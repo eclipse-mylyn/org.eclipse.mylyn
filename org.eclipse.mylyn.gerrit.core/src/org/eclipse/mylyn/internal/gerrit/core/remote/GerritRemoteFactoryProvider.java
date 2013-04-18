@@ -11,49 +11,77 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.remote;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
-import org.eclipse.mylyn.reviews.core.spi.remote.JobRemoteService;
-import org.eclipse.mylyn.reviews.core.spi.remote.emf.ReviewsRemoteFactoryProvider;
+import org.eclipse.mylyn.reviews.core.model.IReviewGroup;
+import org.eclipse.mylyn.reviews.core.model.IUser;
+import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
+import org.eclipse.mylyn.reviews.edit.remote.ReviewsRemoteEditFactoryProvider;
 
+import com.google.gerrit.common.data.AccountInfo;
 import com.google.gerrit.common.data.AccountInfoCache;
+import com.google.gerrit.reviewdb.Account;
+import com.google.gerrit.reviewdb.Account.Id;
 
 /**
  * Implements a reviews factory provider for Gerrit remote API.
  * 
  * @author Miles Parker
  */
-public class GerritRemoteFactoryProvider extends ReviewsRemoteFactoryProvider {
+public class GerritRemoteFactoryProvider extends ReviewsRemoteEditFactoryProvider {
 
 	private final GerritClient client;
 
-	ReviewRemoteFactory reviewRemoteFactory = new ReviewRemoteFactory(this);
+	private final GerritReviewRemoteFactory gerritReviewRemoteFactory = new GerritReviewRemoteFactory(this);
 
-	ReviewItemSetRemoteFactory reviewSetFactory = new ReviewItemSetRemoteFactory(this);
+	private final PatchSetDetailRemoteFactory reviewSetFactory = new PatchSetDetailRemoteFactory(this);
 
-	PatchSetContentRemoteFactory reviewItemSetContentFactory = new PatchSetContentRemoteFactory(this);
+	private final PatchSetContentIdRemoteFactory reviewItemSetContentFactory = new PatchSetContentIdRemoteFactory(this);
 
-	public GerritRemoteFactoryProvider(JobRemoteService service, GerritClient client) {
-		super(service);
+	private final GerritUserRemoteFactory userFactory = new GerritUserRemoteFactory(this);
+
+	public GerritRemoteFactoryProvider(GerritClient client) {
 		this.client = client;
 	}
 
 	@Override
-	public ReviewRemoteFactory getReviewFactory() {
-		return reviewRemoteFactory;
+	public GerritReviewRemoteFactory getReviewFactory() {
+		return gerritReviewRemoteFactory;
 	}
 
 	@Override
-	public ReviewItemSetRemoteFactory getReviewItemSetFactory() {
+	public PatchSetDetailRemoteFactory getReviewItemSetFactory() {
 		return reviewSetFactory;
 	}
 
 	@Override
-	public PatchSetContentRemoteFactory getReviewItemSetContentFactory() {
+	public PatchSetContentIdRemoteFactory getReviewItemSetContentFactory() {
 		return reviewItemSetContentFactory;
 	}
 
-	public UserRemoteFactory getUserFactory(AccountInfoCache cache) {
-		return new UserRemoteFactory(this, cache);
+	public GerritUserRemoteFactory getUserFactory(AccountInfoCache cache) {
+		userFactory.getCache().merge(cache);
+		return userFactory;
+	}
+
+	void retrieveUser(IReviewGroup parent, AccountInfoCache cache, Id id, IProgressMonitor monitor)
+			throws CoreException {
+		if (id != null) {
+			final RemoteEmfConsumer<IReviewGroup, IUser, AccountInfo, Id, String> userConsumer = getUserFactory(cache).getConsumerForRemoteKey(
+					parent, id);
+			userConsumer.pull(false, monitor);
+		}
+	}
+
+	IUser createUser(IReviewGroup parent, AccountInfoCache cache, Account.Id id) {
+		if (id != null) {
+			final RemoteEmfConsumer<IReviewGroup, IUser, AccountInfo, Id, String> userConsumer = getUserFactory(cache).getConsumerForRemoteKey(
+					parent, id);
+			userConsumer.applyModel(false);
+			return userConsumer.getModelObject();
+		}
+		return null;
 	}
 
 	public GerritClient getClient() {

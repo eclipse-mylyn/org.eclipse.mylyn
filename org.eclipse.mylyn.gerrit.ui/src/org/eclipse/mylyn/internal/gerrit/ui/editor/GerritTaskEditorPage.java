@@ -15,14 +15,10 @@ import java.util.Set;
 
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.GerritTaskSchema;
-import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
-import org.eclipse.mylyn.internal.gerrit.core.remote.GerritRemoteFactoryProvider;
-import org.eclipse.mylyn.reviews.core.spi.remote.emf.ReviewsRemoteFactoryProvider;
 import org.eclipse.mylyn.reviews.ui.spi.editor.AbstractReviewTaskEditorPage;
+import org.eclipse.mylyn.reviews.ui.spi.editor.ReviewDetailSection;
 import org.eclipse.mylyn.reviews.ui.spi.editor.ReviewSetSection;
-import org.eclipse.mylyn.reviews.ui.spi.remote.RemoteUiService;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorFactory;
@@ -86,10 +82,10 @@ public class GerritTaskEditorPage extends AbstractReviewTaskEditorPage {
 				newCommentsDescriptor = descriptor;
 			}
 		}
-		descriptors.add(new TaskEditorPartDescriptor(ReviewSection.class.getName()) {
+		descriptors.add(new TaskEditorPartDescriptor(ReviewDetailSection.class.getName()) {
 			@Override
 			public AbstractTaskEditorPart createPart() {
-				return new ReviewSection();
+				return new ReviewDetailSection();
 			}
 		});
 		descriptors.add(new TaskEditorPartDescriptor(ReviewSetSection.class.getName()) {
@@ -105,12 +101,5 @@ public class GerritTaskEditorPage extends AbstractReviewTaskEditorPage {
 			descriptors.add(newCommentsDescriptor);
 		}
 		return descriptors;
-	}
-
-	@Override
-	protected ReviewsRemoteFactoryProvider createRemoteFactory() {
-		GerritConnector connector = (GerritConnector) TasksUi.getRepositoryConnector(getConnectorKind());
-		GerritClient client = connector.getClient(getTaskRepository());
-		return new GerritRemoteFactoryProvider(new RemoteUiService(), client);
 	}
 }

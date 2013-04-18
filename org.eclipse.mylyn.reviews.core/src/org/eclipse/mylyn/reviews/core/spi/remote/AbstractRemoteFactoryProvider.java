@@ -18,17 +18,21 @@ package org.eclipse.mylyn.reviews.core.spi.remote;
  */
 public abstract class AbstractRemoteFactoryProvider {
 
-	private final AbstractRemoteService service;
+	private AbstractRemoteService service;
 
-	public AbstractRemoteFactoryProvider(JobRemoteService service) {
-		this.service = service;
+	public void modelExec(Runnable runnable, boolean block) {
+		if (service != null) {
+			service.modelExec(runnable, block);
+		} else {
+			throw new RuntimeException("Internal Error: Connector must supply a service for execution.");
+		}
 	}
 
 	public AbstractRemoteService getService() {
 		return service;
 	}
 
-	public void dispose() {
-		service.dispose();
+	public void setService(AbstractRemoteService service) {
+		this.service = service;
 	}
 }

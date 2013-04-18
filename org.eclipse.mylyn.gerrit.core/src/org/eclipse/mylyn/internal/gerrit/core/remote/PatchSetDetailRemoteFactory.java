@@ -25,22 +25,22 @@ import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.reviewdb.PatchSet;
 
 /**
- * Converts patch set details to review sets. Does not require a remote invocation, as the neccesary data is collected
- * as part of {@link ReviewRemoteFactory} API call.
+ * Converts patch set details to review sets. Does not retrive actual patch set content. Does not require a remote
+ * invocation, as the neccesary data is collected as part of {@link GerritReviewRemoteFactory} API call.
  * 
  * @author Miles Parker
  * @author Steffen Pingel
  */
-public class ReviewItemSetRemoteFactory extends
+public class PatchSetDetailRemoteFactory extends
 		AbstractRemoteEmfFactory<IReview, IReviewItemSet, PatchSetDetail, PatchSetDetail, String> {
 
-	public ReviewItemSetRemoteFactory(GerritRemoteFactoryProvider gerritRemoteFactoryProvider) {
-		super(gerritRemoteFactoryProvider.getService(), ReviewsPackage.Literals.REVIEW_ITEM_SET__ITEMS,
+	public PatchSetDetailRemoteFactory(GerritRemoteFactoryProvider gerritRemoteFactoryProvider) {
+		super(gerritRemoteFactoryProvider, ReviewsPackage.Literals.REVIEW__SETS,
 				ReviewsPackage.Literals.REVIEW_ITEM__ID);
 	}
 
 	@Override
-	public PatchSetDetail retrieve(PatchSetDetail remoteKey, IProgressMonitor monitor) throws CoreException {
+	public PatchSetDetail pull(IReview parent, PatchSetDetail remoteKey, IProgressMonitor monitor) throws CoreException {
 		return remoteKey;
 	}
 
@@ -50,7 +50,12 @@ public class ReviewItemSetRemoteFactory extends
 	}
 
 	@Override
-	public IReviewItemSet create(IReview review, PatchSetDetail patchSetDetail) {
+	public boolean isPullNeeded(IReview parent, IReviewItemSet object, PatchSetDetail remote) {
+		return object != null;
+	}
+
+	@Override
+	public IReviewItemSet createModel(IReview review, PatchSetDetail patchSetDetail) {
 		PatchSet patchSet = patchSetDetail.getPatchSet();
 		IReviewItemSet itemSet = IReviewsFactory.INSTANCE.createReviewItemSet();
 		itemSet.setName(NLS.bind("Patch Set {0}", patchSet.getPatchSetId()));
@@ -58,6 +63,22 @@ public class ReviewItemSetRemoteFactory extends
 		itemSet.setId(patchSet.getPatchSetId() + "");
 		itemSet.setReference(patchSet.getRefName());
 		itemSet.setRevision(patchSet.getRevision().get());
+		review.getSets().add(itemSet);
 		return itemSet;
+	}
+
+	@Override
+	public PatchSetDetail getRemoteKey(PatchSetDetail remoteObject) {
+		return remoteObject;
+	}
+
+	@Override
+	public String getLocalKeyForRemoteObject(PatchSetDetail remoteObject) {
+		return remoteObject.getPatchSet().getPatchSetId() + "";
+	}
+
+	@Override
+	public String getLocalKeyForRemoteKey(PatchSetDetail remoteKey) {
+		return getLocalKeyForRemoteObject(remoteKey);
 	}
 }

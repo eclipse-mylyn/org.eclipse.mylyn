@@ -17,10 +17,9 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -31,7 +30,6 @@ import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.EcorePackage;
-import org.eclipse.mylyn.reviews.core.spi.remote.JobRemoteService;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.AbstractRemoteEmfFactory;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.junit.Test;
@@ -40,97 +38,6 @@ import org.junit.Test;
  * @author Miles Parker
  */
 public class RemoteEmfFactoryTest {
-
-	private static final int TEST_TIMEOUT = 100;
-
-	private final class TestListener<T> implements RemoteEmfConsumer.IObserver<T> {
-
-		T createdObject;
-
-		int updated;
-
-		int responded;
-
-		IStatus failure;
-
-		AbstractRemoteEmfFactory<?, ?, ?, ?, ?> factory;
-
-		private TestListener(AbstractRemoteEmfFactory<?, ?, ?, ?, ?> factory) {
-			this.factory = factory;
-		}
-
-		public void created(T object) {
-			createdObject = object;
-		}
-
-		public void responded(boolean modified) {
-			responded++;
-			if (modified) {
-				updated++;
-			}
-		}
-
-		public void failed(org.eclipse.core.runtime.IStatus status) {
-			failure = status;
-		}
-
-		protected void waitForResponse(int response, int update) {
-			long delay;
-			delay = 0;
-			while (delay < TEST_TIMEOUT) {
-				if (responded < response) {
-					try {
-						Thread.sleep(10);
-						delay += 10;
-					} catch (InterruptedException e) {
-					}
-				} else {
-					break;
-				}
-			}
-			try {
-				//wait extra to ensure there aren't remaining jobs
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-			}
-			assertThat("Wrong # responses", responded, is(response));
-			assertThat("Wrong # updates", updated, is(update));
-			if (factory != null) {
-				assertThat(factory.getService().isActive(), is(false));
-			}
-		}
-
-		protected void waitForFailure() {
-			long delay = 0;
-			while (delay < TEST_TIMEOUT) {
-				if (failure == null) {
-					try {
-						Thread.sleep(10);
-						delay += 10;
-					} catch (InterruptedException e) {
-					}
-				} else {
-					break;
-				}
-			}
-		}
-
-		void clear() {
-			createdObject = null;
-			updated = 0;
-			failure = null;
-		}
-	}
-
-	class TestRemoteObject {
-		String name;
-
-		String data;
-
-		private TestRemoteObject(String name) {
-			this.name = name;
-		}
-	}
 
 	class TestRemoteObjectManyObject {
 		String name;
@@ -142,81 +49,44 @@ public class RemoteEmfFactoryTest {
 		}
 	}
 
-	TestRemoteObject remote1 = new TestRemoteObject("Object 1");
-
-	TestRemoteObject remote2 = new TestRemoteObject("Object 2");
-
-	Map<String, TestRemoteObject> remoteForKey = new HashMap<String, TestRemoteObject>();
-
-	class TestRemoteFactory extends AbstractRemoteEmfFactory<EPackage, EClass, TestRemoteObject, String, String> {
-
-		public TestRemoteFactory() {
-			super(new JobRemoteService(), EcorePackage.Literals.EPACKAGE__ECLASSIFIERS,
-					EcorePackage.Literals.ENAMED_ELEMENT__NAME);
-			remoteForKey.put("object1", remote1);
-			remoteForKey.put("object2", remote2);
-		}
-
-		@Override
-		public TestRemoteObject retrieve(String remoteKey, IProgressMonitor monitor) throws CoreException {
-			return remoteForKey.get(remoteKey);
-		}
-
-		@Override
-		protected EClass create(EPackage parent, TestRemoteObject remoteObject) {
-			EClass clazz = EcoreFactory.eINSTANCE.createEClass();
-			clazz.setName(remoteObject.name);
-			return clazz;
-		}
-
-		@Override
-		public boolean update(EPackage parent, EClass object, TestRemoteObject remoteObject) {
-			object.setInstanceTypeName(remoteObject.data);
-			return true;
-		}
-	}
-
 	class TestRemoteFactoryNoUpdate extends TestRemoteFactory {
 
 		@Override
-		public boolean update(EPackage parent, EClass object, TestRemoteObject remoteObject) {
+		public boolean updateModel(EPackage parent, EClass object, TestRemoteObject remoteObject) {
 			return false;
 		}
 	}
 
-	class TestRemoteFactoryCollectionObject extends
-			AbstractRemoteEmfFactory<EPackage, List<EClassifier>, TestRemoteObject, String, String> {
+	EPackage parent = EcoreFactory.eINSTANCE.createEPackage();
 
-		public TestRemoteFactoryCollectionObject() {
-			super(new JobRemoteService(), EcorePackage.Literals.EPACKAGE__ECLASSIFIERS,
-					EcorePackage.Literals.ENAMED_ELEMENT__NAME);
-			remoteForKey.put("object1", remote1);
-			remoteForKey.put("object2", remote2);
+	class TestManagerHarness {
+
+		TestRemoteFactory factory;
+
+		RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> consumer;
+
+		TestIRemoteEmfObserver<EPackage, EClass> listener;
+
+		TestManagerHarness(TestRemoteFactory factory) {
+			this.factory = factory;
+			listener = new TestIRemoteEmfObserver<EPackage, EClass>(factory);
+			consumer = createConsumer();
+			consumer.addObserver(listener);
 		}
 
-		@Override
-		public TestRemoteObject retrieve(String remoteKey, IProgressMonitor monitor) throws CoreException {
-			return remoteForKey.get(remoteKey);
+		TestManagerHarness() {
+			this(new TestRemoteFactory());
 		}
 
-		@Override
-		protected List<EClassifier> create(EPackage parent, TestRemoteObject remoteObject) {
-			List<EClassifier> classifiers = parent.getEClassifiers();
-			EClass class1 = EcoreFactory.eINSTANCE.createEClass();
-			class1.setName("Many Class 1");
-			classifiers.add(class1);
-			EClass class2 = EcoreFactory.eINSTANCE.createEClass();
-			class2.setName("Many Class 2");
-			classifiers.add(class2);
-			return classifiers;
+		RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> createConsumer() {
+			return factory.getConsumerForRemoteKey(parent, "remoteKeyFor Object 1");
 		}
 
-		@Override
-		public boolean update(EPackage parent, List<EClassifier> classifiers, TestRemoteObject remoteObject) {
-			EClass class2 = EcoreFactory.eINSTANCE.createEClass();
-			class2.setName("Many Class " + (classifiers.size() + 1));
-			classifiers.add(class2);
-			return true;
+		void basicTest() {
+			consumer.retrieve(false);
+			listener.waitForResponse(1, 1);
+			checkConsumer(consumer, "remoteKeyFor Object 1", "Remote Object 1", "localKeyFor Object 1",
+					"Local Object 1");
 		}
 	}
 
@@ -224,8 +94,34 @@ public class RemoteEmfFactoryTest {
 
 	class TestFailureFactory extends TestRemoteFactory {
 		@Override
-		public TestRemoteObject retrieve(String remoteKey, IProgressMonitor monitor) throws CoreException {
+		public TestRemoteObject pull(EPackage parent, String remoteKey, IProgressMonitor monitor) throws CoreException {
 			throw new CoreException(errorStatus);
+		}
+	}
+
+	protected void checkConsumer(RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> manager,
+			String remoteKey, String remoteObject, String localKey, String localObject) {
+		if (remoteKey != null) {
+			assertThat("Bad Remote Key", manager.getRemoteKey(), is(remoteKey));
+		} else {
+			assertThat("Bad Remote Key", manager.getRemoteKey(), nullValue());
+		}
+		if (remoteObject != null) {
+			assertThat("Bad Remote Object", manager.getRemoteObject(), notNullValue());
+			assertThat(manager.getRemoteObject().getName(), is(remoteObject));
+		} else {
+			assertThat("Bad Remote Object", manager.getRemoteObject(), nullValue());
+		}
+		if (localKey != null) {
+			assertThat("Bad Local Key", manager.getLocalKey(), is(localKey));
+		} else {
+			assertThat("Bad Local Key", manager.getLocalKey(), nullValue());
+		}
+		if (localObject != null) {
+			assertThat("Bad Local Object", manager.getModelObject(), notNullValue());
+			assertThat(manager.getModelObject().getName(), is(localObject));
+		} else {
+			assertThat("Bad Local Object", manager.getModelObject(), nullValue());
 		}
 	}
 
@@ -233,166 +129,369 @@ public class RemoteEmfFactoryTest {
 	public void testRemoteProcessCreate() {
 		TestRemoteFactory testRemoteFactory = new TestRemoteFactory();
 		EPackage parent = EcoreFactory.eINSTANCE.createEPackage();
-		EClass create1 = testRemoteFactory.create(parent, remote1);
-		assertThat(create1.getName(), is("Object 1"));
-		EClass create2 = testRemoteFactory.create(parent, remote2);
-		assertThat(create2.getName(), is("Object 2"));
+		EClass create1 = testRemoteFactory.createModel(parent, TestRemoteFactory.remote1);
+		assertThat(create1.getName(), is("Local Object 1"));
+		EClass create2 = testRemoteFactory.createModel(parent, TestRemoteFactory.remote2);
+		assertThat(create2.getName(), is("Local Object 2"));
 	}
 
 	@Test
-	public void testRemoteProcessGet() {
-		TestRemoteFactory testRemoteFactory = new TestRemoteFactory();
-		EPackage parent = EcoreFactory.eINSTANCE.createEPackage();
-		EClass get2 = testRemoteFactory.get(parent, remote2);
-		assertThat(get2.getName(), is("Object 2"));
-		EClass get1 = testRemoteFactory.get(parent, remote1);
-		assertThat(get1.getName(), is("Object 1"));
-
-		EClass get1Again = testRemoteFactory.get(parent, remote1);
-		assertThat(get1Again.getName(), is("Object 1"));
+	public void testGetConsumerForRemoteKey() throws CoreException {
+		TestManagerHarness harness = new TestManagerHarness() {
+			@Override
+			RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> createConsumer() {
+				return factory.getConsumerForRemoteKey(parent, "remoteKeyFor Object 1");
+			}
+		};
+		checkConsumer(harness.consumer, "remoteKeyFor Object 1", null, "localKeyFor Object 1", null);
+		harness.basicTest();
 	}
 
 	@Test
-	public void testRemoteProcessRequest() throws CoreException {
-		EPackage parent = EcoreFactory.eINSTANCE.createEPackage();
-
-		TestRemoteFactory factory = new TestRemoteFactory();
-		TestListener<EClass> testListener = new TestListener<EClass>(factory);
-		RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> consume = factory.consume("Test Process",
-				parent, "object1", null, testListener);
-		consume.request();
-		testListener.waitForResponse(1, 1);
-		assertThat(testListener.createdObject, notNullValue());
-		EClass modelObject = factory.getModelObject(remote1);
-		assertThat(modelObject.getName(), is("Object 1"));
-		TestRemoteObject remoteObject = factory.getRemoteObject(modelObject);
-		assertThat(remoteObject, sameInstance(remote1));
-		assertThat(testListener.createdObject.getInstanceTypeName(), nullValue());
-	}
-
-	@Test
-	public void testRemoteProcessUpdate() throws CoreException {
-		EPackage parent = EcoreFactory.eINSTANCE.createEPackage();
-
-		TestRemoteFactory factory = new TestRemoteFactory();
-		TestListener<EClass> testListener = new TestListener<EClass>(factory);
-		RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> consume = factory.consume("Test Process",
-				parent, "object1", null, testListener);
-		consume.request();
-		testListener.waitForResponse(1, 1);
-		remote1.data = "new";
-		consume.request();
-		testListener.waitForResponse(2, 2);
-		EClass modelObject = factory.getModelObject(remote1);
-		assertThat(modelObject, sameInstance(consume.getModelObject()));
+	public void testGetConsumerForRemoteKeyUpdate() throws CoreException {
+		TestManagerHarness harness = new TestManagerHarness() {
+			@Override
+			RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> createConsumer() {
+				return factory.getConsumerForRemoteKey(parent, "remoteKeyFor Object 1");
+			}
+		};
+		checkConsumer(harness.consumer, "remoteKeyFor Object 1", null, "localKeyFor Object 1", null);
+		harness.basicTest();
+		TestRemoteFactory.remote1.data = "new";
+		harness.consumer.retrieve(false);
+		harness.listener.waitForResponse(2, 2);
+		EClass modelObject = harness.consumer.getModelObject();
 		assertThat(modelObject.getInstanceTypeName(), is("new"));
 	}
 
 	@Test
-	public void testRemoteProcessRequestUpdateNoModification() throws CoreException {
-		EPackage parent = EcoreFactory.eINSTANCE.createEPackage();
-		TestRemoteFactory factory = new TestRemoteFactoryNoUpdate();
-		TestListener<EClass> testListener = new TestListener<EClass>(factory);
-		RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> consume = factory.consume("Test Process",
-				parent, "object1", null, testListener);
-		consume.request();
-		testListener.waitForResponse(1, 1);
-		assertThat(testListener.createdObject, notNullValue());
-		EClass modelObject = factory.getModelObject(remote1);
-		assertThat(modelObject.getName(), is("Object 1"));
-		TestRemoteObject remoteObject = factory.getRemoteObject(modelObject);
-		assertThat(remoteObject, sameInstance(remote1));
-		assertThat(testListener.createdObject.getInstanceTypeName(), nullValue());
-		consume.request();
-		testListener.waitForResponse(2, 1);
-	}
-
-	@Test
-	public void testRemoteProcessCollectionRequestAndUpdate() throws CoreException {
-		EPackage parent = EcoreFactory.eINSTANCE.createEPackage();
-		TestRemoteFactoryCollectionObject factory = new TestRemoteFactoryCollectionObject();
-		TestListener<List<EClassifier>> testListener = new TestListener<List<EClassifier>>(factory);
-		RemoteEmfConsumer<EPackage, List<EClassifier>, TestRemoteObject, String, String> consume = factory.consume(
-				"Test Process", parent, null, null, testListener);
-		consume.request();
-		testListener.waitForResponse(1, 1);
-		assertThat(testListener.createdObject, notNullValue());
-		List<EClassifier> modelObject = consume.getModelObject();
-		assertThat(modelObject.size(), is(3));
-		assertThat(modelObject.get(0).getName(), is("Many Class 1"));
-		assertThat(modelObject.get(1).getName(), is("Many Class 2"));
-		assertThat(modelObject.get(2).getName(), is("Many Class 3"));
-
-		consume.request();
-		testListener.waitForResponse(2, 2);
-		consume.request();
-		testListener.waitForResponse(3, 3);
-		assertThat(modelObject.size(), is(5));
-		assertThat(modelObject.get(3).getName(), is("Many Class 4"));
-		assertThat(modelObject.get(4).getName(), is("Many Class 5"));
-	}
-
-	@Test
-	public void testRemoteProcessConsumerVsSubscriber() throws CoreException {
-		EPackage parent = EcoreFactory.eINSTANCE.createEPackage();
-
+	public void testGetConsumerForDifferentParentSameLocalKey() throws CoreException {
+		EPackage parent1 = EcoreFactory.eINSTANCE.createEPackage();
 		TestRemoteFactory factory = new TestRemoteFactory();
-		TestListener<EClass> testListener1 = new TestListener<EClass>(factory);
-		RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> consumer1 = factory.consume(
-				"Test Process", parent, "object1", null, testListener1);
-		TestListener<EClass> testListener2 = new TestListener<EClass>(factory);
-		RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> consumer2 = factory.consume(
-				"Test Process", parent, "object1", null, testListener2);
-		consumer1.request();
-		testListener1.waitForResponse(1, 1);
-		assertThat(testListener1.createdObject.getName(), is("Object 1"));
-		assertThat(consumer1.getModelObject().getName(), is("Object 1"));
-		assertThat(consumer2.getModelObject(), nullValue());
+		TestIRemoteEmfObserver<EPackage, EClass> listener1 = new TestIRemoteEmfObserver<EPackage, EClass>(factory);
+		RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> consumer1 = factory.getConsumerForRemoteKey(
+				parent1, "remoteKeyFor Object 1");
 
-		consumer2.subscribe();
-		assertThat(testListener2.createdObject, nullValue());
-		assertThat(consumer2.getModelObject().getName(), is("Object 1"));
+		EPackage parent2 = EcoreFactory.eINSTANCE.createEPackage();
+		RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> consumer2 = factory.getConsumerForRemoteKey(
+				parent2, "remoteKeyFor Object 1");
+
+		assertThat(consumer1, not(sameInstance(consumer2)));
 	}
 
 	@Test
-	public void testRemoteProcessMultipleConsumers() throws CoreException {
-		EPackage parent = EcoreFactory.eINSTANCE.createEPackage();
+	public void testGetConsumerForLocalKey() throws CoreException {
+		TestManagerHarness harness = new TestManagerHarness() {
+			@Override
+			RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> createConsumer() {
+				return factory.getConsumerForLocalKey(parent, "localKeyFor Object 1");
+			}
+		};
+		checkConsumer(harness.consumer, null, null, "localKeyFor Object 1", null);
+		harness.consumer.retrieve(false);
+		harness.listener.waitForResponse(0, 0);
+		checkConsumer(harness.consumer, null, null, "localKeyFor Object 1", null);
+	}
 
-		TestRemoteFactory factory = new TestRemoteFactoryNoUpdate();
-		TestListener<EClass> testListener1 = new TestListener<EClass>(factory);
-		RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> consumer1 = factory.consume(
-				"Test Process", parent, "object1", null, testListener1);
-		consumer1.request();
-		testListener1.waitForResponse(1, 1);
-		assertThat(testListener1.createdObject.getName(), is("Object 1"));
-		assertThat(consumer1.getModelObject().getName(), is("Object 1"));
-		assertThat(factory.getService().isActive(), not(true));
+	@Test
+	public void testGetConsumerForRemote() throws CoreException {
+		TestManagerHarness harness = new TestManagerHarness() {
+			@Override
+			RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> createConsumer() {
+				return factory.getConsumerForRemoteObject(parent, TestRemoteFactory.remote1);
+			}
+		};
+		checkConsumer(harness.consumer, "remoteKeyFor Object 1", "Remote Object 1", "localKeyFor Object 1", null);
+		harness.consumer.retrieve(false);
+		harness.listener.waitForResponse(1, 1);
+		checkConsumer(harness.consumer, "remoteKeyFor Object 1", "Remote Object 1", "localKeyFor Object 1",
+				"Local Object 1");
+	}
 
-		TestListener<EClass> testListener2 = new TestListener<EClass>(factory);
-		RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> consumer2 = factory.consume(
-				"Test Process", parent, "object1", null, testListener2);
-		assertThat(consumer2.getModelObject(), nullValue());
-		consumer2.request();
+	@Test
+	public void testRemoteKeyThenRemoteObject() throws CoreException {
+		TestRemoteFactory testRemoteFactory = new TestRemoteFactory();
+		TestManagerHarness keyHarness = new TestManagerHarness(testRemoteFactory) {
+			@Override
+			RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> createConsumer() {
+				return factory.getConsumerForRemoteKey(parent, "remoteKeyFor Object 2");
+			}
+		};
+		checkConsumer(keyHarness.consumer, "remoteKeyFor Object 2", null, "localKeyFor Object 2", null);
+		TestManagerHarness remoteHarness = new TestManagerHarness(testRemoteFactory) {
+			@Override
+			RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> createConsumer() {
+				return factory.getConsumerForRemoteObject(parent, TestRemoteFactory.remote2);
+			}
+		};
+		assertThat(keyHarness.consumer, sameInstance(remoteHarness.consumer));
+		checkConsumer(remoteHarness.consumer, "remoteKeyFor Object 2", "Remote Object 2", "localKeyFor Object 2", null);
+	}
+
+	@Test
+	public void testRemoteObjectThenRemoteKey() throws CoreException {
+		TestRemoteFactory testRemoteFactory = new TestRemoteFactory();
+		TestManagerHarness remoteHarness = new TestManagerHarness(testRemoteFactory) {
+			@Override
+			RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> createConsumer() {
+				return factory.getConsumerForRemoteObject(parent, TestRemoteFactory.remote2);
+			}
+		};
+		checkConsumer(remoteHarness.consumer, "remoteKeyFor Object 2", "Remote Object 2", "localKeyFor Object 2", null);
+		TestManagerHarness keyHarness = new TestManagerHarness(testRemoteFactory) {
+			@Override
+			RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> createConsumer() {
+				return factory.getConsumerForRemoteKey(parent, "remoteKeyFor Object 2");
+			}
+		};
+		assertThat(keyHarness.consumer, sameInstance(remoteHarness.consumer));
+		checkConsumer(keyHarness.consumer, "remoteKeyFor Object 2", "Remote Object 2", "localKeyFor Object 2", null);
+	}
+
+	@Test
+	public void testLocalKeyThenRemoteKeyAndObject() throws CoreException {
+		TestRemoteFactory testRemoteFactory = new TestRemoteFactory();
+		TestManagerHarness remoteHarness = new TestManagerHarness(testRemoteFactory) {
+			@Override
+			RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> createConsumer() {
+				return factory.getConsumerForLocalKey(parent, "localKeyFor Object 2");
+			}
+		};
+		checkConsumer(remoteHarness.consumer, null, null, "localKeyFor Object 2", null);
+		TestManagerHarness keyHarness = new TestManagerHarness(testRemoteFactory) {
+			@Override
+			RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> createConsumer() {
+				return factory.getConsumerForRemoteKey(parent, "remoteKeyFor Object 2");
+			}
+		};
+		assertThat(keyHarness.consumer, sameInstance(remoteHarness.consumer));
+		checkConsumer(keyHarness.consumer, "remoteKeyFor Object 2", null, "localKeyFor Object 2", null);
+		keyHarness.consumer.retrieve(false);
+		keyHarness.listener.waitForResponse(1, 1);
+		checkConsumer(keyHarness.consumer, "remoteKeyFor Object 2", "Remote Object 2", "localKeyFor Object 2",
+				"Local Object 2");
+	}
+
+	@Test
+	public void testLocalObjectThenRemoteKeyAndObject() {
+		TestRemoteFactory factory = new TestRemoteFactory();
+		EClass create1 = EcoreFactory.eINSTANCE.createEClass();
+		create1.setName("Object 1");
+		create1.setInstanceClassName("localKeyFor Object 1");
+		parent.getEClassifiers().add(create1);
+		EClass create2 = EcoreFactory.eINSTANCE.createEClass();
+		create2.setName("Object 2");
+		create2.setInstanceClassName("localKeyFor Object 2");
+		parent.getEClassifiers().add(create2);
+		TestIRemoteEmfObserver<EPackage, EClass> testListener1 = new TestIRemoteEmfObserver<EPackage, EClass>(factory);
+		RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> createConsumer = factory.getConsumerForLocalKey(
+				parent, "localKeyFor Object 2");
+		createConsumer.addObserver(testListener1);
+		createConsumer.retrieve(false);
+		testListener1.waitForResponse(1, 0);
+		assertThat(testListener1.createdObject, nullValue());
+		checkConsumer(createConsumer, null, null, "localKeyFor Object 2", "Object 2");
+
+		TestManagerHarness keyHarness = new TestManagerHarness(factory) {
+			@Override
+			RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> createConsumer() {
+				return factory.getConsumerForRemoteKey(parent, "remoteKeyFor Object 2");
+			}
+		};
+		assertThat(keyHarness.consumer, sameInstance(createConsumer));
+		checkConsumer(keyHarness.consumer, "remoteKeyFor Object 2", null, "localKeyFor Object 2", "Object 2");
+		createConsumer.retrieve(false);
 		testListener1.waitForResponse(2, 1);
-		testListener2.waitForResponse(1, 0);
-		assertThat(factory.getService().isActive(), not(true));
-		assertThat(testListener2.createdObject, nullValue());
-		assertThat(consumer2.getModelObject(), sameInstance(consumer1.getModelObject()));
-		consumer1.request();
-		testListener1.waitForResponse(3, 1);
-		testListener2.waitForResponse(2, 0);
+		checkConsumer(keyHarness.consumer, "remoteKeyFor Object 2", "Remote Object 2", "localKeyFor Object 2",
+				"Object 2");
 	}
 
 	@Test
 	public void testRemoteProcessFailure() throws CoreException {
 		EPackage parent = EcoreFactory.eINSTANCE.createEPackage();
 		TestRemoteFactory factory = new TestFailureFactory();
-		TestListener<EClass> testListener = new TestListener<EClass>(factory);
-		RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> consume = factory.consume("Test Process",
-				parent, "object1", null, testListener);
-		consume.request();
+		TestIRemoteEmfObserver<EPackage, EClass> testListener = new TestIRemoteEmfObserver<EPackage, EClass>(factory);
+		RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> consumer1 = factory.getConsumerForRemoteKey(
+				parent, "object1");
+		consumer1.addObserver(testListener);
+		consumer1.retrieve(false);
 		testListener.waitForFailure();
 		assertThat(testListener.failure, is(errorStatus));
 	}
 
+	@Test
+	public void testMultipleConsumers() throws CoreException {
+		TestRemoteFactory factory = new TestRemoteFactory();
+		TestManagerHarness[] harnesses = new TestManagerHarness[5];
+		for (int i = 0; i < harnesses.length; i++) {
+			harnesses[i] = new TestManagerHarness(factory);
+			harnesses[i].basicTest();
+		}
+		for (int i = 1; i < harnesses.length; i++) {
+			assertThat(harnesses[i].consumer, sameInstance(harnesses[0].consumer));
+		}
+	}
+
+	class TestRemoteFactoryCollectionObject extends
+			AbstractRemoteEmfFactory<EPackage, List<EClassifier>, TestRemoteObject, String, String> {
+
+		public TestRemoteFactoryCollectionObject() {
+			super(new TestRemoteFactoryProvider(), EcorePackage.Literals.EPACKAGE__ECLASSIFIERS,
+					EcorePackage.Literals.ENAMED_ELEMENT__NAME);
+		}
+
+		@Override
+		public TestRemoteObject pull(EPackage parent, String remoteKey, IProgressMonitor monitor) throws CoreException {
+			return TestRemoteFactory.remoteForKey.get(remoteKey);
+		}
+
+		@Override
+		protected List<EClassifier> createModel(EPackage parent, TestRemoteObject remoteObject) {
+			List<EClassifier> classifiers = parent.getEClassifiers();
+			EClass class1 = EcoreFactory.eINSTANCE.createEClass();
+			class1.setName("Many " + remoteObject.getName() + "_1");
+			classifiers.add(class1);
+			EClass class2 = EcoreFactory.eINSTANCE.createEClass();
+			class2.setName("Many " + remoteObject.getName() + "_2");
+			classifiers.add(class2);
+			return classifiers;
+		}
+
+		@Override
+		public boolean updateModel(EPackage parent, List<EClassifier> classifiers, TestRemoteObject remoteObject) {
+			EClass class2 = EcoreFactory.eINSTANCE.createEClass();
+			class2.setName("Many " + remoteObject.getName() + "_" + (classifiers.size() + 1));
+			classifiers.add(class2);
+			return true;
+		}
+
+		@Override
+		public String getRemoteKey(TestRemoteObject remoteObject) {
+			return "remoteKeyFor" + remoteObject.getName();
+		}
+
+		@Override
+		public String getLocalKeyForRemoteObject(TestRemoteObject remoteObject) {
+			return "localKeyFor" + remoteObject.getName();
+		}
+
+		@Override
+		public String getLocalKeyForRemoteKey(String remoteKey) {
+			return remoteKey.replace("remote", "local");
+		}
+	}
+
+	@Test
+	public void testRemoteProcessCollectionRequestAndUpdate() throws CoreException {
+		EPackage parent = EcoreFactory.eINSTANCE.createEPackage();
+		TestRemoteFactoryCollectionObject factory = new TestRemoteFactoryCollectionObject();
+		TestIRemoteEmfObserver<EPackage, List<EClassifier>> testListener = new TestIRemoteEmfObserver<EPackage, List<EClassifier>>(
+				factory);
+		RemoteEmfConsumer<EPackage, List<EClassifier>, TestRemoteObject, String, String> consumer1 = factory.getConsumerForRemoteKey(
+				parent, "remoteKeyFor Object 1");
+		consumer1.addObserver(testListener);
+		consumer1.retrieve(false);
+		testListener.waitForResponse(1, 1);
+		List<EClassifier> modelObject = consumer1.getModelObject();
+		assertThat(modelObject.size(), is(3));
+		assertThat(modelObject.get(0).getName(), is("Many Remote Object 1_1"));
+		assertThat(modelObject.get(1).getName(), is("Many Remote Object 1_2"));
+		assertThat(modelObject.get(2).getName(), is("Many Remote Object 1_3"));
+
+		consumer1.retrieve(false);
+		testListener.waitForResponse(2, 2);
+		consumer1.retrieve(false);
+		testListener.waitForResponse(3, 3);
+		assertThat(modelObject.size(), is(5));
+		assertThat(modelObject.get(3).getName(), is("Many Remote Object 1_4"));
+		assertThat(modelObject.get(4).getName(), is("Many Remote Object 1_5"));
+	}
+
+	class TestNoPullFactory extends TestRemoteFactory {
+		@Override
+		public TestRemoteObject pull(EPackage parent, String remoteKey, IProgressMonitor monitor) throws CoreException {
+			fail("No retrieve call expected.");
+			return null;
+		}
+
+		@Override
+		public boolean isPullNeeded(EPackage parent, EClass object, TestRemoteObject remote) {
+			return false;
+		}
+	}
+
+	@Test
+	public void testRemoteKeyNoPull() throws CoreException {
+		TestManagerHarness harness = new TestManagerHarness(new TestNoPullFactory()) {
+			@Override
+			RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> createConsumer() {
+				return factory.getConsumerForRemoteKey(parent, "remoteKeyFor Object 1");
+			}
+		};
+		checkConsumer(harness.consumer, "remoteKeyFor Object 1", null, "localKeyFor Object 1", null);
+		harness.consumer.retrieve(false);
+		harness.listener.waitForResponse(0, 0);
+		checkConsumer(harness.consumer, "remoteKeyFor Object 1", null, "localKeyFor Object 1", null);
+	}
+
+	class TestNoPullForceOnlyFactory extends TestRemoteFactory {
+
+		@Override
+		public boolean isPullNeeded(EPackage parent, EClass object, TestRemoteObject remote) {
+			return false;
+		}
+	}
+
+	@Test
+	public void testRemoteKeyNoPullForceOnly() throws CoreException {
+		TestManagerHarness harness = new TestManagerHarness(new TestNoPullForceOnlyFactory()) {
+			@Override
+			RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> createConsumer() {
+				return factory.getConsumerForRemoteKey(parent, "remoteKeyFor Object 1");
+			}
+		};
+		checkConsumer(harness.consumer, "remoteKeyFor Object 1", null, "localKeyFor Object 1", null);
+		harness.consumer.retrieve(false);
+		harness.listener.waitForResponse(0, 0);
+		checkConsumer(harness.consumer, "remoteKeyFor Object 1", null, "localKeyFor Object 1", null);
+		harness.consumer.retrieve(true);
+		harness.listener.waitForResponse(1, 1);
+		checkConsumer(harness.consumer, "remoteKeyFor Object 1", "Remote Object 1", "localKeyFor Object 1",
+				"Local Object 1");
+	}
+
+	class TestPullCreateOnlyFactory extends TestRemoteFactory {
+
+		@Override
+		public boolean isUpdateModelNeeded(EPackage parent, EClass object, TestRemoteObject remote) {
+			return false;
+		}
+	}
+
+	@Test
+	public void testRemoteKeyNoUpdate() throws CoreException {
+		TestManagerHarness harness = new TestManagerHarness(new TestPullCreateOnlyFactory()) {
+			@Override
+			RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> createConsumer() {
+				return factory.getConsumerForRemoteKey(parent, "remoteKeyFor Object 1");
+			}
+		};
+		checkConsumer(harness.consumer, "remoteKeyFor Object 1", null, "localKeyFor Object 1", null);
+		harness.consumer.retrieve(false);
+		harness.listener.waitForResponse(1, 1);
+		checkConsumer(harness.consumer, "remoteKeyFor Object 1", "Remote Object 1", "localKeyFor Object 1",
+				"Local Object 1");
+		TestRemoteFactory.remote1.data = "newData";
+		harness.consumer.retrieve(false);
+		harness.listener.waitForResponse(2, 1);
+		EClass modelObject = harness.consumer.getModelObject();
+		checkConsumer(harness.consumer, "remoteKeyFor Object 1", "Remote Object 1", "localKeyFor Object 1",
+				"Local Object 1");
+		assertThat(modelObject.getInstanceTypeName(), is("localKeyFor Object 1"));
+		harness.consumer.retrieve(true);
+		harness.listener.waitForResponse(3, 2);
+		checkConsumer(harness.consumer, "remoteKeyFor Object 1", "Remote Object 1", "localKeyFor Object 1",
+				"Local Object 1");
+		assertThat(modelObject.getInstanceTypeName(), is("newData"));
+	}
 }

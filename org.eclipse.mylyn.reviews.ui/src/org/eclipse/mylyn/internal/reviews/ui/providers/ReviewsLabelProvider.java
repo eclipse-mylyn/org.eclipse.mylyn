@@ -59,8 +59,6 @@ import org.eclipse.swt.widgets.Display;
  */
 public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 
-	private static final String GLOBAL_COMMENTS_NAME = "Global";
-
 	private static final int TOOLTIP_CHAR_WIDTH = 100;
 
 	static final int LINE_NUMBER_WIDTH = 4;
@@ -153,7 +151,10 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 		@Override
 		public String getText(Object element) {
 			if (element instanceof GlobalCommentsNode) {
-				return GLOBAL_COMMENTS_NAME;
+				return org.eclipse.mylyn.internal.reviews.ui.Messages.Reviews_GeneralCommentsText;
+			}
+			if (element instanceof RetrievingContentsNode) {
+				return org.eclipse.mylyn.internal.reviews.ui.Messages.Reviews_RetrievingContents;
 			}
 			if (element instanceof Collection) {
 				Collection<?> collection = (Collection<?>) element;
@@ -205,7 +206,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 		@Override
 		public StyledString getStyledText(Object element) {
 			Styler styler = null;
-			if (element instanceof IComment) {
+			if (element instanceof IComment || element instanceof RetrievingContentsNode) {
 				styler = COMMENT_STYLE;
 			}
 			StyledString styledString = new StyledString(getText(element), styler);
@@ -381,7 +382,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 		@Override
 		public String getText(Object element) {
 			if (element instanceof GlobalCommentsNode) {
-				return GLOBAL_COMMENTS_NAME;
+				return org.eclipse.mylyn.internal.reviews.ui.Messages.Reviews_GeneralCommentsText;
 			}
 			if (element instanceof Collection) {
 				Collection<?> collection = (Collection<?>) element;
@@ -600,6 +601,9 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 	}
 
 	public static String getStatsText(ITopicContainer container) {
+		if (container instanceof IReviewItemSet && ((IReviewItemSet) container).getItems().size() == 0) {
+			return "  [?]";
+		}
 		List<? extends IComment> comments;
 		if (container instanceof IReview) {
 			comments = container.getTopics();

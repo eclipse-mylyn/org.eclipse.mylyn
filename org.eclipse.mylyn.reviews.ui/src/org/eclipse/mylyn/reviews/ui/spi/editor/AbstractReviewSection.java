@@ -11,15 +11,15 @@
 
 package org.eclipse.mylyn.reviews.ui.spi.editor;
 
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.impl.AdapterImpl;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.mylyn.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.AbstractTaskEditorSection;
+import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IReview;
-import org.eclipse.mylyn.reviews.core.model.IReviewGroup;
-import org.eclipse.mylyn.reviews.core.spi.remote.emf.ReviewsRemoteFactoryProvider;
-import org.eclipse.mylyn.reviews.ui.spi.factories.AbstractUiFactoryProvider;
+import org.eclipse.mylyn.reviews.core.spi.remote.emf.IRemoteEmfObserver;
+import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
+import org.eclipse.mylyn.reviews.core.spi.remote.review.IReviewRemoteFactoryProvider;
 import org.eclipse.mylyn.reviews.ui.spi.factories.IUiContext;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -40,29 +40,23 @@ import org.eclipse.ui.forms.widgets.Section;
  * @author Miles Parker
  * @author Steffen Pingel
  */
-public abstract class AbstractReviewSection extends AbstractTaskEditorSection implements IUiContext {
+public abstract class AbstractReviewSection extends AbstractTaskEditorSection implements IUiContext,
+		IRemoteEmfObserver<IRepository, IReview> {
 
 	protected Composite composite;
 
 	protected FormToolkit toolkit;
 
-	protected boolean createdModelControls;
+	protected boolean modelContentsCurrent;
+
+	protected RemoteEmfConsumer<IRepository, IReview, ?, String, String> consumer;
 
 	@Override
 	public void initialize(AbstractTaskEditorPage taskEditorPage) {
 		super.initialize(taskEditorPage);
-		final IReviewGroup group = getReviewEditorPage().getRemoteFactory().getGroup();
-		group.eAdapters().add(new AdapterImpl() {
-			@Override
-			public void notifyChanged(Notification notification) {
-				if (notification.getNotifier() == group) {
-					Object newValue = notification.getNewValue();
-					if (newValue instanceof IReview && ((IReview) newValue).getId().equals(getTaskData().getTaskId())) {
-						checkCreateModelControls();
-					}
-				}
-			}
-		});
+		consumer = getFactoryProvider().getReviewFactory().getConsumerForLocalKey(getFactoryProvider().getRoot(),
+				getTask().getTaskId());
+		consumer.addObserver(this);
 	}
 
 	@Override
@@ -70,33 +64,39 @@ public abstract class AbstractReviewSection extends AbstractTaskEditorSection im
 		this.toolkit = toolkit;
 		composite = toolkit.createComposite(parent);
 		GridLayoutFactory.fillDefaults().extendedMargins(0, 0, 0, 5).applyTo(composite);
-		checkCreateModelControls();
+		checkCreateModelContent();
 		return composite;
 	}
 
 	/**
 	 * We don't know whether the model or the controls will be available first, so we handle both cases here.
 	 */
-	private void checkCreateModelControls() {
-		if (composite != null && !createdModelControls) {
+	private void checkCreateModelContent() {
+		if (composite != null) {
 			if (!composite.isDisposed()) {
-				if (getReviewEditorPage().getReview() != null) {
-					createdModelControls = true;
-					createModelControls();
-					getSection().setText(CommonUiUtil.toLabel(getPartName()));
-				} else {
-					getSection().setText(CommonUiUtil.toLabel(getPartName()) + " [Loading contents...]");
+				if (!modelContentsCurrent && getReview() != null) {
+					modelContentsCurrent = true;
+					createModelContent();
 				}
+				updateMessage();
 			}
 		}
 	}
 
-	@Override
-	public void refresh() {
-		super.refresh();
+	@SuppressWarnings("restriction")
+	private void updateMessage() {
+		if (composite != null) {
+			if (consumer != null && consumer.getModelObject() != null) {
+				getSection().setText(CommonUiUtil.toLabel(getPartName()));
+			} else {
+				getSection().setText(
+						CommonUiUtil.toLabel(getPartName()) + " "
+								+ org.eclipse.mylyn.internal.reviews.ui.Messages.Reviews_RetrievingDetails);
+			}
+		}
 	}
 
-	protected void createModelControls() {
+	protected void createModelContent() {
 	}
 
 	public Label addTextClient(final FormToolkit toolkit, final Section section, String text) {
@@ -151,20 +151,44 @@ public abstract class AbstractReviewSection extends AbstractTaskEditorSection im
 	}
 
 	public IReview getReview() {
-		return getReviewEditorPage().getReview();
+		if (consumer != null) {
+			return consumer.getModelObject();
+		}
+		return null;
 	}
 
 	public TaskRepository getTaskRepository() {
 		return getReviewEditorPage().getTaskRepository();
 	}
 
-	public ReviewsRemoteFactoryProvider getRemoteFactoryProvider() {
-		return getReviewEditorPage().getRemoteFactory();
+	public IRepository getModelRepository() {
+		return (IRepository) getReview().getGroup();
+	}
+
+	public IReviewRemoteFactoryProvider getFactoryProvider() {
+		return getReviewEditorPage().getFactoryProvider();
 	}
 
 	public AbstractReviewTaskEditorPage getReviewEditorPage() {
 		return (AbstractReviewTaskEditorPage) getTaskEditorPage();
 	}
 
-	protected abstract AbstractUiFactoryProvider<?> getUiFactoryProvider();
+	public void created(IRepository parent, IReview object) {
+		//ignore
+	}
+
+	public void updating(IRepository parent, IReview object) {
+		//ignore
+	}
+
+	public void updated(IRepository parent, IReview object, boolean modified) {
+		checkCreateModelContent();
+		if (modified) {
+			refresh();
+		}
+	}
+
+	public void failed(IRepository parent, IReview object, IStatus status) {
+		// ignore
+	}
 }

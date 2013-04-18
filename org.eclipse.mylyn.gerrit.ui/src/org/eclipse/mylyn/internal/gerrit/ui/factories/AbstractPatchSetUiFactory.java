@@ -26,6 +26,7 @@ import org.eclipse.mylyn.internal.gerrit.core.egit.GerritToGitMapping;
 import org.eclipse.mylyn.internal.gerrit.core.remote.GerritRemoteFactoryProvider;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
 import org.eclipse.mylyn.internal.gerrit.ui.egit.EGitUiUtil;
+import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.ui.spi.factories.AbstractUiFactory;
 import org.eclipse.mylyn.reviews.ui.spi.factories.IUiContext;
@@ -46,15 +47,20 @@ public abstract class AbstractPatchSetUiFactory extends AbstractUiFactory<IRevie
 	}
 
 	protected PatchSetDetail getPatchSetDetail() {
-		return getGerritFactoryProvider().getReviewItemSetFactory().getRemoteObject(getModelObject());
+		return getGerritFactoryProvider().getReviewItemSetFactory()
+				.getConsumerForModel(getModelObject().getReview(), getModelObject())
+				.getRemoteObject();
 	}
 
 	protected GerritRemoteFactoryProvider getGerritFactoryProvider() {
-		return (GerritRemoteFactoryProvider) getRemoteFactoryProvider();
+		return (GerritRemoteFactoryProvider) getFactoryProvider();
 	}
 
 	protected GerritChange getChange() {
-		return getGerritFactoryProvider().getReviewFactory().getRemoteObject(getModelObject().getReview());
+		return getGerritFactoryProvider().getReviewFactory()
+				.getConsumerForModel((IRepository) getModelObject().getReview().getGroup(),
+						getModelObject().getReview())
+				.getRemoteObject();
 	}
 
 	protected final String getGerritProject(ChangeDetail changeDetail) {

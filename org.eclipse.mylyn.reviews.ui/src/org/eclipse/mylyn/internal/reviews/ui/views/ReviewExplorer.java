@@ -14,9 +14,10 @@ package org.eclipse.mylyn.internal.reviews.ui.views;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
@@ -25,39 +26,44 @@ import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
+import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsImages;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiConstants;
+import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.internal.reviews.ui.providers.ReviewsLabelProvider;
 import org.eclipse.mylyn.internal.reviews.ui.providers.TableStyledLabelProvider;
 import org.eclipse.mylyn.internal.reviews.ui.providers.TableStyledLabelProvider.TableColumnProvider;
+import org.eclipse.mylyn.reviews.core.model.IFileItem;
+import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IReview;
+import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
+import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
+import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfObserver;
+import org.eclipse.mylyn.reviews.core.spi.remote.review.IReviewRemoteFactoryProvider;
 import org.eclipse.mylyn.reviews.ui.spi.editor.AbstractReviewTaskEditorPage;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPageListener;
 import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.navigator.CommonNavigator;
@@ -69,7 +75,7 @@ import org.eclipse.ui.navigator.INavigatorFilterService;
 /**
  * @author Miles Parker
  */
-public class ReviewExplorer extends CommonNavigator implements ISelectionListener {
+public class ReviewExplorer extends CommonNavigator {
 
 	public static final String SHOW_VIEW_LIST = "showViewList";
 
@@ -87,7 +93,7 @@ public class ReviewExplorer extends CommonNavigator implements ISelectionListene
 
 	private boolean filterForComments;
 
-	private List<IReview> reviews = Collections.emptyList();
+	private IReview review = null;
 
 	private TaskEditor currentPart;
 
@@ -96,6 +102,30 @@ public class ReviewExplorer extends CommonNavigator implements ISelectionListene
 	private ReviewsLabelProvider flatLabelProvider;
 
 	private TableStyledLabelProvider currentProvider;
+
+	private RemoteEmfConsumer<IRepository, IReview, ?, String, String> reviewConsumer;
+
+	private IReviewRemoteFactoryProvider factoryProvider;
+
+	private String taskId;
+
+	private final RemoteEmfObserver<IRepository, IReview> reviewObserver = new RemoteEmfObserver<IRepository, IReview>() {
+		@Override
+		public void created(IRepository parentObject, IReview modelObject) {
+			if (modelObject.getId().equals(taskId) && modelObject != ReviewExplorer.this.review) {
+				setReview(modelObject);
+			}
+		}
+
+		@Override
+		public void updated(IRepository parentObject, IReview modelObject, boolean modified) {
+			if (modified) {
+				updatePerservingSelection();
+			}
+		}
+	};
+
+	private final Map<IReviewItemSet, RemoteEmfObserver<IReviewItemSet, List<IFileItem>>> patchSetObservers = new HashMap<IReviewItemSet, RemoteEmfObserver<IReviewItemSet, List<IFileItem>>>();
 
 	class ShowListAction extends Action {
 		public ShowListAction() {
@@ -161,7 +191,7 @@ public class ReviewExplorer extends CommonNavigator implements ISelectionListene
 		 */
 		@Override
 		public void run() {
-			updatePerservingSelection();
+			refresh();
 		}
 	}
 
@@ -194,6 +224,20 @@ public class ReviewExplorer extends CommonNavigator implements ISelectionListene
 		treeLabelProvider = new ReviewsLabelProvider.Tree();
 		final CommonViewer viewer = super.createCommonViewer(parent);
 		updateTreeViewer(viewer);
+		viewer.addTreeListener(new ITreeViewerListener() {
+			public void treeExpanded(TreeExpansionEvent event) {
+				if (event.getElement() instanceof IReviewItemSet) {
+					IReviewItemSet set = (IReviewItemSet) event.getElement();
+					if (set.getItems().size() == 0) {
+						RemoteEmfObserver<IReviewItemSet, List<IFileItem>> observer = patchSetObservers.get(set);
+						observer.getConsumer().retrieve(false);
+					}
+				}
+			}
+
+			public void treeCollapsed(TreeExpansionEvent event) {
+			}
+		});
 		return viewer;
 	}
 
@@ -294,14 +338,6 @@ public class ReviewExplorer extends CommonNavigator implements ISelectionListene
 		return matches;
 	}
 
-	public void refreshView() {
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				updatePerservingSelection();
-			}
-		});
-	}
-
 	/**
 	 * @see org.eclipse.ui.navigator.CommonNavigator#createPartControl(org.eclipse.swt.widgets.Composite)
 	 */
@@ -347,27 +383,6 @@ public class ReviewExplorer extends CommonNavigator implements ISelectionListene
 
 		updateActivations();
 
-		getViewSite().getPage().addPartListener(new IPartListener() {
-
-			public void partOpened(IWorkbenchPart part) {
-			}
-
-			public void partDeactivated(IWorkbenchPart part) {
-			}
-
-			public void partClosed(IWorkbenchPart part) {
-			}
-
-			public void partBroughtToTop(IWorkbenchPart part) {
-			}
-
-			public void partActivated(IWorkbenchPart part) {
-				if (part == ReviewExplorer.this) {
-					activated();
-				}
-			}
-		});
-
 		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (activePage != null) {
 			handleActivePage(activePage);
@@ -389,82 +404,72 @@ public class ReviewExplorer extends CommonNavigator implements ISelectionListene
 
 	private void handleActivePage(IWorkbenchPage page) {
 		if (page != null) {
-			IEditorPart activeEditor = page.getActiveEditor();
-			if (activeEditor instanceof TaskEditor) {
-				currentPart = (TaskEditor) activeEditor;
-			}
 			page.addPartListener(new IPartListener() {
-
 				public void partOpened(IWorkbenchPart part) {
-					// ignore
-
 				}
 
 				public void partDeactivated(IWorkbenchPart part) {
-					// ignore
-
 				}
 
 				public void partClosed(IWorkbenchPart part) {
 					if (part == currentPart) {
-						clear();
+						currentPart = null;
+						review = null;
+						taskId = null;
+						disposeObservers();
+						update();
 					}
 				}
 
 				public void partBroughtToTop(IWorkbenchPart part) {
-					// ignore
-
 				}
 
 				public void partActivated(IWorkbenchPart part) {
-					// ignore
-
+					partSelected(part);
 				}
 			});
-			activated();
+			partSelected(page.getActiveEditor());
 		}
 	}
 
 	protected void updateContentDescription() {
 		String title = "(No Selection)";
-		Object input = getCommonViewer().getInput();
-		if (input != null && currentPart != null) {
+		if (currentPart != null && currentPart.getTaskEditorInput() != null) {
 			ITask task = currentPart.getTaskEditorInput().getTask();
 			title = "Change " + task.getTaskId() + ": " + task.getSummary();
 		}
 		setContentDescription(title);
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on ISelectionListener.
-	 * Notify the current page that the selection has changed.
-	 */
-	public void selectionChanged(IWorkbenchPart part, ISelection sel) {
-		List<IReview> lastReviews = reviews;
-		if (part instanceof TaskEditor) {
+	protected void partSelected(IWorkbenchPart part) {
+		if (part instanceof TaskEditor && currentPart != part) {
 			TaskEditor editor = (TaskEditor) part;
 			IFormPage page = editor.getActivePageInstance();
 			if (page instanceof AbstractReviewTaskEditorPage) {
-				IReview review = ((AbstractReviewTaskEditorPage) page).getReview();
-				if (review != null) {
-					reviews = Collections.singletonList(review);
-				} else {
-					reviews = Collections.emptyList();
-				}
+				AbstractTaskEditorPage reviewPage = (AbstractTaskEditorPage) page;
+				factoryProvider = ReviewsUiPlugin.getDefault().getFactoryProvider(reviewPage.getConnectorKind(),
+						reviewPage.getTaskRepository());
 				currentPart = (TaskEditor) part;
-
-				if (!reviews.equals(lastReviews)) {
-					update();
-				}
+				setReviewId(reviewPage.getTask().getTaskId());
+				updateContentDescription();
 			}
 		}
 	}
 
-	private void update() {
-		getCommonViewer().setInput(reviews);
-		refreshAction.setEnabled(!reviews.isEmpty());
+	protected void update() {
+		refreshAction.setEnabled(review != null);
+		getCommonViewer().setInput(review);
 		updateContentDescription();
 		getCommonViewer().refresh();
+	}
+
+	protected void refresh() {
+		if (reviewConsumer != null) {
+			reviewConsumer.retrieve(true);
+			for (RemoteEmfObserver<IReviewItemSet, List<IFileItem>> observer : patchSetObservers.values()) {
+				observer.getConsumer().retrieve(true);
+			}
+		}
 	}
 
 	protected void updatePerservingSelection() {
@@ -477,10 +482,10 @@ public class ReviewExplorer extends CommonNavigator implements ISelectionListene
 		getCommonViewer().getControl().setRedraw(false);
 		update();
 		Collection<Object> newExpanded = matchingElements(
-				(ITreeContentProvider) getCommonViewer().getContentProvider(), reviews,
+				(ITreeContentProvider) getCommonViewer().getContentProvider(), review,
 				new HashSet<Object>(Arrays.asList(priorExpanded)), true);
 		Collection<Object> newSelection = matchingElements(
-				(ITreeContentProvider) getCommonViewer().getContentProvider(), reviews,
+				(ITreeContentProvider) getCommonViewer().getContentProvider(), review,
 				new HashSet<Object>(Arrays.asList(priorSelection)), false);
 		getCommonViewer().setExpandedElements(newExpanded.toArray());
 		getCommonViewer().setSelection(new StructuredSelection(newSelection.toArray()), true);
@@ -488,10 +493,58 @@ public class ReviewExplorer extends CommonNavigator implements ISelectionListene
 		getCommonViewer().getControl().redraw();
 	}
 
-	private void clear() {
-		reviews = Collections.emptyList();
-		currentPart = null;
-		update();
+	public void setReview(IReview newReview) {
+		if (review != newReview) {
+			review = newReview;
+			update();
+			if (review != null) {
+				reviewConsumer = factoryProvider.getReviewFactory().getConsumerForModel(factoryProvider.getRoot(),
+						newReview);
+				reviewConsumer.retrieve(false);
+				for (IReviewItemSet newSet : review.getSets()) {
+					RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, ?, String, String> contentConsumer = factoryProvider.getReviewItemSetContentFactory()
+							.getConsumerForLocalKey(newSet, newSet.getId());
+					RemoteEmfObserver<IReviewItemSet, List<IFileItem>> patchSetObserver = new RemoteEmfObserver<IReviewItemSet, List<IFileItem>>(
+							contentConsumer) {
+						@Override
+						public void updated(IReviewItemSet parent, List<IFileItem> items, boolean modified) {
+							if (showList) {
+								getCommonViewer().refresh(true);
+							} else {
+								//Tree, so we can just refresh the parent set, assuming it's currently displayed
+								TreeItem[] rootItems = getCommonViewer().getTree().getItems();
+								boolean parentDisplayed = false;
+								for (TreeItem treeItem : rootItems) {
+									Object data = treeItem.getData();
+									if (data == parent) {
+										parentDisplayed = true;
+										break;
+									}
+								}
+								if (parentDisplayed) {
+									getCommonViewer().refresh(parent, true);
+								} else { //treeitem is currently being filtered (as a non-commented set, for example)
+									getCommonViewer().refresh(true);
+								}
+							}
+						}
+					};
+					patchSetObservers.put(newSet, patchSetObserver);
+				}
+			}
+		}
+	}
+
+	protected void setReviewId(String newTaskId) {
+		if (!newTaskId.equals(taskId)) {
+			taskId = newTaskId;
+			disposeObservers();
+			reviewConsumer = factoryProvider.getReviewFactory().getConsumerForLocalKey(factoryProvider.getRoot(),
+					newTaskId);
+			reviewConsumer.addObserver(reviewObserver);
+			reviewConsumer.retrieve(false);
+			setReview(reviewConsumer.getModelObject());
+		}
 	}
 
 	/**
@@ -506,13 +559,12 @@ public class ReviewExplorer extends CommonNavigator implements ISelectionListene
 		}
 	}
 
-	/**
-	 * @see org.eclipse.ui.navigator.CommonNavigator#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
-	 */
-	@Override
-	public void init(IViewSite site, IMemento memento) throws PartInitException {
-		site.getPage().addPostSelectionListener(this);
-		super.init(site, memento);
+	private void disposeObservers() {
+		for (RemoteEmfObserver<IReviewItemSet, List<IFileItem>> observer : patchSetObservers.values()) {
+			observer.dispose();
+		}
+		patchSetObservers.clear();
+		reviewObserver.dispose();
 	}
 
 	/* (non-Javadoc)
@@ -521,15 +573,11 @@ public class ReviewExplorer extends CommonNavigator implements ISelectionListene
 	@Override
 	public void dispose() {
 		super.dispose();
-		getSite().getPage().removePostSelectionListener(this);
 		//Don't hang on to references
 		flatLabelProvider.doDispose();
 		treeLabelProvider.doDispose();
 		currentPart = null;
-	}
-
-	protected void refreshAll() {
-		refreshView();
+		disposeObservers();
 	}
 
 	public boolean isFlat() {
@@ -600,12 +648,6 @@ public class ReviewExplorer extends CommonNavigator implements ISelectionListene
 
 		updateTreeViewer(getCommonViewer());
 		getCommonViewer().refresh();
-	}
-
-	protected void activated() {
-		if (currentPart instanceof IEditorPart) {
-			selectionChanged(currentPart, StructuredSelection.EMPTY);
-		}
 	}
 
 	public IWorkbenchPart getCurrentPart() {

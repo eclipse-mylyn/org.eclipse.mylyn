@@ -23,6 +23,7 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.gerrit.core.client.PatchSetContent;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
+import org.eclipse.mylyn.internal.gerrit.core.remote.PatchSetContentCompareRemoteFactory;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritReviewBehavior;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
 import org.eclipse.mylyn.internal.reviews.ui.compare.ReviewItemSetCompareEditorInput;
@@ -30,6 +31,7 @@ import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
+import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfObserver;
 import org.eclipse.mylyn.reviews.ui.spi.factories.IUiContext;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -39,6 +41,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -54,6 +57,37 @@ import com.google.gerrit.reviewdb.PatchSet;
  * @author Sebastien Dubois
  */
 public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
+
+	private final class CompareObserver extends RemoteEmfObserver<IReviewItemSet, List<IFileItem>> {
+		private final IReviewItemSet compareSet;
+
+		private final RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, PatchSetContent, PatchSetContent, String> consumer;
+
+		private CompareObserver(IReviewItemSet compareSet,
+				RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, PatchSetContent, PatchSetContent, String> consumer) {
+			this.compareSet = compareSet;
+			this.consumer = consumer;
+		}
+
+		@Override
+		public void updated(IReviewItemSet parentObject, List<IFileItem> modelObject, boolean modified) {
+			CompareConfiguration configuration = new CompareConfiguration();
+			CompareUI.openCompareEditor(new ReviewItemSetCompareEditorInput(configuration, compareSet, null,
+					new GerritReviewBehavior(getTask(), resolveGitRepository())));
+			Display.getCurrent().asyncExec(new Runnable() {
+				@Override
+				public void run() {
+					consumer.removeObserver(CompareObserver.this);
+				}
+			});
+		}
+
+		@Override
+		public void failed(IReviewItemSet parentObject, List<IFileItem> modelObject, IStatus status) {
+			StatusHandler.log(new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID,
+					"Couldn't load task content for review", status.getException())); //$NON-NLS-1$
+		}
+	}
 
 	private PatchSet baseSet;
 
@@ -131,28 +165,17 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 		String basePatchSetLabel = content.getBase() != null ? content.getBase().getPatchSetId() + "" : "Base";
 		compareSet.setName(NLS.bind("Compare Patch Set {0} and {1}", content.getTarget().getPatchSetId(),
 				basePatchSetLabel));
-		RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, PatchSetContent, PatchSetContent, String> consumer = getGerritFactoryProvider().getReviewItemSetContentFactory()
-				.consume("Compare Items", compareSet, content, "", new RemoteEmfConsumer.IObserver<List<IFileItem>>() {
-					public void responded(boolean modified) {
-						CompareConfiguration configuration = new CompareConfiguration();
-						CompareUI.openCompareEditor(new ReviewItemSetCompareEditorInput(configuration, compareSet,
-								null, new GerritReviewBehavior(getTask(), resolveGitRepository())));
-					}
-
-					public void failed(IStatus status) {
-						StatusHandler.log(new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID,
-								"Couldn't load task content for review", status.getException())); //$NON-NLS-1$
-					}
-
-					public void created(List<IFileItem> object) {
-					}
-				});
-		consumer.request();
+		PatchSetContentCompareRemoteFactory remoteFactory = new PatchSetContentCompareRemoteFactory(
+				getGerritFactoryProvider());
+		final RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, PatchSetContent, PatchSetContent, String> consumer = remoteFactory.getConsumerForRemoteObject(
+				compareSet, content);
+		consumer.addObserver(new CompareObserver(compareSet, consumer));
+		consumer.retrieve(false);
 	}
 
 	@Override
 	public boolean isExecutable() {
 		ChangeDetailX changeDetail = getChange().getChangeDetail();
-		return changeDetail != null && changeDetail.getPatchSets().size() > 1;
+		return changeDetail != null && changeDetail.getPatchSets().size() > 0;
 	}
 }

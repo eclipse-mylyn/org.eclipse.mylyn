@@ -15,21 +15,21 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiConstants;
-import org.eclipse.mylyn.internal.reviews.ui.views.ReviewExplorer;
+import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IReview;
-import org.eclipse.mylyn.reviews.core.model.IReviewGroup;
+import org.eclipse.mylyn.reviews.core.spi.remote.emf.IRemoteEmfObserver;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
-import org.eclipse.mylyn.reviews.core.spi.remote.emf.ReviewsRemoteFactoryProvider;
-import org.eclipse.mylyn.reviews.internal.core.model.ReviewsFactory;
+import org.eclipse.mylyn.reviews.core.spi.remote.review.IReviewRemoteFactoryProvider;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 
@@ -38,86 +38,84 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
  * 
  * @author Miles Parker
  */
-public abstract class AbstractReviewTaskEditorPage extends AbstractTaskEditorPage {
+public abstract class AbstractReviewTaskEditorPage extends AbstractTaskEditorPage implements
+		IRemoteEmfObserver<IRepository, IReview> {
 
-	//TODO Much of this class will not be neccesary at all once we have workspace model support and notification working.
-	private ReviewsRemoteFactoryProvider remoteFactory;
+	private RemoteEmfConsumer<IRepository, IReview, ?, String, String> consumer;
 
-	private IReview review;
+	private IReviewRemoteFactoryProvider factoryProvider;
 
-	private RemoteEmfConsumer<IReviewGroup, IReview, ?, String, String> consumer;
+	private boolean refreshRequested;
 
 	public AbstractReviewTaskEditorPage(TaskEditor editor, String id, String label, String connectorKind) {
 		super(editor, id, label, connectorKind);
 	}
 
 	@Override
-	public void init(IEditorSite site, IEditorInput input) {
-		super.init(site, input);
-		IReviewGroup group = ReviewsFactory.eINSTANCE.createReviewGroup();
-		remoteFactory = createRemoteFactory();
-		consumer = remoteFactory.getReviewFactory().consume("Manage", remoteFactory.getGroup(), getTask().getTaskId(),
-				getTask().getTaskId(), new RemoteEmfConsumer.IObserver<IReview>() {
-
-					public void created(IReview review) {
-						AbstractReviewTaskEditorPage.this.review = review;
-					}
-
-					public void responded(boolean modified) {
-					}
-
-					public void failed(final IStatus status) {
-						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-								"Error loading task", status.getException())); //$NON-NLS-1$
-						getTaskEditor().setMessage(
-								org.eclipse.mylyn.internal.tasks.ui.editors.Messages.AbstractTaskEditorPage_Error_opening_task,
-								IMessageProvider.ERROR, new HyperlinkAdapter() {
-									@Override
-									public void linkActivated(HyperlinkEvent event) {
-										TasksUiInternal.displayStatus(
-												org.eclipse.mylyn.internal.tasks.ui.editors.Messages.AbstractTaskEditorPage_Open_failed,
-												status);
-									}
-								});
-					}
-				});
-		consumer.request();
+	public void init(final IEditorSite site, final IEditorInput input) {
+		AbstractReviewTaskEditorPage.super.init(site, input);
+		if (getFactoryProvider() != null) {
+			consumer = getFactoryProvider().getReviewFactory().getConsumerForRemoteKey(getFactoryProvider().getRoot(),
+					getTask().getTaskId());
+			consumer.addObserver(AbstractReviewTaskEditorPage.this);
+			consumer.retrieve(false);
+		}
 	}
 
 	@Override
 	public void refresh() {
-		super.refresh();
-		consumer.request();
+		refreshRequested = true;
+		//We defer the actual refresh until the model is also refreshed. See updated method.
+		consumer.retrieve(true);
 	}
 
-	public void refreshExplorer() {
-		//TODO, we really shouldn't be updating the view directly, it should be listening for model change, but that needs to be implemented with care given EMF update and UI threading concerns, etc.
-		IViewPart view = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow()
-				.getActivePage()
-				.findView(ReviewsUiConstants.REVIEW_EXPLORER_ID);
-		if (view instanceof ReviewExplorer) {
-			((ReviewExplorer) view).refreshView();
+	public IReviewRemoteFactoryProvider getFactoryProvider() {
+		if (factoryProvider == null) {
+			factoryProvider = ReviewsUiPlugin.getDefault().getFactoryProvider(getConnectorKind(), getTaskRepository());
+		}
+		return factoryProvider;
+	}
+
+	public void created(IRepository parent, IReview object) {
+		//ignore
+	}
+
+	public void updating(IRepository parent, IReview object) {
+		//ignore
+	}
+
+	public void updated(IRepository parent, IReview object, boolean modified) {
+		if (refreshRequested) {
+			getTask().getSynchronizationState().isIncoming();
+			//Prevent CME from observer and allow other UI processes time to execute
+			Display.getCurrent().asyncExec(new Runnable() {
+				@Override
+				public void run() {
+					AbstractReviewTaskEditorPage.super.refresh();
+				}
+			});
+			refreshRequested = false;
+		} else if (modified) {
+			if (getTask() instanceof AbstractTask) {
+				//This is a little awkward, as if we have another update source, we'll need to re-refresh from here as well,
+				//but there isn't an obvious way to force the update to occur at this point w/o creating a cycle
+				((AbstractTask) getTask()).setSynchronizationState(ITask.SynchronizationState.INCOMING);
+			}
 		}
 	}
 
-	protected abstract ReviewsRemoteFactoryProvider createRemoteFactory();
-
-	public ReviewsRemoteFactoryProvider getRemoteFactory() {
-		return remoteFactory;
-	}
-
-	/**
-	 * Returns the current review. All instances should provide one open, accessible review model instance at init time,
-	 * and that review should be constant throughout the editor life-cycle.
-	 */
-	public IReview getReview() {
-		return review;
-	}
-
-	@Override
-	public void dispose() {
-		super.dispose();
-		remoteFactory.dispose();
+	public void failed(IRepository parent, IReview object, final IStatus status) {
+		StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+				"Error loading task", status.getException())); //$NON-NLS-1$
+		getTaskEditor().setMessage(
+				org.eclipse.mylyn.internal.tasks.ui.editors.Messages.AbstractTaskEditorPage_Error_opening_task,
+				IMessageProvider.ERROR, new HyperlinkAdapter() {
+					@Override
+					public void linkActivated(HyperlinkEvent event) {
+						TasksUiInternal.displayStatus(
+								org.eclipse.mylyn.internal.tasks.ui.editors.Messages.AbstractTaskEditorPage_Open_failed,
+								status);
+					}
+				});
 	}
 }

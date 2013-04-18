@@ -39,61 +39,65 @@ public class JobRemoteService extends AbstractRemoteService {
 	}
 
 	/**
-	 * Fully implements the {@link AbstractRemoteService#execute(AbstractRemoteConsumer)} contract:
+	 * Fully implements the {@link AbstractRemoteService#retrieve(AbstractRemoteConsumer, boolean)} contract:
 	 * <ol>
 	 * <li>If {@link AbstractRemoteConsumer#isAsynchronous()}, creates and runs a job to
-	 * {@link AbstractRemoteConsumer#retrieve(org.eclipse.core.runtime.IProgressMonitor)} the remote API data.
+	 * {@link AbstractRemoteConsumer#pull(boolean, org.eclipse.core.runtime.IProgressMonitor)} the remote API data.
 	 * Otherwise, simply calls retrieve.</li>
 	 * <li>If a failure occurs, calls {@link AbstractRemoteConsumer#notifyDone(org.eclipse.core.runtime.IStatus)}.</li>
-	 * <li>Invokes {@link AbstractRemoteConsumer#apply()} inside of a modelExec call, so that extending classes can
-	 * manage thread context.</li>
+	 * <li>Invokes {@link AbstractRemoteConsumer#applyModel(boolean)} inside of a modelExec call, so that extending
+	 * classes can manage thread context.</li>
 	 * <li>(No notification occurs in the case of an error while applying.)</li>
 	 * </ol>
 	 */
 	@Override
-	public void execute(final AbstractRemoteConsumer process) {
+	public void retrieve(final AbstractRemoteConsumer process, final boolean force) {
 		if (process.isAsynchronous()) {
-			final Job job = new Job(process.getDescription()) {
+			new Thread() { //We create a new temporary thread here just to ensure that retrieve returns as quickly as possible
 				@Override
-				protected IStatus run(IProgressMonitor monitor) {
-					try {
-						process.retrieve(monitor);
-					} catch (CoreException e) {
-//						return e.getStatus();
-						return new Status(IStatus.WARNING, "org.eclipse.mylyn.reviews.core", "Couldn't update model.",
-								e);
-					} catch (OperationCanceledException e) {
-						return Status.CANCEL_STATUS;
-					}
-					return Status.OK_STATUS;
-				}
-			};
-			job.addJobChangeListener(new JobChangeAdapter() {
-				@Override
-				public void done(final IJobChangeEvent event) {
-					modelExec(new Runnable() {
-						public void run() {
-							final IStatus result = event.getResult();
-							if (result.isOK()) {
-								process.apply();
+				public void run() {
+					final Job job = new Job(process.getDescription()) {
+						@Override
+						protected IStatus run(IProgressMonitor monitor) {
+							try {
+								process.pull(force, monitor);
+							} catch (CoreException e) {
+								return new Status(IStatus.WARNING, "org.eclipse.mylyn.reviews.core",
+										"Couldn't update model.", e);
+							} catch (OperationCanceledException e) {
+								return Status.CANCEL_STATUS;
 							}
-							process.notifyDone(event.getResult());
+							return Status.OK_STATUS;
+						}
+					};
+					job.addJobChangeListener(new JobChangeAdapter() {
+						@Override
+						public void done(final IJobChangeEvent event) {
+							modelExec(new Runnable() {
+								public void run() {
+									final IStatus result = event.getResult();
+									if (result.isOK()) {
+										process.applyModel(force);
+									}
+									process.notifyDone(event.getResult());
+								}
+							});
 						}
 					});
+					addJob(job);
+					job.schedule();
 				}
-			});
-			addJob(job);
-			job.schedule();
+			}.start();
 		} else {
 			try {
-				process.retrieve(new NullProgressMonitor());
+				process.pull(force, new NullProgressMonitor());
 			} catch (CoreException e) {
 				process.notifyDone(e.getStatus());
 				return;
 			}
 			modelExec(new Runnable() {
 				public void run() {
-					process.apply();
+					process.applyModel(force);
 					process.notifyDone(Status.OK_STATUS);
 				}
 			});
@@ -144,7 +148,7 @@ public class JobRemoteService extends AbstractRemoteService {
 	}
 
 	@Override
-	public void modelExec(Runnable runnable) {
+	public void modelExec(Runnable runnable, boolean block) {
 		runnable.run();
 	}
 }

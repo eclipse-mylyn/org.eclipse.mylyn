@@ -28,21 +28,26 @@ public abstract class AbstractRemoteConsumer {
 	 * Override to perform the request against remote API, storing the results of that request as state (e.g. as
 	 * member(s) field of an implementing class). May be long-running and should be able to safely fail.
 	 * 
+	 * @param force
+	 *            pull from remote even when API doesn't require
 	 * @param monitor
 	 * @throws CoreException
 	 */
-	protected abstract void retrieve(IProgressMonitor monitor) throws CoreException;
+	protected abstract void pull(boolean force, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Override to apply the remotely obtained state to a local model object. This method is expected to execute
 	 * <em>very</em> quickly, as the typical implementation will occur on the UI thread.
 	 * 
+	 * @param force
+	 *            apply the changes even when API doesn't require
 	 * @throws CoreException
 	 */
-	protected abstract void apply();
+	protected abstract void applyModel(boolean force);
 
 	/**
-	 * Provides notification of failure. See {@link AbstractRemoteService#execute(AbstractRemoteProcess)} for details.
+	 * Provides notification of failure. See {@link AbstractRemoteService#retrieve(AbstractRemoteProcess, boolean)} for
+	 * details.
 	 */
 	public abstract void notifyDone(IStatus status);
 
@@ -64,4 +69,12 @@ public abstract class AbstractRemoteConsumer {
 	 * @return
 	 */
 	public abstract String getDescription();
+
+	/**
+	 * Returns {@link #getDescription()}.
+	 */
+	@Override
+	public String toString() {
+		return getDescription();
+	}
 }

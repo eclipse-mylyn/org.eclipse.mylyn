@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.client.compat;
 
+import java.util.List;
+
 import com.google.gerrit.common.data.ChangeDetail;
 
 /**
@@ -42,6 +44,8 @@ public class ChangeDetailX extends ChangeDetail {
 
 	private boolean canEdit;
 
+	protected List<SubmitRecord> submitRecords;
+
 	public boolean canRevert() {
 		return canRevert;
 	}
@@ -62,4 +66,11 @@ public class ChangeDetailX extends ChangeDetail {
 		return canDeleteDraft;
 	}
 
+	public List<SubmitRecord> getSubmitRecords() {
+		return submitRecords;
+	}
+
+	public void setSubmitRecords(List<SubmitRecord> submitRecords) {
+		this.submitRecords = submitRecords;
+	}
 }

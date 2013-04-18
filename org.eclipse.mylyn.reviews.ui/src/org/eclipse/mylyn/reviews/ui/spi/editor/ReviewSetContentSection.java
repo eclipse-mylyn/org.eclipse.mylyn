@@ -13,7 +13,6 @@
 package org.eclipse.mylyn.reviews.ui.spi.editor;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,11 +37,13 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
+import org.eclipse.mylyn.reviews.core.spi.remote.emf.IRemoteEmfObserver;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.FormColors;
@@ -60,7 +61,7 @@ import org.eclipse.ui.forms.widgets.Section;
  * @author Miles Parker
  * @author Sam Davis
  */
-public class ReviewSetContentSection {
+public class ReviewSetContentSection implements IRemoteEmfObserver<IReviewItemSet, List<IFileItem>> {
 
 	private static final int MAXIMUM_ITEMS_SHOWN = 30;
 
@@ -78,7 +79,11 @@ public class ReviewSetContentSection {
 
 	private boolean createdContentSection;
 
-	private boolean retrievedModelContents;
+	private boolean requestedModelContents;
+
+	private boolean modelContentsCurrent;
+
+	private Composite tableContainer;
 
 	public ReviewSetContentSection(ReviewSetSection parentSection, final IReviewItemSet set) {
 		this.parentSection = parentSection;
@@ -86,55 +91,35 @@ public class ReviewSetContentSection {
 		int style = ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT
 				| ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT;
 		//We assume that the last item is also the "current" item
-		List<IReviewItem> items = new ArrayList<IReviewItem>(set.getReview().getSets());
+		List<IReviewItemSet> items = set.getReview().getSets();
 		if (items.get(items.size() - 1) == set) {
 			style |= ExpandableComposite.EXPANDED;
 		}
 		consumer = getParentSection().getReviewEditorPage()
-				.getRemoteFactory()
+				.getFactoryProvider()
 				.getReviewItemSetContentFactory()
-				.consume("Managing Review Set", set, set.getItems(),
-						new RemoteEmfConsumer.IObserver<List<IFileItem>>() {
-
-							public void responded(boolean modified) {
-								retrievedModelContents = true;
-								checkCreateModelControls();
-							}
-
-							public void failed(IStatus status) {
-								StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-										"Error loading patch set", status.getException())); //$NON-NLS-1$
-								AbstractReviewSection.appendMessage(getParentSection().getSection(),
-										"Couldn't load patch set.");
-							}
-
-							public void created(List<IFileItem> object) {
-							}
-						});
+				.getConsumerForRemoteKey(set, set.getId());
+		consumer.addObserver(this);
 		section = parentSection.getToolkit().createSection(parentSection.getComposite(), style);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(section);
 		section.setText(set.getName());
 		section.setTitleBarForeground(parentSection.getToolkit().getColors().getColor(IFormColors.TITLE));
 
 		parentSection.addTextClient(parentSection.getToolkit(), section, "", false); //$NON-NLS-1$
-		updateControls(false);
+		updateMessage();
 
 		if (section.isExpanded()) {
-			createContents();
-			checkCreateModelControls();
+			onExpanded();
 		}
 		section.addExpansionListener(new ExpansionAdapter() {
 			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
-				if (section.getClient() == null) {
-					createContents();
-					checkCreateModelControls();
-				}
+				onExpanded();
 			}
 		});
 	}
 
-	public void updateControls(boolean cachingInProgress) {
+	public void updateMessage() {
 		String message;
 
 		String time = DateFormat.getDateTimeInstance().format(set.getCreationDate());
@@ -145,21 +130,20 @@ public class ReviewSetContentSection {
 			message = NLS.bind("{0}", time);
 		}
 
-		if (cachingInProgress) {
-			message += " [Caching contents...]";
+		if (consumer.isRetrieving()) {
+			message += " " + org.eclipse.mylyn.internal.reviews.ui.Messages.Reviews_RetrievingContents;
 		}
 
 		AbstractReviewSection.appendMessage(getSection(), message);
 	}
 
 	protected void onExpanded() {
-		//We assume that if we have any items that the review has been updated, and that all review sets have at least one review item (e.g. commit message)
-		boolean contentRetrieved = set.getItems().size() > 0;
-		updateControls(!contentRetrieved);
-		if (!contentRetrieved) {
-			contentRetrieved = true;
-			consumer.request();
+		updateMessage();
+		if (!requestedModelContents) {
+			consumer.retrieve(false);
+			requestedModelContents = true;
 		}
+		checkCreateModelControls();
 	}
 
 	void createContents() {
@@ -173,14 +157,22 @@ public class ReviewSetContentSection {
 		authorLabel.setText("Author");
 
 		Text authorText = new Text(composite, SWT.READ_ONLY);
-		authorText.setText(set.getAddedBy().getDisplayName());
+		if (set.getAddedBy() != null) {
+			authorText.setText(set.getAddedBy().getDisplayName());
+		} else {
+			authorText.setText("Unspecified");
+		}
 
 		Label committerLabel = new Label(composite, SWT.NONE);
 		committerLabel.setForeground(colors.getColor(IFormColors.TITLE));
 		committerLabel.setText("Committer");
 
 		Text committerText = new Text(composite, SWT.READ_ONLY);
-		committerText.setText(set.getCommittedBy().getDisplayName());
+		if (set.getCommittedBy() != null) {
+			committerText.setText(set.getCommittedBy().getDisplayName());
+		} else {
+			committerText.setText("Unspecified");
+		}
 
 		Label commitLabel = new Label(composite, SWT.NONE);
 		commitLabel.setForeground(colors.getColor(IFormColors.TITLE));
@@ -204,6 +196,19 @@ public class ReviewSetContentSection {
 		Text refText = new Text(composite, SWT.READ_ONLY);
 		refText.setText(set.getReference());
 
+		tableContainer = new Composite(composite, SWT.NONE);
+		tableContainer.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GRAY));
+		GridDataFactory.fillDefaults().span(2, 1).grab(true, true).applyTo(tableContainer);
+		GridLayoutFactory.fillDefaults().numColumns(2).applyTo(tableContainer);
+
+		Composite actionComposite = getParentSection().getUiFactoryProvider().createButtons(getParentSection(),
+				composite, parentSection.getToolkit(), set);
+		GridDataFactory.fillDefaults().span(2, 1).applyTo(actionComposite);
+
+		parentSection.getTaskEditorPage().reflow();
+	}
+
+	public void createItemSetTable(Composite composite) {
 		boolean fixedViewerSize = set.getItems().size() > MAXIMUM_ITEMS_SHOWN;
 		int heightHint = fixedViewerSize ? 300 : SWT.DEFAULT;
 		int style = SWT.SINGLE | SWT.BORDER | SWT.VIRTUAL;
@@ -274,35 +279,28 @@ public class ReviewSetContentSection {
 				}
 			}
 		});
-
-		Composite actionComposite = getParentSection().getUiFactoryProvider().createButtons(getParentSection(),
-				composite, parentSection.getToolkit(), set);
-		GridDataFactory.fillDefaults().span(2, 1).applyTo(actionComposite);
-
-		onExpanded();
 		EditorUtil.addScrollListener(viewer.getTable());
-
-		parentSection.getTaskEditorPage().reflow();
 	}
 
 	/**
 	 * We don't know whether the model or the controls will be available first, so we handle both cases here.
 	 */
 	private void checkCreateModelControls() {
-		if (retrievedModelContents && !createdContentSection && viewer != null && !viewer.getControl().isDisposed()
-				&& section.isExpanded()) {
-			createdContentSection = true;
-			createModelControls();
+		if (section.isExpanded()) {
+			if (!createdContentSection) {
+				createdContentSection = true;
+				createContents();
+			}
+			if (requestedModelContents && !set.getItems().isEmpty() && ((viewer == null || !modelContentsCurrent))) {
+				modelContentsCurrent = true;
+				if (viewer == null) {
+					createItemSetTable(tableContainer);
+				}
+				viewer.setInput(set);
+				getParentSection().getTaskEditorPage().reflow();
+			}
 		}
-	}
-
-	private void createModelControls() {
-		viewer.setInput(set);
-		if (getParentSection().getTaskEditorPage() instanceof AbstractReviewTaskEditorPage) {
-			((AbstractReviewTaskEditorPage) getParentSection().getTaskEditorPage()).refreshExplorer();
-		}
-		updateControls(false);
-		getParentSection().getTaskEditorPage().reflow();
+		updateMessage();
 	}
 
 	public Section getSection() {
@@ -313,18 +311,26 @@ public class ReviewSetContentSection {
 		return parentSection;
 	}
 
-	public void updated() {
-		// ignore
-
+	public void created(IReviewItemSet parent, List<IFileItem> object) {
 	}
 
-	public void failure(IStatus status) {
-		// ignore
-
+	public void updating(IReviewItemSet parent, List<IFileItem> object) {
+		updateMessage();
 	}
 
-	public void created(List<IReviewItem> object) {
-		// ignore
+	public void updated(IReviewItemSet parent, List<IFileItem> object, boolean modified) {
+		modelContentsCurrent &= !modified;
+		checkCreateModelControls();
+	}
 
+	public void failed(IReviewItemSet parent, List<IFileItem> object, IStatus status) {
+		StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+				"Error loading patch set", status.getException())); //$NON-NLS-1$
+		AbstractReviewSection.appendMessage(getParentSection().getSection(), "Couldn't load patch set.");
+	}
+
+	public void dispose() {
+		consumer.removeObserver(this);
+		section.dispose();
 	}
 }

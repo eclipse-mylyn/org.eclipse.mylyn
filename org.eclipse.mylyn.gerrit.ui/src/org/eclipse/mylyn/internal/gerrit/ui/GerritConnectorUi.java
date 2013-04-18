@@ -45,6 +45,7 @@ import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
  * @author Thomas Westling
  * @author Steffen Pingel
  * @author Kevin Sawicki
+ * @author Miles Parker
  */
 public class GerritConnectorUi extends AbstractRepositoryConnectorUi {
 
@@ -134,5 +135,4 @@ public class GerritConnectorUi extends AbstractRepositoryConnectorUi {
 		}
 		return links != null ? links.toArray(new IHyperlink[links.size()]) : null;
 	}
-
 }

@@ -11,37 +11,48 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.remote;
 
+import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.sameInstance;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertThat;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.gerrit.tests.support.GerritHarness;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.PatchSetContent;
+import org.eclipse.mylyn.reviews.core.model.IApprovalType;
+import org.eclipse.mylyn.reviews.core.model.IChange;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IFileVersion;
+import org.eclipse.mylyn.reviews.core.model.IRepository;
+import org.eclipse.mylyn.reviews.core.model.IRequirementEntry;
+import org.eclipse.mylyn.reviews.core.model.IRequirementReviewState;
 import org.eclipse.mylyn.reviews.core.model.IReview;
-import org.eclipse.mylyn.reviews.core.model.IReviewGroup;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
+import org.eclipse.mylyn.reviews.core.model.IReviewerEntry;
 import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
 import org.eclipse.mylyn.reviews.core.model.ITopic;
+import org.eclipse.mylyn.reviews.core.model.IUser;
+import org.eclipse.mylyn.reviews.core.model.RequirementStatus;
 import org.eclipse.mylyn.reviews.core.spi.remote.JobRemoteService;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,18 +67,17 @@ public class GerritRemoteFactoryTest extends TestCase {
 
 	private GerritClient client;
 
-	private GerritRemoteFactoryProvider service;
+	private GerritRemoteFactoryProvider factoryProvider;
 
 	private GerritHarness harness;
 
 	@Override
 	@Before
 	public void setUp() throws Exception {
-		//TODO -- we shouldn't be using eclipse as test host, but I can't find a test gerrit instance that is working
 		harness = GerritFixture.current().harness();
 		client = harness.client();
-		TaskRepository repository = GerritFixture.current().singleRepository();
-		service = new GerritRemoteFactoryProvider(new JobRemoteService(), client);
+		factoryProvider = new GerritRemoteFactoryProvider(client);
+		factoryProvider.setService(new JobRemoteService());
 	}
 
 	@Override
@@ -76,80 +86,25 @@ public class GerritRemoteFactoryTest extends TestCase {
 		harness.dispose();
 	}
 
-	private final class TestListener<T> implements RemoteEmfConsumer.IObserver<T> {
-
-		T createdObject;
-
-		int updated;
-
-		IStatus failure;
-
-		@Override
-		public void created(T object) {
-			createdObject = object;
-		}
-
-		@Override
-		public void responded(boolean modified) {
-			updated++;
-		}
-
-		@Override
-		public void failed(org.eclipse.core.runtime.IStatus status) {
-			failure = status;
-		}
-
-		protected void waitForUpdate() {
-			long delay;
-			delay = 0;
-			while (delay < 10000) {
-				if (updated < 1) {
-					try {
-						Thread.sleep(10);
-						delay += 10;
-					} catch (InterruptedException e) {
-					}
-				} else {
-					break;
-				}
-			}
-			assertThat(updated, greaterThan(0));
-		}
-
-		protected void waitForFailure() {
-			long delay = 0;
-			while (delay < 10000) {
-				if (failure == null) {
-					try {
-						Thread.sleep(10);
-						delay += 10;
-					} catch (InterruptedException e) {
-					}
-				} else {
-					break;
-				}
-			}
-		}
-
-		void clear() {
-			createdObject = null;
-			updated = 0;
-			failure = null;
-		}
-	}
-
 	@Test
 	public void testReviewFactory() throws CoreException {
-		IReviewGroup group = IReviewsFactory.INSTANCE.createReviewGroup();
-		TestListener<IReview> reviewListener = new TestListener<IReview>();
-		RemoteEmfConsumer<IReviewGroup, IReview, GerritChange, String, String> consumer = service.getReviewFactory()
-				.consume("Test Get Review", group, "2", "2", reviewListener);
-		consumer.request();
-		reviewListener.waitForUpdate();
+		IRepository group = IReviewsFactory.INSTANCE.createRepository();
+		TestRemoteObserver<IRepository, IReview> reviewListener = new TestRemoteObserver<IRepository, IReview>(
+				factoryProvider.getReviewFactory());
+		RemoteEmfConsumer<IRepository, IReview, GerritChange, String, String> consumer = factoryProvider.getReviewFactory()
+				.getConsumerForRemoteKey(group, "2");
+		consumer.addObserver(reviewListener);
+		consumer.retrieve(false);
+		reviewListener.waitForResponse(1, 1);
+
 		assertThat(group.getReviews().size(), is(1));
 		IReview review = group.getReviews().get(0);
 		assertThat(review, notNullValue());
 		assertThat(review.getId(), is("2"));
+		assertThat(review.getKey(), is("I2fcca48e6ae767e779cc428540cbe3fac6df1eb3"));
+		assertThat(review.getSubject(), is("Create Remote Test Review"));
+		assertThat(review.getMessage(), startsWith("Create Remote Test Review"));
+		assertThat(review.getMessage(), endsWith("<tests@mylyn.eclipse.org>"));
 		assertThat(review.getOwner().getDisplayName(), is("Mylyn Test User"));
 		Calendar reviewCreated = Calendar.getInstance();
 		reviewCreated.setTime(review.getCreationDate());
@@ -162,12 +117,12 @@ public class GerritRemoteFactoryTest extends TestCase {
 		List<ITopic> topics = review.getTopics();
 		assertThat(topics.size(), greaterThan(2));
 		ITopic topic = topics.get(0);
-		assertThat(topic.getAuthor().getDisplayName(), is("Mylyn Test User"));
-		assertThat(topic.getDescription(), is("Uploaded patch set 2."));
-		assertThat(topic.getComments().size(), is(1));
 		IComment comment = topic.getComments().get(0);
 		assertThat(comment.getAuthor().getDisplayName(), is("Mylyn Test User"));
 		assertThat(comment.getDescription(), is("Uploaded patch set 2."));
+		assertThat(topic.getAuthor().getDisplayName(), is("Mylyn Test User"));
+		assertThat(topic.getDescription(), is("Uploaded patch set 2."));
+		assertThat(topic.getComments().size(), is(1));
 
 		List<IReviewItemSet> items = review.getSets();
 		assertThat(items.size(), greaterThan(1));
@@ -191,63 +146,136 @@ public class GerritRemoteFactoryTest extends TestCase {
 		//TODO -- we need to get update time here, not creation time. Not clear where gerrit API provides this
 		assertThat(patch2Created.get(Calendar.MINUTE), is(9));
 		assertThat(patchSet2.getReference(), is("refs/changes/02/2/2"));
+
+		assertThat(group.getUsers().size(), is(1));
+		assertThat(group.getUsers().get(0).getDisplayName(), is("Mylyn Test User"));
+
+		//Approvals
+		assertThat(group.getApprovalTypes().size(), is(2));
+		IApprovalType verifyApproval = group.getApprovalTypes().get(0);
+		assertThat(verifyApproval.getKey(), is("VRIF"));
+		assertThat(verifyApproval.getName(), is("Verified"));
+		IApprovalType codeReviewApproval = group.getApprovalTypes().get(1);
+		assertThat(codeReviewApproval.getKey(), is("CRVW"));
+		assertThat(codeReviewApproval.getName(), is("Code Review"));
+
+		assertThat(review.getReviewerApprovals().size(), is(1));
+		Entry<IUser, IReviewerEntry> reviewerEntry = review.getReviewerApprovals().entrySet().iterator().next();
+		Map<IApprovalType, Integer> reviewerApprovals = reviewerEntry.getValue().getApprovals();
+		assertThat(reviewerApprovals.size(), is(1));
+		Entry<IApprovalType, Integer> next = reviewerApprovals.entrySet().iterator().next();
+		assertThat(next.getKey(), sameInstance(codeReviewApproval));
+		assertThat(next.getValue(), is(1));
+
+		Set<Entry<IApprovalType, IRequirementEntry>> reviewApprovals = review.getRequirements().entrySet();
+		assertThat(reviewApprovals.size(), is(2));
+		IRequirementEntry codeReviewEntry = review.getRequirements().get(codeReviewApproval);
+		assertThat(codeReviewEntry, notNullValue());
+		assertThat(codeReviewEntry.getBy(), nullValue());
+		assertThat(codeReviewEntry.getStatus(), is(RequirementStatus.NOT_SATISFIED));
+		IRequirementEntry verifyEntry = review.getRequirements().get(verifyApproval);
+		assertThat(verifyEntry, notNullValue());
+		assertThat(verifyEntry.getBy(), nullValue());
+		assertThat(verifyEntry.getStatus(), is(RequirementStatus.NOT_SATISFIED));
+
+		assertThat(review.getState(), instanceOf(IRequirementReviewState.class));
+		assertThat(((IRequirementReviewState) review.getState()).getStatus(), is(RequirementStatus.NOT_SATISFIED));
+		assertThat(((IRequirementReviewState) review.getState()).getDescriptor(), is("NotSatisfied"));
+
+		//Dependencies
+		assertThat(review.getParents().size(), is(1));
+		IChange parentChange = review.getParents().get(0);
+		assertThat(parentChange.getId(), is("1"));
+		assertThat(parentChange.getKey(), is("I4c72e71a1bce68eff290c55b52b066b15a95a7b9"));
+		assertThat(parentChange.getSubject(), is("Test Review Commit"));
+		assertThat(parentChange.getMessage(), nullValue());
+		assertThat(parentChange.getOwner().getDisplayName(), is("Mylyn Test User"));
+
+		assertThat(review.getChildren().size(), is(1));
+		IChange childChange = review.getChildren().get(0);
+		assertThat(childChange.getId(), is("3"));
+		assertThat(childChange.getKey(), is("Id6475a8d1546943ed9d98139d5b553961bceb42b"));
+		assertThat(childChange.getSubject(), is("New Manual Test"));
+		assertThat(childChange.getMessage(), nullValue());
+		assertThat(childChange.getOwner().getDisplayName(), is("Mylyn Test User"));
 	}
 
 	@Test
 	public void testPatchSetContentFactory() throws CoreException {
-		IReviewGroup group = IReviewsFactory.INSTANCE.createReviewGroup();
-		TestListener<IReview> reviewListener = new TestListener<IReview>();
-		RemoteEmfConsumer<IReviewGroup, IReview, GerritChange, String, String> consumer = service.getReviewFactory()
-				.consume("Test Get Review", group, "2", "2", reviewListener);
-		consumer.request();
-		reviewListener.waitForUpdate();
+		IRepository group = IReviewsFactory.INSTANCE.createRepository();
+		TestRemoteObserver<IRepository, IReview> reviewListener = new TestRemoteObserver<IRepository, IReview>(
+				factoryProvider.getReviewFactory());
+		RemoteEmfConsumer<IRepository, IReview, GerritChange, String, String> reviewConsumer = factoryProvider.getReviewFactory()
+				.getConsumerForRemoteKey(group, "2");
+		reviewConsumer.addObserver(reviewListener);
+		reviewConsumer.retrieve(false);
+		reviewListener.waitForResponse(1, 1);
+
 		assertThat(group.getReviews().size(), is(1));
 		IReview review = group.getReviews().get(0);
+		assertThat(review.getId(), is("2"));
+		assertThat(review.getSubject(), is("Create Remote Test Review"));
 
-		PatchSetContentRemoteFactory patchFactory = service.getReviewItemSetContentFactory();
-		assertThat(review.getSets().size(), greaterThan(2));
-		IReviewItemSet patchSet4 = review.getSets().get(3);
-		PatchSetDetail detail = service.getReviewItemSetFactory().getRemoteObject(patchSet4);
+		IReviewItemSet testPatchSet = review.getSets().get(3);
+		RemoteEmfConsumer<IReview, IReviewItemSet, PatchSetDetail, PatchSetDetail, String> itemSetConsumer = factoryProvider.getReviewItemSetFactory()
+				.getConsumerForLocalKey(review, "4");
+		itemSetConsumer.retrieve(false);
+		PatchSetDetail detail = itemSetConsumer.getRemoteObject();
+		assertThat(detail.getInfo().getKey().get(), is(4));
+
 		PatchSetContent content = new PatchSetContent((PatchSet) null, detail);
-		TestListener<List<IFileItem>> reviewItemListener = new TestListener<List<IFileItem>>();
-		RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, PatchSetContent, PatchSetContent, String> patchSetConsumer = patchFactory.consume(
-				"CompareItems", patchSet4, content, "", reviewItemListener);
-		patchSetConsumer.request();
-		reviewItemListener.waitForUpdate();
-		List<IFileItem> fileItems = patchSet4.getItems();
+
+		PatchSetContentIdRemoteFactory patchFactory = factoryProvider.getReviewItemSetContentFactory();
+		assertThat(review.getSets().size(), greaterThan(2));
+		List<IFileItem> fileItems = testPatchSet.getItems();
+		assertThat(fileItems.size(), is(0));
+		TestRemoteObserver<IReviewItemSet, List<IFileItem>> patchSetListener = new TestRemoteObserver<IReviewItemSet, List<IFileItem>>(
+				patchFactory);
+		RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, PatchSetContent, String, String> patchSetConsumer = patchFactory.getConsumerForRemoteKey(
+				testPatchSet, "4");
+		patchSetConsumer.addObserver(patchSetListener);
+		patchSetConsumer.retrieve(false);
+		patchSetListener.waitForResponse(1, 1);
+
 		assertThat(fileItems.size(), is(3));
 		for (IReviewItem fileItem : fileItems) {
 			assertThat(fileItem, instanceOf(IFileItem.class));
+			assertThat(fileItem.getAddedBy().getDisplayName(), is("Mylyn Test User"));
+			assertThat(fileItem.getCommittedBy().getDisplayName(), is("Mylyn Test User"));
 		}
-		IFileItem fileItem = fileItems.get(2);
-		assertThat(fileItem.getAddedBy().getDisplayName(), is("Mylyn Test User"));
-		assertThat(fileItem.getCommittedBy().getDisplayName(), is("Mylyn Test User"));
-		//TODO Shouldn't name be last segment only?
-		assertThat(fileItem.getName(), is("mylyn.test.files/item_remote_test_2.txt"));
+		IFileItem fileItem0 = fileItems.get(0);
+		assertThat(fileItem0.getName(), is("/COMMIT_MSG"));
 
-		IFileVersion base = fileItem.getBase();
-		assertThat(base.getAddedBy(), nullValue());
-		assertThat(base.getCommittedBy(), nullValue());
-		assertThat(base.getContent(), is(""));
-		assertThat(base.getId(), is("base-2,4,mylyn.test.files/item_remote_test_2.txt"));
-		assertThat(base.getName(), is("mylyn.test.files/item_remote_test_2.txt"));
-		assertThat(base.getPath(), nullValue());
-		assertThat(base.getReference(), nullValue());
-		assertThat(base.getDescription(), is("Base"));
+		IFileItem fileItem1 = fileItems.get(1);
+		assertThat(fileItem1.getName(), is("mylyn.test.files/item_remote_test.txt"));
 
-		IFileVersion target = fileItem.getTarget();
-		assertThat(target.getAddedBy().getDisplayName(), is("Mylyn Test User"));
-		assertThat(target.getCommittedBy().getDisplayName(), is("Mylyn Test User"));
-		assertThat(target.getContent(), is("(Added for comment test review. V2)"));
-		assertThat(target.getId(), is("2,4,mylyn.test.files/item_remote_test_2.txt"));
-		assertThat(target.getName(), is("mylyn.test.files/item_remote_test_2.txt"));
-		assertThat(target.getPath(), is("mylyn.test.files/item_remote_test_2.txt"));
-		assertThat(target.getReference(), nullValue());
-		assertThat(target.getDescription(), is("Patch Set 4"));
+		IFileItem fileItem2 = fileItems.get(2);
+		assertThat(fileItem2.getName(), is("mylyn.test.files/item_remote_test_2.txt"));
 
-		List<IComment> allComments = target.getAllComments();
+		IFileVersion base2 = fileItem2.getBase();
+		assertThat(base2.getAddedBy(), nullValue());
+		assertThat(base2.getCommittedBy(), nullValue());
+		assertThat(base2.getContent(), is(""));
+		assertThat(base2.getId(), is("base-2,4,mylyn.test.files/item_remote_test_2.txt"));
+		assertThat(base2.getName(), is("mylyn.test.files/item_remote_test_2.txt"));
+		assertThat(base2.getPath(), nullValue());
+		assertThat(base2.getReference(), nullValue());
+		assertThat(base2.getDescription(), is("Base"));
+
+		IFileVersion target2 = fileItem2.getTarget();
+		assertThat(target2.getAddedBy().getDisplayName(), is("Mylyn Test User"));
+		assertThat(target2.getCommittedBy().getDisplayName(), is("Mylyn Test User"));
+		assertThat(target2.getContent(), is("(Added for comment test review. V2)"));
+		assertThat(target2.getId(), is("2,4,mylyn.test.files/item_remote_test_2.txt"));
+		assertThat(target2.getName(), is("mylyn.test.files/item_remote_test_2.txt"));
+		assertThat(target2.getPath(), is("mylyn.test.files/item_remote_test_2.txt"));
+		assertThat(target2.getReference(), nullValue());
+		assertThat(target2.getDescription(), is("Patch Set 4"));
+
+		List<IComment> allComments = target2.getAllComments();
 		assertThat(allComments.size(), is(1));
 		IComment fileComment = allComments.get(0);
+		assertThat(fileComment, notNullValue());
 		assertThat(fileComment.getAuthor().getDisplayName(), is("Mylyn Test User"));
 		assertThat(fileComment.getDescription(), is("Changed the version."));
 	}

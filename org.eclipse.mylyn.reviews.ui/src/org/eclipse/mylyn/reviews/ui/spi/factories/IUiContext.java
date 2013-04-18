@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.reviews.ui.spi.factories;
 
-import org.eclipse.mylyn.reviews.core.spi.remote.AbstractRemoteFactoryProvider;
+import org.eclipse.mylyn.reviews.core.spi.remote.review.IReviewRemoteFactoryProvider;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -42,5 +42,5 @@ public interface IUiContext {
 
 	TaskRepository getTaskRepository();
 
-	AbstractRemoteFactoryProvider getRemoteFactoryProvider();
+	IReviewRemoteFactoryProvider getFactoryProvider();
 }

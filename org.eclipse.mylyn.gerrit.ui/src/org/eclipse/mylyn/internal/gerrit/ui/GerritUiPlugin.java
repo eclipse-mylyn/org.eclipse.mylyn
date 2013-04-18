@@ -72,5 +72,4 @@ public class GerritUiPlugin extends AbstractUIPlugin {
 		}
 		return operationFactory;
 	}
-
 }

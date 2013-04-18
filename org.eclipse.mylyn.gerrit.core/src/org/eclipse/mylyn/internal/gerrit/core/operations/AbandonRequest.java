@@ -43,7 +43,7 @@ public class AbandonRequest extends AbstractRequest<ChangeDetail> {
 
 	@Override
 	protected ChangeDetail execute(GerritClient client, IProgressMonitor monitor) throws GerritException {
-		return client.abondon(getReviewId(), getPatchSetId(), getMessage(), monitor);
+		return client.abandon(getReviewId(), getPatchSetId(), getMessage(), monitor);
 	}
 
 }

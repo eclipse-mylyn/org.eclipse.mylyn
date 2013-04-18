@@ -22,12 +22,12 @@ import org.eclipse.swt.widgets.Display;
 public class RemoteUiService extends JobRemoteService {
 
 	@Override
-	public void modelExec(final Runnable runnable) {
-		getDisplayThread().asyncExec(new Runnable() {
-			public void run() {
-				runnable.run();
-			}
-		});
+	public void modelExec(final Runnable runnable, boolean block) {
+		if (block) {
+			getDisplayThread().syncExec(runnable);
+		} else {
+			getDisplayThread().asyncExec(runnable);
+		}
 	}
 
 	private Display getDisplayThread() {

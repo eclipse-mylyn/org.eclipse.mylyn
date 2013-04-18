@@ -39,7 +39,9 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritLoginException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritSystemInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.internal.gerrit.core.remote.GerritRemoteFactoryProvider;
+import org.eclipse.mylyn.reviews.core.spi.remote.AbstractRemoteFactoryProvider;
+import org.eclipse.mylyn.reviews.internal.core.ReviewsConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
@@ -63,7 +65,7 @@ import com.google.gwtorm.server.StandardKeyEncoder;
  * @author Sascha Scholz
  * @author Miles Parker
  */
-public class GerritConnector extends AbstractRepositoryConnector {
+public class GerritConnector extends ReviewsConnector {
 
 	static Logger logger = Logger.getLogger("com.google.gson.ParameterizedTypeHandlerMap"); //$NON-NLS-1$
 
@@ -404,4 +406,8 @@ public class GerritConnector extends AbstractRepositoryConnector {
 		return "MERGED".equals(status) || "ABANDONED".equals(status);
 	}
 
+	@Override
+	public AbstractRemoteFactoryProvider createFactoryProvider(TaskRepository repository) {
+		return new GerritRemoteFactoryProvider(getClient(repository));
+	}
 }

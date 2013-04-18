@@ -50,8 +50,12 @@ public class ReviewsTreeContentProvider extends GenericTreeContentProvider {
 			}
 			if (element instanceof IReviewItemSet) {
 				IReviewItemSet itemSet = (IReviewItemSet) element;
-				children.addAll(itemSet.getTopics());
-				children.addAll(itemSet.getItems());
+				if (itemSet.getItems().size() > 0) {
+					children.addAll(itemSet.getTopics());
+					children.addAll(itemSet.getItems());
+				} else {
+					children.add(new RetrievingContentsNode(itemSet));
+				}
 			}
 			if (element instanceof ITopic) {
 				ITopic topic = (ITopic) element;
@@ -84,8 +88,8 @@ public class ReviewsTreeContentProvider extends GenericTreeContentProvider {
 		}
 		return ((element instanceof ITopicContainer) && ((ITopicContainer) element).getAllComments().size() > 0)
 				|| (element instanceof IReview && ((IReview) element).getSets().size() > 0)
-				|| (element instanceof GlobalCommentsNode && hasChildren(((GlobalCommentsNode) element).getReview()) || (element instanceof IReviewItemSet && ((IReviewItemSet) element).getItems()
-						.size() > 0)) || hasCollectionChildren(element);
+				|| (element instanceof GlobalCommentsNode && hasChildren(((GlobalCommentsNode) element).getReview()) || (element instanceof IReviewItemSet))
+				|| hasCollectionChildren(element);
 	}
 
 	@Override

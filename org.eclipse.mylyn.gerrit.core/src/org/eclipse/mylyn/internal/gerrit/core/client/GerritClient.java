@@ -44,7 +44,6 @@ import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchSetPublishDetai
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectAdminService;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
-import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
 import org.eclipse.osgi.util.NLS;
 
 import com.google.gerrit.common.data.AccountDashboardInfo;
@@ -57,7 +56,6 @@ import com.google.gerrit.common.data.PatchScript;
 import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.common.data.ReviewerResult;
 import com.google.gerrit.common.data.SingleListChangeInfo;
-import com.google.gerrit.common.data.SystemInfoService;
 import com.google.gerrit.reviewdb.Account;
 import com.google.gerrit.reviewdb.AccountDiffPreference;
 import com.google.gerrit.reviewdb.AccountDiffPreference.Whitespace;
@@ -85,8 +83,6 @@ import com.google.gwtjsonrpc.client.VoidResult;
  * @author Miles Parker
  */
 public class GerritClient {
-
-	private static final IReviewsFactory FACTORY = IReviewsFactory.INSTANCE;
 
 	private abstract class Operation<T> implements AsyncCallback<T> {
 
@@ -274,7 +270,7 @@ public class GerritClient {
 		});
 	}
 
-	public ChangeDetail abondon(String reviewId, int patchSetId, final String message, IProgressMonitor monitor)
+	public ChangeDetail abandon(String reviewId, int patchSetId, final String message, IProgressMonitor monitor)
 			throws GerritException {
 		final PatchSet.Id id = new PatchSet.Id(new Change.Id(id(reviewId)), patchSetId);
 		return execute(monitor, new Operation<ChangeDetail>() {
@@ -818,10 +814,6 @@ public class GerritClient {
 		return getService(PatchDetailService.class);
 	}
 
-	private SystemInfoService getSystemInfoService() {
-		return getService(SystemInfoService.class);
-	}
-
 	private List<Project> getVisibleProjects(IProgressMonitor monitor, GerritConfig gerritConfig)
 			throws GerritException {
 		List<Project> result = new ArrayList<Project>();
@@ -915,5 +907,4 @@ public class GerritClient {
 		}
 		return clazz.cast(service);
 	}
-
 }

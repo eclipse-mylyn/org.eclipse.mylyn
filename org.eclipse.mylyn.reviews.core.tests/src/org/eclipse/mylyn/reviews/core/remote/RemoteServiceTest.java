@@ -42,12 +42,12 @@ public class RemoteServiceTest {
 		IStatus status;
 
 		@Override
-		protected void retrieve(IProgressMonitor monitor) throws CoreException {
+		protected void pull(boolean force, IProgressMonitor monitor) throws CoreException {
 			retrieve = true;
 		}
 
 		@Override
-		protected void apply() {
+		protected void applyModel(boolean force) {
 			apply = true;
 		}
 
@@ -88,7 +88,7 @@ public class RemoteServiceTest {
 	public void testExecute() throws CoreException {
 		JobRemoteService remoteService = new JobRemoteService();
 		Consumer consumer = new Consumer();
-		remoteService.execute(consumer);
+		remoteService.retrieve(consumer, false);
 		consumer.waitForDone();
 		assertThat(consumer.status.getSeverity(), is(IStatus.OK));
 		assertThat(consumer.retrieve, is(true));
@@ -100,7 +100,7 @@ public class RemoteServiceTest {
 		JobRemoteService remoteService = new JobRemoteService();
 		Consumer consumer = new Consumer();
 		consumer.async = false;
-		remoteService.execute(consumer);
+		remoteService.retrieve(consumer, false);
 		consumer.waitForDone();
 		assertThat(consumer.status.getSeverity(), is(IStatus.OK));
 		assertThat(consumer.retrieve, is(true));
@@ -109,7 +109,7 @@ public class RemoteServiceTest {
 
 	class BrokenConsumer extends Consumer {
 		@Override
-		protected void retrieve(IProgressMonitor monitor) throws CoreException {
+		protected void pull(boolean force, IProgressMonitor monitor) throws CoreException {
 			throw new CoreException(new Status(IStatus.ERROR, "blah", "Whoops!"));
 		}
 	}
@@ -118,7 +118,7 @@ public class RemoteServiceTest {
 	public void testExecuteCoreException() throws CoreException {
 		JobRemoteService remoteService = new JobRemoteService();
 		Consumer consumer = new BrokenConsumer();
-		remoteService.execute(consumer);
+		remoteService.retrieve(consumer, false);
 		consumer.waitForDone();
 		assertThat(consumer.status.getSeverity(), is(IStatus.WARNING));
 		assertThat(consumer.retrieve, is(false));
@@ -130,7 +130,7 @@ public class RemoteServiceTest {
 		JobRemoteService remoteService = new JobRemoteService();
 		Consumer consumer = new BrokenConsumer();
 		consumer.async = false;
-		remoteService.execute(consumer);
+		remoteService.retrieve(consumer, false);
 		consumer.waitForDone();
 		assertThat(consumer.status.getSeverity(), is(IStatus.ERROR));
 		assertThat(consumer.retrieve, is(false));
@@ -155,15 +155,15 @@ public class RemoteServiceTest {
 		Thread retrieveThread;
 
 		@Override
-		protected void retrieve(IProgressMonitor monitor) throws CoreException {
+		protected void pull(boolean force, IProgressMonitor monitor) throws CoreException {
 			retrieveThread = Thread.currentThread();
-			super.retrieve(monitor);
+			super.pull(force, monitor);
 		}
 
 		@Override
-		protected void apply() {
+		protected void applyModel(boolean force) {
 			modelThread = Thread.currentThread();
-			super.apply();
+			super.applyModel(force);
 		}
 	}
 
@@ -171,7 +171,7 @@ public class RemoteServiceTest {
 	public void testExecuteModelThread() throws CoreException {
 		JobRemoteService remoteService = new ThreadedService();
 		ModelThreadConsumer consumer = new ModelThreadConsumer();
-		remoteService.execute(consumer);
+		remoteService.retrieve(consumer, false);
 		consumer.waitForDone();
 		assertThat(consumer.modelThread.getName(), is("Test Thread"));
 		assertThat(consumer.retrieveThread.getName(), not("Test Thread"));
@@ -187,7 +187,7 @@ public class RemoteServiceTest {
 		JobRemoteService remoteService = new ThreadedService();
 		ModelThreadConsumer consumer = new ModelThreadConsumer();
 		consumer.async = false;
-		remoteService.execute(consumer);
+		remoteService.retrieve(consumer, false);
 		consumer.waitForDone();
 		assertThat(consumer.modelThread.getName(), is("Test Thread"));
 		assertThat(consumer.retrieveThread.getName(), not("Test Thread"));

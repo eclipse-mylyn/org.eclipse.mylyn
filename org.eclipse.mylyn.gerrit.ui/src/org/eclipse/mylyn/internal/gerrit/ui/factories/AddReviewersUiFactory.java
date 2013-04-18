@@ -15,6 +15,7 @@ import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.remote.GerritRemoteFactoryProvider;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.AddReviewersDialog;
+import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.ui.spi.factories.AbstractUiFactory;
 import org.eclipse.mylyn.reviews.ui.spi.factories.IUiContext;
@@ -38,8 +39,9 @@ public class AddReviewersUiFactory extends AbstractUiFactory<IReview> {
 	}
 
 	protected GerritChange getChange() {
-		return ((GerritRemoteFactoryProvider) getRemoteFactoryProvider()).getReviewFactory().getRemoteObject(
-				getModelObject());
+		return ((GerritRemoteFactoryProvider) getFactoryProvider()).getReviewFactory()
+				.getConsumerForModel((IRepository) getModelObject().getGroup(), getModelObject())
+				.getRemoteObject();
 	}
 
 	@Override

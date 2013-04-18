@@ -11,10 +11,12 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.remote;
 
+import java.util.ArrayList;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
+import org.eclipse.mylyn.reviews.core.model.IReviewGroup;
 import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.AbstractRemoteEmfFactory;
@@ -30,29 +32,33 @@ import com.google.gerrit.reviewdb.Account.Id;
  * 
  * @author Miles Parker
  */
-public class UserRemoteFactory extends AbstractRemoteEmfFactory<EObject, IUser, Account.Id, Account.Id, String> {
+public class GerritUserRemoteFactory extends AbstractRemoteEmfFactory<IReviewGroup, IUser, AccountInfo, Account.Id, String> {
 
-	private final AccountInfoCache cache;
+	private final AccountInfoCache cache = new AccountInfoCache(new ArrayList<AccountInfo>());
 
-	public UserRemoteFactory(GerritRemoteFactoryProvider gerritRemoteFactoryProvider, AccountInfoCache cache) {
-		super(gerritRemoteFactoryProvider.getService(), null, ReviewsPackage.Literals.USER__ID);
-		this.cache = cache;
+	public GerritUserRemoteFactory(GerritRemoteFactoryProvider gerritRemoteFactoryProvider) {
+		super(gerritRemoteFactoryProvider, ReviewsPackage.Literals.REVIEW_GROUP__USERS,
+				ReviewsPackage.Literals.USER__ID);
 	}
 
 	@Override
-	public Id retrieve(Id remoteKey, IProgressMonitor monitor) throws CoreException {
-		return remoteKey;
+	public AccountInfo pull(IReviewGroup parent, Id id, IProgressMonitor monitor) throws CoreException {
+		return cache.get(id);
 	}
 
 	@Override
-	public IUser create(EObject item, Id id) {
-		AccountInfo info = cache.get(id);
+	public IUser createModel(IReviewGroup group, AccountInfo info) {
 		IUser user = IReviewsFactory.INSTANCE.createUser();
 		user.setDisplayName(GerritUtil.getUserLabel(info));
-		if (id != null) {
-			user.setId(Integer.toString(id.get()));
-		}
+		user.setId(info.getId() + "");
+		user.setEmail(info.getPreferredEmail());
+		group.getUsers().add(user);
 		return user;
+	}
+
+	@Override
+	public boolean isPullNeeded(IReviewGroup parent, IUser user, AccountInfo remote) {
+		return true;
 	}
 
 	@Override
@@ -61,7 +67,21 @@ public class UserRemoteFactory extends AbstractRemoteEmfFactory<EObject, IUser, 
 	}
 
 	@Override
-	public boolean update(EObject item, IUser object, Id id) {
+	public boolean updateModel(IReviewGroup item, IUser object, AccountInfo info) {
 		return false;
+	}
+
+	@Override
+	public Id getRemoteKey(AccountInfo info) {
+		return info.getId();
+	}
+
+	@Override
+	public String getLocalKeyForRemoteKey(Id remoteKey) {
+		return Integer.toString(remoteKey.get());
+	}
+
+	public AccountInfoCache getCache() {
+		return cache;
 	}
 }

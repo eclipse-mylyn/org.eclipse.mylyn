@@ -31,8 +31,6 @@ import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
  */
 public abstract class ReviewSetSection extends AbstractReviewSection {
 
-	private static final int MAXIMUM_ITEMS_SHOWN = 30;
-
 	protected ReviewsLabelProvider labelProvider;
 
 	private List<ReviewSetContentSection> reviewSetSections;
@@ -42,14 +40,6 @@ public abstract class ReviewSetSection extends AbstractReviewSection {
 
 	public ReviewSetSection() {
 		setPartName("Patch Sets");
-	}
-
-	@Override
-	public void dispose() {
-		super.dispose();
-		if (labelProvider != null) {
-			labelProvider.dispose();
-		}
 	}
 
 	@Override
@@ -70,7 +60,7 @@ public abstract class ReviewSetSection extends AbstractReviewSection {
 	}
 
 	@Override
-	public void createModelControls() {
+	public void createModelContent() {
 		for (IReviewItem item : getReview().getSets()) {
 			if (item instanceof IReviewItemSet) {
 				IReviewItemSet set = (IReviewItemSet) item;
@@ -78,6 +68,7 @@ public abstract class ReviewSetSection extends AbstractReviewSection {
 				reviewSetSections.add(subSection);
 			}
 		}
+		getTaskEditorPage().reflow();
 	}
 
 	protected ReviewSetContentSection createContentSubSection(IReviewItemSet set) {
@@ -89,7 +80,6 @@ public abstract class ReviewSetSection extends AbstractReviewSection {
 		return true;
 	}
 
-	@Override
 	protected abstract AbstractReviewItemSetUiFactoryProvider getUiFactoryProvider();
 
 	@Override
@@ -97,4 +87,14 @@ public abstract class ReviewSetSection extends AbstractReviewSection {
 		return getEditor().getTaskEditorInput().getTaskRepository();
 	}
 
+	@Override
+	public void dispose() {
+		super.dispose();
+		if (labelProvider != null) {
+			labelProvider.dispose();
+		}
+		for (ReviewSetContentSection section : reviewSetSections) {
+			section.dispose();
+		}
+	}
 }

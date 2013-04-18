@@ -12,6 +12,7 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.remote;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -39,7 +40,6 @@ import org.eclipse.osgi.util.NLS;
 import com.google.gerrit.common.data.AccountInfoCache;
 import com.google.gerrit.common.data.CommentDetail;
 import com.google.gerrit.common.data.PatchScript;
-import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.prettify.common.SparseFileContent;
 import com.google.gerrit.reviewdb.Patch;
 import com.google.gerrit.reviewdb.PatchLineComment;
@@ -50,42 +50,57 @@ import com.google.gerrit.reviewdb.PatchLineComment;
  * @author Miles Parker
  * @author Steffen Pingel
  */
-public class PatchSetContentRemoteFactory extends
-		AbstractRemoteEmfFactory<IReviewItemSet, List<IFileItem>, PatchSetContent, PatchSetContent, String> {
+public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
+		AbstractRemoteEmfFactory<IReviewItemSet, List<IFileItem>, PatchSetContent, RemoteKeyType, String> {
 
 	private final ReviewItemCache cache;
 
-	private final GerritRemoteFactoryProvider gerritRemoteFactoryProvider;
+	private final GerritRemoteFactoryProvider gerritFactoryProvider;
 
 	public PatchSetContentRemoteFactory(GerritRemoteFactoryProvider gerritRemoteFactoryProvider) {
-		super(gerritRemoteFactoryProvider.getService(), ReviewsPackage.Literals.REVIEW_ITEM_SET__ITEMS,
+		super(gerritRemoteFactoryProvider, ReviewsPackage.Literals.REVIEW_ITEM_SET__ITEMS,
 				ReviewsPackage.Literals.REVIEW_ITEM__ID);
-		this.gerritRemoteFactoryProvider = gerritRemoteFactoryProvider;
+		this.gerritFactoryProvider = gerritRemoteFactoryProvider;
 		cache = new ReviewItemCache();
 	}
 
-	@Override
-	public PatchSetContent retrieve(PatchSetContent content, IProgressMonitor monitor) throws CoreException {
+	public PatchSetContent pull(IReviewItemSet parentObject, PatchSetContent content, IProgressMonitor monitor)
+			throws CoreException {
 		try {
-			gerritRemoteFactoryProvider.getClient().loadPatchSetContent(content, monitor);
+			gerritFactoryProvider.getClient().loadPatchSetContent(content, monitor);
+
 		} catch (GerritException e) {
 			throw new CoreException(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
 					"Problem while collecting patch set content", e));
 		}
+		for (Patch patch : content.getTargetDetail().getPatches()) {
+			PatchScript patchScript = content.getPatchScript(patch.getKey());
+			CommentDetail commentDetail = patchScript.getCommentDetail();
+			List<PatchLineComment> comments = new ArrayList<PatchLineComment>();
+			comments.addAll(commentDetail.getCommentsA());
+			comments.addAll(commentDetail.getCommentsB());
+			for (PatchLineComment comment : comments) {
+				gerritFactoryProvider.retrieveUser(getGerritProvider().getRoot(), patchScript.getCommentDetail()
+						.getAccounts(), comment.getAuthor(), monitor);
+			}
+		}
 		return content;
 	}
 
-	@Override
-	public PatchSetContent getRemoteKey(IReviewItemSet parentObject, List<IFileItem> items) {
-		PatchSetDetail patchDetail = gerritRemoteFactoryProvider.getReviewItemSetFactory()
-				.getRemoteObject(parentObject);
-		return new PatchSetContent(null, patchDetail.getPatchSet());
-	}
-
-	void addComments(IFileVersion version, List<PatchLineComment> comments, AccountInfoCache accountInfoCache) {
-		if (comments == null || comments.isEmpty()) {
-			return;
+	boolean addComments(IReviewItemSet set, IFileVersion version, List<PatchLineComment> comments,
+			AccountInfoCache accountInfoCache) {
+		version.getTopics().clear();
+		if (version == null || comments == null || comments.isEmpty()) {
+			return false;
 		}
+		boolean changed = comments.size() != version.getTopics().size();
+		int oldDraftCount = version.getTopics().size();
+		for (ITopic topic : version.getTopics()) {
+			if (topic.isDraft()) {
+				oldDraftCount++;
+			}
+		}
+		int draftCount = 0;
 		for (PatchLineComment comment : comments) {
 			ILineRange line = IReviewsFactory.INSTANCE.createLineRange();
 			line.setStart(comment.getLine());
@@ -94,11 +109,15 @@ public class PatchSetContentRemoteFactory extends
 			location.getRanges().add(line);
 
 			IComment topicComment = IReviewsFactory.INSTANCE.createComment();
-			IUser author = gerritRemoteFactoryProvider.getUserFactory(accountInfoCache).get(topicComment,
+			IUser author = getGerritProvider().createUser(getGerritProvider().getRoot(), accountInfoCache,
 					comment.getAuthor());
+
 			topicComment.setCreationDate(comment.getWrittenOn());
 			topicComment.setDescription(comment.getMessage());
 			topicComment.setDraft(PatchLineComment.Status.DRAFT == comment.getStatus());
+			if (topicComment.isDraft()) {
+				draftCount++;
+			}
 			topicComment.setAuthor(author);
 
 			ITopic topic = IReviewsFactory.INSTANCE.createTopic();
@@ -114,11 +133,18 @@ public class PatchSetContentRemoteFactory extends
 
 			version.getTopics().add(topic);
 		}
+		changed |= draftCount != oldDraftCount;
+		return changed;
 	}
 
 	@Override
-	public List<IFileItem> create(IReviewItemSet set, PatchSetContent content) {
-		List<IFileItem> items = IReviewsFactory.INSTANCE.createReviewItemSet().getItems();
+	public boolean isPullNeeded(IReviewItemSet parent, List<IFileItem> items, PatchSetContent remote) {
+		return items == null || items.size() == 0 || remote == null;
+	}
+
+	@Override
+	public List<IFileItem> createModel(IReviewItemSet set, PatchSetContent content) {
+		List<IFileItem> items = set.getItems();
 		for (Patch patch : content.getTargetDetail().getPatches()) {
 			String targetId = patch.getKey().toString();
 			String sourceFileName = (patch.getSourceFileName() != null)
@@ -128,14 +154,15 @@ public class PatchSetContentRemoteFactory extends
 					? new Patch.Key(content.getBase().getId(), sourceFileName).toString()
 					: "base-" + targetId;
 			String id = baseId + ":" + targetId; //$NON-NLS-1$
-			IFileItem item = (IFileItem) cache.getItem(id);
+			IFileItem item = (IFileItem) getCache().getItem(id);
 			if (item == null) {
 				item = IReviewsFactory.INSTANCE.createFileItem();
 				item.setId(id);
 				item.setName(patch.getFileName());
 				item.setAddedBy(set.getAddedBy());
 				item.setCommittedBy(set.getCommittedBy());
-				cache.put(item);
+				item.setReference(patch.getKey().getParentKey() + "," + patch.getFileName());
+				getCache().put(item);
 			}
 			items.add(item);
 
@@ -143,39 +170,38 @@ public class PatchSetContentRemoteFactory extends
 			if (patchScript != null) {
 				CommentDetail commentDetail = patchScript.getCommentDetail();
 
-				IFileVersion versionA = (IFileVersion) cache.getItem(baseId);
-				if (versionA == null) {
-					versionA = IReviewsFactory.INSTANCE.createFileVersion();
-					versionA.setId(baseId);
-					versionA.setContent(patchScript.getA().asString());
-					versionA.setPath(patchScript.getA().getPath());
-					versionA.setDescription((content.getBase() != null) ? NLS.bind("Patch Set {0}", content.getBase()
-							.getPatchSetId()) : "Base");
-					versionA.setFile(item);
-					versionA.setName(item.getName());
-					addComments(versionA, commentDetail.getCommentsA(), commentDetail.getAccounts());
-					cache.put(versionA);
+				IFileVersion baseVersion = (IFileVersion) getCache().getItem(baseId);
+				if (baseVersion == null) {
+					baseVersion = IReviewsFactory.INSTANCE.createFileVersion();
+					baseVersion.setId(baseId);
+					baseVersion.setContent(patchScript.getA().asString());
+					baseVersion.setPath(patchScript.getA().getPath());
+					baseVersion.setDescription((content.getBase() != null) ? NLS.bind("Patch Set {0}",
+							content.getBase().getPatchSetId()) : "Base");
+					baseVersion.setFile(item);
+					baseVersion.setName(item.getName());
+					getCache().put(baseVersion);
 				}
-				item.setBase(versionA);
+				addComments(set, baseVersion, commentDetail.getCommentsA(), commentDetail.getAccounts());
+				item.setBase(baseVersion);
 
-				IFileVersion versionB = (IFileVersion) cache.getItem(targetId);
-				if (versionB == null) {
-					versionB = IReviewsFactory.INSTANCE.createFileVersion();
-					versionB.setId(targetId);
+				IFileVersion targetVersion = (IFileVersion) getCache().getItem(targetId);
+				if (targetVersion == null) {
+					targetVersion = IReviewsFactory.INSTANCE.createFileVersion();
+					targetVersion.setId(targetId);
 					SparseFileContent target = patchScript.getB().apply(patchScript.getA(), patchScript.getEdits());
-					versionB.setContent(target.asString());
-					versionB.setPath(patchScript.getB().getPath());
-					versionB.setDescription(NLS.bind("Patch Set {0}", content.getTargetDetail()
+					targetVersion.setContent(target.asString());
+					targetVersion.setPath(patchScript.getB().getPath());
+					targetVersion.setDescription(NLS.bind("Patch Set {0}", content.getTargetDetail()
 							.getPatchSet()
 							.getPatchSetId()));
-					versionB.setFile(item);
-					versionB.setAddedBy(item.getAddedBy());
-					versionB.setCommittedBy(item.getCommittedBy());
-					versionB.setName(item.getName());
-					addComments(versionB, commentDetail.getCommentsB(), commentDetail.getAccounts());
-					cache.put(versionB);
+					targetVersion.setFile(item);
+					targetVersion.setAddedBy(item.getAddedBy());
+					targetVersion.setCommittedBy(item.getCommittedBy());
+					targetVersion.setName(item.getName());
+					getCache().put(targetVersion);
 				}
-				item.setTarget(versionB);
+				item.setTarget(targetVersion);
 			}
 		}
 		return items;
@@ -185,7 +211,27 @@ public class PatchSetContentRemoteFactory extends
 	 * Patch sets results never change.
 	 */
 	@Override
-	public boolean update(IReviewItemSet set, List<IFileItem> items, PatchSetContent content) {
-		return false;
+	public boolean updateModel(IReviewItemSet set, List<IFileItem> items, PatchSetContent content) {
+		boolean changed = false;
+		for (IFileItem item : items) {
+			IFileItem fileItem = item;
+			PatchScript patchScript = content.getPatchScript(Patch.Key.parse(item.getReference()));
+			if (patchScript != null) {
+				CommentDetail commentDetail = patchScript.getCommentDetail();
+				changed |= addComments(set, fileItem.getBase(), commentDetail.getCommentsA(),
+						commentDetail.getAccounts());
+				changed |= addComments(set, fileItem.getTarget(), commentDetail.getCommentsB(),
+						commentDetail.getAccounts());
+			}
+		}
+		return changed;
+	}
+
+	public GerritRemoteFactoryProvider getGerritProvider() {
+		return gerritFactoryProvider;
+	}
+
+	public ReviewItemCache getCache() {
+		return cache;
 	}
 }

@@ -14,4 +14,7 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: Eclipse Mylyn
-Export-Package: org.eclipse.mylyn.reviews.edit.provider;x-internal:=true
+Export-Package: org.eclipse.mylyn.reviews.edit,
+ org.eclipse.mylyn.reviews.edit.provider,
+ org.eclipse.mylyn.reviews.edit.remote
+Bundle-Activator: org.eclipse.mylyn.reviews.edit.ReviewsEditPlugin

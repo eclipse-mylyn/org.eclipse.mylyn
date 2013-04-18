@@ -96,4 +96,14 @@ public class PatchSetContent {
 		return patchScriptByPatchKey.get(key);
 	}
 
+	public String getId() {
+		String id = "";
+		if (getBase() != null) {
+			id += getBase().getId() + "-";
+		}
+		if (getTarget() != null) {
+			id += getTarget().getId();
+		}
+		return id;
+	}
 }
