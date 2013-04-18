@@ -94,4 +94,8 @@ public class HudsonFixture extends RepositoryTestFixture {
 		return true;
 	}
 
+	public boolean isHudson() {
+		return Type.HUDSON == getType();
+	}
+
 }

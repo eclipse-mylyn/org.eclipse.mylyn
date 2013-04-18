@@ -120,7 +120,7 @@ public class HudsonHarness {
 	}
 
 	public HudsonModelBallColor getSuccessColor() {
-		if (getFixture().getVersion().compareTo("3.0.1") >= 0) {
+		if (getFixture().isHudson() && getFixture().getVersion().compareTo("3.0.1") >= 0) {
 			return HudsonModelBallColor.GREEN;
 		} else {
 			return HudsonModelBallColor.BLUE;
@@ -128,7 +128,7 @@ public class HudsonHarness {
 	}
 
 	public HudsonModelBallColor getSuccessAnimeColor() {
-		if (getFixture().getVersion().compareTo("3.0.1") >= 0) {
+		if (getFixture().isHudson() && getFixture().getVersion().compareTo("3.0.1") >= 0) {
 			return HudsonModelBallColor.GREEN_ANIME;
 		} else {
 			return HudsonModelBallColor.BLUE_ANIME;
