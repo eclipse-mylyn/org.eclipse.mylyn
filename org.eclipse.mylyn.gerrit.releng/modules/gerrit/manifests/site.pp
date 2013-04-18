@@ -14,6 +14,7 @@ define gerrit::site (
   $userGroup    = $gerrit::userGroup,) {
   $envbase = "$base/$envid"
   $conf = "$base/conf.d"
+  $envhost = regsubst(file("/etc/hostname"), '\n', '')
 
   /* can't use cwd => $envbase since that may not yet exist and would cause a cyclic dependency */
   exec { "stop $envid":

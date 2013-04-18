@@ -1,5 +1,10 @@
 [gerrit]
         basePath = <%= envbase %>/git
+<% if @envhost == "precise32" %>
+        canonicalWebUrl = http://localhost:2080/<%= envid %>
+<% else %>
+        canonicalWebUrl = http://<%= envhost %>/<%= envid %>
+<% end %>
 [database]
         type = H2
         database = db/ReviewDB

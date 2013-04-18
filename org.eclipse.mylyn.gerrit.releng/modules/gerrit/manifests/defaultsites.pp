@@ -33,6 +33,7 @@ define gerrit::defaultsites ($base = $gerrit::base, $userOwner = $gerrit::userOw
     version => "2.4.2",
     port    => 28242,
     sshport => 29242,
+    envdefault => true,
     require => Gerrit["2.4.2"],
   }
 
@@ -40,7 +41,6 @@ define gerrit::defaultsites ($base = $gerrit::base, $userOwner = $gerrit::userOw
     version => "2.5.2",
     port    => 28252,
     sshport => 29252,
-    envdefault => true,
     require => Gerrit["2.5.2"],
   }
 
