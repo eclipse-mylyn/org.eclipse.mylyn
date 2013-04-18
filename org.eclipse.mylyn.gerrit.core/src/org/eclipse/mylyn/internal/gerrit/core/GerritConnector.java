@@ -13,6 +13,7 @@
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core;
 
+import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,6 +46,7 @@ import org.eclipse.mylyn.reviews.internal.core.ReviewsConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
+import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
@@ -257,7 +259,7 @@ public class GerritConnector extends ReviewsConnector {
 		} catch (UnsupportedClassVersionError e) {
 			return toStatus(repository, e);
 		} catch (GerritException e) {
-			return toStatus(repository, e);
+			return toStatus(repository, "Problem performing query", e);
 		} finally {
 			monitor.done();
 		}
@@ -273,7 +275,7 @@ public class GerritConnector extends ReviewsConnector {
 		try {
 			getClient(repository).refreshConfig(monitor);
 		} catch (GerritException e) {
-			throw toCoreException(repository, e);
+			throw toCoreException(repository, "Problem updating repository", e);
 		}
 	}
 
@@ -296,16 +298,16 @@ public class GerritConnector extends ReviewsConnector {
 	}
 
 	public GerritSystemInfo validate(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
+		// only allow user prompting in case of Open ID authentication 
+		if (!Boolean.parseBoolean(repository.getProperty(GerritConnector.KEY_REPOSITORY_OPEN_ID_ENABLED))) {
+			monitor = Policy.backgroundMonitorFor(monitor);
+		}
 		try {
-			// only allow user prompting in case of Open ID authentication 
-			if (!Boolean.parseBoolean(repository.getProperty(GerritConnector.KEY_REPOSITORY_OPEN_ID_ENABLED))) {
-				monitor = Policy.backgroundMonitorFor(monitor);
-			}
 			return createClient(repository, false).getInfo(monitor);
 		} catch (UnsupportedClassVersionError e) {
 			throw toCoreException(repository, e);
 		} catch (GerritException e) {
-			throw toCoreException(repository, e);
+			throw toCoreException(repository, "Invalid repository", e);
 		}
 	}
 
@@ -373,27 +375,41 @@ public class GerritConnector extends ReviewsConnector {
 		}
 	}
 
-	public static CoreException toCoreException(TaskRepository repository, GerritException e) {
-		return new CoreException(toStatus(repository, e));
+	public CoreException toCoreException(TaskRepository repository, String qualifier, GerritException e) {
+		return new CoreException(toStatus(repository, qualifier, e));
 	}
 
 	public static CoreException toCoreException(TaskRepository repository, UnsupportedClassVersionError e) {
 		return new CoreException(toStatus(repository, e));
 	}
 
-	public static Status toStatus(TaskRepository repository, GerritException e) {
-		String message;
+	Status toStatus(TaskRepository repository, String qualifier, Exception e) {
+		if (StringUtils.isEmpty(qualifier)) {
+			qualifier = "";
+		} else if (!StringUtils.endsWith(qualifier, ": ")) {
+			qualifier += ": ";
+		}
 		if (e instanceof GerritHttpException) {
 			int code = ((GerritHttpException) e).getResponseCode();
-			message = NLS.bind("Unexpected error: {1} ({0})", code, HttpStatus.getStatusText(code));
+			return createErrorStatus(repository, qualifier + HttpStatus.getStatusText(code));
 		} else if (e instanceof GerritLoginException) {
-			message = "Login failed";
-		} else if (e.getMessage() != null) {
-			message = NLS.bind("Unexpected error: {0}", e.getMessage());
-		} else {
-			message = "Unexpected error while communicating with Gerrit";
+			return RepositoryStatus.createLoginError(repository.getUrl(), GerritCorePlugin.PLUGIN_ID);
+		} else if (e instanceof UnknownHostException) {
+			return createErrorStatus(repository, qualifier + "Unknown Host");
+		} else if (e instanceof GerritException && e.getCause() != null) {
+			Throwable cause = e.getCause();
+			if (cause instanceof Exception) {
+				return toStatus(repository, qualifier, (Exception) cause);
+			}
+		} else if (e instanceof GerritException && e.getMessage() != null) {
+			return createErrorStatus(repository, NLS.bind("{0}Gerrit connection issue: {1}", qualifier, e.getMessage()));
 		}
-		return new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, message, e);
+		return RepositoryStatus.createStatus(repository, IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
+				NLS.bind("{0}Unexpected error while connecting to Gerrit: {1}", qualifier, e.getMessage()));
+	}
+
+	protected RepositoryStatus createErrorStatus(TaskRepository repository, String message) {
+		return RepositoryStatus.createStatus(repository, IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, message);
 	}
 
 	public static Status toStatus(TaskRepository repository, UnsupportedClassVersionError e) {

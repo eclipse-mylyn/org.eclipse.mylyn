@@ -22,7 +22,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
+import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
@@ -119,7 +119,9 @@ public class GerritReviewRemoteFactory extends
 			pull(parent, detail, detail.getNeededBy(), monitor);
 			return gerritChange;
 		} catch (GerritException e) {
-			throw GerritConnector.toCoreException(null, e);
+			throw GerritCorePlugin.getDefault()
+					.getConnector()
+					.toCoreException(null, "Problem while retrieving Gerrit review.", e);
 		}
 	}
 

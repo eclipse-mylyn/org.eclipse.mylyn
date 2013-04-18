@@ -12,8 +12,6 @@
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.ui;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -194,18 +192,6 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 	@Override
 	protected Validator getValidator(TaskRepository repository) {
 		return new GerritValidator(repository);
-	}
-
-	@Override
-	protected boolean isValidUrl(String url) {
-		if (url.startsWith(URL_PREFIX_HTTPS) || url.startsWith(URL_PREFIX_HTTP)) {
-			try {
-				new URL(url);
-				return true;
-			} catch (MalformedURLException e) {
-			}
-		}
-		return false;
 	}
 
 	@Override

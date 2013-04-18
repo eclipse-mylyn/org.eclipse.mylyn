@@ -101,7 +101,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 			updateTaskData(repository, taskData, review, !anonymous, id);
 			return taskData;
 		} catch (GerritException e) {
-			throw GerritConnector.toCoreException(repository, e);
+			throw connector.toCoreException(repository, "Problem retrieving task data", e);
 		}
 	}
 
