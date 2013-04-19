@@ -13,9 +13,11 @@
 package org.eclipse.mylyn.internal.gerrit.core.remote;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -86,27 +88,27 @@ public class GerritReviewRemoteFactory extends
 			final ChangeDetailX detail = gerritChange.getChangeDetail();
 
 			//We need to ensure we have all possible users for review in pull phase, as we can't do any async calls in apply phase
-			getGerritProvider().retrieveUser(parent, detail.getAccounts(), detail.getChange().getOwner(), monitor);
+			getGerritProvider().pullUser(parent, detail.getAccounts(), detail.getChange().getOwner(), monitor);
 			for (ChangeMessage message : detail.getMessages()) {
 				if (message.getAuthor() != null) {
-					getGerritProvider().retrieveUser(parent, detail.getAccounts(), message.getAuthor(), monitor);
+					getGerritProvider().pullUser(parent, detail.getAccounts(), message.getAuthor(), monitor);
 				}
 			}
 			for (PatchSetDetail patchSetDetail : gerritChange.getPatchSetDetails()) {
-				getGerritProvider().retrieveUser(parent, detail.getAccounts(),
+				getGerritProvider().pullUser(parent, detail.getAccounts(),
 						patchSetDetail.getInfo().getAuthor().getAccount(), monitor);
-				getGerritProvider().retrieveUser(parent, detail.getAccounts(),
+				getGerritProvider().pullUser(parent, detail.getAccounts(),
 						patchSetDetail.getInfo().getCommitter().getAccount(), monitor);
 			}
 			for (ApprovalDetail remoteApproval : detail.getApprovals()) {
-				getGerritProvider().retrieveUser(parent, detail.getAccounts(), remoteApproval.getAccount(), monitor);
+				getGerritProvider().pullUser(parent, detail.getAccounts(), remoteApproval.getAccount(), monitor);
 			}
 
 			if (detail.getSubmitRecords() != null) {
 				for (SubmitRecord record : detail.getSubmitRecords()) {
 					for (Label label : record.getLabels()) {
 						if (label.getAppliedBy() != null) {
-							getGerritProvider().retrieveUser(parent, detail.getAccounts(), label.getAppliedBy(),
+							getGerritProvider().pullUser(parent, detail.getAccounts(), label.getAppliedBy(),
 									monitor);
 						}
 					}
@@ -125,7 +127,7 @@ public class GerritReviewRemoteFactory extends
 			IProgressMonitor monitor) throws CoreException {
 		for (ChangeInfo remoteChange : remoteChanges) {
 			AccountInfo remoteOwner = detail.getAccounts().get(remoteChange.getOwner());
-			getGerritProvider().retrieveUser(parent, detail.getAccounts(), remoteOwner.getId(), monitor);
+			getGerritProvider().pullUser(parent, detail.getAccounts(), remoteOwner.getId(), monitor);
 		}
 	}
 
@@ -151,7 +153,23 @@ public class GerritReviewRemoteFactory extends
 	@Override
 	public boolean isUpdateModelNeeded(IRepository parent, IReview review, GerritChange gerritChange) {
 		Change change = gerritChange.getChangeDetail().getChange();
-		return review.getModificationDate() == null || review.getModificationDate().equals(change.getLastUpdatedOn());
+		gerritChange.getChangeDetail().getDependsOn();
+		isDependenciesDifferent(review.getParents(), gerritChange.getChangeDetail().getDependsOn());
+		return review.getModificationDate() == null || !review.getModificationDate().equals(change.getLastUpdatedOn())
+				|| isDependenciesDifferent(review.getParents(), gerritChange.getChangeDetail().getDependsOn())
+				|| isDependenciesDifferent(review.getChildren(), gerritChange.getChangeDetail().getNeededBy());
+	}
+
+	public boolean isDependenciesDifferent(List<IChange> localDependencies, List<ChangeInfo> remoteDependencies) {
+		Set<String> localIds = new HashSet<String>();
+		for (IChange localChange : localDependencies) {
+			localIds.add(localChange.getId());
+		}
+		Set<String> remoteIds = new HashSet<String>();
+		for (ChangeInfo depend : remoteDependencies) {
+			remoteIds.add(depend.getId().toString());
+		}
+		return !localIds.equals(remoteDependencies);
 	}
 
 	@Override
@@ -333,7 +351,6 @@ public class GerritReviewRemoteFactory extends
 			ISimpleReviewState state = IReviewsFactory.INSTANCE.createSimpleReviewState();
 			state.setName(remoteChange.getStatus().name());
 			localChange.setState(state);
-			;
 			localChanges.add(localChange);
 		}
 	}

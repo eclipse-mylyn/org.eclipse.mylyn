@@ -16,6 +16,7 @@ import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.PushResult;
@@ -60,7 +61,7 @@ public class GerritProject {
 		return folder;
 	}
 
-	public Git cloneProject() throws Exception {
+	public Git getGitProject() throws Exception {
 		if (git == null) {
 			folder = CommonTestUtil.createTempFolder("gerrit"); //$NON-NLS-1$
 			String url = fixture.getRepositoryUrl() + PROJECT;
@@ -72,20 +73,45 @@ public class GerritProject {
 		return git;
 	}
 
-	public RevCommit commitAndPushFile() throws Exception {
-		String email = registerAuthenticator();
+	public class CommitResult {
+		public RevCommit commit;
 
-		Git git = cloneProject();
-		CommonTestUtil.write(new File(folder, "test.txt").getAbsolutePath(), new StringBuffer("test")); //$NON-NLS-1$ //$NON-NLS-2$
-		RevCommit commit = git.commit().setAll(true).setInsertChangeId(true).setAuthor("Test", email) //$NON-NLS-1$
-				.setCommitter("Test", email) //$NON-NLS-1$
-				.setMessage("Test Commit") //$NON-NLS-1$
+		public PushResult push;
+
+		private CommitResult(RevCommit commit, PushResult result) {
+			this.commit = commit;
+			this.push = result;
+		}
+	}
+
+	public CommitResult commitAndPushFile() throws Exception {
+		return commitAndPushFile("test.txt");
+	}
+
+	public CommitResult commitAndPushFile(String fileName) throws Exception {
+		addFile(fileName);
+		Git git = getGitProject();
+		return commitAndPush(git.commit().setAll(true).setInsertChangeId(true).setMessage("Test Commit"));
+	}
+
+	public void addFile(String fileName) throws Exception {
+		CommonTestUtil.write(new File(folder, fileName).getAbsolutePath(), new StringBuffer("test")); //$NON-NLS-1$ 
+		getGitProject().add().addFilepattern(".").call();
+	}
+
+	public void addFile(String fileName, String text) throws Exception {
+		CommonTestUtil.write(new File(folder, fileName).getAbsolutePath(), new StringBuffer(text));
+		getGitProject().add().addFilepattern(".").call();
+	}
+
+	public CommitResult commitAndPush(CommitCommand command) throws Exception {
+		String email = registerAuthenticator();
+		RevCommit call = command.setAuthor("Test", email) //$NON-NLS-1$
+				.setCommitter("Test", email)
 				.call();
 		Iterable<PushResult> result = git.push().setRefSpecs(new RefSpec("HEAD:refs/for/master")).call(); //$NON-NLS-1$
-		for (PushResult pushResult : result) {
-			System.err.println(pushResult.getMessages());
-		}
-		return commit;
+		//Safe to assume one and only one result?
+		return new CommitResult(call, result.iterator().next());
 	}
 
 	public String registerAuthenticator() throws Exception {

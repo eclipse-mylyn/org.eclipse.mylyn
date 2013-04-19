@@ -65,13 +65,17 @@ public class GerritRemoteFactoryProvider extends ReviewsRemoteEditFactoryProvide
 		return userFactory;
 	}
 
-	void retrieveUser(IReviewGroup parent, AccountInfoCache cache, Id id, IProgressMonitor monitor)
+	IUser pullUser(IReviewGroup parent, AccountInfoCache cache, Id id, IProgressMonitor monitor)
 			throws CoreException {
 		if (id != null) {
 			final RemoteEmfConsumer<IReviewGroup, IUser, AccountInfo, Id, String> userConsumer = getUserFactory(cache).getConsumerForRemoteKey(
 					parent, id);
-			userConsumer.pull(false, monitor);
+			if (userConsumer.getModelObject() == null) {
+				userConsumer.pull(false, monitor);
+			}
+			return userConsumer.getModelObject();
 		}
+		return null;
 	}
 
 	IUser createUser(IReviewGroup parent, AccountInfoCache cache, Account.Id id) {

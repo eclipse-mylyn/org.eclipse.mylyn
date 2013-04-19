@@ -21,7 +21,7 @@ import org.eclipse.mylyn.reviews.core.spi.remote.emf.IRemoteEmfObserver;
 
 final class TestRemoteObserver<P extends EObject, T> implements IRemoteEmfObserver<P, T> {
 
-	static final int TEST_TIMEOUT = 10000;
+	static final int TEST_TIMEOUT = 7500;
 
 	T createdObject;
 
@@ -72,8 +72,9 @@ final class TestRemoteObserver<P extends EObject, T> implements IRemoteEmfObserv
 		}
 		try {
 			//wait extra to ensure there aren't remaining jobs
-			Thread.sleep(100);
+			Thread.sleep(25);
 		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
 		}
 		assertThat("Wrong # responses", responded, is(response));
 		assertThat("Wrong # updates", updated, is(update));

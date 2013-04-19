@@ -80,7 +80,7 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
 			comments.addAll(commentDetail.getCommentsA());
 			comments.addAll(commentDetail.getCommentsB());
 			for (PatchLineComment comment : comments) {
-				gerritFactoryProvider.retrieveUser(getGerritProvider().getRoot(), patchScript.getCommentDetail()
+				gerritFactoryProvider.pullUser(getGerritProvider().getRoot(), patchScript.getCommentDetail()
 						.getAccounts(), comment.getAuthor(), monitor);
 			}
 		}
@@ -139,7 +139,7 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
 
 	@Override
 	public boolean isPullNeeded(IReviewItemSet parent, List<IFileItem> items, PatchSetContent remote) {
-		return items == null || items.size() == 0 || remote == null;
+		return true;
 	}
 
 	@Override
@@ -168,8 +168,6 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
 
 			PatchScript patchScript = content.getPatchScript(patch.getKey());
 			if (patchScript != null) {
-				CommentDetail commentDetail = patchScript.getCommentDetail();
-
 				IFileVersion baseVersion = (IFileVersion) getCache().getItem(baseId);
 				if (baseVersion == null) {
 					baseVersion = IReviewsFactory.INSTANCE.createFileVersion();
@@ -182,7 +180,6 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
 					baseVersion.setName(item.getName());
 					getCache().put(baseVersion);
 				}
-				addComments(set, baseVersion, commentDetail.getCommentsA(), commentDetail.getAccounts());
 				item.setBase(baseVersion);
 
 				IFileVersion targetVersion = (IFileVersion) getCache().getItem(targetId);
