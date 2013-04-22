@@ -85,13 +85,13 @@ public class TaskRepositoryManager implements IRepositoryManager {
 
 	public TaskRepositoryManager() {
 		this.migrators = Collections.emptyList();
-		Category catTasks = new Category(IRepositoryConstants.CATEGORY_TASKS, "Tasks", 0); //$NON-NLS-1$
+		Category catTasks = new Category(TaskRepository.CATEGORY_TASKS, "Tasks", 0); //$NON-NLS-1$
 		repositoryCategories.put(catTasks.getId(), catTasks);
-		Category catBugs = new Category(IRepositoryConstants.CATEGORY_BUGS, "Bugs", 100); //$NON-NLS-1$
+		Category catBugs = new Category(TaskRepository.CATEGORY_BUGS, "Bugs", 100); //$NON-NLS-1$
 		repositoryCategories.put(catBugs.getId(), catBugs);
-		Category catBuild = new Category(IRepositoryConstants.CATEGORY_BUILD, "Builds", 200); //$NON-NLS-1$
+		Category catBuild = new Category(TaskRepository.CATEGORY_BUILD, "Builds", 200); //$NON-NLS-1$
 		repositoryCategories.put(catBuild.getId(), catBuild);
-		Category catReview = new Category(IRepositoryConstants.CATEGORY_REVIEW, "Reviews", 300); //$NON-NLS-1$
+		Category catReview = new Category(TaskRepository.CATEGORY_REVIEW, "Reviews", 300); //$NON-NLS-1$
 		repositoryCategories.put(catReview.getId(), catReview);
 		Category catOther = new Category(IRepositoryConstants.CATEGORY_OTHER, "Other", 400); //$NON-NLS-1$
 		repositoryCategories.put(catOther.getId(), catOther);
@@ -518,8 +518,7 @@ public class TaskRepositoryManager implements IRepositoryManager {
 	}
 
 	public Category getCategory(TaskRepository repository) {
-		String categoryId = repository.getProperty(IRepositoryConstants.PROPERTY_CATEGORY);
-		return getCategory(categoryId);
+		return getCategory(repository.getCategory());
 	}
 
 	public void initialize(List<AbstractRepositoryMigrator> repositoryMigrators) {

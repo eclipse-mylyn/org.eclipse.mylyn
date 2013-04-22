@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.tasks.core;
 
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+
 /**
  * @author Mik Kersten
  * @since 2.0
@@ -39,13 +41,25 @@ public interface IRepositoryConstants {
 
 	public static final String KIND_UNKNOWN = "<unknown>"; //$NON-NLS-1$
 
-	public static final String CATEGORY_TASKS = "org.eclipse.mylyn.category.tasks"; //$NON-NLS-1$
+	/**
+	 * @deprecated Use {@link TaskRepository#CATEGORY_TASKS} instead
+	 */
+	public static final String CATEGORY_TASKS = TaskRepository.CATEGORY_TASKS; //$NON-NLS-1$
 
-	public static final String CATEGORY_BUGS = "org.eclipse.mylyn.category.bugs"; //$NON-NLS-1$
+	/**
+	 * @deprecated Use {@link TaskRepository#CATEGORY_BUGS} instead
+	 */
+	public static final String CATEGORY_BUGS = TaskRepository.CATEGORY_BUGS; //$NON-NLS-1$
 
-	public static final String CATEGORY_BUILD = "org.eclipse.mylyn.category.build"; //$NON-NLS-1$
+	/**
+	 * @deprecated Use {@link TaskRepository#CATEGORY_BUILD} instead
+	 */
+	public static final String CATEGORY_BUILD = TaskRepository.CATEGORY_BUILD; //$NON-NLS-1$
 
-	public static final String CATEGORY_REVIEW = "org.eclipse.mylyn.category.review"; //$NON-NLS-1$
+	/**
+	 * @deprecated Use {@link TaskRepository#CATEGORY_REVIEW} instead
+	 */
+	public static final String CATEGORY_REVIEW = TaskRepository.CATEGORY_REVIEW; //$NON-NLS-1$
 
 	public static final String CATEGORY_OTHER = "org.eclipse.mylyn.category.other"; //$NON-NLS-1$
 

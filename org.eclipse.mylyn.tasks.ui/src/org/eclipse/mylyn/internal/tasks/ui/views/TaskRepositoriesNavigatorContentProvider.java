@@ -19,7 +19,6 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryCategory;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryChangeListener;
-import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryAdapter;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryChangeEvent;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryDelta;
@@ -101,7 +100,7 @@ public class TaskRepositoriesNavigatorContentProvider implements ITreeContentPro
 			} else if (RepositoryCategory.ID_CATEGORY_OTHER.equals(category.getId())) {
 				Set<Object> items = new HashSet<Object>();
 				for (TaskRepository repository : repositories) {
-					if (repository.getProperty(IRepositoryConstants.PROPERTY_CATEGORY) == null) {
+					if (repository.getCategory() == null) {
 						items.add(repository);
 					}
 				}
@@ -109,7 +108,7 @@ public class TaskRepositoriesNavigatorContentProvider implements ITreeContentPro
 			} else {
 				Set<Object> items = new HashSet<Object>();
 				for (TaskRepository repository : repositories) {
-					if (category.getId().equals(repository.getProperty(IRepositoryConstants.PROPERTY_CATEGORY))) {
+					if (category.getId().equals(repository.getCategory())) {
 						items.add(repository);
 					}
 				}

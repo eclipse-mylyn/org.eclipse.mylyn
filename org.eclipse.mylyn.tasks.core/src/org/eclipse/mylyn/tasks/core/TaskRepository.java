@@ -147,6 +147,38 @@ public final class TaskRepository extends PlatformObject {
 
 	public static final String OFFLINE = "org.eclipse.mylyn.tasklist.repositories.offline"; //$NON-NLS-1$
 
+	/**
+	 * Category for repositories that manage tasks.
+	 * 
+	 * @see #setCategory(String)
+	 * @since 3.9
+	 */
+	public static final String CATEGORY_TASKS = "org.eclipse.mylyn.category.tasks"; //$NON-NLS-1$
+
+	/**
+	 * Category for repositories that manage bugs.
+	 * 
+	 * @see #setCategory(String)
+	 * @since 3.9
+	 */
+	public static final String CATEGORY_BUGS = "org.eclipse.mylyn.category.bugs"; //$NON-NLS-1$
+
+	/**
+	 * Category for repositories that manage builds.
+	 * 
+	 * @see #setCategory(String)
+	 * @since 3.9
+	 */
+	public static final String CATEGORY_BUILD = "org.eclipse.mylyn.category.build"; //$NON-NLS-1$
+
+	/**
+	 * Category for repositories that manage reviews.
+	 * 
+	 * @see #setCategory(String)
+	 * @since 3.9
+	 */
+	public static final String CATEGORY_REVIEW = "org.eclipse.mylyn.category.review"; //$NON-NLS-1$
+
 	// HACK: Lock used to work around race condition in
 	// Platform.add/get/flushAuthorizationInfo()
 	private static final Object LOCK = new Object();
@@ -936,6 +968,20 @@ public final class TaskRepository extends PlatformObject {
 	 */
 	public boolean isCreatedFromTemplate() {
 		return "true".equals(getProperty(CREATED_FROM_TEMPLATE)); //$NON-NLS-1$
+	}
+
+	/**
+	 * @since 3.9
+	 */
+	public String getCategory() {
+		return getProperty(IRepositoryConstants.PROPERTY_CATEGORY);
+	}
+
+	/**
+	 * @since 3.9
+	 */
+	public void setCategory(String category) {
+		setProperty(IRepositoryConstants.PROPERTY_CATEGORY, category);
 	}
 
 }

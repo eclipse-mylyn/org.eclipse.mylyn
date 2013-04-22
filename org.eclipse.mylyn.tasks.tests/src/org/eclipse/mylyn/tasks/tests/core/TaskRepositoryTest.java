@@ -79,4 +79,18 @@ public class TaskRepositoryTest extends TestCase {
 		}
 		assertTrue(caughtException);
 	}
+
+	public void testGetCategory() {
+		assertNull(taskRepository.getCategory());
+	}
+
+	public void testSetCategory() {
+		taskRepository.setCategory(TaskRepository.CATEGORY_TASKS);
+		assertEquals(TaskRepository.CATEGORY_TASKS, taskRepository.getCategory());
+		taskRepository.setCategory("any");
+		assertEquals("any", taskRepository.getCategory());
+		taskRepository.setCategory(null);
+		assertEquals(null, taskRepository.getCategory());
+	}
+
 }

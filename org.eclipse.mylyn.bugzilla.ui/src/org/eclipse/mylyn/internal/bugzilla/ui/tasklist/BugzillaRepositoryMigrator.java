@@ -12,7 +12,6 @@
 package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorExtensions;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryMigrator;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -31,8 +30,8 @@ public class BugzillaRepositoryMigrator extends AbstractRepositoryMigrator {
 	@Override
 	public boolean migrateRepository(TaskRepository repository) {
 		boolean migrated = false;
-		if (repository.getProperty(IRepositoryConstants.PROPERTY_CATEGORY) == null) {
-			repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY, IRepositoryConstants.CATEGORY_BUGS);
+		if (repository.getCategory() == null) {
+			repository.setCategory(TaskRepository.CATEGORY_BUGS);
 			migrated = true;
 		}
 		// FIXME the Eclipse.org Bugzilla URL should not be hard coded here

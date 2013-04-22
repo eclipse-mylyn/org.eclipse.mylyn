@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryMigrator;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -29,8 +28,8 @@ public class LocalRepositoryMigrator extends AbstractRepositoryMigrator {
 
 	@Override
 	public boolean migrateRepository(TaskRepository repository) {
-		if (repository.getProperty(IRepositoryConstants.PROPERTY_CATEGORY) == null) {
-			repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY, IRepositoryConstants.CATEGORY_TASKS);
+		if (repository.getCategory() == null) {
+			repository.setCategory(TaskRepository.CATEGORY_TASKS);
 			return true;
 		}
 		return false;

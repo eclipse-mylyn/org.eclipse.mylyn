@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.internal.trac.ui;
 
-import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryMigrator;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -28,8 +27,8 @@ public class TracRepositoryMigrator extends AbstractRepositoryMigrator {
 
 	@Override
 	public boolean migrateRepository(TaskRepository repository) {
-		if (repository.getProperty(IRepositoryConstants.PROPERTY_CATEGORY) == null) {
-			repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY, IRepositoryConstants.CATEGORY_BUGS);
+		if (repository.getCategory() == null) {
+			repository.setCategory(TaskRepository.CATEGORY_BUGS);
 			return true;
 		}
 		return false;
