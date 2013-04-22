@@ -324,9 +324,14 @@ public class ReviewSetContentSection implements IRemoteEmfObserver<IReviewItemSe
 	}
 
 	public void failed(IReviewItemSet parent, List<IFileItem> object, IStatus status) {
-		StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-				"Error loading patch set", status.getException())); //$NON-NLS-1$
-		AbstractReviewSection.appendMessage(getParentSection().getSection(), "Couldn't load patch set.");
+		Status errorStatus = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error loading patch set",
+				status.getException());
+		StatusHandler.log(errorStatus);
+		if (getParentSection().getSection().getTextClient() != null) {
+			AbstractReviewSection.appendMessage(getParentSection().getSection(), "Couldn't load patch set.");
+		} else {
+			((AbstractReviewTaskEditorPage) getParentSection().getTaskEditorPage()).failed(null, null, errorStatus);
+		}
 	}
 
 	public void dispose() {

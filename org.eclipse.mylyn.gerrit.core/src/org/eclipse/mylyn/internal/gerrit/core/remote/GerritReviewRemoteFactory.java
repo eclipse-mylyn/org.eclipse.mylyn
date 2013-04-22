@@ -63,7 +63,8 @@ import com.google.gerrit.reviewdb.UserIdentity;
  * @author Miles Parker
  * @author Steffen Pingel
  */
-public class GerritReviewRemoteFactory extends AbstractRemoteEmfFactory<IRepository, IReview, GerritChange, String, String> {
+public class GerritReviewRemoteFactory extends
+		AbstractRemoteEmfFactory<IRepository, IReview, GerritChange, String, String> {
 
 	public GerritReviewRemoteFactory(GerritRemoteFactoryProvider gerritRemoteFactoryProvider) {
 		super(gerritRemoteFactoryProvider, ReviewsPackage.Literals.REVIEW_GROUP__REVIEWS,
@@ -79,7 +80,7 @@ public class GerritReviewRemoteFactory extends AbstractRemoteEmfFactory<IReposit
 	@Override
 	public GerritChange pull(IRepository parent, String remoteKey, IProgressMonitor monitor) throws CoreException {
 		try {
-			getGerritProvider().getClient().refreshConfig(new NullProgressMonitor());
+			getGerritProvider().getClient().refreshConfigOnce(new NullProgressMonitor());
 
 			GerritChange gerritChange = getGerritProvider().getClient().getChange(remoteKey, monitor);
 			final ChangeDetailX detail = gerritChange.getChangeDetail();

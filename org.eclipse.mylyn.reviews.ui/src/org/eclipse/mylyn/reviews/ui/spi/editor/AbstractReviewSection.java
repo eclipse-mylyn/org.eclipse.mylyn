@@ -127,7 +127,6 @@ public abstract class AbstractReviewSection extends AbstractTaskEditorSection im
 		final Label textClientLabel = (Label) section.getTextClient();
 		textClientLabel.setText("  " + message);
 		textClientLabel.getParent().layout(true, true);
-		//textClientLabel.setVisible(cachingInProgress || !section.isExpanded());
 	}
 
 	public Composite getComposite() {
