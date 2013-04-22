@@ -24,9 +24,11 @@ import org.eclipse.mylyn.internal.reviews.ui.ReviewsImages;
 import org.eclipse.mylyn.reviews.core.model.IApprovalType;
 import org.eclipse.mylyn.reviews.core.model.IChange;
 import org.eclipse.mylyn.reviews.core.model.IRequirementEntry;
+import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewerEntry;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.reviews.core.model.RequirementStatus;
+import org.eclipse.mylyn.reviews.ui.spi.factories.AbstractUiFactoryProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -48,7 +50,7 @@ import org.eclipse.ui.forms.widgets.Section;
  * @author Steffen Pingel
  * @author Miles Parker
  */
-public class ReviewDetailSection extends AbstractReviewSection {
+public abstract class ReviewDetailSection extends AbstractReviewSection {
 
 	public ReviewDetailSection() {
 		setPartName("Review");
@@ -165,6 +167,10 @@ public class ReviewDetailSection extends AbstractReviewSection {
 				addTextClient(toolkit, subSection, headerText);
 			}
 		}
+		if (getUiFactoryProvider() != null) {
+			Composite actionComposite = getUiFactoryProvider().createButtons(this, composite, getToolkit(), getReview());
+			GridDataFactory.fillDefaults().span(2, 1).applyTo(actionComposite);
+		}
 	}
 
 	protected boolean canAddReviewers() {
@@ -203,6 +209,8 @@ public class ReviewDetailSection extends AbstractReviewSection {
 			});
 		}
 	}
+
+	protected abstract AbstractUiFactoryProvider<IReview> getUiFactoryProvider();
 
 	@Override
 	protected boolean shouldExpandOnCreate() {

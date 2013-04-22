@@ -85,7 +85,7 @@ public class GerritTaskEditorPage extends AbstractReviewTaskEditorPage {
 		descriptors.add(new TaskEditorPartDescriptor(ReviewDetailSection.class.getName()) {
 			@Override
 			public AbstractTaskEditorPart createPart() {
-				return new ReviewDetailSection();
+				return new GerritReviewDetailSection();
 			}
 		});
 		descriptors.add(new TaskEditorPartDescriptor(ReviewSetSection.class.getName()) {

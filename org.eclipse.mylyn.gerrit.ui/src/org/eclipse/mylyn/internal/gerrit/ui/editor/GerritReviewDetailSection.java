@@ -13,10 +13,10 @@
 
 package org.eclipse.mylyn.internal.gerrit.ui.editor;
 
-import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.gerrit.ui.factories.ReviewUiFactoryProvider;
+import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.ui.spi.editor.ReviewDetailSection;
-import org.eclipse.swt.widgets.Composite;
+import org.eclipse.mylyn.reviews.ui.spi.factories.AbstractUiFactoryProvider;
 
 import com.google.gerrit.reviewdb.Change;
 
@@ -28,16 +28,9 @@ import com.google.gerrit.reviewdb.Change;
  */
 public class GerritReviewDetailSection extends ReviewDetailSection {
 
-	private final ReviewUiFactoryProvider reviewUiFactoryProvider = new ReviewUiFactoryProvider();
-
 	@Override
-	protected void createReviewersSubSection(Composite parent) {
-		if (getReview().getReviewerApprovals().isEmpty() && !canAddReviewers()) {
-			return;
-		}
-		super.createReviewersSubSection(parent);
-		Composite actionComposite = reviewUiFactoryProvider.createButtons(this, composite, getToolkit(), getReview());
-		GridDataFactory.fillDefaults().span(2, 1).applyTo(actionComposite);
+	protected AbstractUiFactoryProvider<IReview> getUiFactoryProvider() {
+		return new ReviewUiFactoryProvider();
 	}
 
 	@Override
