@@ -72,13 +72,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.commons.soap"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.mylyn.commons.xmlrpc"
          download-size="0"
          install-size="0"
@@ -181,13 +174,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.commons.soap.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.mylyn.commons.ui.source"
          download-size="0"
          install-size="0"
@@ -253,59 +239,7 @@
          unpack="false"/>
 
    <plugin
-         id="javax.xml.bind"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.axis"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="javax.wsdl"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="javax.xml.rpc"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="javax.xml.soap"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.apache.commons.discovery"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.apache.commons.logging"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="javax.activation"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="javax.mail"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -327,13 +261,6 @@
 
    <plugin
          id="org.apache.commons.lang"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="javax.xml"
          download-size="0"
          install-size="0"
          version="0.0.0"
