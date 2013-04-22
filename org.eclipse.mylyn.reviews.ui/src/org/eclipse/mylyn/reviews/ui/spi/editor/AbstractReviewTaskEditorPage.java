@@ -16,7 +16,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.reviews.core.model.IRepository;
@@ -24,7 +23,6 @@ import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.IRemoteEmfObserver;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.eclipse.mylyn.reviews.core.spi.remote.review.IReviewRemoteFactoryProvider;
-import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.swt.widgets.Display;
@@ -45,6 +43,8 @@ public abstract class AbstractReviewTaskEditorPage extends AbstractTaskEditorPag
 
 	private IReviewRemoteFactoryProvider factoryProvider;
 
+	private boolean intialRefreshRequested;
+
 	private boolean refreshRequested;
 
 	public AbstractReviewTaskEditorPage(TaskEditor editor, String id, String label, String connectorKind) {
@@ -58,6 +58,7 @@ public abstract class AbstractReviewTaskEditorPage extends AbstractTaskEditorPag
 			consumer = getFactoryProvider().getReviewFactory().getConsumerForRemoteKey(getFactoryProvider().getRoot(),
 					getTask().getTaskId());
 			consumer.addObserver(AbstractReviewTaskEditorPage.this);
+			intialRefreshRequested = true;
 			consumer.retrieve(false);
 		}
 	}
@@ -85,8 +86,7 @@ public abstract class AbstractReviewTaskEditorPage extends AbstractTaskEditorPag
 	}
 
 	public void updated(IRepository parent, IReview object, boolean modified) {
-		if (refreshRequested) {
-			getTask().getSynchronizationState().isIncoming();
+		if (refreshRequested || (modified && !intialRefreshRequested)) {
 			//Prevent CME from observer and allow other UI processes time to execute
 			Display.getCurrent().asyncExec(new Runnable() {
 				@Override
@@ -95,13 +95,8 @@ public abstract class AbstractReviewTaskEditorPage extends AbstractTaskEditorPag
 				}
 			});
 			refreshRequested = false;
-		} else if (modified) {
-			if (getTask() instanceof AbstractTask) {
-				//This is a little awkward, as if we have another update source, we'll need to re-refresh from here as well,
-				//but there isn't an obvious way to force the update to occur at this point w/o creating a cycle
-				((AbstractTask) getTask()).setSynchronizationState(ITask.SynchronizationState.INCOMING);
-			}
 		}
+		intialRefreshRequested = false;
 	}
 
 	public void failed(IRepository parent, IReview object, final IStatus status) {
