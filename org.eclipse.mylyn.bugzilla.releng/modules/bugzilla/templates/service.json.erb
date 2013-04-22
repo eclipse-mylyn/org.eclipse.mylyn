@@ -4,10 +4,10 @@
   "version": "<%= envversion %>",
   "info": "<%= envinfo %>",
   "properties":{
-<% if @envdefault           %><% if propertyanz.to_i > 0 %>   ,<% else %>    <% end %><% propertyanz = propertyanz.to_i -%><% propertyanz += 1 -%>"default": "<%= envdefault %>"<% end %>
+<% if @envdefault           %><% if propertyanz.to_i > 0 %>   ,<% else %>    <% end %><% propertyanz = propertyanz.to_i -%><% propertyanz += 1 -%>"default": "1"<% end %>
 <% if @custom_wf            %><% if propertyanz.to_i > 0 %>   ,<% else %>    <% end %><% propertyanz = propertyanz.to_i -%><% propertyanz += 1 -%>"custom_wf": "<%= custom_wf %>"<% end %>
 <% if @custom_wf_and_status %><% if propertyanz.to_i > 0 %>   ,<% else %>    <% end %><% propertyanz = propertyanz.to_i -%><% propertyanz += 1 -%>"custom_wf_and_status": "<%= custom_wf_and_status %>"<% end %>
-<% if @xmlrpc_enabled       %><% if propertyanz.to_i > 0 %>   ,<% else %>    <% end %><% propertyanz = propertyanz.to_i -%><% propertyanz += 1 -%>"xmlrpc_enabled": "<%= xmlrpc_enabled %>"<% end %>
+<% if !@xmlrpc_enabled       %><% if propertyanz.to_i > 0 %>   ,<% else %>    <% end %><% propertyanz = propertyanz.to_i -%><% propertyanz += 1 -%>"xmlrpc_enabled": "<%= xmlrpc_enabled %>"<% end %>
 <% if @desciptorfile > " "  %><% if propertyanz.to_i > 0 %>   ,<% else %>    <% end %><% propertyanz = propertyanz.to_i -%><% propertyanz += 1 -%>"desciptorfile": "<%= desciptorfile %>"<% end %>
    }
 }

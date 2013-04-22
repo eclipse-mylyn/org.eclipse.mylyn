@@ -23,7 +23,7 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
   
   /* Sites */
 
-  bugzilla::site { "bugzilla-3.6.12":
+  bugzilla::site { "bugzilla-3.6.13":
     major     => "3",
     minor     => "6",
   }
