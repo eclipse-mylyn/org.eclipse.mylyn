@@ -12,14 +12,10 @@
 <unit id="com.google.gwtjsonrpc" version="1.2.5.v201112241444"/>
 <unit id="com.google.gwtorm" version="1.1.4.v201112241444"/>
 <unit id="com.sun.syndication" version="0.9.0.v200803061811"/>
-<unit id="com.sun.xml.bind" version="2.2.0.v201105210647"/>
 <unit id="javax.activation" version="1.1.0.v201211130549"/>
 <unit id="javax.mail" version="1.4.0.v201005080615"/>
-<unit id="javax.xml" version="1.3.4.v201005080400"/>
-<unit id="javax.xml.bind" version="2.2.0.v201105210648"/>
 <unit id="javax.xml.rpc" version="1.1.0.v201209140446"/>
 <unit id="javax.xml.soap" version="1.3.0.v201105210645"/>
-<unit id="javax.xml.stream" version="1.0.1.v201004272200"/>
 <unit id="javax.wsdl" version="1.6.2.v201012040545"/>
 <unit id="org.antlr.runtime" version="3.0.0.v200803061811"/>
 <unit id="org.apache.ant" version="1.8.4.v201303080030"/>
