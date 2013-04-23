@@ -230,9 +230,14 @@ public class GerritReviewRemoteFactory extends
 			IUser author = getGerritProvider().createUser(parent, detail.getAccounts(),
 					patchSetDetail.getInfo().getAuthor().getAccount());
 			itemSet.setAddedBy(author);
-			IUser committer = getGerritProvider().createUser(parent, detail.getAccounts(),
-					patchSetDetail.getInfo().getCommitter().getAccount());
-			itemSet.setCommittedBy(committer);
+			//User Identity refers to a specific user interaction for the current patch set
+			UserIdentity committerIdent = patchSetDetail.getInfo().getCommitter();
+			if (committerIdent != null) {
+				IUser committer = getGerritProvider().createUser(parent, detail.getAccounts(),
+						committerIdent.getAccount());
+				itemSet.setCommittedBy(committer);
+				itemSet.setCreationDate(committerIdent.getDate());
+			}
 			UserIdentity authorIdent = patchSetDetail.getInfo().getAuthor();
 			if (authorIdent != null) {
 				itemSet.setModificationDate(authorIdent.getDate());
