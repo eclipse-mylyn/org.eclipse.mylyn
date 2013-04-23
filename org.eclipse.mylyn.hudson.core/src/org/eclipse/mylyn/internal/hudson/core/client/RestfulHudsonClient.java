@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -378,25 +377,8 @@ public class RestfulHudsonClient {
 	}
 
 	public static <T> T unmarshal(Node node, Class<T> clazz) throws JAXBException {
-		JAXBContext ctx;
-		try {
-			ctx = JAXBContext.newInstance(clazz);
-		} catch (JAXBException e) {
-			// fails on Java 5, see bug 325176
-			// instantiate com.sun.xml.bind implementation which is an optional dependency
-			// use reflection to avoid compile time dependency, see bug 344198 
-			//JAXBContext ctx = new com.sun.xml.bind.v2.runtime.JAXBContextImpl.JAXBContextBuilder().setClasses(new Class[] { clazz }).build();
-			try {
-				Class<?> contextBuilderClass = Class.forName("com.sun.xml.bind.v2.runtime.JAXBContextImpl$JAXBContextBuilder");
-				Object obj = contextBuilderClass.newInstance();
-				Method method = contextBuilderClass.getDeclaredMethod("setClasses", Class[].class);
-				obj = method.invoke(obj, new Object[] { new Class[] { clazz } });
-				method = contextBuilderClass.getDeclaredMethod("build");
-				ctx = (JAXBContext) method.invoke(obj);
-			} catch (Exception e2) {
-				throw new JAXBException(e2);
-			}
-		}
+		JAXBContext ctx = JAXBContext.newInstance(clazz);
+
 		Unmarshaller unmarshaller = ctx.createUnmarshaller();
 
 		JAXBElement<T> hudsonElement = unmarshaller.unmarshal(node, clazz);
