@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Display;
  */
 public class ConnectorDiscoveryWizardMainPage extends WizardPage implements IShellProvider {
 
-	private static final String DEFAULT_DIRECTORY_URL = "http://www.eclipse.org/mylyn/discovery/directory-3.8.xml"; //$NON-NLS-1$
+	private static final String DEFAULT_DIRECTORY_URL = "http://www.eclipse.org/mylyn/discovery/directory-3.9.xml"; //$NON-NLS-1$
 
 	private static final String SYSTEM_PROPERTY_DIRECTORY_URL = "mylyn.discovery.directory"; //$NON-NLS-1$
 

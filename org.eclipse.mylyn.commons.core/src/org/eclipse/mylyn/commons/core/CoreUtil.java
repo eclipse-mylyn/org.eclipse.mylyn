@@ -40,7 +40,7 @@ public class CoreUtil {
 		}
 	}
 
-	private static final String FRAMEWORK_VERSION = "3.8.0"; //$NON-NLS-1$
+	private static final String FRAMEWORK_VERSION = "3.9.0"; //$NON-NLS-1$
 
 	/**
 	 * Returns a string representation of <code>object</code>. If object is a map or array the returned string will
