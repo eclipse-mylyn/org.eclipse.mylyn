@@ -18,9 +18,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
@@ -35,11 +32,9 @@ import org.eclipse.mylyn.internal.reviews.ui.providers.ReviewsLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
-import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.IRemoteEmfObserver;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
-import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -84,6 +79,8 @@ public class ReviewSetContentSection implements IRemoteEmfObserver<IReviewItemSe
 	private boolean modelContentsCurrent;
 
 	private Composite tableContainer;
+
+	private int lastCommentCount;
 
 	public ReviewSetContentSection(ReviewSetSection parentSection, final IReviewItemSet set) {
 		this.parentSection = parentSection;
@@ -220,9 +217,6 @@ public class ReviewSetContentSection implements IRemoteEmfObserver<IReviewItemSe
 		viewer = new TableViewer(composite, style);
 		GridDataFactory.fillDefaults().span(2, 1).grab(true, true).hint(500, heightHint).applyTo(viewer.getControl());
 		viewer.setContentProvider(new IStructuredContentProvider() {
-			private EContentAdapter modelAdapter;
-
-			private int addedDrafts;
 
 			public void dispose() {
 				// ignore
@@ -240,30 +234,6 @@ public class ReviewSetContentSection implements IRemoteEmfObserver<IReviewItemSe
 			}
 
 			public void inputChanged(final Viewer viewer, Object oldInput, Object newInput) {
-				if (modelAdapter != null) {
-					for (IReviewItem item : getReviewItems(oldInput)) {
-						((EObject) item).eAdapters().remove(modelAdapter);
-					}
-					addedDrafts = 0;
-				}
-
-				if (newInput instanceof IReviewItemSet) {
-					// monitors any new topics that are added
-					modelAdapter = new EContentAdapter() {
-						@Override
-						public void notifyChanged(Notification notification) {
-							super.notifyChanged(notification);
-							if (notification.getFeatureID(IReviewItem.class) == ReviewsPackage.REVIEW_ITEM__TOPICS
-									&& notification.getEventType() == Notification.ADD) {
-								viewer.refresh();
-								addedDrafts++;
-							}
-						}
-					};
-					for (Object item : getReviewItems(newInput)) {
-						((EObject) item).eAdapters().add(modelAdapter);
-					}
-				}
 			}
 		});
 		labelProvider = new ReviewsLabelProvider.Simple();
@@ -318,8 +288,15 @@ public class ReviewSetContentSection implements IRemoteEmfObserver<IReviewItemSe
 		updateMessage();
 	}
 
-	public void updated(IReviewItemSet parent, List<IFileItem> object, boolean modified) {
+	public void updated(IReviewItemSet parent, List<IFileItem> items, boolean modified) {
 		modelContentsCurrent &= !modified;
+		int currentCommentSize = 0;
+		for (IFileItem item : items) {
+			currentCommentSize += item.getAllComments().size();
+		}
+		modelContentsCurrent &= lastCommentCount == currentCommentSize;
+		requestedModelContents |= lastCommentCount != currentCommentSize;
+		lastCommentCount = currentCommentSize;
 		checkCreateModelControls();
 	}
 

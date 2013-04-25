@@ -34,11 +34,8 @@ import com.google.gerrit.reviewdb.PatchSet;
  */
 public class PublishUiFactory extends AbstractPatchSetUiFactory {
 
-	private final int addedDrafts;
-
 	public PublishUiFactory(IUiContext context, IReviewItemSet set) {
 		super("Publish Comments...", context, set);
-		this.addedDrafts = 0;
 	}
 
 	@Override
@@ -48,7 +45,7 @@ public class PublishUiFactory extends AbstractPatchSetUiFactory {
 
 		TaskAttribute comment = getTaskData().getRoot().getAttribute(TaskAttribute.COMMENT_NEW);
 		String editorCommentText = comment != null ? comment.getValue() : "";
-		int open = new PublishDialog(getShell(), getTask(), publishDetail, addedDrafts, editorCommentText).open(getEditor());
+		int open = new PublishDialog(getShell(), getTask(), publishDetail, getModelObject(), editorCommentText).open(getEditor());
 		if (open == Window.OK && comment != null) {
 			comment.clearValues();
 			if (getTaskEditorPage() != null) {

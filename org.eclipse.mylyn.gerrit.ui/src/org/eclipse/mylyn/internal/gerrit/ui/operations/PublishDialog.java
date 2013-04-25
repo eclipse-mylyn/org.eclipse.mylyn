@@ -24,6 +24,8 @@ import org.eclipse.mylyn.internal.gerrit.core.client.compat.PermissionLabel;
 import org.eclipse.mylyn.internal.gerrit.core.operations.GerritOperation;
 import org.eclipse.mylyn.internal.gerrit.core.operations.PublishRequest;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor;
+import org.eclipse.mylyn.reviews.core.model.IComment;
+import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -59,15 +61,15 @@ public class PublishDialog extends GerritOperationDialog {
 
 	private Label statusLabel;
 
-	private final int addedDrafts;
-
 	private final String editorCommentText;
 
-	public PublishDialog(Shell parentShell, ITask task, PatchSetPublishDetail publishDetail, int addedDrafts,
+	private final IReviewItemSet set;
+
+	public PublishDialog(Shell parentShell, ITask task, PatchSetPublishDetail publishDetail, IReviewItemSet set,
 			String editorCommentText) {
 		super(parentShell, task);
 		this.publishDetail = publishDetail;
-		this.addedDrafts = addedDrafts;
+		this.set = set;
 		this.editorCommentText = editorCommentText;
 		this.approvalButtons = new ArrayList<Button>();
 		setNeedsConfig(true);
@@ -115,7 +117,13 @@ public class PublishDialog extends GerritOperationDialog {
 		messageEditor.getControl().setFocus();
 
 		statusLabel = new Label(composite, SWT.NONE);
-		statusLabel.setText(NLS.bind("Publishes {0} draft(s).", publishDetail.getDrafts().size() + addedDrafts));
+
+		int drafts = 0;
+		for (IComment comment : set.getAllComments()) {
+			drafts += comment.isDraft() ? 1 : 0;
+		}
+
+		statusLabel.setText(NLS.bind("Publishes {0} draft{1}.", drafts, drafts > 1 ? "s" : ""));
 
 		return composite;
 	}

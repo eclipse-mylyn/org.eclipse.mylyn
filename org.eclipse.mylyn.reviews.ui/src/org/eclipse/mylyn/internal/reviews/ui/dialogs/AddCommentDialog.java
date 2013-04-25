@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.reviews.ui.dialogs;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -24,9 +25,14 @@ import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorExtensions;
+import org.eclipse.mylyn.reviews.core.model.IFileItem;
+import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
+import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.core.model.ITopic;
+import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
+import org.eclipse.mylyn.reviews.core.spi.remote.review.IReviewRemoteFactoryProvider;
 import org.eclipse.mylyn.reviews.ui.ProgressDialog;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -124,6 +130,21 @@ public class AddCommentDialog extends ProgressDialog {
 
 		if (result.get().isOK()) {
 			item.getTopics().add(topic);
+			IFileItem file = null;
+			if (item instanceof IFileItem) {
+				file = (IFileItem) item;
+			} else if (item instanceof IFileVersion) {
+				file = ((IFileVersion) item).getFile();
+			}
+			if (file != null) {
+				TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(
+						reviewBehavior.getTask().getConnectorKind(), reviewBehavior.getTask().getRepositoryUrl());
+				IReviewRemoteFactoryProvider factoryProvider = ReviewsUiPlugin.getDefault().getFactoryProvider(
+						reviewBehavior.getTask().getConnectorKind(), taskRepository);
+				RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, ?, String, String> consumer = factoryProvider.getReviewItemSetContentFactory()
+						.getConsumerForLocalKey(file.getSet(), file.getSet().getId());
+				consumer.updateObservers();
+			}
 			return true;
 		} else {
 			StatusManager.getManager().handle(result.get(), StatusManager.SHOW | StatusManager.LOG);

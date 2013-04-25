@@ -193,7 +193,6 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, R
 	 */
 	@Override
 	public void applyModel(boolean force) {
-		//We may not have been retrieving the model at this point
 		NotificationChain msgs = new NotificationChainImpl();
 		EReference reference = factory.getParentReference();
 		boolean modified = false;
@@ -336,6 +335,17 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, R
 		synchronized (remoteEmfObservers) {
 			remoteEmfObservers.remove(observer);
 		}
+	}
+
+	public void updateObservers() {
+		NotificationChain msgs = new NotificationChainImpl();
+		msgs.add(new RemoteENotificationImpl((InternalEObject) parentObject, RemoteNotification.REMOTE_MEMBER_UPDATE,
+				factory.getParentReference(), modelObject, false));
+		if (modelObject instanceof EObject) {
+			msgs.add(new RemoteENotificationImpl((InternalEObject) modelObject, RemoteNotification.REMOTE_UPDATE, null,
+					null, false));
+		}
+		msgs.dispatch();
 	}
 
 	/**
