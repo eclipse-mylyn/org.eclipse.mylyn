@@ -18,18 +18,20 @@ import java.util.List;
  * The following features are supported:
  * <ul>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IComment#getAuthor <em>Author</em>}</li>
- * <li>{@link org.eclipse.mylyn.reviews.core.model.IComment#getType <em>Type</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IComment#getDescription <em>Description</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IComment#getId <em>Id</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IComment#getReplies <em>Replies</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IComment#isDraft <em>Draft</em>}</li>
- * <li>{@link org.eclipse.mylyn.reviews.core.model.IComment#getParentTopic <em>Parent Topic</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IComment#getLocations <em>Locations</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IComment#getReview <em>Review</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IComment#getTitle <em>Title</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IComment#getItem <em>Item</em>}</li>
  * </ul>
  * </p>
  * 
  * @generated
  */
-public interface IComment extends IReviewComponent, IIndexed, IDated {
+public interface IComment extends IIndexed, IDated {
 	/**
 	 * Returns the value of the '<em><b>Author</b></em>' reference. <!-- begin-user-doc -->
 	 * <p>
@@ -54,31 +56,6 @@ public interface IComment extends IReviewComponent, IIndexed, IDated {
 	 * @generated
 	 */
 	void setAuthor(IUser value);
-
-	/**
-	 * Returns the value of the '<em><b>Type</b></em>' containment reference. <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Type</em>' containment reference isn't clear, there really should be more of a
-	 * description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * 
-	 * @return the value of the '<em>Type</em>' containment reference.
-	 * @see #setType(ICommentType)
-	 * @generated
-	 */
-	ICommentType getType();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IComment#getType <em>Type</em>}' containment
-	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Type</em>' containment reference.
-	 * @see #getType()
-	 * @generated
-	 */
-	void setType(ICommentType value);
 
 	/**
 	 * Returns the value of the '<em><b>Description</b></em>' attribute. <!-- begin-user-doc -->
@@ -130,7 +107,7 @@ public interface IComment extends IReviewComponent, IIndexed, IDated {
 	void setId(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Replies</b></em>' containment reference list. The list contents are of type
+	 * Returns the value of the '<em><b>Replies</b></em>' reference list. The list contents are of type
 	 * {@link org.eclipse.mylyn.reviews.core.model.IComment}. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Replies</em>' containment reference list isn't clear, there really should be more of a
@@ -138,7 +115,7 @@ public interface IComment extends IReviewComponent, IIndexed, IDated {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Replies</em>' containment reference list.
+	 * @return the value of the '<em>Replies</em>' reference list.
 	 * @generated
 	 */
 	List<IComment> getReplies();
@@ -169,30 +146,95 @@ public interface IComment extends IReviewComponent, IIndexed, IDated {
 	void setDraft(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Parent Topic</b></em>' container reference. It is bidirectional and its opposite
-	 * is '{@link org.eclipse.mylyn.reviews.core.model.ITopic#getComments <em>Comments</em>}'. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Locations</b></em>' containment reference list. The list contents are of type
+	 * {@link org.eclipse.mylyn.reviews.core.model.ILocation}. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Parent Topic</em>' reference isn't clear, there really should be more of a description
+	 * If the meaning of the '<em>Locations</em>' containment reference list isn't clear, there really should be more of
+	 * a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Locations</em>' containment reference list.
+	 * @generated
+	 */
+	List<ILocation> getLocations();
+
+	/**
+	 * Returns the value of the '<em><b>Review</b></em>' reference. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Review</em>' reference isn't clear, there really should be more of a description
 	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Parent Topic</em>' container reference.
-	 * @see #setParentTopic(ITopic)
-	 * @see org.eclipse.mylyn.reviews.core.model.ITopic#getComments
+	 * @return the value of the '<em>Review</em>' reference.
+	 * @see #setReview(IReview)
 	 * @generated
 	 */
-	ITopic getParentTopic();
+	IReview getReview();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IComment#getParentTopic <em>Parent Topic</em>}
-	 * ' container reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IComment#getReview <em>Review</em>}'
+	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
-	 *            the new value of the '<em>Parent Topic</em>' container reference.
-	 * @see #getParentTopic()
+	 *            the new value of the '<em>Review</em>' reference.
+	 * @see #getReview()
 	 * @generated
 	 */
-	void setParentTopic(ITopic value);
+	void setReview(IReview value);
+
+	/**
+	 * Returns the value of the '<em><b>Title</b></em>' attribute. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Title</em>' attribute isn't clear, there really should be more of a description
+	 * here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Title</em>' attribute.
+	 * @see #setTitle(String)
+	 * @generated
+	 */
+	String getTitle();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IComment#getTitle <em>Title</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Title</em>' attribute.
+	 * @see #getTitle()
+	 * @generated
+	 */
+	void setTitle(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Item</b></em>' container reference. It is bidirectional and its opposite is '
+	 * {@link org.eclipse.mylyn.reviews.core.model.ICommentContainer#getComments <em>Comments</em>}'. <!--
+	 * begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Item</em>' container reference isn't clear, there really should be more of a
+	 * description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Item</em>' container reference.
+	 * @see #setItem(ICommentContainer)
+	 * @see org.eclipse.mylyn.reviews.core.model.ICommentContainer#getComments
+	 * @generated
+	 */
+	ICommentContainer getItem();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IComment#getItem <em>Item</em>}' container
+	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Item</em>' container reference.
+	 * @see #getItem()
+	 * @generated
+	 */
+	void setItem(ICommentContainer value);
 
 } // IComment

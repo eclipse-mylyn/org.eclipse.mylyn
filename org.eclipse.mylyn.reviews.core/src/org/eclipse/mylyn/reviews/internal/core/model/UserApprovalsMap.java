@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.BasicEMap;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
@@ -58,8 +59,8 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 	protected IUser key;
 
 	/**
-	 * The cached value of the '{@link #getTypedValue() <em>Value</em>}' reference. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getTypedValue() <em>Value</em>}' containment reference. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getTypedValue()
 	 * @generated
@@ -136,6 +137,15 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 			InternalEObject oldValue = (InternalEObject) value;
 			value = (IReviewerEntry) eResolveProxy(oldValue);
 			if (value != oldValue) {
+				InternalEObject newValue = (InternalEObject) value;
+				NotificationChain msgs = oldValue.eInverseRemove(this, EOPPOSITE_FEATURE_BASE
+						- ReviewsPackage.USER_APPROVALS_MAP__VALUE, null, null);
+				if (newValue.eInternalContainer() == null) {
+					msgs = newValue.eInverseAdd(this,
+							EOPPOSITE_FEATURE_BASE - ReviewsPackage.USER_APPROVALS_MAP__VALUE, null, msgs);
+				}
+				if (msgs != null)
+					msgs.dispatch();
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.USER_APPROVALS_MAP__VALUE,
 							oldValue, value));
@@ -158,12 +168,54 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 	 * 
 	 * @generated
 	 */
-	public void setTypedValue(IReviewerEntry newValue) {
+	public NotificationChain basicSetTypedValue(IReviewerEntry newValue, NotificationChain msgs) {
 		IReviewerEntry oldValue = value;
 		value = newValue;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.USER_APPROVALS_MAP__VALUE, oldValue,
-					value));
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+					ReviewsPackage.USER_APPROVALS_MAP__VALUE, oldValue, newValue);
+			if (msgs == null)
+				msgs = notification;
+			else
+				msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setTypedValue(IReviewerEntry newValue) {
+		if (newValue != value) {
+			NotificationChain msgs = null;
+			if (value != null)
+				msgs = ((InternalEObject) value).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
+						- ReviewsPackage.USER_APPROVALS_MAP__VALUE, null, msgs);
+			if (newValue != null)
+				msgs = ((InternalEObject) newValue).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
+						- ReviewsPackage.USER_APPROVALS_MAP__VALUE, null, msgs);
+			msgs = basicSetTypedValue(newValue, msgs);
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.USER_APPROVALS_MAP__VALUE, newValue,
+					newValue));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+		case ReviewsPackage.USER_APPROVALS_MAP__VALUE:
+			return basicSetTypedValue(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**

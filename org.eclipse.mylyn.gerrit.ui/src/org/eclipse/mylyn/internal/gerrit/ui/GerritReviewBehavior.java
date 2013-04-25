@@ -23,7 +23,7 @@ import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
-import org.eclipse.mylyn.reviews.core.model.ITopic;
+import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.team.core.history.IFileRevision;
@@ -52,7 +52,7 @@ public class GerritReviewBehavior extends ReviewBehavior {
 	}
 
 	@Override
-	public IStatus addTopic(IReviewItem item, ITopic topic, IProgressMonitor monitor) {
+	public IStatus addComment(IReviewItem item, IComment comment, IProgressMonitor monitor) {
 		short side = 1;
 		String id = item.getId();
 		if (id.startsWith("base-")) {
@@ -61,11 +61,11 @@ public class GerritReviewBehavior extends ReviewBehavior {
 			side = 0;
 		}
 		Patch.Key key = Patch.Key.parse(id);
-		for (ILocation location : topic.getLocations()) {
+		for (ILocation location : comment.getLocations()) {
 			if (location instanceof ILineLocation) {
 				ILineLocation lineLocation = (ILineLocation) location;
 				SaveDraftRequest request = new SaveDraftRequest(key, lineLocation.getRangeMin(), side);
-				request.setMessage(topic.getDescription());
+				request.setMessage(comment.getDescription());
 
 				GerritOperation<PatchLineComment> operation = getOperationFactory().createSaveDraftOperation(getTask(),
 						request);
@@ -73,7 +73,7 @@ public class GerritReviewBehavior extends ReviewBehavior {
 			}
 		}
 		//We'll only get here if there is something really broken in calling code or model. Gerrit has one and only one comment per location.
-		throw new RuntimeException("Internal Exception. No line location for comment. Topic: " + topic.getId());
+		throw new RuntimeException("Internal Exception. No line location for comment. Comment: " + comment.getId());
 	}
 
 	@Override

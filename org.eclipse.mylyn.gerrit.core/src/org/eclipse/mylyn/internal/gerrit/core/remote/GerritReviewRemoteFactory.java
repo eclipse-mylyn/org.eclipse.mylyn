@@ -36,12 +36,10 @@ import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IRequirementEntry;
 import org.eclipse.mylyn.reviews.core.model.IRequirementReviewState;
 import org.eclipse.mylyn.reviews.core.model.IReview;
-import org.eclipse.mylyn.reviews.core.model.IReviewGroup;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.core.model.IReviewerEntry;
 import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
 import org.eclipse.mylyn.reviews.core.model.ISimpleReviewState;
-import org.eclipse.mylyn.reviews.core.model.ITopic;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.reviews.core.model.RequirementStatus;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.AbstractRemoteEmfFactory;
@@ -69,7 +67,7 @@ public class GerritReviewRemoteFactory extends
 		AbstractRemoteEmfFactory<IRepository, IReview, GerritChange, String, String> {
 
 	public GerritReviewRemoteFactory(GerritRemoteFactoryProvider gerritRemoteFactoryProvider) {
-		super(gerritRemoteFactoryProvider, ReviewsPackage.Literals.REVIEW_GROUP__REVIEWS,
+		super(gerritRemoteFactoryProvider, ReviewsPackage.Literals.REPOSITORY__REVIEWS,
 				ReviewsPackage.Literals.CHANGE__ID);
 	}
 
@@ -124,7 +122,7 @@ public class GerritReviewRemoteFactory extends
 		}
 	}
 
-	protected void pull(IReviewGroup parent, ChangeDetailX detail, List<ChangeInfo> remoteChanges,
+	protected void pull(IRepository parent, ChangeDetailX detail, List<ChangeInfo> remoteChanges,
 			IProgressMonitor monitor) throws CoreException {
 		for (ChangeInfo remoteChange : remoteChanges) {
 			AccountInfo remoteOwner = detail.getAccounts().get(remoteChange.getOwner());
@@ -191,25 +189,18 @@ public class GerritReviewRemoteFactory extends
 	}
 
 	public void updateComments(IRepository parent, IReview review, ChangeDetailX detail) {
-		//Topics and Comments
-		int oldTopicCount = review.getTopics().size();
-		int topicIndex = 0;
+		int oldCommentCount = review.getComments().size();
+		int commentIndex = 0;
 		for (ChangeMessage message : detail.getMessages()) {
-			if (topicIndex++ < oldTopicCount) {
+			if (commentIndex++ < oldCommentCount) {
 				continue;
 			}
-			ITopic topic = review.createTopicComment(null, message.getMessage());
-			topic.setDraft(false);
-			topic.setCreationDate(message.getWrittenOn());
-			for (IComment comment : topic.getComments()) {
-				comment.setDraft(false);
-			}
+			IComment comment = review.createComment(null, message.getMessage());
+			comment.setDraft(false);
+			comment.setCreationDate(message.getWrittenOn());
 			if (message.getAuthor() != null) {
 				IUser author = getGerritProvider().createUser(parent, detail.getAccounts(), message.getAuthor());
-				topic.setAuthor(author);
-				for (IComment comment : topic.getComments()) {
-					comment.setAuthor(topic.getAuthor());
-				}
+				comment.setAuthor(author);
 			}
 		}
 	}
@@ -342,7 +333,7 @@ public class GerritReviewRemoteFactory extends
 		create(parent, review.getChildren(), detail, detail.getNeededBy());
 	}
 
-	protected void create(IReviewGroup group, List<IChange> localChanges, ChangeDetailX detail,
+	protected void create(IRepository group, List<IChange> localChanges, ChangeDetailX detail,
 			List<ChangeInfo> remoteChanges) {
 		localChanges.clear();
 		for (ChangeInfo remoteChange : remoteChanges) {

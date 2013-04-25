@@ -61,7 +61,7 @@
          <enablement>
             <or>
                <instanceof
-                     value="org.eclipse.mylyn.reviews.core.model.ITopic">
+                     value="org.eclipse.mylyn.reviews.core.model.IComment">
                </instanceof>
                <instanceof
                      value="org.eclipse.mylyn.reviews.core.model.IFileItem">

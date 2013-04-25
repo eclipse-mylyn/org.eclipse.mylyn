@@ -22,12 +22,16 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.mylyn.reviews.core.model.IApprovalType;
 import org.eclipse.mylyn.reviews.core.model.IRepository;
+import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewState;
+import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -42,12 +46,15 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Repository#getTaskConnectorKind <em>Task Connector Kind
  * </em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Repository#getTaskRepository <em>Task Repository</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Repository#getReviews <em>Reviews</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Repository#getUsers <em>Users</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Repository#getDescription <em>Description</em>}</li>
  * </ul>
  * </p>
  * 
  * @generated
  */
-public class Repository extends ReviewGroup implements IRepository {
+public class Repository extends EObjectImpl implements IRepository {
 	/**
 	 * The cached value of the '{@link #getApprovalTypes() <em>Approval Types</em>}' containment reference list. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
@@ -127,6 +134,46 @@ public class Repository extends ReviewGroup implements IRepository {
 	 * @ordered
 	 */
 	protected TaskRepository taskRepository = TASK_REPOSITORY_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getReviews() <em>Reviews</em>}' containment reference list. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
+	 * @see #getReviews()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<IReview> reviews;
+
+	/**
+	 * The cached value of the '{@link #getUsers() <em>Users</em>}' containment reference list. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getUsers()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<IUser> users;
+
+	/**
+	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #getDescription()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String DESCRIPTION_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #getDescription()
+	 * @generated
+	 * @ordered
+	 */
+	protected String description = DESCRIPTION_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -244,6 +291,68 @@ public class Repository extends ReviewGroup implements IRepository {
 	 * 
 	 * @generated
 	 */
+	public List<IReview> getReviews() {
+		if (reviews == null) {
+			reviews = new EObjectContainmentWithInverseEList.Resolving<IReview>(IReview.class, this,
+					ReviewsPackage.REPOSITORY__REVIEWS, ReviewsPackage.REVIEW__REPOSITORY);
+		}
+		return reviews;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public List<IUser> getUsers() {
+		if (users == null) {
+			users = new EObjectContainmentEList.Resolving<IUser>(IUser.class, this, ReviewsPackage.REPOSITORY__USERS);
+		}
+		return users;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setDescription(String newDescription) {
+		String oldDescription = description;
+		description = newDescription;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REPOSITORY__DESCRIPTION,
+					oldDescription, description));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+		case ReviewsPackage.REPOSITORY__REVIEWS:
+			return ((InternalEList<InternalEObject>) (InternalEList<?>) getReviews()).basicAdd(otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -251,6 +360,10 @@ public class Repository extends ReviewGroup implements IRepository {
 			return ((InternalEList<?>) getApprovalTypes()).basicRemove(otherEnd, msgs);
 		case ReviewsPackage.REPOSITORY__REVIEW_STATES:
 			return ((InternalEList<?>) getReviewStates()).basicRemove(otherEnd, msgs);
+		case ReviewsPackage.REPOSITORY__REVIEWS:
+			return ((InternalEList<?>) getReviews()).basicRemove(otherEnd, msgs);
+		case ReviewsPackage.REPOSITORY__USERS:
+			return ((InternalEList<?>) getUsers()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -273,6 +386,12 @@ public class Repository extends ReviewGroup implements IRepository {
 			return getTaskConnectorKind();
 		case ReviewsPackage.REPOSITORY__TASK_REPOSITORY:
 			return getTaskRepository();
+		case ReviewsPackage.REPOSITORY__REVIEWS:
+			return getReviews();
+		case ReviewsPackage.REPOSITORY__USERS:
+			return getUsers();
+		case ReviewsPackage.REPOSITORY__DESCRIPTION:
+			return getDescription();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -303,6 +422,17 @@ public class Repository extends ReviewGroup implements IRepository {
 		case ReviewsPackage.REPOSITORY__TASK_REPOSITORY:
 			setTaskRepository((TaskRepository) newValue);
 			return;
+		case ReviewsPackage.REPOSITORY__REVIEWS:
+			getReviews().clear();
+			getReviews().addAll((Collection<? extends IReview>) newValue);
+			return;
+		case ReviewsPackage.REPOSITORY__USERS:
+			getUsers().clear();
+			getUsers().addAll((Collection<? extends IUser>) newValue);
+			return;
+		case ReviewsPackage.REPOSITORY__DESCRIPTION:
+			setDescription((String) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -329,6 +459,15 @@ public class Repository extends ReviewGroup implements IRepository {
 			return;
 		case ReviewsPackage.REPOSITORY__TASK_REPOSITORY:
 			setTaskRepository(TASK_REPOSITORY_EDEFAULT);
+			return;
+		case ReviewsPackage.REPOSITORY__REVIEWS:
+			getReviews().clear();
+			return;
+		case ReviewsPackage.REPOSITORY__USERS:
+			getUsers().clear();
+			return;
+		case ReviewsPackage.REPOSITORY__DESCRIPTION:
+			setDescription(DESCRIPTION_EDEFAULT);
 			return;
 		}
 		super.eUnset(featureID);
@@ -358,6 +497,12 @@ public class Repository extends ReviewGroup implements IRepository {
 			return TASK_REPOSITORY_EDEFAULT == null
 					? taskRepository != null
 					: !TASK_REPOSITORY_EDEFAULT.equals(taskRepository);
+		case ReviewsPackage.REPOSITORY__REVIEWS:
+			return reviews != null && !reviews.isEmpty();
+		case ReviewsPackage.REPOSITORY__USERS:
+			return users != null && !users.isEmpty();
+		case ReviewsPackage.REPOSITORY__DESCRIPTION:
+			return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -379,6 +524,8 @@ public class Repository extends ReviewGroup implements IRepository {
 		result.append(taskConnectorKind);
 		result.append(", taskRepository: "); //$NON-NLS-1$
 		result.append(taskRepository);
+		result.append(", description: "); //$NON-NLS-1$
+		result.append(description);
 		result.append(')');
 		return result.toString();
 	}

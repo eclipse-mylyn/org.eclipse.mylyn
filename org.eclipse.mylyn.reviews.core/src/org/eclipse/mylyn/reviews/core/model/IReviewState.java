@@ -10,6 +10,8 @@
  */
 package org.eclipse.mylyn.reviews.core.model;
 
+import org.eclipse.emf.ecore.EObject;
+
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Review State</b></em>'. <!-- end-user-doc -->
  * <p>
@@ -21,7 +23,7 @@ package org.eclipse.mylyn.reviews.core.model;
  * 
  * @generated
  */
-public interface IReviewState extends IReviewComponent {
+public interface IReviewState extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Descriptor</b></em>' attribute. <!-- begin-user-doc -->

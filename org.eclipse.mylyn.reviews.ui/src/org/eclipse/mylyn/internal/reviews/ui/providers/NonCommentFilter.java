@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.reviews.ui.providers;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.mylyn.reviews.core.model.ITopicContainer;
+import org.eclipse.mylyn.reviews.core.model.ICommentContainer;
 
 /**
  * @author Miles Parker
@@ -22,8 +22,8 @@ public class NonCommentFilter extends ViewerFilter {
 
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		if (element instanceof ITopicContainer) {
-			ITopicContainer container = (ITopicContainer) element;
+		if (element instanceof ICommentContainer) {
+			ICommentContainer container = (ICommentContainer) element;
 			return container.getAllComments().size() > 0;
 		}
 		return true;

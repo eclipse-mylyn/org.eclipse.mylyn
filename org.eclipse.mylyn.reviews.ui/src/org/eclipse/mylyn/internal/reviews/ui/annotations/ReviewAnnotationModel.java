@@ -38,7 +38,7 @@ import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
-import org.eclipse.mylyn.reviews.core.model.ITopic;
+import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 
 /**
@@ -75,8 +75,8 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 			}
 			if (notification.getEventType() == Notification.ADD) {
 				AnnotationModelEvent event = new AnnotationModelEvent(ReviewAnnotationModel.this);
-				if (notification.getNewValue() instanceof ITopic) {
-					createCommentAnnotations(document, event, (ITopic) notification.getNewValue());
+				if (notification.getNewValue() instanceof IComment) {
+					createCommentAnnotations(document, event, (IComment) notification.getNewValue());
 				}
 				fireModelChanged(event);
 			}
@@ -202,11 +202,11 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 		}
 	}
 
-	private void createCommentAnnotations(IDocument document, AnnotationModelEvent event, ITopic topic) {
+	private void createCommentAnnotations(IDocument document, AnnotationModelEvent event, IComment comment) {
 		int startLine = 0;
 		int endLine = 0;
 		//TODO We need to ensure that this works properly with cases where 0 or many locations exist.
-		for (ILocation location : topic.getLocations()) {
+		for (ILocation location : comment.getLocations()) {
 			if (location instanceof ILineLocation) {
 				ILineLocation lineLocation = (ILineLocation) location;
 				try {
@@ -224,7 +224,7 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 
 					}
 					length = Math.max(1, length);
-					CommentAnnotation ca = new CommentAnnotation(offset, length, topic);
+					CommentAnnotation ca = new CommentAnnotation(offset, length, comment);
 					annotations.add(ca);
 					event.annotationAdded(ca);
 				} catch (BadLocationException e) {
@@ -266,7 +266,7 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 		clear(event);
 
 		if (document != null && reviewItem != null) {
-			for (ITopic comment : reviewItem.getTopics()) {
+			for (IComment comment : reviewItem.getComments()) {
 				createCommentAnnotations(document, event, comment);
 			}
 		}

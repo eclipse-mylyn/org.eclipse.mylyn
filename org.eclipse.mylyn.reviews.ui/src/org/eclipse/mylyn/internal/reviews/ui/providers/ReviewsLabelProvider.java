@@ -39,8 +39,8 @@ import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
-import org.eclipse.mylyn.reviews.core.model.ITopic;
-import org.eclipse.mylyn.reviews.core.model.ITopicContainer;
+import org.eclipse.mylyn.reviews.core.model.IComment;
+import org.eclipse.mylyn.reviews.core.model.ICommentContainer;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.osgi.util.NLS;
@@ -213,8 +213,8 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 			if (element instanceof GlobalCommentsNode) {
 				element = ((GlobalCommentsNode) element).getReview();
 			}
-			addTopicContainerStatsStyle(element, styledString);
-			addTopicLineNumberStyle(element, styledString);
+			addCommentContainerStatsStyle(element, styledString);
+			addCommentLineNumberStyle(element, styledString);
 			addFilePathStyle(element, styledString);
 			return styledString;
 		}
@@ -283,9 +283,9 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 			if (element instanceof IFileVersion) {
 				return ((IFileVersion) element).getFile();
 			}
-			if (element instanceof ITopic) {
-				ITopic topic = (ITopic) element;
-				return adapt(topic.getItem());
+			if (element instanceof IComment) {
+				IComment comment = (IComment) element;
+				return adapt(comment.getItem());
 			}
 			if (element instanceof IReview) {
 				return new GlobalCommentsNode((IReview) element);
@@ -297,7 +297,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 		public StyledString getStyledText(Object element) {
 			//We don't want to include stats for this usage
 			StyledString styledString = new StyledString(getText(element));
-			addTopicLineNumberStyle(element, styledString);
+			addCommentLineNumberStyle(element, styledString);
 			addFilePathStyle(adapt(element), styledString);
 			return styledString;
 		}
@@ -312,7 +312,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 			50, 400, true) {
 		@Override
 		public Object adapt(Object element) {
-			if (element instanceof ITopic) {
+			if (element instanceof IComment) {
 				return element;
 			}
 			return null;
@@ -455,8 +455,8 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 				if (element instanceof GlobalCommentsNode) {
 					element = ((GlobalCommentsNode) element).getReview();
 				}
-				if (element instanceof ITopicContainer) {
-					ITopicContainer container = (ITopicContainer) element;
+				if (element instanceof ICommentContainer) {
+					ICommentContainer container = (ICommentContainer) element;
 					String statsText = getStatsText(container);
 					styledString.append(statsText, StyledString.DECORATIONS_STYLER);
 				}
@@ -526,7 +526,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 		@Override
 		public StyledString getStyledText(Object element) {
 			StyledString styledString = new StyledString(getText(element));
-			addTopicContainerStatsStyle(element, styledString);
+			addCommentContainerStatsStyle(element, styledString);
 			return styledString;
 		}
 
@@ -555,9 +555,9 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 			element = ((GlobalCommentsNode) element).getReview();
 		}
 		if (includeCommentStats) {
-			addTopicContainerStatsStyle(element, styledString);
+			addCommentContainerStatsStyle(element, styledString);
 		}
-		addTopicLineNumberStyle(element, styledString);
+		addCommentLineNumberStyle(element, styledString);
 		addFilePathStyle(element, styledString);
 		return styledString;
 	}
@@ -567,9 +567,9 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 		return ITEMS_COLUMN.getImage(element);
 	}
 
-	public static void addTopicLineNumberStyle(Object element, StyledString styledString) {
-		if (element instanceof ITopic) {
-			ITopic comment = (ITopic) element;
+	public static void addCommentLineNumberStyle(Object element, StyledString styledString) {
+		if (element instanceof IComment) {
+			IComment comment = (IComment) element;
 			String[] locationStrings = new String[comment.getLocations().size()];
 			int index = 0;
 			for (ILocation location : comment.getLocations()) {
@@ -587,9 +587,9 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 		}
 	}
 
-	public static void addTopicContainerStatsStyle(Object element, StyledString styledString) {
-		if (element instanceof ITopicContainer) {
-			ITopicContainer container = (ITopicContainer) element;
+	public static void addCommentContainerStatsStyle(Object element, StyledString styledString) {
+		if (element instanceof ICommentContainer) {
+			ICommentContainer container = (ICommentContainer) element;
 			String statsText = getStatsText(container);
 			styledString.append(statsText, StyledString.DECORATIONS_STYLER);
 		}
@@ -600,13 +600,13 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 		return index < Long.MAX_VALUE ? index + "" : "";
 	}
 
-	public static String getStatsText(ITopicContainer container) {
+	public static String getStatsText(ICommentContainer container) {
 		if (container instanceof IReviewItemSet && ((IReviewItemSet) container).getItems().size() == 0) {
 			return "  [?]";
 		}
 		List<? extends IComment> comments;
 		if (container instanceof IReview) {
-			comments = container.getTopics();
+			comments = container.getComments();
 		} else {
 			comments = container.getAllComments();
 		}

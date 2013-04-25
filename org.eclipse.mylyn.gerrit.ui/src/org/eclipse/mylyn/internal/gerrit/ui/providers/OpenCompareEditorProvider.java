@@ -23,7 +23,7 @@ import org.eclipse.mylyn.internal.reviews.ui.views.ReviewExplorer;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.mylyn.reviews.core.model.IReview;
-import org.eclipse.mylyn.reviews.core.model.ITopic;
+import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.ui.IActionBars;
@@ -89,8 +89,8 @@ public class OpenCompareEditorProvider extends CommonActionProvider {
 
 	private static IFileItem getFileFor(Object element) {
 		//TODO Move to adapter?
-		if (element instanceof ITopic) {
-			return getFileFor(((ITopic) element).getItem());
+		if (element instanceof IComment) {
+			return getFileFor(((IComment) element).getItem());
 		}
 		if (element instanceof IFileVersion) {
 			return ((IFileVersion) element).getFile();
@@ -102,8 +102,8 @@ public class OpenCompareEditorProvider extends CommonActionProvider {
 	}
 
 	private static IReview getReviewFor(Object element) {
-		if (element instanceof ITopic) {
-			return ((ITopic) element).getReview();
+		if (element instanceof IComment) {
+			return ((IComment) element).getReview();
 		}
 		if (element instanceof IFileVersion) {
 			return ((IFileVersion) element).getReview();

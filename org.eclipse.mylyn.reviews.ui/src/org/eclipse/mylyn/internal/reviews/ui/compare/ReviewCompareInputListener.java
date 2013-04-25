@@ -47,7 +47,7 @@ import org.eclipse.mylyn.internal.reviews.ui.annotations.ReviewAnnotationModel;
 import org.eclipse.mylyn.internal.reviews.ui.editors.ruler.CommentAnnotationRulerColumn;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
-import org.eclipse.mylyn.reviews.core.model.ITopic;
+import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.swt.custom.LineBackgroundEvent;
 import org.eclipse.swt.custom.LineBackgroundListener;
 import org.eclipse.swt.custom.StyledText;
@@ -95,7 +95,7 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 				CommentAnnotation annotation = it.next();
 				int startLine;
 				int endLine;
-				ITopic comment = annotation.getTopic();
+				IComment comment = annotation.getComment();
 				//TODO This code assumes that we have one comment per annotation. That won't work for r4E.
 				if (comment.getLocations().size() == 1) {
 					ILocation location = comment.getLocations().get(0);

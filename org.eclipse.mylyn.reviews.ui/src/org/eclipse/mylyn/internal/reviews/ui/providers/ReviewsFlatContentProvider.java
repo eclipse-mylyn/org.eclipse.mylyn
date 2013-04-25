@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.reviews.ui.providers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.mylyn.reviews.core.model.ITopicContainer;
+import org.eclipse.mylyn.reviews.core.model.ICommentContainer;
 
 /**
  * Flattens all contents of a review to their lowest level of detail. (In current implementations, this is comments.)
@@ -24,9 +24,9 @@ import org.eclipse.mylyn.reviews.core.model.ITopicContainer;
 public class ReviewsFlatContentProvider extends GenericTreeContentProvider {
 
 	public Object[] getElements(Object element) {
-		if (element instanceof ITopicContainer) {
+		if (element instanceof ICommentContainer) {
 			List<Object> children = new ArrayList<Object>();
-			children.addAll(((ITopicContainer) element).getAllComments());
+			children.addAll(((ICommentContainer) element).getAllComments());
 			return children.toArray();
 		}
 		return getCollectionChildren(element);
@@ -34,7 +34,7 @@ public class ReviewsFlatContentProvider extends GenericTreeContentProvider {
 
 	@Override
 	public boolean hasChildren(Object element) {
-		return ((element instanceof ITopicContainer) && ((ITopicContainer) element).getAllComments().size() > 0)
+		return ((element instanceof ICommentContainer) && ((ICommentContainer) element).getAllComments().size() > 0)
 				|| hasCollectionChildren(element);
 	}
 }

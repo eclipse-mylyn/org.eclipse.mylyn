@@ -11,6 +11,7 @@
 package org.eclipse.mylyn.reviews.core.model;
 
 import java.util.List;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -23,12 +24,15 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskRepositoryUrl <em>Task Repository Url</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskConnectorKind <em>Task Connector Kind</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskRepository <em>Task Repository</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IRepository#getReviews <em>Reviews</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IRepository#getUsers <em>Users</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IRepository#getDescription <em>Description</em>}</li>
  * </ul>
  * </p>
  * 
  * @generated
  */
-public interface IRepository extends IReviewGroup {
+public interface IRepository extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Approval Types</b></em>' containment reference list. The list contents are of
 	 * type {@link org.eclipse.mylyn.reviews.core.model.IApprovalType}. <!-- begin-user-doc -->
@@ -131,5 +135,60 @@ public interface IRepository extends IReviewGroup {
 	 * @generated
 	 */
 	void setTaskRepository(TaskRepository value);
+
+	/**
+	 * Returns the value of the '<em><b>Reviews</b></em>' containment reference list. The list contents are of type
+	 * {@link org.eclipse.mylyn.reviews.core.model.IReview}. It is bidirectional and its opposite is '
+	 * {@link org.eclipse.mylyn.reviews.core.model.IReview#getRepository <em>Repository</em>}'. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Reviews</em>' containment reference list isn't clear, there really should be more of a
+	 * description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Reviews</em>' containment reference list.
+	 * @see org.eclipse.mylyn.reviews.core.model.IReview#getRepository
+	 * @generated
+	 */
+	List<IReview> getReviews();
+
+	/**
+	 * Returns the value of the '<em><b>Users</b></em>' containment reference list. The list contents are of type
+	 * {@link org.eclipse.mylyn.reviews.core.model.IUser}. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Users</em>' containment reference list isn't clear, there really should be more of a
+	 * description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Users</em>' containment reference list.
+	 * @generated
+	 */
+	List<IUser> getUsers();
+
+	/**
+	 * Returns the value of the '<em><b>Description</b></em>' attribute. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Description</em>' attribute isn't clear, there really should be more of a description
+	 * here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Description</em>' attribute.
+	 * @see #setDescription(String)
+	 * @generated
+	 */
+	String getDescription();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IRepository#getDescription
+	 * <em>Description</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Description</em>' attribute.
+	 * @see #getDescription()
+	 * @generated
+	 */
+	void setDescription(String value);
 
 } // IRepository

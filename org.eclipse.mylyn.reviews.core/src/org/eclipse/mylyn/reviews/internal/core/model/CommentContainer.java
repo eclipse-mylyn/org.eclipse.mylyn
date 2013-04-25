@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011 Tasktop Technologies and others.
+ * Copyright (c) 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,56 +15,47 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.mylyn.reviews.core.model.IComment;
+import org.eclipse.mylyn.reviews.core.model.ICommentContainer;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
-import org.eclipse.mylyn.reviews.core.model.ITopic;
-import org.eclipse.mylyn.reviews.core.model.ITopicContainer;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Topic Container</b></em>'. <!-- end-user-doc
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Comment Container</b></em>'. <!-- end-user-doc
  * -->
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.TopicContainer#getAllComments <em>All Comments</em>}</li>
- * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.TopicContainer#getTopics <em>Topics</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.CommentContainer#getAllComments <em>All Comments</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.CommentContainer#getComments <em>Comments</em>}</li>
  * </ul>
  * </p>
  * 
  * @generated
  */
-public abstract class TopicContainer extends ReviewComponent implements ITopicContainer {
+public abstract class CommentContainer extends EObjectImpl implements ICommentContainer {
 	/**
-	 * The cached value of the '{@link #getTopics() <em>Topics</em>}' reference list. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @see #getTopics()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<ITopic> topics;
-
-	/**
-	 * The cached value of the '{@link #getDirectTopics() <em>Direct Topics</em>}' containment reference list. <!--
+	 * The cached value of the '{@link #getComments() <em>Comments</em>}' containment reference list. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @see #getDirectTopics()
+	 * @see #getComments()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<ITopic> directTopics;
+	protected EList<IComment> comments;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected TopicContainer() {
+	protected CommentContainer() {
 		super();
 	}
 
@@ -75,7 +66,7 @@ public abstract class TopicContainer extends ReviewComponent implements ITopicCo
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return ReviewsPackage.Literals.TOPIC_CONTAINER;
+		return ReviewsPackage.Literals.COMMENT_CONTAINER;
 	}
 
 	/**
@@ -94,23 +85,14 @@ public abstract class TopicContainer extends ReviewComponent implements ITopicCo
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @generated NOT
-	 */
-	public List<ITopic> getTopics() {
-		return getDirectTopics();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->See Important note in {@link ITopicContainer#getDirectTopics()} <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
-	public List<ITopic> getDirectTopics() {
-		if (directTopics == null) {
-			directTopics = new EObjectContainmentWithInverseEList.Resolving<ITopic>(ITopic.class, this,
-					ReviewsPackage.TOPIC_CONTAINER__DIRECT_TOPICS, ReviewsPackage.TOPIC__ITEM);
+	public List<IComment> getComments() {
+		if (comments == null) {
+			comments = new EObjectContainmentWithInverseEList.Resolving<IComment>(IComment.class, this,
+					ReviewsPackage.COMMENT_CONTAINER__COMMENTS, ReviewsPackage.COMMENT__ITEM);
 		}
-		return directTopics;
+		return comments;
 	}
 
 	/**
@@ -118,23 +100,47 @@ public abstract class TopicContainer extends ReviewComponent implements ITopicCo
 	 * 
 	 * @generated NOT
 	 */
-	public ITopic createTopicComment(ILocation initalLocation, String commentText) {
-		ITopic topic = ReviewsFactory.eINSTANCE.createTopic();
-		topic.setDraft(true);
-		topic.setDescription(commentText);
-		if (initalLocation != null) {
-			topic.getLocations().add(initalLocation);
+	public List<IComment> getAllDrafts() {
+		BasicEList<IComment> drafts = new BasicEList<IComment>();
+		for (IComment comment : getAllComments()) {
+			if (comment.isDraft()) {
+				drafts.add(comment);
+			}
 		}
+		return drafts;
+	}
 
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated NOT
+	 */
+	public List<IComment> getDrafts() {
+		BasicEList<IComment> drafts = new BasicEList<IComment>();
+		for (IComment comment : getComments()) {
+			if (comment.isDraft()) {
+				drafts.add(comment);
+			}
+		}
+		return drafts;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated NOT
+	 */
+	public IComment createComment(ILocation initalLocation, String commentText) {
 		IComment comment = ReviewsFactory.eINSTANCE.createComment();
-		comment.setDescription(topic.getDescription());
+		comment.setDescription(commentText);
 		comment.setDraft(true);
 		Date created = new Date();
 		comment.setCreationDate(created);
-		topic.setCreationDate(created);
-		topic.getComments().add(comment);
-		getTopics().add(topic);
-		return topic;
+		if (initalLocation != null) {
+			comment.getLocations().add(initalLocation);
+		}
+		getComments().add(comment);
+		return comment;
 	}
 
 	/**
@@ -146,8 +152,8 @@ public abstract class TopicContainer extends ReviewComponent implements ITopicCo
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case ReviewsPackage.TOPIC_CONTAINER__DIRECT_TOPICS:
-			return ((InternalEList<InternalEObject>) (InternalEList<?>) getDirectTopics()).basicAdd(otherEnd, msgs);
+		case ReviewsPackage.COMMENT_CONTAINER__COMMENTS:
+			return ((InternalEList<InternalEObject>) (InternalEList<?>) getComments()).basicAdd(otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -160,8 +166,10 @@ public abstract class TopicContainer extends ReviewComponent implements ITopicCo
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case ReviewsPackage.TOPIC_CONTAINER__DIRECT_TOPICS:
-			return ((InternalEList<?>) getDirectTopics()).basicRemove(otherEnd, msgs);
+		case ReviewsPackage.COMMENT_CONTAINER__COMMENTS:
+			return ((InternalEList<?>) getComments()).basicRemove(otherEnd, msgs);
+		case ReviewsPackage.COMMENT_CONTAINER__DRAFTS:
+			return ((InternalEList<?>) getDrafts()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -174,12 +182,14 @@ public abstract class TopicContainer extends ReviewComponent implements ITopicCo
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case ReviewsPackage.TOPIC_CONTAINER__ALL_COMMENTS:
+		case ReviewsPackage.COMMENT_CONTAINER__ALL_COMMENTS:
 			return getAllComments();
-		case ReviewsPackage.TOPIC_CONTAINER__TOPICS:
-			return getTopics();
-		case ReviewsPackage.TOPIC_CONTAINER__DIRECT_TOPICS:
-			return getDirectTopics();
+		case ReviewsPackage.COMMENT_CONTAINER__COMMENTS:
+			return getComments();
+		case ReviewsPackage.COMMENT_CONTAINER__ALL_DRAFTS:
+			return getAllDrafts();
+		case ReviewsPackage.COMMENT_CONTAINER__DRAFTS:
+			return getDrafts();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -193,13 +203,13 @@ public abstract class TopicContainer extends ReviewComponent implements ITopicCo
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case ReviewsPackage.TOPIC_CONTAINER__TOPICS:
-			getTopics().clear();
-			getTopics().addAll((Collection<? extends ITopic>) newValue);
+		case ReviewsPackage.COMMENT_CONTAINER__COMMENTS:
+			getComments().clear();
+			getComments().addAll((Collection<? extends IComment>) newValue);
 			return;
-		case ReviewsPackage.TOPIC_CONTAINER__DIRECT_TOPICS:
-			getDirectTopics().clear();
-			getDirectTopics().addAll((Collection<? extends ITopic>) newValue);
+		case ReviewsPackage.COMMENT_CONTAINER__DRAFTS:
+			getDrafts().clear();
+			getDrafts().addAll((Collection<? extends IComment>) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -213,11 +223,11 @@ public abstract class TopicContainer extends ReviewComponent implements ITopicCo
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.TOPIC_CONTAINER__TOPICS:
-			getTopics().clear();
+		case ReviewsPackage.COMMENT_CONTAINER__COMMENTS:
+			getComments().clear();
 			return;
-		case ReviewsPackage.TOPIC_CONTAINER__DIRECT_TOPICS:
-			getDirectTopics().clear();
+		case ReviewsPackage.COMMENT_CONTAINER__DRAFTS:
+			getDrafts().clear();
 			return;
 		}
 		super.eUnset(featureID);
@@ -231,14 +241,16 @@ public abstract class TopicContainer extends ReviewComponent implements ITopicCo
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case ReviewsPackage.TOPIC_CONTAINER__ALL_COMMENTS:
+		case ReviewsPackage.COMMENT_CONTAINER__ALL_COMMENTS:
 			return !getAllComments().isEmpty();
-		case ReviewsPackage.TOPIC_CONTAINER__TOPICS:
-			return topics != null && !topics.isEmpty();
-		case ReviewsPackage.TOPIC_CONTAINER__DIRECT_TOPICS:
-			return directTopics != null && !directTopics.isEmpty();
+		case ReviewsPackage.COMMENT_CONTAINER__COMMENTS:
+			return comments != null && !comments.isEmpty();
+		case ReviewsPackage.COMMENT_CONTAINER__ALL_DRAFTS:
+			return !getAllDrafts().isEmpty();
+		case ReviewsPackage.COMMENT_CONTAINER__DRAFTS:
+			return !getDrafts().isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
 
-} //TopicContainer
+} //CommentContainer

@@ -76,18 +76,10 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 			return createReview();
 		case ReviewsPackage.COMMENT:
 			return createComment();
-		case ReviewsPackage.REVIEW_ITEM:
-			return createReviewItem();
 		case ReviewsPackage.USER:
 			return createUser();
-		case ReviewsPackage.REVIEW_GROUP:
-			return createReviewGroup();
 		case ReviewsPackage.REPOSITORY:
 			return createRepository();
-		case ReviewsPackage.TOPIC:
-			return createTopic();
-		case ReviewsPackage.REVIEW_COMPONENT:
-			return createReviewComponent();
 		case ReviewsPackage.FILE_ITEM:
 			return createFileItem();
 		case ReviewsPackage.REVIEW_ITEM_SET:
@@ -174,16 +166,6 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 * 
 	 * @generated
 	 */
-	public IReviewItem createReviewItem() {
-		ReviewItem reviewItem = new ReviewItem();
-		return reviewItem;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
 	public IUser createUser() {
 		User user = new User();
 		return user;
@@ -194,39 +176,9 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 * 
 	 * @generated
 	 */
-	public IReviewGroup createReviewGroup() {
-		ReviewGroup reviewGroup = new ReviewGroup();
-		return reviewGroup;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
 	public IRepository createRepository() {
 		Repository repository = new Repository();
 		return repository;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public ITopic createTopic() {
-		Topic topic = new Topic();
-		return topic;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public IReviewComponent createReviewComponent() {
-		ReviewComponent reviewComponent = new ReviewComponent();
-		return reviewComponent;
 	}
 
 	/**

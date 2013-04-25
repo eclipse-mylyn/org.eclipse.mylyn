@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
-import org.eclipse.mylyn.reviews.core.model.IReviewGroup;
+import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.AbstractRemoteEmfFactory;
@@ -32,22 +32,23 @@ import com.google.gerrit.reviewdb.Account.Id;
  * 
  * @author Miles Parker
  */
-public class GerritUserRemoteFactory extends AbstractRemoteEmfFactory<IReviewGroup, IUser, AccountInfo, Account.Id, String> {
+public class GerritUserRemoteFactory extends
+		AbstractRemoteEmfFactory<IRepository, IUser, AccountInfo, Account.Id, String> {
 
 	private final AccountInfoCache cache = new AccountInfoCache(new ArrayList<AccountInfo>());
 
 	public GerritUserRemoteFactory(GerritRemoteFactoryProvider gerritRemoteFactoryProvider) {
-		super(gerritRemoteFactoryProvider, ReviewsPackage.Literals.REVIEW_GROUP__USERS,
+		super(gerritRemoteFactoryProvider, ReviewsPackage.Literals.REPOSITORY__USERS,
 				ReviewsPackage.Literals.USER__ID);
 	}
 
 	@Override
-	public AccountInfo pull(IReviewGroup parent, Id id, IProgressMonitor monitor) throws CoreException {
+	public AccountInfo pull(IRepository parent, Id id, IProgressMonitor monitor) throws CoreException {
 		return cache.get(id);
 	}
 
 	@Override
-	public IUser createModel(IReviewGroup group, AccountInfo info) {
+	public IUser createModel(IRepository group, AccountInfo info) {
 		IUser user = IReviewsFactory.INSTANCE.createUser();
 		user.setDisplayName(GerritUtil.getUserLabel(info));
 		user.setId(info.getId() + "");
@@ -57,7 +58,7 @@ public class GerritUserRemoteFactory extends AbstractRemoteEmfFactory<IReviewGro
 	}
 
 	@Override
-	public boolean isPullNeeded(IReviewGroup parent, IUser user, AccountInfo remote) {
+	public boolean isPullNeeded(IRepository parent, IUser user, AccountInfo remote) {
 		return true;
 	}
 
@@ -67,7 +68,7 @@ public class GerritUserRemoteFactory extends AbstractRemoteEmfFactory<IReviewGro
 	}
 
 	@Override
-	public boolean updateModel(IReviewGroup item, IUser object, AccountInfo info) {
+	public boolean updateModel(IRepository item, IUser object, AccountInfo info) {
 		return false;
 	}
 

@@ -13,23 +13,23 @@ package org.eclipse.mylyn.reviews.internal.core.model;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
+import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.mylyn.reviews.core.model.IComment;
-import org.eclipse.mylyn.reviews.core.model.ICommentType;
+import org.eclipse.mylyn.reviews.core.model.ICommentContainer;
 import org.eclipse.mylyn.reviews.core.model.IDated;
-import org.eclipse.mylyn.reviews.core.model.IIndexed;
-import org.eclipse.mylyn.reviews.core.model.ITopic;
+import org.eclipse.mylyn.reviews.core.model.ILocation;
+import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 
 /**
@@ -41,18 +41,20 @@ import org.eclipse.mylyn.reviews.core.model.IUser;
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Comment#getCreationDate <em>Creation Date</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Comment#getModificationDate <em>Modification Date</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Comment#getAuthor <em>Author</em>}</li>
- * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Comment#getType <em>Type</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Comment#getDescription <em>Description</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Comment#getId <em>Id</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Comment#getReplies <em>Replies</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Comment#isDraft <em>Draft</em>}</li>
- * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Comment#getParentTopic <em>Parent Topic</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Comment#getLocations <em>Locations</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Comment#getReview <em>Review</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Comment#getTitle <em>Title</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Comment#getItem <em>Item</em>}</li>
  * </ul>
  * </p>
  * 
  * @generated
  */
-public class Comment extends ReviewComponent implements IComment {
+public class Comment extends EObjectImpl implements IComment {
 	/**
 	 * The default value of the '{@link #getIndex() <em>Index</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -114,16 +116,6 @@ public class Comment extends ReviewComponent implements IComment {
 	protected IUser author;
 
 	/**
-	 * The cached value of the '{@link #getType() <em>Type</em>}' containment reference. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @see #getType()
-	 * @generated
-	 * @ordered
-	 */
-	protected ICommentType type;
-
-	/**
 	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
@@ -162,8 +154,8 @@ public class Comment extends ReviewComponent implements IComment {
 	protected String id = ID_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getReplies() <em>Replies</em>}' containment reference list. <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getReplies() <em>Replies</em>}' reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getReplies()
 	 * @generated
@@ -192,6 +184,46 @@ public class Comment extends ReviewComponent implements IComment {
 	protected boolean draft = DRAFT_EDEFAULT;
 
 	/**
+	 * The cached value of the '{@link #getLocations() <em>Locations</em>}' containment reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getLocations()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<ILocation> locations;
+
+	/**
+	 * The cached value of the '{@link #getReview() <em>Review</em>}' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #getReview()
+	 * @generated
+	 * @ordered
+	 */
+	protected IReview review;
+
+	/**
+	 * The default value of the '{@link #getTitle() <em>Title</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #getTitle()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String TITLE_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getTitle() <em>Title</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @see #getTitle()
+	 * @generated
+	 * @ordered
+	 */
+	protected String title = TITLE_EDEFAULT;
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
@@ -211,15 +243,17 @@ public class Comment extends ReviewComponent implements IComment {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> Returns 0; base comments aren't ordered. <!-- end-user-doc -->
 	 * 
 	 * @generated NOT
 	 */
+	@Override
 	public long getIndex() {
-		if (getParentTopic() != null) {
-			return getParentTopic().getIndex();
+		long index = Long.MAX_VALUE;
+		for (ILocation location : getLocations()) {
+			index = Math.min(index, location.getIndex());
 		}
-		return 0;
+		return index;
 	}
 
 	/**
@@ -241,81 +275,6 @@ public class Comment extends ReviewComponent implements IComment {
 		author = newAuthor;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.COMMENT__AUTHOR, oldAuthor, author));
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public ICommentType getType() {
-		if (type != null && type.eIsProxy()) {
-			InternalEObject oldType = (InternalEObject) type;
-			type = (ICommentType) eResolveProxy(oldType);
-			if (type != oldType) {
-				InternalEObject newType = (InternalEObject) type;
-				NotificationChain msgs = oldType.eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-						- ReviewsPackage.COMMENT__TYPE, null, null);
-				if (newType.eInternalContainer() == null) {
-					msgs = newType.eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ReviewsPackage.COMMENT__TYPE, null, msgs);
-				}
-				if (msgs != null)
-					msgs.dispatch();
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.COMMENT__TYPE, oldType,
-							type));
-			}
-		}
-		return type;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public ICommentType basicGetType() {
-		return type;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public NotificationChain basicSetType(ICommentType newType, NotificationChain msgs) {
-		ICommentType oldType = type;
-		type = newType;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
-					ReviewsPackage.COMMENT__TYPE, oldType, newType);
-			if (msgs == null)
-				msgs = notification;
-			else
-				msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public void setType(ICommentType newType) {
-		if (newType != type) {
-			NotificationChain msgs = null;
-			if (type != null)
-				msgs = ((InternalEObject) type).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-						- ReviewsPackage.COMMENT__TYPE, null, msgs);
-			if (newType != null)
-				msgs = ((InternalEObject) newType).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
-						- ReviewsPackage.COMMENT__TYPE, null, msgs);
-			msgs = basicSetType(newType, msgs);
-			if (msgs != null)
-				msgs.dispatch();
-		} else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.COMMENT__TYPE, newType, newType));
 	}
 
 	/**
@@ -412,8 +371,7 @@ public class Comment extends ReviewComponent implements IComment {
 	 */
 	public List<IComment> getReplies() {
 		if (replies == null) {
-			replies = new EObjectContainmentEList.Resolving<IComment>(IComment.class, this,
-					ReviewsPackage.COMMENT__REPLIES);
+			replies = new EObjectResolvingEList<IComment>(IComment.class, this, ReviewsPackage.COMMENT__REPLIES);
 		}
 		return replies;
 	}
@@ -444,10 +402,12 @@ public class Comment extends ReviewComponent implements IComment {
 	 * 
 	 * @generated
 	 */
-	public ITopic getParentTopic() {
-		if (eContainerFeatureID() != ReviewsPackage.COMMENT__PARENT_TOPIC)
-			return null;
-		return (ITopic) eContainer();
+	public List<ILocation> getLocations() {
+		if (locations == null) {
+			locations = new EObjectContainmentEList.Resolving<ILocation>(ILocation.class, this,
+					ReviewsPackage.COMMENT__LOCATIONS);
+		}
+		return locations;
 	}
 
 	/**
@@ -455,10 +415,17 @@ public class Comment extends ReviewComponent implements IComment {
 	 * 
 	 * @generated
 	 */
-	public ITopic basicGetParentTopic() {
-		if (eContainerFeatureID() != ReviewsPackage.COMMENT__PARENT_TOPIC)
-			return null;
-		return (ITopic) eInternalContainer();
+	public IReview getReview() {
+		if (review != null && review.eIsProxy()) {
+			InternalEObject oldReview = (InternalEObject) review;
+			review = (IReview) eResolveProxy(oldReview);
+			if (review != oldReview) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.COMMENT__REVIEW,
+							oldReview, review));
+			}
+		}
+		return review;
 	}
 
 	/**
@@ -466,8 +433,72 @@ public class Comment extends ReviewComponent implements IComment {
 	 * 
 	 * @generated
 	 */
-	public NotificationChain basicSetParentTopic(ITopic newParentTopic, NotificationChain msgs) {
-		msgs = eBasicSetContainer((InternalEObject) newParentTopic, ReviewsPackage.COMMENT__PARENT_TOPIC, msgs);
+	public IReview basicGetReview() {
+		return review;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setReview(IReview newReview) {
+		IReview oldReview = review;
+		review = newReview;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.COMMENT__REVIEW, oldReview, review));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setTitle(String newTitle) {
+		String oldTitle = title;
+		title = newTitle;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.COMMENT__TITLE, oldTitle, title));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public ICommentContainer getItem() {
+		if (eContainerFeatureID() != ReviewsPackage.COMMENT__ITEM)
+			return null;
+		return (ICommentContainer) eContainer();
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public ICommentContainer basicGetItem() {
+		if (eContainerFeatureID() != ReviewsPackage.COMMENT__ITEM)
+			return null;
+		return (ICommentContainer) eInternalContainer();
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public NotificationChain basicSetItem(ICommentContainer newItem, NotificationChain msgs) {
+		msgs = eBasicSetContainer((InternalEObject) newItem, ReviewsPackage.COMMENT__ITEM, msgs);
 		return msgs;
 	}
 
@@ -476,23 +507,22 @@ public class Comment extends ReviewComponent implements IComment {
 	 * 
 	 * @generated
 	 */
-	public void setParentTopic(ITopic newParentTopic) {
-		if (newParentTopic != eInternalContainer()
-				|| (eContainerFeatureID() != ReviewsPackage.COMMENT__PARENT_TOPIC && newParentTopic != null)) {
-			if (EcoreUtil.isAncestor(this, newParentTopic))
+	public void setItem(ICommentContainer newItem) {
+		if (newItem != eInternalContainer()
+				|| (eContainerFeatureID() != ReviewsPackage.COMMENT__ITEM && newItem != null)) {
+			if (EcoreUtil.isAncestor(this, newItem))
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
 			NotificationChain msgs = null;
 			if (eInternalContainer() != null)
 				msgs = eBasicRemoveFromContainer(msgs);
-			if (newParentTopic != null)
-				msgs = ((InternalEObject) newParentTopic).eInverseAdd(this, ReviewsPackage.TOPIC__COMMENTS,
-						ITopic.class, msgs);
-			msgs = basicSetParentTopic(newParentTopic, msgs);
+			if (newItem != null)
+				msgs = ((InternalEObject) newItem).eInverseAdd(this, ReviewsPackage.COMMENT_CONTAINER__COMMENTS,
+						ICommentContainer.class, msgs);
+			msgs = basicSetItem(newItem, msgs);
 			if (msgs != null)
 				msgs.dispatch();
 		} else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.COMMENT__PARENT_TOPIC, newParentTopic,
-					newParentTopic));
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.COMMENT__ITEM, newItem, newItem));
 	}
 
 	/**
@@ -503,10 +533,10 @@ public class Comment extends ReviewComponent implements IComment {
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case ReviewsPackage.COMMENT__PARENT_TOPIC:
+		case ReviewsPackage.COMMENT__ITEM:
 			if (eInternalContainer() != null)
 				msgs = eBasicRemoveFromContainer(msgs);
-			return basicSetParentTopic((ITopic) otherEnd, msgs);
+			return basicSetItem((ICommentContainer) otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -519,12 +549,10 @@ public class Comment extends ReviewComponent implements IComment {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case ReviewsPackage.COMMENT__TYPE:
-			return basicSetType(null, msgs);
-		case ReviewsPackage.COMMENT__REPLIES:
-			return ((InternalEList<?>) getReplies()).basicRemove(otherEnd, msgs);
-		case ReviewsPackage.COMMENT__PARENT_TOPIC:
-			return basicSetParentTopic(null, msgs);
+		case ReviewsPackage.COMMENT__LOCATIONS:
+			return ((InternalEList<?>) getLocations()).basicRemove(otherEnd, msgs);
+		case ReviewsPackage.COMMENT__ITEM:
+			return basicSetItem(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -537,8 +565,9 @@ public class Comment extends ReviewComponent implements IComment {
 	@Override
 	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
 		switch (eContainerFeatureID()) {
-		case ReviewsPackage.COMMENT__PARENT_TOPIC:
-			return eInternalContainer().eInverseRemove(this, ReviewsPackage.TOPIC__COMMENTS, ITopic.class, msgs);
+		case ReviewsPackage.COMMENT__ITEM:
+			return eInternalContainer().eInverseRemove(this, ReviewsPackage.COMMENT_CONTAINER__COMMENTS,
+					ICommentContainer.class, msgs);
 		}
 		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
@@ -559,10 +588,6 @@ public class Comment extends ReviewComponent implements IComment {
 			return getModificationDate();
 		case ReviewsPackage.COMMENT__AUTHOR:
 			return getAuthor();
-		case ReviewsPackage.COMMENT__TYPE:
-			if (resolve)
-				return getType();
-			return basicGetType();
 		case ReviewsPackage.COMMENT__DESCRIPTION:
 			return getDescription();
 		case ReviewsPackage.COMMENT__ID:
@@ -571,10 +596,18 @@ public class Comment extends ReviewComponent implements IComment {
 			return getReplies();
 		case ReviewsPackage.COMMENT__DRAFT:
 			return isDraft();
-		case ReviewsPackage.COMMENT__PARENT_TOPIC:
+		case ReviewsPackage.COMMENT__LOCATIONS:
+			return getLocations();
+		case ReviewsPackage.COMMENT__REVIEW:
 			if (resolve)
-				return getParentTopic();
-			return basicGetParentTopic();
+				return getReview();
+			return basicGetReview();
+		case ReviewsPackage.COMMENT__TITLE:
+			return getTitle();
+		case ReviewsPackage.COMMENT__ITEM:
+			if (resolve)
+				return getItem();
+			return basicGetItem();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -597,9 +630,6 @@ public class Comment extends ReviewComponent implements IComment {
 		case ReviewsPackage.COMMENT__AUTHOR:
 			setAuthor((IUser) newValue);
 			return;
-		case ReviewsPackage.COMMENT__TYPE:
-			setType((ICommentType) newValue);
-			return;
 		case ReviewsPackage.COMMENT__DESCRIPTION:
 			setDescription((String) newValue);
 			return;
@@ -613,8 +643,18 @@ public class Comment extends ReviewComponent implements IComment {
 		case ReviewsPackage.COMMENT__DRAFT:
 			setDraft((Boolean) newValue);
 			return;
-		case ReviewsPackage.COMMENT__PARENT_TOPIC:
-			setParentTopic((ITopic) newValue);
+		case ReviewsPackage.COMMENT__LOCATIONS:
+			getLocations().clear();
+			getLocations().addAll((Collection<? extends ILocation>) newValue);
+			return;
+		case ReviewsPackage.COMMENT__REVIEW:
+			setReview((IReview) newValue);
+			return;
+		case ReviewsPackage.COMMENT__TITLE:
+			setTitle((String) newValue);
+			return;
+		case ReviewsPackage.COMMENT__ITEM:
+			setItem((ICommentContainer) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -637,9 +677,6 @@ public class Comment extends ReviewComponent implements IComment {
 		case ReviewsPackage.COMMENT__AUTHOR:
 			setAuthor((IUser) null);
 			return;
-		case ReviewsPackage.COMMENT__TYPE:
-			setType((ICommentType) null);
-			return;
 		case ReviewsPackage.COMMENT__DESCRIPTION:
 			setDescription(DESCRIPTION_EDEFAULT);
 			return;
@@ -652,8 +689,17 @@ public class Comment extends ReviewComponent implements IComment {
 		case ReviewsPackage.COMMENT__DRAFT:
 			setDraft(DRAFT_EDEFAULT);
 			return;
-		case ReviewsPackage.COMMENT__PARENT_TOPIC:
-			setParentTopic((ITopic) null);
+		case ReviewsPackage.COMMENT__LOCATIONS:
+			getLocations().clear();
+			return;
+		case ReviewsPackage.COMMENT__REVIEW:
+			setReview((IReview) null);
+			return;
+		case ReviewsPackage.COMMENT__TITLE:
+			setTitle(TITLE_EDEFAULT);
+			return;
+		case ReviewsPackage.COMMENT__ITEM:
+			setItem((ICommentContainer) null);
 			return;
 		}
 		super.eUnset(featureID);
@@ -677,8 +723,6 @@ public class Comment extends ReviewComponent implements IComment {
 					: !MODIFICATION_DATE_EDEFAULT.equals(modificationDate);
 		case ReviewsPackage.COMMENT__AUTHOR:
 			return author != null;
-		case ReviewsPackage.COMMENT__TYPE:
-			return type != null;
 		case ReviewsPackage.COMMENT__DESCRIPTION:
 			return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
 		case ReviewsPackage.COMMENT__ID:
@@ -687,8 +731,14 @@ public class Comment extends ReviewComponent implements IComment {
 			return replies != null && !replies.isEmpty();
 		case ReviewsPackage.COMMENT__DRAFT:
 			return draft != DRAFT_EDEFAULT;
-		case ReviewsPackage.COMMENT__PARENT_TOPIC:
-			return basicGetParentTopic() != null;
+		case ReviewsPackage.COMMENT__LOCATIONS:
+			return locations != null && !locations.isEmpty();
+		case ReviewsPackage.COMMENT__REVIEW:
+			return review != null;
+		case ReviewsPackage.COMMENT__TITLE:
+			return TITLE_EDEFAULT == null ? title != null : !TITLE_EDEFAULT.equals(title);
+		case ReviewsPackage.COMMENT__ITEM:
+			return basicGetItem() != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -700,14 +750,6 @@ public class Comment extends ReviewComponent implements IComment {
 	 */
 	@Override
 	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
-		if (baseClass == IIndexed.class) {
-			switch (derivedFeatureID) {
-			case ReviewsPackage.COMMENT__INDEX:
-				return ReviewsPackage.INDEXED__INDEX;
-			default:
-				return -1;
-			}
-		}
 		if (baseClass == IDated.class) {
 			switch (derivedFeatureID) {
 			case ReviewsPackage.COMMENT__CREATION_DATE:
@@ -728,14 +770,6 @@ public class Comment extends ReviewComponent implements IComment {
 	 */
 	@Override
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
-		if (baseClass == IIndexed.class) {
-			switch (baseFeatureID) {
-			case ReviewsPackage.INDEXED__INDEX:
-				return ReviewsPackage.COMMENT__INDEX;
-			default:
-				return -1;
-			}
-		}
 		if (baseClass == IDated.class) {
 			switch (baseFeatureID) {
 			case ReviewsPackage.DATED__CREATION_DATE:
@@ -770,6 +804,8 @@ public class Comment extends ReviewComponent implements IComment {
 		result.append(id);
 		result.append(", draft: "); //$NON-NLS-1$
 		result.append(draft);
+		result.append(", title: "); //$NON-NLS-1$
+		result.append(title);
 		result.append(')');
 		return result.toString();
 	}

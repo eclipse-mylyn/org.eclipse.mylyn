@@ -66,30 +66,11 @@ public class IndexedTest {
 	}
 
 	@Test
-	public void testTopic() {
-		ITopic t1 = ReviewsFactory.eINSTANCE.createTopic();
-		t1.getLocations().add(l1);
-		ITopic t2 = ReviewsFactory.eINSTANCE.createTopic();
-		t2.getLocations().add(l2);
-		List<ITopic> orderable = new ArrayList<ITopic>();
-		orderable.add(t1);
-		orderable.add(t2);
-
-		Collections.sort(orderable, IIndexed.COMPARATOR);
-		assertThat(orderable.get(0), sameInstance(t2));
-		assertThat(orderable.get(1), sameInstance(t1));
-	}
-
-	@Test
 	public void testComment() {
 		IComment c1 = ReviewsFactory.eINSTANCE.createComment();
 		IComment c2 = ReviewsFactory.eINSTANCE.createComment();
-		ITopic t1 = ReviewsFactory.eINSTANCE.createTopic();
-		t1.getComments().add(c1);
-		t1.getLocations().add(l1);
-		ITopic t2 = ReviewsFactory.eINSTANCE.createTopic();
-		t2.getComments().add(c2);
-		t2.getLocations().add(l2);
+		c1.getLocations().add(l1);
+		c2.getLocations().add(l2);
 		List<IComment> orderable = new ArrayList<IComment>();
 		orderable.add(c1);
 		orderable.add(c2);

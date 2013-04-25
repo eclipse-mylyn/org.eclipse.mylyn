@@ -11,8 +11,7 @@
 
 package org.eclipse.mylyn.internal.reviews.ui.editors.parts;
 
-import java.text.DateFormat;
-
+import org.eclipse.mylyn.internal.reviews.ui.IReviewActionListener;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 import org.eclipse.swt.widgets.Composite;
@@ -24,36 +23,20 @@ public class CommentPart extends AbstractCommentPart<CommentPart> {
 
 	private Composite composite;
 
+	private IReviewActionListener actionListener;
+
 	public CommentPart(IComment comment, ReviewBehavior behavior) {
 		super(comment, behavior);
 	}
 
 	@Override
-	protected String getSectionHeaderText() {
-		String headerText = comment.getAuthor().getDisplayName() + "   ";
-		headerText += DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(
-				comment.getCreationDate());
-		return headerText;
-	}
-
-	// TODO could be moved to a util method
-	private String getCommentText() {
-		String commentText = comment.getDescription();
-
-		String customFieldsString = "";
-		if (customFieldsString.length() > 0) {
-			commentText += "  " + customFieldsString;
-		}
-		return commentText;
+	public void hookCustomActionRunListener(IReviewActionListener actionRunListener) {
+		this.actionListener = actionRunListener;
 	}
 
 	@Override
-	protected String getAnnotationText() {
-		String text = "";
-		if (comment.isDraft()) {
-			text = "DRAFT ";
-		}
-		return text;
+	public IReviewActionListener getActionListener() {
+		return actionListener;
 	}
 
 	@Override

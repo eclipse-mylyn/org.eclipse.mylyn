@@ -213,7 +213,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	 */
 	@Override
 	public List<IComment> getAllComments() {
-		BasicEList<IComment> all = new BasicEList<IComment>(getTopics());
+		BasicEList<IComment> all = new BasicEList<IComment>(getComments());
 		for (IReviewItem item : getItems()) {
 			all.addAll(item.getAllComments());
 		}

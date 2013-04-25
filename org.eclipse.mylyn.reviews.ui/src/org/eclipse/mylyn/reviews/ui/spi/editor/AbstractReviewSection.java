@@ -161,7 +161,7 @@ public abstract class AbstractReviewSection extends AbstractTaskEditorSection im
 	}
 
 	public IRepository getModelRepository() {
-		return (IRepository) getReview().getGroup();
+		return getReview().getRepository();
 	}
 
 	public IReviewRemoteFactoryProvider getFactoryProvider() {

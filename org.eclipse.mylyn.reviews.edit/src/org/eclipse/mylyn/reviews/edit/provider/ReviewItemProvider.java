@@ -36,7 +36,7 @@ import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
  * 
  * @generated
  */
-public class ReviewItemProvider extends TopicContainerItemProvider implements IEditingDomainItemProvider,
+public class ReviewItemProvider extends CommentContainerItemProvider implements IEditingDomainItemProvider,
 		IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -309,7 +309,9 @@ public class ReviewItemProvider extends TopicContainerItemProvider implements IE
 		Object childFeature = feature;
 		Object childObject = child;
 
-		boolean qualify = childFeature == ReviewsPackage.Literals.REVIEW__PARENTS
+		boolean qualify = childFeature == ReviewsPackage.Literals.COMMENT_CONTAINER__COMMENTS
+				|| childFeature == ReviewsPackage.Literals.COMMENT_CONTAINER__DRAFTS
+				|| childFeature == ReviewsPackage.Literals.REVIEW__PARENTS
 				|| childFeature == ReviewsPackage.Literals.REVIEW__CHILDREN;
 
 		if (qualify) {

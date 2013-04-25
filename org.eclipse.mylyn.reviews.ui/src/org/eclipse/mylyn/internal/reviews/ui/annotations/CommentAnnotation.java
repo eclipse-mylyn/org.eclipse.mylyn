@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.reviews.ui.annotations;
 
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
-import org.eclipse.mylyn.reviews.core.model.ITopic;
+import org.eclipse.mylyn.reviews.core.model.IComment;
 
 /**
  * Class to represent a comment in a Crucible review
@@ -28,9 +28,9 @@ public class CommentAnnotation extends Annotation {
 
 	private final Position position;
 
-	private final ITopic comment;
+	private final IComment comment;
 
-	public CommentAnnotation(int offset, int length, ITopic comment) {
+	public CommentAnnotation(int offset, int length, IComment comment) {
 		super(COMMENT_ANNOTATION_ID, false, null);
 		position = new Position(offset, length);
 		this.comment = comment;
@@ -45,7 +45,7 @@ public class CommentAnnotation extends Annotation {
 		return comment.getAuthor().getDisplayName() + " - " + comment.getTitle();
 	}
 
-	public ITopic getTopic() {
+	public IComment getComment() {
 		return comment;
 	}
 

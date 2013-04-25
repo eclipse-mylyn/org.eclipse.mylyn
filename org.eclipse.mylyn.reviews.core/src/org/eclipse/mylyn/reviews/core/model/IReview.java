@@ -19,7 +19,7 @@ import java.util.Map;
  * The following features are supported:
  * <ul>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IReview#getSets <em>Sets</em>}</li>
- * <li>{@link org.eclipse.mylyn.reviews.core.model.IReview#getGroup <em>Group</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IReview#getRepository <em>Repository</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IReview#getParents <em>Parents</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IReview#getChildren <em>Children</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IReview#getReviewerApprovals <em>Reviewer Approvals</em>}</li>
@@ -29,7 +29,7 @@ import java.util.Map;
  * 
  * @generated
  */
-public interface IReview extends ITopicContainer, IChange {
+public interface IReview extends ICommentContainer, IChange {
 	/**
 	 * Returns the value of the '<em><b>Sets</b></em>' containment reference list. The list contents are of type
 	 * {@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet}. It is bidirectional and its opposite is '
@@ -48,31 +48,32 @@ public interface IReview extends ITopicContainer, IChange {
 	List<IReviewItemSet> getSets();
 
 	/**
-	 * Returns the value of the '<em><b>Group</b></em>' container reference. It is bidirectional and its opposite is '
-	 * {@link org.eclipse.mylyn.reviews.core.model.IReviewGroup#getReviews <em>Reviews</em>}'. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Repository</b></em>' container reference. It is bidirectional and its opposite
+	 * is '{@link org.eclipse.mylyn.reviews.core.model.IRepository#getReviews <em>Reviews</em>}'. <!-- begin-user-doc
+	 * -->
 	 * <p>
-	 * If the meaning of the '<em>Group</em>' container reference isn't clear, there really should be more of a
+	 * If the meaning of the '<em>Repository</em>' container reference isn't clear, there really should be more of a
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Group</em>' container reference.
-	 * @see #setGroup(IReviewGroup)
-	 * @see org.eclipse.mylyn.reviews.core.model.IReviewGroup#getReviews
+	 * @return the value of the '<em>Repository</em>' container reference.
+	 * @see #setRepository(IRepository)
+	 * @see org.eclipse.mylyn.reviews.core.model.IRepository#getReviews
 	 * @generated
 	 */
-	IReviewGroup getGroup();
+	IRepository getRepository();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReview#getGroup <em>Group</em>}' container
-	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IReview#getRepository <em>Repository</em>}'
+	 * container reference. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
-	 *            the new value of the '<em>Group</em>' container reference.
-	 * @see #getGroup()
+	 *            the new value of the '<em>Repository</em>' container reference.
+	 * @see #getRepository()
 	 * @generated
 	 */
-	void setGroup(IReviewGroup value);
+	void setRepository(IRepository value);
 
 	/**
 	 * Returns the value of the '<em><b>Parents</b></em>' containment reference list. The list contents are of type

@@ -27,7 +27,7 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.reviews.core.model.IReviewGroup;
+import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.spi.remote.AbstractRemoteFactoryProvider;
 import org.eclipse.mylyn.reviews.edit.ReviewsEditPlugin;
 import org.eclipse.mylyn.reviews.edit.provider.ReviewsItemProviderAdapterFactory;
@@ -56,7 +56,7 @@ public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObj
 
 		Resource resource = new ResourceImpl();
 
-		if (resource.getContents().size() > 0 && resource.getContents().get(0) instanceof IReviewGroup) {
+		if (resource.getContents().size() > 0 && resource.getContents().get(0) instanceof IRepository) {
 			try {
 				rootObject = (ERootObject) resource.getContents().get(0);
 			} catch (ClassCastException e) {

@@ -73,8 +73,8 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 */
 	protected ReviewsSwitch<Adapter> modelSwitch = new ReviewsSwitch<Adapter>() {
 		@Override
-		public Adapter caseTopicContainer(ITopicContainer object) {
-			return createTopicContainerAdapter();
+		public Adapter caseCommentContainer(ICommentContainer object) {
+			return createCommentContainerAdapter();
 		}
 
 		@Override
@@ -113,28 +113,8 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
-		public Adapter caseReviewGroup(IReviewGroup object) {
-			return createReviewGroupAdapter();
-		}
-
-		@Override
 		public Adapter caseRepository(IRepository object) {
 			return createRepositoryAdapter();
-		}
-
-		@Override
-		public Adapter caseCommentType(ICommentType object) {
-			return createCommentTypeAdapter();
-		}
-
-		@Override
-		public Adapter caseTopic(ITopic object) {
-			return createTopicAdapter();
-		}
-
-		@Override
-		public Adapter caseReviewComponent(IReviewComponent object) {
-			return createReviewComponentAdapter();
 		}
 
 		@Override
@@ -160,11 +140,6 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 		@Override
 		public Adapter caseFileVersion(IFileVersion object) {
 			return createFileVersionAdapter();
-		}
-
-		@Override
-		public Adapter caseModelVersioning(IModelVersioning object) {
-			return createModelVersioningAdapter();
 		}
 
 		@Override
@@ -237,16 +212,16 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.ITopicContainer
-	 * <em>Topic Container</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.ICommentContainer
+	 * <em>Comment Container</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can
 	 * easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!--
 	 * end-user-doc -->
 	 * 
 	 * @return the new adapter.
-	 * @see org.eclipse.mylyn.reviews.core.model.ITopicContainer
+	 * @see org.eclipse.mylyn.reviews.core.model.ICommentContainer
 	 * @generated
 	 */
-	public Adapter createTopicContainerAdapter() {
+	public Adapter createCommentContainerAdapter() {
 		return null;
 	}
 
@@ -332,20 +307,6 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IReviewGroup
-	 * <em>Review Group</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily
-	 * ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc
-	 * -->
-	 * 
-	 * @return the new adapter.
-	 * @see org.eclipse.mylyn.reviews.core.model.IReviewGroup
-	 * @generated
-	 */
-	public Adapter createReviewGroupAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IRepository
 	 * <em>Repository</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily
 	 * ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc
@@ -356,47 +317,6 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createRepositoryAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.ICommentType
-	 * <em>Comment Type</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily
-	 * ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc
-	 * -->
-	 * 
-	 * @return the new adapter.
-	 * @see org.eclipse.mylyn.reviews.core.model.ICommentType
-	 * @generated
-	 */
-	public Adapter createCommentTypeAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.ITopic <em>Topic</em>}
-	 * '. <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's
-	 * useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
-	 * @return the new adapter.
-	 * @see org.eclipse.mylyn.reviews.core.model.ITopic
-	 * @generated
-	 */
-	public Adapter createTopicAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IReviewComponent
-	 * <em>Review Component</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can
-	 * easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!--
-	 * end-user-doc -->
-	 * 
-	 * @return the new adapter.
-	 * @see org.eclipse.mylyn.reviews.core.model.IReviewComponent
-	 * @generated
-	 */
-	public Adapter createReviewComponentAdapter() {
 		return null;
 	}
 
@@ -467,20 +387,6 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createFileVersionAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IModelVersioning
-	 * <em>Model Versioning</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can
-	 * easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!--
-	 * end-user-doc -->
-	 * 
-	 * @return the new adapter.
-	 * @see org.eclipse.mylyn.reviews.core.model.IModelVersioning
-	 * @generated
-	 */
-	public Adapter createModelVersioningAdapter() {
 		return null;
 	}
 

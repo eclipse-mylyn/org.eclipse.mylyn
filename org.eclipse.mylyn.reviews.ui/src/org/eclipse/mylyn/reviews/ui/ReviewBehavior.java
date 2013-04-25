@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
-import org.eclipse.mylyn.reviews.core.model.ITopic;
+import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.team.core.history.IFileRevision;
 
@@ -35,7 +35,7 @@ public abstract class ReviewBehavior {
 		return task;
 	}
 
-	public abstract IStatus addTopic(IReviewItem fileItem, ITopic topic, IProgressMonitor monitor);
+	public abstract IStatus addComment(IReviewItem fileItem, IComment comment, IProgressMonitor monitor);
 
 	public abstract IFileRevision getFileRevision(IFileVersion reviewFileVersion);
 }

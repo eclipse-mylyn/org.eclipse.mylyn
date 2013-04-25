@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="reviews" nsURI="http://eclipse.org/mylyn/reviews/core/1.0" nsPrefix="reviews">
-  <eClassifiers xsi:type="ecore:EClass" name="TopicContainer" abstract="true" eSuperTypes="#//ReviewComponent">
-    <eOperations name="createTopicComment" eType="#//Topic">
+  <eClassifiers xsi:type="ecore:EClass" name="CommentContainer" abstract="true">
+    <eOperations name="createComment" eType="#//Comment">
       <eParameters name="initalLocation" eType="#//Location"/>
       <eParameters name="commentText" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eOperations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="allComments" upperBound="-1"
         eType="#//Comment" changeable="false" volatile="true" transient="true" derived="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="topics" upperBound="-1"
-        eType="#//Topic" transient="true" derived="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="directTopics" upperBound="-1"
-        eType="#//Topic" containment="true" eOpposite="#//Topic/item"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="comments" upperBound="-1"
+        eType="#//Comment" containment="true" eOpposite="#//Comment/item"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="allDrafts" upperBound="-1"
+        eType="#//Comment" changeable="false" volatile="true" transient="true" derived="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="drafts" upperBound="-1"
+        eType="#//Comment" volatile="true" transient="true" derived="true" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Change" eSuperTypes="#//Dated">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -23,11 +25,11 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="state" lowerBound="1" eType="#//ReviewState"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Review" eSuperTypes="#//TopicContainer #//Change">
+  <eClassifiers xsi:type="ecore:EClass" name="Review" eSuperTypes="#//CommentContainer #//Change">
     <eStructuralFeatures xsi:type="ecore:EReference" name="sets" upperBound="-1" eType="#//ReviewItemSet"
         containment="true" eOpposite="#//ReviewItemSet/parentReview"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//ReviewGroup"
-        eOpposite="#//ReviewGroup/reviews"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="repository" lowerBound="1"
+        eType="#//Repository" eOpposite="#//Repository/reviews"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parents" upperBound="-1"
         eType="#//Change" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="children" upperBound="-1"
@@ -37,20 +39,23 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="requirements" upperBound="-1"
         eType="#//ReviewRequirementsMap" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Comment" eSuperTypes="#//ReviewComponent #//Indexed #//Dated">
+  <eClassifiers xsi:type="ecore:EClass" name="Comment" eSuperTypes="#//Indexed #//Dated">
     <eStructuralFeatures xsi:type="ecore:EReference" name="author" lowerBound="1"
         eType="#//User" resolveProxies="false"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="type" lowerBound="1" eType="#//CommentType"
-        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="replies" upperBound="-1"
-        eType="#//Comment" containment="true"/>
+        eType="#//Comment"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="draft" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parentTopic" eType="#//Topic"
-        transient="true" eOpposite="#//Topic/comments"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="locations" upperBound="-1"
+        eType="#//Location" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="review" lowerBound="1"
+        eType="#//Review" derived="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="item" eType="#//CommentContainer"
+        eOpposite="#//CommentContainer/comments"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ReviewItem" eSuperTypes="#//TopicContainer">
+  <eClassifiers xsi:type="ecore:EClass" name="ReviewItem" abstract="true" eSuperTypes="#//CommentContainer">
     <eStructuralFeatures xsi:type="ecore:EReference" name="addedBy" lowerBound="1"
         eType="#//User"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="committedBy" lowerBound="1"
@@ -67,19 +72,12 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="email" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="displayName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ReviewState" abstract="true" eSuperTypes="#//ReviewComponent">
+  <eClassifiers xsi:type="ecore:EClass" name="ReviewState" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="descriptor" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" changeable="false"
         volatile="true" transient="true" derived="true" iD="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ReviewGroup" eSuperTypes="#//ReviewComponent">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="reviews" upperBound="-1"
-        eType="#//Review" containment="true" eOpposite="#//Review/group" eKeys="#//Change/key"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="users" upperBound="-1"
-        eType="#//User" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Repository" eSuperTypes="#//ReviewGroup">
+  <eClassifiers xsi:type="ecore:EClass" name="Repository">
     <eStructuralFeatures xsi:type="ecore:EReference" name="approvalTypes" upperBound="-1"
         eType="#//ApprovalType" containment="true" eKeys="#//ApprovalType/key"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="reviewStates" upperBound="-1"
@@ -88,28 +86,11 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="taskConnectorKind" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="taskRepository" eType="#//TaskRepository"
         transient="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CommentType" abstract="true"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Topic" eSuperTypes="#//Comment">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="locations" upperBound="-1"
-        eType="#//Location" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="comments" upperBound="-1"
-        eType="#//Comment" transient="true" derived="true" containment="true" eOpposite="#//Comment/parentTopic"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="review" lowerBound="1"
-        eType="#//Review"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="item" eType="#//TopicContainer"
-        eOpposite="#//TopicContainer/directTopics"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ReviewComponent">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="enabled" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
-        defaultValueLiteral="true">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="namespace" value=""/>
-        <details key="wildcards" value=""/>
-        <details key="name" value=""/>
-      </eAnnotations>
-    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reviews" upperBound="-1"
+        eType="#//Review" containment="true" eOpposite="#//Review/repository" eKeys="#//Change/key"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="users" upperBound="-1"
+        eType="#//User" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FileItem" eSuperTypes="#//ReviewItem">
     <eStructuralFeatures xsi:type="ecore:EReference" name="base" eType="#//FileVersion"
@@ -149,10 +130,6 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="fileRevision" eType="#//IFileRevision"
         transient="true" derived="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ModelVersioning" abstract="true" interface="true">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="fragmentVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        defaultValueLiteral="1.0.0"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Indexed" abstract="true" interface="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="index" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"
         changeable="false" volatile="true" transient="true" derived="true"/>
@@ -168,7 +145,8 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UserApprovalsMap" instanceClassName="java.util.Map$Entry">
     <eStructuralFeatures xsi:type="ecore:EReference" name="key" lowerBound="1" eType="#//User"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="value" lowerBound="1" eType="#//ReviewerEntry"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="value" lowerBound="1" eType="#//ReviewerEntry"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ReviewerEntry">
     <eStructuralFeatures xsi:type="ecore:EReference" name="approvals" upperBound="-1"
@@ -195,7 +173,8 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ReviewRequirementsMap" instanceClassName="java.util.Map$Entry">
     <eStructuralFeatures xsi:type="ecore:EReference" name="key" lowerBound="1" eType="#//ApprovalType"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="value" lowerBound="1" eType="#//RequirementEntry"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="value" lowerBound="1" eType="#//RequirementEntry"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RequirementReviewState" eSuperTypes="#//ReviewState">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" lowerBound="1"

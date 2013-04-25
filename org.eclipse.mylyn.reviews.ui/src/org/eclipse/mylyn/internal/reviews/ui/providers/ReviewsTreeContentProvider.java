@@ -19,8 +19,8 @@ import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
-import org.eclipse.mylyn.reviews.core.model.ITopic;
-import org.eclipse.mylyn.reviews.core.model.ITopicContainer;
+import org.eclipse.mylyn.reviews.core.model.IComment;
+import org.eclipse.mylyn.reviews.core.model.ICommentContainer;
 
 /**
  * Provides a common tree hierarchy similar to Gerrit Web UI hierarchy, except that when used with ReviewsSorter, global
@@ -40,7 +40,7 @@ public class ReviewsTreeContentProvider extends GenericTreeContentProvider {
 
 	public Object[] getElements(Object element) {
 		if (element instanceof GlobalCommentsNode) {
-			return ((GlobalCommentsNode) element).getReview().getTopics().toArray();
+			return ((GlobalCommentsNode) element).getReview().getComments().toArray();
 		} else if (element instanceof EObject) {
 			List<Object> children = new ArrayList<Object>();
 			if (element instanceof IReview) {
@@ -51,23 +51,23 @@ public class ReviewsTreeContentProvider extends GenericTreeContentProvider {
 			if (element instanceof IReviewItemSet) {
 				IReviewItemSet itemSet = (IReviewItemSet) element;
 				if (itemSet.getItems().size() > 0) {
-					children.addAll(itemSet.getTopics());
+					children.addAll(itemSet.getComments());
 					children.addAll(itemSet.getItems());
 				} else {
 					children.add(new RetrievingContentsNode(itemSet));
 				}
 			}
-			if (element instanceof ITopic) {
-				ITopic topic = (ITopic) element;
-				children.addAll(topic.getReplies());
+			if (element instanceof IComment) {
+				IComment comment = (IComment) element;
+				children.addAll(comment.getReplies());
 			}
 			if (element instanceof IFileItem) {
 				IFileItem item = (IFileItem) element;
-				for (ITopic topic : item.getBase().getTopics()) {
-					children.add(topic);
+				for (IComment comment : item.getBase().getComments()) {
+					children.add(comment);
 				}
-				for (ITopic topic : item.getTarget().getTopics()) {
-					children.add(topic);
+				for (IComment comment : item.getTarget().getComments()) {
+					children.add(comment);
 				}
 			}
 			return children.toArray();
@@ -84,9 +84,9 @@ public class ReviewsTreeContentProvider extends GenericTreeContentProvider {
 			return ((IReview) element).getSets().size() > 0;
 		}
 		if (element instanceof GlobalCommentsNode) {
-			return ((GlobalCommentsNode) element).getReview().getTopics().size() > 0;
+			return ((GlobalCommentsNode) element).getReview().getComments().size() > 0;
 		}
-		return ((element instanceof ITopicContainer) && ((ITopicContainer) element).getAllComments().size() > 0)
+		return ((element instanceof ICommentContainer) && ((ICommentContainer) element).getAllComments().size() > 0)
 				|| (element instanceof IReview && ((IReview) element).getSets().size() > 0)
 				|| (element instanceof GlobalCommentsNode && hasChildren(((GlobalCommentsNode) element).getReview()) || (element instanceof IReviewItemSet))
 				|| hasCollectionChildren(element);

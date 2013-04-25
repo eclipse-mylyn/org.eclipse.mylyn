@@ -13,7 +13,6 @@ package org.eclipse.mylyn.reviews.internal.core.model;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -21,7 +20,6 @@ import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
-import org.eclipse.mylyn.reviews.core.model.ITopic;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 
 /**
@@ -40,7 +38,7 @@ import org.eclipse.mylyn.reviews.core.model.IUser;
  * 
  * @generated
  */
-public class ReviewItem extends TopicContainer implements IReviewItem {
+public abstract class ReviewItem extends CommentContainer implements IReviewItem {
 	/**
 	 * The cached value of the '{@link #getAddedBy() <em>Added By</em>}' reference. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -145,7 +143,7 @@ public class ReviewItem extends TopicContainer implements IReviewItem {
 	 */
 	@Override
 	public List<IComment> getAllComments() {
-		return new BasicEList<IComment>(getTopics());
+		return getComments();
 	}
 
 	/**
@@ -331,18 +329,15 @@ public class ReviewItem extends TopicContainer implements IReviewItem {
 	 * @generated NOT
 	 */
 	@Override
-	public ITopic createTopicComment(ILocation initalLocation, String commentText) {
-		ITopic topic = super.createTopicComment(initalLocation, commentText);
+	public IComment createComment(ILocation initalLocation, String commentText) {
+		IComment comment = super.createComment(initalLocation, commentText);
 		IUser user = getAddedBy();
 		if (user == null) {
 			user = ReviewsFactory.eINSTANCE.createUser();
 			user.setDisplayName("<Undefined>"); //$NON-NLS-1$
 		}
-		topic.setAuthor(user);
-		for (IComment comment : topic.getComments()) {
-			comment.setAuthor(topic.getAuthor());
-		}
-		return topic;
+		comment.setAuthor(user);
+		return comment;
 	}
 
 	/**

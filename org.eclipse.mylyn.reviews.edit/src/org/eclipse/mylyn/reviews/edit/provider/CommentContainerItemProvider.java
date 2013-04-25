@@ -16,6 +16,8 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.util.ResourceLocator;
+
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
@@ -25,28 +27,28 @@ import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
-import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
+import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
+import org.eclipse.mylyn.reviews.core.model.ICommentContainer;
 import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
-import org.eclipse.mylyn.reviews.core.model.ITopic;
 
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.mylyn.reviews.core.model.ITopic} object. <!--
+ * This is the item provider adapter for a {@link org.eclipse.mylyn.reviews.core.model.ICommentContainer} object. <!--
  * begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
  */
-public class TopicItemProvider extends CommentItemProvider implements IEditingDomainItemProvider,
+public class CommentContainerItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider,
 		IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	public TopicItemProvider(AdapterFactory adapterFactory) {
+	public CommentContainerItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -60,66 +62,40 @@ public class TopicItemProvider extends CommentItemProvider implements IEditingDo
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addCommentsPropertyDescriptor(object);
-			addReviewPropertyDescriptor(object);
-			addTitlePropertyDescriptor(object);
-			addItemPropertyDescriptor(object);
+			addAllCommentsPropertyDescriptor(object);
+			addAllDraftsPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the Comments feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds a property descriptor for the All Comments feature. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected void addCommentsPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_Topic_comments_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_Topic_comments_feature", "_UI_Topic_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.TOPIC__COMMENTS, true, false, true, null, null, null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Review feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected void addReviewPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_Topic_review_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_Topic_review_feature", "_UI_Topic_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.TOPIC__REVIEW, true, false, true, null, null, null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Title feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected void addTitlePropertyDescriptor(Object object) {
+	protected void addAllCommentsPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(
 				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
 				getResourceLocator(),
-				getString("_UI_Topic_title_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_Topic_title_feature", "_UI_Topic_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.TOPIC__TITLE, true, false, false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				null, null));
+				getString("_UI_CommentContainer_allComments_feature"), //$NON-NLS-1$
+				getString(
+						"_UI_PropertyDescriptor_description", "_UI_CommentContainer_allComments_feature", "_UI_CommentContainer_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				ReviewsPackage.Literals.COMMENT_CONTAINER__ALL_COMMENTS, false, false, false, null, null, null));
 	}
 
 	/**
-	 * This adds a property descriptor for the Item feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds a property descriptor for the All Drafts feature. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected void addItemPropertyDescriptor(Object object) {
+	protected void addAllDraftsPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_Topic_item_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_Topic_item_feature", "_UI_Topic_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.TOPIC__ITEM, true, false, true, null, null, null));
+				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+				getResourceLocator(),
+				getString("_UI_CommentContainer_allDrafts_feature"), //$NON-NLS-1$
+				getString(
+						"_UI_PropertyDescriptor_description", "_UI_CommentContainer_allDrafts_feature", "_UI_CommentContainer_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				ReviewsPackage.Literals.COMMENT_CONTAINER__ALL_DRAFTS, false, false, false, null, null, null));
 	}
 
 	/**
@@ -134,7 +110,8 @@ public class TopicItemProvider extends CommentItemProvider implements IEditingDo
 	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures.add(ReviewsPackage.Literals.TOPIC__LOCATIONS);
+			childrenFeatures.add(ReviewsPackage.Literals.COMMENT_CONTAINER__COMMENTS);
+			childrenFeatures.add(ReviewsPackage.Literals.COMMENT_CONTAINER__DRAFTS);
 		}
 		return childrenFeatures;
 	}
@@ -153,25 +130,13 @@ public class TopicItemProvider extends CommentItemProvider implements IEditingDo
 	}
 
 	/**
-	 * This returns Topic.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/Topic")); //$NON-NLS-1$
-	}
-
-	/**
 	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((ITopic) object).getId();
-		return label == null || label.length() == 0 ? getString("_UI_Topic_type") : //$NON-NLS-1$
-				getString("_UI_Topic_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+		return getString("_UI_CommentContainer_type"); //$NON-NLS-1$
 	}
 
 	/**
@@ -185,11 +150,9 @@ public class TopicItemProvider extends CommentItemProvider implements IEditingDo
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
-		switch (notification.getFeatureID(ITopic.class)) {
-		case ReviewsPackage.TOPIC__TITLE:
-			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-			return;
-		case ReviewsPackage.TOPIC__LOCATIONS:
+		switch (notification.getFeatureID(ICommentContainer.class)) {
+		case ReviewsPackage.COMMENT_CONTAINER__COMMENTS:
+		case ReviewsPackage.COMMENT_CONTAINER__DRAFTS:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 			return;
 		}
@@ -206,8 +169,42 @@ public class TopicItemProvider extends CommentItemProvider implements IEditingDo
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 
-		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.TOPIC__LOCATIONS,
-				IReviewsFactory.INSTANCE.createLineLocation()));
+		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.COMMENT_CONTAINER__COMMENTS,
+				IReviewsFactory.INSTANCE.createComment()));
+
+		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.COMMENT_CONTAINER__DRAFTS,
+				IReviewsFactory.INSTANCE.createComment()));
+	}
+
+	/**
+	 * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public String getCreateChildText(Object owner, Object feature, Object child, Collection<?> selection) {
+		Object childFeature = feature;
+		Object childObject = child;
+
+		boolean qualify = childFeature == ReviewsPackage.Literals.COMMENT_CONTAINER__COMMENTS
+				|| childFeature == ReviewsPackage.Literals.COMMENT_CONTAINER__DRAFTS;
+
+		if (qualify) {
+			return getString("_UI_CreateChild_text2", //$NON-NLS-1$
+					new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
+		}
+		return super.getCreateChildText(owner, feature, child, selection);
+	}
+
+	/**
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public ResourceLocator getResourceLocator() {
+		return ReviewsEditPlugin.INSTANCE;
 	}
 
 }

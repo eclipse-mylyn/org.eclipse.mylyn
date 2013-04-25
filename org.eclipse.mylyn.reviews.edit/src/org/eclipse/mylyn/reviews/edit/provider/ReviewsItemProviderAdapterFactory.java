@@ -16,7 +16,6 @@ import java.util.Collection;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -28,7 +27,6 @@ import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
-
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsAdapterFactory;
 
 /**
@@ -125,52 +123,6 @@ public class ReviewsItemProviderAdapterFactory extends ReviewsAdapterFactory imp
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.mylyn.reviews.core.model.IComment} instances.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected CommentItemProvider commentItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.mylyn.reviews.core.model.IComment}. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public Adapter createCommentAdapter() {
-		if (commentItemProvider == null) {
-			commentItemProvider = new CommentItemProvider(this);
-		}
-
-		return commentItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.mylyn.reviews.core.model.IReviewItem}
-	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected ReviewItemItemProvider reviewItemItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.mylyn.reviews.core.model.IReviewItem}. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public Adapter createReviewItemAdapter() {
-		if (reviewItemItemProvider == null) {
-			reviewItemItemProvider = new ReviewItemItemProvider(this);
-		}
-
-		return reviewItemItemProvider;
-	}
-
-	/**
 	 * This keeps track of the one adapter used for all {@link org.eclipse.mylyn.reviews.core.model.IUser} instances.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -191,29 +143,6 @@ public class ReviewsItemProviderAdapterFactory extends ReviewsAdapterFactory imp
 		}
 
 		return userItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.mylyn.reviews.core.model.IReviewGroup}
-	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected ReviewGroupItemProvider reviewGroupItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.mylyn.reviews.core.model.IReviewGroup}. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public Adapter createReviewGroupAdapter() {
-		if (reviewGroupItemProvider == null) {
-			reviewGroupItemProvider = new ReviewGroupItemProvider(this);
-		}
-
-		return reviewGroupItemProvider;
 	}
 
 	/**
@@ -240,49 +169,26 @@ public class ReviewsItemProviderAdapterFactory extends ReviewsAdapterFactory imp
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.mylyn.reviews.core.model.ITopic} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.mylyn.reviews.core.model.IComment} instances.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected TopicItemProvider topicItemProvider;
+	protected CommentItemProvider commentItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.mylyn.reviews.core.model.ITopic}. <!-- begin-user-doc --> <!--
+	 * This creates an adapter for a {@link org.eclipse.mylyn.reviews.core.model.IComment}. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
 	 * @generated
 	 */
 	@Override
-	public Adapter createTopicAdapter() {
-		if (topicItemProvider == null) {
-			topicItemProvider = new TopicItemProvider(this);
+	public Adapter createCommentAdapter() {
+		if (commentItemProvider == null) {
+			commentItemProvider = new CommentItemProvider(this);
 		}
 
-		return topicItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.mylyn.reviews.core.model.IReviewComponent}
-	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected ReviewComponentItemProvider reviewComponentItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.mylyn.reviews.core.model.IReviewComponent}. <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public Adapter createReviewComponentAdapter() {
-		if (reviewComponentItemProvider == null) {
-			reviewComponentItemProvider = new ReviewComponentItemProvider(this);
-		}
-
-		return reviewComponentItemProvider;
+		return commentItemProvider;
 	}
 
 	/**
@@ -682,18 +588,10 @@ public class ReviewsItemProviderAdapterFactory extends ReviewsAdapterFactory imp
 			reviewItemProvider.dispose();
 		if (commentItemProvider != null)
 			commentItemProvider.dispose();
-		if (reviewItemItemProvider != null)
-			reviewItemItemProvider.dispose();
 		if (userItemProvider != null)
 			userItemProvider.dispose();
-		if (reviewGroupItemProvider != null)
-			reviewGroupItemProvider.dispose();
 		if (repositoryItemProvider != null)
 			repositoryItemProvider.dispose();
-		if (topicItemProvider != null)
-			topicItemProvider.dispose();
-		if (reviewComponentItemProvider != null)
-			reviewComponentItemProvider.dispose();
 		if (fileItemItemProvider != null)
 			fileItemItemProvider.dispose();
 		if (reviewItemSetItemProvider != null)

@@ -26,7 +26,7 @@ package org.eclipse.mylyn.reviews.core.model;
  * 
  * @generated
  */
-public interface IReviewItem extends ITopicContainer {
+public interface IReviewItem extends ICommentContainer {
 	/**
 	 * Returns the value of the '<em><b>Added By</b></em>' reference. <!-- begin-user-doc -->
 	 * <p>

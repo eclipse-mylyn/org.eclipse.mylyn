@@ -41,14 +41,6 @@ public interface IReviewsFactory {
 	IComment createComment();
 
 	/**
-	 * Returns a new object of class '<em>Review Item</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @return a new object of class '<em>Review Item</em>'.
-	 * @generated
-	 */
-	IReviewItem createReviewItem();
-
-	/**
 	 * Returns a new object of class '<em>User</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return a new object of class '<em>User</em>'.
@@ -57,36 +49,12 @@ public interface IReviewsFactory {
 	IUser createUser();
 
 	/**
-	 * Returns a new object of class '<em>Review Group</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @return a new object of class '<em>Review Group</em>'.
-	 * @generated
-	 */
-	IReviewGroup createReviewGroup();
-
-	/**
 	 * Returns a new object of class '<em>Repository</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return a new object of class '<em>Repository</em>'.
 	 * @generated
 	 */
 	IRepository createRepository();
-
-	/**
-	 * Returns a new object of class '<em>Topic</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @return a new object of class '<em>Topic</em>'.
-	 * @generated
-	 */
-	ITopic createTopic();
-
-	/**
-	 * Returns a new object of class '<em>Review Component</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @return a new object of class '<em>Review Component</em>'.
-	 * @generated
-	 */
-	IReviewComponent createReviewComponent();
 
 	/**
 	 * Returns a new object of class '<em>File Item</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->

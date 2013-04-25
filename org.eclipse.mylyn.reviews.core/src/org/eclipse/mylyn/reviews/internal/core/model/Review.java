@@ -33,15 +33,13 @@ import org.eclipse.mylyn.reviews.core.model.IApprovalType;
 import org.eclipse.mylyn.reviews.core.model.IChange;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IDated;
+import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IRequirementEntry;
 import org.eclipse.mylyn.reviews.core.model.IReview;
-import org.eclipse.mylyn.reviews.core.model.IReviewGroup;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.core.model.IReviewState;
 import org.eclipse.mylyn.reviews.core.model.IReviewerEntry;
-import org.eclipse.mylyn.reviews.core.model.ITopic;
 import org.eclipse.mylyn.reviews.core.model.IUser;
-import org.eclipse.mylyn.reviews.core.model.RequirementStatus;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Review</b></em>'. <!-- end-user-doc -->
@@ -57,7 +55,7 @@ import org.eclipse.mylyn.reviews.core.model.RequirementStatus;
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Review#getOwner <em>Owner</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Review#getState <em>State</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Review#getSets <em>Sets</em>}</li>
- * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Review#getGroup <em>Group</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Review#getRepository <em>Repository</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Review#getParents <em>Parents</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Review#getChildren <em>Children</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Review#getReviewerApprovals <em>Reviewer Approvals</em>}</li>
@@ -67,7 +65,7 @@ import org.eclipse.mylyn.reviews.core.model.RequirementStatus;
  * 
  * @generated
  */
-public class Review extends TopicContainer implements IReview {
+public class Review extends CommentContainer implements IReview {
 	/**
 	 * The default value of the '{@link #getCreationDate() <em>Creation Date</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -291,9 +289,10 @@ public class Review extends TopicContainer implements IReview {
 	public void setCreationDate(Date newCreationDate) {
 		Date oldCreationDate = creationDate;
 		creationDate = newCreationDate;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW__CREATION_DATE,
 					oldCreationDate, creationDate));
+		}
 	}
 
 	/**
@@ -313,9 +312,10 @@ public class Review extends TopicContainer implements IReview {
 	public void setModificationDate(Date newModificationDate) {
 		Date oldModificationDate = modificationDate;
 		modificationDate = newModificationDate;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW__MODIFICATION_DATE,
 					oldModificationDate, modificationDate));
+		}
 	}
 
 	/**
@@ -329,6 +329,69 @@ public class Review extends TopicContainer implements IReview {
 					ReviewsPackage.REVIEW__SETS, ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW);
 		}
 		return sets;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public IRepository getRepository() {
+		if (eContainerFeatureID() != ReviewsPackage.REVIEW__REPOSITORY) {
+			return null;
+		}
+		return (IRepository) eContainer();
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public IRepository basicGetRepository() {
+		if (eContainerFeatureID() != ReviewsPackage.REVIEW__REPOSITORY) {
+			return null;
+		}
+		return (IRepository) eInternalContainer();
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public NotificationChain basicSetRepository(IRepository newRepository, NotificationChain msgs) {
+		msgs = eBasicSetContainer((InternalEObject) newRepository, ReviewsPackage.REVIEW__REPOSITORY, msgs);
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setRepository(IRepository newRepository) {
+		if (newRepository != eInternalContainer()
+				|| (eContainerFeatureID() != ReviewsPackage.REVIEW__REPOSITORY && newRepository != null)) {
+			if (EcoreUtil.isAncestor(this, newRepository)) {
+				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+			}
+			NotificationChain msgs = null;
+			if (eInternalContainer() != null) {
+				msgs = eBasicRemoveFromContainer(msgs);
+			}
+			if (newRepository != null) {
+				msgs = ((InternalEObject) newRepository).eInverseAdd(this, ReviewsPackage.REPOSITORY__REVIEWS,
+						IRepository.class, msgs);
+			}
+			msgs = basicSetRepository(newRepository, msgs);
+			if (msgs != null) {
+				msgs.dispatch();
+			}
+		} else if (eNotificationRequired()) {
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW__REPOSITORY, newRepository,
+					newRepository));
+		}
 	}
 
 	/**
@@ -350,12 +413,9 @@ public class Review extends TopicContainer implements IReview {
 	 */
 	@Override
 	public List<IComment> getAllComments() {
-		BasicEList<IComment> all = new BasicEList<IComment>(getTopics());
-		for (ITopic topic : getTopics()) {
-			all.addAll(topic.getReplies());
-		}
-		for (IReviewItemSet item : getSets()) {
-			all.addAll(item.getAllComments());
+		BasicEList<IComment> all = new BasicEList<IComment>(getComments());
+		for (IReviewItemSet set : getSets()) {
+			all.addAll(set.getAllComments());
 		}
 		return all;
 	}
@@ -376,11 +436,13 @@ public class Review extends TopicContainer implements IReview {
 				if (newState.eInternalContainer() == null) {
 					msgs = newState.eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ReviewsPackage.REVIEW__STATE, null, msgs);
 				}
-				if (msgs != null)
+				if (msgs != null) {
 					msgs.dispatch();
-				if (eNotificationRequired())
+				}
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.REVIEW__STATE, oldState,
 							state));
+				}
 			}
 		}
 		return state;
@@ -406,10 +468,11 @@ public class Review extends TopicContainer implements IReview {
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
 					ReviewsPackage.REVIEW__STATE, oldState, newState);
-			if (msgs == null)
+			if (msgs == null) {
 				msgs = notification;
-			else
+			} else {
 				msgs.add(notification);
+			}
 		}
 		return msgs;
 	}
@@ -422,17 +485,21 @@ public class Review extends TopicContainer implements IReview {
 	public void setState(IReviewState newState) {
 		if (newState != state) {
 			NotificationChain msgs = null;
-			if (state != null)
+			if (state != null) {
 				msgs = ((InternalEObject) state).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
 						- ReviewsPackage.REVIEW__STATE, null, msgs);
-			if (newState != null)
+			}
+			if (newState != null) {
 				msgs = ((InternalEObject) newState).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
 						- ReviewsPackage.REVIEW__STATE, null, msgs);
+			}
 			msgs = basicSetState(newState, msgs);
-			if (msgs != null)
+			if (msgs != null) {
 				msgs.dispatch();
-		} else if (eNotificationRequired())
+			}
+		} else if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW__STATE, newState, newState));
+		}
 	}
 
 	/**
@@ -452,8 +519,9 @@ public class Review extends TopicContainer implements IReview {
 	public void setId(String newId) {
 		String oldId = id;
 		id = newId;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW__ID, oldId, id));
+		}
 	}
 
 	/**
@@ -473,8 +541,9 @@ public class Review extends TopicContainer implements IReview {
 	public void setKey(String newKey) {
 		String oldKey = key;
 		key = newKey;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW__KEY, oldKey, key));
+		}
 	}
 
 	/**
@@ -494,8 +563,9 @@ public class Review extends TopicContainer implements IReview {
 	public void setSubject(String newSubject) {
 		String oldSubject = subject;
 		subject = newSubject;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW__SUBJECT, oldSubject, subject));
+		}
 	}
 
 	/**
@@ -515,8 +585,9 @@ public class Review extends TopicContainer implements IReview {
 	public void setMessage(String newMessage) {
 		String oldMessage = message;
 		message = newMessage;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW__MESSAGE, oldMessage, message));
+		}
 	}
 
 	/**
@@ -529,9 +600,10 @@ public class Review extends TopicContainer implements IReview {
 			InternalEObject oldOwner = (InternalEObject) owner;
 			owner = (IUser) eResolveProxy(oldOwner);
 			if (owner != oldOwner) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.REVIEW__OWNER, oldOwner,
 							owner));
+				}
 			}
 		}
 		return owner;
@@ -554,63 +626,9 @@ public class Review extends TopicContainer implements IReview {
 	public void setOwner(IUser newOwner) {
 		IUser oldOwner = owner;
 		owner = newOwner;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW__OWNER, oldOwner, owner));
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public IReviewGroup getGroup() {
-		if (eContainerFeatureID() != ReviewsPackage.REVIEW__GROUP)
-			return null;
-		return (IReviewGroup) eContainer();
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public IReviewGroup basicGetGroup() {
-		if (eContainerFeatureID() != ReviewsPackage.REVIEW__GROUP)
-			return null;
-		return (IReviewGroup) eInternalContainer();
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public NotificationChain basicSetGroup(IReviewGroup newGroup, NotificationChain msgs) {
-		msgs = eBasicSetContainer((InternalEObject) newGroup, ReviewsPackage.REVIEW__GROUP, msgs);
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public void setGroup(IReviewGroup newGroup) {
-		if (newGroup != eInternalContainer()
-				|| (eContainerFeatureID() != ReviewsPackage.REVIEW__GROUP && newGroup != null)) {
-			if (EcoreUtil.isAncestor(this, newGroup))
-				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
-			NotificationChain msgs = null;
-			if (eInternalContainer() != null)
-				msgs = eBasicRemoveFromContainer(msgs);
-			if (newGroup != null)
-				msgs = ((InternalEObject) newGroup).eInverseAdd(this, ReviewsPackage.REVIEW_GROUP__REVIEWS,
-						IReviewGroup.class, msgs);
-			msgs = basicSetGroup(newGroup, msgs);
-			if (msgs != null)
-				msgs.dispatch();
-		} else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW__GROUP, newGroup, newGroup));
+		}
 	}
 
 	/**
@@ -677,10 +695,11 @@ public class Review extends TopicContainer implements IReview {
 		switch (featureID) {
 		case ReviewsPackage.REVIEW__SETS:
 			return ((InternalEList<InternalEObject>) (InternalEList<?>) getSets()).basicAdd(otherEnd, msgs);
-		case ReviewsPackage.REVIEW__GROUP:
-			if (eInternalContainer() != null)
+		case ReviewsPackage.REVIEW__REPOSITORY:
+			if (eInternalContainer() != null) {
 				msgs = eBasicRemoveFromContainer(msgs);
-			return basicSetGroup((IReviewGroup) otherEnd, msgs);
+			}
+			return basicSetRepository((IRepository) otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -697,8 +716,8 @@ public class Review extends TopicContainer implements IReview {
 			return basicSetState(null, msgs);
 		case ReviewsPackage.REVIEW__SETS:
 			return ((InternalEList<?>) getSets()).basicRemove(otherEnd, msgs);
-		case ReviewsPackage.REVIEW__GROUP:
-			return basicSetGroup(null, msgs);
+		case ReviewsPackage.REVIEW__REPOSITORY:
+			return basicSetRepository(null, msgs);
 		case ReviewsPackage.REVIEW__PARENTS:
 			return ((InternalEList<?>) getParents()).basicRemove(otherEnd, msgs);
 		case ReviewsPackage.REVIEW__CHILDREN:
@@ -721,8 +740,8 @@ public class Review extends TopicContainer implements IReview {
 	@Override
 	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
 		switch (eContainerFeatureID()) {
-		case ReviewsPackage.REVIEW__GROUP:
-			return eInternalContainer().eInverseRemove(this, ReviewsPackage.REVIEW_GROUP__REVIEWS, IReviewGroup.class,
+		case ReviewsPackage.REVIEW__REPOSITORY:
+			return eInternalContainer().eInverseRemove(this, ReviewsPackage.REPOSITORY__REVIEWS, IRepository.class,
 					msgs);
 		}
 		return super.eBasicRemoveFromContainerFeature(msgs);
@@ -749,33 +768,38 @@ public class Review extends TopicContainer implements IReview {
 		case ReviewsPackage.REVIEW__MESSAGE:
 			return getMessage();
 		case ReviewsPackage.REVIEW__OWNER:
-			if (resolve)
+			if (resolve) {
 				return getOwner();
+			}
 			return basicGetOwner();
 		case ReviewsPackage.REVIEW__STATE:
-			if (resolve)
+			if (resolve) {
 				return getState();
+			}
 			return basicGetState();
 		case ReviewsPackage.REVIEW__SETS:
 			return getSets();
-		case ReviewsPackage.REVIEW__GROUP:
-			if (resolve)
-				return getGroup();
-			return basicGetGroup();
+		case ReviewsPackage.REVIEW__REPOSITORY:
+			if (resolve) {
+				return getRepository();
+			}
+			return basicGetRepository();
 		case ReviewsPackage.REVIEW__PARENTS:
 			return getParents();
 		case ReviewsPackage.REVIEW__CHILDREN:
 			return getChildren();
 		case ReviewsPackage.REVIEW__REVIEWER_APPROVALS:
-			if (coreType)
+			if (coreType) {
 				return ((EMap.InternalMapView<IUser, IReviewerEntry>) getReviewerApprovals()).eMap();
-			else
+			} else {
 				return getReviewerApprovals();
+			}
 		case ReviewsPackage.REVIEW__REQUIREMENTS:
-			if (coreType)
+			if (coreType) {
 				return ((EMap.InternalMapView<IApprovalType, IRequirementEntry>) getRequirements()).eMap();
-			else
+			} else {
 				return getRequirements();
+			}
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -817,8 +841,8 @@ public class Review extends TopicContainer implements IReview {
 			getSets().clear();
 			getSets().addAll((Collection<? extends IReviewItemSet>) newValue);
 			return;
-		case ReviewsPackage.REVIEW__GROUP:
-			setGroup((IReviewGroup) newValue);
+		case ReviewsPackage.REVIEW__REPOSITORY:
+			setRepository((IRepository) newValue);
 			return;
 		case ReviewsPackage.REVIEW__PARENTS:
 			getParents().clear();
@@ -873,8 +897,8 @@ public class Review extends TopicContainer implements IReview {
 		case ReviewsPackage.REVIEW__SETS:
 			getSets().clear();
 			return;
-		case ReviewsPackage.REVIEW__GROUP:
-			setGroup((IReviewGroup) null);
+		case ReviewsPackage.REVIEW__REPOSITORY:
+			setRepository((IRepository) null);
 			return;
 		case ReviewsPackage.REVIEW__PARENTS:
 			getParents().clear();
@@ -920,8 +944,8 @@ public class Review extends TopicContainer implements IReview {
 			return state != null;
 		case ReviewsPackage.REVIEW__SETS:
 			return sets != null && !sets.isEmpty();
-		case ReviewsPackage.REVIEW__GROUP:
-			return basicGetGroup() != null;
+		case ReviewsPackage.REVIEW__REPOSITORY:
+			return basicGetRepository() != null;
 		case ReviewsPackage.REVIEW__PARENTS:
 			return parents != null && !parents.isEmpty();
 		case ReviewsPackage.REVIEW__CHILDREN:
@@ -1017,8 +1041,9 @@ public class Review extends TopicContainer implements IReview {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (creationDate: "); //$NON-NLS-1$

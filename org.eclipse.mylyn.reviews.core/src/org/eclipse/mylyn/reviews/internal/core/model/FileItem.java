@@ -23,7 +23,6 @@ import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
-import org.eclipse.team.core.history.IFileRevision;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>File Item</b></em>'. <!-- end-user-doc -->
@@ -161,12 +160,12 @@ public class FileItem extends ReviewItem implements IFileItem {
 	 */
 	@Override
 	public List<IComment> getAllComments() {
-		BasicEList<IComment> all = new BasicEList<IComment>(getTopics());
+		BasicEList<IComment> all = new BasicEList<IComment>(getComments());
 		if (getBase() != null) {
-			all.addAll(getBase().getTopics());
+			all.addAll(getBase().getComments());
 		}
 		if (getTarget() != null) {
-			all.addAll(getTarget().getTopics());
+			all.addAll(getTarget().getComments());
 		}
 		return all;
 	}

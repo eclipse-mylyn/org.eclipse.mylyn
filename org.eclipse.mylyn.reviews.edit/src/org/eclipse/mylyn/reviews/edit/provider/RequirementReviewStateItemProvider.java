@@ -95,8 +95,9 @@ public class RequirementReviewStateItemProvider extends ReviewStateItemProvider 
 	 */
 	@Override
 	public String getText(Object object) {
-		IRequirementReviewState requirementReviewState = (IRequirementReviewState) object;
-		return getString("_UI_RequirementReviewState_type") + " " + requirementReviewState.isEnabled(); //$NON-NLS-1$ //$NON-NLS-2$
+		String label = ((IRequirementReviewState) object).getDescriptor();
+		return label == null || label.length() == 0 ? getString("_UI_RequirementReviewState_type") : //$NON-NLS-1$
+				getString("_UI_RequirementReviewState_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

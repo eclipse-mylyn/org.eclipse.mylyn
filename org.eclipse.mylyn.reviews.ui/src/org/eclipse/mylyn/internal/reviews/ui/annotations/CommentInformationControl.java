@@ -86,7 +86,7 @@ public class CommentInformationControl extends DefaultInformationControl impleme
 
 		Set<IComment> comments = new HashSet<IComment>();
 		for (CommentAnnotation annotation : annotations) {
-			comments.addAll(getUnreadComments(annotation.getTopic()));
+			comments.addAll(getUnreadComments(annotation.getComment()));
 		}
 
 		if (comments.size() > 0) {

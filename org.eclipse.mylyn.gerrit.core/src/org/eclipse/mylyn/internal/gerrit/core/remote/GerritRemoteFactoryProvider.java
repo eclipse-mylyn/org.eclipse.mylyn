@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.gerrit.core.remote;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
-import org.eclipse.mylyn.reviews.core.model.IReviewGroup;
+import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.eclipse.mylyn.reviews.edit.remote.ReviewsRemoteEditFactoryProvider;
@@ -65,10 +65,10 @@ public class GerritRemoteFactoryProvider extends ReviewsRemoteEditFactoryProvide
 		return userFactory;
 	}
 
-	IUser pullUser(IReviewGroup parent, AccountInfoCache cache, Id id, IProgressMonitor monitor)
+	IUser pullUser(IRepository parent, AccountInfoCache cache, Id id, IProgressMonitor monitor)
 			throws CoreException {
 		if (id != null) {
-			final RemoteEmfConsumer<IReviewGroup, IUser, AccountInfo, Id, String> userConsumer = getUserFactory(cache).getConsumerForRemoteKey(
+			final RemoteEmfConsumer<IRepository, IUser, AccountInfo, Id, String> userConsumer = getUserFactory(cache).getConsumerForRemoteKey(
 					parent, id);
 			if (userConsumer.getModelObject() == null) {
 				userConsumer.pull(false, monitor);
@@ -78,9 +78,9 @@ public class GerritRemoteFactoryProvider extends ReviewsRemoteEditFactoryProvide
 		return null;
 	}
 
-	IUser createUser(IReviewGroup parent, AccountInfoCache cache, Account.Id id) {
+	IUser createUser(IRepository parent, AccountInfoCache cache, Account.Id id) {
 		if (id != null) {
-			final RemoteEmfConsumer<IReviewGroup, IUser, AccountInfo, Id, String> userConsumer = getUserFactory(cache).getConsumerForRemoteKey(
+			final RemoteEmfConsumer<IRepository, IUser, AccountInfo, Id, String> userConsumer = getUserFactory(cache).getConsumerForRemoteKey(
 					parent, id);
 			userConsumer.applyModel(false);
 			return userConsumer.getModelObject();

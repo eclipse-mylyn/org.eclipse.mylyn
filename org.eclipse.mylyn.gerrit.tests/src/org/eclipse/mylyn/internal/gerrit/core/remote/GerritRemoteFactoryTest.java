@@ -56,7 +56,6 @@ import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.core.model.IReviewerEntry;
 import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
-import org.eclipse.mylyn.reviews.core.model.ITopic;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.reviews.core.model.RequirementStatus;
 import org.eclipse.mylyn.reviews.core.spi.remote.JobRemoteService;
@@ -176,15 +175,13 @@ public class GerritRemoteFactoryTest extends TestCase {
 				null);
 		reviewHarness.consumer.retrieve(false);
 		reviewHarness.listener.waitForResponse(2, 2);
-		List<ITopic> topics = getReview().getTopics();
-		assertThat(topics.size(), is(2));
-		ITopic topic = topics.get(0);
-		IComment comment = topic.getComments().get(0);
+		List<IComment> comments = getReview().getComments();
+		assertThat(comments.size(), is(2));
+		IComment comment = comments.get(0);
 		assertThat(comment.getAuthor().getDisplayName(), is("tests"));
 		assertThat(comment.getDescription(), is("Patch Set 1:\n\n" + message1));
-		assertThat(topic.getAuthor().getDisplayName(), is("tests"));
-		assertThat(topic.getDescription(), is("Patch Set 1:\n\n" + message1));
-		assertThat(topic.getComments().size(), is(1));
+		assertThat(comment.getAuthor().getDisplayName(), is("tests"));
+		assertThat(comment.getDescription(), is("Patch Set 1:\n\n" + message1));
 	}
 
 	@Test

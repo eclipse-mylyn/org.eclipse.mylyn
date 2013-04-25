@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
@@ -26,6 +27,7 @@ import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
+import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 import org.eclipse.mylyn.reviews.core.model.IRepository;
@@ -39,7 +41,7 @@ import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
  * 
  * @generated
  */
-public class RepositoryItemProvider extends ReviewGroupItemProvider implements IEditingDomainItemProvider,
+public class RepositoryItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider,
 		IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -63,6 +65,7 @@ public class RepositoryItemProvider extends ReviewGroupItemProvider implements I
 			addTaskRepositoryUrlPropertyDescriptor(object);
 			addTaskConnectorKindPropertyDescriptor(object);
 			addTaskRepositoryPropertyDescriptor(object);
+			addDescriptionPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -118,6 +121,22 @@ public class RepositoryItemProvider extends ReviewGroupItemProvider implements I
 	}
 
 	/**
+	 * This adds a property descriptor for the Description feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addDescriptionPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+				getResourceLocator(),
+				getString("_UI_Repository_description_feature"), //$NON-NLS-1$
+				getString(
+						"_UI_PropertyDescriptor_description", "_UI_Repository_description_feature", "_UI_Repository_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				ReviewsPackage.Literals.REPOSITORY__DESCRIPTION, true, false, false,
+				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+	}
+
+	/**
 	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
 	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
 	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}. <!-- begin-user-doc --> <!--
@@ -131,6 +150,8 @@ public class RepositoryItemProvider extends ReviewGroupItemProvider implements I
 			super.getChildrenFeatures(object);
 			childrenFeatures.add(ReviewsPackage.Literals.REPOSITORY__APPROVAL_TYPES);
 			childrenFeatures.add(ReviewsPackage.Literals.REPOSITORY__REVIEW_STATES);
+			childrenFeatures.add(ReviewsPackage.Literals.REPOSITORY__REVIEWS);
+			childrenFeatures.add(ReviewsPackage.Literals.REPOSITORY__USERS);
 		}
 		return childrenFeatures;
 	}
@@ -165,8 +186,9 @@ public class RepositoryItemProvider extends ReviewGroupItemProvider implements I
 	 */
 	@Override
 	public String getText(Object object) {
-		IRepository repository = (IRepository) object;
-		return getString("_UI_Repository_type") + " " + repository.isEnabled(); //$NON-NLS-1$ //$NON-NLS-2$
+		String label = ((IRepository) object).getTaskRepositoryUrl();
+		return label == null || label.length() == 0 ? getString("_UI_Repository_type") : //$NON-NLS-1$
+				getString("_UI_Repository_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -184,10 +206,13 @@ public class RepositoryItemProvider extends ReviewGroupItemProvider implements I
 		case ReviewsPackage.REPOSITORY__TASK_REPOSITORY_URL:
 		case ReviewsPackage.REPOSITORY__TASK_CONNECTOR_KIND:
 		case ReviewsPackage.REPOSITORY__TASK_REPOSITORY:
+		case ReviewsPackage.REPOSITORY__DESCRIPTION:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 			return;
 		case ReviewsPackage.REPOSITORY__APPROVAL_TYPES:
 		case ReviewsPackage.REPOSITORY__REVIEW_STATES:
+		case ReviewsPackage.REPOSITORY__REVIEWS:
+		case ReviewsPackage.REPOSITORY__USERS:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 			return;
 		}
@@ -212,6 +237,22 @@ public class RepositoryItemProvider extends ReviewGroupItemProvider implements I
 
 		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.REPOSITORY__REVIEW_STATES,
 				IReviewsFactory.INSTANCE.createSimpleReviewState()));
+
+		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.REPOSITORY__REVIEWS,
+				IReviewsFactory.INSTANCE.createReview()));
+
+		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.REPOSITORY__USERS,
+				IReviewsFactory.INSTANCE.createUser()));
+	}
+
+	/**
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public ResourceLocator getResourceLocator() {
+		return ReviewsEditPlugin.INSTANCE;
 	}
 
 }

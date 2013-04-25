@@ -15,7 +15,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.mylyn.commons.workbench.forms.CommonFormUtil;
 import org.eclipse.mylyn.internal.reviews.ui.IReviewActionListener;
-import org.eclipse.mylyn.internal.reviews.ui.editors.parts.TopicPart;
+import org.eclipse.mylyn.internal.reviews.ui.editors.parts.CommentPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.DisposeListener;
@@ -167,7 +167,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 			currentPopupDialog = this;
 			// FIXME
 			for (CommentAnnotation annotation : annotationInput.getAnnotations()) {
-				TopicPart part = new TopicPart(annotation.getTopic(), annotationInput.getBehavior());
+				CommentPart part = new CommentPart(annotation.getComment(), annotationInput.getBehavior());
 				part.hookCustomActionRunListener(this);
 				Control control = part.createControl(composite, toolkit);
 				toolkit.adapt(control, true, true);

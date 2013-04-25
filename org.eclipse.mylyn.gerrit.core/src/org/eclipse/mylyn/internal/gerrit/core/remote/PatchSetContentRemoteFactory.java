@@ -31,7 +31,6 @@ import org.eclipse.mylyn.reviews.core.model.ILineLocation;
 import org.eclipse.mylyn.reviews.core.model.ILineRange;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
-import org.eclipse.mylyn.reviews.core.model.ITopic;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.AbstractRemoteEmfFactory;
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
@@ -89,49 +88,35 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
 
 	boolean addComments(IReviewItemSet set, IFileVersion version, List<PatchLineComment> comments,
 			AccountInfoCache accountInfoCache) {
-		version.getTopics().clear();
+		version.getComments().clear();
 		if (version == null || comments == null || comments.isEmpty()) {
 			return false;
 		}
-		boolean changed = comments.size() != version.getTopics().size();
-		int oldDraftCount = version.getTopics().size();
-		for (ITopic topic : version.getTopics()) {
-			if (topic.isDraft()) {
-				oldDraftCount++;
-			}
-		}
+		boolean changed = comments.size() != version.getComments().size();
+		int oldDraftCount = version.getDrafts().size();
 		int draftCount = 0;
-		for (PatchLineComment comment : comments) {
+		for (PatchLineComment gerritComment : comments) {
 			ILineRange line = IReviewsFactory.INSTANCE.createLineRange();
-			line.setStart(comment.getLine());
-			line.setEnd(comment.getLine());
+			line.setStart(gerritComment.getLine());
+			line.setEnd(gerritComment.getLine());
 			ILineLocation location = IReviewsFactory.INSTANCE.createLineLocation();
 			location.getRanges().add(line);
 
-			IComment topicComment = IReviewsFactory.INSTANCE.createComment();
+			IComment comment = IReviewsFactory.INSTANCE.createComment();
 			IUser author = getGerritProvider().createUser(getGerritProvider().getRoot(), accountInfoCache,
-					comment.getAuthor());
+					gerritComment.getAuthor());
 
-			topicComment.setCreationDate(comment.getWrittenOn());
-			topicComment.setDescription(comment.getMessage());
-			topicComment.setDraft(PatchLineComment.Status.DRAFT == comment.getStatus());
-			if (topicComment.isDraft()) {
+			comment.setId(gerritComment.getKey().get());
+			comment.setCreationDate(gerritComment.getWrittenOn());
+			comment.setTitle(GerritUtil.shortenText(gerritComment.getMessage(), 10, 20));
+			comment.setDescription(gerritComment.getMessage());
+			comment.setDraft(PatchLineComment.Status.DRAFT == gerritComment.getStatus());
+			if (comment.isDraft()) {
 				draftCount++;
 			}
-			topicComment.setAuthor(author);
-
-			ITopic topic = IReviewsFactory.INSTANCE.createTopic();
-			topic.setId(comment.getKey().get());
-			topic.setAuthor(author);
-			topic.setCreationDate(comment.getWrittenOn());
-			topic.getLocations().add(location);
-			topic.setItem(version);
-			topic.setDraft(PatchLineComment.Status.DRAFT == comment.getStatus());
-			topic.setDescription(comment.getMessage());
-			topic.setTitle(GerritUtil.shortenText(comment.getMessage(), 10, 20));
-			topic.getComments().add(topicComment);
-
-			version.getTopics().add(topic);
+			comment.setAuthor(author);
+			comment.getLocations().add(location);
+			version.getComments().add(comment);
 		}
 		changed |= draftCount != oldDraftCount;
 		return changed;

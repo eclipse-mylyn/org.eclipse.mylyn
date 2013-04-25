@@ -30,7 +30,7 @@ import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
-import org.eclipse.mylyn.reviews.core.model.ITopic;
+import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.eclipse.mylyn.reviews.core.spi.remote.review.IReviewRemoteFactoryProvider;
 import org.eclipse.mylyn.reviews.ui.ProgressDialog;
@@ -82,7 +82,7 @@ public class AddCommentDialog extends ProgressDialog {
 	@Override
 	public boolean close() {
 		if (getReturnCode() == OK) {
-			boolean shouldClose = performOperation(getTopic());
+			boolean shouldClose = performOperation(getComment());
 			if (!shouldClose) {
 				return false;
 			}
@@ -101,17 +101,17 @@ public class AddCommentDialog extends ProgressDialog {
 		return task;
 	}
 
-	private ITopic getTopic() {
-		ITopic topic = item.createTopicComment(getLocation(), commentEditor.getText());
-		return topic;
+	private IComment getComment() {
+		IComment comment = item.createComment(getLocation(), commentEditor.getText());
+		return comment;
 	}
 
-	private boolean performOperation(final ITopic topic) {
+	private boolean performOperation(final IComment comment) {
 		final AtomicReference<IStatus> result = new AtomicReference<IStatus>();
 		try {
 			run(true, true, new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					result.set(reviewBehavior.addTopic(item, topic, monitor));
+					result.set(reviewBehavior.addComment(item, comment, monitor));
 				}
 			});
 		} catch (InvocationTargetException e) {
@@ -129,7 +129,7 @@ public class AddCommentDialog extends ProgressDialog {
 		}
 
 		if (result.get().isOK()) {
-			item.getTopics().add(topic);
+			item.getComments().add(comment);
 			IFileItem file = null;
 			if (item instanceof IFileItem) {
 				file = (IFileItem) item;

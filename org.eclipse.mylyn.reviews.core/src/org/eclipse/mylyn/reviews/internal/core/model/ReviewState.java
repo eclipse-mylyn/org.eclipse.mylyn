@@ -14,6 +14,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.mylyn.reviews.core.model.IReviewState;
 
 /**
@@ -27,7 +28,7 @@ import org.eclipse.mylyn.reviews.core.model.IReviewState;
  * 
  * @generated
  */
-public abstract class ReviewState extends ReviewComponent implements IReviewState {
+public abstract class ReviewState extends EObjectImpl implements IReviewState {
 	/**
 	 * The default value of the '{@link #getDescriptor() <em>Descriptor</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->

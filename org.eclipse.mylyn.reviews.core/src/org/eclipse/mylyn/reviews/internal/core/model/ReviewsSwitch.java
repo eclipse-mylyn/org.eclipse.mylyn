@@ -82,11 +82,9 @@ public class ReviewsSwitch<T> {
 	 */
 	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
-		case ReviewsPackage.TOPIC_CONTAINER: {
-			ITopicContainer topicContainer = (ITopicContainer) theEObject;
-			T result = caseTopicContainer(topicContainer);
-			if (result == null)
-				result = caseReviewComponent(topicContainer);
+		case ReviewsPackage.COMMENT_CONTAINER: {
+			ICommentContainer commentContainer = (ICommentContainer) theEObject;
+			T result = caseCommentContainer(commentContainer);
 			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
@@ -104,11 +102,9 @@ public class ReviewsSwitch<T> {
 			IReview review = (IReview) theEObject;
 			T result = caseReview(review);
 			if (result == null)
-				result = caseTopicContainer(review);
+				result = caseCommentContainer(review);
 			if (result == null)
 				result = caseChange(review);
-			if (result == null)
-				result = caseReviewComponent(review);
 			if (result == null)
 				result = caseDated(review);
 			if (result == null)
@@ -118,8 +114,6 @@ public class ReviewsSwitch<T> {
 		case ReviewsPackage.COMMENT: {
 			IComment comment = (IComment) theEObject;
 			T result = caseComment(comment);
-			if (result == null)
-				result = caseReviewComponent(comment);
 			if (result == null)
 				result = caseIndexed(comment);
 			if (result == null)
@@ -132,9 +126,7 @@ public class ReviewsSwitch<T> {
 			IReviewItem reviewItem = (IReviewItem) theEObject;
 			T result = caseReviewItem(reviewItem);
 			if (result == null)
-				result = caseTopicContainer(reviewItem);
-			if (result == null)
-				result = caseReviewComponent(reviewItem);
+				result = caseCommentContainer(reviewItem);
 			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
@@ -159,56 +151,12 @@ public class ReviewsSwitch<T> {
 			IReviewState reviewState = (IReviewState) theEObject;
 			T result = caseReviewState(reviewState);
 			if (result == null)
-				result = caseReviewComponent(reviewState);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case ReviewsPackage.REVIEW_GROUP: {
-			IReviewGroup reviewGroup = (IReviewGroup) theEObject;
-			T result = caseReviewGroup(reviewGroup);
-			if (result == null)
-				result = caseReviewComponent(reviewGroup);
-			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
 		}
 		case ReviewsPackage.REPOSITORY: {
 			IRepository repository = (IRepository) theEObject;
 			T result = caseRepository(repository);
-			if (result == null)
-				result = caseReviewGroup(repository);
-			if (result == null)
-				result = caseReviewComponent(repository);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case ReviewsPackage.COMMENT_TYPE: {
-			ICommentType commentType = (ICommentType) theEObject;
-			T result = caseCommentType(commentType);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case ReviewsPackage.TOPIC: {
-			ITopic topic = (ITopic) theEObject;
-			T result = caseTopic(topic);
-			if (result == null)
-				result = caseComment(topic);
-			if (result == null)
-				result = caseReviewComponent(topic);
-			if (result == null)
-				result = caseIndexed(topic);
-			if (result == null)
-				result = caseDated(topic);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case ReviewsPackage.REVIEW_COMPONENT: {
-			IReviewComponent reviewComponent = (IReviewComponent) theEObject;
-			T result = caseReviewComponent(reviewComponent);
 			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
@@ -219,9 +167,7 @@ public class ReviewsSwitch<T> {
 			if (result == null)
 				result = caseReviewItem(fileItem);
 			if (result == null)
-				result = caseTopicContainer(fileItem);
-			if (result == null)
-				result = caseReviewComponent(fileItem);
+				result = caseCommentContainer(fileItem);
 			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
@@ -234,9 +180,7 @@ public class ReviewsSwitch<T> {
 			if (result == null)
 				result = caseDated(reviewItemSet);
 			if (result == null)
-				result = caseTopicContainer(reviewItemSet);
-			if (result == null)
-				result = caseReviewComponent(reviewItemSet);
+				result = caseCommentContainer(reviewItemSet);
 			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
@@ -265,16 +209,7 @@ public class ReviewsSwitch<T> {
 			if (result == null)
 				result = caseReviewItem(fileVersion);
 			if (result == null)
-				result = caseTopicContainer(fileVersion);
-			if (result == null)
-				result = caseReviewComponent(fileVersion);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case ReviewsPackage.MODEL_VERSIONING: {
-			IModelVersioning modelVersioning = (IModelVersioning) theEObject;
-			T result = caseModelVersioning(modelVersioning);
+				result = caseCommentContainer(fileVersion);
 			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
@@ -344,8 +279,6 @@ public class ReviewsSwitch<T> {
 			if (result == null)
 				result = caseReviewState(requirementReviewState);
 			if (result == null)
-				result = caseReviewComponent(requirementReviewState);
-			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
 		}
@@ -354,8 +287,6 @@ public class ReviewsSwitch<T> {
 			T result = caseSimpleReviewState(simpleReviewState);
 			if (result == null)
 				result = caseReviewState(simpleReviewState);
-			if (result == null)
-				result = caseReviewComponent(simpleReviewState);
 			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
@@ -366,17 +297,17 @@ public class ReviewsSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Topic Container</em>'. <!-- begin-user-doc
+	 * Returns the result of interpreting the object as an instance of '<em>Comment Container</em>'. <!-- begin-user-doc
 	 * --> This implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc
 	 * -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Topic Container</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Comment Container</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseTopicContainer(ITopicContainer object) {
+	public T caseCommentContainer(ICommentContainer object) {
 		return null;
 	}
 
@@ -465,20 +396,6 @@ public class ReviewsSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Review Group</em>'. <!-- begin-user-doc -->
-	 * This implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Review Group</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseReviewGroup(IReviewGroup object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Repository</em>'. <!-- begin-user-doc -->
 	 * This implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
 	 * 
@@ -489,49 +406,6 @@ public class ReviewsSwitch<T> {
 	 * @generated
 	 */
 	public T caseRepository(IRepository object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Comment Type</em>'. <!-- begin-user-doc -->
-	 * This implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Comment Type</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseCommentType(ICommentType object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Topic</em>'. <!-- begin-user-doc --> This
-	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Topic</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseTopic(ITopic object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Review Component</em>'. <!-- begin-user-doc
-	 * --> This implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc
-	 * -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Review Component</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseReviewComponent(IReviewComponent object) {
 		return null;
 	}
 
@@ -603,21 +477,6 @@ public class ReviewsSwitch<T> {
 	 * @generated
 	 */
 	public T caseFileVersion(IFileVersion object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Model Versioning</em>'. <!-- begin-user-doc
-	 * --> This implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc
-	 * -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Model Versioning</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseModelVersioning(IModelVersioning object) {
 		return null;
 	}
 

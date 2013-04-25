@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
@@ -26,6 +27,7 @@ import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
+import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 import org.eclipse.mylyn.reviews.core.model.IComment;
@@ -39,7 +41,7 @@ import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
  * 
  * @generated
  */
-public class CommentItemProvider extends ReviewComponentItemProvider implements IEditingDomainItemProvider,
+public class CommentItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider,
 		IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -67,7 +69,8 @@ public class CommentItemProvider extends ReviewComponentItemProvider implements 
 			addDescriptionPropertyDescriptor(object);
 			addIdPropertyDescriptor(object);
 			addDraftPropertyDescriptor(object);
-			addParentTopicPropertyDescriptor(object);
+			addReviewPropertyDescriptor(object);
+			addTitlePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -176,16 +179,31 @@ public class CommentItemProvider extends ReviewComponentItemProvider implements 
 	}
 
 	/**
-	 * This adds a property descriptor for the Parent Topic feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds a property descriptor for the Review feature. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected void addParentTopicPropertyDescriptor(Object object) {
+	protected void addReviewPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(
 				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_Comment_parentTopic_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_Comment_parentTopic_feature", "_UI_Comment_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.COMMENT__PARENT_TOPIC, true, false, true, null, null, null));
+				getString("_UI_Comment_review_feature"), //$NON-NLS-1$
+				getString("_UI_PropertyDescriptor_description", "_UI_Comment_review_feature", "_UI_Comment_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				ReviewsPackage.Literals.COMMENT__REVIEW, true, false, true, null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Title feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addTitlePropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+				getResourceLocator(),
+				getString("_UI_Comment_title_feature"), //$NON-NLS-1$
+				getString("_UI_PropertyDescriptor_description", "_UI_Comment_title_feature", "_UI_Comment_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				ReviewsPackage.Literals.COMMENT__TITLE, true, false, false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				null, null));
 	}
 
 	/**
@@ -200,8 +218,8 @@ public class CommentItemProvider extends ReviewComponentItemProvider implements 
 	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures.add(ReviewsPackage.Literals.COMMENT__TYPE);
 			childrenFeatures.add(ReviewsPackage.Literals.COMMENT__REPLIES);
+			childrenFeatures.add(ReviewsPackage.Literals.COMMENT__LOCATIONS);
 		}
 		return childrenFeatures;
 	}
@@ -259,10 +277,11 @@ public class CommentItemProvider extends ReviewComponentItemProvider implements 
 		case ReviewsPackage.COMMENT__DESCRIPTION:
 		case ReviewsPackage.COMMENT__ID:
 		case ReviewsPackage.COMMENT__DRAFT:
+		case ReviewsPackage.COMMENT__TITLE:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 			return;
-		case ReviewsPackage.COMMENT__TYPE:
 		case ReviewsPackage.COMMENT__REPLIES:
+		case ReviewsPackage.COMMENT__LOCATIONS:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 			return;
 		}
@@ -282,8 +301,18 @@ public class CommentItemProvider extends ReviewComponentItemProvider implements 
 		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.COMMENT__REPLIES,
 				IReviewsFactory.INSTANCE.createComment()));
 
-		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.COMMENT__REPLIES,
-				IReviewsFactory.INSTANCE.createTopic()));
+		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.COMMENT__LOCATIONS,
+				IReviewsFactory.INSTANCE.createLineLocation()));
+	}
+
+	/**
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public ResourceLocator getResourceLocator() {
+		return ReviewsEditPlugin.INSTANCE;
 	}
 
 }
