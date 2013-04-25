@@ -148,7 +148,8 @@ public class ActivityContextManager implements IActivityContextManager {
 		}
 		// if the platform is shutting down the workbench manager has already been disposed 
 		// and removing the listener would trigger loading of working sets again
-		if (PlatformUI.isWorkbenchRunning()) {
+		// the working set manager null check is required on Eclipse 4.3
+		if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getWorkingSetManager() != null) {
 			PlatformUI.getWorkbench().getWorkingSetManager().removePropertyChangeListener(WORKING_SET_CHANGE_LISTENER);
 		}
 	}
