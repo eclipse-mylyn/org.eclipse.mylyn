@@ -127,6 +127,67 @@ public class ReviewExplorer extends CommonNavigator {
 
 	private final Map<IReviewItemSet, RemoteEmfObserver<IReviewItemSet, List<IFileItem>>> patchSetObservers = new HashMap<IReviewItemSet, RemoteEmfObserver<IReviewItemSet, List<IFileItem>>>();
 
+	private final IPartListener editorPartListener = new IPartListener() {
+		public void partOpened(IWorkbenchPart part) {
+		}
+
+		public void partDeactivated(IWorkbenchPart part) {
+		}
+
+		public void partClosed(IWorkbenchPart part) {
+			if (part == currentPart) {
+				currentPart = null;
+				review = null;
+				taskId = null;
+				disposeObservers();
+				update();
+			}
+		}
+
+		public void partBroughtToTop(IWorkbenchPart part) {
+		}
+
+		public void partActivated(IWorkbenchPart part) {
+			if (part instanceof TaskEditor && currentPart != part) {
+				TaskEditor editor = (TaskEditor) part;
+				IFormPage page = editor.getActivePageInstance();
+				if (page instanceof AbstractReviewTaskEditorPage) {
+					AbstractTaskEditorPage reviewPage = (AbstractTaskEditorPage) page;
+					factoryProvider = ReviewsUiPlugin.getDefault().getFactoryProvider(reviewPage.getConnectorKind(),
+							reviewPage.getTaskRepository());
+					currentPart = (TaskEditor) part;
+					setReviewId(reviewPage.getTask().getTaskId());
+					updateContentDescription();
+				}
+			}
+		}
+	};
+
+	private final IPageListener pageListener = new IPageListener() {
+
+		private IWorkbenchPage activePage;
+
+		public void pageOpened(IWorkbenchPage page) {
+		}
+
+		public void pageClosed(IWorkbenchPage page) {
+			pageActivated(null);
+		}
+
+		public void pageActivated(IWorkbenchPage page) {
+			if (page != activePage) {
+				if (activePage != null) {
+					activePage.removePartListener(editorPartListener);
+				}
+				if (page != null) {
+					page.addPartListener(editorPartListener);
+					editorPartListener.partActivated(page.getActiveEditor());
+				}
+				activePage = page;
+			}
+		}
+	};
+
 	class ShowListAction extends Action {
 		public ShowListAction() {
 			super("", AS_RADIO_BUTTON); //$NON-NLS-1$
@@ -383,53 +444,8 @@ public class ReviewExplorer extends CommonNavigator {
 
 		updateActivations();
 
-		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		if (activePage != null) {
-			handleActivePage(activePage);
-		} else {
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().addPageListener(new IPageListener() {
-				public void pageOpened(IWorkbenchPage page) {
-				}
-
-				public void pageClosed(IWorkbenchPage page) {
-				}
-
-				public void pageActivated(IWorkbenchPage page) {
-					handleActivePage(page);
-				}
-			});
-		}
+		pageListener.pageActivated(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage());
 		update();
-	}
-
-	private void handleActivePage(IWorkbenchPage page) {
-		if (page != null) {
-			page.addPartListener(new IPartListener() {
-				public void partOpened(IWorkbenchPart part) {
-				}
-
-				public void partDeactivated(IWorkbenchPart part) {
-				}
-
-				public void partClosed(IWorkbenchPart part) {
-					if (part == currentPart) {
-						currentPart = null;
-						review = null;
-						taskId = null;
-						disposeObservers();
-						update();
-					}
-				}
-
-				public void partBroughtToTop(IWorkbenchPart part) {
-				}
-
-				public void partActivated(IWorkbenchPart part) {
-					partSelected(part);
-				}
-			});
-			partSelected(page.getActiveEditor());
-		}
 	}
 
 	protected void updateContentDescription() {
@@ -439,21 +455,6 @@ public class ReviewExplorer extends CommonNavigator {
 			title = "Change " + task.getTaskId() + ": " + task.getSummary();
 		}
 		setContentDescription(title);
-	}
-
-	protected void partSelected(IWorkbenchPart part) {
-		if (part instanceof TaskEditor && currentPart != part) {
-			TaskEditor editor = (TaskEditor) part;
-			IFormPage page = editor.getActivePageInstance();
-			if (page instanceof AbstractReviewTaskEditorPage) {
-				AbstractTaskEditorPage reviewPage = (AbstractTaskEditorPage) page;
-				factoryProvider = ReviewsUiPlugin.getDefault().getFactoryProvider(reviewPage.getConnectorKind(),
-						reviewPage.getTaskRepository());
-				currentPart = (TaskEditor) part;
-				setReviewId(reviewPage.getTask().getTaskId());
-				updateContentDescription();
-			}
-		}
 	}
 
 	protected void update() {
@@ -578,6 +579,7 @@ public class ReviewExplorer extends CommonNavigator {
 		treeLabelProvider.doDispose();
 		currentPart = null;
 		disposeObservers();
+		pageListener.pageActivated(null);
 	}
 
 	public boolean isFlat() {
