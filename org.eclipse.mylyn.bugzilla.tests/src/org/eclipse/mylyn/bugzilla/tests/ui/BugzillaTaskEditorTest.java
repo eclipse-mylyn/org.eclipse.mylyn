@@ -20,6 +20,7 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tests.util.TestFixture;
 import org.eclipse.ui.IWorkbenchPage;
@@ -35,13 +36,16 @@ public class BugzillaTaskEditorTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
+		// ensure that the local repository is present
 		TestFixture.resetTaskListAndRepositories();
 		repository = BugzillaFixture.current().repository();
+		TasksUi.getRepositoryManager().addRepository(repository);
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		UiTestUtil.closeAllEditors();
+		TestFixture.resetTaskListAndRepositories();
 	}
 
 	/**
@@ -66,10 +70,8 @@ public class BugzillaTaskEditorTest extends TestCase {
 			}
 		};
 
-		final TaskData[] taskData = new TaskData[1];
-
-		taskData[0] = TasksUiInternal.createTaskData(repository, taskMappingInit, taskMappingSelect, null);
-		TasksUiInternal.createAndOpenNewTask(taskData[0]);
+		TaskData taskData = TasksUiInternal.createTaskData(repository, taskMappingInit, taskMappingSelect, null);
+		TasksUiInternal.createAndOpenNewTask(taskData);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		assertEquals("New Task", taskEditor.getTitle());
