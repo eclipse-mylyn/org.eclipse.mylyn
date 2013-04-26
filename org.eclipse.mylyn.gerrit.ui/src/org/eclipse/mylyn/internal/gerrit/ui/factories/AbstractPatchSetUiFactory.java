@@ -70,7 +70,7 @@ public abstract class AbstractPatchSetUiFactory extends AbstractUiFactory<IRevie
 	protected final Repository resolveGitRepository() {
 		//Here we try to resolve the Git repository in the workspace for this Patch Set.  
 		//If so, we will use the appropriate file revision to provide navigability in the Compare Editor.
-		GerritToGitMapping mapper = getGitRepository();
+		GerritToGitMapping mapper = getGitRepository(false);
 		Repository gitRepository = null;
 		if (mapper != null) {
 			try {
@@ -82,7 +82,7 @@ public abstract class AbstractPatchSetUiFactory extends AbstractUiFactory<IRevie
 		return gitRepository;
 	}
 
-	protected final GerritToGitMapping getGitRepository() {
+	protected final GerritToGitMapping getGitRepository(boolean displayCloneDialog) {
 		ChangeDetail changeDetail = getChange().getChangeDetail();
 		GerritConfigX config = GerritCorePlugin.getGerritClient(getTaskRepository()).getGerritConfig();
 		GerritToGitMapping mapper = new GerritToGitMapping(getTaskRepository(), config, getGerritProject(changeDetail));
@@ -90,13 +90,15 @@ public abstract class AbstractPatchSetUiFactory extends AbstractUiFactory<IRevie
 			if (mapper.find() != null) {
 				return mapper;
 			} else if (mapper.getGerritProject() != null) {
-				boolean create = MessageDialog.openQuestion(getShell(), "Clone Git Repository",
-						"The referenced Git repository was not found in the workspace. Clone Git repository?");
-				if (create) {
-					int response = EGitUiUtil.openCloneRepositoryWizard(getShell(), getTaskRepository(),
-							mapper.getGerritProject());
-					if (response == Window.OK && mapper.find() != null) {
-						return mapper;
+				if (displayCloneDialog) {
+					boolean create = MessageDialog.openQuestion(getShell(), "Clone Git Repository",
+							"The referenced Git repository was not found in the workspace. Clone Git repository?");
+					if (create) {
+						int response = EGitUiUtil.openCloneRepositoryWizard(getShell(), getTaskRepository(),
+								mapper.getGerritProject());
+						if (response == Window.OK && mapper.find() != null) {
+							return mapper;
+						}
 					}
 				}
 			} else {

@@ -29,7 +29,7 @@ public class FetchUiFactory extends AbstractPatchSetUiFactory {
 
 	@Override
 	public void execute() {
-		GerritToGitMapping mapping = getGitRepository();
+		GerritToGitMapping mapping = getGitRepository(true);
 		if (mapping != null) {
 			String refName = getPatchSetDetail().getPatchSet().getRefName();
 			FetchGerritChangeWizard wizard = new FetchGerritChangeWizard(mapping.getRepository(), refName);
