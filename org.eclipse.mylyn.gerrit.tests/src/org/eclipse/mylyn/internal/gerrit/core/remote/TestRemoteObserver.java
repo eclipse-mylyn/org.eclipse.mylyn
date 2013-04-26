@@ -21,7 +21,7 @@ import org.eclipse.mylyn.reviews.core.spi.remote.emf.IRemoteEmfObserver;
 
 final class TestRemoteObserver<P extends EObject, T> implements IRemoteEmfObserver<P, T> {
 
-	static final int TEST_TIMEOUT = 7500;
+	static final int TEST_TIMEOUT = 15000;
 
 	T createdObject;
 
