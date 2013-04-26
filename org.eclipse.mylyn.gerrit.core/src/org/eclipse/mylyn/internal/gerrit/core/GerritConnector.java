@@ -408,8 +408,12 @@ public class GerritConnector extends ReviewsConnector {
 				NLS.bind("{0}Unexpected error while connecting to Gerrit: {1}", qualifier, e.getMessage()));
 	}
 
-	protected RepositoryStatus createErrorStatus(TaskRepository repository, String message) {
-		return RepositoryStatus.createStatus(repository, IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, message);
+	protected Status createErrorStatus(TaskRepository repository, String message) {
+		if (repository != null) {
+			return RepositoryStatus.createStatus(repository, IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, message);
+		} else {
+			return new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, message + " (Repository Unknown)");
+		}
 	}
 
 	public static Status toStatus(TaskRepository repository, UnsupportedClassVersionError e) {

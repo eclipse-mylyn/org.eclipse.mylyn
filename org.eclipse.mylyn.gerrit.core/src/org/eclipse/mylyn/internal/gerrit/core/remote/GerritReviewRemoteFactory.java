@@ -108,8 +108,7 @@ public class GerritReviewRemoteFactory extends
 				for (SubmitRecord record : detail.getSubmitRecords()) {
 					for (Label label : record.getLabels()) {
 						if (label.getAppliedBy() != null) {
-							getGerritProvider().pullUser(parent, detail.getAccounts(), label.getAppliedBy(),
-									monitor);
+							getGerritProvider().pullUser(parent, detail.getAccounts(), label.getAppliedBy(), monitor);
 						}
 					}
 				}
@@ -121,7 +120,7 @@ public class GerritReviewRemoteFactory extends
 		} catch (GerritException e) {
 			throw GerritCorePlugin.getDefault()
 					.getConnector()
-					.toCoreException(null, "Problem while retrieving Gerrit review.", e);
+					.toCoreException(parent.getTaskRepository(), "Problem while retrieving Gerrit review.", e);
 		}
 	}
 
