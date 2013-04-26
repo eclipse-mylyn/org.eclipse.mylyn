@@ -16,7 +16,9 @@ import java.util.Date;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataState;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataStore;
@@ -198,8 +200,6 @@ public class TaskDataStoreTest extends TestCase {
 		setupData();
 		data.getRoot().createAttribute("attribute").setValue("\u0000");
 
-		File file = File.createTempFile("mylyn", null);
-		file.deleteOnExit();
 		storage.putTaskData(file, state);
 
 		try {
@@ -213,8 +213,6 @@ public class TaskDataStoreTest extends TestCase {
 		setupData();
 		data.getRoot().createAttribute("attribute").setValue("\u0001\u001F");
 
-		File file = File.createTempFile("mylyn", null);
-		file.deleteOnExit();
 		storage.putTaskData(file, state);
 
 		TaskDataState state2 = storage.getTaskDataState(file);
@@ -225,8 +223,6 @@ public class TaskDataStoreTest extends TestCase {
 		setupData();
 		data.getRoot().createAttribute("attribute").setValue("\u007F\u0080");
 
-		File file = File.createTempFile("mylyn", null);
-		file.deleteOnExit();
 		storage.putTaskData(file, state);
 
 		TaskDataState state2 = storage.getTaskDataState(file);
@@ -237,8 +233,6 @@ public class TaskDataStoreTest extends TestCase {
 		setupData();
 		data.getRoot().createAttribute("attribute").setValue("\u0001\u001F\u007F\u0080");
 
-		File file = File.createTempFile("mylyn", null);
-		file.deleteOnExit();
 		storage.putTaskData(file, state);
 
 		if (System.getProperty("java.version").compareTo("1.6") < 0) {
@@ -288,4 +282,69 @@ public class TaskDataStoreTest extends TestCase {
 		TaskDataState state2 = storage.getTaskDataState(file);
 		assertFalse(state2.getRepositoryData().getRoot().getAttribute("attribute").hasValue());
 	}
+
+	public void testCorruptedData() throws Exception {
+		if (!hasXerces()) {
+			System.err.println("Skipping testCorruptedData() due to Xerces missing");
+			return;
+		}
+		state = storage.getTaskDataState(CommonTestUtil.getFile(this, "testdata/taskdata-bug406647.zip"));
+		assertFalse(state.getRepositoryData().getRoot().toString().contains("<ke"));
+		assertFalse(state.getRepositoryData().getRoot().toString().contains("<va"));
+		assertFalse(state.getRepositoryData().getRoot().toString().contains("ey>"));
+		assertFalse(state.getRepositoryData().getRoot().toString().contains("al>"));
+	}
+
+	private boolean hasXerces() {
+		try {
+			Class.forName("org.apache.xerces.parsers.SAXParser");
+			return true;
+		} catch (ClassNotFoundException e) {
+			return false;
+		}
+	}
+
+	public void testRandomDataXml_1_0() throws Exception {
+		randomData(32, Integer.MAX_VALUE);
+	}
+
+	public void testRandomDataXml_1_1() throws Exception {
+		if (!hasXerces()) {
+			System.err.println("Skipping testRandomDataXml_1_1 due to Xerces missing");
+			return;
+		}
+		randomData(0, Integer.MAX_VALUE);
+	}
+
+	private void randomData(int start, int end) throws Exception {
+		setupData();
+
+		for (int i = 0; i < 1000; i++) {
+			TaskAttribute attribute = data.getRoot().createAttribute("testId");
+			attribute.getMetaData().setLabel(generateString(start, end));
+			attribute.putOption(generateString(start, end), generateString(start, end));
+			attribute.putOption(generateString(start, end), generateString(start, end));
+			attribute.addValue(generateString(start, end));
+			attribute.addValue(generateString(start, end));
+			if (start == 0) {
+				// ensure that XML is read as version 1.1
+				attribute.addValue(generateString(start, end) + "\u0001");
+			}
+		}
+
+		String expectedValue = data.getRoot().toString();
+		storage.putTaskData(file, state);
+
+		state = storage.getTaskDataState(file);
+		String actualValue = state.getRepositoryData().getRoot().toString();
+		assertEquals(expectedValue, actualValue);
+	}
+
+	/**
+	 * Returns a random string that doesn't contain "key" or "val".
+	 */
+	private String generateString(int start, int end) {
+		return RandomStringUtils.random(1000, start, end, true, true);
+	}
+
 }

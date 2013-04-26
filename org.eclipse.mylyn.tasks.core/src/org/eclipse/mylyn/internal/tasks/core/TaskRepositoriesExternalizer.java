@@ -29,7 +29,6 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * @author Rob Elves
@@ -112,7 +111,7 @@ public class TaskRepositoriesExternalizer {
 			}
 
 			SaxRepositoriesContentHandler contentHandler = new SaxRepositoriesContentHandler();
-			XMLReader reader = XMLReaderFactory.createXMLReader();
+			XMLReader reader = XmlReaderUtil.createXmlReader();
 			reader.setContentHandler(contentHandler);
 			reader.parse(new InputSource(inputStream));
 			return contentHandler.getRepositories();
@@ -132,4 +131,5 @@ public class TaskRepositoriesExternalizer {
 			}
 		}
 	}
+
 }
