@@ -40,8 +40,8 @@ public class FileItemCompareEditorInput extends CompareEditorInput {
 		super(configuration);
 		this.file = file;
 		this.behavior = behavior;
-		setTitle(NLS.bind("Compare {0} {1} and {2}", new Object[] { file.getName(), file.getTarget().getDescription(),
-				file.getBase().getDescription() }));
+		setTitle(NLS.bind("Compare {0} {1} and {2}", new Object[] { file.getName(), file.getBase().getDescription(),
+				file.getTarget().getDescription() }));
 	}
 
 	@Override

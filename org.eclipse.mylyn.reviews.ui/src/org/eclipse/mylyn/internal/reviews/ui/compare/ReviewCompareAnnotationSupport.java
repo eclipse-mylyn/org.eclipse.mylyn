@@ -174,8 +174,8 @@ public class ReviewCompareAnnotationSupport {
 	}
 
 	public void setReviewItem(IFileItem item, ReviewBehavior behavior) {
-		leftAnnotationModel.setItem(item.getTarget(), behavior);
-		rightAnnotationModel.setItem(item.getBase(), behavior);
+		leftAnnotationModel.setItem(item.getBase(), behavior);
+		rightAnnotationModel.setItem(item.getTarget(), behavior);
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				try {

@@ -21,18 +21,12 @@ import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.ui.spi.factories.IUiContext;
 
-import com.google.gerrit.reviewdb.PatchSet;
-
 /**
  * @author Steffen Pingel
  * @author Miles Parker
  * @author Sebastien Dubois
  */
 public class OpenFileUiFactory extends AbstractPatchSetUiFactory {
-
-	private PatchSet base;
-
-	private PatchSet target;
 
 	private final IFileItem item;
 

@@ -28,7 +28,6 @@ import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.team.core.history.IFileRevision;
 
 /**
  * @author Steffen Pingel
@@ -62,8 +61,8 @@ public class FileItemNode extends DiffNode {
 			kind = Differencer.NO_CHANGE;
 		}
 
-		setLeft(getElement(behavior, fileItem.getTarget(), targetPath, monitor));
-		setRight(getElement(behavior, fileItem.getBase(), basePath, monitor));
+		setLeft(getElement(behavior, fileItem.getBase(), basePath, monitor));
+		setRight(getElement(behavior, fileItem.getTarget(), targetPath, monitor));
 		labelProvider = new FileItemNodeLabelProvider();
 
 		setKind(kind);
