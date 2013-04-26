@@ -13,4 +13,4 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-Localization: plugin
 Export-Package: org.eclipse.mylyn.internal.tasks.activity.core;x-internal:=true,
  org.eclipse.mylyn.tasks.activity.core;x-internal:=true,
-  org.eclipse.mylyn.tasks.activity.core.spi
+  org.eclipse.mylyn.tasks.activity.core.spi;x-internal:=true

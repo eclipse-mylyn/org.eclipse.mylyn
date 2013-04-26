@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.eclipse.mylyn.tasks.activity.tests
 Bundle-Version: 3.9.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.junit;bundle-version="4.5.0",
+Require-Bundle: org.junit;bundle-version="4.8.2",
  org.eclipse.core.runtime,
  org.eclipse.mylyn.commons.core,
  org.eclipse.mylyn.commons.sdk.util,

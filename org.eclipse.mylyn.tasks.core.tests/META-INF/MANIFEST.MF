@@ -6,7 +6,7 @@ Bundle-Version: 3.9.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.tasks.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.junit;bundle-version="4.5.0",
+Require-Bundle: org.junit;bundle-version="4.8.2",
  org.mockito;bundle-version="[1.8.4,2.0.0)",
  org.objenesis;bundle-version="[1.0.0,2.0.0)",
  org.hamcrest;bundle-version="[1.0.0,2.0.0)",
