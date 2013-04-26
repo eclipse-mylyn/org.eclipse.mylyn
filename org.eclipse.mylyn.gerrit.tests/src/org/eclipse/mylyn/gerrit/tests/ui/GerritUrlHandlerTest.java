@@ -76,7 +76,7 @@ public class GerritUrlHandlerTest extends TestCase {
 			return;
 		}
 		// needs to be a repository that is not protected by HTTP auth to avoid browser popup
-		TaskRepository repository = GerritFixture.GERRIT_ECLIPSE_ORG.singleRepository();
+		TaskRepository repository = GerritFixture.GERRIT_NON_EXISTANT.singleRepository();
 		EditorHandle handler = BrowserUtil.openUrl(activePage, repository.getUrl() + "/abc", 0); //$NON-NLS-1$
 		assertNotNull("Expected a browser instance, got: " + handler.getClass(), handler.getAdapter(IWebBrowser.class));
 		assertEquals(Status.OK_STATUS, handler.getStatus());

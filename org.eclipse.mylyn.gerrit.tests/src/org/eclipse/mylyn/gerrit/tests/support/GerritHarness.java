@@ -13,8 +13,8 @@
 package org.eclipse.mylyn.gerrit.tests.support;
 
 import java.net.Proxy;
-import java.util.List;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.eclipse.mylyn.commons.net.IProxyProvider;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
@@ -22,7 +22,6 @@ import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
-import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
 
 /**
  * @author Steffen Pingel
@@ -35,6 +34,8 @@ public class GerritHarness {
 	private UserCredentials credentials;
 
 	private GerritProject project;
+
+	private final String uniqueMessage = RandomStringUtils.randomAlphabetic(6);
 
 	public GerritHarness(GerritFixture fixture) {
 		this.fixture = fixture;
@@ -89,12 +90,13 @@ public class GerritHarness {
 		return project;
 	}
 
+	public String defaultQuery() {
+		return "message:" + uniqueMessage;
+	}
+
 	public void ensureOneReviewExists() throws Exception {
-		List<GerritQueryResult> reviews = client().executeQuery(null, "status:open"); //$NON-NLS-1$
-		if (reviews.isEmpty()) {
-			// populate repository with one initial commit
-			project().commitAndPushFile();
-		}
+		// populate repository with a unique commit
+		project().commitAndPushFile(uniqueMessage);
 	}
 
 }

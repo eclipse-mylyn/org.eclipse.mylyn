@@ -152,7 +152,8 @@ public class GerritSynchronizationTest extends TestCase {
 
 	private ITask createAndSynchronizeQuery(boolean user) throws Exception {
 		IRepositoryQuery query = TasksUi.getRepositoryModel().createRepositoryQuery(repository);
-		query.setAttribute(GerritQuery.TYPE, GerritQuery.ALL_OPEN_CHANGES);
+		query.setAttribute(GerritQuery.TYPE, GerritQuery.CUSTOM);
+		query.setAttribute(GerritQuery.QUERY_STRING, harness.defaultQuery());
 		taskList.addQuery((RepositoryQuery) query);
 
 		synchronizeAllTasks(user);

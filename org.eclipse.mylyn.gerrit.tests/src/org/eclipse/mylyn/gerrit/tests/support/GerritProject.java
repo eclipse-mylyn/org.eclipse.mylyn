@@ -37,7 +37,7 @@ public class GerritProject {
 		public void testCommitAndPushFile() throws Exception {
 			GerritProject project = new GerritProject(GerritFixture.current());
 			try {
-				project.commitAndPushFile();
+				project.commitAndPushFile("test");
 			} finally {
 				System.err.println(project.getFolder());
 			}
@@ -84,14 +84,14 @@ public class GerritProject {
 		}
 	}
 
-	public CommitResult commitAndPushFile() throws Exception {
-		return commitAndPushFile("test.txt");
+	public CommitResult commitAndPushFile(String message) throws Exception {
+		return commitAndPushFile(message, "test.txt");
 	}
 
-	public CommitResult commitAndPushFile(String fileName) throws Exception {
+	public CommitResult commitAndPushFile(String message, String fileName) throws Exception {
 		addFile(fileName);
 		Git git = getGitProject();
-		return commitAndPush(git.commit().setAll(true).setInsertChangeId(true).setMessage("Test Commit"));
+		return commitAndPush(git.commit().setAll(true).setInsertChangeId(true).setMessage(message));
 	}
 
 	public void addFile(String fileName) throws Exception {

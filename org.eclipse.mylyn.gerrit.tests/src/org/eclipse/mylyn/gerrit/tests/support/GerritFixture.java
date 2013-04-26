@@ -23,6 +23,8 @@ public class GerritFixture extends TestFixture {
 
 	public static GerritFixture GERRIT_ECLIPSE_ORG = new GerritFixture("https://git.eclipse.org/r", "2.2.2", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
+	public static GerritFixture GERRIT_NON_EXISTANT = new GerritFixture("http://mylyn.org/gerrit", "2.2.2", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
 	public static GerritFixture DEFAULT = TestConfiguration.getDefault().discoverDefault(GerritFixture.class, "gerrit"); //$NON-NLS-1$
 
 	private static GerritFixture current;
