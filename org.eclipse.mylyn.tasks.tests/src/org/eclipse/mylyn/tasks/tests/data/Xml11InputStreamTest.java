@@ -23,6 +23,7 @@ import org.eclipse.mylyn.internal.tasks.core.data.TaskDataExternalizer.Xml11Inpu
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings("resource")
 public class Xml11InputStreamTest extends TestCase {
 
 	public void testShortStream() throws Exception {

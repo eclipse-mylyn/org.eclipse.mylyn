@@ -21,7 +21,6 @@ import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tasks.core.data.ITaskDataConstants;
@@ -50,7 +49,7 @@ public class XmlExternalizationTest extends TestCase {
 		@Override
 		public void characters(char[] ch, int start, int length) throws SAXException {
 			//System.err.println(Arrays.toString(ch));
-			Assert.assertEquals(1, length);
+			assertEquals(1, length);
 			this.ch = ch[start];
 		}
 
