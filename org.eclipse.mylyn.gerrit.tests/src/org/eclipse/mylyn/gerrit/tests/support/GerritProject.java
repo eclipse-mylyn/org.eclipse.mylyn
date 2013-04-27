@@ -19,8 +19,10 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.PushResult;
 import org.eclipse.jgit.transport.RefSpec;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
@@ -61,13 +63,22 @@ public class GerritProject {
 		return folder;
 	}
 
+	private CredentialsProvider getCredentialsProvider() throws Exception {
+		AuthenticationCredentials credentials = fixture.location().getCredentials(AuthenticationType.REPOSITORY);
+		return new UsernamePasswordCredentialsProvider(getGitUsername(credentials), credentials.getPassword());
+	}
+
+	public String getGitUsername(AuthenticationCredentials credentials) {
+		String shortUsername = StringUtils.substringBefore(credentials.getUserName(), "@"); //$NON-NLS-1$
+		return shortUsername;
+	}
+
 	public Git getGitProject() throws Exception {
 		if (git == null) {
 			folder = CommonTestUtil.createTempFolder("gerrit"); //$NON-NLS-1$
 			String url = fixture.getRepositoryUrl() + PROJECT;
 			AuthenticationCredentials credentials = fixture.location().getCredentials(AuthenticationType.REPOSITORY);
-			String shortUsername = StringUtils.substringBefore(credentials.getUserName(), "@"); //$NON-NLS-1$
-			url = url.replace("://", "://" + shortUsername + ":" + credentials.getPassword() + "@"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			url = url.replace("://", "://" + getGitUsername(credentials) + ":" + credentials.getPassword() + "@"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			git = Git.cloneRepository().setDirectory(folder).setURI(url).call();
 		}
 		return git;
@@ -109,7 +120,9 @@ public class GerritProject {
 		RevCommit call = command.setAuthor("Test", email) //$NON-NLS-1$
 				.setCommitter("Test", email)
 				.call();
-		Iterable<PushResult> result = git.push().setRefSpecs(new RefSpec("HEAD:refs/for/master")).call(); //$NON-NLS-1$
+		Iterable<PushResult> result = git.push()
+				.setCredentialsProvider(getCredentialsProvider())
+				.setRefSpecs(new RefSpec("HEAD:refs/for/master")).call(); //$NON-NLS-1$
 		//Safe to assume one and only one result?
 		return new CommitResult(call, result.iterator().next());
 	}
