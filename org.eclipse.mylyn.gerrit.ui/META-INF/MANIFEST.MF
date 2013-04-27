@@ -37,7 +37,9 @@ Bundle-Vendor: Eclipse Mylyn
 Export-Package: org.eclipse.mylyn.internal.gerrit.ui;x-internal:=true,
  org.eclipse.mylyn.internal.gerrit.ui.editor;x-internal:=true,
  org.eclipse.mylyn.internal.gerrit.ui.egit;x-internal:=true,
+ org.eclipse.mylyn.internal.gerrit.ui.factories;x-internal:=true,
  org.eclipse.mylyn.internal.gerrit.ui.operations;x-internal:=true,
+ org.eclipse.mylyn.internal.gerrit.ui.providers;x-internal:=true,
  org.eclipse.mylyn.internal.gerrit.ui.wizards;x-internal:=true
 Import-Package: com.google.gerrit.common;version="2.1.5",
  com.google.gerrit.common.data;version="2.1.5",
