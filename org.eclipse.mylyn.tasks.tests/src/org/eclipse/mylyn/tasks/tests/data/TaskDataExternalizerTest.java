@@ -19,6 +19,7 @@ import java.util.zip.ZipInputStream;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataExternalizer;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataExternalizer.Xml11InputStream;
@@ -27,7 +28,6 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.xml.sax.SAXParseException;
 
@@ -50,7 +50,7 @@ public class TaskDataExternalizerTest extends TestCase {
 	}
 
 	public void testRead() throws Exception {
-		File file = TaskTestUtil.getFile("testdata/taskdata-1.0-bug-219897.zip");
+		File file = CommonTestUtil.getFile(this, "testdata/taskdata-1.0-bug-219897.zip");
 		ZipInputStream in = new ZipInputStream(new FileInputStream(file));
 		try {
 			in.getNextEntry();
@@ -62,7 +62,7 @@ public class TaskDataExternalizerTest extends TestCase {
 	}
 
 	public void testReadWrite() throws Exception {
-		File file = TaskTestUtil.getFile("testdata/taskdata-1.0-bug-219897.zip");
+		File file = CommonTestUtil.getFile(this, "testdata/taskdata-1.0-bug-219897.zip");
 		ZipInputStream in = new ZipInputStream(new FileInputStream(file));
 		ITaskDataWorkingCopy state;
 		try {
