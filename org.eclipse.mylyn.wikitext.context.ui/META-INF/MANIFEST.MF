@@ -25,4 +25,3 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylyn.wikitext.ui;bundle-version="1.8.0"
 Export-Package: org.eclipse.mylyn.internal.wikitext.context.ui;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.context.ui.actions;x-internal:=true
-
