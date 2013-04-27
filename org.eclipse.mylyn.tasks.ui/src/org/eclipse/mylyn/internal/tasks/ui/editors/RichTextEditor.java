@@ -29,6 +29,7 @@ import org.eclipse.jface.text.source.AnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationAccess;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.mylyn.commons.ui.FillWidthLayout;
 import org.eclipse.mylyn.commons.ui.compatibility.CommonThemes;
 import org.eclipse.mylyn.commons.workbench.editors.CommonTextSupport;
 import org.eclipse.mylyn.commons.workbench.forms.CommonFormUtil;

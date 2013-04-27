@@ -17,6 +17,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.ui.CommonImages;
+import org.eclipse.mylyn.commons.ui.FillWidthLayout;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor.State;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor.StateChangedEvent;
