@@ -49,12 +49,10 @@ import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -926,25 +924,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 			public void keyReleased(KeyEvent e) {
 			}
 
-		});
-
-		getViewer().addTreeListener(new ITreeViewerListener() {
-
-			public void treeCollapsed(final TreeExpansionEvent event) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						getViewer().refresh(event.getElement());
-					}
-				});
-			}
-
-			public void treeExpanded(final TreeExpansionEvent event) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						getViewer().refresh(event.getElement());
-					}
-				});
-			}
 		});
 
 		// update tooltip contents
