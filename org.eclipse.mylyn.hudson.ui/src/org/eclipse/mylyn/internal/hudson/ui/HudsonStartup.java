@@ -11,10 +11,7 @@
 
 package org.eclipse.mylyn.internal.hudson.ui;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.builds.ui.BuildsUiStartup;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 
 /**
  * @author Steffen Pingel
@@ -42,9 +39,7 @@ public class HudsonStartup extends BuildsUiStartup {
 			discovery = new HudsonDiscovery();
 			discovery.start();
 		} catch (LinkageError e) {
-			// occurs when the optional ECF depedency is not satisfied 
-			StatusHandler.log(new Status(IStatus.WARNING, HudsonUiPlugin.ID_PLUGIN,
-					"ECF integration failed to load. Hudson server auto discovery is not available.", e));
+			// occurs when the optional ECF dependency is not satisfied 
 			discovery = null;
 		}
 	}
