@@ -16,9 +16,8 @@ import java.util.Map;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.ResourceLocator;
-
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -27,7 +26,11 @@ import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
-
+import org.eclipse.emf.edit.provider.ViewerNotification;
+import org.eclipse.mylyn.reviews.core.model.IApprovalType;
+import org.eclipse.mylyn.reviews.core.model.IRequirementEntry;
+import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
+import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
 
 /**
@@ -106,12 +109,18 @@ public class ReviewRequirementsMapItemProvider extends ItemProviderAdapter imple
 	/**
 	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public String getText(Object object) {
-		Map.Entry<?, ?> reviewRequirementsMap = (Map.Entry<?, ?>) object;
-		return "" + reviewRequirementsMap.getKey() + " -> " + reviewRequirementsMap.getValue(); //$NON-NLS-1$ //$NON-NLS-2$
+		Map.Entry<IApprovalType, IRequirementEntry> reviewRequirementsMap = (Map.Entry<IApprovalType, IRequirementEntry>) object;
+		String text = "";
+		IUser user = reviewRequirementsMap.getValue().getBy();
+		if (user != null) {
+			text += user.getDisplayName();
+		}
+		return text
+				+ ": " + reviewRequirementsMap.getKey().getName() + " " + reviewRequirementsMap.getValue().getStatus().getName(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

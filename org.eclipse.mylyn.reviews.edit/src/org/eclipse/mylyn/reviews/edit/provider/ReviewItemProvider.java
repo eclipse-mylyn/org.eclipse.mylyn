@@ -99,21 +99,6 @@ public class ReviewItemProvider extends CommentContainerItemProvider implements 
 	}
 
 	/**
-	 * This adds a property descriptor for the Id feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected void addIdPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_Change_id_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_Change_id_feature", "_UI_Change_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				ReviewsPackage.Literals.CHANGE__ID, true, false, false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				null, null));
-	}
-
-	/**
 	 * This adds a property descriptor for the Key feature. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
@@ -172,6 +157,21 @@ public class ReviewItemProvider extends CommentContainerItemProvider implements 
 	}
 
 	/**
+	 * This adds a property descriptor for the Id feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addIdPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+				getResourceLocator(),
+				getString("_UI_Change_id_feature"), //$NON-NLS-1$
+				getString("_UI_PropertyDescriptor_description", "_UI_Change_id_feature", "_UI_Change_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				ReviewsPackage.Literals.CHANGE__ID, true, false, false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				null, null));
+	}
+
+	/**
 	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
 	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
 	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}. <!-- begin-user-doc --> <!--
@@ -219,13 +219,13 @@ public class ReviewItemProvider extends CommentContainerItemProvider implements 
 	/**
 	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((IReview) object).getId();
+		String label = ((IReview) object).getId() + " / " + ((IReview) object).getMessage();
 		return label == null || label.length() == 0 ? getString("_UI_Review_type") : //$NON-NLS-1$
-				getString("_UI_Review_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+				label;
 	}
 
 	/**

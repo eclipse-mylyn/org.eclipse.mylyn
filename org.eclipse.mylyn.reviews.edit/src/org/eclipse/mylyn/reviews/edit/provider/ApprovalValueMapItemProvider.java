@@ -16,9 +16,7 @@ import java.util.Map;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.ResourceLocator;
-
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -29,7 +27,7 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
-
+import org.eclipse.mylyn.reviews.internal.core.model.ApprovalType;
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
 
 /**
@@ -109,12 +107,12 @@ public class ApprovalValueMapItemProvider extends ItemProviderAdapter implements
 	/**
 	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public String getText(Object object) {
-		Map.Entry<?, ?> approvalValueMap = (Map.Entry<?, ?>) object;
-		return "" + approvalValueMap.getKey() + " -> " + approvalValueMap.getValue(); //$NON-NLS-1$ //$NON-NLS-2$
+		Map.Entry<ApprovalType, Integer> approvalValueMap = (Map.Entry<ApprovalType, Integer>) object;
+		return "" + approvalValueMap.getKey().getName() + " -> " + approvalValueMap.getValue(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

@@ -13,12 +13,12 @@ package org.eclipse.mylyn.reviews.edit.provider;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.ResourceLocator;
-
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -27,7 +27,11 @@ import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
-
+import org.eclipse.emf.edit.provider.ViewerNotification;
+import org.eclipse.mylyn.reviews.core.model.IApprovalType;
+import org.eclipse.mylyn.reviews.core.model.IReviewerEntry;
+import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
+import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
 
 /**
@@ -106,12 +110,19 @@ public class UserApprovalsMapItemProvider extends ItemProviderAdapter implements
 	/**
 	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public String getText(Object object) {
-		Map.Entry<?, ?> userApprovalsMap = (Map.Entry<?, ?>) object;
-		return "" + userApprovalsMap.getKey() + " -> " + userApprovalsMap.getValue(); //$NON-NLS-1$ //$NON-NLS-2$
+		Map.Entry<IUser, IReviewerEntry> userApprovalsMap = (Map.Entry<IUser, IReviewerEntry>) object;
+		Map<IApprovalType, Integer> approvals = userApprovalsMap.getValue().getApprovals();
+		String approvalDescs = "";
+		int i = 0;
+		for (Entry<IApprovalType, Integer> approval : approvals.entrySet()) {
+			approvalDescs += approval.getKey().getName() + ": " + approval.getValue();
+			approvalDescs += (i++ > 0 ? ", " : "");
+		}
+		return "" + userApprovalsMap.getKey().getDisplayName() + " -> " + approvalDescs; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
