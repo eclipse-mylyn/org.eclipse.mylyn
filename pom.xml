@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.eclipse.mylyn</groupId>
@@ -41,26 +41,82 @@
     </repository>
   </repositories>
   <profiles>
-	<profile>
-	  <id>implicit-target</id>
+    <profile>
+      <id>implicit-target</id>
       <activation>
-		<property>
-		  <name>!explicit-target</name>
-		</property>
+        <property>
+          <name>!explicit-target</name>
+        </property>
       </activation>
-	  <repositories>
-		<repository>
-		  <id>eclipse-mylyn-commons</id>
-		  <layout>p2</layout>
-		  <url>${mylyn-commons-repository-url}</url>
-		</repository>
-		<repository>
-		  <id>eclipse-mylyn-tasks</id>
-		  <layout>p2</layout>
-		  <url>${mylyn-tasks-repository-url}</url>
-		</repository>
-	  </repositories>
-	</profile>
+      <repositories>
+        <repository>
+          <id>eclipse-mylyn-commons</id>
+          <layout>p2</layout>
+          <url>${mylyn-commons-repository-url}</url>
+        </repository>
+        <repository>
+          <id>eclipse-mylyn-tasks</id>
+          <layout>p2</layout>
+          <url>${mylyn-tasks-repository-url}</url>
+        </repository>
+      </repositories>
+    </profile>
+    <profile>
+      <id>strict</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.eclipse.tycho</groupId>
+            <artifactId>target-platform-configuration</artifactId>
+            <version>${tycho-version}</version>
+            <configuration>
+              <resolver>p2</resolver>
+              <target>
+                <artifact>
+                  <groupId>org.eclipse.mylyn.context</groupId>
+                  <artifactId>org.eclipse.mylyn.context-target</artifactId>
+                  <version>3.9.0-SNAPSHOT</version>
+                  <classifier>mylyn-context-e3.5</classifier>
+                </artifact>
+              </target>
+              <ignoreTychoRepositories>true</ignoreTychoRepositories>
+              <environments>
+                <environment>
+                  <os>macosx</os>
+                  <ws>cocoa</ws>
+                  <arch>x86</arch>
+                </environment>
+                <environment>
+                  <os>macosx</os>
+                  <ws>cocoa</ws>
+                  <arch>x86_64</arch>
+                </environment>
+                <environment>
+                  <os>win32</os>
+                  <ws>win32</ws>
+                  <arch>x86</arch>
+                </environment>
+                <environment>
+                  <os>win32</os>
+                  <ws>win32</ws>
+                  <arch>x86_64</arch>
+                </environment>
+                <environment>
+                  <os>linux</os>
+                  <ws>gtk</ws>
+                  <arch>x86</arch>
+                </environment>
+                <environment>
+                  <os>linux</os>
+                  <ws>gtk</ws>
+                  <arch>x86_64</arch>
+                </environment>
+              </environments>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
   <modules>
     <module>org.eclipse.mylyn.bugzilla.ide</module>
@@ -69,6 +125,7 @@
     <module>org.eclipse.mylyn.cdt.ui</module>
     <module>org.eclipse.mylyn.context-feature</module>
     <module>org.eclipse.mylyn.context-site</module>
+    <module>org.eclipse.mylyn.context-target</module>
     <module>org.eclipse.mylyn.context.core</module>
     <module>org.eclipse.mylyn.context.sdk-feature</module>
     <module>org.eclipse.mylyn.context.sdk.java</module>
@@ -96,14 +153,4 @@
     <module>org.eclipse.mylyn.team.tests</module>
     <module>org.eclipse.mylyn.team.ui</module>
   </modules>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-maven-plugin</artifactId>
-        <version>${tycho-version}</version>
-        <extensions>true</extensions>
-      </plugin>
-    </plugins>
-  </build>
 </project>
