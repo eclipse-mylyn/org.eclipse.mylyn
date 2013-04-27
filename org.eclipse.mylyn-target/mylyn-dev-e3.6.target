@@ -33,6 +33,7 @@
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.mylyn.builds.sdk.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.mylyn.commons.sdk.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.commons.soap_feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.mylyn.context.sdk.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.mylyn.docs.sdk.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.mylyn.reviews.sdk.feature.feature.group" version="0.0.0"/>
