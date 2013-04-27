@@ -701,7 +701,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 			detail.append(MessageFormat.format(Messages.BugzillaTaskEditorPage_DetailLine, message));
 		} else {
 			for (String key : proposals.keySet()) {
-				detail.append(MessageFormat.format("\t{0}\n", key));
+				detail.append(MessageFormat.format(Messages.BugzillaTaskEditorPage_Proposal_Detail, key));
 
 				for (String proposalValue : proposals.get(key)) {
 					detail.append(MessageFormat.format(Messages.BugzillaTaskEditorPage_DetailLine, proposalValue));

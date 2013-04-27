@@ -354,6 +354,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private AbstractTaskActivityMonitor taskActivityMonitor;
 
+	@SuppressWarnings("rawtypes")
 	private ServiceReference proxyServiceReference;
 
 	private IProxyChangeListener proxyChangeListener;
@@ -559,6 +560,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			proxyServiceReference = context.getServiceReference(IProxyService.class.getName());
 			if (proxyServiceReference != null) {
+				@SuppressWarnings("unchecked")
 				IProxyService proxyService = (IProxyService) context.getService(proxyServiceReference);
 				if (proxyService != null) {
 					proxyChangeListener = new IProxyChangeListener() {
@@ -763,6 +765,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			}
 
 			if (proxyServiceReference != null) {
+				@SuppressWarnings("unchecked")
 				IProxyService proxyService = (IProxyService) context.getService(proxyServiceReference);
 				if (proxyService != null) {
 					proxyService.removeProxyChangeListener(proxyChangeListener);
@@ -1004,6 +1007,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private final Map<String, List<IDynamicSubMenuContributor>> menuContributors = new HashMap<String, List<IDynamicSubMenuContributor>>();
 
+	@SuppressWarnings("rawtypes")
 	private ServiceTracker identityServiceTracker;
 
 	public Map<String, List<IDynamicSubMenuContributor>> getDynamicMenuMap() {
@@ -1375,6 +1379,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		}
 	}
 
+	@SuppressWarnings("restriction")
 	public ServiceMessageManager getServiceMessageManager() {
 		return serviceMessageManager;
 	}
@@ -1383,6 +1388,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		return synchronizationManger;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked", "restriction" })
 	public IIdentityService getIdentityService() {
 		if (identityServiceTracker == null) {
 			identityServiceTracker = new ServiceTracker(getBundle().getBundleContext(),

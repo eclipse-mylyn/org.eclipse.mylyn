@@ -405,7 +405,7 @@ public class TasksUiUtil {
 	 */
 	public static boolean openWithBrowser(IRepositoryElement element) {
 		TaskRepository repository = TasksUiInternal.getRepository(element);
-		return (repository != null) ? openWithBrowser(repository, element) : null;
+		return (repository != null) ? openWithBrowser(repository, element) : false;
 	}
 
 	/**

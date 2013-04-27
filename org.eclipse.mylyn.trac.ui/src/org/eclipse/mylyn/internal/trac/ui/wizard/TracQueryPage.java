@@ -475,9 +475,7 @@ public class TracQueryPage extends AbstractRepositoryQueryPage2 {
 	}
 
 	@Override
-	protected void createPageContent(@SuppressWarnings("restriction")
-	SectionComposite composite) {
-		@SuppressWarnings("restriction")
+	protected void createPageContent(SectionComposite composite) {
 		Composite control = composite.getContent();
 
 		GridLayout layout = new GridLayout(4, false);

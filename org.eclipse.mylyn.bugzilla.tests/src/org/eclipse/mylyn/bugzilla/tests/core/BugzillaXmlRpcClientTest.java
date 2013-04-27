@@ -642,9 +642,6 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 			}
 
 			if (metaHTML != null && metaXMLRPC != null) {
-				String a0 = metaHTML.getKind();
-				String a1 = metaXMLRPC.getKind();
-
 				if (metaHTML.getKind() != null && metaXMLRPC.getKind() == null) {
 					div += (prefix + attributeNameHTML + " MetaData Kind not in XMLRPC\n");
 				} else if (metaHTML.getKind() != null && metaHTML.getKind().compareTo(metaXMLRPC.getKind()) != 0) {

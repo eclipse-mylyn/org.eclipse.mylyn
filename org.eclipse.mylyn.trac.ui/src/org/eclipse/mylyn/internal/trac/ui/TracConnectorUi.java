@@ -53,8 +53,8 @@ public class TracConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public IHyperlink[] findHyperlinks(TaskRepository repository, String text, int lineOffset, int regionOffset) {
-		return TracHyperlinkUtil.findTicketHyperlinks(repository, text, lineOffset, regionOffset);
+	public IHyperlink[] findHyperlinks(TaskRepository repository, ITask task, String text, int index, int textOffset) {
+		return TracHyperlinkUtil.findTicketHyperlinks(repository, text, index, textOffset);
 	}
 
 	@Override

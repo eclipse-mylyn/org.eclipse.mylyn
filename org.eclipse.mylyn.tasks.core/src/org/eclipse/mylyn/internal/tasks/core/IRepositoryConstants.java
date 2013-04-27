@@ -44,22 +44,26 @@ public interface IRepositoryConstants {
 	/**
 	 * @deprecated Use {@link TaskRepository#CATEGORY_TASKS} instead
 	 */
-	public static final String CATEGORY_TASKS = TaskRepository.CATEGORY_TASKS; //$NON-NLS-1$
+	@Deprecated
+	public static final String CATEGORY_TASKS = TaskRepository.CATEGORY_TASKS;
 
 	/**
 	 * @deprecated Use {@link TaskRepository#CATEGORY_BUGS} instead
 	 */
-	public static final String CATEGORY_BUGS = TaskRepository.CATEGORY_BUGS; //$NON-NLS-1$
+	@Deprecated
+	public static final String CATEGORY_BUGS = TaskRepository.CATEGORY_BUGS;
 
 	/**
 	 * @deprecated Use {@link TaskRepository#CATEGORY_BUILD} instead
 	 */
-	public static final String CATEGORY_BUILD = TaskRepository.CATEGORY_BUILD; //$NON-NLS-1$
+	@Deprecated
+	public static final String CATEGORY_BUILD = TaskRepository.CATEGORY_BUILD;
 
 	/**
 	 * @deprecated Use {@link TaskRepository#CATEGORY_REVIEW} instead
 	 */
-	public static final String CATEGORY_REVIEW = TaskRepository.CATEGORY_REVIEW; //$NON-NLS-1$
+	@Deprecated
+	public static final String CATEGORY_REVIEW = TaskRepository.CATEGORY_REVIEW;
 
 	public static final String CATEGORY_OTHER = "org.eclipse.mylyn.category.other"; //$NON-NLS-1$
 
