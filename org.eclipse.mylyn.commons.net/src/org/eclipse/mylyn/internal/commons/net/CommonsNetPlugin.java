@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.commons.core.CommonsCorePlugin;
 import org.osgi.framework.BundleContext;
-import org.osgi.util.tracker.ServiceTracker;
 
 /**
  * Provides an entry point for the proxy service and potentially other web facilities
@@ -62,14 +61,10 @@ public class CommonsNetPlugin extends Plugin {
 		CommonsCorePlugin.setProxyService(proxyService);
 	}
 
-	@SuppressWarnings("rawtypes")
-	private ServiceTracker tracker;
-
 	public CommonsNetPlugin() {
 		INSTANCE = this;
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);

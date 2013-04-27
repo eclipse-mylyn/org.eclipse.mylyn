@@ -86,7 +86,7 @@ public abstract class CommonHttpOperation<T> {
 		return executeOnce(request, monitor);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void handleAuthenticationError(HttpRequestBase request, AuthenticationException e,
 			IOperationMonitor monitor, boolean requestCredentials) throws AuthenticationException {
 		invalidateAuthentication(e, monitor);

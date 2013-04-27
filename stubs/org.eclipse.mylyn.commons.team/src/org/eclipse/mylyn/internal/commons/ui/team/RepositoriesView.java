@@ -45,6 +45,7 @@ public class RepositoriesView extends CommonNavigator {
 	@Override
 	protected CommonViewer createCommonViewer(Composite aParent) {
 		CommonViewer viewer = super.createCommonViewer(aParent);
+		@SuppressWarnings("unused")
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		return viewer;
 	}
@@ -52,7 +53,6 @@ public class RepositoriesView extends CommonNavigator {
 	@Override
 	public Object getAdapter(@SuppressWarnings("rawtypes")
 	Class adapter) {
-		// FIXME read targets from extension point?
 		if (adapter == IShowInTargetList.class) {
 			return new IShowInTargetList() {
 				public String[] getShowInTargetIds() {

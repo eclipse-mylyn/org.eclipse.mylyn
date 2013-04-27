@@ -276,6 +276,7 @@ public final class XmlMemento {
 	/* (non-Javadoc)
 	 * Method declared in XMLMemento.
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public XmlMemento[] getChildren(String type) {
 
 		// Get the nodes.

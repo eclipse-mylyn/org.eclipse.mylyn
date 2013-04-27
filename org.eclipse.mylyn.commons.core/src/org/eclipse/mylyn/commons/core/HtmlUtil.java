@@ -35,12 +35,16 @@ public class HtmlUtil {
 	 */
 	public static String toText(String htmlText) throws IOException {
 		Html2TextReader reader = new Html2TextReader(new StringReader(htmlText));
-		int c;
-		StringBuffer sb = new StringBuffer(htmlText.length());
-		while ((c = reader.read()) != -1) {
-			sb.append((char) c);
+		try {
+			int c;
+			StringBuffer sb = new StringBuffer(htmlText.length());
+			while ((c = reader.read()) != -1) {
+				sb.append((char) c);
+			}
+			return sb.toString();
+		} finally {
+			reader.close();
 		}
-		return sb.toString();
 	}
 
 	/**
