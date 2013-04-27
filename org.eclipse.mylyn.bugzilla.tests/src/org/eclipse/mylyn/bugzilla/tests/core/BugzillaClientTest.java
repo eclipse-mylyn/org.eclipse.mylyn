@@ -73,8 +73,7 @@ public class BugzillaClientTest extends TestCase {
 				0,
 				config.getInstallVersion().compareMajorMinorOnly(
 						new BugzillaVersion(BugzillaFixture.current().getVersion())));
-		if (BugzillaVersion.BUGZILLA_3_6.compareTo(BugzillaFixture.current().getBugzillaVersion()) == 0
-				&& BugzillaFixture.CUSTOM_WF_AND_STATUS.equals(BugzillaFixture.current().getDescription())) {
+		if (BugzillaFixture.current().isCustomWorkflowAndStatus()) {
 			assertEquals(10, config.getOptionValues(BugzillaAttribute.BUG_STATUS).size());
 		} else if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
 			assertEquals(7, config.getOptionValues(BugzillaAttribute.BUG_STATUS).size());
@@ -99,8 +98,7 @@ public class BugzillaClientTest extends TestCase {
 		}
 		assertEquals(7, config.getOptionValues(BugzillaAttribute.BUG_SEVERITY).size());
 		assertEquals(3, config.getOptionValues(BugzillaAttribute.PRODUCT).size());
-		if (BugzillaVersion.BUGZILLA_3_6.compareTo(BugzillaFixture.current().getBugzillaVersion()) == 0
-				&& BugzillaFixture.CUSTOM_WF_AND_STATUS.equals(BugzillaFixture.current().getDescription())) {
+		if (BugzillaFixture.current().isCustomWorkflowAndStatus()) {
 			assertEquals(6, config.getOpenStatusValues().size());
 			assertEquals(1, config.getClosedStatusValues().size());
 		} else if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {

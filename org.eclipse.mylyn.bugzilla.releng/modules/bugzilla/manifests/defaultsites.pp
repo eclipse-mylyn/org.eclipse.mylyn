@@ -28,25 +28,26 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
     minor     => "6",
   }
 
-  bugzilla::site { "bugzilla-3.6.12-custom-wf":
+  bugzilla::site { "bugzilla-3.6.13-custom-wf":
     major       => "3",
     minor       => "6",
-    branchTag   => "bugzilla-3.6.12",
+    branchTag   => "bugzilla-3.6.13",
     custom_wf   => true,
   }
 
-  bugzilla::site { "bugzilla-3.6.12-custom-wf-and-status":
+  bugzilla::site { "bugzilla-3.6.13-custom-wf-and-status":
     major                => "3",
     minor                => "6",
-    branchTag            => "bugzilla-3.6.12",
+    branchTag            => "bugzilla-3.6.13",
     custom_wf_and_status => true,
+    xmlrpc_enabled       => false,
     desciptorfile        => "DescriptorFile-custom-wf-and-status.txt"
   }
 
-  bugzilla::site { "bugzilla-3.6.12-xml-rpc-disabled":
+  bugzilla::site { "bugzilla-3.6.13-xml-rpc-disabled":
     major          => "3",
     minor          => "6",
-    branchTag      => "bugzilla-3.6.12",
+    branchTag      => "bugzilla-3.6.13",
     xmlrpc_enabled => false,
   }
 

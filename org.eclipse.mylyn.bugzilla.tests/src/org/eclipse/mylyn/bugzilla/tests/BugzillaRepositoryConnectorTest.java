@@ -349,12 +349,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 //
 	public void testStdWorkflow() throws Exception {
 		if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
-			if (!(BugzillaVersion.BUGZILLA_3_6.compareTo(BugzillaFixture.current().getBugzillaVersion()) == 0 && BugzillaFixture.CUSTOM_WF.equals(BugzillaFixture.current()
-					.getDescription()))
-					&& !(BugzillaVersion.BUGZILLA_3_6.compareTo(BugzillaFixture.current().getBugzillaVersion()) == 0 && BugzillaFixture.CUSTOM_WF_AND_STATUS.equals(BugzillaFixture.current()
-							.getDescription()))
-
-			) {
+			if (!BugzillaFixture.current().isCustomWorkflow() && !BugzillaFixture.current().isCustomWorkflowAndStatus()) {
 				doStdWorkflow32("3");
 			}
 		} else {
@@ -416,8 +411,13 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		TaskAttribute statusAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
 		assertEquals("CONFIRMED", statusAttribute.getValue());
 		TaskAttribute selectedOperationAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.OPERATION);
-		TaskOperation.applyTo(selectedOperationAttribute, BugzillaOperation.in_progress.toString(),
-				BugzillaOperation.in_progress.getLabel());
+		TaskAttribute operationAttribute = taskData.getRoot().getAttribute(
+				TaskAttribute.PREFIX_OPERATION + BugzillaOperation.in_progress.toString());
+		TaskAttribute operationAttributeUppercase = taskData.getRoot().getAttribute(
+				TaskAttribute.PREFIX_OPERATION + BugzillaOperation.in_progress.toString().toUpperCase());
+		TaskOperation.applyTo(selectedOperationAttribute, operationAttribute != null
+				? operationAttribute.getValue()
+				: operationAttributeUppercase.getValue(), BugzillaOperation.in_progress.getLabel());
 		model.attributeChanged(selectedOperationAttribute);
 		changed.clear();
 		changed.add(selectedOperationAttribute);
@@ -478,8 +478,13 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		statusAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
 		assertEquals("VERIFIED", statusAttribute.getValue());
 		selectedOperationAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.OPERATION);
-		TaskOperation.applyTo(selectedOperationAttribute, BugzillaOperation.confirmed.toString(),
-				BugzillaOperation.confirmed.getLabel());
+		operationAttribute = taskData.getRoot().getAttribute(
+				TaskAttribute.PREFIX_OPERATION + BugzillaOperation.confirmed.toString());
+		operationAttributeUppercase = taskData.getRoot().getAttribute(
+				TaskAttribute.PREFIX_OPERATION + BugzillaOperation.confirmed.toString().toUpperCase());
+		TaskOperation.applyTo(selectedOperationAttribute, operationAttribute != null
+				? operationAttribute.getValue()
+				: operationAttributeUppercase.getValue(), BugzillaOperation.confirmed.getLabel());
 		model.attributeChanged(selectedOperationAttribute);
 		changed.clear();
 		changed.add(selectedOperationAttribute);

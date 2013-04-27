@@ -37,24 +37,29 @@ define bugzilla::site (
   $propertyanz = 0
   $confDir = "$base/conf.d"
  
+
   if $branch == "trunk" {
-        $envinfo = "trunk"  
+    $envinfo1 = "trunk"  
+  } elsif $custom_wf {
+    $envinfo1 = "Custom Workflow"  
+  } elsif $custom_wf_and_status {
+    $envinfo1 = "Custom Workflow and Status"  
   } else {
-    if $xmlrpc_enabled {
-      if $custom_wf {
-        $envinfo = "Custom Workflow"  
-      } else {
-        if $custom_wf_and_status {
-          $envinfo = "Custom Workflow and Status"  
-        } else {
-          $envinfo = ""  
-        }
-      }
+    $envinfo1 = ""  
+  }
+  if $envinfo1 != "" {
+    if !$xmlrpc_enabled {
+      $envinfo = "$envinfo1, XML-RPC disabled"
     } else {
+       $envinfo = "$envinfo1"
+    }
+  } else {
+    if !$xmlrpc_enabled {
       $envinfo = "XML-RPC disabled"
+    } else {
+       $envinfo = ""
     }
   }
-
   if $major == "3" {
     if $minor == "6" {
       $VersionCreateName = "name"

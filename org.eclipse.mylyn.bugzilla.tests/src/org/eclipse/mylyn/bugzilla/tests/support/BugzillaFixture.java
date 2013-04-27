@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import junit.framework.AssertionFailedError;
@@ -44,7 +45,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tests.util.TestFixture;
-import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Steffen Pingel
@@ -57,8 +57,6 @@ public class BugzillaFixture extends TestFixture {
 
 	public static final String CUSTOM_WF_AND_STATUS = "Custom Workflow and Status";
 
-	public static final String XML_RPC_DISABLED = "XML-RPC disabled";
-
 	private static BugzillaFixture current;
 
 	private final String version;
@@ -66,6 +64,14 @@ public class BugzillaFixture extends TestFixture {
 	private final BugzillaVersion bugzillaVersion;
 
 	private final Map<String, String> properties;
+
+	private final Map<String, String> defaultproperties = new HashMap<String, String>() {
+		private static final long serialVersionUID = 6995247925138693239L;
+
+		{
+			put("xmlrpc_enabled", "true");
+		}
+	};
 
 	private BugzillaRepositoryConnector connector;
 
@@ -87,10 +93,6 @@ public class BugzillaFixture extends TestFixture {
 
 	public BugzillaVersion getBugzillaVersion() {
 		return bugzillaVersion;
-	}
-
-	public Map<String, String> getProperties() {
-		return properties;
 	}
 
 	public static void cleanup010() throws Exception {
@@ -137,8 +139,8 @@ public class BugzillaFixture extends TestFixture {
 	public BugzillaClient client(AbstractWebLocation location, String encoding) throws CoreException {
 
 		TaskRepository taskRepository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, location.getUrl());
-		if (properties.get("desciptorfile") != null) {
-			String filepath = "testdata/repository/" + properties.get("desciptorfile");
+		if (getDsciptorfile() != null) {
+			String filepath = "testdata/repository/" + getDsciptorfile();
 			try {
 				File file = BugzillaFixture.getFile(filepath);
 				if (file != null) {
@@ -156,6 +158,7 @@ public class BugzillaFixture extends TestFixture {
 
 		taskRepository.setCredentials(AuthenticationType.HTTP, location.getCredentials(AuthenticationType.HTTP), false);
 		taskRepository.setCharacterEncoding(encoding);
+		taskRepository.setProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC, getProperty("xmlrpc_enabled"));
 
 		connector = new BugzillaRepositoryConnector();
 		BugzillaClientManager bugzillaClientManager = connector.getClientManager();
@@ -164,14 +167,6 @@ public class BugzillaFixture extends TestFixture {
 		connector.getRepositoryConfiguration(taskRepository, false, new NullProgressMonitor());
 		connector.writeRepositoryConfigFile();
 		return client;
-	}
-
-	private String getRepositoryName(String url) {
-		int i = url.lastIndexOf("/");
-		if (i == -1) {
-			throw new IllegalArgumentException(NLS.bind("Unable to determine repository name for {0}", url));
-		}
-		return url.substring(i + 1);
 	}
 
 	public BugzillaClient client(PrivilegeLevel level) throws Exception {
@@ -251,14 +246,32 @@ public class BugzillaFixture extends TestFixture {
 	}
 
 	public String getProperty(String key) {
+		String result = null;
 		if (properties != null) {
-			return properties.get(key);
+			result = properties.get(key);
+			if (result == null) {
+				result = defaultproperties.get(key);
+			}
+		} else {
+			result = defaultproperties.get(key);
 		}
-		return null;
+		return result;
 	}
 
 	public boolean isCustomWorkflowAndStatus() {
-		return Boolean.parseBoolean(properties.get("custom_wf_and_status"));
+		return Boolean.parseBoolean(getProperty("custom_wf_and_status"));
+	}
+
+	public boolean isCustomWorkflow() {
+		return Boolean.parseBoolean(getProperty("custom_wf"));
+	}
+
+	public boolean isXmlRpcEnabled() {
+		return Boolean.parseBoolean(getProperty("xmlrpc_enabled"));
+	}
+
+	public String getDsciptorfile() {
+		return getProperty("desciptorfile");
 	}
 
 }

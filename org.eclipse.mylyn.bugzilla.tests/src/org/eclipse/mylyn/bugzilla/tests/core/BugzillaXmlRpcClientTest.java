@@ -351,7 +351,7 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 //		}
 //	}
 	public void testGetVersion() throws Exception {
-		if (BugzillaFixture.current().getDescription().equals(BugzillaFixture.XML_RPC_DISABLED)) {
+		if (!BugzillaFixture.current().isXmlRpcEnabled()) {
 			return;
 		} else {
 			IProgressMonitor monitor = new NullProgressMonitor();
@@ -365,7 +365,7 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 
 	@SuppressWarnings("unchecked")
 	public void testUserInfo() throws Exception {
-		if (BugzillaFixture.current().getDescription().equals(BugzillaFixture.XML_RPC_DISABLED)) {
+		if (!BugzillaFixture.current().isXmlRpcEnabled()) {
 			return;
 		} else {
 			IProgressMonitor monitor = new NullProgressMonitor();
@@ -400,7 +400,7 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 
 	@SuppressWarnings("unchecked")
 	public void testProductInfo() throws Exception {
-		if (BugzillaFixture.current().getDescription().equals(BugzillaFixture.XML_RPC_DISABLED)) {
+		if (!BugzillaFixture.current().isXmlRpcEnabled()) {
 			return;
 		} else {
 			IProgressMonitor monitor = new NullProgressMonitor();
@@ -441,7 +441,7 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 		int uID = -1;
 		IProgressMonitor monitor = new NullProgressMonitor();
 		BugzillaFixture a = BugzillaFixture.current();
-		if (BugzillaFixture.current().getDescription().equals(BugzillaFixture.XML_RPC_DISABLED)) {
+		if (!BugzillaFixture.current().isXmlRpcEnabled()) {
 			try {
 				uID = bugzillaClient.login(monitor);
 				fail("Never reach this! We should get an XmlRpcException");
@@ -459,7 +459,7 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 
 		if (BugzillaFixture.current().getBugzillaVersion().isSmaller(BugzillaVersion.BUGZILLA_3_6)) {
 			return;
-		} else if (BugzillaFixture.current().getDescription().equals(BugzillaFixture.XML_RPC_DISABLED)) {
+		} else if (!BugzillaFixture.current().isXmlRpcEnabled()) {
 			return;
 		} else {
 			CustomTransitionManager ctm = new CustomTransitionManager();
@@ -475,9 +475,9 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 			 * way to determine (using the operation 'reopen') whether "REOPEN" or "UNCONFIRMED"
 			 * is valid.
 			 */
-			if (BugzillaFixture.current().getDescription().equals(BugzillaFixture.CUSTOM_WF)) {
+			if (BugzillaFixture.current().isCustomWorkflow()) {
 				expectTransitions = fixtureTransitionsMap.get(BugzillaFixture.CUSTOM_WF);
-			} else if (BugzillaFixture.current().getDescription().equals(BugzillaFixture.CUSTOM_WF_AND_STATUS)) {
+			} else if (BugzillaFixture.current().isCustomWorkflowAndStatus()) {
 				expectTransitions = fixtureTransitionsMap.get(BugzillaFixture.CUSTOM_WF_AND_STATUS);
 			} else if (BugzillaFixture.current().getBugzillaVersion().isSmaller(BugzillaVersion.BUGZILLA_4_0)) {
 				expectTransitions = fixtureTransitionsMap.get(BUGZILLA_LE_4_0);
@@ -502,8 +502,7 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 	}
 
 	public void testXmlRpcBugGet() throws Exception {
-		if (BugzillaFixture.current().getDescription().equals(BugzillaFixture.XML_RPC_DISABLED)
-				|| BugzillaVersion.BUGZILLA_3_4.compareTo(BugzillaFixture.current().getBugzillaVersion()) == 0) {
+		if (!BugzillaFixture.current().isXmlRpcEnabled()) {
 			return;
 		} else {
 			Set<String> taskIds = new HashSet<String>();
@@ -675,8 +674,7 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 	}
 
 	public void testUpdateProductInfo() throws Exception {
-		if (BugzillaFixture.current().getDescription().equals(BugzillaFixture.XML_RPC_DISABLED)
-				|| BugzillaVersion.BUGZILLA_3_4.compareTo(BugzillaFixture.current().getBugzillaVersion()) == 0) {
+		if (!BugzillaFixture.current().isXmlRpcEnabled()) {
 			return;
 		}
 		RepositoryConfiguration repositoryConfiguration = connector.getRepositoryConfiguration(repository.getRepositoryUrl());
