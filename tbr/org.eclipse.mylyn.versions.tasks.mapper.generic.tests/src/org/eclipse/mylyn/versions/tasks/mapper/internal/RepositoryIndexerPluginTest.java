@@ -1,3 +1,4 @@
+package org.eclipse.mylyn.versions.tasks.mapper.internal;
 /*******************************************************************************
  * Copyright (c) 2012 Research Group for Industrial Software (INSO), Vienna University of Technology.
  * All rights reserved. This program and the accompanying materials
@@ -8,7 +9,7 @@
  * Contributors:
  *     Research Group for Industrial Software (INSO), Vienna University of Technology - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.versions.tasks.mapper.internal;
+
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,7 +18,7 @@ import org.junit.Test;
 import org.osgi.framework.BundleContext;
 
 /**
- * 
+ *
  * @author Kilian Matt
  */
 public class RepositoryIndexerPluginTest {
@@ -41,10 +42,10 @@ public class RepositoryIndexerPluginTest {
 	@Test
 	public void lastStartedObjectIsSavedAsDefault() throws Exception {
 		plugin.start(context);
-		
+
 		RepositoryIndexerPlugin other = new RepositoryIndexerPlugin();
 		other.start(context);
-		
+
 		Assert.assertSame(other, RepositoryIndexerPlugin.getDefault());
 		Assert.assertNotSame(plugin, RepositoryIndexerPlugin.getDefault());
 	}

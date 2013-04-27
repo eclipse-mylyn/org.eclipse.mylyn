@@ -20,6 +20,6 @@
     <module>org.eclipse.mylyn.versions.tasks.core</module>
     <module>org.eclipse.mylyn.versions.tasks.ui</module>
     <module>org.eclipse.mylyn.versions.tasks.mapper.generic</module>
-    <module>org.eclipse.mylyn.versions.tasks.mapper.tests</module>
+    <module>org.eclipse.mylyn.versions.tasks.mapper.generic.tests</module>
   </modules>
 </project>

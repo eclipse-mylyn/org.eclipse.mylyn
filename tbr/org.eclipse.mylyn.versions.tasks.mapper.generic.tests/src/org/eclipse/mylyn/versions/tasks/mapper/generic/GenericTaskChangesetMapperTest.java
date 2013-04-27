@@ -24,7 +24,6 @@ import org.eclipse.mylyn.versions.core.ChangeSet;
 import org.eclipse.mylyn.versions.core.ScmRepository;
 import org.eclipse.mylyn.versions.core.spi.ScmConnector;
 import org.eclipse.mylyn.versions.tasks.core.IChangeSetMapping;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;

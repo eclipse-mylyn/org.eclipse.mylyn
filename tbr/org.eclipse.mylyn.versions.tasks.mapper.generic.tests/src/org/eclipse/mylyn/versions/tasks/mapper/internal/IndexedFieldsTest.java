@@ -1,3 +1,4 @@
+package org.eclipse.mylyn.versions.tasks.mapper.internal;
 /*******************************************************************************
  * Copyright (c) 2012 Research Group for Industrial Software (INSO), Vienna University of Technology.
  * All rights reserved. This program and the accompanying materials
@@ -8,7 +9,7 @@
  * Contributors:
  *     Research Group for Industrial Software (INSO), Vienna University of Technology - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.versions.tasks.mapper.internal;
+
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
