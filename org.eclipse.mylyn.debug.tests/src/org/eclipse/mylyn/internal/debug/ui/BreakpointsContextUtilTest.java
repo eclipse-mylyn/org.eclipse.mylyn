@@ -17,21 +17,19 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.custommonkey.xmlunit.Diff;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.jdt.internal.debug.core.breakpoints.JavaLineBreakpoint;
-import org.eclipse.mylyn.commons.core.XmlMemento;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
@@ -109,14 +107,8 @@ public class BreakpointsContextUtilTest {
 		List<IBreakpoint> breakpoints = new ArrayList<IBreakpoint>();
 		breakpoints.add(breakpoint);
 		InputStream exportedBreakpoints = BreakpointsContextUtil.exportBreakpoints(breakpoints, null);
-		assertEquals(toCanonicalXml(expectedResult), toCanonicalXml(exportedBreakpoints));
-	}
-
-	private String toCanonicalXml(InputStream in) throws Exception {
-		XmlMemento memento = XmlMemento.createReadRoot(new StringReader(IOUtils.toString(in)));
-		StringWriter out = new StringWriter();
-		memento.save(out);
-		return out.toString();
+		Diff xmlDiff = new Diff(IOUtils.toString(expectedResult), IOUtils.toString(exportedBreakpoints));
+		assertTrue(xmlDiff.toString(), xmlDiff.similar());
 	}
 
 	@Test
@@ -137,4 +129,5 @@ public class BreakpointsContextUtilTest {
 		BreakpointsContextUtil.removeBreakpoints(breakpointsToRemove);
 		assertEquals(currentBreakpoints, breakpointManager.getBreakpoints().length);
 	}
+
 }
