@@ -36,7 +36,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.wizards.IWizardDescriptor;
 
 /**
@@ -65,8 +64,6 @@ public class BuildsServiceMessageControl extends NotificationControl {
 	private final CopyOnWriteArrayList<AbstractNotification> messages;
 
 	//private final Stack<AbstractNotification> messages;
-
-	private ImageHyperlink settingsLink;
 
 	public BuildsServiceMessageControl(Composite parent) {
 		super(parent);

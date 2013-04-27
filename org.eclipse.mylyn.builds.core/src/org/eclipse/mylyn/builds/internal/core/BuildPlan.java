@@ -323,9 +323,10 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 			InternalEObject oldServer = (InternalEObject) server;
 			server = (IBuildServer) eResolveProxy(oldServer);
 			if (server != oldServer) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, BuildPackage.BUILD_PLAN__SERVER,
 							oldServer, server));
+				}
 			}
 		}
 		return server;
@@ -348,8 +349,9 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	public void setServer(IBuildServer newServer) {
 		IBuildServer oldServer = server;
 		server = newServer;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__SERVER, oldServer, server));
+		}
 	}
 
 	/**
@@ -385,9 +387,10 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 			InternalEObject oldParent = (InternalEObject) parent;
 			parent = (IBuildPlan) eResolveProxy(oldParent);
 			if (parent != oldParent) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, BuildPackage.BUILD_PLAN__PARENT,
 							oldParent, parent));
+				}
 			}
 		}
 		return parent;
@@ -413,10 +416,11 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
 					BuildPackage.BUILD_PLAN__PARENT, oldParent, newParent);
-			if (msgs == null)
+			if (msgs == null) {
 				msgs = notification;
-			else
+			} else {
 				msgs.add(notification);
+			}
 		}
 		return msgs;
 	}
@@ -429,17 +433,21 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	public void setParent(IBuildPlan newParent) {
 		if (newParent != parent) {
 			NotificationChain msgs = null;
-			if (parent != null)
+			if (parent != null) {
 				msgs = ((InternalEObject) parent).eInverseRemove(this, BuildPackage.BUILD_PLAN__CHILDREN,
 						IBuildPlan.class, msgs);
-			if (newParent != null)
+			}
+			if (newParent != null) {
 				msgs = ((InternalEObject) newParent).eInverseAdd(this, BuildPackage.BUILD_PLAN__CHILDREN,
 						IBuildPlan.class, msgs);
+			}
 			msgs = basicSetParent(newParent, msgs);
-			if (msgs != null)
+			if (msgs != null) {
 				msgs.dispatch();
-		} else if (eNotificationRequired())
+			}
+		} else if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__PARENT, newParent, newParent));
+		}
 	}
 
 	/**
@@ -464,8 +472,9 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	public void setHealth(int newHealth) {
 		int oldHealth = health;
 		health = newHealth;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__HEALTH, oldHealth, health));
+		}
 	}
 
 	/**
@@ -489,8 +498,9 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	public void setId(String newId) {
 		String oldId = id;
 		id = newId;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__ID, oldId, id));
+		}
 	}
 
 	/**
@@ -514,8 +524,9 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	public void setInfo(String newInfo) {
 		String oldInfo = info;
 		info = newInfo;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__INFO, oldInfo, info));
+		}
 	}
 
 	/**
@@ -540,9 +551,10 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	public void setSelected(boolean newSelected) {
 		boolean oldSelected = selected;
 		selected = newSelected;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__SELECTED, oldSelected,
 					selected));
+		}
 	}
 
 	/**
@@ -567,8 +579,9 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	public void setSummary(String newSummary) {
 		String oldSummary = summary;
 		summary = newSummary;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__SUMMARY, oldSummary, summary));
+		}
 	}
 
 	/**
@@ -593,8 +606,9 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	public void setState(BuildState newState) {
 		BuildState oldState = state;
 		state = newState;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__STATE, oldState, state));
+		}
 	}
 
 	/**
@@ -619,8 +633,9 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	public void setStatus(BuildStatus newStatus) {
 		BuildStatus oldStatus = status;
 		status = newStatus;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__STATUS, oldStatus, status));
+		}
 	}
 
 	/**
@@ -645,9 +660,10 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	public void setDescription(String newDescription) {
 		String oldDescription = description;
 		description = newDescription;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__DESCRIPTION, oldDescription,
 					description));
+		}
 	}
 
 	/**
@@ -665,9 +681,10 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 			InternalEObject oldLastBuild = (InternalEObject) lastBuild;
 			lastBuild = (IBuild) eResolveProxy(oldLastBuild);
 			if (lastBuild != oldLastBuild) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, BuildPackage.BUILD_PLAN__LAST_BUILD,
 							oldLastBuild, lastBuild));
+				}
 			}
 		}
 		return lastBuild;
@@ -690,9 +707,10 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	public void setLastBuild(IBuild newLastBuild) {
 		IBuild oldLastBuild = lastBuild;
 		lastBuild = newLastBuild;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, BuildPackage.BUILD_PLAN__LAST_BUILD, oldLastBuild,
 					lastBuild));
+		}
 	}
 
 	/**
@@ -751,9 +769,10 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 		case BuildPackage.BUILD_PLAN__CHILDREN:
 			return ((InternalEList<InternalEObject>) (InternalEList<?>) getChildren()).basicAdd(otherEnd, msgs);
 		case BuildPackage.BUILD_PLAN__PARENT:
-			if (parent != null)
+			if (parent != null) {
 				msgs = ((InternalEObject) parent).eInverseRemove(this, BuildPackage.BUILD_PLAN__CHILDREN,
 						IBuildPlan.class, msgs);
+			}
 			return basicSetParent((IBuildPlan) otherEnd, msgs);
 		case BuildPackage.BUILD_PLAN__PARAMETER_DEFINITIONS:
 			return ((InternalEList<InternalEObject>) (InternalEList<?>) getParameterDefinitions()).basicAdd(otherEnd,
@@ -791,14 +810,16 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 		case BuildPackage.BUILD_PLAN__SERVER:
-			if (resolve)
+			if (resolve) {
 				return getServer();
+			}
 			return basicGetServer();
 		case BuildPackage.BUILD_PLAN__CHILDREN:
 			return getChildren();
 		case BuildPackage.BUILD_PLAN__PARENT:
-			if (resolve)
+			if (resolve) {
 				return getParent();
+			}
 			return basicGetParent();
 		case BuildPackage.BUILD_PLAN__HEALTH:
 			return getHealth();
@@ -817,8 +838,9 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 		case BuildPackage.BUILD_PLAN__DESCRIPTION:
 			return getDescription();
 		case BuildPackage.BUILD_PLAN__LAST_BUILD:
-			if (resolve)
+			if (resolve) {
 				return getLastBuild();
+			}
 			return basicGetLastBuild();
 		case BuildPackage.BUILD_PLAN__PARAMETER_DEFINITIONS:
 			return getParameterDefinitions();
@@ -998,8 +1020,9 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (health: "); //$NON-NLS-1$
@@ -1040,6 +1063,7 @@ public class BuildPlan extends BuildElement implements IBuildPlan {
 
 	public void merge(BuildPlan source) {
 		Assert.isNotNull(source);
+		@SuppressWarnings("serial")
 		EcoreUtil.Copier copier = new EcoreUtil.Copier() {
 			@Override
 			protected EObject createCopy(EObject source) {

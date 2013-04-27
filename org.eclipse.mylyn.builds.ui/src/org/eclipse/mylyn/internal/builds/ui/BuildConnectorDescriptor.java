@@ -33,16 +33,14 @@ public class BuildConnectorDescriptor {
 
 	final String label;
 
-	private IStatus status;
-
 	BuildConnectorUi ui;
 
 	private BuildConnectorUiDelegate uiDelegate;
 
 	public BuildConnectorDescriptor(IConfigurationElement element) {
 		this.element = element;
-		this.connectorKind = element.getAttribute("kind");
-		this.label = element.getAttribute("label");
+		this.connectorKind = element.getAttribute("kind"); //$NON-NLS-1$
+		this.label = element.getAttribute("label"); //$NON-NLS-1$
 	}
 
 	public IStatus createCore() {
@@ -122,7 +120,7 @@ public class BuildConnectorDescriptor {
 		} else if (label == null) {
 			return new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind(
 					"Connector core extension contributed by {0} does not specify label attribute", getPluginId())); //$NON-NLS-1$
-		} else if (element.getAttribute("core") == null) {
+		} else if (element.getAttribute("core") == null) { //$NON-NLS-1$
 			return new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind(
 					"Connector core extension contributed by {0} does not specify core attribute", getPluginId())); //$NON-NLS-1$
 		}

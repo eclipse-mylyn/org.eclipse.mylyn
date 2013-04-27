@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.internal.builds.ui.editor;
 
-import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.IBuild;
@@ -29,8 +28,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  * @author Steffen Pingel
  */
 public class HeaderPart extends AbstractBuildEditorPart {
-
-	private DataBindingContext dbc;
 
 	public HeaderPart() {
 		this.span = 2;

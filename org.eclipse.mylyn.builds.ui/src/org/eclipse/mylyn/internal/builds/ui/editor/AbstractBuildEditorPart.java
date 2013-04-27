@@ -219,6 +219,7 @@ public abstract class AbstractBuildEditorPart extends AbstractFormPart {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	protected <T extends IBuildElement> T getInput(Class<T> clazz) {
 		if (clazz == IBuildPlan.class) {
 			return (T) getPlan();

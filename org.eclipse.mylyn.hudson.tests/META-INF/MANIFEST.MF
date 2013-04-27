@@ -4,7 +4,6 @@ Bundle-Name: Mylyn Hudson Connector
 Bundle-SymbolicName: org.eclipse.mylyn.hudson.tests;singleton:=true
 Bundle-Version: 1.1.0.qualifier
 Require-Bundle: org.junit;bundle-version="4.8.2",
- com.sun.xml.bind;bundle-version="2.2.0";resolution:=optional,
  org.eclipse.core.runtime,
  org.eclipse.jface.text,
  org.eclipse.search,

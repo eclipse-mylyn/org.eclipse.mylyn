@@ -21,8 +21,8 @@ import org.eclipse.mylyn.builds.internal.core.util.BuildsConstants;
 import org.eclipse.mylyn.commons.core.DelegatingProgressMonitor;
 import org.eclipse.mylyn.commons.core.IDelegatingProgressMonitor;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
-import org.eclipse.mylyn.commons.core.operations.OperationUtil;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor.OperationFlag;
+import org.eclipse.mylyn.commons.core.operations.OperationUtil;
 
 /**
  * @author Steffen Pingel
@@ -43,7 +43,8 @@ public abstract class BuildJob extends Job {
 	}
 
 	@Override
-	public Object getAdapter(Class adapter) {
+	public Object getAdapter(@SuppressWarnings("rawtypes")
+	Class adapter) {
 		if (adapter == IBuildElement.class) {
 			IBuildElement element = getElement();
 			if (element != null) {

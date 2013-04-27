@@ -53,8 +53,6 @@ import org.eclipse.swt.widgets.Label;
  */
 public class BuildToolTip extends RichToolTip {
 
-	private final static int MAX_TEXT_WIDTH = 300;
-
 	private final static int MAX_WIDTH = 600;
 
 	public BuildToolTip(Control control) {
@@ -152,7 +150,6 @@ public class BuildToolTip extends RichToolTip {
 			int passed = 0;
 			int failed = 0;
 			int unstable = 0;
-			int aborted = 0;
 			int disabled = 0;
 			List<IBuildPlan> plans = BuildsUiInternal.getModel().getPlans((BuildServer) data);
 			for (IBuildPlan iBuildPlan : plans) {
@@ -168,7 +165,6 @@ public class BuildToolTip extends RichToolTip {
 						unstable++;
 						break;
 					case ABORTED:
-						aborted++;
 						break;
 					case DISABLED:
 						disabled++;

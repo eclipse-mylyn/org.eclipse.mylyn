@@ -233,16 +233,16 @@ public class BuildsUiInternal {
 	}
 
 	public static List<IBuildElement> getElements(ExecutionEvent event) {
-		String selector = event.getParameter("element");
+		String selector = event.getParameter("element"); //$NON-NLS-1$
 
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
 		if (selection instanceof IStructuredSelection) {
-			List items = ((IStructuredSelection) selection).toList();
+			List<?> items = ((IStructuredSelection) selection).toList();
 			List<IBuildElement> result = new ArrayList<IBuildElement>(items.size());
 			for (Object item : items) {
 				if (item instanceof IBuildElement) {
 					IBuildElement element = (IBuildElement) item;
-					if ("lastBuild".equals(selector)) {
+					if ("lastBuild".equals(selector)) { //$NON-NLS-1$
 						if (element instanceof IBuildPlan) {
 							element = ((IBuildPlan) element).getLastBuild();
 						} else {

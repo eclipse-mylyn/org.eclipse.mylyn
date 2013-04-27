@@ -112,6 +112,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		public int compare(TreeViewer viewer, Object e1, Object e2, int columnIndex) {
 			if (e1 instanceof IBuildServer && e2 instanceof IBuildServer) {
 				// keep server sort order stable for now
+				@SuppressWarnings("unchecked")
 				int res = getComparator().compare(((IBuildElement) e1).getLabel(), ((IBuildElement) e2).getLabel());
 				if (getSortDirection(viewer) == SWT.UP) {
 					return -res;
@@ -206,8 +207,6 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	private BuildToolTip toolTip;
 
 	private BuildsServiceMessageControl serviceMessageControl;
-
-	private TreeViewerSupport treeViewerSupport;
 
 	public BuildsView() {
 		BuildsUiPlugin.getDefault().initializeRefresh();
@@ -307,7 +306,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 
 		updateContents(Status.OK_STATUS);
 
-		treeViewerSupport = new TreeViewerSupport(viewer, getStateFile());
+		new TreeViewerSupport(viewer, getStateFile());
 		// Make sure we get notifications
 		NotificationSinkProxy.setControl(serviceMessageControl);
 	}

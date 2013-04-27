@@ -65,7 +65,6 @@ public class HudsonConnector extends BuildConnector {
 	@Override
 	public IBuildElement getBuildElementFromUrl(IBuildServer server, String url) {
 		if (url.startsWith(server.getUrl())) {
-			String path = url.substring(server.getUrl().length());
 			Pattern p = Pattern.compile("(.*/job/(.*)/)(\\d+)");
 			Matcher matcher = p.matcher(url);
 			if (matcher.find()) {

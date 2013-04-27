@@ -22,6 +22,7 @@ import org.eclipse.mylyn.internal.builds.ui.commands.CopyDetailsHandler.Mode;
  */
 public class CopyDetailsParameterValues implements IParameterValues {
 
+	@SuppressWarnings("rawtypes")
 	public Map getParameterValues() {
 		Map<String, String> result = new HashMap<String, String>();
 		for (Mode mode : CopyDetailsHandler.Mode.values()) {

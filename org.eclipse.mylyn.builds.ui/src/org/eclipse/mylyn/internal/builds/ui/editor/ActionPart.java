@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.internal.builds.ui.editor;
 
-import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.commons.ui.CommonImages;
@@ -32,8 +31,6 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
  * @author Steffen Pingel
  */
 public class ActionPart extends AbstractBuildEditorPart {
-
-	private DataBindingContext dbc;
 
 	public ActionPart() {
 	}

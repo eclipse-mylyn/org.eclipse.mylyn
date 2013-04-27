@@ -146,7 +146,6 @@ public class ParametersDialog extends TitleAreaDialog {
 			control.setText(toValue(def.getBuildPlanId()));
 			return control;
 		} else if (definition instanceof FileParameterDefinition) {
-			FileParameterDefinition def = (FileParameterDefinition) definition;
 			Text control = new Text(pane, SWT.BORDER);
 			return control;
 		}

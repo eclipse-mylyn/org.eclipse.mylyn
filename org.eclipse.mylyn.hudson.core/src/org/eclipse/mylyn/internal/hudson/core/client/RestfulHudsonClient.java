@@ -71,18 +71,11 @@ import org.xml.sax.SAXException;
 public class RestfulHudsonClient {
 
 	public enum BuildId {
-		LAST(-1, "lastBuild"), LAST_FAILED(-5, "lastFailedBuild"), LAST_STABLE(-2, "lastStableBuild"), LAST_SUCCESSFUL(
-				-3, "lastSuccessfulBuild"), LAST_UNSTABLE(-4, "lastUnstableBuild");
+		LAST(-1), LAST_FAILED(-5), LAST_STABLE(-2), LAST_SUCCESSFUL(-3), LAST_UNSTABLE(-4);
 
 		private HudsonModelBuild build;
 
-		private final int id;
-
-		private final String url;
-
-		BuildId(int id, String url) {
-			this.id = id;
-			this.url = url;
+		BuildId(int id) {
 			this.build = new HudsonModelBuild();
 			this.build.setNumber(id);
 		}

@@ -46,18 +46,15 @@ public class BuildConsole {
 
 	private MessageConsoleStream stream;
 
-	private final BuildModel model;
+	final static String CONSOLE_TYPE = "org.eclipse.mylyn.builds.ui.console.BuildConsole"; //$NON-NLS-1$
 
-	final static String CONSOLE_TYPE = "org.eclipse.mylyn.builds.ui.console.BuildConsole";
-
-	final static String ATTRIBUTE_BUILD = "org.eclipse.mylyn.builds.ui.console.build";
+	final static String ATTRIBUTE_BUILD = "org.eclipse.mylyn.builds.ui.console.build"; //$NON-NLS-1$
 
 	public BuildConsole(IConsoleManager consoleManager, BuildModel model, IBuild build) {
 		Assert.isNotNull(consoleManager);
 		Assert.isNotNull(model);
 		Assert.isNotNull(build);
 		this.consoleManager = consoleManager;
-		this.model = model;
 		this.build = build;
 	}
 

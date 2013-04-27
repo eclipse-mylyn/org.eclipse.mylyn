@@ -28,6 +28,7 @@ public class HudsonRunBuildForm {
 
 	private class Parameters {
 
+		@SuppressWarnings("unused")
 		private NameValue[] parameter;
 	}
 

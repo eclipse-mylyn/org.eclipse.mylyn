@@ -32,8 +32,10 @@ public class BuildNotification extends AbstractUiNotification {
 
 	private static final String ID_EVENT_PLAN_STATUS_CHANGED = "org.eclipse.mylyn.builds.ui.events.PlanStatusChanged"; //$NON-NLS-1$
 
+	@SuppressWarnings("unused")
 	private static final String ID_EVENT_BUILD_COMPLETED = "org.eclipse.mylyn.builds.ui.events.BuildCompleted"; //$NON-NLS-1$
 
+	@SuppressWarnings("unused")
 	private static final String ID_EVENT_BUILD_STARTED = "org.eclipse.mylyn.builds.ui.events.BuildStarted"; //$NON-NLS-1$
 
 	private final IBuildElement element;
