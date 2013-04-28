@@ -26,6 +26,7 @@
   <properties>
     <mylyn-version>3.9.0-SNAPSHOT</mylyn-version>
     <tycho-version>0.17.0</tycho-version>
+    <tycho-extras-version>0.17.0</tycho-extras-version>
 
     <mylyn-test-append></mylyn-test-append>
 
@@ -668,12 +669,19 @@
             <format>${dist.qualifier}</format>
             <archiveSite>false</archiveSite>
             <archive>
-              <manifestEntries>
-                <Source-Control-Identifier>${source.control.id}</Source-Control-Identifier>
-              </manifestEntries>
               <addMavenDescriptor>false</addMavenDescriptor>
             </archive>
+            <sourceReferences>
+              <generate>true</generate>
+            </sourceReferences>
           </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.eclipse.tycho.extras</groupId>
+              <artifactId>tycho-sourceref-jgit</artifactId>
+              <version>${tycho-extras-version}</version>
+            </dependency>
+          </dependencies>
         </plugin>
         <!-- code analysis -->
         <plugin>
