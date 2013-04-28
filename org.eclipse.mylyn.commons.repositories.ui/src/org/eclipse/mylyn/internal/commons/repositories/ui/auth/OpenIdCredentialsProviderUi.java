@@ -46,8 +46,8 @@ public class OpenIdCredentialsProviderUi extends AbstractCredentialsProviderUi<O
 		}
 		final OpenIdAuthenticationRequest request = (OpenIdAuthenticationRequest) authRequest;
 
-		final WebBrowserDialog dialog = new WebBrowserDialog(WorkbenchUtil.getShell(), "Login", null,
-				"Login to OpenID Provider", MessageDialog.NONE, new String[] { IDialogConstants.CANCEL_LABEL }, 0);
+		final WebBrowserDialog dialog = new WebBrowserDialog(WorkbenchUtil.getShell(), Messages.OpenIdCredentialsProviderUi_Login, null,
+				Messages.OpenIdCredentialsProviderUi_Login_to_OpenID_Provider, MessageDialog.NONE, new String[] { IDialogConstants.CANCEL_LABEL }, 0);
 		dialog.create();
 
 		dialog.getBrowser().addLocationListener(new LocationAdapter() {

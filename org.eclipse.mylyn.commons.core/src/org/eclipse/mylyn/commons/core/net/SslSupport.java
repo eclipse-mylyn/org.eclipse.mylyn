@@ -120,7 +120,7 @@ public class SslSupport {
 						}
 					}
 				} catch (Exception cause) {
-					IOException e = new SslCertificateException(NLS.bind("Error accessing keystore: {0}",
+					IOException e = new SslCertificateException(NLS.bind("Error accessing keystore: {0}", //$NON-NLS-1$
 							cause.getMessage()));
 					e.initCause(cause);
 					throw e;

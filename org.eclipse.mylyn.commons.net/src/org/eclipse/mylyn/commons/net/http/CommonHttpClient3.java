@@ -77,7 +77,7 @@ public class CommonHttpClient3 {
 
 	public synchronized HostConfiguration getHostConfiguration(IOperationMonitor monitor) throws IOException {
 		if (location.getUrl() == null) {
-			throw new IOException("No URL specified.");
+			throw new IOException("No URL specified."); //$NON-NLS-1$
 		}
 		return WebUtil.createHostConfiguration(httpClient, location, monitor);
 	}

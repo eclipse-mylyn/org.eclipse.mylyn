@@ -156,7 +156,7 @@ public class CredentialsDialog extends TitleAreaDialog {
 	}
 
 	private void createKeyStoreControls(Composite composite) {
-		new Label(composite, SWT.NONE).setText("Key Store:");
+		new Label(composite, SWT.NONE).setText(Messages.CredentialsDialog_KeyStore);
 
 		final Text keyStoreField = new Text(composite, SWT.BORDER);
 		keyStoreField.addModifyListener(new ModifyListener() {
@@ -175,7 +175,7 @@ public class CredentialsDialog extends TitleAreaDialog {
 				.applyTo(keyStoreField);
 
 		Button browseButton = new Button(composite, SWT.PUSH);
-		browseButton.setText("Browse...");
+		browseButton.setText(Messages.CredentialsDialog_Browse);
 		browseButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -193,7 +193,7 @@ public class CredentialsDialog extends TitleAreaDialog {
 	}
 
 	private void createPasswordControls(Composite composite) {
-		new Label(composite, SWT.NONE).setText("Password:");
+		new Label(composite, SWT.NONE).setText(Messages.CredentialsDialog_Password);
 
 		final Text passwordField = new Text(composite, SWT.BORDER | SWT.PASSWORD);
 		passwordField.addModifyListener(new ModifyListener() {
@@ -213,7 +213,7 @@ public class CredentialsDialog extends TitleAreaDialog {
 				.applyTo(passwordField);
 
 		final Button savePasswordButton = new Button(composite, SWT.CHECK);
-		savePasswordButton.setText("Save Password");
+		savePasswordButton.setText(Messages.CredentialsDialog_SavePassword);
 		savePasswordButton.setSelection(savePassword);
 		savePasswordButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -225,7 +225,7 @@ public class CredentialsDialog extends TitleAreaDialog {
 	}
 
 	private void createUserControls(Composite composite) {
-		new Label(composite, SWT.NONE).setText("Username:");
+		new Label(composite, SWT.NONE).setText(Messages.CredentialsDialog_Username);
 
 		final Text usernameText = new Text(composite, SWT.BORDER);
 		usernameText.setText(username);
@@ -245,7 +245,7 @@ public class CredentialsDialog extends TitleAreaDialog {
 				.applyTo(usernameText);
 
 		if (needsDomain()) {
-			new Label(composite, SWT.NONE).setText("Domain:");
+			new Label(composite, SWT.NONE).setText(Messages.CredentialsDialog_Domain);
 
 			final Text domainText = new Text(composite, SWT.BORDER);
 			domainText.setText(domain);
@@ -265,8 +265,8 @@ public class CredentialsDialog extends TitleAreaDialog {
 
 	@Override
 	protected Control createContents(Composite parent) {
-		getShell().setText("Enter credentials");
-		setTitle("Authentication");
+		getShell().setText(Messages.CredentialsDialog_Enter_credentials);
+		setTitle(Messages.CredentialsDialog_Authentication);
 
 		Control control = super.createContents(parent);
 

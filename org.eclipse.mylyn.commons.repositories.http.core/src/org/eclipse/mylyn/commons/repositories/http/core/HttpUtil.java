@@ -293,7 +293,7 @@ public class HttpUtil {
 				}
 			} catch (UnknownHostException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, ID_PLUGIN,
-						"Unable to get hostname.  Defaulting to servers host.", e));
+						"Unable to get hostname.  Defaulting to servers host.", e)); //$NON-NLS-1$
 			}
 			if (hostName == null) {
 				hostName = address.getHostName();

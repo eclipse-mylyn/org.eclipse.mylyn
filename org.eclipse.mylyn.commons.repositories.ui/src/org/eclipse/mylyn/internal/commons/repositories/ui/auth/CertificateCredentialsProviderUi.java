@@ -63,7 +63,7 @@ public class CertificateCredentialsProviderUi extends AbstractCredentialsProvide
 	private String getDefaultMessage(AuthenticationRequest<AuthenticationType<CertificateCredentials>> request) {
 		AuthenticationType<CertificateCredentials> authType = request.getAuthenticationType();
 		if (AuthenticationType.CERTIFICATE == authType) {
-			return "Enter key store password";
+			return Messages.CertificateCredentialsProviderUi_Enter_key_store_password;
 		}
 		return null;
 	}

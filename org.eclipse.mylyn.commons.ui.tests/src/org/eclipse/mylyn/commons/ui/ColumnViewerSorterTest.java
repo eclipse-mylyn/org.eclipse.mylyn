@@ -24,6 +24,7 @@ import org.mockito.Mockito;
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings("nls")
 public class ColumnViewerSorterTest {
 
 	class StubColumnViewerSorter extends AbstractColumnViewerSorter<ColumnViewer, Item> {

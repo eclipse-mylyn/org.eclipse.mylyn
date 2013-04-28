@@ -53,7 +53,7 @@ public class UserCredentialsProviderUi extends AbstractCredentialsProviderUi<Use
 
 		dialog.create();
 
-		dialog.setTitle(NLS.bind("Credentials for {0}", request.getLocation().getLabel()));
+		dialog.setTitle(NLS.bind(Messages.UserCredentialsProviderUi_Credentials_for, request.getLocation().getLabel()));
 		// caller provided message takes precedence
 		if (request.getMessage() != null) {
 			dialog.setMessage(request.getMessage());
@@ -78,11 +78,11 @@ public class UserCredentialsProviderUi extends AbstractCredentialsProviderUi<Use
 	private String getDefaultMessage(AuthenticationRequest<AuthenticationType<UserCredentials>> request) {
 		AuthenticationType<UserCredentials> authType = request.getAuthenticationType();
 		if (AuthenticationType.REPOSITORY == authType) {
-			return "Enter repository credentials";
+			return Messages.UserCredentialsProviderUi_Enter_repository_credentials;
 		} else if (AuthenticationType.HTTP == authType) {
-			return "Enter HTTP credentials";
+			return Messages.UserCredentialsProviderUi_Enter_HTTP_credentials;
 		} else if (AuthenticationType.PROXY == authType) {
-			return "Enter proxy credentials";
+			return Messages.UserCredentialsProviderUi_Enter_proxy_credentials;
 		}
 		return null;
 	}

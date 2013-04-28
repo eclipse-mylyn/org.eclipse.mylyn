@@ -609,7 +609,7 @@ public class RepositoryLocationPart {
 		if (getWorkingCopy().getCredentials(AuthenticationType.CERTIFICATE, false) != null) {
 			style |= ExpandableComposite.EXPANDED;
 		}
-		ExpandableComposite section = parent.createSection("Certificate Authentiation", style);
+		ExpandableComposite section = parent.createSection(Messages.RepositoryLocationPart_Certificate_Authentiation, style);
 		section.clientVerticalSpacing = 5;
 
 		final Composite composite = new Composite(section, SWT.NONE);
@@ -620,10 +620,10 @@ public class RepositoryLocationPart {
 
 		Button enableButton = new Button(composite, SWT.CHECK);
 		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(enableButton);
-		enableButton.setText("Enable certificate authentication");
+		enableButton.setText(Messages.RepositoryLocationPart_Enable_certificate_authentication);
 
 		label = new Label(composite, SWT.NONE);
-		label.setText("Keystore file:");
+		label.setText(Messages.RepositoryLocationPart_Keystorefile);
 
 		final Text keyStoreFileNameText = new Text(composite, SWT.BORDER);
 		// FIXME fix width hint
@@ -633,7 +633,7 @@ public class RepositoryLocationPart {
 				.applyTo(keyStoreFileNameText);
 
 		Button certBrowseButton = new Button(composite, SWT.PUSH);
-		certBrowseButton.setText("Browse...");
+		certBrowseButton.setText(Messages.RepositoryLocationPart_Browse);
 		certBrowseButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

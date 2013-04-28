@@ -19,9 +19,15 @@ class Messages extends NLS {
 
 	public static String RepositoryLocationPart_Anonymous;
 
+	public static String RepositoryLocationPart_Browse;
+
+	public static String RepositoryLocationPart_Certificate_Authentiation;
+
 	public static String RepositoryLocationPart_Change_Settings;
 
 	public static String RepositoryLocationPart_Disconnected;
+
+	public static String RepositoryLocationPart_Enable_certificate_authentication;
 
 	public static String RepositoryLocationPart_Enable_HTTP_Authentication;
 
@@ -30,6 +36,8 @@ class Messages extends NLS {
 	public static String RepositoryLocationPart_Enter_a_valid_server_url;
 
 	public static String RepositoryLocationPart_HTTP_Authentication;
+
+	public static String RepositoryLocationPart_Keystorefile;
 
 	public static String RepositoryLocationPart_Label;
 
