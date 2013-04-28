@@ -12,6 +12,9 @@
   <artifactId>org.eclipse.mylyn.builds-parent</artifactId>
   <version>1.1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
+  <properties>
+    <tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/mylyn/org.eclipse.mylyn.builds.git</tycho.scmUrl>
+  </properties>
   <mailingLists>
     <mailingList>
       <name>Mylyn Builds Mailing List</name>
