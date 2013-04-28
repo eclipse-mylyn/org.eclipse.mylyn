@@ -12,6 +12,9 @@
   <artifactId>org.eclipse.mylyn.context-parent</artifactId>
   <version>3.9.0-SNAPSHOT</version>
   <packaging>pom</packaging>
+  <properties>
+    <tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/mylyn/org.eclipse.mylyn.context.git</tycho.scmUrl>
+  </properties>
   <mailingLists>
     <mailingList>
       <name>Mylyn Context Mailing List</name>
