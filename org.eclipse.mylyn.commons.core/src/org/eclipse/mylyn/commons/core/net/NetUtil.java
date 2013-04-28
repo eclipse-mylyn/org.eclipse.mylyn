@@ -74,7 +74,9 @@ public class NetUtil {
 	 *            the current operation or null
 	 * @throws IOException
 	 * @see {@link Socket#connect(java.net.SocketAddress, int)}
+	 * @deprecated
 	 */
+	@Deprecated
 	public static void connect(final Socket socket, InetSocketAddress address, int timeout,
 			MonitoredOperation<?> operation) throws IOException {
 		if (operation != null) {

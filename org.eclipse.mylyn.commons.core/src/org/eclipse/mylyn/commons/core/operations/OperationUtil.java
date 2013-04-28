@@ -75,6 +75,7 @@ public class OperationUtil {
 	/**
 	 * @since 3.7
 	 */
+	@Deprecated
 	public static <T> T execute(IProgressMonitor monitor, Operation<T> request) throws Throwable {
 		// check for legacy reasons
 		SubMonitor subMonitor = (monitor instanceof SubMonitor) ? (SubMonitor) monitor : SubMonitor.convert(null);
@@ -102,6 +103,8 @@ public class OperationUtil {
 
 			try {
 				return future.get(POLL_INTERVAL, TimeUnit.MILLISECONDS);
+			} catch (CancellationException e) {
+				throw new OperationCanceledException();
 			} catch (ExecutionException e) {
 				// XXX this hides the original stack trace from the caller invoking execute() 
 				throw e.getCause();

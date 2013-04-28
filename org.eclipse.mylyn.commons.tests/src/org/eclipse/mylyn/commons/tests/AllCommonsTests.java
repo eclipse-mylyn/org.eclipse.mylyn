@@ -15,6 +15,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.commons.core.HtmlStreamTokenizerTest;
+import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.tests.core.AuthenticatedProxyTest;
 import org.eclipse.mylyn.commons.tests.core.CommonListenerListTest;
 import org.eclipse.mylyn.commons.tests.core.CoreUtilTest;
@@ -26,6 +27,7 @@ import org.eclipse.mylyn.commons.tests.net.NetUtilTest;
 import org.eclipse.mylyn.commons.tests.net.SslProtocolSocketFactoryTest;
 import org.eclipse.mylyn.commons.tests.net.TimeoutInputStreamTest;
 import org.eclipse.mylyn.commons.tests.net.WebUtilTest;
+import org.eclipse.mylyn.commons.tests.operations.CancellableOperationMonitorThreadTest;
 import org.eclipse.mylyn.commons.tests.operations.OperationUtilTest;
 import org.eclipse.mylyn.commons.tests.workbench.browser.BrowserUtilTest;
 
@@ -35,7 +37,7 @@ import org.eclipse.mylyn.commons.tests.workbench.browser.BrowserUtilTest;
 public class AllCommonsTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite(AllCommonsTests.class.getName());
+		TestSuite suite = new ManagedTestSuite(AllCommonsTests.class.getName());
 		suite.addTestSuite(TimeoutInputStreamTest.class);
 		suite.addTestSuite(CoreUtilTest.class);
 		suite.addTestSuite(AuthenticatedProxyTest.class);
@@ -50,6 +52,7 @@ public class AllCommonsTests {
 		suite.addTestSuite(Html2TextReaderTest.class);
 		suite.addTestSuite(CommonHttpMethod3Test.class);
 		suite.addTestSuite(HtmlStreamTokenizerTest.class);
+		suite.addTestSuite(CancellableOperationMonitorThreadTest.class);
 		return suite;
 	}
 

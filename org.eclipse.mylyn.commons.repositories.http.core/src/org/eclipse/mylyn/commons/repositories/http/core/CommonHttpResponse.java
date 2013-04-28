@@ -21,45 +21,50 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylyn.commons.core.operations.CancellableOperationMonitorThread;
+import org.eclipse.mylyn.commons.core.operations.ICancellableOperation;
+import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 
 /**
  * @author Steffen Pingel
  */
-public class CommonHttpResponse {
+public class CommonHttpResponse implements ICancellableOperation {
+
+	private CancellableInputStream entityStream;
+
+	private final IOperationMonitor monitor;
 
 	private final HttpRequest request;
 
 	private final HttpResponse response;
 
-	public CommonHttpResponse(HttpRequest request, HttpResponse response) {
+	private final CancellableOperationMonitorThread monitorThread;
+
+	public CommonHttpResponse(HttpRequest request, HttpResponse response,
+			CancellableOperationMonitorThread monitorThread, IOperationMonitor monitor) {
 		Assert.isNotNull(request);
 		Assert.isNotNull(response);
+		Assert.isNotNull(monitorThread);
+		Assert.isNotNull(monitor);
 		this.request = request;
 		this.response = response;
+		this.monitorThread = monitorThread;
+		this.monitor = monitor;
+	}
+
+	@Override
+	public void abort() {
+		abortStream();
+		if (request instanceof HttpUriRequest) {
+			try {
+				((HttpUriRequest) request).abort();
+			} catch (UnsupportedOperationException e) {
+			}
+		}
 	}
 
 	public HttpRequest getRequest() {
 		return request;
-	}
-
-	public HttpResponse getResponse() {
-		return response;
-	}
-
-	public int getStatusCode() {
-		return response.getStatusLine().getStatusCode();
-	}
-
-	public InputStream getResponseEntityAsStream(IProgressMonitor monitor) throws IOException {
-		HttpEntity entity = response.getEntity();
-		if (entity == null) {
-			throw new IOException("Expected entity"); //$NON-NLS-1$
-		}
-		return HttpUtil.getResponseBodyAsStream(entity, monitor);
-	}
-
-	public void release(IProgressMonitor monitor) {
-		HttpUtil.release(request, response, monitor);
 	}
 
 	public String getRequestPath() {
@@ -70,8 +75,73 @@ public class CommonHttpResponse {
 		}
 	}
 
+	public HttpResponse getResponse() {
+		return response;
+	}
+
 	public String getResponseCharSet() {
 		return EntityUtils.getContentCharSet(response.getEntity());
+	}
+
+	public synchronized InputStream getResponseEntityAsStream() throws IOException {
+		if (entityStream != null) {
+			throw new IllegalStateException();
+		}
+		HttpEntity entity = response.getEntity();
+		if (entity == null) {
+			throw new IOException("Expected entity"); //$NON-NLS-1$
+		}
+		entityStream = new CancellableInputStream(this, entity.getContent());
+		monitorThread.addOperation(this);
+		return entityStream;
+	}
+
+	/**
+	 * @deprecated use {@link #getResponseEntityAsStream()} instead
+	 */
+	@Deprecated
+	public InputStream getResponseEntityAsStream(IOperationMonitor monitor) throws IOException {
+		return getResponseEntityAsStream();
+	}
+
+	public int getStatusCode() {
+		return response.getStatusLine().getStatusCode();
+	}
+
+	@Override
+	public boolean isCanceled() {
+		return monitor.isCanceled();
+	}
+
+	public void release() {
+		releaseStream();
+		HttpUtil.release(request, response, monitor);
+	}
+
+	/**
+	 * @deprecated use {@link #release()} instead
+	 */
+	@Deprecated
+	public void release(IProgressMonitor monitor) {
+		release();
+	}
+
+	private synchronized void abortStream() {
+		if (entityStream != null) {
+			CancellableOperationMonitorThread.getInstance().removeOperation(this);
+			entityStream.cancel();
+		}
+	}
+
+	private synchronized void releaseStream() {
+		if (entityStream != null) {
+			CancellableOperationMonitorThread.getInstance().removeOperation(this);
+			entityStream = null;
+		}
+	}
+
+	void notifyStreamClosed() {
+		release();
 	}
 
 }

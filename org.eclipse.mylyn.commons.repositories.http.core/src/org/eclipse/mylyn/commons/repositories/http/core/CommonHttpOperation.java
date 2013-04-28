@@ -118,7 +118,7 @@ public abstract class CommonHttpOperation<T> {
 		try {
 			validate(response, monitor);
 			// success
-			return new CommonHttpResponse(request, response);
+			return new CommonHttpResponse(request, response, client.getMonitorThread(), monitor);
 		} catch (IOException e) {
 			HttpUtil.release(request, response, monitor);
 			throw e;
@@ -136,8 +136,8 @@ public abstract class CommonHttpOperation<T> {
 		return client.needsAuthentication();
 	}
 
-	protected <T extends AuthenticationCredentials> T requestCredentials(
-			AuthenticationRequest<AuthenticationType<T>> request, IOperationMonitor monitor) {
+	protected <C extends AuthenticationCredentials> C requestCredentials(
+			AuthenticationRequest<AuthenticationType<C>> request, IOperationMonitor monitor) {
 		return client.requestCredentials(request, monitor);
 	}
 

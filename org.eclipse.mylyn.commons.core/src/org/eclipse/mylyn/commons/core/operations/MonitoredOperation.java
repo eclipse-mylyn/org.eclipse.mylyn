@@ -28,7 +28,7 @@ import org.eclipse.osgi.util.NLS;
  * @since 3.7
  * @see OperationUtil#execute(IProgressMonitor, Operation)
  */
-public abstract class MonitoredOperation<T> extends Operation<T> implements ICancellable {
+public abstract class MonitoredOperation<T> extends Operation<T> implements ICancellableOperation {
 
 	private static ThreadLocal<MonitoredOperation<?>> currentOperation = new ThreadLocal<MonitoredOperation<?>>();
 
@@ -69,6 +69,14 @@ public abstract class MonitoredOperation<T> extends Operation<T> implements ICan
 				// ignore
 			}
 		}
+	}
+
+	/**
+	 * @since 3.9
+	 */
+	@Override
+	public boolean isCanceled() {
+		return monitor.isCanceled();
 	}
 
 	public void addListener(ICancellable listener) {

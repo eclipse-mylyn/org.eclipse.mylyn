@@ -23,7 +23,6 @@ import org.apache.http.conn.scheme.SchemeSocketFactory;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.eclipse.mylyn.commons.core.net.NetUtil;
-import org.eclipse.mylyn.commons.core.operations.MonitoredOperation;
 
 /**
  * @author Steffen Pingel
@@ -48,7 +47,7 @@ public class PollingProtocolSocketFactory implements SchemeSocketFactory {
 		int connTimeout = HttpConnectionParams.getConnectionTimeout(params);
 
 		socket.bind(localAddress);
-		NetUtil.connect(socket, remoteAddress, connTimeout, MonitoredOperation.getCurrentOperation());
+		socket.connect(remoteAddress, connTimeout);
 		return socket;
 	}
 

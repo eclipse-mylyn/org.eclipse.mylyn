@@ -28,7 +28,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.commons.core.net.NetUtil;
 import org.eclipse.mylyn.commons.core.net.SslSupport;
 import org.eclipse.mylyn.commons.core.net.TrustAllTrustManager;
-import org.eclipse.mylyn.commons.core.operations.MonitoredOperation;
 
 /**
  * Provides support for managing SSL connections.
@@ -58,7 +57,7 @@ public class PollingSslProtocolSocketFactory implements LayeredSchemeSocketFacto
 		}
 
 		int connTimeout = HttpConnectionParams.getConnectionTimeout(params);
-		NetUtil.connect(socket, remoteAddress, connTimeout, MonitoredOperation.getCurrentOperation());
+		socket.connect(remoteAddress, connTimeout);
 
 		if (socket instanceof SSLSocket) {
 			return socket;

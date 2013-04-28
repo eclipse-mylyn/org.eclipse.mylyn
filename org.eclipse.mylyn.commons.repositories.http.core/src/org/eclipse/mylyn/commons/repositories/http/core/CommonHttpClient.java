@@ -31,6 +31,7 @@ import org.apache.http.protocol.SyncBasicHttpContext;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.commons.core.net.SslSupport;
 import org.eclipse.mylyn.commons.core.net.TrustAllTrustManager;
+import org.eclipse.mylyn.commons.core.operations.CancellableOperationMonitorThread;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationCredentials;
@@ -58,6 +59,8 @@ public class CommonHttpClient {
 	private AbstractHttpClient httpClient;
 
 	private final RepositoryLocation location;
+
+	private CancellableOperationMonitorThread monitorThread = CancellableOperationMonitorThread.getInstance();
 
 	public CommonHttpClient(RepositoryLocation location) {
 		this.location = location;
@@ -152,6 +155,8 @@ public class CommonHttpClient {
 			// remove the token that associates certificate credentials with the connection
 			context.removeAttribute(ClientContext.USER_TOKEN);
 		}
+
+		context.setAttribute(HttpUtil.CONTEXT_KEY_MONITOR_THREAD, getMonitorThread());
 	}
 
 	protected void authenticate(IOperationMonitor monitor) throws IOException {
@@ -195,6 +200,14 @@ public class CommonHttpClient {
 					getLocation(), AuthenticationType.PROXY);
 			throw new AuthenticationException(HttpUtil.getStatusText(statusCode), request);
 		}
+	}
+
+	public CancellableOperationMonitorThread getMonitorThread() {
+		return monitorThread;
+	}
+
+	public void setMonitorThread(CancellableOperationMonitorThread monitorThread) {
+		this.monitorThread = monitorThread;
 	}
 
 }

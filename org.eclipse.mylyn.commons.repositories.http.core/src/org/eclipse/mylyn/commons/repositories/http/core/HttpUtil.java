@@ -13,6 +13,7 @@ package org.eclipse.mylyn.commons.repositories.http.core;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InterruptedIOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -49,13 +50,15 @@ import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.core.net.AuthenticatedProxy;
 import org.eclipse.mylyn.commons.core.net.NetUtil;
-import org.eclipse.mylyn.commons.core.operations.MonitoredOperation;
-import org.eclipse.mylyn.commons.core.operations.Operation;
+import org.eclipse.mylyn.commons.core.operations.CancellableOperationMonitorThread;
+import org.eclipse.mylyn.commons.core.operations.ICancellableOperation;
+import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 import org.eclipse.mylyn.commons.core.operations.OperationUtil;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
@@ -107,6 +110,8 @@ public class HttpUtil {
 	static final String ID_PLUGIN = "org.eclipse.mylyn.commons.repositories.http"; //$NON-NLS-1$
 
 	private static ThreadSafeClientConnManager connectionManager;
+
+	static final String CONTEXT_KEY_MONITOR_THREAD = CancellableOperationMonitorThread.class.getName();
 
 	public static void configureClient(AbstractHttpClient client, String userAgent) {
 		HttpClientParams.setCookiePolicy(client.getParams(), CookiePolicy.BEST_MATCH);
@@ -161,26 +166,42 @@ public class HttpUtil {
 	}
 
 	public static HttpResponse execute(final AbstractHttpClient client, final HttpHost host, final HttpContext context,
-			final HttpRequestBase method, IProgressMonitor monitor) throws IOException {
+			final HttpRequestBase method, final IProgressMonitor progress) throws IOException {
 		Assert.isNotNull(client);
 		Assert.isNotNull(method);
 
-		monitor = OperationUtil.convert(monitor);
-
-		MonitoredOperation<HttpResponse> executor = new MonitoredOperation<HttpResponse>(monitor) {
+		final IOperationMonitor monitor = OperationUtil.convert(progress);
+		ICancellableOperation operation = new ICancellableOperation() {
 			@Override
 			public void abort() {
-				super.abort();
 				method.abort();
 			}
 
 			@Override
-			public HttpResponse execute() throws Exception {
-				return client.execute(host, method, context);
+			public boolean isCanceled() {
+				return monitor.isCanceled();
 			}
 		};
 
-		return executeInternal(monitor, executor);
+		CancellableOperationMonitorThread thread = null;
+		if (context != null) {
+			thread = (CancellableOperationMonitorThread) context.getAttribute(CONTEXT_KEY_MONITOR_THREAD);
+		}
+		if (thread != null) {
+			thread.addOperation(operation);
+		}
+		try {
+			return client.execute(host, method, context);
+		} catch (InterruptedIOException e) {
+			if (monitor.isCanceled()) {
+				throw new OperationCanceledException();
+			}
+			throw e;
+		} finally {
+			if (thread != null) {
+				thread.removeOperation(operation);
+			}
+		}
 	}
 
 	public static NTCredentials getNtCredentials(UserCredentials credentials, String workstation) {
@@ -266,21 +287,6 @@ public class HttpUtil {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private static <T> T executeInternal(IProgressMonitor monitor, Operation<?> request) throws IOException {
-		try {
-			return (T) OperationUtil.execute(monitor, request);
-		} catch (IOException e) {
-			throw e;
-		} catch (RuntimeException e) {
-			throw e;
-		} catch (Error e) {
-			throw e;
-		} catch (Throwable e) {
-			throw new RuntimeException(e);
-		}
-	}
-
 	static Credentials getCredentials(final String username, final String password, final InetAddress address,
 			boolean forceUserNamePassword) {
 		int i = username.indexOf("\\"); //$NON-NLS-1$
@@ -335,26 +341,24 @@ public class HttpUtil {
 				((HttpUriRequest) request).abort();
 			} catch (UnsupportedOperationException e) {
 				// fall back to standard close
-				try {
-					EntityUtils.consume(response.getEntity());
-				} catch (IOException e2) {
-					// ignore
-				} catch (NullPointerException e2) {
-					// XXX work-around for bug 368830
-				}
+				consume(request, response);
 			}
 		} else {
+			consume(request, response);
+		}
+	}
+
+	private static void consume(HttpRequest request, HttpResponse response) {
+		try {
+			EntityUtils.consume(response.getEntity());
+		} catch (IOException e) {
+			// if construction of the stream fails the connection has to be aborted to be released
 			try {
-				EntityUtils.consume(response.getEntity());
-			} catch (IOException e) {
-				// if construction of the stream fails the connection has to be aborted to be released
-				try {
-					((HttpUriRequest) request).abort();
-				} catch (UnsupportedOperationException e2) {
-				}
-			} catch (NullPointerException e) {
-				// XXX work-around for bug 368830
+				((HttpUriRequest) request).abort();
+			} catch (UnsupportedOperationException e2) {
 			}
+		} catch (NullPointerException e2) {
+			// XXX work-around for bug 368830
 		}
 	}
 

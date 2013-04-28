@@ -11,7 +11,10 @@
 
 package org.eclipse.mylyn.commons.sdk.util;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
+import java.net.Socket;
 import java.net.URL;
 
 /**
@@ -21,7 +24,7 @@ import java.net.URL;
  */
 public class TestUrl {
 
-	public static final TestUrl DEFAULT = new TestUrl();
+	public static final TestUrl DEFAULT = probeLocalhost();
 
 	private final String URL_HTTP_404_NOT_FOUND = "http://mylyn.org/notfound";
 
@@ -35,8 +38,20 @@ public class TestUrl {
 
 	private final String URL_HTTPS_OK = "https://mylyn.org/";
 
+	private final String host;
+
 	public URL getConnectionRefused() {
 		return createUrl(URL_HTTP_CONNECTION_REFUSED);
+	}
+
+	private static TestUrl probeLocalhost() {
+		Socket socket = new Socket();
+		try {
+			socket.connect(new InetSocketAddress("localhost", 2080), 100);
+			return new TestUrl("localhost");
+		} catch (IOException e) {
+			return new TestUrl(null);
+		}
 	}
 
 	public URL getConnectionTimeout() {
@@ -60,6 +75,9 @@ public class TestUrl {
 	}
 
 	private URL createUrl(String url) {
+		if (host != null) {
+			url = url.replace("mylyn.org", host);
+		}
 		try {
 			return new URL(url);
 		} catch (MalformedURLException e) {
@@ -67,8 +85,8 @@ public class TestUrl {
 		}
 	}
 
-	private TestUrl() {
-		// not intended to be instantiated
+	private TestUrl(String host) {
+		this.host = host;
 	}
 
 }
