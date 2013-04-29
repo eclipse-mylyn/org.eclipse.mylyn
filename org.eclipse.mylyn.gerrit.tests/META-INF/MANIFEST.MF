@@ -5,9 +5,10 @@ Bundle-SymbolicName: org.eclipse.mylyn.gerrit.tests;singleton:=true
 Bundle-Version: 2.0.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.junit;bundle-version="4.5.0",
+Require-Bundle: 
  javax.servlet;bundle-version="2.5.0",
  org.hamcrest;bundle-version="[1.0.0,2.0.0)",
+ org.junit;bundle-version="4.5.0",
  org.apache.commons.logging,
  org.eclipse.core.runtime,
  org.eclipse.core.net,

@@ -76,6 +76,9 @@ import com.google.gerrit.reviewdb.Patch;
  */
 public class GerritRemoteFactoryTest extends TestCase {
 
+	//The maximum difference between two dates to account for clock skew between test machines
+	static final int CREATION_TIME_DELTA = 30 * 60 * 1000; //30 Minutes
+
 	private GerritClient client;
 
 	private GerritRemoteFactoryProvider factoryProvider;
@@ -135,7 +138,7 @@ public class GerritRemoteFactoryTest extends TestCase {
 			assertThat(review.getMessage(), allOf(startsWith("Test Change"), endsWith("aaa")));
 			assertThat(review.getOwner().getDisplayName(), is("tests"));
 			assertThat(System.currentTimeMillis() - review.getCreationDate().getTime(),
-					allOf(greaterThan(0L), lessThan((long) TestRemoteObserver.TEST_TIMEOUT)));
+					allOf(greaterThan((long) -CREATION_TIME_DELTA), lessThan((long) CREATION_TIME_DELTA)));
 		}
 	}
 
