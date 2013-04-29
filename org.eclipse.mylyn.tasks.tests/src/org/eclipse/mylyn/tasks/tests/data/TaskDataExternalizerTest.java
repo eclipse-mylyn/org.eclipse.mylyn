@@ -13,8 +13,6 @@ package org.eclipse.mylyn.tasks.tests.data;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.zip.ZipInputStream;
 
 import junit.framework.TestCase;
@@ -50,8 +48,7 @@ public class TaskDataExternalizerTest extends TestCase {
 	}
 
 	public void testRead() throws Exception {
-		File file = CommonTestUtil.getFile(this, "testdata/taskdata-1.0-bug-219897.zip");
-		ZipInputStream in = new ZipInputStream(new FileInputStream(file));
+		ZipInputStream in = new ZipInputStream(CommonTestUtil.getResource(this, "testdata/taskdata-1.0-bug-219897.zip"));
 		try {
 			in.getNextEntry();
 			@SuppressWarnings("unused")
@@ -62,8 +59,7 @@ public class TaskDataExternalizerTest extends TestCase {
 	}
 
 	public void testReadWrite() throws Exception {
-		File file = CommonTestUtil.getFile(this, "testdata/taskdata-1.0-bug-219897.zip");
-		ZipInputStream in = new ZipInputStream(new FileInputStream(file));
+		ZipInputStream in = new ZipInputStream(CommonTestUtil.getResource(this, "testdata/taskdata-1.0-bug-219897.zip"));
 		ITaskDataWorkingCopy state;
 		try {
 			in.getNextEntry();
