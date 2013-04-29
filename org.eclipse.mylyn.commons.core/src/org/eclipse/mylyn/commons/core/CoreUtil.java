@@ -13,8 +13,14 @@ package org.eclipse.mylyn.commons.core;
 
 import java.util.Map;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Version;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
 /**
  * @since 3.0
@@ -41,6 +47,11 @@ public class CoreUtil {
 	}
 
 	private static final String FRAMEWORK_VERSION = "3.9.0"; //$NON-NLS-1$
+
+	private static final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+	static {
+		saxParserFactory.setNamespaceAware(true);
+	}
 
 	/**
 	 * Returns a string representation of <code>object</code>. If object is a map or array the returned string will
@@ -302,6 +313,28 @@ public class CoreUtil {
 			}
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * Returns a new {@link XMLReader} instance using default factories.
+	 * 
+	 * @since 3.9
+	 */
+	public static SAXParser newSaxParser() throws SAXException {
+		try {
+			return saxParserFactory.newSAXParser();
+		} catch (ParserConfigurationException e) {
+			throw new SAXException(e);
+		}
+	}
+
+	/**
+	 * Returns a new {@link XMLReader} instance using default factories.
+	 * 
+	 * @since 3.9
+	 */
+	public static XMLReader newXmlReader() throws SAXException {
+		return newSaxParser().getXMLReader();
 	}
 
 }

@@ -16,6 +16,7 @@ import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.internal.discovery.core.model.Directory.Entry;
 import org.eclipse.mylyn.internal.discovery.core.util.DefaultSaxErrorHandler;
 import org.eclipse.mylyn.internal.discovery.core.util.IOWithCauseException;
@@ -26,7 +27,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * A parser for {@link Directory directories}.
@@ -64,7 +64,7 @@ public class DirectoryParser {
 	public Directory parse(Reader directoryContents) throws IOException {
 		XMLReader xmlReader;
 		try {
-			xmlReader = XMLReaderFactory.createXMLReader();
+			xmlReader = CoreUtil.newXmlReader();
 		} catch (SAXException e) {
 			throw new IOWithCauseException(e.getMessage(), e);
 		}
