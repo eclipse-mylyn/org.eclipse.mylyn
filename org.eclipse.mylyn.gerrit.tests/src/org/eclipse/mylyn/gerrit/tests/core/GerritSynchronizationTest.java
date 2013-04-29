@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.gerrit.tests.support.GerritHarness;
-import org.eclipse.mylyn.gerrit.tests.support.GerritProject;
 import org.eclipse.mylyn.internal.gerrit.core.GerritQuery;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
@@ -59,17 +58,16 @@ public class GerritSynchronizationTest extends TestCase {
 
 	private TaskList taskList;
 
-	private GerritProject project;
-
 	@Override
 	@Before
 	public void setUp() throws Exception {
 		TasksUiPlugin.getDefault()
 				.getPreferenceStore()
 				.setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
+		// cancel any parallel query synchronization jobs
+		Job.getJobManager().cancel(ITasksCoreConstants.JOB_FAMILY_SYNCHRONIZATION);
 
 		harness = GerritFixture.current().harness();
-		project = harness.project();
 		repository = GerritFixture.current().singleRepository();
 		taskList = TasksUiPlugin.getTaskList();
 		taskDataManager = TasksUiPlugin.getTaskDataManager();
@@ -89,7 +87,7 @@ public class GerritSynchronizationTest extends TestCase {
 	public void testSynchronizeBackgroundQueryTaskUpdated() throws Exception {
 		ITask task = createAndSynchronizeQuery(false);
 		String message = addComment(task);
-		synchronizeAllTasks(false);
+		synchronizeRepository(false);
 		assertHasNewComment(task, message);
 	}
 
@@ -110,7 +108,7 @@ public class GerritSynchronizationTest extends TestCase {
 	public void testSynchronizeQueryTaskUpdated() throws Exception {
 		ITask task = createAndSynchronizeQuery(true);
 		String message = addComment(task);
-		synchronizeAllTasks(true);
+		synchronizeRepository(true);
 		assertHasNewComment(task, message);
 	}
 
@@ -156,20 +154,20 @@ public class GerritSynchronizationTest extends TestCase {
 		query.setAttribute(GerritQuery.QUERY_STRING, harness.defaultQuery());
 		taskList.addQuery((RepositoryQuery) query);
 
-		synchronizeAllTasks(user);
+		synchronizeRepository(user);
 
 		ITask task = assertTaskListHasOneTask();
 		assertEquals(SynchronizationState.INCOMING_NEW, task.getSynchronizationState());
 		return task;
 	}
 
-	private void synchronizeAllTasks(boolean user) throws InterruptedException {
+	private void synchronizeRepository(boolean user) throws InterruptedException {
 		SynchronizationJob job = TasksUiPlugin.getTaskJobFactory().createSynchronizeRepositoriesJob(
 				Collections.singleton(repository));
 		job.setUser(user);
 		job.schedule();
 		job.join();
-		// wait for parallel query synchronization jobs
+		// wait for any query synchronization jobs scheduled by job above
 		Job.getJobManager().join(ITasksCoreConstants.JOB_FAMILY_SYNCHRONIZATION, null);
 	}
 

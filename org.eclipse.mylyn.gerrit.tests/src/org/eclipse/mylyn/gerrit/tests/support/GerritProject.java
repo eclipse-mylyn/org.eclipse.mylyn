@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.gerrit.tests.support;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 
@@ -59,7 +60,10 @@ public class GerritProject {
 		this.fixture = fixture;
 	}
 
-	public File getFolder() {
+	public File getFolder() throws IOException {
+		if (folder == null) {
+			folder = CommonTestUtil.createTempFolder("gerrit"); //$NON-NLS-1$
+		}
 		return folder;
 	}
 
@@ -75,11 +79,10 @@ public class GerritProject {
 
 	public Git getGitProject() throws Exception {
 		if (git == null) {
-			folder = CommonTestUtil.createTempFolder("gerrit"); //$NON-NLS-1$
 			String url = fixture.getRepositoryUrl() + PROJECT;
 			AuthenticationCredentials credentials = fixture.location().getCredentials(AuthenticationType.REPOSITORY);
 			url = url.replace("://", "://" + getGitUsername(credentials) + ":" + credentials.getPassword() + "@"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-			git = Git.cloneRepository().setDirectory(folder).setURI(url).call();
+			git = Git.cloneRepository().setDirectory(getFolder()).setURI(url).call();
 		}
 		return git;
 	}
@@ -101,18 +104,18 @@ public class GerritProject {
 
 	public CommitResult commitAndPushFile(String message, String fileName) throws Exception {
 		addFile(fileName);
-		Git git = getGitProject();
-		return commitAndPush(git.commit().setAll(true).setInsertChangeId(true).setMessage(message));
+		CommitCommand command = getGitProject().commit().setAll(true).setInsertChangeId(true).setMessage(message);
+		return commitAndPush(command);
 	}
 
 	public void addFile(String fileName) throws Exception {
-		CommonTestUtil.write(new File(folder, fileName).getAbsolutePath(), new StringBuffer("test")); //$NON-NLS-1$ 
-		getGitProject().add().addFilepattern(".").call();
+		addFile(fileName, "test");
 	}
 
 	public void addFile(String fileName, String text) throws Exception {
-		CommonTestUtil.write(new File(folder, fileName).getAbsolutePath(), new StringBuffer(text));
-		getGitProject().add().addFilepattern(".").call();
+		Git gitProject = getGitProject();
+		CommonTestUtil.write(new File(getFolder(), fileName).getAbsolutePath(), new StringBuffer(text));
+		gitProject.add().addFilepattern(".").call();
 	}
 
 	public CommitResult commitAndPush(CommitCommand command) throws Exception {
