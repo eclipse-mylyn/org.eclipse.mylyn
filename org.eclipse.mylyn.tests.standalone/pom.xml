@@ -3,10 +3,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>org.eclipse.mylyn-parent</artifactId>
+    <artifactId>org.eclipse.mylyn-aggregator</artifactId>
     <groupId>org.eclipse.mylyn</groupId>
     <version>3.9.0-SNAPSHOT</version>
-    <relativePath>../org.eclipse.mylyn-parent</relativePath>
   </parent>
   <artifactId>org.eclipse.mylyn.tests.standalone</artifactId>
   <version>3.9.0-SNAPSHOT</version>
