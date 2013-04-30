@@ -14,7 +14,7 @@
   <packaging>pom</packaging>
   <properties>
     <tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/mylyn/org.eclipse.mylyn.commons.git</tycho.scmUrl>
-    <sonar.skippedModules>org.eclipse.mylyn,org.eclipse.mylyn.commons,org.eclipse.mylyn.commons-site,org.eclipse.mylyn.commons.activity,org.eclipse.mylyn.commons.sdk,org.eclipse.mylyn.commons.soap_feature,org.eclipse.mylyn.commons.compatibility,org.eclipse.mylyn.discovery,org.eclipse.mylyn.monitor,org.eclipse.mylyn.commons.repositories.http,org.eclipse.mylyn.commons.stubs-parent,org.eclipse.mylyn.commons.identity,org.eclipse.mylyn.commons.notifications,org.eclipse.mylyn.commons.repositories,org.eclipse.mylyn.commons.team</sonar.skippedModules>
+    <sonar.skippedModules>org.eclipse.mylyn,org.eclipse.mylyn.commons,org.eclipse.mylyn.commons-site,org.eclipse.mylyn.commons.activity,org.eclipse.mylyn.commons.sdk,org.eclipse.mylyn.commons.soap_feature,org.eclipse.mylyn.commons.compatibility,org.eclipse.mylyn.discovery,org.eclipse.mylyn.monitor,org.eclipse.mylyn.commons.repositories.http</sonar.skippedModules>
   </properties>	  
   <mailingLists>
     <mailingList>
@@ -86,6 +86,5 @@
     <module>org.eclipse.mylyn.monitor.core</module>
     <module>org.eclipse.mylyn.monitor.tests</module>
     <module>org.eclipse.mylyn.monitor.ui</module>
-    <module>stubs</module>
   </modules>
 </project>
