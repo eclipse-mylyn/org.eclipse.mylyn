@@ -14,7 +14,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -23,13 +22,13 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.custommonkey.xmlunit.Diff;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.jdt.internal.debug.core.breakpoints.JavaLineBreakpoint;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
@@ -102,18 +101,15 @@ public class BreakpointsContextUtilTest {
 	@Test
 	public void testExportBreakpoints() throws Exception {
 		BreakpointsTestUtil.createProject();
-		InputStream expectedResult = new FileInputStream(new File("testdata/breakpointFile.xml")); //$NON-NLS-1$
-		IBreakpoint breakpoint = BreakpointsTestUtil.createTestBreakpoint();
 		List<IBreakpoint> breakpoints = new ArrayList<IBreakpoint>();
-		breakpoints.add(breakpoint);
+		breakpoints.add(BreakpointsTestUtil.createTestBreakpoint());
+
 		InputStream exportedBreakpoints = BreakpointsContextUtil.exportBreakpoints(breakpoints, null);
-		String expected = IOUtils.toString(expectedResult);
-		String actual = IOUtils.toString(exportedBreakpoints);
-		Diff xmlDiff = new Diff(expected, actual);
-		//assertTrue(xmlDiff.toString(), xmlDiff.similar());
-		System.err.println(xmlDiff.toString());
-		System.err.println(expected);
-		System.err.println(actual);
+		List<String> expected = IOUtils.readLines(CommonTestUtil.getResource(this, "testdata/breakpointFile.xml"));
+		List<String> actual = IOUtils.readLines(exportedBreakpoints);
+		Collections.sort(expected);
+		Collections.sort(actual);
+		assertEquals(expected, actual);
 	}
 
 	@Test

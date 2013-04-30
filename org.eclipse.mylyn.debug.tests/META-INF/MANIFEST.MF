@@ -20,7 +20,6 @@ Require-Bundle: org.junit;bundle-version="4.8.2",
  org.eclipse.debug.core,
  org.eclipse.mylyn.context.sdk.java,
  org.apache.commons.io,
- org.eclipse.jdt.debug,
- org.custommonkey.xmlunit
+ org.eclipse.jdt.debug
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.eclipse.mylyn.internal.debug.ui;x-internal:=true
