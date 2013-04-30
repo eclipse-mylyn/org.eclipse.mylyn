@@ -67,6 +67,8 @@ public class GerritSynchronizationTest extends TestCase {
 		// cancel any parallel query synchronization jobs
 		Job.getJobManager().cancel(ITasksCoreConstants.JOB_FAMILY_SYNCHRONIZATION);
 
+		TestFixture.resetTaskListAndRepositories();
+
 		harness = GerritFixture.current().harness();
 		repository = GerritFixture.current().singleRepository();
 		taskList = TasksUiPlugin.getTaskList();
