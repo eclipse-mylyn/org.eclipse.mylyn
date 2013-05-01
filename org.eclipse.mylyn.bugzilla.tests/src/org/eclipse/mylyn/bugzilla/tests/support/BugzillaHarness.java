@@ -257,7 +257,11 @@ public class BugzillaHarness {
 		cf_largetextbox.setValue("large text box");
 		cf_multiselect.setValue("Blue");
 		cf_datetime.setValue("2012-01-01 00:00:00");
-		cf_bugid.setValue("3");
+		String cf_bugidValue = taskCfBugIdExists();
+		if (cf_bugidValue == null) {
+			cf_bugidValue = createCfBugIdTask();
+		}
+		cf_bugid.setValue(cf_bugidValue);
 
 		model.attributeChanged(cf_freetext);
 		model.attributeChanged(cf_dropdown);
@@ -710,6 +714,219 @@ public class BugzillaHarness {
 		assertEquals(ResponseKind.TASK_CREATED.toString(), response.getReposonseKind().toString());
 		String taskId = response.getTaskId();
 
+		return taskId;
+	}
+
+	public String taskAliasExists() {
+		String taskID = null;
+		String queryUrlString = abstractBugzillaTest.getRepository().getRepositoryUrl() + "/buglist.cgi?"
+				+ "short_desc=test%20Alias%20Bug&resolution=---&query_format=advanced"
+				+ "&short_desc_type=casesubstring&component=TestComponent&product=TestProduct";
+		RepositoryQuery query = new RepositoryQuery(abstractBugzillaTest.getRepository().getConnectorKind(),
+				"handle-testQueryViaConnector");
+		query.setUrl(queryUrlString);
+		final Map<Integer, TaskData> changedTaskData = new HashMap<Integer, TaskData>();
+		TaskDataCollector collector = new TaskDataCollector() {
+			@Override
+			public void accept(TaskData taskData) {
+				changedTaskData.put(Integer.valueOf(taskData.getTaskId()), taskData);
+			}
+		};
+		abstractBugzillaTest.getConnector().performQuery(abstractBugzillaTest.getRepository(), query, collector, null,
+				new NullProgressMonitor());
+		if (changedTaskData.size() > 0) {
+			Set<Integer> ks = changedTaskData.keySet();
+			SortedSet<Integer> sks = new TreeSet<Integer>(ks);
+			taskID = sks.last().toString();
+		}
+		return taskID;
+	}
+
+	public String createAliasTask() throws Exception {
+		final TaskMapping taskMappingInit = new TaskMapping() {
+
+			@Override
+			public String getProduct() {
+				return "TestProduct";
+			}
+		};
+		final TaskMapping taskMappingSelect = new TaskMapping() {
+			@Override
+			public String getComponent() {
+				return "TestComponent";
+			}
+
+			@Override
+			public String getSummary() {
+				return "test Alias Bug";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The Description of the Alias Bug";
+			}
+		};
+		final TaskData[] taskDataNew = new TaskData[1];
+
+		// create Task
+		taskDataNew[0] = TasksUiInternal.createTaskData(abstractBugzillaTest.getRepository(), taskMappingInit,
+				taskMappingSelect, null);
+		ITask taskNew = TasksUiUtil.createOutgoingNewTask(taskDataNew[0].getConnectorKind(),
+				taskDataNew[0].getRepositoryUrl());
+
+		ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(taskNew, taskDataNew[0]);
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		TaskAttribute alias = taskDataNew[0].getRoot().getAttribute("alias");
+		if (alias == null) {
+			alias = taskDataNew[0].getRoot().createAttribute("alias");
+		}
+		alias.setValue("Fritz");
+		changed.add(alias);
+		workingCopy.save(changed, null);
+		RepositoryResponse response = BugzillaFixture.current().submitTask(taskDataNew[0],
+				abstractBugzillaTest.getClient());
+		((AbstractTask) taskNew).setSubmitting(true);
+		assertNotNull(response);
+		assertEquals(ResponseKind.TASK_CREATED.toString(), response.getReposonseKind().toString());
+		String taskId = response.getTaskId();
+		return taskId;
+	}
+
+	public String taskAlias2Exists() {
+		String taskID = null;
+		String queryUrlString = abstractBugzillaTest.getRepository().getRepositoryUrl() + "/buglist.cgi?"
+				+ "short_desc=test%20Alias%20Bug2&resolution=---&query_format=advanced"
+				+ "&short_desc_type=casesubstring&component=TestComponent&product=TestProduct";
+		RepositoryQuery query = new RepositoryQuery(abstractBugzillaTest.getRepository().getConnectorKind(),
+				"handle-testQueryViaConnector");
+		query.setUrl(queryUrlString);
+		final Map<Integer, TaskData> changedTaskData = new HashMap<Integer, TaskData>();
+		TaskDataCollector collector = new TaskDataCollector() {
+			@Override
+			public void accept(TaskData taskData) {
+				changedTaskData.put(Integer.valueOf(taskData.getTaskId()), taskData);
+			}
+		};
+		abstractBugzillaTest.getConnector().performQuery(abstractBugzillaTest.getRepository(), query, collector, null,
+				new NullProgressMonitor());
+		if (changedTaskData.size() > 0) {
+			Set<Integer> ks = changedTaskData.keySet();
+			SortedSet<Integer> sks = new TreeSet<Integer>(ks);
+			taskID = sks.last().toString();
+		}
+		return taskID;
+	}
+
+	public String createAliasTask2() throws Exception {
+		final TaskMapping taskMappingInit = new TaskMapping() {
+
+			@Override
+			public String getProduct() {
+				return "TestProduct";
+			}
+		};
+		final TaskMapping taskMappingSelect = new TaskMapping() {
+			@Override
+			public String getComponent() {
+				return "TestComponent";
+			}
+
+			@Override
+			public String getSummary() {
+				return "test Alias Bug2";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The Description of the Alias Bug";
+			}
+		};
+		final TaskData[] taskDataNew = new TaskData[1];
+
+		// create Task
+		taskDataNew[0] = TasksUiInternal.createTaskData(abstractBugzillaTest.getRepository(), taskMappingInit,
+				taskMappingSelect, null);
+		ITask taskNew = TasksUiUtil.createOutgoingNewTask(taskDataNew[0].getConnectorKind(),
+				taskDataNew[0].getRepositoryUrl());
+
+		ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(taskNew, taskDataNew[0]);
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		workingCopy.save(changed, null);
+		RepositoryResponse response = BugzillaFixture.current().submitTask(taskDataNew[0],
+				abstractBugzillaTest.getClient());
+		((AbstractTask) taskNew).setSubmitting(true);
+		assertNotNull(response);
+		assertEquals(ResponseKind.TASK_CREATED.toString(), response.getReposonseKind().toString());
+		String taskId = response.getTaskId();
+		return taskId;
+	}
+
+	public String taskCfBugIdExists() {
+		String taskID = null;
+		String queryUrlString = abstractBugzillaTest.getRepository().getRepositoryUrl() + "/buglist.cgi?"
+				+ "short_desc=test%20CF%20Bug%20ID%20Bug&resolution=---&query_format=advanced"
+				+ "&short_desc_type=casesubstring&component=TestComponent&product=TestProduct";
+		RepositoryQuery query = new RepositoryQuery(abstractBugzillaTest.getRepository().getConnectorKind(),
+				"handle-testQueryViaConnector");
+		query.setUrl(queryUrlString);
+		final Map<Integer, TaskData> changedTaskData = new HashMap<Integer, TaskData>();
+		TaskDataCollector collector = new TaskDataCollector() {
+			@Override
+			public void accept(TaskData taskData) {
+				changedTaskData.put(Integer.valueOf(taskData.getTaskId()), taskData);
+			}
+		};
+		abstractBugzillaTest.getConnector().performQuery(abstractBugzillaTest.getRepository(), query, collector, null,
+				new NullProgressMonitor());
+		if (changedTaskData.size() > 0) {
+			Set<Integer> ks = changedTaskData.keySet();
+			SortedSet<Integer> sks = new TreeSet<Integer>(ks);
+			taskID = sks.last().toString();
+		}
+		return taskID;
+	}
+
+	public String createCfBugIdTask() throws Exception {
+		final TaskMapping taskMappingInit = new TaskMapping() {
+
+			@Override
+			public String getProduct() {
+				return "TestProduct";
+			}
+		};
+		final TaskMapping taskMappingSelect = new TaskMapping() {
+			@Override
+			public String getComponent() {
+				return "TestComponent";
+			}
+
+			@Override
+			public String getSummary() {
+				return "test CF Bug ID Bug";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The Description of the CF Bug ID Bug";
+			}
+		};
+		final TaskData[] taskDataNew = new TaskData[1];
+
+		// create Task
+		taskDataNew[0] = TasksUiInternal.createTaskData(abstractBugzillaTest.getRepository(), taskMappingInit,
+				taskMappingSelect, null);
+		ITask taskNew = TasksUiUtil.createOutgoingNewTask(taskDataNew[0].getConnectorKind(),
+				taskDataNew[0].getRepositoryUrl());
+
+		ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(taskNew, taskDataNew[0]);
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		workingCopy.save(changed, null);
+		RepositoryResponse response = BugzillaFixture.current().submitTask(taskDataNew[0],
+				abstractBugzillaTest.getClient());
+		((AbstractTask) taskNew).setSubmitting(true);
+		assertNotNull(response);
+		assertEquals(ResponseKind.TASK_CREATED.toString(), response.getReposonseKind().toString());
+		String taskId = response.getTaskId();
 		return taskId;
 	}
 

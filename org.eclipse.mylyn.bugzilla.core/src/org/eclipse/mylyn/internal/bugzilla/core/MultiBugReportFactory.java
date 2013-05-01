@@ -57,8 +57,10 @@ public class MultiBugReportFactory extends AbstractReportFactory {
 
 		if (bugMap.size() == 1 && contentHandler.errorOccurred()) {
 			String errorResponse = contentHandler.getErrorMessage().toLowerCase(Locale.ENGLISH);
-			if (errorResponse.equals(IBugzillaConstants.XML_ERROR_NOTFOUND)
-					|| errorResponse.equals(IBugzillaConstants.XML_ERROR_INVALIDBUGID)) {
+			if (errorResponse.equals(IBugzillaConstants.XML_ERROR_NOTFOUND)) {
+				throw new CoreException(new BugzillaStatus(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
+						RepositoryStatus.ERROR_REPOSITORY, "", IBugzillaConstants.ERROR_MSG_NOT_FOUND_BUG_ID)); //$NON-NLS-1$
+			} else if (errorResponse.equals(IBugzillaConstants.XML_ERROR_INVALIDBUGID)) {
 				throw new CoreException(new BugzillaStatus(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_REPOSITORY, "", IBugzillaConstants.ERROR_MSG_INVALID_BUG_ID)); //$NON-NLS-1$
 			} else if (errorResponse.equals(IBugzillaConstants.XML_ERROR_NOTPERMITTED)) {

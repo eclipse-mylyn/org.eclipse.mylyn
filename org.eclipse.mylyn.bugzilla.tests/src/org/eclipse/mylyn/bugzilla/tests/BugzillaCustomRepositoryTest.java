@@ -36,7 +36,11 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 public class BugzillaCustomRepositoryTest extends AbstractBugzillaTest {
 
 	public void testWorkflow() throws Exception {
-		doCustomWorkflow("3");
+		String taskId = harness.taskCfBugIdExists();
+		if (taskId == null) {
+			taskId = harness.createCfBugIdTask();
+		}
+		doCustomWorkflow(taskId);
 	}
 
 	private void doCustomWorkflow(String DupBugID) throws Exception {
@@ -281,6 +285,6 @@ public class BugzillaCustomRepositoryTest extends AbstractBugzillaTest {
 		assertEquals("CLOSED", statusAttribute.getValue());
 		resolution = taskData.getRoot().getMappedAttribute(TaskAttribute.RESOLUTION);
 		assertEquals("FIXED", resolution.getValue());
-
 	}
+
 }

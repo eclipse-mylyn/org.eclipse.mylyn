@@ -88,6 +88,8 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 	private final SimpleDateFormat simpleFormatter_deltaTS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); //$NON-NLS-1$
 
+	private String bugIDValue;
+
 	public SaxMultiBugReportContentHandler(TaskAttributeMapper mapper, TaskDataCollector collector,
 			Map<String, TaskData> taskDataMap, List<BugzillaCustomField> customFields,
 			BugzillaRepositoryConnector connector) {
@@ -150,6 +152,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			taskComment = null;
 			longDescs = new ArrayList<TaskComment>();
 			token = null;
+			bugIDValue = null;
 			break;
 		case LONG_DESC:
 			String is_private = attributes.getValue("isprivate"); //$NON-NLS-1$
@@ -309,6 +312,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		}
 		switch (tag) {
 		case BUG_ID: {
+			bugIDValue = parsedText.trim();
 			repositoryTaskData = taskDataMap.get(parsedText.trim());
 			if (repositoryTaskData == null) {
 				errorMessage = parsedText + Messages.SaxMultiBugReportContentHandler_id_not_found;
@@ -545,8 +549,30 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 					IBugzillaConstants.BUGZILLA_PARAM_USECLASSIFICATION, false);
 			break;
 		case ALIAS:
+			if (repositoryTaskData == null) {
+				repositoryTaskData = taskDataMap.get(parsedText.trim());
+				if (repositoryTaskData == null) {
+					errorMessage = parsedText + Messages.SaxMultiBugReportContentHandler_id_not_found;
+					bugParseErrorOccurred = true;
+					break;
+				} else {
+					errorMessage = null;
+					bugParseErrorOccurred = false;
+				}
+			}
 			BugzillaUtil.createAttributeWithKindDefaultIfUsed(parsedText, tag, repositoryTaskData,
 					IBugzillaConstants.BUGZILLA_PARAM_USEBUGALIASES, false);
+			TaskAttribute attr = repositoryTaskData.getRoot().getMappedAttribute(BugzillaAttribute.BUG_ID.getKey());
+			if (attr == null) {
+				attr = BugzillaTaskDataHandler.createAttribute(repositoryTaskData, BugzillaAttribute.BUG_ID);
+			}
+			attr.setValue(bugIDValue);
+
+			if (exporter != null) {
+				createAttrribute(exporter, BugzillaAttribute.EXPORTER_NAME);
+			} else {
+				createAttrribute("", BugzillaAttribute.EXPORTER_NAME); //$NON-NLS-1$
+			}
 			break;
 		case SEE_ALSO:
 			BugzillaUtil.createAttributeWithKindDefaultIfUsed(parsedText, tag, repositoryTaskData,

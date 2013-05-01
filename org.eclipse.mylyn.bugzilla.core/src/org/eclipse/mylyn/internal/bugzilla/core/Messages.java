@@ -275,6 +275,8 @@ public class Messages extends NLS {
 
 	public static String BugzillaTaskDataHandler_Submitting_task;
 
+	public static String IBugzillaConstants_Bug_id_not_found;
+
 	public static String BugzillaTaskDataHandler_updating_attachment;
 
 	public static String IBugzillaConstants_Bugzilla_login_information_or_repository_version_incorrect;

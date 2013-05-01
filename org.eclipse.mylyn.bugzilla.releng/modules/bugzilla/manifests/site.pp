@@ -31,6 +31,7 @@ define bugzilla::site (
   $envdefault           = false,
   $clearDB              = $bugzilla::clearDB,
   $desciptorfile        = " ",
+  $usebugaliases        = false,
   ) {
 
   include "bugzilla"
@@ -44,6 +45,8 @@ define bugzilla::site (
     $envinfo1 = "Custom Workflow"  
   } elsif $custom_wf_and_status {
     $envinfo1 = "Custom Workflow and Status"  
+  } elsif $usebugaliases {
+    $envinfo1 = "Use Bugaliases"  
   } else {
     $envinfo1 = ""  
   }

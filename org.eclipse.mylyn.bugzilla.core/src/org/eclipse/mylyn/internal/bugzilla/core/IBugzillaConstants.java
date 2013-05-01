@@ -228,6 +228,8 @@ public interface IBugzillaConstants {
 
 	public static final String ERROR_MSG_INVALID_BUG_ID = Messages.IBugzillaConstants_invalid_bug_id_requested_bug_id_does_not_exist;
 
+	public static final String ERROR_MSG_NOT_FOUND_BUG_ID = Messages.IBugzillaConstants_Bug_id_not_found;
+
 	public static final String ERROR_MSG_NO_DATA_RETRIEVED = Messages.IBugzillaConstants_NO_DATA_RETRIEVED_FOR_TASK;
 
 	public static final String INVALID_CREDENTIALS = Messages.IBugzillaConstants_invalid_repository_credentials;

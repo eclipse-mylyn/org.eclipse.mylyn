@@ -16,4 +16,5 @@ $answer{'mail_delivery_method'} = 'None';
 
 $answer{'insidergroup'} = 'bz_canusewhineatothers';
 <% if @custom_wf_and_status %>$answer{'duplicate_or_move_bug_status'} = 'CLOSED';<% end %>
+<% if @usebugaliases %>$answer{'usebugaliases'} = '1';<% end %>
 $answer{'NO_PAUSE'} = 1

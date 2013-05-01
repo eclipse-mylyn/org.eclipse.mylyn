@@ -18,11 +18,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
@@ -57,6 +60,7 @@ import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -73,9 +77,87 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			connector.getTaskData(repository, "99999", new NullProgressMonitor());
 			fail("Invalid id error should have resulted");
 		} catch (CoreException e) {
+			if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_4) > 0) {
+				assertTrue(e.getStatus().getMessage().contains(IBugzillaConstants.ERROR_MSG_INVALID_BUG_ID));
+			} else {
+				assertTrue(e.getStatus().getMessage().contains(IBugzillaConstants.ERROR_MSG_NOT_FOUND_BUG_ID));
+			}
+		}
+
+	}
+
+	public void testAliasRetrievalFailure() throws CoreException {
+		try {
+			connector.getTaskData(repository, "Hugo", new NullProgressMonitor());
+			fail("Invalid id error should have resulted");
+		} catch (CoreException e) {
 			assertTrue(e.getStatus().getMessage().contains(IBugzillaConstants.ERROR_MSG_INVALID_BUG_ID));
 		}
 
+	}
+
+	public void testAliasRetrieval() throws Exception {
+		String taskId = harness.taskAliasExists();
+		if (taskId == null) {
+			taskId = harness.createAliasTask();
+		}
+		String usebugaliases = BugzillaFixture.current().getProperty("usebugaliases");
+		boolean bugAliases = Boolean.parseBoolean(usebugaliases);
+		try {
+			TaskData td = connector.getTaskData(repository, "Fritz", new NullProgressMonitor());
+			if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_4) >= 0
+					|| bugAliases) {
+				assertNotNull(td);
+			} else {
+				fail("testAliasRetrieval: never reach this! CoreException expected");
+			}
+		} catch (CoreException e) {
+			if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_4) < 0
+					&& !bugAliases) {
+				assertTrue(e.getStatus().getMessage().contains(IBugzillaConstants.ERROR_MSG_INVALID_BUG_ID));
+			} else {
+				fail("testAliasRetrieval: never reach this! no CoreException expected");
+			}
+		}
+	}
+
+	public void testAliasMultiRetrieval() throws Exception {
+		String taskId = harness.taskAliasExists();
+		if (taskId == null) {
+			taskId = harness.createAliasTask();
+		}
+		taskId = harness.taskAlias2Exists();
+		if (taskId == null) {
+			taskId = harness.createAliasTask2();
+		}
+		Set<String> taskIds = new HashSet<String>();
+		taskIds.add("Hugo");
+		taskIds.add("Fritz");
+		taskIds.add(taskId);
+		final Map<String, TaskData> results = new HashMap<String, TaskData>();
+		final Map<String, IStatus> failed = new HashMap<String, IStatus>();
+		TaskDataCollector collector = new TaskDataCollector() {
+			@Override
+			public void accept(TaskData taskData) {
+				results.put(taskData.getTaskId(), taskData);
+			}
+
+			@Override
+			public void failed(String taskId, IStatus status) {
+				failed.put(taskId, status);
+			}
+
+		};
+		connector.getTaskDataHandler().getMultiTaskData(repository, taskIds, collector, new NullProgressMonitor());
+		String usebugaliases = BugzillaFixture.current().getProperty("usebugaliases");
+		if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_4) >= 0
+				|| Boolean.parseBoolean(usebugaliases)) {
+			assertEquals(2, results.size());
+			assertEquals(1, failed.size());
+		} else {
+			assertEquals(1, results.size());
+			assertEquals(2, failed.size());
+		}
 	}
 
 	public void testMultiRetrievalFailure() throws Exception {
@@ -348,13 +430,17 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 //	}
 //
 	public void testStdWorkflow() throws Exception {
+		String taskId = harness.taskCfBugIdExists();
+		if (taskId == null) {
+			taskId = harness.createCfBugIdTask();
+		}
 		if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
 			if (!BugzillaFixture.current().isCustomWorkflow() && !BugzillaFixture.current().isCustomWorkflowAndStatus()) {
-				doStdWorkflow32("3");
+				doStdWorkflow32(taskId);
 			}
 		} else {
-			doStdWorkflow40_1("3");
-			doStdWorkflow40_2("3");
+			doStdWorkflow40_1(taskId);
+			doStdWorkflow40_2(taskId);
 		}
 	}
 
