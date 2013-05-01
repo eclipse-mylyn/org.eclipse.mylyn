@@ -46,6 +46,9 @@
    <feature url="features/org.eclipse.mylyn.commons.soap_feature_0.0.0.jar" id="org.eclipse.mylyn.commons.soap_feature" version="0.0.0">
       <category name="SDK"/>
    </feature>
+   <feature url="features/org.eclipse.mylyn.commons.tck_0.0.0.jar" id="org.eclipse.mylyn.commons.tck" version="0.0.0">
+      <category name="SDK"/>
+   </feature>
    <category-def name="Features" label="Mylyn Commons Features">
       <description>
          Tools.

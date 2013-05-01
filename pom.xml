@@ -14,7 +14,7 @@
   <packaging>pom</packaging>
   <properties>
     <tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/mylyn/org.eclipse.mylyn.commons.git</tycho.scmUrl>
-    <sonar.skippedModules>org.eclipse.mylyn,org.eclipse.mylyn.commons,org.eclipse.mylyn.commons-site,org.eclipse.mylyn.commons.activity,org.eclipse.mylyn.commons.sdk,org.eclipse.mylyn.commons.soap_feature,org.eclipse.mylyn.commons.compatibility,org.eclipse.mylyn.discovery,org.eclipse.mylyn.monitor,org.eclipse.mylyn.commons.repositories.http</sonar.skippedModules>
+    <sonar.skippedModules>org.eclipse.mylyn,org.eclipse.mylyn.commons,org.eclipse.mylyn.commons-site,org.eclipse.mylyn.commons.activity,org.eclipse.mylyn.commons.sdk,org.eclipse.mylyn.commons.soap_feature,org.eclipse.mylyn.commons.tck,org.eclipse.mylyn.commons.compatibility,org.eclipse.mylyn.discovery,org.eclipse.mylyn.monitor,org.eclipse.mylyn.commons.repositories.http</sonar.skippedModules>
   </properties>	  
   <mailingLists>
     <mailingList>
@@ -78,6 +78,7 @@
     <module>org.eclipse.mylyn.commons.repositories.http.tests</module>
     <module>org.eclipse.mylyn.commons.sdk-feature</module>
     <module>org.eclipse.mylyn.commons.sdk.util</module>
+    <module>org.eclipse.mylyn.commons.tck-feature</module>
     <module>org.eclipse.mylyn.discovery-feature</module>
     <module>org.eclipse.mylyn.discovery.core</module>
     <module>org.eclipse.mylyn.discovery.tests</module>
