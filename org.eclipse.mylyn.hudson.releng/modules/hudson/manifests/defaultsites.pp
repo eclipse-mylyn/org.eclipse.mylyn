@@ -40,6 +40,11 @@ define hudson::defaultsites ($base = $hudson::base,) {
     qualifier => "stable",
   }
 
+  hudson::hudson { "1.509.1":
+    type      => "jenkins",
+    qualifier => "stable",
+  }
+
   hudson::hudson { "jenkins-latest":
     type      => "jenkins",
     qualifier => "latest",
@@ -88,6 +93,13 @@ define hudson::defaultsites ($base = $hudson::base,) {
     version => "1.480.3",
     port    => 9123,
     require => Hudson["1.480.3"],
+  }
+
+  hudson::site { "jenkins-1.509.1":
+    envtype => "jenkins",
+    version => "1.509.1",
+    port    => 9131,
+    require => Hudson["1.509.1"],
   }
 
   hudson::site { "jenkins-latest":
