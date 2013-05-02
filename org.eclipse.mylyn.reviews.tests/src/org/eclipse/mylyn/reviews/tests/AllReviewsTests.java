@@ -14,7 +14,9 @@ package org.eclipse.mylyn.reviews.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.reviews.spi.edit.remote.AbstractRemoteEditFactoryProviderTest;
 import org.eclipse.mylyn.reviews.tests.ui.ReviewUiTest;
+import org.eclipse.mylyn.reviews.tests.ui.UiDataLocatorTest;
 
 /**
  * @author Steffen Pingel
@@ -24,6 +26,8 @@ public class AllReviewsTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite(AllReviewsTests.class.getName());
 		suite.addTestSuite(ReviewUiTest.class);
+		suite.addTestSuite(UiDataLocatorTest.class);
+		suite.addTestSuite(AbstractRemoteEditFactoryProviderTest.class);
 		return suite;
 	}
 

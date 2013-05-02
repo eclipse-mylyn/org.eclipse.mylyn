@@ -23,6 +23,7 @@ import org.osgi.framework.BundleContext;
  * 
  * @author Thomas Westling
  * @author Sascha Scholz
+ * @author Miles Parker
  */
 public class GerritCorePlugin extends Plugin {
 
@@ -45,6 +46,7 @@ public class GerritCorePlugin extends Plugin {
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
+		getConnector().close();
 	}
 
 	/**

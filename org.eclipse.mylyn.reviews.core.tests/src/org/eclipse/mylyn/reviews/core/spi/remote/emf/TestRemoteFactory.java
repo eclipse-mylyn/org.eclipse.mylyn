@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.reviews.core.remote;
+package org.eclipse.mylyn.reviews.core.spi.remote.emf;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,15 +20,16 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.EcorePackage;
-import org.eclipse.mylyn.reviews.core.spi.remote.emf.AbstractRemoteEmfFactory;
 
-class TestRemoteFactory extends AbstractRemoteEmfFactory<EPackage, EClass, TestRemoteObject, String, String> {
+class TestRemoteFactory extends AbstractRemoteEmfFactory<EPackage, EClass, String, TestRemoteObject, String, Integer> {
 
 	static TestRemoteObject remote1 = new TestRemoteObject("Remote Object 1");
 
 	static TestRemoteObject remote2 = new TestRemoteObject("Remote Object 2");
 
 	static Map<String, TestRemoteObject> remoteForKey = new HashMap<String, TestRemoteObject>();
+
+	Integer currentVal;
 
 	{
 		remoteForKey.put("remoteKeyFor Object 1", remote1);
@@ -73,5 +74,10 @@ class TestRemoteFactory extends AbstractRemoteEmfFactory<EPackage, EClass, TestR
 	@Override
 	public String getLocalKeyForRemoteKey(String remoteKey) {
 		return remoteKey.replace("remote", "local");
+	}
+
+	@Override
+	public Integer getModelCurrentValue(EPackage parentObject, EClass object) {
+		return currentVal;
 	}
 }

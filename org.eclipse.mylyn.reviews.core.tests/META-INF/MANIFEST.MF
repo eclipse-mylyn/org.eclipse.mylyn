@@ -15,5 +15,4 @@ Require-Bundle: org.junit;bundle-version="4.5.0",
  org.apache.commons.logging,
  org.eclipse.core.net
 Export-Package: 
- org.eclipse.mylyn.reviews.core.model;x-internal:=true,
- org.eclipse.mylyn.reviews.core.remote;x-internal:=true
+ org.eclipse.mylyn.reviews.core.model;x-internal:=true

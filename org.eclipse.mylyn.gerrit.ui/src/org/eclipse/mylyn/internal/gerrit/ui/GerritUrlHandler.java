@@ -65,7 +65,7 @@ public class GerritUrlHandler extends AbstractUrlHandler {
 			if (activePage instanceof GerritTaskEditorPage) {
 				GerritTaskEditorPage gerritPage = (GerritTaskEditorPage) activePage;
 				ReviewSetSection section = (ReviewSetSection) gerritPage.getPart(ReviewSetSection.class.getName());
-				if (section != null) {
+				if (section != null && !section.getControl().isDisposed()) {
 					section.revealPatchSet(patchSetNumber);
 				}
 			}

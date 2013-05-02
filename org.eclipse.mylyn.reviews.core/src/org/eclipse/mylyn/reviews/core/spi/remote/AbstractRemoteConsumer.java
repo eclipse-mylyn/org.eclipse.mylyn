@@ -33,7 +33,7 @@ public abstract class AbstractRemoteConsumer {
 	 * @param monitor
 	 * @throws CoreException
 	 */
-	protected abstract void pull(boolean force, IProgressMonitor monitor) throws CoreException;
+	public abstract void pull(boolean force, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Override to apply the remotely obtained state to a local model object. This method is expected to execute
@@ -43,7 +43,7 @@ public abstract class AbstractRemoteConsumer {
 	 *            apply the changes even when API doesn't require
 	 * @throws CoreException
 	 */
-	protected abstract void applyModel(boolean force);
+	public abstract void applyModel(boolean force);
 
 	/**
 	 * Provides notification of failure. See {@link AbstractRemoteService#retrieve(AbstractRemoteProcess, boolean)} for

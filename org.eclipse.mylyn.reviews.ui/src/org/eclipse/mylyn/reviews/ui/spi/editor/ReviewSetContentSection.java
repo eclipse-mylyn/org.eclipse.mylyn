@@ -14,6 +14,7 @@ package org.eclipse.mylyn.reviews.ui.spi.editor;
 
 import java.text.DateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -34,9 +35,14 @@ import org.eclipse.mylyn.internal.reviews.ui.providers.ReviewsLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
+import org.eclipse.mylyn.reviews.core.model.IRepository;
+import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.IRemoteEmfObserver;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
+import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfObserver;
+import org.eclipse.mylyn.reviews.core.spi.remote.review.ReviewItemSetContentRemoteFactory;
+import org.eclipse.mylyn.reviews.core.spi.remote.review.ReviewItemSetRemoteFactory;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -58,7 +64,7 @@ import org.eclipse.ui.forms.widgets.Section;
  * @author Miles Parker
  * @author Sam Davis
  */
-public class ReviewSetContentSection implements IRemoteEmfObserver<IReviewItemSet, List<IFileItem>> {
+public class ReviewSetContentSection {
 
 	private static final int MAXIMUM_ITEMS_SHOWN = 30;
 
@@ -70,50 +76,117 @@ public class ReviewSetContentSection implements IRemoteEmfObserver<IReviewItemSe
 
 	private TableViewer viewer;
 
-	private final RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, ?, ?, String> consumer;
+	private boolean buttonsUpdated;
 
-	private boolean createdContentSection;
+	private final IRemoteEmfObserver<IRepository, IReview, String, Date> reviewObserver = new RemoteEmfObserver<IRepository, IReview, String, Date>() {
+		@Override
+		public void updated(IRepository parentObject, IReview modelObject, boolean modified) {
+			updateButtons();
+		}
+	};
 
-	private boolean requestedModelContents;
+	private final ReviewItemSetRemoteFactory.Client setClient = new ReviewItemSetRemoteFactory.Client() {
 
-	private boolean modelContentsCurrent;
+		@Override
+		protected boolean isClientReady() {
+			return section != null && !section.isDisposed();
+		}
+
+		@Override
+		protected void update() {
+			updateButtons();
+		}
+	};
+
+	private final ReviewItemSetContentRemoteFactory.Client itemsClient = new ReviewItemSetContentRemoteFactory.Client() {
+
+		@Override
+		protected boolean isClientReady() {
+			return section != null && !section.isDisposed();
+		}
+
+		@Override
+		protected void create() {
+			updateMessage();
+			createItemSetTable(tableContainer);
+			viewer.setInput(set);
+			getParentSection().getTaskEditorPage().reflow();
+		}
+
+		@Override
+		protected void update() {
+			super.update();
+			updateMessage();
+			viewer.setInput(set);
+			updateButtons();
+		}
+
+		@Override
+		protected void updating() {
+			updateMessage();
+		}
+
+		@Override
+		public void failed(IReviewItemSet parent, List<IFileItem> object, IStatus status) {
+			Status errorStatus = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error loading patch set",
+					status.getException());
+			StatusHandler.log(errorStatus);
+			if (getParentSection().getSection().getTextClient() != null) {
+				AbstractReviewSection.appendMessage(getParentSection().getSection(), "Couldn't load patch set.");
+			}
+		}
+	};
 
 	private Composite tableContainer;
 
-	private int lastCommentCount;
+	private Composite actionContainer;
+
+	private Composite actionComposite;
+
+	private RemoteEmfConsumer<IRepository, IReview, String, ?, ?, Date> reviewConsumer;
 
 	public ReviewSetContentSection(ReviewSetSection parentSection, final IReviewItemSet set) {
 		this.parentSection = parentSection;
 		this.set = set;
+		//We assume that the last item is also the "current" item
+//		List<IReviewItemSet> items = set.getReview().getSets();
+//		if (items.get(items.size() - 1) == set) {
+//			style |= ExpandableComposite.EXPANDED;
+//		}
 		int style = ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT
 				| ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT;
-		//We assume that the last item is also the "current" item
-		List<IReviewItemSet> items = set.getReview().getSets();
-		if (items.get(items.size() - 1) == set) {
-			style |= ExpandableComposite.EXPANDED;
-		}
-		consumer = getParentSection().getReviewEditorPage()
-				.getFactoryProvider()
-				.getReviewItemSetContentFactory()
-				.getConsumerForRemoteKey(set, set.getId());
-		consumer.addObserver(this);
 		section = parentSection.getToolkit().createSection(parentSection.getComposite(), style);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(section);
 		section.setText(set.getName());
 		section.setTitleBarForeground(parentSection.getToolkit().getColors().getColor(IFormColors.TITLE));
 
 		parentSection.addTextClient(parentSection.getToolkit(), section, "", false); //$NON-NLS-1$
-		updateMessage();
 
-		if (section.isExpanded()) {
-			onExpanded();
-		}
 		section.addExpansionListener(new ExpansionAdapter() {
 			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
-				onExpanded();
+				if (e.getState()) {
+					itemsClient.populate();
+					updateButtons();
+				}
 			}
 		});
+		createPatchSetControls();
+		updateMessage();
+	}
+
+	private void createPatchSetControls() {
+		RemoteEmfConsumer<IReview, IReviewItemSet, String, ?, ?, String> setConsumer = getParentSection().getReviewEditorPage()
+				.getFactoryProvider()
+				.getReviewItemSetFactory()
+				.getConsumerForModel(set.getParentReview(), set);
+		setClient.setConsumer(setConsumer);
+		RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, String, ?, ?, Long> contentConsumer = getParentSection().getReviewEditorPage()
+				.getFactoryProvider()
+				.getReviewItemSetContentFactory()
+				.getConsumerForLocalKey(set, set.getId());
+		itemsClient.setConsumer(contentConsumer);
+		createMainSection();
 	}
 
 	public void updateMessage() {
@@ -127,23 +200,14 @@ public class ReviewSetContentSection implements IRemoteEmfObserver<IReviewItemSe
 			message = NLS.bind("{0}", time);
 		}
 
-		if (consumer.isRetrieving()) {
+		if (itemsClient.getConsumer().isRetrieving()) {
 			message += " " + org.eclipse.mylyn.internal.reviews.ui.Messages.Reviews_RetrievingContents;
 		}
 
 		AbstractReviewSection.appendMessage(getSection(), message);
 	}
 
-	protected void onExpanded() {
-		updateMessage();
-		if (!requestedModelContents) {
-			consumer.retrieve(false);
-			requestedModelContents = true;
-		}
-		checkCreateModelControls();
-	}
-
-	void createContents() {
+	void createMainSection() {
 		Composite composite = parentSection.getToolkit().createComposite(section);
 		GridLayoutFactory.fillDefaults().numColumns(2).applyTo(composite);
 		section.setClient(composite);
@@ -198,9 +262,9 @@ public class ReviewSetContentSection implements IRemoteEmfObserver<IReviewItemSe
 		GridDataFactory.fillDefaults().span(2, 1).grab(true, true).applyTo(tableContainer);
 		GridLayoutFactory.fillDefaults().numColumns(2).applyTo(tableContainer);
 
-		Composite actionComposite = getParentSection().getUiFactoryProvider().createButtons(getParentSection(),
-				composite, parentSection.getToolkit(), set);
-		GridDataFactory.fillDefaults().span(2, 1).applyTo(actionComposite);
+		actionContainer = new Composite(composite, SWT.NONE);
+		GridDataFactory.fillDefaults().span(2, 1).grab(true, true).applyTo(actionContainer);
+		GridLayoutFactory.fillDefaults().numColumns(2).applyTo(actionContainer);
 
 		parentSection.getTaskEditorPage().reflow();
 	}
@@ -261,25 +325,16 @@ public class ReviewSetContentSection implements IRemoteEmfObserver<IReviewItemSe
 		EditorUtil.addScrollListener(viewer.getTable());
 	}
 
-	/**
-	 * We don't know whether the model or the controls will be available first, so we handle both cases here.
-	 */
-	private void checkCreateModelControls() {
-		if (section.isExpanded()) {
-			if (!createdContentSection) {
-				createdContentSection = true;
-				createContents();
+	public void updateButtons() {
+		if (!buttonsUpdated && setClient.getConsumer().getRemoteObject() != null) {
+			if (actionComposite != null) {
+				actionComposite.dispose();
 			}
-			if (requestedModelContents && !set.getItems().isEmpty() && ((viewer == null || !modelContentsCurrent))) {
-				modelContentsCurrent = true;
-				if (viewer == null) {
-					createItemSetTable(tableContainer);
-				}
-				viewer.setInput(set);
-				getParentSection().getTaskEditorPage().reflow();
-			}
+			actionComposite = getParentSection().getUiFactoryProvider().createButtons(getParentSection(),
+					actionContainer, parentSection.getToolkit(), set);
+			getParentSection().getTaskEditorPage().reflow();
+			buttonsUpdated = true;
 		}
-		updateMessage();
 	}
 
 	public Section getSection() {
@@ -290,38 +345,12 @@ public class ReviewSetContentSection implements IRemoteEmfObserver<IReviewItemSe
 		return parentSection;
 	}
 
-	public void created(IReviewItemSet parent, List<IFileItem> object) {
-	}
-
-	public void updating(IReviewItemSet parent, List<IFileItem> object) {
-		updateMessage();
-	}
-
-	public void updated(IReviewItemSet parent, List<IFileItem> items, boolean modified) {
-		modelContentsCurrent &= !modified;
-		int currentCommentSize = 0;
-		for (IFileItem item : items) {
-			currentCommentSize += item.getAllComments().size();
-		}
-		modelContentsCurrent &= lastCommentCount == currentCommentSize;
-		requestedModelContents |= lastCommentCount != currentCommentSize;
-		lastCommentCount = currentCommentSize;
-		checkCreateModelControls();
-	}
-
-	public void failed(IReviewItemSet parent, List<IFileItem> object, IStatus status) {
-		Status errorStatus = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error loading patch set",
-				status.getException());
-		StatusHandler.log(errorStatus);
-		if (getParentSection().getSection().getTextClient() != null) {
-			AbstractReviewSection.appendMessage(getParentSection().getSection(), "Couldn't load patch set.");
-		} else {
-			((AbstractReviewTaskEditorPage) getParentSection().getTaskEditorPage()).failed(null, null, errorStatus);
-		}
-	}
-
 	public void dispose() {
-		consumer.removeObserver(this);
+		itemsClient.dispose();
 		section.dispose();
+	}
+
+	public void updateReview() {
+		updateButtons();
 	}
 }

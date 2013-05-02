@@ -41,8 +41,10 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritSystemInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
 import org.eclipse.mylyn.internal.gerrit.core.remote.GerritRemoteFactoryProvider;
-import org.eclipse.mylyn.reviews.core.spi.remote.AbstractRemoteFactoryProvider;
-import org.eclipse.mylyn.reviews.internal.core.ReviewsConnector;
+import org.eclipse.mylyn.reviews.core.model.IRepository;
+import org.eclipse.mylyn.reviews.core.model.IReview;
+import org.eclipse.mylyn.reviews.core.spi.ReviewsConnector;
+import org.eclipse.mylyn.reviews.core.spi.remote.emf.AbstractRemoteEmfFactoryProvider;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
@@ -435,7 +437,7 @@ public class GerritConnector extends ReviewsConnector {
 	}
 
 	@Override
-	public AbstractRemoteFactoryProvider createFactoryProvider(TaskRepository repository) {
-		return new GerritRemoteFactoryProvider(getClient(repository));
+	public AbstractRemoteEmfFactoryProvider<IRepository, IReview> createFactoryProvider(TaskRepository repository) {
+		return new GerritRemoteFactoryProvider(repository, getClient(repository));
 	}
 }
