@@ -10,17 +10,18 @@
  */
 package org.eclipse.mylyn.reviews.internal.core.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.NotificationChain;
-import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
+import org.eclipse.emf.ecore.util.EObjectEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.ICommentContainer;
@@ -101,13 +102,14 @@ public abstract class CommentContainer extends EObjectImpl implements ICommentCo
 	 * @generated NOT
 	 */
 	public List<IComment> getAllDrafts() {
-		BasicEList<IComment> drafts = new BasicEList<IComment>();
+		List<IComment> drafts = new ArrayList<IComment>(getComments());
 		for (IComment comment : getAllComments()) {
 			if (comment.isDraft()) {
 				drafts.add(comment);
 			}
 		}
-		return drafts;
+		return new EObjectEList.UnmodifiableEList<IComment>(this,
+				ReviewsPackage.Literals.COMMENT_CONTAINER__ALL_DRAFTS, drafts.size(), drafts.toArray());
 	}
 
 	/**
@@ -116,13 +118,14 @@ public abstract class CommentContainer extends EObjectImpl implements ICommentCo
 	 * @generated NOT
 	 */
 	public List<IComment> getDrafts() {
-		BasicEList<IComment> drafts = new BasicEList<IComment>();
+		List<IComment> drafts = new ArrayList<IComment>(getComments());
 		for (IComment comment : getComments()) {
 			if (comment.isDraft()) {
 				drafts.add(comment);
 			}
 		}
-		return drafts;
+		return new EObjectEList.UnmodifiableEList<IComment>(this, ReviewsPackage.Literals.COMMENT_CONTAINER__DRAFTS,
+				drafts.size(), drafts.toArray());
 	}
 
 	/**

@@ -10,6 +10,7 @@
  */
 package org.eclipse.mylyn.reviews.internal.core.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -17,7 +18,6 @@ import java.util.Map;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EClass;
@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
+import org.eclipse.emf.ecore.util.EObjectEList;
 import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -413,11 +414,12 @@ public class Review extends CommentContainer implements IReview {
 	 */
 	@Override
 	public List<IComment> getAllComments() {
-		BasicEList<IComment> all = new BasicEList<IComment>(getComments());
+		List<IComment> all = new ArrayList<IComment>(getComments());
 		for (IReviewItemSet set : getSets()) {
 			all.addAll(set.getAllComments());
 		}
-		return all;
+		return new EObjectEList.UnmodifiableEList<IComment>(this,
+				ReviewsPackage.Literals.COMMENT_CONTAINER__ALL_COMMENTS, all.size(), all.toArray());
 	}
 
 	/**

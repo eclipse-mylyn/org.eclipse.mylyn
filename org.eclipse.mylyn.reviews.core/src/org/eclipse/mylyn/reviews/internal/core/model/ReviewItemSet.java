@@ -10,18 +10,19 @@
  */
 package org.eclipse.mylyn.reviews.internal.core.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
+import org.eclipse.emf.ecore.util.EObjectEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.mylyn.reviews.core.model.IComment;
@@ -154,9 +155,10 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	public void setCreationDate(Date newCreationDate) {
 		Date oldCreationDate = creationDate;
 		creationDate = newCreationDate;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM_SET__CREATION_DATE,
 					oldCreationDate, creationDate));
+		}
 	}
 
 	/**
@@ -176,9 +178,10 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	public void setModificationDate(Date newModificationDate) {
 		Date oldModificationDate = modificationDate;
 		modificationDate = newModificationDate;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM_SET__MODIFICATION_DATE,
 					oldModificationDate, modificationDate));
+		}
 	}
 
 	/**
@@ -213,11 +216,12 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	 */
 	@Override
 	public List<IComment> getAllComments() {
-		BasicEList<IComment> all = new BasicEList<IComment>(getComments());
+		List<IComment> all = new ArrayList<IComment>(getComments());
 		for (IReviewItem item : getItems()) {
 			all.addAll(item.getAllComments());
 		}
-		return all;
+		return new EObjectEList.UnmodifiableEList<IComment>(this,
+				ReviewsPackage.Literals.COMMENT_CONTAINER__ALL_COMMENTS, all.size(), all.toArray());
 	}
 
 	/**
@@ -237,9 +241,10 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	public void setRevision(String newRevision) {
 		String oldRevision = revision;
 		revision = newRevision;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM_SET__REVISION,
 					oldRevision, revision));
+		}
 	}
 
 	/**
@@ -248,8 +253,9 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	 * @generated
 	 */
 	public IReview getParentReview() {
-		if (eContainerFeatureID() != ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW)
+		if (eContainerFeatureID() != ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW) {
 			return null;
+		}
 		return (IReview) eContainer();
 	}
 
@@ -259,8 +265,9 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	 * @generated
 	 */
 	public IReview basicGetParentReview() {
-		if (eContainerFeatureID() != ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW)
+		if (eContainerFeatureID() != ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW) {
 			return null;
+		}
 		return (IReview) eInternalContainer();
 	}
 
@@ -283,20 +290,25 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	public void setParentReview(IReview newParentReview) {
 		if (newParentReview != eInternalContainer()
 				|| (eContainerFeatureID() != ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW && newParentReview != null)) {
-			if (EcoreUtil.isAncestor(this, newParentReview))
+			if (EcoreUtil.isAncestor(this, newParentReview)) {
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+			}
 			NotificationChain msgs = null;
-			if (eInternalContainer() != null)
+			if (eInternalContainer() != null) {
 				msgs = eBasicRemoveFromContainer(msgs);
-			if (newParentReview != null)
+			}
+			if (newParentReview != null) {
 				msgs = ((InternalEObject) newParentReview).eInverseAdd(this, ReviewsPackage.REVIEW__SETS,
 						IReview.class, msgs);
+			}
 			msgs = basicSetParentReview(newParentReview, msgs);
-			if (msgs != null)
+			if (msgs != null) {
 				msgs.dispatch();
-		} else if (eNotificationRequired())
+			}
+		} else if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW,
 					newParentReview, newParentReview));
+		}
 	}
 
 	/**
@@ -311,8 +323,9 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 		case ReviewsPackage.REVIEW_ITEM_SET__ITEMS:
 			return ((InternalEList<InternalEObject>) (InternalEList<?>) getItems()).basicAdd(otherEnd, msgs);
 		case ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW:
-			if (eInternalContainer() != null)
+			if (eInternalContainer() != null) {
 				msgs = eBasicRemoveFromContainer(msgs);
+			}
 			return basicSetParentReview((IReview) otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
@@ -365,8 +378,9 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 		case ReviewsPackage.REVIEW_ITEM_SET__REVISION:
 			return getRevision();
 		case ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW:
-			if (resolve)
+			if (resolve) {
 				return getParentReview();
+			}
 			return basicGetParentReview();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -499,8 +513,9 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (creationDate: "); //$NON-NLS-1$
