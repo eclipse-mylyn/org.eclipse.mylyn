@@ -12,6 +12,8 @@
 package org.eclipse.mylyn.internal.cdt.ui;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -141,11 +143,11 @@ public class CDTUiBridge extends AbstractContextUiBridge {
 		if (editor instanceof CEditor) {
 			TextSelection textSelection = selection;
 			try {
-				if (selection != null) {
-					return SelectionConverter.getElementAtOffset(((CEditor) editor).getInputCElement(), textSelection);
-				} else {
-					Object element = ((CEditor) editor).getInputCElement();
-					if (element instanceof ICElement) {
+				ICElement element = getInputCElement((CEditor) editor);
+				if (element != null) {
+					if (selection != null) {
+						return SelectionConverter.getElementAtOffset(element, textSelection);
+					} else {
 						return element;
 					}
 				}
@@ -159,6 +161,26 @@ public class CDTUiBridge extends AbstractContextUiBridge {
 	@Override
 	public String getContentType() {
 		return CDTStructureBridge.CONTENT_TYPE;
+	}
+
+	/**
+	 * The return type of CEditor.getInputCElement was changed from ICElement to IWorkingCopy, breaking binary
+	 * compatibility, so we have to call it using reflection.
+	 */
+	public static ICElement getInputCElement(CEditor editor) {
+		try {
+			Method getInputCElementMethod = editor.getClass().getMethod("getInputCElement"); //$NON-NLS-1$
+			Object result = getInputCElementMethod.invoke(editor);
+			return (ICElement) result;
+		} catch (InvocationTargetException e) {
+			if (e.getCause() instanceof RuntimeException) {
+				throw (RuntimeException) e.getCause();
+			}
+			throw new RuntimeException(e.getCause());
+		} catch (Exception e) {
+			StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.ID_PLUGIN, e.getMessage(), e));
+		}
+		return null;
 	}
 
 }

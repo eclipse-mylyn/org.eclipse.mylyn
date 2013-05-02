@@ -35,6 +35,7 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.cdt.ui.CDTStructureBridge;
 import org.eclipse.mylyn.internal.cdt.ui.CDTUIBridgePlugin;
+import org.eclipse.mylyn.internal.cdt.ui.CDTUiBridge;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.progress.UIJob;
 
@@ -126,7 +127,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 				List<ICElement> toExpand = new ArrayList<ICElement>();
 				List<ICElement> toCollapse = new ArrayList<ICElement>();
 
-				ICElement element = editor.getInputCElement();
+				ICElement element = CDTUiBridge.getInputCElement(editor);
 				if (element instanceof ITranslationUnit) {
 					ITranslationUnit compilationUnit = (ITranslationUnit) element;
 					List<ICElement> allChildren = getAllChildren(compilationUnit);
@@ -154,8 +155,8 @@ public class ActiveFoldingListener extends AbstractContextListener {
 	}
 
 	protected void collapseElements(ICElement[] elements) {
-		for (int i = 0; i < elements.length; ++i) {
-			collapse(elements[i]);
+		for (ICElement element : elements) {
+			collapse(element);
 		}
 	}
 
@@ -174,8 +175,8 @@ public class ActiveFoldingListener extends AbstractContextListener {
 	}
 
 	protected void expandElements(ICElement[] elements) {
-		for (int i = 0; i < elements.length; ++i) {
-			expand(elements[i]);
+		for (ICElement element : elements) {
+			expand(element);
 		}
 	}
 

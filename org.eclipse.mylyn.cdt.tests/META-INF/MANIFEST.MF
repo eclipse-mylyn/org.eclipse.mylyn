@@ -16,7 +16,13 @@ Require-Bundle: org.junit;bundle-version="4.8.2",
  org.eclipse.mylyn.monitor.core,
  org.eclipse.mylyn.monitor.ui,
  org.eclipse.mylyn.commons.sdk.util,
- org.eclipse.mylyn.context.sdk.util
+ org.eclipse.mylyn.context.sdk.util,
+ org.eclipse.ui,
+ org.eclipse.ui.ide,
+ org.eclipse.mylyn.tasks.ui,
+ org.eclipse.mylyn.tasks.core,
+ org.eclipse.cdt.managedbuilder.core,
+ org.eclipse.cdt.managedbuilder.ui
 Export-Package: org.eclipse.mylyn.cdt.tests;x-internal:=true,
  org.eclipse.mylyn.cdt.tests.support;x-internal:=true
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

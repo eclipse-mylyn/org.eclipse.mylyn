@@ -33,6 +33,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.context.ui.AbstractAutoFocusViewAction;
 import org.eclipse.mylyn.context.ui.InterestFilter;
 import org.eclipse.mylyn.internal.cdt.ui.CDTDeclarationsFilter;
+import org.eclipse.mylyn.internal.cdt.ui.CDTUiBridge;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
 
@@ -51,9 +52,11 @@ public class FocusCViewAction extends AbstractAutoFocusViewAction {
 			throws CoreException {
 		Object elementToSelect = null;
 		if (changedSelection instanceof TextSelection && part instanceof CEditor) {
-			ICElement cdtElement = SelectionConverter.getElementAtOffset(((CEditor) part).getInputCElement(),
-					changedSelection);
-			elementToSelect = cdtElement;
+			ICElement element = CDTUiBridge.getInputCElement((CEditor) part);
+			if (element != null) {
+				ICElement cdtElement = SelectionConverter.getElementAtOffset(element, changedSelection);
+				elementToSelect = cdtElement;
+			}
 		}
 
 		if (elementToSelect != null) {
