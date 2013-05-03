@@ -21,11 +21,11 @@ import java.util.zip.ZipInputStream;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * @author Brock Janiczak
@@ -72,7 +72,7 @@ public class SaxContextReader implements IInteractionContextReader {
 
 					SaxContextContentHandler contentHandler = new SaxContextContentHandler(handleIdentifier,
 							contextScaling);
-					XMLReader reader = XMLReaderFactory.createXMLReader();
+					XMLReader reader = CoreUtil.newXmlReader();
 					reader.setContentHandler(contentHandler);
 					reader.parse(new InputSource(zipInputStream));
 					return contentHandler.getContext();
