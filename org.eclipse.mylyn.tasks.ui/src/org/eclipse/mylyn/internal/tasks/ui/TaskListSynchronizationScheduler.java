@@ -169,4 +169,9 @@ public class TaskListSynchronizationScheduler implements IUserAttentionListener 
 		reschedule();
 	}
 
+	public void dispose() {
+		refreshJob.removeJobChangeListener(jobListener);
+		refreshJob.cancel();
+	}
+
 }

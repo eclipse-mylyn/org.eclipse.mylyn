@@ -90,15 +90,19 @@ public class TaskListSynchronizationSchedulerTest extends TestCase {
 	public void testSynchronization() throws Exception {
 		TaskListSynchronizationScheduler scheduler = new TaskListSynchronizationScheduler(
 				TasksUiPlugin.getTaskJobFactory());
-		scheduler.setInterval(1);
-		assertTrue(connector.latch.await(10, TimeUnit.SECONDS));
+		try {
+			scheduler.setInterval(1);
+			assertTrue(connector.latch.await(10, TimeUnit.SECONDS));
 
-		// cancel and reschedule
-		scheduler.userAttentionLost();
-		scheduler.userAttentionGained();
-		release();
+			// cancel and reschedule
+			scheduler.userAttentionLost();
+			scheduler.userAttentionGained();
+			release();
 
-		assertTrue("Expected synchronization to run again", connector.latch.await(5, TimeUnit.SECONDS));
+			assertTrue("Expected synchronization to run again", connector.latch.await(5, TimeUnit.SECONDS));
+		} finally {
+			scheduler.dispose();
+		}
 	}
 
 	private void release() throws Exception {
