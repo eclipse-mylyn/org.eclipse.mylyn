@@ -16,7 +16,6 @@ import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
@@ -199,8 +198,9 @@ public class GerritRemoteFactoryTest extends TestCase {
 		assertThat(items.size(), is(2));
 		IReviewItemSet patchSet2 = items.get(1);
 		assertThat(patchSet2.getReference(), endsWith("/2"));
-		assertThat(System.currentTimeMillis() - patchSet2.getCreationDate().getTime(),
-				allOf(greaterThan(0L), lessThan((long) TestRemoteObserver.TEST_TIMEOUT)));
+		long timeDelta = System.currentTimeMillis() - patchSet2.getCreationDate().getTime();
+		assertThat("Creation delta out of range : " + timeDelta + " ms", timeDelta > -CREATION_TIME_DELTA
+				&& timeDelta < CREATION_TIME_DELTA, is(true));
 	}
 
 	@Test
