@@ -23,6 +23,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.internal.tasks.core.data.ITaskDataConstants;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
@@ -31,7 +32,6 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * @author Steffen Pingel
@@ -95,7 +95,7 @@ public class XmlExternalizationTest extends TestCase {
 			SimpleCharacterWriter writer = new SimpleCharacterWriter(handler);
 			writer.write(badChar);
 
-			XMLReader parser = XMLReaderFactory.createXMLReader();
+			XMLReader parser = CoreUtil.newXmlReader();
 			parser.setFeature("http://apache.org/xml/features/continue-after-fatal-error", true);
 			SimpleCharacterReader readHandler = new SimpleCharacterReader();
 			parser.setErrorHandler(new ErrorHandler() {
@@ -135,7 +135,7 @@ public class XmlExternalizationTest extends TestCase {
 			SimpleCharacterWriter writer = new SimpleCharacterWriter(handler);
 			writer.write(badChar);
 
-			XMLReader parser = XMLReaderFactory.createXMLReader();
+			XMLReader parser = CoreUtil.newXmlReader();
 			parser.setFeature("http://apache.org/xml/features/continue-after-fatal-error", true);
 			SimpleCharacterReader readHandler = new SimpleCharacterReader();
 			parser.setErrorHandler(new ErrorHandler() {

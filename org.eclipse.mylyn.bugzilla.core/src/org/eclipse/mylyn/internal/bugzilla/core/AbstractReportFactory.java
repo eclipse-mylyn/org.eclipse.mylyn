@@ -20,6 +20,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.security.GeneralSecurityException;
 
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
@@ -27,7 +28,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * @author Rob Elves
@@ -87,7 +87,7 @@ public class AbstractReportFactory {
 		}
 
 		try {
-			final XMLReader reader = XMLReaderFactory.createXMLReader();
+			final XMLReader reader = CoreUtil.newXmlReader();
 			reader.setFeature("http://xml.org/sax/features/validation", false); //$NON-NLS-1$
 			reader.setContentHandler(contentHandler);
 

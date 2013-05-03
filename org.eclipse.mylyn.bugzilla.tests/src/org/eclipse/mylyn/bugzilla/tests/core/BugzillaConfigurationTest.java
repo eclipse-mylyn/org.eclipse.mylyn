@@ -19,6 +19,7 @@ import java.io.InputStreamReader;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
@@ -29,7 +30,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * @author Robert Elves
@@ -126,7 +126,7 @@ public class BugzillaConfigurationTest extends TestCase {
 			}
 
 			SaxConfigurationContentHandler contentHandler = new SaxConfigurationContentHandler();
-			final XMLReader reader = XMLReaderFactory.createXMLReader();
+			final XMLReader reader = CoreUtil.newXmlReader();
 			reader.setContentHandler(contentHandler);
 			reader.setErrorHandler(new ErrorHandler() {
 				public void error(SAXParseException exception) throws SAXException {
@@ -154,5 +154,4 @@ public class BugzillaConfigurationTest extends TestCase {
 			}
 		}
 	}
-
 }
