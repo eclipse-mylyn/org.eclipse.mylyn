@@ -20,6 +20,7 @@ import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.internal.tasks.core.ITaskJobFactory;
 import org.eclipse.mylyn.monitor.ui.IUserAttentionListener;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Steffen Pingel
@@ -70,7 +71,7 @@ public class TaskListSynchronizationScheduler implements IUserAttentionListener 
 
 	private synchronized void reschedule() {
 		long delay = this.interval;
-		if (delay != 0) {
+		if (delay != 0 && PlatformUI.isWorkbenchRunning()) {
 			if (!userActive) {
 				// triple scheduling interval each time
 				this.inactiveInterval *= 3;
