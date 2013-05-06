@@ -1,0 +1,8 @@
+{ 
+  "type": "phpmyadmin",
+  "url": "phpmyadmin",
+  "version": "3.4.10.1deb1",
+  "info": "Administration of the Mysql Databases",
+  "properties":{
+   }
+}

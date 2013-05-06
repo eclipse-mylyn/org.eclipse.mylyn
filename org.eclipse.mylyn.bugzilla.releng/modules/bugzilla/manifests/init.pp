@@ -16,6 +16,7 @@ class bugzilla {
   $dbuser = 'bugz'
   $dbuserPassword = 'ovlwq8'
   $clearDB = false
+  $envhost = regsubst(file("/etc/hostname"), '\n', '')
 
   exec { "apt-get update":
     command => "apt-get update",
@@ -115,6 +116,16 @@ class bugzilla {
   exec { "prepare bugzilla":
     command => "echo Bugzilla pre-requisites are installed",
     require => Package[$requirements],
+  }
+ 
+ if $envhost != "mylyn.org"{ 
+    file { "$bugzillaBase/servicephpmyadmin.json":
+      source  => "puppet:///modules/bugzilla/servicephpmyadmin.json",		
+      owner   => "$userOwner",
+      group   => "$userGroup",
+      mode    => 644,
+      require => Package[$requirements],
+    }
   }
   
   file { "/usr/lib/cgi-bin/services":		
