@@ -80,7 +80,6 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 		}
 
 		runBackup = new Job("Task Data Snapshot") { //$NON-NLS-1$
-
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
@@ -89,7 +88,9 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 					}
 					return Status.OK_STATUS;
 				} finally {
-					schedule(STANDARD_DELAY);
+					if (PlatformUI.isWorkbenchRunning()) {
+						schedule(STANDARD_DELAY);
+					}
 				}
 			}
 		};
