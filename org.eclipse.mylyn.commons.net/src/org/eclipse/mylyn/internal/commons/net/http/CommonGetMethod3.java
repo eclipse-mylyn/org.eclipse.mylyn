@@ -107,12 +107,11 @@ public class CommonGetMethod3 extends GetMethod implements CommonHttpMethod3 {
 		if (monitor != null && monitor.isCanceled()) {
 			// force a connection close on cancel to avoid blocking to do reading the remainder of the response 
 			abort();
-		} else {
-			try {
-				releaseConnection();
-			} catch (NullPointerException e) {
-				// ignore, see bug 255417
-			}
+		}
+		try {
+			releaseConnection();
+		} catch (NullPointerException e) {
+			// ignore, see bug 255417
 		}
 	}
 

@@ -14,18 +14,17 @@
 
 package org.eclipse.mylyn.internal.commons.net.http;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylyn.commons.net.WebUtil;
-import org.eclipse.mylyn.commons.net.http.CommonHttpMethod3;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.httpclient.HttpConnection;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.methods.PostMethod;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.zip.GZIPInputStream;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylyn.commons.net.WebUtil;
+import org.eclipse.mylyn.commons.net.http.CommonHttpMethod3;
 
 /**
  * Based on {@code org.eclipse.ecf.provider.filetransfer.httpclient.HttpClientRetrieveFileTransfer}.
@@ -108,12 +107,11 @@ public class CommonPostMethod3 extends PostMethod implements CommonHttpMethod3 {
 		if (monitor != null && monitor.isCanceled()) {
 			// force a connection close on cancel to avoid blocking to do reading the remainder of the response
 			abort();
-		} else {
-			try {
-				releaseConnection();
-			} catch (NullPointerException e) {
-				// ignore, see bug 255417
-			}
+		}
+		try {
+			releaseConnection();
+		} catch (NullPointerException e) {
+			// ignore, see bug 255417
 		}
 	}
 

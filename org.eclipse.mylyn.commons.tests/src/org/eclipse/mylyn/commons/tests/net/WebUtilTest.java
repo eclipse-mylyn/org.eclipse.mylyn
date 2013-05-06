@@ -54,7 +54,7 @@ import org.eclipse.mylyn.internal.commons.net.TimeoutInputStream;
  */
 public class WebUtilTest extends TestCase {
 
-	private class StubProgressMonitor implements IProgressMonitor {
+	static class StubProgressMonitor implements IProgressMonitor {
 
 		private volatile boolean canceled;
 
@@ -139,7 +139,7 @@ public class WebUtilTest extends TestCase {
 	public void testExecute() throws Exception {
 		StubProgressMonitor monitor = new StubProgressMonitor();
 		HttpClient client = new HttpClient();
-		String url = "http://eclipse.org/";
+		String url = "http://mylyn.org/";
 		WebLocation location = new WebLocation(url);
 		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, monitor);
 
@@ -184,7 +184,7 @@ public class WebUtilTest extends TestCase {
 	public void testExecuteAlreadyCancelled() throws Exception {
 		StubProgressMonitor monitor = new StubProgressMonitor();
 		HttpClient client = new HttpClient();
-		String url = "http://eclipse.org/";
+		String url = "http://mylyn.org/";
 		WebLocation location = new WebLocation(url);
 		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, monitor);
 
@@ -217,13 +217,12 @@ public class WebUtilTest extends TestCase {
 	public void testCreateHostConfigurationProxy() throws Exception {
 		StubProgressMonitor monitor = new StubProgressMonitor();
 		HttpClient client = new HttpClient();
-		WebUtil.createHostConfiguration(client, new WebLocation("http://eclipse.org/", null, null,
-				new IProxyProvider() {
-					public Proxy getProxyForHost(String host, String proxyType) {
-						assertEquals(IProxyData.HTTP_PROXY_TYPE, proxyType);
-						return null;
-					}
-				}), monitor);
+		WebUtil.createHostConfiguration(client, new WebLocation("http://mylyn.org/", null, null, new IProxyProvider() {
+			public Proxy getProxyForHost(String host, String proxyType) {
+				assertEquals(IProxyData.HTTP_PROXY_TYPE, proxyType);
+				return null;
+			}
+		}), monitor);
 		WebUtil.createHostConfiguration(client, new WebLocation("https://eclipse.org/", null, null,
 				new IProxyProvider() {
 					public Proxy getProxyForHost(String host, String proxyType) {

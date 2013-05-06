@@ -20,6 +20,7 @@ import org.eclipse.mylyn.commons.tests.core.CoreUtilTest;
 import org.eclipse.mylyn.commons.tests.core.ExtensionPointReaderTest;
 import org.eclipse.mylyn.commons.tests.core.Html2TextReaderTest;
 import org.eclipse.mylyn.commons.tests.core.storage.CommonStoreTest;
+import org.eclipse.mylyn.commons.tests.net.CommonHttpMethod3Test;
 import org.eclipse.mylyn.commons.tests.net.NetUtilTest;
 import org.eclipse.mylyn.commons.tests.net.SslProtocolSocketFactoryTest;
 import org.eclipse.mylyn.commons.tests.net.TimeoutInputStreamTest;
@@ -46,6 +47,7 @@ public class AllCommonsTests {
 		suite.addTestSuite(CommonListenerListTest.class);
 		suite.addTestSuite(CommonStoreTest.class);
 		suite.addTestSuite(Html2TextReaderTest.class);
+		suite.addTestSuite(CommonHttpMethod3Test.class);
 		return suite;
 	}
 
