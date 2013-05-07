@@ -20,7 +20,6 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * The following features are supported:
  * <ul>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IRepository#getApprovalTypes <em>Approval Types</em>}</li>
- * <li>{@link org.eclipse.mylyn.reviews.core.model.IRepository#getReviewStates <em>Review States</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskRepositoryUrl <em>Task Repository Url</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskConnectorKind <em>Task Connector Kind</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskRepository <em>Task Repository</em>}</li>
@@ -46,20 +45,6 @@ public interface IRepository extends EObject {
 	 * @generated
 	 */
 	List<IApprovalType> getApprovalTypes();
-
-	/**
-	 * Returns the value of the '<em><b>Review States</b></em>' containment reference list. The list contents are of
-	 * type {@link org.eclipse.mylyn.reviews.core.model.IReviewState}. <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Review States</em>' containment reference list isn't clear, there really should be
-	 * more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * 
-	 * @return the value of the '<em>Review States</em>' containment reference list.
-	 * @generated
-	 */
-	List<IReviewState> getReviewStates();
 
 	/**
 	 * Returns the value of the '<em><b>Task Repository Url</b></em>' attribute. <!-- begin-user-doc -->

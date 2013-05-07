@@ -34,16 +34,14 @@ import org.eclipse.mylyn.reviews.core.model.ILineRange;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IRequirementEntry;
-import org.eclipse.mylyn.reviews.core.model.IRequirementReviewState;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
-import org.eclipse.mylyn.reviews.core.model.IReviewState;
 import org.eclipse.mylyn.reviews.core.model.IReviewerEntry;
 import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
-import org.eclipse.mylyn.reviews.core.model.ISimpleReviewState;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.reviews.core.model.RequirementStatus;
+import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.team.core.history.IFileRevision;
 
@@ -151,7 +149,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getDated()
 	 * @generated
 	 */
-	public static final int DATED = 15;
+	public static final int DATED = 14;
 
 	/**
 	 * The feature id for the '<em><b>Creation Date</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -441,7 +439,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getIndexed()
 	 * @generated
 	 */
-	public static final int INDEXED = 14;
+	public static final int INDEXED = 13;
 
 	/**
 	 * The feature id for the '<em><b>Index</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -746,33 +744,6 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int USER_FEATURE_COUNT = 3;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewState
-	 * <em>Review State</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewState
-	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getReviewState()
-	 * @generated
-	 */
-	public static final int REVIEW_STATE = 7;
-
-	/**
-	 * The feature id for the '<em><b>Descriptor</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int REVIEW_STATE__DESCRIPTOR = 0;
-
-	/**
-	 * The number of structural features of the '<em>Review State</em>' class. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int REVIEW_STATE_FEATURE_COUNT = 1;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.Repository <em>Repository</em>}'
 	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -780,7 +751,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getRepository()
 	 * @generated
 	 */
-	public static final int REPOSITORY = 8;
+	public static final int REPOSITORY = 7;
 
 	/**
 	 * The feature id for the '<em><b>Approval Types</b></em>' containment reference list. <!-- begin-user-doc --> <!--
@@ -792,22 +763,13 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int REPOSITORY__APPROVAL_TYPES = 0;
 
 	/**
-	 * The feature id for the '<em><b>Review States</b></em>' containment reference list. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int REPOSITORY__REVIEW_STATES = 1;
-
-	/**
 	 * The feature id for the '<em><b>Task Repository Url</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REPOSITORY__TASK_REPOSITORY_URL = 2;
+	public static final int REPOSITORY__TASK_REPOSITORY_URL = 1;
 
 	/**
 	 * The feature id for the '<em><b>Task Connector Kind</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
@@ -816,7 +778,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REPOSITORY__TASK_CONNECTOR_KIND = 3;
+	public static final int REPOSITORY__TASK_CONNECTOR_KIND = 2;
 
 	/**
 	 * The feature id for the '<em><b>Task Repository</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -824,7 +786,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REPOSITORY__TASK_REPOSITORY = 4;
+	public static final int REPOSITORY__TASK_REPOSITORY = 3;
 
 	/**
 	 * The feature id for the '<em><b>Reviews</b></em>' containment reference list. <!-- begin-user-doc --> <!--
@@ -833,7 +795,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REPOSITORY__REVIEWS = 5;
+	public static final int REPOSITORY__REVIEWS = 4;
 
 	/**
 	 * The feature id for the '<em><b>Users</b></em>' containment reference list. <!-- begin-user-doc --> <!--
@@ -842,7 +804,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REPOSITORY__USERS = 6;
+	public static final int REPOSITORY__USERS = 5;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -850,7 +812,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REPOSITORY__DESCRIPTION = 7;
+	public static final int REPOSITORY__DESCRIPTION = 6;
 
 	/**
 	 * The number of structural features of the '<em>Repository</em>' class. <!-- begin-user-doc --> <!-- end-user-doc
@@ -859,7 +821,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REPOSITORY_FEATURE_COUNT = 8;
+	public static final int REPOSITORY_FEATURE_COUNT = 7;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.FileItem <em>File Item</em>}'
@@ -869,7 +831,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getFileItem()
 	 * @generated
 	 */
-	public static final int FILE_ITEM = 9;
+	public static final int FILE_ITEM = 8;
 
 	/**
 	 * The feature id for the '<em><b>All Comments</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc
@@ -997,7 +959,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getReviewItemSet()
 	 * @generated
 	 */
-	public static final int REVIEW_ITEM_SET = 10;
+	public static final int REVIEW_ITEM_SET = 9;
 
 	/**
 	 * The feature id for the '<em><b>All Comments</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc
@@ -1142,7 +1104,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getLineLocation()
 	 * @generated
 	 */
-	public static final int LINE_LOCATION = 11;
+	public static final int LINE_LOCATION = 10;
 
 	/**
 	 * The feature id for the '<em><b>Index</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1194,7 +1156,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getLineRange()
 	 * @generated
 	 */
-	public static final int LINE_RANGE = 12;
+	public static final int LINE_RANGE = 11;
 
 	/**
 	 * The feature id for the '<em><b>Start</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1229,7 +1191,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getFileVersion()
 	 * @generated
 	 */
-	public static final int FILE_VERSION = 13;
+	public static final int FILE_VERSION = 12;
 
 	/**
 	 * The feature id for the '<em><b>All Comments</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc
@@ -1371,7 +1333,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getApprovalType()
 	 * @generated
 	 */
-	public static final int APPROVAL_TYPE = 16;
+	public static final int APPROVAL_TYPE = 15;
 
 	/**
 	 * The feature id for the '<em><b>Key</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1406,7 +1368,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getUserApprovalsMap()
 	 * @generated
 	 */
-	public static final int USER_APPROVALS_MAP = 17;
+	public static final int USER_APPROVALS_MAP = 16;
 
 	/**
 	 * The feature id for the '<em><b>Key</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1442,7 +1404,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getReviewerEntry()
 	 * @generated
 	 */
-	public static final int REVIEWER_ENTRY = 18;
+	public static final int REVIEWER_ENTRY = 17;
 
 	/**
 	 * The feature id for the '<em><b>Approvals</b></em>' map. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1469,7 +1431,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getApprovalValueMap()
 	 * @generated
 	 */
-	public static final int APPROVAL_VALUE_MAP = 19;
+	public static final int APPROVAL_VALUE_MAP = 18;
 
 	/**
 	 * The feature id for the '<em><b>Key</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1504,7 +1466,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getRequirementEntry()
 	 * @generated
 	 */
-	public static final int REQUIREMENT_ENTRY = 20;
+	public static final int REQUIREMENT_ENTRY = 19;
 
 	/**
 	 * The feature id for the '<em><b>Status</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1539,7 +1501,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getReviewRequirementsMap()
 	 * @generated
 	 */
-	public static final int REVIEW_REQUIREMENTS_MAP = 21;
+	public static final int REVIEW_REQUIREMENTS_MAP = 20;
 
 	/**
 	 * The feature id for the '<em><b>Key</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1568,76 +1530,6 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int REVIEW_REQUIREMENTS_MAP_FEATURE_COUNT = 2;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.RequirementReviewState
-	 * <em>Requirement Review State</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see org.eclipse.mylyn.reviews.internal.core.model.RequirementReviewState
-	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getRequirementReviewState()
-	 * @generated
-	 */
-	public static final int REQUIREMENT_REVIEW_STATE = 22;
-
-	/**
-	 * The feature id for the '<em><b>Descriptor</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int REQUIREMENT_REVIEW_STATE__DESCRIPTOR = REVIEW_STATE__DESCRIPTOR;
-
-	/**
-	 * The feature id for the '<em><b>Status</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int REQUIREMENT_REVIEW_STATE__STATUS = REVIEW_STATE_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Requirement Review State</em>' class. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int REQUIREMENT_REVIEW_STATE_FEATURE_COUNT = REVIEW_STATE_FEATURE_COUNT + 1;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.SimpleReviewState
-	 * <em>Simple Review State</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see org.eclipse.mylyn.reviews.internal.core.model.SimpleReviewState
-	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getSimpleReviewState()
-	 * @generated
-	 */
-	public static final int SIMPLE_REVIEW_STATE = 23;
-
-	/**
-	 * The feature id for the '<em><b>Descriptor</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int SIMPLE_REVIEW_STATE__DESCRIPTOR = REVIEW_STATE__DESCRIPTOR;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int SIMPLE_REVIEW_STATE__NAME = REVIEW_STATE_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Simple Review State</em>' class. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	public static final int SIMPLE_REVIEW_STATE_FEATURE_COUNT = REVIEW_STATE_FEATURE_COUNT + 1;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.core.model.RequirementStatus
 	 * <em>Requirement Status</em>}' enum. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -1645,7 +1537,17 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getRequirementStatus()
 	 * @generated
 	 */
-	public static final int REQUIREMENT_STATUS = 24;
+	public static final int REQUIREMENT_STATUS = 21;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.core.model.ReviewStatus <em>Review Status</em>}'
+	 * enum. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.reviews.core.model.ReviewStatus
+	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getReviewStatus()
+	 * @generated
+	 */
+	public static final int REVIEW_STATUS = 22;
 
 	/**
 	 * The meta object id for the '<em>IFile Revision</em>' data type. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1654,7 +1556,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getIFileRevision()
 	 * @generated
 	 */
-	public static final int IFILE_REVISION = 25;
+	public static final int IFILE_REVISION = 23;
 
 	/**
 	 * The meta object id for the '<em>Task Repository</em>' data type. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1663,7 +1565,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getTaskRepository()
 	 * @generated
 	 */
-	public static final int TASK_REPOSITORY = 26;
+	public static final int TASK_REPOSITORY = 24;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1713,13 +1615,6 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	private EClass userEClass = null;
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	private EClass reviewStateEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1824,21 +1719,14 @@ public class ReviewsPackage extends EPackageImpl {
 	 * 
 	 * @generated
 	 */
-	private EClass requirementReviewStateEClass = null;
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	private EClass simpleReviewStateEClass = null;
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
 	private EEnum requirementStatusEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EEnum reviewStatusEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1891,8 +1779,9 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public static ReviewsPackage init() {
-		if (isInited)
+		if (isInited) {
 			return (ReviewsPackage) EPackage.Registry.INSTANCE.getEPackage(ReviewsPackage.eNS_URI);
+		}
 
 		// Obtain or create and register package
 		ReviewsPackage theReviewsPackage = (ReviewsPackage) (EPackage.Registry.INSTANCE.get(eNS_URI) instanceof ReviewsPackage
@@ -2061,17 +1950,16 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the containment reference '
-	 * {@link org.eclipse.mylyn.reviews.core.model.IChange#getState <em>State</em>}'. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.reviews.core.model.IChange#getState
+	 * <em>State</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @return the meta object for the containment reference '<em>State</em>'.
+	 * @return the meta object for the attribute '<em>State</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.IChange#getState()
 	 * @see #getChange()
 	 * @generated
 	 */
-	public EReference getChange_State() {
-		return (EReference) changeEClass.getEStructuralFeatures().get(5);
+	public EAttribute getChange_State() {
+		return (EAttribute) changeEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -2454,32 +2342,6 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.IReviewState
-	 * <em>Review State</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for class '<em>Review State</em>'.
-	 * @see org.eclipse.mylyn.reviews.core.model.IReviewState
-	 * @generated
-	 */
-	public EClass getReviewState() {
-		return reviewStateEClass;
-	}
-
-	/**
-	 * Returns the meta object for the attribute '
-	 * {@link org.eclipse.mylyn.reviews.core.model.IReviewState#getDescriptor <em>Descriptor</em>}'. <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for the attribute '<em>Descriptor</em>'.
-	 * @see org.eclipse.mylyn.reviews.core.model.IReviewState#getDescriptor()
-	 * @see #getReviewState()
-	 * @generated
-	 */
-	public EAttribute getReviewState_Descriptor() {
-		return (EAttribute) reviewStateEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.IRepository <em>Repository</em>}'.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -2506,20 +2368,6 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the containment reference list '
-	 * {@link org.eclipse.mylyn.reviews.core.model.IRepository#getReviewStates <em>Review States</em>}'. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for the containment reference list '<em>Review States</em>'.
-	 * @see org.eclipse.mylyn.reviews.core.model.IRepository#getReviewStates()
-	 * @see #getRepository()
-	 * @generated
-	 */
-	public EReference getRepository_ReviewStates() {
-		return (EReference) repositoryEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
 	 * Returns the meta object for the attribute '
 	 * {@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskRepositoryUrl <em>Task Repository Url</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
@@ -2530,7 +2378,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EAttribute getRepository_TaskRepositoryUrl() {
-		return (EAttribute) repositoryEClass.getEStructuralFeatures().get(2);
+		return (EAttribute) repositoryEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -2544,7 +2392,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EAttribute getRepository_TaskConnectorKind() {
-		return (EAttribute) repositoryEClass.getEStructuralFeatures().get(3);
+		return (EAttribute) repositoryEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -2558,7 +2406,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EAttribute getRepository_TaskRepository() {
-		return (EAttribute) repositoryEClass.getEStructuralFeatures().get(4);
+		return (EAttribute) repositoryEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -2572,7 +2420,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EReference getRepository_Reviews() {
-		return (EReference) repositoryEClass.getEStructuralFeatures().get(5);
+		return (EReference) repositoryEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -2586,7 +2434,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EReference getRepository_Users() {
-		return (EReference) repositoryEClass.getEStructuralFeatures().get(6);
+		return (EReference) repositoryEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -2600,7 +2448,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EAttribute getRepository_Description() {
-		return (EAttribute) repositoryEClass.getEStructuralFeatures().get(7);
+		return (EAttribute) repositoryEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -3161,58 +3009,6 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.IRequirementReviewState
-	 * <em>Requirement Review State</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for class '<em>Requirement Review State</em>'.
-	 * @see org.eclipse.mylyn.reviews.core.model.IRequirementReviewState
-	 * @generated
-	 */
-	public EClass getRequirementReviewState() {
-		return requirementReviewStateEClass;
-	}
-
-	/**
-	 * Returns the meta object for the attribute '
-	 * {@link org.eclipse.mylyn.reviews.core.model.IRequirementReviewState#getStatus <em>Status</em>}'. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for the attribute '<em>Status</em>'.
-	 * @see org.eclipse.mylyn.reviews.core.model.IRequirementReviewState#getStatus()
-	 * @see #getRequirementReviewState()
-	 * @generated
-	 */
-	public EAttribute getRequirementReviewState_Status() {
-		return (EAttribute) requirementReviewStateEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.ISimpleReviewState
-	 * <em>Simple Review State</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for class '<em>Simple Review State</em>'.
-	 * @see org.eclipse.mylyn.reviews.core.model.ISimpleReviewState
-	 * @generated
-	 */
-	public EClass getSimpleReviewState() {
-		return simpleReviewStateEClass;
-	}
-
-	/**
-	 * Returns the meta object for the attribute '
-	 * {@link org.eclipse.mylyn.reviews.core.model.ISimpleReviewState#getName <em>Name</em>}'. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see org.eclipse.mylyn.reviews.core.model.ISimpleReviewState#getName()
-	 * @see #getSimpleReviewState()
-	 * @generated
-	 */
-	public EAttribute getSimpleReviewState_Name() {
-		return (EAttribute) simpleReviewStateEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
 	 * Returns the meta object for enum '{@link org.eclipse.mylyn.reviews.core.model.RequirementStatus
 	 * <em>Requirement Status</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -3222,6 +3018,18 @@ public class ReviewsPackage extends EPackageImpl {
 	 */
 	public EEnum getRequirementStatus() {
 		return requirementStatusEEnum;
+	}
+
+	/**
+	 * Returns the meta object for enum '{@link org.eclipse.mylyn.reviews.core.model.ReviewStatus
+	 * <em>Review Status</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for enum '<em>Review Status</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.ReviewStatus
+	 * @generated
+	 */
+	public EEnum getReviewStatus() {
+		return reviewStatusEEnum;
 	}
 
 	/**
@@ -3272,8 +3080,9 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public void createPackageContents() {
-		if (isCreated)
+		if (isCreated) {
 			return;
+		}
 		isCreated = true;
 
 		// Create classes and their features
@@ -3289,7 +3098,7 @@ public class ReviewsPackage extends EPackageImpl {
 		createEAttribute(changeEClass, CHANGE__SUBJECT);
 		createEAttribute(changeEClass, CHANGE__MESSAGE);
 		createEReference(changeEClass, CHANGE__OWNER);
-		createEReference(changeEClass, CHANGE__STATE);
+		createEAttribute(changeEClass, CHANGE__STATE);
 
 		reviewEClass = createEClass(REVIEW);
 		createEReference(reviewEClass, REVIEW__SETS);
@@ -3325,12 +3134,8 @@ public class ReviewsPackage extends EPackageImpl {
 		createEAttribute(userEClass, USER__EMAIL);
 		createEAttribute(userEClass, USER__DISPLAY_NAME);
 
-		reviewStateEClass = createEClass(REVIEW_STATE);
-		createEAttribute(reviewStateEClass, REVIEW_STATE__DESCRIPTOR);
-
 		repositoryEClass = createEClass(REPOSITORY);
 		createEReference(repositoryEClass, REPOSITORY__APPROVAL_TYPES);
-		createEReference(repositoryEClass, REPOSITORY__REVIEW_STATES);
 		createEAttribute(repositoryEClass, REPOSITORY__TASK_REPOSITORY_URL);
 		createEAttribute(repositoryEClass, REPOSITORY__TASK_CONNECTOR_KIND);
 		createEAttribute(repositoryEClass, REPOSITORY__TASK_REPOSITORY);
@@ -3394,14 +3199,9 @@ public class ReviewsPackage extends EPackageImpl {
 		createEReference(reviewRequirementsMapEClass, REVIEW_REQUIREMENTS_MAP__KEY);
 		createEReference(reviewRequirementsMapEClass, REVIEW_REQUIREMENTS_MAP__VALUE);
 
-		requirementReviewStateEClass = createEClass(REQUIREMENT_REVIEW_STATE);
-		createEAttribute(requirementReviewStateEClass, REQUIREMENT_REVIEW_STATE__STATUS);
-
-		simpleReviewStateEClass = createEClass(SIMPLE_REVIEW_STATE);
-		createEAttribute(simpleReviewStateEClass, SIMPLE_REVIEW_STATE__NAME);
-
 		// Create enums
 		requirementStatusEEnum = createEEnum(REQUIREMENT_STATUS);
+		reviewStatusEEnum = createEEnum(REVIEW_STATUS);
 
 		// Create data types
 		iFileRevisionEDataType = createEDataType(IFILE_REVISION);
@@ -3422,8 +3222,9 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public void initializePackageContents() {
-		if (isInitialized)
+		if (isInitialized) {
 			return;
+		}
 		isInitialized = true;
 
 		// Initialize package
@@ -3448,8 +3249,6 @@ public class ReviewsPackage extends EPackageImpl {
 		reviewItemSetEClass.getESuperTypes().add(this.getDated());
 		lineLocationEClass.getESuperTypes().add(this.getLocation());
 		fileVersionEClass.getESuperTypes().add(this.getReviewItem());
-		requirementReviewStateEClass.getESuperTypes().add(this.getReviewState());
-		simpleReviewStateEClass.getESuperTypes().add(this.getReviewState());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(commentContainerEClass, ICommentContainer.class,
@@ -3502,11 +3301,10 @@ public class ReviewsPackage extends EPackageImpl {
 				this.getUser(),
 				null,
 				"owner", null, 0, 1, IChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
+		initEAttribute(
 				getChange_State(),
-				this.getReviewState(),
-				null,
-				"state", null, 1, 1, IChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+				this.getReviewStatus(),
+				"state", null, 0, 1, IChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(reviewEClass, IReview.class, "Review", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEReference(
@@ -3629,13 +3427,6 @@ public class ReviewsPackage extends EPackageImpl {
 				ecorePackage.getEString(),
 				"displayName", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(reviewStateEClass, IReviewState.class,
-				"ReviewState", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getReviewState_Descriptor(),
-				ecorePackage.getEString(),
-				"descriptor", null, 1, 1, IReviewState.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-
 		initEClass(repositoryEClass, IRepository.class,
 				"Repository", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEReference(
@@ -3644,11 +3435,6 @@ public class ReviewsPackage extends EPackageImpl {
 				null,
 				"approvalTypes", null, 0, -1, IRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		getRepository_ApprovalTypes().getEKeys().add(this.getApprovalType_Key());
-		initEReference(
-				getRepository_ReviewStates(),
-				this.getReviewState(),
-				null,
-				"reviewStates", null, 0, -1, IRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(
 				getRepository_TaskRepositoryUrl(),
 				ecorePackage.getEString(),
@@ -3848,20 +3634,6 @@ public class ReviewsPackage extends EPackageImpl {
 				null,
 				"value", null, 1, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(requirementReviewStateEClass, IRequirementReviewState.class,
-				"RequirementReviewState", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getRequirementReviewState_Status(),
-				this.getRequirementStatus(),
-				"status", null, 1, 1, IRequirementReviewState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-
-		initEClass(simpleReviewStateEClass, ISimpleReviewState.class,
-				"SimpleReviewState", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getSimpleReviewState_Name(),
-				ecorePackage.getEString(),
-				"name", null, 1, 1, ISimpleReviewState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-
 		// Initialize enums and add enum literals
 		initEEnum(requirementStatusEEnum, RequirementStatus.class, "RequirementStatus"); //$NON-NLS-1$
 		addEEnumLiteral(requirementStatusEEnum, RequirementStatus.UNKNOWN);
@@ -3871,6 +3643,12 @@ public class ReviewsPackage extends EPackageImpl {
 		addEEnumLiteral(requirementStatusEEnum, RequirementStatus.NOT_SATISFIED);
 		addEEnumLiteral(requirementStatusEEnum, RequirementStatus.REJECTED);
 		addEEnumLiteral(requirementStatusEEnum, RequirementStatus.ERROR);
+
+		initEEnum(reviewStatusEEnum, ReviewStatus.class, "ReviewStatus"); //$NON-NLS-1$
+		addEEnumLiteral(reviewStatusEEnum, ReviewStatus.NEW);
+		addEEnumLiteral(reviewStatusEEnum, ReviewStatus.SUBMITTED);
+		addEEnumLiteral(reviewStatusEEnum, ReviewStatus.MERGED);
+		addEEnumLiteral(reviewStatusEEnum, ReviewStatus.ABANDONED);
 
 		// Initialize data types
 		initEDataType(iFileRevisionEDataType, IFileRevision.class,
@@ -3988,12 +3766,12 @@ public class ReviewsPackage extends EPackageImpl {
 		public static final EReference CHANGE__OWNER = eINSTANCE.getChange_Owner();
 
 		/**
-		 * The meta object literal for the '<em><b>State</b></em>' containment reference feature. <!-- begin-user-doc
-		 * --> <!-- end-user-doc -->
+		 * The meta object literal for the '<em><b>State</b></em>' attribute feature. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
 		 * 
 		 * @generated
 		 */
-		public static final EReference CHANGE__STATE = eINSTANCE.getChange_State();
+		public static final EAttribute CHANGE__STATE = eINSTANCE.getChange_State();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.internal.core.model.Review <em>Review</em>}
@@ -4238,24 +4016,6 @@ public class ReviewsPackage extends EPackageImpl {
 		public static final EAttribute USER__DISPLAY_NAME = eINSTANCE.getUser_DisplayName();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewState
-		 * <em>Review State</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
-		 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewState
-		 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getReviewState()
-		 * @generated
-		 */
-		public static final EClass REVIEW_STATE = eINSTANCE.getReviewState();
-
-		/**
-		 * The meta object literal for the '<em><b>Descriptor</b></em>' attribute feature. <!-- begin-user-doc --> <!--
-		 * end-user-doc -->
-		 * 
-		 * @generated
-		 */
-		public static final EAttribute REVIEW_STATE__DESCRIPTOR = eINSTANCE.getReviewState_Descriptor();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.internal.core.model.Repository
 		 * <em>Repository</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
@@ -4272,14 +4032,6 @@ public class ReviewsPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EReference REPOSITORY__APPROVAL_TYPES = eINSTANCE.getRepository_ApprovalTypes();
-
-		/**
-		 * The meta object literal for the '<em><b>Review States</b></em>' containment reference list feature. <!--
-		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
-		 * @generated
-		 */
-		public static final EReference REPOSITORY__REVIEW_STATES = eINSTANCE.getRepository_ReviewStates();
 
 		/**
 		 * The meta object literal for the '<em><b>Task Repository Url</b></em>' attribute feature. <!-- begin-user-doc
@@ -4700,42 +4452,6 @@ public class ReviewsPackage extends EPackageImpl {
 		public static final EReference REVIEW_REQUIREMENTS_MAP__VALUE = eINSTANCE.getReviewRequirementsMap_Value();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.internal.core.model.RequirementReviewState
-		 * <em>Requirement Review State</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
-		 * @see org.eclipse.mylyn.reviews.internal.core.model.RequirementReviewState
-		 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getRequirementReviewState()
-		 * @generated
-		 */
-		public static final EClass REQUIREMENT_REVIEW_STATE = eINSTANCE.getRequirementReviewState();
-
-		/**
-		 * The meta object literal for the '<em><b>Status</b></em>' attribute feature. <!-- begin-user-doc --> <!--
-		 * end-user-doc -->
-		 * 
-		 * @generated
-		 */
-		public static final EAttribute REQUIREMENT_REVIEW_STATE__STATUS = eINSTANCE.getRequirementReviewState_Status();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.internal.core.model.SimpleReviewState
-		 * <em>Simple Review State</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
-		 * @see org.eclipse.mylyn.reviews.internal.core.model.SimpleReviewState
-		 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getSimpleReviewState()
-		 * @generated
-		 */
-		public static final EClass SIMPLE_REVIEW_STATE = eINSTANCE.getSimpleReviewState();
-
-		/**
-		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature. <!-- begin-user-doc --> <!--
-		 * end-user-doc -->
-		 * 
-		 * @generated
-		 */
-		public static final EAttribute SIMPLE_REVIEW_STATE__NAME = eINSTANCE.getSimpleReviewState_Name();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.core.model.RequirementStatus
 		 * <em>Requirement Status</em>}' enum. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
@@ -4744,6 +4460,16 @@ public class ReviewsPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EEnum REQUIREMENT_STATUS = eINSTANCE.getRequirementStatus();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.core.model.ReviewStatus
+		 * <em>Review Status</em>}' enum. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.mylyn.reviews.core.model.ReviewStatus
+		 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getReviewStatus()
+		 * @generated
+		 */
+		public static final EEnum REVIEW_STATUS = eINSTANCE.getReviewStatus();
 
 		/**
 		 * The meta object literal for the '<em>IFile Revision</em>' data type. <!-- begin-user-doc --> <!--

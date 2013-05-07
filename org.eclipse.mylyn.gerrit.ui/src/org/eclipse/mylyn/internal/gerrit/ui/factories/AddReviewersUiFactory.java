@@ -11,16 +11,13 @@
 
 package org.eclipse.mylyn.internal.gerrit.ui.factories;
 
-import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.remote.GerritRemoteFactoryProvider;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.AddReviewersDialog;
 import org.eclipse.mylyn.reviews.core.model.IReview;
+import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
 import org.eclipse.mylyn.reviews.ui.spi.factories.AbstractUiFactory;
 import org.eclipse.mylyn.reviews.ui.spi.factories.IUiContext;
-
-import com.google.gerrit.reviewdb.Change;
-import com.google.gerrit.reviewdb.Change.Status;
 
 /**
  * @author Steffen Pingel
@@ -45,7 +42,6 @@ public class AddReviewersUiFactory extends AbstractUiFactory<IReview> {
 
 	@Override
 	public boolean isExecutable() {
-		Status status = getChange().getChangeDetail().getChange().getStatus();
-		return status == Change.Status.NEW || GerritUtil.isDraft(status);
+		return getModelObject().getState() == null || getModelObject().getState() == ReviewStatus.NEW;
 	}
 }

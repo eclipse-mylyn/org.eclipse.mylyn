@@ -34,14 +34,13 @@ import org.eclipse.mylyn.reviews.core.model.IChange;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IRequirementEntry;
-import org.eclipse.mylyn.reviews.core.model.IRequirementReviewState;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.core.model.IReviewerEntry;
 import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
-import org.eclipse.mylyn.reviews.core.model.ISimpleReviewState;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.reviews.core.model.RequirementStatus;
+import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.AbstractRemoteEmfFactory;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
@@ -315,16 +314,23 @@ public class GerritReviewRemoteFactory extends
 					}
 					review.getRequirements().put(approvalType, requirementEntry);
 				}
-				IRequirementReviewState state = IReviewsFactory.INSTANCE.createRequirementReviewState();
-				if (record.getStatus().equals("OK")) {
-					state.setStatus(RequirementStatus.SATISFIED);
-				} else if (record.getStatus().equals("NOT_READY")) {
-					state.setStatus(RequirementStatus.NOT_SATISFIED);
-				} else if (record.getStatus().equals("CLOSED")) {
-					state.setStatus(RequirementStatus.CLOSED);
-				}
-				review.setState(state);
 			}
+		}
+
+		//State
+		switch (detail.getChange().getStatus()) {
+		case NEW:
+			review.setState(ReviewStatus.NEW);
+			break;
+		case MERGED:
+			review.setState(ReviewStatus.MERGED);
+			break;
+		case SUBMITTED:
+			review.setState(ReviewStatus.SUBMITTED);
+			break;
+		case ABANDONED:
+			review.setState(ReviewStatus.ABANDONED);
+			break;
 		}
 	}
 
@@ -345,9 +351,20 @@ public class GerritReviewRemoteFactory extends
 			localChange.setOwner(owner);
 			localChange.setModificationDate(remoteChange.getLastUpdatedOn());
 			localChange.setSubject(remoteChange.getSubject());
-			ISimpleReviewState state = IReviewsFactory.INSTANCE.createSimpleReviewState();
-			state.setName(remoteChange.getStatus().name());
-			localChange.setState(state);
+			switch (remoteChange.getStatus()) {
+			case NEW:
+				localChange.setState(ReviewStatus.NEW);
+				break;
+			case MERGED:
+				localChange.setState(ReviewStatus.MERGED);
+				break;
+			case SUBMITTED:
+				localChange.setState(ReviewStatus.SUBMITTED);
+				break;
+			case ABANDONED:
+				localChange.setState(ReviewStatus.ABANDONED);
+				break;
+			}
 			localChanges.add(localChange);
 		}
 	}

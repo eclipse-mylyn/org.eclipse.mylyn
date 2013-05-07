@@ -28,6 +28,7 @@ import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
+import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
 
 /**
@@ -270,11 +271,7 @@ public class ReviewItemProvider extends CommentContainerItemProvider implements 
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 
-		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.CHANGE__STATE,
-				IReviewsFactory.INSTANCE.createRequirementReviewState()));
-
-		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.CHANGE__STATE,
-				IReviewsFactory.INSTANCE.createSimpleReviewState()));
+		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.CHANGE__STATE, ReviewStatus.NEW));
 
 		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.REVIEW__SETS,
 				IReviewsFactory.INSTANCE.createReviewItemSet()));

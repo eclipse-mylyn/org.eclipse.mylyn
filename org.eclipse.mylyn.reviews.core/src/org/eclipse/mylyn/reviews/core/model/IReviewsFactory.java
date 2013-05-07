@@ -113,22 +113,6 @@ public interface IReviewsFactory {
 	IRequirementEntry createRequirementEntry();
 
 	/**
-	 * Returns a new object of class '<em>Requirement Review State</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @return a new object of class '<em>Requirement Review State</em>'.
-	 * @generated
-	 */
-	IRequirementReviewState createRequirementReviewState();
-
-	/**
-	 * Returns a new object of class '<em>Simple Review State</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @return a new object of class '<em>Simple Review State</em>'.
-	 * @generated
-	 */
-	ISimpleReviewState createSimpleReviewState();
-
-	/**
 	 * Returns a new object of class '<em>Approval Type</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return a new object of class '<em>Approval Type</em>'.

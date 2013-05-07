@@ -102,10 +102,6 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 			return createRequirementEntry();
 		case ReviewsPackage.REVIEW_REQUIREMENTS_MAP:
 			return (EObject) createReviewRequirementsMap();
-		case ReviewsPackage.REQUIREMENT_REVIEW_STATE:
-			return createRequirementReviewState();
-		case ReviewsPackage.SIMPLE_REVIEW_STATE:
-			return createSimpleReviewState();
 		default:
 			throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -121,6 +117,8 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 		switch (eDataType.getClassifierID()) {
 		case ReviewsPackage.REQUIREMENT_STATUS:
 			return createRequirementStatusFromString(eDataType, initialValue);
+		case ReviewsPackage.REVIEW_STATUS:
+			return createReviewStatusFromString(eDataType, initialValue);
 		default:
 			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -136,6 +134,8 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 		switch (eDataType.getClassifierID()) {
 		case ReviewsPackage.REQUIREMENT_STATUS:
 			return convertRequirementStatusToString(eDataType, instanceValue);
+		case ReviewsPackage.REVIEW_STATUS:
+			return convertReviewStatusToString(eDataType, instanceValue);
 		default:
 			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -286,26 +286,6 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 * 
 	 * @generated
 	 */
-	public IRequirementReviewState createRequirementReviewState() {
-		RequirementReviewState requirementReviewState = new RequirementReviewState();
-		return requirementReviewState;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public ISimpleReviewState createSimpleReviewState() {
-		SimpleReviewState simpleReviewState = new SimpleReviewState();
-		return simpleReviewState;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
 	public RequirementStatus createRequirementStatusFromString(EDataType eDataType, String initialValue) {
 		RequirementStatus result = RequirementStatus.get(initialValue);
 		if (result == null)
@@ -320,6 +300,28 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 * @generated
 	 */
 	public String convertRequirementStatusToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public ReviewStatus createReviewStatusFromString(EDataType eDataType, String initialValue) {
+		ReviewStatus result = ReviewStatus.get(initialValue);
+		if (result == null)
+			throw new IllegalArgumentException(
+					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public String convertReviewStatusToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 

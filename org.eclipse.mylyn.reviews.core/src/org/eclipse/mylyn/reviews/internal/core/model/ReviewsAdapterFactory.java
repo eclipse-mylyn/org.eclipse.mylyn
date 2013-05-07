@@ -108,11 +108,6 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
-		public Adapter caseReviewState(IReviewState object) {
-			return createReviewStateAdapter();
-		}
-
-		@Override
 		public Adapter caseRepository(IRepository object) {
 			return createRepositoryAdapter();
 		}
@@ -180,16 +175,6 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 		@Override
 		public Adapter caseReviewRequirementsMap(Map.Entry<IApprovalType, IRequirementEntry> object) {
 			return createReviewRequirementsMapAdapter();
-		}
-
-		@Override
-		public Adapter caseRequirementReviewState(IRequirementReviewState object) {
-			return createRequirementReviewStateAdapter();
-		}
-
-		@Override
-		public Adapter caseSimpleReviewState(ISimpleReviewState object) {
-			return createSimpleReviewStateAdapter();
 		}
 
 		@Override
@@ -289,20 +274,6 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createUserAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.IReviewState
-	 * <em>Review State</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily
-	 * ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc
-	 * -->
-	 * 
-	 * @return the new adapter.
-	 * @see org.eclipse.mylyn.reviews.core.model.IReviewState
-	 * @generated
-	 */
-	public Adapter createReviewStateAdapter() {
 		return null;
 	}
 
@@ -481,34 +452,6 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createReviewRequirementsMapAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '
-	 * {@link org.eclipse.mylyn.reviews.core.model.IRequirementReviewState <em>Requirement Review State</em>}'. <!--
-	 * begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to
-	 * ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
-	 * @return the new adapter.
-	 * @see org.eclipse.mylyn.reviews.core.model.IRequirementReviewState
-	 * @generated
-	 */
-	public Adapter createRequirementReviewStateAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.ISimpleReviewState
-	 * <em>Simple Review State</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can
-	 * easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!--
-	 * end-user-doc -->
-	 * 
-	 * @return the new adapter.
-	 * @see org.eclipse.mylyn.reviews.core.model.ISimpleReviewState
-	 * @generated
-	 */
-	public Adapter createSimpleReviewStateAdapter() {
 		return null;
 	}
 

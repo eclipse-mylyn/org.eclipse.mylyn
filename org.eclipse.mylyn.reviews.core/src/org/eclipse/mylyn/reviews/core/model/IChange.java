@@ -151,28 +151,31 @@ public interface IChange extends IDated {
 	void setOwner(IUser value);
 
 	/**
-	 * Returns the value of the '<em><b>State</b></em>' containment reference. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>State</b></em>' attribute. The literals are from the enumeration
+	 * {@link org.eclipse.mylyn.reviews.core.model.ReviewStatus}. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>State</em>' containment reference isn't clear, there really should be more of a
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>State</em>' containment reference.
-	 * @see #setState(IReviewState)
+	 * @return the value of the '<em>State</em>' attribute.
+	 * @see org.eclipse.mylyn.reviews.core.model.ReviewStatus
+	 * @see #setState(ReviewStatus)
 	 * @generated
 	 */
-	IReviewState getState();
+	ReviewStatus getState();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IChange#getState <em>State</em>}' containment
-	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IChange#getState <em>State</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @param value
-	 *            the new value of the '<em>State</em>' containment reference.
+	 *            the new value of the '<em>State</em>' attribute.
+	 * @see org.eclipse.mylyn.reviews.core.model.ReviewStatus
 	 * @see #getState()
 	 * @generated
 	 */
-	void setState(IReviewState value);
+	void setState(ReviewStatus value);
 
 } // IChange

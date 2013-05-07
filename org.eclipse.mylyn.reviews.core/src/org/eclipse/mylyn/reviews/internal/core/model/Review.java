@@ -38,9 +38,9 @@ import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IRequirementEntry;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
-import org.eclipse.mylyn.reviews.core.model.IReviewState;
 import org.eclipse.mylyn.reviews.core.model.IReviewerEntry;
 import org.eclipse.mylyn.reviews.core.model.IUser;
+import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Review</b></em>'. <!-- end-user-doc -->
@@ -195,14 +195,24 @@ public class Review extends CommentContainer implements IReview {
 	protected IUser owner;
 
 	/**
-	 * The cached value of the '{@link #getState() <em>State</em>}' containment reference. <!-- begin-user-doc --> <!--
+	 * The default value of the '{@link #getState() <em>State</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
 	 * @see #getState()
 	 * @generated
 	 * @ordered
 	 */
-	protected IReviewState state;
+	protected static final ReviewStatus STATE_EDEFAULT = ReviewStatus.NEW;
+
+	/**
+	 * The cached value of the '{@link #getState() <em>State</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @see #getState()
+	 * @generated
+	 * @ordered
+	 */
+	protected ReviewStatus state = STATE_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getSets() <em>Sets</em>}' containment reference list. <!-- begin-user-doc -->
@@ -427,26 +437,7 @@ public class Review extends CommentContainer implements IReview {
 	 * 
 	 * @generated
 	 */
-	public IReviewState getState() {
-		if (state != null && state.eIsProxy()) {
-			InternalEObject oldState = (InternalEObject) state;
-			state = (IReviewState) eResolveProxy(oldState);
-			if (state != oldState) {
-				InternalEObject newState = (InternalEObject) state;
-				NotificationChain msgs = oldState.eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-						- ReviewsPackage.REVIEW__STATE, null, null);
-				if (newState.eInternalContainer() == null) {
-					msgs = newState.eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ReviewsPackage.REVIEW__STATE, null, msgs);
-				}
-				if (msgs != null) {
-					msgs.dispatch();
-				}
-				if (eNotificationRequired()) {
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.REVIEW__STATE, oldState,
-							state));
-				}
-			}
-		}
+	public ReviewStatus getState() {
 		return state;
 	}
 
@@ -455,52 +446,11 @@ public class Review extends CommentContainer implements IReview {
 	 * 
 	 * @generated
 	 */
-	public IReviewState basicGetState() {
-		return state;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public NotificationChain basicSetState(IReviewState newState, NotificationChain msgs) {
-		IReviewState oldState = state;
-		state = newState;
+	public void setState(ReviewStatus newState) {
+		ReviewStatus oldState = state;
+		state = newState == null ? STATE_EDEFAULT : newState;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
-					ReviewsPackage.REVIEW__STATE, oldState, newState);
-			if (msgs == null) {
-				msgs = notification;
-			} else {
-				msgs.add(notification);
-			}
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public void setState(IReviewState newState) {
-		if (newState != state) {
-			NotificationChain msgs = null;
-			if (state != null) {
-				msgs = ((InternalEObject) state).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-						- ReviewsPackage.REVIEW__STATE, null, msgs);
-			}
-			if (newState != null) {
-				msgs = ((InternalEObject) newState).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
-						- ReviewsPackage.REVIEW__STATE, null, msgs);
-			}
-			msgs = basicSetState(newState, msgs);
-			if (msgs != null) {
-				msgs.dispatch();
-			}
-		} else if (eNotificationRequired()) {
-			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW__STATE, newState, newState));
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW__STATE, oldState, state));
 		}
 	}
 
@@ -714,8 +664,6 @@ public class Review extends CommentContainer implements IReview {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case ReviewsPackage.REVIEW__STATE:
-			return basicSetState(null, msgs);
 		case ReviewsPackage.REVIEW__SETS:
 			return ((InternalEList<?>) getSets()).basicRemove(otherEnd, msgs);
 		case ReviewsPackage.REVIEW__REPOSITORY:
@@ -775,10 +723,7 @@ public class Review extends CommentContainer implements IReview {
 			}
 			return basicGetOwner();
 		case ReviewsPackage.REVIEW__STATE:
-			if (resolve) {
-				return getState();
-			}
-			return basicGetState();
+			return getState();
 		case ReviewsPackage.REVIEW__SETS:
 			return getSets();
 		case ReviewsPackage.REVIEW__REPOSITORY:
@@ -837,7 +782,7 @@ public class Review extends CommentContainer implements IReview {
 			setOwner((IUser) newValue);
 			return;
 		case ReviewsPackage.REVIEW__STATE:
-			setState((IReviewState) newValue);
+			setState((ReviewStatus) newValue);
 			return;
 		case ReviewsPackage.REVIEW__SETS:
 			getSets().clear();
@@ -894,7 +839,7 @@ public class Review extends CommentContainer implements IReview {
 			setOwner((IUser) null);
 			return;
 		case ReviewsPackage.REVIEW__STATE:
-			setState((IReviewState) null);
+			setState(STATE_EDEFAULT);
 			return;
 		case ReviewsPackage.REVIEW__SETS:
 			getSets().clear();
@@ -943,7 +888,7 @@ public class Review extends CommentContainer implements IReview {
 		case ReviewsPackage.REVIEW__OWNER:
 			return owner != null;
 		case ReviewsPackage.REVIEW__STATE:
-			return state != null;
+			return state != STATE_EDEFAULT;
 		case ReviewsPackage.REVIEW__SETS:
 			return sets != null && !sets.isEmpty();
 		case ReviewsPackage.REVIEW__REPOSITORY:
@@ -1060,6 +1005,8 @@ public class Review extends CommentContainer implements IReview {
 		result.append(subject);
 		result.append(", message: "); //$NON-NLS-1$
 		result.append(message);
+		result.append(", state: "); //$NON-NLS-1$
+		result.append(state);
 		result.append(')');
 		return result.toString();
 	}

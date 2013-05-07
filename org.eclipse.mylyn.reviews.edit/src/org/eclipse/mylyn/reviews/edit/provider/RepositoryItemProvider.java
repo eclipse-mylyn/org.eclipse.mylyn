@@ -149,7 +149,6 @@ public class RepositoryItemProvider extends ItemProviderAdapter implements IEdit
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
 			childrenFeatures.add(ReviewsPackage.Literals.REPOSITORY__APPROVAL_TYPES);
-			childrenFeatures.add(ReviewsPackage.Literals.REPOSITORY__REVIEW_STATES);
 			childrenFeatures.add(ReviewsPackage.Literals.REPOSITORY__REVIEWS);
 			childrenFeatures.add(ReviewsPackage.Literals.REPOSITORY__USERS);
 		}
@@ -210,7 +209,6 @@ public class RepositoryItemProvider extends ItemProviderAdapter implements IEdit
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 			return;
 		case ReviewsPackage.REPOSITORY__APPROVAL_TYPES:
-		case ReviewsPackage.REPOSITORY__REVIEW_STATES:
 		case ReviewsPackage.REPOSITORY__REVIEWS:
 		case ReviewsPackage.REPOSITORY__USERS:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
@@ -231,12 +229,6 @@ public class RepositoryItemProvider extends ItemProviderAdapter implements IEdit
 
 		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.REPOSITORY__APPROVAL_TYPES,
 				IReviewsFactory.INSTANCE.createApprovalType()));
-
-		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.REPOSITORY__REVIEW_STATES,
-				IReviewsFactory.INSTANCE.createRequirementReviewState()));
-
-		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.REPOSITORY__REVIEW_STATES,
-				IReviewsFactory.INSTANCE.createSimpleReviewState()));
 
 		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.REPOSITORY__REVIEWS,
 				IReviewsFactory.INSTANCE.createReview()));

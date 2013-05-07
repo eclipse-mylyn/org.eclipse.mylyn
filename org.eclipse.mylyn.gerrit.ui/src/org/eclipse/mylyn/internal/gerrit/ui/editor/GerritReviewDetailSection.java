@@ -15,10 +15,9 @@ package org.eclipse.mylyn.internal.gerrit.ui.editor;
 
 import org.eclipse.mylyn.internal.gerrit.ui.factories.ReviewUiFactoryProvider;
 import org.eclipse.mylyn.reviews.core.model.IReview;
+import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
 import org.eclipse.mylyn.reviews.ui.spi.editor.ReviewDetailSection;
 import org.eclipse.mylyn.reviews.ui.spi.factories.AbstractUiFactoryProvider;
-
-import com.google.gerrit.reviewdb.Change;
 
 /**
  * Displays basic information about a given review corresponding to top sections of Gerrit web interface.
@@ -35,7 +34,6 @@ public class GerritReviewDetailSection extends ReviewDetailSection {
 
 	@Override
 	protected boolean canAddReviewers() {
-		return getReview().getState().getDescriptor().equalsIgnoreCase(Change.Status.NEW.name())
-				|| getReview().getState() == null;
+		return getReview().getState() == null || getReview().getState() == ReviewStatus.NEW;
 	}
 }

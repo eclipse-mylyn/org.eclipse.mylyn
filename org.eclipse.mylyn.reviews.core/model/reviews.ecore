@@ -22,8 +22,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="subject" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="message" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="owner" eType="#//User"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="state" lowerBound="1" eType="#//ReviewState"
-        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="state" eType="#//ReviewStatus"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Review" eSuperTypes="#//CommentContainer #//Change">
     <eStructuralFeatures xsi:type="ecore:EReference" name="sets" upperBound="-1" eType="#//ReviewItemSet"
@@ -72,16 +71,9 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="email" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="displayName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ReviewState" abstract="true">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="descriptor" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" changeable="false"
-        volatile="true" transient="true" derived="true" iD="true"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Repository">
     <eStructuralFeatures xsi:type="ecore:EReference" name="approvalTypes" upperBound="-1"
         eType="#//ApprovalType" containment="true" eKeys="#//ApprovalType/key"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="reviewStates" upperBound="-1"
-        eType="#//ReviewState" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="taskRepositoryUrl" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="taskConnectorKind" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="taskRepository" eType="#//TaskRepository"
@@ -176,12 +168,11 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="value" lowerBound="1" eType="#//RequirementEntry"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RequirementReviewState" eSuperTypes="#//ReviewState">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" lowerBound="1"
-        eType="#//RequirementStatus"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SimpleReviewState" eSuperTypes="#//ReviewState">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EEnum" name="ReviewStatus">
+    <eLiterals name="New" literal="NEW"/>
+    <eLiterals name="Submitted" value="1" literal="SUBMITTED"/>
+    <eLiterals name="Merged" value="2" literal="MERGED"/>
+    <eLiterals name="Abandoned" value="3" literal="ABANDONED"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="IFileRevision" instanceClassName="org.eclipse.team.core.history.IFileRevision"
       serializable="false"/>

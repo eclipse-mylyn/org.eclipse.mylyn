@@ -13,17 +13,13 @@ package org.eclipse.mylyn.reviews.internal.core.model;
 import java.util.Date;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.mylyn.reviews.core.model.IChange;
-import org.eclipse.mylyn.reviews.core.model.IReviewState;
 import org.eclipse.mylyn.reviews.core.model.IUser;
+import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Change</b></em>'. <!-- end-user-doc -->
@@ -172,14 +168,24 @@ public class Change extends EObjectImpl implements IChange {
 	protected IUser owner;
 
 	/**
-	 * The cached value of the '{@link #getState() <em>State</em>}' containment reference. <!-- begin-user-doc --> <!--
+	 * The default value of the '{@link #getState() <em>State</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
 	 * @see #getState()
 	 * @generated
 	 * @ordered
 	 */
-	protected IReviewState state;
+	protected static final ReviewStatus STATE_EDEFAULT = ReviewStatus.NEW;
+
+	/**
+	 * The cached value of the '{@link #getState() <em>State</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @see #getState()
+	 * @generated
+	 * @ordered
+	 */
+	protected ReviewStatus state = STATE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -217,9 +223,10 @@ public class Change extends EObjectImpl implements IChange {
 	public void setCreationDate(Date newCreationDate) {
 		Date oldCreationDate = creationDate;
 		creationDate = newCreationDate;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.CHANGE__CREATION_DATE,
 					oldCreationDate, creationDate));
+		}
 	}
 
 	/**
@@ -239,9 +246,10 @@ public class Change extends EObjectImpl implements IChange {
 	public void setModificationDate(Date newModificationDate) {
 		Date oldModificationDate = modificationDate;
 		modificationDate = newModificationDate;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.CHANGE__MODIFICATION_DATE,
 					oldModificationDate, modificationDate));
+		}
 	}
 
 	/**
@@ -261,8 +269,9 @@ public class Change extends EObjectImpl implements IChange {
 	public void setId(String newId) {
 		String oldId = id;
 		id = newId;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.CHANGE__ID, oldId, id));
+		}
 	}
 
 	/**
@@ -282,8 +291,9 @@ public class Change extends EObjectImpl implements IChange {
 	public void setKey(String newKey) {
 		String oldKey = key;
 		key = newKey;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.CHANGE__KEY, oldKey, key));
+		}
 	}
 
 	/**
@@ -303,8 +313,9 @@ public class Change extends EObjectImpl implements IChange {
 	public void setSubject(String newSubject) {
 		String oldSubject = subject;
 		subject = newSubject;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.CHANGE__SUBJECT, oldSubject, subject));
+		}
 	}
 
 	/**
@@ -324,8 +335,9 @@ public class Change extends EObjectImpl implements IChange {
 	public void setMessage(String newMessage) {
 		String oldMessage = message;
 		message = newMessage;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.CHANGE__MESSAGE, oldMessage, message));
+		}
 	}
 
 	/**
@@ -338,9 +350,10 @@ public class Change extends EObjectImpl implements IChange {
 			InternalEObject oldOwner = (InternalEObject) owner;
 			owner = (IUser) eResolveProxy(oldOwner);
 			if (owner != oldOwner) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.CHANGE__OWNER, oldOwner,
 							owner));
+				}
 			}
 		}
 		return owner;
@@ -363,62 +376,9 @@ public class Change extends EObjectImpl implements IChange {
 	public void setOwner(IUser newOwner) {
 		IUser oldOwner = owner;
 		owner = newOwner;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.CHANGE__OWNER, oldOwner, owner));
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public IReviewState getState() {
-		if (state != null && state.eIsProxy()) {
-			InternalEObject oldState = (InternalEObject) state;
-			state = (IReviewState) eResolveProxy(oldState);
-			if (state != oldState) {
-				InternalEObject newState = (InternalEObject) state;
-				NotificationChain msgs = oldState.eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-						- ReviewsPackage.CHANGE__STATE, null, null);
-				if (newState.eInternalContainer() == null) {
-					msgs = newState.eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ReviewsPackage.CHANGE__STATE, null, msgs);
-				}
-				if (msgs != null)
-					msgs.dispatch();
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.CHANGE__STATE, oldState,
-							state));
-			}
-		}
-		return state;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public IReviewState basicGetState() {
-		return state;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public NotificationChain basicSetState(IReviewState newState, NotificationChain msgs) {
-		IReviewState oldState = state;
-		state = newState;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
-					ReviewsPackage.CHANGE__STATE, oldState, newState);
-			if (msgs == null)
-				msgs = notification;
-			else
-				msgs.add(notification);
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.CHANGE__OWNER, oldOwner, owner));
 		}
-		return msgs;
 	}
 
 	/**
@@ -426,20 +386,8 @@ public class Change extends EObjectImpl implements IChange {
 	 * 
 	 * @generated
 	 */
-	public void setState(IReviewState newState) {
-		if (newState != state) {
-			NotificationChain msgs = null;
-			if (state != null)
-				msgs = ((InternalEObject) state).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-						- ReviewsPackage.CHANGE__STATE, null, msgs);
-			if (newState != null)
-				msgs = ((InternalEObject) newState).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
-						- ReviewsPackage.CHANGE__STATE, null, msgs);
-			msgs = basicSetState(newState, msgs);
-			if (msgs != null)
-				msgs.dispatch();
-		} else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.CHANGE__STATE, newState, newState));
+	public ReviewStatus getState() {
+		return state;
 	}
 
 	/**
@@ -447,13 +395,12 @@ public class Change extends EObjectImpl implements IChange {
 	 * 
 	 * @generated
 	 */
-	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-		case ReviewsPackage.CHANGE__STATE:
-			return basicSetState(null, msgs);
+	public void setState(ReviewStatus newState) {
+		ReviewStatus oldState = state;
+		state = newState == null ? STATE_EDEFAULT : newState;
+		if (eNotificationRequired()) {
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.CHANGE__STATE, oldState, state));
 		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -477,13 +424,12 @@ public class Change extends EObjectImpl implements IChange {
 		case ReviewsPackage.CHANGE__MESSAGE:
 			return getMessage();
 		case ReviewsPackage.CHANGE__OWNER:
-			if (resolve)
+			if (resolve) {
 				return getOwner();
+			}
 			return basicGetOwner();
 		case ReviewsPackage.CHANGE__STATE:
-			if (resolve)
-				return getState();
-			return basicGetState();
+			return getState();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -518,7 +464,7 @@ public class Change extends EObjectImpl implements IChange {
 			setOwner((IUser) newValue);
 			return;
 		case ReviewsPackage.CHANGE__STATE:
-			setState((IReviewState) newValue);
+			setState((ReviewStatus) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -554,7 +500,7 @@ public class Change extends EObjectImpl implements IChange {
 			setOwner((IUser) null);
 			return;
 		case ReviewsPackage.CHANGE__STATE:
-			setState((IReviewState) null);
+			setState(STATE_EDEFAULT);
 			return;
 		}
 		super.eUnset(featureID);
@@ -585,7 +531,7 @@ public class Change extends EObjectImpl implements IChange {
 		case ReviewsPackage.CHANGE__OWNER:
 			return owner != null;
 		case ReviewsPackage.CHANGE__STATE:
-			return state != null;
+			return state != STATE_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -597,8 +543,9 @@ public class Change extends EObjectImpl implements IChange {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (creationDate: "); //$NON-NLS-1$
@@ -613,6 +560,8 @@ public class Change extends EObjectImpl implements IChange {
 		result.append(subject);
 		result.append(", message: "); //$NON-NLS-1$
 		result.append(message);
+		result.append(", state: "); //$NON-NLS-1$
+		result.append(state);
 		result.append(')');
 		return result.toString();
 	}

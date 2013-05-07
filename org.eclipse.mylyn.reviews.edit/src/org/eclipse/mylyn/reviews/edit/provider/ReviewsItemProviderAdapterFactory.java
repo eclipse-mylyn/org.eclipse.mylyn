@@ -442,53 +442,6 @@ public class ReviewsItemProviderAdapterFactory extends ReviewsAdapterFactory imp
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all
-	 * {@link org.eclipse.mylyn.reviews.core.model.IRequirementReviewState} instances. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected RequirementReviewStateItemProvider requirementReviewStateItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.mylyn.reviews.core.model.IRequirementReviewState}. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public Adapter createRequirementReviewStateAdapter() {
-		if (requirementReviewStateItemProvider == null) {
-			requirementReviewStateItemProvider = new RequirementReviewStateItemProvider(this);
-		}
-
-		return requirementReviewStateItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.mylyn.reviews.core.model.ISimpleReviewState}
-	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected SimpleReviewStateItemProvider simpleReviewStateItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.mylyn.reviews.core.model.ISimpleReviewState}. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public Adapter createSimpleReviewStateAdapter() {
-		if (simpleReviewStateItemProvider == null) {
-			simpleReviewStateItemProvider = new SimpleReviewStateItemProvider(this);
-		}
-
-		return simpleReviewStateItemProvider;
-	}
-
-	/**
 	 * This returns the root adapter factory that contains this factory. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
@@ -614,10 +567,6 @@ public class ReviewsItemProviderAdapterFactory extends ReviewsAdapterFactory imp
 			requirementEntryItemProvider.dispose();
 		if (reviewRequirementsMapItemProvider != null)
 			reviewRequirementsMapItemProvider.dispose();
-		if (requirementReviewStateItemProvider != null)
-			requirementReviewStateItemProvider.dispose();
-		if (simpleReviewStateItemProvider != null)
-			simpleReviewStateItemProvider.dispose();
 	}
 
 }

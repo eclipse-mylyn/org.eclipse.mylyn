@@ -49,7 +49,6 @@ import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IRequirementEntry;
-import org.eclipse.mylyn.reviews.core.model.IRequirementReviewState;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
@@ -57,6 +56,7 @@ import org.eclipse.mylyn.reviews.core.model.IReviewerEntry;
 import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.reviews.core.model.RequirementStatus;
+import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
 import org.eclipse.mylyn.reviews.core.spi.remote.JobRemoteService;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -245,9 +245,7 @@ public class GerritRemoteFactoryTest extends TestCase {
 		assertThat(verifyEntry.getBy(), nullValue());
 		assertThat(verifyEntry.getStatus(), is(RequirementStatus.NOT_SATISFIED));
 
-		assertThat(getReview().getState(), instanceOf(IRequirementReviewState.class));
-		assertThat(((IRequirementReviewState) getReview().getState()).getStatus(), is(RequirementStatus.NOT_SATISFIED));
-		assertThat(((IRequirementReviewState) getReview().getState()).getDescriptor(), is("NotSatisfied"));
+		assertThat(getReview().getState(), is(ReviewStatus.NEW));
 	}
 
 	@Test
