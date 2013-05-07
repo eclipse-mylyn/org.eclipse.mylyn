@@ -63,6 +63,7 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 
 	@Test
 	public void testRefactorMetaContextHandles() throws Exception {
+		Calendar now = Calendar.getInstance();
 		String firstUrl = "http://repository1.com/bugs";
 		String secondUrl = "http://repository2.com/bugs";
 		AbstractTask task1 = new MockTask(firstUrl, "1");
@@ -70,12 +71,16 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 		taskList.addTask(task1);
 		taskList.addTask(task2);
 		Calendar startDate = Calendar.getInstance();
+		startDate.setTimeInMillis(now.getTimeInMillis());
 		Calendar endDate = Calendar.getInstance();
+		endDate.setTimeInMillis(now.getTimeInMillis());
 		endDate.add(Calendar.MINUTE, 5);
 
 		Calendar startDate2 = Calendar.getInstance();
+		startDate2.setTimeInMillis(now.getTimeInMillis());
 		startDate2.add(Calendar.MINUTE, 15);
 		Calendar endDate2 = Calendar.getInstance();
+		endDate2.setTimeInMillis(now.getTimeInMillis());
 		endDate2.add(Calendar.MINUTE, 25);
 
 		ContextCorePlugin.getContextManager().resetActivityMetaContext();
@@ -95,14 +100,14 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 						endDate2.getTime()));
 
 		assertEquals(2, metaContext.getInteractionHistory().size());
-		assertEquals(60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1));
-		assertEquals(2 * 60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task2));
+		assertEquals(5 * 60 * 1000, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1));
+		assertEquals(10 * 60 * 1000, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task2));
 		new RefactorRepositoryUrlOperation(firstUrl, secondUrl).run(new NullProgressMonitor());
 		metaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 		assertEquals(2, metaContext.getInteractionHistory().size());
-		assertEquals(60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(new MockTask(secondUrl, "1")));
-		assertEquals(2 * 60 * 1000 * 5,
-				TasksUiPlugin.getTaskActivityManager().getElapsedTime(new MockTask(secondUrl, "2")));
+		assertEquals(5 * 60 * 1000, TasksUiPlugin.getTaskActivityManager().getElapsedTime(new MockTask(secondUrl, "1")));
+		assertEquals(10 * 60 * 1000, TasksUiPlugin.getTaskActivityManager()
+				.getElapsedTime(new MockTask(secondUrl, "2")));
 		assertEquals(secondUrl + "-1", metaContext.getInteractionHistory().get(0).getStructureHandle());
 	}
 
