@@ -393,7 +393,11 @@ public class GerritConnector extends ReviewsConnector {
 			int code = ((GerritHttpException) e).getResponseCode();
 			return createErrorStatus(repository, qualifier + HttpStatus.getStatusText(code));
 		} else if (e instanceof GerritLoginException) {
-			return RepositoryStatus.createLoginError(repository.getUrl(), GerritCorePlugin.PLUGIN_ID);
+			if (repository != null) {
+				return RepositoryStatus.createLoginError(repository.getUrl(), GerritCorePlugin.PLUGIN_ID);
+			} else {
+				return createErrorStatus(null, qualifier + "Unknown Host");
+			}
 		} else if (e instanceof UnknownHostException) {
 			return createErrorStatus(repository, qualifier + "Unknown Host");
 		} else if (e instanceof GerritException && e.getCause() != null) {
@@ -404,8 +408,12 @@ public class GerritConnector extends ReviewsConnector {
 		} else if (e instanceof GerritException && e.getMessage() != null) {
 			return createErrorStatus(repository, NLS.bind("{0}Gerrit connection issue: {1}", qualifier, e.getMessage()));
 		}
-		return RepositoryStatus.createStatus(repository, IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
-				NLS.bind("{0}Unexpected error while connecting to Gerrit: {1}", qualifier, e.getMessage()));
+		String message = NLS.bind("{0}Unexpected error while connecting to Gerrit: {1}", qualifier, e.getMessage());
+		if (repository != null) {
+			return RepositoryStatus.createStatus(repository, IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, message);
+		} else {
+			return createErrorStatus(repository, message);
+		}
 	}
 
 	protected Status createErrorStatus(TaskRepository repository, String message) {
