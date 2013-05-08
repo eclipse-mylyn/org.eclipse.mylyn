@@ -14,7 +14,7 @@ import java.text.DateFormat;
 import java.text.MessageFormat;
 
 import org.eclipse.egit.github.core.RepositoryCommit;
-import org.eclipse.egit.ui.UIIcons;
+import org.eclipse.egit.ui.internal.UIIcons;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.ui.model.WorkbenchAdapter;
@@ -38,7 +38,7 @@ public class PullRequestCommitAdapter extends WorkbenchAdapter {
 
 	/**
 	 * Get commit
-	 * 
+	 *
 	 * @return commit
 	 */
 	public RepositoryCommit getCommit() {
