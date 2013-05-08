@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Tasktop Technologies.
+ * Copyright (c) 2011, 2013 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,6 +34,7 @@ class WhitespaceCleanupProcessor extends DocumentProcessor {
 		// for every element containing text with leading or trailing whitespace, move the whitespace out of the element.
 		for (Element element : body.getAllElements()) {
 			if (!Html.isWhitespacePreserve(element)) {
+				normalizeTextNodes(element);
 				List<Node> children = element.childNodes();
 				if (!children.isEmpty()) {
 					Node firstChild = children.get(0);

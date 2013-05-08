@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Tasktop Technologies.
+ * Copyright (c) 2012, 2013 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,10 +13,12 @@
 package org.eclipse.mylyn.internal.wikitext.core.parser.html;
 
 import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.TextNode;
 import org.junit.Test;
 
 /**
@@ -170,9 +172,51 @@ public class HtmlCleanerTest {
 		assertTrue(result.contains("<p><span style=\"color: #A1B2C3 !    important;\">foo bar</span></p>"));
 	}
 
+	@Test
+	public void testTrailingWhitespaceBodyNoBlock() {
+		// bug 406943
+		String result = cleanToBody("<html>\n<body>\ntext\n</body>\n</html>");
+		TestUtil.println(result);
+		assertEquals("<body>text</body>", result);
+	}
+
+	@Test
+	public void testTrailingWhitespaceBodyNoBlock_WhitespaceOutsideBody() {
+		// bug 406943
+		String result = cleanToBody("<html>\n<body>\ntext\n</body>\n</html>");
+		TestUtil.println(result);
+		assertEquals("<body>text</body>", result);
+	}
+
+	@Test
+	public void testTrailingWhitespaceBodyNoBlock_WhitespaceOutsideBody2() {
+		// bug 406943
+		Document document = Document.createShell("");
+		document.body().appendChild(new TextNode("\n", ""));
+		document.body().appendChild(new TextNode("text", ""));
+		document.body().appendChild(new TextNode("\n", ""));
+		document.body().appendChild(new TextNode("\n", ""));
+		String result = cleanToBody(document);
+		TestUtil.println(result);
+		assertEquals("<body>text</body>", result);
+	}
+
+	private String cleanToBody(String originalHtml) {
+		Document document = Jsoup.parse(originalHtml);
+		return cleanToBody(document);
+	}
+
+	private String cleanToBody(Document document) {
+		new HtmlCleaner().apply(document);
+		document.outputSettings().prettyPrint(false);
+		String result = document.body().outerHtml();
+		return result;
+	}
+
 	private String clean(String originalHtml) {
 		Document document = Jsoup.parse(originalHtml);
 		new HtmlCleaner().apply(document);
+		document.outputSettings().prettyPrint(false);
 		String result = document.outerHtml();
 		return result;
 	}
