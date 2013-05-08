@@ -14,6 +14,7 @@ package org.eclipse.mylyn.wikitext.tests;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -58,11 +59,26 @@ public class DiscoveryTestSuite extends TestSuite implements ClassFilter {
 							throw new IllegalStateException(clazz.getName(), e);
 						}
 					} else {
-						addTest(new TestSuite(clazz));
+						addTest(new JUnit4TestAdapter(clazz));
 					}
 				}
 			}
+
 		});
+	}
+
+	private boolean hasTestMethods(Class<?> clazz) {
+		for (Class<?> c = clazz; c != null && c != Object.class; c = c.getSuperclass()) {
+			Method[] methods = c.getDeclaredMethods();
+			if (methods != null) {
+				for (Method m : methods) {
+					if (m.getAnnotation(org.junit.Test.class) != null) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -74,7 +90,9 @@ public class DiscoveryTestSuite extends TestSuite implements ClassFilter {
 
 	public boolean filter(Class<?> clazz) {
 		if (!Test.class.isAssignableFrom(clazz)) {
-			return true;
+			if (!hasTestMethods(clazz)) {
+				return true;
+			}
 		}
 		if (DiscoveryTestSuite.class.isAssignableFrom(clazz)) {
 			return true;

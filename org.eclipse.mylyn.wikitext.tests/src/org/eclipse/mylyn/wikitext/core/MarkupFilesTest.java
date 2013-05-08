@@ -272,16 +272,15 @@ public class MarkupFilesTest extends TestSuite {
 		} else {
 			String className = MarkupFilesTest.class.getSimpleName() + ".class";
 			URL classResource = MarkupFilesTest.class.getResource(className);
-			String path = classResource.toExternalForm();
+			String path = classResource.getPath();
 			String classPath = MarkupFilesTest.class.getName().replace('.', '/') + ".class";
 			if (!path.endsWith(classPath)) {
 				throw new IllegalStateException(path);
 			}
-			String urlPrefix = "file:/";
-			if (!path.startsWith(urlPrefix)) {
-				throw new IllegalStateException(path);
+			if (!"file".equals(classResource.getProtocol())) {
+				throw new IllegalStateException(classResource.getProtocol() + " is not supported");
 			}
-			path = path.substring(urlPrefix.length(), path.length() - classPath.length());
+			path = path.substring(0, path.length() - classPath.length());
 
 			File file;
 			try {
