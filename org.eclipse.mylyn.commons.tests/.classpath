@@ -5,6 +5,7 @@
 		<accessrules>
 			<accessrule kind="accessible" pattern="org/eclipse/mylyn/internal/**"/>
 			<accessrule kind="accessible" pattern="org/eclipse/core/internal/net/**"/>
+			<accessrule kind="accessible" pattern="org/eclipse/mylyn/commons/sdk/**"/>
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>

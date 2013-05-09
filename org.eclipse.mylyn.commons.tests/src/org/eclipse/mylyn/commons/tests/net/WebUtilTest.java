@@ -41,6 +41,7 @@ import org.eclipse.mylyn.commons.net.IProxyProvider;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.TestUrl;
 import org.eclipse.mylyn.commons.tests.support.TestProxy;
 import org.eclipse.mylyn.commons.tests.support.TestProxy.Message;
 import org.eclipse.mylyn.internal.commons.net.AuthenticatedProxy;
@@ -139,11 +140,10 @@ public class WebUtilTest extends TestCase {
 	public void testExecute() throws Exception {
 		StubProgressMonitor monitor = new StubProgressMonitor();
 		HttpClient client = new HttpClient();
-		String url = "http://mylyn.org/";
-		WebLocation location = new WebLocation(url);
+		WebLocation location = new WebLocation(TestUrl.DEFAULT.getHttpOk().toString());
 		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, monitor);
 
-		GetMethod method = new GetMethod(url);
+		GetMethod method = new GetMethod(location.getUrl());
 		try {
 			int result = WebUtil.execute(client, hostConfiguration, method, monitor);
 			assertEquals(HttpStatus.SC_OK, result);
@@ -155,11 +155,10 @@ public class WebUtilTest extends TestCase {
 	public void testExecuteCancelStalledConnect() throws Exception {
 		final StubProgressMonitor monitor = new StubProgressMonitor();
 		HttpClient client = new HttpClient();
-		String url = "http://google.com:9999/";
-		WebLocation location = new WebLocation(url);
+		WebLocation location = new WebLocation(TestUrl.DEFAULT.getConnectionTimeout().toString());
 		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, monitor);
 
-		GetMethod method = new GetMethod(url);
+		GetMethod method = new GetMethod(location.getUrl());
 		try {
 			Runnable runner = new Runnable() {
 				public void run() {
@@ -184,11 +183,10 @@ public class WebUtilTest extends TestCase {
 	public void testExecuteAlreadyCancelled() throws Exception {
 		StubProgressMonitor monitor = new StubProgressMonitor();
 		HttpClient client = new HttpClient();
-		String url = "http://mylyn.org/";
-		WebLocation location = new WebLocation(url);
+		WebLocation location = new WebLocation(TestUrl.DEFAULT.getHttpOk().toString());
 		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, monitor);
 
-		GetMethod method = new GetMethod(url);
+		GetMethod method = new GetMethod(location.getUrl());
 		try {
 			monitor.canceled = true;
 			WebUtil.execute(client, hostConfiguration, method, monitor);
@@ -217,13 +215,13 @@ public class WebUtilTest extends TestCase {
 	public void testCreateHostConfigurationProxy() throws Exception {
 		StubProgressMonitor monitor = new StubProgressMonitor();
 		HttpClient client = new HttpClient();
-		WebUtil.createHostConfiguration(client, new WebLocation("http://mylyn.org/", null, null, new IProxyProvider() {
+		WebUtil.createHostConfiguration(client, new WebLocation(TestUrl.DEFAULT.getHttpOk().toString(), null, null, new IProxyProvider() {
 			public Proxy getProxyForHost(String host, String proxyType) {
 				assertEquals(IProxyData.HTTP_PROXY_TYPE, proxyType);
 				return null;
 			}
 		}), monitor);
-		WebUtil.createHostConfiguration(client, new WebLocation("https://eclipse.org/", null, null,
+		WebUtil.createHostConfiguration(client, new WebLocation(TestUrl.DEFAULT.getHttpsOk().toString(), null, null,
 				new IProxyProvider() {
 					public Proxy getProxyForHost(String host, String proxyType) {
 						assertEquals(IProxyData.HTTPS_PROXY_TYPE, proxyType);
