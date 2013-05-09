@@ -215,12 +215,13 @@ public class WebUtilTest extends TestCase {
 	public void testCreateHostConfigurationProxy() throws Exception {
 		StubProgressMonitor monitor = new StubProgressMonitor();
 		HttpClient client = new HttpClient();
-		WebUtil.createHostConfiguration(client, new WebLocation(TestUrl.DEFAULT.getHttpOk().toString(), null, null, new IProxyProvider() {
-			public Proxy getProxyForHost(String host, String proxyType) {
-				assertEquals(IProxyData.HTTP_PROXY_TYPE, proxyType);
-				return null;
-			}
-		}), monitor);
+		WebUtil.createHostConfiguration(client, new WebLocation(TestUrl.DEFAULT.getHttpOk().toString(), null, null,
+				new IProxyProvider() {
+					public Proxy getProxyForHost(String host, String proxyType) {
+						assertEquals(IProxyData.HTTP_PROXY_TYPE, proxyType);
+						return null;
+					}
+				}), monitor);
 		WebUtil.createHostConfiguration(client, new WebLocation(TestUrl.DEFAULT.getHttpsOk().toString(), null, null,
 				new IProxyProvider() {
 					public Proxy getProxyForHost(String host, String proxyType) {
@@ -599,7 +600,7 @@ public class WebUtilTest extends TestCase {
 
 	public void testGetTitleFromUrl() throws Exception {
 		assertEquals("Eclipse Mylyn Open Source Project",
-				WebUtil.getTitleFromUrl(new WebLocation("http://eclipse.org/mylyn"), null));
+				WebUtil.getTitleFromUrl(new WebLocation(TestUrl.DEFAULT.getHttpOk().toString()), null));
 		// disabled: fails in environments where the DNS resolver redirects for unknown hosts  
 		//		try {
 //			String title = WebUtil.getTitleFromUrl(new WebLocation("http://invalidurl"), null);
