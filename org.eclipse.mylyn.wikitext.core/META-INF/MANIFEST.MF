@@ -25,7 +25,7 @@ Export-Package: org.eclipse.mylyn.internal.wikitext.core;x-internal:=true,
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.eclipse.mylyn.internal.wikitext.core.WikiTextPlugin
 Require-Bundle: org.eclipse.core.runtime,
- org.jsoup;bundle-version="1.6.1";resolution:=optional;x-installation:=greedy,
+ org.jsoup;bundle-version="1.7.2";resolution:=optional;x-installation:=greedy,
  org.apache.ant;bundle-version="1.7.0";resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Localization: plugin
