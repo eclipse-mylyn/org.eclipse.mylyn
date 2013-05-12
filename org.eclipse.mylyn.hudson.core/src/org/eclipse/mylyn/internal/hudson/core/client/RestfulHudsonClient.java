@@ -40,6 +40,7 @@ import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylyn.builds.core.spi.AbstractConfigurationCache;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
@@ -302,6 +303,8 @@ public class RestfulHudsonClient {
 	Element parse(InputStream in, String url) throws HudsonException {
 		try {
 			return getDocumentBuilder().parse(in).getDocumentElement();
+		} catch (OperationCanceledException e) {
+			throw e;
 		} catch (SAXException e) {
 			throw new HudsonException(NLS.bind("Failed to parse response from {0}", url), e);
 		} catch (Exception e) {
