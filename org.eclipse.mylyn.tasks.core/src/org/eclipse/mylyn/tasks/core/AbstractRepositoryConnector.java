@@ -38,9 +38,70 @@ import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
  * <ul>
  * <li>Only methods that take a progress monitor can do network I/O.</li>
  * <li>{@link TaskRepository}, {@link ITask} and {@link TaskData} instances passes as parameters are guaranteed to match
- * this connector.
- * <li>Methods are not expected to throw runtime exceptions. If repository operations results in an error
- * {@link CoreException} should be thrown with a {@link RepositoryStatus} specifying error details.
+ * this connector.</li>
+ * <li>Methods are not expected to throw runtime exceptions. If repository operations results in an error</li>
+ * {@link CoreException} should be thrown with a {@link RepositoryStatus} specifying error details.</li>
+ * </ul>
+ * <h3>Synchronization</h3>
+ * <p>
+ * The tasks framework has a notion of synchronization for keeping a local cache of tasks synchronized with repository
+ * state. Synchronization are anchored around queries which brings in tasks from the repository based on search
+ * criteria. A synchronization has several stages:
+ * <ol>
+ * <li>Identify stale tasks (optional): {@link #preSynchronization(ISynchronizationSession, IProgressMonitor)}
+ * <li>Perform each query:
+ * {@link #performQuery(TaskRepository, IRepositoryQuery, TaskDataCollector, ISynchronizationSession, IProgressMonitor)}
+ * <li>Check each retrieved task if it is stale: {@link #hasTaskChanged(TaskRepository, ITask, TaskData)}
+ * <li>Update cached state: {@link #updateTaskFromTaskData(TaskRepository, ITask, TaskData)}
+ * <li>For each stale task: {@link #getTaskData(TaskRepository, String, IProgressMonitor)}
+ * <li>Update cached state: {@link #updateTaskFromTaskData(TaskRepository, ITask, TaskData)}
+ * <li>Persist synchronization state (optional): {@link #postSynchronization(ISynchronizationSession, IProgressMonitor)}
+ * </ol>
+ * <p>
+ * Connectors can implement these methods in several ways depending on APIs provided by the repository. In order to
+ * ensure correct synchronization it is important that the method interaction follows one of the contracts specified
+ * below.
+ * <p>
+ * Methods denoted as optional above are required to synchronize tasks not contained in queries. See
+ * {@link #preSynchronization(ISynchronizationSession, IProgressMonitor)} and
+ * {@link ISynchronizationSession#markStale(ITask)} for more details.
+ * </p>
+ * <h4>Full data synchronization</h4>
+ * <ul>
+ * <li>
+ * {@link #performQuery(TaskRepository, IRepositoryQuery, TaskDataCollector, ISynchronizationSession, IProgressMonitor)}
+ * returns full task data.
+ * </ul>
+ * <h4>Stale tasks are managed on a per repository basis</h4>
+ * <ul>
+ * <li>
+ * {@link #performQuery(TaskRepository, IRepositoryQuery, TaskDataCollector, ISynchronizationSession, IProgressMonitor)}
+ * returns partial task data
+ * <li>{@link #preSynchronization(ISynchronizationSession, IProgressMonitor)} invokes
+ * {@link ISynchronizationSession#markStale(ITask)} for all changed tasks in the session
+ * <li>{@link #postSynchronization(ISynchronizationSession, IProgressMonitor)} stores the synchronization stamp for full
+ * synchronizations only
+ * </ul>
+ * <h4>Stale tasks are managed on a per task basis</h4>
+ * <ul>
+ * <li>
+ * {@link #performQuery(TaskRepository, IRepositoryQuery, TaskDataCollector, ISynchronizationSession, IProgressMonitor)}
+ * returns partial task data
+ * <li>{@link #hasTaskChanged(TaskRepository, ITask, TaskData)} returns true if the partial task data has changes
+ * <li>{@link #updateTaskFromTaskData(TaskRepository, ITask, TaskData)} updates {@link ITask} partially for partial task
+ * data
+ * <li>{@link #hasTaskChanged(TaskRepository, ITask, TaskData)} returns true for the full task data even if the task was
+ * already updated for partial task data
+ * <li>{@link #updateTaskFromTaskData(TaskRepository, ITask, TaskData)} updates {@link ITask} fully for full task data
+ * </ul>
+ * <h4>Partial data synchronization only</h4>
+ * <ul>
+ * <li>
+ * {@link #performQuery(TaskRepository, IRepositoryQuery, TaskDataCollector, ISynchronizationSession, IProgressMonitor)}
+ * returns partial task data
+ * <li>{@link #hasTaskChanged(TaskRepository, ITask, TaskData)} returns true if the partial task data has changes
+ * <li>{@link #canSynchronizeTask(TaskRepository, ITask)} returns <code>false</code> so full task data is never
+ * retrieved
  * </ul>
  * 
  * @author Mik Kersten
@@ -300,7 +361,13 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
+	 * Returns <code>true</code>, if the state in <code>taskData</code> is different than the state stored in
+	 * <code>task</code>.
+	 * <p>
+	 * See {@link AbstractRepositoryConnector} for more details how this method interacts with other methods.
+	 * 
 	 * @since 3.0
+	 * @see #updateTaskFromTaskData(TaskRepository, ITask, TaskData)
 	 */
 	public abstract boolean hasTaskChanged(TaskRepository taskRepository, ITask task, TaskData taskData);
 
@@ -360,6 +427,8 @@ public abstract class AbstractRepositoryConnector {
 	 * does not return the full task data for a result, {@link TaskData#isPartial()} will return true.
 	 * <p>
 	 * Implementors must complete executing <code>query</code> before returning from this method.
+	 * <p>
+	 * See {@link AbstractRepositoryConnector} for more details how this method interacts with other methods.
 	 * 
 	 * @param repository
 	 *            task repository to run query against
@@ -405,6 +474,8 @@ public abstract class AbstractRepositoryConnector {
 
 	/**
 	 * Hook into the synchronization process.
+	 * <p>
+	 * See {@link AbstractRepositoryConnector} for more details how this method interacts with other methods.
 	 * 
 	 * @since 3.0
 	 */
@@ -446,6 +517,13 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
+	 * Updates <code>task</code> based on the state in <code>taskData</code>. {@link TaskMapper#applyTo(ITask)} can be
+	 * used to map common attributes.
+	 * <p>
+	 * See {@link AbstractRepositoryConnector} for more details how this method interacts with other methods.
+	 * 
+	 * @see #hasTaskChanged(TaskRepository, ITask, TaskData)
+	 * @see TaskMapper#applyTo(ITask)
 	 * @since 3.0
 	 */
 	public abstract void updateTaskFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData);
