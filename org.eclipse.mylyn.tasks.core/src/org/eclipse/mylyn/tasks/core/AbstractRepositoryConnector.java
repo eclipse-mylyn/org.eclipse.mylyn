@@ -32,11 +32,21 @@ import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 
 /**
  * Encapsulates common operations that can be performed on a task repository. Extend to connect with a Java API or WS
- * API for accessing the repository. Only methods that take a progress monitor can do network I/O.
+ * API for accessing the repository.
+ * <p>
+ * General notes:
+ * <ul>
+ * <li>Only methods that take a progress monitor can do network I/O.</li>
+ * <li>{@link TaskRepository}, {@link ITask} and {@link TaskData} instances passes as parameters are guaranteed to match
+ * this connector.
+ * <li>Methods are not expected to throw runtime exceptions. If repository operations results in an error
+ * {@link CoreException} should be thrown with a {@link RepositoryStatus} specifying error details.
+ * </ul>
  * 
  * @author Mik Kersten
  * @author Rob Elves
  * @author Shawn Minto
+ * @author Steffen Pingel
  * @since 2.0
  */
 public abstract class AbstractRepositoryConnector {
@@ -69,14 +79,21 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
+	 * Returns true, if the connector supports querying the repository.
+	 * 
 	 * @since 3.0
+	 * @see #performQuery(TaskRepository, IRepositoryQuery, TaskDataCollector, ISynchronizationSession,
+	 *      IProgressMonitor)
 	 */
 	public boolean canQuery(TaskRepository repository) {
 		return true;
 	}
 
 	/**
+	 * Returns true, if the connectors support retrieving full task data for <code>task</code>.
+	 * 
 	 * @since 3.0
+	 * @see #getTaskData(TaskRepository, String, IProgressMonitor)
 	 */
 	public boolean canSynchronizeTask(TaskRepository taskRepository, ITask task) {
 		return true;
@@ -116,12 +133,22 @@ public abstract class AbstractRepositoryConnector {
 	public abstract String getLabel();
 
 	/**
-	 * Can return null if URLs are not used to identify tasks.
+	 * Returns the repository URL for <code>taskUrl</code> if it is a valid task URL for this connector.
+	 * <p>
+	 * Implementations typically match the task identifier based on repository specific patterns. For a Bugzilla task
+	 * URL for example the implementation would match on <code>bugs.cgi</code> and return the repository specific
+	 * portion of the URL: &quot;<i>http://bugs/</i><b>bugs.cgi?bugid=</b>123&quot;.
+	 * 
+	 * @return a task identifier or <code>null</code>, if <code>taskUrl</code> is not recognized
+	 * @see #getTaskData(TaskRepository, String, IProgressMonitor)
 	 */
-	public abstract String getRepositoryUrlFromTaskUrl(String taskFullUrl);
+	public abstract String getRepositoryUrlFromTaskUrl(String taskUrl);
 
 	/**
 	 * Returns a short label for the connector, e.g. Bugzilla.
+	 * <p>
+	 * The default implementations returns the substring of the text returned by {@link #getLabel()} up to the first
+	 * occurrence of <em>(</em> or a space.
 	 * 
 	 * @since 2.3
 	 */
@@ -145,6 +172,11 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
+	 * Returns the attachment handler. The method is expected to always return the same instance.
+	 * <p>
+	 * The default implementation returns <code>null</code>.
+	 * 
+	 * @return the attachment handler, or null, if attachments are not supported
 	 * @since 3.0
 	 */
 	public AbstractTaskAttachmentHandler getTaskAttachmentHandler() {
@@ -152,12 +184,28 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
+	 * Returns the full task data. The method is expected to always return the same instance.
+	 * 
+	 * @param repository
+	 *            the task repository matching this connector
+	 * @param taskIdOrKey
+	 *            a task identifier
+	 * @param monitor
+	 *            the progress monitor
+	 * @see #canSynchronizeTask(TaskRepository, ITask)
+	 * @see #canCreateTaskFromKey(TaskRepository)
+	 * @see TaskData#isPartial()
 	 * @since 3.0
 	 */
-	public abstract TaskData getTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
+	public abstract TaskData getTaskData(TaskRepository repository, String taskIdOrKey, IProgressMonitor monitor)
 			throws CoreException;
 
 	/**
+	 * Returns the task data handler. The method is expected to always return the same instance.
+	 * <p>
+	 * The default implementation returns <code>null</code>.
+	 * 
+	 * @return the task data handler, or null, task data submission is not supported
 	 * @since 3.0
 	 */
 	public AbstractTaskDataHandler getTaskDataHandler() {
@@ -165,9 +213,18 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
+	 * Returns the task identifier for <code>taskUrl</code> if it is a valid task URL for this connector. The task
+	 * identifier needs to be a task ID or key that is recognized by
+	 * {@link #getTaskData(TaskRepository, String, IProgressMonitor)}.
+	 * <p>
+	 * Implementations typically match the task identifier based on repository specific patterns such as
+	 * &quot;http://bugs/<b>bugs.cgibugid=123</b>&quot;.
+	 * 
+	 * @return a task identifier or <code>null</code>, if <code>taskUrl</code> is not recognized
+	 * @see #getTaskData(TaskRepository, String, IProgressMonitor)
 	 * @since 2.0
 	 */
-	public abstract String getTaskIdFromTaskUrl(String taskFullUrl);
+	public abstract String getTaskIdFromTaskUrl(String taskUrl);
 
 	/**
 	 * Used for referring to the task in the UI.
@@ -177,6 +234,12 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
+	 * Extracts task identifiers from <code>comment</code>. This is used to linking text such as commit messages to
+	 * tasks.
+	 * <p>
+	 * Implementations typically scan <code>comment</code> for repository specific patterns such as KEY-123 for JIRA.
+	 * 
+	 * @return null, if the method is not supported; an array of task identifiers otherwise
 	 * @since 2.0
 	 */
 	public String[] getTaskIdsFromComment(TaskRepository repository, String comment) {
@@ -184,6 +247,9 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
+	 * Returns a mapping for {@link TaskData}. The mapping maps the connector specific representation to the standard
+	 * schema defined in {@link ITaskMapping}.
+	 * 
 	 * @since 3.0
 	 */
 	public ITaskMapping getTaskMapping(TaskData taskData) {
@@ -191,8 +257,14 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
-	 * Connectors can override to return other tasks associated with this task.
+	 * Return other tasks associated with this task.
+	 * <p>
+	 * For subtasks implementations are expected to return relations creates by {@link TaskRelation#subtask(String)}.
+	 * <p>
+	 * The default implementation returns <code>null</code>.
 	 * 
+	 * @return a list of relations or null if <code>taskData</code> does not have relations or if task relations are not
+	 *         supported
 	 * @since 3.0
 	 */
 	public Collection<TaskRelation> getTaskRelations(TaskData taskData) {
@@ -200,9 +272,15 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
+	 * Returns a task URL for the task referenced by <code>taskIdOrKey</code> in the repository referenced by
+	 * <code>repositoryUrl</code>.
+	 * 
+	 * @return a task URL or null if the connector does not support task URLs
+	 * @see #getTaskIdFromTaskUrl(String)
+	 * @see #getRepositoryUrlFromTaskUrl(String)
 	 * @since 2.0
 	 */
-	public abstract String getTaskUrl(String repositoryUrl, String taskId);
+	public abstract String getTaskUrl(String repositoryUrl, String taskIdOrKey);
 
 	/**
 	 * Returns a URL for <code>element</code> that contains authentication information such as a session ID.
@@ -227,21 +305,32 @@ public abstract class AbstractRepositoryConnector {
 	public abstract boolean hasTaskChanged(TaskRepository taskRepository, ITask task, TaskData taskData);
 
 	/**
+	 * Returns <code>true</code> if the completion state for <code>task</code> is managed locally and not on the
+	 * repository which is the common case and default.
+	 * <p>
+	 * The default implementation returns <code>false</code>.
+	 * 
 	 * @since 3.0
 	 */
-	public boolean hasLocalCompletionState(TaskRepository taskRepository, ITask task) {
+	public boolean hasLocalCompletionState(TaskRepository repository, ITask task) {
 		return false;
 	}
 
 	/**
+	 * Returns <code>true</code>, if <code>task</code> has a due date that is managed on the repository.
+	 * <p>
+	 * The default implementation returns <code>false</code>.
+	 * 
 	 * @since 3.0
 	 */
-	public boolean hasRepositoryDueDate(TaskRepository taskRepository, ITask task, TaskData taskData) {
+	public boolean hasRepositoryDueDate(TaskRepository repository, ITask task, TaskData taskData) {
 		return false;
 	}
 
 	/**
-	 * Default implementation returns true every 24hrs.
+	 * Returns <code>true</code> to indication that the repository configuration is stale and requires update
+	 * <p>
+	 * The default implementation returns <code>true</code> every 24 hours.
 	 * 
 	 * @return true to indicate that the repository configuration is stale and requires update
 	 * @since 3.0
@@ -256,6 +345,10 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
+	 * Returns true, if users can manage create repositories for this connector.
+	 * <p>
+	 * The default implementation returns true.
+	 * 
 	 * @since 2.0
 	 */
 	public boolean isUserManaged() {
@@ -416,21 +509,5 @@ public abstract class AbstractRepositoryConnector {
 			throws CoreException {
 		throw new UnsupportedOperationException();
 	}
-
-//	/**
-//	 * Returns a specific revision of a task. Sub-classes may override. 
-//	 * 
-//	 * @return null, if the revision is not found
-//	 * @since 3.6
-//	 * @see TaskHistory
-//	 * @see #getTaskHistory(TaskRepository, ITask, IProgressMonitor)
-//	 */
-//	public TaskData getTaskData(TaskRepository repository, ITask task, String revisionId, IProgressMonitor monitor)
-//			throws CoreException {
-//		Assert.isNotNull(repository);
-//		Assert.isNotNull(task);
-//		Assert.isNotNull(revisionId);
-//		return null;
-//	}
 
 }
