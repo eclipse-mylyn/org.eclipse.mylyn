@@ -22,7 +22,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
  */
 public enum BugzillaAttribute {
 	STATUS_WHITEBOARD(Messages.BugzillaAttribute_Status_Whiteboard,
-			"status_whiteboard", TaskAttribute.TYPE_LONG_RICH_TEXT, Flag.ATTRIBUTE), //$NON-NLS-1$
+			"status_whiteboard", TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE), //$NON-NLS-1$
 
 	ACTUAL_TIME(Messages.BugzillaAttribute_Worked, "actual_time", TaskAttribute.TYPE_SHORT_TEXT, Flag.READ_ONLY), //$NON-NLS-1$
 

@@ -1,5 +1,5 @@
 TaskAttribute[id=root,values=[],options=null,metaData=null]
- TaskAttribute[id=status_whiteboard,values=[],options=null,metaData={task.meta.readOnly=false, task.meta.attributeKind=task.common.kind.default, task.meta.type=longRichText}]
+ TaskAttribute[id=status_whiteboard,values=[],options=null,metaData={task.meta.readOnly=false, task.meta.attributeKind=task.common.kind.default, task.meta.type=shortText}]
  TaskAttribute[id=actual_time,values=[],options=null,metaData={task.meta.readOnly=true, task.meta.type=shortText}]
  TaskAttribute[id=comment,values=[],options=null,metaData={task.meta.readOnly=false, task.meta.type=longText}]
  TaskAttribute[id=alias,values=[],options=null,metaData={task.meta.readOnly=false, task.meta.type=shortText}]
