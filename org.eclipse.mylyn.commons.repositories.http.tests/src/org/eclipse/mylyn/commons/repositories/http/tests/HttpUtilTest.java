@@ -18,6 +18,7 @@ import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.impl.client.ContentEncodingHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.eclipse.core.runtime.AssertionFailedException;
@@ -25,6 +26,7 @@ import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.commons.repositories.http.core.HttpUtil;
 import org.eclipse.mylyn.commons.sdk.util.TestProxy;
+import org.eclipse.mylyn.commons.sdk.util.TestProxy.Message;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -109,4 +111,27 @@ public class HttpUtilTest {
 		HttpUtil.configureProxy(client, null);
 	}
 
+	@Test
+	public void testGetEmptyGzipResponse() throws Exception {
+		client = new ContentEncodingHttpClient() {
+			@Override
+			protected ClientConnectionManager createClientConnectionManager() {
+				return connectionManager;
+			}
+		};
+
+		Message message = new Message("HTTP/1.1 200 OK");
+		message.headers.add("Content-Length: 0");
+		message.headers.add("Content-Encoding: gzip");
+		message.headers.add("Connection: close");
+
+		testProxy.addResponse(message);
+		HttpRequestBase request = new HttpGet(testProxy.getUrl());
+
+		HttpUtil.configureClient(client, null);
+		HttpResponse response = HttpUtil.execute(client, null, request, null);
+		assertEquals(1, connectionManager.getConnectionsInPool());
+		HttpUtil.release(request, response, null);
+		assertEquals(0, connectionManager.getConnectionsInPool());
+	}
 }

@@ -347,7 +347,11 @@ public class HttpUtil {
 			try {
 				EntityUtils.consume(response.getEntity());
 			} catch (IOException e) {
-				// ignore
+				// if construction of the stream fails the connection has to be aborted to be released
+				try {
+					((HttpUriRequest) request).abort();
+				} catch (UnsupportedOperationException e2) {
+				}
 			} catch (NullPointerException e) {
 				// XXX work-around for bug 368830
 			}
