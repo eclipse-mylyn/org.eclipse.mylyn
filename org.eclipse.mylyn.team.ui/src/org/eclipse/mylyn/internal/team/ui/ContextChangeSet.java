@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
@@ -30,8 +29,6 @@ import org.eclipse.mylyn.team.ui.AbstractTaskReference;
 import org.eclipse.mylyn.team.ui.IContextChangeSet;
 import org.eclipse.mylyn.team.ui.TeamUiUtil;
 import org.eclipse.team.core.diff.IDiff;
-import org.eclipse.team.core.diff.provider.ThreeWayDiff;
-import org.eclipse.team.core.mapping.provider.ResourceDiff;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSet;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 import org.osgi.service.prefs.Preferences;
@@ -110,17 +107,6 @@ public class ContextChangeSet extends ActiveChangeSet/*CVSActiveChangeSet*/imple
 	@Override
 	public void add(IDiff diff) {
 		super.add(diff);
-	}
-
-	private IResource getResourceFromDiff(IDiff diff) {
-		if (diff instanceof ResourceDiff) {
-			return ((ResourceDiff) diff).getResource();
-		} else if (diff instanceof ThreeWayDiff) {
-			ThreeWayDiff threeWayDiff = (ThreeWayDiff) diff;
-			return ResourcesPlugin.getWorkspace().getRoot().findMember(threeWayDiff.getPath());
-		} else {
-			return null;
-		}
 	}
 
 	@Override

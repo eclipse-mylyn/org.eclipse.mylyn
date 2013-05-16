@@ -26,7 +26,6 @@ import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.ui.IMemento;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,8 +34,6 @@ import org.junit.Test;
  * @author Steffen Pingel
  */
 public class ContextMementoMigratorTest extends TestCase {
-
-	private static final String ID_RESOURCE_PERSPECTIVE = "org.eclipse.ui.resourcePerspective";
 
 	private static final String ID_PLANNING_PERSPECTIVE = "org.eclipse.mylyn.tasks.ui.perspectives.planning";
 
@@ -104,12 +101,6 @@ public class ContextMementoMigratorTest extends TestCase {
 				ContextUiPlugin.getDefault()
 						.getPreferenceStore()
 						.getString(ContextMementoMigrator.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier()));
-	}
-
-	private IWorkbenchWindow getWorkbenchWindow() {
-		IWorkbenchWindow window = ContextUiPlugin.getPerspectiveStateParticipant().getWorkbenchWindow();
-		assertNotNull(window);
-		return window;
 	}
 
 }

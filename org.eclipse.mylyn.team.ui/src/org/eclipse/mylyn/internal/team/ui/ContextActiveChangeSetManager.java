@@ -45,8 +45,6 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 
 	private final List<IContextChangeSet> activeChangeSets = new ArrayList<IContextChangeSet>();
 
-	private final Map<ActiveChangeSetManager, ActiveChangeSet> noTaskSetMap = new HashMap<ActiveChangeSetManager, ActiveChangeSet>();;
-
 	private final Map<ActiveChangeSetManager, ChangeSetChangeListener> listenerByManager = new HashMap<ActiveChangeSetManager, ChangeSetChangeListener>();
 
 	/**
@@ -191,7 +189,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	}
 
 	// TODO m4.0 remove deprecated method that is needed maintain backwards compatibility
-	@SuppressWarnings({ "restriction", "deprecation" })
+	@SuppressWarnings({ "deprecation" })
 	@Override
 	public void contextActivated(IInteractionContext context) {
 		try {

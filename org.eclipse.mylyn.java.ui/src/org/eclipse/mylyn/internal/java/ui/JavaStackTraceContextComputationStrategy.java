@@ -193,7 +193,6 @@ public class JavaStackTraceContextComputationStrategy extends AbstractJavaContex
 	public List<Element> computeElements(String description) throws IOException {
 		List<Element> elements = new ArrayList<Element>();
 
-		@SuppressWarnings("resource")
 		BufferedReader reader = new BufferedReader(new StringReader(description));
 		for (String line = reader.readLine(); line != null && elements.size() < maxElements; line = reader.readLine()) {
 			Matcher matcher = STACK_TRACE_PATTERN.matcher(line);

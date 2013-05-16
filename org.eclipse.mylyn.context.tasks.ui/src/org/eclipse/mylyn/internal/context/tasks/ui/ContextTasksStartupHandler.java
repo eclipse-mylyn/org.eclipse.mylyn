@@ -102,8 +102,6 @@ public class ContextTasksStartupHandler implements IContextUiStartup {
 
 	private class ContextActivationListener extends AbstractContextListener {
 
-		private ContextStatePersistenceHandler stateHandler;
-
 		@Override
 		public void contextChanged(ContextChangeEvent event) {
 			switch (event.getEventKind()) {
@@ -208,12 +206,6 @@ public class ContextTasksStartupHandler implements IContextUiStartup {
 		updateAutoManageExpansionPreference();
 
 		ContextCore.getContextManager().addListener(contextActivationListener);
-	}
-
-	private void lazyStop() {
-		ContextCore.getContextManager().removeListener(contextActivationListener);
-
-		TasksUi.getTaskActivityManager().removeActivationListener(TASK_ACTIVATION_LISTENER);
 	}
 
 	private void updateAutoManageExpansionPreference() {
