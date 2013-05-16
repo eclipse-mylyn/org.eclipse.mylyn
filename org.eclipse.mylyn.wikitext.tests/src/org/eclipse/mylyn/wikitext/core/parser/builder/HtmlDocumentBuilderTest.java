@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 David Green and others.
+ * Copyright (c) 2007, 2013 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -97,8 +97,8 @@ public class HtmlDocumentBuilderTest extends TestCase {
 		parser.parse("\"An URL\":foo/bar.html");
 		String html = out.toString();
 		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<a href=\"file:/base/2/with%20space/foo/bar.html\">An URL</a>")
-				|| html.contains("<a href=\"file:/C:/base/2/with%20space/foo/bar.html\">An URL</a>"));
+		Pattern pattern = Pattern.compile("<a href=\"file:(/[A-Z]{1}:)?/base/2/with%20space/foo/bar.html\">An URL</a>");
+		assertTrue(pattern.matcher(html).find());
 	}
 
 	public void testNoGratuitousWhitespace() {
