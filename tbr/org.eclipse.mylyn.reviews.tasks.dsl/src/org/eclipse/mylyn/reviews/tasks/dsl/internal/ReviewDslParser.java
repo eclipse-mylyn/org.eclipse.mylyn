@@ -253,8 +253,6 @@ public class ReviewDslParser extends Parser {
 
 		Token set4 = null;
 
-		CommonTree set4_tree = null;
-
 		try {
 			// ReviewDsl.g:22:3: ( 'PASSED' | 'WARNING' | 'FAILED' | 'TODO' )
 			// ReviewDsl.g:
@@ -547,7 +545,6 @@ public class ReviewDslParser extends Parser {
 
 		Token string_literal10 = null;
 		Token string_literal11 = null;
-		Token s = null;
 		List list_s = new ArrayList();
 		resourceDef_return resourceDef12 = null;
 
@@ -557,7 +554,6 @@ public class ReviewDslParser extends Parser {
 
 		CommonTree string_literal10_tree = null;
 		CommonTree string_literal11_tree = null;
-		CommonTree s_tree = null;
 
 		try {
 			// ReviewDsl.g:36:4: ( 'Review' 'scope:' (s+= ( resourceDef |
@@ -1027,8 +1023,6 @@ public class ReviewDslParser extends Parser {
 		CommonTree root_0 = null;
 
 		Token set25 = null;
-
-		CommonTree set25_tree = null;
 
 		try {
 			// ReviewDsl.g:61:4: ( TASK_ID | INT )

@@ -12,7 +12,6 @@
 package org.eclipse.mylyn.internal.gerrit.core.client.data;
 
 import java.sql.Timestamp;
-import java.util.Map;
 
 import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
 
@@ -31,8 +30,6 @@ public class GerritQueryResult {
 	private Timestamp created;
 
 	private String id;
-
-	private Map<String, GerritLabel> labels;
 
 	private GerritPerson owner;
 
@@ -71,10 +68,6 @@ public class GerritQueryResult {
 
 	public String getId() {
 		return id;
-	}
-
-	public Map<String, GerritLabel> getLabels() {
-		return labels;
 	}
 
 	public int getNumber() {

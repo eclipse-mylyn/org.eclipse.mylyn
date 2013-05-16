@@ -69,7 +69,6 @@ public class GerritCommentLinkDetectorTest {
 	public void testTaskPatternInvalid() {
 		commentLinks.add(COMMENT_LINK_TASK_INVALID);
 		GerritCommentLinkDetector detector = new GerritCommentLinkDetector(repository, commentLinks);
-		UrlHyperlink expected = new UrlHyperlink(new Region(0, 9), "http://tracker.mylyn.org/123");
 		assertEquals("null", String.valueOf(detector.findHyperlinks("Task: 123", 0, 0)));
 	}
 

@@ -206,10 +206,6 @@ public class ChangesetPart extends AbstractFormPart {
 
 		private boolean includeSubTasks;
 
-		public boolean isIncludeSubTasks() {
-			return includeSubTasks;
-		}
-
 		public void setIncludeSubTasks(boolean includeSubTasks) {
 			boolean isChanged = this.includeSubTasks ^ includeSubTasks;
 			this.includeSubTasks = includeSubTasks;

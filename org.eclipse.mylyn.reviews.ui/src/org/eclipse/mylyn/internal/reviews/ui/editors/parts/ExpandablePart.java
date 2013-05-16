@@ -27,7 +27,6 @@ import org.eclipse.mylyn.internal.reviews.ui.IReviewAction;
 import org.eclipse.mylyn.internal.reviews.ui.IReviewActionListener;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -308,22 +307,6 @@ public abstract class ExpandablePart<T extends IComment, V extends ExpandablePar
 
 	public boolean isIncomming() {
 		return isIncomming;
-	}
-
-	private void highlightControl(Control client, Color highlightColor) {
-		if (highlightColor == null || highlightColor.isDisposed()) {
-			return;
-		}
-		if (!client.isDisposed()) {
-			if (highlightColor != null) {
-				client.setBackground(highlightColor);
-			}
-			if (client instanceof Composite) {
-				for (Control child : ((Composite) client).getChildren()) {
-					highlightControl(child, highlightColor);
-				}
-			}
-		}
 	}
 
 	public void dispose() {

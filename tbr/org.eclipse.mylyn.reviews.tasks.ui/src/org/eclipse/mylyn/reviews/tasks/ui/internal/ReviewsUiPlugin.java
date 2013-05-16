@@ -11,7 +11,6 @@
 package org.eclipse.mylyn.reviews.tasks.ui.internal;
 
 import org.eclipse.mylyn.reviews.tasks.core.IReviewMapper;
-import org.eclipse.mylyn.reviews.tasks.core.internal.ReviewTaskMapper;
 import org.eclipse.mylyn.reviews.tasks.core.internal.ReviewsUtil;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;

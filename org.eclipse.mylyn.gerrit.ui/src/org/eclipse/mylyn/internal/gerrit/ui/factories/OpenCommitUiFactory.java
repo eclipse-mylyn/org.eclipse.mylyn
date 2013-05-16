@@ -21,17 +21,11 @@ import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.ui.spi.factories.IUiContext;
 import org.eclipse.swt.widgets.Display;
 
-import com.google.gerrit.reviewdb.PatchSet;
-
 /**
  * @author Steffen Pingel
  * @author Miles Parker
  */
 public class OpenCommitUiFactory extends AbstractPatchSetUiFactory {
-
-	private PatchSet base;
-
-	private PatchSet target;
 
 	public OpenCommitUiFactory(IUiContext context, IReviewItemSet set) {
 		super("Open Commit", context, set);

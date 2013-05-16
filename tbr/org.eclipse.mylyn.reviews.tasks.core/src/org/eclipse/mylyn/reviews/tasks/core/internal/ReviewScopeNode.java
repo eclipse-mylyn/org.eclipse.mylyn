@@ -10,17 +10,16 @@
  *******************************************************************************/
 package org.eclipse.mylyn.reviews.tasks.core.internal;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import org.eclipse.mylyn.reviews.tasks.core.IReviewScopeItem;
 import org.eclipse.mylyn.reviews.tasks.core.ITaskProperties;
 import org.eclipse.mylyn.reviews.tasks.core.Rating;
 import org.eclipse.mylyn.reviews.tasks.core.ReviewResult;
 import org.eclipse.mylyn.reviews.tasks.core.ReviewScope;
-import org.eclipse.mylyn.reviews.tasks.core.IReviewScopeItem;
 /**
  * 
  * @author mattk

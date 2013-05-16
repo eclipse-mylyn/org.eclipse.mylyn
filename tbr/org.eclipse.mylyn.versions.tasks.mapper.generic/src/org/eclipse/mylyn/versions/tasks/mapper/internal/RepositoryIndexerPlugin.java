@@ -12,7 +12,6 @@ package org.eclipse.mylyn.versions.tasks.mapper.internal;
 
 import java.io.File;
 
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.versions.tasks.mapper.generic.IChangeSetIndexSearcher;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;

@@ -10,18 +10,10 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.versions.tasks.ui;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
-import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskFormPage;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.IManagedForm;
@@ -29,14 +21,12 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 /**
- *
  * @author Kilian Matt
- *
  */
 public class ChangeSetPage extends TaskFormPage {
 
 	public ChangeSetPage(TaskEditor editor) {
-		super(editor, ChangeSetPage.class.getName(),"title");
+		super(editor, ChangeSetPage.class.getName(), "title");
 	}
 
 	@Override
@@ -45,17 +35,18 @@ public class ChangeSetPage extends TaskFormPage {
 
 		Composite body = managedForm.getForm().getBody();
 		body.setLayout(new TableWrapLayout());
-		createPart(body,managedForm);
+		createPart(body, managedForm);
 	}
+
 	private void createPart(Composite parent, IManagedForm managedForm) {
 		ChangesetPart part = new ChangesetPart();
 		managedForm.addPart(part);
 		part.initialize(this);
 		Control control = part.createControl(parent, managedForm.getToolkit());
-		control.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.FILL_GRAB));
+		control.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB));
 	}
 
-	public ITask getTask(){
-		return ((TaskEditorInput)getEditorInput()).getTask();
+	public ITask getTask() {
+		return ((TaskEditorInput) getEditorInput()).getTask();
 	}
 }

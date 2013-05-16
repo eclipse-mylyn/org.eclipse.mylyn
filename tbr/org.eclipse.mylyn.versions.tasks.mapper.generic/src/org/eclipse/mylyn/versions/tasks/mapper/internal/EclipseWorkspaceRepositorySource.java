@@ -12,7 +12,6 @@ package org.eclipse.mylyn.versions.tasks.mapper.internal;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;

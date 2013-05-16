@@ -42,7 +42,6 @@ import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.internal.texteditor.PropertyEventDispatcher;
 import org.eclipse.ui.texteditor.AnnotationPreference;
 import org.eclipse.ui.texteditor.AnnotationPreferenceLookup;
-import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.rulers.IContributedRulerColumn;
 import org.eclipse.ui.texteditor.rulers.RulerColumnDescriptor;
@@ -61,8 +60,6 @@ public class CommentAnnotationRulerColumn extends AbstractRulerColumn implements
 	private ISourceViewer fViewer;
 
 	private PropertyEventDispatcher fDispatcher;
-
-	private IDocumentProvider fDocumentProvider;
 
 	public CommentAnnotationRulerColumn() {
 		setTextInset(10);
@@ -86,7 +83,6 @@ public class CommentAnnotationRulerColumn extends AbstractRulerColumn implements
 
 	public void setEditor(ITextEditor editor) {
 		fEditor = editor;
-		fDocumentProvider = fEditor.getDocumentProvider();
 	}
 
 	public ITextEditor getEditor() {

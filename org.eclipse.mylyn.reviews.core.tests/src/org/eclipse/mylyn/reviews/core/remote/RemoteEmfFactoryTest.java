@@ -168,7 +168,6 @@ public class RemoteEmfFactoryTest {
 	public void testGetConsumerForDifferentParentSameLocalKey() throws CoreException {
 		EPackage parent1 = EcoreFactory.eINSTANCE.createEPackage();
 		TestRemoteFactory factory = new TestRemoteFactory();
-		TestIRemoteEmfObserver<EPackage, EClass> listener1 = new TestIRemoteEmfObserver<EPackage, EClass>(factory);
 		RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> consumer1 = factory.getConsumerForRemoteKey(
 				parent1, "remoteKeyFor Object 1");
 

@@ -10,19 +10,10 @@
  *******************************************************************************/
 package org.eclipse.mylyn.versions.tasks.mapper.generic;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.versions.core.ScmCore;
 import org.eclipse.mylyn.versions.core.ScmRepository;
-import org.eclipse.mylyn.versions.core.spi.ScmConnector;
 import org.eclipse.mylyn.versions.tasks.core.IChangeSetMapping;
 import org.eclipse.mylyn.versions.tasks.mapper.internal.ChangeSetProvider;
 import org.eclipse.mylyn.versions.tasks.mapper.internal.EclipsePluginConfiguration;

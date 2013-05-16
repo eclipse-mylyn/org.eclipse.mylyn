@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.gerrit.ui.operations;
 import org.eclipse.mylyn.internal.gerrit.core.operations.GerritOperation;
 import org.eclipse.mylyn.internal.gerrit.core.operations.SubmitRequest;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
@@ -32,8 +31,6 @@ import com.google.gerrit.reviewdb.PatchSet;
 public class SubmitDialog extends GerritOperationDialog {
 
 	private final PatchSet patchSet;
-
-	private RichTextEditor messageEditor;
 
 	public SubmitDialog(Shell parentShell, ITask task, PatchSet patchSet) {
 		super(parentShell, task);
