@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,18 +13,16 @@ package org.eclipse.mylyn.internal.monitor.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.ExtensionPointReader;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.monitor.core.IInteractionEventListener;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
@@ -63,7 +61,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 	private ActivityContextManager activityContextManager;
 
-	private final ArrayList<AbstractUserActivityMonitor> monitors = new ArrayList<AbstractUserActivityMonitor>();
+	private final List<AbstractUserActivityMonitor> monitors = new ArrayList<AbstractUserActivityMonitor>();
 
 	protected Set<IPartListener> partListeners = new HashSet<IPartListener>();
 
@@ -259,52 +257,25 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 		return interactionListeners;
 	}
 
-	class MonitorUiExtensionPointReader {
+	static class MonitorUiExtensionPointReader {
 
-		public static final String EXTENSION_ID_USER = "org.eclipse.mylyn.monitor.ui.user"; //$NON-NLS-1$
+		private static final String EXTENSION_ID_USER = "user"; //$NON-NLS-1$
 
-		public static final String ELEMENT_ACTIVITY_TIMER = "osActivityTimer"; //$NON-NLS-1$
+		private static final String ELEMENT_ACTIVITY_TIMER = "osActivityTimer"; //$NON-NLS-1$
 
-		public static final String ELEMENT_CLASS = "class"; //$NON-NLS-1$
+		private static boolean extensionsRead = false;
 
-		private boolean extensionsRead = false;
+		private static void initExtensions(Collection<AbstractUserActivityMonitor> monitors) {
+			if (!extensionsRead) {
+				ExtensionPointReader<AbstractUserActivityMonitor> reader = new ExtensionPointReader<AbstractUserActivityMonitor>(
+						ID_PLUGIN, EXTENSION_ID_USER, ELEMENT_ACTIVITY_TIMER, AbstractUserActivityMonitor.class);
+				reader.read();
+				List<AbstractUserActivityMonitor> items = reader.getItems();
+				Collections.reverse(items);
+				// TODO set id for monitor to identify instance
+				monitors.addAll(items);
 
-		public void initExtensions() {
-			try {
-				if (!extensionsRead) {
-					IExtensionRegistry registry = Platform.getExtensionRegistry();
-					IExtensionPoint extensionPoint = registry.getExtensionPoint(EXTENSION_ID_USER);
-					if (extensionPoint != null) {
-						IExtension[] extensions = extensionPoint.getExtensions();
-						for (IExtension extension : extensions) {
-							IConfigurationElement[] elements = extension.getConfigurationElements();
-							for (IConfigurationElement element : elements) {
-								if (element.getName().compareTo(ELEMENT_ACTIVITY_TIMER) == 0) {
-									readActivityMonitor(element);
-								}
-							}
-						}
-						extensionsRead = true;
-					}
-				}
-			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN,
-						"Could not read monitor extension", t)); //$NON-NLS-1$
-			}
-		}
-
-		private void readActivityMonitor(IConfigurationElement element) throws CoreException {
-			try {
-				if (element.getAttribute(ELEMENT_CLASS) != null) {
-					Object activityTimer = element.createExecutableExtension(ELEMENT_CLASS);
-					if (activityTimer instanceof AbstractUserActivityMonitor) {
-						// TODO set id for monitor to identify instance
-						monitors.add(0, (AbstractUserActivityMonitor) activityTimer);
-					}
-				}
-			} catch (Throwable e) {
-				StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Could not load activity timer", //$NON-NLS-1$
-						e));
+				extensionsRead = true;
 			}
 		}
 	}
@@ -393,8 +364,8 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 //							InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
 //							InteractionContextManager.ACTIVITY_DELTA_STARTED, 1f));
 
+			MonitorUiExtensionPointReader.initExtensions(monitors);
 			monitors.add(new WorkbenchUserActivityMonitor());
-			new MonitorUiExtensionPointReader().initExtensions();
 
 			activityContextManager.init(monitors);
 
