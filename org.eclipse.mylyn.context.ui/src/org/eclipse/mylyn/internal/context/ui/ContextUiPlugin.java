@@ -37,9 +37,9 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylyn.commons.core.ExtensionPointReader;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
-import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
@@ -59,7 +59,6 @@ import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.navigator.INavigatorContentExtension;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -526,41 +525,17 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	static class UiStartupExtensionPointReader {
 
-		private static final String EXTENSION_ID_STARTUP = "org.eclipse.mylyn.context.ui.startup"; //$NON-NLS-1$
+		private static final String EXTENSION_ID_STARTUP = "startup"; //$NON-NLS-1$
 
 		private static final String ELEMENT_STARTUP = "startup"; //$NON-NLS-1$
 
-		private static final String ELEMENT_CLASS = "class"; //$NON-NLS-1$
-
 		public static void runStartupExtensions() {
-			IExtensionRegistry registry = Platform.getExtensionRegistry();
-			IExtensionPoint extensionPoint = registry.getExtensionPoint(EXTENSION_ID_STARTUP);
-			IExtension[] extensions = extensionPoint.getExtensions();
-			for (IExtension extension : extensions) {
-				IConfigurationElement[] elements = extension.getConfigurationElements();
-				for (IConfigurationElement element : elements) {
-					if (element.getName().compareTo(ELEMENT_STARTUP) == 0) {
-						runStartupExtension(element);
-					}
-				}
-			}
-		}
+			ExtensionPointReader<IContextUiStartup> reader = new ExtensionPointReader<IContextUiStartup>(
+					ContextUiPlugin.ID_PLUGIN, EXTENSION_ID_STARTUP, ELEMENT_STARTUP, IContextUiStartup.class);
+			reader.read();
 
-		private static void runStartupExtension(IConfigurationElement configurationElement) {
-			try {
-				Object object = WorkbenchPlugin.createExtension(configurationElement, ELEMENT_CLASS);
-				if (!(object instanceof IContextUiStartup)) {
-					StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not : " //$NON-NLS-1$
-							+ object.getClass().getCanonicalName() + " must implement " //$NON-NLS-1$
-							+ AbstractContextStructureBridge.class.getCanonicalName()));
-					return;
-				}
-
-				IContextUiStartup startup = (IContextUiStartup) object;
+			for (IContextUiStartup startup : reader.getItems()) {
 				startup.lazyStartup();
-			} catch (CoreException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-						"Could not load startup extension", e)); //$NON-NLS-1$
 			}
 		}
 	}
