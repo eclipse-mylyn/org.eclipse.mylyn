@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,15 +15,13 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.ExtensionPointReader;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.tasks.bugs.AbstractSupportHandler;
 import org.eclipse.mylyn.tasks.bugs.ISupportResponse;
@@ -38,7 +36,7 @@ public class SupportHandlerManager {
 
 	private static final String ELEMENT_TASK_HANDLER = "handler"; //$NON-NLS-1$
 
-	private static final String EXTENSION_ID_TASK_CONTRIBUTORS = "org.eclipse.mylyn.tasks.bugs.support"; //$NON-NLS-1$
+	private static final String EXTENSION_ID_TASK_CONTRIBUTORS = "support"; //$NON-NLS-1$
 
 	private final DefaultSupportHandler defaultSupportHandler = new DefaultSupportHandler();
 
@@ -115,33 +113,34 @@ public class SupportHandlerManager {
 		}
 		readExtensions = true;
 
-		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IExtensionPoint extensionPoint = registry.getExtensionPoint(EXTENSION_ID_TASK_CONTRIBUTORS);
-		IExtension[] extensions = extensionPoint.getExtensions();
-		for (IExtension extension : extensions) {
-			IConfigurationElement[] elements = extension.getConfigurationElements();
-			for (IConfigurationElement element : elements) {
-				if (element.getName().equals(ELEMENT_TASK_HANDLER)) {
-					readTaskContributor(element);
-				}
+		ExtensionPointReader<AbstractSupportHandler> reader = new ExtensionPointReader<AbstractSupportHandler>(
+				TasksBugsPlugin.ID_PLUGIN, EXTENSION_ID_TASK_CONTRIBUTORS, ELEMENT_TASK_HANDLER,
+				AbstractSupportHandler.class) {
+			@Override
+			protected AbstractSupportHandler readElement(IConfigurationElement element,
+					org.eclipse.core.runtime.MultiStatus result) {
+				return readTaskContributor(element, result);
 			}
-		}
+		};
+		reader.read();
+		taskContributors.addAll(reader.getItems());
 	}
 
-	private void readTaskContributor(IConfigurationElement element) {
+	private AbstractSupportHandler readTaskContributor(IConfigurationElement element, MultiStatus result) {
 		try {
 			Object object = element.createExecutableExtension(ELEMENT_CLASS);
 			if (object instanceof AbstractSupportHandler) {
-				taskContributors.add((AbstractSupportHandler) object);
+				return (AbstractSupportHandler) object;
 			} else {
-				StatusHandler.log(new Status(IStatus.WARNING, TasksBugsPlugin.ID_PLUGIN,
+				result.add(new Status(IStatus.WARNING, TasksBugsPlugin.ID_PLUGIN,
 						"Could not load task contributor extenstion: \"" + object.getClass().getCanonicalName() + "\"" //$NON-NLS-1$ //$NON-NLS-2$
 								+ " does not implement \"" + AbstractSupportHandler.class.getCanonicalName() + "\"")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		} catch (Throwable e) {
-			StatusHandler.log(new Status(IStatus.WARNING, TasksBugsPlugin.ID_PLUGIN,
+			result.add(new Status(IStatus.WARNING, TasksBugsPlugin.ID_PLUGIN,
 					"Could not load task contributor extension", e)); //$NON-NLS-1$
 		}
+		return null;
 	}
 
 	public void removeErrorReporter(AbstractSupportHandler taskContributor) {
