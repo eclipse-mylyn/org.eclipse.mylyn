@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Stefan Seelmann and others.
+ * Copyright (c) 2013 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,26 +8,25 @@
  * Contributors:
  *     Stefan Seelmann - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylyn.internal.wikitext.markdown.core.block;
 
-import java.util.regex.Pattern;
+import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
+ * Block that can be nested within a {@link QuoteBlock}.
+ * 
  * @author Stefan Seelmann
  */
-public class HorizontalRuleBlock extends NestableBlock {
-
-	private static final Pattern pattern = Pattern.compile("(\\*\\s*){3,}|(-\\s*){3,}|(_\\s*){3,}"); //$NON-NLS-1$
+public abstract class NestableBlock extends Block {
 
 	@Override
-	protected int processLineContent(String line, int offset) {
-		builder.charactersUnescaped("<hr/>"); //$NON-NLS-1$
-		setClosed(true);
-		return -1;
+	public int processLine(String line, int offset) {
+		return processLineContent(line, offset);
 	}
 
 	@Override
-	public boolean canStart(String line, int lineOffset) {
-		return pattern.matcher(line.substring(lineOffset)).matches();
+	public NestableBlock clone() {
+		return (NestableBlock) super.clone();
 	}
 }

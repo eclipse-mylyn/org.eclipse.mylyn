@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Stefan Seelmann and others.
+ * Copyright (c) 2012, 2013 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,14 +13,13 @@ package org.eclipse.mylyn.internal.wikitext.markdown.core.block;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
-import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
  * Markdown default paragraph.
  * 
  * @author Stefan Seelmann
  */
-public class ParagraphBlock extends Block {
+public class ParagraphBlock extends NestableBlock {
 
 	private int blockLineCount = 0;
 
@@ -32,15 +31,16 @@ public class ParagraphBlock extends Block {
 
 	@Override
 	protected int processLineContent(String line, int offset) {
+
 		// start of block
 		if (blockLineCount == 0) {
 			builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
 		}
 
 		// empty line: start new block
-		if (markupLanguage.isEmptyLine(line)) {
+		if (markupLanguage.isEmptyLine(line.substring(offset))) {
 			setClosed(true);
-			return 0;
+			return offset;
 		}
 
 		// next line, does not convert to line break

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Stefan Seelmann and others.
+ * Copyright (c) 2012, 2013 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 
-import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
 /**
  * Tests for Markdown block elements. Follows specification at
@@ -27,33 +26,33 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 	 * tabs is considered blank.) Normal paragraphs should not be indented with spaces or tabs.
 	 */
 	public void testParagraphWithOneLine() {
-		String html = parseToHtml("a paragraph");
-		TestUtil.println("HTML: " + html);
-		assertEquals("<p>a paragraph</p>\n", html);
+		String markup = "a paragraph";
+		String expectedHtml = "<p>a paragraph</p>\n";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testParagraphWithMulitpleLines() {
-		String html = parseToHtml("a paragraph\nwith multiple\nlines");
-		TestUtil.println("HTML: " + html);
-		assertEquals("<p>a paragraph\nwith multiple\nlines</p>\n", html);
+		String markup = "a paragraph\nwith multiple\nlines";
+		String expectedHtml = "<p>a paragraph\nwith multiple\nlines</p>\n";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testParagraphsSeparatedBySingleBlankLine() {
-		String html = parseToHtml("a paragraph\n\nanother paragraph\n\n");
-		TestUtil.println("HTML: " + html);
-		assertEquals("<p>a paragraph</p>\n<p>another paragraph</p>\n", html);
+		String markup = "a paragraph\n\nanother paragraph\n\n";
+		String expectedHtml = "<p>a paragraph</p>\n<p>another paragraph</p>\n";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testParagraphsSeparatedByMulitpleBlankLines() {
-		String html = parseToHtml("a paragraph\n\n\nanother paragraph\n\n\n");
-		TestUtil.println("HTML: " + html);
-		assertEquals("<p>a paragraph</p>\n<p>another paragraph</p>\n", html);
+		String markup = "a paragraph\n\n\nanother paragraph\n\n\n";
+		String expectedHtml = "<p>a paragraph</p>\n<p>another paragraph</p>\n";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testParagraphsSeparatedByMulitpleBlankLinesWithSpacesAndTabs() {
-		String html = parseToHtml("a paragraph\n \n\t\nanother paragraph");
-		TestUtil.println("HTML: " + html);
-		assertEquals("<p>a paragraph</p>\n<p>another paragraph</p>\n", html);
+		String markup = "a paragraph\n \n\t\nanother paragraph";
+		String expectedHtml = "<p>a paragraph</p>\n<p>another paragraph</p>\n";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	/*
@@ -61,48 +60,48 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 	 * break tag using Markdown, you end a line with two or more spaces, then type return.
 	 */
 	public void testLineBreakInParagraph() {
-		String html = parseToHtml("line  1  \nline  2    \nline  3");
-		TestUtil.println("HTML: " + html);
-		assertEquals("<p>line  1<br/>\nline  2<br/>\nline  3</p>\n", html);
+		String markup = "line  1  \nline  2    \nline  3";
+		String expectedHtml = "<p>line  1<br/>\nline  2<br/>\nline  3</p>\n";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	/*
 	 * Headers. Atx-style headers use 1-6 hash characters at the start of the line, corresponding to header levels 1-6.
 	 */
 	public void testAtxStyleHeaderH1() {
-		String h1 = parseToHtml("# This is an H1");
-		TestUtil.println("HTML: " + h1);
-		assertEquals("<h1>This is an H1</h1>", h1);
+		String markup = "# This is an H1";
+		String expectedHtml = "<h1>This is an H1</h1>";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testAtxStyleHeaderH2() {
-		String h2 = parseToHtml("## This is an H2");
-		TestUtil.println("HTML: " + h2);
-		assertEquals("<h2>This is an H2</h2>", h2);
+		String markup = "## This is an H2";
+		String expectedHtml = "<h2>This is an H2</h2>";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testAtxStyleHeaderH3() {
-		String h3 = parseToHtml("### This is an H3");
-		TestUtil.println("HTML: " + h3);
-		assertEquals("<h3>This is an H3</h3>", h3);
+		String markup = "### This is an H3";
+		String expectedHtml = "<h3>This is an H3</h3>";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testAtxStyleHeaderH4() {
-		String h4 = parseToHtml("#### This is an H4");
-		TestUtil.println("HTML: " + h4);
-		assertEquals("<h4>This is an H4</h4>", h4);
+		String markup = "#### This is an H4";
+		String expectedHtml = "<h4>This is an H4</h4>";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testAtxStyleHeaderH5() {
-		String h5 = parseToHtml("##### This is an H5");
-		TestUtil.println("HTML: " + h5);
-		assertEquals("<h5>This is an H5</h5>", h5);
+		String markup = "##### This is an H5";
+		String expectedHtml = "<h5>This is an H5</h5>";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testAtxStyleHeaderH6() {
-		String h6 = parseToHtml("###### This is an H6");
-		TestUtil.println("HTML: " + h6);
-		assertEquals("<h6>This is an H6</h6>", h6);
+		String markup = "###### This is an H6";
+		String expectedHtml = "<h6>This is an H6</h6>";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	/*
@@ -111,51 +110,51 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 	 * opening hashes determines the header level.)
 	 */
 	public void testClosedAtxStyleHeaderH1() {
-		String h1 = parseToHtml("# This is an H1 #");
-		TestUtil.println("HTML: " + h1);
-		assertEquals("<h1>This is an H1</h1>", h1);
+		String markup = "# This is an H1 #";
+		String expectedHtml = "<h1>This is an H1</h1>";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testClosedAtxStyleHeaderH2() {
-		String h2 = parseToHtml("## This is an H2 ##");
-		TestUtil.println("HTML: " + h2);
-		assertEquals("<h2>This is an H2</h2>", h2);
+		String markup = "## This is an H2 ##";
+		String expectedHtml = "<h2>This is an H2</h2>";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testClosedAtxStyleHeaderH3() {
-		String h3 = parseToHtml("### This is an H3 ###");
-		TestUtil.println("HTML: " + h3);
-		assertEquals("<h3>This is an H3</h3>", h3);
+		String markup = "### This is an H3 ###";
+		String expectedHtml = "<h3>This is an H3</h3>";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testClosedAtxStyleHeaderH4() {
-		String h4 = parseToHtml("#### This is an H4 ####");
-		TestUtil.println("HTML: " + h4);
-		assertEquals("<h4>This is an H4</h4>", h4);
+		String markup = "#### This is an H4 ####";
+		String expectedHtml = "<h4>This is an H4</h4>";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testClosedAtxStyleHeaderH5() {
-		String h5 = parseToHtml("##### This is an H5 #####");
-		TestUtil.println("HTML: " + h5);
-		assertEquals("<h5>This is an H5</h5>", h5);
+		String markup = "##### This is an H5 #####";
+		String expectedHtml = "<h5>This is an H5</h5>";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testClosedAtxStyleHeaderH6() {
-		String h6 = parseToHtml("###### This is an H6 ######");
-		TestUtil.println("HTML: " + h6);
-		assertEquals("<h6>This is an H6</h6>", h6);
+		String markup = "###### This is an H6 ######";
+		String expectedHtml = "<h6>This is an H6</h6>";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testClosedAtxStyleHeaderWithMoreClosingHashes() {
-		String h1 = parseToHtml("# This is an H1 ################################");
-		TestUtil.println("HTML: " + h1);
-		assertEquals("<h1>This is an H1</h1>", h1);
+		String markup = "# This is an H1 ################################";
+		String expectedHtml = "<h1>This is an H1</h1>";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testClosedAtxStyleHeaderWithLessCosingHashes() {
-		String h6 = parseToHtml("###### This is an H6 #");
-		TestUtil.println("HTML: " + h6);
-		assertEquals("<h6>This is an H6</h6>", h6);
+		String markup = "###### This is an H6 #";
+		String expectedHtml = "<h6>This is an H6</h6>";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	/*
@@ -163,27 +162,27 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 	 * headers). Any number of underlining ='s or -'s will work.
 	 */
 	public void testUnderlinedHeaderH1() {
-		String h1 = parseToHtml("This is an H1\n============");
-		TestUtil.println("HTML: " + h1);
-		assertEquals("<h1>This is an H1</h1>", h1);
+		String markup = "This is an H1\n============";
+		String expectedHtml = "<h1>This is an H1</h1>";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testUnderlinedHeaderH2() {
-		String h2 = parseToHtml("This is an H2\n------------");
-		TestUtil.println("HTML: " + h2);
-		assertEquals("<h2>This is an H2</h2>", h2);
+		String markup = "This is an H2\n------------";
+		String expectedHtml = "<h2>This is an H2</h2>";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testSingleCharUnderlinedHeaderH1() {
-		String h1 = parseToHtml("This is an H1\n= ");
-		TestUtil.println("HTML: " + h1);
-		assertEquals("<h1>This is an H1</h1>", h1);
+		String markup = "This is an H1\n= ";
+		String expectedHtml = "<h1>This is an H1</h1>";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testSingleCharUnderlinedHeaderH2() {
-		String h2 = parseToHtml("This is an H2\n- ");
-		TestUtil.println("HTML: " + h2);
-		assertEquals("<h2>This is an H2</h2>", h2);
+		String markup = "This is an H2\n- ";
+		String expectedHtml = "<h2>This is an H2</h2>";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	/*
@@ -191,36 +190,102 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 	 * put a > before every line.
 	 */
 	public void testBlockquoteWithQuoteCharInEachLine() {
-		String h1 = parseToHtml("> Lorem ipsum dolor sit amet, \n>  consetetur adipisici elit.\n");
-		TestUtil.println("HTML: " + h1);
-		assertEquals("<blockquote><p>Lorem ipsum dolor sit amet, \nconsetetur adipisici elit.</p>\n</blockquote>", h1);
+		String markup = "> Lorem ipsum dolor sit amet, \n> consetetur adipisici elit.\n";
+		String expectedHtml = "<blockquote><p>Lorem ipsum dolor sit amet, \nconsetetur adipisici elit.</p>\n</blockquote>";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	/*
 	 * Markdown allows you to be lazy and only put the > before the first line of a hard-wrapped paragraph.
 	 */
 	public void testBlockquoteWithSingleQuoteChar() {
-		String h1 = parseToHtml("> Lorem ipsum dolor sit amet, \nconsetetur adipisici elit.\n");
-		TestUtil.println("HTML: " + h1);
-		assertEquals("<blockquote><p>Lorem ipsum dolor sit amet, \nconsetetur adipisici elit.</p>\n</blockquote>", h1);
+		String markup = "> Lorem ipsum dolor sit amet, \nconsetetur adipisici elit.\n";
+		String expectedHtml = "<blockquote><p>Lorem ipsum dolor sit amet, \nconsetetur adipisici elit.</p>\n</blockquote>";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	/*
 	 * Blockquotes can be nested (i.e. a blockquote-in-a-blockquote) by adding additional levels of >.
 	 */
-	public void testNestedBlockquotes() {
-		String h1 = parseToHtml(">A1\n>>B1\n>A2\n");
-		TestUtil.println("HTML: " + h1);
-		assertEquals("<blockquote><p>A1</p>\n<blockquote><p>B1</p>\n</blockquote><p>A2</p>\n</blockquote>", h1);
+	public void testNestedBlockquotesTwoLevels() {
+		String markup = "> A1\n>\n> > B1\n> > B2\n>\n> A2\n";
+		String expectedHtml = "<blockquote><p>A1</p>\n<blockquote><p>B1\nB2</p>\n</blockquote><p>A2</p>\n</blockquote>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testNestedBlockquotesThreeLevels() {
+		String markup = "> A1\n>\n> > B1\n> >\n> > > C1\n>\n> A2\n";
+		String expectedHtml = "<blockquote><p>A1</p>\n<blockquote><p>B1</p>\n<blockquote><p>C1</p>\n</blockquote></blockquote><p>A2</p>\n</blockquote>";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	/*
 	 * Blockquotes can contain other Markdown elements, including headers, lists, and code blocks.
 	 */
-	public void testBlockquotesWithOtherElements() {
-		String h1 = parseToHtml(">#H1");
-		TestUtil.println("HTML: " + h1);
-		assertEquals("<blockquote><h1>H1</h1></blockquote>", h1);
+	public void testBlockquotesContainingParagraphs() {
+		String markup = ">a\n>b\n>\n>c";
+		String expectedHtml = "<blockquote><p>a\nb</p>\n<p>c</p>\n</blockquote>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testBlockquotesContainingHeader() {
+		String markup = ">#H1";
+		String expectedHtml = "<blockquote><h1>H1</h1></blockquote>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testBlockquotesContainingUnderlinedHeader1() {
+		String markup = ">H1\n>===";
+		String expectedHtml = "<blockquote><h1>H1</h1></blockquote>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testBlockquotesContainingUnderlinedHeader2() {
+		String markup = ">H2\n>---";
+		String expectedHtml = "<blockquote><h2>H2</h2></blockquote>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testBlockquotesContainingInlineLink() {
+		String markup = ">[Link](http://www.example.com)";
+		String expectedHtml = "<blockquote><p><a href=\"http://www.example.com\">Link</a></p>\n</blockquote>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testBlockquotesContainingReferenceLink() {
+		String markup = ">[Link][link]\n>\n>[link]: http://www.example.com";
+		String expectedHtml = "<blockquote><p><a href=\"http://www.example.com\">Link</a></p>\n</blockquote>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testBlockquotesContainingHorizontalRule() {
+		String markup = ">---";
+		String expectedHtml = "<blockquote><hr/></blockquote>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testBlockquotesContainingHorizontalRuleIsNotInterpretedAsUnderlinedHeader() {
+		String markup = ">No H2.\n>\n>---\n";
+		String expectedHtml = "<blockquote><p>No H2.</p>\n<hr/></blockquote>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testBlockquotesContainingCodeBlock() {
+		String markup = ">     code\n>     block";
+		String expectedHtml = "<blockquote><pre><code>code\nblock</code></pre></blockquote>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testBlockquotesContainingInlineHTML() {
+		String markup = "> <input type=\"button\" value=\"Click\"/>";
+		String expectedHtml = "<blockquote><input type=\"button\" value=\"Click\"/>\n</blockquote>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testBlockquoteSimple() {
+		String markup = "> a\n> b";
+		String expectedHtml = "<blockquote><p>a\nb</p>\n</blockquote>";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	/*
@@ -228,51 +293,48 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 	 * line of the block by at least 4 spaces or 1 tab.
 	 */
 	public void testCodeBlockIndentedByFourSpaces() {
-		String html = parseToHtml("    This is a code block.");
-		TestUtil.println("HTML: " + html);
-		assertEquals("<pre><code>This is a code block.</code></pre>", html);
+		String markup = "    This is a code block.";
+		String expectedHtml = "<pre><code>This is a code block.</code></pre>";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testCodeBlockIndentedByOneTab() {
-		String html = parseToHtml("\tThis is a code block.");
-		TestUtil.println("HTML: " + html);
-		assertEquals("<pre><code>This is a code block.</code></pre>", html);
+		String markup = "\tThis is a code block.";
+		String expectedHtml = "<pre><code>This is a code block.</code></pre>";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	/*
 	 * One level of indentation - 4 spaces or 1 tab - is removed from each line of the code block.
 	 */
 	public void testCodeBlockMultiLineIndentedByFourSpaces() {
-		String html = parseToHtml("    aaa\n        bbb\n            ccc\n    \n    continue after empty line");
-		TestUtil.println("HTML: " + html);
+		String markup = "    aaa\n        bbb\n            ccc\n    \n    continue after empty line";
 		String expectedHtml = "<pre><code>aaa\n    bbb\n        ccc\n\ncontinue after empty line</code></pre>";
-		assertEquals(expectedHtml, html);
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testCodeBlockMultiLineIndentedByOneTab() {
-		String html = parseToHtml("\taaa\n\t\tbbb\n\t\t\tccc\n\t\n\tcontinue after empty line");
-		TestUtil.println("HTML: " + html);
+		String markup = "\taaa\n\t\tbbb\n\t\t\tccc\n\t\n\tcontinue after empty line";
 		String expectedHtml = "<pre><code>aaa\n    bbb\n        ccc\n\ncontinue after empty line</code></pre>";
-		assertEquals(expectedHtml, html);
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	/*
 	 * Within a code block, ampersands (&) and angle brackets (< and >) are automatically converted into HTML entities.
 	 */
 	public void testSpecialCharactersAreConvertedInCodeBlock() {
-		String html = parseToHtml("    <div class=\"footer\">\n    &copy; 2004 Foo Bar\n    </div>");
-		TestUtil.println("HTML: " + html);
-		String exptectedHtml = "<pre><code>&lt;div class=\"footer\"&gt;\n&amp;copy; 2004 Foo Bar\n&lt;/div&gt;</code></pre>";
-		assertEquals(exptectedHtml, html);
+		String markup = "    <div class=\"footer\">\n    &copy; 2004 Foo Bar\n    </div>";
+		String expectedHtml = "<pre><code>&lt;div class=\"footer\"&gt;\n&amp;copy; 2004 Foo Bar\n&lt;/div&gt;</code></pre>";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	/*
 	 * Regular Markdown syntax is not processed within code blocks.
 	 */
 	public void testNoProcessingInCodeBlock() {
-		String html = parseToHtml("    ### Header 3\n    Lorem *ipsum*");
-		TestUtil.println("HTML: " + html);
-		assertEquals("<pre><code>### Header 3\nLorem *ipsum*</code></pre>", html);
+		String markup = "    ### Header 3\n    Lorem *ipsum*";
+		String expectedHtml = "<pre><code>### Header 3\nLorem *ipsum*</code></pre>";
+		parseAndAssert(markup, expectedHtml);
 	}
 
 	/*
@@ -280,38 +342,26 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 	 * underscores on a line by themselves. If you wish, you may use spaces between the hyphens or asterisks.
 	 */
 	public void testHorizontalRulesWithAsterisksAndSpaces() {
-		String html = parseToHtml("* * *");
-		TestUtil.println("HTML: " + html);
-		assertEquals("<hr/>", html);
+		parseAndAssert("* * *", "<hr/>");
 	}
 
 	public void testHorizontalRulesWithAsterisks() {
-		String html = parseToHtml("***");
-		TestUtil.println("HTML: " + html);
-		assertEquals("<hr/>", html);
+		parseAndAssert("***", "<hr/>");
 	}
 
 	public void testHorizontalRulesWithMoreAsterisks() {
-		String html = parseToHtml("*****");
-		TestUtil.println("HTML: " + html);
-		assertEquals("<hr/>", html);
+		parseAndAssert("*****", "<hr/>");
 	}
 
 	public void testHorizontalRulesWithHyphensAndSpaces() {
-		String html = parseToHtml("- - -");
-		TestUtil.println("HTML: " + html);
-		assertEquals("<hr/>", html);
+		parseAndAssert("- - -", "<hr/>");
 	}
 
 	public void testHorizontalRulesWithHyphens() {
-		String html = parseToHtml("---------------------------------------");
-		TestUtil.println("HTML: " + html);
-		assertEquals("<hr/>", html);
+		parseAndAssert("---------------------------------------", "<hr/>");
 	}
 
 	public void testHorizontalRulesWithUnderscores() {
-		String html = parseToHtml("___");
-		TestUtil.println("HTML: " + html);
-		assertEquals("<hr/>", html);
+		parseAndAssert("___", "<hr/>");
 	}
 }

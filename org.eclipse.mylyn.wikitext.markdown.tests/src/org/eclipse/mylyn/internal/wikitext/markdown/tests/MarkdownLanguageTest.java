@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Stefan Seelmann and others.
+ * Copyright (c) 2012, 2013 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,6 +36,14 @@ public class MarkdownLanguageTest extends MarkdownLanguageTestBase {
 		text.append("> Blockquote\n");
 		text.append("\n");
 		text.append("    Code block\n");
+		text.append("\n");
+		text.append("I get 10 times more traffic from [Google] [1]  than from [Yahoo][] or [MSN] [].\n");
+		text.append("\n");
+		text.append("  [1]:     http://google.com/        \"Google\"\n");
+		text.append("  [YAHOO]: http://search.yahoo.com/  'Yahoo Search'\n");
+		text.append("  [msn]:   http://search.msn.com/    (MSN Search)\n");
+		text.append("\n");
+		text.append("More text.\n");
 
 		String html = parseToHtml(text.toString());
 		TestUtil.println("HTML: " + html);
@@ -46,5 +54,12 @@ public class MarkdownLanguageTest extends MarkdownLanguageTestBase {
 		assertTrue(html.contains("<h2>Header 2<"));
 		assertTrue(html.contains("<blockquote><p>Blockquote"));
 		assertTrue(html.contains("<pre><code>Code block"));
+		assertTrue(html.contains("<a href=\"http://google.com/\" title=\"Google\">Google</a>"));
+		assertTrue(html.contains("<a href=\"http://search.yahoo.com/\" title=\"Yahoo Search\">Yahoo</a>"));
+		assertTrue(html.contains("<a href=\"http://search.msn.com/\" title=\"MSN Search\">MSN</a>"));
+		assertFalse(html.contains("[1]"));
+		assertFalse(html.contains("[YAHOO]"));
+		assertFalse(html.contains("[msn]"));
+		assertTrue(html.contains("<p>More text.</p>"));
 	}
 }

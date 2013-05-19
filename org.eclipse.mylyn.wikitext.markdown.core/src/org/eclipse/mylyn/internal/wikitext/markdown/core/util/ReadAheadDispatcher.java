@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Stefan Seelmann and others.
+ * Copyright (c) 2012, 2013 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,25 +11,29 @@
 
 package org.eclipse.mylyn.internal.wikitext.markdown.core.util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.eclipse.mylyn.internal.wikitext.markdown.core.block.NestableBlock;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 import org.eclipse.mylyn.wikitext.core.parser.markup.ContentState;
 
 /**
- * Adapter {@link Block} for {@link ReadAheadBlock}s.
+ * Adapter {@link NestableBlock} for {@link ReadAheadBlock}s.
  * 
  * @author Stefan Seelmann
  */
-public class ReadAheadDispatcher extends Block {
+public class ReadAheadDispatcher extends NestableBlock {
 
 	private final LookAheadReader lookAheadReader;
 
-	private Block[] blocks;
+	private List<NestableBlock> blocks;
 
-	private Block dispatchedBlock;
+	private NestableBlock dispatchedBlock;
 
-	public ReadAheadDispatcher(Block... blocks) {
-		this.blocks = blocks;
+	public ReadAheadDispatcher(NestableBlock... blocks) {
+		this.blocks = cloneBlocks(Arrays.asList(blocks));
 		this.lookAheadReader = new LookAheadReader();
 	}
 
@@ -43,7 +47,7 @@ public class ReadAheadDispatcher extends Block {
 	protected int processLineContent(String line, int offset) {
 		if (dispatchedBlock == null) {
 			lookAheadReader.setContentState(getState());
-			for (Block block : blocks) {
+			for (NestableBlock block : blocks) {
 				if (block instanceof ReadAheadBlock) {
 					ReadAheadBlock raBlock = ReadAheadBlock.class.cast(block);
 					if (raBlock.canStart(line, offset, lookAheadReader)) {
@@ -74,7 +78,7 @@ public class ReadAheadDispatcher extends Block {
 
 	@Override
 	public void setState(ContentState state) {
-		for (Block block : blocks) {
+		for (NestableBlock block : blocks) {
 			block.setState(state);
 		}
 		super.setState(state);
@@ -82,22 +86,24 @@ public class ReadAheadDispatcher extends Block {
 
 	@Override
 	public void setParser(MarkupParser parser) {
-		for (Block block : blocks) {
+		for (NestableBlock block : blocks) {
 			block.setParser(parser);
 		}
 		super.setParser(parser);
 	}
 
 	@Override
-	public Block clone() {
+	public NestableBlock clone() {
 		ReadAheadDispatcher clone = (ReadAheadDispatcher) super.clone();
-		Block[] clonedBlocks = new Block[blocks.length];
-		int i = 0;
-		for (Block block : blocks) {
-			clonedBlocks[i++] = block.clone();
-		}
-		clone.blocks = clonedBlocks;
+		clone.blocks = cloneBlocks(blocks);
 		return clone;
 	}
 
+	private List<NestableBlock> cloneBlocks(List<NestableBlock> blocks) {
+		List<NestableBlock> clonedBlocks = new ArrayList<NestableBlock>();
+		for (NestableBlock block : blocks) {
+			clonedBlocks.add(block.clone());
+		}
+		return clonedBlocks;
+	}
 }

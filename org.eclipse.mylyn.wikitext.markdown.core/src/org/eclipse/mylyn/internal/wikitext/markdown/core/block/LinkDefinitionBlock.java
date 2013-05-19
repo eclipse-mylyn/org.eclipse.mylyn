@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Stefan Seelmann and others.
+ * Copyright (c) 2013 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,26 +8,31 @@
  * Contributors:
  *     Stefan Seelmann - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylyn.internal.wikitext.markdown.core.block;
 
-import java.util.regex.Pattern;
+import org.eclipse.mylyn.internal.wikitext.markdown.core.LinkDefinitionParser;
 
 /**
+ * Markdown link/image definitions. Does not emit anything.
+ * 
  * @author Stefan Seelmann
  */
-public class HorizontalRuleBlock extends NestableBlock {
-
-	private static final Pattern pattern = Pattern.compile("(\\*\\s*){3,}|(-\\s*){3,}|(_\\s*){3,}"); //$NON-NLS-1$
-
-	@Override
-	protected int processLineContent(String line, int offset) {
-		builder.charactersUnescaped("<hr/>"); //$NON-NLS-1$
-		setClosed(true);
-		return -1;
-	}
+public class LinkDefinitionBlock extends NestableBlock {
 
 	@Override
 	public boolean canStart(String line, int lineOffset) {
-		return pattern.matcher(line.substring(lineOffset)).matches();
+		return LinkDefinitionParser.LINK_DEFINITION_PATTERN.matcher(line.substring(lineOffset)).matches();
 	}
+
+	@Override
+	protected int processLineContent(String line, int offset) {
+		if (markupLanguage.isEmptyLine(line.substring(offset))) {
+			setClosed(true);
+			return offset;
+		}
+
+		return -1;
+	}
+
 }

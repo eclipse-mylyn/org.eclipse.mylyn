@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Stefan Seelmann and others.
+ * Copyright (c) 2012, 2013 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,32 +11,38 @@
 
 package org.eclipse.mylyn.internal.wikitext.markdown.core.block;
 
-import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
+import java.util.regex.Pattern;
+
+import org.eclipse.mylyn.internal.wikitext.markdown.core.token.AutomaticLinkReplacementToken;
 
 /**
  * Markdown inline HTML.
  * 
  * @author Stefan Seelmann
  */
-public class InlineHtmlBlock extends Block {
+public class InlineHtmlBlock extends NestableBlock {
 
-   @Override
-   public boolean canStart(String line, int lineOffset) {
-       return line.startsWith("<"); //$NON-NLS-1$
-   }
+	private static final Pattern AUTOMATIC_LINK_PATTERN = Pattern.compile(AutomaticLinkReplacementToken.AUTOMATIC_LINK_REGEX);
 
-   @Override
-   protected int processLineContent(String line, int offset) {
-       // empty line: start new block
-       if (markupLanguage.isEmptyLine(line)) {
-           setClosed(true);
-           return 0;
-       }
+	@Override
+	public boolean canStart(String line, int lineOffset) {
+		return line.substring(lineOffset).trim().startsWith("<") && !AUTOMATIC_LINK_PATTERN.matcher(line).matches(); //$NON-NLS-1$
+	}
 
-       builder.charactersUnescaped(line);
-       builder.characters("\n"); //$NON-NLS-1$
+	@Override
+	protected int processLineContent(String line, int offset) {
+		String text = line.substring(offset);
 
-       return -1;
-   }
+		// empty line: start new block
+		if (markupLanguage.isEmptyLine(text)) {
+			setClosed(true);
+			return offset;
+		}
+
+		builder.charactersUnescaped(text);
+		builder.characters("\n"); //$NON-NLS-1$
+
+		return -1;
+	}
 
 }

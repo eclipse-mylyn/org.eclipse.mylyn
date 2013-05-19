@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Stefan Seelmann and others.
+ * Copyright (c) 2012, 2013 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,14 +15,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
-import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
  * Markdown headings.
  * 
  * @author Stefan Seelmann
  */
-public class HeadingBlock extends Block {
+public class HeadingBlock extends NestableBlock {
 
 	private static final Pattern pattern = Pattern.compile("(#{1,6})\\s*(.+?)\\s*(?:#*\\s*)?"); //$NON-NLS-1$
 
@@ -30,22 +29,19 @@ public class HeadingBlock extends Block {
 
 	@Override
 	public boolean canStart(String line, int lineOffset) {
-		if (lineOffset == 0) {
-			matcher = pattern.matcher(line);
-			return matcher.matches();
-		} else {
-			matcher = null;
-			return false;
-		}
+		matcher = pattern.matcher(line.substring(lineOffset));
+		return matcher.matches();
 	}
 
 	@Override
-	public int processLineContent(String line, int offset) {
+	protected int processLineContent(String line, int offset) {
 		int level = matcher.group(1).length();
-		String text = matcher.group(2);
 
 		builder.beginHeading(level, new Attributes());
-		builder.characters(text);
+		int textStart = offset + matcher.start(2);
+		int textEnd = offset + matcher.end(2);
+		String lineExcludingClosingHash = line.substring(0, textEnd);
+		markupLanguage.emitMarkupLine(getParser(), state, lineExcludingClosingHash, textStart);
 		builder.endHeading();
 
 		setClosed(true);

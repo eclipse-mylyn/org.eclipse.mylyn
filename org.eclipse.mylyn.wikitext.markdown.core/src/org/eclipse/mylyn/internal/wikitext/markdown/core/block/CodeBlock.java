@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Stefan Seelmann and others.
+ * Copyright (c) 2012, 2013 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,14 +16,13 @@ import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
-import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
  * Markdown code block.
  * 
  * @author Stefan Seelmann
  */
-public class CodeBlock extends Block {
+public class CodeBlock extends NestableBlock {
 
 	private static final Pattern startPattern = Pattern.compile("(?: {4}|\\t)((?: {4}|\\t)*)(.*)"); //$NON-NLS-1$
 
@@ -31,11 +30,7 @@ public class CodeBlock extends Block {
 
 	@Override
 	public boolean canStart(String line, int lineOffset) {
-		if (lineOffset == 0) {
-			return startPattern.matcher(line).matches();
-		} else {
-			return false;
-		}
+		return startPattern.matcher(line.substring(lineOffset)).matches();
 	}
 
 	@Override
@@ -48,10 +43,10 @@ public class CodeBlock extends Block {
 		}
 
 		// extract the content
-		Matcher matcher = startPattern.matcher(line);
+		Matcher matcher = startPattern.matcher(line.substring(offset));
 		if (!matcher.matches()) {
 			setClosed(true);
-			return 0;
+			return offset;
 		}
 		String intent = matcher.group(1);
 		String content = matcher.group(2);

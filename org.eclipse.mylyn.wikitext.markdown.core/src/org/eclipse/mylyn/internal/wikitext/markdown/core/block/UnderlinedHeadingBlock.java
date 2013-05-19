@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Stefan Seelmann and others.
+ * Copyright (c) 2012, 2013 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,14 +16,13 @@ import java.util.regex.Pattern;
 import org.eclipse.mylyn.internal.wikitext.markdown.core.util.LookAheadReader;
 import org.eclipse.mylyn.internal.wikitext.markdown.core.util.ReadAheadBlock;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
-import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
  * Markdown underlined headings.
  * 
  * @author Stefan Seelmann
  */
-public class UnderlinedHeadingBlock extends Block implements ReadAheadBlock {
+public class UnderlinedHeadingBlock extends NestableBlock implements ReadAheadBlock {
 
 	private static final Pattern h1pattern = Pattern.compile("=+\\s*"); //$NON-NLS-1$
 
@@ -37,12 +36,14 @@ public class UnderlinedHeadingBlock extends Block implements ReadAheadBlock {
 		blockLineCount = 0;
 		level = 0;
 		String nextLine = lookAheadReader.lookAhead();
-		if (nextLine == null) {
+		if (nextLine == null || nextLine.length() < lineOffset) {
 			return false;
-		} else if (h1pattern.matcher(nextLine).matches()) {
+		}
+		String text = nextLine.substring(lineOffset);
+		if (h1pattern.matcher(text).matches()) {
 			level = 1;
 			return true;
-		} else if (h2pattern.matcher(nextLine).matches()) {
+		} else if (h2pattern.matcher(text).matches()) {
 			level = 2;
 			return true;
 		} else {
@@ -57,10 +58,11 @@ public class UnderlinedHeadingBlock extends Block implements ReadAheadBlock {
 	}
 
 	@Override
-	public int processLineContent(String line, int offset) {
+	protected int processLineContent(String line, int offset) {
+
 		if (blockLineCount == 0) {
 			builder.beginHeading(level, new Attributes());
-			builder.characters(line);
+			markupLanguage.emitMarkupLine(getParser(), state, line, offset);
 		} else {
 			builder.endHeading();
 			setClosed(true);

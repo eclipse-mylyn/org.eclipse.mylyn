@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Stefan Seelmann and others.
+ * Copyright (c) 2012, 2013 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,20 +13,28 @@ package org.eclipse.mylyn.wikitext.markdown.core;
 
 import java.util.List;
 
+import org.eclipse.mylyn.internal.wikitext.markdown.core.MarkdownContentState;
 import org.eclipse.mylyn.internal.wikitext.markdown.core.block.CodeBlock;
 import org.eclipse.mylyn.internal.wikitext.markdown.core.block.HeadingBlock;
 import org.eclipse.mylyn.internal.wikitext.markdown.core.block.HorizontalRuleBlock;
 import org.eclipse.mylyn.internal.wikitext.markdown.core.block.InlineHtmlBlock;
+import org.eclipse.mylyn.internal.wikitext.markdown.core.block.LinkDefinitionBlock;
 import org.eclipse.mylyn.internal.wikitext.markdown.core.block.ParagraphBlock;
 import org.eclipse.mylyn.internal.wikitext.markdown.core.block.QuoteBlock;
 import org.eclipse.mylyn.internal.wikitext.markdown.core.block.UnderlinedHeadingBlock;
 import org.eclipse.mylyn.internal.wikitext.markdown.core.phrase.BackslashEscapePhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.markdown.core.phrase.SimplePhraseModifier;
+import org.eclipse.mylyn.internal.wikitext.markdown.core.token.AutomaticLinkReplacementToken;
+import org.eclipse.mylyn.internal.wikitext.markdown.core.token.InlineImageReplacementToken;
+import org.eclipse.mylyn.internal.wikitext.markdown.core.token.InlineLinkReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.markdown.core.token.PreserverHtmlEntityToken;
+import org.eclipse.mylyn.internal.wikitext.markdown.core.token.ReferenceStyleImageReplacementToken;
+import org.eclipse.mylyn.internal.wikitext.markdown.core.token.ReferenceStyleLinkReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.markdown.core.util.ReadAheadDispatcher;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.core.parser.markup.ContentState;
 import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.HtmlEndTagPhraseModifier;
 import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.HtmlStartTagPhraseModifier;
 import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLineBreakReplacementToken;
@@ -56,6 +64,13 @@ public class MarkdownLanguage extends AbstractMarkupLanguage {
 		// inline HTML
 		phraseModifierSyntax.add(new HtmlEndTagPhraseModifier());
 		phraseModifierSyntax.add(new HtmlStartTagPhraseModifier());
+		// images
+		phraseModifierSyntax.add(new InlineImageReplacementToken());
+		phraseModifierSyntax.add(new ReferenceStyleImageReplacementToken());
+		// links
+		phraseModifierSyntax.add(new InlineLinkReplacementToken());
+		phraseModifierSyntax.add(new ReferenceStyleLinkReplacementToken());
+		phraseModifierSyntax.add(new AutomaticLinkReplacementToken());
 		// backslash escaped span elements
 		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("**")); //$NON-NLS-1$ 
 		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("__")); //$NON-NLS-1$ 
@@ -90,6 +105,7 @@ public class MarkdownLanguage extends AbstractMarkupLanguage {
 		blocks.add(new HeadingBlock());
 		blocks.add(new InlineHtmlBlock());
 		blocks.add(new QuoteBlock());
+		blocks.add(new LinkDefinitionBlock());
 	}
 
 	@Override
@@ -100,4 +116,8 @@ public class MarkdownLanguage extends AbstractMarkupLanguage {
 		return readAheadBlock;
 	}
 
+	@Override
+	protected ContentState createState() {
+		return new MarkdownContentState();
+	}
 }

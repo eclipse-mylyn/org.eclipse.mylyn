@@ -7,9 +7,11 @@ Bundle-Vendor: %Bundle-Vendor.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.mylyn.wikitext.core;bundle-version="1.5.0",
  org.eclipse.team.core;resolution:=optional
-Export-Package: org.eclipse.mylyn.internal.wikitext.markdown.core.block;x-internal:=true,
+Export-Package: org.eclipse.mylyn.internal.wikitext.markdown.core;x-internal:=true,
+ org.eclipse.mylyn.internal.wikitext.markdown.core.block;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.markdown.core.phrase;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.markdown.core.token;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.markdown.core.util;x-internal:=true,
+ org.eclipse.mylyn.internal.wikitext.markdown.core.validation;x-internal:=true,
  org.eclipse.mylyn.wikitext.markdown.core
 Bundle-Localization: plugin
