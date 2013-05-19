@@ -49,7 +49,7 @@
 <unit id="org.apache.xml.resolver" version="1.2.0.v201005080400"/>
 <unit id="org.apache.xml.serializer" version="2.7.1.v201005080400"/>
 <unit id="org.apache.xerces" version="2.9.0.v201101211617"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20130510173906/repository/"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.cdt.platform.feature.group" version="6.0.2.201002161416"/>
