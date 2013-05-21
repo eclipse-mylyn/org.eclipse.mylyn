@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 Tasktop Technologies and others.
+ * Copyright (c) 2010, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@
 
 package org.eclipse.mylyn.reviews.ui.spi.editor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -77,7 +78,15 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 		subSection.setText("Reviewers");
 
 		Composite composite = toolkit.createComposite(subSection);
-		int numColumns = getModelRepository().getApprovalTypes().size() + 1;
+		List<IApprovalType> approvalTypes = getModelRepository().getApprovalTypes();
+		List<IApprovalType> approvalTypesWithLabel = new ArrayList<IApprovalType>(approvalTypes.size());
+		for (IApprovalType approvalType : approvalTypes) {
+			if (!approvalType.getKey().equals(approvalType.getName())) {
+				approvalTypesWithLabel.add(approvalType);
+			}
+		}
+
+		int numColumns = approvalTypesWithLabel.size() + 1;
 		GridLayoutFactory.fillDefaults()
 				.numColumns(numColumns)
 				.extendedMargins(0, 0, 0, 5)
@@ -86,14 +95,14 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 				.applyTo(composite);
 		subSection.setClient(composite);
 
-		if (!getModelRepository().getApprovalTypes().isEmpty()) {
+		if (!approvalTypesWithLabel.isEmpty()) {
 			StringBuilder names = new StringBuilder();
 
 			Label headerLabel = new Label(composite, SWT.NONE);
 			headerLabel.setText(" "); //$NON-NLS-1$
 			StringBuilder needs = new StringBuilder();
 
-			for (IApprovalType approvalType : getModelRepository().getApprovalTypes()) {
+			for (IApprovalType approvalType : approvalTypesWithLabel) {
 				IRequirementEntry requirementEntry = getReview().getRequirements().get(approvalType);
 				Composite headerContainer = new Composite(composite, SWT.NONE);
 				headerContainer.setForeground(toolkit.getColors().getColor(IFormColors.TB_BG));
@@ -136,7 +145,7 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 				reviewerRowLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 				reviewerRowLabel.setText(entry.getKey().getDisplayName());
 
-				for (IApprovalType approvalType : getModelRepository().getApprovalTypes()) {
+				for (IApprovalType approvalType : approvalTypesWithLabel) {
 					Integer value = entry.getValue().getApprovals().get(approvalType);
 					Label approvalValueLabel = new Label(composite, SWT.NONE);
 					GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.FILL).applyTo(approvalValueLabel);
