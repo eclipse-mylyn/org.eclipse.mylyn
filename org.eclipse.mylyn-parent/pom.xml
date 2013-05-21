@@ -799,24 +799,8 @@
             <useUIHarness>true</useUIHarness>
             <failIfNoTests>true</failIfNoTests>
             <forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds>
-            <product>org.eclipse.sdk.ide</product>
-            <application>org.eclipse.ui.ide.workbench</application>
             <argLine>${tycho.testArgLine} -Xmx512m -XX:MaxPermSize=256m -Djava.io.tmpdir=${project.build.directory} ${test.vmargs}</argLine>
             <appArgLine>${test.args}</appArgLine>         
-            <!--
-                <environmentVariables>
-                <http_proxy>${http_proxy}</http_proxy>
-                <https_proxy>${https_proxy}</https_proxy>
-                </environmentVariables>
-            -->
-            <application>org.eclipse.ui.ide.workbench</application>
-            <dependencies>
-              <dependency>
-                <type>p2-installable-unit</type>
-                <artifactId>org.eclipse.sdk.feature.group</artifactId>
-                <version>${platform-version}</version>
-              </dependency>
-            </dependencies>
           </configuration>
         </plugin>
       </plugins>

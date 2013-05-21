@@ -250,24 +250,10 @@
           <version>${tycho-version}</version>
           <configuration>
             <skip>${test.skip}</skip>
-            <useUIThread>true</useUIThread>
-            <useUIHarness>true</useUIHarness>
             <failIfNoTests>true</failIfNoTests>
             <forkedProcessTimeoutInSeconds>3600</forkedProcessTimeoutInSeconds>
-            <excludes>
-              <exclude>**/Test*java</exclude>
-            </excludes>
             <argLine>${tycho.testArgLine} -Xmx512m -XX:MaxPermSize=256m -Djava.io.tmpdir=${project.build.directory} ${test.vmargs}</argLine>
             <appArgLine>${test.args}</appArgLine>         
-            <application>org.eclipse.ui.ide.workbench</application>
-            <!-- <product>org.eclipse.sdk.ide</product> -->
-            <dependencies>
-              <dependency>
-                <type>p2-installable-unit</type>
-                <artifactId>org.eclipse.sdk.feature.group</artifactId>
-                <version>0.0.0</version>
-              </dependency>
-            </dependencies>
           </configuration>
         </plugin>
       </plugins>
