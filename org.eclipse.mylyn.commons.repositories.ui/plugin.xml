@@ -11,7 +11,7 @@
             class="org.eclipse.mylyn.internal.commons.repositories.ui.RepositoriesView"
             icon="icons/eview16/repositories.gif"
             id="org.eclipse.mylyn.commons.repositories.ui.navigator.Repositories"
-            name="Team Repositories">
+            name="%TeamRepositoriesView.name">
       </view>
    </extension>
    <extension
@@ -96,7 +96,7 @@
             locationURI="toolbar:org.eclipse.mylyn.commons.repositories.ui.navigator.Repositories">
          <command
                commandId="org.eclipse.mylyn.commons.ui.command.AddRepository"
-               label="Add Repository..."
+               label="%AddRepositoryCommand.label"
                style="push">
          </command>
       </menuContribution>
@@ -104,10 +104,10 @@
             locationURI="popup:org.eclipse.mylyn.commons.repositories.ui.navigator.Repositories?after=group.new">
          <menu
                id="new"
-               label="New">
+               label="%NewMenu.label">
             <command
                   commandId="org.eclipse.mylyn.commons.ui.command.AddRepository"
-                  label="Repository..."
+                  label="%RepositoryCommand.label"
                   style="push">
             </command>
          </menu>
@@ -129,7 +129,7 @@
       <menuContribution
             locationURI="popup:org.eclipse.mylyn.commons.repositories.ui.navigator.Repositories?after=group.goto">
          <menu
-               label="Show In">
+               label="%ShowInMenu.label">
             <dynamic
                   class="org.eclipse.mylyn.internal.commons.repositories.ui.ShowInMenuContribution"
                   id="org.eclipse.mylyn.commons.repositories.ui.menu.ShowIn">
@@ -154,7 +154,7 @@
             locationURI="popup:org.eclipse.mylyn.commons.repositories.ui.navigator.Repositories?after=group.edit">
          <command
                commandId="org.eclipse.ui.edit.delete"
-               label="Delete"
+               label="%DeleteCommand.label"
                style="push">
             <visibleWhen
                   checkEnabled="true">
@@ -173,32 +173,32 @@
          point="org.eclipse.mylyn.commons.repositories.ui.categories">
       <category
             id="org.eclipse.mylyn.category.tasks"
-            label="Tasks"
+            label="%TasksCategory.label"
             rank="0">
       </category>
       <category
             id="org.eclipse.mylyn.category.bugs"
-            label="Bugs"
+            label="%BugsCategory.label"
             rank="100">
       </category>
       <category
             id="org.eclipse.mylyn.category.build"
-            label="Builds"
+            label="%BuildsCategory.label"
             rank="200">
       </category>
       <category
             id="org.eclipse.mylyn.category.review"
-            label="Reviews"
+            label="%ReviewsCategory.label"
             rank="300">
       </category>
       <category
             id="org.eclipse.mylyn.category.requirements"
-            label="Requirements"
+            label="%RequirementsCategory.label"
             rank="400">
       </category>
       <category
             id="org.eclipse.mylyn.category.other"
-            label="Other"
+            label="%OtherCategory.label"
             rank="500">
       </category>
    </extension>
