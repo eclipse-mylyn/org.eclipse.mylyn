@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -522,7 +522,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 				ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED));
 
 		taskListServiceMessageEnabledButton = new Button(group, SWT.CHECK);
-		taskListServiceMessageEnabledButton.setText("Display notification when new connectors are available"); //$NON-NLS-1$
+		taskListServiceMessageEnabledButton.setText(Messages.TasksUiPreferencePage_Notification_for_new_connectors_available_Label);
 		taskListServiceMessageEnabledButton.setSelection(getPreferenceStore().getBoolean(
 				ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED));
 	}
