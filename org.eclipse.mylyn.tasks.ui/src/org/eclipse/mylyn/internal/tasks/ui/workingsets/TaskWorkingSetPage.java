@@ -402,7 +402,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 		// PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IIDEHelpContextIds.WORKING_SET_RESOURCE_PAGE);
 		Label label = new Label(composite, SWT.WRAP);
-		label.setText(""); //$NON-NLS-1$
+		label.setText(Messages.TaskWorkingSetPage_Working_set_name);
 		label.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL
 				| GridData.VERTICAL_ALIGN_CENTER));
 
@@ -416,7 +416,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		// text.setBackground(FieldAssistColors.getRequiredFieldBackgroundColor(text));
 
 		label = new Label(composite, SWT.WRAP);
-		label.setText(""); //$NON-NLS-1$
+		label.setText(Messages.TaskWorkingSetPage_Working_set_contents);
 		label.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL
 				| GridData.VERTICAL_ALIGN_CENTER));
 
