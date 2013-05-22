@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -311,6 +312,25 @@ public class TaskListToolTip extends GradientToolTip {
 		return null;
 	}
 
+	private String getSynchronizationStateText(IRepositoryElement element) {
+		if (element instanceof ITaskContainer) {
+			Collection<ITask> tasks = ((ITaskContainer) element).getChildren();
+			if (tasks.size() > 0) {
+				int incoming = 0;
+				int outgoing = 0;
+				for (ITask task : tasks) {
+					if (task.getSynchronizationState().isIncoming()) {
+						incoming++;
+					} else if (task.getSynchronizationState().isOutgoing()) {
+						outgoing++;
+					}
+				}
+				return NLS.bind(Messages.TaskListToolTip_Incoming_Outgoing, new Object[] { incoming, outgoing });
+			}
+		}
+		return null;
+	}
+
 	private String getStatusText(IRepositoryElement element) {
 		IStatus status = null;
 		if (element instanceof AbstractTask) {
@@ -494,6 +514,11 @@ public class TaskListToolTip extends GradientToolTip {
 				}
 			}
 			addIconAndLabel(composite, image, incommingText);
+		}
+
+		String synchronizationStateText = getSynchronizationStateText(currentTipElement);
+		if (synchronizationStateText != null) {
+			addIconAndLabel(composite, null, synchronizationStateText);
 		}
 
 		ProgressData progress = getProgressData(currentTipElement);
