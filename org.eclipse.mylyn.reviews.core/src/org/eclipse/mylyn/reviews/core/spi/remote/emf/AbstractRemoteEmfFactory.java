@@ -257,7 +257,6 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 	@SuppressWarnings("unchecked")
 	public LocalKeyType getLocalKey(EParentObjectType parentObject, EObjectType modelObject) {
 		if (modelObject instanceof EObject) {
-			getService().ensureModelThread();
 			EObject eObject = (EObject) modelObject;
 			return (LocalKeyType) eObject.eGet(getLocalKeyAttribute()); //Cannot test for type because of erasure
 		}
