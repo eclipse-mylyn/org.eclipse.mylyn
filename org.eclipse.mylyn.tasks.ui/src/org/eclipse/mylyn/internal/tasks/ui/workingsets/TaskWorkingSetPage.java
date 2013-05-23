@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 Eugene Kuleshov and others.
+ * Copyright (c) 2004, 2013 Eugene Kuleshov and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -413,7 +413,6 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				validateInput();
 			}
 		});
-		text.setFocus();
 		// text.setBackground(FieldAssistColors.getRequiredFieldBackgroundColor(text));
 
 		label = new Label(composite, SWT.WRAP);
@@ -496,6 +495,9 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 		if (workingSet != null) {
 			text.setText(workingSet.getName());
+			treeViewer.getControl().setFocus();
+		} else {
+			text.setFocus();
 		}
 
 		setPageComplete(false);
