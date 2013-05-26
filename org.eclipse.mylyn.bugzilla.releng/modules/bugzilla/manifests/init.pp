@@ -15,8 +15,8 @@ class bugzilla {
   $bugzillaBase = "/home/$userOwner/bugzilla"
   $dbuser = 'bugz'
   $dbuserPassword = 'ovlwq8'
-  $clearDB = false
   $envhost = regsubst(file("/etc/hostname"), '\n', '')
+  $confDir = "$bugzillaBase/conf.d"
 
   exec { "apt-get update":
     command => "apt-get update",
@@ -113,11 +113,6 @@ class bugzilla {
     target => "/etc/apache2/sites-available/default-ssl",
   }
 
-  exec { "prepare bugzilla":
-    command => "echo Bugzilla pre-requisites are installed",
-    require => Package[$requirements],
-  }
- 
  if $envhost != "mylyn.org"{ 
     file { "$bugzillaBase/servicephpmyadmin.json":
       source  => "puppet:///modules/bugzilla/servicephpmyadmin.json",		
@@ -127,10 +122,41 @@ class bugzilla {
       require => Package[$requirements],
     }
   }
-  
+
   file { "/usr/lib/cgi-bin/services":		
     source  => "puppet:///modules/bugzilla/services.cgi",		
     mode => 755,		
     require => Package[$requirements],
   }
+  
+  $_exists =inline_template("<%= File.exists?('/etc/bugzilla_clear_mode') %>")
+  if $_exists == "true"  {
+    $clearMode            = regsubst(file("/etc/bugzilla_clear_mode"), '\n', '')
+  } else {
+    $clearMode            = "noclear"
+    exec { "create clearMode":
+      command => "echo \"noclear\" >/etc/bugzilla_clear_mode",
+      creates => '/etc/bugzilla_clear_mode', 
+    }
+  }
+
+  exec { "create  $confDir":
+    command => "mkdir -p $confDir",
+    creates => "$confDir",
+    user => "$userOwner",
+    require => Package[$requirements],
+  }
+
+  exec { "mysql create user ${dbuser}":
+    unless   => "/usr/bin/mysql --user='${dbuser}' --password='${dbuserPassword}'",
+    command   => "/usr/bin/mysql -v --user='root' -e \"CREATE USER '${dbuser}'@localhost IDENTIFIED BY '${dbuserPassword}'\"",
+    logoutput => true,
+    require   => Package["mysql-server"],
+  }
+
+  exec { "prepare bugzilla":
+    command => "echo Bugzilla pre-requisites are installed",
+    require => [Exec["mysql create user ${dbuser}"],Exec["create  $confDir"]],
+  }
+
 }

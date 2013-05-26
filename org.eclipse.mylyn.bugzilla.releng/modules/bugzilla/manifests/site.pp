@@ -29,15 +29,14 @@ define bugzilla::site (
   $userGroup            = $bugzilla::userGroup,
   $envversion           = "${major}.${minor}",
   $envdefault           = false,
-  $clearDB              = $bugzilla::clearDB,
   $desciptorfile        = " ",
   $usebugaliases        = false,
+  $clearMode            = $bugzilla::clearMode,
   ) {
 
   include "bugzilla"
   $propertyanz = 0
   $confDir = "$base/conf.d"
- 
 
   if $branch == "trunk" {
     $envinfo1 = "trunk"  
@@ -79,21 +78,6 @@ define bugzilla::site (
    	$branchName = "${major}.${minor}"
   }
 
-
-  exec { "prepare $version":
-    command => "mkdir -p $confDir",
-    creates => "$base",
-    user => "$userOwner",
-    require => Exec["prepare bugzilla"],
-  }
-
-  exec { "mysql create user ${bugz_user} for $version":
-    unless   => "/usr/bin/mysql --user='${bugz_user}' --password='${bugz_password}'",
-    command   => "/usr/bin/mysql -v --user='root' -e \"CREATE USER '${bugz_user}'@localhost IDENTIFIED BY '${bugz_password}'\"",
-    logoutput => true,
-    require   => Package["mysql-server"],
-  }
-
   if $branchTag == "trunk" {
     exec { "extract bugzilla $version":
       command => "bzr co bzr://bzr.mozilla.org/bugzilla/$branchName $version",
@@ -101,7 +85,7 @@ define bugzilla::site (
       user => "$userOwner",
       timeout => 300,
       creates => "$base/$version",
-      require   => Exec["prepare $version"]
+      require   => Exec["prepare bugzilla"]
     }
   } else {
     exec { "extract bugzilla $version":
@@ -110,7 +94,7 @@ define bugzilla::site (
       user => "$userOwner",
       timeout => 300,
       creates => "$base/$version",
-      require   => Exec["prepare $version"]
+      require   => Exec["prepare bugzilla"]
     }
   }
  
@@ -139,24 +123,24 @@ define bugzilla::site (
     require   => Exec["post extract bugzilla $version"]
   }
 
-  if $clearDB {
-  exec { "mysql-dropdb-$version":
-    onlyif    => "/usr/bin/mysql --user=root '${bugz_dbname}'",
-    command   => "/usr/bin/mysqladmin -v --user=root --force drop '${bugz_dbname}'",
-    require   => Exec["mysql-grant-${bugz_dbname}-${bugzilla::dbuser}"]
-  }
+  if $clearMode == "clear" {
+    exec { "mysql-dropdb-$version":
+      onlyif    => "/usr/bin/mysql --user=root '${bugz_dbname}'",
+      command   => "/usr/bin/mysqladmin -v --user=root --force drop '${bugz_dbname}'",
+      require   => Exec["mysql-grant-${bugz_dbname}-${bugzilla::dbuser}"]
+    }
 
-  exec { "mysql-createdb-$version":
-    unless    => "/usr/bin/mysql --user=root '${bugz_dbname}'",
-    command   => "/usr/bin/mysqladmin -v --user=root --force create '${bugz_dbname}'",
-    require   => Exec["mysql-dropdb-$version"]
-  }
+    exec { "mysql-createdb-$version":
+      unless    => "/usr/bin/mysql --user=root '${bugz_dbname}'",
+      command   => "/usr/bin/mysqladmin -v --user=root --force create '${bugz_dbname}'",
+      require   => Exec["mysql-dropdb-$version"]
+    }
   } else {
-  exec { "mysql-createdb-$version":
-    unless    => "/usr/bin/mysql --user=root '${bugz_dbname}'",
-    command   => "/usr/bin/mysqladmin -v --user=root --force create '${bugz_dbname}'",
-    require   => Exec["mysql-grant-${bugz_dbname}-${bugzilla::dbuser}"]
-  }
+    exec { "mysql-createdb-$version":
+      unless    => "/usr/bin/mysql --user=root '${bugz_dbname}'",
+      command   => "/usr/bin/mysqladmin -v --user=root --force create '${bugz_dbname}'",
+      require   => Exec["mysql-grant-${bugz_dbname}-${bugzilla::dbuser}"]
+    }
   }
 
   file { "$base/$version/callchecksetup.pl":

@@ -56,23 +56,22 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
     minor   => "0",
   }
 
-  bugzilla::site { "bugzilla-4.2.5":
+  bugzilla::site { "bugzilla-4.2.6":
     major   => "4",
     minor   => "2",
     envdefault => true,
   }
 
-  bugzilla::site { "bugzilla-4.2.5-bugaliases":
+  bugzilla::site { "bugzilla-4.2.6-bugaliases":
     major   => "4",
     minor   => "2",
-    branchTag      => "bugzilla-4.2.5",
+    branchTag      => "bugzilla-4.2.6",
     usebugaliases => true,
   }
 
   bugzilla::site { "bugzilla-4.4":
     major     => "4",
     minor     => "4",
-    branchTag => "trunk",
   }
 
   bugzilla::site { "bugzilla-trunk":
