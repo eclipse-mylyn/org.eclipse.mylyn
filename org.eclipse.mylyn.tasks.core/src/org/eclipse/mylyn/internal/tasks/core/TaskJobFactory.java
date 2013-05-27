@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -86,10 +86,7 @@ public class TaskJobFactory implements ITaskJobFactory {
 		ExtensionPointReader<TaskJobListener> reader = new ExtensionPointReader<TaskJobListener>(
 				ITasksCoreConstants.ID_PLUGIN,
 				"taskJobListeners", "listener", TaskJobListener.class, "connectorKind", connectorKind); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		IStatus status = reader.read();
-		if (!status.isOK()) {
-			StatusHandler.log(status);
-		}
+		reader.read();
 		return reader.getItems();
 	}
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Tasktop Technologies and others.
+ * Copyright (c) 2012, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,9 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.ui.util;
-
-import java.util.List;
+package org.eclipse.mylyn.internal.tasks.ui.util;import java.util.List;
 
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
@@ -23,6 +21,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TaskDropListener;
 import org.eclipse.mylyn.tasks.ui.TaskDropListener.TaskDropEvent;
+;
 
 /**
  * @author Sam Davis
@@ -38,10 +37,7 @@ public class TaskDropHandler {
 		if (taskDropListeners == null) {
 			ExtensionPointReader<TaskDropListener> reader = new ExtensionPointReader<TaskDropListener>(
 					TasksUiPlugin.ID_PLUGIN, "taskDropListener", "listener", TaskDropListener.class); //$NON-NLS-1$//$NON-NLS-2$
-			IStatus status = reader.read();
-			if (!status.isOK()) {
-				StatusHandler.log(status);
-			}
+			reader.read();
 			taskDropListeners = reader.getItems();
 		}
 	}
