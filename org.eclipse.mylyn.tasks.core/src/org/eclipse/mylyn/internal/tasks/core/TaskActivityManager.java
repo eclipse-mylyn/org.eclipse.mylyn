@@ -857,6 +857,22 @@ public class TaskActivityManager implements ITaskActivityManager {
 		return taskActivationHistory;
 	}
 
+	public Date getFirstActivity(ITask task) {
+		SortedMap<Calendar, Long> activityMap = taskElapsedTimeMap.get(task);
+		if (activityMap != null && !activityMap.isEmpty()) {
+			return activityMap.firstKey().getTime();
+		}
+		return null;
+	}
+
+	public Date getLastActivity(ITask task) {
+		SortedMap<Calendar, Long> activityMap = taskElapsedTimeMap.get(task);
+		if (activityMap != null && !activityMap.isEmpty()) {
+			return activityMap.lastKey().getTime();
+		}
+		return null;
+	}
+
 	public Set<ITask> getAllScheduledTasks() {
 		return new HashSet<ITask>(allScheduledTasks);
 	}

@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.tasks.core;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -67,6 +68,18 @@ public interface ITaskActivityManager {
 	 * is null, the elapsed time for the range with no task active is returned
 	 */
 	public abstract long getElapsedTime(ITask task, Calendar start, Calendar end);
+
+	/**
+	 * @return the date of the first activity of the given task
+	 * @since 3.10
+	 */
+	public abstract Date getFirstActivity(ITask task);
+
+	/**
+	 * @return the date of the last activity of the given task
+	 * @since 3.10
+	 */
+	public abstract Date getLastActivity(ITask task);
 
 	public abstract void addActivityListener(ITaskActivityListener listener);
 
