@@ -26,7 +26,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.ExtensionPointReader;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.workbench.EditorHandle;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.commons.workbench.CommonsWorkbenchPlugin;
@@ -84,10 +83,7 @@ public class BrowserUtil {
 		static {
 			ExtensionPointReader<AbstractUrlHandler> reader = new ExtensionPointReader<AbstractUrlHandler>(
 					CommonsWorkbenchPlugin.ID_PLUGIN, "urlHandlers", "handler", AbstractUrlHandler.class); //$NON-NLS-1$ //$NON-NLS-2$
-			IStatus status = reader.read();
-			if (!status.isOK()) {
-				StatusHandler.log(status);
-			}
+			reader.read();
 
 			handlers = reader.getItems();
 

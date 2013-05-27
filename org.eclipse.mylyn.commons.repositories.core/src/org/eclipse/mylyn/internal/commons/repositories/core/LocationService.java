@@ -16,9 +16,7 @@ import java.net.Proxy;
 import javax.net.ssl.X509TrustManager;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.commons.core.ExtensionPointReader;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.core.net.NetUtil;
 import org.eclipse.mylyn.commons.core.net.ProxyProvider;
 import org.eclipse.mylyn.commons.repositories.core.ILocationService;
@@ -39,11 +37,7 @@ public class LocationService implements ILocationService {
 		static {
 			ExtensionPointReader<ILocationService> reader = new ExtensionPointReader<ILocationService>(
 					RepositoriesCoreInternal.ID_PLUGIN, "locationServices", "service", ILocationService.class); //$NON-NLS-1$ //$NON-NLS-2$
-
-			IStatus status = reader.read();
-			if (!status.isOK()) {
-				StatusHandler.log(status);
-			}
+			reader.read();
 
 			if (reader.getItem() != null) {
 				service = reader.getItem();
