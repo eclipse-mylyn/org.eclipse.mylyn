@@ -16,6 +16,10 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.reviews.ui.messages"; //$NON-NLS-1$
 
+	public static String Reviews_AddCommentDialog_Title;
+
+	public static String Reviews_AddCommentDialog_Message;
+
 	public static String Reviews_GeneralCommentsText;
 
 	public static String Reviews_RetrievingContents;

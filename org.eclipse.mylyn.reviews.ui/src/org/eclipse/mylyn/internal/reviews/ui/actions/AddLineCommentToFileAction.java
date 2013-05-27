@@ -90,7 +90,7 @@ public class AddLineCommentToFileAction extends AbstractReviewAction {
 	}
 
 	protected LineRange getSelectedRange() {
-		//if its the action from the compareeditor, get currently selected lines
+		//if its the action from the compare editor, get currently selected lines
 		if (compareSourceViewer != null) {
 			return compareSourceViewer.getSelection();
 		} else {

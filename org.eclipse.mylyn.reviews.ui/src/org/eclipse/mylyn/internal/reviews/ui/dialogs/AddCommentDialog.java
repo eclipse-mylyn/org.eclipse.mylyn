@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Tasktop Technologies and others.
+ * Copyright (c) 2011, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,10 +17,12 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.commons.workbench.editors.CommonTextSupport;
+import org.eclipse.mylyn.internal.reviews.ui.Messages;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor;
@@ -40,6 +42,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -118,7 +121,7 @@ public class AddCommentDialog extends ProgressDialog {
 		} catch (InvocationTargetException e) {
 			StatusManager.getManager().handle(
 					new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
-							"Unexpected error during execution of operation", e),
+							"Unexpected error during execution of operation", e), //$NON-NLS-1$
 					StatusManager.SHOW | StatusManager.LOG);
 		} catch (InterruptedException e) {
 			// cancelled
@@ -162,14 +165,15 @@ public class AddCommentDialog extends ProgressDialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		toolkit = new FormToolkit(TasksUiPlugin.getDefault().getFormColors(parent.getDisplay()));
-		Control control = super.createDialogArea(parent);
-		return control;
+		return super.createDialogArea(parent);
 	}
 
 	@Override
 	protected Control createPageControls(Composite parent) {
-		setTitle("Add Comment");
-		setMessage("");
+		getShell().setText(Messages.Reviews_AddCommentDialog_Title);
+		setTitle(Messages.Reviews_AddCommentDialog_Title);
+		setMessage(NLS.bind(Messages.Reviews_AddCommentDialog_Message, new Path(item.getName()).lastSegment(),
+				location.getIndex()));
 
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
@@ -209,5 +213,11 @@ public class AddCommentDialog extends ProgressDialog {
 		});
 
 		return editor;
+	}
+
+	@Override
+	protected void setShellStyle(int newShellStyle) {
+		super.setShellStyle(SWT.CLOSE | SWT.MODELESS | SWT.BORDER | SWT.TITLE | SWT.RESIZE);
+		setBlockOnOpen(false);
 	}
 }
