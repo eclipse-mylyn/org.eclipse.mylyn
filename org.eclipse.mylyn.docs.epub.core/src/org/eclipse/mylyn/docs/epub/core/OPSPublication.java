@@ -549,7 +549,7 @@ public abstract class OPSPublication {
 	 * @param href
 	 *            the item referenced
 	 * @param title
-	 *            title of the reference
+	 *            title of the reference (optional)
 	 * @param value
 	 *            type of the reference
 	 * @return the reference
@@ -560,9 +560,6 @@ public abstract class OPSPublication {
 		}
 		if (href == null) {
 			throw new IllegalArgumentException("A href must be specified"); //$NON-NLS-1$
-		}
-		if (title == null) {
-			throw new IllegalArgumentException("A title must be specified"); //$NON-NLS-1$
 		}
 		log(MessageFormat.format(Messages.getString("OPSPublication.11"), value, title, href), Severity.VERBOSE, //$NON-NLS-1$
 				indent);
@@ -872,7 +869,11 @@ public abstract class OPSPublication {
 					}
 				}
 				if (add) {
-					addItem(null, null, file, relativePath.getParent(), null, false, false, false);
+					try {
+						addItem(null, null, file, relativePath.getParent(), null, false, false, false);
+					} catch (Exception e) {
+						throw new RuntimeException("Could not add file referenced from \"" + root + "\"", e);
+					}
 				}
 			}
 		}

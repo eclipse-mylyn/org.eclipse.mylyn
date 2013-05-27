@@ -14,7 +14,7 @@ bc..
           id ID #IMPLIED
           taskname CDATA #IMPLIED
           identifierid CDATA #IMPLIED
-          file CDATA #IMPLIED
+          file CDATA #REQUIRED
           description CDATA #IMPLIED
           workingfolder CDATA #IMPLIED
           includeReferenced %boolean; #IMPLIED>
@@ -115,7 +115,7 @@ bc..
 <!ATTLIST contributor
           id ID #IMPLIED
           fileAs CDATA #IMPLIED
-          name CDATA #IMPLIED
+          name CDATA #REQUIRED
           lang CDATA #IMPLIED
           role CDATA #IMPLIED>
 
@@ -123,7 +123,7 @@ bc..
 <!ATTLIST creator
           id ID #IMPLIED
           fileAs CDATA #IMPLIED
-          name CDATA #IMPLIED
+          name CDATA #REQUIRED
           lang CDATA #IMPLIED
           role CDATA #IMPLIED>
 
@@ -164,7 +164,7 @@ bc..
 <!ELEMENT date EMPTY>
 <!ATTLIST date
           id ID #IMPLIED
-          date CDATA #IMPLIED
+          date CDATA #REQUIRED
           event CDATA #IMPLIED>
           
 p.           
@@ -259,9 +259,9 @@ h3. Cover
 bc.. 
 <!ELEMENT cover (#PCDATA)>
 <!ATTLIST cover
-          image CDATA #IMPLIED>
+          image CDATA #REQUIRED>
 
-p. Adds a cover page using the supplied image file. Use a PNG, SVG or JPEG formatted file. When supplying raster images a dimension of 738x985 pixels is typical for a full screen iPad image. A title can also be specified.
+p. Adds a cover page using the supplied image file. Use a PNG, SVG or JPEG formatted file. When supplying raster images a dimension of 738x985 pixels is typical for a full screen iPad image. A title can also be specified as text within the "cover" delimiters.
 
 h2. Adding content
 
@@ -275,15 +275,14 @@ bc..
 <!ELEMENT item EMPTY>
 <!ATTLIST item
           id ID #IMPLIED
-          file CDATA #IMPLIED
+          file CDATA #REQUIRED
           type CDATA #IMPLIED
-          page CDATA #IMPLIED
           spine %boolean; #IMPLIED>
 
 p. 
 * **file** - points to a file to include in the manifest
 * **type** - The MIME type of the file. If omitted it will be automatically detected if possible.
-* **spine** - Whether or not to include the file in the reading order of the publication.
+* **spine** - Whether or not to include the file in the reading order of the publication. The default is *true*.
 
 h3. Secondary content files
 
@@ -309,8 +308,8 @@ bc..
 <!ELEMENT reference EMPTY>
 <!ATTLIST reference
           id ID #IMPLIED
-          href CDATA #IMPLIED
-          type CDATA #IMPLIED
+          href CDATA #REQUIRED
+          type CDATA #REQUIRED
           title CDATA #IMPLIED>
 p. 
 * **id** - optional unique identifier.
