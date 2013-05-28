@@ -53,41 +53,36 @@ public class JobRemoteService extends AbstractRemoteService {
 	@Override
 	public void retrieve(final AbstractRemoteConsumer process, final boolean force) {
 		if (process.isAsynchronous()) {
-			new Thread() { //We create a new temporary thread here just to ensure that retrieve returns as quickly as possible
+			final Job job = new Job(process.getDescription()) {
 				@Override
-				public void run() {
-					final Job job = new Job(process.getDescription()) {
-						@Override
-						protected IStatus run(IProgressMonitor monitor) {
-							try {
-								process.pull(force, monitor);
-							} catch (CoreException e) {
-								return new Status(IStatus.WARNING, "org.eclipse.mylyn.reviews.core",
-										"Couldn't update model.", e);
-							} catch (OperationCanceledException e) {
-								return Status.CANCEL_STATUS;
+				protected IStatus run(IProgressMonitor monitor) {
+					try {
+						process.pull(force, monitor);
+					} catch (CoreException e) {
+						return new Status(IStatus.WARNING, "org.eclipse.mylyn.reviews.core", "Couldn't update model.",
+								e);
+					} catch (OperationCanceledException e) {
+						return Status.CANCEL_STATUS;
+					}
+					return Status.OK_STATUS;
+				}
+			};
+			job.addJobChangeListener(new JobChangeAdapter() {
+				@Override
+				public void done(final IJobChangeEvent event) {
+					modelExec(new Runnable() {
+						public void run() {
+							final IStatus result = event.getResult();
+							if (result.isOK()) {
+								process.applyModel(force);
 							}
-							return Status.OK_STATUS;
-						}
-					};
-					job.addJobChangeListener(new JobChangeAdapter() {
-						@Override
-						public void done(final IJobChangeEvent event) {
-							modelExec(new Runnable() {
-								public void run() {
-									final IStatus result = event.getResult();
-									if (result.isOK()) {
-										process.applyModel(force);
-									}
-									process.notifyDone(event.getResult());
-								}
-							});
+							process.notifyDone(event.getResult());
 						}
 					});
-					addJob(job);
-					job.schedule();
 				}
-			}.start();
+			});
+			addJob(job);
+			job.schedule();
 		} else {
 			try {
 				process.pull(force, new NullProgressMonitor());
