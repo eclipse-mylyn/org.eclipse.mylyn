@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.commons.core.operations.CancellableOperationMonitorThread;
 import org.eclipse.mylyn.commons.core.operations.ICancellableOperation;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
+import org.eclipse.mylyn.commons.core.operations.OperationUtil;
 
 /**
  * @author Steffen Pingel
@@ -50,6 +51,19 @@ public class CommonHttpResponse implements ICancellableOperation {
 		this.response = response;
 		this.monitorThread = monitorThread;
 		this.monitor = monitor;
+	}
+
+	public CommonHttpResponse(HttpRequest request, HttpResponse response, IOperationMonitor monitor) {
+		this(request, response, CancellableOperationMonitorThread.getInstance(), monitor);
+	}
+
+	/**
+	 * @deprecated use
+	 *             {@link CommonHttpResponse#CommonHttpResponse(HttpRequest, HttpResponse, CancellableOperationMonitorThread, IOperationMonitor)	
+	 */
+	@Deprecated
+	public CommonHttpResponse(HttpRequest request, HttpResponse response) {
+		this(request, response, CancellableOperationMonitorThread.getInstance(), OperationUtil.convert(null));
 	}
 
 	@Override
@@ -100,7 +114,7 @@ public class CommonHttpResponse implements ICancellableOperation {
 	 * @deprecated use {@link #getResponseEntityAsStream()} instead
 	 */
 	@Deprecated
-	public InputStream getResponseEntityAsStream(IOperationMonitor monitor) throws IOException {
+	public InputStream getResponseEntityAsStream(IProgressMonitor monitor) throws IOException {
 		return getResponseEntityAsStream();
 	}
 
