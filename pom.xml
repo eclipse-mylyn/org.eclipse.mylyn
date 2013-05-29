@@ -225,7 +225,7 @@
 
   <profiles>
     <profile>
-      <id>platform-helios</id>
+      <id>platform-juno</id>
       <activation>
         <property>
           <name>platform-version-name</name>
@@ -238,7 +238,7 @@
       </properties>
     </profile>
     <profile>
-      <id>platform-indigo</id>
+      <id>platform-kepler</id>
       <activation>
         <property>
           <name>platform-version-name</name>
@@ -266,4 +266,18 @@
 		</build>
 	</profile>
   </profiles>
+
+  <distributionManagement>
+    <repository>
+      <id>repo.eclipse.org</id>
+      <name>EGit Maven Repository - Releases</name>
+      <url>https://repo.eclipse.org/content/repositories/egit-releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>repo.eclipse.org</id>
+      <name>EGit Maven Repository - Snapshots</name>
+      <url>https://repo.eclipse.org/content/repositories/egit-snapshots/</url>
+      <uniqueVersion>true</uniqueVersion>
+    </snapshotRepository>
+  </distributionManagement>
 </project>
