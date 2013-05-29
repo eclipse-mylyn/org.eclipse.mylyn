@@ -79,8 +79,6 @@ public class Messages extends NLS {
 
 	public static String BugzillaRepositorySettingsPage_DownloadToolTip;
 
-	public static String BugzillaRepositorySettingsPage_Error_updating_repository_configuration;
-
 	public static String BugzillaRepositorySettingsPage_insiderGroup;
 
 	public static String BugzillaRepositorySettingsPage_insiderGroup_ToolTip;
@@ -112,8 +110,6 @@ public class Messages extends NLS {
 	public static String BugzillaRepositorySettingsPage_usestatuswhiteboard;
 
 	public static String BugzillaRepositorySettingsPage_usetargetmilestone;
-
-	public static String BugzillaRepositorySettingsPage_Updating_repository_configuration_for_X;
 
 	public static String BugzillaRepositorySettingsPage_UseXmlRpc;
 

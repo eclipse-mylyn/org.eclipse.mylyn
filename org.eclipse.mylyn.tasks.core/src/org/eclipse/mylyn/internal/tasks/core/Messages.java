@@ -65,8 +65,6 @@ public class Messages extends NLS {
 
 	public static String TaskJobFactory_Refreshing_repository_configuration;
 
-	public static String TaskJobFactory_Receiving_configuration;
-
 	public static String TaskRelation_Dependency;
 
 	public static String TaskRelation_Parent;

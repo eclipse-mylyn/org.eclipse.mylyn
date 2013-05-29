@@ -111,9 +111,6 @@ public class Messages extends NLS {
 
 	public static String TaskScheduleContentProvider_Unscheduled;
 
-	public static String UpdateRepositoryConfigurationAction_Error_updating_repository_configuration;
-
 	public static String UpdateRepositoryConfigurationAction_Update_Repository_Configuration;
 
-	public static String UpdateRepositoryConfigurationAction_Updating_repository_configuration_for_X;
 }

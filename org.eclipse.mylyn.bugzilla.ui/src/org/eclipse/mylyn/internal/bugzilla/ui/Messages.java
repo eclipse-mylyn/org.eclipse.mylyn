@@ -16,8 +16,6 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.bugzilla.ui.messages"; //$NON-NLS-1$
 
-	public static String BugzillaUiPlugin_Configuration_Refresh_Failed;
-
 	public static String TaskAttachmentHyperlink_Open_Attachment_X_in_Y;
 
 	public static String TaskAttachmentTableEditorHyperlink_AttachmentNotFound;
