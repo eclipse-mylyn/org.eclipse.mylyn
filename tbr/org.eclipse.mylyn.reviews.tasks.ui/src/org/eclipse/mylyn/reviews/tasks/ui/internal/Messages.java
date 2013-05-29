@@ -17,11 +17,6 @@ import org.eclipse.osgi.util.NLS;
  */
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.reviews.tasks.ui.internal.messages"; //$NON-NLS-1$
-	public static String CreateTask_Success;
-	public static String CreateTask_Title;
-	public static String CreateTask_UploadingAttachment;
-	public static String PatchCreator_ReaderCreationFailed;
-	public static String ReviewCommentTaskAttachmentSource_Description;
 	public static String ReviewTaskEditorPageFactory_PageTitle;
 	static {
 		// initialize resource bundle
