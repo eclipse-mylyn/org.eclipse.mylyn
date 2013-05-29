@@ -19,10 +19,6 @@ import org.eclipse.osgi.util.NLS;
 class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.docs.epub.ui.messages"; //$NON-NLS-1$
 
-	public static String AbstractMarkupResourceHandler_markupLanguageMappingFailed;
-
-	public static String AbstractMarkupResourceHandler_unexpectedError;
-
 	public static String ConvertFromMarkupWizard_0;
 
 	public static String ConvertFromMarkupWizard_1;
@@ -32,12 +28,6 @@ class Messages extends NLS {
 	public static String ConvertFromMarkupWizard_3;
 
 	public static String ConvertFromMarkupWizard_4;
-
-	public static String ConvertMarkupToEPUB_cannotCompleteOperation;
-
-	public static String ConvertMarkupToEPUB_cannotConvert;
-
-	public static String ConvertMarkupToEPUB_detailsFollow;
 
 	public static String EPUB2Bean_0;
 
