@@ -42,10 +42,10 @@
   <properties>
     <tycho-version>0.17.0</tycho-version>
     <egit-site>file:/${basedir}/../../egit/org.eclipse.egit.repository/target/repository</egit-site>
-    <platform-version-name>indigo</platform-version-name>
+    <platform-version-name>kepler</platform-version-name>
     <mylyn-site>http://download.eclipse.org/mylyn/releases/3.7</mylyn-site>
     <eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
-    <orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/</orbit-site>
+    <orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/</orbit-site>
     <download-publish-path>/home/data/httpd/download.eclipse.org/egit/github/updates-nightly</download-publish-path>
   </properties>
 
@@ -67,7 +67,7 @@
       <url>${egit-site}</url>
     </repository>
     <repository>
-      <id>indigo</id>
+      <id>eclipse</id>
       <layout>p2</layout>
       <url>${eclipse-site}</url>
     </repository>
@@ -229,12 +229,12 @@
       <activation>
         <property>
           <name>platform-version-name</name>
-          <value>helios</value>
+          <value>juno</value>
         </property>
       </activation>
       <properties>
-        <eclipse-site>http://download.eclipse.org/releases/helios</eclipse-site>
-        <platform-version>[3.6,3.7)</platform-version>
+        <eclipse-site>http://download.eclipse.org/releases/juno</eclipse-site>
+        <platform-version>[3.8,3.9)</platform-version>
       </properties>
     </profile>
     <profile>
@@ -242,12 +242,12 @@
       <activation>
         <property>
           <name>platform-version-name</name>
-          <value>indigo</value>
+          <value>kepler</value>
         </property>
       </activation>
       <properties>
-        <eclipse-site>http://download.eclipse.org/releases/indigo</eclipse-site>
-        <platform-version>[3.7,3.8)</platform-version>
+        <eclipse-site>http://download.eclipse.org/releases/kepler</eclipse-site>
+        <platform-version>[3.9,4.0)</platform-version>
       </properties>
     </profile>
 	<profile>
