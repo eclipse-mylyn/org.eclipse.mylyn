@@ -25,31 +25,15 @@ public class Messages extends NLS {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
-	public static String WorkbenchUtil_Browser_Initialization_Failed;
-
-	public static String WorkbenchUtil_Invalid_URL_Error;
-
-	public static String WorkbenchUtil_No_URL_Error;
-
-	public static String WorkbenchUtil_Open_Location_Title;
-
 	public static String ColorSelectionWindow_Close;
 
 	public static String SwtUtil_Fading;
-
-	public static String AbstractFilteredTree_Find;
 
 	public static String AbstractNotificationPopup_Close_Notification_Job;
 
 	public static String AbstractNotificationPopup_Notification;
 
-	public static String DatePicker_Choose_Date;
-
-	public static String DatePicker_Clear;
-
 	public static String DateSelectionDialog_Clear;
-
-	public static String DateSelectionDialog_Date_Selection;
 
 	public static String ScreenshotCreationPage_After_capturing;
 
