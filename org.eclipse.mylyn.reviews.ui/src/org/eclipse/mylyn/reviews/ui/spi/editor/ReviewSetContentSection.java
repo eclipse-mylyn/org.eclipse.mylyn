@@ -31,6 +31,8 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.ui.compatibility.CommonColors;
+import org.eclipse.mylyn.commons.workbench.forms.ScalingHyperlink;
 import org.eclipse.mylyn.internal.reviews.ui.providers.ReviewsLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
@@ -54,7 +56,6 @@ import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.Section;
 
 /**
@@ -216,8 +217,10 @@ public class ReviewSetContentSection {
 		commitLabel.setForeground(colors.getColor(IFormColors.TITLE));
 		commitLabel.setText("Commit");
 
-		Hyperlink commitLink = new Hyperlink(composite, SWT.READ_ONLY);
+		ScalingHyperlink commitLink = new ScalingHyperlink(composite, SWT.READ_ONLY);
 		commitLink.setText(set.getRevision());
+		commitLink.setForeground(CommonColors.HYPERLINK_WIDGET);
+		commitLink.registerMouseTrackListener();
 		commitLink.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent event) {
