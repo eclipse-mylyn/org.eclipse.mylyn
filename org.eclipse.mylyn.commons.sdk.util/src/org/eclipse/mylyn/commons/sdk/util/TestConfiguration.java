@@ -35,9 +35,10 @@ import com.google.gson.reflect.TypeToken;
  */
 public class TestConfiguration {
 
-	private static final String URL_SERVICES_LOCALHOST = "http://localhost:2080";
+	private static final String URL_SERVICES_LOCALHOST = System.getProperty("localhost.test.server",
+			"http://localhost:2080");
 
-	private static final String URL_SERVICES_DEFAULT = "http://mylyn.org";
+	private static final String URL_SERVICES_DEFAULT = System.getProperty("mylyn.test.server", "http://mylyn.org");
 
 	public enum TestKind {
 		UNIT, COMPONENT, INTEGRATION, SYSTEM
@@ -45,22 +46,12 @@ public class TestConfiguration {
 
 	public static TestConfiguration defaultConfiguration;
 
-	private static final String SERVER = System.getProperty("mylyn.test.server", "mylyn.org");
-
 	public static TestConfiguration getDefault() {
 		if (defaultConfiguration == null) {
 			defaultConfiguration = new TestConfiguration(TestKind.UNIT);
 			defaultConfiguration.setDefaultOnly(CommonTestUtil.runHeartbeatTestsOnly());
 		}
 		return defaultConfiguration;
-	}
-
-	public static String getRepositoryUrl(String service) {
-		return getDefault().getUrl(service);
-	}
-
-	public static String getRepositoryUrl(String service, boolean secure) {
-		return getDefault().getUrl(service, secure);
 	}
 
 	public static void setDefault(TestConfiguration defaultConfiguration) {
@@ -78,14 +69,6 @@ public class TestConfiguration {
 	public TestConfiguration(TestKind firstKind, TestKind... moreKinds) {
 		Assert.isNotNull(firstKind);
 		this.kinds = EnumSet.of(firstKind, moreKinds);
-	}
-
-	public String getUrl(String service) {
-		return getUrl(service, false);
-	}
-
-	public String getUrl(String service, boolean secure) {
-		return ((secure) ? "https://" : "http://") + SERVER + "/" + service;
 	}
 
 	public boolean hasKind(TestKind kind) {
@@ -131,20 +114,21 @@ public class TestConfiguration {
 	public <T> List<T> discover(Class<T> clazz, String fixtureType, boolean defaultOnly) {
 		List<T> fixtures = Collections.emptyList();
 
-		try {
-			File file = CommonTestUtil.getFile(clazz, "local.json");
-			fixtures = discover("file://" + file.getAbsolutePath(), "", clazz, fixtureType, defaultOnly);
-		} catch (AssertionFailedError e) {
-			// ignore
-		} catch (IOException e) {
-			// ignore
-		}
+		if (!CommonTestUtil.ignoreLocalTestServices()) {
+			try {
+				File file = CommonTestUtil.getFile(clazz, "local.json");
+				fixtures = discover("file://" + file.getAbsolutePath(), "", clazz, fixtureType, defaultOnly);
+			} catch (AssertionFailedError e) {
+				// ignore
+			} catch (IOException e) {
+				// ignore
+			}
 
-		if (fixtures.isEmpty()) {
-			fixtures = discover(URL_SERVICES_LOCALHOST + "/cgi-bin/services", URL_SERVICES_LOCALHOST, clazz,
-					fixtureType, defaultOnly);
+			if (fixtures.isEmpty()) {
+				fixtures = discover(URL_SERVICES_LOCALHOST + "/cgi-bin/services", URL_SERVICES_LOCALHOST, clazz,
+						fixtureType, defaultOnly);
+			}
 		}
-
 		if (fixtures.isEmpty()) {
 			fixtures = discover(URL_SERVICES_DEFAULT + "/cgi-bin/services", URL_SERVICES_DEFAULT, clazz, fixtureType,
 					defaultOnly);

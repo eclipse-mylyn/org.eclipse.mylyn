@@ -62,6 +62,8 @@ public class CommonTestUtil {
 
 	public static final String KEY_CREDENTIALS_FILE = "mylyn.credentials";
 
+	private static final String KEY_IGNORE_LOCAL_SERVICES = "org.eclipse.mylyn.tests.ignore.local.services";
+
 	private final static int MAX_RETRY = 5;
 
 	/**
@@ -545,6 +547,14 @@ public class CommonTestUtil {
 		Proxy httpProxy = WebUtil.getProxyForUrl("http://mylyn.org");
 		Proxy httpsProxy = WebUtil.getProxyForUrl("https://mylyn.org");
 		return CoreUtil.areEqual(httpProxy, httpsProxy);
+	}
+
+	/**
+	 * Returns whether to run on local services if present. Returns false, unless a system property has been set to
+	 * force to ignore local running services.
+	 */
+	public static boolean ignoreLocalTestServices() {
+		return Boolean.parseBoolean(System.getProperty(KEY_IGNORE_LOCAL_SERVICES));
 	}
 
 }
