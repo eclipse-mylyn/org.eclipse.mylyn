@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaTest;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
+import org.eclipse.mylyn.bugzilla.tests.support.BugzillaHarness;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.bugzilla.core.AbstractBugzillaOperation;
@@ -304,9 +305,12 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 		}
 	};
 
+	private BugzillaHarness harness;
+
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
+		harness = BugzillaFixture.current().createHarness();
 		WebLocation webLocation = new WebLocation(BugzillaFixture.current().getRepositoryUrl() + "/xmlrpc.cgi");
 		webLocation.setCredentials(AuthenticationType.REPOSITORY, "tests@mylyn.eclipse.org", "mylyntest");
 		bugzillaClient = new BugzillaXmlRpcClient(webLocation, client);

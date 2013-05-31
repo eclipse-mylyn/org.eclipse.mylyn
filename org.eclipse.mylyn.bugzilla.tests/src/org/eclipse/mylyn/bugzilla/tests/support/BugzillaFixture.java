@@ -290,4 +290,8 @@ public class BugzillaFixture extends TestFixture {
 		return getProperty("desciptorfile");
 	}
 
+	public BugzillaHarness createHarness() {
+		return new BugzillaHarness(this);
+	}
+
 }

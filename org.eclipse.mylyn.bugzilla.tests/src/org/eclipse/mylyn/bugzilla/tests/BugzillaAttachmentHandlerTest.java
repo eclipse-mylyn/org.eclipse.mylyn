@@ -51,16 +51,6 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  */
 public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
 	@SuppressWarnings("null")
 	public void testUpdateAttachmentFlags() throws Exception {
 		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, "update of Attachment Flags",

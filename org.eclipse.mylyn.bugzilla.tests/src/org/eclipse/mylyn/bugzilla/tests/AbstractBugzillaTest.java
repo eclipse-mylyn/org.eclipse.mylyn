@@ -58,7 +58,6 @@ public abstract class AbstractBugzillaTest extends TestCase {
 
 	public AbstractBugzillaTest() {
 		super();
-		harness = new BugzillaHarness(this);
 	}
 
 	@Override
@@ -73,6 +72,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		this.connector = BugzillaFixture.current().connector();
 		this.repository = BugzillaFixture.current().repository();
 		TasksUi.getRepositoryManager().addRepository(repository);
+		harness = BugzillaFixture.current().createHarness();
 	}
 
 	@Override
