@@ -119,14 +119,6 @@ public class Messages extends NLS {
 
 	public static String BugzillaRepositorySettingsPage_Validating_server_settings;
 
-	public static String BugzillaRepositorySettingsPage_XMLRPC;
-
-	public static String BugzillaRepositorySettingsPage_XMLRPC_Active;
-
-	public static String BugzillaRepositorySettingsPage_XMLRPC_DefaultMilestones;
-
-	public static String BugzillaRepositorySettingsPage_XMLRPC_WorkflowTransitions;
-
 	public static String BugzillaTaskAttachmentPage_Advanced;
 
 }

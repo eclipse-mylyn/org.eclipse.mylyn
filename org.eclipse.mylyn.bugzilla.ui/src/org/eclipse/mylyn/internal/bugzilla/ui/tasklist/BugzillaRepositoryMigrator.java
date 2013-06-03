@@ -12,7 +12,6 @@
 package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorExtensions;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryMigrator;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -39,15 +38,6 @@ public class BugzillaRepositoryMigrator extends AbstractRepositoryMigrator {
 		if (repository.getProperty(TaskEditorExtensions.REPOSITORY_PROPERTY_AVATAR_SUPPORT) == null
 				&& "https://bugs.eclipse.org/bugs".equals(repository.getRepositoryUrl())) { //$NON-NLS-1$
 			repository.setProperty(TaskEditorExtensions.REPOSITORY_PROPERTY_AVATAR_SUPPORT, Boolean.TRUE.toString());
-			migrated = true;
-		}
-		if (repository.getProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC_DEFAULT_MILESTONE) == null
-				&& repository.getProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC) == null
-				&& repository.getProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC_WORKFLOW) != null) {
-			repository.setProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC,
-					repository.getProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC_WORKFLOW));
-			repository.setProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC_DEFAULT_MILESTONE,
-					repository.getProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC_WORKFLOW));
 			migrated = true;
 		}
 		return migrated;

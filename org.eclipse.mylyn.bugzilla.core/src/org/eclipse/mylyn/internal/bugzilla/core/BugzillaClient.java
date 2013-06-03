@@ -729,8 +729,6 @@ public class BugzillaClient {
 			throws IOException, CoreException {
 		GzipGetMethod method = null;
 		int attempt = 0;
-		StatusHandler.log(new Status(IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN,
-				Messages.BugzillaClient_Start_GetConfiguration + repositoryUrl));
 		while (attempt < 2) {
 			try {
 				method = getConnectGzip(repositoryUrl + IBugzillaConstants.URL_GET_CONFIG_RDF, monitor, eTagValue);
@@ -750,7 +748,6 @@ public class BugzillaClient {
 										stream, getCharacterEncoding());
 
 								repositoryConfiguration = configFactory.getConfiguration();
-								repositoryConfiguration.setRepositoryUrl(repositoryUrl.toExternalForm());
 								Header eTag = method.getResponseHeader("ETag"); //$NON-NLS-1$
 								if (eTag != null) {
 									repositoryConfiguration.setETagValue(eTag.getValue());
@@ -772,7 +769,7 @@ public class BugzillaClient {
 									getXmlRpcClient();
 									if (xmlRpcClient != null) {
 										xmlRpcClient.updateConfiguration(monitor, repositoryConfiguration,
-												configParameters);
+												configParameters.get(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE));
 									} else {
 										repositoryConfiguration.setValidTransitions(monitor,
 												configParameters.get(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE), null);
@@ -782,8 +779,6 @@ public class BugzillaClient {
 									}
 
 									if (!repositoryConfiguration.getOptionValues(BugzillaAttribute.PRODUCT).isEmpty()) {
-										StatusHandler.log(new Status(IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN,
-												Messages.BugzillaClient_Stop_GetConfiguration + repositoryUrl));
 										return repositoryConfiguration;
 									} else {
 										if (attempt == 0) {
@@ -814,8 +809,6 @@ public class BugzillaClient {
 				}
 			}
 		}
-		StatusHandler.log(new Status(IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN,
-				Messages.BugzillaClient_Start_GetConfiguration + repositoryUrl));
 		return null;
 	}
 
