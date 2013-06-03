@@ -78,7 +78,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	private static final String LABEL_SHORT_LOGINS = Messages.BugzillaRepositorySettingsPage_local_users_enabled;
 
-	private static final String LABEL_VERSION_NUMBER = "3.0 - 4.0"; //$NON-NLS-1$
+	private static final String LABEL_VERSION_NUMBER = "3.0 - 4.4"; //$NON-NLS-1$
 
 	private static final String TITLE = Messages.BugzillaRepositorySettingsPage_bugzilla_repository_settings;
 
@@ -104,7 +104,11 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	private Combo languageSettingCombo;
 
-	private Button useXMLRPCstatusTransitions;
+	private Button useXMLRPC;
+
+	private Button useXMLRPCWorkflowTransitions;
+
+	private Button useXMLRPCDefaultMilestones;
 
 	private Button autodetectXMLRPCFile;
 
@@ -283,9 +287,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				.align(SWT.FILL, SWT.CENTER)
 				.hint(300, SWT.DEFAULT)
 				.applyTo(descriptorFile);
-		useXMLRPCstatusTransitions = new Button(workflowGroup, SWT.CHECK | SWT.LEFT);
-		useXMLRPCstatusTransitions.setText(Messages.BugzillaRepositorySettingsPage_UseXmlRpc);
-		useXMLRPCstatusTransitions.setToolTipText(Messages.BugzillaRepositorySettingsPage_RequiresBugzilla3_6);
+		new Label(workflowGroup, SWT.NONE);
 		Composite descriptorComposite = new Composite(workflowGroup, SWT.NONE);
 		gridLayout = new GridLayout(2, false);
 		gridLayout.marginWidth = 0;
@@ -392,6 +394,22 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				languageSettingCombo.select(languageSettingCombo.indexOf(IBugzillaConstants.DEFAULT_LANG));
 			}
 		}
+
+		Group xmlrpcGroup = new Group(parent, SWT.SHADOW_ETCHED_IN);
+		xmlrpcGroup.setLayout(new GridLayout(3, false));
+		xmlrpcGroup.setText(Messages.BugzillaRepositorySettingsPage_XMLRPC);
+		xmlrpcGroup.setToolTipText(Messages.BugzillaRepositorySettingsPage_RequiresBugzilla3_6);
+		GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).span(2, 1).applyTo(xmlrpcGroup);
+		useXMLRPC = new Button(xmlrpcGroup, SWT.CHECK | SWT.LEFT);
+		useXMLRPC.setText(Messages.BugzillaRepositorySettingsPage_XMLRPC_Active);
+		useXMLRPC.setToolTipText(Messages.BugzillaRepositorySettingsPage_RequiresBugzilla3_6);
+		useXMLRPCWorkflowTransitions = new Button(xmlrpcGroup, SWT.CHECK | SWT.LEFT);
+		useXMLRPCWorkflowTransitions.setText(Messages.BugzillaRepositorySettingsPage_XMLRPC_WorkflowTransitions);
+		useXMLRPCWorkflowTransitions.setToolTipText(Messages.BugzillaRepositorySettingsPage_RequiresBugzilla3_6);
+		useXMLRPCDefaultMilestones = new Button(xmlrpcGroup, SWT.CHECK | SWT.LEFT);
+		useXMLRPCDefaultMilestones.setText(Messages.BugzillaRepositorySettingsPage_XMLRPC_DefaultMilestones);
+		useXMLRPCDefaultMilestones.setToolTipText(Messages.BugzillaRepositorySettingsPage_RequiresBugzilla3_6);
+
 		Group adminGroup = new Group(parent, SWT.SHADOW_ETCHED_IN);
 		adminGroup.setLayout(new GridLayout(3, true));
 		adminGroup.setText(Messages.BugzillaRepositorySettingsPage_admin_parameter);
@@ -452,7 +470,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 					use_see_also.setSelection(!value);
 
 					value = Boolean.parseBoolean(myTemplate.getAttribute("useXMLRPC")); //$NON-NLS-1$
-					useXMLRPCstatusTransitions.setSelection(value);
+					useXMLRPC.setSelection(value);
 				} else {
 					useclassification.setSelection(true);
 					usetargetmilestone.setSelection(false);
@@ -460,7 +478,9 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 					usestatuswhiteboard.setSelection(false);
 					usebugaliases.setSelection(true);
 					use_see_also.setSelection(true);
-					useXMLRPCstatusTransitions.setSelection(false);
+					useXMLRPC.setSelection(false);
+					useXMLRPCWorkflowTransitions.setSelection(false);
+					useXMLRPCDefaultMilestones.setSelection(false);
 				}
 			} else {
 				// we use the repository values
@@ -478,7 +498,11 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				use_see_also.setSelection(!value);
 
 				value = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC));
-				useXMLRPCstatusTransitions.setSelection(value);
+				useXMLRPC.setSelection(value);
+				value = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC_WORKFLOW));
+				useXMLRPCWorkflowTransitions.setSelection(value);
+				value = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC_DEFAULT_MILESTONE));
+				useXMLRPCDefaultMilestones.setSelection(value);
 			}
 		}
 	}
@@ -539,7 +563,11 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			changed = changed || repositoryAuth.getPassword().compareTo(getPassword()) != 0;
 		}
 		changed = changed
-				|| Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC)) != useXMLRPCstatusTransitions.getSelection();
+				|| Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC)) != useXMLRPC.getSelection();
+		changed = changed
+				|| Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC_WORKFLOW)) != useXMLRPCWorkflowTransitions.getSelection();
+		changed = changed
+				|| Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC_DEFAULT_MILESTONE)) != useXMLRPCDefaultMilestones.getSelection();
 		changed = changed
 				|| !equals(repository.getProperty(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE),
 						descriptorFile.getText());
@@ -667,8 +695,11 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		repository.setProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN,
 				String.valueOf(cleanQAContact.getSelection()));
 		repository.setProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING, languageSettingCombo.getText());
-		repository.setProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC,
-				Boolean.toString(useXMLRPCstatusTransitions.getSelection()));
+		repository.setProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC, Boolean.toString(useXMLRPC.getSelection()));
+		repository.setProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC_WORKFLOW,
+				Boolean.toString(useXMLRPCWorkflowTransitions.getSelection()));
+		repository.setProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC_DEFAULT_MILESTONE,
+				Boolean.toString(useXMLRPCDefaultMilestones.getSelection()));
 		repository.setProperty(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE, descriptorFile.getText());
 		if (!autodetectPlatformOS.getSelection()) {
 			repository.setProperty(IBugzillaConstants.BUGZILLA_DEF_PLATFORM,

@@ -252,7 +252,11 @@ public interface IBugzillaConstants {
 
 	public static final String BUGZILLA_DESCRIPTOR_FILE = "bugzilla.desciptorFile"; //$NON-NLS-1$
 
-	public static final String BUGZILLA_USE_XMLRPC = "bugzilla.xmlrpc.status.transition"; //$NON-NLS-1$
+	public static final String BUGZILLA_USE_XMLRPC = "bugzilla.xmlrpc"; //$NON-NLS-1$
+
+	public static final String BUGZILLA_USE_XMLRPC_WORKFLOW = "bugzilla.xmlrpc.status.transition"; //$NON-NLS-1$
+
+	public static final String BUGZILLA_USE_XMLRPC_DEFAULT_MILESTONE = "bugzilla.xmlrpc.default.milestone"; //$NON-NLS-1$
 
 	public static final String DEFAULT_LANG = "en (default)"; //$NON-NLS-1$
 

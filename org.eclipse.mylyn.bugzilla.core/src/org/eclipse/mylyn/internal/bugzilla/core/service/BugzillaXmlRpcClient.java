@@ -32,6 +32,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -54,6 +55,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.eclipse.osgi.util.NLS;
 
 @SuppressWarnings("restriction")
 public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
@@ -413,51 +415,71 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 	}
 
 	public void updateConfiguration(IProgressMonitor monitor, RepositoryConfiguration repositoryConfiguration,
-			String fileName) throws CoreException {
-		repositoryConfiguration.setValidTransitions(monitor, fileName, this);
-		if (!repositoryConfiguration.getOptionValues(BugzillaAttribute.PRODUCT).isEmpty()) {
+			Map<String, String> configParameters) throws CoreException {
+		if (Boolean.parseBoolean(configParameters.get(IBugzillaConstants.BUGZILLA_USE_XMLRPC_WORKFLOW))) {
+			repositoryConfiguration.setValidTransitions(monitor,
+					configParameters.get(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE), this);
+		}
+		if (!repositoryConfiguration.getOptionValues(BugzillaAttribute.PRODUCT).isEmpty()
+				&& Boolean.parseBoolean(configParameters.get(IBugzillaConstants.BUGZILLA_USE_XMLRPC_DEFAULT_MILESTONE))) {
 			updateProductInfo(monitor, repositoryConfiguration);
 		}
 	}
 
 	public void updateProductInfo(IProgressMonitor monitor, RepositoryConfiguration repositoryConfiguration)
 			throws CoreException {
+		ArrayList<Object> productIDNew = new ArrayList<Object>();
+		StatusHandler.log(new Status(IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN, Messages.BugzillaXmlRpcClient_Start_UpdateProductInfo
+				+ repositoryConfiguration.getRepositoryUrl()));
 		try {
 			Object[] productIDs = getAccessibleProducts(monitor);
-			Object[] products = getProducts(monitor, productIDs);
-			for (Object object : products) {
-				if (object instanceof HashMap<?, ?>) {
-					String defaultMilestone = null;
-					String product = (String) ((HashMap<?, ?>) object).get("name"); //$NON-NLS-1$
-					HashMap<?, ?> values = (HashMap<?, ?>) ((HashMap<?, ?>) object).get("internals"); //$NON-NLS-1$
-					Object defaultMilestoneObj = null;
-					if (values != null) {
-						if (values instanceof HashMap<?, ?>) {
-							defaultMilestoneObj = ((HashMap<?, ?>) values).get("defaultmilestone"); //$NON-NLS-1$
+			for (Object productID : productIDs) {
+				productIDNew.clear();
+				productIDNew.add(productID);
+				try {
+					Object[] products = getProducts(monitor, productIDNew.toArray());
+					for (Object object : products) {
+						if (object instanceof HashMap<?, ?>) {
+							String defaultMilestone = null;
+							String product = (String) ((HashMap<?, ?>) object).get("name"); //$NON-NLS-1$
+							HashMap<?, ?> values = (HashMap<?, ?>) ((HashMap<?, ?>) object).get("internals"); //$NON-NLS-1$
+							Object defaultMilestoneObj = null;
+							if (values != null) {
+								if (values instanceof HashMap<?, ?>) {
+									defaultMilestoneObj = ((HashMap<?, ?>) values).get("defaultmilestone"); //$NON-NLS-1$
+								}
+							} else {
+								defaultMilestoneObj = ((HashMap<?, ?>) object).get("default_milestone"); //$NON-NLS-1$
+							}
+							if (defaultMilestoneObj != null) {
+								if (defaultMilestoneObj instanceof String) {
+									defaultMilestone = (String) defaultMilestoneObj;
+								} else if (defaultMilestoneObj instanceof Double) {
+									defaultMilestone = ((Double) defaultMilestoneObj).toString();
+								} else if (defaultMilestoneObj instanceof Integer) {
+									defaultMilestone = ((Integer) defaultMilestoneObj).toString();
+								}
+							}
+							if (product != null && !product.equals("") //$NON-NLS-1$
+									&& defaultMilestone != null && !defaultMilestone.equals("")) { //$NON-NLS-1$
+								repositoryConfiguration.setDefaultMilestone(product, defaultMilestone);
+							}
 						}
-					} else {
-						defaultMilestoneObj = ((HashMap<?, ?>) object).get("default_milestone"); //$NON-NLS-1$
 					}
-					if (defaultMilestoneObj != null) {
-						if (defaultMilestoneObj instanceof String) {
-							defaultMilestone = (String) defaultMilestoneObj;
-						} else if (defaultMilestoneObj instanceof Double) {
-							defaultMilestone = ((Double) defaultMilestoneObj).toString();
-						} else if (defaultMilestoneObj instanceof Integer) {
-							defaultMilestone = ((Integer) defaultMilestoneObj).toString();
-						}
-					}
-					if (product != null && !product.equals("") //$NON-NLS-1$
-							&& defaultMilestone != null && !defaultMilestone.equals("")) { //$NON-NLS-1$
-						repositoryConfiguration.setDefaultMilestone(product, defaultMilestone);
-					}
+				} catch (Exception e) {
+					Status status = new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, NLS.bind(
+							Messages.BugzillaXmlRpcClient_CanNotGetTheDefaultMilestoneForProductWithID,
+							productIDNew.get(0)));
+					StatusHandler.log(status);
 				}
 			}
 		} catch (XmlRpcException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 					"Can not get the Default Milestones using XMLRPC")); //$NON-NLS-1$
+		} finally {
+			StatusHandler.log(new Status(IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN, Messages.BugzillaXmlRpcClient_Stop_UpdateProductInfo
+					+ repositoryConfiguration.getRepositoryUrl()));
 		}
-
 	}
 
 	public int getUserID() {
