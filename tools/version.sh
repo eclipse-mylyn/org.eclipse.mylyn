@@ -109,7 +109,7 @@ perl -pi~ -e '
 	s/(org.eclipse.mylyn.internal.github.*;version=")[^"[(]*(")/${1}'"$EGIT_V"'${2}/;
 	s/(org.eclipse.mylyn.internal.github.*;version="\[)[^"]*(\)")/${1}'"$EGIT_V,$EGIT_N"'${2}/;
 	s/(org.eclipse.jgit.*;version="\[)[^"]*(\)")/${1}'"$JGIT_V,$JGIT_N"'${2}/;
-	' $(git ls-files | grep META-INF/MANIFEST.MF)
+	' $(git ls-files | egrep "META-INF/MANIFEST.MF|META-INF/SOURCE-MANIFEST.MF")
 
 perl -pi~ -e '
 	if ($ARGV ne $old_argv) {
