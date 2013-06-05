@@ -29,10 +29,6 @@ import org.eclipse.swt.graphics.Image;
  */
 public class CDTContextLabelProvider extends AppearanceAwareLabelProvider {
 
-	public CDTContextLabelProvider() {
-		super();
-	}
-
 	@Override
 	public String getText(Object object) {
 		if (object instanceof IInteractionElement) {
@@ -41,9 +37,8 @@ public class CDTContextLabelProvider extends AppearanceAwareLabelProvider {
 				ICElement element = CDTStructureBridge.getElementForHandle(node.getHandleIdentifier());
 				if (element == null) {
 					return Messages.CDTContextLabelProvider_Missing_Element;
-				} else {
-					return getTextForElement(element);
 				}
+				return getTextForElement(element);
 			}
 		} else if (object instanceof IInteractionRelation) {
 			return getNameForRelationship(((IInteractionRelation) object).getRelationshipHandle());
@@ -56,9 +51,8 @@ public class CDTContextLabelProvider extends AppearanceAwareLabelProvider {
 	private String getTextForElement(ICElement element) {
 		if (element.exists()) {
 			return super.getText(element);
-		} else {
-			return Messages.CDTContextLabelProvider_Missing_Element;
 		}
+		return Messages.CDTContextLabelProvider_Missing_Element;
 	}
 
 	@Override
@@ -66,21 +60,28 @@ public class CDTContextLabelProvider extends AppearanceAwareLabelProvider {
 		if (object instanceof IInteractionElement) {
 			IInteractionElement node = (IInteractionElement) object;
 			if (node.getContentType().equals(CDTStructureBridge.CONTENT_TYPE)) {
-				ICElement element = CDTStructureBridge.getElementForHandle(node.getHandleIdentifier());
-				if (element != null) {
-					return super.getImage(element);
-				}
-				return null;
+				return getImageForCDTContentType(node);
 			}
 		} else if (object instanceof IInteractionRelation) {
-			ImageDescriptor descriptor = getIconForRelationship(((IInteractionRelation) object).getRelationshipHandle());
-			if (descriptor != null) {
-				return CommonImages.getImage(descriptor);
-			} else {
-				return null;
-			}
+			return getImageForRelation((IInteractionRelation) object);
 		}
 		return super.getImage(object);
+	}
+
+	private Image getImageForRelation(IInteractionRelation relation) {
+		ImageDescriptor descriptor = getIconForRelationship(relation.getRelationshipHandle());
+		if (descriptor != null) {
+			return CommonImages.getImage(descriptor);
+		}
+		return null;
+	}
+
+	private Image getImageForCDTContentType(IInteractionElement node) {
+		ICElement element = CDTStructureBridge.getElementForHandle(node.getHandleIdentifier());
+		if (element != null) {
+			return super.getImage(element);
+		}
+		return null;
 	}
 
 	private ImageDescriptor getIconForRelationship(String relationshipHandle) {
@@ -88,20 +89,21 @@ public class CDTContextLabelProvider extends AppearanceAwareLabelProvider {
 		return null;
 	}
 
+	public static AppearanceAwareLabelProvider createCDTUiLabelProvider() {
+		int imageFlags = AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS | CElementImageProvider.SMALL_ICONS;
+		AppearanceAwareLabelProvider cdtUiLabelProvider = new AppearanceAwareLabelProvider(
+				AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS, imageFlags);
+		ProblemsLabelDecorator problemsLabelDecorator = new ProblemsLabelDecorator(null);
+		cdtUiLabelProvider.addLabelDecorator(problemsLabelDecorator);
+		return cdtUiLabelProvider;
+	}
+
 	@SuppressWarnings("restriction")
 	private String getNameForRelationship(String relationshipHandle) {
 		if (relationshipHandle.equals(InteractionContextManager.CONTAINMENT_PROPAGATION_ID)) {
 			return Messages.CDTContextLabelProvider_Containment;
-		} else {
-			return null;
 		}
+		return null;
 	}
 
-	public static AppearanceAwareLabelProvider createCDTUiLabelProvider() {
-		AppearanceAwareLabelProvider cdtUiLabelProvider = new AppearanceAwareLabelProvider(
-				AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS, AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS
-						| CElementImageProvider.SMALL_ICONS);
-		cdtUiLabelProvider.addLabelDecorator(new ProblemsLabelDecorator(null));
-		return cdtUiLabelProvider;
-	}
 }
