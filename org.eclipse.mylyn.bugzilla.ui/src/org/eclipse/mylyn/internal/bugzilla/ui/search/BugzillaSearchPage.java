@@ -449,7 +449,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 		os.deselectAll();
 		summaryOperation.select(0);
 		commentOperation.select(0);
-		emailOperation.select(0);
+		emailOperation.select(1);
 
 		for (Button emailButton : emailButtons) {
 			emailButton.setSelection(false);
@@ -457,7 +457,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 		summaryPattern.setText(""); //$NON-NLS-1$
 		commentPattern.setText(""); //$NON-NLS-1$
 		emailPattern.setText(""); //$NON-NLS-1$
-		emailOperation2.select(0);
+		emailOperation2.select(1);
 		for (Button element : emailButtons2) {
 			element.setSelection(false);
 		}
@@ -552,8 +552,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 		emailOperation = new Combo(basicComposite, SWT.SINGLE | SWT.READ_ONLY | SWT.BORDER);
 		emailOperation.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		emailOperation.setItems(emailOperationText);
-		emailOperation.setText(emailOperationText[0]);
-		emailOperation.select(0);
+		emailOperation.setText(emailOperationText[1]);
+		emailOperation.select(1);
 
 		new Label(basicComposite, SWT.NONE);
 		Composite emailComposite = new Composite(basicComposite, SWT.NONE);
@@ -791,8 +791,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage2 implements 
 		emailOperation2 = new Combo(advancedComposite, SWT.SINGLE | SWT.READ_ONLY | SWT.BORDER);
 		emailOperation2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		emailOperation2.setItems(emailOperationText);
-		emailOperation2.setText(emailOperationText[0]);
-		emailOperation2.select(0);
+		emailOperation2.setText(emailOperationText[1]);
+		emailOperation2.select(1);
 
 		new Label(advancedComposite, SWT.NONE);
 		Composite emailComposite2 = new Composite(advancedComposite, SWT.NONE);
