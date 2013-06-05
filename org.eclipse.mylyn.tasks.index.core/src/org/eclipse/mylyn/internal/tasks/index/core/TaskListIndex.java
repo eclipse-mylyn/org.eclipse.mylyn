@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Tasktop Technologies.
+ * Copyright (c) 2011, 2013 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -157,7 +157,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		public MaintainIndexJob() {
 			super(Messages.TaskListIndex_indexerJob);
 			setUser(false);
-			setSystem(false); // true?
+			setSystem(true);
 			setPriority(Job.LONG);
 		}
 
