@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Tasktop Technologies and others.
+ * Copyright (c) 2011, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -59,8 +59,6 @@ public class PublishDialog extends GerritOperationDialog {
 
 	private final List<Button> approvalButtons;
 
-	private Label statusLabel;
-
 	private final String editorCommentText;
 
 	private final IReviewItemSet set;
@@ -116,14 +114,14 @@ public class PublishDialog extends GerritOperationDialog {
 		messageEditor.getViewer().setSelectedRange(editorCommentText.length(), 0);
 		messageEditor.getControl().setFocus();
 
-		statusLabel = new Label(composite, SWT.NONE);
-
 		int drafts = 0;
 		for (IComment comment : set.getAllComments()) {
 			drafts += comment.isDraft() ? 1 : 0;
 		}
-
-		statusLabel.setText(NLS.bind("Publishes {0} draft{1}.", drafts, drafts > 1 ? "s" : ""));
+		if (drafts > 0) {
+			Label statusLabel = new Label(composite, SWT.NONE);
+			statusLabel.setText(NLS.bind("Publishes {0} draft{1}.", drafts, drafts > 1 ? "s" : ""));
+		}
 
 		return composite;
 	}
