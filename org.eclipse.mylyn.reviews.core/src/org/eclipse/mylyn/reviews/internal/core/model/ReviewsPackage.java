@@ -3455,6 +3455,7 @@ public class ReviewsPackage extends EPackageImpl {
 				this.getUser(),
 				null,
 				"users", null, 0, -1, IRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		getRepository_Users().getEKeys().add(this.getUser_Id());
 		initEAttribute(
 				getRepository_Description(),
 				ecorePackage.getEString(),
