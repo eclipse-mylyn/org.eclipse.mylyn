@@ -208,10 +208,9 @@ public class Repository extends EObjectImpl implements IRepository {
 	public void setTaskRepositoryUrl(String newTaskRepositoryUrl) {
 		String oldTaskRepositoryUrl = taskRepositoryUrl;
 		taskRepositoryUrl = newTaskRepositoryUrl;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REPOSITORY__TASK_REPOSITORY_URL,
 					oldTaskRepositoryUrl, taskRepositoryUrl));
-		}
 	}
 
 	/**
@@ -231,10 +230,9 @@ public class Repository extends EObjectImpl implements IRepository {
 	public void setTaskConnectorKind(String newTaskConnectorKind) {
 		String oldTaskConnectorKind = taskConnectorKind;
 		taskConnectorKind = newTaskConnectorKind;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REPOSITORY__TASK_CONNECTOR_KIND,
 					oldTaskConnectorKind, taskConnectorKind));
-		}
 	}
 
 	/**
@@ -254,10 +252,9 @@ public class Repository extends EObjectImpl implements IRepository {
 	public void setTaskRepository(TaskRepository newTaskRepository) {
 		TaskRepository oldTaskRepository = taskRepository;
 		taskRepository = newTaskRepository;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REPOSITORY__TASK_REPOSITORY,
 					oldTaskRepository, taskRepository));
-		}
 	}
 
 	/**
@@ -302,10 +299,9 @@ public class Repository extends EObjectImpl implements IRepository {
 	public void setDescription(String newDescription) {
 		String oldDescription = description;
 		description = newDescription;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REPOSITORY__DESCRIPTION,
 					oldDescription, description));
-		}
 	}
 
 	/**
@@ -476,9 +472,8 @@ public class Repository extends EObjectImpl implements IRepository {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) {
+		if (eIsProxy())
 			return super.toString();
-		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (taskRepositoryUrl: "); //$NON-NLS-1$

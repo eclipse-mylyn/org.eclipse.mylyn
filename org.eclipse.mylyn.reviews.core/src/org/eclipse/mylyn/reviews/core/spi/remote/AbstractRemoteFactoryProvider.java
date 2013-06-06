@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.reviews.core.spi.remote;
 
-
 /**
  * Support generic implementations of a set of remote API factories. In the base case, this just encapsulates a service.
  * 
