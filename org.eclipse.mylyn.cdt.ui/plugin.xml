@@ -25,11 +25,6 @@
             class="org.eclipse.mylyn.internal.cdt.ui.CDTUiBridge"
             contentType="c/c++">
       </uiBridge>
-      <!-- only for sandbox features -->
-      <labelProvider
-            class="org.eclipse.mylyn.internal.cdt.ui.CDTContextLabelProvider"
-            contentType="c/c++">
-      </labelProvider>
       <preservedFilters
             viewId="org.eclipse.cdt.ui.CView">
          <filter
