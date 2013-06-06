@@ -89,6 +89,7 @@ import org.eclipse.ui.statushandlers.StatusManager;
  * @author Frank Becker
  * @author David Green
  * @author Helen Bershadskaya
+ * @author Benjamin Muskalla
  * @since 2.0
  */
 public abstract class AbstractRepositorySettingsPage extends AbstractTaskRepositoryPage implements ITaskRepositoryPage,
@@ -244,12 +245,16 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	protected SectionComposite innerComposite;
 
 	/**
-	 * @since 3.0
+	 * @since 3.10
 	 */
-	public AbstractRepositorySettingsPage(String title, String description, TaskRepository taskRepository) {
+	public AbstractRepositorySettingsPage(String title, String description, TaskRepository taskRepository,
+			AbstractRepositoryConnector connector) {
 		super(title, description, taskRepository);
 		repository = taskRepository;
-		this.connector = TasksUi.getRepositoryManager().getRepositoryConnector(getConnectorKind());
+		if (connector == null) {
+			connector = TasksUi.getRepositoryManager().getRepositoryConnector(getConnectorKind());
+		}
+		this.connector = connector;
 		setNeedsAnonymousLogin(false);
 		setNeedsEncoding(true);
 		setNeedsTimeZone(true);
@@ -257,6 +262,13 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		setNeedsValidation(true);
 		setNeedsAdvanced(true);
 		setNeedsValidateOnFinish(false);
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public AbstractRepositorySettingsPage(String title, String description, TaskRepository taskRepository) {
+		this(title, description, taskRepository, null);
 	}
 
 	/**

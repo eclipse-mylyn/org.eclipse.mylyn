@@ -16,6 +16,7 @@ import junit.framework.TestCase;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnectorUi;
@@ -228,10 +229,21 @@ public class RepositorySettingsPageTest extends TestCase {
 		assertTrue(page.isValidUrl("http://www.mylyn.org/bugzilla34"));
 	}
 
+	public void testInjectConnectorIntoSettingsPage() throws Exception {
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, "http://localhost/");
+		MockRepositoryConnector connector = new MockRepositoryConnector();
+		MockRepositorySettingsPage page = new MockRepositorySettingsPage(repository, connector);
+		assertSame(page.getConnector(), connector);
+	}
+
 	private class MockRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 		public MockRepositorySettingsPage(TaskRepository taskRepository) {
 			super("title", "summary", taskRepository);
+		}
+
+		public MockRepositorySettingsPage(TaskRepository taskRepository, AbstractRepositoryConnector connector) {
+			super("title", "summary", taskRepository, connector);
 		}
 
 		@Override
