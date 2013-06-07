@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.mylyn.reviews.core.spi.remote.AbstractRemoteFactoryProvider;
 import org.eclipse.mylyn.reviews.core.spi.remote.AbstractRemoteService;
 
 /**
@@ -46,7 +47,7 @@ import org.eclipse.mylyn.reviews.core.spi.remote.AbstractRemoteService;
  * 
  * @author Miles Parker
  */
-public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType> {
+public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject, EObjectType, RemoteType, RemoteKeyType, LocalKeyType> {
 
 	class UniqueLocalReference<P, L> {
 		P parent;
@@ -77,13 +78,13 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 		}
 	}
 
-	private final Map<UniqueLocalReference<EParentObjectType, LocalKeyType>, RemoteEmfConsumer<EParentObjectType, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType>> consumerForLocalKey = new HashMap<UniqueLocalReference<EParentObjectType, LocalKeyType>, RemoteEmfConsumer<EParentObjectType, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType>>();
+	private final Map<UniqueLocalReference<EParentObjectType, LocalKeyType>, RemoteEmfConsumer<EParentObjectType, EObjectType, RemoteType, RemoteKeyType, LocalKeyType>> consumerForLocalKey = new HashMap<UniqueLocalReference<EParentObjectType, LocalKeyType>, RemoteEmfConsumer<EParentObjectType, EObjectType, RemoteType, RemoteKeyType, LocalKeyType>>();
 
 	private final EReference parentReference;
 
 	private final EAttribute localKeyAttribute;
 
-	private final AbstractRemoteEmfFactoryProvider<?, ?> factoryProvider;
+	private final AbstractRemoteFactoryProvider factoryProvider;
 
 	/**
 	 * Constructs the factory.
@@ -96,7 +97,7 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 	 * @param localKeyAttribute
 	 *            The EMF attribute specifying the local key; must be available for all model object instance
 	 */
-	public AbstractRemoteEmfFactory(AbstractRemoteEmfFactoryProvider<?, ?> factoryProvider, EReference parentReference,
+	public AbstractRemoteEmfFactory(AbstractRemoteFactoryProvider factoryProvider, EReference parentReference,
 			EAttribute localKeyAttribute) {
 		this.factoryProvider = factoryProvider;
 		this.parentReference = parentReference;
@@ -112,15 +113,13 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 	 * @return A key used for locating the remote object from remote API. That object does not have to exist on the
 	 *         remote API yet, provided appropriate remote key to local key mappings are provided.
 	 */
-	public synchronized RemoteEmfConsumer<EParentObjectType, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType> getConsumerForRemoteKey(
+	public synchronized RemoteEmfConsumer<EParentObjectType, EObjectType, RemoteType, RemoteKeyType, LocalKeyType> getConsumerForRemoteKey(
 			EParentObjectType parentObject, RemoteKeyType remoteKey) {
 		LocalKeyType localKey = getLocalKeyForRemoteKey(remoteKey);
-		RemoteEmfConsumer<EParentObjectType, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType> consumer = null;
-		if (localKey != null) {
-			consumer = getConsumerForLocalKey(parentObject, localKey);
-		}
+		RemoteEmfConsumer<EParentObjectType, EObjectType, RemoteType, RemoteKeyType, LocalKeyType> consumer = findConsumer(
+				parentObject, localKey);
 		if (consumer == null) {
-			consumer = new RemoteEmfConsumer<EParentObjectType, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType>(
+			consumer = new RemoteEmfConsumer<EParentObjectType, EObjectType, RemoteType, RemoteKeyType, LocalKeyType>(
 					this, parentObject, null, localKey, null, remoteKey);
 			assignConsumer(parentObject, localKey, consumer);
 		} else {
@@ -137,14 +136,14 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 	 *            The object that contains or will contain the remote object type
 	 * @return An object containing remotely derived state
 	 */
-	public synchronized RemoteEmfConsumer<EParentObjectType, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType> getConsumerForRemoteObject(
+	public synchronized RemoteEmfConsumer<EParentObjectType, EObjectType, RemoteType, RemoteKeyType, LocalKeyType> getConsumerForRemoteObject(
 			EParentObjectType parentObject, RemoteType remoteObject) {
 		RemoteKeyType remoteKey = getRemoteKey(remoteObject);
 		LocalKeyType localKey = getLocalKeyForRemoteKey(remoteKey);
-		RemoteEmfConsumer<EParentObjectType, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType> consumer = findConsumer(
+		RemoteEmfConsumer<EParentObjectType, EObjectType, RemoteType, RemoteKeyType, LocalKeyType> consumer = findConsumer(
 				parentObject, localKey);
 		if (consumer == null) {
-			consumer = new RemoteEmfConsumer<EParentObjectType, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType>(
+			consumer = new RemoteEmfConsumer<EParentObjectType, EObjectType, RemoteType, RemoteKeyType, LocalKeyType>(
 					this, parentObject, null, localKey, remoteObject, remoteKey);
 			assignConsumer(parentObject, localKey, consumer);
 		} else {
@@ -164,42 +163,36 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 	 *         subsequent retrieval based on a matching remote key.
 	 * @return An object containing remotely derived state
 	 */
-	public synchronized RemoteEmfConsumer<EParentObjectType, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType> getConsumerForLocalKey(
+	public synchronized RemoteEmfConsumer<EParentObjectType, EObjectType, RemoteType, RemoteKeyType, LocalKeyType> getConsumerForLocalKey(
 			EParentObjectType parentObject, LocalKeyType localKey) {
-		RemoteEmfConsumer<EParentObjectType, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType> consumer = findConsumer(
+		RemoteEmfConsumer<EParentObjectType, EObjectType, RemoteType, RemoteKeyType, LocalKeyType> consumer = findConsumer(
 				parentObject, localKey);
 		if (consumer == null) {
-			EObjectType eo = findObject(parentObject, localKey);
-			if (eo != null) {
-				EObjectType modelObject = eo;
-				consumer = new RemoteEmfConsumer<EParentObjectType, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType>(
-						this, parentObject, modelObject, localKey, null, null);
-				assignConsumer(parentObject, localKey, consumer);
+			Object parentField = parentObject.eGet(parentReference);
+			if (parentField instanceof List<?>) {
+				List<?> members = (List<?>) parentField;
+				for (Object object : members) {
+					if (object instanceof EObject) {
+						@SuppressWarnings("unchecked")
+						EObjectType eo = (EObjectType) object;
+						LocalKeyType currentKey = getLocalKey(parentObject, eo);
+						if (currentKey != null && localKey.equals(currentKey)) {
+							EObjectType modelObject = eo;
+							consumer = new RemoteEmfConsumer<EParentObjectType, EObjectType, RemoteType, RemoteKeyType, LocalKeyType>(
+									this, parentObject, modelObject, localKey, null, null);
+							assignConsumer(parentObject, localKey, consumer);
+							break;
+						}
+					}
+				}
 			}
 			if (consumer == null) {
-				consumer = new RemoteEmfConsumer<EParentObjectType, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType>(
+				consumer = new RemoteEmfConsumer<EParentObjectType, EObjectType, RemoteType, RemoteKeyType, LocalKeyType>(
 						this, parentObject, null, localKey, null, null);
 				assignConsumer(parentObject, localKey, consumer);
 			}
 		}
 		return consumer;
-	}
-
-	protected EObjectType findObject(EParentObjectType parentObject, LocalKeyType localKey) {
-		getService().ensureModelThread();
-		Object parentField = parentObject.eGet(parentReference);
-		if (parentField instanceof List<?>) {
-			List<?> members = (List<?>) parentField;
-			for (Object object : members) {
-				if (object instanceof EObject) {
-					LocalKeyType currentKey = getLocalKey(parentObject, (EObjectType) object);
-					if (currentKey != null && localKey.equals(currentKey)) {
-						return (EObjectType) object;
-					}
-				}
-			}
-		}
-		return null;
 	}
 
 	/**
@@ -212,46 +205,32 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 	 * @return A key used for locating the model object from within the model parent object (Typically an EMF id)
 	 * @return An object containing remotely derived state
 	 */
-	public synchronized RemoteEmfConsumer<EParentObjectType, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType> getConsumerForModel(
+	public synchronized RemoteEmfConsumer<EParentObjectType, EObjectType, RemoteType, RemoteKeyType, LocalKeyType> getConsumerForModel(
 			EParentObjectType parentObject, EObjectType modelObject) {
-		RemoteEmfConsumer<EParentObjectType, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType> consumer = null;
+		RemoteEmfConsumer<EParentObjectType, EObjectType, RemoteType, RemoteKeyType, LocalKeyType> consumer = null;
 		LocalKeyType localKey = getLocalKey(parentObject, modelObject);
-		if (localKey != null) {
-			consumer = findConsumer(parentObject, localKey);
-		}
+		consumer = findConsumer(parentObject, localKey);
 		if (consumer == null) {
-			consumer = new RemoteEmfConsumer<EParentObjectType, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType>(
+			consumer = new RemoteEmfConsumer<EParentObjectType, EObjectType, RemoteType, RemoteKeyType, LocalKeyType>(
 					this, parentObject, modelObject, localKey, null, null);
 			assignConsumer(parentObject, localKey, consumer);
 		}
 		return consumer;
 	}
 
-	private RemoteEmfConsumer<EParentObjectType, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType> findConsumer(
+	private RemoteEmfConsumer<EParentObjectType, EObjectType, RemoteType, RemoteKeyType, LocalKeyType> findConsumer(
 			EParentObjectType parentObject, LocalKeyType localKey) {
 		UniqueLocalReference<EParentObjectType, LocalKeyType> key = new UniqueLocalReference<EParentObjectType, LocalKeyType>(
 				parentObject, localKey);
 		return consumerForLocalKey.get(key);
 	}
 
-	private RemoteEmfConsumer<EParentObjectType, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType> assignConsumer(
-			EParentObjectType parentObject,
-			LocalKeyType localKey,
-			RemoteEmfConsumer<EParentObjectType, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType> consumer) {
+	private RemoteEmfConsumer<EParentObjectType, EObjectType, RemoteType, RemoteKeyType, LocalKeyType> assignConsumer(
+			EParentObjectType parentObject, LocalKeyType localKey,
+			RemoteEmfConsumer<EParentObjectType, EObjectType, RemoteType, RemoteKeyType, LocalKeyType> consumer) {
 		UniqueLocalReference<EParentObjectType, LocalKeyType> key = new UniqueLocalReference<EParentObjectType, LocalKeyType>(
 				parentObject, localKey);
 		return consumerForLocalKey.put(key, consumer);
-	}
-
-	public void removeConsumer(
-			RemoteEmfConsumer<EParentObjectType, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType> consumer) {
-		EParentObjectType parentObject = consumer.getParentObject();
-		LocalKeyType localKey = consumer.getLocalKey();
-		if (parentObject != null && localKey != null) {
-			UniqueLocalReference<EParentObjectType, LocalKeyType> key = new UniqueLocalReference<EParentObjectType, LocalKeyType>(
-					parentObject, localKey);
-			consumerForLocalKey.remove(key);
-		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -291,32 +270,6 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 	 * @return An object containing remotely derived state
 	 */
 	public abstract RemoteKeyType getRemoteKey(RemoteType remoteObject);
-
-	/**
-	 * Override to infer a remote key from a local key. This method is optional but should be supplied whenever it is
-	 * possible to infer the remote key.
-	 * 
-	 * @param localKey
-	 *            The local key to discover remote key from, null if unable to infer one
-	 */
-	public RemoteKeyType getRemoteKeyForLocalKey(EParentObjectType parentObject, LocalKeyType localKey) {
-		RemoteType remoteObject = getRemoteObjectForLocalKey(parentObject, localKey);
-		if (remoteObject != null) {
-			return getRemoteKey(remoteObject);
-		}
-		return null;
-	}
-
-	/**
-	 * Override to find a remote object from a local obejct. This method is optional but should be supplied whenever it
-	 * is possible to infer the remote key.
-	 * 
-	 * @param localKey
-	 *            The local key to discover remote key from, null if unable to infer one
-	 */
-	public RemoteType getRemoteObjectForLocalKey(EParentObjectType parentObject, LocalKeyType localKey) {
-		return null;
-	}
 
 	/**
 	 * Returns true if the creation of an object requires a call to the remote API. If false, no request job is created.
@@ -364,18 +317,6 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 		return object == null || remote == null;
 	}
 
-	public EObjectType openModel(EParentObjectType parentObject, LocalKeyType localKey) {
-		if (isCacheRoot()) {
-			Object opened = getFactoryProvider().open(localKey);
-			return (EObjectType) opened;
-		}
-		return null;
-	}
-
-	public boolean isCacheRoot() {
-		return false;
-	}
-
 	/**
 	 * Override to create an EObject from remote object. (Consumers should use
 	 * {@link #get(EParentObjectType parent, RemoteType remoteObject)}, which ensures that any cached objects will be
@@ -389,22 +330,6 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 	 * @return a model object
 	 */
 	protected abstract EObjectType createModel(EParentObjectType parentObject, RemoteType remoteObject);
-
-	/**
-	 * Override to return true if a remote object should be created.
-	 * 
-	 * @param parentObject
-	 *            The object that contains the model object
-	 * @param modelObject
-	 *            The model object to test
-	 * @param remoteObject
-	 *            A unique identifier in the target API
-	 * @param monitor
-	 * @return
-	 */
-	public boolean isCreateModelNeeded(EParentObjectType parentObject, EObjectType modelObject) {
-		return modelObject == null;
-	}
 
 	/**
 	 * Updates the values for the supplied EMF object based on any values that have changed in the remote object since
@@ -451,7 +376,7 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 	 */
 	public synchronized final EObjectType get(EParentObjectType parentObject, LocalKeyType localKey,
 			RemoteKeyType remoteKey) {
-		RemoteEmfConsumer<EParentObjectType, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType> consumer = null;
+		RemoteEmfConsumer<EParentObjectType, EObjectType, RemoteType, RemoteKeyType, LocalKeyType> consumer = null;
 		if (localKey != null) {
 			consumer = getConsumerForLocalKey(parentObject, localKey);
 		}
@@ -495,14 +420,7 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 	/**
 	 * Returns the parent factory provider that provides this factory.
 	 */
-	public AbstractRemoteEmfFactoryProvider<?, ?> getFactoryProvider() {
+	public AbstractRemoteFactoryProvider getFactoryProvider() {
 		return factoryProvider;
 	}
-
-	public abstract ObjectCurrentType getModelCurrentValue(EParentObjectType parentObject, EObjectType object);
-
-	public String getModelDescription(EParentObjectType parentObject, EObjectType object, LocalKeyType localKey) {
-		return getParentReference().getEReferenceType().getName() + " " + localKey;
-	}
-
 }

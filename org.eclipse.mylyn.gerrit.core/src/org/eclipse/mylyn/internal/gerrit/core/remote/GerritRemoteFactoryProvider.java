@@ -13,13 +13,11 @@ package org.eclipse.mylyn.internal.gerrit.core.remote;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
-import org.eclipse.mylyn.reviews.spi.edit.remote.review.ReviewsRemoteEditFactoryProvider;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.reviews.edit.remote.ReviewsRemoteEditFactoryProvider;
 
 import com.google.gerrit.common.data.AccountInfo;
 import com.google.gerrit.common.data.AccountInfoCache;
@@ -43,8 +41,7 @@ public class GerritRemoteFactoryProvider extends ReviewsRemoteEditFactoryProvide
 
 	private final GerritUserRemoteFactory userFactory = new GerritUserRemoteFactory(this);
 
-	public GerritRemoteFactoryProvider(TaskRepository repository, GerritClient client) {
-		super(repository);
+	public GerritRemoteFactoryProvider(GerritClient client) {
 		this.client = client;
 	}
 
@@ -68,30 +65,23 @@ public class GerritRemoteFactoryProvider extends ReviewsRemoteEditFactoryProvide
 		return userFactory;
 	}
 
-	void pullUser(final IRepository parent, final AccountInfoCache cache, final Id id, final IProgressMonitor monitor)
+	IUser pullUser(IRepository parent, AccountInfoCache cache, Id id, IProgressMonitor monitor)
 			throws CoreException {
-		modelExec(new Runnable() {
-			@Override
-			public void run() {
-				if (id != null) {
-					final RemoteEmfConsumer<IRepository, IUser, String, AccountInfo, Id, String> userConsumer = getUserFactory(
-							cache).getConsumerForRemoteKey(parent, id);
-					if (userConsumer.getModelObject() == null) {
-						try {
-							userConsumer.pull(false, monitor);
-						} catch (CoreException e) {
-							StatusHandler.log(e.getStatus());
-						}
-					}
-				}
+		if (id != null) {
+			final RemoteEmfConsumer<IRepository, IUser, AccountInfo, Id, String> userConsumer = getUserFactory(cache).getConsumerForRemoteKey(
+					parent, id);
+			if (userConsumer.getModelObject() == null) {
+				userConsumer.pull(false, monitor);
 			}
-		}, true);
+			return userConsumer.getModelObject();
+		}
+		return null;
 	}
 
 	IUser createUser(IRepository parent, AccountInfoCache cache, Account.Id id) {
 		if (id != null) {
-			final RemoteEmfConsumer<IRepository, IUser, String, AccountInfo, Id, String> userConsumer = getUserFactory(
-					cache).getConsumerForRemoteKey(parent, id);
+			final RemoteEmfConsumer<IRepository, IUser, AccountInfo, Id, String> userConsumer = getUserFactory(cache).getConsumerForRemoteKey(
+					parent, id);
 			userConsumer.applyModel(false);
 			return userConsumer.getModelObject();
 		}

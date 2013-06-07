@@ -32,7 +32,8 @@ import org.eclipse.mylyn.reviews.core.model.ILineRange;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
 import org.eclipse.mylyn.reviews.core.model.IUser;
-import org.eclipse.mylyn.reviews.core.spi.remote.review.ReviewItemSetContentRemoteFactory;
+import org.eclipse.mylyn.reviews.core.spi.remote.emf.AbstractRemoteEmfFactory;
+import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
 import org.eclipse.osgi.util.NLS;
 
 import com.google.gerrit.common.data.AccountInfoCache;
@@ -49,14 +50,15 @@ import com.google.gerrit.reviewdb.PatchLineComment;
  * @author Steffen Pingel
  */
 public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
-		ReviewItemSetContentRemoteFactory<PatchSetContent, RemoteKeyType> {
+		AbstractRemoteEmfFactory<IReviewItemSet, List<IFileItem>, PatchSetContent, RemoteKeyType, String> {
 
 	private final ReviewItemCache cache;
 
 	private final GerritRemoteFactoryProvider gerritFactoryProvider;
 
 	public PatchSetContentRemoteFactory(GerritRemoteFactoryProvider gerritRemoteFactoryProvider) {
-		super(gerritRemoteFactoryProvider);
+		super(gerritRemoteFactoryProvider, ReviewsPackage.Literals.REVIEW_ITEM_SET__ITEMS,
+				ReviewsPackage.Literals.REVIEW_ITEM__ID);
 		this.gerritFactoryProvider = gerritRemoteFactoryProvider;
 		cache = new ReviewItemCache();
 	}
@@ -187,11 +189,9 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
 		return items;
 	}
 
-	@Override
-	public boolean isCreateModelNeeded(IReviewItemSet set, List<IFileItem> items) {
-		return super.isCreateModelNeeded(set, items) || items == null || items.isEmpty();
-	}
-
+	/**
+	 * Patch sets results never change.
+	 */
 	@Override
 	public boolean updateModel(IReviewItemSet set, List<IFileItem> items, PatchSetContent content) {
 		boolean changed = false;
@@ -206,9 +206,6 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
 						commentDetail.getAccounts());
 			}
 		}
-		if (changed) {
-			getGerritProvider().save(set.getReview());
-		}
 		return changed;
 	}
 
@@ -216,25 +213,7 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
 		return gerritFactoryProvider;
 	}
 
-	@Override
-	public List<IFileItem> findObject(IReviewItemSet parentObject, String localKey) {
-		return parentObject.getItems();
-	}
-
-	@Override
-	public String getLocalKey(IReviewItemSet parentObject, List<IFileItem> modelObject) {
-		return parentObject.getId();
-	}
-
 	public ReviewItemCache getCache() {
 		return cache;
-	}
-
-	@Override
-	public String getModelDescription(IReviewItemSet set, List<IFileItem> items, String localKey) {
-		if (set.getReview() != null) {
-			return "Review " + set.getReview().getId() + ", Patch Set " + set.getId();
-		}
-		return set.getName();
 	}
 }

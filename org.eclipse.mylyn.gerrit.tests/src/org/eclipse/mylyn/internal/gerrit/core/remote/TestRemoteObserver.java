@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.AbstractRemoteEmfFactory;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.IRemoteEmfObserver;
 
-final class TestRemoteObserver<P extends EObject, T, L, C> implements IRemoteEmfObserver<P, T, L, C> {
+final class TestRemoteObserver<P extends EObject, T> implements IRemoteEmfObserver<P, T> {
 
 	static final int TEST_TIMEOUT = 15000;
 
@@ -31,9 +31,9 @@ final class TestRemoteObserver<P extends EObject, T, L, C> implements IRemoteEmf
 
 	IStatus failure;
 
-	AbstractRemoteEmfFactory<P, T, L, ?, ?, C> factory;
+	AbstractRemoteEmfFactory<?, ?, ?, ?, ?> factory;
 
-	public TestRemoteObserver(AbstractRemoteEmfFactory<P, T, L, ?, ?, C> factory) {
+	public TestRemoteObserver(AbstractRemoteEmfFactory<?, ?, ?, ?, ?> factory) {
 		this.factory = factory;
 	}
 
@@ -76,8 +76,8 @@ final class TestRemoteObserver<P extends EObject, T, L, C> implements IRemoteEmf
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		}
-		assertThat("Wrong # responses: " + responded + ", updated: " + updated, responded, is(response));
-		assertThat("Wrong # updates" + updated, updated, is(update));
+		assertThat("Wrong # responses", responded, is(response));
+		assertThat("Wrong # updates", updated, is(update));
 		if (factory != null) {
 			assertThat(factory.getService().isActive(), is(false));
 		}

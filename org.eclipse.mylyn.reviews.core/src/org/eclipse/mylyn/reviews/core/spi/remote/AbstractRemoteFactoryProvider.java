@@ -20,8 +20,6 @@ public abstract class AbstractRemoteFactoryProvider {
 
 	private AbstractRemoteService service;
 
-	private AbstractDataLocator dataLocator;
-
 	public void modelExec(Runnable runnable, boolean block) {
 		if (service != null) {
 			service.modelExec(runnable, block);
@@ -36,13 +34,5 @@ public abstract class AbstractRemoteFactoryProvider {
 
 	public void setService(AbstractRemoteService service) {
 		this.service = service;
-	}
-
-	public void setDataLocator(AbstractDataLocator dataLocation) {
-		this.dataLocator = dataLocation;
-	}
-
-	public AbstractDataLocator getDataLocator() {
-		return dataLocator;
 	}
 }

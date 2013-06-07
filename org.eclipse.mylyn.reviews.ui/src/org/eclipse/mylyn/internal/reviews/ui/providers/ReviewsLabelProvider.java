@@ -31,7 +31,6 @@ import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsImages;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.reviews.core.model.IComment;
-import org.eclipse.mylyn.reviews.core.model.ICommentContainer;
 import org.eclipse.mylyn.reviews.core.model.IDated;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IFileVersion;
@@ -40,6 +39,8 @@ import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
+import org.eclipse.mylyn.reviews.core.model.IComment;
+import org.eclipse.mylyn.reviews.core.model.ICommentContainer;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.osgi.util.NLS;
@@ -190,11 +191,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 				return desc;
 			}
 			if (element instanceof IUser) {
-				String displayName = ((IUser) element).getDisplayName();
-				if (!StringUtils.isEmpty(displayName)) {
-					return displayName;
-				}
-				return "Unknown";
+				return ((IUser) element).getDisplayName();
 			}
 			if (element instanceof Date) {
 				return DateUtil.getRelativeDuration(System.currentTimeMillis() - ((Date) element).getTime()) + " ago";
@@ -473,7 +470,11 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 				if (element instanceof GlobalCommentsNode) {
 					element = ((GlobalCommentsNode) element).getReview();
 				}
-				addCommentContainerStatsStyle(element, styledString);
+				if (element instanceof ICommentContainer) {
+					ICommentContainer container = (ICommentContainer) element;
+					String statsText = getStatsText(container);
+					styledString.append(statsText, StyledString.DECORATIONS_STYLER);
+				}
 				if (element instanceof IFileItem) {
 					IReviewItem item = (IReviewItem) element;
 					styledString.append("  " + item.getName(), StyledString.QUALIFIER_STYLER);

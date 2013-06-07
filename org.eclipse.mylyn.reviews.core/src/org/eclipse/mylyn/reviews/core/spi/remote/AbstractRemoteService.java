@@ -46,11 +46,6 @@ public abstract class AbstractRemoteService {
 	public abstract void retrieve(final AbstractRemoteConsumer process, boolean force);
 
 	/**
-	 * Fail fast if we aren't in current model thread.
-	 */
-	public abstract void ensureModelThread();
-
-	/**
 	 * Supports apply and notification services executed against a specific thread. (For example, the Remote Ui Service
 	 * overrides this to force all model update events to occur on the UI thread, as best EMF practices require.)
 	 * 

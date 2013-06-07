@@ -9,7 +9,7 @@
  *     GitHub Inc. - initial API and implementation
  *     Tasktop Technologies - improvements
  *******************************************************************************/
-package org.eclipse.mylyn.reviews.core.spi.remote.emf;
+package org.eclipse.mylyn.reviews.core.remote;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -42,12 +42,12 @@ public class RemoteServiceTest {
 		IStatus status;
 
 		@Override
-		public void pull(boolean force, IProgressMonitor monitor) throws CoreException {
+		protected void pull(boolean force, IProgressMonitor monitor) throws CoreException {
 			retrieve = true;
 		}
 
 		@Override
-		public void applyModel(boolean force) {
+		protected void applyModel(boolean force) {
 			apply = true;
 		}
 
@@ -109,7 +109,7 @@ public class RemoteServiceTest {
 
 	class BrokenConsumer extends Consumer {
 		@Override
-		public void pull(boolean force, IProgressMonitor monitor) throws CoreException {
+		protected void pull(boolean force, IProgressMonitor monitor) throws CoreException {
 			throw new CoreException(new Status(IStatus.ERROR, "blah", "Whoops!"));
 		}
 	}
@@ -155,13 +155,13 @@ public class RemoteServiceTest {
 		Thread retrieveThread;
 
 		@Override
-		public void pull(boolean force, IProgressMonitor monitor) throws CoreException {
+		protected void pull(boolean force, IProgressMonitor monitor) throws CoreException {
 			retrieveThread = Thread.currentThread();
 			super.pull(force, monitor);
 		}
 
 		@Override
-		public void applyModel(boolean force) {
+		protected void applyModel(boolean force) {
 			modelThread = Thread.currentThread();
 			super.applyModel(force);
 		}

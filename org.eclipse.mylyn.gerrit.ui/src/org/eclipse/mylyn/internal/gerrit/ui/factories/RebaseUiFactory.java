@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.gerrit.ui.factories;
 
-import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
 import org.eclipse.mylyn.internal.gerrit.ui.operations.RebaseDialog;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.ui.spi.factories.IUiContext;
@@ -33,8 +33,7 @@ public class RebaseUiFactory extends AbstractPatchSetUiFactory {
 
 	@Override
 	public boolean isExecutable() {
-		GerritChange change = getChange();
-		return change != null && change.getChangeDetail() != null
-				&& change.getChangeDetail().canRebase();
+		ChangeDetailX changeDetail = getChange().getChangeDetail();
+		return changeDetail != null && changeDetail.canRebase();
 	}
 }

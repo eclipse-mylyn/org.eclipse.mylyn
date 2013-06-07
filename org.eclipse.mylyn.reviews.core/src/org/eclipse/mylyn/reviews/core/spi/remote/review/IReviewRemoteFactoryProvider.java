@@ -11,7 +11,13 @@
 
 package org.eclipse.mylyn.reviews.core.spi.remote.review;
 
+import java.util.List;
+
+import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IRepository;
+import org.eclipse.mylyn.reviews.core.model.IReview;
+import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
+import org.eclipse.mylyn.reviews.core.spi.remote.emf.AbstractRemoteEmfFactory;
 
 /**
  * Supports decoupling of Reviews from remote API.
@@ -20,11 +26,11 @@ import org.eclipse.mylyn.reviews.core.model.IRepository;
  */
 public interface IReviewRemoteFactoryProvider {
 
-	ReviewRemoteFactory<?, ?> getReviewFactory();
+	AbstractRemoteEmfFactory<IRepository, IReview, ?, String, String> getReviewFactory();
 
-	ReviewItemSetRemoteFactory<?, ?> getReviewItemSetFactory();
+	AbstractRemoteEmfFactory<IReview, IReviewItemSet, ?, ?, String> getReviewItemSetFactory();
 
-	ReviewItemSetContentRemoteFactory<?, ?> getReviewItemSetContentFactory();
+	AbstractRemoteEmfFactory<IReviewItemSet, List<IFileItem>, ?, String, String> getReviewItemSetContentFactory();
 
 	IRepository getRoot();
 }

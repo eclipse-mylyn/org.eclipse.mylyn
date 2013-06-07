@@ -11,13 +11,10 @@
 package org.eclipse.mylyn.internal.reviews.ui;
 
 import org.eclipse.mylyn.commons.workbench.CommonImageManger;
-import org.eclipse.mylyn.reviews.core.model.IRepository;
-import org.eclipse.mylyn.reviews.core.model.IReview;
-import org.eclipse.mylyn.reviews.core.spi.ReviewsConnector;
+import org.eclipse.mylyn.reviews.core.spi.remote.AbstractRemoteFactoryProvider;
 import org.eclipse.mylyn.reviews.core.spi.remote.AbstractRemoteService;
-import org.eclipse.mylyn.reviews.core.spi.remote.emf.AbstractRemoteEmfFactoryProvider;
 import org.eclipse.mylyn.reviews.core.spi.remote.review.IReviewRemoteFactoryProvider;
-import org.eclipse.mylyn.reviews.ui.spi.factories.UiDataLocator;
+import org.eclipse.mylyn.reviews.internal.core.ReviewsConnector;
 import org.eclipse.mylyn.reviews.ui.spi.remote.RemoteUiService;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -61,16 +58,12 @@ public class ReviewsUiPlugin extends AbstractUIPlugin {
 
 	public IReviewRemoteFactoryProvider getFactoryProvider(String connectorKind, TaskRepository repository) {
 		ReviewsConnector connector = (ReviewsConnector) TasksUi.getRepositoryConnector(connectorKind);
-		AbstractRemoteEmfFactoryProvider<IRepository, IReview> factoryProvider = connector.getFactoryProvider(repository);
-		if (service == null) {
-			service = new RemoteUiService();
-		}
-		factoryProvider.setService(service);
-		if (!(factoryProvider.getDataLocator() instanceof UiDataLocator)) {
-			factoryProvider.setDataLocator(new UiDataLocator());
-		}
-		factoryProvider.open();
+		AbstractRemoteFactoryProvider factoryProvider = connector.getFactoryProvider(repository);
 		if (factoryProvider instanceof IReviewRemoteFactoryProvider) {
+			if (service == null) {
+				service = new RemoteUiService();
+			}
+			factoryProvider.setService(service);
 			return (IReviewRemoteFactoryProvider) factoryProvider;
 		}
 		throw new RuntimeException("The connector factory propvider must implement IReviewRemoteFactoryProvider");

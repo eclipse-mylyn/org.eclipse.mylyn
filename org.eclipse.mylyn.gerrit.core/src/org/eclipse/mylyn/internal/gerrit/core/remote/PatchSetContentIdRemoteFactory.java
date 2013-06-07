@@ -36,18 +36,11 @@ public class PatchSetContentIdRemoteFactory extends PatchSetContentRemoteFactory
 
 	@Override
 	public PatchSetContent pull(IReviewItemSet parentObject, String key, IProgressMonitor monitor) throws CoreException {
-		RemoteEmfConsumer<IReview, IReviewItemSet, String, PatchSetDetail, PatchSetDetail, String> itemSetConsumer = getGerritProvider().getReviewItemSetFactory()
+		RemoteEmfConsumer<IReview, IReviewItemSet, PatchSetDetail, PatchSetDetail, String> itemSetConsumer = getGerritProvider().getReviewItemSetFactory()
 				.getConsumerForLocalKey(parentObject.getReview(), key);
 		PatchSetDetail detail = itemSetConsumer.getRemoteObject();
-		if (detail == null) {
-			itemSetConsumer.pull(false, monitor);
-			detail = itemSetConsumer.getRemoteObject();
-		}
-		if (detail != null) {
-			PatchSetContent content = new PatchSetContent((PatchSet) null, detail);
-			return pull(parentObject, content, monitor);
-		}
-		return null;
+		PatchSetContent content = new PatchSetContent((PatchSet) null, detail);
+		return pull(parentObject, content, monitor);
 	}
 
 	@Override
@@ -58,10 +51,5 @@ public class PatchSetContentIdRemoteFactory extends PatchSetContentRemoteFactory
 	@Override
 	public String getLocalKeyForRemoteKey(String remoteKey) {
 		return remoteKey;
-	}
-
-	@Override
-	public String getRemoteKeyForLocalKey(IReviewItemSet parentObject, String localKey) {
-		return localKey;
 	}
 }

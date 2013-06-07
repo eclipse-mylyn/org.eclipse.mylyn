@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.reviews.core.spi.remote.emf;
+package org.eclipse.mylyn.reviews.core.remote;
 
 class TestRemoteObject {
 	String name;

@@ -38,10 +38,10 @@ import org.eclipse.mylyn.reviews.core.spi.remote.AbstractRemoteConsumer;
  * 
  * @author Miles Parker
  */
-public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType>
+public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, RemoteType, RemoteKeyType, LocalKeyType>
 		extends AbstractRemoteConsumer {
 
-	private final AbstractRemoteEmfFactory<EParentObjectType, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType> factory;
+	private final AbstractRemoteEmfFactory<EParentObjectType, EObjectType, RemoteType, RemoteKeyType, LocalKeyType> factory;
 
 	private RemoteKeyType remoteKey;
 
@@ -53,7 +53,7 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 
 	private LocalKeyType localKey;
 
-	private final Collection<IRemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType>> remoteEmfObservers;
+	Collection<IRemoteEmfObserver<EParentObjectType, EObjectType>> remoteEmfObservers;
 
 	private boolean pulling;
 
@@ -71,7 +71,7 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 				boolean notifyChild = !remoteMessage.isMember() && msg.getNotifier() == modelObject;
 				if (notifyParent || notifyChild) {
 					synchronized (remoteEmfObservers) {
-						for (IRemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType> listener : remoteEmfObservers) {
+						for (IRemoteEmfObserver<EParentObjectType, EObjectType> listener : remoteEmfObservers) {
 							switch (msg.getEventType()) {
 							case RemoteNotification.REMOTE_MEMBER_CREATE:
 								listener.created(parentObject, modelObject);
@@ -98,7 +98,7 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 	ConsumerAdapter adapter = new ConsumerAdapter();
 
 	RemoteEmfConsumer(
-			AbstractRemoteEmfFactory<EParentObjectType, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType> factory,
+			AbstractRemoteEmfFactory<EParentObjectType, EObjectType, RemoteType, RemoteKeyType, LocalKeyType> factory,
 			EParentObjectType parent, EObjectType modelObject, LocalKeyType localKey, RemoteType remoteObject,
 			RemoteKeyType remoteKey) {
 		this.parentObject = parent;
@@ -118,7 +118,7 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 		} else if (parent != null) {
 			parent.eAdapters().add(adapter);
 		}
-		remoteEmfObservers = new ArrayList<IRemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType>>();
+		remoteEmfObservers = new ArrayList<IRemoteEmfObserver<EParentObjectType, EObjectType>>();
 	}
 
 	/**
@@ -136,9 +136,6 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 		pulling = true;
 		if (remoteObject != null && remoteKey == null) {
 			remoteKey = factory.getRemoteKey(remoteObject);
-		}
-		if (remoteKey == null && localKey != null) {
-			remoteKey = factory.getRemoteKeyForLocalKey(parentObject, localKey);
 		}
 		//Pull when "needed" or forced, but not when we don't have a remote key as that would be pointless.
 		if ((factory.isPullNeeded(parentObject, modelObject, remoteObject) || force == true) && remoteKey != null) {
@@ -200,7 +197,7 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 		EReference reference = factory.getParentReference();
 		boolean modified = false;
 		if (remoteObject != null) {
-			if (modelObject == null || factory.isCreateModelNeeded(parentObject, modelObject)
+			if (modelObject == null
 					|| (reference.isMany() && (((Collection<?>) parentObject.eGet(reference)).size() == 0))) {
 				modified = true;
 				modelObject = factory.createModel(parentObject, remoteObject);
@@ -216,9 +213,7 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 				if (modelObject instanceof EObject) {
 					((EObject) modelObject).eSet(factory.getLocalKeyAttribute(),
 							factory.getLocalKeyForRemoteObject(remoteObject));
-					if (!((EObject) modelObject).eAdapters().contains(adapter)) {
-						((EObject) modelObject).eAdapters().add(adapter);
-					}
+					((EObject) modelObject).eAdapters().add(adapter);
 				}
 				msgs.add(new RemoteENotificationImpl((InternalEObject) parentObject,
 						RemoteNotification.REMOTE_MEMBER_CREATE, reference, modelObject));
@@ -296,19 +291,12 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 	 */
 	@Override
 	public void dispose() {
-		retrieving = false;
 		parentObject.eAdapters().remove(adapter);
 		if (modelObject instanceof EObject) {
 			((EObject) modelObject).eAdapters().remove(adapter);
 		}
 		synchronized (remoteEmfObservers) {
 			remoteEmfObservers.clear();
-		}
-		getFactory().removeConsumer(this);
-		if (getModelObject() instanceof EObject) {
-			getFactory().getFactoryProvider().close((EObject) getModelObject());
-		} else if (getModelObject() instanceof Collection<?>) {
-			getFactory().getFactoryProvider().close(getParentObject());
 		}
 	}
 
@@ -318,9 +306,9 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 	 * @param observer
 	 *            The observer to add
 	 */
-	public void addObserver(IRemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType> observer) {
+	public void addObserver(IRemoteEmfObserver<EParentObjectType, EObjectType> observer) {
 		if (observer instanceof RemoteEmfObserver) {
-			RemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType> remoteEmfObserver = (RemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType>) observer;
+			RemoteEmfObserver<EParentObjectType, EObjectType> remoteEmfObserver = (RemoteEmfObserver<EParentObjectType, EObjectType>) observer;
 			if (remoteEmfObserver.getConsumer() != null && remoteEmfObserver.getConsumer() != this) {
 				remoteEmfObserver.getConsumer().removeObserver(remoteEmfObserver);
 			}
@@ -337,19 +325,15 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 	 * @param observer
 	 *            The observer to remove
 	 */
-	public void removeObserver(
-			IRemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType> observer) {
+	public void removeObserver(IRemoteEmfObserver<EParentObjectType, EObjectType> observer) {
 		if (observer instanceof RemoteEmfObserver) {
-			RemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType> remoteEmfObserver = (RemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType>) observer;
+			RemoteEmfObserver<EParentObjectType, EObjectType> remoteEmfObserver = (RemoteEmfObserver<EParentObjectType, EObjectType>) observer;
 			if (remoteEmfObserver.getConsumer() == this) {
 				remoteEmfObserver.internalSetConsumer(null);
 			}
 		}
 		synchronized (remoteEmfObservers) {
 			remoteEmfObservers.remove(observer);
-		}
-		if (remoteEmfObservers.size() == 0) {
-			dispose();
 		}
 	}
 
@@ -367,18 +351,8 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 	/**
 	 * Returns the factory that providing services and objects for this consumer.
 	 */
-	public AbstractRemoteEmfFactory<EParentObjectType, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType> getFactory() {
+	public AbstractRemoteEmfFactory<EParentObjectType, EObjectType, RemoteType, RemoteKeyType, LocalKeyType> getFactory() {
 		return factory;
-	}
-
-	public void open() {
-		Object object = getFactory().openModel(parentObject, localKey);
-		if (object instanceof EObject) {
-			modelObject = (EObjectType) object;
-			if (!((EObject) modelObject).eAdapters().contains(adapter)) {
-				((EObject) modelObject).eAdapters().add(adapter);
-			}
-		}
 	}
 
 	/**
@@ -464,6 +438,11 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 
 	@Override
 	public String getDescription() {
-		return "Retrieving " + factory.getModelDescription(getParentObject(), getModelObject(), getLocalKey());
+		return "Retrieving "
+				+ factory.getParentReference().getEReferenceType().getName()
+				+ " "
+				+ (localKey != null ? localKey.toString() : (remoteKey != null
+						? ("Remote Key: " + remoteKey)
+						: "Unknown"));
 	}
 }

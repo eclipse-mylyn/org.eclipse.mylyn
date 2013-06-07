@@ -23,26 +23,18 @@ public class RemoteUiService extends JobRemoteService {
 
 	@Override
 	public void modelExec(final Runnable runnable, boolean block) {
+		if (block) {
+			getDisplayThread().syncExec(runnable);
+		} else {
+			getDisplayThread().asyncExec(runnable);
+		}
+	}
+
+	private Display getDisplayThread() {
 		Display displayThread = Display.getCurrent();
 		if (displayThread == null) {
 			displayThread = Display.getDefault();
 		}
-		if (block) {
-			if (Display.getCurrent() != null) {
-				//Don't cause deadlock, just execute now!
-				runnable.run();
-			} else {
-				displayThread.syncExec(runnable);
-			}
-		} else {
-			displayThread.asyncExec(runnable);
-		}
-	}
-
-	@Override
-	public void ensureModelThread() {
-		if (Display.getCurrent() == null) {
-			throw new RuntimeException("Attempted to execute a model-related operation in a non-model thread.");
-		}
+		return displayThread;
 	}
 }

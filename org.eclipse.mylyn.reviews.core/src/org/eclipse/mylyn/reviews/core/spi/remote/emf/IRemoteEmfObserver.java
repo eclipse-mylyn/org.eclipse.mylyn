@@ -23,7 +23,7 @@ import org.eclipse.emf.ecore.EObject;
  * add.
  * </p>
  */
-public interface IRemoteEmfObserver<EParentObjectType extends EObject, EObjectType, LocalKeyType, ObjectCurrentType> {
+public interface IRemoteEmfObserver<EParentObjectType extends EObject, EObjectType> {
 
 	/**
 	 * Called whenever a model object has been created from a remote object and added to a parent object.

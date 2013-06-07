@@ -46,12 +46,8 @@ public abstract class AbstractPatchSetUiFactory extends AbstractUiFactory<IRevie
 	}
 
 	protected PatchSetDetail getPatchSetDetail() {
-		return getPatchSetDetail(getModelObject());
-	}
-
-	protected PatchSetDetail getPatchSetDetail(IReviewItemSet set) {
 		return getGerritFactoryProvider().getReviewItemSetFactory()
-				.getConsumerForModel(getModelObject().getReview(), set)
+				.getConsumerForModel(getModelObject().getReview(), getModelObject())
 				.getRemoteObject();
 	}
 

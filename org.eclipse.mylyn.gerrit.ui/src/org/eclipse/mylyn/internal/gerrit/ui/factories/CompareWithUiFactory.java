@@ -22,6 +22,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.gerrit.core.client.PatchSetContent;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.remote.PatchSetContentCompareRemoteFactory;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritReviewBehavior;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
@@ -30,7 +31,7 @@ import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
-import org.eclipse.mylyn.reviews.core.spi.remote.review.ReviewItemSetContentRemoteFactory;
+import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfObserver;
 import org.eclipse.mylyn.reviews.ui.spi.factories.IUiContext;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -47,6 +48,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
 import org.eclipse.ui.internal.WorkbenchImages;
 
+import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.reviewdb.PatchSet;
 
 /**
@@ -56,22 +58,26 @@ import com.google.gerrit.reviewdb.PatchSet;
  */
 public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 
-	private final class CompareClient extends ReviewItemSetContentRemoteFactory.Client {
+	private final class CompareObserver extends RemoteEmfObserver<IReviewItemSet, List<IFileItem>> {
 		private final IReviewItemSet compareSet;
 
-		private CompareClient(IReviewItemSet compareSet) {
+		private final RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, PatchSetContent, PatchSetContent, String> consumer;
+
+		private CompareObserver(IReviewItemSet compareSet,
+				RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, PatchSetContent, PatchSetContent, String> consumer) {
 			this.compareSet = compareSet;
+			this.consumer = consumer;
 		}
 
 		@Override
-		protected void update() {
+		public void updated(IReviewItemSet parentObject, List<IFileItem> modelObject, boolean modified) {
 			CompareConfiguration configuration = new CompareConfiguration();
 			CompareUI.openCompareEditor(new ReviewItemSetCompareEditorInput(configuration, compareSet, null,
 					new GerritReviewBehavior(getTask(), resolveGitRepository())));
 			Display.getCurrent().asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					dispose();
+					consumer.removeObserver(CompareObserver.this);
 				}
 			});
 		}
@@ -81,25 +87,24 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 			StatusHandler.log(new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID,
 					"Couldn't load task content for review", status.getException())); //$NON-NLS-1$
 		}
-
-		@Override
-		protected boolean isClientReady() {
-			// ignore
-			return true;
-		}
 	}
 
-	private IReviewItemSet baseSet;
+	private PatchSet baseSet;
 
-	private IReviewItemSet targetSet;
+	private PatchSet targetSet;
+
+	final PatchSet currentSet;
 
 	public CompareWithUiFactory(IUiContext context, IReviewItemSet set) {
 		super("Compare With...", context, set);
+		final PatchSetDetail patchSetDetail = getPatchSetDetail();
+		currentSet = patchSetDetail.getPatchSet();
 	}
 
 	@Override
 	public Control createControl(IUiContext context, Composite parent, FormToolkit toolkit) {
 		if (isExecutable()) {
+			final ChangeDetailX changeDetail = getChange().getChangeDetail();
 
 			final Composite compareComposite = toolkit.createComposite(parent);
 			GridLayoutFactory.fillDefaults().numColumns(2).spacing(0, 0).applyTo(compareComposite);
@@ -109,12 +114,12 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					baseSet = null;
-					targetSet = getModelObject();
+					targetSet = currentSet;
 					execute();
 				}
 			});
 
-			if (getModelObject().getReview().getSets().size() > 1) {
+			if (changeDetail.getPatchSets().size() > 1) {
 				Button compareWithButton = toolkit.createButton(compareComposite, "", SWT.PUSH);
 				GridDataFactory.fillDefaults().grab(false, true).applyTo(compareWithButton);
 				compareWithButton.setImage(WorkbenchImages.getImage(IWorkbenchGraphicConstants.IMG_LCL_BUTTON_MENU));
@@ -129,15 +134,15 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 						Point p = compareComposite.getLocation();
 						p.y = p.y + compareComposite.getSize().y;
 						p = compareComposite.getParent().toDisplay(p);
-						for (final IReviewItemSet otherSet : getModelObject().getReview().getSets()) {
-							if (otherSet != getModelObject()) {
+						for (final PatchSet itemSet : changeDetail.getPatchSets()) {
+							if (itemSet.getPatchSetId() != currentSet.getPatchSetId()) {
 								MenuItem item = new MenuItem(menu, SWT.NONE);
-								item.setText(NLS.bind("Compare with {0}", otherSet.getName()));
+								item.setText(NLS.bind("Compare with Patch Set {0}", itemSet.getPatchSetId()));
 								item.addSelectionListener(new SelectionAdapter() {
 									@Override
 									public void widgetSelected(SelectionEvent e) {
-										baseSet = otherSet;
-										targetSet = getModelObject();
+										baseSet = itemSet;
+										targetSet = currentSet;
 										execute();
 									}
 								});
@@ -155,27 +160,22 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 
 	@Override
 	public void execute() {
-		PatchSet basePatch = null;
-		if (baseSet != null) {
-			basePatch = getPatchSetDetail(baseSet).getPatchSet();
-		}
-		final PatchSetContent content = new PatchSetContent(basePatch, getPatchSetDetail(targetSet).getPatchSet());
+		final PatchSetContent content = new PatchSetContent(baseSet, targetSet);
 		final IReviewItemSet compareSet = IReviewsFactory.INSTANCE.createReviewItemSet();
 		String basePatchSetLabel = content.getBase() != null ? content.getBase().getPatchSetId() + "" : "Base";
-		compareSet.setName(NLS.bind("Compare Patch Set {0} with {1}", content.getTarget().getPatchSetId(),
+		compareSet.setName(NLS.bind("Compare Patch Set {0} and {1}", content.getTarget().getPatchSetId(),
 				basePatchSetLabel));
 		PatchSetContentCompareRemoteFactory remoteFactory = new PatchSetContentCompareRemoteFactory(
 				getGerritFactoryProvider());
-		final RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, String, PatchSetContent, PatchSetContent, Long> consumer = remoteFactory.getConsumerForRemoteObject(
+		final RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, PatchSetContent, PatchSetContent, String> consumer = remoteFactory.getConsumerForRemoteObject(
 				compareSet, content);
-		CompareClient client = new CompareClient(compareSet);
-		consumer.addObserver(client);
-		client.setConsumer(consumer);
-		client.populate();
+		consumer.addObserver(new CompareObserver(compareSet, consumer));
+		consumer.retrieve(false);
 	}
 
 	@Override
 	public boolean isExecutable() {
-		return true;
+		ChangeDetailX changeDetail = getChange().getChangeDetail();
+		return changeDetail != null && changeDetail.getPatchSets().size() > 0;
 	}
 }

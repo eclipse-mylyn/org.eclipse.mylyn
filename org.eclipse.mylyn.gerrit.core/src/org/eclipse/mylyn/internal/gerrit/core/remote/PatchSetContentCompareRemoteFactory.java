@@ -17,9 +17,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.gerrit.core.client.PatchSetContent;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 
-import com.google.gerrit.common.data.PatchSetDetail;
-import com.google.gerrit.reviewdb.PatchSet;
-
 /**
  * Manages retrieval of patch set contents, including file revisions and associated comments, from Gerrit API,
  * supporting arbitrary patch set contents, including comparisons.
@@ -46,20 +43,5 @@ public class PatchSetContentCompareRemoteFactory extends PatchSetContentRemoteFa
 	@Override
 	public String getLocalKeyForRemoteKey(PatchSetContent content) {
 		return content.getId();
-	}
-
-	@Override
-	public PatchSetContent getRemoteObjectForLocalKey(IReviewItemSet parentObject, String localKey) {
-		return super.getRemoteKeyForLocalKey(parentObject, localKey);
-	}
-
-	@Override
-	public PatchSetContent getRemoteKeyForLocalKey(IReviewItemSet parentObject, String localKey) {
-		PatchSetDetailRemoteFactory itemSetFactory = ((GerritRemoteFactoryProvider) getFactoryProvider()).getReviewItemSetFactory();
-		PatchSetDetail detail = itemSetFactory.getRemoteKeyForLocalKey(parentObject.getReview(), localKey);
-		if (detail != null) {
-			return new PatchSetContent((PatchSet) null, detail);
-		}
-		return null;
 	}
 }

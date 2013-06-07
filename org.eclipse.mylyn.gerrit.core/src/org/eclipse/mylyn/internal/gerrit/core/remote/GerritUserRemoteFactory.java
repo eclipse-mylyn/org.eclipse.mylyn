@@ -33,12 +33,13 @@ import com.google.gerrit.reviewdb.Account.Id;
  * @author Miles Parker
  */
 public class GerritUserRemoteFactory extends
-		AbstractRemoteEmfFactory<IRepository, IUser, String, AccountInfo, Account.Id, String> {
+		AbstractRemoteEmfFactory<IRepository, IUser, AccountInfo, Account.Id, String> {
 
 	private final AccountInfoCache cache = new AccountInfoCache(new ArrayList<AccountInfo>());
 
 	public GerritUserRemoteFactory(GerritRemoteFactoryProvider gerritRemoteFactoryProvider) {
-		super(gerritRemoteFactoryProvider, ReviewsPackage.Literals.REPOSITORY__USERS, ReviewsPackage.Literals.USER__ID);
+		super(gerritRemoteFactoryProvider, ReviewsPackage.Literals.REPOSITORY__USERS,
+				ReviewsPackage.Literals.USER__ID);
 	}
 
 	@Override
@@ -83,10 +84,5 @@ public class GerritUserRemoteFactory extends
 
 	public AccountInfoCache getCache() {
 		return cache;
-	}
-
-	@Override
-	public String getModelCurrentValue(IRepository parentObject, IUser object) {
-		return object.getDisplayName() + "|" + object.getEmail() + "|" + object.getId();
 	}
 }

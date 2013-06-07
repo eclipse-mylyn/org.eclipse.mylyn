@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.reviews.ui.views;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -49,9 +48,6 @@ import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfObserver;
 import org.eclipse.mylyn.reviews.core.spi.remote.review.IReviewRemoteFactoryProvider;
-import org.eclipse.mylyn.reviews.core.spi.remote.review.ReviewItemSetContentRemoteFactory;
-import org.eclipse.mylyn.reviews.core.spi.remote.review.ReviewItemSetContentRemoteFactory.Client;
-import org.eclipse.mylyn.reviews.core.spi.remote.review.ReviewRemoteFactory;
 import org.eclipse.mylyn.reviews.ui.spi.editor.AbstractReviewTaskEditorPage;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
@@ -107,63 +103,29 @@ public class ReviewExplorer extends CommonNavigator {
 
 	private TableStyledLabelProvider currentProvider;
 
-	private RemoteEmfConsumer<IRepository, IReview, String, ?, ?, Date> reviewConsumer;
+	private RemoteEmfConsumer<IRepository, IReview, ?, String, String> reviewConsumer;
 
 	private IReviewRemoteFactoryProvider factoryProvider;
 
 	private String taskId;
 
-	private final ReviewRemoteFactory.Client reviewObserver = new ReviewRemoteFactory.Client() {
+	private final RemoteEmfObserver<IRepository, IReview> reviewObserver = new RemoteEmfObserver<IRepository, IReview>() {
 		@Override
-		public void create() {
-			setReview(getConsumer().getModelObject());
+		public void created(IRepository parentObject, IReview modelObject) {
+			if (modelObject.getId().equals(taskId) && modelObject != ReviewExplorer.this.review) {
+				setReview(modelObject);
+			}
 		}
 
 		@Override
-		public void update() {
-			updatePatchSetObservers();
-			updatePerservingSelection();
-		}
-
-		@Override
-		protected boolean isClientReady() {
-			return getCommonViewer() != null && getCommonViewer().getControl() != null
-					&& !getCommonViewer().getControl().isDisposed();
+		public void updated(IRepository parentObject, IReview modelObject, boolean modified) {
+			if (modified) {
+				updatePerservingSelection();
+			}
 		}
 	};
 
-	private final class PatchSetClient extends ReviewItemSetContentRemoteFactory.Client {
-		@Override
-		protected boolean isClientReady() {
-			return getCommonViewer() != null && getCommonViewer().getControl() != null
-					&& !getCommonViewer().getControl().isDisposed();
-		}
-
-		@Override
-		protected void update() {
-			if (showList) {
-				getCommonViewer().refresh(true);
-			} else {
-				//Tree, so we can just refresh the parent set, assuming it's currently displayed
-				TreeItem[] rootItems = getCommonViewer().getTree().getItems();
-				boolean parentDisplayed = false;
-				for (TreeItem treeItem : rootItems) {
-					Object data = treeItem.getData();
-					if (data == getConsumer().getParentObject()) {
-						parentDisplayed = true;
-						break;
-					}
-				}
-				if (parentDisplayed) {
-					getCommonViewer().refresh(getConsumer().getParentObject(), true);
-				} else { //treeitem is currently being filtered (as a non-commented set, for example)
-					getCommonViewer().refresh(true);
-				}
-			}
-		}
-	}
-
-	private final Map<IReviewItemSet, ReviewItemSetContentRemoteFactory.Client> patchSetObservers = new HashMap<IReviewItemSet, ReviewItemSetContentRemoteFactory.Client>();
+	private final Map<IReviewItemSet, RemoteEmfObserver<IReviewItemSet, List<IFileItem>>> patchSetObservers = new HashMap<IReviewItemSet, RemoteEmfObserver<IReviewItemSet, List<IFileItem>>>();
 
 	private final IPartListener editorPartListener = new IPartListener() {
 		public void partOpened(IWorkbenchPart part) {
@@ -177,8 +139,7 @@ public class ReviewExplorer extends CommonNavigator {
 				currentPart = null;
 				review = null;
 				taskId = null;
-				reviewObserver.dispose();
-				disposePatchSetObservers();
+				disposeObservers();
 				update();
 			}
 		}
@@ -329,7 +290,7 @@ public class ReviewExplorer extends CommonNavigator {
 				if (event.getElement() instanceof IReviewItemSet) {
 					IReviewItemSet set = (IReviewItemSet) event.getElement();
 					if (set.getItems().size() == 0) {
-						ReviewItemSetContentRemoteFactory.Client observer = getPatchSetObserver(set);
+						RemoteEmfObserver<IReviewItemSet, List<IFileItem>> observer = patchSetObservers.get(set);
 						observer.getConsumer().retrieve(false);
 					}
 				}
@@ -506,7 +467,7 @@ public class ReviewExplorer extends CommonNavigator {
 	protected void refresh() {
 		if (reviewConsumer != null) {
 			reviewConsumer.retrieve(true);
-			for (ReviewItemSetContentRemoteFactory.Client observer : patchSetObservers.values()) {
+			for (RemoteEmfObserver<IReviewItemSet, List<IFileItem>> observer : patchSetObservers.values()) {
 				observer.getConsumer().retrieve(true);
 			}
 		}
@@ -537,12 +498,40 @@ public class ReviewExplorer extends CommonNavigator {
 		if (review != newReview) {
 			review = newReview;
 			update();
-			if (review != null
-					&& !factoryProvider.getReviewFactory().isCreateModelNeeded(factoryProvider.getRoot(), review)) {
+			if (review != null) {
 				reviewConsumer = factoryProvider.getReviewFactory().getConsumerForModel(factoryProvider.getRoot(),
 						newReview);
 				reviewConsumer.retrieve(false);
-				updatePatchSetObservers();
+				for (IReviewItemSet newSet : review.getSets()) {
+					RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, ?, String, String> contentConsumer = factoryProvider.getReviewItemSetContentFactory()
+							.getConsumerForLocalKey(newSet, newSet.getId());
+					RemoteEmfObserver<IReviewItemSet, List<IFileItem>> patchSetObserver = new RemoteEmfObserver<IReviewItemSet, List<IFileItem>>(
+							contentConsumer) {
+						@Override
+						public void updated(IReviewItemSet parent, List<IFileItem> items, boolean modified) {
+							if (showList) {
+								getCommonViewer().refresh(true);
+							} else {
+								//Tree, so we can just refresh the parent set, assuming it's currently displayed
+								TreeItem[] rootItems = getCommonViewer().getTree().getItems();
+								boolean parentDisplayed = false;
+								for (TreeItem treeItem : rootItems) {
+									Object data = treeItem.getData();
+									if (data == parent) {
+										parentDisplayed = true;
+										break;
+									}
+								}
+								if (parentDisplayed) {
+									getCommonViewer().refresh(parent, true);
+								} else { //treeitem is currently being filtered (as a non-commented set, for example)
+									getCommonViewer().refresh(true);
+								}
+							}
+						}
+					};
+					patchSetObservers.put(newSet, patchSetObserver);
+				}
 			}
 		}
 	}
@@ -550,8 +539,7 @@ public class ReviewExplorer extends CommonNavigator {
 	protected void setReviewId(String newTaskId) {
 		if (!newTaskId.equals(taskId)) {
 			taskId = newTaskId;
-			reviewObserver.dispose();
-			disposePatchSetObservers();
+			disposeObservers();
 			reviewConsumer = factoryProvider.getReviewFactory().getConsumerForLocalKey(factoryProvider.getRoot(),
 					newTaskId);
 			reviewConsumer.addObserver(reviewObserver);
@@ -572,25 +560,12 @@ public class ReviewExplorer extends CommonNavigator {
 		}
 	}
 
-	private void disposePatchSetObservers() {
-		for (RemoteEmfObserver<IReviewItemSet, List<IFileItem>, String, Long> observer : patchSetObservers.values()) {
+	private void disposeObservers() {
+		for (RemoteEmfObserver<IReviewItemSet, List<IFileItem>> observer : patchSetObservers.values()) {
 			observer.dispose();
 		}
 		patchSetObservers.clear();
-	}
-
-	public void updatePatchSetObservers() {
-		for (IReviewItemSet set : review.getSets()) {
-			Client client = patchSetObservers.get(set);
-			if (client == null) {
-				ReviewItemSetContentRemoteFactory.Client patchSetObserver = new PatchSetClient();
-				RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, String, ?, ?, Long> consumer = factoryProvider.getReviewItemSetContentFactory()
-						.getConsumerForLocalKey(set, set.getId());
-				patchSetObserver.setConsumer(consumer);
-				patchSetObservers.put(set, patchSetObserver);
-				patchSetObserver.checkUpdate(false);
-			}
-		}
+		reviewObserver.dispose();
 	}
 
 	/* (non-Javadoc)
@@ -603,8 +578,7 @@ public class ReviewExplorer extends CommonNavigator {
 		flatLabelProvider.doDispose();
 		treeLabelProvider.doDispose();
 		currentPart = null;
-		reviewObserver.dispose();
-		disposePatchSetObservers();
+		disposeObservers();
 		pageListener.pageActivated(null);
 	}
 
@@ -676,10 +650,6 @@ public class ReviewExplorer extends CommonNavigator {
 
 		updateTreeViewer(getCommonViewer());
 		getCommonViewer().refresh();
-	}
-
-	public Client getPatchSetObserver(IReviewItemSet set) {
-		return patchSetObservers.get(set);
 	}
 
 	public IWorkbenchPart getCurrentPart() {

@@ -14,11 +14,11 @@ package org.eclipse.mylyn.reviews.edit;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
-public class ReviewsEditPluginActivator implements BundleActivator {
+public class ReviewsEditPlugin implements BundleActivator {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylyn.reviews.edit"; //$NON-NLS-1$
 
-	private static ReviewsEditPluginActivator plugin;
+	private static ReviewsEditPlugin plugin;
 
 	public void start(BundleContext context) throws Exception {
 		plugin = this;
@@ -28,7 +28,7 @@ public class ReviewsEditPluginActivator implements BundleActivator {
 		plugin = null;
 	}
 
-	public static ReviewsEditPluginActivator getDefault() {
+	public static ReviewsEditPlugin getDefault() {
 		return plugin;
 	}
 }

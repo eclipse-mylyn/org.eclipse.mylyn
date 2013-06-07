@@ -9,7 +9,7 @@
  *     GitHub Inc. - initial API and implementation
  *     Tasktop Technologies - improvements
  *******************************************************************************/
-package org.eclipse.mylyn.reviews.core.spi.remote.emf;
+package org.eclipse.mylyn.reviews.core.remote;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -20,6 +20,7 @@ import static org.junit.Assert.assertThat;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcoreFactory;
+import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.junit.Test;
 
 /**
@@ -30,14 +31,13 @@ public class RemoteEmfObserverTest {
 	public void testListeners() {
 		TestRemoteFactory factory = new TestRemoteFactory();
 		EPackage parent = EcoreFactory.eINSTANCE.createEPackage();
-		RemoteEmfConsumer<EPackage, EClass, String, TestRemoteObject, String, Integer> consumer1 = factory.getConsumerForRemoteKey(
+		RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> consumer1 = factory.getConsumerForRemoteKey(
 				parent, "remoteKeyFor Object 1");
-		RemoteEmfConsumer<EPackage, EClass, String, TestRemoteObject, String, Integer> consumer2 = factory.getConsumerForRemoteKey(
+		RemoteEmfConsumer<EPackage, EClass, TestRemoteObject, String, String> consumer2 = factory.getConsumerForRemoteKey(
 				parent, "remoteKeyFor Object 2");
 		assertThat(consumer1, not(sameInstance(consumer2)));
-		TestRemoteEmfObserver<EPackage, EClass, String, Integer> listener1 = new TestRemoteEmfObserver<EPackage, EClass, String, Integer>(
-				consumer1);
-		TestRemoteEmfObserver<EPackage, EClass, String, Integer> listener2 = new TestRemoteEmfObserver<EPackage, EClass, String, Integer>();
+		TestRemoteEmfObserver<EPackage, EClass> listener1 = new TestRemoteEmfObserver<EPackage, EClass>(consumer1);
+		TestRemoteEmfObserver<EPackage, EClass> listener2 = new TestRemoteEmfObserver<EPackage, EClass>();
 		consumer1.retrieve(false);
 		listener1.waitForResponse(1, 1);
 		assertThat(listener2.responded, is(0));

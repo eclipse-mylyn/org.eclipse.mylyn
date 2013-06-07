@@ -9,19 +9,13 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.gerrit.core.remote;
+package org.eclipse.mylyn.reviews.core.remote;
 
-import java.io.File;
+import org.eclipse.mylyn.reviews.core.spi.remote.AbstractRemoteFactoryProvider;
+import org.eclipse.mylyn.reviews.core.spi.remote.JobRemoteService;
 
-import org.apache.commons.io.FileUtils;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.mylyn.reviews.core.spi.remote.AbstractDataLocator;
-
-final class TestDataLocator extends AbstractDataLocator {
-	@Override
-	public IPath getSystemPath() {
-		return new Path(FileUtils.getTempDirectory().getAbsolutePath() + File.separator
-				+ "org.eclipse.mylyn.gerrit.tests");
+class TestRemoteFactoryProvider extends AbstractRemoteFactoryProvider {
+	public TestRemoteFactoryProvider() {
+		setService(new JobRemoteService());
 	}
 }
