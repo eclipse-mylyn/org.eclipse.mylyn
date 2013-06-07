@@ -20,17 +20,18 @@ import org.eclipse.emf.ecore.EObject;
  * 
  * @author Miles Parker
  */
-public class RemoteEmfObserver<EParentObjectType extends EObject, EObjectType> implements
-		IRemoteEmfObserver<EParentObjectType, EObjectType> {
+public class RemoteEmfObserver<EParentObjectType extends EObject, EObjectType, LocalKeyType, ObjectCurrentType>
+		implements IRemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType> {
 
-	RemoteEmfConsumer<EParentObjectType, EObjectType, ?, ?, ?> consumer;
+	RemoteEmfConsumer<EParentObjectType, EObjectType, LocalKeyType, ?, ?, ObjectCurrentType> consumer;
 
 	/**
 	 * Constructs an observer that listens to the supplied consumer.
 	 * 
 	 * @param consumer
 	 */
-	public RemoteEmfObserver(RemoteEmfConsumer<EParentObjectType, EObjectType, ?, ?, ?> consumer) {
+	public RemoteEmfObserver(
+			RemoteEmfConsumer<EParentObjectType, EObjectType, LocalKeyType, ?, ?, ObjectCurrentType> consumer) {
 		setConsumer(consumer);
 	}
 
@@ -56,7 +57,7 @@ public class RemoteEmfObserver<EParentObjectType extends EObject, EObjectType> i
 	 * Returns the consumer the observer is listening to. This value may be null if the observer was added directly to
 	 * the consumer.
 	 */
-	public RemoteEmfConsumer<EParentObjectType, EObjectType, ?, ?, ?> getConsumer() {
+	public RemoteEmfConsumer<EParentObjectType, EObjectType, LocalKeyType, ?, ?, ObjectCurrentType> getConsumer() {
 		return consumer;
 	}
 
@@ -66,7 +67,8 @@ public class RemoteEmfObserver<EParentObjectType extends EObject, EObjectType> i
 	 * 
 	 * @param consumer
 	 */
-	public void setConsumer(RemoteEmfConsumer<EParentObjectType, EObjectType, ?, ?, ?> consumer) {
+	public void setConsumer(
+			RemoteEmfConsumer<EParentObjectType, EObjectType, LocalKeyType, ?, ?, ObjectCurrentType> consumer) {
 		if (this.consumer != consumer) {
 			consumer.addObserver(this);
 		}
@@ -75,7 +77,8 @@ public class RemoteEmfObserver<EParentObjectType extends EObject, EObjectType> i
 	/**
 	 * Non-API. Intended for use by consumer only.
 	 */
-	void internalSetConsumer(RemoteEmfConsumer<EParentObjectType, EObjectType, ?, ?, ?> consumer) {
+	void internalSetConsumer(
+			RemoteEmfConsumer<EParentObjectType, EObjectType, LocalKeyType, ?, ?, ObjectCurrentType> consumer) {
 		this.consumer = consumer;
 	}
 

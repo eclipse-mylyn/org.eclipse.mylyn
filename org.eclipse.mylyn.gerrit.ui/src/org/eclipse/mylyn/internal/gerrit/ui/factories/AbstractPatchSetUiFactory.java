@@ -26,7 +26,9 @@ import org.eclipse.mylyn.internal.gerrit.core.egit.GerritToGitMapping;
 import org.eclipse.mylyn.internal.gerrit.core.remote.GerritRemoteFactoryProvider;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
 import org.eclipse.mylyn.internal.gerrit.ui.egit.EGitUiUtil;
+import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
+import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.eclipse.mylyn.reviews.ui.spi.factories.AbstractUiFactory;
 import org.eclipse.mylyn.reviews.ui.spi.factories.IUiContext;
 import org.eclipse.osgi.util.NLS;
@@ -46,8 +48,13 @@ public abstract class AbstractPatchSetUiFactory extends AbstractUiFactory<IRevie
 	}
 
 	protected PatchSetDetail getPatchSetDetail() {
-		return getGerritFactoryProvider().getReviewItemSetFactory()
-				.getConsumerForModel(getModelObject().getReview(), getModelObject())
+		return getPatchSetDetail(getModelObject());
+	}
+
+	protected PatchSetDetail getPatchSetDetail(IReviewItemSet set) {
+		RemoteEmfConsumer<IReview, IReviewItemSet, String, PatchSetDetail, PatchSetDetail, String> consumerForModel = getGerritFactoryProvider().getReviewItemSetFactory()
+				.getConsumerForModel(getModelObject().getReview(), set);
+		return consumerForModel
 				.getRemoteObject();
 	}
 
@@ -114,5 +121,10 @@ public abstract class AbstractPatchSetUiFactory extends AbstractUiFactory<IRevie
 			StatusManager.getManager().handle(status, StatusManager.BLOCK | StatusManager.SHOW | StatusManager.LOG);
 		}
 		return null;
+	}
+
+	@Override
+	protected boolean isExecutableStateKnown() {
+		return getChange() != null && getChange().getChangeDetail() != null && getPatchSetDetail() != null;
 	}
 }

@@ -12,6 +12,7 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.remote;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -41,9 +42,8 @@ import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.reviews.core.model.RequirementStatus;
 import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
-import org.eclipse.mylyn.reviews.core.spi.remote.emf.AbstractRemoteEmfFactory;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
-import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
+import org.eclipse.mylyn.reviews.core.spi.remote.review.ReviewRemoteFactory;
 
 import com.google.gerrit.common.data.AccountInfo;
 import com.google.gerrit.common.data.ApprovalDetail;
@@ -62,12 +62,15 @@ import com.google.gerrit.reviewdb.UserIdentity;
  * @author Miles Parker
  * @author Steffen Pingel
  */
-public class GerritReviewRemoteFactory extends
-		AbstractRemoteEmfFactory<IRepository, IReview, GerritChange, String, String> {
+public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange, String> {
 
 	public GerritReviewRemoteFactory(GerritRemoteFactoryProvider gerritRemoteFactoryProvider) {
-		super(gerritRemoteFactoryProvider, ReviewsPackage.Literals.REPOSITORY__REVIEWS,
-				ReviewsPackage.Literals.CHANGE__ID);
+		super(gerritRemoteFactoryProvider);
+	}
+
+	@Override
+	protected IReview open(IRepository parentObject, String localKey) {
+		return getGerritProvider().open(localKey);
 	}
 
 	@Override
@@ -130,11 +133,16 @@ public class GerritReviewRemoteFactory extends
 	}
 
 	@Override
+	public boolean isCreateModelNeeded(IRepository parentObject, IReview modelObject) {
+		return super.isCreateModelNeeded(parentObject, modelObject) || modelObject.getModificationDate() == null;
+	}
+
+	@Override
 	public IReview createModel(IRepository parent, GerritChange gerritChange) {
 		final ChangeDetailX detail = gerritChange.getChangeDetail();
 		Change change = detail.getChange();
 
-		final IReview review = IReviewsFactory.INSTANCE.createReview();
+		IReview review = getGerritProvider().open(getLocalKeyForRemoteObject(gerritChange));
 
 		//Immutable Data (?)
 		review.setKey(change.getKey().get());
@@ -176,7 +184,7 @@ public class GerritReviewRemoteFactory extends
 		Change change = detail.getChange();
 
 		//Mutable Data
-		review.setModificationDate(change.getLastUpdatedOn());
+		review.setModificationDate(new Date(change.getLastUpdatedOn().getTime())); //Convert from SQL Timestamp
 		review.setSubject(change.getSubject());
 		review.setMessage(detail.getDescription());
 
@@ -209,13 +217,19 @@ public class GerritReviewRemoteFactory extends
 		//Basic Patch Sets
 		int oldPatchCount = review.getSets().size();
 		int patchIndex = 0;
+		PatchSetDetailRemoteFactory itemSetFactory = getGerritProvider().getReviewItemSetFactory();
 		for (PatchSetDetail patchSetDetail : gerritChange.getPatchSetDetails()) {
+			RemoteEmfConsumer<IReview, IReviewItemSet, String, PatchSetDetail, PatchSetDetail, String> consumer = itemSetFactory.getConsumerForRemoteObject(
+					review, patchSetDetail);
+			try {
+				//We force a pull here, which is safe because there isn't any actual client API invocation
+				consumer.pull(true, new NullProgressMonitor());
+			} catch (CoreException e) {
+				throw new RuntimeException("Internal Exception. Unexpected state.", e);
+			}
 			if (patchIndex++ < oldPatchCount) {
 				continue;
 			}
-			PatchSetDetailRemoteFactory itemSetFactory = getGerritProvider().getReviewItemSetFactory();
-			RemoteEmfConsumer<IReview, IReviewItemSet, PatchSetDetail, PatchSetDetail, String> consumer = itemSetFactory.getConsumerForRemoteObject(
-					review, patchSetDetail);
 			consumer.applyModel(false);
 			IReviewItemSet itemSet = consumer.getModelObject();
 			IUser author = getGerritProvider().createUser(parent, detail.getAccounts(),
@@ -233,7 +247,7 @@ public class GerritReviewRemoteFactory extends
 			if (authorIdent != null) {
 				itemSet.setModificationDate(authorIdent.getDate());
 			}
-			review.getSets().add(itemSet);
+			consumer.release();
 		}
 	}
 
@@ -382,6 +396,11 @@ public class GerritReviewRemoteFactory extends
 	@Override
 	public String getLocalKeyForRemoteKey(String remoteKey) {
 		return remoteKey;
+	}
+
+	@Override
+	public String getRemoteKeyForLocalKey(IRepository parentObject, String localKey) {
+		return localKey;
 	}
 
 	public GerritRemoteFactoryProvider getGerritProvider() {

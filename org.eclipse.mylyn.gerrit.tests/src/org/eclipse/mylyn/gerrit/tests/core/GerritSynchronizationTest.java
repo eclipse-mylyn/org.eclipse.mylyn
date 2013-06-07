@@ -11,6 +11,11 @@
 
 package org.eclipse.mylyn.gerrit.tests.core;
 
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
@@ -18,17 +23,24 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.mylyn.commons.sdk.util.UiTestUtil;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.gerrit.tests.support.GerritHarness;
+import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.GerritQuery;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
+import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
+import org.eclipse.mylyn.internal.reviews.ui.RemoteUiFactoryProviderConfigurer;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.reviews.spi.edit.remote.AbstractRemoteEditFactoryProvider;
+import org.eclipse.mylyn.reviews.spi.edit.remote.review.ReviewsRemoteEditFactoryProvider;
+import org.eclipse.mylyn.reviews.ui.spi.remote.RemoteUiService;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
@@ -58,9 +70,15 @@ public class GerritSynchronizationTest extends TestCase {
 
 	private TaskList taskList;
 
+	private GerritClient client;
+
 	@Override
 	@Before
 	public void setUp() throws Exception {
+//		RemoteFactoryProviderConfigurer configurer = new TestFactoryProviderConfigurer();
+//
+//		GerritCorePlugin.getDefault().getConnector().setFactoryProviderConfigurer(configurer);
+		GerritUiPlugin.getDefault();
 		TasksUiPlugin.getDefault()
 				.getPreferenceStore()
 				.setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
@@ -71,6 +89,17 @@ public class GerritSynchronizationTest extends TestCase {
 
 		harness = GerritFixture.current().harness();
 		repository = GerritFixture.current().singleRepository();
+		GerritCorePlugin.getDefault()
+				.getConnector()
+				.setFactoryProviderConfigurer(new RemoteUiFactoryProviderConfigurer());
+		client = GerritCorePlugin.getDefault().getConnector().getClient(repository);
+		AbstractRemoteEditFactoryProvider abstractRemoteEditFactoryProvider = (AbstractRemoteEditFactoryProvider) client.getFactoryProvider();
+		GerritCorePlugin.getDefault()
+				.getConnector()
+				.getFactoryProviderConfigurer()
+				.configure(abstractRemoteEditFactoryProvider);
+
+		assertThat(abstractRemoteEditFactoryProvider.getService(), instanceOf(RemoteUiService.class));
 		taskList = TasksUiPlugin.getTaskList();
 		taskDataManager = TasksUiPlugin.getTaskDataManager();
 
@@ -124,7 +153,7 @@ public class GerritSynchronizationTest extends TestCase {
 
 	private String addComment(ITask task) throws GerritException {
 		taskDataManager.setTaskRead(task, true);
-		GerritClient client = new GerritClient(harness.location());
+		GerritClient client = new GerritClient(null, harness.location());
 		String message = "new comment, time: " + System.currentTimeMillis(); //$NON-NLS-1$
 		client.publishComments(task.getTaskId(), 1, message, Collections.<ApprovalCategoryValue.Id> emptySet(), null);
 		return message;
@@ -160,6 +189,13 @@ public class GerritSynchronizationTest extends TestCase {
 
 		ITask task = assertTaskListHasOneTask();
 		assertEquals(SynchronizationState.INCOMING_NEW, task.getSynchronizationState());
+
+		String filePath = client.getFactoryProvider().getDataLocator().getSystemPath() + File.separator
+				+ "org.eclipse.mylyn.gerrit-" + ReviewsRemoteEditFactoryProvider.asFileName(repository.getUrl())
+				+ File.separator + "Review" + File.separator + task.getTaskId() + ".reviews";
+		File file = new File(filePath);
+		assertThat("File should exist at: " + filePath, file.exists(), is(true));
+
 		return task;
 	}
 
@@ -170,7 +206,16 @@ public class GerritSynchronizationTest extends TestCase {
 		job.schedule();
 		job.join();
 		// wait for any query synchronization jobs scheduled by job above
-		Job.getJobManager().join(ITasksCoreConstants.JOB_FAMILY_SYNCHRONIZATION, null);
+		boolean synchronizing = true;
+		while (synchronizing) {
+			try {
+				Job.getJobManager().join(ITasksCoreConstants.JOB_FAMILY_SYNCHRONIZATION, null);
+				synchronizing = false;
+			} catch (InterruptedException e) {
+				// ignore interrupts caused by sync exec and spin the UI loop to process them
+				UiTestUtil.waitForDisplay();
+			}
+		}
 	}
 
 	private void synchronizeTask(ITask task, boolean user) throws InterruptedException {
@@ -178,7 +223,16 @@ public class GerritSynchronizationTest extends TestCase {
 				TasksUi.getRepositoryConnector(repository.getConnectorKind()), repository, Collections.singleton(task));
 		job.setUser(user);
 		job.schedule();
-		job.join();
+		boolean synchronizing = true;
+		while (synchronizing) {
+			try {
+				job.join();
+				synchronizing = false;
+			} catch (InterruptedException e) {
+				// ignore interrupts caused by sync exec and spin the UI loop to process them
+				UiTestUtil.waitForDisplay();
+			}
+		}
 	}
 
 }

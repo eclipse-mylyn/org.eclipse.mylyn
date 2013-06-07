@@ -37,6 +37,7 @@ import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
@@ -58,10 +59,13 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 	}
 
 	@Override
-	public void createModelContent() {
+	protected Control createContent(FormToolkit toolkit, Composite parent) {
+		Control content = super.createContent(toolkit, parent);
+		getReview().getChildren();
 		createReviewersSubSection(composite);
 		createDependenciesSubSection(toolkit, composite, "Depends On", getReview().getParents());
 		createDependenciesSubSection(toolkit, composite, "Needed By", getReview().getChildren());
+		return content;
 	}
 
 	protected void createReviewersSubSection(Composite parent) {
@@ -177,7 +181,8 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 			}
 		}
 		if (getUiFactoryProvider() != null) {
-			Composite actionComposite = getUiFactoryProvider().createButtons(this, composite, getToolkit(), getReview());
+			Composite actionComposite = getUiFactoryProvider().createControls(this, composite, getToolkit(),
+					getReview());
 			GridDataFactory.fillDefaults().span(2, 1).applyTo(actionComposite);
 		}
 	}

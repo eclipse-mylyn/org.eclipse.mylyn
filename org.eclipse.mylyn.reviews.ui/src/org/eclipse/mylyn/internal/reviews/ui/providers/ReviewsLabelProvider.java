@@ -191,7 +191,11 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 				return desc;
 			}
 			if (element instanceof IUser) {
-				return ((IUser) element).getDisplayName();
+				String displayName = ((IUser) element).getDisplayName();
+				if (!StringUtils.isEmpty(displayName)) {
+					return displayName;
+				}
+				return "Unknown";
 			}
 			if (element instanceof Date) {
 				return DateUtil.getRelativeDuration(System.currentTimeMillis() - ((Date) element).getTime()) + " ago";
@@ -470,11 +474,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 				if (element instanceof GlobalCommentsNode) {
 					element = ((GlobalCommentsNode) element).getReview();
 				}
-				if (element instanceof ICommentContainer) {
-					ICommentContainer container = (ICommentContainer) element;
-					String statsText = getStatsText(container);
-					styledString.append(statsText, StyledString.DECORATIONS_STYLER);
-				}
+				addCommentContainerStatsStyle(element, styledString);
 				if (element instanceof IFileItem) {
 					IReviewItem item = (IReviewItem) element;
 					styledString.append("  " + item.getName(), StyledString.QUALIFIER_STYLER);

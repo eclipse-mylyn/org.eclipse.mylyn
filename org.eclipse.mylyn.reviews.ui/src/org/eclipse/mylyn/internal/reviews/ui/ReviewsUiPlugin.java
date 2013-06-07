@@ -11,13 +11,7 @@
 package org.eclipse.mylyn.internal.reviews.ui;
 
 import org.eclipse.mylyn.commons.workbench.CommonImageManger;
-import org.eclipse.mylyn.reviews.core.spi.remote.AbstractRemoteFactoryProvider;
 import org.eclipse.mylyn.reviews.core.spi.remote.AbstractRemoteService;
-import org.eclipse.mylyn.reviews.core.spi.remote.review.IReviewRemoteFactoryProvider;
-import org.eclipse.mylyn.reviews.internal.core.ReviewsConnector;
-import org.eclipse.mylyn.reviews.ui.spi.remote.RemoteUiService;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -54,18 +48,5 @@ public class ReviewsUiPlugin extends AbstractUIPlugin {
 
 	public CommonImageManger getImageManager() {
 		return imageManager;
-	}
-
-	public IReviewRemoteFactoryProvider getFactoryProvider(String connectorKind, TaskRepository repository) {
-		ReviewsConnector connector = (ReviewsConnector) TasksUi.getRepositoryConnector(connectorKind);
-		AbstractRemoteFactoryProvider factoryProvider = connector.getFactoryProvider(repository);
-		if (factoryProvider instanceof IReviewRemoteFactoryProvider) {
-			if (service == null) {
-				service = new RemoteUiService();
-			}
-			factoryProvider.setService(service);
-			return (IReviewRemoteFactoryProvider) factoryProvider;
-		}
-		throw new RuntimeException("The connector factory propvider must implement IReviewRemoteFactoryProvider");
 	}
 }

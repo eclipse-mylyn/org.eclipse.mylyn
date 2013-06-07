@@ -15,19 +15,21 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
-import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 import org.eclipse.mylyn.reviews.ui.ReviewUi;
 import org.eclipse.team.core.history.IFileRevision;
+import org.junit.Test;
 
 /**
  * @author Steffen Pingel
  */
 public class ReviewUiTest extends TestCase {
 
-	public void testGetActiveReivew() {
+	@Test
+	public void testGetActiveReview() {
 		ReviewBehavior activeReview = new ReviewBehavior(null) {
 			@Override
 			public IStatus addComment(IReviewItem fileItem, IComment comment, IProgressMonitor monitor) {
@@ -44,5 +46,4 @@ public class ReviewUiTest extends TestCase {
 		ReviewUi.setActiveReview(activeReview);
 		assertEquals(activeReview, ReviewUi.getActiveReview());
 	}
-
 }

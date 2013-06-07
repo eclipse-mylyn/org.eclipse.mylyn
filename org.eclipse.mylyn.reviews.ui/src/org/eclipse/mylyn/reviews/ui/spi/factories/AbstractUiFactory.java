@@ -11,6 +11,11 @@
 
 package org.eclipse.mylyn.reviews.ui.spi.factories;
 
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.reviews.core.spi.remote.review.IReviewRemoteFactoryProvider;
 import org.eclipse.mylyn.reviews.ui.spi.editor.AbstractReviewSection;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -18,6 +23,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -42,6 +48,8 @@ public abstract class AbstractUiFactory<EObjectType> implements IUiContext {
 
 	private final IUiContext context;
 
+	private Button button;
+
 	public AbstractUiFactory(String name, IUiContext context, EObjectType object) {
 		this.context = context;
 		this.name = name;
@@ -57,18 +65,32 @@ public abstract class AbstractUiFactory<EObjectType> implements IUiContext {
 	 * @return the created control; may be null in the case where the factory isn't executable.
 	 */
 	public Control createControl(IUiContext context, Composite parent, FormToolkit toolkit) {
-		if (isExecutable()) {
-			Button button = toolkit.createButton(parent, name, SWT.PUSH);
-			button.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					execute();
-				}
-			});
-			return button;
-		}
-		return null;
+		button = toolkit.createButton(parent, name, SWT.PUSH);
+		button.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				handleExecute();
+			}
+		});
+		button.setEnabled(!isExecutableStateKnown() || isExecutable());
+		return button;
 	}
+
+	private void handleExecute() {
+		if (isExecutableStateKnown()) {
+			execute();
+		} else {
+			handleExecutionStateError();
+		}
+	}
+
+	protected void handleExecutionStateError() {
+		String message = NLS.bind("Cannot {0}", StringUtils.removeEnd(name, "..."));
+		ErrorDialog.openError(getShell(), "Refresh Required", message, new Status(IStatus.ERROR,
+				ReviewsUiPlugin.PLUGIN_ID, "(Refresh editor to update button status.)"));
+	}
+
+	protected abstract boolean isExecutableStateKnown();
 
 	public abstract boolean isExecutable();
 

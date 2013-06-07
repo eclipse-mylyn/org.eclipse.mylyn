@@ -9,26 +9,19 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.reviews.edit;
+package org.eclipse.mylyn.internal.gerrit.core.remote;
 
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
+import java.io.File;
 
-public class ReviewsEditPlugin implements BundleActivator {
+import org.apache.commons.io.FileUtils;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.mylyn.reviews.core.spi.remote.AbstractDataLocator;
 
-	public static final String PLUGIN_ID = "org.eclipse.mylyn.reviews.edit"; //$NON-NLS-1$
-
-	private static ReviewsEditPlugin plugin;
-
-	public void start(BundleContext context) throws Exception {
-		plugin = this;
-	}
-
-	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-	}
-
-	public static ReviewsEditPlugin getDefault() {
-		return plugin;
+public final class TestDataLocator extends AbstractDataLocator {
+	@Override
+	public IPath getSystemPath() {
+		return new Path(FileUtils.getTempDirectory().getAbsolutePath() + File.separator
+				+ "org.eclipse.mylyn.gerrit.tests");
 	}
 }

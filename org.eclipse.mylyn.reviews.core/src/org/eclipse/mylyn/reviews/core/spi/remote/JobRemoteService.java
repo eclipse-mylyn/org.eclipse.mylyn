@@ -78,10 +78,15 @@ public class JobRemoteService extends AbstractRemoteService {
 							}
 							process.notifyDone(event.getResult());
 						}
-					});
+					}, false);
 				}
 			});
 			addJob(job);
+//			if (process.isSystemJob()) {
+//				job.setSystem(true);
+//			} else if (process.isUserJob()) {
+//				job.setUser(true);
+//			}
 			job.schedule();
 		} else {
 			try {
@@ -145,5 +150,10 @@ public class JobRemoteService extends AbstractRemoteService {
 	@Override
 	public void modelExec(Runnable runnable, boolean block) {
 		runnable.run();
+	}
+
+	@Override
+	public void ensureModelThread() {
+		//noop -- in base case we can update model from anywhere
 	}
 }

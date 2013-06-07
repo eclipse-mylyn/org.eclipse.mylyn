@@ -44,6 +44,12 @@ import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchSetPublishDetai
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectAdminService;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
+import org.eclipse.mylyn.internal.gerrit.core.remote.GerritRemoteFactoryProvider;
+import org.eclipse.mylyn.reviews.core.model.IRepository;
+import org.eclipse.mylyn.reviews.core.model.IReview;
+import org.eclipse.mylyn.reviews.core.spi.ReviewsClient;
+import org.eclipse.mylyn.reviews.core.spi.remote.emf.AbstractRemoteEmfFactoryProvider;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.osgi.util.NLS;
 
 import com.google.gerrit.common.data.AccountDashboardInfo;
@@ -82,7 +88,7 @@ import com.google.gwtjsonrpc.client.VoidResult;
  * @author Sascha Scholz
  * @author Miles Parker
  */
-public class GerritClient {
+public class GerritClient extends ReviewsClient {
 
 	private abstract class Operation<T> implements AsyncCallback<T> {
 
@@ -228,16 +234,18 @@ public class GerritClient {
 	 */
 	private boolean restQueryAPIEnabled;
 
-	public GerritClient(AbstractWebLocation location) {
-		this(location, null, null, null);
+	public GerritClient(TaskRepository repository, AbstractWebLocation location) {
+		this(repository, location, null, null, null);
 	}
 
-	public GerritClient(AbstractWebLocation location, GerritConfiguration config, GerritAuthenticationState authState) {
-		this(location, config, authState, null);
+	public GerritClient(TaskRepository repository, AbstractWebLocation location, GerritConfiguration config,
+			GerritAuthenticationState authState) {
+		this(repository, location, config, authState, null);
 	}
 
-	public GerritClient(AbstractWebLocation location, GerritConfiguration config, GerritAuthenticationState authState,
-			String xsrfKey) {
+	public GerritClient(TaskRepository repository, AbstractWebLocation location, GerritConfiguration config,
+			GerritAuthenticationState authState, String xsrfKey) {
+		super(repository);
 		this.client = new GerritHttpClient(location) {
 			@Override
 			protected void sessionChanged(Cookie cookie) {
@@ -906,5 +914,10 @@ public class GerritClient {
 			serviceByClass.put(clazz, service);
 		}
 		return clazz.cast(service);
+	}
+
+	@Override
+	public AbstractRemoteEmfFactoryProvider<IRepository, IReview> createFactoryProvider() {
+		return new GerritRemoteFactoryProvider(this);
 	}
 }

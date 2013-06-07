@@ -33,13 +33,12 @@ import com.google.gerrit.reviewdb.Account.Id;
  * @author Miles Parker
  */
 public class GerritUserRemoteFactory extends
-		AbstractRemoteEmfFactory<IRepository, IUser, AccountInfo, Account.Id, String> {
+		AbstractRemoteEmfFactory<IRepository, IUser, String, AccountInfo, Account.Id, String> {
 
 	private final AccountInfoCache cache = new AccountInfoCache(new ArrayList<AccountInfo>());
 
 	public GerritUserRemoteFactory(GerritRemoteFactoryProvider gerritRemoteFactoryProvider) {
-		super(gerritRemoteFactoryProvider, ReviewsPackage.Literals.REPOSITORY__USERS,
-				ReviewsPackage.Literals.USER__ID);
+		super(gerritRemoteFactoryProvider, ReviewsPackage.Literals.REPOSITORY__USERS, ReviewsPackage.Literals.USER__ID);
 	}
 
 	@Override
@@ -48,12 +47,12 @@ public class GerritUserRemoteFactory extends
 	}
 
 	@Override
-	public IUser createModel(IRepository group, AccountInfo info) {
+	public IUser createModel(IRepository repository, AccountInfo info) {
 		IUser user = IReviewsFactory.INSTANCE.createUser();
 		user.setDisplayName(GerritUtil.getUserLabel(info));
 		user.setId(info.getId() + "");
 		user.setEmail(info.getPreferredEmail());
-		group.getUsers().add(user);
+		repository.getUsers().add(user);
 		return user;
 	}
 
@@ -84,5 +83,10 @@ public class GerritUserRemoteFactory extends
 
 	public AccountInfoCache getCache() {
 		return cache;
+	}
+
+	@Override
+	public String getModelCurrentValue(IRepository parentObject, IUser object) {
+		return object.getDisplayName() + "|" + object.getEmail() + "|" + object.getId();
 	}
 }

@@ -12,13 +12,17 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.remote;
 
+import java.util.Date;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
+import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
-import org.eclipse.mylyn.reviews.core.spi.remote.emf.AbstractRemoteEmfFactory;
-import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
+import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
+import org.eclipse.mylyn.reviews.core.spi.remote.review.ReviewItemSetRemoteFactory;
 import org.eclipse.osgi.util.NLS;
 
 import com.google.gerrit.common.data.PatchSetDetail;
@@ -31,12 +35,10 @@ import com.google.gerrit.reviewdb.PatchSet;
  * @author Miles Parker
  * @author Steffen Pingel
  */
-public class PatchSetDetailRemoteFactory extends
-		AbstractRemoteEmfFactory<IReview, IReviewItemSet, PatchSetDetail, PatchSetDetail, String> {
+public class PatchSetDetailRemoteFactory extends ReviewItemSetRemoteFactory<PatchSetDetail, PatchSetDetail> {
 
 	public PatchSetDetailRemoteFactory(GerritRemoteFactoryProvider gerritRemoteFactoryProvider) {
-		super(gerritRemoteFactoryProvider, ReviewsPackage.Literals.REVIEW__SETS,
-				ReviewsPackage.Literals.REVIEW_ITEM__ID);
+		super(gerritRemoteFactoryProvider);
 	}
 
 	@Override
@@ -51,7 +53,7 @@ public class PatchSetDetailRemoteFactory extends
 
 	@Override
 	public boolean isPullNeeded(IReview parent, IReviewItemSet object, PatchSetDetail remote) {
-		return object != null;
+		return object == null || remote == null;
 	}
 
 	@Override
@@ -80,5 +82,26 @@ public class PatchSetDetailRemoteFactory extends
 	@Override
 	public String getLocalKeyForRemoteKey(PatchSetDetail remoteKey) {
 		return getLocalKeyForRemoteObject(remoteKey);
+	}
+
+	@Override
+	public PatchSetDetail getRemoteObjectForLocalKey(IReview parentObject, String localKey) {
+		GerritReviewRemoteFactory reviewFactory = ((GerritRemoteFactoryProvider) getFactoryProvider()).getReviewFactory();
+		RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> reviewConsumer = reviewFactory.getConsumerForModel(
+				parentObject.getRepository(), parentObject);
+		try {
+			int index = Integer.parseInt(localKey) - 1;
+			if (reviewConsumer != null) {
+				GerritChange change = reviewConsumer.getRemoteObject();
+				if (change != null) {
+					if (change.getPatchSetDetails().size() > index) {
+						return change.getPatchSetDetails().get(index);
+					}
+				}
+			}
+		} catch (NumberFormatException e) {
+			//ignore;
+		}
+		return null;
 	}
 }

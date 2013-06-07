@@ -111,7 +111,7 @@ public class GerritClientTest extends TestCase {
 		WebLocation location = harness.location();
 		GerritAuthenticationState authState = new GerritAuthenticationState();
 		authState.setCookie(new Cookie(WebUtil.getHost(location.getUrl()), "xrsfKey", "invalid"));
-		client = new GerritClient(location, null, authState, "invalid");
+		client = new GerritClient(null, location, null, authState, "invalid");
 		client.getAccount(null);
 	}
 

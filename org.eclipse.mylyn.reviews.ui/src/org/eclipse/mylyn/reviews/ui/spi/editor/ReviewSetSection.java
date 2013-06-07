@@ -23,6 +23,9 @@ import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.ui.spi.factories.AbstractReviewItemSetUiFactoryProvider;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * @author Steffen Pingel
@@ -60,19 +63,18 @@ public abstract class ReviewSetSection extends AbstractReviewSection {
 	}
 
 	@Override
-	public void createModelContent() {
+	protected Control createContent(FormToolkit toolkit, Composite parent) {
+		Control content = super.createContent(toolkit, parent);
 		for (IReviewItem item : getReview().getSets()) {
 			if (item instanceof IReviewItemSet) {
 				IReviewItemSet set = (IReviewItemSet) item;
-				ReviewSetContentSection subSection = createContentSubSection(set);
+				ReviewSetContentSection subSection = new ReviewSetContentSection(this, set);
 				reviewSetSections.add(subSection);
 			}
 		}
+		revealPatchSet(reviewSetSections.size());
 		getTaskEditorPage().reflow();
-	}
-
-	protected ReviewSetContentSection createContentSubSection(IReviewItemSet set) {
-		return new ReviewSetContentSection(this, set);
+		return content;
 	}
 
 	@Override

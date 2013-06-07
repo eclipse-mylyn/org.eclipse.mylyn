@@ -9,13 +9,15 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.reviews.core.remote;
+package org.eclipse.mylyn.reviews.core.spi.remote;
 
-import org.eclipse.mylyn.reviews.core.spi.remote.AbstractRemoteFactoryProvider;
-import org.eclipse.mylyn.reviews.core.spi.remote.JobRemoteService;
+import org.eclipse.mylyn.reviews.core.model.IRepository;
+import org.eclipse.mylyn.reviews.core.model.IReview;
+import org.eclipse.mylyn.reviews.core.spi.remote.emf.AbstractRemoteEmfFactoryProvider;
 
-class TestRemoteFactoryProvider extends AbstractRemoteFactoryProvider {
-	public TestRemoteFactoryProvider() {
-		setService(new JobRemoteService());
+public class RemoteFactoryProviderConfigurer {
+
+	public void configure(AbstractRemoteEmfFactoryProvider<IRepository, IReview> provider) {
+		//noop
 	}
 }

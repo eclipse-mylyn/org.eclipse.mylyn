@@ -9,17 +9,15 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.reviews.core.remote;
+package org.eclipse.mylyn.reviews.core.spi.remote.emf;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.mylyn.reviews.core.spi.remote.emf.AbstractRemoteEmfFactory;
-import org.eclipse.mylyn.reviews.core.spi.remote.emf.IRemoteEmfObserver;
 
-final class TestIRemoteEmfObserver<P extends EObject, T> implements IRemoteEmfObserver<P, T> {
+final class TestIRemoteEmfObserver<P extends EObject, T, L, C> implements IRemoteEmfObserver<P, T, L, C> {
 
 	static final int TEST_TIMEOUT = 100;
 
@@ -31,9 +29,9 @@ final class TestIRemoteEmfObserver<P extends EObject, T> implements IRemoteEmfOb
 
 	IStatus failure;
 
-	AbstractRemoteEmfFactory<?, ?, ?, ?, ?> factory;
+	AbstractRemoteEmfFactory<P, T, ?, ?, L, C> factory;
 
-	TestIRemoteEmfObserver(AbstractRemoteEmfFactory<?, ?, ?, ?, ?> factory) {
+	TestIRemoteEmfObserver(AbstractRemoteEmfFactory<P, T, ?, ?, L, C> factory) {
 		this.factory = factory;
 	}
 

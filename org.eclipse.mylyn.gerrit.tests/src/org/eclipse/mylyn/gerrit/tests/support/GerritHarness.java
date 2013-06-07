@@ -22,6 +22,8 @@ import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * @author Steffen Pingel
@@ -42,7 +44,8 @@ public class GerritHarness {
 	}
 
 	public GerritClient client() {
-		return new GerritClient(location());
+		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(fixture.getRepositoryUrl());
+		return new GerritClient(repository, location());
 	}
 
 	public WebLocation location() {
@@ -62,12 +65,13 @@ public class GerritHarness {
 	}
 
 	public GerritClient clientAnonymous() {
+		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(fixture.getRepositoryUrl());
 		WebLocation location = new WebLocation(fixture.getRepositoryUrl(), null, null, new IProxyProvider() {
 			public Proxy getProxyForHost(String host, String proxyType) {
 				return WebUtil.getProxyForUrl(fixture.getRepositoryUrl());
 			}
 		});
-		return new GerritClient(location);
+		return new GerritClient(repository, location);
 	}
 
 	public void dispose() {

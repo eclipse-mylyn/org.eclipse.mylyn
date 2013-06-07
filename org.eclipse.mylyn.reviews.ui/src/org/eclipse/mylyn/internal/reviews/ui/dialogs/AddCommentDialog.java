@@ -12,7 +12,6 @@
 package org.eclipse.mylyn.internal.reviews.ui.dialogs;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -25,13 +24,12 @@ import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorExtensions;
+import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
-import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
-import org.eclipse.mylyn.reviews.core.model.IComment;
-import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
+import org.eclipse.mylyn.reviews.core.spi.ReviewsConnector;
 import org.eclipse.mylyn.reviews.core.spi.remote.review.IReviewRemoteFactoryProvider;
 import org.eclipse.mylyn.reviews.ui.ProgressDialog;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
@@ -139,11 +137,14 @@ public class AddCommentDialog extends ProgressDialog {
 			if (file != null) {
 				TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(
 						reviewBehavior.getTask().getConnectorKind(), reviewBehavior.getTask().getRepositoryUrl());
-				IReviewRemoteFactoryProvider factoryProvider = ReviewsUiPlugin.getDefault().getFactoryProvider(
-						reviewBehavior.getTask().getConnectorKind(), taskRepository);
-				RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, ?, String, String> consumer = factoryProvider.getReviewItemSetContentFactory()
-						.getConsumerForLocalKey(file.getSet(), file.getSet().getId());
-				consumer.updateObservers();
+				ReviewsConnector connector = (ReviewsConnector) TasksUiPlugin.getConnector(reviewBehavior.getTask()
+						.getConnectorKind());
+				IReviewRemoteFactoryProvider factoryProvider = (IReviewRemoteFactoryProvider) connector.getReviewClient(
+						taskRepository)
+						.getFactoryProvider();
+				factoryProvider.getReviewItemSetContentFactory()
+						.getConsumerForLocalKey(file.getSet(), file.getSet().getId())
+						.updateObservers();
 			}
 			return true;
 		} else {

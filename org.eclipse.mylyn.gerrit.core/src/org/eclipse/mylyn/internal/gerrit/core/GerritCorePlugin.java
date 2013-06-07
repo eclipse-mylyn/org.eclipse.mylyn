@@ -23,6 +23,7 @@ import org.osgi.framework.BundleContext;
  * 
  * @author Thomas Westling
  * @author Sascha Scholz
+ * @author Miles Parker
  */
 public class GerritCorePlugin extends Plugin {
 

@@ -28,13 +28,14 @@ public abstract class AbstractUiFactoryProvider<EObjectType> {
 
 	public abstract List<AbstractUiFactory<EObjectType>> createFactories(IUiContext context, EObjectType type);
 
-	public Composite createButtons(IUiContext context, Composite parent, FormToolkit toolkit, EObjectType object) {
+	public Composite createControls(IUiContext context, Composite parent, FormToolkit toolkit, EObjectType object) {
 		Composite buttonComposite = new Composite(parent, SWT.NONE);
 		RowLayout layout = new RowLayout();
 		layout.center = true;
 		layout.spacing = 10;
 		buttonComposite.setLayout(layout);
-		for (AbstractUiFactory<EObjectType> factory : createFactories(context, object)) {
+		List<AbstractUiFactory<EObjectType>> factories = createFactories(context, object);
+		for (AbstractUiFactory<EObjectType> factory : factories) {
 			factory.createControl(context, buttonComposite, toolkit);
 		}
 		return buttonComposite;

@@ -32,6 +32,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritAuthenticationState;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
@@ -41,8 +42,11 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritSystemInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
 import org.eclipse.mylyn.internal.gerrit.core.remote.GerritRemoteFactoryProvider;
-import org.eclipse.mylyn.reviews.core.spi.remote.AbstractRemoteFactoryProvider;
-import org.eclipse.mylyn.reviews.internal.core.ReviewsConnector;
+import org.eclipse.mylyn.reviews.core.model.IRepository;
+import org.eclipse.mylyn.reviews.core.model.IReview;
+import org.eclipse.mylyn.reviews.core.spi.ReviewsClient;
+import org.eclipse.mylyn.reviews.core.spi.ReviewsConnector;
+import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
@@ -76,6 +80,8 @@ public class GerritConnector extends ReviewsConnector {
 		// disable logging of Overriding the existing type handler for class java.sql.Timestamp message
 		logger.setLevel(Level.OFF);
 	}
+
+	public static long GERRIT_COLLECTION_TIMEOUT = 30 * 1000; //2 Minutes
 
 	private static final Pattern CHANGE_ID_PATTERN = Pattern.compile("(/#change,|/#/c/)(\\d+)"); //$NON-NLS-1$
 
@@ -135,7 +141,7 @@ public class GerritConnector extends ReviewsConnector {
 	}
 
 	public GerritClient getClient(TaskRepository repository) {
-		return createClient(repository, true);
+		return (GerritClient) getReviewClient(repository);
 	}
 
 	@Override
@@ -214,10 +220,7 @@ public class GerritConnector extends ReviewsConnector {
 		ITaskMapping taskMapping = getTaskMapping(taskData);
 		Date repositoryDate = taskMapping.getModificationDate();
 		Date localDate = task.getModificationDate();
-		if (repositoryDate != null && repositoryDate.equals(localDate)) {
-			return false;
-		}
-		return true;
+		return repositoryDate == null || !repositoryDate.equals(localDate);
 	}
 
 	@Override
@@ -303,7 +306,7 @@ public class GerritConnector extends ReviewsConnector {
 			monitor = Policy.backgroundMonitorFor(monitor);
 		}
 		try {
-			return createClient(repository, false).getInfo(monitor);
+			return ((GerritClient) createReviewClient(repository, false)).getInfo(monitor);
 		} catch (UnsupportedClassVersionError e) {
 			throw toCoreException(repository, e);
 		} catch (GerritException e) {
@@ -311,12 +314,14 @@ public class GerritConnector extends ReviewsConnector {
 		}
 	}
 
-	private GerritClient createClient(final TaskRepository repository, boolean cachedConfig) {
+	@Override
+	protected ReviewsClient createReviewClient(final TaskRepository repository, boolean cachedConfig) {
 		GerritConfiguration config = (cachedConfig) ? loadConfiguration(repository) : null;
 		GerritAuthenticationState authState = (cachedConfig)
 				? GerritClient.authStateFromString(repository.getProperty(KEY_REPOSITORY_AUTH))
 				: null;
-		return new GerritClient(taskRepositoryLocationFactory.createWebLocation(repository), config, authState) {
+		return new GerritClient(repository, taskRepositoryLocationFactory.createWebLocation(repository), config,
+				authState) {
 			@Override
 			protected void configurationChanged(GerritConfiguration config) {
 				saveConfiguration(repository, config);
@@ -432,10 +437,5 @@ public class GerritConnector extends ReviewsConnector {
 
 	public static boolean isClosed(String status) {
 		return "MERGED".equals(status) || "ABANDONED".equals(status);
-	}
-
-	@Override
-	public AbstractRemoteFactoryProvider createFactoryProvider(TaskRepository repository) {
-		return new GerritRemoteFactoryProvider(getClient(repository));
 	}
 }
