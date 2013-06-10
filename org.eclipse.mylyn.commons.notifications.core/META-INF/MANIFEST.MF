@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.eclipse.mylyn.commons.notifications.core;singleton:=tru
 Bundle-Version: 1.2.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.eclipse.mylyn.commons.notifications.core;x-internal:=true
+Export-Package: org.eclipse.mylyn.commons.notifications.core;x-friends:="org.eclipse.mylyn.commons.notifications.ui"
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.commons.core
 Bundle-ClassPath: .
