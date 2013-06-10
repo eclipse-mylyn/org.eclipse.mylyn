@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -96,6 +96,8 @@ public class Messages extends NLS {
 	public static String UiLegendControl_Incoming_changes;
 
 	public static String UiLegendControl_New_task;
+
+	public static String UiLegendControl_Notes;
 
 	public static String UiLegendControl_Open_Task_List_;
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,6 +38,8 @@ public class TasksUiImages {
 	private static final String TOOL_SMALL = "etool12"; //$NON-NLS-1$
 
 	private static final String OBJ = "obj16"; //$NON-NLS-1$
+
+	private static final String OVERLAY = "ovr16"; //$NON-NLS-1$
 
 	private static final String WIZBAN = "wizban"; //$NON-NLS-1$
 
@@ -224,6 +226,11 @@ public class TasksUiImages {
 	 * @since 3.8
 	 */
 	public static final ImageDescriptor IMAGE_CAPTURE_SMALL = create(TOOL_SMALL, "image_capture.png"); //$NON-NLS-1$
+
+	/**
+	 * @since 3.10
+	 */
+	public static final ImageDescriptor NOTES = create(OVERLAY, "overlay-notes.gif"); //$NON-NLS-1$
 
 	public static Image getImageForPriority(PriorityLevel priorityLevel) {
 		if (priorityLevel == null) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,12 +16,14 @@ import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.mylyn.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskRepositoryElement;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 
 /**
  * @author Mik Kersten
@@ -43,6 +45,9 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 				decoration.addOverlay(CommonImages.OVERLAY_DATE_OVERDUE, IDecoration.TOP_RIGHT);
 			} else if (!task.isCompleted() && task.getDueDate() != null) {
 				decoration.addOverlay(CommonImages.OVERLAY_DATE_DUE, IDecoration.TOP_RIGHT);
+			}
+			if (hasNotes(task)) {
+				decoration.addOverlay(TasksUiImages.NOTES, IDecoration.BOTTOM_RIGHT);
 			}
 		} else if (element instanceof ITaskRepositoryElement) {
 			ITaskRepositoryElement repositoryElement = (ITaskRepositoryElement) element;
@@ -90,6 +95,13 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 			return TasksUiInternal.getPriorityImage((ITask) element);
 		}
 		return null;
+	}
+
+	private boolean hasNotes(ITask task) {
+		if (task instanceof AbstractTask) {
+			return !((AbstractTask) task).getNotes().isEmpty();
+		}
+		return false;
 	}
 
 }

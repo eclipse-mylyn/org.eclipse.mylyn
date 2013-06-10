@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -331,6 +331,10 @@ public class UiLegendControl extends Composite {
 		imageLabel.setImage(CommonImages.getImage(CommonImages.OVERLAY_DATE_OVERDUE));
 		Label textLabel = toolkit.createLabel(activityClient, Messages.UiLegendControl_Past_Due_date);
 		textLabel.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_OVERDUE));
+
+		imageLabel = toolkit.createLabel(activityClient, ""); //$NON-NLS-1$
+		imageLabel.setImage(CommonImages.getImage(TasksUiImages.NOTES));
+		toolkit.createLabel(activityClient, Messages.UiLegendControl_Notes);
 
 		imageLabel = toolkit.createLabel(activityClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(CommonImages.BLANK));
