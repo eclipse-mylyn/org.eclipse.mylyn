@@ -137,7 +137,7 @@ public class EditorStateParticipant extends ContextStateParticipant {
 					}
 				}
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+				StatusHandler.log(new Status(IStatus.WARNING, ContextUiPlugin.ID_PLUGIN,
 						"Could not restore all editors, memento: \"" + mementoString + "\"", e)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
@@ -150,7 +150,7 @@ public class EditorStateParticipant extends ContextStateParticipant {
 				ContextUi.getUiBridge(activeNode.getContentType()).open(activeNode);
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+			StatusHandler.log(new Status(IStatus.WARNING, ContextUiPlugin.ID_PLUGIN,
 					"Failed to open editors on activation", e)); //$NON-NLS-1$
 		} finally {
 			ContextCore.getContextManager().setContextCapturePaused(false);
@@ -198,7 +198,7 @@ public class EditorStateParticipant extends ContextStateParticipant {
 		}
 
 		if (shouldRestoreActiveWindowToActive && shouldRestoreUnknownWindowToActive) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+			StatusHandler.log(new Status(IStatus.WARNING, ContextUiPlugin.ID_PLUGIN,
 					"Unable to find window to restore memento to.", new Exception())); //$NON-NLS-1$
 		}
 
@@ -241,7 +241,7 @@ public class EditorStateParticipant extends ContextStateParticipant {
 					saveEditors_e_4_legacy((WorkbenchPage) window.getActivePage(), memento);
 				}
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+				StatusHandler.log(new Status(IStatus.WARNING, ContextUiPlugin.ID_PLUGIN,
 						"Saving of editor state failed", e)); //$NON-NLS-1$
 				failed = true;
 			}
@@ -377,7 +377,7 @@ public class EditorStateParticipant extends ContextStateParticipant {
 				}
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+			StatusHandler.log(new Status(IStatus.WARNING, ContextUiPlugin.ID_PLUGIN,
 					"Restoring of editor state failed", e)); //$NON-NLS-1$
 		}
 	}
@@ -513,7 +513,7 @@ public class EditorStateParticipant extends ContextStateParticipant {
 				}
 			}
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not auto close editor", t)); //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.WARNING, ContextUiPlugin.ID_PLUGIN, "Could not auto close editor", t)); //$NON-NLS-1$
 		}
 	}
 
@@ -536,7 +536,7 @@ public class EditorStateParticipant extends ContextStateParticipant {
 				}
 			}
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not auto close editor", t)); //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.WARNING, ContextUiPlugin.ID_PLUGIN, "Could not auto close editor", t)); //$NON-NLS-1$
 		}
 	}
 
@@ -549,7 +549,7 @@ public class EditorStateParticipant extends ContextStateParticipant {
 			}
 
 			public void handleException(Throwable e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+				StatusHandler.log(new Status(IStatus.WARNING, ContextUiPlugin.ID_PLUGIN,
 						"Failed to verify editor status", e)); //$NON-NLS-1$
 			}
 		});
@@ -574,7 +574,7 @@ public class EditorStateParticipant extends ContextStateParticipant {
 				}
 
 				public void handleException(Throwable e) {
-					StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+					StatusHandler.log(new Status(IStatus.WARNING, ContextUiPlugin.ID_PLUGIN,
 							"Failed to verify editor status", e)); //$NON-NLS-1$
 				}
 			});
