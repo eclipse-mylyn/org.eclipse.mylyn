@@ -76,8 +76,9 @@ public abstract class AbstractReviewSection extends AbstractTaskEditorSection im
 	}
 
 	public static void appendMessage(Section section, String message) {
-		final Label textClientLabel = (Label) section.getTextClient();
-		if (!textClientLabel.isDisposed()) {
+		Control textClient = section.getTextClient();
+		if (textClient instanceof Label && !textClient.isDisposed()) {
+			final Label textClientLabel = (Label) textClient;
 			textClientLabel.setText("  " + message);
 			textClientLabel.getParent().layout(true, true);
 		}
