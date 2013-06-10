@@ -32,6 +32,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
+import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient.Request;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritService.GerritRequest;
@@ -302,18 +303,22 @@ public class GerritClient extends ReviewsClient {
 		});
 	}
 
-	public void loadPatchSetContent(PatchSetContent patchSetContent, IProgressMonitor monitor) throws GerritException {
-		Id baseId = (patchSetContent.getBase() != null) ? patchSetContent.getBase().getId() : null;
-		Id targetId = patchSetContent.getTarget().getId();
-		if (patchSetContent.getTargetDetail() == null) {
-			PatchSetDetail targetDetail = getPatchSetDetail(baseId, targetId, monitor);
-			patchSetContent.setTargetDetail(targetDetail);
-		}
-		for (Patch patch : patchSetContent.getTargetDetail().getPatches()) {
-			PatchScript patchScript = getPatchScript(patch.getKey(), baseId, targetId, monitor);
-			if (patchScript != null) {
-				patchSetContent.putPatchScriptByPatchKey(patch.getKey(), patchScript);
+	public void loadPatchSetContent(PatchSetContent patchSetContent, IProgressMonitor monitor) {
+		try {
+			Id baseId = (patchSetContent.getBase() != null) ? patchSetContent.getBase().getId() : null;
+			Id targetId = patchSetContent.getTarget().getId();
+			if (patchSetContent.getTargetDetail() == null) {
+				PatchSetDetail targetDetail = getPatchSetDetail(baseId, targetId, monitor);
+				patchSetContent.setTargetDetail(targetDetail);
 			}
+			for (Patch patch : patchSetContent.getTargetDetail().getPatches()) {
+				PatchScript patchScript = getPatchScript(patch.getKey(), baseId, targetId, monitor);
+				if (patchScript != null) {
+					patchSetContent.putPatchScriptByPatchKey(patch.getKey(), patchScript);
+				}
+			}
+		} catch (GerritException e) {
+			handleMissingPatchSet("Patch Set " + patchSetContent.getId(), e);
 		}
 	}
 
@@ -395,7 +400,7 @@ public class GerritClient extends ReviewsClient {
 			IProgressMonitor monitor) throws GerritException {
 		PatchSetDetail result = null;
 		try {
-			// Gerrit 2.2
+			// Gerrit 2.4+
 			result = execute(monitor, new Operation<PatchSetDetail>() {
 				@Override
 				public void execute(IProgressMonitor monitor) throws GerritException {
@@ -468,17 +473,26 @@ public class GerritClient extends ReviewsClient {
 		List<PatchSetDetail> patchSets = new ArrayList<PatchSetDetail>(changeDetail.getPatchSets().size());
 		Map<PatchSet.Id, PatchSetPublishDetailX> patchSetPublishDetailByPatchSetId = new HashMap<PatchSet.Id, PatchSetPublishDetailX>();
 		for (PatchSet patchSet : changeDetail.getPatchSets()) {
-			PatchSetDetail patchSetDetail = getPatchSetDetail(null, patchSet.getId(), monitor);
-			patchSets.add(patchSetDetail);
-			if (!isAnonymous()) {
-				PatchSetPublishDetailX patchSetPublishDetail = getPatchSetPublishDetail(patchSet.getId(), monitor);
-				patchSetPublishDetailByPatchSetId.put(patchSet.getId(), patchSetPublishDetail);
+			try {
+				PatchSetDetail patchSetDetail = getPatchSetDetail(null, patchSet.getId(), monitor);
+				patchSets.add(patchSetDetail);
+				if (!isAnonymous()) {
+					PatchSetPublishDetailX patchSetPublishDetail = getPatchSetPublishDetail(patchSet.getId(), monitor);
+					patchSetPublishDetailByPatchSetId.put(patchSet.getId(), patchSetPublishDetail);
+				}
+			} catch (GerritException e) {
+				handleMissingPatchSet("Patch Set " + patchSet.getPatchSetId() + " items for Review " + reviewId, e);
 			}
 		}
 		change.setChangeDetail(changeDetail);
 		change.setPatchSets(patchSets);
 		change.setPatchSetPublishDetailByPatchSetId(patchSetPublishDetailByPatchSetId);
 		return change;
+	}
+
+	private void handleMissingPatchSet(String desc, GerritException e) {
+		GerritCorePlugin.logWarning("Couldn't load " + desc
+				+ ". (Perhaps the Patch Set has been removed from repository?)", e);
 	}
 
 	public int id(String id) throws GerritException {
