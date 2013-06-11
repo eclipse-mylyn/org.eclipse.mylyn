@@ -14,7 +14,6 @@ package org.eclipse.mylyn.reviews.ui.spi.factories;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.reviews.core.spi.remote.review.IReviewRemoteFactoryProvider;
 import org.eclipse.mylyn.reviews.ui.spi.editor.AbstractReviewSection;
@@ -32,6 +31,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
  * Support UI context and implementation neutral creation of controls for a single component that modifies the state of
@@ -85,9 +85,11 @@ public abstract class AbstractUiFactory<EObjectType> implements IUiContext {
 	}
 
 	protected void handleExecutionStateError() {
-		String message = NLS.bind("Cannot {0}", StringUtils.removeEnd(name, "..."));
-		ErrorDialog.openError(getShell(), "Refresh Required", message, new Status(IStatus.ERROR,
-				ReviewsUiPlugin.PLUGIN_ID, "(Refresh editor to update button status.)"));
+		String message = NLS.bind(
+				"Cannot {0}. Try re-synchronizing the review task. If that fails, there may be a problem with your repository connection.",
+				StringUtils.removeEnd(name, "..."));
+		StatusManager.getManager().handle(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, message),
+				StatusManager.SHOW | StatusManager.LOG);
 	}
 
 	protected abstract boolean isExecutableStateKnown();

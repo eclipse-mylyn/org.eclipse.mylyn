@@ -31,12 +31,18 @@ public class OpenFileUiFactory extends AbstractPatchSetUiFactory {
 	private final IFileItem item;
 
 	public OpenFileUiFactory(IUiContext context, IReviewItemSet set, IFileItem item) {
-		super("Open", context, set);
+		super("Open File", context, set);
 		this.item = item;
 	}
 
 	@Override
 	public void execute() {
+		//(The action is always available so isExecutable is never called from framework.)
+		if (!isExecutable()) {
+			handleExecutionStateError();
+			return;
+		}
+
 		if (item.getBase() == null || item.getTarget() == null) {
 			getEditor().setMessage("The selected file is not available, yet", IMessageProvider.WARNING);
 			return;
@@ -49,6 +55,6 @@ public class OpenFileUiFactory extends AbstractPatchSetUiFactory {
 
 	@Override
 	public boolean isExecutable() {
-		return true;
+		return getChange() != null;
 	}
 }
