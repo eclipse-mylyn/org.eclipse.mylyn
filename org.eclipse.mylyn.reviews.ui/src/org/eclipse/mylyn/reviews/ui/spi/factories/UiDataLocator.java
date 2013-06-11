@@ -23,7 +23,8 @@ import org.eclipse.mylyn.reviews.core.spi.remote.AbstractDataLocator;
  */
 public class UiDataLocator extends AbstractDataLocator {
 
-	private static final String MODEL_DIR = "model"; //$NON-NLS-1$
+	//EMF XML files
+	private static final String MODEL_DIR = "reviews_xml"; //$NON-NLS-1$
 
 	@SuppressWarnings("restriction")
 	@Override

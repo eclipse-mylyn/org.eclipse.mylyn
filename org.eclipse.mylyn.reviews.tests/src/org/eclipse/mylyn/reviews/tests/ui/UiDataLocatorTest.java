@@ -32,7 +32,7 @@ public class UiDataLocatorTest extends TestCase {
 	public void testGetLocation() {
 		UiDataLocator locator = new UiDataLocator();
 		String workSpaceRoot = ResourcesPlugin.getWorkspace().getRoot().getLocation().toString();
-		String expectedPath = workSpaceRoot + "/.metadata/.mylyn/model/Class/MyFile.txt";
+		String expectedPath = workSpaceRoot + "/.metadata/.mylyn/reviews_xml/Class/MyFile.txt";
 		String systemPath = expectedPath.replaceAll("/", File.separator); //ensure platform neutrality
 		IPath fileLocation = locator.getFilePath("", "Class", "MyFile", "txt");
 		assertThat(fileLocation.toPortableString(), is(expectedPath));
