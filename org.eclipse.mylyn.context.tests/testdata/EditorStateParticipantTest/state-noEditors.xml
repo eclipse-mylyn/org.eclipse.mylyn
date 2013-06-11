@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<State>
+<org.eclipse.mylyn.context.ui.editors>
+<MonitoredWindowOpenEditors class="org.eclipse.ui.internal.WorkbenchWindow" isActive="true" isLaunching="true" number="0">
+</MonitoredWindowOpenEditors>
+</org.eclipse.mylyn.context.ui.editors>
+</State>

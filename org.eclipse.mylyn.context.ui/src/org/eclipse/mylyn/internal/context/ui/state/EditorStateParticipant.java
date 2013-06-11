@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2012 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -358,6 +358,9 @@ public class EditorStateParticipant extends ContextStateParticipant {
 
 		try {
 			IMemento[] editorMementos = memento.getChildren(IWorkbenchConstants.TAG_EDITOR);
+			if (editorMementos.length == 0) {
+				return;
+			}
 			Set<IMemento> editorMementoSet = new LinkedHashSet<IMemento>();
 			editorMementoSet.addAll(Arrays.asList(editorMementos));
 

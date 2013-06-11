@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Tasktop Technologies and others.
+ * Copyright (c) 2012, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintStream;
 import java.util.Arrays;
 
 import junit.framework.TestCase;
@@ -184,6 +185,27 @@ public class EditorStateParticipantTest extends TestCase {
 		assertEquals(toString(memento), toString(memento2));
 	}
 
+	public void testNoEditorsState() throws Exception {
+		createFiles();
+
+		PrintStream prevErr = System.err;
+		try {
+			IsEmptyOutputStream os = new IsEmptyOutputStream();
+			System.setErr(new PrintStream(os));
+
+			XMLMemento memento = XMLMemento.createReadRoot(new InputStreamReader(CommonTestUtil.getResource(this,
+					"testdata/EditorStateParticipantTest/state-noEditors.xml")));
+			IInteractionContext context = new InteractionContext("id", new InteractionContextScaling());
+			ContextState state = new ContextState(context, context.getHandleIdentifier(), memento);
+			participant.restoreState(state);
+			assertTrue(os.isEmpty());
+			assertEquals(0, page.getEditorReferences().length);
+			assertNotNull(memento.getChild(EditorStateParticipant.MEMENTO_EDITORS));
+		} finally {
+			System.setErr(prevErr);
+		}
+	}
+
 	private String toString(XMLMemento memento) throws IOException {
 		File workspace = ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile();
 		OutputStream out = new ByteArrayOutputStream();
@@ -231,6 +253,20 @@ public class EditorStateParticipantTest extends TestCase {
 
 		fileB = project.getProject().getFile("b.txt");
 		fileB.create(new ByteArrayInputStream("abc".getBytes()), false, null);
+	}
+
+	private static class IsEmptyOutputStream extends OutputStream {
+
+		private boolean empty = true;
+
+		@Override
+		public void write(int b) throws IOException {
+			empty = false;
+		}
+
+		public boolean isEmpty() {
+			return empty;
+		}
 	}
 
 }
