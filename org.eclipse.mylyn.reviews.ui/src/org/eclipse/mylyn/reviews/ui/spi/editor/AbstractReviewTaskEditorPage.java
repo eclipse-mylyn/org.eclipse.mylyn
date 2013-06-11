@@ -11,19 +11,27 @@
 
 package org.eclipse.mylyn.reviews.ui.spi.editor;
 
+import java.io.File;
 import java.util.Date;
 
+import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
+import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
 import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.spi.ReviewsConnector;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfObserver;
 import org.eclipse.mylyn.reviews.core.spi.remote.review.IReviewRemoteFactoryProvider;
+import org.eclipse.mylyn.reviews.spi.edit.remote.AbstractRemoteEditFactoryProvider;
 import org.eclipse.mylyn.reviews.spi.edit.remote.review.ReviewsRemoteEditFactoryProvider;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 
 /**
  * Marks task editor as providing Review model for extending classes.
@@ -43,10 +51,33 @@ public abstract class AbstractReviewTaskEditorPage extends AbstractTaskEditorPag
 	@Override
 	public void init(final IEditorSite site, final IEditorInput input) {
 		AbstractReviewTaskEditorPage.super.init(site, input);
+
+		checkIfModelIsCached();
+
 		reviewConsumer = getFactoryProvider().getReviewFactory().getConsumerForLocalKey(getFactoryProvider().getRoot(),
 				getTask().getTaskId());
 		reviewConsumer.addObserver(reviewObserver);
 		reviewConsumer.open();
+	}
+
+	private void checkIfModelIsCached() {
+		AbstractRemoteEditFactoryProvider factoryProvider = (AbstractRemoteEditFactoryProvider) getFactoryProvider();
+		String reviewPath = factoryProvider.getDataLocator()
+				.getFilePath(factoryProvider.getContainerSegment(), "Review", getTask().getTaskId(), "reviews")
+				.toOSString();
+		if (!new File(reviewPath).exists()) {
+			getTaskEditor().setMessage(Messages.AbstractTaskEditorPage_Synchronize_to_retrieve_task_data,
+					IMessageProvider.WARNING, new HyperlinkAdapter() {
+						@Override
+						public void linkActivated(HyperlinkEvent e) {
+							SynchronizeEditorAction synchronizeEditorAction = new SynchronizeEditorAction();
+							synchronizeEditorAction.selectionChanged(new StructuredSelection(getTaskEditor()));
+							if (synchronizeEditorAction != null) {
+								synchronizeEditorAction.run();
+							}
+						}
+					});
+		}
 	}
 
 	public IReviewRemoteFactoryProvider getFactoryProvider() {
