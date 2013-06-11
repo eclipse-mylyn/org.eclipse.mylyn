@@ -28,9 +28,10 @@ import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.commons.ui.CommonImages;
+import org.eclipse.mylyn.commons.workbench.CommonImageManger;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsImages;
-import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.reviews.core.model.IComment;
+import org.eclipse.mylyn.reviews.core.model.ICommentContainer;
 import org.eclipse.mylyn.reviews.core.model.IDated;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IFileVersion;
@@ -39,8 +40,6 @@ import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
-import org.eclipse.mylyn.reviews.core.model.IComment;
-import org.eclipse.mylyn.reviews.core.model.ICommentContainer;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.osgi.util.NLS;
@@ -104,10 +103,12 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 
 	public static final TableColumnProvider ITEMS_COLUMN = new TableColumnProvider("Item", 80, 800, true) {
 
+		CommonImageManger imageManager = new CommonImageManger();
+
 		@Override
 		public Image getImage(Object element) {
 			if (element instanceof IReview) {
-				return ReviewsUiPlugin.getDefault().getImageManager().getFileImage("review");
+				return imageManager.getFileImage("review"); //$NON-NLS-1$
 			}
 			if (element instanceof IReviewItemSet) {
 				return CommonImages.getImage(ReviewsImages.CHANGE_LOG);
@@ -115,7 +116,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 			}
 			if (element instanceof IReviewItem) {
 				IReviewItem item = (IReviewItem) element;
-				Image image = ReviewsUiPlugin.getDefault().getImageManager().getFileImage(item.getName());
+				Image image = imageManager.getFileImage(item.getName());
 				if (element instanceof IFileItem) {
 					ImageDescriptor baseImage = ImageDescriptor.createFromImage(image);
 					IFileItem fileItem = (IFileItem) element;

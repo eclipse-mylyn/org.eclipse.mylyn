@@ -10,20 +10,17 @@
  *********************************************************************/
 package org.eclipse.mylyn.internal.reviews.ui;
 
-import org.eclipse.mylyn.commons.workbench.CommonImageManger;
-import org.eclipse.mylyn.reviews.core.spi.remote.AbstractRemoteService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+/**
+ * @author Steffen Pingel
+ */
 public class ReviewsUiPlugin extends AbstractUIPlugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylyn.reviews.ui"; //$NON-NLS-1$
 
 	private static ReviewsUiPlugin plugin;
-
-	CommonImageManger imageManager;
-
-	AbstractRemoteService service;
 
 	public ReviewsUiPlugin() {
 	}
@@ -32,21 +29,16 @@ public class ReviewsUiPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		imageManager = new CommonImageManger();
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
-		imageManager.dispose();
 	}
 
 	public static ReviewsUiPlugin getDefault() {
 		return plugin;
 	}
 
-	public CommonImageManger getImageManager() {
-		return imageManager;
-	}
 }
