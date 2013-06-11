@@ -13,10 +13,7 @@
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -28,10 +25,8 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
 import org.eclipse.mylyn.internal.gerrit.core.remote.GerritRemoteFactoryProvider;
-import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IReview;
-import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfObserver;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
@@ -70,8 +65,6 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 
 	private final GerritConnector connector;
 
-	private boolean retrievePatchSets;
-
 	public GerritTaskDataHandler(GerritConnector connector) {
 		this.connector = connector;
 	}
@@ -100,6 +93,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 	 */
 	public TaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
+		ReviewObserver reviewObserver = new ReviewObserver();
 		try {
 			GerritClient client = connector.getClient(repository);
 			client.refreshConfigOnce(monitor);
@@ -110,16 +104,20 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 			}
 			TaskData taskData = createTaskData(repository, taskId, monitor);
 
-			ReviewObserver reviewObserver = new ReviewObserver();
 			RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> consumer = updateModelData(
 					repository, taskData, reviewObserver, monitor);
+			if (consumer.getRemoteObject() == null) {
+				throw new CoreException(connector.createErrorStatus(repository,
+						"Couldn't retrieve remote object for task: " + taskId + ". Check remote connection"));
+			}
 			if (!monitor.isCanceled()) {
 				updateTaskData(repository, taskData, consumer.getRemoteObject(), !anonymous, id);
 			}
-			reviewObserver.dispose();
 			return taskData;
 		} catch (GerritException e) {
-			throw connector.toCoreException(repository, "Problem retrieving task data", e);
+			throw connector.toCoreException(repository, "Problem retrieving task data for ", e);
+		} finally {
+			reviewObserver.dispose();
 		}
 	}
 
@@ -137,8 +135,6 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 			}
 			consumer.addObserver(reviewObserver);
 			consumer.open();
-			Date priorModificationData = consumer.getModelObject() != null ? consumer.getModelObject()
-					.getModificationDate() : null;
 			if (monitor.isCanceled()) {
 				return consumer;
 			}
@@ -146,67 +142,15 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 			consumer.retrieve(true);
 			consumer.setAsynchronous(true);
 
-			long startTime = System.currentTimeMillis();
 			while (!reviewObserver.complete && !monitor.isCanceled()) {
-//				if (System.currentTimeMillis() > startTime + GerritConnector.GERRIT_COLLECTION_TIMEOUT) {
-//					reviewObserver.dispose();
-//					throw new CoreException(new Status(IStatus.WARNING, GerritCorePlugin.PLUGIN_ID,
-//							"Task retrieval taking too long. Connection issue?"));
-//				}
 				try {
 					Thread.sleep(50);
 				} catch (InterruptedException e) {
-//					if (monitor.isCanceled()) {
-//						break; //We assume that this is what the interrupt was about
-//					} else {
 					reviewObserver.dispose();
 					Thread.currentThread().interrupt();
-//					}
 				}
 			}
 
-			if (consumer.getModelObject().getModificationDate() != null
-					&& !consumer.getModelObject().getModificationDate().equals(priorModificationData)) {
-				Collection<ReviewItemSetClient> setClients = new ArrayList<ReviewItemSetClient>();
-				if (reviewObserver.result.isOK() && retrievePatchSets) {
-					int index = 0;
-					for (IReviewItemSet set : consumer.getModelObject().getSets()) {
-						//Retrieve the last patch set plus any patch sets the user has already seen.
-						if (set.getItems() != null
-								&& (set.getItems().size() > 0 || index == consumer.getModelObject().getSets().size() - 1)) {
-							RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, String, ?, ?, Long> contentConsumer = factoryProvider.getReviewItemSetContentFactory()
-									.getConsumerForModel(set, set.getItems());
-							ReviewItemSetClient setClient = new ReviewItemSetClient();
-							contentConsumer.addObserver(setClient);
-							setClients.add(setClient);
-							contentConsumer.retrieve(true);
-						}
-						index++;
-					}
-					boolean done = false;
-					while (!done && !monitor.isCanceled()) {
-						int patchSetsUpdated = 0;
-						for (ReviewItemSetClient setClient : setClients) {
-							patchSetsUpdated += setClient.complete ? 1 : 0;
-						}
-						done = patchSetsUpdated == setClients.size();
-						if (!done) {
-							try {
-								Thread.sleep(50);
-							} catch (InterruptedException e) {
-								if (monitor.isCanceled()) {
-									break;
-								} else {
-									Thread.currentThread().interrupt();
-								}
-							}
-						}
-					}
-				}
-				for (ReviewItemSetClient setClient : setClients) {
-					setClient.dispose();
-				}
-			}
 			consumer.save();
 			if (!reviewObserver.result.isOK()) {
 				if (reviewObserver.result.getException() instanceof CoreException) {
@@ -216,23 +160,6 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 			}
 		}
 		return consumer;
-	}
-
-	private class ReviewItemSetClient extends RemoteEmfObserver<IReviewItemSet, List<IFileItem>, String, Long> {
-		boolean complete;
-
-		boolean failed;
-
-		@Override
-		public void updated(IReviewItemSet parentObject, List<IFileItem> modelObject, boolean modified) {
-			complete = true;
-		}
-
-		@Override
-		public void failed(IReviewItemSet parentObject, List<IFileItem> modelObject, IStatus status) {
-			complete = true;
-			failed = true;
-		}
 	}
 
 	private class ReviewObserver extends RemoteEmfObserver<IRepository, IReview, String, Date> {
