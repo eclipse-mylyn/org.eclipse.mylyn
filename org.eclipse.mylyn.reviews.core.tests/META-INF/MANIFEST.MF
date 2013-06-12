@@ -13,6 +13,9 @@ Require-Bundle: org.junit;bundle-version="4.5.0",
  org.eclipse.equinox.security,
  org.eclipse.mylyn.commons.net,
  org.apache.commons.logging,
+ org.apache.commons.io,
  org.eclipse.core.net
 Export-Package: 
- org.eclipse.mylyn.reviews.core.model;x-internal:=true
+ org.eclipse.mylyn.reviews.core.model;x-internal:=true,
+ org.eclipse.mylyn.reviews.core.spi.remote;x-internal:=true,
+ org.eclipse.mylyn.reviews.core.spi.remote.emf;x-internal:=true

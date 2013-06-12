@@ -11,8 +11,7 @@
 package org.eclipse.mylyn.reviews.internal.core.model;
 
 import org.eclipse.emf.common.util.URI;
-
-import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
+import org.eclipse.emf.ecore.resource.impl.BinaryResourceImpl;
 
 /**
  * <!-- begin-user-doc --> The <b>Resource </b> associated with the package. <!-- end-user-doc -->
@@ -20,7 +19,7 @@ import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
  * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsResourceFactory
  * @generated
  */
-public class ReviewsResource extends XMLResourceImpl {
+public class ReviewsResource extends BinaryResourceImpl {
 	/**
 	 * Creates an instance of the resource. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 

@@ -20,7 +20,8 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.mylyn.reviews.ui.spi.factories.UiDataLocator;
+import org.eclipse.mylyn.reviews.core.spi.remote.ReviewsDataLocator;
+import org.eclipse.mylyn.reviews.ui.spi.factories.ReviewsUiDataLocator;
 import org.junit.Test;
 
 /**
@@ -30,9 +31,9 @@ public class UiDataLocatorTest extends TestCase {
 
 	@Test
 	public void testGetLocation() {
-		UiDataLocator locator = new UiDataLocator();
+		ReviewsDataLocator locator = new ReviewsUiDataLocator();
 		String workSpaceRoot = ResourcesPlugin.getWorkspace().getRoot().getLocation().toString();
-		String expectedPath = workSpaceRoot + "/.metadata/.mylyn/reviews_xml/Class/MyFile.txt";
+		String expectedPath = workSpaceRoot + "/.metadata/.mylyn/reviews_bin/Class/MyFile.txt";
 		String systemPath = expectedPath.replaceAll("/", File.separator); //ensure platform neutrality
 		IPath fileLocation = locator.getFilePath("", "Class", "MyFile", "txt");
 		assertThat(fileLocation.toPortableString(), is(expectedPath));

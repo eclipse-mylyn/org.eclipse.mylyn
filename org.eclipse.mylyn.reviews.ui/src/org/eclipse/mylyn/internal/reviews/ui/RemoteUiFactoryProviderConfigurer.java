@@ -15,7 +15,7 @@ import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.spi.remote.RemoteFactoryProviderConfigurer;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.AbstractRemoteEmfFactoryProvider;
-import org.eclipse.mylyn.reviews.ui.spi.factories.UiDataLocator;
+import org.eclipse.mylyn.reviews.ui.spi.factories.ReviewsUiDataLocator;
 import org.eclipse.mylyn.reviews.ui.spi.remote.RemoteUiService;
 
 public class RemoteUiFactoryProviderConfigurer extends RemoteFactoryProviderConfigurer {
@@ -24,8 +24,8 @@ public class RemoteUiFactoryProviderConfigurer extends RemoteFactoryProviderConf
 		if (!(provider.getService() instanceof RemoteUiService)) {
 			provider.setService(new RemoteUiService());
 		}
-		if (!(provider.getDataLocator() instanceof UiDataLocator)) {
-			provider.setDataLocator(new UiDataLocator());
+		if (!(provider.getDataLocator() instanceof ReviewsUiDataLocator)) {
+			provider.setDataLocator(new ReviewsUiDataLocator());
 		}
 		provider.open();
 	}

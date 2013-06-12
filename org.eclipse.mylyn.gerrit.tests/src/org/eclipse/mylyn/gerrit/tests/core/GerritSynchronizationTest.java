@@ -190,7 +190,7 @@ public class GerritSynchronizationTest extends TestCase {
 		ITask task = assertTaskListHasOneTask();
 		assertEquals(SynchronizationState.INCOMING_NEW, task.getSynchronizationState());
 
-		String filePath = client.getFactoryProvider().getDataLocator().getSystemPath() + File.separator
+		String filePath = client.getFactoryProvider().getDataLocator().getModelPath() + File.separator
 				+ "org.eclipse.mylyn.gerrit-" + ReviewsRemoteEditFactoryProvider.asFileName(repository.getUrl())
 				+ File.separator + "Review" + File.separator + task.getTaskId() + ".reviews";
 		File file = new File(filePath);

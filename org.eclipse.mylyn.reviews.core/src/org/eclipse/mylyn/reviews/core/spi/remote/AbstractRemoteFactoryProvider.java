@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.reviews.core.spi.remote;
 
-
 /**
  * Support generic implementations of a set of remote API factories. In the base case, this just encapsulates a service.
  * 
@@ -39,8 +38,9 @@ public abstract class AbstractRemoteFactoryProvider {
 		this.service = service;
 	}
 
-	public void setDataLocator(AbstractDataLocator dataLocation) {
-		this.dataLocator = dataLocation;
+	public void setDataLocator(AbstractDataLocator dataLocator) {
+		this.dataLocator = dataLocator;
+		dataLocator.migrate();
 	}
 
 	public AbstractDataLocator getDataLocator() {

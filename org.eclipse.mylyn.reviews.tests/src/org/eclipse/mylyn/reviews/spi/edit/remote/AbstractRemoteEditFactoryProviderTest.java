@@ -72,19 +72,21 @@ public class AbstractRemoteEditFactoryProviderTest extends TestCase {
 	}
 
 	AbstractDataLocator testDataLocator = new AbstractDataLocator() {
+		@Override
+		protected IPath getSystemDataPath() {
+			return new Path(FileUtils.getTempDirectory().getAbsolutePath());
+		}
 
 		@Override
-		public IPath getSystemPath() {
-			return new Path(FileUtils.getTempDirectory().getAbsolutePath() + File.separator
-					+ "org.eclipse.mylyn.reviews.tests" + File.separator + "RemoteEditFactoryTest");
+		protected IPath getLocatorDataSegment() {
+			return new Path("org.eclipse.mylyn.reviews.tests").append("RemoteEditFactoryTest");
 		}
 	};
 
 	@Override
 	@Before
 	protected void setUp() throws Exception {
-		System.err.println("Sending test output to: " + testDataLocator.getSystemPath());
-		File rootDir = new File(testDataLocator.getSystemPath().toPortableString());
+		File rootDir = new File(testDataLocator.getModelPath().toPortableString());
 		FileUtils.deleteDirectory(rootDir);
 	}
 
@@ -92,7 +94,7 @@ public class AbstractRemoteEditFactoryProviderTest extends TestCase {
 	public void testCreateRoot() {
 		TestEditFactoryProvider provider = new TestEditFactoryProvider();
 		provider.setDataLocator(testDataLocator);
-		String filePath = testDataLocator.getSystemPath() + File.separator + "Container" + File.separator + "EPackage"
+		String filePath = testDataLocator.getModelPath() + File.separator + "Container" + File.separator + "EPackage"
 				+ File.separator + "EPackage.ecore";
 		File file = new File(filePath);
 		assertThat("File should not exist at: " + filePath, file.exists(), is(false));
@@ -117,9 +119,9 @@ public class AbstractRemoteEditFactoryProviderTest extends TestCase {
 	public void testBadFile() throws Exception {
 		TestEditFactoryProvider provider = new TestEditFactoryProvider();
 		provider.setDataLocator(testDataLocator);
-		String filePath = testDataLocator.getSystemPath() + File.separator + "Container" + File.separator + "EPackage"
+		String filePath = testDataLocator.getModelPath() + File.separator + "Container" + File.separator + "EPackage"
 				+ File.separator + "EPackage.ecore";
-		File parentDir = new File(testDataLocator.getSystemPath() + File.separator + "Container" + File.separator
+		File parentDir = new File(testDataLocator.getModelPath() + File.separator + "Container" + File.separator
 				+ "EPackage");
 		parentDir.mkdirs();
 		File file = new File(filePath);
@@ -158,7 +160,7 @@ public class AbstractRemoteEditFactoryProviderTest extends TestCase {
 		TestEditFactoryProvider provider = new TestEditFactoryProvider();
 		provider.setDataLocator(testDataLocator);
 		provider.setService(new JobRemoteService());
-		String filePath = testDataLocator.getSystemPath() + File.separator + "Container" + File.separator + "EClass"
+		String filePath = testDataLocator.getModelPath() + File.separator + "Container" + File.separator + "EClass"
 				+ File.separator + "123.ecore";
 		File file = new File(filePath);
 		assertThat("File should not exist at: " + filePath, file.exists(), is(false));
@@ -185,7 +187,7 @@ public class AbstractRemoteEditFactoryProviderTest extends TestCase {
 		TestEditFactoryProvider provider = new TestEditFactoryProvider();
 		provider.setDataLocator(testDataLocator);
 		provider.setService(new JobRemoteService());
-		String filePath = testDataLocator.getSystemPath() + File.separator + "Container" + File.separator + "EClass"
+		String filePath = testDataLocator.getModelPath() + File.separator + "Container" + File.separator + "EClass"
 				+ File.separator + "123.ecore";
 		File file = new File(filePath);
 		assertThat("File should not exist at: " + filePath, file.exists(), is(false));
@@ -212,9 +214,9 @@ public class AbstractRemoteEditFactoryProviderTest extends TestCase {
 	public void testDeleteCache() throws Exception {
 		TestEditFactoryProvider provider = new TestEditFactoryProvider();
 		provider.setDataLocator(testDataLocator);
-		File testFile = new File(testDataLocator.getSystemPath() + File.separator + "Blah");
+		File testFile = new File(testDataLocator.getModelPath() + File.separator + "Blah");
 		testFile.mkdirs();
-		File root = new File(testDataLocator.getSystemPath().toOSString());
+		File root = new File(testDataLocator.getModelPath().toOSString());
 		assertThat(root.exists(), is(true));
 		provider.deleteCache();
 		assertThat(root.exists(), is(false));

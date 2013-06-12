@@ -11,17 +11,14 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.remote;
 
-import java.io.File;
-
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.mylyn.reviews.core.spi.remote.AbstractDataLocator;
+import org.eclipse.mylyn.reviews.core.spi.remote.ReviewsDataLocator;
 
-public final class TestDataLocator extends AbstractDataLocator {
+public final class TestDataLocator extends ReviewsDataLocator {
 	@Override
-	public IPath getSystemPath() {
-		return new Path(FileUtils.getTempDirectory().getAbsolutePath() + File.separator
-				+ "org.eclipse.mylyn.gerrit.tests");
+	public IPath getSystemDataPath() {
+		return new Path(FileUtils.getTempDirectory().getAbsolutePath()).append("gerrit_tests");
 	}
 }

@@ -32,7 +32,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class MylynDataLocatorTest extends TestCase {
+public class GerritDataLocatorTest extends TestCase {
 
 	private ReviewHarness reviewHarness;
 
@@ -43,9 +43,11 @@ public class MylynDataLocatorTest extends TestCase {
 	@Override
 	@Before
 	public void setUp() throws Exception {
-		System.err.println("*** Setup");
-		File rootDir = new File(locator.getSystemPath().toPortableString());
-		FileUtils.deleteDirectory(rootDir);
+		File rootDir = new File(locator.getSystemDataPath().toOSString());
+		if (rootDir.exists()) {
+			FileUtils.forceDelete(rootDir);
+		}
+		FileUtils.forceMkdir(rootDir);
 		reviewHarness = new ReviewHarness(System.currentTimeMillis() + "");
 		provider = new GerritRemoteFactoryProvider(reviewHarness.client);
 		provider.setDataLocator(locator);
@@ -55,18 +57,15 @@ public class MylynDataLocatorTest extends TestCase {
 	@Override
 	@After
 	public void tearDown() throws Exception {
-		System.err.println("*** tear down");
 		reviewHarness.dispose();
 	}
 
 	@Test
 	public void testCreateRoot() throws Exception {
-		System.err.println("*** Create Root");
-		String filePath = FileUtils.getTempDirectory().getAbsolutePath() + File.separator
-				+ "org.eclipse.mylyn.gerrit.tests" + File.separator + "org.eclipse.mylyn.gerrit-"
+		String testPath = FileUtils.getTempDirectory().getAbsolutePath() + File.separator + "gerrit_tests";
+		String filePath = testPath + File.separator + "reviews_bin" + File.separator + "org.eclipse.mylyn.gerrit-"
 				+ ReviewsRemoteEditFactoryProvider.asFileName(reviewHarness.repository.getUrl()) + File.separator
 				+ "Repository" + File.separator + "Repository.reviews";
-		System.err.println(filePath);
 		File file = new File(filePath);
 		assertThat("File should not exist at: " + filePath, file.exists(), is(false));
 		provider.open();
@@ -86,9 +85,32 @@ public class MylynDataLocatorTest extends TestCase {
 	}
 
 	@Test
+	public void testMigrate() throws Exception {
+		String testPath = FileUtils.getTempDirectory().getAbsolutePath() + File.separator + "gerrit_tests";
+		File binDir = new File(testPath + File.separator + "reviews_bin");
+		File xmlDir = new File(testPath + File.separator + "reviews_xml");
+		FileUtils.forceMkdir(xmlDir);
+		File xmlFile = new File(testPath + File.separator + "reviews_xml" + File.separator + "SomeFile.txt");
+		xmlFile.createNewFile();
+		File modelDir = new File(testPath + File.separator + "model");
+		FileUtils.forceMkdir(modelDir);
+		assertThat(binDir.exists(), is(false));
+		assertThat(xmlDir.exists(), is(true));
+		assertThat(xmlFile.exists(), is(true));
+		assertThat(modelDir.exists(), is(true));
+		provider.setDataLocator(new TestDataLocator());
+		provider.open();
+		assertThat(binDir.exists(), is(true));
+		assertThat(xmlDir.exists(), is(false));
+		assertThat(xmlFile.exists(), is(false));
+		assertThat(modelDir.exists(), is(false));
+		provider.close();
+	}
+
+	@Test
 	public void testCreateChild() throws Exception {
-		System.err.println("*** Create Child");
-		String filePath = locator.getSystemPath() + File.separator + "org.eclipse.mylyn.gerrit-"
+		String testPath = FileUtils.getTempDirectory().getAbsolutePath() + File.separator + "gerrit_tests";
+		String filePath = testPath + File.separator + "reviews_bin" + File.separator + "org.eclipse.mylyn.gerrit-"
 				+ ReviewsRemoteEditFactoryProvider.asFileName(reviewHarness.repository.getUrl()) + File.separator
 				+ "Review" + File.separator + "2.reviews";
 		File file = new File(filePath);

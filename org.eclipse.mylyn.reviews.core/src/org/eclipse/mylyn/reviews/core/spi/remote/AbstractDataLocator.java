@@ -17,14 +17,20 @@ import org.eclipse.core.runtime.Path;
 
 public abstract class AbstractDataLocator {
 
-	public abstract IPath getSystemPath();
+	protected abstract IPath getSystemDataPath();
+
+	protected abstract IPath getLocatorDataSegment();
+
+	public final IPath getModelPath() {
+		return getSystemDataPath().append(getLocatorDataSegment());
+	}
 
 	public IPath getFileScalingFragment(String fileName) {
 		return new Path("");
 	}
 
 	public IPath getParentDir(String containerSegment, String typeFragment, String fileName) {
-		IPath path = getSystemPath();
+		IPath path = getModelPath();
 		path = path.append(containerSegment);
 		path = path.append(typeFragment);
 		path = path.append(getFileScalingFragment(fileName));
@@ -51,9 +57,9 @@ public abstract class AbstractDataLocator {
 	}
 
 	public IPath getObjectPathFromFilePath(IPath path) {
-		if (getSystemPath().isPrefixOf(path)) {
+		if (getModelPath().isPrefixOf(path)) {
 			String fragment = parseScalingFragment(path);
-			path = path.makeRelativeTo(getSystemPath());
+			path = path.makeRelativeTo(getModelPath());
 			path = path.removeFileExtension();
 			String cleanPath = StringUtils.remove(path.toPortableString(), fragment);
 			return new Path(cleanPath).makeAbsolute();
@@ -62,8 +68,8 @@ public abstract class AbstractDataLocator {
 	}
 
 	public IPath normalize(IPath path) {
-		if (getSystemPath().isPrefixOf(path)) {
-			path = path.makeRelativeTo(getSystemPath());
+		if (getModelPath().isPrefixOf(path)) {
+			path = path.makeRelativeTo(getModelPath());
 
 			return getFilePath(path.segment(0), path.segment(1), path.removeFileExtension().lastSegment(),
 					path.getFileExtension());
@@ -77,19 +83,22 @@ public abstract class AbstractDataLocator {
 	}
 
 	public String parseContainerSegment(IPath path) {
-		if (getSystemPath().isPrefixOf(path)) {
-			path = path.makeRelativeTo(getSystemPath());
+		if (getModelPath().isPrefixOf(path)) {
+			path = path.makeRelativeTo(getModelPath());
 		}
 		return path.segment(0);
 	}
 
 	public String parseScalingFragment(IPath path) {
-		path = path.makeRelativeTo(getSystemPath());
+		path = path.makeRelativeTo(getModelPath());
 		path = path.removeFirstSegments(2).removeFileExtension().removeLastSegments(1);
 		return path.toString();
 	}
 
 	public String parseFileName(IPath path) {
 		return path.removeFileExtension().lastSegment();
+	}
+
+	public void migrate() {
 	}
 }

@@ -33,7 +33,6 @@ import org.eclipse.emf.ecore.EFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -43,6 +42,7 @@ import org.eclipse.mylyn.reviews.core.spi.remote.AbstractDataLocator;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.AbstractRemoteEmfFactoryProvider;
 import org.eclipse.mylyn.reviews.edit.ReviewsEditPluginActivator;
 import org.eclipse.mylyn.reviews.edit.provider.ReviewsItemProviderAdapterFactory;
+import org.eclipse.mylyn.reviews.internal.core.model.ReviewsResourceFactory;
 
 /**
  * Supports decoupling of Reviews from remote API as well as job management.
@@ -76,6 +76,9 @@ public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObj
 		this.parentReference = parentReference;
 		this.localKeyAttribute = localKeyAttribute;
 		this.childType = childType;
+
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("reviews", new ReviewsResourceFactory());
+
 		ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(
 				ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
 
@@ -84,12 +87,6 @@ public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObj
 
 		BasicCommandStack commandStack = new BasicCommandStack();
 		editingDomain = new AdapterFactoryEditingDomain(adapterFactory, commandStack, new HashMap<Resource, Boolean>());
-
-		Map<Object, Object> loadOptions = editingDomain.getResourceSet().getLoadOptions();
-		loadOptions.put(XMLResource.OPTION_DEFER_ATTACHMENT, Boolean.TRUE);
-		loadOptions.put(XMLResource.OPTION_DEFER_IDREF_RESOLUTION, Boolean.TRUE);
-		loadOptions.put(XMLResource.OPTION_USE_DEPRECATED_METHODS, Boolean.TRUE);
-		loadOptions.put(XMLResource.OPTION_ENCODING, "UTF-8"); //$NON-NLS-1$
 	}
 
 	public EClass getRootClass() {
@@ -99,6 +96,13 @@ public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObj
 	@Override
 	public ERootObject open() {
 		if (rootObject == null) {
+			IPath oldContainerPath = getDataLocator().getModelPath()
+					.append(getContainerSegment())
+					.append(getContainerSegment());
+
+			rootObject = (ERootObject) open(getRootClass(), getRootClass().getName());
+			clearChildren();
+
 			rootObject = (ERootObject) open(getRootClass(), getRootClass().getName());
 			clearChildren();
 		}
@@ -282,9 +286,6 @@ public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObj
 		}
 		final Map<Object, Object> saveOptions = new HashMap<Object, Object>();
 		saveOptions.put(Resource.OPTION_SAVE_ONLY_IF_CHANGED, Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER);
-		if (resource instanceof XMLResource) {
-			saveOptions.put(XMLResource.OPTION_ENCODING, "UTF-8"); //$NON-NLS-1$
-		}
 		try {
 			resource.save(saveOptions);
 		} catch (IOException e) {
@@ -293,12 +294,12 @@ public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObj
 	}
 
 	/**
-	 * WARNING: Recursively deletes directory specified by {@link AbstractDataLocator#getSystemPath()}. Ensure that that
+	 * WARNING: Recursively deletes directory specified by {@link AbstractDataLocator#getModelPath()}. Ensure that that
 	 * directory isn't used by any other resources!
 	 */
 	public void deleteCache() {
 		close();
-		IPath systemPath = getDataLocator().getSystemPath();
+		IPath systemPath = getDataLocator().getModelPath();
 		File file = new File(systemPath.toOSString());
 		if (file.exists()) {
 			try {

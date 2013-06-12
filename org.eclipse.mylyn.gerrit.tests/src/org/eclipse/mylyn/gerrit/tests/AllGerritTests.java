@@ -25,7 +25,7 @@ import org.eclipse.mylyn.gerrit.tests.core.client.OpenIdAuthenticationTest;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.gerrit.tests.ui.GerritUrlHandlerTest;
 import org.eclipse.mylyn.internal.gerrit.core.remote.GerritReviewRemoteFactoryTest;
-import org.eclipse.mylyn.internal.gerrit.core.remote.MylynDataLocatorTest;
+import org.eclipse.mylyn.internal.gerrit.core.remote.GerritDataLocatorTest;
 import org.eclipse.mylyn.internal.gerrit.core.remote.PatchSetRemoteFactoryTest;
 
 /**
@@ -64,7 +64,7 @@ public class AllGerritTests {
 		fixture.add(GerritClientTest.class);
 		fixture.add(GerritConnectorTest.class);
 		fixture.add(GerritSynchronizationTest.class);
-		fixture.add(MylynDataLocatorTest.class);
+		fixture.add(GerritDataLocatorTest.class);
 		fixture.add(GerritReviewRemoteFactoryTest.class);
 		fixture.add(PatchSetRemoteFactoryTest.class);
 		fixture.done();

@@ -202,8 +202,6 @@ public class GerritHttpClient {
 					// login or re-authenticate due to an expired session
 					authenticate(openIdProvider, monitor);
 				} else {
-//					System.err.println("Method failed: " + method.getStatusLine() + "\n"
-//							+ method.getResponseBodyAsString());
 					throw new GerritHttpException(code);
 				}
 			}
@@ -468,9 +466,6 @@ public class GerritHttpClient {
 				AuthScope.ANY_SCHEME);
 		Credentials httpCredentials = WebUtil.getHttpClientCredentials(credentials, WebUtil.getHost(repositoryUrl));
 		httpClient.getState().setCredentials(authScope, httpCredentials);
-//		if (CoreUtil.TEST_MODE) {
-//			System.err.println(" Setting credentials: " + httpCredentials); //$NON-NLS-1$
-//		}
 
 		GetMethod method = new GetMethod(WebUtil.getRequestPath(repositoryUrl + LOGIN_URL));
 		method.setFollowRedirects(false);

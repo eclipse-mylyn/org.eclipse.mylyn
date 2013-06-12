@@ -11,24 +11,20 @@
 
 package org.eclipse.mylyn.reviews.ui.spi.factories;
 
-import java.io.File;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.reviews.core.spi.remote.AbstractDataLocator;
+import org.eclipse.mylyn.reviews.core.spi.remote.ReviewsDataLocator;
 
 /**
  * @author Miles Parker
  */
-public class UiDataLocator extends AbstractDataLocator {
-
-	//EMF XML files
-	private static final String MODEL_DIR = "reviews_xml"; //$NON-NLS-1$
+public class ReviewsUiDataLocator extends ReviewsDataLocator {
 
 	@SuppressWarnings("restriction")
 	@Override
-	public IPath getSystemPath() {
-		return new Path(TasksUiPlugin.getTaskDataManager().getDataPath() + File.separator + MODEL_DIR);
+	public IPath getSystemDataPath() {
+		return new Path(TasksUiPlugin.getTaskDataManager().getDataPath());
 	}
+
 }
