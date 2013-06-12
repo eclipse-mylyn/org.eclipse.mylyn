@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -1335,7 +1336,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	/**
 	 * @since 2.0
 	 */
-	protected abstract void createAdditionalControls(Composite parent);
+	protected abstract void createAdditionalControls(@NonNull Composite parent);
 
 	/**
 	 * @since 2.0
@@ -1668,7 +1669,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	 * @since 2.2
 	 */
 	@Override
-	public void applyTo(TaskRepository repository) {
+	public void applyTo(@NonNull TaskRepository repository) {
 		repository.setVersion(getVersion());
 		if (needsEncoding()) {
 			repository.setCharacterEncoding(getCharacterEncoding());
@@ -2014,7 +2015,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	/**
 	 * @since 2.0
 	 */
-	protected abstract Validator getValidator(TaskRepository repository);
+	protected abstract Validator getValidator(@NonNull TaskRepository repository);
 
 	/**
 	 * Public for testing.
@@ -2025,7 +2026,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 		private IStatus status;
 
-		public abstract void run(IProgressMonitor monitor) throws CoreException;
+		public abstract void run(@NonNull IProgressMonitor monitor) throws CoreException;
 
 		public IStatus getStatus() {
 			return status;
@@ -2043,8 +2044,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	 * @since 3.7
 	 * @see IAdaptable#getAdapter(Class)
 	 */
-	public Object getAdapter(@SuppressWarnings("rawtypes")
-	Class adapter) {
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		if (adapter == IValidatable.class) {
 			return new IValidatable() {
 				public void validate() {
