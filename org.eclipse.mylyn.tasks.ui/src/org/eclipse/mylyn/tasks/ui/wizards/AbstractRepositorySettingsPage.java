@@ -255,6 +255,10 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			connector = TasksUi.getRepositoryManager().getRepositoryConnector(getConnectorKind());
 		}
 		this.connector = connector;
+		if (repository != null && !repository.getConnectorKind().equals(getConnectorKind())) {
+			throw new IllegalArgumentException(
+					"connectorKind of repository does not match connectorKind of page, expected '" + getConnectorKind() + "', got '" + repository.getConnectorKind() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		}
 		setNeedsAnonymousLogin(false);
 		setNeedsEncoding(true);
 		setNeedsTimeZone(true);
