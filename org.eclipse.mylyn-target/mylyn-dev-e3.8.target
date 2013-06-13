@@ -62,6 +62,10 @@
 <unit id="org.eclipse.swtbot.eclipse.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site"/>
 </location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.jdt.annotation" version="1.0.1.v20130111-135246"/>
+<repository location="http://download.eclipse.org/eclipse/updates/3.8/R-3.8.2-201301310800"/>
+</location>
 </locations>
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 <launcherArgs>

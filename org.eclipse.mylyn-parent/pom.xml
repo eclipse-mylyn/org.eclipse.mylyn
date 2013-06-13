@@ -75,6 +75,7 @@
     <alt-platform-repository-url>http://download.eclipse.org/releases/indigo/201202240900/</alt-platform-repository-url>
 
     <orbit-repository-url>http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/</orbit-repository-url>
+    <jdt-annotation-repository-url>http://download.eclipse.org/mylyn/snapshots/jdt-annotation/</jdt-annotation-repository-url>
     <mylyn-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/</mylyn-repository-url>
     <mylyn-builds-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/builds/</mylyn-builds-repository-url>
     <mylyn-commons-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/commons/</mylyn-commons-repository-url>
@@ -300,6 +301,11 @@
           <layout>p2</layout>
           <url>${orbit-repository-url}</url>
         </repository>
+        <repository>
+          <id>eclipse-jdt-annotation</id>
+          <layout>p2</layout>
+          <url>${jdt-annotation-repository-url}</url>
+        </repository>
         <!--
             <repository>
             <id>eclipse-mylyn</id>
@@ -471,8 +477,8 @@
       <id>osx</id>
       <activation>
         <property>
-          <name>java.vendor.url</name>
-          <value>http://www.apple.com/</value>
+          <name>os.name</name>
+          <value>Mac OS X</value>
         </property>
       </activation>
       <properties>
