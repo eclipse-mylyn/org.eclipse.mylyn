@@ -22,10 +22,12 @@ import org.eclipse.mylyn.commons.core.operations.CancellableOperationMonitorThre
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpResponse;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.TestUrl;
 import org.eclipse.mylyn.internal.commons.core.operations.NullOperationMonitor;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -40,6 +42,13 @@ public class CommonHttpResponseTest {
 	private CommonHttpResponse response;
 
 	private final CancellableOperationMonitorThread monitorThread = new CancellableOperationMonitorThread();
+
+	@BeforeClass
+	public static void setUpClass() {
+		if (CommonTestUtil.fixProxyConfiguration()) {
+			CommonTestUtil.dumpSystemInfo(System.err);
+		}
+	}
 
 	@Before
 	public void setUp() throws Exception {

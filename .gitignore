@@ -4,3 +4,4 @@
 /stubs/*/target
 /target
 *.rej
+*~

@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.Writer;
+import java.net.Proxy;
 import java.net.ProxySelector;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -477,13 +478,21 @@ public class CommonTestUtil {
 		return username;
 	}
 
+	/**
+	 * Activates manual proxy configuration in the Ecipse proxy service if system proxy support is not available. This
+	 * sets proxy configuration to Java system properties.
+	 * <p>
+	 * This work around is required on e3.5/gtk.x86_64 where system proxy settings get enabled but the proxy
+	 * configuration is not actually detected resulting in a broken configuration.
+	 * <p>
+	 * Please note that this only works for http proxies. The https proxy system property is ignored.
+	 * 
+	 * @see #isHttpsProxyBroken()
+	 */
 	public static boolean fixProxyConfiguration() {
 		if (Platform.isRunning() && CommonsNetPlugin.getProxyService() != null
 				&& CommonsNetPlugin.getProxyService().isSystemProxiesEnabled()
 				&& !CommonsNetPlugin.getProxyService().hasSystemProxies()) {
-			// XXX e3.5/gtk.x86_64 activate manual proxy configuration which
-			// defaults to Java system properties if system proxy support is
-			// not available
 			System.err.println("Forcing manual proxy configuration");
 			CommonsNetPlugin.getProxyService().setSystemProxiesEnabled(false);
 			CommonsNetPlugin.getProxyService().setProxiesEnabled(true);
@@ -504,9 +513,16 @@ public class CommonTestUtil {
 			info = info.replaceFirst(Pattern.quote("${" + entry.getKey() + "}"), entry.getValue().toString());
 		}
 		out.println(info);
-		out.print("Proxy : " + WebUtil.getProxyForUrl("http://mylyn.eclipse.org") + " (Platform)");
+		out.print("HTTP Proxy : " + WebUtil.getProxyForUrl("http://mylyn.org") + " (Platform)");
 		try {
-			out.print(" / " + ProxySelector.getDefault().select(new URI("http://mylyn.eclipse.org")) + " (Java)");
+			out.print(" / " + ProxySelector.getDefault().select(new URI("http://mylyn.org")) + " (Java)");
+		} catch (URISyntaxException e) {
+			// ignore
+		}
+		out.println();
+		out.print("HTTPS Proxy : " + WebUtil.getProxyForUrl("https://mylyn.org") + " (Platform)");
+		try {
+			out.print(" / " + ProxySelector.getDefault().select(new URI("https://mylyn.org")) + " (Java)");
 		} catch (URISyntaxException e) {
 			// ignore
 		}
@@ -516,6 +532,19 @@ public class CommonTestUtil {
 
 	public static boolean isEclipse4() {
 		return Platform.getBundle("org.eclipse.e4.core.commands") != null;
+	}
+
+	/**
+	 * If Eclipse proxy configuration is set to manual https proxies aren't detected and hence tests that rely on https
+	 * connections may fail. Use this method to detect whether https is configured correctly.
+	 * 
+	 * @see #fixProxyConfiguration()
+	 */
+	public static boolean isHttpsProxyBroken() {
+		// checks if http and https proxy configuration matches
+		Proxy httpProxy = WebUtil.getProxyForUrl("http://mylyn.org");
+		Proxy httpsProxy = WebUtil.getProxyForUrl("https://mylyn.org");
+		return CoreUtil.areEqual(httpProxy, httpsProxy);
 	}
 
 }
