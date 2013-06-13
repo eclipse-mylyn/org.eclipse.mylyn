@@ -122,6 +122,9 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
 	@Override
 	public List<IFileItem> createModel(IReviewItemSet set, PatchSetContent content) {
 		List<IFileItem> items = set.getItems();
+		if (!items.isEmpty()) {
+			return items;
+		}
 		for (Patch patch : content.getTargetDetail().getPatches()) {
 			String targetId = patch.getKey().toString();
 			String sourceFileName = (patch.getSourceFileName() != null)
