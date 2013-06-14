@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.tasks.ui;
 
+import org.eclipse.core.commands.operations.IUndoContext;
+import org.eclipse.core.commands.operations.ObjectUndoContext;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
@@ -75,6 +77,8 @@ public class TasksUiUtil {
 	 */
 	@Deprecated
 	public static final int FLAG_NO_RICH_EDITOR = 1 << 17;
+
+	private static ObjectUndoContext undoContext;
 
 	/**
 	 * @since 3.0
@@ -447,5 +451,12 @@ public class TasksUiUtil {
 		return TasksUiPlugin.getDefault()
 				.getPreferenceStore()
 				.getBoolean(ITasksUiPreferenceConstants.EDITOR_CURRENT_LINE_HIGHLIGHT);
+	}
+
+	public static synchronized IUndoContext getUndoContext() {
+		if (undoContext == null) {
+			undoContext = new ObjectUndoContext(new Object(), "Tasks Context"); //$NON-NLS-1$
+		}
+		return undoContext;
 	}
 }

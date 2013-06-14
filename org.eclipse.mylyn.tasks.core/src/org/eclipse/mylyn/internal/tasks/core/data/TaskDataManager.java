@@ -458,12 +458,13 @@ public class TaskDataManager implements ITaskDataManager {
 	}
 
 	/**
-	 * @param task
+	 * @param itask
 	 *            repository task to mark as read or unread
 	 * @param read
 	 *            true to mark as read, false to mark as unread
+	 * @return true if synchronization state has been changed
 	 */
-	public void setTaskRead(final ITask itask, final boolean read) {
+	public boolean setTaskRead(final ITask itask, final boolean read) {
 		final AbstractTask task = (AbstractTask) itask;
 		Assert.isNotNull(task);
 		final boolean changed[] = new boolean[1];
@@ -504,6 +505,7 @@ public class TaskDataManager implements ITaskDataManager {
 		if (changed[0]) {
 			taskList.notifyElementChanged(task);
 		}
+		return changed[0];
 	}
 
 	void putEdits(final ITask itask, final TaskData editsData) throws CoreException {

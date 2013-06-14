@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.commands;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -67,36 +68,57 @@ public abstract class AbstractTaskHandler extends AbstractHandler {
 			Object[] items = ((IStructuredSelection) selection).toArray();
 			if (singleTask) {
 				if (items.length == 1 && items[0] instanceof ITask) {
-					processed |= process(event, items[0], false);
+					processed |= process(event, items, false);
 				}
 			} else {
-				for (Object item : items) {
-					processed |= process(event, item, recurse);
-				}
+				processed |= process(event, items, recurse);
 			}
 		}
 		return processed;
 	}
 
-	private boolean process(ExecutionEvent event, Object item, boolean recurse) throws ExecutionException {
-		if (!(item instanceof IRepositoryElement)) {
-			item = Platform.getAdapterManager().getAdapter(item, ITask.class);
-		}
-		if (item instanceof ITask) {
-			execute(event, (ITask) item);
-			return true;
-		}
-		if (item instanceof ITaskContainer && (recurse || !(item instanceof AbstractTask))) {
-			execute(event, (ITaskContainer) item);
+	private boolean process(ExecutionEvent event, Object[] items, boolean recurse) throws ExecutionException {
+		ITask[] tasks = collectTasks(items, recurse);
+		if (tasks != null) {
+			execute(event, tasks);
 			return true;
 		}
 		return false;
 	}
 
-	protected void execute(ExecutionEvent event, ITaskContainer item) throws ExecutionException {
+	private ITask[] collectTasks(Object[] items, boolean recurse) {
+		Set<ITask> result = new HashSet<ITask>(items.length);
+		for (int i = 0; i < items.length; i++) {
+			if (!(items[i] instanceof IRepositoryElement)) {
+				items[i] = Platform.getAdapterManager().getAdapter(items[i], ITask.class);
+			}
+		}
+		getChildren(items, recurse, result);
+		getTasks(items, result);
+
+		return result.toArray(new ITask[result.size()]);
+	}
+
+	private void getChildren(Object[] items, boolean recurse, Set<ITask> result) {
+		for (Object item : items) {
+			if (item instanceof ITaskContainer && (recurse || !(item instanceof AbstractTask))) {
+				getFilteredChildren((ITaskContainer) item, result);
+			}
+		}
+	}
+
+	private void getTasks(Object[] items, Set<ITask> result) {
+		for (Object item : items) {
+			if (item instanceof ITask) {
+				result.add((ITask) item);
+			}
+		}
+	}
+
+	protected void getFilteredChildren(ITaskContainer item, Set<ITask> result) {
 		for (ITask task : item.getChildren()) {
 			if (!filterBasedOnActiveTaskList || isVisibleInTaskList(item, task)) {
-				process(event, task, true);
+				result.add(task);
 			}
 		}
 	}
@@ -116,6 +138,12 @@ public abstract class AbstractTaskHandler extends AbstractHandler {
 	}
 
 	protected void execute(ExecutionEvent event, ITask task) throws ExecutionException {
+	}
+
+	protected void execute(ExecutionEvent event, ITask[] tasks) throws ExecutionException {
+		for (ITask task : tasks) {
+			execute(event, task);
+		}
 	}
 
 	public boolean getFilterBasedOnActiveTaskList() {

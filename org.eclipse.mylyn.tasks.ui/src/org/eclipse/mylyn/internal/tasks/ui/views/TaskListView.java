@@ -1022,6 +1022,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		IActionBars bars = getViewSite().getActionBars();
 		bars.setGlobalActionHandler(ActionFactory.DELETE.getId(), actionGroup.getDeleteAction());
 		bars.setGlobalActionHandler(ActionFactory.COPY.getId(), actionGroup.getCopyDetailsAction());
+		bars.setGlobalActionHandler(ActionFactory.UNDO.getId(), actionGroup.getUndoAction());
+		bars.setGlobalActionHandler(ActionFactory.REDO.getId(), actionGroup.getRedoAction());
 	}
 
 	private void applyPresentation(String id) {
