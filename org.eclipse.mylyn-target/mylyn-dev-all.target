@@ -23,11 +23,12 @@
 <unit id="org.eclipse.emf.transaction.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.gef.sdk.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.gmf.runtime.sdk.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.papyrus.sdk.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.uml2.sdk.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.cdt.platform.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.ecf.core.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.ecore.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.ecore.edit.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.ecore.editor.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.common.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.common.ui.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.databinding.feature.group" version="0.0.0"/>
