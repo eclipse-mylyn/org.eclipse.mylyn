@@ -21,6 +21,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -120,14 +122,14 @@ public abstract class AbstractRepositoryConnector {
 	 * @since 2.0
 	 */
 	// TODO move this to ConnectorUi.hasNewTaskWizard()
-	public abstract boolean canCreateNewTask(TaskRepository repository);
+	public abstract boolean canCreateNewTask(@NonNull TaskRepository repository);
 
 	/**
 	 * Returns true, if the connector supports retrieval of tasks based on String keys.
 	 * 
 	 * @since 2.0
 	 */
-	public abstract boolean canCreateTaskFromKey(TaskRepository repository);
+	public abstract boolean canCreateTaskFromKey(@NonNull TaskRepository repository);
 
 	/**
 	 * Returns true, if the connector supports retrieval of task history for <code>task</code>.
@@ -135,7 +137,7 @@ public abstract class AbstractRepositoryConnector {
 	 * @see #getHistory(TaskRepository, ITask, IProgressMonitor)
 	 * @since 3.6
 	 */
-	public boolean canGetTaskHistory(TaskRepository repository, ITask task) {
+	public boolean canGetTaskHistory(@NonNull TaskRepository repository, @NonNull ITask task) {
 		return false;
 	}
 
@@ -146,7 +148,7 @@ public abstract class AbstractRepositoryConnector {
 	 * @see #performQuery(TaskRepository, IRepositoryQuery, TaskDataCollector, ISynchronizationSession,
 	 *      IProgressMonitor)
 	 */
-	public boolean canQuery(TaskRepository repository) {
+	public boolean canQuery(@NonNull TaskRepository repository) {
 		return true;
 	}
 
@@ -156,7 +158,7 @@ public abstract class AbstractRepositoryConnector {
 	 * @since 3.0
 	 * @see #getTaskData(TaskRepository, String, IProgressMonitor)
 	 */
-	public boolean canSynchronizeTask(TaskRepository taskRepository, ITask task) {
+	public boolean canSynchronizeTask(@NonNull TaskRepository taskRepository, @NonNull ITask task) {
 		return true;
 	}
 
@@ -165,7 +167,7 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * @since 3.3
 	 */
-	public boolean canDeleteTask(TaskRepository repository, ITask task) {
+	public boolean canDeleteTask(@NonNull TaskRepository repository, @NonNull ITask task) {
 		return false;
 	}
 
@@ -184,6 +186,7 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * @since 2.0
 	 */
+	@NonNull
 	public abstract String getConnectorKind();
 
 	/**
@@ -191,6 +194,7 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * @since 2.0
 	 */
+	@NonNull
 	public abstract String getLabel();
 
 	/**
@@ -203,7 +207,8 @@ public abstract class AbstractRepositoryConnector {
 	 * @return a task identifier or <code>null</code>, if <code>taskUrl</code> is not recognized
 	 * @see #getTaskData(TaskRepository, String, IProgressMonitor)
 	 */
-	public abstract String getRepositoryUrlFromTaskUrl(String taskUrl);
+	@Nullable
+	public abstract String getRepositoryUrlFromTaskUrl(@NonNull String taskUrl);
 
 	/**
 	 * Returns a short label for the connector, e.g. Bugzilla.
@@ -213,6 +218,7 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * @since 2.3
 	 */
+	@Nullable
 	public String getShortLabel() {
 		String label = getLabel();
 		if (label == null) {
@@ -240,6 +246,7 @@ public abstract class AbstractRepositoryConnector {
 	 * @return the attachment handler, or null, if attachments are not supported
 	 * @since 3.0
 	 */
+	@Nullable
 	public AbstractTaskAttachmentHandler getTaskAttachmentHandler() {
 		return null;
 	}
@@ -258,8 +265,9 @@ public abstract class AbstractRepositoryConnector {
 	 * @see TaskData#isPartial()
 	 * @since 3.0
 	 */
-	public abstract TaskData getTaskData(TaskRepository repository, String taskIdOrKey, IProgressMonitor monitor)
-			throws CoreException;
+	@NonNull
+	public abstract TaskData getTaskData(@NonNull TaskRepository repository, @NonNull String taskIdOrKey,
+			@NonNull IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Returns the task data handler. The method is expected to always return the same instance.
@@ -269,6 +277,7 @@ public abstract class AbstractRepositoryConnector {
 	 * @return the task data handler, or null, task data submission is not supported
 	 * @since 3.0
 	 */
+	@Nullable
 	public AbstractTaskDataHandler getTaskDataHandler() {
 		return null;
 	}
@@ -285,11 +294,13 @@ public abstract class AbstractRepositoryConnector {
 	 * @see #getTaskData(TaskRepository, String, IProgressMonitor)
 	 * @since 2.0
 	 */
-	public abstract String getTaskIdFromTaskUrl(String taskUrl);
+	@Nullable
+	public abstract String getTaskIdFromTaskUrl(@NonNull String taskUrl);
 
 	/**
 	 * Used for referring to the task in the UI.
 	 */
+	@NonNull
 	public String getTaskIdPrefix() {
 		return "task"; //$NON-NLS-1$
 	}
@@ -303,7 +314,8 @@ public abstract class AbstractRepositoryConnector {
 	 * @return null, if the method is not supported; an array of task identifiers otherwise
 	 * @since 2.0
 	 */
-	public String[] getTaskIdsFromComment(TaskRepository repository, String comment) {
+	@Nullable
+	public String[] getTaskIdsFromComment(@NonNull TaskRepository repository, @NonNull String comment) {
 		return null;
 	}
 
@@ -313,6 +325,7 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * @since 3.0
 	 */
+	@NonNull
 	public ITaskMapping getTaskMapping(TaskData taskData) {
 		return new TaskMapper(taskData);
 	}
@@ -328,7 +341,8 @@ public abstract class AbstractRepositoryConnector {
 	 *         supported
 	 * @since 3.0
 	 */
-	public Collection<TaskRelation> getTaskRelations(TaskData taskData) {
+	@Nullable
+	public Collection<TaskRelation> getTaskRelations(@NonNull TaskData taskData) {
 		return null;
 	}
 
@@ -341,7 +355,8 @@ public abstract class AbstractRepositoryConnector {
 	 * @see #getRepositoryUrlFromTaskUrl(String)
 	 * @since 2.0
 	 */
-	public abstract String getTaskUrl(String repositoryUrl, String taskIdOrKey);
+	@Nullable
+	public abstract String getTaskUrl(@NonNull String repositoryUrl, @NonNull String taskIdOrKey);
 
 	/**
 	 * Returns a URL for <code>element</code> that contains authentication information such as a session ID.
@@ -356,7 +371,8 @@ public abstract class AbstractRepositoryConnector {
 	 * @see IRepositoryElement#getUrl()
 	 * @since 3.4
 	 */
-	public URL getAuthenticatedUrl(TaskRepository repository, IRepositoryElement element) {
+	@Nullable
+	public URL getAuthenticatedUrl(@NonNull TaskRepository repository, @NonNull IRepositoryElement element) {
 		return null;
 	}
 
@@ -369,7 +385,8 @@ public abstract class AbstractRepositoryConnector {
 	 * @since 3.0
 	 * @see #updateTaskFromTaskData(TaskRepository, ITask, TaskData)
 	 */
-	public abstract boolean hasTaskChanged(TaskRepository taskRepository, ITask task, TaskData taskData);
+	public abstract boolean hasTaskChanged(@NonNull TaskRepository taskRepository, @NonNull ITask task,
+			@NonNull TaskData taskData);
 
 	/**
 	 * Returns <code>true</code> if the completion state for <code>task</code> is managed locally and not on the
@@ -379,7 +396,7 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * @since 3.0
 	 */
-	public boolean hasLocalCompletionState(TaskRepository repository, ITask task) {
+	public boolean hasLocalCompletionState(@NonNull TaskRepository repository, @NonNull ITask task) {
 		return false;
 	}
 
@@ -390,7 +407,8 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * @since 3.0
 	 */
-	public boolean hasRepositoryDueDate(TaskRepository repository, ITask task, TaskData taskData) {
+	public boolean hasRepositoryDueDate(@NonNull TaskRepository repository, @NonNull ITask task,
+			@NonNull TaskData taskData) {
 		return false;
 	}
 
@@ -402,7 +420,7 @@ public abstract class AbstractRepositoryConnector {
 	 * @return true to indicate that the repository configuration is stale and requires update
 	 * @since 3.0
 	 */
-	public boolean isRepositoryConfigurationStale(TaskRepository repository, IProgressMonitor monitor)
+	public boolean isRepositoryConfigurationStale(@NonNull TaskRepository repository, @NonNull IProgressMonitor monitor)
 			throws CoreException {
 		Date configDate = repository.getConfigurationDate();
 		if (configDate != null) {
@@ -445,8 +463,10 @@ public abstract class AbstractRepositoryConnector {
 	 *             if the query was canceled
 	 * @since 3.0
 	 */
-	public abstract IStatus performQuery(TaskRepository repository, IRepositoryQuery query,
-			TaskDataCollector collector, ISynchronizationSession session, IProgressMonitor monitor);
+	@NonNull
+	public abstract IStatus performQuery(@NonNull TaskRepository repository, @NonNull IRepositoryQuery query,
+			@NonNull TaskDataCollector collector, @Nullable ISynchronizationSession session,
+			@NonNull IProgressMonitor monitor);
 
 	/**
 	 * Delete the task from the server
@@ -455,7 +475,9 @@ public abstract class AbstractRepositoryConnector {
 	 *             if this is not implemented by the connector
 	 * @since 3.3
 	 */
-	public IStatus deleteTask(TaskRepository repository, ITask task, IProgressMonitor monitor) throws CoreException {
+	@Nullable
+	public IStatus deleteTask(@NonNull TaskRepository repository, @NonNull ITask task, @NonNull IProgressMonitor monitor)
+			throws CoreException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -464,7 +486,8 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * @since 3.0
 	 */
-	public void postSynchronization(ISynchronizationSession event, IProgressMonitor monitor) throws CoreException {
+	public void postSynchronization(@NonNull ISynchronizationSession event, @NonNull IProgressMonitor monitor)
+			throws CoreException {
 		try {
 			monitor.beginTask("", 1); //$NON-NLS-1$
 		} finally {
@@ -479,7 +502,8 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * @since 3.0
 	 */
-	public void preSynchronization(ISynchronizationSession event, IProgressMonitor monitor) throws CoreException {
+	public void preSynchronization(@NonNull ISynchronizationSession event, @NonNull IProgressMonitor monitor)
+			throws CoreException {
 		try {
 			monitor.beginTask("", 1); //$NON-NLS-1$
 		} finally {
@@ -497,8 +521,8 @@ public abstract class AbstractRepositoryConnector {
 	 * @since 3.0
 	 * @see #isRepositoryConfigurationStale(TaskRepository, IProgressMonitor)
 	 */
-	public abstract void updateRepositoryConfiguration(TaskRepository taskRepository, IProgressMonitor monitor)
-			throws CoreException;
+	public abstract void updateRepositoryConfiguration(@NonNull TaskRepository taskRepository,
+			@NonNull IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Updates the local repository configuration cache (e.g. products and components). The default implementation
@@ -511,8 +535,8 @@ public abstract class AbstractRepositoryConnector {
 	 * @see #updateRepositoryConfiguration(TaskRepository, IProgressMonitor)
 	 * @since 3.3
 	 */
-	public void updateRepositoryConfiguration(TaskRepository taskRepository, ITask task, IProgressMonitor monitor)
-			throws CoreException {
+	public void updateRepositoryConfiguration(@NonNull TaskRepository taskRepository, @Nullable ITask task,
+			@NonNull IProgressMonitor monitor) throws CoreException {
 		updateRepositoryConfiguration(taskRepository, monitor);
 	}
 
@@ -526,7 +550,8 @@ public abstract class AbstractRepositoryConnector {
 	 * @see TaskMapper#applyTo(ITask)
 	 * @since 3.0
 	 */
-	public abstract void updateTaskFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData);
+	public abstract void updateTaskFromTaskData(@NonNull TaskRepository taskRepository, @NonNull ITask task,
+			@NonNull TaskData taskData);
 
 	/**
 	 * Called when a new task is created, before it is opened in a task editor. Connectors should override this method
@@ -535,7 +560,8 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * @since 3.5
 	 */
-	public void updateNewTaskFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData) {
+	public void updateNewTaskFromTaskData(@NonNull TaskRepository taskRepository, @NonNull ITask task,
+			@NonNull TaskData taskData) {
 	}
 
 	/**
@@ -548,7 +574,7 @@ public abstract class AbstractRepositoryConnector {
 	 *            provides additional details
 	 * @since 3.4
 	 */
-	public void migrateTask(TaskMigrationEvent event) {
+	public void migrateTask(@NonNull TaskMigrationEvent event) {
 	}
 
 	/**
@@ -561,7 +587,7 @@ public abstract class AbstractRepositoryConnector {
 	 * @return true if user using the repository is owner of the task
 	 * @since 3.5
 	 */
-	public boolean isOwnedByUser(TaskRepository repository, ITask task) {
+	public boolean isOwnedByUser(@NonNull TaskRepository repository, @NonNull ITask task) {
 		if (task.getOwner() != null) {
 			return task.getOwner().equals(repository.getUserName());
 		}
@@ -583,8 +609,9 @@ public abstract class AbstractRepositoryConnector {
 	 * @see #canGetHistory(TaskRepository, ITask)
 	 * @since 3.6
 	 */
-	public TaskHistory getTaskHistory(TaskRepository repository, ITask task, IProgressMonitor monitor)
-			throws CoreException {
+	@NonNull
+	public TaskHistory getTaskHistory(@NonNull TaskRepository repository, @NonNull ITask task,
+			@NonNull IProgressMonitor monitor) throws CoreException {
 		throw new UnsupportedOperationException();
 	}
 
