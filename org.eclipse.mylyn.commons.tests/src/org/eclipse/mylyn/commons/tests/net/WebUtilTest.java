@@ -13,6 +13,7 @@ package org.eclipse.mylyn.commons.tests.net;
 
 import java.io.IOException;
 import java.io.InterruptedIOException;
+import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Proxy.Type;
@@ -134,6 +135,8 @@ public class WebUtilTest extends TestCase {
 			fail("Expected OperationCanceledException");
 		} catch (OperationCanceledException expected) {
 			assertTrue(monitor.isCanceled());
+		} catch (ConnectException ignored) {
+			System.err.println("Skipping testConnectCancelStalledConnect() due to blocking firewall");
 		}
 	}
 
@@ -175,6 +178,8 @@ public class WebUtilTest extends TestCase {
 			fail("Expected OperationCanceledException");
 		} catch (OperationCanceledException expected) {
 			assertTrue(monitor.isCanceled());
+		} catch (ConnectException ignored) {
+			System.err.println("Skipping testExecuteCancelStalledConnect() due to blocking firewall");
 		} finally {
 			WebUtil.releaseConnection(method, monitor);
 		}
