@@ -12,6 +12,8 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import java.util.List;
+
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.mylyn.commons.ui.CommonImages;
@@ -238,6 +240,16 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 
 		TaskAttribute dateModified = getTaskData().getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
 		addAttribute(headerComposite, toolkit, dateModified, EditorUtil.HEADER_COLUMN_MARGIN, true, false, true);
+
+		List<TaskAttribute> commentAttributes = getTaskData().getAttributeMapper().getAttributesByType(getTaskData(),
+				TaskAttribute.TYPE_COMMENT);
+		if (!commentAttributes.isEmpty()) {
+			TaskAttribute lastComment = commentAttributes.get(commentAttributes.size() - 1);
+			if (lastComment.getMappedAttribute(TaskAttribute.COMMENT_DATE) != null) {
+				addAttribute(headerComposite, toolkit, lastComment.getMappedAttribute(TaskAttribute.COMMENT_DATE),
+						EditorUtil.HEADER_COLUMN_MARGIN, true, true, true);
+			}
+		}
 	}
 
 	public boolean needsHeader() {
