@@ -60,10 +60,6 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
 	public PatchSetContent pull(IReviewItemSet parentObject, PatchSetContent content, IProgressMonitor monitor)
 			throws CoreException {
 		gerritFactoryProvider.getClient().loadPatchSetContent(content, monitor);
-		//We may be pulling data for a compare patch set, in which case we won't have a related review and won't care about comments.
-		if (parentObject.getReview() == null) {
-			return content;
-		}
 		for (Patch patch : content.getTargetDetail().getPatches()) {
 			PatchScript patchScript = content.getPatchScript(patch.getKey());
 			CommentDetail commentDetail = patchScript.getCommentDetail();
@@ -71,7 +67,7 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
 			comments.addAll(commentDetail.getCommentsA());
 			comments.addAll(commentDetail.getCommentsB());
 			for (PatchLineComment comment : comments) {
-				gerritFactoryProvider.pullUser(parentObject.getReview().getRepository(), patchScript.getCommentDetail()
+				gerritFactoryProvider.pullUser(gerritFactoryProvider.getRoot(), patchScript.getCommentDetail()
 						.getAccounts(), comment.getAuthor(), monitor);
 			}
 		}
@@ -191,10 +187,6 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
 
 	@Override
 	public boolean updateModel(IReviewItemSet set, List<IFileItem> items, PatchSetContent content) {
-		//As in pull phase, we may not have a Review in the case where the patch set content is for a one off compare
-		if (set.getReview() == null) {
-			return false;
-		}
 		boolean changed = false;
 		for (IFileItem item : items) {
 			IFileItem fileItem = item;
@@ -207,7 +199,7 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
 						commentDetail.getAccounts());
 			}
 		}
-		if (changed) {
+		if (changed && set.getReview() != null) {
 			getGerritProvider().save(set.getReview());
 		}
 		return changed;

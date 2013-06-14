@@ -149,14 +149,19 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 	public void execute() {
 		PatchSet basePatch = null;
 		if (baseSet != null) {
-			basePatch = getPatchSetDetail(baseSet).getPatchSet();
+			PatchSetDetail baseSetDetail = getPatchSetDetail(baseSet);
+			if (baseSetDetail == null) {
+				handleExecutionStateError();
+				return;
+			}
+			basePatch = baseSetDetail.getPatchSet();
 		}
-		PatchSetDetail patchSetDetail = getPatchSetDetail(targetSet);
-		if (patchSetDetail == null) {
+		PatchSetDetail targetSetDetail = getPatchSetDetail(targetSet);
+		if (targetSetDetail == null) {
 			handleExecutionStateError();
 			return;
 		}
-		final PatchSetContent content = new PatchSetContent(basePatch, patchSetDetail.getPatchSet());
+		final PatchSetContent content = new PatchSetContent(basePatch, targetSetDetail.getPatchSet());
 		compareSet = IReviewsFactory.INSTANCE.createReviewItemSet();
 		String basePatchSetLabel = content.getBase() != null ? content.getBase().getPatchSetId() + "" : "Base";
 		compareSet.setName(NLS.bind("Compare Patch Set {0} with {1}", content.getTarget().getPatchSetId(),
