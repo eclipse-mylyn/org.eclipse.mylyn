@@ -243,11 +243,15 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 											throw new Exception(NLS.bind(Messages.WikiTextUiPlugin_contentRequired,
 													new Object[] { EXTENSION_POINT_TEMPLATE }));
 										}
+										content = content.replace("\\t", "\t"); //$NON-NLS-1$//$NON-NLS-2$
 										content = content.replace("\\r\\n", Text.DELIMITER).replace("\\r", //$NON-NLS-1$ //$NON-NLS-2$
 												Text.DELIMITER).replace("\\n", Text.DELIMITER).replace("\\\\", "\\"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 										if (content.endsWith("$") //$NON-NLS-1$
 												&& !(content.endsWith("\\$") || content.endsWith("$$"))) { //$NON-NLS-1$ //$NON-NLS-2$
 											content = content.substring(0, content.length() - 1);
+										}
+										if (content.startsWith("^")) { //$NON-NLS-1$
+											content = content.substring(1);
 										}
 										content = content.replace("\\$", "$$"); //$NON-NLS-1$ //$NON-NLS-2$
 

@@ -76,7 +76,9 @@
          <attribute name="content" type="string">
             <annotation>
                <documentation>
-                  The template content, where ${varname} are variables and \n is a newline, and \\ is the &apos;\&apos; character.  Note that ${text} and ${selection} are variables that correspond to the current text selection.
+                  The template content, where ${varname} are variables and \n is a newline, \t is tab, and \\ is the &apos;\&apos; character.  Note that ${text} and ${selection} are variables that correspond to the current text selection.  
+
+If the template needs trailing whitespace it should be terminated with the &apos;$&apos; character.  Similarly if the template needs leading whitespace it should be started with the &apos;^&apos; character.
                </documentation>
             </annotation>
          </attribute>
