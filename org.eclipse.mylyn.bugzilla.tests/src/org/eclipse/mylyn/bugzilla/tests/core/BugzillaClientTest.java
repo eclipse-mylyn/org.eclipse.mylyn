@@ -16,10 +16,9 @@ import java.net.Proxy;
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaTest;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
@@ -49,17 +48,7 @@ import org.eclipse.mylyn.tests.util.UrlBuilder;
  * @author Frank Becker
  * @author David Green
  */
-public class BugzillaClientTest extends TestCase {
-
-	private BugzillaClient client;
-
-	private TaskRepository repository;
-
-	@Override
-	protected void setUp() throws Exception {
-		repository = BugzillaFixture.current().repository();
-		client = BugzillaFixture.current().client();
-	}
+public class BugzillaClientTest extends AbstractBugzillaTest {
 
 	public void testRDFProductConfig() throws Exception {
 		if (BugzillaVersion.BUGZILLA_4_4.compareTo(BugzillaFixture.current().getBugzillaVersion()) == 0
@@ -234,11 +223,16 @@ public class BugzillaClientTest extends TestCase {
 	 * test for bug 335278: enhance search result handler to handle additional attributes
 	 */
 	public void testQueryRealName_Bug335278() throws Exception {
+		String taskId = harness.enhanceSearchTaskExists();
+		if (taskId == null) {
+			taskId = harness.createEnhanceSearchTask();
+		}
+
 		IRepositoryQuery query = new RepositoryQuery(BugzillaFixture.current().getConnectorKind(), "query");
 		UrlBuilder urlBuilder = UrlBuilder.build(BugzillaFixture.current().repository()).append("/buglist.cgi");
 
 		urlBuilder.parameter(
-				"columnlist",
+				"short_desc=test%20Bug%20335278&columnlist",
 				"bug_severity,priority,assigned_to,bug_status,resolution,short_desc,changeddate,reporter,assigned_to_realname,reporter_realname,product,component");
 		query.setUrl(urlBuilder.toString());
 

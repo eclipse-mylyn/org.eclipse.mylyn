@@ -13,6 +13,7 @@
 
 package org.eclipse.mylyn.bugzilla.tests.core;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -214,14 +215,39 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 	}
 
 	public void testPerformQuery() throws Exception {
-		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
-
-		// queries for bugs assigned to tests@mylyn.eclipse.org, updated in the last hour, trivial with P1
 		RepositoryConfiguration repositoryConfiguration = connector.getRepositoryConfiguration(repository.getRepositoryUrl());
 		List<String> priorities = repositoryConfiguration.getOptionValues(BugzillaAttribute.PRIORITY);
-		String priority = priorities.get(0);
-		String severity = "trivial";
+		final String priority = priorities.get(0);
+		final String severity = "trivial";
 		String email = "tests%40mylyn.eclipse.org";
+
+		final String summaryNotNull = "Summary for testPerformQuery " + new Date();
+		final String descriptionNotNull = "Description for testPerformQuery " + new Date();
+		// create a Task so we not have on for the query
+		BugzillaFixture.current().createTask(PrivilegeLevel.USER, new HashMap<String, String>() {
+			private static final long serialVersionUID = 1L;
+			{
+				put(TaskAttribute.SUMMARY, summaryNotNull);
+				put(TaskAttribute.DESCRIPTION, descriptionNotNull);
+				put(BugzillaAttribute.OP_SYS.getKey(), "All");
+				put(BugzillaAttribute.REP_PLATFORM.getKey(), "All");
+				put(BugzillaAttribute.VERSION.getKey(), "unspecified");
+				put(TaskAttribute.PRIORITY, priority);
+				put(TaskAttribute.SEVERITY, severity);
+			}
+		});
+		// create the test Task
+		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, new HashMap<String, String>() {
+			private static final long serialVersionUID = 1L;
+			{
+				put(TaskAttribute.SUMMARY, summaryNotNull);
+				put(TaskAttribute.DESCRIPTION, descriptionNotNull);
+				put(BugzillaAttribute.OP_SYS.getKey(), "All");
+				put(BugzillaAttribute.REP_PLATFORM.getKey(), "All");
+				put(BugzillaAttribute.VERSION.getKey(), "unspecified");
+			}
+		});
+
 		String bug_status = BugzillaFixture.current()
 				.getBugzillaVersion()
 				.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0
@@ -230,7 +256,8 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 		String queryUrlString = repository.getRepositoryUrl() + "/buglist.cgi?priority=" + priority
 				+ "&emailassigned_to1=1&query_format=advanced&emailreporter1=1&field0-0-0=bug_status&bug_severity="
 				+ severity + bug_status + "&type0-0-1=equals&value0-0-1=tests%40mylyn.eclipse.org&email1=" + email
-				+ "&type0-0-0=notequals&field0-0-1=reporter&value0-0-0=UNCONFIRMED&emailtype1=exact";
+				+ "&type0-0-0=notequals&field0-0-1=reporter&value0-0-0=UNCONFIRMED&emailtype1=exact&longdesc="
+				+ descriptionNotNull + "&longdesc_type=casesubstring";
 
 		// make sure initial task is not P1/trivial
 		assertFalse(taskData.getRoot()
@@ -253,6 +280,7 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 			}
 		};
 		connector.performQuery(repository, query, collector, null, new NullProgressMonitor());
+		assertEquals(1, changedTaskData.size());
 
 		// set priority and severity on task
 		taskData.getRoot()
@@ -260,6 +288,7 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 				.setValue(System.currentTimeMillis() + "");
 		taskData.getRoot().getMappedAttribute(BugzillaAttribute.PRIORITY.getKey()).setValue(priority);
 		taskData.getRoot().getMappedAttribute(BugzillaAttribute.BUG_SEVERITY.getKey()).setValue(severity);
+		taskData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION).setValue(descriptionNotNull);
 		RepositoryResponse response = BugzillaFixture.current().submitTask(taskData, client);
 		assertFalse(response.getTaskId().equals(""));
 		TaskData taskDataNew = BugzillaFixture.current().getTask(response.getTaskId(), client);
@@ -273,7 +302,7 @@ public class BugzillaRepositoryConnectorStandaloneTest extends TestCase {
 			}
 		};
 		connector.performQuery(repository, query, collector2, null, new NullProgressMonitor());
-
+		assertEquals(2, changedTaskData2.size());
 		// compare query results
 		changedTaskData2.keySet().removeAll(changedTaskData.keySet());
 		assertEquals(1, changedTaskData2.size());

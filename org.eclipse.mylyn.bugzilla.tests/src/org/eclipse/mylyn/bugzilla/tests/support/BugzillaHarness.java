@@ -21,6 +21,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
@@ -35,9 +36,11 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
@@ -45,6 +48,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
@@ -52,6 +56,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
 public class BugzillaHarness {
 
@@ -672,9 +677,7 @@ public class BugzillaHarness {
 		RepositoryResponse response = createNewTask(taskDataNew);
 		assertNotNull(response);
 		assertEquals(ResponseKind.TASK_CREATED.toString(), response.getReposonseKind().toString());
-		String taskId = response.getTaskId();
-
-		return taskId;
+		return response.getTaskId();
 	}
 
 	public String taskAliasExists() {
@@ -733,8 +736,7 @@ public class BugzillaHarness {
 		RepositoryResponse response = createNewTask(taskDataNew);
 		assertNotNull(response);
 		assertEquals(ResponseKind.TASK_CREATED.toString(), response.getReposonseKind().toString());
-		String taskId = response.getTaskId();
-		return taskId;
+		return response.getTaskId();
 	}
 
 	public String taskAlias2Exists() {
@@ -790,8 +792,7 @@ public class BugzillaHarness {
 		RepositoryResponse response = createNewTask(taskDataNew);
 		assertNotNull(response);
 		assertEquals(ResponseKind.TASK_CREATED.toString(), response.getReposonseKind().toString());
-		String taskId = response.getTaskId();
-		return taskId;
+		return response.getTaskId();
 	}
 
 	public String taskCfBugIdExists() {
@@ -845,8 +846,71 @@ public class BugzillaHarness {
 		RepositoryResponse response = createNewTask(taskDataNew);
 		assertNotNull(response);
 		assertEquals(ResponseKind.TASK_CREATED.toString(), response.getReposonseKind().toString());
-		String taskId = response.getTaskId();
-		return taskId;
+		return response.getTaskId();
+	}
+
+	public String enhanceSearchTaskExists() {
+		String taskID = null;
+		String queryUrlString = repository().getRepositoryUrl() + "/buglist.cgi?"
+				+ "short_desc=test%20EnhanceSearch&resolution=---&query_format=advanced"
+				+ "&short_desc_type=casesubstring&component=TestComponent&product=TestProduct";
+		RepositoryQuery query = new RepositoryQuery(repository().getConnectorKind(), "handle-testQueryViaConnector");
+		query.setUrl(queryUrlString);
+		final Map<Integer, TaskData> changedTaskData = new HashMap<Integer, TaskData>();
+		TaskDataCollector collector = new TaskDataCollector() {
+			@Override
+			public void accept(TaskData taskData) {
+				changedTaskData.put(Integer.valueOf(taskData.getTaskId()), taskData);
+			}
+		};
+		connector().performQuery(repository(), query, collector, null, new NullProgressMonitor());
+		if (changedTaskData.size() > 0) {
+			Set<Integer> ks = changedTaskData.keySet();
+			SortedSet<Integer> sks = new TreeSet<Integer>(ks);
+			taskID = sks.last().toString();
+		}
+		return taskID;
+	}
+
+	public String createEnhanceSearchTask() throws Exception {
+		final TaskMapping taskMappingInit = new TaskMapping() {
+
+			@Override
+			public String getProduct() {
+				return "TestProduct";
+			}
+		};
+		final TaskMapping taskMappingSelect = new TaskMapping() {
+			@Override
+			public String getComponent() {
+				return "TestComponent";
+			}
+
+			@Override
+			public String getSummary() {
+				return "test EnhanceSearch";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The Description of the Bug 335278";
+			}
+		};
+		final TaskData[] taskDataNew = new TaskData[1];
+
+		// create Task
+		taskDataNew[0] = TasksUiInternal.createTaskData(repository(), taskMappingInit, taskMappingSelect, null);
+		ITask taskNew = TasksUiUtil.createOutgoingNewTask(taskDataNew[0].getConnectorKind(),
+				taskDataNew[0].getRepositoryUrl());
+
+		ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(taskNew, taskDataNew[0]);
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		workingCopy.save(changed, null);
+		RepositoryResponse response = BugzillaFixture.current().submitTask(taskDataNew[0], priviledgedClient());
+		((AbstractTask) taskNew).setSubmitting(true);
+		assertNotNull(response);
+		assertEquals(ResponseKind.TASK_CREATED.toString(), response.getReposonseKind().toString());
+		return response.getTaskId();
 	}
 
 }

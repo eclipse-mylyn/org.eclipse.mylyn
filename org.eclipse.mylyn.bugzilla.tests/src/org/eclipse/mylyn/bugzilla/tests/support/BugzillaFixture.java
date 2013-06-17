@@ -20,6 +20,7 @@ import java.util.Map;
 
 import junit.framework.AssertionFailedError;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
@@ -194,12 +195,23 @@ public class BugzillaFixture extends TestFixture {
 	 * @return The taskData retrieved from updating the task
 	 */
 	public TaskData createTask(PrivilegeLevel level, String summary, String description) throws Exception {
-		if (summary == null) {
-			summary = "summary";
-		}
-		if (description == null) {
-			description = "description";
-		}
+		final String summaryNotNull = summary != null ? summary : "summary";
+		final String descriptionNotNull = description != null ? description : "description";
+		return createTask(level, new HashMap<String, String>() {
+			private static final long serialVersionUID = 1L;
+			{
+				put(TaskAttribute.SUMMARY, summaryNotNull);
+				put(TaskAttribute.DESCRIPTION, descriptionNotNull);
+				put(BugzillaAttribute.OP_SYS.getKey(), "All");
+				put(BugzillaAttribute.REP_PLATFORM.getKey(), "All");
+				put(BugzillaAttribute.VERSION.getKey(), "unspecified");
+			}
+		});
+	}
+
+	public TaskData createTask(PrivilegeLevel level, Map<String, String> additionalAttributeValues) throws Exception {
+		Assert.isLegal(additionalAttributeValues.containsKey(TaskAttribute.SUMMARY), "need value for Summary");
+		Assert.isLegal(additionalAttributeValues.containsKey(TaskAttribute.DESCRIPTION), "need value for Description");
 		ITaskMapping initializationData = new TaskMapping() {
 
 			@Override
@@ -219,11 +231,11 @@ public class BugzillaFixture extends TestFixture {
 		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(repository());
 		TaskData taskData = new TaskData(mapper, repository().getConnectorKind(), repository().getRepositoryUrl(), "");
 		taskDataHandler.initializeTaskData(repository(), taskData, initializationData, null);
-		taskData.getRoot().createMappedAttribute(TaskAttribute.SUMMARY).setValue(summary);
-		taskData.getRoot().createMappedAttribute(TaskAttribute.DESCRIPTION).setValue(description);
-		taskData.getRoot().createMappedAttribute(BugzillaAttribute.OP_SYS.getKey()).setValue("All");
-		taskData.getRoot().createMappedAttribute(BugzillaAttribute.REP_PLATFORM.getKey()).setValue("All");
-		taskData.getRoot().createMappedAttribute(BugzillaAttribute.VERSION.getKey()).setValue("unspecified");
+		for (String attributeKey : additionalAttributeValues.keySet()) {
+			taskData.getRoot()
+					.createMappedAttribute(attributeKey)
+					.setValue(additionalAttributeValues.get(attributeKey));
+		}
 		RepositoryResponse response = submitTask(taskData, client);
 		String bugId = response.getTaskId();
 		return getTask(bugId, client);
