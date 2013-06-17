@@ -30,19 +30,19 @@ public class TaskRepositoriesSorter extends ViewerSorter {
 			String label1 = t1.getRepositoryLabel();
 			String label2 = t2.getRepositoryLabel();
 
+			if (label1 == null) {
+				return (label2 != null) ? 1 : 0;
+			} else if (label2 == null) {
+				return -1;
+			}
+
 			if (LocalRepositoryConnector.REPOSITORY_LABEL.equals(label1)) {
 				return -1;
 			} else if (LocalRepositoryConnector.REPOSITORY_LABEL.equals(label2)) {
 				return 1;
 			}
 
-			if (!t1.getConnectorKind().equals(t2.getConnectorKind())) {
-				return (t1.getConnectorKind()).compareTo(t2.getConnectorKind());
-			} else {
-				if (label1 != null) {
-					return label1.compareTo(label2);
-				}
-			}
+			return label1.compareToIgnoreCase(label2);
 		}
 		return super.compare(viewer, e1, e2);
 	}
