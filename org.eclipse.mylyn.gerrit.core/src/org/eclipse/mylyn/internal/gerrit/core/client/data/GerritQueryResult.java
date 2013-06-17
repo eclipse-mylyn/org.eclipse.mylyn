@@ -13,7 +13,8 @@ package org.eclipse.mylyn.internal.gerrit.core.client.data;
 
 import java.sql.Timestamp;
 
-import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
+import org.eclipse.mylyn.internal.gerrit.core.remote.GerritReviewRemoteFactory;
+import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
 
 import com.google.gerrit.common.data.ChangeInfo;
 import com.google.gerrit.reviewdb.Change.Status;
@@ -47,7 +48,7 @@ public class GerritQueryResult {
 		setProject(changeInfo.getProject().getName());
 		setSubject(changeInfo.getSubject());
 		Status status = changeInfo.getStatus();
-		if (GerritUtil.isDraft(status)) {
+		if (GerritReviewRemoteFactory.getReviewStatus(status) == ReviewStatus.DRAFT) {
 			setStatus("DRAFT"); //$NON-NLS-1$
 		} else {
 			setStatus(status.toString());

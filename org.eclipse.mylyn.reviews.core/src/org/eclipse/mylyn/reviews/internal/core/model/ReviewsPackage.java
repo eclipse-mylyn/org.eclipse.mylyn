@@ -3647,6 +3647,7 @@ public class ReviewsPackage extends EPackageImpl {
 		addEEnumLiteral(reviewStatusEEnum, ReviewStatus.SUBMITTED);
 		addEEnumLiteral(reviewStatusEEnum, ReviewStatus.MERGED);
 		addEEnumLiteral(reviewStatusEEnum, ReviewStatus.ABANDONED);
+		addEEnumLiteral(reviewStatusEEnum, ReviewStatus.DRAFT);
 
 		// Initialize data types
 		initEDataType(iFileRevisionEDataType, IFileRevision.class,

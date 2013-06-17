@@ -336,20 +336,26 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 			}
 		}
 
-		//State
-		switch (detail.getChange().getStatus()) {
+		review.setState(getReviewStatus(detail.getChange().getStatus()));
+	}
+
+	public static ReviewStatus getReviewStatus(com.google.gerrit.reviewdb.Change.Status gerritStatus) {
+		if (gerritStatus == null) {
+			// DRAFT is not correctly parsed for ChangeInfo since Change.Status does not define the corresponding enum field 
+			return ReviewStatus.DRAFT;
+		}
+		switch (gerritStatus) {
 		case NEW:
-			review.setState(ReviewStatus.NEW);
-			break;
+			return ReviewStatus.NEW;
 		case MERGED:
-			review.setState(ReviewStatus.MERGED);
-			break;
+			return ReviewStatus.MERGED;
 		case SUBMITTED:
-			review.setState(ReviewStatus.SUBMITTED);
-			break;
+			return ReviewStatus.SUBMITTED;
 		case ABANDONED:
-			review.setState(ReviewStatus.ABANDONED);
-			break;
+			return ReviewStatus.ABANDONED;
+		default:
+			GerritCorePlugin.logError("Internal Error: unexpected change status: " + gerritStatus, new Exception());
+			return null;
 		}
 	}
 
@@ -370,20 +376,7 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 			localChange.setOwner(owner);
 			localChange.setModificationDate(remoteChange.getLastUpdatedOn());
 			localChange.setSubject(remoteChange.getSubject());
-			switch (remoteChange.getStatus()) {
-			case NEW:
-				localChange.setState(ReviewStatus.NEW);
-				break;
-			case MERGED:
-				localChange.setState(ReviewStatus.MERGED);
-				break;
-			case SUBMITTED:
-				localChange.setState(ReviewStatus.SUBMITTED);
-				break;
-			case ABANDONED:
-				localChange.setState(ReviewStatus.ABANDONED);
-				break;
-			}
+			localChange.setState(getReviewStatus(remoteChange.getStatus()));
 			localChanges.add(localChange);
 		}
 	}

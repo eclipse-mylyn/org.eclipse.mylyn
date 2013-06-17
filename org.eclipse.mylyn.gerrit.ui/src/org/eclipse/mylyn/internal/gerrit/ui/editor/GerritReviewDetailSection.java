@@ -34,6 +34,6 @@ public class GerritReviewDetailSection extends ReviewDetailSection {
 
 	@Override
 	protected boolean canAddReviewers() {
-		return getReview().getState() == null || getReview().getState() == ReviewStatus.NEW;
+		return getReview().getState() == ReviewStatus.DRAFT || getReview().getState() == ReviewStatus.NEW;
 	}
 }

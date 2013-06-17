@@ -193,7 +193,7 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 		}
 		return consumer;
 	}
-	
+
 	class ObjectFinder implements Runnable {
 		EObjectType foundObject;
 
@@ -224,7 +224,7 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 			}
 		}
 	}
-	
+
 	protected EObjectType open(EParentObjectType parentObject, LocalKeyType localKey) {
 		ObjectFinder finder = new ObjectFinder(parentObject, localKey);
 		getService().modelExec(finder, true);

@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.client.compat;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.google.gerrit.reviewdb.Account;
@@ -51,7 +52,7 @@ public class SubmitRecord {
 
 	String status;
 
-	private List<Label> labels;
+	private List<Label> labels = Collections.emptyList();;
 
 	public String getStatus() {
 		return status;

@@ -56,7 +56,15 @@ public enum ReviewStatus implements InternalReviewStatus {
 	 * @generated
 	 * @ordered
 	 */
-	ABANDONED(3, "Abandoned", "ABANDONED"); //$NON-NLS-1$ //$NON-NLS-2$
+	ABANDONED(3, "Abandoned", "ABANDONED"), /**
+	 * The '<em><b>Draft</b></em>' literal object. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #DRAFT_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	DRAFT(4, "Draft", "DRAFT"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
 	 * The '<em><b>New</b></em>' literal value. <!-- begin-user-doc -->
@@ -115,11 +123,25 @@ public enum ReviewStatus implements InternalReviewStatus {
 	public static final int ABANDONED_VALUE = 3;
 
 	/**
+	 * The '<em><b>Draft</b></em>' literal value. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>Draft</b></em>' literal object isn't clear, there really should be more of a
+	 * description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #DRAFT
+	 * @generated
+	 * @ordered
+	 */
+	public static final int DRAFT_VALUE = 4;
+
+	/**
 	 * An array of all the '<em><b>Review Status</b></em>' enumerators. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	private static final ReviewStatus[] VALUES_ARRAY = new ReviewStatus[] { NEW, SUBMITTED, MERGED, ABANDONED, };
+	private static final ReviewStatus[] VALUES_ARRAY = new ReviewStatus[] { NEW, SUBMITTED, MERGED, ABANDONED, DRAFT, };
 
 	/**
 	 * A public read-only list of all the '<em><b>Review Status</b></em>' enumerators. <!-- begin-user-doc --> <!--
@@ -177,6 +199,8 @@ public enum ReviewStatus implements InternalReviewStatus {
 			return MERGED;
 		case ABANDONED_VALUE:
 			return ABANDONED;
+		case DRAFT_VALUE:
+			return DRAFT;
 		}
 		return null;
 	}

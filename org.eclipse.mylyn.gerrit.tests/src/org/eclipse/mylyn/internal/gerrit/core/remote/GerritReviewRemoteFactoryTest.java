@@ -47,6 +47,7 @@ import org.junit.Test;
 
 import com.google.gerrit.reviewdb.ApprovalCategory;
 import com.google.gerrit.reviewdb.ApprovalCategoryValue;
+import com.google.gerrit.reviewdb.Change.Status;
 
 /**
  * @author Miles Parker
@@ -69,6 +70,16 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(comment.getDescription(), is("Patch Set 1:\n\n" + message1));
 		assertThat(comment.getAuthor().getDisplayName(), is("tests"));
 		assertThat(comment.getDescription(), is("Patch Set 1:\n\n" + message1));
+	}
+
+	@Test
+	public void testReviewStatus() throws Exception {
+		assertThat(GerritReviewRemoteFactory.getReviewStatus(Status.ABANDONED), is(ReviewStatus.ABANDONED));
+		assertThat(GerritReviewRemoteFactory.getReviewStatus(Status.MERGED), is(ReviewStatus.MERGED));
+		assertThat(GerritReviewRemoteFactory.getReviewStatus(Status.NEW), is(ReviewStatus.NEW));
+		assertThat(GerritReviewRemoteFactory.getReviewStatus(Status.SUBMITTED), is(ReviewStatus.SUBMITTED));
+		//Test for drafts hack
+		assertThat(GerritReviewRemoteFactory.getReviewStatus(null), is(ReviewStatus.DRAFT));
 	}
 
 	@Test

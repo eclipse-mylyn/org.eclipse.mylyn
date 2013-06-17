@@ -173,6 +173,7 @@
     <eLiterals name="Submitted" value="1" literal="SUBMITTED"/>
     <eLiterals name="Merged" value="2" literal="MERGED"/>
     <eLiterals name="Abandoned" value="3" literal="ABANDONED"/>
+    <eLiterals name="Draft" value="4" literal="DRAFT"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="IFileRevision" instanceClassName="org.eclipse.team.core.history.IFileRevision"
       serializable="false"/>
