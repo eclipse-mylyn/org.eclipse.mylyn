@@ -38,6 +38,7 @@ public class GerritTaskEditorPage extends AbstractReviewTaskEditorPage {
 	public GerritTaskEditorPage(TaskEditor editor) {
 		super(editor, GerritTaskEditorPage.class.getName(), "Gerrit Page", GerritConnector.CONNECTOR_KIND);
 		setNeedsPrivateSection(true);
+		setNeedsSubmit(false);
 		setNeedsSubmitButton(false);
 	}
 
