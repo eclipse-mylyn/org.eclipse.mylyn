@@ -115,10 +115,10 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 		this.localKey = localKey;
 		this.factory = factory;
 		if (remoteKey == null && remoteObject != null) {
-			remoteKey = factory.getRemoteKey(remoteObject);
+			this.remoteKey = factory.getRemoteKey(remoteObject);
 		}
 		if (localKey == null && modelObject != null) {
-			localKey = factory.getLocalKey(null, modelObject);
+			this.localKey = factory.getLocalKey(null, modelObject);
 		}
 		if (modelObject instanceof EObject) {
 			((EObject) modelObject).eAdapters().add(adapter);
