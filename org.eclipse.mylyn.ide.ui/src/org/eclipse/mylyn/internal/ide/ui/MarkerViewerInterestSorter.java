@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,7 +29,7 @@ public class MarkerViewerInterestSorter extends ViewerSorter {
 
 	@Override
 	public int compare(Viewer viewer, Object obj1, Object obj2) {
-		if (obj1 instanceof ProblemMarker && obj1 instanceof ProblemMarker) {
+		if (obj1 instanceof ProblemMarker && obj2 instanceof ProblemMarker) {
 			ProblemMarker marker1 = (ProblemMarker) obj1;
 			ProblemMarker marker2 = (ProblemMarker) obj2;
 			if (marker1.getSeverity() == IMarker.SEVERITY_ERROR && marker2.getSeverity() < IMarker.SEVERITY_ERROR) {
