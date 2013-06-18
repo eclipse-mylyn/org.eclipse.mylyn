@@ -258,45 +258,50 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 			typeForKey.put(type.getKey(), type);
 		}
 		GerritConfiguration configuration = getGerritProvider().getClient().getConfiguration();
-		for (ApprovalType remoteType : configuration.getGerritConfig().getApprovalTypes().getApprovalTypes()) {
-			IApprovalType localApprovalType = typeForKey.get(remoteType.getCategory().getId().get());
-			if (localApprovalType == null) {
-				localApprovalType = IReviewsFactory.INSTANCE.createApprovalType();
-				localApprovalType.setKey(remoteType.getCategory().getId().get());
-				localApprovalType.setName(remoteType.getCategory().getName());
-				parent.getApprovalTypes().add(localApprovalType);
-				typeForKey.put(localApprovalType.getKey(), localApprovalType);
+		if (configuration.getGerritConfig().getApprovalTypes() != null) {
+			for (ApprovalType remoteType : configuration.getGerritConfig().getApprovalTypes().getApprovalTypes()) {
+				IApprovalType localApprovalType = typeForKey.get(remoteType.getCategory().getId().get());
+				if (localApprovalType == null) {
+					localApprovalType = IReviewsFactory.INSTANCE.createApprovalType();
+					localApprovalType.setKey(remoteType.getCategory().getId().get());
+					localApprovalType.setName(remoteType.getCategory().getName());
+					parent.getApprovalTypes().add(localApprovalType);
+					typeForKey.put(localApprovalType.getKey(), localApprovalType);
+				}
+				String approvalName = remoteType.getCategory().getName();
+				//Special case so we can match different label name for status records. (?!)
+				approvalName = approvalName.replace(" ", "-");
+				typeForName.put(approvalName, localApprovalType);
 			}
-			String approvalName = remoteType.getCategory().getName();
-			//Special case so we can match different label name for status records. (?!)
-			approvalName = approvalName.replace(" ", "-");
-			typeForName.put(approvalName, localApprovalType);
 		}
 
 		//Approvals
 		review.getReviewerApprovals().clear();
-		for (ApprovalDetail remoteApproval : detail.getApprovals()) {
-			IUser reviewer = getGerritProvider().createUser(parent, detail.getAccounts(), remoteApproval.getAccount());
-			if (reviewer == null) {
-				throw new RuntimeException("Internal Error, no reviewer found for: " + remoteApproval.getAccount());
-			}
-			IReviewerEntry reviewerEntry = review.getReviewerApprovals().get(reviewer);
-			if (reviewerEntry == null) {
-				reviewerEntry = IReviewsFactory.INSTANCE.createReviewerEntry();
-				review.getReviewerApprovals().put(reviewer, reviewerEntry);
-			}
-			for (Entry<com.google.gerrit.reviewdb.ApprovalCategory.Id, PatchSetApproval> remoteMap : remoteApproval.getApprovalMap()
-					.entrySet()) {
-				String remoteType = remoteMap.getValue().getCategoryId().get();
-				IApprovalType approvalType = typeForKey.get(remoteType);
-				if (approvalType == null) {
-					approvalType = IReviewsFactory.INSTANCE.createApprovalType();
-					approvalType.setKey(remoteType);
-					approvalType.setName(remoteType);
-					parent.getApprovalTypes().add(approvalType);
-					typeForKey.put(approvalType.getKey(), approvalType);
+		if (detail.getApprovals() != null) {
+			for (ApprovalDetail remoteApproval : detail.getApprovals()) {
+				IUser reviewer = getGerritProvider().createUser(parent, detail.getAccounts(),
+						remoteApproval.getAccount());
+				if (reviewer == null) {
+					throw new RuntimeException("Internal Error, no reviewer found for: " + remoteApproval.getAccount());
 				}
-				reviewerEntry.getApprovals().put(approvalType, (int) remoteMap.getValue().getValue());
+				IReviewerEntry reviewerEntry = review.getReviewerApprovals().get(reviewer);
+				if (reviewerEntry == null) {
+					reviewerEntry = IReviewsFactory.INSTANCE.createReviewerEntry();
+					review.getReviewerApprovals().put(reviewer, reviewerEntry);
+				}
+				for (Entry<com.google.gerrit.reviewdb.ApprovalCategory.Id, PatchSetApproval> remoteMap : remoteApproval.getApprovalMap()
+						.entrySet()) {
+					String remoteType = remoteMap.getValue().getCategoryId().get();
+					IApprovalType approvalType = typeForKey.get(remoteType);
+					if (approvalType == null) {
+						approvalType = IReviewsFactory.INSTANCE.createApprovalType();
+						approvalType.setKey(remoteType);
+						approvalType.setName(remoteType);
+						parent.getApprovalTypes().add(approvalType);
+						typeForKey.put(approvalType.getKey(), approvalType);
+					}
+					reviewerEntry.getApprovals().put(approvalType, (int) remoteMap.getValue().getValue());
+				}
 			}
 		}
 
