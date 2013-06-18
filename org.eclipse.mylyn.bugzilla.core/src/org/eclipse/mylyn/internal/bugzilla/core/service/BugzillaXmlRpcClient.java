@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 Frank Becker and others.
+ * Copyright (c) 2010, 2013 Frank Becker and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -851,11 +851,11 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 				attachmentMapper.setDeltaDate(lastChangeTime);
 				attachmentMapper.setContentType(content_type);
 				attachmentMapper.setCreationDate(creation_time);
-				attachmentMapper.setDeprecated(is_obsolete.equals("1")); //$NON-NLS-1$
+				attachmentMapper.setDeprecated(is_obsolete.equals(Integer.valueOf(1)));
 				attachmentMapper.setDescription(summary);
 				attachmentMapper.setFileName(file_name);
 				attachmentMapper.setLength(size != null ? size : -1L);
-				attachmentMapper.setPatch(is_patch.equals("1")); //$NON-NLS-1$
+				attachmentMapper.setPatch(is_patch.equals(Integer.valueOf(1)));
 				attachmentMapper.applyTo(attachmentAttribute);
 
 				addFlags(taskData, attachment.get("flags"), attachmentAttribute); //$NON-NLS-1$
