@@ -228,6 +228,7 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 				throw new RuntimeException("Internal Exception. Unexpected state.", e);
 			}
 			if (patchIndex++ < oldPatchCount) {
+				consumer.release();
 				continue;
 			}
 			consumer.applyModel(false);

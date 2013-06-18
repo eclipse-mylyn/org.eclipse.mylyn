@@ -43,6 +43,7 @@ public class PatchSetContentIdRemoteFactory extends PatchSetContentRemoteFactory
 			itemSetConsumer.pull(false, monitor);
 			detail = itemSetConsumer.getRemoteObject();
 		}
+		itemSetConsumer.release();
 		if (detail != null) {
 			PatchSetContent content = new PatchSetContent((PatchSet) null, detail);
 			return pull(parentObject, content, monitor);

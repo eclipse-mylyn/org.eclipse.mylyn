@@ -101,6 +101,10 @@ public class PatchSetDetailRemoteFactory extends ReviewItemSetRemoteFactory<Patc
 			}
 		} catch (NumberFormatException e) {
 			//ignore;
+		} finally {
+			if (reviewConsumer != null) {
+				reviewConsumer.release();
+			}
 		}
 		return null;
 	}

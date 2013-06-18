@@ -75,7 +75,7 @@ public class ReviewSetContentSection {
 
 	private TableViewer viewer;
 
-	private final RemoteEmfObserver<IReviewItemSet, List<IFileItem>, String, Long> itemListClient = new RemoteEmfObserver<IReviewItemSet, List<IFileItem>, String, Long>() {
+	private final RemoteEmfObserver<IReviewItemSet, List<IFileItem>, String, Long> itemListObserver = new RemoteEmfObserver<IReviewItemSet, List<IFileItem>, String, Long>() {
 
 		@Override
 		public void created(IReviewItemSet parentObject, java.util.List<IFileItem> modelObject) {
@@ -111,6 +111,8 @@ public class ReviewSetContentSection {
 
 	private Composite actionContainer;
 
+	private final RemoteEmfObserver<IRepository, IReview, String, Date> reviewObserver;
+
 	public ReviewSetContentSection(ReviewSetSection parentSection, final IReviewItemSet set) {
 		this.parentSection = parentSection;
 		this.set = set;
@@ -126,18 +128,18 @@ public class ReviewSetContentSection {
 				.getFactoryProvider()
 				.getReviewItemSetContentFactory()
 				.getConsumerForLocalKey(set, set.getId());
-		itemListClient.setConsumer(itemSetConsumer);
+		itemListObserver.setConsumer(itemSetConsumer);
 		final RemoteEmfConsumer<IRepository, IReview, String, ?, ?, Date> reviewConsumer = getParentSection().getReviewEditorPage()
 				.getFactoryProvider()
 				.getReviewFactory()
 				.getConsumerForModel(set.getReview().getRepository(), set.getReview());
-		reviewConsumer.addObserver(new RemoteEmfObserver<IRepository, IReview, String, Date>() {
+		reviewObserver = new RemoteEmfObserver<IRepository, IReview, String, Date>() {
 			@Override
 			public void updated(IRepository parentObject, IReview modelObject, boolean modified) {
 				if (reviewConsumer.getRemoteObject() != null && section.isExpanded() && modified) {
 					itemSetConsumer.retrieve(false);
 					updateMessage();
-					craeteButtons();
+					createButtons();
 				}
 			}
 
@@ -145,7 +147,8 @@ public class ReviewSetContentSection {
 			public void failed(IRepository parentObject, IReview modelObject, IStatus status) {
 				AbstractReviewSection.appendMessage(getSection(), "Couldn't load patch set: " + status.getMessage());
 			}
-		});
+		};
+		reviewConsumer.addObserver(reviewObserver);
 
 		section.addExpansionListener(new ExpansionAdapter() {
 			@Override
@@ -155,7 +158,7 @@ public class ReviewSetContentSection {
 						itemSetConsumer.retrieve(false);
 					}
 					updateMessage();
-					craeteButtons();
+					createButtons();
 				}
 			}
 		});
@@ -178,7 +181,7 @@ public class ReviewSetContentSection {
 			message = NLS.bind("{0}", time);
 		}
 
-		if (itemListClient != null && itemListClient.getConsumer().isRetrieving()) {
+		if (itemListObserver != null && itemListObserver.getConsumer().isRetrieving()) {
 			message += " " + org.eclipse.mylyn.internal.reviews.ui.Messages.Reviews_RetrievingContents;
 		}
 
@@ -245,7 +248,7 @@ public class ReviewSetContentSection {
 		actionContainer = new Composite(composite, SWT.NONE);
 		GridDataFactory.fillDefaults().span(2, 1).grab(true, true).applyTo(actionContainer);
 		GridLayoutFactory.fillDefaults().numColumns(1).applyTo(actionContainer);
-		craeteButtons();
+		createButtons();
 
 		parentSection.getTaskEditorPage().reflow();
 	}
@@ -321,7 +324,7 @@ public class ReviewSetContentSection {
 		}
 	}
 
-	public void craeteButtons() {
+	public void createButtons() {
 		if (!actionContainer.isDisposed()) {
 			for (Control oldActionControl : actionContainer.getChildren()) {
 				oldActionControl.dispose();
@@ -342,7 +345,8 @@ public class ReviewSetContentSection {
 	}
 
 	public void dispose() {
-		itemListClient.dispose();
+		itemListObserver.dispose();
+		reviewObserver.dispose();
 		section.dispose();
 	}
 }

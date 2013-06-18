@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.gerrit.ui.factories;
 
 import java.io.IOException;
+import java.util.Date;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -26,6 +27,7 @@ import org.eclipse.mylyn.internal.gerrit.core.egit.GerritToGitMapping;
 import org.eclipse.mylyn.internal.gerrit.core.remote.GerritRemoteFactoryProvider;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
 import org.eclipse.mylyn.internal.gerrit.ui.egit.EGitUiUtil;
+import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
@@ -52,10 +54,11 @@ public abstract class AbstractPatchSetUiFactory extends AbstractUiFactory<IRevie
 	}
 
 	protected PatchSetDetail getPatchSetDetail(IReviewItemSet set) {
-		RemoteEmfConsumer<IReview, IReviewItemSet, String, PatchSetDetail, PatchSetDetail, String> consumerForModel = getGerritFactoryProvider().getReviewItemSetFactory()
+		RemoteEmfConsumer<IReview, IReviewItemSet, String, PatchSetDetail, PatchSetDetail, String> consumer = getGerritFactoryProvider().getReviewItemSetFactory()
 				.getConsumerForModel(getModelObject().getReview(), set);
-		return consumerForModel
-				.getRemoteObject();
+		PatchSetDetail remoteObject = consumer.getRemoteObject();
+		consumer.release();
+		return remoteObject;
 	}
 
 	protected GerritRemoteFactoryProvider getGerritFactoryProvider() {
@@ -63,9 +66,11 @@ public abstract class AbstractPatchSetUiFactory extends AbstractUiFactory<IRevie
 	}
 
 	protected GerritChange getChange() {
-		return getGerritFactoryProvider().getReviewFactory()
-				.getConsumerForModel(getModelObject().getReview().getRepository(), getModelObject().getReview())
-				.getRemoteObject();
+		RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> consumer = getGerritFactoryProvider().getReviewFactory()
+				.getConsumerForModel(getModelObject().getReview().getRepository(), getModelObject().getReview());
+		GerritChange remoteObject = consumer.getRemoteObject();
+		consumer.release();
+		return remoteObject;
 	}
 
 	protected final String getGerritProject(ChangeDetail changeDetail) {

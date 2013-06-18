@@ -122,6 +122,12 @@ class ReviewHarness {
 	}
 
 	public void dispose() {
+		if (listener != null) {
+			consumer.removeObserver(listener);
+		}
+		if (consumer != null) {
+			consumer.release();
+		}
 		gerritHarness.dispose();
 	}
 
