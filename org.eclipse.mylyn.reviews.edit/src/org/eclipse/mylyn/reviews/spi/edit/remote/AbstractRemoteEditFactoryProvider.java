@@ -102,9 +102,6 @@ public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObj
 
 			rootObject = (ERootObject) open(getRootClass(), getRootClass().getName());
 			clearChildren();
-
-			rootObject = (ERootObject) open(getRootClass(), getRootClass().getName());
-			clearChildren();
 		}
 		return rootObject;
 	}
