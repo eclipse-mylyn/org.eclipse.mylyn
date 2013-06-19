@@ -168,21 +168,9 @@ public interface IComment extends IIndexed, IDated {
 	 * <!-- end-user-doc -->
 	 * 
 	 * @return the value of the '<em>Review</em>' reference.
-	 * @see #setReview(IReview)
 	 * @generated
 	 */
 	IReview getReview();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IComment#getReview <em>Review</em>}'
-	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Review</em>' reference.
-	 * @see #getReview()
-	 * @generated
-	 */
-	void setReview(IReview value);
 
 	/**
 	 * Returns the value of the '<em><b>Title</b></em>' attribute. <!-- begin-user-doc -->

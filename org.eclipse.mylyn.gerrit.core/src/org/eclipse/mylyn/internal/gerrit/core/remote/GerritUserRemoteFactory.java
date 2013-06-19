@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.gerrit.core.remote;
 
 import java.util.ArrayList;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
@@ -49,9 +50,7 @@ public class GerritUserRemoteFactory extends
 	@Override
 	public IUser createModel(IRepository repository, AccountInfo info) {
 		IUser user = IReviewsFactory.INSTANCE.createUser();
-		user.setDisplayName(GerritUtil.getUserLabel(info));
 		user.setId(info.getId() + "");
-		user.setEmail(info.getPreferredEmail());
 		repository.getUsers().add(user);
 		return user;
 	}
@@ -67,8 +66,19 @@ public class GerritUserRemoteFactory extends
 	}
 
 	@Override
-	public boolean updateModel(IRepository item, IUser object, AccountInfo info) {
-		return false;
+	public boolean updateModel(IRepository item, IUser user, AccountInfo info) {
+		String gerritLabel = GerritUtil.getUserLabel(info);
+		boolean changed = false;
+		if (!gerritLabel.equals(user.getDisplayName())) {
+			user.setDisplayName(gerritLabel);
+			changed = true;
+		}
+		String gerritEmail = info.getPreferredEmail();
+		if (!ObjectUtils.equals(gerritEmail, user.getEmail())) {
+			user.setEmail(gerritEmail);
+			changed = true;
+		}
+		return changed;
 	}
 
 	@Override

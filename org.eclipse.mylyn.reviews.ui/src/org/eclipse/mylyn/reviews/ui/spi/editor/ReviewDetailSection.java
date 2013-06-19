@@ -61,7 +61,6 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 	@Override
 	protected Control createContent(FormToolkit toolkit, Composite parent) {
 		Control content = super.createContent(toolkit, parent);
-		getReview().getChildren();
 		createReviewersSubSection(composite);
 		createDependenciesSubSection(toolkit, composite, "Depends On", getReview().getParents());
 		createDependenciesSubSection(toolkit, composite, "Needed By", getReview().getChildren());

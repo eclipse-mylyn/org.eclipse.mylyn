@@ -100,7 +100,21 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 	}
 
 	@Test
+	public void testAccount() throws Exception {
+		//Account
+		assertThat(reviewHarness.getRepository().getAccount(), notNullValue());
+		assertThat(reviewHarness.getRepository().getAccount().getDisplayName(), is("tests"));
+		assertThat(reviewHarness.getRepository().getAccount().getEmail(), is("tests@mylyn.eclipse.org"));
+		assertThat(reviewHarness.getRepository().getUsers().get(0), is(reviewHarness.getRepository().getAccount()));
+	}
+
+	@Test
 	public void testUsers() throws Exception {
+		//Account
+		assertThat(reviewHarness.getRepository().getAccount(), notNullValue());
+		assertThat(reviewHarness.getRepository().getAccount().getDisplayName(), is("tests"));
+		assertThat(reviewHarness.getRepository().getAccount().getEmail(), is("tests@mylyn.eclipse.org"));
+
 		//Users
 		assertThat(reviewHarness.getRepository().getUsers().size(), is(1));
 		assertThat(reviewHarness.getRepository().getUsers().get(0).getDisplayName(), is("tests"));

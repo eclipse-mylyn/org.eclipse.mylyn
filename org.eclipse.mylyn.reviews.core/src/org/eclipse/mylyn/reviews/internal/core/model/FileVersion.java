@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.mylyn.reviews.core.model.IFileVersion;
+import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.team.core.history.IFileRevision;
 
 /**
@@ -225,6 +226,16 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 			}
 		}
 		return file;
+	}
+	
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated NOT
+	 */
+	@Override
+	public IReview getReview() {
+		return getFile().getReview();
 	}
 
 	/**

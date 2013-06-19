@@ -65,6 +65,7 @@ public class RepositoryItemProvider extends ItemProviderAdapter implements IEdit
 			addTaskRepositoryUrlPropertyDescriptor(object);
 			addTaskConnectorKindPropertyDescriptor(object);
 			addTaskRepositoryPropertyDescriptor(object);
+			addAccountPropertyDescriptor(object);
 			addDescriptionPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
@@ -118,6 +119,20 @@ public class RepositoryItemProvider extends ItemProviderAdapter implements IEdit
 						"_UI_PropertyDescriptor_description", "_UI_Repository_taskRepository_feature", "_UI_Repository_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				ReviewsPackage.Literals.REPOSITORY__TASK_REPOSITORY, true, false, false,
 				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Account feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addAccountPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+				getResourceLocator(),
+				getString("_UI_Repository_account_feature"), //$NON-NLS-1$
+				getString("_UI_PropertyDescriptor_description", "_UI_Repository_account_feature", "_UI_Repository_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				ReviewsPackage.Literals.REPOSITORY__ACCOUNT, true, false, true, null, null, null));
 	}
 
 	/**

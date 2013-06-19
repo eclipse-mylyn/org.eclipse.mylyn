@@ -30,6 +30,7 @@ import org.eclipse.mylyn.reviews.core.model.ICommentContainer;
 import org.eclipse.mylyn.reviews.core.model.IDated;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IReview;
+import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 
 /**
@@ -273,8 +274,9 @@ public class Comment extends EObjectImpl implements IComment {
 	public void setAuthor(IUser newAuthor) {
 		IUser oldAuthor = author;
 		author = newAuthor;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.COMMENT__AUTHOR, oldAuthor, author));
+		}
 	}
 
 	/**
@@ -294,9 +296,10 @@ public class Comment extends EObjectImpl implements IComment {
 	public void setDescription(String newDescription) {
 		String oldDescription = description;
 		description = newDescription;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.COMMENT__DESCRIPTION, oldDescription,
 					description));
+		}
 	}
 
 	/**
@@ -316,9 +319,10 @@ public class Comment extends EObjectImpl implements IComment {
 	public void setCreationDate(Date newCreationDate) {
 		Date oldCreationDate = creationDate;
 		creationDate = newCreationDate;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.COMMENT__CREATION_DATE,
 					oldCreationDate, creationDate));
+		}
 	}
 
 	/**
@@ -338,9 +342,10 @@ public class Comment extends EObjectImpl implements IComment {
 	public void setModificationDate(Date newModificationDate) {
 		Date oldModificationDate = modificationDate;
 		modificationDate = newModificationDate;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.COMMENT__MODIFICATION_DATE,
 					oldModificationDate, modificationDate));
+		}
 	}
 
 	/**
@@ -360,8 +365,9 @@ public class Comment extends EObjectImpl implements IComment {
 	public void setId(String newId) {
 		String oldId = id;
 		id = newId;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.COMMENT__ID, oldId, id));
+		}
 	}
 
 	/**
@@ -393,8 +399,9 @@ public class Comment extends EObjectImpl implements IComment {
 	public void setDraft(boolean newDraft) {
 		boolean oldDraft = draft;
 		draft = newDraft;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.COMMENT__DRAFT, oldDraft, draft));
+		}
 	}
 
 	/**
@@ -416,37 +423,13 @@ public class Comment extends EObjectImpl implements IComment {
 	 * @generated
 	 */
 	public IReview getReview() {
-		if (review != null && review.eIsProxy()) {
-			InternalEObject oldReview = (InternalEObject) review;
-			review = (IReview) eResolveProxy(oldReview);
-			if (review != oldReview) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.COMMENT__REVIEW,
-							oldReview, review));
-			}
+		if (getItem() instanceof IReview) {
+			return (IReview) getItem();
+		}
+		if (getItem() instanceof IReviewItem) {
+			return ((IReviewItem) getItem()).getReview();
 		}
 		return review;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public IReview basicGetReview() {
-		return review;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public void setReview(IReview newReview) {
-		IReview oldReview = review;
-		review = newReview;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.COMMENT__REVIEW, oldReview, review));
 	}
 
 	/**
@@ -466,8 +449,9 @@ public class Comment extends EObjectImpl implements IComment {
 	public void setTitle(String newTitle) {
 		String oldTitle = title;
 		title = newTitle;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.COMMENT__TITLE, oldTitle, title));
+		}
 	}
 
 	/**
@@ -476,8 +460,9 @@ public class Comment extends EObjectImpl implements IComment {
 	 * @generated
 	 */
 	public ICommentContainer getItem() {
-		if (eContainerFeatureID() != ReviewsPackage.COMMENT__ITEM)
+		if (eContainerFeatureID() != ReviewsPackage.COMMENT__ITEM) {
 			return null;
+		}
 		return (ICommentContainer) eContainer();
 	}
 
@@ -487,8 +472,9 @@ public class Comment extends EObjectImpl implements IComment {
 	 * @generated
 	 */
 	public ICommentContainer basicGetItem() {
-		if (eContainerFeatureID() != ReviewsPackage.COMMENT__ITEM)
+		if (eContainerFeatureID() != ReviewsPackage.COMMENT__ITEM) {
 			return null;
+		}
 		return (ICommentContainer) eInternalContainer();
 	}
 
@@ -510,19 +496,24 @@ public class Comment extends EObjectImpl implements IComment {
 	public void setItem(ICommentContainer newItem) {
 		if (newItem != eInternalContainer()
 				|| (eContainerFeatureID() != ReviewsPackage.COMMENT__ITEM && newItem != null)) {
-			if (EcoreUtil.isAncestor(this, newItem))
+			if (EcoreUtil.isAncestor(this, newItem)) {
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+			}
 			NotificationChain msgs = null;
-			if (eInternalContainer() != null)
+			if (eInternalContainer() != null) {
 				msgs = eBasicRemoveFromContainer(msgs);
-			if (newItem != null)
+			}
+			if (newItem != null) {
 				msgs = ((InternalEObject) newItem).eInverseAdd(this, ReviewsPackage.COMMENT_CONTAINER__COMMENTS,
 						ICommentContainer.class, msgs);
+			}
 			msgs = basicSetItem(newItem, msgs);
-			if (msgs != null)
+			if (msgs != null) {
 				msgs.dispatch();
-		} else if (eNotificationRequired())
+			}
+		} else if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.COMMENT__ITEM, newItem, newItem));
+		}
 	}
 
 	/**
@@ -534,8 +525,9 @@ public class Comment extends EObjectImpl implements IComment {
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 		case ReviewsPackage.COMMENT__ITEM:
-			if (eInternalContainer() != null)
+			if (eInternalContainer() != null) {
 				msgs = eBasicRemoveFromContainer(msgs);
+			}
 			return basicSetItem((ICommentContainer) otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
@@ -599,14 +591,13 @@ public class Comment extends EObjectImpl implements IComment {
 		case ReviewsPackage.COMMENT__LOCATIONS:
 			return getLocations();
 		case ReviewsPackage.COMMENT__REVIEW:
-			if (resolve)
-				return getReview();
-			return basicGetReview();
+			return getReview();
 		case ReviewsPackage.COMMENT__TITLE:
 			return getTitle();
 		case ReviewsPackage.COMMENT__ITEM:
-			if (resolve)
+			if (resolve) {
 				return getItem();
+			}
 			return basicGetItem();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -646,9 +637,6 @@ public class Comment extends EObjectImpl implements IComment {
 		case ReviewsPackage.COMMENT__LOCATIONS:
 			getLocations().clear();
 			getLocations().addAll((Collection<? extends ILocation>) newValue);
-			return;
-		case ReviewsPackage.COMMENT__REVIEW:
-			setReview((IReview) newValue);
 			return;
 		case ReviewsPackage.COMMENT__TITLE:
 			setTitle((String) newValue);
@@ -691,9 +679,6 @@ public class Comment extends EObjectImpl implements IComment {
 			return;
 		case ReviewsPackage.COMMENT__LOCATIONS:
 			getLocations().clear();
-			return;
-		case ReviewsPackage.COMMENT__REVIEW:
-			setReview((IReview) null);
 			return;
 		case ReviewsPackage.COMMENT__TITLE:
 			setTitle(TITLE_EDEFAULT);
@@ -790,8 +775,9 @@ public class Comment extends EObjectImpl implements IComment {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (creationDate: "); //$NON-NLS-1$

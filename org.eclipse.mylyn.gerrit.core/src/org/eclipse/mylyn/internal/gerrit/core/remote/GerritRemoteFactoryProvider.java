@@ -75,12 +75,10 @@ public class GerritRemoteFactoryProvider extends ReviewsRemoteEditFactoryProvide
 				if (id != null) {
 					final RemoteEmfConsumer<IRepository, IUser, String, AccountInfo, Id, String> userConsumer = getUserFactory(
 							cache).getConsumerForRemoteKey(parent, id);
-					if (userConsumer.getModelObject() == null) {
-						try {
-							userConsumer.pull(false, monitor);
-						} catch (CoreException e) {
-							StatusHandler.log(e.getStatus());
-						}
+					try {
+						userConsumer.pull(false, monitor);
+					} catch (CoreException e) {
+						StatusHandler.log(e.getStatus());
 					}
 				}
 			}

@@ -232,29 +232,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	 * @generated
 	 */
 	public IReview getReview() {
-		IReview review = basicGetReview();
-		return review != null && review.eIsProxy() ? (IReview) eResolveProxy((InternalEObject) review) : review;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public IReview basicGetReview() {
 		// TODO: implement this method to return the 'Review' reference
-		// -> do not perform proxy resolution
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public void setReview(IReview newReview) {
-		// TODO: implement this method to set the 'Review' reference
 		// Ensure that you remove @generated or mark it @generated NOT
 		throw new UnsupportedOperationException();
 	}
@@ -331,12 +309,9 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	@Override
 	public IComment createComment(ILocation initalLocation, String commentText) {
 		IComment comment = super.createComment(initalLocation, commentText);
-		IUser user = getAddedBy();
-		if (user == null) {
-			user = ReviewsFactory.eINSTANCE.createUser();
-			user.setDisplayName("<Undefined>"); //$NON-NLS-1$
+		if (getReview() != null && getReview().getRepository() != null) {
+			comment.setAuthor(getReview().getRepository().getAccount());
 		}
-		comment.setAuthor(user);
 		return comment;
 	}
 
@@ -357,9 +332,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 				return getCommittedBy();
 			return basicGetCommittedBy();
 		case ReviewsPackage.REVIEW_ITEM__REVIEW:
-			if (resolve)
-				return getReview();
-			return basicGetReview();
+			return getReview();
 		case ReviewsPackage.REVIEW_ITEM__NAME:
 			return getName();
 		case ReviewsPackage.REVIEW_ITEM__ID:
@@ -384,9 +357,6 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 			return;
 		case ReviewsPackage.REVIEW_ITEM__COMMITTED_BY:
 			setCommittedBy((IUser) newValue);
-			return;
-		case ReviewsPackage.REVIEW_ITEM__REVIEW:
-			setReview((IReview) newValue);
 			return;
 		case ReviewsPackage.REVIEW_ITEM__NAME:
 			setName((String) newValue);
@@ -415,9 +385,6 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 		case ReviewsPackage.REVIEW_ITEM__COMMITTED_BY:
 			setCommittedBy((IUser) null);
 			return;
-		case ReviewsPackage.REVIEW_ITEM__REVIEW:
-			setReview((IReview) null);
-			return;
 		case ReviewsPackage.REVIEW_ITEM__NAME:
 			setName(NAME_EDEFAULT);
 			return;
@@ -444,7 +411,7 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 		case ReviewsPackage.REVIEW_ITEM__COMMITTED_BY:
 			return committedBy != null;
 		case ReviewsPackage.REVIEW_ITEM__REVIEW:
-			return basicGetReview() != null;
+			return getReview() != null;
 		case ReviewsPackage.REVIEW_ITEM__NAME:
 			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 		case ReviewsPackage.REVIEW_ITEM__ID:

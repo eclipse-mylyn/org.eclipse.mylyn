@@ -789,13 +789,21 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int REPOSITORY__TASK_REPOSITORY = 3;
 
 	/**
+	 * The feature id for the '<em><b>Account</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REPOSITORY__ACCOUNT = 4;
+
+	/**
 	 * The feature id for the '<em><b>Reviews</b></em>' containment reference list. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REPOSITORY__REVIEWS = 4;
+	public static final int REPOSITORY__REVIEWS = 5;
 
 	/**
 	 * The feature id for the '<em><b>Users</b></em>' containment reference list. <!-- begin-user-doc --> <!--
@@ -804,7 +812,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REPOSITORY__USERS = 5;
+	public static final int REPOSITORY__USERS = 6;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -812,7 +820,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REPOSITORY__DESCRIPTION = 6;
+	public static final int REPOSITORY__DESCRIPTION = 7;
 
 	/**
 	 * The number of structural features of the '<em>Repository</em>' class. <!-- begin-user-doc --> <!-- end-user-doc
@@ -821,7 +829,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REPOSITORY_FEATURE_COUNT = 7;
+	public static final int REPOSITORY_FEATURE_COUNT = 8;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.FileItem <em>File Item</em>}'
@@ -2409,6 +2417,19 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.mylyn.reviews.core.model.IRepository#getAccount
+	 * <em>Account</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference '<em>Account</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IRepository#getAccount()
+	 * @see #getRepository()
+	 * @generated
+	 */
+	public EReference getRepository_Account() {
+		return (EReference) repositoryEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
 	 * Returns the meta object for the containment reference list '
 	 * {@link org.eclipse.mylyn.reviews.core.model.IRepository#getReviews <em>Reviews</em>}'. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2419,7 +2440,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EReference getRepository_Reviews() {
-		return (EReference) repositoryEClass.getEStructuralFeatures().get(4);
+		return (EReference) repositoryEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -2433,7 +2454,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EReference getRepository_Users() {
-		return (EReference) repositoryEClass.getEStructuralFeatures().get(5);
+		return (EReference) repositoryEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -2447,7 +2468,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public EAttribute getRepository_Description() {
-		return (EAttribute) repositoryEClass.getEStructuralFeatures().get(6);
+		return (EAttribute) repositoryEClass.getEStructuralFeatures().get(7);
 	}
 
 	/**
@@ -3137,6 +3158,7 @@ public class ReviewsPackage extends EPackageImpl {
 		createEAttribute(repositoryEClass, REPOSITORY__TASK_REPOSITORY_URL);
 		createEAttribute(repositoryEClass, REPOSITORY__TASK_CONNECTOR_KIND);
 		createEAttribute(repositoryEClass, REPOSITORY__TASK_REPOSITORY);
+		createEReference(repositoryEClass, REPOSITORY__ACCOUNT);
 		createEReference(repositoryEClass, REPOSITORY__REVIEWS);
 		createEReference(repositoryEClass, REPOSITORY__USERS);
 		createEAttribute(repositoryEClass, REPOSITORY__DESCRIPTION);
@@ -3367,7 +3389,7 @@ public class ReviewsPackage extends EPackageImpl {
 				getComment_Review(),
 				this.getReview(),
 				null,
-				"review", null, 1, 1, IComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+				"review", null, 1, 1, IComment.class, IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(
 				getComment_Title(),
 				ecorePackage.getEString(),
@@ -3394,7 +3416,7 @@ public class ReviewsPackage extends EPackageImpl {
 				getReviewItem_Review(),
 				this.getReview(),
 				null,
-				"review", null, 1, 1, IReviewItem.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+				"review", null, 1, 1, IReviewItem.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(
 				getReviewItem_Name(),
 				ecorePackage.getEString(),
@@ -3444,6 +3466,11 @@ public class ReviewsPackage extends EPackageImpl {
 				getRepository_TaskRepository(),
 				this.getTaskRepository(),
 				"taskRepository", null, 0, 1, IRepository.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getRepository_Account(),
+				this.getUser(),
+				null,
+				"account", null, 1, 1, IRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(
 				getRepository_Reviews(),
 				this.getReview(),
@@ -4055,6 +4082,14 @@ public class ReviewsPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EAttribute REPOSITORY__TASK_REPOSITORY = eINSTANCE.getRepository_TaskRepository();
+
+		/**
+		 * The meta object literal for the '<em><b>Account</b></em>' reference feature. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EReference REPOSITORY__ACCOUNT = eINSTANCE.getRepository_Account();
 
 		/**
 		 * The meta object literal for the '<em><b>Reviews</b></em>' containment reference list feature. <!--

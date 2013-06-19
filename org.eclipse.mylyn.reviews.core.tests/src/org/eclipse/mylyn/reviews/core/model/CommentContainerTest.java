@@ -10,7 +10,9 @@
  */
 package org.eclipse.mylyn.reviews.core.model;
 
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
@@ -20,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.mylyn.reviews.internal.core.model.FileItem;
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsFactory;
 import org.junit.Test;
 
@@ -148,16 +151,30 @@ public class CommentContainerTest {
 
 	@Test
 	public void testCreateFileItemComment() {
-		IReviewItem item = ReviewsFactory.eINSTANCE.createFileItem();
+		IRepository repos = ReviewsFactory.eINSTANCE.createRepository();
+		IReview review = ReviewsFactory.eINSTANCE.createReview();
+		repos.getReviews().add(review);
+		IReviewItemSet set = ReviewsFactory.eINSTANCE.createReviewItemSet();
+		review.getSets().add(set);
+		IFileItem item = ReviewsFactory.eINSTANCE.createFileItem();
+		set.getItems().add(item);
 		ILineLocation location = ReviewsFactory.eINSTANCE.createLineLocation();
-		IUser definedUser = ReviewsFactory.eINSTANCE.createUser();
-		definedUser.setDisplayName("Some User");
-		item.setAddedBy(definedUser);
+		IUser fileAuthor = ReviewsFactory.eINSTANCE.createUser();
+		fileAuthor.setDisplayName("Another User");
+		item.setAddedBy(fileAuthor);
+		IUser account = ReviewsFactory.eINSTANCE.createUser();
+		account.setDisplayName("This User");
+		repos.setAccount(account);
+
 		IComment comment = item.createComment(location, "My Comment");
+		assertThat(comment.getItem(), instanceOf(IFileItem.class));
+		assertThat(comment.getReview(), sameInstance(review));
+		assertThat(((FileItem) comment.getItem()).getReview(), sameInstance(review));
+		assertThat(((FileItem) comment.getItem()).getReview().getRepository(), sameInstance(repos));
 		assertTrue(item.getComments().contains(comment));
 		assertSame(comment.getItem(), item);
 		assertThat(comment.getDescription(), is("My Comment"));
-		assertThat(comment.getAuthor().getDisplayName(), is("Some User"));
+		assertThat(comment.getAuthor().getDisplayName(), is("This User"));
 		assertTrue(new Date().getTime() - 100 < comment.getCreationDate().getTime());
 	}
 
@@ -167,8 +184,7 @@ public class CommentContainerTest {
 		ILineLocation location = ReviewsFactory.eINSTANCE.createLineLocation();
 		IComment comment = item.createComment(location, "My Comment");
 		assertThat(item.getComments().size(), is(1));
-		assertThat(comment.getAuthor().getDisplayName(), is("<Undefined>"));
-		assertThat(comment.getAuthor().getDisplayName(), is("<Undefined>"));
+		assertThat(comment.getAuthor(), nullValue());
 	}
 
 	@Test

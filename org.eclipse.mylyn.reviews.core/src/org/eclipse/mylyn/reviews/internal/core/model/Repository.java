@@ -40,6 +40,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Repository#getTaskConnectorKind <em>Task Connector Kind
  * </em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Repository#getTaskRepository <em>Task Repository</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Repository#getAccount <em>Account</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Repository#getReviews <em>Reviews</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Repository#getUsers <em>Users</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Repository#getDescription <em>Description</em>}</li>
@@ -118,6 +119,16 @@ public class Repository extends EObjectImpl implements IRepository {
 	 * @ordered
 	 */
 	protected TaskRepository taskRepository = TASK_REPOSITORY_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getAccount() <em>Account</em>}' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #getAccount()
+	 * @generated
+	 * @ordered
+	 */
+	protected IUser account;
 
 	/**
 	 * The cached value of the '{@link #getReviews() <em>Reviews</em>}' containment reference list. <!-- begin-user-doc
@@ -262,6 +273,46 @@ public class Repository extends EObjectImpl implements IRepository {
 	 * 
 	 * @generated
 	 */
+	public IUser getAccount() {
+		if (account != null && account.eIsProxy()) {
+			InternalEObject oldAccount = (InternalEObject) account;
+			account = (IUser) eResolveProxy(oldAccount);
+			if (account != oldAccount) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.REPOSITORY__ACCOUNT,
+							oldAccount, account));
+			}
+		}
+		return account;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public IUser basicGetAccount() {
+		return account;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setAccount(IUser newAccount) {
+		IUser oldAccount = account;
+		account = newAccount;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REPOSITORY__ACCOUNT, oldAccount,
+					account));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	public List<IReview> getReviews() {
 		if (reviews == null) {
 			reviews = new EObjectContainmentWithInverseEList.Resolving<IReview>(IReview.class, this,
@@ -353,6 +404,10 @@ public class Repository extends EObjectImpl implements IRepository {
 			return getTaskConnectorKind();
 		case ReviewsPackage.REPOSITORY__TASK_REPOSITORY:
 			return getTaskRepository();
+		case ReviewsPackage.REPOSITORY__ACCOUNT:
+			if (resolve)
+				return getAccount();
+			return basicGetAccount();
 		case ReviewsPackage.REPOSITORY__REVIEWS:
 			return getReviews();
 		case ReviewsPackage.REPOSITORY__USERS:
@@ -384,6 +439,9 @@ public class Repository extends EObjectImpl implements IRepository {
 			return;
 		case ReviewsPackage.REPOSITORY__TASK_REPOSITORY:
 			setTaskRepository((TaskRepository) newValue);
+			return;
+		case ReviewsPackage.REPOSITORY__ACCOUNT:
+			setAccount((IUser) newValue);
 			return;
 		case ReviewsPackage.REPOSITORY__REVIEWS:
 			getReviews().clear();
@@ -420,6 +478,9 @@ public class Repository extends EObjectImpl implements IRepository {
 		case ReviewsPackage.REPOSITORY__TASK_REPOSITORY:
 			setTaskRepository(TASK_REPOSITORY_EDEFAULT);
 			return;
+		case ReviewsPackage.REPOSITORY__ACCOUNT:
+			setAccount((IUser) null);
+			return;
 		case ReviewsPackage.REPOSITORY__REVIEWS:
 			getReviews().clear();
 			return;
@@ -455,6 +516,8 @@ public class Repository extends EObjectImpl implements IRepository {
 			return TASK_REPOSITORY_EDEFAULT == null
 					? taskRepository != null
 					: !TASK_REPOSITORY_EDEFAULT.equals(taskRepository);
+		case ReviewsPackage.REPOSITORY__ACCOUNT:
+			return account != null;
 		case ReviewsPackage.REPOSITORY__REVIEWS:
 			return reviews != null && !reviews.isEmpty();
 		case ReviewsPackage.REPOSITORY__USERS:

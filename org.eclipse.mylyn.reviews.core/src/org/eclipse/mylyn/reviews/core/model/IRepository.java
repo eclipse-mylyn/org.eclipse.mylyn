@@ -23,6 +23,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskRepositoryUrl <em>Task Repository Url</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskConnectorKind <em>Task Connector Kind</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskRepository <em>Task Repository</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IRepository#getAccount <em>Account</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IRepository#getReviews <em>Reviews</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IRepository#getUsers <em>Users</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IRepository#getDescription <em>Description</em>}</li>
@@ -120,6 +121,31 @@ public interface IRepository extends EObject {
 	 * @generated
 	 */
 	void setTaskRepository(TaskRepository value);
+
+	/**
+	 * Returns the value of the '<em><b>Account</b></em>' reference. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Account</em>' reference isn't clear, there really should be more of a description
+	 * here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Account</em>' reference.
+	 * @see #setAccount(IUser)
+	 * @generated
+	 */
+	IUser getAccount();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IRepository#getAccount <em>Account</em>}'
+	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Account</em>' reference.
+	 * @see #getAccount()
+	 * @generated
+	 */
+	void setAccount(IUser value);
 
 	/**
 	 * Returns the value of the '<em><b>Reviews</b></em>' containment reference list. The list contents are of type

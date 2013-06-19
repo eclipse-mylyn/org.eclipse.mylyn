@@ -50,6 +50,7 @@ import com.google.gerrit.common.data.ApprovalDetail;
 import com.google.gerrit.common.data.ApprovalType;
 import com.google.gerrit.common.data.ChangeInfo;
 import com.google.gerrit.common.data.PatchSetDetail;
+import com.google.gerrit.reviewdb.Account;
 import com.google.gerrit.reviewdb.Change;
 import com.google.gerrit.reviewdb.ChangeMessage;
 import com.google.gerrit.reviewdb.PatchSetApproval;
@@ -86,6 +87,16 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 
 			GerritChange gerritChange = getGerritProvider().getClient().getChange(remoteKey, monitor);
 			final ChangeDetailX detail = gerritChange.getChangeDetail();
+
+			try {
+				getGerritProvider().pullUser(parent, detail.getAccounts(),
+						getGerritProvider().getClient().getAccount(monitor).getId(), monitor);
+			} catch (GerritException e) {
+				//We can't have a user if we aren't signed in!
+				if (!getGerritProvider().getClient().isNotSignedInException(e)) {
+					throw e;
+				}
+			}
 
 			//We need to ensure we have all possible users for review in pull phase, as we can't do any async calls in apply phase
 			getGerritProvider().pullUser(parent, detail.getAccounts(), detail.getChange().getOwner(), monitor);
@@ -183,13 +194,22 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 		ChangeDetailX detail = gerritChange.getChangeDetail();
 		Change change = detail.getChange();
 
+		//Handle initial account and any incidental account changes
+		Account gerritAccount = getGerritProvider().getClient().getConfiguration().getAccount();
+		if (gerritAccount != null) {
+			IUser account = getGerritProvider().createUser(parent, detail.getAccounts(), gerritAccount.getId());
+			parent.setAccount(account);
+		} else {
+			parent.setAccount(null);
+		}
+
 		//Mutable Data
 		review.setModificationDate(new Date(change.getLastUpdatedOn().getTime())); //Convert from SQL Timestamp
 		review.setSubject(change.getSubject());
 		review.setMessage(detail.getDescription());
 
 		updateComments(parent, review, detail);
-		updateEmptyPatchSets(parent, review, gerritChange);
+		updatePatchSets(parent, review, gerritChange);
 		updateApprovalsAndRequirements(parent, review, detail);
 		updateDependencies(parent, review, detail);
 		return true;
@@ -212,7 +232,7 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 		}
 	}
 
-	public void updateEmptyPatchSets(IRepository parent, IReview review, GerritChange gerritChange) {
+	public void updatePatchSets(IRepository parent, IReview review, GerritChange gerritChange) {
 		ChangeDetailX detail = gerritChange.getChangeDetail();
 		//Basic Patch Sets
 		int oldPatchCount = review.getSets().size();

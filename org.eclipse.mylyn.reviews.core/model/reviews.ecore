@@ -49,7 +49,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="locations" upperBound="-1"
         eType="#//Location" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="review" lowerBound="1"
-        eType="#//Review" derived="true"/>
+        eType="#//Review" changeable="false" transient="true" derived="true" resolveProxies="false"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="item" eType="#//CommentContainer"
         eOpposite="#//CommentContainer/comments"/>
@@ -60,7 +60,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="committedBy" lowerBound="1"
         eType="#//User"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="review" lowerBound="1"
-        eType="#//Review" volatile="true" transient="true" derived="true"/>
+        eType="#//Review" changeable="false" volatile="true" transient="true" derived="true"
+        resolveProxies="false"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="reference" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -78,6 +79,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="taskConnectorKind" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="taskRepository" eType="#//TaskRepository"
         transient="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="account" lowerBound="1"
+        eType="#//User"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="reviews" upperBound="-1"
         eType="#//Review" containment="true" eOpposite="#//Review/repository" eKeys="#//Change/key"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="users" upperBound="-1"

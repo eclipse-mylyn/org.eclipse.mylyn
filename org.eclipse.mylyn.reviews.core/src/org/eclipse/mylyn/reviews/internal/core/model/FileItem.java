@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IFileVersion;
+import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 
 /**
@@ -258,6 +259,18 @@ public class FileItem extends ReviewItem implements IFileItem {
 		if (eContainerFeatureID() != ReviewsPackage.FILE_ITEM__SET)
 			return null;
 		return (IReviewItemSet) eContainer();
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated NOT
+	 */
+	public IReview getReview() {
+		if (getSet() != null) {
+			return getSet().getReview();
+		}
+		return null;
 	}
 
 	/**
