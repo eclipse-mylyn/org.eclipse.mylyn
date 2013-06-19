@@ -474,9 +474,11 @@ public class ReviewExplorer extends CommonNavigator {
 
 	protected void update() {
 		updateContentDescription();
-		refreshAction.setEnabled(review != null);
-		getCommonViewer().setInput(review);
-		getCommonViewer().refresh();
+		if (!getCommonViewer().getControl().isDisposed()) {
+			refreshAction.setEnabled(review != null);
+			getCommonViewer().setInput(review);
+			getCommonViewer().refresh();
+		}
 	}
 
 	protected void refresh() {

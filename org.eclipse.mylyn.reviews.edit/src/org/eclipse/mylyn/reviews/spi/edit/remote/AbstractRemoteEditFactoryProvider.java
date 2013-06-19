@@ -262,6 +262,9 @@ public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObj
 	public void close() {
 		clearChildren();
 		save();
+		if (getService() != null) {
+			getService().dispose();
+		}
 		rootObject = null;
 	}
 

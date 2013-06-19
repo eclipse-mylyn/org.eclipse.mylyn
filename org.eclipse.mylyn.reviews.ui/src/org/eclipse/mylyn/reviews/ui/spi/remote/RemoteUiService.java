@@ -11,8 +11,10 @@
 
 package org.eclipse.mylyn.reviews.ui.spi.remote;
 
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylyn.reviews.core.spi.remote.JobRemoteService;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Executes remote job, ensuring that results are applied and notification occurs in UI thread.
@@ -25,7 +27,11 @@ public class RemoteUiService extends JobRemoteService {
 	public void modelExec(final Runnable runnable, boolean block) {
 		Display displayThread = Display.getCurrent();
 		if (displayThread == null) {
-			displayThread = Display.getDefault();
+			if (!PlatformUI.getWorkbench().isClosing()) {
+				displayThread = PlatformUI.getWorkbench().getDisplay();
+			} else {
+				throw new OperationCanceledException();
+			}
 		}
 		if (block) {
 			if (Display.getCurrent() != null) {

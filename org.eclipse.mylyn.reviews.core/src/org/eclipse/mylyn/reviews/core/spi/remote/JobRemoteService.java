@@ -82,11 +82,6 @@ public class JobRemoteService extends AbstractRemoteService {
 				}
 			});
 			addJob(job);
-//			if (process.isSystemJob()) {
-//				job.setSystem(true);
-//			} else if (process.isUserJob()) {
-//				job.setUser(true);
-//			}
 			job.schedule();
 		} else {
 			try {

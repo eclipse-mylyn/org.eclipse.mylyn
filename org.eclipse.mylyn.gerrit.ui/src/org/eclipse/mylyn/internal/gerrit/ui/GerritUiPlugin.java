@@ -10,11 +10,15 @@
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.ui;
 
+import java.util.Set;
+
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.GerritOperationFactory;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.reviews.ui.RemoteUiFactoryProviderConfigurer;
-import org.eclipse.mylyn.reviews.core.spi.remote.RemoteFactoryProviderConfigurer;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskRepositoryLocationUiFactory;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -60,6 +64,12 @@ public class GerritUiPlugin extends AbstractUIPlugin {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
+		Set<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getRepositories(
+				GerritConnector.CONNECTOR_KIND);
+		for (TaskRepository repository : repositories) {
+			GerritClient client = GerritCorePlugin.getDefault().getConnector().getClient(repository);
+			client.getFactoryProvider().close();
+		}
 		super.stop(context);
 	}
 
