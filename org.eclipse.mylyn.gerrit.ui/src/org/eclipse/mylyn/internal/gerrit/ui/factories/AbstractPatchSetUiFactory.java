@@ -57,7 +57,6 @@ public abstract class AbstractPatchSetUiFactory extends AbstractUiFactory<IRevie
 		RemoteEmfConsumer<IReview, IReviewItemSet, String, PatchSetDetail, PatchSetDetail, String> consumer = getGerritFactoryProvider().getReviewItemSetFactory()
 				.getConsumerForModel(getModelObject().getReview(), set);
 		PatchSetDetail remoteObject = consumer.getRemoteObject();
-		consumer.release();
 		return remoteObject;
 	}
 
