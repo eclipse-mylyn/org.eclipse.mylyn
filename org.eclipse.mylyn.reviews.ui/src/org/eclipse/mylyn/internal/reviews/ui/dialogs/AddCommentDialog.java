@@ -137,7 +137,8 @@ public class AddCommentDialog extends ProgressDialog {
 			} else if (item instanceof IFileVersion) {
 				file = ((IFileVersion) item).getFile();
 			}
-			if (file != null) {
+			if (file != null && file.getReview() != null) {
+				//Update any review item set observers IFF we belong to a review. (The set might represent a compare, in which case we won't have a relevant model object.)
 				TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(
 						reviewBehavior.getTask().getConnectorKind(), reviewBehavior.getTask().getRepositoryUrl());
 				ReviewsConnector connector = (ReviewsConnector) TasksUiPlugin.getConnector(reviewBehavior.getTask()
