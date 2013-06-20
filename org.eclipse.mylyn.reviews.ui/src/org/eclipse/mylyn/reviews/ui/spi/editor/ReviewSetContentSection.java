@@ -18,7 +18,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
@@ -30,11 +29,9 @@ import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.ToolTip;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.ui.compatibility.CommonColors;
 import org.eclipse.mylyn.commons.workbench.forms.ScalingHyperlink;
 import org.eclipse.mylyn.internal.reviews.ui.providers.ReviewsLabelProvider;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IRepository;
@@ -75,6 +72,8 @@ public class ReviewSetContentSection {
 
 	private TableViewer viewer;
 
+	private IStatus failureStatus;
+
 	private final RemoteEmfObserver<IReviewItemSet, List<IFileItem>, String, Long> itemListObserver = new RemoteEmfObserver<IReviewItemSet, List<IFileItem>, String, Long>() {
 
 		@Override
@@ -93,17 +92,14 @@ public class ReviewSetContentSection {
 
 		@Override
 		public void updating(IReviewItemSet parent, java.util.List<IFileItem> object) {
+			failureStatus = null;
 			updateMessage();
 		}
 
 		@Override
 		public void failed(IReviewItemSet parent, List<IFileItem> object, IStatus status) {
-			Status errorStatus = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error loading patch set",
-					status.getException());
-			StatusHandler.log(errorStatus);
-			if (getParentSection().getSection().getTextClient() != null) {
-				AbstractReviewSection.appendMessage(getParentSection().getSection(), "Couldn't load patch set.");
-			}
+			failureStatus = status;
+			updateMessage();
 		}
 	};
 
@@ -145,7 +141,7 @@ public class ReviewSetContentSection {
 
 			@Override
 			public void failed(IRepository parentObject, IReview modelObject, IStatus status) {
-				AbstractReviewSection.appendMessage(getSection(), "Couldn't load patch set: " + status.getMessage());
+				failureStatus = status;
 			}
 		};
 		reviewConsumer.addObserver(reviewObserver);
@@ -173,16 +169,20 @@ public class ReviewSetContentSection {
 		}
 		String message;
 
-		String time = DateFormat.getDateTimeInstance().format(set.getCreationDate());
-		int numComments = set.getAllComments().size();
-		if (numComments > 0) {
-			message = NLS.bind("{0}, {1} Comments", time, numComments);
+		if (failureStatus == null) {
+			String time = DateFormat.getDateTimeInstance().format(set.getCreationDate());
+			int numComments = set.getAllComments().size();
+			if (numComments > 0) {
+				message = NLS.bind("{0}, {1} Comments", time, numComments);
+			} else {
+				message = NLS.bind("{0}", time);
+			}
+			if (itemListObserver != null && itemListObserver.getConsumer().isRetrieving()) {
+				message += " " + org.eclipse.mylyn.internal.reviews.ui.Messages.Reviews_RetrievingContents;
+			}
 		} else {
-			message = NLS.bind("{0}", time);
-		}
-
-		if (itemListObserver != null && itemListObserver.getConsumer().isRetrieving()) {
-			message += " " + org.eclipse.mylyn.internal.reviews.ui.Messages.Reviews_RetrievingContents;
+			message = org.eclipse.mylyn.internal.reviews.ui.Messages.Reviews_UpdateFailure + ": "
+					+ failureStatus.getMessage();
 		}
 
 		AbstractReviewSection.appendMessage(getSection(), message);

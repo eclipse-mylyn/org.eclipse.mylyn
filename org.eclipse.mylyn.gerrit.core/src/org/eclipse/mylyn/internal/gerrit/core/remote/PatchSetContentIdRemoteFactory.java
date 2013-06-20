@@ -14,6 +14,9 @@ package org.eclipse.mylyn.internal.gerrit.core.remote;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.client.PatchSetContent;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
@@ -47,7 +50,8 @@ public class PatchSetContentIdRemoteFactory extends PatchSetContentRemoteFactory
 			PatchSetContent content = new PatchSetContent((PatchSet) null, detail);
 			return pull(parentObject, content, monitor);
 		}
-		return null;
+		throw new CoreException(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
+				"Couldn't obtain patch set detail for " + key + ". Check remote connection."));
 	}
 
 	@Override

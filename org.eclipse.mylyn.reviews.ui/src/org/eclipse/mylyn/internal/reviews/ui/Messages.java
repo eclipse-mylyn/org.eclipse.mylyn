@@ -21,6 +21,9 @@ public class Messages extends NLS {
 	public static String Reviews_RetrievingContents;
 
 	public static String Reviews_RetrievingDetails;
+
+	public static String Reviews_UpdateFailure;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

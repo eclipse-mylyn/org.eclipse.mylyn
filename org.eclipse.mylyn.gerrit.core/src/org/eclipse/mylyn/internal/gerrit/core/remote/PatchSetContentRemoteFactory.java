@@ -17,6 +17,9 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
 import org.eclipse.mylyn.internal.gerrit.core.ReviewItemCache;
 import org.eclipse.mylyn.internal.gerrit.core.client.PatchSetContent;
@@ -62,6 +65,11 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
 		gerritFactoryProvider.getClient().loadPatchSetContent(content, monitor);
 		for (Patch patch : content.getTargetDetail().getPatches()) {
 			PatchScript patchScript = content.getPatchScript(patch.getKey());
+			if (patchScript == null) {
+				throw new CoreException(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
+						"Couldn't obtain patch information for patch set " + patch.getKey()
+								+ ". Check remote connection."));
+			}
 			CommentDetail commentDetail = patchScript.getCommentDetail();
 			List<PatchLineComment> comments = new ArrayList<PatchLineComment>();
 			comments.addAll(commentDetail.getCommentsA());
