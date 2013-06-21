@@ -81,5 +81,11 @@
          </includes>
       </viewerActionBinding>
    </extension>
-   
+      <extension
+         point="org.eclipse.mylyn.tasks.ui.taskEditorExtensions">
+      <repositoryAssociation
+            connectorKind="org.eclipse.mylyn.gerrit"
+            taskEditorExtension="org.eclipse.mylyn.wikitext.tasks.ui.editor.textileTaskEditorExtension">
+      </repositoryAssociation>
+   </extension>
 </plugin>
