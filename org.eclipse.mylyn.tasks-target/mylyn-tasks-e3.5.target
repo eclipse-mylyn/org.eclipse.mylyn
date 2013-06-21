@@ -20,11 +20,11 @@
 <repository location="http://download.eclipse.org/releases/galileo"/>
 </location>
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.mylyn.commons.sdk.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.mylyn.commons.tck.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/mylyn/snapshots/nightly/commons"/>
 </location>
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.mylyn.commons.sdk.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.mylyn.context.core" version="0.0.0"/>
 <repository location="http://download.eclipse.org/mylyn/snapshots/3.9"/>
 </location>
