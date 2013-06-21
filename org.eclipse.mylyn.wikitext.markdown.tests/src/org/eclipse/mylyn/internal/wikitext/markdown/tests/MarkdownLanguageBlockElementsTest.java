@@ -281,9 +281,121 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 		parseAndAssert(markup, expectedHtml);
 	}
 
+	public void testBlockquotesContainingList() {
+		String markup = "> * Black\n> * White";
+		String expectedHtml = "<blockquote><ul><li>Black</li><li>White</li></ul></blockquote>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testBlockquotesContainingListWithWrappedItem() {
+		String markup = "> * Wrapped\n    line\n> * Next\nitem";
+		String expectedHtml = "<blockquote><ul><li>Wrapped\n    line</li><li>Next\nitem</li></ul></blockquote>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
 	public void testBlockquoteSimple() {
 		String markup = "> a\n> b";
 		String expectedHtml = "<blockquote><p>a\nb</p></blockquote>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	/*
+	 * Unordered lists use asterisks, pluses, and hyphens - interchangably - as list markers.
+	 */
+	public void testUnorderedListUsingAsteriskMarker() {
+		String markup = "*   Red\n*   Green\n*   Blue";
+		String expectedHtml = "<ul><li>Red</li><li>Green</li><li>Blue</li></ul>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testUnorderedListUsingPlusMarkers() {
+		String markup = "+   Red\n+   Green\n+   Blue";
+		String expectedHtml = "<ul><li>Red</li><li>Green</li><li>Blue</li></ul>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testUnorderedListUsingHyphenMarkers() {
+		String markup = "-   Red\n-   Green\n-   Blue";
+		String expectedHtml = "<ul><li>Red</li><li>Green</li><li>Blue</li></ul>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testUnorderedListUsingMixedMarkers() {
+		String markup = "*   Red\n-   Green\n+   Blue";
+		String expectedHtml = "<ul><li>Red</li><li>Green</li><li>Blue</li></ul>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	/*
+	 * Ordered lists use numbers followed by periods.
+	 */
+	public void testOrderedListUsingSequentialNumbers() {
+		String markup = "1.  Bird\n2.  McHale\n3.  Parish";
+		String expectedHtml = "<ol><li>Bird</li><li>McHale</li><li>Parish</li></ol>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	/*
+	 * It's important to note that the actual numbers you use to mark the list
+	 * have no effect on the HTML output Markdown produces.
+	 */
+	public void testOrderedListUsingSameNumbers() {
+		String markup = "1.  Bird\n1.  McHale\n1.  Parish";
+		String expectedHtml = "<ol><li>Bird</li><li>McHale</li><li>Parish</li></ol>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	/*
+	 * List markers typically start at the left margin, but may be indented by up to three spaces.
+	 */
+	public void testListMarkersIndentedBySpaces() {
+		String markup = " * Red\n  * Green\n   * Blue";
+		String expectedHtml = "<ul><li>Red</li><li>Green</li><li>Blue</li></ul>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testListMarkersIndentedByMoreThanThreeSpacesIsNotRecognizedAsList() {
+		String markup = "    * Red\n     * Green\n      * Blue";
+		String expectedHtml = "<pre><code>* Red\n * Green\n  * Blue</code></pre>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	/*
+	 * List markers must be followed by one or more spaces or a tab.
+	 */
+	public void testListMarkersFollowedBySpaces() {
+		String markup = "* Red\n*   Green\n*     Blue";
+		String expectedHtml = "<ul><li>Red</li><li>Green</li><li>Blue</li></ul>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testListMarkersFollowedByTab() {
+		String markup = "1.\tBird\n1.\tMcHale\n1.\tParish";
+		String expectedHtml = "<ol><li>Bird</li><li>McHale</li><li>Parish</li></ol>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testListMarkersNotFollowedBySpaceOrTabIsNotRecognizedAsList() {
+		String markup = "*Red\n*Green\n*Blue";
+		String expectedHtml = "<p>*Red\n*Green\n*Blue</p>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	/*
+	 * To make lists look nice, you can wrap items with hanging indents.
+	 */
+	public void testListWithWrappedItemAndHangingIndents() {
+		String markup = "* Lorem ipsum\n  sit amet.\n* Donec sit\n  amet nisl.";
+		String expectedHtml = "<ul><li>Lorem ipsum\n  sit amet.</li><li>Donec sit\n  amet nisl.</li></ul>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	/*
+	 * But if you want to be lazy, you don't have to.
+	 */
+	public void testListWithWrappedItemAndNoHangingIndents() {
+		String markup = "* Lorem ipsum\nsit amet.\n* Donec sit\namet nisl.";
+		String expectedHtml = "<ul><li>Lorem ipsum\nsit amet.</li><li>Donec sit\namet nisl.</li></ul>";
 		parseAndAssert(markup, expectedHtml);
 	}
 

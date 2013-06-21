@@ -11,9 +11,15 @@
          <template name="##### " description="%template.description.h5" content="\n##### ${text}\n\n" block="true"/>
          <template name="###### " description="%template.description.h6" content="\n###### ${text}\n\n" block="true"/>
 
-		<template name="link"	description="Link - [Text](http://www.example.com &quot;Optional title&quot;)" content="[${text}](${text} &quot;${title}&quot;) $"/>
-		<template name="link (simple)" description="Link - &lt;http://www.example.com&gt;" content="&lt;${text}&gt; $"/>
-		<template name="!image" description="Image - ![Alt text](path/to/image.png &quot;Optional title&quot;)" content="![${altText}](${text}.png &quot;${title}&quot;) $"/>
+         <template name="*" description="%template.description.lb" content="\n*   ${first item}\n*   ${second item}\n" block="true"/>
+         <template name="1." description="%template.description.ln" content="\n1.  ${first item}\n2.  ${second item}\n" block="true"/>
+         <template name="&gt;" description="%template.description.bq" content="\n&gt; ${text}\n" block="true"/>
+
+		<template name="[]" description="%template.description.li" content="[${text}](${url} &quot;${title}&quot;) $"/>
+		<template name="[id]" description="%template.description.lr" content="[${text}][${id}] ${cursor}\n\n[${id}]: ${url} &quot;${title}&quot;"/>
+		<template name="&lt;&gt;" description="%template.description.ls" content="&lt;http://${url}&gt; $"/>
+		<template name="![]" description="%template.description.ii" content="![${altText}](${image}.png &quot;${title}&quot;) $"/>
+		<template name="![id]" description="%template.description.ir" content="![${altText}][${id}] ${cursor}\n\n[${id}]: ${image}.png &quot;${title}&quot;"/>
 		<template name="\n" description="Line break (end of line)" content="^  \n"/>
 		<template name="\t" description="Code block (indented with tab)" content="\n\t${text}\n"/>
 

@@ -19,6 +19,7 @@ import org.eclipse.mylyn.internal.wikitext.markdown.core.block.HeadingBlock;
 import org.eclipse.mylyn.internal.wikitext.markdown.core.block.HorizontalRuleBlock;
 import org.eclipse.mylyn.internal.wikitext.markdown.core.block.InlineHtmlBlock;
 import org.eclipse.mylyn.internal.wikitext.markdown.core.block.LinkDefinitionBlock;
+import org.eclipse.mylyn.internal.wikitext.markdown.core.block.ListBlock;
 import org.eclipse.mylyn.internal.wikitext.markdown.core.block.ParagraphBlock;
 import org.eclipse.mylyn.internal.wikitext.markdown.core.block.QuoteBlock;
 import org.eclipse.mylyn.internal.wikitext.markdown.core.block.UnderlinedHeadingBlock;
@@ -105,6 +106,7 @@ public class MarkdownLanguage extends AbstractMarkupLanguage {
 		blocks.add(new HeadingBlock());
 		blocks.add(new InlineHtmlBlock());
 		blocks.add(new QuoteBlock());
+		blocks.add(new ListBlock());
 		blocks.add(new LinkDefinitionBlock());
 	}
 

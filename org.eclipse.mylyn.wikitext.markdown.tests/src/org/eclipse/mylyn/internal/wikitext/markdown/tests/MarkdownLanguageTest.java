@@ -37,6 +37,9 @@ public class MarkdownLanguageTest extends MarkdownLanguageTestBase {
 		text.append("\n");
 		text.append("    Code block\n");
 		text.append("\n");
+		text.append("* List item 1\n");
+		text.append("* List item 2\n");
+		text.append("\n");
 		text.append("I get 10 times more traffic from [Google] [1]  than from [Yahoo][] or [MSN] [].\n");
 		text.append("\n");
 		text.append("  [1]:     http://google.com/        \"Google\"\n");
@@ -54,6 +57,9 @@ public class MarkdownLanguageTest extends MarkdownLanguageTestBase {
 		assertTrue(html.contains("<h2>Header 2<"));
 		assertTrue(html.contains("<blockquote><p>Blockquote"));
 		assertTrue(html.contains("<pre><code>Code block"));
+		assertTrue(html.contains("<ul>"));
+		assertTrue(html.contains("<li>List item 1</li>"));
+		assertTrue(html.contains("<li>List item 2</li>"));
 		assertTrue(html.contains("<a href=\"http://google.com/\" title=\"Google\">Google</a>"));
 		assertTrue(html.contains("<a href=\"http://search.yahoo.com/\" title=\"Yahoo Search\">Yahoo</a>"));
 		assertTrue(html.contains("<a href=\"http://search.msn.com/\" title=\"MSN Search\">MSN</a>"));

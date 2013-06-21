@@ -31,6 +31,18 @@ more spaces to create a line break.
 \#\# This is also an H2 \#\#    
 \#\#\#\#\# This is an H5  
 
+##### Lists
+
+Unordered lists use `*`, `+`, or `-` as bullets.
+
+*   one
+*   two
+
+Numbered lists use numbers followed by periods:
+
+1.  one
+2.  two
+
 ##### Block Quotes
 
 > Block quotes use email-style quoting  
