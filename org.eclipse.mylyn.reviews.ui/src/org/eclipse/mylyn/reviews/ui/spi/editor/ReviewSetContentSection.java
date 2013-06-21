@@ -88,6 +88,7 @@ public class ReviewSetContentSection {
 				updateItemSetTable();
 			}
 			updateMessage();
+			createButtons();
 		}
 
 		@Override

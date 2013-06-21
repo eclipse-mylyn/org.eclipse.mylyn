@@ -158,6 +158,14 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 				}
 				throw new CoreException(reviewObserver.result);
 			}
+		} else {
+			while (consumer.isRetrieving() && !monitor.isCanceled()) {
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+				}
+			}
 		}
 		return consumer;
 	}

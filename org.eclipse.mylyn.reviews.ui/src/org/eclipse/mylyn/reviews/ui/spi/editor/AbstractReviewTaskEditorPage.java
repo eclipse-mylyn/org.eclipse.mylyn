@@ -80,6 +80,9 @@ public abstract class AbstractReviewTaskEditorPage extends AbstractTaskEditorPag
 				getTask().getTaskId());
 		reviewConsumer.addObserver(reviewObserver);
 		reviewConsumer.open();
+		if (reviewConsumer.getRemoteObject() == null) {
+			reviewConsumer.retrieve(false);
+		}
 	}
 
 	private void checkIfModelIsCached() {

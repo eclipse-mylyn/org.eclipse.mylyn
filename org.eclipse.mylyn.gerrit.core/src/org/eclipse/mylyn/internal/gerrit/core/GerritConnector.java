@@ -32,7 +32,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritAuthenticationState;
-import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
@@ -41,12 +40,8 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritLoginException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritSystemInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
-import org.eclipse.mylyn.internal.gerrit.core.remote.GerritRemoteFactoryProvider;
-import org.eclipse.mylyn.reviews.core.model.IRepository;
-import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.spi.ReviewsClient;
 import org.eclipse.mylyn.reviews.core.spi.ReviewsConnector;
-import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
@@ -80,8 +75,6 @@ public class GerritConnector extends ReviewsConnector {
 		// disable logging of Overriding the existing type handler for class java.sql.Timestamp message
 		logger.setLevel(Level.OFF);
 	}
-
-	public static long GERRIT_COLLECTION_TIMEOUT = 30 * 1000; //2 Minutes
 
 	private static final Pattern CHANGE_ID_PATTERN = Pattern.compile("(/#change,|/#/c/)(\\d+)"); //$NON-NLS-1$
 

@@ -14,7 +14,9 @@ package org.eclipse.mylyn.internal.gerrit.ui.factories;
 import java.io.IOException;
 import java.util.Date;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -56,8 +58,15 @@ public abstract class AbstractPatchSetUiFactory extends AbstractUiFactory<IRevie
 	protected PatchSetDetail getPatchSetDetail(IReviewItemSet set) {
 		RemoteEmfConsumer<IReview, IReviewItemSet, String, PatchSetDetail, PatchSetDetail, String> consumer = getGerritFactoryProvider().getReviewItemSetFactory()
 				.getConsumerForModel(getModelObject().getReview(), set);
-		PatchSetDetail remoteObject = consumer.getRemoteObject();
-		return remoteObject;
+		//This is not really a remote call, we're just ensuring we have the patch set detail available.
+		if (consumer.getRemoteObject() == null) {
+			try {
+				consumer.pull(false, new NullProgressMonitor());
+			} catch (CoreException e) {
+				//We'll handle any issues downstream if we don't have a remote object
+			}
+		}
+		return consumer.getRemoteObject();
 	}
 
 	protected GerritRemoteFactoryProvider getGerritFactoryProvider() {

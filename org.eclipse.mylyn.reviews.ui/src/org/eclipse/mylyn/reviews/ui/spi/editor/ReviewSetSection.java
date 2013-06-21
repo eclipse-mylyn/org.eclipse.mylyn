@@ -38,9 +38,6 @@ public abstract class ReviewSetSection extends AbstractReviewSection {
 
 	private List<ReviewSetContentSection> reviewSetSections;
 
-// XXX drafts added after the publish detail was refreshed from server
-	protected int addedDrafts;
-
 	public ReviewSetSection() {
 		setPartName("Patch Sets");
 	}
