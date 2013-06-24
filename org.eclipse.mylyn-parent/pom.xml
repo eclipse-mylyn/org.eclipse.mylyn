@@ -16,7 +16,7 @@
 
   <groupId>org.eclipse.mylyn</groupId>
   <artifactId>org.eclipse.mylyn-parent</artifactId>
-  <version>3.9.0-SNAPSHOT</version>
+  <version>3.9.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <prerequisites>
@@ -75,14 +75,14 @@
     <alt-platform-repository-url>http://download.eclipse.org/releases/indigo/201202240900/</alt-platform-repository-url>
 
     <orbit-repository-url>http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/</orbit-repository-url>
-    <mylyn-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/</mylyn-repository-url>
-    <mylyn-builds-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/builds/</mylyn-builds-repository-url>
-    <mylyn-commons-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/commons/</mylyn-commons-repository-url>
-    <mylyn-context-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/context/</mylyn-context-repository-url>
-    <mylyn-docs-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/docs/</mylyn-docs-repository-url>
-    <mylyn-reviews-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/reviews/</mylyn-reviews-repository-url>
-    <mylyn-tasks-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/tasks/</mylyn-tasks-repository-url>
-    <mylyn-versions-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/versions/</mylyn-versions-repository-url>
+    <mylyn-repository-url>http://download.eclipse.org/mylyn/snapshots/3.9/</mylyn-repository-url>
+    <mylyn-builds-repository-url>http://download.eclipse.org/mylyn/snapshots/3.9/</mylyn-builds-repository-url>
+    <mylyn-commons-repository-url>http://download.eclipse.org/mylyn/snapshots/3.9/</mylyn-commons-repository-url>
+    <mylyn-context-repository-url>http://download.eclipse.org/mylyn/snapshots/3.9/</mylyn-context-repository-url>
+    <mylyn-docs-repository-url>http://download.eclipse.org/mylyn/snapshots/3.9/</mylyn-docs-repository-url>
+    <mylyn-reviews-repository-url>http://download.eclipse.org/mylyn/snapshots/3.9/</mylyn-reviews-repository-url>
+    <mylyn-tasks-repository-url>http://download.eclipse.org/mylyn/snapshots/3.9/</mylyn-tasks-repository-url>
+    <mylyn-versions-repository-url>http://download.eclipse.org/mylyn/snapshots/3.9/</mylyn-versions-repository-url>
   </properties>
 
   <mailingLists>
@@ -174,7 +174,7 @@
                 <artifact>
                   <groupId>org.eclipse.mylyn</groupId>
                   <artifactId>org.eclipse.mylyn-target</artifactId>
-                  <version>3.9.0-SNAPSHOT</version>
+                  <version>3.9.1-SNAPSHOT</version>
                   <classifier>${target-platform}</classifier>
                 </artifact>
               </target>
