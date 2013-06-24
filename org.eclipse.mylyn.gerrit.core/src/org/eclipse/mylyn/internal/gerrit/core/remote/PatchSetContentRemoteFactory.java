@@ -84,8 +84,11 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
 
 	boolean addComments(IReviewItemSet set, IFileVersion version, List<PatchLineComment> comments,
 			AccountInfoCache accountInfoCache) {
+		if (version == null) {
+			return false;
+		}
 		version.getComments().clear();
-		if (version == null || comments == null || comments.isEmpty()) {
+		if (comments == null || comments.isEmpty()) {
 			return false;
 		}
 		boolean changed = comments.size() != version.getComments().size();
