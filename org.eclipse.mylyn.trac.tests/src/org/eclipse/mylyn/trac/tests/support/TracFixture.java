@@ -60,6 +60,8 @@ public class TracFixture extends TestFixture {
 
 	private final Set<String> tags;
 
+	private final boolean excluded;
+
 	public TracFixture(Version accessMode, String url, String version, String info) {
 		super(TracCorePlugin.CONNECTOR_KIND, url);
 		Assert.isNotNull(accessMode);
@@ -67,6 +69,7 @@ public class TracFixture extends TestFixture {
 		this.accessMode = accessMode;
 		this.version = version;
 		this.tags = new HashSet<String>();
+		this.excluded = info.startsWith("Test");
 		setInfo("Trac", version, info);
 	}
 
@@ -187,6 +190,11 @@ public class TracFixture extends TestFixture {
 
 	public boolean requiresAuthentication() {
 		return getInfo().contains("AllBasicAuth");
+	}
+
+	@Override
+	public boolean isExcluded() {
+		return super.isExcluded() || excluded;
 	}
 
 }
