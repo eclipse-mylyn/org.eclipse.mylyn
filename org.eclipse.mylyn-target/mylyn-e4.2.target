@@ -74,9 +74,10 @@
 <repository location="http://subclipse.tigris.org/archive/subclipse_1.8.10"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.osgi" version="3.8.0.v20120529-1548"/>
+<unit id="org.eclipse.osgi" version="3.8.2.v20130124-134944"/>
 <unit id="org.eclipse.core.runtime.compatibility.auth" version="3.2.300.v20120523-2004"/>
-<repository location="http://download.eclipse.org/eclipse/updates/3.8/R-3.8-201206081200"/>
+<unit id="org.eclipse.jdt.annotation" version="1.0.1.v20130111-135246"/>
+<repository location="http://download.eclipse.org/eclipse/updates/3.8/R-3.8.2-201301310800"/>
 </location>
 </locations>
 </target>

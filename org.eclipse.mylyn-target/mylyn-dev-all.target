@@ -18,23 +18,23 @@
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.sdk.ide" version="0.0.0"/>
 <unit id="org.eclipse.birt.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.ecoretools.sdk.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.transaction.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.gef.sdk.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.gmf.runtime.sdk.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.papyrus.sdk.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.uml2.sdk.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.cdt.platform.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.ecf.core.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.ecore.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.ecore.edit.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.ecore.editor.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.common.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.common.ui.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.databinding.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.edit.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.edit.ui.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/releases/indigo/201109230900/"/>
+<repository location="http://download.eclipse.org/releases/juno/201303010900/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.mylyn.builds.sdk.feature.group" version="0.0.0"/>
@@ -65,6 +65,11 @@
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.swtbot.eclipse.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/technology/swtbot/releases/latest/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.jdt.annotation" version="1.0.1.v20130111-135246"/>
+<unit id="org.eclipse.sdk.ide" version="0.0.0"/>
+<repository location="http://download.eclipse.org/eclipse/updates/3.8/R-3.8.2-201301310800"/>
 </location>
 </locations>
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
