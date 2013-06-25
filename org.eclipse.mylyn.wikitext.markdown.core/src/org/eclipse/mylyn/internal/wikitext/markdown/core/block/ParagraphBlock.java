@@ -58,7 +58,6 @@ public class ParagraphBlock extends NestableBlock {
 	public void setClosed(boolean closed) {
 		if (closed && !isClosed()) {
 			builder.endBlock();
-			builder.characters("\n"); //$NON-NLS-1$
 		}
 		super.setClosed(closed);
 	}

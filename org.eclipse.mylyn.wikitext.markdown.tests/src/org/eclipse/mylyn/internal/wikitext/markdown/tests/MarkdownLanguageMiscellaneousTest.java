@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 
-
 /**
  * Tests for Markdown overview and miscellaneous. Follows specification at
  * <a>http://daringfireball.net/projects/markdown/syntax#overview</a>.
@@ -34,7 +33,7 @@ public class MarkdownLanguageMiscellaneousTest extends MarkdownLanguageTestBase 
 	 */
 	public void testInlineHtml() throws Exception {
 		String markup = "aaa\n\n<table>\n <tr>\n  <td>Foo</td>\n </tr>\n</table>\n\nbbb";
-		String expectedHtml = "<p>aaa</p>\n<table>\n <tr>\n  <td>Foo</td>\n </tr>\n</table>\n<p>bbb</p>\n";
+		String expectedHtml = "<p>aaa</p><table> <tr>  <td>Foo</td> </tr></table><p>bbb</p>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
@@ -44,7 +43,7 @@ public class MarkdownLanguageMiscellaneousTest extends MarkdownLanguageTestBase 
 	 */
 	public void testNoProcessingWithinInlineHtmlBlockLevelTags() throws Exception {
 		String markup = "<div>*Foo*</div>";
-		String expectedHtml = "<div>*Foo*</div>\n";
+		String expectedHtml = "<div>*Foo*</div>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
@@ -55,7 +54,7 @@ public class MarkdownLanguageMiscellaneousTest extends MarkdownLanguageTestBase 
 	 */
 	public void testSpanLevelTags() throws Exception {
 		String markup = "Image: <img src=\"image.jpg\">some nice image</img>.";
-		String expectedHtml = "<p>Image: <img src=\"image.jpg\">some nice image</img>.</p>\n";
+		String expectedHtml = "<p>Image: <img src=\"image.jpg\">some nice image</img>.</p>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
@@ -64,7 +63,7 @@ public class MarkdownLanguageMiscellaneousTest extends MarkdownLanguageTestBase 
 	 */
 	public void testProcessingInSpanLevelTags() throws Exception {
 		String markup = "Image: <img src=\"image.jpg\">some **nice** image</img>.";
-		String expectedHtml = "<p>Image: <img src=\"image.jpg\">some <strong>nice</strong> image</img>.</p>\n";
+		String expectedHtml = "<p>Image: <img src=\"image.jpg\">some <strong>nice</strong> image</img>.</p>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
@@ -75,19 +74,19 @@ public class MarkdownLanguageMiscellaneousTest extends MarkdownLanguageTestBase 
 	 * can write: &copy; and Markdown will leave it alone.
 	 */
 	public void testPreserveHtmlEntities() {
-		parseAndAssert("&copy; &amp;", "<p>&copy; &amp;</p>\n");
+		parseAndAssert("&copy; &amp;", "<p>&copy; &amp;</p>");
 	}
 
 	/*
 	 * But if you write: AT&T Markdown will translate it to: AT&amp;T. 
 	 */
 	public void testAmpersandIsEscaped() {
-		parseAndAssert("AT&T, a & b", "<p>AT&amp;T, a &amp; b</p>\n");
+		parseAndAssert("AT&T, a & b", "<p>AT&amp;T, a &amp; b</p>");
 	}
 
 	public void testAmpersandIsEscapedWithinUrl() {
 		String markup = "http://images.google.com/images?num=30&q=larry+bird";
-		String expectedHtml = "<p>http://images.google.com/images?num=30&amp;q=larry+bird</p>\n";
+		String expectedHtml = "<p>http://images.google.com/images?num=30&amp;q=larry+bird</p>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
@@ -96,11 +95,11 @@ public class MarkdownLanguageMiscellaneousTest extends MarkdownLanguageTestBase 
 	 * will treat them as such. But if you write: 4 < 5 Markdown will translate it to: 4 &lt; 5
 	 */
 	public void testLessThanAngleBracketIsEscaped() {
-		parseAndAssert("4 < 5", "<p>4 &lt; 5</p>\n");
+		parseAndAssert("4 < 5", "<p>4 &lt; 5</p>");
 	}
 
 	public void testGreaterThanAngleBracketIsEscaped() {
-		parseAndAssert("6 > 5", "<p>6 &gt; 5</p>\n");
+		parseAndAssert("6 > 5", "<p>6 &gt; 5</p>");
 	}
 
 	/*
@@ -108,63 +107,63 @@ public class MarkdownLanguageMiscellaneousTest extends MarkdownLanguageTestBase 
 	 * meaning in Markdown's formatting syntax.
 	 */
 	public void testEscapedBackslash() {
-		parseAndAssert("\\\\", "<p>\\</p>\n");
+		parseAndAssert("\\\\", "<p>\\</p>");
 	}
 
 	public void testEscapedBacktick() {
-		parseAndAssert("\\`", "<p>`</p>\n");
+		parseAndAssert("\\`", "<p>`</p>");
 	}
 
 	public void testEscapedAsterisk() {
-		parseAndAssert("\\*", "<p>*</p>\n");
+		parseAndAssert("\\*", "<p>*</p>");
 	}
 
 	public void testEscapedUnderscore() {
-		parseAndAssert("\\_", "<p>_</p>\n");
+		parseAndAssert("\\_", "<p>_</p>");
 	}
 
 	public void testEscapedOpeningCurlyBrace() {
-		parseAndAssert("\\{", "<p>{</p>\n");
+		parseAndAssert("\\{", "<p>{</p>");
 	}
 
 	public void testEscapedClosingCurlyBrace() {
-		parseAndAssert("\\}", "<p>}</p>\n");
+		parseAndAssert("\\}", "<p>}</p>");
 	}
 
 	public void testEscapedOpeningSquareBracket() {
-		parseAndAssert("\\[", "<p>[</p>\n");
+		parseAndAssert("\\[", "<p>[</p>");
 	}
 
 	public void testEscapedClosingSquareBracket() {
-		parseAndAssert("\\]", "<p>]</p>\n");
+		parseAndAssert("\\]", "<p>]</p>");
 	}
 
 	public void testEscapedOpeningParenthesis() {
-		parseAndAssert("\\(", "<p>(</p>\n");
+		parseAndAssert("\\(", "<p>(</p>");
 	}
 
 	public void testEscapedClosingParenthesis() {
-		parseAndAssert("\\)", "<p>)</p>\n");
+		parseAndAssert("\\)", "<p>)</p>");
 	}
 
 	public void testEscapedHashMark() {
-		parseAndAssert("\\#", "<p>#</p>\n");
+		parseAndAssert("\\#", "<p>#</p>");
 	}
 
 	public void testEscapedPlusSign() {
-		parseAndAssert("\\+", "<p>+</p>\n");
+		parseAndAssert("\\+", "<p>+</p>");
 	}
 
 	public void testEscapedMinusSign() {
-		parseAndAssert("\\-", "<p>-</p>\n");
+		parseAndAssert("\\-", "<p>-</p>");
 	}
 
 	public void testEscapedDot() {
-		parseAndAssert("\\.", "<p>.</p>\n");
+		parseAndAssert("\\.", "<p>.</p>");
 	}
 
 	public void testEscapedExclamationMark() {
-		parseAndAssert("\\!", "<p>!</p>\n");
+		parseAndAssert("\\!", "<p>!</p>");
 	}
 
 	/*
@@ -174,19 +173,19 @@ public class MarkdownLanguageMiscellaneousTest extends MarkdownLanguageTestBase 
 	 */
 	public void testAutomaticLinksAtBeginOfLine() throws Exception {
 		String markup = "<http://example.com/>";
-		String expectedHtml = "<p><a href=\"http://example.com/\">http://example.com/</a></p>\n";
+		String expectedHtml = "<p><a href=\"http://example.com/\">http://example.com/</a></p>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testAutomaticLinksWithinText() throws Exception {
 		String markup = "This <http://example.com/> is an automatic link.";
-		String expectedHtml = "<p>This <a href=\"http://example.com/\">http://example.com/</a> is an automatic link.</p>\n";
+		String expectedHtml = "<p>This <a href=\"http://example.com/\">http://example.com/</a> is an automatic link.</p>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testNoSpanWithinAutomaticLinks() throws Exception {
 		String markup = "This <http://www.google.de/?q=t_es_t> is an automatic link.";
-		String expectedHtml = "<p>This <a href=\"http://www.google.de/?q=t_es_t\">http://www.google.de/?q=t_es_t</a> is an automatic link.</p>\n";
+		String expectedHtml = "<p>This <a href=\"http://www.google.de/?q=t_es_t\">http://www.google.de/?q=t_es_t</a> is an automatic link.</p>";
 		parseAndAssert(markup, expectedHtml);
 	}
 }

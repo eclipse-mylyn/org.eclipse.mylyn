@@ -40,7 +40,6 @@ public class InlineHtmlBlock extends NestableBlock {
 		}
 
 		builder.charactersUnescaped(text);
-		builder.characters("\n"); //$NON-NLS-1$
 
 		return -1;
 	}

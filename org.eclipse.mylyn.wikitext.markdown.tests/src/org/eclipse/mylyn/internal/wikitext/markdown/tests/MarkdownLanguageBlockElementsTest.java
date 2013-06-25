@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 
-
 /**
  * Tests for Markdown block elements. Follows specification at
  * <a>http://daringfireball.net/projects/markdown/syntax#block</a>.
@@ -27,31 +26,31 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 	 */
 	public void testParagraphWithOneLine() {
 		String markup = "a paragraph";
-		String expectedHtml = "<p>a paragraph</p>\n";
+		String expectedHtml = "<p>a paragraph</p>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testParagraphWithMulitpleLines() {
 		String markup = "a paragraph\nwith multiple\nlines";
-		String expectedHtml = "<p>a paragraph\nwith multiple\nlines</p>\n";
+		String expectedHtml = "<p>a paragraph\nwith multiple\nlines</p>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testParagraphsSeparatedBySingleBlankLine() {
-		String markup = "a paragraph\n\nanother paragraph\n\n";
-		String expectedHtml = "<p>a paragraph</p>\n<p>another paragraph</p>\n";
+		String markup = "a paragraph\n\nanother paragraph\n";
+		String expectedHtml = "<p>a paragraph</p><p>another paragraph</p>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testParagraphsSeparatedByMulitpleBlankLines() {
-		String markup = "a paragraph\n\n\nanother paragraph\n\n\n";
-		String expectedHtml = "<p>a paragraph</p>\n<p>another paragraph</p>\n";
+		String markup = "a paragraph\n\n\nanother paragraph\n\n";
+		String expectedHtml = "<p>a paragraph</p><p>another paragraph</p>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testParagraphsSeparatedByMulitpleBlankLinesWithSpacesAndTabs() {
 		String markup = "a paragraph\n \n\t\nanother paragraph";
-		String expectedHtml = "<p>a paragraph</p>\n<p>another paragraph</p>\n";
+		String expectedHtml = "<p>a paragraph</p><p>another paragraph</p>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
@@ -61,7 +60,7 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 	 */
 	public void testLineBreakInParagraph() {
 		String markup = "line  1  \nline  2    \nline  3";
-		String expectedHtml = "<p>line  1<br/>\nline  2<br/>\nline  3</p>\n";
+		String expectedHtml = "<p>line  1<br/>\nline  2<br/>\nline  3</p>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
@@ -190,8 +189,8 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 	 * put a > before every line.
 	 */
 	public void testBlockquoteWithQuoteCharInEachLine() {
-		String markup = "> Lorem ipsum dolor sit amet, \n> consetetur adipisici elit.\n";
-		String expectedHtml = "<blockquote><p>Lorem ipsum dolor sit amet, \nconsetetur adipisici elit.</p>\n</blockquote>";
+		String markup = "> Lorem ipsum dolor sit amet, \n> consetetur adipisici elit.";
+		String expectedHtml = "<blockquote><p>Lorem ipsum dolor sit amet, \nconsetetur adipisici elit.</p></blockquote>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
@@ -199,8 +198,8 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 	 * Markdown allows you to be lazy and only put the > before the first line of a hard-wrapped paragraph.
 	 */
 	public void testBlockquoteWithSingleQuoteChar() {
-		String markup = "> Lorem ipsum dolor sit amet, \nconsetetur adipisici elit.\n";
-		String expectedHtml = "<blockquote><p>Lorem ipsum dolor sit amet, \nconsetetur adipisici elit.</p>\n</blockquote>";
+		String markup = "> Lorem ipsum dolor sit amet, \nconsetetur adipisici elit.";
+		String expectedHtml = "<blockquote><p>Lorem ipsum dolor sit amet, \nconsetetur adipisici elit.</p></blockquote>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
@@ -208,14 +207,14 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 	 * Blockquotes can be nested (i.e. a blockquote-in-a-blockquote) by adding additional levels of >.
 	 */
 	public void testNestedBlockquotesTwoLevels() {
-		String markup = "> A1\n>\n> > B1\n> > B2\n>\n> A2\n";
-		String expectedHtml = "<blockquote><p>A1</p>\n<blockquote><p>B1\nB2</p>\n</blockquote><p>A2</p>\n</blockquote>";
+		String markup = "> A1\n>\n> > B1\n> > B2\n>\n> A2";
+		String expectedHtml = "<blockquote><p>A1</p><blockquote><p>B1\nB2</p></blockquote><p>A2</p></blockquote>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testNestedBlockquotesThreeLevels() {
-		String markup = "> A1\n>\n> > B1\n> >\n> > > C1\n>\n> A2\n";
-		String expectedHtml = "<blockquote><p>A1</p>\n<blockquote><p>B1</p>\n<blockquote><p>C1</p>\n</blockquote></blockquote><p>A2</p>\n</blockquote>";
+		String markup = "> A1\n>\n> > B1\n> >\n> > > C1\n>\n> A2";
+		String expectedHtml = "<blockquote><p>A1</p><blockquote><p>B1</p><blockquote><p>C1</p></blockquote></blockquote><p>A2</p></blockquote>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
@@ -224,7 +223,7 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 	 */
 	public void testBlockquotesContainingParagraphs() {
 		String markup = ">a\n>b\n>\n>c";
-		String expectedHtml = "<blockquote><p>a\nb</p>\n<p>c</p>\n</blockquote>";
+		String expectedHtml = "<blockquote><p>a\nb</p><p>c</p></blockquote>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
@@ -248,13 +247,13 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 
 	public void testBlockquotesContainingInlineLink() {
 		String markup = ">[Link](http://www.example.com)";
-		String expectedHtml = "<blockquote><p><a href=\"http://www.example.com\">Link</a></p>\n</blockquote>";
+		String expectedHtml = "<blockquote><p><a href=\"http://www.example.com\">Link</a></p></blockquote>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testBlockquotesContainingReferenceLink() {
 		String markup = ">[Link][link]\n>\n>[link]: http://www.example.com";
-		String expectedHtml = "<blockquote><p><a href=\"http://www.example.com\">Link</a></p>\n</blockquote>";
+		String expectedHtml = "<blockquote><p><a href=\"http://www.example.com\">Link</a></p></blockquote>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
@@ -265,8 +264,8 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 	}
 
 	public void testBlockquotesContainingHorizontalRuleIsNotInterpretedAsUnderlinedHeader() {
-		String markup = ">No H2.\n>\n>---\n";
-		String expectedHtml = "<blockquote><p>No H2.</p>\n<hr/></blockquote>";
+		String markup = ">No H2.\n>\n>---";
+		String expectedHtml = "<blockquote><p>No H2.</p><hr/></blockquote>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
@@ -278,13 +277,13 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 
 	public void testBlockquotesContainingInlineHTML() {
 		String markup = "> <input type=\"button\" value=\"Click\"/>";
-		String expectedHtml = "<blockquote><input type=\"button\" value=\"Click\"/>\n</blockquote>";
+		String expectedHtml = "<blockquote><input type=\"button\" value=\"Click\"/></blockquote>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testBlockquoteSimple() {
 		String markup = "> a\n> b";
-		String expectedHtml = "<blockquote><p>a\nb</p>\n</blockquote>";
+		String expectedHtml = "<blockquote><p>a\nb</p></blockquote>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
