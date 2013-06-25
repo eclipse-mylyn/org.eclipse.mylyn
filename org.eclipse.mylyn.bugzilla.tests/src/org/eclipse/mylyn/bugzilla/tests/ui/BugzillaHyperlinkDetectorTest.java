@@ -112,6 +112,8 @@ public class BugzillaHyperlinkDetectorTest extends TestCase {
 		assertHyperlinks("bug  123", link(0, 8, "123"));
 		assertHyperlinks("bug#123", link(0, 7, "123"));
 		assertHyperlinks("bug  #  123", link(0, 11, "123"));
+		assertHyperlinks("Bug: 123", link(0, 8, "123"));
+		assertHyperlinks("bug: 123", link(0, 8, "123"));
 	}
 
 	public void testFindHyperlinksTask() {
@@ -151,6 +153,7 @@ public class BugzillaHyperlinkDetectorTest extends TestCase {
 	public void testFindHyperlinksMultiple() {
 		assertHyperlinks("bug 456#comment#12", link(0, 7, "456"), link(8, 10, "123", "12"));
 		assertHyperlinks("bug 123             bug 456", link(0, 7, "123"), link(20, 7, "456"));
+		assertHyperlinks("bug: 123             bug: 456", link(0, 8, "123"), link(21, 8, "456"));
 	}
 
 	public void testFindHyperlinksLinebreak() {

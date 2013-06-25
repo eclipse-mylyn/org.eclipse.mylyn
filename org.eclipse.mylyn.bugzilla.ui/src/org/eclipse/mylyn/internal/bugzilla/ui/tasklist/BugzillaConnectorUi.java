@@ -53,7 +53,7 @@ import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
  */
 public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 
-	private static final String BUG = "(?:duplicate of|bug|task)[ \t]*#?[ \t]*(\\d+)"; //$NON-NLS-1$
+	private static final String BUG = "(?:duplicate of|bug|task)[ \t]*(?:#|:)?[ \t]*(\\d+)"; //$NON-NLS-1$
 
 	private static final String COMMENT = "comment[ \t]*#?[ \t]*(\\d+)"; //$NON-NLS-1$
 
