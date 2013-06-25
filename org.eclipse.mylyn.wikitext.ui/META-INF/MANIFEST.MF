@@ -17,6 +17,7 @@ Require-Bundle: org.eclipse.mylyn.wikitext.core;bundle-version="1.5.0",
  org.eclipse.help
 Bundle-Activator: org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin
 Export-Package: org.eclipse.mylyn.internal.wikitext.ui;x-friends:="org.eclipse.mylyn.wikitext.tasks.ui",
+ org.eclipse.mylyn.internal.wikitext.ui.commands;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.ui.editor;x-friends:="org.eclipse.mylyn.wikitext.tests,org.eclipse.mylyn.wikitext.tasks.ui,org.eclipse.mylyn.wikitext.context.ui",
  org.eclipse.mylyn.internal.wikitext.ui.editor.actions;x-friends:="org.eclipse.mylyn.wikitext.tests,org.eclipse.mylyn.wikitext.tasks.ui,org.eclipse.mylyn.wikitext.context.ui",
  org.eclipse.mylyn.internal.wikitext.ui.editor.assist;x-friends:="org.eclipse.mylyn.wikitext.tests,org.eclipse.mylyn.wikitext.tasks.ui,org.eclipse.mylyn.wikitext.context.ui",

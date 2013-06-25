@@ -10,11 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.ui.commands;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
@@ -24,6 +21,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.mylyn.internal.wikitext.ui.util.IOUtil;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
@@ -37,7 +35,7 @@ import org.eclipse.ui.PlatformUI;
 public class ConvertMarkupToHtml extends AbstractMarkupResourceHandler {
 
 	@Override
-	protected void handleFile(IFile file, String name) {
+	protected void handleFile(final IFile file, String name) {
 		final IFile newFile = file.getParent().getFile(new Path(name + ".html")); //$NON-NLS-1$
 		if (newFile.exists()) {
 			if (!MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
@@ -47,36 +45,27 @@ public class ConvertMarkupToHtml extends AbstractMarkupResourceHandler {
 			}
 		}
 
-		StringWriter writer = new StringWriter();
+		final StringWriter writer = new StringWriter();
 		HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer) {
 			@Override
 			protected XmlStreamWriter createXmlStreamWriter(Writer out) {
 				return super.createFormattingXmlStreamWriter(out);
 			}
 		};
-		MarkupParser parser = new MarkupParser();
+		final MarkupParser parser = new MarkupParser();
 		parser.setMarkupLanguage(markupLanguage);
 		parser.setBuilder(builder);
 		builder.setEmitDtd(true);
 
 		try {
-			StringWriter w = new StringWriter();
-			Reader r = new InputStreamReader(new BufferedInputStream(file.getContents()), file.getCharset());
-			try {
-				int i;
-				while ((i = r.read()) != -1) {
-					w.write((char) i);
-				}
-			} finally {
-				r.close();
-			}
-
-			parser.parse(w.toString());
-			final String xhtmlContent = writer.toString();
 
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
+						String inputContent = IOUtil.readFully(file);
+						parser.parse(inputContent);
+						String xhtmlContent = writer.toString();
+
 						if (newFile.exists()) {
 							newFile.setContents(new ByteArrayInputStream(xhtmlContent.getBytes("utf-8")), false, true, //$NON-NLS-1$
 									monitor);

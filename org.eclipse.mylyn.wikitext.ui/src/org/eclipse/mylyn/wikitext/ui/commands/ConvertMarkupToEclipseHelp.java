@@ -10,11 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.ui.commands;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.Reader;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 
@@ -24,6 +21,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.mylyn.internal.wikitext.ui.util.IOUtil;
 import org.eclipse.mylyn.wikitext.core.parser.util.MarkupToEclipseToc;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
@@ -35,7 +33,7 @@ import org.eclipse.ui.PlatformUI;
 public class ConvertMarkupToEclipseHelp extends ConvertMarkupToHtml {
 
 	@Override
-	protected void handleFile(IFile file, String name) {
+	protected void handleFile(final IFile file, String name) {
 		super.handleFile(file, name);
 		final IFile newFile = file.getParent().getFile(new Path(name + "-toc.xml")); //$NON-NLS-1$
 		if (newFile.exists()) {
@@ -51,7 +49,7 @@ public class ConvertMarkupToEclipseHelp extends ConvertMarkupToHtml {
 		IPath parentFullPath = file.getParent().getFullPath();
 		IPath pluginPathToHelp = parentFullPath.removeFirstSegments(1);
 
-		MarkupToEclipseToc markupToEclipseToc = new MarkupToEclipseToc();
+		final MarkupToEclipseToc markupToEclipseToc = new MarkupToEclipseToc();
 		markupToEclipseToc.setMarkupLanguage(markupLanguage);
 		markupToEclipseToc.setBookTitle(name);
 
@@ -66,22 +64,13 @@ public class ConvertMarkupToEclipseHelp extends ConvertMarkupToHtml {
 		markupToEclipseToc.setHtmlFile(htmlFilePath);
 
 		try {
-			StringWriter w = new StringWriter();
-			Reader r = new InputStreamReader(new BufferedInputStream(file.getContents()), file.getCharset());
-			try {
-				int i;
-				while ((i = r.read()) != -1) {
-					w.write((char) i);
-				}
-			} finally {
-				r.close();
-			}
-
-			final String tocXml = markupToEclipseToc.parse(w.toString());
 
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+
 					try {
+						String content = IOUtil.readFully(file);
+						final String tocXml = markupToEclipseToc.parse(content);
 						if (newFile.exists()) {
 							newFile.setContents(new ByteArrayInputStream(tocXml.getBytes("utf-8")), false, true, //$NON-NLS-1$
 									monitor);

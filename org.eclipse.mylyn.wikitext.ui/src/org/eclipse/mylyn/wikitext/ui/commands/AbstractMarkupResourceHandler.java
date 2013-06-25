@@ -83,7 +83,7 @@ public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 							}
 						}
 
-						handleFile(file, name);
+						handleFile(event, file, name);
 					} finally {
 						markupLanguage = prev;
 					}
@@ -92,6 +92,17 @@ public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Classes that need access to the {@code event} should override this method. The default implementation simply
+	 * calls {@link #handleFile(IFile, String)}
+	 * 
+	 * @since 1.9
+	 * @see #handleFile(IFile, String)
+	 */
+	protected void handleFile(ExecutionEvent event, IFile file, String name) throws ExecutionException {
+		handleFile(file, name);
 	}
 
 	/**
@@ -112,6 +123,15 @@ public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 		return selection;
 	}
 
+	/**
+	 * Perform the command's function on the given file.
+	 * 
+	 * @param file
+	 *            the input file to process
+	 * @param name
+	 *            the name of the output file without file extension
+	 * @see #handleFile(ExecutionEvent, IFile, String)
+	 */
 	protected abstract void handleFile(IFile file, String name) throws ExecutionException;
 
 	public MarkupLanguage getMarkupLanguage() {
