@@ -18,18 +18,22 @@ import java.lang.reflect.Method;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareEditorInput;
+import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.contentmergeviewer.TextMergeViewer;
 import org.eclipse.compare.structuremergeviewer.DiffNode;
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.IDiffElement;
+import org.eclipse.compare.structuremergeviewer.StructureDiffViewer;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -124,6 +128,41 @@ public class ReviewItemSetCompareEditorInput extends CompareEditorInput {
 	}
 
 	@Override
+	public Viewer findStructureViewer(Viewer oldViewer, ICompareInput input, Composite parent) {
+		Viewer structureViewer = super.findStructureViewer(oldViewer, input, parent);
+		if (structureViewer instanceof StructureDiffViewer) {
+			StructureDiffViewer diffViewer = (StructureDiffViewer) structureViewer;
+			diffViewer.setLabelProvider(new LabelProvider() {
+
+				@Override
+				public String getText(Object element) {
+					if (element instanceof ITypedElement) {
+						return ((ITypedElement) element).getName();
+					}
+					return "<no name>"; //$NON-NLS-1$
+				}
+
+				@Override
+				public Image getImage(Object element) {
+					if (element instanceof IDiffElement) {
+						IDiffElement input = (IDiffElement) element;
+						int kind = input.getKind();
+						//We need to swap additions and deletions as work-around. See https://bugs.eclipse.org/bugs/show_bug.cgi?id=410534
+						if (kind == Differencer.ADDITION) {
+							kind = Differencer.DELETION;
+						} else if (kind == Differencer.DELETION) {
+							kind = Differencer.ADDITION;
+						}
+						return getCompareConfiguration().getImage(input.getImage(), kind);
+					}
+					return null;
+				}
+			});
+		}
+		return structureViewer;
+	}
+
+	@Override
 	public Viewer findContentViewer(Viewer oldViewer, ICompareInput input, Composite parent) {
 		Viewer contentViewer = super.findContentViewer(oldViewer, input, parent);
 		if (input instanceof FileItemNode && ((FileItemNode) input).getFileItem() != null) {
@@ -131,7 +170,6 @@ public class ReviewItemSetCompareEditorInput extends CompareEditorInput {
 			IFileItem item = ((FileItemNode) input).getFileItem();
 			support.setReviewItem(item, behavior);
 			getCompareConfiguration().setLabelProvider(input, ((FileItemNode) input).getLabelProvider());
-
 			//NOTE:  This solves the problem described in bug 402060, but causes a bad listener leak in AbstractTextEditor so we remove it for now
 			//updateViewerConfig(contentViewer, (FileItemNode) input);
 		}
