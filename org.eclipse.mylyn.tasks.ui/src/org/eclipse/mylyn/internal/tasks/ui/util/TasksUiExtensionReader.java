@@ -11,20 +11,14 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.util;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -35,14 +29,12 @@ import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.core.activity.DefaultTaskActivityMonitor;
 import org.eclipse.mylyn.internal.tasks.core.context.DefaultTaskContextStore;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
+import org.eclipse.mylyn.internal.tasks.core.util.RepositoryConnectorExtensionReader;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.AbstractTaskListPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryMigrator;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.activity.AbstractTaskActivityMonitor;
 import org.eclipse.mylyn.tasks.core.context.AbstractTaskContextStore;
@@ -57,95 +49,9 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  * @author Mik Kersten
  * @author Shawn Minto
  * @author Rob Elves
+ * @author Steffen Pingel
  */
 public class TasksUiExtensionReader {
-
-	private static class ConnectorDescriptor {
-
-		IConfigurationElement element;
-
-		IConfigurationElement taskListMigratorElement;
-
-		IConfigurationElement repositoryMigratorElement;
-
-		AbstractRepositoryConnector repositoryConnector;
-
-		AbstractTaskListMigrator taskListMigrator;
-
-		AbstractRepositoryMigrator repositoryMigrator;
-
-		private final String id;
-
-		public ConnectorDescriptor(IConfigurationElement element) {
-			this.element = element;
-			this.id = element.getAttribute(ATTR_ID);
-		}
-
-		public String getId() {
-			return id;
-		}
-
-		public String getConnectorKind() {
-			return (repositoryConnector != null) ? repositoryConnector.getConnectorKind() : null;
-		}
-
-		public IStatus createConnector() {
-			Assert.isTrue(repositoryConnector == null);
-			try {
-				Object connectorCore = element.createExecutableExtension(ATTR_CLASS);
-				if (connectorCore instanceof AbstractRepositoryConnector) {
-					repositoryConnector = (AbstractRepositoryConnector) connectorCore;
-					return Status.OK_STATUS;
-				} else {
-					return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load connector core " //$NON-NLS-1$
-							+ connectorCore.getClass().getCanonicalName());
-				}
-			} catch (Throwable e) {
-				return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load connector core", e); //$NON-NLS-1$
-			}
-		}
-
-		public IStatus createTaskListMigrator() {
-			Assert.isTrue(taskListMigrator == null);
-			try {
-				Object migratorObject = taskListMigratorElement.createExecutableExtension(ATTR_CLASS);
-				if (migratorObject instanceof AbstractTaskListMigrator) {
-					taskListMigrator = (AbstractTaskListMigrator) migratorObject;
-					return Status.OK_STATUS;
-				} else {
-					return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-							"Could not load task list migrator: " + migratorObject.getClass().getCanonicalName() //$NON-NLS-1$
-									+ " must implement " + AbstractTaskListMigrator.class.getCanonicalName()); //$NON-NLS-1$
-				}
-			} catch (Throwable e) {
-				return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Could not load task list migrator extension", e); //$NON-NLS-1$
-			}
-		}
-
-		public IStatus createRepositoryMigrator() {
-			Assert.isTrue(repositoryMigrator == null);
-			try {
-				Object migratorObject = repositoryMigratorElement.createExecutableExtension(ATTR_CLASS);
-				if (migratorObject instanceof AbstractRepositoryMigrator) {
-					repositoryMigrator = (AbstractRepositoryMigrator) migratorObject;
-					return Status.OK_STATUS;
-				} else {
-					return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-							"Could not load repository migrator: " + migratorObject.getClass().getCanonicalName() //$NON-NLS-1$
-									+ " must implement " + AbstractRepositoryMigrator.class.getCanonicalName()); //$NON-NLS-1$
-				}
-			} catch (Throwable e) {
-				return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Could not load repository migrator extension", e); //$NON-NLS-1$
-			}
-		}
-
-		public String getPluginId() {
-			return element.getContributor().getName();
-		}
-
-	}
 
 	public static final String EXTENSION_REPOSITORIES = "org.eclipse.mylyn.tasks.ui.repositories"; //$NON-NLS-1$
 
@@ -177,15 +83,9 @@ public class TasksUiExtensionReader {
 
 	public static final String ELMNT_TMPL_ADDAUTO = "addAutomatically"; //$NON-NLS-1$
 
-	public static final String ELMNT_REPOSITORY_CONNECTOR = "connectorCore"; //$NON-NLS-1$
-
 	public static final String ELMNT_REPOSITORY_LINK_PROVIDER = "linkProvider"; //$NON-NLS-1$
 
 	public static final String ELMNT_REPOSITORY_UI = "connectorUi"; //$NON-NLS-1$
-
-	public static final String ELMNT_MIGRATOR = "taskListMigrator"; //$NON-NLS-1$
-
-	public static final String ELMNT_REPOSITORY_MIGRATOR = "repositoryMigrator"; //$NON-NLS-1$
 
 	public static final String ATTR_BRANDING_ICON = "brandingIcon"; //$NON-NLS-1$
 
@@ -242,7 +142,11 @@ public class TasksUiExtensionReader {
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
 
 			// NOTE: has to be read first, consider improving
-			initConnectorCores(taskListExternalizer, repositoryManager, registry);
+			IExtensionPoint repositoriesExtensionPoint = registry.getExtensionPoint(EXTENSION_REPOSITORIES);
+			RepositoryConnectorExtensionReader reader = new RepositoryConnectorExtensionReader(taskListExternalizer,
+					repositoryManager);
+			reader.registerConnectors(repositoriesExtensionPoint);
+			disabledContributors.addAll(reader.getDisabledContributors());
 
 			IExtensionPoint templatesExtensionPoint = registry.getExtensionPoint(EXTENSION_TEMPLATES);
 			IExtension[] templateExtensions = templatesExtensionPoint.getExtensions();
@@ -284,121 +188,6 @@ public class TasksUiExtensionReader {
 
 			coreExtensionsRead = true;
 		}
-	}
-
-	private static void initConnectorCores(TaskListExternalizer taskListExternalizer,
-			TaskRepositoryManager repositoryManager, IExtensionRegistry registry) {
-		List<ConnectorDescriptor> descriptors = new ArrayList<ConnectorDescriptor>();
-		MultiStatus result = new MultiStatus(TasksUiPlugin.ID_PLUGIN, 0, "Repository connectors failed to load.", null); //$NON-NLS-1$
-
-		// read core and migrator extensions to check for id conflicts
-		Map<String, List<ConnectorDescriptor>> descriptorById = new LinkedHashMap<String, List<ConnectorDescriptor>>();
-		IExtensionPoint repositoriesExtensionPoint = registry.getExtensionPoint(EXTENSION_REPOSITORIES);
-		IExtension[] repositoryExtensions = repositoriesExtensionPoint.getExtensions();
-		for (IExtension repositoryExtension : repositoryExtensions) {
-			IConfigurationElement[] elements = repositoryExtension.getConfigurationElements();
-			ConnectorDescriptor descriptor = null;
-			IConfigurationElement tasklistMigratorElement = null;
-			IConfigurationElement repositoryMigratorElement = null;
-			for (IConfigurationElement element : elements) {
-				if (element.getName().equals(ELMNT_REPOSITORY_CONNECTOR)) {
-					descriptor = new ConnectorDescriptor(element);
-				} else if (element.getName().equals(ELMNT_MIGRATOR)) {
-					tasklistMigratorElement = element;
-				} else if (element.getName().equals(ELMNT_REPOSITORY_MIGRATOR)) {
-					repositoryMigratorElement = element;
-				}
-			}
-			if (descriptor != null) {
-				descriptor.taskListMigratorElement = tasklistMigratorElement;
-				descriptor.repositoryMigratorElement = repositoryMigratorElement;
-				descriptors.add(descriptor);
-				if (descriptor.getId() != null) {
-					add(descriptorById, descriptor.getId(), descriptor);
-				}
-			}
-		}
-
-		checkForConflicts(descriptors, result, descriptorById);
-
-		// create instances to check for connector kind conflicts
-		Map<String, List<ConnectorDescriptor>> descriptorByConnectorKind = new LinkedHashMap<String, List<ConnectorDescriptor>>();
-		for (ConnectorDescriptor descriptor : descriptors) {
-			IStatus status = descriptor.createConnector();
-			if (status.isOK() && descriptor.repositoryConnector != null) {
-				add(descriptorByConnectorKind, descriptor.getConnectorKind(), descriptor);
-			} else {
-				result.add(status);
-			}
-		}
-
-		checkForConflicts(descriptors, result, descriptorByConnectorKind);
-
-		// register connectors
-		List<AbstractTaskListMigrator> taskListmigrators = new ArrayList<AbstractTaskListMigrator>();
-		List<AbstractRepositoryMigrator> repositoryMigrators = new ArrayList<AbstractRepositoryMigrator>();
-		for (ConnectorDescriptor descriptor : descriptors) {
-			if (descriptor.repositoryConnector != null) {
-				repositoryManager.addRepositoryConnector(descriptor.repositoryConnector);
-				if (descriptor.taskListMigratorElement != null) {
-					IStatus status = descriptor.createTaskListMigrator();
-					if (status.isOK() && descriptor.taskListMigrator != null) {
-						taskListmigrators.add(descriptor.taskListMigrator);
-					} else {
-						result.add(status);
-					}
-				}
-				if (descriptor.repositoryMigratorElement != null) {
-					IStatus status = descriptor.createRepositoryMigrator();
-					if (status.isOK() && descriptor.repositoryMigrator != null) {
-						repositoryMigrators.add(descriptor.repositoryMigrator);
-					} else {
-						result.add(status);
-					}
-				}
-			}
-		}
-
-		if (!result.isOK()) {
-			StatusHandler.log(result);
-		}
-
-		repositoryManager.initialize(repositoryMigrators);
-		taskListExternalizer.initialize(taskListmigrators);
-	}
-
-	private static boolean isDisabled(IConfigurationElement element) {
-		return disabledContributors.contains(element.getContributor().getName());
-	}
-
-	private static void checkForConflicts(List<ConnectorDescriptor> descriptors, MultiStatus result,
-			Map<String, List<ConnectorDescriptor>> descriptorById) {
-		for (Map.Entry<String, List<ConnectorDescriptor>> entry : descriptorById.entrySet()) {
-			if (entry.getValue().size() > 1) {
-				MultiStatus status = new MultiStatus(TasksUiPlugin.ID_PLUGIN, 0, NLS.bind(
-						"Connector ''{0}'' registered by multiple extensions.", entry.getKey()), null); //$NON-NLS-1$
-				for (ConnectorDescriptor descriptor : entry.getValue()) {
-					status.add(new Status(
-							IStatus.ERROR,
-							TasksUiPlugin.ID_PLUGIN,
-							NLS.bind(
-									"All extensions contributed by ''{0}'' have been disabled.", descriptor.getPluginId()), null)); //$NON-NLS-1$
-					disabledContributors.add(descriptor.getPluginId());
-					descriptors.remove(descriptor);
-				}
-				result.add(status);
-			}
-		}
-	}
-
-	private static void add(Map<String, List<ConnectorDescriptor>> descriptorById, String id,
-			ConnectorDescriptor descriptor) {
-		List<ConnectorDescriptor> list = descriptorById.get(id);
-		if (list == null) {
-			list = new ArrayList<ConnectorDescriptor>();
-			descriptorById.put(id, list);
-		}
-		list.add(descriptor);
 	}
 
 	public static void initWorkbenchUiExtensions() {
@@ -703,6 +492,10 @@ public class TasksUiExtensionReader {
 			}
 		}
 		return new DefaultTaskContextStore();
+	}
+
+	private static boolean isDisabled(IConfigurationElement element) {
+		return disabledContributors.contains(element.getContributor().getName());
 	}
 
 }
