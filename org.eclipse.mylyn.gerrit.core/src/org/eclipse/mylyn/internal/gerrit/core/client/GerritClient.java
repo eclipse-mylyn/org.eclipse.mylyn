@@ -303,8 +303,7 @@ public class GerritClient extends ReviewsClient {
 		});
 	}
 
-	public void loadPatchSetContent(PatchSetContent patchSetContent, IProgressMonitor monitor) {
-		try {
+	public void loadPatchSetContent(PatchSetContent patchSetContent, IProgressMonitor monitor) throws GerritException {
 			Id baseId = (patchSetContent.getBase() != null) ? patchSetContent.getBase().getId() : null;
 			Id targetId = patchSetContent.getTarget().getId();
 			if (patchSetContent.getTargetDetail() == null) {
@@ -317,9 +316,6 @@ public class GerritClient extends ReviewsClient {
 					patchSetContent.putPatchScriptByPatchKey(patch.getKey(), patchScript);
 				}
 			}
-		} catch (GerritException e) {
-			handleMissingPatchSet("Patch Set " + patchSetContent.getId(), e);
-		}
 	}
 
 	public GerritConfigX getGerritConfig() {

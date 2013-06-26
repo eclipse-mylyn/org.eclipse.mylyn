@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.gerrit.core.client.PatchSetContent;
 import org.eclipse.mylyn.internal.gerrit.core.remote.PatchSetContentCompareRemoteFactory;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritReviewBehavior;
@@ -46,6 +45,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
 import org.eclipse.ui.internal.WorkbenchImages;
+import org.eclipse.ui.statushandlers.StatusManager;
 
 import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.reviewdb.PatchSet;
@@ -74,8 +74,9 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 
 		@Override
 		public void failed(IReviewItemSet parentObject, List<IFileItem> modelObject, IStatus status) {
-			StatusHandler.log(new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID,
-					"Couldn't load task content for review", status.getException())); //$NON-NLS-1$
+			StatusManager.getManager().handle(
+					new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID, "Couldn't load content for compare editor",
+							status.getException()), StatusManager.SHOW | StatusManager.LOG);
 		}
 	};
 

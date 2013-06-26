@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
 import org.eclipse.mylyn.internal.gerrit.core.ReviewItemCache;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.PatchSetContent;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
@@ -62,7 +63,12 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
 
 	public PatchSetContent pull(IReviewItemSet parentObject, PatchSetContent content, IProgressMonitor monitor)
 			throws CoreException {
-		gerritFactoryProvider.getClient().loadPatchSetContent(content, monitor);
+		try {
+			gerritFactoryProvider.getClient().loadPatchSetContent(content, monitor);
+		} catch (GerritException e) {
+			throw new CoreException(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
+					"Couldn't obtain patch set content for " + content.getId() + ". Check remote connection.", e));
+		}
 		for (Patch patch : content.getTargetDetail().getPatches()) {
 			PatchScript patchScript = content.getPatchScript(patch.getKey());
 			if (patchScript == null) {
