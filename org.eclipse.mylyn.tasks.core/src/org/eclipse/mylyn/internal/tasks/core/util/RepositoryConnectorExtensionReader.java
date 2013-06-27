@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.tasks.core.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -23,8 +24,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
@@ -33,7 +37,8 @@ import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalize
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryMigrator;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
-import org.eclipse.mylyn.tasks.core.RepositoryConnectorDescriptor;
+import org.eclipse.mylyn.tasks.core.spi.RepositoryConnectorContributor;
+import org.eclipse.mylyn.tasks.core.spi.RepositoryConnectorDescriptor;
 import org.eclipse.osgi.util.NLS;
 
 public class RepositoryConnectorExtensionReader {
@@ -48,6 +53,9 @@ public class RepositoryConnectorExtensionReader {
 
 	public static final String ATTR_CLASS = "class"; //$NON-NLS-1$
 
+	private static final String EXTENSION_CONTRIBUTORS = ITasksCoreConstants.ID_PLUGIN
+			+ ".repositoryConnectorContributor"; //$NON-NLS-1$
+
 	private static class ConnectorFactory {
 
 		private AbstractRepositoryConnector connector;
@@ -61,6 +69,8 @@ public class RepositoryConnectorExtensionReader {
 		private final String pluginId;
 
 		public ConnectorFactory(RepositoryConnectorDescriptor descriptor, String pluginId) {
+			Assert.isNotNull(pluginId);
+			Assert.isNotNull(pluginId);
 			this.descriptor = descriptor;
 			this.pluginId = pluginId;
 		}
@@ -196,6 +206,10 @@ public class RepositoryConnectorExtensionReader {
 
 	private final TaskRepositoryManager repositoryManager;
 
+	private final List<ConnectorFactory> factories = new ArrayList<ConnectorFactory>();
+
+	private MultiStatus result;
+
 	public RepositoryConnectorExtensionReader(TaskListExternalizer taskListExternalizer,
 			TaskRepositoryManager repositoryManager) {
 		this.taskListExternalizer = taskListExternalizer;
@@ -203,28 +217,69 @@ public class RepositoryConnectorExtensionReader {
 	}
 
 	public void registerConnectors(IExtensionPoint repositoriesExtensionPoint) {
-		List<ConnectorFactory> descriptors = new ArrayList<ConnectorFactory>();
-		MultiStatus result = new MultiStatus(ITasksCoreConstants.ID_PLUGIN, 0,
-				"Repository connectors failed to load.", null); //$NON-NLS-1$
+		if (result != null) {
+			throw new IllegalStateException("registerConnectors may only be invoked once"); //$NON-NLS-1$
+		}
 
-		Map<String, List<ConnectorFactory>> factoryById = readFromRepositoriesExtensionPoint(
-				repositoriesExtensionPoint, descriptors);
-		checkForConflicts(descriptors, result, factoryById);
+		result = new MultiStatus(ITasksCoreConstants.ID_PLUGIN, 0, "Repository connectors failed to load.", null); //$NON-NLS-1$
 
-		Map<String, List<ConnectorFactory>> factoryByConnectorKind = createConnectorInstances(descriptors, result);
-		checkForConflicts(descriptors, result, factoryByConnectorKind);
+		Map<String, List<ConnectorFactory>> factoryById = readFromRepositoriesExtensionPoint(repositoriesExtensionPoint);
+		checkForConflicts(factoryById);
 
-		registerConnectorInstances(descriptors, result);
+		readFromContributorsExtensionPoint();
+
+		Map<String, List<ConnectorFactory>> factoryByConnectorKind = createConnectorInstances();
+		checkForConflicts(factoryByConnectorKind);
+
+		registerConnectorInstances();
 
 		if (!result.isOK()) {
 			StatusHandler.log(result);
 		}
 	}
 
-	public Map<String, List<ConnectorFactory>> createConnectorInstances(List<ConnectorFactory> descriptors,
-			MultiStatus result) {
+	private void readFromContributorsExtensionPoint() {
+		IExtensionPoint repositoriesExtensionPoint = Platform.getExtensionRegistry().getExtensionPoint(
+				EXTENSION_CONTRIBUTORS);
+		IExtension[] extensions = repositoriesExtensionPoint.getExtensions();
+		for (IExtension extension : extensions) {
+			IConfigurationElement[] elements = extension.getConfigurationElements();
+			for (IConfigurationElement element : elements) {
+				addDescriptorsFromContributor(element);
+			}
+		}
+	}
+
+	private void addDescriptorsFromContributor(final IConfigurationElement element) {
+		SafeRunner.run(new ISafeRunnable() {
+
+			@Override
+			public void run() throws Exception {
+				RepositoryConnectorContributor contributor = (RepositoryConnectorContributor) element.createExecutableExtension(ATTR_CLASS);
+				Collection<RepositoryConnectorDescriptor> descriptors = contributor.getDescriptors();
+				if (descriptors == null) {
+					result.add(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
+							"Could not load connectors contributed by ''{0}''", element.getContributor().getName()))); //$NON-NLS-1$
+					return;
+				}
+				for (RepositoryConnectorDescriptor descriptor : descriptors) {
+					if (descriptor != null) {
+						factories.add(new ConnectorFactory(descriptor, element.getContributor().getName()));
+					}
+				}
+			}
+
+			@Override
+			public void handleException(Throwable exception) {
+				// ignore
+
+			}
+		});
+	}
+
+	public Map<String, List<ConnectorFactory>> createConnectorInstances() {
 		Map<String, List<ConnectorFactory>> factoryByConnectorKind = new LinkedHashMap<String, List<ConnectorFactory>>();
-		for (ConnectorFactory descriptor : descriptors) {
+		for (ConnectorFactory descriptor : factories) {
 			IStatus status = descriptor.createConnector();
 			if (status.isOK() && descriptor.getConnector() != null) {
 				add(factoryByConnectorKind, descriptor.getConnectorKind(), descriptor);
@@ -235,11 +290,11 @@ public class RepositoryConnectorExtensionReader {
 		return factoryByConnectorKind;
 	}
 
-	private void registerConnectorInstances(List<ConnectorFactory> descriptors, MultiStatus result) {
+	private void registerConnectorInstances() {
 		List<AbstractTaskListMigrator> taskListmigrators = new ArrayList<AbstractTaskListMigrator>();
 		List<AbstractRepositoryMigrator> repositoryMigrators = new ArrayList<AbstractRepositoryMigrator>();
 
-		for (ConnectorFactory descriptor : descriptors) {
+		for (ConnectorFactory descriptor : factories) {
 			if (descriptor.getConnector() != null) {
 				repositoryManager.addRepositoryConnector(descriptor.getConnector());
 
@@ -268,7 +323,7 @@ public class RepositoryConnectorExtensionReader {
 	}
 
 	private Map<String, List<ConnectorFactory>> readFromRepositoriesExtensionPoint(
-			IExtensionPoint repositoriesExtensionPoint, List<ConnectorFactory> descriptors) {
+			IExtensionPoint repositoriesExtensionPoint) {
 		// read core and migrator extensions to check for id conflicts
 		Map<String, List<ConnectorFactory>> factoryById = new LinkedHashMap<String, List<ConnectorFactory>>();
 
@@ -291,7 +346,7 @@ public class RepositoryConnectorExtensionReader {
 				descriptor.taskListMigratorElement = tasklistMigratorElement;
 				descriptor.repositoryMigratorElement = repositoryMigratorElement;
 				ConnectorFactory factory = new ConnectorFactory(descriptor, descriptor.getPluginId());
-				descriptors.add(factory);
+				factories.add(factory);
 				if (descriptor.getId() != null) {
 					add(factoryById, descriptor.getId(), factory);
 				}
@@ -300,8 +355,7 @@ public class RepositoryConnectorExtensionReader {
 		return factoryById;
 	}
 
-	private void checkForConflicts(List<ConnectorFactory> descriptors, MultiStatus result,
-			Map<String, List<ConnectorFactory>> descriptorById) {
+	private void checkForConflicts(Map<String, List<ConnectorFactory>> descriptorById) {
 		for (Map.Entry<String, List<ConnectorFactory>> entry : descriptorById.entrySet()) {
 			if (entry.getValue().size() > 1) {
 				MultiStatus status = new MultiStatus(ITasksCoreConstants.ID_PLUGIN, 0, NLS.bind(
@@ -310,7 +364,7 @@ public class RepositoryConnectorExtensionReader {
 					status.add(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
 							"All extensions contributed by ''{0}'' have been disabled.", factory.getPluginId()), null)); //$NON-NLS-1$
 					disabledContributors.add(factory.getPluginId());
-					descriptors.remove(factory);
+					factories.remove(factory);
 				}
 				result.add(status);
 			}
@@ -328,6 +382,10 @@ public class RepositoryConnectorExtensionReader {
 
 	public Set<String> getDisabledContributors() {
 		return new HashSet<String>(disabledContributors);
+	}
+
+	public IStatus getResult() {
+		return result;
 	}
 
 }

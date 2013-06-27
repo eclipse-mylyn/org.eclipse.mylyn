@@ -9,17 +9,19 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.tasks.tests.support;
 
-/**
- * @since 3.10
- */
-public abstract class RepositoryConnectorDescriptor {
+import java.util.Collections;
+import java.util.List;
 
-	public abstract AbstractRepositoryConnector createRepositoryConnector();
+import org.eclipse.mylyn.tasks.core.spi.RepositoryConnectorContributor;
+import org.eclipse.mylyn.tasks.core.spi.RepositoryConnectorDescriptor;
 
-	public abstract AbstractTaskListMigrator createTaskListMigrator();
+public class MockRepositoryConnectorContributor extends RepositoryConnectorContributor {
 
-	public abstract AbstractRepositoryMigrator createRepositoryMigrator();
+	@Override
+	public List<RepositoryConnectorDescriptor> getDescriptors() {
+		return Collections.<RepositoryConnectorDescriptor> singletonList(new MockRepositoryConnectorDescriptor());
+	}
 
 }

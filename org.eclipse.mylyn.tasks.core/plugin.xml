@@ -17,4 +17,5 @@
    <extension-point id="taskActivationListeners" name="Task Activation Listeners" schema="schema/taskActivationListeners.exsd"/>
    <extension-point id="activityMonitor" name="Task Activity Monitor" schema="schema/activityMonitor.exsd"/>
    <extension-point id="contextStore" name="Task Context Store" schema="schema/contextStore.exsd"/>
+   <extension-point id="repositoryConnectorContributor" name="Repository Connector Contributor" schema="schema/repositoryConnectorContributor.exsd"/>
 </plugin>

@@ -25,5 +25,6 @@ Export-Package: org.eclipse.mylyn.internal.provisional.tasks.core;x-internal:=tr
  org.eclipse.mylyn.tasks.core.activity,
  org.eclipse.mylyn.tasks.core.context,
  org.eclipse.mylyn.tasks.core.data,
+ org.eclipse.mylyn.tasks.core.spi,
  org.eclipse.mylyn.tasks.core.sync
 Bundle-Localization: plugin

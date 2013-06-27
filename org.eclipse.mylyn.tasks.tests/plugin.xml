@@ -207,5 +207,11 @@
             name="Invalid Test Provider">
       </provider>
    </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.core.repositoryConnectorContributor">
+      <contributor
+            class="org.eclipse.mylyn.tasks.tests.support.MockRepositoryConnectorContributor">
+      </contributor>
+   </extension>
   
 </plugin>
