@@ -174,6 +174,7 @@ Lightweight markup is designed to be readily converted to HTML.  WikiText provid
 * "OASIS DITA":http://dita.xml.org
 * Eclipse help format (HTML and @toc.xml@)
 * "XSL-FO":http://en.wikipedia.org/wiki/XSL_Formatting_Objects
+* Other markup languages (e.g. Textile, Confluence)
 
 h2. Conversion In Eclipse
 
@@ -181,9 +182,15 @@ These conversions can be made by right-clicking any @*.textile@, @*.tracwiki@, @
 
 !images/resource-conversion-menu.png!
 
-Performing a conversion from the UI will cause corresponding files (@*.xml@, @*.html@, @*-toc.xml@) to be created in the same folder as the selected file(s).
+Performing a conversion from the UI will cause corresponding files (@*.xml@, @*.html@, @*-toc.xml@, @*.textile@) to be created in the same folder as the selected file(s).
 
 More control over the conversion process can be achieved by using Ant build scripts (described below).
+
+h3. Wiki Markup Conversion
+
+Mylyn WikiText can convert from one wiki markup language to another.  Currently supported output formats are Textile and Confluence.  Examples of conversions include MediaWiki to Textile, Confluence to Textile, MediaWiki to Confluence, etc.
+
+Wiki markup conversion is performed in Eclipse, see "Conversion In Eclipse":#ConversionInEclipse for more details.
 
 h2. Conversion using Ant build scripts
 
@@ -763,5 +770,5 @@ h2. Feedback
 
 We're interested in any feedback that you might have.  For patches, enhancement requests, bugs: "post an issue":https://bugs.eclipse.org/bugs under under Tools/Mylyn/WikiText.
 
-p{font-style: italic;}. Copyright (c) 2008, 2012 David Green and others.
+p{font-style: italic;}. Copyright (c) 2008, 2013 David Green and others.
 All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at "http://www.eclipse.org/legal/epl-v10.html":http://www.eclipse.org/legal/epl-v10.html
