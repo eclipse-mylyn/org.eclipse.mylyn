@@ -208,6 +208,8 @@ public class RepositoryConnectorExtensionReader {
 
 	private final List<ConnectorFactory> factories = new ArrayList<ConnectorFactory>();
 
+	private final List<RepositoryConnectorDescriptor> descriptors = new ArrayList<RepositoryConnectorDescriptor>();
+
 	private MultiStatus result;
 
 	public RepositoryConnectorExtensionReader(TaskListExternalizer taskListExternalizer,
@@ -267,6 +269,7 @@ public class RepositoryConnectorExtensionReader {
 						factories.add(new ConnectorFactory(descriptor, element.getContributor().getName()));
 					}
 				}
+				RepositoryConnectorExtensionReader.this.descriptors.addAll(descriptors);
 			}
 
 			@Override
@@ -378,6 +381,10 @@ public class RepositoryConnectorExtensionReader {
 			descriptorById.put(id, list);
 		}
 		list.add(descriptor);
+	}
+
+	public List<RepositoryConnectorDescriptor> getDescriptors() {
+		return new ArrayList<RepositoryConnectorDescriptor>(descriptors);
 	}
 
 	public Set<String> getDisabledContributors() {

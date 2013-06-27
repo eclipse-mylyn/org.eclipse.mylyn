@@ -17,9 +17,9 @@
          </appInfo>
       </annotation>
       <complexType>
-         <choice>
+         <sequence>
             <element ref="contributor"/>
-         </choice>
+         </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
                <documentation>
@@ -49,13 +49,13 @@
 
    <element name="contributor">
       <complexType>
-         <attribute name="class" type="string">
+         <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
                   The class that contributes connector descriptors.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.tasks.core.RepositoryConnectorDescriptor:"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.tasks.core.spi.RepositoryConnectorContributor:"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -76,27 +76,28 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         [Enter extension point usage example here.]
+            &lt;extension
+         point=&quot;org.eclipse.mylyn.tasks.core.repositoryConnectorContributor&quot;&gt;
+      &lt;contributor
+            class=&quot;MyRepositoryConnectorContributor&quot;&gt;
+      &lt;/contributor&gt;
+   &lt;/extension&gt;
       </documentation>
    </annotation>
+
+
 
    <annotation>
       <appInfo>
-         <meta.section type="apiinfo"/>
+         <meta.section type="copyright"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         Copyright (c) 2013 Tasktop Technologies and others.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
       </documentation>
    </annotation>
-
-   <annotation>
-      <appInfo>
-         <meta.section type="implementation"/>
-      </appInfo>
-      <documentation>
-         [Enter information about supplied implementation of this extension point.]
-      </documentation>
-   </annotation>
-
 
 </schema>

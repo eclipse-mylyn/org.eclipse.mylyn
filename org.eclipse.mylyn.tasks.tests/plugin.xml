@@ -213,5 +213,18 @@
             class="org.eclipse.mylyn.tasks.tests.support.MockRepositoryConnectorContributor">
       </contributor>
    </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector"
+            class="org.eclipse.mylyn.tasks.tests.support.MockRepositoryConnectorAdapter">
+         <adapter
+               type="org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi">
+         </adapter>
+         <adapter
+               type="org.eclipse.mylyn.tasks.core.spi.RepositoryConnectorBranding">
+         </adapter>
+      </factory>
+   </extension>
   
 </plugin>

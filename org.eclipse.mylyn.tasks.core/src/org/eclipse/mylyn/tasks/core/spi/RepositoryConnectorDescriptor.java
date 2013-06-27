@@ -21,6 +21,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
  * A descriptor for an {@link AbstractRepositoryConnector} instance.
  * 
  * @since 3.10
+ * @see RepositoryConnectorBranding
  */
 public abstract class RepositoryConnectorDescriptor {
 

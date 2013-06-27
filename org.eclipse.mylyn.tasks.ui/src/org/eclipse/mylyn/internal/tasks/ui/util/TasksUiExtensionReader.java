@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.core.activity.DefaultTaskActivityMonitor;
@@ -38,7 +37,7 @@ import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.activity.AbstractTaskActivityMonitor;
 import org.eclipse.mylyn.tasks.core.context.AbstractTaskContextStore;
-import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.core.spi.RepositoryConnectorDescriptor;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
@@ -87,10 +86,6 @@ public class TasksUiExtensionReader {
 
 	public static final String ELMNT_REPOSITORY_UI = "connectorUi"; //$NON-NLS-1$
 
-	public static final String ATTR_BRANDING_ICON = "brandingIcon"; //$NON-NLS-1$
-
-	public static final String ATTR_OVERLAY_ICON = "overlayIcon"; //$NON-NLS-1$
-
 	public static final String ELMNT_TYPE = "type"; //$NON-NLS-1$
 
 	public static final String ELMNT_QUERY_PAGE = "queryPage"; //$NON-NLS-1$
@@ -136,6 +131,8 @@ public class TasksUiExtensionReader {
 	 */
 	private static Set<String> disabledContributors = new HashSet<String>();
 
+	private static Set<RepositoryConnectorDescriptor> descriptors = new HashSet<RepositoryConnectorDescriptor>();
+
 	public static void initStartupExtensions(TaskListExternalizer taskListExternalizer,
 			TaskRepositoryManager repositoryManager) {
 		if (!coreExtensionsRead) {
@@ -146,6 +143,7 @@ public class TasksUiExtensionReader {
 			RepositoryConnectorExtensionReader reader = new RepositoryConnectorExtensionReader(taskListExternalizer,
 					repositoryManager);
 			reader.registerConnectors(repositoriesExtensionPoint);
+			descriptors.addAll(reader.getDescriptors());
 			disabledContributors.addAll(reader.getDisabledContributors());
 
 			IExtensionPoint templatesExtensionPoint = registry.getExtensionPoint(EXTENSION_TEMPLATES);
@@ -193,18 +191,9 @@ public class TasksUiExtensionReader {
 	public static void initWorkbenchUiExtensions() {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 
-		IExtensionPoint repositoriesExtensionPoint = registry.getExtensionPoint(EXTENSION_REPOSITORIES);
-		IExtension[] repositoryExtensions = repositoriesExtensionPoint.getExtensions();
-		for (IExtension repositoryExtension : repositoryExtensions) {
-			IConfigurationElement[] elements = repositoryExtension.getConfigurationElements();
-			for (IConfigurationElement element : elements) {
-				if (!isDisabled(element)) {
-					if (element.getName().equals(ELMNT_REPOSITORY_UI)) {
-						readRepositoryConnectorUi(element);
-					}
-				}
-			}
-		}
+		RepositoryConnectorUiExtensionReader reader = new RepositoryConnectorUiExtensionReader(registry,
+				disabledContributors);
+		reader.registerConnectorUis();
 
 		IExtensionPoint linkProvidersExtensionPoint = registry.getExtensionPoint(EXTENSION_REPOSITORY_LINKS_PROVIDERS);
 		IExtension[] linkProvidersExtensions = linkProvidersExtensionPoint.getExtensions();
@@ -326,47 +315,6 @@ public class TasksUiExtensionReader {
 		} catch (Throwable e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load page editor factory", //$NON-NLS-1$
 					e));
-		}
-	}
-
-	private static void readRepositoryConnectorUi(IConfigurationElement element) {
-		try {
-			Object connectorUiObject = element.createExecutableExtension(ATTR_CLASS);
-			if (connectorUiObject instanceof AbstractRepositoryConnectorUi) {
-				AbstractRepositoryConnectorUi connectorUi = (AbstractRepositoryConnectorUi) connectorUiObject;
-				if (TasksUiPlugin.getConnector(connectorUi.getConnectorKind()) != null) {
-					TasksUiPlugin.getDefault().addRepositoryConnectorUi(connectorUi);
-
-					String iconPath = element.getAttribute(ATTR_BRANDING_ICON);
-					if (iconPath != null) {
-						ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(
-								element.getContributor().getName(), iconPath);
-						if (descriptor != null) {
-							TasksUiPlugin.getDefault().addBrandingIcon(connectorUi.getConnectorKind(),
-									CommonImages.getImage(descriptor));
-						}
-					}
-					String overlayIconPath = element.getAttribute(ATTR_OVERLAY_ICON);
-					if (overlayIconPath != null) {
-						ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(
-								element.getContributor().getName(), overlayIconPath);
-						if (descriptor != null) {
-							TasksUiPlugin.getDefault().addOverlayIcon(connectorUi.getConnectorKind(), descriptor);
-						}
-					}
-				} else {
-					StatusHandler.log(new Status(
-							IStatus.ERROR,
-							TasksUiPlugin.ID_PLUGIN,
-							NLS.bind(
-									"Ignoring connector ui for kind ''{0}'' without corresponding core contributed by ''{1}''.", connectorUi.getConnectorKind(), element.getContributor().getName()))); //$NON-NLS-1$
-				}
-			} else {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load connector ui " //$NON-NLS-1$
-						+ connectorUiObject.getClass().getCanonicalName()));
-			}
-		} catch (Throwable e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load connector ui", e)); //$NON-NLS-1$
 		}
 	}
 
