@@ -40,7 +40,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta.Kind;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
-import org.eclipse.mylyn.tasks.core.ITaskActivityManager;
+import org.eclipse.mylyn.tasks.core.ITaskActivityManager2;
 import org.eclipse.osgi.util.NLS;
 
 /**
@@ -49,7 +49,7 @@ import org.eclipse.osgi.util.NLS;
  * @since 2.1
  * @author Rob Elves
  */
-public class TaskActivityManager implements ITaskActivityManager {
+public class TaskActivityManager implements ITaskActivityManager2 {
 
 	private final TaskActivationHistory taskActivationHistory = new TaskActivationHistory();
 
