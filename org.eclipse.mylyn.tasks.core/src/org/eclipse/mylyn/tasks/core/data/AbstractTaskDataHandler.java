@@ -16,6 +16,8 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
@@ -37,8 +39,8 @@ public abstract class AbstractTaskDataHandler {
 	 * 
 	 * @since 3.0
 	 */
-	public void getMultiTaskData(TaskRepository repository, Set<String> taskIds, TaskDataCollector collector,
-			IProgressMonitor monitor) throws CoreException {
+	public void getMultiTaskData(@NonNull TaskRepository repository, @NonNull Set<String> taskIds, @NonNull TaskDataCollector collector,
+			@Nullable IProgressMonitor monitor) throws CoreException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -47,16 +49,16 @@ public abstract class AbstractTaskDataHandler {
 	 * 
 	 * @since 3.0
 	 */
-	public abstract RepositoryResponse postTaskData(TaskRepository repository, TaskData taskData,
-			Set<TaskAttribute> oldAttributes, IProgressMonitor monitor) throws CoreException;
+	public abstract RepositoryResponse postTaskData(@NonNull TaskRepository repository, @NonNull TaskData taskData,
+			@Nullable Set<TaskAttribute> oldAttributes, @Nullable IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Initialize a new task data object with default attributes and values
 	 * 
 	 * @since 3.0
 	 */
-	public abstract boolean initializeTaskData(TaskRepository repository, TaskData data,
-			ITaskMapping initializationData, IProgressMonitor monitor) throws CoreException;
+	public abstract boolean initializeTaskData(@NonNull TaskRepository repository, @NonNull TaskData data,
+			@Nullable ITaskMapping initializationData, @Nullable IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Initializes <code>taskData</code> with default attributes for a subtask of <code>parentTaskData</code>.
@@ -64,8 +66,8 @@ public abstract class AbstractTaskDataHandler {
 	 * @return false if this operation is not supported by the connector, true if initialized
 	 * @since 3.0
 	 */
-	public boolean initializeSubTaskData(TaskRepository repository, TaskData taskData, TaskData parentTaskData,
-			IProgressMonitor monitor) throws CoreException {
+	public boolean initializeSubTaskData(@NonNull TaskRepository repository, @NonNull TaskData taskData, @NonNull TaskData parentTaskData,
+			@Nullable IProgressMonitor monitor) throws CoreException {
 		return false;
 	}
 
@@ -78,7 +80,7 @@ public abstract class AbstractTaskDataHandler {
 	 *            the parent task data, may be null
 	 * @since 3.0
 	 */
-	public boolean canInitializeSubTaskData(TaskRepository repository, ITask task) {
+	public boolean canInitializeSubTaskData(@NonNull TaskRepository repository, @Nullable ITask task) {
 		return false;
 	}
 
@@ -88,7 +90,7 @@ public abstract class AbstractTaskDataHandler {
 	 * @see TaskAttributeMapper
 	 * @since 3.0
 	 */
-	public abstract TaskAttributeMapper getAttributeMapper(TaskRepository repository);
+	public abstract TaskAttributeMapper getAttributeMapper(@NonNull TaskRepository repository);
 
 	/**
 	 * Returns true if connector support downloading multiple task data in single request, false otherwise. If true,
@@ -98,7 +100,7 @@ public abstract class AbstractTaskDataHandler {
 	 *            the repository for which multi task data download is supported
 	 * @since 3.0
 	 */
-	public boolean canGetMultiTaskData(TaskRepository repository) {
+	public boolean canGetMultiTaskData(@NonNull TaskRepository repository) {
 		return false;
 	}
 
@@ -110,7 +112,7 @@ public abstract class AbstractTaskDataHandler {
 	 * 
 	 * @since 3.0
 	 */
-	public void migrateTaskData(TaskRepository repository, TaskData taskData) {
+	public void migrateTaskData(@NonNull TaskRepository repository, @NonNull TaskData taskData) {
 	}
 
 }

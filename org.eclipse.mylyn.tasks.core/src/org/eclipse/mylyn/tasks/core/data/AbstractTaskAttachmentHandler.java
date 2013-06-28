@@ -15,6 +15,8 @@ import java.io.InputStream;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
@@ -26,14 +28,14 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  */
 public abstract class AbstractTaskAttachmentHandler {
 
-	public abstract boolean canGetContent(TaskRepository repository, ITask task);
+	public abstract boolean canGetContent(@NonNull TaskRepository repository, @NonNull ITask task);
 
-	public abstract boolean canPostContent(TaskRepository repository, ITask task);
+	public abstract boolean canPostContent(@NonNull TaskRepository repository,@NonNull ITask task);
 
-	public abstract InputStream getContent(TaskRepository repository, ITask task, TaskAttribute attachmentAttribute,
-			IProgressMonitor monitor) throws CoreException;
+	public abstract InputStream getContent(@NonNull TaskRepository repository, @NonNull ITask task, @Nullable TaskAttribute attachmentAttribute,
+			@Nullable IProgressMonitor monitor) throws CoreException;
 
-	public abstract void postContent(TaskRepository repository, ITask task, AbstractTaskAttachmentSource source,
-			String comment, TaskAttribute attachmentAttribute, IProgressMonitor monitor) throws CoreException;
+	public abstract void postContent(@NonNull TaskRepository repository, @NonNull ITask task, @NonNull AbstractTaskAttachmentSource source,
+			@Nullable String comment, @Nullable TaskAttribute attachmentAttribute, @Nullable IProgressMonitor monitor) throws CoreException;
 
 }
