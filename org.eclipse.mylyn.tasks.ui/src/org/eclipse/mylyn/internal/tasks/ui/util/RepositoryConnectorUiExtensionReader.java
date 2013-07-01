@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -84,14 +85,12 @@ public class RepositoryConnectorUiExtensionReader {
 		SafeRunner.run(new ISafeRunnable() {
 			@Override
 			public void run() throws Exception {
-				AbstractRepositoryConnectorUi connectorUi = (AbstractRepositoryConnectorUi) Platform.getAdapterManager()
-						.loadAdapter(connector, AbstractRepositoryConnectorUi.class.getName());
+				AbstractRepositoryConnectorUi connectorUi = loadAdapter(connector, AbstractRepositoryConnectorUi.class);
 				if (connectorUi != null) {
 					TasksUiPlugin.getDefault().addRepositoryConnectorUi(connectorUi);
 				}
 
-				RepositoryConnectorBranding branding = (RepositoryConnectorBranding) Platform.getAdapterManager()
-						.loadAdapter(connector, RepositoryConnectorBranding.class.getName());
+				RepositoryConnectorBranding branding = loadAdapter(connector, RepositoryConnectorBranding.class);
 				if (branding != null) {
 					InputStream brandingImageData = branding.getBrandingImageData();
 					if (brandingImageData != null) {
@@ -104,6 +103,18 @@ public class RepositoryConnectorUiExtensionReader {
 								getImageDescriptor(overlayImageData));
 					}
 				}
+			}
+
+			@SuppressWarnings("unchecked")
+			public <T> T loadAdapter(final AbstractRepositoryConnector connector, Class<T> klass) {
+				T adapter = null;
+				if (connector instanceof IAdaptable) {
+					adapter = (T) ((IAdaptable) connector).getAdapter(klass);
+				}
+				if (adapter == null) {
+					adapter = (T) Platform.getAdapterManager().loadAdapter(connector, klass.getName());
+				}
+				return adapter;
 			}
 
 			private ImageDescriptor getImageDescriptor(InputStream in) {
