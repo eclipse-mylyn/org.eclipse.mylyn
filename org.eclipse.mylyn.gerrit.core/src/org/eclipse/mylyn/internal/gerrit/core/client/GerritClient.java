@@ -755,7 +755,7 @@ public class GerritClient extends ReviewsClient {
 						@Override
 						public HttpMethodBase createMethod() throws IOException {
 							GetMethod method = new GetMethod(client.getUrl()
-									+ "/changes/?format=JSON&q=" + URLEncoder.encode(queryString, "UTF-8")); //$NON-NLS-1$ //$NON-NLS-2$ 
+									+ "/changes/?q=" + URLEncoder.encode(queryString, "UTF-8")); //$NON-NLS-1$ //$NON-NLS-2$ 
 							method.setRequestHeader("Accept", "application/json"); //$NON-NLS-1$//$NON-NLS-2$
 							return method;
 						}
