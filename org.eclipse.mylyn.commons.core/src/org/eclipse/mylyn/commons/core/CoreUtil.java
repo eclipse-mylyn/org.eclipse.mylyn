@@ -46,7 +46,7 @@ public class CoreUtil {
 		}
 	}
 
-	private static final String FRAMEWORK_VERSION = "3.9.0"; //$NON-NLS-1$
+	private static final String FRAMEWORK_VERSION = "3.10.0"; //$NON-NLS-1$
 
 	private static final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 	static {
