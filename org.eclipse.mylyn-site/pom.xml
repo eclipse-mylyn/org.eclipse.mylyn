@@ -37,6 +37,14 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-packaging-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <configuration>
+          <timestampProvider></timestampProvider>
+        </configuration>
+      </plugin>
+      <plugin>
         <artifactId>maven-resources-plugin</artifactId>
         <executions>
           <execution>
@@ -94,7 +102,7 @@
                 <echo file="${project.build.directory}/version.properties">
                   <![CDATA[
                            ${unqualifiedVersion}
-                           ${buildQualifier}
+                           ${buildQualifier}p
                   ]]>
                 </echo>
               </target>
