@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Tasktop Technologies and others.
+ * Copyright (c) 2011, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.apache.commons.httpclient.Cookie;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
@@ -59,7 +60,7 @@ public class GerritClientTest extends TestCase {
 
 	@Test
 	public void testRefreshConfig() throws Exception {
-		GerritConfiguration config = client.refreshConfig(null);
+		GerritConfiguration config = client.refreshConfig(new NullProgressMonitor());
 		assertNotNull(config);
 		assertNotNull(config.getGerritConfig());
 		assertNotNull(config.getProjects());
@@ -70,7 +71,7 @@ public class GerritClientTest extends TestCase {
 		if (!GerritFixture.current().canAuthenticate()) {
 			return; // skip
 		}
-		Account account = client.getAccount(null);
+		Account account = client.getAccount(new NullProgressMonitor());
 		assertEquals(CommonTestUtil.getShortUserName(harness.readCredentials()), account.getUserName());
 	}
 
@@ -78,7 +79,7 @@ public class GerritClientTest extends TestCase {
 	public void testGetAccountAnonymous() throws Exception {
 		client = harness.clientAnonymous();
 		try {
-			client.getAccount(null);
+			client.getAccount(new NullProgressMonitor());
 			fail("Expected GerritException");
 		} catch (GerritException e) {
 			assertEquals("Not Signed In", e.getMessage());
@@ -97,7 +98,7 @@ public class GerritClientTest extends TestCase {
 		expected.add(new CommentLink("([Tt]ask:\\s+)(\\d+)", "$1<a href=\"http://tracker.mylyn.org/$2\">$2</a>"));
 
 		client = harness.client();
-		GerritConfiguration config = client.refreshConfig(null);
+		GerritConfiguration config = client.refreshConfig(new NullProgressMonitor());
 		List<CommentLink> links = config.getGerritConfig().getCommentLinks2();
 		assertEquals(expected, links);
 	}
@@ -113,6 +114,19 @@ public class GerritClientTest extends TestCase {
 		authState.setCookie(new Cookie(WebUtil.getHost(location.getUrl()), "xrsfKey", "invalid"));
 		client = new GerritClient(null, location, null, authState, "invalid");
 		client.getAccount(null);
+	}
+
+	@Test
+	public void testGetVersion() throws Exception {
+		assertEquals(getCurrentVersion(), client.getVersion(new NullProgressMonitor()).toString());
+	}
+
+	private static String getCurrentVersion() {
+		String simpleInfo = GerritFixture.current().getSimpleInfo();
+		if (simpleInfo.indexOf('/') != -1) {
+			return simpleInfo.substring(0, simpleInfo.indexOf('/'));
+		}
+		return simpleInfo;
 	}
 
 }

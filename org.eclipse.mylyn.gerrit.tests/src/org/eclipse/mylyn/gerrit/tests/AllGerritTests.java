@@ -21,11 +21,12 @@ import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.gerrit.tests.core.GerritConnectorTest;
 import org.eclipse.mylyn.gerrit.tests.core.GerritSynchronizationTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.GerritClientTest;
+import org.eclipse.mylyn.gerrit.tests.core.client.GerritVersionTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.OpenIdAuthenticationTest;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.gerrit.tests.ui.GerritUrlHandlerTest;
-import org.eclipse.mylyn.internal.gerrit.core.remote.GerritReviewRemoteFactoryTest;
 import org.eclipse.mylyn.internal.gerrit.core.remote.GerritDataLocatorTest;
+import org.eclipse.mylyn.internal.gerrit.core.remote.GerritReviewRemoteFactoryTest;
 import org.eclipse.mylyn.internal.gerrit.core.remote.PatchSetRemoteFactoryTest;
 
 /**
@@ -46,6 +47,7 @@ public class AllGerritTests {
 	}
 
 	private static void addTests(TestSuite suite, TestConfiguration configuration) {
+		suite.addTestSuite(GerritVersionTest.class);
 		if (!configuration.isLocalOnly()) {
 			// network tests
 			suite.addTestSuite(GerritUrlHandlerTest.class);

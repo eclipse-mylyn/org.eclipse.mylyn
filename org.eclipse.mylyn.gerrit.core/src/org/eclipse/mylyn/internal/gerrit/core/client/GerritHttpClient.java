@@ -1,5 +1,5 @@
 /*********************************************************************
- * Copyright (c) 2010 Sony Ericsson/ST Ericsson and others.
+ * Copyright (c) 2010, 2013 Sony Ericsson/ST Ericsson and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -160,21 +160,27 @@ public class GerritHttpClient {
 	}
 
 	public <T> T execute(Request<T> request, IProgressMonitor monitor) throws IOException, GerritException {
+		return execute(request, true, monitor);
+	}
+
+	public <T> T execute(Request<T> request, boolean authenticateIfNeeded, IProgressMonitor monitor)
+			throws IOException, GerritException {
 		String openIdProvider = getOpenIdProvider();
 
 		hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
 
 		for (int attempt = 0; attempt < 2; attempt++) {
-			// force authentication
-			if (needsAuthentication()) {
-				AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
-				if (openIdProvider != null || credentials != null) {
-					authenticate(openIdProvider, monitor);
+			if (authenticateIfNeeded) {
+				// force authentication
+				if (needsAuthentication()) {
+					AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
+					if (openIdProvider != null || credentials != null) {
+						authenticate(openIdProvider, monitor);
+					}
 				}
-			}
-
-			if (!obtainedXsrfKey) {
-				updateXsrfKey(monitor);
+				if (!obtainedXsrfKey) {
+					updateXsrfKey(monitor);
+				}
 			}
 
 			HttpMethodBase method = request.createMethod();

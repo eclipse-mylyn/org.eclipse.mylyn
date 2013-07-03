@@ -1,5 +1,5 @@
 /*********************************************************************
- * Copyright (c) 2010 Sony Ericsson/ST Ericsson and others.
+ * Copyright (c) 2010, 2013 Sony Ericsson/ST Ericsson and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpMethodBase;
@@ -52,6 +54,7 @@ import org.eclipse.mylyn.reviews.core.spi.ReviewsClient;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.AbstractRemoteEmfFactoryProvider;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.osgi.util.NLS;
+import org.osgi.framework.Version;
 
 import com.google.gerrit.common.data.AccountDashboardInfo;
 import com.google.gerrit.common.data.AccountService;
@@ -90,6 +93,8 @@ import com.google.gwtjsonrpc.client.VoidResult;
  * @author Miles Parker
  */
 public class GerritClient extends ReviewsClient {
+
+	private static final Pattern GERRIT_VERSION_PATTERN = Pattern.compile("Powered by Gerrit Code Review (.+)</p>"); //$NON-NLS-1$
 
 	private abstract class Operation<T> implements AsyncCallback<T> {
 
@@ -178,6 +183,8 @@ public class GerritClient extends ReviewsClient {
 	private Account myAcount;
 
 	private AccountDiffPreference myDiffPreference;
+
+	private Version myVersion;
 
 //	private GerritConfig createDefaultConfig() {
 //		GerritConfig config = new GerritConfig();
@@ -346,6 +353,7 @@ public class GerritClient extends ReviewsClient {
 	}
 
 	public GerritSystemInfo getInfo(IProgressMonitor monitor) throws GerritException {
+		Version version = getCachedVersion(monitor);
 		List<ContributorAgreement> contributorAgreements = null;
 		Account account = null;
 		if (!isAnonymous()) {
@@ -366,7 +374,7 @@ public class GerritClient extends ReviewsClient {
 			executeQuery(monitor, "status:open"); //$NON-NLS-1$
 		}
 		refreshConfigOnce(monitor);
-		return new GerritSystemInfo(contributorAgreements, account);
+		return new GerritSystemInfo(version, contributorAgreements, account);
 	}
 
 	public PatchScript getPatchScript(final Patch.Key key, final PatchSet.Id leftId, final PatchSet.Id rightId,
@@ -929,5 +937,50 @@ public class GerritClient extends ReviewsClient {
 	@Override
 	public AbstractRemoteEmfFactoryProvider<IRepository, IReview> createFactoryProvider() {
 		return new GerritRemoteFactoryProvider(this);
+	}
+
+	private Version getCachedVersion(IProgressMonitor monitor) throws GerritException {
+		synchronized (this) {
+			if (myVersion != null) {
+				return myVersion;
+			}
+		}
+		Version version = getVersion(monitor);
+
+		synchronized (this) {
+			myVersion = version;
+		}
+		return myVersion;
+	}
+
+	public Version getVersion(IProgressMonitor monitor) throws GerritException {
+		return execute(monitor, new Operation<Version>() {
+			@Override
+			public void execute(IProgressMonitor monitor) throws GerritException {
+				try {
+					Request<String> request = new Request<String>() {
+						@Override
+						public HttpMethodBase createMethod() throws IOException {
+							return new GetMethod(client.getUrl() + "/tools/hooks/"); //$NON-NLS-1$
+						}
+
+						@Override
+						public String process(HttpMethodBase method) throws IOException {
+							String content = method.getResponseBodyAsString();
+							Matcher matcher = GERRIT_VERSION_PATTERN.matcher(content);
+							if (matcher.find()) {
+								return matcher.group(1);
+							}
+							return null;
+						}
+					};
+					String result = client.execute(request, false, monitor);
+					Version version = GerritVersion.parseGerritVersion(result);
+					onSuccess(version);
+				} catch (Exception e) {
+					onFailure(e);
+				}
+			}
+		});
 	}
 }
