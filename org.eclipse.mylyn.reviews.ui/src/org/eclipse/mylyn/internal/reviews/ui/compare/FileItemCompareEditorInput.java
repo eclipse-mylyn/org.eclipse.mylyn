@@ -64,10 +64,4 @@ public class FileItemCompareEditorInput extends CompareEditorInput {
 	public IFileItem getFile() {
 		return file;
 	}
-
-	@Override
-	protected void contentsCreated() {
-		super.contentsCreated();
-		//getAnnotationModelToAttach().focusOnComment();
-	}
 }
