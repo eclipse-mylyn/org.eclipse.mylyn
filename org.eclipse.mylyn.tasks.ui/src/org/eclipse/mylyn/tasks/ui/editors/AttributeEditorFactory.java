@@ -13,9 +13,9 @@ package org.eclipse.mylyn.tasks.ui.editors;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.internal.tasks.ui.editors.BooleanAttributeEditor;
-import org.eclipse.mylyn.internal.tasks.ui.editors.LastCommentedAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.DateAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.DoubleAttributeEditor;
+import org.eclipse.mylyn.internal.tasks.ui.editors.LastCommentedAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.LongTextAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.MultiSelectionAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.PersonAttributeEditor;
@@ -85,7 +85,7 @@ public class AttributeEditorFactory {
 			return new DateAttributeEditor(model, taskAttribute);
 		} else if (TaskAttribute.TYPE_DATETIME.equals(type)) {
 			if (taskAttribute.getParentAttribute() != null
-					&& taskAttribute.getParentAttribute().getMetaData().getType().equals(TaskAttribute.TYPE_COMMENT)) {
+					&& TaskAttribute.TYPE_COMMENT.equals(taskAttribute.getParentAttribute().getMetaData().getType())) {
 				LastCommentedAttributeEditor editor = new LastCommentedAttributeEditor(model, taskAttribute);
 				return editor;
 			}
