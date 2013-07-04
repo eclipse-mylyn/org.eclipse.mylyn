@@ -121,8 +121,7 @@ public class EditorRestoreTest extends TestCase {
 		FileEditorInput input = new FileEditorInput(fileA);
 		IEditorInput[] inputs = new IEditorInput[] { input, new FileEditorInput(fileB) {
 			@Override
-			public Object getAdapter(@SuppressWarnings("rawtypes")
-			Class adapter) {
+			public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 				if (adapter == ContextAwareEditorInput.class) {
 					return new ContextAwareEditorInput() {
 						@Override

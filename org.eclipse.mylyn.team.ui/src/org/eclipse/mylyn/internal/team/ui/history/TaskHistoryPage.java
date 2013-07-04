@@ -250,8 +250,7 @@ public class TaskHistoryPage extends HistoryPage {
 		super.dispose();
 	}
 
-	public Object getAdapter(@SuppressWarnings("rawtypes")
-	Class adapter) {
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		return null;
 	}
 

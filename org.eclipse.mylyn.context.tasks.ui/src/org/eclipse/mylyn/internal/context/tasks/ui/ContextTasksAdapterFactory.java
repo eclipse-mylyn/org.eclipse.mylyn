@@ -31,8 +31,7 @@ public class ContextTasksAdapterFactory implements IAdapterFactory {
 
 	private static final Class<?>[] ADAPTER_LIST = new Class[] { IInteractionContext.class };
 
-	public Object getAdapter(Object adaptableObject, @SuppressWarnings("rawtypes")
-	Class adapterType) {
+	public Object getAdapter(Object adaptableObject, @SuppressWarnings("rawtypes") Class adapterType) {
 		if (adapterType == IInteractionContext.class) {
 			if (adaptableObject == TasksUi.getTaskActivityManager().getActiveTask()) {
 				return ContextCore.getContextManager().getActiveContext();

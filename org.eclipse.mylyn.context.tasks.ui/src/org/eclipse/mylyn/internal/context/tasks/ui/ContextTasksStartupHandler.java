@@ -66,8 +66,7 @@ public class ContextTasksStartupHandler implements IContextUiStartup {
 			this.task = task;
 		}
 
-		public Object getAdapter(@SuppressWarnings("rawtypes")
-		Class adapter) {
+		public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 			if (adapter == ITask.class) {
 				return task;
 			} else if (adapter == TaskData.class) {

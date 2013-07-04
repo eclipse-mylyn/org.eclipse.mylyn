@@ -54,8 +54,8 @@ public class BreakpointsContextUtil {
 	}
 
 	public static List<IBreakpoint> importBreakpoints(IInteractionContext context, IProgressMonitor progressMonitor) {
-		InputStream stream = ContextCore.getContextManager()
-				.getAdditionalContextData(context, DebugUiPlugin.CONTRIBUTOR_ID);
+		InputStream stream = ContextCore.getContextManager().getAdditionalContextData(context,
+				DebugUiPlugin.CONTRIBUTOR_ID);
 		if (stream == null) {
 			return new ArrayList<IBreakpoint>();
 		}
