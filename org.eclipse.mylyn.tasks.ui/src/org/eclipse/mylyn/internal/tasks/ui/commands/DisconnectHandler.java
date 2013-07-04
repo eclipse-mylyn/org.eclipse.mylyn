@@ -55,8 +55,7 @@ public class DisconnectHandler extends AbstractHandler implements IElementUpdate
 		return null;
 	}
 
-	public void updateElement(UIElement element, @SuppressWarnings("rawtypes")
-	Map parameters) {
+	public void updateElement(UIElement element, @SuppressWarnings("rawtypes") Map parameters) {
 		IWorkbenchWindow window = (IWorkbenchWindow) element.getServiceLocator().getService(IWorkbenchWindow.class);
 		if (window != null) {
 			IWorkbenchPage activePage = ((WorkbenchWindow) window).getActivePage();

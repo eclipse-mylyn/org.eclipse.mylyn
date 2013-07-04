@@ -9,7 +9,9 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.ui.util;import java.util.List;
+package org.eclipse.mylyn.internal.tasks.ui.util;
+
+import java.util.List;
 
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
@@ -21,6 +23,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TaskDropListener;
 import org.eclipse.mylyn.tasks.ui.TaskDropListener.TaskDropEvent;
+
 ;
 
 /**

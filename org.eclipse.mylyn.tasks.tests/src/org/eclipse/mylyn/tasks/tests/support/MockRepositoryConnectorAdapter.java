@@ -42,8 +42,7 @@ public class MockRepositoryConnectorAdapter implements IAdapterFactory {
 	private static final Class<?>[] ADAPTER_LIST = new Class<?>[] { AbstractRepositoryConnector.class };
 
 	@Override
-	public Object getAdapter(Object adaptableObject, @SuppressWarnings("rawtypes")
-	Class adapterType) {
+	public Object getAdapter(Object adaptableObject, @SuppressWarnings("rawtypes") Class adapterType) {
 		if (adaptableObject instanceof MockRepositoryConnector) {
 			final AbstractRepositoryConnector connector = (AbstractRepositoryConnector) adaptableObject;
 			if (adapterType == AbstractRepositoryConnectorUi.class) {

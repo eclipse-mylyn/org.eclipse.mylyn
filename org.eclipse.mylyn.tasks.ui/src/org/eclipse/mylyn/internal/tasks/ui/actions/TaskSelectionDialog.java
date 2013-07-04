@@ -431,7 +431,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 	public TaskSelectionDialog(Shell parent) {
 		this(parent, false);
 	}
-	
+
 	public TaskSelectionDialog(Shell parent, boolean multi) {
 		super(parent, multi);
 		this.taskActivationHistory = TasksUiPlugin.getTaskActivityManager().getTaskActivationHistory();

@@ -40,8 +40,8 @@ public abstract class AbstractTaskDataHandler {
 	 * 
 	 * @since 3.0
 	 */
-	public void getMultiTaskData(@NonNull TaskRepository repository, @NonNull Set<String> taskIds, @NonNull TaskDataCollector collector,
-			@Nullable IProgressMonitor monitor) throws CoreException {
+	public void getMultiTaskData(@NonNull TaskRepository repository, @NonNull Set<String> taskIds,
+			@NonNull TaskDataCollector collector, @Nullable IProgressMonitor monitor) throws CoreException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -78,8 +78,8 @@ public abstract class AbstractTaskDataHandler {
 	 * @return false if this operation is not supported by the connector, true if initialized
 	 * @since 3.0
 	 */
-	public boolean initializeSubTaskData(@NonNull TaskRepository repository, @NonNull TaskData taskData, @NonNull TaskData parentTaskData,
-			@Nullable IProgressMonitor monitor) throws CoreException {
+	public boolean initializeSubTaskData(@NonNull TaskRepository repository, @NonNull TaskData taskData,
+			@NonNull TaskData parentTaskData, @Nullable IProgressMonitor monitor) throws CoreException {
 		return false;
 	}
 

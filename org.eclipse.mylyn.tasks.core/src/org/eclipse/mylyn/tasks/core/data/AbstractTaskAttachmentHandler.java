@@ -30,12 +30,13 @@ public abstract class AbstractTaskAttachmentHandler {
 
 	public abstract boolean canGetContent(@NonNull TaskRepository repository, @NonNull ITask task);
 
-	public abstract boolean canPostContent(@NonNull TaskRepository repository,@NonNull ITask task);
+	public abstract boolean canPostContent(@NonNull TaskRepository repository, @NonNull ITask task);
 
-	public abstract InputStream getContent(@NonNull TaskRepository repository, @NonNull ITask task, @Nullable TaskAttribute attachmentAttribute,
-			@Nullable IProgressMonitor monitor) throws CoreException;
+	public abstract InputStream getContent(@NonNull TaskRepository repository, @NonNull ITask task,
+			@Nullable TaskAttribute attachmentAttribute, @Nullable IProgressMonitor monitor) throws CoreException;
 
-	public abstract void postContent(@NonNull TaskRepository repository, @NonNull ITask task, @NonNull AbstractTaskAttachmentSource source,
-			@Nullable String comment, @Nullable TaskAttribute attachmentAttribute, @Nullable IProgressMonitor monitor) throws CoreException;
+	public abstract void postContent(@NonNull TaskRepository repository, @NonNull ITask task,
+			@NonNull AbstractTaskAttachmentSource source, @Nullable String comment,
+			@Nullable TaskAttribute attachmentAttribute, @Nullable IProgressMonitor monitor) throws CoreException;
 
 }
