@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 David Green and others.
+ * Copyright (c) 2007, 2008, 2013 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Torkild U. Resheim - fix for Java 1.7, bug 412332
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.ui.editor.syntax;
 
@@ -16,6 +17,7 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 
 /**
  * @author David Green
+ * @author Torkild U. Resheim
  */
 public class Segment<ChildType extends Segment<?>> {
 	private int offset;
@@ -92,7 +94,7 @@ public class Segment<ChildType extends Segment<?>> {
 			throw new IllegalArgumentException();
 		}
 		children.add(child);
-		child.parent = this;
+		child.setParent(this);
 	}
 
 	public Segment<?> getParent() {
@@ -116,9 +118,13 @@ public class Segment<ChildType extends Segment<?>> {
 		children = (Segments<ChildType>) s.children;
 		if (children != null) {
 			for (ChildType child : children.asList()) {
-				child.parent = this;
+				child.setParent(this);
 			}
 		}
 		s.children = null;
+	}
+
+	void setParent(Segment<?> parent) {
+		this.parent = parent;
 	}
 }
