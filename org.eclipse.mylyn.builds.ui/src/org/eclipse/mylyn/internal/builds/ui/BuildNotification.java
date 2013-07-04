@@ -49,8 +49,7 @@ public class BuildNotification extends AbstractUiNotification {
 		this.element = element;
 	}
 
-	public Object getAdapter(@SuppressWarnings("rawtypes")
-	Class adapter) {
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 

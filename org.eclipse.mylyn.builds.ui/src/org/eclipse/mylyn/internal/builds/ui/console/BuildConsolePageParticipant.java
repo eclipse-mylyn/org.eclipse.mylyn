@@ -25,8 +25,7 @@ public class BuildConsolePageParticipant implements IConsolePageParticipant {
 
 	private CloseConsoleAction closeAction;
 
-	public Object getAdapter(@SuppressWarnings("rawtypes")
-	Class adapter) {
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		return null;
 	}
 

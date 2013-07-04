@@ -43,8 +43,7 @@ public abstract class BuildJob extends Job {
 	}
 
 	@Override
-	public Object getAdapter(@SuppressWarnings("rawtypes")
-	Class adapter) {
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		if (adapter == IBuildElement.class) {
 			IBuildElement element = getElement();
 			if (element != null) {

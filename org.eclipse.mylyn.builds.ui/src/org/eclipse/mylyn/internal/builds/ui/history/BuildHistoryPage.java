@@ -91,8 +91,7 @@ public class BuildHistoryPage extends HistoryPage {
 		return NLS.bind("Build history for {0}", getName());
 	}
 
-	public Object getAdapter(@SuppressWarnings("rawtypes")
-	Class adapter) {
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		return null;
 	}
 

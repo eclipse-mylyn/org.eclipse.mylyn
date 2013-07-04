@@ -51,8 +51,7 @@ public class BuildEditorInput implements IEditorInput {
 		return plan;
 	}
 
-	public Object getAdapter(@SuppressWarnings("rawtypes")
-	Class adapter) {
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		if (adapter == IEditorInput.class) {
 			return this;
 		}

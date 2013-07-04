@@ -32,8 +32,7 @@ public class BuildServerWizardPage extends RepositoryWizardPage {
 		super(pageName);
 		setTitle("Build Server Properties");
 		setElement(new IAdaptable() {
-			public Object getAdapter(@SuppressWarnings("rawtypes")
-			Class adapter) {
+			public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 				if (adapter == RepositoryLocation.class) {
 					return getModel().getLocation();
 				}

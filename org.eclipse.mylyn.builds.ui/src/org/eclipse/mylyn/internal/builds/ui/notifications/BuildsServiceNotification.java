@@ -76,8 +76,7 @@ public class BuildsServiceNotification extends AbstractUiNotification {
 		return Dialog.getImage(notificationKindImage);
 	}
 
-	public Object getAdapter(@SuppressWarnings("rawtypes")
-	Class adapter) {
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 
