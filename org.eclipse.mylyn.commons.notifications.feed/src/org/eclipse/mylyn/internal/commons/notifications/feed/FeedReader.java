@@ -53,8 +53,7 @@ public class FeedReader {
 				SyndEntry syndEntry = (SyndEntry) it.next();
 				final FeedEntry entry = createEntry(syndEntry);
 				if (environment.matches(new IAdaptable() {
-					public Object getAdapter(@SuppressWarnings("rawtypes")
-					Class adapter) {
+					public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 						if (adapter == IFilterable.class) {
 							return new IFilterable() {
 								public List<String> getFilters(String key) {

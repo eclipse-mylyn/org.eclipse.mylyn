@@ -59,8 +59,7 @@ public class NotificationEnvironmentTest extends TestCase {
 		}
 
 		@Override
-		public Object getAdapter(@SuppressWarnings("rawtypes")
-		Class adapter) {
+		public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 			if (adapter == IFilterable.class) {
 				return this;
 			}

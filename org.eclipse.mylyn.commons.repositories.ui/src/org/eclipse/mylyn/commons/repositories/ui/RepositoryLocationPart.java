@@ -609,7 +609,8 @@ public class RepositoryLocationPart {
 		if (getWorkingCopy().getCredentials(AuthenticationType.CERTIFICATE, false) != null) {
 			style |= ExpandableComposite.EXPANDED;
 		}
-		ExpandableComposite section = parent.createSection(Messages.RepositoryLocationPart_Certificate_Authentiation, style);
+		ExpandableComposite section = parent.createSection(Messages.RepositoryLocationPart_Certificate_Authentiation,
+				style);
 		section.clientVerticalSpacing = 5;
 
 		final Composite composite = new Composite(section, SWT.NONE);

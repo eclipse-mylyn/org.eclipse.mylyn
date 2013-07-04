@@ -36,7 +36,7 @@ public class AuthenticationException extends IOException {
 	public AuthenticationException(String message, AuthenticationRequest<?> request) {
 		this(message, request, false);
 	}
-	
+
 	public AuthenticationException(AuthenticationRequest<?> request) {
 		this(null, request, false);
 	}
@@ -48,5 +48,5 @@ public class AuthenticationException extends IOException {
 	public boolean shouldRetry() {
 		return shouldRetry;
 	}
-	
+
 }

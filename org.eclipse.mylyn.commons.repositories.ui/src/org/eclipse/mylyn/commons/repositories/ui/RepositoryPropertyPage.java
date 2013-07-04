@@ -53,8 +53,7 @@ public class RepositoryPropertyPage extends PropertyPage implements IAdaptable {
 		return workingCopy;
 	}
 
-	public Object getAdapter(@SuppressWarnings("rawtypes")
-	Class adapter) {
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		if (adapter == DialogPage.class) {
 			return this;
 		}

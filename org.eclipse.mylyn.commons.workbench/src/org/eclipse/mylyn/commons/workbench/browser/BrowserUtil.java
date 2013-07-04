@@ -66,8 +66,7 @@ public class BrowserUtil {
 		}
 
 		@Override
-		public Object getAdapter(@SuppressWarnings("rawtypes")
-		Class adapter) {
+		public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 			if (adapter == IWebBrowser.class) {
 				return browser;
 			}

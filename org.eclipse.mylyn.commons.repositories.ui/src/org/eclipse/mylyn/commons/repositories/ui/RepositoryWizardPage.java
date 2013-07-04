@@ -59,8 +59,7 @@ public class RepositoryWizardPage extends WizardPage implements IPartContainer, 
 		return new RepositoryLocationPart(getWorkingCopy());
 	}
 
-	public Object getAdapter(@SuppressWarnings("rawtypes")
-	Class adapter) {
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		if (adapter == WizardPage.class) {
 			return this;
 		}

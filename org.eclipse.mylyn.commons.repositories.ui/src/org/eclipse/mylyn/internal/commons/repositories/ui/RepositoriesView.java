@@ -55,8 +55,7 @@ public class RepositoriesView extends CommonNavigator {
 	}
 
 	@Override
-	public Object getAdapter(@SuppressWarnings("rawtypes")
-	Class adapter) {
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		// FIXME read targets from extension point?
 		if (adapter == IShowInTargetList.class) {
 			return new IShowInTargetList() {
