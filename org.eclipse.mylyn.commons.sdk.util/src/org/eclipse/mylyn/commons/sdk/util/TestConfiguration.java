@@ -134,6 +134,11 @@ public class TestConfiguration {
 					defaultOnly);
 		}
 
+		if (fixtures.isEmpty()) {
+			throw new RuntimeException(NLS.bind("Failed to discover any fixtures for kind {0} with defaultOnly={1}",
+					fixtureType, Boolean.toString(defaultOnly)));
+		}
+
 		return fixtures;
 	}
 
