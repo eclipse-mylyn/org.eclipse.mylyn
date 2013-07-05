@@ -85,4 +85,34 @@ public abstract class AbstractTaskEditorPageFactory implements IPluginContributi
 		this.pluginId = pluginId;
 	}
 
+	/**
+	 * Clients should override to provide an image for <code>page</code>. Invokes {@link #getPageImage()} for backwards
+	 * compatibility.
+	 * 
+	 * @param editor
+	 *            the task editor instance
+	 * @param page
+	 *            the page that uses the image
+	 * @return an image
+	 * @since 3.10
+	 */
+	public Image getPageImage(TaskEditor editor, IFormPage page) {
+		return getPageImage();
+	}
+
+	/**
+	 * Clients should override to provide a label for <code>page</code>. Invokes {@link #getPageText()} for backwards
+	 * compatibility.
+	 * 
+	 * @param editor
+	 *            the task editor instance
+	 * @param page
+	 *            the page that uses the label
+	 * @return a label
+	 * @since 3.10
+	 */
+	public String getPageText(TaskEditor editor, IFormPage page) {
+		return getPageText();
+	}
+
 }

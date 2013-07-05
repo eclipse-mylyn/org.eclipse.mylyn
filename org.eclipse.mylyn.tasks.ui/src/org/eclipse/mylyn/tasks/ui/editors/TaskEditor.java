@@ -408,8 +408,8 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			try {
 				IFormPage page = factory.createPage(this);
 				int index = addPage(page);
-				setPageImage(index, factory.getPageImage());
-				setPageText(index, factory.getPageText());
+				setPageImage(index, factory.getPageImage(this, page));
+				setPageText(index, factory.getPageText(this, page));
 				if (factory.getPriority() == AbstractTaskEditorPageFactory.PRIORITY_TASK) {
 					setActivePage(index);
 				}
