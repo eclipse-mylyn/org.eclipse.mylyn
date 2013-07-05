@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Frank Becker - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests.core;
@@ -35,60 +36,15 @@ public class TaskInitializationDataTest extends TestCase {
 		} catch (UnsupportedOperationException e) {
 			// expected
 		}
-		try {
-			data.getTaskStatus();
-			fail("Should not be supported");
-		} catch (UnsupportedOperationException e) {
-			// expected
-		}
-		try {
-			data.getTaskData();
-			fail("Should not be supported");
-		} catch (UnsupportedOperationException e) {
-			// expected
-		}
-		try {
-			data.getPriorityLevel();
-			fail("Should not be supported");
-		} catch (UnsupportedOperationException e) {
-			// expected
-		}
-		try {
-			data.getModificationDate();
-			fail("Should not be supported");
-		} catch (UnsupportedOperationException e) {
-			// expected
-		}
-		try {
-			data.getKeywords();
-			fail("Should not be supported");
-		} catch (UnsupportedOperationException e) {
-			// expected
-		}
-		try {
-			data.getDueDate();
-			fail("Should not be supported");
-		} catch (UnsupportedOperationException e) {
-			// expected
-		}
-		try {
-			data.getCreationDate();
-			fail("Should not be supported");
-		} catch (UnsupportedOperationException e) {
-			// expected
-		}
-		try {
-			data.getCompletionDate();
-			fail("Should not be supported");
-		} catch (UnsupportedOperationException e) {
-			// expected
-		}
-		try {
-			data.getCc();
-			fail("Should not be supported");
-		} catch (UnsupportedOperationException e) {
-			// expected
-		}
+		assertNull(data.getTaskStatus());
+		assertNull(data.getTaskData());
+		assertNull(data.getPriorityLevel());
+		assertNull(data.getModificationDate());
+		assertNull(data.getKeywords());
+		assertNull(data.getDueDate());
+		assertNull(data.getCreationDate());
+		assertNull(data.getCompletionDate());
+		assertNull(data.getCc());
 	}
 
 	public void testTaskKind() throws Exception {

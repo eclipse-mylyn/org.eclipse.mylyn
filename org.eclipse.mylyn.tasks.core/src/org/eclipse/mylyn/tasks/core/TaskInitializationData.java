@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Frank Becker - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.core;
@@ -42,19 +43,19 @@ public class TaskInitializationData implements ITaskMapping {
 	}
 
 	/**
-	 * Throws {@link UnsupportedOperationException}.
+	 * Returns <code>null</code>.
 	 */
 	@Nullable
 	public List<String> getCc() {
-		throw new UnsupportedOperationException();
+		return null;
 	}
 
 	/**
-	 * Throws {@link UnsupportedOperationException}.
+	 * Returns <code>null</code>.
 	 */
 	@Nullable
 	public Date getCompletionDate() {
-		throw new UnsupportedOperationException();
+		return null;
 	}
 
 	@Nullable
@@ -63,11 +64,11 @@ public class TaskInitializationData implements ITaskMapping {
 	}
 
 	/**
-	 * Throws {@link UnsupportedOperationException}.
+	 * Returns <code>null</code>.
 	 */
 	@Nullable
 	public Date getCreationDate() {
-		throw new UnsupportedOperationException();
+		return null;
 	}
 
 	@Nullable
@@ -76,35 +77,36 @@ public class TaskInitializationData implements ITaskMapping {
 	}
 
 	/**
-	 * Throws {@link UnsupportedOperationException}.
+	 * Returns <code>null</code>.
 	 */
 	@Nullable
 	public Date getDueDate() {
-		throw new UnsupportedOperationException();
+		return null;
 	}
 
 	/**
-	 * Throws {@link UnsupportedOperationException}.
+	 * Returns <code>null</code>.
 	 */
 	@Nullable
 	public List<String> getKeywords() {
-		throw new UnsupportedOperationException();
+		return null;
 	}
 
 	/**
-	 * Throws {@link UnsupportedOperationException}.
+	 * Returns <code>null</code>.
 	 */
 	@Nullable
 	public Date getModificationDate() {
-		throw new UnsupportedOperationException();
+		return null;
 	}
 
 	/**
-	 * Throws {@link UnsupportedOperationException}.
+	 * Returns <code>null</code>.
 	 */
 	@Nullable
 	public String getOwner() {
-		throw new UnsupportedOperationException();
+		return null;
+
 	}
 
 	@Nullable
@@ -113,11 +115,11 @@ public class TaskInitializationData implements ITaskMapping {
 	}
 
 	/**
-	 * Throws {@link UnsupportedOperationException}.
+	 * Returns <code>null</code>.
 	 */
 	@Nullable
 	public PriorityLevel getPriorityLevel() {
-		throw new UnsupportedOperationException();
+		return null;
 	}
 
 	@Nullable
@@ -151,11 +153,11 @@ public class TaskInitializationData implements ITaskMapping {
 	}
 
 	/**
-	 * Throws {@link UnsupportedOperationException}.
+	 * Returns <code>null</code>.
 	 */
 	@Nullable
 	public TaskData getTaskData() {
-		throw new UnsupportedOperationException();
+		return null;
 	}
 
 	@Nullable
@@ -169,11 +171,11 @@ public class TaskInitializationData implements ITaskMapping {
 	}
 
 	/**
-	 * Does not map to a common attribute and hence throws {@link UnsupportedOperationException}.
+	 * Does not map to a common attribute and hence Returns <code>null</code>.
 	 */
 	@Nullable
 	public String getTaskStatus() {
-		throw new UnsupportedOperationException();
+		return null;
 	}
 
 	@Nullable

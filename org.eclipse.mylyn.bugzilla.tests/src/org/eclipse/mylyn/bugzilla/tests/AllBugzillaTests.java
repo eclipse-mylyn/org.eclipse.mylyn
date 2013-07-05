@@ -24,6 +24,7 @@ import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaRepositorySettingsPageTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaSearchPageTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaTaskEditorTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaTaskHyperlinkDetectorTest;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 
@@ -35,6 +36,10 @@ import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 public class AllBugzillaTests {
 
 	public static Test suite() {
+		if (CommonTestUtil.fixProxyConfiguration()) {
+			CommonTestUtil.dumpSystemInfo(System.err);
+		}
+
 		TestSuite suite = new ManagedTestSuite(AllBugzillaTests.class.getName());
 		addTests(suite, TestConfiguration.getDefault());
 		return suite;

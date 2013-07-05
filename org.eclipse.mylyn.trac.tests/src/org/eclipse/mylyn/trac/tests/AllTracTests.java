@@ -40,6 +40,10 @@ import org.eclipse.mylyn.trac.tests.ui.TracRepositorySettingsPageTest;
 public class AllTracTests {
 
 	public static Test suite() {
+		if (CommonTestUtil.fixProxyConfiguration()) {
+			CommonTestUtil.dumpSystemInfo(System.err);
+		}
+
 		TestSuite suite = new ManagedTestSuite(AllTracTests.class.getName());
 		addTests(suite, TestConfiguration.getDefault());
 		return suite;
