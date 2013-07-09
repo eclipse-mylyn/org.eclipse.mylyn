@@ -1,5 +1,5 @@
 /*********************************************************************
- * Copyright (c) 2011 Tasktop Technologies and others.
+ * Copyright (c) 2011, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,7 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient.JsonEntity;
+import org.osgi.framework.Version;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtjsonrpc.client.RemoteJsonService;
@@ -53,10 +55,18 @@ public class GerritService implements InvocationHandler {
 
 	}
 
-	public static <T extends RemoteJsonService> T create(Class<T> serviceClass, GerritHttpClient gerritHttpClient) {
-		InvocationHandler handler = new GerritService(gerritHttpClient, "/gerrit/rpc/" + serviceClass.getSimpleName()); //$NON-NLS-1$
+	public static <T extends RemoteJsonService> T create(Class<T> serviceClass, GerritHttpClient gerritHttpClient,
+			Version version) {
+		String uri = getGerritRpcUri(version);
+		InvocationHandler handler = new GerritService(gerritHttpClient, uri + serviceClass.getSimpleName());
 		return serviceClass.cast(Proxy.newProxyInstance(GerritService.class.getClassLoader(),
 				new Class<?>[] { serviceClass }, handler));
+	}
+
+	private static String getGerritRpcUri(Version version) {
+		return GerritVersion.isVersion26OrLater(version)
+				? GerritConnector.GERRIT_260_RPC_URI
+				: GerritConnector.GERRIT_RPC_URI;
 	}
 
 	private final String uri;

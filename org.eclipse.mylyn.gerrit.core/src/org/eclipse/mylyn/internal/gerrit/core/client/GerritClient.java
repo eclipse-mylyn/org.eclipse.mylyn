@@ -96,8 +96,6 @@ public class GerritClient extends ReviewsClient {
 
 	private static final Pattern GERRIT_VERSION_PATTERN = Pattern.compile("Powered by Gerrit Code Review (.+)</p>"); //$NON-NLS-1$
 
-	private static final Version GERRIT_VERSION_2_6 = new Version(2, 6, 0);
-
 	private abstract class Operation<T> implements AsyncCallback<T> {
 
 		private Throwable exception;
@@ -283,7 +281,7 @@ public class GerritClient extends ReviewsClient {
 		return execute(monitor, new Operation<PatchLineComment>() {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
-				getPatchDetailService().saveDraft(comment, this);
+				getPatchDetailService(monitor).saveDraft(comment, this);
 			}
 		});
 	}
@@ -294,7 +292,7 @@ public class GerritClient extends ReviewsClient {
 		return execute(monitor, new Operation<ChangeDetail>() {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
-				getChangeManageService().abandonChange(id, message, this);
+				getChangeManageService(monitor).abandonChange(id, message, this);
 			}
 		});
 	}
@@ -307,7 +305,7 @@ public class GerritClient extends ReviewsClient {
 		return execute(monitor, new Operation<ChangeDetailX>() {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
-				getChangeDetailService().changeDetailX(id, this);
+				getChangeDetailService(monitor).changeDetailX(id, this);
 			}
 		});
 	}
@@ -344,7 +342,7 @@ public class GerritClient extends ReviewsClient {
 		AccountDiffPreference diffPreference = execute(monitor, new Operation<AccountDiffPreference>() {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
-				getAccountService().myDiffPreferences(this);
+				getAccountService(monitor).myDiffPreferences(this);
 			}
 		});
 
@@ -365,12 +363,7 @@ public class GerritClient extends ReviewsClient {
 //					getSystemInfoService().contributorAgreements(this);
 //				}
 //			});
-			account = execute(monitor, new Operation<Account>() {
-				@Override
-				public void execute(IProgressMonitor monitor) throws GerritException {
-					getAccountService().myAccount(this);
-				}
-			});
+			account = getAccount(monitor);
 		} else {
 			// XXX should run some more meaningful validation as anonymous, for now any call is good to validate the URL etc.
 			executeQuery(monitor, "status:open"); //$NON-NLS-1$
@@ -387,7 +380,7 @@ public class GerritClient extends ReviewsClient {
 		return execute(monitor, new Operation<PatchScript>() {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
-				getPatchDetailService().patchScript(key, leftId, rightId, diffPrefs, this);
+				getPatchDetailService(monitor).patchScript(key, leftId, rightId, diffPrefs, this);
 			}
 		});
 	}
@@ -410,7 +403,8 @@ public class GerritClient extends ReviewsClient {
 			result = execute(monitor, new Operation<PatchSetDetail>() {
 				@Override
 				public void execute(IProgressMonitor monitor) throws GerritException {
-					getChangeDetailService().patchSetDetail2(idBase, idTarget, createAccountDiffPreference(), this);
+					getChangeDetailService(monitor).patchSetDetail2(idBase, idTarget, createAccountDiffPreference(),
+							this);
 				}
 			});
 		} catch (GerritException e) {
@@ -420,7 +414,7 @@ public class GerritClient extends ReviewsClient {
 					result = execute(monitor, new Operation<PatchSetDetail>() {
 						@Override
 						public void execute(IProgressMonitor monitor) throws GerritException {
-							getChangeDetailService().patchSetDetail(idTarget, this);
+							getChangeDetailService(monitor).patchSetDetail(idTarget, this);
 						}
 					});
 				} else {
@@ -433,8 +427,8 @@ public class GerritClient extends ReviewsClient {
 					result = execute(monitor, new Operation<PatchSetDetail>() {
 						@Override
 						public void execute(IProgressMonitor monitor) throws GerritException {
-							getChangeDetailService().patchSetDetail(idBase, idTarget, createAccountDiffPreference(),
-									this);
+							getChangeDetailService(monitor).patchSetDetail(idBase, idTarget,
+									createAccountDiffPreference(), this);
 						}
 					});
 				} else {
@@ -456,7 +450,7 @@ public class GerritClient extends ReviewsClient {
 				new Operation<org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchSetPublishDetailX>() {
 					@Override
 					public void execute(IProgressMonitor monitor) throws GerritException {
-						getChangeDetailService().patchSetPublishDetailX(id, this);
+						getChangeDetailService(monitor).patchSetPublishDetailX(id, this);
 					}
 				});
 		return publishDetail;
@@ -518,7 +512,7 @@ public class GerritClient extends ReviewsClient {
 		execute(monitor, new Operation<VoidResult>() {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
-				getPatchDetailService().publishComments(id, message, approvals, this);
+				getPatchDetailService(monitor).publishComments(id, message, approvals, this);
 			}
 		});
 	}
@@ -530,7 +524,7 @@ public class GerritClient extends ReviewsClient {
 			return execute(monitor, new Operation<ReviewerResult>() {
 				@Override
 				public void execute(IProgressMonitor monitor) throws GerritException {
-					getPatchDetailService().addReviewers(id, reviewers, this);
+					getPatchDetailService(monitor).addReviewers(id, reviewers, this);
 				}
 			});
 		} catch (GerritException e) {
@@ -540,7 +534,7 @@ public class GerritClient extends ReviewsClient {
 				return execute(monitor, new Operation<ReviewerResult>() {
 					@Override
 					public void execute(IProgressMonitor monitor) throws GerritException {
-						getPatchDetailService().addReviewers(id, reviewers, false, this);
+						getPatchDetailService(monitor).addReviewers(id, reviewers, false, this);
 					}
 				});
 			} else {
@@ -575,7 +569,7 @@ public class GerritClient extends ReviewsClient {
 				AccountDashboardInfo ad = execute(monitor, new Operation<AccountDashboardInfo>() {
 					@Override
 					public void execute(IProgressMonitor monitor) throws GerritException {
-						getChangeListService().forAccount(account.getId(), this);
+						getChangeListService(monitor).forAccount(account.getId(), this);
 					}
 				});
 
@@ -597,7 +591,7 @@ public class GerritClient extends ReviewsClient {
 
 	private boolean hasJsonRpcApi(IProgressMonitor monitor) throws GerritException {
 		Version version = getCachedVersion(monitor);
-		return version.compareTo(GERRIT_VERSION_2_6) < 0;
+		return !GerritVersion.isVersion26OrLater(version);
 	}
 
 	/**
@@ -680,7 +674,7 @@ public class GerritClient extends ReviewsClient {
 		return execute(monitor, new Operation<ChangeDetail>() {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
-				getChangeManageService().publish(id, this);
+				getChangeManageService(monitor).publish(id, this);
 			}
 		});
 	}
@@ -690,7 +684,7 @@ public class GerritClient extends ReviewsClient {
 		return execute(monitor, new Operation<ChangeDetail>() {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
-				getChangeManageService().rebaseChange(id, this);
+				getChangeManageService(monitor).rebaseChange(id, this);
 			}
 		});
 	}
@@ -701,7 +695,7 @@ public class GerritClient extends ReviewsClient {
 		return execute(monitor, new Operation<ChangeDetail>() {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
-				getChangeManageService().restoreChange(id, message, this);
+				getChangeManageService(monitor).restoreChange(id, message, this);
 			}
 		});
 	}
@@ -712,7 +706,7 @@ public class GerritClient extends ReviewsClient {
 		return execute(monitor, new Operation<ChangeDetail>() {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
-				getChangeManageService().revertChange(id, message, this);
+				getChangeManageService(monitor).revertChange(id, message, this);
 			}
 		});
 	}
@@ -723,7 +717,7 @@ public class GerritClient extends ReviewsClient {
 		return execute(monitor, new Operation<ChangeDetail>() {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
-				getChangeManageService().submit(id, this);
+				getChangeManageService(monitor).submit(id, this);
 			}
 		});
 	}
@@ -735,7 +729,7 @@ public class GerritClient extends ReviewsClient {
 				SingleListChangeInfo sl = execute(monitor, new Operation<SingleListChangeInfo>() {
 					@Override
 					public void execute(IProgressMonitor monitor) throws GerritException {
-						getChangeListService().allQueryNext(queryString, "z", -1, this); //$NON-NLS-1$
+						getChangeListService(monitor).allQueryNext(queryString, "z", -1, this); //$NON-NLS-1$
 					}
 				});
 				return convert(sl.getChanges());
@@ -814,12 +808,7 @@ public class GerritClient extends ReviewsClient {
 				return myAcount;
 			}
 		}
-		Account account = execute(monitor, new Operation<Account>() {
-			@Override
-			public void execute(IProgressMonitor monitor) throws GerritException {
-				getAccountService().myAccount(this);
-			}
-		});
+		Account account = executeAccount(monitor);
 
 		synchronized (this) {
 			myAcount = account;
@@ -827,24 +816,33 @@ public class GerritClient extends ReviewsClient {
 		return myAcount;
 	}
 
-	private AccountService getAccountService() {
-		return getService(AccountService.class);
+	public Account executeAccount(IProgressMonitor monitor) throws GerritException {
+		return execute(monitor, new Operation<Account>() {
+			@Override
+			public void execute(IProgressMonitor monitor) throws GerritException {
+				getAccountService(monitor).myAccount(this);
+			}
+		});
 	}
 
-	private ChangeDetailService getChangeDetailService() {
-		return getService(ChangeDetailService.class);
+	private AccountService getAccountService(IProgressMonitor monitor) {
+		return getService(AccountService.class, monitor);
 	}
 
-	private ChangeListService getChangeListService() {
-		return getService(ChangeListService.class);
+	private ChangeDetailService getChangeDetailService(IProgressMonitor monitor) {
+		return getService(ChangeDetailService.class, monitor);
 	}
 
-	private ChangeManageService getChangeManageService() {
-		return getService(ChangeManageService.class);
+	private ChangeListService getChangeListService(IProgressMonitor monitor) {
+		return getService(ChangeListService.class, monitor);
 	}
 
-	private PatchDetailService getPatchDetailService() {
-		return getService(PatchDetailService.class);
+	private ChangeManageService getChangeManageService(IProgressMonitor monitor) {
+		return getService(ChangeManageService.class, monitor);
+	}
+
+	private PatchDetailService getPatchDetailService(IProgressMonitor monitor) {
+		return getService(PatchDetailService.class, monitor);
 	}
 
 	private List<Project> getVisibleProjects(IProgressMonitor monitor, GerritConfig gerritConfig)
@@ -854,7 +852,7 @@ public class GerritClient extends ReviewsClient {
 			List<ProjectDetailX> projectDetails = execute(monitor, new Operation<List<ProjectDetailX>>() {
 				@Override
 				public void execute(IProgressMonitor monitor) throws GerritException {
-					getProjectAdminService().visibleProjectDetails(this);
+					getProjectAdminService(monitor).visibleProjectDetails(this);
 				}
 			});
 			for (ProjectDetailX projectDetail : projectDetails) {
@@ -868,7 +866,7 @@ public class GerritClient extends ReviewsClient {
 				List<Project> projects = execute(monitor, new Operation<List<Project>>() {
 					@Override
 					public void execute(IProgressMonitor monitor) throws GerritException {
-						getProjectAdminService().visibleProjects(this);
+						getProjectAdminService(monitor).visibleProjects(this);
 					}
 				});
 				for (Project project : projects) {
@@ -885,8 +883,8 @@ public class GerritClient extends ReviewsClient {
 		return result;
 	}
 
-	private ProjectAdminService getProjectAdminService() {
-		return getService(ProjectAdminService.class);
+	private ProjectAdminService getProjectAdminService(IProgressMonitor monitor) {
+		return getService(ProjectAdminService.class, monitor);
 	}
 
 	public boolean isAnonymous() {
@@ -932,10 +930,16 @@ public class GerritClient extends ReviewsClient {
 		return operation.getResult();
 	}
 
-	protected synchronized <T extends RemoteJsonService> T getService(Class<T> clazz) {
+	protected synchronized <T extends RemoteJsonService> T getService(Class<T> clazz, IProgressMonitor monitor) {
+		Version version = Version.emptyVersion;
+		try {
+			version = getCachedVersion(monitor);
+		} catch (GerritException e) {
+			// ignore, continue with emptyVersion
+		}
 		RemoteJsonService service = serviceByClass.get(clazz);
 		if (service == null) {
-			service = GerritService.create(clazz, client);
+			service = GerritService.create(clazz, client, version);
 			serviceByClass.put(clazz, service);
 		}
 		return clazz.cast(service);

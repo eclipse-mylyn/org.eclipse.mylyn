@@ -40,6 +40,7 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.UnsupportedRequestException;
 import org.eclipse.mylyn.commons.net.WebUtil;
+import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 
 import com.google.gerrit.common.auth.SignInMode;
 import com.google.gerrit.common.auth.openid.DiscoveryResult;
@@ -99,7 +100,7 @@ public class GerritHttpClient {
 
 	}
 
-	private static final Object LOGIN_COOKIE_NAME = "GerritAccount"; //$NON-NLS-1$
+	private static final String LOGIN_COOKIE_NAME = "GerritAccount"; //$NON-NLS-1$
 
 	private static final String LOGIN_URL = "/login/mine"; //$NON-NLS-1$
 
@@ -228,7 +229,12 @@ public class GerritHttpClient {
 				try {
 					GerritHtmlProcessor processor = new GerritHtmlProcessor();
 					processor.parse(in, method.getResponseCharSet());
-					setXsrfKey(processor.getXsrfKey());
+					String xGerritAuth = processor.getXGerritAuth();
+					if (xGerritAuth != null) {
+						setXsrfKey(xGerritAuth);
+					} else {
+						setXsrfKey(processor.getXsrfKey());
+					}
 				} finally {
 					in.close();
 				}
@@ -325,7 +331,7 @@ public class GerritHttpClient {
 		};
 
 		OpenIdAuthenticationResponse openIdResponse = null;
-		JsonRequest jsonRequest = new JsonRequest("/gerrit/rpc/OpenIdService", entity);
+		JsonRequest jsonRequest = new JsonRequest(GerritConnector.GERRIT_RPC_URI + "OpenIdService", entity); //$NON-NLS-1$
 		PostMethod method = jsonRequest.createMethod();
 		try {
 			int code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
@@ -341,7 +347,7 @@ public class GerritHttpClient {
 						OpenIdAuthenticationRequest authenticationRequest = new OpenIdAuthenticationRequest(
 								result.providerUrl, result.providerArgs, returnUrl);
 						authenticationRequest.setAlternateUrl(location.getUrl());
-						authenticationRequest.setCookie("GerritAccount");
+						authenticationRequest.setCookie("GerritAccount"); //$NON-NLS-1$
 						authenticationRequest.setCookieUrl(location.getUrl());
 						try {
 							openIdResponse = ((IOpenIdLocation) location).requestAuthentication(authenticationRequest,
@@ -351,7 +357,7 @@ public class GerritHttpClient {
 						}
 					}
 				} else {
-					throw new GerritException("Invalid OpenID provider");
+					throw new GerritException("Invalid OpenID provider"); //$NON-NLS-1$
 				}
 			}
 			if (openIdResponse == null) {
@@ -363,8 +369,8 @@ public class GerritHttpClient {
 
 		if (openIdResponse.getCookieValue() != null) {
 			URL url = new URL(location.getUrl());
-			boolean isSecure = "https".equals(url.getProtocol());
-			setXsrfCookie(new Cookie(url.getHost(), "GerritAccount", openIdResponse.getCookieValue(), url.getPath(),
+			boolean isSecure = "https".equals(url.getProtocol()); //$NON-NLS-1$
+			setXsrfCookie(new Cookie(url.getHost(), "GerritAccount", openIdResponse.getCookieValue(), url.getPath(), //$NON-NLS-1$
 					null, isSecure));
 			return HttpStatus.SC_TEMPORARY_REDIRECT;
 		} else {
@@ -394,7 +400,7 @@ public class GerritHttpClient {
 		args.add(credentials.getUserName());
 		args.add(credentials.getPassword());
 
-		final String request = json.createRequest(getId(), null, "authenticate", args);
+		final String request = json.createRequest(getId(), null, "authenticate", args); //$NON-NLS-1$
 		JsonEntity entity = new JsonEntity() {
 			@Override
 			public String getContent() {
@@ -402,7 +408,7 @@ public class GerritHttpClient {
 			}
 		};
 
-		JsonRequest jsonRequest = new JsonRequest("/gerrit/rpc/UserPassAuthService", entity);
+		JsonRequest jsonRequest = new JsonRequest(GerritConnector.GERRIT_RPC_URI + "UserPassAuthService", entity); //$NON-NLS-1$
 		PostMethod method = jsonRequest.createMethod();
 		try {
 			int code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
@@ -473,30 +479,44 @@ public class GerritHttpClient {
 		Credentials httpCredentials = WebUtil.getHttpClientCredentials(credentials, WebUtil.getHost(repositoryUrl));
 		httpClient.getState().setCredentials(authScope, httpCredentials);
 
-		GetMethod method = new GetMethod(WebUtil.getRequestPath(repositoryUrl + LOGIN_URL));
-		method.setFollowRedirects(false);
-		int code;
-		try {
-			code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
-			if (needsReauthentication(code, monitor)) {
-				return -1;
-			}
-
-			if (code == HttpStatus.SC_MOVED_TEMPORARILY) {
-				Header locationHeader = method.getResponseHeader("Location");
-				if (locationHeader != null) {
-					if (locationHeader.getValue().endsWith("SignInFailure,SIGN_IN,Session cookie not available.")) {
-						// try different authentication method
-						return HttpStatus.SC_NOT_FOUND;
+		HttpMethodBase[] methods = getFormAuthMethods(repositoryUrl, credentials);
+		for (HttpMethodBase method : methods) {
+			int code;
+			try {
+				code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
+				if (code == HttpStatus.SC_METHOD_NOT_ALLOWED) {
+					continue; // try next http method
+				} else if (needsReauthentication(code, monitor)) {
+					return -1;
+				} else if (code == HttpStatus.SC_MOVED_TEMPORARILY) {
+					Header locationHeader = method.getResponseHeader("Location"); //$NON-NLS-1$
+					if (locationHeader != null) {
+						if (locationHeader.getValue().endsWith("SignInFailure,SIGN_IN,Session cookie not available.")) { //$NON-NLS-1$
+							// try different authentication method
+							return HttpStatus.SC_NOT_FOUND;
+						}
 					}
+				} else if (code != HttpStatus.SC_NOT_FOUND) {
+					throw new GerritHttpException(code);
 				}
-			} else if (code != HttpStatus.SC_NOT_FOUND) {
-				throw new GerritHttpException(code);
+				return code;
+			} finally {
+				WebUtil.releaseConnection(method, monitor);
 			}
-			return code;
-		} finally {
-			WebUtil.releaseConnection(method, monitor);
 		}
+		return -1;
+	}
+
+	private HttpMethodBase[] getFormAuthMethods(String repositoryUrl, AuthenticationCredentials credentials) {
+		PostMethod post = new PostMethod(WebUtil.getRequestPath(repositoryUrl + LOGIN_URL));
+		post.setParameter("username", credentials.getUserName()); //$NON-NLS-1$
+		post.setParameter("password", credentials.getPassword()); //$NON-NLS-1$
+		post.setFollowRedirects(false);
+
+		GetMethod get = new GetMethod(WebUtil.getRequestPath(repositoryUrl + LOGIN_URL));
+		get.setFollowRedirects(false);
+
+		return new HttpMethodBase[] { post, get };
 	}
 
 	private synchronized boolean needsAuthentication() {

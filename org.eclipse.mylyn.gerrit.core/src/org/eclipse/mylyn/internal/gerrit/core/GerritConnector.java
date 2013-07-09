@@ -1,5 +1,5 @@
 /*********************************************************************
- * Copyright (c) 2010 Sony Ericsson/ST Ericsson and others.
+ * Copyright (c) 2010, 2013 Sony Ericsson/ST Ericsson and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -107,6 +107,10 @@ public class GerritConnector extends ReviewsConnector {
 	public static final String KEY_REPOSITORY_OPEN_ID_ENABLED = CONNECTOR_KIND + ".openId.enabled"; //$NON-NLS-1$
 
 	public static final String KEY_REPOSITORY_OPEN_ID_PROVIDER = CONNECTOR_KIND + ".openId.provider"; //$NON-NLS-1$
+
+	public static final String GERRIT_RPC_URI = "/gerrit/rpc/"; //$NON-NLS-1$
+
+	public static final String GERRIT_260_RPC_URI = "/gerrit_ui/rpc/"; //$NON-NLS-1$
 
 	private final GerritTaskDataHandler taskDataHandler = new GerritTaskDataHandler(this);
 

@@ -60,12 +60,21 @@ public class GerritHtmlProcessor {
 
 	private String xsrfKey;
 
+	/**
+	 * Introduced in Gerrit 2.6 as a replacement for {@link #xsrfKey}.
+	 */
+	private String xGerritAuth;
+
 	public GerritConfigX getConfig() {
 		return config;
 	}
 
 	public String getXsrfKey() {
 		return xsrfKey;
+	}
+
+	public String getXGerritAuth() {
+		return xGerritAuth;
 	}
 
 	public void parse(InputStream in, String charset) throws IOException {
@@ -94,6 +103,7 @@ public class GerritHtmlProcessor {
 	private void parse(String text) {
 		String configPrefix = "var gerrit_hostpagedata={\"config\":"; //$NON-NLS-1$
 		String configXsrfToken = "hostpagedata.xsrfToken=\""; //$NON-NLS-1$
+		String configXGerritAuth = "hostpagedata.xGerritAuth=\""; //$NON-NLS-1$
 		String[] tokens = text.split(";gerrit_"); //$NON-NLS-1$
 		for (String token : tokens) {
 			if (token.startsWith(configPrefix)) {
@@ -101,12 +111,16 @@ public class GerritHtmlProcessor {
 				// remove closing }
 				token = token.substring(0, token.length() - 1);
 				this.config = gerritConfigFromString(token);
-			}
-			if (token.startsWith(configXsrfToken)) {
+			} else if (token.startsWith(configXsrfToken)) {
 				token = token.substring(configXsrfToken.length());
 				// remove closing "
 				token = token.substring(0, token.length() - 1);
 				this.xsrfKey = token;
+			} else if (token.startsWith(configXGerritAuth)) {
+				token = token.substring(configXGerritAuth.length());
+				// remove closing "
+				token = token.substring(0, token.length() - 1);
+				this.xGerritAuth = token;
 			}
 		}
 	}

@@ -21,6 +21,8 @@ import org.osgi.framework.Version;
 
 public class GerritVersion extends Version {
 
+	private static final Version VERSION_2_6_0 = new Version(2, 6, 0);
+
 	// e.g. 2.6 or 2.6.0
 	private static final Pattern MAJOR_MINOR_MICRO_VERSION_PATTERN = Pattern.compile("\\d+\\.\\d+(\\.\\d+)?"); //$NON-NLS-1$
 
@@ -52,5 +54,9 @@ public class GerritVersion extends Version {
 					matcher.group(4));
 		}
 		throw new IllegalArgumentException("Unrecognized version pattern : " + version); //$NON-NLS-1$
+	}
+
+	public static boolean isVersion26OrLater(Version version) {
+		return version.compareTo(VERSION_2_6_0) >= 0;
 	}
 }
