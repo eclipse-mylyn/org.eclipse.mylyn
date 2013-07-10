@@ -33,12 +33,10 @@ public class AbandonUiFactory extends AbstractPatchSetUiFactory {
 
 	@Override
 	public boolean isExecutable() {
+		if (isAnonymous()) {
+			return false;
+		}
 		ChangeDetailX changeDetail = getChange().getChangeDetail();
 		return changeDetail != null && changeDetail.isCurrentPatchSet(getPatchSetDetail()) && changeDetail.canAbandon();
-	}
-
-	@Override
-	protected boolean isExecutableStateKnown() {
-		return getChange() != null && getChange().getChangeDetail() != null && getPatchSetDetail() != null;
 	}
 }

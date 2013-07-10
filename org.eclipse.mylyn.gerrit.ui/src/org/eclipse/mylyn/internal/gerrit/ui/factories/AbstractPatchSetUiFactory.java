@@ -29,6 +29,7 @@ import org.eclipse.mylyn.internal.gerrit.core.egit.GerritToGitMapping;
 import org.eclipse.mylyn.internal.gerrit.core.remote.GerritRemoteFactoryProvider;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
 import org.eclipse.mylyn.internal.gerrit.ui.egit.EGitUiUtil;
+import org.eclipse.mylyn.internal.reviews.ui.ReviewUiUtil;
 import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
@@ -136,8 +137,13 @@ public abstract class AbstractPatchSetUiFactory extends AbstractUiFactory<IRevie
 		return null;
 	}
 
+	protected boolean isAnonymous() {
+		return ReviewUiUtil.isAnonymous(getModelObject());
+	}
+
 	@Override
 	protected boolean isExecutableStateKnown() {
-		return getChange() != null && getChange().getChangeDetail() != null && getPatchSetDetail() != null;
+		return isAnonymous()
+				|| (getChange() != null && getChange().getChangeDetail() != null && getPatchSetDetail() != null);
 	}
 }

@@ -35,6 +35,9 @@ public class SubmitUiFactory extends AbstractPatchSetUiFactory {
 
 	@Override
 	public boolean isExecutable() {
+		if (isAnonymous()) {
+			return false;
+		}
 		ChangeDetailX changeDetail = getChange().getChangeDetail();
 		if (changeDetail != null) {
 			if (changeDetail.getCurrentActions() != null) {

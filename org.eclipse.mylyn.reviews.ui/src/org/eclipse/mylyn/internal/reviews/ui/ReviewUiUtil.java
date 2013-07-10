@@ -16,6 +16,8 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.source.LineRange;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
+import org.eclipse.mylyn.reviews.core.model.IReview;
+import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
@@ -142,4 +144,13 @@ public final class ReviewUiUtil {
 		}
 		return d;
 	}
+
+	public static boolean isAnonymous(IReviewItem item) {
+		return item != null && isAnonymous(item.getReview());
+	}
+
+	public static boolean isAnonymous(IReview review) {
+		return review != null && review.getRepository() != null && review.getRepository().getAccount() == null;
+	}
+
 }

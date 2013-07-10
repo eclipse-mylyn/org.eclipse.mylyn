@@ -36,6 +36,7 @@ import org.eclipse.ui.IEditorPart;
  * Action for adding a comment to a line in the active review
  * 
  * @author Shawn Minto
+ * @author Miles Parker
  */
 public class AddLineCommentToFileAction extends AbstractReviewAction {
 
@@ -61,7 +62,7 @@ public class AddLineCommentToFileAction extends AbstractReviewAction {
 		if (compareSourceViewer != null) {
 			selectedRange = compareSourceViewer.getSelection();
 			if (selectedRange != null) {
-				return true;
+				return !ReviewUiUtil.isAnonymous(getItem());
 			}
 		}
 		return false;
@@ -112,11 +113,18 @@ public class AddLineCommentToFileAction extends AbstractReviewAction {
 	}
 
 	public void run(IAction action) {
-		IReviewItem item = compareSourceViewer.getAnnotationModel().getItem();
+		IReviewItem item = getItem();
 		ReviewBehavior reviewBehavior = compareSourceViewer.getAnnotationModel().getBehavior();
 
 		AddCommentDialog dialog = new AddCommentDialog(WorkbenchUtil.getShell(), reviewBehavior, item, getLocation());
 		dialog.open();
+	}
+
+	public IReviewItem getItem() {
+		if (compareSourceViewer != null && compareSourceViewer.getAnnotationModel() != null) {
+			return compareSourceViewer.getAnnotationModel().getItem();
+		}
+		return null;
 	}
 
 }

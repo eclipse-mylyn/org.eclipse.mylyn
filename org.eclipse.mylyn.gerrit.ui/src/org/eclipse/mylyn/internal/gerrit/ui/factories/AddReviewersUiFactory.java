@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.gerrit.ui.factories;
 
 import org.eclipse.mylyn.internal.gerrit.ui.operations.AddReviewersDialog;
+import org.eclipse.mylyn.internal.reviews.ui.ReviewUiUtil;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.ui.spi.factories.AbstractUiFactory;
 import org.eclipse.mylyn.reviews.ui.spi.factories.IUiContext;
@@ -36,8 +37,13 @@ public class AddReviewersUiFactory extends AbstractUiFactory<IReview> {
 		return true;
 	}
 
+	public boolean isAnonymous() {
+		return getModelObject() != null && getModelObject().getRepository() != null
+				&& getModelObject().getRepository().getAccount() == null;
+	}
+
 	@Override
 	public boolean isExecutable() {
-		return true;
+		return !ReviewUiUtil.isAnonymous(getModelObject());
 	}
 }

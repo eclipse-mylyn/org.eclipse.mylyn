@@ -33,6 +33,9 @@ public class RestoreUiFactory extends AbstractPatchSetUiFactory {
 
 	@Override
 	public boolean isExecutable() {
+		if (isAnonymous()) {
+			return false;
+		}
 		ChangeDetailX changeDetail = getChange().getChangeDetail();
 		return changeDetail != null && changeDetail.isCurrentPatchSet(getPatchSetDetail()) && changeDetail.canRestore();
 	}

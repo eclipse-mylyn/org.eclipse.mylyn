@@ -33,8 +33,10 @@ public class RebaseUiFactory extends AbstractPatchSetUiFactory {
 
 	@Override
 	public boolean isExecutable() {
+		if (isAnonymous()) {
+			return false;
+		}
 		GerritChange change = getChange();
-		return change != null && change.getChangeDetail() != null
-				&& change.getChangeDetail().canRebase();
+		return change != null && change.getChangeDetail() != null && change.getChangeDetail().canRebase();
 	}
 }
