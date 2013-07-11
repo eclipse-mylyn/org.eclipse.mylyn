@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
@@ -30,12 +32,13 @@ public class TaskAttributeMapper {
 
 	private final TaskRepository taskRepository;
 
-	public TaskAttributeMapper(TaskRepository taskRepository) {
+	public TaskAttributeMapper(@NonNull TaskRepository taskRepository) {
 		Assert.isNotNull(taskRepository);
 		this.taskRepository = taskRepository;
 	}
 
-	public TaskAttribute createTaskAttachment(TaskData taskData) {
+	@NonNull
+	public TaskAttribute createTaskAttachment(@NonNull TaskData taskData) {
 		TaskAttribute taskAttribute = taskData.getRoot().createAttribute(
 				mapToRepositoryKey(taskData.getRoot(), TaskAttribute.NEW_ATTACHMENT));
 //		TaskAttachmentMapper mapper = TaskAttachmentMapper.createFrom(taskAttribute);
@@ -46,7 +49,7 @@ public class TaskAttributeMapper {
 		return taskAttribute;
 	}
 
-	public boolean equals(TaskAttribute newAttribute, TaskAttribute oldAttribute) {
+	public boolean equals(@NonNull TaskAttribute newAttribute, @NonNull TaskAttribute oldAttribute) {
 		if (TaskAttribute.TYPE_COMMENT.equals(newAttribute.getMetaData().getType())) {
 			if (newAttribute.getValues().equals(oldAttribute.getValues())) {
 				return true;
@@ -69,7 +72,8 @@ public class TaskAttributeMapper {
 		return newAttribute.getValues().equals(oldAttribute.getValues());
 	}
 
-	public TaskAttribute getAssoctiatedAttribute(TaskAttribute taskAttribute) {
+	@Nullable
+	public TaskAttribute getAssoctiatedAttribute(@NonNull TaskAttribute taskAttribute) {
 		String id = taskAttribute.getMetaDatum(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID);
 		if (id != null) {
 			// look up as nested attribute first
@@ -83,7 +87,8 @@ public class TaskAttributeMapper {
 		return null;
 	}
 
-	public TaskAttribute getAssoctiatedAttribute(TaskOperation taskOperation) {
+	@Nullable
+	public TaskAttribute getAssoctiatedAttribute(@NonNull TaskOperation taskOperation) {
 		TaskAttribute taskAttribute = taskOperation.getTaskAttribute();
 		if (taskAttribute != null) {
 			return getAssoctiatedAttribute(taskAttribute);
@@ -91,7 +96,8 @@ public class TaskAttributeMapper {
 		return null;
 	}
 
-	public List<TaskAttribute> getAttributesByType(TaskData taskData, String type) {
+	@NonNull
+	public List<TaskAttribute> getAttributesByType(@NonNull TaskData taskData, @NonNull String type) {
 		Assert.isNotNull(taskData);
 		Assert.isNotNull(type);
 		List<TaskAttribute> result = new ArrayList<TaskAttribute>();
@@ -103,7 +109,7 @@ public class TaskAttributeMapper {
 		return result;
 	}
 
-	public boolean getBooleanValue(TaskAttribute attribute) {
+	public boolean getBooleanValue(@NonNull TaskAttribute attribute) {
 		String booleanString = attribute.getValue();
 		if (booleanString != null && booleanString.length() > 0) {
 			return Boolean.parseBoolean(booleanString);
@@ -111,7 +117,8 @@ public class TaskAttributeMapper {
 		return false;
 	}
 
-	public Date getDateValue(TaskAttribute attribute) {
+	@Nullable
+	public Date getDateValue(@NonNull TaskAttribute attribute) {
 		String dateString = attribute.getValue();
 		try {
 			if (dateString != null && dateString.length() > 0) {
@@ -126,15 +133,17 @@ public class TaskAttributeMapper {
 	/**
 	 * @deprecated Not used, see {@link TaskAttributeMetaData#setDefaultOption(String)}
 	 */
+	@Nullable
 	@Deprecated
-	public String getDefaultOption(TaskAttribute taskAttribute) {
+	public String getDefaultOption(@NonNull TaskAttribute taskAttribute) {
 		return taskAttribute.getMetaData().getDefaultOption();
 	}
 
 	/**
 	 * @since 3.5
 	 */
-	public Double getDoubleValue(TaskAttribute attribute) {
+	@Nullable
+	public Double getDoubleValue(@NonNull TaskAttribute attribute) {
 		String doubleString = attribute.getValue();
 		try {
 			if (doubleString != null) {
@@ -146,7 +155,8 @@ public class TaskAttributeMapper {
 		return null;
 	}
 
-	public Integer getIntegerValue(TaskAttribute attribute) {
+	@Nullable
+	public Integer getIntegerValue(@NonNull TaskAttribute attribute) {
 		String integerString = attribute.getValue();
 		try {
 			if (integerString != null) {
@@ -158,11 +168,13 @@ public class TaskAttributeMapper {
 		return null;
 	}
 
-	public String getLabel(TaskAttribute taskAttribute) {
+	@Nullable
+	public String getLabel(@NonNull TaskAttribute taskAttribute) {
 		return taskAttribute.getMetaData().getLabel();
 	}
 
-	public Long getLongValue(TaskAttribute attribute) {
+	@Nullable
+	public Long getLongValue(@NonNull TaskAttribute attribute) {
 		String longString = attribute.getValue();
 		try {
 			if (longString != null) {
@@ -177,11 +189,13 @@ public class TaskAttributeMapper {
 	/**
 	 * Returns labelByValue.
 	 */
-	public Map<String, String> getOptions(TaskAttribute attribute) {
+	@NonNull
+	public Map<String, String> getOptions(@NonNull TaskAttribute attribute) {
 		return attribute.getOptions();
 	}
 
-	public IRepositoryPerson getRepositoryPerson(TaskAttribute taskAttribute) {
+	@NonNull
+	public IRepositoryPerson getRepositoryPerson(@NonNull TaskAttribute taskAttribute) {
 		IRepositoryPerson person = taskRepository.createPerson(taskAttribute.getValue());
 		TaskAttribute child = taskAttribute.getMappedAttribute(TaskAttribute.PERSON_NAME);
 		if (child != null) {
@@ -190,7 +204,8 @@ public class TaskAttributeMapper {
 		return person;
 	}
 
-	public List<TaskOperation> getTaskOperations(TaskAttribute operationsAttribute) {
+	@NonNull
+	public List<TaskOperation> getTaskOperations(@NonNull TaskAttribute operationsAttribute) {
 		Assert.isNotNull(operationsAttribute);
 		TaskData taskData = operationsAttribute.getTaskData();
 		List<TaskOperation> result = new ArrayList<TaskOperation>();
@@ -203,11 +218,13 @@ public class TaskAttributeMapper {
 		return result;
 	}
 
-	public TaskOperation getTaskOperation(TaskAttribute taskAttribute) {
+	@NonNull
+	public TaskOperation getTaskOperation(@NonNull TaskAttribute taskAttribute) {
 		Assert.isNotNull(taskAttribute);
 		return TaskOperation.createFrom(taskAttribute);
 	}
 
+	@NonNull
 	public TaskRepository getTaskRepository() {
 		return taskRepository;
 	}
@@ -215,11 +232,13 @@ public class TaskAttributeMapper {
 	/**
 	 * @return empty String if not available
 	 */
-	public String getValue(TaskAttribute taskAttribute) {
+	@Nullable
+	public String getValue(@NonNull TaskAttribute taskAttribute) {
 		return taskAttribute.getValue();
 	}
 
-	public String getValueLabel(TaskAttribute taskAttribute) {
+	@NonNull
+	public String getValueLabel(@NonNull TaskAttribute taskAttribute) {
 		List<String> labels = getValueLabels(taskAttribute);
 		StringBuilder sb = new StringBuilder();
 		String sep = ""; //$NON-NLS-1$
@@ -230,7 +249,8 @@ public class TaskAttributeMapper {
 		return sb.toString();
 	}
 
-	public List<String> getValueLabels(TaskAttribute taskAttribute) {
+	@NonNull
+	public List<String> getValueLabels(@NonNull TaskAttribute taskAttribute) {
 		List<String> values = taskAttribute.getValues();
 		Map<String, String> options = getOptions(taskAttribute);
 		List<String> result = new ArrayList<String>(values.size());
@@ -244,23 +264,24 @@ public class TaskAttributeMapper {
 		return result;
 	}
 
-	public List<String> getValues(TaskAttribute attribute) {
+	@NonNull
+	public List<String> getValues(@NonNull TaskAttribute attribute) {
 		return new ArrayList<String>(attribute.getValues());
 	}
 
-	public boolean hasValue(TaskAttribute attribute) {
+	public boolean hasValue(@NonNull TaskAttribute attribute) {
 		return attribute.getValues().size() > 0;
 	}
 
-	public String mapToRepositoryKey(TaskAttribute parent, String key) {
+	public String mapToRepositoryKey(@NonNull TaskAttribute parent, @NonNull String key) {
 		return key;
 	}
 
-	public void setBooleanValue(TaskAttribute attribute, Boolean value) {
+	public void setBooleanValue(@NonNull TaskAttribute attribute, @NonNull Boolean value) {
 		attribute.setValue(Boolean.toString(value));
 	}
 
-	public void setDateValue(TaskAttribute attribute, Date date) {
+	public void setDateValue(@NonNull TaskAttribute attribute, @Nullable Date date) {
 		if (date != null) {
 			attribute.setValue(Long.toString(date.getTime()));
 		} else {
@@ -271,7 +292,7 @@ public class TaskAttributeMapper {
 	/**
 	 * @since 3.5
 	 */
-	public void setDoubleValue(TaskAttribute attribute, Double value) {
+	public void setDoubleValue(@NonNull TaskAttribute attribute, @Nullable Double value) {
 		if (value != null) {
 			attribute.setValue(value.toString());
 		} else {
@@ -279,7 +300,7 @@ public class TaskAttributeMapper {
 		}
 	}
 
-	public void setIntegerValue(TaskAttribute attribute, Integer value) {
+	public void setIntegerValue(@NonNull TaskAttribute attribute, @Nullable Integer value) {
 		if (value != null) {
 			attribute.setValue(value.toString());
 		} else {
@@ -287,7 +308,7 @@ public class TaskAttributeMapper {
 		}
 	}
 
-	public void setLongValue(TaskAttribute attribute, Long value) {
+	public void setLongValue(@NonNull TaskAttribute attribute, @Nullable Long value) {
 		if (value != null) {
 			attribute.setValue(value.toString());
 		} else {
@@ -295,7 +316,7 @@ public class TaskAttributeMapper {
 		}
 	}
 
-	public void setRepositoryPerson(TaskAttribute taskAttribute, IRepositoryPerson person) {
+	public void setRepositoryPerson(@NonNull TaskAttribute taskAttribute, @NonNull IRepositoryPerson person) {
 		setValue(taskAttribute, person.getPersonId());
 		if (person.getName() != null) {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.PERSON_NAME);
@@ -303,25 +324,25 @@ public class TaskAttributeMapper {
 		}
 	}
 
-	public void setTaskOperation(TaskAttribute taskAttribute, TaskOperation taskOperation) {
+	public void setTaskOperation(@NonNull TaskAttribute taskAttribute, @NonNull TaskOperation taskOperation) {
 		Assert.isNotNull(taskAttribute);
 		Assert.isNotNull(taskOperation);
 		TaskOperation.applyTo(taskAttribute, taskOperation.getOperationId(), taskOperation.getLabel());
 	}
 
-	public void setValue(TaskAttribute attribute, String value) {
+	public void setValue(@NonNull TaskAttribute attribute, @NonNull String value) {
 		attribute.setValue(value);
 	}
 
-	public void setValues(TaskAttribute attribute, List<String> values) {
+	public void setValues(@NonNull TaskAttribute attribute, @NonNull List<String> values) {
 		attribute.setValues(values);
 	}
 
-	public void updateTaskAttachment(ITaskAttachment taskAttachment, TaskAttribute taskAttribute) {
+	public void updateTaskAttachment(@NonNull ITaskAttachment taskAttachment, @NonNull TaskAttribute taskAttribute) {
 		TaskAttachmentMapper.createFrom(taskAttribute).applyTo(taskAttachment);
 	}
 
-	public void updateTaskComment(ITaskComment taskComment, TaskAttribute taskAttribute) {
+	public void updateTaskComment(@NonNull ITaskComment taskComment, @NonNull TaskAttribute taskAttribute) {
 		TaskCommentMapper.createFrom(taskAttribute).applyTo(taskComment);
 	}
 
