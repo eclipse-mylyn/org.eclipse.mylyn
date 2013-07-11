@@ -19,6 +19,7 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
+import org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateManager;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 
 /**
@@ -48,10 +49,7 @@ public class CommitTemplateTest extends TestCase {
 	public void testTemplateNullKeyTrailingCharacters() {
 		String template = "${task.status} - ${connector.task.prefix} ${task.key}: ${task.description}";
 
-		String taskId = "12345678";
-		TaskTask testTask = new TaskTask("no url", taskId, "summary");
-		testTask.setTaskKey(null);
-		testTask.setSummary("TestSummary");
+		TaskTask testTask = createTask();
 
 		String commitComment = FocusedTeamUiPlugin.getDefault()
 				.getCommitTemplateManager()
@@ -65,10 +63,7 @@ public class CommitTemplateTest extends TestCase {
 	public void testTemplateCollapseWhitespace() {
 		String template = "${task.status} - ${connector.task.prefix} ${task.key} ${task.key} : ${task.description}";
 
-		String taskId = "12345678";
-		TaskTask testTask = new TaskTask("no url", taskId, "summary");
-		testTask.setTaskKey(null);
-		testTask.setSummary("TestSummary");
+		TaskTask testTask = createTask();
 
 		String commitComment = FocusedTeamUiPlugin.getDefault()
 				.getCommitTemplateManager()
@@ -82,10 +77,7 @@ public class CommitTemplateTest extends TestCase {
 	public void testTemplateWithTab() {
 		String template = "${task.status} - \t${connector.task.prefix} ${task.key} ${task.key} : ${task.description}";
 
-		String taskId = "12345678";
-		TaskTask testTask = new TaskTask("no url", taskId, "summary");
-		testTask.setTaskKey(null);
-		testTask.setSummary("TestSummary");
+		TaskTask testTask = createTask();
 
 		String commitComment = FocusedTeamUiPlugin.getDefault()
 				.getCommitTemplateManager()
@@ -94,6 +86,55 @@ public class CommitTemplateTest extends TestCase {
 
 		assertTrue(commitComment.contains("\t"));
 		assertEquals("Incomplete - \t : TestSummary", commitComment);
+	}
+
+	public void testTemplateVariableWithParameters() {
+		CommitTemplateManager manager = FocusedTeamUiPlugin.getDefault().getCommitTemplateManager();
+		TaskTask testTask = createTask();
+
+		assertEquals("ABC", manager.generateComment(testTask, "${TestVar(\"ABC\")}"));
+		assertEquals("one ABC two", manager.generateComment(testTask, "one ${TestVar(\"ABC\")} two"));
+		assertEquals("oneABCtwo", manager.generateComment(testTask, "one${TestVar(\"ABC\")}two"));
+		assertEquals("oneABC-DEFtwo", manager.generateComment(testTask, "one${TestVar(\"ABC\",\"DEF\")}two"));
+		assertEquals("oneABC-DEFtwo", manager.generateComment(testTask, "one${TestVar(\"ABC\", \"DEF\")}two"));
+		assertEquals("oneABC-DEFtwo", manager.generateComment(testTask, "one${TestVar(\"ABC\" ,\"DEF\")}two"));
+		assertEquals("oneABC-DEFtwo", manager.generateComment(testTask, "one${TestVar(\"ABC\" , \"DEF\")}two"));
+		assertEquals("oneABC-DEFtwo", manager.generateComment(testTask, "one${TestVar( \"ABC\" , \"DEF\" )}two"));
+		assertEquals("oneABC-DEF-GHItwo",
+				manager.generateComment(testTask, "one${TestVar(\"ABC\", \"DEF\", \"GHI\")}two"));
+		assertEquals("Incomplete x-y TestSummary",
+				manager.generateComment(testTask, "${task.status} ${TestVar( \"x\" , \"y\" )} ${task.description}"));
+		assertEquals("one ABC DEF two",
+				manager.generateComment(testTask, "one ${TestVar(\"ABC\")} ${TestVar(\"DEF\")} two"));
+		assertEquals("one two", manager.generateComment(testTask, "one ${TestVar(\"\")} two"));
+		assertEquals("Incomplete TestSummary",
+				manager.generateComment(testTask, "${task.status} ${TestVar()} ${task.description}"));
+	}
+
+	public void testTemplateVariableWithParametersIncorrectSyntax() {
+		CommitTemplateManager manager = FocusedTeamUiPlugin.getDefault().getCommitTemplateManager();
+		TaskTask testTask = createTask();
+
+		assertEquals("Incomplete x , \"y TestSummary",
+				manager.generateComment(testTask, "${task.status} ${TestVar( \"x , \"y\" )} ${task.description}"));
+		assertEquals("Incomplete x\" \"y TestSummary",
+				manager.generateComment(testTask, "${task.status} ${TestVar( \"x\" \"y\" )} ${task.description}"));
+		assertEquals("Incomplete TestSummary",
+				manager.generateComment(testTask, "${task.status} ${TestVar( \"x , )} ${task.description}"));
+		assertEquals("Incomplete TestSummary",
+				manager.generateComment(testTask, "${task.status} ${TestVar( \"x\" , )} ${task.description}"));
+		assertEquals("Incomplete TestSummary",
+				manager.generateComment(testTask, "${task.status} ${TestVar( x )} ${task.description}"));
+		assertEquals("Incomplete TestSummary",
+				manager.generateComment(testTask, "${task.status} ${noexist( \"x\" )} ${task.description}"));
+	}
+
+	private TaskTask createTask() {
+		String taskId = "12345678";
+		TaskTask testTask = new TaskTask("no url", taskId, "summary");
+		testTask.setTaskKey(null);
+		testTask.setSummary("TestSummary");
+		return testTask;
 	}
 
 	public void testRepositoryTaskCommentParsing() {

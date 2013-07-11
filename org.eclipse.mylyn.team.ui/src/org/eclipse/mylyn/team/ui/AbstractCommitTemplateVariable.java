@@ -25,6 +25,11 @@ public abstract class AbstractCommitTemplateVariable {
 
 	protected String recognizedKeyword;
 
+	/**
+	 * @since 3.10
+	 */
+	protected String[] arguments;
+
 	public String getDescription() {
 		return description != null ? description : "Handler for '" + recognizedKeyword + "'"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
@@ -48,5 +53,12 @@ public abstract class AbstractCommitTemplateVariable {
 		}
 
 		this.recognizedKeyword = recognizedKeyword;
+	}
+
+	/**
+	 * @since 3.10
+	 */
+	public void setArguments(String[] arguments) {
+		this.arguments = arguments;
 	}
 }

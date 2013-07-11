@@ -55,7 +55,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.team.ITemplateHandler"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.team.ui.AbstractCommitTemplateVariable"/>
                </appInfo>
             </annotation>
          </attribute>

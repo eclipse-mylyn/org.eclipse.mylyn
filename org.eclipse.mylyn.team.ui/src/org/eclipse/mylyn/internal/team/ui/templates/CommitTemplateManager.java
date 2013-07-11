@@ -35,6 +35,9 @@ import org.eclipse.mylyn.team.ui.AbstractCommitTemplateVariable;
  */
 public class CommitTemplateManager {
 
+	private static final Pattern ARGUMENT_PATTERN = Pattern.compile("(.+)" + "\\(\\s*\"" //$NON-NLS-1$ //$NON-NLS-2$
+			+ "(.+(?:\"\\s*,\\s*\".+)*)" + "\"\\s*\\)}" + "(.*)", Pattern.DOTALL); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
 	private static final String ATTR_CLASS = "class"; //$NON-NLS-1$
 
 	private static final String ATTR_DESCRIPTION = "description"; //$NON-NLS-1$
@@ -44,6 +47,8 @@ public class CommitTemplateManager {
 	private static final String ELEM_TEMPLATE_HANDLER = "templateVariable"; //$NON-NLS-1$
 
 	private static final String EXT_POINT_TEMPLATE_HANDLERS = "commitTemplates"; //$NON-NLS-1$
+
+	private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
 	public String generateComment(ITask task, String template) {
 		return processKeywords(task, template);
@@ -148,8 +153,8 @@ public class CommitTemplateManager {
 				if (keyword.equals(foundKeyword)) {
 					AbstractCommitTemplateVariable handler = (AbstractCommitTemplateVariable) element.createExecutableExtension(ATTR_CLASS);
 					if (handler != null) {
-						(handler).setDescription(description);
-						(handler).setRecognizedKeyword(foundKeyword);
+						handler.setDescription(description);
+						handler.setRecognizedKeyword(foundKeyword);
 					}
 //					else {
 //						String recognizedKeyword = handler.getRecognizedKeyword();
@@ -174,13 +179,22 @@ public class CommitTemplateManager {
 		for (int i = 1; i < segments.length; i++) {
 			String segment = segments[i];
 			String value = null;
-			int brace = segment.indexOf('}');
-			if (brace > 0) {
-				String keyword = segment.substring(0, brace);
-				value = processKeyword(task, keyword);
+			String trailingCharacters;
+			Matcher argumentMatcher = ARGUMENT_PATTERN.matcher(segment);
+			if (argumentMatcher.matches()) {
+				String keyword = argumentMatcher.group(1);
+				String[] args = argumentMatcher.group(2).split("\"\\s*,\\s*\""); //$NON-NLS-1$
+				value = processKeyword(task, keyword, args);
+				trailingCharacters = argumentMatcher.group(3);
+			} else {
+				int brace = segment.indexOf('}');
+				if (brace > 0) {
+					String keyword = segment.substring(0, brace);
+					value = processKeyword(task, keyword, EMPTY_STRING_ARRAY);
+				}
+				trailingCharacters = segment.substring(brace + 1);
 			}
 
-			String trailingCharacters = segment.substring(brace + 1);
 			if (value != null) {
 				evaluated.add(value);
 				evaluated.add(trailingCharacters);
@@ -202,10 +216,11 @@ public class CommitTemplateManager {
 		return commitTemplate.replaceAll("[ ]+", " "); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
-	private String processKeyword(ITask task, String keyword) {
+	private String processKeyword(ITask task, String keyword, String[] args) {
 		try {
 			AbstractCommitTemplateVariable handler = createHandler(keyword);
 			if (handler != null) {
+				handler.setArguments(args);
 				return handler.getValue(task);
 			}
 		} catch (Exception e) {
