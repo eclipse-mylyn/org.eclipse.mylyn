@@ -96,6 +96,8 @@ public class GerritClient extends ReviewsClient {
 
 	private static final Pattern GERRIT_VERSION_PATTERN = Pattern.compile("Powered by Gerrit Code Review (.+)</p>"); //$NON-NLS-1$
 
+	private static final Version GERRIT_VERSION_2_6 = new Version(2, 6, 0);
+
 	private abstract class Operation<T> implements AsyncCallback<T> {
 
 		private Throwable exception;
@@ -567,7 +569,7 @@ public class GerritClient extends ReviewsClient {
 	 * user. On Gerrit 2.4 and earlier closed reviews are not included.
 	 */
 	public List<GerritQueryResult> queryMyReviews(IProgressMonitor monitor) throws GerritException {
-		if (!restQueryAPIEnabled) {
+		if (hasJsonRpcApi(monitor) && !restQueryAPIEnabled) {
 			try {
 				final Account account = getAccount(monitor);
 				AccountDashboardInfo ad = execute(monitor, new Operation<AccountDashboardInfo>() {
@@ -591,6 +593,11 @@ public class GerritClient extends ReviewsClient {
 		}
 		// the "self" alias is only supported in Gerrit 2.5 and later
 		return executeQueryRest(monitor, "owner:self OR reviewer:self"); //$NON-NLS-1$
+	}
+
+	private boolean hasJsonRpcApi(IProgressMonitor monitor) throws GerritException {
+		Version version = getCachedVersion(monitor);
+		return version.compareTo(GERRIT_VERSION_2_6) < 0;
 	}
 
 	/**
@@ -723,7 +730,7 @@ public class GerritClient extends ReviewsClient {
 
 	public List<GerritQueryResult> executeQuery(IProgressMonitor monitor, final String queryString)
 			throws GerritException {
-		if (!restQueryAPIEnabled) {
+		if (hasJsonRpcApi(monitor) && !restQueryAPIEnabled) {
 			try {
 				SingleListChangeInfo sl = execute(monitor, new Operation<SingleListChangeInfo>() {
 					@Override
