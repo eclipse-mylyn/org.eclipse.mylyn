@@ -22,6 +22,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.commons.workbench.forms.CommonFormUtil;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritSystemInfo;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -63,6 +64,10 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 		public void run(IProgressMonitor monitor) throws CoreException {
 			GerritConnector connector = (GerritConnector) getConnector();
 			info = connector.validate(repository, monitor);
+		}
+
+		private boolean isSupportedVersion() {
+			return !GerritVersion.isVersion26OrLater(info.getVersion());
 		}
 
 	}
@@ -140,8 +145,17 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 		super.applyValidatorResult(validator);
 		if (validator.getStatus() != null && validator.getStatus().isOK()) {
 			GerritValidator gerritValidator = (GerritValidator) validator;
-			setMessage(NLS.bind("{0} Logged in as {1}.", getMessage(), gerritValidator.getInfo().getFullName()),
-					IMessageProvider.INFORMATION);
+
+			String warning = ""; //$NON-NLS-1$
+			if (!gerritValidator.isSupportedVersion()) {
+				warning = NLS.bind("\nPlease keep in mind that Gerrit {0} is not fully supported yet.",
+						gerritValidator.getInfo().getVersion());
+			}
+
+			setMessage(NLS.bind("{0} Logged in as {1}.{2}", new String[] { getMessage(),
+					gerritValidator.getInfo().getFullName(), warning }), warning.isEmpty()
+					? IMessageProvider.INFORMATION
+					: IMessageProvider.WARNING);
 		}
 	}
 
