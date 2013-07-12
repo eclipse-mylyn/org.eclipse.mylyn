@@ -111,8 +111,10 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 				getGerritProvider().pullUser(parent, detail.getAccounts(),
 						patchSetDetail.getInfo().getCommitter().getAccount(), monitor);
 			}
-			for (ApprovalDetail remoteApproval : detail.getApprovals()) {
-				getGerritProvider().pullUser(parent, detail.getAccounts(), remoteApproval.getAccount(), monitor);
+			if (detail.getApprovals() != null) {
+				for (ApprovalDetail remoteApproval : detail.getApprovals()) {
+					getGerritProvider().pullUser(parent, detail.getAccounts(), remoteApproval.getAccount(), monitor);
+				}
 			}
 
 			if (detail.getSubmitRecords() != null) {
@@ -294,65 +296,67 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 				approvalName = approvalName.replace(" ", "-");
 				typeForName.put(approvalName, localApprovalType);
 			}
-		}
 
-		//Approvals
-		review.getReviewerApprovals().clear();
-		if (detail.getApprovals() != null) {
-			for (ApprovalDetail remoteApproval : detail.getApprovals()) {
-				IUser reviewer = getGerritProvider().createUser(parent, detail.getAccounts(),
-						remoteApproval.getAccount());
-				if (reviewer == null) {
-					throw new RuntimeException("Internal Error, no reviewer found for: " + remoteApproval.getAccount());
-				}
-				IReviewerEntry reviewerEntry = review.getReviewerApprovals().get(reviewer);
-				if (reviewerEntry == null) {
-					reviewerEntry = IReviewsFactory.INSTANCE.createReviewerEntry();
-					review.getReviewerApprovals().put(reviewer, reviewerEntry);
-				}
-				for (Entry<com.google.gerrit.reviewdb.ApprovalCategory.Id, PatchSetApproval> remoteMap : remoteApproval.getApprovalMap()
-						.entrySet()) {
-					String remoteType = remoteMap.getValue().getCategoryId().get();
-					IApprovalType approvalType = typeForKey.get(remoteType);
-					if (approvalType == null) {
-						approvalType = IReviewsFactory.INSTANCE.createApprovalType();
-						approvalType.setKey(remoteType);
-						approvalType.setName(remoteType);
-						parent.getApprovalTypes().add(approvalType);
-						typeForKey.put(approvalType.getKey(), approvalType);
+			//Approvals
+			review.getReviewerApprovals().clear();
+			if (detail.getApprovals() != null) {
+				for (ApprovalDetail remoteApproval : detail.getApprovals()) {
+					IUser reviewer = getGerritProvider().createUser(parent, detail.getAccounts(),
+							remoteApproval.getAccount());
+					if (reviewer == null) {
+						throw new RuntimeException("Internal Error, no reviewer found for: "
+								+ remoteApproval.getAccount());
 					}
-					reviewerEntry.getApprovals().put(approvalType, (int) remoteMap.getValue().getValue());
+					IReviewerEntry reviewerEntry = review.getReviewerApprovals().get(reviewer);
+					if (reviewerEntry == null) {
+						reviewerEntry = IReviewsFactory.INSTANCE.createReviewerEntry();
+						review.getReviewerApprovals().put(reviewer, reviewerEntry);
+					}
+					for (Entry<com.google.gerrit.reviewdb.ApprovalCategory.Id, PatchSetApproval> remoteMap : remoteApproval.getApprovalMap()
+							.entrySet()) {
+						String remoteType = remoteMap.getValue().getCategoryId().get();
+						IApprovalType approvalType = typeForKey.get(remoteType);
+						if (approvalType == null) {
+							approvalType = IReviewsFactory.INSTANCE.createApprovalType();
+							approvalType.setKey(remoteType);
+							approvalType.setName(remoteType);
+							parent.getApprovalTypes().add(approvalType);
+							typeForKey.put(approvalType.getKey(), approvalType);
+						}
+						reviewerEntry.getApprovals().put(approvalType, (int) remoteMap.getValue().getValue());
+					}
 				}
 			}
-		}
 
-		//Requirements
-		review.getRequirements().clear();
-		if (detail.getSubmitRecords() != null) {
-			for (SubmitRecord record : detail.getSubmitRecords()) {
-				for (Label label : record.getLabels()) {
-					IApprovalType approvalType = typeForName.get(label.getLabel());
-					if (approvalType == null) {
-						throw new RuntimeException("Internal Error, no approval type found for: " + label.getLabel());
+			//Requirements
+			review.getRequirements().clear();
+			if (detail.getSubmitRecords() != null) {
+				for (SubmitRecord record : detail.getSubmitRecords()) {
+					for (Label label : record.getLabels()) {
+						IApprovalType approvalType = typeForName.get(label.getLabel());
+						if (approvalType == null) {
+							throw new RuntimeException("Internal Error, no approval type found for: "
+									+ label.getLabel());
+						}
+						IRequirementEntry requirementEntry = IReviewsFactory.INSTANCE.createRequirementEntry();
+						if (label.getStatus().equals("OK")) {
+							requirementEntry.setStatus(RequirementStatus.SATISFIED);
+						} else if (label.getStatus().equals("NEED")) {
+							requirementEntry.setStatus(RequirementStatus.NOT_SATISFIED);
+						} else if (label.getStatus().equals("REJECT")) {
+							requirementEntry.setStatus(RequirementStatus.REJECTED);
+						} else if (label.getStatus().equals("MAY")) {
+							requirementEntry.setStatus(RequirementStatus.OPTIONAL);
+						} else if (label.getStatus().equals("IMPOSSIBLE")) {
+							requirementEntry.setStatus(RequirementStatus.ERROR);
+						}
+						if (label.getAppliedBy() != null) {
+							IUser approver = getGerritProvider().createUser(parent, detail.getAccounts(),
+									label.getAppliedBy());
+							requirementEntry.setBy(approver);
+						}
+						review.getRequirements().put(approvalType, requirementEntry);
 					}
-					IRequirementEntry requirementEntry = IReviewsFactory.INSTANCE.createRequirementEntry();
-					if (label.getStatus().equals("OK")) {
-						requirementEntry.setStatus(RequirementStatus.SATISFIED);
-					} else if (label.getStatus().equals("NEED")) {
-						requirementEntry.setStatus(RequirementStatus.NOT_SATISFIED);
-					} else if (label.getStatus().equals("REJECT")) {
-						requirementEntry.setStatus(RequirementStatus.REJECTED);
-					} else if (label.getStatus().equals("MAY")) {
-						requirementEntry.setStatus(RequirementStatus.OPTIONAL);
-					} else if (label.getStatus().equals("IMPOSSIBLE")) {
-						requirementEntry.setStatus(RequirementStatus.ERROR);
-					}
-					if (label.getAppliedBy() != null) {
-						IUser approver = getGerritProvider().createUser(parent, detail.getAccounts(),
-								label.getAppliedBy());
-						requirementEntry.setBy(approver);
-					}
-					review.getRequirements().put(approvalType, requirementEntry);
 				}
 			}
 		}
