@@ -6,6 +6,7 @@ define gerrit::site (
   $allbasicauth = false,
   $certauth     = false,
   $digestauth   = false,
+  $authtype     = "HTTP",
   $envtype      = "gerrit",
   $envinfo      = "",
   $envdefault = false,

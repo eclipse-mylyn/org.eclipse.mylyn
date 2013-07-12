@@ -18,7 +18,7 @@ define gerrit::gerrit (
   }
 
   exec { "download gerrit $version":
-    command => "wget -O $base/archive/gerrit-$version.war https://gerrit.googlecode.com/files/gerrit${postfix}-${version}.war",
+    command => "wget -O $base/archive/gerrit-$version.war http://gerrit-releases.storage.googleapis.com/gerrit${postfix}-${version}.war",
     creates => "$base/archive/gerrit-$version.war",
     user    => "$userOwner",
     require => Exec["prepare $version"],

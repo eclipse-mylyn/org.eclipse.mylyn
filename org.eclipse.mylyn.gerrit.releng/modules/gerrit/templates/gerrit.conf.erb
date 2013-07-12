@@ -1,6 +1,7 @@
 ProxyPass        /<%= envid %> http://localhost:<%= port %>/<%= envid %>
 ProxyPassReverse /<%= envid %> http://localhost:<%= port %>/<%= envid %>
 
+<% if @authtype == "HTTP" %>
 <% if @allbasicauth %>
 <Location /<%= envid %>>
   AuthType Basic
@@ -32,4 +33,5 @@ ProxyPassReverse /<%= envid %> http://localhost:<%= port %>/<%= envid %>
   Require valid-user
 <% end %>
 </Location>
+<% end %>
 <% end %>
