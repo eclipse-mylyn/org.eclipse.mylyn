@@ -26,9 +26,9 @@
             <configuration>
               <artifacts>
                 <artifact>
-                  <file>mylyn-tasks-e3.5.target</file>
+                  <file>mylyn-tasks-e3.6.target</file>
                   <type>target</type>
-                  <classifier>mylyn-tasks-e3.5</classifier>
+                  <classifier>mylyn-tasks-e3.6</classifier>
                 </artifact>
               </artifacts>
             </configuration>
