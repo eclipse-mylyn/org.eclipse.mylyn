@@ -447,27 +447,35 @@ public class GerritHttpClient {
 		}
 
 		String repositoryUrl = getUrl();
-		GetMethod method = new GetMethod(WebUtil.getRequestPath(repositoryUrl + BECOME_URL + "?" + key + "=" //$NON-NLS-1$ //$NON-NLS-2$
-				+ credentials.getUserName()));
-		method.setFollowRedirects(false);
-		try {
-			int code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
-			if (needsReauthentication(code, monitor)) {
-				return -1;
-			}
+		String gerrit_2_5_RequestPath = WebUtil.getRequestPath(repositoryUrl + BECOME_URL + "?" + key + "=" //$NON-NLS-1$ //$NON-NLS-2$
+				+ credentials.getUserName());
+		String gerrit_2_6_RequestPath = WebUtil.getRequestPath(repositoryUrl + LOGIN_URL + "?" + key + "=" //$NON-NLS-1$ //$NON-NLS-2$
+				+ credentials.getUserName());
+		for (String requestPath : new String[] { gerrit_2_5_RequestPath, gerrit_2_6_RequestPath }) {
+			GetMethod method = new GetMethod(requestPath);
+			method.setFollowRedirects(false);
+			try {
+				int code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
+				if (needsReauthentication(code, monitor)) {
+					return -1;
+				}
 
-			if (code == HttpStatus.SC_OK) {
-				// authentication failed
+				if (code == HttpStatus.SC_OK) {
+					// authentication failed
+					return code;
+				}
+				if (code == HttpStatus.SC_NOT_FOUND) {
+					continue;
+				}
+				if (code != HttpStatus.SC_MOVED_TEMPORARILY && code != HttpStatus.SC_MOVED_TEMPORARILY) {
+					throw new GerritHttpException(code);
+				}
 				return code;
+			} finally {
+				WebUtil.releaseConnection(method, monitor);
 			}
-			if (code != HttpStatus.SC_NOT_FOUND && code != HttpStatus.SC_MOVED_TEMPORARILY
-					&& code != HttpStatus.SC_MOVED_TEMPORARILY) {
-				throw new GerritHttpException(code);
-			}
-			return code;
-		} finally {
-			WebUtil.releaseConnection(method, monitor);
 		}
+		return HttpStatus.SC_NOT_FOUND;
 	}
 
 	private int authenticateForm(AuthenticationCredentials credentials, IProgressMonitor monitor) throws IOException,
@@ -496,6 +504,9 @@ public class GerritHttpClient {
 							return HttpStatus.SC_NOT_FOUND;
 						}
 					}
+				} else if (code == HttpStatus.SC_OK) {
+					// try different authentication method as the server maybe using development mode authentication
+					return HttpStatus.SC_NOT_FOUND;
 				} else if (code != HttpStatus.SC_NOT_FOUND) {
 					throw new GerritHttpException(code);
 				}
@@ -504,7 +515,7 @@ public class GerritHttpClient {
 				WebUtil.releaseConnection(method, monitor);
 			}
 		}
-		return -1;
+		return HttpStatus.SC_NOT_FOUND;
 	}
 
 	private HttpMethodBase[] getFormAuthMethods(String repositoryUrl, AuthenticationCredentials credentials) {
