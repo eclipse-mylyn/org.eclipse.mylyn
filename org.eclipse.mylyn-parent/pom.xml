@@ -55,6 +55,7 @@
     <sign.skip>true</sign.skip>
     <pack.skip>false</pack.skip>
     <promote.skip>true</promote.skip>
+    <promote.prefix>I</promote.prefix>
 
     <dist.qualifier>'I'yyyyMMdd-HHmm</dist.qualifier>
     <dist.repository>${project.name}</dist.repository>
@@ -558,6 +559,7 @@
         <forceContextQualifier>v${env.TIMESTAMP}</forceContextQualifier>
         <sign.skip>false</sign.skip>
         <dist.site>/home/data/httpd/download.eclipse.org/mylyn/snapshots</dist.site>
+        <promote.prefix>v</promote.prefix>
       </properties>
     </profile>
     <profile>
