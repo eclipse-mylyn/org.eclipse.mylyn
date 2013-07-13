@@ -50,7 +50,6 @@ public class AllGerritTests {
 		suite.addTestSuite(GerritVersionTest.class);
 		if (!configuration.isLocalOnly()) {
 			// network tests
-			suite.addTestSuite(GerritUrlHandlerTest.class);
 			suite.addTestSuite(OpenIdAuthenticationTest.class);
 			List<GerritFixture> fixtures = configuration.discover(GerritFixture.class, "gerrit"); //$NON-NLS-1$
 			for (GerritFixture fixture : fixtures) {
@@ -69,6 +68,7 @@ public class AllGerritTests {
 		fixture.add(GerritDataLocatorTest.class);
 		fixture.add(GerritReviewRemoteFactoryTest.class);
 		fixture.add(PatchSetRemoteFactoryTest.class);
+		fixture.add(GerritUrlHandlerTest.class);
 		fixture.done();
 	}
 

@@ -47,10 +47,13 @@ public class GerritUrlHandlerTest extends TestCase {
 		TestFixture.resetTaskListAndRepositories();
 	}
 
-	// TODO: re-enable the test, see bug 412620
-	public void _testOpenUrl() throws Exception {
+	public void testOpenUrl() throws Exception {
 		// needs to be a repository that is not protected by HTTP auth to avoid browser popup in case of test failure
-		TaskRepository repository = GerritFixture.GERRIT_ECLIPSE_ORG.singleRepository();
+		if (!GerritFixture.current().supportsAnonymousAccess()) {
+			System.err.println("Skipping GerritUrlHandlerTest.testOpenUrl() due to lack of anonymous access");
+			return;
+		}
+		TaskRepository repository = GerritFixture.current().singleRepository();
 		repository.setCredentials(AuthenticationType.REPOSITORY, null, false);
 		EditorHandle handler = BrowserUtil.openUrl(activePage, repository.getUrl() + "/1", 0); //$NON-NLS-1$		
 		assertNull("Expected an editor instance, got a browser instance", handler.getAdapter(IWebBrowser.class));

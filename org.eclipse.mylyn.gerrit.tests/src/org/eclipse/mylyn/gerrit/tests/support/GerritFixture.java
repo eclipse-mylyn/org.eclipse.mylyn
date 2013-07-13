@@ -21,6 +21,7 @@ import org.eclipse.mylyn.tests.util.TestFixture;
  */
 public class GerritFixture extends TestFixture {
 
+	@Deprecated
 	public static GerritFixture GERRIT_ECLIPSE_ORG = new GerritFixture("https://git.eclipse.org/r", "2.2.2", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 	public static GerritFixture GERRIT_NON_EXISTANT = new GerritFixture("http://mylyn.org/gerrit", "2.2.2", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -31,6 +32,8 @@ public class GerritFixture extends TestFixture {
 
 	private final boolean excluded;
 
+	private boolean supportsAnonymousAccess;
+
 	public GerritFixture(String url, String version, String description) {
 		super(GerritConnector.CONNECTOR_KIND, url);
 		setInfo(url, version, description);
@@ -39,6 +42,7 @@ public class GerritFixture extends TestFixture {
 
 	public GerritFixture(FixtureConfiguration configuration) {
 		this(configuration.getUrl(), configuration.getVersion(), configuration.getInfo());
+		supportsAnonymousAccess = "DEVELOPMENT_BECOME_ANY_ACCOUNT".equals(configuration.getProperties().get("authtype"));
 	}
 
 	public static GerritFixture current() {
@@ -71,6 +75,10 @@ public class GerritFixture extends TestFixture {
 	@Override
 	public boolean isExcluded() {
 		return super.isExcluded() || excluded;
+	}
+
+	public boolean supportsAnonymousAccess() {
+		return supportsAnonymousAccess;
 	}
 
 }
