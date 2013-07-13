@@ -45,8 +45,8 @@
 <repository location="http://download.eclipse.org/eclipse/updates/3.8/R-3.8.2-201301310800"/>
 </location>
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.sdk.ide" version="3.5.2.M20100211-1343"/>
-<repository location="http://download.eclipse.org/releases/galileo"/>
+<unit id="org.eclipse.sdk.ide" version="3.6.2.M20110210-1200"/>
+<repository location="http://download.eclipse.org/releases/helios"/>
 </location>
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.mylyn.context.core" version="0.0.0"/>
