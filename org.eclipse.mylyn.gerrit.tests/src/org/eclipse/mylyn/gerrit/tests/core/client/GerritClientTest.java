@@ -28,10 +28,12 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritAuthenticationState;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.CommentLink;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.osgi.framework.Version;
 
 import com.google.gerrit.reviewdb.Account;
 
@@ -118,15 +120,15 @@ public class GerritClientTest extends TestCase {
 
 	@Test
 	public void testGetVersion() throws Exception {
-		assertEquals(getCurrentVersion(), client.getVersion(new NullProgressMonitor()).toString());
+		assertEquals(getCurrentVersion(), client.getVersion(new NullProgressMonitor()));
 	}
 
-	private static String getCurrentVersion() {
-		String simpleInfo = GerritFixture.current().getSimpleInfo();
-		if (simpleInfo.indexOf('/') != -1) {
-			return simpleInfo.substring(0, simpleInfo.indexOf('/'));
+	private static Version getCurrentVersion() {
+		String version = GerritFixture.current().getSimpleInfo();
+		if (version.indexOf('/') != -1) {
+			version = version.substring(0, version.indexOf('/'));
 		}
-		return simpleInfo;
+		return GerritVersion.parseGerritVersion(version);
 	}
 
 }
