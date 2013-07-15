@@ -28,6 +28,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.mylyn.gerrit.tests.support.GerritProject.CommitResult;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
@@ -197,5 +198,21 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(childChange.getId(), is(reviewDep1.getId()));
 		assertThat(childChange.getSubject(), is(reviewDep1.getSubject()));
 		assertThat(childChange.getModificationDate(), is(reviewDep1.getModificationDate()));
+	}
+
+	@Test
+	public void testAbandonChange() throws Exception {
+		String message1 = "abandon, time: " + System.currentTimeMillis(); //$NON-NLS-1$
+
+		reviewHarness.client.abandon(reviewHarness.shortId, 1, message1, new NullProgressMonitor());
+		reviewHarness.consumer.retrieve(false);
+		reviewHarness.listener.waitForResponse(2, 2);
+
+		assertThat(getReview().getState(), is(ReviewStatus.ABANDONED));
+		List<IComment> comments = getReview().getComments();
+		assertThat(comments.size(), is(1));
+		IComment lastComment = comments.get(0);
+		assertThat(lastComment.getAuthor().getDisplayName(), is("tests"));
+		assertThat(lastComment.getDescription(), is("Patch Set 1: Abandoned\n\n" + message1));
 	}
 }
