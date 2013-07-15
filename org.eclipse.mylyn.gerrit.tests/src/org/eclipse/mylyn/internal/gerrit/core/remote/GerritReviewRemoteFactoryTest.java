@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Tasktop Technologies and others.
+ * Copyright (c) 2012, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -65,11 +65,12 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		reviewHarness.listener.waitForResponse(2, 2);
 		List<IComment> comments = getReview().getComments();
 		assertThat(comments.size(), is(2));
-		IComment comment = comments.get(0);
-		assertThat(comment.getAuthor().getDisplayName(), is("tests"));
-		assertThat(comment.getDescription(), is("Patch Set 1:\n\n" + message1));
-		assertThat(comment.getAuthor().getDisplayName(), is("tests"));
-		assertThat(comment.getDescription(), is("Patch Set 1:\n\n" + message1));
+		IComment comment1 = comments.get(0);
+		assertThat(comment1.getAuthor().getDisplayName(), is("tests"));
+		assertThat(comment1.getDescription(), is("Patch Set 1:\n\n" + message1));
+		IComment comment2 = comments.get(1);
+		assertThat(comment2.getAuthor().getDisplayName(), is("tests"));
+		assertThat(comment2.getDescription(), is("Patch Set 1:\n\n" + message2));
 	}
 
 	@Test
