@@ -23,6 +23,8 @@ import org.eclipse.mylyn.gerrit.tests.core.GerritSynchronizationTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.GerritClientTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.GerritVersionTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.OpenIdAuthenticationTest;
+import org.eclipse.mylyn.gerrit.tests.core.client.rest.ReviewInfoTest;
+import org.eclipse.mylyn.gerrit.tests.core.client.rest.ReviewInputTest;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.gerrit.tests.ui.GerritUrlHandlerTest;
 import org.eclipse.mylyn.internal.gerrit.core.remote.GerritDataLocatorTest;
@@ -48,6 +50,8 @@ public class AllGerritTests {
 
 	private static void addTests(TestSuite suite, TestConfiguration configuration) {
 		suite.addTestSuite(GerritVersionTest.class);
+		suite.addTestSuite(ReviewInfoTest.class);
+		suite.addTestSuite(ReviewInputTest.class);
 		if (!configuration.isLocalOnly()) {
 			// network tests
 			suite.addTestSuite(OpenIdAuthenticationTest.class);

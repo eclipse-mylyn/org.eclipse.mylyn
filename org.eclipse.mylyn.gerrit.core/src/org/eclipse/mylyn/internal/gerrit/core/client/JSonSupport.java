@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jgit.diff.Edit;
 
 import com.google.gerrit.common.data.GerritConfig;
@@ -203,8 +204,8 @@ public class JSonSupport {
 		return gson.toJson(msg, msg.getClass());
 	}
 
-	<T> T parseResponse(String responseMessage, Type resultType) throws GerritException {
-		JSonResponse response = gson.fromJson(responseMessage, JSonResponse.class);
+	<T> T parseJsonResponse(String responseMessage, Type resultType) throws GerritException {
+		JSonResponse response = parseResponse(responseMessage, JSonResponse.class);
 		if (response.error != null) {
 			JSonError error = gson.fromJson(response.error, JSonError.class);
 			throw new GerritException(error.message, error.code);
@@ -213,4 +214,13 @@ public class JSonSupport {
 		}
 	}
 
+	public <T> T parseResponse(String responseMessage, Type resultType) {
+		Assert.isLegal(responseMessage != null);
+		Assert.isLegal(!responseMessage.isEmpty());
+
+		if (responseMessage.startsWith(")]}'\n")) { //$NON-NLS-1$
+			responseMessage = responseMessage.substring(5);
+		}
+		return gson.fromJson(responseMessage, resultType);
+	}
 }

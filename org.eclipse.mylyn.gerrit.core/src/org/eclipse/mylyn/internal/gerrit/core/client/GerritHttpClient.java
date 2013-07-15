@@ -15,6 +15,7 @@ package org.eclipse.mylyn.internal.gerrit.core.client;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -94,6 +95,42 @@ public class GerritHttpClient {
 
 	}
 
+	private class RestRequest<T> extends Request<T> {
+
+		private final JSonSupport json = new JSonSupport();
+
+		private final String serviceUri;
+
+		private final Object input;
+
+		private final Type resultType;
+
+		public RestRequest(final String serviceUri, final Object input, Type resultType) {
+			this.serviceUri = serviceUri;
+			this.input = input;
+			this.resultType = resultType;
+		}
+
+		@Override
+		public PostMethod createMethod() throws IOException {
+			PostMethod method = new PostMethod(getUrl() + serviceUri);
+			method.setRequestHeader("Content-Type", "application/json; charset=utf-8"); //$NON-NLS-1$//$NON-NLS-2$
+			method.setRequestHeader("Accept", "application/json"); //$NON-NLS-1$//$NON-NLS-2$
+
+			String content = json.getGson().toJson(input);
+			RequestEntity requestEntity = new StringRequestEntity(content, "application/json", null); //$NON-NLS-1$
+			method.setRequestEntity(requestEntity);
+			return method;
+		}
+
+		@Override
+		public T process(HttpMethodBase method) throws IOException {
+			String content = method.getResponseBodyAsString();
+			return json.parseResponse(content, resultType);
+		}
+
+	}
+
 	public static abstract class JsonEntity {
 
 		public abstract String getContent();
@@ -160,6 +197,15 @@ public class GerritHttpClient {
 		return execute(new JsonRequest(serviceUri, entity), monitor);
 	}
 
+	public <T> T postRestRequest(final String serviceUri, final Object input, Type resultType, IProgressMonitor monitor)
+			throws IOException, GerritException {
+		Assert.isNotNull(serviceUri, "REST Service URI must be not null."); //$NON-NLS-1$
+		Assert.isNotNull(input, "Input object must be not null."); //$NON-NLS-1$
+		Assert.isNotNull(resultType, "Output type must be not null."); //$NON-NLS-1$
+
+		return execute(new RestRequest<T>(serviceUri, input, resultType), monitor);
+	}
+
 	public <T> T execute(Request<T> request, IProgressMonitor monitor) throws IOException, GerritException {
 		return execute(request, true, monitor);
 	}
@@ -185,6 +231,11 @@ public class GerritHttpClient {
 			}
 
 			HttpMethodBase method = request.createMethod();
+			if (obtainedXsrfKey) {
+				// required to authenticate against Gerrit 2.6+ REST endpoints
+				// harmless in previous versions
+				method.setRequestHeader("X-Gerrit-Auth", xsrfKey); //$NON-NLS-1$
+			}
 			try {
 				// Execute the method.
 				WebUtil.execute(httpClient, hostConfiguration, method, monitor);
@@ -340,7 +391,7 @@ public class GerritHttpClient {
 			}
 
 			if (code == HttpURLConnection.HTTP_OK) {
-				DiscoveryResult result = json.parseResponse(jsonRequest.process(method), DiscoveryResult.class);
+				DiscoveryResult result = json.parseJsonResponse(jsonRequest.process(method), DiscoveryResult.class);
 				if (result.status == Status.VALID) {
 					if (location instanceof IOpenIdLocation) {
 						String returnUrl = result.providerArgs.get("openid.return_to"); //$NON-NLS-1$
@@ -417,7 +468,7 @@ public class GerritHttpClient {
 			}
 
 			if (code == HttpURLConnection.HTTP_OK) {
-				LoginResult result = json.parseResponse(jsonRequest.process(method), LoginResult.class);
+				LoginResult result = json.parseJsonResponse(jsonRequest.process(method), LoginResult.class);
 				if (result.success) {
 					return HttpStatus.SC_TEMPORARY_REDIRECT;
 				} else {

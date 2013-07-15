@@ -47,6 +47,8 @@ import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchSetPublishDetai
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectAdminService;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.ReviewInfo;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.ReviewInput;
 import org.eclipse.mylyn.internal.gerrit.core.remote.GerritRemoteFactoryProvider;
 import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IReview;
@@ -468,12 +470,17 @@ public class GerritClient extends ReviewsClient {
 	public void publishComments(String reviewId, int patchSetId, final String message,
 			final Set<ApprovalCategoryValue.Id> approvals, IProgressMonitor monitor) throws GerritException {
 		final PatchSet.Id id = new PatchSet.Id(new Change.Id(id(reviewId)), patchSetId);
-		execute(monitor, new Operation<VoidResult>() {
-			@Override
-			public void execute(IProgressMonitor monitor) throws GerritException {
-				getPatchDetailService(monitor).publishComments(id, message, approvals, this);
-			}
-		});
+		if (hasJsonRpcApi(monitor)) {
+			execute(monitor, new Operation<VoidResult>() {
+				@Override
+				public void execute(IProgressMonitor monitor) throws GerritException {
+					getPatchDetailService(monitor).publishComments(id, message, approvals, this);
+				}
+			});
+		} else {
+			final String uri = "/a/changes/" + id.getParentKey().get() + "/revisions/" + id.get() + "/review"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			execute(uri, new ReviewInput(message), ReviewInfo.class, monitor);
+		}
 	}
 
 	public ReviewerResult addReviewers(String reviewId, final List<String> reviewers, IProgressMonitor monitor)
@@ -879,6 +886,20 @@ public class GerritClient extends ReviewsClient {
 		} finally {
 			GerritRequest.setCurrentRequest(null);
 		}
+	}
+
+	private <T> T execute(final String url, final Object input, final Type resultType, IProgressMonitor monitor)
+			throws GerritException {
+		return execute(monitor, new Operation<T>() {
+			@Override
+			public void execute(IProgressMonitor monitor) throws GerritException {
+				try {
+					setResult(client.<T> postRestRequest(url, input, resultType, monitor));
+				} catch (IOException e) {
+					throw new GerritException(e);
+				}
+			}
+		});
 	}
 
 	private <T> T executeOnce(IProgressMonitor monitor, Operation<T> operation) throws GerritException {

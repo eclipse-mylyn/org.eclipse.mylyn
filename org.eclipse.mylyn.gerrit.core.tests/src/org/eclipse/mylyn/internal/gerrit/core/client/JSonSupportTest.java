@@ -30,15 +30,24 @@ public class JSonSupportTest {
 		JSonSupport json = new JSonSupport();
 		Calendar c = new GregorianCalendar(2012, 0, 26, 12, 33, 11);
 		c.set(Calendar.MILLISECOND, 110);
-		c.setTimeZone(TimeZone.getTimeZone("UTC"));
+		c.setTimeZone(TimeZone.getTimeZone("UTC")); //$NON-NLS-1$
 		assertEquals(new Timestamp(c.getTimeInMillis()),
-				json.getGson().fromJson("\"2012-01-26 12:33:11.110000000\"", Timestamp.class));
+				json.parseResponse("\"2012-01-26 12:33:11.110000000\"", Timestamp.class)); //$NON-NLS-1$
 
 		c = new GregorianCalendar(2012, 10, 8, 21, 38, 35);
 		c.set(Calendar.MILLISECOND, 337);
-		c.setTimeZone(TimeZone.getTimeZone("UTC"));
+		c.setTimeZone(TimeZone.getTimeZone("UTC")); //$NON-NLS-1$
 		assertEquals(new Timestamp(c.getTimeInMillis()),
-				json.getGson().fromJson("\"2012-11-08 21:38:35.337000000\"", Timestamp.class));
+				json.parseResponse("\"2012-11-08 21:38:35.337000000\"", Timestamp.class)); //$NON-NLS-1$
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void testParseResponseNull() {
+		new JSonSupport().parseResponse(null, Timestamp.class);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testParseResponseEmpty() {
+		new JSonSupport().parseResponse("", Timestamp.class); //$NON-NLS-1$
+	}
 }

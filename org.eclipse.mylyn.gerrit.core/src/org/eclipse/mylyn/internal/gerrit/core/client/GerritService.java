@@ -113,7 +113,7 @@ public class GerritService implements InvocationHandler {
 			Type[] types = method.getGenericParameterTypes();
 			final Type resultType = ((ParameterizedType) types[types.length - 1]).getActualTypeArguments()[0];
 
-			Object result = json.parseResponse(responseMessage, resultType);
+			Object result = json.parseJsonResponse(responseMessage, resultType);
 			callback.onSuccess(result);
 		} catch (Throwable e) {
 			callback.onFailure(e);
