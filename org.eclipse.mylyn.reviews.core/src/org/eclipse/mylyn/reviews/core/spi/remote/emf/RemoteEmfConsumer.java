@@ -106,8 +106,8 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 
 	RemoteEmfConsumer(
 			AbstractRemoteEmfFactory<EParentObjectType, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType> factory,
-			final EParentObjectType parent, final EObjectType modelObject, LocalKeyType localKey,
-			RemoteType remoteObject, RemoteKeyType remoteKey) {
+			EParentObjectType parent, EObjectType modelObject, LocalKeyType localKey, RemoteType remoteObject,
+			RemoteKeyType remoteKey) {
 		this.parentObject = parent;
 		this.modelObject = modelObject;
 		this.remoteObject = remoteObject;
@@ -121,17 +121,9 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 			this.localKey = factory.getLocalKey(null, modelObject);
 		}
 		if (modelObject instanceof EObject) {
-			getFactory().getService().modelExec(new Runnable() {
-				public void run() {
-					((EObject) modelObject).eAdapters().add(adapter);
-				}
-			});
+			((EObject) modelObject).eAdapters().add(adapter);
 		} else if (parent != null) {
-			getFactory().getService().modelExec(new Runnable() {
-				public void run() {
-					parent.eAdapters().add(adapter);
-				}
-			});
+			parent.eAdapters().add(adapter);
 		}
 		remoteEmfObservers = new ArrayList<IRemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType>>();
 	}
@@ -312,14 +304,10 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 	@Override
 	public void dispose() {
 		retrieving = false;
-		getFactory().getService().modelExec(new Runnable() {
-			public void run() {
-				parentObject.eAdapters().remove(adapter);
-				if (modelObject instanceof EObject) {
-					((EObject) modelObject).eAdapters().remove(adapter);
-				}
-			}
-		});
+		parentObject.eAdapters().remove(adapter);
+		if (modelObject instanceof EObject) {
+			((EObject) modelObject).eAdapters().remove(adapter);
+		}
 		synchronized (remoteEmfObservers) {
 			remoteEmfObservers.clear();
 		}
