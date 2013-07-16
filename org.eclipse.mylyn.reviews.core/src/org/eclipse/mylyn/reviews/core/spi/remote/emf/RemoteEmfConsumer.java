@@ -106,8 +106,8 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 
 	RemoteEmfConsumer(
 			AbstractRemoteEmfFactory<EParentObjectType, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType> factory,
-			EParentObjectType parent, EObjectType modelObject, LocalKeyType localKey, RemoteType remoteObject,
-			RemoteKeyType remoteKey) {
+			final EParentObjectType parent, final EObjectType modelObject, LocalKeyType localKey,
+			RemoteType remoteObject, RemoteKeyType remoteKey) {
 		this.parentObject = parent;
 		this.modelObject = modelObject;
 		this.remoteObject = remoteObject;
@@ -120,12 +120,20 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 		if (localKey == null && modelObject != null) {
 			this.localKey = factory.getLocalKey(null, modelObject);
 		}
-		if (modelObject instanceof EObject) {
-			((EObject) modelObject).eAdapters().add(adapter);
-		} else if (parent != null) {
-			parent.eAdapters().add(adapter);
-		}
 		remoteEmfObservers = new ArrayList<IRemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType>>();
+		if (modelObject instanceof EObject) {
+			getFactory().getService().modelExec(new Runnable() {
+				public void run() {
+					((EObject) modelObject).eAdapters().add(adapter);
+				}
+			}, false);
+		} else if (parent != null) {
+			getFactory().getService().modelExec(new Runnable() {
+				public void run() {
+					parent.eAdapters().add(adapter);
+				}
+			}, false);
+		}
 	}
 
 	/**
@@ -304,10 +312,14 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 	@Override
 	public void dispose() {
 		retrieving = false;
-		parentObject.eAdapters().remove(adapter);
-		if (modelObject instanceof EObject) {
-			((EObject) modelObject).eAdapters().remove(adapter);
-		}
+		getFactory().getService().modelExec(new Runnable() {
+			public void run() {
+				parentObject.eAdapters().remove(adapter);
+				if (modelObject instanceof EObject) {
+					((EObject) modelObject).eAdapters().remove(adapter);
+				}
+			}
+		}, false);
 		synchronized (remoteEmfObservers) {
 			remoteEmfObservers.clear();
 		}
