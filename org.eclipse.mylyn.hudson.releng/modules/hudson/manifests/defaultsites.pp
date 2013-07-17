@@ -99,6 +99,7 @@ define hudson::defaultsites ($base = $hudson::base,) {
     envtype => "jenkins",
     version => "1.509.2",
     port    => 9131,
+    envdefault => true,
     require => Hudson["1.509.2"],
   }
 
