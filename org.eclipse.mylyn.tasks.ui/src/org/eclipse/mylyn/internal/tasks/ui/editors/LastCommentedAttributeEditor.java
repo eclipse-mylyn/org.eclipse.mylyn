@@ -18,10 +18,12 @@ public class LastCommentedAttributeEditor extends DateAttributeEditor {
 
 	public LastCommentedAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
+		setShowDateRelative(true);
 	}
 
 	@Override
 	public String getLabel() {
 		return Messages.LastCommentedAttributeEditor_dateLastCommented;
 	}
+
 }

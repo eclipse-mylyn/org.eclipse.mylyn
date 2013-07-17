@@ -15,6 +15,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.commons.workbench.forms.DatePicker;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -41,11 +42,14 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 
 	private boolean showTime;
 
+	private boolean showDateRelative;
+
 	private Text text;
 
 	public DateAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 		setLayoutHint(new LayoutHint(RowSpan.SINGLE, ColumnSpan.SINGLE));
+		setShowDateRelative(false);
 	}
 
 	@Override
@@ -122,6 +126,8 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 		if (date != null) {
 			if (getShowTime()) {
 				return EditorUtil.formatDateTime(date);
+			} else if (getShowDateRelative()) {
+				return DateUtil.getRelative(date.getTime());
 			} else {
 				return EditorUtil.formatDate(date);
 			}
@@ -156,6 +162,14 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 	@Override
 	public boolean shouldAutoRefresh() {
 		return true;
+	}
+
+	public boolean getShowDateRelative() {
+		return showDateRelative;
+	}
+
+	public void setShowDateRelative(boolean showDateRelative) {
+		this.showDateRelative = showDateRelative;
 	}
 
 }
