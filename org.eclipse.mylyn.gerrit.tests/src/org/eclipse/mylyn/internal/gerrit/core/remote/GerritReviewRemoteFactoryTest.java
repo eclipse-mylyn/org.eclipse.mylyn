@@ -49,10 +49,12 @@ import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.eclipse.osgi.util.NLS;
 import org.junit.Test;
 
+import com.google.gerrit.common.data.ChangeDetail;
 import com.google.gerrit.common.data.ReviewerResult;
 import com.google.gerrit.reviewdb.ApprovalCategory;
 import com.google.gerrit.reviewdb.ApprovalCategoryValue;
 import com.google.gerrit.reviewdb.Change.Status;
+import com.google.gerrit.reviewdb.ChangeMessage;
 
 /**
  * @author Miles Parker
@@ -201,16 +203,26 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 	public void testAbandonChange() throws Exception {
 		String message1 = "abandon, time: " + System.currentTimeMillis(); //$NON-NLS-1$
 
-		reviewHarness.client.abandon(reviewHarness.shortId, 1, message1, new NullProgressMonitor());
+		ChangeDetail changeDetail = reviewHarness.client.abandon(reviewHarness.shortId, 1, message1,
+				new NullProgressMonitor());
 		reviewHarness.consumer.retrieve(false);
 		reviewHarness.listener.waitForResponse(2, 2);
+
+		assertThat(changeDetail, notNullValue());
+		assertThat(changeDetail.getChange().getStatus(), is(Status.ABANDONED));
+		List<ChangeMessage> messages = changeDetail.getMessages();
+		assertThat(messages.size(), is(1));
+		ChangeMessage lastMessage = messages.get(0);
+		assertThat(lastMessage.getAuthor().get(), is(1000001));
+		assertThat(lastMessage.getMessage(), endsWith("Abandoned\n\n" + message1));
 
 		assertThat(getReview().getState(), is(ReviewStatus.ABANDONED));
 		List<IComment> comments = getReview().getComments();
 		assertThat(comments.size(), is(1));
 		IComment lastComment = comments.get(0);
 		assertThat(lastComment.getAuthor().getDisplayName(), is("tests"));
-		assertThat(lastComment.getDescription(), is("Patch Set 1: Abandoned\n\n" + message1));
+		assertThat(lastComment.getAuthor().getId(), is("1000001"));
+		assertThat(lastComment.getDescription(), endsWith("Abandoned\n\n" + message1));
 	}
 
 	@Test

@@ -47,6 +47,8 @@ import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchSetPublishDetai
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectAdminService;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.AbandonInput;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ReviewInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ReviewInput;
 import org.eclipse.mylyn.internal.gerrit.core.remote.GerritRemoteFactoryProvider;
@@ -61,7 +63,6 @@ import org.osgi.framework.Version;
 import com.google.gerrit.common.data.AccountDashboardInfo;
 import com.google.gerrit.common.data.AccountService;
 import com.google.gerrit.common.data.ChangeDetail;
-import com.google.gerrit.common.data.ChangeInfo;
 import com.google.gerrit.common.data.ChangeListService;
 import com.google.gerrit.common.data.GerritConfig;
 import com.google.gerrit.common.data.PatchScript;
@@ -245,12 +246,18 @@ public class GerritClient extends ReviewsClient {
 	public ChangeDetail abandon(String reviewId, int patchSetId, final String message, IProgressMonitor monitor)
 			throws GerritException {
 		final PatchSet.Id id = new PatchSet.Id(new Change.Id(id(reviewId)), patchSetId);
-		return execute(monitor, new Operation<ChangeDetail>() {
-			@Override
-			public void execute(IProgressMonitor monitor) throws GerritException {
-				getChangeManageService(monitor).abandonChange(id, message, this);
-			}
-		});
+		if (hasJsonRpcApi(monitor)) {
+			return execute(monitor, new Operation<ChangeDetail>() {
+				@Override
+				public void execute(IProgressMonitor monitor) throws GerritException {
+					getChangeManageService(monitor).abandonChange(id, message, this);
+				}
+			});
+		} else {
+			final String uri = "/a/changes/" + id.getParentKey().get() + "/abandon"; //$NON-NLS-1$ //$NON-NLS-2$
+			execute(uri, new AbandonInput(message), ChangeInfo.class, monitor);
+			return getChangeDetail(id.getParentKey().get(), monitor);
+		}
 	}
 
 	/**
@@ -539,7 +546,7 @@ public class GerritClient extends ReviewsClient {
 					}
 				});
 
-				List<ChangeInfo> allMyChanges = ad.getByOwner();
+				List<com.google.gerrit.common.data.ChangeInfo> allMyChanges = ad.getByOwner();
 				allMyChanges.addAll(ad.getForReview());
 				allMyChanges.addAll(ad.getClosed());
 				return convert(allMyChanges);
@@ -719,9 +726,9 @@ public class GerritClient extends ReviewsClient {
 		return executeQueryRest(monitor, queryString);
 	}
 
-	private List<GerritQueryResult> convert(List<ChangeInfo> changes) {
+	private List<GerritQueryResult> convert(List<com.google.gerrit.common.data.ChangeInfo> changes) {
 		List<GerritQueryResult> results = new ArrayList<GerritQueryResult>(changes.size());
-		for (ChangeInfo changeInfo : changes) {
+		for (com.google.gerrit.common.data.ChangeInfo changeInfo : changes) {
 			GerritQueryResult result = new GerritQueryResult(changeInfo);
 			results.add(result);
 		}

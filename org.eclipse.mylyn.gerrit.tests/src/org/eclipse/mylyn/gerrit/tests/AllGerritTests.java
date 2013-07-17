@@ -23,6 +23,9 @@ import org.eclipse.mylyn.gerrit.tests.core.GerritSynchronizationTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.GerritClientTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.GerritVersionTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.OpenIdAuthenticationTest;
+import org.eclipse.mylyn.gerrit.tests.core.client.rest.AbandonInputTest;
+import org.eclipse.mylyn.gerrit.tests.core.client.rest.AccountInfoTest;
+import org.eclipse.mylyn.gerrit.tests.core.client.rest.ChangeInfoTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.rest.ReviewInfoTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.rest.ReviewInputTest;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
@@ -50,6 +53,9 @@ public class AllGerritTests {
 
 	private static void addTests(TestSuite suite, TestConfiguration configuration) {
 		suite.addTestSuite(GerritVersionTest.class);
+		suite.addTestSuite(AbandonInputTest.class);
+		suite.addTestSuite(AccountInfoTest.class);
+		suite.addTestSuite(ChangeInfoTest.class);
 		suite.addTestSuite(ReviewInfoTest.class);
 		suite.addTestSuite(ReviewInputTest.class);
 		if (!configuration.isLocalOnly()) {
