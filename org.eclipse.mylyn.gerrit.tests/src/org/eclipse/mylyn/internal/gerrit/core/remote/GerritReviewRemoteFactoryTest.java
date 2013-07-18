@@ -221,6 +221,37 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 	}
 
 	@Test
+	public void testRestoreChange() throws Exception {
+		String message1 = "abandon, time: " + System.currentTimeMillis();
+		reviewHarness.client.abandon(reviewHarness.shortId, 1, message1, new NullProgressMonitor());
+		reviewHarness.consumer.retrieve(false);
+		reviewHarness.listener.waitForResponse(2, 2);
+		String message2 = "restore, time: " + System.currentTimeMillis();
+
+		reviewHarness.client.restore(reviewHarness.shortId, 1, message2, new NullProgressMonitor());
+		reviewHarness.consumer.retrieve(false);
+		reviewHarness.listener.waitForResponse(3, 3);
+
+		assertThat(getReview().getState(), is(ReviewStatus.NEW));
+		List<IComment> comments = getReview().getComments();
+		assertThat(comments.size(), is(2)); // abandon + restore
+		IComment lastComment = comments.get(1);
+		assertThat(lastComment.getAuthor().getDisplayName(), is("tests"));
+		assertThat(lastComment.getDescription(), is("Patch Set 1: Restored\n\n" + message2));
+	}
+
+	@Test
+	public void testRestoreNewChange() throws Exception {
+		assertThat(getReview().getState(), is(ReviewStatus.NEW));
+		String message1 = "restore, time: " + System.currentTimeMillis();
+		try {
+			reviewHarness.client.restore(reviewHarness.shortId, 1, message1, new NullProgressMonitor());
+			fail("Expected to fail when restoring a new change");
+		} catch (GerritException e) {
+			assertThat(e.getMessage(), is("Not Found"));
+		}
+	}
+
 	public void testCannotSubmitChange() throws Exception {
 		String message1 = "submit, time: " + System.currentTimeMillis(); //$NON-NLS-1$
 		try {
