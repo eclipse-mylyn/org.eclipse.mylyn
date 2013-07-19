@@ -307,4 +307,14 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 				new NullProgressMonitor());
 		assertThat(reviewerResult.getErrors().isEmpty(), is(true));
 	}
+
+	@Test
+	public void testCannotRebaseChangeAlreadyUpToDate() throws Exception {
+		try {
+			reviewHarness.client.rebase(reviewHarness.shortId, 1, new NullProgressMonitor());
+			fail("Expected to fail when rebasing a change that is already up to date");
+		} catch (GerritException e) {
+			assertThat(e.getMessage(), is("Change is already up to date."));
+		}
+	}
 }
