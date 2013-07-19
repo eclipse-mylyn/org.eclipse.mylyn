@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Tasktop Technologies and others.
+ * Copyright (c) 2012, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jgit.api.CommitCommand;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.PatchSetContent;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
@@ -34,7 +35,9 @@ import org.junit.Test;
 
 import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.reviewdb.ApprovalCategoryValue;
+import com.google.gerrit.reviewdb.Change;
 import com.google.gerrit.reviewdb.Patch;
+import com.google.gerrit.reviewdb.PatchSet;
 
 /**
  * @author Miles Parker
@@ -181,6 +184,33 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(fileComment.isDraft(), is(false));
 		assertThat(fileComment.getAuthor().getDisplayName(), is("tests"));
 		assertThat(fileComment.getDescription(), is("Line 2 Comment"));
+	}
 
+	@Test
+	public void testLoadPatchSet() throws Exception {
+		// given
+		GerritChange change = reviewHarness.client.getChange(reviewHarness.shortId, new NullProgressMonitor());
+		List<PatchSetDetail> details = change.getPatchSetDetails();
+		assertThat(details, notNullValue());
+		assertThat(details.size(), is(1));
+		PatchSetDetail detail = details.get(0);
+		PatchSetContent content = new PatchSetContent((PatchSet) null, detail);
+		assertThat(content, notNullValue());
+
+		final Change.Id changeId = new Change.Id(reviewHarness.client.id(reviewHarness.shortId));
+		final PatchSet.Id patchSetId = new PatchSet.Id(changeId, 1);
+		final Patch.Key commitMsgPatchKey = new Patch.Key(patchSetId, "/COMMIT_MSG");
+		final Patch.Key testFilePatchKey = new Patch.Key(patchSetId, "testFile1.txt");
+
+		assertThat(content.getTargetDetail(), notNullValue());
+		assertThat(content.getPatchScript(commitMsgPatchKey), nullValue());
+		assertThat(content.getPatchScript(testFilePatchKey), nullValue());
+
+		// when
+		reviewHarness.client.loadPatchSetContent(content, new NullProgressMonitor());
+
+		// then
+		assertThat(content.getPatchScript(commitMsgPatchKey), notNullValue());
+		assertThat(content.getPatchScript(testFilePatchKey), notNullValue());
 	}
 }
