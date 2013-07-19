@@ -380,7 +380,7 @@ public class GerritClient extends ReviewsClient {
 		return new GerritSystemInfo(version, contributorAgreements, account);
 	}
 
-	public PatchScript getPatchScript(final Patch.Key key, final PatchSet.Id leftId, final PatchSet.Id rightId,
+	private PatchScript getPatchScript(final Patch.Key key, final PatchSet.Id leftId, final PatchSet.Id rightId,
 			IProgressMonitor monitor) throws GerritException {
 		//final AccountDiffPreference diffPrefs = getDiffPreference(monitor);
 		//final AccountDiffPreference diffPrefs = new AccountDiffPreference(getAccount(monitor).getId());
@@ -403,7 +403,7 @@ public class GerritClient extends ReviewsClient {
 		return diffPrefs;
 	}
 
-	public PatchSetDetail getPatchSetDetail(final PatchSet.Id idBase, final PatchSet.Id idTarget,
+	private PatchSetDetail getPatchSetDetail(final PatchSet.Id idBase, final PatchSet.Id idTarget,
 			IProgressMonitor monitor) throws GerritException {
 		PatchSetDetail result = null;
 		try {
@@ -919,7 +919,7 @@ public class GerritClient extends ReviewsClient {
 		return myAcount;
 	}
 
-	public Account executeAccount(IProgressMonitor monitor) throws GerritException {
+	private Account executeAccount(IProgressMonitor monitor) throws GerritException {
 		return execute(monitor, new Operation<Account>() {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
