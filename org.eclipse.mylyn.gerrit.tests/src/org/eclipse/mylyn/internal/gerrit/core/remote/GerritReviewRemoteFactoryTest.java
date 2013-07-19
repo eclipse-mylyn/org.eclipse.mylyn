@@ -107,7 +107,6 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testAccount() throws Exception {
-		//Account
 		assertThat(reviewHarness.getRepository().getAccount(), notNullValue());
 		assertThat(reviewHarness.getRepository().getAccount().getDisplayName(), is("tests"));
 		assertThat(reviewHarness.getRepository().getAccount().getEmail(), is("tests@mylyn.eclipse.org"));
@@ -116,19 +115,13 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testUsers() throws Exception {
-		//Account
-		assertThat(reviewHarness.getRepository().getAccount(), notNullValue());
-		assertThat(reviewHarness.getRepository().getAccount().getDisplayName(), is("tests"));
-		assertThat(reviewHarness.getRepository().getAccount().getEmail(), is("tests@mylyn.eclipse.org"));
-
-		//Users
 		assertThat(reviewHarness.getRepository().getUsers().size(), is(1));
 		assertThat(reviewHarness.getRepository().getUsers().get(0).getDisplayName(), is("tests"));
+		assertThat(reviewHarness.getRepository().getUsers().get(0).getEmail(), is("tests@mylyn.eclipse.org"));
 	}
 
 	@Test
 	public void testApprovals() throws Exception {
-		//Approvals
 		assertThat(reviewHarness.getRepository().getApprovalTypes().size(), is(2));
 		IApprovalType verifyApproval = reviewHarness.getRepository().getApprovalTypes().get(0);
 		assertThat(verifyApproval.getKey(), is("VRIF"));
