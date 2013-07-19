@@ -36,11 +36,13 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.mylyn.gerrit.tests.core.client.rest.ChangeInfoTest;
+import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.gerrit.tests.support.GerritProject.CommitResult;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo;
 import org.eclipse.mylyn.reviews.core.model.IApprovalType;
 import org.eclipse.mylyn.reviews.core.model.IChange;
@@ -55,12 +57,16 @@ import org.eclipse.mylyn.reviews.core.model.RequirementStatus;
 import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.junit.Test;
+import org.osgi.framework.Version;
 
+import com.google.gerrit.common.data.ApprovalDetail;
 import com.google.gerrit.common.data.ChangeDetail;
 import com.google.gerrit.common.data.ReviewerResult;
+import com.google.gerrit.reviewdb.ApprovalCategory;
 import com.google.gerrit.reviewdb.ApprovalCategoryValue;
 import com.google.gerrit.reviewdb.Change.Status;
 import com.google.gerrit.reviewdb.ChangeMessage;
+import com.google.gerrit.reviewdb.PatchSetApproval;
 
 /**
  * @author Miles Parker
@@ -278,8 +284,8 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		try {
 			reviewHarness.client.addReviewers(reviewHarness.shortId, null, new NullProgressMonitor());
 			fail("Expected to fail when trying to add null reviewers");
-		} catch (GerritException e) {
-			assertThat(e.getMessage(), is("Internal Server Error"));
+		} catch (IllegalArgumentException e) {
+			assertThat(e.getMessage(), is("reviewers cannot be null"));
 		}
 	}
 
@@ -287,42 +293,114 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 	public void testAddEmptyReviewers() throws Exception {
 		ReviewerResult reviewerResult = reviewHarness.client.addReviewers(reviewHarness.shortId,
 				Collections.<String> emptyList(), new NullProgressMonitor());
+		reviewHarness.consumer.retrieve(false);
+		reviewHarness.listener.waitForResponse(2, 2);
+
+		assertThat(reviewerResult, notNullValue());
 		assertThat(reviewerResult.getErrors().isEmpty(), is(true));
+		assertThat(reviewerResult.getChange().getApprovals().isEmpty(), is(true));
+		assertThat(getReview().getReviewerApprovals().isEmpty(), is(true));
 	}
 
 	@Test
 	public void testAddInvalidReviewers() throws Exception {
 		List<String> reviewers = Arrays.asList(new String[] { "foo" });
+
 		ReviewerResult reviewerResult = reviewHarness.client.addReviewers(reviewHarness.shortId, reviewers,
 				new NullProgressMonitor());
+		reviewHarness.consumer.retrieve(false);
+		reviewHarness.listener.waitForResponse(2, 2);
+
+		assertThat(reviewerResult, notNullValue());
 		assertThat(reviewerResult.getErrors().size(), is(1));
 		assertThat(reviewerResult.getErrors().get(0).getName(), is("foo"));
+		assertThat(reviewerResult.getErrors().get(0).getType(), nullValue());
+		assertThat(reviewerResult.getChange().getApprovals().isEmpty(), is(true));
+		assertThat(getReview().getReviewerApprovals().isEmpty(), is(true));
 	}
 
 	@Test
 	public void testAddSomeInvalidReviewers() throws Exception {
 		List<String> reviewers = Arrays.asList(new String[] { "tests", "foo" });
+
 		ReviewerResult reviewerResult = reviewHarness.client.addReviewers(reviewHarness.shortId, reviewers,
 				new NullProgressMonitor());
-		assertThat(reviewerResult.getErrors().isEmpty(), is(false));
-		assertThat(reviewerResult.getErrors().size(), is(1));
-		assertThat(reviewerResult.getErrors().get(0).getName(), is("foo"));
+		reviewHarness.consumer.retrieve(false);
+		reviewHarness.listener.waitForResponse(2, 2);
+
+		assertReviewerResult(reviewerResult, "foo");
 	}
 
 	@Test
 	public void testAddReviewers() throws Exception {
+		assertThat(getReview().getReviewerApprovals().isEmpty(), is(true));
 		List<String> reviewers = Arrays.asList(new String[] { "tests" });
+
 		ReviewerResult reviewerResult = reviewHarness.client.addReviewers(reviewHarness.shortId, reviewers,
 				new NullProgressMonitor());
-		assertThat(reviewerResult.getErrors().isEmpty(), is(true));
+		reviewHarness.consumer.retrieve(false);
+		reviewHarness.listener.waitForResponse(2, 2);
+
+		assertReviewerResult(reviewerResult, null);
 	}
 
 	@Test
 	public void testAddReviewersByEmail() throws Exception {
 		List<String> reviewers = Arrays.asList(new String[] { "tests@mylyn.eclipse.org" });
+
 		ReviewerResult reviewerResult = reviewHarness.client.addReviewers(reviewHarness.shortId, reviewers,
 				new NullProgressMonitor());
-		assertThat(reviewerResult.getErrors().isEmpty(), is(true));
+		reviewHarness.consumer.retrieve(false);
+		reviewHarness.listener.waitForResponse(2, 2);
+
+		assertReviewerResult(reviewerResult, null);
+	}
+
+	private void assertReviewerResult(ReviewerResult reviewerResult, String nameInErrors) {
+		assertThat(reviewerResult, notNullValue());
+
+		assertThat(reviewerResult.getErrors().isEmpty(), is(nameInErrors == null));
+		if (nameInErrors != null) {
+			assertThat(reviewerResult.getErrors().size(), is(1));
+			assertThat(reviewerResult.getErrors().get(0).getName(), is(nameInErrors));
+			assertThat(reviewerResult.getErrors().get(0).getType(), nullValue());
+		}
+
+		List<ApprovalDetail> approvals = reviewerResult.getChange().getApprovals();
+		assertThat(approvals.isEmpty(), is(false));
+		assertThat(approvals.size(), is(1));
+		assertThat(approvals.get(0).getAccount().get(), is(1000001));
+
+		Map<ApprovalCategory.Id, PatchSetApproval> approvalMap = approvals.get(0).getApprovalMap();
+		assertThat(approvalMap, notNullValue());
+		assertThat(approvalMap.isEmpty(), is(false));
+		assertThat(approvalMap.size(), is(1));
+
+		PatchSetApproval crvw = approvalMap.get(ApprovalUtil.CRVW.getCategory().getId());
+		assertThat(crvw, notNullValue());
+		assertThat(crvw.getAccountId().get(), is(1000001));
+		assertThat(crvw.getValue(), is((short) 0));
+		assertThat(crvw.getGranted(), notNullValue());
+		assertThat(crvw.getPatchSetId(), notNullValue());
+		assertThat(crvw.getPatchSetId().get(), is(1));
+		assertThat(crvw.getPatchSetId().getParentKey().get(), is(Integer.parseInt(getReview().getId())));
+
+		// TODO: empty map vs map with null key
+		if (GerritVersion.isVersion26OrLater(getCurrentVersion())) {
+			assertThat(getReview().getReviewerApprovals().isEmpty(), is(true));
+		} else {
+			assertThat(getReview().getReviewerApprovals().isEmpty(), is(false));
+			assertThat(getReview().getReviewerApprovals().size(), is(1));
+			assertThat(getReview().getReviewerApprovals().get(0), nullValue());
+		}
+	}
+
+	private static Version getCurrentVersion() {
+		String version = GerritFixture.current().getSimpleInfo();
+		if (version.indexOf('/') != -1) {
+			version = version.substring(0, version.indexOf('/'));
+		}
+		return GerritVersion.parseGerritVersion(version);
 	}
 
 	@Test

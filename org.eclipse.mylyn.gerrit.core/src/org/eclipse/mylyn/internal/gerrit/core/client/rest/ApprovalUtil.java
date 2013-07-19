@@ -98,6 +98,15 @@ public final class ApprovalUtil {
 		return null;
 	}
 
+	public static short parseShort(String s) {
+		s = s.trim();
+		// only Java7 handles a plus sign as indication of a positive value
+		if (s.startsWith("+")) { //$NON-NLS-1$
+			s = s.substring(1);
+		}
+		return Short.parseShort(s);
+	}
+
 	private ApprovalUtil() {
 	}
 }

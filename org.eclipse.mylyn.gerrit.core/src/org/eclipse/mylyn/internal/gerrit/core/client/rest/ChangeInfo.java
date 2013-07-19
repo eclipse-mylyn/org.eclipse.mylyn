@@ -181,21 +181,12 @@ public class ChangeInfo {
 			List<ApprovalCategoryValue> valueList = new ArrayList<ApprovalCategoryValue>();
 			for (Entry<String, String> valueEntry : entry.getValue().getValues().entrySet()) {
 				valueList.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(approvalCategoryId,
-						parseShort(valueEntry.getKey())), valueEntry.getValue()));
+						ApprovalUtil.parseShort(valueEntry.getKey())), valueEntry.getValue()));
 			}
 			ApprovalType approvalType = new ApprovalType(approvalCategory, valueList);
 			result.add(approvalType);
 		}
 		return result;
-	}
-
-	private static short parseShort(String s) {
-		s = s.trim();
-		// only Java7 handles a plus sign as indication of a positive value
-		if (s.startsWith("+")) { //$NON-NLS-1$
-			s = s.substring(1);
-		}
-		return Short.parseShort(s);
 	}
 
 }

@@ -24,6 +24,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -34,6 +35,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
@@ -53,12 +55,15 @@ import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectAdminService;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.AbandonInput;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.AddReviewerResult;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.CommentInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.CommentInput;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.RestoreInput;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ReviewInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ReviewInput;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.ReviewerInfo;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.ReviewerInput;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.SubmitInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.SubmitInput;
 import org.eclipse.mylyn.internal.gerrit.core.remote.GerritRemoteFactoryProvider;
@@ -72,6 +77,7 @@ import org.osgi.framework.Version;
 
 import com.google.gerrit.common.data.AccountDashboardInfo;
 import com.google.gerrit.common.data.AccountService;
+import com.google.gerrit.common.data.ApprovalDetail;
 import com.google.gerrit.common.data.ChangeDetail;
 import com.google.gerrit.common.data.ChangeListService;
 import com.google.gerrit.common.data.GerritConfig;
@@ -546,27 +552,55 @@ public class GerritClient extends ReviewsClient {
 
 	public ReviewerResult addReviewers(String reviewId, final List<String> reviewers, IProgressMonitor monitor)
 			throws GerritException {
+		Assert.isLegal(reviewers != null, "reviewers cannot be null"); //$NON-NLS-1$
 		final Change.Id id = new Change.Id(id(reviewId));
-		try {
-			return execute(monitor, new Operation<ReviewerResult>() {
-				@Override
-				public void execute(IProgressMonitor monitor) throws GerritException {
-					getPatchDetailService(monitor).addReviewers(id, reviewers, this);
-				}
-			});
-		} catch (GerritException e) {
-			// Gerrit 2.2
-			String message = e.getMessage();
-			if (message != null && message.contains("Error parsing request")) { //$NON-NLS-1$
+		if (hasJsonRpcApi(monitor)) {
+			try {
 				return execute(monitor, new Operation<ReviewerResult>() {
 					@Override
 					public void execute(IProgressMonitor monitor) throws GerritException {
-						getPatchDetailService(monitor).addReviewers(id, reviewers, false, this);
+						getPatchDetailService(monitor).addReviewers(id, reviewers, this);
 					}
 				});
-			} else {
-				throw e;
+			} catch (GerritException e) {
+				// Gerrit 2.2
+				String message = e.getMessage();
+				if (message != null && message.contains("Error parsing request")) { //$NON-NLS-1$
+					return execute(monitor, new Operation<ReviewerResult>() {
+						@Override
+						public void execute(IProgressMonitor monitor) throws GerritException {
+							getPatchDetailService(monitor).addReviewers(id, reviewers, false, this);
+						}
+					});
+				} else {
+					throw e;
+				}
 			}
+		} else {
+			final String uri = "/a/changes/" + id.get() + "/reviewers"; //$NON-NLS-1$ //$NON-NLS-2$
+			Set<ReviewerInfo> reviewerInfos = new HashSet<ReviewerInfo>(reviewers.size());
+			ReviewerResult reviewerResult = new ReviewerResult();
+			for (final String reviewerId : reviewers) {
+				try {
+					AddReviewerResult addReviewerResult = executePostRestRequest(uri, new ReviewerInput(reviewerId),
+							AddReviewerResult.class, null /*no error handler*/, monitor);
+					reviewerInfos.addAll(addReviewerResult.getReviewers());
+				} catch (GerritHttpException e) {
+					if (e.getResponseCode() == 422 /*Unprocessable Entity*/) {
+						reviewerResult.addError(new ReviewerResult.Error(null /* no type*/, reviewerId));
+					}
+				}
+			}
+
+			ChangeDetail changeDetail = getChangeDetail(id.get(), monitor);
+
+			List<ApprovalDetail> approvalDetails = new ArrayList<ApprovalDetail>(reviewerInfos.size());
+			for (ReviewerInfo reviewerInfo : reviewerInfos) {
+				approvalDetails.add(reviewerInfo.toApprovalDetail(changeDetail.getCurrentPatchSet()));
+			}
+			changeDetail.setApprovals(approvalDetails);
+			reviewerResult.setChange(changeDetail);
+			return reviewerResult;
 		}
 	}
 
