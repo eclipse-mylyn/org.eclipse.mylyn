@@ -19,6 +19,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -48,6 +49,7 @@ import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.eclipse.osgi.util.NLS;
 import org.junit.Test;
 
+import com.google.gerrit.common.data.ReviewerResult;
 import com.google.gerrit.reviewdb.ApprovalCategory;
 import com.google.gerrit.reviewdb.ApprovalCategoryValue;
 import com.google.gerrit.reviewdb.Change.Status;
@@ -228,5 +230,57 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 			assertThat(e.getMessage(), is(NLS.bind(
 					"Cannot submit change {0}: needs Verified; change {0}: needs Code-Review", reviewHarness.shortId)));
 		}
+	}
+
+	@Test
+	public void testAddNullReviewers() throws Exception {
+		try {
+			reviewHarness.client.addReviewers(reviewHarness.shortId, null, new NullProgressMonitor());
+			fail("Expected to fail when trying to add null reviewers");
+		} catch (GerritException e) {
+			assertThat(e.getMessage(), is("Internal Server Error"));
+		}
+	}
+
+	@Test
+	public void testAddEmptyReviewers() throws Exception {
+		ReviewerResult reviewerResult = reviewHarness.client.addReviewers(reviewHarness.shortId,
+				Collections.<String> emptyList(), new NullProgressMonitor());
+		assertThat(reviewerResult.getErrors().isEmpty(), is(true));
+	}
+
+	@Test
+	public void testAddInvalidReviewers() throws Exception {
+		List<String> reviewers = Arrays.asList(new String[] { "foo" });
+		ReviewerResult reviewerResult = reviewHarness.client.addReviewers(reviewHarness.shortId, reviewers,
+				new NullProgressMonitor());
+		assertThat(reviewerResult.getErrors().size(), is(1));
+		assertThat(reviewerResult.getErrors().get(0).getName(), is("foo"));
+	}
+
+	@Test
+	public void testAddSomeInvalidReviewers() throws Exception {
+		List<String> reviewers = Arrays.asList(new String[] { "tests", "foo" });
+		ReviewerResult reviewerResult = reviewHarness.client.addReviewers(reviewHarness.shortId, reviewers,
+				new NullProgressMonitor());
+		assertThat(reviewerResult.getErrors().isEmpty(), is(false));
+		assertThat(reviewerResult.getErrors().size(), is(1));
+		assertThat(reviewerResult.getErrors().get(0).getName(), is("foo"));
+	}
+
+	@Test
+	public void testAddReviewers() throws Exception {
+		List<String> reviewers = Arrays.asList(new String[] { "tests" });
+		ReviewerResult reviewerResult = reviewHarness.client.addReviewers(reviewHarness.shortId, reviewers,
+				new NullProgressMonitor());
+		assertThat(reviewerResult.getErrors().isEmpty(), is(true));
+	}
+
+	@Test
+	public void testAddReviewersByEmail() throws Exception {
+		List<String> reviewers = Arrays.asList(new String[] { "tests@mylyn.eclipse.org" });
+		ReviewerResult reviewerResult = reviewHarness.client.addReviewers(reviewHarness.shortId, reviewers,
+				new NullProgressMonitor());
+		assertThat(reviewerResult.getErrors().isEmpty(), is(true));
 	}
 }
