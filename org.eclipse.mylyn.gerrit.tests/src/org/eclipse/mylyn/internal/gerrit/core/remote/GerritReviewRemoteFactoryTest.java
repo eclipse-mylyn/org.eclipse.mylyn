@@ -17,6 +17,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertThat;
 
 import java.util.Arrays;
@@ -46,7 +47,6 @@ import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.reviews.core.model.RequirementStatus;
 import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
-import org.eclipse.osgi.util.NLS;
 import org.junit.Test;
 
 import com.google.gerrit.common.data.ChangeDetail;
@@ -258,13 +258,11 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 	}
 
 	public void testCannotSubmitChange() throws Exception {
-		String message1 = "submit, time: " + System.currentTimeMillis(); //$NON-NLS-1$
 		try {
-			reviewHarness.client.submit(reviewHarness.shortId, 1, message1, new NullProgressMonitor());
+			reviewHarness.client.submit(reviewHarness.shortId, 1, new NullProgressMonitor());
 			fail("Expected to fail when submitting a change without approvals");
 		} catch (GerritException e) {
-			assertThat(e.getMessage(), is(NLS.bind(
-					"Cannot submit change {0}: needs Verified; change {0}: needs Code-Review", reviewHarness.shortId)));
+			assertThat(e.getMessage(), startsWith("Cannot submit change"));
 		}
 	}
 

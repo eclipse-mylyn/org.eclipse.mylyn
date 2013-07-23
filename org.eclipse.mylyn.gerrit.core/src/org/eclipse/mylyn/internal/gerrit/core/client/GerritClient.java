@@ -17,6 +17,7 @@ package org.eclipse.mylyn.internal.gerrit.core.client;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient.ErrorHandler;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient.Request;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritService.GerritRequest;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailService;
@@ -51,6 +53,8 @@ import org.eclipse.mylyn.internal.gerrit.core.client.rest.AbandonInput;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ReviewInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ReviewInput;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.SubmitInfo;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.SubmitInput;
 import org.eclipse.mylyn.internal.gerrit.core.remote.GerritRemoteFactoryProvider;
 import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IReview;
@@ -255,7 +259,7 @@ public class GerritClient extends ReviewsClient {
 			});
 		} else {
 			final String uri = "/a/changes/" + id.getParentKey().get() + "/abandon"; //$NON-NLS-1$ //$NON-NLS-2$
-			execute(uri, new AbandonInput(message), ChangeInfo.class, monitor);
+			execute(uri, new AbandonInput(message), ChangeInfo.class, null/*no error handler*/, monitor);
 			return getChangeDetail(id.getParentKey().get(), monitor);
 		}
 	}
@@ -486,7 +490,7 @@ public class GerritClient extends ReviewsClient {
 			});
 		} else {
 			final String uri = "/a/changes/" + id.getParentKey().get() + "/revisions/" + id.get() + "/review"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			execute(uri, new ReviewInput(message), ReviewInfo.class, monitor);
+			execute(uri, new ReviewInput(message), ReviewInfo.class, null /*no error handler*/, monitor);
 		}
 	}
 
@@ -692,15 +696,40 @@ public class GerritClient extends ReviewsClient {
 		});
 	}
 
-	public ChangeDetail submit(String reviewId, int patchSetId, final String message, IProgressMonitor monitor)
-			throws GerritException {
+	public ChangeDetail submit(String reviewId, int patchSetId, IProgressMonitor monitor) throws GerritException {
 		final PatchSet.Id id = new PatchSet.Id(new Change.Id(id(reviewId)), patchSetId);
-		return execute(monitor, new Operation<ChangeDetail>() {
+		if (hasJsonRpcApi(monitor)) {
+			return execute(monitor, new Operation<ChangeDetail>() {
+				@Override
+				public void execute(IProgressMonitor monitor) throws GerritException {
+					getChangeManageService(monitor).submit(id, this);
+				}
+			});
+		} else {
+			return submitRest(id, monitor);
+		}
+	}
+
+	private ChangeDetail submitRest(PatchSet.Id id, IProgressMonitor monitor) throws GerritException {
+		final String uri = "/a/changes/" + id.getParentKey().get() + "/revisions/" + id.get() + "/submit"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		execute(uri, new SubmitInput(true), SubmitInfo.class, new ErrorHandler() {
 			@Override
-			public void execute(IProgressMonitor monitor) throws GerritException {
-				getChangeManageService(monitor).submit(id, this);
+			public void handleError(HttpMethodBase method) throws GerritException {
+				if (method.getStatusCode() == HttpURLConnection.HTTP_FORBIDDEN
+						&& "submit not permitted\n".equals(getResponseBodyAsString(method))) { //$NON-NLS-1$
+					throw new GerritException("Cannot submit change"); //$NON-NLS-1$
+				}
 			}
-		});
+
+			private String getResponseBodyAsString(HttpMethodBase method) {
+				try {
+					return method.getResponseBodyAsString();
+				} catch (IOException e) {
+					return null;
+				}
+			}
+		}, monitor);
+		return getChangeDetail(id.get(), monitor);
 	}
 
 	public List<GerritQueryResult> executeQuery(IProgressMonitor monitor, final String queryString)
@@ -895,13 +924,13 @@ public class GerritClient extends ReviewsClient {
 		}
 	}
 
-	private <T> T execute(final String url, final Object input, final Type resultType, IProgressMonitor monitor)
-			throws GerritException {
+	private <T> T execute(final String url, final Object input, final Type resultType, final ErrorHandler handler,
+			IProgressMonitor monitor) throws GerritException {
 		return execute(monitor, new Operation<T>() {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
 				try {
-					setResult(client.<T> postRestRequest(url, input, resultType, monitor));
+					setResult(client.<T> postRestRequest(url, input, resultType, handler, monitor));
 				} catch (IOException e) {
 					throw new GerritException(e);
 				}

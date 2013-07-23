@@ -43,7 +43,7 @@ public class SubmitRequest extends AbstractRequest<ChangeDetail> {
 
 	@Override
 	protected ChangeDetail execute(GerritClient client, IProgressMonitor monitor) throws GerritException {
-		return client.submit(getReviewId(), getPatchSetId(), getMessage(), monitor);
+		return client.submit(getReviewId(), getPatchSetId(), monitor);
 	}
 
 }

@@ -64,9 +64,16 @@ public class GerritHttpClient {
 
 		public abstract T process(HttpMethodBase method) throws IOException;
 
+		public void handleError(HttpMethodBase method) throws GerritException {
+			// do nothing by default
+		}
 	}
 
-	private class JsonRequest extends Request<String> {
+	public static interface ErrorHandler {
+		public void handleError(HttpMethodBase method) throws GerritException;
+	}
+
+	class JsonRequest extends Request<String> {
 
 		private final String serviceUri;
 
@@ -105,10 +112,13 @@ public class GerritHttpClient {
 
 		private final Type resultType;
 
-		public RestRequest(final String serviceUri, final Object input, Type resultType) {
+		private final ErrorHandler errorHandler;
+
+		public RestRequest(final String serviceUri, final Object input, Type resultType, ErrorHandler handler) {
 			this.serviceUri = serviceUri;
 			this.input = input;
 			this.resultType = resultType;
+			this.errorHandler = handler;
 		}
 
 		@Override
@@ -129,6 +139,12 @@ public class GerritHttpClient {
 			return json.parseResponse(content, resultType);
 		}
 
+		@Override
+		public void handleError(HttpMethodBase method) throws GerritException {
+			if (errorHandler != null) {
+				errorHandler.handleError(method);
+			}
+		}
 	}
 
 	public static abstract class JsonEntity {
@@ -197,13 +213,13 @@ public class GerritHttpClient {
 		return execute(new JsonRequest(serviceUri, entity), monitor);
 	}
 
-	public <T> T postRestRequest(final String serviceUri, final Object input, Type resultType, IProgressMonitor monitor)
-			throws IOException, GerritException {
+	public <T> T postRestRequest(final String serviceUri, final Object input, Type resultType, ErrorHandler handler,
+			IProgressMonitor monitor) throws IOException, GerritException {
 		Assert.isNotNull(serviceUri, "REST Service URI must be not null."); //$NON-NLS-1$
 		Assert.isNotNull(input, "Input object must be not null."); //$NON-NLS-1$
 		Assert.isNotNull(resultType, "Output type must be not null."); //$NON-NLS-1$
 
-		return execute(new RestRequest<T>(serviceUri, input, resultType), monitor);
+		return execute(new RestRequest<T>(serviceUri, input, resultType, handler), monitor);
 	}
 
 	public <T> T execute(Request<T> request, IProgressMonitor monitor) throws IOException, GerritException {
@@ -255,7 +271,11 @@ public class GerritHttpClient {
 					WebUtil.releaseConnection(method, monitor);
 				}
 			} else {
-				WebUtil.releaseConnection(method, monitor);
+				try {
+					request.handleError(method);
+				} finally {
+					WebUtil.releaseConnection(method, monitor);
+				}
 				if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
 					// login or re-authenticate due to an expired session
 					authenticate(openIdProvider, monitor);
