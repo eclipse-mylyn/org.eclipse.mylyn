@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Tasktop Technologies and others.
+ * Copyright (c) 2012, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,9 +33,9 @@ public class UiDataLocatorTest extends TestCase {
 	public void testGetLocation() {
 		ReviewsDataLocator locator = new ReviewsUiDataLocator();
 		String workSpaceRoot = ResourcesPlugin.getWorkspace().getRoot().getLocation().toString();
-		String expectedPath = workSpaceRoot + "/.metadata/.mylyn/reviews_bin/Class/MyFile.txt";
-		String systemPath = expectedPath.replaceAll("/", File.separator); //ensure platform neutrality
-		IPath fileLocation = locator.getFilePath("", "Class", "MyFile", "txt");
+		String expectedPath = workSpaceRoot + "/.metadata/.mylyn/reviews_bin/Class/MyFile.txt"; //$NON-NLS-1$
+		String systemPath = expectedPath.replace('/', File.separatorChar); //ensure platform neutrality
+		IPath fileLocation = locator.getFilePath("", "Class", "MyFile", "txt"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		assertThat(fileLocation.toPortableString(), is(expectedPath));
 		assertThat(fileLocation.toOSString(), is(systemPath));
 	}
