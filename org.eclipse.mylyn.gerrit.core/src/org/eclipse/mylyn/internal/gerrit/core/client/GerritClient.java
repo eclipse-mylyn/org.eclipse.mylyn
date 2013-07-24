@@ -138,7 +138,7 @@ public class GerritClient extends ReviewsClient {
 	public boolean isAuthenticationException(Throwable exception) {
 		if (exception instanceof GerritException) {
 			return ((GerritException) exception).getCode() == -32603
-					&& "Invalid xsrfKey in request".equals(((GerritException) exception).getMessage());
+					&& "Invalid xsrfKey in request".equals(((GerritException) exception).getMessage()); //$NON-NLS-1$
 		}
 		return false;
 	}
@@ -146,7 +146,7 @@ public class GerritClient extends ReviewsClient {
 	public boolean isNotSignedInException(Throwable exception) {
 		if (exception instanceof GerritException) {
 			return ((GerritException) exception).getCode() == -32603
-					&& "not signed in".equalsIgnoreCase(((GerritException) exception).getMessage());
+					&& "not signed in".equalsIgnoreCase(((GerritException) exception).getMessage()); //$NON-NLS-1$
 		}
 		return false;
 	}
@@ -185,52 +185,6 @@ public class GerritClient extends ReviewsClient {
 	private AccountDiffPreference myDiffPreference;
 
 	private Version myVersion;
-
-//	private GerritConfig createDefaultConfig() {
-//		GerritConfig config = new GerritConfig();
-//		List<ApprovalType> approvals = new ArrayList<ApprovalType>();
-//
-//		ApprovalCategory category = new ApprovalCategory(new ApprovalCategory.Id("VRIF"), "Verified");
-//		category.setAbbreviatedName("V");
-//		category.setPosition((short) 0);
-//		List<ApprovalCategoryValue> values = new ArrayList<ApprovalCategoryValue>();
-//		values.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(category.getId(), (short) -1), "Fails"));
-//		values.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(category.getId(), (short) 0), "No score"));
-//		values.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(category.getId(), (short) 1), "Verified"));
-//		approvals.add(new ApprovalType(category, values));
-//
-//		category = new ApprovalCategory(new ApprovalCategory.Id("CRVW"), "Code Review");
-//		category.setAbbreviatedName("R");
-//		category.setPosition((short) 1);
-//		values = new ArrayList<ApprovalCategoryValue>();
-//		values.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(category.getId(), (short) -2),
-//				"Do not submit"));
-//		values.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(category.getId(), (short) -1),
-//				"I would prefer that you didn\u0027t submit this"));
-//		values.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(category.getId(), (short) 0), "No score"));
-//		values.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(category.getId(), (short) 1),
-//				"Looks good to me, but someone else must approve"));
-//		values.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(category.getId(), (short) 2),
-//				"Looks good to me, approved"));
-//		approvals.add(new ApprovalType(category, values));
-//
-//		category = new ApprovalCategory(new ApprovalCategory.Id("IPCL"), "IP Clean");
-//		category.setAbbreviatedName("I");
-//		category.setPosition((short) 2);
-//		values = new ArrayList<ApprovalCategoryValue>();
-//		values.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(category.getId(), (short) -1),
-//				"Unclean IP, do not check in"));
-//		values.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(category.getId(), (short) 0), "No score"));
-//		values.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(category.getId(), (short) 1),
-//				"IP review completed"));
-//		approvals.add(new ApprovalType(category, values));
-//
-//		List<ApprovalType> actions = new ArrayList<ApprovalType>();
-//
-//		ApprovalTypes approvalTypes = new ApprovalTypes(approvals, actions);
-//		config.setApprovalTypes(approvalTypes);
-//		return config;
-//	}
 
 	private final Map<Class<? extends RemoteJsonService>, RemoteJsonService> serviceByClass;
 
@@ -311,18 +265,18 @@ public class GerritClient extends ReviewsClient {
 	}
 
 	public void loadPatchSetContent(PatchSetContent patchSetContent, IProgressMonitor monitor) throws GerritException {
-			Id baseId = (patchSetContent.getBase() != null) ? patchSetContent.getBase().getId() : null;
-			Id targetId = patchSetContent.getTarget().getId();
-			if (patchSetContent.getTargetDetail() == null) {
-				PatchSetDetail targetDetail = getPatchSetDetail(baseId, targetId, monitor);
-				patchSetContent.setTargetDetail(targetDetail);
+		Id baseId = (patchSetContent.getBase() != null) ? patchSetContent.getBase().getId() : null;
+		Id targetId = patchSetContent.getTarget().getId();
+		if (patchSetContent.getTargetDetail() == null) {
+			PatchSetDetail targetDetail = getPatchSetDetail(baseId, targetId, monitor);
+			patchSetContent.setTargetDetail(targetDetail);
+		}
+		for (Patch patch : patchSetContent.getTargetDetail().getPatches()) {
+			PatchScript patchScript = getPatchScript(patch.getKey(), baseId, targetId, monitor);
+			if (patchScript != null) {
+				patchSetContent.putPatchScriptByPatchKey(patch.getKey(), patchScript);
 			}
-			for (Patch patch : patchSetContent.getTargetDetail().getPatches()) {
-				PatchScript patchScript = getPatchScript(patch.getKey(), baseId, targetId, monitor);
-				if (patchScript != null) {
-					patchSetContent.putPatchScriptByPatchKey(patch.getKey(), patchScript);
-				}
-			}
+		}
 	}
 
 	public GerritConfigX getGerritConfig() {
@@ -445,7 +399,7 @@ public class GerritClient extends ReviewsClient {
 
 	boolean isNoSuchServiceError(GerritException e) {
 		String message = e.getMessage();
-		return message != null && message.contains("No such service method");
+		return message != null && message.contains("No such service method"); //$NON-NLS-1$
 	}
 
 	public PatchSetPublishDetailX getPatchSetPublishDetail(final PatchSet.Id id, IProgressMonitor monitor)
@@ -485,7 +439,8 @@ public class GerritClient extends ReviewsClient {
 					patchSetPublishDetailByPatchSetId.put(patchSet.getId(), patchSetPublishDetail);
 				}
 			} catch (GerritException e) {
-				handleMissingPatchSet("Patch Set " + patchSet.getPatchSetId() + " items for Review " + reviewId, e);
+				handleMissingPatchSet(
+						NLS.bind("Patch Set {0} items for Review {1}", patchSet.getPatchSetId(), reviewId), e); //$NON-NLS-1$
 			}
 		}
 		change.setChangeDetail(changeDetail);
@@ -495,18 +450,18 @@ public class GerritClient extends ReviewsClient {
 	}
 
 	private void handleMissingPatchSet(String desc, GerritException e) {
-		GerritCorePlugin.logWarning("Couldn't load " + desc
-				+ ". (Perhaps the Patch Set has been removed from repository?)", e);
+		GerritCorePlugin.logWarning(
+				NLS.bind("Couldn't load {0}. (Perhaps the Patch Set has been removed from repository?)", desc), e); //$NON-NLS-1$
 	}
 
 	public int id(String id) throws GerritException {
 		if (id == null) {
-			throw new GerritException("Invalid ID (null)");
+			throw new GerritException("Invalid ID (null)"); //$NON-NLS-1$
 		}
 		try {
 			return Integer.parseInt(id);
 		} catch (NumberFormatException e) {
-			throw new GerritException(NLS.bind("Invalid ID (''{0}'')", id));
+			throw new GerritException(NLS.bind("Invalid ID (''{0}'')", id)); //$NON-NLS-1$
 		}
 	}
 
@@ -631,11 +586,11 @@ public class GerritClient extends ReviewsClient {
 			}, monitor);
 
 			if (gerritConfig == null) {
-				throw new GerritException("Failed to obtain Gerrit configuration");
+				throw new GerritException("Failed to obtain Gerrit configuration"); //$NON-NLS-1$
 			}
 			return gerritConfig;
 		} catch (UnknownHostException cause) {
-			GerritException e = new GerritException("Unknown host: " + cause.getMessage());
+			GerritException e = new GerritException("Unknown host: " + cause.getMessage()); //$NON-NLS-1$
 			e.initCause(cause);
 			throw e;
 		} catch (IOException cause) {
