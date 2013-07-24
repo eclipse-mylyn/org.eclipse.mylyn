@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  *  Contributors:
  *      Sony Ericsson/ST Ericsson - initial API and implementation
  *      Tasktop Technologies - improvements
@@ -203,8 +203,6 @@ public class GerritClient extends ReviewsClient {
 
 	private Account myAcount;
 
-	private AccountDiffPreference myDiffPreference;
-
 	private Version myVersion;
 
 	private final Map<Class<? extends RemoteJsonService>, RemoteJsonService> serviceByClass;
@@ -360,29 +358,6 @@ public class GerritClient extends ReviewsClient {
 
 	public GerritConfiguration getConfiguration() {
 		return config;
-	}
-
-	/**
-	 * @deprecated Do not use, this method is going to be removed in 2.1. See bug 413630.
-	 */
-	@Deprecated
-	public AccountDiffPreference getDiffPreference(IProgressMonitor monitor) throws GerritException {
-		synchronized (this) {
-			if (myDiffPreference != null) {
-				return myDiffPreference;
-			}
-		}
-		AccountDiffPreference diffPreference = execute(monitor, new Operation<AccountDiffPreference>() {
-			@Override
-			public void execute(IProgressMonitor monitor) throws GerritException {
-				getAccountService(monitor).myDiffPreferences(this);
-			}
-		});
-
-		synchronized (this) {
-			myDiffPreference = diffPreference;
-		}
-		return myDiffPreference;
 	}
 
 	public GerritSystemInfo getInfo(IProgressMonitor monitor) throws GerritException {
@@ -797,20 +772,6 @@ public class GerritClient extends ReviewsClient {
 		return getConfiguration();
 	}
 
-	/**
-	 * @deprecated Do not use, this method is going to be removed in 2.1. See bug 413630.
-	 */
-	@Deprecated
-	public ChangeDetail publish(String reviewId, int patchSetId, IProgressMonitor monitor) throws GerritException {
-		final PatchSet.Id id = new PatchSet.Id(new Change.Id(id(reviewId)), patchSetId);
-		return execute(monitor, new Operation<ChangeDetail>() {
-			@Override
-			public void execute(IProgressMonitor monitor) throws GerritException {
-				getChangeManageService(monitor).publish(id, this);
-			}
-		});
-	}
-
 	public ChangeDetail rebase(String reviewId, int patchSetId, IProgressMonitor monitor) throws GerritException {
 		final PatchSet.Id id = new PatchSet.Id(new Change.Id(id(reviewId)), patchSetId);
 		return execute(monitor, new Operation<ChangeDetail>() {
@@ -843,21 +804,6 @@ public class GerritClient extends ReviewsClient {
 			}
 			return getChangeDetail(id.getParentKey().get(), monitor);
 		}
-	}
-
-	/**
-	 * @deprecated Do not use, this method is going to be removed in 2.1. See bug 413630.
-	 */
-	@Deprecated
-	public ChangeDetail revert(String reviewId, int patchSetId, final String message, IProgressMonitor monitor)
-			throws GerritException {
-		final PatchSet.Id id = new PatchSet.Id(new Change.Id(id(reviewId)), patchSetId);
-		return execute(monitor, new Operation<ChangeDetail>() {
-			@Override
-			public void execute(IProgressMonitor monitor) throws GerritException {
-				getChangeManageService(monitor).revertChange(id, message, this);
-			}
-		});
 	}
 
 	public ChangeDetail submit(String reviewId, int patchSetId, IProgressMonitor monitor) throws GerritException {
