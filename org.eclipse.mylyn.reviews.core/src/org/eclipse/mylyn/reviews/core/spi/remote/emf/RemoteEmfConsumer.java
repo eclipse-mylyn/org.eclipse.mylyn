@@ -11,8 +11,8 @@
 
 package org.eclipse.mylyn.reviews.core.spi.remote.emf;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -77,24 +77,22 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 						&& ((msg.getNewValue() == modelObject && (msg.getEventType() == RemoteNotification.REMOTE_MEMBER_CREATE || msg.getEventType() == RemoteNotification.REMOTE_MEMBER_FAILURE)) || modelObject instanceof Collection);
 				boolean notifyChild = !remoteMessage.isMember() && msg.getNotifier() == modelObject;
 				if (notifyParent || notifyChild) {
-					synchronized (remoteEmfObservers) {
-						for (IRemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType> listener : remoteEmfObservers) {
-							switch (msg.getEventType()) {
-							case RemoteNotification.REMOTE_MEMBER_CREATE:
-								listener.created(parentObject, modelObject);
-								break;
-							case RemoteNotification.REMOTE_MEMBER_UPDATING:
-							case RemoteNotification.REMOTE_UPDATING:
-								listener.updating(parentObject, modelObject);
-								break;
-							case RemoteNotification.REMOTE_MEMBER_UPDATE:
-							case RemoteNotification.REMOTE_UPDATE:
-								listener.updated(parentObject, modelObject, remoteMessage.isModification());
-								break;
-							case RemoteNotification.REMOTE_MEMBER_FAILURE:
-							case RemoteNotification.REMOTE_FAILURE:
-								listener.failed(parentObject, modelObject, remoteMessage.getStatus());
-							}
+					for (IRemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType> listener : remoteEmfObservers) {
+						switch (msg.getEventType()) {
+						case RemoteNotification.REMOTE_MEMBER_CREATE:
+							listener.created(parentObject, modelObject);
+							break;
+						case RemoteNotification.REMOTE_MEMBER_UPDATING:
+						case RemoteNotification.REMOTE_UPDATING:
+							listener.updating(parentObject, modelObject);
+							break;
+						case RemoteNotification.REMOTE_MEMBER_UPDATE:
+						case RemoteNotification.REMOTE_UPDATE:
+							listener.updated(parentObject, modelObject, remoteMessage.isModification());
+							break;
+						case RemoteNotification.REMOTE_MEMBER_FAILURE:
+						case RemoteNotification.REMOTE_FAILURE:
+							listener.failed(parentObject, modelObject, remoteMessage.getStatus());
 						}
 					}
 				}
@@ -120,7 +118,7 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 		if (localKey == null && modelObject != null) {
 			this.localKey = factory.getLocalKey(null, modelObject);
 		}
-		remoteEmfObservers = new ArrayList<IRemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType>>();
+		remoteEmfObservers = new CopyOnWriteArrayList<IRemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType>>();
 		if (modelObject instanceof EObject) {
 			getFactory().getService().modelExec(new Runnable() {
 				public void run() {
@@ -320,9 +318,7 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 				}
 			}
 		}, false);
-		synchronized (remoteEmfObservers) {
-			remoteEmfObservers.clear();
-		}
+		remoteEmfObservers.clear();
 		getFactory().removeConsumer(this);
 		if (getModelObject() instanceof EObject) {
 			getFactory().getFactoryProvider().close((EObject) getModelObject());
@@ -345,9 +341,7 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 			}
 			remoteEmfObserver.internalSetConsumer(this);
 		}
-		synchronized (remoteEmfObservers) {
-			remoteEmfObservers.add(observer);
-		}
+		remoteEmfObservers.add(observer);
 		if (modelObject instanceof EObject) {
 			if (!((EObject) modelObject).eAdapters().contains(adapter)) {
 				((EObject) modelObject).eAdapters().add(adapter);
@@ -374,9 +368,7 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 				remoteEmfObserver.internalSetConsumer(null);
 			}
 		}
-		synchronized (remoteEmfObservers) {
-			remoteEmfObservers.remove(observer);
-		}
+		remoteEmfObservers.remove(observer);
 		release();
 	}
 

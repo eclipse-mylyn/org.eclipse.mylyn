@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.reviews.core.spi.remote.emf;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EReference;
@@ -166,13 +167,21 @@ public class RemoteENotificationImpl extends ENotificationImpl implements Remote
 	}
 
 	public boolean isDone() {
-		return getEventType() == REMOTE_UPDATE || getEventType() == REMOTE_FAILURE
-				|| getEventType() == REMOTE_MEMBER_UPDATE || getEventType() == REMOTE_MEMBER_FAILURE;
+		int[] failureOrUpdate = new int[] { REMOTE_UPDATE, //
+				REMOTE_FAILURE, //
+				REMOTE_MEMBER_UPDATE, //
+				REMOTE_MEMBER_FAILURE //
+		};
+		return ArrayUtils.contains(failureOrUpdate, getEventType());
 	}
 
 	public boolean isMember() {
-		return getEventType() == REMOTE_MEMBER_CREATE || getEventType() == REMOTE_MEMBER_FAILURE
-				|| getEventType() == REMOTE_MEMBER_UPDATE || getEventType() == REMOTE_MEMBER_UPDATING;
+		int[] member = new int[] { REMOTE_MEMBER_CREATE, //
+				REMOTE_MEMBER_FAILURE, //
+				REMOTE_MEMBER_UPDATE, //
+				REMOTE_MEMBER_UPDATING //
+		};
+		return ArrayUtils.contains(member, getEventType());
 	}
 
 	public IStatus getStatus() {
@@ -180,8 +189,12 @@ public class RemoteENotificationImpl extends ENotificationImpl implements Remote
 	}
 
 	public boolean isModification() {
-		return (modified && getEventType() != REMOTE_MEMBER_FAILURE && getEventType() != REMOTE_FAILURE
-				&& getEventType() != REMOTE_UPDATING && getEventType() != REMOTE_MEMBER_UPDATING)
-				|| getEventType() == REMOTE_MEMBER_CREATE;
+		int[] failureOrUpdating = new int[] { REMOTE_MEMBER_FAILURE, //
+				REMOTE_FAILURE, //
+				REMOTE_UPDATING, //
+				REMOTE_MEMBER_UPDATING //
+		};
+		return getEventType() == REMOTE_MEMBER_CREATE
+				|| (modified && !ArrayUtils.contains(failureOrUpdating, getEventType()));
 	}
 }
