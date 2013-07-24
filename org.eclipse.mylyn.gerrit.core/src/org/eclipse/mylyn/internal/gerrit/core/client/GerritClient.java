@@ -333,6 +333,10 @@ public class GerritClient extends ReviewsClient {
 		return config;
 	}
 
+	/**
+	 * @deprecated Do not use, this method is going to be removed in 2.1. See bug 413630.
+	 */
+	@Deprecated
 	public AccountDiffPreference getDiffPreference(IProgressMonitor monitor) throws GerritException {
 		synchronized (this) {
 			if (myDiffPreference != null) {
@@ -669,6 +673,10 @@ public class GerritClient extends ReviewsClient {
 		return getConfiguration();
 	}
 
+	/**
+	 * @deprecated Do not use, this method is going to be removed in 2.1. See bug 413630.
+	 */
+	@Deprecated
 	public ChangeDetail publish(String reviewId, int patchSetId, IProgressMonitor monitor) throws GerritException {
 		final PatchSet.Id id = new PatchSet.Id(new Change.Id(id(reviewId)), patchSetId);
 		return execute(monitor, new Operation<ChangeDetail>() {
@@ -700,6 +708,10 @@ public class GerritClient extends ReviewsClient {
 		});
 	}
 
+	/**
+	 * @deprecated Do not use, this method is going to be removed in 2.1. See bug 413630.
+	 */
+	@Deprecated
 	public ChangeDetail revert(String reviewId, int patchSetId, final String message, IProgressMonitor monitor)
 			throws GerritException {
 		final PatchSet.Id id = new PatchSet.Id(new Change.Id(id(reviewId)), patchSetId);
