@@ -42,7 +42,7 @@ public class ReviewInputTest extends TestCase {
 	public void testFromEmpty() throws Exception {
 		ReviewInput reviewInput = new ReviewInput("");
 
-		String json = new JSonSupport().getGson().toJson(reviewInput);
+		String json = new JSonSupport().toJson(reviewInput);
 
 		assertNotNull(json);
 		assertFalse(json.isEmpty());
@@ -53,7 +53,7 @@ public class ReviewInputTest extends TestCase {
 	public void testFromValid() throws Exception {
 		ReviewInput reviewInput = new ReviewInput("Looking good!");
 
-		String json = new JSonSupport().getGson().toJson(reviewInput);
+		String json = new JSonSupport().toJson(reviewInput);
 
 		assertNotNull(json);
 		assertFalse(json.isEmpty());
@@ -65,7 +65,7 @@ public class ReviewInputTest extends TestCase {
 		ReviewInput reviewInput = new ReviewInput("");
 		reviewInput.setApprovals(null);
 
-		String json = new JSonSupport().getGson().toJson(reviewInput);
+		String json = new JSonSupport().toJson(reviewInput);
 
 		assertNotNull(json);
 		assertFalse(json.isEmpty());
@@ -77,7 +77,7 @@ public class ReviewInputTest extends TestCase {
 		ReviewInput reviewInput = new ReviewInput("");
 		reviewInput.setApprovals(Collections.<ApprovalCategoryValue.Id> emptySet());
 
-		String json = new JSonSupport().getGson().toJson(reviewInput);
+		String json = new JSonSupport().toJson(reviewInput);
 
 		assertNotNull(json);
 		assertFalse(json.isEmpty());
@@ -91,7 +91,7 @@ public class ReviewInputTest extends TestCase {
 		approvals.add(ApprovalUtil.CRVW.getValue((short) 1).getId());
 		reviewInput.setApprovals(approvals);
 
-		String json = new JSonSupport().getGson().toJson(reviewInput);
+		String json = new JSonSupport().toJson(reviewInput);
 
 		assertNotNull(json);
 		assertFalse(json.isEmpty());

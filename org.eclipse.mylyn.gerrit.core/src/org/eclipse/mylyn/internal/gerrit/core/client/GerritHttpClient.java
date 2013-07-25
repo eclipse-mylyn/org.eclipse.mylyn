@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  *  Contributors:
  *      Sony Ericsson/ST Ericsson - initial API and implementation
  *      Tasktop Technologies - improvements
@@ -148,7 +148,7 @@ public class GerritHttpClient {
 
 		private HttpMethodBase createPostMethod() throws IOException {
 			PostMethod method = new PostMethod(getUrl() + serviceUri);
-			String content = json.getGson().toJson(input);
+			String content = json.toJson(input);
 			RequestEntity requestEntity = new StringRequestEntity(content, "application/json", null); //$NON-NLS-1$
 			method.setRequestEntity(requestEntity);
 			return method;

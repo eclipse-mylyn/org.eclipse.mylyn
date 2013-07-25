@@ -176,7 +176,7 @@ public class GerritClient extends ReviewsClient {
 	public static GerritAuthenticationState authStateFromString(String token) {
 		try {
 			JSonSupport support = new JSonSupport();
-			return support.getGson().fromJson(token, GerritAuthenticationState.class);
+			return support.parseResponse(token, GerritAuthenticationState.class);
 		} catch (Exception e) {
 			// ignore
 			return null;
@@ -190,7 +190,7 @@ public class GerritClient extends ReviewsClient {
 		}
 		try {
 			JSonSupport support = new JSonSupport();
-			return support.getGson().toJson(authState);
+			return support.toJson(authState);
 		} catch (Exception e) {
 			// ignore
 			return null;

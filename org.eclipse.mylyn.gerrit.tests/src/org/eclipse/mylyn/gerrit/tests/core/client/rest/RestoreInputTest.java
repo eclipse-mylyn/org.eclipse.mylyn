@@ -37,7 +37,7 @@ public class RestoreInputTest extends TestCase {
 	public void testFromEmpty() throws Exception {
 		RestoreInput restoreInput = new RestoreInput("");
 
-		String json = new JSonSupport().getGson().toJson(restoreInput);
+		String json = new JSonSupport().toJson(restoreInput);
 
 		assertNotNull(json);
 		assertFalse(json.isEmpty());
@@ -48,7 +48,7 @@ public class RestoreInputTest extends TestCase {
 	public void testFromValid() throws Exception {
 		RestoreInput restoreInput = new RestoreInput("Whatever");
 
-		String json = new JSonSupport().getGson().toJson(restoreInput);
+		String json = new JSonSupport().toJson(restoreInput);
 
 		assertNotNull(json);
 		assertFalse(json.isEmpty());

@@ -46,7 +46,7 @@ public class ReviewerInputTest extends TestCase {
 	public void testFromValid() throws Exception {
 		ReviewerInput reviewerInput = new ReviewerInput("john.doe@example.com");
 
-		String json = new JSonSupport().getGson().toJson(reviewerInput);
+		String json = new JSonSupport().toJson(reviewerInput);
 
 		assertNotNull(json);
 		assertFalse(json.isEmpty());

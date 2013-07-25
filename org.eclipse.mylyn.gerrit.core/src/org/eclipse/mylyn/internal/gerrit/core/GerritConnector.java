@@ -357,7 +357,7 @@ public class GerritConnector extends ReviewsConnector {
 	private static GerritConfiguration configurationFromString(String token) {
 		try {
 			JSonSupport support = new JSonSupport();
-			return support.getGson().fromJson(token, GerritConfiguration.class);
+			return support.parseResponse(token, GerritConfiguration.class);
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
 					"Failed to deserialize configuration: '" + token + "'", e));
@@ -368,7 +368,7 @@ public class GerritConnector extends ReviewsConnector {
 	private static String configurationToString(GerritConfiguration config) {
 		try {
 			JSonSupport support = new JSonSupport();
-			return support.getGson().toJson(config);
+			return support.toJson(config);
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
 					"Failed to serialize configuration", e));

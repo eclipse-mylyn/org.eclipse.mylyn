@@ -37,7 +37,7 @@ public class AbandonInputTest extends TestCase {
 	public void testFromEmpty() throws Exception {
 		AbandonInput abandonInput = new AbandonInput("");
 
-		String json = new JSonSupport().getGson().toJson(abandonInput);
+		String json = new JSonSupport().toJson(abandonInput);
 
 		assertNotNull(json);
 		assertFalse(json.isEmpty());
@@ -48,7 +48,7 @@ public class AbandonInputTest extends TestCase {
 	public void testFromValid() throws Exception {
 		AbandonInput abandonInput = new AbandonInput("Whatever");
 
-		String json = new JSonSupport().getGson().toJson(abandonInput);
+		String json = new JSonSupport().toJson(abandonInput);
 
 		assertNotNull(json);
 		assertFalse(json.isEmpty());

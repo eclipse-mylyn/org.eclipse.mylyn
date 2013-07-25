@@ -26,7 +26,7 @@ public class SubmitInputTest extends TestCase {
 		SubmitInput submitInput = new SubmitInput(true);
 		assertTrue(submitInput.isWaitForMerge());
 
-		String json = new JSonSupport().getGson().toJson(submitInput);
+		String json = new JSonSupport().toJson(submitInput);
 
 		assertNotNull(json);
 		assertFalse(json.isEmpty());

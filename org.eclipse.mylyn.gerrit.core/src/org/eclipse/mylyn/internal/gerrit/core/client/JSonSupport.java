@@ -187,10 +187,6 @@ public class JSonSupport {
 				.create();
 	}
 
-	public Gson getGson() {
-		return gson;
-	}
-
 	String createRequest(int id, String xsrfKey, String methodName, Collection<Object> args) {
 		JsonRequest msg = new JsonRequest();
 		msg.method = methodName;
@@ -218,9 +214,15 @@ public class JSonSupport {
 		Assert.isLegal(responseMessage != null);
 		Assert.isLegal(!responseMessage.isEmpty());
 
+		// Gerrit 2.5 prepends the output with bogus characters
+		// see http://code.google.com/p/gerrit/issues/detail?id=1648
 		if (responseMessage.startsWith(")]}'\n")) { //$NON-NLS-1$
 			responseMessage = responseMessage.substring(5);
 		}
 		return gson.fromJson(responseMessage, resultType);
+	}
+
+	public String toJson(Object src) {
+		return gson.toJson(src);
 	}
 }

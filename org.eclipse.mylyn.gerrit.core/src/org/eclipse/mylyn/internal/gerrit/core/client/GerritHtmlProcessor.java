@@ -36,7 +36,7 @@ public class GerritHtmlProcessor {
 	private static GerritConfigX gerritConfigFromString(String token) {
 		try {
 			JSonSupport support = new JSonSupport();
-			return support.getGson().fromJson(token, GerritConfigX.class);
+			return support.parseResponse(token, GerritConfigX.class);
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
 					"Failed to deserialize Gerrit configuration: '" + token + "'", e));
