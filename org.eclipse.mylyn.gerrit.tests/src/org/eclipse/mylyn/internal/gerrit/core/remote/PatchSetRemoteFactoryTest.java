@@ -174,7 +174,7 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(fileComment.getDescription(), is("Line 2 Comment"));
 
 		reviewHarness.client.publishComments(reviewHarness.shortId, 2, "Submit Comments",
-				Collections.<ApprovalCategoryValue.Id> emptySet(), null);
+				Collections.<ApprovalCategoryValue.Id> emptySet(), new NullProgressMonitor());
 		patchSetConsumer.retrieve(false);
 		patchSetListener.waitForResponse(3, 3);
 		allComments = commentFile.getAllComments();

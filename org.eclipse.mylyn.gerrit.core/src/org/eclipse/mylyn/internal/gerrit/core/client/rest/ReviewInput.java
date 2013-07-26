@@ -10,14 +10,19 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core.client.rest;
 
+import java.util.Map;
+
 import org.eclipse.core.runtime.Assert;
 
 /**
- * Data model object for https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#review-input
+ * Data model object for <a
+ * href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#review-input">ReviewInput</a>.
  */
 public class ReviewInput {
 
 	private final String message;
+
+	private Map<String, CommentInput[]> comments;
 
 	public ReviewInput(String msg) {
 		Assert.isLegal(msg != null);
@@ -28,4 +33,11 @@ public class ReviewInput {
 		return message;
 	}
 
+	public Map<String, CommentInput[]> getComments() {
+		return comments;
+	}
+
+	public void setComments(Map<String, CommentInput[]> comments) {
+		this.comments = comments;
+	}
 }

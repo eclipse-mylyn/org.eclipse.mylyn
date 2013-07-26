@@ -22,9 +22,11 @@ import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -52,6 +54,8 @@ import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.AbandonInput;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.CommentInfo;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.CommentInput;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.RestoreInput;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ReviewInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ReviewInput;
@@ -491,9 +495,41 @@ public class GerritClient extends ReviewsClient {
 				}
 			});
 		} else {
+			ReviewInput reviewInput = new ReviewInput(message);
+			Map<String, CommentInfo[]> drafts = listDrafts(id, monitor);
+			Map<String, CommentInput[]> comments = convert(drafts);
+			if (!comments.isEmpty()) {
+				reviewInput.setComments(comments);
+			}
 			final String uri = "/a/changes/" + id.getParentKey().get() + "/revisions/" + id.get() + "/review"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			executePostRestRequest(uri, new ReviewInput(message), ReviewInfo.class, null /*no error handler*/, monitor);
+			executePostRestRequest(uri, reviewInput, ReviewInfo.class, null /*no error handler*/, monitor);
 		}
+	}
+
+	private Map<String, CommentInfo[]> listDrafts(final PatchSet.Id id, IProgressMonitor monitor)
+			throws GerritException {
+		String uri = "/changes/" + id.getParentKey().get() + "/revisions/" + id.get() + "/drafts/"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		TypeToken<Map<String, CommentInfo[]>> resultType = new TypeToken<Map<String, CommentInfo[]>>() {
+		};
+
+		return executeGetRestRequest(uri, resultType.getType(), monitor);
+	}
+
+	private Map<String, CommentInput[]> convert(Map<String, CommentInfo[]> commentInfos) {
+		if (commentInfos == null || commentInfos.isEmpty()) {
+			return Collections.<String, CommentInput[]> emptyMap();
+		}
+		Map<String, CommentInput[]> commentInputs = new HashMap<String, CommentInput[]>(commentInfos.size());
+		Set<Entry<String, CommentInfo[]>> entrySet = commentInfos.entrySet();
+		for (Entry<String, CommentInfo[]> entry : entrySet) {
+			CommentInfo[] infos = entry.getValue();
+			List<CommentInput> inputs = new ArrayList<CommentInput>(infos.length);
+			for (CommentInfo info : infos) {
+				inputs.add(new CommentInput(info));
+			}
+			commentInputs.put(entry.getKey(), inputs.toArray(new CommentInput[inputs.size()]));
+		}
+		return commentInputs;
 	}
 
 	public ReviewerResult addReviewers(String reviewId, final List<String> reviewers, IProgressMonitor monitor)
