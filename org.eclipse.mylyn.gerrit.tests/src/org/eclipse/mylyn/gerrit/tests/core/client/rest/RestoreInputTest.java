@@ -18,15 +18,15 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
-import org.eclipse.mylyn.internal.gerrit.core.client.rest.AbandonInput;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.RestoreInput;
 import org.junit.Test;
 
-public class AbandonInputTest extends TestCase {
+public class RestoreInputTest extends TestCase {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testFromNull() throws Exception {
 		try {
-			new AbandonInput(null);
+			new RestoreInput(null);
 			fail("Expected IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 			// expected
@@ -35,9 +35,9 @@ public class AbandonInputTest extends TestCase {
 
 	@Test
 	public void testFromEmpty() throws Exception {
-		AbandonInput abandonInput = new AbandonInput("");
+		RestoreInput restoreInput = new RestoreInput("");
 
-		String json = new JSonSupport().getGson().toJson(abandonInput);
+		String json = new JSonSupport().getGson().toJson(restoreInput);
 
 		assertNotNull(json);
 		assertFalse(json.isEmpty());
@@ -46,9 +46,9 @@ public class AbandonInputTest extends TestCase {
 
 	@Test
 	public void testFromValid() throws Exception {
-		AbandonInput abandonInput = new AbandonInput("Whatever");
+		RestoreInput restoreInput = new RestoreInput("Whatever");
 
-		String json = new JSonSupport().getGson().toJson(abandonInput);
+		String json = new JSonSupport().getGson().toJson(restoreInput);
 
 		assertNotNull(json);
 		assertFalse(json.isEmpty());

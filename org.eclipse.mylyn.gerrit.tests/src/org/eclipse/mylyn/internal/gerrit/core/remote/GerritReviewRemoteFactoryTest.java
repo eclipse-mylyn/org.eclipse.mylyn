@@ -242,7 +242,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(comments.size(), is(2)); // abandon + restore
 		IComment lastComment = comments.get(1);
 		assertThat(lastComment.getAuthor().getDisplayName(), is("tests"));
-		assertThat(lastComment.getDescription(), is("Patch Set 1: Restored\n\n" + message2));
+		assertThat(lastComment.getDescription(), endsWith("Restored\n\n" + message2));
 	}
 
 	@Test

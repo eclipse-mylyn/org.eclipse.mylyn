@@ -51,6 +51,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.AbandonInput;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.RestoreInput;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ReviewInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ReviewInput;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.SubmitInfo;
@@ -673,12 +674,24 @@ public class GerritClient extends ReviewsClient {
 	public ChangeDetail restore(String reviewId, int patchSetId, final String message, IProgressMonitor monitor)
 			throws GerritException {
 		final PatchSet.Id id = new PatchSet.Id(new Change.Id(id(reviewId)), patchSetId);
-		return execute(monitor, new Operation<ChangeDetail>() {
-			@Override
-			public void execute(IProgressMonitor monitor) throws GerritException {
-				getChangeManageService(monitor).restoreChange(id, message, this);
+		if (hasJsonRpcApi(monitor)) {
+			return execute(monitor, new Operation<ChangeDetail>() {
+				@Override
+				public void execute(IProgressMonitor monitor) throws GerritException {
+					getChangeManageService(monitor).restoreChange(id, message, this);
+				}
+			});
+		} else {
+			final String uri = "/a/changes/" + id.getParentKey().get() + "/restore"; //$NON-NLS-1$ //$NON-NLS-2$
+			try {
+				execute(uri, new RestoreInput(message), ChangeInfo.class, null/*no error handler*/, monitor);
+			} catch (GerritHttpException e) {
+				if (e.getResponseCode() == HttpURLConnection.HTTP_CONFLICT) {
+					throw new GerritException("Not Found", e); //$NON-NLS-1$
+				}
 			}
-		});
+			return getChangeDetail(id.getParentKey().get(), monitor);
+		}
 	}
 
 	/**
