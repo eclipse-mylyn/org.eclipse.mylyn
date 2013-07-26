@@ -12,8 +12,22 @@
 package org.eclipse.mylyn.internal.gerrit.core.client.rest;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
+import com.google.gerrit.common.data.ApprovalDetail;
+import com.google.gerrit.common.data.ApprovalType;
+import com.google.gerrit.reviewdb.Account;
+import com.google.gerrit.reviewdb.ApprovalCategory;
+import com.google.gerrit.reviewdb.ApprovalCategoryValue;
 import com.google.gerrit.reviewdb.Change;
+import com.google.gerrit.reviewdb.PatchSet;
+import com.google.gerrit.reviewdb.PatchSetApproval;
 
 /**
  * Data model object for <a
@@ -108,4 +122,80 @@ public class ChangeInfo {
 	public AccountInfo getOwner() {
 		return owner;
 	}
+
+	private Map<String/*Label*/, LabelInfo> labels;
+
+	private String current_revision;
+
+	private Map<String/*commit ID*/, RevisionInfo> revisions;
+
+	public Map<String, LabelInfo> getLabels() {
+		return labels;
+	}
+
+	public String getCurrentRevision() {
+		return current_revision;
+	}
+
+	public Map<String, RevisionInfo> getRevisions() {
+		return revisions;
+	}
+
+	private PatchSet.Id getCurrentPatchSetId() {
+		Change.Id changeId = new Change.Id(_number);
+		int patchSetId = revisions.get(current_revision).getNumber();
+		return new PatchSet.Id(changeId, patchSetId);
+	}
+
+	public Set<ApprovalDetail> convertToApprovalDetails() {
+		if (labels == null) {
+			return Collections.<ApprovalDetail> emptySet();
+		}
+		Set<ApprovalDetail> result = new HashSet<ApprovalDetail>();
+		for (Entry<String, LabelInfo> entry : labels.entrySet()) {
+			List<ApprovalInfo> all = entry.getValue().getAll();
+			if (all != null) {
+				String name = entry.getKey().replace('-', ' ');
+				ApprovalCategory.Id approvalCategoryId = ApprovalUtil.findCategoryIdByName(name);
+				for (ApprovalInfo approvalInfo : all) {
+					Account.Id accountId = new Account.Id(approvalInfo.getId());
+					ApprovalDetail approvalDetail = new ApprovalDetail(accountId);
+					approvalDetail.add(new PatchSetApproval(new PatchSetApproval.Key(getCurrentPatchSetId(), accountId,
+							approvalCategoryId), approvalInfo.getValue()));
+					result.add(approvalDetail);
+				}
+			}
+		}
+		return result;
+	}
+
+	public Set<ApprovalType> convertToApprovalTypes() {
+		if (labels == null) {
+			return null;
+		}
+		Set<ApprovalType> result = new HashSet<ApprovalType>();
+		for (Entry<String, LabelInfo> entry : labels.entrySet()) {
+			String name = entry.getKey().replace('-', ' ');
+			ApprovalCategory.Id approvalCategoryId = ApprovalUtil.findCategoryIdByName(name);
+			ApprovalCategory approvalCategory = new ApprovalCategory(approvalCategoryId, name);
+			List<ApprovalCategoryValue> valueList = new ArrayList<ApprovalCategoryValue>();
+			for (Entry<String, String> valueEntry : entry.getValue().getValues().entrySet()) {
+				valueList.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(approvalCategoryId,
+						parseShort(valueEntry.getKey())), valueEntry.getValue()));
+			}
+			ApprovalType approvalType = new ApprovalType(approvalCategory, valueList);
+			result.add(approvalType);
+		}
+		return result;
+	}
+
+	private static short parseShort(String s) {
+		s = s.trim();
+		// only Java7 handles a plus sign as indication of a positive value
+		if (s.startsWith("+")) { //$NON-NLS-1$
+			s = s.substring(1);
+		}
+		return Short.parseShort(s);
+	}
+
 }

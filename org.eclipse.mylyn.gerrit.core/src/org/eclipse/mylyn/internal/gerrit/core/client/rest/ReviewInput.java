@@ -10,9 +10,13 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core.client.rest;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
+
+import com.google.gerrit.reviewdb.ApprovalCategoryValue;
 
 /**
  * Data model object for <a
@@ -23,6 +27,8 @@ public class ReviewInput {
 	private final String message;
 
 	private Map<String, CommentInput[]> comments;
+
+	private Map<String, Short> labels;
 
 	public ReviewInput(String msg) {
 		Assert.isLegal(msg != null);
@@ -40,4 +46,18 @@ public class ReviewInput {
 	public void setComments(Map<String, CommentInput[]> comments) {
 		this.comments = comments;
 	}
+
+	public void setApprovals(Set<ApprovalCategoryValue.Id> approvals) {
+		if (approvals == null || approvals.isEmpty()) {
+			return;
+		}
+		labels = new HashMap<String, Short>(approvals.size());
+		for (ApprovalCategoryValue.Id approval : approvals) {
+			String labelName = ApprovalUtil.findCategoryNameById(approval.getParentKey().get());
+			labelName = labelName.replace(' ', '-');
+			Short voteValue = Short.valueOf(approval.get());
+			labels.put(labelName, voteValue);
+		}
+	}
+
 }

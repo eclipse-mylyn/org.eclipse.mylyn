@@ -8,20 +8,27 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylyn.internal.gerrit.core.client.rest;
 
+import java.util.List;
 import java.util.Map;
 
 /**
  * Data model object for <a
- * href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#review-info">ReviewInfo</a>.
+ * href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#label-info">LabelInfo</a>.
  */
-public class ReviewInfo {
+public class LabelInfo {
 
-	private Map<String, Short> labels;
+	private List<ApprovalInfo> all;
 
-	public Map<String, Short> getLabels() {
-		return labels;
+	private Map<String, String> values;
+
+	public List<ApprovalInfo> getAll() {
+		return all;
 	}
 
+	public Map<String/*vote*/, String/*description*/> getValues() {
+		return values;
+	}
 }

@@ -20,7 +20,7 @@ import com.google.gerrit.common.data.ApprovalType;
 import com.google.gerrit.reviewdb.ApprovalCategory;
 import com.google.gerrit.reviewdb.ApprovalCategoryValue;
 
-public abstract class ApprovalUtil {
+public final class ApprovalUtil {
 
 	public static final ApprovalType VRIF;
 
@@ -96,5 +96,8 @@ public abstract class ApprovalUtil {
 			return BY_ID.get(id).getCategory().getName();
 		}
 		return null;
+	}
+
+	private ApprovalUtil() {
 	}
 }

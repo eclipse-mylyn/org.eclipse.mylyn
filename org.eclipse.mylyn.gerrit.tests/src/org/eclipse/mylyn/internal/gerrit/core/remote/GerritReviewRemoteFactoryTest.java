@@ -11,6 +11,9 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.remote;
 
+import static org.eclipse.mylyn.gerrit.tests.core.client.rest.IsEmpty.empty;
+import static org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalUtil.CRVW;
+import static org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalUtil.VRIF;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
@@ -32,9 +35,13 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jgit.api.CommitCommand;
+import org.eclipse.mylyn.gerrit.tests.core.client.rest.ChangeInfoTest;
 import org.eclipse.mylyn.gerrit.tests.support.GerritProject.CommitResult;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo;
 import org.eclipse.mylyn.reviews.core.model.IApprovalType;
 import org.eclipse.mylyn.reviews.core.model.IChange;
 import org.eclipse.mylyn.reviews.core.model.IComment;
@@ -51,7 +58,6 @@ import org.junit.Test;
 
 import com.google.gerrit.common.data.ChangeDetail;
 import com.google.gerrit.common.data.ReviewerResult;
-import com.google.gerrit.reviewdb.ApprovalCategory;
 import com.google.gerrit.reviewdb.ApprovalCategoryValue;
 import com.google.gerrit.reviewdb.Change.Status;
 import com.google.gerrit.reviewdb.ChangeMessage;
@@ -124,21 +130,16 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testApprovals() throws Exception {
-		assertThat(reviewHarness.getRepository().getApprovalTypes().size(), is(2));
-		IApprovalType verifyApproval = reviewHarness.getRepository().getApprovalTypes().get(0);
-		assertThat(verifyApproval.getKey(), is("VRIF"));
-		assertThat(verifyApproval.getName(), is("Verified"));
-		IApprovalType codeReviewApproval = reviewHarness.getRepository().getApprovalTypes().get(1);
-		assertThat(codeReviewApproval.getKey(), is("CRVW"));
-		assertThat(codeReviewApproval.getName(), is("Code Review"));
+		int approvals = isVersion26rLater() ? 1 : 2;
+		assertThat(reviewHarness.getRepository().getApprovalTypes().size(), is(approvals));
+		IApprovalType codeReviewApproval = reviewHarness.getRepository().getApprovalTypes().get(approvals - 1);
+		assertThat(codeReviewApproval.getKey(), is(CRVW.getCategory().getId().get()));
+		assertThat(codeReviewApproval.getName(), is(CRVW.getCategory().getName()));
 
 		String approvalMessage = "approval, time: " + System.currentTimeMillis(); //$NON-NLS-1$
-		reviewHarness.client.publishComments(
-				reviewHarness.shortId,
-				1,
-				approvalMessage,
-				new HashSet<ApprovalCategoryValue.Id>(Collections.singleton(new ApprovalCategoryValue.Id(
-						new ApprovalCategory.Id("CRVW"), (short) 1))), null);
+		reviewHarness.client.publishComments(reviewHarness.shortId, 1, approvalMessage,
+				new HashSet<ApprovalCategoryValue.Id>(Collections.singleton(CRVW.getValue((short) 1).getId())),
+				new NullProgressMonitor());
 		reviewHarness.consumer.retrieve(false);
 		reviewHarness.listener.waitForResponse(2, 2);
 		assertThat(getReview().getReviewerApprovals().size(), is(1));
@@ -150,15 +151,21 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(next.getValue(), is(1));
 
 		Set<Entry<IApprovalType, IRequirementEntry>> reviewApprovals = getReview().getRequirements().entrySet();
-		assertThat(reviewApprovals.size(), is(2));
+		assertThat(reviewApprovals.size(), is(approvals));
 		IRequirementEntry codeReviewEntry = getReview().getRequirements().get(codeReviewApproval);
 		assertThat(codeReviewEntry, notNullValue());
 		assertThat(codeReviewEntry.getBy(), nullValue());
 		assertThat(codeReviewEntry.getStatus(), is(RequirementStatus.NOT_SATISFIED));
-		IRequirementEntry verifyEntry = getReview().getRequirements().get(verifyApproval);
-		assertThat(verifyEntry, notNullValue());
-		assertThat(verifyEntry.getBy(), nullValue());
-		assertThat(verifyEntry.getStatus(), is(RequirementStatus.NOT_SATISFIED));
+		if (!isVersion26rLater()) {
+			IApprovalType verifyApproval = reviewHarness.getRepository().getApprovalTypes().get(0);
+			assertThat(verifyApproval.getKey(), is(VRIF.getCategory().getId().get()));
+			assertThat(verifyApproval.getName(), is(VRIF.getCategory().getName()));
+
+			IRequirementEntry verifyEntry = getReview().getRequirements().get(verifyApproval);
+			assertThat(verifyEntry, notNullValue());
+			assertThat(verifyEntry.getBy(), nullValue());
+			assertThat(verifyEntry.getStatus(), is(RequirementStatus.NOT_SATISFIED));
+		}
 		assertThat(getReview().getState(), is(ReviewStatus.NEW));
 	}
 
@@ -326,5 +333,31 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		} catch (GerritException e) {
 			assertThat(e.getMessage(), is("Change is already up to date."));
 		}
+	}
+
+	@Test
+	public void testGetChangeDetailWithNoApprovals() throws Exception {
+		int reviewId = Integer.parseInt(reviewHarness.shortId);
+
+		ChangeDetailX changeDetail = reviewHarness.client.getChangeDetail(reviewId, new NullProgressMonitor());
+
+		assertThat(changeDetail, notNullValue());
+		assertThat(changeDetail.getApprovals(), empty());
+	}
+
+	@Test
+	public void testGetChangeInfo() throws Exception {
+		if (!isVersion26rLater()) {
+			return; // testing Gerrit REST API, available in 2.6 and later
+		}
+		int reviewId = Integer.parseInt(reviewHarness.shortId);
+
+		ChangeInfo changeInfo = reviewHarness.client.getChangeInfo(reviewId, new NullProgressMonitor());
+
+		ChangeInfoTest.assertHasCodeReviewLabels(changeInfo);
+	}
+
+	private boolean isVersion26rLater() throws GerritException {
+		return GerritVersion.isVersion26OrLater(reviewHarness.client.getVersion(new NullProgressMonitor()));
 	}
 }

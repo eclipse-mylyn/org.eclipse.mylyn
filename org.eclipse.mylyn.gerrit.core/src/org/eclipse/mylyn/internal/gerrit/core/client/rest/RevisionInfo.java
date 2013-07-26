@@ -10,18 +10,21 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core.client.rest;
 
-import java.util.Map;
-
 /**
  * Data model object for <a
- * href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#review-info">ReviewInfo</a>.
+ * href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#revision-info">RevisionInfo</a>.
  */
-public class ReviewInfo {
+public class RevisionInfo {
 
-	private Map<String, Short> labels;
+	private boolean draft;
 
-	public Map<String, Short> getLabels() {
-		return labels;
+	private int _number;
+
+	public boolean isDraft() {
+		return draft;
 	}
 
+	public int getNumber() {
+		return _number;
+	}
 }

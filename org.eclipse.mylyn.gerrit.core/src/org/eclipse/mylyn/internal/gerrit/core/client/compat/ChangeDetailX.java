@@ -12,7 +12,9 @@
 package org.eclipse.mylyn.internal.gerrit.core.client.compat;
 
 import java.util.List;
+import java.util.Set;
 
+import com.google.gerrit.common.data.ApprovalType;
 import com.google.gerrit.common.data.ChangeDetail;
 
 /**
@@ -46,6 +48,8 @@ public class ChangeDetailX extends ChangeDetail {
 
 	protected List<SubmitRecord> submitRecords;
 
+	private Set<ApprovalType> approvalTypes;
+
 	public boolean canRevert() {
 		return canRevert;
 	}
@@ -72,5 +76,13 @@ public class ChangeDetailX extends ChangeDetail {
 
 	public void setSubmitRecords(List<SubmitRecord> submitRecords) {
 		this.submitRecords = submitRecords;
+	}
+
+	public Set<ApprovalType> getApprovalTypes() {
+		return approvalTypes;
+	}
+
+	public void setApprovalTypes(Set<ApprovalType> approvalTypes) {
+		this.approvalTypes = approvalTypes;
 	}
 }

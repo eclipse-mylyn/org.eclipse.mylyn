@@ -275,12 +275,23 @@ public class GerritClient extends ReviewsClient {
 	 */
 	public ChangeDetailX getChangeDetail(int reviewId, IProgressMonitor monitor) throws GerritException {
 		final Change.Id id = new Change.Id(reviewId);
-		return execute(monitor, new Operation<ChangeDetailX>() {
+		ChangeDetailX changeDetail = execute(monitor, new Operation<ChangeDetailX>() {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
 				getChangeDetailService(monitor).changeDetailX(id, this);
 			}
 		});
+		if (changeDetail.getApprovals() == null && isVersion26OrLater(monitor)) {
+			ChangeInfo changeInfo = getChangeInfo(reviewId, monitor);
+			changeDetail.setApprovals(changeInfo.convertToApprovalDetails());
+			changeDetail.setApprovalTypes(changeInfo.convertToApprovalTypes());
+		}
+		return changeDetail;
+	}
+
+	public ChangeInfo getChangeInfo(final int reviewId, IProgressMonitor monitor) throws GerritException {
+		final String uri = "/changes/" + reviewId + "/revisions/current/review"; //$NON-NLS-1$ //$NON-NLS-2$
+		return executeGetRestRequest(uri, ChangeInfo.class, monitor);
 	}
 
 	public void loadPatchSetContent(PatchSetContent patchSetContent, IProgressMonitor monitor) throws GerritException {
@@ -501,6 +512,7 @@ public class GerritClient extends ReviewsClient {
 			if (!comments.isEmpty()) {
 				reviewInput.setComments(comments);
 			}
+			reviewInput.setApprovals(approvals);
 			final String uri = "/a/changes/" + id.getParentKey().get() + "/revisions/" + id.get() + "/review"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			executePostRestRequest(uri, reviewInput, ReviewInfo.class, null /*no error handler*/, monitor);
 		}
@@ -605,8 +617,12 @@ public class GerritClient extends ReviewsClient {
 	}
 
 	private boolean hasJsonRpcApi(IProgressMonitor monitor) throws GerritException {
+		return !isVersion26OrLater(monitor);
+	}
+
+	private boolean isVersion26OrLater(IProgressMonitor monitor) throws GerritException {
 		Version version = getCachedVersion(monitor);
-		return !GerritVersion.isVersion26OrLater(version);
+		return GerritVersion.isVersion26OrLater(version);
 	}
 
 	/**
