@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Tasktop Technologies and others.
+ * Copyright (c) 2012, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,8 +26,11 @@ import org.eclipse.mylyn.gerrit.tests.core.client.OpenIdAuthenticationTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.rest.AbandonInputTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.rest.AccountInfoTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.rest.ChangeInfoTest;
+import org.eclipse.mylyn.gerrit.tests.core.client.rest.RestoreInputTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.rest.ReviewInfoTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.rest.ReviewInputTest;
+import org.eclipse.mylyn.gerrit.tests.core.client.rest.SubmitInfoTest;
+import org.eclipse.mylyn.gerrit.tests.core.client.rest.SubmitInputTest;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.gerrit.tests.ui.GerritUrlHandlerTest;
 import org.eclipse.mylyn.internal.gerrit.core.remote.GerritDataLocatorTest;
@@ -56,8 +59,11 @@ public class AllGerritTests {
 		suite.addTestSuite(AbandonInputTest.class);
 		suite.addTestSuite(AccountInfoTest.class);
 		suite.addTestSuite(ChangeInfoTest.class);
+		suite.addTestSuite(RestoreInputTest.class);
 		suite.addTestSuite(ReviewInfoTest.class);
 		suite.addTestSuite(ReviewInputTest.class);
+		suite.addTestSuite(SubmitInfoTest.class);
+		suite.addTestSuite(SubmitInputTest.class);
 		if (!configuration.isLocalOnly()) {
 			// network tests
 			suite.addTestSuite(OpenIdAuthenticationTest.class);
