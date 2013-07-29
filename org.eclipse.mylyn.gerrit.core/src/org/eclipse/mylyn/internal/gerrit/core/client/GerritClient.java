@@ -16,6 +16,7 @@ package org.eclipse.mylyn.internal.gerrit.core.client;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
@@ -260,7 +261,7 @@ public class GerritClient extends ReviewsClient {
 			});
 		} else {
 			final String uri = "/a/changes/" + id.getParentKey().get() + "/abandon"; //$NON-NLS-1$ //$NON-NLS-2$
-			execute(uri, new AbandonInput(message), ChangeInfo.class, null/*no error handler*/, monitor);
+			executePostRestRequest(uri, new AbandonInput(message), ChangeInfo.class, null/*no error handler*/, monitor);
 			return getChangeDetail(id.getParentKey().get(), monitor);
 		}
 	}
@@ -491,7 +492,7 @@ public class GerritClient extends ReviewsClient {
 			});
 		} else {
 			final String uri = "/a/changes/" + id.getParentKey().get() + "/revisions/" + id.get() + "/review"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			execute(uri, new ReviewInput(message), ReviewInfo.class, null /*no error handler*/, monitor);
+			executePostRestRequest(uri, new ReviewInput(message), ReviewInfo.class, null /*no error handler*/, monitor);
 		}
 	}
 
@@ -684,7 +685,8 @@ public class GerritClient extends ReviewsClient {
 		} else {
 			final String uri = "/a/changes/" + id.getParentKey().get() + "/restore"; //$NON-NLS-1$ //$NON-NLS-2$
 			try {
-				execute(uri, new RestoreInput(message), ChangeInfo.class, null/*no error handler*/, monitor);
+				executePostRestRequest(uri, new RestoreInput(message), ChangeInfo.class, null/*no error handler*/,
+						monitor);
 			} catch (GerritHttpException e) {
 				if (e.getResponseCode() == HttpURLConnection.HTTP_CONFLICT) {
 					throw new GerritException("Not Found", e); //$NON-NLS-1$
@@ -725,7 +727,7 @@ public class GerritClient extends ReviewsClient {
 
 	private ChangeDetail submitRest(PatchSet.Id id, IProgressMonitor monitor) throws GerritException {
 		final String uri = "/a/changes/" + id.getParentKey().get() + "/revisions/" + id.get() + "/submit"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		execute(uri, new SubmitInput(true), SubmitInfo.class, new ErrorHandler() {
+		executePostRestRequest(uri, new SubmitInput(true), SubmitInfo.class, new ErrorHandler() {
 			@Override
 			public void handleError(HttpMethodBase method) throws GerritException {
 				if (method.getStatusCode() == HttpURLConnection.HTTP_FORBIDDEN
@@ -779,40 +781,14 @@ public class GerritClient extends ReviewsClient {
 
 	public List<GerritQueryResult> executeQueryRest(IProgressMonitor monitor, final String queryString)
 			throws GerritException {
-		return execute(monitor, new Operation<List<GerritQueryResult>>() {
-			@Override
-			public void execute(IProgressMonitor monitor) throws GerritException {
-				try {
-					Request<List<GerritQueryResult>> request = new Request<List<GerritQueryResult>>() {
-						@Override
-						public HttpMethodBase createMethod() throws IOException {
-							GetMethod method = new GetMethod(client.getUrl()
-									+ "/changes/?q=" + URLEncoder.encode(queryString, "UTF-8")); //$NON-NLS-1$ //$NON-NLS-2$ 
-							method.setRequestHeader("Accept", "application/json"); //$NON-NLS-1$//$NON-NLS-2$
-							return method;
-						}
-
-						@Override
-						public List<GerritQueryResult> process(HttpMethodBase method) throws IOException {
-							JSonSupport json = new JSonSupport();
-							// Gerrit 2.5 prepends the output with bogus characters
-							// see http://code.google.com/p/gerrit/issues/detail?id=1648
-							String content = method.getResponseBodyAsString();
-							if (content.startsWith(")]}'\n")) { //$NON-NLS-1$
-								content = content.substring(5);
-							}
-							Type type = new TypeToken<List<GerritQueryResult>>() {
-							}.getType();
-							return json.getGson().fromJson(content, type);
-						}
-					};
-					List<GerritQueryResult> result = client.execute(request, monitor);
-					onSuccess(result);
-				} catch (Exception e) {
-					onFailure(e);
-				}
-			}
-		});
+		try {
+			String uri = "/changes/?q=" + URLEncoder.encode(queryString, "UTF-8"); //$NON-NLS-1$ //$NON-NLS-2$
+			TypeToken<List<GerritQueryResult>> queryResultListType = new TypeToken<List<GerritQueryResult>>() {
+			};
+			return executeGetRestRequest(uri, queryResultListType.getType(), monitor);
+		} catch (UnsupportedEncodingException e) {
+			throw new GerritException(e);
+		}
 	}
 
 	/**
@@ -937,13 +913,27 @@ public class GerritClient extends ReviewsClient {
 		}
 	}
 
-	private <T> T execute(final String url, final Object input, final Type resultType, final ErrorHandler handler,
-			IProgressMonitor monitor) throws GerritException {
+	private <T> T executePostRestRequest(final String url, final Object input, final Type resultType,
+			final ErrorHandler handler, IProgressMonitor monitor) throws GerritException {
 		return execute(monitor, new Operation<T>() {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
 				try {
 					setResult(client.<T> postRestRequest(url, input, resultType, handler, monitor));
+				} catch (IOException e) {
+					throw new GerritException(e);
+				}
+			}
+		});
+	}
+
+	private <T> T executeGetRestRequest(final String url, final Type resultType, IProgressMonitor monitor)
+			throws GerritException {
+		return execute(monitor, new Operation<T>() {
+			@Override
+			public void execute(IProgressMonitor monitor) throws GerritException {
+				try {
+					setResult(client.<T> getRestRequest(url, resultType, monitor));
 				} catch (IOException e) {
 					throw new GerritException(e);
 				}

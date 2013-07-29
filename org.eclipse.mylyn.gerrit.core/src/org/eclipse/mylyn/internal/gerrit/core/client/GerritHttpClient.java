@@ -42,6 +42,7 @@ import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.UnsupportedRequestException;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient.Request.HttpMethod;
 
 import com.google.gerrit.common.auth.SignInMode;
 import com.google.gerrit.common.auth.openid.DiscoveryResult;
@@ -59,6 +60,10 @@ import com.google.gerrit.common.auth.userpass.LoginResult;
 public class GerritHttpClient {
 
 	public static abstract class Request<T> {
+
+		public enum HttpMethod {
+			POST, GET
+		}
 
 		public abstract HttpMethodBase createMethod() throws IOException;
 
@@ -106,6 +111,8 @@ public class GerritHttpClient {
 
 		private final JSonSupport json = new JSonSupport();
 
+		private final HttpMethod httpMethod;
+
 		private final String serviceUri;
 
 		private final Object input;
@@ -114,19 +121,32 @@ public class GerritHttpClient {
 
 		private final ErrorHandler errorHandler;
 
-		public RestRequest(final String serviceUri, final Object input, Type resultType, ErrorHandler handler) {
+		public RestRequest(final HttpMethod httpMethod, final String serviceUri, final Object input, Type resultType,
+				ErrorHandler handler) {
+			this.httpMethod = httpMethod;
 			this.serviceUri = serviceUri;
 			this.input = input;
 			this.resultType = resultType;
 			this.errorHandler = handler;
 		}
 
+		@SuppressWarnings("null")
 		@Override
-		public PostMethod createMethod() throws IOException {
-			PostMethod method = new PostMethod(getUrl() + serviceUri);
+		public HttpMethodBase createMethod() throws IOException {
+			HttpMethodBase method = null;
+			if (httpMethod == HttpMethod.POST) {
+				method = createPostMethod();
+			} else if (httpMethod == HttpMethod.GET) {
+				method = new GetMethod(getUrl() + serviceUri);
+			}
 			method.setRequestHeader("Content-Type", "application/json; charset=utf-8"); //$NON-NLS-1$//$NON-NLS-2$
 			method.setRequestHeader("Accept", "application/json"); //$NON-NLS-1$//$NON-NLS-2$
 
+			return method;
+		}
+
+		private HttpMethodBase createPostMethod() throws IOException {
+			PostMethod method = new PostMethod(getUrl() + serviceUri);
 			String content = json.getGson().toJson(input);
 			RequestEntity requestEntity = new StringRequestEntity(content, "application/json", null); //$NON-NLS-1$
 			method.setRequestEntity(requestEntity);
@@ -215,11 +235,23 @@ public class GerritHttpClient {
 
 	public <T> T postRestRequest(final String serviceUri, final Object input, Type resultType, ErrorHandler handler,
 			IProgressMonitor monitor) throws IOException, GerritException {
-		Assert.isNotNull(serviceUri, "REST Service URI must be not null."); //$NON-NLS-1$
 		Assert.isNotNull(input, "Input object must be not null."); //$NON-NLS-1$
+
+		return restRequest(HttpMethod.POST, serviceUri, input, resultType, handler, monitor);
+	}
+
+	public <T> T getRestRequest(final String serviceUri, Type resultType, IProgressMonitor monitor) throws IOException,
+			GerritException {
+		return restRequest(HttpMethod.GET, serviceUri, null, resultType, null, monitor);
+	}
+
+	private <T> T restRequest(final HttpMethod httpMethod, final String serviceUri, final Object input,
+			Type resultType, ErrorHandler handler, IProgressMonitor monitor) throws IOException, GerritException {
+		Assert.isNotNull(httpMethod, "HTTP Method must be not null."); //$NON-NLS-1$
+		Assert.isNotNull(serviceUri, "REST Service URI must be not null."); //$NON-NLS-1$
 		Assert.isNotNull(resultType, "Output type must be not null."); //$NON-NLS-1$
 
-		return execute(new RestRequest<T>(serviceUri, input, resultType, handler), monitor);
+		return execute(new RestRequest<T>(httpMethod, serviceUri, input, resultType, handler), monitor);
 	}
 
 	public <T> T execute(Request<T> request, IProgressMonitor monitor) throws IOException, GerritException {
