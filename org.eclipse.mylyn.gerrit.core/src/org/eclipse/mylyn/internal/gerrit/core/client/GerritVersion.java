@@ -21,6 +21,10 @@ import org.osgi.framework.Version;
 
 public class GerritVersion extends Version {
 
+	private static final Version VERSION_2_4_0 = new Version(2, 4, 0);
+
+	private static final Version VERSION_2_5_0 = new Version(2, 5, 0);
+
 	private static final Version VERSION_2_6_0 = new Version(2, 6, 0);
 
 	private static final Version VERSION_2_7_0 = new Version(2, 7, 0);
@@ -64,5 +68,9 @@ public class GerritVersion extends Version {
 
 	public static boolean isVersion27OrLater(Version version) {
 		return version.compareTo(VERSION_2_7_0) >= 0;
+	}
+
+	public static boolean isVersion24x(Version version) {
+		return version.compareTo(VERSION_2_4_0) >= 0 && version.compareTo(VERSION_2_5_0) < 0;
 	}
 }

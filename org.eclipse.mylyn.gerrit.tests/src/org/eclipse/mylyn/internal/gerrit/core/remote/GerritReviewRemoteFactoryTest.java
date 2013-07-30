@@ -136,7 +136,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testApprovals() throws Exception {
-		int approvals = isVersion26rLater() ? 1 : 2;
+		int approvals = isVersion26OrLater() ? 1 : 2;
 		assertThat(reviewHarness.getRepository().getApprovalTypes().size(), is(approvals));
 		IApprovalType codeReviewApproval = reviewHarness.getRepository().getApprovalTypes().get(approvals - 1);
 		assertThat(codeReviewApproval.getKey(), is(CRVW.getCategory().getId().get()));
@@ -162,7 +162,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(codeReviewEntry, notNullValue());
 		assertThat(codeReviewEntry.getBy(), nullValue());
 		assertThat(codeReviewEntry.getStatus(), is(RequirementStatus.NOT_SATISFIED));
-		if (!isVersion26rLater()) {
+		if (!isVersion26OrLater()) {
 			IApprovalType verifyApproval = reviewHarness.getRepository().getApprovalTypes().get(0);
 			assertThat(verifyApproval.getKey(), is(VRIF.getCategory().getId().get()));
 			assertThat(verifyApproval.getName(), is(VRIF.getCategory().getName()));
@@ -266,7 +266,11 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 			reviewHarness.client.restore(reviewHarness.shortId, 1, message1, new NullProgressMonitor());
 			fail("Expected to fail when restoring a new change");
 		} catch (GerritException e) {
-			assertThat(e.getMessage(), is("Not Found"));
+			if (isVersion24x()) {
+				assertThat(e.getMessage(), is("Change is not abandoned or patchset is not latest"));
+			} else {
+				assertThat(e.getMessage(), is("Not Found"));
+			}
 		}
 	}
 
@@ -420,7 +424,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testGetChangeInfo() throws Exception {
-		if (!isVersion26rLater()) {
+		if (!isVersion26OrLater()) {
 			return; // testing Gerrit REST API, available in 2.6 and later
 		}
 		int reviewId = Integer.parseInt(reviewHarness.shortId);
@@ -442,7 +446,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 							.getId())), new NullProgressMonitor());
 			fail("Expected to fail when trying to vote +2 when it's not permitted");
 		} catch (GerritException e) {
-			if (isVersion26rLater()) {
+			if (isVersion26OrLater()) {
 				assertEquals("Applying label \"Code-Review\": 2 is restricted", e.getMessage());
 			} else {
 				assertEquals("Code-Review=2 not permitted", e.getMessage());
@@ -451,7 +455,11 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		}
 	}
 
-	private boolean isVersion26rLater() throws GerritException {
+	private boolean isVersion26OrLater() throws GerritException {
 		return GerritVersion.isVersion26OrLater(reviewHarness.client.getVersion(new NullProgressMonitor()));
+	}
+
+	private boolean isVersion24x() throws GerritException {
+		return GerritVersion.isVersion24x(reviewHarness.client.getVersion(new NullProgressMonitor()));
 	}
 }
