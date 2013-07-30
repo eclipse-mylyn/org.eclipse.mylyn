@@ -67,7 +67,8 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 		}
 
 		private boolean isSupportedVersion() {
-			return !GerritVersion.isVersion26OrLater(info.getVersion());
+			// bump after bug 412872 gets fixed
+			return !GerritVersion.isVersion27OrLater(info.getVersion());
 		}
 
 	}
@@ -148,7 +149,8 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 
 			String warning = ""; //$NON-NLS-1$
 			if (!gerritValidator.isSupportedVersion()) {
-				warning = NLS.bind("\nPlease keep in mind that Gerrit {0} is not fully supported yet.",
+				warning = NLS.bind(
+						"\nGerrit {0} is not fully supported, yet. See https://bugs.eclipse.org/412872 for details.",
 						gerritValidator.getInfo().getVersion());
 			}
 
