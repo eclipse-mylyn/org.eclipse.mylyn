@@ -139,6 +139,7 @@ public class GerritHttpClient {
 			} else if (httpMethod == HttpMethod.GET) {
 				method = new GetMethod(getUrl() + serviceUri);
 			}
+			Assert.isNotNull(method, "Failed to create method for " + httpMethod); //$NON-NLS-1$
 			method.setRequestHeader("Content-Type", "application/json; charset=utf-8"); //$NON-NLS-1$//$NON-NLS-2$
 			method.setRequestHeader("Accept", "application/json"); //$NON-NLS-1$//$NON-NLS-2$
 
