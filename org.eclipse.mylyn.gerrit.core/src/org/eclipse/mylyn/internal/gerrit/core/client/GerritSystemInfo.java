@@ -44,7 +44,11 @@ public class GerritSystemInfo {
 	}
 
 	public String getFullName() {
-		return (account != null) ? account.getFullName() : "Anonymous";
+		return (account != null) ? getAccountName() : "Anonymous";
+	}
+
+	private String getAccountName() {
+		return (account.getFullName() != null) ? account.getFullName() : account.getUserName();
 	}
 
 }

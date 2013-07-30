@@ -28,6 +28,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritAuthenticationState;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritSystemInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.CommentLink;
 import org.junit.After;
@@ -85,6 +86,16 @@ public class GerritClientTest extends TestCase {
 			fail("Expected GerritException");
 		} catch (GerritException e) {
 			assertEquals("Not Signed In", e.getMessage());
+		}
+	}
+
+	@Test
+	public void testGetInfo() throws Exception {
+		GerritSystemInfo info = client.getInfo(new NullProgressMonitor());
+		if (GerritFixture.current().canAuthenticate()) {
+			assertEquals(CommonTestUtil.getShortUserName(harness.readCredentials()), info.getFullName());
+		} else {
+			assertEquals("Anonymous", info.getFullName());
 		}
 	}
 
