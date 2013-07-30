@@ -84,8 +84,7 @@ public final class ApprovalUtil {
 		BY_ID.put(IPCL.getCategory().getId().get(), IPCL);
 	}
 
-	static ApprovalCategory findCategoryByName(String name) {
-		name = name.replace('-', ' ');
+	private static ApprovalCategory findCategoryByName(String name) {
 		if (BY_NAME.containsKey(name)) {
 			return BY_NAME.get(name).getCategory();
 		}
@@ -93,8 +92,7 @@ public final class ApprovalUtil {
 	}
 
 	static ApprovalCategory findCategoryByNameWithDash(String name) {
-		name = name.replace('-', ' ');
-		return findCategoryByName(name);
+		return findCategoryByName(name.replace('-', ' '));
 	}
 
 	static ApprovalCategory.Id findCategoryIdByName(String name) {
@@ -106,11 +104,10 @@ public final class ApprovalUtil {
 	}
 
 	static ApprovalCategory.Id findCategoryIdByNameWithDash(String name) {
-		name = name.replace('-', ' ');
-		return findCategoryIdByName(name);
+		return findCategoryIdByName(name.replace('-', ' '));
 	}
 
-	public static String findCategoryNameById(String id) {
+	static String findCategoryNameById(String id) {
 		if (BY_ID.containsKey(id)) {
 			return BY_ID.get(id).getCategory().getName();
 		}
@@ -121,7 +118,7 @@ public final class ApprovalUtil {
 		return name.replace(' ', '-');
 	}
 
-	public static short parseShort(String s) {
+	static short parseShort(String s) {
 		s = s.trim();
 		// only Java7 handles a plus sign as indication of a positive value
 		if (s.startsWith("+")) { //$NON-NLS-1$

@@ -55,6 +55,7 @@ import com.google.gerrit.common.data.ChangeInfo;
 import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.reviewdb.Account;
 import com.google.gerrit.reviewdb.Change;
+import com.google.gerrit.reviewdb.Change.Status;
 import com.google.gerrit.reviewdb.ChangeMessage;
 import com.google.gerrit.reviewdb.PatchSetApproval;
 import com.google.gerrit.reviewdb.UserIdentity;
@@ -134,7 +135,7 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 		} catch (GerritException e) {
 			throw GerritCorePlugin.getDefault()
 					.getConnector()
-					.toCoreException(parent.getTaskRepository(), "Problem while retrieving Gerrit review.", e);
+					.toCoreException(parent.getTaskRepository(), "Problem while retrieving Gerrit review.", e); //$NON-NLS-1$
 		}
 	}
 
@@ -248,7 +249,7 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 				//We force a pull here, which is safe because there isn't any actual client API invocation
 				consumer.pull(true, new NullProgressMonitor());
 			} catch (CoreException e) {
-				throw new RuntimeException("Internal Exception. Unexpected state.", e);
+				throw new RuntimeException("Internal Exception. Unexpected state.", e); //$NON-NLS-1$
 			}
 			if (patchIndex++ < oldPatchCount) {
 				consumer.release();
@@ -334,7 +335,7 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 				IUser reviewer = getGerritProvider().createUser(parent, detail.getAccounts(),
 						remoteApproval.getAccount());
 				if (reviewer == null) {
-					throw new RuntimeException("Internal Error, no reviewer found for: " + remoteApproval.getAccount());
+					throw new RuntimeException("Internal Error, no reviewer found for: " + remoteApproval.getAccount()); //$NON-NLS-1$
 				}
 				IReviewerEntry reviewerEntry = review.getReviewerApprovals().get(reviewer);
 				if (reviewerEntry == null) {
@@ -366,18 +367,22 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 				for (Label label : record.getLabels()) {
 					IApprovalType approvalType = typeForName.get(label.getLabel());
 					if (approvalType == null) {
-						throw new RuntimeException("Internal Error, no approval type found for: " + label.getLabel());
+						if (detail.getChange().getStatus() == Status.ABANDONED) {
+							// typeForName can be empty for an abandoned change as it no longer provides approval types info
+							continue;
+						}
+						throw new RuntimeException("Internal Error, no approval type found for: " + label.getLabel()); //$NON-NLS-1$
 					}
 					IRequirementEntry requirementEntry = IReviewsFactory.INSTANCE.createRequirementEntry();
-					if (label.getStatus().equals("OK")) {
+					if (label.getStatus().equals("OK")) { //$NON-NLS-1$
 						requirementEntry.setStatus(RequirementStatus.SATISFIED);
-					} else if (label.getStatus().equals("NEED")) {
+					} else if (label.getStatus().equals("NEED")) { //$NON-NLS-1$
 						requirementEntry.setStatus(RequirementStatus.NOT_SATISFIED);
-					} else if (label.getStatus().equals("REJECT")) {
+					} else if (label.getStatus().equals("REJECT")) { //$NON-NLS-1$
 						requirementEntry.setStatus(RequirementStatus.REJECTED);
-					} else if (label.getStatus().equals("MAY")) {
+					} else if (label.getStatus().equals("MAY")) { //$NON-NLS-1$
 						requirementEntry.setStatus(RequirementStatus.OPTIONAL);
-					} else if (label.getStatus().equals("IMPOSSIBLE")) {
+					} else if (label.getStatus().equals("IMPOSSIBLE")) { //$NON-NLS-1$
 						requirementEntry.setStatus(RequirementStatus.ERROR);
 					}
 					if (label.getAppliedBy() != null) {
@@ -406,7 +411,7 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 		case ABANDONED:
 			return ReviewStatus.ABANDONED;
 		default:
-			GerritCorePlugin.logError("Internal Error: unexpected change status: " + gerritStatus, new Exception());
+			GerritCorePlugin.logError("Internal Error: unexpected change status: " + gerritStatus, new Exception()); //$NON-NLS-1$
 			return null;
 		}
 	}
@@ -422,7 +427,7 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 		for (ChangeInfo remoteChange : remoteChanges) {
 			final IChange localChange = IReviewsFactory.INSTANCE.createChange();
 			localChange.setKey(remoteChange.getKey().get());
-			localChange.setId(remoteChange.getId().get() + "");
+			localChange.setId(Integer.toString(remoteChange.getId().get()));
 			AccountInfo remoteOwner = detail.getAccounts().get(remoteChange.getOwner());
 			IUser owner = getGerritProvider().createUser(group, detail.getAccounts(), remoteOwner.getId());
 			localChange.setOwner(owner);
@@ -435,7 +440,7 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 
 	@Override
 	public String getRemoteKey(GerritChange remoteObject) {
-		return remoteObject.getChangeDetail().getChange().getId().get() + "";
+		return Integer.toString(remoteObject.getChangeDetail().getChange().getId().get());
 	}
 
 	@Override

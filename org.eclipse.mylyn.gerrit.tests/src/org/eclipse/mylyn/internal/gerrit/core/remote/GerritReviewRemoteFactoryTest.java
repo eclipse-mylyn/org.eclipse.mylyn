@@ -385,14 +385,9 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(crvw.getPatchSetId().get(), is(1));
 		assertThat(crvw.getPatchSetId().getParentKey().get(), is(Integer.parseInt(getReview().getId())));
 
-		// TODO: empty map vs map with null key
-		if (GerritVersion.isVersion26OrLater(getCurrentVersion())) {
-			assertThat(getReview().getReviewerApprovals().isEmpty(), is(true));
-		} else {
-			assertThat(getReview().getReviewerApprovals().isEmpty(), is(false));
-			assertThat(getReview().getReviewerApprovals().size(), is(1));
-			assertThat(getReview().getReviewerApprovals().get(0), nullValue());
-		}
+		assertThat(getReview().getReviewerApprovals().isEmpty(), is(false));
+		assertThat(getReview().getReviewerApprovals().size(), is(1));
+		assertThat(getReview().getReviewerApprovals().get(0), nullValue());
 	}
 
 	private static Version getCurrentVersion() {
