@@ -520,7 +520,28 @@ public class GerritClient extends ReviewsClient {
 			}
 			reviewInput.setApprovals(approvals);
 			final String uri = "/a/changes/" + id.getParentKey().get() + "/revisions/" + id.get() + "/review"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			executePostRestRequest(uri, reviewInput, ReviewInfo.class, null /*no error handler*/, monitor);
+			executePostRestRequest(uri, reviewInput, ReviewInfo.class, new ErrorHandler() {
+
+				@Override
+				public void handleError(HttpMethodBase method) throws GerritException {
+					if (method.getStatusCode() == HttpURLConnection.HTTP_FORBIDDEN) {
+						String msg = getResponseBodyAsString(method);
+						if (msg.startsWith("Applying label") && msg.endsWith("is restricted")) { //$NON-NLS-1$ //$NON-NLS-2$
+							throw new GerritException(msg);
+						}
+					}
+				}
+
+				private String getResponseBodyAsString(HttpMethodBase method) {
+					try {
+						String msg = method.getResponseBodyAsString();
+						return msg.trim();
+					} catch (IOException e) {
+						// ignore
+					}
+					return null;
+				}
+			}, monitor);
 		}
 	}
 

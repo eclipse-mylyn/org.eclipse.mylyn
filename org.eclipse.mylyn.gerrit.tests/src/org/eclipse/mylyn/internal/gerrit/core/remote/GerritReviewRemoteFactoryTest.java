@@ -435,6 +435,27 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		ChangeInfoTest.assertHasCodeReviewLabels(changeInfo);
 	}
 
+	@Test
+	public void testUnpermittedApproval() throws Exception {
+		String approvalMessage = "approval, time: " + System.currentTimeMillis();
+		try {
+			reviewHarness.client.publishComments(
+					reviewHarness.shortId,
+					1,
+					approvalMessage,
+					new HashSet<ApprovalCategoryValue.Id>(Collections.singleton(ApprovalUtil.CRVW.getValue((short) 2)
+							.getId())), new NullProgressMonitor());
+			fail("Expected to fail when trying to vote +2 when it's not permitted");
+		} catch (GerritException e) {
+			if (isVersion26rLater()) {
+				assertEquals("Applying label \"Code-Review\": 2 is restricted", e.getMessage());
+			} else {
+				assertEquals("Code-Review=2 not permitted", e.getMessage());
+			}
+
+		}
+	}
+
 	private boolean isVersion26rLater() throws GerritException {
 		return GerritVersion.isVersion26OrLater(reviewHarness.client.getVersion(new NullProgressMonitor()));
 	}
