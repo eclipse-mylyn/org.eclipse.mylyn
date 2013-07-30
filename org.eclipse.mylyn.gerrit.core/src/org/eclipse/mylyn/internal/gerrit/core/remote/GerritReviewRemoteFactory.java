@@ -12,6 +12,7 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.remote;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -48,6 +49,7 @@ import org.eclipse.mylyn.reviews.core.spi.remote.review.ReviewRemoteFactory;
 import com.google.gerrit.common.data.AccountInfo;
 import com.google.gerrit.common.data.ApprovalDetail;
 import com.google.gerrit.common.data.ApprovalType;
+import com.google.gerrit.common.data.ApprovalTypes;
 import com.google.gerrit.common.data.ChangeInfo;
 import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.reviewdb.Account;
@@ -278,43 +280,53 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 		for (IApprovalType type : parent.getApprovalTypes()) {
 			typeForKey.put(type.getKey(), type);
 		}
-		// read approvals from configuration
-		GerritConfiguration configuration = getGerritProvider().getClient().getConfiguration();
-		if (configuration.getGerritConfig().getApprovalTypes() != null) {
-			for (ApprovalType remoteType : configuration.getGerritConfig().getApprovalTypes().getApprovalTypes()) {
-				IApprovalType localApprovalType = typeForKey.get(remoteType.getCategory().getId().get());
-				if (localApprovalType == null) {
-					localApprovalType = IReviewsFactory.INSTANCE.createApprovalType();
-					localApprovalType.setKey(remoteType.getCategory().getId().get());
-					localApprovalType.setName(remoteType.getCategory().getName());
-					parent.getApprovalTypes().add(localApprovalType);
-					typeForKey.put(localApprovalType.getKey(), localApprovalType);
-				}
-				String approvalName = remoteType.getCategory().getName();
-				//Special case so we can match different label name for status records. (?!)
-				approvalName = approvalName.replace(' ', '-');
-				typeForName.put(approvalName, localApprovalType);
-			}
-		}
-		// read approvals from change detail
-		if (detail.getApprovalTypes() != null) {
-			for (ApprovalType approvalType : detail.getApprovalTypes()) {
-				IApprovalType localApprovalType = typeForKey.get(approvalType.getCategory().getId().get());
-				if (localApprovalType == null) {
-					localApprovalType = IReviewsFactory.INSTANCE.createApprovalType();
-					localApprovalType.setKey(approvalType.getCategory().getId().get());
-					localApprovalType.setName(approvalType.getCategory().getName());
-					parent.getApprovalTypes().add(localApprovalType);
-					typeForKey.put(localApprovalType.getKey(), localApprovalType);
-				}
-				String approvalName = approvalType.getCategory().getName();
-				//Special case so we can match different label name for status records. (?!)
-				approvalName = approvalName.replace(' ', '-');
-				typeForName.put(approvalName, localApprovalType);
-			}
-		}
 
-		//Approvals
+		GerritConfiguration configuration = getGerritProvider().getClient().getConfiguration();
+		readApprovals(configuration, parent, typeForKey, typeForName);
+		readApprovals(detail, parent, typeForKey, typeForName);
+
+		updateApprovals(parent, review, detail, typeForKey);
+		updateRequirements(parent, review, detail, typeForName);
+
+		review.setState(getReviewStatus(detail.getChange().getStatus()));
+	}
+
+	private void readApprovals(GerritConfiguration configuration, IRepository parent,
+			Map<String, IApprovalType> typeForKey, Map<String, IApprovalType> typeForName) {
+		ApprovalTypes approvalTypes = configuration.getGerritConfig().getApprovalTypes();
+		if (approvalTypes != null) {
+			readApprovals(approvalTypes.getApprovalTypes(), parent, typeForKey, typeForName);
+		}
+	}
+
+	private void readApprovals(ChangeDetailX detail, IRepository parent, Map<String, IApprovalType> typeForKey,
+			Map<String, IApprovalType> typeForName) {
+		readApprovals(detail.getApprovalTypes(), parent, typeForKey, typeForName);
+	}
+
+	private void readApprovals(Collection<ApprovalType> approvalTypes, IRepository parent,
+			Map<String, IApprovalType> typeForKey, Map<String, IApprovalType> typeForName) {
+		if (approvalTypes == null) {
+			return;
+		}
+		for (ApprovalType remoteType : approvalTypes) {
+			IApprovalType localApprovalType = typeForKey.get(remoteType.getCategory().getId().get());
+			if (localApprovalType == null) {
+				localApprovalType = IReviewsFactory.INSTANCE.createApprovalType();
+				localApprovalType.setKey(remoteType.getCategory().getId().get());
+				localApprovalType.setName(remoteType.getCategory().getName());
+				parent.getApprovalTypes().add(localApprovalType);
+				typeForKey.put(localApprovalType.getKey(), localApprovalType);
+			}
+			String approvalName = remoteType.getCategory().getName();
+			//Special case so we can match different label name for status records. (?!)
+			approvalName = approvalName.replace(" ", "-"); //$NON-NLS-1$ //$NON-NLS-2$
+			typeForName.put(approvalName, localApprovalType);
+		}
+	}
+
+	private void updateApprovals(IRepository parent, IReview review, ChangeDetailX detail,
+			Map<String, IApprovalType> typeForKey) {
 		review.getReviewerApprovals().clear();
 		if (detail.getApprovals() != null) {
 			for (ApprovalDetail remoteApproval : detail.getApprovals()) {
@@ -343,8 +355,10 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 				}
 			}
 		}
+	}
 
-		//Requirements
+	private void updateRequirements(IRepository parent, IReview review, ChangeDetailX detail,
+			Map<String, IApprovalType> typeForName) {
 		review.getRequirements().clear();
 		if (detail.getSubmitRecords() != null) {
 			for (SubmitRecord record : detail.getSubmitRecords()) {
@@ -374,8 +388,6 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 				}
 			}
 		}
-
-		review.setState(getReviewStatus(detail.getChange().getStatus()));
 	}
 
 	public static ReviewStatus getReviewStatus(com.google.gerrit.reviewdb.Change.Status gerritStatus) {
