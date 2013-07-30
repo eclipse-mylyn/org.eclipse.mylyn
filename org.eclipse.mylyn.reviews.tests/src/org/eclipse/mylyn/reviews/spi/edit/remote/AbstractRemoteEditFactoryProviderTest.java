@@ -24,10 +24,12 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 
 import junit.framework.TestCase;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
@@ -86,7 +88,7 @@ public class AbstractRemoteEditFactoryProviderTest extends TestCase {
 	@Override
 	@Before
 	protected void setUp() throws Exception {
-		File rootDir = new File(testDataLocator.getModelPath().toPortableString());
+		File rootDir = new File(testDataLocator.getModelPath().removeLastSegments(1).toPortableString());
 		FileUtils.deleteDirectory(rootDir);
 	}
 
@@ -208,6 +210,46 @@ public class AbstractRemoteEditFactoryProviderTest extends TestCase {
 		BufferedReader reader = new BufferedReader(new FileReader(file));
 		assertThat(reader.readLine(), startsWith("<?xml version"));
 		reader.close();
+	}
+
+	@Test
+	public void testSpaces() throws IOException {
+		AbstractDataLocator testSpaceDataLocator = new AbstractDataLocator() {
+			@Override
+			protected IPath getSystemDataPath() {
+				return new Path(FileUtils.getTempDirectory().getAbsolutePath());
+			}
+
+			@Override
+			protected IPath getLocatorDataSegment() {
+				return new Path("org.eclipse.mylyn.reviews.tests").append("RemoteEditFactoryTest Spaces");
+			}
+		};
+		TestEditFactoryProvider provider = new TestEditFactoryProvider();
+		provider.setDataLocator(testSpaceDataLocator);
+		provider.setService(new JobRemoteService());
+		String osString = testSpaceDataLocator.getModelPath().toOSString();
+		assertThat(osString.endsWith("RemoteEditFactoryTest Spaces"), is(true));
+		String spacesOsString = StringUtils.replace(osString, " ", "%20");
+		assertThat(spacesOsString.endsWith("RemoteEditFactoryTest%20Spaces"), is(true));
+
+		String filePath = osString + File.separator + "Container" + File.separator + "EClass" + File.separator
+				+ "123.ecore";
+		File file = new File(filePath);
+		File badDir = new File(spacesOsString);
+		assertThat("File should not exist at: " + filePath, file.exists(), is(false));
+		assertThat("Directory should not exist at: " + badDir.getAbsolutePath(), badDir.exists(), is(false));
+		provider.open();
+		EClass child = provider.open("123");
+		assertThat(child.getName(), is("123"));
+		assertThat(child.getInstanceClassName(), nullValue());
+		child.setInstanceClassName("Foo");
+		assertThat(provider.getRoot().getEClassifiers().get(0), sameInstance((EClassifier) child));
+		provider.close(child);
+		assertThat("File should exist at: " + filePath, file.exists(), is(true));
+		assertThat(provider.getRoot().getEClassifiers().size(), is(0));
+
+		assertThat("File should not exist at: " + badDir.getAbsolutePath(), badDir.exists(), is(false));
 	}
 
 	@Test

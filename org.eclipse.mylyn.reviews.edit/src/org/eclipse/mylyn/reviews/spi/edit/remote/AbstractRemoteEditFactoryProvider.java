@@ -96,10 +96,6 @@ public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObj
 	@Override
 	public ERootObject open() {
 		if (rootObject == null) {
-			IPath oldContainerPath = getDataLocator().getModelPath()
-					.append(getContainerSegment())
-					.append(getContainerSegment());
-
 			rootObject = (ERootObject) open(getRootClass(), getRootClass().getName());
 			clearChildren();
 		}
@@ -127,7 +123,7 @@ public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObj
 
 	private Resource getResourceImpl(URI uri, boolean loadOnDemand) {
 		Resource resource = null;
-		String fileString = uri.devicePath();
+		String fileString = uri.toFileString();
 		IPath filePath = new Path(fileString);
 		File file = new File(filePath.toOSString());
 		if (!file.exists()) {
