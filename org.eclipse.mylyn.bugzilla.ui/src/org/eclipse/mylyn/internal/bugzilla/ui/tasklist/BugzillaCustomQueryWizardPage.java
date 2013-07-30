@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,14 +37,6 @@ import org.eclipse.swt.widgets.Text;
  */
 public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 
-	private static final String LABEL_CUSTOM_TITLE = Messages.BugzillaCustomQueryWizardPage_Query_Title;
-
-	private static final String LABEL_CUSTOM_QUERY = Messages.BugzillaCustomQueryWizardPage_Query_URL;
-
-	private static final String TITLE = Messages.BugzillaCustomQueryWizardPage_Create_query_from_URL;
-
-	private static final String DESCRIPTION = Messages.BugzillaCustomQueryWizardPage_Enter_the_title_and_URL_for_the_query;
-
 	private static final Pattern URL_PATTERN = Pattern.compile("([a-zA-Z][a-zA-Z+.-]{0,10}://[a-zA-Z0-9%._~!$&?#'()*+,;:@/=-]*/buglist.cgi?[a-zA-Z0-9%_~!$&?#'(*+;:@/=-])"); //$NON-NLS-1$
 
 	private Text queryText;
@@ -54,10 +46,10 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 	private Text queryTitle;
 
 	public BugzillaCustomQueryWizardPage(TaskRepository repository, IRepositoryQuery query) {
-		super(TITLE, repository, query);
+		super(Messages.BugzillaCustomQueryWizardPage_Create_query_from_URL, repository, query);
 		this.query = query;
-		setTitle(TITLE);
-		setDescription(DESCRIPTION);
+		setTitle(Messages.BugzillaCustomQueryWizardPage_Create_query_from_URL);
+		setDescription(Messages.BugzillaCustomQueryWizardPage_Enter_the_title_and_URL_for_the_query);
 		setImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 	}
 
@@ -77,7 +69,7 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 		};
 
 		final Label queryTitleLabel = new Label(composite, SWT.NONE);
-		queryTitleLabel.setText(LABEL_CUSTOM_TITLE);
+		queryTitleLabel.setText(Messages.BugzillaCustomQueryWizardPage_Query_Title);
 
 		queryTitle = new Text(composite, SWT.BORDER);
 		queryTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
@@ -85,10 +77,10 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 		queryTitle.setFocus();
 
 		final Label queryUrlLabel = new Label(composite, SWT.NONE);
-		queryUrlLabel.setText(LABEL_CUSTOM_QUERY);
+		queryUrlLabel.setText(Messages.BugzillaCustomQueryWizardPage_Query_URL);
 
-		queryText = new Text(composite, SWT.BORDER);
-		final GridData gd_queryText = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		queryText = new Text(composite, SWT.BORDER | SWT.MULTI | SWT.WRAP);
+		final GridData gd_queryText = new GridData(GridData.FILL_BOTH);
 		gd_queryText.widthHint = 300;
 		queryText.setLayoutData(gd_queryText);
 		queryText.addModifyListener(modifyListener);
@@ -119,7 +111,6 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 					return true;
 				} else {
 					setErrorMessage(Messages.BugzillaCustomQueryWizardPage_No_Valid_Buglist_URL);
-
 					return false;
 				}
 			}
