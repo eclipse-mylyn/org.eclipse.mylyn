@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.client.compat;
 
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalUtil;
+
 import com.google.gerrit.reviewdb.ApprovalCategory;
 import com.google.gerrit.reviewdb.ApprovalCategoryValue;
 
@@ -40,7 +42,7 @@ public class PermissionLabel {
 	}
 
 	public String toLabelName(String identifier) {
-		return "label-" + identifier.replace(" ", "-"); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+		return "label-" + ApprovalUtil.toNameWithDash(identifier); //$NON-NLS-1$
 	}
 
 	public boolean matches(ApprovalCategoryValue value) {

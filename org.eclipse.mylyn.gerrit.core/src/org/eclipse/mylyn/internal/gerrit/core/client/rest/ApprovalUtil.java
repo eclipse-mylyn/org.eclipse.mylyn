@@ -84,11 +84,30 @@ public final class ApprovalUtil {
 		BY_ID.put(IPCL.getCategory().getId().get(), IPCL);
 	}
 
-	static ApprovalCategory.Id findCategoryIdByName(String name) {
+	static ApprovalCategory findCategoryByName(String name) {
+		name = name.replace('-', ' ');
 		if (BY_NAME.containsKey(name)) {
-			return BY_NAME.get(name).getCategory().getId();
+			return BY_NAME.get(name).getCategory();
 		}
 		return null;
+	}
+
+	static ApprovalCategory findCategoryByNameWithDash(String name) {
+		name = name.replace('-', ' ');
+		return findCategoryByName(name);
+	}
+
+	static ApprovalCategory.Id findCategoryIdByName(String name) {
+		ApprovalCategory cat = findCategoryByName(name);
+		if (cat != null) {
+			return cat.getId();
+		}
+		return null;
+	}
+
+	static ApprovalCategory.Id findCategoryIdByNameWithDash(String name) {
+		name = name.replace('-', ' ');
+		return findCategoryIdByName(name);
 	}
 
 	public static String findCategoryNameById(String id) {
@@ -96,6 +115,10 @@ public final class ApprovalUtil {
 			return BY_ID.get(id).getCategory().getName();
 		}
 		return null;
+	}
+
+	public static String toNameWithDash(String name) {
+		return name.replace(' ', '-');
 	}
 
 	public static short parseShort(String s) {

@@ -72,7 +72,6 @@ public class ChangeInfo {
 	private String _sortkey;
 
 	// e.g. 3965
-	@SuppressWarnings("unused")
 	private int _number;
 
 	public String getKind() {
@@ -155,8 +154,10 @@ public class ChangeInfo {
 		for (Entry<String, LabelInfo> entry : labels.entrySet()) {
 			List<ApprovalInfo> all = entry.getValue().getAll();
 			if (all != null) {
-				String name = entry.getKey().replace('-', ' ');
-				ApprovalCategory.Id approvalCategoryId = ApprovalUtil.findCategoryIdByName(name);
+				ApprovalCategory.Id approvalCategoryId = ApprovalUtil.findCategoryIdByNameWithDash(entry.getKey());
+				if (approvalCategoryId == null) {
+					continue;
+				}
 				for (ApprovalInfo approvalInfo : all) {
 					Account.Id accountId = new Account.Id(approvalInfo.getId());
 					ApprovalDetail approvalDetail = new ApprovalDetail(accountId);
@@ -175,12 +176,10 @@ public class ChangeInfo {
 		}
 		Set<ApprovalType> result = new HashSet<ApprovalType>();
 		for (Entry<String, LabelInfo> entry : labels.entrySet()) {
-			String name = entry.getKey().replace('-', ' ');
-			ApprovalCategory.Id approvalCategoryId = ApprovalUtil.findCategoryIdByName(name);
-			ApprovalCategory approvalCategory = new ApprovalCategory(approvalCategoryId, name);
+			ApprovalCategory approvalCategory = ApprovalUtil.findCategoryByNameWithDash(entry.getKey());
 			List<ApprovalCategoryValue> valueList = new ArrayList<ApprovalCategoryValue>();
 			for (Entry<String, String> valueEntry : entry.getValue().getValues().entrySet()) {
-				valueList.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(approvalCategoryId,
+				valueList.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(approvalCategory.getId(),
 						ApprovalUtil.parseShort(valueEntry.getKey())), valueEntry.getValue()));
 			}
 			ApprovalType approvalType = new ApprovalType(approvalCategory, valueList);

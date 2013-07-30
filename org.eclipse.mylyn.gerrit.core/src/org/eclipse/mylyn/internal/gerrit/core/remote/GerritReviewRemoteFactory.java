@@ -31,6 +31,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.SubmitRecord;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.SubmitRecord.Label;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalUtil;
 import org.eclipse.mylyn.reviews.core.model.IApprovalType;
 import org.eclipse.mylyn.reviews.core.model.IChange;
 import org.eclipse.mylyn.reviews.core.model.IComment;
@@ -320,7 +321,7 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 			}
 			String approvalName = remoteType.getCategory().getName();
 			//Special case so we can match different label name for status records. (?!)
-			approvalName = approvalName.replace(" ", "-"); //$NON-NLS-1$ //$NON-NLS-2$
+			approvalName = ApprovalUtil.toNameWithDash(approvalName);
 			typeForName.put(approvalName, localApprovalType);
 		}
 	}
