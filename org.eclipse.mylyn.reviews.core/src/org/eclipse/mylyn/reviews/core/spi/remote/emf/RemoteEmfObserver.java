@@ -11,17 +11,15 @@
 
 package org.eclipse.mylyn.reviews.core.spi.remote.emf;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * A concrete implementation of {@link IRemoteEmfObserver}, providing a number of convenience methods for managing
+ * A concrete implementation of {@link RemoteEmfObserver}, providing a number of convenience methods for managing
  * consumer interaction with observers.
  * 
  * @author Miles Parker
  */
-public class RemoteEmfObserver<EParentObjectType extends EObject, EObjectType, LocalKeyType, ObjectCurrentType>
-		implements IRemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType> {
+public class RemoteEmfObserver<EParentObjectType extends EObject, EObjectType, LocalKeyType, ObjectCurrentType> {
 
 	RemoteEmfConsumer<EParentObjectType, EObjectType, LocalKeyType, ?, ?, ObjectCurrentType> consumer;
 
@@ -41,16 +39,10 @@ public class RemoteEmfObserver<EParentObjectType extends EObject, EObjectType, L
 	public RemoteEmfObserver() {
 	}
 
-	public void created(EParentObjectType parentObject, EObjectType modelObject) {
+	public void updating() {
 	}
 
-	public void updating(EParentObjectType parent, EObjectType object) {
-	}
-
-	public void updated(EParentObjectType parentObject, EObjectType modelObject, boolean modified) {
-	}
-
-	public void failed(EParentObjectType parentObject, EObjectType modelObject, IStatus status) {
+	public void updated(boolean modified) {
 	}
 
 	/**

@@ -17,7 +17,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
@@ -72,18 +71,11 @@ public class ReviewSetContentSection {
 
 	private TableViewer viewer;
 
-	private IStatus failureStatus;
-
 	private final RemoteEmfObserver<IReviewItemSet, List<IFileItem>, String, Long> itemListObserver = new RemoteEmfObserver<IReviewItemSet, List<IFileItem>, String, Long>() {
 
 		@Override
-		public void created(IReviewItemSet parentObject, java.util.List<IFileItem> modelObject) {
+		public void updated(boolean modified) {
 			createItemSetTable();
-			updateMessage();
-		}
-
-		@Override
-		public void updated(IReviewItemSet parentObject, java.util.List<IFileItem> modelObject, boolean modified) {
 			if (modified) {
 				updateItemSetTable();
 			}
@@ -92,14 +84,7 @@ public class ReviewSetContentSection {
 		}
 
 		@Override
-		public void updating(IReviewItemSet parent, java.util.List<IFileItem> object) {
-			failureStatus = null;
-			updateMessage();
-		}
-
-		@Override
-		public void failed(IReviewItemSet parent, List<IFileItem> object, IStatus status) {
-			failureStatus = status;
+		public void updating() {
 			updateMessage();
 		}
 	};
@@ -132,17 +117,12 @@ public class ReviewSetContentSection {
 				.getConsumerForModel(set.getReview().getRepository(), set.getReview());
 		reviewObserver = new RemoteEmfObserver<IRepository, IReview, String, Date>() {
 			@Override
-			public void updated(IRepository parentObject, IReview modelObject, boolean modified) {
+			public void updated(boolean modified) {
 				if (reviewConsumer.getRemoteObject() != null && section.isExpanded() && modified) {
 					itemSetConsumer.retrieve(false);
 					updateMessage();
 					createButtons();
 				}
-			}
-
-			@Override
-			public void failed(IRepository parentObject, IReview modelObject, IStatus status) {
-				failureStatus = status;
 			}
 		};
 		reviewConsumer.addObserver(reviewObserver);
@@ -170,7 +150,7 @@ public class ReviewSetContentSection {
 		}
 		String message;
 
-		if (failureStatus == null) {
+		if (itemListObserver.getConsumer().getStatus().isOK()) {
 			String time = DateFormat.getDateTimeInstance().format(set.getCreationDate());
 			int numComments = set.getAllComments().size();
 			if (numComments > 0) {
@@ -183,7 +163,7 @@ public class ReviewSetContentSection {
 			}
 		} else {
 			message = org.eclipse.mylyn.internal.reviews.ui.Messages.Reviews_UpdateFailure + ": "
-					+ failureStatus.getMessage();
+					+ itemListObserver.getConsumer().getStatus().getMessage();
 		}
 
 		AbstractReviewSection.appendMessage(getSection(), message);

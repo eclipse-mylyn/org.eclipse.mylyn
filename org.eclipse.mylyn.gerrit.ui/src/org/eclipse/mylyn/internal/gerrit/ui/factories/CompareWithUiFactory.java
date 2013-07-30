@@ -59,18 +59,18 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 	private final RemoteEmfObserver<IReviewItemSet, List<IFileItem>, String, Long> itemListClient = new RemoteEmfObserver<IReviewItemSet, List<IFileItem>, String, Long>() {
 
 		@Override
-		public void updated(IReviewItemSet parentObject, java.util.List<IFileItem> modelObject, boolean modified) {
-			CompareConfiguration configuration = new CompareConfiguration();
-			CompareUI.openCompareEditor(new ReviewItemSetCompareEditorInput(configuration, compareSet, null,
-					new GerritReviewBehavior(getTask(), resolveGitRepository())));
-			dispose();
-		}
-
-		@Override
-		public void failed(IReviewItemSet parentObject, List<IFileItem> modelObject, IStatus status) {
-			StatusManager.getManager().handle(
-					new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID, "Couldn't load content for compare editor",
-							status.getException()), StatusManager.SHOW | StatusManager.LOG);
+		public void updated(boolean modified) {
+			IStatus status = itemListClient.getConsumer().getStatus();
+			if (status.isOK()) {
+				CompareConfiguration configuration = new CompareConfiguration();
+				CompareUI.openCompareEditor(new ReviewItemSetCompareEditorInput(configuration, compareSet, null,
+						new GerritReviewBehavior(getTask(), resolveGitRepository())));
+				dispose();
+			} else {
+				StatusManager.getManager().handle(
+						new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID, "Couldn't load content for compare editor",
+								status.getException()), StatusManager.SHOW | StatusManager.LOG);
+			}
 		}
 	};
 

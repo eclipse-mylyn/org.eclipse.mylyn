@@ -19,8 +19,6 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
@@ -132,11 +130,11 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> consumer = factoryProvider.getReviewFactory()
 				.getConsumerForLocalKey(factoryProvider.getRoot(), taskData.getTaskId());
 
+		consumer.addObserver(reviewObserver);
 		if (!consumer.isRetrieving()) {
 			if (monitor.isCanceled()) {
 				return consumer;
 			}
-			consumer.addObserver(reviewObserver);
 			consumer.open();
 			if (monitor.isCanceled()) {
 				return consumer;
@@ -144,31 +142,23 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 			consumer.setAsynchronous(false);
 			consumer.retrieve(true);
 			consumer.setAsynchronous(true);
+		}
 
-			while (!reviewObserver.complete && !monitor.isCanceled()) {
-				try {
-					Thread.sleep(50);
-				} catch (InterruptedException e) {
-					reviewObserver.dispose();
-					Thread.currentThread().interrupt();
-				}
+		while (!reviewObserver.complete && !monitor.isCanceled()) {
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+				reviewObserver.dispose();
+				Thread.currentThread().interrupt();
 			}
+		}
 
-			consumer.save();
-			if (!reviewObserver.result.isOK()) {
-				if (reviewObserver.result.getException() instanceof CoreException) {
-					throw ((CoreException) reviewObserver.result.getException());
-				}
-				throw new CoreException(reviewObserver.result);
+		consumer.save();
+		if (!consumer.getStatus().isOK()) {
+			if (consumer.getStatus().getException() instanceof CoreException) {
+				throw ((CoreException) consumer.getStatus().getException());
 			}
-		} else {
-			while (consumer.isRetrieving() && !monitor.isCanceled()) {
-				try {
-					Thread.sleep(50);
-				} catch (InterruptedException e) {
-					Thread.currentThread().interrupt();
-				}
-			}
+			throw new CoreException(consumer.getStatus());
 		}
 		return consumer;
 	}
@@ -176,17 +166,9 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 	private class ReviewObserver extends RemoteEmfObserver<IRepository, IReview, String, Date> {
 		boolean complete;
 
-		IStatus result = Status.OK_STATUS;
-
 		@Override
-		public void updated(IRepository parentObject, IReview modelObject, boolean modified) {
+		public void updated(boolean modified) {
 			complete = true;
-		}
-
-		@Override
-		public void failed(IRepository parentObject, IReview modelObject, IStatus status) {
-			complete = true;
-			result = status;
 		}
 	}
 

@@ -16,14 +16,13 @@ import static org.junit.Assert.assertThat;
 
 import java.util.Collection;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 
 final class TestRemoteEmfObserver<P extends EObject, T, L, C> extends RemoteEmfObserver<P, T, L, C> {
 
 	static final int TEST_TIMEOUT = 100;
 
-	T createdObject;
+	boolean currentlyUpdating;
 
 	int updated;
 
@@ -33,8 +32,6 @@ final class TestRemoteEmfObserver<P extends EObject, T, L, C> extends RemoteEmfO
 
 	int responded;
 
-	IStatus failure;
-
 	public TestRemoteEmfObserver() {
 	}
 
@@ -43,29 +40,21 @@ final class TestRemoteEmfObserver<P extends EObject, T, L, C> extends RemoteEmfO
 	}
 
 	@Override
-	public void created(P object, T child) {
-		createdObject = child;
-	}
-
-	@Override
-	public void updating(P parent, T object) {
+	public synchronized void updating() {
 		updating++;
+		currentlyUpdating = true;
 	}
 
 	@Override
-	public void updated(P object, T child, boolean modified) {
+	public void updated(boolean modified) {
 		responded++;
 		if (modified) {
 			updated++;
 		}
-		if (child instanceof Collection) {
+		if (consumer.getModelObject() instanceof Collection) {
 			updatedMember++;
 		}
-	}
-
-	@Override
-	public void failed(P object, T child, IStatus status) {
-		failure = status;
+		currentlyUpdating = false;
 	}
 
 	protected void waitForResponse(int response, int update) {
@@ -89,26 +78,5 @@ final class TestRemoteEmfObserver<P extends EObject, T, L, C> extends RemoteEmfO
 		}
 		assertThat("Wrong # responses: " + responded + ", updated: " + updated, responded, is(response));
 		assertThat("Wrong # updates" + updated, updated, is(update));
-	}
-
-	protected void waitForFailure() {
-		long delay = 0;
-		while (delay < TEST_TIMEOUT) {
-			if (failure == null) {
-				try {
-					Thread.sleep(10);
-					delay += 10;
-				} catch (InterruptedException e) {
-				}
-			} else {
-				break;
-			}
-		}
-	}
-
-	void clear() {
-		createdObject = null;
-		updated = 0;
-		failure = null;
 	}
 }

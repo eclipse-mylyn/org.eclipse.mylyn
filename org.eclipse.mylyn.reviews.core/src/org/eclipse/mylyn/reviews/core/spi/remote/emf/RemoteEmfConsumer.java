@@ -17,14 +17,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
-import org.eclipse.emf.common.notify.impl.AdapterImpl;
-import org.eclipse.emf.common.notify.impl.NotificationChainImpl;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.mylyn.reviews.core.spi.remote.AbstractRemoteConsumer;
 
 /**
@@ -33,8 +29,8 @@ import org.eclipse.mylyn.reviews.core.spi.remote.AbstractRemoteConsumer;
  * <p>
  * After obtaining a consumer using one of the {@link RemoteEmfConsumer} <i>AbstractRemoteEmfFactory#getConsumer()</i>
  * methods, call {@link RemoteEmfConsumer#retrieve(boolean)} to request an update. Any registered
- * {@link IRemoteEmfObserver}s will then receive an {@link IRemoteEmfObserver#updated(EObject, Object, boolean)} event
- * regardless of whether or not the actual state changed.
+ * {@link RemoteEmfObserver}s will then receive an {@link RemoteEmfObserver#updated(boolean)} event regardless of
+ * whether or not the actual state changed.
  * 
  * @author Miles Parker
  */
@@ -53,7 +49,7 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 
 	private LocalKeyType localKey;
 
-	private final Collection<IRemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType>> remoteEmfObservers;
+	private final Collection<RemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType>> remoteEmfObservers;
 
 	private boolean pulling;
 
@@ -66,41 +62,7 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 	//Can set to false for running with in another job
 	boolean asynchronous = true;
 
-	private class ConsumerAdapter extends AdapterImpl {
-
-		@Override
-		public void notifyChanged(Notification msg) {
-			if (msg instanceof RemoteNotification) {
-				RemoteNotification remoteMessage = (RemoteNotification) msg;
-				boolean notifyParent = remoteMessage.isMember()
-						&& msg.getNotifier() == parentObject
-						&& ((msg.getNewValue() == modelObject && (msg.getEventType() == RemoteNotification.REMOTE_MEMBER_CREATE || msg.getEventType() == RemoteNotification.REMOTE_MEMBER_FAILURE)) || modelObject instanceof Collection);
-				boolean notifyChild = !remoteMessage.isMember() && msg.getNotifier() == modelObject;
-				if (notifyParent || notifyChild) {
-					for (IRemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType> listener : remoteEmfObservers) {
-						switch (msg.getEventType()) {
-						case RemoteNotification.REMOTE_MEMBER_CREATE:
-							listener.created(parentObject, modelObject);
-							break;
-						case RemoteNotification.REMOTE_MEMBER_UPDATING:
-						case RemoteNotification.REMOTE_UPDATING:
-							listener.updating(parentObject, modelObject);
-							break;
-						case RemoteNotification.REMOTE_MEMBER_UPDATE:
-						case RemoteNotification.REMOTE_UPDATE:
-							listener.updated(parentObject, modelObject, remoteMessage.isModification());
-							break;
-						case RemoteNotification.REMOTE_MEMBER_FAILURE:
-						case RemoteNotification.REMOTE_FAILURE:
-							listener.failed(parentObject, modelObject, remoteMessage.getStatus());
-						}
-					}
-				}
-			}
-		}
-	}
-
-	ConsumerAdapter adapter = new ConsumerAdapter();
+	private IStatus lastStatus = Status.OK_STATUS;
 
 	RemoteEmfConsumer(
 			AbstractRemoteEmfFactory<EParentObjectType, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType> factory,
@@ -118,20 +80,25 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 		if (localKey == null && modelObject != null) {
 			this.localKey = factory.getLocalKey(null, modelObject);
 		}
-		remoteEmfObservers = new CopyOnWriteArrayList<IRemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType>>();
-		if (modelObject instanceof EObject) {
-			getFactory().getService().modelExec(new Runnable() {
-				public void run() {
-					((EObject) modelObject).eAdapters().add(adapter);
+		remoteEmfObservers = new CopyOnWriteArrayList<RemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType>>();
+	}
+
+	public void notifyObservers(final RemoteNotification notification) {
+		getFactory().getService().modelExec(new Runnable() {
+			@Override
+			public void run() {
+				for (RemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType> listener : remoteEmfObservers) {
+					switch (notification.getType()) {
+					case RemoteNotification.REMOTE_UPDATE:
+						listener.updated(notification.isModification());
+						break;
+					case RemoteNotification.REMOTE_UPDATING:
+						listener.updating();
+						break;
+					}
 				}
-			}, false);
-		} else if (parent != null) {
-			getFactory().getService().modelExec(new Runnable() {
-				public void run() {
-					parent.eAdapters().add(adapter);
-				}
-			}, false);
-		}
+			}
+		});
 	}
 
 	/**
@@ -155,17 +122,7 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 		}
 		//Pull when "needed" or forced, but not when we don't have a remote key as that would be pointless.
 		if ((factory.isPullNeeded(parentObject, modelObject, remoteObject) || force == true) && remoteKey != null) {
-
-			getFactory().getService().modelExec(new Runnable() {
-				public void run() {
-					parentObject.eNotify(new RemoteENotificationImpl((InternalEObject) parentObject,
-							RemoteNotification.REMOTE_MEMBER_UPDATING, factory.getParentReference(), modelObject));
-					if (modelObject instanceof EObject) {
-						((EObject) modelObject).eNotify(new RemoteENotificationImpl((InternalEObject) modelObject,
-								RemoteNotification.REMOTE_MEMBER_UPDATING, null, null));
-					}
-				}
-			}, false);
+			notifyObservers(RemoteNotification.createUpdatingNotification());
 			try {
 				remoteObject = factory.pull(parentObject, remoteKey, monitor);
 				if (localKey == null) {
@@ -173,19 +130,11 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 				}
 				pulling = false;
 			} catch (final CoreException e) {
-				getFactory().getService().modelExec(new Runnable() {
-					public void run() {
-						parentObject.eNotify(new RemoteENotificationImpl((InternalEObject) parentObject,
-								RemoteNotification.REMOTE_MEMBER_FAILURE, factory.getParentReference(), null,
-								e.getStatus()));
-						if (modelObject instanceof EObject) {
-							((EObject) modelObject).eNotify(new RemoteENotificationImpl((InternalEObject) modelObject,
-									RemoteNotification.REMOTE_FAILURE, null, null, e.getStatus()));
-						}
-					}
-				}, false);
+				lastStatus = e.getStatus();
+				notifyObservers(RemoteNotification.createUpdateNotification(false));
 				throw e;
 			}
+			lastStatus = Status.OK_STATUS;
 		}
 		pulling = false;
 	}
@@ -209,7 +158,6 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 	 */
 	@Override
 	public void applyModel(boolean force) {
-		NotificationChain msgs = new NotificationChainImpl();
 		EReference reference = factory.getParentReference();
 		boolean modified = false;
 		if (remoteObject != null) {
@@ -229,31 +177,19 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 				if (modelObject instanceof EObject) {
 					((EObject) modelObject).eSet(factory.getLocalKeyAttribute(),
 							factory.getLocalKeyForRemoteObject(remoteObject));
-					if (!((EObject) modelObject).eAdapters().contains(adapter)) {
-						((EObject) modelObject).eAdapters().add(adapter);
-					}
 				}
-				msgs.add(new RemoteENotificationImpl((InternalEObject) parentObject,
-						RemoteNotification.REMOTE_MEMBER_CREATE, reference, modelObject));
 			}
 			if (factory.isUpdateModelNeeded(parentObject, modelObject, remoteObject) || force) {
 				modified |= factory.updateModel(parentObject, modelObject, remoteObject);
 			}
 		}
-		msgs.add(new RemoteENotificationImpl((InternalEObject) parentObject, RemoteNotification.REMOTE_MEMBER_UPDATE,
-				reference, modelObject, modified));
-		if (modelObject instanceof EObject) {
-			msgs.add(new RemoteENotificationImpl((InternalEObject) modelObject, RemoteNotification.REMOTE_UPDATE, null,
-					null, modified));
-		}
 		retrieving = false;
-		msgs.dispatch();
+		notifyObservers(RemoteNotification.createUpdateNotification(modified));
 	}
 
 	/**
 	 * Returns true whenever the consumer is updating model state, that is after a {@link #retrieve(boolean)} has been
-	 * called and until immediately after the {@link IRemoteEmfObserver#updated(EObject, Object, boolean)} has been
-	 * called.
+	 * called and until immediately after the {@link RemoteEmfObserver#updated(boolean)} has been called.
 	 */
 	public boolean isRetrieving() {
 		return retrieving;
@@ -264,8 +200,7 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 	 * method primary factory consumers will be interested in. The method will asynchronously (as defined by remote
 	 * service implementation):<li>
 	 * <ol>
-	 * Notify any registered {@link IRemoteEmfObserver}s that the object is
-	 * {@link IRemoteEmfObserver#updating(EObject, Object)}.
+	 * Notify any registered {@link RemoteEmfObserver}s that the object is {@link RemoteEmfObserver#updating()}.
 	 * </ol>
 	 * <ol>
 	 * Call the remote API, retrieving the results into a local object representing the contents of the remote object.
@@ -277,7 +212,7 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 	 * Notify objects of any changes via the standard EMF notification mechanisms. (As a by-product of the above step.)
 	 * </ol>
 	 * <ol>
-	 * Notify any registered {@link IRemoteEmfObserver}s of object creation or update. (An update is notified even if
+	 * Notify any registered {@link RemoteEmfObserver}s of object creation or update. (An update is notified even if
 	 * object state does not change.)
 	 * </ol>
 	 * </li>
@@ -292,12 +227,11 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 			return;
 		}
 		retrieving = true;
-		getFactory().getService().retrieve(this, force);
+		getFactory().getService().retrieve(this, force || !lastStatus.isOK());
 	}
 
 	/**
-	 * Notifies the consumer that a failure has occurred while performing a retrieval. (Consumers should generally
-	 * handle update and failure notifications through the {@link IRemoteEmfObserver#failed(IStatus)} method instead.)
+	 * Handles notification from the service that a retrieval has completed.
 	 */
 	@Override
 	public void notifyDone(IStatus status) {
@@ -310,14 +244,6 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 	@Override
 	public void dispose() {
 		retrieving = false;
-		getFactory().getService().modelExec(new Runnable() {
-			public void run() {
-				parentObject.eAdapters().remove(adapter);
-				if (modelObject instanceof EObject) {
-					((EObject) modelObject).eAdapters().remove(adapter);
-				}
-			}
-		}, false);
 		remoteEmfObservers.clear();
 		getFactory().removeConsumer(this);
 		if (getModelObject() instanceof EObject) {
@@ -333,25 +259,15 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 	 * @param observer
 	 *            The observer to add
 	 */
-	public void addObserver(IRemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType> observer) {
-		if (observer instanceof RemoteEmfObserver) {
-			RemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType> remoteEmfObserver = (RemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType>) observer;
+	public void addObserver(RemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType> observer) {
+		if (observer != null) {
+			RemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType> remoteEmfObserver = observer;
 			if (remoteEmfObserver.getConsumer() != null && remoteEmfObserver.getConsumer() != this) {
 				remoteEmfObserver.getConsumer().removeObserver(remoteEmfObserver);
 			}
 			remoteEmfObserver.internalSetConsumer(this);
+			remoteEmfObservers.add(observer);
 		}
-		remoteEmfObservers.add(observer);
-		if (modelObject instanceof EObject) {
-			if (!((EObject) modelObject).eAdapters().contains(adapter)) {
-				((EObject) modelObject).eAdapters().add(adapter);
-			}
-		} else if (parentObject != null) {
-			if (!((EObject) parentObject).eAdapters().contains(adapter)) {
-				((EObject) parentObject).eAdapters().add(adapter);
-			}
-		}
-
 	}
 
 	/**
@@ -361,14 +277,14 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 	 *            The observer to remove
 	 */
 	public void removeObserver(
-			IRemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType> observer) {
-		if (observer instanceof RemoteEmfObserver) {
-			RemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType> remoteEmfObserver = (RemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType>) observer;
+			RemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType> observer) {
+		if (observer != null) {
+			RemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType> remoteEmfObserver = observer;
 			if (remoteEmfObserver.getConsumer() == this) {
 				remoteEmfObserver.internalSetConsumer(null);
 			}
+			remoteEmfObservers.remove(observer);
 		}
-		remoteEmfObservers.remove(observer);
 		release();
 	}
 
@@ -379,14 +295,7 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 	}
 
 	public void updateObservers() {
-		NotificationChain msgs = new NotificationChainImpl();
-		msgs.add(new RemoteENotificationImpl((InternalEObject) parentObject, RemoteNotification.REMOTE_MEMBER_UPDATE,
-				factory.getParentReference(), modelObject, false));
-		if (modelObject instanceof EObject) {
-			msgs.add(new RemoteENotificationImpl((InternalEObject) modelObject, RemoteNotification.REMOTE_UPDATE, null,
-					null, false));
-		}
-		msgs.dispatch();
+		notifyObservers(RemoteNotification.createUpdateNotification(false));
 	}
 
 	/**
@@ -397,18 +306,7 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 	}
 
 	public void open() {
-		Object object = getFactory().open(parentObject, localKey);
-		if (object instanceof EObject) {
-			modelObject = (EObjectType) object;
-			getFactory().getService().modelExec(new Runnable() {
-				@Override
-				public void run() {
-					if (!((EObject) modelObject).eAdapters().contains(adapter)) {
-						((EObject) modelObject).eAdapters().add(adapter);
-					}
-				}
-			}, true);
-		}
+		getFactory().open(parentObject, localKey);
 	}
 
 	public void save() {
@@ -521,5 +419,9 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 
 	public void setAsynchronous(boolean asynchronous) {
 		this.asynchronous = asynchronous;
+	}
+
+	public IStatus getStatus() {
+		return lastStatus;
 	}
 }

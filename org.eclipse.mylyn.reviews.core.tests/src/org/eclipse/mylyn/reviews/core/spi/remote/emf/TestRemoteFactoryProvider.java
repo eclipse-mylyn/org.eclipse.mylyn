@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.mylyn.reviews.core.spi.remote.JobRemoteService;
 
 class TestRemoteFactoryProvider<R extends EObject, C> extends AbstractRemoteEmfFactoryProvider<R, C> {
+
 	public TestRemoteFactoryProvider() {
 		setService(new JobRemoteService());
 	}

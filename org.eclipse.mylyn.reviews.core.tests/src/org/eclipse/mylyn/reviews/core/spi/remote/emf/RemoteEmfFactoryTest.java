@@ -154,7 +154,6 @@ public class RemoteEmfFactoryTest {
 	@Test
 	public void testRemoteProcessCreate() {
 		TestEClassRemoteFactory testEClassRemoteFactory = new TestEClassRemoteFactory();
-		EPackage parent = EcoreFactory.eINSTANCE.createEPackage();
 		EClass create1 = testEClassRemoteFactory.createModel(parent, TestEClassRemoteFactory.remote1);
 		assertThat(create1.getName(), is("Local Object 1"));
 		EClass create2 = testEClassRemoteFactory.createModel(parent, TestEClassRemoteFactory.remote2);
@@ -214,7 +213,7 @@ public class RemoteEmfFactoryTest {
 		};
 		checkConsumer(harness.consumer, null, null, "localKeyFor Object 1", null);
 		harness.consumer.retrieve(false);
-		harness.listener.waitForResponse(0, 0);
+		harness.listener.waitForResponse(1, 0);
 		checkConsumer(harness.consumer, null, null, "localKeyFor Object 1", null);
 	}
 
@@ -314,7 +313,6 @@ public class RemoteEmfFactoryTest {
 				createConsumer);
 		createConsumer.retrieve(false);
 		testListener1.waitForResponse(1, 0);
-		assertThat(testListener1.createdObject, nullValue());
 		checkConsumer(createConsumer, null, null, "localKeyFor Object 2", "Object 2");
 
 		TestManagerEClassHarness keyHarness = new TestManagerEClassHarness(factory) {
@@ -333,15 +331,14 @@ public class RemoteEmfFactoryTest {
 
 	@Test
 	public void testRemoteProcessFailure() throws CoreException {
-		EPackage parent = EcoreFactory.eINSTANCE.createEPackage();
 		TestEClassRemoteFactory factory = new TestFailureFactory();
 		RemoteEmfConsumer<EPackage, EClass, String, TestRemoteEClass, String, Integer> consumer1 = factory.getConsumerForRemoteKey(
 				parent, "object1");
 		TestRemoteEmfObserver<EPackage, EClass, String, Integer> testListener = new TestRemoteEmfObserver<EPackage, EClass, String, Integer>(
 				consumer1);
 		consumer1.retrieve(false);
-		testListener.waitForFailure();
-		assertThat(testListener.failure, is(errorStatus));
+		testListener.waitForResponse(1, 0);
+		assertThat(consumer1.getStatus(), sameInstance(errorStatus));
 	}
 
 	@Test
@@ -467,7 +464,7 @@ public class RemoteEmfFactoryTest {
 		};
 		checkConsumer(harness.consumer, "remoteKeyFor Object 1", null, "localKeyFor Object 1", null);
 		harness.consumer.retrieve(false);
-		harness.listener.waitForResponse(0, 0);
+		harness.listener.waitForResponse(1, 0);
 		checkConsumer(harness.consumer, "remoteKeyFor Object 1", null, "localKeyFor Object 1", null);
 	}
 
@@ -489,10 +486,10 @@ public class RemoteEmfFactoryTest {
 		};
 		checkConsumer(harness.consumer, "remoteKeyFor Object 1", null, "localKeyFor Object 1", null);
 		harness.consumer.retrieve(false);
-		harness.listener.waitForResponse(0, 0);
+		harness.listener.waitForResponse(1, 0);
 		checkConsumer(harness.consumer, "remoteKeyFor Object 1", null, "localKeyFor Object 1", null);
 		harness.consumer.retrieve(true);
-		harness.listener.waitForResponse(1, 1);
+		harness.listener.waitForResponse(2, 1);
 		checkConsumer(harness.consumer, "remoteKeyFor Object 1", "Remote Object 1", "localKeyFor Object 1",
 				"Local Object 1");
 	}
@@ -570,11 +567,14 @@ public class RemoteEmfFactoryTest {
 				consumer1);
 		consumer1.retrieve(false);
 		testListener.waitForResponse(1, 1);
+		assertThat(testListener.updating, is(1));
+		assertThat(testListener.currentlyUpdating, is(false));
 		assertThat(testListener.updatedMember, is(1));
 
 		consumer1.retrieve(true);
 		testListener.waitForResponse(2, 2);
-		assertThat(testListener.updating, is(1));
+		assertThat(testListener.currentlyUpdating, is(false));
+		assertThat(testListener.updating, is(2));
 		assertThat(testListener.updatedMember, is(2));
 	}
 
@@ -586,8 +586,8 @@ public class RemoteEmfFactoryTest {
 		TestRemoteEmfObserver<EPackage, List<EClassifier>, String, Integer> testListener = new TestRemoteEmfObserver<EPackage, List<EClassifier>, String, Integer>(
 				consumer1);
 		consumer1.retrieve(false);
-		testListener.waitForFailure();
-		assertThat(testListener.failure, sameInstance(errorStatus));
+		testListener.waitForResponse(1, 0);
+		assertThat(consumer1.getStatus(), sameInstance(errorStatus));
 	}
 
 }

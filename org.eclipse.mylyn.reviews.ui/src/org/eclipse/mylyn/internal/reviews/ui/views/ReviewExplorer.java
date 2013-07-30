@@ -110,7 +110,7 @@ public class ReviewExplorer extends CommonNavigator {
 	private final RemoteEmfObserver<IRepository, IReview, String, Date> reviewObserver = new RemoteEmfObserver<IRepository, IReview, String, Date>() {
 
 		@Override
-		public void updated(IRepository parentObject, IReview modelObject, boolean modified) {
+		public void updated(boolean modified) {
 			if (modified) {
 				updatePatchSetObservers();
 				updatePerservingSelection();
@@ -120,7 +120,7 @@ public class ReviewExplorer extends CommonNavigator {
 
 	private class RemoteItemSetContentObserver extends RemoteEmfObserver<IReviewItemSet, List<IFileItem>, String, Long> {
 		@Override
-		public void updated(IReviewItemSet parentObject, java.util.List<IFileItem> modelObject, boolean modified) {
+		public void updated(boolean modified) {
 			if (showList) {
 				getCommonViewer().refresh(true);
 			} else {
