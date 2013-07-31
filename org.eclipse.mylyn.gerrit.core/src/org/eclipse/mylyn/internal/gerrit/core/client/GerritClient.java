@@ -76,6 +76,8 @@ import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Version;
 
 import com.google.gerrit.common.data.AccountDashboardInfo;
+import com.google.gerrit.common.data.AccountInfo;
+import com.google.gerrit.common.data.AccountInfoCache;
 import com.google.gerrit.common.data.AccountService;
 import com.google.gerrit.common.data.ApprovalDetail;
 import com.google.gerrit.common.data.ChangeDetail;
@@ -287,12 +289,49 @@ public class GerritClient extends ReviewsClient {
 				getChangeDetailService(monitor).changeDetailX(id, this);
 			}
 		});
-		if (changeDetail.getApprovals() == null && isVersion26OrLater(monitor)) {
-			ChangeInfo changeInfo = getChangeInfo(reviewId, monitor);
-			changeDetail.setApprovals(changeInfo.convertToApprovalDetails());
-			changeDetail.setApprovalTypes(changeInfo.convertToApprovalTypes());
+		if (isVersion26OrLater(monitor)) {
+			if (changeDetail.getApprovals() == null) {
+				ChangeInfo changeInfo = getChangeInfo(reviewId, monitor);
+				changeDetail.setApprovals(changeInfo.convertToApprovalDetails());
+				changeDetail.setApprovalTypes(changeInfo.convertToApprovalTypes());
+			}
+			List<ReviewerInfo> reviewers = listReviewers(reviewId, monitor);
+			if (!hasAllReviewers(changeDetail.getAccounts(), reviewers)) {
+				merge(changeDetail.getAccounts(), reviewers);
+			}
 		}
 		return changeDetail;
+	}
+
+	private List<ReviewerInfo> listReviewers(final int reviewId, IProgressMonitor monitor) throws GerritException {
+		final String uri = "/changes/" + reviewId + "/reviewers/"; //$NON-NLS-1$ //$NON-NLS-2$
+		TypeToken<List<ReviewerInfo>> reviewersListType = new TypeToken<List<ReviewerInfo>>() {
+		};
+		return executeGetRestRequest(uri, reviewersListType.getType(), monitor);
+	}
+
+	private boolean hasAllReviewers(AccountInfoCache accounts, List<ReviewerInfo> reviewers) {
+		for (ReviewerInfo reviewer : reviewers) {
+			AccountInfo cachedAccount = accounts.get(new Account.Id(reviewer.getId()));
+			if (cachedAccount == null || isAnonymous(cachedAccount)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean isAnonymous(AccountInfo accountInfo) {
+		return accountInfo.getFullName() == null && accountInfo.getPreferredEmail() == null;
+	}
+
+	private void merge(AccountInfoCache accounts, List<ReviewerInfo> reviewers) {
+		Set<com.google.gerrit.common.data.AccountInfo> accountInfos = new HashSet<com.google.gerrit.common.data.AccountInfo>(
+				reviewers.size());
+		for (ReviewerInfo reviewer : reviewers) {
+			accountInfos.add(reviewer.toAccountInfo());
+		}
+		AccountInfoCache accountInfoCache = new AccountInfoCache(accountInfos);
+		accounts.merge(accountInfoCache);
 	}
 
 	public ChangeInfo getChangeInfo(final int reviewId, IProgressMonitor monitor) throws GerritException {

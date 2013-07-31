@@ -54,4 +54,13 @@ public class ReviewerInfo extends AccountInfo {
 		}
 		return approvalDetail;
 	}
+
+	public com.google.gerrit.common.data.AccountInfo toAccountInfo() {
+		Account.Id accountId = new Account.Id(getId());
+		Account account = new Account(accountId);
+		account.setFullName(getName());
+		account.setPreferredEmail(getEmail());
+		com.google.gerrit.common.data.AccountInfo accountInfo = new com.google.gerrit.common.data.AccountInfo(account);
+		return accountInfo;
+	}
 }

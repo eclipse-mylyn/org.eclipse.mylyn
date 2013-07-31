@@ -78,6 +78,7 @@ public class ReviewerInfoTest extends TestCase {
 		assertEquals("john.doe@example.com", reviewerInfo.getEmail());
 		assertNull(reviewerInfo.getUsername());
 
+		// toApprovalDetail
 		PatchSet dummyPatchSet = new PatchSet(new PatchSet.Id(new Change.Id(1), 1));
 		ApprovalDetail approvalDetail = reviewerInfo.toApprovalDetail(dummyPatchSet);
 		assertNotNull(approvalDetail);
@@ -93,6 +94,13 @@ public class ReviewerInfoTest extends TestCase {
 		assertNotNull(vrif);
 		assertEquals(1000096, vrif.getAccountId().get());
 		assertEquals(1, vrif.getValue());
+
+		// toAccountInfo
+		com.google.gerrit.common.data.AccountInfo accountInfo = reviewerInfo.toAccountInfo();
+		assertNotNull(accountInfo);
+		assertEquals(1000096, accountInfo.getId().get());
+		assertEquals("john.doe@example.com", accountInfo.getPreferredEmail());
+		assertEquals("John Doe", accountInfo.getFullName());
 	}
 
 	private ReviewerInfo parseFile(String path) throws IOException {
