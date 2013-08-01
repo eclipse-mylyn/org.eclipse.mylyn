@@ -16,6 +16,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.commons.notifications.tests.core.NotificationEnvironmentTest;
 import org.eclipse.mylyn.commons.notifications.tests.feed.FeedReaderTest;
+import org.eclipse.mylyn.commons.notifications.tests.feed.ServiceMessageManagerTest;
 
 /**
  * @author Steffen Pingel
@@ -26,6 +27,7 @@ public class AllNotificationsTests {
 		TestSuite suite = new TestSuite(AllNotificationsTests.class.getName());
 		suite.addTestSuite(NotificationEnvironmentTest.class);
 		suite.addTestSuite(FeedReaderTest.class);
+		suite.addTestSuite(ServiceMessageManagerTest.class);
 		return suite;
 	}
 

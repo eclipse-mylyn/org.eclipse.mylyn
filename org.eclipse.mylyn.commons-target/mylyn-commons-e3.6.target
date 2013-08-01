@@ -6,7 +6,6 @@
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="com.google.gson" version="2.1.0.v201303041604"/>
 <unit id="com.google.guava" version="12.0.0.v201212092141"/>
-<unit id="com.sun.syndication" version="0.9.0.v200803061811"/>
 <unit id="com.thoughtworks.qdox" version="1.6.3.v20081201-1400"/>
 <unit id="javax.activation" version="1.1.0.v201211130549"/>
 <unit id="javax.mail" version="1.4.0.v201005080615"/>
@@ -34,7 +33,6 @@
 <unit id="org.hamcrest.integration" version="1.1.0.v201303031500"/>
 <unit id="org.hamcrest.library" version="1.1.0.v20090501071000"/>
 <unit id="org.hamcrest.text" version="1.1.0.v20090501071000"/>
-<unit id="org.jdom" version="1.1.1.v201101151400"/>
 <unit id="org.mockito" version="1.8.4.v201303031500"/>
 <unit id="org.objenesis" version="1.0.0.v201105211943"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20130914154012/repository/"/>

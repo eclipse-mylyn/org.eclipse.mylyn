@@ -7,14 +7,20 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Red Hat, Inc - Bug 412953.
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.commons.notifications.feed;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.stream.StreamSource;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -22,11 +28,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.notifications.core.IFilterable;
 import org.eclipse.mylyn.commons.notifications.core.NotificationEnvironment;
-
-import com.sun.syndication.feed.synd.SyndEntry;
-import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.io.SyndFeedInput;
-import com.sun.syndication.io.XmlReader;
 
 /**
  * @author Steffen Pingel
@@ -46,12 +47,14 @@ public class FeedReader {
 	}
 
 	public IStatus parse(InputStream in, IProgressMonitor monitor) {
-		SyndFeedInput input = new SyndFeedInput();
+
 		try {
-			SyndFeed feed = input.build(new XmlReader(in));
-			for (Iterator<?> it = feed.getEntries().iterator(); it.hasNext();) {
-				SyndEntry syndEntry = (SyndEntry) it.next();
-				final FeedEntry entry = createEntry(syndEntry);
+			JAXBContext jc = JAXBContext.newInstance(RSS.class);
+			Unmarshaller unmarshaller = jc.createUnmarshaller();
+			JAXBElement<RSS> rss = unmarshaller.unmarshal(new StreamSource(in), RSS.class);
+
+			for (RSSItem rssItem : rss.getValue().getItems()) {
+				final FeedEntry entry = createEntry(rssItem);
 				if (environment.matches(new IAdaptable() {
 					public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 						if (adapter == IFilterable.class) {
@@ -76,11 +79,17 @@ public class FeedReader {
 			return Status.OK_STATUS;
 		} catch (Exception e) {
 			return new Status(IStatus.ERROR, INotificationsFeed.ID_PLUGIN, IStatus.ERROR, "Failed to parse RSS feed", e); //$NON-NLS-1$ 
+		} finally {
+			try {
+				in.close();
+			} catch (IOException e) {
+				//ignore
+			}
 		}
 	}
 
-	protected FeedEntry createEntry(SyndEntry syndEntry) {
-		return new FeedEntry(eventId, syndEntry);
+	protected FeedEntry createEntry(RSSItem rssItem) {
+		return new FeedEntry(eventId, rssItem);
 	}
 
 	public List<FeedEntry> getEntries() {

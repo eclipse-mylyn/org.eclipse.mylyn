@@ -8,31 +8,26 @@
 
 package org.eclipse.mylyn.commons.notifications.feed;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HostConfiguration;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.commons.net.WebLocation;
-import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.notifications.core.NotificationEnvironment;
 import org.eclipse.mylyn.internal.commons.notifications.feed.FeedReader;
 import org.eclipse.mylyn.internal.commons.notifications.feed.INotificationsFeed;
@@ -182,45 +177,42 @@ public class ServiceMessageManager {
 		int status = -1;
 		List<? extends ServiceMessage> messages = null;
 		try {
-			HttpClient httpClient = new HttpClient(WebUtil.getConnectionManager());
-			WebUtil.configureHttpClient(httpClient, null);
-
-			WebLocation location = new WebLocation(url);
-			HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(httpClient, location,
-					new SubProgressMonitor(monitor, 1));
-
-			GetMethod method = new GetMethod(url);
-			method.setRequestHeader("If-Modified-Since", lastModified); //$NON-NLS-1$
-			method.setRequestHeader("If-None-Match", eTag); //$NON-NLS-1$
+			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+			if (lastModified != null && lastModified.length() > 0) {
+				try {
+					connection.setIfModifiedSince(Long.parseLong(lastModified));
+				} catch (NumberFormatException e) {
+					// ignore
+				}
+			}
+			if (eTag != null && eTag.length() > 0) {
+				connection.setRequestProperty("If-None-Match", eTag); //$NON-NLS-1$
+			}
 
 			try {
-				status = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
-				if (status == HttpStatus.SC_OK && !monitor.isCanceled()) {
-					Header lastModifiedHeader = method.getResponseHeader("Last-Modified"); //$NON-NLS-1$
-					if (lastModifiedHeader != null) {
-						lastModified = lastModifiedHeader.getValue();
-					}
-					Header eTagHeader = method.getResponseHeader("ETag"); //$NON-NLS-1$
-					if (eTagHeader != null) {
-						eTag = eTagHeader.getValue();
-					}
+				connection.connect();
 
-					InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
+				status = connection.getResponseCode();
+				if (status == HttpURLConnection.HTTP_OK && !monitor.isCanceled()) {
+					lastModified = connection.getHeaderField("Last-Modified"); //$NON-NLS-1$
+					eTag = connection.getHeaderField("ETag"); //$NON-NLS-1$
+
+					InputStream in = new BufferedInputStream(connection.getInputStream());
 					try {
 						messages = readMessages(in, monitor);
 					} finally {
 						in.close();
 					}
-				} else if (status == HttpStatus.SC_NOT_FOUND) {
+				} else if (status == HttpURLConnection.HTTP_NOT_FOUND) {
 					// no messages
-				} else if (status == HttpStatus.SC_NOT_MODIFIED) {
+				} else if (status == HttpURLConnection.HTTP_NOT_MODIFIED) {
 					// no new messages
 				} else {
 					logStatus(new Status(IStatus.WARNING, INotificationsFeed.ID_PLUGIN,
-							"Http error retrieving service message: " + HttpStatus.getStatusText(status))); //$NON-NLS-1$
+							"Http error retrieving service message: " + connection.getResponseMessage())); //$NON-NLS-1$
 				}
 			} finally {
-				WebUtil.releaseConnection(method, monitor);
+				connection.disconnect();
 			}
 		} catch (Exception e) {
 			logStatus(new Status(IStatus.WARNING, INotificationsFeed.ID_PLUGIN,
