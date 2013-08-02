@@ -66,7 +66,7 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 		protected final String prefix;
 
-		protected final String suffix;
+		protected String suffix;
 
 		protected final boolean requireAdjacentSeparator;
 
@@ -291,6 +291,19 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		}
 	}
 
+	public class DefinitionItemBlock extends ContentBlock {
+
+		public DefinitionItemBlock() {
+			super(BlockType.DEFINITION_ITEM, " := ", "\n", false, true, true); //$NON-NLS-1$//$NON-NLS-2$
+		}
+
+		@Override
+		public void lineBreak() throws IOException {
+			TextileDocumentBuilder.this.emitContent('\n');
+			suffix = " =:\n"; //$NON-NLS-1$
+		}
+	}
+
 	public TextileDocumentBuilder(Writer out) {
 		super(out);
 	}
@@ -305,7 +318,9 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		case CODE:
 			return new ContentBlock(type, "bc. ", "\n\n", false, false, false); //$NON-NLS-1$ //$NON-NLS-2$
 		case DEFINITION_ITEM:
+			return new DefinitionItemBlock();
 		case DEFINITION_TERM:
+			return new ContentBlock(type, "- ", "", false, true, true); //$NON-NLS-1$//$NON-NLS-2$
 		case LIST_ITEM:
 			char prefixChar = computeCurrentListType() == BlockType.NUMERIC_LIST ? '#' : '*';
 			return new ContentBlock(type, computePrefix(prefixChar, computeListLevel()) + " ", "\n", false, true, true); //$NON-NLS-1$ //$NON-NLS-2$
