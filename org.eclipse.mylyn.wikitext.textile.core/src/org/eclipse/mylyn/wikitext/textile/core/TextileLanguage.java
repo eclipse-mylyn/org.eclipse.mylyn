@@ -19,6 +19,7 @@ import java.util.ResourceBundle;
 import org.eclipse.mylyn.internal.wikitext.textile.core.TextileContentState;
 import org.eclipse.mylyn.internal.wikitext.textile.core.TextileDocumentBuilder;
 import org.eclipse.mylyn.internal.wikitext.textile.core.block.CodeBlock;
+import org.eclipse.mylyn.internal.wikitext.textile.core.block.DefinitionListBlock;
 import org.eclipse.mylyn.internal.wikitext.textile.core.block.FootnoteBlock;
 import org.eclipse.mylyn.internal.wikitext.textile.core.block.HeadingBlock;
 import org.eclipse.mylyn.internal.wikitext.textile.core.block.ListBlock;
@@ -104,8 +105,11 @@ public class TextileLanguage extends AbstractMarkupLanguage {
 
 		blocks.add(new HeadingBlock());
 		ListBlock listBlock = new ListBlock();
+		DefinitionListBlock definitonListBlock = new DefinitionListBlock();
 		blocks.add(listBlock);
+		blocks.add(definitonListBlock);
 		paragraphBreakingBlocks.add(listBlock);
+		paragraphBreakingBlocks.add(definitonListBlock);
 		blocks.add(new PreformattedBlock());
 		blocks.add(new QuoteBlock());
 		blocks.add(new CodeBlock());
