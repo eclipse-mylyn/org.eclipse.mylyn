@@ -433,7 +433,6 @@ public class FastMarkupPartitioner extends FastPartitioner {
 			}
 			switch (block.getType()) {
 			case DEFINITION_ITEM:
-			case DEFINITION_TERM:
 			case LIST_ITEM:
 			case TABLE_CELL_HEADER:
 			case TABLE_CELL_NORMAL:
@@ -448,6 +447,7 @@ public class FastMarkupPartitioner extends FastPartitioner {
 			case BULLETED_LIST:
 			case NUMERIC_LIST:
 			case DEFINITION_LIST:
+			case DEFINITION_TERM:
 				return block.getParent() != null && filtered(block.getParent());
 			}
 			return false;

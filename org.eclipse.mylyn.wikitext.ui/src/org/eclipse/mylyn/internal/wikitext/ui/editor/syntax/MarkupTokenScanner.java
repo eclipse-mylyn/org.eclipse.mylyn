@@ -410,6 +410,9 @@ public class MarkupTokenScanner implements ITokenScanner {
 			case PREFORMATTED:
 				key = Preferences.BLOCK_PRE;
 				break;
+			case DEFINITION_TERM:
+				key = Preferences.BLOCK_DT;
+				break;
 			}
 			cssStyles = preferences.getCssByBlockModifierType().get(key);
 		}

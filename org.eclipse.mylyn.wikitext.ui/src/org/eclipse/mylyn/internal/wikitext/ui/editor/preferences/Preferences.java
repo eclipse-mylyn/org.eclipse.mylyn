@@ -82,6 +82,8 @@ public class Preferences implements Cloneable {
 
 	public static final String BLOCK_H1 = "h1."; //$NON-NLS-1$
 
+	public static final String BLOCK_DT = "dt"; //$NON-NLS-1$
+
 	/**
 	 * heading preferences key indexed by level (0 is null, 1 is {@link #BLOCK_H1}, etc.)
 	 */
@@ -99,6 +101,7 @@ public class Preferences implements Cloneable {
 		cssByBlockModifierType.put(BLOCK_BC, "font-family: monospace; color: #4444CC;"); //$NON-NLS-1$
 		cssByBlockModifierType.put(BLOCK_PRE, "font-family: monospace;"); //$NON-NLS-1$
 		cssByBlockModifierType.put(BLOCK_QUOTE, "color: rgb(38,86,145);"); //$NON-NLS-1$
+		cssByBlockModifierType.put(BLOCK_DT, "font-weight: bold;"); //$NON-NLS-1$
 	}
 
 	private Map<String, String> cssByPhraseModifierType = new LinkedHashMap<String, String>();
