@@ -73,6 +73,18 @@ bc. # one
 ## one.two
 # two
 
+h5. Definition Lists
+
+bc. - term := definition
+- term two := a multi-
+line definition =:
+- term three := definition 3
+
+- term := definition
+- term two := a multi-
+line definition =:
+- term three := definition 3
+
 h4. Tables
 
 ==|_. a|_. table|_. header|==
