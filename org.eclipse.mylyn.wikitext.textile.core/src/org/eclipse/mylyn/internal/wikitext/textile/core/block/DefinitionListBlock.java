@@ -21,7 +21,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 public class DefinitionListBlock extends Block {
 
-	private static final Pattern START_PATTERN = Pattern.compile("(?:(;\\s+(.+))|(-\\s+(.+?)\\s*:=\\s*((.+?)\\s*(=:)?)?))"); //$NON-NLS-1$
+	private static final Pattern START_PATTERN = Pattern.compile("(?:(;\\s+(.+))|(-\\s+(.+?)\\s*(:=)\\s*((.+?)\\s*(=:)?)?))"); //$NON-NLS-1$
 
 	private static final Pattern END_ITEM_PATTERN = Pattern.compile("(.*?)\\s*(=:)\\s*"); //$NON-NLS-1$
 
@@ -98,12 +98,17 @@ public class DefinitionListBlock extends Block {
 		int textLineOffset;
 		String term = matcher.group(2);
 		String definition = null;
+		int definitionOffset = 0;
+		int definitionSegmentOffset = 0;
 		boolean definitionEnd = false;
 		if (term == null) {
 			term = matcher.group(4);
 			textLineOffset = matcher.start(4);
-			definition = matcher.group(6);
-			definitionEnd = matcher.group(7) != null;
+			definition = matcher.group(7);
+			definitionOffset = matcher.start(7);
+			definitionEnd = matcher.group(8) != null;
+			definitionSegmentOffset = matcher.start(5);
+			state.setLineSegmentEndOffset(definitionSegmentOffset);
 		} else {
 			textLineOffset = matcher.start(2);
 		}
@@ -113,8 +118,11 @@ public class DefinitionListBlock extends Block {
 		endBlock();
 
 		if (definition != null) {
+			// since it's a mid-line block, we must set the offsets here 
+			state.setLineCharacterOffset(definitionSegmentOffset);
 			beginBlock(BlockType.DEFINITION_ITEM, new Attributes());
-			markupLanguage.emitMarkupLine(getParser(), state, matcher.start(6), definition, 0);
+
+			markupLanguage.emitMarkupLine(getParser(), state, definitionOffset, definition, 0);
 			if (definitionEnd) {
 				endBlock();
 			} else {

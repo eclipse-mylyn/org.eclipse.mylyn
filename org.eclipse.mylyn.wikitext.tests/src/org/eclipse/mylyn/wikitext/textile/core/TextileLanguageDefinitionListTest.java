@@ -12,12 +12,17 @@
 package org.eclipse.mylyn.wikitext.textile.core;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.List;
 
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.builder.RecordingDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.builder.RecordingDocumentBuilder.Event;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -145,5 +150,32 @@ public class TextileLanguageDefinitionListTest {
 	public void definitionListInterruptsParagraph() {
 		String html = parseToHtml("one\n- two := three four");
 		assertEquals("<p>one</p><dl><dt>two</dt><dd>three four</dd></dl>", html);
+	}
+
+	@Test
+	public void offsets() {
+		RecordingDocumentBuilder builder = new RecordingDocumentBuilder();
+		MarkupParser markupParser = new MarkupParser(markupLanguage);
+		markupParser.setBuilder(builder);
+		markupParser.parse("- one := two");
+
+		Event event = findEvent(builder.getEvents(), BlockType.DEFINITION_TERM);
+		assertEquals(1, event.locator.getLineNumber());
+		assertEquals(0, event.locator.getLineCharacterOffset());
+		assertEquals(6, event.locator.getLineSegmentEndOffset());
+
+		Event itemEvent = findEvent(builder.getEvents(), BlockType.DEFINITION_ITEM);
+		assertEquals(1, itemEvent.locator.getLineNumber());
+		assertEquals(6, itemEvent.locator.getLineCharacterOffset());
+	}
+
+	private Event findEvent(List<Event> events, BlockType blockType) {
+		for (Event event : events) {
+			if (event.blockType == blockType) {
+				return event;
+			}
+		}
+		fail(String.format("Expected block %s but found %s", blockType, events));
+		throw new IllegalStateException();
 	}
 }
