@@ -1,15 +1,15 @@
 [gerrit]
-        basePath = <%= envbase %>/git
+        basePath = <%= @envbase %>/git
 <% if @envhost == "precise32" %>
-        canonicalWebUrl = http://localhost:2080/<%= envid %>
+        canonicalWebUrl = http://localhost:2080/<%= @envid %>
 <% else %>
-        canonicalWebUrl = http://<%= envhost %>/<%= envid %>
+        canonicalWebUrl = http://<%= @envhost %>/<%= @envid %>
 <% end %>
 [database]
         type = H2
         database = db/ReviewDB
 [auth]
-        type = <%= authtype %>
+        type = <%= @authtype %>
 [sendemail]
         smtpServer = localhost
 [container]
@@ -17,9 +17,9 @@
         javaHome = /usr/lib/jvm/java-6-openjdk-i386/jre
         heapLimit = 128m
 [sshd]
-        listenAddress = *:<%= sshport %>
+        listenAddress = *:<%= @sshport %>
 [httpd]
-        listenUrl = proxy-http://*:<%= port %>/<%= envid %>
+        listenUrl = proxy-http://*:<%= @port %>/<%= @envid %>
 [cache]
         directory = cache
 
