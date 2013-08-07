@@ -21,9 +21,9 @@ import org.eclipse.jface.viewers.ITreePathContentProvider;
  */
 public abstract class AbstractTaskListContentProvider implements ITreeContentProvider, ITreePathContentProvider {
 
-	protected TaskListView taskListView;
+	protected AbstractTaskListView taskListView;
 
-	public AbstractTaskListContentProvider(TaskListView view) {
+	public AbstractTaskListContentProvider(AbstractTaskListView view) {
 		this.taskListView = view;
 	}
 

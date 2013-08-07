@@ -45,7 +45,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 
 	protected static Object[] EMPTY_ARRRY = new Object[0];
 
-	public TaskListContentProvider(TaskListView taskListView) {
+	public TaskListContentProvider(AbstractTaskListView taskListView) {
 		super(taskListView);
 	}
 

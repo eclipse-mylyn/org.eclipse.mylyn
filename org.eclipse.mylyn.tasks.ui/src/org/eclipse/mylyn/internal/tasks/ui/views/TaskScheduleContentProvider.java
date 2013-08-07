@@ -67,7 +67,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 
 	private final Completed completed;
 
-	public TaskScheduleContentProvider(TaskListView taskListView) {
+	public TaskScheduleContentProvider(AbstractTaskListView taskListView) {
 		super(taskListView);
 		this.taskActivityManager = TasksUiPlugin.getTaskActivityManager();
 		taskActivityManager.addActivityListener(this);

@@ -241,7 +241,7 @@ public class CustomTaskListDecorationDrawer implements Listener {
 		}
 	}
 
-	private void drawActivationImage(final int activationImageOffset, Event event, Image image) {
+	protected void drawActivationImage(final int activationImageOffset, Event event, Image image) {
 		Rectangle rect = image.getBounds();
 		int offset = Math.max(0, (event.height - rect.height) / 2);
 		event.gc.drawImage(image, activationImageOffset, event.y + offset);

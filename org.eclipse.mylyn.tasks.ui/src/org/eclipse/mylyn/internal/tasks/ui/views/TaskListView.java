@@ -15,7 +15,6 @@
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -53,24 +52,16 @@ import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.jface.viewers.TreePath;
-import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.commons.ui.compatibility.CommonThemes;
-import org.eclipse.mylyn.commons.workbench.DelayedRefreshJob;
 import org.eclipse.mylyn.commons.workbench.GradientDrawer;
 import org.eclipse.mylyn.internal.commons.notifications.feed.ServiceMessage;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
-import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
-import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.UnsubmittedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.CategorizedPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
@@ -95,7 +86,6 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.ShowNonMatchingSubtasksAction
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeAutomaticallyAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskListSortAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskListViewActionGroup;
-import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListServiceMessageControl;
 import org.eclipse.mylyn.internal.tasks.ui.search.AbstractSearchHandler;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchUtil;
@@ -103,8 +93,6 @@ import org.eclipse.mylyn.internal.tasks.ui.util.SortCriterion;
 import org.eclipse.mylyn.internal.tasks.ui.util.SortCriterion.SortKey;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker;
-import org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker.TreeVisitor;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
@@ -121,7 +109,6 @@ import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
-import org.eclipse.swt.SWTException;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.RTFTransfer;
@@ -180,7 +167,6 @@ import org.eclipse.ui.part.IShowInSource;
 import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.part.ShowInContext;
-import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 import org.eclipse.ui.themes.IThemeManager;
 
@@ -190,105 +176,7 @@ import org.eclipse.ui.themes.IThemeManager;
  * @author Eugene Kuleshov
  * @author David Green
  */
-public class TaskListView extends ViewPart implements IPropertyChangeListener, IShowInTarget {
-
-	private final class TaskListRefreshJob extends DelayedRefreshJob {
-
-		private TaskListRefreshJob(TreeViewer treeViewer, String name) {
-			super(treeViewer, name);
-		}
-
-		@Override
-		protected void doRefresh(Object[] items) {
-			TreePath selection = preserveSelection();
-
-			if (items == null) {
-				viewer.refresh(true);
-			} else if (items.length > 0) {
-				try {
-					if (TaskListView.this.isFocusedMode()) {
-						Set<Object> children = new HashSet<Object>(Arrays.asList(items));
-						Set<AbstractTaskContainer> parents = new HashSet<AbstractTaskContainer>();
-						for (Object item : items) {
-							if (item instanceof AbstractTask) {
-								parents.addAll(((AbstractTask) item).getParentContainers());
-							}
-						}
-						// 1. refresh parents
-						children.removeAll(parents);
-						for (AbstractTaskContainer parent : parents) {
-							viewer.refresh(parent, false);
-							// only refresh label of parent
-							viewer.update(parent, null);
-						}
-						// 2. refresh children
-						for (Object item : children) {
-							viewer.refresh(item, true);
-						}
-						// 3. update states of all changed items
-						for (Object item : items) {
-							updateExpansionState(item);
-						}
-					} else {
-						Set<AbstractTaskContainer> parents = new HashSet<AbstractTaskContainer>();
-						for (Object item : items) {
-							if (item instanceof AbstractTask) {
-								parents.addAll(((AbstractTask) item).getParentContainers());
-							}
-							viewer.refresh(item, true);
-							updateExpansionState(item);
-						}
-						// refresh labels of parents for task activation or incoming indicators
-						for (AbstractTaskContainer parent : parents) {
-							// only refresh label
-							viewer.update(parent, null);
-						}
-					}
-				} catch (SWTException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to refresh viewer: " //$NON-NLS-1$
-							+ viewer, e));
-				}
-			}
-
-			updateToolTip(false);
-			restoreSelection(selection);
-		}
-
-		private TreePath preserveSelection() {
-			if (viewer instanceof TreeViewer) {
-				TreeViewer treeViewer = (TreeViewer) viewer;
-				// in case the refresh removes the currently selected item, 
-				// remember the next item in the tree to restore the selection
-				// TODO: consider making this optional
-				TreeItem[] selection = treeViewer.getTree().getSelection();
-				if (selection.length > 0) {
-					TreeWalker treeWalker = new TreeWalker(treeViewer);
-					return treeWalker.walk(new TreeVisitor() {
-						@Override
-						public boolean visit(Object object) {
-							return true;
-						}
-					}, selection[selection.length - 1]);
-				}
-			}
-			return null;
-		}
-
-		private void restoreSelection(TreePath treePath) {
-			if (treePath != null) {
-				ISelection newSelection = viewer.getSelection();
-				if (newSelection == null || newSelection.isEmpty()) {
-					viewer.setSelection(new TreeSelection(treePath), true);
-				}
-			}
-		}
-
-		protected void updateExpansionState(Object item) {
-			if (TaskListView.this.isFocusedMode() && isAutoExpandMode()) {
-				TaskListView.this.getViewer().expandToLevel(item, 3);
-			}
-		}
-	}
+public class TaskListView extends AbstractTaskListView implements IPropertyChangeListener, IShowInTarget {
 
 	private static final String ID_SEPARATOR_FILTERS = "filters"; //$NON-NLS-1$
 
@@ -488,55 +376,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 	};
 
-	private final ITaskListChangeListener TASKLIST_CHANGE_LISTENER = new TaskListChangeAdapter() {
-
-		@Override
-		public void containersChanged(final Set<TaskContainerDelta> deltas) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					for (TaskContainerDelta taskContainerDelta : deltas) {
-						if (isScheduledPresentation()) {
-							// TODO: implement refresh policy for scheduled presentation
-							refreshJob.refresh();
-						} else {
-							switch (taskContainerDelta.getKind()) {
-							case ROOT:
-								refreshJob.refresh();
-								break;
-							case ADDED:
-							case REMOVED:
-								if (isFilteredContainer(taskContainerDelta)) {
-									// container may have changed visibility, refresh root
-									refreshJob.refresh();
-								} else {
-									if (taskContainerDelta.getElement() != null) {
-										refreshJob.refreshElement(taskContainerDelta.getElement());
-									}
-									if (taskContainerDelta.getParent() != null) {
-										refreshJob.refreshElement(taskContainerDelta.getParent());
-									} else {
-										// element was added/removed from the root
-										refreshJob.refresh();
-									}
-								}
-								break;
-							case CONTENT:
-								refreshJob.refreshElement(taskContainerDelta.getElement());
-							}
-
-						}
-					}
-				}
-
-				private boolean isFilteredContainer(TaskContainerDelta taskContainerDelta) {
-					ITaskContainer parent = taskContainerDelta.getParent();
-					return parent instanceof UnsubmittedTaskContainer || parent instanceof UnmatchedTaskContainer
-							|| parent instanceof UncategorizedTaskContainer;
-				}
-			});
-		}
-	};
-
 	private final IPropertyChangeListener THEME_CHANGE_LISTENER = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
 			if (event.getProperty().equals(IThemeManager.CHANGE_CURRENT_THEME)
@@ -608,7 +447,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 		TasksUiPlugin.getDefault().getServiceMessageManager().removeServiceMessageListener(serviceMessageControl);
 		TasksUiPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(tasksUiPreferenceListener);
-		TasksUiInternal.getTaskList().removeChangeListener(TASKLIST_CHANGE_LISTENER);
+		if (refreshJob != null) {
+			refreshJob.dispose();
+		}
 		TasksUiPlugin.getTaskActivityManager().removeActivityListener(TASK_ACTIVITY_LISTENER);
 		TasksUiPlugin.getTaskActivityManager().removeActivationListener(TASK_ACTIVATION_LISTENER);
 
@@ -835,7 +676,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 		getViewer().getTree().setHeaderVisible(false);
 		getViewer().setUseHashlookup(true);
-		refreshJob = new TaskListRefreshJob(getViewer(), "Task List Refresh"); //$NON-NLS-1$
+		refreshJob = new TaskListRefreshJob(this, getViewer(), "Task List Refresh"); //$NON-NLS-1$
 
 		configureColumns(columnNames, columnWidths);
 
@@ -978,7 +819,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		PlatformUI.getWorkbench().getWorkingSetManager().addPropertyChangeListener(this);
 		TasksUiPlugin.getTaskActivityManager().addActivityListener(TASK_ACTIVITY_LISTENER);
 		TasksUiPlugin.getTaskActivityManager().addActivationListener(TASK_ACTIVATION_LISTENER);
-		TasksUiInternal.getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
 
 		TasksUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(tasksUiPreferenceListener);
 
@@ -1168,7 +1008,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 				new TaskListDropAdapter(getViewer()));
 	}
 
-	void expandToActiveTasks() {
+	@Override
+	protected void expandToActiveTasks() {
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
@@ -1332,6 +1173,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		}
 	}
 
+	@Override
 	public void refresh() {
 		refreshJob.refreshNow();
 	}
@@ -1340,6 +1182,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		return taskListToolTip;
 	}
 
+	@Override
 	public TreeViewer getViewer() {
 		return filteredTree.getViewer();
 	}
@@ -1375,7 +1218,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 
 	boolean isInRenameAction = false;
 
-	private DelayedRefreshJob refreshJob;
+	private TaskListRefreshJob refreshJob;
 
 	private boolean itemNotFoundExceptionLogged;
 
@@ -1457,6 +1300,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		return drilledIntoCategory;
 	}
 
+	@Override
 	public TaskListFilteredTree getFilteredTree() {
 		return filteredTree;
 	}
@@ -1523,6 +1367,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		return images;
 	}
 
+	@Override
 	public Set<AbstractTaskListFilter> getFilters() {
 		return filters;
 	}
@@ -1555,15 +1400,18 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		//filterArchiveCategory.setEnabled(enabled);
 	}
 
+	@Override
 	public boolean isScheduledPresentation() {
 		return currentPresentation != null && ScheduledPresentation.ID.equals(currentPresentation.getId());
 	}
 
+	@Override
 	public boolean isFocusedMode() {
 		return focusedMode;
 	}
 
-	private boolean isAutoExpandMode() {
+	@Override
+	protected boolean isAutoExpandMode() {
 		return TasksUiPlugin.getDefault()
 				.getPreferenceStore()
 				.getBoolean(ITasksUiPreferenceConstants.AUTO_EXPAND_TASK_LIST);
@@ -1663,7 +1511,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener, I
 		}
 	}
 
-	private void updateToolTip(boolean force) {
+	@Override
+	protected void updateToolTip(boolean force) {
 		if (taskListToolTip != null && taskListToolTip.isVisible()) {
 			if (!force && taskListToolTip.isTriggeredByMouse()) {
 				return;
