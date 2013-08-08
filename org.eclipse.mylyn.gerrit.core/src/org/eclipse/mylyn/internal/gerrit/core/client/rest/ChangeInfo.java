@@ -20,6 +20,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.PermissionLabel;
+
 import com.google.gerrit.common.data.ApprovalDetail;
 import com.google.gerrit.common.data.ApprovalType;
 import com.google.gerrit.reviewdb.Account;
@@ -66,6 +68,14 @@ public class ChangeInfo {
 	private boolean mergeable;
 
 	private AccountInfo owner;
+
+	private Map<String/*Label*/, LabelInfo> labels;
+
+	private String current_revision;
+
+	private Map<String/*commit ID*/, RevisionInfo> revisions;
+
+	private Map<String/*Label*/, String[]> permitted_labels;
 
 	// e.g. "0023412400000f7d"
 	@SuppressWarnings("unused")
@@ -122,12 +132,6 @@ public class ChangeInfo {
 		return owner;
 	}
 
-	private Map<String/*Label*/, LabelInfo> labels;
-
-	private String current_revision;
-
-	private Map<String/*commit ID*/, RevisionInfo> revisions;
-
 	public Map<String, LabelInfo> getLabels() {
 		return labels;
 	}
@@ -138,6 +142,10 @@ public class ChangeInfo {
 
 	public Map<String, RevisionInfo> getRevisions() {
 		return revisions;
+	}
+
+	public Map<String, String[]> getPermittedLabels() {
+		return permitted_labels;
 	}
 
 	private PatchSet.Id getCurrentPatchSetId() {
@@ -184,6 +192,25 @@ public class ChangeInfo {
 			}
 			ApprovalType approvalType = new ApprovalType(approvalCategory, valueList);
 			result.add(approvalType);
+		}
+		return result;
+	}
+
+	public List<PermissionLabel> convertToPermissionLabels() {
+		if (permitted_labels == null) {
+			return null;
+		}
+		List<PermissionLabel> result = new ArrayList<PermissionLabel>(permitted_labels.size());
+		for (Entry<String, String[]> entry : permitted_labels.entrySet()) {
+			List<Short> values = new ArrayList<Short>(entry.getValue().length);
+			for (String value : entry.getValue()) {
+				values.add(ApprovalUtil.parseShort(value));
+			}
+			PermissionLabel label = new PermissionLabel();
+			label.setName(PermissionLabel.toLabelName(entry.getKey()));
+			label.setMin(Collections.min(values));
+			label.setMax(Collections.max(values));
+			result.add(label);
 		}
 		return result;
 	}

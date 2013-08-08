@@ -34,8 +34,19 @@
       }
     }
   },
-  "permitted_labels": {},
-  "removable_reviewers": [],
+  "permitted_labels": {
+    "Code-Review": [
+      "-1",
+      " 0",
+      "+1"
+    ]
+  },
+  "removable_reviewers": [
+    {
+      "_account_id": 1000001,
+      "email": "tests@mylyn.eclipse.org"
+    }
+  ],
   "current_revision": "d164521a077df962fdd674ba0fa8574d1c5eaa47",
   "revisions": {
     "d164521a077df962fdd674ba0fa8574d1c5eaa47": {

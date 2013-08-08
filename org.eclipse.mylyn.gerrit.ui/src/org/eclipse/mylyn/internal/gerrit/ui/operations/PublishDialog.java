@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.gerrit.ui.operations;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchSetPublishDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PermissionLabel;
 import org.eclipse.mylyn.internal.gerrit.core.operations.GerritOperation;
@@ -51,6 +53,8 @@ public class PublishDialog extends GerritOperationDialog {
 
 	private static final String KEY_ID = "ApprovalCategoryValue.Id"; //$NON-NLS-1$
 
+	private final GerritChange gerritChange;
+
 	private final PatchSetPublishDetail publishDetail;
 
 	private RichTextEditor messageEditor;
@@ -63,9 +67,10 @@ public class PublishDialog extends GerritOperationDialog {
 
 	private final IReviewItemSet set;
 
-	public PublishDialog(Shell parentShell, ITask task, PatchSetPublishDetail publishDetail, IReviewItemSet set,
-			String editorCommentText) {
+	public PublishDialog(Shell parentShell, ITask task, GerritChange gerritChange, PatchSetPublishDetail publishDetail,
+			IReviewItemSet set, String editorCommentText) {
 		super(parentShell, task);
+		this.gerritChange = gerritChange;
 		this.publishDetail = publishDetail;
 		this.set = set;
 		this.editorCommentText = editorCommentText;
@@ -138,45 +143,55 @@ public class PublishDialog extends GerritOperationDialog {
 			return;
 		}
 
-		if (config.getApprovalTypes() != null && config.getApprovalTypes().getApprovalTypes() != null) {
-			for (ApprovalType approvalType : config.getApprovalTypes().getApprovalTypes()) {
-				Set<ApprovalCategoryValue.Id> allowed = getAllowed(publishDetail, approvalType);
-				if (allowed != null && allowed.size() > 0) {
-					Group group = new Group(approvalComposite, SWT.NONE);
-					GridDataFactory.fillDefaults().grab(true, false).applyTo(group);
-					group.setText(approvalType.getCategory().getName());
-					group.setLayout(new RowLayout(SWT.VERTICAL));
+		Collection<ApprovalType> approvalTypes = getApprovalTypes(config);
+		if (approvalTypes == null) {
+			approvalTypes = gerritChange.getChangeDetail().getApprovalTypes();
+		}
 
-					int givenValue = 0;
-					if (publishDetail.getGiven() != null) {
-						// Gerrit 2.1
-						PatchSetApproval approval = publishDetail.getGiven().get(approvalType.getCategory().getId());
-						if (approval != null) {
-							givenValue = approval.getValue();
-						}
+		for (ApprovalType approvalType : approvalTypes) {
+			Set<ApprovalCategoryValue.Id> allowed = getAllowed(publishDetail, approvalType);
+			if (allowed != null && allowed.size() > 0) {
+				Group group = new Group(approvalComposite, SWT.NONE);
+				GridDataFactory.fillDefaults().grab(true, false).applyTo(group);
+				group.setText(approvalType.getCategory().getName());
+				group.setLayout(new RowLayout(SWT.VERTICAL));
+
+				int givenValue = 0;
+				if (publishDetail.getGiven() != null) {
+					// Gerrit 2.1
+					PatchSetApproval approval = publishDetail.getGiven().get(approvalType.getCategory().getId());
+					if (approval != null) {
+						givenValue = approval.getValue();
+					}
+				}
+
+				List<ApprovalCategoryValue.Id> allowedList = new ArrayList<ApprovalCategoryValue.Id>(allowed);
+				Collections.sort(allowedList, new Comparator<ApprovalCategoryValue.Id>() {
+					public int compare(ApprovalCategoryValue.Id o1, ApprovalCategoryValue.Id o2) {
+						return o2.get() - o1.get();
+					}
+				});
+				for (ApprovalCategoryValue.Id valueId : allowedList) {
+					ApprovalCategoryValue approvalValue = approvalType.getValue(valueId.get());
+
+					Button button = new Button(group, SWT.RADIO);
+					button.setText(approvalValue.format());
+					if (approvalValue.getValue() == givenValue) {
+						button.setSelection(true);
 					}
 
-					List<ApprovalCategoryValue.Id> allowedList = new ArrayList<ApprovalCategoryValue.Id>(allowed);
-					Collections.sort(allowedList, new Comparator<ApprovalCategoryValue.Id>() {
-						public int compare(ApprovalCategoryValue.Id o1, ApprovalCategoryValue.Id o2) {
-							return o2.get() - o1.get();
-						}
-					});
-					for (ApprovalCategoryValue.Id valueId : allowedList) {
-						ApprovalCategoryValue approvalValue = approvalType.getValue(valueId.get());
-
-						Button button = new Button(group, SWT.RADIO);
-						button.setText(approvalValue.format());
-						if (approvalValue.getValue() == givenValue) {
-							button.setSelection(true);
-						}
-
-						button.setData(KEY_ID, valueId);
-						approvalButtons.add(button);
-					}
+					button.setData(KEY_ID, valueId);
+					approvalButtons.add(button);
 				}
 			}
 		}
+	}
+
+	private Collection<ApprovalType> getApprovalTypes(GerritConfig config) {
+		if (config.getApprovalTypes() != null && config.getApprovalTypes().getApprovalTypes() != null) {
+			return config.getApprovalTypes().getApprovalTypes();
+		}
+		return null;
 	}
 
 	private Set<ApprovalCategoryValue.Id> getAllowed(PatchSetPublishDetail publishDetail, ApprovalType approvalType) {

@@ -149,15 +149,13 @@ public abstract class GerritOperationDialog extends ProgressDialog {
 		Control control = super.createDialogArea(parent);
 		if (needsConfig()) {
 			GerritConfig config = getOperationFactory().getClient(getTask()).getGerritConfig();
-			if (config != null) {
-				doRefresh(config);
-			} else {
+			if (config == null) {
 				GerritOperation<GerritConfiguration> operation = getOperationFactory().createRefreshConfigOperation(
 						getTask(), new RefreshConfigRequest());
 				performOperation(operation);
 				config = operation.getOperationResult().getGerritConfig();
-				doRefresh(config);
 			}
+			doRefresh(config);
 		}
 		return control;
 	}

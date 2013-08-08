@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.gerrit.core.remote;
 import static org.eclipse.mylyn.gerrit.tests.core.client.rest.IsEmpty.empty;
 import static org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalUtil.CRVW;
 import static org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalUtil.VRIF;
+import static org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalUtil.toNameWithDash;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
@@ -21,6 +22,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.hamcrest.Matchers.startsWith;
+import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 
 import java.util.Arrays;
@@ -36,13 +38,13 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.mylyn.gerrit.tests.core.client.rest.ChangeInfoTest;
-import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.gerrit.tests.support.GerritProject.CommitResult;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
-import org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalUtil;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchSetPublishDetailX;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.PermissionLabel;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo;
 import org.eclipse.mylyn.reviews.core.model.IApprovalType;
 import org.eclipse.mylyn.reviews.core.model.IChange;
@@ -57,15 +59,16 @@ import org.eclipse.mylyn.reviews.core.model.RequirementStatus;
 import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.junit.Test;
-import org.osgi.framework.Version;
 
 import com.google.gerrit.common.data.ApprovalDetail;
 import com.google.gerrit.common.data.ChangeDetail;
 import com.google.gerrit.common.data.ReviewerResult;
 import com.google.gerrit.reviewdb.ApprovalCategory;
 import com.google.gerrit.reviewdb.ApprovalCategoryValue;
+import com.google.gerrit.reviewdb.Change;
 import com.google.gerrit.reviewdb.Change.Status;
 import com.google.gerrit.reviewdb.ChangeMessage;
+import com.google.gerrit.reviewdb.PatchSet;
 import com.google.gerrit.reviewdb.PatchSetApproval;
 
 /**
@@ -380,7 +383,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(approvalMap.isEmpty(), is(false));
 		assertThat(approvalMap.size(), is(1));
 
-		PatchSetApproval crvw = approvalMap.get(ApprovalUtil.CRVW.getCategory().getId());
+		PatchSetApproval crvw = approvalMap.get(CRVW.getCategory().getId());
 		assertThat(crvw, notNullValue());
 		assertThat(crvw.getAccountId().get(), is(1000001));
 		assertThat(crvw.getValue(), is((short) 0));
@@ -392,14 +395,6 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(getReview().getReviewerApprovals().isEmpty(), is(false));
 		assertThat(getReview().getReviewerApprovals().size(), is(1));
 		assertThat(getReview().getReviewerApprovals().get(0), nullValue());
-	}
-
-	private static Version getCurrentVersion() {
-		String version = GerritFixture.current().getSimpleInfo();
-		if (version.indexOf('/') != -1) {
-			version = version.substring(0, version.indexOf('/'));
-		}
-		return GerritVersion.parseGerritVersion(version);
 	}
 
 	@Test
@@ -438,12 +433,9 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 	public void testUnpermittedApproval() throws Exception {
 		String approvalMessage = "approval, time: " + System.currentTimeMillis();
 		try {
-			reviewHarness.client.publishComments(
-					reviewHarness.shortId,
-					1,
-					approvalMessage,
-					new HashSet<ApprovalCategoryValue.Id>(Collections.singleton(ApprovalUtil.CRVW.getValue((short) 2)
-							.getId())), new NullProgressMonitor());
+			reviewHarness.client.publishComments(reviewHarness.shortId, 1, approvalMessage,
+					new HashSet<ApprovalCategoryValue.Id>(Collections.singleton(CRVW.getValue((short) 2).getId())),
+					new NullProgressMonitor());
 			fail("Expected to fail when trying to vote +2 when it's not permitted");
 		} catch (GerritException e) {
 			if (isVersion26OrLater()) {
@@ -453,6 +445,26 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 			}
 
 		}
+	}
+
+	@Test
+	public void testGetPatchSetPublishDetail() throws Exception {
+		int reviewId = Integer.parseInt(reviewHarness.shortId);
+		PatchSet.Id id = new PatchSet.Id(new Change.Id(reviewId), 1);
+
+		PatchSetPublishDetailX patchSetDetail = reviewHarness.client.getPatchSetPublishDetail(id,
+				new NullProgressMonitor());
+
+		assertThat(patchSetDetail, notNullValue());
+		List<PermissionLabel> allowed = patchSetDetail.getLabels();
+		assertThat(allowed, notNullValue());
+		assertThat(allowed, not(empty()));
+		assertThat(allowed.size(), is(1));
+		PermissionLabel crvwAllowed = allowed.get(0);
+		assertThat(crvwAllowed.matches(CRVW.getCategory()), is(true));
+		assertThat(crvwAllowed.getName(), is(PermissionLabel.toLabelName(toNameWithDash(CRVW.getCategory().getName()))));
+		assertThat(crvwAllowed.getMin(), is(-1));
+		assertThat(crvwAllowed.getMax(), is(1));
 	}
 
 	private boolean isVersion26OrLater() throws GerritException {

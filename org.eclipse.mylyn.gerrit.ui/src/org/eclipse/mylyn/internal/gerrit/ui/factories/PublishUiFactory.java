@@ -45,7 +45,8 @@ public class PublishUiFactory extends AbstractPatchSetUiFactory {
 
 		TaskAttribute comment = getTaskData().getRoot().getAttribute(TaskAttribute.COMMENT_NEW);
 		String editorCommentText = comment != null ? comment.getValue() : "";
-		int open = new PublishDialog(getShell(), getTask(), publishDetail, getModelObject(), editorCommentText).open(getEditor());
+		int open = new PublishDialog(getShell(), getTask(), getChange(), publishDetail, getModelObject(),
+				editorCommentText).open(getEditor());
 		if (open == Window.OK && comment != null) {
 			comment.clearValues();
 			if (getTaskEditorPage() != null) {

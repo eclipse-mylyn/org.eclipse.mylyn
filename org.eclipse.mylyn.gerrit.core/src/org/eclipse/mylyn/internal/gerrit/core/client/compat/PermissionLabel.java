@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Tasktop Technologies and others.
+ * Copyright (c) 2011, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,15 +33,27 @@ public class PermissionLabel {
 		return max;
 	}
 
+	public void setMax(int max) {
+		this.max = max;
+	}
+
 	public int getMin() {
 		return min;
+	}
+
+	public void setMin(int min) {
+		this.min = min;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public String toLabelName(String identifier) {
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public static String toLabelName(String identifier) {
 		return "label-" + ApprovalUtil.toNameWithDash(identifier); //$NON-NLS-1$
 	}
 

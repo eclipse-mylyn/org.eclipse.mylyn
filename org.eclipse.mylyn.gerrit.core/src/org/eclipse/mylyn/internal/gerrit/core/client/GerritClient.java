@@ -440,13 +440,16 @@ public class GerritClient extends ReviewsClient {
 
 	public PatchSetPublishDetailX getPatchSetPublishDetail(final PatchSet.Id id, IProgressMonitor monitor)
 			throws GerritException {
-		PatchSetPublishDetailX publishDetail = execute(monitor,
-				new Operation<org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchSetPublishDetailX>() {
-					@Override
-					public void execute(IProgressMonitor monitor) throws GerritException {
-						getChangeDetailService(monitor).patchSetPublishDetailX(id, this);
-					}
-				});
+		PatchSetPublishDetailX publishDetail = execute(monitor, new Operation<PatchSetPublishDetailX>() {
+			@Override
+			public void execute(IProgressMonitor monitor) throws GerritException {
+				getChangeDetailService(monitor).patchSetPublishDetailX(id, this);
+			}
+		});
+		if (publishDetail.getLabels() == null && isVersion26OrLater(monitor)) {
+			ChangeInfo changeInfo = getChangeInfo(id.getParentKey().get(), monitor);
+			publishDetail.setLabels(changeInfo.convertToPermissionLabels());
+		}
 		return publishDetail;
 	}
 

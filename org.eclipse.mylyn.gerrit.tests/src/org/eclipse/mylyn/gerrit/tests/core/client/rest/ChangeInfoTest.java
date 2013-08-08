@@ -12,6 +12,8 @@
 package org.eclipse.mylyn.gerrit.tests.core.client.rest;
 
 import static org.eclipse.mylyn.gerrit.tests.core.client.rest.IsEmpty.empty;
+import static org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalUtil.CRVW;
+import static org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalUtil.toNameWithDash;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -36,9 +38,9 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.PermissionLabel;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalInfo;
-import org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.LabelInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.RevisionInfo;
@@ -135,6 +137,7 @@ public class ChangeInfoTest extends TestCase {
 		assertThat(changeInfo.getLabels().get("Code-Review").getAll(), nullValue());
 		assertThat(changeInfo.convertToApprovalDetails(), empty());
 		assertHasCodeReviewApprovalType(changeInfo.convertToApprovalTypes());
+		// no permitted labels
 		assertHasRevisions(changeInfo, 1);
 	}
 
@@ -146,6 +149,7 @@ public class ChangeInfoTest extends TestCase {
 		assertHasApprovalInfo(changeInfo.getLabels().get("Code-Review").getAll(), -1);
 		assertHasApprovalDetail(changeInfo.convertToApprovalDetails(), -1);
 		assertHasCodeReviewApprovalType(changeInfo.convertToApprovalTypes());
+		assertHasCodeReviewPermissionLabels(changeInfo);
 		assertHasRevisions(changeInfo, 1);
 	}
 
@@ -157,6 +161,7 @@ public class ChangeInfoTest extends TestCase {
 		assertHasApprovalInfo(changeInfo.getLabels().get("Code-Review").getAll(), 0);
 		assertHasApprovalDetail(changeInfo.convertToApprovalDetails(), 0);
 		assertHasCodeReviewApprovalType(changeInfo.convertToApprovalTypes());
+		// no permission labels
 		assertHasRevisions(changeInfo, 2);
 	}
 
@@ -176,11 +181,11 @@ public class ChangeInfoTest extends TestCase {
 		assertThat(values, Matchers.<String, String> hasKey(" 0"));
 		assertThat(values, Matchers.<String, String> hasKey("+1"));
 		assertThat(values, Matchers.<String, String> hasKey("+2"));
-		assertThat(values.get("-2"), equalTo(ApprovalUtil.CRVW.getValue((short) -2).getName()));
-		assertThat(values.get("-1"), equalTo(ApprovalUtil.CRVW.getValue((short) -1).getName()));
-		assertThat(values.get(" 0"), equalTo(ApprovalUtil.CRVW.getValue((short) 0).getName()));
-		assertThat(values.get("+1"), equalTo(ApprovalUtil.CRVW.getValue((short) 1).getName()));
-		assertThat(values.get("+2"), equalTo(ApprovalUtil.CRVW.getValue((short) 2).getName()));
+		assertThat(values.get("-2"), equalTo(CRVW.getValue((short) -2).getName()));
+		assertThat(values.get("-1"), equalTo(CRVW.getValue((short) -1).getName()));
+		assertThat(values.get(" 0"), equalTo(CRVW.getValue((short) 0).getName()));
+		assertThat(values.get("+1"), equalTo(CRVW.getValue((short) 1).getName()));
+		assertThat(values.get("+2"), equalTo(CRVW.getValue((short) 2).getName()));
 	}
 
 	private static Timestamp timestamp(String date) throws ParseException {
@@ -201,10 +206,10 @@ public class ChangeInfoTest extends TestCase {
 		assertThat(approvalTypes, not(empty()));
 		assertThat(approvalTypes.size(), is(1));
 		ApprovalType approvalType = approvalTypes.iterator().next();
-		assertThat(approvalType.getCategory().getId(), equalTo(ApprovalUtil.CRVW.getCategory().getId()));
+		assertThat(approvalType.getCategory().getId(), equalTo(CRVW.getCategory().getId()));
 		assertThat(approvalType.getCategory().getName(), is("Code Review"));
 		assertThat(approvalType.getValues().size(), is(5));
-		for (ApprovalCategoryValue approvalCategoryValue : ApprovalUtil.CRVW.getValues()) {
+		for (ApprovalCategoryValue approvalCategoryValue : CRVW.getValues()) {
 			assertHasItem(approvalType.getValues(), ApprovalCategoryValueComparator.INSTANCE, approvalCategoryValue);
 		}
 	}
@@ -225,9 +230,32 @@ public class ChangeInfoTest extends TestCase {
 		assertThat(approvalDetail, notNullValue());
 		Map<Id, PatchSetApproval> approvalMap = approvalDetail.getApprovalMap();
 		assertThat(approvalMap, notNullValue());
-		assertThat(approvalMap, Matchers.<Id, PatchSetApproval> hasKey(ApprovalUtil.CRVW.getCategory().getId()));
-		PatchSetApproval patchSetApproval = approvalMap.get(ApprovalUtil.CRVW.getCategory().getId());
+		assertThat(approvalMap, Matchers.<Id, PatchSetApproval> hasKey(CRVW.getCategory().getId()));
+		PatchSetApproval patchSetApproval = approvalMap.get(CRVW.getCategory().getId());
 		assertThat(patchSetApproval.getValue(), is((short) value));
+	}
+
+	public static void assertHasCodeReviewPermissionLabels(ChangeInfo changeInfo) {
+		Map<String, String[]> permittedLabels = changeInfo.getPermittedLabels();
+
+		assertThat(permittedLabels, notNullValue());
+		assertThat(permittedLabels, not(empty()));
+		assertThat(permittedLabels.size(), is(1));
+		String[] crvwPermittedLabels = permittedLabels.get(toNameWithDash(CRVW.getCategory().getName()));
+		assertThat(crvwPermittedLabels, not(empty()));
+		assertThat(crvwPermittedLabels.length, is(3));
+		assertThat(crvwPermittedLabels[0], is(CRVW.getValue((short) -1).formatValue()));
+		assertThat(crvwPermittedLabels[1], is(CRVW.getValue((short) 0).formatValue()));
+		assertThat(crvwPermittedLabels[2], is(CRVW.getValue((short) 1).formatValue()));
+
+		List<PermissionLabel> permissionLabels = changeInfo.convertToPermissionLabels();
+		assertThat(permissionLabels, notNullValue());
+		assertThat(permissionLabels, not(empty()));
+		assertThat(permissionLabels.size(), is(1));
+		PermissionLabel crvwAllowed = permissionLabels.get(0);
+		assertThat(crvwAllowed.getName(), is(PermissionLabel.toLabelName(toNameWithDash(CRVW.getCategory().getName()))));
+		assertThat(crvwAllowed.getMin(), is(-1));
+		assertThat(crvwAllowed.getMax(), is(1));
 	}
 
 	private static void assertHasRevisions(ChangeInfo changeInfo, int patchSetNr) {
