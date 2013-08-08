@@ -171,10 +171,19 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 		parent.setParent(filterComposite);
 
 		Composite workingSetComposite = createActiveWorkingSetComposite(filterComposite);
-		GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).grab(false, false).applyTo(workingSetComposite);
-
+		if (workingSetComposite != null) {
+			GridDataFactory.fillDefaults()
+					.align(SWT.BEGINNING, SWT.CENTER)
+					.grab(false, false)
+					.applyTo(workingSetComposite);
+		}
 		Composite activeTaskComposite = createActiveTaskComposite(filterComposite);
-		GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).grab(true, false).applyTo(activeTaskComposite);
+		if (activeTaskComposite != null) {
+			GridDataFactory.fillDefaults()
+					.align(SWT.BEGINNING, SWT.CENTER)
+					.grab(true, false)
+					.applyTo(activeTaskComposite);
+		}
 
 		gridLayout.numColumns = filterComposite.getChildren().length;
 		return parent;
@@ -231,8 +240,10 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 
 	public void setShowProgress(boolean showProgress) {
 		this.showProgress = showProgress;
-		progressComposite.setVisible(showProgress);
-		((GridData) progressComposite.getLayoutData()).exclude = !showProgress;
+		if (progressComposite != null) {
+			progressComposite.setVisible(showProgress);
+			((GridData) progressComposite.getLayoutData()).exclude = !showProgress;
+		}
 		getParent().getParent().layout(true, true);
 	}
 
