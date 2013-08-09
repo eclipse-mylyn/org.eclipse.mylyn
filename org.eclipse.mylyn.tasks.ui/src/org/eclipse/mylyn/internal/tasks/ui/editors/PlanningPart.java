@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -378,15 +378,13 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		toolkit.paintBordersFor(composite);
 	}
 
-	private void addNotesLabelText(final FormToolkit toolkit, Composite composite) {
-
-		if (notesString.length() == 0 && !noteEditor.getViewer().getTextWidget().isFocusControl()) {
-			notesString = PERSONAL_NOTES;
-			noteEditor.setText(notesString);
+	private void addNotesLabelText(final FormToolkit toolkit, final Composite composite) {
+		if (!noteEditor.getViewer().getTextWidget().isFocusControl()) {
+			setNotesLabelText(composite);
 		}
+		noteEditor.getViewer().getTextWidget().addFocusListener(new FocusListener() {
 
-		FocusListener removePersonalNotesFocusListener = new FocusListener() {
-
+			@Override
 			public void focusGained(FocusEvent e) {
 				if (noteEditor.getText().equals(PERSONAL_NOTES)) {
 					noteEditor.setText(""); //$NON-NLS-1$
@@ -397,23 +395,23 @@ public class PlanningPart extends AbstractLocalEditorPart {
 				}
 			}
 
+			@Override
 			public void focusLost(FocusEvent e) {
+				setNotesLabelText(composite);
 			}
-		};
-		boolean changeColor = false;
-		if (noteEditor.getText().equals(PERSONAL_NOTES)) {
-			changeColor = true;
-		}
+		});
+	}
 
-		if (noteEditor.getViewer() != null) {
-			noteEditor.getViewer().getTextWidget().addFocusListener(removePersonalNotesFocusListener);
-			if (changeColor) {
+	private void setNotesLabelText(Composite composite) {
+		if (notesString.length() == 0) {
+			notesString = PERSONAL_NOTES;
+			noteEditor.setText(notesString);
+			if (noteEditor.getViewer() != null) {
 				noteEditor.getViewer()
 						.getTextWidget()
 						.setForeground(composite.getShell().getDisplay().getSystemColor(SWT.COLOR_GRAY));
 			}
 		}
-
 	}
 
 	private void createActiveTime(FormToolkit toolkit, Composite toolbarComposite, int numColumns) {
