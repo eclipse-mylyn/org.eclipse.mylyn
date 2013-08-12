@@ -28,6 +28,8 @@ import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfObserver;
 import org.eclipse.mylyn.reviews.core.spi.remote.review.IReviewRemoteFactoryProvider;
 import org.eclipse.mylyn.reviews.spi.edit.remote.AbstractRemoteEditFactoryProvider;
 import org.eclipse.mylyn.reviews.spi.edit.remote.review.ReviewsRemoteEditFactoryProvider;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.IEditorInput;
@@ -127,8 +129,11 @@ public abstract class AbstractReviewTaskEditorPage extends AbstractTaskEditorPag
 	}
 
 	public IReviewRemoteFactoryProvider getFactoryProvider() {
-		return (IReviewRemoteFactoryProvider) ((ReviewsConnector) getConnector()).getReviewClient(getTaskRepository())
-				.getFactoryProvider();
+		// obtain from editor input instead of calling getTaskRepository() to avoid NPE when task model could not be loaded
+		// note that this would not return the expected result for unsubmitted tasks which is not supported for reviews 
+		TaskRepository repository = getTaskEditor().getTaskEditorInput().getTaskRepository();
+		ReviewsConnector connector = (ReviewsConnector) TasksUi.getRepositoryConnector(repository.getConnectorKind());
+		return (IReviewRemoteFactoryProvider) connector.getReviewClient(repository).getFactoryProvider();
 	}
 
 	@Override
