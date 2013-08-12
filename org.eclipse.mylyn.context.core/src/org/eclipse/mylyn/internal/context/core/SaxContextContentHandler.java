@@ -45,6 +45,9 @@ public class SaxContextContentHandler extends DefaultHandler {
 
 	private final String contextHandleIdentifier;
 
+	private final SimpleDateFormat dateFormat = new SimpleDateFormat(InteractionContextExternalizer.DATE_FORMAT_STRING,
+			Locale.ENGLISH);
+
 	static final String ATTRIBUTE_INTERACTION_EVENT = "InteractionEvent"; //$NON-NLS-1$
 
 	static final String ATTRIBUTE_CONTENT = "Content"; //$NON-NLS-1$
@@ -114,8 +117,6 @@ public class SaxContextContentHandler extends DefaultHandler {
 			}
 		}
 
-		SimpleDateFormat dateFormat = new SimpleDateFormat(InteractionContextExternalizer.DATE_FORMAT_STRING,
-				Locale.ENGLISH);
 		Date dStartDate = dateFormat.parse(startDate);
 		Date dEndDate = dateFormat.parse(endDate);
 		float iInterest = Float.parseFloat(interest);
