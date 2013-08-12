@@ -25,9 +25,16 @@ define gerrit::site (
     onlyif  => "test -x $envbase/bin/gerrit.sh && $envbase/bin/gerrit.sh check | grep -q 'Gerrit running'",
   }
 
+  exec { "clear $envid":
+    command => "rm -rf $envbase",
+    require => Exec["stop $envid"],
+    user    => "$gerrit::userOwner",
+    onlyif  => "test -e $base/clearexisting",
+  }
+
   exec { "configure $envid":
     command => "java -jar $base/archive/gerrit-$version.war init --batch --site-path $envbase --no-auto-start",
-    require => Exec["stop $envid"],
+    require => Exec["clear $envid"],
     user    => "$gerrit::userOwner",
     creates => "$envbase",
   }
