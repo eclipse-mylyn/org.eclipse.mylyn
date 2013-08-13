@@ -491,24 +491,26 @@ public class ReviewExplorer extends CommonNavigator {
 	}
 
 	protected void updatePerservingSelection() {
-		//Because we don't necessarily have the same backing EMF objects, we need to test on equality. We'd also like to restore selection even if the tree structure changes. In this case, using labels will be most consistent with user expectations..
-		Object[] priorExpanded = getCommonViewer().getExpandedElements();
-		Object[] priorSelection = new Object[] {};
-		if (getCommonViewer().getSelection() instanceof IStructuredSelection) {
-			priorSelection = ((IStructuredSelection) getCommonViewer().getSelection()).toArray();
+		if (!getCommonViewer().getControl().isDisposed()) {
+			//Because we don't necessarily have the same backing EMF objects, we need to test on equality. We'd also like to restore selection even if the tree structure changes. In this case, using labels will be most consistent with user expectations..
+			Object[] priorExpanded = getCommonViewer().getExpandedElements();
+			Object[] priorSelection = new Object[] {};
+			if (getCommonViewer().getSelection() instanceof IStructuredSelection) {
+				priorSelection = ((IStructuredSelection) getCommonViewer().getSelection()).toArray();
+			}
+			getCommonViewer().getControl().setRedraw(false);
+			update();
+			Collection<Object> newExpanded = matchingElements(
+					(ITreeContentProvider) getCommonViewer().getContentProvider(), review,
+					new HashSet<Object>(Arrays.asList(priorExpanded)), true);
+			Collection<Object> newSelection = matchingElements(
+					(ITreeContentProvider) getCommonViewer().getContentProvider(), review,
+					new HashSet<Object>(Arrays.asList(priorSelection)), false);
+			getCommonViewer().setExpandedElements(newExpanded.toArray());
+			getCommonViewer().setSelection(new StructuredSelection(newSelection.toArray()), true);
+			getCommonViewer().getControl().setRedraw(true);
+			getCommonViewer().getControl().redraw();
 		}
-		getCommonViewer().getControl().setRedraw(false);
-		update();
-		Collection<Object> newExpanded = matchingElements(
-				(ITreeContentProvider) getCommonViewer().getContentProvider(), review,
-				new HashSet<Object>(Arrays.asList(priorExpanded)), true);
-		Collection<Object> newSelection = matchingElements(
-				(ITreeContentProvider) getCommonViewer().getContentProvider(), review,
-				new HashSet<Object>(Arrays.asList(priorSelection)), false);
-		getCommonViewer().setExpandedElements(newExpanded.toArray());
-		getCommonViewer().setSelection(new StructuredSelection(newSelection.toArray()), true);
-		getCommonViewer().getControl().setRedraw(true);
-		getCommonViewer().getControl().redraw();
 	}
 
 	public void setReview(IReview review) {
