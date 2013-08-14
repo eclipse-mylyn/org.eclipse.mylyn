@@ -56,8 +56,6 @@ import com.google.gerrit.reviewdb.Project;
  */
 public class EGitUiUtil {
 
-	private static boolean credentialsProviderWarningLogged;
-
 	public static RevCommit getRevCommit(Repository repository, PatchSet target) throws AmbiguousObjectException,
 			IOException, MissingObjectException, IncorrectObjectTypeException {
 		ObjectId ref = repository.resolve(target.getRevision().get());
