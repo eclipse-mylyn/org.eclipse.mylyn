@@ -11,8 +11,13 @@
 
 package org.eclipse.mylyn.hudson.tests.core;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.builds.core.BuildState;
+import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.internal.hudson.core.HudsonServerBehaviour;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonConfigurationCache;
@@ -42,6 +47,63 @@ public class HudsonServerBehaviourTest extends TestCase {
 		healthReport.setScore(80);
 		job.getHealthReport().add(healthReport);
 		assertEquals(80, behaviour.parseJob(job).getHealth());
+	}
+
+	public void testParseJobNoColor() throws Exception {
+		HudsonServerBehaviour behaviour = new HudsonServerBehaviour(new RepositoryLocation(),
+				new HudsonConfigurationCache());
+		HudsonModelJob job = new HudsonModelJob();
+
+		IBuildPlan buildPlan = behaviour.parseJob(job);
+
+		assertNull(buildPlan.getState());
+		assertNull(buildPlan.getStatus());
+	}
+
+	public void testParseJobRunningColor() throws Exception {
+		HudsonServerBehaviour behaviour = new HudsonServerBehaviour(new RepositoryLocation(),
+				new HudsonConfigurationCache());
+		HudsonModelJob job = new HudsonModelJob();
+
+		for (HudsonModelBallColor color : getRunningColors()) {
+			job.setColor(color);
+			IBuildPlan buildPlan = behaviour.parseJob(job);
+
+			assertEquals(BuildState.RUNNING, buildPlan.getState());
+		}
+	}
+
+	public void testParseJobStoppedColor() throws Exception {
+		HudsonServerBehaviour behaviour = new HudsonServerBehaviour(new RepositoryLocation(),
+				new HudsonConfigurationCache());
+		HudsonModelJob job = new HudsonModelJob();
+
+		for (HudsonModelBallColor color : getStoppedColors()) {
+			job.setColor(color);
+			IBuildPlan buildPlan = behaviour.parseJob(job);
+
+			assertEquals(BuildState.STOPPED, buildPlan.getState());
+		}
+	}
+
+	private Set<HudsonModelBallColor> getRunningColors() {
+		Set<HudsonModelBallColor> result = new HashSet<HudsonModelBallColor>();
+		for (HudsonModelBallColor color : HudsonModelBallColor.values()) {
+			if (color.value().endsWith("_anime")) {
+				result.add(color);
+			}
+		}
+		return result;
+	}
+
+	private Set<HudsonModelBallColor> getStoppedColors() {
+		Set<HudsonModelBallColor> result = new HashSet<HudsonModelBallColor>();
+		for (HudsonModelBallColor color : HudsonModelBallColor.values()) {
+			if (!color.value().endsWith("_anime")) {
+				result.add(color);
+			}
+		}
+		return result;
 	}
 
 }

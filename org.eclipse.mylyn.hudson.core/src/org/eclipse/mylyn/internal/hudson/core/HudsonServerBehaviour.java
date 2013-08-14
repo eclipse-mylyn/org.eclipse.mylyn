@@ -841,46 +841,66 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 	}
 
 	protected void updateStateAndStatus(HudsonModelJob job, IBuildPlan plan) {
-		if (job.getColor().equals(HudsonModelBallColor.BLUE) || job.getColor().equals(HudsonModelBallColor.GREEN)) {
-			plan.setStatus(BuildStatus.SUCCESS);
-			plan.setState(BuildState.STOPPED);
-		} else if (job.getColor().equals(HudsonModelBallColor.BLUE_ANIME)
-				|| job.getColor().equals(HudsonModelBallColor.GREEN_ANIME)) {
-			plan.setStatus(BuildStatus.SUCCESS);
-			plan.setState(BuildState.RUNNING);
-		} else if (job.getColor().equals(HudsonModelBallColor.RED)) {
-			plan.setStatus(BuildStatus.FAILED);
-			plan.setState(BuildState.STOPPED);
-		} else if (job.getColor().equals(HudsonModelBallColor.RED_ANIME)) {
-			plan.setStatus(BuildStatus.FAILED);
-			plan.setState(BuildState.RUNNING);
-		} else if (job.getColor().equals(HudsonModelBallColor.YELLOW)) {
-			plan.setStatus(BuildStatus.UNSTABLE);
-			plan.setState(BuildState.STOPPED);
-		} else if (job.getColor().equals(HudsonModelBallColor.YELLOW_ANIME)) {
-			plan.setStatus(BuildStatus.UNSTABLE);
-			plan.setState(BuildState.RUNNING);
-		} else if (job.getColor().equals(HudsonModelBallColor.GREY)) {
-			plan.setStatus(BuildStatus.DISABLED);
-			plan.setState(BuildState.STOPPED);
-		} else if (job.getColor().equals(HudsonModelBallColor.GREY_ANIME)) {
-			plan.setStatus(BuildStatus.DISABLED);
-			plan.setState(BuildState.RUNNING);
-		} else if (job.getColor().equals(HudsonModelBallColor.DISABLED)) {
-			plan.setStatus(BuildStatus.DISABLED);
-			plan.setState(BuildState.STOPPED);
-		} else if (job.getColor().equals(HudsonModelBallColor.DISABLED_ANIME)) {
-			plan.setStatus(BuildStatus.DISABLED);
-			plan.setState(BuildState.RUNNING);
-		} else if (job.getColor().equals(HudsonModelBallColor.ABORTED)) {
-			plan.setStatus(BuildStatus.ABORTED);
-			plan.setState(BuildState.STOPPED);
-		} else if (job.getColor().equals(HudsonModelBallColor.ABORTED_ANIME)) {
-			plan.setStatus(BuildStatus.ABORTED);
-			plan.setState(BuildState.RUNNING);
-		} else {
+		HudsonModelBallColor color = job.getColor();
+		if (color == null) {
 			plan.setStatus(null);
 			plan.setState(null);
+		} else {
+			switch (color) {
+			case BLUE:
+			case GREEN:
+				plan.setStatus(BuildStatus.SUCCESS);
+				plan.setState(BuildState.STOPPED);
+				break;
+			case BLUE_ANIME:
+			case GREEN_ANIME:
+				plan.setStatus(BuildStatus.SUCCESS);
+				plan.setState(BuildState.RUNNING);
+				break;
+			case RED:
+				plan.setStatus(BuildStatus.FAILED);
+				plan.setState(BuildState.STOPPED);
+				break;
+			case RED_ANIME:
+				plan.setStatus(BuildStatus.FAILED);
+				plan.setState(BuildState.RUNNING);
+				break;
+			case YELLOW:
+				plan.setStatus(BuildStatus.UNSTABLE);
+				plan.setState(BuildState.STOPPED);
+				break;
+			case YELLOW_ANIME:
+				plan.setStatus(BuildStatus.UNSTABLE);
+				plan.setState(BuildState.RUNNING);
+				break;
+			case GREY:
+				plan.setStatus(BuildStatus.DISABLED);
+				plan.setState(BuildState.STOPPED);
+				break;
+			case GREY_ANIME:
+				plan.setStatus(BuildStatus.DISABLED);
+				plan.setState(BuildState.RUNNING);
+				break;
+			case DISABLED:
+				plan.setStatus(BuildStatus.DISABLED);
+				plan.setState(BuildState.STOPPED);
+				break;
+			case DISABLED_ANIME:
+				plan.setStatus(BuildStatus.DISABLED);
+				plan.setState(BuildState.RUNNING);
+				break;
+			case ABORTED:
+				plan.setStatus(BuildStatus.ABORTED);
+				plan.setState(BuildState.STOPPED);
+				break;
+			case ABORTED_ANIME:
+				plan.setStatus(BuildStatus.ABORTED);
+				plan.setState(BuildState.RUNNING);
+				break;
+			default:
+				plan.setStatus(null);
+				plan.setState(null);
+			}
 		}
 
 		EnumSet<BuildState> flags = EnumSet.noneOf(BuildState.class);
