@@ -21,13 +21,14 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.EcorePackage;
 
-class TestRemoteFactory extends AbstractRemoteEmfFactory<EPackage, EClass, String, TestRemoteObject, String, Integer> {
+class TestEClassRemoteFactory extends
+		AbstractRemoteEmfFactory<EPackage, EClass, String, TestRemoteEClass, String, Integer> {
 
-	static TestRemoteObject remote1 = new TestRemoteObject("Remote Object 1");
+	static TestRemoteEClass remote1 = new TestRemoteEClass("Remote Object 1");
 
-	static TestRemoteObject remote2 = new TestRemoteObject("Remote Object 2");
+	static TestRemoteEClass remote2 = new TestRemoteEClass("Remote Object 2");
 
-	static Map<String, TestRemoteObject> remoteForKey = new HashMap<String, TestRemoteObject>();
+	static Map<String, TestRemoteEClass> remoteForKey = new HashMap<String, TestRemoteEClass>();
 
 	Integer currentVal;
 
@@ -36,25 +37,25 @@ class TestRemoteFactory extends AbstractRemoteEmfFactory<EPackage, EClass, Strin
 		remoteForKey.put("remoteKeyFor Object 2", remote2);
 	}
 
-	public TestRemoteFactory() {
+	public TestEClassRemoteFactory() {
 		super(new TestRemoteFactoryProvider(), EcorePackage.Literals.EPACKAGE__ECLASSIFIERS,
 				EcorePackage.Literals.ECLASSIFIER__INSTANCE_CLASS_NAME);
 	}
 
 	@Override
-	public TestRemoteObject pull(EPackage parent, String remoteKey, IProgressMonitor monitor) throws CoreException {
+	public TestRemoteEClass pull(EPackage parent, String remoteKey, IProgressMonitor monitor) throws CoreException {
 		return remoteForKey.get(remoteKey);
 	}
 
 	@Override
-	protected EClass createModel(EPackage parent, TestRemoteObject remoteObject) {
+	protected EClass createModel(EPackage parent, TestRemoteEClass remoteObject) {
 		EClass clazz = EcoreFactory.eINSTANCE.createEClass();
 		clazz.setName(remoteObject.name.replaceAll("Remote", "Local"));
 		return clazz;
 	}
 
 	@Override
-	public boolean updateModel(EPackage parent, EClass object, TestRemoteObject remoteObject) {
+	public boolean updateModel(EPackage parent, EClass object, TestRemoteEClass remoteObject) {
 		if (remoteObject != null) {
 			object.setInstanceTypeName(remoteObject.data);
 		}
@@ -62,7 +63,7 @@ class TestRemoteFactory extends AbstractRemoteEmfFactory<EPackage, EClass, Strin
 	}
 
 	@Override
-	public String getRemoteKey(TestRemoteObject remoteObject) {
+	public String getRemoteKey(TestRemoteEClass remoteObject) {
 		if (remoteObject == remote1) {
 			return "remoteKeyFor Object 1";
 		} else if (remoteObject == remote2) {

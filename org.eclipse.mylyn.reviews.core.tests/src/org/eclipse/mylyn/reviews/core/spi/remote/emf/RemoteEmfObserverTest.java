@@ -27,12 +27,12 @@ import org.junit.Test;
  */
 public class RemoteEmfObserverTest {
 	@Test
-	public void testListeners() {
-		TestRemoteFactory factory = new TestRemoteFactory();
+	public void testAddRemoteAndSetListeners() {
+		TestEClassRemoteFactory factory = new TestEClassRemoteFactory();
 		EPackage parent = EcoreFactory.eINSTANCE.createEPackage();
-		RemoteEmfConsumer<EPackage, EClass, String, TestRemoteObject, String, Integer> consumer1 = factory.getConsumerForRemoteKey(
+		RemoteEmfConsumer<EPackage, EClass, String, TestRemoteEClass, String, Integer> consumer1 = factory.getConsumerForRemoteKey(
 				parent, "remoteKeyFor Object 1");
-		RemoteEmfConsumer<EPackage, EClass, String, TestRemoteObject, String, Integer> consumer2 = factory.getConsumerForRemoteKey(
+		RemoteEmfConsumer<EPackage, EClass, String, TestRemoteEClass, String, Integer> consumer2 = factory.getConsumerForRemoteKey(
 				parent, "remoteKeyFor Object 2");
 		assertThat(consumer1, not(sameInstance(consumer2)));
 		TestRemoteEmfObserver<EPackage, EClass, String, Integer> listener1 = new TestRemoteEmfObserver<EPackage, EClass, String, Integer>(
@@ -76,5 +76,4 @@ public class RemoteEmfObserverTest {
 		assertThat(listener1.responded, is(4));
 		assertThat(listener1.updated, is(4));
 	}
-
 }

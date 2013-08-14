@@ -14,6 +14,8 @@ package org.eclipse.mylyn.reviews.core.spi.remote.emf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.util.Collection;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 
@@ -24,6 +26,10 @@ final class TestRemoteEmfObserver<P extends EObject, T, L, C> extends RemoteEmfO
 	T createdObject;
 
 	int updated;
+
+	int updating;
+
+	int updatedMember;
 
 	int responded;
 
@@ -43,6 +49,7 @@ final class TestRemoteEmfObserver<P extends EObject, T, L, C> extends RemoteEmfO
 
 	@Override
 	public void updating(P parent, T object) {
+		updating++;
 	}
 
 	@Override
@@ -50,6 +57,9 @@ final class TestRemoteEmfObserver<P extends EObject, T, L, C> extends RemoteEmfO
 		responded++;
 		if (modified) {
 			updated++;
+		}
+		if (child instanceof Collection) {
+			updatedMember++;
 		}
 	}
 
@@ -77,8 +87,8 @@ final class TestRemoteEmfObserver<P extends EObject, T, L, C> extends RemoteEmfO
 			Thread.sleep(100);
 		} catch (InterruptedException e) {
 		}
-		assertThat("Wrong # responses", responded, is(response));
-		assertThat("Wrong # updates", updated, is(update));
+		assertThat("Wrong # responses: " + responded + ", updated: " + updated, responded, is(response));
+		assertThat("Wrong # updates" + updated, updated, is(update));
 	}
 
 	protected void waitForFailure() {
