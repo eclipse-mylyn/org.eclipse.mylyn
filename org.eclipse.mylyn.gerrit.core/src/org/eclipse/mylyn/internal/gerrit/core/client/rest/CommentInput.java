@@ -26,13 +26,16 @@ public class CommentInput {
 	private String path;
 
 	// REVISION (default) or PARENT
+	@SuppressWarnings("unused")
 	private String side;
 
 	// 0 for file comment (default)
 	private int line;
 
+	@SuppressWarnings("unused")
 	private String in_reply_to;
 
+	@SuppressWarnings("unused")
 	private Timestamp updated;
 
 	private String message;
