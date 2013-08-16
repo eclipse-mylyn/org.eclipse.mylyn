@@ -879,9 +879,9 @@ public class GerritClient extends ReviewsClient {
 		executePostRestRequest(uri, new SubmitInput(true), SubmitInfo.class, new ErrorHandler() {
 			@Override
 			public void handleError(HttpMethodBase method) throws GerritException {
-				if (method.getStatusCode() == HttpURLConnection.HTTP_FORBIDDEN
-						&& "submit not permitted\n".equals(getResponseBodyAsString(method))) { //$NON-NLS-1$
-					throw new GerritException("Cannot submit change"); //$NON-NLS-1$
+				String errorMsg = getResponseBodyAsString(method);
+				if (isNotPermitted(method, errorMsg) || isConflict(method)) {
+					throw new GerritException(NLS.bind("Cannot submit change: {0}", errorMsg)); //$NON-NLS-1$
 				}
 			}
 
@@ -891,6 +891,15 @@ public class GerritClient extends ReviewsClient {
 				} catch (IOException e) {
 					return null;
 				}
+			}
+
+			private boolean isNotPermitted(HttpMethodBase method, String msg) {
+				return method.getStatusCode() == HttpURLConnection.HTTP_FORBIDDEN
+						&& "submit not permitted\n".equals(msg); //$NON-NLS-1$
+			}
+
+			private boolean isConflict(HttpMethodBase method) {
+				return method.getStatusCode() == HttpURLConnection.HTTP_CONFLICT;
 			}
 		}, monitor);
 		return getChangeDetail(id.get(), monitor);
