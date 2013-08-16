@@ -130,7 +130,7 @@ define gerrit::site (
   exec { "create project for $envid":
     command => "$ssh gerrit create-project --name org.eclipse.mylyn.test --empty-commit",
     #    user => "$gerrit::userOwner",
-    require => Exec["start $envid"],
+    require => [Exec["start $envid"], File["$envbase/admin.id_rsa"]],
     creates => "$envbase/git/org.eclipse.mylyn.test.git"
   }
 
