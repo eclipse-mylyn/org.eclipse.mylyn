@@ -36,6 +36,12 @@ public class MarkdownLanguageSpanElementsTest extends MarkdownLanguageTestBase {
 		parseAndAssert(markup, expectedHtml);
 	}
 
+	public void testInlineLinkWithEmptyLinkText() {
+		String markup = "Link with empty link text [](http://example.com/).";
+		String expectedHtml = "<p>Link with empty link text <a href=\"http://example.com/\"></a>.</p>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
 	/*
 	 * If you're referring to a local resource on the same server, you can use relative paths:
 	 */
@@ -61,6 +67,12 @@ public class MarkdownLanguageSpanElementsTest extends MarkdownLanguageTestBase {
 	public void testReferenceStyleLink() {
 		String markup = "This is [an example][id] reference-style link.\n\n[id]: http://example.com/  \"Optional Title Here\"";
 		String expectedHtml = "<p>This is <a href=\"http://example.com/\" title=\"Optional Title Here\">an example</a> reference-style link.</p>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testReferenceStyleLinkWithEmptyLinkText() {
+		String markup = "Link with empty link text [][id].\n\n[id]: http://example.com/";
+		String expectedHtml = "<p>Link with empty link text <a href=\"http://example.com/\"></a>.</p>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
@@ -179,6 +191,18 @@ public class MarkdownLanguageSpanElementsTest extends MarkdownLanguageTestBase {
 		parseAndAssert(markup, expectedHtml);
 	}
 
+	public void testInlineImageWithEmptyAltText() {
+		String markup = "![](/path/to/img.jpg)";
+		String expectedHtml = "<p><img alt=\"\" border=\"0\" src=\"/path/to/img.jpg\"/></p>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testInlineImageWithEmptyTitle() {
+		String markup = "![](/path/to/img.jpg \"\")";
+		String expectedHtml = "<p><img alt=\"\" title=\"\" border=\"0\" src=\"/path/to/img.jpg\"/></p>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
 	public void testNoSpanWithinInlineImage() throws Exception {
 		String markup = "![Alt text](/path/to/my_nice_image.jpg)";
 		String expectedHtml = "<p><img alt=\"Alt text\" border=\"0\" src=\"/path/to/my_nice_image.jpg\"/></p>";
@@ -191,6 +215,12 @@ public class MarkdownLanguageSpanElementsTest extends MarkdownLanguageTestBase {
 	public void testReferenceStyleImage() {
 		String markup = "![Alt text][id]\n\n[id]: url/to/image  \"Optional title attribute\"";
 		String expectedHtml = "<p><img alt=\"Alt text\" title=\"Optional title attribute\" border=\"0\" src=\"url/to/image\"/></p>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testReferenceStyleImageWithEmptyAltTextAndEmptyTitle() {
+		String markup = "![][id]\n\n[id]: url/to/image  \"\"";
+		String expectedHtml = "<p><img alt=\"\" title=\"\" border=\"0\" src=\"url/to/image\"/></p>";
 		parseAndAssert(markup, expectedHtml);
 	}
 

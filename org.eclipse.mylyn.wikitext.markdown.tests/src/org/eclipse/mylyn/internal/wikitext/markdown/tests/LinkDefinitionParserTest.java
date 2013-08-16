@@ -40,6 +40,17 @@ public class LinkDefinitionParserTest extends TestCase {
 		assertNull(linkDefinition.getTitle());
 	}
 
+	public void testEmptyTitle() {
+		String markup = "[foo]: http://example.com/ \"\"";
+		linkDefinitionParser.parse(markup);
+
+		LinkDefinition linkDefinition = linkDefinitionParser.getLinkDefinition("foo");
+		assertNotNull(linkDefinition);
+		assertEquals("foo", linkDefinition.getId());
+		assertEquals("http://example.com/", linkDefinition.getUrl());
+		assertEquals("", linkDefinition.getTitle());
+	}
+
 	public void testDoubleQuotedTitle() {
 		String markup = "[foo]: http://example.com/ \"Optional Title Here\"";
 		linkDefinitionParser.parse(markup);

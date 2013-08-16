@@ -27,7 +27,7 @@ public class LinkDefinitionParser {
 
 	private static final String URL_REGEX = "\\s+(?=[<]?(([^>\\s]+)))(?:<\\3>|\\3)"; //$NON-NLS-1$
 
-	private static final String TITLE_REGEX = "(?:\\s+[\"'\\(](.+)[\"'\\)])?"; //$NON-NLS-1$
+	private static final String TITLE_REGEX = "(?:\\s+[\"'\\(](.*?)[\"'\\)])?"; //$NON-NLS-1$
 
 	public static final Pattern LINK_DEFINITION_PATTERN = Pattern.compile(ID_REGEX + URL_REGEX + TITLE_REGEX);
 

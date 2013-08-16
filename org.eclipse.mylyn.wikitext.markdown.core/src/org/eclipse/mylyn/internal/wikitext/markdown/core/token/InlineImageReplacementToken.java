@@ -24,7 +24,7 @@ public class InlineImageReplacementToken extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "!\\[\\s*(.+?)\\s*\\]\\(\\s*(.+?)(?:\\s\"(.+?)\")?\\s*\\)"; //$NON-NLS-1$
+		return "!\\[\\s*(.*?)\\s*\\]\\(\\s*(.+?)(?:\\s\"(.*?)\")?\\s*\\)"; //$NON-NLS-1$
 	}
 
 	@Override
