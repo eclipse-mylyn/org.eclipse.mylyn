@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.ParseException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.text.html.HTML.Tag;
 
@@ -101,13 +103,14 @@ public class GerritHtmlProcessor {
 	 * Parses the configuration from <code>text</code>.
 	 */
 	private void parse(String text) {
-		String configPrefix = "var gerrit_hostpagedata={\"config\":"; //$NON-NLS-1$
+		Pattern p = Pattern.compile("var gerrit_hostpagedata=\\{(\"version\":\"([^\"]+)\",)?\"config\":"); //$NON-NLS-1$
 		String configXsrfToken = "hostpagedata.xsrfToken=\""; //$NON-NLS-1$
 		String configXGerritAuth = "hostpagedata.xGerritAuth=\""; //$NON-NLS-1$
 		String[] tokens = text.split(";gerrit_"); //$NON-NLS-1$
 		for (String token : tokens) {
-			if (token.startsWith(configPrefix)) {
-				token = token.substring(configPrefix.length());
+			Matcher m = p.matcher(token);
+			if (m.find()) {
+				token = token.substring(m.toMatchResult().group(0).length());
 				// remove closing }
 				token = token.substring(0, token.length() - 1);
 				this.config = gerritConfigFromString(token);
@@ -124,5 +127,4 @@ public class GerritHtmlProcessor {
 			}
 		}
 	}
-
 }
