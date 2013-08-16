@@ -48,6 +48,7 @@ Import-Package: com.google.gerrit.common.auth.userpass;version="2.1.5",
 Export-Package: org.eclipse.mylyn.gerrit.tests;x-internal:=true,
  org.eclipse.mylyn.gerrit.tests.core;x-internal:=true,
  org.eclipse.mylyn.gerrit.tests.core.client;x-internal:=true,
+ org.eclipse.mylyn.gerrit.tests.core.client.rest;x-internal:=true,
  org.eclipse.mylyn.gerrit.tests.support;x-internal:=true,
  org.eclipse.mylyn.gerrit.tests.ui;x-internal:=true,
  org.eclipse.mylyn.internal.gerrit.core.remote;x-internal:=true
