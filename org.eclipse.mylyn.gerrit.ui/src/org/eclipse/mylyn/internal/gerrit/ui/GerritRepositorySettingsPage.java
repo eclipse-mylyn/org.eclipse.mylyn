@@ -121,7 +121,7 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 		repository.setProperty(GerritConnector.KEY_REPOSITORY_OPEN_ID_ENABLED,
 				Boolean.toString(openIdButton.getSelection()));
 		repository.setProperty(GerritConnector.KEY_REPOSITORY_OPEN_ID_PROVIDER, openIdCombo.getText());
-		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY, IRepositoryConstants.CATEGORY_REVIEW);
+		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY, TaskRepository.CATEGORY_REVIEW);
 		repository.removeProperty(GerritConnector.KEY_REPOSITORY_ACCOUNT_ID);
 		repository.removeProperty(GerritConnector.KEY_REPOSITORY_AUTH);
 	}
