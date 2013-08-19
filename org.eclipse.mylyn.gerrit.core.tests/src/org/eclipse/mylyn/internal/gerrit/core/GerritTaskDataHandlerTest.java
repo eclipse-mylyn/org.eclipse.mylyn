@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.gerrit.core;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -29,6 +30,7 @@ public class GerritTaskDataHandlerTest {
 		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://repository"); //$NON-NLS-1$
 		TaskData data = handler.createPartialTaskData(repository, "1", null); //$NON-NLS-1$
 		assertNull(data.getRoot().getAttribute(GerritTaskSchema.getDefault().UPLOADED.getKey()));
+		assertTrue(data.isPartial());
 	}
 
 	@Test

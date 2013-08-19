@@ -13,9 +13,12 @@ package org.eclipse.mylyn.gerrit.tests.core;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.gerrit.tests.support.GerritHarness;
@@ -25,6 +28,7 @@ import org.eclipse.mylyn.internal.gerrit.core.GerritTaskSchema;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tests.util.InMemoryTaskDataCollector;
 import org.junit.After;
@@ -73,6 +77,14 @@ public class GerritConnectorTest extends TestCase {
 		for (TaskData result : resultCollector.getResults()) {
 			assertTrue(result.isPartial());
 			assertNull(result.getRoot().getAttribute(GerritTaskSchema.getDefault().UPLOADED.getKey()));
+			TaskAttribute key = result.getRoot().getAttribute(GerritTaskSchema.getDefault().KEY.getKey());
+			assertNotNull(key);
+			String value = key.getValue();
+			assertNotNull(value);
+			assertTrue(value.startsWith("I")); // Change-Ids are prefixed with an uppercase I
+			// 'expand' the abbreviated SHA-1 with 'a's
+			String objId = StringUtils.rightPad(value.substring(1), Constants.OBJECT_ID_STRING_LENGTH, 'a');
+			assertTrue(ObjectId.isId(objId));
 		}
 	}
 

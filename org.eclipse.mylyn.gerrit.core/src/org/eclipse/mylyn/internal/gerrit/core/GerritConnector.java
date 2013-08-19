@@ -246,15 +246,14 @@ public class GerritConnector extends ReviewsConnector {
 			if (result != null) {
 				for (GerritQueryResult changeInfo : result) {
 					TaskData taskData = taskDataHandler.createPartialTaskData(repository,
-							changeInfo.getNumber() + "", monitor); //$NON-NLS-1$
-					taskData.setPartial(true);
+							Integer.toString(changeInfo.getNumber()), monitor);
 					taskDataHandler.updateTaskData(repository, taskData, changeInfo);
 					resultCollector.accept(taskData);
 				}
 				return Status.OK_STATUS;
 			}
 
-			return new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, NLS.bind("Unknows query type: {0}",
+			return new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, NLS.bind("Unknown query type: {0}",
 					query.getAttribute(GerritQuery.PROJECT)));
 		} catch (UnsupportedClassVersionError e) {
 			return toStatus(repository, e);
@@ -287,7 +286,7 @@ public class GerritConnector extends ReviewsConnector {
 		mapper.applyTo(task);
 		String key = task.getTaskKey();
 		if (key != null) {
-			task.setSummary(NLS.bind("{0} [{1}]", mapper.getSummary(), key));
+			task.setSummary(NLS.bind("{0} [{1}]", mapper.getSummary(), key)); //$NON-NLS-1$
 			task.setTaskKey(task.getTaskId());
 		}
 

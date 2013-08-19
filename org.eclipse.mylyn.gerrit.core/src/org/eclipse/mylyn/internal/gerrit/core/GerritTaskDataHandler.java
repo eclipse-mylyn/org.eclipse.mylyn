@@ -16,6 +16,7 @@ package org.eclipse.mylyn.internal.gerrit.core;
 import java.util.Date;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -39,6 +40,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.osgi.util.NLS;
 
 import com.google.gerrit.common.data.AccountInfo;
 import com.google.gerrit.common.data.ChangeDetail;
@@ -80,6 +82,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		TaskData data = new TaskData(getAttributeMapper(repository), GerritConnector.CONNECTOR_KIND,
 				repository.getRepositoryUrl(), taskId);
 		GerritQueryResultSchema.getDefault().initialize(data);
+		data.setPartial(true);
 		return data;
 	}
 
@@ -108,14 +111,14 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 					repository, taskData, reviewObserver, monitor);
 			if (consumer.getRemoteObject() == null) {
 				throw new CoreException(connector.createErrorStatus(repository,
-						"Couldn't retrieve remote object for task: " + taskId + ". Check remote connection"));
+						NLS.bind("Couldn't retrieve remote object for task: {0}. Check remote connection", taskId))); //$NON-NLS-1$
 			}
 			if (!monitor.isCanceled()) {
 				updateTaskData(repository, taskData, consumer.getRemoteObject(), !anonymous, id);
 			}
 			return taskData;
 		} catch (GerritException e) {
-			throw connector.toCoreException(repository, "Problem retrieving task data for ", e);
+			throw connector.toCoreException(repository, "Problem retrieving task data for ", e); //$NON-NLS-1$
 		} finally {
 			reviewObserver.dispose();
 		}
@@ -254,7 +257,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 				mapper.setAuthor(person);
 			} else {
 				// messages without an author are from Gerrit itself
-				IRepositoryPerson person = repository.createPerson("Gerrit Code Review");
+				IRepositoryPerson person = repository.createPerson("Gerrit Code Review"); //$NON-NLS-1$
 				mapper.setAuthor(person);
 			}
 			mapper.setText(message.getMessage());
@@ -279,7 +282,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 
 	public void updateTaskData(TaskRepository repository, TaskData data, GerritQueryResult changeInfo) {
 		GerritQueryResultSchema schema = GerritQueryResultSchema.getDefault();
-		setAttributeValue(data, schema.KEY, changeInfo.getId().substring(0, Math.min(9, changeInfo.getId().length())));
+		setAttributeValue(data, schema.KEY, shortenChangeId(changeInfo.getId()));
 		setAttributeValue(data, schema.PROJECT, changeInfo.getProject());
 		setAttributeValue(data, schema.SUMMARY, changeInfo.getSubject());
 		setAttributeValue(data, schema.STATUS, changeInfo.getStatus());
@@ -289,6 +292,14 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		if (GerritConnector.isClosed(changeInfo.getStatus())) {
 			setAttributeValue(data, schema.COMPLETED, dateToString(changeInfo.getUpdated()));
 		}
+	}
+
+	private String shortenChangeId(String changeId) {
+		if (StringUtils.countMatches(changeId, String.valueOf('~')) == 2) {
+			// project~branch~change_id in Gerrit 2.6 and later
+			changeId = changeId.substring(changeId.lastIndexOf('~') + 1);
+		}
+		return changeId.substring(0, Math.min(9, changeId.length()));
 	}
 
 	/**
