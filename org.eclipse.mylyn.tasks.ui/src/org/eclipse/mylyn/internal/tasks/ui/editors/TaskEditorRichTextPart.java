@@ -25,6 +25,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor.StateChangedLi
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
@@ -104,8 +105,9 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 			} else {
 				clazz = "<null>"; //$NON-NLS-1$
 			}
-			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-					"Expected an instance of RichTextAttributeEditor, got \"" + clazz + "\"")); //$NON-NLS-1$ //$NON-NLS-2$
+			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, NLS.bind(
+					"Expected an instance of RichTextAttributeEditor, got \"{0}\"", clazz), //$NON-NLS-1$
+					new IllegalArgumentException()));
 			return;
 		}
 
