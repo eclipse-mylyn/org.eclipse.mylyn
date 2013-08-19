@@ -743,16 +743,15 @@ public class RepositoryConfiguration implements Serializable {
 		} else {
 			TaskAttribute everConfirmed = bugReport.getRoot().getAttribute(BugzillaAttribute.EVERCONFIRMED.getKey());
 			TaskAttribute product = bugReport.getRoot().getMappedAttribute(TaskAttribute.PRODUCT);
-			Boolean unconfirmedAllowed = products.get(product.getValue()).getUnconfirmedAllowed();
-
+			boolean unconfirmedAllowed = getUnconfirmedAllowed(product.getValue());
 			switch (status) {
 			case START:
 				addOperation(bugReport, BugzillaOperation.new_default);
 				addOperation(bugReport, BugzillaOperation.unconfirmed);
 				TaskAttribute unconfirmedAttribute = bugReport.getRoot().getAttribute(
 						TaskAttribute.PREFIX_OPERATION + BugzillaOperation.unconfirmed.toString());
-				if (unconfirmedAttribute != null && unconfirmedAllowed != null) {
-					unconfirmedAttribute.getMetaData().setDisabled(!unconfirmedAllowed.booleanValue());
+				if (unconfirmedAttribute != null) {
+					unconfirmedAttribute.getMetaData().setDisabled(!unconfirmedAllowed);
 				}
 				addOperation(bugReport, BugzillaOperation.confirmed);
 				addOperation(bugReport, BugzillaOperation.in_progress);
@@ -1269,12 +1268,12 @@ public class RepositoryConfiguration implements Serializable {
 		this.lastModifiedHeader = lastModifiedHeader;
 	}
 
-	public Boolean getUnconfirmedAllowed(String product) {
+	public boolean getUnconfirmedAllowed(String product) {
 		ProductEntry entry = products.get(product);
-		if (entry != null) {
-			return entry.getUnconfirmedAllowed();
+		if (entry != null && entry.getUnconfirmedAllowed() != null) {
+			return entry.getUnconfirmedAllowed().booleanValue();
 		} else {
-			return null;
+			return false;
 		}
 	}
 }

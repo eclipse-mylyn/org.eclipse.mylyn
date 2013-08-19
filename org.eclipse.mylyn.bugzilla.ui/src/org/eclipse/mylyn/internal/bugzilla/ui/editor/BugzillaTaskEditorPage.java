@@ -531,13 +531,13 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 						}
 						if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) >= 0) {
 							AbstractTaskEditorPart part = getPart(ID_PART_ACTIONS);
-							Boolean unconfirmedAllowed = repositoryConfiguration.getUnconfirmedAllowed(taskAttribute.getValue());
+							boolean unconfirmedAllowed = repositoryConfiguration.getUnconfirmedAllowed(taskAttribute.getValue());
 							TaskAttribute unconfirmedAttribute = taskAttribute.getTaskData()
 									.getRoot()
 									.getAttribute(
 											TaskAttribute.PREFIX_OPERATION + BugzillaOperation.unconfirmed.toString());
-							if (unconfirmedAttribute != null && unconfirmedAllowed != null) {
-								unconfirmedAttribute.getMetaData().setReadOnly(!unconfirmedAllowed.booleanValue());
+							if (unconfirmedAttribute != null) {
+								unconfirmedAttribute.getMetaData().setReadOnly(!unconfirmedAllowed);
 							}
 							if (part != null) {
 								TaskEditorActionPart actionPart = (TaskEditorActionPart) part;
