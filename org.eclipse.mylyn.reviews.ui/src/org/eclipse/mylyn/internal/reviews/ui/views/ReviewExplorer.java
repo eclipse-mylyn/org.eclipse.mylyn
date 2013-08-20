@@ -523,7 +523,6 @@ public class ReviewExplorer extends CommonNavigator {
 			patchSetObservers.clear();
 			if (reviewConsumer != null) {
 				reviewConsumer.removeObserver(reviewObserver);
-				reviewConsumer.release();
 			}
 			if (review != null) {
 				ReviewsConnector connector = (ReviewsConnector) TasksUiPlugin.getConnector(review.getRepository()
