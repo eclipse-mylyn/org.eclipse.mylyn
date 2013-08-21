@@ -29,7 +29,9 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.commons.ui.FillWidthLayout;
 import org.eclipse.mylyn.commons.ui.SelectionProviderAdapter;
+import org.eclipse.mylyn.commons.ui.compatibility.CommonColors;
 import org.eclipse.mylyn.commons.workbench.forms.CommonFormUtil;
+import org.eclipse.mylyn.commons.workbench.forms.ScalingHyperlink;
 import org.eclipse.mylyn.internal.tasks.core.TaskComment;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CommentActionGroup;
 import org.eclipse.mylyn.internal.tasks.ui.editors.CommentGroupStrategy.CommentGroup;
@@ -73,7 +75,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 	private static final String ID_POPUP_MENU = "org.eclipse.mylyn.tasks.ui.editor.menu.comments"; //$NON-NLS-1$
 
-	private class CommentGroupViewer {
+	public class CommentGroupViewer {
 
 		private final CommentGroup commentGroup;
 
@@ -129,7 +131,8 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		}
 
 		private Section createSection(final Composite parent, final FormToolkit toolkit) {
-			int style = ExpandableComposite.TWISTIE | ExpandableComposite.SHORT_TITLE_BAR;
+			int style = ExpandableComposite.TWISTIE | ExpandableComposite.SHORT_TITLE_BAR
+					| ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT;
 //			if (/*commentGroup.hasIncoming() || */expandAllInProgress) {
 //				style |= ExpandableComposite.EXPANDED;
 //			}
@@ -168,7 +171,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 							} finally {
 								getTaskEditorPage().setReflow(true);
 							}
-							getTaskEditorPage().reflow();
+							reflow();
 						}
 					}
 				});
@@ -252,6 +255,24 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			this.renderedInSubSection = renderedInSubSection;
 		}
 
+		public void createSectionHyperlink(String message, HyperlinkAdapter listener) {
+			if (groupSection != null) {
+				ScalingHyperlink resultLink = new ScalingHyperlink(groupSection, SWT.READ_ONLY);
+				resultLink.setForeground(CommonColors.HYPERLINK_WIDGET);
+				resultLink.setUnderlined(true);
+				resultLink.setText(message);
+				groupSection.setTextClient(resultLink);
+				resultLink.getParent().layout(true, true);
+				resultLink.addHyperlinkListener(listener);
+			}
+		}
+
+		public void clearSectionHyperlink() {
+			if (groupSection != null) {
+				groupSection.setTextClient(null);
+			}
+		}
+
 		//		private void createToolBar(final FormToolkit toolkit) {
 //		if (section == null) {
 //			return;
@@ -294,7 +315,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 	}
 
-	protected class CommentViewer {
+	public class CommentViewer {
 
 		private Composite buttonComposite;
 
@@ -305,6 +326,8 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		private final TaskComment taskComment;
 
 		private AbstractAttributeEditor editor;
+
+		private boolean suppressSelectionChanged;
 
 		public CommentViewer(TaskAttribute commentAttribute) {
 			this.commentAttribute = commentAttribute;
@@ -447,7 +470,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 					composite.setData(KEY_EDITOR, editor);
 
 					getTaskEditorPage().getAttributeEditorToolkit().adapt(editor);
-					getTaskEditorPage().reflow();
+					reflow();
 				}
 			} else if (!expanded && composite.getData(KEY_EDITOR) != null) {
 				// dispose viewer
@@ -455,9 +478,11 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				editor.getControl().setMenu(null);
 				editor.getControl().dispose();
 				composite.setData(KEY_EDITOR, null);
-				getTaskEditorPage().reflow();
+				reflow();
 			}
-			getTaskEditorPage().selectionChanged(taskComment);
+			if (!suppressSelectionChanged) {
+				getTaskEditorPage().selectionChanged(taskComment);
+			}
 		}
 
 		public boolean isExpanded() {
@@ -489,6 +514,10 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 		public Control getControl() {
 			return commentComposite;
+		}
+
+		public void suppressSelectionChanged(boolean value) {
+			this.suppressSelectionChanged = value;
 		}
 
 	}
@@ -541,6 +570,12 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 	private boolean expandAllInProgress;
 
 	private boolean hasIncoming;
+
+	/**
+	 * We can't use the reflow flag in AbstractTaskEditorPage because it gets set at various points where we
+	 * might not want to reflow.
+	 */
+	private boolean reflow = true;
 
 	protected Section section;
 
@@ -599,7 +634,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		} finally {
 			getTaskEditorPage().setReflow(true);
 		}
-		getTaskEditorPage().reflow();
+		reflow();
 	}
 
 	private TaskComment convertToTaskComment(TaskDataModel taskDataModel, TaskAttribute commentAttribute) {
@@ -673,7 +708,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 								expandAllInProgress = false;
 								getTaskEditorPage().setReflow(true);
 							}
-							getTaskEditorPage().reflow();
+							reflow();
 						}
 					}
 				});
@@ -690,7 +725,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		}
 	}
 
-	private void expandAllComments(boolean expandViewers) {
+	public void expandAllComments(boolean expandViewers) {
 		try {
 			expandAllInProgress = true;
 			suppressExpandViewers = !expandViewers;
@@ -717,7 +752,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			suppressExpandViewers = false;
 			getTaskEditorPage().setReflow(true);
 		}
-		getTaskEditorPage().reflow();
+		reflow();
 	}
 
 	private void expandSection(final FormToolkit toolkit, final Section section) {
@@ -773,7 +808,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		this.commentGroupStrategy = commentGroupStrategy;
 	}
 
-	private List<CommentGroupViewer> getCommentGroupViewers() {
+	public List<CommentGroupViewer> getCommentGroupViewers() {
 		if (commentGroupViewers != null) {
 			return commentGroupViewers;
 		}
@@ -847,4 +882,17 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		return null;
 	}
 
+	public boolean isCommentSectionExpanded() {
+		return section != null && section.isExpanded();
+	}
+
+	public void reflow() {
+		if (reflow) {
+			getTaskEditorPage().reflow();
+		}
+	}
+
+	public void setReflow(boolean reflow) {
+		this.reflow = reflow;
+	}
 }
