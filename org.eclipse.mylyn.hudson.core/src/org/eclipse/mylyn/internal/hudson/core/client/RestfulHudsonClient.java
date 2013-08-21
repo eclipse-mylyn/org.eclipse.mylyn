@@ -108,7 +108,7 @@ public class RestfulHudsonClient {
 			public List<HudsonModelRun> execute() throws IOException, HudsonException, JAXBException {
 				String url = HudsonUrl.create(getJobUrl(job))
 						.depth(1)
-						.tree("builds[number,url,building,result,duration,timestamp,actions[causes[shortDescription],failCount,totalCount,skipCount]]")
+						.tree("builds[number,url,building,result,duration,timestamp,actions[causes[shortDescription],failCount,totalCount,skipCount]]") //$NON-NLS-1$
 						.toUrl();
 				HttpRequestBase request = createGetRequest(url);
 				CommonHttpResponse response = execute(request, monitor);
@@ -118,7 +118,7 @@ public class RestfulHudsonClient {
 			@Override
 			protected List<HudsonModelRun> doProcess(CommonHttpResponse response, IOperationMonitor monitor)
 					throws IOException, HudsonException, JAXBException {
-				InputStream in = response.getResponseEntityAsStream(monitor);
+				InputStream in = response.getResponseEntityAsStream();
 				HudsonModelProject project = unmarshal(parse(in, response.getRequestPath()), HudsonModelProject.class);
 				return project.getBuild();
 			}
@@ -139,7 +139,7 @@ public class RestfulHudsonClient {
 			@Override
 			protected HudsonModelBuild doProcess(CommonHttpResponse response, IOperationMonitor monitor)
 					throws IOException, HudsonException, JAXBException {
-				InputStream in = response.getResponseEntityAsStream(monitor);
+				InputStream in = response.getResponseEntityAsStream();
 				HudsonModelBuild hudsonBuild = unmarshal(parse(in, response.getRequestPath()), HudsonModelBuild.class);
 				return hudsonBuild;
 			}
@@ -154,11 +154,11 @@ public class RestfulHudsonClient {
 				//				String url = HudsonUrl.create(getBuildUrl(job, build) + "/testReport" + URL_API).exclude(
 				//						"/testResult/suite/case/stdout").exclude("/testResult/suite/case/stderr").toUrl();
 				// need to scope retrieved data due to http://issues.hudson-ci.org/browse/HUDSON-7399
-				String resultTree = "duration,failCount,passCount,skipCount,suites[cases[className,duration,errorDetails,errorStackTrace,failedSince,name,skipped,status],duration,name,stderr,stdout]";
-				String aggregatedTree = "failCount,skipCount,totalCount,childReports[child[number,url],result["
-						+ resultTree + "]]";
-				String url = HudsonUrl.create(getBuildUrl(job, build) + "/testReport")
-						.tree(resultTree + "," + aggregatedTree)
+				String resultTree = "duration,failCount,passCount,skipCount,suites[cases[className,duration,errorDetails,errorStackTrace,failedSince,name,skipped,status],duration,name,stderr,stdout]"; //$NON-NLS-1$
+				String aggregatedTree = "failCount,skipCount,totalCount,childReports[child[number,url],result[" //$NON-NLS-1$
+						+ resultTree + "]]"; //$NON-NLS-1$
+				String url = HudsonUrl.create(getBuildUrl(job, build) + "/testReport") //$NON-NLS-1$
+						.tree(resultTree + "," + aggregatedTree) //$NON-NLS-1$
 						.toUrl();
 				HttpRequestBase request = createGetRequest(url);
 				CommonHttpResponse response = execute(request, monitor);
@@ -168,9 +168,9 @@ public class RestfulHudsonClient {
 			@Override
 			protected HudsonTestReport doProcess(CommonHttpResponse response, IOperationMonitor monitor)
 					throws IOException, HudsonException, JAXBException {
-				InputStream in = response.getResponseEntityAsStream(monitor);
+				InputStream in = response.getResponseEntityAsStream();
 				Element element = parse(in, response.getRequestPath());
-				if ("surefireAggregatedReport".equals(element.getNodeName())) {
+				if ("surefireAggregatedReport".equals(element.getNodeName())) { //$NON-NLS-1$
 					HudsonMavenReportersSurefireAggregatedReport report = unmarshal(element,
 							HudsonMavenReportersSurefireAggregatedReport.class);
 					// unmarshal nested test results
@@ -187,15 +187,15 @@ public class RestfulHudsonClient {
 
 	protected String getBuildUrl(final HudsonModelJob job, final HudsonModelRun build) throws HudsonException {
 		if (build.getNumber() == -1) {
-			return getJobUrl(job) + "/lastBuild";
+			return getJobUrl(job) + "/lastBuild"; //$NON-NLS-1$
 		} else {
-			return getJobUrl(job) + "/" + build.getNumber();
+			return getJobUrl(job) + "/" + build.getNumber(); //$NON-NLS-1$
 		}
 	}
 
 	public String getArtifactUrl(final HudsonModelJob job, final HudsonModelRun build, HudsonModelRunArtifact artifact)
 			throws HudsonException {
-		return getBuildUrl(job, build) + "/artifact/" + artifact.getRelativePath();
+		return getBuildUrl(job, build) + "/artifact/" + artifact.getRelativePath(); //$NON-NLS-1$
 	}
 
 	public AbstractConfigurationCache<HudsonConfiguration> getCache() {
@@ -211,7 +211,7 @@ public class RestfulHudsonClient {
 		return new HudsonOperation<Reader>(client) {
 			@Override
 			public Reader execute() throws IOException, HudsonException, JAXBException {
-				HttpRequestBase request = createGetRequest(getBuildUrl(job, hudsonBuild) + "/consoleText");
+				HttpRequestBase request = createGetRequest(getBuildUrl(job, hudsonBuild) + "/consoleText"); //$NON-NLS-1$
 				CommonHttpResponse response = execute(request, monitor);
 				return process(response, monitor);
 			}
@@ -219,10 +219,10 @@ public class RestfulHudsonClient {
 			@Override
 			protected Reader doProcess(CommonHttpResponse response, IOperationMonitor monitor) throws IOException,
 					HudsonException {
-				InputStream in = response.getResponseEntityAsStream(monitor);
+				InputStream in = response.getResponseEntityAsStream();
 				String charSet = response.getResponseCharSet();
 				if (charSet == null) {
-					charSet = "UTF-8";
+					charSet = "UTF-8"; //$NON-NLS-1$
 				}
 				return new InputStreamReader(in, charSet);
 			}
@@ -241,11 +241,9 @@ public class RestfulHudsonClient {
 		return new HudsonOperation<List<HudsonModelJob>>(client) {
 			@Override
 			public List<HudsonModelJob> execute() throws IOException, HudsonException, JAXBException {
-				String url = HudsonUrl.create(baseUrl())
-						.depth(1)
-						.include("/hudson/job")
-						.match("name", ids)
-						.exclude("/hudson/job/build")
+				String url = HudsonUrl.create(baseUrl()).depth(1).include("/hudson/job") //$NON-NLS-1$
+						.match("name", ids) //$NON-NLS-1$
+						.exclude("/hudson/job/build") //$NON-NLS-1$
 						.toUrl();
 				HttpRequestBase request = createGetRequest(url);
 				CommonHttpResponse response = execute(request, monitor);
@@ -255,7 +253,7 @@ public class RestfulHudsonClient {
 			@Override
 			protected List<HudsonModelJob> doProcess(CommonHttpResponse response, IOperationMonitor monitor)
 					throws IOException, HudsonException, JAXBException {
-				InputStream in = response.getResponseEntityAsStream(monitor);
+				InputStream in = response.getResponseEntityAsStream();
 
 				Map<String, String> jobNameById = new HashMap<String, String>();
 
@@ -287,7 +285,7 @@ public class RestfulHudsonClient {
 	}
 
 	String getJobUrl(HudsonModelJob job) throws HudsonException {
-		String encodedJobname = "";
+		String encodedJobname = ""; //$NON-NLS-1$
 		try {
 			encodedJobname = new URI(null, job.getName(), null).toASCIIString();
 		} catch (URISyntaxException e) {
@@ -297,7 +295,7 @@ public class RestfulHudsonClient {
 		if (!url.endsWith("/")) { //$NON-NLS-1$
 			url += "/"; //$NON-NLS-1$
 		}
-		return url + "job/" + encodedJobname;
+		return url + "job/" + encodedJobname; //$NON-NLS-1$
 	}
 
 	Element parse(InputStream in, String url) throws HudsonException {
@@ -306,9 +304,9 @@ public class RestfulHudsonClient {
 		} catch (OperationCanceledException e) {
 			throw e;
 		} catch (SAXException e) {
-			throw new HudsonException(NLS.bind("Failed to parse response from {0}", url), e);
+			throw new HudsonException(NLS.bind("Failed to parse response from {0}", url), e); //$NON-NLS-1$
 		} catch (Exception e) {
-			throw new HudsonException(NLS.bind("Failed to parse response from {0}", url), e);
+			throw new HudsonException(NLS.bind("Failed to parse response from {0}", url), e); //$NON-NLS-1$
 		}
 	}
 
@@ -316,7 +314,7 @@ public class RestfulHudsonClient {
 		return new HudsonOperation<Document>(client) {
 			@Override
 			public Document execute() throws IOException, HudsonException, JAXBException {
-				HttpRequestBase request = createGetRequest(getJobUrl(job) + "/config.xml");
+				HttpRequestBase request = createGetRequest(getJobUrl(job) + "/config.xml"); //$NON-NLS-1$
 				CommonHttpResponse response = execute(request, monitor);
 				return processAndRelease(response, monitor);
 			}
@@ -324,7 +322,7 @@ public class RestfulHudsonClient {
 			@Override
 			protected Document doProcess(CommonHttpResponse response, IOperationMonitor monitor) throws IOException,
 					HudsonException, JAXBException {
-				InputStream in = response.getResponseEntityAsStream(monitor);
+				InputStream in = response.getResponseEntityAsStream();
 				try {
 					DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 					return builder.parse(in); // TODO Enhance progress monitoring
@@ -342,7 +340,7 @@ public class RestfulHudsonClient {
 		new HudsonOperation<Object>(client) {
 			@Override
 			public Object execute() throws IOException, HudsonException, JAXBException {
-				HttpPost request = createPostRequest(getJobUrl(job) + "/build");
+				HttpPost request = createPostRequest(getJobUrl(job) + "/build"); //$NON-NLS-1$
 				if (parameters != null) {
 					HudsonRunBuildForm form = new HudsonRunBuildForm();
 					for (Entry<String, String> entry : parameters.entrySet()) {
@@ -400,7 +398,7 @@ public class RestfulHudsonClient {
 					type = Type.HUDSON;
 					header = response.getResponse().getFirstHeader("X-Hudson"); //$NON-NLS-1$
 					if (header == null) {
-						throw new HudsonException(NLS.bind("{0} does not appear to be a Hudson or Jenkins instance",
+						throw new HudsonException(NLS.bind("{0} does not appear to be a Hudson or Jenkins instance", //$NON-NLS-1$
 								baseUrl()));
 					}
 				} else {
