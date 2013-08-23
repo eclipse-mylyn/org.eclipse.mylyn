@@ -27,6 +27,7 @@ import org.eclipse.mylyn.bugzilla.tests.core.BugzillaRepositoryConnectorConfigur
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaRepositoryConnectorStandaloneTest;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaTaskCompletionTest;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaVersionTest;
+import org.eclipse.mylyn.bugzilla.tests.core.RepositoryConfigurationTest;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
@@ -49,6 +50,7 @@ public class AllBugzillaHeadlessStandaloneTests {
 		suite.addTestSuite(BugzillaDateTimeTests.class);
 		suite.addTestSuite(BugzillaAttributeMapperTest.class);
 		suite.addTestSuite(BugzillaAttributeTest.class);
+		suite.addTestSuite(RepositoryConfigurationTest.class);
 		if (!configuration.isLocalOnly()) {
 			// network tests
 			suite.addTestSuite(BugzillaTaskCompletionTest.class);

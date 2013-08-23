@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
@@ -1270,8 +1271,8 @@ public class RepositoryConfiguration implements Serializable {
 
 	public boolean getUnconfirmedAllowed(String product) {
 		ProductEntry entry = products.get(product);
-		if (entry != null && entry.getUnconfirmedAllowed() != null) {
-			return entry.getUnconfirmedAllowed().booleanValue();
+		if (entry != null) {
+			return BooleanUtils.toBoolean(entry.getUnconfirmedAllowed());
 		} else {
 			return false;
 		}
