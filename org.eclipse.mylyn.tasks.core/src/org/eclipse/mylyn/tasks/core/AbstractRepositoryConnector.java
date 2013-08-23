@@ -475,7 +475,7 @@ public abstract class AbstractRepositoryConnector {
 	 *             if this is not implemented by the connector
 	 * @since 3.3
 	 */
-	@Nullable
+	@NonNull
 	public IStatus deleteTask(@NonNull TaskRepository repository, @NonNull ITask task, @NonNull IProgressMonitor monitor)
 			throws CoreException {
 		throw new UnsupportedOperationException();
