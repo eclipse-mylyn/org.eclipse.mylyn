@@ -19,7 +19,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.discovery.tests.DiscoveryTestConstants;
+import org.eclipse.mylyn.internal.discovery.core.DiscoveryCore;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryCategory;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryCertification;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryConnector;
@@ -35,7 +35,7 @@ public class RemoteBundleDiscoveryStrategyTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		discoveryStrategy = new RemoteBundleDiscoveryStrategy();
-		discoveryStrategy.setDirectoryUrl(DiscoveryTestConstants.DEFAULT_MYLYN_DISCOVERY_URL);
+		discoveryStrategy.setDirectoryUrl(DiscoveryCore.getDiscoveryUrl());
 		discoveryStrategy.setCategories(new ArrayList<DiscoveryCategory>());
 		discoveryStrategy.setConnectors(new ArrayList<DiscoveryConnector>());
 		discoveryStrategy.setCertifications(new ArrayList<DiscoveryCertification>());

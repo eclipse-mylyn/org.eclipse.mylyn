@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylyn.internal.discovery.core.DiscoveryCore;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -29,10 +30,6 @@ import org.eclipse.swt.widgets.Display;
  * @author David Green
  */
 public class ConnectorDiscoveryWizardMainPage extends WizardPage implements IShellProvider {
-
-	private static final String DEFAULT_DIRECTORY_URL = "http://www.eclipse.org/mylyn/discovery/directory-3.10.xml"; //$NON-NLS-1$
-
-	private static final String SYSTEM_PROPERTY_DIRECTORY_URL = "mylyn.discovery.directory"; //$NON-NLS-1$
 
 	private static final int MINIMUM_HEIGHT = 480;
 
@@ -60,7 +57,7 @@ public class ConnectorDiscoveryWizardMainPage extends WizardPage implements IShe
 		});
 		viewer.createControl(parent);
 
-		String url = System.getProperty(SYSTEM_PROPERTY_DIRECTORY_URL, DEFAULT_DIRECTORY_URL);
+		String url = DiscoveryCore.getDiscoveryUrl();
 		if (url.length() > 0) {
 			viewer.setDirectoryUrl(url);
 		}
