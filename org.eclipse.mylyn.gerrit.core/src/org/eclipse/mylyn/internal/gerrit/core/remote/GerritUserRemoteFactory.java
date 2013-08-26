@@ -50,7 +50,7 @@ public class GerritUserRemoteFactory extends
 	@Override
 	public IUser createModel(IRepository repository, AccountInfo info) {
 		IUser user = IReviewsFactory.INSTANCE.createUser();
-		user.setId(info.getId() + "");
+		user.setId(info.getId().toString());
 		repository.getUsers().add(user);
 		return user;
 	}
@@ -91,12 +91,8 @@ public class GerritUserRemoteFactory extends
 		return Integer.toString(remoteKey.get());
 	}
 
-	public AccountInfoCache getCache() {
+	AccountInfoCache getCache() {
 		return cache;
 	}
 
-	@Override
-	public String getModelCurrentValue(IRepository parentObject, IUser object) {
-		return object.getDisplayName() + "|" + object.getEmail() + "|" + object.getId();
-	}
 }

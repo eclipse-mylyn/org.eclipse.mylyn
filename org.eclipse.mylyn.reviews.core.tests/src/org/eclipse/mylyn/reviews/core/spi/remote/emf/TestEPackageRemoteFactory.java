@@ -29,8 +29,6 @@ class TestEPackageRemoteFactory extends
 
 	static Map<String, TestRemoteEPackage> remoteForKey = new HashMap<String, TestRemoteEPackage>();
 
-	Integer currentVal;
-
 	{
 		remoteForKey.put("remoteKeyFor Package 1", remote1);
 		remoteForKey.put("remoteKeyFor Package 2", remote2);
@@ -73,8 +71,4 @@ class TestEPackageRemoteFactory extends
 		return remoteKey.replace("remote", "local");
 	}
 
-	@Override
-	public Integer getModelCurrentValue(EPackage parentPackage, EPackage object) {
-		return currentVal;
-	}
 }

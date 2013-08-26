@@ -34,9 +34,9 @@ public class GerritRemoteFactoryProvider extends ReviewsRemoteEditFactoryProvide
 
 	private final GerritClient client;
 
-	private final GerritReviewRemoteFactory gerritReviewRemoteFactory = new GerritReviewRemoteFactory(this);
+	private final GerritReviewRemoteFactory reviewFactory = new GerritReviewRemoteFactory(this);
 
-	private final PatchSetDetailRemoteFactory reviewSetFactory = new PatchSetDetailRemoteFactory(this);
+	private final PatchSetDetailRemoteFactory reviewItemSetFactory = new PatchSetDetailRemoteFactory(this);
 
 	private final PatchSetContentIdRemoteFactory reviewItemSetContentFactory = new PatchSetContentIdRemoteFactory(this);
 
@@ -49,12 +49,12 @@ public class GerritRemoteFactoryProvider extends ReviewsRemoteEditFactoryProvide
 
 	@Override
 	public GerritReviewRemoteFactory getReviewFactory() {
-		return gerritReviewRemoteFactory;
+		return reviewFactory;
 	}
 
 	@Override
 	public PatchSetDetailRemoteFactory getReviewItemSetFactory() {
-		return reviewSetFactory;
+		return reviewItemSetFactory;
 	}
 
 	@Override

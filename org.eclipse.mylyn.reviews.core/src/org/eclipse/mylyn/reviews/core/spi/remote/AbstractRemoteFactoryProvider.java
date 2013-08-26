@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.reviews.core.spi.remote;
 
+import org.eclipse.core.runtime.Assert;
+
 /**
  * Support generic implementations of a set of remote API factories. In the base case, this just encapsulates a service.
  * 
@@ -23,11 +25,8 @@ public abstract class AbstractRemoteFactoryProvider {
 	private AbstractDataLocator dataLocator;
 
 	public void modelExec(Runnable runnable, boolean block) {
-		if (service != null) {
-			service.modelExec(runnable, block);
-		} else {
-			throw new RuntimeException("Internal Error: Connector must supply a service for execution.");
-		}
+		Assert.isLegal(service != null, "Internal Error: Connector must supply a service for execution."); //$NON-NLS-1$
+		service.modelExec(runnable, block);
 	}
 
 	public AbstractRemoteService getService() {
@@ -39,8 +38,9 @@ public abstract class AbstractRemoteFactoryProvider {
 	}
 
 	public void setDataLocator(AbstractDataLocator dataLocator) {
+		Assert.isLegal(dataLocator != null);
 		this.dataLocator = dataLocator;
-		dataLocator.migrate();
+		this.dataLocator.migrate();
 	}
 
 	public AbstractDataLocator getDataLocator() {

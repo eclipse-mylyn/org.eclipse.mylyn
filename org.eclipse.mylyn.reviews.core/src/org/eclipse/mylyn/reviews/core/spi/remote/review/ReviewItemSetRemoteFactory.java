@@ -25,8 +25,4 @@ public abstract class ReviewItemSetRemoteFactory<RemoteType, RemoteKeyType> exte
 		super(factoryProvider, ReviewsPackage.Literals.REVIEW__SETS, ReviewsPackage.Literals.REVIEW_ITEM__ID);
 	}
 
-	@Override
-	public String getModelCurrentValue(IReview review, IReviewItemSet set) {
-		return set.getReference();
-	}
 }

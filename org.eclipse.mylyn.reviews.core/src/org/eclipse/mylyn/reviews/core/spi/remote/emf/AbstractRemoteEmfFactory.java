@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EAttribute;
@@ -54,9 +55,8 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 		L localKey;
 
 		UniqueLocalReference(P parent, L localKey) {
-			if (parent == null || localKey == null) {
-				throw new RuntimeException("Internal Exception: Parent and local keys must be specified.");
-			}
+			Assert.isLegal(parent != null, "Internal Exception: Parent must be specified."); //$NON-NLS-1$
+			Assert.isLegal(localKey != null, "Internal Exception: Local key must be specified."); //$NON-NLS-1$
 			this.parent = parent;
 			this.localKey = localKey;
 		}
@@ -516,10 +516,8 @@ public abstract class AbstractRemoteEmfFactory<EParentObjectType extends EObject
 		return factoryProvider;
 	}
 
-	public abstract ObjectCurrentType getModelCurrentValue(EParentObjectType parentObject, EObjectType object);
-
 	public String getModelDescription(EParentObjectType parentObject, EObjectType object, LocalKeyType localKey) {
-		return getParentReference().getEReferenceType().getName() + " " + localKey;
+		return getParentReference().getEReferenceType().getName() + " " + localKey; //$NON-NLS-1$
 	}
 
 }

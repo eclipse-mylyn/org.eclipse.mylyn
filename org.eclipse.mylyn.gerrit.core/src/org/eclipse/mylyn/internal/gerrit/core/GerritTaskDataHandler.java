@@ -55,14 +55,6 @@ import com.google.gerrit.reviewdb.ChangeMessage;
  */
 public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 
-	public static String dateToString(Date date) {
-		if (date == null) {
-			return ""; //$NON-NLS-1$
-		} else {
-			return date.getTime() + ""; //$NON-NLS-1$
-		}
-	}
-
 	private final GerritConnector connector;
 
 	public GerritTaskDataHandler(GerritConnector connector) {
@@ -116,7 +108,8 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 			}
 			return taskData;
 		} catch (GerritException e) {
-			throw connector.toCoreException(repository, "Problem retrieving task data for ", e); //$NON-NLS-1$
+			throw connector.toCoreException(repository,
+					NLS.bind("Problem retrieving task data for task: {0}", taskId), e); //$NON-NLS-1$
 		} finally {
 			reviewObserver.dispose();
 		}
@@ -293,6 +286,14 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 			attribute.setValue(value);
 		}
 		return attribute;
+	}
+
+	private static String dateToString(Date date) {
+		if (date == null) {
+			return ""; //$NON-NLS-1$
+		} else {
+			return Long.toString(date.getTime());
+		}
 	}
 
 }

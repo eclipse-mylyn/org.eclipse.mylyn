@@ -15,7 +15,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.mylyn.reviews.core.spi.remote.AbstractRemoteFactoryProvider;
 
 /**
- * Support generic implementations of a set of remote API factories. In the base case, this just encapsulates a service.
+ * Extends {@link AbstractRemoteFactoryProvider} with methods to open, save and close EMF resources.
  * 
  * @author Miles Parker
  */

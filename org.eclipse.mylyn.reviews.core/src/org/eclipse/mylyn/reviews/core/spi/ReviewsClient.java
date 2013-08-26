@@ -23,7 +23,6 @@ public abstract class ReviewsClient {
 	AbstractRemoteEmfFactoryProvider<IRepository, IReview> factoryProvider;
 
 	public ReviewsClient(TaskRepository repository) {
-		super();
 		this.repository = repository;
 	}
 

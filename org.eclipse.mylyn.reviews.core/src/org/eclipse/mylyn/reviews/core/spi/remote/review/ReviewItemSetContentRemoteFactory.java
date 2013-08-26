@@ -28,17 +28,4 @@ public abstract class ReviewItemSetContentRemoteFactory<RemoteType, RemoteKey> e
 		super(factoryProvider, ReviewsPackage.Literals.REVIEW_ITEM_SET__ITEMS, ReviewsPackage.Literals.REVIEW_ITEM__ID);
 	}
 
-	@Override
-	public Long getModelCurrentValue(IReviewItemSet parentObject, List<IFileItem> items) {
-		if (items == null || items.isEmpty()) {
-			return null;
-		}
-		int currentCommentSize = 0;
-		int currentDraftSize = 0;
-		for (IFileItem item : items) {
-			currentCommentSize += item.getAllComments().size();
-			currentDraftSize += item.getAllDrafts().size();
-		}
-		return new Long(currentCommentSize + currentDraftSize * Integer.MAX_VALUE);
-	}
 }

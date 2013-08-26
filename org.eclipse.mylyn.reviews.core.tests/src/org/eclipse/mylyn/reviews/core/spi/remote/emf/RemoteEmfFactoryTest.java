@@ -402,11 +402,6 @@ public class RemoteEmfFactoryTest {
 			return remoteKey.replace("remote", "local");
 		}
 
-		@Override
-		public Integer getModelCurrentValue(EPackage parentObject, List<EClassifier> object) {
-			// ignore
-			return null;
-		}
 	}
 
 	class TestRemoteFactoryCollectionFailureObject extends TestRemoteFactoryCollectionObject {

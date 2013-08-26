@@ -26,8 +26,4 @@ public abstract class ReviewRemoteFactory<RemoteType, RemoteKey> extends
 		super(factoryProvider, ReviewsPackage.Literals.REPOSITORY__REVIEWS, ReviewsPackage.Literals.CHANGE__ID);
 	}
 
-	@Override
-	public Date getModelCurrentValue(IRepository parentObject, IReview object) {
-		return object != null ? object.getModificationDate() : null;
-	}
 }

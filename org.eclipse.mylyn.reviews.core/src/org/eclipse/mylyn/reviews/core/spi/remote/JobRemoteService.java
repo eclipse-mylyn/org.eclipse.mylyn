@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.mylyn.reviews.internal.core.ReviewsCoreConstants;
 
 /**
  * An implementation of a remote service using jobs to fulfill the remote service contract. (Future implementations will
@@ -59,8 +60,7 @@ public class JobRemoteService extends AbstractRemoteService {
 					try {
 						process.pull(force, monitor);
 					} catch (CoreException e) {
-						return new Status(IStatus.WARNING, "org.eclipse.mylyn.reviews.core", "Couldn't update model.",
-								e);
+						return new Status(IStatus.WARNING, ReviewsCoreConstants.PLUGIN_ID, "Couldn't update model.", e); //$NON-NLS-1$
 					} catch (OperationCanceledException e) {
 						return Status.CANCEL_STATUS;
 					}

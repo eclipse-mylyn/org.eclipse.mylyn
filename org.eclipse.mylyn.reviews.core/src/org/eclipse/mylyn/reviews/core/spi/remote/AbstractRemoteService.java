@@ -32,7 +32,7 @@ public abstract class AbstractRemoteService {
 	 * {@link AbstractRemoteConsumer#notifyDone(org.eclipse.core.runtime.IStatus)} is invoked with the exception.</li>
 	 * <li>Otherwise, when the request process returns, the {@link AbstractRemoteConsumer#applyModel(boolean)} phase of
 	 * the process is invoked. (In the case of the UI implementations, this might occur on the UI thread.)</li>
-	 * <li>If a failure occurs during the create phase, notifyDone may optionally be invoked to report the failure.</li>
+	 * <li>If a failure occurs during the apply phase, notifyDone may optionally be invoked to report the failure.</li>
 	 * <li>If both phases complete successfully,
 	 * {@link AbstractRemoteConsumer#notifyDone(org.eclipse.core.runtime.IStatus)} is invoked on the process with an OK
 	 * status.</li>
@@ -51,17 +51,17 @@ public abstract class AbstractRemoteService {
 	public abstract void ensureModelThread();
 
 	/**
-	 * Supports apply and notification services executed against a specific thread. (For example, the Remote Ui Service
+	 * Supports apply and notification services executed against a specific thread. (For example, the Remote UI Service
 	 * overrides this to force all model update events to occur on the UI thread, as best EMF practices require.)
 	 * 
 	 * @param runnable
 	 * @param block
-	 *            true if the model execution should block until complete, false if it can complete in seperate thread
+	 *            true if the model execution should block until complete, false if it can complete in separate thread
 	 */
 	public abstract void modelExec(Runnable runnable, boolean block);
 
 	/**
-	 * Supports apply and notification services executed against a specific thread. (For example, the Remote Ui Service
+	 * Supports apply and notification services executed against a specific thread. (For example, the Remote UI Service
 	 * overrides this to force all model update events to occur on the UI thread, as best EMF practices require.)
 	 * 
 	 * @param runnable
