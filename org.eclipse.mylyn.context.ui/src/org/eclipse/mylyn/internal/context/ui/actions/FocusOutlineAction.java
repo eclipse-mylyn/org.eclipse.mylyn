@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import org.eclipse.mylyn.context.ui.ContextUi;
 import org.eclipse.mylyn.context.ui.InterestFilter;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -74,7 +75,6 @@ public class FocusOutlineAction extends AbstractFocusViewAction {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public List<StructuredViewer> getViewers() {
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
@@ -84,8 +84,12 @@ public class FocusOutlineAction extends AbstractFocusViewAction {
 		for (IWorkbenchWindow w : PlatformUI.getWorkbench().getWorkbenchWindows()) {
 			IWorkbenchPage page = w.getActivePage();
 			if (page != null) {
-				IEditorPart[] parts = page.getEditors();
-				for (IEditorPart part : parts) {
+				IEditorReference[] editorRefs = page.getEditorReferences();
+				for (IEditorReference editorRef : editorRefs) {
+					IEditorPart part = editorRef.getEditor(false);
+					if (part == null) {
+						continue;
+					}
 					AbstractContextUiBridge bridge = ContextUi.getUiBridgeForEditor(part);
 					List<TreeViewer> outlineViewers = bridge.getContentOutlineViewers(part);
 					for (TreeViewer viewer : outlineViewers) {
