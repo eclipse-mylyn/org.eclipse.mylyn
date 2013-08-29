@@ -16,11 +16,11 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.PresentationFilter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.operations.RedoActionHandler;
 import org.eclipse.ui.operations.UndoActionHandler;
 import org.eclipse.ui.part.DrillDownAdapter;
@@ -55,7 +55,7 @@ public class TaskListViewActionGroup extends RepositoryElementActionGroup {
 		renameAction = add(new RenameAction(view));
 		hideQueryAction = add(new HideQueryAction());
 
-		IUndoContext undoContext = TasksUiUtil.getUndoContext();
+		IUndoContext undoContext = TasksUiInternal.getUndoContext();
 		undoAction = new UndoActionHandler(view.getSite(), undoContext);
 		redoAction = new RedoActionHandler(view.getSite(), undoContext);
 

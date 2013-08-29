@@ -30,6 +30,8 @@ import org.eclipse.core.commands.NotEnabledException;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.commands.common.NotDefinedException;
+import org.eclipse.core.commands.operations.IUndoContext;
+import org.eclipse.core.commands.operations.ObjectUndoContext;
 import org.eclipse.core.expressions.EvaluationContext;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Assert;
@@ -156,6 +158,8 @@ public class TasksUiInternal {
 	public static final int SWT_SHEET = 1 << 28;
 
 	public static final String ID_MENU_ACTIVE_TASK = "org.eclipse.mylyn.tasks.ui.menus.activeTask"; //$NON-NLS-1$
+
+	private static ObjectUndoContext undoContext;
 
 	public static MultiRepositoryAwareWizard createNewTaskWizard(ITaskMapping taskSelection) {
 		return new NewTaskWizardInternal(taskSelection);
@@ -1472,4 +1476,10 @@ public class TasksUiInternal {
 		return image;
 	}
 
+	public static synchronized IUndoContext getUndoContext() {
+		if (undoContext == null) {
+			undoContext = new ObjectUndoContext(new Object(), "Tasks Context"); //$NON-NLS-1$
+		}
+		return undoContext;
+	}
 }

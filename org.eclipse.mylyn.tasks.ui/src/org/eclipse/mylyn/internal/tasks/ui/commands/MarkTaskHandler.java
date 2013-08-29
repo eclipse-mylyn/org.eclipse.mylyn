@@ -35,7 +35,6 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -157,7 +156,7 @@ public abstract class MarkTaskHandler extends AbstractTaskHandler {
 			this.shell = shell;
 			this.markRead = markRead;
 			this.tasks = Arrays.asList(tasks);
-			addContext(TasksUiUtil.getUndoContext());
+			addContext(TasksUiInternal.getUndoContext());
 		}
 
 		private void execute() throws ExecutionException {
