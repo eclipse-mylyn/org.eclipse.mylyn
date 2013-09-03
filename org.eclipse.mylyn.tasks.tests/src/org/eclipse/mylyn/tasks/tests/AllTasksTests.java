@@ -14,6 +14,7 @@ package org.eclipse.mylyn.tasks.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.tasks.tests.bugs.SupportHandlerManagerTest;
 import org.eclipse.mylyn.tasks.tests.core.FileTaskAttachmentSourceTest;
 import org.eclipse.mylyn.tasks.tests.core.ITasksCoreConstantsTest;
@@ -56,7 +57,7 @@ import org.eclipse.mylyn.tasks.tests.ui.editor.TaskUrlHyperlinkDetectorTest;
 public class AllTasksTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite(AllTasksTests.class.getName());
+		TestSuite suite = new ManagedTestSuite(AllTasksTests.class.getName());
 		suite.addTestSuite(TasksUiUtilTest.class);
 		suite.addTestSuite(TaskListUiTest.class);
 		suite.addTestSuite(TaskRepositoryCredentialsTest.class);
