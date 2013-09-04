@@ -50,7 +50,7 @@
     <test.args>-eclipse.keyring ${test.keyring.file} -eclipse.password ${test.keyring.password} ${test.userargs}</test.args>
     <test.userargs></test.userargs>
     <test.keyring.file>${project.build.directory}/.eclipse.keyring</test.keyring.file>
-    <test.keyring.password>${project.build.directory}/work/configuration/config.ini</test.keyring.password>
+    <test.keyring.password>${project.build.directory}/../../.gitignore</test.keyring.password>
 
     <sign.skip>true</sign.skip>
     <pack.skip>false</pack.skip>
@@ -518,7 +518,6 @@
       </activation>
       <properties>
         <mylyn-credentials>/shared/mylyn/.credentials.properties</mylyn-credentials>
-        <test.keyring.password>/shared/mylyn/spingel/.secret</test.keyring.password>
         <test.vmargs>-ea -Dmylyn.credentials=${mylyn-credentials} -Dorg.eclipse.mylyn.wikitext.tests.disableOutput=true -Dhttp.proxyHost=proxy.eclipse.org -Dhttp.proxyPort=9898 -Dhttps.proxyHost=proxy.eclipse.org -Dhttps.proxyPort=9898 -DhttpnonProxyHosts=*.eclipse.org ${test.uservmargs}</test.vmargs>
         <!--
             <mylyn-test-append>@e${target-version}</mylyn-test-append>
@@ -583,26 +582,6 @@
         <version>${tycho-version}</version>
         <extensions>true</extensions>
       </plugin>
-      <!--
-          <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-antrun-plugin</artifactId>
-          <version>1.6</version>
-          <executions>
-          <execution>
-          <phase>pre-integration-test</phase>
-          <configuration>
-          <target if="test.suite">
-          <echo file="${test.keyring.password}">.</echo>
-          </target>
-          </configuration>
-          <goals>
-          <goal>run</goal>
-          </goals>
-          </execution>
-          </executions>
-          </plugin>
-      -->
       <!-- common coverage configuration -->
       <plugin>
         <groupId>org.jacoco</groupId>
