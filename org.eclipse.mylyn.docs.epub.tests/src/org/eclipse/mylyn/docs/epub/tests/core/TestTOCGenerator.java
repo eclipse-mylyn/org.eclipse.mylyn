@@ -16,7 +16,6 @@ import java.io.StringReader;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.eclipse.emf.common.util.EList;
@@ -44,9 +43,9 @@ public class TestTOCGenerator extends TestCase {
 		Ncx ncx = createNcx();
 		TOCGenerator.parse(new InputSource(new StringReader(html)), "test.html", ncx, 0);
 		EList<NavPoint> points = ncx.getNavMap().getNavPoints();
-		Assert.assertEquals(2, points.size());
-		Assert.assertEquals(2, points.get(0).getNavPoints().size());
-		Assert.assertEquals(1, points.get(0).getNavPoints().get(1).getNavPoints().size());
+		assertEquals(2, points.size());
+		assertEquals(2, points.get(0).getNavPoints().size());
+		assertEquals(1, points.get(0).getNavPoints().get(1).getNavPoints().size());
 	}
 
 	@Test
@@ -55,10 +54,10 @@ public class TestTOCGenerator extends TestCase {
 		Ncx ncx = createNcx();
 		TOCGenerator.parse(new InputSource(new StringReader(html)), "test.html", ncx, 0);
 		EList<NavPoint> points = ncx.getNavMap().getNavPoints();
-		Assert.assertEquals(2, points.size());
+		assertEquals(2, points.size());
 		// "h2" will be added as a sub-node to the first "h1" regardless of the
 		// missing identifier.
-		Assert.assertEquals(1, points.get(0).getNavPoints().size());
+		assertEquals(1, points.get(0).getNavPoints().size());
 	}
 
 	/**
@@ -76,7 +75,7 @@ public class TestTOCGenerator extends TestCase {
 		TOCGenerator.parse(new InputSource(new StringReader(html)), "test.html", ncx, 0);
 		EList<NavPoint> points = ncx.getNavMap().getNavPoints();
 		// "h3" will be created as a "h1" and "h2" added to it
-		Assert.assertEquals(2, points.size());
+		assertEquals(2, points.size());
 	}
 
 	@Test
@@ -86,8 +85,8 @@ public class TestTOCGenerator extends TestCase {
 		Ncx ncx = createNcx();
 		TOCGenerator.parse(new InputSource(new StringReader(html)), "test.html", ncx, 0);
 		EList<NavPoint> points = ncx.getNavMap().getNavPoints();
-		Assert.assertEquals(2, points.size());
-		Assert.assertEquals(1, points.get(0).getNavPoints().size());
+		assertEquals(2, points.size());
+		assertEquals(1, points.get(0).getNavPoints().size());
 	}
 
 	private Ncx createNcx() {

@@ -15,8 +15,6 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import junit.framework.Assert;
-
 import org.apache.tools.ant.BuildFileTest;
 
 import com.adobe.epubcheck.api.EpubCheck;
@@ -44,8 +42,7 @@ public class TestAntTask extends BuildFileTest {
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
 		EpubCheck checker = new EpubCheck(f, pw);
-		//checker.validate();
-		Assert.assertTrue(sw.getBuffer().toString().trim(), checker.validate());
+		assertTrue(sw.getBuffer().toString().trim(), checker.validate());
 	}
 
 	private File getFile(String file) {

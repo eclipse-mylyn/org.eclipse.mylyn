@@ -16,7 +16,6 @@ import java.io.StringReader;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.docs.epub.core.OPS2Validator;
@@ -59,7 +58,7 @@ public class TestOPS2Validator extends TestCase {
 			String in = "<html><body><div " + attr + "=\"test\">content</div></body></html>";
 			String expected = "<html><body><div>content</div></body></html>";
 			String out = OPS2Validator.clean(new InputSource(new StringReader(in)), "test.html");
-			Assert.assertEquals(expected, out);
+			assertEquals(expected, out);
 		}
 	}
 
@@ -69,7 +68,7 @@ public class TestOPS2Validator extends TestCase {
 			String in = "<html><body><" + element + "></" + element + "></body></html>";
 			String result = "<html><body></body></html>";
 			String out = OPS2Validator.clean(new InputSource(new StringReader(in)), "test.html");
-			Assert.assertEquals(result, out);
+			assertEquals(result, out);
 
 		}
 	}
@@ -79,7 +78,7 @@ public class TestOPS2Validator extends TestCase {
 		for (String attr : legalAttributes) {
 			String in = "<html><body><div " + attr + "=\"test\"></div></body></html>";
 			String out = OPS2Validator.clean(new InputSource(new StringReader(in)), "test.html");
-			Assert.assertEquals(in, out);
+			assertEquals(in, out);
 		}
 	}
 
@@ -88,7 +87,7 @@ public class TestOPS2Validator extends TestCase {
 		for (String element : legalElements) {
 			String in = "<html><body><" + element + ">content</" + element + "></body></html>";
 			String out = OPS2Validator.clean(new InputSource(new StringReader(in)), "test.html");
-			Assert.assertEquals(in, out);
+			assertEquals(in, out);
 
 		}
 	}
@@ -97,6 +96,6 @@ public class TestOPS2Validator extends TestCase {
 	public void testNormal() throws ParserConfigurationException, SAXException, IOException {
 		String in = "<body><h1 id=\"h1-1\">test</h1></body>";
 		String out = OPS2Validator.clean(new InputSource(new StringReader(in)), "test.html");
-		Assert.assertEquals(in, out);
+		assertEquals(in, out);
 	}
 }

@@ -14,8 +14,6 @@ package org.eclipse.mylyn.docs.epub.tests.api;
 import java.io.File;
 import java.io.IOException;
 
-import junit.framework.Assert;
-
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.emf.ecore.util.FeatureMapUtil.FeatureEList;
@@ -74,13 +72,13 @@ public class TestOPS2Publication extends AbstractTest {
 		epub.add(oebps);
 		oebps.addItem(new File("testdata/plain-page.xhtml"));
 		epub.pack(epubFile);
-		Assert.assertTrue(oebps.getTableOfContents() != null);
-		Assert.assertTrue(oebps.getTableOfContents() instanceof Ncx);
+		assertTrue(oebps.getTableOfContents() != null);
+		assertTrue(oebps.getTableOfContents() instanceof Ncx);
 		Ncx ncx = (Ncx) oebps.getTableOfContents();
 		NavPoint h1_1 = ncx.getNavMap().getNavPoints().get(0);
 		NavPoint h1_2 = ncx.getNavMap().getNavPoints().get(1);
-		Assert.assertEquals("First item", getText(h1_1));
-		Assert.assertEquals("Second item", getText(h1_2));
+		assertEquals("First item", getText(h1_1));
+		assertEquals("Second item", getText(h1_2));
 		epubFile.delete();
 	}
 
@@ -98,8 +96,8 @@ public class TestOPS2Publication extends AbstractTest {
 		oebps.addItem(new File("testdata/plain-page.xhtml"));
 		oebps.setGenerateToc(false);
 		epub.pack(epubFile);
-		Assert.assertTrue(oebps.getTableOfContents() != null);
-		Assert.assertTrue(oebps.getTableOfContents() instanceof Ncx);
+		assertTrue(oebps.getTableOfContents() != null);
+		assertTrue(oebps.getTableOfContents() instanceof Ncx);
 	}
 
 	/**
@@ -113,8 +111,8 @@ public class TestOPS2Publication extends AbstractTest {
 	@Test
 	public final void testGetTableOfContents() throws Exception {
 		epub.add(oebps);
-		Assert.assertTrue(oebps.getTableOfContents() != null);
-		Assert.assertTrue(oebps.getTableOfContents() instanceof Ncx);
+		assertTrue(oebps.getTableOfContents() != null);
+		assertTrue(oebps.getTableOfContents() instanceof Ncx);
 	}
 
 	/**
@@ -131,13 +129,13 @@ public class TestOPS2Publication extends AbstractTest {
 		EPUB epub_in = new EPUB();
 		epub_in.unpack(epubFile, epubFolder);
 		OPSPublication oebps_in = epub_in.getOPSPublications().get(0);
-		Assert.assertTrue(oebps_in.getTableOfContents() != null);
-		Assert.assertTrue(oebps_in.getTableOfContents() instanceof Ncx);
+		assertTrue(oebps_in.getTableOfContents() != null);
+		assertTrue(oebps_in.getTableOfContents() instanceof Ncx);
 		Ncx ncx = (Ncx) oebps_in.getTableOfContents();
 		NavPoint h1_1 = ncx.getNavMap().getNavPoints().get(0);
 		NavPoint h1_2 = ncx.getNavMap().getNavPoints().get(1);
-		Assert.assertEquals("First item", getText(h1_1));
-		Assert.assertEquals("Second item", getText(h1_2));
+		assertEquals("First item", getText(h1_1));
+		assertEquals("Second item", getText(h1_2));
 	}
 
 	/**
@@ -154,18 +152,18 @@ public class TestOPS2Publication extends AbstractTest {
 		EPUB epub_in = new EPUB();
 		epub_in.unpack(epubFile, epubFolder);
 		OPSPublication oebps_in = epub_in.getOPSPublications().get(0);
-		Assert.assertTrue(oebps_in.getTableOfContents() != null);
-		Assert.assertTrue(oebps_in.getTableOfContents() instanceof Ncx);
+		assertTrue(oebps_in.getTableOfContents() != null);
+		assertTrue(oebps_in.getTableOfContents() instanceof Ncx);
 		Ncx ncx = (Ncx) oebps_in.getTableOfContents();
 		NavPoint h1_1 = ncx.getNavMap().getNavPoints().get(0);
 		NavPoint h1_2 = ncx.getNavMap().getNavPoints().get(1);
-		Assert.assertEquals("First item", getText(h1_1));
-		Assert.assertEquals("Second item", getText(h1_2));
+		assertEquals("First item", getText(h1_1));
+		assertEquals("Second item", getText(h1_2));
 		Meta meta = ncx.getHead().getMetas().get(0);
 		String id = getText(meta);
 		// The UUID for the NCX file should be different if it comes from
 		// another NCX than the one specified.
-		Assert.assertTrue(TOCFILE_ID.equals(id));
+		assertTrue(TOCFILE_ID.equals(id));
 
 	}
 
@@ -183,10 +181,10 @@ public class TestOPS2Publication extends AbstractTest {
 		epub.add(oebps);
 		oebps.addItem(new File("testdata/plain-page_warnings.xhtml"));
 		epub.pack(epubFile);
-		Assert.assertEquals(1, oebps.getValidationMessages().size());
+		assertEquals(1, oebps.getValidationMessages().size());
 		ValidationMessage msg = oebps.getValidationMessages().get(0);
-		Assert.assertEquals(Severity.WARNING, msg.getSeverity());
-		Assert.assertTrue(msg.getMessage().startsWith("Element \"bad\""));
+		assertEquals(Severity.WARNING, msg.getSeverity());
+		assertTrue(msg.getMessage().startsWith("Element \"bad\""));
 	}
 
 	/**
@@ -206,9 +204,9 @@ public class TestOPS2Publication extends AbstractTest {
 		oebps.addItem(new File("testdata/OPF-Tests/Bug_379052/chapter-1.xhtml"));
 		epub.pack(epubFile);
 		// Two XHTML files, one with a warning. One CSS file and the NCX.
-		Assert.assertEquals(4, oebps.getOpfPackage().getManifest().getItems().size());
+		assertEquals(4, oebps.getOpfPackage().getManifest().getItems().size());
 		// Should be exactly two warning.
-		Assert.assertEquals(1, oebps.getValidationMessages().size());
+		assertEquals(1, oebps.getValidationMessages().size());
 		epubFile.delete();
 	}
 
@@ -228,8 +226,8 @@ public class TestOPS2Publication extends AbstractTest {
 		oebps.addItem(new File("testdata/OPF-Tests/Bug_358671/illegal-type.html"));
 		epub.pack(epubFile);
 		ValidationMessage msg = oebps.getValidationMessages().get(0);
-		Assert.assertEquals(Severity.WARNING, msg.getSeverity());
-		Assert.assertEquals(
+		assertEquals(Severity.WARNING, msg.getSeverity());
+		assertEquals(
 				true,
 				msg.getMessage().equals(
 						"Item \"illegal-type.html\" is not a core media type and does not specify a fallback item."));
@@ -255,8 +253,8 @@ public class TestOPS2Publication extends AbstractTest {
 				true, false);
 		epub.pack(epubFile);
 		ValidationMessage msg = oebps.getValidationMessages().get(0);
-		Assert.assertEquals(Severity.WARNING, msg.getSeverity());
-		Assert.assertEquals(
+		assertEquals(Severity.WARNING, msg.getSeverity());
+		assertEquals(
 				true,
 				msg.getMessage()
 						.equals("Item \"illegal-type.html\" is not a core media type and specifies a non-core media fallback item."));
@@ -279,11 +277,11 @@ public class TestOPS2Publication extends AbstractTest {
 		item.setFallback("fallback");
 		oebps.addItem("fallback", null, new File("testdata/plain-page.xhtml"), null, null, true, true, false);
 		epub.pack(epubFile);
-		Assert.assertEquals(3, oebps.getOpfPackage().getManifest().getItems().size());
-		Assert.assertEquals(1, oebps.getValidationMessages().size());
+		assertEquals(3, oebps.getOpfPackage().getManifest().getItems().size());
+		assertEquals(1, oebps.getValidationMessages().size());
 		ValidationMessage msg = oebps.getValidationMessages().get(0);
-		Assert.assertEquals(Severity.WARNING, msg.getSeverity());
-		Assert.assertEquals(
+		assertEquals(Severity.WARNING, msg.getSeverity());
+		assertEquals(
 				true,
 				msg.getMessage()
 						.equals("Item \"illegal-type.html\" is not a core media type but a legal fallback item has been specified."));

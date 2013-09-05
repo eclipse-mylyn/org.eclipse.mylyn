@@ -872,7 +872,8 @@ public abstract class OPSPublication {
 					try {
 						addItem(null, null, file, relativePath.getParent(), null, false, false, false);
 					} catch (Exception e) {
-						throw new RuntimeException("Could not add file referenced from \"" + root + "\"", e);
+						throw new RuntimeException(String.format("Could not add file referenced from \"%1$s\"", root), //$NON-NLS-1$
+								e);
 					}
 				}
 			}

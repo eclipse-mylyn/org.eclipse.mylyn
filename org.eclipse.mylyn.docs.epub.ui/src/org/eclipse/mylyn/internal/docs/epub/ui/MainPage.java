@@ -264,7 +264,7 @@ public class MainPage extends WizardPage {
 				File file = new File((String) value);
 				if (!file.exists()) {
 					controlDecoration.show();
-					return ValidationStatus.error("The specified file must exist.");
+					return ValidationStatus.error("The specified file must exist."); //$NON-NLS-1$
 				}
 				boolean suffixOK = false;
 				String name = file.getName();
@@ -290,13 +290,13 @@ public class MainPage extends WizardPage {
 		IObservableValue textObserveTextObserveWidget = SWTObservables.observeText(titleText, SWT.Modify);
 		final IObservableValue beanTitleObserveValue = PojoObservables.observeValue(bean, "title"); //$NON-NLS-1$
 		UpdateValueStrategy titleStrategy = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
-		titleStrategy.setBeforeSetValidator(new StringValidator("A title must be specified", titleText));
+		titleStrategy.setBeforeSetValidator(new StringValidator("A title must be specified", titleText)); //$NON-NLS-1$
 		bindingContext.bindValue(textObserveTextObserveWidget, beanTitleObserveValue, titleStrategy, null);
 		//
 		IObservableValue text_3ObserveTextObserveWidget = SWTObservables.observeText(authorText, SWT.Modify);
 		final IObservableValue beanCreatorObserveValue = PojoObservables.observeValue(bean, "creator"); //$NON-NLS-1$
 		UpdateValueStrategy authorStrategy = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
-		authorStrategy.setBeforeSetValidator(new StringValidator("An author must be specified", authorText));
+		authorStrategy.setBeforeSetValidator(new StringValidator("An author must be specified", authorText)); //$NON-NLS-1$
 		bindingContext.bindValue(text_3ObserveTextObserveWidget, beanCreatorObserveValue, authorStrategy, null);
 		//
 		IObservableValue dateTimeObserveSelectionObserveWidget = SWTObservables.observeSelection(dateTime);
@@ -306,46 +306,46 @@ public class MainPage extends WizardPage {
 		IObservableValue text_4ObserveTextObserveWidget = SWTObservables.observeText(identifierText, SWT.Modify);
 		final IObservableValue beanIdentifierObserveValue = PojoObservables.observeValue(bean, "identifier"); //$NON-NLS-1$
 		UpdateValueStrategy identifierStrategy = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
-		identifierStrategy.setBeforeSetValidator(new StringValidator("An identifier must be specified", identifierText));
+		identifierStrategy.setBeforeSetValidator(new StringValidator("An identifier must be specified", identifierText)); //$NON-NLS-1$
 		bindingContext.bindValue(text_4ObserveTextObserveWidget, beanIdentifierObserveValue, identifierStrategy, null);
 		//
 		IObservableValue schemeTextObserveTextObserveWidget = SWTObservables.observeText(schemeText);
 		final IObservableValue beanIdSchemeObserveValue = PojoObservables.observeValue(bean, "scheme"); //$NON-NLS-1$
 		UpdateValueStrategy schemeStrategy = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
-		schemeStrategy.setBeforeSetValidator(new StringValidator("An identifier scheme must be specified", schemeText));
+		schemeStrategy.setBeforeSetValidator(new StringValidator("An identifier scheme must be specified", schemeText)); //$NON-NLS-1$
 		bindingContext.bindValue(schemeTextObserveTextObserveWidget, beanIdSchemeObserveValue, schemeStrategy, null);
 		//
 		IObservableValue text_1ObserveTextObserveWidget = SWTObservables.observeText(copyrightText, SWT.Modify);
 		final IObservableValue beanRightsObserveValue = PojoObservables.observeValue(bean, "rights"); //$NON-NLS-1$
 		UpdateValueStrategy rightsStrategy = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
-		rightsStrategy.setBeforeSetValidator(new StringValidator("Rights must be specified", copyrightText));
+		rightsStrategy.setBeforeSetValidator(new StringValidator("Rights must be specified", copyrightText)); //$NON-NLS-1$
 		bindingContext.bindValue(text_1ObserveTextObserveWidget, beanRightsObserveValue, rightsStrategy, null);
 		//
 		IObservableValue comboObserveTextObserveWidget = SWTObservables.observeText(combo);
 		final IObservableValue beanLanguageObserveValue = PojoObservables.observeValue(bean, "language"); //$NON-NLS-1$
 		UpdateValueStrategy languageStrategy = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
-		languageStrategy.setBeforeSetValidator(new StringValidator("An language must be specified", combo));
+		languageStrategy.setBeforeSetValidator(new StringValidator("An language must be specified", combo)); //$NON-NLS-1$
 		bindingContext.bindValue(comboObserveTextObserveWidget, beanLanguageObserveValue, languageStrategy, null);
 		//
 		IObservableValue subjectTextObserveTextObserveWidget = SWTObservables.observeText(subjectText, SWT.Modify);
 		final IObservableValue beanSubjectObserveValue = PojoObservables.observeValue(bean, "subject"); //$NON-NLS-1$
 		UpdateValueStrategy subjectStrategy = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
-		subjectStrategy.setBeforeSetValidator(new StringValidator("A subject must be specified", subjectText));
+		subjectStrategy.setBeforeSetValidator(new StringValidator("A subject must be specified", subjectText)); //$NON-NLS-1$
 		bindingContext.bindValue(subjectTextObserveTextObserveWidget, beanSubjectObserveValue, subjectStrategy, null);
 		//
 		IObservableValue coverObserveTextObserveWidget = SWTObservables.observeText(coverText, SWT.Modify);
 		IObservableValue beanCoverObserveValue = PojoObservables.observeValue(bean, "cover"); //$NON-NLS-1$
 		UpdateValueStrategy coverStrategy = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
 		coverStrategy.setBeforeSetValidator(new FileValidator(
-				"The cover image must be a valid image file of type PNG, SVG or JPEG.", coverText, new String[] {
-						".png", ".svg", ".jpeg", ".jpg" }));
+				"The cover image must be a valid image file of type PNG, SVG or JPEG.", coverText, new String[] { //$NON-NLS-1$
+				".png", ".svg", ".jpeg", ".jpg" })); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		bindingContext.bindValue(coverObserveTextObserveWidget, beanCoverObserveValue, coverStrategy, null);
 		//
 		IObservableValue styleSheetTextObserveTextObserveWidget = SWTObservables.observeText(styleSheetText, SWT.Modify);
 		IObservableValue beanStyleSheetObserveValue = PojoObservables.observeValue(bean, "styleSheet"); //$NON-NLS-1$
 		UpdateValueStrategy styleSheetStrategy = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
-		styleSheetStrategy.setBeforeSetValidator(new FileValidator("The style sheet must be a valid CSS file.",
-				styleSheetText, new String[] { ".css" }));
+		styleSheetStrategy.setBeforeSetValidator(new FileValidator("The style sheet must be a valid CSS file.", //$NON-NLS-1$
+				styleSheetText, new String[] { ".css" })); //$NON-NLS-1$
 		bindingContext.bindValue(styleSheetTextObserveTextObserveWidget, beanStyleSheetObserveValue,
 				styleSheetStrategy, null);
 		//
@@ -356,7 +356,7 @@ public class MainPage extends WizardPage {
 	public boolean isPageComplete() {
 		boolean ok = super.isPageComplete();
 		if (ok) {
-			setMessage("Press finish to generate an EPUB from the Wiki markup.");
+			setMessage("Press finish to generate an EPUB from the Wiki markup."); //$NON-NLS-1$
 		}
 		return ok;
 	}

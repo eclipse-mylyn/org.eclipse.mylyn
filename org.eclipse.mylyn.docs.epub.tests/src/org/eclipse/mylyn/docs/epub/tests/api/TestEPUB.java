@@ -16,8 +16,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-import junit.framework.Assert;
-
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.mylyn.docs.epub.core.EPUB;
 import org.eclipse.mylyn.docs.epub.core.OPS2Publication;
@@ -42,7 +40,7 @@ public class TestEPUB extends AbstractTest {
 	@Test
 	public final void testEPUB() {
 		EPUB epub = new EPUB();
-		Assert.assertEquals(true, epub.getOPSPublications().isEmpty());
+		assertEquals(true, epub.getOPSPublications().isEmpty());
 
 	}
 
@@ -64,9 +62,9 @@ public class TestEPUB extends AbstractTest {
 		Container container = epub.getContainer();
 		RootFiles rootfiles = container.getRootfiles();
 		EList<RootFile> files = rootfiles.getRootfiles();
-		Assert.assertEquals(true, files.get(0).getFullPath().equals("SVG+XML/drawing.svg"));
-		Assert.assertEquals(true, files.get(0).getMediaType().equals("image/svg+xml"));
-		Assert.assertEquals(true, files.get(0).getPublication() == drawing);
+		assertEquals(true, files.get(0).getFullPath().equals("SVG+XML/drawing.svg"));
+		assertEquals(true, files.get(0).getMediaType().equals("image/svg+xml"));
+		assertEquals(true, files.get(0).getPublication() == drawing);
 	}
 
 	/**
@@ -115,12 +113,12 @@ public class TestEPUB extends AbstractTest {
 		Container container = epub.getContainer();
 		RootFiles rootfiles = container.getRootfiles();
 		EList<RootFile> files = rootfiles.getRootfiles();
-		Assert.assertEquals(true, files.get(0).getFullPath().equals("OEBPS/content.opf"));
-		Assert.assertEquals(true, files.get(1).getFullPath().equals("OEBPS_1/content.opf"));
-		Assert.assertEquals(true, files.get(0).getMediaType().equals("application/oebps-package+xml"));
-		Assert.assertEquals(true, files.get(1).getMediaType().equals("application/oebps-package+xml"));
-		Assert.assertEquals(true, files.get(0).getPublication() == oebps1);
-		Assert.assertEquals(true, files.get(1).getPublication() == oebps2);
+		assertEquals(true, files.get(0).getFullPath().equals("OEBPS/content.opf"));
+		assertEquals(true, files.get(1).getFullPath().equals("OEBPS_1/content.opf"));
+		assertEquals(true, files.get(0).getMediaType().equals("application/oebps-package+xml"));
+		assertEquals(true, files.get(1).getMediaType().equals("application/oebps-package+xml"));
+		assertEquals(true, files.get(0).getPublication() == oebps1);
+		assertEquals(true, files.get(1).getPublication() == oebps2);
 	}
 
 	/**
@@ -138,7 +136,7 @@ public class TestEPUB extends AbstractTest {
 		epub.add(oebps);
 		File drawing = new File("testdata/drawing.svg");
 		epub.add(drawing, "image/svg+xml");
-		Assert.assertEquals(1, epub.getOPSPublications().size());
+		assertEquals(1, epub.getOPSPublications().size());
 	}
 
 	/**
@@ -158,7 +156,7 @@ public class TestEPUB extends AbstractTest {
 		File drawing = new File("testdata/drawing.svg");
 		epub.add(drawing, "image/svg+xml");
 		File tempFolder = epub.pack(epubFile);
-		Assert.assertEquals(false, tempFolder.exists());
+		assertEquals(false, tempFolder.exists());
 	}
 
 	/**
@@ -180,15 +178,15 @@ public class TestEPUB extends AbstractTest {
 		epub.pack(epubFile, epubFolder);
 		// Make sure all required files are present
 		File metaFolder = new File(epubFolder.getAbsolutePath() + File.separator + "META-INF");
-		Assert.assertEquals(true, metaFolder.exists());
-		Assert.assertEquals(true, metaFolder.isDirectory());
+		assertEquals(true, metaFolder.exists());
+		assertEquals(true, metaFolder.isDirectory());
 		File containerFile = new File(epubFolder.getAbsolutePath() + File.separator + "META-INF" + File.separator
 				+ "container.xml");
-		Assert.assertEquals(true, containerFile.exists());
-		Assert.assertEquals(false, containerFile.isDirectory());
+		assertEquals(true, containerFile.exists());
+		assertEquals(false, containerFile.isDirectory());
 		File oebpsFolder = new File(epubFolder.getAbsolutePath() + File.separator + "OEBPS");
-		Assert.assertEquals(true, oebpsFolder.exists());
-		Assert.assertEquals(true, oebpsFolder.isDirectory());
+		assertEquals(true, oebpsFolder.exists());
+		assertEquals(true, oebpsFolder.isDirectory());
 	}
 
 	/**
@@ -246,7 +244,7 @@ public class TestEPUB extends AbstractTest {
 		epub.pack(epubFile, epubFolder);
 		EPUB epub2 = new EPUB();
 		epub2.unpack(epubFile);
-		Assert.assertEquals(1, epub2.getOPSPublications().size());
+		assertEquals(1, epub2.getOPSPublications().size());
 	}
 
 	/**
@@ -270,15 +268,15 @@ public class TestEPUB extends AbstractTest {
 
 		// Make sure all required files are present
 		File metaFolder = new File(epubFolder.getAbsolutePath() + File.separator + "META-INF");
-		Assert.assertEquals(true, metaFolder.exists());
-		Assert.assertEquals(true, metaFolder.isDirectory());
+		assertEquals(true, metaFolder.exists());
+		assertEquals(true, metaFolder.isDirectory());
 		File containerFile = new File(epubFolder.getAbsolutePath() + File.separator + "META-INF" + File.separator
 				+ "container.xml");
-		Assert.assertEquals(true, containerFile.exists());
-		Assert.assertEquals(false, containerFile.isDirectory());
+		assertEquals(true, containerFile.exists());
+		assertEquals(false, containerFile.isDirectory());
 		File oebpsFolder = new File(epubFolder.getAbsolutePath() + File.separator + "OEBPS");
-		Assert.assertEquals(true, oebpsFolder.exists());
-		Assert.assertEquals(true, oebpsFolder.isDirectory());
+		assertEquals(true, oebpsFolder.exists());
+		assertEquals(true, oebpsFolder.isDirectory());
 	}
 
 	private class EPUB_OCF_Test extends EPUB {
