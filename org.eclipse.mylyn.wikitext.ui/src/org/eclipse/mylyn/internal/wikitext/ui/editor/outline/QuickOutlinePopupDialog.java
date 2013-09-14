@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.internal.wikitext.ui.editor.outline;
 
-import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.List;
 
@@ -87,23 +86,11 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 		return exclusions;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		patternFilter = new PatternFilter();
-		// TODO e3.5: use the new look constructor if available.
-		try {
-			Constructor<FilteredTree> constructor = FilteredTree.class.getConstructor(Composite.class, int.class,
-					PatternFilter.class, boolean.class);
-			filteredTree = constructor.newInstance(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER,
-					patternFilter, true);
-		} catch (SecurityException e1) {
-			throw new IllegalStateException(e1);
-		} catch (NoSuchMethodException e1) {
-			filteredTree = new FilteredTree(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER, patternFilter);
-		} catch (Exception e) {
-			throw new IllegalStateException(e);
-		}
+		filteredTree = new FilteredTree(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER, patternFilter,
+				true);
 
 		int heightHint = (filteredTree.getViewer().getTree().getItemHeight() * 12)
 				+ Math.max(filteredTree.getFilterControl().getSize().y, 12);
