@@ -25,9 +25,6 @@ define trac::defaultsites ($base = $trac::base, $userOwner = $trac::userOwner, $
 
   /* Instances */
 
-  trac::trac { "0.11.7":
-  }
-
   trac::trac { "0.12.5":
   }
 
@@ -47,8 +44,8 @@ define trac::defaultsites ($base = $trac::base, $userOwner = $trac::userOwner, $
     egg => "TracAccountManager",
   }
 
-  trac::plugin { "masterticketsplugin-0.11":
-    url => "http://trac-hacks.org/svn/masterticketsplugin/0.11",
+  trac::plugin { "masterticketsplugin-trunk":
+    url => "http://trac-hacks.org/svn/masterticketsplugin/trunk",
     egg => "TracMasterTickets",
   }
 
@@ -58,11 +55,6 @@ define trac::defaultsites ($base = $trac::base, $userOwner = $trac::userOwner, $
   }
 
   /* Sites */
-
-  trac::site { "trac-0.11.7":
-    version => "0.11.7",
-    require => Trac["0.11.7"],
-  }
 
   trac::site { "trac-0.12.5":
     version => "0.12.5",

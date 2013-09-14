@@ -45,7 +45,6 @@ define trac::site (
     command => "/usr/bin/svnadmin create $envbase/svn",
     require => File["$envbase/svn"],
     creates => "$envbase/svn/format",
-    user    => "www-data",
   }
 
   exec { "initenv $envid":
