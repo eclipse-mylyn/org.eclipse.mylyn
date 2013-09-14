@@ -100,11 +100,11 @@ public class CoreUtil {
 	 * Returns the version of the bundle.
 	 * 
 	 * @since 3.7
+	 * @deprecated use {@link Bundle#getVersion()} instead
 	 */
-	// TODO e3.5 remove this method and replace with bundle.getVersion()
+	@Deprecated
 	public static Version getVersion(Bundle bundle) {
-		String header = (String) bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
-		return (header != null) ? Version.parseVersion(header) : null;
+		return bundle.getVersion();
 	}
 
 	/**

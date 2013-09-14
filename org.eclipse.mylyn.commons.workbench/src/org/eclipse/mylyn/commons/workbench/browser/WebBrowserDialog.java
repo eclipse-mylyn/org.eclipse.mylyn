@@ -15,7 +15,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Method;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -79,15 +78,7 @@ public class WebBrowserDialog extends MessageDialog {
 	}
 
 	public boolean setUrl(String url, String postData, String[] headers) {
-		// TODO e3.6 replace reflection with call to setUrl(...)
-		Method method;
-		try {
-			method = Browser.class.getDeclaredMethod("setUrl", String.class, String.class, //$NON-NLS-1$
-					String[].class);
-			return (Boolean) method.invoke(getBrowser(), url, postData, headers);
-		} catch (Exception e) {
-			return false;
-		}
+		return getBrowser().setUrl(url, postData, headers);
 	}
 
 	public static int openText(Shell parent, String title, String message, String text) {

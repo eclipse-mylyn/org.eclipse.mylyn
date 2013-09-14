@@ -29,10 +29,13 @@ public class PeopleView extends CommonNavigator {
 	}
 
 	@Override
+	protected Object getInitialInput() {
+		return rootCategory;
+	}
+
+	@Override
 	public void createPartControl(Composite aParent) {
 		super.createPartControl(aParent);
-		// TODO e3.5 replace by overriding getInitialInput()
-		getCommonViewer().setInput(rootCategory);
 		getCommonViewer().expandAll();
 	}
 

@@ -18,7 +18,6 @@ import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.commons.notifications.core.AbstractNotification;
 import org.eclipse.mylyn.commons.notifications.ui.AbstractUiNotification;
-import org.eclipse.mylyn.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.commons.ui.compatibility.CommonColors;
 import org.eclipse.mylyn.commons.workbench.AbstractWorkbenchNotificationPopup;
 import org.eclipse.mylyn.commons.workbench.forms.CommonFormUtil;
@@ -91,7 +90,7 @@ public class NotificationPopup extends AbstractWorkbenchNotificationPopup {
 				GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.TOP).applyTo(itemLink);
 				itemLink.setForeground(CommonColors.HYPERLINK_WIDGET);
 				itemLink.registerMouseTrackListener();
-				itemLink.setText(CommonUiUtil.toLabel(notification.getLabel()));
+				itemLink.setText(LegacyActionTools.escapeMnemonics(notification.getLabel()));
 				if (notification instanceof AbstractUiNotification) {
 					itemLink.setImage(((AbstractUiNotification) notification).getNotificationImage());
 				}
@@ -123,7 +122,7 @@ public class NotificationPopup extends AbstractWorkbenchNotificationPopup {
 				}
 				if (descriptionText != null && !descriptionText.trim().equals("")) { //$NON-NLS-1$
 					Label descriptionLabel = new Label(notificationComposite, SWT.NO_FOCUS);
-					descriptionLabel.setText(CommonUiUtil.toLabel(descriptionText));
+					descriptionLabel.setText(LegacyActionTools.escapeMnemonics(descriptionText));
 					descriptionLabel.setBackground(parent.getBackground());
 					GridDataFactory.fillDefaults()
 							.span(2, SWT.DEFAULT)

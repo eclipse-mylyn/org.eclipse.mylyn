@@ -36,6 +36,7 @@ import org.eclipse.ui.progress.WorkbenchJob;
  * @author Mik Kersten
  * @since 3.7
  */
+@SuppressWarnings("deprecation")
 public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 
 	private static final int FILTER_WIDTH_MIN = 60;

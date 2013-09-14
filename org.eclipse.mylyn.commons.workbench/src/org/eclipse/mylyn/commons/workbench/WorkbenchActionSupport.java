@@ -24,12 +24,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.internal.WorkbenchMessages;
-import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 
 /**
  * Manages commons workbench actions for editing text.
@@ -114,7 +114,7 @@ public class WorkbenchActionSupport implements ISelectionChangedListener {
 		cutAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
 		cutAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
 		cutAction.setDisabledImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT_DISABLED));
-		cutAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.CUT);
+		cutAction.setActionDefinitionId(IWorkbenchCommandConstants.EDIT_CUT);
 
 		pasteAction = new GlobalAction(ActionFactory.PASTE.getId());
 		pasteAction.setText(WorkbenchMessages.Workbench_paste);
@@ -122,38 +122,38 @@ public class WorkbenchActionSupport implements ISelectionChangedListener {
 		pasteAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
 		pasteAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
 		pasteAction.setDisabledImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE_DISABLED));
-		pasteAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.PASTE);
+		pasteAction.setActionDefinitionId(IWorkbenchCommandConstants.EDIT_PASTE);
 
 		copyAction = new GlobalAction(ActionFactory.COPY.getId());
 		copyAction.setText(WorkbenchMessages.Workbench_copy);
 		copyAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
 		copyAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
 		copyAction.setDisabledImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY_DISABLED));
-		copyAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.COPY);
+		copyAction.setActionDefinitionId(IWorkbenchCommandConstants.EDIT_COPY);
 
 		undoAction = new GlobalAction(ActionFactory.UNDO.getId());
 		undoAction.setText(WorkbenchMessages.Workbench_undo);
 		undoAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
 		undoAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
 		undoAction.setDisabledImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_UNDO_DISABLED));
-		undoAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.UNDO);
+		undoAction.setActionDefinitionId(IWorkbenchCommandConstants.EDIT_UNDO);
 
 		redoAction = new GlobalAction(ActionFactory.REDO.getId());
 		redoAction.setText(WorkbenchMessages.Workbench_redo);
 		redoAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_REDO));
 		redoAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_REDO));
 		redoAction.setDisabledImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_REDO_DISABLED));
-		redoAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.REDO);
+		redoAction.setActionDefinitionId(IWorkbenchCommandConstants.EDIT_REDO);
 
 		selectAllAction = new GlobalAction(ActionFactory.SELECT_ALL.getId());
 		selectAllAction.setText(WorkbenchMessages.Workbench_selectAll);
-		selectAllAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.SELECT_ALL);
+		selectAllAction.setActionDefinitionId(IWorkbenchCommandConstants.EDIT_SELECT_ALL);
 		selectAllAction.setEnabled(true);
 
 		findAction = new GlobalAction(ActionFactory.FIND.getId());
 		findAction.setText(WorkbenchMessages.Workbench_findReplace);
 		findAction.setImageDescriptor(CommonImages.FIND);
-		findAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.FIND_REPLACE);
+		findAction.setActionDefinitionId(IWorkbenchCommandConstants.EDIT_FIND_AND_REPLACE);
 	}
 
 	public void contributeActions(IMenuManager manager) {

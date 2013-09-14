@@ -34,8 +34,9 @@ import org.eclipse.ui.dialogs.PatternFilter;
  * 
  * @author Hiroyuki Inaba
  * @since 3.7
+ * @deprecated use {@link FilteredTree} instead
  */
-// TODO e3.5 remove this class and replace with FilteredTree
+@Deprecated
 public class EnhancedFilteredTree extends FilteredTree {
 
 	protected boolean useNewLook;

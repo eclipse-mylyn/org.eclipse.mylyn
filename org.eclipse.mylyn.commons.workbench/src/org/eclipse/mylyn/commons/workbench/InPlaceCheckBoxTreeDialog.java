@@ -32,6 +32,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.progress.WorkbenchJob;
 
@@ -49,10 +50,10 @@ public class InPlaceCheckBoxTreeDialog extends AbstractInPlaceDialog {
 
 	private final String dialogLabel;
 
-	private class CheckboxFilteredTree extends EnhancedFilteredTree {
+	private class CheckboxFilteredTree extends FilteredTree {
 
 		public CheckboxFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
-			super(parent, treeStyle, filter);
+			super(parent, treeStyle, filter, true);
 		}
 
 		@Override

@@ -36,6 +36,7 @@ import org.eclipse.ui.IPluginContribution;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
@@ -43,8 +44,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.activities.IIdentifier;
 import org.eclipse.ui.activities.IWorkbenchActivitySupport;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.progress.IProgressConstants2;
 import org.eclipse.ui.services.IServiceLocator;
-import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 
 /**
  * @author Mik Kersten
@@ -73,19 +74,11 @@ public class WorkbenchUtil {
 
 	public static final String GROUP_RUN = "group.run"; //$NON-NLS-1$
 
-	// TODO e3.6 IProgressConstants2#SHOW_IN_TASKBAR_ICON_PROPERTY
-	public static final QualifiedName SHOW_IN_TASKBAR_ICON_PROPERTY = new QualifiedName(
-			"org.eclipse.ui.workbench.progress", "inTaskBarIcon"); //$NON-NLS-1$//$NON-NLS-2$
-
-//	public static IViewPart getFromActivePerspective(String viewId) {
-//		if (PlatformUI.isWorkbenchRunning()) {
-//			IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-//			if (activePage != null) {
-//				return activePage.findView(viewId);
-//			}
-//		}
-//		return null;
-//	}
+	/**
+	 * @deprecated use {@link IProgressConstants2#SHOW_IN_TASKBAR_ICON_PROPERTY} instead
+	 */
+	@Deprecated
+	public static final QualifiedName SHOW_IN_TASKBAR_ICON_PROPERTY = IProgressConstants2.SHOW_IN_TASKBAR_ICON_PROPERTY;
 
 	/**
 	 * @since 3.9
@@ -250,7 +243,7 @@ public class WorkbenchUtil {
 		IHandlerService service = (IHandlerService) serviceLocator.getService(IHandlerService.class);
 		if (service != null) {
 			try {
-				return service.executeCommand(IWorkbenchActionDefinitionIds.PROPERTIES, null);
+				return service.executeCommand(IWorkbenchCommandConstants.FILE_PROPERTIES, null);
 			} catch (NotEnabledException e) {
 				// ignore
 			} catch (Exception e) {
