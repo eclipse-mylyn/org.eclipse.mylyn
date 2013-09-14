@@ -144,6 +144,8 @@ public class HudsonClientTest extends TestCase {
 
 		final String jobName = harness.getPlanFailing();
 		RestfulHudsonClient client = harness.connect();
+		ensureHasRunOnce(client, jobName, HudsonModelBallColor.RED);
+
 		client.runBuild(harness.getJob(jobName), null, null);
 		HudsonTestUtil.poll(new Callable<Object>() {
 			public Object call() throws Exception {
@@ -151,6 +153,19 @@ public class HudsonClientTest extends TestCase {
 				return null;
 			}
 		});
+	}
+
+	private void ensureHasRunOnce(RestfulHudsonClient client, final String jobName,
+			final HudsonModelBallColor expectedColor) throws Exception {
+		if (!expectedColor.equals(harness.getJob(jobName).getColor())) {
+			client.runBuild(harness.getJob(jobName), null, null);
+			HudsonTestUtil.poll(new Callable<Object>() {
+				public Object call() throws Exception {
+					assertEquals(expectedColor, harness.getJob(jobName).getColor());
+					return null;
+				}
+			});
+		}
 	}
 
 	public void testRunBuildSucceeding() throws Exception {
@@ -161,6 +176,8 @@ public class HudsonClientTest extends TestCase {
 
 		final String jobName = harness.getPlanSucceeding();
 		RestfulHudsonClient client = harness.connect();
+		ensureHasRunOnce(client, jobName, harness.getSuccessAnimeColor());
+
 		client.runBuild(harness.getJob(jobName), null, null);
 		HudsonTestUtil.poll(new Callable<Object>() {
 			public Object call() throws Exception {
