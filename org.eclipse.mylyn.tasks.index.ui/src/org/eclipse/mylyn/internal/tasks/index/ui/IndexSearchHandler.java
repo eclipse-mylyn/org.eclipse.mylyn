@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.index.ui;
 
-import java.lang.reflect.Method;
-
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
@@ -107,15 +105,7 @@ public class IndexSearchHandler extends AbstractSearchHandler {
 				textControl.removeListener(SWT.Traverse, listener);
 				textControl.addListener(SWT.Traverse, new Listener() {
 					public void handleEvent(Event event) {
-						// TODO e3.6 replace with call to adapter.isProposalPopupOpen()
-						boolean popupOpen = false;
-						try {
-							Method method = ContentProposalAdapter.class.getDeclaredMethod("isProposalPopupOpen"); //$NON-NLS-1$
-							popupOpen = (Boolean) method.invoke(adapter);
-						} catch (Exception e) {
-							// ignore, Eclipse 3.5 does not support this API
-						}
-						if (!popupOpen) {
+						if (!adapter.isProposalPopupOpen()) {
 							listener.handleEvent(event);
 						}
 					}

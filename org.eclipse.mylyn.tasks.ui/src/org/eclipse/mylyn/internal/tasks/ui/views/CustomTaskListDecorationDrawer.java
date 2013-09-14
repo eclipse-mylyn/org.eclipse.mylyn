@@ -58,8 +58,6 @@ public class CustomTaskListDecorationDrawer implements Listener {
 
 	private final Rectangle lastClippingArea;
 
-	private final boolean tweakClipping;
-
 	private boolean useStrikethroughForCompleted;
 
 	private boolean synchronizationOverlaid;
@@ -84,7 +82,6 @@ public class CustomTaskListDecorationDrawer implements Listener {
 	public CustomTaskListDecorationDrawer(int activationImageOffset, boolean focusedMode) {
 		this.activationImageOffset = activationImageOffset;
 		this.lastClippingArea = new Rectangle(0, 0, 0, 0);
-		this.tweakClipping = PlatformUiUtil.isPaintItemClippingRequired();
 		this.platformSpecificSquish = PlatformUiUtil.getTreeItemSquish();
 		this.synchronizationOverlaid = TasksUiPlugin.getDefault()
 				.getPreferenceStore()
@@ -152,29 +149,15 @@ public class CustomTaskListDecorationDrawer implements Listener {
 //					int offsetY = tree.getViewer().getExpandedElements().length * tree.getViewer().getTree().getItemHeight();
 //					event.gc.drawText("Open search dialog...", 20, offsetY - 10);
 //				}
-				if (tweakClipping) {
-					lastClippingArea.x = event.x;
-					lastClippingArea.y = event.y;
-					lastClippingArea.width = event.width;
-					lastClippingArea.height = event.height;
-				}
 				break;
 			}
 			case SWT.PaintItem: {
 				Rectangle clipping = null;
-				if (tweakClipping) {
-					// GTK requires setting the clipping from the erase event so that images can be drawn to the left of the content area
-					clipping = event.gc.getClipping();
-					event.gc.setClipping(lastClippingArea);
-				}
 				if (activationImage != null) {
 					drawActivationImage(activationImageOffset, event, activationImage);
 				}
 				if (data instanceof ITaskContainer) {
 					drawSyncronizationImage((ITaskContainer) data, event);
-				}
-				if (tweakClipping) {
-					event.gc.setClipping(clipping);
 				}
 				break;
 			}

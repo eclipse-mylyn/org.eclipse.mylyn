@@ -18,10 +18,10 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
@@ -82,7 +82,7 @@ public abstract class AbstractTaskEditorSection extends AbstractTaskEditorPart {
 			return;
 		}
 
-		final Label label = toolkit.createLabel(composite, CommonUiUtil.toLabel(text));
+		final Label label = toolkit.createLabel(composite, LegacyActionTools.escapeMnemonics(text));
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		label.setBackground(null);
 		label.setVisible(!section.isExpanded());

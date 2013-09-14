@@ -24,7 +24,6 @@ import org.eclipse.jface.wizard.ProgressMonitorPart;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
-import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -77,7 +76,7 @@ public class RetrieveLatestContextDialog extends MessageDialog {
 			RetrieveLatestContextDialog dialog = new RetrieveLatestContextDialog(shell,
 					Messages.RetrieveLatestContextDialog_Dialog_Title, null, message, kind, new String[] {
 							IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0, task, attachment);
-			style &= TasksUiInternal.SWT_SHEET;
+			style &= SWT.SHEET;
 			dialog.setShellStyle(dialog.getShellStyle() | style);
 			return dialog.open() == 0;
 		}

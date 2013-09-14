@@ -154,7 +154,10 @@ public class TasksUiInternal {
 
 	private static final TaskDropHandler taskDropHandler = new TaskDropHandler();
 
-	// TODO e3.5 replace by SWT.SHEET
+	/**
+	 * @deprecated use SWT.SHEET instead
+	 */
+	@Deprecated
 	public static final int SWT_SHEET = 1 << 28;
 
 	public static final String ID_MENU_ACTIVE_TASK = "org.eclipse.mylyn.tasks.ui.menus.activeTask"; //$NON-NLS-1$

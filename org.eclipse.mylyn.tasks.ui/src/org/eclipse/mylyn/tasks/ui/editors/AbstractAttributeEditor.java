@@ -12,7 +12,7 @@
 package org.eclipse.mylyn.tasks.ui.editors;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.mylyn.commons.ui.CommonUiUtil;
+import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
@@ -153,7 +153,7 @@ public abstract class AbstractAttributeEditor {
 	 */
 	public String getLabel() {
 		String label = getAttributeMapper().getLabel(getTaskAttribute());
-		return CommonUiUtil.toLabel(label);
+		return (label != null) ? LegacyActionTools.escapeMnemonics(label) : ""; //$NON-NLS-1$
 	}
 
 	/**

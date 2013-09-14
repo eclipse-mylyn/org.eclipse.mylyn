@@ -15,10 +15,8 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 /**
- * @author Rob Elves (moved into task.ui)
- * @see org.eclipse.jface.viewers.IContentProvider
+ * @author Rob Elves
  */
-// TODO e3.5 merge into SearchResultTreeContentProvider
 public abstract class SearchResultContentProvider implements ITreeContentProvider {
 
 	/** An empty array of objects */
