@@ -382,9 +382,6 @@ public class DiscoveryViewer {
 		}
 	}
 
-	// e3.5 replace with SWT.ICON_CANCEL
-	public static final int ICON_CANCEL = 1 << 8;
-
 	private static final int MINIMUM_HEIGHT = 100;
 
 	private static boolean useNativeSearchField(Composite composite) {
@@ -392,8 +389,8 @@ public class DiscoveryViewer {
 			useNativeSearchField = Boolean.FALSE;
 			Text testText = null;
 			try {
-				testText = new Text(composite, SWT.SEARCH | ICON_CANCEL);
-				useNativeSearchField = new Boolean((testText.getStyle() & ICON_CANCEL) != 0);
+				testText = new Text(composite, SWT.SEARCH | SWT.ICON_CANCEL);
+				useNativeSearchField = new Boolean((testText.getStyle() & SWT.ICON_CANCEL) != 0);
 			} finally {
 				if (testText != null) {
 					testText.dispose();
@@ -765,7 +762,8 @@ public class DiscoveryViewer {
 					GridLayoutFactory.fillDefaults().numColumns(2).applyTo(textFilterContainer);
 
 					if (nativeSearch) {
-						filterText = new Text(textFilterContainer, SWT.SINGLE | SWT.BORDER | SWT.SEARCH | ICON_CANCEL);
+						filterText = new Text(textFilterContainer, SWT.SINGLE | SWT.BORDER | SWT.SEARCH
+								| SWT.ICON_CANCEL);
 					} else {
 						filterText = new Text(textFilterContainer, SWT.SINGLE);
 					}
@@ -779,7 +777,7 @@ public class DiscoveryViewer {
 						filterText.addSelectionListener(new SelectionAdapter() {
 							@Override
 							public void widgetDefaultSelected(SelectionEvent e) {
-								if (e.detail == ICON_CANCEL) {
+								if (e.detail == SWT.ICON_CANCEL) {
 									clearFilterText();
 								}
 							}

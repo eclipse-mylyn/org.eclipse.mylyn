@@ -40,7 +40,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.discovery.core.DiscoveryCore;
 import org.eclipse.mylyn.internal.discovery.core.util.WebUtil;
@@ -268,7 +267,7 @@ public class ConnectorDiscovery {
 	/**
 	 * eliminate any connectors whose {@link ConnectorDescriptor#getPlatformFilter() platform filters} don't match
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	private void filterDescriptors() {
 		for (DiscoveryConnector connector : new ArrayList<DiscoveryConnector>(connectors)) {
 			if (connector.getPlatformFilter() != null && connector.getPlatformFilter().trim().length() > 0) {
@@ -313,7 +312,7 @@ public class ConnectorDiscovery {
 		for (IBundleGroupProvider provider : Platform.getBundleGroupProviders()) {
 			for (IBundleGroup bundleGroup : provider.getBundleGroups()) {
 				for (Bundle bundle : bundleGroup.getBundles()) {
-					featureToVersion.put(bundle.getSymbolicName(), CoreUtil.getVersion(bundle));
+					featureToVersion.put(bundle.getSymbolicName(), bundle.getVersion());
 				}
 			}
 		}

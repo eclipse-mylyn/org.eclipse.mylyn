@@ -16,20 +16,16 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptor;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryFeedbackJob;
 import org.eclipse.mylyn.internal.discovery.ui.wizards.Messages;
-import org.eclipse.osgi.service.resolver.VersionRange;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.eclipse.ui.statushandlers.StatusManager;
-import org.osgi.framework.Bundle;
 
 /**
  * @author David Green
@@ -49,16 +45,7 @@ public abstract class DiscoveryUi {
 	}
 
 	public static AbstractInstallJob createInstallJob(List<ConnectorDescriptor> descriptors) {
-		AbstractInstallJob runner = null;
-		Bundle bundle = Platform.getBundle("org.eclipse.equinox.p2.engine"); //$NON-NLS-1$
-		if (bundle != null && new VersionRange("[1.0.0,1.1.0)").isIncluded(CoreUtil.getVersion(bundle))) { //$NON-NLS-1$
-			// load class for Eclipse 3.5
-			runner = new PrepareInstallProfileJob_e_3_5(descriptors);
-		}
-		if (runner == null) {
-			runner = new PrepareInstallProfileJob_e_3_6(descriptors);
-		}
-		return runner;
+		return new PrepareInstallProfileJob(descriptors);
 	}
 
 	public static boolean install(List<ConnectorDescriptor> descriptors, IRunnableContext context) {

@@ -17,7 +17,6 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptorKind;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDiscovery;
@@ -29,7 +28,7 @@ import org.osgi.framework.Version;
  * A wizard for performing discovery of connectors and selecting connectors to install. When finish is pressed, selected
  * connectors are downloaded and installed.
  * 
- * @see PrepareInstallProfileJob_e_3_6
+ * @see PrepareInstallProfileJob
  * @see ConnectorDiscoveryWizardMainPage
  * @author David Green
  */
@@ -62,7 +61,7 @@ public class ConnectorDiscoveryWizard extends Wizard {
 		// add the installed Mylyn version to the environment so that we can have
 		// connectors that are filtered based on version of Mylyn
 		Bundle bundle = Platform.getBundle("org.eclipse.mylyn.tasks.core"); //$NON-NLS-1$
-		Version version = CoreUtil.getVersion(bundle);
+		Version version = bundle.getVersion();
 		environment.put("org.eclipse.mylyn.version", version.toString()); //$NON-NLS-1$
 		environment.put("org.eclipse.mylyn.version.major", version.getMajor()); //$NON-NLS-1$
 		environment.put("org.eclipse.mylyn.version.minor", version.getMinor()); //$NON-NLS-1$
