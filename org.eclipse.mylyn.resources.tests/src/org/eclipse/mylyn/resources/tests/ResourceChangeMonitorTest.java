@@ -258,10 +258,8 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		assertTrue(element.getInterest().isPredicted());
 	}
 
-	@SuppressWarnings("deprecation")
 	public void testDerrivedFileChanged() throws CoreException {
-		// TODO e3.6 replace with setDerived(true, null)
-		fileInFolder.setDerived(true);
+		fileInFolder.setDerived(true, null);
 
 		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + project.getProject().getName(),
 				new String[] { "/test.txt" }, (IResourceDelta.CHANGED | IResourceDelta.CONTENT), IResource.PROJECT);
@@ -275,9 +273,8 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 
 	@SuppressWarnings("deprecation")
 	public void testDerrivedFolderChanged() throws CoreException {
-		// TODO e3.6 replace with setDerived(true, null)
-		folder.setDerived(true);
-		fileInFolder.setDerived(false);
+		folder.setDerived(true, null);
+		fileInFolder.setDerived(false, null);
 
 		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + project.getProject().getName(), null,
 				(IResourceDelta.CHANGED | IResourceDelta.CONTENT), IResource.PROJECT);

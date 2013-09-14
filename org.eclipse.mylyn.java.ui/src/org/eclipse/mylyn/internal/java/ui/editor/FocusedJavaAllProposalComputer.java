@@ -12,26 +12,14 @@
 
 package org.eclipse.mylyn.internal.java.ui.editor;
 
-import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jdt.core.CompletionContext;
-import org.eclipse.jdt.core.CompletionProposal;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
-import org.eclipse.jdt.internal.ui.text.JavaHeuristicScanner;
-import org.eclipse.jdt.internal.ui.text.Symbols;
-import org.eclipse.jdt.internal.ui.text.java.JavaCompletionProposalComputer;
-import org.eclipse.jdt.ui.text.java.CompletionProposalCollector;
+import org.eclipse.jdt.internal.ui.text.java.JavaAllCompletionProposalComputer;
 import org.eclipse.jdt.ui.text.java.ContentAssistInvocationContext;
-import org.eclipse.jdt.ui.text.java.JavaContentAssistInvocationContext;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
 import org.eclipse.mylyn.internal.java.ui.JavaUiUtil;
 
 /**
@@ -40,32 +28,7 @@ import org.eclipse.mylyn.internal.java.ui.JavaUiUtil;
  * @author Mik Kersten
  * @author Steffen Pingel
  */
-// TODO e3.5 extend org.eclipse.jdt.internal.ui.text.java.JavaAllCompletionProposalComputer
-public class FocusedJavaAllProposalComputer extends JavaCompletionProposalComputer {
-
-	/**
-	 * @see CompletionProposal#CONSTRUCTOR_INVOCATION
-	 */
-	// TODO e3.5 replace by CompletionProposal.CONSTRUCTOR_INVOCATION
-	public static final int CONSTRUCTOR_INVOCATION = 26;
-
-	/**
-	 * @see CompletionProposal#ANONYMOUS_CLASS_CONSTRUCTOR_INVOCATION
-	 */
-	// TODO e3.5 replace by CompletionProposal.ANONYMOUS_CLASS_CONSTRUCTOR_INVOCATION
-	public static final int ANONYMOUS_CLASS_CONSTRUCTOR_INVOCATION = 27;
-
-	private static Field field;
-	static {
-		try {
-			field = JavaContentAssistInvocationContext.class.getDeclaredField("fCoreContext"); //$NON-NLS-1$
-			field.setAccessible(true);
-		} catch (Exception e) {
-			// ignore
-		}
-	}
-
-	private boolean coreContextExceptionLogged;
+public class FocusedJavaAllProposalComputer extends JavaAllCompletionProposalComputer {
 
 	public FocusedJavaAllProposalComputer() {
 		FocusedJavaProposalProcessor.getDefault().addMonitoredComputer(this);
@@ -75,24 +38,6 @@ public class FocusedJavaAllProposalComputer extends JavaCompletionProposalComput
 	@Override
 	public List computeCompletionProposals(ContentAssistInvocationContext context, IProgressMonitor monitor) {
 		if (shouldReturnResults()) {
-			// TODO e3.6 remove code below (work-around for bug 271252)
-			if (field != null) {
-				try {
-					CompletionContext coreContext = (CompletionContext) field.get(context);
-					if (coreContext != null && !coreContext.isExtended()) {
-						// trigger re-computation of coreContext to ensure that coreContext is extended
-						field.set(context, null);
-					}
-				} catch (Exception e) {
-					if (!coreContextExceptionLogged) {
-						coreContextExceptionLogged = true;
-						StatusHandler.log(new Status(
-								IStatus.WARNING,
-								JavaUiBridgePlugin.ID_PLUGIN,
-								"An error was encountered while computing Task-Focused content assist. To recover use Restore Defaults in Preferences > Java > Editor > Content Assist > Advanced.", e)); //$NON-NLS-1$
-					}
-				}
-			}
 			List proposals = super.computeCompletionProposals(context, monitor);
 			return FocusedJavaProposalProcessor.getDefault().projectInterestModel(this, proposals);
 		} else {
@@ -111,84 +56,6 @@ public class FocusedJavaAllProposalComputer extends JavaCompletionProposalComput
 			return false;
 		}
 		return true;
-	}
-
-	/**
-	 * @see org.eclipse.jdt.internal.ui.text.java.JavaAllCompletionProposalComputer#createCollector(JavaContentAssistInvocationContext)
-	 */
-	@Override
-	protected CompletionProposalCollector createCollector(JavaContentAssistInvocationContext context) {
-		CompletionProposalCollector collector = super.createCollector(context);
-		collector.setIgnored(CompletionProposal.ANNOTATION_ATTRIBUTE_REF, false);
-		collector.setIgnored(CompletionProposal.ANONYMOUS_CLASS_DECLARATION, false);
-		try {
-			collector.setIgnored(ANONYMOUS_CLASS_CONSTRUCTOR_INVOCATION, false);
-		} catch (IllegalArgumentException e) {
-			// ignore
-		}
-		collector.setIgnored(CompletionProposal.FIELD_REF, false);
-		collector.setIgnored(CompletionProposal.FIELD_REF_WITH_CASTED_RECEIVER, false);
-		collector.setIgnored(CompletionProposal.KEYWORD, false);
-		collector.setIgnored(CompletionProposal.LABEL_REF, false);
-		collector.setIgnored(CompletionProposal.LOCAL_VARIABLE_REF, false);
-		collector.setIgnored(CompletionProposal.METHOD_DECLARATION, false);
-		collector.setIgnored(CompletionProposal.METHOD_NAME_REFERENCE, false);
-		collector.setIgnored(CompletionProposal.METHOD_REF, false);
-		try {
-			collector.setIgnored(CONSTRUCTOR_INVOCATION, false);
-		} catch (IllegalArgumentException e) {
-			// ignore
-		}
-		collector.setIgnored(CompletionProposal.METHOD_REF_WITH_CASTED_RECEIVER, false);
-		collector.setIgnored(CompletionProposal.PACKAGE_REF, false);
-		collector.setIgnored(CompletionProposal.POTENTIAL_METHOD_DECLARATION, false);
-		collector.setIgnored(CompletionProposal.VARIABLE_DECLARATION, false);
-		collector.setIgnored(CompletionProposal.TYPE_REF, false);
-		return collector;
-	}
-
-	/**
-	 * @see org.eclipse.jdt.internal.ui.text.java.JavaAllCompletionProposalComputer#guessContextInformationPosition(ContentAssistInvocationContext)
-	 */
-	@Override
-	protected int guessContextInformationPosition(ContentAssistInvocationContext context) {
-		int invocationOffset = context.getInvocationOffset();
-		int typeContext = super.guessContextInformationPosition(context);
-		int methodContext = guessMethodContextInformationPosition2(context);
-		if (typeContext != invocationOffset && typeContext > methodContext) {
-			return typeContext;
-		} else if (methodContext != invocationOffset) {
-			return methodContext;
-		} else {
-			return invocationOffset;
-		}
-	}
-
-	// renamed, since guessMethodContextInformationPosition(ContentAssistInvocationContext) is final
-	protected final int guessMethodContextInformationPosition2(ContentAssistInvocationContext context) {
-		final int contextPosition = context.getInvocationOffset();
-
-		IDocument document = context.getDocument();
-		JavaHeuristicScanner scanner = new JavaHeuristicScanner(document);
-		int bound = Math.max(-1, contextPosition - 200);
-
-		// try the innermost scope of parentheses that looks like a method call
-		int pos = contextPosition - 1;
-		do {
-			int paren = scanner.findOpeningPeer(pos, bound, '(', ')');
-			if (paren == JavaHeuristicScanner.NOT_FOUND) {
-				break;
-			}
-			int token = scanner.previousToken(paren - 1, bound);
-			// next token must be a method name (identifier) or the closing angle of a
-			// constructor call of a parameterized type.
-			if (token == Symbols.TokenIDENT || token == Symbols.TokenGREATERTHAN) {
-				return paren + 1;
-			}
-			pos = paren - 1;
-		} while (true);
-
-		return contextPosition;
 	}
 
 }

@@ -19,7 +19,6 @@ import org.eclipse.ui.views.navigator.ResourceNavigator;
 /**
  * @author Mik Kersten
  */
-// TODO e3.5
 @SuppressWarnings("deprecation")
 public class IdeUiUtil {
 
@@ -35,26 +34,6 @@ public class IdeUiUtil {
 		IViewPart view = activePage.findView(id);
 		return view;
 	}
-
-//	public static void forceSynchronizeViewUpdate() {
-//		IViewPart view = getView(ID_VIEW_SYNCHRONIZE);
-//		if (view instanceof SynchronizeView) {
-//			SynchronizeView syncView = (SynchronizeView)view;
-//			IPage currentPage = syncView.getCurrentPage();
-//			if (currentPage instanceof ModelSynchronizePage) {
-//				ModelSynchronizePage modelPage = (ModelSynchronizePage)currentPage;
-////				String currentProvider = (String)modelPage.getConfiguration().getProperty(ModelSynchronizeParticipant.P_VISIBLE_MODEL_PROVIDER);
-////				modelPage.getConfiguration().setProperty(
-////						ModelSynchronizeParticipant.P_VISIBLE_MODEL_PROVIDER, 
-////						ResourceModelProvider.RESOURCE_MODEL_PROVIDER_ID);
-//				
-//				modelPage.getConfiguration().setProperty(
-//						ModelSynchronizeParticipant.P_VISIBLE_MODEL_PROVIDER, 
-//						ChangeSetModelProvider.ID);
-//				
-//			}
-//		}
-//	}
 
 	public static ResourceNavigator getNavigatorFromActivePage() {
 		if (PlatformUI.getWorkbench() == null || PlatformUI.getWorkbench().getActiveWorkbenchWindow() == null) {

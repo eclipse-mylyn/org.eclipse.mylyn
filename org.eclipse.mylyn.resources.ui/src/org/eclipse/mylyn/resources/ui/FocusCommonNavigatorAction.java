@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.resources.ui;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -39,7 +38,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.internal.navigator.NavigatorContentService;
 import org.eclipse.ui.internal.navigator.actions.LinkEditorAction;
 import org.eclipse.ui.internal.navigator.filters.CommonFilterDescriptor;
 import org.eclipse.ui.internal.navigator.filters.CommonFilterDescriptorManager;
@@ -47,6 +45,7 @@ import org.eclipse.ui.internal.navigator.filters.CoreExpressionFilter;
 import org.eclipse.ui.internal.navigator.filters.SelectFiltersAction;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.ILinkHelper;
+import org.eclipse.ui.navigator.LinkHelperService;
 
 /**
  * @author Mik Kersten
@@ -54,9 +53,7 @@ import org.eclipse.ui.navigator.ILinkHelper;
  */
 public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAction {
 
-	private Object linkService;
-
-	private Method linkServiceMethod;
+	private LinkHelperService linkService;
 
 	private boolean resolveFailed;
 
@@ -105,22 +102,12 @@ public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAc
 		if (resolveFailed) {
 			return null;
 		}
-		if (linkServiceMethod == null) {
-			// TODO e3.5 replace with call to CommonNavigator.getLinkHelperService()
+		if (linkService == null) {
 			try {
-				try {
-					// e3.5: get helper from common navigator
-					Method method = CommonNavigator.class.getDeclaredMethod("getLinkHelperService"); //$NON-NLS-1$
-					method.setAccessible(true);
-					linkService = method.invoke(commonNavigator);
-				} catch (NoSuchMethodException e) {
-					// e3.3, e3.4: instantiate helper
-					Class<?> clazz = Class.forName("org.eclipse.ui.internal.navigator.extensions.LinkHelperService"); //$NON-NLS-1$
-					Constructor<?> constructor = clazz.getConstructor(NavigatorContentService.class);
-					linkService = constructor.newInstance((NavigatorContentService) commonNavigator.getCommonViewer()
-							.getNavigatorContentService());
-				}
-				linkServiceMethod = linkService.getClass().getDeclaredMethod("getLinkHelpersFor", IEditorInput.class); //$NON-NLS-1$
+				// need reflection since the method is protected
+				Method method = CommonNavigator.class.getDeclaredMethod("getLinkHelperService"); //$NON-NLS-1$
+				method.setAccessible(true);
+				linkService = (LinkHelperService) method.invoke(commonNavigator);
 			} catch (Throwable e) {
 				resolveFailed = true;
 				StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.ID_PLUGIN,
@@ -129,13 +116,7 @@ public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAc
 		}
 
 		IEditorInput input = editor.getEditorInput();
-		// TODO e3.5 replace with call to linkService.getLinkHelpersFor(editor.getEditorInput());
-		ILinkHelper[] helpers;
-		try {
-			helpers = (ILinkHelper[]) linkServiceMethod.invoke(linkService, editor.getEditorInput());
-		} catch (Exception e) {
-			return null;
-		}
+		ILinkHelper[] helpers = linkService.getLinkHelpersFor(input);
 
 		IStructuredSelection selection = StructuredSelection.EMPTY;
 		IStructuredSelection newSelection = StructuredSelection.EMPTY;

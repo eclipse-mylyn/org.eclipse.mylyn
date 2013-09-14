@@ -33,22 +33,6 @@
 	        parentContentType="resource"/>
 	</extension>
 	
-	
-    <extension
-         id="apitools_javadoc_proposals"
-         name="%javaCompletionProposalComputer.name"
-         point="org.eclipse.jdt.ui.javaCompletionProposalComputer">
-      <javaCompletionProposalComputer
-            activate="true"
-            categoryId="org.eclipse.mylyn.java.ui.javaAllProposalCategory"
-            class="org.eclipse.mylyn.internal.pde.ui.FocusedApiToolsJavadocCompletionProposalComputer">
-         <partition
-               type="__java_javadoc">
-         </partition>
-      </javaCompletionProposalComputer>
-   	</extension>
-	
-	
 	<extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
