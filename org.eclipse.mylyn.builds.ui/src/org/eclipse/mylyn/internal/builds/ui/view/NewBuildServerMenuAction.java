@@ -39,9 +39,6 @@ import org.eclipse.ui.menus.CommandContributionItemParameter;
  */
 public class NewBuildServerMenuAction extends Action implements IMenuCreator {
 
-	// TODO e3.6 replace by IWorkbenchCommandConstants.VIEWS_SHOW_VIEW_PARM_ID
-	private static final String VIEWS_SHOW_VIEW_PARM_ID = "org.eclipse.ui.views.showView.viewId"; //$NON-NLS-1$
-
 	private MenuManager manager;
 
 	private Menu menu;
@@ -85,7 +82,7 @@ public class NewBuildServerMenuAction extends Action implements IMenuCreator {
 				RepositoryUi.ID_VIEW_REPOSITORIES, IWorkbenchCommandConstants.VIEWS_SHOW_VIEW,
 				CommandContributionItem.STYLE_PUSH);
 		Map<String, String> targetId = new HashMap<String, String>();
-		targetId.put(VIEWS_SHOW_VIEW_PARM_ID, RepositoryUi.ID_VIEW_REPOSITORIES);
+		targetId.put(IWorkbenchCommandConstants.VIEWS_SHOW_VIEW_PARM_ID, RepositoryUi.ID_VIEW_REPOSITORIES);
 		parm.parameters = targetId;
 		parm.label = "Show Repositories View";
 		if (parm.label.length() > 0) {
