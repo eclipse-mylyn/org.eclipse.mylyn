@@ -20,6 +20,7 @@ import org.eclipse.mylyn.discovery.tests.core.ConnectorDiscoveryRemoteTest;
 import org.eclipse.mylyn.discovery.tests.core.ConnectorDiscoveryTest;
 import org.eclipse.mylyn.discovery.tests.core.DirectoryParserTest;
 import org.eclipse.mylyn.discovery.tests.core.RemoteBundleDiscoveryStrategyTest;
+import org.eclipse.mylyn.discovery.tests.core.util.WebUtilTest;
 
 /**
  * @author Steffen Pingel
@@ -35,6 +36,7 @@ public class AllDiscoveryTests {
 		suite.addTestSuite(ConnectorDiscoveryTest.class);
 		suite.addTestSuite(DirectoryParserTest.class);
 		suite.addTestSuite(BundleDiscoveryStrategyTest.class);
+		suite.addTestSuite(WebUtilTest.class);
 		if (!configuration.isLocalOnly()) {
 			suite.addTestSuite(RemoteBundleDiscoveryStrategyTest.class);
 			suite.addTestSuite(ConnectorDiscoveryRemoteTest.class);

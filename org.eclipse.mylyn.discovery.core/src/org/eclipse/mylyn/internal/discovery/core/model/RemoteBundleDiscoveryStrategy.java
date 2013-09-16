@@ -231,11 +231,7 @@ public class RemoteBundleDiscoveryStrategy extends BundleDiscoveryStrategy {
 								Messages.RemoteBundleDiscoveryStrategy_unrecognized_discovery_url, bundleUrl)));
 						continue;
 					}
-					String lastPathElement = bundleUrl.lastIndexOf('/') == -1
-							? bundleUrl
-							: bundleUrl.substring(bundleUrl.lastIndexOf('/'));
-					File target = File.createTempFile(
-							lastPathElement.replaceAll("^[a-zA-Z0-9_.]", "_") + "_", ".jar", temporaryStorage); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
+					File target = File.createTempFile(WebUtil.getFileNameFor(bundleUrl) + "_", ".jar", temporaryStorage); //$NON-NLS-1$ //$NON-NLS-2$
 
 					if (monitor.isCanceled()) {
 						break;
