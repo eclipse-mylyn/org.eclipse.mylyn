@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Reviews Framework
 Bundle-SymbolicName: org.eclipse.mylyn.reviews.tests;singleton:=true
-Bundle-Version: 2.0.1.qualifier
+Bundle-Version: 2.1.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.hamcrest;bundle-version="1.1.0",
