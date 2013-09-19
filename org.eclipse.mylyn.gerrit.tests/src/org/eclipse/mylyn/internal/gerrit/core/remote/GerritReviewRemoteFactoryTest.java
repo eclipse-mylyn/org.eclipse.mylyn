@@ -203,7 +203,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		//Not expected to be same instance
 		assertThat(parentChange.getId(), is(getReview().getId()));
 		assertThat(parentChange.getSubject(), is(getReview().getSubject()));
-		assertThat(parentChange.getModificationDate(), is(getReview().getModificationDate()));
+		assertThat(parentChange.getModificationDate().getTime(), is(getReview().getModificationDate().getTime()));
 
 		reviewHarness.consumer.retrieve(false);
 		reviewHarness.listener.waitForResponse(2, 2);
@@ -212,7 +212,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		//Not expected to be same instance
 		assertThat(childChange.getId(), is(reviewDep1.getId()));
 		assertThat(childChange.getSubject(), is(reviewDep1.getSubject()));
-		assertThat(childChange.getModificationDate(), is(reviewDep1.getModificationDate()));
+		assertThat(childChange.getModificationDate().getTime(), is(reviewDep1.getModificationDate().getTime()));
 	}
 
 	@Test
