@@ -65,7 +65,7 @@ public class HudsonConnector extends BuildConnector {
 	@Override
 	public IBuildElement getBuildElementFromUrl(IBuildServer server, String url) {
 		if (url.startsWith(server.getUrl())) {
-			Pattern p = Pattern.compile("(.*/job/(.*)/)(\\d+)");
+			Pattern p = Pattern.compile("(.*/job/(.*)/)(\\d+)"); //$NON-NLS-1$
 			Matcher matcher = p.matcher(url);
 			if (matcher.find()) {
 				IBuildPlan plan = IBuildFactory.INSTANCE.createBuildPlan();

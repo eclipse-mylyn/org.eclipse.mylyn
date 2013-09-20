@@ -44,7 +44,7 @@ public abstract class BuildConnectorUi {
 	public ImageDescriptor getImageDescriptor() {
 		if (descriptor == null) {
 			if (element != null) {
-				String iconPath = element.getAttribute("icon");
+				String iconPath = element.getAttribute("icon"); //$NON-NLS-1$
 				if (iconPath != null) {
 					descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(element.getContributor().getName(),
 							iconPath);

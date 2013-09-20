@@ -58,7 +58,7 @@ public class HudsonCorePlugin implements BundleActivator {
 	}
 
 	public static CoreException toCoreException(HudsonException e) {
-		return new CoreException(new Status(IStatus.ERROR, ID_PLUGIN, "Unexpected error: " + e.getMessage(), e));
+		return new CoreException(new Status(IStatus.ERROR, ID_PLUGIN, "Unexpected error: " + e.getMessage(), e)); //$NON-NLS-1$
 	}
 
 }
