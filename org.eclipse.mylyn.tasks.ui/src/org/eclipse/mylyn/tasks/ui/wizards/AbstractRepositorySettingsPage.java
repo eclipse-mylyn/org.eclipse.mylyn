@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 Tasktop Technologies and others. 
+ * Copyright (c) 2004, 2013 Tasktop Technologies and others. 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,8 @@ package org.eclipse.mylyn.tasks.ui.wizards;
 
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -66,6 +68,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -314,8 +317,20 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		}
 		Point p = innerComposite.getContent().computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
 		innerComposite.setMinSize(p);
+		swapUserNameWithAnonymousInTabList();
 		Dialog.applyDialogFont(innerComposite);
 		setControl(innerComposite);
+	}
+
+	private void swapUserNameWithAnonymousInTabList() {
+		List<Control> tabList = Arrays.asList(compositeContainer.getTabList());
+		if (tabList.contains(repositoryUserNameEditor.getTextControl(compositeContainer))
+				&& tabList.contains(anonymousButton)) {
+			int userNameIndex = tabList.indexOf(repositoryUserNameEditor.getTextControl(compositeContainer));
+			int anonymousIndex = tabList.indexOf(anonymousButton);
+			Collections.swap(tabList, userNameIndex, anonymousIndex);
+			compositeContainer.setTabList(tabList.toArray(new Control[tabList.size()]));
+		}
 	}
 
 	/**
