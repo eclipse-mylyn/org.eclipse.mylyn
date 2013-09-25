@@ -19,21 +19,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Writer;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.nio.charset.Charset;
 import java.util.Enumeration;
-import java.util.regex.Matcher;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import junit.framework.AssertionFailedError;
-
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.osgi.framework.adaptor.BundleClassLoader;
 import org.eclipse.osgi.util.NLS;
 
 /**
@@ -166,50 +157,9 @@ public class CommonTestUtil {
 		return in;
 	}
 
+	@Deprecated
 	public static File getFile(Object source, String filename) throws IOException {
-		Class<?> clazz = (source instanceof Class<?>) ? (Class<?>) source : source.getClass();
-		if (Platform.isRunning()) {
-			ClassLoader classLoader = clazz.getClassLoader();
-			if (classLoader instanceof BundleClassLoader) {
-				URL url = ((BundleClassLoader) classLoader).getBundle().getEntry(filename);
-				if (url != null) {
-					URL localURL = FileLocator.toFileURL(url);
-					return new File(localURL.getFile());
-				}
-			}
-		} else {
-			URL localURL = clazz.getResource("");
-			String path = URLDecoder.decode(localURL.getFile(), Charset.defaultCharset().name());
-			int i = path.indexOf("!");
-			if (i != -1) {
-				int j = path.lastIndexOf(File.separatorChar, i);
-				if (j != -1) {
-					path = path.substring(0, j) + File.separator;
-				} else {
-					throw new AssertionFailedError("Unable to determine location for '" + filename + "' at '" + path
-							+ "'");
-				}
-				// class file is nested in jar, use jar path as base
-				if (path.startsWith("file:")) {
-					path = path.substring(5);
-				}
-				return new File(path + filename);
-			} else {
-				// remove all package segments from name
-				String directory = clazz.getName().replaceAll("[^.]", "");
-				directory = directory.replaceAll(".", "../");
-				if (path.contains("/bin/")) {
-					// account for bin/ when running from Eclipse workspace
-					directory += "../";
-				} else if (path.contains("/target/classes/")) {
-					// account for bin/ when running from Eclipse workspace
-					directory += "../../";
-				}
-				filename = path + (directory + filename).replaceAll("/", Matcher.quoteReplacement(File.separator));
-				return new File(filename).getCanonicalFile();
-			}
-		}
-		throw new AssertionFailedError("Could not locate " + filename);
+		return org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.getFile(source, filename);
 	}
 
 	public static String read(File source) throws IOException {

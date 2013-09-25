@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.commons.sdk.util;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -19,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.Proxy;
 import java.net.ProxySelector;
@@ -37,6 +40,7 @@ import java.util.zip.ZipFile;
 
 import junit.framework.AssertionFailedError;
 
+import org.apache.commons.lang.reflect.MethodUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
@@ -47,9 +51,9 @@ import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.repositories.core.auth.CertificateCredentials;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
-import org.eclipse.osgi.baseadaptor.loader.BaseClassLoader;
 import org.eclipse.osgi.service.resolver.VersionRange;
 import org.eclipse.osgi.util.NLS;
+import org.osgi.framework.Bundle;
 
 /**
  * @author Steffen Pingel
@@ -254,53 +258,79 @@ public class CommonTestUtil {
 		throw new AssertionFailedError("invalid privilege level");
 	}
 
+	private static boolean isOsgiVersion310orNewer(ClassLoader classLoader) {
+		return classLoader.getClass().getName().equals("org.eclipse.osgi.internal.loader.ModuleClassLoader");
+	}
+
 	public static File getFile(Object source, String filename) throws IOException {
 		Class<?> clazz = (source instanceof Class<?>) ? (Class<?>) source : source.getClass();
 		if (Platform.isRunning()) {
 			ClassLoader classLoader = clazz.getClassLoader();
-			if (classLoader instanceof BaseClassLoader) {
-				URL url = ((BaseClassLoader) classLoader).getClasspathManager()
-						.getBaseData()
-						.getBundle()
-						.getEntry(filename);
-				if (url != null) {
-					URL localURL = FileLocator.toFileURL(url);
-					return new File(localURL.getFile());
+			try {
+				if (isOsgiVersion310orNewer(classLoader)) {
+					return checkNotNull(getFileFromClassLoader4Luna(filename, classLoader));
+				} else {
+					return checkNotNull(getFileFromClassLoaderBeforeLuna(filename, classLoader));
 				}
+			} catch (Exception e) {
+				AssertionFailedError exception = new AssertionFailedError(NLS.bind(
+						"Could not locate {0} using classloader for {1}", filename, clazz));
+				exception.initCause(e);
+				throw exception;
 			}
 		} else {
-			URL localURL = clazz.getResource("");
-			String path = URLDecoder.decode(localURL.getFile(), Charset.defaultCharset().name());
-			int i = path.indexOf("!");
-			if (i != -1) {
-				int j = path.lastIndexOf(File.separatorChar, i);
-				if (j != -1) {
-					path = path.substring(0, j) + File.separator;
-				} else {
-					throw new AssertionFailedError("Unable to determine location for '" + filename + "' at '" + path
-							+ "'");
-				}
-				// class file is nested in jar, use jar path as base
-				if (path.startsWith("file:")) {
-					path = path.substring(5);
-				}
-				return new File(path + filename);
-			} else {
-				// remove all package segments from name
-				String directory = clazz.getName().replaceAll("[^.]", "");
-				directory = directory.replaceAll(".", "../");
-				if (path.contains("/bin/")) {
-					// account for bin/ when running from Eclipse workspace
-					directory += "../";
-				} else if (path.contains("/target/classes/")) {
-					// account for bin/ when running from Eclipse workspace
-					directory += "../../";
-				}
-				filename = path + (directory + filename).replaceAll("/", Matcher.quoteReplacement(File.separator));
-				return new File(filename).getCanonicalFile();
-			}
+			return getFileFromNotRunningPlatform(filename, clazz);
 		}
-		throw new AssertionFailedError("Could not locate " + filename);
+	}
+
+	private static File getFileFromNotRunningPlatform(String filename, Class<?> clazz)
+			throws UnsupportedEncodingException, IOException {
+		URL localURL = clazz.getResource("");
+		String path = URLDecoder.decode(localURL.getFile(), Charset.defaultCharset().name());
+		int i = path.indexOf("!");
+		if (i != -1) {
+			int j = path.lastIndexOf(File.separatorChar, i);
+			if (j != -1) {
+				path = path.substring(0, j) + File.separator;
+			} else {
+				throw new AssertionFailedError("Unable to determine location for '" + filename + "' at '" + path + "'");
+			}
+			// class file is nested in jar, use jar path as base
+			if (path.startsWith("file:")) {
+				path = path.substring(5);
+			}
+			return new File(path + filename);
+		} else {
+			// remove all package segments from name
+			String directory = clazz.getName().replaceAll("[^.]", "");
+			directory = directory.replaceAll(".", "../");
+			if (path.contains("/bin/")) {
+				// account for bin/ when running from Eclipse workspace
+				directory += "../";
+			} else if (path.contains("/target/classes/")) {
+				// account for bin/ when running from Eclipse workspace
+				directory += "../../";
+			}
+			filename = path + (directory + filename).replaceAll("/", Matcher.quoteReplacement(File.separator));
+			return new File(filename).getCanonicalFile();
+		}
+	}
+
+	private static File getFileFromClassLoaderBeforeLuna(String filename, ClassLoader classLoader) throws Exception {
+		Object classpathManager = MethodUtils.invokeExactMethod(classLoader, "getClasspathManager", null);
+		Object baseData = MethodUtils.invokeExactMethod(classpathManager, "getBaseData", null);
+		Bundle bundle = (Bundle) MethodUtils.invokeExactMethod(baseData, "getBundle", null);
+		URL localURL = FileLocator.toFileURL(bundle.getEntry(filename));
+		return new File(localURL.getFile());
+	}
+
+	private static File getFileFromClassLoader4Luna(String filename, ClassLoader classLoader) throws Exception {
+		Object classpathManager = MethodUtils.invokeExactMethod(classLoader, "getClasspathManager", null);
+		Object generation = MethodUtils.invokeExactMethod(classpathManager, "getGeneration", null);
+		Object bundleFile = MethodUtils.invokeExactMethod(generation, "getBundleFile", null);
+		File file = (File) MethodUtils.invokeExactMethod(bundleFile, "getFile", new Object[] { filename, true },
+				new Class[] { String.class, boolean.class });
+		return file;
 	}
 
 	public static InputStream getResource(Object source, String filename) throws IOException {

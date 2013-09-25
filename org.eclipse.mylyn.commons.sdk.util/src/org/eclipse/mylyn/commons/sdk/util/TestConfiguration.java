@@ -135,8 +135,9 @@ public class TestConfiguration {
 		}
 
 		if (fixtures.isEmpty()) {
-			throw new RuntimeException(NLS.bind("Failed to discover any fixtures for kind {0} with defaultOnly={1}",
-					fixtureType, Boolean.toString(defaultOnly)));
+			throw new RuntimeException(NLS.bind(
+					"Failed to discover any fixtures for kind {0} with defaultOnly={1} ({2} and {3})", new Object[] {
+							fixtureType, Boolean.toString(defaultOnly), URL_SERVICES_LOCALHOST, URL_SERVICES_DEFAULT }));
 		}
 
 		return fixtures;
