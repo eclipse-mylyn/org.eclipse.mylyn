@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Guy Perron - add Windows support  
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.sdk.util;
@@ -117,7 +118,7 @@ public class TestConfiguration {
 		if (!CommonTestUtil.ignoreLocalTestServices()) {
 			try {
 				File file = CommonTestUtil.getFile(clazz, "local.json");
-				fixtures = discover("file://" + file.getAbsolutePath(), "", clazz, fixtureType, defaultOnly);
+				fixtures = discover(file.toURI().toASCIIString(), "", clazz, fixtureType, defaultOnly);
 			} catch (AssertionFailedError e) {
 				// ignore
 			} catch (IOException e) {
