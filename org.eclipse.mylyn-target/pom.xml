@@ -52,6 +52,11 @@
                   <classifier>mylyn-e4.3</classifier>
                 </artifact>
                 <artifact>
+                  <file>mylyn-e4.4.target</file>
+                  <type>target</type>
+                  <classifier>mylyn-e4.4</classifier>
+                </artifact>
+                <artifact>
                   <file>mylyn-maintenance.target</file>
                   <type>target</type>
                   <classifier>mylyn-maintenance</classifier>
