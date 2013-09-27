@@ -57,14 +57,14 @@
                   <classifier>mylyn-e4.4</classifier>
                 </artifact>
                 <artifact>
-                  <file>mylyn-maintenance.target</file>
+                  <file>mylyn-emaintenance.target</file>
                   <type>target</type>
-                  <classifier>mylyn-maintenance</classifier>
+                  <classifier>mylyn-emaintenance</classifier>
                 </artifact>
                 <artifact>
-                  <file>mylyn-staging.target</file>
+                  <file>mylyn-estaging.target</file>
                   <type>target</type>
-                  <classifier>mylyn-staging</classifier>
+                  <classifier>mylyn-estaging</classifier>
                 </artifact>
               </artifacts>
             </configuration>

@@ -53,7 +53,6 @@
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.cdt.platform.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.ecf.core.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.equinox.concurrent" version="0.0.0"/>
 <unit id="org.eclipse.emf.ecore.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.common.feature.group" version="0.0.0"/>
@@ -65,6 +64,10 @@
 <unit id="org.eclipse.jgit.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.sdk.ide" version="0.0.0"/>
 <repository location="http://download.eclipse.org/releases/staging"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.ecf.core.feature.group" version="0.0.0"/>
+<repository location="http://download.eclipse.org/releases/kepler"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.10"/>
