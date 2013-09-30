@@ -9,11 +9,11 @@
 <unit id="org.mockito" version="1.8.4.v201303031500"/>
 <unit id="org.objenesis" version="1.0.0.v201105211943"/>
 <unit id="org.junit" version="4.8.2.v4_8_2_v20130308-0413"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20130827064939/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.platform.ide" version="0.0.0"/>
-<repository location="http://download.eclipse.org/eclipse/updates/4.3milestones"/>
+<repository location="http://download.eclipse.org/eclipse/updates/4.3"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.mylyn_feature.feature.group" version="0.0.0"/>

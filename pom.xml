@@ -46,7 +46,7 @@
     <platform-version-name>kepler</platform-version-name>
     <mylyn-site>http://download.eclipse.org/mylyn/releases/3.7</mylyn-site>
     <eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
-    <orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/</orbit-site>
+	<orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/R20130827064939/repository/</orbit-site>
     <download-publish-path>/home/data/httpd/download.eclipse.org/egit/github/updates-nightly</download-publish-path>
   </properties>
 
