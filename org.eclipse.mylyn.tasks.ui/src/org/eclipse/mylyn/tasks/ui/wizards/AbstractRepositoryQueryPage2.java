@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -414,7 +415,7 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 		progressContainer.setCancelButton(cancelButton);
 	}
 
-	protected abstract void createPageContent(SectionComposite parent);
+	protected abstract void createPageContent(@NonNull SectionComposite parent);
 
 	protected void doClearControls() {
 	}
@@ -444,6 +445,6 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 		return false;
 	}
 
-	protected abstract boolean restoreState(IRepositoryQuery query);
+	protected abstract boolean restoreState(@NonNull IRepositoryQuery query);
 
 }

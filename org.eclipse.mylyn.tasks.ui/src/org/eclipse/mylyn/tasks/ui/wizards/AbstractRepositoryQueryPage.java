@@ -15,6 +15,7 @@ import java.beans.Beans;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
@@ -120,7 +121,7 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 		return query;
 	}
 
-	public abstract void applyTo(IRepositoryQuery query);
+	public abstract void applyTo(@NonNull IRepositoryQuery query);
 
 	public void saveState() {
 		// empty
