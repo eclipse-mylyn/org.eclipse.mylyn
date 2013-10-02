@@ -17,6 +17,8 @@ import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -54,12 +56,16 @@ public abstract class AbstractRepositoryConnectorUi {
 	/**
 	 * @return the unique type of the repository, e.g. "bugzilla"
 	 */
+	@NonNull
 	public abstract String getConnectorKind();
 
 	/**
+	 * @param repository
+	 *            the repository to edit or {@code null} if creating a new repository
 	 * @since 3.0
 	 */
-	public abstract ITaskRepositoryPage getSettingsPage(TaskRepository taskRepository);
+	@NonNull
+	public abstract ITaskRepositoryPage getSettingsPage(@Nullable TaskRepository repository);
 
 	/**
 	 * @param repository
@@ -67,12 +73,14 @@ public abstract class AbstractRepositoryConnectorUi {
 	 *            can be null
 	 * @since 3.0
 	 */
-	public abstract IWizard getQueryWizard(TaskRepository taskRepository, IRepositoryQuery queryToEdit);
+	@NonNull
+	public abstract IWizard getQueryWizard(@NonNull TaskRepository repository, @Nullable IRepositoryQuery query);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract IWizard getNewTaskWizard(TaskRepository taskRepository, ITaskMapping selection);
+	@NonNull
+	public abstract IWizard getNewTaskWizard(@NonNull TaskRepository repository, @Nullable ITaskMapping selection);
 
 	/**
 	 * Override to return a custom task editor ID. If overriding this method the connector becomes responsible for
@@ -81,7 +89,8 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * 
 	 * @since 3.0
 	 */
-	public String getTaskEditorId(ITask repositoryTask) {
+	@NonNull
+	public String getTaskEditorId(@NonNull ITask repositoryTask) {
 		return TaskEditor.ID_EDITOR;
 	}
 
@@ -97,7 +106,8 @@ public abstract class AbstractRepositoryConnectorUi {
 	 *            - the task to edit
 	 * @since 3.4
 	 */
-	public IEditorInput getTaskEditorInput(TaskRepository repository, ITask task) {
+	@NonNull
+	public IEditorInput getTaskEditorInput(@NonNull TaskRepository repository, @NonNull ITask task) {
 		return new TaskEditorInput(repository, task);
 	}
 
@@ -109,6 +119,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * @deprecated use {@link #getLegendElements()} instead
 	 */
 	@Deprecated
+	@NonNull
 	public List<ITask> getLegendItems() {
 		return Collections.emptyList();
 	}
@@ -118,6 +129,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * 
 	 * @since 3.0
 	 */
+	@NonNull
 	public List<LegendElement> getLegendElements() {
 		return Collections.emptyList();
 	}
@@ -127,7 +139,8 @@ public abstract class AbstractRepositoryConnectorUi {
 	 *            can be null
 	 * @since 3.0
 	 */
-	public String getTaskKindLabel(ITask task) {
+	@NonNull
+	public String getTaskKindLabel(@Nullable ITask task) {
 		return LABEL_TASK_DEFAULT;
 	}
 
@@ -138,7 +151,8 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * 
 	 * @since 3.0
 	 */
-	public ImageDescriptor getImageDescriptor(IRepositoryElement element) {
+	@Nullable
+	public ImageDescriptor getImageDescriptor(@NonNull IRepositoryElement element) {
 		if (element instanceof RepositoryQuery) {
 			return ((RepositoryQuery) element).getAutoUpdate() ? TasksUiImages.QUERY : TasksUiImages.QUERY_OFFLINE;
 		} else if (element instanceof ITask) {
@@ -153,7 +167,8 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * 
 	 * @since 3.0
 	 */
-	public ImageDescriptor getTaskKindOverlay(ITask task) {
+	@Nullable
+	public ImageDescriptor getTaskKindOverlay(@NonNull ITask task) {
 		return null;
 	}
 
@@ -163,7 +178,8 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * 
 	 * @since 3.0
 	 */
-	public ImageDescriptor getTaskPriorityOverlay(ITask task) {
+	@NonNull
+	public ImageDescriptor getTaskPriorityOverlay(@NonNull ITask task) {
 		return TasksUiInternal.getPriorityImage(task);
 	}
 
@@ -173,14 +189,16 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * @return returns null
 	 */
 	@Deprecated
-	public IWizard getAddExistingTaskWizard(TaskRepository repository) {
+	@Nullable
+	public IWizard getAddExistingTaskWizard(@Nullable TaskRepository repository) {
 		return null;
 	}
 
 	/**
 	 * @since 3.0
 	 */
-	public ITaskSearchPage getSearchPage(TaskRepository repository, IStructuredSelection selection) {
+	@Nullable
+	public ITaskSearchPage getSearchPage(@NonNull TaskRepository repository, @Nullable IStructuredSelection selection) {
 		return null;
 	}
 
@@ -190,7 +208,8 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * @param taskRepository
 	 *            TODO
 	 */
-	public String getAccountCreationUrl(TaskRepository taskRepository) {
+	@Nullable
+	public String getAccountCreationUrl(@NonNull TaskRepository taskRepository) {
 		return null;
 	}
 
@@ -200,7 +219,8 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * @param taskRepository
 	 *            TODO
 	 */
-	public String getAccountManagementUrl(TaskRepository taskRepository) {
+	@Nullable
+	public String getAccountManagementUrl(@NonNull TaskRepository taskRepository) {
 		return null;
 	}
 
@@ -210,7 +230,8 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * @return a url of a page for the history of the task; null, if no history url is available
 	 * @since 3.0
 	 */
-	public String getTaskHistoryUrl(TaskRepository taskRepository, ITask task) {
+	@Nullable
+	public String getTaskHistoryUrl(@NonNull TaskRepository taskRepository, @NonNull ITask task) {
 		return null;
 	}
 
@@ -222,7 +243,9 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * @return the reply text with a reference to <code>taskComment</code>; null, if no reference is available
 	 * @since 3.0
 	 */
-	public String getReplyText(TaskRepository taskRepository, ITask task, ITaskComment taskComment, boolean includeTask) {
+	@Nullable
+	public String getReplyText(@NonNull TaskRepository taskRepository, @NonNull ITask task,
+			@Nullable ITaskComment taskComment, boolean includeTask) {
 		if (taskComment == null) {
 			return Messages.AbstractRepositoryConnectorUi_InReplyToDescription;
 		} else if (includeTask) {
@@ -252,7 +275,9 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * @deprecated use {@link #findHyperlinks(TaskRepository, ITask, String, int, int)} instead
 	 */
 	@Deprecated
-	public IHyperlink[] findHyperlinks(TaskRepository repository, String text, int index, int textOffset) {
+	@Nullable
+	public IHyperlink[] findHyperlinks(@NonNull TaskRepository repository, @NonNull String text, int index,
+			int textOffset) {
 		return null;
 	}
 
@@ -274,7 +299,8 @@ public abstract class AbstractRepositoryConnectorUi {
 	/**
 	 * @since 3.0
 	 */
-	public IWizardPage getTaskAttachmentPage(TaskAttachmentModel model) {
+	@NonNull
+	public IWizardPage getTaskAttachmentPage(@NonNull TaskAttachmentModel model) {
 		return new TaskAttachmentPage(model);
 	}
 
@@ -296,7 +322,9 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * @return an array of hyperlinks, or null if no hyperlinks were found
 	 * @since 3.4
 	 */
-	public IHyperlink[] findHyperlinks(TaskRepository repository, ITask task, String text, int index, int textOffset) {
+	@Nullable
+	public IHyperlink[] findHyperlinks(@NonNull TaskRepository repository, @Nullable ITask task, @NonNull String text,
+			int index, int textOffset) {
 		return findHyperlinks(repository, text, index, textOffset);
 	}
 }
