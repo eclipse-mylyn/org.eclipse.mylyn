@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.java.ui;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
@@ -62,7 +63,9 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 
 	private static final String MYLYN_PREVIOUS_RUN = "org.eclipse.mylyn.ui.first.run.0_4_9"; //$NON-NLS-1$
 
-	private static final String MYLYN_RUN_COUNT = "org.eclipse.mylyn.java.ui.run.count.3_1_0"; //$NON-NLS-1$
+	private static final String MYLYN_RUN_COUNT_3_1 = "org.eclipse.mylyn.java.ui.run.count.3_1_0"; //$NON-NLS-1$
+
+	private static final String MYLYN_RUN_COUNT_3_10 = "org.eclipse.mylyn.java.ui.run.count.3_10_0"; //$NON-NLS-1$
 
 	private static final String NUM_COMPUTERS_PREF_KEY = "content_assist_number_of_computers"; //$NON-NLS-1$
 
@@ -79,18 +82,13 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 
 		IPreferenceStore javaPrefs = JavaPlugin.getDefault().getPreferenceStore();
 		// NOTE: moved out of wizard and first task activation to avoid bug 194766
-		int count = getPreferenceStore().getInt(MYLYN_RUN_COUNT);
+		int count = getPreferenceStore().getInt(MYLYN_RUN_COUNT_3_1);
 		if (count < 1) {
-			getPreferenceStore().setValue(MYLYN_RUN_COUNT, count + 1);
+			getPreferenceStore().setValue(MYLYN_RUN_COUNT_3_1, count + 1);
 
 			// Mylyn 3.1 removes 2 computers, migrate JDT setting on first run to avoid prevent JDT from displaying a warning dialog 
 			if (count == 0 && getPreferenceStore().contains(MYLYN_PREVIOUS_RUN)) {
-				if (javaPrefs.contains(NUM_COMPUTERS_PREF_KEY)) {
-					int lastNumberOfComputers = javaPrefs.getInt(NUM_COMPUTERS_PREF_KEY);
-					if (lastNumberOfComputers > 0) {
-						javaPrefs.putValue(NUM_COMPUTERS_PREF_KEY, Integer.toString(lastNumberOfComputers - 2));
-					}
-				}
+				changeProcessorCount(javaPrefs, -2);
 			}
 
 			// try installing Task-Focused content assist twice
@@ -104,10 +102,30 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 			}.schedule();
 		}
 
+		int count_3_10 = getPreferenceStore().getInt(MYLYN_RUN_COUNT_3_10);
+		if (count_3_10 < 1) {
+			getPreferenceStore().setValue(MYLYN_RUN_COUNT_3_10, count_3_10 + 1);
+
+			// check that the PDE bridge is installed and we are migrating from a previous version
+			if (Platform.getBundle("org.eclipse.mylyn.pde.ui") != null && count > 0) { //$NON-NLS-1$
+				// Mylyn 3.10 removes 1 computer for PDE API Tooling
+				changeProcessorCount(javaPrefs, -1);
+			}
+		}
+
 		// the Task-Focused category should be disabled if the user reverts to the default 
 		String defaultValue = javaPrefs.getDefaultString(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES);
 		javaPrefs.setDefault(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES, defaultValue
 				+ JavaUiUtil.ASSIST_MYLYN_ALL + JavaUiUtil.SEPARATOR_CODEASSIST);
+	}
+
+	public void changeProcessorCount(IPreferenceStore javaPrefs, int delta) {
+		if (javaPrefs.contains(NUM_COMPUTERS_PREF_KEY)) {
+			int lastNumberOfComputers = javaPrefs.getInt(NUM_COMPUTERS_PREF_KEY);
+			if (lastNumberOfComputers > 0) {
+				javaPrefs.putValue(NUM_COMPUTERS_PREF_KEY, Integer.toString(lastNumberOfComputers + delta));
+			}
+		}
 	}
 
 	private void lazyStart() {
@@ -164,15 +182,6 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 	private void installEditorTracker(IWorkbench workbench) {
 		editorTracker = new ActiveFoldingEditorTracker();
 		editorTracker.install(workbench);
-		// workbench.addWindowListener(editorTracker);
-		// IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
-		// for (int i = 0; i < windows.length; i++) {
-		// windows[i].addPageListener(editorTracker);
-		// IWorkbenchPage[] pages = windows[i].getPages();
-		// for (int j = 0; j < pages.length; j++) {
-		// pages[j].addPartListener(editorTracker);
-		// }
-		// }
 
 		// update editors that are already opened
 		for (IWorkbenchWindow w : PlatformUI.getWorkbench().getWorkbenchWindows()) {
