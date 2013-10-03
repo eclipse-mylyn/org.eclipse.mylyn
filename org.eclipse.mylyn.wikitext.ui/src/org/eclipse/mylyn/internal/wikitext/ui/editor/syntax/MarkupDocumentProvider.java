@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 David Green and others.
+ * Copyright (c) 2007, 2013 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Marc-Andre Laperle (Ericsson) - Fix Bug 402118
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.ui.editor.syntax;
 
@@ -15,6 +16,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
@@ -125,8 +127,16 @@ public class MarkupDocumentProvider extends TextFileDocumentProvider {
 	 * edited markup to render the same on all platforms, regardless of the platform-standard EOL marker.
 	 */
 	public static void cleanUpEolMarkers(IDocument document) {
-		String platformEolMarker = Text.DELIMITER;
-		replaceLineDelimiters(document, platformEolMarker);
+		try {
+			// Use the first line delimiter to decide which EOL marker
+			// to use for the whole document
+			String documentLineDelimiter = document.getLineDelimiter(0);
+			if (documentLineDelimiter != null) {
+				replaceLineDelimiters(document, documentLineDelimiter);
+			}
+		} catch (BadLocationException e) {
+			// No markers to clean up
+		}
 	}
 
 	private static void replaceLineDelimiters(IDocument document, String newLineDelimiter) {
