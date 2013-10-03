@@ -25,7 +25,6 @@ import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.ui.BuildsUi;
 import org.eclipse.mylyn.builds.ui.BuildsUiConstants;
-import org.eclipse.mylyn.builds.ui.spi.BuildConnectorUi;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.commons.workbench.browser.BrowserUtil;
@@ -35,8 +34,8 @@ import org.eclipse.mylyn.internal.builds.ui.actions.RunBuildAction;
 import org.eclipse.mylyn.internal.builds.ui.actions.ShowHistoryAction;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
-import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -54,13 +53,23 @@ public class BuildEditor extends SharedHeaderFormEditor {
 
 	private IBuild build;
 
+	private BuildDetailsPage buildDetailsPage;
+
+	private boolean isDisposed;
+
+	private RunBuildAction runBuildAction;
+
+	private ShowHistoryAction historyAction;
+
+	private NewTaskFromBuildAction newTaskFromBuildAction;
+
 	@Override
 	protected void addPages() {
-		BuildDetailsPage buildDetailsPage = new BuildDetailsPage(this, "Details");
+		buildDetailsPage = new BuildDetailsPage(this, Messages.BuildEditor_Details);
 		try {
 			addPage(buildDetailsPage);
 		} catch (PartInitException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Could not create Build editor.", e));
+			StatusHandler.log(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Could not create Build editor.", e)); //$NON-NLS-1$
 		}
 		setActivePage(0);
 	}
@@ -70,6 +79,8 @@ public class BuildEditor extends SharedHeaderFormEditor {
 		getToolkit().decorateFormHeading(headerForm.getForm().getForm());
 		EditorUtil.initializeScrollbars(getHeaderForm().getForm());
 		updateHeader();
+		fillToolBar();
+		updateToolBarActions();
 	}
 
 	@Override
@@ -111,40 +122,46 @@ public class BuildEditor extends SharedHeaderFormEditor {
 
 	private void updateHeader() {
 		BuildEditorInput input = getEditorInput();
+		String title;
+		Image image;
 		if (input.getBuild() != null) {
-			getHeaderForm().getForm().setImage(
-					CommonImages.getImage(BuildLabelProvider.getImageDescriptor(input.getBuild().getStatus())));
-			getHeaderForm().getForm().setText(NLS.bind("Build {0}", input.getBuild().getLabel()));
+			image = CommonImages.getImage(BuildLabelProvider.getImageDescriptor(input.getBuild().getStatus()));
+			title = NLS.bind(Messages.BuildEditor_Build_X, input.getBuild().getLabel());
 		} else {
-			BuildConnectorUi connectorUi = BuildsUi.getConnectorUi(plan.getServer());
-			getHeaderForm().getForm().setImage(CommonImages.getImage(connectorUi.getImageDescriptor()));
-			getHeaderForm().getForm().setText("Build");
+			image = CommonImages.getImage(BuildsUi.getConnectorUi(plan.getServer()).getImageDescriptor());
+			title = Messages.BuildEditor_Build;
 		}
+		switch (getEditorInput().getBuildInfo()) {
+		case PARTIAL:
+			title = NLS.bind(Messages.BuildEditor_X_Retrieving_Build, title);
+			break;
+		case ERROR:
+			title = NLS.bind(Messages.BuildEditor_X_Failed_Retrieve_Build_Information, title);
+			image = CommonImages.getImage(CommonImages.ERROR);
+			break;
+		}
+		getHeaderForm().getForm().setText(title);
+		getHeaderForm().getForm().setImage(image);
 		setTitleToolTip(input.getToolTipText());
 		setPartName(input.getName());
-
-		updateToolBar();
 	}
 
-	private void updateToolBar() {
+	private void fillToolBar() {
 		final Form form = getHeaderForm().getForm().getForm();
 		IToolBarManager toolBarManager = form.getToolBarManager();
 
 		toolBarManager.add(new GroupMarker(BuildsUiConstants.GROUP_FILE));
 
-		RunBuildAction runBuildAction = new RunBuildAction();
-		runBuildAction.selectionChanged(new StructuredSelection(getEditorInput().getPlan()));
+		runBuildAction = new RunBuildAction();
 		toolBarManager.add(runBuildAction);
 
-		ShowHistoryAction historyAction = new ShowHistoryAction();
-		historyAction.selectionChanged(new StructuredSelection(getEditorInput().getPlan()));
+		historyAction = new ShowHistoryAction();
 		toolBarManager.add(historyAction);
 
 		toolBarManager.add(new Separator(BuildsUiConstants.GROUP_EDIT));
 
 		if (getEditorInput().getBuild() != null) {
-			NewTaskFromBuildAction newTaskFromBuildAction = new NewTaskFromBuildAction();
-			newTaskFromBuildAction.selectionChanged(new StructuredSelection(getEditorInput().getBuild()));
+			newTaskFromBuildAction = new NewTaskFromBuildAction();
 			toolBarManager.add(newTaskFromBuildAction);
 		}
 
@@ -161,10 +178,36 @@ public class BuildEditor extends SharedHeaderFormEditor {
 			}
 		};
 		openWithBrowserAction.setImageDescriptor(CommonImages.WEB);
-		openWithBrowserAction.setToolTipText(Messages.AbstractTaskEditorPage_Open_with_Web_Browser);
+		openWithBrowserAction.setToolTipText(Messages.BuildEditor_Open_with_Web_Browser);
 		toolBarManager.add(openWithBrowserAction);
 
 		toolBarManager.update(true);
+	}
+
+	protected void updateToolBarActions() {
+		runBuildAction.selectionChanged(new StructuredSelection(getEditorInput().getPlan()));
+		historyAction.selectionChanged(new StructuredSelection(getEditorInput().getPlan()));
+		if (newTaskFromBuildAction != null) {
+			newTaskFromBuildAction.selectionChanged(new StructuredSelection(getEditorInput().getBuild()));
+		}
+	}
+
+	public void refresh() {
+		this.build = getEditorInput().getBuild();
+		this.plan = getEditorInput().getPlan();
+		buildDetailsPage.refresh();
+		updateHeader();
+		updateToolBarActions();
+	}
+
+	@Override
+	public void dispose() {
+		isDisposed = true;
+		super.dispose();
+	}
+
+	public boolean isDisposed() {
+		return isDisposed;
 	}
 
 }

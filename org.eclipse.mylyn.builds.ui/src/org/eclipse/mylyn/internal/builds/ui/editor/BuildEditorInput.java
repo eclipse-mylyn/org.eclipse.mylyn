@@ -25,10 +25,15 @@ import org.eclipse.ui.IPersistableElement;
  * @author Steffen Pingel
  */
 public class BuildEditorInput implements IEditorInput {
+	public static enum BuildInfo {
+		PARTIAL, COMPLETE, ERROR;
+	}
 
-	private final IBuildPlan plan;
+	private BuildInfo buildInfo = BuildInfo.COMPLETE;
 
-	private final IBuild build;
+	private IBuildPlan plan;
+
+	private IBuild build;
 
 	public BuildEditorInput(IBuildPlan plan) {
 		Assert.isNotNull(plan);
@@ -41,6 +46,20 @@ public class BuildEditorInput implements IEditorInput {
 		Assert.isNotNull(build.getPlan());
 		this.plan = build.getPlan();
 		this.build = build;
+	}
+
+	public BuildEditorInput(IBuildPlan plan, boolean partial) {
+		this(plan);
+		if (partial) {
+			this.buildInfo = BuildInfo.PARTIAL;
+		}
+	}
+
+	public BuildEditorInput(IBuild build, boolean partial) {
+		this(build);
+		if (partial) {
+			this.buildInfo = BuildInfo.PARTIAL;
+		}
 	}
 
 	public IBuild getBuild() {
@@ -80,6 +99,17 @@ public class BuildEditorInput implements IEditorInput {
 
 	public String getToolTipText() {
 		return "";
+	}
+
+	protected BuildInfo getBuildInfo() {
+		return buildInfo;
+	}
+
+	public void updateBuildInfo(IBuild build, BuildInfo buildInfo) {
+		Assert.isTrue(getBuildInfo() != BuildInfo.COMPLETE);
+		this.build = build;
+		this.plan = build.getPlan();
+		this.buildInfo = buildInfo;
 	}
 
 }
