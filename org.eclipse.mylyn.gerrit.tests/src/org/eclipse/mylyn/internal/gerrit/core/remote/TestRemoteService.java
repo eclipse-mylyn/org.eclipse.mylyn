@@ -29,10 +29,6 @@ public class TestRemoteService extends AbstractRemoteService {
 	}
 
 	@Override
-	public void ensureModelThread() {
-	}
-
-	@Override
 	public void modelExec(Runnable runnable, boolean block) {
 		runnable.run();
 	}

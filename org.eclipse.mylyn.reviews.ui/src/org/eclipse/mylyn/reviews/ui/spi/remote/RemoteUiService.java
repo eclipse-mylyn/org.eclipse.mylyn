@@ -45,10 +45,4 @@ public class RemoteUiService extends JobRemoteService {
 		}
 	}
 
-	@Override
-	public void ensureModelThread() {
-		if (Display.getCurrent() == null) {
-			throw new RuntimeException("Attempted to execute a model-related operation in a non-model thread.");
-		}
-	}
 }

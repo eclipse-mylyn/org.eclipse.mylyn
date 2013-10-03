@@ -147,8 +147,4 @@ public class JobRemoteService extends AbstractRemoteService {
 		runnable.run();
 	}
 
-	@Override
-	public void ensureModelThread() {
-		//noop -- in base case we can update model from anywhere
-	}
 }
