@@ -16,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.util.Util;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.commons.workbench.EditorHandle;
@@ -29,7 +28,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
-import org.osgi.framework.Version;
 
 /**
  * @author Steffen Pingel
@@ -57,7 +55,7 @@ public class GerritUrlHandlerTest extends TestCase {
 		}
 		TaskRepository repository = GerritFixture.current().singleRepository();
 		repository.setCredentials(AuthenticationType.REPOSITORY, null, false);
-		EditorHandle handler = BrowserUtil.openUrl(activePage, repository.getUrl() + "/1", 0); //$NON-NLS-1$
+		EditorHandle handler = BrowserUtil.openUrl(activePage, repository.getUrl() + "/1", 0); //$NON-NLS-1$		
 		assertNull("Expected an editor instance, got a browser instance", handler.getAdapter(IWebBrowser.class));
 
 		long startTime = System.currentTimeMillis();
@@ -81,20 +79,11 @@ public class GerritUrlHandlerTest extends TestCase {
 			System.err.println("Skipping GerritUrlHandlerTest.testOpenUrlInvalid() due to lack of browser support");
 			return;
 		}
-		if (preventJvmCrash()) {
-			System.err.println("Skipping GerritUrlHandlerTest.testOpenUrlInvalid() to prevent possible JVM crash");
-			return;
-		}
 		// needs to be a repository that is not protected by HTTP auth to avoid browser popup
 		TaskRepository repository = GerritFixture.GERRIT_NON_EXISTANT.singleRepository();
 		EditorHandle handler = BrowserUtil.openUrl(activePage, repository.getUrl() + "/abc", 0); //$NON-NLS-1$
 		assertNotNull("Expected a browser instance, got: " + handler.getClass(), handler.getAdapter(IWebBrowser.class));
 		assertEquals(Status.OK_STATUS, handler.getStatus());
-	}
-
-	private boolean preventJvmCrash() {
-		// TODO: do a better job here
-		return Util.isLinux() && Version.parseVersion(System.getProperty("java.version").replace('_', '.')).getMinor() < 7;
 	}
 
 }
