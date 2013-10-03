@@ -368,7 +368,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 		}
 		noteEditor.getViewer().addTextListener(new ITextListener() {
 			public void textChanged(TextEvent event) {
-				notesString = noteEditor.getText();
+				notesString = PERSONAL_NOTES.equals(noteEditor.getText()) ? "" : noteEditor.getText(); //$NON-NLS-1$
 				if (!notesEqual()) {
 					markDirty();
 				}
@@ -386,7 +386,7 @@ public class PlanningPart extends AbstractLocalEditorPart {
 
 			@Override
 			public void focusGained(FocusEvent e) {
-				if (noteEditor.getText().equals(PERSONAL_NOTES)) {
+				if (PERSONAL_NOTES.equals(noteEditor.getText())) {
 					noteEditor.setText(""); //$NON-NLS-1$
 
 					if (noteEditor.getViewer() != null) {
