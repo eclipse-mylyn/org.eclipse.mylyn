@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Torkild U. Resheim
+ * Copyright (c) 2012, 2013 Torkild U. Resheim
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -213,7 +213,7 @@ public class OPS2Validator extends DefaultHandler {
 					contents.append("\""); //$NON-NLS-1$
 					if (!isLegalAttribute(name)) {
 						messages.add(new ValidationMessage(Severity.WARNING, MessageFormat.format(
-								"Attribute \"{0}\" in {1} is not in OPS Preferred Vocabularies", name, href))); //$NON-NLS-1$
+								"Attribute \"{0}\" in file \"{1}\" is not in OPS Preferred Vocabularies", name, href))); //$NON-NLS-1$
 					}
 				}
 			}
@@ -221,7 +221,7 @@ public class OPS2Validator extends DefaultHandler {
 			recording = true;
 			if (!isLegalElement(qName)) {
 				messages.add(new ValidationMessage(Severity.WARNING, MessageFormat.format(
-						"Element \"{0}\" in {1} is not in OPS Preferred Vocabularies", qName, href))); //$NON-NLS-1$
+						"Element \"{0}\" in file \"{1}\" is not in OPS Preferred Vocabularies", qName, href))); //$NON-NLS-1$
 
 			}
 		}
