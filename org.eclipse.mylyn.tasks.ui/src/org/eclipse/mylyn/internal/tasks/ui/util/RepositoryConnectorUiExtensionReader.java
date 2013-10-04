@@ -11,8 +11,8 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.util;
 
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
@@ -91,14 +91,30 @@ public class RepositoryConnectorUiExtensionReader {
 				if (branding != null) {
 					InputStream brandingImageData = branding.getBrandingImageData();
 					if (brandingImageData != null) {
-						TasksUiPlugin.getDefault().addBrandingIcon(connector.getConnectorKind(),
-								getImage(brandingImageData));
+						try {
+							TasksUiPlugin.getDefault().addBrandingIcon(connector.getConnectorKind(),
+									getImage(brandingImageData));
+						} finally {
+							closeQuietly(brandingImageData);
+						}
 					}
 					InputStream overlayImageData = branding.getOverlayImageData();
 					if (overlayImageData != null) {
-						TasksUiPlugin.getDefault().addOverlayIcon(connector.getConnectorKind(),
-								getImageDescriptor(overlayImageData));
+						try {
+							TasksUiPlugin.getDefault().addOverlayIcon(connector.getConnectorKind(),
+									getImageDescriptor(overlayImageData));
+						} finally {
+							closeQuietly(brandingImageData);
+						}
 					}
+				}
+			}
+
+			private void closeQuietly(InputStream in) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					// ignore
 				}
 			}
 
