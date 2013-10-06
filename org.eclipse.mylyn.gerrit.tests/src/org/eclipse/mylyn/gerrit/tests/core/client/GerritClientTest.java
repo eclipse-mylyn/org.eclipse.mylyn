@@ -29,12 +29,10 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritSystemInfo;
-import org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.CommentLink;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.osgi.framework.Version;
 
 import com.google.gerrit.reviewdb.Account;
 
@@ -101,7 +99,8 @@ public class GerritClientTest extends TestCase {
 
 	@Test
 	public void testRefreshConfigCommentLinks() throws Exception {
-		if (!GerritFixture.current().canAuthenticate()) {
+		if (!GerritFixture.current().canAuthenticate()
+				|| !GerritFixture.current().getCapabilities().supportsCommentLinks()) {
 			return; // skip
 		}
 
@@ -131,15 +130,7 @@ public class GerritClientTest extends TestCase {
 
 	@Test
 	public void testGetVersion() throws Exception {
-		assertEquals(getCurrentVersion(), client.getVersion(new NullProgressMonitor()));
-	}
-
-	private static Version getCurrentVersion() {
-		String version = GerritFixture.current().getSimpleInfo();
-		if (version.indexOf('/') != -1) {
-			version = version.substring(0, version.indexOf('/'));
-		}
-		return GerritVersion.parseGerritVersion(version);
+		assertEquals(GerritFixture.current().getGerritVersion(), client.getVersion(new NullProgressMonitor()));
 	}
 
 }

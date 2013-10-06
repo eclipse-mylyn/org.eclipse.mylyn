@@ -22,7 +22,6 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.commons.workbench.forms.CommonFormUtil;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritSystemInfo;
-import org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -67,8 +66,7 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 		}
 
 		private boolean isSupportedVersion() {
-			// bump after bug 412872 gets fixed
-			return !GerritVersion.isVersion27OrLater(info.getVersion());
+			return info.getCapabilities().isSupported();
 		}
 
 	}
@@ -150,7 +148,7 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 			String warning = ""; //$NON-NLS-1$
 			if (!gerritValidator.isSupportedVersion()) {
 				warning = NLS.bind(
-						"\nGerrit {0} is not fully supported, yet. See https://bugs.eclipse.org/412872 for details.",
+						"\nGerrit {0} has not been tested with this version of Mylyn. It may not be fully supported.",
 						gerritValidator.getInfo().getVersion());
 			}
 

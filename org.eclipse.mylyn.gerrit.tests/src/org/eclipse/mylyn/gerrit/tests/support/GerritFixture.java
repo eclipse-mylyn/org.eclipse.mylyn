@@ -14,7 +14,10 @@ package org.eclipse.mylyn.gerrit.tests.support;
 import org.eclipse.mylyn.commons.sdk.util.FixtureConfiguration;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritCapabilities;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion;
 import org.eclipse.mylyn.tests.util.TestFixture;
+import org.osgi.framework.Version;
 
 /**
  * @author Steffen Pingel
@@ -79,6 +82,18 @@ public class GerritFixture extends TestFixture {
 
 	public boolean supportsAnonymousAccess() {
 		return supportsAnonymousAccess;
+	}
+
+	public Version getGerritVersion() {
+		String version = getSimpleInfo();
+		if (version.indexOf('/') != -1) {
+			version = version.substring(0, version.indexOf('/'));
+		}
+		return GerritVersion.parseGerritVersion(version);
+	}
+
+	public GerritCapabilities getCapabilities() {
+		return new GerritCapabilities(getGerritVersion());
 	}
 
 }

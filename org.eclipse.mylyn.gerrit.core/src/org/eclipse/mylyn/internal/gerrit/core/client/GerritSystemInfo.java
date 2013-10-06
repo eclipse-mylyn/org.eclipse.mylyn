@@ -51,4 +51,8 @@ public class GerritSystemInfo {
 		return (account.getFullName() != null) ? account.getFullName() : account.getUserName();
 	}
 
+	public GerritCapabilities getCapabilities() {
+		return new GerritCapabilities(version);
+	}
+
 }
