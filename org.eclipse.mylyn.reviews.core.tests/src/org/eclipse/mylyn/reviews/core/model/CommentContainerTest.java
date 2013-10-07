@@ -176,15 +176,17 @@ public class CommentContainerTest {
 		assertThat(comment.getDescription(), is("My Comment"));
 		assertThat(comment.getAuthor().getDisplayName(), is("This User"));
 		assertTrue(new Date().getTime() - 100 < comment.getCreationDate().getTime());
+		assertThat(comment.isMine(), is(true));
 	}
 
 	@Test
 	public void testCreateFileItemCommentNoUser() {
-		IReviewItem item = ReviewsFactory.eINSTANCE.createFileItem();
+		IFileItem item = ReviewsFactory.eINSTANCE.createFileItem();
 		ILineLocation location = ReviewsFactory.eINSTANCE.createLineLocation();
 		IComment comment = item.createComment(location, "My Comment");
 		assertThat(item.getComments().size(), is(1));
 		assertThat(comment.getAuthor(), nullValue());
+		assertThat(comment.isMine(), is(false));
 	}
 
 	@Test
@@ -194,5 +196,51 @@ public class CommentContainerTest {
 		IComment comment = review.createComment(location, "My Comment");
 		assertThat(review.getComments().size(), is(1));
 		assertNull(comment.getAuthor());
+	}
+
+	@Test
+	public void testGetReviewFileItemComment() {
+		IReview review = ReviewsFactory.eINSTANCE.createReview();
+		IReviewItemSet set = ReviewsFactory.eINSTANCE.createReviewItemSet();
+		review.getSets().add(set);
+		IFileItem item = ReviewsFactory.eINSTANCE.createFileItem();
+		IComment comment = ReviewsFactory.eINSTANCE.createComment();
+		set.getItems().add(item);
+		item.getComments().add(comment);
+		assertThat(comment.getReview(), sameInstance(review));
+	}
+
+	@Test
+	public void testGetReviewComment() {
+		IReview review = ReviewsFactory.eINSTANCE.createReview();
+		IComment comment = ReviewsFactory.eINSTANCE.createComment();
+		review.getComments().add(comment);
+		assertThat(comment.getReview(), sameInstance(review));
+	}
+
+	@Test
+	public void testCommentIsMine() {
+		IRepository repos = ReviewsFactory.eINSTANCE.createRepository();
+		IReview review = ReviewsFactory.eINSTANCE.createReview();
+		repos.getReviews().add(review);
+		IReviewItemSet set = ReviewsFactory.eINSTANCE.createReviewItemSet();
+		review.getSets().add(set);
+		IFileItem item = ReviewsFactory.eINSTANCE.createFileItem();
+		IComment comment = ReviewsFactory.eINSTANCE.createComment();
+		set.getItems().add(item);
+		item.getComments().add(comment);
+		assertThat(comment.isMine(), is(false));
+		IUser user = ReviewsFactory.eINSTANCE.createUser();
+		repos.setAccount(user);
+		comment.setAuthor(user);
+		assertThat(comment.isMine(), is(true));
+		//the following tests should be removed when https://bugs.eclipse.org/bugs/show_bug.cgi?id=418878 is fixed.
+		IUser user2 = ReviewsFactory.eINSTANCE.createUser();
+		comment.setAuthor(user2);
+		user.setEmail("foo@bar.com");
+		user2.setEmail("foo@bar.com");
+		assertThat(comment.isMine(), is(true));
+		user2.setEmail("baz@bar.com");
+		assertThat(comment.isMine(), is(false));
 	}
 } //ReviewItemTest

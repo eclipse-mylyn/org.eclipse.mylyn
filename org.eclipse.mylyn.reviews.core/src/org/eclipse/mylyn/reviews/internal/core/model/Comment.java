@@ -29,6 +29,7 @@ import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.ICommentContainer;
 import org.eclipse.mylyn.reviews.core.model.IDated;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
+import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IUser;
@@ -50,6 +51,7 @@ import org.eclipse.mylyn.reviews.core.model.IUser;
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Comment#getReview <em>Review</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Comment#getTitle <em>Title</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Comment#getItem <em>Item</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.Comment#isMine <em>Mine</em>}</li>
  * </ul>
  * </p>
  * 
@@ -223,6 +225,16 @@ public class Comment extends EObjectImpl implements IComment {
 	 * @ordered
 	 */
 	protected String title = TITLE_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isMine() <em>Mine</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @see #isMine()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean MINE_EDEFAULT = false;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -521,6 +533,18 @@ public class Comment extends EObjectImpl implements IComment {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
+	 * @generated NOT
+	 */
+	public boolean isMine() {
+		IRepository repos = getReview() != null ? getReview().getRepository() : null;
+		return getAuthor() != null
+				&& repos != null
+				&& (repos.getAccount() == getAuthor() || (repos.getAccount().getEmail().equals(getAuthor().getEmail())));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -601,6 +625,8 @@ public class Comment extends EObjectImpl implements IComment {
 				return getItem();
 			}
 			return basicGetItem();
+		case ReviewsPackage.COMMENT__MINE:
+			return isMine();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -726,6 +752,8 @@ public class Comment extends EObjectImpl implements IComment {
 			return TITLE_EDEFAULT == null ? title != null : !TITLE_EDEFAULT.equals(title);
 		case ReviewsPackage.COMMENT__ITEM:
 			return basicGetItem() != null;
+		case ReviewsPackage.COMMENT__MINE:
+			return isMine() != MINE_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}

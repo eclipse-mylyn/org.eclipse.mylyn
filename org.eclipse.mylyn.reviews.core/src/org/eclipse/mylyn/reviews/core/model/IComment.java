@@ -26,6 +26,7 @@ import java.util.List;
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IComment#getReview <em>Review</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IComment#getTitle <em>Title</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IComment#getItem <em>Item</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IComment#isMine <em>Mine</em>}</li>
  * </ul>
  * </p>
  * 
@@ -224,5 +225,17 @@ public interface IComment extends IIndexed, IDated {
 	 * @generated
 	 */
 	void setItem(ICommentContainer value);
+
+	/**
+	 * Returns the value of the '<em><b>Mine</b></em>' attribute. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Mine</em>' attribute isn't clear, there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Mine</em>' attribute.
+	 * @generated
+	 */
+	boolean isMine();
 
 } // IComment

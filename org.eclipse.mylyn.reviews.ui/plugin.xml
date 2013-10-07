@@ -2,7 +2,7 @@
 <?eclipse version="3.4"?>
 <plugin>
 	<extension point="org.eclipse.ui.editors.annotationTypes">
-		<type name="org.eclipse.mylyn.reviews.ui.comment.Annotation"/>
+		<type name="org.eclipse.mylyn.reviews.ui.comment.AnnotationOther"/>
 	</extension>
 	
 	<extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
@@ -12,7 +12,7 @@
 			contributesToHeader="false" 
 			highlightPreferenceKey="comment_highlight" 
 			highlightPreferenceValue="true" 
-			icon="icons/eview16/annotation-review.gif" 
+			icon="icons/obj16/person.gif" 
 			includeOnPreferencePage="true" 
 			isGoToNextNavigationTarget="false" 
 			isGoToNextNavigationTargetKey="comment_isGoToNextNavigationTargetKey" 
@@ -31,6 +31,38 @@
 			verticalRulerPreferenceKey="comment_verticalRuler" 
 			verticalRulerPreferenceValue="true" />
 	</extension>
+		
+	<extension point="org.eclipse.ui.editors.annotationTypes">
+		<type name="org.eclipse.mylyn.reviews.ui.comment.AnnotationMe"/>
+	</extension>
+	
+	<extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
+		<specification annotationType="org.eclipse.mylyn.reviews.ui.comment.AnnotationMe" 
+			colorPreferenceKey="comment_color" 
+			colorPreferenceValue="179,215,255" 
+			contributesToHeader="false" 
+			highlightPreferenceKey="comment_highlight" 
+			highlightPreferenceValue="true" 
+			icon="icons/obj16/person-me.gif" 
+			includeOnPreferencePage="true" 
+			isGoToNextNavigationTarget="false" 
+			isGoToNextNavigationTargetKey="comment_isGoToNextNavigationTargetKey" 
+			isGoToPreviousNavigationTarget="false" 
+			isGoToPreviousNavigationTargetKey="commet_isGoToPreviousNavigationTargetKey" 
+			label="Active Review Comments" 
+			overviewRulerPreferenceKey="comment_overviewRuler" 
+			overviewRulerPreferenceValue="true" 
+			presentationLayer="0" 
+			showInNextPrevDropdownToolbarAction="false" 
+			showInNextPrevDropdownToolbarActionKey="comment_showInNextPrevDropdownToolbarAction" 
+			textPreferenceKey="comment_text" 
+			textPreferenceValue="true" 
+			textStylePreferenceKey="comment_stylePreferences" 
+			textStylePreferenceValue="BOX" 
+			verticalRulerPreferenceKey="comment_verticalRuler" 
+			verticalRulerPreferenceValue="true" />
+	</extension>
+	
  <extension
        point="org.eclipse.ui.views">
     <view

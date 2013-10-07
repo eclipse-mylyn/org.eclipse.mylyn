@@ -566,12 +566,20 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int COMMENT__ITEM = INDEXED_FEATURE_COUNT + 10;
 
 	/**
+	 * The feature id for the '<em><b>Mine</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int COMMENT__MINE = INDEXED_FEATURE_COUNT + 11;
+
+	/**
 	 * The number of structural features of the '<em>Comment</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	public static final int COMMENT_FEATURE_COUNT = INDEXED_FEATURE_COUNT + 11;
+	public static final int COMMENT_FEATURE_COUNT = INDEXED_FEATURE_COUNT + 12;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem <em>Review Item</em>}
@@ -2196,6 +2204,19 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.reviews.core.model.IComment#isMine
+	 * <em>Mine</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Mine</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IComment#isMine()
+	 * @see #getComment()
+	 * @generated
+	 */
+	public EAttribute getComment_Mine() {
+		return (EAttribute) commentEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.IReviewItem <em>Review Item</em>}
 	 * '. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -3139,6 +3160,7 @@ public class ReviewsPackage extends EPackageImpl {
 		createEReference(commentEClass, COMMENT__REVIEW);
 		createEAttribute(commentEClass, COMMENT__TITLE);
 		createEReference(commentEClass, COMMENT__ITEM);
+		createEAttribute(commentEClass, COMMENT__MINE);
 
 		reviewItemEClass = createEClass(REVIEW_ITEM);
 		createEReference(reviewItemEClass, REVIEW_ITEM__ADDED_BY);
@@ -3402,6 +3424,10 @@ public class ReviewsPackage extends EPackageImpl {
 				this.getCommentContainer(),
 				this.getCommentContainer_Comments(),
 				"item", null, 0, 1, IComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getComment_Mine(),
+				ecorePackage.getEBoolean(),
+				"mine", null, 1, 1, IComment.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(reviewItemEClass, IReviewItem.class,
 				"ReviewItem", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -3941,6 +3967,14 @@ public class ReviewsPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EReference COMMENT__ITEM = eINSTANCE.getComment_Item();
+
+		/**
+		 * The meta object literal for the '<em><b>Mine</b></em>' attribute feature. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute COMMENT__MINE = eINSTANCE.getComment_Mine();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.internal.core.model.ReviewItem

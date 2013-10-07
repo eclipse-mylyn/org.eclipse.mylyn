@@ -28,12 +28,14 @@ public class CommentAnnotation extends Annotation {
 
 	public static final String COMMENT_ANNOTATION_ID = "org.eclipse.mylyn.reviews.ui.comment.Annotation"; //$NON-NLS-1$
 
+	public static final String COMMENT_ANNOTATION_ME_ID = "org.eclipse.mylyn.reviews.ui.comment.AnnotationMe";
+
 	private final Position position;
 
 	private final IComment comment;
 
 	public CommentAnnotation(int offset, int length, IComment comment) {
-		super(COMMENT_ANNOTATION_ID, false, null);
+		super(comment.isMine() ? COMMENT_ANNOTATION_ME_ID : COMMENT_ANNOTATION_ID, false, null);
 		position = new Position(offset, length);
 		this.comment = comment;
 	}

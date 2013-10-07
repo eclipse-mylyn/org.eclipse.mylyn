@@ -145,7 +145,10 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 				//			if (StringUtils.startsWith(comment.getAuthor().getDisplayName(), "Hudson")) {
 				//				return CommonImages.getImage(ReviewsImages.SERVER);
 				//			}
-				//TODO: We'd like to return PERSON_ME if user, but need to figure out how to get that w/o creating too much coupling.
+				IComment comment = (IComment) element;
+				if (comment.isMine()) {
+					return CommonImages.getImage(CommonImages.PERSON_ME);
+				}
 				return CommonImages.getImage(CommonImages.PERSON);
 			}
 			if (element instanceof GlobalCommentsNode) {

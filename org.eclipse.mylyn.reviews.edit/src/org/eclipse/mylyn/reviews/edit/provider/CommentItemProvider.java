@@ -71,6 +71,7 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 			addDraftPropertyDescriptor(object);
 			addReviewPropertyDescriptor(object);
 			addTitlePropertyDescriptor(object);
+			addMinePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -207,6 +208,21 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 	}
 
 	/**
+	 * This adds a property descriptor for the Mine feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addMinePropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+				getResourceLocator(),
+				getString("_UI_Comment_mine_feature"), //$NON-NLS-1$
+				getString("_UI_PropertyDescriptor_description", "_UI_Comment_mine_feature", "_UI_Comment_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				ReviewsPackage.Literals.COMMENT__MINE, false, false, false, ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+				null, null));
+	}
+
+	/**
 	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
 	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
 	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}. <!-- begin-user-doc --> <!--
@@ -278,6 +294,7 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 		case ReviewsPackage.COMMENT__ID:
 		case ReviewsPackage.COMMENT__DRAFT:
 		case ReviewsPackage.COMMENT__TITLE:
+		case ReviewsPackage.COMMENT__MINE:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 			return;
 		case ReviewsPackage.COMMENT__REPLIES:
