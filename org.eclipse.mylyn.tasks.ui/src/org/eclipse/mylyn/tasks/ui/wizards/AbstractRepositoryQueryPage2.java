@@ -379,40 +379,45 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 				}
 			});
 		}
-		final ProgressMonitorPart progressMonitorPart = new ProgressMonitorPart(composite, null);
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).grab(true, false).applyTo(progressMonitorPart);
-		progressMonitorPart.setVisible(false);
-		progressContainer = new ProgressContainer(composite.getShell(), progressMonitorPart) {
-			@Override
-			protected void restoreUiState(java.util.Map<Object, Object> state) {
-				cancelButton.setVisible(false);
-				CommonUiUtil.setEnabled(innerComposite, true);
-				for (Control control : composite.getChildren()) {
-					if (control instanceof ProgressMonitorPart) {
-						break;
+		if (getContainer() == null) {
+			final ProgressMonitorPart progressMonitorPart = new ProgressMonitorPart(composite, null);
+			GridDataFactory.fillDefaults()
+					.align(SWT.FILL, SWT.BEGINNING)
+					.grab(true, false)
+					.applyTo(progressMonitorPart);
+			progressMonitorPart.setVisible(false);
+			progressContainer = new ProgressContainer(composite.getShell(), progressMonitorPart) {
+				@Override
+				protected void restoreUiState(java.util.Map<Object, Object> state) {
+					cancelButton.setVisible(false);
+					CommonUiUtil.setEnabled(innerComposite, true);
+					for (Control control : composite.getChildren()) {
+						if (control instanceof ProgressMonitorPart) {
+							break;
+						}
+						control.setEnabled(true);
 					}
-					control.setEnabled(true);
 				}
-			}
 
-			@Override
-			protected void saveUiState(java.util.Map<Object, Object> savedState) {
-				CommonUiUtil.setEnabled(innerComposite, false);
-				for (Control control : composite.getChildren()) {
-					if (control instanceof ProgressMonitorPart) {
-						break;
+				@Override
+				protected void saveUiState(java.util.Map<Object, Object> savedState) {
+					CommonUiUtil.setEnabled(innerComposite, false);
+					for (Control control : composite.getChildren()) {
+						if (control instanceof ProgressMonitorPart) {
+							break;
+						}
+						control.setEnabled(false);
 					}
-					control.setEnabled(false);
+					cancelButton.setEnabled(true);
+					cancelButton.setVisible(true);
 				}
-				cancelButton.setEnabled(true);
-				cancelButton.setVisible(true);
-			}
-		};
+			};
 
-		cancelButton = new Button(composite, SWT.PUSH);
-		cancelButton.setText(IDialogConstants.CANCEL_LABEL);
-		cancelButton.setVisible(false);
-		progressContainer.setCancelButton(cancelButton);
+			cancelButton = new Button(composite, SWT.PUSH);
+			cancelButton.setText(IDialogConstants.CANCEL_LABEL);
+			cancelButton.setVisible(false);
+			progressContainer.setCancelButton(cancelButton);
+		}
 	}
 
 	protected abstract void createPageContent(@NonNull SectionComposite parent);
