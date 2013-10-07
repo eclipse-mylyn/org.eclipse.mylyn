@@ -95,23 +95,7 @@ public class SectionComposite extends SharedScrolledComposite {
 					section.setLayoutData(g);
 				}
 
-				layout(true);
-
-				Point newSize = section.getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-				Rectangle currentbounds = section.getShell().getBounds();
-				if (newSize.x > currentbounds.width || newSize.y > currentbounds.height) {
-					Object shellData = section.getShell().getData();
-					if (shellData instanceof Window) {
-						Window window = (Window) shellData;
-						Rectangle preferredSize = new Rectangle(currentbounds.x, currentbounds.y, Math.max(
-								currentbounds.width, newSize.x), Math.max(currentbounds.height, newSize.y));
-						Rectangle result = WindowUtil.getConstrainedShellBounds(window, preferredSize);
-						section.getShell().setBounds(result);
-					}
-				}
-
-				reflow(true);
-				getParent().layout(true, true);
+				resizeAndReflow();
 			}
 		});
 		section.setText(title);
@@ -131,6 +115,35 @@ public class SectionComposite extends SharedScrolledComposite {
 			toolkit = new FormToolkit(CommonsWorkbenchPlugin.getDefault().getFormColors(getDisplay()));
 		}
 		return toolkit;
+	}
+
+	/**
+	 * Invokes {@link #layout(boolean)} and resizes the shell if the preferred size of its children is larger than its
+	 * current size and invokes {@link #reflow(boolean)} to update the scroll bar.
+	 * <p>
+	 * This method is invoked when sections are expanded. Clients should invoke this method when the contents of the
+	 * {@link SectionComposite} are changed.
+	 * 
+	 * @since 3.10
+	 */
+	public void resizeAndReflow() {
+		layout(true);
+
+		Point newSize = getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+		Rectangle currentbounds = getShell().getBounds();
+		if (newSize.x > currentbounds.width || newSize.y > currentbounds.height) {
+			Object shellData = getShell().getData();
+			if (shellData instanceof Window) {
+				Window window = (Window) shellData;
+				Rectangle preferredSize = new Rectangle(currentbounds.x, currentbounds.y, Math.max(currentbounds.width,
+						newSize.x), Math.max(currentbounds.height, newSize.y));
+				Rectangle result = WindowUtil.getConstrainedShellBounds(window, preferredSize);
+				getShell().setBounds(result);
+			}
+		}
+
+		reflow(true);
+		getParent().layout(true, true);
 	}
 
 }
