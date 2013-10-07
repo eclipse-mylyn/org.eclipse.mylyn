@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.tasks.ui.editors;
 
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IPluginContribution;
 import org.eclipse.ui.forms.editor.IFormPage;
@@ -33,21 +35,26 @@ public abstract class AbstractTaskEditorPageFactory implements IPluginContributi
 
 	private String pluginId;
 
-	public abstract boolean canCreatePageFor(TaskEditorInput input);
+	public abstract boolean canCreatePageFor(@NonNull TaskEditorInput input);
 
-	public abstract IFormPage createPage(TaskEditor parentEditor);
+	@NonNull
+	public abstract IFormPage createPage(@NonNull TaskEditor parentEditor);
 
-	public String[] getConflictingIds(TaskEditorInput input) {
+	@Nullable
+	public String[] getConflictingIds(@NonNull TaskEditorInput input) {
 		return null;
 	}
 
+	@Nullable
 	public String getId() {
 		return id;
 	}
 
 	// TODO EDITOR life cycle of image?
+	@NonNull
 	public abstract Image getPageImage();
 
+	@NonNull
 	public abstract String getPageText();
 
 	public int getPriority() {
@@ -63,6 +70,7 @@ public abstract class AbstractTaskEditorPageFactory implements IPluginContributi
 	 * 
 	 * @since 3.2
 	 */
+	@Nullable
 	public final String getLocalId() {
 		return getId();
 	}
@@ -73,6 +81,7 @@ public abstract class AbstractTaskEditorPageFactory implements IPluginContributi
 	 * @since 3.2
 	 * @see #setPluginId(String)
 	 */
+	@Nullable
 	public final String getPluginId() {
 		return pluginId;
 	}
@@ -81,7 +90,7 @@ public abstract class AbstractTaskEditorPageFactory implements IPluginContributi
 	 * @since 3.2
 	 * @see #getPluginId()
 	 */
-	public final void setPluginId(String pluginId) {
+	public final void setPluginId(@Nullable String pluginId) {
 		this.pluginId = pluginId;
 	}
 
@@ -96,7 +105,8 @@ public abstract class AbstractTaskEditorPageFactory implements IPluginContributi
 	 * @return an image
 	 * @since 3.10
 	 */
-	public Image getPageImage(TaskEditor editor, IFormPage page) {
+	@NonNull
+	public Image getPageImage(@NonNull TaskEditor editor, @NonNull IFormPage page) {
 		return getPageImage();
 	}
 
@@ -111,7 +121,8 @@ public abstract class AbstractTaskEditorPageFactory implements IPluginContributi
 	 * @return a label
 	 * @since 3.10
 	 */
-	public String getPageText(TaskEditor editor, IFormPage page) {
+	@NonNull
+	public String getPageText(@NonNull TaskEditor editor, @NonNull IFormPage page) {
 		return getPageText();
 	}
 
