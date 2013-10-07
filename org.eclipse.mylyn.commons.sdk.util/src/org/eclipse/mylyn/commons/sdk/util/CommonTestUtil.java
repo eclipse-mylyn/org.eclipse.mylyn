@@ -42,6 +42,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.mylyn.commons.core.CoreUtil;
+import org.eclipse.mylyn.commons.core.net.NetUtil;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.repositories.core.auth.CertificateCredentials;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
@@ -554,6 +555,10 @@ public class CommonTestUtil {
 	 */
 	public static boolean ignoreLocalTestServices() {
 		return Boolean.parseBoolean(System.getProperty(KEY_IGNORE_LOCAL_SERVICES));
+	}
+
+	public static boolean isBehindProxy() {
+		return NetUtil.getProxyForUrl("https://mylyn.org/secure/index.txt") != null;
 	}
 
 }

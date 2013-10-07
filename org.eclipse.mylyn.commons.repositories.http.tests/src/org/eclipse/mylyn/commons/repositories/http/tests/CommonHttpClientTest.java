@@ -26,7 +26,6 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.util.EntityUtils;
-import org.eclipse.mylyn.commons.core.net.NetUtil;
 import org.eclipse.mylyn.commons.core.net.SslSupport;
 import org.eclipse.mylyn.commons.core.net.TrustAllTrustManager;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
@@ -56,7 +55,7 @@ public class CommonHttpClientTest {
 
 	@Test
 	public void testCertificateAuthenticationCertificate() throws Exception {
-		if (CommonTestUtil.isCertificateAuthBroken()) {
+		if (CommonTestUtil.isCertificateAuthBroken() || CommonTestUtil.isBehindProxy()) {
 			System.err.println("Skipped CommonHttpClientTest.testCertificateAuthenticationCertificate() due to incompatible JVM");
 			return; // skip test 
 		}
@@ -82,8 +81,7 @@ public class CommonHttpClientTest {
 
 	@Test(expected = SSLException.class)
 	public void testCertificateAuthenticationCertificateReset() throws Exception {
-		if (CommonTestUtil.isCertificateAuthBroken()
-				|| NetUtil.getProxyForUrl("https://mylyn.org/secure/index.txt") != null) {
+		if (CommonTestUtil.isCertificateAuthBroken() || CommonTestUtil.isBehindProxy()) {
 			// bug 369805
 			System.err.println("Skipped CommonHttpClientTest.testCertificateAuthenticationCertificateReset due to incompatible JVM");
 			throw new SSLException(""); // skip test 
