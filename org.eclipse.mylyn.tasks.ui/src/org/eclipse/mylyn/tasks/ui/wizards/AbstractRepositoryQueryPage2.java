@@ -447,4 +447,15 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 
 	protected abstract boolean restoreState(@NonNull IRepositoryQuery query);
 
+	/**
+	 * Reflows the page and resizes the shell as necessary. Clients should invoke this if the content of the page is
+	 * changed dynamically.
+	 * 
+	 * @see SectionComposite#resizeAndReflow()
+	 * @since 3.10
+	 */
+	public void reflow() {
+		innerComposite.resizeAndReflow();
+	}
+
 }
