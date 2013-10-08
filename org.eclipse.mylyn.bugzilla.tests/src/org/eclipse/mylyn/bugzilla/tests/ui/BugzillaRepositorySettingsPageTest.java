@@ -165,7 +165,7 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 		assertEquals(tempPass, repositoryTest.getPassword());
 	}
 
-	public void testPersistChangeUserId() throws Exception {
+	public void testValidateOnFinishInvalidUserId() throws Exception {
 		assertEquals(1, manager.getAllRepositories().size());
 		EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
 		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), wizard);
@@ -174,24 +174,14 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 		BugzillaClient client = createClient(page.getRepositoryUrl(), page.getUserName(), page.getPassword(),
 				page.getHttpAuthUserId(), page.getHttpAuthPassword(), page.getCharacterEncoding());
 		client.validate(null);
+		String oldUserId = page.getUserName();
 		page.setUserId("bogus");
-		wizard.performFinish();
+		boolean finished = wizard.performFinish();
+		assertFalse(finished);
 		assertEquals(1, manager.getAllRepositories().size());
 		TaskRepository repositoryTest = manager.getRepository(BugzillaCorePlugin.CONNECTOR_KIND,
 				BugzillaFixture.current().getRepositoryUrl());
-		assertNotNull(repositoryTest);
-		wizard = new EditRepositoryWizard(repositoryTest);
-		dialog = new WizardDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), wizard);
-		dialog.create();
-		page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
-		try {
-			client = createClient(page.getRepositoryUrl(), page.getUserName(), page.getPassword(),
-					page.getHttpAuthUserId(), page.getHttpAuthPassword(), page.getCharacterEncoding());
-			client.validate(null);
-		} catch (CoreException e) {
-			return;
-		}
-		fail("LoginException didn't occur!");
+		assertEquals(oldUserId, repositoryTest.getCredentials(AuthenticationType.REPOSITORY).getUserName());
 	}
 
 }
