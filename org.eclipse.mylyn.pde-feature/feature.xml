@@ -30,7 +30,7 @@
 
    <requires>
       <import feature="org.eclipse.mylyn.java_feature" version="3.10.0" match="equivalent"/>
-      <import feature="org.eclipse.pde" version="3.4.0" match="compatible"/>
+      <import feature="org.eclipse.pde" version="3.6.0" match="compatible"/>
    </requires>
 
    <plugin

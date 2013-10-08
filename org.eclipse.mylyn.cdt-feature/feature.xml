@@ -29,7 +29,7 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.cdt.platform" version="5.0.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.cdt.platform" version="7.0.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.mylyn.context_feature" version="3.10.0" match="compatible"/>
    </requires>
 
