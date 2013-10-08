@@ -29,7 +29,7 @@
    </license>
 
    <url>
-      <discovery label="Mylyn 3.9 for Eclipse 3.8, 4.2 and 4.3" url="http://download.eclipse.org/mylyn/releases/3.9"/>
+      <discovery label="Mylyn 3.10 for Eclipse 3.8, 4.3 and 4.4" url="http://download.eclipse.org/mylyn/releases/3.10"/>
    </url>
 
    <requires>
