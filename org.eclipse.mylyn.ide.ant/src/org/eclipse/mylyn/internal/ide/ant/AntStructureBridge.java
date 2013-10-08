@@ -18,6 +18,7 @@ import org.eclipse.ant.internal.ui.editor.AntEditor;
 import org.eclipse.ant.internal.ui.editor.text.AntAnnotationModel;
 import org.eclipse.ant.internal.ui.model.AntElementNode;
 import org.eclipse.ant.internal.ui.model.AntModel;
+import org.eclipse.ant.internal.ui.model.IAntElement;
 import org.eclipse.ant.internal.ui.model.IProblemRequestor;
 import org.eclipse.ant.internal.ui.model.LocationProvider;
 import org.eclipse.core.internal.resources.File;
@@ -84,7 +85,7 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 		if (o instanceof AntElementNode) {
 
 			// try to get the parent node
-			AntElementNode parent = ((AntElementNode) o).getParentNode();
+			IAntElement parent = ((AntElementNode) o).getParentNode();
 
 			if (parent != null) {
 				// get the handle for the parent node
