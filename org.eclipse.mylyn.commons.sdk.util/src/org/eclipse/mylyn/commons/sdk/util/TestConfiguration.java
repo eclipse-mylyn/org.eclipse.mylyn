@@ -161,9 +161,11 @@ public class TestConfiguration {
 	private static <T> List<T> loadFixtures(List<FixtureConfiguration> configurations, Class<T> clazz,
 			String fixtureType, boolean defaultOnly) {
 		List<T> result = new ArrayList<T>();
+		String defaultOverwriteUrl = System.getProperty("mylyn.tests.configuration.url", "");
 		for (FixtureConfiguration configuration : configurations) {
-			if (configuration != null && fixtureType.equals(configuration.getType())
-					&& (!defaultOnly || configuration.isDefault())) {
+			if (configuration != null
+					&& fixtureType.equals(configuration.getType())
+					&& (!defaultOnly || (defaultOverwriteUrl.equals("") && configuration.isDefault()) || (configuration.url.equals(defaultOverwriteUrl)))) {
 				try {
 					Constructor<T> constructor = clazz.getConstructor(FixtureConfiguration.class);
 					result.add(constructor.newInstance(configuration));
