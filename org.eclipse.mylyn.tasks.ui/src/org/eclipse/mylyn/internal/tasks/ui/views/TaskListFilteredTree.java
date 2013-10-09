@@ -149,7 +149,9 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 				}
 				actionGroup.setSelectionProvider(null);
 				activeTaskMenuManager.dispose();
-				taskListToolTip.dispose();
+				if (taskListToolTip != null) {
+					taskListToolTip.dispose();
+				}
 			}
 		});
 	}
