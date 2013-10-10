@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.Assert;
  * @author Rob Elves
  * @author Steffen Pingel
  * @author Miles Parker
+ * @author David Green
  * @since 3.0
  */
 public final class TaskAttribute {
@@ -117,6 +118,20 @@ public final class TaskAttribute {
 	public static final String META_ATTRIBUTE_KIND = "task.meta.attributeKind"; //$NON-NLS-1$
 
 	public static final String META_ATTRIBUTE_TYPE = "task.meta.type"; //$NON-NLS-1$
+
+	/**
+	 * A key for {@link TaskAttributeMetaData} that is used for specifying the media type of a
+	 * {@link #TYPE_LONG_RICH_TEXT} or {@link #TYPE_SHORT_RICH_TEXT}. The media type if specified must be a valid <a
+	 * href="http://en.wikipedia.org/wiki/Internet_media_type">Internet Media Type</a> (also known as Content-Type,
+	 * mime-type) according to <a href="http://www.ietf.org/rfc/rfc2045.txt">RFC 2045</a> and <a
+	 * href="http://www.ietf.org/rfc/rfc2046.txt">RFC 2046</a>.
+	 * 
+	 * @see #TYPE_LONG_RICH_TEXT
+	 * @see #TYPE_SHORT_RICH_TEXT
+	 * @see #META_ATTRIBUTE_TYPE
+	 * @since 3.10
+	 */
+	public static final String META_ATTRIBUTE_MEDIA_TYPE = "task.meta.mediaType"; //$NON-NLS-1$
 
 	public static final String META_DEFAULT_OPTION = "task.meta.defaultOption"; //$NON-NLS-1$
 
@@ -242,6 +257,7 @@ public final class TaskAttribute {
 
 	/**
 	 * @since 3.0
+	 * @see #META_ATTRIBUTE_MEDIA_TYPE
 	 */
 	public static final String TYPE_LONG_RICH_TEXT = "longRichText"; //$NON-NLS-1$
 
@@ -264,6 +280,7 @@ public final class TaskAttribute {
 
 	/**
 	 * @since 3.0
+	 * @see #META_ATTRIBUTE_MEDIA_TYPE
 	 */
 	public static final String TYPE_SHORT_RICH_TEXT = "shortRichText"; //$NON-NLS-1$
 
