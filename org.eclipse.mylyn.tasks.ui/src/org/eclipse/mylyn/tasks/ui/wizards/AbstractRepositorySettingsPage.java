@@ -18,8 +18,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.httpclient.URI;
@@ -247,6 +249,10 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	 * @since 3.9
 	 */
 	protected SectionComposite innerComposite;
+
+	private TaskRepository validatedTaskRepository;
+
+	private final Map<AuthenticationType, AuthenticationCredentials> validatedAuthenticationCredentials = new HashMap<AuthenticationType, AuthenticationCredentials>();
 
 	/**
 	 * @since 3.10
@@ -652,7 +658,9 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		}
 
 		updateHyperlinks();
-
+		if (repository != null) {
+			saveToValidatedProperties(createTaskRepository());
+		}
 		GridLayout layout = new GridLayout(3, false);
 		compositeContainer.setLayout(layout);
 	}
@@ -1950,7 +1958,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	 * @since 2.0
 	 */
 	protected void validateSettings() {
-		final Validator validator = getValidator(createTaskRepository());
+		TaskRepository newTaskRepository = createTaskRepository();
+		final Validator validator = getValidator(newTaskRepository);
 		if (validator == null) {
 			return;
 		}
@@ -1990,6 +1999,9 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 		getWizard().getContainer().updateButtons();
 		applyValidatorResult(validator);
+		if (isValid) {
+			saveToValidatedProperties(newTaskRepository);
+		}
 	}
 
 	/**
@@ -2102,7 +2114,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	@Override
 	public boolean preFinish(TaskRepository repository) {
-		if (validateOnFinishButton != null && validateOnFinishButton.getSelection()) {
+		if (validateOnFinishButton != null && validateOnFinishButton.getSelection() && !propertiesUnchanged()) {
 			isValid = false;
 			validateSettings();
 		} else {
@@ -2136,6 +2148,39 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			throw new IllegalStateException("Toolkit is not initialized, createControl() must be invoked first"); //$NON-NLS-1$
 		}
 		return toolkit;
+	}
+
+	private boolean propertiesUnchanged() {
+		TaskRepository newRepository = createTaskRepository();
+		boolean propertiesUnchanged = false;
+		if (validatedTaskRepository != null) {
+			propertiesUnchanged = validatedTaskRepository.getProperties().equals(newRepository.getProperties());
+			if (propertiesUnchanged) {
+				for (AuthenticationType authenticationType : AuthenticationType.values()) {
+					AuthenticationCredentials credentialsOld = validatedAuthenticationCredentials.get(authenticationType);
+					AuthenticationCredentials credentialsNew = newRepository.getCredentials(authenticationType);
+					if (credentialsOld != null) {
+						propertiesUnchanged = credentialsOld.equals(credentialsNew);
+						if (!propertiesUnchanged) {
+							break;
+						}
+					} else if (credentialsNew != null) {
+						propertiesUnchanged = false;
+						break;
+					}
+				}
+			}
+		}
+		return propertiesUnchanged;
+	}
+
+	private void saveToValidatedProperties(TaskRepository taskRepository) {
+		validatedTaskRepository = taskRepository;
+		validatedAuthenticationCredentials.clear();
+		for (AuthenticationType authenticationType : AuthenticationType.values()) {
+			AuthenticationCredentials ra = validatedTaskRepository.getCredentials(authenticationType);
+			validatedAuthenticationCredentials.put(authenticationType, ra);
+		}
 	}
 
 }
