@@ -40,7 +40,6 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritLoginException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritSystemInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
-import org.eclipse.mylyn.reviews.core.spi.ReviewsClient;
 import org.eclipse.mylyn.reviews.core.spi.ReviewsConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -302,7 +301,7 @@ public class GerritConnector extends ReviewsConnector {
 			monitor = Policy.backgroundMonitorFor(monitor);
 		}
 		try {
-			return ((GerritClient) createReviewClient(repository, false)).getInfo(monitor);
+			return createTransientReviewClient(repository).getInfo(monitor);
 		} catch (UnsupportedClassVersionError e) {
 			throw toCoreException(repository, e);
 		} catch (GerritException e) {
@@ -311,11 +310,9 @@ public class GerritConnector extends ReviewsConnector {
 	}
 
 	@Override
-	protected ReviewsClient createReviewClient(final TaskRepository repository, boolean cachedConfig) {
-		GerritConfiguration config = (cachedConfig) ? loadConfiguration(repository) : null;
-		GerritAuthenticationState authState = (cachedConfig)
-				? GerritClient.authStateFromString(repository.getProperty(KEY_REPOSITORY_AUTH))
-				: null;
+	protected GerritClient createReviewClient(final TaskRepository repository, boolean b) {
+		GerritConfiguration config = loadConfiguration(repository);
+		GerritAuthenticationState authState = loadAuthState(repository);
 		return new GerritClient(repository, taskRepositoryLocationFactory.createWebLocation(repository), config,
 				authState) {
 			@Override
@@ -328,6 +325,18 @@ public class GerritConnector extends ReviewsConnector {
 				repository.setProperty(KEY_REPOSITORY_AUTH, GerritClient.authStateToString(authState));
 			}
 		};
+	}
+
+	protected GerritClient createTransientReviewClient(final TaskRepository repository) {
+		return new GerritClient(repository, taskRepositoryLocationFactory.createWebLocation(repository));
+	}
+
+	private GerritAuthenticationState loadAuthState(final TaskRepository repository) {
+		String authState = repository.getProperty(KEY_REPOSITORY_AUTH);
+		if (authState != null) {
+			return GerritClient.authStateFromString(authState);
+		}
+		return null;
 	}
 
 	protected GerritConfiguration loadConfiguration(TaskRepository repository) {
@@ -355,6 +364,9 @@ public class GerritConnector extends ReviewsConnector {
 	}
 
 	private static GerritConfiguration configurationFromString(String token) {
+		if (token == null) {
+			return null;
+		}
 		try {
 			JSonSupport support = new JSonSupport();
 			return support.parseResponse(token, GerritConfiguration.class);

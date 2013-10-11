@@ -13,9 +13,20 @@ package org.eclipse.mylyn.internal.gerrit.core;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.util.Collections;
+import java.util.List;
+
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.GerritConfigX;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.junit.Test;
+
+import com.google.gerrit.reviewdb.Project;
+import com.google.gerrit.reviewdb.Project.NameKey;
 
 /**
  * @author Mikael Kober
@@ -91,4 +102,37 @@ public class GerritConnectorTest {
 		assertEquals("http://review.mylyn.org/#/c/4698/", //$NON-NLS-1$
 				connector.getTaskUrl("http://review.mylyn.org/", "4698")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
+
+	@Test
+	public void createReviewClient() {
+		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://repository"); //$NON-NLS-1$
+		GerritClient client = connector.createReviewClient(repository, true);
+		assertNull(client.getConfiguration());
+		assertNull(client.getGerritConfig());
+	}
+
+	@Test
+	public void createReviewClientWithConfiguration() {
+		Project project = new Project(new NameKey("name")); //$NON-NLS-1$
+		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://repository"); //$NON-NLS-1$
+		GerritConfiguration configuration = new GerritConfiguration(new GerritConfigX(),
+				Collections.singletonList(project), null);
+		connector.saveConfiguration(repository, configuration);
+
+		GerritClient client = connector.createReviewClient(repository, true);
+		List<Project> projects = client.getConfiguration().getProjects();
+		assertNotNull(projects);
+		assertEquals(1, projects.size());
+		assertEquals(project.getNameKey(), projects.get(0).getNameKey());
+		assertNotNull(client.getGerritConfig());
+	}
+
+	@Test
+	public void createTransientReviewClient() {
+		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://repository"); //$NON-NLS-1$
+		GerritClient client = connector.createTransientReviewClient(repository);
+		assertNull(client.getConfiguration());
+		assertNull(client.getGerritConfig());
+	}
+
 }

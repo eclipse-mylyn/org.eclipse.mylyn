@@ -34,6 +34,15 @@ public abstract class ReviewsConnector extends AbstractRepositoryConnector {
 		return client;
 	}
 
+	/**
+	 * Returns the behavior for {@code repository}.
+	 * 
+	 * @param repository
+	 *            the repository
+	 * @param b
+	 *            always true
+	 * @return the {@link ReviewsClient} instance
+	 */
 	protected abstract ReviewsClient createReviewClient(TaskRepository repository, boolean b);
 
 	public void setFactoryProviderConfigurer(RemoteFactoryProviderConfigurer factoryProviderConfigurer) {
