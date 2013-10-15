@@ -14,7 +14,8 @@ package org.eclipse.mylyn.internal.gerrit.core.client.rest;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -69,7 +70,7 @@ public class ChangeInfo {
 
 	private AccountInfo owner;
 
-	private Map<String/*Label*/, LabelInfo> labels;
+	private LinkedHashMap<String/*Label*/, LabelInfo> labels;
 
 	private String current_revision;
 
@@ -158,7 +159,7 @@ public class ChangeInfo {
 		if (labels == null) {
 			return Collections.<ApprovalDetail> emptySet();
 		}
-		Set<ApprovalDetail> result = new HashSet<ApprovalDetail>();
+		Set<ApprovalDetail> result = new LinkedHashSet<ApprovalDetail>();
 		for (Entry<String, LabelInfo> entry : labels.entrySet()) {
 			List<ApprovalInfo> all = entry.getValue().getAll();
 			if (all != null) {
@@ -182,7 +183,7 @@ public class ChangeInfo {
 		if (labels == null) {
 			return null;
 		}
-		Set<ApprovalType> result = new HashSet<ApprovalType>();
+		Set<ApprovalType> result = new LinkedHashSet<ApprovalType>();
 		for (Entry<String, LabelInfo> entry : labels.entrySet()) {
 			ApprovalCategory approvalCategory = ApprovalUtil.findCategoryByNameWithDash(entry.getKey());
 			List<ApprovalCategoryValue> valueList = new ArrayList<ApprovalCategoryValue>();

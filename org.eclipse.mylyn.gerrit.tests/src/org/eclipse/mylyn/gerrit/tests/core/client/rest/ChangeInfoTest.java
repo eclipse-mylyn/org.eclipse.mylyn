@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -41,6 +42,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PermissionLabel;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalInfo;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.LabelInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.RevisionInfo;
@@ -165,6 +167,23 @@ public class ChangeInfoTest extends TestCase {
 		assertHasRevisions(changeInfo, 2);
 	}
 
+	@Test
+	public void testThreeApprovalTypes() throws IOException {
+		ChangeInfo changeInfo = parseFile("testdata/ChangeInfo_ThreeApprovalTypes.json");
+
+		// assert approval types ordering is not changed
+		Map<String, LabelInfo> labels = changeInfo.getLabels();
+		assertNotNull(labels);
+		assertEquals(3, labels.size());
+		Set<ApprovalType> approvalTypes = changeInfo.convertToApprovalTypes();
+		assertNotNull(approvalTypes);
+		assertEquals(3, approvalTypes.size());
+		Iterator<ApprovalType> it = approvalTypes.iterator();
+		assertCategoriesEqual(ApprovalUtil.VRIF, it.next());
+		assertCategoriesEqual(ApprovalUtil.CRVW, it.next());
+		assertCategoriesEqual(ApprovalUtil.IPCL, it.next());
+	}
+
 	// Utility methods
 
 	public static void assertHasCodeReviewLabels(ChangeInfo changeInfo) {
@@ -286,5 +305,9 @@ public class ChangeInfoTest extends TestCase {
 		public int compare(ApprovalCategoryValue acv1, ApprovalCategoryValue acv2) {
 			return acv1.format().compareTo(acv2.format());
 		}
+	}
+
+	private static void assertCategoriesEqual(ApprovalType expected, ApprovalType actual) {
+		assertEquals(expected.getCategory().getId().get(), actual.getCategory().getId().get());
 	}
 }
