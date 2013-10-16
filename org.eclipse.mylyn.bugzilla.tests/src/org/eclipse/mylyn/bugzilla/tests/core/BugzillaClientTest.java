@@ -232,7 +232,7 @@ public class BugzillaClientTest extends AbstractBugzillaTest {
 		UrlBuilder urlBuilder = UrlBuilder.build(BugzillaFixture.current().repository()).append("/buglist.cgi");
 
 		urlBuilder.parameter(
-				"short_desc=test%20Bug%20335278&columnlist",
+				"short_desc=test%20EnhanceSearch&columnlist",
 				"bug_severity,priority,assigned_to,bug_status,resolution,short_desc,changeddate,reporter,assigned_to_realname,reporter_realname,product,component");
 		query.setUrl(urlBuilder.toString());
 
