@@ -534,7 +534,6 @@
         </property>
       </activation>
       <properties>
-        <forceContextQualifier>v${env.TIMESTAMP}</forceContextQualifier>
         <sign.skip>false</sign.skip>
         <dist.site>/home/data/httpd/download.eclipse.org/mylyn/snapshots</dist.site>
         <promote.prefix>v</promote.prefix>
