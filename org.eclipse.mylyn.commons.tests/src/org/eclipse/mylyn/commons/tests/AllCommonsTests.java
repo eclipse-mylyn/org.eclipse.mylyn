@@ -16,6 +16,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.commons.core.HtmlStreamTokenizerTest;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
+import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.commons.tests.core.AuthenticatedProxyTest;
 import org.eclipse.mylyn.commons.tests.core.CommonListenerListTest;
 import org.eclipse.mylyn.commons.tests.core.CoreUtilTest;
@@ -38,6 +39,17 @@ public class AllCommonsTests {
 
 	public static Test suite() {
 		TestSuite suite = new ManagedTestSuite(AllCommonsTests.class.getName());
+		addTests(suite);
+		return suite;
+	}
+
+	public static Test suite(TestConfiguration configuration) {
+		TestSuite suite = new TestSuite(AllCommonsTests.class.getName());
+		addTests(suite);
+		return suite;
+	}
+
+	private static void addTests(TestSuite suite) {
 		suite.addTestSuite(TimeoutInputStreamTest.class);
 		suite.addTestSuite(CoreUtilTest.class);
 		suite.addTestSuite(AuthenticatedProxyTest.class);
@@ -53,7 +65,6 @@ public class AllCommonsTests {
 		suite.addTestSuite(CommonHttpMethod3Test.class);
 		suite.addTestSuite(HtmlStreamTokenizerTest.class);
 		suite.addTestSuite(CancellableOperationMonitorThreadTest.class);
-		return suite;
 	}
 
 }
