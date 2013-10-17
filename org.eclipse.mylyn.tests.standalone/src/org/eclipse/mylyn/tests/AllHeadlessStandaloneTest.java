@@ -14,7 +14,6 @@ package org.eclipse.mylyn.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.bugzilla.tests.AllBugzillaHeadlessStandaloneTests;
 import org.eclipse.mylyn.commons.notifications.tests.core.NotificationEnvironmentTest;
 import org.eclipse.mylyn.commons.notifications.tests.feed.FeedReaderTest;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
@@ -78,7 +77,7 @@ public class AllHeadlessStandaloneTest {
 		suite.addTestSuite(Xml11InputStreamTest.class);
 
 		// bugzilla
-		suite.addTest(AllBugzillaHeadlessStandaloneTests.suite(configuration));
+		//suite.addTest(AllBugzillaHeadlessStandaloneTests.suite(configuration));
 
 		// trac
 		suite.addTest(AllTracHeadlessStandaloneTests.suite(configuration));
