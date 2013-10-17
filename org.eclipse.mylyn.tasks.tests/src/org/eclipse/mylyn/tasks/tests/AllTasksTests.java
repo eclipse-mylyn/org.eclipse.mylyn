@@ -15,6 +15,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
+import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.tasks.tests.bugs.SupportHandlerManagerTest;
 import org.eclipse.mylyn.tasks.tests.core.FileTaskAttachmentSourceTest;
 import org.eclipse.mylyn.tasks.tests.core.ITasksCoreConstantsTest;
@@ -59,6 +60,17 @@ public class AllTasksTests {
 
 	public static Test suite() {
 		TestSuite suite = new ManagedTestSuite(AllTasksTests.class.getName());
+		addTests(suite);
+		return suite;
+	}
+
+	public static TestSuite suite(TestConfiguration configuration) {
+		TestSuite suite = new TestSuite(AllTasksTests.class.getName());
+		addTests(suite);
+		return suite;
+	}
+
+	public static void addTests(TestSuite suite) {
 		suite.addTestSuite(TasksUiUtilTest.class);
 		suite.addTestSuite(TaskListUiTest.class);
 		suite.addTestSuite(TaskRepositoryCredentialsTest.class);
@@ -146,7 +158,6 @@ public class AllTasksTests {
 		suite.addTestSuite(RepositoryConnectorContributorTest.class);
 		suite.addTestSuite(TaskInitializationDataTest.class);
 		suite.addTestSuite(TaskDataDiffTest.class);
-		return suite;
 	}
 
 }
