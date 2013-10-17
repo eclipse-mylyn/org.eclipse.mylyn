@@ -27,6 +27,7 @@ import org.eclipse.mylyn.gerrit.tests.core.client.rest.AbandonInputTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.rest.AccountInfoTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.rest.AddReviewerResultTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.rest.ChangeInfoTest;
+import org.eclipse.mylyn.gerrit.tests.core.client.rest.ProjectInfoTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.rest.RestoreInputTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.rest.ReviewInfoTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.rest.ReviewInputTest;
@@ -63,6 +64,7 @@ public class AllGerritTests {
 		suite.addTestSuite(AccountInfoTest.class);
 		suite.addTestSuite(AddReviewerResultTest.class);
 		suite.addTestSuite(ChangeInfoTest.class);
+		suite.addTestSuite(ProjectInfoTest.class);
 		suite.addTestSuite(RestoreInputTest.class);
 		suite.addTestSuite(ReviewerInfoTest.class);
 		suite.addTestSuite(ReviewerInputTest.class);

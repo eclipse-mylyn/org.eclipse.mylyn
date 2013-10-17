@@ -59,6 +59,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.rest.AddReviewerResult;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.CommentInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.CommentInput;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.ProjectInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.RestoreInput;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ReviewInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ReviewInput;
@@ -98,6 +99,7 @@ import com.google.gerrit.reviewdb.PatchLineComment;
 import com.google.gerrit.reviewdb.PatchSet;
 import com.google.gerrit.reviewdb.PatchSet.Id;
 import com.google.gerrit.reviewdb.Project;
+import com.google.gerrit.reviewdb.Project.NameKey;
 import com.google.gson.reflect.TypeToken;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtjsonrpc.client.RemoteJsonService;
@@ -697,6 +699,11 @@ public class GerritClient extends ReviewsClient {
 		return GerritVersion.isVersion26OrLater(version);
 	}
 
+	private boolean isVersion27OrLater(IProgressMonitor monitor) throws GerritException {
+		Version version = getCachedVersion(monitor);
+		return GerritVersion.isVersion27OrLater(version);
+	}
+
 	/**
 	 * Returns watched changes of the currently logged in user
 	 */
@@ -964,19 +971,26 @@ public class GerritClient extends ReviewsClient {
 				}
 			}
 		} catch (GerritException e) {
-			// Gerrit <= 2.2.1
 			if (isNoSuchServiceError(e)) {
-				List<Project> projects = execute(monitor, new Operation<List<Project>>() {
-					@Override
-					public void execute(IProgressMonitor monitor) throws GerritException {
-						getProjectAdminService(monitor).visibleProjects(this);
+				if (isVersion27OrLater(monitor)) {
+					Map<String, ProjectInfo> projects = listProjects(monitor);
+					for (String projectName : projects.keySet()) {
+						result.add(new Project(new NameKey(projectName)));
 					}
-				});
-				for (Project project : projects) {
-					ProjectDetailX projectDetail = new ProjectDetailX();
-					projectDetail.setProject(project);
-					if (!GerritUtil.isPermissionOnlyProject(projectDetail, gerritConfig)) {
-						result.add(project);
+				} else {
+					// Gerrit <= 2.2.1
+					List<Project> projects = execute(monitor, new Operation<List<Project>>() {
+						@Override
+						public void execute(IProgressMonitor monitor) throws GerritException {
+							getProjectAdminService(monitor).visibleProjects(this);
+						}
+					});
+					for (Project project : projects) {
+						ProjectDetailX projectDetail = new ProjectDetailX();
+						projectDetail.setProject(project);
+						if (!GerritUtil.isPermissionOnlyProject(projectDetail, gerritConfig)) {
+							result.add(project);
+						}
 					}
 				}
 			} else {
@@ -984,6 +998,13 @@ public class GerritClient extends ReviewsClient {
 			}
 		}
 		return result;
+	}
+
+	private Map<String, ProjectInfo> listProjects(IProgressMonitor monitor) throws GerritException {
+		final String uri = "/projects/"; //$NON-NLS-1$
+		TypeToken<Map<String, ProjectInfo>> resultType = new TypeToken<Map<String, ProjectInfo>>() {
+		};
+		return executeGetRestRequest(uri, resultType.getType(), monitor);
 	}
 
 	private ProjectAdminService getProjectAdminService(IProgressMonitor monitor) {
