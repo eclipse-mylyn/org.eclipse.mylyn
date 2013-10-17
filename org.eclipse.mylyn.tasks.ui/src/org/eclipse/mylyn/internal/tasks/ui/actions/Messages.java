@@ -147,6 +147,8 @@ public class Messages extends NLS {
 
 	public static String FilterCompletedTasksAction_Filter_Completed_Tasks;
 
+	public static String FilterMyTasksAction_My_Tasks;
+
 	public static String GoIntoAction_Go_Into;
 
 	public static String GoUpAction_Go_Up_To_Root;

@@ -107,8 +107,7 @@ public class FocusTaskListAction implements IFilteredTreeListener, IViewActionDe
 					taskListView.getFilteredTree().setRedraw(false);
 					taskListView.setFocusedMode(true);
 					previousSorter = taskListView.getViewer().getSorter();
-					previousFilters = new HashSet<AbstractTaskListFilter>(taskListView.getFilters());
-					taskListView.clearFilters();
+					previousFilters = taskListView.clearFilters();
 					if (!taskListView.getFilters().contains(taskListInterestFilter)) {
 						taskListView.addFilter(taskListInterestFilter);
 					}

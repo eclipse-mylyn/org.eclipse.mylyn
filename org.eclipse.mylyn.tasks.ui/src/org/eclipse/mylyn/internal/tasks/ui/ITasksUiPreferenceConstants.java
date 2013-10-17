@@ -52,6 +52,8 @@ public interface ITasksUiPreferenceConstants {
 
 	public static final String FILTER_PRIORITY = "org.eclipse.mylyn.tasks.ui.filters.priority"; //$NON-NLS-1$
 
+	public static final String FILTER_MY_TASKS_MODE = "org.eclipse.mylyn.tasks.ui.filters.my.tasks"; //$NON-NLS-1$
+
 	public static final String GROUP_SUBTASKS = "org.eclipse.mylyn.tasks.ui.group.subtasks"; //$NON-NLS-1$
 
 	public static final String OVERLAYS_INCOMING_TIGHT = "org.eclipse.mylyn.tasks.ui.overlays.incoming.tight"; //$NON-NLS-1$

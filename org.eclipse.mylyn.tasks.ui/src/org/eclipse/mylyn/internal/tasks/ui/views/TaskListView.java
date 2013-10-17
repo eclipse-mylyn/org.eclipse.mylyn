@@ -65,6 +65,7 @@ import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.CategorizedPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.MyTasksFilter;
 import org.eclipse.mylyn.internal.tasks.ui.ScheduledPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.TaskArchiveFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskCompletionFilter;
@@ -75,6 +76,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CollapseAllAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ExpandAllAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.FilterCompletedTasksAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.FilterMyTasksAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.GoUpAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.GroupSubTasksAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.LinkWithEditorAction;
@@ -252,6 +254,8 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 
 	private FilterCompletedTasksAction filterCompleteTask;
 
+	private FilterMyTasksAction filterMyTasksAction;
+
 	private GroupSubTasksAction groupSubTasksAction;
 
 	private SynchronizeAutomaticallyAction synchronizeAutomatically;
@@ -278,6 +282,8 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 	private final TaskArchiveFilter filterArchive = new TaskArchiveFilter();
 
 	private final PresentationFilter filterPresentation = PresentationFilter.getInstance();
+
+	private final MyTasksFilter filterMyTasks = new MyTasksFilter();
 
 	private TaskWorkingSetFilter filterWorkingSet;
 
@@ -544,6 +550,9 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 		addFilter(filterPriority);
 		if (TasksUiPlugin.getDefault().getPreferenceStore().contains(ITasksUiPreferenceConstants.FILTER_COMPLETE_MODE)) {
 			addFilter(filterComplete);
+		}
+		if (TasksUiPlugin.getDefault().getPreferenceStore().contains(ITasksUiPreferenceConstants.FILTER_MY_TASKS_MODE)) {
+			addFilter(filterMyTasks);
 		}
 		addFilter(filterPresentation);
 		addFilter(filterArchive);
@@ -1049,6 +1058,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 		manager.add(sortDialogAction);
 		manager.add(filterOnPriorityAction);
 		manager.add(filterCompleteTask);
+		manager.add(filterMyTasksAction);
 		IMenuManager advancedMenu = new MenuManager(Messages.TaskListView_Advanced_Filters_Label);
 		advancedMenu.add(new ShowAllQueriesAction());
 		showNonMatchingSubtasksAction = new ShowNonMatchingSubtasksAction();
@@ -1082,6 +1092,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 		manager.add(new GroupMarker(ID_SEPARATOR_CONTEXT));
 		manager.add(new Separator());
 		manager.add(filterCompleteTask);
+		manager.add(filterMyTasksAction);
 		manager.add(collapseAll);
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
@@ -1123,6 +1134,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 		synchronizeAutomatically = new SynchronizeAutomaticallyAction();
 		openPreferencesAction = new OpenTasksUiPreferencesAction();
 		//filterArchiveCategory = new FilterArchiveContainerAction(this);
+		filterMyTasksAction = new FilterMyTasksAction(this);
 		sortDialogAction = new TaskListSortAction(getSite(), this);
 		filterOnPriorityAction = new PriorityDropDownAction(this);
 		linkWithEditorAction = new LinkWithEditorAction(this);
@@ -1201,11 +1213,20 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 		}
 	}
 
-	public void clearFilters() {
+	public Set<AbstractTaskListFilter> clearFilters() {
+		HashSet<AbstractTaskListFilter> previousFilters = new HashSet<AbstractTaskListFilter>(getFilters());
+		previousFilters.remove(filterMyTasks);// this filter is always available for users to toggle
 		filters.clear();
 		filters.add(filterArchive);
 		filters.add(filterWorkingSet);
 		filters.add(filterPresentation);
+		boolean enableMyTasksFilter = TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(ITasksUiPreferenceConstants.FILTER_MY_TASKS_MODE);
+		if (enableMyTasksFilter) {
+			filters.add(getMyTasksFilter());
+		}
+		return previousFilters;
 	}
 
 	public void removeFilter(AbstractTaskListFilter filter) {
@@ -1616,5 +1637,9 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 
 	public TaskListServiceMessageControl getServiceMessageControl() {
 		return serviceMessageControl;
+	}
+
+	public MyTasksFilter getMyTasksFilter() {
+		return filterMyTasks;
 	}
 }
