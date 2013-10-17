@@ -48,7 +48,7 @@ public class AllNonConnectorTests {
 
 	static void addTests(TestSuite suite, TestConfiguration configuration) {
 		suite.addTest(AllIntegrationTests.suite());
-		suite.addTest(AllCommonsTests.suite());
+		suite.addTest(AllCommonsTests.suite(configuration));
 		suite.addTest(AllNotificationsTests.suite());
 		suite.addTest(AllActivityTests.suite());
 		suite.addTest(AllContextTests.suite());
@@ -58,7 +58,7 @@ public class AllNonConnectorTests {
 		suite.addTest(AllCdtTests.suite());
 		suite.addTest(AllMonitorTests.suite());
 		suite.addTest(AllIdeTests.suite());
-		suite.addTest(AllTasksTests.suite());
+		suite.addTest(AllTasksTests.suite(configuration));
 		suite.addTest(AllBuildsTests.suite());
 		suite.addTest(AllReviewsTests.suite());
 		suite.addTest(AllResourcesTests.suite());
