@@ -88,6 +88,15 @@ public class GerritVersionTest extends TestCase {
 	}
 
 	@Test
+	public void testParse_V221NQT012() throws Exception {
+		Version v = parseGerritVersion("V2.2.1-NQT-012");
+		assertEquals(2, v.getMajor());
+		assertEquals(2, v.getMinor());
+		assertEquals(1, v.getMicro());
+		assertEquals("NQT-012", v.getQualifier());
+	}
+
+	@Test
 	public void testParse_123q() throws Exception {
 		Version v = parseGerritVersion("1.2.3-q");
 		assertEquals(1, v.getMajor());

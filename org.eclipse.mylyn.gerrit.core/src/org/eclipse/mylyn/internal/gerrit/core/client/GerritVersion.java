@@ -28,13 +28,13 @@ public class GerritVersion extends Version {
 	private static final Version VERSION_2_6_0 = new Version(2, 6, 0);
 
 	// e.g. 2.6 or 2.6.0
-	private static final Pattern MAJOR_MINOR_MICRO_VERSION_PATTERN = Pattern.compile("\\d+\\.\\d+(\\.\\d+)?"); //$NON-NLS-1$
+	private static final Pattern MAJOR_MINOR_MICRO_VERSION_PATTERN = Pattern.compile("V?\\d+\\.\\d+(\\.\\d+)?"); //$NON-NLS-1$
 
 	// e.g. 2.6-rc3
-	private static final Pattern MAJOR_MINOR_QUALIFIER_VERSION_PATTERN = Pattern.compile("(\\d+)\\.(\\d+)-([-\\w]+)"); //$NON-NLS-1$
+	private static final Pattern MAJOR_MINOR_QUALIFIER_VERSION_PATTERN = Pattern.compile("V?(\\d+)\\.(\\d+)-([-\\w]+)"); //$NON-NLS-1$
 
 	// e.g. 2.6.1-rc1
-	private static final Pattern MAJOR_MINOR_MICRO_QUALIFIER_VERSION_PATTERN = Pattern.compile("(\\d+)\\.(\\d+)\\.(\\d+)-([-\\w]+)"); //$NON-NLS-1$
+	private static final Pattern MAJOR_MINOR_MICRO_QUALIFIER_VERSION_PATTERN = Pattern.compile("V?(\\d+)\\.(\\d+)\\.(\\d+)-([-\\w]+)"); //$NON-NLS-1$
 
 	public GerritVersion(String version) {
 		super(version);
