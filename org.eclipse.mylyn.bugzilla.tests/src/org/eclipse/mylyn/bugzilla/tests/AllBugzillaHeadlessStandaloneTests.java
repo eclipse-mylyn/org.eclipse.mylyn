@@ -26,6 +26,7 @@ import org.eclipse.mylyn.bugzilla.tests.core.BugzillaFlagsTest;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaRepositoryConnectorConfigurationTest;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaRepositoryConnectorStandaloneTest;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaTaskCompletionTest;
+import org.eclipse.mylyn.bugzilla.tests.core.BugzillaUtilTest;
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaVersionTest;
 import org.eclipse.mylyn.bugzilla.tests.core.RepositoryConfigurationTest;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
@@ -74,6 +75,7 @@ public class AllBugzillaHeadlessStandaloneTests {
 		fixture.add(BugzillaRepositoryConnectorStandaloneTest.class);
 		fixture.add(BugzillaRepositoryConnectorConfigurationTest.class);
 		fixture.add(BugzillaClientTest.class);
+		fixture.add(BugzillaUtilTest.class);
 
 		// Only run these tests on > 3.2 repositories
 		if (!fixture.getBugzillaVersion().isSmallerOrEquals(BugzillaVersion.BUGZILLA_3_2)) {

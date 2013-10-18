@@ -1600,6 +1600,9 @@ public class BugzillaClient {
 						// Don't post any remaining non-bugzilla specific attributes
 						continue;
 					}
+					if (id.equals(BugzillaAttribute.DELTA_TS.getKey())) {
+						value = BugzillaUtil.removeTimezone(value);
+					}
 					fields.put(id, new NameValuePair(id, value != null ? value : "")); //$NON-NLS-1$
 				}
 			}

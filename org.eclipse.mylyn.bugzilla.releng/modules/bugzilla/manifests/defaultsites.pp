@@ -51,25 +51,25 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
     xmlrpc_enabled => false,
   }
 
-  bugzilla::site { "bugzilla-4.0.10":
+  bugzilla::site { "bugzilla-4.0.11":
     major   => "4",
     minor   => "0",
   }
 
-  bugzilla::site { "bugzilla-4.2.6":
+  bugzilla::site { "bugzilla-4.2.7":
     major   => "4",
     minor   => "2",
     envdefault => true,
   }
 
-  bugzilla::site { "bugzilla-4.2.6-bugaliases":
+  bugzilla::site { "bugzilla-4.2.7-bugaliases":
     major   => "4",
     minor   => "2",
-    branchTag      => "bugzilla-4.2.6",
+    branchTag      => "bugzilla-4.2.7",
     usebugaliases => true,
   }
 
-  bugzilla::site { "bugzilla-4.4":
+  bugzilla::site { "bugzilla-4.4.1":
     major     => "4",
     minor     => "4",
   }
@@ -80,4 +80,5 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
     branch      => "trunk",
     branchTag   => "trunk",
   }
+
 }

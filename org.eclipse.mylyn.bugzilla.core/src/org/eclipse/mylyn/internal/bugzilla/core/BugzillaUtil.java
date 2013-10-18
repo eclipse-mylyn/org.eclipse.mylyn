@@ -11,9 +11,16 @@
 
 package org.eclipse.mylyn.internal.bugzilla.core;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.osgi.util.NLS;
 
 public class BugzillaUtil {
 
@@ -64,5 +71,17 @@ public class BugzillaUtil {
 	public static boolean getTaskPropertyWithDefaultTrue(TaskRepository taskRepository, String property) {
 		String useParam = taskRepository.getProperty(property);
 		return (useParam == null || (useParam != null && useParam.equals("true"))); //$NON-NLS-1$
+	}
+
+	private static final Pattern TIME_STAMP_PATTERN = Pattern.compile(
+			"[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
+
+	public static String removeTimezone(String timeWithTimezone) throws CoreException {
+		Matcher matcher = TIME_STAMP_PATTERN.matcher(timeWithTimezone);
+		if (matcher.find()) {
+			return matcher.group();
+		}
+		throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, NLS.bind(
+				"{0} is not a valid time", timeWithTimezone))); //$NON-NLS-1$
 	}
 }
