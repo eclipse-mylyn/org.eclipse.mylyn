@@ -30,6 +30,7 @@ import org.eclipse.mylyn.internal.context.ui.actions.FocusOutlineAction;
 import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
 import org.eclipse.mylyn.internal.java.ui.actions.FocusPackageExplorerAction;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -71,7 +72,6 @@ public class FocusViewActionTest extends AbstractJavaContextTest {
 		assertFalse(ContextCore.getContextManager().isContextCapturePaused());
 	}
 
-	@SuppressWarnings("deprecation")
 	public void testContents() throws JavaModelException, PartInitException {
 		IMethod m1 = type1.createMethod("void m1() { }", null, true, null);
 		UiTestUtil.openView("org.eclipse.ui.views.ContentOutline");
@@ -79,9 +79,13 @@ public class FocusViewActionTest extends AbstractJavaContextTest {
 
 //		FocusOutlineAction.getDefault().update(true);
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
-		IEditorPart[] parts = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditors();
-		for (IEditorPart part : parts) {
-			if (part.getTitle().equals("Type1.java")) {
+		IEditorReference[] refrences = PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow()
+				.getActivePage()
+				.getEditorReferences();
+		for (IEditorReference reference : refrences) {
+			if (reference.getTitle().equals("Type1.java")) {
+				IEditorPart part = reference.getEditor(true);
 				AbstractContextUiBridge bridge = ContextUi.getUiBridgeForEditor(part);
 				List<TreeViewer> outlineViewers = bridge.getContentOutlineViewers(part);
 				for (TreeViewer viewer : outlineViewers) {

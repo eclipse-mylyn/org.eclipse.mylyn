@@ -145,10 +145,9 @@ public class JavaEditorManagerTest extends AbstractJavaContextTest {
 		assertEquals(0, tracker.getEditorListenerMap().size());
 	}
 
-	@SuppressWarnings("deprecation")
 	public void testAutoCloseWithDecay() throws JavaModelException, InvocationTargetException, InterruptedException {
 		ContextUiPlugin.getEditorStateParticipant().closeAllEditors();
-		assertEquals(0, page.getEditors().length);
+		assertEquals(0, page.getEditorReferences().length);
 
 		// create and open types
 		AbstractContextUiBridge bridge = ContextUi.getUiBridge(JavaStructureBridge.CONTENT_TYPE);
@@ -165,7 +164,7 @@ public class JavaEditorManagerTest extends AbstractJavaContextTest {
 		// opening editors can cause selection events on e4
 		context.reset();
 
-		assertEquals(2, page.getEditors().length);
+		assertEquals(2, page.getEditorReferences().length);
 		// process a number of events to trigger decay
 		for (int i = 0; i < 1 / (scaling.getDecay()) * 3; i++) {
 			ContextCore.getContextManager().processInteractionEvent(mockSelection());
@@ -183,7 +182,7 @@ public class JavaEditorManagerTest extends AbstractJavaContextTest {
 		bridge.open(elementB);
 		// make type interesting
 		monitor.selectionChanged(view, new StructuredSelection(typeB));
-		assertEquals(1, page.getEditors().length);
+		assertEquals(1, page.getEditorReferences().length);
 	}
 
 }
