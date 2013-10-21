@@ -87,7 +87,8 @@ public abstract class DocumentRegionValidator {
 			if (length <= 0) {
 				problems = Collections.emptyList();
 			} else {
-				problems = delegate.validate(new SubProgressMonitor(monitor, totalWork / 2), markup, offset, length);
+				problems = delegate.validate(markup, offset, length);
+				monitor.worked(totalWork / 2);
 			}
 
 			// always createProblems even if there are no problems

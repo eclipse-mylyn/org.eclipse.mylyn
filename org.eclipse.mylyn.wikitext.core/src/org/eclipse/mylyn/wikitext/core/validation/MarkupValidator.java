@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.wikitext.core.validation.StandaloneMarkupValidator;
 
 /**
@@ -28,31 +27,24 @@ public class MarkupValidator {
 
 	private final List<ValidationRule> rules = new ArrayList<ValidationRule>();
 
-	public List<ValidationProblem> validate(IProgressMonitor monitor, String markup) {
-		return validate(monitor, markup, 0, markup.length());
+	public List<ValidationProblem> validate(String markup) {
+		return validate(markup, 0, markup.length());
 	}
 
-	public List<ValidationProblem> validate(IProgressMonitor monitor, String markup, int offset, int length) {
-		final int totalWork = length == 0 || rules.isEmpty() ? 1 : rules.size();
-		monitor.beginTask(Messages.getString("MarkupValidator.0"), totalWork); //$NON-NLS-1$
-		try {
-			if (length == 0 || rules.isEmpty()) {
-				return Collections.emptyList();
-			}
-
-			List<ValidationProblem> problems = new ArrayList<ValidationProblem>();
-
-			for (ValidationRule rule : rules) {
-				problems.addAll(rule.findProblems(markup, offset, length));
-				monitor.worked(1);
-			}
-			if (!problems.isEmpty()) {
-				Collections.sort(problems);
-			}
-			return problems;
-		} finally {
-			monitor.done();
+	public List<ValidationProblem> validate(String markup, int offset, int length) {
+		if (length == 0 || rules.isEmpty()) {
+			return Collections.emptyList();
 		}
+
+		List<ValidationProblem> problems = new ArrayList<ValidationProblem>();
+
+		for (ValidationRule rule : rules) {
+			problems.addAll(rule.findProblems(markup, offset, length));
+		}
+		if (!problems.isEmpty()) {
+			Collections.sort(problems);
+		}
+		return problems;
 	}
 
 	public List<ValidationRule> getRules() {

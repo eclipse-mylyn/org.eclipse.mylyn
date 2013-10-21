@@ -14,7 +14,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.wikitext.core.validation.MarkupValidator;
 import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
@@ -76,7 +75,7 @@ public class BlockWhitespaceRuleTest extends TestCase {
 
 	public void testValidator() {
 		String markup = "h1. Foo\n\nbc. bar\n\npre.\nsdf\n\nbc.\n\n";
-		List<ValidationProblem> result = validator.validate(new NullProgressMonitor(), markup);
+		List<ValidationProblem> result = validator.validate(markup);
 		assertEquals(2, result.size());
 		TestUtil.println(result);
 		assertEquals(18, result.get(0).getOffset());
