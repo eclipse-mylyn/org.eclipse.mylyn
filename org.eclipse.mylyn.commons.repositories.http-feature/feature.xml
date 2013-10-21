@@ -12,7 +12,7 @@
 <feature
       id="org.eclipse.mylyn.commons.repositories.http"
       label="%featureName"
-      version="1.2.0.qualifier"
+      version="1.3.0.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.mylyn.commons.core">
 
@@ -29,7 +29,7 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.mylyn.commons.repositories" version="1.2.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.mylyn.commons.repositories" version="1.3.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
