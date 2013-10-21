@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.tasks.core;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 /**
  * Notified of change to the life-cycle of task repositories.
  * 
@@ -24,27 +26,27 @@ public interface IRepositoryListener {
 	 * 
 	 * @since 3.0
 	 */
-	public abstract void repositoryAdded(TaskRepository repository);
+	public abstract void repositoryAdded(@NonNull TaskRepository repository);
 
 	/**
 	 * A task repository has been removed.
 	 * 
 	 * @since 3.0
 	 */
-	public abstract void repositoryRemoved(TaskRepository repository);
+	public abstract void repositoryRemoved(@NonNull TaskRepository repository);
 
 	/**
 	 * The settings of a repository have been updated.
 	 * 
 	 * @since 3.0
 	 */
-	public abstract void repositorySettingsChanged(TaskRepository repository);
+	public abstract void repositorySettingsChanged(@NonNull TaskRepository repository);
 
 	/**
 	 * TODO: Refactor into general delta notification
 	 * 
 	 * @since 3.0
 	 */
-	public abstract void repositoryUrlChanged(TaskRepository repository, String oldUrl);
+	public abstract void repositoryUrlChanged(@NonNull TaskRepository repository, @NonNull String oldUrl);
 
 }
