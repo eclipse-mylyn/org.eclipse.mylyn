@@ -19,6 +19,7 @@ import junit.framework.TestCase;
 /**
  * @author David Green
  */
+@SuppressWarnings("resource")
 public class LocationTrackingReaderTest extends TestCase {
 
 	public void testCharOffset() throws IOException {
