@@ -117,4 +117,17 @@
     <module>org.eclipse.mylyn.docs.epub-feature</module>
     <module>org.eclipse.mylyn.docs-site</module>
   </modules>
+  
+  <distributionManagement>
+    <repository>
+      <id>repo.eclipse.org</id>
+      <name>Mylyn Repository - Releases</name>
+      <url>https://repo.eclipse.org/content/repositories/mylyn-releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>repo.eclipse.org</id>
+      <name>Mylyn Repository - Snapshots</name>
+      <url>https://repo.eclipse.org/content/repositories/mylyn-snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
 </project>
