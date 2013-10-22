@@ -591,4 +591,8 @@ public class CommonTestUtil {
 		return NetUtil.getProxyForUrl("https://mylyn.org/secure/index.txt") != null;
 	}
 
+	public static boolean skipBrowserTests() {
+		return Boolean.parseBoolean(System.getProperty("mylyn.test.skipBrowserTests"));
+	}
+
 }

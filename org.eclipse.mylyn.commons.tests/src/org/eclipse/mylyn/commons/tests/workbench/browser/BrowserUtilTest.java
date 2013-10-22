@@ -13,6 +13,7 @@ package org.eclipse.mylyn.commons.tests.workbench.browser;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.workbench.EditorHandle;
 import org.eclipse.mylyn.commons.workbench.browser.AbstractUrlHandler;
 import org.eclipse.mylyn.commons.workbench.browser.BrowserUtil;
@@ -76,12 +77,20 @@ public class BrowserUtilTest extends TestCase {
 	}
 
 	public void testUrlHandlerPriorityNullHandle() {
+		if (CommonTestUtil.skipBrowserTests()) {
+			System.err.println("Skipping BrowserUtilTest.testUrlHandlerPriorityNullHandle() to avoid browser crash");
+			return;
+		}
 		BrowserUtil.openUrl("http://mylyn.org", 0);
 		assertTrue(LowPriorityHandler.queried);
 		assertTrue(HighPriorityHandler.queried);
 	}
 
 	public void testUrlHandlerPriorityLow() {
+		if (CommonTestUtil.skipBrowserTests()) {
+			System.err.println("Skipping BrowserUtilTest.testUrlHandlerPriorityLow() to avoid browser crash");
+			return;
+		}
 		LowPriorityHandler.handle = new EditorHandle();
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		Object result = BrowserUtil.openUrl(page, "http://mylyn.org", 0);
@@ -91,6 +100,10 @@ public class BrowserUtilTest extends TestCase {
 	}
 
 	public void testUrlHandlerPriorityHigh() {
+		if (CommonTestUtil.skipBrowserTests()) {
+			System.err.println("Skipping BrowserUtilTest.testUrlHandlerPriorityHigh() to avoid browser crash");
+			return;
+		}
 		LowPriorityHandler.handle = new EditorHandle();
 		HighPriorityHandler.handle = new EditorHandle();
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
