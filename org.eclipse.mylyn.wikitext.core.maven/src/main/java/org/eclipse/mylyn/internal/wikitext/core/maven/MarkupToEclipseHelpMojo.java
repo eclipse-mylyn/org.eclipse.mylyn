@@ -66,7 +66,6 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 	 * Source folder.
 	 * 
 	 * @parameter expression="${basedir}/src/main/docs"
-	 * @readonly
 	 * @required
 	 */
 	protected File sourceFolder;
