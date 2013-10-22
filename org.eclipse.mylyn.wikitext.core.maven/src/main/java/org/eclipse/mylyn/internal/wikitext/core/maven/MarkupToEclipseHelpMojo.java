@@ -37,11 +37,13 @@ import org.eclipse.mylyn.internal.wikitext.core.parser.builder.DefaultSplittingS
 import org.eclipse.mylyn.internal.wikitext.core.parser.builder.NoSplittingStrategy;
 import org.eclipse.mylyn.internal.wikitext.core.parser.builder.SplitOutlineItem;
 import org.eclipse.mylyn.internal.wikitext.core.parser.builder.SplittingHtmlDocumentBuilder;
+import org.eclipse.mylyn.internal.wikitext.core.parser.builder.SplittingMarkupToEclipseToc;
 import org.eclipse.mylyn.internal.wikitext.core.parser.builder.SplittingOutlineParser;
 import org.eclipse.mylyn.internal.wikitext.core.parser.builder.SplittingStrategy;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.util.MarkupToEclipseToc;
 import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 
 import com.google.common.collect.Lists;
@@ -70,12 +72,20 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 	protected File sourceFolder;
 
 	/**
-	 * The filename format to use when generating output filenames. Defaults to {@code $1.html} where {@code $1} is the
-	 * name of the page.
+	 * The filename format to use when generating output filenames for HTML files. Defaults to {@code $1.html} where
+	 * {@code $1} is the name of the source file without extension.
 	 * 
 	 * @parameter
 	 */
 	protected String htmlFilenameFormat = "$1.html"; //$NON-NLS-1$
+
+	/**
+	 * The filename format to use when generating output filenames for Eclipse help table of contents XML files.
+	 * Defaults to {@code $1-toc.xml} where {@code $1} is the name of the source file without extension.
+	 * 
+	 * @parameter
+	 */
+	protected String xmlFilenameFormat = "$1-toc.xml"; //$NON-NLS-1$
 
 	/**
 	 * Specify the title of the output document. If unspecified, the title is the filename (without extension).
@@ -182,6 +192,14 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 	 */
 	protected List<String> stylesheetUrls = Lists.newArrayList();
 
+	/**
+	 * the prefix to URLs in the toc.xml, typically the relative path from the plugin to the help files. For example, if
+	 * the help file is in 'help/index.html' then the help prefix would be 'help'
+	 * 
+	 * @parameter
+	 */
+	protected String helpPrefix;
+
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		try {
 			ensureOutputFolderExists();
@@ -259,25 +277,69 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 				SplittingStrategy splittingStrategy = createSplittingStrategy();
 				SplittingOutlineParser outlineParser = createOutlineParser(markupLanguage, splittingStrategy);
 
-				SplitOutlineItem item = outlineParser.parse(markupContent);
-				item.setSplitTarget(htmlOutputFile.getName());
+				SplitOutlineItem rootTocItem = outlineParser.parse(markupContent);
+				rootTocItem.setSplitTarget(htmlOutputFile.getName());
 
-				SplittingHtmlDocumentBuilder splittingBuilder = createSplittingBuilder(builder, item, htmlOutputFile);
+				SplittingHtmlDocumentBuilder splittingBuilder = createSplittingBuilder(builder, rootTocItem,
+						htmlOutputFile);
 
 				MarkupParser parser = new MarkupParser();
 				parser.setMarkupLanguage(markupLanguage);
 				parser.setBuilder(splittingBuilder);
 
 				parser.parse(markupContent);
+
+				createEclipseHelpToc(rootTocItem, sourceFile, relativePath, htmlOutputFile, name);
 			} finally {
-				try {
-					writer.close();
-				} catch (IOException e) {
-					throw new BuildFailureException(format("Cannot write to file {0}: {1}", htmlOutputFile,
-							e.getMessage()));
-				}
+				close(writer, htmlOutputFile);
 			}
 		}
+	}
+
+	private void close(Writer writer, File file) {
+		try {
+			writer.close();
+		} catch (IOException e) {
+			throw new BuildFailureException(format("Cannot write to file {0}: {1}", file, e.getMessage()));
+		}
+	}
+
+	private void createEclipseHelpToc(SplitOutlineItem rootTocItem, File sourceFile, String relativePath,
+			File htmlOutputFile, String name) {
+		File tocOutputFile = computeTocFile(htmlOutputFile, name);
+		if (!tocOutputFile.exists() || tocOutputFile.lastModified() < sourceFile.lastModified()) {
+			Writer writer = createWriter(tocOutputFile);
+			try {
+
+				MarkupToEclipseToc toEclipseToc = new SplittingMarkupToEclipseToc();
+
+				toEclipseToc.setHelpPrefix(helpPrefix);
+				toEclipseToc.setBookTitle(title == null ? name : title);
+				toEclipseToc.setCopyrightNotice(copyrightNotice);
+
+				if (relativePath.length() > 0) {
+					String prefix = helpPrefix == null ? "" : helpPrefix;
+					if (prefix.length() > 0) {
+						prefix += "/";
+					}
+					prefix += relativePath;
+					toEclipseToc.setHelpPrefix(prefix.replaceAll("\\\\", "/"));
+				}
+				toEclipseToc.setHtmlFile(htmlOutputFile.getName());
+
+				String tocXml = toEclipseToc.createToc(rootTocItem);
+				writer.write(tocXml);
+			} catch (IOException e) {
+				throw new BuildFailureException(format("Cannot write to file {0}: {1}", tocOutputFile, e.getMessage()),
+						e);
+			} finally {
+				close(writer, tocOutputFile);
+			}
+		}
+	}
+
+	private File computeTocFile(File htmlFile, String name) {
+		return new File(htmlFile.getParentFile(), xmlFilenameFormat.replace("$1", name)); //$NON-NLS-1$
 	}
 
 	private SplittingHtmlDocumentBuilder createSplittingBuilder(HtmlDocumentBuilder builder, SplitOutlineItem item,

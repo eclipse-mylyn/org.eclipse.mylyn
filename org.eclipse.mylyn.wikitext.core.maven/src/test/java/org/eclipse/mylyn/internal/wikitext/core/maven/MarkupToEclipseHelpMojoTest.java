@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.wikitext.core.maven;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -67,6 +68,7 @@ public class MarkupToEclipseHelpMojoTest {
 
 	private File calculateSourceFolder() {
 		URL resource = MarkupToEclipseHelpMojoTest.class.getResource("/test.textile");
+		checkNotNull(resource);
 		checkState(resource.getProtocol().equals("file"));
 		String path = resource.getPath();
 		File file = new File(path);
@@ -129,6 +131,7 @@ public class MarkupToEclipseHelpMojoTest {
 		markupToEclipseHelp.execute();
 
 		assertTrue(computeOutputFile("test.html").exists());
+		assertTrue(computeOutputFile("test-toc.xml").exists());
 		assertTrue(computeOutputFile("Top-Level-Heading-2.html").exists());
 		assertTrue(computeOutputFile("Top-Level-Heading-3.html").exists());
 		assertTrue(computeOutputFile("images/wikitext-32.gif").exists());
@@ -136,6 +139,8 @@ public class MarkupToEclipseHelpMojoTest {
 
 		assertHasContent("test.html", "<title>Test This</title>");
 		assertHasContent("test.html", "<h1 id=\"TestFile\">Test File</h1>");
+		assertHasContent("test-toc.xml", "<toc topic=\"test.html\" label=\"Test This\">");
+		assertHasContent("test-toc.xml", "<topic href=\"Top-Level-Heading-2.html\" label=\"Top Level Heading 2\">");
 		assertHasContent("Top-Level-Heading-2.html", "<h1 id=\"TopLevelHeading2\">Top Level Heading 2</h1>");
 		assertHasContent("Top-Level-Heading-3.html", "<h1 id=\"TopLevelHeading3\">Top Level Heading 3</h1>");
 	}
