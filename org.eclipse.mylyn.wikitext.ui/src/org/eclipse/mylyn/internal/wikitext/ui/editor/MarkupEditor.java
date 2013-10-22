@@ -76,7 +76,7 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitione
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupDocumentProvider;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupTokenScanner;
 import org.eclipse.mylyn.internal.wikitext.ui.util.NlsResourceBundle;
-import org.eclipse.mylyn.wikitext.core.WikiText;
+import org.eclipse.mylyn.wikitext.core.osgi.WikiText;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;

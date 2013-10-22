@@ -7,4 +7,10 @@ Bundle-Vendor: %Bundle-Vendor
 Bundle-Localization: META-INF/l10n/bundle
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.eclipse.mylyn.wikitext.core.osgi
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.mylyn.wikitext.core;bundle-version="2.0.0",
+ com.google.guava;bundle-version="12.0.0"
+Export-Package: org.eclipse.mylyn.internal.wikitext.core.osgi;x-internal:=true,
+ org.eclipse.mylyn.internal.wikitext.core.osgi.util;x-internal:=true,
+ org.eclipse.mylyn.wikitext.core.osgi
+Bundle-Activator: org.eclipse.mylyn.internal.wikitext.core.osgi.WikiTextPlugin

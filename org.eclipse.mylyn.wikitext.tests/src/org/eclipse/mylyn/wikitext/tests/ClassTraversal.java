@@ -20,7 +20,7 @@ import java.util.Enumeration;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.internal.wikitext.core.WikiTextPlugin;
+import org.eclipse.mylyn.internal.wikitext.core.osgi.WikiTextPlugin;
 import org.osgi.framework.Bundle;
 
 /**

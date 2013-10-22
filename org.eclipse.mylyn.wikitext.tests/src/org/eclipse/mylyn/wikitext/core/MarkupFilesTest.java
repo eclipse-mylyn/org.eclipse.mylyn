@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.wikitext.core;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -30,6 +32,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.mylyn.internal.wikitext.core.osgi.WikiTextPlugin;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
@@ -254,6 +257,8 @@ public class MarkupFilesTest extends TestSuite {
 		log.info("******************* Discovering tests....");
 
 		if (Platform.isRunning()) {
+			assertNotNull(WikiTextPlugin.getDefault()); // ensure OSGi bundle is initialized
+
 			Bundle bundle = Platform.getBundle("org.eclipse.mylyn.wikitext.tests");
 			Enumeration<URL> entries = bundle.findEntries("/" + MARKUP_LANGUAGE_TESTS, null, false);
 			while (entries.hasMoreElements()) {

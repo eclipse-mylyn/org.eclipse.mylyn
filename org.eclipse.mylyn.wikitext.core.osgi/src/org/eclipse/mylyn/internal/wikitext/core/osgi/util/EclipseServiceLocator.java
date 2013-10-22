@@ -8,14 +8,14 @@
  * Contributors:
  *     David Green - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.internal.wikitext.core.util;
+package org.eclipse.mylyn.internal.wikitext.core.osgi.util;
 
 import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.eclipse.mylyn.internal.wikitext.core.WikiTextPlugin;
+import org.eclipse.mylyn.internal.wikitext.core.osgi.WikiTextPlugin;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 

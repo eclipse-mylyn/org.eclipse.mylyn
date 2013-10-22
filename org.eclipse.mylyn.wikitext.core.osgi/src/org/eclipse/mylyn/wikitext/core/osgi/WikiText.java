@@ -9,11 +9,11 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.wikitext.core;
+package org.eclipse.mylyn.wikitext.core.osgi;
 
 import java.util.Set;
 
-import org.eclipse.mylyn.internal.wikitext.core.WikiTextPlugin;
+import org.eclipse.mylyn.internal.wikitext.core.osgi.WikiTextPlugin;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 import org.eclipse.mylyn.wikitext.core.validation.MarkupValidator;
@@ -27,7 +27,7 @@ import org.eclipse.mylyn.wikitext.core.validation.MarkupValidator;
  * @noextend This class is not intended to be subclassed by clients.
  * @noinstantiate This class is not intended to be instantiated by clients.
  * @author David Green
- * @since 1.0
+ * @since 2.0
  */
 public class WikiText {
 	/**

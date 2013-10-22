@@ -18,7 +18,7 @@ import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.internal.wikitext.core.WikiTextPlugin;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.wikitext.tests.ClassTraversal.Visitor;
 
 /**
@@ -85,7 +85,7 @@ public class DiscoveryTestSuite extends TestSuite implements ClassFilter {
 	 * indicate if the eclipse runtime is active
 	 */
 	public static boolean inEclipseRuntime() {
-		return WikiTextPlugin.getDefault() != null;
+		return Platform.isRunning();
 	}
 
 	public boolean filter(Class<?> clazz) {

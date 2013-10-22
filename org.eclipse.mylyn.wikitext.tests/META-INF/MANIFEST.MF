@@ -31,6 +31,7 @@ Require-Bundle: org.junit;bundle-version="4.8",
  org.jsoup;bundle-version="1.7.2",
  com.google.guava;bundle-version="12.0.0"
 Export-Package: 
+ org.eclipse.mylyn.internal.wikitext.core.osgi.util;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.core.parser.builder;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.core.parser.html;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.core.util.css;x-internal:=true,
@@ -48,6 +49,7 @@ Export-Package:
  org.eclipse.mylyn.wikitext.confluence.core;x-internal:=true,
  org.eclipse.mylyn.wikitext.confluence.core.resources;x-internal:=true,
  org.eclipse.mylyn.wikitext.core;x-internal:=true,
+ org.eclipse.mylyn.wikitext.core.osgi;x-internal:=true,
  org.eclipse.mylyn.wikitext.core.parser;x-internal:=true,
  org.eclipse.mylyn.wikitext.core.parser.builder;x-internal:=true,
  org.eclipse.mylyn.wikitext.core.parser.builder.resources;x-internal:=true,

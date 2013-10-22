@@ -8,7 +8,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.internal.wikitext.core;
+package org.eclipse.mylyn.internal.wikitext.core.osgi;
 
 import java.text.MessageFormat;
 import java.util.Collections;
@@ -26,7 +26,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.internal.wikitext.core.util.EclipseServiceLocator;
+import org.eclipse.mylyn.internal.wikitext.core.osgi.util.EclipseServiceLocator;
 import org.eclipse.mylyn.internal.wikitext.core.validation.ValidationRules;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
@@ -47,6 +47,8 @@ import com.google.common.collect.Sets;
  * @see ServiceLocator
  */
 public class WikiTextPlugin extends Plugin {
+
+	private static final String EXTENSION_POINT_NAMESPACE = "org.eclipse.mylyn.wikitext.core"; //$NON-NLS-1$
 
 	private static final String EXTENSION_MARKUP_LANGUAGE = "markupLanguage"; //$NON-NLS-1$
 
@@ -157,6 +159,7 @@ public class WikiTextPlugin extends Plugin {
 		}
 		int lastIndexOfDot = name.lastIndexOf('.');
 		String extension = lastIndexOfDot == -1 ? name : name.substring(lastIndexOfDot + 1);
+		extension = extension.toLowerCase();
 		Class<? extends MarkupLanguage> languageClass = languageByFileExtension.get(extension);
 		if (languageClass != null) {
 			return languageNameByLanguage.get(languageClass);
@@ -244,8 +247,8 @@ public class WikiTextPlugin extends Plugin {
 			if (validationRulesByLanguageName == null) {
 				Map<String, ValidationRules> validationRulesByLanguageName = new HashMap<String, ValidationRules>();
 
-				IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(getPluginId(),
-						EXTENSION_VALIDATION_RULES);
+				IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(
+						getExtensionPointNamespace(), EXTENSION_VALIDATION_RULES);
 				if (extensionPoint != null) {
 					IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
 					for (IConfigurationElement element : configurationElements) {
@@ -320,8 +323,8 @@ public class WikiTextPlugin extends Plugin {
 				Map<String, String> languageExtensionByLanguage = new HashMap<String, String>();
 				Map<Class<? extends MarkupLanguage>, String> languageNameByLanguage = new HashMap<Class<? extends MarkupLanguage>, String>();
 
-				IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(getPluginId(),
-						EXTENSION_MARKUP_LANGUAGE);
+				IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(
+						getExtensionPointNamespace(), EXTENSION_MARKUP_LANGUAGE);
 				if (extensionPoint != null) {
 					IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
 					for (IConfigurationElement element : configurationElements) {
@@ -370,6 +373,7 @@ public class WikiTextPlugin extends Plugin {
 							String[] parts = fileExtensions.split("\\s*,\\s*"); //$NON-NLS-1$
 							for (String part : parts) {
 								if (part.length() != 0) {
+									part = part.toLowerCase();
 									Class<? extends MarkupLanguage> previous = languageByFileExtension.put(part,
 											d.getClass());
 									if (previous != null) {
@@ -396,6 +400,10 @@ public class WikiTextPlugin extends Plugin {
 				this.languageNameByLanguage = languageNameByLanguage;
 			}
 		}
+	}
+
+	private String getExtensionPointNamespace() {
+		return EXTENSION_POINT_NAMESPACE;
 	}
 
 	public void log(int severity, String message) {

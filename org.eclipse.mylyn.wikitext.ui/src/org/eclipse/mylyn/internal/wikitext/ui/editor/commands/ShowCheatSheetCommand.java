@@ -21,7 +21,7 @@ import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.actions.ContextHelpAction;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.help.HelpContent;
 import org.eclipse.mylyn.internal.wikitext.ui.util.InformationPresenterUtil;
-import org.eclipse.mylyn.wikitext.core.WikiText;
+import org.eclipse.mylyn.wikitext.core.osgi.WikiText;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Control;

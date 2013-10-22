@@ -39,6 +39,8 @@ public class ServiceLocator {
 
 	protected final ClassLoader classLoader;
 
+	private static Object implementationClassLock = new Object();
+
 	private static Class<? extends ServiceLocator> implementationClass;
 
 	private static Pattern CLASS_NAME_PATTERN = Pattern.compile("\\s*([^\\s#]+)?#?.*"); //$NON-NLS-1$
@@ -55,11 +57,13 @@ public class ServiceLocator {
 	 * @see #getInstance()
 	 */
 	public static ServiceLocator getInstance(ClassLoader classLoader) {
-		if (implementationClass != null) {
-			try {
-				return implementationClass.getConstructor(ClassLoader.class).newInstance(classLoader);
-			} catch (Exception e) {
-				throw new IllegalStateException(e);
+		synchronized (implementationClassLock) {
+			if (implementationClass != null) {
+				try {
+					return implementationClass.getConstructor(ClassLoader.class).newInstance(classLoader);
+				} catch (Exception e) {
+					throw new IllegalStateException(e);
+				}
 			}
 		}
 		return new ServiceLocator(classLoader);
@@ -164,7 +168,9 @@ public class ServiceLocator {
 	}
 
 	public static void setImplementation(Class<? extends ServiceLocator> implementationClass) {
-		ServiceLocator.implementationClass = implementationClass;
+		synchronized (implementationClassLock) {
+			ServiceLocator.implementationClass = implementationClass;
+		}
 	}
 
 	private interface MarkupLanguageVisitor {
