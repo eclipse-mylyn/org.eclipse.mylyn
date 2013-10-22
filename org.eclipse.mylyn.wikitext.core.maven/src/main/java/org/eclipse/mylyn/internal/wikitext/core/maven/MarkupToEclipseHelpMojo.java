@@ -312,18 +312,10 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 
 				MarkupToEclipseToc toEclipseToc = new SplittingMarkupToEclipseToc();
 
-				toEclipseToc.setHelpPrefix(helpPrefix);
 				toEclipseToc.setBookTitle(title == null ? name : title);
 				toEclipseToc.setCopyrightNotice(copyrightNotice);
+				toEclipseToc.setHelpPrefix(calculateHelpPrefix(relativePath));
 
-				if (relativePath.length() > 0) {
-					String prefix = helpPrefix == null ? "" : helpPrefix;
-					if (prefix.length() > 0) {
-						prefix += "/";
-					}
-					prefix += relativePath;
-					toEclipseToc.setHelpPrefix(prefix.replaceAll("\\\\", "/"));
-				}
 				toEclipseToc.setHtmlFile(htmlOutputFile.getName());
 
 				String tocXml = toEclipseToc.createToc(rootTocItem);
@@ -335,6 +327,17 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 				close(writer, tocOutputFile);
 			}
 		}
+	}
+
+	protected String calculateHelpPrefix(String relativePath) {
+		String prefix = helpPrefix == null ? "" : helpPrefix;
+		if (relativePath.length() > 0) {
+			if (prefix.length() > 0) {
+				prefix += "/";
+			}
+			prefix += relativePath;
+		}
+		return prefix.length() == 0 ? null : prefix.replaceAll("\\\\", "/");
 	}
 
 	private File computeTocFile(File htmlFile, String name) {

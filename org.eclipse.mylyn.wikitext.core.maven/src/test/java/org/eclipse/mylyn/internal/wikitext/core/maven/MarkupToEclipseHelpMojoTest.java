@@ -15,6 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
@@ -33,7 +34,6 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder.Stylesheet;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -47,12 +47,7 @@ import com.google.common.io.Files;
 public class MarkupToEclipseHelpMojoTest {
 
 	@Rule
-	public TemporaryFolder temporaryFolder = new TemporaryFolder() {
-		@Override
-		public void delete() {
-			// ignore
-		}
-	};
+	public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();
@@ -162,6 +157,33 @@ public class MarkupToEclipseHelpMojoTest {
 		assertEquals(markupToEclipseHelp.title, builder.getTitle());
 	}
 
+	@Test
+	public void calculateHelpPrefixRoot() {
+		assertNull(markupToEclipseHelp.calculateHelpPrefix(""));
+	}
+
+	@Test
+	public void calculateHelpPrefix() {
+		assertEquals("test/one", markupToEclipseHelp.calculateHelpPrefix("test/one"));
+	}
+
+	@Test
+	public void calculateHelpPrefixRootWithHelpPrefix() {
+		markupToEclipseHelp.helpPrefix = "help";
+		assertEquals("help", markupToEclipseHelp.calculateHelpPrefix(""));
+	}
+
+	@Test
+	public void calculateHelpPrefixWithHelpPrefix() {
+		markupToEclipseHelp.helpPrefix = "help";
+		assertEquals("help/test/one", markupToEclipseHelp.calculateHelpPrefix("test/one"));
+	}
+
+	@Test
+	public void calculateHelpPrefixWindowsSeparator() {
+		assertEquals("test/one", markupToEclipseHelp.calculateHelpPrefix("test\\one"));
+	}
+
 	private void assertHasContent(String path, String expectedContent) {
 		File file = computeOutputFile(path);
 		assertTrue(file.toString(), file.exists());
@@ -179,21 +201,4 @@ public class MarkupToEclipseHelpMojoTest {
 		return new File(temporaryFolder.getRoot(), path);
 	}
 
-	@After
-	public void listFiles() {
-		listFiles("", temporaryFolder.getRoot());
-	}
-
-	private void listFiles(String string, File base) {
-		File[] children = base.listFiles();
-		if (children != null) {
-			for (File child : children) {
-				String path = string + "/" + child.getName();
-				System.out.println(path);
-				if (child.isDirectory()) {
-					listFiles(path, child);
-				}
-			}
-		}
-	}
 }
