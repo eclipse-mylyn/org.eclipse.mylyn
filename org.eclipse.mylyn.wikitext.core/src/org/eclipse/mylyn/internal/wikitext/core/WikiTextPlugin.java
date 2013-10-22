@@ -34,6 +34,8 @@ import org.eclipse.mylyn.wikitext.core.validation.MarkupValidator;
 import org.eclipse.mylyn.wikitext.core.validation.ValidationRule;
 import org.osgi.framework.BundleContext;
 
+import com.google.common.collect.Sets;
+
 /**
  * The WikiText plug-in class. Use only in an Eclipse runtime environment. Programs should use the
  * {@link ServiceLocator} instead of this class if possible. Stand-alone programs (that is, those programs that do not
@@ -119,12 +121,25 @@ public class WikiTextPlugin extends Plugin {
 			MarkupLanguage language = languageClass.newInstance();
 			language.setName(name);
 			language.setExtendsLanguage(languageExtensionByLanguage.get(name));
+			configureFileExtensions(language);
 			return language;
 		} catch (Exception e) {
 			log(IStatus.ERROR, MessageFormat.format(Messages.getString("WikiTextPlugin.2"), name, //$NON-NLS-1$
 					languageClass.getName(), e.getMessage()), e);
 		}
 		return null;
+	}
+
+	private void configureFileExtensions(MarkupLanguage language) {
+		Set<String> fileExtensions = Sets.newHashSet();
+		for (Entry<String, Class<? extends MarkupLanguage>> entry : languageByFileExtension.entrySet()) {
+			if (entry.getValue() == language.getClass()) {
+				fileExtensions.add(entry.getKey());
+			}
+		}
+		if (!fileExtensions.isEmpty()) {
+			language.setFileExtensions(fileExtensions);
+		}
 	}
 
 	/**
@@ -370,6 +385,7 @@ public class WikiTextPlugin extends Plugin {
 									}
 								}
 							}
+
 						}
 					}
 				}

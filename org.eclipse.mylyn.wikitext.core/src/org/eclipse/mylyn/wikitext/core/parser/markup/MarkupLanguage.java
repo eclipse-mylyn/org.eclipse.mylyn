@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.parser.markup;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.Writer;
@@ -17,6 +20,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,6 +31,8 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.ImpliedHyperlinkRepla
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
 import org.eclipse.mylyn.wikitext.core.util.LocationTrackingReader;
 import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
+
+import com.google.common.collect.ImmutableSet;
 
 /**
  * A markup language, which knows its formatting rules and is able to process content based on {@link Block},
@@ -54,6 +60,8 @@ public abstract class MarkupLanguage implements Cloneable {
 	private String name;
 
 	private String extendsLanguage;
+
+	private Set<String> fileExtensions;
 
 	private boolean filterGenerativeBlocks;
 
@@ -117,11 +125,12 @@ public abstract class MarkupLanguage implements Cloneable {
 		initProcessors();
 		ContentState state = createState();
 		state.setMarkupContent(markupContent);
-		LocationTrackingReader reader = new LocationTrackingReader(new StringReader(markupContent));
 
 		DocumentBuilder builder = parser.getBuilder();
-
 		builder.setLocator(state);
+
+		@SuppressWarnings("resource")
+		LocationTrackingReader reader = new LocationTrackingReader(new StringReader(markupContent));
 		try {
 			if (asDocument) {
 				builder.beginDocument();
@@ -541,6 +550,33 @@ public abstract class MarkupLanguage implements Cloneable {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * Provides the normal file extensions of this markup language. The default implementation returns a set of
+	 * {@link #getName()}.
+	 * 
+	 * @return the file extensions
+	 * @since 2.0
+	 */
+	public Set<String> getFileExtensions() {
+		if (fileExtensions == null) {
+			return Collections.singleton(getName());
+		}
+		return fileExtensions;
+	}
+
+	/**
+	 * Sets the normal file extensions of this markup language.
+	 * 
+	 * @return the file extensions
+	 * @since 2.0
+	 * @see #getFileExtensions()
+	 */
+	public void setFileExtensions(Set<String> fileExtensions) {
+		checkNotNull(fileExtensions, "Must specify file extensions"); //$NON-NLS-1$
+		checkArgument(!fileExtensions.isEmpty(), "File extensions must not be empty"); //$NON-NLS-1$
+		this.fileExtensions = ImmutableSet.copyOf(fileExtensions);
 	}
 
 	/**
