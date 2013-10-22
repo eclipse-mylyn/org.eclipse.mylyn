@@ -755,6 +755,9 @@ h1. Upgrading From Mylyn WikiText 1.x to 2.x
 For 2.0 Mylyn WikiText has been reorganized into several new jar files (OSGi bundles) to better manage dependencies.
 
 Notable changes when upgrading from 1.x to 2.0:
+
+h2. Ant Usage in 2.0
+
 # The Ant classpath has changed.  The following jar files will be needed for running Ant tasks:
 ** @org.eclipse.mylyn.wikitext.core.jar@
 ** @org.eclipse.mylyn.wikitext.core.ant.jar@ (new for 2.0)
@@ -767,6 +770,10 @@ Notable changes when upgrading from 1.x to 2.0:
 ** @org.eclipse.mylyn.wikitext.twiki.core.jar@ (only required for TWiki)
 # Ant taskdefs must reference a new properties file @<taskdef resource="org/eclipse/mylyn/wikitext/core/ant/tasks.properties"@ see "Ant Examples":#AntExamples for more details
 
+h2. API Changes in 2.0
+
+* @org.eclipse.mylyn.wikitext.core.validation.MarkupValidator@ no longer accepts an @IProgressMonitor@
+* @org.eclipse.mylyn.wikitext.core.WikiText@ has been moved to @org.eclipse.mylyn.wikitext.core.osgi.WikiText@
 
 h1. More Information
 
