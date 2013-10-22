@@ -1256,6 +1256,20 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><p>not a comment  more text</p></body>"));
 	}
 
+	public void testComment_SingleLine_MultipleBlocks() throws IOException {
+		String input = "<!-- X -->Lorem<!-- Y -->Ipsum<!-- Z -->";
+		String html = parser.parseToHtml(input);
+		TestUtil.println(html);
+		assertTrue(html.contains("<p>LoremIpsum</p>"));
+	}
+
+	public void testComment_SingleLine_MultipleBlocks_OnMultipleLines() throws IOException {
+		String input = "<!-- X -->Lorem<!-- Y -->Ipsum\n<!-- Z -->";
+		String html = parser.parseToHtml(input);
+		TestUtil.println(html);
+		assertTrue(html.contains("<p>LoremIpsum</p>"));
+	}
+
 	public void testComment_MultiLine() throws IOException {
 		String html = parser.parseToHtml("<!-- comment\nwith\nMultiple lines of text -->\n");
 		TestUtil.println("HTML: \n" + html);

@@ -151,6 +151,7 @@ public abstract class MarkupLanguage implements Cloneable {
 					state.setLineLength(line.length());
 
 					for (;;) {
+						popClosedBlocks(nestedBlocks);
 						if (nestedBlocks != null && !nestedBlocks.isEmpty()) {
 							Block nestedParent = nestedBlocks.peek();
 							int closeOffset = nestedParent.findCloseOffset(line, lineOffset);
@@ -246,6 +247,17 @@ public abstract class MarkupLanguage implements Cloneable {
 			}
 		} finally {
 			builder.setLocator(null);
+		}
+	}
+
+	private void popClosedBlocks(Stack<Block> blocks) {
+		while (blocks != null && !blocks.isEmpty()) {
+			Block block = blocks.peek();
+			if (block.isClosed()) {
+				blocks.pop();
+			} else {
+				break;
+			}
 		}
 	}
 
