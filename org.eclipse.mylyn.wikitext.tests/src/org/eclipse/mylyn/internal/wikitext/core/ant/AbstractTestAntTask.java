@@ -9,7 +9,7 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.wikitext.core.util.anttask;
+package org.eclipse.mylyn.internal.wikitext.core.ant;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.util.ResourceBundle;
 
 import junit.framework.TestCase;
 
@@ -37,6 +38,10 @@ public abstract class AbstractTestAntTask extends TestCase {
 		tempFolder = File.createTempFile(getClass().getSimpleName(), ".tmp");
 		tempFolder.delete();
 		tempFolder.mkdirs();
+	}
+
+	protected ResourceBundle loadTaskdefBundle() {
+		return ResourceBundle.getBundle("org.eclipse.mylyn.wikitext.core.ant.tasks");
 	}
 
 	private String computeLanguageName() {

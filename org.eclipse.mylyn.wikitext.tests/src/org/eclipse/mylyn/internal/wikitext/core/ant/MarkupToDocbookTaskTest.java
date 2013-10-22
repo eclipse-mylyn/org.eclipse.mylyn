@@ -9,14 +9,14 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.wikitext.core.util.anttask;
+package org.eclipse.mylyn.internal.wikitext.core.ant;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ResourceBundle;
 import java.util.regex.Pattern;
+
 
 public class MarkupToDocbookTaskTest extends AbstractTestAntTask {
 
@@ -106,7 +106,6 @@ public class MarkupToDocbookTaskTest extends AbstractTestAntTask {
 	}
 
 	public void testTaskdef() {
-		ResourceBundle bundle = ResourceBundle.getBundle(MarkupToDocbookTask.class.getPackage().getName() + ".tasks");
-		assertEquals(MarkupToDocbookTask.class.getName(), bundle.getString("wikitext-to-docbook"));
+		assertEquals(MarkupToDocbookTask.class.getName(), loadTaskdefBundle().getString("wikitext-to-docbook"));
 	}
 }

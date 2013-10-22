@@ -9,7 +9,7 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.wikitext.core.util.anttask;
+package org.eclipse.mylyn.internal.wikitext.core.ant;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -61,5 +61,9 @@ public class HtmlToMarkupTaskTest extends AbstractTestAntTask {
 			writer.close();
 		}
 		return htmlFile;
+	}
+
+	public void testTaskdef() {
+		assertEquals(HtmlToMarkupTask.class.getName(), loadTaskdefBundle().getString("html-to-wikitext"));
 	}
 }

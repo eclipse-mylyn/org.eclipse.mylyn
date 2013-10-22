@@ -9,7 +9,7 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.wikitext.core.util.anttask;
+package org.eclipse.mylyn.internal.wikitext.core.ant;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

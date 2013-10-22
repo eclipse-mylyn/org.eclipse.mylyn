@@ -41,7 +41,7 @@
 	
 	
 	<target name="plugin-docs" depends="compile-tasks" description="generate plugin help documentation">
-		<taskdef resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties" classpathref="wikitext.ant.classpath"/>
+		<taskdef resource="org/eclipse/mylyn/wikitext/core/ant/tasks.properties" classpathref="wikitext.ant.classpath"/>
 		
 		<wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.textile.core.TextileLanguage" 
 			multipleOutputFiles="true"

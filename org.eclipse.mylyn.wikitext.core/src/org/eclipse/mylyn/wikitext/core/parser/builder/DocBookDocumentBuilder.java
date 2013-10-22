@@ -29,7 +29,6 @@ import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.util.MarkupToDocbook;
 import org.eclipse.mylyn.wikitext.core.util.FormattingXMLStreamWriter;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
-import org.eclipse.mylyn.wikitext.core.util.anttask.MarkupToDocbookTask;
 
 /**
  * A builder that can emit <a href="http://www.docbook.org/">Docbook</a>

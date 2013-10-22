@@ -26,7 +26,6 @@ import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.core.util.DefaultXmlStreamWriter;
 import org.eclipse.mylyn.wikitext.core.util.FormattingXMLStreamWriter;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
-import org.eclipse.mylyn.wikitext.core.util.anttask.MarkupToDitaTask;
 
 /**
  * a document builder that can produce OASIS DITA output in the form of a book map and multiple topic output files, one

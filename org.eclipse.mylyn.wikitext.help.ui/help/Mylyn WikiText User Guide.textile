@@ -205,7 +205,7 @@ bc..
 		</fileset>
 	</path>
 
-	<taskdef classpathref="wikitext.classpath" resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties" />
+	<taskdef classpathref="wikitext.classpath" resource="org/eclipse/mylyn/wikitext/core/ant/tasks.properties" />
 	
 	<target name="generate-help" depends="init" description="Generate Eclipse help from textile source">
 		<wikitext-to-eclipse-help markupLanguage="Textile" 
@@ -416,7 +416,7 @@ p. To use this Ant task you'll need to add a @<taskdef>@ to your Ant script as f
 
 bc. 
 	<taskdef classpathref="wikitext.classpath" 
-		resource="org/eclipse/mylyn/internal/wikitext/mediawiki/core/tasks/tasks.properties"/>
+		resource="org/eclipse/mylyn/wikitext/core/ant/tasks.properties"/>
 
 The following describes the Ant task and its configurable options:
 
@@ -495,7 +495,7 @@ pre..
 p. You may decide to customize your markup language by subclassing @MarkupLanguageConfiguration@.  In this case your Ant script may look more like this:
 
 pre.. 
-<taskdef resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties"
+<taskdef resource="org/eclipse/mylyn/wikitext/core/ant/tasks.properties"
 	classpathref="wikitext.classpath"
 	loaderref="wikitext.classpath.loader"/>
 <typedef name="languageConfiguration"
@@ -749,6 +749,24 @@ CSS styles are also used to modify the appearance of rendered markup, both in th
 !images/editor-preferences-appearance.png!
 
 See "Editor Preferences":#EditorPreferences for a list of supported styles.
+
+h1. Upgrading From Mylyn WikiText 1.x to 2.x
+
+For 2.0 Mylyn WikiText has been reorganized into several new jar files (OSGi bundles) to better manage dependencies.
+
+Notable changes when upgrading from 1.x to 2.0:
+# The Ant classpath has changed.  The following jar files will be needed for running Ant tasks:
+** @org.eclipse.mylyn.wikitext.core.jar@
+** @org.eclipse.mylyn.wikitext.core.ant.jar@ (new for 2.0)
+** @org.eclipse.mylyn.wikitext.textile.core.jar@ (only required for Textile)
+** @org.eclipse.mylyn.wikitext.confluence.core.jar@ (only required for Confluence)
+** @org.eclipse.mylyn.wikitext.markdown.core.jar@ (only required for Markdown)
+** @org.eclipse.mylyn.wikitext.creole.core.jar@ (only required for Creole)
+** @org.eclipse.mylyn.wikitext.mediawiki.core.jar@ (only required for MediaWiki)
+** @org.eclipse.mylyn.wikitext.tracwiki.core.jar@ (only required for TracWiki)
+** @org.eclipse.mylyn.wikitext.twiki.core.jar@ (only required for TWiki)
+# Ant taskdefs must reference a new properties file @<taskdef resource="org/eclipse/mylyn/wikitext/core/ant/tasks.properties"@ see "Ant Examples":#AntExamples for more details
+
 
 h1. More Information
 

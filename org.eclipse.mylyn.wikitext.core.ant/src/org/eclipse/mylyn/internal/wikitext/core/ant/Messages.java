@@ -9,13 +9,13 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.wikitext.core.util.anttask;
+package org.eclipse.mylyn.internal.wikitext.core.ant;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 class Messages {
-	private static final String BUNDLE_NAME = "org.eclipse.mylyn.wikitext.core.util.anttask.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.wikitext.core.ant.messages"; //$NON-NLS-1$
 
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 

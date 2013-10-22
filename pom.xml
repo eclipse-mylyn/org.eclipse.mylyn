@@ -84,6 +84,7 @@
     <module>org.eclipse.mylyn.wikitext.core</module>
     <module>org.eclipse.mylyn.wikitext.core.maven</module>
     <module>org.eclipse.mylyn.wikitext.core.osgi</module>
+    <module>org.eclipse.mylyn.wikitext.core.ant</module>
     <module>org.eclipse.mylyn.wikitext.creole.core</module>
     <module>org.eclipse.mylyn.wikitext.creole.ui</module>
     <module>org.eclipse.mylyn.wikitext.extras-feature</module>

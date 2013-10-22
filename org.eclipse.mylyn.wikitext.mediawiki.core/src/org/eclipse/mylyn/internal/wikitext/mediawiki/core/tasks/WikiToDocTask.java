@@ -36,6 +36,7 @@ import java.util.regex.Pattern;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.eclipse.mylyn.internal.wikitext.core.ant.MarkupTask;
 import org.eclipse.mylyn.internal.wikitext.core.parser.builder.DefaultSplittingStrategy;
 import org.eclipse.mylyn.internal.wikitext.core.parser.builder.NoSplittingStrategy;
 import org.eclipse.mylyn.internal.wikitext.core.parser.builder.SplitOutlineItem;
@@ -50,7 +51,6 @@ import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
-import org.eclipse.mylyn.wikitext.core.util.anttask.MarkupTask;
 import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
 import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem.Severity;
 import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
