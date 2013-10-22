@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -43,6 +44,7 @@ import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 
+import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 
 /**
@@ -173,6 +175,13 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 	 */
 	protected String copyrightNotice = null;
 
+	/**
+	 * The list of CSS stylesheet URLs relative to the {@link #sourceFolder}.
+	 * 
+	 * @parameter
+	 */
+	protected List<String> stylesheetUrls = Lists.newArrayList();
+
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		try {
 			ensureOutputFolderExists();
@@ -297,7 +306,7 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 		return splittingStrategy;
 	}
 
-	private HtmlDocumentBuilder createRootBuilder(Writer writer, String name) {
+	protected HtmlDocumentBuilder createRootBuilder(Writer writer, String name) {
 		HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer, formatOutput);
 		builder.setTitle(title == null ? name : title);
 		builder.setEmitDtd(emitDoctype);
@@ -311,7 +320,14 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 		builder.setPrependImagePrefix(prependImagePrefix);
 		builder.setXhtmlStrict(xhtmlStrict);
 		builder.setCopyrightNotice(copyrightNotice);
+		configureStylesheets(builder);
 		return builder;
+	}
+
+	protected void configureStylesheets(HtmlDocumentBuilder builder) {
+		for (String cssStylesheetUrl : stylesheetUrls) {
+			builder.addCssStylesheet(new HtmlDocumentBuilder.Stylesheet(cssStylesheetUrl));
+		}
 	}
 
 	private Writer createWriter(File outputFile) {

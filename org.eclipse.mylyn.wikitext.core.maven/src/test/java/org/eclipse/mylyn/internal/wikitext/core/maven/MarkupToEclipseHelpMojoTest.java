@@ -12,19 +12,26 @@
 package org.eclipse.mylyn.internal.wikitext.core.maven;
 
 import static com.google.common.base.Preconditions.checkState;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.net.URL;
+import java.util.UUID;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder.Stylesheet;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -33,6 +40,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 
 import com.google.common.base.Charsets;
+import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 
 public class MarkupToEclipseHelpMojoTest {
@@ -130,6 +138,23 @@ public class MarkupToEclipseHelpMojoTest {
 		assertHasContent("test.html", "<h1 id=\"TestFile\">Test File</h1>");
 		assertHasContent("Top-Level-Heading-2.html", "<h1 id=\"TopLevelHeading2\">Top Level Heading 2</h1>");
 		assertHasContent("Top-Level-Heading-3.html", "<h1 id=\"TopLevelHeading3\">Top Level Heading 3</h1>");
+	}
+
+	@Test
+	public void configureStylesheetUrls() {
+		markupToEclipseHelp.stylesheetUrls = Lists.newArrayList("test/foo.css", "bar.css");
+		HtmlDocumentBuilder builder = mock(HtmlDocumentBuilder.class);
+		markupToEclipseHelp.configureStylesheets(builder);
+		verify(builder, times(2)).addCssStylesheet(any(Stylesheet.class));
+	}
+
+	@Test
+	public void createBuilder() {
+		markupToEclipseHelp.copyrightNotice = UUID.randomUUID().toString();
+		markupToEclipseHelp.title = UUID.randomUUID().toString();
+		HtmlDocumentBuilder builder = markupToEclipseHelp.createRootBuilder(new StringWriter(), "test");
+		assertEquals(markupToEclipseHelp.copyrightNotice, builder.getCopyrightNotice());
+		assertEquals(markupToEclipseHelp.title, builder.getTitle());
 	}
 
 	private void assertHasContent(String path, String expectedContent) {
