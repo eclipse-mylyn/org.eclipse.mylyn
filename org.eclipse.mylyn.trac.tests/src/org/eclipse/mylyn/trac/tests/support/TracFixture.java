@@ -197,4 +197,15 @@ public class TracFixture extends TestFixture {
 		return super.isExcluded() || excluded;
 	}
 
+	public void waitToGuaranteeTaskUpdate() {
+		if (getVersion().compareTo("0.12") < 0) {
+			// Trac 0.11 can fail with database errors if subsequent task updates happen too quickly
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
+
 }

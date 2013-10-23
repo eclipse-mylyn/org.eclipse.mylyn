@@ -199,6 +199,7 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 		AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
 		ITask task = harness.createTask("attachmentChangesLastModifiedDate");
 		Date lastModified = task.getModificationDate();
+		harness.getFixture().waitToGuaranteeTaskUpdate();
 		// XXX the test case fails when comment == null
 		attachmentHandler.postContent(repository, task, new TextTaskAttachmentSource("abc"), "comment", null, null);
 
@@ -440,6 +441,8 @@ public class TracTaskDataHandlerXmlRpcTest extends TestCase {
 		// change ticket in repository
 		ticket.putBuiltinValue(Key.PRIORITY, "trivial");
 		client.updateTicket(ticket, "changing priority", null);
+
+		harness.getFixture().waitToGuaranteeTaskUpdate();
 
 		// submit conflicting change 
 		try {
