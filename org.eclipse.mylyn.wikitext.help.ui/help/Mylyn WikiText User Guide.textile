@@ -1,7 +1,7 @@
 h1. Overview
 
 This guide provides basic instructions on the use of WikiText.  
-WikiText provides extensions to the Mylyn task editor supporting "lightweight markup languages":http://en.wikipedia.org/wiki/Lightweight_markup_language such as Textile and MediaWiki.  WikiText also provides a wiki text editor for Eclipse and Ant tasks for converting lightweight markup to HTML and other formats.
+WikiText provides extensions to the Mylyn task editor supporting "lightweight markup languages":http://en.wikipedia.org/wiki/Lightweight_markup_language such as Textile and MediaWiki.  WikiText also provides a wiki text editor for Eclipse, a Maven plug-ins and Ant tasks for generating from lightweight markup to HTML and other formats.
 
 For information about integrating your application with WikiText please see the *WikiText Developer Guide*.
 
@@ -165,9 +165,9 @@ WikiText adds markup language capabilities for common Bugzilla content when used
 !{margin-left:2em;}images/task-editor-bugzilla-text.png!
  
 
-h1. Markup Conversion
+h1. Markup Generation
 
-Lightweight markup is designed to be readily converted to HTML.  WikiText provides a means to convert markup to:
+Lightweight markup (wikitext) is designed to be readily converted to HTML.  WikiText provides a means to generate HTML and these output formats:
 
 * HTML
 * "DocBook":http://www.docbook.org
@@ -176,7 +176,7 @@ Lightweight markup is designed to be readily converted to HTML.  WikiText provid
 * "XSL-FO":http://en.wikipedia.org/wiki/XSL_Formatting_Objects
 * Other markup languages (e.g. Textile, Confluence)
 
-h2. Conversion In Eclipse
+h2. Generation In Eclipse
 
 These conversions can be made by right-clicking any @*.textile@, @*.tracwiki@, @*.mediawiki@, @*.twiki@, or @*.confluence@ resource in the Eclipse UI: 
 
@@ -186,13 +186,57 @@ Performing a conversion from the UI will cause corresponding files (@*.xml@, @*.
 
 More control over the conversion process can be achieved by using Ant build scripts (described below).
 
-h3. Wiki Markup Conversion
+h3. Content Generation from Wiki Markup
 
 Mylyn WikiText can convert from one wiki markup language to another.  Currently supported output formats are Textile and Confluence.  Examples of conversions include MediaWiki to Textile, Confluence to Textile, MediaWiki to Confluence, etc.
 
-Wiki markup conversion is performed in Eclipse, see "Conversion In Eclipse":#ConversionInEclipse for more details.
+Wiki markup conversion is performed in Eclipse, see "Conversion In Eclipse":#GenerationInEclipse for more details.
 
-h2. Conversion using Ant build scripts
+h2. Content Generation from Wiki Markup using Maven
+
+A Maven plug-in is provided that can generate HTML and Eclipse Help content from wiki markup.  The plug-in scans a source folder and generates HTML and a corresponding Eclipse help table of contents file for each wiki markup source file.  Non-wiki source files (such as CSS and images) are copied as-is to the output folder.
+
+The Mylyn WikiText plug-in can be included by adding the following Maven repository as a plug-in repository to your Maven configuration: @https://repo.eclipse.org/content/repositories/mylyn-releases/@
+
+To add the Maven repository via your pom, use the following syntax:
+
+bc. 
+	<pluginRepositories>
+		<pluginRepository>
+			<id>eclipse.org-mylyn</id>
+			<url>https://repo.eclipse.org/content/repositories/mylyn-releases/</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+To include the plug-in as a build step, add the following syntax:
+
+bc. 
+		<plugin>
+			<groupId>org.eclipse.mylyn.docs</groupId>
+			<artifactId>org.eclipse.mylyn.wikitext.core.maven</artifactId>
+			<configuration>
+				<sourceFolder>src</sourceFolder>
+				<copyrightNotice>${help.copyrightNotice}</copyrightNotice>
+				<title>${help.documentTitle}</title>
+				<multipleOutputFiles>true</multipleOutputFiles>
+				<navigationImages>true</navigationImages>
+				<formatOutput>true</formatOutput>
+				<stylesheetUrls>
+					<param>styles/main.css</param>
+				</stylesheetUrls>
+			</configuration>
+			<executions>
+				<execution>
+					<goals>
+						<goal>eclipse-help</goal>
+					</goals>
+				</execution>
+			</executions>
+		</plugin>
+
+Refer to the Maven plug-in help for details on the available configuration parameters. 
+
+h2. Content Generation from Wiki Markup using Ant
 
 "Ant":http://www.apache.org build scripts may also be used to drive a markup conversion.  The following is an example of how to drive conversion from Textile markup to Eclipse help format (to HTML and toc.xml):
 
@@ -467,7 +511,7 @@ The first option requires less effort, but results in less control over the outp
 h2. Html To WikiText
 
 Mylyn WikiText can generate wiki markup from most simple HTML files using the @<html-to-wikitext>@ Ant task.
-In addition to "common task options":#ConversionusingAntbuildscripts the following are available:
+In addition to "common task options":#ContentGenerationfromWikiMarkupusingAnt the following are available:
 
 |_. Option |_. Usage |
 | @file@ | The source file.  Not required if a fileset is specified. |
