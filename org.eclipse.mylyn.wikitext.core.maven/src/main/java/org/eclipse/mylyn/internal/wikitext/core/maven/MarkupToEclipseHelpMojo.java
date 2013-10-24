@@ -286,7 +286,7 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 				rootTocItem.setSplitTarget(htmlOutputFile.getName());
 
 				SplittingHtmlDocumentBuilder splittingBuilder = createSplittingBuilder(builder, rootTocItem,
-						htmlOutputFile);
+						htmlOutputFile, relativePath);
 
 				MarkupParser parser = new MarkupParser();
 				parser.setMarkupLanguage(markupLanguage);
@@ -355,13 +355,15 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 		return new File(htmlFile.getParentFile(), xmlFilenameFormat.replace("$1", name)); //$NON-NLS-1$
 	}
 
-	private SplittingHtmlDocumentBuilder createSplittingBuilder(HtmlDocumentBuilder builder, SplitOutlineItem item,
-			File htmlOutputFile) {
+	protected SplittingHtmlDocumentBuilder createSplittingBuilder(HtmlDocumentBuilder builder, SplitOutlineItem item,
+			File htmlOutputFile, String relativePath) {
 		SplittingHtmlDocumentBuilder splittingBuilder = new SplittingHtmlDocumentBuilder();
 		splittingBuilder.setRootBuilder(builder);
 		splittingBuilder.setOutline(item);
 		splittingBuilder.setRootFile(htmlOutputFile);
 		splittingBuilder.setNavigationImages(navigationImages);
+		splittingBuilder.setNavigationImagePath(computeResourcePath(splittingBuilder.getNavigationImagePath(),
+				relativePath));
 		splittingBuilder.setFormatting(formatOutput);
 		return splittingBuilder;
 	}

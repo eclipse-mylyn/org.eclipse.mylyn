@@ -32,6 +32,8 @@ import java.util.UUID;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.eclipse.mylyn.internal.wikitext.core.parser.builder.SplitOutlineItem;
+import org.eclipse.mylyn.internal.wikitext.core.parser.builder.SplittingHtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder.Stylesheet;
 import org.eclipse.mylyn.wikitext.core.parser.util.MarkupToEclipseToc;
@@ -223,6 +225,20 @@ public class MarkupToEclipseHelpMojoTest {
 		assertEquals("styles/main.css", markupToEclipseHelp.computeResourcePath("styles/main.css", ""));
 		assertEquals("../styles/main.css", markupToEclipseHelp.computeResourcePath("styles/main.css", "one"));
 		assertEquals("../../styles/main.css", markupToEclipseHelp.computeResourcePath("styles/main.css", "one/two"));
+	}
+
+	@Test
+	public void createSplittingBuilderWithRelativePath() {
+		assertNavigationImagesPath("images", "");
+		assertNavigationImagesPath("../../images", "one/two");
+	}
+
+	private void assertNavigationImagesPath(String expected, String relativePath) {
+		HtmlDocumentBuilder builder = mock(HtmlDocumentBuilder.class);
+		SplitOutlineItem item = mock(SplitOutlineItem.class);
+		SplittingHtmlDocumentBuilder splittingBuilder = markupToEclipseHelp.createSplittingBuilder(builder, item,
+				mock(File.class), relativePath);
+		assertEquals(expected, splittingBuilder.getNavigationImagePath());
 	}
 
 	private void assertHasContent(String path, String expectedContent) {
