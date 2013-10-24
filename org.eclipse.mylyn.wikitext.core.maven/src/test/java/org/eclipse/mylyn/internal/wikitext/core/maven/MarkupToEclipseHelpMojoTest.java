@@ -40,6 +40,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
+import org.mockito.ArgumentCaptor;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
@@ -145,15 +146,25 @@ public class MarkupToEclipseHelpMojoTest {
 	public void configureStylesheetUrls() {
 		markupToEclipseHelp.stylesheetUrls = Lists.newArrayList("test/foo.css", "bar.css");
 		HtmlDocumentBuilder builder = mock(HtmlDocumentBuilder.class);
-		markupToEclipseHelp.configureStylesheets(builder);
+		markupToEclipseHelp.configureStylesheets(builder, "");
 		verify(builder, times(2)).addCssStylesheet(any(Stylesheet.class));
+	}
+
+	@Test
+	public void configureStylesheetUrlsWithRelativePath() {
+		markupToEclipseHelp.stylesheetUrls = Lists.newArrayList("bar.css");
+		HtmlDocumentBuilder builder = mock(HtmlDocumentBuilder.class);
+		markupToEclipseHelp.configureStylesheets(builder, "one/two");
+		ArgumentCaptor<Stylesheet> captor = ArgumentCaptor.forClass(Stylesheet.class);
+		verify(builder).addCssStylesheet(captor.capture());
+		assertEquals("../../bar.css", captor.getValue().getUrl());
 	}
 
 	@Test
 	public void createBuilder() {
 		markupToEclipseHelp.copyrightNotice = UUID.randomUUID().toString();
 		markupToEclipseHelp.title = UUID.randomUUID().toString();
-		HtmlDocumentBuilder builder = markupToEclipseHelp.createRootBuilder(new StringWriter(), "test");
+		HtmlDocumentBuilder builder = markupToEclipseHelp.createRootBuilder(new StringWriter(), "test", "");
 		assertEquals(markupToEclipseHelp.copyrightNotice, builder.getCopyrightNotice());
 		assertEquals(markupToEclipseHelp.title, builder.getTitle());
 	}
@@ -205,6 +216,13 @@ public class MarkupToEclipseHelpMojoTest {
 		markupToEclipseHelp.tocAnchorLevel = 3;
 		toc = markupToEclipseHelp.createMarkupToEclipseToc("", file, "Test");
 		assertEquals(3, toc.getAnchorLevel());
+	}
+
+	@Test
+	public void computeResourcePath() {
+		assertEquals("styles/main.css", markupToEclipseHelp.computeResourcePath("styles/main.css", ""));
+		assertEquals("../styles/main.css", markupToEclipseHelp.computeResourcePath("styles/main.css", "one"));
+		assertEquals("../../styles/main.css", markupToEclipseHelp.computeResourcePath("styles/main.css", "one/two"));
 	}
 
 	private void assertHasContent(String path, String expectedContent) {

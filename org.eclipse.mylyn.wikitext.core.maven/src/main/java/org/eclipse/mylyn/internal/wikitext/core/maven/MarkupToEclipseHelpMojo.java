@@ -277,7 +277,7 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 
 			Writer writer = createWriter(htmlOutputFile);
 			try {
-				HtmlDocumentBuilder builder = createRootBuilder(writer, name);
+				HtmlDocumentBuilder builder = createRootBuilder(writer, name, relativePath);
 
 				SplittingStrategy splittingStrategy = createSplittingStrategy();
 				SplittingOutlineParser outlineParser = createOutlineParser(markupLanguage, splittingStrategy);
@@ -381,7 +381,7 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 		return splittingStrategy;
 	}
 
-	protected HtmlDocumentBuilder createRootBuilder(Writer writer, String name) {
+	protected HtmlDocumentBuilder createRootBuilder(Writer writer, String name, String relativePath) {
 		HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer, formatOutput);
 		builder.setTitle(title == null ? name : title);
 		builder.setEmitDtd(emitDoctype);
@@ -395,14 +395,27 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 		builder.setPrependImagePrefix(prependImagePrefix);
 		builder.setXhtmlStrict(xhtmlStrict);
 		builder.setCopyrightNotice(copyrightNotice);
-		configureStylesheets(builder);
+		configureStylesheets(builder, relativePath);
 		return builder;
 	}
 
-	protected void configureStylesheets(HtmlDocumentBuilder builder) {
+	protected void configureStylesheets(HtmlDocumentBuilder builder, String relativePath) {
 		for (String cssStylesheetUrl : stylesheetUrls) {
-			builder.addCssStylesheet(new HtmlDocumentBuilder.Stylesheet(cssStylesheetUrl));
+			builder.addCssStylesheet(new HtmlDocumentBuilder.Stylesheet(computeResourcePath(cssStylesheetUrl,
+					relativePath)));
 		}
+	}
+
+	protected String computeResourcePath(String resourcePath, String relativePath) {
+		String path = resourcePath;
+		String prefix = relativePath.replaceAll("[^\\\\/]+", "..").replace('\\', '/');
+		if (prefix.length() > 0) {
+			if (!resourcePath.startsWith("/")) {
+				prefix += '/';
+			}
+			path = prefix + resourcePath;
+		}
+		return path;
 	}
 
 	private Writer createWriter(File outputFile) {
