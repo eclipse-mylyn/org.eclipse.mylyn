@@ -184,6 +184,25 @@ public class ChangeInfoTest extends TestCase {
 		assertCategoriesEqual(ApprovalUtil.IPCL, it.next());
 	}
 
+	@Test
+	public void testCustomApprovalType() throws IOException {
+		ChangeInfo changeInfo = parseFile("testdata/ChangeInfo_CustomApprovalType.json");
+
+		Map<String, LabelInfo> labels = changeInfo.getLabels();
+		assertNotNull(labels);
+		assertEquals(2, labels.size());
+		Set<ApprovalType> approvalTypes = changeInfo.convertToApprovalTypes();
+		assertNotNull(approvalTypes);
+		assertEquals(2, approvalTypes.size());
+		Iterator<ApprovalType> it = approvalTypes.iterator();
+		assertCategoriesEqual(ApprovalUtil.CRVW, it.next());
+		ApprovalType custom = it.next();
+		assertEquals("Non-Author-Code-Review", custom.getCategory().getName());
+		// that's all we know about the approval, the rest is void
+		assertNull(custom.getCategory().getAbbreviatedName());
+		assertTrue(custom.getValues().isEmpty());
+	}
+
 	// Utility methods
 
 	public static void assertHasCodeReviewLabels(ChangeInfo changeInfo) {

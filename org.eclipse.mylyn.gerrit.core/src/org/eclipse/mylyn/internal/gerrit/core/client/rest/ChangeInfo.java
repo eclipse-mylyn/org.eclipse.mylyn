@@ -186,10 +186,17 @@ public class ChangeInfo {
 		Set<ApprovalType> result = new LinkedHashSet<ApprovalType>();
 		for (Entry<String, LabelInfo> entry : labels.entrySet()) {
 			ApprovalCategory approvalCategory = ApprovalUtil.findCategoryByNameWithDash(entry.getKey());
+			if (approvalCategory == null) {
+				// it's a custom approval type
+				approvalCategory = new ApprovalCategory(new ApprovalCategory.Id(null), entry.getKey());
+			}
 			List<ApprovalCategoryValue> valueList = new ArrayList<ApprovalCategoryValue>();
-			for (Entry<String, String> valueEntry : entry.getValue().getValues().entrySet()) {
-				valueList.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(approvalCategory.getId(),
-						ApprovalUtil.parseShort(valueEntry.getKey())), valueEntry.getValue()));
+			if (entry.getValue() != null && entry.getValue().getValues() != null) {
+				// custom approval types may not provide values
+				for (Entry<String, String> valueEntry : entry.getValue().getValues().entrySet()) {
+					valueList.add(new ApprovalCategoryValue(new ApprovalCategoryValue.Id(approvalCategory.getId(),
+							ApprovalUtil.parseShort(valueEntry.getKey())), valueEntry.getValue()));
+				}
 			}
 			ApprovalType approvalType = new ApprovalType(approvalCategory, valueList);
 			result.add(approvalType);
