@@ -84,7 +84,7 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 		List<IApprovalType> approvalTypes = getModelRepository().getApprovalTypes();
 		List<IApprovalType> approvalTypesWithLabel = new ArrayList<IApprovalType>(approvalTypes.size());
 		for (IApprovalType approvalType : approvalTypes) {
-			if (!approvalType.getKey().equals(approvalType.getName())) {
+			if (!approvalType.getName().equals(approvalType.getKey())) {
 				approvalTypesWithLabel.add(approvalType);
 			}
 		}

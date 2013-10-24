@@ -299,6 +299,8 @@ public class GerritClient extends ReviewsClient {
 			if (!hasAllReviewers(changeDetail.getAccounts(), reviewers)) {
 				merge(changeDetail.getAccounts(), reviewers);
 			}
+		} else if (changeDetail.getApprovalTypes() == null && getGerritConfig() != null) {
+			changeDetail.convertSubmitRecordsToApprovalTypes(getGerritConfig().getApprovalTypes());
 		}
 		return changeDetail;
 	}
