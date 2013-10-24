@@ -201,6 +201,9 @@ public class CommonImages {
 
 	public static final ImageDescriptor FILTER_COMPLETE = create(T_ELCL, "filter-complete.gif"); //$NON-NLS-1$
 
+	/**
+	 * @since 3.11
+	 */
 	public static final ImageDescriptor FILTER_MY_TASKS = create(T_ELCL, "filter-mytasks.png"); //$NON-NLS-1$
 
 	public static final ImageDescriptor FILTER_ARCHIVE = create(T_ELCL, "filter-archive.gif"); //$NON-NLS-1$
