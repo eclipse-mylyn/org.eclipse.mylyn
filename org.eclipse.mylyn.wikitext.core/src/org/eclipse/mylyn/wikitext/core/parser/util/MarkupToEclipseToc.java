@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.parser.util;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
@@ -41,6 +43,8 @@ public class MarkupToEclipseToc {
 
 	private String copyrightNotice;
 
+	private int anchorLevel = -1;
+
 	public String parse(String markupContent) {
 		if (markupLanguage == null) {
 			throw new IllegalStateException("Must set markupLanguage"); //$NON-NLS-1$
@@ -69,6 +73,11 @@ public class MarkupToEclipseToc {
 
 		emitToc(writer, root.getChildren());
 
+		if (anchorLevel >= 0) {
+			writer.writeEmptyElement("anchor"); //$NON-NLS-1$
+			writer.writeAttribute("id", "additions"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+
 		writer.writeEndElement(); // toc
 
 		writer.writeEndDocument();
@@ -89,7 +98,8 @@ public class MarkupToEclipseToc {
 
 			// bug 260065: only append document anchor name if this is not the first item in the file.
 			OutlineItem previous = item.getPrevious();
-			if (previous != null && previous.getParent() != null) {
+			boolean hasPrevious = previous != null && previous.getParent() != null;
+			if (hasPrevious) {
 				String fileOfPrevious = computeFile(previous);
 				fileOfPrevious = adjustForPrefix(fileOfPrevious);
 
@@ -103,6 +113,11 @@ public class MarkupToEclipseToc {
 
 			if (!item.getChildren().isEmpty()) {
 				emitToc(writer, item.getChildren());
+			}
+
+			if (item.getLevel() <= anchorLevel) {
+				writer.writeEmptyElement("anchor"); //$NON-NLS-1$
+				writer.writeAttribute("id", item.getId() + "-additions"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
 			writer.writeEndElement(); // topic
@@ -146,6 +161,34 @@ public class MarkupToEclipseToc {
 
 	public void setHtmlFile(String htmlFile) {
 		this.htmlFile = htmlFile;
+	}
+
+	/**
+	 * Indicates the heading level at which anchors of the form {@code &lt;anchor id="additions"/&gt;} should be
+	 * emitted. A level of 0 corresponds to the root of the document, and levels 1-6 correspond to heading levels h1,
+	 * h2...h6.
+	 * <p>
+	 * The default is -1.
+	 * </p>
+	 * 
+	 * @since 2.0
+	 * @see #setAnchorLevel(int)
+	 */
+	public int getAnchorLevel() {
+		return anchorLevel;
+	}
+
+	/**
+	 * Provides the heading level at which anchors should be emitted.
+	 * 
+	 * @see #getAnchorLevel()
+	 * @param anchorLevel
+	 *            a number >= 0 and <= 6
+	 * @since 2.0
+	 */
+	public void setAnchorLevel(int anchorLevel) {
+		checkArgument(anchorLevel >= 0 && anchorLevel <= 6, "The anchor level must be >= 0 and <= 6"); //$NON-NLS-1$
+		this.anchorLevel = anchorLevel;
 	}
 
 	protected XmlStreamWriter createXmlStreamWriter(Writer out) {

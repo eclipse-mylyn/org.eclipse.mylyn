@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<toc topic="Test.html" label="Test">
+	<topic href="Test.html" label="First">
+		<topic href="Test.html#Second" label="Second"></topic>
+		<anchor id="First-additions"/>
+	</topic>
+	<topic href="Test.html#Third" label="Third">
+		<anchor id="Third-additions"/>
+	</topic>
+	<anchor id="additions"/>
+</toc>

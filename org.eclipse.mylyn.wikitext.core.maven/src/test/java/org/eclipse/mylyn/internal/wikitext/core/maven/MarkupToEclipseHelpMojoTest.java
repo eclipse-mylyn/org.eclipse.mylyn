@@ -34,6 +34,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder.Stylesheet;
+import org.eclipse.mylyn.wikitext.core.parser.util.MarkupToEclipseToc;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -182,6 +183,28 @@ public class MarkupToEclipseHelpMojoTest {
 	@Test
 	public void calculateHelpPrefixWindowsSeparator() {
 		assertEquals("test/one", markupToEclipseHelp.calculateHelpPrefix("test\\one"));
+	}
+
+	@Test
+	public void createMarkupToEclipseTocCopyrightNotice() {
+		File file = mock(File.class);
+		doReturn("Test.html").when(file).getName();
+
+		markupToEclipseHelp.copyrightNotice = "Test Copyright";
+		MarkupToEclipseToc toc = markupToEclipseHelp.createMarkupToEclipseToc("", file, "Test");
+		assertEquals("Test Copyright", toc.getCopyrightNotice());
+	}
+
+	@Test
+	public void createMarkupToEclipseTocAnchorLevel() {
+		File file = mock(File.class);
+		doReturn("Test.html").when(file).getName();
+
+		MarkupToEclipseToc toc = markupToEclipseHelp.createMarkupToEclipseToc("", file, "Test");
+		assertEquals(0, toc.getAnchorLevel());
+		markupToEclipseHelp.tocAnchorLevel = 3;
+		toc = markupToEclipseHelp.createMarkupToEclipseToc("", file, "Test");
+		assertEquals(3, toc.getAnchorLevel());
 	}
 
 	private void assertHasContent(String path, String expectedContent) {

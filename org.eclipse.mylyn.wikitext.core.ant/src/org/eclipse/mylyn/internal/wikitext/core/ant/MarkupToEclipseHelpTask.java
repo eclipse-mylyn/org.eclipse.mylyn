@@ -33,6 +33,8 @@ public class MarkupToEclipseHelpTask extends MarkupToHtmlTask {
 
 	private String helpPrefix;
 
+	private int tocAnchorLevel = 0;
+
 	@Override
 	void processed(String markupContent, SplitOutlineItem item, final File baseDir, final File source) {
 		super.processed(markupContent, item, baseDir, source);
@@ -58,6 +60,7 @@ public class MarkupToEclipseHelpTask extends MarkupToHtmlTask {
 				MarkupToEclipseToc toEclipseToc = new SplittingMarkupToEclipseToc();
 
 				toEclipseToc.setHelpPrefix(helpPrefix);
+				toEclipseToc.setAnchorLevel(tocAnchorLevel);
 				System.out.println("Help: " + baseDir + " " + htmlOutputFile); //$NON-NLS-1$//$NON-NLS-2$
 				toEclipseToc.setBookTitle(title == null ? name : title);
 				toEclipseToc.setCopyrightNotice(getCopyrightNotice());
@@ -128,6 +131,25 @@ public class MarkupToEclipseHelpTask extends MarkupToHtmlTask {
 	 */
 	public void setHelpPrefix(String helpPrefix) {
 		this.helpPrefix = helpPrefix;
+	}
+
+	/**
+	 * Indicates the heading level at which anchors of the form {@code &lt;anchor id="additions"/&gt;} should be
+	 * emitted. A level of 0 corresponds to the root of the document, and levels 1-6 correspond to heading levels h1,
+	 * h2...h6.
+	 * <p>
+	 * The default level is 0 (the document root)
+	 * </p>
+	 */
+	public int getTocAnchorLevel() {
+		return tocAnchorLevel;
+	}
+
+	/**
+	 * @see #getTocAnchorLevel()
+	 */
+	public void setTocAnchorLevel(int tocAnchorLevel) {
+		this.tocAnchorLevel = tocAnchorLevel;
 	}
 
 }

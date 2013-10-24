@@ -193,6 +193,18 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 	 */
 	protected String helpPrefix;
 
+	/**
+	 * Indicates the heading level at which anchors of the form {@code &lt;anchor id="additions"/&gt;} should be
+	 * emitted. A level of 0 corresponds to the root of the document, and levels 1-6 correspond to heading levels h1,
+	 * h2...h6.
+	 * <p>
+	 * The default level is 0 (the document root)
+	 * </p>
+	 * 
+	 * @parameter
+	 */
+	protected int tocAnchorLevel = 0;
+
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		try {
 			ensureOutputFolderExists();
@@ -303,16 +315,9 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 		if (!tocOutputFile.exists() || tocOutputFile.lastModified() < sourceFile.lastModified()) {
 			Writer writer = createWriter(tocOutputFile);
 			try {
-
-				MarkupToEclipseToc toEclipseToc = new SplittingMarkupToEclipseToc();
-
-				toEclipseToc.setBookTitle(title == null ? name : title);
-				toEclipseToc.setCopyrightNotice(copyrightNotice);
-				toEclipseToc.setHelpPrefix(calculateHelpPrefix(relativePath));
-
-				toEclipseToc.setHtmlFile(htmlOutputFile.getName());
-
+				MarkupToEclipseToc toEclipseToc = createMarkupToEclipseToc(relativePath, htmlOutputFile, name);
 				String tocXml = toEclipseToc.createToc(rootTocItem);
+
 				writer.write(tocXml);
 			} catch (IOException e) {
 				throw new BuildFailureException(format("Cannot write to file {0}: {1}", tocOutputFile, e.getMessage()),
@@ -321,6 +326,18 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 				close(writer, tocOutputFile);
 			}
 		}
+	}
+
+	protected MarkupToEclipseToc createMarkupToEclipseToc(String relativePath, File htmlOutputFile, String name) {
+		MarkupToEclipseToc toEclipseToc = new SplittingMarkupToEclipseToc();
+
+		toEclipseToc.setBookTitle(title == null ? name : title);
+		toEclipseToc.setCopyrightNotice(copyrightNotice);
+		toEclipseToc.setAnchorLevel(tocAnchorLevel);
+		toEclipseToc.setHelpPrefix(calculateHelpPrefix(relativePath));
+
+		toEclipseToc.setHtmlFile(htmlOutputFile.getName());
+		return toEclipseToc;
 	}
 
 	protected String calculateHelpPrefix(String relativePath) {
