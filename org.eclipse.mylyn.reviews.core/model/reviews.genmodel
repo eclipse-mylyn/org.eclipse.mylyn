@@ -15,7 +15,7 @@
       interfacePackageSuffix="core.model" metaDataPackageSuffix="core.model" classPackageSuffix="internal.core.model"
       utilityPackageSuffix="internal.core.model" providerPackageSuffix="edit.provider"
       presentationPackageSuffix="ui.model.presentations" testsPackageSuffix="core.model"
-      generateExampleClass="false" contentTypeIdentifier="" fileExtensions="xml" ecorePackage="reviews.ecore#/">
+      generateExampleClass="false" contentTypeIdentifier="" fileExtensions="reviews" ecorePackage="reviews.ecore#/">
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="reviews.ecore#//RequirementStatus">
       <genEnumLiterals ecoreEnumLiteral="reviews.ecore#//RequirementStatus/Unknown"/>
       <genEnumLiterals ecoreEnumLiteral="reviews.ecore#//RequirementStatus/Satisfied"/>
