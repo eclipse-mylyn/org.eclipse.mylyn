@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.gerrit.tests.core.client.cmpat;
+package org.eclipse.mylyn.gerrit.tests.core.client.compat;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,6 +78,23 @@ public class ChangeDetailXTest extends TestCase {
 		} catch (IllegalStateException e) {
 			// expected
 		}
+	}
+
+	@Test
+	public void testAbandoned() throws Exception {
+		ChangeDetailXAsResult result = parseFile("testdata/ChangeDetailX_abandoned.json");
+
+		assertEquals("2.0", result.jsonrpc);
+		assertEquals(3, result.id);
+		assertNotNull(result.result);
+
+		ChangeDetailX changeDetailX = result.result;
+
+		assertNull(changeDetailX.getApprovalTypes());
+		assertNull(changeDetailX.getSubmitRecords());
+
+		changeDetailX.convertSubmitRecordsToApprovalTypes(getTestConfig().getApprovalTypes());
+		assertNull(changeDetailX.getApprovalTypes()); // nothing has changed
 	}
 
 	private void assertLabelEqual(String expectedLabel, Label label) {

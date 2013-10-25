@@ -97,6 +97,9 @@ public class ChangeDetailX extends ChangeDetail {
 		if (approvalTypes != null) {
 			throw new IllegalStateException();
 		}
+		if (submitRecords == null) {
+			return;
+		}
 		approvalTypes = new LinkedHashSet<ApprovalType>();
 		for (SubmitRecord record : submitRecords) {
 			for (Label label : record.getLabels()) {

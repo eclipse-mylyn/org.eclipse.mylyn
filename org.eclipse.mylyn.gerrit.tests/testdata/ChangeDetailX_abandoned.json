@@ -1,0 +1,190 @@
+{
+	"jsonrpc" : "2.0",
+	"id" : 3,
+	"result" : {
+		"accounts" : {
+			"accounts" : [{
+					"id" : 1000001
+				}, {
+					"id" : {
+						"id" : 1000001
+					},
+					"preferredEmail" : "tests@mylyn.eclipse.org"
+				}
+			]
+		},
+		"allowsAnonymous" : true,
+		"canAbandon" : false,
+		"canPublish" : true,
+		"canRebase" : false,
+		"canRestore" : true,
+		"canRevert" : false,
+		"canDeleteDraft" : true,
+		"change" : {
+			"changeId" : {
+				"id" : 1
+			},
+			"changeKey" : {
+				"id" : "I1382707167100aaaaaaaaaaaaaaaaaaaaaaaaaaa"
+			},
+			"rowVersion" : 2,
+			"createdOn" : "2013-10-25 13:19:29.928000000",
+			"lastUpdatedOn" : "2013-10-25 13:19:31.580000000",
+			"sortKey" : "0028a95f00000001",
+			"owner" : {
+				"id" : 1000001
+			},
+			"dest" : {
+				"projectName" : {
+					"name" : "org.eclipse.mylyn.test"
+				},
+				"branchName" : "refs/heads/master"
+			},
+			"open" : false,
+			"status" : "A",
+			"nbrPatchSets" : 1,
+			"currentPatchSetId" : 1,
+			"subject" : "Test Change 1382707167100",
+			"mergeable" : false
+		},
+		"starred" : false,
+		"dependsOn" : [],
+		"neededBy" : [],
+		"patchSets" : [{
+				"id" : {
+					"changeId" : {
+						"id" : 1
+					},
+					"patchSetId" : 1
+				},
+				"revision" : {
+					"id" : "20ba11d5090d4892a0e6b0ee8162c5418b3491b7"
+				},
+				"uploader" : {
+					"id" : 1000001
+				},
+				"createdOn" : "2013-10-25 13:19:29.928000000",
+				"draft" : false
+			}
+		],
+		"approvals" : [],
+		"canSubmit" : false,
+		"messages" : [{
+				"key" : {
+					"changeId" : {
+						"id" : 1
+					},
+					"uuid" : "AAAAAX////8\u003d"
+				},
+				"author" : {
+					"id" : 1000001
+				},
+				"writtenOn" : "2013-10-25 13:19:31.578000000",
+				"message" : "Patch Set 1: Abandoned\n\nabandon, time: 1382707171627",
+				"patchset" : {
+					"changeId" : {
+						"id" : 1
+					},
+					"patchSetId" : 1
+				}
+			}
+		],
+		"currentPatchSetId" : {
+			"changeId" : {
+				"id" : 1
+			},
+			"patchSetId" : 1
+		},
+		"currentDetail" : {
+			"patchSet" : {
+				"id" : {
+					"changeId" : {
+						"id" : 1
+					},
+					"patchSetId" : 1
+				},
+				"revision" : {
+					"id" : "20ba11d5090d4892a0e6b0ee8162c5418b3491b7"
+				},
+				"uploader" : {
+					"id" : 1000001
+				},
+				"createdOn" : "2013-10-25 13:19:29.928000000",
+				"draft" : false
+			},
+			"info" : {
+				"key" : {
+					"changeId" : {
+						"id" : 1
+					},
+					"patchSetId" : 1
+				},
+				"subject" : "Test Change 1382707167100",
+				"message" : "Test Change 1382707167100\n\nChange-Id: I1382707167100aaaaaaaaaaaaaaaaaaaaaaaaaaa",
+				"author" : {
+					"name" : "Test",
+					"email" : "tests@mylyn.eclipse.org",
+					"when" : "2013-10-25 13:19:29.000000000",
+					"tz" : 120,
+					"accountId" : {
+						"id" : 1000001
+					}
+				},
+				"committer" : {
+					"name" : "Test",
+					"email" : "tests@mylyn.eclipse.org",
+					"when" : "2013-10-25 13:19:29.000000000",
+					"tz" : 120,
+					"accountId" : {
+						"id" : 1000001
+					}
+				},
+				"parents" : [{
+						"id" : {
+							"id" : "9a2f2ca8091521e76dcce271c42caa9fac5f3d54"
+						},
+						"shortMessage" : "Initial empty repository"
+					}
+				],
+				"revId" : "20ba11d5090d4892a0e6b0ee8162c5418b3491b7"
+			},
+			"patches" : [{
+					"key" : {
+						"patchSetId" : {
+							"changeId" : {
+								"id" : 1
+							},
+							"patchSetId" : 1
+						},
+						"fileName" : "/COMMIT_MSG"
+					},
+					"changeType" : "A",
+					"patchType" : "U",
+					"nbrComments" : 0,
+					"nbrDrafts" : 0,
+					"insertions" : 9,
+					"deletions" : 0,
+					"reviewedByCurrentUser" : false
+				}, {
+					"key" : {
+						"patchSetId" : {
+							"changeId" : {
+								"id" : 1
+							},
+							"patchSetId" : 1
+						},
+						"fileName" : "testFile1.txt"
+					},
+					"changeType" : "A",
+					"patchType" : "U",
+					"nbrComments" : 0,
+					"nbrDrafts" : 0,
+					"insertions" : 1,
+					"deletions" : 0,
+					"reviewedByCurrentUser" : false
+				}
+			]
+		},
+		"canEdit" : true
+	}
+}
