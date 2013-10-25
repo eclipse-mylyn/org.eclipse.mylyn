@@ -26,6 +26,7 @@ h4. Block Modifiers
 | ==notextile.== | Escaped block |
 | ==#== | Numeric list |
 | ==*== | Bulleted list |
+| ==###.== | Comment (excluded content) |
 
 h4. Links
 

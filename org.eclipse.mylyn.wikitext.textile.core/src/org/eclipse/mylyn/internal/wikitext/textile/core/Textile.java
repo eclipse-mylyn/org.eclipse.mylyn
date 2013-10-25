@@ -38,7 +38,7 @@ public class Textile {
 
 	public static final int ATTRIBUTES_BLOCK_GROUP_COUNT = 7;
 
-	private static final Pattern explicitBlockBeginPattern = Pattern.compile("(((h[1-6])|p|pre|bc|bq|table)|(fn([0-9]{1,2})))" //$NON-NLS-1$
+	private static final Pattern explicitBlockBeginPattern = Pattern.compile("(((h[1-6])|p|pre|bc|bq|table|###)|(fn([0-9]{1,2})))" //$NON-NLS-1$
 			+ REGEX_ATTRIBUTES + "\\.\\.?\\s+.*"); //$NON-NLS-1$
 
 	private static final Map<String, String> alignmentToStyle = new HashMap<String, String>();

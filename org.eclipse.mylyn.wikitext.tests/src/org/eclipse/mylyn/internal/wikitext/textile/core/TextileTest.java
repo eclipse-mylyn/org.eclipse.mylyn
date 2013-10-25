@@ -44,7 +44,7 @@ public class TextileTest extends TestCase {
 	}
 
 	public void testExplicitOtherStartsNewBlock() {
-		String[] types = new String[] { "pre", "bc", "bq", "p", "table" };
+		String[] types = new String[] { "pre", "bc", "bq", "p", "table", "###" };
 		for (String type : types) {
 			assertTrue(Textile.explicitBlockBegins(type + ". ", 0));
 			assertTrue(Textile.explicitBlockBegins(type + ". asfsdfds", 0));

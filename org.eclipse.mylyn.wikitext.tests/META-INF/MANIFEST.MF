@@ -41,6 +41,7 @@ Export-Package:
  org.eclipse.mylyn.internal.wikitext.mediawiki.core;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.mediawiki.core.validation;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.textile.core;x-internal:=true,
+ org.eclipse.mylyn.internal.wikitext.textile.core.block;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.textile.core.validation;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.twiki.core.validation;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.twiki.tests;x-internal:=true,
