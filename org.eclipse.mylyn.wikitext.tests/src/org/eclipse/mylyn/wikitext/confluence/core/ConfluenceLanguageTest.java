@@ -172,21 +172,6 @@ public class ConfluenceLanguageTest extends TestCase {
 		assertTrue(html.contains("<p>a { b</p>"));
 	}
 
-	public void testLineBreak() {
-		String html = parser.parseToHtml("a paragraph with an arbitrary\\\\line break");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(Pattern.compile("<body><p>a paragraph with an arbitrary<br/>\\s*line break</p></body>",
-				Pattern.MULTILINE)
-				.matcher(html)
-				.find());
-	}
-
-	public void testLineBreakWithSpace() {
-		String html = parser.parseToHtml("a paragraph with an arbitrary\\\\ \\\\line break");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>a paragraph with an arbitrary<br/><br/>line break</p></body>"));
-	}
-
 	public void testEndash() {
 		String html = parser.parseToHtml("an endash -- foo");
 		TestUtil.println("HTML: \n" + html);
