@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.core.parser.builder;
 
+import java.text.Normalizer;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -54,25 +55,33 @@ public class DefaultSplittingStrategy extends SplittingStrategy {
 	}
 
 	protected String computeSplitTarget() {
-		String candidate = null;
-		if (candidate == null) {
-			if (label != null && label.length() > 0) {
-				candidate = label.replaceAll("[^a-zA-Z0-9]+", "-"); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-			if (candidate == null || candidate.length() == 0) {
-				if (id != null) {
-					candidate = id;
-				} else {
-					candidate = "h" + headingLevel + "p" + headingCount; //$NON-NLS-1$ //$NON-NLS-2$
-				}
-			}
-		}
+		String candidate = computeSplitTargetCandidate();
 		String computedTarget = candidate;
 		int seed = 1;
 		while (!targets.add(computedTarget)) {
 			computedTarget = candidate + (++seed);
 		}
 		return computedTarget + ".html"; //$NON-NLS-1$
+	}
+
+	protected String computeSplitTargetCandidate() {
+		String candidate = null;
+		if (label != null && label.length() > 0) {
+			candidate = stripUnsafeCharacters(label);
+		}
+		if (candidate == null && id != null) {
+			candidate = stripUnsafeCharacters(id);
+		}
+		if (candidate == null || candidate.length() == 0) {
+			candidate = "h" + headingLevel + "p" + headingCount; //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		return candidate;
+	}
+
+	protected String stripUnsafeCharacters(String candidate) {
+		String safe = Normalizer.normalize(candidate, Normalizer.Form.NFD);
+		safe = safe.replaceAll("\\p{IsM}+", "").replaceAll("[^a-zA-Z0-9]+", "-"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		return safe;
 	}
 
 	@Override
