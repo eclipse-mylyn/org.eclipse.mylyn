@@ -137,7 +137,7 @@ class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 					qualifiedUrl = imageUrl;
 				} else {
 					if (imageUrl.startsWith("/")) { //$NON-NLS-1$
-						qualifiedUrl += imageUrl.substring(0);
+						qualifiedUrl += imageUrl.substring(1);
 					} else {
 						qualifiedUrl += imageUrl;
 					}
