@@ -22,6 +22,9 @@ import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.junit.Before;
 
+/**
+ * @since 2.0
+ */
 public abstract class AbstractMarkupGenerationTest<L extends MarkupLanguage> {
 
 	protected MarkupParser parser;

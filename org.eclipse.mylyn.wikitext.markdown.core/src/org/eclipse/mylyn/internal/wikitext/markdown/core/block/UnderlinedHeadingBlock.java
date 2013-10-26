@@ -61,7 +61,10 @@ public class UnderlinedHeadingBlock extends NestableBlock implements ReadAheadBl
 	protected int processLineContent(String line, int offset) {
 
 		if (blockLineCount == 0) {
-			builder.beginHeading(level, new Attributes());
+			Attributes attributes = new Attributes();
+			attributes.setId(state.getIdGenerator().newId("h" + level, line)); //$NON-NLS-1$
+
+			builder.beginHeading(level, attributes);
 			markupLanguage.emitMarkupLine(getParser(), state, line, offset);
 		} else {
 			builder.endHeading();

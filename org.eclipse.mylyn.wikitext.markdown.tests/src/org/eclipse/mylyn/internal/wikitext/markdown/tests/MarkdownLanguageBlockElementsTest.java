@@ -65,126 +65,6 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 	}
 
 	/*
-	 * Headers. Atx-style headers use 1-6 hash characters at the start of the line, corresponding to header levels 1-6.
-	 */
-	public void testAtxStyleHeaderH1() {
-		String markup = "# This is an H1";
-		String expectedHtml = "<h1>This is an H1</h1>";
-		parseAndAssert(markup, expectedHtml);
-	}
-
-	public void testAtxStyleHeaderH2() {
-		String markup = "## This is an H2";
-		String expectedHtml = "<h2>This is an H2</h2>";
-		parseAndAssert(markup, expectedHtml);
-	}
-
-	public void testAtxStyleHeaderH3() {
-		String markup = "### This is an H3";
-		String expectedHtml = "<h3>This is an H3</h3>";
-		parseAndAssert(markup, expectedHtml);
-	}
-
-	public void testAtxStyleHeaderH4() {
-		String markup = "#### This is an H4";
-		String expectedHtml = "<h4>This is an H4</h4>";
-		parseAndAssert(markup, expectedHtml);
-	}
-
-	public void testAtxStyleHeaderH5() {
-		String markup = "##### This is an H5";
-		String expectedHtml = "<h5>This is an H5</h5>";
-		parseAndAssert(markup, expectedHtml);
-	}
-
-	public void testAtxStyleHeaderH6() {
-		String markup = "###### This is an H6";
-		String expectedHtml = "<h6>This is an H6</h6>";
-		parseAndAssert(markup, expectedHtml);
-	}
-
-	/*
-	 * Optionally, you may "close" atx-style headers. This is purely cosmetic - you can use this if you think it looks
-	 * better. The closing hashes don't even need to match the number of hashes used to open the header. (The number of
-	 * opening hashes determines the header level.)
-	 */
-	public void testClosedAtxStyleHeaderH1() {
-		String markup = "# This is an H1 #";
-		String expectedHtml = "<h1>This is an H1</h1>";
-		parseAndAssert(markup, expectedHtml);
-	}
-
-	public void testClosedAtxStyleHeaderH2() {
-		String markup = "## This is an H2 ##";
-		String expectedHtml = "<h2>This is an H2</h2>";
-		parseAndAssert(markup, expectedHtml);
-	}
-
-	public void testClosedAtxStyleHeaderH3() {
-		String markup = "### This is an H3 ###";
-		String expectedHtml = "<h3>This is an H3</h3>";
-		parseAndAssert(markup, expectedHtml);
-	}
-
-	public void testClosedAtxStyleHeaderH4() {
-		String markup = "#### This is an H4 ####";
-		String expectedHtml = "<h4>This is an H4</h4>";
-		parseAndAssert(markup, expectedHtml);
-	}
-
-	public void testClosedAtxStyleHeaderH5() {
-		String markup = "##### This is an H5 #####";
-		String expectedHtml = "<h5>This is an H5</h5>";
-		parseAndAssert(markup, expectedHtml);
-	}
-
-	public void testClosedAtxStyleHeaderH6() {
-		String markup = "###### This is an H6 ######";
-		String expectedHtml = "<h6>This is an H6</h6>";
-		parseAndAssert(markup, expectedHtml);
-	}
-
-	public void testClosedAtxStyleHeaderWithMoreClosingHashes() {
-		String markup = "# This is an H1 ################################";
-		String expectedHtml = "<h1>This is an H1</h1>";
-		parseAndAssert(markup, expectedHtml);
-	}
-
-	public void testClosedAtxStyleHeaderWithLessCosingHashes() {
-		String markup = "###### This is an H6 #";
-		String expectedHtml = "<h6>This is an H6</h6>";
-		parseAndAssert(markup, expectedHtml);
-	}
-
-	/*
-	 * Setext-style headers are "underlined" using equal signs (for first-level headers) and dashes (for second-level
-	 * headers). Any number of underlining ='s or -'s will work.
-	 */
-	public void testUnderlinedHeaderH1() {
-		String markup = "This is an H1\n============";
-		String expectedHtml = "<h1>This is an H1</h1>";
-		parseAndAssert(markup, expectedHtml);
-	}
-
-	public void testUnderlinedHeaderH2() {
-		String markup = "This is an H2\n------------";
-		String expectedHtml = "<h2>This is an H2</h2>";
-		parseAndAssert(markup, expectedHtml);
-	}
-
-	public void testSingleCharUnderlinedHeaderH1() {
-		String markup = "This is an H1\n= ";
-		String expectedHtml = "<h1>This is an H1</h1>";
-		parseAndAssert(markup, expectedHtml);
-	}
-
-	public void testSingleCharUnderlinedHeaderH2() {
-		String markup = "This is an H2\n- ";
-		String expectedHtml = "<h2>This is an H2</h2>";
-		parseAndAssert(markup, expectedHtml);
-	}
-
-	/*
 	 * Blockquotes. Markdown uses email-style > characters for blockquoting. It looks best if you hard wrap the text and
 	 * put a > before every line.
 	 */
@@ -229,19 +109,19 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 
 	public void testBlockquotesContainingHeader() {
 		String markup = ">#H1";
-		String expectedHtml = "<blockquote><h1>H1</h1></blockquote>";
+		String expectedHtml = "<blockquote><h1 id=\"H1\">H1</h1></blockquote>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testBlockquotesContainingUnderlinedHeader1() {
 		String markup = ">H1\n>===";
-		String expectedHtml = "<blockquote><h1>H1</h1></blockquote>";
+		String expectedHtml = "<blockquote><h1 id=\"H1\">H1</h1></blockquote>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testBlockquotesContainingUnderlinedHeader2() {
 		String markup = ">H2\n>---";
-		String expectedHtml = "<blockquote><h2>H2</h2></blockquote>";
+		String expectedHtml = "<blockquote><h2 id=\"H2\">H2</h2></blockquote>";
 		parseAndAssert(markup, expectedHtml);
 	}
 

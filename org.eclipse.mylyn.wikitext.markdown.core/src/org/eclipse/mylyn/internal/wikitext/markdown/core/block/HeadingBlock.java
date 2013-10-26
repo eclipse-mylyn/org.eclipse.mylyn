@@ -37,10 +37,14 @@ public class HeadingBlock extends NestableBlock {
 	protected int processLineContent(String line, int offset) {
 		int level = matcher.group(1).length();
 
-		builder.beginHeading(level, new Attributes());
+		Attributes attributes = new Attributes();
 		int textStart = offset + matcher.start(2);
 		int textEnd = offset + matcher.end(2);
 		String lineExcludingClosingHash = line.substring(0, textEnd);
+
+		attributes.setId(state.getIdGenerator().newId("h" + level, lineExcludingClosingHash)); //$NON-NLS-1$
+
+		builder.beginHeading(level, attributes);
 		markupLanguage.emitMarkupLine(getParser(), state, lineExcludingClosingHash, textStart);
 		builder.endHeading();
 
