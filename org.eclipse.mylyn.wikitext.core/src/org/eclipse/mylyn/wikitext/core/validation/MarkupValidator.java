@@ -17,7 +17,7 @@ import java.util.List;
 import org.eclipse.mylyn.internal.wikitext.core.validation.StandaloneMarkupValidator;
 
 /**
- * Validate markup given a set of rules
+ * Validates markup given a set of rules
  * 
  * @author David Green
  * @see StandaloneMarkupValidator
@@ -27,10 +27,26 @@ public class MarkupValidator {
 
 	private final List<ValidationRule> rules = new ArrayList<ValidationRule>();
 
+	/**
+	 * @param markup
+	 *            the content to validate
+	 * @return the list of validation problems, or an empty list if there are none
+	 * @since 2.0
+	 */
 	public List<ValidationProblem> validate(String markup) {
 		return validate(markup, 0, markup.length());
 	}
 
+	/**
+	 * @param offset
+	 *            the 0-based index at which validation should begin
+	 * @param length
+	 *            the length of the content to validate
+	 * @param markup
+	 *            the content to validate
+	 * @return the list of validation problems, or an empty list if there are none
+	 * @since 2.0
+	 */
 	public List<ValidationProblem> validate(String markup, int offset, int length) {
 		if (length == 0 || rules.isEmpty()) {
 			return Collections.emptyList();
