@@ -54,7 +54,6 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.store.NIOFSDirectory;
 import org.apache.lucene.util.Version;
@@ -1119,7 +1118,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	}
 
 	private void indexQueuedTasks(SubMonitor monitor) throws CorruptIndexException, LockObtainFailedException,
-			IOException, CoreException {
+			IOException {
 
 		synchronized (reindexQueue) {
 			if (reindexQueue.isEmpty()) {
@@ -1149,17 +1148,8 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 					}
 
 					if (writer == null) {
-						try {
-							writer = new IndexWriter(directory, TaskAnalyzer.instance(), false,
-									IndexWriter.MaxFieldLength.UNLIMITED);
-						} catch (CorruptIndexException e) {
-							rebuildIndex = true;
-							synchronized (reindexQueue) {
-								reindexQueue.clear();
-							}
-							rebuildIndexCompletely(monitor);
-							return;
-						}
+						writer = new IndexWriter(directory, TaskAnalyzer.instance(), false,
+								IndexWriter.MaxFieldLength.UNLIMITED);
 					}
 
 					monitor.setWorkRemaining(workingQueue.size());
@@ -1212,17 +1202,8 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 
 		monitor.beginTask(Messages.TaskListIndex_task_rebuilding_index, taskListState.indexableTasks.size());
 		try {
-			IndexWriter writer;
-			try {
-				writer = createIndexWriter();
-			} catch (CorruptIndexException e) {
-				if (directory instanceof FSDirectory) {
-					cleanDirectory(((FSDirectory) directory).getDirectory());
-					writer = createIndexWriter();
-				} else {
-					throw e;
-				}
-			}
+			final IndexWriter writer = new IndexWriter(directory, TaskAnalyzer.instance(), true,
+					IndexWriter.MaxFieldLength.UNLIMITED);
 			try {
 
 				for (ITask task : taskListState.indexableTasks) {
@@ -1247,24 +1228,6 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 			monitor.done();
 		}
 		return multiStatus;
-	}
-
-	private void cleanDirectory(File file) throws IOException {
-		if (file.exists()) {
-			File[] children = file.listFiles();
-			if (children != null) {
-				for (File child : children) {
-					if (child.isDirectory()) {
-						cleanDirectory(child);
-					}
-					child.delete();
-				}
-			}
-		}
-	}
-
-	protected IndexWriter createIndexWriter() throws CorruptIndexException, LockObtainFailedException, IOException {
-		return new IndexWriter(directory, TaskAnalyzer.instance(), true, IndexWriter.MaxFieldLength.UNLIMITED);
 	}
 
 	/**
