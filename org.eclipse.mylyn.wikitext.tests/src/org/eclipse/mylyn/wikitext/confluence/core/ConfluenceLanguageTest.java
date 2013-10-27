@@ -595,30 +595,6 @@ public class ConfluenceLanguageTest extends TestCase {
 		assertTrue(Pattern.compile("with two paras\\s*</pre>", Pattern.MULTILINE).matcher(html).find());
 	}
 
-	public void testBlockCode() {
-		String html = parser.parseToHtml("h1. a header\n" + "\n" + "Some text\n" + "{code:language=Java}\n"
-				+ "public class Foo {\n" + "}\n" + "{code}" + "\n" + "More text...");
-		TestUtil.println("HTML:" + html);
-
-		assertTrue(Pattern.compile("<p>Some text</p><pre><code>", Pattern.MULTILINE).matcher(html).find());
-		assertTrue(html.contains("<code>\npublic class Foo {\n"));
-		assertTrue(html.contains("</code></pre><p>More text...</p>"));
-	}
-
-	public void testBlockCode2() {
-		String html = parser.parseToHtml("{code}some code{code}more text");
-		TestUtil.println("HTML:" + html);
-		assertTrue(html.contains("<body><pre><code>some code"));
-		assertTrue(html.contains("</code></pre><p>more text</p></body>"));
-	}
-
-	public void testBlockCodeJava() {
-		String html = parser.parseToHtml("{code:Java}some code{code}more text");
-		TestUtil.println("HTML:" + html);
-		assertTrue(html.contains("<body><pre><code class=\"java code-java\">some code"));
-		assertTrue(html.contains("</code></pre><p>more text</p></body>"));
-	}
-
 	public void testNote() {
 		String html = parser.parseToHtml("h1. a header\n" + "\n" + "Some text\n" + "{note:title=A Title}\n"
 				+ "the body of the note\n" + "which may span multiple lines\n" + "\n"

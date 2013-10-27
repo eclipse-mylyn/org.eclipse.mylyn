@@ -68,6 +68,8 @@ public class CodeBlock extends AbstractConfluenceDelimitedBlock {
 	protected void setOption(String key, String value) {
 		if (key.equals("title")) { //$NON-NLS-1$
 			title = value;
+		} else if (key.equals("language")) { //$NON-NLS-1$
+			language = value;
 		}
 	}
 
