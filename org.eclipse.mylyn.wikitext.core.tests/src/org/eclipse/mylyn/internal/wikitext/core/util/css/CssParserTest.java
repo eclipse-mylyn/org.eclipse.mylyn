@@ -21,8 +21,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.wikitext.tests.TestUtil;
-
 /**
  * @author David Green
  */
@@ -75,7 +73,7 @@ public class CssParserTest extends TestCase {
 	public void testSimpleId() {
 		Selector selector = parser.parseSelector("#id");
 		assertNotNull(selector);
-		TestUtil.println(selector);
+
 		assertEquals(IdSelector.class, selector.getClass());
 		assertEquals("id", ((IdSelector) selector).getId());
 	}
@@ -83,7 +81,7 @@ public class CssParserTest extends TestCase {
 	public void testSimpleClass() {
 		Selector selector = parser.parseSelector(".className");
 		assertNotNull(selector);
-		TestUtil.println(selector);
+
 		assertEquals(CssClassSelector.class, selector.getClass());
 		assertEquals("className", ((CssClassSelector) selector).getCssClass());
 	}
@@ -91,7 +89,7 @@ public class CssParserTest extends TestCase {
 	public void testSimpleElement() {
 		Selector selector = parser.parseSelector("body");
 		assertNotNull(selector);
-		TestUtil.println(selector);
+
 		assertEquals(NameSelector.class, selector.getClass());
 		assertEquals("body", ((NameSelector) selector).getName());
 	}
@@ -99,7 +97,7 @@ public class CssParserTest extends TestCase {
 	public void testNumericElementName() {
 		Selector selector = parser.parseSelector("h1");
 		assertNotNull(selector);
-		TestUtil.println("testNumericElementName: " + selector);
+
 		assertEquals(NameSelector.class, selector.getClass());
 		assertEquals("h1", ((NameSelector) selector).getName());
 	}
@@ -107,7 +105,7 @@ public class CssParserTest extends TestCase {
 	public void testCompoundIdElement() {
 		Selector selector = parser.parseSelector("#foo a");
 		assertNotNull(selector);
-		TestUtil.println("testCompoundIdElement: " + selector);
+
 		assertEquals(CompositeSelector.class, selector.getClass());
 
 		CompositeSelector compositeSelector = (CompositeSelector) selector;
@@ -130,7 +128,7 @@ public class CssParserTest extends TestCase {
 	public void testCompoundIdElement2() {
 		Selector selector = parser.parseSelector("#foo, a");
 		assertNotNull(selector);
-		TestUtil.println(selector);
+
 		assertEquals(CompositeSelector.class, selector.getClass());
 
 		CompositeSelector compositeSelector = (CompositeSelector) selector;
@@ -150,7 +148,7 @@ public class CssParserTest extends TestCase {
 	public void testCompoundElementWithJoin() {
 		Selector selector = parser.parseSelector("table tr");
 		assertNotNull(selector);
-		TestUtil.println(selector);
+
 		assertEquals(CompositeSelector.class, selector.getClass());
 
 		CompositeSelector compositeSelector = (CompositeSelector) selector;
@@ -173,7 +171,7 @@ public class CssParserTest extends TestCase {
 	public void testCompoundElementUsingDot() {
 		Selector selector = parser.parseSelector("table.summaryTable");
 		assertNotNull(selector);
-		TestUtil.println(selector);
+
 		assertEquals(CompositeSelector.class, selector.getClass());
 
 		CompositeSelector compositeSelector = (CompositeSelector) selector;
@@ -193,7 +191,7 @@ public class CssParserTest extends TestCase {
 	public void testCompoundElementUsingDotAndJoin() {
 		Selector selector = parser.parseSelector("table.summaryTable tr.a1");
 		assertNotNull(selector);
-		TestUtil.println("testCompoundElementUsingDotAndJoin: " + selector);
+
 		assertEquals(CompositeSelector.class, selector.getClass());
 
 		CompositeSelector compositeSelector = (CompositeSelector) selector;

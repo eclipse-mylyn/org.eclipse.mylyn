@@ -148,13 +148,10 @@ public abstract class AbstractSaxParserTest extends TestCase {
 	}
 
 	protected void performTest(String html, String expectedResult) throws IOException, SAXException {
-		TestUtil.println("HTML: " + html);
 
 		parser.parse(sourceForHtml(html), builder);
 
 		String generatedMarkup = out.toString();
-
-		TestUtil.println("Markup: " + generatedMarkup);
 
 		Assert.assertEquals(expectedResult, generatedMarkup);
 
@@ -167,7 +164,6 @@ public abstract class AbstractSaxParserTest extends TestCase {
 		markupParser.parse(generatedMarkup);
 
 		String generatedHtml = out.toString();
-
 		TestUtil.println("Generated HTML: " + generatedHtml);
 	}
 
