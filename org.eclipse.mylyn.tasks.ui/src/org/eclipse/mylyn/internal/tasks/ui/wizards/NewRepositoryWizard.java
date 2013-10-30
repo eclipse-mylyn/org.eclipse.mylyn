@@ -157,7 +157,9 @@ public class NewRepositoryWizard extends Wizard implements INewWizard {
 			if (messageDialog.getReturnCode() == IDialogConstants.YES_ID) {
 				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
 				final IWizard queryWizard = connectorUi.getQueryWizard(taskRepository, null);
-				((Wizard) queryWizard).setForcePreviousAndNextButtons(true);
+				if (queryWizard instanceof Wizard) {
+					((Wizard) queryWizard).setForcePreviousAndNextButtons(true);
+				}
 
 				// execute delayed to avoid stacking dialogs
 				getShell().getDisplay().asyncExec(new Runnable() {

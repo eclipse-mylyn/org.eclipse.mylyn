@@ -77,7 +77,9 @@ public class NewQueryAction extends Action implements IViewActionDelegate, IExec
 			TaskRepository taskRepository = TasksUiUtil.getSelectedRepository();
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
 			wizard = connectorUi.getQueryWizard(taskRepository, null);
-			((Wizard) wizard).setForcePreviousAndNextButtons(true);
+			if (wizard instanceof Wizard) {
+				((Wizard) wizard).setForcePreviousAndNextButtons(true);
+			}
 			if (connectorUi instanceof LocalRepositoryConnectorUi) {
 				wizard.performFinish();
 				return;

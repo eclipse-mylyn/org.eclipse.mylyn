@@ -106,7 +106,9 @@ public class AddRepositoryAction extends Action {
 			if (messageDialog.getReturnCode() == IDialogConstants.YES_ID) {
 				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
 				IWizard queryWizard = connectorUi.getQueryWizard(taskRepository, null);
-				((Wizard) queryWizard).setForcePreviousAndNextButtons(true);
+				if (queryWizard instanceof Wizard) {
+					((Wizard) queryWizard).setForcePreviousAndNextButtons(true);
+				}
 
 				WizardDialog queryDialog = new WizardDialog(shell, queryWizard);
 				queryDialog.create();
