@@ -247,13 +247,8 @@ public class RepositorySearchWizardPage extends WizardPage implements
 									.format(Messages.RepositorySearchWizardPage_Searching,
 											text), 10);
 					try {
-						StringBuilder query = new StringBuilder();
-						for (String term : text.split("\n")) //$NON-NLS-1$
-							query.append(UrlUtils.encode(term.trim())).append(
-									'+');
-						query.deleteCharAt(query.length() - 1);
 						final List<SearchRepository> repositories = repositoryService
-								.searchRepositories(query.toString(), language);
+								.searchRepositories(text.trim(), language);
 						PlatformUI.getWorkbench().getDisplay()
 								.syncExec(new Runnable() {
 
