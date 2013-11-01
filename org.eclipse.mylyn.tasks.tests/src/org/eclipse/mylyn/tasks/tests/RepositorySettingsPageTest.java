@@ -236,6 +236,39 @@ public class RepositorySettingsPageTest extends TestCase {
 		assertSame(page.getConnector(), connector);
 	}
 
+	public void testNeedsRepositoryCredentialsDefaultsToTrue() {
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, "http://localhost/");
+		MockRepositorySettingsPage page = new MockRepositorySettingsPage(repository);
+		assertTrue(page.needsRepositoryCredentials());
+	}
+
+	public void testNeedsRepositoryCredentialsCanBeSetToFalse() {
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, "http://localhost/");
+		MockRepositorySettingsPage page = new MockRepositorySettingsPage(repository);
+		page.setNeedsRepositoryCredentials(false);
+		assertFalse(page.needsRepositoryCredentials());
+	}
+
+	public void testNeedsRepositoryCredentialsPageCompletesWithoutCredentials() {
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, "http://localhost/");
+		MockRepositorySettingsPage page = new MockRepositorySettingsPage(repository);
+		page.setNeedsRepositoryCredentials(false);
+
+		try {
+			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+			page.createControl(shell);
+			page.setUrl("http://example.com");
+			assertNull(page.getRepositoryUserNameEditor());
+			assertNull(page.getRepositoryPasswordEditor());
+			assertTrue(page.isPageComplete());
+			assertNull(page.getMessage());
+			assertNotNull(page.createTaskRepository());
+		} finally {
+			page.dispose();
+		}
+
+	}
+
 	private class MockRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 		public MockRepositorySettingsPage(TaskRepository taskRepository) {
@@ -287,6 +320,15 @@ public class RepositorySettingsPageTest extends TestCase {
 		public String getConnectorKind() {
 			return MockRepositoryConnector.CONNECTOR_KIND;
 		}
+
+		public StringFieldEditor getRepositoryUserNameEditor() {
+			return repositoryUserNameEditor;
+		}
+
+		public StringFieldEditor getRepositoryPasswordEditor() {
+			return repositoryPasswordEditor;
+		}
+
 	}
 
 }
