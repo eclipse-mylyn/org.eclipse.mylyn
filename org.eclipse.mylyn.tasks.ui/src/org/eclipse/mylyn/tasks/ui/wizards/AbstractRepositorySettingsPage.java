@@ -188,8 +188,6 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	private boolean needsAdvanced;
 
-	private boolean needsRepositoryCredentials = true;
-
 	protected Composite compositeContainer;
 
 	private Composite advancedComp;
@@ -325,9 +323,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		}
 		Point p = innerComposite.getContent().computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
 		innerComposite.setMinSize(p);
-		if (needsRepositoryCredentials()) {
-			swapUserNameWithAnonymousInTabList();
-		}
+		swapUserNameWithAnonymousInTabList();
 		Dialog.applyDialogFont(innerComposite);
 		setControl(innerComposite);
 	}
@@ -449,120 +445,6 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			}
 		});
 
-		if (needsRepositoryCredentials()) {
-			createRepositoryCredentialsSection();
-		}
-
-		// TODO: put this back if we can't get the info from all connectors
-		// if (needsTimeZone()) {
-		// Label timeZoneLabel = new Label(container, SWT.NONE);
-		// timeZoneLabel.setText("Repository time zone: ");
-		// timeZonesCombo = new Combo(container, SWT.READ_ONLY);
-		// String[] timeZoneIds = TimeZone.getAvailableIDs();
-		// Arrays.sort(timeZoneIds);
-		// for (String zone : timeZoneIds) {
-		// timeZonesCombo.add(zone);
-		// }
-		// boolean setZone = false;
-		// if (repository != null) {
-		// if (timeZonesCombo.indexOf(repository.getTimeZoneId()) > -1) {
-		// timeZonesCombo.select(timeZonesCombo.indexOf(repository.getTimeZoneId()));
-		// setZone = true;
-		// }
-		// }
-		// if (!setZone) {
-		// timeZonesCombo.select(timeZonesCombo.indexOf(TimeZone.getDefault().getID()));
-		// }
-		// }
-
-		if (needsAdvanced() || needsEncoding()) {
-			createAdvancedSection();
-		}
-
-		if (needsCertAuth()) {
-			createCertAuthSection();
-		}
-
-		if (needsHttpAuth()) {
-			createHttpAuthSection();
-		}
-
-		if (needsProxy()) {
-			createProxySection();
-		}
-
-		createContributionControls(innerComposite);
-
-		Composite managementComposite = new Composite(compositeContainer, SWT.NULL);
-		GridLayout managementLayout = new GridLayout(4, false);
-		managementLayout.marginHeight = 0;
-		managementLayout.marginWidth = 0;
-		managementLayout.horizontalSpacing = 10;
-		managementComposite.setLayout(managementLayout);
-		managementComposite.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 2, 1));
-
-		createAccountHyperlink = toolkit.createHyperlink(managementComposite,
-				Messages.AbstractRepositorySettingsPage_Create_new_account, SWT.NONE);
-		createAccountHyperlink.setBackground(managementComposite.getBackground());
-		createAccountHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-//				TaskRepository repository = getRepository();
-				TaskRepository repository = createTaskRepository();
-//				if (repository == null && getServerUrl() != null && getServerUrl().length() > 0) {
-//					repository = createTaskRepository();
-//				}
-				if (repository != null) {
-					String accountCreationUrl = TasksUiPlugin.getConnectorUi(connector.getConnectorKind())
-							.getAccountCreationUrl(repository);
-					if (accountCreationUrl != null) {
-						BrowserUtil.openUrl(accountCreationUrl, IWorkbenchBrowserSupport.AS_EXTERNAL);
-					}
-				}
-			}
-		});
-
-		manageAccountHyperlink = toolkit.createHyperlink(managementComposite,
-				Messages.AbstractRepositorySettingsPage_Change_account_settings, SWT.NONE);
-		manageAccountHyperlink.setBackground(managementComposite.getBackground());
-		manageAccountHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				TaskRepository repository = getRepository();
-				if (repository == null && getRepositoryUrl() != null && getRepositoryUrl().length() > 0) {
-					repository = createTaskRepository();
-				}
-				if (repository != null) {
-					String accountManagementUrl = TasksUiPlugin.getConnectorUi(connector.getConnectorKind())
-							.getAccountManagementUrl(repository);
-					if (accountManagementUrl != null) {
-						BrowserUtil.openUrl(accountManagementUrl, IWorkbenchBrowserSupport.AS_EXTERNAL);
-					}
-				}
-			}
-		});
-
-		if (needsRepositoryCredentials()) {
-			// bug 131656: must set echo char after setting value on Mac
-			((RepositoryStringFieldEditor) repositoryPasswordEditor).getTextControl().setEchoChar('*');
-
-			if (needsAnonymousLogin()) {
-				// do this after username and password widgets have been intialized
-				if (repository != null) {
-					setAnonymous(isAnonymousAccess());
-				}
-			}
-		}
-
-		updateHyperlinks();
-		if (repository != null) {
-			saveToValidatedProperties(createTaskRepository());
-		}
-		GridLayout layout = new GridLayout(3, false);
-		compositeContainer.setLayout(layout);
-	}
-
-	private void createRepositoryCredentialsSection() {
 		repositoryUserNameEditor = new StringFieldEditor("", LABEL_USER, StringFieldEditor.UNLIMITED, //$NON-NLS-1$
 				compositeContainer) {
 
@@ -675,6 +557,112 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		} else {
 			savePasswordButton.setSelection(false);
 		}
+
+		// TODO: put this back if we can't get the info from all connectors
+		// if (needsTimeZone()) {
+		// Label timeZoneLabel = new Label(container, SWT.NONE);
+		// timeZoneLabel.setText("Repository time zone: ");
+		// timeZonesCombo = new Combo(container, SWT.READ_ONLY);
+		// String[] timeZoneIds = TimeZone.getAvailableIDs();
+		// Arrays.sort(timeZoneIds);
+		// for (String zone : timeZoneIds) {
+		// timeZonesCombo.add(zone);
+		// }
+		// boolean setZone = false;
+		// if (repository != null) {
+		// if (timeZonesCombo.indexOf(repository.getTimeZoneId()) > -1) {
+		// timeZonesCombo.select(timeZonesCombo.indexOf(repository.getTimeZoneId()));
+		// setZone = true;
+		// }
+		// }
+		// if (!setZone) {
+		// timeZonesCombo.select(timeZonesCombo.indexOf(TimeZone.getDefault().getID()));
+		// }
+		// }
+
+		if (needsAdvanced() || needsEncoding()) {
+			createAdvancedSection();
+		}
+
+		if (needsCertAuth()) {
+			createCertAuthSection();
+		}
+
+		if (needsHttpAuth()) {
+			createHttpAuthSection();
+		}
+
+		if (needsProxy()) {
+			createProxySection();
+		}
+
+		createContributionControls(innerComposite);
+
+		Composite managementComposite = new Composite(compositeContainer, SWT.NULL);
+		GridLayout managementLayout = new GridLayout(4, false);
+		managementLayout.marginHeight = 0;
+		managementLayout.marginWidth = 0;
+		managementLayout.horizontalSpacing = 10;
+		managementComposite.setLayout(managementLayout);
+		managementComposite.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 2, 1));
+
+		createAccountHyperlink = toolkit.createHyperlink(managementComposite,
+				Messages.AbstractRepositorySettingsPage_Create_new_account, SWT.NONE);
+		createAccountHyperlink.setBackground(managementComposite.getBackground());
+		createAccountHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
+//				TaskRepository repository = getRepository();
+				TaskRepository repository = createTaskRepository();
+//				if (repository == null && getServerUrl() != null && getServerUrl().length() > 0) {
+//					repository = createTaskRepository();
+//				}
+				if (repository != null) {
+					String accountCreationUrl = TasksUiPlugin.getConnectorUi(connector.getConnectorKind())
+							.getAccountCreationUrl(repository);
+					if (accountCreationUrl != null) {
+						BrowserUtil.openUrl(accountCreationUrl, IWorkbenchBrowserSupport.AS_EXTERNAL);
+					}
+				}
+			}
+		});
+
+		manageAccountHyperlink = toolkit.createHyperlink(managementComposite,
+				Messages.AbstractRepositorySettingsPage_Change_account_settings, SWT.NONE);
+		manageAccountHyperlink.setBackground(managementComposite.getBackground());
+		manageAccountHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
+				TaskRepository repository = getRepository();
+				if (repository == null && getRepositoryUrl() != null && getRepositoryUrl().length() > 0) {
+					repository = createTaskRepository();
+				}
+				if (repository != null) {
+					String accountManagementUrl = TasksUiPlugin.getConnectorUi(connector.getConnectorKind())
+							.getAccountManagementUrl(repository);
+					if (accountManagementUrl != null) {
+						BrowserUtil.openUrl(accountManagementUrl, IWorkbenchBrowserSupport.AS_EXTERNAL);
+					}
+				}
+			}
+		});
+
+		// bug 131656: must set echo char after setting value on Mac
+		((RepositoryStringFieldEditor) repositoryPasswordEditor).getTextControl().setEchoChar('*');
+
+		if (needsAnonymousLogin()) {
+			// do this after username and password widgets have been intialized
+			if (repository != null) {
+				setAnonymous(isAnonymousAccess());
+			}
+		}
+
+		updateHyperlinks();
+		if (repository != null) {
+			saveToValidatedProperties(createTaskRepository());
+		}
+		GridLayout layout = new GridLayout(3, false);
+		compositeContainer.setLayout(layout);
 	}
 
 	private void createAdvancedSection() {
@@ -1598,8 +1586,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			if (!isValidUrl(url)) {
 				errorMessage = Messages.AbstractRepositorySettingsPage_Enter_a_valid_server_url;
 			}
-			if (errorMessage == null && needsRepositoryCredentials()
-					&& (!needsAnonymousLogin() || !anonymousButton.getSelection()) && isMissingCredentials()) {
+			if (errorMessage == null && (!needsAnonymousLogin() || !anonymousButton.getSelection())
+					&& isMissingCredentials()) {
 				errorMessage = Messages.AbstractRepositorySettingsPage_Enter_a_user_id_Message0;
 			}
 			setMessage(errorMessage, repository == null ? IMessageProvider.NONE : IMessageProvider.ERROR);
@@ -1615,7 +1603,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	 * @since 3.4
 	 */
 	protected boolean isMissingCredentials() {
-		return needsRepositoryCredentials() && repositoryUserNameEditor.getStringValue().trim().equals("") //$NON-NLS-1$
+		return repositoryUserNameEditor.getStringValue().trim().equals("") //$NON-NLS-1$
 				|| (getSavePassword() && repositoryPasswordEditor.getStringValue().trim().equals("")); //$NON-NLS-1$
 	}
 
@@ -1718,13 +1706,11 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			repository.setCharacterEncoding(getCharacterEncoding());
 		}
 
-		if (needsRepositoryCredentials()) {
-			if (isAnonymousAccess()) {
-				repository.setCredentials(AuthenticationType.REPOSITORY, null, getSavePassword());
-			} else {
-				AuthenticationCredentials credentials = new AuthenticationCredentials(getUserName(), getPassword());
-				repository.setCredentials(AuthenticationType.REPOSITORY, credentials, getSavePassword());
-			}
+		if (isAnonymousAccess()) {
+			repository.setCredentials(AuthenticationType.REPOSITORY, null, getSavePassword());
+		} else {
+			AuthenticationCredentials credentials = new AuthenticationCredentials(getUserName(), getPassword());
+			repository.setCredentials(AuthenticationType.REPOSITORY, credentials, getSavePassword());
 		}
 		repository.setRepositoryLabel(getRepositoryLabel());
 
@@ -1794,13 +1780,6 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	 */
 	public boolean needsAnonymousLogin() {
 		return needsAnonymousLogin;
-	}
-
-	/**
-	 * @since 3.10
-	 */
-	public boolean needsRepositoryCredentials() {
-		return needsRepositoryCredentials;
 	}
 
 	/**
@@ -1878,13 +1857,6 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	 */
 	public void setNeedsAnonymousLogin(boolean needsAnonymousLogin) {
 		this.needsAnonymousLogin = needsAnonymousLogin;
-	}
-
-	/**
-	 * @since 3.10
-	 */
-	public void setNeedsRepositoryCredentials(boolean needsCredentials) {
-		this.needsRepositoryCredentials = needsCredentials;
 	}
 
 	public void setNeedsValidation(boolean needsValidation) {
