@@ -151,13 +151,8 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 					TasksUiInternal.logAndDisplayStatus(Messages.TaskListBackupManager_Scheduled_task_data_backup,
 							status);
 				} else {
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							TasksUiInternal.logAndDisplayStatus(
-									Messages.TaskListBackupManager_Scheduled_task_data_backup, status);
-
-						}
-					});
+					TasksUiInternal.asyncLogAndDisplayStatus(Messages.TaskListBackupManager_Scheduled_task_data_backup,
+							status);
 				}
 			}
 
