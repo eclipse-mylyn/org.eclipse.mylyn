@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Frank Becker - fixes for bug 420326
  *******************************************************************************/
 
 package org.eclipse.mylyn.context.tasks.tests;
@@ -756,7 +757,7 @@ public class TaskActivityTimingTest extends TestCase {
 		assertEquals(2, mockContext.getInteractionHistory().size());
 	}
 
-	public void testCollapeedByTheHour() {
+	public void testCollapsedByTheHour() {
 		Calendar startTime1 = Calendar.getInstance();
 		startTime1.set(Calendar.MINUTE, 2);
 		startTime1.set(Calendar.SECOND, 0);
@@ -767,20 +768,17 @@ public class TaskActivityTimingTest extends TestCase {
 		endTime1.add(Calendar.MINUTE, 2);
 
 		Calendar startTime2 = Calendar.getInstance();
+		startTime2.setTime(startTime1.getTime());
 		startTime2.add(Calendar.HOUR_OF_DAY, 1);
-		startTime2.set(Calendar.MINUTE, 2);
-		startTime2.set(Calendar.SECOND, 0);
-		startTime2.set(Calendar.MILLISECOND, 0);
 
 		Calendar endTime2 = Calendar.getInstance();
 		endTime2.setTime(startTime2.getTime());
 		endTime2.add(Calendar.MINUTE, 3);
 
 		Calendar startTime3 = Calendar.getInstance();
+		startTime3.setTime(startTime1.getTime());
 		startTime3.add(Calendar.HOUR_OF_DAY, 1);
 		startTime3.set(Calendar.MINUTE, 20);
-		startTime3.set(Calendar.SECOND, 0);
-		startTime3.set(Calendar.MILLISECOND, 0);
 
 		Calendar endTime3 = Calendar.getInstance();
 		endTime3.setTime(startTime3.getTime());
@@ -864,6 +862,7 @@ public class TaskActivityTimingTest extends TestCase {
 		endTime1.add(Calendar.MINUTE, 2);
 
 		Calendar startTime2 = Calendar.getInstance();
+		startTime2.setTime(startTime1.getTime());
 		startTime2.add(Calendar.HOUR_OF_DAY, 1);
 		startTime2.set(Calendar.MINUTE, 2);
 		startTime2.set(Calendar.SECOND, 0);
@@ -874,6 +873,7 @@ public class TaskActivityTimingTest extends TestCase {
 		endTime2.add(Calendar.MINUTE, 3);
 
 		Calendar startTime3 = Calendar.getInstance();
+		startTime3.setTime(startTime1.getTime());
 		startTime3.add(Calendar.HOUR_OF_DAY, 1);
 		startTime3.set(Calendar.MINUTE, 20);
 		startTime3.set(Calendar.SECOND, 0);

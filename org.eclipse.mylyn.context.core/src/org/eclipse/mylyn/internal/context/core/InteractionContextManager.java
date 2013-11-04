@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Frank Becker - fixes for bug 420326
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.context.core;
@@ -366,10 +367,12 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 			t0.setTime(firstEvent.getDate());
 			t0.set(Calendar.MINUTE, 0);
+			t0.set(Calendar.SECOND, 0);
 			t0.set(Calendar.MILLISECOND, 0);
 
 			t1.setTime(firstEvent.getDate());
 			t1.set(Calendar.MINUTE, t1.getMaximum(Calendar.MINUTE));
+			t1.set(Calendar.SECOND, t1.getMaximum(Calendar.SECOND));
 			t1.set(Calendar.MILLISECOND, t1.getMaximum(Calendar.MILLISECOND));
 
 			InteractionEvent nextEvent = itr.next();
