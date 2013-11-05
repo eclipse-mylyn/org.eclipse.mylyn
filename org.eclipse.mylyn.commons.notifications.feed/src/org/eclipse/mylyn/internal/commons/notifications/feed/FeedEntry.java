@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
@@ -44,7 +45,7 @@ public class FeedEntry extends ServiceMessage {
 	}
 
 	private Date getDate(RSSItem source) {
-		SimpleDateFormat sdf = new SimpleDateFormat("E, dd MMM yyyy hh:mm:ss ZZZZ"); //$NON-NLS-1$
+		SimpleDateFormat sdf = new SimpleDateFormat("E, dd MMM yyyy hh:mm:ss ZZZZ", Locale.US); //$NON-NLS-1$
 		try {
 			return sdf.parse(source.getPubDate());
 		} catch (ParseException e) {

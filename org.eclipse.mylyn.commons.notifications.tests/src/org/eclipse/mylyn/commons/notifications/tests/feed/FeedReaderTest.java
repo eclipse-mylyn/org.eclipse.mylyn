@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.commons.notifications.tests.feed;
 
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Set;
 
 import junit.framework.TestCase;
@@ -61,6 +62,24 @@ public class FeedReaderTest extends TestCase {
 		assertEquals(
 				"Mylyn 3.7 is now available. <a href=\"http://eclipse.org/mylyn/new/\">See New and Noteworthy</a> for details.",
 				entry.getDescription());
+	}
+
+	public void testParseWithGermanLocale() throws Exception {
+		Locale locale = Locale.getDefault();
+		try {
+			Locale.setDefault(Locale.GERMAN);
+
+			assertEquals(Status.OK_STATUS, reader.parse(
+					CommonTestUtil.getResource(FeedReaderTest.class, "testdata/FeedReaderTest/update2.xml"), null));
+			assertEquals(1, reader.getEntries().size());
+			Collections.sort(reader.getEntries());
+
+			FeedEntry entry = reader.getEntries().get(0);
+			assertEquals("Mylyn Update", entry.getTitle());
+			assertEquals(1380758400000L, entry.getDate().getTime());
+		} finally {
+			Locale.setDefault(locale);
+		}
 	}
 
 }
