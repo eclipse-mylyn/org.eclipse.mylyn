@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2012 David Green and others.
+ * Copyright (c) 2007, 2013 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,8 +7,11 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Torkild U. Resheim - Handle links when transforming, bug 325006
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.parser.builder;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -43,6 +46,7 @@ import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
  * 
  * @author David Green
  * @author Matthias Kempka extensibility improvements, see bug 259089
+ * @author Torkild U. Resheim
  * @since 1.0
  */
 public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
@@ -229,6 +233,8 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private String copyrightNotice;
 
+	private String htmlFilenameFormat = null;
+
 	/**
 	 * construct the HtmlDocumentBuilder.
 	 * 
@@ -284,6 +290,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		other.setXhtmlStrict(xhtmlStrict);
 		other.setPrependImagePrefix(prependImagePrefix);
 		other.setCopyrightNotice(getCopyrightNotice());
+		other.setHtmlFilenameFormat(htmlFilenameFormat);
 		if (stylesheets != null) {
 			other.stylesheets = new ArrayList<Stylesheet>();
 			other.stylesheets.addAll(stylesheets);
@@ -633,7 +640,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 			// bug 259786: add the charset as a HTML meta http-equiv
 			// see http://www.w3.org/International/tutorials/tutorial-char-enc/
 			//
-			// <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> 
+			// <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 			writer.writeEmptyElement(htmlNsUri, "meta"); //$NON-NLS-1$
 			writer.writeAttribute("http-equiv", "Content-Type"); //$NON-NLS-1$ //$NON-NLS-2$
 			writer.writeAttribute("content", String.format("text/html; charset=%s", encoding)); //$NON-NLS-1$//$NON-NLS-2$
@@ -700,7 +707,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 			writer.writeAttribute("type", "text/css"); //$NON-NLS-1$ //$NON-NLS-2$
 			for (Entry<String, String> attr : stylesheet.attributes.entrySet()) {
 				String attrName = attr.getKey();
-				if (!"type".equals(attrName)) { //$NON-NLS-1$ 
+				if (!"type".equals(attrName)) { //$NON-NLS-1$
 					writer.writeAttribute(attrName, attr.getValue());
 				}
 			}
@@ -1137,16 +1144,88 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * 
 	 * @param href
 	 *            the url for the href attribute
+	 * @see #getHtmlFilenameFormat()
 	 */
 	protected void emitAnchorHref(String href) {
-		writer.writeAttribute("href", makeUrlAbsolute(href)); //$NON-NLS-1$
+		writer.writeAttribute("href", makeUrlAbsolute(applyHtmlFilenameFormat(href))); //$NON-NLS-1$
+	}
+
+	/**
+	 * Applies the {@link #getHtmlFilenameFormat() HTML filename format} to links that are missing a filename extension
+	 * using the format specified by {@link #getHtmlFilenameFormat()}.
+	 * 
+	 * @param href
+	 *            the link
+	 * @return the given {@code href} with the {@link #getHtmlFilenameFormat() HTML filename format} applied, or the
+	 *         original {@code href} if the {@link #getHtmlFilenameFormat()} is null
+	 * @see #getHtmlFilenameFormat()
+	 */
+	private String applyHtmlFilenameFormat(String href) {
+		if (getHtmlFilenameFormat() != null) {
+			if (isMissingFilenameExtension(href) && !isAbsoluteUrl(href)) {
+				int indexOfHash = href.indexOf('#');
+				if (indexOfHash > 0) {
+					href = getHtmlFilenameFormat().replace("$1", href.substring(0, indexOfHash)) + href.substring(indexOfHash); //$NON-NLS-1$
+				} else if (indexOfHash == -1) {
+					href = getHtmlFilenameFormat().replace("$1", href); //$NON-NLS-1$
+				}
+			}
+		}
+		return href;
+	}
+
+	private boolean isAbsoluteUrl(String href) {
+		return ABSOLUTE_URL_PATTERN.matcher(href).matches();
+	}
+
+	/**
+	 * Determines whether or not the {@code href} has a a filename extension
+	 * 
+	 * @param href
+	 *            the reference to test
+	 * @return {@code true} if the {@code href} is relative and missing a filename extension, otherwise {@code false}
+	 */
+	private boolean isMissingFilenameExtension(String href) {
+		int lasIndexOfSlash = href.lastIndexOf('/');
+		return href.lastIndexOf('.') <= lasIndexOfSlash && lasIndexOfSlash < href.length() - 1;
+	}
+
+	/**
+	 * Provides the HTML filename format which is used to rewrite relative URLs having no filename extension. Specifying
+	 * the HTML filename format enables content to have relative hyperlinks to generated files without having to specify
+	 * the filename extension in the hyperlink. If specified, the returned value is a pattern where "$1" indicates the
+	 * location of the filename. For example "$1.html". The default value is {@code null}.
+	 * 
+	 * @see #setHtmlFilenameFormat(String)
+	 * @return the HTML filename format or {@code null}
+	 * @since 2.0
+	 */
+	public String getHtmlFilenameFormat() {
+		return htmlFilenameFormat;
+	}
+
+	/**
+	 * Sets the HTML filename format which is used to rewrite relative URLs having no filename extension. Specifying the
+	 * HTML filename format enables content to have relative hyperlinks to generated files without having to specify the
+	 * filename extension in the hyperlink. If specified, the returned value is a pattern where "$1" indicates the
+	 * location of the filename. For example "$1.html". The default value is {@code null}.
+	 * 
+	 * @param htmlFilenameFormat
+	 *            the HTML filename format or <code>null</code>
+	 * @since 2.0
+	 * @see #getHtmlFilenameFormat()
+	 */
+	public void setHtmlFilenameFormat(String htmlFilenameFormat) {
+		checkArgument(htmlFilenameFormat == null || htmlFilenameFormat.contains("$1"), //$NON-NLS-1$
+				"The HTML filename format must contain \"$1\""); //$NON-NLS-1$
+		this.htmlFilenameFormat = htmlFilenameFormat;
 	}
 
 	private String prependImageUrl(String imageUrl) {
 		if (prependImagePrefix == null || prependImagePrefix.length() == 0) {
 			return imageUrl;
 		}
-		if (ABSOLUTE_URL_PATTERN.matcher(imageUrl).matches() || imageUrl.contains("../")) { //$NON-NLS-1$
+		if (isAbsoluteUrl(imageUrl) || imageUrl.contains("../")) { //$NON-NLS-1$
 			return imageUrl;
 		}
 		String url = prependImagePrefix;

@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Torkild U. Resheim - Handle links when transforming, bug 325006
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.parser.builder;
 
@@ -35,6 +36,7 @@ import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
  * @author David Green
+ * @author Torkild U. Resheim
  */
 public class HtmlDocumentBuilderTest extends TestCase {
 
@@ -75,6 +77,13 @@ public class HtmlDocumentBuilderTest extends TestCase {
 		parser.setBuilder(builder);
 	}
 
+	private void assertContainsPattern(String pattern) {
+		Pattern p = Pattern.compile(pattern);
+		String html = out.toString();
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(p.matcher(html).find());
+	}
+
 	public void testRelativeUrlWithBase() throws URISyntaxException {
 		builder.setBase(new URI("http://www.foo.bar/baz"));
 		parser.parse("\"An URL\":foo/bar.html");
@@ -99,6 +108,63 @@ public class HtmlDocumentBuilderTest extends TestCase {
 		TestUtil.println("HTML: \n" + html);
 		Pattern pattern = Pattern.compile("<a href=\"file:(/[A-Z]{1}:)?/base/2/with%20space/foo/bar.html\">An URL</a>");
 		assertTrue(pattern.matcher(html).find());
+	}
+
+	public void testHtmlFilenameFormat() throws URISyntaxException {
+		final File file = new File("/base/2/with space/");
+		builder.setHtmlFilenameFormat("$1.html");
+		builder.setBase(file.toURI());
+		parser.parse("\"An URL\":foo.bar/bar");
+		assertContainsPattern("<a href=\"file:(/[A-Z]{1}:)?/base/2/with%20space/foo.bar/bar.html\">An URL</a>");
+	}
+
+	public void testHtmlFilenameFormat_Image() throws URISyntaxException {
+		final File file = new File("/base/2/with space/");
+		builder.setHtmlFilenameFormat("$1.html");
+		builder.setBase(file.toURI());
+		parser.parse("\"An URL\":foo.bar/bar.jpg");
+		assertContainsPattern("<a href=\"file:(/[A-Z]{1}:)?/base/2/with%20space/foo.bar/bar.jpg\">An URL</a>");
+	}
+
+	public void testHtmlFilenameFormat_WithAnchor() throws URISyntaxException {
+		final File file = new File("/base/2/with space/");
+		builder.setHtmlFilenameFormat("$1.html");
+		builder.setBase(file.toURI());
+		parser.parse("\"An URL\":foo/bar#bar");
+		assertContainsPattern("<a href=\"file:(/[A-Z]{1}:)?/base/2/with%20space/foo/bar.html#bar\">An URL</a>");
+	}
+
+	public void testHtmlFilenameFormat_Internal() throws URISyntaxException {
+		builder.setHtmlFilenameFormat("$1.html");
+		parser.parse("\"An URL\":#bar");
+		assertContainsPattern("<a href=\"#bar\">An URL</a>");
+	}
+
+	public void testHtmlFilenameFormat_Directory() throws URISyntaxException {
+		builder.setHtmlFilenameFormat("$1.html");
+		parser.parse("\"An URL\":one/two/");
+		assertContainsPattern("<a href=\"one/two/\">An URL</a>");
+	}
+
+	public void testHtmlFilenameFormat_Absolute() throws URISyntaxException {
+		builder.setHtmlFilenameFormat("$1.html");
+		parser.parse("\"An URL\":http://example.com/one/two");
+		assertContainsPattern("<a href=\"http://example.com/one/two\">An URL</a>");
+	}
+
+	public void testSetHtmlFilenameFormat() {
+		builder.setHtmlFilenameFormat("$1.thtml");
+		assertEquals("$1.thtml", builder.getHtmlFilenameFormat());
+
+		builder.setHtmlFilenameFormat(null);
+		assertNull(builder.getHtmlFilenameFormat());
+
+		try {
+			builder.setHtmlFilenameFormat("$.html");
+			fail("expected exception");
+		} catch (IllegalArgumentException e) {
+			assertNull(builder.getHtmlFilenameFormat());
+		}
 	}
 
 	public void testNoGratuitousWhitespace() {

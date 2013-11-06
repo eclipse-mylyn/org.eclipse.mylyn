@@ -397,6 +397,7 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 		builder.setPrependImagePrefix(prependImagePrefix);
 		builder.setXhtmlStrict(xhtmlStrict);
 		builder.setCopyrightNotice(copyrightNotice);
+		builder.setHtmlFilenameFormat(htmlFilenameFormat);
 		configureStylesheets(builder, relativePath);
 		return builder;
 	}

@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Torkild U. Resheim - Handle links when transforming file based wiki
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.core.ant;
@@ -21,6 +22,10 @@ import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
+/**
+ * @author David Green
+ * @author Torkild U. Resheim
+ */
 public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 
 	protected MarkupToHtmlTask task;
@@ -249,6 +254,29 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 
 	public void testTaskdef() {
 		assertEquals(MarkupToHtmlTask.class.getName(), loadTaskdefBundle().getString("wikitext-to-html"));
+	}
+
+	public void testMultipleFiles_LinkToConvertedMarkupDocument() throws IOException {
+		File markup = createTextileMarkupFile("h1. Heading One\n\n\"a link\":foo#bar\n\nh1. Heading Two\n\n\"a link\":foo#bar\n");
+		task.setFile(markup);
+		task.setMultipleOutputFiles(true);
+		task.execute();
+
+		listFiles();
+
+		File htmlFile = new File(markup.getParentFile(), "markup.html");
+		assertTrue(htmlFile.exists() && htmlFile.isFile());
+
+		String content = getContent(htmlFile);
+		//TestUtil.println(content);
+		assertTrue(content.contains("<a href=\"foo.html#bar\">a link</a>"));
+
+		File htmlFile2 = new File(markup.getParentFile(), "Heading-Two.html");
+		assertTrue(htmlFile2.exists());
+
+		String content2 = getContent(htmlFile2);
+		//TestUtil.println(content2);
+		assertTrue(content2.contains("<a href=\"foo.html#bar\">a link</a>"));
 	}
 
 }

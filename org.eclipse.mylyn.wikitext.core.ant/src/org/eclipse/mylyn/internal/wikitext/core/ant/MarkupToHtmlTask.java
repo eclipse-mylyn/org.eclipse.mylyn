@@ -8,6 +8,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     Peter Stibrany - bug 294383 
+ *     Torkild U. Resheim - Handle links when transforming file based wiki
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.core.ant;
 
@@ -42,6 +43,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
  * An Ant task for converting lightweight markup to HTML format.
  * 
  * @author David Green
+ * @author Torkild U. Resheim
  * @since 1.0
  */
 public class MarkupToHtmlTask extends MarkupTask {
@@ -235,6 +237,7 @@ public class MarkupToHtmlTask extends MarkupTask {
 				builder.setPrependImagePrefix(prependImagePrefix);
 				builder.setXhtmlStrict(xhtmlStrict);
 				builder.setCopyrightNotice(copyrightNotice);
+				builder.setHtmlFilenameFormat(htmlFilenameFormat);
 
 				SplittingStrategy splittingStrategy = multipleOutputFiles
 						? new DefaultSplittingStrategy()

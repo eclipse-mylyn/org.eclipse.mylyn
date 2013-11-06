@@ -166,9 +166,11 @@ public class MarkupToEclipseHelpMojoTest {
 	public void createBuilder() {
 		markupToEclipseHelp.copyrightNotice = UUID.randomUUID().toString();
 		markupToEclipseHelp.title = UUID.randomUUID().toString();
+		markupToEclipseHelp.htmlFilenameFormat = "$1.test.html";
 		HtmlDocumentBuilder builder = markupToEclipseHelp.createRootBuilder(new StringWriter(), "test", "");
 		assertEquals(markupToEclipseHelp.copyrightNotice, builder.getCopyrightNotice());
 		assertEquals(markupToEclipseHelp.title, builder.getTitle());
+		assertEquals(markupToEclipseHelp.htmlFilenameFormat, builder.getHtmlFilenameFormat());
 	}
 
 	@Test
