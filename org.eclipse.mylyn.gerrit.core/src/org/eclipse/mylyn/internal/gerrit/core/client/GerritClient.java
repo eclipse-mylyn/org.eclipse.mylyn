@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -860,7 +861,35 @@ public class GerritClient extends ReviewsClient {
 		return getChangeDetail(id.get(), monitor);
 	}
 
+	/**
+	 * Sends a query for the changes visible to the caller to the gerrit server.
+	 * 
+	 * @param monitor
+	 *            A progress monitor
+	 * @param queryString
+	 *            The specific gerrit change query
+	 * @return a list of GerritQueryResults built from the parsed query result (ChangeInfo:s)
+	 * @throws GerritException
+	 */
 	public List<GerritQueryResult> executeQuery(IProgressMonitor monitor, final String queryString)
+			throws GerritException {
+		return executeQuery(monitor, queryString, null);
+	}
+
+	/**
+	 * Sends a query for the changes visible to the caller to the gerrit server with the possibility of adding options
+	 * to the query.
+	 * 
+	 * @param monitor
+	 *            A progress monitor
+	 * @param queryString
+	 *            The specific gerrit change query
+	 * @param optionString
+	 *            Query options ("&o=" parameter). Only applicable for the REST API, ignored otherwise. May be null.
+	 * @return a list of GerritQueryResults built from the parsed query result (ChangeInfo:s)
+	 * @throws GerritException
+	 */
+	public List<GerritQueryResult> executeQuery(IProgressMonitor monitor, final String queryString, String optionString)
 			throws GerritException {
 		if (hasJsonRpcApi(monitor) && !restQueryAPIEnabled) {
 			try {
@@ -880,7 +909,7 @@ public class GerritClient extends ReviewsClient {
 			}
 		}
 
-		return executeQueryRest(monitor, queryString);
+		return executeQueryRest(monitor, queryString, optionString);
 	}
 
 	private List<GerritQueryResult> convert(List<com.google.gerrit.common.data.ChangeInfo> changes) {
@@ -892,10 +921,41 @@ public class GerritClient extends ReviewsClient {
 		return results;
 	}
 
+	/**
+	 * Sends a query for the changes visible to the caller to the gerrit server. Uses the gerrit REST API.
+	 * 
+	 * @param monitor
+	 *            A progress monitor
+	 * @param queryString
+	 *            The specific gerrit change query
+	 * @return a list of GerritQueryResults built from the parsed query result (ChangeInfo:s)
+	 * @throws GerritException
+	 */
 	public List<GerritQueryResult> executeQueryRest(IProgressMonitor monitor, final String queryString)
 			throws GerritException {
+		return executeQueryRest(monitor, queryString, null);
+	}
+
+	/**
+	 * Sends a query for the changes visible to the caller to the gerrit server with the possibility of adding options
+	 * to the query. Uses the gerrit REST API.
+	 * 
+	 * @param monitor
+	 *            A progress monitor
+	 * @param queryString
+	 *            The specific gerrit change query
+	 * @param optionString
+	 *            Query options ("&o=" parameter). May be null or empty.
+	 * @return a list of GerritQueryResults built from the parsed query result (ChangeInfo:s)
+	 * @throws GerritException
+	 */
+	public List<GerritQueryResult> executeQueryRest(IProgressMonitor monitor, final String queryString,
+			String optionString) throws GerritException {
 		try {
 			String uri = "/changes/?q=" + URLEncoder.encode(queryString, "UTF-8"); //$NON-NLS-1$ //$NON-NLS-2$
+			if (StringUtils.isNotBlank(optionString)) {
+				uri += "&o=" + URLEncoder.encode(optionString, "UTF-8"); //$NON-NLS-1$ //$NON-NLS-2$
+			}
 			TypeToken<List<GerritQueryResult>> queryResultListType = new TypeToken<List<GerritQueryResult>>() {
 			};
 			return executeGetRestRequest(uri, queryResultListType.getType(), monitor);

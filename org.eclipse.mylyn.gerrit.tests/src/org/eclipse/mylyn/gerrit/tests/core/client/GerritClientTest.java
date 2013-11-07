@@ -1,4 +1,5 @@
 /*******************************************************************************
+ /*******************************************************************************
  * Copyright (c) 2011, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -8,6 +9,8 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Sascha Scholz (SAP) - improvements
+ *     Francois Chouinard (Ericsson)  - Bug 414219 Add new Test
+ *     Jacques Bouthillier (Ericsson) - Fix comments for Bug 414219
  *******************************************************************************/
 
 package org.eclipse.mylyn.gerrit.tests.core.client;
@@ -30,6 +33,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritSystemInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.CommentLink;
+import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,6 +43,7 @@ import com.google.gerrit.reviewdb.Account;
 /**
  * @author Steffen Pingel
  * @author Sascha Scholz
+ * @author Francois Chouinard
  */
 public class GerritClientTest extends TestCase {
 
@@ -131,6 +136,94 @@ public class GerritClientTest extends TestCase {
 	@Test
 	public void testGetVersion() throws Exception {
 		assertEquals(GerritFixture.current().getGerritVersion(), client.getVersion(new NullProgressMonitor()));
+	}
+
+	private List<GerritQueryResult> executeQuery(String query) throws GerritException {
+		List<GerritQueryResult> results = null;
+		results = client.executeQuery(new NullProgressMonitor(), query);
+		return results;
+	}
+
+	private List<GerritQueryResult> executeQuery(String query, String option) throws GerritException {
+		List<GerritQueryResult> results = null;
+		results = client.executeQuery(new NullProgressMonitor(), query, option);
+		return results;
+	}
+
+	@Test
+	public void testExecuteQueryWithoutOption() throws Exception {
+		String query = "status:open";
+		List<GerritQueryResult> results = null;
+		results = executeQuery(query);
+		assertNotNull(results);
+	}
+
+	@Test
+	public void testExecuteQueryWithNullOption() throws Exception {
+		String query = "status:open";
+		String option = null;
+		List<GerritQueryResult> results = executeQuery(query, option);
+		assertNotNull(results);
+	}
+
+	@Test
+	public void testExecuteQueryWithEmptyOption() throws Exception {
+		String query = "status:open";
+		String option = "";
+		List<GerritQueryResult> results = null;
+		results = executeQuery(query, option);
+		assertNotNull(results);
+	}
+
+	@Test
+	public void testExecuteQueryWithOption() throws Exception {
+		String query = "status:open";
+		String option = "LABELS";
+		List<GerritQueryResult> results = executeQuery(query, option);
+		assertNotNull(results);
+		for (int index = 0; index < results.size(); index++) {
+			assertNotNull(results.get(index));
+		}
+	}
+
+	private List<GerritQueryResult> executeQueryRest(String query) throws GerritException {
+		return client.executeQueryRest(new NullProgressMonitor(), query);
+	}
+
+	private List<GerritQueryResult> executeQueryRest(String query, String option) throws GerritException {
+		return client.executeQueryRest(new NullProgressMonitor(), query, option);
+	}
+
+	@Test
+	public void testExecuteQueryRestWithoutOption() throws Exception {
+		String query = "status:open";
+		List<GerritQueryResult> results = executeQueryRest(query);
+		assertNotNull(results);
+	}
+
+	@Test
+	public void testExecuteQueryRestWithNullOption() throws Exception {
+		String query = "status:open";
+		String option = null;
+		List<GerritQueryResult> results = executeQueryRest(query, option);
+		assertNotNull(results);
+	}
+
+	@Test
+	public void testExecuteQueryRestWithEmptyOption() throws Exception {
+		String query = "status:open";
+		String option = "";
+		List<GerritQueryResult> results = null;
+		results = executeQueryRest(query, option);
+		assertNotNull(results);
+	}
+
+	@Test
+	public void testExecuteQueryvWithOption() throws Exception {
+		String query = "status:open";
+		String option = "LABELS";
+		List<GerritQueryResult> results = executeQueryRest(query, option);
+		assertNotNull(results);
 	}
 
 }
