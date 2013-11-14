@@ -48,7 +48,8 @@ class bugzilla {
     "libtest-taint-perl",
     "liburi-perl",
     "libsoap-lite-perl",
-    "libtemplate-perl",]
+    "libtemplate-perl",
+    "patchutils",]
 
   package { $requirements:
     ensure  => "installed",

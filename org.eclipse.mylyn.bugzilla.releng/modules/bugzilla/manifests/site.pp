@@ -32,6 +32,7 @@ define bugzilla::site (
   $desciptorfile        = " ",
   $usebugaliases        = false,
   $clearMode            = $bugzilla::clearMode,
+  $rest_enabled         = false,
   ) {
 
   include "bugzilla"
@@ -51,13 +52,26 @@ define bugzilla::site (
   }
   if $envinfo1 != "" {
     if !$xmlrpc_enabled {
-      $envinfo = "$envinfo1, XML-RPC disabled"
+      $envinfo2 = "$envinfo1, XML-RPC disabled"
     } else {
-       $envinfo = "$envinfo1"
+       $envinfo2 = "$envinfo1"
     }
   } else {
     if !$xmlrpc_enabled {
-      $envinfo = "XML-RPC disabled"
+      $envinfo2 = "XML-RPC disabled"
+    } else {
+       $envinfo2 = ""
+    }
+  }
+  if $envinfo2 != "" {
+    if $rest_enabled {
+      $envinfo = "$envinfo2, REST enabled"
+    } else {
+       $envinfo = "$envinfo2"
+    }
+  } else {
+    if $rest_enabled {
+      $envinfo = "REST enabled"
     } else {
        $envinfo = ""
     }

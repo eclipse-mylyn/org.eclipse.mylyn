@@ -138,6 +138,7 @@ sub install_before_final_checks {
 											version => Bugzilla::Version::DEFAULT_VERSION,
 											classification => 'Unclassified',
 											defaultmilestone => DEFAULT_MILESTONE,
+											allows_unconfirmed => 0,
 						});
 		Bugzilla::Component->create({ %{ ({
 											name => 'ManualC1',

@@ -10,5 +10,6 @@
 <% if !@xmlrpc_enabled      %><% if propertyanz.to_i > 0 %>   ,<% else %>    <% end %><% propertyanz = propertyanz.to_i -%><% propertyanz += 1 -%>"xmlrpc_enabled": "<%= xmlrpc_enabled %>"<% end %>
 <% if @desciptorfile > " "  %><% if propertyanz.to_i > 0 %>   ,<% else %>    <% end %><% propertyanz = propertyanz.to_i -%><% propertyanz += 1 -%>"desciptorfile": "<%= desciptorfile %>"<% end %>
 <% if @usebugaliases        %><% if propertyanz.to_i > 0 %>   ,<% else %>    <% end %><% propertyanz = propertyanz.to_i -%><% propertyanz += 1 -%>"usebugaliases": "<%= usebugaliases %>"<% end %>
-   }
+<% if @rest_enabled         %><% if propertyanz.to_i > 0 %>   ,<% else %>    <% end %><% propertyanz = propertyanz.to_i -%><% propertyanz += 1 -%>"rest_enabled": "<%= rest_enabled %>"<% end %>
+    }
 }
