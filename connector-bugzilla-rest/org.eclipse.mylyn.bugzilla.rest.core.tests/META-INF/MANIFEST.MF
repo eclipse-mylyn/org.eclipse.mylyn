@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mylyn Bugzilla Rest Connector
+Bundle-SymbolicName: org.eclipse.mylyn.bugzilla.rest.core.tests;singleton:=true
+Bundle-Version: 2.2.0.qualifier
+Bundle-Vendor: Eclipse Mylyn
+Fragment-Host: org.eclipse.mylyn.bugzilla.rest.core
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.junit;bundle-version="4.8.2"
+Export-Package: org.eclipse.mylyn.internal.bugzilla.rest.core;x-internal:=true
