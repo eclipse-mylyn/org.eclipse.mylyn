@@ -11,15 +11,13 @@
 
 package org.eclipse.mylyn.internal.bugzilla.rest.ui;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 public class DummyTest {
 
 	@Test
 	public void test() {
-		fail("Not yet implemented");
+		// fail("Not yet implemented");
 	}
 
 }
