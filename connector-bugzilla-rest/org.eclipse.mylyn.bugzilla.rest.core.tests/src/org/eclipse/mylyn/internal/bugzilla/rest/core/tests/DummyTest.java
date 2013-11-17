@@ -9,7 +9,7 @@
  *     Frank Becker - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.bugzilla.rest.ui;
+package org.eclipse.mylyn.internal.bugzilla.rest.core.tests;
 
 import org.junit.Test;
 
@@ -17,7 +17,7 @@ public class DummyTest {
 
 	@Test
 	public void test() {
-		// fail("Not yet implemented");
+//		fail("Not yet implemented");
 	}
 
 }

@@ -9,7 +9,7 @@
  *     Frank Becker - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.bugzilla.rest.core;
+package org.eclipse.mylyn.internal.bugzilla.rest.ui.tests;
 
 import org.junit.Test;
 
