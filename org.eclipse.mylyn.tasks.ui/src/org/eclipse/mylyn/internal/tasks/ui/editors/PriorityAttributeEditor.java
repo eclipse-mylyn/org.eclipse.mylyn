@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import java.text.MessageFormat;
+
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -83,7 +85,7 @@ public class PriorityAttributeEditor extends AbstractAttributeEditor {
 
 	private void updateEditor() {
 		editor.select(getValue(), mapping.getPriorityLevel());
-		editor.setToolTipText(getValueLabel());
+		editor.setToolTipText(MessageFormat.format(Messages.PriorityAttributeEditor_Priority_Tooltip, getValueLabel()));
 	}
 
 }
