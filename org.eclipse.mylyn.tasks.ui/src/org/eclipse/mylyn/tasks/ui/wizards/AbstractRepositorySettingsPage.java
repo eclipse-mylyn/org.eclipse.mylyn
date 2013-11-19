@@ -334,13 +334,15 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	}
 
 	private void swapUserNameWithAnonymousInTabList() {
-		List<Control> tabList = Arrays.asList(compositeContainer.getTabList());
-		if (tabList.contains(repositoryUserNameEditor.getTextControl(compositeContainer))
-				&& tabList.contains(anonymousButton)) {
-			int userNameIndex = tabList.indexOf(repositoryUserNameEditor.getTextControl(compositeContainer));
-			int anonymousIndex = tabList.indexOf(anonymousButton);
-			Collections.swap(tabList, userNameIndex, anonymousIndex);
-			compositeContainer.setTabList(tabList.toArray(new Control[tabList.size()]));
+		if (compositeContainer != null && anonymousButton != null && repositoryUserNameEditor != null) {
+			List<Control> tabList = Arrays.asList(compositeContainer.getTabList());
+			if (tabList.contains(repositoryUserNameEditor.getTextControl(compositeContainer))
+					&& tabList.contains(anonymousButton)) {
+				int userNameIndex = tabList.indexOf(repositoryUserNameEditor.getTextControl(compositeContainer));
+				int anonymousIndex = tabList.indexOf(anonymousButton);
+				Collections.swap(tabList, userNameIndex, anonymousIndex);
+				compositeContainer.setTabList(tabList.toArray(new Control[tabList.size()]));
+			}
 		}
 	}
 
