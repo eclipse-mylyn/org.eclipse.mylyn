@@ -225,19 +225,6 @@ public class TaskListToolTip extends GradientToolTip {
 			sb.append("  ["); //$NON-NLS-1$
 			sb.append(getRepositoryLabel(task.getConnectorKind(), task.getRepositoryUrl()));
 			sb.append("]"); //$NON-NLS-1$
-			sb.append("\n"); //$NON-NLS-1$
-
-			String owner = ((ITask) element).getOwner();
-			if (owner != null) {
-				sb.append(NLS.bind(Messages.TaskListToolTip_Assigned_to_X, owner));
-				sb.append("\n"); //$NON-NLS-1$
-			}
-
-			String extendedToolTipInfo = task.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_EXTENDED_TOOLTIP);
-			if (extendedToolTipInfo != null && extendedToolTipInfo.length() > 0) {
-				sb.append(extendedToolTipInfo);
-				sb.append("\n"); //$NON-NLS-1$
-			}
 			return sb.toString();
 		} else {
 			return null;
@@ -263,6 +250,40 @@ public class TaskListToolTip extends GradientToolTip {
 			return label;
 		}
 		return ""; //$NON-NLS-1$
+	}
+
+	private String getOwnerText(IRepositoryElement element) {
+		if (element instanceof ITask) {
+			String owner = ((ITask) element).getOwner();
+			if (owner != null) {
+				return NLS.bind(Messages.TaskListToolTip_Assigned_to_X, owner);
+			}
+		}
+		return null;
+	}
+
+	private Image getOwnerImage(IRepositoryElement element) {
+		if (element instanceof ITask) {
+			ITask task = (ITask) element;
+			AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(task.getConnectorKind());
+			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
+					task.getRepositoryUrl());
+			if (connector.isOwnedByUser(repository, task)) {
+				return CommonImages.getImage(CommonImages.PERSON_ME);
+			}
+		}
+		return null;
+	}
+
+	private String getExtendedToolTipText(IRepositoryElement element) {
+		if (element instanceof ITask) {
+			ITask task = (ITask) element;
+			String extendedToolTipInfo = task.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_EXTENDED_TOOLTIP);
+			if (extendedToolTipInfo != null && extendedToolTipInfo.length() > 0) {
+				return extendedToolTipInfo;
+			}
+		}
+		return null;
 	}
 
 	private String getActivityText(IRepositoryElement element) {
@@ -497,6 +518,16 @@ public class TaskListToolTip extends GradientToolTip {
 		String detailsText = getDetailsText(currentTipElement);
 		if (detailsText != null) {
 			addIconAndLabel(composite, null, detailsText);
+		}
+
+		String ownerText = getOwnerText(currentTipElement);
+		if (ownerText != null) {
+			addIconAndLabel(composite, getOwnerImage(currentTipElement), ownerText);
+		}
+
+		String extendedText = getExtendedToolTipText(currentTipElement);
+		if (extendedText != null) {
+			addIconAndLabel(composite, null, extendedText);
 		}
 
 		String synchText = getSynchText(currentTipElement);
