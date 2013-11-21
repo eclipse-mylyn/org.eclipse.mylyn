@@ -29,7 +29,7 @@ define gerrit::defaultsites ($base = $gerrit::base, $userOwner = $gerrit::userOw
   gerrit { "2.7":
   }
 
-  gerrit { "2.8-rc0":
+  gerrit { "2.8-rc2":
   }
 
   /* Sites */
@@ -71,12 +71,12 @@ define gerrit::defaultsites ($base = $gerrit::base, $userOwner = $gerrit::userOw
     require => Gerrit["2.7"],
   }
 
-  gerrit::site { "gerrit-2.8-rc0":
-    version => "2.8-rc0",
+  gerrit::site { "gerrit-2.8-rc2":
+    version => "2.8-rc2",
     port    => 28280,
     sshport => 29280,
     envinfo => "Test",
-    require => Gerrit["2.8-rc0"],
+    require => Gerrit["2.8-rc2"],
   }
 
 }
