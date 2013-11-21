@@ -55,7 +55,6 @@ import com.google.gerrit.common.data.ChangeInfo;
 import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.reviewdb.Account;
 import com.google.gerrit.reviewdb.Change;
-import com.google.gerrit.reviewdb.Change.Status;
 import com.google.gerrit.reviewdb.ChangeMessage;
 import com.google.gerrit.reviewdb.PatchSetApproval;
 import com.google.gerrit.reviewdb.UserIdentity;
@@ -367,8 +366,9 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 				for (Label label : record.getLabels()) {
 					IApprovalType approvalType = typeForName.get(label.getLabel());
 					if (approvalType == null) {
-						if (detail.getChange().getStatus() == Status.ABANDONED) {
-							// typeForName can be empty for an abandoned change as it no longer provides approval types info
+						if (detail.getChange().getStatus().isClosed()) {
+							// typeForName can be empty for a closed* change as it no longer provides approval types info
+							// * abandoned or reverted
 							continue;
 						}
 						throw new RuntimeException("Internal Error, no approval type found for: " + label.getLabel()); //$NON-NLS-1$
@@ -398,7 +398,7 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 
 	public static ReviewStatus getReviewStatus(com.google.gerrit.reviewdb.Change.Status gerritStatus) {
 		if (gerritStatus == null) {
-			// DRAFT is not correctly parsed for ChangeInfo since Change.Status does not define the corresponding enum field 
+			// DRAFT is not correctly parsed for ChangeInfo since Change.Status does not define the corresponding enum field
 			return ReviewStatus.DRAFT;
 		}
 		switch (gerritStatus) {
