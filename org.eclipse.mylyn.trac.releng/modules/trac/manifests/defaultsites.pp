@@ -25,9 +25,6 @@ define trac::defaultsites ($base = $trac::base, $userOwner = $trac::userOwner, $
 
   /* Instances */
 
-  trac::trac { "0.12.5":
-  }
-
   trac::trac { "1.0":
   }
 
@@ -55,11 +52,6 @@ define trac::defaultsites ($base = $trac::base, $userOwner = $trac::userOwner, $
   }
 
   /* Sites */
-
-  trac::site { "trac-0.12.5":
-    version => "0.12.5",
-    require => Trac["0.12.5"],
-  }
 
   trac::site { "trac-1.0":
     version => "1.0",
