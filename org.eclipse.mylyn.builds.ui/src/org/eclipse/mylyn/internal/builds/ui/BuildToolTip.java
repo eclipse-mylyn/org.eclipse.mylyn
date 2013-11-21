@@ -140,12 +140,10 @@ public class BuildToolTip extends RichToolTip {
 			addPlan(parent, plan);
 		}
 
-		if (data instanceof IBuildElement) {
-			if (data.getElementStatus() != null) {
-				addIconAndLabel(parent, CommonImages.getImage(CommonImages.WARNING), data.getElementStatus()
-						.getMessage());
-			}
+		if (data.getElementStatus() != null) {
+			addIconAndLabel(parent, CommonImages.getImage(CommonImages.WARNING), data.getElementStatus().getMessage());
 		}
+
 		if (data instanceof IBuildServer) {
 			int passed = 0;
 			int failed = 0;
