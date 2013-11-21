@@ -63,7 +63,7 @@ public class GerritToGitMappingTest {
 
 	@Test
 	public void testFindMatching() throws Exception {
-		GerritToGitMapping mapping = createTestMapping(createRepositories("project1", GERRIT_PROJECT)); //$NON-NLS-1$ 
+		GerritToGitMapping mapping = createTestMapping(createRepositories("project1", GERRIT_PROJECT)); //$NON-NLS-1$
 		assertNotNull(mapping.find());
 	}
 
@@ -72,7 +72,7 @@ public class GerritToGitMappingTest {
 		for (String project : projects) {
 			repos.add(createRepository(project));
 		}
-		return repos.toArray(new Repository[0]);
+		return repos.toArray(new Repository[repos.size()]);
 	}
 
 	private Repository createRepository(String project) {

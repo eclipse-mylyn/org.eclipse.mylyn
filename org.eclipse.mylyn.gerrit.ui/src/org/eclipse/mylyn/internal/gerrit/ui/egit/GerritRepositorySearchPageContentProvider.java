@@ -79,7 +79,7 @@ public class GerritRepositorySearchPageContentProvider implements ITreeContentPr
 				it.remove();
 			}
 		}
-		TaskRepository[] result = repositories.toArray(new TaskRepository[] {});
+		TaskRepository[] result = repositories.toArray(new TaskRepository[repositories.size()]);
 		Arrays.sort(result, new TaskRepositoryComparator());
 		return result;
 	}

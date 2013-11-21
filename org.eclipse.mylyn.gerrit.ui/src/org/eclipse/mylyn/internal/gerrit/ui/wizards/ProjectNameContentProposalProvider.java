@@ -78,7 +78,7 @@ public class ProjectNameContentProposalProvider implements IContentProposalProvi
 					proposals.add(new ProjectNameContentProposal(projectName));
 				}
 			}
-			return proposals.toArray(new IContentProposal[] {});
+			return proposals.toArray(new IContentProposal[proposals.size()]);
 		} else {
 			return new IContentProposal[] { new MissingConfigurationContentProposal() };
 		}

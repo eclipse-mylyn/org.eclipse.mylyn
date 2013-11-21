@@ -13,7 +13,9 @@ package org.eclipse.mylyn.internal.gerrit.ui.editor;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Set;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -51,7 +53,8 @@ public class ComparePatchSetJob extends Job {
 
 	public void openSynchronization(String baseRef, String targetRef) throws IOException {
 		GitSynchronizeData data = new GitSynchronizeData(repository, baseRef, targetRef, false);
-		GitModelSynchronize.launch(data, data.getProjects().toArray(new IResource[0]));
+		Set<IProject> projects = data.getProjects();
+		GitModelSynchronize.launch(data, projects.toArray(new IResource[projects.size()]));
 	}
 
 	@Override
