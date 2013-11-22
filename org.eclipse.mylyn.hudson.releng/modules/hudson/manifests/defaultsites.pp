@@ -50,6 +50,7 @@ define hudson::defaultsites ($base = $hudson::base,) {
     envtype => "hudson",
     version => "3.1.0",
     port    => 9041,
+    envdefault => true,
     require => Hudson["3.1.0"],
   }
 
