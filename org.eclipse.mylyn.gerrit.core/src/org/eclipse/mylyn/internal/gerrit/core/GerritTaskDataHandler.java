@@ -14,6 +14,7 @@
 package org.eclipse.mylyn.internal.gerrit.core;
 
 import java.util.Date;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -22,7 +23,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
+import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritPerson;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.GerritReviewLabel;
 import org.eclipse.mylyn.internal.gerrit.core.remote.GerritRemoteFactoryProvider;
 import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IReview;
@@ -41,11 +44,14 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.osgi.util.NLS;
 
 import com.google.gerrit.common.data.AccountInfo;
+import com.google.gerrit.common.data.ApprovalDetail;
 import com.google.gerrit.common.data.ChangeDetail;
 import com.google.gerrit.common.data.ChangeInfo;
 import com.google.gerrit.reviewdb.Account;
+import com.google.gerrit.reviewdb.ApprovalCategory;
 import com.google.gerrit.reviewdb.Change;
 import com.google.gerrit.reviewdb.ChangeMessage;
+import com.google.gerrit.reviewdb.PatchSetApproval;
 
 /**
  * @author Mikael Kober
@@ -56,6 +62,8 @@ import com.google.gerrit.reviewdb.ChangeMessage;
 public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 
 	private final GerritConnector connector;
+
+	private final String ANONYMOUS = "Anonymous"; //$NON-NLS-1$
 
 	public GerritTaskDataHandler(GerritConnector connector) {
 		this.connector = connector;
@@ -244,6 +252,36 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		}
 
 		setAttributeValue(data, schema.CAN_PUBLISH, Boolean.toString(canPublish));
+
+		// Retrieve the 'starred' state
+		setAttributeValue(data, schema.IS_STARRED, Boolean.toString(changeDetail.isStarred()));
+
+		// Retrieve the approvals
+		Short reviewState = 0;
+		Short verifyState = 0;
+		for (ApprovalDetail approvals : changeDetail.getApprovals()) {
+			Map<ApprovalCategory.Id, PatchSetApproval> map = approvals.getApprovalMap();
+			PatchSetApproval approval = map.get(new ApprovalCategory.Id("CRVW")); //$NON-NLS-1$
+			if (approval != null) {
+				reviewState = getStateValue(approval.getValue(), reviewState);
+			}
+			approval = map.get(new ApprovalCategory.Id("VRIF")); //$NON-NLS-1$
+			if (approval != null) {
+				verifyState = getStateValue(approval.getValue(), verifyState);
+			}
+		}
+		setAttributeValue(data, schema.REVIEW_STATE, reviewState.toString());
+		setAttributeValue(data, schema.VERIFY_STATE, verifyState.toString());
+	}
+
+	private Short getStateValue(Short value, Short oldState) {
+		Short state = 0;
+		if (value < 0) {
+			state = (short) Math.min(oldState, value);
+		} else {
+			state = (short) Math.max(oldState, value);
+		}
+		return state;
 	}
 
 	@Override
@@ -267,6 +305,22 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		if (GerritConnector.isClosed(changeInfo.getStatus())) {
 			setAttributeValue(data, schema.COMPLETED, dateToString(changeInfo.getUpdated()));
 		}
+
+		// Add fields for the Gerrit Dashboard viewer entries
+		GerritPerson owner = changeInfo.getOwner();
+		setAttributeValue(data, schema.OWNER, (owner != null) ? owner.getName() : ANONYMOUS);
+		setAttributeValue(data, schema.BRANCH, changeInfo.getBranch());
+		setAttributeValue(data, schema.IS_STARRED, (changeInfo.isStarred() ? Boolean.TRUE : Boolean.FALSE).toString());
+
+		GerritReviewLabel reviewLabel = changeInfo.getReviewLabel();
+		if (reviewLabel != null) {
+			if (reviewLabel.getVerifyStatus() != null) {
+				setAttributeValue(data, schema.VERIFY_STATE, reviewLabel.getVerifyStatus().getStatus());
+			}
+			if (reviewLabel.getCodeReviewStatus() != null) {
+				setAttributeValue(data, schema.REVIEW_STATE, reviewLabel.getCodeReviewStatus().getStatus());
+			}
+		}
 	}
 
 	private String shortenChangeId(String changeId) {
@@ -280,8 +334,8 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 	/**
 	 * Convenience method to set the value of a given Attribute in the given {@link TaskData}.
 	 */
-	private TaskAttribute setAttributeValue(TaskData data, Field gerritAttribut, String value) {
-		TaskAttribute attribute = data.getRoot().getAttribute(gerritAttribut.getKey());
+	private TaskAttribute setAttributeValue(TaskData data, Field gerritAttribute, String value) {
+		TaskAttribute attribute = data.getRoot().getAttribute(gerritAttribute.getKey());
 		if (value != null) {
 			attribute.setValue(value);
 		}

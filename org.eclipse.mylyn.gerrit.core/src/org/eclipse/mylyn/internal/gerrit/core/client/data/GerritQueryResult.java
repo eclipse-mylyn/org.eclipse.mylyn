@@ -7,12 +7,14 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Francois Chouinard - Added support for the review labels
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core.client.data;
 
 import java.sql.Timestamp;
 
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.GerritReviewLabel;
 import org.eclipse.mylyn.internal.gerrit.core.remote.GerritReviewRemoteFactory;
 import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
 
@@ -42,6 +44,12 @@ public class GerritQueryResult {
 
 	private Timestamp updated;
 
+	// 'Starred' status of the review
+	private boolean starred;
+
+	// Labels
+	private GerritReviewLabel labels;
+
 	public GerritQueryResult(ChangeInfo changeInfo) {
 		setNumber(changeInfo.getId().get());
 		setId(changeInfo.getKey().get());
@@ -54,6 +62,7 @@ public class GerritQueryResult {
 			setStatus(status.toString());
 		}
 		setUpdated(changeInfo.getLastUpdatedOn());
+		setStarred(changeInfo.isStarred());
 	}
 
 	public GerritQueryResult() {
@@ -95,6 +104,14 @@ public class GerritQueryResult {
 		return updated;
 	}
 
+	public boolean isStarred() {
+		return starred;
+	}
+
+	public GerritReviewLabel getReviewLabel() {
+		return labels;
+	}
+
 	private void setId(String id) {
 		this.id = id;
 	}
@@ -117,6 +134,10 @@ public class GerritQueryResult {
 
 	private void setUpdated(Timestamp updated) {
 		this.updated = updated;
+	}
+
+	private void setStarred(boolean starred) {
+		this.starred = starred;
 	}
 
 }

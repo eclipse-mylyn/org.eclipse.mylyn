@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Francois Chouinard - Moved/added fields for Gerrit Dashboard
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core;
@@ -50,4 +51,22 @@ public class GerritQueryResultSchema extends AbstractTaskSchema {
 
 	public final Field URL = inheritFrom(parent.TASK_URL).create();
 
+	// Moved from GerritTaskSchema
+	public final Field OWNER = inheritFrom(parent.USER_ASSIGNED).flags(Flag.READ_ONLY, Flag.ATTRIBUTE).create();
+
+	// Moved from GerritTaskSchema
+	public final Field BRANCH = createField("org.eclipse.gerrit.Branch", "Branch", TaskAttribute.TYPE_SHORT_TEXT,
+			Flag.READ_ONLY, Flag.ATTRIBUTE);
+
+	// Indicates that the review is 'starred'
+	public final Field IS_STARRED = createField("org.eclipse.gerrit.StarredReview", "Starred",
+			TaskAttribute.TYPE_BOOLEAN);
+
+	// The review state (typically -2 .. +2)
+	public final Field REVIEW_STATE = createField("org.eclipse.gerrit.ReviewState", "ReviewState",
+			TaskAttribute.TYPE_INTEGER, Flag.READ_ONLY);
+
+	// The verification state (typically -1 .. +1)
+	public final Field VERIFY_STATE = createField("org.eclipse.gerrit.VerifyState", "VerifyState",
+			TaskAttribute.TYPE_INTEGER, Flag.READ_ONLY);
 }

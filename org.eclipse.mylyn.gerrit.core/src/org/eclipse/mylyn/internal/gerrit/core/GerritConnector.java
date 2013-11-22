@@ -10,6 +10,8 @@
  *      Tasktop Technologies - improvements
  *      GitHub, Inc. - fixes for bug 354753
  *      Sascha Scholz (SAP) - improvements
+ *      Francois Chouinard (Ericsson) - Bug 414253 Add support for Gerrit Dashboard
+ *      Jacques Bouthillier (Ericsson) - Bug 414253 Add support for Gerrit Dashboard
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core;
 
@@ -64,6 +66,8 @@ import com.google.gwtorm.server.StandardKeyEncoder;
  * @author Thomas Westling
  * @author Sascha Scholz
  * @author Miles Parker
+ * @author Francois Chouinard
+ * @author Jacques Bouthillier
  */
 public class GerritConnector extends ReviewsConnector {
 
@@ -230,16 +234,21 @@ public class GerritConnector extends ReviewsConnector {
 			List<GerritQueryResult> result = null;
 			if (GerritQuery.ALL_OPEN_CHANGES.equals(query.getAttribute(GerritQuery.TYPE))) {
 				result = client.queryAllReviews(monitor);
-			} else if (GerritQuery.CUSTOM.equals(query.getAttribute(GerritQuery.TYPE))) {
-				String queryString = query.getAttribute(GerritQuery.QUERY_STRING);
-				result = client.executeQuery(monitor, queryString);
 			} else if (GerritQuery.MY_CHANGES.equals(query.getAttribute(GerritQuery.TYPE))) {
 				result = client.queryMyReviews(monitor);
 			} else if (GerritQuery.MY_WATCHED_CHANGES.equals(query.getAttribute(GerritQuery.TYPE))) {
 				result = client.queryWatchedReviews(monitor);
+			} else if (GerritQuery.CUSTOM.equals(query.getAttribute(GerritQuery.TYPE))) {
+				String queryString = query.getAttribute(GerritQuery.QUERY_STRING);
+				result = client.executeQuery(monitor, queryString);
 			} else if (GerritQuery.OPEN_CHANGES_BY_PROJECT.equals(query.getAttribute(GerritQuery.TYPE))) {
 				String project = query.getAttribute(GerritQuery.PROJECT);
 				result = client.queryByProject(monitor, project);
+			} else {
+				String queryString = query.getAttribute(GerritQuery.QUERY_STRING);
+				if (StringUtils.isNotBlank(queryString)) {
+					result = client.executeQuery(monitor, queryString);
+				}
 			}
 
 			if (result != null) {
@@ -247,6 +256,10 @@ public class GerritConnector extends ReviewsConnector {
 					TaskData taskData = taskDataHandler.createPartialTaskData(repository,
 							Integer.toString(changeInfo.getNumber()), monitor);
 					taskDataHandler.updateTaskData(repository, taskData, changeInfo);
+					if (monitor.isCanceled()) {
+						break;
+					}
+
 					resultCollector.accept(taskData);
 				}
 				return Status.OK_STATUS;

@@ -69,6 +69,7 @@ public class GerritConnectorTest extends TestCase {
 
 		IRepositoryQuery query = new RepositoryQuery(repository.getConnectorKind(), "query"); //$NON-NLS-1$
 		query.setAttribute(GerritQuery.TYPE, GerritQuery.ALL_OPEN_CHANGES);
+		query.setAttribute(GerritQuery.QUERY_STRING, GerritQuery.ALL_OPEN_CHANGES);
 		InMemoryTaskDataCollector resultCollector = new InMemoryTaskDataCollector();
 
 		IStatus status = connector.performQuery(repository, query, resultCollector, null, new NullProgressMonitor());

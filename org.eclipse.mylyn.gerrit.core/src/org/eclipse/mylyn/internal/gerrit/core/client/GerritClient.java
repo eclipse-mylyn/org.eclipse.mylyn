@@ -11,6 +11,8 @@
  *      Sascha Scholz (SAP) - improvements
  *      GitHub, Inc. - fixes for bug 354753
  *      Christian Trutz - improvements
+ *      Francois Chouinard - Added "LABELS" option on selected queries
+ *      Jacques Bouthillier - Bug 414253 Add support for Gerrit Dashboard
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
@@ -115,10 +117,14 @@ import com.google.gwtjsonrpc.client.VoidResult;
  * @author Christian Trutz
  * @author Sascha Scholz
  * @author Miles Parker
+ * @author Francois Chouinard
+ * @author Jacques Bouthillier
  */
 public class GerritClient extends ReviewsClient {
 
 	private static final Pattern GERRIT_VERSION_PATTERN = Pattern.compile("Powered by Gerrit Code Review (.+)</p>"); //$NON-NLS-1$
+
+	private static final String GET_LABELS_OPTION = "LABELS"; //$NON-NLS-1$
 
 	private abstract class Operation<T> implements AsyncCallback<T> {
 
@@ -690,7 +696,7 @@ public class GerritClient extends ReviewsClient {
 			}
 		}
 		// the "self" alias is only supported in Gerrit 2.5 and later
-		return executeQueryRest(monitor, "owner:self OR reviewer:self"); //$NON-NLS-1$
+		return executeQueryRest(monitor, "owner:self OR reviewer:self", GET_LABELS_OPTION); //$NON-NLS-1$
 	}
 
 	private boolean hasJsonRpcApi(IProgressMonitor monitor) throws GerritException {
@@ -873,7 +879,7 @@ public class GerritClient extends ReviewsClient {
 	 */
 	public List<GerritQueryResult> executeQuery(IProgressMonitor monitor, final String queryString)
 			throws GerritException {
-		return executeQuery(monitor, queryString, null);
+		return executeQuery(monitor, queryString, GET_LABELS_OPTION);
 	}
 
 	/**

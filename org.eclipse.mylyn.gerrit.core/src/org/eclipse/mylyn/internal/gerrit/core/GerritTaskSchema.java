@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     GitHub Inc. - fix for bug 355557
+ *     Francois Chouinard - Move OWNER and BRANCH to GerritQueryResultSchema
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core;
@@ -30,11 +31,6 @@ public class GerritTaskSchema extends GerritQueryResultSchema {
 
 	public final Field UPLOADED = inheritFrom(parent.DATE_CREATION).create();
 
-	public final Field OWNER = inheritFrom(parent.USER_ASSIGNED).flags(Flag.READ_ONLY, Flag.ATTRIBUTE).create();
-
-	public final Field BRANCH = createField("org.eclipse.gerrit.Branch", "Branch", TaskAttribute.TYPE_SHORT_TEXT,
-			Flag.READ_ONLY, Flag.ATTRIBUTE);
-
 	public final Field DESCRIPTION = inheritFrom(parent.DESCRIPTION).addFlags(Flag.READ_ONLY).create();
 
 	public final Field OBJ_REVIEW = createField("org.eclipse.gerrit.Review", "Review", TaskAttribute.TYPE_LONG_TEXT);
@@ -42,4 +38,5 @@ public class GerritTaskSchema extends GerritQueryResultSchema {
 	public final Field CAN_PUBLISH = createField("org.eclipse.gerrit.CanPublish", "Publish", TaskAttribute.TYPE_BOOLEAN);
 
 	public final Field NEW_COMMENT = inheritFrom(parent.NEW_COMMENT).create();
+
 }

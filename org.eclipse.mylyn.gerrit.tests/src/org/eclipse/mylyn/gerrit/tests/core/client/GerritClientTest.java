@@ -11,6 +11,7 @@
  *     Sascha Scholz (SAP) - improvements
  *     Francois Chouinard (Ericsson)  - Bug 414219 Add new Test
  *     Jacques Bouthillier (Ericsson) - Fix comments for Bug 414219
+ *     Jacques Bouthillier (Ericsson) - Bug 414253 Adjust some Test 
  *******************************************************************************/
 
 package org.eclipse.mylyn.gerrit.tests.core.client;
@@ -44,8 +45,11 @@ import com.google.gerrit.reviewdb.Account;
  * @author Steffen Pingel
  * @author Sascha Scholz
  * @author Francois Chouinard
+ * @author Jacques Bouthillier
  */
 public class GerritClientTest extends TestCase {
+
+	private static final String GET_LABELS_OPTION = "LABELS"; //$NON-NLS-1$
 
 	private GerritHarness harness;
 
@@ -153,8 +157,7 @@ public class GerritClientTest extends TestCase {
 	@Test
 	public void testExecuteQueryWithoutOption() throws Exception {
 		String query = "status:open";
-		List<GerritQueryResult> results = null;
-		results = executeQuery(query);
+		List<GerritQueryResult> results = executeQuery(query);
 		assertNotNull(results);
 	}
 
@@ -170,19 +173,19 @@ public class GerritClientTest extends TestCase {
 	public void testExecuteQueryWithEmptyOption() throws Exception {
 		String query = "status:open";
 		String option = "";
-		List<GerritQueryResult> results = null;
-		results = executeQuery(query, option);
+		List<GerritQueryResult> results = executeQuery(query, option);
 		assertNotNull(results);
 	}
 
 	@Test
 	public void testExecuteQueryWithOption() throws Exception {
 		String query = "status:open";
-		String option = "LABELS";
+		String option = GET_LABELS_OPTION;
 		List<GerritQueryResult> results = executeQuery(query, option);
 		assertNotNull(results);
 		for (int index = 0; index < results.size(); index++) {
 			assertNotNull(results.get(index));
+			assertNotNull(results.get(index).getReviewLabel());
 		}
 	}
 
@@ -198,6 +201,7 @@ public class GerritClientTest extends TestCase {
 	public void testExecuteQueryRestWithoutOption() throws Exception {
 		String query = "status:open";
 		List<GerritQueryResult> results = executeQueryRest(query);
+
 		assertNotNull(results);
 	}
 
@@ -221,8 +225,53 @@ public class GerritClientTest extends TestCase {
 	@Test
 	public void testExecuteQueryvWithOption() throws Exception {
 		String query = "status:open";
-		String option = "LABELS";
-		List<GerritQueryResult> results = executeQueryRest(query, option);
+		String option = GET_LABELS_OPTION;
+		List<GerritQueryResult> results = executeQuery(query, option);
+		assertNotNull(results);
+	}
+
+	@Test
+	public void testExecuteQueryAllMerged() throws GerritException {
+		String query = "status:merged";
+		String option = GET_LABELS_OPTION;
+		List<GerritQueryResult> results = executeQuery(query, option);
+		assertNotNull(results);
+	}
+
+	@Test
+	public void testExecuteQueryAllAbandoned() throws GerritException {
+		String query = "status:abandoned";
+		String option = GET_LABELS_OPTION;
+		List<GerritQueryResult> results = executeQuery(query, option);
+		assertNotNull(results);
+	}
+
+	@Test
+	public void testExecuteQueryisStarred() throws GerritException {
+		String query = "is:starred status:open";
+		String option = GET_LABELS_OPTION;
+		List<GerritQueryResult> results = executeQuery(query, option);
+		assertNotNull(results);
+	}
+
+	@Test
+	public void testExecuteQueryHasComments() throws GerritException {
+		String query = "has:draft";
+		List<GerritQueryResult> results = executeQuery(query);
+		assertNotNull(results);
+	}
+
+	@Test
+	public void testExecuteQueryDraftsCommentsReviews() throws GerritException {
+		String query = "has:draft";
+		List<GerritQueryResult> results = executeQuery(query);
+		assertNotNull(results);
+	}
+
+	@Test
+	public void testExecuteQueryDraftsReviews() throws GerritException {
+		String query = "is:draft";
+		List<GerritQueryResult> results = executeQuery(query);
 		assertNotNull(results);
 	}
 
