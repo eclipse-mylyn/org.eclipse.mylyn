@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 David Green and others.
+ * Copyright (c) 2007, 2013 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -64,10 +64,13 @@ public class SimpleWrappedPhraseModifier extends PatternBasedElement {
 	protected String getPattern(int groupOffset) {
 		String quotedStartDelimiter = quoteLite(startDelimiter);
 		String quotedDelimiter = quoteLite(endDelimiter);
+		String firstCharacterOfDelimiter = quoteLite(endDelimiter.substring(0, 1));
 
-		return quotedStartDelimiter + "(?!" + quotedDelimiter + ")" + "([^\\s" + quotedDelimiter + "]+|\\S[^" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-				+ quotedDelimiter + "]*[^\\s" + quotedDelimiter + "])" + // content //$NON-NLS-1$ //$NON-NLS-2$
-				quotedDelimiter;
+		return quotedStartDelimiter + "(?!" + firstCharacterOfDelimiter + ")" + //$NON-NLS-1$ //$NON-NLS-2$ 
+				"([^\\s" + quotedDelimiter //$NON-NLS-1$ 
+				+ "]+|\\S(?:.*?\\S)?)" + //$NON-NLS-1$ 
+				"(?<!" + firstCharacterOfDelimiter + ")" + quotedDelimiter; //$NON-NLS-1$//$NON-NLS-2$
+
 	}
 
 	private String quoteLite(String literal) {

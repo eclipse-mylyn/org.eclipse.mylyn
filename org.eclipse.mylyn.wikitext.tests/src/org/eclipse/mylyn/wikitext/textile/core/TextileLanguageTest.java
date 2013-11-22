@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2012 David Green and others.
+ * Copyright (c) 2007, 2013 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -156,6 +156,12 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<sub>subscript:</sub>"));
 		assertTrue(html.contains("<span>spanned text:</span>"));
 		assertTrue(html.contains("<code>code text:</code>"));
+	}
+
+	public void testDeleted() {
+		String html = parser.parseToHtml("one -two three-four five- six");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<del>two three-four five</del>"));
 	}
 
 	public void testAdjacentPhraseModifiers() {

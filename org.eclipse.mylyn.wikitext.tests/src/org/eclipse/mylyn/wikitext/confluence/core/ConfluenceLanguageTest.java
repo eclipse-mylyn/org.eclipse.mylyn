@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2012 David Green and others.
+ * Copyright (c) 2007, 2013 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -152,6 +152,12 @@ public class ConfluenceLanguageTest extends TestCase {
 			TestUtil.println("HTML: \n" + html);
 			assertTrue(html.contains("<p>a paragraph with <" + pair[1] + ">content foo bar baz</" + pair[1] + "></p>"));
 		}
+	}
+
+	public void testDeleted() {
+		String html = parser.parseToHtml("one -two three-four five- six");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<del>two three-four five</del>"));
 	}
 
 	public void testMonospaced() {

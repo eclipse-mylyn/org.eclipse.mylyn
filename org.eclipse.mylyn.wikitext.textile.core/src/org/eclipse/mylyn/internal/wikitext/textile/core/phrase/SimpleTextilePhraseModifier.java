@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2013 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -96,12 +96,12 @@ public class SimpleTextilePhraseModifier extends PatternBasedElement {
 	@Override
 	protected String getPattern(int groupOffset) {
 		String quotedDelimiter = quoteLite(getDelimiter());
-		String lastCharacterOfDelimiter = quoteLite(getDelimiter().substring(0, 1));
+		String firstCharacterOfDelimiter = quoteLite(getDelimiter().substring(0, 1));
 
 		return quotedDelimiter
-				+ "(?!" + lastCharacterOfDelimiter + ")" + Textile.REGEX_ATTRIBUTES + "([^\\s" + quotedDelimiter //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				+ "(?!" + firstCharacterOfDelimiter + ")" + Textile.REGEX_ATTRIBUTES + "([^\\s" + quotedDelimiter //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				+ "]+|\\S(?:.*?\\S)?)" + // content //$NON-NLS-1$ 
-				"(?<!" + lastCharacterOfDelimiter + ")" + quotedDelimiter; //$NON-NLS-1$ //$NON-NLS-2$
+				"(?<!" + firstCharacterOfDelimiter + ")" + quotedDelimiter; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
