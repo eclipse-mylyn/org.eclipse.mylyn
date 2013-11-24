@@ -40,8 +40,8 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.validation.ResourceMarkerMarkupValidator;
-import org.eclipse.mylyn.wikitext.core.osgi.WikiText;
 import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
+import org.eclipse.mylyn.wikitext.ui.WikiText;
 import org.eclipse.osgi.util.NLS;
 
 /**

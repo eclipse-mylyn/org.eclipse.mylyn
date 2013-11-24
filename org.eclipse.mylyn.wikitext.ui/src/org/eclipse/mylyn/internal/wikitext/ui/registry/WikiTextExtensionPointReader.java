@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 David Green and others.
+ * Copyright (c) 2007, 2013 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,7 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.core.osgi;
+package org.eclipse.mylyn.internal.wikitext.ui.registry;
 
 import java.text.MessageFormat;
 import java.util.Collections;
@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.wikitext.core.validation.ValidationRules;
+import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.validation.MarkupValidator;
 import org.eclipse.mylyn.wikitext.core.validation.ValidationRule;
@@ -56,19 +57,17 @@ public class WikiTextExtensionPointReader {
 
 	private Map<String, ValidationRules> validationRulesByLanguageName;
 
-	private final ILog log;
-
 	public static WikiTextExtensionPointReader instance() {
 		synchronized (instanceLock) {
 			if (instance == null) {
-				instance = new WikiTextExtensionPointReader(WikiTextPlugin.getDefault().getLog());
+				instance = new WikiTextExtensionPointReader();
 			}
 			return instance;
 		}
 	}
 
-	private WikiTextExtensionPointReader(ILog log) {
-		this.log = log;
+	private WikiTextExtensionPointReader() {
+		// prevent instantiation
 	}
 
 	/**
@@ -388,7 +387,7 @@ public class WikiTextExtensionPointReader {
 	}
 
 	private ILog getLog() {
-		return log;
+		return WikiTextUiPlugin.getDefault().getLog();
 	}
 
 	private void log(int severity, String message) {
@@ -396,7 +395,7 @@ public class WikiTextExtensionPointReader {
 	}
 
 	private void log(int severity, String message, Throwable t) {
-		getLog().log(new Status(severity, WikiTextPlugin.getDefault().getPluginId(), message, t));
+		getLog().log(new Status(severity, WikiTextUiPlugin.getDefault().getPluginId(), message, t));
 	}
 
 	private String getExtensionPointNamespace() {

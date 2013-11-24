@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.wikitext.tests;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -20,8 +22,9 @@ import java.util.Enumeration;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.internal.wikitext.core.osgi.WikiTextPlugin;
+import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
 /**
  * A utility for visiting Mylyn classes available on the classpath.
@@ -64,7 +67,7 @@ public class ClassTraversal {
 					host = bundle35Matcher.group(1);
 				}
 				long bundleId = Long.parseLong(host);
-				Bundle bundle = WikiTextPlugin.getDefault().getBundle().getBundleContext().getBundle(bundleId);
+				Bundle bundle = getBundle(bundleId);
 				if (bundle == null) {
 					throw new IllegalStateException("Cannot get bundle " + bundleId);
 				}
@@ -77,6 +80,11 @@ public class ClassTraversal {
 				throw new IllegalStateException("Unimplemented protocol: " + protocol);
 			}
 		}
+	}
+
+	private Bundle getBundle(long bundleId) {
+		return checkNotNull(FrameworkUtil.getBundle(WikiTextUiPlugin.class), "Cannot determine bundle").getBundleContext()
+				.getBundle(bundleId);
 	}
 
 	private void visitClasses(ClassLoader loader, File root, File file, Visitor visitor) {

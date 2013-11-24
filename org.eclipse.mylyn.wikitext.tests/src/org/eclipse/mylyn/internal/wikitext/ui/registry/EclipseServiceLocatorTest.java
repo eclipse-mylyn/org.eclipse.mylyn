@@ -9,7 +9,7 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.core.osgi.util;
+package org.eclipse.mylyn.internal.wikitext.ui.registry;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -18,11 +18,11 @@ import static org.junit.Assert.assertTrue;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylyn.internal.wikitext.core.osgi.WikiTextPlugin;
-import org.eclipse.mylyn.wikitext.core.osgi.WikiText;
+import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 import org.eclipse.mylyn.wikitext.tests.EclipseRuntimeRequired;
+import org.eclipse.mylyn.wikitext.ui.WikiText;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,7 +36,7 @@ public class EclipseServiceLocatorTest {
 	public void before() {
 		assertTrue("platform must be running for this test", Platform.isRunning());
 		// verify that the OSGi plug-in has been initialized otherwise this test will fail
-		assertNotNull(WikiTextPlugin.getDefault());
+		assertNotNull(WikiTextUiPlugin.getDefault());
 	}
 
 	@Test

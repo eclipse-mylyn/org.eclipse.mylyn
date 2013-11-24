@@ -32,8 +32,10 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.assist.Templates;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.help.CheatSheetContent;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.help.HelpContent;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.preferences.Preferences;
-import org.eclipse.mylyn.wikitext.core.osgi.WikiText;
+import org.eclipse.mylyn.internal.wikitext.ui.registry.EclipseServiceLocator;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
+import org.eclipse.mylyn.wikitext.ui.WikiText;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -65,6 +67,7 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 
 	public WikiTextUiPlugin() {
 		plugin = this;
+		ServiceLocator.setImplementation(EclipseServiceLocator.class);
 	}
 
 	@Override

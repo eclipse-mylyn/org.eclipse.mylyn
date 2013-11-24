@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 David Green and others.
+ * Copyright (c) 2007, 2013 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,11 +12,15 @@ package org.eclipse.mylyn.wikitext.core.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.List;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -26,6 +30,10 @@ import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 
+import com.google.common.base.Charsets;
+import com.google.common.collect.Lists;
+import com.google.common.io.Closeables;
+
 /**
  * A service locator for use both inside and outside of an Eclipse environment. Provides access to markup languages by
  * name.
@@ -34,8 +42,6 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
  * @since 1.0
  */
 public class ServiceLocator {
-
-	private static final String UTF_8 = "utf-8"; //$NON-NLS-1$
 
 	protected final ClassLoader classLoader;
 
@@ -184,44 +190,74 @@ public class ServiceLocator {
 			String servicesFilename = "META-INF/services/" + MarkupLanguage.class.getName(); //$NON-NLS-1$
 			Enumeration<URL> resources = classLoader.getResources(servicesFilename);
 			while (resources.hasMoreElements()) {
-				URL url = resources.nextElement();
-				try {
-					BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), UTF_8));
+				List<String> classNames = readServiceClassNames(resources.nextElement());
+				for (String className : classNames) {
 					try {
-						String line;
-						while ((line = reader.readLine()) != null) {
-							Matcher matcher = CLASS_NAME_PATTERN.matcher(line);
-							if (matcher.matches()) {
-								String className = matcher.group(1);
-								if (className != null) {
-									try {
-										Class<?> clazz = Class.forName(className, true, classLoader);
-										if (MarkupLanguage.class.isAssignableFrom(clazz)) {
-											MarkupLanguage instance = (MarkupLanguage) clazz.newInstance();
-											if (!visitor.accept(instance)) {
-												return;
-											}
-										}
-									} catch (Exception e) {
-										// very unusual, but inform the user in a stand-alone way
-										Logger.getLogger(ServiceLocator.class.getName())
-												.log(Level.WARNING,
-														MessageFormat.format(
-																Messages.getString("ServiceLocator.0"), className), e); //$NON-NLS-1$
-									}
-								}
+						Class<?> clazz = Class.forName(className, true, classLoader);
+						if (MarkupLanguage.class.isAssignableFrom(clazz)) {
+							MarkupLanguage instance = (MarkupLanguage) clazz.newInstance();
+							if (!visitor.accept(instance)) {
+								return;
 							}
 						}
-					} finally {
-						reader.close();
+					} catch (Exception e) {
+						// very unusual, but inform the user in a stand-alone way
+						Logger.getLogger(ServiceLocator.class.getName()).log(Level.WARNING,
+								MessageFormat.format(Messages.getString("ServiceLocator.0"), className), e); //$NON-NLS-1$
 					}
-				} catch (IOException e) {
 				}
 			}
 		} catch (IOException e) {
-			// very unusual, but inform the user in a stand-alone way
-			Logger.getLogger(ServiceLocator.class.getName()).log(Level.SEVERE,
-					Messages.getString("ServiceLocator.1"), e); //$NON-NLS-1$
+			logReadServiceClassNamesFailure(e);
 		}
+
+	}
+
+	/**
+	 * Reads the services provided in the file with the given URL. The URL must provide a file in the format expected by
+	 * {@link ServiceLoader}.
+	 * 
+	 * @since 2.0
+	 * @see ServiceLoader
+	 */
+	protected List<String> readServiceClassNames(URL url) {
+		InputStream stream = null;
+		try {
+			stream = url.openStream();
+			return readServiceClassNames(stream);
+		} catch (IOException e) {
+			logReadServiceClassNamesFailure(e);
+		} finally {
+			Closeables.closeQuietly(stream);
+		}
+		return Collections.emptyList();
+	}
+
+	List<String> readServiceClassNames(InputStream stream) {
+		List<String> serviceClassNames = Lists.newArrayList();
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new InputStreamReader(stream, Charsets.UTF_8));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				Matcher matcher = CLASS_NAME_PATTERN.matcher(line);
+				if (matcher.matches()) {
+					String className = matcher.group(1);
+					if (className != null) {
+						serviceClassNames.add(className);
+					}
+				}
+			}
+		} catch (IOException e) {
+			logReadServiceClassNamesFailure(e);
+		} finally {
+			Closeables.closeQuietly(reader);
+		}
+		return serviceClassNames;
+	}
+
+	protected void logReadServiceClassNamesFailure(IOException e) {
+		// very unusual, but inform in a stand-alone way
+		Logger.getLogger(ServiceLocator.class.getName()).log(Level.SEVERE, Messages.getString("ServiceLocator.1"), e); //$NON-NLS-1$
 	}
 }

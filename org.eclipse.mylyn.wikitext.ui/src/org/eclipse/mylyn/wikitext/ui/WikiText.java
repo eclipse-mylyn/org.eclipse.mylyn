@@ -9,11 +9,11 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.wikitext.core.osgi;
+package org.eclipse.mylyn.wikitext.ui;
 
 import java.util.Set;
 
-import org.eclipse.mylyn.internal.wikitext.core.osgi.WikiTextExtensionPointReader;
+import org.eclipse.mylyn.internal.wikitext.ui.registry.WikiTextExtensionPointReader;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 import org.eclipse.mylyn.wikitext.core.validation.MarkupValidator;

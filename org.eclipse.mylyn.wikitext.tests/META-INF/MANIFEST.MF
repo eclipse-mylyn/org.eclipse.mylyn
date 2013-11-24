@@ -32,8 +32,8 @@ Require-Bundle: org.junit;bundle-version="4.8",
  org.jsoup;bundle-version="1.7.2",
  com.google.guava;bundle-version="12.0.0"
 Export-Package: 
+ .;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.core.ant;x-internal:=true,
- org.eclipse.mylyn.internal.wikitext.core.osgi.util;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.core.parser.builder;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.core.parser.html;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.mediawiki.core;x-internal:=true,
@@ -45,12 +45,12 @@ Export-Package:
  org.eclipse.mylyn.internal.wikitext.twiki.tests;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.ui.editor.syntax;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.resources;x-internal:=true,
+ org.eclipse.mylyn.internal.wikitext.ui.registry;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.ui.util;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.ui.viewer;x-internal:=true,
  org.eclipse.mylyn.wikitext.confluence.core;x-internal:=true,
  org.eclipse.mylyn.wikitext.confluence.core.resources;x-internal:=true,
  org.eclipse.mylyn.wikitext.core;x-internal:=true,
- org.eclipse.mylyn.wikitext.core.osgi;x-internal:=true,
  org.eclipse.mylyn.wikitext.core.parser;x-internal:=true,
  org.eclipse.mylyn.wikitext.core.parser.builder;x-internal:=true,
  org.eclipse.mylyn.wikitext.core.parser.builder.resources;x-internal:=true,
@@ -67,3 +67,5 @@ Export-Package:
  org.eclipse.mylyn.wikitext.ui;x-internal:=true,
  org.eclipse.mylyn.wikitext.ui.annotation;x-internal:=true
 Bundle-Localization: plugin
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: WikiTextTestsPlugin

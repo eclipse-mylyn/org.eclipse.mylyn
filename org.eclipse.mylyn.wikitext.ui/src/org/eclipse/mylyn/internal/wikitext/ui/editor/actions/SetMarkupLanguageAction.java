@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.wikitext.ui.editor.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor;
-import org.eclipse.mylyn.wikitext.core.osgi.WikiText;
+import org.eclipse.mylyn.wikitext.ui.WikiText;
 
 /**
  * @author David Green

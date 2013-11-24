@@ -8,7 +8,7 @@ Export-Package: org.eclipse.mylyn.internal.wikitext.core.parser.builder;x-intern
  org.eclipse.mylyn.internal.wikitext.core.parser.html;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.core.util;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.core.util.css;x-friends:="org.eclipse.mylyn.wikitext.ui,org.eclipse.mylyn.wikitext.tasks.ui",
- org.eclipse.mylyn.internal.wikitext.core.validation;x-internal:=true,
+ org.eclipse.mylyn.internal.wikitext.core.validation;x-friends:="org.eclipse.mylyn.wikitext.ui",
  org.eclipse.mylyn.wikitext.core.parser,
  org.eclipse.mylyn.wikitext.core.parser.builder,
  org.eclipse.mylyn.wikitext.core.parser.markup,

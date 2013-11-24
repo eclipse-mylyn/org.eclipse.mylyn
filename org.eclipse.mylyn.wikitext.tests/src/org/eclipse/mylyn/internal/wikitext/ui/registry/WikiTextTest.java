@@ -9,7 +9,7 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.wikitext.core.osgi;
+package org.eclipse.mylyn.internal.wikitext.ui.registry;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -19,6 +19,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.tests.EclipseRuntimeRequired;
+import org.eclipse.mylyn.wikitext.ui.WikiText;
 import org.junit.Test;
 
 @EclipseRuntimeRequired

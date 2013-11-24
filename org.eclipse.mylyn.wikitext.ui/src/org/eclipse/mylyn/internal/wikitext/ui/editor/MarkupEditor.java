@@ -76,7 +76,6 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitione
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupDocumentProvider;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupTokenScanner;
 import org.eclipse.mylyn.internal.wikitext.ui.util.NlsResourceBundle;
-import org.eclipse.mylyn.wikitext.core.osgi.WikiText;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
@@ -84,6 +83,7 @@ import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
+import org.eclipse.mylyn.wikitext.ui.WikiText;
 import org.eclipse.mylyn.wikitext.ui.editor.MarkupSourceViewerConfiguration;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
