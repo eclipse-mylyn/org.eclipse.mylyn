@@ -24,6 +24,7 @@ import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
+import org.eclipse.mylyn.internal.commons.repositories.core.InMemoryCredentialsStore;
 
 /**
  * @author Steffen Pingel
@@ -154,6 +155,8 @@ public abstract class RepositoryTestFixture {
 		RepositoryLocation location = new RepositoryLocation();
 		location.setUrl(repositoryUrl);
 		location.setProxy(proxy);
+		location.setCredentialsStore(new InMemoryCredentialsStore());
+
 		if (username != null && password != null) {
 			location.setCredentials(AuthenticationType.REPOSITORY, new UserCredentials(username, password));
 		}
