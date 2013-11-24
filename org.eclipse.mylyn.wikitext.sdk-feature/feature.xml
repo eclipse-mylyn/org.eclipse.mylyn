@@ -124,6 +124,13 @@
          unpack="false"/>
          
    <plugin
+         id="org.eclipse.mylyn.wikitext.core.osgi.tests.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+         
+   <plugin
          id="org.eclipse.mylyn.wikitext.tests.source"
          download-size="0"
          install-size="0"
