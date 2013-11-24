@@ -18,7 +18,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.internal.wikitext.core.osgi.WikiTextPlugin;
+import org.eclipse.mylyn.internal.wikitext.core.osgi.WikiTextExtensionPointReader;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor;
 import org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage;
 import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
@@ -68,7 +68,7 @@ public class FileTypesTest extends AbstractTestInWorkspace {
 		assertInstanceOf(TextileLanguage.class, markupEditor.getMarkupLanguage());
 
 		// set the markup language
-		markupEditor.setMarkupLanguage(WikiTextPlugin.getDefault().getMarkupLanguage("MediaWiki"), true); //$NON-NLS-1$
+		markupEditor.setMarkupLanguage(WikiTextExtensionPointReader.instance().getMarkupLanguage("MediaWiki"), true); //$NON-NLS-1$
 		assertInstanceOf(MediaWikiLanguage.class, markupEditor.getMarkupLanguage());
 
 		// close the editor

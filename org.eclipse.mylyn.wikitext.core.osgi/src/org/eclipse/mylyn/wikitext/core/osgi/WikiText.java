@@ -13,7 +13,7 @@ package org.eclipse.mylyn.wikitext.core.osgi;
 
 import java.util.Set;
 
-import org.eclipse.mylyn.internal.wikitext.core.osgi.WikiTextPlugin;
+import org.eclipse.mylyn.internal.wikitext.core.osgi.WikiTextExtensionPointReader;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 import org.eclipse.mylyn.wikitext.core.validation.MarkupValidator;
@@ -43,7 +43,7 @@ public class WikiText {
 	 * leading dot.
 	 */
 	public static Set<String> getMarkupFileExtensions() {
-		return WikiTextPlugin.getDefault().getMarkupFileExtensions();
+		return WikiTextExtensionPointReader.instance().getMarkupFileExtensions();
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class WikiText {
 	 * @see #getMarkupLanguageNames()
 	 */
 	public static MarkupLanguage getMarkupLanguage(String name) {
-		return WikiTextPlugin.getDefault().getMarkupLanguage(name);
+		return WikiTextExtensionPointReader.instance().getMarkupLanguage(name);
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class WikiText {
 	 * @see #getMarkupLanguageForFilename(String)
 	 */
 	public static MarkupLanguage getMarkupLanguageForFilename(String name) {
-		return WikiTextPlugin.getDefault().getMarkupLanguageForFilename(name);
+		return WikiTextExtensionPointReader.instance().getMarkupLanguageForFilename(name);
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class WikiText {
 	 * @see #getMarkupLanguageForFilename(String)
 	 */
 	public static String getMarkupLanguageNameForFilename(String name) {
-		return WikiTextPlugin.getDefault().getMarkupLanguageNameForFilename(name);
+		return WikiTextExtensionPointReader.instance().getMarkupLanguageNameForFilename(name);
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class WikiText {
 	 * @see #getMarkupLanguage(String)
 	 */
 	public static Set<String> getMarkupLanguageNames() {
-		return WikiTextPlugin.getDefault().getMarkupLanguageNames();
+		return WikiTextExtensionPointReader.instance().getMarkupLanguageNames();
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class WikiText {
 	 * @see #getMarkupLanguageNames()
 	 */
 	public static MarkupValidator getMarkupValidator(String name) {
-		return WikiTextPlugin.getDefault().getMarkupValidator(name);
+		return WikiTextExtensionPointReader.instance().getMarkupValidator(name);
 	}
 
 }

@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.mylyn.internal.wikitext.core.osgi.WikiTextPlugin;
+import org.eclipse.mylyn.internal.wikitext.core.osgi.WikiTextExtensionPointReader;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 
@@ -35,7 +36,7 @@ public class EclipseServiceLocator extends ServiceLocator {
 		if (languageName == null) {
 			throw new IllegalArgumentException();
 		}
-		MarkupLanguage markupLanguage = WikiTextPlugin.getDefault().getMarkupLanguage(languageName);
+		MarkupLanguage markupLanguage = WikiTextExtensionPointReader.instance().getMarkupLanguage(languageName);
 		if (markupLanguage == null) {
 			try {
 				// dispatch to super in case we've been given a fully qualified class name
@@ -44,7 +45,7 @@ public class EclipseServiceLocator extends ServiceLocator {
 				// specified language not found.
 				// create a useful error message
 				StringBuilder buf = new StringBuilder();
-				for (String name : new TreeSet<String>(WikiTextPlugin.getDefault().getMarkupLanguageNames())) {
+				for (String name : new TreeSet<String>(WikiTextExtensionPointReader.instance().getMarkupLanguageNames())) {
 					if (buf.length() != 0) {
 						buf.append(", "); //$NON-NLS-1$
 					}
@@ -64,7 +65,7 @@ public class EclipseServiceLocator extends ServiceLocator {
 	public Set<MarkupLanguage> getAllMarkupLanguages() {
 		Set<MarkupLanguage> markupLanguages = new HashSet<MarkupLanguage>();
 
-		for (String languageName : WikiTextPlugin.getDefault().getMarkupLanguageNames()) {
+		for (String languageName : WikiTextExtensionPointReader.instance().getMarkupLanguageNames()) {
 			MarkupLanguage markupLanguage = getMarkupLanguage(languageName);
 			if (markupLanguage != null) {
 				markupLanguages.add(markupLanguage);
