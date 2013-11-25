@@ -245,7 +245,7 @@ bc..
 
 	<path id="wikitext.classpath">
 		<fileset dir="${wikitext.standalone}">
-			<include name="org.eclipse.mylyn.wikitext.*core*.jar"/>
+			<include name="*.jar"/>
 		</fileset>
 	</path>
 
@@ -803,7 +803,7 @@ Notable changes when upgrading from 1.x to 2.0:
 
 h2. Ant Usage in 2.0
 
-# The Ant classpath has changed.  The following jar files will be needed for running Ant tasks:
+# The Ant classpath has changed.  The Ant classpath definition should include all jars provided with the standalone distribution of Mylyn WikiText.  The classpath should be defined with @<include name="*.jar"/>@ (see the "examples":#ContentGenerationfromWikiMarkupusingAnt ).  The following jar files will be needed for running Ant tasks:
 ** @org.eclipse.mylyn.wikitext.core.jar@
 ** @org.eclipse.mylyn.wikitext.core.ant.jar@ (new for 2.0)
 ** @org.eclipse.mylyn.wikitext.textile.core.jar@ (only required for Textile)
@@ -813,6 +813,7 @@ h2. Ant Usage in 2.0
 ** @org.eclipse.mylyn.wikitext.mediawiki.core.jar@ (only required for MediaWiki)
 ** @org.eclipse.mylyn.wikitext.tracwiki.core.jar@ (only required for TracWiki)
 ** @org.eclipse.mylyn.wikitext.twiki.core.jar@ (only required for TWiki)
+** @guava-12.0.jar@ Guava is now required (new for 2.0) 
 # Ant taskdefs must reference a new properties file @<taskdef resource="org/eclipse/mylyn/wikitext/core/ant/tasks.properties"@ see "Ant Examples":#AntExamples for more details
 
 h2. API Changes in 2.0

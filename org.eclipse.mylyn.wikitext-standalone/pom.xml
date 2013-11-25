@@ -10,9 +10,34 @@
   </parent>
   <artifactId>org.eclipse.mylyn.wikitext-standalone</artifactId>
   <packaging>eclipse-repository</packaging>
+  
   <build>
-    <plugins>
-      <plugin>
+	<plugins>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-dependency-plugin</artifactId>
+			<version>2.8</version>
+			<executions>
+				<execution>
+					<phase>package</phase>
+					<goals>
+						<goal>copy</goal>
+					</goals>
+					<configuration>
+						<artifactItems>
+							<artifactItem>
+								<groupId>com.google.guava</groupId>
+								<artifactId>guava</artifactId>
+								<version>12.0</version>
+								<type>jar</type>
+							</artifactItem>
+						</artifactItems>
+						<outputDirectory>${project.build.directory}/repository/plugins</outputDirectory>
+					</configuration>
+				</execution>
+			</executions>
+		</plugin>
+    <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
         <version>1.6</version>
