@@ -47,7 +47,7 @@
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.apache.commons.lang" version="2.6.0.v201205030909"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20130914154012/repository/"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/I20131123181249/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.sdk.ide" version="4.4.0.I20131030-2000"/>
