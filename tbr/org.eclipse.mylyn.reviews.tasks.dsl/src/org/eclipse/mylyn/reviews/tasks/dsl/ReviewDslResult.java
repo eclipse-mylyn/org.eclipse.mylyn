@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Research Group for Industrial Software (INSO), Vienna University of Technology - initial API and implementation
+ *     Jacques Bouthillier (Ericsson) - Bug 422509 Prevent null pointer exception
  *******************************************************************************/
 package org.eclipse.mylyn.reviews.tasks.dsl;
 
@@ -137,7 +138,7 @@ public class ReviewDslResult {
 
 	public StringBuilder serialize(StringBuilder sb) {
 		sb.append("Review result: ");
-		sb.append(rating.toString());
+		sb.append(rating!= null ? rating.toString(): "");
 		if (comment != null) {
 			sb.append(" \"");
 			sb.append(comment);

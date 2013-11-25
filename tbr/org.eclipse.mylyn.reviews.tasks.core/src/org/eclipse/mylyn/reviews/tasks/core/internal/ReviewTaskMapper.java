@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Kilian Matt (Research Group for Industrial Software (INSO), Vienna University of Technology) - initial API and implementation
+ *     Jacques Bouthillier (Ericsson) - Bug 422509 Prevent Null pointer exception
  *******************************************************************************/
 package org.eclipse.mylyn.reviews.tasks.core.internal;
 
@@ -86,21 +87,25 @@ public class ReviewTaskMapper implements IReviewMapper {
 			ITaskProperties taskProperties) {
 		ReviewDslResult result = new ReviewDslResult();
 		ReviewDslResult.Rating rating = ReviewDslResult.Rating.WARNING;
-		switch (res.getRating()) {
-		case FAIL:
-			rating = ReviewDslResult.Rating.FAILED;
-			break;
-		case PASSED:
-			rating = ReviewDslResult.Rating.PASSED;
-			break;
-		case TODO:
-			rating = ReviewDslResult.Rating.TODO;
-			break;
-		case WARNING:
-			rating = ReviewDslResult.Rating.WARNING;
-			break;
+		// Need to set the rating, otherwise get a null pointer exception
+		if (res.getRating() != null) {
+			switch (res.getRating()) {
+			case FAIL:
+				rating = ReviewDslResult.Rating.FAILED;
+				break;
+			case PASSED:
+				rating = ReviewDslResult.Rating.PASSED;
+				break;
+			case TODO:
+				rating = ReviewDslResult.Rating.TODO;
+				break;
+			case WARNING:
+				rating = ReviewDslResult.Rating.WARNING;
+				break;
+			}
+			result.setRating(rating);
+
 		}
-		result.setRating(rating);
 		result.setComment(res.getComment());
 
 		String resultAsText = serializer.serialize(result);
