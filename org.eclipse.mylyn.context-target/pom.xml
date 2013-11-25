@@ -26,9 +26,9 @@
             <configuration>
               <artifacts>
                 <artifact>
-                  <file>mylyn-context-e3.5.target</file>
+                  <file>mylyn-context-e3.6.target</file>
                   <type>target</type>
-                  <classifier>mylyn-context-e3.5</classifier>
+                  <classifier>mylyn-context-e3.6</classifier>
                 </artifact>
               </artifacts>
             </configuration>
