@@ -16,7 +16,7 @@
 <unit id="org.mockito" version="1.8.4.v201303031500"/>
 <unit id="org.objenesis" version="1.0.0.v201105211943"/>
 <unit id="com.thoughtworks.qdox" version="1.6.3.v20081201-1400"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/I20131123181249/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.birt.feature.group" version="0.0.0"/>

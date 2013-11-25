@@ -7,7 +7,7 @@
 <unit id="com.google.gerrit.prettify" version="2.1.5.v201112241444"/>
 <unit id="com.google.gerrit.reviewdb" version="2.1.5.v201112241444"/>
 <unit id="com.google.gerrit.common" version="2.1.5.v201112241444"/>
-<unit id="com.google.gson" version="2.1.0.v201303041604"/>
+<unit id="com.google.gson" version="2.2.4.v201311231704"/>
 <unit id="com.google.gwt.servlet" version="2.0.4.v20100709-0658"/>
 <unit id="com.google.gwtjsonrpc" version="1.2.5.v201112241444"/>
 <unit id="com.google.gwtorm" version="1.1.4.v201112241444"/>
@@ -36,8 +36,8 @@
 <unit id="org.jdom" version="1.1.1.v201101151400"/>
 <unit id="org.mockito" version="1.8.4.v201303031500"/>
 <unit id="org.objenesis" version="1.0.0.v201105211943"/>
-<unit id="org.apache.httpcomponents.httpclient" version="4.2.5.v201305222326"/>
-<unit id="org.apache.httpcomponents.httpcore" version="4.2.4.v201305222326"/>
+<unit id="org.apache.httpcomponents.httpclient" version="4.2.6.v201311072007"/>
+<unit id="org.apache.httpcomponents.httpcore" version="4.2.5.v201311072007"/>
 <unit id="org.jsoup" version="1.7.2.v201304221138"/>
 <unit id="org.apache.lucene.core" version="2.9.1.v201101211721"/>
 <unit id="com.google.guava" version="12.0.0.v201212092141"/>
@@ -45,7 +45,7 @@
 <unit id="org.apache.xml.resolver" version="1.2.0.v201005080400"/>
 <unit id="org.apache.xml.serializer" version="2.7.1.v201005080400"/>
 <unit id="org.apache.xerces" version="2.9.0.v201101211617"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20130914154012/repository/"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/I20131123181249/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.junit" version="4.8.2.v4_8_2_v20130308-0413"/>
