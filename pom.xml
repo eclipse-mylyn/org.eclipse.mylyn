@@ -109,6 +109,8 @@
     <module>org.eclipse.mylyn.wikitext.tests</module>
     <module>org.eclipse.mylyn.wikitext.creole.tests</module>
     <module>org.eclipse.mylyn.wikitext.markdown.tests</module>
+    <module>org.eclipse.mylyn.wikitext.html.core</module>
+    <module>org.eclipse.mylyn.wikitext.html.tests</module>
     <module>org.eclipse.mylyn.wikitext-standalone</module>
 
     <module>org.eclipse.mylyn.docs.epub.core</module>
