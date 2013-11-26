@@ -11,35 +11,27 @@
 
 package org.eclipse.mylyn.wikitext.core.osgi;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.text.MessageFormat.format;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.ServiceLoader;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 
-import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
-import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 /**
  * A {@link ServiceLocator} for use in an OSGi runtime environment. Uses OSGI {@link Bundle bundles} to load markup
@@ -51,15 +43,39 @@ import com.google.common.collect.Sets;
  */
 public class OsgiServiceLocator extends ServiceLocator {
 
+	static class BundleResourceDescriptor extends ResourceDescriptor {
+
+		private final Bundle bundle;
+
+		public BundleResourceDescriptor(Bundle bundle, URL resourceUrl) {
+			super(resourceUrl);
+			this.bundle = bundle;
+		}
+
+	}
+
 	/**
 	 * Creates a new {@link OsgiServiceLocator}.
 	 */
-	public OsgiServiceLocator() {
+	OsgiServiceLocator() {
 		this(OsgiServiceLocator.class.getClassLoader());
 	}
 
-	public OsgiServiceLocator(ClassLoader classLoader) {
+	OsgiServiceLocator(ClassLoader classLoader) {
 		super(classLoader);
+	}
+
+	/**
+	 * Provides the {@link #isApplicable() applicable} service locator instance. Selects an {@link OsgiServiceLocator}
+	 * if {{@link #isApplicable()} returns {@code true}, otherwise delegates to {@link ServiceLocator#getInstance()}.
+	 * 
+	 * @return the service locator.
+	 */
+	public static ServiceLocator getApplicableInstance() {
+		if (isApplicable()) {
+			return new OsgiServiceLocator();
+		}
+		return ServiceLocator.getInstance();
 	}
 
 	/**
@@ -70,61 +86,31 @@ public class OsgiServiceLocator extends ServiceLocator {
 	}
 
 	@Override
-	public MarkupLanguage getMarkupLanguage(String languageName) throws IllegalArgumentException {
-		checkArgument(!Strings.isNullOrEmpty(languageName), "Must provide a languageName"); //$NON-NLS-1$
-
-		List<String> names = Lists.newArrayList();
-		Set<MarkupLanguage> allMarkupLanguages = getAllMarkupLanguages();
-		for (MarkupLanguage language : allMarkupLanguages) {
-			if (language.getName().equals(languageName) || language.getClass().getName().equals(languageName)) {
-				return language;
-			}
-			names.add(language.getName());
-		}
-		Collections.sort(names);
-		String languages = Joiner.on(Messages.getString("OsgiServiceLocator.3")).join(names); //$NON-NLS-1$
-		String message = format(Messages.getString("OsgiServiceLocator.4"), languageName, //$NON-NLS-1$
-				languages);
-		throw new IllegalArgumentException(message);
-	}
-
-	@Override
-	public Set<MarkupLanguage> getAllMarkupLanguages() {
-		Set<MarkupLanguage> allLanguages = Sets.newHashSet();
-
-		final String serviceResourceName = "META-INF/services/" + MarkupLanguage.class.getName(); //$NON-NLS-1$
-
+	protected List<ResourceDescriptor> discoverServiceResources() {
+		List<ResourceDescriptor> descriptors = Lists.newArrayList();
 		for (Bundle bundle : bundles()) {
-			Enumeration<URL> resources = null;
-			try {
-				resources = bundle.getResources(serviceResourceName);
-			} catch (IOException e) {
-				log(format(Messages.getString("OsgiServiceLocator.0"), bundle.getSymbolicName(), e.getMessage()), e); //$NON-NLS-1$
-			}
-			if (resources == null) {
-				continue;
-			}
-			while (resources.hasMoreElements()) {
-				URL resourceUrl = resources.nextElement();
-				for (String serviceClass : readServiceClassNames(resourceUrl)) {
-					Class<?> clazz;
-					try {
-						clazz = bundle.loadClass(serviceClass);
-					} catch (ClassNotFoundException e1) {
-						log(format(Messages.getString("OsgiServiceLocator.2"), serviceClass), e1); //$NON-NLS-1$
-						continue;
-					}
-					if (MarkupLanguage.class.isAssignableFrom(clazz)) {
-						try {
-							allLanguages.add((MarkupLanguage) clazz.newInstance());
-						} catch (Exception e) {
-							log(format(Messages.getString("OsgiServiceLocator.1"), e.getMessage()), e); //$NON-NLS-1$
-						}
-					}
+			for (String resourceName : getClasspathServiceResourceNames()) {
+				Enumeration<URL> resources = null;
+				try {
+					resources = bundle.getResources(resourceName);
+				} catch (IOException e) {
+					log(format(Messages.getString("OsgiServiceLocator.0"), bundle.getSymbolicName(), e.getMessage()), e); //$NON-NLS-1$
+				}
+				if (resources == null) {
+					continue;
+				}
+				while (resources.hasMoreElements()) {
+					URL resourceUrl = resources.nextElement();
+					descriptors.add(new BundleResourceDescriptor(bundle, resourceUrl));
 				}
 			}
 		}
-		return ImmutableSet.copyOf(allLanguages);
+		return descriptors;
+	}
+
+	@Override
+	protected Class<?> loadClass(ResourceDescriptor resource, String className) throws ClassNotFoundException {
+		return ((BundleResourceDescriptor) resource).bundle.loadClass(className);
 	}
 
 	private void log(String message, Throwable t) {

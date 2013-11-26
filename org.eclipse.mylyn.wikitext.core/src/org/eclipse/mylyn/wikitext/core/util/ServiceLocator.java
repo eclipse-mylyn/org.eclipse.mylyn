@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.util;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +25,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -31,6 +33,8 @@ import java.util.regex.Pattern;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.io.Closeables;
 
@@ -99,12 +103,10 @@ public class ServiceLocator {
 	 *             if the provided language name is null or if no implementation is available for the given language
 	 */
 	public MarkupLanguage getMarkupLanguage(final String languageName) throws IllegalArgumentException {
-		if (languageName == null) {
-			throw new IllegalArgumentException();
-		}
+		checkArgument(!Strings.isNullOrEmpty(languageName), "Must provide a languageName"); //$NON-NLS-1$
 		Pattern classNamePattern = Pattern.compile("\\s*([^\\s#]+)?#?.*"); //$NON-NLS-1$
 		// first try Java services (jar-based)
-		final Set<String> names = new TreeSet<String>();
+		final List<String> names = Lists.newArrayList();
 
 		final MarkupLanguage[] result = new MarkupLanguage[1];
 
@@ -139,6 +141,8 @@ public class ServiceLocator {
 				}
 			}
 		}
+
+		Collections.sort(names);
 
 		// specified language not found.
 		// create a useful error message
@@ -184,33 +188,86 @@ public class ServiceLocator {
 	}
 
 	private void loadMarkupLanguages(MarkupLanguageVisitor visitor) {
-		try {
-			// note that we can't use the standard Java services API to load services here since the service may be declared on 
-			// a specific class loader (not the system class loader).
-			String servicesFilename = "META-INF/services/" + MarkupLanguage.class.getName(); //$NON-NLS-1$
-			Enumeration<URL> resources = classLoader.getResources(servicesFilename);
-			while (resources.hasMoreElements()) {
-				List<String> classNames = readServiceClassNames(resources.nextElement());
-				for (String className : classNames) {
-					try {
-						Class<?> clazz = Class.forName(className, true, classLoader);
-						if (MarkupLanguage.class.isAssignableFrom(clazz)) {
-							MarkupLanguage instance = (MarkupLanguage) clazz.newInstance();
-							if (!visitor.accept(instance)) {
-								return;
-							}
+		for (ResourceDescriptor descriptor : discoverServiceResources()) {
+			List<String> classNames = readServiceClassNames(descriptor.getUrl());
+			for (String className : classNames) {
+				try {
+					Class<?> clazz = loadClass(descriptor, className);
+					if (MarkupLanguage.class.isAssignableFrom(clazz)) {
+						MarkupLanguage instance = (MarkupLanguage) clazz.newInstance();
+						if (!visitor.accept(instance)) {
+							return;
 						}
-					} catch (Exception e) {
-						// very unusual, but inform the user in a stand-alone way
-						Logger.getLogger(ServiceLocator.class.getName()).log(Level.WARNING,
-								MessageFormat.format(Messages.getString("ServiceLocator.0"), className), e); //$NON-NLS-1$
 					}
+				} catch (Exception e) {
+					// very unusual, but inform the user in a stand-alone way
+					Logger.getLogger(ServiceLocator.class.getName()).log(Level.WARNING,
+							MessageFormat.format(Messages.getString("ServiceLocator.0"), className), e); //$NON-NLS-1$
 				}
 			}
-		} catch (IOException e) {
-			logReadServiceClassNamesFailure(e);
+		}
+	}
+
+	/**
+	 * @since 2.0
+	 */
+	protected static class ResourceDescriptor {
+		private final URL url;
+
+		public ResourceDescriptor(URL url) {
+			this.url = checkNotNull(url);
 		}
 
+		public URL getUrl() {
+			return url;
+		}
+	}
+
+	/**
+	 * Loads the specified class.
+	 * 
+	 * @param resourceUrl
+	 *            the service resource from which the class name was discovered
+	 * @param className
+	 *            the class name to load
+	 * @return the class
+	 * @throws ClassNotFoundException
+	 *             if the class could not be loaded
+	 * @since 2.0
+	 */
+	protected Class<?> loadClass(ResourceDescriptor resource, String className) throws ClassNotFoundException {
+		return Class.forName(className, true, classLoader);
+	}
+
+	/**
+	 * @return the service resources
+	 * @since 2.0
+	 * @see #getClasspathServiceResourceNames()
+	 */
+	protected List<ResourceDescriptor> discoverServiceResources() {
+		List<ResourceDescriptor> serviceResources = Lists.newArrayList();
+		for (String serviceResourceName : getClasspathServiceResourceNames()) {
+			try {
+				Enumeration<URL> resources = classLoader.getResources(serviceResourceName);
+				while (resources.hasMoreElements()) {
+					serviceResources.add(new ResourceDescriptor(resources.nextElement()));
+				}
+			} catch (IOException e) {
+				logReadServiceClassNamesFailure(e);
+			}
+		}
+		return serviceResources;
+	}
+
+	/**
+	 * Provides the list of service resource names from which Java services should be loaded.
+	 * 
+	 * @return the list of service resource names
+	 * @since 2.0
+	 */
+	protected List<String> getClasspathServiceResourceNames() {
+		return ImmutableList.copyOf(Lists.newArrayList("META-INF/services/" + MarkupLanguage.class.getName(), //$NON-NLS-1$
+				"services/" + MarkupLanguage.class.getName())); //$NON-NLS-1$
 	}
 
 	/**

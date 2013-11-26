@@ -20,11 +20,13 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URL;
 
+import org.eclipse.mylyn.wikitext.core.osgi.OsgiServiceLocator;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -41,6 +43,13 @@ public class HtmlLanguageTest {
 	public void create() {
 		HtmlLanguage language = new HtmlLanguage();
 		assertEquals("HTML", language.getName());
+	}
+
+	@Test
+	public void isDiscoverable() {
+		MarkupLanguage language = OsgiServiceLocator.getApplicableInstance().getMarkupLanguage("HTML");
+		assertNotNull(language);
+		assertTrue(language instanceof HtmlLanguage);
 	}
 
 	@Test

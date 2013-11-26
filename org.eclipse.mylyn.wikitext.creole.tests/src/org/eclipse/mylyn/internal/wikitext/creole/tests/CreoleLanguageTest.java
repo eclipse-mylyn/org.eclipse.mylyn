@@ -13,7 +13,9 @@ package org.eclipse.mylyn.internal.wikitext.creole.tests;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.wikitext.core.osgi.OsgiServiceLocator;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.creole.core.CreoleLanguage;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
@@ -29,6 +31,12 @@ public class CreoleLanguageTest extends TestCase {
 	public void setUp() throws Exception {
 		super.setUp();
 		parser = new MarkupParser(new CreoleLanguage());
+	}
+
+	public void testDiscoverable() {
+		MarkupLanguage language = OsgiServiceLocator.getApplicableInstance().getMarkupLanguage("Creole");
+		assertNotNull(language);
+		assertTrue(language instanceof CreoleLanguage);
 	}
 
 	public void testParagraph() throws Exception {

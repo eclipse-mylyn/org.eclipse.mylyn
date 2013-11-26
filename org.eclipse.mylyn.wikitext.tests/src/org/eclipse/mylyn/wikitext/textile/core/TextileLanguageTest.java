@@ -21,11 +21,13 @@ import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.wikitext.core.osgi.OsgiServiceLocator;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.RecordingDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.RecordingDocumentBuilder.Event;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
@@ -53,6 +55,12 @@ public class TextileLanguageTest extends TestCase {
 		parser = new MarkupParser();
 		markupLanguage = new TextileLanguage();
 		parser.setMarkupLanguage(markupLanguage);
+	}
+
+	public void testDiscoverable() {
+		MarkupLanguage language = OsgiServiceLocator.getApplicableInstance().getMarkupLanguage("Textile");
+		assertNotNull(language);
+		assertTrue(language instanceof TextileLanguage);
 	}
 
 	public void testIsDetectingRawHyperlinks() {
@@ -1545,4 +1553,5 @@ public class TextileLanguageTest extends TestCase {
 			assertTrue(html.contains("&amp; " + entity + ";"));
 		}
 	}
+
 }

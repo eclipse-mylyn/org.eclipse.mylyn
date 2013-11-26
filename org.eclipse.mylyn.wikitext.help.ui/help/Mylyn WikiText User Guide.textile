@@ -818,8 +818,12 @@ h2. Ant Usage in 2.0
 
 h2. API Changes in 2.0
 
+Many API-breaking changes have been made to Mylyn WikiText 2.0.  In most cases client code upgrading to 2.0 will simply need to be recompiled, however in a few cases client code will have to change.  All changes have been annodated with the javadoc tag <tt>@since 2.0</tt>.
+
+* Many methods in @org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage@ have been moved to @org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage@.
 * @org.eclipse.mylyn.wikitext.core.validation.MarkupValidator@ no longer accepts an @IProgressMonitor@
-* @org.eclipse.mylyn.wikitext.core.WikiText@ has been moved to @org.eclipse.mylyn.wikitext.core.osgi.WikiText@
+* @org.eclipse.mylyn.wikitext.core.WikiText@ has been moved to @org.eclipse.mylyn.wikitext.ui.WikiText@
+* Applications running in OSGi should use @org.eclipse.mylyn.wikitext.core.osgi.OsgiServiceLocator@ instead of @org.eclipse.mylyn.wikitext.core.util.ServiceLocator@.
 
 h1. More Information
 

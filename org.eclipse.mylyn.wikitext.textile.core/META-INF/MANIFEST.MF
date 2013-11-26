@@ -5,12 +5,12 @@ Bundle-SymbolicName: org.eclipse.mylyn.wikitext.textile.core;singleton:=true
 Bundle-Version: 2.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: %Bundle-Vendor.0
-Require-Bundle: org.eclipse.mylyn.wikitext.core;bundle-version="2.0.0",
- org.eclipse.team.core;resolution:=optional
+Require-Bundle: org.eclipse.mylyn.wikitext.core;bundle-version="2.0.0"
 Export-Package: org.eclipse.mylyn.internal.wikitext.textile.core;x-friends:="org.eclipse.mylyn.wikitext.textile.tests",
  org.eclipse.mylyn.internal.wikitext.textile.core.block;x-friends:="org.eclipse.mylyn.wikitext.textile.tests",
  org.eclipse.mylyn.internal.wikitext.textile.core.phrase;x-friends:="org.eclipse.mylyn.wikitext.textile.tests",
  org.eclipse.mylyn.internal.wikitext.textile.core.token;x-friends:="org.eclipse.mylyn.wikitext.textile.tests",
  org.eclipse.mylyn.internal.wikitext.textile.core.validation;x-friends:="org.eclipse.mylyn.wikitext.textile.tests",
- org.eclipse.mylyn.wikitext.textile.core
+ org.eclipse.mylyn.wikitext.textile.core,
+ services
 Bundle-Localization: plugin

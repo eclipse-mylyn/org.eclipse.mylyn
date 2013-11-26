@@ -25,9 +25,11 @@ import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.wikitext.core.osgi.OsgiServiceLocator;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.DocBookDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.RecordingDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
@@ -57,6 +59,12 @@ public class MediaWikiLanguageTest extends TestCase {
 		super.tearDown();
 
 		Locale.setDefault(locale);
+	}
+
+	public void testDiscoverable() {
+		MarkupLanguage language = OsgiServiceLocator.getApplicableInstance().getMarkupLanguage("MediaWiki");
+		assertNotNull(language);
+		assertTrue(language instanceof MediaWikiLanguage);
 	}
 
 	public void testIsDetectingRawHyperlinks() {

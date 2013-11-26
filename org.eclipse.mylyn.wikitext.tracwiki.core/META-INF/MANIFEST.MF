@@ -5,11 +5,11 @@ Bundle-SymbolicName: org.eclipse.mylyn.wikitext.tracwiki.core;singleton:=true
 Bundle-Version: 2.0.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.eclipse.mylyn.wikitext.core;bundle-version="2.0.0",
- org.eclipse.team.core;resolution:=optional
+Require-Bundle: org.eclipse.mylyn.wikitext.core;bundle-version="2.0.0"
 Export-Package: org.eclipse.mylyn.internal.wikitext.tracwiki.core.block;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.tracwiki.core.phrase;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.tracwiki.core.token;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.tracwiki.core.validation;x-internal:=true,
- org.eclipse.mylyn.wikitext.tracwiki.core
+ org.eclipse.mylyn.wikitext.tracwiki.core,
+ services
 Bundle-Localization: plugin

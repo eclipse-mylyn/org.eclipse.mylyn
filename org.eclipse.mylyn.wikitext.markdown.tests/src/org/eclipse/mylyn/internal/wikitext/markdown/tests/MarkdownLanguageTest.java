@@ -11,6 +11,9 @@
 
 package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 
+import org.eclipse.mylyn.wikitext.core.osgi.OsgiServiceLocator;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.markdown.core.MarkdownLanguage;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
 /**
@@ -19,6 +22,12 @@ import org.eclipse.mylyn.wikitext.tests.TestUtil;
  * @author Stefan Seelmann
  */
 public class MarkdownLanguageTest extends MarkdownLanguageTestBase {
+
+	public void testDiscoverable() {
+		MarkupLanguage language = OsgiServiceLocator.getApplicableInstance().getMarkupLanguage("Markdown");
+		assertNotNull(language);
+		assertTrue(language instanceof MarkdownLanguage);
+	}
 
 	public void testFullExample() {
 

@@ -11,7 +11,6 @@
 package org.eclipse.mylyn.wikitext.core.osgi;
 
 import static java.text.MessageFormat.format;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -32,9 +31,7 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 import com.google.common.base.Throwables;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 public class OsgiServiceLocatorTest {
 	@Rule
@@ -46,36 +43,6 @@ public class OsgiServiceLocatorTest {
 	}
 
 	@Test
-	public void getMarkupLanguageNull() {
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("Must provide a languageName");
-		new OsgiServiceLocator().getMarkupLanguage(null);
-	}
-
-	@Test
-	public void getMarkupLanguageUnknown() {
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("Cannot load markup language \"UnknownLanguage\": available languages are LanguageOne, LanguageTwo");
-		OsgiServiceLocator serviceLocator = locatorWithLanguages("LanguageOne", "LanguageTwo");
-		serviceLocator.getMarkupLanguage("UnknownLanguage");
-	}
-
-	@Test
-	public void getMarkupLanguageByName() {
-		OsgiServiceLocator serviceLocator = locatorWithLanguages("LanguageOne", "LanguageTwo");
-		MarkupLanguage markupLanguage = serviceLocator.getMarkupLanguage("LanguageTwo");
-		assertNotNull(markupLanguage);
-		assertEquals("LanguageTwo", markupLanguage.getName());
-	}
-
-	@Test
-	public void getMarkupLanguageByClassname() {
-		OsgiServiceLocator serviceLocator = locatorWithLanguages("LanguageOne", "LanguageTwo");
-		MarkupLanguage markupLanguage = serviceLocator.getMarkupLanguage(MockMarkupLanguage.class.getName());
-		assertNotNull(markupLanguage);
-	}
-
-	@Test
 	public void getAllMarkupLanguages() {
 		OsgiServiceLocator serviceLocator = createOsgiServiceLocator(createBundleWithLanguage(MockMarkupLanguage.class));
 		Set<MarkupLanguage> languages = serviceLocator.getAllMarkupLanguages();
@@ -84,15 +51,20 @@ public class OsgiServiceLocatorTest {
 		assertMarkupLanguagePresent("MockMarkupLanguage", languages);
 	}
 
+	@Test
+	public void getApplicableInstance() {
+		assertNotNull(OsgiServiceLocator.getApplicableInstance());
+	}
+
 	private Bundle createBundleWithLanguage(Class<? extends MarkupLanguage> markupLanguage) {
 		Bundle bundle = mock(Bundle.class);
 		try {
-			URL url = new URL("file:" + markupLanguage.getClass().getName());
+			URL url = new URL("file:" + markupLanguage.getName());
 			List<URL> resources = Lists.newArrayList(url);
 			doReturn(Collections.enumeration(resources)).when(bundle).getResources(
 					"META-INF/services/" + MarkupLanguage.class.getName());
 			doReturn(1234L).when(bundle).getBundleId();
-			doReturn(markupLanguage).when(bundle).loadClass(eq(markupLanguage.getClass().getName()));
+			doReturn(markupLanguage).when(bundle).loadClass(eq(markupLanguage.getName()));
 		} catch (Exception e) {
 			throw Throwables.propagate(e);
 		}
@@ -126,16 +98,4 @@ public class OsgiServiceLocatorTest {
 		fail(format("Language {0} expected but not found in {1}", name, languages));
 	}
 
-	private OsgiServiceLocator locatorWithLanguages(String... languageNames) {
-		final Set<MarkupLanguage> languages = Sets.newHashSet();
-		for (String languageName : languageNames) {
-			languages.add(new MockMarkupLanguage(languageName));
-		}
-		return new OsgiServiceLocator() {
-			@Override
-			public Set<MarkupLanguage> getAllMarkupLanguages() {
-				return ImmutableSet.copyOf(languages);
-			}
-		};
-	}
 }

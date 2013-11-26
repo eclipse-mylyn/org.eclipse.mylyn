@@ -17,7 +17,9 @@ import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.wikitext.core.osgi.OsgiServiceLocator;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
@@ -42,6 +44,12 @@ public class TracWikiLanguageTest extends TestCase {
 
 	protected TracWikiLanguage getMarkupLanguage() {
 		return markupLanguage;
+	}
+
+	public void testDiscoverable() {
+		MarkupLanguage language = OsgiServiceLocator.getApplicableInstance().getMarkupLanguage("TracWiki");
+		assertNotNull(language);
+		assertTrue(language instanceof TracWikiLanguage);
 	}
 
 	/**

@@ -21,10 +21,12 @@ import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.wikitext.core.osgi.OsgiServiceLocator;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.DocBookDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.RecordingDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
 /**
@@ -44,6 +46,12 @@ public class ConfluenceLanguageTest extends TestCase {
 	private void initParser() {
 		parser = new MarkupParser();
 		parser.setMarkupLanguage(new ConfluenceLanguage());
+	}
+
+	public void testDiscoverable() {
+		MarkupLanguage language = OsgiServiceLocator.getApplicableInstance().getMarkupLanguage("Confluence");
+		assertNotNull(language);
+		assertTrue(language instanceof ConfluenceLanguage);
 	}
 
 	public void testIsDetectingRawHyperlinks() {

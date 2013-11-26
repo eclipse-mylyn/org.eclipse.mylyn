@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 
 import org.eclipse.mylyn.internal.wikitext.MockMarkupLanguage;
@@ -49,23 +50,38 @@ public class ServiceLocatorTest {
 
 	@Before
 	public void setUp() {
+		ServiceLocator.setImplementation(null);
 		locator = ServiceLocator.getInstance(ServiceLocatorTest.class.getClassLoader());
 	}
 
 	@Test
-	public void testKnownLanguage() {
-		setupServiceLocatorWithMockMarkupLanguage();
+	public void testKnownLanguageMetaInf() {
+		setupServiceLocatorWithMockMarkupLanguage(true);
+		assertKnownMarkupLanguage();
+	}
+
+	@Test
+	public void testKnownLanguageServices() {
+		setupServiceLocatorWithMockMarkupLanguage(false);
+		assertKnownMarkupLanguage();
+	}
+
+	protected void assertKnownMarkupLanguage() {
 		MarkupLanguage markupLanguage = locator.getMarkupLanguage(MockMarkupLanguage.class.getSimpleName());
 		assertNotNull(markupLanguage);
 		assertEquals(new MockMarkupLanguage().getName(), markupLanguage.getName());
 	}
 
-	protected void setupServiceLocatorWithMockMarkupLanguage() {
+	protected void setupServiceLocatorWithMockMarkupLanguage(boolean metaInf) {
 		try {
 			ClassLoader classLoader = mock(ClassLoader.class);
 			Collection<URL> resources = Lists.newArrayList(new URL("file:" + MockMarkupLanguage.class.getName()));
-			doReturn(Collections.enumeration(resources)).when(classLoader).getResources(
+
+			Enumeration<Object> empty = Collections.enumeration(Collections.emptyList());
+			doReturn(metaInf ? Collections.enumeration(resources) : empty).when(classLoader).getResources(
 					eq("META-INF/services/" + MarkupLanguage.class.getName()));
+			doReturn(!metaInf ? Collections.enumeration(resources) : empty).when(classLoader).getResources(
+					eq("services/" + MarkupLanguage.class.getName()));
 			doReturn(MockMarkupLanguage.class).when(classLoader).loadClass(MockMarkupLanguage.class.getName());
 			locator = new ServiceLocator(classLoader) {
 				@Override
@@ -81,6 +97,7 @@ public class ServiceLocatorTest {
 
 	@Test
 	public void testUnknownLanguage() {
+		setupServiceLocatorWithMockMarkupLanguage(true);
 		thrown.expect(IllegalArgumentException.class);
 		locator.getMarkupLanguage("No Such Language asdlkfjal;sjdf");
 	}
@@ -89,6 +106,22 @@ public class ServiceLocatorTest {
 	public void testFQN() {
 		MarkupLanguage markupLanguage = locator.getMarkupLanguage(MockMarkupLanguage.class.getName());
 		assertNotNull(markupLanguage);
+		assertEquals(MockMarkupLanguage.class, markupLanguage.getClass());
+	}
+
+	@Test
+	public void getMarkupLanguageNull() {
+		thrown.expect(IllegalArgumentException.class);
+		thrown.expectMessage("Must provide a languageName");
+		locator.getMarkupLanguage(null);
+	}
+
+	@Test
+	public void getMarkupLanguageUnknown() {
+		setupServiceLocatorWithMockMarkupLanguage(true);
+		thrown.expect(IllegalArgumentException.class);
+		thrown.expectMessage("Cannot load markup language 'UnknownLanguage'. Known markup languages are 'MockMarkupLanguage'");
+		locator.getMarkupLanguage("UnknownLanguage");
 	}
 
 	@Test
@@ -113,6 +146,14 @@ public class ServiceLocatorTest {
 		assertEquals(2, names.size());
 		assertEquals(Object.class.getName(), names.get(0));
 		assertEquals(String.class.getName(), names.get(1));
+	}
+
+	@Test
+	public void getClasspathServiceResourceNames() {
+		List<String> names = locator.getClasspathServiceResourceNames();
+		assertNotNull(names);
+		assertTrue(names.contains("META-INF/services/" + MarkupLanguage.class.getName()));
+		assertTrue(names.contains("services/" + MarkupLanguage.class.getName()));
 	}
 
 	private InputStream createInput(String content) {

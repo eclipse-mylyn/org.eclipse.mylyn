@@ -12,7 +12,9 @@ package org.eclipse.mylyn.internal.wikitext.twiki.tests;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.wikitext.core.osgi.OsgiServiceLocator;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 import org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage;
 
@@ -27,6 +29,12 @@ public class TWikiLanguageTest extends TestCase {
 		super.setUp();
 		language = new TWikiLanguage();
 		parser = new MarkupParser(language);
+	}
+
+	public void testDiscoverable() {
+		MarkupLanguage language = OsgiServiceLocator.getApplicableInstance().getMarkupLanguage("TWiki");
+		assertNotNull(language);
+		assertTrue(language instanceof TWikiLanguage);
 	}
 
 	public void testIsDetectingRawHyperlinks() {
