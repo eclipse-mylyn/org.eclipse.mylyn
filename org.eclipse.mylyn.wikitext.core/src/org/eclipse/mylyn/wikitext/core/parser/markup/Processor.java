@@ -15,10 +15,10 @@ import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 
 /**
  * @author David Green
- * @since 1.0
+ * @since 2.0
  */
 public class Processor implements Cloneable {
-	protected MarkupLanguage markupLanguage;
+	protected AbstractMarkupLanguage markupLanguage;
 
 	protected DocumentBuilder builder;
 
@@ -47,7 +47,7 @@ public class Processor implements Cloneable {
 	public void setParser(MarkupParser parser) {
 		if (parser != null && parser.getMarkupLanguage() != markupLanguage) {
 			if (markupLanguage == null) {
-				markupLanguage = parser.getMarkupLanguage();
+				markupLanguage = (AbstractMarkupLanguage) parser.getMarkupLanguage();
 			} else {
 				throw new IllegalStateException();
 			}
@@ -57,11 +57,11 @@ public class Processor implements Cloneable {
 
 	}
 
-	void setMarkupLanguage(MarkupLanguage markupLanguage) {
+	void setMarkupLanguage(AbstractMarkupLanguage markupLanguage) {
 		this.markupLanguage = markupLanguage;
 	}
 
-	public MarkupLanguage getMarkupLanguage() {
+	public AbstractMarkupLanguage getMarkupLanguage() {
 		return markupLanguage;
 	}
 

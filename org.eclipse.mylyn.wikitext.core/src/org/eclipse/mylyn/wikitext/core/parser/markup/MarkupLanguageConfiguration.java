@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage.PatternBasedSyntax;
+import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage.PatternBasedSyntax;
 
 /**
  * A configuration for a markup language, which enables client code to modify the syntax of the markup language by
@@ -24,7 +24,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage.PatternBased
  * features.
  * 
  * @author David Green
- * @since 1.0
+ * @since 2.0
  */
 public class MarkupLanguageConfiguration implements Cloneable {
 

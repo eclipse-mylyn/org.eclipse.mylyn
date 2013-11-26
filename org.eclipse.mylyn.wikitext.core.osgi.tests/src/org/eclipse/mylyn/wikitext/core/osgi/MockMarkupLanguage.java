@@ -13,13 +13,10 @@ package org.eclipse.mylyn.wikitext.core.osgi;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import java.util.List;
-
-import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 
 class MockMarkupLanguage extends MarkupLanguage {
 	public MockMarkupLanguage(String name) {
@@ -32,23 +29,7 @@ class MockMarkupLanguage extends MarkupLanguage {
 	}
 
 	@Override
-	public List<Block> getBlocks() {
-		return Lists.newArrayList();
-	}
-
-	@Override
-	protected void initializeSyntax() {
-		// ignore
-	}
-
-	@Override
-	protected PatternBasedSyntax getPhraseModifierSyntax() {
+	public void processContent(MarkupParser parser, String markupContent, boolean asDocument) {
 		throw new UnsupportedOperationException();
 	}
-
-	@Override
-	protected PatternBasedSyntax getReplacementTokenSyntax() {
-		throw new UnsupportedOperationException();
-	}
-
 }

@@ -11,12 +11,8 @@
 
 package org.eclipse.mylyn.internal.wikitext;
 
-import java.util.List;
-
-import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
-
-import com.google.common.collect.Lists;
 
 public class MockMarkupLanguage extends MarkupLanguage {
 
@@ -25,22 +21,7 @@ public class MockMarkupLanguage extends MarkupLanguage {
 	}
 
 	@Override
-	public List<Block> getBlocks() {
-		return Lists.newArrayList();
-	}
-
-	@Override
-	protected void initializeSyntax() {
-		// ignore
-	}
-
-	@Override
-	protected PatternBasedSyntax getPhraseModifierSyntax() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	protected PatternBasedSyntax getReplacementTokenSyntax() {
+	public void processContent(MarkupParser parser, String markupContent, boolean asDocument) {
 		throw new UnsupportedOperationException();
 	}
 

@@ -8,12 +8,15 @@
  * Contributors:
  *     David Green - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.wikitext.core.parser.markup.block;import java.util.regex.Pattern;
+package org.eclipse.mylyn.wikitext.core.parser.markup.block;
+
+import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.QuoteAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
+
 ;
 
 /**

@@ -11,9 +11,7 @@
 
 package org.eclipse.mylyn.wikitext.html.core;
 
-import java.util.List;
-
-import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 
 public class HtmlLanguage extends MarkupLanguage {
@@ -24,22 +22,7 @@ public class HtmlLanguage extends MarkupLanguage {
 	}
 
 	@Override
-	public List<Block> getBlocks() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	protected void initializeSyntax() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	protected PatternBasedSyntax getPhraseModifierSyntax() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	protected PatternBasedSyntax getReplacementTokenSyntax() {
+	public void processContent(MarkupParser parser, String markupContent, boolean asDocument) {
 		throw new UnsupportedOperationException();
 	}
 

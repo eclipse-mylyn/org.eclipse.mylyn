@@ -15,7 +15,7 @@ package org.eclipse.mylyn.wikitext.core.util;
  * <ul>
  * <li>StAX is only available in Java 6</li>
  * <li>The methods of this API only throw unchecked exceptions</li>
- * <li>This API provides a means for writing unescaped XML</li>
+ * <li>This API provides a means for writing {@link #writeLiteral(String) unescaped XML}</li>
  * </ul>
  * 
  * @author David Green

@@ -14,8 +14,8 @@ package org.eclipse.mylyn.wikitext.core.parser.markup;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Collections;
-import java.util.List;
 
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -31,25 +31,8 @@ public class MarkupLanguageTest {
 		}
 
 		@Override
-		protected void initializeSyntax() {
-			// ignore
-		}
-
-		@Override
-		protected PatternBasedSyntax getReplacementTokenSyntax() {
-			// ignore
-			return null;
-		}
-
-		@Override
-		protected PatternBasedSyntax getPhraseModifierSyntax() {
-			// ignore
-			return null;
-		}
-
-		@Override
-		public List<Block> getBlocks() {
-			return Collections.emptyList();
+		public void processContent(MarkupParser parser, String markupContent, boolean asDocument) {
+			throw new UnsupportedOperationException();
 		}
 	}
 
