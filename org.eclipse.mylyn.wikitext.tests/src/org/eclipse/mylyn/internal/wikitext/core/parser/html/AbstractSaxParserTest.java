@@ -149,7 +149,7 @@ public abstract class AbstractSaxParserTest extends TestCase {
 
 	protected void performTest(String html, String expectedResult) throws IOException, SAXException {
 
-		parser.parse(sourceForHtml(html), builder);
+		parser.parse(sourceForHtml(html), builder, true);
 
 		String generatedMarkup = out.toString();
 

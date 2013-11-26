@@ -11,19 +11,42 @@
 
 package org.eclipse.mylyn.wikitext.html.core;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.Writer;
+
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.HtmlParser;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import com.google.common.base.Throwables;
 
 public class HtmlLanguage extends MarkupLanguage {
 
 	public HtmlLanguage() {
 		setName("HTML"); //$NON-NLS-1$
-		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void processContent(MarkupParser parser, String markupContent, boolean asDocument) {
-		throw new UnsupportedOperationException();
+		HtmlParser htmlParser = new HtmlParser();
+		InputSource source = new InputSource(new StringReader(markupContent));
+		try {
+			htmlParser.parse(source, parser.getBuilder(), asDocument);
+		} catch (IOException e) {
+			throw Throwables.propagate(e);
+		} catch (SAXException e) {
+			throw Throwables.propagate(e);
+		}
+	}
+
+	@Override
+	public DocumentBuilder createDocumentBuilder(Writer out) {
+		return new HtmlDocumentBuilder(out, true);
 	}
 
 }

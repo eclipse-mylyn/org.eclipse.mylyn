@@ -35,6 +35,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * A parser for (X)HTML that is based on SAX. Subclasses determine the source of SAX events.
  * 
  * @author David Green
+ * @since 2.0
  */
 public abstract class AbstractSaxHtmlParser {
 
@@ -167,8 +168,11 @@ public abstract class AbstractSaxHtmlParser {
 
 		private final StringBuilder elementText = new StringBuilder();
 
-		public DocumentBuilderAdapter(DocumentBuilder builder) {
+		private final boolean asDocument;
+
+		public DocumentBuilderAdapter(DocumentBuilder builder, boolean asDocument) {
 			this.builder = builder;
+			this.asDocument = asDocument;
 		}
 
 		public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
@@ -295,11 +299,15 @@ public abstract class AbstractSaxHtmlParser {
 		}
 
 		public void startDocument() throws SAXException {
-			builder.beginDocument();
+			if (asDocument) {
+				builder.beginDocument();
+			}
 		}
 
 		public void endDocument() throws SAXException {
-			builder.endDocument();
+			if (asDocument) {
+				builder.endDocument();
+			}
 		}
 
 		public void startPrefixMapping(String prefix, String uri) throws SAXException {
@@ -584,21 +592,24 @@ public abstract class AbstractSaxHtmlParser {
 			throws IOException, SAXException;
 
 	/**
-	 * parse HTML from the given input, and emit an approximation of the source document to the given document builder
-	 * 
 	 * @param input
-	 *            the source input
 	 * @param builder
-	 *            the builder to which output is provided
 	 * @throws IOException
 	 * @throws SAXException
 	 */
-	public void parse(InputSource input, DocumentBuilder builder) throws IOException, SAXException {
-		parse(input, builder, createContentHandler(builder));
+	public void parse(InputSource input, DocumentBuilder builder, boolean asDocument) throws IOException, SAXException {
+		parse(input, builder, createContentHandler(builder, asDocument));
 	}
 
 	protected ContentHandler createContentHandler(DocumentBuilder builder) {
-		return new DocumentBuilderAdapter(builder);
+		return createContentHandler(builder, true);
+	}
+
+	/**
+	 * @since 2.0
+	 */
+	protected ContentHandler createContentHandler(DocumentBuilder builder, boolean asDocument) {
+		return new DocumentBuilderAdapter(builder, asDocument);
 	}
 
 }

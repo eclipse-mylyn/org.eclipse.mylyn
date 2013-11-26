@@ -29,8 +29,8 @@ import org.xml.sax.SAXException;
 public class HtmlParser {
 
 	/**
-	 * parse well-formed XHTML from the given input, and emit an approximation of the source document to the given
-	 * document builder
+	 * Parses well-formed XHTML from the given input, and emit an approximation of the source document to the given
+	 * document builder. Equivalent to {@code parse(input,builder,true)}
 	 * 
 	 * @param input
 	 *            the source input
@@ -40,6 +40,22 @@ public class HtmlParser {
 	 * @throws SAXException
 	 */
 	public void parse(InputSource input, DocumentBuilder builder) throws IOException, SAXException {
+		parse(input, builder, true);
+	}
+
+	/**
+	 * Parses well-formed XHTML or HTML from the given input, and emit an approximation of the source document to the
+	 * given document builder.
+	 * 
+	 * @param input
+	 *            the source input
+	 * @param builder
+	 *            the builder to which output is provided
+	 * @param asDocument
+	 *            indicates if the builder should be driven as a {@link DocumentBuilder#beginDocument() document}.
+	 * @since 2.0
+	 */
+	public void parse(InputSource input, DocumentBuilder builder, boolean asDocument) throws IOException, SAXException {
 		if (input == null) {
 			throw new IllegalArgumentException();
 		}
@@ -53,7 +69,7 @@ public class HtmlParser {
 			parser = new XHtmlParser();
 		}
 
-		parser.parse(input, builder);
+		parser.parse(input, builder, asDocument);
 	}
 
 	private boolean isJsoupAvailable() {
