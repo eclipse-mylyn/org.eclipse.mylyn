@@ -15,6 +15,7 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.HeadingAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.IdGenerator;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 
 /**
@@ -71,19 +72,19 @@ public class OutlineParser {
 		}
 		root.setLength(markup.length());
 
-		markupLanguage.setFilterGenerativeContents(true);
-		markupLanguage.setBlocksOnly(isBlocksOnly());
-		try {
-			OutlineBuilder outlineBuilder = (OutlineBuilder) createOutlineUpdater(root);
-			outlineBuilder.idGenerator.setGenerationStrategy(markupLanguage.getIdGenerationStrategy());
-			MarkupParser markupParser = new MarkupParser();
-			markupParser.setBuilder(outlineBuilder);
-			markupParser.setMarkupLanguage(markupLanguage);
-			markupParser.parse(markup);
-		} finally {
-			markupLanguage.setFilterGenerativeContents(false);
-			markupLanguage.setBlocksOnly(false);
+		MarkupLanguage markupLanguage = this.markupLanguage.clone();
+		if (markupLanguage instanceof AbstractMarkupLanguage) {
+			AbstractMarkupLanguage language = (AbstractMarkupLanguage) markupLanguage;
+			language.setFilterGenerativeContents(true);
+			language.setBlocksOnly(isBlocksOnly());
 		}
+
+		OutlineBuilder outlineBuilder = (OutlineBuilder) createOutlineUpdater(root);
+		outlineBuilder.idGenerator.setGenerationStrategy(markupLanguage.getIdGenerationStrategy());
+		MarkupParser markupParser = new MarkupParser();
+		markupParser.setBuilder(outlineBuilder);
+		markupParser.setMarkupLanguage(markupLanguage);
+		markupParser.parse(markup);
 
 		return root;
 	}

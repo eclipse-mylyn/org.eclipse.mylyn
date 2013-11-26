@@ -60,7 +60,11 @@ public class MediaWikiLanguageTest extends TestCase {
 	}
 
 	public void testIsDetectingRawHyperlinks() {
-		assertTrue(parser.getMarkupLanguage().isDetectingRawHyperlinks());
+		assertTrue(getMarkupLanguage().isDetectingRawHyperlinks());
+	}
+
+	protected MediaWikiLanguage getMarkupLanguage() {
+		return markupLanguage;
 	}
 
 	public void testParagraph() {

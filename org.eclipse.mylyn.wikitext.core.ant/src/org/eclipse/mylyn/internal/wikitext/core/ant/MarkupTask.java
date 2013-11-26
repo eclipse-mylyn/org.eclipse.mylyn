@@ -24,6 +24,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.eclipse.mylyn.internal.wikitext.core.validation.StandaloneMarkupValidator;
+import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
@@ -95,7 +96,8 @@ public abstract class MarkupTask extends Task {
 			MarkupLanguage language = ServiceLocator.getInstance(getClass().getClassLoader()).getMarkupLanguage(
 					markupLanguage);
 			if (internalLinkPattern != null) {
-				language.setInternalLinkPattern(internalLinkPattern);
+				checkAbstractMarkupLanguage(language, "internalLinkPattern"); //$NON-NLS-1$
+				((AbstractMarkupLanguage) language).setInternalLinkPattern(internalLinkPattern);
 			}
 			if (markupLanguageConfiguration != null) {
 				language.configure(markupLanguageConfiguration);
@@ -103,6 +105,13 @@ public abstract class MarkupTask extends Task {
 			return language;
 		} catch (IllegalArgumentException e) {
 			throw new BuildException(e.getMessage(), e);
+		}
+	}
+
+	private void checkAbstractMarkupLanguage(MarkupLanguage language, String field) {
+		if (!(language instanceof AbstractMarkupLanguage)) {
+			throw new BuildException(MessageFormat.format(Messages.getString("MarkupTask.2"), field, //$NON-NLS-1$
+					language.getName()));
 		}
 	}
 

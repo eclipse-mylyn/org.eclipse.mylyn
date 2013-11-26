@@ -31,6 +31,7 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.Locator;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.osgi.util.NLS;
 
@@ -152,10 +153,14 @@ public class FastMarkupPartitioner extends FastPartitioner {
 			int startOffset = partitionOffset == -1 ? offset : Math.min(offset, partitionOffset);
 			int endOffset = offset + length;
 
+			boolean blocksOnly = partitionOffset != -1;
 			MarkupParser markupParser = new MarkupParser(markupLanguage);
-			markupLanguage.setBlocksOnly(partitionOffset != -1);
-			markupLanguage.setFilterGenerativeContents(true);
-			PartitionBuilder partitionBuilder = new PartitionBuilder(startOffset, markupLanguage.isBlocksOnly());
+			if (markupLanguage instanceof AbstractMarkupLanguage) {
+				AbstractMarkupLanguage language = (AbstractMarkupLanguage) markupLanguage;
+				language.setFilterGenerativeContents(true);
+				language.setBlocksOnly(blocksOnly);
+			}
+			PartitionBuilder partitionBuilder = new PartitionBuilder(startOffset, blocksOnly);
 			markupParser.setBuilder(partitionBuilder);
 
 			String markupContent;
@@ -497,8 +502,11 @@ public class FastMarkupPartitioner extends FastPartitioner {
 
 	public void reparse(IDocument document, Block block) {
 		MarkupParser markupParser = new MarkupParser(markupLanguage);
-		markupLanguage.setBlocksOnly(false);
-		markupLanguage.setFilterGenerativeContents(true);
+		if (markupLanguage instanceof AbstractMarkupLanguage) {
+			AbstractMarkupLanguage language = (AbstractMarkupLanguage) markupLanguage;
+			language.setFilterGenerativeContents(true);
+			language.setBlocksOnly(false);
+		}
 		PartitionBuilder partitionBuilder = new PartitionBuilder(block.getOffset(), false);
 		markupParser.setBuilder(partitionBuilder);
 

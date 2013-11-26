@@ -41,6 +41,7 @@ import org.eclipse.mylyn.tasks.ui.TaskHyperlinkPresenter;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
+import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.ui.editor.MarkupSourceViewer;
@@ -128,7 +129,8 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		configuration.setDisableHyperlinkModifiers(true);
 		configuration.setEnableSelfContainedIncrementalFind(true);
 
-		if (markupLanguageCopy.isDetectingRawHyperlinks()) {
+		if (markupLanguageCopy instanceof AbstractMarkupLanguage
+				&& ((AbstractMarkupLanguage) markupLanguageCopy).isDetectingRawHyperlinks()) {
 			// bug 264612 don't detect hyperlinks twice
 			configuration.addHyperlinkDetectorDescriptorFilter(new DefaultHyperlinkDetectorDescriptorFilter(
 					"org.eclipse.mylyn.tasks.ui.hyperlinks.detectors.url")); //$NON-NLS-1$
@@ -279,7 +281,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 	protected void configureMarkupLanguage(TaskRepository taskRepository, MarkupLanguageType markupLanguage) {
 		String internalLinkPattern = taskRepository.getProperty(AbstractTaskEditorExtension.INTERNAL_WIKI_LINK_PATTERN);
 		if (internalLinkPattern != null && internalLinkPattern.trim().length() > 0) {
-			markupLanguage.setInternalLinkPattern(internalLinkPattern.trim());
+			((AbstractMarkupLanguage) markupLanguage).setInternalLinkPattern(internalLinkPattern.trim());
 		} else {
 			configureDefaultInternalLinkPattern(taskRepository, markupLanguage);
 		}

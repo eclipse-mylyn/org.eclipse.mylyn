@@ -13,6 +13,7 @@ package org.eclipse.mylyn.wikitext.core.parser.markup;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.regex.Pattern;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.token.ImpliedHyperlinkReplacementToken;
+import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
 import org.eclipse.mylyn.wikitext.core.util.LocationTrackingReader;
 
 /**
@@ -46,6 +48,14 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	private boolean syntaxInitialized = false;
 
 	protected MarkupLanguageConfiguration configuration;
+
+	private boolean blocksOnly;
+
+	private boolean filterGenerativeBlocks;
+
+	protected String internalLinkPattern = "{0}"; //$NON-NLS-1$
+
+	private boolean enableMacros = true;
 
 	public static final class PatternBasedSyntax {
 		protected List<PatternBasedElement> elements = new ArrayList<PatternBasedElement>();
@@ -81,7 +91,7 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 		}
 
 		/**
-		 * @since 1.1
+		 * 
 		 */
 		protected List<PatternBasedElement> getElements() {
 			return Collections.unmodifiableList(elements);
@@ -188,6 +198,18 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 			syntaxInitialized = true;
 			initializeSyntax();
 		}
+	}
+
+	/**
+	 * Create new state for tracking a document and its contents during a parse session. Subclasses may override this
+	 * method to provide additional state tracking capability.
+	 * 
+	 * @return the new state.
+	 */
+	protected ContentState createState() {
+		ContentState contentState = new ContentState();
+		contentState.getIdGenerator().setGenerationStrategy(getIdGenerationStrategy());
+		return contentState;
 	}
 
 	@Override
@@ -584,7 +606,13 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 		// no phrase extensions
 	}
 
-	@Override
+	/**
+	 * Indicate if this markup language detects 'raw' hyperlinks; that is hyperlinks without any special markup. The
+	 * default implementation checks the markup syntax for use of {@link ImpliedHyperlinkReplacementToken} and returns
+	 * true if it is in the syntax.
+	 * 
+	 * @return true if raw hyperlinks are detected by this markup language, otherwise false.
+	 */
 	public boolean isDetectingRawHyperlinks() {
 		initializeSyntax(false);
 		PatternBasedSyntax replacementTokenSyntax = getReplacementTokenSyntax();
@@ -606,10 +634,96 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 		return tokenSyntax;
 	}
 
+	/**
+	 * Indicate if generative contents should be filtered. This option is used with the {@link OutlineParser}.
+	 */
+	public boolean isFilterGenerativeContents() {
+		return filterGenerativeBlocks;
+	}
+
+	/**
+	 * Indicate if table of contents should be filtered. This option is used with the {@link OutlineParser}.
+	 */
+	public void setFilterGenerativeContents(boolean filterGenerativeBlocks) {
+		this.filterGenerativeBlocks = filterGenerativeBlocks;
+	}
+
+	/**
+	 * indicate if the parser should detect blocks only. This is useful for use in a document partitioner where the
+	 * partition boundaries are defined by blocks.
+	 */
+	public boolean isBlocksOnly() {
+		return blocksOnly;
+	}
+
+	/**
+	 * indicate if the parser should detect blocks only. This is useful for use in a document partitioner where the
+	 * partition boundaries are defined by blocks.
+	 */
+	public void setBlocksOnly(boolean blocksOnly) {
+		this.blocksOnly = blocksOnly;
+	}
+
+	/**
+	 * The pattern to use when creating hyperlink targets for internal links. The pattern is implementation-specific,
+	 * however implementations are encouraged to use {@link MessageFormat}, where the 0th parameter is the internal
+	 * link.
+	 * 
+	 * @see MessageFormat
+	 */
+	public String getInternalLinkPattern() {
+		return internalLinkPattern;
+	}
+
+	/**
+	 * The pattern to use when creating hyperlink targets for internal links. The pattern is implementation-specific,
+	 * however implementations are encouraged to use {@link MessageFormat}, where the 0th parameter is the internal
+	 * link.
+	 * 
+	 * @see MessageFormat
+	 */
+	public void setInternalLinkPattern(String internalLinkPattern) {
+		this.internalLinkPattern = internalLinkPattern;
+	}
+
+	/**
+	 * Indicate if macro processing is enabled. Generally such processing is enabled except when used in a source
+	 * editor.
+	 * <p>
+	 * Macros are defined as text substitution prior to normal processing. Such preprocessing changes the markup before
+	 * it is processed, and as such has the side-effect of changing computed offsets when parsing markup.
+	 * </p>
+	 * <p>
+	 * The default value is true.
+	 * </p>
+	 * 
+	 * @return true if macros are enabled, otherwise false
+	 */
+	public boolean isEnableMacros() {
+		return enableMacros;
+	}
+
+	/**
+	 * Indicate if macro processing is enabled. Generally such processing is enabled except when used in a source
+	 * editor.
+	 * <p>
+	 * Macros are defined as text substitution prior to normal processing. Such preprocessing changes the markup before
+	 * it is processed, and as such has the side-effect of changing computed offsets when parsing markup.
+	 * </p>
+	 * 
+	 * @param enableMacros
+	 *            true if macros are enabled, otherwise false
+	 */
+	public void setEnableMacros(boolean enableMacros) {
+		this.enableMacros = enableMacros;
+	}
+
 	@Override
 	public MarkupLanguage clone() {
 		AbstractMarkupLanguage copy = (AbstractMarkupLanguage) super.clone();
 		copy.configuration = configuration == null ? null : configuration.clone();
+		copy.internalLinkPattern = internalLinkPattern;
+		copy.enableMacros = enableMacros;
 		return copy;
 	}
 }

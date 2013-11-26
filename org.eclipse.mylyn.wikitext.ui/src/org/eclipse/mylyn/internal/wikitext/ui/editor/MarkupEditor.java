@@ -80,6 +80,7 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
@@ -599,9 +600,15 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 					MarkupLanguage markupLanguage = getMarkupLanguage();
 					if (markupLanguage != null) {
 						markupLanguage = markupLanguage.clone();
-						markupLanguage.setEnableMacros(true);
-						markupLanguage.setBlocksOnly(false);
-						markupLanguage.setFilterGenerativeContents(false);
+						if (markupLanguage instanceof AbstractMarkupLanguage) {
+							((AbstractMarkupLanguage) markupLanguage).setEnableMacros(true);
+						}
+
+						if (markupLanguage instanceof AbstractMarkupLanguage) {
+							AbstractMarkupLanguage language = (AbstractMarkupLanguage) markupLanguage;
+							language.setFilterGenerativeContents(false);
+							language.setBlocksOnly(false);
+						}
 
 						MarkupParser markupParser = new MarkupParser();
 						markupParser.setBuilder(builder);
@@ -1032,8 +1039,8 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	}
 
 	public void setMarkupLanguage(MarkupLanguage markupLanguage, boolean persistSetting) {
-		if (markupLanguage != null) {
-			markupLanguage.setEnableMacros(false);
+		if (markupLanguage instanceof AbstractMarkupLanguage) {
+			((AbstractMarkupLanguage) markupLanguage).setEnableMacros(false);
 		}
 		((MarkupDocumentProvider) getDocumentProvider()).setMarkupLanguage(markupLanguage);
 

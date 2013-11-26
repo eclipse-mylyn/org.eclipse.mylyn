@@ -37,7 +37,11 @@ public class TracWikiLanguageTest extends TestCase {
 	}
 
 	public void testIsDetectingRawHyperlinks() {
-		assertTrue(parser.getMarkupLanguage().isDetectingRawHyperlinks());
+		assertTrue(getMarkupLanguage().isDetectingRawHyperlinks());
+	}
+
+	protected TracWikiLanguage getMarkupLanguage() {
+		return markupLanguage;
 	}
 
 	/**

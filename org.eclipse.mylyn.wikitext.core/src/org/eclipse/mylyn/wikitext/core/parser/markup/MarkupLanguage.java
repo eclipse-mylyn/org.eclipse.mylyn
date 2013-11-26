@@ -14,14 +14,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.Writer;
-import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.core.parser.markup.token.ImpliedHyperlinkReplacementToken;
-import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
 import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 
 import com.google.common.collect.ImmutableSet;
@@ -56,14 +53,6 @@ public abstract class MarkupLanguage implements Cloneable {
 
 	private Set<String> fileExtensions;
 
-	private boolean filterGenerativeBlocks;
-
-	private boolean blocksOnly;
-
-	protected String internalLinkPattern = "{0}"; //$NON-NLS-1$
-
-	private boolean enableMacros = true;
-
 	@Override
 	public MarkupLanguage clone() {
 		MarkupLanguage markupLanguage;
@@ -73,21 +62,8 @@ public abstract class MarkupLanguage implements Cloneable {
 			throw new IllegalStateException(e);
 		}
 		markupLanguage.setName(name);
-		markupLanguage.internalLinkPattern = internalLinkPattern;
-		markupLanguage.enableMacros = enableMacros;
+		markupLanguage.setExtendsLanguage(extendsLanguage);
 		return markupLanguage;
-	}
-
-	/**
-	 * Create new state for tracking a document and its contents during a parse session. Subclasses may override this
-	 * method to provide additional state tracking capability.
-	 * 
-	 * @return the new state.
-	 */
-	protected ContentState createState() {
-		ContentState contentState = new ContentState();
-		contentState.getIdGenerator().setGenerationStrategy(getIdGenerationStrategy());
-		return contentState;
 	}
 
 	/**
@@ -135,7 +111,6 @@ public abstract class MarkupLanguage implements Cloneable {
 	 * {@link #getName()}.
 	 * 
 	 * @return the file extensions
-	 * @since 2.0
 	 */
 	public Set<String> getFileExtensions() {
 		if (fileExtensions == null) {
@@ -148,7 +123,6 @@ public abstract class MarkupLanguage implements Cloneable {
 	 * Sets the normal file extensions of this markup language.
 	 * 
 	 * @return the file extensions
-	 * @since 2.0
 	 * @see #getFileExtensions()
 	 */
 	public void setFileExtensions(Set<String> fileExtensions) {
@@ -176,105 +150,7 @@ public abstract class MarkupLanguage implements Cloneable {
 		this.extendsLanguage = extendsLanguage;
 	}
 
-	/**
-	 * Indicate if generative contents should be filtered. This option is used with the {@link OutlineParser}.
-	 */
-	public boolean isFilterGenerativeContents() {
-		return filterGenerativeBlocks;
-	}
-
-	/**
-	 * Indicate if table of contents should be filtered. This option is used with the {@link OutlineParser}.
-	 */
-	public void setFilterGenerativeContents(boolean filterGenerativeBlocks) {
-		this.filterGenerativeBlocks = filterGenerativeBlocks;
-	}
-
-	/**
-	 * indicate if the parser should detect blocks only. This is useful for use in a document partitioner where the
-	 * partition boundaries are defined by blocks.
-	 */
-	public boolean isBlocksOnly() {
-		return blocksOnly;
-	}
-
-	/**
-	 * indicate if the parser should detect blocks only. This is useful for use in a document partitioner where the
-	 * partition boundaries are defined by blocks.
-	 */
-	public void setBlocksOnly(boolean blocksOnly) {
-		this.blocksOnly = blocksOnly;
-	}
-
 	public abstract void processContent(MarkupParser parser, String markupContent, boolean asDocument);
-
-	/**
-	 * The pattern to use when creating hyperlink targets for internal links. The pattern is implementation-specific,
-	 * however implementations are encouraged to use {@link MessageFormat}, where the 0th parameter is the internal
-	 * link.
-	 * 
-	 * @see MessageFormat
-	 */
-	public String getInternalLinkPattern() {
-		return internalLinkPattern;
-	}
-
-	/**
-	 * The pattern to use when creating hyperlink targets for internal links. The pattern is implementation-specific,
-	 * however implementations are encouraged to use {@link MessageFormat}, where the 0th parameter is the internal
-	 * link.
-	 * 
-	 * @see MessageFormat
-	 */
-	public void setInternalLinkPattern(String internalLinkPattern) {
-		this.internalLinkPattern = internalLinkPattern;
-	}
-
-	/**
-	 * Indicate if this markup language detects 'raw' hyperlinks; that is hyperlinks without any special markup. The
-	 * default implementation checks the markup syntax for use of {@link ImpliedHyperlinkReplacementToken} and returns
-	 * true if it is in the syntax.
-	 * 
-	 * @return true if raw hyperlinks are detected by this markup language, otherwise false.
-	 * @since 1.1
-	 */
-	public boolean isDetectingRawHyperlinks() {
-		return false;
-	}
-
-	/**
-	 * Indicate if macro processing is enabled. Generally such processing is enabled except when used in a source
-	 * editor.
-	 * <p>
-	 * Macros are defined as text substitution prior to normal processing. Such preprocessing changes the markup before
-	 * it is processed, and as such has the side-effect of changing computed offsets when parsing markup.
-	 * </p>
-	 * <p>
-	 * The default value is true.
-	 * </p>
-	 * 
-	 * @return true if macros are enabled, otherwise false
-	 * @since 1.3
-	 */
-	public boolean isEnableMacros() {
-		return enableMacros;
-	}
-
-	/**
-	 * Indicate if macro processing is enabled. Generally such processing is enabled except when used in a source
-	 * editor.
-	 * <p>
-	 * Macros are defined as text substitution prior to normal processing. Such preprocessing changes the markup before
-	 * it is processed, and as such has the side-effect of changing computed offsets when parsing markup.
-	 * </p>
-	 * 
-	 * @param enableMacros
-	 *            true if macros are enabled, otherwise false
-	 * @since 1.3
-	 */
-	public void setEnableMacros(boolean enableMacros) {
-		this.enableMacros = enableMacros;
-	}
 
 	/**
 	 * Create a document builder suitable for emitting content in this markup language
@@ -284,7 +160,6 @@ public abstract class MarkupLanguage implements Cloneable {
 	 * @return a document builder
 	 * @throws UnsupportedOperationException
 	 *             if the markup language has no corresponding document builder
-	 * @since 1.6
 	 */
 	public DocumentBuilder createDocumentBuilder(Writer out) {
 		throw new UnsupportedOperationException();

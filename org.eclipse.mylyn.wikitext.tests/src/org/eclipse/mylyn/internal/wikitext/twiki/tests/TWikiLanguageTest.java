@@ -30,7 +30,7 @@ public class TWikiLanguageTest extends TestCase {
 	}
 
 	public void testIsDetectingRawHyperlinks() {
-		assertTrue(parser.getMarkupLanguage().isDetectingRawHyperlinks());
+		assertTrue(language.isDetectingRawHyperlinks());
 	}
 
 	public void testParagraphs() {

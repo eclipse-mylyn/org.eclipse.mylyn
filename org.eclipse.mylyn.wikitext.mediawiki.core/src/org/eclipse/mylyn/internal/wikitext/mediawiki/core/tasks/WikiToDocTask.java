@@ -997,7 +997,7 @@ public class WikiToDocTask extends MarkupTask {
 	@Override
 	protected MarkupLanguage createMarkupLanguage() throws BuildException {
 		if (getMarkupLanguage() == null) {
-			MarkupLanguage markupLanguage = new MediaWikiLanguage();
+			MediaWikiLanguage markupLanguage = new MediaWikiLanguage();
 			if (getInternalLinkPattern() != null) {
 				markupLanguage.setInternalLinkPattern(getInternalLinkPattern());
 			}

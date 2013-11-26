@@ -30,6 +30,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitioner;
+import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
@@ -231,8 +232,8 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 	 */
 	public void setMarkupLanguage(MarkupLanguage markupLanguage) {
 		this.markupLanguage = markupLanguage;
-		if (this.markupLanguage != null) {
-			this.markupLanguage.setEnableMacros(false);
+		if (this.markupLanguage instanceof AbstractMarkupLanguage) {
+			((AbstractMarkupLanguage) this.markupLanguage).setEnableMacros(false);
 		}
 		sourceViewerConfiguration.setMarkupLanguage(markupLanguage);
 
