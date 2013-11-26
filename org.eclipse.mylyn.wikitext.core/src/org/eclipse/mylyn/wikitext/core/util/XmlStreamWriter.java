@@ -19,6 +19,7 @@ package org.eclipse.mylyn.wikitext.core.util;
  * </ul>
  * 
  * @author David Green
+ * @since 1.0
  */
 public abstract class XmlStreamWriter {
 

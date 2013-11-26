@@ -47,16 +47,25 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 
 	private boolean syntaxInitialized = false;
 
+	/**
+	 * @since 2.0
+	 */
 	protected MarkupLanguageConfiguration configuration;
 
 	private boolean blocksOnly;
 
 	private boolean filterGenerativeBlocks;
 
+	/**
+	 * @since 2.0
+	 */
 	protected String internalLinkPattern = "{0}"; //$NON-NLS-1$
 
 	private boolean enableMacros = true;
 
+	/**
+	 * @since 2.0
+	 */
 	public static final class PatternBasedSyntax {
 		protected List<PatternBasedElement> elements = new ArrayList<PatternBasedElement>();
 
@@ -561,8 +570,14 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 		blocks.add(createParagraphBlock()); // ORDER DEPENDENCY: this must come last
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	protected abstract void addStandardTokens(PatternBasedSyntax tokenSyntax);
 
+	/**
+	 * @since 2.0
+	 */
 	protected abstract void addStandardPhraseModifiers(PatternBasedSyntax phraseModifierSyntax);
 
 	protected abstract void addStandardBlocks(List<Block> blocks, List<Block> paragraphBreakingBlocks);
@@ -589,6 +604,7 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	 * 
 	 * @param tokenSyntax
 	 *            the token syntax
+	 * @since 2.0
 	 */
 	protected void addTokenExtensions(PatternBasedSyntax tokenSyntax) {
 		// no token extensions
@@ -601,6 +617,7 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	 * 
 	 * @param phraseModifierSyntax
 	 *            the phrase modifier syntax
+	 * @since 2.0
 	 */
 	protected void addPhraseModifierExtensions(PatternBasedSyntax phraseModifierSyntax) {
 		// no phrase extensions
@@ -626,10 +643,16 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 		return false;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	protected PatternBasedSyntax getPhraseModifierSyntax() {
 		return phraseModifierSyntax;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	protected PatternBasedSyntax getReplacementTokenSyntax() {
 		return tokenSyntax;
 	}

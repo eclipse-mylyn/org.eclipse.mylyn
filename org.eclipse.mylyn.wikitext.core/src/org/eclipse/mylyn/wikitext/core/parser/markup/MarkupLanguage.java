@@ -111,6 +111,7 @@ public abstract class MarkupLanguage implements Cloneable {
 	 * {@link #getName()}.
 	 * 
 	 * @return the file extensions
+	 * @since 2.0
 	 */
 	public Set<String> getFileExtensions() {
 		if (fileExtensions == null) {
@@ -124,6 +125,7 @@ public abstract class MarkupLanguage implements Cloneable {
 	 * 
 	 * @return the file extensions
 	 * @see #getFileExtensions()
+	 * @since 2.0
 	 */
 	public void setFileExtensions(Set<String> fileExtensions) {
 		checkNotNull(fileExtensions, "Must specify file extensions"); //$NON-NLS-1$
