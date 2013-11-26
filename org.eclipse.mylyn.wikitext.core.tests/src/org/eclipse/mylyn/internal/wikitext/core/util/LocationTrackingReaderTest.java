@@ -8,11 +8,13 @@
  * Contributors:
  *     David Green - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.wikitext.core.util;
+package org.eclipse.mylyn.internal.wikitext.core.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+
+import org.eclipse.mylyn.wikitext.core.util.LocationTrackingReader;
 
 import junit.framework.TestCase;
 

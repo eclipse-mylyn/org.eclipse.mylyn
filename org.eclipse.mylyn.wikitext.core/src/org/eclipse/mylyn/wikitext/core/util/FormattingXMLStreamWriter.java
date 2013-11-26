@@ -87,6 +87,7 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 
 	@Override
 	public void writeCData(String data) {
+		++lineOffset;
 		delegate.writeCData(data);
 	}
 
@@ -125,6 +126,7 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 
 	@Override
 	public void writeLiteral(String literal) {
+		++lineOffset;
 		delegate.writeLiteral(literal);
 	}
 
@@ -135,6 +137,7 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 		}
 		++childCount;
 		maybeIndent();
+		++lineOffset;
 		delegate.writeComment(data);
 	}
 
@@ -145,6 +148,7 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 
 	@Override
 	public void writeDTD(String dtd) {
+		++lineOffset;
 		delegate.writeDTD(dtd);
 	}
 
@@ -152,6 +156,7 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 	public void writeEmptyElement(String prefix, String localName, String namespaceURI) {
 		++childCount;
 		maybeIndent();
+		++lineOffset;
 		delegate.writeEmptyElement(prefix, localName, namespaceURI);
 	}
 
@@ -159,6 +164,7 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 	public void writeEmptyElement(String namespaceURI, String localName) {
 		++childCount;
 		maybeIndent();
+		++lineOffset;
 		delegate.writeEmptyElement(namespaceURI, localName);
 	}
 
@@ -166,6 +172,7 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 	public void writeEmptyElement(String localName) {
 		++childCount;
 		maybeIndent();
+		++lineOffset;
 		delegate.writeEmptyElement(localName);
 	}
 
@@ -185,6 +192,7 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 
 	@Override
 	public void writeEntityRef(String name) {
+		++lineOffset;
 		delegate.writeEntityRef(name);
 	}
 
@@ -195,26 +203,36 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 
 	@Override
 	public void writeProcessingInstruction(String target, String data) {
+		++childCount;
+		++lineOffset;
 		delegate.writeProcessingInstruction(target, data);
 	}
 
 	@Override
 	public void writeProcessingInstruction(String target) {
+		++childCount;
+		++lineOffset;
 		delegate.writeProcessingInstruction(target);
 	}
 
 	@Override
 	public void writeStartDocument() {
+		++childCount;
+		++lineOffset;
 		delegate.writeStartDocument();
 	}
 
 	@Override
 	public void writeStartDocument(String encoding, String version) {
+		++childCount;
+		++lineOffset;
 		delegate.writeStartDocument(encoding, version);
 	}
 
 	@Override
 	public void writeStartDocument(String version) {
+		++childCount;
+		++lineOffset;
 		delegate.writeStartDocument(version);
 	}
 
@@ -226,6 +244,7 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 		childCounts.push(childCount);
 		childCount = 0;
 		++indentLevel;
+		++lineOffset;
 		delegate.writeStartElement(prefix, localName, namespaceURI);
 	}
 
@@ -237,6 +256,7 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 		childCounts.push(childCount);
 		childCount = 0;
 		++indentLevel;
+		++lineOffset;
 		delegate.writeStartElement(namespaceURI, localName);
 	}
 
@@ -248,6 +268,7 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 		childCounts.push(childCount);
 		childCount = 0;
 		++indentLevel;
+		++lineOffset;
 		delegate.writeStartElement(localName);
 	}
 
@@ -260,14 +281,17 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 			return;
 		}
 		StringBuilder buf = new StringBuilder();
-		if (withNewline) {
+		if (withNewline && (childCount > 1 || !childCounts.isEmpty())) {
 			buf.append('\n');
+			lineOffset = 0;
 		}
 		for (int x = 0; x < indentLevel; ++x) {
 			buf.append('\t');
 		}
-		lineOffset = indentLevel;
-		delegate.writeCharacters(buf.toString().toCharArray(), 0, buf.length());
+		lineOffset += indentLevel;
+		if (buf.length() > 0) {
+			delegate.writeCharacters(buf.toString().toCharArray(), 0, buf.length());
+		}
 	}
 
 	private boolean preserveWhitespace() {

@@ -87,14 +87,14 @@ public class HtmlLanguageTest {
 		builder.characters("test");
 		builder.endBlock();
 		builder.endDocument();
-		assertEquals(loadResourceContent("newDocumentBuilderIsFormatting"), out.toString().trim());
+		assertEquals(loadResourceContent("newDocumentBuilderIsFormatting"), out.toString());
 	}
 
 	private String loadResourceContent(String resourceName) {
 		try {
 			String fileName = HtmlLanguageTest.class.getSimpleName() + '_' + resourceName + ".xml";
 			URL resource = HtmlLanguageTest.class.getResource(fileName);
-			return Resources.toString(resource, Charsets.UTF_8).trim();
+			return Resources.toString(resource, Charsets.UTF_8);
 		} catch (IOException e) {
 			throw Throwables.propagate(e);
 		}

@@ -58,7 +58,6 @@ Export-Package:
  org.eclipse.mylyn.wikitext.core.parser.markup.token;x-internal:=true,
  org.eclipse.mylyn.wikitext.core.parser.outline;x-internal:=true,
  org.eclipse.mylyn.wikitext.core.parser.util;x-internal:=true,
- org.eclipse.mylyn.wikitext.core.util;x-internal:=true,
  org.eclipse.mylyn.wikitext.mediawiki.core;x-internal:=true,
  org.eclipse.mylyn.wikitext.tests;x-internal:=true,
  org.eclipse.mylyn.wikitext.textile.core;x-internal:=true,
