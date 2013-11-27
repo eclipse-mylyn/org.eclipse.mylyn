@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.wikitext.core.parser.html;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -177,7 +179,7 @@ public class HtmlParser extends AbstractSaxHtmlParser {
 	}
 
 	public void setProcessors(List<DocumentProcessor> processors) {
-		this.processors = processors;
+		this.processors = checkNotNull(processors);
 	}
 
 	private String readContent(InputSource input) throws IOException {

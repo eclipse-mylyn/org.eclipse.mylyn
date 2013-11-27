@@ -122,6 +122,7 @@ public class MarkupLanguageConfiguration implements Cloneable {
 	 * Adds {@link #getPhraseModifiers() phrase modifiers} to the given syntax.
 	 * 
 	 * @param phraseModifierSyntax
+	 * @since 2.0
 	 */
 	public void addPhraseModifierExtensions(PatternBasedSyntax phraseModifierSyntax) {
 		for (PatternBasedElement element : getPhraseModifiers()) {
@@ -204,6 +205,7 @@ public class MarkupLanguageConfiguration implements Cloneable {
 	 * 
 	 * @param tokenSyntax
 	 *            the syntax to which tokens should be added
+	 * @since 2.0
 	 */
 	public void addTokenExtensions(PatternBasedSyntax tokenSyntax) {
 		for (PatternBasedElement element : getTokens()) {

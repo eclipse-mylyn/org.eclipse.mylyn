@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Tasktop Technologies.
+ * Copyright (c) 2011, 2013 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,12 +8,14 @@
  * Contributors:
  *     David Green - initial API and implementation
  *******************************************************************************/
-
 package org.eclipse.mylyn.wikitext.core.parser;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.IOException;
 
 import org.eclipse.mylyn.internal.wikitext.core.parser.html.AbstractSaxHtmlParser;
+import org.eclipse.mylyn.internal.wikitext.core.parser.html.HtmlCleaner;
 import org.eclipse.mylyn.internal.wikitext.core.parser.html.XHtmlParser;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -27,6 +29,48 @@ import org.xml.sax.SAXException;
  * @since 1.6
  */
 public class HtmlParser {
+
+	private final AbstractSaxHtmlParser delegate;
+
+	private HtmlParser(AbstractSaxHtmlParser parser) {
+		this.delegate = checkNotNull(parser);
+
+	}
+
+	public HtmlParser() {
+		AbstractSaxHtmlParser parser;
+		if (isJsoupAvailable()) {
+			parser = new org.eclipse.mylyn.internal.wikitext.core.parser.html.HtmlParser();
+		} else {
+			parser = new XHtmlParser();
+		}
+		this.delegate = parser;
+	}
+
+	/**
+	 * Provides a parser instance with cleanup rules that make the result more suitable for generating wiki markup.
+	 * 
+	 * @since 2.0
+	 */
+	public static HtmlParser instanceWithHtmlCleanupRules() {
+		org.eclipse.mylyn.internal.wikitext.core.parser.html.HtmlParser parser = new org.eclipse.mylyn.internal.wikitext.core.parser.html.HtmlParser();
+		HtmlCleaner htmlCleaner = new HtmlCleaner();
+		htmlCleaner.configure(parser);
+		return new HtmlParser(parser);
+	}
+
+	/**
+	 * Creates a new parser instance.
+	 * 
+	 * @since 2.0
+	 */
+	public static HtmlParser instance() {
+		return new HtmlParser();
+	}
+
+	AbstractSaxHtmlParser getDelegate() {
+		return delegate;
+	}
 
 	/**
 	 * Parses well-formed XHTML from the given input, and emit an approximation of the source document to the given
@@ -56,23 +100,13 @@ public class HtmlParser {
 	 * @since 2.0
 	 */
 	public void parse(InputSource input, DocumentBuilder builder, boolean asDocument) throws IOException, SAXException {
-		if (input == null) {
-			throw new IllegalArgumentException();
-		}
-		if (builder == null) {
-			throw new IllegalArgumentException();
-		}
-		AbstractSaxHtmlParser parser;
-		if (isJsoupAvailable()) {
-			parser = new org.eclipse.mylyn.internal.wikitext.core.parser.html.HtmlParser();
-		} else {
-			parser = new XHtmlParser();
-		}
+		checkNotNull(input);
+		checkNotNull(builder);
 
-		parser.parse(input, builder, asDocument);
+		delegate.parse(input, builder, asDocument);
 	}
 
-	private boolean isJsoupAvailable() {
+	boolean isJsoupAvailable() {
 		try {
 			Class.forName("org.jsoup.Jsoup", true, HtmlParser.class.getClassLoader()); //$NON-NLS-1$
 			return true;

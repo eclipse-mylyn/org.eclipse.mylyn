@@ -61,6 +61,9 @@ public class Processor implements Cloneable {
 		this.markupLanguage = markupLanguage;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public AbstractMarkupLanguage getMarkupLanguage() {
 		return markupLanguage;
 	}
