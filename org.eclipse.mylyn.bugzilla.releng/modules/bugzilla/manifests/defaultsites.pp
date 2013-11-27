@@ -79,6 +79,7 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
     minor       => "5",
     branch      => "trunk",
     branchTag   => "trunk",
+    envversion   => "4.5.1+",
   }
 
 bugzilla::site { "bugzilla-rest-trunk":
@@ -86,8 +87,9 @@ bugzilla::site { "bugzilla-rest-trunk":
     minor        => "5",
     branch       => "trunk",
     branchTag    => "trunk",
-    rest_enabled => true,
     envversion   => "4.5.1+",
+    envdefault_rest => true,
+    rest_enabled => true,
   }
 
 }

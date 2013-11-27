@@ -29,6 +29,7 @@ define bugzilla::site (
   $userGroup            = $bugzilla::userGroup,
   $envversion           = "${major}.${minor}",
   $envdefault           = false,
+  $envdefault_rest      = false,
   $desciptorfile        = " ",
   $usebugaliases        = false,
   $clearMode            = $bugzilla::clearMode,
