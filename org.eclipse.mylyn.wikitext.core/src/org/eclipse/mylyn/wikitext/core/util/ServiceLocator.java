@@ -322,8 +322,9 @@ public class ServiceLocator {
 		return serviceClassNames;
 	}
 
-	protected void logReadServiceClassNamesFailure(IOException e) {
+	void logReadServiceClassNamesFailure(IOException e) {
 		// very unusual, but inform in a stand-alone way
 		Logger.getLogger(ServiceLocator.class.getName()).log(Level.SEVERE, Messages.getString("ServiceLocator.1"), e); //$NON-NLS-1$
 	}
+
 }
