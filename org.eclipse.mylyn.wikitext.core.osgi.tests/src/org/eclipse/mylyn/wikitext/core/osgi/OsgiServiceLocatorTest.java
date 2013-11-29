@@ -11,6 +11,7 @@
 package org.eclipse.mylyn.wikitext.core.osgi;
 
 import static java.text.MessageFormat.format;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -54,6 +56,22 @@ public class OsgiServiceLocatorTest {
 	@Test
 	public void getApplicableInstance() {
 		assertNotNull(OsgiServiceLocator.getApplicableInstance());
+	}
+
+	@Test
+	public void installAsDefaultImplementation() {
+		ServiceLocator.setImplementation(OsgiServiceLocator.class);
+		ServiceLocator instance = ServiceLocator.getInstance();
+		assertNotNull(instance);
+		assertEquals(OsgiServiceLocator.class, instance.getClass());
+	}
+
+	@Test
+	public void installAsDefaultImplementationWithClassLoader() {
+		ServiceLocator.setImplementation(OsgiServiceLocator.class);
+		ServiceLocator instance = ServiceLocator.getInstance(OsgiServiceLocatorTest.class.getClassLoader());
+		assertNotNull(instance);
+		assertEquals(OsgiServiceLocator.class, instance.getClass());
 	}
 
 	private Bundle createBundleWithLanguage(Class<? extends MarkupLanguage> markupLanguage) {

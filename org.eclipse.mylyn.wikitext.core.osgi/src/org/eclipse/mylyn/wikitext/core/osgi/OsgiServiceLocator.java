@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.ServiceLoader;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,6 +33,7 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Throwables;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 /**
  * A {@link ServiceLocator} for use in an OSGi runtime environment. Uses OSGI {@link Bundle bundles} to load markup
@@ -57,11 +59,14 @@ public class OsgiServiceLocator extends ServiceLocator {
 	/**
 	 * Creates a new {@link OsgiServiceLocator}.
 	 */
-	OsgiServiceLocator() {
+	public OsgiServiceLocator() {
 		this(OsgiServiceLocator.class.getClassLoader());
 	}
 
-	OsgiServiceLocator(ClassLoader classLoader) {
+	/**
+	 * Creates a new {@link OsgiServiceLocator}.
+	 */
+	public OsgiServiceLocator(ClassLoader classLoader) {
 		super(classLoader);
 	}
 
@@ -87,6 +92,7 @@ public class OsgiServiceLocator extends ServiceLocator {
 
 	@Override
 	protected List<ResourceDescriptor> discoverServiceResources() {
+		Set<URL> resourceUrls = Sets.newHashSet();
 		List<ResourceDescriptor> descriptors = Lists.newArrayList();
 		for (Bundle bundle : bundles()) {
 			for (String resourceName : getClasspathServiceResourceNames()) {
@@ -101,7 +107,9 @@ public class OsgiServiceLocator extends ServiceLocator {
 				}
 				while (resources.hasMoreElements()) {
 					URL resourceUrl = resources.nextElement();
-					descriptors.add(new BundleResourceDescriptor(bundle, resourceUrl));
+					if (resourceUrls.add(resourceUrl)) {
+						descriptors.add(new BundleResourceDescriptor(bundle, resourceUrl));
+					}
 				}
 			}
 		}

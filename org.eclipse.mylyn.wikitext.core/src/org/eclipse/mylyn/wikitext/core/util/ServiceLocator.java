@@ -107,6 +107,7 @@ public class ServiceLocator {
 		Pattern classNamePattern = Pattern.compile("\\s*([^\\s#]+)?#?.*"); //$NON-NLS-1$
 		// first try Java services (jar-based)
 		final List<String> names = Lists.newArrayList();
+		final List<MarkupLanguage> languages = Lists.newArrayList();
 
 		final MarkupLanguage[] result = new MarkupLanguage[1];
 
@@ -117,6 +118,7 @@ public class ServiceLocator {
 					result[0] = language;
 					return false;
 				}
+				languages.add(language);
 				names.add(language.getName());
 				return true;
 			}
@@ -130,6 +132,13 @@ public class ServiceLocator {
 		if (matcher.matches()) {
 			String className = matcher.group(1);
 			if (className != null) {
+				// first try to load from a discovered markup language since this will circumvent
+				//  classloader issues
+				for (MarkupLanguage language : languages) {
+					if (className.equals(language.getClass().getName())) {
+						return language;
+					}
+				}
 				try {
 					Class<?> clazz = Class.forName(className, true, classLoader);
 					if (MarkupLanguage.class.isAssignableFrom(clazz)) {
