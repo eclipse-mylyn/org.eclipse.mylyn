@@ -11,7 +11,15 @@
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
 
+public abstract class BugzillaRestUnauthenticatedGetRequest<T> extends BugzillaRestAuthenticatedGetRequest<T> {
 
-public class BugzillaRestCorePlugin  {
-	public static final String CONNECTOR_KIND = "org.eclipse.mylyn.bugzilla.rest"; //$NON-NLS-1$
+	public BugzillaRestUnauthenticatedGetRequest(BugzillaRestHttpClient client) {
+		super(client);
+	}
+
+	@Override
+	protected boolean needsAuthentication() {
+		return false;
+	}
+
 }

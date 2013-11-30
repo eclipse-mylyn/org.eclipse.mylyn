@@ -4,9 +4,14 @@ Bundle-Name: org.eclipse.mylyn.bugzilla.rest.core
 Bundle-SymbolicName: org.eclipse.mylyn.bugzilla.rest.core;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.mylyn.tasks.core;bundle-version="[3.11.0,4.0.0)",
- org.eclipse.mylyn.commons.core;bundle-version="[3.11.0,4.0.0)"
+ org.eclipse.mylyn.tasks.core,
+ org.eclipse.mylyn.commons.core,
+ org.eclipse.mylyn.commons.repositories.core,
+ org.eclipse.mylyn.commons.repositories.http.core,
+ org.apache.httpcomponents.httpclient,
+ org.apache.httpcomponents.httpcore,
+ com.google.gson;bundle-version="2.1.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.eclipse.mylyn.internal.bugzilla.rest.core;x-friends:="org.eclipse.mylyn.bugzilla.rest.ui"
+Export-Package: org.eclipse.mylyn.internal.bugzilla.rest.core;x-friends:="org.eclipse.mylyn.bugzilla.rest.ui,org.eclipse.mylyn.bugzilla.rest.core.tests,org.eclipse.mylyn.bugzilla.rest.ui.tests"
 Bundle-Vendor: Eclipse Mylyn
