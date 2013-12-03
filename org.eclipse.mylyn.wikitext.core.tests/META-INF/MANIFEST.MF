@@ -18,5 +18,6 @@ Export-Package: org.eclipse.mylyn.internal.wikitext;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.core.util;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.core.util.css;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.core.validation;x-internal:=true,
+ org.eclipse.mylyn.wikitext.core.parser,
  org.eclipse.mylyn.wikitext.core.parser.builder;x-internal:=true,
  org.eclipse.mylyn.wikitext.core.util;x-internal:=true

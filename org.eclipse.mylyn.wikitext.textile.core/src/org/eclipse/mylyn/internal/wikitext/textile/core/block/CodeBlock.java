@@ -49,8 +49,7 @@ public class CodeBlock extends Block {
 			offset = matcher.start(LINE_REMAINDER_GROUP_OFFSET);
 			extended = matcher.group(EXTENDED_GROUP) != null;
 
-			builder.beginBlock(BlockType.PREFORMATTED, attributes);
-			builder.beginBlock(BlockType.CODE, new Attributes());
+			builder.beginBlock(BlockType.CODE, attributes);
 		}
 		if (markupLanguage.isEmptyLine(line) && !extended) {
 			setClosed(true);
@@ -86,7 +85,6 @@ public class CodeBlock extends Block {
 	public void setClosed(boolean closed) {
 		if (closed && !isClosed()) {
 			builder.endBlock();// code
-			builder.endBlock();// pre
 		}
 		super.setClosed(closed);
 	}

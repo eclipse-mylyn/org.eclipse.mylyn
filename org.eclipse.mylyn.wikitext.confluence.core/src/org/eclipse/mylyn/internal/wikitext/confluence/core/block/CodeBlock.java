@@ -34,12 +34,10 @@ public class CodeBlock extends AbstractConfluenceDelimitedBlock {
 			builder.beginBlock(BlockType.PANEL, attributes);
 		}
 		Attributes attributes = new Attributes();
-		Attributes preAttributes = new Attributes();
 		if (language != null) {
 			// chili-style class and atlassian-style class
 			attributes.setCssClass(language + " code-" + language); //$NON-NLS-1$
 		}
-		builder.beginBlock(BlockType.PREFORMATTED, preAttributes);
 		builder.beginBlock(BlockType.CODE, attributes);
 	}
 
@@ -55,7 +53,6 @@ public class CodeBlock extends AbstractConfluenceDelimitedBlock {
 			builder.endBlock(); // panel	
 		}
 		builder.endBlock(); // code
-		builder.endBlock(); // pre
 	}
 
 	@Override

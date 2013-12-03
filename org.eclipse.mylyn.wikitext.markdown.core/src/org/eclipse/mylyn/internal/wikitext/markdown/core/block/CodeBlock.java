@@ -38,7 +38,6 @@ public class CodeBlock extends NestableBlock {
 
 		// start of block
 		if (blockLineCount == 0) {
-			builder.beginBlock(BlockType.PREFORMATTED, new Attributes());
 			builder.beginBlock(BlockType.CODE, new Attributes());
 		}
 
@@ -69,7 +68,6 @@ public class CodeBlock extends NestableBlock {
 	@Override
 	public void setClosed(boolean closed) {
 		if (closed && !isClosed()) {
-			builder.endBlock();
 			builder.endBlock();
 		}
 		super.setClosed(closed);

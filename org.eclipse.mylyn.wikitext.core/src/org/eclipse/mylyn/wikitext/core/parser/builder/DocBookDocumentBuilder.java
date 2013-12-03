@@ -199,7 +199,8 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 			elementName = "para"; //$NON-NLS-1$
 			break;
 		case CODE:
-			elementName = "code"; //$NON-NLS-1$
+			elementName = "literallayout"; //$NON-NLS-1$
+			elementNames = new String[] { "code" }; //$NON-NLS-1$
 			break;
 		case PREFORMATTED:
 			elementName = "literallayout"; //$NON-NLS-1$

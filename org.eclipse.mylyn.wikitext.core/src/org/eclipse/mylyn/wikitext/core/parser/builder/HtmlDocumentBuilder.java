@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Stack;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
@@ -175,7 +176,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	private static final Map<BlockType, ElementInfo> blockTypeToElementInfo = new HashMap<BlockType, ElementInfo>();
 	static {
 		blockTypeToElementInfo.put(BlockType.BULLETED_LIST, new ElementInfo("ul")); //$NON-NLS-1$
-		blockTypeToElementInfo.put(BlockType.CODE, new ElementInfo("code")); //$NON-NLS-1$
+		blockTypeToElementInfo.put(BlockType.CODE, new ElementInfo("pre", null, null, new ElementInfo("code"))); //$NON-NLS-1$ //$NON-NLS-2$
 		blockTypeToElementInfo.put(BlockType.DIV, new ElementInfo("div")); //$NON-NLS-1$
 		blockTypeToElementInfo.put(BlockType.FOOTNOTE, new ElementInfo("footnote")); //$NON-NLS-1$
 		blockTypeToElementInfo.put(BlockType.LIST_ITEM, new ElementInfo("li")); //$NON-NLS-1$
@@ -234,6 +235,8 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	private String copyrightNotice;
 
 	private String htmlFilenameFormat = null;
+
+	private final Stack<ElementInfo> blockState = new Stack<ElementInfo>();
 
 	/**
 	 * construct the HtmlDocumentBuilder.
@@ -665,16 +668,19 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 			writer.writeCharacters("\n"); //$NON-NLS-1$
 			for (Entry<BlockType, ElementInfo> ent : blockTypeToElementInfo.entrySet()) {
 				ElementInfo elementInfo = ent.getValue();
-				if (elementInfo.cssStyles != null && elementInfo.cssClass != null) {
-					String[] classes = elementInfo.cssClass.split("\\s+"); //$NON-NLS-1$
-					for (String cssClass : classes) {
-						writer.writeCharacters("."); //$NON-NLS-1$
-						writer.writeCharacters(cssClass);
-						writer.writeCharacters(" "); //$NON-NLS-1$
+				while (elementInfo != null) {
+					if (elementInfo.cssStyles != null && elementInfo.cssClass != null) {
+						String[] classes = elementInfo.cssClass.split("\\s+"); //$NON-NLS-1$
+						for (String cssClass : classes) {
+							writer.writeCharacters("."); //$NON-NLS-1$
+							writer.writeCharacters(cssClass);
+							writer.writeCharacters(" "); //$NON-NLS-1$
+						}
+						writer.writeCharacters("{"); //$NON-NLS-1$
+						writer.writeCharacters(elementInfo.cssStyles);
+						writer.writeCharacters("}\n"); //$NON-NLS-1$
 					}
-					writer.writeCharacters("{"); //$NON-NLS-1$
-					writer.writeCharacters(elementInfo.cssStyles);
-					writer.writeCharacters("}\n"); //$NON-NLS-1$
+					elementInfo = elementInfo.next;
 				}
 			}
 			writer.writeEndElement();
@@ -802,21 +808,8 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		if (elementInfo == null) {
 			throw new IllegalStateException(type.name());
 		}
-		writer.writeStartElement(htmlNsUri, elementInfo.name);
-		if (elementInfo.cssClass != null) {
-			if (attributes.getCssClass() == null) {
-				attributes.setCssClass(elementInfo.cssClass);
-			} else {
-				attributes.setCssClass(elementInfo.cssClass + ' ' + attributes.getCssClass());
-			}
-		}
-		if (useInlineStyles && !suppressBuiltInStyles && elementInfo.cssStyles != null) {
-			if (attributes.getCssStyle() == null) {
-				attributes.setCssStyle(elementInfo.cssStyles);
-			} else {
-				attributes.setCssStyle(elementInfo.cssStyles + attributes.getCssStyle());
-			}
-		}
+		writeBlockElements(attributes, elementInfo);
+		blockState.push(elementInfo);
 		if (type == BlockType.TABLE) {
 			applyTableAttributes(attributes);
 		} else if (type == BlockType.TABLE_ROW) {
@@ -838,6 +831,27 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 				endSpan();
 				endBlock();
 			}
+		}
+	}
+
+	protected void writeBlockElements(Attributes attributes, ElementInfo elementInfo) {
+		writer.writeStartElement(htmlNsUri, elementInfo.name);
+		if (elementInfo.cssClass != null) {
+			if (attributes.getCssClass() == null) {
+				attributes.setCssClass(elementInfo.cssClass);
+			} else {
+				attributes.setCssClass(elementInfo.cssClass + ' ' + attributes.getCssClass());
+			}
+		}
+		if (useInlineStyles && !suppressBuiltInStyles && elementInfo.cssStyles != null) {
+			if (attributes.getCssStyle() == null) {
+				attributes.setCssStyle(elementInfo.cssStyles);
+			} else {
+				attributes.setCssStyle(elementInfo.cssStyles + attributes.getCssStyle());
+			}
+		}
+		if (elementInfo.next != null) {
+			writeBlockElements(new Attributes(), elementInfo.next);
 		}
 	}
 
@@ -868,7 +882,10 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	@Override
 	public void endBlock() {
-		writer.writeEndElement();
+		ElementInfo elementInfo = blockState.pop();
+		for (int x = 0; x < elementInfo.size(); ++x) {
+			writer.writeEndElement();
+		}
 	}
 
 	@Override
@@ -1253,14 +1270,25 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		final String cssStyles;
 
+		final ElementInfo next;
+
 		public ElementInfo(String name, String cssClass, String cssStyles) {
+			this(name, cssClass, cssStyles, null);
+		}
+
+		public ElementInfo(String name, String cssClass, String cssStyles, ElementInfo next) {
 			this.name = name;
 			this.cssClass = cssClass;
 			this.cssStyles = cssStyles != null && !cssStyles.endsWith(";") ? cssStyles + ';' : cssStyles; //$NON-NLS-1$
+			this.next = next;
 		}
 
 		public ElementInfo(String name) {
 			this(name, null, null);
+		}
+
+		public int size() {
+			return 1 + (next == null ? 0 : next.size());
 		}
 	}
 

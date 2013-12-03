@@ -77,6 +77,22 @@ public class HtmlDocumentBuilderTest {
 		assertExpected("emitAsDocumentTrueFormatting");
 	}
 
+	@Test
+	public void blockCode() {
+		builder.beginBlock(BlockType.CODE, new Attributes());
+		builder.characters("test");
+		builder.endBlock();
+		assertEquals("<pre><code>test</code></pre>", out.toString());
+	}
+
+	@Test
+	public void blockPreformatted() {
+		builder.beginBlock(BlockType.PREFORMATTED, new Attributes());
+		builder.characters("test");
+		builder.endBlock();
+		assertEquals("<pre>test</pre>", out.toString());
+	}
+
 	protected void setupFormatting() {
 		builder = new HtmlDocumentBuilder(out, true);
 	}
