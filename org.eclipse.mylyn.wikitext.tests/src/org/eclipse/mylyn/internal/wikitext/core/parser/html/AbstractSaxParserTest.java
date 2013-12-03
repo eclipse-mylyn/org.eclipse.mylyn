@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.wikitext.textile.core.TextileDocumentBuilder;
@@ -153,7 +152,7 @@ public abstract class AbstractSaxParserTest extends TestCase {
 
 		String generatedMarkup = out.toString();
 
-		Assert.assertEquals(expectedResult, generatedMarkup);
+		assertEquals(expectedResult, generatedMarkup);
 
 		MarkupParser markupParser = new MarkupParser(new TextileLanguage());
 

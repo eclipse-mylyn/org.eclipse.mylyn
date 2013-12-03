@@ -13,7 +13,6 @@ package org.eclipse.mylyn.internal.wikitext.mediawiki.core;
 
 import java.io.StringWriter;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.wikitext.confluence.core.ConfluenceDocumentBuilder;
@@ -52,7 +51,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("text  more text\n\n", markup);
+		assertEquals("text  more text\n\n", markup);
 	}
 
 	public void testParagraphWithCssClass() {
@@ -66,7 +65,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("text  more text\n\n", markup);
+		assertEquals("text  more text\n\n", markup);
 	}
 
 	public void testParagraphWithCssStyle() {
@@ -80,7 +79,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("text  more text\n\n", markup);
+		assertEquals("text  more text\n\n", markup);
 	}
 
 	public void testParagraphWithId() {
@@ -94,7 +93,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("text  more text\n\n", markup);
+		assertEquals("text  more text\n\n", markup);
 	}
 
 	public void testParagraphWithIdAndClass() {
@@ -108,7 +107,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("text  more text\n\n", markup);
+		assertEquals("text  more text\n\n", markup);
 	}
 
 	public void testParagraphWithLink() {
@@ -128,7 +127,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("text  more text \"baz\":http://example.com/foo+bar/baz.gif test\n\n", markup);
+		assertEquals("text  more text \"baz\":http://example.com/foo+bar/baz.gif test\n\n", markup);
 	}
 
 	public void testBlockCode() {
@@ -142,7 +141,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("{code}text\n\nmore text{code}\n\n\n", markup);
+		assertEquals("{code}text\n\nmore text{code}\n\n\n", markup);
 	}
 
 	public void testParagraphFollowingExtendedBlockCode() {
@@ -162,7 +161,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("{code}text\n\nmore text{code}\n\n\ntext\n\ntext2\n\n", markup);
+		assertEquals("{code}text\n\nmore text{code}\n\n\ntext\n\ntext2\n\n", markup);
 	}
 
 	public void testHeading1() {
@@ -179,7 +178,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("h1. text  more text\n\ntext\n\n", markup);
+		assertEquals("h1. text  more text\n\ntext\n\n", markup);
 	}
 
 	public void testHeading1_WithNestedMarkup() {
@@ -199,7 +198,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("h1. text _emphasized_\n\ntext\n\n", markup);
+		assertEquals("h1. text _emphasized_\n\ntext\n\n", markup);
 	}
 
 	public void testImplicitParagrah() {
@@ -215,7 +214,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("text1\n\ntext2\n\ntext3\n\n", markup);
+		assertEquals("text1\n\ntext2\n\ntext3\n\n", markup);
 	}
 
 	public void testBoldSpanNoWhitespace_spanAtLineStart() {
@@ -234,7 +233,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("*text2* text3\n\n", markup);
+		assertEquals("*text2* text3\n\n", markup);
 	}
 
 	public void testBoldSpanNoWhitespace_spanAtLineEnd() {
@@ -253,7 +252,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("text3 *text2*\n\n", markup);
+		assertEquals("text3 *text2*\n\n", markup);
 	}
 
 	public void testBoldSpanNoWhitespace_spanMidLine() {
@@ -273,7 +272,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("text3 *text2* text4\n\n", markup);
+		assertEquals("text3 *text2* text4\n\n", markup);
 	}
 
 	public void testBoldSpanNoWhitespace_adjacentSpans() {
@@ -294,7 +293,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("*text2* _text3_\n\n", markup);
+		assertEquals("*text2* _text3_\n\n", markup);
 	}
 
 	public void testSpanWithAdjacentWhitespace() {
@@ -315,7 +314,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("prefix *bolded* suffix\n\n", markup);
+		assertEquals("prefix *bolded* suffix\n\n", markup);
 	}
 
 	public void testBoldSpanWithAdjacentPunctuation() {
@@ -334,7 +333,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("*text2*!\n\n", markup);
+		assertEquals("*text2*!\n\n", markup);
 	}
 
 	public void testEmptySpan() {
@@ -354,7 +353,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("prefix  suffix\n\n", markup);
+		assertEquals("prefix  suffix\n\n", markup);
 	}
 
 	public void testTableWithEmptyCells() {
@@ -378,7 +377,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("|content| |\n\n", markup);
+		assertEquals("|content| |\n\n", markup);
 	}
 
 	public void testDivAfterImplicitParagraph() {
@@ -407,7 +406,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("test\n\nmore *text*\n# text2\n\n", markup);
+		assertEquals("test\n\nmore *text*\n# text2\n\n", markup);
 	}
 
 	public void testDivWithinTableCell() {
@@ -439,7 +438,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("|first|content|\n\n", markup);
+		assertEquals("|first|content|\n\n", markup);
 	}
 
 	public void testItalics() {
@@ -460,7 +459,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("prefix _italic phrase_ suffix\n\n", markup);
+		assertEquals("prefix _italic phrase_ suffix\n\n", markup);
 	}
 
 	public void testEmptyBoldSpan() {
@@ -479,7 +478,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("first second\n\n", markup);
+		assertEquals("first second\n\n", markup);
 	}
 
 	public void testParagraphWithSingleNewline() {
@@ -495,7 +494,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("first\nsecond\n\n", markup);
+		assertEquals("first\nsecond\n\n", markup);
 	}
 
 	public void testParagraphWithMultipleNewlines() {
@@ -513,7 +512,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("first\n\\\\\\\\second\n\n", markup);
+		assertEquals("first\n\\\\\\\\second\n\n", markup);
 	}
 
 	public void testListItemWithSingleNewline() {
@@ -539,7 +538,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("* first\nsecond\n* another\n\n", markup);
+		assertEquals("* first\nsecond\n* another\n\n", markup);
 	}
 
 	public void testListItemWithMultipleNewlines() {
@@ -566,7 +565,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("* first\n\\\\second\n* another\n\n", markup);
+		assertEquals("* first\n\\\\second\n* another\n\n", markup);
 	}
 
 	public void testPreformattedWithMultipleNewlines() {
@@ -585,6 +584,6 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("{noformat}first\n\nsecond{noformat}\n\n\n", markup);
+		assertEquals("{noformat}first\n\nsecond{noformat}\n\n\n", markup);
 	}
 }

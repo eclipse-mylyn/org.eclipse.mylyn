@@ -13,7 +13,6 @@ package org.eclipse.mylyn.internal.wikitext.textile.core;
 
 import java.io.StringWriter;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
@@ -59,7 +58,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 			TestUtil.println(markup);
 
-			Assert.assertEquals("text more text\n\n", markup);
+			assertEquals("text more text\n\n", markup);
 		}
 	}
 
@@ -74,7 +73,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 			TestUtil.println(markup);
 
-			Assert.assertEquals("a b\n\n", markup);
+			assertEquals("a b\n\n", markup);
 		}
 	}
 
@@ -92,7 +91,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("text\nmore text\n\n", markup);
+		assertEquals("text\nmore text\n\n", markup);
 	}
 
 	public void testParagraph_MultipleLineBreaksInImplicitParagraph() {
@@ -107,7 +106,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("text\nmore text\n\n", markup);
+		assertEquals("text\nmore text\n\n", markup);
 	}
 
 	public void testParagraph_NewlineFollowedBySpaceOrTabInParagraph() {
@@ -125,7 +124,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("text\n more\n\tmore2 text\n\n", markup);
+		assertEquals("text\n more\n\tmore2 text\n\n", markup);
 	}
 
 	public void testMultipleParagraphs() {
@@ -144,7 +143,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("first paragraph\n\nsecond paragraph\n\n", markup);
+		assertEquals("first paragraph\n\nsecond paragraph\n\n", markup);
 	}
 
 	public void testParagraphWithBoldEmphasis() {
@@ -165,7 +164,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("some *bold* and _emphasis_\n\n", markup);
+		assertEquals("some *bold* and _emphasis_\n\n", markup);
 	}
 
 	public void testParagraphWithCssClass() {
@@ -179,7 +178,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("p(test). text more text\n\n", markup);
+		assertEquals("p(test). text more text\n\n", markup);
 	}
 
 	public void testParagraphWithCssStyle() {
@@ -193,7 +192,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("p{x-test: foo;}. text more text\n\n", markup);
+		assertEquals("p{x-test: foo;}. text more text\n\n", markup);
 	}
 
 	public void testParagraphWithId() {
@@ -207,7 +206,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("p(#123). text more text\n\n", markup);
+		assertEquals("p(#123). text more text\n\n", markup);
 	}
 
 	public void testParagraphWithIdAndClass() {
@@ -221,7 +220,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("p(test#123). text more text\n\n", markup);
+		assertEquals("p(test#123). text more text\n\n", markup);
 	}
 
 	public void testParagraphWithLink() {
@@ -241,7 +240,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("text more text \"baz\":http://example.com/foo+bar/baz.gif test\n\n", markup);
+		assertEquals("text more text \"baz\":http://example.com/foo+bar/baz.gif test\n\n", markup);
 	}
 
 	public void testBlockCode() {
@@ -255,7 +254,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("bc.. text\n\nmore text\n\n\n", markup);
+		assertEquals("bc.. text\n\nmore text\n\n\n", markup);
 	}
 
 	public void testParagraphFollowingExtendedBlockCode() {
@@ -275,7 +274,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("bc.. text\n\nmore text\n\n\np. text\n\ntext2\n\n", markup);
+		assertEquals("bc.. text\n\nmore text\n\n\np. text\n\ntext2\n\n", markup);
 	}
 
 	public void testHeading1() {
@@ -292,7 +291,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("h1. text more text\n\ntext\n\n", markup);
+		assertEquals("h1. text more text\n\ntext\n\n", markup);
 	}
 
 	public void testHeading1_WithNestedMarkup() {
@@ -312,13 +311,13 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("h1. text _emphasized_\n\ntext\n\n", markup);
+		assertEquals("h1. text _emphasized_\n\ntext\n\n", markup);
 	}
 
 	public void testHeading1_WithAttributes() {
 		String markup = doHeadingAttributesTest();
 
-		Assert.assertEquals("h1(classTest#idTest). text more text\n\n", markup);
+		assertEquals("h1(classTest#idTest). text more text\n\n", markup);
 	}
 
 	public void testHeading1_WithoutAttributes() {
@@ -326,7 +325,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		String markup = doHeadingAttributesTest();
 
-		Assert.assertEquals("h1. text more text\n\n", markup);
+		assertEquals("h1. text more text\n\n", markup);
 	}
 
 	private String doHeadingAttributesTest() {
@@ -358,7 +357,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("text1\n\ntext2\n\ntext3\n\n", markup);
+		assertEquals("text1\n\ntext2\n\ntext3\n\n", markup);
 	}
 
 	public void testBoldSpanNoWhitespace_spanAtLineStart() {
@@ -377,7 +376,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("*text2* text3\n\n", markup);
+		assertEquals("*text2* text3\n\n", markup);
 	}
 
 	public void testBoldSpanNoWhitespace_spanAtLineEnd() {
@@ -396,7 +395,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("text3 *text2*\n\n", markup);
+		assertEquals("text3 *text2*\n\n", markup);
 	}
 
 	public void testBoldSpanNoWhitespace_spanMidLine() {
@@ -416,7 +415,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("text3 *text2* text4\n\n", markup);
+		assertEquals("text3 *text2* text4\n\n", markup);
 	}
 
 	public void testBoldSpanNoWhitespace_adjacentSpans() {
@@ -437,7 +436,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("*text2* __text3__\n\n", markup);
+		assertEquals("*text2* __text3__\n\n", markup);
 	}
 
 	public void testBoldSpanWithAdjacentPunctuation() {
@@ -456,7 +455,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("*text2*!\n\n", markup);
+		assertEquals("*text2*!\n\n", markup);
 	}
 
 	public void testBulletedList() {
@@ -481,7 +480,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("* text2 *text3*\n* text4\n\n", markup);
+		assertEquals("* text2 *text3*\n* text4\n\n", markup);
 	}
 
 	public void testBulletedList_TwoLevels() {
@@ -513,7 +512,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("* text2\n** text3\n** text4\n\n\n", markup);
+		assertEquals("* text2\n** text3\n** text4\n\n\n", markup);
 	}
 
 	public void testSpanWithAdjacentWhitespace() {
@@ -534,7 +533,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("prefix *bolded* suffix\n\n", markup);
+		assertEquals("prefix *bolded* suffix\n\n", markup);
 	}
 
 	public void testEmptySpan() {
@@ -554,7 +553,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("prefix suffix\n\n", markup);
+		assertEquals("prefix suffix\n\n", markup);
 	}
 
 	public void testTableWithEmptyCells() {
@@ -578,7 +577,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("|content| |\n\n", markup);
+		assertEquals("|content| |\n\n", markup);
 	}
 
 	public void testDivAfterImplicitParagraph() {
@@ -607,7 +606,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("test\n\nmore *text*\n# text2\n\n", markup);
+		assertEquals("test\n\nmore *text*\n# text2\n\n", markup);
 	}
 
 	public void testDivWithinTableCell() {
@@ -639,7 +638,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("|first|content|\n\n", markup);
+		assertEquals("|first|content|\n\n", markup);
 	}
 
 	public void testEmptyBoldSpan() {
@@ -658,7 +657,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("first second\n\n", markup);
+		assertEquals("first second\n\n", markup);
 	}
 
 	public void testProtectionAgainstNestedSpans() {
@@ -679,7 +678,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("%{color:blue;}first second%", markup);
+		assertEquals("%{color:blue;}first second%", markup);
 	}
 
 	public void testLineBreak() {
@@ -693,7 +692,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("line\nbreak\n\n", markup);
+		assertEquals("line\nbreak\n\n", markup);
 	}
 
 	public void testLineBreak_ExplicitBlockAfterExtendedBlock() {
@@ -715,7 +714,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("bc.. one\n\n\ntwo\n\n\np. line\nbreak\n\n", markup);
+		assertEquals("bc.. one\n\n\ntwo\n\n\np. line\nbreak\n\n", markup);
 	}
 
 	public void testLineBreakInFootnote() {
@@ -731,7 +730,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("fn1. line\nbreak\n\n", markup);
+		assertEquals("fn1. line\nbreak\n\n", markup);
 	}
 
 	public void testLineBreakInPreformatted_Extended() {
@@ -748,7 +747,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("pre.. line\n\nbreak\n\n\n", markup);
+		assertEquals("pre.. line\n\nbreak\n\n\n", markup);
 	}
 
 	public void testLineBreakInPreformatted() {
@@ -764,7 +763,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("pre. line\nbreak\n\n", markup);
+		assertEquals("pre. line\nbreak\n\n", markup);
 	}
 
 	public void testLink() {
@@ -780,7 +779,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("a \"link to foo\":#foo test\n\n", markup);
+		assertEquals("a \"link to foo\":#foo test\n\n", markup);
 	}
 
 	public void testImageLink() {
@@ -796,7 +795,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("a !fooImage.png!:#foo test\n\n", markup);
+		assertEquals("a !fooImage.png!:#foo test\n\n", markup);
 	}
 
 	public void testImage() {
@@ -812,7 +811,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("a !fooImage.png! test\n\n", markup);
+		assertEquals("a !fooImage.png! test\n\n", markup);
 	}
 
 	public void testEntityReference() {
@@ -828,7 +827,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("a (c) test\n\n", markup);
+		assertEquals("a (c) test\n\n", markup);
 	}
 
 	public void testEntityCopyright() {
@@ -842,7 +841,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("a (c) test\n\n", markup);
+		assertEquals("a (c) test\n\n", markup);
 	}
 
 	public void testEntityReg() {
@@ -856,7 +855,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("a (r) test\n\n", markup);
+		assertEquals("a (r) test\n\n", markup);
 	}
 
 	public void testNonBreakingSpace() {
@@ -870,6 +869,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		Assert.assertEquals("a test\n\n", markup);
+		assertEquals("a test\n\n", markup);
 	}
 }
