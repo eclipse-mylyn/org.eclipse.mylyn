@@ -28,6 +28,14 @@ public class Messages extends NLS {
 
 	public static String Reviews_UpdateFailure;
 
+	public static String Reviews_NextComment;
+
+	public static String Reviews_NextComment_Tooltip;
+
+	public static String Reviews_PreviousComment;
+
+	public static String Reviews_PreviousComment_Tooltip;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

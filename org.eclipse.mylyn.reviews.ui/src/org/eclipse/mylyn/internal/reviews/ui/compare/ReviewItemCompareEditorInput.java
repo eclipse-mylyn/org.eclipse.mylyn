@@ -9,31 +9,53 @@
  *     Atlassian - initial API and implementation
  *     Tasktop Technologies - improvements
  *     Sebastien Dubois (Ericsson) - Improvements for bug 400266
+ *     Guy Perron (Ericsson) - Bug 422673 Insert annotation navigation
  ******************************************************************************/
 
 package org.eclipse.mylyn.internal.reviews.ui.compare;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareEditorInput;
+import org.eclipse.compare.CompareViewerPane;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.IDiffElement;
 import org.eclipse.compare.structuremergeviewer.StructureDiffViewer;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.mylyn.internal.reviews.ui.Messages;
+import org.eclipse.mylyn.internal.reviews.ui.ReviewsImages;
+import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.handlers.IHandlerActivation;
+import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.menus.CommandContributionItem;
+import org.eclipse.ui.menus.CommandContributionItemParameter;
+import org.eclipse.ui.services.IServiceLocator;
 
 /**
  * @author Steffen Pingel
  * @author Sebastien Dubois
  * @author Miles Parker
+ * @author Guy Perron
  */
 public abstract class ReviewItemCompareEditorInput extends CompareEditorInput {
 
 	final ReviewBehavior behavior;
+
+	private IHandlerActivation gotoNextCommentHandler;
+
+	private IHandlerActivation gotoPreviousCommentHandler;
 
 	public ReviewItemCompareEditorInput(CompareConfiguration configuration, ReviewBehavior behavior) {
 		super(configuration);
@@ -81,7 +103,64 @@ public abstract class ReviewItemCompareEditorInput extends CompareEditorInput {
 		if (input instanceof FileItemNode && ((FileItemNode) input).getFileItem() != null) {
 			ReviewCompareAnnotationSupport support = ReviewCompareAnnotationSupport.getAnnotationSupport(contentViewer);
 			support.setReviewItem(((FileItemNode) input).getFileItem(), behavior);
+
+			if (gotoNextCommentHandler == null && gotoPreviousCommentHandler == null) {
+				initializeGotoCommentHandlers(parent, support);
+			}
 		}
 		return contentViewer;
+	}
+
+	private void initializeGotoCommentHandlers(Composite parent, ReviewCompareAnnotationSupport support) {
+		ToolBarManager tbm = CompareViewerPane.getToolBarManager(parent);
+		if (tbm != null) {
+			IServiceLocator serviceLocator = getServiceLocator();
+			if (serviceLocator != null) {
+				final IHandlerService handlerService = (IHandlerService) serviceLocator.getService(IHandlerService.class);
+				if (handlerService != null) {
+					gotoNextCommentHandler = handlerService.activateHandler(ReviewsUiPlugin.PLUGIN_ID
+							+ ".commands.navigate.comment.next", //$NON-NLS-1$
+							new GotoCommentHandler(Direction.FORWARDS, support));
+					gotoPreviousCommentHandler = handlerService.activateHandler(ReviewsUiPlugin.PLUGIN_ID
+							+ ".commands.navigate.comment.previous", //$NON-NLS-1$
+							new GotoCommentHandler(Direction.BACKWARDS, support));
+					final List<IHandlerActivation> activations = new ArrayList<IHandlerActivation>(Arrays.asList(
+							gotoNextCommentHandler, gotoPreviousCommentHandler));
+					parent.addDisposeListener(new DisposeListener() {
+						@Override
+						public void widgetDisposed(DisposeEvent e) {
+							handlerService.deactivateHandlers(activations);
+							activations.clear();
+						}
+					});
+				}
+
+				CommandContributionItemParameter p = new CommandContributionItemParameter(serviceLocator, //
+						ReviewsUiPlugin.PLUGIN_ID + ".navigate.comment.next", //$NON-NLS-1$
+						ReviewsUiPlugin.PLUGIN_ID + ".commands.navigate.comment.next", //$NON-NLS-1$ // command id
+						CommandContributionItem.STYLE_PUSH);
+				p.icon = ReviewsImages.NEXT_COMMENT;
+				p.label = Messages.Reviews_NextComment;
+				if (p.label.length() > 0) {
+					p.mnemonic = p.label.substring(0, 1);
+				}
+				p.tooltip = Messages.Reviews_NextComment_Tooltip;
+
+				tbm.appendToGroup("navigation", new CommandContributionItem(p)); //$NON-NLS-1$
+
+				p = new CommandContributionItemParameter(serviceLocator, //
+						ReviewsUiPlugin.PLUGIN_ID + ".navigate.comment.previous", //$NON-NLS-1$
+						ReviewsUiPlugin.PLUGIN_ID + ".commands.navigate.comment.previous", //$NON-NLS-1$ // command id
+						CommandContributionItem.STYLE_PUSH);
+				p.icon = ReviewsImages.PREVIOUS_COMMENT;
+				p.label = Messages.Reviews_PreviousComment;
+				if (p.label.length() > 0) {
+					p.mnemonic = p.label.substring(0, 1);
+				}
+				p.tooltip = Messages.Reviews_PreviousComment_Tooltip;
+				tbm.appendToGroup("navigation", new CommandContributionItem(p)); //$NON-NLS-1$
+				tbm.update(true);
+			}
+		}
 	}
 }

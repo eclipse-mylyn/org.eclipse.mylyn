@@ -61,6 +61,10 @@ public class ReviewsImages {
 
 	public static final ImageDescriptor BLANK = create("obj12/blank.gif"); //$NON-NLS-1$
 
+	public static final ImageDescriptor NEXT_COMMENT = create("elcl16/nxtanmly_menu.png"); //$NON-NLS-1$
+
+	public static final ImageDescriptor PREVIOUS_COMMENT = create("elcl16/prevanmly_menu.png"); //$NON-NLS-1$
+
 	private static ImageDescriptor create(String path) {
 		try {
 			return ImageDescriptor.createFromURL(makeIconFileURL(path));
