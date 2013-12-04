@@ -13,6 +13,7 @@ package org.eclipse.mylyn.wikitext.core.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -26,7 +27,9 @@ import java.util.Enumeration;
 import java.util.List;
 
 import org.eclipse.mylyn.internal.wikitext.MockMarkupLanguage;
+import org.eclipse.mylyn.internal.wikitext.MockMarkupLanguageProvider;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageProvider;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -66,6 +69,18 @@ public class ServiceLocatorTest {
 		assertKnownMarkupLanguage();
 	}
 
+	@Test
+	public void testKnownLanguageProviderMetaInf() {
+		setupServiceLocatorWithMockMarkupLanguageProvider(true);
+		assertKnownMarkupLanguage();
+	}
+
+	@Test
+	public void testKnownLanguageProviderServices() {
+		setupServiceLocatorWithMockMarkupLanguageProvider(false);
+		assertKnownMarkupLanguage();
+	}
+
 	protected void assertKnownMarkupLanguage() {
 		MarkupLanguage markupLanguage = locator.getMarkupLanguage(MockMarkupLanguage.class.getSimpleName());
 		assertNotNull(markupLanguage);
@@ -78,16 +93,43 @@ public class ServiceLocatorTest {
 			Collection<URL> resources = Lists.newArrayList(new URL("file:" + MockMarkupLanguage.class.getName()));
 
 			Enumeration<Object> empty = Collections.enumeration(Collections.emptyList());
+			doReturn(empty).when(classLoader).getResources(any(String.class));
 			doReturn(metaInf ? Collections.enumeration(resources) : empty).when(classLoader).getResources(
 					eq("META-INF/services/" + MarkupLanguage.class.getName()));
 			doReturn(!metaInf ? Collections.enumeration(resources) : empty).when(classLoader).getResources(
 					eq("services/" + MarkupLanguage.class.getName()));
 			doReturn(MockMarkupLanguage.class).when(classLoader).loadClass(MockMarkupLanguage.class.getName());
+
 			locator = new ServiceLocator(classLoader) {
 				@Override
 				protected List<String> readServiceClassNames(URL url) {
 					return super.readServiceClassNames(new ByteArrayInputStream(MockMarkupLanguage.class.getName()
 							.getBytes(Charsets.UTF_8)));
+				}
+			};
+		} catch (Exception e) {
+			throw Throwables.propagate(e);
+		}
+	}
+
+	protected void setupServiceLocatorWithMockMarkupLanguageProvider(boolean metaInf) {
+		try {
+			ClassLoader classLoader = mock(ClassLoader.class);
+			Collection<URL> resources = Lists.newArrayList(new URL("file:" + MockMarkupLanguageProvider.class.getName()));
+
+			Enumeration<Object> empty = Collections.enumeration(Collections.emptyList());
+			doReturn(empty).when(classLoader).getResources(any(String.class));
+			doReturn(metaInf ? Collections.enumeration(resources) : empty).when(classLoader).getResources(
+					eq("META-INF/services/" + MarkupLanguageProvider.class.getName()));
+			doReturn(!metaInf ? Collections.enumeration(resources) : empty).when(classLoader).getResources(
+					eq("services/" + MarkupLanguageProvider.class.getName()));
+			doReturn(MockMarkupLanguageProvider.class).when(classLoader).loadClass(
+					MockMarkupLanguageProvider.class.getName());
+			locator = new ServiceLocator(classLoader) {
+				@Override
+				protected List<String> readServiceClassNames(URL url) {
+					return super.readServiceClassNames(new ByteArrayInputStream(
+							MockMarkupLanguageProvider.class.getName().getBytes(Charsets.UTF_8)));
 				}
 			};
 		} catch (Exception e) {

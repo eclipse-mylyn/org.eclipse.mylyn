@@ -31,6 +31,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageProvider;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
@@ -41,9 +42,20 @@ import com.google.common.io.Closeables;
 /**
  * A service locator for use both inside and outside of an Eclipse environment. Provides access to markup languages by
  * name.
+ * <p>
+ * Markup languages may be dynamically discovered by adding a Java service file in one of the following locations:
+ * <ul>
+ * <li><tt>META-INF/services/org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage</tt></li>
+ * <li><tt>services/org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage</tt></li>
+ * <li><tt>META-INF/services/org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageProvider</tt></li>
+ * <li><tt>services/org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageProvider</tt></li>
+ * </ul>
+ * </p>
  * 
  * @author David Green
  * @since 1.0
+ * @see MarkupLanguage
+ * @see MarkupLanguageProvider
  */
 public class ServiceLocator {
 
@@ -207,6 +219,13 @@ public class ServiceLocator {
 						if (!visitor.accept(instance)) {
 							return;
 						}
+					} else if (MarkupLanguageProvider.class.isAssignableFrom(clazz)) {
+						MarkupLanguageProvider provider = (MarkupLanguageProvider) clazz.newInstance();
+						for (MarkupLanguage language : provider.getMarkupLanguages()) {
+							if (!visitor.accept(language)) {
+								return;
+							}
+						}
 					}
 				} catch (Exception e) {
 					// very unusual, but inform the user in a stand-alone way
@@ -275,8 +294,14 @@ public class ServiceLocator {
 	 * @since 2.0
 	 */
 	protected List<String> getClasspathServiceResourceNames() {
-		return ImmutableList.copyOf(Lists.newArrayList("META-INF/services/" + MarkupLanguage.class.getName(), //$NON-NLS-1$
-				"services/" + MarkupLanguage.class.getName())); //$NON-NLS-1$
+		List<String> paths = Lists.newArrayList();
+		for (String suffix : new String[] { "services/" + MarkupLanguage.class.getName(), //$NON-NLS-1$
+				"services/" + MarkupLanguageProvider.class.getName() }) { //$NON-NLS-1$
+			for (String prefix : new String[] { "", "META-INF/" }) { //$NON-NLS-1$//$NON-NLS-2$
+				paths.add(prefix + suffix);
+			}
+		}
+		return ImmutableList.copyOf(paths);
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 David Green and others.
+ * Copyright (c) 2007, 2008 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,24 +11,18 @@
 
 package org.eclipse.mylyn.internal.wikitext;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.Set;
 
-import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageProvider;
 
-public class MockMarkupLanguage extends MarkupLanguage {
+import com.google.common.collect.ImmutableSet;
 
-	public MockMarkupLanguage() {
-		this(MockMarkupLanguage.class.getSimpleName());
-	}
-
-	public MockMarkupLanguage(String name) {
-		setName(checkNotNull(name));
-	}
+public class MockMarkupLanguageProvider extends MarkupLanguageProvider {
 
 	@Override
-	public void processContent(MarkupParser parser, String markupContent, boolean asDocument) {
-		throw new UnsupportedOperationException();
+	protected Set<MarkupLanguage> loadMarkupLanguages() {
+		return ImmutableSet.<MarkupLanguage> of(new MockMarkupLanguage());
 	}
 
 }
