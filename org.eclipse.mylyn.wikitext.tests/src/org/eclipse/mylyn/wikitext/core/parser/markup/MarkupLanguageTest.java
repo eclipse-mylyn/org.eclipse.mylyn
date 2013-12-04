@@ -13,6 +13,7 @@ package org.eclipse.mylyn.wikitext.core.parser.markup;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.StringWriter;
 import java.util.Collections;
 
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
@@ -34,6 +35,7 @@ public class MarkupLanguageTest {
 		public void processContent(MarkupParser parser, String markupContent, boolean asDocument) {
 			throw new UnsupportedOperationException();
 		}
+
 	}
 
 	@Rule
@@ -64,5 +66,11 @@ public class MarkupLanguageTest {
 	public void getFileExtensionsSpecified() {
 		markupLanguage.setFileExtensions(Sets.newHashSet(markupLanguage.getName(), "123"));
 		assertEquals(Sets.newHashSet(markupLanguage.getName(), "123"), markupLanguage.getFileExtensions());
+	}
+
+	@Test
+	public void documentBuilderUnsupported() {
+		thrown.expect(UnsupportedOperationException.class);
+		markupLanguage.createDocumentBuilder(new StringWriter());
 	}
 }

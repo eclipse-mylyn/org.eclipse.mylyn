@@ -81,13 +81,25 @@ public class HtmlLanguageTest {
 	@Test
 	public void newDocumentBuilderIsFormatting() {
 		Writer out = new StringWriter();
-		DocumentBuilder builder = new HtmlLanguage().createDocumentBuilder(out);
+		DocumentBuilder builder = new HtmlLanguage().createDocumentBuilder(out, true);
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
 		builder.characters("test");
 		builder.endBlock();
 		builder.endDocument();
 		assertEquals(loadResourceContent("newDocumentBuilderIsFormatting"), out.toString());
+	}
+
+	@Test
+	public void newDocumentBuilderIsNotFormatting() {
+		Writer out = new StringWriter();
+		DocumentBuilder builder = new HtmlLanguage().createDocumentBuilder(out, false);
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("test");
+		builder.endBlock();
+		builder.endDocument();
+		assertEquals(loadResourceContent("newDocumentBuilderIsNotFormatting"), out.toString());
 	}
 
 	private String loadResourceContent(String resourceName) {

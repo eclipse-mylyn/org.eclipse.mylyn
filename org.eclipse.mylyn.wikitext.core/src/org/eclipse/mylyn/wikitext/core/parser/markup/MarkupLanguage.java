@@ -155,15 +155,34 @@ public abstract class MarkupLanguage implements Cloneable {
 	public abstract void processContent(MarkupParser parser, String markupContent, boolean asDocument);
 
 	/**
-	 * Create a document builder suitable for emitting content in this markup language
+	 * Creates a {@link DocumentBuilder} suitable for emitting content in this markup language. Equivalent to
+	 * {@code createDocumentBuilder(out,false)}.
 	 * 
 	 * @param out
 	 *            the target to which content is written
 	 * @return a document builder
 	 * @throws UnsupportedOperationException
 	 *             if the markup language has no corresponding document builder
+	 * @see #createDocumentBuilder(Writer, boolean)
 	 */
 	public DocumentBuilder createDocumentBuilder(Writer out) {
+		return createDocumentBuilder(out, false);
+	}
+
+	/**
+	 * Creates a {@link DocumentBuilder} suitable for emitting content in this markup language.
+	 * 
+	 * @param out
+	 *            the target to which content is written
+	 * @param formatting
+	 *            indicates if the builder should format the output using pretty-print rules. If not supported by the
+	 *            document builder this parameter is ignored.
+	 * @return a document builder
+	 * @throws UnsupportedOperationException
+	 *             if the markup language has no corresponding document builder
+	 * @since 2.0
+	 */
+	public DocumentBuilder createDocumentBuilder(Writer out, boolean formatting) {
 		throw new UnsupportedOperationException();
 	}
 }

@@ -45,8 +45,8 @@ public class HtmlLanguage extends MarkupLanguage {
 	}
 
 	@Override
-	public DocumentBuilder createDocumentBuilder(Writer out) {
-		return new HtmlDocumentBuilder(out, true);
+	public DocumentBuilder createDocumentBuilder(Writer out, boolean formatting) {
+		return new HtmlDocumentBuilder(out, formatting);
 	}
 
 }

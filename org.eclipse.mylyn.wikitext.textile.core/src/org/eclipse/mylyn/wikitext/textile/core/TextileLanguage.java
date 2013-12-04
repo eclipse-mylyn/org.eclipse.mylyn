@@ -249,10 +249,10 @@ public class TextileLanguage extends AbstractMarkupLanguage {
 	}
 
 	/**
-	 * @since 1.6
+	 * @since 2.0
 	 */
 	@Override
-	public DocumentBuilder createDocumentBuilder(Writer out) {
+	public DocumentBuilder createDocumentBuilder(Writer out, boolean formatting) {
 		return new TextileDocumentBuilder(out);
 	}
 }
