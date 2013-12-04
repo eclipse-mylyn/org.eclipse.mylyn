@@ -25,10 +25,16 @@ import org.xml.sax.SAXException;
 
 import com.google.common.base.Throwables;
 
+/**
+ * @author david.green
+ * @since 2.0
+ */
 public class HtmlLanguage extends MarkupLanguage {
 
+	static final String NAME_HTML = "HTML"; //$NON-NLS-1$
+
 	public HtmlLanguage() {
-		setName("HTML"); //$NON-NLS-1$
+		setName(NAME_HTML);
 	}
 
 	@Override
@@ -47,6 +53,15 @@ public class HtmlLanguage extends MarkupLanguage {
 	@Override
 	public DocumentBuilder createDocumentBuilder(Writer out, boolean formatting) {
 		return new HtmlDocumentBuilder(out, formatting);
+	}
+
+	/**
+	 * Creates a {@link HtmlLanguageBuilder}.
+	 * 
+	 * @return the new {@link HtmlLanguageBuilder}
+	 */
+	public static HtmlLanguageBuilder builder() {
+		return new HtmlLanguageBuilder();
 	}
 
 }

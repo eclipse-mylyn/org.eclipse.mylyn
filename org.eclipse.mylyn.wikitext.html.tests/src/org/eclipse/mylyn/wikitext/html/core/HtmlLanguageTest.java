@@ -102,6 +102,11 @@ public class HtmlLanguageTest {
 		assertEquals(loadResourceContent("newDocumentBuilderIsNotFormatting"), out.toString());
 	}
 
+	@Test
+	public void builder() {
+		assertNotNull(HtmlLanguage.builder());
+	}
+
 	private String loadResourceContent(String resourceName) {
 		try {
 			String fileName = HtmlLanguageTest.class.getSimpleName() + '_' + resourceName + ".xml";
