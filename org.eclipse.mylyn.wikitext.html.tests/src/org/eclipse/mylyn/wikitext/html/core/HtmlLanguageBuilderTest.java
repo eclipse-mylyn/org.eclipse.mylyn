@@ -15,6 +15,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -79,9 +81,49 @@ public class HtmlLanguageBuilderTest {
 
 	@Test
 	public void create() {
-		HtmlLanguage language = builder.name("Test").create();
+		HtmlLanguage language = builder.add(BlockType.PARAGRAPH).name("Test").create();
 		assertNotNull(language);
 		assertEquals("Test", language.getName());
+	}
+
+	@Test
+	public void createWithoutName() {
+		thrown.expect(IllegalStateException.class);
+		thrown.expectMessage("Name must be provided to create an HtmlLanguage");
+		builder.add(BlockType.PARAGRAPH).create();
+	}
+
+	@Test
+	public void createWithoutBlockType() {
+		thrown.expect(IllegalStateException.class);
+		thrown.expectMessage("Must provide support for at least one block type");
+		builder.name("Test").create();
+	}
+
+	@Test
+	public void addBlockTypeNull() {
+		thrown.expect(NullPointerException.class);
+		thrown.expectMessage("Must provide a blockType");
+		builder.add((BlockType) null);
+	}
+
+	@Test
+	public void addBlockType() {
+		assertNotNull(builder.add(BlockType.PARAGRAPH));
+		assertSame(builder, builder.add(BlockType.PARAGRAPH));
+	}
+
+	@Test
+	public void addSpanTypeNull() {
+		thrown.expect(NullPointerException.class);
+		thrown.expectMessage("Must provide a spanType");
+		builder.add((SpanType) null);
+	}
+
+	@Test
+	public void addSpanType() {
+		assertNotNull(builder.add(SpanType.BOLD));
+		assertSame(builder, builder.add(SpanType.BOLD));
 	}
 
 	protected void expectBlacklisted() {
@@ -89,10 +131,4 @@ public class HtmlLanguageBuilderTest {
 		thrown.expectMessage("Name must not be equal to " + HtmlLanguage.NAME_HTML);
 	}
 
-	@Test
-	public void createWithoutName() {
-		thrown.expect(IllegalStateException.class);
-		thrown.expectMessage("Name must be provided to create an HtmlLanguage");
-		builder.create();
-	}
 }
