@@ -834,7 +834,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		}
 	}
 
-	protected void writeBlockElements(Attributes attributes, ElementInfo elementInfo) {
+	private void writeBlockElements(Attributes attributes, ElementInfo elementInfo) {
 		writer.writeStartElement(htmlNsUri, elementInfo.name);
 		if (elementInfo.cssClass != null) {
 			if (attributes.getCssClass() == null) {
