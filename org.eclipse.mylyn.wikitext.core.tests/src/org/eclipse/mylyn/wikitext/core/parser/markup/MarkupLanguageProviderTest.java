@@ -57,4 +57,33 @@ public class MarkupLanguageProviderTest {
 		provider.getMarkupLanguages();
 	}
 
+	@Test
+	public void getMarkupLanguagesDuplicatedNames() {
+		MarkupLanguageProvider provider = new MarkupLanguageProvider() {
+
+			@Override
+			protected Set<MarkupLanguage> loadMarkupLanguages() {
+				return ImmutableSet.<MarkupLanguage> of(new MockMarkupLanguage("Test"), new MockMarkupLanguage("Test"));
+			}
+		};
+		thrown.expect(IllegalStateException.class);
+		thrown.expectMessage("Language name 'Test' must not be provided more than once");
+		provider.getMarkupLanguages();
+	}
+
+	@Test
+	public void getMarkupLanguagesNullName() {
+		MarkupLanguageProvider provider = new MarkupLanguageProvider() {
+
+			@Override
+			protected Set<MarkupLanguage> loadMarkupLanguages() {
+				MockMarkupLanguage language = new MockMarkupLanguage();
+				language.setName(null);
+				return ImmutableSet.<MarkupLanguage> of(language);
+			}
+		};
+		thrown.expect(NullPointerException.class);
+		thrown.expectMessage("Provided languages must have a name");
+		provider.getMarkupLanguages();
+	}
 }
