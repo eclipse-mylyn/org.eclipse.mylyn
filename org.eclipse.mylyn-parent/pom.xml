@@ -74,7 +74,7 @@
     <alt-target-version>3.7</alt-target-version>
     <alt-platform-repository-url>http://download.eclipse.org/releases/indigo/201202240900/</alt-platform-repository-url>
 
-    <orbit-repository-url>http://download.eclipse.org/tools/orbit/downloads/drops/I20131123181249/repository/</orbit-repository-url>
+    <orbit-repository-url>http://download.eclipse.org/tools/orbit/downloads/drops/I20131204063848/repository/</orbit-repository-url>
     <jdt-annotation-repository-url>http://download.eclipse.org/mylyn/snapshots/jdt-annotation/</jdt-annotation-repository-url>
     <mylyn-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/</mylyn-repository-url>
     <mylyn-builds-repository-url>http://download.eclipse.org/mylyn/snapshots/nightly/builds/</mylyn-builds-repository-url>
