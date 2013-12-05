@@ -60,7 +60,8 @@ public class HtmlSubsetLanguageTest {
 
 	@Test
 	public void createDocumentBuilder() {
-		DocumentBuilder builder = newHtmlSubsetLanguage().createDocumentBuilder(new StringWriter(), false);
+		DocumentBuilder builder = newHtmlSubsetLanguage(BlockType.PARAGRAPH).createDocumentBuilder(new StringWriter(),
+				false);
 		assertNotNull(builder);
 		assertTrue(builder instanceof HtmlSubsetDocumentBuilder);
 	}

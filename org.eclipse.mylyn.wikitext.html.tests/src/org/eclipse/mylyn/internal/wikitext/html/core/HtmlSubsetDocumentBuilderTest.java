@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.wikitext.html.core;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
 import java.io.StringWriter;
@@ -152,6 +153,7 @@ public class HtmlSubsetDocumentBuilderTest {
 
 	@Test
 	public void setSupportedBlockTypesEmpty() {
+		thrown.expect(IllegalArgumentException.class);
 		builder.setSupportedBlockTypes(Sets.<BlockType> newHashSet());
 	}
 
@@ -164,16 +166,72 @@ public class HtmlSubsetDocumentBuilderTest {
 	@Test
 	public void unsupportedBlockTypes() {
 		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
-		assertSame(UnsupportedBlockStrategy.instance, builder.pushBlockStrategy(BlockType.CODE));
+		assertNotNull(builder.pushBlockStrategy(BlockType.CODE));
 	}
 
 	@Test
-	public void blockSupported() {
-		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
-		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
-		builder.characters("test");
-		builder.endBlock();
-		assertContent("<p>test</p>");
+	public void blockParagraphSupported() {
+		assertSupportedBlock("<p>test</p>", BlockType.PARAGRAPH);
+	}
+
+	@Test
+	public void blockCodeSupported() {
+		assertSupportedBlock("<pre><code>test</code></pre>", BlockType.CODE);
+	}
+
+	@Test
+	public void blockDivSupported() {
+		assertSupportedBlock("<div>test</div>", BlockType.DIV);
+	}
+
+	@Test
+	public void blockPreformattedSupported() {
+		assertSupportedBlock("<pre>test</pre>", BlockType.PREFORMATTED);
+	}
+
+	@Test
+	public void blockQuoteSupported() {
+		assertSupportedBlock("<blockquote>test</blockquote>", BlockType.QUOTE);
+	}
+
+	@Test
+	public void blockParagraphUnsuupported() {
+		assertUnsupportedBlock("\ntest\n", BlockType.PARAGRAPH, BlockType.CODE);
+	}
+
+	@Test
+	public void blockCodeUnsuupported() {
+		assertUnsupportedBlock("<pre>test</pre>", BlockType.CODE, BlockType.PREFORMATTED);
+	}
+
+	@Test
+	public void blockCodeUnsuupportedToPara() {
+		assertUnsupportedBlock("<p>test</p>", BlockType.CODE, BlockType.PARAGRAPH);
+	}
+
+	@Test
+	public void blockCodeUnsuupportedWithoutFallback() {
+		assertUnsupportedBlock("\ntest\n", BlockType.CODE, BlockType.DIV);
+	}
+
+	@Test
+	public void blockDivUnsuupported() {
+		assertUnsupportedBlock("<p>test</p>", BlockType.DIV, BlockType.PARAGRAPH);
+	}
+
+	@Test
+	public void blockPreformattedUnsuupported() {
+		assertUnsupportedBlock("<p>test</p>", BlockType.PREFORMATTED, BlockType.PARAGRAPH);
+	}
+
+	@Test
+	public void blockQuoteUnsuupported() {
+		assertUnsupportedBlock("<p>test</p>", BlockType.QUOTE, BlockType.PARAGRAPH);
+	}
+
+	@Test
+	public void blockQuoteUnsuupportedWithoutFallback() {
+		assertUnsupportedBlock("\ntest\n", BlockType.QUOTE, BlockType.CODE);
 	}
 
 	@Test
@@ -182,7 +240,7 @@ public class HtmlSubsetDocumentBuilderTest {
 		builder.beginBlock(BlockType.DIV, new Attributes());
 		builder.characters("test");
 		builder.endBlock();
-		assertContent("\ntest\n");
+		assertContent("<p>test</p>");
 	}
 
 	@Test
@@ -194,7 +252,89 @@ public class HtmlSubsetDocumentBuilderTest {
 		builder.beginBlock(BlockType.DIV, new Attributes());
 		builder.characters("test2");
 		builder.endBlock();
-		assertContent("<p>test</p>\ntest2\n");
+		assertContent("<p>test</p><p>test2</p>");
+	}
+
+	@Test
+	public void blockBulletedListSupported() {
+		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.BULLETED_LIST));
+		buildList(BlockType.BULLETED_LIST);
+		assertContent("<ul><li>test 0</li><li>test 1</li></ul>");
+	}
+
+	@Test
+	public void blockBulletedListUnsupported() {
+		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
+		buildList(BlockType.BULLETED_LIST);
+		assertContent("\n<p>test 0</p><p>test 1</p>\n");
+	}
+
+	@Test
+	public void blockNumericListSupported() {
+		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.NUMERIC_LIST));
+		buildList(BlockType.NUMERIC_LIST);
+		assertContent("<ol><li>test 0</li><li>test 1</li></ol>");
+	}
+
+	@Test
+	public void blockNumericListUnsupported() {
+		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
+		buildList(BlockType.NUMERIC_LIST);
+		assertContent("\n<p>test 0</p><p>test 1</p>\n");
+	}
+
+	@Test
+	public void testTableSupported() {
+		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.TABLE));
+		buildTable();
+		assertContent("<table><tr><td>test 0/0</td><td>test 1/0</td><td>test 2/0</td></tr><tr><td>test 0/1</td><td>test 1/1</td><td>test 2/1</td></tr></table>");
+	}
+
+	@Test
+	public void testTableUnsupported() {
+		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
+		buildTable();
+		assertContent("\n\n<p>test 0/0</p><p>test 1/0</p><p>test 2/0</p>\n\n<p>test 0/1</p><p>test 1/1</p><p>test 2/1</p>\n\n");
+	}
+
+	private void buildTable() {
+		builder.beginBlock(BlockType.TABLE, new Attributes());
+		for (int y = 0; y < 2; ++y) {
+			builder.beginBlock(BlockType.TABLE_ROW, new Attributes());
+			for (int x = 0; x < 3; ++x) {
+				builder.beginBlock(BlockType.TABLE_CELL_NORMAL, new Attributes());
+				builder.characters("test " + x + "/" + y);
+				builder.endBlock();
+			}
+			builder.endBlock();
+		}
+		builder.endBlock();
+	}
+
+	protected void buildList(BlockType listType) {
+		builder.beginBlock(listType, new Attributes());
+		for (int x = 0; x < 2; ++x) {
+			builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+			builder.characters("test " + x);
+			builder.endBlock();
+		}
+		builder.endBlock();
+	}
+
+	private void assertSupportedBlock(String expected, BlockType blockType) {
+		builder.setSupportedBlockTypes(Sets.newHashSet(blockType));
+		builder.beginBlock(blockType, new Attributes());
+		builder.characters("test");
+		builder.endBlock();
+		assertContent(expected);
+	}
+
+	private void assertUnsupportedBlock(String expected, BlockType unsupported, BlockType supported) {
+		builder.setSupportedBlockTypes(Sets.newHashSet(supported));
+		builder.beginBlock(unsupported, new Attributes());
+		builder.characters("test");
+		builder.endBlock();
+		assertContent(expected);
 	}
 
 	private void assertContent(String expectedContent) {

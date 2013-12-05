@@ -15,7 +15,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.io.Writer;
-import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
@@ -23,14 +22,11 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-
 public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 
 	private final DocumentBuilder delegate;
 
-	private Map<BlockType, BlockStrategy> blockStrategyByBlockType = Maps.newHashMap();
+	private BlockStrategies blockStrategies;
 
 	private final Stack<BlockStrategy> blockStrategyState = new Stack<BlockStrategy>();
 
@@ -43,14 +39,8 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 	}
 
 	void setSupportedBlockTypes(Set<BlockType> blockTypes) {
-		checkNotNull(blockTypes);
 		checkState(blockStrategyState.isEmpty());
-
-		Map<BlockType, BlockStrategy> blockStrategyByBlockType = Maps.newHashMap();
-		for (BlockType blockType : blockTypes) {
-			blockStrategyByBlockType.put(blockType, SupportedBlockStrategy.instance);
-		}
-		this.blockStrategyByBlockType = ImmutableMap.copyOf(blockStrategyByBlockType);
+		blockStrategies = new BlockStrategies(blockTypes);
 	}
 
 	@Override
@@ -69,10 +59,7 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 	}
 
 	BlockStrategy pushBlockStrategy(BlockType type) {
-		BlockStrategy strategy = blockStrategyByBlockType.get(type);
-		if (strategy == null) {
-			strategy = UnsupportedBlockStrategy.instance;
-		}
+		BlockStrategy strategy = blockStrategies.getBlockStrategy(type);
 		blockStrategyState.push(strategy);
 		return strategy;
 	}
