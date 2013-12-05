@@ -14,18 +14,31 @@ package org.eclipse.mylyn.internal.wikitext.html.core;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.Writer;
+import java.util.Set;
 
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.html.core.HtmlLanguage;
+
+import com.google.common.collect.ImmutableSet;
 
 public class HtmlSubsetLanguage extends HtmlLanguage {
 
-	public HtmlSubsetLanguage(String name) {
+	private final Set<BlockType> supportedBlockTypes;
+
+	public HtmlSubsetLanguage(String name, Set<BlockType> blockTypes) {
 		setName(checkNotNull(name));
+		this.supportedBlockTypes = ImmutableSet.copyOf(checkNotNull(blockTypes));
+	}
+
+	public Set<BlockType> getSupportedBlockTypes() {
+		return supportedBlockTypes;
 	}
 
 	@Override
 	public DocumentBuilder createDocumentBuilder(Writer out, boolean formatting) {
-		return new HtmlSubsetDocumentBuilder(out, formatting);
+		HtmlSubsetDocumentBuilder builder = new HtmlSubsetDocumentBuilder(out, formatting);
+		builder.setSupportedBlockTypes(supportedBlockTypes);
+		return builder;
 	}
 }

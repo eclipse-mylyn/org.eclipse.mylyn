@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.wikitext.html.core;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 import java.io.StringWriter;
 
@@ -23,6 +24,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import com.google.common.collect.Sets;
 
 public class HtmlSubsetDocumentBuilderTest {
 	@Rule
@@ -40,6 +43,7 @@ public class HtmlSubsetDocumentBuilderTest {
 		delegate = new HtmlDocumentBuilder(writer);
 		delegate.setEmitAsDocument(false);
 		builder = new HtmlSubsetDocumentBuilder(delegate);
+		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
 	}
 
 	@Test
@@ -138,6 +142,59 @@ public class HtmlSubsetDocumentBuilderTest {
 		builder.characters("test");
 		builder.endSpan();
 		assertContent("<b>test</b>");
+	}
+
+	@Test
+	public void setSupportedBlockTypesNull() {
+		thrown.expect(NullPointerException.class);
+		builder.setSupportedBlockTypes(null);
+	}
+
+	@Test
+	public void setSupportedBlockTypesEmpty() {
+		builder.setSupportedBlockTypes(Sets.<BlockType> newHashSet());
+	}
+
+	@Test
+	public void supportedBlockTypes() {
+		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
+		assertSame(SupportedBlockStrategy.instance, builder.pushBlockStrategy(BlockType.PARAGRAPH));
+	}
+
+	@Test
+	public void unsupportedBlockTypes() {
+		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
+		assertSame(UnsupportedBlockStrategy.instance, builder.pushBlockStrategy(BlockType.CODE));
+	}
+
+	@Test
+	public void blockSupported() {
+		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("test");
+		builder.endBlock();
+		assertContent("<p>test</p>");
+	}
+
+	@Test
+	public void blockUnsupported() {
+		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
+		builder.beginBlock(BlockType.DIV, new Attributes());
+		builder.characters("test");
+		builder.endBlock();
+		assertContent("\ntest\n");
+	}
+
+	@Test
+	public void blockSupportedUnsupportedCombined() {
+		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("test");
+		builder.endBlock();
+		builder.beginBlock(BlockType.DIV, new Attributes());
+		builder.characters("test2");
+		builder.endBlock();
+		assertContent("<p>test</p>\ntest2\n");
 	}
 
 	private void assertContent(String expectedContent) {
