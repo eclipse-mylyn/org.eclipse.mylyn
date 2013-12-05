@@ -13,4 +13,5 @@ Require-Bundle: org.eclipse.mylyn.wikitext.core;bundle-version="2.0.0",
  org.mockito;bundle-version="[1.8.4,2.0.0)",
  org.objenesis;bundle-version="[1.0.0,2.0.0)",
  org.hamcrest;bundle-version="[1.0.0,2.0.0)"
-Export-Package: org.eclipse.mylyn.wikitext.html.core;x-internal:=true
+Export-Package: org.eclipse.mylyn.internal.wikitext.html.core;x-internal:=true,
+ org.eclipse.mylyn.wikitext.html.core;x-internal:=true

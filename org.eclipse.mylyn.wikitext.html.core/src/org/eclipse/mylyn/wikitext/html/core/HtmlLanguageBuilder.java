@@ -17,6 +17,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Set;
 
+import org.eclipse.mylyn.internal.wikitext.html.core.HtmlSubsetLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
@@ -87,9 +88,8 @@ public class HtmlLanguageBuilder {
 		checkState(name != null, "Name must be provided to create an HtmlLanguage"); //$NON-NLS-1$
 		checkState(!blockTypes.isEmpty(), "Must provide support for at least one block type"); //$NON-NLS-1$
 
-		HtmlLanguage htmlLanguage = new HtmlLanguage();
+		HtmlLanguage htmlLanguage = new HtmlSubsetLanguage(name);
 		// FIXME: bug 423453 create language with support for specified syntax
-		htmlLanguage.setName(name);
 		return htmlLanguage;
 	}
 }

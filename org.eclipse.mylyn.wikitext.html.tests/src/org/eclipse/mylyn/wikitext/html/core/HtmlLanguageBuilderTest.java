@@ -14,7 +14,9 @@ package org.eclipse.mylyn.wikitext.html.core;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
+import org.eclipse.mylyn.internal.wikitext.html.core.HtmlSubsetLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.junit.Before;
@@ -84,6 +86,7 @@ public class HtmlLanguageBuilderTest {
 		HtmlLanguage language = builder.add(BlockType.PARAGRAPH).name("Test").create();
 		assertNotNull(language);
 		assertEquals("Test", language.getName());
+		assertTrue(language instanceof HtmlSubsetLanguage);
 	}
 
 	@Test
