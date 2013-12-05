@@ -93,4 +93,8 @@ public class DefaultTaskSchemaTest extends TestCase {
 		assertNotNull(testData.getRoot().getAttribute(TaskAttribute.ATTACHMENT_ID));
 		assertNotNull(testData.getRoot().getAttribute(TaskAttribute.SUMMARY));
 	}
+
+	public void testDescriptionHasKind() {
+		assertEquals(TaskAttribute.KIND_DESCRIPTION, DefaultTaskSchema.getInstance().DESCRIPTION.getKind());
+	}
 }

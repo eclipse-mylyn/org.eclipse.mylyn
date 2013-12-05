@@ -109,6 +109,13 @@ public final class TaskAttribute {
 
 	public static final String KIND_OPERATION = "task.common.kind.operation"; //$NON-NLS-1$
 
+	/**
+	 * A {@link TaskAttributeMetaData#getKind() kind} used to indicate that the field is related to a description.
+	 * 
+	 * @since 3.11
+	 */
+	public static final String KIND_DESCRIPTION = "task.common.kind.description"; //$NON-NLS-1$
+
 	public static final String KIND_PEOPLE = "task.common.kind.people"; //$NON-NLS-1$
 
 	//public static final String META_SHOW_IN_ATTRIBUTES_SECTION = "task.meta.showInTaskEditorAttributesSection";

@@ -125,6 +125,8 @@ public abstract class AbstractTaskSchema {
 				return TaskAttribute.KIND_PEOPLE;
 			} else if (flags.contains(Flag.OPERATION)) {
 				return TaskAttribute.KIND_OPERATION;
+			} else if (flags.contains(Flag.DESCRIPTION)) {
+				return TaskAttribute.KIND_DESCRIPTION;
 			}
 			return null;
 		}
@@ -193,7 +195,14 @@ public abstract class AbstractTaskSchema {
 	}
 
 	public enum Flag {
-		ATTRIBUTE, OPERATION, PEOPLE, READ_ONLY
+		ATTRIBUTE, OPERATION, PEOPLE, READ_ONLY,
+		/**
+		 * A flag used to indicate that the field is related to a description.
+		 * 
+		 * @since 3.11
+		 * @see TaskAttribute#KIND_DESCRIPTION
+		 */
+		DESCRIPTION
 	};
 
 	protected class FieldFactory {
