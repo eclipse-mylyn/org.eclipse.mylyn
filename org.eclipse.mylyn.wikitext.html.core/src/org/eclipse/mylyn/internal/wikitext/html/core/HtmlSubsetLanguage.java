@@ -68,4 +68,13 @@ public class HtmlSubsetLanguage extends HtmlLanguage {
 		}
 		return builder;
 	}
+
+	@Override
+	public HtmlSubsetLanguage clone() {
+		HtmlSubsetLanguage copy = new HtmlSubsetLanguage(getName(), documentHandler, headingLevel, supportedBlockTypes,
+				supportedSpanTypes);
+		copy.setFileExtensions(getFileExtensions());
+		copy.setExtendsLanguage(getExtendsLanguage());
+		return copy;
+	}
 }

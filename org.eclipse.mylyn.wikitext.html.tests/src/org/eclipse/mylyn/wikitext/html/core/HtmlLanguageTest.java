@@ -107,6 +107,14 @@ public class HtmlLanguageTest {
 		assertNotNull(HtmlLanguage.builder());
 	}
 
+	@Test
+	public void cloneSupported() {
+		HtmlLanguage language = new HtmlLanguage();
+		HtmlLanguage cloned = (HtmlLanguage) language.clone();
+		assertNotNull(cloned);
+		assertEquals(language.getName(), cloned.getName());
+	}
+
 	private String loadResourceContent(String resourceName) {
 		try {
 			String fileName = HtmlLanguageTest.class.getSimpleName() + '_' + resourceName + ".xml";
