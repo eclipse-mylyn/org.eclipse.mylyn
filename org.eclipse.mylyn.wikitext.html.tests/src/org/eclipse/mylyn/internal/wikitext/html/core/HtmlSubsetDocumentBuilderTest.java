@@ -45,6 +45,7 @@ public class HtmlSubsetDocumentBuilderTest {
 		delegate.setEmitAsDocument(false);
 		builder = new HtmlSubsetDocumentBuilder(delegate);
 		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
+		builder.setSupportedSpanTypes(Sets.newHashSet(SpanType.BOLD));
 	}
 
 	@Test
@@ -334,6 +335,214 @@ public class HtmlSubsetDocumentBuilderTest {
 		builder.beginBlock(unsupported, new Attributes());
 		builder.characters("test");
 		builder.endBlock();
+		assertContent(expected);
+	}
+
+	@Test
+	public void supportedSpanTypes() {
+		builder.setSupportedSpanTypes(Sets.newHashSet(SpanType.BOLD));
+		assertSame(SupportedSpanStrategy.instance, builder.pushSpanStrategy(SpanType.BOLD));
+	}
+
+	@Test
+	public void unsupportedSpanTypes() {
+		builder.setSupportedSpanTypes(Sets.newHashSet(SpanType.BOLD));
+		assertNotNull(builder.pushSpanStrategy(SpanType.EMPHASIS));
+	}
+
+	@Test
+	public void spanBoldSupported() {
+		assertSupportedSpan("<b>test</b>", SpanType.BOLD);
+	}
+
+	@Test
+	public void spanCitationSupported() {
+		assertSupportedSpan("<cite>test</cite>", SpanType.CITATION);
+	}
+
+	@Test
+	public void spanCodeSupported() {
+		assertSupportedSpan("<code>test</code>", SpanType.CODE);
+	}
+
+	@Test
+	public void spanDeletedSupported() {
+		assertSupportedSpan("<del>test</del>", SpanType.DELETED);
+	}
+
+	@Test
+	public void spanEmphasisSupported() {
+		assertSupportedSpan("<em>test</em>", SpanType.EMPHASIS);
+	}
+
+	@Test
+	public void spanInsertedSupported() {
+		assertSupportedSpan("<ins>test</ins>", SpanType.INSERTED);
+	}
+
+	@Test
+	public void spanItalicSupported() {
+		assertSupportedSpan("<i>test</i>", SpanType.ITALIC);
+	}
+
+	@Test
+	public void spanLinkSupported() {
+		assertSupportedSpan("<a>test</a>", SpanType.LINK);
+	}
+
+	@Test
+	public void spanMonospaceSupported() {
+		assertSupportedSpan("<tt>test</tt>", SpanType.MONOSPACE);
+	}
+
+	@Test
+	public void spanQuoteSupported() {
+		assertSupportedSpan("<q>test</q>", SpanType.QUOTE);
+	}
+
+	@Test
+	public void spanSpanSupported() {
+		assertSupportedSpan("<span>test</span>", SpanType.SPAN);
+	}
+
+	@Test
+	public void spanStrongSupported() {
+		assertSupportedSpan("<strong>test</strong>", SpanType.STRONG);
+	}
+
+	@Test
+	public void spanSubscriptSupported() {
+		assertSupportedSpan("<sub>test</sub>", SpanType.SUBSCRIPT);
+	}
+
+	@Test
+	public void spanSuperscriptSupported() {
+		assertSupportedSpan("<sup>test</sup>", SpanType.SUPERSCRIPT);
+	}
+
+	@Test
+	public void spanUnderlinedSupported() {
+		assertSupportedSpan("<u>test</u>", SpanType.UNDERLINED);
+	}
+
+	@Test
+	public void spanBoldUnsupported() {
+		assertUnsupportedSpan("<strong>test</strong>", SpanType.BOLD, SpanType.STRONG);
+	}
+
+	@Test
+	public void spanBoldUnsupportedNoFallback() {
+		assertUnsupportedSpan("test", SpanType.BOLD, SpanType.SPAN);
+	}
+
+	@Test
+	public void spanCitationUnsupported() {
+		assertUnsupportedSpan("test", SpanType.CITATION, SpanType.BOLD);
+	}
+
+	@Test
+	public void spanCodeUnsupported() {
+		assertUnsupportedSpan("<tt>test</tt>", SpanType.CODE, SpanType.MONOSPACE);
+	}
+
+	@Test
+	public void spanCodeUnsupportedNoFallback() {
+		assertUnsupportedSpan("test", SpanType.CODE, SpanType.SPAN);
+	}
+
+	@Test
+	public void spanDeletedUnsupported() {
+		assertUnsupportedSpan("test", SpanType.DELETED, SpanType.BOLD);
+	}
+
+	@Test
+	public void spanEmphasisUnsupported() {
+		assertUnsupportedSpan("<i>test</i>", SpanType.EMPHASIS, SpanType.ITALIC);
+	}
+
+	@Test
+	public void spanEmphasisUnsupportedNoFallback() {
+		assertUnsupportedSpan("test", SpanType.EMPHASIS, SpanType.BOLD);
+	}
+
+	@Test
+	public void spanInsertedUnsupported() {
+		assertUnsupportedSpan("test", SpanType.INSERTED, SpanType.BOLD);
+	}
+
+	@Test
+	public void spanItalicUnsupported() {
+		assertUnsupportedSpan("<em>test</em>", SpanType.ITALIC, SpanType.EMPHASIS);
+	}
+
+	@Test
+	public void spanItalicUnsupportedNoFallback() {
+		assertUnsupportedSpan("test", SpanType.ITALIC, SpanType.BOLD);
+	}
+
+	@Test
+	public void spanLinkUnsupported() {
+		assertUnsupportedSpan("test", SpanType.LINK, SpanType.BOLD);
+	}
+
+	@Test
+	public void spanMonospaceUnsupported() {
+		assertUnsupportedSpan("<code>test</code>", SpanType.MONOSPACE, SpanType.CODE);
+	}
+
+	@Test
+	public void spanMonospaceUnsupportedNoFallback() {
+		assertUnsupportedSpan("test", SpanType.MONOSPACE, SpanType.BOLD);
+	}
+
+	@Test
+	public void spanQuoteUnsupported() {
+		assertUnsupportedSpan("test", SpanType.QUOTE, SpanType.BOLD);
+	}
+
+	@Test
+	public void spanSpanUnsupported() {
+		assertUnsupportedSpan("test", SpanType.SPAN, SpanType.BOLD);
+	}
+
+	@Test
+	public void spanStrongUnsupported() {
+		assertUnsupportedSpan("<b>test</b>", SpanType.STRONG, SpanType.BOLD);
+	}
+
+	@Test
+	public void spanStrongUnsupportedNoFallback() {
+		assertUnsupportedSpan("test", SpanType.STRONG, SpanType.SPAN);
+	}
+
+	@Test
+	public void spanSubscriptUnsupported() {
+		assertUnsupportedSpan("test", SpanType.SUBSCRIPT, SpanType.BOLD);
+	}
+
+	@Test
+	public void spanSuperscriptUnsupported() {
+		assertUnsupportedSpan("test", SpanType.SUPERSCRIPT, SpanType.BOLD);
+	}
+
+	@Test
+	public void spanUnderlinedUnsupported() {
+		assertUnsupportedSpan("test", SpanType.UNDERLINED, SpanType.BOLD);
+	}
+
+	private void assertSupportedSpan(String expected, SpanType spanType) {
+		builder.setSupportedSpanTypes(Sets.newHashSet(spanType));
+		builder.beginSpan(spanType, new Attributes());
+		builder.characters("test");
+		builder.endSpan();
+		assertContent(expected);
+	}
+
+	private void assertUnsupportedSpan(String expected, SpanType unsupported, SpanType supported) {
+		builder.setSupportedSpanTypes(Sets.newHashSet(supported));
+		builder.beginSpan(unsupported, new Attributes());
+		builder.characters("test");
+		builder.endSpan();
 		assertContent(expected);
 	}
 

@@ -28,7 +28,11 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 
 	private BlockStrategies blockStrategies;
 
+	private SpanStrategies spanStrategies;
+
 	private final Stack<BlockStrategy> blockStrategyState = new Stack<BlockStrategy>();
+
+	private final Stack<SpanStrategy> spanStrategyState = new Stack<SpanStrategy>();
 
 	public HtmlSubsetDocumentBuilder(Writer out, boolean formatting) {
 		this(new HtmlDocumentBuilder(checkNotNull(out, "Must provide a writer"), formatting)); //$NON-NLS-1$
@@ -41,6 +45,11 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 	void setSupportedBlockTypes(Set<BlockType> blockTypes) {
 		checkState(blockStrategyState.isEmpty());
 		blockStrategies = new BlockStrategies(blockTypes);
+	}
+
+	void setSupportedSpanTypes(Set<SpanType> spanTypes) {
+		checkState(spanStrategyState.isEmpty());
+		spanStrategies = new SpanStrategies(spanTypes);
 	}
 
 	@Override
@@ -59,7 +68,7 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 	}
 
 	BlockStrategy pushBlockStrategy(BlockType type) {
-		BlockStrategy strategy = blockStrategies.getBlockStrategy(type);
+		BlockStrategy strategy = blockStrategies.getStrategy(type);
 		blockStrategyState.push(strategy);
 		return strategy;
 	}
@@ -71,12 +80,19 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 
 	@Override
 	public void beginSpan(SpanType type, Attributes attributes) {
-		delegate.beginSpan(type, attributes);
+		SpanStrategy strategy = pushSpanStrategy(type);
+		strategy.beginSpan(delegate, type, attributes);
+	}
+
+	SpanStrategy pushSpanStrategy(SpanType type) {
+		SpanStrategy strategy = spanStrategies.getStrategy(type);
+		spanStrategyState.push(strategy);
+		return strategy;
 	}
 
 	@Override
 	public void endSpan() {
-		delegate.endSpan();
+		spanStrategyState.pop().endSpan(delegate);
 	}
 
 	@Override

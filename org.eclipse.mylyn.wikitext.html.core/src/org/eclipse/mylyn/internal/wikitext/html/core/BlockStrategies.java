@@ -11,109 +11,79 @@
 
 package org.eclipse.mylyn.internal.wikitext.html.core;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-class BlockStrategies {
+class BlockStrategies extends ElementStrategies<BlockType, BlockStrategy> {
 
-	private static final Map<BlockType, List<BlockType>> blockTypeToAlternatives = Maps.newHashMap();
+	private static final Map<BlockType, List<BlockType>> blockTypeToAlternatives = createBlockTypeToAlternatives();
 
-	static {
-		blockTypeToAlternatives.put(BlockType.BULLETED_LIST, Lists.newArrayList(BlockType.NUMERIC_LIST));
-		blockTypeToAlternatives.put(BlockType.NUMERIC_LIST, Lists.newArrayList(BlockType.BULLETED_LIST));
-		blockTypeToAlternatives.put(BlockType.CODE, Lists.newArrayList(BlockType.PREFORMATTED, BlockType.PARAGRAPH));
-		blockTypeToAlternatives.put(BlockType.DEFINITION_LIST,
-				Lists.newArrayList(BlockType.NUMERIC_LIST, BlockType.BULLETED_LIST));
-		blockTypeToAlternatives.put(BlockType.DIV, Lists.newArrayList(BlockType.PARAGRAPH));
-		blockTypeToAlternatives.put(BlockType.FOOTNOTE,
-				Lists.newArrayList(BlockType.BULLETED_LIST, BlockType.NUMERIC_LIST));
-		blockTypeToAlternatives.put(BlockType.INFORMATION, Lists.newArrayList(BlockType.PARAGRAPH));
-		blockTypeToAlternatives.put(BlockType.LIST_ITEM, Lists.newArrayList(BlockType.PARAGRAPH));
-		blockTypeToAlternatives.put(BlockType.NOTE, Lists.newArrayList(BlockType.PARAGRAPH));
-		blockTypeToAlternatives.put(BlockType.PANEL, Lists.newArrayList(BlockType.PARAGRAPH));
-		blockTypeToAlternatives.put(BlockType.PREFORMATTED, Lists.newArrayList(BlockType.CODE, BlockType.PARAGRAPH));
-		blockTypeToAlternatives.put(BlockType.QUOTE, Lists.newArrayList(BlockType.PARAGRAPH));
-		blockTypeToAlternatives.put(BlockType.TABLE_CELL_HEADER, Lists.newArrayList(BlockType.PARAGRAPH));
-		blockTypeToAlternatives.put(BlockType.TABLE_CELL_NORMAL, Lists.newArrayList(BlockType.PARAGRAPH));
-		blockTypeToAlternatives.put(BlockType.TIP, Lists.newArrayList(BlockType.PARAGRAPH));
-		blockTypeToAlternatives.put(BlockType.WARNING, Lists.newArrayList(BlockType.PARAGRAPH));
+	private static Map<BlockType, List<BlockType>> createBlockTypeToAlternatives() {
+		Map<BlockType, List<BlockType>> alternatives = Maps.newHashMap();
+		alternatives.put(BlockType.BULLETED_LIST, ImmutableList.of(BlockType.NUMERIC_LIST));
+		alternatives.put(BlockType.NUMERIC_LIST, ImmutableList.of(BlockType.BULLETED_LIST));
+		alternatives.put(BlockType.CODE, ImmutableList.of(BlockType.PREFORMATTED, BlockType.PARAGRAPH));
+		alternatives.put(BlockType.DEFINITION_LIST, ImmutableList.of(BlockType.NUMERIC_LIST, BlockType.BULLETED_LIST));
+		alternatives.put(BlockType.DIV, ImmutableList.of(BlockType.PARAGRAPH));
+		alternatives.put(BlockType.FOOTNOTE, ImmutableList.of(BlockType.BULLETED_LIST, BlockType.NUMERIC_LIST));
+		alternatives.put(BlockType.INFORMATION, ImmutableList.of(BlockType.PARAGRAPH));
+		alternatives.put(BlockType.LIST_ITEM, ImmutableList.of(BlockType.PARAGRAPH));
+		alternatives.put(BlockType.NOTE, ImmutableList.of(BlockType.PARAGRAPH));
+		alternatives.put(BlockType.PANEL, ImmutableList.of(BlockType.PARAGRAPH));
+		alternatives.put(BlockType.PREFORMATTED, ImmutableList.of(BlockType.CODE, BlockType.PARAGRAPH));
+		alternatives.put(BlockType.QUOTE, ImmutableList.of(BlockType.PARAGRAPH));
+		alternatives.put(BlockType.TABLE_CELL_HEADER, ImmutableList.of(BlockType.PARAGRAPH));
+		alternatives.put(BlockType.TABLE_CELL_NORMAL, ImmutableList.of(BlockType.PARAGRAPH));
+		alternatives.put(BlockType.TIP, ImmutableList.of(BlockType.PARAGRAPH));
+		alternatives.put(BlockType.WARNING, ImmutableList.of(BlockType.PARAGRAPH));
+		return ImmutableMap.copyOf(alternatives);
 	}
-
-	private Map<BlockType, BlockStrategy> blockStrategyByBlockType;
 
 	BlockStrategies(Set<BlockType> blockTypes) {
-		checkNotNull(blockTypes);
-		checkArgument(!blockTypes.isEmpty());
-
-		initialize(blockTypes);
+		super(BlockType.class, blockTypes);
 	}
 
-	public BlockStrategy getBlockStrategy(BlockType blockType) {
-		return checkNotNull(blockStrategyByBlockType.get(checkNotNull(blockType)));
-	}
-
-	private void initialize(Set<BlockType> blockTypes) {
-		Map<BlockType, BlockStrategy> blockStrategyByBlockType = Maps.newHashMap();
-		for (BlockType blockType : blockTypes) {
-			addSupportedBlockType(blockStrategyByBlockType, blockType);
+	@Override
+	void addImplicitElementTypes(Map<BlockType, BlockStrategy> elementStrategyByElementType, Set<BlockType> elementTypes) {
+		if (elementTypes.contains(BlockType.TABLE)) {
+			addSupportedElementType(elementStrategyByElementType, BlockType.TABLE_ROW);
+			addSupportedElementType(elementStrategyByElementType, BlockType.TABLE_CELL_HEADER);
+			addSupportedElementType(elementStrategyByElementType, BlockType.TABLE_CELL_NORMAL);
 		}
-		addImplicitBlockTypes(blockStrategyByBlockType, blockTypes);
-
-		Map<BlockType, BlockStrategy> alternativesByBlockType = Maps.newHashMap();
-		for (BlockType blockType : BlockType.values()) {
-			if (!blockStrategyByBlockType.containsKey(blockType)) {
-				alternativesByBlockType.put(blockType, calculateFallBackBlockType(blockStrategyByBlockType, blockType));
-			}
+		if (elementTypes.contains(BlockType.BULLETED_LIST) || elementTypes.contains(BlockType.NUMERIC_LIST)) {
+			addSupportedElementType(elementStrategyByElementType, BlockType.LIST_ITEM);
 		}
-		blockStrategyByBlockType.putAll(alternativesByBlockType);
-
-		this.blockStrategyByBlockType = ImmutableMap.copyOf(blockStrategyByBlockType);
-	}
-
-	private void addImplicitBlockTypes(Map<BlockType, BlockStrategy> blockStrategyByBlockType, Set<BlockType> blockTypes) {
-		if (blockTypes.contains(BlockType.TABLE)) {
-			addSupportedBlockType(blockStrategyByBlockType, BlockType.TABLE_ROW);
-			addSupportedBlockType(blockStrategyByBlockType, BlockType.TABLE_CELL_HEADER);
-			addSupportedBlockType(blockStrategyByBlockType, BlockType.TABLE_CELL_NORMAL);
-		}
-		if (blockTypes.contains(BlockType.BULLETED_LIST) || blockTypes.contains(BlockType.NUMERIC_LIST)) {
-			addSupportedBlockType(blockStrategyByBlockType, BlockType.LIST_ITEM);
-		}
-		if (blockTypes.contains(BlockType.DEFINITION_LIST)) {
-			addSupportedBlockType(blockStrategyByBlockType, BlockType.DEFINITION_ITEM);
-			addSupportedBlockType(blockStrategyByBlockType, BlockType.DEFINITION_TERM);
+		if (elementTypes.contains(BlockType.DEFINITION_LIST)) {
+			addSupportedElementType(elementStrategyByElementType, BlockType.DEFINITION_ITEM);
+			addSupportedElementType(elementStrategyByElementType, BlockType.DEFINITION_TERM);
 		}
 	}
 
-	private void addSupportedBlockType(Map<BlockType, BlockStrategy> blockStrategyByBlockType, BlockType blockType) {
-		blockStrategyByBlockType.put(blockType, SupportedBlockStrategy.instance);
+	@Override
+	BlockStrategy getSupportedStrategy(BlockType elementType) {
+		return SupportedBlockStrategy.instance;
 	}
 
-	private BlockStrategy calculateFallBackBlockType(Map<BlockType, BlockStrategy> strategies, BlockType blockType) {
-		BlockStrategy blockStrategy = null;
-		List<BlockType> alternatives = blockTypeToAlternatives.get(blockType);
-		if (alternatives != null) {
-			for (BlockType alternative : alternatives) {
-				if (strategies.containsKey(alternative)) {
-					blockStrategy = new SubstitutionBlockStrategy(alternative);
-					break;
-				}
-			}
-		}
-		if (blockStrategy == null) {
-			blockStrategy = UnsupportedBlockStrategy.instance;
-		}
-		return blockStrategy;
+	@Override
+	BlockStrategy getUnsupportedElementStrategy() {
+		return UnsupportedBlockStrategy.instance;
+	}
+
+	@Override
+	BlockStrategy createSubstitutionElementStrategy(BlockType alternative) {
+		return new SubstitutionBlockStrategy(alternative);
+	}
+
+	@Override
+	Map<BlockType, List<BlockType>> getElementTypeToAlternatives() {
+		return blockTypeToAlternatives;
 	}
 
 }

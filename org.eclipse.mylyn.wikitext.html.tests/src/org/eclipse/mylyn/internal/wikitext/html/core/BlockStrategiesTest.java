@@ -44,14 +44,14 @@ public class BlockStrategiesTest {
 		assertSupported(strategies, BlockType.PARAGRAPH);
 		assertSupported(strategies, BlockType.CODE);
 		for (BlockType blockType : BlockType.values()) {
-			assertNotNull(strategies.getBlockStrategy(blockType));
+			assertNotNull(strategies.getStrategy(blockType));
 		}
 	}
 
 	@Test
 	public void alternatives() {
 		BlockStrategies strategies = new BlockStrategies(Sets.newHashSet(BlockType.PARAGRAPH));
-		assertTrue(strategies.getBlockStrategy(BlockType.CODE) instanceof SubstitutionBlockStrategy);
+		assertTrue(strategies.getStrategy(BlockType.CODE) instanceof SubstitutionBlockStrategy);
 	}
 
 	@Test
@@ -61,7 +61,6 @@ public class BlockStrategiesTest {
 			if (blockType == BlockType.PARAGRAPH) {
 				continue;
 			}
-			assertNotNull(strategies.getBlockStrategy(blockType));
 			assertUnsupported(strategies, blockType);
 		}
 	}
@@ -94,12 +93,12 @@ public class BlockStrategiesTest {
 	}
 
 	private void assertUnsupported(BlockStrategies strategies, BlockType blockType) {
-		BlockStrategy blockStrategy = strategies.getBlockStrategy(blockType);
+		BlockStrategy blockStrategy = strategies.getStrategy(blockType);
 		assertNotNull(blockStrategy);
 		assertFalse(blockStrategy instanceof SupportedBlockStrategy);
 	}
 
 	private void assertSupported(BlockStrategies strategies, BlockType blockType) {
-		assertTrue(strategies.getBlockStrategy(blockType) instanceof SupportedBlockStrategy);
+		assertTrue(strategies.getStrategy(blockType) instanceof SupportedBlockStrategy);
 	}
 }
