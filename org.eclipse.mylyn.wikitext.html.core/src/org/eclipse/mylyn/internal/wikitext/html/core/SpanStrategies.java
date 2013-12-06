@@ -11,6 +11,9 @@
 
 package org.eclipse.mylyn.internal.wikitext.html.core;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,15 +30,21 @@ public class SpanStrategies extends ElementStrategies<SpanType, SpanStrategy> {
 
 	private static Map<SpanType, List<SpanType>> createSpanTypeToAlternatives() {
 		Map<SpanType, List<SpanType>> alternatives = Maps.newHashMap();
-		alternatives.put(SpanType.BOLD, ImmutableList.of(SpanType.STRONG));
-		alternatives.put(SpanType.STRONG, ImmutableList.of(SpanType.BOLD));
-		alternatives.put(SpanType.CODE, ImmutableList.of(SpanType.MONOSPACE));
-		alternatives.put(SpanType.EMPHASIS, ImmutableList.of(SpanType.ITALIC));
-		alternatives.put(SpanType.INSERTED, ImmutableList.of(SpanType.UNDERLINED));
-		alternatives.put(SpanType.ITALIC, ImmutableList.of(SpanType.EMPHASIS));
-		alternatives.put(SpanType.MONOSPACE, ImmutableList.of(SpanType.CODE));
-		alternatives.put(SpanType.STRONG, ImmutableList.of(SpanType.BOLD));
+		addAlternatives(alternatives, SpanType.BOLD, SpanType.STRONG);
+		addAlternatives(alternatives, SpanType.STRONG, SpanType.BOLD);
+		addAlternatives(alternatives, SpanType.CODE, SpanType.MONOSPACE);
+		addAlternatives(alternatives, SpanType.EMPHASIS, SpanType.ITALIC);
+		addAlternatives(alternatives, SpanType.INSERTED, SpanType.UNDERLINED);
+		addAlternatives(alternatives, SpanType.ITALIC, SpanType.EMPHASIS);
+		addAlternatives(alternatives, SpanType.MONOSPACE, SpanType.CODE);
 		return ImmutableMap.copyOf(alternatives);
+	}
+
+	private static void addAlternatives(Map<SpanType, List<SpanType>> alternatives, SpanType spanType,
+			SpanType... spanTypes) {
+		checkState(!alternatives.containsKey(spanType), "Duplicate %s", spanType); //$NON-NLS-1$
+		checkArgument(spanTypes.length > 0);
+		alternatives.put(spanType, ImmutableList.copyOf(spanTypes));
 	}
 
 	SpanStrategies(Set<SpanType> elementTypes) {

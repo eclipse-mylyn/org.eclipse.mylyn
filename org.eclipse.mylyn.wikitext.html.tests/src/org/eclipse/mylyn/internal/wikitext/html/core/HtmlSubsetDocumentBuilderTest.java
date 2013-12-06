@@ -205,42 +205,47 @@ public class HtmlSubsetDocumentBuilderTest {
 	}
 
 	@Test
-	public void blockParagraphUnsuupported() {
+	public void blockParagraphUnsupported() {
+		assertUnsupportedBlock("<div>test</div>", BlockType.PARAGRAPH, BlockType.DIV);
+	}
+
+	@Test
+	public void blockParagraphUnsupportedWithoutFallback() {
 		assertUnsupportedBlock("\ntest\n", BlockType.PARAGRAPH, BlockType.CODE);
 	}
 
 	@Test
-	public void blockCodeUnsuupported() {
+	public void blockCodeUnsupported() {
 		assertUnsupportedBlock("<pre>test</pre>", BlockType.CODE, BlockType.PREFORMATTED);
 	}
 
 	@Test
-	public void blockCodeUnsuupportedToPara() {
+	public void blockCodeUnsupportedToPara() {
 		assertUnsupportedBlock("<p>test</p>", BlockType.CODE, BlockType.PARAGRAPH);
 	}
 
 	@Test
-	public void blockCodeUnsuupportedWithoutFallback() {
+	public void blockCodeUnsupportedWithoutFallback() {
 		assertUnsupportedBlock("\ntest\n", BlockType.CODE, BlockType.DIV);
 	}
 
 	@Test
-	public void blockDivUnsuupported() {
+	public void blockDivUnsupported() {
 		assertUnsupportedBlock("<p>test</p>", BlockType.DIV, BlockType.PARAGRAPH);
 	}
 
 	@Test
-	public void blockPreformattedUnsuupported() {
+	public void blockPreformattedUnsupported() {
 		assertUnsupportedBlock("<p>test</p>", BlockType.PREFORMATTED, BlockType.PARAGRAPH);
 	}
 
 	@Test
-	public void blockQuoteUnsuupported() {
+	public void blockQuoteUnsupported() {
 		assertUnsupportedBlock("<p>test</p>", BlockType.QUOTE, BlockType.PARAGRAPH);
 	}
 
 	@Test
-	public void blockQuoteUnsuupportedWithoutFallback() {
+	public void blockQuoteUnsupportedWithoutFallback() {
 		assertUnsupportedBlock("\ntest\n", BlockType.QUOTE, BlockType.CODE);
 	}
 

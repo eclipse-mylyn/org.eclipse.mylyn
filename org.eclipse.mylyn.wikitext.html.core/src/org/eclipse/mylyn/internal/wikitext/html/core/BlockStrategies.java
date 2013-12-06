@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.wikitext.html.core;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.util.List;
 import java.util.Map;
@@ -29,23 +30,31 @@ class BlockStrategies extends ElementStrategies<BlockType, BlockStrategy> {
 
 	private static Map<BlockType, List<BlockType>> createBlockTypeToAlternatives() {
 		Map<BlockType, List<BlockType>> alternatives = Maps.newHashMap();
-		alternatives.put(BlockType.BULLETED_LIST, ImmutableList.of(BlockType.NUMERIC_LIST));
-		alternatives.put(BlockType.NUMERIC_LIST, ImmutableList.of(BlockType.BULLETED_LIST));
-		alternatives.put(BlockType.CODE, ImmutableList.of(BlockType.PREFORMATTED, BlockType.PARAGRAPH));
-		alternatives.put(BlockType.DEFINITION_LIST, ImmutableList.of(BlockType.NUMERIC_LIST, BlockType.BULLETED_LIST));
-		alternatives.put(BlockType.DIV, ImmutableList.of(BlockType.PARAGRAPH));
-		alternatives.put(BlockType.FOOTNOTE, ImmutableList.of(BlockType.BULLETED_LIST, BlockType.NUMERIC_LIST));
-		alternatives.put(BlockType.INFORMATION, ImmutableList.of(BlockType.PARAGRAPH));
-		alternatives.put(BlockType.LIST_ITEM, ImmutableList.of(BlockType.PARAGRAPH));
-		alternatives.put(BlockType.NOTE, ImmutableList.of(BlockType.PARAGRAPH));
-		alternatives.put(BlockType.PANEL, ImmutableList.of(BlockType.PARAGRAPH));
-		alternatives.put(BlockType.PREFORMATTED, ImmutableList.of(BlockType.CODE, BlockType.PARAGRAPH));
-		alternatives.put(BlockType.QUOTE, ImmutableList.of(BlockType.PARAGRAPH));
-		alternatives.put(BlockType.TABLE_CELL_HEADER, ImmutableList.of(BlockType.PARAGRAPH));
-		alternatives.put(BlockType.TABLE_CELL_NORMAL, ImmutableList.of(BlockType.PARAGRAPH));
-		alternatives.put(BlockType.TIP, ImmutableList.of(BlockType.PARAGRAPH));
-		alternatives.put(BlockType.WARNING, ImmutableList.of(BlockType.PARAGRAPH));
+		addAlternatives(alternatives, BlockType.PARAGRAPH, BlockType.DIV);
+		addAlternatives(alternatives, BlockType.BULLETED_LIST, BlockType.NUMERIC_LIST);
+		addAlternatives(alternatives, BlockType.NUMERIC_LIST, BlockType.BULLETED_LIST);
+		addAlternatives(alternatives, BlockType.CODE, BlockType.PREFORMATTED, BlockType.PARAGRAPH);
+		addAlternatives(alternatives, BlockType.DEFINITION_LIST, BlockType.NUMERIC_LIST, BlockType.BULLETED_LIST);
+		addAlternatives(alternatives, BlockType.DIV, BlockType.PARAGRAPH);
+		addAlternatives(alternatives, BlockType.FOOTNOTE, BlockType.BULLETED_LIST, BlockType.NUMERIC_LIST);
+		addAlternatives(alternatives, BlockType.INFORMATION, BlockType.PARAGRAPH);
+		addAlternatives(alternatives, BlockType.LIST_ITEM, BlockType.PARAGRAPH);
+		addAlternatives(alternatives, BlockType.NOTE, BlockType.PARAGRAPH);
+		addAlternatives(alternatives, BlockType.PANEL, BlockType.PARAGRAPH);
+		addAlternatives(alternatives, BlockType.PREFORMATTED, BlockType.CODE, BlockType.PARAGRAPH);
+		addAlternatives(alternatives, BlockType.QUOTE, BlockType.PARAGRAPH);
+		addAlternatives(alternatives, BlockType.TABLE_CELL_HEADER, BlockType.PARAGRAPH);
+		addAlternatives(alternatives, BlockType.TABLE_CELL_NORMAL, BlockType.PARAGRAPH);
+		addAlternatives(alternatives, BlockType.TIP, BlockType.PARAGRAPH);
+		addAlternatives(alternatives, BlockType.WARNING, BlockType.PARAGRAPH);
 		return ImmutableMap.copyOf(alternatives);
+	}
+
+	private static void addAlternatives(Map<BlockType, List<BlockType>> alternatives, BlockType blockType,
+			BlockType... blockTypes) {
+		checkState(!alternatives.containsKey(blockType), "Duplicate %s", blockType); //$NON-NLS-1$
+		checkArgument(blockTypes.length > 0);
+		alternatives.put(blockType, ImmutableList.copyOf(blockTypes));
 	}
 
 	BlockStrategies(Set<BlockType> blockTypes) {
