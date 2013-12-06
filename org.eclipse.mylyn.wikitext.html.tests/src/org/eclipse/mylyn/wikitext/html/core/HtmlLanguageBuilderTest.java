@@ -97,6 +97,7 @@ public class HtmlLanguageBuilderTest {
 		HtmlSubsetLanguage subsetLanguage = (HtmlSubsetLanguage) language;
 		assertEquals(ImmutableSet.of(BlockType.PARAGRAPH, BlockType.CODE), subsetLanguage.getSupportedBlockTypes());
 		assertEquals(ImmutableSet.of(SpanType.SUPERSCRIPT), subsetLanguage.getSupportedSpanTypes());
+		assertEquals(0, subsetLanguage.getSupportedHeadingLevel());
 	}
 
 	@Test
@@ -137,6 +138,37 @@ public class HtmlLanguageBuilderTest {
 	public void addSpanType() {
 		assertNotNull(builder.add(SpanType.BOLD));
 		assertSame(builder, builder.add(SpanType.BOLD));
+	}
+
+	@Test
+	public void addHeadings() {
+		assertNotNull(builder.addHeadings(1));
+		assertSame(builder, builder.addHeadings(1));
+	}
+
+	@Test
+	public void addHeadingsCreatesExpectedSupportLevel() {
+		HtmlSubsetLanguage subsetLanguage = (HtmlSubsetLanguage) builder.add(BlockType.PARAGRAPH)
+				.addHeadings(3)
+				.name("Test")
+				.create();
+		assertEquals(3, subsetLanguage.getSupportedHeadingLevel());
+	}
+
+	@Test
+	public void addHeadingsLowerBounds() {
+		builder.addHeadings(1);
+		thrown.expect(IllegalArgumentException.class);
+		thrown.expectMessage("Heading level must be between 1 and 6");
+		builder.addHeadings(0);
+	}
+
+	@Test
+	public void addHeadingsUpperBounds() {
+		builder.addHeadings(6);
+		thrown.expect(IllegalArgumentException.class);
+		thrown.expectMessage("Heading level must be between 1 and 6");
+		builder.addHeadings(7);
 	}
 
 	protected void expectBlacklisted() {

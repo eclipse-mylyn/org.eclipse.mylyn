@@ -34,6 +34,10 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 
 	private final Stack<SpanStrategy> spanStrategyState = new Stack<SpanStrategy>();
 
+	private final Stack<Integer> headingState = new Stack<Integer>();
+
+	private int supportedHeadingLevel;
+
 	public HtmlSubsetDocumentBuilder(Writer out, boolean formatting) {
 		this(new HtmlDocumentBuilder(checkNotNull(out, "Must provide a writer"), formatting)); //$NON-NLS-1$
 	}
@@ -50,6 +54,10 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 	void setSupportedSpanTypes(Set<SpanType> spanTypes) {
 		checkState(spanStrategyState.isEmpty());
 		spanStrategies = new SpanStrategies(spanTypes);
+	}
+
+	void setSupportedHeadingLevel(int headingLevel) {
+		this.supportedHeadingLevel = headingLevel;
 	}
 
 	@Override
@@ -97,12 +105,28 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 
 	@Override
 	public void beginHeading(int level, Attributes attributes) {
-		delegate.beginHeading(level, attributes);
+		headingState.push(level);
+		if (headingLevelSupported(level)) {
+			delegate.beginHeading(level, attributes);
+		} else {
+			beginBlock(BlockType.PARAGRAPH, attributes);
+			beginSpan(SpanType.BOLD, new Attributes());
+		}
+	}
+
+	boolean headingLevelSupported(int level) {
+		return supportedHeadingLevel > 0 && level <= supportedHeadingLevel;
 	}
 
 	@Override
 	public void endHeading() {
-		delegate.endHeading();
+		Integer level = headingState.pop();
+		if (headingLevelSupported(level)) {
+			delegate.endHeading();
+		} else {
+			endSpan();
+			endBlock();
+		}
 	}
 
 	@Override

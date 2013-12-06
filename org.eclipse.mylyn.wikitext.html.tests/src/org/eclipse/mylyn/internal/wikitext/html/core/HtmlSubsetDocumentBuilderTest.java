@@ -46,6 +46,7 @@ public class HtmlSubsetDocumentBuilderTest {
 		builder = new HtmlSubsetDocumentBuilder(delegate);
 		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
 		builder.setSupportedSpanTypes(Sets.newHashSet(SpanType.BOLD));
+		builder.setSupportedHeadingLevel(3);
 	}
 
 	@Test
@@ -128,6 +129,14 @@ public class HtmlSubsetDocumentBuilderTest {
 		builder.characters("test");
 		builder.endHeading();
 		assertContent("<h1>test</h1>");
+	}
+
+	@Test
+	public void headingUnsupported() {
+		builder.beginHeading(4, new Attributes());
+		builder.characters("test");
+		builder.endHeading();
+		assertContent("<p><b>test</b></p>");
 	}
 
 	@Test

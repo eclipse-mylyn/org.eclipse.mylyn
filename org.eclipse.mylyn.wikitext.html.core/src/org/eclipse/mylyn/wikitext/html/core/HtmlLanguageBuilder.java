@@ -39,6 +39,8 @@ public class HtmlLanguageBuilder {
 
 	private final Set<SpanType> spanTypes = Sets.newHashSet();
 
+	private int headingLevel;
+
 	HtmlLanguageBuilder() {
 		// prevent direct instantiation
 	}
@@ -62,6 +64,11 @@ public class HtmlLanguageBuilder {
 
 	/**
 	 * Adds the given {@link BlockType} to the supported syntax of the language created by this builder.
+	 * <p>
+	 * Adding {@link BlockType#TABLE}, {@link BlockType#BULLETED_LIST}, {@link BlockType#NUMERIC_LIST} or
+	 * {@link BlockType#DEFINITION_LIST} will cause the corresponding related blocks to be added. For example, adding
+	 * {@link BlockType#BULLETED_LIST} also adds {@link BlockType#LIST_ITEM}.
+	 * </p>
 	 * 
 	 * @param blockType
 	 *            the block type
@@ -84,10 +91,23 @@ public class HtmlLanguageBuilder {
 		return this;
 	}
 
+	/**
+	 * Adds support for headings up to and including the specified level.
+	 * 
+	 * @param level
+	 *            the level which must be a number between 1 and 6 inclusive
+	 * @return this builder
+	 */
+	public HtmlLanguageBuilder addHeadings(int level) {
+		checkArgument(level > 0 && level <= 6, "Heading level must be between 1 and 6"); //$NON-NLS-1$
+		headingLevel = level;
+		return this;
+	}
+
 	public HtmlLanguage create() {
 		checkState(name != null, "Name must be provided to create an HtmlLanguage"); //$NON-NLS-1$
 		checkState(!blockTypes.isEmpty(), "Must provide support for at least one block type"); //$NON-NLS-1$
 
-		return new HtmlSubsetLanguage(name, blockTypes, spanTypes);
+		return new HtmlSubsetLanguage(name, headingLevel, blockTypes, spanTypes);
 	}
 }

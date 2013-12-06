@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.wikitext.html.core;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.Writer;
@@ -29,8 +30,12 @@ public class HtmlSubsetLanguage extends HtmlLanguage {
 
 	private final Set<SpanType> supportedSpanTypes;
 
-	public HtmlSubsetLanguage(String name, Set<BlockType> blockTypes, Set<SpanType> spanTypes) {
+	private final int headingLevel;
+
+	public HtmlSubsetLanguage(String name, int headingLevel, Set<BlockType> blockTypes, Set<SpanType> spanTypes) {
 		setName(checkNotNull(name));
+		checkArgument(headingLevel >= 0 && headingLevel <= 6, "headingLevel must be between 0 and 6"); //$NON-NLS-1$
+		this.headingLevel = headingLevel;
 		this.supportedBlockTypes = ImmutableSet.copyOf(checkNotNull(blockTypes));
 		this.supportedSpanTypes = ImmutableSet.copyOf(checkNotNull(spanTypes));
 	}
@@ -43,9 +48,15 @@ public class HtmlSubsetLanguage extends HtmlLanguage {
 		return supportedSpanTypes;
 	}
 
+	public int getSupportedHeadingLevel() {
+		return headingLevel;
+	}
+
 	@Override
 	public DocumentBuilder createDocumentBuilder(Writer out, boolean formatting) {
 		HtmlSubsetDocumentBuilder builder = new HtmlSubsetDocumentBuilder(out, formatting);
+		builder.setSupportedHeadingLevel(headingLevel);
+		builder.setSupportedSpanTypes(supportedSpanTypes);
 		builder.setSupportedBlockTypes(supportedBlockTypes);
 		builder.setSupportedSpanTypes(supportedSpanTypes);
 		return builder;
