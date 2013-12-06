@@ -34,26 +34,26 @@ public class HtmlSubsetLanguageTest {
 	@Test
 	public void createNullName() {
 		thrown.expect(NullPointerException.class);
-		new HtmlSubsetLanguage(null, 6, ImmutableSet.of(BlockType.PARAGRAPH), ImmutableSet.of(SpanType.BOLD));
+		new HtmlSubsetLanguage(null, null, 6, ImmutableSet.of(BlockType.PARAGRAPH), ImmutableSet.of(SpanType.BOLD));
 	}
 
 	@Test
 	public void createNullBlockTypes() {
 		thrown.expect(NullPointerException.class);
-		new HtmlSubsetLanguage("Test", 6, null, ImmutableSet.of(SpanType.BOLD));
+		new HtmlSubsetLanguage("Test", null, 6, null, ImmutableSet.of(SpanType.BOLD));
 	}
 
 	@Test
 	public void createNullSpanTypes() {
 		thrown.expect(NullPointerException.class);
-		new HtmlSubsetLanguage("Test", 6, ImmutableSet.of(BlockType.PARAGRAPH), null);
+		new HtmlSubsetLanguage("Test", null, 6, ImmutableSet.of(BlockType.PARAGRAPH), null);
 	}
 
 	@Test
 	public void createInvalidHeadingLevel() {
 		thrown.expect(IllegalArgumentException.class);
 		thrown.expectMessage("headingLevel must be between 0 and 6");
-		new HtmlSubsetLanguage("Test", -1, ImmutableSet.of(BlockType.PARAGRAPH), ImmutableSet.of(SpanType.BOLD));
+		new HtmlSubsetLanguage("Test", null, -1, ImmutableSet.of(BlockType.PARAGRAPH), ImmutableSet.of(SpanType.BOLD));
 	}
 
 	@Test
@@ -88,15 +88,16 @@ public class HtmlSubsetLanguageTest {
 	}
 
 	private HtmlSubsetLanguage newHtmlSubsetLanguageWithHeadingLevel(int level) {
-		return new HtmlSubsetLanguage("Test", level, Sets.newHashSet(BlockType.PARAGRAPH), ImmutableSet.<SpanType> of());
+		return new HtmlSubsetLanguage("Test", null, level, Sets.newHashSet(BlockType.PARAGRAPH),
+				ImmutableSet.<SpanType> of());
 	}
 
 	protected HtmlSubsetLanguage newHtmlSubsetLanguage(SpanType... spans) {
-		return new HtmlSubsetLanguage("Test", 6, Sets.newHashSet(BlockType.PARAGRAPH), Sets.newHashSet(spans));
+		return new HtmlSubsetLanguage("Test", null, 6, Sets.newHashSet(BlockType.PARAGRAPH), Sets.newHashSet(spans));
 	}
 
 	protected HtmlSubsetLanguage newHtmlSubsetLanguage(BlockType... blocks) {
-		return new HtmlSubsetLanguage("Test", 6, Sets.newHashSet(blocks), ImmutableSet.<SpanType> of());
+		return new HtmlSubsetLanguage("Test", null, 6, Sets.newHashSet(blocks), ImmutableSet.<SpanType> of());
 	}
 
 	@Test

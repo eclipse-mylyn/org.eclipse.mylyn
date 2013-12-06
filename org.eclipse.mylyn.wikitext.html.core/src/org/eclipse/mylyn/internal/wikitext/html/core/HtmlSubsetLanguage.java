@@ -20,6 +20,7 @@ import java.util.Set;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentHandler;
 import org.eclipse.mylyn.wikitext.html.core.HtmlLanguage;
 
 import com.google.common.collect.ImmutableSet;
@@ -32,8 +33,12 @@ public class HtmlSubsetLanguage extends HtmlLanguage {
 
 	private final int headingLevel;
 
-	public HtmlSubsetLanguage(String name, int headingLevel, Set<BlockType> blockTypes, Set<SpanType> spanTypes) {
+	private final HtmlDocumentHandler documentHandler;
+
+	public HtmlSubsetLanguage(String name, HtmlDocumentHandler documentHandler, int headingLevel,
+			Set<BlockType> blockTypes, Set<SpanType> spanTypes) {
 		setName(checkNotNull(name));
+		this.documentHandler = documentHandler;
 		checkArgument(headingLevel >= 0 && headingLevel <= 6, "headingLevel must be between 0 and 6"); //$NON-NLS-1$
 		this.headingLevel = headingLevel;
 		this.supportedBlockTypes = ImmutableSet.copyOf(checkNotNull(blockTypes));
@@ -58,7 +63,9 @@ public class HtmlSubsetLanguage extends HtmlLanguage {
 		builder.setSupportedHeadingLevel(headingLevel);
 		builder.setSupportedSpanTypes(supportedSpanTypes);
 		builder.setSupportedBlockTypes(supportedBlockTypes);
-		builder.setSupportedSpanTypes(supportedSpanTypes);
+		if (documentHandler != null) {
+			builder.setDocumentHandler(documentHandler);
+		}
 		return builder;
 	}
 }

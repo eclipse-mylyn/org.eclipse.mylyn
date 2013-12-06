@@ -16,7 +16,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.io.StringWriter;
+
 import org.eclipse.mylyn.internal.wikitext.html.core.HtmlSubsetLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.junit.Before;
@@ -169,6 +172,34 @@ public class HtmlLanguageBuilderTest {
 		thrown.expect(IllegalArgumentException.class);
 		thrown.expectMessage("Heading level must be between 1 and 6");
 		builder.addHeadings(7);
+	}
+
+	@Test
+	public void document() {
+		HtmlSubsetLanguage subsetLanguage = (HtmlSubsetLanguage) builder.add(BlockType.PARAGRAPH)
+				.document("<div>", "</div>")
+				.name("Test")
+				.create();
+		StringWriter writer = new StringWriter();
+		DocumentBuilder documentBuilder = subsetLanguage.createDocumentBuilder(writer);
+		documentBuilder.beginDocument();
+		documentBuilder.characters("test");
+		documentBuilder.endDocument();
+		assertEquals("<div>test</div>", writer.toString());
+	}
+
+	@Test
+	public void documentNullPrefix() {
+		thrown.expect(NullPointerException.class);
+		thrown.expectMessage("Must provide a prefix");
+		builder.document(null, "ouch");
+	}
+
+	@Test
+	public void documentNullSuffix() {
+		thrown.expect(NullPointerException.class);
+		thrown.expectMessage("Must provide a suffix");
+		builder.document("ouch", null);
 	}
 
 	protected void expectBlacklisted() {

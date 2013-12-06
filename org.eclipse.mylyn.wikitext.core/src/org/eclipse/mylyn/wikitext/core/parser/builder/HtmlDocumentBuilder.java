@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.wikitext.core.parser.builder;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -51,6 +52,7 @@ import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
  * @since 1.0
  */
 public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
+
 	private static final Pattern ABSOLUTE_URL_PATTERN = Pattern.compile("[a-zA-Z]{3,8}://?.*"); //$NON-NLS-1$
 
 	private static final Map<String, String> entityReferenceToNumericEquivalent = new HashMap<String, String>();
@@ -235,6 +237,8 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	private String copyrightNotice;
 
 	private String htmlFilenameFormat = null;
+
+	private HtmlDocumentHandler documentHandler = new DefaultDocumentHandler();
 
 	private final Stack<ElementInfo> blockState = new Stack<ElementInfo>();
 
@@ -587,36 +591,64 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		this.linkRel = linkRel;
 	}
 
+	/**
+	 * Provides an {@link HtmlDocumentHandler} for this builder.
+	 * 
+	 * @param documentHandler
+	 *            the document handler
+	 * @since 2.0
+	 * @see HtmlDocumentHandler
+	 */
+	public void setDocumentHandler(HtmlDocumentHandler documentHandler) {
+		this.documentHandler = checkNotNull(documentHandler, "Must provide a documentHandler"); //$NON-NLS-1$
+	}
+
+	private class DefaultDocumentHandler implements HtmlDocumentHandler {
+
+		@Override
+		public void beginDocument(HtmlDocumentBuilder builder, XmlStreamWriter writer) {
+			if (emitAsDocument) {
+				if (encoding != null && encoding.length() > 0) {
+					writer.writeStartDocument(encoding, "1.0"); //$NON-NLS-1$
+				} else {
+					writer.writeStartDocument();
+				}
+
+				if (emitDtd && htmlDtd != null) {
+					writer.writeDTD(htmlDtd);
+				}
+
+				if (copyrightNotice != null) {
+					writer.writeComment(copyrightNotice);
+				}
+
+				writer.writeStartElement(htmlNsUri, "html"); //$NON-NLS-1$
+				writer.writeDefaultNamespace(htmlNsUri);
+
+				emitHead();
+				beginBody();
+			} else {
+				// sanity check
+				if (stylesheets != null && !stylesheets.isEmpty()) {
+					throw new IllegalStateException(Messages.getString("HtmlDocumentBuilder.0")); //$NON-NLS-1$
+				}
+			}
+		}
+
+		@Override
+		public void endDocument(HtmlDocumentBuilder builder, XmlStreamWriter writer) {
+			if (emitAsDocument) {
+				endBody();
+				writer.writeEndElement(); // html
+				writer.writeEndDocument();
+			}
+		}
+	}
+
 	@Override
 	public void beginDocument() {
 		writer.setDefaultNamespace(htmlNsUri);
-
-		if (emitAsDocument) {
-			if (encoding != null && encoding.length() > 0) {
-				writer.writeStartDocument(encoding, "1.0"); //$NON-NLS-1$
-			} else {
-				writer.writeStartDocument();
-			}
-
-			if (emitDtd && htmlDtd != null) {
-				writer.writeDTD(htmlDtd);
-			}
-
-			if (copyrightNotice != null) {
-				writer.writeComment(copyrightNotice);
-			}
-
-			writer.writeStartElement(htmlNsUri, "html"); //$NON-NLS-1$
-			writer.writeDefaultNamespace(htmlNsUri);
-
-			emitHead();
-			beginBody();
-		} else {
-			// sanity check
-			if (stylesheets != null && !stylesheets.isEmpty()) {
-				throw new IllegalStateException(Messages.getString("HtmlDocumentBuilder.0")); //$NON-NLS-1$
-			}
-		}
+		documentHandler.beginDocument(this, writer);
 	}
 
 	/**
@@ -740,12 +772,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	@Override
 	public void endDocument() {
-		if (emitAsDocument) {
-			endBody();
-			writer.writeEndElement(); // html
-			writer.writeEndDocument();
-		}
-
+		documentHandler.endDocument(this, writer);
 		writer.close();
 	}
 

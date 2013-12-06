@@ -21,8 +21,11 @@ import java.net.URL;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
@@ -32,6 +35,9 @@ public class HtmlDocumentBuilderTest {
 	private StringWriter out;
 
 	private HtmlDocumentBuilder builder;
+
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();
 
 	@Before
 	public void setup() {
@@ -55,6 +61,12 @@ public class HtmlDocumentBuilderTest {
 
 		buildBasicDocument();
 		assertExpected("emitAsDocumentTrue");
+	}
+
+	@Test
+	public void emitAsDocumentDefaultTrue() {
+		builder = new HtmlDocumentBuilder(out);
+		assertTrue(builder.isEmitAsDocument());
 	}
 
 	@Test
@@ -91,6 +103,32 @@ public class HtmlDocumentBuilderTest {
 		builder.characters("test");
 		builder.endBlock();
 		assertEquals("<pre>test</pre>", out.toString());
+	}
+
+	@Test
+	public void setDocumentHandlerNull() {
+		thrown.expect(NullPointerException.class);
+		builder.setDocumentHandler(null);
+	}
+
+	@Test
+	public void withDocumentHandler() {
+		builder.setDocumentHandler(new HtmlDocumentHandler() {
+
+			@Override
+			public void endDocument(HtmlDocumentBuilder builder, XmlStreamWriter writer) {
+				writer.writeLiteral("END");
+			}
+
+			@Override
+			public void beginDocument(HtmlDocumentBuilder builder, XmlStreamWriter writer) {
+				writer.writeLiteral("START");
+			}
+		});
+		builder.beginDocument();
+		builder.characters("test");
+		builder.endDocument();
+		assertEquals("STARTtestEND", out.toString());
 	}
 
 	protected void setupFormatting() {

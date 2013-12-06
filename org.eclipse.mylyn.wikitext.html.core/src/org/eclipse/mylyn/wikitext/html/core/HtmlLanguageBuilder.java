@@ -18,8 +18,10 @@ import static com.google.common.base.Preconditions.checkState;
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.wikitext.html.core.HtmlSubsetLanguage;
+import org.eclipse.mylyn.internal.wikitext.html.core.LiteralHtmlDocumentHandler;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentHandler;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 
 import com.google.common.base.Strings;
@@ -40,6 +42,8 @@ public class HtmlLanguageBuilder {
 	private final Set<SpanType> spanTypes = Sets.newHashSet();
 
 	private int headingLevel;
+
+	private LiteralHtmlDocumentHandler documentHandler;
 
 	HtmlLanguageBuilder() {
 		// prevent direct instantiation
@@ -104,10 +108,30 @@ public class HtmlLanguageBuilder {
 		return this;
 	}
 
+	/**
+	 * Provides a prefix and suffix which are emitted as literals at the start and end of content created using the
+	 * {@link MarkupLanguage#createDocumentBuilder(java.io.Writer, boolean) document builder}.
+	 * 
+	 * @param prefix
+	 *            the prefix which is an HTML literal value that precedes the content, for example {@code "<div>"} or
+	 *            {@code "<html><body>"}. May be empty.
+	 * @param suffix
+	 *            the prefix which is an HTML literal value that precedes the content, for example {@code "</div>"} or
+	 *            {@code "</body></html>"}. May be empty.
+	 * @return this builder
+	 * @see HtmlDocumentHandler
+	 */
+	public HtmlLanguageBuilder document(String prefix, String suffix) {
+		checkNotNull(prefix, "Must provide a prefix"); //$NON-NLS-1$
+		checkNotNull(suffix, "Must provide a suffix"); //$NON-NLS-1$
+		documentHandler = new LiteralHtmlDocumentHandler(prefix, suffix);
+		return this;
+	}
+
 	public HtmlLanguage create() {
 		checkState(name != null, "Name must be provided to create an HtmlLanguage"); //$NON-NLS-1$
 		checkState(!blockTypes.isEmpty(), "Must provide support for at least one block type"); //$NON-NLS-1$
 
-		return new HtmlSubsetLanguage(name, headingLevel, blockTypes, spanTypes);
+		return new HtmlSubsetLanguage(name, documentHandler, headingLevel, blockTypes, spanTypes);
 	}
 }
