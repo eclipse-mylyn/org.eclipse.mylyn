@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.internal.wikitext.html.core;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.EnumSet;
@@ -29,7 +28,6 @@ abstract class ElementStrategies<ElementType extends Enum<ElementType>, ElementS
 	ElementStrategies(Class<ElementType> elementTypeClass, Set<ElementType> elementTypes) {
 		checkNotNull(elementTypeClass);
 		checkNotNull(elementTypes);
-		checkArgument(!elementTypes.isEmpty());
 
 		initialize(elementTypeClass, elementTypes);
 	}

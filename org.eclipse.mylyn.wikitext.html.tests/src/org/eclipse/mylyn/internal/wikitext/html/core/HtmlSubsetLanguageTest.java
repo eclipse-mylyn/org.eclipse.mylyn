@@ -19,6 +19,7 @@ import java.io.StringWriter;
 
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -33,18 +34,24 @@ public class HtmlSubsetLanguageTest {
 	@Test
 	public void createNullName() {
 		thrown.expect(NullPointerException.class);
-		new HtmlSubsetLanguage(null, ImmutableSet.of(BlockType.PARAGRAPH));
+		new HtmlSubsetLanguage(null, ImmutableSet.of(BlockType.PARAGRAPH), ImmutableSet.of(SpanType.BOLD));
 	}
 
 	@Test
 	public void createNullBlockTypes() {
 		thrown.expect(NullPointerException.class);
-		new HtmlSubsetLanguage("Test", null);
+		new HtmlSubsetLanguage("Test", null, ImmutableSet.of(SpanType.BOLD));
+	}
+
+	@Test
+	public void createNullSpanTypes() {
+		thrown.expect(NullPointerException.class);
+		new HtmlSubsetLanguage("Test", ImmutableSet.of(BlockType.PARAGRAPH), null);
 	}
 
 	@Test
 	public void create() {
-		HtmlSubsetLanguage language = newHtmlSubsetLanguage();
+		HtmlSubsetLanguage language = newHtmlSubsetLanguage(BlockType.PARAGRAPH);
 		assertEquals("Test", language.getName());
 	}
 
@@ -54,8 +61,18 @@ public class HtmlSubsetLanguageTest {
 				newHtmlSubsetLanguage(BlockType.PARAGRAPH, BlockType.CODE).getSupportedBlockTypes());
 	}
 
+	@Test
+	public void supportedSpanTypes() {
+		assertEquals(Sets.newHashSet(SpanType.BOLD, SpanType.EMPHASIS),
+				newHtmlSubsetLanguage(SpanType.BOLD, SpanType.EMPHASIS).getSupportedSpanTypes());
+	}
+
+	protected HtmlSubsetLanguage newHtmlSubsetLanguage(SpanType... spans) {
+		return new HtmlSubsetLanguage("Test", Sets.newHashSet(BlockType.PARAGRAPH), Sets.newHashSet(spans));
+	}
+
 	protected HtmlSubsetLanguage newHtmlSubsetLanguage(BlockType... blocks) {
-		return new HtmlSubsetLanguage("Test", Sets.newHashSet(blocks));
+		return new HtmlSubsetLanguage("Test", Sets.newHashSet(blocks), ImmutableSet.<SpanType> of());
 	}
 
 	@Test

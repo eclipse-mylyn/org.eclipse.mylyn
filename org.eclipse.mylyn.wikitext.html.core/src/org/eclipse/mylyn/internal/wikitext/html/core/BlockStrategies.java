@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.wikitext.html.core;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -48,6 +50,7 @@ class BlockStrategies extends ElementStrategies<BlockType, BlockStrategy> {
 
 	BlockStrategies(Set<BlockType> blockTypes) {
 		super(BlockType.class, blockTypes);
+		checkArgument(!blockTypes.isEmpty());
 	}
 
 	@Override

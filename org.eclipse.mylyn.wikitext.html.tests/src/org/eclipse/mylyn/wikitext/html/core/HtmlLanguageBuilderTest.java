@@ -24,6 +24,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import com.google.common.collect.ImmutableSet;
+
 public class HtmlLanguageBuilderTest {
 
 	private HtmlLanguageBuilder builder;
@@ -83,10 +85,18 @@ public class HtmlLanguageBuilderTest {
 
 	@Test
 	public void create() {
-		HtmlLanguage language = builder.add(BlockType.PARAGRAPH).name("Test").create();
+		HtmlLanguage language = builder.add(BlockType.PARAGRAPH)
+				.add(BlockType.CODE)
+				.add(SpanType.SUPERSCRIPT)
+				.name("Test")
+				.create();
 		assertNotNull(language);
 		assertEquals("Test", language.getName());
 		assertTrue(language instanceof HtmlSubsetLanguage);
+
+		HtmlSubsetLanguage subsetLanguage = (HtmlSubsetLanguage) language;
+		assertEquals(ImmutableSet.of(BlockType.PARAGRAPH, BlockType.CODE), subsetLanguage.getSupportedBlockTypes());
+		assertEquals(ImmutableSet.of(SpanType.SUPERSCRIPT), subsetLanguage.getSupportedSpanTypes());
 	}
 
 	@Test

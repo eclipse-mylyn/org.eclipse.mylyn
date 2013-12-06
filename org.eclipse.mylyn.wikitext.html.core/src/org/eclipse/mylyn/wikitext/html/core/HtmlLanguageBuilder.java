@@ -88,8 +88,6 @@ public class HtmlLanguageBuilder {
 		checkState(name != null, "Name must be provided to create an HtmlLanguage"); //$NON-NLS-1$
 		checkState(!blockTypes.isEmpty(), "Must provide support for at least one block type"); //$NON-NLS-1$
 
-		HtmlSubsetLanguage htmlLanguage = new HtmlSubsetLanguage(name, blockTypes);
-		// FIXME: bug 423453 create language with support for specified syntax
-		return htmlLanguage;
+		return new HtmlSubsetLanguage(name, blockTypes, spanTypes);
 	}
 }

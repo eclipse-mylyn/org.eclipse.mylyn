@@ -33,8 +33,8 @@ public class SpanStrategiesTest {
 
 	@Test
 	public void createEmpty() {
-		thrown.expect(IllegalArgumentException.class);
-		new SpanStrategies(Sets.<SpanType> newHashSet());
+		SpanStrategies strategies = new SpanStrategies(Sets.<SpanType> newHashSet());
+		assertNotNull(strategies.getStrategy(SpanType.BOLD));
 	}
 
 	@Test
