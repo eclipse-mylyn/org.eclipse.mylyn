@@ -957,7 +957,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			AttachmentUtil.postContext(connector, repository, task, "test", attribute, new NullProgressMonitor());
 		} catch (CoreException e) {
 			assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
-			assertTrue(e.getStatus().getMessage().indexOf("invalid username or password") != -1);
+			assertTrue(e.getStatus().getMessage().indexOf("invalid username or password") != -1
+					|| e.getStatus().getMessage().indexOf("invalid login or password") != -1);
 			return;
 		} finally {
 			repository.setCredentials(AuthenticationType.REPOSITORY, oldCreds, false);
