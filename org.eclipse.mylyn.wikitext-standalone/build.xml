@@ -28,7 +28,7 @@
         <zip destfile="${wikitext.standalone.archive}">
         	<zipfileset prefix="${wikitext.standalone.dir}" dir="${wikitext.plugin.jars.location}">
         		<include name="org.eclipse.mylyn.wikitext.*core*.jar"/>
-        		<include name="guava*.jar"/>
+        		<include name="com.google.guava*.jar"/>
         		<exclude name="org.eclipse.mylyn.wikitext.*source*.jar"/>
         	</zipfileset>
         	<zipfileset prefix="${wikitext.standalone.dir}/docs" dir="${wikitext.sources.location}/org.eclipse.mylyn.wikitext.help.ui/help">
