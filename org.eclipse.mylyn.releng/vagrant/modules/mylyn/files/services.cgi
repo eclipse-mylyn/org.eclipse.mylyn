@@ -13,8 +13,10 @@ my @verzeichnisse = (
 );
 
 my @files = File::Find::Rule->file()
-                              ->name( $muster )
-                              ->in( @verzeichnisse );
+    ->mindepth(3)
+    ->maxdepth(4)
+    ->name( $muster )
+    ->in( @verzeichnisse );
 
 print "Content-type:application/json\r\n\r\n";
 if ($callback) {
