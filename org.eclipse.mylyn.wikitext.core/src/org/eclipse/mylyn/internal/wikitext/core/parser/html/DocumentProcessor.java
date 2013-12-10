@@ -47,7 +47,11 @@ public abstract class DocumentProcessor {
 						childTextNode.text(previousSiblingTextNode.text() + childTextNode.text());
 						previousSibling.remove();
 					}
-					childTextNode.text(StringUtil.normaliseWhitespace(childTextNode.getWholeText()));
+					String wholeText = childTextNode.getWholeText();
+					if (!Html.isWhitespacePreserve(parentElement)) {
+						wholeText = StringUtil.normaliseWhitespace(wholeText);
+					}
+					childTextNode.text(wholeText);
 				}
 			}
 		}

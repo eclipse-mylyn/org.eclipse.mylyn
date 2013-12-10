@@ -200,6 +200,17 @@ public class HtmlCleanerTest {
 		assertEquals("<body>text</body>", result);
 	}
 
+	@Test
+	public void preformattedWhitespacePreserve() {
+		assertEquals("<body><pre> \none\r\ntwo\n</pre></body>", cleanToBody("<pre> \none\r\ntwo\n</pre>"));
+	}
+
+	@Test
+	public void preformattedCodeWhitespacePreserve() {
+		assertEquals("<body><pre><code> \none\r\ntwo\n</code></pre></body>",
+				cleanToBody("<pre><code> \none\r\ntwo\n</code></pre>"));
+	}
+
 	private String cleanToBody(String originalHtml) {
 		Document document = Jsoup.parse(originalHtml);
 		return cleanToBody(document);
