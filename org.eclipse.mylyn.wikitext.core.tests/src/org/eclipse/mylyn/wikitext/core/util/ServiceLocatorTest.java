@@ -20,11 +20,14 @@ import static org.mockito.Mockito.mock;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.mylyn.internal.wikitext.MockMarkupLanguage;
 import org.eclipse.mylyn.internal.wikitext.MockMarkupLanguageProvider;
@@ -79,6 +82,33 @@ public class ServiceLocatorTest {
 	public void testKnownLanguageProviderServices() {
 		setupServiceLocatorWithMockMarkupLanguageProvider(false);
 		assertKnownMarkupLanguage();
+	}
+
+	@Test
+	public void testLoadClassNotFound() throws MalformedURLException {
+		final URL url = new URL("file://example");
+		final AtomicBoolean wasThrown = new AtomicBoolean();
+		locator = new ServiceLocator(ServiceLocatorTest.class.getClassLoader()) {
+			@Override
+			protected Class<?> loadClass(ResourceDescriptor resource, String className) throws ClassNotFoundException {
+				wasThrown.set(true);
+				throw new ClassNotFoundException(className);
+			}
+
+			@Override
+			protected List<ResourceDescriptor> discoverServiceResources() {
+				return Lists.newArrayList(new ResourceDescriptor(url));
+			}
+
+			@Override
+			protected List<String> readServiceClassNames(URL url) {
+				return Lists.newArrayList("test.TestLanguage");
+			}
+		};
+		Set<MarkupLanguage> languages = locator.getAllMarkupLanguages();
+		assertTrue(wasThrown.get());
+		assertNotNull(languages);
+		assertTrue(languages.isEmpty());
 	}
 
 	protected void assertKnownMarkupLanguage() {
