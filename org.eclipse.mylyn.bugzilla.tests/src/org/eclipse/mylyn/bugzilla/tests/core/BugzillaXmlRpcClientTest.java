@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaTest;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaHarness;
+import org.eclipse.mylyn.bugzilla.tests.support.BugzillaTestSupportUtil;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.bugzilla.core.AbstractBugzillaOperation;
@@ -444,7 +445,6 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 	public void testXmlRpcInstalled() throws Exception {
 		int uID = -1;
 		IProgressMonitor monitor = new NullProgressMonitor();
-		BugzillaFixture a = BugzillaFixture.current();
 		if (!BugzillaFixture.current().isXmlRpcEnabled()) {
 			try {
 				uID = bugzillaClient.login(monitor);

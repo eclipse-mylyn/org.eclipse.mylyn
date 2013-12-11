@@ -305,5 +305,4 @@ public class BugzillaFixture extends TestFixture {
 	public BugzillaHarness createHarness() {
 		return new BugzillaHarness(this);
 	}
-
 }

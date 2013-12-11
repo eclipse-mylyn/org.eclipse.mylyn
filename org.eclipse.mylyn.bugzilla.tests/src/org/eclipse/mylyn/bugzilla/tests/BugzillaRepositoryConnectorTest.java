@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
+import org.eclipse.mylyn.bugzilla.tests.support.BugzillaTestSupportUtil;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
@@ -957,8 +958,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			AttachmentUtil.postContext(connector, repository, task, "test", attribute, new NullProgressMonitor());
 		} catch (CoreException e) {
 			assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
-			assertTrue(e.getStatus().getMessage().indexOf("invalid username or password") != -1
-					|| e.getStatus().getMessage().indexOf("invalid login or password") != -1);
+			assertTrue(BugzillaTestSupportUtil.isInvalidLogon(e));
 			return;
 		} finally {
 			repository.setCredentials(AuthenticationType.REPOSITORY, oldCreds, false);
