@@ -127,7 +127,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		assertEquals("text  more text \"baz\":http://example.com/foo+bar/baz.gif test\n\n", markup);
+		assertEquals("text  more text [baz | http://example.com/foo+bar/baz.gif] test\n\n", markup);
 	}
 
 	public void testBlockCode() {
@@ -354,6 +354,110 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 		TestUtil.println(markup);
 
 		assertEquals("prefix  suffix\n\n", markup);
+	}
+
+	public void testMonospaceSpan() {
+		builder.beginDocument();
+
+		builder.characters("prefix ");
+
+		builder.beginSpan(SpanType.MONOSPACE, new Attributes());
+		builder.characters("test");
+		builder.endSpan();
+
+		builder.characters(" suffix");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		assertEquals("prefix {{test}} suffix\n\n", markup);
+	}
+
+	public void testLinkSpan() {
+		builder.beginDocument();
+
+		builder.characters("prefix ");
+
+		LinkAttributes attributes = new LinkAttributes();
+		attributes.setHref("http://example.com/target");
+		builder.beginSpan(SpanType.LINK, attributes);
+		builder.characters("test");
+		builder.endSpan();
+
+		builder.characters(" suffix");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		assertEquals("prefix [test | http://example.com/target] suffix\n\n", markup);
+	}
+
+	public void testLinkSpanWithTitle() {
+		builder.beginDocument();
+
+		builder.characters("prefix ");
+
+		LinkAttributes attributes = new LinkAttributes();
+		attributes.setHref("http://example.com/target");
+		attributes.setTitle("Title Words");
+		builder.beginSpan(SpanType.LINK, attributes);
+		builder.characters("test");
+		builder.endSpan();
+
+		builder.characters(" suffix");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		assertEquals("prefix [test | http://example.com/target | Title Words] suffix\n\n", markup);
+	}
+
+	public void testLinkSpanNoText() {
+		builder.beginDocument();
+
+		builder.characters("prefix ");
+
+		LinkAttributes attributes = new LinkAttributes();
+		attributes.setHref("http://example.com/target");
+		builder.beginSpan(SpanType.LINK, attributes);
+		builder.endSpan();
+
+		builder.characters(" suffix");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		assertEquals("prefix [http://example.com/target] suffix\n\n", markup);
+	}
+
+	public void testLinkAlternate() {
+		builder.beginDocument();
+
+		builder.characters("prefix ");
+
+		builder.link("#test", "Test 123");
+
+		builder.characters(" suffix");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		assertEquals("prefix [Test 123 | #test] suffix\n\n", markup);
 	}
 
 	public void testTableWithEmptyCells() {

@@ -556,6 +556,26 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("prefix suffix\n\n", markup);
 	}
 
+	public void testMonospaceSpan() {
+		builder.beginDocument();
+
+		builder.characters("prefix ");
+
+		builder.beginSpan(SpanType.MONOSPACE, new Attributes());
+		builder.characters("text");
+		builder.endSpan();
+
+		builder.characters(" suffix");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		assertEquals("prefix %{font-family:monospace;}text% suffix\n\n", markup);
+	}
+
 	public void testTableWithEmptyCells() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.TABLE, new Attributes());

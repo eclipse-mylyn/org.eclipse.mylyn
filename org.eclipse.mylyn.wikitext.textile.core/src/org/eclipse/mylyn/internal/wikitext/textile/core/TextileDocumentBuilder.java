@@ -369,7 +369,7 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			appendStyle = "text-decoration:underline;";//$NON-NLS-1$
 			break;
 		case MONOSPACE:
-			appendStyle = "text-decoration:underline;";//$NON-NLS-1$
+			appendStyle = "font-family:monospace;";//$NON-NLS-1$
 			break;
 		}
 		if (appendStyle != null) {
@@ -410,7 +410,7 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			break;
 		case MONOSPACE:
 			block = new SpanBlock(spanAttributes, true, false);
-
+			break;
 		case STRONG:
 			block = new ContentBlock("*" + spanAttributes, "*", true, false); //$NON-NLS-1$//$NON-NLS-2$
 			break;

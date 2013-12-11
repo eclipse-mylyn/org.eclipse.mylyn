@@ -26,6 +26,8 @@ import org.eclipse.mylyn.wikitext.core.parser.HtmlParser;
 import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.builder.AbstractMarkupDocumentBuilder;
 
+import com.google.common.base.Strings;
+
 /**
  * a document builder that emits Confluence markup
  * 
@@ -207,15 +209,19 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 		@Override
 		protected void emitContent(String content, boolean extended) throws IOException {
-			if (content.matches("!.*?!")) { //$NON-NLS-1$
+			//[Example|http://example.com|title]
+			// [Example|http://example.com]
+			ConfluenceDocumentBuilder.this.emitContent('[');
+			if (!Strings.isNullOrEmpty(content)) {
 				ConfluenceDocumentBuilder.this.emitContent(content);
-			} else {
-				ConfluenceDocumentBuilder.this.emitContent('"');
-				ConfluenceDocumentBuilder.this.emitContent(content);
-				ConfluenceDocumentBuilder.this.emitContent('"');
+				ConfluenceDocumentBuilder.this.emitContent(" | "); //$NON-NLS-1$
 			}
-			ConfluenceDocumentBuilder.this.emitContent(':');
 			ConfluenceDocumentBuilder.this.emitContent(attributes.getHref());
+			if (!Strings.isNullOrEmpty(attributes.getTitle())) {
+				ConfluenceDocumentBuilder.this.emitContent(" | "); //$NON-NLS-1$
+				ConfluenceDocumentBuilder.this.emitContent(attributes.getTitle());
+			}
+			ConfluenceDocumentBuilder.this.emitContent(']');
 		}
 	}
 
@@ -320,6 +326,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			break;
 		case MONOSPACE:
 			block = new ContentBlock("{{", "}}", true, false); //$NON-NLS-1$//$NON-NLS-2$
+			break;
 		case STRONG:
 			block = new ContentBlock("*" + spanAttributes, "*", true, false); //$NON-NLS-1$//$NON-NLS-2$
 			break;
@@ -421,16 +428,12 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	@Override
 	public void link(Attributes attributes, String hrefOrHashName, String text) {
 		assertOpenBlock();
-		try {
-			currentBlock.write('"');
-			writeAttributes(attributes);
-			currentBlock.write(text);
-			currentBlock.write('"');
-			currentBlock.write(':');
-			currentBlock.write(hrefOrHashName);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		LinkAttributes linkAttributes = new LinkAttributes();
+		linkAttributes.setTitle(attributes.getTitle());
+		linkAttributes.setHref(hrefOrHashName);
+		beginSpan(SpanType.LINK, linkAttributes);
+		characters(text);
+		endSpan();
 	}
 
 	@Override
