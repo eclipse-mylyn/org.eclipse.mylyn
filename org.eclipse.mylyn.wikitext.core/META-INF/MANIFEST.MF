@@ -11,6 +11,7 @@ Export-Package: org.eclipse.mylyn.internal.wikitext.core.parser.builder;x-intern
  org.eclipse.mylyn.internal.wikitext.core.validation;x-friends:="org.eclipse.mylyn.wikitext.ui",
  org.eclipse.mylyn.wikitext.core.parser,
  org.eclipse.mylyn.wikitext.core.parser.builder,
+ org.eclipse.mylyn.wikitext.core.parser.builder.event,
  org.eclipse.mylyn.wikitext.core.parser.markup,
  org.eclipse.mylyn.wikitext.core.parser.markup.block,
  org.eclipse.mylyn.wikitext.core.parser.markup.phrase,
@@ -19,7 +20,6 @@ Export-Package: org.eclipse.mylyn.internal.wikitext.core.parser.builder;x-intern
  org.eclipse.mylyn.wikitext.core.parser.util,
  org.eclipse.mylyn.wikitext.core.util,
  org.eclipse.mylyn.wikitext.core.validation
-Bundle-ActivationPolicy: lazy
 Require-Bundle: org.jsoup;bundle-version="1.7.2";resolution:=optional;x-installation:=greedy,
  com.google.guava;bundle-version="12.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

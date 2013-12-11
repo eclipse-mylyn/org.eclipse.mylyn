@@ -15,10 +15,12 @@ Require-Bundle: org.jsoup;bundle-version="1.7.2";resolution:=optional;x-installa
 Export-Package: org.eclipse.mylyn.internal.wikitext;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.core.parser.builder;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.core.parser.html;x-internal:=true,
+ org.eclipse.mylyn.internal.wikitext.core.test;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.core.util;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.core.util.css;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.core.validation;x-internal:=true,
  org.eclipse.mylyn.wikitext.core.parser;x-internal:=true,
  org.eclipse.mylyn.wikitext.core.parser.builder;x-internal:=true,
+ org.eclipse.mylyn.wikitext.core.parser.builder.event;x-internal:=true,
  org.eclipse.mylyn.wikitext.core.parser.markup;x-internal:=true,
  org.eclipse.mylyn.wikitext.core.util;x-internal:=true
