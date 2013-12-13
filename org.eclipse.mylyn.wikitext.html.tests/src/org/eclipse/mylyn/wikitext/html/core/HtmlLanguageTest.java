@@ -27,6 +27,7 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.jsoup.Jsoup;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -71,6 +72,17 @@ public class HtmlLanguageTest {
 	}
 
 	@Test
+	public void parseMalformed() {
+		assertProcessContent(loadResourceContent("parseMalformed_expected.xml"),
+				loadResourceContent("parseMalformed_input.html"), true);
+	}
+
+	@Test
+	public void jsoupIsAvailableForMalformedHtmlParsing() {
+		assertNotNull(Jsoup.parse("one<br>two"));
+	}
+
+	@Test
 	public void newDocumentBuilder() {
 		Writer out = new StringWriter();
 		DocumentBuilder builder = new HtmlLanguage().createDocumentBuilder(out);
@@ -87,7 +99,7 @@ public class HtmlLanguageTest {
 		builder.characters("test");
 		builder.endBlock();
 		builder.endDocument();
-		assertEquals(loadResourceContent("newDocumentBuilderIsFormatting"), out.toString());
+		assertEquals(loadResourceContent("newDocumentBuilderIsFormatting.xml"), out.toString());
 	}
 
 	@Test
@@ -99,7 +111,7 @@ public class HtmlLanguageTest {
 		builder.characters("test");
 		builder.endBlock();
 		builder.endDocument();
-		assertEquals(loadResourceContent("newDocumentBuilderIsNotFormatting"), out.toString());
+		assertEquals(loadResourceContent("newDocumentBuilderIsNotFormatting.xml"), out.toString());
 	}
 
 	@Test
@@ -117,7 +129,7 @@ public class HtmlLanguageTest {
 
 	private String loadResourceContent(String resourceName) {
 		try {
-			String fileName = HtmlLanguageTest.class.getSimpleName() + '_' + resourceName + ".xml";
+			String fileName = HtmlLanguageTest.class.getSimpleName() + '_' + resourceName;
 			URL resource = HtmlLanguageTest.class.getResource(fileName);
 			return Resources.toString(resource, Charsets.UTF_8);
 		} catch (IOException e) {
