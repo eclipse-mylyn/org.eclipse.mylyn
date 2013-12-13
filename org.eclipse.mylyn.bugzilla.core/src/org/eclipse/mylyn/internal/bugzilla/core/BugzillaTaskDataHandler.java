@@ -546,7 +546,6 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		createAttribute(taskData, BugzillaAttribute.SHORT_DESC);
 
 		TaskAttribute attributeVersion = createAttribute(taskData, BugzillaAttribute.VERSION);
-		attributeVersion.getMetaData().setRequired(true);
 		optionValues = repositoryConfiguration.getProductOptionValues(BugzillaAttribute.VERSION,
 				productAttribute.getValue());
 		Collections.sort(optionValues);
@@ -558,7 +557,6 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		}
 
 		TaskAttribute attributeComponent = createAttribute(taskData, BugzillaAttribute.COMPONENT);
-		attributeComponent.getMetaData().setRequired(true);
 		optionValues = repositoryConfiguration.getProductOptionValues(BugzillaAttribute.COMPONENT,
 				productAttribute.getValue());
 		Collections.sort(optionValues);
@@ -609,7 +607,6 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		}
 
 		TaskAttribute attributeOPSYS = createAttribute(taskData, BugzillaAttribute.OP_SYS);
-		attributeOPSYS.getMetaData().setRequired(true);
 		optionValues = repositoryConfiguration.getOptionValues(BugzillaAttribute.OP_SYS);
 		for (String option : optionValues) {
 			attributeOPSYS.putOption(option, option);
@@ -620,7 +617,6 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		}
 
 		TaskAttribute attributePriority = createAttribute(taskData, BugzillaAttribute.PRIORITY);
-		attributePriority.getMetaData().setRequired(true);
 		optionValues = repositoryConfiguration.getOptionValues(BugzillaAttribute.PRIORITY);
 		for (String option : optionValues) {
 			attributePriority.putOption(option, option);
@@ -631,7 +627,6 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		}
 
 		TaskAttribute attributeSeverity = createAttribute(taskData, BugzillaAttribute.BUG_SEVERITY);
-		attributeSeverity.getMetaData().setRequired(true);
 		optionValues = repositoryConfiguration.getOptionValues(BugzillaAttribute.BUG_SEVERITY);
 		for (String option : optionValues) {
 			attributeSeverity.putOption(option, option);

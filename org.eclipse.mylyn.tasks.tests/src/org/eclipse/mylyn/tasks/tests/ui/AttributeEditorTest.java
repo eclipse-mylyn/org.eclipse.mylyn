@@ -50,8 +50,8 @@ public class AttributeEditorTest extends TestCase {
 		}
 
 		@Override
-		public boolean isRequired() {
-			return super.isRequired();
+		public boolean needsValue() {
+			return super.needsValue();
 		}
 
 		@Override
@@ -90,22 +90,22 @@ public class AttributeEditorTest extends TestCase {
 	public void testDetermineNotRequired() throws Exception {
 		TaskAttribute attribute = new TaskAttribute(taskData.getRoot(), "not.required.field");
 		MockAttributeEditor editor = new MockAttributeEditor(manager, attribute);
-		assertFalse(editor.isRequired());
+		assertFalse(editor.needsValue());
 		attribute.setValue("");
-		assertFalse(editor.isRequired());
+		assertFalse(editor.needsValue());
 		attribute.setValue("abc");
-		assertFalse(editor.isRequired());
+		assertFalse(editor.needsValue());
 	}
 
 	public void testDetermineRequired() throws Exception {
 		TaskAttribute attribute = new TaskAttribute(taskData.getRoot(), "a.required.field");
 		attribute.getMetaData().setRequired(true);
 		MockAttributeEditor editor = new MockAttributeEditor(manager, attribute);
-		assertTrue(editor.isRequired());
+		assertTrue(editor.needsValue());
 		attribute.setValue("");
-		assertTrue(editor.isRequired());
+		assertTrue(editor.needsValue());
 		attribute.setValue("abc");
-		assertFalse(editor.isRequired());
+		assertFalse(editor.needsValue());
 	}
 
 	public void testDecorateRequired() throws Exception {
@@ -145,9 +145,9 @@ public class AttributeEditorTest extends TestCase {
 			}
 
 			@Override
-			public boolean isRequired() {
+			public boolean needsValue() {
 				eventLog.append("asked");
-				return super.isRequired();
+				return super.needsValue();
 			}
 
 		};

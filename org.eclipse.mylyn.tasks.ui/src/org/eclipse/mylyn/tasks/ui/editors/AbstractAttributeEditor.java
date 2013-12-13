@@ -93,6 +93,16 @@ public abstract class AbstractAttributeEditor {
 		}
 	};
 
+	private final DisposeListener disposeDecorationListener = new DisposeListener() {
+		@Override
+		public void widgetDisposed(DisposeEvent e) {
+			if (decoration != null) {
+				decoration.dispose();
+				decoration = null;
+			}
+		}
+	};
+
 	private ControlDecoration decoration;
 
 	/**
@@ -249,11 +259,15 @@ public abstract class AbstractAttributeEditor {
 	}
 
 	private void updateRequiredDecoration() {
-		if (getLabelControl() != null && isRequired()) {
-			decorateRequired();
-		} else if (decoration != null) {
-			decoration.hide();
-			decoration.dispose();
+		if (getLabelControl() != null) {
+			if (needsValue()) {
+				decorateRequired();
+			} else if (decoration != null) {
+				decoration.hide();
+				decoration.dispose();
+				decoration = null;
+				getLabelControl().removeDisposeListener(disposeDecorationListener);
+			}
 		}
 	}
 
@@ -261,24 +275,22 @@ public abstract class AbstractAttributeEditor {
 	 * @since 3.11
 	 */
 	protected void decorateRequired() {
-		decoration = new ControlDecoration(getLabelControl(), SWT.TOP | SWT.RIGHT);
-		decoration.setDescriptionText(Messages.AbstractAttributeEditor_AttributeIsRequired);
-		decoration.setMarginWidth(0);
-		Image image = FieldDecorationRegistry.getDefault()
-				.getFieldDecoration(FieldDecorationRegistry.DEC_ERROR)
-				.getImage();
-		decoration.setImage(image);
-		getLabelControl().addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent e) {
-				decoration.dispose();
-			}
-		});
+		if (decoration == null) {
+			decoration = new ControlDecoration(getLabelControl(), SWT.TOP | SWT.RIGHT);
+			decoration.setDescriptionText(Messages.AbstractAttributeEditor_AttributeIsRequired);
+			decoration.setMarginWidth(0);
+			Image image = FieldDecorationRegistry.getDefault()
+					.getFieldDecoration(FieldDecorationRegistry.DEC_ERROR)
+					.getImage();
+			decoration.setImage(image);
+			getLabelControl().addDisposeListener(disposeDecorationListener);
+		}
 	}
 
 	/**
 	 * @since 3.11
 	 */
-	protected boolean isRequired() {
+	protected boolean needsValue() {
 		boolean isRequired = getTaskAttribute().getMetaData().isRequired();
 		boolean hasValue = !StringUtils.isEmpty(getTaskAttribute().getValue());
 		return isRequired && !hasValue;

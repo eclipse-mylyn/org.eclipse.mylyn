@@ -149,7 +149,11 @@ public final class TaskAttribute {
 	public static final String META_READ_ONLY = "task.meta.readOnly"; //$NON-NLS-1$
 
 	/**
-	 * @since 3.8
+	 * Key for {@link TaskAttributeMetaData} used to specify that a field requires a value before it can be submitted to
+	 * the server. This meta-data is used by the framework as a UI hint and does not guarantee that a connector will
+	 * enforce compliance before attempting to post task data.
+	 * 
+	 * @since 3.11
 	 */
 	public static final String META_REQUIRED = "task.meta.required"; //$NON-NLS-1$
 
