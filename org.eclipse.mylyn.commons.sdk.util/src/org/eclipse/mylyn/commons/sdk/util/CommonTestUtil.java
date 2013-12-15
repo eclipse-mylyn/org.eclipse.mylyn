@@ -259,7 +259,8 @@ public class CommonTestUtil {
 	}
 
 	private static boolean isOsgiVersion310orNewer(ClassLoader classLoader) {
-		return classLoader.getClass().getName().equals("org.eclipse.osgi.internal.loader.ModuleClassLoader");
+		return classLoader.getClass().getName().equals("org.eclipse.osgi.internal.loader.ModuleClassLoader") // user before 4.4M4
+				|| classLoader.getClass().getName().equals("org.eclipse.osgi.internal.loader.EquinoxClassLoader");
 	}
 
 	public static File getFile(Object source, String filename) throws IOException {
