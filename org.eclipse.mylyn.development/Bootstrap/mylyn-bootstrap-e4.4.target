@@ -55,7 +55,7 @@
 <unit id="org.hamcrest.core" version="1.1.0.v20090501071000"/>
 <unit id="org.hamcrest.library" version="1.1.0.v20090501071000"/>
 <unit id="org.hamcrest.generator" version="1.1.0.v20090501071000"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/I20131123181249/repository/"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20131206110810/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.common.feature.group" version="0.0.0"/>
