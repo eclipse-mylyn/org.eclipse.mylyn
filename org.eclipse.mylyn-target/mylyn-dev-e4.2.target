@@ -4,20 +4,6 @@
 <target name="mylyn-dev-e4.2" sequenceNumber="17">
 <locations>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.antlr.runtime" version="3.0.0.v200803061811"/>
-<unit id="org.apache.lucene.core" version="2.9.1.v201101211721"/>
-<unit id="org.hamcrest" version="1.1.0.v20090501071000"/>
-<unit id="org.hamcrest.core" version="1.1.0.v20090501071000"/>
-<unit id="org.hamcrest.generator" version="1.1.0.v20090501071000"/>
-<unit id="org.hamcrest.integration" version="1.1.0.v201303031500"/>
-<unit id="org.hamcrest.library" version="1.1.0.v20090501071000"/>
-<unit id="org.hamcrest.text" version="1.1.0.v20090501071000"/>
-<unit id="org.junit" version="4.8.2.v4_8_2_v20130308-0413"/>
-<unit id="org.mockito" version="1.8.4.v201303031500"/>
-<unit id="org.objenesis" version="1.0.0.v201105211943"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/I20131123181249/repository/"/>
-</location>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.cdt.platform.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.ecf.core.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.ecore.feature.group" version="0.0.0"/>
@@ -32,6 +18,7 @@
 <unit id="org.eclipse.mylyn.builds.sdk.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.mylyn.commons.sdk.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.mylyn.commons.soap_feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.commons.tck.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.mylyn.context.sdk.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.mylyn.docs.sdk.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.mylyn.reviews.sdk.feature.feature.group" version="0.0.0"/>
