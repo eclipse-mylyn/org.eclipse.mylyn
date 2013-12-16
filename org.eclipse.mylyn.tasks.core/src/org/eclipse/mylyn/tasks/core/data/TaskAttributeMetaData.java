@@ -107,6 +107,14 @@ public class TaskAttributeMetaData {
 		return Boolean.parseBoolean(taskAttribute.getMetaDatum(TaskAttribute.META_REQUIRED));
 	}
 
+	/**
+	 * @since 3.11
+	 * @see TaskAttribute#META_ATTRIBUTE_MEDIA_TYPE
+	 */
+	public String getMediaType() {
+		return taskAttribute.getMetaDatum(TaskAttribute.META_ATTRIBUTE_MEDIA_TYPE);
+	}
+
 	public TaskAttributeMetaData putValue(String key, String value) {
 		taskAttribute.putMetaDatum(key, value);
 		return this;
@@ -189,6 +197,20 @@ public class TaskAttributeMetaData {
 	 */
 	public TaskAttributeMetaData setRequired(boolean value) {
 		taskAttribute.putMetaDatum(TaskAttribute.META_REQUIRED, Boolean.toString(value));
+		return this;
+	}
+
+	/**
+	 * @since 3.11
+	 * @see TaskAttribute#META_ATTRIBUTE_MEDIA_TYPE
+	 * @return this
+	 */
+	public TaskAttributeMetaData setMediaType(String value) {
+		if (value != null) {
+			taskAttribute.putMetaDatum(TaskAttribute.META_ATTRIBUTE_MEDIA_TYPE, value);
+		} else {
+			taskAttribute.removeMetaDatum(TaskAttribute.META_ATTRIBUTE_MEDIA_TYPE);
+		}
 		return this;
 	}
 

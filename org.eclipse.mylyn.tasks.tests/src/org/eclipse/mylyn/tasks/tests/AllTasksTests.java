@@ -43,6 +43,7 @@ import org.eclipse.mylyn.tasks.tests.ui.TaskListSynchronizationSchedulerTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskListViewTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskRelationHyperlinkDetectorTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.AttachmentTableLabelProviderTest;
+import org.eclipse.mylyn.tasks.tests.ui.editor.TaskEditorExtensionsTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.EditorUtilTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.PlanningPartTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.RegionComparatorTest;
@@ -162,6 +163,7 @@ public class AllTasksTests {
 		suite.addTestSuite(RepositoryConnectorContributorTest.class);
 		suite.addTestSuite(TaskInitializationDataTest.class);
 		suite.addTestSuite(TaskDataDiffTest.class);
+		suite.addTestSuite(TaskEditorExtensionsTest.class);
 	}
 
 }

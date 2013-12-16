@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -22,9 +23,13 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.IPluginContribution;
+
+import com.google.common.collect.Multimap;
+import com.google.common.net.MediaType;
 
 /**
  * @author David Green
@@ -34,6 +39,8 @@ public class TaskEditorExtensions {
 	public static final String REPOSITORY_PROPERTY_EDITOR_EXTENSION = "editorExtension"; //$NON-NLS-1$
 
 	public static final String REPOSITORY_PROPERTY_AVATAR_SUPPORT = "avatarSupport"; //$NON-NLS-1$
+
+	private static final String MARKUP_KEY = "markup"; //$NON-NLS-1$
 
 	private static Map<String, RegisteredTaskEditorExtension> extensionsById = new HashMap<String, RegisteredTaskEditorExtension>();
 
@@ -97,6 +104,41 @@ public class TaskEditorExtensions {
 			return taskEditorExtension == null ? null : taskEditorExtension.getExtension();
 		}
 		return null;
+	}
+
+	/**
+	 * get a task editor extension for a specific task attribute
+	 * 
+	 * @param taskRepository
+	 * @param taskAttribute
+	 * @return the extension, or null if there is none
+	 * @see #getTaskEditorExtension(TaskRepository);
+	 * @since 3.11
+	 */
+	public static AbstractTaskEditorExtension getTaskEditorExtension(TaskRepository taskRepository,
+			TaskAttribute taskAttribute) {
+		init();
+		String input = taskAttribute.getMetaData().getMediaType();
+		if (input != null) {
+			try {
+				MediaType media = MediaType.parse(input);
+				Multimap<String, String> parameters = media.parameters();
+				if (parameters.containsKey(MARKUP_KEY)) {
+					Iterator<String> iter = parameters.get(MARKUP_KEY).iterator();
+					String markup = iter.next();
+					SortedSet<RegisteredTaskEditorExtension> extensions = getTaskEditorExtensions();
+					for (RegisteredTaskEditorExtension extension : extensions) {
+						if (markup.equals(extension.getName())) {
+							return extension.getExtension();
+						}
+					}
+				}
+			} catch (IllegalArgumentException e) {
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, String.format(
+						"Unable to parse markup type for attribute %s", taskAttribute.toString()), e)); //$NON-NLS-1$
+			}
+		}
+		return getTaskEditorExtension(taskRepository);
 	}
 
 	public static String getTaskEditorExtensionId(TaskRepository taskRepository) {
