@@ -81,6 +81,13 @@ public class HtmlCleanerTest {
 	}
 
 	@Test
+	public void preserveSpanWithClass() {
+		String result = clean("<p>foo <span class=\"test\">bar</span></p>");
+
+		assertTrue(result.contains("<p>foo <span class=\"test\">bar</span></p>"));
+	}
+
+	@Test
 	public void testRemoveExcessiveStyles_lots_of_styles() {
 		String result = clean("<p>foo <span style=\"font-style: italic;font-weight: bold; color: blue; bogus: bad; ignoreThis: too\"> bar</span></p>");
 

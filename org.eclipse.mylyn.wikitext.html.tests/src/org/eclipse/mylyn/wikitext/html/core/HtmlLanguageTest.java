@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.wikitext.html.core;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -57,7 +58,7 @@ public class HtmlLanguageTest {
 	public void parse() {
 		String sourceHtml = "<p>one <b>two</b> three</p>";
 		String expectedHtml = "<p>one <b>two</b> three</p>";
-		assertProcessContent(expectedHtml, sourceHtml, false);
+		assertProcessContent(expectedHtml, sourceHtml, false, true);
 	}
 
 	@Test
@@ -68,13 +69,13 @@ public class HtmlLanguageTest {
 				"<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/></head>" + //
 				"<body><p>one <b>two</b> three</p></body>" + //
 				"</html>";
-		assertProcessContent(expectedHtml, sourceHtml, true);
+		assertProcessContent(expectedHtml, sourceHtml, true, true);
 	}
 
 	@Test
 	public void parseMalformed() {
 		assertProcessContent(loadResourceContent("parseMalformed_expected.xml"),
-				loadResourceContent("parseMalformed_input.html"), true);
+				loadResourceContent("parseMalformed_input.html"), true, true);
 	}
 
 	@Test
@@ -122,9 +123,40 @@ public class HtmlLanguageTest {
 	@Test
 	public void cloneSupported() {
 		HtmlLanguage language = new HtmlLanguage();
-		HtmlLanguage cloned = (HtmlLanguage) language.clone();
+		HtmlLanguage cloned = language.clone();
 		assertNotNull(cloned);
 		assertEquals(language.getName(), cloned.getName());
+	}
+
+	@Test
+	public void parseCleansHtmlDefaultsToTrue() {
+		assertTrue(new HtmlLanguage().isParseCleansHtml());
+	}
+
+	@Test
+	public void parseCleansHtml() {
+		HtmlLanguage htmlLanguage = new HtmlLanguage();
+		htmlLanguage.setParseCleansHtml(true);
+		assertTrue(htmlLanguage.isParseCleansHtml());
+		htmlLanguage.setParseCleansHtml(false);
+		assertFalse(htmlLanguage.isParseCleansHtml());
+	}
+
+	@Test
+	public void parseCleansHtmlSetOnClone() {
+		HtmlLanguage htmlLanguage = new HtmlLanguage();
+		htmlLanguage.setParseCleansHtml(true);
+		assertEquals(htmlLanguage.isParseCleansHtml(), htmlLanguage.clone().isParseCleansHtml());
+		htmlLanguage.setParseCleansHtml(false);
+		assertEquals(htmlLanguage.isParseCleansHtml(), htmlLanguage.clone().isParseCleansHtml());
+	}
+
+	@Test
+	public void parseCleansHtmlAffectsParsing() {
+		assertProcessContent("test <span class=\"test\">one</span> two", "test<span class=\"test\"> one </span>two",
+				false, true);
+		assertProcessContent("test<span class=\"test\"> one </span>two", "test<span class=\"test\"> one </span>two",
+				false, false);
 	}
 
 	private String loadResourceContent(String resourceName) {
@@ -137,11 +169,13 @@ public class HtmlLanguageTest {
 		}
 	}
 
-	protected void assertProcessContent(String expectedHtml, String sourceHtml, boolean asDocument) {
+	protected void assertProcessContent(String expectedHtml, String sourceHtml, boolean asDocument,
+			boolean parseCleansHtml) {
 		Writer out = new StringWriter();
 		HtmlDocumentBuilder builder = new HtmlDocumentBuilder(out);
 
 		HtmlLanguage language = new HtmlLanguage();
+		language.setParseCleansHtml(parseCleansHtml);
 		MarkupParser markupParser = new MarkupParser(language, builder);
 		markupParser.parse(sourceHtml, asDocument);
 

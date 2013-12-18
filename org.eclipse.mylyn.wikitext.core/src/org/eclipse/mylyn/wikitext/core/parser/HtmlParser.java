@@ -21,12 +21,13 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * a parser for HTML, driving {@link DocumentBuilder}. Depending on parsers available at runtime, input may need to be
+ * A parser for HTML, driving {@link DocumentBuilder}. Depending on parsers available at runtime, input may need to be
  * well-formed XHTML.
  * 
  * @see DocumentBuilder
  * @author David Green
  * @since 1.6
+ * @see #instanceWithHtmlCleanupRules()
  */
 public class HtmlParser {
 

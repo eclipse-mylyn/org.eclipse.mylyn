@@ -75,6 +75,7 @@ public class HtmlSubsetLanguage extends HtmlLanguage {
 				supportedSpanTypes);
 		copy.setFileExtensions(getFileExtensions());
 		copy.setExtendsLanguage(getExtendsLanguage());
+		copy.setParseCleansHtml(isParseCleansHtml());
 		return copy;
 	}
 }

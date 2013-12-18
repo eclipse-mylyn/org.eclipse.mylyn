@@ -23,6 +23,7 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentHandler;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
+import org.eclipse.mylyn.wikitext.html.core.HtmlLanguage;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -103,13 +104,22 @@ public class HtmlSubsetLanguageTest {
 		HtmlSubsetLanguage language = new HtmlSubsetLanguage("Test", documentHandler, 6, Sets.newHashSet(
 				BlockType.PARAGRAPH, BlockType.DIV, BlockType.QUOTE), Sets.newHashSet(SpanType.CITATION,
 				SpanType.EMPHASIS));
-		HtmlSubsetLanguage cloned = (HtmlSubsetLanguage) language.clone();
+		HtmlSubsetLanguage cloned = language.clone();
 
 		assertEquals(language.getName(), cloned.getName());
 		assertEquals(language.getSupportedBlockTypes(), cloned.getSupportedBlockTypes());
 		assertEquals(language.getSupportedHeadingLevel(), cloned.getSupportedHeadingLevel());
 		assertEquals(language.getSupportedSpanTypes(), cloned.getSupportedSpanTypes());
 
+	}
+
+	@Test
+	public void parseCleansHtmlSetOnClone() {
+		HtmlLanguage htmlLanguage = newHtmlSubsetLanguage(BlockType.PARAGRAPH);
+		htmlLanguage.setParseCleansHtml(true);
+		assertEquals(htmlLanguage.isParseCleansHtml(), htmlLanguage.clone().isParseCleansHtml());
+		htmlLanguage.setParseCleansHtml(false);
+		assertEquals(htmlLanguage.isParseCleansHtml(), htmlLanguage.clone().isParseCleansHtml());
 	}
 
 	private void assertSupportedHeadingLevel(int level) {
