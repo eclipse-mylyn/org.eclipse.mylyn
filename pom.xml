@@ -95,9 +95,6 @@
     <module>org.eclipse.mylyn.help.ui</module>
     <module>org.eclipse.mylyn.sdk-feature</module>
     <module>org.eclipse.mylyn.test-feature</module>
-    <module>org.eclipse.mylyn.oslc.core</module>
-    <module>org.eclipse.mylyn.oslc.tests</module>
-    <module>org.eclipse.mylyn.oslc.ui</module>
     <module>org.eclipse.mylyn.tasks-site</module>
     <module>org.eclipse.mylyn.tasks-target</module>
     <module>org.eclipse.mylyn.tasks.activity.core</module>
