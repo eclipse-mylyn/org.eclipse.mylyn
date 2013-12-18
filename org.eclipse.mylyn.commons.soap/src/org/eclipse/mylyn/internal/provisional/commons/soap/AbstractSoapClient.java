@@ -25,9 +25,11 @@ import org.eclipse.mylyn.internal.commons.soap.SoapRequest;
 
 /**
  * Base class for clients that access SOAP servers.
- * 
+ *
+ * @deprecated The org.eclipse.mylyn.commons.soap bundle will be removed in Mylyn 3.12. See bug 421379 for details.
  * @author Steffen Pingel
  */
+@Deprecated
 public abstract class AbstractSoapClient {
 
 	/**
@@ -36,7 +38,7 @@ public abstract class AbstractSoapClient {
 	 * fails on the second attempt
 	 * {@link AbstractWebLocation#requestCredentials(AuthenticationType, String, IProgressMonitor)} is invoked and the
 	 * cycle is restarted from the beginning.
-	 * 
+	 *
 	 * @param <T>
 	 *            type for the result of <code>runnable</code>
 	 * @param monitor
@@ -77,7 +79,7 @@ public abstract class AbstractSoapClient {
 
 	/**
 	 * Executes <code>runnable</code>. Returns after runnable has completed.
-	 * 
+	 *
 	 * @param <T>
 	 *            type for the result of <code>runnable</code>
 	 * @param monitor
@@ -130,7 +132,7 @@ public abstract class AbstractSoapClient {
 	/**
 	 * Returns if <code>exception</code> indicates an authentication error. If true is returned the original request can
 	 * be retried with different credentials.
-	 * 
+	 *
 	 * @see #call(IProgressMonitor, Callable)
 	 */
 	protected abstract boolean isAuthenticationException(Exception exception);
@@ -138,7 +140,7 @@ public abstract class AbstractSoapClient {
 	/**
 	 * If a request fails due to an authentication error this method can be used to re-establish a session. If true is
 	 * returned the original request is retried.
-	 * 
+	 *
 	 * @param monitor
 	 * @return if false is returned the
 	 * @see #call(IProgressMonitor, Callable)

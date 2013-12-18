@@ -1,12 +1,12 @@
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,22 +16,22 @@
 /*
  * Original class;
  *  Axis 1.4: src/org/apache/axis/transport/http/CommonsHTTPSender.java
- * 
+ *
  * Modifications for the Mylyn project:
- * 
+ *
  * Steffen Pingel
- *   - renamed class to CommonsHttpSender  
- *   - changed package from org.apache.axis.transport.http to 
- *     org.eclipse.mylyn.internal.jira.core.service.soap 
+ *   - renamed class to CommonsHttpSender
+ *   - changed package from org.apache.axis.transport.http to
+ *     org.eclipse.mylyn.internal.jira.core.service.soap
  *   - changed visibility of addContextInfo() from private to protected
  *   - reformatted source and added @SuppressWarnings annotation
- *   - commented calls to commons logging out 
+ *   - commented calls to commons logging out
  *   - added timeout thread for idle connections
  *   - added AxisHttpFault to provide additional details in case of http error
- * Pawel Niewiadomski 
+ * Pawel Niewiadomski
  *   - fixed user agent handling (bug 288441)
  * Robert Munteanu
- *    - allow subclasses to override creation of HttpMethod instances (bug 360780) 
+ *    - allow subclasses to override creation of HttpMethod instances (bug 360780)
  */
 package org.eclipse.mylyn.internal.provisional.commons.soap;
 
@@ -89,12 +89,14 @@ import org.eclipse.mylyn.commons.net.WebUtil;
 
 /**
  * This class uses Jakarta Commons's HttpClient to call a SOAP server.
- * 
+ *
+ * @deprecated The org.eclipse.mylyn.commons.soap bundle will be removed in Mylyn 3.12. See bug 421379 for details.
  * @author Davanum Srinivas (dims@yahoo.com) History: By Chandra Talluri Modifications done for maintaining sessions.
  *         Cookies needed to be set on HttpState not on MessageContext, since ttpMethodBase overwrites the cookies from
  *         HttpState. Also we need to setCookiePolicy on HttpState to CookiePolicy.COMPATIBILITY else it is defaulting
  *         to RFC2109Spec and adding Version information to it and tomcat server not recognizing it
  */
+@Deprecated
 @SuppressWarnings({ "serial", "rawtypes", "null" })
 public class CommonsHttpSender extends BasicHandler {
 
@@ -118,7 +120,7 @@ public class CommonsHttpSender extends BasicHandler {
 	/**
 	 * invoke creates a socket connection, sends the request SOAP message and then reads the response SOAP message back
 	 * from the SOAP server
-	 * 
+	 *
 	 * @param msgContext
 	 *            the messsage context
 	 * @throws AxisFault
@@ -182,7 +184,7 @@ public class CommonsHttpSender extends BasicHandler {
 			}
 
 			// don't forget the cookies!
-			// Cookies need to be set on HttpState, since HttpMethodBase 
+			// Cookies need to be set on HttpState, since HttpMethodBase
 			// overwrites the cookies from HttpState
 			if (msgContext.getMaintainSession()) {
 				HttpState state = httpClient.getState();
@@ -226,7 +228,7 @@ public class CommonsHttpSender extends BasicHandler {
 				}
 			}
 
-			// wrap the response body stream so that close() also releases 
+			// wrap the response body stream so that close() also releases
 			// the connection back to the pool.
 			InputStream releaseConnectionOnCloseStream = createConnectionReleasingInputStream(method);
 
@@ -275,7 +277,7 @@ public class CommonsHttpSender extends BasicHandler {
 				}
 			}
 
-			// always release the connection back to the pool if 
+			// always release the connection back to the pool if
 			// it was one way invocation
 			if (msgContext.isPropertyTrue("axis.one.way")) { //$NON-NLS-1$
 				method.releaseConnection();
@@ -302,7 +304,7 @@ public class CommonsHttpSender extends BasicHandler {
 	/**
 	 * little helper function for cookies. fills up the message context with a string or an array of strings (if there
 	 * are more than one Set-Cookie)
-	 * 
+	 *
 	 * @param cookieName
 	 * @param setCookieName
 	 * @param cookie
@@ -350,7 +352,7 @@ public class CommonsHttpSender extends BasicHandler {
 
 	/**
 	 * Add cookies from message context
-	 * 
+	 *
 	 * @param msgContext
 	 * @param state
 	 * @param header
@@ -375,7 +377,7 @@ public class CommonsHttpSender extends BasicHandler {
 
 	/**
 	 * add cookie to state
-	 * 
+	 *
 	 * @param state
 	 * @param cookie
 	 */
@@ -386,7 +388,7 @@ public class CommonsHttpSender extends BasicHandler {
 
 	/**
 	 * cleanup the cookie value.
-	 * 
+	 *
 	 * @param cookie
 	 *            initial cookie value
 	 * @return a cleaned up cookie value.
@@ -424,7 +426,7 @@ public class CommonsHttpSender extends BasicHandler {
 			} else {
 				if (tcp.getProxyUser().length() != 0) {
 					Credentials proxyCred = new UsernamePasswordCredentials(tcp.getProxyUser(), tcp.getProxyPassword());
-					// if the username is in the form "user\domain" 
+					// if the username is in the form "user\domain"
 					// then use NTCredentials instead.
 					int domainIndex = tcp.getProxyUser().indexOf("\\"); //$NON-NLS-1$
 					if (domainIndex > 0) {
@@ -445,7 +447,7 @@ public class CommonsHttpSender extends BasicHandler {
 
 	/**
 	 * Extracts info from message context.
-	 * 
+	 *
 	 * @param method
 	 *            Post method
 	 * @param httpClient
@@ -522,7 +524,7 @@ public class CommonsHttpSender extends BasicHandler {
 			method.addRequestHeader(HTTPConstants.HEADER_CONTENT_ENCODING, HTTPConstants.COMPRESSION_GZIP);
 		}
 
-		// Transfer MIME headers of SOAPMessage to HTTP headers. 
+		// Transfer MIME headers of SOAPMessage to HTTP headers.
 		MimeHeaders mimeHeaders = msg.getMimeHeaders();
 		if (mimeHeaders != null) {
 			for (Iterator i = mimeHeaders.getAllHeaders(); i.hasNext();) {
@@ -574,7 +576,7 @@ public class CommonsHttpSender extends BasicHandler {
 
 	/**
 	 * Check if the specified host is in the list of non proxy hosts.
-	 * 
+	 *
 	 * @param host
 	 *            host name
 	 * @param nonProxyHosts
@@ -609,7 +611,7 @@ public class CommonsHttpSender extends BasicHandler {
 	/**
 	 * Matches a string against a pattern. The pattern contains two special characters: '*' which means zero or more
 	 * characters,
-	 * 
+	 *
 	 * @param pattern
 	 *            the (non-null) pattern to match against
 	 * @param str
@@ -858,7 +860,7 @@ public class CommonsHttpSender extends BasicHandler {
 					// fall through to doing chunked.
 				}
 			}
-			return -1; // do chunked 
+			return -1; // do chunked
 		}
 
 		private ByteArrayOutputStream cachedStream;

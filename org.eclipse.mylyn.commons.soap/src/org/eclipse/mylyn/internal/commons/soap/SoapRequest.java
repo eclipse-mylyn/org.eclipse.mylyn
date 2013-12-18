@@ -15,8 +15,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 
 /**
+ * @deprecated The org.eclipse.mylyn.commons.soap bundle will be removed in Mylyn 3.12. See bug 421379 for details.
  * @author Steffen Pingel
  */
+@Deprecated
 public class SoapRequest {
 
 	private static ThreadLocal<SoapRequest> currentRequest = new ThreadLocal<SoapRequest>();

@@ -24,7 +24,7 @@ import org.eclipse.mylyn.internal.commons.soap.SoapRequest;
 /**
  * A client for SOAP calls that uses {@link AbstractWebLocation} and is based on {@link CommonsHttpSender}. Specify the
  * client in your soap service configuration:
- * 
+ *
  * <pre>
  * &lt;deployment name=&quot;defaultClientConfig&quot;
  *             xmlns=&quot;http://xml.apache.org/axis/wsdd/&quot;
@@ -34,9 +34,11 @@ import org.eclipse.mylyn.internal.commons.soap.SoapRequest;
  *   ...
  * &lt;/deployment&gt;
  * </pre>
- * 
+ *
+ * @deprecated The org.eclipse.mylyn.commons.soap bundle will be removed in Mylyn 3.12. See bug 421379 for details.
  * @author Steffen Pingel
  */
+@Deprecated
 public class SoapHttpSender extends CommonsHttpSender {
 
 	private static final long serialVersionUID = -5876804777334482128L;

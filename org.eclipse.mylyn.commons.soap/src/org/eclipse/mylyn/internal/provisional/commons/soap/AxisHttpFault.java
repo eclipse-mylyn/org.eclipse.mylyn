@@ -21,9 +21,11 @@ import org.apache.commons.httpclient.HttpMethodBase;
 
 /**
  * Indicates that the server returned an unexpected HTTP error in response to a SOAP call.
- * 
+ *
+ * @deprecated The org.eclipse.mylyn.commons.soap bundle will be removed in Mylyn 3.12. See bug 421379 for details.
  * @author Steffen Pingel
  */
+@Deprecated
 public class AxisHttpFault extends AxisFault {
 
 	private static final long serialVersionUID = -7568493217182396309L;
