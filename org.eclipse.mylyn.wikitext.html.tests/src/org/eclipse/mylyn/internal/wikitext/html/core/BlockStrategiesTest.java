@@ -11,15 +11,19 @@
 
 package org.eclipse.mylyn.internal.wikitext.html.core;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import java.util.List;
 
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 
 public class BlockStrategiesTest {
@@ -90,6 +94,50 @@ public class BlockStrategiesTest {
 		assertSupported(strategies, BlockType.DEFINITION_LIST);
 		assertSupported(strategies, BlockType.DEFINITION_ITEM);
 		assertSupported(strategies, BlockType.DEFINITION_TERM);
+	}
+
+	@Test
+	public void fallBackToUnsupported() {
+		BlockStrategies strategies = new BlockStrategies(Sets.newHashSet(BlockType.PARAGRAPH));
+		List<BlockType> unsupportedBlockTypes = ImmutableList.of(BlockType.TABLE, BlockType.TABLE_ROW,
+				BlockType.BULLETED_LIST, BlockType.NUMERIC_LIST, BlockType.DEFINITION_LIST);
+		for (BlockType blockType : unsupportedBlockTypes) {
+			BlockStrategy strategy = strategies.getStrategy(blockType);
+			assertNotNull(strategy);
+			assertEquals(UnsupportedBlockStrategy.class, strategy.getClass());
+		}
+	}
+
+	@Test
+	public void fallBack() {
+		for (BlockType supportedType : ImmutableList.of(BlockType.PARAGRAPH, BlockType.DIV)) {
+
+			List<BlockType> fallBackTypes = ImmutableList.of(BlockType.CODE, BlockType.DEFINITION_ITEM,
+					BlockType.DEFINITION_TERM, BlockType.FOOTNOTE, BlockType.INFORMATION, BlockType.LIST_ITEM,
+					BlockType.NOTE, BlockType.PREFORMATTED, BlockType.QUOTE, BlockType.TABLE_CELL_HEADER,
+					BlockType.TABLE_CELL_NORMAL, BlockType.TIP, BlockType.WARNING);
+			for (BlockType blockType : fallBackTypes) {
+				assertFallback(supportedType, blockType);
+			}
+		}
+	}
+
+	@Test
+	public void fallBackParagraphToDiv() {
+		assertFallback(BlockType.DIV, BlockType.PARAGRAPH);
+	}
+
+	@Test
+	public void fallBackDivToParagraph() {
+		assertFallback(BlockType.PARAGRAPH, BlockType.DIV);
+	}
+
+	protected void assertFallback(BlockType supportedType, BlockType blockType) {
+		BlockStrategies strategies = new BlockStrategies(Sets.newHashSet(supportedType));
+		BlockStrategy strategy = strategies.getStrategy(blockType);
+		assertNotNull(strategy);
+		assertEquals(blockType.name(), SubstitutionBlockStrategy.class, strategy.getClass());
+		assertEquals(blockType.name(), supportedType, ((SubstitutionBlockStrategy) strategy).getBlockType());
 	}
 
 	private void assertUnsupported(BlockStrategies strategies, BlockType blockType) {

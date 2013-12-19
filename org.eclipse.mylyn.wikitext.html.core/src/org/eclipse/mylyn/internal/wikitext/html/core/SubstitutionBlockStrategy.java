@@ -25,6 +25,10 @@ class SubstitutionBlockStrategy implements BlockStrategy {
 		this.blockType = checkNotNull(blockType);
 	}
 
+	BlockType getBlockType() {
+		return blockType;
+	}
+
 	@Override
 	public void beginBlock(DocumentBuilder builder, BlockType unsupportedType, Attributes attributes) {
 		builder.beginBlock(blockType, attributes);

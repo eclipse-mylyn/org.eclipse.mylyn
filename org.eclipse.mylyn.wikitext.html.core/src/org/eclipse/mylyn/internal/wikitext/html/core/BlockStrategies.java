@@ -33,20 +33,22 @@ class BlockStrategies extends ElementStrategies<BlockType, BlockStrategy> {
 		addAlternatives(alternatives, BlockType.PARAGRAPH, BlockType.DIV);
 		addAlternatives(alternatives, BlockType.BULLETED_LIST, BlockType.NUMERIC_LIST);
 		addAlternatives(alternatives, BlockType.NUMERIC_LIST, BlockType.BULLETED_LIST);
-		addAlternatives(alternatives, BlockType.CODE, BlockType.PREFORMATTED, BlockType.PARAGRAPH);
+		addAlternatives(alternatives, BlockType.CODE, BlockType.PREFORMATTED, BlockType.PARAGRAPH, BlockType.DIV);
 		addAlternatives(alternatives, BlockType.DEFINITION_LIST, BlockType.NUMERIC_LIST, BlockType.BULLETED_LIST);
 		addAlternatives(alternatives, BlockType.DIV, BlockType.PARAGRAPH);
-		addAlternatives(alternatives, BlockType.FOOTNOTE, BlockType.BULLETED_LIST, BlockType.NUMERIC_LIST);
-		addAlternatives(alternatives, BlockType.INFORMATION, BlockType.PARAGRAPH);
-		addAlternatives(alternatives, BlockType.LIST_ITEM, BlockType.PARAGRAPH);
-		addAlternatives(alternatives, BlockType.NOTE, BlockType.PARAGRAPH);
-		addAlternatives(alternatives, BlockType.PANEL, BlockType.PARAGRAPH);
-		addAlternatives(alternatives, BlockType.PREFORMATTED, BlockType.CODE, BlockType.PARAGRAPH);
-		addAlternatives(alternatives, BlockType.QUOTE, BlockType.PARAGRAPH);
-		addAlternatives(alternatives, BlockType.TABLE_CELL_HEADER, BlockType.PARAGRAPH);
-		addAlternatives(alternatives, BlockType.TABLE_CELL_NORMAL, BlockType.PARAGRAPH);
-		addAlternatives(alternatives, BlockType.TIP, BlockType.PARAGRAPH);
-		addAlternatives(alternatives, BlockType.WARNING, BlockType.PARAGRAPH);
+		addAlternatives(alternatives, BlockType.FOOTNOTE, BlockType.PARAGRAPH, BlockType.DIV);
+		addAlternatives(alternatives, BlockType.INFORMATION, BlockType.PARAGRAPH, BlockType.DIV);
+		addAlternatives(alternatives, BlockType.LIST_ITEM, BlockType.PARAGRAPH, BlockType.DIV);
+		addAlternatives(alternatives, BlockType.DEFINITION_ITEM, BlockType.PARAGRAPH, BlockType.DIV);
+		addAlternatives(alternatives, BlockType.DEFINITION_TERM, BlockType.PARAGRAPH, BlockType.DIV);
+		addAlternatives(alternatives, BlockType.NOTE, BlockType.PARAGRAPH, BlockType.DIV);
+		addAlternatives(alternatives, BlockType.PANEL, BlockType.PARAGRAPH, BlockType.DIV);
+		addAlternatives(alternatives, BlockType.PREFORMATTED, BlockType.CODE, BlockType.PARAGRAPH, BlockType.DIV);
+		addAlternatives(alternatives, BlockType.QUOTE, BlockType.PARAGRAPH, BlockType.DIV);
+		addAlternatives(alternatives, BlockType.TABLE_CELL_HEADER, BlockType.PARAGRAPH, BlockType.DIV);
+		addAlternatives(alternatives, BlockType.TABLE_CELL_NORMAL, BlockType.PARAGRAPH, BlockType.DIV);
+		addAlternatives(alternatives, BlockType.TIP, BlockType.PARAGRAPH, BlockType.DIV);
+		addAlternatives(alternatives, BlockType.WARNING, BlockType.PARAGRAPH, BlockType.DIV);
 		return ImmutableMap.copyOf(alternatives);
 	}
 

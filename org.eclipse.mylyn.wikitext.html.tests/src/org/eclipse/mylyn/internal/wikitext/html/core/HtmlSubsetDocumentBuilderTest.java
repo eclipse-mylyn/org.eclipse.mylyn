@@ -226,7 +226,7 @@ public class HtmlSubsetDocumentBuilderTest {
 
 	@Test
 	public void blockCodeUnsupportedWithoutFallback() {
-		assertUnsupportedBlock("\ntest\n", BlockType.CODE, BlockType.DIV);
+		assertUnsupportedBlock("\ntest\n", BlockType.CODE, BlockType.LIST_ITEM);
 	}
 
 	@Test
