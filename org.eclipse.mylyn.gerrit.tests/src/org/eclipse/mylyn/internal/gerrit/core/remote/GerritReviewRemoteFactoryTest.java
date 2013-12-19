@@ -86,11 +86,18 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		reviewHarness.consumer.retrieve(false);
 		reviewHarness.listener.waitForResponse(2, 2);
 		List<IComment> comments = getReview().getComments();
-		assertThat(comments.size(), is(2));
-		IComment comment1 = comments.get(0);
+		int offset = getCommentOffset();
+		assertThat(comments.size(), is(offset + 2));
+		if (isVersion28OrLater()) {
+			IComment comment1 = comments.get(0);
+			assertThat(comment1.getAuthor().getDisplayName(), is("tests"));
+			assertThat(comment1.getDescription(), is("Uploaded patch set 1."));
+
+		}
+		IComment comment1 = comments.get(offset + 0);
 		assertThat(comment1.getAuthor().getDisplayName(), is("tests"));
 		assertThat(comment1.getDescription(), is("Patch Set 1:\n\n" + message1));
-		IComment comment2 = comments.get(1);
+		IComment comment2 = comments.get(offset + 1);
 		assertThat(comment2.getAuthor().getDisplayName(), is("tests"));
 		assertThat(comment2.getDescription(), is("Patch Set 1:\n\n" + message2));
 	}
@@ -227,15 +234,16 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(changeDetail, notNullValue());
 		assertThat(changeDetail.getChange().getStatus(), is(Status.ABANDONED));
 		List<ChangeMessage> messages = changeDetail.getMessages();
-		assertThat(messages.size(), is(1));
-		ChangeMessage lastMessage = messages.get(0);
+		int offset = getCommentOffset();
+		assertThat(messages.size(), is(offset + 1));
+		ChangeMessage lastMessage = messages.get(offset + 0);
 		assertThat(lastMessage.getAuthor().get(), is(1000001));
 		assertThat(lastMessage.getMessage(), endsWith("Abandoned\n\n" + message1));
 
 		assertThat(getReview().getState(), is(ReviewStatus.ABANDONED));
 		List<IComment> comments = getReview().getComments();
-		assertThat(comments.size(), is(1));
-		IComment lastComment = comments.get(0);
+		assertThat(comments.size(), is(offset + 1));
+		IComment lastComment = comments.get(offset + 0);
 		assertThat(lastComment.getAuthor().getDisplayName(), is("tests"));
 		assertThat(lastComment.getAuthor().getId(), is("1000001"));
 		assertThat(lastComment.getDescription(), endsWith("Abandoned\n\n" + message1));
@@ -255,8 +263,9 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 		assertThat(getReview().getState(), is(ReviewStatus.NEW));
 		List<IComment> comments = getReview().getComments();
-		assertThat(comments.size(), is(2)); // abandon + restore
-		IComment lastComment = comments.get(1);
+		int offset = getCommentOffset();
+		assertThat(comments.size(), is(offset + 2)); // abandon + restore
+		IComment lastComment = comments.get(offset + 1);
 		assertThat(lastComment.getAuthor().getDisplayName(), is("tests"));
 		assertThat(lastComment.getDescription(), endsWith("Restored\n\n" + message2));
 	}
@@ -465,6 +474,15 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(crvwAllowed.getName(), is(PermissionLabel.toLabelName(toNameWithDash(CRVW.getCategory().getName()))));
 		assertThat(crvwAllowed.getMin(), is(-1));
 		assertThat(crvwAllowed.getMax(), is(1));
+	}
+
+	private int getCommentOffset() throws GerritException {
+		// Version 2.8 adds a comment for each uploaded patch set
+		return isVersion28OrLater() ? 1 : 0;
+	}
+
+	private boolean isVersion28OrLater() throws GerritException {
+		return GerritVersion.isVersion28OrLater(reviewHarness.client.getVersion(new NullProgressMonitor()));
 	}
 
 	private boolean isVersion26OrLater() throws GerritException {

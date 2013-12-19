@@ -29,6 +29,8 @@ public class GerritVersion extends Version {
 
 	private static final Version VERSION_2_7_0 = new Version(2, 7, 0);
 
+	private static final Version VERSION_2_8_0 = new Version(2, 8, 0);
+
 	// e.g. 2.6 or 2.6.0
 	private static final Pattern MAJOR_MINOR_MICRO_VERSION_PATTERN = Pattern.compile("V?\\d+\\.\\d+(\\.\\d+)?"); //$NON-NLS-1$
 
@@ -62,6 +64,10 @@ public class GerritVersion extends Version {
 		throw new IllegalArgumentException("Unrecognized version pattern : " + version); //$NON-NLS-1$
 	}
 
+	public static boolean isVersion28OrLater(Version version) {
+		return version.compareTo(VERSION_2_8_0) >= 0;
+	}
+
 	public static boolean isVersion26OrLater(Version version) {
 		return version.compareTo(VERSION_2_6_0) >= 0;
 	}
@@ -73,4 +79,5 @@ public class GerritVersion extends Version {
 	public static boolean isVersion24x(Version version) {
 		return version.compareTo(VERSION_2_4_0) >= 0 && version.compareTo(VERSION_2_5_0) < 0;
 	}
+
 }
