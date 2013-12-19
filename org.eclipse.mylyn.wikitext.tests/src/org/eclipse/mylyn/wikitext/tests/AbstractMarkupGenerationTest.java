@@ -13,7 +13,6 @@ package org.eclipse.mylyn.wikitext.tests;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 
@@ -32,7 +31,7 @@ public abstract class AbstractMarkupGenerationTest<L extends MarkupLanguage> {
 	protected MarkupLanguage markupLanguage;
 
 	@Before
-	public void initParser() throws IOException {
+	public void initParser() {
 		parser = new MarkupParser();
 		markupLanguage = createMarkupLanguage();
 		parser.setMarkupLanguage(markupLanguage);
