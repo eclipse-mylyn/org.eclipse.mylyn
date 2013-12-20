@@ -63,8 +63,8 @@
     <dist.site></dist.site>
     <dist.pack200>${java.home}/bin</dist.pack200>
 
-    <dist.releases.url>file:///home/data/httpd/download.eclipse.org/mylyn/maven/releases</dist.releases.url>
-    <dist.snapshots.url>file:///home/data/httpd/download.eclipse.org/mylyn/maven/snapshots</dist.snapshots.url>
+    <dist.releases.url>https://repo.eclipse.org/content/repositories/mylyn-releases/</dist.releases.url>
+    <dist.snapshots.url>https://repo.eclipse.org/content/repositories/mylyn-snapshots/</dist.snapshots.url>
 
     <target-platform>mylyn-e${target-version}</target-platform>
     <egit-repository-url>http://download.eclipse.org/egit/updates-1.3/</egit-repository-url>
@@ -103,15 +103,13 @@
   
   <distributionManagement>
     <repository>
-      <uniqueVersion>false</uniqueVersion>
-      <id>mylyn-releases</id>
-      <name>Mylyn Release Repository</name>
+      <id>repo.eclipse.org</id>
+      <name>Mylyn Repository - Releases</name>
       <url>${dist.releases.url}</url>
     </repository>
     <snapshotRepository>
-      <uniqueVersion>false</uniqueVersion>
-      <id>mylyn-snapshot</id>
-      <name>Mylyn Snapshot Repository</name>
+      <id>repo.eclipse.org</id>
+      <name>Mylyn Repository - Snapshots</name>
       <url>${dist.snapshots.url}</url>
     </snapshotRepository>
   </distributionManagement>
