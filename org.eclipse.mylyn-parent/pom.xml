@@ -120,12 +120,12 @@
         <enabled>true</enabled>
       </snapshots>
       <id>mylyn-snapshots</id>
-      <url>http://download.eclipse.org/mylyn/maven/snapshots</url>
+      <url>https://repo.eclipse.org/content/repositories/mylyn-snapshots/</url>
       <layout>default</layout>
     </repository>
     <repository>
       <id>mylyn-releases</id>
-      <url>http://download.eclipse.org/mylyn/maven/releases</url>
+      <url>https://repo.eclipse.org/content/repositories/mylyn-releases/</url>
       <layout>default</layout>
     </repository>
   </repositories>
