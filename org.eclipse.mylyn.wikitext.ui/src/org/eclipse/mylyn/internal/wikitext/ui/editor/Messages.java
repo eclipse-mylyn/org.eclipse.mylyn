@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2013 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Marc-Andre Laperle (Ericsson) - Add collapse all button (Bug 424558)
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.ui.editor;
@@ -38,6 +39,12 @@ class Messages extends NLS {
 	public static String MarkupEditor_preview_tooltip;
 
 	public static String MarkupEditor_updateOutline;
+
+	public static String MarkupEditor_collapseAllAction_label;
+
+	public static String MarkupEditor_collapseAllAction_tooltip;
+
+	public static String MarkupEditor_collapseAllAction_description;
 
 	static {
 		// initialize resource bundle

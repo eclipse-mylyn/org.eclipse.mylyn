@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2013 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,15 +7,19 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Marc-Andre Laperle (Ericsson) - Add collapse all button (Bug 424558)
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.ui.editor;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -25,6 +29,7 @@ import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.ToolTip;
+import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.dnd.DndConfigurationStrategy;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.swt.SWT;
@@ -35,12 +40,17 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.handlers.CollapseAllHandler;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.part.IShowInSource;
 import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.part.ShowInContext;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.IUpdate;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
@@ -131,7 +141,9 @@ public class MarkupEditorOutline extends ContentOutlinePage implements IShowInSo
 			}
 		};
 
-		getSite().setSelectionProvider(viewer);
+		IPageSite site = getSite();
+		site.setSelectionProvider(viewer);
+		configureActionBars(site);
 
 		MenuManager manager = new MenuManager("#PopUp"); //$NON-NLS-1$
 		manager.setRemoveAllWhenShown(true);
@@ -142,10 +154,49 @@ public class MarkupEditorOutline extends ContentOutlinePage implements IShowInSo
 		});
 		viewer.getTree().setMenu(manager.createContextMenu(viewer.getTree()));
 
-		getSite().registerContextMenu(MarkupEditor.ID + ".outlineContextMenu", manager, viewer); //$NON-NLS-1$
+		site.registerContextMenu(MarkupEditor.ID + ".outlineContextMenu", manager, viewer); //$NON-NLS-1$
 
 		configureDnd();
 		configureActions();
+	}
+
+	/**
+	 * Collapse all nodes.
+	 */
+	private static class CollapseAllAction extends Action {
+
+		private final TreeViewer viewer;
+
+		public CollapseAllAction(TreeViewer viewer) {
+			super(Messages.MarkupEditor_collapseAllAction_label);
+			setDescription(Messages.MarkupEditor_collapseAllAction_description);
+			setToolTipText(Messages.MarkupEditor_collapseAllAction_tooltip);
+			setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(WikiTextUiPlugin.getDefault().getPluginId(),
+					"icons/collapseall.gif")); //$NON-NLS-1$
+			this.viewer = viewer;
+		}
+
+		@Override
+		public void run() {
+			try {
+				viewer.getControl().setRedraw(false);
+				viewer.collapseAll();
+			} finally {
+				viewer.getControl().setRedraw(true);
+			}
+		}
+	}
+
+	private void configureActionBars(IPageSite site) {
+		IActionBars actionBars = site.getActionBars();
+		IToolBarManager toolBarManager = actionBars.getToolBarManager();
+		IHandlerService handlerService = (IHandlerService) site.getService(IHandlerService.class);
+
+		CollapseAllAction collapseAllAction = new CollapseAllAction(getTreeViewer());
+		toolBarManager.add(collapseAllAction);
+		handlerService.activateHandler(CollapseAllHandler.COMMAND_ID, new ActionHandler(collapseAllAction));
+
+		actionBars.updateActionBars();
 	}
 
 	@Override
