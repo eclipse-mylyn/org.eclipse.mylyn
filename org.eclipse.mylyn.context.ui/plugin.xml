@@ -124,7 +124,7 @@
    	  <actionSet
             label="%actionSet.label"
             description="%actionSet.description"
-            visible="true"
+            visible="false"
             id="org.eclipse.mylyn.context.ui.actionSet">
          <!--
          <action

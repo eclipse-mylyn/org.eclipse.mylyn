@@ -32,6 +32,7 @@ import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.ui.IContextUiStartup;
 import org.eclipse.mylyn.internal.context.ui.ContextPopulationStrategy;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.internal.context.ui.IContextUiConstants;
 import org.eclipse.mylyn.internal.context.ui.IContextUiPreferenceContstants;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.externalization.ExternalizationManager;
@@ -110,9 +111,17 @@ public class ContextTasksStartupHandler implements IContextUiStartup {
 				break;
 			case ACTIVATED:
 				getStateHandler().activated(event.getContext());
+				PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow()
+						.getActivePage()
+						.showActionSet(IContextUiConstants.ID_CONTEXT_UI_ACTION_SET);
 				break;
 			case DEACTIVATED:
 				getStateHandler().deactivated(event.getContext());
+				PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow()
+						.getActivePage()
+						.hideActionSet(IContextUiConstants.ID_CONTEXT_UI_ACTION_SET);
 				break;
 			case CLEARED:
 				getStateHandler().clear(event.getContextHandle(), event.isActiveContext());
@@ -213,8 +222,8 @@ public class ContextTasksStartupHandler implements IContextUiStartup {
 				.getPreferenceStore()
 				.getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_EXPANSION);
 		TasksUiPlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(ITasksUiPreferenceConstants.AUTO_EXPAND_TASK_LIST, value);
+		.getPreferenceStore()
+		.setValue(ITasksUiPreferenceConstants.AUTO_EXPAND_TASK_LIST, value);
 	}
 
 	void contextActivated(ContextChangeEvent event) {

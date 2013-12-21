@@ -54,7 +54,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent.Kind;
 
 /**
  * This is the core class resposible for context management.
- * 
+ *
  * @author Mik Kersten
  * @author Jevgeni Holodkov
  * @author Shawn Minto
@@ -286,7 +286,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 						public void handleException(Throwable e) {
 							StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
 									"Listener failed: " //$NON-NLS-1$
-											+ listener.getClass(), e));
+									+ listener.getClass(), e));
 						}
 
 						public void run() throws Exception {
@@ -305,7 +305,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 						public void handleException(Throwable e) {
 							StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
 									"Listener failed: " //$NON-NLS-1$
-											+ listener.getClass(), e));
+									+ listener.getClass(), e));
 						}
 
 						public void run() throws Exception {
@@ -458,7 +458,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 						public void handleException(Throwable e) {
 							StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
 									"Listener failed: " //$NON-NLS-1$
-											+ listener.getClass(), e));
+									+ listener.getClass(), e));
 						}
 
 						public void run() throws Exception {
@@ -769,7 +769,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 		return activationHistorySuppressed;
 	}
 
-	// TODO consider removing check for pause and making clients explicitly determine this, 
+	// TODO consider removing check for pause and making clients explicitly determine this,
 	// or provide a separate method
 	public boolean isContextActive() {
 		return !contextCapturePaused && activeContext.getContextMap().values().size() > 0;
@@ -1079,7 +1079,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 	/**
 	 * Used to migrate old activity to new activity events
-	 * 
+	 *
 	 * @since 2.1
 	 */
 	public InteractionContext migrateLegacyActivity(InteractionContext context) {
@@ -1141,7 +1141,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 	/**
 	 * Copy the listener list in case it is modified during the notificiation.
-	 * 
+	 *
 	 * @param element
 	 */
 	public void notifyRelationshipsChanged(final IInteractionElement element) {
@@ -1256,7 +1256,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 	 * Policy is that a parent should not have an interest lower than that of one of its children. This meets our goal
 	 * of having them decay no faster than the children while having their interest be proportional to the interest of
 	 * their children.
-	 * 
+	 *
 	 * @param forcedBridge
 	 *            The structure bridge that we should use. Can be null, then we will automatically select
 	 * @param handles
@@ -1434,7 +1434,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 						public void handleException(Throwable e) {
 							StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
 									"Listener failed: " //$NON-NLS-1$
-											+ listener.getClass(), e));
+									+ listener.getClass(), e));
 						}
 
 						public void run() throws Exception {
