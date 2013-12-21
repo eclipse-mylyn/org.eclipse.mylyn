@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="mylyn-bootstrap-e4.4" sequenceNumber="112">
+<?pde version="3.8"?><target name="mylyn-bootstrap-e4.4" sequenceNumber="113">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.swtbot.eclipse.feature.group" version="0.0.0"/>
@@ -82,9 +82,9 @@
 <repository location="http://subclipse.tigris.org/archive/subclipse_1.8.10"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.egit.feature.group" version="3.2.0.201311130903-m3"/>
-<unit id="org.eclipse.jgit.feature.group" version="3.2.0.201311130903-m3"/>
-<unit id="org.eclipse.egit.mylyn.feature.group" version="3.2.0.201311130903-m3"/>
+<unit id="org.eclipse.egit.feature.group" version="3.2.0.201312181205-r"/>
+<unit id="org.eclipse.egit.mylyn.feature.group" version="3.2.0.201312181205-r"/>
+<unit id="org.eclipse.jgit.feature.group" version="3.2.0.201312181205-r"/>
 <repository location="http://download.eclipse.org/releases/luna"/>
 </location>
 </locations>
