@@ -105,26 +105,29 @@ public class Junit4TestFixtureRunner extends Suite {
 				fixtureType = fixtueDef.fixtureType();
 			}
 		}
-
-		List<AbstractTestFixture> parametersList = (List<AbstractTestFixture>) TestConfiguration.getDefault().discover(
-				fixtureClass, fixtureType);
-		List<AbstractTestFixture> fixturesToExecute = new ArrayList<AbstractTestFixture>();
-		if (restrictProperty != null) {
-			for (AbstractTestFixture abstractFixture : parametersList) {
-				String tempProperty = abstractFixture.getProperty(restrictProperty);
-				if (tempProperty != null && tempProperty.equals(restrictValue)) {
-					fixturesToExecute.add(abstractFixture);
+		if (fixtureType != null) {
+			List<AbstractTestFixture> parametersList = (List<AbstractTestFixture>) TestConfiguration.getDefault()
+					.discover(fixtureClass, fixtureType);
+			List<AbstractTestFixture> fixturesToExecute = new ArrayList<AbstractTestFixture>();
+			if (restrictProperty != null) {
+				for (AbstractTestFixture abstractFixture : parametersList) {
+					String tempProperty = abstractFixture.getProperty(restrictProperty);
+					if (tempProperty != null && tempProperty.equals(restrictValue)) {
+						fixturesToExecute.add(abstractFixture);
+					}
+				}
+				if (fixturesToExecute.size() > 0) {
+					for (int i = 0; i < fixturesToExecute.size(); i++) {
+						runners.add(new TestClassRunnerForFixture(getTestClass().getJavaClass(), fixturesToExecute, i));
+					}
+				}
+			} else if (parametersList.size() > 0) {
+				for (int i = 0; i < parametersList.size(); i++) {
+					runners.add(new TestClassRunnerForFixture(getTestClass().getJavaClass(), parametersList, i));
 				}
 			}
-			if (fixturesToExecute.size() > 0) {
-				for (int i = 0; i < fixturesToExecute.size(); i++) {
-					runners.add(new TestClassRunnerForFixture(getTestClass().getJavaClass(), fixturesToExecute, i));
-				}
-			}
-		} else if (parametersList.size() > 0) {
-			for (int i = 0; i < parametersList.size(); i++) {
-				runners.add(new TestClassRunnerForFixture(getTestClass().getJavaClass(), parametersList, i));
-			}
+		} else {
+			throw new InitializationError("Missing Annotation FixtureDefinition for Junit4TestFixtureRunner");
 		}
 	}
 
