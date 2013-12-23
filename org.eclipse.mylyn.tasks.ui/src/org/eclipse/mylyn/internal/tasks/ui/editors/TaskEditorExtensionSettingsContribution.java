@@ -15,6 +15,8 @@ import java.util.SortedSet;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorExtensions.RegisteredTaskEditorExtension;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -28,6 +30,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Widget;
 
 /**
@@ -105,6 +108,13 @@ public class TaskEditorExtensionSettingsContribution extends AbstractTaskReposit
 	}
 
 	private void createTaskEditorExtensionsControl(Composite parent) {
+		Composite infoComposite = new Composite(parent, SWT.NONE);
+		GridLayoutFactory.fillDefaults().numColumns(2).applyTo(infoComposite);
+		Label infoImage = new Label(infoComposite, SWT.NONE);
+		infoImage.setImage(CommonImages.getImage(CommonImages.INFORMATION));
+		Label infoLabel = new Label(infoComposite, SWT.NONE);
+		infoLabel.setText(Messages.TaskEditorExtensionSettingsContribution_Rendering_Group_Info);
+
 		String defaultExtensionId = TaskEditorExtensions.getDefaultTaskEditorExtensionId(getConnectorKind());
 		selectedExtensionId = getRepository() == null
 				? defaultExtensionId

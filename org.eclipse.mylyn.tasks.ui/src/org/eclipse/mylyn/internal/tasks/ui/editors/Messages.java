@@ -291,6 +291,8 @@ public class Messages extends NLS {
 
 	public static String TaskEditorExtensionSettingsContribution_Rendering_Group_Label;
 
+	public static String TaskEditorExtensionSettingsContribution_Rendering_Group_Info;
+
 	public static String TaskEditorExtensionSettingsContribution_Select_the_capabilities_of_the_task_editor;
 
 	public static String TaskHyperlinkPresenter_Not_In_Task_List;
