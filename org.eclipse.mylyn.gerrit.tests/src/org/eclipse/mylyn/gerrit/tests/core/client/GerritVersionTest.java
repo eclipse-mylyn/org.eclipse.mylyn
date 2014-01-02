@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2014 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -103,6 +103,15 @@ public class GerritVersionTest extends TestCase {
 		assertEquals(2, v.getMinor());
 		assertEquals(3, v.getMicro());
 		assertEquals("q", v.getQualifier());
+	}
+
+	@Test
+	public void testParse_27xxx31() throws Exception {
+		Version v = parseGerritVersion("2.7-xxx3.1");
+		assertEquals(2, v.getMajor());
+		assertEquals(7, v.getMinor());
+		assertEquals(0, v.getMicro());
+		assertEquals("xxx3", v.getQualifier()); // '.1' is lost as '.' cannot be part of a qualifier
 	}
 
 	@Test
