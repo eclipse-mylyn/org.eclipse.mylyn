@@ -26,6 +26,8 @@ import java.util.TimeZone;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.PlatformObject;
+import org.eclipse.core.runtime.jobs.ILock;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.core.ILocationService;
@@ -182,6 +184,8 @@ public final class TaskRepository extends PlatformObject {
 		throw new IllegalArgumentException("Unknown authentication type: " + type); //$NON-NLS-1$
 	}
 
+	private final ILock lock = Job.getJobManager().newLock();
+
 	private boolean isCachedUserName;
 
 	private String cachedUserName;
@@ -292,9 +296,12 @@ public final class TaskRepository extends PlatformObject {
 		setProperty(getKeyPrefix(AuthenticationType.PROXY) + ENABLED, null);
 		setProperty(getKeyPrefix(AuthenticationType.REPOSITORY) + ENABLED, null);
 
-		synchronized (this) {
+		try {
+			lock.acquire();
 			transientProperties.clear();
 			isCachedUserName = false;
+		} finally {
+			lock.release();
 		}
 
 		ICredentialsStore credentialsStore = getCredentialsStore();
@@ -375,28 +382,33 @@ public final class TaskRepository extends PlatformObject {
 	 * @return null, if no credentials are set for <code>authType</code>
 	 * @since 3.0
 	 */
-	public synchronized AuthenticationCredentials getCredentials(AuthenticationType authType) {
-		String key = getKeyPrefix(authType);
-		if (getBooleanProperty(key + ENABLED)) {
-			String userName = getAuthInfo(key + USERNAME);
-			String password;
+	public AuthenticationCredentials getCredentials(AuthenticationType authType) {
+		try {
+			lock.acquire();
+			String key = getKeyPrefix(authType);
+			if (getBooleanProperty(key + ENABLED)) {
+				String userName = getAuthInfo(key + USERNAME);
+				String password;
 
-			if (getBooleanProperty(key + SAVE_PASSWORD)) {
-				password = getAuthInfo(key + PASSWORD);
+				if (getBooleanProperty(key + SAVE_PASSWORD)) {
+					password = getAuthInfo(key + PASSWORD);
+				} else {
+					password = transientProperties.get(key + PASSWORD);
+				}
+
+				if (userName == null) {
+					userName = ""; //$NON-NLS-1$
+				}
+				if (password == null) {
+					password = ""; //$NON-NLS-1$
+				}
+
+				return new AuthenticationCredentials(userName, password);
 			} else {
-				password = transientProperties.get(key + PASSWORD);
+				return null;
 			}
-
-			if (userName == null) {
-				userName = ""; //$NON-NLS-1$
-			}
-			if (password == null) {
-				password = ""; //$NON-NLS-1$
-			}
-
-			return new AuthenticationCredentials(userName, password);
-		} else {
-			return null;
+		} finally {
+			lock.release();
 		}
 	}
 
@@ -615,35 +627,39 @@ public final class TaskRepository extends PlatformObject {
 	 *            memory only
 	 * @since 3.0
 	 */
-	public synchronized void setCredentials(AuthenticationType authType, AuthenticationCredentials credentials,
-			boolean savePassword) {
-		String key = getKeyPrefix(authType);
+	public void setCredentials(AuthenticationType authType, AuthenticationCredentials credentials, boolean savePassword) {
+		try {
+			lock.acquire();
+			String key = getKeyPrefix(authType);
 
-		setBooleanProperty(key + SAVE_PASSWORD, savePassword);
+			setBooleanProperty(key + SAVE_PASSWORD, savePassword);
 
-		if (credentials == null) {
-			setBooleanProperty(key + ENABLED, false);
-			transientProperties.remove(key + PASSWORD);
-			addAuthInfo(null, null, key + USERNAME, key + PASSWORD);
-		} else {
-			setBooleanProperty(key + ENABLED, true);
-			if (savePassword) {
-				addAuthInfo(credentials.getUserName(), credentials.getPassword(), key + USERNAME, key + PASSWORD);
-				transientProperties.remove(key + PASSWORD);
-			} else {
-				addAuthInfo(credentials.getUserName(), null, key + USERNAME, key + PASSWORD);
-				transientProperties.put(key + PASSWORD, credentials.getPassword());
-			}
-		}
-
-		if (authType == AuthenticationType.REPOSITORY) {
 			if (credentials == null) {
-				this.cachedUserName = null;
-				this.isCachedUserName = false;
+				setBooleanProperty(key + ENABLED, false);
+				transientProperties.remove(key + PASSWORD);
+				addAuthInfo(null, null, key + USERNAME, key + PASSWORD);
 			} else {
-				this.cachedUserName = credentials.getUserName();
-				this.isCachedUserName = true;
+				setBooleanProperty(key + ENABLED, true);
+				if (savePassword) {
+					addAuthInfo(credentials.getUserName(), credentials.getPassword(), key + USERNAME, key + PASSWORD);
+					transientProperties.remove(key + PASSWORD);
+				} else {
+					addAuthInfo(credentials.getUserName(), null, key + USERNAME, key + PASSWORD);
+					transientProperties.put(key + PASSWORD, credentials.getPassword());
+				}
 			}
+
+			if (authType == AuthenticationType.REPOSITORY) {
+				if (credentials == null) {
+					this.cachedUserName = null;
+					this.isCachedUserName = false;
+				} else {
+					this.cachedUserName = credentials.getUserName();
+					this.isCachedUserName = true;
+				}
+			}
+		} finally {
+			lock.release();
 		}
 	}
 
