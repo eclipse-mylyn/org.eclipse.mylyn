@@ -25,12 +25,12 @@ import java.util.TimeZone;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.core.ILocationService;
 import org.eclipse.mylyn.commons.repositories.core.auth.ICredentialsStore;
+import org.eclipse.mylyn.internal.commons.repositories.core.InMemoryCredentialsStore;
 import org.eclipse.mylyn.internal.commons.repositories.core.LocationService;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryPerson;
@@ -54,7 +54,6 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryPerson;
  * @since 2.0
  */
 public final class TaskRepository extends PlatformObject {
-
 	public static final String DEFAULT_CHARACTER_ENCODING = "UTF-8"; //$NON-NLS-1$
 
 	private static final String USERNAME = ".username"; //$NON-NLS-1$
@@ -165,14 +164,7 @@ public final class TaskRepository extends PlatformObject {
 	 */
 	public static final String CATEGORY_REVIEW = "org.eclipse.mylyn.category.review"; //$NON-NLS-1$
 
-	// HACK: Lock used to work around race condition in
-	// Platform.add/get/flushAuthorizationInfo()
-	private static final Object LOCK = new Object();
-
 	private final Set<PropertyChangeListener> propertyChangeListeners = new HashSet<PropertyChangeListener>();
-
-	// HACK: private credentials for headless operation
-	private static Map<String, Map<String, String>> credentials = new HashMap<String, Map<String, String>>();
 
 	private static String CREATED_FROM_TEMPLATE = "org.eclipse.mylyn.tasklist.repositories.template"; //$NON-NLS-1$
 
@@ -257,29 +249,21 @@ public final class TaskRepository extends PlatformObject {
 	}
 
 	private ICredentialsStore getCredentialsStore() {
+		if (!shouldPersistCredentials()) {
+			// use a different ID so that we use a different in memory store than that used as a cache by the secure store
+			return InMemoryCredentialsStore.getStore("headless::" + getRepositoryUrl()); //$NON-NLS-1$
+		}
 		return getService().getCredentialsStore(getRepositoryUrl());
 	}
 
 	private void addAuthInfo(String username, String password, String userProperty, String passwordProperty) {
-		if (Platform.isRunning() && shouldPersistCredentials()) {
-			ICredentialsStore credentialsStore = getCredentialsStore();
-			if (userProperty.equals(getKeyPrefix(AuthenticationType.REPOSITORY) + USERNAME)) {
-				this.setProperty(userProperty, username);
-			} else {
-				credentialsStore.put(userProperty, username, false);
-			}
-			credentialsStore.put(passwordProperty, password, true);
+		ICredentialsStore credentialsStore = getCredentialsStore();
+		if (userProperty.equals(getKeyPrefix(AuthenticationType.REPOSITORY) + USERNAME)) {
+			this.setProperty(userProperty, username);
 		} else {
-			synchronized (LOCK) {
-				Map<String, String> headlessCreds = credentials.get(getRepositoryUrl());
-				if (headlessCreds == null) {
-					headlessCreds = new HashMap<String, String>();
-					credentials.put(getRepositoryUrl(), headlessCreds);
-				}
-				headlessCreds.put(userProperty, username);
-				headlessCreds.put(passwordProperty, password);
-			}
+			credentialsStore.put(userProperty, username, false);
 		}
+		credentialsStore.put(passwordProperty, password, true);
 	}
 
 	/**
@@ -313,37 +297,17 @@ public final class TaskRepository extends PlatformObject {
 			isCachedUserName = false;
 		}
 
-		if (Platform.isRunning() && shouldPersistCredentials()) {
-			ICredentialsStore credentialsStore = getCredentialsStore();
-			credentialsStore.clear();
-			this.setProperty(AuthenticationType.REPOSITORY + USERNAME, ""); //$NON-NLS-1$
-		} else {
-			synchronized (LOCK) {
-				Map<String, String> headlessCreds = credentials.get(getRepositoryUrl());
-				if (headlessCreds != null) {
-					headlessCreds.clear();
-				}
-			}
-		}
+		ICredentialsStore credentialsStore = getCredentialsStore();
+		credentialsStore.clear();
+		this.setProperty(AuthenticationType.REPOSITORY + USERNAME, ""); //$NON-NLS-1$
 	}
 
 	private String getAuthInfo(String property) {
-		if (Platform.isRunning() && shouldPersistCredentials()) {
-			if (property.equals(getKeyPrefix(AuthenticationType.REPOSITORY) + USERNAME)) {
-				return getProperty(property);
-			}
-			ICredentialsStore credentialsStore = getCredentialsStore();
-			return credentialsStore.get(property, null);
-		} else {
-			synchronized (LOCK) {
-				Map<String, String> headlessCreds = credentials.get(getRepositoryUrl());
-				if (headlessCreds == null) {
-					headlessCreds = new HashMap<String, String>();
-					credentials.put(getRepositoryUrl(), headlessCreds);
-				}
-				return headlessCreds.get(property);
-			}
+		if (property.equals(getKeyPrefix(AuthenticationType.REPOSITORY) + USERNAME)) {
+			return getProperty(property);
 		}
+		ICredentialsStore credentialsStore = getCredentialsStore();
+		return credentialsStore.get(property, null);
 	}
 
 	/**
