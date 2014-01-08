@@ -195,6 +195,36 @@ public class HtmlCleanerTest {
 	}
 
 	@Test
+	public void testWhitespacesBetweenListItems() {
+		String result = cleanToBody("<body><ol><li>item 0</li> <li>item 1</li>\t\n   <li>item 2</li></ol></body>");
+
+		assertEquals("<body><ol><li>item 0</li><li>item 1</li><li>item 2</li></ol></body>", result);
+	}
+
+	@Test
+	public void testWhitespacesBetweenOrderedListAndItems() {
+		String result = cleanToBody("<body><ol>  <li>item 0</li> \n</ol></body>");
+
+		assertEquals("<body><ol><li>item 0</li></ol></body>", result);
+	}
+
+	@Test
+	public void testWhitespacesBetweenUnorderedListAndItems() {
+		String result = cleanToBody("<body><ul>  <li>item 0</li> \n</ul></body>");
+
+		assertEquals("<body><ul><li>item 0</li></ul></body>", result);
+	}
+
+	@Test
+	public void testWhitespacesBetweenTableCells() {
+		String result = cleanToBody("<body><table><tbody><tr><th>cell 0.0</th> <th>cell 0.1</th>\t\n  <th>cell 0.2</th></tr> <tr><td>cell 1.0</td> <td>cell 1.1</td> \t\r\n<td>cell 1.2</td></tr> <tr><td>cell 2.0</td> <td>cell 2.1</td> <td>cell 2.2</td></th></tbody></table></body>");
+
+		assertEquals(
+				"<body><table><tbody><tr><th>cell 0.0</th><th>cell 0.1</th><th>cell 0.2</th></tr><tr><td>cell 1.0</td><td>cell 1.1</td><td>cell 1.2</td></tr><tr><td>cell 2.0</td><td>cell 2.1</td><td>cell 2.2</td></tr></tbody></table></body>",
+				result);
+	}
+
+	@Test
 	public void testTrailingWhitespaceBodyNoBlock_WhitespaceOutsideBody2() {
 		// bug 406943
 		Document document = Document.createShell("");

@@ -15,15 +15,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.jsoup.helper.StringUtil;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
+
 /**
  * @author David Green
  */
 class WhitespaceCleanupProcessor extends DocumentProcessor {
+
+	private final Set<String> CHILD_TAGS = ImmutableSet.of("li", "th", "tr", "td"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
 	@Override
 	public void process(Document document) {
@@ -60,6 +66,7 @@ class WhitespaceCleanupProcessor extends DocumentProcessor {
 							affectedParents.add(textNode.parent());
 						}
 					}
+					normalizeEmptySpaceBetweenNodes(element);
 					children = element.childNodes();
 					if (!children.isEmpty()) {
 
@@ -98,6 +105,34 @@ class WhitespaceCleanupProcessor extends DocumentProcessor {
 					}
 					affectedParents.clear();
 				}
+			}
+		}
+	}
+
+	private void normalizeEmptySpaceBetweenNodes(Element parent) {
+		List<Node> children = parent.childNodes();
+		if (!children.isEmpty()) {
+			children = Lists.newArrayList(children);
+			for (Node child : children) {
+				Node previousSibling = child.previousSibling();
+				Node nextSibling = child.nextSibling();
+				if (child instanceof TextNode && previousSibling instanceof Element && nextSibling instanceof Element) {
+					TextNode textNode = (TextNode) child;
+					Element prevElement = (Element) previousSibling;
+					Element nextElement = (Element) nextSibling;
+					normalizeTextBetweenNodes(textNode, prevElement, nextElement);
+				}
+			}
+		}
+	}
+
+	private void normalizeTextBetweenNodes(TextNode textNode, Element prevElement, Element nextElement) {
+		String wholeText = StringUtil.normaliseWhitespace(textNode.getWholeText()).trim();
+		if (wholeText.isEmpty()) {
+			boolean isSurroundedByEqualTags = nextElement.tagName().equals(prevElement.tagName())
+					&& CHILD_TAGS.contains(nextElement.tagName());
+			if (isSurroundedByEqualTags) {
+				textNode.remove();
 			}
 		}
 	}
