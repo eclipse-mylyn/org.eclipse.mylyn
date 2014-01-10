@@ -7,9 +7,13 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Endre Zoltan Kovacs - adding {@link TaskData} to the API.
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.core;
+
+import org.eclipse.jdt.annotation.Nullable;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
  * @author Sam Davis
@@ -21,9 +25,19 @@ public class TaskJobEvent {
 
 	private final ITask originalTask;
 
+	private final TaskData taskData;
+
 	public TaskJobEvent(ITask originalTask, ITask task) {
+		this(originalTask, task, null);
+	}
+
+	/**
+	 * @since 3.11
+	 */
+	public TaskJobEvent(final ITask originalTask, final ITask task, @Nullable final TaskData taskData) {
 		this.originalTask = originalTask;
 		this.task = task;
+		this.taskData = taskData;
 	}
 
 	/**
@@ -39,6 +53,15 @@ public class TaskJobEvent {
 	 */
 	public ITask getTask() {
 		return task;
+	}
+
+	/**
+	 * @return The taskData of the task being submitted. On 'aboutTosubmit', it holds the unsubmitted taskData, on
+	 *         'taskSubmitted' it is the updated taskData. May be <code>null</code>.
+	 * @since 3.11
+	 */
+	public TaskData getTaskData() {
+		return taskData;
 	}
 
 }

@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Endre Zoltan Kovacs - Supplying {@link TaskData} to  {@link TaskJobEvent}s.
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.core.sync;
@@ -113,7 +114,7 @@ public class SubmitTaskJob extends SubmitJob {
 				task = createTask(monitor, updatedTaskData);
 				taskDataManager.putSubmittedTaskData(task, updatedTaskData, monitor);
 				fireTaskSynchronized(monitor);
-				fireTaskSubmissionComplete();
+				fireTaskSubmissionComplete(updatedTaskData);
 			} catch (CoreException e) {
 				errorStatus = e.getStatus();
 			} catch (OperationCanceledException e) {
@@ -137,7 +138,7 @@ public class SubmitTaskJob extends SubmitJob {
 		for (final TaskJobListener listener : taskJobListeners) {
 			SafeRunner.run(new ISafeRunnable() {
 				public void run() throws Exception {
-					listener.aboutToSubmit(new TaskJobEvent(originalTask, task));
+					listener.aboutToSubmit(new TaskJobEvent(originalTask, task, taskData));
 				}
 
 				public void handleException(Throwable e) {
@@ -148,11 +149,11 @@ public class SubmitTaskJob extends SubmitJob {
 		}
 	}
 
-	protected void fireTaskSubmissionComplete() {
+	protected void fireTaskSubmissionComplete(final TaskData updatedTaskData) {
 		for (final TaskJobListener listener : taskJobListeners) {
 			SafeRunner.run(new ISafeRunnable() {
 				public void run() throws Exception {
-					listener.taskSubmitted(new TaskJobEvent(originalTask, task));
+					listener.taskSubmitted(new TaskJobEvent(originalTask, task, updatedTaskData));
 				}
 
 				public void handleException(Throwable e) {
