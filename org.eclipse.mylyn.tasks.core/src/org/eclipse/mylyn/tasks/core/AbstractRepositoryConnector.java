@@ -615,4 +615,22 @@ public abstract class AbstractRepositoryConnector {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * Validates the connection to {@code repository} and returns information about the repository. This typically
+	 * requires connecting to the repository.
+	 * <p>
+	 * Throws {@link UnsupportedOperationException} if not implemented by clients.
+	 * 
+	 * @param repository
+	 *            the repository
+	 * @param monitor
+	 *            a progress monitor
+	 * @throws CoreException
+	 *             thrown in case the operation fails
+	 * @since 3.11
+	 */
+	public RepositoryInfo validateRepository(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
+		throw new UnsupportedOperationException();
+	}
+
 }
