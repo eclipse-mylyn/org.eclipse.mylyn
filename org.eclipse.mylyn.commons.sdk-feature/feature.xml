@@ -40,12 +40,6 @@
          id="org.eclipse.mylyn.monitor"
          version="0.0.0"/>
 
-   <!--
-   <includes
-         id="org.eclipse.mylyn.commons.activity"
-         version="0.0.0"/>
-   -->
-   
    <includes
          id="org.eclipse.mylyn.commons.identity"
          version="0.0.0"/>
@@ -62,8 +56,6 @@
          id="org.eclipse.mylyn.commons.repositories.http"
          version="0.0.0"/>
 
-   <!-- bundles not included in other features -->
-
    <plugin
          id="org.eclipse.mylyn.commons.net"
          download-size="0"
@@ -78,16 +70,12 @@
          version="0.0.0"
          unpack="false"/>
 
-   <!-- sdk bundles -->
-
    <plugin
          id="org.eclipse.mylyn.commons.sdk.util"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
-   <!-- source bundles -->
 
    <plugin
          id="org.eclipse.mylyn.commons.core.source"
@@ -109,7 +97,7 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-   
+
    <plugin
          id="org.eclipse.mylyn.commons.net.source"
          download-size="0"
@@ -222,8 +210,6 @@
          version="0.0.0"
          unpack="false"/>
 
-   <!-- Orbit bundles -->
-
    <plugin
          id="org.apache.xmlrpc"
          download-size="0"
@@ -289,6 +275,13 @@
 
    <plugin
          id="org.apache.httpcomponents.httpclient"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.google.guava"
          download-size="0"
          install-size="0"
          version="0.0.0"
