@@ -16,6 +16,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.builds.tests.core.BuildModelManagerTest;
 import org.eclipse.mylyn.builds.tests.operations.RefreshOperationTest;
+import org.eclipse.mylyn.builds.tests.ui.BuildsViewTest;
 import org.eclipse.mylyn.builds.tests.util.BuildsUrlHandlerTest;
 import org.eclipse.mylyn.builds.tests.util.JUnitResultGeneratorTest;
 
@@ -34,6 +35,7 @@ public class AllBuildsTests {
 		suite.addTestSuite(JUnitResultGeneratorTest.class);
 		suite.addTestSuite(RefreshOperationTest.class);
 		suite.addTestSuite(BuildsUrlHandlerTest.class);
+		suite.addTestSuite(BuildsViewTest.class);
 		return suite;
 	}
 

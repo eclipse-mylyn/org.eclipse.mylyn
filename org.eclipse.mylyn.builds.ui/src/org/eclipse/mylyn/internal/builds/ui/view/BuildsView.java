@@ -105,6 +105,35 @@ import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
  * @author Lucas Panjer
  */
 public class BuildsView extends ViewPart implements IShowInTarget {
+	public class BuildsSummary {
+		int numSuccess;
+
+		int numUnstable;
+
+		int numFailed;
+
+		public boolean isSuccess() {
+			return numSuccess > 0 && numUnstable == 0 && numFailed == 0;
+		}
+
+		public boolean isUnstable() {
+			return numUnstable > 0 && numFailed == 0;
+		}
+
+		public boolean isFailed() {
+			return numFailed > 0;
+		}
+
+		public boolean isEmpty() {
+			return numSuccess == 0 && numSuccess == 0 && numFailed == 0;
+		}
+
+		@Override
+		public String toString() {
+			return NLS.bind("{0} Succeeded, {1} Unstable, {2} Failed", new Object[] { numSuccess, numUnstable,
+					numFailed });
+		}
+	}
 
 	private class BuildTreeSorter extends TreeSorter {
 
@@ -416,7 +445,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	@Override
 	public void dispose() {
 		super.dispose();
-		model.eAdapters().remove(modelListener);
+		getModel().eAdapters().remove(modelListener);
 		BuildsUiPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(propertyChangeListener);
 	}
 
@@ -480,35 +509,26 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		return contentProvider;
 	}
 
-	protected BuildStatus getPlanStatus() {
-		BuildStatus planStatus = null;
-		boolean plansSelected = false;
-		if (contentProvider != null) {
-			for (IBuildPlan plan : model.getPlans()) {
+	protected BuildsSummary getBuildsSummary() {
+		BuildsSummary buildsSummary = new BuildsSummary();
+		if (getContentProvider() != null) {
+			for (IBuildPlan plan : getModel().getPlans()) {
 				if (plan.getStatus() != null) {
 					switch (plan.getStatus()) {
 					case SUCCESS:
-						if (planStatus == null) {
-							planStatus = BuildStatus.SUCCESS;
-						}
+						buildsSummary.numSuccess++;
 						break;
 					case UNSTABLE:
-						if (planStatus == null || planStatus == BuildStatus.SUCCESS) {
-							planStatus = BuildStatus.UNSTABLE;
-						}
+						buildsSummary.numUnstable++;
 						break;
 					case FAILED:
-						planStatus = BuildStatus.FAILED;
+						buildsSummary.numFailed++;
 						break;
 					}
 				}
-				plansSelected = true;
 			}
 		}
-		if (plansSelected) {
-			return (planStatus != null) ? planStatus : BuildStatus.DISABLED;
-		}
-		return null;
+		return buildsSummary;
 	}
 
 	TreeViewer getViewer() {
@@ -608,7 +628,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		boolean isShowingViewer = (stackLayout.topControl == viewer.getControl());
 		boolean hasContents = false;
 		if (contentProvider != null) {
-			if (model.getPlans().size() > 0 || model.getServers().size() > 0) {
+			if (getModel().getPlans().size() > 0 || getModel().getServers().size() > 0) {
 				hasContents = true;
 			}
 		}
@@ -627,19 +647,23 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	public void updateDecoration(IStatus status) {
 		String statusMessage = "";
 		if (status.isOK()) {
-			BuildStatus planStatus = getPlanStatus();
-			if (planStatus == BuildStatus.SUCCESS) {
+			BuildsSummary buildsSummary = getBuildsSummary();
+			if (buildsSummary.isSuccess()) {
 				setTitleImage(CommonImages.getImageWithOverlay(BuildImages.VIEW_BUILDS, CommonImages.OVERLAY_SUCCESS,
 						false, false));
-			} else if (planStatus == BuildStatus.UNSTABLE) {
+			} else if (buildsSummary.isUnstable()) {
 				setTitleImage(CommonImages.getImageWithOverlay(BuildImages.VIEW_BUILDS, CommonImages.OVERLAY_FAILED,
 						false, false));
-
-			} else if (planStatus == BuildStatus.FAILED) {
+			} else if (buildsSummary.isFailed()) {
 				setTitleImage(CommonImages.getImageWithOverlay(BuildImages.VIEW_BUILDS, CommonImages.OVERLAY_ERROR,
 						false, false));
 			} else {
 				setTitleImage(CommonImages.getImage(BuildImages.VIEW_BUILDS));
+			}
+			if (!buildsSummary.isEmpty()) {
+				setContentDescription(buildsSummary.toString());
+			} else {
+				setContentDescription(""); //$NON-NLS-1$
 			}
 			if (lastRefresh != null) {
 				statusMessage = NLS.bind("Last update: {0}", DateFormat.getDateTimeInstance().format(lastRefresh));
@@ -703,6 +727,10 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		TreeColumn column = (tree.getColumn(1).getResizable()) ? tree.getColumn(1) : tree.getColumn(0);
 		int nw = column.getWidth() + tree.getClientArea().width - totalColumnWidth;
 		column.setWidth(nw);
+	}
+
+	protected BuildModel getModel() {
+		return model;
 	}
 
 }
