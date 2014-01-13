@@ -14,10 +14,17 @@ package org.eclipse.mylyn.internal.bugzilla.rest.core;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.operations.OperationUtil;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
+import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
+import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.RepositoryInfo;
+import org.eclipse.mylyn.tasks.core.RepositoryVersion;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -114,7 +121,28 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 	}
 
 	public BugzillaRestClient createClient(TaskRepository repository) {
-		BugzillaRestClient client = new BugzillaRestClient(new RepositoryLocation(repository.getProperties()));
+		RepositoryLocation location = new RepositoryLocation(repository.getProperties());
+		AuthenticationCredentials credentials1 = repository.getCredentials(org.eclipse.mylyn.commons.net.AuthenticationType.REPOSITORY);
+		UserCredentials credentials = new UserCredentials(credentials1.getUserName(), credentials1.getPassword(), null,
+				true);
+		location.setCredentials(AuthenticationType.REPOSITORY, credentials);
+		BugzillaRestClient client = new BugzillaRestClient(location);
+
 		return client;
 	}
+
+	@Override
+	public RepositoryInfo validateRepository(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
+		try {
+			BugzillaRestClient client = createClient(repository);
+			if (!client.validate(OperationUtil.convert(monitor))) {
+				throw new CoreException(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, "repository is invalide"));
+			}
+			BugzillaRestVersion version = client.getVersion(OperationUtil.convert(monitor));
+			return new RepositoryInfo(new RepositoryVersion(version.toString()));
+		} catch (Exception e) {
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, e.getMessage(), e));
+		}
+	}
+
 }

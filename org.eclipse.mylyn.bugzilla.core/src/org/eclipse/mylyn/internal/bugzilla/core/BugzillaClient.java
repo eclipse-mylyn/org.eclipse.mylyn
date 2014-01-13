@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
- *     Frank Becker - fixes for bug 165072 
+ *     Frank Becker - fixes for bug 165072
  *     Red Hat Inc. - fixes for bug 259291
  *******************************************************************************/
 
@@ -249,7 +249,7 @@ public class BugzillaClient {
 				uID = xmlRpcClient.login(monitor);
 				if (uID == -1) {
 					throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
-							"XMLRPC user could not login")); //$NON-NLS-1$					
+							"XMLRPC user could not login")); //$NON-NLS-1$
 				}
 			} catch (XmlRpcException e) {
 				throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
@@ -343,7 +343,7 @@ public class BugzillaClient {
 				return getMethod;
 			case HttpURLConnection.HTTP_NOT_MODIFIED:
 				WebUtil.releaseConnection(getMethod, monitor);
-				throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN, "Not changed")); //$NON-NLS-1$			
+				throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN, "Not changed")); //$NON-NLS-1$
 			case HttpURLConnection.HTTP_UNAUTHORIZED:
 			case HttpURLConnection.HTTP_FORBIDDEN:
 				// login or reauthenticate due to an expired session
@@ -488,7 +488,7 @@ public class BugzillaClient {
 			}
 			if (httpAuthCredentials != null && httpAuthCredentials.getUserName() != null
 					&& httpAuthCredentials.getUserName().length() > 0) {
-				// If httpAuthCredentials are used HttpURLConnection.HTTP_UNAUTHORIZED when the credentials are invalide so we 
+				// If httpAuthCredentials are used HttpURLConnection.HTTP_UNAUTHORIZED when the credentials are invalide so we
 				// not need to test the cookies.
 				// see bug 305267 or https://bugzilla.mozilla.org/show_bug.cgi?id=385606
 				loggedIn = true;
@@ -1259,7 +1259,7 @@ public class BugzillaClient {
 		hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
 
 		GzipGetMethod getMethod = new GzipGetMethod(WebUtil.getRequestPath(bugUrl), false);
-		getMethod.setRequestHeader("Content-Type", "text/xml; charset=" + getCharacterEncoding()); //$NON-NLS-1$ //$NON-NLS-2$ 
+		getMethod.setRequestHeader("Content-Type", "text/xml; charset=" + getCharacterEncoding()); //$NON-NLS-1$ //$NON-NLS-2$
 		httpClient.getParams().setParameter("http.protocol.single-cookie-header", true); //$NON-NLS-1$
 		getMethod.setDoAuthentication(true);
 
@@ -1806,7 +1806,7 @@ public class BugzillaClient {
 
 		String bugUrl = taskData.getRepositoryUrl() + IBugzillaConstants.URL_GET_SHOW_BUG + taskData.getTaskId();
 		GzipGetMethod getMethod = new GzipGetMethod(WebUtil.getRequestPath(bugUrl), false);
-		getMethod.setRequestHeader("Content-Type", "text/xml; charset=" + getCharacterEncoding()); //$NON-NLS-1$ //$NON-NLS-2$ 
+		getMethod.setRequestHeader("Content-Type", "text/xml; charset=" + getCharacterEncoding()); //$NON-NLS-1$ //$NON-NLS-2$
 		httpClient.getParams().setParameter("http.protocol.single-cookie-header", true); //$NON-NLS-1$
 		getMethod.setDoAuthentication(true);
 
@@ -2299,7 +2299,7 @@ public class BugzillaClient {
 			try {
 				code = WebUtil.execute(httpClient, hostConfiguration, headMethod, monitor);
 			} catch (IOException e) {
-//				ignore the response 
+//				ignore the response
 				WebUtil.releaseConnection(headMethod, monitor);
 				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_IO, repositoryUrl.toString(), e));
@@ -2308,19 +2308,19 @@ public class BugzillaClient {
 			if (code == HttpURLConnection.HTTP_OK) {
 				return headMethod;
 			} else if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
-//				ignore the response 
+//				ignore the response
 				WebUtil.releaseConnection(headMethod, monitor);
 				loggedIn = false;
 				authenticate(monitor);
 			} else if (code == HttpURLConnection.HTTP_PROXY_AUTH) {
 				loggedIn = false;
-//				ignore the response 
+//				ignore the response
 				WebUtil.releaseConnection(headMethod, monitor);
 				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
 						"Proxy authentication required")); //$NON-NLS-1$
 			} else {
-//				ignore the response 
+//				ignore the response
 				WebUtil.releaseConnection(headMethod, monitor);
 				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_NETWORK, "Http error: " + HttpStatus.getStatusText(code))); //$NON-NLS-1$
@@ -2505,7 +2505,7 @@ public class BugzillaClient {
 			BugzillaXmlRpcClient client = getXmlRpcClient();
 			if (client == null) {
 				throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
-						"XMLRPC is not available")); //$NON-NLS-1$				
+						"XMLRPC is not available")); //$NON-NLS-1$
 			}
 			return client.getHistory(new Integer[] { bugId }, monitor);
 		} catch (XmlRpcException e) {
