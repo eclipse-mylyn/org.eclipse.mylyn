@@ -12,19 +12,21 @@
 
 package org.eclipse.mylyn.internal.reviews.ui.annotations;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.mylyn.reviews.core.model.IComment;
+import org.eclipse.mylyn.reviews.core.spi.ModelUtil;
 
 /**
- * Class to represent a comment in a Crucible review
+ * Class to represent a comment in a review
  * 
  * @author Shawn Minto
  * @author Steffen Pingel
  */
 public class CommentAnnotation extends Annotation {
 
-	public static final String COMMENT_ANNOTATION_ID = "org.eclipse.mylyn.reviews.ui.comment.Annotation";
+	public static final String COMMENT_ANNOTATION_ID = "org.eclipse.mylyn.reviews.ui.comment.Annotation"; //$NON-NLS-1$
 
 	private final Position position;
 
@@ -51,11 +53,8 @@ public class CommentAnnotation extends Annotation {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((comment == null) ? 0 : comment.hashCode());
-		result = prime * result + ((position == null) ? 0 : position.hashCode());
-		return result;
+		int result = ((position == null) ? 0 : position.hashCode());
+		return ModelUtil.ecoreHash(result, comment);
 	}
 
 	@Override
@@ -66,17 +65,10 @@ public class CommentAnnotation extends Annotation {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof CommentAnnotation)) {
+		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		final CommentAnnotation other = (CommentAnnotation) obj;
-		if (comment == null) {
-			if (other.comment != null) {
-				return false;
-			}
-		} else if (!comment.equals(other.comment)) {
-			return false;
-		}
+		CommentAnnotation other = (CommentAnnotation) obj;
 		if (position == null) {
 			if (other.position != null) {
 				return false;
@@ -84,7 +76,9 @@ public class CommentAnnotation extends Annotation {
 		} else if (!position.equals(other.position)) {
 			return false;
 		}
-		return true;
+		if (comment != null && other.comment != null && comment.getId() != null && other.comment.getId() != null) {
+			return comment.getId().equals(other.comment.getId());
+		}
+		return EcoreUtil.equals(comment, other.comment);
 	}
-
 }

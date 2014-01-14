@@ -150,11 +150,12 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @generated
+	 * @generated NOT
 	 */
 	public void setCreationDate(Date newCreationDate) {
 		Date oldCreationDate = creationDate;
-		creationDate = newCreationDate;
+		//Protect against case where java.sql.Timestamp is used
+		creationDate = new Date(newCreationDate.getTime());
 		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM_SET__CREATION_DATE,
 					oldCreationDate, creationDate));
@@ -173,11 +174,12 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @generated
+	 * @generated NOT
 	 */
 	public void setModificationDate(Date newModificationDate) {
 		Date oldModificationDate = modificationDate;
-		modificationDate = newModificationDate;
+		//Protect against case where java.sql.Timestamp is used
+		modificationDate = new Date(newModificationDate.getTime());
 		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM_SET__MODIFICATION_DATE,
 					oldModificationDate, modificationDate));
@@ -290,8 +292,7 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	public void setParentReview(IReview newParentReview) {
 		if (newParentReview != eInternalContainer()
 				|| (eContainerFeatureID() != ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW && newParentReview != null)) {
-			if (EcoreUtil.isAncestor(this, newParentReview))
-			 {
+			if (EcoreUtil.isAncestor(this, newParentReview)) {
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
 			}
 			NotificationChain msgs = null;

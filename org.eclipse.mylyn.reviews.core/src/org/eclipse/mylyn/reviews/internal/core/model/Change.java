@@ -218,11 +218,12 @@ public class Change extends EObjectImpl implements IChange {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @generated
+	 * @generated NOT
 	 */
 	public void setCreationDate(Date newCreationDate) {
 		Date oldCreationDate = creationDate;
-		creationDate = newCreationDate;
+		//Protect against case where java.sql.Timestamp is used
+		creationDate = new Date(newCreationDate.getTime());
 		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.CHANGE__CREATION_DATE,
 					oldCreationDate, creationDate));
@@ -241,11 +242,12 @@ public class Change extends EObjectImpl implements IChange {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @generated
+	 * @generated NOT
 	 */
 	public void setModificationDate(Date newModificationDate) {
 		Date oldModificationDate = modificationDate;
-		modificationDate = newModificationDate;
+		//Protect against case where java.sql.Timestamp is used
+		modificationDate = new Date(newModificationDate.getTime());
 		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.CHANGE__MODIFICATION_DATE,
 					oldModificationDate, modificationDate));

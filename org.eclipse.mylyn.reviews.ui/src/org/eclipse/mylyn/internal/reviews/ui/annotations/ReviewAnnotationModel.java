@@ -15,6 +15,7 @@ package org.eclipse.mylyn.internal.reviews.ui.annotations;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -51,7 +52,7 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 
 	private final Set<IAnnotationModelListener> annotationModelListeners = new HashSet<IAnnotationModelListener>(2);
 
-	private final List<CommentAnnotation> annotations = new ArrayList<CommentAnnotation>();
+	private final Set<CommentAnnotation> annotations = new LinkedHashSet<CommentAnnotation>();
 
 	private ReviewBehavior behavior;
 
@@ -229,8 +230,9 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 					}
 					length = Math.max(1, length);
 					CommentAnnotation ca = new CommentAnnotation(offset, length, comment);
-					annotations.add(ca);
-					event.annotationAdded(ca);
+					if (annotations.add(ca)) {
+						event.annotationAdded(ca);
+					}
 				} catch (BadLocationException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, "Unable to add annotation.",
 							e));

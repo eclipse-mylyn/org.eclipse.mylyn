@@ -15,6 +15,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.reviews.spi.edit.remote.AbstractRemoteEditFactoryProviderTest;
+import org.eclipse.mylyn.reviews.tests.ui.ReviewAnnotationModelTest;
 import org.eclipse.mylyn.reviews.tests.ui.ReviewUiTest;
 import org.eclipse.mylyn.reviews.tests.ui.UiDataLocatorTest;
 
@@ -28,6 +29,7 @@ public class AllReviewsTests {
 		suite.addTestSuite(ReviewUiTest.class);
 		suite.addTestSuite(UiDataLocatorTest.class);
 		suite.addTestSuite(AbstractRemoteEditFactoryProviderTest.class);
+		suite.addTestSuite(ReviewAnnotationModelTest.class);
 		return suite;
 	}
 
