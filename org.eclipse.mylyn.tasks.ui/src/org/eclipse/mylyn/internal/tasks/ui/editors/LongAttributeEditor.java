@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 Tasktop Technologies and others.
+ * Copyright (c) 2014 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,10 +21,11 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * @author Thomas Ehrnhoefer
+ * @author Steffen Pingel
  */
-public class DoubleAttributeEditor extends TextAttributeEditor {
+public class LongAttributeEditor extends TextAttributeEditor {
 
-	public DoubleAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
+	public LongAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 	}
 
@@ -39,13 +40,14 @@ public class DoubleAttributeEditor extends TextAttributeEditor {
 			public String isValid(String newText) {
 				if (StringUtils.isNotBlank(newText)) {
 					try {
-						Double.parseDouble(newText);
+						Long.parseLong(newText);
 					} catch (NumberFormatException e) {
-						return Messages.DoubleAttributeEditor_this_field_requires_double_value;
+						return Messages.LongAttributeEditor_This_field_requires_a_long_value;
 					}
 				}
 				return null;
 			}
 		};
 	}
+
 }

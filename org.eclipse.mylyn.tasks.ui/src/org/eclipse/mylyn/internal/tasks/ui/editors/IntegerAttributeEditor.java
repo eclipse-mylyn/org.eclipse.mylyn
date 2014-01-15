@@ -34,12 +34,12 @@ public class IntegerAttributeEditor extends TextAttributeEditor {
 		AttributeEditorToolkit.createValidator(this, getText(), getAttributeTypeValidator());
 	}
 
-	private IInputValidator getAttributeTypeValidator() {
+	IInputValidator getAttributeTypeValidator() {
 		return new IInputValidator() {
 			public String isValid(String newText) {
 				if (StringUtils.isNotBlank(newText)) {
 					try {
-						Integer.parseInt(getText().getText());
+						Integer.parseInt(newText);
 					} catch (NumberFormatException e) {
 						return Messages.IntegerAttributeEditor_this_field_requires_integer_value;
 					}

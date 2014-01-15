@@ -59,6 +59,8 @@ public class Messages extends NLS {
 
 	public static String LastCommentedAttributeEditor_dateLastCommented;
 
+	public static String LongAttributeEditor_This_field_requires_a_long_value;
+
 	public static String CommentGroupStrategy_Current;
 
 	public static String CommentGroupStrategy_Older;

@@ -111,6 +111,7 @@
     <module>org.eclipse.mylyn.tasks.search</module>
     <module>org.eclipse.mylyn.tasks.tests</module>
     <module>org.eclipse.mylyn.tasks.ui</module>
+    <module>org.eclipse.mylyn.tasks.ui.tests</module>
     <module>org.eclipse.mylyn.tests.util</module>
     <module>org.eclipse.mylyn.trac-feature</module>
     <module>org.eclipse.mylyn.trac.core</module>
