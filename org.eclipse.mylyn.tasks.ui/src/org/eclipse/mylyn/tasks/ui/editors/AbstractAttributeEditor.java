@@ -292,7 +292,7 @@ public abstract class AbstractAttributeEditor {
 	 */
 	protected boolean needsValue() {
 		boolean isRequired = getTaskAttribute().getMetaData().isRequired();
-		boolean hasValue = !StringUtils.isEmpty(getTaskAttribute().getValue());
+		boolean hasValue = !StringUtils.isEmpty(getAttributeMapper().getValue(getTaskAttribute()));
 		return isRequired && !hasValue;
 	}
 

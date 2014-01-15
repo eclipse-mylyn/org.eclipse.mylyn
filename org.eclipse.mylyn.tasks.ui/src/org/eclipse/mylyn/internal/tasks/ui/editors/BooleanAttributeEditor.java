@@ -67,6 +67,11 @@ public class BooleanAttributeEditor extends AbstractAttributeEditor {
 		return getAttributeMapper().getBooleanValue(getTaskAttribute());
 	}
 
+	@Override
+	protected boolean needsValue() {
+		return false;
+	}
+
 	public void setValue(boolean value) {
 		getAttributeMapper().setBooleanValue(getTaskAttribute(), value);
 		attributeChanged();

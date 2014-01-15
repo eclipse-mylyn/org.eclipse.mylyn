@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataState;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.editors.BooleanAttributeEditor;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
@@ -68,6 +69,19 @@ public class AttributeEditorTest extends TestCase {
 		protected boolean shouldAutoRefresh() {
 			return true;
 		}
+	}
+
+	private class MockBooleanAttributeEditor extends BooleanAttributeEditor {
+
+		public MockBooleanAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
+			super(manager, taskAttribute);
+		}
+
+		@Override
+		public boolean needsValue() {
+			return super.needsValue();
+		}
+
 	}
 
 	private TaskRepository repository;
@@ -195,6 +209,15 @@ public class AttributeEditorTest extends TestCase {
 
 		attribute.getMetaData().setRequired(false);
 		manager.attributeChanged(attribute);
+	}
+
+	public void testBooleanAttribute() throws Exception {
+		TaskAttribute attribute = new TaskAttribute(taskData.getRoot(), "a.required.boolean");
+		attribute.getMetaData().setType(TaskAttribute.TYPE_BOOLEAN);
+		attribute.getMetaData().setRequired(true);
+
+		MockBooleanAttributeEditor editor = new MockBooleanAttributeEditor(manager, attribute);
+		assertFalse(editor.needsValue());
 	}
 
 	private TaskDataModel createManager() throws Exception {
