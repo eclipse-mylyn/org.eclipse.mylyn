@@ -116,7 +116,9 @@ public class HttpUtil {
 	public static void configureClient(AbstractHttpClient client, String userAgent) {
 		HttpClientParams.setCookiePolicy(client.getParams(), CookiePolicy.BEST_MATCH);
 
-		HttpProtocolParams.setUserAgent(client.getParams(), userAgent);
+		if (userAgent != null) {
+			HttpProtocolParams.setUserAgent(client.getParams(), userAgent);
+		}
 		HttpProtocolParams.setUseExpectContinue(client.getParams(), true);
 		client.getParams().setBooleanParameter(ClientPNames.ALLOW_CIRCULAR_REDIRECTS, true);
 

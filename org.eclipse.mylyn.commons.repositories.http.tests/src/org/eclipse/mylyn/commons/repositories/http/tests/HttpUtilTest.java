@@ -21,6 +21,7 @@ import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.client.ContentEncodingHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.HttpProtocolParams;
 import org.eclipse.core.runtime.AssertionFailedException;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
@@ -133,5 +134,17 @@ public class HttpUtilTest {
 		assertEquals(1, connectionManager.getConnectionsInPool());
 		HttpUtil.release(request, response, null);
 		assertEquals(0, connectionManager.getConnectionsInPool());
+	}
+
+	@Test
+	public void testConfigureClient() {
+		HttpUtil.configureClient(client, "Agent 007");
+		assertEquals("Agent 007", HttpProtocolParams.getUserAgent(client.getParams()));
+
+		HttpUtil.configureClient(client, "Special Agent Fox Mulder");
+		assertEquals("Special Agent Fox Mulder", HttpProtocolParams.getUserAgent(client.getParams()));
+
+		HttpUtil.configureClient(client, null);
+		assertEquals("Special Agent Fox Mulder", HttpProtocolParams.getUserAgent(client.getParams()));
 	}
 }
