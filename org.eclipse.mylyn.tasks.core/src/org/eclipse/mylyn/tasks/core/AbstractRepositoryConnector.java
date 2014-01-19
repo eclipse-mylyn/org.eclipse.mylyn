@@ -633,4 +633,16 @@ public abstract class AbstractRepositoryConnector {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * Set the category of the {@code repository} to the default TaskRepository.CATEGORY_BUGS.
+	 * <p>
+	 * Subclasses may override.
+	 * 
+	 * @param repository
+	 *            the repository
+	 * @since 3.11
+	 */
+	public void applyDefaultCategory(TaskRepository repository) {
+		repository.setCategory(TaskRepository.CATEGORY_BUGS);
+	}
 }

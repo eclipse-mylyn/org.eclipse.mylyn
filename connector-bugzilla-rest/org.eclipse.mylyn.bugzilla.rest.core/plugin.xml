@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         id="org.eclipse.mylyn.bugzilla.rest.repository"
+         name="Bugzilla REST Repository"
+         point="org.eclipse.mylyn.tasks.core.repositories">
+      <connectorCore
+            class="org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConnector"
+            id="org.eclipse.mylyn.bugzilla.rest"
+            name="Bugzilla REST Repository Connector">
+      </connectorCore>
+   </extension>
+</plugin>

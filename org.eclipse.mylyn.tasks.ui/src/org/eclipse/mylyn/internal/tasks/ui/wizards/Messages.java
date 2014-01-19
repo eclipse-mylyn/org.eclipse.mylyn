@@ -235,6 +235,8 @@ public class Messages extends NLS {
 
 	public static String AbstractRepositorySettingsPage_Server_;
 
+	public static String AbstractRepositorySettingsPage_Settings_are_valid_version;
+
 	public static String AbstractRepositorySettingsPage_Unable_to_authenticate_with_repository;
 
 	public static String AbstractRepositorySettingsPage_Use_global_Network_Connections_preferences;

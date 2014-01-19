@@ -53,7 +53,7 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryPerson;
  * <li>The solution we have come up with thus far is not to interpret the date as a DATE object but rather simply use
  * the date string given to us by the repository itself.</li>
  * </ul>
- * 
+ *
  * @author Mik Kersten
  * @author Rob Elves
  * @author Eugene Kuleshov
@@ -149,7 +149,7 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * Category for repositories that manage tasks.
-	 * 
+	 *
 	 * @see #setCategory(String)
 	 * @since 3.9
 	 */
@@ -157,7 +157,7 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * Category for repositories that manage bugs.
-	 * 
+	 *
 	 * @see #setCategory(String)
 	 * @since 3.9
 	 */
@@ -165,7 +165,7 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * Category for repositories that manage builds.
-	 * 
+	 *
 	 * @see #setCategory(String)
 	 * @since 3.9
 	 */
@@ -173,7 +173,7 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * Category for repositories that manage reviews.
-	 * 
+	 *
 	 * @see #setCategory(String)
 	 * @since 3.9
 	 */
@@ -485,7 +485,7 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * Returns {@code} if credentials persisted in the platform keystore.
-	 * 
+	 *
 	 * @since 3.10
 	 * @see #setShouldPersistCredentials(boolean)
 	 */
@@ -498,7 +498,7 @@ public final class TaskRepository extends PlatformObject {
 	 * will not be persisted in the platform keystore.
 	 * <p>
 	 * This flag does not have any effect if not running in an OSGi environment.
-	 * 
+	 *
 	 * @since 3.10
 	 * @see #shouldPersistCredentials()
 	 */
@@ -513,7 +513,7 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * Get the last refresh date as initialized {@link Date} object, null if not set<br />
-	 * 
+	 *
 	 * @return {@link Date} configuration date, null if not set
 	 */
 	public Date getConfigurationDate() {
@@ -542,7 +542,7 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * Returns the credentials for an authentication type.
-	 * 
+	 *
 	 * @param authType
 	 *            the type of authentication
 	 * @return null, if no credentials are set for <code>authType</code>
@@ -684,7 +684,7 @@ public final class TaskRepository extends PlatformObject {
 		// NOTE: if anonymous, user name is "" string so we won't go to keyring
 		if (!isCachedUserName) {
 			if (useSecureStorage()) {
-				// do not open secure store for username to avoid prompting user for password during initialization 
+				// do not open secure store for username to avoid prompting user for password during initialization
 				cachedUserName = getProperty(getKeyPrefix(AuthenticationType.REPOSITORY) + USERNAME);
 			} else {
 				cachedUserName = getUserName(AuthenticationType.REPOSITORY);
@@ -769,12 +769,12 @@ public final class TaskRepository extends PlatformObject {
 	public void setCharacterEncoding(String characterEncoding) {
 		properties.put(IRepositoryConstants.PROPERTY_ENCODING, characterEncoding == null
 				? DEFAULT_CHARACTER_ENCODING
-				: characterEncoding);
+						: characterEncoding);
 	}
 
 	/**
 	 * Set the Configuration date to the {@link Date} indicated.
-	 * 
+	 *
 	 * @param configuration
 	 *            date {@link {@link Date}
 	 */
@@ -786,7 +786,7 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * Sets the credentials for <code>authType</code>.
-	 * 
+	 *
 	 * @param authType
 	 *            the type of authentication
 	 * @param credentials
@@ -891,7 +891,7 @@ public final class TaskRepository extends PlatformObject {
 	public void setTimeZoneId(String timeZoneId) {
 		setProperty(IRepositoryConstants.PROPERTY_TIMEZONE, timeZoneId == null
 				? TimeZone.getDefault().getID()
-				: timeZoneId);
+						: timeZoneId);
 	}
 
 	/**
@@ -977,7 +977,7 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * If this repository was automatically created from a template <code>value</code> should be set to true.
-	 * 
+	 *
 	 * @since 3.5
 	 * @see #isCreatedFromTemplate()
 	 */
@@ -987,7 +987,7 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * Returns true, if this repository was automatically created from a template.
-	 * 
+	 *
 	 * @since 3.5
 	 * @see #setCreatedFromTemplate(boolean)
 	 */

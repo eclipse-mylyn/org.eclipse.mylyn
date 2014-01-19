@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2013 Tasktop Technologies and others. 
+ * Copyright (c) 2004, 2013 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -53,9 +53,11 @@ import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.Messages;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.RepositoryInfo;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -88,7 +90,7 @@ import org.eclipse.ui.statushandlers.StatusManager;
 /**
  * Extend to provide custom repository settings. This page is typically invoked by the user requesting properties via
  * the Task Repositories view.
- * 
+ *
  * @author Mik Kersten
  * @author Rob Elves
  * @author Steffen Pingel
@@ -99,7 +101,7 @@ import org.eclipse.ui.statushandlers.StatusManager;
  * @since 2.0
  */
 public abstract class AbstractRepositorySettingsPage extends AbstractTaskRepositoryPage implements ITaskRepositoryPage,
-		IAdaptable {
+IAdaptable {
 
 	protected static final String PREFS_PAGE_ID_NET_PROXY = "org.eclipse.ui.net.NetPreferences"; //$NON-NLS-1$
 
@@ -411,10 +413,10 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		});
 
 		GridDataFactory.fillDefaults()
-				.hint(300, SWT.DEFAULT)
-				.grab(true, false)
-				.span(2, SWT.DEFAULT)
-				.applyTo(serverUrlCombo);
+		.hint(300, SWT.DEFAULT)
+		.grab(true, false)
+		.span(2, SWT.DEFAULT)
+		.applyTo(serverUrlCombo);
 
 		repositoryLabelEditor = new StringFieldEditor("", LABEL_REPOSITORY_LABEL, StringFieldEditor.UNLIMITED, //$NON-NLS-1$
 				compositeContainer) {
@@ -702,7 +704,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			} catch (LinkageError e) {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 						Messages.AbstractRepositorySettingsPage_Problems_encountered_determining_available_charsets, e));
-				// bug 237972: 3rd party encodings can cause availableCharsets() to fail 
+				// bug 237972: 3rd party encodings can cause availableCharsets() to fail
 				otherEncoding.setEnabled(false);
 				otherEncodingCombo.setEnabled(false);
 			}
@@ -756,10 +758,10 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 		certAuthButton = new Button(certAuthComp, SWT.CHECK);
 		GridDataFactory.fillDefaults()
-				.indent(0, 5)
-				.align(SWT.LEFT, SWT.TOP)
-				.span(3, SWT.DEFAULT)
-				.applyTo(certAuthButton);
+		.indent(0, 5)
+		.align(SWT.LEFT, SWT.TOP)
+		.span(3, SWT.DEFAULT)
+		.applyTo(certAuthButton);
 
 		certAuthButton.setText(Messages.AbstractRepositorySettingsPage_Enable_certificate_authentification);
 
@@ -851,10 +853,10 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 		httpAuthButton = new Button(httpAuthComp, SWT.CHECK);
 		GridDataFactory.fillDefaults()
-				.indent(0, 5)
-				.align(SWT.LEFT, SWT.TOP)
-				.span(3, SWT.DEFAULT)
-				.applyTo(httpAuthButton);
+		.indent(0, 5)
+		.align(SWT.LEFT, SWT.TOP)
+		.span(3, SWT.DEFAULT)
+		.applyTo(httpAuthButton);
 
 		httpAuthButton.setText(Messages.AbstractRepositorySettingsPage_Enable_http_authentication);
 
@@ -1605,7 +1607,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	/**
 	 * Returns true, if credentials are incomplete. Clients may override this method.
-	 * 
+	 *
 	 * @since 3.4
 	 */
 	protected boolean isMissingCredentials() {
@@ -1691,7 +1693,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	 * Note: The credentials of the created repository are not persisted in the platform keystore. When overriding,
 	 * subclasses must either call super or call {@link TaskRepository#setShouldPersistCredentials(boolean)
 	 * setShouldPersistCredentials(false)} before calling {@link #applyTo(TaskRepository)}.
-	 * 
+	 *
 	 * @since 2.0
 	 */
 	public TaskRepository createTaskRepository() {
@@ -1707,6 +1709,10 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	 */
 	@Override
 	public void applyTo(@NonNull TaskRepository repository) {
+		String category = repository.getCategory();
+		if (category == null || category.length() == 0) {
+			connector.applyDefaultCategory(repository);
+		}
 		repository.setVersion(getVersion());
 		if (needsEncoding()) {
 			repository.setCharacterEncoding(getCharacterEncoding());
@@ -1890,7 +1896,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	 * <p>
 	 * This information is typically used by the wizard to set the enablement of the validation UI affordance.
 	 * </p>
-	 * 
+	 *
 	 * @return <code>true</code> if this page can be validated, and <code>false</code> otherwise
 	 * @see #needsValidation()
 	 * @see IWizardContainer#updateButtons()
@@ -1909,7 +1915,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	/**
 	 * Public for testing.
-	 * 
+	 *
 	 * @since 2.0
 	 */
 	public void setUrl(String url) {
@@ -1918,7 +1924,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	/**
 	 * Public for testing.
-	 * 
+	 *
 	 * @since 2.0
 	 */
 	public void setUserId(String id) {
@@ -1927,7 +1933,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	/**
 	 * Public for testing.
-	 * 
+	 *
 	 * @since 2.0
 	 */
 	public void setPassword(String pass) {
@@ -1976,7 +1982,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	/**
 	 * Validate settings provided by the {@link #getValidator(TaskRepository) validator}, typically the server settings.
-	 * 
+	 *
 	 * @since 2.0
 	 */
 	protected void validateSettings() {
@@ -2012,7 +2018,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			StatusManager.getManager().handle(
 					new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 							Messages.AbstractRepositorySettingsPage_Internal_error_validating_repository, e),
-					StatusManager.SHOW | StatusManager.LOG);
+							StatusManager.SHOW | StatusManager.LOG);
 			return;
 		} catch (InterruptedException e) {
 			// canceled
@@ -2070,13 +2076,28 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	}
 
 	/**
+	 * For version 3.11 we change the abstract implementation to a default implementation. The default implementation
+	 * creates an {@link Validator} and deligate the work to
+	 * {@link AbstractRepositoryConnector#validateRepository(TaskRepository, IProgressMonitor)}
+	 *
 	 * @since 2.0
 	 */
-	protected abstract Validator getValidator(@NonNull TaskRepository repository);
+
+	protected Validator getValidator(final TaskRepository repository) {
+		return new org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage.Validator() {
+
+			@Override
+			public void run(IProgressMonitor monitor) throws CoreException {
+				RepositoryInfo repositoryInfo = connector.validateRepository(repository, monitor);
+				setStatus(new Status(IStatus.OK, TasksUiPlugin.ID_PLUGIN, NLS.bind(
+						Messages.AbstractRepositorySettingsPage_Settings_are_valid_version, repositoryInfo.getVersion())));
+			}
+		};
+	}
 
 	/**
 	 * Public for testing.
-	 * 
+	 *
 	 * @since 2.0
 	 */
 	public abstract class Validator {
@@ -2097,7 +2118,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	/**
 	 * Provides an adapter for the {@link IValidatable} interface.
-	 * 
+	 *
 	 * @since 3.7
 	 * @see IAdaptable#getAdapter(Class)
 	 */
@@ -2159,7 +2180,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	/**
 	 * Returns the toolkit used to construct sections and hyperlinks.
-	 * 
+	 *
 	 * @return the toolkit
 	 * @throws IllegalStateException
 	 *             if the toolkit has not been initialized
