@@ -11,4 +11,11 @@
             overlayIcon="icons/eview16/overlay-bugzilla.gif">
       </connectorUi>
    </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.ui.editors">
+      <pageFactory
+            class="org.eclipse.mylyn.internal.bugzilla.rest.ui.BugzillaRestTaskEditorPageFactory"
+            id="org.eclipse.mylyn.bugzilla.rest.ui.pageFactory">
+      </pageFactory>
+   </extension>
 </plugin>

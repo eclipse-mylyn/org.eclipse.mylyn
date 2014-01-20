@@ -18,6 +18,7 @@ import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
+import org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard;
 
 public class BugzillaRestRepositoryConnectorUi extends AbstractRepositoryConnectorUi {
 
@@ -43,8 +44,7 @@ public class BugzillaRestRepositoryConnectorUi extends AbstractRepositoryConnect
 
 	@Override
 	public IWizard getNewTaskWizard(TaskRepository repository, ITaskMapping selection) {
-		// ignore
-		return null;
+		return new NewTaskWizard(repository, selection);
 	}
 
 	@Override
