@@ -79,8 +79,8 @@ public class OsgiServiceLocatorTest {
 		try {
 			URL url = new URL("file:" + markupLanguage.getName());
 			List<URL> resources = Lists.newArrayList(url);
-			doReturn(Collections.enumeration(resources)).when(bundle).getResources(
-					"META-INF/services/" + MarkupLanguage.class.getName());
+			doReturn(Collections.enumeration(resources)).when(bundle).findEntries(eq("META-INF/services"),
+					eq(MarkupLanguage.class.getName()), eq(false));
 			doReturn(1234L).when(bundle).getBundleId();
 			doReturn(markupLanguage).when(bundle).loadClass(eq(markupLanguage.getName()));
 		} catch (Exception e) {

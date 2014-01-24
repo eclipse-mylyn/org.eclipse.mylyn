@@ -12,17 +12,14 @@
 package org.eclipse.mylyn.wikitext.core.osgi;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static java.text.MessageFormat.format;
+import static com.google.common.base.Preconditions.checkState;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 import org.osgi.framework.Bundle;
@@ -44,6 +41,8 @@ import com.google.common.collect.Sets;
  * @since 2.0
  */
 public class OsgiServiceLocator extends ServiceLocator {
+
+	private static final String SERVICES_SLASH = "services/"; //$NON-NLS-1$
 
 	static class BundleResourceDescriptor extends ResourceDescriptor {
 
@@ -96,14 +95,18 @@ public class OsgiServiceLocator extends ServiceLocator {
 		List<ResourceDescriptor> descriptors = Lists.newArrayList();
 		for (Bundle bundle : bundles()) {
 			for (String resourceName : getClasspathServiceResourceNames()) {
-				Enumeration<URL> resources = null;
-				try {
-					resources = bundle.getResources(resourceName);
-				} catch (IOException e) {
-					log(format(Messages.getString("OsgiServiceLocator.0"), bundle.getSymbolicName(), e.getMessage()), e); //$NON-NLS-1$
-				}
+				int indexOf = resourceName.indexOf(SERVICES_SLASH);
+				checkState(indexOf >= 0, resourceName);
+
+				String path = resourceName.substring(0, indexOf + SERVICES_SLASH.length() - 1);
+				String file = resourceName.substring(indexOf + SERVICES_SLASH.length());
+				Enumeration<URL> resources = bundle.findEntries(path, file, false);
 				if (resources == null) {
-					continue;
+					// for running within Eclipse as a JUnit plug-in test
+					resources = bundle.findEntries("src/" + path, file, false); //$NON-NLS-1$
+					if (resources == null) {
+						continue;
+					}
 				}
 				while (resources.hasMoreElements()) {
 					URL resourceUrl = resources.nextElement();
@@ -119,10 +122,6 @@ public class OsgiServiceLocator extends ServiceLocator {
 	@Override
 	protected Class<?> loadClass(ResourceDescriptor resource, String className) throws ClassNotFoundException {
 		return ((BundleResourceDescriptor) resource).bundle.loadClass(className);
-	}
-
-	private void log(String message, Throwable t) {
-		Logger.getLogger(OsgiServiceLocator.class.getName()).log(Level.SEVERE, message, t);
 	}
 
 	private static class SystemBundleFilter implements Predicate<Bundle> {
