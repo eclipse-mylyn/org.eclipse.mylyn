@@ -72,7 +72,16 @@ public abstract class BugzillaRestAuthenticatedGetRequest<T> extends BugzillaRes
 
 	@Override
 	protected HttpRequestBase createHttpRequestBase() {
-		HttpRequestBase request = new HttpGet(baseUrl() + getUrlSuffix());
+		String bugUrl = getUrlSuffix();
+		BugzillaRestLoginToken token = ((BugzillaRestHttpClient) getClient()).getLoginToken();
+		if ((!(this instanceof BugzillaRestValidateRequest) && !(this instanceof BugzillaRestUnauthenticatedGetRequest))
+				&& token != null && bugUrl.length() > 0) {
+			if (!bugUrl.endsWith("?")) {
+				bugUrl += "&";
+			}
+			bugUrl += "token=" + token.getToken();
+		}
+		HttpRequestBase request = new HttpGet(baseUrl() + bugUrl);
 		request.setHeader(CONTENT_TYPE, TEXT_XML_CHARSET_UTF_8);
 		request.setHeader(ACCEPT, APPLICATION_JSON);
 		return request;
@@ -80,6 +89,9 @@ public abstract class BugzillaRestAuthenticatedGetRequest<T> extends BugzillaRes
 
 	@Override
 	protected T execute(IOperationMonitor monitor) throws IOException, BugzillaRestException {
+		if (needsAuthentication()) {
+			authenticate(monitor);
+		}
 		HttpRequestBase request = createHttpRequestBase();
 		CommonHttpResponse response = execute(request, monitor);
 		return processAndRelease(response, monitor);

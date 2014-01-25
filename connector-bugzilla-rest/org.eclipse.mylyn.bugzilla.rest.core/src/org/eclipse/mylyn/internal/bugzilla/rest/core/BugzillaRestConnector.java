@@ -11,15 +11,22 @@
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 import org.eclipse.mylyn.commons.core.operations.OperationUtil;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
+import org.eclipse.mylyn.internal.commons.core.operations.NullOperationMonitor;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -31,16 +38,85 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 
-public class BugzillaRestConnector extends AbstractRepositoryConnector {
-	private static BugzillaRestConnector INSTANCE;
+import com.google.common.base.Optional;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.UncheckedExecutionException;
 
-	public static BugzillaRestConnector getDefault() {
-		return INSTANCE;
-	}
+public class BugzillaRestConnector extends AbstractRepositoryConnector {
+
+	public static final Duration CLIENT_CACHE_DURATION = new Duration(24, TimeUnit.HOURS);
+
+	public static final Duration CONFIGURATION_CACHE_EXPIRE_DURATION = new Duration(7, TimeUnit.DAYS);
+
+	public static final Duration CONFIGURATION_CACHE_REFRESH_AFTER_WRITE_DURATION = new Duration(1, TimeUnit.DAYS);
+
+	private final ExecutorService executor = Executors.newFixedThreadPool(3);
+
+	private static final ThreadLocal<IOperationMonitor> context = new ThreadLocal<IOperationMonitor>();
+
+	private final LoadingCache<RepositoryKey, BugzillaRestClient> clientCache = CacheBuilder.newBuilder()
+			.expireAfterAccess(CLIENT_CACHE_DURATION.getValue(), CLIENT_CACHE_DURATION.getUnit())
+			.build(new CacheLoader<RepositoryKey, BugzillaRestClient>() {
+
+				@Override
+				public BugzillaRestClient load(RepositoryKey key) throws Exception {
+					TaskRepository repository = key.getRepository();
+					return createClient(repository);
+				}
+			});
+
+	private final LoadingCache<RepositoryKey, Optional<BugzillaRestConfiguration>> configurationCache;
 
 	public BugzillaRestConnector() {
+		this(CONFIGURATION_CACHE_REFRESH_AFTER_WRITE_DURATION);
+	}
+
+	public BugzillaRestConnector(Duration refreshAfterWriteDuration) {
 		super();
-		INSTANCE = this;
+		configurationCache = createCacheBuilder(CONFIGURATION_CACHE_EXPIRE_DURATION, refreshAfterWriteDuration).build(
+				new CacheLoader<RepositoryKey, Optional<BugzillaRestConfiguration>>() {
+
+					@Override
+					public Optional<BugzillaRestConfiguration> load(RepositoryKey key) throws Exception {
+						BugzillaRestClient client = clientCache.get(key);
+						return Optional.fromNullable(client.getConfiguration(key.getRepository(), context.get()));
+					}
+
+					@Override
+					public ListenableFuture<Optional<BugzillaRestConfiguration>> reload(final RepositoryKey key,
+							Optional<BugzillaRestConfiguration> oldValue) throws Exception {
+						// asynchronous!
+						ListenableFutureJob<Optional<BugzillaRestConfiguration>> job = new ListenableFutureJob("") {
+
+							@Override
+							protected IStatus run(IProgressMonitor monitor) {
+								BugzillaRestClient client;
+								try {
+									client = clientCache.get(key);
+									set(Optional.fromNullable(client.getConfiguration(key.getRepository(),
+											context.get())));
+								} catch (ExecutionException e) {
+									e.printStackTrace();
+									return new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN,
+											"BugzillaRestConnector reload Configuration", e);
+								}
+								return Status.OK_STATUS;
+							}
+						};
+						job.schedule();
+						return job;
+					}
+				});
+	}
+
+	protected CacheBuilder<Object, Object> createCacheBuilder(Duration expireAfterWriteDuration,
+			Duration refreshAfterWriteDuration) {
+		return CacheBuilder.newBuilder()
+				.expireAfterWrite(expireAfterWriteDuration.getValue(), expireAfterWriteDuration.getUnit())
+				.refreshAfterWrite(refreshAfterWriteDuration.getValue(), refreshAfterWriteDuration.getUnit());
 	}
 
 	@Override
@@ -105,8 +181,9 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 	@Override
 	public void updateRepositoryConfiguration(TaskRepository taskRepository, IProgressMonitor monitor)
 			throws CoreException {
-		// ignore
-
+		context.set(monitor != null ? OperationUtil.convert(monitor) : new NullOperationMonitor());
+		configurationCache.refresh(new RepositoryKey(taskRepository));
+		context.remove();
 	}
 
 	@Override
@@ -117,10 +194,10 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public AbstractTaskDataHandler getTaskDataHandler() {
-		return new BugzillaRestTaskDataHandler();
+		return new BugzillaRestTaskDataHandler(this);
 	}
 
-	public BugzillaRestClient createClient(TaskRepository repository) {
+	private BugzillaRestClient createClient(TaskRepository repository) {
 		RepositoryLocation location = new RepositoryLocation(repository.getProperties());
 		AuthenticationCredentials credentials1 = repository.getCredentials(org.eclipse.mylyn.commons.net.AuthenticationType.REPOSITORY);
 		UserCredentials credentials = new UserCredentials(credentials1.getUserName(), credentials1.getPassword(), null,
@@ -129,6 +206,23 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 		BugzillaRestClient client = new BugzillaRestClient(location);
 
 		return client;
+	}
+
+	/**
+	 * Returns the Client for the {@link TaskRepository}.
+	 *
+	 * @param repository
+	 *            the {@link TaskRepository} object
+	 * @return the client Object
+	 * @throws CoreException
+	 */
+	public BugzillaRestClient getClient(TaskRepository repository) throws CoreException {
+		try {
+			return clientCache.get(new RepositoryKey(repository));
+		} catch (ExecutionException e) {
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN,
+					"TaskRepositoryManager is null"));
+		}
 	}
 
 	@Override
@@ -143,6 +237,40 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 		} catch (Exception e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, e.getMessage(), e));
 		}
+	}
+
+	public BugzillaRestConfiguration getRepositoryConfiguration(TaskRepository repository) throws CoreException {
+		if (clientCache.getIfPresent(new RepositoryKey(repository)) == null) {
+			getClient(repository);
+		}
+		try {
+			Optional<BugzillaRestConfiguration> configurationOptional = configurationCache.get(new RepositoryKey(
+					repository));
+			return configurationOptional.isPresent() ? configurationOptional.get() : null;
+		} catch (UncheckedExecutionException e) {
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, e.getMessage(), e));
+		} catch (ExecutionException e) {
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, e.getMessage(), e));
+		}
+	}
+
+	public void clearClientCache() {
+		clientCache.invalidateAll();
+	}
+
+	public void clearConfigurationCache() {
+		configurationCache.invalidateAll();
+	}
+
+	public void clearAllCaches() {
+		clearClientCache();
+		clearConfigurationCache();
+	}
+
+	@Override
+	public boolean isRepositoryConfigurationStale(TaskRepository repository, IProgressMonitor monitor)
+			throws CoreException {
+		return false;
 	}
 
 }

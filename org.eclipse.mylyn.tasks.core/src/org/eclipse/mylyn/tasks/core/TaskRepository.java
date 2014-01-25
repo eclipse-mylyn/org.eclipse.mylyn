@@ -584,7 +584,7 @@ public final class TaskRepository extends PlatformObject {
 	public void setCharacterEncoding(String characterEncoding) {
 		properties.put(IRepositoryConstants.PROPERTY_ENCODING, characterEncoding == null
 				? DEFAULT_CHARACTER_ENCODING
-						: characterEncoding);
+				: characterEncoding);
 	}
 
 	/**
@@ -709,7 +709,7 @@ public final class TaskRepository extends PlatformObject {
 	public void setTimeZoneId(String timeZoneId) {
 		setProperty(IRepositoryConstants.PROPERTY_TIMEZONE, timeZoneId == null
 				? TimeZone.getDefault().getID()
-						: timeZoneId);
+				: timeZoneId);
 	}
 
 	/**

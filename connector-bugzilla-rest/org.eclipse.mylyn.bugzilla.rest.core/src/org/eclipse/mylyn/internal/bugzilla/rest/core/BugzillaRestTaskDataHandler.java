@@ -24,9 +24,10 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 public class BugzillaRestTaskDataHandler extends AbstractTaskDataHandler {
+	protected final BugzillaRestConnector connector;
 
-	public BugzillaRestTaskDataHandler() {
-		// ignore
+	public BugzillaRestTaskDataHandler(BugzillaRestConnector connector) {
+		this.connector = connector;
 	}
 
 	@Override
@@ -46,7 +47,7 @@ public class BugzillaRestTaskDataHandler extends AbstractTaskDataHandler {
 		data.setVersion("0"); //$NON-NLS-1$
 		BugzillaRestTaskSchema.getDefault().initialize(data);
 		if (initializationData != null) {
-			BugzillaRestConnector.getDefault().getTaskMapping(data).merge(initializationData);
+			connector.getTaskMapping(data).merge(initializationData);
 		}
 		return true;
 	}
