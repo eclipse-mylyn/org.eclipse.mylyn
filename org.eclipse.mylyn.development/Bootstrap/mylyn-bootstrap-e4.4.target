@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="mylyn-bootstrap-e4.4" sequenceNumber="113">
+<?pde version="3.8"?><target name="mylyn-bootstrap-e4.4" sequenceNumber="123">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.swtbot.eclipse.feature.group" version="0.0.0"/>
@@ -70,10 +70,6 @@
 <repository location="http://download.eclipse.org/releases/kepler"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.sdk.ide" version="4.4.0.I20131212-1600"/>
-<repository location="http://download.eclipse.org/eclipse/updates/4.4-I-builds/"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.tmatesoft.svnkit.feature.group" version="1.7.4.v1_r9190_v20120510_1337"/>
 <unit id="org.tigris.subversion.subclipse.mylyn.feature.group" version="3.0.0"/>
 <unit id="net.java.dev.jna.feature.group" version="3.4.0.t20120117_1605"/>
@@ -86,6 +82,10 @@
 <unit id="org.eclipse.egit.mylyn.feature.group" version="3.2.0.201312181205-r"/>
 <unit id="org.eclipse.jgit.feature.group" version="3.2.0.201312181205-r"/>
 <repository location="http://download.eclipse.org/releases/luna"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.sdk.ide" version="4.4.0.I20140123-1600"/>
+<repository location="http://download.eclipse.org/eclipse/updates/4.4-I-builds/"/>
 </location>
 </locations>
 <launcherArgs>
