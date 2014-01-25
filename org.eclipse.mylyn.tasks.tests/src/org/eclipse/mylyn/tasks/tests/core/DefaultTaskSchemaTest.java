@@ -39,6 +39,8 @@ public class DefaultTaskSchemaTest extends TestCase {
 
 		public final Field SUMMARY_READ_ONLY = inheritFrom(parent.SUMMARY).addFlags(Flag.READ_ONLY).create();
 
+		public final Field PRODUCT_REQUIRED = inheritFrom(parent.PRODUCT).addFlags(Flag.REQUIRED).create();
+
 		public final Field REPORTER = inheritFrom(parent.USER_REPORTER).create();
 
 		public final Field REPORTER_MODIFIED = inheritFrom(parent.USER_REPORTER).addFlags(Flag.READ_ONLY)
@@ -97,4 +99,23 @@ public class DefaultTaskSchemaTest extends TestCase {
 	public void testDescriptionHasKind() {
 		assertEquals(TaskAttribute.KIND_DESCRIPTION, DefaultTaskSchema.getInstance().DESCRIPTION.getKind());
 	}
+
+	public void testRequiredAttribute() {
+		TestSchema schema = new TestSchema();
+		assertEquals(TaskAttribute.PRODUCT, schema.PRODUCT_REQUIRED.getKey());
+		TaskData testData = new TaskData(new TaskAttributeMapper(new TaskRepository("mock", "http://mock")), "mock",
+				"http://mock", "-1");
+		schema.initialize(testData);
+		assertNotNull(testData.getRoot().getAttribute(TaskAttribute.USER_REPORTER));
+		assertFalse("USER_REPORTER should be not required", testData.getRoot()
+				.getAttribute(TaskAttribute.USER_REPORTER)
+				.getMetaData()
+				.isRequired());
+		assertNotNull(testData.getRoot().getAttribute(TaskAttribute.PRODUCT));
+		assertTrue("PRODUCT should be required", testData.getRoot()
+				.getAttribute(TaskAttribute.PRODUCT)
+				.getMetaData()
+				.isRequired());
+	}
+
 }

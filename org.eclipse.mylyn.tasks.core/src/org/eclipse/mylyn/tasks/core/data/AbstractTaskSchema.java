@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.Assert;
 
 /**
  * Base class for task schemas. Clients should subclass to define a specific schema.
- * 
+ *
  * @author Steffen Pingel
  * @author David Green
  * @author Miles Parker
@@ -90,6 +90,7 @@ public abstract class AbstractTaskSchema {
 			metaData.setType(getType());
 			metaData.setReadOnly(isReadOnly());
 			metaData.setKind(getKind());
+			metaData.setRequired(isRequired());
 			// options
 			Map<String, String> options = getDefaultOptions();
 			if (options != null) {
@@ -110,7 +111,7 @@ public abstract class AbstractTaskSchema {
 
 		/**
 		 * the key to use when indexing this field
-		 * 
+		 *
 		 * @return the index key, or null if this should not be indexed
 		 * @since 3.7
 		 */
@@ -192,17 +193,32 @@ public abstract class AbstractTaskSchema {
 			return true;
 		}
 
+		/**
+		 * @since 3.11
+		 */
+		public boolean isRequired() {
+			return flags.contains(Flag.REQUIRED);
+		}
+
 	}
 
 	public enum Flag {
 		ATTRIBUTE, OPERATION, PEOPLE, READ_ONLY,
 		/**
 		 * A flag used to indicate that the field is related to a description.
-		 * 
+		 *
 		 * @since 3.11
 		 * @see TaskAttribute#KIND_DESCRIPTION
 		 */
-		DESCRIPTION
+		DESCRIPTION,
+		/**
+		 * A flag used to indicate that the field is required.
+		 *
+		 * @since 3.11
+		 * @see TaskAttribute#META_REQUIRED
+		 */
+		REQUIRED
+
 	};
 
 	protected class FieldFactory {
@@ -279,7 +295,7 @@ public abstract class AbstractTaskSchema {
 	/**
 	 * Provides an iterator for all fields within the schema. Subsequent modifications to the returned collection are
 	 * not reflected to schema.
-	 * 
+	 *
 	 * @since 3.9
 	 * @return all fields within the schema
 	 */
