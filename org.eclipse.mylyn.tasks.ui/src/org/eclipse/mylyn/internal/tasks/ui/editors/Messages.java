@@ -298,4 +298,8 @@ public class Messages extends NLS {
 	public static String TaskHyperlinkPresenter_Not_In_Task_List;
 
 	public static String TaskUrlHyperlink_Open_URL_in_Task_Editor;
+
+	public static String TaskEditorFindSupport_Find;
+
+	public static String TaskEditorFindSupport_Show_X_more_results;
 }

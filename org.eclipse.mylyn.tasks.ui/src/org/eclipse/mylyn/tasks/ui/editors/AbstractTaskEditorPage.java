@@ -79,6 +79,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorAttributePart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorCommentPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorContributionExtensionReader;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorDescriptionPart;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorFindSupport;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorNewCommentPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorOutlineNode;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorOutlinePage;
@@ -132,6 +133,7 @@ import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IFormPart;
@@ -503,6 +505,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	private FocusTracker focusTracker;
 
+	private TaskEditorFindSupport findSupport;
+
 	/**
 	 * @since 3.1
 	 */
@@ -542,6 +546,9 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	}
 
 	public boolean canPerformAction(String actionId) {
+		if (findSupport != null && actionId.equals(ActionFactory.FIND.getId())) {
+			return true;
+		}
 		return CommonTextSupport.canPerformAction(actionId, EditorUtil.getFocusControl(this));
 	}
 
@@ -903,6 +910,9 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	}
 
 	public void doAction(String actionId) {
+		if (findSupport != null && actionId.equals(ActionFactory.FIND.getId())) {
+			findSupport.toggleFind();
+		}
 		CommonTextSupport.doAction(actionId, EditorUtil.getFocusControl(this));
 	}
 
@@ -1072,6 +1082,9 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 				};
 				submitButtonContribution.marginLeft = 10;
 				toolBarManager.add(submitButtonContribution);
+			}
+			if (findSupport != null) {
+				findSupport.addFindAction(toolBarManager);
 			}
 		}
 	}
@@ -1269,6 +1282,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
 		this.textSupport = new CommonTextSupport(handlerService);
 		this.textSupport.setSelectionChangedListener(this);
+		createFindSupport();
 
 		initModel(taskEditorInput);
 
@@ -1335,6 +1349,15 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 				}
 			}
 		}
+	}
+
+	/**
+	 * Subclasses may override to disable the task editor find functionality.
+	 * 
+	 * @since 3.11
+	 */
+	protected void createFindSupport() {
+		this.findSupport = new TaskEditorFindSupport(this);
 	}
 
 	@Override
