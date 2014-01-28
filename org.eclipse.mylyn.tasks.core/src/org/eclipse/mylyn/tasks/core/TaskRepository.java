@@ -240,12 +240,12 @@ public final class TaskRepository extends PlatformObject {
 		setProperty(IRepositoryConstants.PROPERTY_ENCODING, encoding);
 		setProperty(IRepositoryConstants.PROPERTY_TIMEZONE, timeZoneId);
 		// use platform proxy by default (headless will need to set this to false)
-		this.setProperty(TaskRepository.PROXY_USEDEFAULT, new Boolean(true).toString());
+		setBooleanProperty(TaskRepository.PROXY_USEDEFAULT, true);
 
 		// for backwards compatibility to versions prior to 2.2
-		this.setProperty(AUTH_REPOSITORY + SAVE_PASSWORD, String.valueOf(true));
-		this.setProperty(AUTH_HTTP + SAVE_PASSWORD, String.valueOf(true));
-		this.setProperty(AUTH_PROXY + SAVE_PASSWORD, String.valueOf(true));
+		setBooleanProperty(AUTH_REPOSITORY + SAVE_PASSWORD, true);
+		setBooleanProperty(AUTH_HTTP + SAVE_PASSWORD, true);
+		setBooleanProperty(AUTH_PROXY + SAVE_PASSWORD, true);
 	}
 
 	private ICredentialsStore getCredentialsStore() {
@@ -377,14 +377,11 @@ public final class TaskRepository extends PlatformObject {
 	 */
 	public synchronized AuthenticationCredentials getCredentials(AuthenticationType authType) {
 		String key = getKeyPrefix(authType);
-
-		String enabled = getProperty(key + ENABLED);
-		if ("true".equals(enabled)) { //$NON-NLS-1$
+		if (getBooleanProperty(key + ENABLED)) {
 			String userName = getAuthInfo(key + USERNAME);
 			String password;
 
-			String savePassword = getProperty(key + SAVE_PASSWORD);
-			if (savePassword != null && "true".equals(savePassword)) { //$NON-NLS-1$
+			if (getBooleanProperty(key + SAVE_PASSWORD)) {
 				password = getAuthInfo(key + PASSWORD);
 			} else {
 				password = transientProperties.get(key + PASSWORD);
@@ -441,6 +438,10 @@ public final class TaskRepository extends PlatformObject {
 
 	public String getProperty(String name) {
 		return this.properties.get(name);
+	}
+
+	private boolean getBooleanProperty(String name) {
+		return Boolean.parseBoolean(getProperty(name));
 	}
 
 	/**
@@ -618,14 +619,14 @@ public final class TaskRepository extends PlatformObject {
 			boolean savePassword) {
 		String key = getKeyPrefix(authType);
 
-		setProperty(key + SAVE_PASSWORD, String.valueOf(savePassword));
+		setBooleanProperty(key + SAVE_PASSWORD, savePassword);
 
 		if (credentials == null) {
-			setProperty(key + ENABLED, String.valueOf(false));
+			setBooleanProperty(key + ENABLED, false);
 			transientProperties.remove(key + PASSWORD);
 			addAuthInfo(null, null, key + USERNAME, key + PASSWORD);
 		} else {
-			setProperty(key + ENABLED, String.valueOf(true));
+			setBooleanProperty(key + ENABLED, true);
 			if (savePassword) {
 				addAuthInfo(credentials.getUserName(), credentials.getPassword(), key + USERNAME, key + PASSWORD);
 				transientProperties.remove(key + PASSWORD);
@@ -667,7 +668,7 @@ public final class TaskRepository extends PlatformObject {
 	}
 
 	public void setOffline(boolean offline) {
-		properties.put(OFFLINE, String.valueOf(offline));
+		setBooleanProperty(OFFLINE, offline);
 	}
 
 	/**
@@ -697,6 +698,10 @@ public final class TaskRepository extends PlatformObject {
 			this.properties.put(key.intern(), (newValue != null) ? newValue.intern() : null);
 			notifyChangeListeners(key, oldValue, newValue);
 		}
+	}
+
+	private void setBooleanProperty(String key, boolean newValue) {
+		setProperty(key, Boolean.toString(newValue));
 	}
 
 	private void notifyChangeListeners(String key, String old, String value) {
@@ -790,7 +795,7 @@ public final class TaskRepository extends PlatformObject {
 	 * @since 3.1
 	 */
 	public void setDefaultProxyEnabled(boolean useDefaultProxy) {
-		setProperty(TaskRepository.PROXY_USEDEFAULT, String.valueOf(useDefaultProxy));
+		setBooleanProperty(TaskRepository.PROXY_USEDEFAULT, useDefaultProxy);
 	}
 
 	/**
@@ -800,7 +805,7 @@ public final class TaskRepository extends PlatformObject {
 	 * @see #isCreatedFromTemplate()
 	 */
 	public void setCreatedFromTemplate(boolean value) {
-		setProperty(TaskRepository.CREATED_FROM_TEMPLATE, String.valueOf(value));
+		setBooleanProperty(TaskRepository.CREATED_FROM_TEMPLATE, value);
 	}
 
 	/**
