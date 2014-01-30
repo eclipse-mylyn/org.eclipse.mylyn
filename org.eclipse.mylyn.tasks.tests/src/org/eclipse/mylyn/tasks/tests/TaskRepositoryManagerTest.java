@@ -12,22 +12,31 @@
 package org.eclipse.mylyn.tasks.tests;
 
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.equinox.security.storage.EncodingUtils;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
+import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.internal.tasks.core.util.TaskRepositoryKeyringMigrator;
+import org.eclipse.mylyn.internal.tasks.core.util.TaskRepositorySecureStoreMigrator;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -65,6 +74,12 @@ public class TaskRepositoryManagerTest extends TestCase {
 	private final String AUTH_HTTP_PASSWORD = AUTH_HTTP + PASSWORD;
 
 	private final String AUTH_HTTP_USERNAME = AUTH_HTTP + USERNAME;
+
+	private static final String AUTH_PROXY = "org.eclipse.mylyn.tasklist.repositories.proxy"; //$NON-NLS-1$
+
+	private final String AUTH_PROXY_PASSWORD = AUTH_PROXY + PASSWORD;
+
+	private final String AUTH_PROXY_USERNAME = AUTH_PROXY + USERNAME;
 
 	private final String AUTH_SCHEME = "Basic"; //$NON-NLS-1$
 
@@ -119,37 +134,61 @@ public class TaskRepositoryManagerTest extends TestCase {
 		assertEquals("httpPassword", repository.getCredentials(AuthenticationType.HTTP).getPassword());
 	}
 
-	// FIXME 3.5 re-enable test
-//	public void testMigrationToSecureStorage() throws Exception {
-//		TaskRepository repository1 = new TaskRepository("bugzilla", "http://repository1/");
-//
-//		Map<String, String> map = new HashMap<String, String>();
-//		map.put(AUTH_USERNAME, "testuser");
-//		map.put(AUTH_PASSWORD, "testpassword");
-//		map.put(AUTH_HTTP_USERNAME, "testhttpuser");
-//		map.put(AUTH_HTTP_PASSWORD, "testhttppassword");
-//
-//		Platform.addAuthorizationInfo(new URL(repository1.getUrl()), AUTH_REALM, AUTH_SCHEME, map);
-//
-//		map = Platform.getAuthorizationInfo(new URL(repository1.getUrl()), AUTH_REALM, AUTH_SCHEME);
-//
-//		assertEquals("testuser", map.get(AUTH_USERNAME));
-//		assertEquals("testpassword", map.get(AUTH_PASSWORD));
-//		assertEquals("testhttpuser", map.get(AUTH_HTTP_USERNAME));
-//		assertEquals("testhttppassword", map.get(AUTH_HTTP_PASSWORD));
-//
-//		assertTrue(manager.migrateToSecureStorage(repository1));
-//
-//		assertNull(Platform.getAuthorizationInfo(new URL(repository1.getUrl()), AUTH_REALM, AUTH_SCHEME));
-//
-//		ISecurePreferences securePreferences = SecurePreferencesFactory.getDefault()
-//				.node(ITasksCoreConstants.ID_PLUGIN);
-//		securePreferences = securePreferences.node(EncodingUtils.encodeSlashes(repository1.getUrl()));
-//		assertEquals("testuser", securePreferences.get(AUTH_USERNAME, null));
-//		assertEquals("testpassword", securePreferences.get(AUTH_PASSWORD, null));
-//		assertEquals("testhttpuser", securePreferences.get(AUTH_HTTP_USERNAME, null));
-//		assertEquals("testhttppassword", securePreferences.get(AUTH_HTTP_PASSWORD, null));
-//	}
+	public void testMigrationFromKeyring() throws Exception {
+		Map<String, String> authInfo = new HashMap<String, String>();
+		authInfo.put(AUTH_USERNAME, "testuser");
+		authInfo.put(AUTH_PASSWORD, "testpassword");
+		authInfo.put(AUTH_HTTP_USERNAME, "testhttpuser");
+		authInfo.put(AUTH_HTTP_PASSWORD, "testhttppassword");
+		authInfo.put(AUTH_PROXY_USERNAME, "testproxyuser");
+		authInfo.put(AUTH_PROXY_PASSWORD, "testproxypassword");
+
+		TaskRepository repository = new TaskRepository("bugzilla", "http://example.com/");
+		repository.flushAuthenticationCredentials();
+		Platform.addAuthorizationInfo(new URL(repository.getUrl()), AUTH_REALM, AUTH_SCHEME, authInfo);
+		new TaskRepositoryKeyringMigrator(AUTH_REALM, AUTH_SCHEME).migrateCredentials(Collections.singleton(repository));
+		assertCredentialsMigrated(repository);
+
+		repository = new TaskRepository("bugzilla", "I am not a url.");
+		repository.flushAuthenticationCredentials();
+		Platform.addAuthorizationInfo(new URL("http://eclipse.org/mylyn"), repository.getUrl(), AUTH_SCHEME, authInfo);
+		new TaskRepositoryKeyringMigrator(AUTH_REALM, AUTH_SCHEME).migrateCredentials(Collections.singleton(repository));
+		assertCredentialsMigrated(repository);
+	}
+
+	public void testMigrationFromOldSecureStoreNode() throws Exception {
+		TaskRepository repository = new TaskRepository("bugzilla", "http://example.com/");
+		repository.flushAuthenticationCredentials();
+		repository.setProperty(AUTH_USERNAME, "testuser");
+
+		ISecurePreferences oldNode = SecurePreferencesFactory.getDefault().node(ITasksCoreConstants.ID_PLUGIN);
+		oldNode = oldNode.node(EncodingUtils.encodeSlashes(repository.getUrl()));
+		oldNode.put(AUTH_PASSWORD, "testpassword", true);
+		oldNode.put(AUTH_HTTP_USERNAME, "testhttpuser", false);
+		oldNode.put(AUTH_HTTP_PASSWORD, "testhttppassword", true);
+		oldNode.put(AUTH_PROXY_USERNAME, "testproxyuser", false);
+		oldNode.put(AUTH_PROXY_PASSWORD, "testproxypassword", true);
+
+		new TaskRepositorySecureStoreMigrator().migrateCredentials(Collections.singleton(repository));
+		assertCredentialsMigrated(repository);
+	}
+
+	private void assertCredentialsMigrated(TaskRepository repository) throws CoreException, MalformedURLException,
+			StorageException {
+		assertEquals("testuser", repository.getProperty(AUTH_USERNAME));
+
+		ISecurePreferences newNode = SecurePreferencesFactory.getDefault().node(SECURE_CREDENTIALS_STORE_NODE_ID);
+		newNode = newNode.node(EncodingUtils.encodeSlashes(repository.getUrl()));
+		assertEquals("testpassword", newNode.get(AUTH_PASSWORD, null));
+		assertEquals("testhttpuser", newNode.get(AUTH_HTTP_USERNAME, null));
+		assertEquals("testhttppassword", newNode.get(AUTH_HTTP_PASSWORD, null));
+		assertEquals("testproxyuser", newNode.get(AUTH_PROXY_USERNAME, null));
+		assertEquals("testproxypassword", newNode.get(AUTH_PROXY_PASSWORD, null));
+
+		for (String key : newNode.childrenNames()) {
+			assertEquals(key.endsWith(PASSWORD), newNode.isEncrypted(key));
+		}
+	}
 
 	public void testRepositoryWithSlash() throws MalformedURLException {
 

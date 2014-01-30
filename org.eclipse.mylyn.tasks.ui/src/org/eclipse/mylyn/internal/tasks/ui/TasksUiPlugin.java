@@ -85,6 +85,8 @@ import org.eclipse.mylyn.internal.tasks.core.externalization.ExternalizationMana
 import org.eclipse.mylyn.internal.tasks.core.externalization.IExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
+import org.eclipse.mylyn.internal.tasks.core.util.TaskRepositoryKeyringMigrator;
+import org.eclipse.mylyn.internal.tasks.core.util.TaskRepositorySecureStoreMigrator;
 import org.eclipse.mylyn.internal.tasks.core.util.TasksCoreExtensionReader;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskDialogAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction;
@@ -143,6 +145,12 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	private static final char DEFAULT_PATH_SEPARATOR = '/';
 
 	private static final int NOTIFICATION_DELAY = 5000;
+
+	private static final String PREF_MIGRATED_TASK_REPOSITORIES_FROM_SECURE_STORE = "migrated.task.repositories.secure.store"; //$NON-NLS-1$
+
+	private static final String PREF_MIGRATED_TASK_REPOSITORIES_FROM_KEYRING = "migrated.task.repositories.keyring"; //$NON-NLS-1$
+
+	private static final String PROP_FORCE_CREDENTIALS_MIGRATION = "org.eclipse.mylyn.tasks.force.credentials.migration"; //$NON-NLS-1$
 
 	private static TasksUiPlugin INSTANCE;
 
@@ -669,6 +677,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			// initialize managers
 			initializeDataSources();
 
+			migrateCredentials(repositoryManager.getAllRepositories());
+
 			// make this available early for clients that are not initialized through tasks ui but need access 
 			taskListNotificationManager = new TaskListNotificationManager();
 
@@ -702,6 +712,47 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task list initialization failed", e)); //$NON-NLS-1$
 		}
+	}
+
+	/**
+	 * Migrate credentials from the old secure store location, and from the deprecated keyring if the compatibility.auth
+	 * bundle is present.
+	 */
+	@SuppressWarnings("deprecation")
+	private void migrateCredentials(final List<TaskRepository> repositories) {
+		// Use a UI job to ensure the UI has loaded
+		new UIJob("Credential Migration UI Job") { //$NON-NLS-1$
+			@Override
+			public IStatus runInUIThread(IProgressMonitor monitor) {
+				// use a Job to ensure we do not access the secure store on the UI thread
+				new Job("Credential Migration") { //$NON-NLS-1$
+					@Override
+					protected IStatus run(IProgressMonitor monitor) {
+						boolean force = Boolean.parseBoolean(System.getProperty(PROP_FORCE_CREDENTIALS_MIGRATION));
+						if (force) {
+							StatusHandler.log(new Status(IStatus.INFO, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
+									"Forcing task repository credential migration because system property {0} is set.", //$NON-NLS-1$
+									PROP_FORCE_CREDENTIALS_MIGRATION)));
+						}
+						if (force
+								|| !getPluginPreferences().getBoolean(PREF_MIGRATED_TASK_REPOSITORIES_FROM_SECURE_STORE)) {
+							new TaskRepositorySecureStoreMigrator().migrateCredentials(repositories);
+						}
+						if ((force || !getPluginPreferences().getBoolean(PREF_MIGRATED_TASK_REPOSITORIES_FROM_KEYRING))
+								&& isKeyringInstalled()) {
+							new TaskRepositoryKeyringMigrator("", "Basic").migrateCredentials(repositories); //$NON-NLS-1$ //$NON-NLS-2$
+						}
+						return Status.OK_STATUS;
+					}
+
+				}.schedule();
+				return Status.OK_STATUS;
+			}
+		}.schedule();
+	}
+
+	private boolean isKeyringInstalled() {
+		return Platform.getBundle("org.eclipse.core.runtime.compatibility.auth") != null; //$NON-NLS-1$
 	}
 
 	private void initHttpLogging() {
@@ -819,6 +870,12 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			if (identityServiceTracker != null) {
 				identityServiceTracker.close();
 				identityServiceTracker = null;
+			}
+
+			// wait until stop() to set these to reduce chance of crash after setting them but before creds are persisted
+			getPluginPreferences().setValue(PREF_MIGRATED_TASK_REPOSITORIES_FROM_SECURE_STORE, Boolean.toString(true));
+			if (isKeyringInstalled()) {
+				getPluginPreferences().setValue(PREF_MIGRATED_TASK_REPOSITORIES_FROM_KEYRING, Boolean.toString(true));
 			}
 
 			if (PlatformUI.isWorkbenchRunning()) {
