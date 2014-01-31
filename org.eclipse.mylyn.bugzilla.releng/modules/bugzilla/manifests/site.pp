@@ -34,6 +34,7 @@ define bugzilla::site (
   $usebugaliases        = false,
   $clearMode            = $bugzilla::clearMode,
   $rest_enabled         = false,
+  $envinfo              = "",
   ) {
 
   include "bugzilla"
@@ -66,16 +67,21 @@ define bugzilla::site (
   }
   if $envinfo2 != "" {
     if $rest_enabled {
-      $envinfo = "$envinfo2, REST enabled"
+      $envinfo3 = "$envinfo2, REST enabled"
     } else {
-       $envinfo = "$envinfo2"
+       $envinfo3 = "$envinfo2"
     }
   } else {
     if $rest_enabled {
-      $envinfo = "REST enabled"
+      $envinfo3 = "REST enabled"
     } else {
-       $envinfo = ""
+       $envinfo3 = ""
     }
+  }
+  if $envinfo != "" {
+      $envinfo_intern = $envinfo
+  } else {
+      $envinfo_intern = $envinfo3
   }
   if $major == "3" {
     if $minor == "6" {

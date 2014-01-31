@@ -74,12 +74,37 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
     minor     => "4",
   }
 
+  bugzilla::site { "bugzilla-4.4.2":
+    major     => "4",
+    minor     => "4",
+  }
+
+bugzilla::site { "bugzilla-4.5.2":
+    major        => "4",
+    minor        => "5",
+    branch       => "trunk",
+    branchTag      => "bugzilla-4.5.2",
+    envdefault_rest => true,
+    envversion   => "4.5.2",
+  }
+  
+bugzilla::site { "bugzilla-rest-4.5.2":
+    major        => "4",
+    minor        => "5",
+    branch       => "trunk",
+    branchTag      => "bugzilla-4.5.2",
+    envdefault_rest => true,
+    rest_enabled => true,
+    envversion   => "4.5.2",
+    envinfo => "4.5.2, REST enabled"
+  }
+  
   bugzilla::site { "bugzilla-trunk":
     major       => "4",
     minor       => "5",
     branch      => "trunk",
     branchTag   => "trunk",
-    envversion   => "4.5.1+",
+    envversion   => "4.5.2+",
   }
 
 bugzilla::site { "bugzilla-rest-trunk":
@@ -87,9 +112,10 @@ bugzilla::site { "bugzilla-rest-trunk":
     minor        => "5",
     branch       => "trunk",
     branchTag    => "trunk",
-    envversion   => "4.5.1+",
+    envversion   => "4.5.2+",
     envdefault_rest => true,
     rest_enabled => true,
   }
+
 
 }

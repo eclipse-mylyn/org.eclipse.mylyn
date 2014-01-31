@@ -32,6 +32,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaStatus;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
@@ -259,9 +260,7 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 					new NullProgressMonitor());
 			fail("never reach this!");
 		} catch (Exception e) {
-			assertEquals(
-					"file is empty:  The file you are trying to attach is empty, does not exist, or you don't have permission to read it.",
-					e.getMessage());
+			assertFileEmptyError(e);
 		}
 
 		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
@@ -286,9 +285,7 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 					new NullProgressMonitor());
 			fail("never reach this!");
 		} catch (Exception e) {
-			assertEquals(
-					"file is empty:  The file you are trying to attach is empty, does not exist, or you don't have permission to read it.",
-					e.getMessage());
+			assertFileEmptyError(e);
 		}
 
 		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
@@ -312,6 +309,16 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 				taskData.getAttributeMapper().getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT).size());
 		// use assertion to track clean-up
 		assertTrue(attachFile.delete());
+	}
+
+	private void assertFileEmptyError(Exception e) {
+		if (BugzillaFixture.current().getBugzillaVersion().compareTo(BugzillaVersion.BUGZILLA_4_5_2) >= 0) {
+			assertEquals("An unknown repository error has occurred: file is empty", e.getMessage());
+		} else {
+			assertEquals(
+					"file is empty:  The file you are trying to attach is empty, does not exist, or you don't have permission to read it.",
+					e.getMessage());
+		}
 	}
 
 	public void testAttachmentToken() throws Exception {
