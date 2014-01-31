@@ -22,7 +22,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * Subclass to provide facility for uploading and downloading files from task repositories.
- * 
+ *
  * @author Steffen Pingel
  * @since 3.0
  */
@@ -33,7 +33,7 @@ public abstract class AbstractTaskAttachmentHandler {
 	public abstract boolean canPostContent(@NonNull TaskRepository repository, @NonNull ITask task);
 
 	public abstract InputStream getContent(@NonNull TaskRepository repository, @NonNull ITask task,
-			@Nullable TaskAttribute attachmentAttribute, @Nullable IProgressMonitor monitor) throws CoreException;
+			@NonNull TaskAttribute attachmentAttribute, @Nullable IProgressMonitor monitor) throws CoreException;
 
 	public abstract void postContent(@NonNull TaskRepository repository, @NonNull ITask task,
 			@NonNull AbstractTaskAttachmentSource source, @Nullable String comment,
