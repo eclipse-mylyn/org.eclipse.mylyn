@@ -549,17 +549,18 @@ public class EditorUtil {
 		if (textWidget.getVerticalBar() != null) {
 			textWidget.addMouseWheelListener(new MouseWheelListener() {
 				public void mouseScrolled(MouseEvent event) {
-					ScrollBar verticalBar = textWidget.getVerticalBar();
 					ScrolledComposite form = FormUtil.getScrolledComposite(textWidget);
-					if (verticalBar != null && form != null) {
+					if (form != null) {
+						ScrollBar verticalBar = textWidget.getVerticalBar();
 						if (event.count < 0) {
 							// scroll form down
-							if (verticalBar.getSelection() + verticalBar.getThumb() == verticalBar.getMaximum()) {
+							if (verticalBar == null
+									|| verticalBar.getSelection() + verticalBar.getThumb() == verticalBar.getMaximum()) {
 								EditorUtil.scroll(form, 0, form.getVerticalBar().getIncrement());
 							}
 						} else {
 							// scroll form up
-							if (verticalBar.getSelection() == verticalBar.getMinimum()) {
+							if (verticalBar == null || verticalBar.getSelection() == verticalBar.getMinimum()) {
 								EditorUtil.scroll(form, 0, -form.getVerticalBar().getIncrement());
 							}
 						}
