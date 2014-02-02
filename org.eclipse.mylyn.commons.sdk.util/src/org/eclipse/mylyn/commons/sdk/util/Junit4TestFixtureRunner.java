@@ -24,6 +24,7 @@ import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.Suite;
+import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 
@@ -64,7 +65,17 @@ public class Junit4TestFixtureRunner extends Suite {
 
 		@Override
 		protected String getName() {
-			return String.format("[%s %s]", fFixtureSetNumber, fFixtureList.get(0).getDescription());
+			return String.format("[%s %s]", fFixtureSetNumber, fFixtureList.get(fFixtureSetNumber).getDescription());
+		}
+
+		@Override
+		protected String testName(final FrameworkMethod method) {
+			if (Boolean.parseBoolean(System.getProperty("org.eclipse.mylyn.tests.all"))) {
+				return String.format("%s[%s %s]", method.getName(), fFixtureSetNumber, fFixtureList.get(0)
+						.getDescription());
+			} else {
+				return super.testName(method);
+			}
 		}
 
 		@Override
