@@ -213,8 +213,12 @@ public class ReviewCompareAnnotationSupport {
 			public void run() {
 				try {
 					// if listeners exist, just make sure the hover hack is in there
-					leftViewerListener.forceCustomAnnotationHover();
-					rightViewerListener.forceCustomAnnotationHover();
+					if (leftViewerListener != null) {
+						leftViewerListener.forceCustomAnnotationHover();
+					}
+					if (rightViewerListener != null) {
+						rightViewerListener.forceCustomAnnotationHover();
+					}
 				} catch (Exception e) {
 					StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
 							"Error attaching annotation hover", e));
