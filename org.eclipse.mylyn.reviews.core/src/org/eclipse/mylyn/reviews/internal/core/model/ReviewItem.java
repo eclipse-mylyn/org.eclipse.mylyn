@@ -156,9 +156,10 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 			InternalEObject oldAddedBy = (InternalEObject) addedBy;
 			addedBy = (IUser) eResolveProxy(oldAddedBy);
 			if (addedBy != oldAddedBy) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.REVIEW_ITEM__ADDED_BY,
 							oldAddedBy, addedBy));
+				}
 			}
 		}
 		return addedBy;
@@ -181,9 +182,10 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	public void setAddedBy(IUser newAddedBy) {
 		IUser oldAddedBy = addedBy;
 		addedBy = newAddedBy;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM__ADDED_BY, oldAddedBy,
 					addedBy));
+		}
 	}
 
 	/**
@@ -196,9 +198,10 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 			InternalEObject oldCommittedBy = (InternalEObject) committedBy;
 			committedBy = (IUser) eResolveProxy(oldCommittedBy);
 			if (committedBy != oldCommittedBy) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.REVIEW_ITEM__COMMITTED_BY,
 							oldCommittedBy, committedBy));
+				}
 			}
 		}
 		return committedBy;
@@ -221,9 +224,10 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	public void setCommittedBy(IUser newCommittedBy) {
 		IUser oldCommittedBy = committedBy;
 		committedBy = newCommittedBy;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM__COMMITTED_BY,
 					oldCommittedBy, committedBy));
+		}
 	}
 
 	/**
@@ -254,8 +258,9 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM__NAME, oldName, name));
+		}
 	}
 
 	/**
@@ -275,8 +280,9 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	public void setId(String newId) {
 		String oldId = id;
 		id = newId;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM__ID, oldId, id));
+		}
 	}
 
 	/**
@@ -296,9 +302,10 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	public void setReference(String newReference) {
 		String oldReference = reference;
 		reference = newReference;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM__REFERENCE, oldReference,
 					reference));
+		}
 	}
 
 	/**
@@ -324,12 +331,14 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 		case ReviewsPackage.REVIEW_ITEM__ADDED_BY:
-			if (resolve)
+			if (resolve) {
 				return getAddedBy();
+			}
 			return basicGetAddedBy();
 		case ReviewsPackage.REVIEW_ITEM__COMMITTED_BY:
-			if (resolve)
+			if (resolve) {
 				return getCommittedBy();
+			}
 			return basicGetCommittedBy();
 		case ReviewsPackage.REVIEW_ITEM__REVIEW:
 			return getReview();
@@ -429,8 +438,9 @@ public abstract class ReviewItem extends CommentContainer implements IReviewItem
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (name: "); //$NON-NLS-1$

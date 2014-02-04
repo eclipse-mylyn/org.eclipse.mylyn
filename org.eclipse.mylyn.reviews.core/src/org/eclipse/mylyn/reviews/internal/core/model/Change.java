@@ -223,9 +223,10 @@ public class Change extends EObjectImpl implements IChange {
 	public void setCreationDate(Date newCreationDate) {
 		Date oldCreationDate = creationDate;
 		creationDate = newCreationDate;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.CHANGE__CREATION_DATE,
 					oldCreationDate, creationDate));
+		}
 	}
 
 	/**
@@ -245,9 +246,10 @@ public class Change extends EObjectImpl implements IChange {
 	public void setModificationDate(Date newModificationDate) {
 		Date oldModificationDate = modificationDate;
 		modificationDate = newModificationDate;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.CHANGE__MODIFICATION_DATE,
 					oldModificationDate, modificationDate));
+		}
 	}
 
 	/**
@@ -267,8 +269,9 @@ public class Change extends EObjectImpl implements IChange {
 	public void setId(String newId) {
 		String oldId = id;
 		id = newId;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.CHANGE__ID, oldId, id));
+		}
 	}
 
 	/**
@@ -288,8 +291,9 @@ public class Change extends EObjectImpl implements IChange {
 	public void setKey(String newKey) {
 		String oldKey = key;
 		key = newKey;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.CHANGE__KEY, oldKey, key));
+		}
 	}
 
 	/**
@@ -309,8 +313,9 @@ public class Change extends EObjectImpl implements IChange {
 	public void setSubject(String newSubject) {
 		String oldSubject = subject;
 		subject = newSubject;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.CHANGE__SUBJECT, oldSubject, subject));
+		}
 	}
 
 	/**
@@ -330,8 +335,9 @@ public class Change extends EObjectImpl implements IChange {
 	public void setMessage(String newMessage) {
 		String oldMessage = message;
 		message = newMessage;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.CHANGE__MESSAGE, oldMessage, message));
+		}
 	}
 
 	/**
@@ -344,9 +350,10 @@ public class Change extends EObjectImpl implements IChange {
 			InternalEObject oldOwner = (InternalEObject) owner;
 			owner = (IUser) eResolveProxy(oldOwner);
 			if (owner != oldOwner) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.CHANGE__OWNER, oldOwner,
 							owner));
+				}
 			}
 		}
 		return owner;
@@ -369,8 +376,9 @@ public class Change extends EObjectImpl implements IChange {
 	public void setOwner(IUser newOwner) {
 		IUser oldOwner = owner;
 		owner = newOwner;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.CHANGE__OWNER, oldOwner, owner));
+		}
 	}
 
 	/**
@@ -390,8 +398,9 @@ public class Change extends EObjectImpl implements IChange {
 	public void setState(ReviewStatus newState) {
 		ReviewStatus oldState = state;
 		state = newState == null ? STATE_EDEFAULT : newState;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.CHANGE__STATE, oldState, state));
+		}
 	}
 
 	/**
@@ -415,8 +424,9 @@ public class Change extends EObjectImpl implements IChange {
 		case ReviewsPackage.CHANGE__MESSAGE:
 			return getMessage();
 		case ReviewsPackage.CHANGE__OWNER:
-			if (resolve)
+			if (resolve) {
 				return getOwner();
+			}
 			return basicGetOwner();
 		case ReviewsPackage.CHANGE__STATE:
 			return getState();
@@ -533,8 +543,9 @@ public class Change extends EObjectImpl implements IChange {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (creationDate: "); //$NON-NLS-1$

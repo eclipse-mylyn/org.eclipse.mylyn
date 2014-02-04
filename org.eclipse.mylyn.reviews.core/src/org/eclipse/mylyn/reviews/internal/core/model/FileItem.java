@@ -96,11 +96,13 @@ public class FileItem extends ReviewItem implements IFileItem {
 					msgs = newBase.eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ReviewsPackage.FILE_ITEM__BASE, null,
 							msgs);
 				}
-				if (msgs != null)
+				if (msgs != null) {
 					msgs.dispatch();
-				if (eNotificationRequired())
+				}
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.FILE_ITEM__BASE, oldBase,
 							base));
+				}
 			}
 		}
 		return base;
@@ -126,10 +128,11 @@ public class FileItem extends ReviewItem implements IFileItem {
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
 					ReviewsPackage.FILE_ITEM__BASE, oldBase, newBase);
-			if (msgs == null)
+			if (msgs == null) {
 				msgs = notification;
-			else
+			} else {
 				msgs.add(notification);
+			}
 		}
 		return msgs;
 	}
@@ -142,17 +145,21 @@ public class FileItem extends ReviewItem implements IFileItem {
 	public void setBase(IFileVersion newBase) {
 		if (newBase != base) {
 			NotificationChain msgs = null;
-			if (base != null)
+			if (base != null) {
 				msgs = ((InternalEObject) base).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
 						- ReviewsPackage.FILE_ITEM__BASE, null, msgs);
-			if (newBase != null)
+			}
+			if (newBase != null) {
 				msgs = ((InternalEObject) newBase).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
 						- ReviewsPackage.FILE_ITEM__BASE, null, msgs);
+			}
 			msgs = basicSetBase(newBase, msgs);
-			if (msgs != null)
+			if (msgs != null) {
 				msgs.dispatch();
-		} else if (eNotificationRequired())
+			}
+		} else if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.FILE_ITEM__BASE, newBase, newBase));
+		}
 	}
 
 	/**
@@ -190,11 +197,13 @@ public class FileItem extends ReviewItem implements IFileItem {
 					msgs = newTarget.eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ReviewsPackage.FILE_ITEM__TARGET, null,
 							msgs);
 				}
-				if (msgs != null)
+				if (msgs != null) {
 					msgs.dispatch();
-				if (eNotificationRequired())
+				}
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.FILE_ITEM__TARGET,
 							oldTarget, target));
+				}
 			}
 		}
 		return target;
@@ -220,10 +229,11 @@ public class FileItem extends ReviewItem implements IFileItem {
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
 					ReviewsPackage.FILE_ITEM__TARGET, oldTarget, newTarget);
-			if (msgs == null)
+			if (msgs == null) {
 				msgs = notification;
-			else
+			} else {
 				msgs.add(notification);
+			}
 		}
 		return msgs;
 	}
@@ -236,18 +246,22 @@ public class FileItem extends ReviewItem implements IFileItem {
 	public void setTarget(IFileVersion newTarget) {
 		if (newTarget != target) {
 			NotificationChain msgs = null;
-			if (target != null)
+			if (target != null) {
 				msgs = ((InternalEObject) target).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
 						- ReviewsPackage.FILE_ITEM__TARGET, null, msgs);
-			if (newTarget != null)
+			}
+			if (newTarget != null) {
 				msgs = ((InternalEObject) newTarget).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
 						- ReviewsPackage.FILE_ITEM__TARGET, null, msgs);
+			}
 			msgs = basicSetTarget(newTarget, msgs);
-			if (msgs != null)
+			if (msgs != null) {
 				msgs.dispatch();
-		} else if (eNotificationRequired())
+			}
+		} else if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.FILE_ITEM__TARGET, newTarget,
 					newTarget));
+		}
 	}
 
 	/**
@@ -256,8 +270,9 @@ public class FileItem extends ReviewItem implements IFileItem {
 	 * @generated
 	 */
 	public IReviewItemSet getSet() {
-		if (eContainerFeatureID() != ReviewsPackage.FILE_ITEM__SET)
+		if (eContainerFeatureID() != ReviewsPackage.FILE_ITEM__SET) {
 			return null;
+		}
 		return (IReviewItemSet) eContainer();
 	}
 
@@ -279,8 +294,9 @@ public class FileItem extends ReviewItem implements IFileItem {
 	 * @generated
 	 */
 	public IReviewItemSet basicGetSet() {
-		if (eContainerFeatureID() != ReviewsPackage.FILE_ITEM__SET)
+		if (eContainerFeatureID() != ReviewsPackage.FILE_ITEM__SET) {
 			return null;
+		}
 		return (IReviewItemSet) eInternalContainer();
 	}
 
@@ -303,18 +319,24 @@ public class FileItem extends ReviewItem implements IFileItem {
 		if (newSet != eInternalContainer()
 				|| (eContainerFeatureID() != ReviewsPackage.FILE_ITEM__SET && newSet != null)) {
 			if (EcoreUtil.isAncestor(this, newSet))
+			 {
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+			}
 			NotificationChain msgs = null;
-			if (eInternalContainer() != null)
+			if (eInternalContainer() != null) {
 				msgs = eBasicRemoveFromContainer(msgs);
-			if (newSet != null)
+			}
+			if (newSet != null) {
 				msgs = ((InternalEObject) newSet).eInverseAdd(this, ReviewsPackage.REVIEW_ITEM_SET__ITEMS,
 						IReviewItemSet.class, msgs);
+			}
 			msgs = basicSetSet(newSet, msgs);
-			if (msgs != null)
+			if (msgs != null) {
 				msgs.dispatch();
-		} else if (eNotificationRequired())
+			}
+		} else if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.FILE_ITEM__SET, newSet, newSet));
+		}
 	}
 
 	/**
@@ -326,8 +348,9 @@ public class FileItem extends ReviewItem implements IFileItem {
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 		case ReviewsPackage.FILE_ITEM__SET:
-			if (eInternalContainer() != null)
+			if (eInternalContainer() != null) {
 				msgs = eBasicRemoveFromContainer(msgs);
+			}
 			return basicSetSet((IReviewItemSet) otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
@@ -375,16 +398,19 @@ public class FileItem extends ReviewItem implements IFileItem {
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 		case ReviewsPackage.FILE_ITEM__BASE:
-			if (resolve)
+			if (resolve) {
 				return getBase();
+			}
 			return basicGetBase();
 		case ReviewsPackage.FILE_ITEM__TARGET:
-			if (resolve)
+			if (resolve) {
 				return getTarget();
+			}
 			return basicGetTarget();
 		case ReviewsPackage.FILE_ITEM__SET:
-			if (resolve)
+			if (resolve) {
 				return getSet();
+			}
 			return basicGetSet();
 		}
 		return super.eGet(featureID, resolve, coreType);

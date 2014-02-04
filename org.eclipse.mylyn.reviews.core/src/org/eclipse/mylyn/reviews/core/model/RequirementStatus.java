@@ -206,8 +206,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 	 * @generated
 	 */
 	public static RequirementStatus get(String literal) {
-		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
-			RequirementStatus result = VALUES_ARRAY[i];
+		for (RequirementStatus result : VALUES_ARRAY) {
 			if (result.toString().equals(literal)) {
 				return result;
 			}
@@ -222,8 +221,7 @@ public enum RequirementStatus implements InternalRequirementStatus {
 	 * @generated
 	 */
 	public static RequirementStatus getByName(String name) {
-		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
-			RequirementStatus result = VALUES_ARRAY[i];
+		for (RequirementStatus result : VALUES_ARRAY) {
 			if (result.getName().equals(name)) {
 				return result;
 			}

@@ -85,185 +85,223 @@ public class ReviewsSwitch<T> {
 		case ReviewsPackage.COMMENT_CONTAINER: {
 			ICommentContainer commentContainer = (ICommentContainer) theEObject;
 			T result = caseCommentContainer(commentContainer);
-			if (result == null)
+			if (result == null) {
 				result = defaultCase(theEObject);
+			}
 			return result;
 		}
 		case ReviewsPackage.CHANGE: {
 			IChange change = (IChange) theEObject;
 			T result = caseChange(change);
-			if (result == null)
+			if (result == null) {
 				result = caseDated(change);
-			if (result == null)
+			}
+			if (result == null) {
 				result = defaultCase(theEObject);
+			}
 			return result;
 		}
 		case ReviewsPackage.REVIEW: {
 			IReview review = (IReview) theEObject;
 			T result = caseReview(review);
-			if (result == null)
+			if (result == null) {
 				result = caseCommentContainer(review);
-			if (result == null)
+			}
+			if (result == null) {
 				result = caseChange(review);
-			if (result == null)
+			}
+			if (result == null) {
 				result = caseDated(review);
-			if (result == null)
+			}
+			if (result == null) {
 				result = defaultCase(theEObject);
+			}
 			return result;
 		}
 		case ReviewsPackage.COMMENT: {
 			IComment comment = (IComment) theEObject;
 			T result = caseComment(comment);
-			if (result == null)
+			if (result == null) {
 				result = caseIndexed(comment);
-			if (result == null)
+			}
+			if (result == null) {
 				result = caseDated(comment);
-			if (result == null)
+			}
+			if (result == null) {
 				result = defaultCase(theEObject);
+			}
 			return result;
 		}
 		case ReviewsPackage.REVIEW_ITEM: {
 			IReviewItem reviewItem = (IReviewItem) theEObject;
 			T result = caseReviewItem(reviewItem);
-			if (result == null)
+			if (result == null) {
 				result = caseCommentContainer(reviewItem);
-			if (result == null)
+			}
+			if (result == null) {
 				result = defaultCase(theEObject);
+			}
 			return result;
 		}
 		case ReviewsPackage.LOCATION: {
 			ILocation location = (ILocation) theEObject;
 			T result = caseLocation(location);
-			if (result == null)
+			if (result == null) {
 				result = caseIndexed(location);
-			if (result == null)
+			}
+			if (result == null) {
 				result = defaultCase(theEObject);
+			}
 			return result;
 		}
 		case ReviewsPackage.USER: {
 			IUser user = (IUser) theEObject;
 			T result = caseUser(user);
-			if (result == null)
+			if (result == null) {
 				result = defaultCase(theEObject);
+			}
 			return result;
 		}
 		case ReviewsPackage.REPOSITORY: {
 			IRepository repository = (IRepository) theEObject;
 			T result = caseRepository(repository);
-			if (result == null)
+			if (result == null) {
 				result = defaultCase(theEObject);
+			}
 			return result;
 		}
 		case ReviewsPackage.FILE_ITEM: {
 			IFileItem fileItem = (IFileItem) theEObject;
 			T result = caseFileItem(fileItem);
-			if (result == null)
+			if (result == null) {
 				result = caseReviewItem(fileItem);
-			if (result == null)
+			}
+			if (result == null) {
 				result = caseCommentContainer(fileItem);
-			if (result == null)
+			}
+			if (result == null) {
 				result = defaultCase(theEObject);
+			}
 			return result;
 		}
 		case ReviewsPackage.REVIEW_ITEM_SET: {
 			IReviewItemSet reviewItemSet = (IReviewItemSet) theEObject;
 			T result = caseReviewItemSet(reviewItemSet);
-			if (result == null)
+			if (result == null) {
 				result = caseReviewItem(reviewItemSet);
-			if (result == null)
+			}
+			if (result == null) {
 				result = caseDated(reviewItemSet);
-			if (result == null)
+			}
+			if (result == null) {
 				result = caseCommentContainer(reviewItemSet);
-			if (result == null)
+			}
+			if (result == null) {
 				result = defaultCase(theEObject);
+			}
 			return result;
 		}
 		case ReviewsPackage.LINE_LOCATION: {
 			ILineLocation lineLocation = (ILineLocation) theEObject;
 			T result = caseLineLocation(lineLocation);
-			if (result == null)
+			if (result == null) {
 				result = caseLocation(lineLocation);
-			if (result == null)
+			}
+			if (result == null) {
 				result = caseIndexed(lineLocation);
-			if (result == null)
+			}
+			if (result == null) {
 				result = defaultCase(theEObject);
+			}
 			return result;
 		}
 		case ReviewsPackage.LINE_RANGE: {
 			ILineRange lineRange = (ILineRange) theEObject;
 			T result = caseLineRange(lineRange);
-			if (result == null)
+			if (result == null) {
 				result = defaultCase(theEObject);
+			}
 			return result;
 		}
 		case ReviewsPackage.FILE_VERSION: {
 			IFileVersion fileVersion = (IFileVersion) theEObject;
 			T result = caseFileVersion(fileVersion);
-			if (result == null)
+			if (result == null) {
 				result = caseReviewItem(fileVersion);
-			if (result == null)
+			}
+			if (result == null) {
 				result = caseCommentContainer(fileVersion);
-			if (result == null)
+			}
+			if (result == null) {
 				result = defaultCase(theEObject);
+			}
 			return result;
 		}
 		case ReviewsPackage.INDEXED: {
 			IIndexed indexed = (IIndexed) theEObject;
 			T result = caseIndexed(indexed);
-			if (result == null)
+			if (result == null) {
 				result = defaultCase(theEObject);
+			}
 			return result;
 		}
 		case ReviewsPackage.DATED: {
 			IDated dated = (IDated) theEObject;
 			T result = caseDated(dated);
-			if (result == null)
+			if (result == null) {
 				result = defaultCase(theEObject);
+			}
 			return result;
 		}
 		case ReviewsPackage.APPROVAL_TYPE: {
 			IApprovalType approvalType = (IApprovalType) theEObject;
 			T result = caseApprovalType(approvalType);
-			if (result == null)
+			if (result == null) {
 				result = defaultCase(theEObject);
+			}
 			return result;
 		}
 		case ReviewsPackage.USER_APPROVALS_MAP: {
 			@SuppressWarnings("unchecked")
 			Map.Entry<IUser, IReviewerEntry> userApprovalsMap = (Map.Entry<IUser, IReviewerEntry>) theEObject;
 			T result = caseUserApprovalsMap(userApprovalsMap);
-			if (result == null)
+			if (result == null) {
 				result = defaultCase(theEObject);
+			}
 			return result;
 		}
 		case ReviewsPackage.REVIEWER_ENTRY: {
 			IReviewerEntry reviewerEntry = (IReviewerEntry) theEObject;
 			T result = caseReviewerEntry(reviewerEntry);
-			if (result == null)
+			if (result == null) {
 				result = defaultCase(theEObject);
+			}
 			return result;
 		}
 		case ReviewsPackage.APPROVAL_VALUE_MAP: {
 			@SuppressWarnings("unchecked")
 			Map.Entry<IApprovalType, Integer> approvalValueMap = (Map.Entry<IApprovalType, Integer>) theEObject;
 			T result = caseApprovalValueMap(approvalValueMap);
-			if (result == null)
+			if (result == null) {
 				result = defaultCase(theEObject);
+			}
 			return result;
 		}
 		case ReviewsPackage.REQUIREMENT_ENTRY: {
 			IRequirementEntry requirementEntry = (IRequirementEntry) theEObject;
 			T result = caseRequirementEntry(requirementEntry);
-			if (result == null)
+			if (result == null) {
 				result = defaultCase(theEObject);
+			}
 			return result;
 		}
 		case ReviewsPackage.REVIEW_REQUIREMENTS_MAP: {
 			@SuppressWarnings("unchecked")
 			Map.Entry<IApprovalType, IRequirementEntry> reviewRequirementsMap = (Map.Entry<IApprovalType, IRequirementEntry>) theEObject;
 			T result = caseReviewRequirementsMap(reviewRequirementsMap);
-			if (result == null)
+			if (result == null) {
 				result = defaultCase(theEObject);
+			}
 			return result;
 		}
 		default:

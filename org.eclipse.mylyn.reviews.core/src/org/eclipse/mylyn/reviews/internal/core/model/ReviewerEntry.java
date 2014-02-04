@@ -101,10 +101,11 @@ public class ReviewerEntry extends EObjectImpl implements IReviewerEntry {
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 		case ReviewsPackage.REVIEWER_ENTRY__APPROVALS:
-			if (coreType)
+			if (coreType) {
 				return ((EMap.InternalMapView<IApprovalType, Integer>) getApprovals()).eMap();
-			else
+			} else {
 				return getApprovals();
+			}
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}

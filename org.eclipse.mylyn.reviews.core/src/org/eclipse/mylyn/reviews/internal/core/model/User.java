@@ -127,8 +127,9 @@ public class User extends EObjectImpl implements IUser {
 	public void setId(String newId) {
 		String oldId = id;
 		id = newId;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.USER__ID, oldId, id));
+		}
 	}
 
 	/**
@@ -148,8 +149,9 @@ public class User extends EObjectImpl implements IUser {
 	public void setEmail(String newEmail) {
 		String oldEmail = email;
 		email = newEmail;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.USER__EMAIL, oldEmail, email));
+		}
 	}
 
 	/**
@@ -169,9 +171,10 @@ public class User extends EObjectImpl implements IUser {
 	public void setDisplayName(String newDisplayName) {
 		String oldDisplayName = displayName;
 		displayName = newDisplayName;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.USER__DISPLAY_NAME, oldDisplayName,
 					displayName));
+		}
 	}
 
 	/**
@@ -259,8 +262,9 @@ public class User extends EObjectImpl implements IUser {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (id: "); //$NON-NLS-1$

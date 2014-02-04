@@ -162,8 +162,9 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	public void setPath(String newPath) {
 		String oldPath = path;
 		path = newPath;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.FILE_VERSION__PATH, oldPath, path));
+		}
 	}
 
 	/**
@@ -183,9 +184,10 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	public void setDescription(String newDescription) {
 		String oldDescription = description;
 		description = newDescription;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.FILE_VERSION__DESCRIPTION,
 					oldDescription, description));
+		}
 	}
 
 	/**
@@ -205,9 +207,10 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	public void setContent(String newContent) {
 		String oldContent = content;
 		content = newContent;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.FILE_VERSION__CONTENT, oldContent,
 					content));
+		}
 	}
 
 	/**
@@ -220,14 +223,15 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 			InternalEObject oldFile = (InternalEObject) file;
 			file = (IFileItem) eResolveProxy(oldFile);
 			if (file != oldFile) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.FILE_VERSION__FILE,
 							oldFile, file));
+				}
 			}
 		}
 		return file;
 	}
-	
+
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -255,8 +259,9 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	public void setFile(IFileItem newFile) {
 		IFileItem oldFile = file;
 		file = newFile;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.FILE_VERSION__FILE, oldFile, file));
+		}
 	}
 
 	/**
@@ -276,9 +281,10 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	public void setFileRevision(IFileRevision newFileRevision) {
 		IFileRevision oldFileRevision = fileRevision;
 		fileRevision = newFileRevision;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.FILE_VERSION__FILE_REVISION,
 					oldFileRevision, fileRevision));
+		}
 	}
 
 	/**
@@ -296,8 +302,9 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 		case ReviewsPackage.FILE_VERSION__CONTENT:
 			return getContent();
 		case ReviewsPackage.FILE_VERSION__FILE:
-			if (resolve)
+			if (resolve) {
 				return getFile();
+			}
 			return basicGetFile();
 		case ReviewsPackage.FILE_VERSION__FILE_REVISION:
 			return getFileRevision();
@@ -388,8 +395,9 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (path: "); //$NON-NLS-1$

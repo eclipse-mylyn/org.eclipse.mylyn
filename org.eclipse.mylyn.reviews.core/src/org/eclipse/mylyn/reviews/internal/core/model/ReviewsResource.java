@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  */
@@ -17,7 +17,7 @@ import org.eclipse.emf.ecore.resource.impl.BinaryResourceImpl;
  * <!-- begin-user-doc --> The <b>Resource </b> associated with the package. <!-- end-user-doc -->
  * 
  * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsResourceFactory
- * @generated
+ * @generated NOT
  */
 public class ReviewsResource extends BinaryResourceImpl {
 	/**

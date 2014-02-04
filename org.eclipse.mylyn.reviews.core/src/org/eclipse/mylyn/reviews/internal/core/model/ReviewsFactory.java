@@ -43,7 +43,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 */
 	public static ReviewsFactory init() {
 		try {
-			ReviewsFactory theReviewsFactory = (ReviewsFactory) EPackage.Registry.INSTANCE.getEFactory(ReviewsPackage.eNS_URI);
+			ReviewsFactory theReviewsFactory = (ReviewsFactory) EPackage.Registry.INSTANCE.getEFactory("http://eclipse.org/mylyn/reviews/core/1.0"); //$NON-NLS-1$ 
 			if (theReviewsFactory != null) {
 				return theReviewsFactory;
 			}
@@ -289,8 +289,10 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	public RequirementStatus createRequirementStatusFromString(EDataType eDataType, String initialValue) {
 		RequirementStatus result = RequirementStatus.get(initialValue);
 		if (result == null)
+		 {
 			throw new IllegalArgumentException(
 					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		}
 		return result;
 	}
 
@@ -311,8 +313,10 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	public ReviewStatus createReviewStatusFromString(EDataType eDataType, String initialValue) {
 		ReviewStatus result = ReviewStatus.get(initialValue);
 		if (result == null)
+		 {
 			throw new IllegalArgumentException(
 					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		}
 		return result;
 	}
 

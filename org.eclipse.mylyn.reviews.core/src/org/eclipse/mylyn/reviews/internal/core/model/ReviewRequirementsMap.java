@@ -89,9 +89,10 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 			InternalEObject oldKey = (InternalEObject) key;
 			key = (IApprovalType) eResolveProxy(oldKey);
 			if (key != oldKey) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
 							ReviewsPackage.REVIEW_REQUIREMENTS_MAP__KEY, oldKey, key));
+				}
 			}
 		}
 		return key;
@@ -114,9 +115,10 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 	public void setTypedKey(IApprovalType newKey) {
 		IApprovalType oldKey = key;
 		key = newKey;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_REQUIREMENTS_MAP__KEY, oldKey,
 					key));
+		}
 	}
 
 	/**
@@ -136,11 +138,13 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 					msgs = newValue.eInverseAdd(this, EOPPOSITE_FEATURE_BASE
 							- ReviewsPackage.REVIEW_REQUIREMENTS_MAP__VALUE, null, msgs);
 				}
-				if (msgs != null)
+				if (msgs != null) {
 					msgs.dispatch();
-				if (eNotificationRequired())
+				}
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
 							ReviewsPackage.REVIEW_REQUIREMENTS_MAP__VALUE, oldValue, value));
+				}
 			}
 		}
 		return value;
@@ -166,10 +170,11 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
 					ReviewsPackage.REVIEW_REQUIREMENTS_MAP__VALUE, oldValue, newValue);
-			if (msgs == null)
+			if (msgs == null) {
 				msgs = notification;
-			else
+			} else {
 				msgs.add(notification);
+			}
 		}
 		return msgs;
 	}
@@ -182,18 +187,22 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 	public void setTypedValue(IRequirementEntry newValue) {
 		if (newValue != value) {
 			NotificationChain msgs = null;
-			if (value != null)
+			if (value != null) {
 				msgs = ((InternalEObject) value).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
 						- ReviewsPackage.REVIEW_REQUIREMENTS_MAP__VALUE, null, msgs);
-			if (newValue != null)
+			}
+			if (newValue != null) {
 				msgs = ((InternalEObject) newValue).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
 						- ReviewsPackage.REVIEW_REQUIREMENTS_MAP__VALUE, null, msgs);
+			}
 			msgs = basicSetTypedValue(newValue, msgs);
-			if (msgs != null)
+			if (msgs != null) {
 				msgs.dispatch();
-		} else if (eNotificationRequired())
+			}
+		} else if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_REQUIREMENTS_MAP__VALUE,
 					newValue, newValue));
+		}
 	}
 
 	/**
@@ -219,12 +228,14 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 		case ReviewsPackage.REVIEW_REQUIREMENTS_MAP__KEY:
-			if (resolve)
+			if (resolve) {
 				return getTypedKey();
+			}
 			return basicGetTypedKey();
 		case ReviewsPackage.REVIEW_REQUIREMENTS_MAP__VALUE:
-			if (resolve)
+			if (resolve) {
 				return getTypedValue();
+			}
 			return basicGetTypedValue();
 		}
 		return super.eGet(featureID, resolve, coreType);

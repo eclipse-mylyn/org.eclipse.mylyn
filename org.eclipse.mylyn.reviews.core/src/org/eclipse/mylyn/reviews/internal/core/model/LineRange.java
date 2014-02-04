@@ -107,8 +107,9 @@ public class LineRange extends EObjectImpl implements ILineRange {
 	public void setStart(int newStart) {
 		int oldStart = start;
 		start = newStart;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.LINE_RANGE__START, oldStart, start));
+		}
 	}
 
 	/**
@@ -128,8 +129,9 @@ public class LineRange extends EObjectImpl implements ILineRange {
 	public void setEnd(int newEnd) {
 		int oldEnd = end;
 		end = newEnd;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.LINE_RANGE__END, oldEnd, end));
+		}
 	}
 
 	/**
@@ -207,8 +209,9 @@ public class LineRange extends EObjectImpl implements ILineRange {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (start: "); //$NON-NLS-1$

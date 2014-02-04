@@ -97,9 +97,10 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 			InternalEObject oldKey = (InternalEObject) key;
 			key = (IUser) eResolveProxy(oldKey);
 			if (key != oldKey) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.USER_APPROVALS_MAP__KEY,
 							oldKey, key));
+				}
 			}
 		}
 		return key;
@@ -122,8 +123,9 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 	public void setTypedKey(IUser newKey) {
 		IUser oldKey = key;
 		key = newKey;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.USER_APPROVALS_MAP__KEY, oldKey, key));
+		}
 	}
 
 	/**
@@ -144,11 +146,13 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 					msgs = newValue.eInverseAdd(this,
 							EOPPOSITE_FEATURE_BASE - ReviewsPackage.USER_APPROVALS_MAP__VALUE, null, msgs);
 				}
-				if (msgs != null)
+				if (msgs != null) {
 					msgs.dispatch();
-				if (eNotificationRequired())
+				}
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.USER_APPROVALS_MAP__VALUE,
 							oldValue, value));
+				}
 			}
 		}
 		return value;
@@ -174,10 +178,11 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
 					ReviewsPackage.USER_APPROVALS_MAP__VALUE, oldValue, newValue);
-			if (msgs == null)
+			if (msgs == null) {
 				msgs = notification;
-			else
+			} else {
 				msgs.add(notification);
+			}
 		}
 		return msgs;
 	}
@@ -190,18 +195,22 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 	public void setTypedValue(IReviewerEntry newValue) {
 		if (newValue != value) {
 			NotificationChain msgs = null;
-			if (value != null)
+			if (value != null) {
 				msgs = ((InternalEObject) value).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
 						- ReviewsPackage.USER_APPROVALS_MAP__VALUE, null, msgs);
-			if (newValue != null)
+			}
+			if (newValue != null) {
 				msgs = ((InternalEObject) newValue).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
 						- ReviewsPackage.USER_APPROVALS_MAP__VALUE, null, msgs);
+			}
 			msgs = basicSetTypedValue(newValue, msgs);
-			if (msgs != null)
+			if (msgs != null) {
 				msgs.dispatch();
-		} else if (eNotificationRequired())
+			}
+		} else if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.USER_APPROVALS_MAP__VALUE, newValue,
 					newValue));
+		}
 	}
 
 	/**
@@ -227,12 +236,14 @@ public class UserApprovalsMap extends EObjectImpl implements BasicEMap.Entry<IUs
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 		case ReviewsPackage.USER_APPROVALS_MAP__KEY:
-			if (resolve)
+			if (resolve) {
 				return getTypedKey();
+			}
 			return basicGetTypedKey();
 		case ReviewsPackage.USER_APPROVALS_MAP__VALUE:
-			if (resolve)
+			if (resolve) {
 				return getTypedValue();
+			}
 			return basicGetTypedValue();
 		}
 		return super.eGet(featureID, resolve, coreType);

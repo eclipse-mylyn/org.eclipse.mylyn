@@ -158,8 +158,7 @@ public enum ReviewStatus implements InternalReviewStatus {
 	 * @generated
 	 */
 	public static ReviewStatus get(String literal) {
-		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
-			ReviewStatus result = VALUES_ARRAY[i];
+		for (ReviewStatus result : VALUES_ARRAY) {
 			if (result.toString().equals(literal)) {
 				return result;
 			}
@@ -174,8 +173,7 @@ public enum ReviewStatus implements InternalReviewStatus {
 	 * @generated
 	 */
 	public static ReviewStatus getByName(String name) {
-		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
-			ReviewStatus result = VALUES_ARRAY[i];
+		for (ReviewStatus result : VALUES_ARRAY) {
 			if (result.getName().equals(name)) {
 				return result;
 			}
@@ -284,5 +282,5 @@ public enum ReviewStatus implements InternalReviewStatus {
  * @generated
  */
 interface InternalReviewStatus extends org.eclipse.emf.common.util.Enumerator {
-	// Empty 
+	// Empty
 }

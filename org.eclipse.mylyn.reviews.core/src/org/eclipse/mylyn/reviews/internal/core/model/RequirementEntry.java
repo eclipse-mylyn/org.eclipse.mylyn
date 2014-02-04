@@ -99,9 +99,10 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 	public void setStatus(RequirementStatus newStatus) {
 		RequirementStatus oldStatus = status;
 		status = newStatus == null ? STATUS_EDEFAULT : newStatus;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REQUIREMENT_ENTRY__STATUS, oldStatus,
 					status));
+		}
 	}
 
 	/**
@@ -114,9 +115,10 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 			InternalEObject oldBy = (InternalEObject) by;
 			by = (IUser) eResolveProxy(oldBy);
 			if (by != oldBy) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.REQUIREMENT_ENTRY__BY,
 							oldBy, by));
+				}
 			}
 		}
 		return by;
@@ -139,8 +141,9 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 	public void setBy(IUser newBy) {
 		IUser oldBy = by;
 		by = newBy;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REQUIREMENT_ENTRY__BY, oldBy, by));
+		}
 	}
 
 	/**
@@ -154,8 +157,9 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 		case ReviewsPackage.REQUIREMENT_ENTRY__STATUS:
 			return getStatus();
 		case ReviewsPackage.REQUIREMENT_ENTRY__BY:
-			if (resolve)
+			if (resolve) {
 				return getBy();
+			}
 			return basicGetBy();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -220,8 +224,9 @@ public class RequirementEntry extends EObjectImpl implements IRequirementEntry {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (status: "); //$NON-NLS-1$

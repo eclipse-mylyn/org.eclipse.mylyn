@@ -97,9 +97,10 @@ public class ApprovalValueMap extends EObjectImpl implements BasicEMap.Entry<IAp
 			InternalEObject oldKey = (InternalEObject) key;
 			key = (IApprovalType) eResolveProxy(oldKey);
 			if (key != oldKey) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReviewsPackage.APPROVAL_VALUE_MAP__KEY,
 							oldKey, key));
+				}
 			}
 		}
 		return key;
@@ -122,8 +123,9 @@ public class ApprovalValueMap extends EObjectImpl implements BasicEMap.Entry<IAp
 	public void setTypedKey(IApprovalType newKey) {
 		IApprovalType oldKey = key;
 		key = newKey;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.APPROVAL_VALUE_MAP__KEY, oldKey, key));
+		}
 	}
 
 	/**
@@ -143,9 +145,10 @@ public class ApprovalValueMap extends EObjectImpl implements BasicEMap.Entry<IAp
 	public void setTypedValue(Integer newValue) {
 		Integer oldValue = value;
 		value = newValue;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.APPROVAL_VALUE_MAP__VALUE, oldValue,
 					value));
+		}
 	}
 
 	/**
@@ -157,8 +160,9 @@ public class ApprovalValueMap extends EObjectImpl implements BasicEMap.Entry<IAp
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 		case ReviewsPackage.APPROVAL_VALUE_MAP__KEY:
-			if (resolve)
+			if (resolve) {
 				return getTypedKey();
+			}
 			return basicGetTypedKey();
 		case ReviewsPackage.APPROVAL_VALUE_MAP__VALUE:
 			return getTypedValue();
@@ -225,8 +229,9 @@ public class ApprovalValueMap extends EObjectImpl implements BasicEMap.Entry<IAp
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (value: "); //$NON-NLS-1$

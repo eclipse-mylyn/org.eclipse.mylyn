@@ -107,8 +107,9 @@ public class ApprovalType extends EObjectImpl implements IApprovalType {
 	public void setKey(String newKey) {
 		String oldKey = key;
 		key = newKey;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.APPROVAL_TYPE__KEY, oldKey, key));
+		}
 	}
 
 	/**
@@ -128,8 +129,9 @@ public class ApprovalType extends EObjectImpl implements IApprovalType {
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.APPROVAL_TYPE__NAME, oldName, name));
+		}
 	}
 
 	/**
@@ -207,8 +209,9 @@ public class ApprovalType extends EObjectImpl implements IApprovalType {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (key: "); //$NON-NLS-1$

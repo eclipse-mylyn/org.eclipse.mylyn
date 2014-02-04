@@ -1787,8 +1787,9 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public static ReviewsPackage init() {
-		if (isInited)
+		if (isInited) {
 			return (ReviewsPackage) EPackage.Registry.INSTANCE.getEPackage(ReviewsPackage.eNS_URI);
+		}
 
 		// Obtain or create and register package
 		ReviewsPackage theReviewsPackage = (ReviewsPackage) (EPackage.Registry.INSTANCE.get(eNS_URI) instanceof ReviewsPackage
@@ -3100,8 +3101,9 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public void createPackageContents() {
-		if (isCreated)
+		if (isCreated) {
 			return;
+		}
 		isCreated = true;
 
 		// Create classes and their features
@@ -3242,8 +3244,9 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @generated
 	 */
 	public void initializePackageContents() {
-		if (isInitialized)
+		if (isInitialized) {
 			return;
+		}
 		isInitialized = true;
 
 		// Initialize package
