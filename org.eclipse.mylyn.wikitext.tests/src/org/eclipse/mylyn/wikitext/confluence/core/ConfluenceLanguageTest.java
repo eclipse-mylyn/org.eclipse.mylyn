@@ -827,65 +827,66 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 
 	@Test
 	public void testItalics() {
-		String html = parser.parseToHtml("_italics_");
-		TestUtil.println(html);
-		assertTrue(html.contains("<em>italics</em>"));
+		assertMarkup("<p><em>italics</em></p>", "_italics_");
 	}
 
 	@Test
 	public void testDoubleUnderscore() {
-		String html = parser.parseToHtml("__italics__");
-		TestUtil.println(html);
-		assertTrue(html.contains("<p>__italics__</p>"));
+		assertMarkup("<p>__italics__</p>", "__italics__");
 	}
 
 	@Test
 	public void testItalicsNegativeMatchTrailingWhitespace() {
-		String html = parser.parseToHtml("_italics _");
-		TestUtil.println(html);
-		assertTrue(html.contains("<p>_italics _</p>"));
+		assertMarkup("<p>_italics _</p>", "_italics _");
 	}
 
 	@Test
 	public void testItalicsNegativeMatchLeadingWhitespace() {
-		String html = parser.parseToHtml("_ italics_");
-		TestUtil.println(html);
-		assertTrue(html.contains("<p>_ italics_</p>"));
+		assertMarkup("<p>_ italics_</p>", "_ italics_");
 	}
 
 	@Test
 	public void testItalicsNegativeMatchNoContent() {
-		String html = parser.parseToHtml("__");
-		TestUtil.println(html);
-		assertTrue(html.contains("<p>__</p>"));
+		assertMarkup("<p>__</p>", "__");
+	}
+
+	@Test
+	public void testItalicsNegativeMatchNoTerminator() {
+		assertMarkup("<p>_some text_here no end</p>", "_some text_here no end");
+	}
+
+	@Test
+	public void testItalicsContainsUnderscore() {
+		assertMarkup("<p><em>some text_here with</em> end</p>", "_some text_here with_ end");
 	}
 
 	@Test
 	public void testItalicsNonGreedy() {
-		String html = parser.parseToHtml("_italics_ a_");
-		TestUtil.println(html);
-		assertTrue(html.contains("<p><em>italics</em> a_</p>"));
+		assertMarkup("<p><em>italics</em> a_</p>", "_italics_ a_");
+	}
+
+	@Test
+	public void testItalicsNonGreedy2() {
+		assertMarkup("<p>some <em>italics</em> and <em>more italics</em> here</p>",
+				"some _italics_ and _more italics_ here");
 	}
 
 	@Test
 	public void testHyperlinkWithItalics() {
-		String html = parser.parseToHtml("[_This is a test_|http://my_url.jpg]");
-		TestUtil.println(html);
-		assertTrue(html.contains("<p><a href=\"http://my_url.jpg\"><em>This is a test</em></a></p>"));
+		assertMarkup("<p><a href=\"http://my_url.jpg\"><em>This is a test</em></a></p>",
+				"[_This is a test_|http://my_url.jpg]");
 	}
 
 	@Test
 	public void testHyperlinkWithBold() {
-		String html = parser.parseToHtml("[*This is a test*|http://my_url.jpg]");
-		TestUtil.println(html);
-		assertTrue(html.contains("<p><a href=\"http://my_url.jpg\"><strong>This is a test</strong></a></p>"));
+		assertMarkup("<p><a href=\"http://my_url.jpg\"><strong>This is a test</strong></a></p>",
+				"[*This is a test*|http://my_url.jpg]");
 	}
 
 	@Test
 	public void testHyperlinkWithBoldItalics() {
-		String html = parser.parseToHtml("[*_This is a test_*|http://my_url.jpg]");
-		TestUtil.println(html);
-		assertTrue(html.contains("<p><a href=\"http://my_url.jpg\"><strong><em>This is a test</em></strong></a></p>"));
+		assertMarkup("<p><a href=\"http://my_url.jpg\"><strong><em>This is a test</em></strong></a></p>",
+				"[*_This is a test_*|http://my_url.jpg]");
 	}
 
 	@Test
@@ -988,6 +989,18 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	@Test
 	public void testHangOnBug318695() throws IOException {
 		String content = Resources.toString(ConfluenceLanguageTest.class.getResource("resources/bug318695.confluence"),
+				Charsets.UTF_8);
+		parser.setBuilder(new HtmlDocumentBuilder(new StringWriter()));
+		parser.parse(new StringReader(content));
+		// if we reach here we didn't hang.
+	}
+
+	/**
+	 * bug 424387
+	 */
+	@Test
+	public void stackOverflowWithLargeContentOnBug424387() throws IOException {
+		String content = Resources.toString(ConfluenceLanguageTest.class.getResource("resources/bug424387.confluence"),
 				Charsets.UTF_8);
 		parser.setBuilder(new HtmlDocumentBuilder(new StringWriter()));
 		parser.parse(new StringReader(content));
