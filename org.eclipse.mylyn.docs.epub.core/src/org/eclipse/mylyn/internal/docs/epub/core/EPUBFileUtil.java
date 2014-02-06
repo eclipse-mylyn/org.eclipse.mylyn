@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Torkild U. Resheim.
- * 
+ * Copyright (c) 2011-2014 Torkild U. Resheim.
+ *
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors: 
+ *
+ * Contributors:
  *   Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.internal.docs.epub.core;
@@ -30,7 +30,7 @@ import org.eclipse.mylyn.docs.epub.core.EPUB;
 
 /**
  * Various EPUB file related utilities.
- * 
+ *
  * @author Torkild U. Resheim
  */
 public class EPUBFileUtil {
@@ -39,7 +39,7 @@ public class EPUBFileUtil {
 
 	/**
 	 * Copies the contents of <i>source</i> to the new <i>destination</i> file.
-	 * 
+	 *
 	 * @param source
 	 *            the source file
 	 * @param destination
@@ -77,7 +77,7 @@ public class EPUBFileUtil {
 
 	/**
 	 * Attempts to figure out the MIME-type for the file.
-	 * 
+	 *
 	 * @param file
 	 *            the file to determine MIME-type for
 	 * @return the MIME-type or <code>null</code>
@@ -130,7 +130,7 @@ public class EPUBFileUtil {
 
 	/**
 	 * Creates a path segment list.
-	 * 
+	 *
 	 * @param root
 	 *            the root folder
 	 * @param file
@@ -154,7 +154,7 @@ public class EPUBFileUtil {
 	 * <p>
 	 * Note that if <i>file</i> is <b>not relative</b> to root, it's absolute path will be returned.
 	 * </p>
-	 * 
+	 *
 	 * @param root
 	 *            the root directory or file
 	 * @param file
@@ -184,10 +184,11 @@ public class EPUBFileUtil {
 	 * Unpacks the given <i>epubfile</i> to the <i>destination</i> directory. This method will also validate the first
 	 * item contained in the EPUB (see {@link #writeEPUBHeader(ZipOutputStream)}).
 	 * <p>
-	 * If the destination folder does not already exist it will be created. Additionally the modification timestamp of
+	 * If the destination folder does not already exist it will be created. Additionally the modification time stamp of
 	 * this folder will be set to the same as the originating EPUB file.
 	 * </p>
-	 * 
+	 * TODO: Actually validate the mimetype file
+	 *
 	 * @param epubfile
 	 *            the EPUB file
 	 * @param destination
@@ -239,7 +240,7 @@ public class EPUBFileUtil {
 	 * A correctly formatted EPUB file must contain an uncompressed entry named <b>mimetype</b> that is placed at the
 	 * beginning. The contents of this file must be the ASCII-encoded string <b>application/epub+zip</b>. This method
 	 * will create this file.
-	 * 
+	 *
 	 * @param zos
 	 *            the zip output stream to write to.
 	 * @throws IOException
@@ -261,7 +262,7 @@ public class EPUBFileUtil {
 	/**
 	 * Recursively compresses contents of the given folder into a zip-file. If a file already exists in the given
 	 * location an exception will be thrown.
-	 * 
+	 *
 	 * @param destination
 	 *            the destination file
 	 * @param folder
@@ -283,7 +284,7 @@ public class EPUBFileUtil {
 
 	/**
 	 * Adds a folder recursively to the output stream.
-	 * 
+	 *
 	 * @param folder
 	 *            the root folder
 	 * @param out

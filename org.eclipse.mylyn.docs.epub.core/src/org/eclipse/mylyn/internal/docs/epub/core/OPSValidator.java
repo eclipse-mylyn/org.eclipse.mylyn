@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Torkild U. Resheim
+ * Copyright (c) 2012-2014 Torkild U. Resheim
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,14 +27,14 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * This type is a SAX parser that will read a XHTML file and produce a new version where elements and attributes not in
- * the EPUB 2.0.1 <b>preferred</b> vocabulary are stripped. Alternatively warnings can be issued when such elements and
- * attributes are found.
- * 
+ * This type is a SAX parser that will read an <i>Open Publication Structure</i> file and optionally produce a new
+ * version where elements and attributes not in the EPUB 2.0.1 <b>preferred</b> vocabulary are stripped. Alternatively
+ * warnings can be issued when such elements and attributes are found and the contents left as is.
+ *
  * @author Torkild U. Resheim
  * @see http://idpf.org/epub/20/spec/OPS_2.0.1_draft.htm
  */
-public class OPS2Validator extends DefaultHandler {
+public class OPSValidator extends DefaultHandler {
 
 	public enum Mode {
 		/** Remove non-preferred elements and attributes */
@@ -43,42 +43,13 @@ public class OPS2Validator extends DefaultHandler {
 		WARN
 	}
 
-	private StringBuilder contents = null;
-
-	private final ArrayList<ValidationMessage> messages;
-
-	public StringBuilder getContents() {
-		return contents;
-	}
-
-	public ArrayList<ValidationMessage> getMessages() {
-		return messages;
-	}
-
-	public static List<ValidationMessage> validate(InputSource file, String href) throws ParserConfigurationException,
-			SAXException, IOException {
-		SAXParserFactory factory = SAXParserFactory.newInstance();
-		factory.setFeature("http://xml.org/sax/features/validation", false); //$NON-NLS-1$
-		factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false); //$NON-NLS-1$
-		SAXParser parser = factory.newSAXParser();
-		OPS2Validator tocGenerator = new OPS2Validator(href, Mode.WARN);
-		try {
-			parser.parse(file, tocGenerator);
-			return tocGenerator.getMessages();
-		} catch (SAXException e) {
-			System.err.println("Could not parse " + href); //$NON-NLS-1$
-			e.printStackTrace();
-		}
-		return null;
-	}
-
 	public static String clean(InputSource file, String href) throws ParserConfigurationException, SAXException,
 			IOException {
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		factory.setFeature("http://xml.org/sax/features/validation", false); //$NON-NLS-1$
 		factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false); //$NON-NLS-1$
 		SAXParser parser = factory.newSAXParser();
-		OPS2Validator tocGenerator = new OPS2Validator(href, Mode.REMOVE);
+		OPSValidator tocGenerator = new OPSValidator(href, Mode.REMOVE);
 		try {
 			parser.parse(file, tocGenerator);
 			return tocGenerator.getContents().toString();
@@ -89,7 +60,28 @@ public class OPS2Validator extends DefaultHandler {
 		return null;
 	}
 
+	public static List<ValidationMessage> validate(InputSource file, String href) throws ParserConfigurationException,
+			SAXException, IOException {
+		SAXParserFactory factory = SAXParserFactory.newInstance();
+		factory.setFeature("http://xml.org/sax/features/validation", false); //$NON-NLS-1$
+		factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false); //$NON-NLS-1$
+		SAXParser parser = factory.newSAXParser();
+		OPSValidator tocGenerator = new OPSValidator(href, Mode.WARN);
+		try {
+			parser.parse(file, tocGenerator);
+			return tocGenerator.getMessages();
+		} catch (SAXException e) {
+			System.err.println("Could not parse " + href); //$NON-NLS-1$
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	private StringBuilder buffer = null;
+
+	private StringBuilder contents = null;
+
+	private final String href;
 
 	@SuppressWarnings("nls")
 	private final String[] legalAttributes = new String[] { "accesskey", "charset", "class", "coords", "dir", "href",
@@ -99,7 +91,7 @@ public class OPS2Validator extends DefaultHandler {
 
 	/**
 	 * A list of legal elements according to the EPUB 2.0.1 specification
-	 * 
+	 *
 	 * @see http://idpf.org/epub/20/spec/OPS_2.0.1_draft.htm#Section1.3.4
 	 * @see http://idpf.org/epub/20/spec/OPS_2.0.1_draft.htm#Section2.2
 	 */
@@ -111,19 +103,20 @@ public class OPS2Validator extends DefaultHandler {
 			"colgroup", "table", "tbody", "td", "tfoot", "th", "thead", "tr", "img", "area", "map", "style", "link",
 			"base" };
 
+	private final ArrayList<ValidationMessage> messages;
+
 	private Mode mode = Mode.WARN;
 
 	/**
-	 * A list of elements that should be let through regardless of contents.
+	 * A list of elements that should be let through regardless of contents. Some publishers use this element to handle
+	 * features present in certain reading systems.
 	 */
 	@SuppressWarnings("nls")
 	private final String[] passthroughElements = new String[] { "meta" };
 
 	private boolean recording = false;
 
-	private final String href;
-
-	public OPS2Validator(String href, Mode mode) {
+	public OPSValidator(String href, Mode mode) {
 		super();
 		this.href = href;
 		buffer = new StringBuilder();
@@ -149,9 +142,17 @@ public class OPS2Validator extends DefaultHandler {
 		recording = false;
 	}
 
+	public StringBuilder getContents() {
+		return contents;
+	}
+
+	public ArrayList<ValidationMessage> getMessages() {
+		return messages;
+	}
+
 	/**
 	 * Returns <code>true</code> if the given attribute name is legal.
-	 * 
+	 *
 	 * @param name
 	 * @return
 	 */
@@ -173,6 +174,14 @@ public class OPS2Validator extends DefaultHandler {
 		return false;
 	}
 
+	/**
+	 * Use to determine whether or not elements with this name should be let trough the validator with any change or
+	 * warning.
+	 *
+	 * @param name
+	 *            the name of the element
+	 * @return whether or not to pass through
+	 */
 	private boolean isPassthroughElement(String name) {
 		for (String legal : passthroughElements) {
 			if (name.equalsIgnoreCase(legal)) {

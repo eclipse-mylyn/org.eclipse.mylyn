@@ -1,1004 +1,180 @@
 /*******************************************************************************
- * Copyright (c) 2011,2012 Torkild U. Resheim.
- * 
+ * Copyright (c) 2011-2014 Torkild U. Resheim.
+ *
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors: 
+ *
+ * Contributors:
  *   Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.core;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
-import java.util.UUID;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.eclipse.emf.common.util.BasicDiagnostic;
-import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.util.Diagnostician;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.xmi.XMLHelper;
 import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.emf.ecore.xmi.impl.XMLResourceFactoryImpl;
 import org.eclipse.mylyn.docs.epub.core.ILogger.Severity;
-import org.eclipse.mylyn.docs.epub.dc.Contributor;
-import org.eclipse.mylyn.docs.epub.dc.Coverage;
-import org.eclipse.mylyn.docs.epub.dc.Creator;
-import org.eclipse.mylyn.docs.epub.dc.DCFactory;
-import org.eclipse.mylyn.docs.epub.dc.DCType;
-import org.eclipse.mylyn.docs.epub.dc.Date;
-import org.eclipse.mylyn.docs.epub.dc.Description;
-import org.eclipse.mylyn.docs.epub.dc.Format;
-import org.eclipse.mylyn.docs.epub.dc.Identifier;
-import org.eclipse.mylyn.docs.epub.dc.Language;
-import org.eclipse.mylyn.docs.epub.dc.LocalizedDCType;
-import org.eclipse.mylyn.docs.epub.dc.Publisher;
-import org.eclipse.mylyn.docs.epub.dc.Relation;
-import org.eclipse.mylyn.docs.epub.dc.Rights;
-import org.eclipse.mylyn.docs.epub.dc.Source;
-import org.eclipse.mylyn.docs.epub.dc.Subject;
-import org.eclipse.mylyn.docs.epub.dc.Title;
+import org.eclipse.mylyn.docs.epub.ncx.DocTitle;
+import org.eclipse.mylyn.docs.epub.ncx.Head;
+import org.eclipse.mylyn.docs.epub.ncx.Meta;
+import org.eclipse.mylyn.docs.epub.ncx.NCXFactory;
+import org.eclipse.mylyn.docs.epub.ncx.NCXPackage;
+import org.eclipse.mylyn.docs.epub.ncx.NavMap;
+import org.eclipse.mylyn.docs.epub.ncx.Ncx;
+import org.eclipse.mylyn.docs.epub.ncx.Text;
+import org.eclipse.mylyn.docs.epub.ncx.util.NCXResourceFactoryImpl;
+import org.eclipse.mylyn.docs.epub.ncx.util.NCXResourceImpl;
+import org.eclipse.mylyn.docs.epub.opf.Guide;
 import org.eclipse.mylyn.docs.epub.opf.Item;
 import org.eclipse.mylyn.docs.epub.opf.Itemref;
+import org.eclipse.mylyn.docs.epub.opf.Manifest;
+import org.eclipse.mylyn.docs.epub.opf.Metadata;
 import org.eclipse.mylyn.docs.epub.opf.OPFFactory;
-import org.eclipse.mylyn.docs.epub.opf.OPFPackage;
-import org.eclipse.mylyn.docs.epub.opf.Package;
-import org.eclipse.mylyn.docs.epub.opf.Reference;
-import org.eclipse.mylyn.docs.epub.opf.Role;
 import org.eclipse.mylyn.docs.epub.opf.Spine;
-import org.eclipse.mylyn.docs.epub.opf.Type;
-import org.eclipse.mylyn.docs.epub.opf.util.OPFResourceImpl;
-import org.eclipse.mylyn.docs.epub.opf.util.OPFValidator;
-import org.eclipse.mylyn.internal.docs.epub.core.EPUBFileUtil;
 import org.eclipse.mylyn.internal.docs.epub.core.EPUBXMLHelperImp;
-import org.eclipse.mylyn.internal.docs.epub.core.ReferenceScanner;
+import org.eclipse.mylyn.internal.docs.epub.core.OPSValidator;
+import org.eclipse.mylyn.internal.docs.epub.core.TOCGenerator;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * This type represents one <i>OPS publication</i>. This includes the <i>OPF package document</i> and <i>OPS content
- * documents</i>, commonly known as <i>Open eBook Publication Structure</i> or OEBPS. It maintains a data structure
- * representing the entire publication and API for building it.
- * <p>
- * Please note that this API is provisional and should not yet be used to build applications.
- * </p>
- * 
+ * This type represents one EPUB revision 2.0.1 formatted publication.
+ *
  * @author Torkild U. Resheim
  */
-public abstract class OPSPublication {
-	// Rules of engagement:
-	// * Keep all data in the model, use "transient" for temporary properties
-	// * Do not actually do anything before the final assemble
+public class OPSPublication extends Publication {
 
-	/** Default identifier for the cover page */
-	private static final String COVER_ID = "cover"; //$NON-NLS-1$
+	/** MIME type for NCX documents */
+	private static final String MIMETYPE_NCX = "application/x-dtbncx+xml"; //$NON-NLS-1$
 
-	/** Publication identifier for the cover image item */
-	public static final String COVER_IMAGE_ID = "cover-image"; //$NON-NLS-1$
+	private static final String NCX_FILE_SUFFIX = "ncx"; //$NON-NLS-1$
 
-	protected static final String CREATION_DATE_ID = "creation"; //$NON-NLS-1$
+	/** Identifier of the table of contents file */
+	private static final String TABLE_OF_CONTENTS_ID = "ncx"; //$NON-NLS-1$
 
-	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
+	/** Default name for the table of contents */
+	private static final String TOCFILE_NAME = "toc.ncx"; //$NON-NLS-1$
 
-	public final static String MIMETYPE_CSS = "text/css"; //$NON-NLS-1$
+	/** List of core media types as specified in http://idpf.org/epub/20/spec/OPS_2.0.1_draft.htm#Section1.3.7 */
+	private static final String[] CORE_MEDIA_TYPES = new String[] { "image/gif", "image/jpeg", "image/png", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			"image/svg+xml", "application/xhtml+xml", "application/x-dtbook+xml", "text/css", "application/xml", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+			"text/x-oeb1-document", "text/x-oeb1-css", "application/x-dtbncx+xml" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-	public static final String MIMETYPE_XHTML = "application/xhtml+xml"; //$NON-NLS-1$
-
-	private static final String OPF_FILE_SUFFIX = "opf"; //$NON-NLS-1$
-
-	protected static final String UUID_SCHEME = "uuid"; //$NON-NLS-1$
-
-	/** The encoding to use in XML files */
-	protected static final String XML_ENCODING = "UTF-8"; //$NON-NLS-1$
+	/** The table of contents */
+	private Ncx ncxTOC;
 
 	/**
-	 * Returns an EPUB version 2.0.1 instance.
-	 * 
-	 * @return an EPUB instance
+	 * Creates a new EPUB.
+	 *
+	 * @since 2.0
 	 */
-	public static OPSPublication getVersion2Instance() {
-		return new OPS2Publication();
-	}
-
-	public static OPSPublication getVersion2Instance(ILogger logger) {
-		return new OPS2Publication(logger);
-	}
-
-	/** Indentation level used when logging */
-	protected int indent = 0;
-
-	protected ILogger logger;
-
-	/** List of validation messages */
-	protected List<ValidationMessage> messages;
-
-	/** The root model element */
-	protected Package opfPackage;
-
-	/** The root folder TODO: Move to opfPackage */
-	private File rootFolder;
-
-	protected OPSPublication() {
-		opfPackage = OPFFactory.eINSTANCE.createPackage();
-		registerOPFResourceFactory();
-	}
-
-	protected OPSPublication(ILogger logger) {
-		this();
-		this.logger = logger;
-		log(MessageFormat.format(Messages.getString("OPSPublication.0"), getVersion()), Severity.INFO, indent++); //$NON-NLS-1$
+	public OPSPublication() {
+		super();
+		setup();
 	}
 
 	/**
-	 * Adds data to the publication that we always want to be present.
-	 * <ul>
-	 * <li>The creation date.</li>
-	 * <li><i>Eclipse Mylyn Docs project</i> as contributor redactor role.</li>
-	 * <li>A unique identifier if none has been specified.</li>
-	 * <li>A empty description if none has been specified.</li>
-	 * <li>Language "English" if none has been specified.</li>
-	 * <li>A dummy title if none has been specified.</li>
-	 * <li>The publication format if none has been specified.</li>
-	 * </ul>
+	 * Creates a new EPUB logging all event to the specified logger.
+	 *
+	 * @since 2.0
 	 */
-	private void addCompulsoryData() {
-		log(Messages.getString("OPSPublication.1"), Severity.VERBOSE, indent++); //$NON-NLS-1$
-		// Creation date is always when we build
-		addDate(null, new java.util.Date(System.currentTimeMillis()), CREATION_DATE_ID);
-		// Make it clear where the tooling comes from
-		addContributor(null, null, "Eclipse Mylyn Docs project", Role.REDACTOR, null); //$NON-NLS-1$
-		// Generate an unique identifier
-		if (getIdentifier() == null) {
-			addIdentifier(UUID_SCHEME, "uuid", "urn:uuid" + UUID.randomUUID().toString()); //$NON-NLS-1$ //$NON-NLS-2$
-			setIdentifierId(UUID_SCHEME);
-		}
-		// Add empty subject
-		if (opfPackage.getMetadata().getSubjects().isEmpty()) {
-			addSubject(null, null, EMPTY_STRING);
-		}
-		// Add English language
-		if (opfPackage.getMetadata().getLanguages().isEmpty()) {
-			addLanguage(null, Locale.ENGLISH.toString());
-		}
-		// Add dummy title
-		if (opfPackage.getMetadata().getTitles().isEmpty()) {
-			addTitle(null, null, "No title specified"); //$NON-NLS-1$
-		}
-		// Set the publication format
-		if (opfPackage.getMetadata().getFormats().isEmpty()) {
-			addFormat(null, EPUB.MIMETYPE_EPUB);
-		}
-		indent--;
+	public OPSPublication(ILogger logger) {
+		super(logger);
+		setup();
 	}
 
 	/**
-	 * Specifies a new contributor for the publication.
-	 * 
-	 * @param id
-	 *            an identifier or <code>null</code>
-	 * @param name
-	 *            name of the creator
-	 * @param role
-	 *            the role or <code>null</code>
-	 * @param fileAs
-	 *            name to file the creator under or <code>null</code>
-	 * @param lang
-	 *            the language code or <code>null</code>
-	 * @return the new creator
-	 */
-	public Contributor addContributor(String id, Locale lang, String name, Role role, String fileAs) {
-		log(MessageFormat.format(Messages.getString("OPSPublication.2"), name, role, //$NON-NLS-1$
-				lang == null ? Messages.getString("OPSPublication.3") : lang.getDisplayName()), Severity.VERBOSE, indent); //$NON-NLS-1$
-		Contributor dc = DCFactory.eINSTANCE.createContributor();
-		setDcLocalized(dc, id, lang, name);
-		if (role != null) {
-			dc.setRole(role);
-		}
-		if (fileAs != null) {
-			dc.setFileAs(fileAs);
-		}
-		opfPackage.getMetadata().getContributors().add(dc);
-		return dc;
-	}
-
-	/**
-	 * Specifies a new &quot;coverage&quot; for the publication.
-	 * 
-	 * @param id
-	 *            an identifier or <code>null</code>
-	 * @param lang
-	 *            the language code or <code>null</code>
-	 * @param value
-	 *            value of the item
-	 * @return the new coverage
-	 */
-	public Coverage addCoverage(String id, Locale lang, String value) {
-		if (value == null) {
-			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
-		}
-		Coverage dc = DCFactory.eINSTANCE.createCoverage();
-		setDcLocalized(dc, id, lang, value);
-		opfPackage.getMetadata().getCoverages().add(dc);
-		return dc;
-	}
-
-	/**
-	 * Specifies a new creator for the publication.
-	 * 
-	 * @param id
-	 *            a unique identifier or <code>null</code>
-	 * @param lang
-	 *            the language code or <code>null</code>
-	 * @param name
-	 *            name of the creator
-	 * @param role
-	 *            the role or <code>null</code>
-	 * @param fileAs
-	 *            name to file the creator under or <code>null</code>
-	 * @return the new creator
-	 */
-	public Creator addCreator(String id, Locale lang, String name, Role role, String fileAs) {
-		log(MessageFormat.format(Messages.getString("OPSPublication.4"), name, role, lang == null //$NON-NLS-1$
-				? Messages.getString("OPSPublication.3") //$NON-NLS-1$
-				: lang.getDisplayName()), Severity.VERBOSE, indent);
-		Creator dc = DCFactory.eINSTANCE.createCreator();
-		setDcLocalized(dc, id, lang, name);
-		if (role != null) {
-			dc.setRole(role);
-		}
-		if (fileAs != null) {
-			dc.setFileAs(fileAs);
-		}
-		opfPackage.getMetadata().getCreators().add(dc);
-		return dc;
-	}
-
-	/**
-	 * Adds a new date to the publication. The given instance will be represented in a format defined by
-	 * "Date and Time Formats" at http://www.w3.org/TR/NOTE-datetime and by ISO 8601 on which it is based.
-	 * 
-	 * @param id
-	 *            optional identifier
-	 * @param date
-	 *            the date
-	 * @param event
-	 *            the event
-	 * @return the new date
-	 * @see #addDate(String, String, String)
-	 */
-	public Date addDate(String id, java.util.Date date, String event) {
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd"); //$NON-NLS-1$
-		TimeZone tz = TimeZone.getTimeZone("UTC"); //$NON-NLS-1$
-		df.setTimeZone(tz);
-		Date dc = DCFactory.eINSTANCE.createDate();
-		setDcCommon(dc, id, df.format(date));
-		if (event != null) {
-			dc.setEvent(event);
-		}
-		opfPackage.getMetadata().getDates().add(dc);
-		return dc;
-	}
-
-	/**
-	 * Date of publication, in the format defined by the W3C specification
-	 * "<a href="http://www.w3.org/TR/NOTE-datetime">Date and Time Formats</a>" and by ISO 8601. In particular, dates
-	 * without times must be represented in the form YYYY[-MM[-DD]]: a required 4-digit year, an optional 2-digit month,
-	 * and if the month is given, an optional 2-digit day of month. The event attribute is optional, possible values may
-	 * include: "creation", "publication", and "modification".
-	 * 
-	 * @param value
-	 *            the date string
-	 * @param event
-	 *            an optional event description
-	 * @return the new date
-	 */
-	public Date addDate(String id, String value, String event) {
-		if (value == null) {
-			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
-		}
-		Date dc = DCFactory.eINSTANCE.createDate();
-		setDcCommon(dc, id, value);
-		if (event != null) {
-			dc.setEvent(event);
-		}
-		opfPackage.getMetadata().getDates().add(dc);
-		return dc;
-	}
-
-	/**
-	 * Adds a new description to the publication.
-	 * 
-	 * @param id
-	 *            identifier or <code>null</code>
-	 * @param lang
-	 *            the language code or <code>null</code>
-	 * @param value
-	 *            the description text
-	 * @return the new description
-	 */
-	public Description addDescription(String id, Locale lang, String value) {
-		if (value == null) {
-			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
-		}
-		log(MessageFormat.format(
-				Messages.getString("OPSPublication.6"), value, lang == null ? Messages.getString("OPSPublication.3") : lang), //$NON-NLS-1$ //$NON-NLS-2$
-				Severity.VERBOSE, indent);
-		Description dc = DCFactory.eINSTANCE.createDescription();
-		setDcLocalized(dc, id, lang, value);
-		opfPackage.getMetadata().getDescriptions().add(dc);
-		return dc;
-	}
-
-	/**
-	 * Adds an optional publication format.
-	 * 
-	 * @param id
-	 *            identifier or <code>null</code>
-	 * @param value
-	 *            the format to add
-	 * @return the new format
-	 */
-	public Format addFormat(String id, String value) {
-		Format dc = DCFactory.eINSTANCE.createFormat();
-		setDcCommon(dc, id, value);
-		opfPackage.getMetadata().getFormats().add(dc);
-		return dc;
-	}
-
-	/**
-	 * Adds a new identifier to the publication.
-	 * 
-	 * @param id
-	 *            the identifier id
-	 * @param scheme
-	 *            the scheme used for representing the identifier
-	 * @param value
-	 *            the identifier value
-	 * @return the new identifier
-	 */
-	public Identifier addIdentifier(String id, String scheme, String value) {
-		if (value == null) {
-			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
-		}
-		Identifier dc = DCFactory.eINSTANCE.createIdentifier();
-		dc.setId(id);
-		dc.setScheme(scheme);
-		FeatureMapUtil.addText(dc.getMixed(), value);
-		opfPackage.getMetadata().getIdentifiers().add(dc);
-		return dc;
-	}
-
-	/**
-	 * Adds a new item to the manifest using default values for properties not specified. Same as
-	 * <code>addItem(null, null, file, null, null, true, false);</code>.
-	 * 
-	 * @param file
-	 * @return the new item
-	 */
-	public Item addItem(File file) {
-		return addItem(null, null, file, null, null, true, true, false);
-	}
-
-	/**
-	 * Adds a new item to the manifest. If an identifier is not specified it will automatically be assigned.
-	 * <p>
-	 * The <i>spine</i> defines the reading order, so the order items are added and whether or not <i>spine</i> is
-	 * <code>true</code> does matter. Unless a table of contents file has been specified it will be generated. All files
-	 * that have been added to the spine will be examined unless the <i>noToc</i> attribute has been set to
-	 * <code>true</code>.
-	 * </p>
-	 * 
-	 * @param file
-	 *            the file to add
-	 * @param dest
-	 *            the destination sub-folder or <code>null</code>
-	 * @param id
-	 *            identifier or <code>null</code>
-	 * @param type
-	 *            MIME file type
-	 * @param spine
-	 *            whether or not to add the item to the spine
-	 * @param linear
-	 *            whether or not the item is part of the reading order
-	 * @param noToc
-	 *            whether or not to include in TOC when automatically generated
-	 * @return the new item
-	 */
-	public Item addItem(String id, Locale lang, File file, String dest, String type, boolean spine, boolean linear,
-			boolean noToc) {
-		if (file == null) {
-			throw new IllegalArgumentException("\"file\" must be specified"); //$NON-NLS-1$
-		}
-		if (!file.exists()) {
-			throw new IllegalArgumentException("\"file\" " + file.getAbsolutePath() + " must exist."); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		if (file.isDirectory()) {
-			throw new IllegalArgumentException("\"file\" " + file.getAbsolutePath() + " must not be a directory."); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		Item item = OPFFactory.eINSTANCE.createItem();
-		if (type == null) {
-			type = EPUBFileUtil.getMimeType(file);
-			if (type == null) {
-				throw new IllegalArgumentException("Could not automatically determine MIME type for file " + file //$NON-NLS-1$
-						+ ". Please specify the correct value"); //$NON-NLS-1$
-			}
-		}
-		if (id == null) {
-			String prefix = EMPTY_STRING;
-			if (!type.equals(MIMETYPE_XHTML)) {
-				prefix = (type.indexOf('/')) == -1 ? type : type.substring(0, type.indexOf('/')) + '-';
-			}
-			id = prefix + file.getName().substring(0, file.getName().lastIndexOf('.'));
-		}
-		item.setId(id);
-		if (dest == null) {
-			item.setHref(file.getName());
-		} else {
-			item.setHref(dest + '/' + file.getName());
-		}
-		item.setNoToc(noToc);
-		item.setMedia_type(type);
-		item.setFile(file.getAbsolutePath());
-		log(MessageFormat.format(Messages.getString("OPSPublication.8"), item.getHref(), item.getMedia_type()), //$NON-NLS-1$
-				Severity.VERBOSE, indent);
-		opfPackage.getManifest().getItems().add(item);
-		if (spine) {
-			Itemref ref = OPFFactory.eINSTANCE.createItemref();
-			if (!linear) {
-				ref.setLinear("no"); //$NON-NLS-1$
-			}
-			ref.setIdref(id);
-			getSpine().getSpineItems().add(ref);
-		}
-		return item;
-	}
-
-	/**
-	 * Adds a new language specification to the publication.
-	 * 
-	 * @param id
-	 *            identifier or <code>null</code>
-	 * @param lang
-	 *            the language code or <code>null</code>
-	 * @param lang
-	 *            the RFC-3066 format of the language code
-	 * @return the language instance
-	 */
-	public Language addLanguage(String id, String value) {
-		if (value == null) {
-			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
-		}
-		Language dc = DCFactory.eINSTANCE.createLanguage();
-		setDcCommon(dc, id, value);
-		opfPackage.getMetadata().getLanguages().add(dc);
-		return dc;
-	}
-
-	/**
-	 * Adds a new meta item to the publication.
-	 * 
-	 * @param name
-	 *            name of the item
-	 * @param value
-	 *            content of the item
-	 * @return the new meta
-	 */
-	public org.eclipse.mylyn.docs.epub.opf.Meta addMeta(String name, String value) {
-		if (value == null) {
-			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
-		}
-		if (name == null) {
-			throw new IllegalArgumentException("A name must be specified"); //$NON-NLS-1$
-		}
-		org.eclipse.mylyn.docs.epub.opf.Meta opf = OPFFactory.eINSTANCE.createMeta();
-		opf.setName(name);
-		opf.setContent(value);
-		opfPackage.getMetadata().getMetas().add(opf);
-		return opf;
-	}
-
-	/**
-	 * Adds a new publisher to the publication.
-	 * 
-	 * @param id
-	 *            identifier or <code>null</code>
-	 * @param lang
-	 *            the language code or <code>null</code>
-	 * @param value
-	 *            name of the publisher
-	 * @return the new publisher
-	 */
-	public Publisher addPublisher(String id, Locale lang, String value) {
-		if (value == null) {
-			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
-		}
-		log(MessageFormat.format(Messages.getString("OPSPublication.9"), value, //$NON-NLS-1$
-				lang == null ? Messages.getString("OPSPublication.3") : lang.getDisplayName()), Severity.VERBOSE, indent); //$NON-NLS-1$
-		Publisher dc = DCFactory.eINSTANCE.createPublisher();
-		setDcLocalized(dc, id, lang, value);
-		opfPackage.getMetadata().getPublishers().add(dc);
-		return dc;
-	}
-
-	/**
-	 * The structural components of the books are listed in reference elements contained within the guide element. These
-	 * components could refer to the table of contents, list of illustrations, foreword, bibliography, and many other
-	 * standard parts of the book. Reading systems are not required to use the guide element but it is a good idea to
-	 * use it.
-	 * 
-	 * @param href
-	 *            the item referenced
-	 * @param title
-	 *            title of the reference (optional)
-	 * @param value
-	 *            type of the reference
-	 * @return the reference
-	 */
-	public Reference addReference(String href, String title, String value) {
-		if (value == null) {
-			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
-		}
-		if (href == null) {
-			throw new IllegalArgumentException("A href must be specified"); //$NON-NLS-1$
-		}
-		log(MessageFormat.format(Messages.getString("OPSPublication.11"), value, title, href), Severity.VERBOSE, //$NON-NLS-1$
-				indent);
-		Reference reference = OPFFactory.eINSTANCE.createReference();
-		reference.setHref(href);
-		reference.setTitle(title);
-		reference.setType(value);
-		opfPackage.getGuide().getGuideItems().add(reference);
-		return reference;
-	}
-
-	/**
-	 * Adds a optional <i>relation</i> specification to the publication.
-	 * 
-	 * @param id
-	 *            identifier or <code>null</code>
-	 * @param lang
-	 *            the language code or <code>null</code>
-	 * @param value
-	 *            the value of the relation
-	 * @return the new relation
-	 */
-	public Relation addRelation(String id, Locale lang, String value) {
-		if (value == null) {
-			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
-		}
-		log(MessageFormat.format(Messages.getString("OPSPublication.12"), value, //$NON-NLS-1$
-				lang == null ? Messages.getString("OPSPublication.3") : lang.getDisplayName()), Severity.VERBOSE, indent); //$NON-NLS-1$
-		Relation dc = DCFactory.eINSTANCE.createRelation();
-		setDcLocalized(dc, id, lang, value);
-		opfPackage.getMetadata().getRelations().add(dc);
-		return dc;
-	}
-
-	/**
-	 * Adds a optional <i>rights</i> specification to the publication.
-	 * 
-	 * @param id
-	 *            identifier or <code>null</code>
-	 * @param lang
-	 *            the language code or <code>null</code>
-	 * @param value
-	 *            the rights text
-	 * @return the new rights element
-	 */
-	public Rights addRights(String id, Locale lang, String value) {
-		if (value == null) {
-			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
-		}
-		log(MessageFormat.format(Messages.getString("OPSPublication.14"), value, //$NON-NLS-1$
-				lang == null ? Messages.getString("OPSPublication.3") : lang.getDisplayName()), Severity.VERBOSE, indent); //$NON-NLS-1$
-		Rights dc = DCFactory.eINSTANCE.createRights();
-		setDcLocalized(dc, id, lang, value);
-		opfPackage.getMetadata().getRights().add(dc);
-		return dc;
-	}
-
-	/**
-	 * Adds a optional <i>source</i> specification to the publication.
-	 * 
-	 * @param id
-	 *            identifier or <code>null</code>
-	 * @param lang
-	 *            the language code or <code>null</code>
-	 * @param value
-	 *            the source text
-	 * @return the new source element
-	 */
-	public Source addSource(String id, Locale lang, String value) {
-		if (value == null) {
-			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
-		}
-		log(MessageFormat.format(Messages.getString("OPSPublication.16"), value, //$NON-NLS-1$
-				lang == null ? Messages.getString("OPSPublication.3") : lang.getDisplayName()), Severity.VERBOSE, indent); //$NON-NLS-1$
-		Source dc = DCFactory.eINSTANCE.createSource();
-		setDcLocalized(dc, id, lang, value);
-		opfPackage.getMetadata().getSources().add(dc);
-		return dc;
-	}
-
-	/**
-	 * Adds a required <i>subject</i> specification to the publication.
-	 * 
-	 * @param id
-	 *            identifier or <code>null</code>
-	 * @param lang
-	 *            the language code or <code>null</code>
-	 * @param value
-	 *            the subject
-	 */
-	public Subject addSubject(String id, Locale lang, String value) {
-		if (value == null) {
-			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
-		}
-		log(MessageFormat.format(Messages.getString("OPSPublication.18"), value, //$NON-NLS-1$
-				lang == null ? Messages.getString("OPSPublication.3") : lang.getDisplayName()), Severity.VERBOSE, indent); //$NON-NLS-1$
-		Subject dc = DCFactory.eINSTANCE.createSubject();
-		setDcLocalized(dc, id, lang, value);
-		opfPackage.getMetadata().getSubjects().add(dc);
-		return dc;
-	}
-
-	/**
-	 * Adds a required <i>title</i> specification to the publication.
-	 * 
-	 * @param id
-	 *            identifier or <code>null</code>
-	 * @param lang
-	 *            the language code or <code>null</code>
-	 * @param value
-	 *            the new title
-	 * @return the new title
-	 */
-	public Title addTitle(String id, Locale lang, String value) {
-		if (value == null) {
-			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
-		}
-		log(MessageFormat.format(Messages.getString("OPSPublication.20"), value, //$NON-NLS-1$
-				lang == null ? Messages.getString("OPSPublication.3") : lang.getDisplayName()), Severity.VERBOSE, indent); //$NON-NLS-1$
-		Title dc = DCFactory.eINSTANCE.createTitle();
-		setDcLocalized(dc, id, lang, value);
-		opfPackage.getMetadata().getTitles().add(dc);
-		return dc;
-	}
-
-	/**
-	 * Adds a optional <i>type</i> specification to the publication.
-	 * 
-	 * @param id
-	 *            identifier or <code>null</code>
-	 * @param type
-	 *            the type to add
-	 * @return the new type
-	 */
-	public org.eclipse.mylyn.docs.epub.dc.Type addType(String id, String value) {
-		if (value == null) {
-			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
-		}
-		org.eclipse.mylyn.docs.epub.dc.Type dc = DCFactory.eINSTANCE.createType();
-		setDcCommon(dc, id, value);
-		opfPackage.getMetadata().getTypes().add(dc);
-		return dc;
-	}
-
-	/**
-	 * Implement to handle generation of table of contents from the items added to the <i>spine</i>.
-	 * 
-	 * @throws Exception
-	 */
-	protected abstract void generateTableOfContents() throws Exception;
-
-	/**
-	 * Returns the main identifier of the publication or <code>null</code> if it could not be determined.
-	 * 
-	 * @return the main identifier or <code>null</code>
-	 */
-	public Identifier getIdentifier() {
-		EList<Identifier> identifiers = opfPackage.getMetadata().getIdentifiers();
-		for (Identifier identifier : identifiers) {
-			if (identifier.getId().equals(opfPackage.getUniqueIdentifier())) {
-				return identifier;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Locates and returns an item from the manifest corresponding to the given identifier.
-	 * 
-	 * @param id
-	 *            the identifier
-	 * @return the item
-	 */
-	public Item getItemById(String id) {
-		EList<Item> items = opfPackage.getManifest().getItems();
-		for (Item item : items) {
-			if (item.getId().equals(id)) {
-				return item;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Returns a list of all manifest items that have the specified MIME type.
-	 * 
-	 * @param mimetype
-	 *            the MIME type to search for
-	 * @return a list of all items
-	 */
-	public List<Item> getItemsByMIMEType(String mimetype) {
-		ArrayList<Item> stylesheets = new ArrayList<Item>();
-		EList<Item> items = opfPackage.getManifest().getItems();
-		for (Item item : items) {
-			if (item.getMedia_type().equals(mimetype)) {
-				stylesheets.add(item);
-			}
-		}
-		return stylesheets;
-	}
-
-	/**
-	 * Returns the list of validation messages.
-	 * 
-	 * @return the list of validation message
-	 */
-	public List<ValidationMessage> getMessages() {
-		return messages;
-	}
-
-	public Package getOpfPackage() {
-		return opfPackage;
-	}
-
-	/**
-	 * Returns the root folder of the publication. This is the folder where the OPF file resides. Note that this
-	 * property will only have a value if this instance has been populated using an existing publication, such as when
-	 * unpacking an EPUB file.
-	 * 
-	 * @return the root folder or <code>null</code>
-	 */
-	public File getRootFolder() {
-		return rootFolder;
-	}
-
-	/**
-	 * Returns the publication spine.
-	 * 
-	 * @return the spine
-	 */
-	protected Spine getSpine() {
-		return opfPackage.getSpine();
-	}
-
-	/**
-	 * Returns the table of contents for the publication. As the actual implementation may vary depending on
-	 * 
-	 * @return the table of contents
-	 */
-	public abstract Object getTableOfContents();
-
-	/**
-	 * Returns a list of validation messages. This list is only populated when {@link #pack(File)} has taken place.
-	 * 
-	 * @return a list of validation messages
-	 */
-	public List<ValidationMessage> getValidationMessages() {
-		return messages;
-	}
-
-	/**
-	 * Returns the EPUB version number of the publication.
-	 * 
-	 * @return the version number
-	 */
-	protected abstract String getVersion();
-
-	/**
-	 * Iterates over all XHTML (non-generated) files in the manifest attempting to determine referenced resources such
-	 * as image files and adds these to the manifest. This method is not recursive, so items added through this
-	 * mechanism will not be searched for more content to add.
-	 * 
-	 * @throws ParserConfigurationException
+	 * This mechanism will traverse the spine of the publication (which is representing the reading order) and parse
+	 * each file for information that can be used to assemble a table of contents. Only XHTML type of files will be
+	 * taken into consideration.
+	 *
 	 * @throws SAXException
 	 * @throws IOException
+	 * @throws ParserConfigurationException
 	 */
-	private void includeReferencedResources() throws ParserConfigurationException, SAXException, IOException {
-		log(Messages.getString("OPSPublication.23"), Severity.INFO, indent++); //$NON-NLS-1$
+	@Override
+	protected void generateTableOfContents() throws ParserConfigurationException, SAXException, IOException {
+		log(Messages.getString("OPS2Publication.0"), Severity.INFO, indent++); //$NON-NLS-1$
+		Meta meta = NCXFactory.eINSTANCE.createMeta();
+		meta.setName("dtb:uid"); //$NON-NLS-1$
+		meta.setContent(getIdentifier().getMixed().getValue(0).toString());
+		ncxTOC.getHead().getMetas().add(meta);
+		int playOrder = 0;
+		// Iterate over the spine
+		EList<Itemref> spineItems = getSpine().getSpineItems();
 		EList<Item> manifestItems = opfPackage.getManifest().getItems();
-		// Compose a list of file references
-		HashMap<File, List<File>> references = new HashMap<File, List<File>>();
-		for (Item item : manifestItems) {
-			// Only parse XHTML-files and files that are not generated
-			if (item.getMedia_type().equals(MIMETYPE_XHTML) && !item.isGenerated()) {
-				File source = null;
-				if (item.getSourcePath() != null) {
-					source = new File(item.getSourcePath());
-					log(MessageFormat.format(Messages.getString("OPSPublication.24"), source), Severity.VERBOSE, indent); //$NON-NLS-1$
-					references.put(source, ReferenceScanner.parse(item));
-				} else {
-					source = new File(item.getFile());
-					log(MessageFormat.format(Messages.getString("OPSPublication.25"), source), Severity.VERBOSE, indent); //$NON-NLS-1$
+		for (Itemref itemref : spineItems) {
+			Item referencedItem = null;
+			String id = itemref.getIdref();
+			// Find the manifest item that is referenced
+			for (Item item : manifestItems) {
+				if (item.getId().equals(id)) {
+					referencedItem = item;
+					break;
 				}
-				references.put(source, ReferenceScanner.parse(item));
-			} else {
-				log(MessageFormat.format(Messages.getString("OPSPublication.26"), item.getFile()), Severity.DEBUG, indent); //$NON-NLS-1$
 			}
-		}
-		indent--;
-		// Add all referenced items to the manifest
-		for (File root : references.keySet()) {
-			List<File> files = references.get(root);
-			for (File file : files) {
-				// Determine a sub-folder to place the resource in.
-				File relativePath = new File(EPUBFileUtil.getRelativePath(root, file));
-				// If "file" is not relative to "root" it will be placed it in
-				// same folder as "root".
-				if (relativePath.isAbsolute()) {
-					relativePath = new File(EMPTY_STRING);
-				}
-				// Add those files that does not already exist in the manifest
-				boolean add = true;
-				EList<Item> items = getOpfPackage().getManifest().getItems();
-				for (Item item : items) {
-					if (item.getFile().equals(file.getAbsolutePath())) {
-						add = false;
-					}
-				}
-				if (add) {
-					try {
-						addItem(null, null, file, relativePath.getParent(), null, false, false, false);
-					} catch (Exception e) {
-						throw new RuntimeException(String.format("Could not add file referenced from \"%1$s\"", root), //$NON-NLS-1$
-								e);
-					}
-				}
+			if (referencedItem != null && !referencedItem.isNoToc()
+					&& referencedItem.getMedia_type().equals(MIMETYPE_XHTML)) {
+				File file = new File(referencedItem.getFile());
+				FileInputStream fis = new FileInputStream(file);
+				log(MessageFormat.format(Messages.getString("OPS2Publication.1"), referencedItem.getHref()), Severity.VERBOSE, indent); //$NON-NLS-1$
+				playOrder = TOCGenerator.parse(new InputSource(fis), referencedItem.getHref(), ncxTOC, playOrder);
 			}
 		}
 		indent--;
 	}
 
-	protected void log(String message, Severity severity, int indent) {
-		if (logger != null) {
-			if (indent == 0) {
-				logger.log(message, severity);
-			} else {
-				StringBuilder sb = new StringBuilder(message);
-				for (int i = 0; i < indent; i++) {
-					sb.insert(0, "  "); //$NON-NLS-1$
-				}
-				logger.log(sb.toString(), severity);
-			}
-		}
+	@Override
+	public Object getTableOfContents() {
+		return ncxTOC;
 	}
 
-	/**
-	 * Assembles the OPS publication in a location relative to the root file. Two levels of validation is performed.
-	 * First the contents are validated. This may result in warning or error class of messages. An error will result in
-	 * a {@link ValidationException} being thrown.
-	 * 
-	 * @param rootFile
-	 *            the root file
-	 * @throws ValidationException
-	 *             when the EPUB contains errors
-	 * @throws SAXException
-	 *             when content cannot be read
-	 * @throws ParserConfigurationException
-	 *             when the SAX parser cannot configured
-	 */
-	void pack(File rootFile) throws IOException, ValidationException, ParserConfigurationException, SAXException {
-		if (opfPackage.getSpine().getSpineItems().isEmpty()) {
-			throw new ValidationException("Spine does not contain any items"); //$NON-NLS-1$
-		}
-		// Include items that have been referenced
-		if (opfPackage.isIncludeReferencedResources()) {
-			includeReferencedResources();
-		}
-		// Make sure all data is in place in the OPF
-		addCompulsoryData();
-		// Note that order is important here. Some of the steps for assembling
-		// the EPUB may insert data into the EPUB structure. Hence the OPF must
-		// be written last.
-		this.rootFolder = rootFile.getAbsoluteFile().getParentFile();
-		if (rootFolder.isDirectory() || rootFolder.mkdirs()) {
-			// Validate contents.
-			messages = validateContents();
-			log(Messages.getString("OPSPublication.5"), Severity.INFO, indent); //$NON-NLS-1$
-			indent++;
-			for (ValidationMessage validation : messages) {
-				switch (validation.getSeverity()) {
-				case ERROR:
-					throw new ValidationException(validation.getMessage());
-				case WARNING:
-					log(validation.getMessage(), Severity.WARNING, indent);
-					break;
-				default:
-					break;
-				}
-			}
-			indent--;
-			// Validate metadata. These are "hard" requirements, so any problem here is an exception
-			List<Diagnostic> problems = validateMetadata();
-			if (problems.size() > 0) {
-				for (Diagnostic diagnostic : problems) {
-					throw new ValidationException(diagnostic.getMessage());
-				}
-			}
-			// Validation OK -- Write content.
-			if (opfPackage.isGenerateCoverHTML()) {
-				writeCoverHTML(rootFolder);
-			}
-			writeContent(rootFolder);
-			writeTableOfContents(rootFolder);
-			writeOPF(rootFile);
-		} else {
-			throw new IOException("Could not create OEBPS folder in " + rootFolder.getAbsolutePath()); //$NON-NLS-1$
-		}
+	@Override
+	protected String getVersion() {
+		return "2.0"; //$NON-NLS-1$
 	}
 
-	/**
-	 * Reads the root file.
-	 * 
-	 * @param rootFile
-	 *            the file to read
-	 * @throws IOException
-	 */
-	protected void readOPF(File rootFile) throws IOException {
+	@Override
+	protected void readTableOfContents(File tocFile) throws IOException {
 		ResourceSet resourceSet = new ResourceSetImpl();
-		URI fileURI = URI.createFileURI(rootFile.getAbsolutePath());
+		URI fileURI = URI.createFileURI(tocFile.getAbsolutePath());
 		Resource resource = resourceSet.createResource(fileURI);
 		resource.load(null);
-		opfPackage = (Package) resource.getContents().get(0);
+		ncxTOC = (Ncx) resource.getContents().get(0);
 	}
 
 	/**
-	 * Implement to read the table of contents for the particular OEPBS implementation.
-	 * 
-	 * @param tocFile
-	 *            the table of contents file
-	 * @throws IOException
-	 */
-	protected abstract void readTableOfContents(File tocFile) throws IOException;
-
-	/**
-	 * Registers a new resource factory for OPF data structures. This is normally done through Eclipse extension points
+	 * Registers a new resource factory for NCX data structures. This is normally done through Eclipse extension points
 	 * but we also need to be able to create this factory without the Eclipse runtime.
 	 */
-	private void registerOPFResourceFactory() {
+	private void registerNCXResourceFactory() {
 		// Register package so that it is available even without the Eclipse runtime
 		@SuppressWarnings("unused")
-		OPFPackage packageInstance = OPFPackage.eINSTANCE;
+		NCXPackage packageInstance = NCXPackage.eINSTANCE;
 
-		// Register the file suffix
-		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(OPF_FILE_SUFFIX,
-				new XMLResourceFactoryImpl() {
-
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(NCX_FILE_SUFFIX,
+				new NCXResourceFactoryImpl() {
 					@Override
 					public Resource createResource(URI uri) {
-						OPFResourceImpl xmiResource = new OPFResourceImpl(uri) {
+						NCXResourceImpl xmiResource = new NCXResourceImpl(uri) {
 
 							@Override
 							protected XMLHelper createXMLHelper() {
@@ -1030,254 +206,146 @@ public abstract class OPSPublication {
 				});
 	}
 
-	/**
-	 * Convenience method for adding a cover to the publication. This method will make sure the required actions are
-	 * taken to provide a cover page for all reading systems.
-	 * 
-	 * @param image
-	 *            the cover image (jpeg, png, svg or gif)
-	 * @param title
-	 *            title of the cover page
-	 */
-	public void setCover(File image, String title) {
-		// Add the cover image to the manifest
-		Item item = addItem(COVER_IMAGE_ID, null, image, null, null, false, false, true);
-		item.setTitle(title);
-		// Point to the cover using a meta tag
-		addMeta(COVER_ID, COVER_IMAGE_ID);
-		opfPackage.setGenerateCoverHTML(true);
+	@Override
+	public void setTableOfContents(File ncxFile) {
+		// Add the file to the publication and make sure we use the table of
+		// contents identifier.
+		Item item = addItem(opfPackage.getSpine().getToc(), null, ncxFile, null, MIMETYPE_NCX, false, false, false);
+		// The table of contents file must be first.
+		opfPackage.getManifest().getItems().move(0, item);
+		log(MessageFormat.format("Using table of contents file {0} for OPS", new Object[] { ncxFile.getName() }), //$NON-NLS-1$
+				Severity.VERBOSE, indent);
+	}
 
+	private void setup() {
+		opfPackage.setVersion(getVersion());
+		ncxTOC = NCXFactory.eINSTANCE.createNcx();
+		// Set the required version attribute
+		ncxTOC.setVersion("2005-1"); //$NON-NLS-1$
+		// Create the required head element
+		Head head = NCXFactory.eINSTANCE.createHead();
+		ncxTOC.setHead(head);
+		// Create the required title element
+		DocTitle docTitle = NCXFactory.eINSTANCE.createDocTitle();
+		Text text = NCXFactory.eINSTANCE.createText();
+		FeatureMapUtil.addText(text.getMixed(), "Table of contents"); //$NON-NLS-1$
+		docTitle.setText(text);
+		ncxTOC.setDocTitle(docTitle);
+		// Create the required navigation map element
+		NavMap navMap = NCXFactory.eINSTANCE.createNavMap();
+		ncxTOC.setNavMap(navMap);
+		// Create the required metadata element
+		Metadata opfMetadata = OPFFactory.eINSTANCE.createMetadata();
+		opfPackage.setMetadata(opfMetadata);
+		Guide opfGuide = OPFFactory.eINSTANCE.createGuide();
+		opfPackage.setGuide(opfGuide);
+		Manifest opfManifest = OPFFactory.eINSTANCE.createManifest();
+		opfPackage.setManifest(opfManifest);
+		// Create the spine and set a reference to the table of contents
+		// item which will be added to the manifest on a later stage.
+		Spine opfSpine = OPFFactory.eINSTANCE.createSpine();
+		opfSpine.setToc(TABLE_OF_CONTENTS_ID);
+		opfPackage.setSpine(opfSpine);
+
+		registerNCXResourceFactory();
+		opfPackage.setGenerateTableOfContents(true);
 	}
 
 	/**
-	 * Sets common properties for <i>Dublin Core</i> elements.
-	 * 
-	 * @param dc
-	 *            the Dublin Core element
-	 * @param id
-	 *            optional identifier
-	 * @param value
-	 *            value of the element
-	 */
-	private void setDcCommon(DCType dc, String id, String value) {
-		FeatureMapUtil.addText(dc.getMixed(), value);
-		if (id != null) {
-			dc.setId(id);
-		}
-	}
-
-	/**
-	 * Sets common properties for localized <i>Dublin Core</i> elements.
-	 * 
-	 * @param dc
-	 *            the Dublin Core element
-	 * @param id
-	 *            optional identifier
-	 * @param lang
-	 *            language code
-	 * @param value
-	 *            value of the element
-	 */
-	private void setDcLocalized(LocalizedDCType dc, String id, Locale lang, String value) {
-		setDcCommon(dc, id, value);
-		if (lang != null) {
-			dc.setLang(lang.toString());
-		}
-	}
-
-	/**
-	 * Specifies whether or not to automatically generate table of contents from the publication contents. The default
-	 * is <code>true</code>
-	 * 
-	 * @param generateToc
-	 *            whether or not to generate a table of contents
-	 */
-	public void setGenerateToc(boolean generateToc) {
-		opfPackage.setGenerateTableOfContents(generateToc);
-	}
-
-	/**
-	 * Specifies the id of the identifier used for the publication.
-	 * 
-	 * @param identifier_id
-	 *            the identifier id
-	 * @see #addIdentifier(String, String, String)
-	 */
-	public void setIdentifierId(String identifier_id) {
-		opfPackage.setUniqueIdentifier(identifier_id);
-	}
-
-	/**
-	 * Specifies whether or not to automatically include resources (files) that are referenced in the contents. The
-	 * default is <code>false</code>.
-	 * 
-	 * @param include
-	 *            whether or not automatically include resources
-	 */
-	public void setIncludeReferencedResources(boolean include) {
-		opfPackage.setIncludeReferencedResources(include);
-	}
-
-	/**
-	 * Specifies a target of contents file for the publication. This is an alternative to
-	 * {@link #setGenerateToc(boolean)}.
-	 * 
-	 * @param tocFile
-	 *            the table of contents file
-	 */
-	public abstract void setTableOfContents(File tocFile);
-
-	/**
-	 * Populates the data model with the content from an unpacked EPUB.
-	 * 
-	 * @param opfFile
-	 *            the (OPS) root file
-	 * @throws Exception
-	 */
-	void unpack(File opfFile) throws Exception {
-		readOPF(opfFile);
-		rootFolder = opfFile.getAbsoluteFile().getParentFile();
-		String tocId = opfPackage.getSpine().getToc();
-		Item tocItem = getItemById(tocId);
-		File tocFile = new File(rootFolder.getAbsolutePath() + File.separator + tocItem.getHref());
-		readTableOfContents(tocFile);
-	}
-
-	/**
-	 * Implement to validate contents.
-	 * 
-	 * @throws FileNotFoundException
+	 * Validates all XHTML items in the manifest. The following rules are observed:
+	 * <ul>
+	 * <li>The item must be a core media type. If not it must have a fallback item which must exist and be of a core
+	 * media type. Otherwise an error is added to the list of messages</li>
+	 * <li>XHTML file content must be in the preferred vocabulary. Warnings are added when this is not the case.</li>
+	 * </ul>
+	 *
 	 * @throws IOException
 	 * @throws SAXException
 	 * @throws ParserConfigurationException
 	 */
-	protected abstract List<ValidationMessage> validateContents() throws FileNotFoundException, IOException,
-			SAXException, ParserConfigurationException;
-
-	/**
-	 * Validates the data model contents.
-	 * 
-	 * @return a list of EMF diagnostics
-	 */
-	public List<Diagnostic> validateMetadata() {
-		EValidator.Registry.INSTANCE.put(OPFPackage.eINSTANCE, new OPFValidator());
-		BasicDiagnostic diagnostics = new BasicDiagnostic();
-		for (EObject eo : opfPackage.eContents()) {
-			Map<Object, Object> context = new HashMap<Object, Object>();
-			Diagnostician.INSTANCE.validate(eo, diagnostics, context);
-		}
-		return diagnostics.getChildren();
-	}
-
-	/**
-	 * Copies all items part of the publication into the OEPBS folder unless the item in question will be generated.
-	 * 
-	 * @param rootFolder
-	 *            the folder to copy into.
-	 * @throws IOException
-	 */
-	private void writeContent(File rootFolder) throws IOException {
-		log(Messages.getString("OPSPublication.22"), Severity.INFO, indent); //$NON-NLS-1$
-		EList<Item> items = opfPackage.getManifest().getItems();
-		for (Item item : items) {
-			if (!item.isGenerated()) {
-				File source = new File(item.getFile());
-				File destination = new File(rootFolder.getAbsolutePath() + File.separator + item.getHref());
-				EPUBFileUtil.copy(source, destination);
+	@Override
+	protected List<ValidationMessage> validateContents() throws ParserConfigurationException, SAXException, IOException {
+		EList<Item> manifestItems = opfPackage.getManifest().getItems();
+		ArrayList<ValidationMessage> messages = new ArrayList<ValidationMessage>();
+		for (Item item : manifestItems) {
+			if (!isLegalType(item)) {
+				Item fallback = getItemById(item.getFallback());
+				if (fallback == null) {
+					messages.add(new ValidationMessage(ValidationMessage.Severity.WARNING, MessageFormat.format(
+							Messages.getString("OPS2Publication.13"), //$NON-NLS-1$
+							item.getHref())));
+				} else if (!isLegalType(fallback)) {
+					messages.add(new ValidationMessage(ValidationMessage.Severity.WARNING, MessageFormat.format(
+							Messages.getString("OPS2Publication.14"), //$NON-NLS-1$
+							item.getHref())));
+				} else {
+					messages.add(new ValidationMessage(ValidationMessage.Severity.WARNING, MessageFormat.format(
+							Messages.getString("OPS2Publication.15"), //$NON-NLS-1$
+							item.getHref())));
+				}
+			}
+			// Validate the XHTML items to see if they contain illegal attributes and elements
+			if (item.getMedia_type().equals(MIMETYPE_XHTML)) {
+				File file = new File(item.getFile());
+				FileReader fr = new FileReader(file);
+				messages.addAll(OPSValidator.validate(new InputSource(fr), item.getHref()));
 			}
 		}
+		return messages;
 	}
 
-	/**
-	 * Writes a XHTML-file for the cover image. This is added to the publication and all required references set.
-	 * 
-	 * @param rootFolder
-	 *            the publication root folder
-	 * @throws IOException
-	 */
-	private void writeCoverHTML(File rootFolder) throws IOException {
-		Item coverImage = getItemById(COVER_IMAGE_ID);
-		File coverFile = new File(rootFolder.getAbsolutePath() + File.separator + "cover-page.xhtml"); //$NON-NLS-1$
-		if (!coverFile.exists()) {
-			try {
-				log(MessageFormat.format(Messages.getString("OPSPublication.28"), coverImage.getHref()), Severity.INFO, //$NON-NLS-1$
-						indent);
-				FileWriter fw = new FileWriter(coverFile);
-				fw.append("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>\n"); //$NON-NLS-1$
-				fw.append("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n"); //$NON-NLS-1$
-				fw.append("<html xmlns=\"http://www.w3.org/1999/xhtml\">\n"); //$NON-NLS-1$
-				fw.append("  <head>\n"); //$NON-NLS-1$
-				fw.append("    <title>" + coverImage.getTitle() + "</title>\n"); //$NON-NLS-1$ //$NON-NLS-2$
-				fw.append("    <style type=\"text/css\">"); //$NON-NLS-1$
-				fw.append("      #cover-body {\n"); //$NON-NLS-1$
-				fw.append("        margin: 0px;\n"); //$NON-NLS-1$
-				fw.append("        text-align: center;\n"); //$NON-NLS-1$
-				fw.append("        background-color: #222222;\n"); //$NON-NLS-1$
-				fw.append("      }\n"); //$NON-NLS-1$
-				fw.append("      #cover-block {\n"); //$NON-NLS-1$
-				fw.append("        height: 100%;\n"); //$NON-NLS-1$
-				fw.append("        margin-top: 0;\n"); //$NON-NLS-1$
-				fw.append("      }\n"); //$NON-NLS-1$
-				fw.append("      #cover-image {\n"); //$NON-NLS-1$
-				fw.append("        height: 100%;\n"); //$NON-NLS-1$
-				fw.append("        text-align: center;\n"); //$NON-NLS-1$
-				fw.append("        max-width: 100%;\n"); //$NON-NLS-1$
-				fw.append("      }\n"); //$NON-NLS-1$
-				fw.append("    </style>\n"); //$NON-NLS-1$
-				fw.append("  </head>\n"); //$NON-NLS-1$
-				fw.append("  <body id=\"cover-body\">\n"); //$NON-NLS-1$
-				fw.append("    <div id=\"cover-block\">\n"); //$NON-NLS-1$
-				fw.append("      <img id=\"cover-image\" src=\"" + coverImage.getHref() + "\" alt=\"" //$NON-NLS-1$ //$NON-NLS-2$
-						+ coverImage.getTitle() + "\"/>\n"); //$NON-NLS-1$
-				fw.append("    </div>\n"); //$NON-NLS-1$
-				fw.append("  </body>\n"); //$NON-NLS-1$
-				fw.append("</html>\n"); //$NON-NLS-1$
-				fw.close();
-			} catch (IOException e) {
-				e.printStackTrace();
+	private boolean isLegalType(Item item) {
+		boolean legal = false;
+		for (String type : CORE_MEDIA_TYPES) {
+			if (item.getMedia_type().equals(type)) {
+				legal = true;
 			}
 		}
-		// Add the cover page item
-		Item coverPage = addItem(COVER_ID, null, coverFile, null, MIMETYPE_XHTML, true, false, false);
-		coverPage.setGenerated(true);
-		addReference(coverPage.getHref(), coverImage.getTitle(), Type.COVER.getLiteral());
-		// Move the cover page first in the spine.
-		EList<Itemref> spine = opfPackage.getSpine().getSpineItems();
-		Itemref cover = null;
-		for (Itemref itemref : spine) {
-			if (itemref.getIdref().equals(COVER_ID)) {
-				cover = itemref;
-			}
-		}
-		if (cover != null) {
-			spine.move(0, cover);
-		}
+		return legal;
 	}
 
 	/**
-	 * Writes the <b>content.opf</b> file.
-	 * 
-	 * @param opfFile
-	 *            the location of the OPF file
+	 * Writes the table of contents file in the specified folder using the NCX format. If a table of contents file has
+	 * not been specified an empty one will be created (since it is required to have one). If in addition it has been
+	 * specified that the table of contents should be created, the content files will be parsed and a TOC will be
+	 * generated.
+	 *
+	 * @param oepbsFolder
+	 *            the folder to create the NCX file in
 	 * @throws IOException
+	 * @throws SAXException
+	 * @throws ParserConfigurationException
+	 * @see {@link #setTableOfContents(File)}
 	 */
-	private void writeOPF(File opfFile) throws IOException {
-		ResourceSet resourceSet = new ResourceSetImpl();
-		// Register the packages to make it available during loading.
-		URI fileURI = URI.createFileURI(opfFile.getAbsolutePath());
-		Resource resource = resourceSet.createResource(fileURI);
-		resource.getContents().add(opfPackage);
-		resource.save(null);
+	@Override
+	protected void writeTableOfContents(File oepbsFolder) throws IOException, ParserConfigurationException,
+			SAXException {
+		// If a table of contents file has not been specified we must create
+		// one. If it has been specified it will be copied.
+		if (getItemById(opfPackage.getSpine().getToc()) == null) {
+			File ncxFile = new File(oepbsFolder.getAbsolutePath() + File.separator + TOCFILE_NAME);
+			ResourceSet resourceSet = new ResourceSetImpl();
+			// Register the packages to make it available during loading.
+			resourceSet.getPackageRegistry().put(NCXPackage.eNS_URI, NCXPackage.eINSTANCE);
+			URI fileURI = URI.createFileURI(ncxFile.getAbsolutePath());
+			Resource resource = resourceSet.createResource(fileURI);
+			// We've been asked to generate a table of contents using pages
+			// contained in the spine.
+			if (opfPackage.isGenerateTableOfContents()) {
+				generateTableOfContents();
+			}
+			resource.getContents().add(ncxTOC);
+			Map<String, Object> options = new HashMap<String, Object>();
+			// NCX requires that we encode using UTF-8
+			options.put(XMLResource.OPTION_ENCODING, XML_ENCODING);
+			options.put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
+			resource.save(options);
+			// Make sure the table of contents file is in the manifest and
+			// referenced in the spine. We also want it to be the first element
+			// in the manifest.
+			Item item = addItem(opfPackage.getSpine().getToc(), null, ncxFile, null, MIMETYPE_NCX, false, false, false);
+			opfPackage.getManifest().getItems().move(0, item);
+		}
 	}
 
-	/**
-	 * Implement to handle writing of the table of contents. Note that this method should do nothing if the table of
-	 * contents has already been specified using {@link #setTableOfContents(File)}.
-	 * 
-	 * @param rootFolder
-	 *            the folder to write in
-	 * @throws Exception
-	 */
-	protected abstract void writeTableOfContents(File rootFolder) throws IOException, ParserConfigurationException,
-			SAXException;
 }

@@ -18,8 +18,8 @@ import java.io.IOException;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.mylyn.docs.epub.core.EPUB;
-import org.eclipse.mylyn.docs.epub.core.OPS2Publication;
 import org.eclipse.mylyn.docs.epub.core.OPSPublication;
+import org.eclipse.mylyn.docs.epub.core.Publication;
 import org.eclipse.mylyn.docs.epub.ocf.Container;
 import org.eclipse.mylyn.docs.epub.ocf.RootFile;
 import org.eclipse.mylyn.docs.epub.ocf.RootFiles;
@@ -93,7 +93,7 @@ public class TestEPUB extends AbstractTest {
 
 	/**
 	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.EPUB#add(org.eclipse.mylyn.docs.epub.core.OPSPublication)} .
+	 * {@link org.eclipse.mylyn.docs.epub.core.EPUB#add(org.eclipse.mylyn.docs.epub.core.Publication)} .
 	 * <ul>
 	 * <li>Container shall hold more than one OPS publication</li>
 	 * <li>OPS structures shall follow naming conventions.</li>
@@ -106,8 +106,8 @@ public class TestEPUB extends AbstractTest {
 	@Test
 	public final void testAddOPSPublication() throws Exception {
 		EPUB epub = new EPUB();
-		OPSPublication oebps1 = new OPS2Publication();
-		OPSPublication oebps2 = new OPS2Publication();
+		Publication oebps1 = new OPSPublication();
+		Publication oebps2 = new OPSPublication();
 		epub.add(oebps1);
 		epub.add(oebps2);
 		Container container = epub.getContainer();
@@ -132,7 +132,7 @@ public class TestEPUB extends AbstractTest {
 	@Test
 	public final void testGetOPSPublications() throws Exception {
 		EPUB epub = new EPUB();
-		OPSPublication oebps = new OPS2Publication();
+		Publication oebps = new OPSPublication();
 		epub.add(oebps);
 		File drawing = new File("testdata/drawing.svg");
 		epub.add(drawing, "image/svg+xml");
@@ -150,7 +150,7 @@ public class TestEPUB extends AbstractTest {
 	@Test
 	public final void testPackFile() throws Exception {
 		EPUB epub = new EPUB();
-		OPSPublication oebps = new OPS2Publication();
+		Publication oebps = new OPSPublication();
 		oebps.addItem(new File("testdata/plain-page.xhtml"));
 		epub.add(oebps);
 		File drawing = new File("testdata/drawing.svg");
@@ -172,7 +172,7 @@ public class TestEPUB extends AbstractTest {
 	@Test
 	public final void testPackFileFile() throws Exception {
 		EPUB epub = new EPUB();
-		OPSPublication oebps = new OPS2Publication();
+		Publication oebps = new OPSPublication();
 		oebps.addItem(new File("testdata/plain-page.xhtml"));
 		epub.add(oebps);
 		epub.pack(epubFile, epubFolder);
@@ -201,7 +201,7 @@ public class TestEPUB extends AbstractTest {
 	public final void testPackFileFileExists() throws Exception {
 		File workingFolder = File.createTempFile("epub_", null);
 		EPUB epub = new EPUB();
-		OPSPublication oebps = new OPS2Publication();
+		Publication oebps = new OPSPublication();
 		epub.add(oebps);
 		try {
 			epub.pack(epubFile, workingFolder);
@@ -238,7 +238,7 @@ public class TestEPUB extends AbstractTest {
 	@Test
 	public final void testUnpackFile() throws Exception {
 		EPUB epub = new EPUB();
-		OPSPublication oebps = new OPS2Publication();
+		Publication oebps = new OPSPublication();
 		oebps.addItem(new File("testdata/plain-page.xhtml"));
 		epub.add(oebps);
 		epub.pack(epubFile, epubFolder);
@@ -256,7 +256,7 @@ public class TestEPUB extends AbstractTest {
 	public final void testUnpackFileFile() throws Exception {
 		// First pack the EPUB
 		EPUB epub = new EPUB();
-		OPSPublication oebps = new OPS2Publication();
+		Publication oebps = new OPSPublication();
 		oebps.addItem(new File("testdata/plain-page.xhtml"));
 		epub.add(oebps);
 		epub.pack(epubFile, epubFolder);
@@ -374,7 +374,7 @@ public class TestEPUB extends AbstractTest {
 	@Test
 	public final void test_Bug378800() throws Exception {
 		EPUB epub = new EPUB();
-		OPSPublication oebps = new OPS2Publication();
+		Publication oebps = new OPSPublication();
 		oebps.addItem(new File("testdata/plain-page.xhtml"));
 		epub.add(oebps);
 		epub.pack(epubFile, epubFolder);

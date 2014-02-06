@@ -19,8 +19,8 @@ import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.emf.ecore.util.FeatureMapUtil.FeatureEList;
 import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
 import org.eclipse.mylyn.docs.epub.core.EPUB;
-import org.eclipse.mylyn.docs.epub.core.OPS2Publication;
 import org.eclipse.mylyn.docs.epub.core.OPSPublication;
+import org.eclipse.mylyn.docs.epub.core.Publication;
 import org.eclipse.mylyn.docs.epub.core.ValidationMessage;
 import org.eclipse.mylyn.docs.epub.core.ValidationMessage.Severity;
 import org.eclipse.mylyn.docs.epub.ncx.Meta;
@@ -30,7 +30,7 @@ import org.eclipse.mylyn.docs.epub.opf.Item;
 import org.junit.Test;
 
 /**
- * Tests features and regressions specific to the OPS 2.0.1 supporting implementation {@link OPS2Publication}.
+ * Tests features and regressions specific to the OPS 2.0.1 supporting implementation {@link OPSPublication}.
  * 
  * @author Torkild U. Resheim
  */
@@ -60,7 +60,7 @@ public class TestOPS2Publication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPS2Publication#generateTableOfContents()} .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#generateTableOfContents()} .
 	 * <ul>
 	 * <li>Table of contents shall be generated from content per default.</li>
 	 * </ul>
@@ -83,7 +83,7 @@ public class TestOPS2Publication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPS2Publication#generateTableOfContents()} .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#generateTableOfContents()} .
 	 * <ul>
 	 * <li>Table of contents shall exist but be empty if not otherwise specified.</li>
 	 * </ul>
@@ -101,7 +101,7 @@ public class TestOPS2Publication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPS2Publication#getTableOfContents()} .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#getTableOfContents()} .
 	 * <ul>
 	 * <li>There shall be a table of contents, even if empty.</li>
 	 * </ul>
@@ -116,7 +116,7 @@ public class TestOPS2Publication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPS2Publication#readTableOfContents(java.io.File)} .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#readTableOfContents(java.io.File)} .
 	 * 
 	 * @throws Exception
 	 */
@@ -128,7 +128,7 @@ public class TestOPS2Publication extends AbstractTest {
 
 		EPUB epub_in = new EPUB();
 		epub_in.unpack(epubFile, epubFolder);
-		OPSPublication oebps_in = epub_in.getOPSPublications().get(0);
+		Publication oebps_in = epub_in.getOPSPublications().get(0);
 		assertTrue(oebps_in.getTableOfContents() != null);
 		assertTrue(oebps_in.getTableOfContents() instanceof Ncx);
 		Ncx ncx = (Ncx) oebps_in.getTableOfContents();
@@ -139,7 +139,7 @@ public class TestOPS2Publication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPS2Publication#setTableOfContents(java.io.File)} .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#setTableOfContents(java.io.File)} .
 	 * 
 	 * @throws Exception
 	 */
@@ -151,7 +151,7 @@ public class TestOPS2Publication extends AbstractTest {
 		epub.pack(epubFile);
 		EPUB epub_in = new EPUB();
 		epub_in.unpack(epubFile, epubFolder);
-		OPSPublication oebps_in = epub_in.getOPSPublications().get(0);
+		Publication oebps_in = epub_in.getOPSPublications().get(0);
 		assertTrue(oebps_in.getTableOfContents() != null);
 		assertTrue(oebps_in.getTableOfContents() instanceof Ncx);
 		Ncx ncx = (Ncx) oebps_in.getTableOfContents();
@@ -168,7 +168,7 @@ public class TestOPS2Publication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPS2Publication#validateContents()} .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#validateContents()} .
 	 * <ul>
 	 * <li>There shall be a warning message</li>
 	 * </ul>
@@ -204,7 +204,7 @@ public class TestOPS2Publication extends AbstractTest {
 		oebps.addItem(new File("testdata/OPF-Tests/Bug_379052/chapter-1.xhtml"));
 		epub.pack(epubFile);
 		// Two XHTML files, one with a warning. One CSS file and the NCX.
-		assertEquals(4, oebps.getOpfPackage().getManifest().getItems().size());
+		assertEquals(4, oebps.getPackage().getManifest().getItems().size());
 		// Should be exactly two warning.
 		assertEquals(1, oebps.getValidationMessages().size());
 		epubFile.delete();
@@ -277,7 +277,7 @@ public class TestOPS2Publication extends AbstractTest {
 		item.setFallback("fallback");
 		oebps.addItem("fallback", null, new File("testdata/plain-page.xhtml"), null, null, true, true, false);
 		epub.pack(epubFile);
-		assertEquals(3, oebps.getOpfPackage().getManifest().getItems().size());
+		assertEquals(3, oebps.getPackage().getManifest().getItems().size());
 		assertEquals(1, oebps.getValidationMessages().size());
 		ValidationMessage msg = oebps.getValidationMessages().get(0);
 		assertEquals(Severity.WARNING, msg.getSeverity());
@@ -287,7 +287,7 @@ public class TestOPS2Publication extends AbstractTest {
 						.equals("Item \"illegal-type.html\" is not a core media type but a legal fallback item has been specified."));
 	}
 
-	private class EPUB_NCX_Test extends OPS2Publication {
+	private class EPUB_NCX_Test extends OPSPublication {
 		public void testReadOCF(File tocFile) throws IOException {
 			readTableOfContents(tocFile);
 		}

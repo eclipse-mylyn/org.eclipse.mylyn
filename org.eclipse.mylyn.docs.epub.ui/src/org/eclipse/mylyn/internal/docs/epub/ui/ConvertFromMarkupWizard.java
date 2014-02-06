@@ -1,11 +1,11 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Torkild U. Resheim.
- * 
+ * Copyright (c) 2011-2014 Torkild U. Resheim.
+ *
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *   Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
@@ -23,7 +23,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.docs.epub.core.EPUB;
-import org.eclipse.mylyn.docs.epub.core.OPSPublication;
+import org.eclipse.mylyn.docs.epub.core.Publication;
+import org.eclipse.mylyn.docs.epub.core.PublicationProxy;
 import org.eclipse.mylyn.docs.epub.core.ValidationMessage;
 import org.eclipse.mylyn.docs.epub.core.wikitext.MarkupToOPS;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
@@ -31,9 +32,9 @@ import org.eclipse.ui.statushandlers.StatusManager;
 
 public class ConvertFromMarkupWizard extends Wizard {
 
-	private EPUB2Bean bean;
+	private PublicationProxy bean;
 
-	OPSPublication oebps;
+	Publication oebps;
 
 	private IFile epubFile;
 
@@ -54,16 +55,15 @@ public class ConvertFromMarkupWizard extends Wizard {
 
 	@Override
 	public void addPages() {
-		oebps = OPSPublication.getVersion2Instance();
-		File workingFolder = null;
-		bean = new EPUB2Bean(oebps, markupFile.getLocation().toFile(), epubFile.getLocation().toFile(), workingFolder);
+		oebps = Publication.getVersion2Instance();
+		bean = new PublicationProxy(oebps, markupFile.getLocation().toFile());
 		page = new MainPage(bean);
 		addPage(page);
 	}
 
 	/**
 	 * Delete the folder recursively.
-	 * 
+	 *
 	 * @param folder
 	 *            the folder to delete
 	 * @return <code>true</code> if the folder was deleted

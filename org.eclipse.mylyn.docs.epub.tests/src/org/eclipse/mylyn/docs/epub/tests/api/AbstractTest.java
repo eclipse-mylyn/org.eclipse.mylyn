@@ -21,8 +21,8 @@ import org.eclipse.emf.ecore.util.FeatureMapUtil.FeatureEList;
 import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
 import org.eclipse.mylyn.docs.epub.core.EPUB;
 import org.eclipse.mylyn.docs.epub.core.ILogger;
-import org.eclipse.mylyn.docs.epub.core.OPS2Publication;
 import org.eclipse.mylyn.docs.epub.core.OPSPublication;
+import org.eclipse.mylyn.docs.epub.core.Publication;
 import org.eclipse.mylyn.docs.epub.dc.DCType;
 import org.eclipse.mylyn.docs.epub.dc.Identifier;
 import org.eclipse.mylyn.docs.epub.tests.ValidationReport;
@@ -80,7 +80,7 @@ public abstract class AbstractTest extends TestCase {
 
 	protected final StdOutLogger logger = new StdOutLogger();
 
-	protected OPSPublication oebps;
+	protected Publication oebps;
 
 	protected boolean deleteFolder(File folder) {
 		if (folder.isDirectory()) {
@@ -134,7 +134,7 @@ public abstract class AbstractTest extends TestCase {
 		}
 		epubFolder.mkdirs();
 		epub = new EPUB(logger);
-		oebps = new OPS2Publication(logger);
+		oebps = new OPSPublication(logger);
 	}
 
 	/**

@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Torkild U. Resheim.
- * 
+ * Copyright (c) 2011-2014 Torkild U. Resheim.
+ *
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors: 
+ *
+ * Contributors:
  *     Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.internal.docs.epub.ui;
@@ -27,6 +27,7 @@ import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylyn.docs.epub.core.PublicationProxy;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -63,7 +64,7 @@ public class MainPage extends WizardPage {
 	/**
 	 * @wbp.nonvisual location=681,21
 	 */
-	private EPUB2Bean bean = new EPUB2Bean();
+	private PublicationProxy bean = new PublicationProxy();
 
 	private Combo schemeText;
 
@@ -75,7 +76,7 @@ public class MainPage extends WizardPage {
 
 	/**
 	 * Create the wizard.
-	 * 
+	 *
 	 * @wbp.parser.constructor
 	 */
 	public MainPage() {
@@ -85,14 +86,14 @@ public class MainPage extends WizardPage {
 		setTitle(Messages.MainPage_1);
 	}
 
-	public MainPage(EPUB2Bean bean) {
+	public MainPage(PublicationProxy bean) {
 		this();
 		this.bean = bean;
 	}
 
 	/**
 	 * Create contents of the wizard.
-	 * 
+	 *
 	 * @param parent
 	 */
 	public void createControl(Composite parent) {
@@ -338,7 +339,7 @@ public class MainPage extends WizardPage {
 		UpdateValueStrategy coverStrategy = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
 		coverStrategy.setBeforeSetValidator(new FileValidator(
 				"The cover image must be a valid image file of type PNG, SVG or JPEG.", coverText, new String[] { //$NON-NLS-1$
-				".png", ".svg", ".jpeg", ".jpg" })); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+						".png", ".svg", ".jpeg", ".jpg" })); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		bindingContext.bindValue(coverObserveTextObserveWidget, beanCoverObserveValue, coverStrategy, null);
 		//
 		IObservableValue styleSheetTextObserveTextObserveWidget = SWTObservables.observeText(styleSheetText, SWT.Modify);

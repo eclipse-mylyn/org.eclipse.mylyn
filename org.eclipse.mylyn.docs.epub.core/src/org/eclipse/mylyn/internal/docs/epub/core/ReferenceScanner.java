@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2011,2012 Torkild U. Resheim.
- * 
+ * Copyright (c) 2011-2014 Torkild U. Resheim.
+ *
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors: 
+ *
+ * Contributors:
  *   Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.internal.docs.epub.core;
@@ -27,8 +27,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * This type is a SAX parser that will read a XHTML file and create a list of all images that are referenced either
- * through an <i>img<i/> tag or a link.
+ * This type is a SAX parser that will read a XHTML file and create a list of all images, content and CSS-files that are
+ * referenced either through an <i>img<i/> tag or a link.
  * 
  * @author Torkild U. Resheim
  */
@@ -109,7 +109,7 @@ public class ReferenceScanner extends AbstractXHTMLScanner {
 			}
 		}
 
-		// Also handle links to image files
+		// Also handle links to files
 		if (qName.equalsIgnoreCase("a")) { //$NON-NLS-1$
 			String ref = getAttribute(attributes, "href"); //$NON-NLS-1$
 			if (ref != null) {
@@ -128,10 +128,10 @@ public class ReferenceScanner extends AbstractXHTMLScanner {
 
 	private void includeRef(String ref) {
 		String t = ref.toLowerCase();
-		if (t.startsWith("#") || t.startsWith("http://") || t.startsWith("https://")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+		if (t.startsWith("#") || t.startsWith("http://") || t.startsWith("https://")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			return;
 		}
-		// Handle links to anchors within resources (bug 375795). 
+		// Handle links to anchors within resources (bug 375795).
 		if (ref.indexOf('#') > -1) {
 			ref = ref.substring(0, ref.indexOf('#'));
 		}

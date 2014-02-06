@@ -15,7 +15,6 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.mylyn.docs.epub.opf.OPFPackage;
 import org.eclipse.mylyn.docs.epub.opf.Reference;
-import org.eclipse.mylyn.docs.epub.opf.Type;
 
 /**
  * <!-- begin-user-doc -->

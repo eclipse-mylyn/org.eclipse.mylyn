@@ -19,8 +19,8 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.eclipse.mylyn.docs.epub.core.EPUB;
-import org.eclipse.mylyn.docs.epub.core.OPS2Publication;
 import org.eclipse.mylyn.docs.epub.core.OPSPublication;
+import org.eclipse.mylyn.docs.epub.core.Publication;
 import org.eclipse.mylyn.docs.epub.opf.Role;
 
 /**
@@ -31,7 +31,7 @@ import org.eclipse.mylyn.docs.epub.opf.Role;
  */
 public class EpubTask extends Task {
 
-	private OPSPublication oebps = null;
+	private Publication oebps = null;
 
 	private ArrayList<FileSetType> filesets = null;
 
@@ -47,7 +47,7 @@ public class EpubTask extends Task {
 		super();
 		try {
 			logger = new AntLogger(this);
-			oebps = new OPS2Publication(logger);
+			oebps = new OPSPublication(logger);
 			filesets = new ArrayList<FileSetType>();
 		} catch (Exception e) {
 			e.printStackTrace();

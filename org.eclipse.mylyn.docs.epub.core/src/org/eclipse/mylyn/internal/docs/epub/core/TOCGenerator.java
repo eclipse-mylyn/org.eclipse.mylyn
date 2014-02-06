@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2011,2012 Torkild U. Resheim.
- * 
+ * Copyright (c) 2011-2014 Torkild U. Resheim.
+ *
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors: 
+ *
+ * Contributors:
  *   Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.internal.docs.epub.core;
@@ -29,8 +29,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * This type is a SAX parser that will read a XHTML file, locate headers and create NCX items for the EPUB table of
- * contents. Each header must have an "id" attribute or it will not be possible to link to the header.
+ * This type is a SAX parser that will read a XHTML file, locate header text (<b>H1</b> trough <b>H6</b>) and create NCX
+ * items for the EPUB table of contents.
  * 
  * @author Torkild U. Resheim
  */
@@ -112,10 +112,14 @@ public class TOCGenerator extends AbstractXHTMLScanner {
 	}
 
 	/**
+	 * Parses an XHTML file, representing a publication chapter, and generates a table of contents for this chapter.
+	 * 
 	 * @param file
+	 *            the XHTML file to parse
 	 * @param href
+	 *            the XHTML file referencing this file
 	 * @param ncx
-	 *            the NCX
+	 *            the NCX to add headers to
 	 * @param playOrder
 	 *            initial play order
 	 * @return

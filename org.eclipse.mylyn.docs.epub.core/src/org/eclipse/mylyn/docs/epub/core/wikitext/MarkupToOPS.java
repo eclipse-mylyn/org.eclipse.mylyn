@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2011,2012 Torkild U. Resheim.
- * 
+ *
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors: 
+ *
+ * Contributors:
  *   Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.core.wikitext;
@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 
-import org.eclipse.mylyn.docs.epub.core.OPSPublication;
+import org.eclipse.mylyn.docs.epub.core.Publication;
 import org.eclipse.mylyn.docs.epub.opf.Item;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
@@ -28,8 +28,10 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 
 /**
- * This type can be used to populate an OPS publication directly from WikiText markup.
- * 
+ * This type can be used to populate an EPUB Publication with content directly from WikiText markup. The markup file
+ * will be converted to XHTML. (Strictly this file should be converted to the subset of XHTML called <i>Open Publication
+ * Structure</i>).
+ *
  * @author Torkild U. Resheim
  * @since 1.0
  */
@@ -38,15 +40,16 @@ public class MarkupToOPS {
 	private MarkupLanguage markupLanguage;
 
 	/**
-	 * Parses the markup file and populates the OPS data.
-	 * 
+	 * Parses the markup file and populates the publication with the result.
+	 *
 	 * @param ops
-	 *            the OPS publication the content will be added to
+	 *            the publication the content will be added to
 	 * @param markupFile
 	 *            the WikiText markup file
 	 * @return the temporary folder used for generating the HTML from markup
+	 * @since 2.0
 	 */
-	public File parse(OPSPublication ops, File markupFile) throws IOException, FileNotFoundException {
+	public File parse(Publication ops, File markupFile) throws IOException, FileNotFoundException {
 		if (markupLanguage == null) {
 			throw new IllegalStateException("must set markupLanguage"); //$NON-NLS-1$
 		}
@@ -62,7 +65,7 @@ public class MarkupToOPS {
 				}
 			};
 
-			List<Item> stylesheets = ops.getItemsByMIMEType(OPSPublication.MIMETYPE_CSS);
+			List<Item> stylesheets = ops.getItemsByMIMEType(Publication.MIMETYPE_CSS);
 			for (Item item : stylesheets) {
 				File file = new File(item.getFile());
 				Stylesheet css = new Stylesheet(file);
@@ -78,7 +81,6 @@ public class MarkupToOPS {
 			markupParser.setBuilder(builder);
 			markupParser.setMarkupLanguage(markupLanguage);
 			markupParser.parse(new FileReader(markupFile));
-			// Convert the generated HTML to EPUB
 			ops.setGenerateToc(true);
 			ops.setIncludeReferencedResources(true);
 			Item item = ops.addItem(htmlFile);
@@ -89,7 +91,7 @@ public class MarkupToOPS {
 
 	/**
 	 * Sets the markup language to use when generating HTML from markup.
-	 * 
+	 *
 	 * @param markupLanguage
 	 *            the markup language
 	 */

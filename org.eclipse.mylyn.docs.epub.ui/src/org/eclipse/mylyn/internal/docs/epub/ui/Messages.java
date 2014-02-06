@@ -1,11 +1,11 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Torkild U. Resheim.
- * 
+ * Copyright (c) 2011-2014 Torkild U. Resheim.
+ *
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors: Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 
@@ -28,8 +28,6 @@ class Messages extends NLS {
 	public static String ConvertFromMarkupWizard_3;
 
 	public static String ConvertFromMarkupWizard_4;
-
-	public static String EPUB2Bean_0;
 
 	public static String MainPage_0;
 

@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2011,2012 Torkild U. Resheim.
- * 
+ * Copyright (c) 2011-2014 Torkild U. Resheim.
+ *
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors: 
+ *
+ * Contributors:
  *   Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.tests.api;
@@ -20,9 +20,10 @@ import java.util.Locale;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.mylyn.docs.epub.core.EPUB;
-import org.eclipse.mylyn.docs.epub.core.OPS2Publication;
 import org.eclipse.mylyn.docs.epub.core.OPSPublication;
+import org.eclipse.mylyn.docs.epub.core.Publication;
 import org.eclipse.mylyn.docs.epub.core.ValidationException;
+import org.eclipse.mylyn.docs.epub.dc.Contributor;
 import org.eclipse.mylyn.docs.epub.dc.Coverage;
 import org.eclipse.mylyn.docs.epub.dc.Date;
 import org.eclipse.mylyn.docs.epub.dc.Description;
@@ -34,6 +35,7 @@ import org.eclipse.mylyn.docs.epub.dc.Source;
 import org.eclipse.mylyn.docs.epub.dc.Subject;
 import org.eclipse.mylyn.docs.epub.dc.Title;
 import org.eclipse.mylyn.docs.epub.opf.Item;
+import org.eclipse.mylyn.docs.epub.opf.Role;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -42,8 +44,8 @@ import com.adobe.epubcheck.api.Report;
 import com.adobe.epubcheck.util.DefaultReportImpl;
 
 /**
- * Tests features and regressions for all versions of the OPS supporting implementation {@link OPSPublication}.
- * 
+ * Tests features and regressions for all versions of the OPS supporting implementation {@link Publication}.
+ *
  * @author Torkild U. Resheim
  */
 @SuppressWarnings("nls")
@@ -51,17 +53,20 @@ public class TestOPSPublication extends AbstractTest {
 
 	/**
 	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addContributor(java.lang.String, java.util.Locale, java.lang.String, org.eclipse.mylyn.docs.epub.opf.Role, java.lang.String)}
+	 * {@link org.eclipse.mylyn.docs.epub.core.Publication#addContributor(java.lang.String, java.util.Locale, java.lang.String, org.eclipse.mylyn.docs.epub.opf.Role, java.lang.String)}
 	 * .
 	 */
 	@Test
 	public final void testAddContributor() {
-		// TODO
+		Contributor contributor = oebps.addContributor("Nomen Nescio");
+		contributor.setRole(Role.AUTHOR);
+
+		oebps.addContributor(null, null, "Nomen Nescio", Role.AUTHOR, null);
 	}
 
 	/**
 	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addCoverage(java.lang.String, java.util.Locale, java.lang.String)}
+	 * {@link org.eclipse.mylyn.docs.epub.core.Publication#addCoverage(java.lang.String, java.util.Locale, java.lang.String)}
 	 * .
 	 */
 	@Test
@@ -69,7 +74,7 @@ public class TestOPSPublication extends AbstractTest {
 		oebps.addCoverage("Coverage", Locale.CANADA_FRENCH, "My Coverage");
 		oebps.addCoverage(null, Locale.CANADA_FRENCH, "My Coverage");
 		oebps.addCoverage(null, null, "My Coverage");
-		EList<Coverage> Coverages = oebps.getOpfPackage().getMetadata().getCoverages();
+		EList<Coverage> Coverages = oebps.getPackage().getMetadata().getCoverages();
 		Assert.assertEquals("Coverage", Coverages.get(0).getId());
 		Assert.assertEquals("fr_CA", Coverages.get(0).getLang());
 		Assert.assertEquals("My Coverage", getText(Coverages.get(0)));
@@ -88,7 +93,7 @@ public class TestOPSPublication extends AbstractTest {
 
 	/**
 	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addCreator(java.lang.String, java.util.Locale, java.lang.String, org.eclipse.mylyn.docs.epub.opf.Role, java.lang.String)}
+	 * {@link org.eclipse.mylyn.docs.epub.core.Publication#addCreator(java.lang.String, java.util.Locale, java.lang.String, org.eclipse.mylyn.docs.epub.opf.Role, java.lang.String)}
 	 * .
 	 */
 	@Test
@@ -98,7 +103,7 @@ public class TestOPSPublication extends AbstractTest {
 
 	/**
 	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addDate(java.lang.String, java.util.Date, java.lang.String)}
+	 * {@link org.eclipse.mylyn.docs.epub.core.Publication#addDate(java.lang.String, java.util.Date, java.lang.String)}
 	 * .
 	 */
 	@Test
@@ -108,7 +113,7 @@ public class TestOPSPublication extends AbstractTest {
 
 	/**
 	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addDate(java.lang.String, java.lang.String, java.lang.String)}
+	 * {@link org.eclipse.mylyn.docs.epub.core.Publication#addDate(java.lang.String, java.lang.String, java.lang.String)}
 	 * .
 	 */
 	@Test
@@ -117,7 +122,7 @@ public class TestOPSPublication extends AbstractTest {
 		oebps.addDate(null, "1969-03", null);
 		oebps.addDate(null, "1969-03-14", null);
 		oebps.addDate(null, "1969-03-14", "event");
-		EList<Date> dates = oebps.getOpfPackage().getMetadata().getDates();
+		EList<Date> dates = oebps.getPackage().getMetadata().getDates();
 		assertEquals("1969", getText(dates.get(0)));
 		assertEquals("1969-03", getText(dates.get(1)));
 		assertEquals("1969-03-14", getText(dates.get(2)));
@@ -131,7 +136,7 @@ public class TestOPSPublication extends AbstractTest {
 
 	/**
 	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addDescription(java.lang.String, java.util.Locale, java.lang.String)}
+	 * {@link org.eclipse.mylyn.docs.epub.core.Publication#addDescription(java.lang.String, java.util.Locale, java.lang.String)}
 	 * .
 	 */
 	@Test
@@ -139,7 +144,7 @@ public class TestOPSPublication extends AbstractTest {
 		oebps.addDescription("Description", Locale.CANADA_FRENCH, "My Description");
 		oebps.addDescription(null, Locale.CANADA_FRENCH, "My Description");
 		oebps.addDescription(null, null, "My Description");
-		EList<Description> Descriptions = oebps.getOpfPackage().getMetadata().getDescriptions();
+		EList<Description> Descriptions = oebps.getPackage().getMetadata().getDescriptions();
 		Assert.assertEquals("Description", Descriptions.get(0).getId());
 		Assert.assertEquals("fr_CA", Descriptions.get(0).getLang());
 		Assert.assertEquals("My Description", getText(Descriptions.get(0)));
@@ -158,14 +163,14 @@ public class TestOPSPublication extends AbstractTest {
 
 	/**
 	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addFormat(java.lang.String, java.lang.String)} .
+	 * {@link org.eclipse.mylyn.docs.epub.core.Publication#addFormat(java.lang.String, java.lang.String)} .
 	 */
 	@Test
 	public final void testAddFormat() {
 		oebps.addDescription("Description", Locale.CANADA_FRENCH, "My Description");
 		oebps.addDescription(null, Locale.CANADA_FRENCH, "My Description");
 		oebps.addDescription(null, null, "My Description");
-		EList<Description> Descriptions = oebps.getOpfPackage().getMetadata().getDescriptions();
+		EList<Description> Descriptions = oebps.getPackage().getMetadata().getDescriptions();
 		Assert.assertEquals("Description", Descriptions.get(0).getId());
 		Assert.assertEquals("fr_CA", Descriptions.get(0).getLang());
 		Assert.assertEquals("My Description", getText(Descriptions.get(0)));
@@ -184,7 +189,7 @@ public class TestOPSPublication extends AbstractTest {
 
 	/**
 	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addIdentifier(java.lang.String, java.lang.String, java.lang.String)}
+	 * {@link org.eclipse.mylyn.docs.epub.core.Publication#addIdentifier(java.lang.String, java.lang.String, java.lang.String)}
 	 * .
 	 */
 	@Test
@@ -192,7 +197,7 @@ public class TestOPSPublication extends AbstractTest {
 		oebps.addIdentifier("Identifier", "ID", "My Identifier");
 		oebps.addIdentifier(null, "ID", "My Identifier");
 		oebps.addIdentifier(null, null, "My Identifier");
-		EList<Identifier> Identifiers = oebps.getOpfPackage().getMetadata().getIdentifiers();
+		EList<Identifier> Identifiers = oebps.getPackage().getMetadata().getIdentifiers();
 		Assert.assertEquals("Identifier", Identifiers.get(0).getId());
 		Assert.assertEquals("ID", Identifiers.get(0).getScheme());
 		Assert.assertEquals("My Identifier", getText(Identifiers.get(0)));
@@ -210,7 +215,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addItem(java.io.File)} .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#addItem(java.io.File)} .
 	 */
 	@Test
 	public final void testAddItemFile() {
@@ -219,7 +224,7 @@ public class TestOPSPublication extends AbstractTest {
 
 	/**
 	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addItem(java.lang.String, java.util.Locale, java.io.File, java.lang.String, java.lang.String, boolean, boolean, boolean)}
+	 * {@link org.eclipse.mylyn.docs.epub.core.Publication#addItem(java.lang.String, java.util.Locale, java.io.File, java.lang.String, java.lang.String, boolean, boolean, boolean)}
 	 * .
 	 */
 	@Test
@@ -229,14 +234,14 @@ public class TestOPSPublication extends AbstractTest {
 
 	/**
 	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addLanguage(java.lang.String, java.lang.String)} .
+	 * {@link org.eclipse.mylyn.docs.epub.core.Publication#addLanguage(java.lang.String, java.lang.String)} .
 	 */
 	@Test
 	public final void testAddLanguage() {
 		oebps.addLanguage(null, "no");
 		oebps.addLanguage("id", "no");
-		Assert.assertEquals("no", getText(oebps.getOpfPackage().getMetadata().getLanguages().get(0)));
-		Assert.assertEquals("id", oebps.getOpfPackage().getMetadata().getLanguages().get(1).getId());
+		Assert.assertEquals("no", getText(oebps.getPackage().getMetadata().getLanguages().get(0)));
+		Assert.assertEquals("id", oebps.getPackage().getMetadata().getLanguages().get(1).getId());
 		try {
 			oebps.addLanguage(null, null);
 			fail();
@@ -246,13 +251,13 @@ public class TestOPSPublication extends AbstractTest {
 
 	/**
 	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addMeta(java.lang.String, java.lang.String)} .
+	 * {@link org.eclipse.mylyn.docs.epub.core.Publication#addMeta(java.lang.String, java.lang.String)} .
 	 */
 	@Test
 	public final void testAddMeta() {
 		oebps.addMeta("name", "value");
-		assertEquals("name", oebps.getOpfPackage().getMetadata().getMetas().get(0).getName());
-		assertEquals("value", oebps.getOpfPackage().getMetadata().getMetas().get(0).getContent());
+		assertEquals("name", oebps.getPackage().getMetadata().getMetas().get(0).getName());
+		assertEquals("value", oebps.getPackage().getMetadata().getMetas().get(0).getContent());
 		try {
 			oebps.addMeta(null, "value");
 			fail();
@@ -267,7 +272,7 @@ public class TestOPSPublication extends AbstractTest {
 
 	/**
 	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addPublisher(java.lang.String, java.util.Locale, java.lang.String)}
+	 * {@link org.eclipse.mylyn.docs.epub.core.Publication#addPublisher(java.lang.String, java.util.Locale, java.lang.String)}
 	 * .
 	 */
 	@Test
@@ -275,7 +280,7 @@ public class TestOPSPublication extends AbstractTest {
 		oebps.addPublisher("Publisher", Locale.CANADA_FRENCH, "My Publisher");
 		oebps.addPublisher(null, Locale.CANADA_FRENCH, "My Publisher");
 		oebps.addPublisher(null, null, "My Publisher");
-		EList<Publisher> Publishers = oebps.getOpfPackage().getMetadata().getPublishers();
+		EList<Publisher> Publishers = oebps.getPackage().getMetadata().getPublishers();
 		Assert.assertEquals("Publisher", Publishers.get(0).getId());
 		Assert.assertEquals("fr_CA", Publishers.get(0).getLang());
 		Assert.assertEquals("My Publisher", getText(Publishers.get(0)));
@@ -294,7 +299,7 @@ public class TestOPSPublication extends AbstractTest {
 
 	/**
 	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addReference(java.lang.String, java.lang.String, org.eclipse.mylyn.docs.epub.opf.Type)}
+	 * {@link org.eclipse.mylyn.docs.epub.core.Publication#addReference(java.lang.String, java.lang.String, org.eclipse.mylyn.docs.epub.opf.Type)}
 	 * .
 	 */
 	@Test
@@ -304,7 +309,7 @@ public class TestOPSPublication extends AbstractTest {
 
 	/**
 	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addRelation(java.lang.String, java.util.Locale, java.lang.String)}
+	 * {@link org.eclipse.mylyn.docs.epub.core.Publication#addRelation(java.lang.String, java.util.Locale, java.lang.String)}
 	 * .
 	 */
 	@Test
@@ -312,7 +317,7 @@ public class TestOPSPublication extends AbstractTest {
 		oebps.addRelation("Relation", Locale.CANADA_FRENCH, "My Relation");
 		oebps.addRelation(null, Locale.CANADA_FRENCH, "My Relation");
 		oebps.addRelation(null, null, "My Relation");
-		EList<Relation> Relations = oebps.getOpfPackage().getMetadata().getRelations();
+		EList<Relation> Relations = oebps.getPackage().getMetadata().getRelations();
 		Assert.assertEquals("Relation", Relations.get(0).getId());
 		Assert.assertEquals("fr_CA", Relations.get(0).getLang());
 		Assert.assertEquals("My Relation", getText(Relations.get(0)));
@@ -331,7 +336,7 @@ public class TestOPSPublication extends AbstractTest {
 
 	/**
 	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addRights(java.lang.String, java.util.Locale, java.lang.String)}
+	 * {@link org.eclipse.mylyn.docs.epub.core.Publication#addRights(java.lang.String, java.util.Locale, java.lang.String)}
 	 * .
 	 */
 	@Test
@@ -339,7 +344,7 @@ public class TestOPSPublication extends AbstractTest {
 		oebps.addRights("Rights", Locale.CANADA_FRENCH, "My Rights");
 		oebps.addRights(null, Locale.CANADA_FRENCH, "My Rights");
 		oebps.addRights(null, null, "My Rights");
-		EList<Rights> Rightss = oebps.getOpfPackage().getMetadata().getRights();
+		EList<Rights> Rightss = oebps.getPackage().getMetadata().getRights();
 		Assert.assertEquals("Rights", Rightss.get(0).getId());
 		Assert.assertEquals("fr_CA", Rightss.get(0).getLang());
 		Assert.assertEquals("My Rights", getText(Rightss.get(0)));
@@ -358,7 +363,7 @@ public class TestOPSPublication extends AbstractTest {
 
 	/**
 	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addSource(java.lang.String, java.util.Locale, java.lang.String)}
+	 * {@link org.eclipse.mylyn.docs.epub.core.Publication#addSource(java.lang.String, java.util.Locale, java.lang.String)}
 	 * .
 	 */
 	@Test
@@ -366,7 +371,7 @@ public class TestOPSPublication extends AbstractTest {
 		oebps.addSource("Source", Locale.CANADA_FRENCH, "My Source");
 		oebps.addSource(null, Locale.CANADA_FRENCH, "My Source");
 		oebps.addSource(null, null, "My Source");
-		EList<Source> Sources = oebps.getOpfPackage().getMetadata().getSources();
+		EList<Source> Sources = oebps.getPackage().getMetadata().getSources();
 		Assert.assertEquals("Source", Sources.get(0).getId());
 		Assert.assertEquals("fr_CA", Sources.get(0).getLang());
 		Assert.assertEquals("My Source", getText(Sources.get(0)));
@@ -386,7 +391,7 @@ public class TestOPSPublication extends AbstractTest {
 
 	/**
 	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addSubject(java.lang.String, java.util.Locale, java.lang.String)}
+	 * {@link org.eclipse.mylyn.docs.epub.core.Publication#addSubject(java.lang.String, java.util.Locale, java.lang.String)}
 	 * .
 	 */
 	@Test
@@ -394,7 +399,7 @@ public class TestOPSPublication extends AbstractTest {
 		oebps.addSubject("Subject", Locale.CANADA_FRENCH, "My Subject");
 		oebps.addSubject(null, Locale.CANADA_FRENCH, "My Subject");
 		oebps.addSubject(null, null, "My Subject");
-		EList<Subject> subjects = oebps.getOpfPackage().getMetadata().getSubjects();
+		EList<Subject> subjects = oebps.getPackage().getMetadata().getSubjects();
 		Assert.assertEquals("Subject", subjects.get(0).getId());
 		Assert.assertEquals("fr_CA", subjects.get(0).getLang());
 		Assert.assertEquals("My Subject", getText(subjects.get(0)));
@@ -413,7 +418,7 @@ public class TestOPSPublication extends AbstractTest {
 
 	/**
 	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addTitle(java.lang.String, java.util.Locale, java.lang.String)}
+	 * {@link org.eclipse.mylyn.docs.epub.core.Publication#addTitle(java.lang.String, java.util.Locale, java.lang.String)}
 	 * .
 	 */
 	@Test
@@ -421,7 +426,7 @@ public class TestOPSPublication extends AbstractTest {
 		oebps.addTitle("Title", Locale.CANADA_FRENCH, "My Title");
 		oebps.addTitle(null, Locale.CANADA_FRENCH, "My Title");
 		oebps.addTitle(null, null, "My Title");
-		EList<Title> titles = oebps.getOpfPackage().getMetadata().getTitles();
+		EList<Title> titles = oebps.getPackage().getMetadata().getTitles();
 		Assert.assertEquals("Title", titles.get(0).getId());
 		Assert.assertEquals("fr_CA", titles.get(0).getLang());
 		Assert.assertEquals("My Title", getText(titles.get(0)));
@@ -440,13 +445,13 @@ public class TestOPSPublication extends AbstractTest {
 
 	/**
 	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#addType(java.lang.String, java.lang.String)} .
+	 * {@link org.eclipse.mylyn.docs.epub.core.Publication#addType(java.lang.String, java.lang.String)} .
 	 */
 	@Test
 	public final void testAddType() {
 		oebps.addType("Type", "My Type");
 		oebps.addType(null, "My Type");
-		EList<org.eclipse.mylyn.docs.epub.dc.Type> Types = oebps.getOpfPackage().getMetadata().getTypes();
+		EList<org.eclipse.mylyn.docs.epub.dc.Type> Types = oebps.getPackage().getMetadata().getTypes();
 		Assert.assertEquals("Type", Types.get(0).getId());
 		Assert.assertEquals("My Type", getText(Types.get(0)));
 		Assert.assertEquals(null, Types.get(1).getId());
@@ -459,7 +464,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#generateTableOfContents()} .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#generateTableOfContents()} .
 	 */
 	@Test
 	public final void testGenerateTableOfContents() {
@@ -467,7 +472,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#getIdentifier()}.
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#getIdentifier()}.
 	 */
 	@Test
 	public final void testGetIdentifier() {
@@ -475,7 +480,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#getItemById(java.lang.String)} .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#getItemById(java.lang.String)} .
 	 */
 	@Test
 	public final void testGetItemById() {
@@ -483,7 +488,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#getItemsByMIMEType(java.lang.String)} .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#getItemsByMIMEType(java.lang.String)} .
 	 */
 	@Test
 	public final void testGetItemsByMIMEType() {
@@ -498,7 +503,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#getOpfPackage()}.
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#getPackage()}.
 	 */
 	@Test
 	public final void testGetOpfPackage() {
@@ -506,7 +511,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#getRootFolder()}.
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#getRootFolder()}.
 	 */
 	@Test
 	public final void testGetRootFolder() {
@@ -514,7 +519,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#getSpine()}.
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#getSpine()}.
 	 */
 	@Test
 	public final void testGetSpine() {
@@ -522,7 +527,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#getTableOfContents()} .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#getTableOfContents()} .
 	 */
 	@Test
 	public final void testGetTableOfContents() {
@@ -530,7 +535,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#getValidationMessages()} .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#getValidationMessages()} .
 	 */
 	@Test
 	public final void testGetValidationMessages() {
@@ -538,9 +543,9 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#pack(java.io.File)}. An EPUB where only a
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#pack(java.io.File)}. An EPUB where only a
 	 * single page has been added shall be packed without issues
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -557,14 +562,14 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#pack(java.io.File)}. An EPUB with no
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#pack(java.io.File)}. An EPUB with no
 	 * content shall fail when packed.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public final void testPack_Empty() throws Exception {
-		epub.add(new OPS2Publication());
+		epub.add(new OPSPublication());
 		try {
 			epubFile.delete();
 			epub.pack(epubFile);
@@ -574,7 +579,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#readTableOfContents(java.io.File)} .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#readTableOfContents(java.io.File)} .
 	 */
 	@Test
 	public final void testReadTableOfContents() {
@@ -582,13 +587,13 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#setCover(java.io.File, java.lang.String)}
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#setCover(java.io.File, java.lang.String)}
 	 * .
 	 * <ul>
 	 * <li>Cover page SVG shall exist in the unpacked folder</li>
 	 * <li>Cover page HTML shall exist in the unpacked folder</li>
 	 * </ul>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -609,7 +614,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#setGenerateToc(boolean)} .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#setGenerateToc(boolean)} .
 	 */
 	@Test
 	public final void testSetGenerateToc() {
@@ -617,7 +622,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#setIdentifierId(java.lang.String)} .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#setIdentifierId(java.lang.String)} .
 	 */
 	@Test
 	public final void testSetIdentifierId() {
@@ -625,11 +630,11 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#setIncludeReferencedResources(boolean)}.
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#setIncludeReferencedResources(boolean)}.
 	 * This is determining whether or not the referenced resources has been picked up and included in the resulting
 	 * EPUB. Also handles <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=375795">bug 375795</a>: [epub][patch]
 	 * Automatic inclusion of referenced resources fail on anchor references
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -655,14 +660,14 @@ public class TestOPSPublication extends AbstractTest {
 		Assert.assertTrue(html2.exists());
 		// The manifest shall only contain the items we have linked to in addition to the toc.ncx and the file that we
 		// started from -- a total of six files.
-		Assert.assertEquals(6, oebps.getOpfPackage().getManifest().getItems().size());
+		Assert.assertEquals(6, oebps.getPackage().getManifest().getItems().size());
 
 	}
 
 	/**
 	 * Test method for <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=380016">bug 380016</a>: Reference scanner
 	 * should also include referenced CSS style sheets
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -683,7 +688,7 @@ public class TestOPSPublication extends AbstractTest {
 	/**
 	 * Test method for <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=360701">bug 360701</a>: [epub] Automatic
 	 * inclusion of referenced resources don't work for WikiText generated HTML.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -713,7 +718,7 @@ public class TestOPSPublication extends AbstractTest {
 	/**
 	 * Test method for <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=373052">bug 373052</a>: [epub] Reference
 	 * scanner does not handle absolute paths
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -753,7 +758,7 @@ public class TestOPSPublication extends AbstractTest {
 	 * File A references file C as do file B. File C references file A. Before the fix there would be two instances of
 	 * file C.
 	 * </p>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public final void test_Bug376312() throws Exception {
@@ -763,14 +768,14 @@ public class TestOPSPublication extends AbstractTest {
 		oebps.addItem(new File("testdata/circular/file-b.xhtml"));
 		epub.add(oebps);
 		epub.pack(epubFile);
-		EList<Item> items = oebps.getOpfPackage().getManifest().getItems();
+		EList<Item> items = oebps.getPackage().getManifest().getItems();
 		// File A, B, C and the NCX
 		assertEquals(4, items.size());
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#setTableOfContents(java.io.File)} .
-	 * 
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#setTableOfContents(java.io.File)} .
+	 *
 	 * @see TestOPS2Publication#testSetTableOfContents()
 	 */
 	@Test
@@ -779,7 +784,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#unpack(java.io.File)} .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#unpack(java.io.File)} .
 	 */
 	@Test
 	public final void testUnpack() {
@@ -787,7 +792,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#validateContents()} .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#validateContents()} .
 	 */
 	@Test
 	public final void testValidateContents() {
@@ -795,7 +800,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#validateMetadata()} .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#validateMetadata()} .
 	 */
 	@Test
 	public final void testValidateMetadata() {
@@ -803,14 +808,14 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.OPSPublication#writeTableOfContents(java.io.File)} .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#writeTableOfContents(java.io.File)} .
 	 */
 	@Test
 	public final void testWriteTableOfContents() {
 		// TODO
 	}
 
-	private class EPUB_OPF_Test extends OPS2Publication {
+	private class EPUB_OPF_Test extends OPSPublication {
 		public void testReadOPF(File rootFile) throws IOException {
 			readOPF(rootFile);
 		}
@@ -818,7 +823,7 @@ public class TestOPSPublication extends AbstractTest {
 
 	/**
 	 * See if the OPF file generated by this tooling can be read.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -832,7 +837,7 @@ public class TestOPSPublication extends AbstractTest {
 	 * This case was discovered when testing an EPUB file generated by DocBook Reading the OPF fails with a
 	 * java.net.SocketException: Unexpected end of file from server. On closer inspection we can see that the file is
 	 * declared as XHTML (which it of course is not). This is probably due to an issue in DocBook XSL 1.76.1
-	 * 
+	 *
 	 * @see http://sourceforge.net/tracker/index.php?func=detail&aid=3353537 &group_id=21935&atid=373747.
 	 * @throws Exception
 	 */
@@ -846,14 +851,14 @@ public class TestOPSPublication extends AbstractTest {
 	/**
 	 * Test method for <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=380729">bug 380729</a>: Allow reference
 	 * elements to have "other." types
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public final void test_Bug380729() throws Exception {
-		// Validation is normally not performed when loading content. However 
-		// the previous implementation of the reference type was an 
-		// enumeration so it would fail when attempting to set it and there 
+		// Validation is normally not performed when loading content. However
+		// the previous implementation of the reference type was an
+		// enumeration so it would fail when attempting to set it and there
 		// was no matching item. Hence this code should now pass as the OPF
 		// contains previously invalid values.
 		File rootFile = new File("testdata/OPF-Tests/Bug_380729/content.opf");
