@@ -53,6 +53,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeManageService;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.GerritConfigX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchDetailService;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchScriptX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchSetPublishDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectAdminService;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectDetailX;
@@ -87,7 +88,6 @@ import com.google.gerrit.common.data.ApprovalDetail;
 import com.google.gerrit.common.data.ChangeDetail;
 import com.google.gerrit.common.data.ChangeListService;
 import com.google.gerrit.common.data.GerritConfig;
-import com.google.gerrit.common.data.PatchScript;
 import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.common.data.ReviewerResult;
 import com.google.gerrit.common.data.SingleListChangeInfo;
@@ -98,6 +98,7 @@ import com.google.gerrit.reviewdb.ApprovalCategoryValue;
 import com.google.gerrit.reviewdb.Change;
 import com.google.gerrit.reviewdb.ContributorAgreement;
 import com.google.gerrit.reviewdb.Patch;
+import com.google.gerrit.reviewdb.Patch.ChangeType;
 import com.google.gerrit.reviewdb.PatchLineComment;
 import com.google.gerrit.reviewdb.PatchSet;
 import com.google.gerrit.reviewdb.PatchSet.Id;
@@ -110,7 +111,7 @@ import com.google.gwtjsonrpc.client.VoidResult;
 
 /**
  * Facade to the Gerrit RPC API.
- *
+ * 
  * @author Mikael Kober
  * @author Thomas Westling
  * @author Steffen Pingel
@@ -356,7 +357,7 @@ public class GerritClient extends ReviewsClient {
 			patchSetContent.setTargetDetail(targetDetail);
 		}
 		for (Patch patch : patchSetContent.getTargetDetail().getPatches()) {
-			PatchScript patchScript = getPatchScript(patch.getKey(), baseId, targetId, monitor);
+			PatchScriptX patchScript = getPatchScript(patch.getKey(), baseId, targetId, monitor);
 			if (patchScript != null) {
 				patchSetContent.putPatchScriptByPatchKey(patch.getKey(), patchScript);
 			}
@@ -391,17 +392,32 @@ public class GerritClient extends ReviewsClient {
 		return new GerritSystemInfo(version, contributorAgreements, account);
 	}
 
-	private PatchScript getPatchScript(final Patch.Key key, final PatchSet.Id leftId, final PatchSet.Id rightId,
+	private PatchScriptX getPatchScript(final Patch.Key key, final PatchSet.Id leftId, final PatchSet.Id rightId,
 			IProgressMonitor monitor) throws GerritException {
 		//final AccountDiffPreference diffPrefs = getDiffPreference(monitor);
 		//final AccountDiffPreference diffPrefs = new AccountDiffPreference(getAccount(monitor).getId());
 		final AccountDiffPreference diffPrefs = createAccountDiffPreference();
-		return execute(monitor, new Operation<PatchScript>() {
+		PatchScriptX patchScript = execute(monitor, new Operation<PatchScriptX>() {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
-				getPatchDetailService(monitor).patchScript(key, leftId, rightId, diffPrefs, this);
+				getPatchDetailService(monitor).patchScriptX(key, leftId, rightId, diffPrefs, this);
 			}
 		});
+		if (patchScript.isBinary() && isVersion27OrLater(monitor)) {
+			final TypeToken<Byte[]> byteArrayType = new TypeToken<Byte[]>() {
+			};
+			if (patchScript.getChangeType() != ChangeType.ADDED) {
+				String keyBaseEncoded = encode(key.toString() + "^1"); //$NON-NLS-1$
+				byte[] binBase = executeGetRestRequest("/cat/" + keyBaseEncoded, byteArrayType.getType(), monitor); //$NON-NLS-1$
+				patchScript.setBinaryA(binBase);
+			}
+			if (patchScript.getChangeType() != ChangeType.DELETED) {
+				String keyTargetEncoded = encode(key.toString() + "^0"); //$NON-NLS-1$
+				byte[] binTarget = executeGetRestRequest("/cat/" + keyTargetEncoded, byteArrayType.getType(), monitor); //$NON-NLS-1$
+				patchScript.setBinaryB(binTarget);
+			}
+		}
+		return patchScript;
 	}
 
 	private AccountDiffPreference createAccountDiffPreference() {
@@ -872,7 +888,7 @@ public class GerritClient extends ReviewsClient {
 
 	/**
 	 * Sends a query for the changes visible to the caller to the gerrit server.
-	 *
+	 * 
 	 * @param monitor
 	 *            A progress monitor
 	 * @param queryString
@@ -888,7 +904,7 @@ public class GerritClient extends ReviewsClient {
 	/**
 	 * Sends a query for the changes visible to the caller to the gerrit server with the possibility of adding options
 	 * to the query.
-	 *
+	 * 
 	 * @param monitor
 	 *            A progress monitor
 	 * @param queryString
@@ -932,7 +948,7 @@ public class GerritClient extends ReviewsClient {
 
 	/**
 	 * Sends a query for the changes visible to the caller to the gerrit server. Uses the gerrit REST API.
-	 *
+	 * 
 	 * @param monitor
 	 *            A progress monitor
 	 * @param queryString
@@ -948,7 +964,7 @@ public class GerritClient extends ReviewsClient {
 	/**
 	 * Sends a query for the changes visible to the caller to the gerrit server with the possibility of adding options
 	 * to the query. Uses the gerrit REST API.
-	 *
+	 * 
 	 * @param monitor
 	 *            A progress monitor
 	 * @param queryString
@@ -960,17 +976,13 @@ public class GerritClient extends ReviewsClient {
 	 */
 	public List<GerritQueryResult> executeQueryRest(IProgressMonitor monitor, final String queryString,
 			String optionString) throws GerritException {
-		try {
-			String uri = "/changes/?q=" + URLEncoder.encode(queryString, "UTF-8"); //$NON-NLS-1$ //$NON-NLS-2$
-			if (StringUtils.isNotBlank(optionString)) {
-				uri += "&o=" + URLEncoder.encode(optionString, "UTF-8"); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-			TypeToken<List<GerritQueryResult>> queryResultListType = new TypeToken<List<GerritQueryResult>>() {
-			};
-			return executeGetRestRequest(uri, queryResultListType.getType(), monitor);
-		} catch (UnsupportedEncodingException e) {
-			throw new GerritException(e);
+		String uri = "/changes/?q=" + encode(queryString); //$NON-NLS-1$
+		if (StringUtils.isNotBlank(optionString)) {
+			uri += "&o=" + encode(optionString); //$NON-NLS-1$
 		}
+		TypeToken<List<GerritQueryResult>> queryResultListType = new TypeToken<List<GerritQueryResult>>() {
+		};
+		return executeGetRestRequest(uri, queryResultListType.getType(), monitor);
 	}
 
 	/**
@@ -1235,4 +1247,11 @@ public class GerritClient extends ReviewsClient {
 		}
 	}
 
+	private static String encode(String string) throws GerritException {
+		try {
+			return URLEncoder.encode(string, "UTF-8"); //$NON-NLS-1$
+		} catch (UnsupportedEncodingException e) {
+			throw new GerritException(e);
+		}
+	}
 }

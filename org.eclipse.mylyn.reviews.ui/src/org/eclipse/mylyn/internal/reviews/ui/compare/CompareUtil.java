@@ -26,7 +26,11 @@ public class CompareUtil {
 
 	public static byte[] getContent(IFileVersion version) {
 		String content = version.getContent();
-		return (content != null) ? content.getBytes() : new byte[0];
+		if (content != null) {
+			return content.getBytes();
+		}
+		byte[] binaryContent = version.getBinaryContent();
+		return binaryContent != null ? binaryContent : new byte[0];
 	}
 
 	static SourceViewer getSourceViewer(MergeSourceViewer sourceViewer) {
@@ -35,7 +39,7 @@ public class CompareUtil {
 		} else {
 			Object returnValue;
 			try {
-				Method getSourceViewerRefl = MergeSourceViewer.class.getDeclaredMethod("getSourceViewer");
+				Method getSourceViewerRefl = MergeSourceViewer.class.getDeclaredMethod("getSourceViewer"); //$NON-NLS-1$
 				getSourceViewerRefl.setAccessible(true);
 				returnValue = getSourceViewerRefl.invoke(sourceViewer);
 				if (returnValue instanceof SourceViewer) {

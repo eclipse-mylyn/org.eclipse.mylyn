@@ -30,6 +30,7 @@ import org.eclipse.team.core.history.IFileRevision;
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.FileVersion#getContent <em>Content</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.FileVersion#getFile <em>File</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.FileVersion#getFileRevision <em>File Revision</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.internal.core.model.FileVersion#getBinaryContent <em>Binary Content</em>}</li>
  * </ul>
  * </p>
  * 
@@ -125,6 +126,26 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	 * @ordered
 	 */
 	protected IFileRevision fileRevision = FILE_REVISION_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getBinaryContent() <em>Binary Content</em>}' attribute. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getBinaryContent()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final byte[] BINARY_CONTENT_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getBinaryContent() <em>Binary Content</em>}' attribute. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getBinaryContent()
+	 * @generated
+	 * @ordered
+	 */
+	protected byte[] binaryContent = BINARY_CONTENT_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -292,6 +313,29 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 	 * 
 	 * @generated
 	 */
+	public byte[] getBinaryContent() {
+		return binaryContent;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setBinaryContent(byte[] newBinaryContent) {
+		byte[] oldBinaryContent = binaryContent;
+		binaryContent = newBinaryContent;
+		if (eNotificationRequired()) {
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.FILE_VERSION__BINARY_CONTENT,
+					oldBinaryContent, binaryContent));
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -308,6 +352,8 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 			return basicGetFile();
 		case ReviewsPackage.FILE_VERSION__FILE_REVISION:
 			return getFileRevision();
+		case ReviewsPackage.FILE_VERSION__BINARY_CONTENT:
+			return getBinaryContent();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -334,6 +380,9 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 			return;
 		case ReviewsPackage.FILE_VERSION__FILE_REVISION:
 			setFileRevision((IFileRevision) newValue);
+			return;
+		case ReviewsPackage.FILE_VERSION__BINARY_CONTENT:
+			setBinaryContent((byte[]) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -362,6 +411,9 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 		case ReviewsPackage.FILE_VERSION__FILE_REVISION:
 			setFileRevision(FILE_REVISION_EDEFAULT);
 			return;
+		case ReviewsPackage.FILE_VERSION__BINARY_CONTENT:
+			setBinaryContent(BINARY_CONTENT_EDEFAULT);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -384,6 +436,10 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 			return file != null;
 		case ReviewsPackage.FILE_VERSION__FILE_REVISION:
 			return FILE_REVISION_EDEFAULT == null ? fileRevision != null : !FILE_REVISION_EDEFAULT.equals(fileRevision);
+		case ReviewsPackage.FILE_VERSION__BINARY_CONTENT:
+			return BINARY_CONTENT_EDEFAULT == null
+					? binaryContent != null
+					: !BINARY_CONTENT_EDEFAULT.equals(binaryContent);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -408,6 +464,8 @@ public class FileVersion extends ReviewItem implements IFileVersion {
 		result.append(content);
 		result.append(", fileRevision: "); //$NON-NLS-1$
 		result.append(fileRevision);
+		result.append(", binaryContent: "); //$NON-NLS-1$
+		result.append(binaryContent);
 		result.append(')');
 		return result.toString();
 	}

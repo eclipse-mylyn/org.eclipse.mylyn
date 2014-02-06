@@ -14,7 +14,8 @@ package org.eclipse.mylyn.internal.gerrit.core.client;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gerrit.common.data.PatchScript;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchScriptX;
+
 import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.reviewdb.Patch;
 import com.google.gerrit.reviewdb.PatchSet;
@@ -35,7 +36,7 @@ public class PatchSetContent {
 
 	private PatchSetDetail targetDetail;
 
-	Map<Patch.Key, PatchScript> patchScriptByPatchKey;
+	Map<Patch.Key, PatchScriptX> patchScriptByPatchKey;
 
 	/**
 	 * Creates empty patch set content using detailed target.
@@ -47,7 +48,7 @@ public class PatchSetContent {
 	public PatchSetContent(PatchSet base, PatchSetDetail targetDetail) {
 		this.base = base;
 		this.targetDetail = targetDetail;
-		this.patchScriptByPatchKey = new HashMap<Patch.Key, PatchScript>();
+		this.patchScriptByPatchKey = new HashMap<Patch.Key, PatchScriptX>();
 	}
 
 	/**
@@ -60,7 +61,7 @@ public class PatchSetContent {
 	public PatchSetContent(PatchSet base, PatchSet target) {
 		this.base = base;
 		this.target = target;
-		this.patchScriptByPatchKey = new HashMap<Patch.Key, PatchScript>();
+		this.patchScriptByPatchKey = new HashMap<Patch.Key, PatchScriptX>();
 	}
 
 	public PatchSet getBase() {
@@ -88,11 +89,11 @@ public class PatchSetContent {
 		this.targetDetail = targetDetail;
 	}
 
-	void putPatchScriptByPatchKey(Patch.Key key, PatchScript script) {
+	void putPatchScriptByPatchKey(Patch.Key key, PatchScriptX script) {
 		patchScriptByPatchKey.put(key, script);
 	}
 
-	public PatchScript getPatchScript(Patch.Key key) {
+	public PatchScriptX getPatchScript(Patch.Key key) {
 		return patchScriptByPatchKey.get(key);
 	}
 

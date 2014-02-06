@@ -14,7 +14,10 @@ package org.eclipse.mylyn.internal.gerrit.core.client.compat;
 import java.util.List;
 
 import com.google.gerrit.common.data.ReviewerResult;
+import com.google.gerrit.reviewdb.AccountDiffPreference;
 import com.google.gerrit.reviewdb.Change;
+import com.google.gerrit.reviewdb.Patch;
+import com.google.gerrit.reviewdb.PatchSet;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -23,5 +26,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public interface PatchDetailService extends com.google.gerrit.common.data.PatchDetailService {
 
 	void addReviewers(Change.Id id, List<String> reviewers, boolean confirmed, AsyncCallback<ReviewerResult> callback);
+
+	void patchScriptX(Patch.Key key, PatchSet.Id a, PatchSet.Id b, AccountDiffPreference diffPrefs,
+			AsyncCallback<PatchScriptX> callback);
 
 }

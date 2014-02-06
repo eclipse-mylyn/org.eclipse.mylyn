@@ -24,6 +24,7 @@ import org.eclipse.mylyn.gerrit.tests.core.client.GerritClientTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.GerritVersionTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.OpenIdAuthenticationTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.compat.ChangeDetailXTest;
+import org.eclipse.mylyn.gerrit.tests.core.client.compat.PatchScriptXTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.rest.AbandonInputTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.rest.AccountInfoTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.rest.AddReviewerResultTest;
@@ -74,6 +75,7 @@ public class AllGerritTests {
 		suite.addTestSuite(SubmitInfoTest.class);
 		suite.addTestSuite(SubmitInputTest.class);
 		suite.addTestSuite(ChangeDetailXTest.class);
+		suite.addTestSuite(PatchScriptXTest.class);
 		if (!configuration.isLocalOnly()) {
 			// network tests
 			suite.addTestSuite(OpenIdAuthenticationTest.class);

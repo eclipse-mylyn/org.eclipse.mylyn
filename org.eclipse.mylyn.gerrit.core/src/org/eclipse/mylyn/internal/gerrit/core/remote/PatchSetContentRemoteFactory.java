@@ -24,6 +24,7 @@ import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
 import org.eclipse.mylyn.internal.gerrit.core.ReviewItemCache;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.PatchSetContent;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchScriptX;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IFileVersion;
@@ -159,13 +160,17 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
 			}
 			items.add(item);
 
-			PatchScript patchScript = content.getPatchScript(patch.getKey());
+			PatchScriptX patchScript = content.getPatchScript(patch.getKey());
 			if (patchScript != null) {
 				IFileVersion baseVersion = (IFileVersion) getCache().getItem(baseId);
 				if (baseVersion == null) {
 					baseVersion = IReviewsFactory.INSTANCE.createFileVersion();
 					baseVersion.setId(baseId);
-					baseVersion.setContent(patchScript.getA().asString());
+					if (patchScript.isBinary()) {
+						baseVersion.setBinaryContent(patchScript.getBinaryA());
+					} else {
+						baseVersion.setContent(patchScript.getA().asString());
+					}
 					baseVersion.setPath(patchScript.getA().getPath());
 					baseVersion.setDescription((content.getBase() != null) ? NLS.bind("Patch Set {0}",
 							content.getBase().getPatchSetId()) : "Base");
@@ -180,7 +185,11 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
 					targetVersion = IReviewsFactory.INSTANCE.createFileVersion();
 					targetVersion.setId(targetId);
 					SparseFileContent target = patchScript.getB().apply(patchScript.getA(), patchScript.getEdits());
-					targetVersion.setContent(target.asString());
+					if (patchScript.isBinary()) {
+						targetVersion.setBinaryContent(patchScript.getBinaryB());
+					} else {
+						targetVersion.setContent(target.asString());
+					}
 					targetVersion.setPath(patchScript.getB().getPath());
 					targetVersion.setDescription(NLS.bind("Patch Set {0}", content.getTargetDetail()
 							.getPatchSet()

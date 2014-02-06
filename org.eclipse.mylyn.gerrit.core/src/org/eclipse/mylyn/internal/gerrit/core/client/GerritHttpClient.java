@@ -48,6 +48,7 @@ import com.google.gerrit.common.auth.SignInMode;
 import com.google.gerrit.common.auth.openid.DiscoveryResult;
 import com.google.gerrit.common.auth.openid.DiscoveryResult.Status;
 import com.google.gerrit.common.auth.userpass.LoginResult;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * Abstract class that handles the http communications with the Gerrit server.
@@ -107,7 +108,8 @@ public class GerritHttpClient {
 
 	}
 
-	private class RestRequest<T> extends Request<T> {
+	// visible for testing
+	class RestRequest<T> extends Request<T> {
 
 		private final JSonSupport json = new JSonSupport();
 
@@ -154,8 +156,13 @@ public class GerritHttpClient {
 			return method;
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public T process(HttpMethodBase method) throws IOException {
+			Type rawType = TypeToken.get(resultType).getRawType();
+			if (rawType == Byte[].class || rawType == byte[].class) {
+				return (T) method.getResponseBody();
+			}
 			String content = method.getResponseBodyAsString();
 			return json.parseResponse(content, resultType);
 		}

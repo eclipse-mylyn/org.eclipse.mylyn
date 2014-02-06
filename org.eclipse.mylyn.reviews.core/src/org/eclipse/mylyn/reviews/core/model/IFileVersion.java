@@ -22,6 +22,7 @@ import org.eclipse.team.core.history.IFileRevision;
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IFileVersion#getContent <em>Content</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IFileVersion#getFile <em>File</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IFileVersion#getFileRevision <em>File Revision</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IFileVersion#getBinaryContent <em>Binary Content</em>}</li>
  * </ul>
  * </p>
  * 
@@ -150,5 +151,30 @@ public interface IFileVersion extends IReviewItem {
 	 * @generated
 	 */
 	void setFileRevision(IFileRevision value);
+
+	/**
+	 * Returns the value of the '<em><b>Binary Content</b></em>' attribute. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Binary Content</em>' attribute isn't clear, there really should be more of a
+	 * description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Binary Content</em>' attribute.
+	 * @see #setBinaryContent(byte[])
+	 * @generated
+	 */
+	byte[] getBinaryContent();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.reviews.core.model.IFileVersion#getBinaryContent
+	 * <em>Binary Content</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Binary Content</em>' attribute.
+	 * @see #getBinaryContent()
+	 * @generated
+	 */
+	void setBinaryContent(byte[] value);
 
 } // IFileVersion

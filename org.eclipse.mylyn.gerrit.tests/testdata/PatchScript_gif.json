@@ -1,0 +1,94 @@
+{
+	"jsonrpc" : "2.0",
+	"id" : 9,
+	"result" : {
+		"changeId" : {
+			"id" : "I4934f8b639737119d8ef28b08d24c4b47a02e23a"
+		},
+		"changeType" : "DELETED",
+		"newName" : "org.eclipse.egit.ui/icons/obj16/gerrit_fetch.gif",
+		"oldMode" : "FILE",
+		"newMode" : "FILE",
+		"header" : ["diff --git a/org.eclipse.egit.ui/icons/obj16/gerrit_fetch.gif b/org.eclipse.egit.ui/icons/obj16/gerrit_fetch.gif\n", "deleted file mode 100644\n", "index a61b2d6..0000000\n", "--- a/org.eclipse.egit.ui/icons/obj16/gerrit_fetch.gif\n", "+++ /dev/null\n", "Binary files differ\n"],
+		"diffPrefs" : {
+			"accountId" : {
+				"id" : 118
+			},
+			"ignoreWhitespace" : "N",
+			"tabSize" : 8,
+			"lineLength" : 100,
+			"syntaxHighlighting" : true,
+			"showWhitespaceErrors" : true,
+			"intralineDifference" : true,
+			"showTabs" : true,
+			"context" : 10,
+			"skipDeleted" : false,
+			"skipUncommented" : false,
+			"expandAllComments" : false,
+			"retainHeader" : false,
+			"manualReview" : false,
+			"showLineEndings" : true
+		},
+		"a" : {
+			"path" : "org.eclipse.egit.ui/icons/obj16/gerrit_fetch.gif",
+			"ranges" : [],
+			"size" : 2,
+			"missingNewlineAtEnd" : true
+		},
+		"b" : {
+			"ranges" : [],
+			"size" : 0,
+			"missingNewlineAtEnd" : false
+		},
+		"edits" : [],
+		"displayMethodA" : "DIFF",
+		"displayMethodB" : "NONE",
+		"comments" : {
+			"a" : [],
+			"b" : [],
+			"accounts" : {
+				"accounts" : []
+			}
+		},
+		"history" : [{
+				"key" : {
+					"patchSetId" : {
+						"changeId" : {
+							"id" : 20222
+						},
+						"patchSetId" : 1
+					},
+					"fileName" : "org.eclipse.egit.ui/icons/obj16/gerrit_fetch.gif"
+				},
+				"changeType" : "M",
+				"patchType" : "U",
+				"nbrComments" : 0,
+				"nbrDrafts" : 0,
+				"insertions" : 0,
+				"deletions" : 0,
+				"reviewedByCurrentUser" : false
+			}, {
+				"key" : {
+					"patchSetId" : {
+						"changeId" : {
+							"id" : 20222
+						},
+						"patchSetId" : 2
+					},
+					"fileName" : "org.eclipse.egit.ui/icons/obj16/gerrit_fetch.gif"
+				},
+				"changeType" : "M",
+				"patchType" : "U",
+				"nbrComments" : 0,
+				"nbrDrafts" : 0,
+				"insertions" : 0,
+				"deletions" : 0,
+				"reviewedByCurrentUser" : false
+			}
+		],
+		"hugeFile" : false,
+		"intralineDifference" : false,
+		"intralineFailure" : false,
+		"intralineTimeout" : false
+	}
+}

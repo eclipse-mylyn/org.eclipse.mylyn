@@ -1333,13 +1333,21 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int FILE_VERSION__FILE_REVISION = REVIEW_ITEM_FEATURE_COUNT + 4;
 
 	/**
+	 * The feature id for the '<em><b>Binary Content</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int FILE_VERSION__BINARY_CONTENT = REVIEW_ITEM_FEATURE_COUNT + 5;
+
+	/**
 	 * The number of structural features of the '<em>File Version</em>' class. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	public static final int FILE_VERSION_FEATURE_COUNT = REVIEW_ITEM_FEATURE_COUNT + 5;
+	public static final int FILE_VERSION_FEATURE_COUNT = REVIEW_ITEM_FEATURE_COUNT + 6;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.ApprovalType
@@ -2771,6 +2779,20 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for the attribute '
+	 * {@link org.eclipse.mylyn.reviews.core.model.IFileVersion#getBinaryContent <em>Binary Content</em>}'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Binary Content</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IFileVersion#getBinaryContent()
+	 * @see #getFileVersion()
+	 * @generated
+	 */
+	public EAttribute getFileVersion_BinaryContent() {
+		return (EAttribute) fileVersionEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.IIndexed <em>Indexed</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -3212,6 +3234,7 @@ public class ReviewsPackage extends EPackageImpl {
 		createEAttribute(fileVersionEClass, FILE_VERSION__CONTENT);
 		createEReference(fileVersionEClass, FILE_VERSION__FILE);
 		createEAttribute(fileVersionEClass, FILE_VERSION__FILE_REVISION);
+		createEAttribute(fileVersionEClass, FILE_VERSION__BINARY_CONTENT);
 
 		indexedEClass = createEClass(INDEXED);
 		createEAttribute(indexedEClass, INDEXED__INDEX);
@@ -3602,6 +3625,10 @@ public class ReviewsPackage extends EPackageImpl {
 				getFileVersion_FileRevision(),
 				this.getIFileRevision(),
 				"fileRevision", null, 0, 1, IFileVersion.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getFileVersion_BinaryContent(),
+				ecorePackage.getEByteArray(),
+				"binaryContent", null, 0, 1, IFileVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(indexedEClass, IIndexed.class, "Indexed", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEAttribute(
@@ -4329,6 +4356,14 @@ public class ReviewsPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EAttribute FILE_VERSION__FILE_REVISION = eINSTANCE.getFileVersion_FileRevision();
+
+		/**
+		 * The meta object literal for the '<em><b>Binary Content</b></em>' attribute feature. <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute FILE_VERSION__BINARY_CONTENT = eINSTANCE.getFileVersion_BinaryContent();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.core.model.IIndexed <em>Indexed</em>}'
