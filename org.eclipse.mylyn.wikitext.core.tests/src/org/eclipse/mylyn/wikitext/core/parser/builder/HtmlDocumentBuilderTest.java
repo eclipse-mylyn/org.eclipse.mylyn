@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 David Green and others.
+ * Copyright (c) 2007, 2014 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.mylyn.wikitext.core.parser.builder;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -129,6 +130,11 @@ public class HtmlDocumentBuilderTest {
 		builder.characters("test");
 		builder.endDocument();
 		assertEquals("STARTtestEND", out.toString());
+	}
+
+	@Test
+	public void providesWriter() {
+		assertNotNull(builder.getWriter());
 	}
 
 	protected void setupFormatting() {

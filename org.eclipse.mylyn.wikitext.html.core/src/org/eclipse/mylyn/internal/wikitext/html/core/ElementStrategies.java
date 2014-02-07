@@ -18,23 +18,39 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.mylyn.wikitext.core.parser.Attributes;
+
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
-abstract class ElementStrategies<ElementType extends Enum<ElementType>, ElementStrategy> {
+abstract class ElementStrategies<ElementType extends Enum<ElementType>, ElementStrategy, HtmlElementStrategyType extends HtmlElementStrategy<ElementType>> {
 
 	private Map<ElementType, ElementStrategy> elementStrategyByElementType;
 
-	ElementStrategies(Class<ElementType> elementTypeClass, Set<ElementType> elementTypes) {
+	private final List<HtmlElementStrategyType> elementStrategies;
+
+	ElementStrategies(Class<ElementType> elementTypeClass, Set<ElementType> elementTypes,
+			List<HtmlElementStrategyType> elementStrategies) {
 		checkNotNull(elementTypeClass);
 		checkNotNull(elementTypes);
+		this.elementStrategies = ImmutableList.copyOf(checkNotNull(elementStrategies));
 
 		initialize(elementTypeClass, elementTypes);
 	}
 
-	public ElementStrategy getStrategy(ElementType elementType) {
-		return checkNotNull(elementStrategyByElementType.get(checkNotNull(elementType)));
+	public ElementStrategy getStrategy(ElementType elementType, Attributes attributes) {
+		checkNotNull(elementType);
+
+		for (HtmlElementStrategyType strategy : elementStrategies) {
+			if (strategy.matcher().matches(elementType, attributes)) {
+				return getElementStrategy(strategy);
+			}
+		}
+		return checkNotNull(elementStrategyByElementType.get(elementType));
 	}
+
+	abstract ElementStrategy getElementStrategy(HtmlElementStrategyType strategy);
 
 	private void initialize(Class<ElementType> elementTypeClass, Set<ElementType> elementTypes) {
 		Map<ElementType, ElementStrategy> elementStrategyByElementType = Maps.newHashMap();

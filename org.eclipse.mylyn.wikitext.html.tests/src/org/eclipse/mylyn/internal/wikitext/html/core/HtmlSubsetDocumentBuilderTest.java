@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2014 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
 import java.io.StringWriter;
+import java.util.Collections;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
@@ -26,6 +27,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 public class HtmlSubsetDocumentBuilderTest {
@@ -45,7 +47,7 @@ public class HtmlSubsetDocumentBuilderTest {
 		delegate.setEmitAsDocument(false);
 		builder = new HtmlSubsetDocumentBuilder(delegate);
 		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
-		builder.setSupportedSpanTypes(Sets.newHashSet(SpanType.BOLD));
+		builder.setSupportedSpanTypes(Sets.newHashSet(SpanType.BOLD), Collections.<SpanHtmlElementStrategy> emptyList());
 		builder.setSupportedHeadingLevel(3);
 	}
 
@@ -170,13 +172,13 @@ public class HtmlSubsetDocumentBuilderTest {
 	@Test
 	public void supportedBlockTypes() {
 		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
-		assertSame(SupportedBlockStrategy.instance, builder.pushBlockStrategy(BlockType.PARAGRAPH));
+		assertSame(SupportedBlockStrategy.instance, builder.pushBlockStrategy(BlockType.PARAGRAPH, new Attributes()));
 	}
 
 	@Test
 	public void unsupportedBlockTypes() {
 		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
-		assertNotNull(builder.pushBlockStrategy(BlockType.CODE));
+		assertNotNull(builder.pushBlockStrategy(BlockType.CODE, new Attributes()));
 	}
 
 	@Test
@@ -354,14 +356,14 @@ public class HtmlSubsetDocumentBuilderTest {
 
 	@Test
 	public void supportedSpanTypes() {
-		builder.setSupportedSpanTypes(Sets.newHashSet(SpanType.BOLD));
-		assertSame(SupportedSpanStrategy.instance, builder.pushSpanStrategy(SpanType.BOLD));
+		builder.setSupportedSpanTypes(Sets.newHashSet(SpanType.BOLD), Collections.<SpanHtmlElementStrategy> emptyList());
+		assertSame(SupportedSpanStrategy.instance, builder.pushSpanStrategy(SpanType.BOLD, new Attributes()));
 	}
 
 	@Test
 	public void unsupportedSpanTypes() {
-		builder.setSupportedSpanTypes(Sets.newHashSet(SpanType.BOLD));
-		assertNotNull(builder.pushSpanStrategy(SpanType.EMPHASIS));
+		builder.setSupportedSpanTypes(Sets.newHashSet(SpanType.BOLD), Collections.<SpanHtmlElementStrategy> emptyList());
+		assertNotNull(builder.pushSpanStrategy(SpanType.EMPHASIS, new Attributes()));
 	}
 
 	@Test
@@ -544,8 +546,30 @@ public class HtmlSubsetDocumentBuilderTest {
 		assertUnsupportedSpan("test", SpanType.UNDERLINED, SpanType.BOLD);
 	}
 
+	@Test
+	public void spanFontTag() {
+		builder.setSupportedSpanTypes(Sets.newHashSet(SpanType.BOLD),
+				Lists.<SpanHtmlElementStrategy> newArrayList(new FontElementStrategy()));
+
+		Attributes spanAttributes = new Attributes();
+		spanAttributes.setCssStyle("color: blue;");
+		builder.beginSpan(SpanType.SPAN, new Attributes(null, null, "color: blue", null));
+		builder.characters("test");
+		builder.endSpan();
+		builder.characters(" ");
+		builder.beginSpan(SpanType.SPAN, new Attributes(null, null, "font-size: 15pt", null));
+		builder.characters("test2");
+		builder.endSpan();
+		builder.characters(" ");
+		builder.beginSpan(SpanType.SPAN, new Attributes(null, null, "font-size: 16em; color: red", null));
+		builder.characters("test2");
+		builder.endSpan();
+
+		assertContent("<font color=\"blue\">test</font> <font size=\"15pt\">test2</font> <font size=\"16em\" color=\"red\">test2</font>");
+	}
+
 	private void assertSupportedSpan(String expected, SpanType spanType) {
-		builder.setSupportedSpanTypes(Sets.newHashSet(spanType));
+		builder.setSupportedSpanTypes(Sets.newHashSet(spanType), Collections.<SpanHtmlElementStrategy> emptyList());
 		builder.beginSpan(spanType, new Attributes());
 		builder.characters("test");
 		builder.endSpan();
@@ -553,7 +577,7 @@ public class HtmlSubsetDocumentBuilderTest {
 	}
 
 	private void assertUnsupportedSpan(String expected, SpanType unsupported, SpanType supported) {
-		builder.setSupportedSpanTypes(Sets.newHashSet(supported));
+		builder.setSupportedSpanTypes(Sets.newHashSet(supported), Collections.<SpanHtmlElementStrategy> emptyList());
 		builder.beginSpan(unsupported, new Attributes());
 		builder.characters("test");
 		builder.endSpan();

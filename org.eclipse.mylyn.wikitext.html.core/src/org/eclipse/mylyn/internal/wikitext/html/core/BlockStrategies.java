@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.wikitext.html.core;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,7 +25,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
-class BlockStrategies extends ElementStrategies<BlockType, BlockStrategy> {
+class BlockStrategies extends ElementStrategies<BlockType, BlockStrategy, HtmlElementStrategy<BlockType>> {
 
 	private static final Map<BlockType, List<BlockType>> blockTypeToAlternatives = createBlockTypeToAlternatives();
 
@@ -60,7 +61,7 @@ class BlockStrategies extends ElementStrategies<BlockType, BlockStrategy> {
 	}
 
 	BlockStrategies(Set<BlockType> blockTypes) {
-		super(BlockType.class, blockTypes);
+		super(BlockType.class, blockTypes, Collections.<HtmlElementStrategy<BlockType>> emptyList());
 		checkArgument(!blockTypes.isEmpty());
 	}
 
@@ -98,6 +99,11 @@ class BlockStrategies extends ElementStrategies<BlockType, BlockStrategy> {
 	@Override
 	Map<BlockType, List<BlockType>> getElementTypeToAlternatives() {
 		return blockTypeToAlternatives;
+	}
+
+	@Override
+	BlockStrategy getElementStrategy(HtmlElementStrategy<BlockType> strategy) {
+		throw new UnsupportedOperationException();
 	}
 
 }

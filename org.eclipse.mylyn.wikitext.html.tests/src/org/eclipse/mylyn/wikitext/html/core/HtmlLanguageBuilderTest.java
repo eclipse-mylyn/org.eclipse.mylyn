@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2014 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.StringWriter;
 
 import org.eclipse.mylyn.internal.wikitext.html.core.HtmlSubsetLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
@@ -200,6 +201,47 @@ public class HtmlLanguageBuilderTest {
 		thrown.expect(NullPointerException.class);
 		thrown.expectMessage("Must provide a suffix");
 		builder.document("ouch", null);
+	}
+
+	@Test
+	public void addSpanFont() {
+		StringWriter writer = new StringWriter();
+		HtmlLanguage language = builder.addSpanFont().add(BlockType.PARAGRAPH).document("", "").name("Test").create();
+		DocumentBuilder builder = language.createDocumentBuilder(writer);
+		builder.beginDocument();
+		builder.beginSpan(SpanType.SPAN, new Attributes());
+		builder.characters("test");
+		builder.endSpan();
+		builder.characters(" ");
+		builder.beginSpan(SpanType.SPAN, new Attributes(null, null, "color: purple", null));
+		builder.characters("inside font");
+		builder.endSpan();
+		builder.endDocument();
+
+		assertEquals("test <font color=\"purple\">inside font</font>", writer.toString());
+	}
+
+	@Test
+	public void addSpanFontWithSpanSupport() {
+		StringWriter writer = new StringWriter();
+		HtmlLanguage language = builder.addSpanFont()
+				.add(BlockType.PARAGRAPH)
+				.add(SpanType.SPAN)
+				.document("", "")
+				.name("Test")
+				.create();
+		DocumentBuilder builder = language.createDocumentBuilder(writer);
+		builder.beginDocument();
+		builder.beginSpan(SpanType.SPAN, new Attributes());
+		builder.characters("test");
+		builder.endSpan();
+		builder.characters(" ");
+		builder.beginSpan(SpanType.SPAN, new Attributes(null, null, "color: purple", null));
+		builder.characters("inside font");
+		builder.endSpan();
+		builder.endDocument();
+
+		assertEquals("<span>test</span> <font color=\"purple\">inside font</font>", writer.toString());
 	}
 
 	protected void expectBlacklisted() {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2014 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,7 +24,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
-public class SpanStrategies extends ElementStrategies<SpanType, SpanStrategy> {
+public class SpanStrategies extends ElementStrategies<SpanType, SpanStrategy, SpanHtmlElementStrategy> {
 
 	private static final Map<SpanType, List<SpanType>> spanTypeToAlternatives = createSpanTypeToAlternatives();
 
@@ -47,8 +47,8 @@ public class SpanStrategies extends ElementStrategies<SpanType, SpanStrategy> {
 		alternatives.put(spanType, ImmutableList.copyOf(spanTypes));
 	}
 
-	SpanStrategies(Set<SpanType> elementTypes) {
-		super(SpanType.class, elementTypes);
+	SpanStrategies(Set<SpanType> elementTypes, List<SpanHtmlElementStrategy> spanElementStrategies) {
+		super(SpanType.class, elementTypes, spanElementStrategies);
 	}
 
 	@Override
@@ -74,6 +74,11 @@ public class SpanStrategies extends ElementStrategies<SpanType, SpanStrategy> {
 	@Override
 	Map<SpanType, List<SpanType>> getElementTypeToAlternatives() {
 		return spanTypeToAlternatives;
+	}
+
+	@Override
+	SpanStrategy getElementStrategy(SpanHtmlElementStrategy strategy) {
+		return strategy.spanStrategy();
 	}
 
 }

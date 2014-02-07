@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2014 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.io.Writer;
+import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
@@ -52,9 +53,9 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 		blockStrategies = new BlockStrategies(blockTypes);
 	}
 
-	void setSupportedSpanTypes(Set<SpanType> spanTypes) {
+	void setSupportedSpanTypes(Set<SpanType> spanTypes, List<SpanHtmlElementStrategy> spanElementStrategies) {
 		checkState(spanStrategyState.isEmpty());
-		spanStrategies = new SpanStrategies(spanTypes);
+		spanStrategies = new SpanStrategies(spanTypes, spanElementStrategies);
 	}
 
 	void setSupportedHeadingLevel(int headingLevel) {
@@ -77,11 +78,11 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 
 	@Override
 	public void beginBlock(BlockType type, Attributes attributes) {
-		pushBlockStrategy(type).beginBlock(delegate, type, attributes);
+		pushBlockStrategy(type, attributes).beginBlock(delegate, type, attributes);
 	}
 
-	BlockStrategy pushBlockStrategy(BlockType type) {
-		BlockStrategy strategy = blockStrategies.getStrategy(type);
+	BlockStrategy pushBlockStrategy(BlockType type, Attributes attributes) {
+		BlockStrategy strategy = blockStrategies.getStrategy(type, attributes);
 		blockStrategyState.push(strategy);
 		return strategy;
 	}
@@ -93,12 +94,12 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 
 	@Override
 	public void beginSpan(SpanType type, Attributes attributes) {
-		SpanStrategy strategy = pushSpanStrategy(type);
+		SpanStrategy strategy = pushSpanStrategy(type, attributes);
 		strategy.beginSpan(delegate, type, attributes);
 	}
 
-	SpanStrategy pushSpanStrategy(SpanType type) {
-		SpanStrategy strategy = spanStrategies.getStrategy(type);
+	SpanStrategy pushSpanStrategy(SpanType type, Attributes attributes) {
+		SpanStrategy strategy = spanStrategies.getStrategy(type, attributes);
 		spanStrategyState.push(strategy);
 		return strategy;
 	}
@@ -173,5 +174,4 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 	public void charactersUnescaped(String literal) {
 		delegate.charactersUnescaped(literal);
 	}
-
 }

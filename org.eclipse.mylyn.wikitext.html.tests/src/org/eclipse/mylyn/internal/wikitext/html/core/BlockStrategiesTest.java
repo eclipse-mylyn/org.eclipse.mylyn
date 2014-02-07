@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2014 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.junit.Rule;
 import org.junit.Test;
@@ -48,14 +49,14 @@ public class BlockStrategiesTest {
 		assertSupported(strategies, BlockType.PARAGRAPH);
 		assertSupported(strategies, BlockType.CODE);
 		for (BlockType blockType : BlockType.values()) {
-			assertNotNull(strategies.getStrategy(blockType));
+			assertNotNull(strategies.getStrategy(blockType, new Attributes()));
 		}
 	}
 
 	@Test
 	public void alternatives() {
 		BlockStrategies strategies = new BlockStrategies(Sets.newHashSet(BlockType.PARAGRAPH));
-		assertTrue(strategies.getStrategy(BlockType.CODE) instanceof SubstitutionBlockStrategy);
+		assertTrue(strategies.getStrategy(BlockType.CODE, new Attributes()) instanceof SubstitutionBlockStrategy);
 	}
 
 	@Test
@@ -102,7 +103,7 @@ public class BlockStrategiesTest {
 		List<BlockType> unsupportedBlockTypes = ImmutableList.of(BlockType.TABLE, BlockType.TABLE_ROW,
 				BlockType.BULLETED_LIST, BlockType.NUMERIC_LIST, BlockType.DEFINITION_LIST);
 		for (BlockType blockType : unsupportedBlockTypes) {
-			BlockStrategy strategy = strategies.getStrategy(blockType);
+			BlockStrategy strategy = strategies.getStrategy(blockType, new Attributes());
 			assertNotNull(strategy);
 			assertEquals(UnsupportedBlockStrategy.class, strategy.getClass());
 		}
@@ -134,19 +135,19 @@ public class BlockStrategiesTest {
 
 	protected void assertFallback(BlockType supportedType, BlockType blockType) {
 		BlockStrategies strategies = new BlockStrategies(Sets.newHashSet(supportedType));
-		BlockStrategy strategy = strategies.getStrategy(blockType);
+		BlockStrategy strategy = strategies.getStrategy(blockType, new Attributes());
 		assertNotNull(strategy);
 		assertEquals(blockType.name(), SubstitutionBlockStrategy.class, strategy.getClass());
 		assertEquals(blockType.name(), supportedType, ((SubstitutionBlockStrategy) strategy).getBlockType());
 	}
 
 	private void assertUnsupported(BlockStrategies strategies, BlockType blockType) {
-		BlockStrategy blockStrategy = strategies.getStrategy(blockType);
+		BlockStrategy blockStrategy = strategies.getStrategy(blockType, new Attributes());
 		assertNotNull(blockStrategy);
 		assertFalse(blockStrategy instanceof SupportedBlockStrategy);
 	}
 
 	private void assertSupported(BlockStrategies strategies, BlockType blockType) {
-		assertTrue(strategies.getStrategy(blockType) instanceof SupportedBlockStrategy);
+		assertTrue(strategies.getStrategy(blockType, new Attributes()) instanceof SupportedBlockStrategy);
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2014 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,9 @@ package org.eclipse.mylyn.internal.wikitext.html.core;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Collections;
+
+import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,34 +29,43 @@ public class SpanStrategiesTest {
 	public ExpectedException thrown = ExpectedException.none();
 
 	@Test
-	public void createNull() {
+	public void createNullElementTypes() {
 		thrown.expect(NullPointerException.class);
-		new SpanStrategies(null);
+		new SpanStrategies(null, Collections.<SpanHtmlElementStrategy> emptyList());
+	}
+
+	@Test
+	public void createNullSpanStrategies() {
+		thrown.expect(NullPointerException.class);
+		new SpanStrategies(Collections.<SpanType> emptySet(), null);
 	}
 
 	@Test
 	public void createEmpty() {
-		SpanStrategies strategies = new SpanStrategies(Sets.<SpanType> newHashSet());
-		assertNotNull(strategies.getStrategy(SpanType.BOLD));
+		SpanStrategies strategies = new SpanStrategies(Sets.<SpanType> newHashSet(),
+				Collections.<SpanHtmlElementStrategy> emptyList());
+		assertNotNull(strategies.getStrategy(SpanType.BOLD, new Attributes()));
 	}
 
 	@Test
 	public void createNonEmpty() {
-		SpanStrategies strategies = new SpanStrategies(Sets.newHashSet(SpanType.BOLD, SpanType.CODE));
+		SpanStrategies strategies = new SpanStrategies(Sets.newHashSet(SpanType.BOLD, SpanType.CODE),
+				Collections.<SpanHtmlElementStrategy> emptyList());
 		assertSupported(strategies, SpanType.BOLD);
 		assertSupported(strategies, SpanType.CODE);
 		for (SpanType spanType : SpanType.values()) {
-			assertNotNull(strategies.getStrategy(spanType));
+			assertNotNull(strategies.getStrategy(spanType, new Attributes()));
 		}
 	}
 
 	@Test
 	public void alternatives() {
-		SpanStrategies strategies = new SpanStrategies(Sets.newHashSet(SpanType.BOLD));
-		assertTrue(strategies.getStrategy(SpanType.STRONG) instanceof SubstitutionSpanStrategy);
+		SpanStrategies strategies = new SpanStrategies(Sets.newHashSet(SpanType.BOLD),
+				Collections.<SpanHtmlElementStrategy> emptyList());
+		assertTrue(strategies.getStrategy(SpanType.STRONG, new Attributes()) instanceof SubstitutionSpanStrategy);
 	}
 
 	private void assertSupported(SpanStrategies strategies, SpanType spanType) {
-		assertTrue(strategies.getStrategy(spanType) instanceof SupportedSpanStrategy);
+		assertTrue(strategies.getStrategy(spanType, new Attributes()) instanceof SupportedSpanStrategy);
 	}
 }
