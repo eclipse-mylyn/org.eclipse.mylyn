@@ -255,7 +255,9 @@ public class ReviewCompareAnnotationSupport {
 	 */
 	protected Annotation findAnnotation(MergeSourceViewer viewer, Direction direction, Position annotationPosition,
 			ReviewAnnotationModel annotationModel) {
-
+		if (viewer == null) {
+			return null;
+		}
 		ITextSelection selection = (ITextSelection) viewer.getSourceViewer().getSelectionProvider().getSelection();
 		final int offset = selection.getOffset();
 		final int length = selection.getLength();
