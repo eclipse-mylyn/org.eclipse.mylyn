@@ -1062,6 +1062,19 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 				proxyAuthComp) {
 
 			@Override
+			protected boolean doCheckState() {
+				return true;
+			}
+
+			@Override
+			protected void valueChanged() {
+				super.valueChanged();
+				if (getWizard() != null) {
+					getWizard().getContainer().updateButtons();
+				}
+			}
+
+			@Override
 			public int getNumberOfControls() {
 				return 3;
 			}
