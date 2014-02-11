@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  *  Contributors:
  *      Sony Ericsson/ST Ericsson - initial API and implementation
  *      Tasktop Technologies - improvements
@@ -17,6 +17,7 @@ package org.eclipse.mylyn.internal.gerrit.core;
 
 import java.net.UnknownHostException;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -42,6 +43,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritLoginException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritSystemInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
+import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
 import org.eclipse.mylyn.reviews.core.spi.ReviewsConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -265,12 +267,12 @@ public class GerritConnector extends ReviewsConnector {
 				return Status.OK_STATUS;
 			}
 
-			return new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, NLS.bind("Unknown query type: {0}",
+			return new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, NLS.bind("Unknown query type: {0}", //$NON-NLS-1$
 					query.getAttribute(GerritQuery.PROJECT)));
 		} catch (UnsupportedClassVersionError e) {
 			return toStatus(repository, e);
 		} catch (GerritException e) {
-			return toStatus(repository, "Problem performing query", e);
+			return toStatus(repository, "Problem performing query", e); //$NON-NLS-1$
 		} finally {
 			monitor.done();
 		}
@@ -286,7 +288,7 @@ public class GerritConnector extends ReviewsConnector {
 		try {
 			getClient(repository).refreshConfig(monitor);
 		} catch (GerritException e) {
-			throw toCoreException(repository, "Problem updating repository", e);
+			throw toCoreException(repository, "Problem updating repository", e); //$NON-NLS-1$
 		}
 	}
 
@@ -309,7 +311,7 @@ public class GerritConnector extends ReviewsConnector {
 	}
 
 	public GerritSystemInfo validate(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
-		// only allow user prompting in case of Open ID authentication 
+		// only allow user prompting in case of Open ID authentication
 		if (!Boolean.parseBoolean(repository.getProperty(GerritConnector.KEY_REPOSITORY_OPEN_ID_ENABLED))) {
 			monitor = Policy.backgroundMonitorFor(monitor);
 		}
@@ -318,7 +320,7 @@ public class GerritConnector extends ReviewsConnector {
 		} catch (UnsupportedClassVersionError e) {
 			throw toCoreException(repository, e);
 		} catch (GerritException e) {
-			throw toCoreException(repository, "Invalid repository", e);
+			throw toCoreException(repository, "Invalid repository", e); //$NON-NLS-1$
 		}
 	}
 
@@ -385,7 +387,7 @@ public class GerritConnector extends ReviewsConnector {
 			return support.parseResponse(token, GerritConfiguration.class);
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
-					"Failed to deserialize configuration: '" + token + "'", e));
+					"Failed to deserialize configuration: '" + token + "'", e)); //$NON-NLS-1$ //$NON-NLS-2$
 			return null;
 		}
 	}
@@ -396,7 +398,7 @@ public class GerritConnector extends ReviewsConnector {
 			return support.toJson(config);
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
-					"Failed to serialize configuration", e));
+					"Failed to serialize configuration", e)); //$NON-NLS-1$
 			return null;
 		}
 	}
@@ -411,9 +413,9 @@ public class GerritConnector extends ReviewsConnector {
 
 	Status toStatus(TaskRepository repository, String qualifier, Exception e) {
 		if (StringUtils.isEmpty(qualifier)) {
-			qualifier = "";
-		} else if (!StringUtils.endsWith(qualifier, ": ")) {
-			qualifier += ": ";
+			qualifier = ""; //$NON-NLS-1$
+		} else if (!StringUtils.endsWith(qualifier, ": ")) { //$NON-NLS-1$
+			qualifier += ": "; //$NON-NLS-1$
 		}
 		if (e instanceof GerritHttpException) {
 			int code = ((GerritHttpException) e).getResponseCode();
@@ -422,19 +424,19 @@ public class GerritConnector extends ReviewsConnector {
 			if (repository != null) {
 				return RepositoryStatus.createLoginError(repository.getUrl(), GerritCorePlugin.PLUGIN_ID);
 			} else {
-				return createErrorStatus(null, qualifier + "Unknown Host");
+				return createErrorStatus(null, qualifier + "Unknown Host"); //$NON-NLS-1$
 			}
 		} else if (e instanceof UnknownHostException) {
-			return createErrorStatus(repository, qualifier + "Unknown Host");
+			return createErrorStatus(repository, qualifier + "Unknown Host"); //$NON-NLS-1$
 		} else if (e instanceof GerritException && e.getCause() != null) {
 			Throwable cause = e.getCause();
 			if (cause instanceof Exception) {
 				return toStatus(repository, qualifier, (Exception) cause);
 			}
 		} else if (e instanceof GerritException && e.getMessage() != null) {
-			return createErrorStatus(repository, NLS.bind("{0}Gerrit connection issue: {1}", qualifier, e.getMessage()));
+			return createErrorStatus(repository, NLS.bind("{0}Gerrit connection issue: {1}", qualifier, e.getMessage())); //$NON-NLS-1$
 		}
-		String message = NLS.bind("{0}Unexpected error while connecting to Gerrit: {1}", qualifier, e.getMessage());
+		String message = NLS.bind("{0}Unexpected error while connecting to Gerrit: {1}", qualifier, e.getMessage()); //$NON-NLS-1$
 		if (repository != null) {
 			return RepositoryStatus.createStatus(repository, IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, message);
 		} else {
@@ -446,17 +448,17 @@ public class GerritConnector extends ReviewsConnector {
 		if (repository != null) {
 			return RepositoryStatus.createStatus(repository, IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, message);
 		} else {
-			return new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, message + " (Repository Unknown)");
+			return new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, message + " (Repository Unknown)"); //$NON-NLS-1$
 		}
 	}
 
 	public static Status toStatus(TaskRepository repository, UnsupportedClassVersionError e) {
-		String message = NLS.bind("The Gerrit Connector requires at Java 1.6 or higer (installed version: {0})",
-				System.getProperty("java.version"));
+		String message = NLS.bind("The Gerrit Connector requires at Java 1.6 or higer (installed version: {0})", //$NON-NLS-1$
+				System.getProperty("java.version")); //$NON-NLS-1$
 		return new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, message, e);
 	}
 
 	public static boolean isClosed(String status) {
-		return "MERGED".equals(status) || "ABANDONED".equals(status);
+		return EnumSet.of(ReviewStatus.MERGED, ReviewStatus.ABANDONED).contains(ReviewStatus.get(status));
 	}
 }

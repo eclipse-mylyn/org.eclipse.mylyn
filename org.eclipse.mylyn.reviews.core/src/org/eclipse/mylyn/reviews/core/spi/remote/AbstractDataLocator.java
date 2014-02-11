@@ -26,7 +26,7 @@ public abstract class AbstractDataLocator {
 	}
 
 	public IPath getFileScalingFragment(String fileName) {
-		return new Path("");
+		return new Path(""); //$NON-NLS-1$
 	}
 
 	public IPath getParentDir(String containerSegment, String typeFragment, String fileName) {

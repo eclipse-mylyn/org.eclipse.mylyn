@@ -67,14 +67,14 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
 			gerritFactoryProvider.getClient().loadPatchSetContent(content, monitor);
 		} catch (GerritException e) {
 			throw new CoreException(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
-					"Couldn't obtain patch set content for " + content.getId() + ". Check remote connection.", e));
+					"Couldn't obtain patch set content for " + content.getId() + ". Check remote connection.", e)); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		for (Patch patch : content.getTargetDetail().getPatches()) {
 			PatchScript patchScript = content.getPatchScript(patch.getKey());
 			if (patchScript == null) {
 				throw new CoreException(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
-						"Couldn't obtain patch information for patch set " + patch.getKey()
-								+ ". Check remote connection."));
+						"Couldn't obtain patch information for patch set " + patch.getKey() //$NON-NLS-1$
+								+ ". Check remote connection.")); //$NON-NLS-1$
 			}
 			CommentDetail commentDetail = patchScript.getCommentDetail();
 			List<PatchLineComment> comments = new ArrayList<PatchLineComment>();
@@ -145,7 +145,7 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
 					: patch.getFileName();
 			String baseId = (content.getBase() != null)
 					? new Patch.Key(content.getBase().getId(), sourceFileName).toString()
-					: "base-" + targetId;
+					: "base-" + targetId; //$NON-NLS-1$
 			String id = baseId + ":" + targetId; //$NON-NLS-1$
 			IFileItem item = (IFileItem) getCache().getItem(id);
 			if (item == null) {
@@ -154,7 +154,7 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
 				item.setName(patch.getFileName());
 				item.setAddedBy(set.getAddedBy());
 				item.setCommittedBy(set.getCommittedBy());
-				item.setReference(patch.getKey().getParentKey() + "," + patch.getFileName());
+				item.setReference(patch.getKey().getParentKey() + "," + patch.getFileName()); //$NON-NLS-1$
 				getCache().put(item);
 			}
 			items.add(item);

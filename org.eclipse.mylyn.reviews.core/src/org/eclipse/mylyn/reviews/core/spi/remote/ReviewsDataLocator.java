@@ -20,11 +20,11 @@ import org.eclipse.core.runtime.Path;
 
 public abstract class ReviewsDataLocator extends AbstractDataLocator {
 
-	private static final String REVIEWS_DIR = "reviews_bin";
+	private static final String REVIEWS_DIR = "reviews_bin"; //$NON-NLS-1$
 
-	private static final String OBSOLETE_MODEL_DIR = "model";
+	private static final String OBSOLETE_MODEL_DIR = "model"; //$NON-NLS-1$
 
-	private static final String OBSOLETE_REVIEWS_XML_DIR = "reviews_xml";
+	private static final String OBSOLETE_REVIEWS_XML_DIR = "reviews_xml"; //$NON-NLS-1$
 
 	@Override
 	public IPath getLocatorDataSegment() {

@@ -371,7 +371,7 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 	void setRemoteObject(RemoteType remoteObject) {
 		if (!factory.getLocalKeyForRemoteObject(remoteObject).equals(getLocalKey())) {
 			throw new RuntimeException(
-					"Internal Error. Tried to set a remote object that doesn't match existing local key or object.");
+					"Internal Error. Tried to set a remote object that doesn't match existing local key or object."); //$NON-NLS-1$
 		}
 		this.remoteObject = remoteObject;
 	}
@@ -384,7 +384,7 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 	void setRemoteKey(RemoteKeyType remoteKey) {
 		if (!factory.getLocalKeyForRemoteKey(remoteKey).equals(getLocalKey())) {
 			throw new RuntimeException(
-					"Internal Error. Tried to set a remote object that doesn't match existing local key or object.");
+					"Internal Error. Tried to set a remote object that doesn't match existing local key or object."); //$NON-NLS-1$
 		}
 		this.remoteKey = remoteKey;
 	}

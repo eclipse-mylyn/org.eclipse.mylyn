@@ -34,12 +34,12 @@ public final class GerritConfiguration {
 	private Account account;
 
 	GerritConfiguration() {
-		// no-args constructor needed by gson	
+		// no-args constructor needed by gson
 	}
 
 	public GerritConfiguration(GerritConfigX gerritConfig, List<Project> projects, Account account) {
-		Assert.isNotNull(gerritConfig, "gerritConfig must not be null");
-		Assert.isNotNull(projects, "projects must not be null");
+		Assert.isNotNull(gerritConfig, "gerritConfig must not be null"); //$NON-NLS-1$
+		Assert.isNotNull(projects, "projects must not be null"); //$NON-NLS-1$
 		this.gerritConfig = gerritConfig;
 		this.projects = projects;
 		this.account = account;

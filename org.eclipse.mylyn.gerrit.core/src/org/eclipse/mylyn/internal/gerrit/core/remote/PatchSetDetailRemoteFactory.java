@@ -62,7 +62,7 @@ public class PatchSetDetailRemoteFactory extends ReviewItemSetRemoteFactory<Patc
 		IReviewItemSet itemSet = IReviewsFactory.INSTANCE.createReviewItemSet();
 		itemSet.setName(NLS.bind("Patch Set {0}", patchSet.getPatchSetId()));
 		itemSet.setCreationDate(patchSet.getCreatedOn());
-		itemSet.setId(patchSet.getPatchSetId() + "");
+		itemSet.setId(Integer.toString(patchSet.getPatchSetId()));
 		itemSet.setReference(patchSet.getRefName());
 		itemSet.setRevision(patchSet.getRevision().get());
 		review.getSets().add(itemSet);
@@ -76,7 +76,7 @@ public class PatchSetDetailRemoteFactory extends ReviewItemSetRemoteFactory<Patc
 
 	@Override
 	public String getLocalKeyForRemoteObject(PatchSetDetail remoteObject) {
-		return remoteObject.getPatchSet().getPatchSetId() + "";
+		return Integer.toString(remoteObject.getPatchSet().getPatchSetId());
 	}
 
 	@Override
