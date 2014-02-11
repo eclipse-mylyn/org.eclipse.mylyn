@@ -27,8 +27,6 @@ public class ReviewsImages {
 
 	private static final URL baseURL = ReviewsUiPlugin.getDefault().getBundle().getEntry("/icons/"); //$NON-NLS-1$
 
-	public static final ImageDescriptor OVERLAY_REVIEW = create("eview16/overlay-review.png"); //$NON-NLS-1$
-
 	public static final ImageDescriptor OVERLAY_ADDED = create("ovr/added.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor OVERLAY_REMOVED = create("ovr/removed.gif"); //$NON-NLS-1$
@@ -45,13 +43,7 @@ public class ReviewsImages {
 
 	public static final ImageDescriptor CHANGE_LOG = create("obj16/changelog_obj.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor COMMIT = create("obj16/commit.gif"); //$NON-NLS-1$
-
-	public static final ImageDescriptor REVIEW_GLASSES = create("obj16/glasses.png"); //$NON-NLS-1$
-
 	public static final ImageDescriptor REVIEW_QUOTE = create("obj16/quote.png"); //$NON-NLS-1$
-
-	public static final ImageDescriptor SERVER = create("obj16/server.png"); //$NON-NLS-1$
 
 	public static final ImageDescriptor APPROVED = create("obj12/approved.gif"); //$NON-NLS-1$
 
