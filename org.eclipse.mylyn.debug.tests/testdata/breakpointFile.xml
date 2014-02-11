@@ -2,7 +2,7 @@
 <breakpoints>
 <breakpoint enabled="true" persistant="true" registered="true">
 <resource path="/test/src/test.java" type="1"/>
-<marker charStart="1" lineNumber="5" type="org.eclipse.jdt.debug.javaLineBreakpointMarker">
+<marker charStart="1" lineNumber="2" type="org.eclipse.jdt.debug.javaLineBreakpointMarker">
 <attrib name="org.eclipse.debug.core.id" value="org.eclipse.jdt.debug"/>
 <attrib name="org.eclipse.jdt.debug.core.suspendPolicy" value="2"/>
 <attrib name="charStart" value="1"/>

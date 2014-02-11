@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.mylyn.context.core.AbstractContextContributor;
@@ -47,13 +48,17 @@ public class BreakpointsContextContributor extends AbstractContextContributor {
 	}
 
 	public void contextChanged(ContextChangeEvent event) {
+		BreakpointsStateUtil stateUtil = new BreakpointsStateUtil(Platform.getStateLocation(DebugUiPlugin.getDefault()
+				.getBundle()));
 		if (event.getEventKind().equals(ContextChangeKind.PRE_ACTIVATED)) {
+			stateUtil.saveState();
 			breakpointsListener = new BreakpointsListener();
 			DebugPlugin.getDefault().getBreakpointManager().addBreakpointListener(breakpointsListener);
 			BreakpointsContextUtil.importBreakpoints(event.getContext(), new NullProgressMonitor());
 		} else if (event.getEventKind().equals(ContextChangeKind.DEACTIVATED)) {
 			DebugPlugin.getDefault().getBreakpointManager().removeBreakpointListener(breakpointsListener);
 			BreakpointsContextUtil.removeBreakpoints(getContextBreakpoints(event.getContext()));
+			stateUtil.restoreState();
 		}
 	}
 

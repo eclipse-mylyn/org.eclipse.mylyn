@@ -12,7 +12,9 @@
 package org.eclipse.mylyn.internal.debug.ui;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.zip.ZipFile;
 
 import org.eclipse.core.resources.IProject;
@@ -31,7 +33,13 @@ public class BreakpointsTestUtil {
 
 	public static IBreakpoint createTestBreakpoint() throws DebugException {
 		IResource testClass = ResourcesPlugin.getWorkspace().getRoot().findMember("/test/src/test.java"); //$NON-NLS-1$
-		return new JavaLineBreakpoint(testClass, "test", 5, 1, 5, 0, true, new HashMap<String, Object>()); //$NON-NLS-1$
+		return new JavaLineBreakpoint(testClass, "test", 2, 1, 5, 0, true, new HashMap<String, Object>()); //$NON-NLS-1$
+	}
+
+	public static List<IBreakpoint> createTestBreakpoints() throws DebugException {
+		List<IBreakpoint> breakpoints = new ArrayList<IBreakpoint>();
+		breakpoints.add(createTestBreakpoint());
+		return breakpoints;
 	}
 
 	public static IProject createProject() throws Exception {

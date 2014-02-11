@@ -101,8 +101,7 @@ public class BreakpointsContextUtilTest {
 	@Test
 	public void testExportBreakpoints() throws Exception {
 		BreakpointsTestUtil.createProject();
-		List<IBreakpoint> breakpoints = new ArrayList<IBreakpoint>();
-		breakpoints.add(BreakpointsTestUtil.createTestBreakpoint());
+		List<IBreakpoint> breakpoints = BreakpointsTestUtil.createTestBreakpoints();
 
 		InputStream exportedBreakpoints = BreakpointsContextUtil.exportBreakpoints(breakpoints, null);
 		List<String> expected = IOUtils.readLines(CommonTestUtil.getResource(this, "testdata/breakpointFile.xml"));
