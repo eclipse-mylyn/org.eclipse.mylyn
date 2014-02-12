@@ -31,7 +31,7 @@ public class BugzillaCustomField implements Serializable {
 	public static final String CUSTOM_FIELD_PREFIX = "cf_"; //$NON-NLS-1$
 
 	public static enum FieldType {
-		UNKNOWN, FreeText, DropDown, MultipleSelection, LargeText, DateTime;
+		UNKNOWN, FreeText, DropDown, MultipleSelection, LargeText, DateTime, BugId;
 
 		private static int parseInt(String type) {
 			try {
@@ -54,6 +54,8 @@ public class BugzillaCustomField implements Serializable {
 				return "Large Text Box"; //$NON-NLS-1$
 			case 5:
 				return "Date/Time"; //$NON-NLS-1$
+			case 6:
+				return "Bug ID"; //$NON-NLS-1$
 			default:
 				return super.toString();
 			}
@@ -71,6 +73,8 @@ public class BugzillaCustomField implements Serializable {
 				return LargeText;
 			case 5:
 				return DateTime;
+			case 6:
+				return BugId;
 			default:
 				return UNKNOWN;
 			}

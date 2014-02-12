@@ -631,6 +631,9 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 					case DateTime:
 						atr.getMetaData().setType(TaskAttribute.TYPE_DATETIME);
 						break;
+					case BugId:
+						atr.getMetaData().setType(TaskAttribute.TYPE_TASK_DEPENDENCY);
+						break;
 
 					default:
 						List<String> options = bugzillaCustomField.getOptions();
