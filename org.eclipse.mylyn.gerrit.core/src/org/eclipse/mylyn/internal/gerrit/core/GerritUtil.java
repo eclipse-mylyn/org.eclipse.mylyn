@@ -17,6 +17,7 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectDetailX;
@@ -193,4 +194,13 @@ public class GerritUtil {
 		uriMap.put(DownloadScheme.ANON_GIT, getAnonGitCloneUri(repository, config, project));
 		return uriMap;
 	}
+
+	public static String toChangeId(String id) {
+		if (StringUtils.countMatches(id, String.valueOf('~')) == 2) {
+			// project~branch~change_id in Gerrit 2.6 and later
+			id = id.substring(id.lastIndexOf('~') + 1);
+		}
+		return id;
+	}
+
 }

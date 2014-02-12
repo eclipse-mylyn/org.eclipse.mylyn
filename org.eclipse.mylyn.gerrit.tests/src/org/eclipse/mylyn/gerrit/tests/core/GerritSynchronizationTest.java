@@ -11,8 +11,10 @@
 
 package org.eclipse.mylyn.gerrit.tests.core;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
 import java.io.File;
@@ -22,12 +24,14 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.sdk.util.UiTestUtil;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.gerrit.tests.support.GerritHarness;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.GerritQuery;
+import org.eclipse.mylyn.internal.gerrit.core.GerritTaskSchema;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
@@ -41,6 +45,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.reviews.spi.edit.remote.AbstractRemoteEditFactoryProvider;
 import org.eclipse.mylyn.reviews.spi.edit.remote.review.ReviewsRemoteEditFactoryProvider;
 import org.eclipse.mylyn.reviews.ui.spi.remote.RemoteUiService;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
@@ -80,8 +85,8 @@ public class GerritSynchronizationTest extends TestCase {
 //		GerritCorePlugin.getDefault().getConnector().setFactoryProviderConfigurer(configurer);
 		GerritUiPlugin.getDefault();
 		TasksUiPlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
+		.getPreferenceStore()
+		.setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 		// cancel any parallel query synchronization jobs
 		Job.getJobManager().cancel(ITasksCoreConstants.JOB_FAMILY_SYNCHRONIZATION);
 
@@ -90,14 +95,14 @@ public class GerritSynchronizationTest extends TestCase {
 		harness = GerritFixture.current().harness();
 		repository = GerritFixture.current().singleRepository();
 		GerritCorePlugin.getDefault()
-				.getConnector()
-				.setFactoryProviderConfigurer(new RemoteUiFactoryProviderConfigurer());
+		.getConnector()
+		.setFactoryProviderConfigurer(new RemoteUiFactoryProviderConfigurer());
 		client = GerritCorePlugin.getDefault().getConnector().getClient(repository);
 		AbstractRemoteEditFactoryProvider abstractRemoteEditFactoryProvider = (AbstractRemoteEditFactoryProvider) client.getFactoryProvider();
 		GerritCorePlugin.getDefault()
-				.getConnector()
-				.getFactoryProviderConfigurer()
-				.configure(abstractRemoteEditFactoryProvider);
+		.getConnector()
+		.getFactoryProviderConfigurer()
+		.configure(abstractRemoteEditFactoryProvider);
 
 		assertThat(abstractRemoteEditFactoryProvider.getService(), instanceOf(RemoteUiService.class));
 		taskList = TasksUiPlugin.getTaskList();
@@ -149,6 +154,23 @@ public class GerritSynchronizationTest extends TestCase {
 		String message = addComment(task);
 		synchronizeTask(task, true);
 		assertHasNewComment(task, message);
+	}
+
+	@Test
+	public void testGetFromChangeId() throws Exception {
+		ITask task = createAndSynchronizeQuery(true);
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(repository.getConnectorKind());
+		TaskData taskData = connector.getTaskData(repository, task.getTaskId(), new NullProgressMonitor());
+		assertEquals(task.getTaskId(), taskData.getTaskId());
+
+		TaskAttribute changeIdAttribute = taskData.getRoot().getAttribute(
+				GerritTaskSchema.getDefault().CHANGE_ID.getKey());
+		assertNotNull(changeIdAttribute);
+		assertThat(task.getTaskId(), not(equalTo(changeIdAttribute.getValue())));
+		TaskData taskDataFromChangeId = connector.getTaskData(repository, changeIdAttribute.getValue(),
+				new NullProgressMonitor());
+		assertEquals(task.getTaskId(), taskDataFromChangeId.getTaskId());
+		assertEquals(taskData.getRoot().toString(), taskDataFromChangeId.getRoot().toString());
 	}
 
 	private String addComment(ITask task) throws GerritException {

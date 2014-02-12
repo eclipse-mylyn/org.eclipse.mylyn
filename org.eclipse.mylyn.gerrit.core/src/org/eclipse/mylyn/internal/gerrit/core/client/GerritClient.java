@@ -110,7 +110,7 @@ import com.google.gwtjsonrpc.client.VoidResult;
 
 /**
  * Facade to the Gerrit RPC API.
- * 
+ *
  * @author Mikael Kober
  * @author Thomas Westling
  * @author Steffen Pingel
@@ -869,7 +869,7 @@ public class GerritClient extends ReviewsClient {
 
 	/**
 	 * Sends a query for the changes visible to the caller to the gerrit server.
-	 * 
+	 *
 	 * @param monitor
 	 *            A progress monitor
 	 * @param queryString
@@ -885,7 +885,7 @@ public class GerritClient extends ReviewsClient {
 	/**
 	 * Sends a query for the changes visible to the caller to the gerrit server with the possibility of adding options
 	 * to the query.
-	 * 
+	 *
 	 * @param monitor
 	 *            A progress monitor
 	 * @param queryString
@@ -929,7 +929,7 @@ public class GerritClient extends ReviewsClient {
 
 	/**
 	 * Sends a query for the changes visible to the caller to the gerrit server. Uses the gerrit REST API.
-	 * 
+	 *
 	 * @param monitor
 	 *            A progress monitor
 	 * @param queryString
@@ -945,7 +945,7 @@ public class GerritClient extends ReviewsClient {
 	/**
 	 * Sends a query for the changes visible to the caller to the gerrit server with the possibility of adding options
 	 * to the query. Uses the gerrit REST API.
-	 * 
+	 *
 	 * @param monitor
 	 *            A progress monitor
 	 * @param queryString
@@ -1214,4 +1214,22 @@ public class GerritClient extends ReviewsClient {
 			}
 		});
 	}
+
+	public String toReviewId(String id, IProgressMonitor monitor) throws GerritException {
+		try {
+			Integer.parseInt(id);
+			return id;
+		} catch (NumberFormatException e) {
+			try {
+				List<GerritQueryResult> results = executeQuery(monitor, id);
+				if (results.size() != 1) {
+					throw new GerritException(NLS.bind("{0} is not a valid review ID", id)); //$NON-NLS-1$
+				}
+				return Integer.toString(results.get(0).getNumber());
+			} catch (GerritException e2) {
+				throw new GerritException(NLS.bind("{0} is not a valid review ID", id), e2); //$NON-NLS-1$
+			}
+		}
+	}
+
 }

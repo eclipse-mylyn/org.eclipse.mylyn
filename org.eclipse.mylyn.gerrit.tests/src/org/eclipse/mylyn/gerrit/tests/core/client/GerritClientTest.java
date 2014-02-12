@@ -11,7 +11,7 @@
  *     Sascha Scholz (SAP) - improvements
  *     Francois Chouinard (Ericsson)  - Bug 414219 Add new Test
  *     Jacques Bouthillier (Ericsson) - Fix comments for Bug 414219
- *     Jacques Bouthillier (Ericsson) - Bug 414253 Adjust some Test 
+ *     Jacques Bouthillier (Ericsson) - Bug 414253 Adjust some Test
  *******************************************************************************/
 
 package org.eclipse.mylyn.gerrit.tests.core.client;
@@ -28,6 +28,7 @@ import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.gerrit.tests.support.GerritHarness;
+import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritAuthenticationState;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
@@ -273,6 +274,33 @@ public class GerritClientTest extends TestCase {
 		String query = "is:draft";
 		List<GerritQueryResult> results = executeQuery(query);
 		assertNotNull(results);
+	}
+
+	@Test
+	public void testToReviewId() throws GerritException {
+		assertEquals("123", client.toReviewId("123", null));
+		assertEquals("1", client.toReviewId("1", null));
+	}
+
+	@Test
+	public void testToReviewIdWithInvalidId() {
+		try {
+			client.toReviewId("invalidid", null);
+			fail("Expected GerritException");
+		} catch (GerritException e) {
+			assertEquals("invalidid is not a valid review ID", e.getMessage());
+
+		}
+	}
+
+	@Test
+	public void testToReviewIdWithChangeId() throws Exception {
+		harness.ensureOneReviewExists();
+		List<GerritQueryResult> results = executeQuery("status:open");
+		GerritQueryResult result = results.get(0);
+		String reviewId = Integer.toString(result.getNumber());
+		String changeId = GerritUtil.toChangeId(result.getId());
+		assertEquals(reviewId, client.toReviewId(changeId, null));
 	}
 
 }

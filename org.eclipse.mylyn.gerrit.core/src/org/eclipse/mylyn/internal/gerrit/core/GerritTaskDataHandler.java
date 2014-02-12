@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  *  Contributors:
  *      Sony Ericsson/ST Ericsson - initial API and implementation
  *      Tasktop Technologies - improvements
@@ -17,7 +17,6 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
@@ -103,6 +102,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 			if (!anonymous) {
 				id = getAccountId(client, repository, monitor);
 			}
+			taskId = client.toReviewId(taskId, monitor);
 			TaskData taskData = createTaskData(repository, taskId, monitor);
 
 			RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> consumer = updateModelData(
@@ -125,7 +125,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 
 	private RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> updateModelData(
 			TaskRepository repository, TaskData taskData, ReviewObserver reviewObserver, IProgressMonitor monitor)
-			throws CoreException {
+					throws CoreException {
 		GerritClient client = connector.getClient(repository);
 		GerritRemoteFactoryProvider factoryProvider = (GerritRemoteFactoryProvider) client.getFactoryProvider();
 		RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> consumer = factoryProvider.getReviewFactory()
@@ -175,7 +175,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 
 	/**
 	 * Get account id for repository
-	 * 
+	 *
 	 * @param client
 	 * @param repository
 	 * @param monitor
@@ -324,10 +324,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	private String shortenChangeId(String changeId) {
-		if (StringUtils.countMatches(changeId, String.valueOf('~')) == 2) {
-			// project~branch~change_id in Gerrit 2.6 and later
-			changeId = changeId.substring(changeId.lastIndexOf('~') + 1);
-		}
+		changeId = GerritUtil.toChangeId(changeId);
 		return changeId.substring(0, Math.min(9, changeId.length()));
 	}
 
