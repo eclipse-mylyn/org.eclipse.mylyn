@@ -158,6 +158,7 @@ public abstract class AbstractTaskEditorAttributeSection extends AbstractTaskEdi
 			ColumnSpan columnSpan = (layoutHint != null && layoutHint.columnSpan != null)
 					? layoutHint.columnSpan
 					: ColumnSpan.SINGLE;
+			gd.horizontalIndent = 1;// prevent clipping of decorators on Windows
 			if (rowSpan == RowSpan.SINGLE && columnSpan == ColumnSpan.SINGLE) {
 				gd.widthHint = COLUMN_WIDTH;
 				gd.horizontalSpan = 1;

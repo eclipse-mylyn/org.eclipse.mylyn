@@ -276,7 +276,7 @@ public abstract class AbstractAttributeEditor {
 	 */
 	protected void decorateRequired() {
 		if (decoration == null) {
-			decoration = new ControlDecoration(getLabelControl(), SWT.TOP | SWT.RIGHT);
+			decoration = new ControlDecoration(getLabelControl(), SWT.BOTTOM | SWT.RIGHT);
 			decoration.setDescriptionText(Messages.AbstractAttributeEditor_AttributeIsRequired);
 			decoration.setMarginWidth(0);
 			Image image = FieldDecorationRegistry.getDefault()

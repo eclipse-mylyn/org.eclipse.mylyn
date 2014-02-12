@@ -43,7 +43,10 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 			editor.createControl(composite, toolkit);
 			getTaskEditorPage().getAttributeEditorToolkit().adapt(editor);
 
-			GridDataFactory gridDataFactory = GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.TOP);
+			GridDataFactory gridDataFactory = GridDataFactory.fillDefaults()
+					.grab(true, false)
+					.align(SWT.FILL, SWT.TOP)
+					.indent(3, 0);// prevent clipping of decorators on Mac
 
 			if (editor instanceof MultiSelectionAttributeEditor) {
 				gridDataFactory.hint(SWT.DEFAULT, 95);
