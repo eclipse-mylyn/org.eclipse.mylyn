@@ -92,7 +92,7 @@ public class GerritUrlHandler extends AbstractUrlHandler {
 		String taskUrl = TasksUi.getRepositoryConnector(GerritConnector.CONNECTOR_KIND).getTaskUrl(repository.getUrl(),
 				taskId);
 		String urlQualifiers = StringUtils.remove(url, taskUrl);
-		String[] fragments = StringUtils.split(urlQualifiers, "/");
+		String[] fragments = StringUtils.split(urlQualifiers, "/"); //$NON-NLS-1$
 		if (fragments.length > 0) {
 			String patchSetFragment = fragments[0];
 			try {

@@ -68,7 +68,7 @@ public class AddReviewersDialog extends GerritOperationDialog {
 		GridLayout layout = GridLayoutFactory.fillDefaults().margins(8, 8).create();
 		composite.setLayout(layout);
 
-		messageEditor = createPersonTextEditor(composite, "");
+		messageEditor = createPersonTextEditor(composite, ""); //$NON-NLS-1$
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(messageEditor);
 
 		return composite;

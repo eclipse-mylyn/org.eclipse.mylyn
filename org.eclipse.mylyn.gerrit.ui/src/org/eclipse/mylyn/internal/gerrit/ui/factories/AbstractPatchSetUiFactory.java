@@ -87,7 +87,7 @@ public abstract class AbstractPatchSetUiFactory extends AbstractUiFactory<IRevie
 	}
 
 	protected final Repository resolveGitRepository() {
-		//Here we try to resolve the Git repository in the workspace for this Patch Set.  
+		//Here we try to resolve the Git repository in the workspace for this Patch Set.
 		//If so, we will use the appropriate file revision to provide navigability in the Compare Editor.
 		GerritToGitMapping mapper = getGitRepository(false);
 		Repository gitRepository = null;
@@ -131,7 +131,7 @@ public abstract class AbstractPatchSetUiFactory extends AbstractUiFactory<IRevie
 						GerritUiPlugin.PLUGIN_ID, reason));
 			}
 		} catch (IOException e) {
-			Status status = new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID, "Error accessing Git repository", e);
+			Status status = new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID, "Error accessing Git repository", e); //$NON-NLS-1$
 			StatusManager.getManager().handle(status, StatusManager.BLOCK | StatusManager.SHOW | StatusManager.LOG);
 		}
 		return null;

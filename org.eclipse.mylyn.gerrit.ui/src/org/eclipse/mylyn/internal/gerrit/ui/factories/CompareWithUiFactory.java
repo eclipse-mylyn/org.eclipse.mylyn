@@ -68,7 +68,7 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 				dispose();
 			} else {
 				StatusManager.getManager().handle(
-						new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID, "Couldn't load content for compare editor",
+						new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID, "Couldn't load content for compare editor", //$NON-NLS-1$
 								status.getException()), StatusManager.SHOW | StatusManager.LOG);
 			}
 		}
@@ -102,7 +102,7 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 			});
 
 			if (getModelObject().getReview().getSets().size() > 1) {
-				Button compareWithButton = toolkit.createButton(compareComposite, "", SWT.PUSH);
+				Button compareWithButton = toolkit.createButton(compareComposite, "", SWT.PUSH); //$NON-NLS-1$
 				GridDataFactory.fillDefaults().grab(false, true).applyTo(compareWithButton);
 				compareWithButton.setImage(WorkbenchImages.getImage(IWorkbenchGraphicConstants.IMG_LCL_BUTTON_MENU));
 				compareWithButton.addSelectionListener(new SelectionAdapter() {
@@ -158,7 +158,9 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 		}
 		final PatchSetContent content = new PatchSetContent(basePatch, targetSetDetail.getPatchSet());
 		compareSet = IReviewsFactory.INSTANCE.createReviewItemSet();
-		String basePatchSetLabel = content.getBase() != null ? content.getBase().getPatchSetId() + "" : "Base";
+		String basePatchSetLabel = content.getBase() != null
+				? Integer.toString(content.getBase().getPatchSetId())
+				: "Base";
 		compareSet.setName(NLS.bind("Compare Patch Set {0} with {1}", content.getTarget().getPatchSetId(),
 				basePatchSetLabel));
 		PatchSetContentCompareRemoteFactory remoteFactory = new PatchSetContentCompareRemoteFactory(

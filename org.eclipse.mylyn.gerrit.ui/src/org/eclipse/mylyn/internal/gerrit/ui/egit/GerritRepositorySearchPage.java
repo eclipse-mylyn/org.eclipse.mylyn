@@ -288,7 +288,7 @@ public class GerritRepositorySearchPage extends WizardPage implements IRepositor
 
 	private void addFetchReviewNotesRefSpec(GitRepositoryInfo gitRepositoryInfo) {
 		String notesRef = Constants.R_NOTES + "*"; //$NON-NLS-1$
-		gitRepositoryInfo.addFetchRefSpec("+" + notesRef + ":" + notesRef);
+		gitRepositoryInfo.addFetchRefSpec("+" + notesRef + ":" + notesRef); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private void addPushToGerritRefSpec(GitRepositoryInfo gitRepositoryInfo) {

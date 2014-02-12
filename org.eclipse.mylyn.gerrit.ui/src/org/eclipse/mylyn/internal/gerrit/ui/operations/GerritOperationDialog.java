@@ -121,7 +121,7 @@ public abstract class GerritOperationDialog extends ProgressDialog {
 		} catch (InvocationTargetException e) {
 			StatusManager.getManager().handle(
 					new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID,
-							"Unexpected error during execution of Gerrit operation", e),
+							"Unexpected error during execution of Gerrit operation", e), //$NON-NLS-1$
 					StatusManager.SHOW | StatusManager.LOG);
 		} catch (InterruptedException e) {
 			// cancelled

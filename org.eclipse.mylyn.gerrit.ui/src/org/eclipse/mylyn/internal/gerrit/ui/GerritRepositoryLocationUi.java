@@ -114,7 +114,7 @@ public class GerritRepositoryLocationUi extends TaskRepositoryLocationUi impleme
 						if (event.location != null && event.location.startsWith(request.getReturnUrl())) {
 							result.set(new OpenIdAuthenticationResponse(event.location, null));
 						}
-						// alternatively check cookies since IE does not notify listeners of redirects 
+						// alternatively check cookies since IE does not notify listeners of redirects
 						String value = Browser.getCookie(request.getCookie(), request.getCookieUrl());
 						if (value != null) {
 							result.set(new OpenIdAuthenticationResponse(event.location, value));
@@ -135,7 +135,7 @@ public class GerritRepositoryLocationUi extends TaskRepositoryLocationUi impleme
 				});
 
 				// navigate to login page
-				dialog.getBrowser().setUrl(request.getRequestUrl() + "?" + sb.toString());
+				dialog.getBrowser().setUrl(request.getRequestUrl() + "?" + sb.toString()); //$NON-NLS-1$
 				dialog.open();
 			}
 		});

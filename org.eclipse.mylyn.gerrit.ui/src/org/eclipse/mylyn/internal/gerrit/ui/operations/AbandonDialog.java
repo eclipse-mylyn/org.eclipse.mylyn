@@ -57,7 +57,7 @@ public class AbandonDialog extends GerritOperationDialog {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 
-		messageEditor = createRichTextEditor(composite, "");
+		messageEditor = createRichTextEditor(composite, ""); //$NON-NLS-1$
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(messageEditor.getControl());
 
 		return composite;

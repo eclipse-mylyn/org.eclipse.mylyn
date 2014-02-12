@@ -71,7 +71,7 @@ public class ComparePatchSetJob extends Job {
 			}
 			openSynchronization(baseRef, targetRef);
 		} catch (Exception e) {
-			return new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID, "Patch set retrieval failed", e);
+			return new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID, "Patch set retrieval failed", e); //$NON-NLS-1$
 		}
 		return Status.OK_STATUS;
 	}

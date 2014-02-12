@@ -4,11 +4,11 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  *  Contributors:
  *      Sony Ericsson/ST Ericsson - initial API and implementation
  *      Tasktop Technologies - improvements
- *      GitHub, Inc. - fixes for bug 354753      
+ *      GitHub, Inc. - fixes for bug 354753
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.ui;
 
@@ -108,8 +108,8 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 		setNeedsTimeZone(false);
 		setNeedsValidation(true);
 
-		openIdProviders.add(new OpenIdProvider("Google Account", "https://www.google.com/accounts/o8/id"));
-		openIdProviders.add(new OpenIdProvider("Yahoo Account", "https://me.yahoo.com"));
+		openIdProviders.add(new OpenIdProvider("Google Account", "https://www.google.com/accounts/o8/id")); //$NON-NLS-2$
+		openIdProviders.add(new OpenIdProvider("Yahoo Account", "https://me.yahoo.com")); //$NON-NLS-2$
 	}
 
 	@SuppressWarnings("restriction")

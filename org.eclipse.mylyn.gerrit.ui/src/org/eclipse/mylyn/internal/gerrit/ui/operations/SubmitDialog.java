@@ -47,7 +47,7 @@ public class SubmitDialog extends GerritOperationDialog {
 	@Override
 	protected Control createPageControls(Composite parent) {
 		setTitle("Submit Change");
-		setMessage("");
+		setMessage(""); //$NON-NLS-1$
 
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));

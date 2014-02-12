@@ -19,11 +19,11 @@ import org.eclipse.mylyn.internal.gerrit.core.GerritOperationFactory;
 import org.eclipse.mylyn.internal.gerrit.core.operations.GerritOperation;
 import org.eclipse.mylyn.internal.gerrit.core.operations.SaveDraftRequest;
 import org.eclipse.mylyn.internal.gerrit.ui.egit.GitFileRevisionUtils;
+import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
-import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.team.core.history.IFileRevision;
@@ -55,7 +55,7 @@ public class GerritReviewBehavior extends ReviewBehavior {
 	public IStatus addComment(IReviewItem item, IComment comment, IProgressMonitor monitor) {
 		short side = 1;
 		String id = item.getId();
-		if (id.startsWith("base-")) {
+		if (id.startsWith("base-")) { //$NON-NLS-1$
 			// base revision
 			id = id.substring(5);
 			side = 0;
@@ -73,7 +73,7 @@ public class GerritReviewBehavior extends ReviewBehavior {
 			}
 		}
 		//We'll only get here if there is something really broken in calling code or model. Gerrit has one and only one comment per location.
-		throw new RuntimeException("Internal Exception. No line location for comment. Comment: " + comment.getId());
+		throw new RuntimeException("Internal Exception. No line location for comment. Comment: " + comment.getId()); //$NON-NLS-1$
 	}
 
 	@Override
