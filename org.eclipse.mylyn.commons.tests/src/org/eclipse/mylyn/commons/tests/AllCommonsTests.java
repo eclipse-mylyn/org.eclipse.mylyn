@@ -31,6 +31,7 @@ import org.eclipse.mylyn.commons.tests.net.WebUtilTest;
 import org.eclipse.mylyn.commons.tests.operations.CancellableOperationMonitorThreadTest;
 import org.eclipse.mylyn.commons.tests.operations.OperationUtilTest;
 import org.eclipse.mylyn.commons.tests.workbench.browser.BrowserUtilTest;
+import org.eclipse.mylyn.commons.tests.workbench.browser.WebBrowserDialogTest;
 
 /**
  * @author Mik Kersten
@@ -58,6 +59,7 @@ public class AllCommonsTests {
 		suite.addTestSuite(SslProtocolSocketFactoryTest.class);
 		suite.addTestSuite(WebUtilTest.class);
 		suite.addTestSuite(BrowserUtilTest.class);
+		suite.addTestSuite(WebBrowserDialogTest.class);
 		suite.addTestSuite(ExtensionPointReaderTest.class);
 		suite.addTestSuite(CommonListenerListTest.class);
 		suite.addTestSuite(CommonStoreTest.class);

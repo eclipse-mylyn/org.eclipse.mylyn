@@ -59,6 +59,10 @@ public class WebBrowserDialog extends MessageDialog {
 
 	private Text locationLabel;
 
+	private boolean showLocation = true;
+
+	private boolean showStatus = true;
+
 	public WebBrowserDialog(Shell parentShell, String dialogTitle, Image dialogTitleImage, String dialogMessage,
 			int dialogImageType, String[] dialogButtonLabels, int defaultIndex) {
 		super(parentShell, dialogTitle, dialogTitleImage, dialogMessage, dialogImageType, dialogButtonLabels,
@@ -119,34 +123,40 @@ public class WebBrowserDialog extends MessageDialog {
 		layout.marginWidth = 0;
 		parent.setLayout(layout);
 
-		locationLabel = new Text(parent, SWT.READ_ONLY | SWT.BORDER);
-		locationLabel.setBackground(parent.getBackground());
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(locationLabel);
+		if (showLocation) {
+			locationLabel = new Text(parent, SWT.READ_ONLY | SWT.BORDER);
+			locationLabel.setBackground(parent.getBackground());
+			GridDataFactory.fillDefaults().grab(true, false).applyTo(locationLabel);
+		}
 
 		browser = new Browser(parent, SWT.BORDER);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(browser);
 
-		statusLabel = new Label(parent, SWT.NONE);
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(statusLabel);
+		if (showStatus) {
+			statusLabel = new Label(parent, SWT.NONE);
+			GridDataFactory.fillDefaults().grab(true, false).applyTo(statusLabel);
 
-		browser.addStatusTextListener(new StatusTextListener() {
-			public void changed(StatusTextEvent event) {
-				statusLabel.setText((event.text != null) ? event.text : ""); //$NON-NLS-1$
-			}
-		});
-		browser.addLocationListener(new LocationListener() {
-			public void changing(LocationEvent event) {
-				// ignore			
-			}
-
-			public void changed(LocationEvent event) {
-				if (!event.top) {
-					// ignore nested frames
-					return;
+			browser.addStatusTextListener(new StatusTextListener() {
+				public void changed(StatusTextEvent event) {
+					statusLabel.setText((event.text != null) ? event.text : ""); //$NON-NLS-1$
 				}
-				locationLabel.setText(event.location != null ? event.location : ""); //$NON-NLS-1$
-			}
-		});
+			});
+		}
+		if (showLocation) {
+			browser.addLocationListener(new LocationListener() {
+				public void changing(LocationEvent event) {
+					// ignore			
+				}
+
+				public void changed(LocationEvent event) {
+					if (!event.top) {
+						// ignore nested frames
+						return;
+					}
+					locationLabel.setText(event.location != null ? event.location : ""); //$NON-NLS-1$
+				}
+			});
+		}
 
 		if (text != null) {
 			browser.setText(text);
@@ -163,6 +173,40 @@ public class WebBrowserDialog extends MessageDialog {
 	@Override
 	protected Point getInitialSize() {
 		return new Point(500, 500);
+	}
+
+	/**
+	 * @since 3.11
+	 */
+	public boolean getShowLocation() {
+		return showLocation;
+	}
+
+	/**
+	 * @since 3.11
+	 */
+	public void setShowLocation(boolean showLocation) {
+		if (locationLabel != null) {
+			throw new IllegalStateException("Control already created"); //$NON-NLS-1$
+		}
+		this.showLocation = showLocation;
+	}
+
+	/**
+	 * @since 3.11
+	 */
+	public boolean getShowStatus() {
+		return showStatus;
+	}
+
+	/**
+	 * @since 3.11
+	 */
+	public void setShowStatus(boolean showStatus) {
+		if (statusLabel != null) {
+			throw new IllegalStateException("Control already created"); //$NON-NLS-1$
+		}
+		this.showStatus = showStatus;
 	}
 
 }
