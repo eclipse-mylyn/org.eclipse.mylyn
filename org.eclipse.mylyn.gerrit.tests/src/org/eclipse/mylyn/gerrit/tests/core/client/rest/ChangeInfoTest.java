@@ -51,9 +51,11 @@ import org.junit.Test;
 
 import com.google.gerrit.common.data.ApprovalDetail;
 import com.google.gerrit.common.data.ApprovalType;
+import com.google.gerrit.reviewdb.Account;
 import com.google.gerrit.reviewdb.ApprovalCategory.Id;
 import com.google.gerrit.reviewdb.ApprovalCategoryValue;
 import com.google.gerrit.reviewdb.Change;
+import com.google.gerrit.reviewdb.PatchSet;
 import com.google.gerrit.reviewdb.PatchSetApproval;
 
 public class ChangeInfoTest extends TestCase {
@@ -141,6 +143,10 @@ public class ChangeInfoTest extends TestCase {
 		assertHasCodeReviewApprovalType(changeInfo.convertToApprovalTypes());
 		// no permitted labels
 		assertHasRevisions(changeInfo, 1);
+		// no approvals given
+		Account account = new Account(new Account.Id(1000001));
+		PatchSet.Id patchSetId = createCurrentPatchSetId(2, 1);
+		assertThat(changeInfo.convertToPatchSetApprovals(patchSetId, account), empty());
 	}
 
 	@Test
@@ -153,6 +159,8 @@ public class ChangeInfoTest extends TestCase {
 		assertHasCodeReviewApprovalType(changeInfo.convertToApprovalTypes());
 		assertHasCodeReviewPermissionLabels(changeInfo);
 		assertHasRevisions(changeInfo, 1);
+
+		assertGiven(changeInfo, createCurrentPatchSetId(2, 1), 1000001, -1);
 	}
 
 	@Test
@@ -165,6 +173,8 @@ public class ChangeInfoTest extends TestCase {
 		assertHasCodeReviewApprovalType(changeInfo.convertToApprovalTypes());
 		// no permission labels
 		assertHasRevisions(changeInfo, 2);
+
+		assertGiven(changeInfo, createCurrentPatchSetId(1, 2), 1000001, 0);
 	}
 
 	@Test
@@ -182,6 +192,11 @@ public class ChangeInfoTest extends TestCase {
 		assertCategoriesEqual(ApprovalUtil.VRIF, it.next());
 		assertCategoriesEqual(ApprovalUtil.CRVW, it.next());
 		assertCategoriesEqual(ApprovalUtil.IPCL, it.next());
+
+		PatchSet.Id patchSetId = createCurrentPatchSetId(12850, -1 /*unspecified*/);
+		assertGiven(changeInfo, patchSetId, 4, -1, 0, -1);
+		assertGiven(changeInfo, patchSetId, 118, 0, 0, 0);
+		assertGiven(changeInfo, patchSetId, 442, 0, 1, 0);
 	}
 
 	@Test
@@ -201,6 +216,10 @@ public class ChangeInfoTest extends TestCase {
 		// that's all we know about the approval, the rest is void
 		assertNull(custom.getCategory().getAbbreviatedName());
 		assertTrue(custom.getValues().isEmpty());
+		// no approvals given
+		Account account = new Account(new Account.Id(1000001));
+		PatchSet.Id patchSetId = createCurrentPatchSetId(1, -1 /*unspecified*/);
+		assertThat(changeInfo.convertToPatchSetApprovals(patchSetId, account), empty());
 	}
 
 	// Utility methods
@@ -328,5 +347,26 @@ public class ChangeInfoTest extends TestCase {
 
 	private static void assertCategoriesEqual(ApprovalType expected, ApprovalType actual) {
 		assertEquals(expected.getCategory().getId().get(), actual.getCategory().getId().get());
+	}
+
+	private static void assertGiven(ChangeInfo changeInfo, PatchSet.Id patchSetId, int accountId, int... approvals) {
+		Account account = new Account(new Account.Id(accountId));
+		Map<Id, PatchSetApproval> given = changeInfo.convertToPatchSetApprovals(patchSetId, account);
+		assertNotNull(given);
+		assertEquals(approvals.length, given.size());
+		if (approvals.length > 0) {
+			assertEquals((short) approvals[0], given.get(ApprovalUtil.CRVW.getCategory().getId()).getValue());
+		}
+		if (approvals.length > 1) {
+			assertEquals((short) approvals[1], given.get(ApprovalUtil.VRIF.getCategory().getId()).getValue());
+		}
+		if (approvals.length > 2) {
+			assertEquals((short) approvals[2], given.get(ApprovalUtil.IPCL.getCategory().getId()).getValue());
+		}
+	}
+
+	private static PatchSet.Id createCurrentPatchSetId(int changeNumber, int patchSetNumber) {
+		Change.Id changeId = new Change.Id(changeNumber);
+		return new PatchSet.Id(changeId, patchSetNumber);
 	}
 }

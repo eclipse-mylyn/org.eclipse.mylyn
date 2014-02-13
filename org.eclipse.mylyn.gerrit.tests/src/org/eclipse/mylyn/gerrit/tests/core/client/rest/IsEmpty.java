@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.gerrit.tests.core.client.rest;
 
 import java.util.Collection;
+import java.util.Map;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -27,6 +28,10 @@ public class IsEmpty<T> extends BaseMatcher<T> {
 		if (o instanceof Collection) {
 			Collection<?> collection = (Collection<?>) o;
 			return collection.isEmpty();
+		}
+		if (o instanceof Map) {
+			Map<?, ?> map = (Map<?, ?>) o;
+			return map.isEmpty();
 		}
 		return false;
 	}

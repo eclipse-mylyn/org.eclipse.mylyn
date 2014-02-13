@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.gerrit.core.client.rest;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -219,6 +220,42 @@ public class ChangeInfo {
 			label.setMin(Collections.min(values));
 			label.setMax(Collections.max(values));
 			result.add(label);
+		}
+		return result;
+	}
+
+	/**
+	 * Converts labels into a map of approvals given by the provided user.
+	 * 
+	 * @param id
+	 *            id of the current patch set
+	 * @param account
+	 *            the user whose approvals should be converted
+	 * @return map of given approvals
+	 * @see #labels
+	 */
+	public Map<ApprovalCategory.Id, PatchSetApproval> convertToPatchSetApprovals(PatchSet.Id id, Account account) {
+		if (labels == null) {
+			return null;
+		}
+		Map<ApprovalCategory.Id, PatchSetApproval> result = new HashMap<ApprovalCategory.Id, PatchSetApproval>(
+				labels.size());
+		for (Entry<String, LabelInfo> entry : labels.entrySet()) {
+			ApprovalCategory approvalCategory = ApprovalUtil.findCategoryByNameWithDash(entry.getKey());
+			if (approvalCategory == null) {
+				continue;
+			}
+			if (entry.getValue().getAll() == null) {
+				continue;
+			}
+			for (ApprovalInfo approvalInfo : entry.getValue().getAll()) {
+				if (approvalInfo.getId() == account.getId().get()) {
+					Account.Id accountId = new Account.Id(approvalInfo.getId());
+					PatchSetApproval.Key key = new PatchSetApproval.Key(id, accountId, approvalCategory.getId());
+					PatchSetApproval approval = new PatchSetApproval(key, approvalInfo.getValue());
+					result.put(approvalCategory.getId(), approval);
+				}
+			}
 		}
 		return result;
 	}

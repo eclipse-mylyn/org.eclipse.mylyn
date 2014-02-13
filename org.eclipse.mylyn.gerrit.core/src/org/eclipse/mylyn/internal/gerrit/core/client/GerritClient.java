@@ -474,6 +474,9 @@ public class GerritClient extends ReviewsClient {
 		if (publishDetail.getLabels() == null && isVersion26OrLater(monitor)) {
 			ChangeInfo changeInfo = getChangeInfo(id.getParentKey().get(), monitor);
 			publishDetail.setLabels(changeInfo.convertToPermissionLabels());
+			if (publishDetail.getGiven() == null) {
+				publishDetail.setGiven(changeInfo.convertToPatchSetApprovals(id, getAccount(monitor)));
+			}
 		}
 		return publishDetail;
 	}
