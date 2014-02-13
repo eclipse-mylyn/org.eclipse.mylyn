@@ -50,11 +50,7 @@ public class FocusedTeamUiPlugin extends AbstractUIPlugin {
 
 	public static final String COMMIT_TEMPLATE = "org.eclipse.mylyn.team.commit.template"; //$NON-NLS-1$
 
-	public static final String DEFAULT_COMMIT_TEMPLATE = "${task.status} - ${connector.task.prefix} ${task.key}: ${task.description} \n${task.url}"; //$NON-NLS-1$
-
-	private static final String OLD_DEFAULT_COMMIT_TEMPLATE = "${task.status} - ${connector.task.prefix} ${task.id}: ${task.description} \n${task.url}"; //$NON-NLS-1$
-
-	private static final String OLD_DEFAULT_COMMIT_TEMPLATE2 = "${task.status} - ${connector.task.prefix} ${task.id}: ${task.description} \r\n${task.url}"; //$NON-NLS-1$
+	public static final String DEFAULT_COMMIT_TEMPLATE = "${task.key}: ${task.description} \n\nTask-Url: ${task.url}"; //$NON-NLS-1$
 
 	public static class FocusedTeamUiStartup implements IStartup {
 
@@ -104,11 +100,6 @@ public class FocusedTeamUiPlugin extends AbstractUIPlugin {
 	private void initPreferenceDefaults() {
 		getPreferenceStore().setDefault(CHANGE_SET_MANAGE, true);
 		getPreferenceStore().setDefault(COMMIT_TEMPLATE, DEFAULT_COMMIT_TEMPLATE);
-		// 2.0M1 - 2.0M2 Default template migration
-		if (getPreferenceStore().getString(COMMIT_TEMPLATE).equals(OLD_DEFAULT_COMMIT_TEMPLATE)
-				|| getPreferenceStore().getString(COMMIT_TEMPLATE).equals(OLD_DEFAULT_COMMIT_TEMPLATE2)) {
-			getPreferenceStore().setValue(COMMIT_TEMPLATE, DEFAULT_COMMIT_TEMPLATE);
-		}
 	}
 
 	public static FocusedTeamUiPlugin getDefault() {
