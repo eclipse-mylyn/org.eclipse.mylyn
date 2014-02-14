@@ -2091,7 +2091,7 @@ IAdaptable {
 	 * @since 2.0
 	 */
 
-	protected Validator getValidator(final TaskRepository repository) {
+	protected Validator getValidator(@NonNull final TaskRepository repository) {
 		return new org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage.Validator() {
 
 			@Override
