@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 David Green and others.
+ * Copyright (c) 2009, 2014 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,12 +7,10 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Marc-Andre Laperle (Ericsson) - Fix background color on Ubuntu
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.ui.editor.outline;
-
-import java.util.Arrays;
-import java.util.List;
 
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -47,7 +45,7 @@ import org.eclipse.ui.part.ShowInContext;
 
 /**
  * A quick outline popup. Design based on PDE class by the same name.
- * 
+ *
  * @author David Green
  */
 public class QuickOutlinePopupDialog extends PopupDialog implements IInformationControl, IInformationControlExtension,
@@ -72,18 +70,6 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 		Text fileterText = new Text(parent, SWT.SEARCH);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(fileterText);
 		return fileterText;
-	}
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Override
-	protected List getBackgroundColorExclusions() {
-		List exclusions = super.getBackgroundColorExclusions();
-		if (filteredTree != null) {
-			Text filterControl = filteredTree.getFilterControl();
-			exclusions.add(filterControl.getParent());
-			exclusions.addAll(Arrays.asList(filterControl.getParent().getChildren()));
-		}
-		return exclusions;
 	}
 
 	@Override
