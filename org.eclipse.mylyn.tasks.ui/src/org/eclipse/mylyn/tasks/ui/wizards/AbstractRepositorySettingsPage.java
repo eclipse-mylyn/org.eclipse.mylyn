@@ -214,7 +214,15 @@ IAdaptable {
 
 	private boolean needsProxy;
 
-	private Button systemProxyButton;
+	/**
+	 * @since 3.11
+	 */
+	protected Button systemProxyButton;
+
+	/**
+	 * @since 3.11
+	 */
+	protected Hyperlink changeProxySettingsLink;
 
 	private String oldProxyUsername = ""; //$NON-NLS-1$
 
@@ -1015,7 +1023,7 @@ IAdaptable {
 			}
 		});
 
-		Hyperlink changeProxySettingsLink = toolkit.createHyperlink(systemSettingsComposite,
+		changeProxySettingsLink = toolkit.createHyperlink(systemSettingsComposite,
 				Messages.AbstractRepositorySettingsPage_Change_Settings, SWT.NULL);
 		changeProxySettingsLink.setBackground(compositeContainer.getBackground());
 		changeProxySettingsLink.addHyperlinkListener(new IHyperlinkListener() {
