@@ -77,7 +77,7 @@ public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObj
 		this.localKeyAttribute = localKeyAttribute;
 		this.childType = childType;
 
-		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("reviews", new ReviewsResourceFactory());
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("reviews", new ReviewsResourceFactory()); //$NON-NLS-1$
 
 		ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(
 				ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
@@ -140,7 +140,7 @@ public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObj
 		} catch (Exception e) {
 			//If anything else goes wrong, just delete and recreate the file anyway!
 			StatusHandler.log(new Status(IStatus.ERROR, ReviewsEditPluginActivator.PLUGIN_ID,
-					"Problem with model file. Will be recreated at: " + uri, e));
+					"Problem with model file. Will be recreated at: " + uri, e)); //$NON-NLS-1$
 			file.delete();
 			resource = editingDomain.getResourceSet().getResource(uri, loadOnDemand);
 		}
@@ -154,7 +154,7 @@ public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObj
 			}
 		}
 		if (eClass == null) {
-			throw new RuntimeException("No instances of " + className + " found in "
+			throw new RuntimeException("No instances of " + className + " found in " //$NON-NLS-1$ //$NON-NLS-2$
 					+ emfFactory.getEPackage().getEClassifiers());
 		}
 
@@ -175,11 +175,11 @@ public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObj
 				save(resource);
 			} catch (AssertionError e) {
 				StatusHandler.log(new Status(IStatus.ERROR, ReviewsEditPluginActivator.PLUGIN_ID,
-						"Bad provider defintion. Local key attribute must be reference of class child type. Local Key: "
-								+ localKeyAttribute.getName() + " Class: " + eClass.getName(), e));
+						"Bad provider defintion. Local key attribute must be reference of class child type. Local Key: " //$NON-NLS-1$
+								+ localKeyAttribute.getName() + " Class: " + eClass.getName(), e)); //$NON-NLS-1$
 			} catch (ClassCastException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, ReviewsEditPluginActivator.PLUGIN_ID,
-						"Bad provider definition. Root remote refernce must match child type.", e));
+						"Bad provider definition. Root remote refernce must match child type.", e)); //$NON-NLS-1$
 			}
 		}
 
@@ -285,7 +285,7 @@ public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObj
 		try {
 			resource.save(saveOptions);
 		} catch (IOException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ReviewsEditPluginActivator.PLUGIN_ID, "Couldn't save model.", e));
+			StatusHandler.log(new Status(IStatus.ERROR, ReviewsEditPluginActivator.PLUGIN_ID, "Couldn't save model.", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -302,7 +302,7 @@ public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObj
 				FileUtils.deleteDirectory(file);
 			} catch (IOException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, ReviewsEditPluginActivator.PLUGIN_ID,
-						"Problem when deleting cache.", e));
+						"Problem when deleting cache.", e)); //$NON-NLS-1$
 			}
 		}
 	}

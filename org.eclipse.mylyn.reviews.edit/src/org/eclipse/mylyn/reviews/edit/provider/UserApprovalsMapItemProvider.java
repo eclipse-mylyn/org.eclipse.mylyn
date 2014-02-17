@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  */
@@ -18,7 +18,6 @@ import java.util.Map.Entry;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -27,10 +26,8 @@ import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
-import org.eclipse.emf.edit.provider.ViewerNotification;
 import org.eclipse.mylyn.reviews.core.model.IApprovalType;
 import org.eclipse.mylyn.reviews.core.model.IReviewerEntry;
-import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
 
@@ -116,11 +113,11 @@ public class UserApprovalsMapItemProvider extends ItemProviderAdapter implements
 	public String getText(Object object) {
 		Map.Entry<IUser, IReviewerEntry> userApprovalsMap = (Map.Entry<IUser, IReviewerEntry>) object;
 		Map<IApprovalType, Integer> approvals = userApprovalsMap.getValue().getApprovals();
-		String approvalDescs = "";
+		String approvalDescs = ""; //$NON-NLS-1$
 		int i = 0;
 		for (Entry<IApprovalType, Integer> approval : approvals.entrySet()) {
-			approvalDescs += approval.getKey().getName() + ": " + approval.getValue();
-			approvalDescs += (i++ > 0 ? ", " : "");
+			approvalDescs += approval.getKey().getName() + ": " + approval.getValue(); //$NON-NLS-1$
+			approvalDescs += (i++ > 0 ? ", " : ""); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return "" + userApprovalsMap.getKey().getDisplayName() + " -> " + approvalDescs; //$NON-NLS-1$ //$NON-NLS-2$
 	}
