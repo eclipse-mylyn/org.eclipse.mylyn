@@ -49,4 +49,10 @@ public class BreakpointsTestUtil {
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		return project;
 	}
+
+	public static void setManageBreakpointsPreference(boolean enabled) {
+		DebugUiPlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(BreakpointsContextContributor.AUTO_MANAGE_BREAKPOINTS, enabled);
+	}
 }

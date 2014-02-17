@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.debug.ui;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -22,6 +23,7 @@ import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Sebastian Schmidt
@@ -60,8 +62,9 @@ public class BreakpointsStructureBridge extends AbstractContextStructureBridge {
 				// FIXME: there are better *unique* random number generators than Math.random...
 				object.getMarker().setAttribute(ATTRIBUTE_ID, "breakpoint[" + (Math.random() * 10000) + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 			} catch (CoreException e) {
-				StatusHandler.log(new Status(IStatus.WARNING, DebugUiPlugin.ID_PLUGIN,
-						"error generating unique breakpoint id")); //$NON-NLS-1$
+				IResource resource = object.getMarker().getResource();
+				StatusHandler.log(new Status(IStatus.WARNING, DebugUiPlugin.ID_PLUGIN, NLS.bind(
+						"Breakpoint could not be updated for resource {0} ", resource.getFullPath()))); //$NON-NLS-1$
 			}
 		}
 	}

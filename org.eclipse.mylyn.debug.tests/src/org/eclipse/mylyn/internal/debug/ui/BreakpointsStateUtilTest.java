@@ -50,6 +50,7 @@ public class BreakpointsStateUtilTest {
 
 	@Before
 	public void setUp() throws Exception {
+		BreakpointsTestUtil.setManageBreakpointsPreference(true);
 		BreakpointsTestUtil.createProject();
 		deleteAllBreakpoints();
 		breakpoint = BreakpointsTestUtil.createTestBreakpoint();

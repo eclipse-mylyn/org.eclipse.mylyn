@@ -30,6 +30,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  * @author Sebastian Schmidt
  */
 public class BreakpointsContextContributor extends AbstractContextContributor {
+	public static final String AUTO_MANAGE_BREAKPOINTS = "org.eclipse.mylyn.context.breakpoints.auto.manage"; //$NON-NLS-1$
 
 	private BreakpointsListener breakpointsListener;
 
@@ -48,15 +49,23 @@ public class BreakpointsContextContributor extends AbstractContextContributor {
 	}
 
 	public void contextChanged(ContextChangeEvent event) {
+		if (!DebugUiPlugin.getDefault().getPreferenceStore().getBoolean(AUTO_MANAGE_BREAKPOINTS)) {
+			if (event.getEventKind() == ContextChangeKind.DEACTIVATED && breakpointsListener != null) {
+				DebugPlugin.getDefault().getBreakpointManager().removeBreakpointListener(breakpointsListener);
+			}
+			return;
+		}
 		BreakpointsStateUtil stateUtil = new BreakpointsStateUtil(Platform.getStateLocation(DebugUiPlugin.getDefault()
 				.getBundle()));
-		if (event.getEventKind().equals(ContextChangeKind.PRE_ACTIVATED)) {
+		if (event.getEventKind() == ContextChangeKind.PRE_ACTIVATED) {
 			stateUtil.saveState();
 			breakpointsListener = new BreakpointsListener();
 			DebugPlugin.getDefault().getBreakpointManager().addBreakpointListener(breakpointsListener);
 			BreakpointsContextUtil.importBreakpoints(event.getContext(), new NullProgressMonitor());
-		} else if (event.getEventKind().equals(ContextChangeKind.DEACTIVATED)) {
-			DebugPlugin.getDefault().getBreakpointManager().removeBreakpointListener(breakpointsListener);
+		} else if (event.getEventKind() == ContextChangeKind.DEACTIVATED) {
+			if (breakpointsListener != null) {
+				DebugPlugin.getDefault().getBreakpointManager().removeBreakpointListener(breakpointsListener);
+			}
 			BreakpointsContextUtil.removeBreakpoints(getContextBreakpoints(event.getContext()));
 			stateUtil.restoreState();
 		}

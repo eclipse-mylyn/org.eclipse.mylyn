@@ -168,4 +168,22 @@
       </visibility>
      </objectContribution>
    </extension>
+    
+   <extension point="org.eclipse.ui.preferencePages">
+      <page 
+         name="%BreakpointsPreferencePage.name"
+         class="org.eclipse.mylyn.internal.debug.ui.BreakpointsPreferencePage"
+         id="org.eclipse.mylyn.debug.ui.breakpoints"
+         category="org.eclipse.mylyn.context.ui.preferences">
+         <keywordReference id="org.eclipse.mylyn.debug.ui.keywords"/>
+      </page> 
+   </extension>
+   
+  <extension
+   		point="org.eclipse.ui.keywords">
+      <keyword
+            label="%keywords.label"
+            id="org.eclipse.mylyn.debug.ui.keywords"/>
+   </extension>
+   
 </plugin>

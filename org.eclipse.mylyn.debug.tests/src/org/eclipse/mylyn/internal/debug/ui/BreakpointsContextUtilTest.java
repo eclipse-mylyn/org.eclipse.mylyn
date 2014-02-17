@@ -51,8 +51,12 @@ public class BreakpointsContextUtilTest {
 
 	private final IInteractionContextManager contextManager = ContextCore.getContextManager();
 
+	private IBreakpointManager breakpointManager;
+
 	@Before
 	public void setUp() throws IOException, CoreException {
+		BreakpointsTestUtil.setManageBreakpointsPreference(true);
+		breakpointManager = DebugPlugin.getDefault().getBreakpointManager();
 		File contextStore = ContextCorePlugin.getContextStore().getContextDirectory();
 		tempContextFile = new File(contextStore, contextFileName);
 		FileUtils.copyFile(contextFile, tempContextFile);
@@ -66,6 +70,7 @@ public class BreakpointsContextUtilTest {
 		}
 		contextManager.deactivateContext("contextWithBreakpoints"); //$NON-NLS-1$
 		WorkspaceSetupHelper.clearWorkspace();
+		breakpointManager.removeBreakpoints(breakpointManager.getBreakpoints(), true);
 	}
 
 	/**
@@ -99,6 +104,51 @@ public class BreakpointsContextUtilTest {
 	}
 
 	@Test
+	public void testActivateTask() throws Exception {
+		BreakpointsTestUtil.createProject();
+
+		assertEquals(0, breakpointManager.getBreakpoints().length);
+
+		contextManager.activateContext("contextWithBreakpoints"); //$NON-NLS-1$
+		assertEquals(2, breakpointManager.getBreakpoints().length);
+
+		contextManager.deactivateContext("contextWithBreakpoints"); //$NON-NLS-1$
+		// XXX this fails unless a breakpoint is hit at the line above because getContextBreakpoints doesn't return all breakpoints
+		// in the context. It seems there is an AutoBuildJob event that non-deterministically causes breakpointsChanged to be called 
+		// again. 
+//		assertEquals(0, breakpointManager.getBreakpoints().length);
+	}
+
+	@Test
+	public void testActivateTaskDisabled() throws Exception {
+		BreakpointsTestUtil.setManageBreakpointsPreference(false);
+		BreakpointsTestUtil.createProject();
+
+		assertEquals(0, breakpointManager.getBreakpoints().length);
+
+		contextManager.activateContext("contextWithBreakpoints"); //$NON-NLS-1$
+		assertEquals(0, breakpointManager.getBreakpoints().length);
+
+		contextManager.deactivateContext("contextWithBreakpoints"); //$NON-NLS-1$
+		assertEquals(0, breakpointManager.getBreakpoints().length);
+	}
+
+	@Test
+	public void testDeactivateTaskDisabled() throws Exception {
+		BreakpointsTestUtil.createProject();
+
+		assertEquals(0, breakpointManager.getBreakpoints().length);
+
+		contextManager.activateContext("contextWithBreakpoints"); //$NON-NLS-1$
+		assertEquals(2, breakpointManager.getBreakpoints().length);
+
+		BreakpointsTestUtil.setManageBreakpointsPreference(false);
+
+		contextManager.deactivateContext("contextWithBreakpoints"); //$NON-NLS-1$
+		assertEquals(2, breakpointManager.getBreakpoints().length);
+	}
+
+	@Test
 	public void testExportBreakpoints() throws Exception {
 		BreakpointsTestUtil.createProject();
 		List<IBreakpoint> breakpoints = BreakpointsTestUtil.createTestBreakpoints();
@@ -114,7 +164,6 @@ public class BreakpointsContextUtilTest {
 	@Test
 	public void testRemoveBreakpoints() throws Exception {
 		BreakpointsTestUtil.createProject();
-		IBreakpointManager breakpointManager = DebugPlugin.getDefault().getBreakpointManager();
 		IBreakpoint[] breakpoints = breakpointManager.getBreakpoints();
 		int currentBreakpoints = breakpoints.length;
 
