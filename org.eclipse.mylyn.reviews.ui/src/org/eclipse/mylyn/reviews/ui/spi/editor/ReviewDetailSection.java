@@ -161,7 +161,7 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 							approvalValueLabel.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 						}
 						rankingText += value;
-						approvalValueLabel.setToolTipText(value + "  " + approvalType.getName());
+						approvalValueLabel.setToolTipText(value + "  " + approvalType.getName()); //$NON-NLS-1$
 					}
 					approvalValueLabel.setText(rankingText);
 				}
@@ -210,7 +210,7 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 		for (final IChange change : changes) {
 			Link link = new Link(composite, SWT.NONE);
 			String changeStatus = change.getState() != null ? NLS.bind(" ({0})",
-					String.valueOf(change.getState().getName())) : " ";
+					String.valueOf(change.getState().getName())) : " "; //$NON-NLS-1$
 			String ownerName = change.getOwner().getDisplayName();
 			link.setText(NLS.bind("<a>{0}</a>: {1} {3} by {2}", new String[] { StringUtils.left(change.getKey(), 9),
 					change.getSubject(), ownerName, changeStatus }));

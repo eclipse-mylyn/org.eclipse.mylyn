@@ -284,12 +284,12 @@ public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHove
 
 		IVerticalRulerInfo info = null;
 		try {
-			Method declaredMethod2 = SourceViewer.class.getDeclaredMethod("getVerticalRuler");
+			Method declaredMethod2 = SourceViewer.class.getDeclaredMethod("getVerticalRuler"); //$NON-NLS-1$
 			declaredMethod2.setAccessible(true);
 			info = (CompositeRuler) declaredMethod2.invoke(currentSourceViewer);
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
-					"Error getting CompareEditor's vertical ruler. ", e));
+					"Error getting CompareEditor's vertical ruler. ", e)); //$NON-NLS-1$
 		}
 
 		if (info == null) {

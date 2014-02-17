@@ -159,10 +159,10 @@ public class ReviewSetContentSection {
 				message = NLS.bind("{0}", time);
 			}
 			if (itemListObserver != null && itemListObserver.getConsumer().isRetrieving()) {
-				message += " " + org.eclipse.mylyn.internal.reviews.ui.Messages.Reviews_RetrievingContents;
+				message += " " + org.eclipse.mylyn.internal.reviews.ui.Messages.Reviews_RetrievingContents; //$NON-NLS-1$
 			}
 		} else {
-			message = org.eclipse.mylyn.internal.reviews.ui.Messages.Reviews_UpdateFailure + ": "
+			message = org.eclipse.mylyn.internal.reviews.ui.Messages.Reviews_UpdateFailure + ": " //$NON-NLS-1$
 					+ itemListObserver.getConsumer().getStatus().getMessage();
 		}
 

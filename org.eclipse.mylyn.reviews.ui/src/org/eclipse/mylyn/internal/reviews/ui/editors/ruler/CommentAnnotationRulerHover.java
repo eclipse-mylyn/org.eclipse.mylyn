@@ -82,7 +82,7 @@ public class CommentAnnotationRulerHover implements IAnnotationHover, IAnnotatio
 	 * {@link IAnnotationHoverExtension2} which supersede this so there's no point in implementing it.
 	 */
 	public String getHoverInfo(ISourceViewer sourceViewer, int lineNumber) {
-		throw new UnsupportedOperationException("This API should not be used");
+		throw new UnsupportedOperationException("This API should not be used"); //$NON-NLS-1$
 	}
 
 	public IInformationControlCreator getHoverControlCreator() {
@@ -258,12 +258,12 @@ public class CommentAnnotationRulerHover implements IAnnotationHover, IAnnotatio
 
 		IVerticalRulerInfo info = null;
 		try {
-			Method declaredMethod2 = SourceViewer.class.getDeclaredMethod("getVerticalRuler");
+			Method declaredMethod2 = SourceViewer.class.getDeclaredMethod("getVerticalRuler"); //$NON-NLS-1$
 			declaredMethod2.setAccessible(true);
 			info = (CompositeRuler) declaredMethod2.invoke(currentSourceViewer);
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
-					"Error getting CompareEditor's vertical ruler. ", e));
+					"Error getting CompareEditor's vertical ruler. ", e)); //$NON-NLS-1$
 		}
 
 		if (info == null) {

@@ -79,7 +79,7 @@ public abstract class AbstractReviewTaskEditorPage extends AbstractTaskEditorPag
 	private void checkIfModelIsCached() {
 		AbstractRemoteEditFactoryProvider factoryProvider = (AbstractRemoteEditFactoryProvider) getFactoryProvider();
 		String reviewPath = factoryProvider.getDataLocator()
-				.getFilePath(factoryProvider.getContainerSegment(), "Review", getTask().getTaskId(), "reviews")
+				.getFilePath(factoryProvider.getContainerSegment(), "Review", getTask().getTaskId(), "reviews") //$NON-NLS-1$ //$NON-NLS-2$
 				.toOSString();
 		if (!new File(reviewPath).exists()) {
 			getTaskEditor().setMessage(Messages.AbstractTaskEditorPage_Synchronize_to_retrieve_task_data,
@@ -119,7 +119,7 @@ public abstract class AbstractReviewTaskEditorPage extends AbstractTaskEditorPag
 
 	public IReviewRemoteFactoryProvider getFactoryProvider() {
 		// obtain from editor input instead of calling getTaskRepository() to avoid NPE when task model could not be loaded
-		// note that this would not return the expected result for unsubmitted tasks which is not supported for reviews 
+		// note that this would not return the expected result for unsubmitted tasks which is not supported for reviews
 		TaskRepository repository = getTaskEditor().getTaskEditorInput().getTaskRepository();
 		ReviewsConnector connector = (ReviewsConnector) TasksUi.getRepositoryConnector(repository.getConnectorKind());
 		return (IReviewRemoteFactoryProvider) connector.getReviewClient(repository).getFactoryProvider();

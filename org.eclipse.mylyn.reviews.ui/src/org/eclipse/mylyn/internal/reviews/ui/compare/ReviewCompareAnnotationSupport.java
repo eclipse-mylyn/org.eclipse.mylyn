@@ -221,7 +221,7 @@ public class ReviewCompareAnnotationSupport {
 					}
 				} catch (Exception e) {
 					StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
-							"Error attaching annotation hover", e));
+							"Error attaching annotation hover", e)); //$NON-NLS-1$
 				}
 			}
 		});

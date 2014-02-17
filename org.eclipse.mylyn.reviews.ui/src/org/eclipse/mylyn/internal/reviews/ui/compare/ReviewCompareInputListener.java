@@ -45,9 +45,9 @@ import org.eclipse.mylyn.internal.reviews.ui.annotations.CommentInformationContr
 import org.eclipse.mylyn.internal.reviews.ui.annotations.IReviewCompareSourceViewer;
 import org.eclipse.mylyn.internal.reviews.ui.annotations.ReviewAnnotationModel;
 import org.eclipse.mylyn.internal.reviews.ui.editors.ruler.CommentAnnotationRulerColumn;
+import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
-import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.swt.custom.LineBackgroundEvent;
 import org.eclipse.swt.custom.LineBackgroundListener;
 import org.eclipse.swt.custom.StyledText;
@@ -157,8 +157,7 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 				} else {
 					// log error since we assume the initial text contains all slaveTexts.
 					StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
-							"Could not find text offset for annotation highlighting"
-									+ " - current text not contained in initial text."));
+							"Could not find text offset for annotation highlighting - current text not contained in initial text.")); //$NON-NLS-1$
 				}
 			}
 			return 0;
@@ -248,7 +247,7 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 
 		// hack for Eclipse 3.5
 		try {
-			Field hoverControlCreator = TextViewer.class.getDeclaredField("fHoverControlCreator");
+			Field hoverControlCreator = TextViewer.class.getDeclaredField("fHoverControlCreator"); //$NON-NLS-1$
 			hoverControlCreator.setAccessible(true);
 			hoverControlCreator.set(sourceViewer, new CommentInformationControlCreator());
 		} catch (Throwable t) {
@@ -257,18 +256,18 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 
 		// hack for Eclipse 3.5
 		try {
-			Method ensureMethod = sourceViewerClazz.getDeclaredMethod("ensureAnnotationHoverManagerInstalled");
+			Method ensureMethod = sourceViewerClazz.getDeclaredMethod("ensureAnnotationHoverManagerInstalled"); //$NON-NLS-1$
 			ensureMethod.setAccessible(true);
 			ensureMethod.invoke(sourceViewer);
 		} catch (Throwable t) {
 			// ignore as it may not exist in other versions
 		}
 
-		Field hoverManager = SourceViewer.class.getDeclaredField("fVerticalRulerHoveringController");
+		Field hoverManager = SourceViewer.class.getDeclaredField("fVerticalRulerHoveringController"); //$NON-NLS-1$
 		hoverManager.setAccessible(true);
 		AnnotationBarHoverManager manager = (AnnotationBarHoverManager) hoverManager.get(sourceViewer);
 		if (manager != null) {
-			Field annotationHover = AnnotationBarHoverManager.class.getDeclaredField("fAnnotationHover");
+			Field annotationHover = AnnotationBarHoverManager.class.getDeclaredField("fAnnotationHover"); //$NON-NLS-1$
 			annotationHover.setAccessible(true);
 			IAnnotationHover hover = (IAnnotationHover) annotationHover.get(manager);
 			annotationHover.set(manager, new CommentAnnotationHover(hover));
@@ -308,9 +307,9 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 			//} else {
 			try {
 				Class<SourceViewer> sourceViewerClazz = SourceViewer.class;
-				Field declaredField2 = sourceViewerClazz.getDeclaredField("fVisualAnnotationModel");
+				Field declaredField2 = sourceViewerClazz.getDeclaredField("fVisualAnnotationModel"); //$NON-NLS-1$
 				declaredField2.setAccessible(true);
-				Method declaredMethod = sourceViewerClazz.getDeclaredMethod("createVisualAnnotationModel",
+				Method declaredMethod = sourceViewerClazz.getDeclaredMethod("createVisualAnnotationModel", //$NON-NLS-1$
 						IAnnotationModel.class);
 				declaredMethod.setAccessible(true);
 				originalAnnotationModel = (IAnnotationModel) declaredMethod.invoke(sourceViewer, annotationModel);
@@ -323,7 +322,7 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 				createHighlighting(sourceViewerClazz);
 			} catch (Throwable t) {
 				StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
-						"Error attaching annotation model", t));
+						"Error attaching annotation model", t)); //$NON-NLS-1$
 			}
 			//}
 		}
@@ -367,7 +366,7 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 
 		OverviewRuler ruler = new OverviewRuler(new DefaultMarkerAnnotationAccess(), 15, EditorsPlugin.getDefault()
 				.getSharedTextColors());
-		Field compositeField = sourceViewerClazz.getDeclaredField("fComposite");
+		Field compositeField = sourceViewerClazz.getDeclaredField("fComposite"); //$NON-NLS-1$
 		compositeField.setAccessible(true);
 
 		ruler.createControl((Composite) compositeField.get(sourceViewer), sourceViewer);
@@ -392,23 +391,23 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 			}
 		});
 
-		Field overViewRulerField = sourceViewerClazz.getDeclaredField("fOverviewRuler");
+		Field overViewRulerField = sourceViewerClazz.getDeclaredField("fOverviewRuler"); //$NON-NLS-1$
 		overViewRulerField.setAccessible(true);
 
 		if (overViewRulerField.get(sourceViewer) == null) {
 			overViewRulerField.set(sourceViewer, ruler);
 		}
 
-		Method declareMethod = sourceViewerClazz.getDeclaredMethod("ensureOverviewHoverManagerInstalled");
+		Method declareMethod = sourceViewerClazz.getDeclaredMethod("ensureOverviewHoverManagerInstalled"); //$NON-NLS-1$
 		declareMethod.setAccessible(true);
 		declareMethod.invoke(sourceViewer);
 		// overviewRuler is null
 
-		Field hoverManager = sourceViewerClazz.getDeclaredField("fOverviewRulerHoveringController");
+		Field hoverManager = sourceViewerClazz.getDeclaredField("fOverviewRulerHoveringController"); //$NON-NLS-1$
 		hoverManager.setAccessible(true);
 		AnnotationBarHoverManager manager = (AnnotationBarHoverManager) hoverManager.get(sourceViewer);
 		if (manager != null) {
-			Field annotationHover = AnnotationBarHoverManager.class.getDeclaredField("fAnnotationHover");
+			Field annotationHover = AnnotationBarHoverManager.class.getDeclaredField("fAnnotationHover"); //$NON-NLS-1$
 			annotationHover.setAccessible(true);
 			IAnnotationHover hover = (IAnnotationHover) annotationHover.get(manager);
 			annotationHover.set(manager, new CommentAnnotationHover(null));
@@ -416,7 +415,7 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 		sourceViewer.showAnnotations(true);
 		sourceViewer.showAnnotationsOverview(true);
 
-		declareMethod = sourceViewerClazz.getDeclaredMethod("showAnnotationsOverview", new Class[] { Boolean.TYPE });
+		declareMethod = sourceViewerClazz.getDeclaredMethod("showAnnotationsOverview", new Class[] { Boolean.TYPE }); //$NON-NLS-1$
 		declareMethod.setAccessible(true);
 	}
 
@@ -426,7 +425,7 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 
 		forceCustomAnnotationHover();
 
-		Method declaredMethod2 = sourceViewerClazz.getDeclaredMethod("getVerticalRuler");
+		Method declaredMethod2 = sourceViewerClazz.getDeclaredMethod("getVerticalRuler"); //$NON-NLS-1$
 		declaredMethod2.setAccessible(true);
 		CompositeRuler ruler = (CompositeRuler) declaredMethod2.invoke(sourceViewer);
 		boolean hasDecorator = false;

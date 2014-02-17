@@ -79,15 +79,15 @@ import org.eclipse.ui.navigator.INavigatorFilterService;
  */
 public class ReviewExplorer extends CommonNavigator {
 
-	public static final String SHOW_VIEW_LIST = "showViewList";
+	public static final String SHOW_VIEW_LIST = "showViewList"; //$NON-NLS-1$
 
-	public static final String FILTER_FOR_COMMENTS = "filterForComments";
+	public static final String FILTER_FOR_COMMENTS = "filterForComments"; //$NON-NLS-1$
 
-	private static final String TREE_ACTION_GROUP = "tree";
+	private static final String TREE_ACTION_GROUP = "tree"; //$NON-NLS-1$
 
-	private static final String FILTER_ACTION_GROUP = "filters";
+	private static final String FILTER_ACTION_GROUP = "filters"; //$NON-NLS-1$
 
-	private static final String REFRESH_ACTION_GROUP = "refresh";
+	private static final String REFRESH_ACTION_GROUP = "refresh"; //$NON-NLS-1$
 
 	private RefreshReviewsAction refreshAction;
 
@@ -448,7 +448,7 @@ public class ReviewExplorer extends CommonNavigator {
 		}
 		manager.add(new Separator(FILTER_ACTION_GROUP));
 		manager.appendToGroup(FILTER_ACTION_GROUP, new FilterNonCommentsReviewsAction());
-		manager.add(new Separator("Separator"));
+		manager.add(new Separator("Separator")); //$NON-NLS-1$
 
 		super.createPartControl(aParent);
 

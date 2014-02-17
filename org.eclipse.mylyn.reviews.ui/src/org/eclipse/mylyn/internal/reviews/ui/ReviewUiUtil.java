@@ -37,7 +37,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
  */
 public final class ReviewUiUtil {
 
-	public static final String CONFLUENCE_WIKI_TASK_EDITOR_EXTENSION = "org.eclipse.mylyn.wikitext.tasks.ui.editor.confluenceTaskEditorExtension";
+	public static final String CONFLUENCE_WIKI_TASK_EDITOR_EXTENSION = "org.eclipse.mylyn.wikitext.tasks.ui.editor.confluenceTaskEditorExtension"; //$NON-NLS-1$
 
 	private ReviewUiUtil() {
 	}

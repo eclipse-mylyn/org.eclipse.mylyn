@@ -152,7 +152,7 @@ public abstract class ExpandablePart<T extends IComment, V extends ExpandablePar
 
 		String annotationsText = getAnnotationText();
 		if (annotationsText == null) {
-			annotationsText = "";
+			annotationsText = ""; //$NON-NLS-1$
 		}
 		if (annotationsTextLabel != null && !annotationsTextLabel.isDisposed()) {
 			annotationsTextLabel.setText(annotationsText);
@@ -245,9 +245,9 @@ public abstract class ExpandablePart<T extends IComment, V extends ExpandablePar
 
 		annotationsComposite.setLayout(rowLayout);
 
-		annotationImageLabel = toolkit.createLabel(annotationsComposite, "");
+		annotationImageLabel = toolkit.createLabel(annotationsComposite, ""); //$NON-NLS-1$
 
-		annotationsTextLabel = toolkit.createLabel(annotationsComposite, "");
+		annotationsTextLabel = toolkit.createLabel(annotationsComposite, ""); //$NON-NLS-1$
 
 		createCustomAnnotations(annotationsComposite, toolkit);
 

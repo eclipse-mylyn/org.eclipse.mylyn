@@ -70,7 +70,7 @@ public abstract class AbstractCommentPart<V extends ExpandablePart<IComment, V>>
 
 	@Override
 	protected String getSectionHeaderText() {
-		String headerText = comment.getAuthor().getDisplayName() + "   ";
+		String headerText = comment.getAuthor().getDisplayName() + "   "; //$NON-NLS-1$
 		headerText += DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(
 				comment.getCreationDate());
 		return headerText;
@@ -176,20 +176,16 @@ public abstract class AbstractCommentPart<V extends ExpandablePart<IComment, V>>
 	private String getCommentText() {
 		String commentText = comment.getDescription();
 
-		String customFieldsString = "";
+		String customFieldsString = ""; //$NON-NLS-1$
 		if (customFieldsString.length() > 0) {
-			commentText += "  " + customFieldsString;
+			commentText += "  " + customFieldsString; //$NON-NLS-1$
 		}
 		return commentText;
 	}
 
 	@Override
 	protected String getAnnotationText() {
-		String text = "";
-		if (comment.isDraft()) {
-			text = "DRAFT ";
-		}
-		return text;
+		return comment.isDraft() ? "DRAFT " : ""; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private Control createReadOnlyText(FormToolkit toolkit, Composite composite, String value) {

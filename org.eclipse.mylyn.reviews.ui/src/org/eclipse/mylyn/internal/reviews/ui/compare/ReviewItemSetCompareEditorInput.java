@@ -88,7 +88,7 @@ public class ReviewItemSetCompareEditorInput extends ReviewItemCompareEditorInpu
 	public void mergeChild(FileItemNode node) {
 		if (node.getChildren().length == 1 && isDirectory(node.getChildren()[0])) {
 			FileItemNode child = (FileItemNode) node.getChildren()[0];
-			node.setName(node.getName() + "/" + child.getName());
+			node.setName(node.getName() + "/" + child.getName()); //$NON-NLS-1$
 			node.remove(child);
 			for (IDiffElement element : child.getChildren()) {
 				node.add(element);
@@ -140,7 +140,7 @@ public class ReviewItemSetCompareEditorInput extends ReviewItemCompareEditorInpu
 				Field declaredField = clazz.getDeclaredField("isConfigured"); //$NON-NLS-1$
 				declaredField.setAccessible(true);
 				declaredField.setBoolean(textMergeViewer, false);
-				Method declaredMethod = clazz.getDeclaredMethod("updateContent", Object.class, Object.class,
+				Method declaredMethod = clazz.getDeclaredMethod("updateContent", Object.class, Object.class, //$NON-NLS-1$
 						Object.class);
 				declaredMethod.setAccessible(true);
 				declaredMethod.invoke(textMergeViewer, null, input.getLeft(), input.getRight());

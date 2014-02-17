@@ -234,7 +234,7 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 						event.annotationAdded(ca);
 					}
 				} catch (BadLocationException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, "Unable to add annotation.",
+					StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, "Unable to add annotation.", //$NON-NLS-1$
 							e));
 				}
 			}

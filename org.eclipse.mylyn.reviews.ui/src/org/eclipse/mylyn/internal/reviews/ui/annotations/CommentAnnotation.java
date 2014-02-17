@@ -28,7 +28,7 @@ public class CommentAnnotation extends Annotation {
 
 	public static final String COMMENT_ANNOTATION_ID = "org.eclipse.mylyn.reviews.ui.comment.Annotation"; //$NON-NLS-1$
 
-	public static final String COMMENT_ANNOTATION_ME_ID = "org.eclipse.mylyn.reviews.ui.comment.AnnotationMe";
+	public static final String COMMENT_ANNOTATION_ME_ID = "org.eclipse.mylyn.reviews.ui.comment.AnnotationMe"; //$NON-NLS-1$
 
 	private final Position position;
 

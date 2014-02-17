@@ -79,7 +79,7 @@ public abstract class AbstractReviewSection extends AbstractTaskEditorSection im
 		Control textClient = section.getTextClient();
 		if (textClient instanceof Label && !textClient.isDisposed()) {
 			final Label textClientLabel = (Label) textClient;
-			textClientLabel.setText("  " + message);
+			textClientLabel.setText("  " + message); //$NON-NLS-1$
 			textClientLabel.getParent().layout(true, true);
 		}
 	}

@@ -64,9 +64,9 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 
 	static final int MAXIMUM_COMMENT_LENGTH = 300;
 
-	static final SimpleDateFormat COMMENT_DATE_FORMAT = new SimpleDateFormat("yyyy.MM.dd HH:mm a");
+	static final SimpleDateFormat COMMENT_DATE_FORMAT = new SimpleDateFormat("yyyy.MM.dd HH:mm a"); //$NON-NLS-1$
 
-	static final SimpleDateFormat EXTENDED_DATE_FORMAT = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
+	static final SimpleDateFormat EXTENDED_DATE_FORMAT = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z"); //$NON-NLS-1$
 
 	public final static Styler AUTHOR_STYLE = new Styler() {
 		@Override
@@ -183,7 +183,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 			}
 			if (element instanceof IFileItem) {
 				//Note, we want platform independent separator here.
-				return StringUtils.substringAfterLast(((IFileItem) element).getName(), "/");
+				return StringUtils.substringAfterLast(((IFileItem) element).getName(), "/"); //$NON-NLS-1$
 			}
 			if (element instanceof IReviewItem) {
 				return ((IReviewItem) element).getName();
@@ -207,7 +207,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 			if (element instanceof ILineLocation) {
 				int min = ((ILineLocation) element).getRangeMin();
 				int max = ((ILineLocation) element).getRangeMax();
-				String text = min + "";
+				String text = Integer.toString(min);
 				if (min != max) {
 					text += "-" + max;
 				}
@@ -237,12 +237,12 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 			if (element instanceof IComment) {
 				IComment comment = (IComment) element;
 				String desc = comment.getDescription();
-				desc = StringUtils.replace(desc, "\r\n", "\n");
-				String[] lines = desc.split("\n");
+				desc = StringUtils.replace(desc, "\r\n", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				String[] lines = desc.split("\n"); //$NON-NLS-1$
 				List<String> seperated = new ArrayList<String>();
 				for (String line : lines) {
-					String newLine = "";
-					String[] splitByWholeSeparator = StringUtils.splitByWholeSeparator(line, " ");
+					String newLine = ""; //$NON-NLS-1$
+					String[] splitByWholeSeparator = StringUtils.splitByWholeSeparator(line, " "); //$NON-NLS-1$
 					int count = 0;
 					for (String word : splitByWholeSeparator) {
 						count += word.length();
@@ -252,14 +252,14 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 							count = word.length();
 						} else {
 							if (count > word.length()) {
-								newLine += " ";
+								newLine += " "; //$NON-NLS-1$
 							}
 							newLine += word;
 						}
 					}
 					seperated.add(newLine);
 				}
-				return StringUtils.join(seperated, "\n");
+				return StringUtils.join(seperated, "\n"); //$NON-NLS-1$
 			}
 			if (element instanceof IFileItem) {
 				IFileItem fileItem = (IFileItem) element;
@@ -469,9 +469,9 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 					}
 					commentText = StringUtils.rightPad(commentText, MAXIMUM_COMMENT_LENGTH - textLength);
 
-					styledString.append(authorText + " ", AUTHOR_STYLE);
-					styledString.append(commentText + " ", COMMENT_STYLE);
-					styledString.append(getText(comment.getCreationDate()) + " ", COMMENT_DATE_STYLE);
+					styledString.append(authorText + " ", AUTHOR_STYLE); //$NON-NLS-1$
+					styledString.append(commentText + " ", COMMENT_STYLE); //$NON-NLS-1$
+					styledString.append(getText(comment.getCreationDate()) + " ", COMMENT_DATE_STYLE); //$NON-NLS-1$
 				} else {
 					styledString.append(text);
 				}
@@ -481,7 +481,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 				addCommentContainerStatsStyle(element, styledString);
 				if (element instanceof IFileItem) {
 					IReviewItem item = (IReviewItem) element;
-					styledString.append("  " + item.getName(), StyledString.QUALIFIER_STYLER);
+					styledString.append("  " + item.getName(), StyledString.QUALIFIER_STYLER); //$NON-NLS-1$
 				}
 			} else {
 				styledString.append(element.toString());
@@ -594,15 +594,15 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 			for (ILocation location : comment.getLocations()) {
 				locationStrings[index++] = ITEMS_COLUMN.getText(location);
 			}
-			String locationString = StringUtils.join(locationStrings, ", ");
-			styledString.append(" " + locationString, LINE_NUMBER_STYLE);
+			String locationString = StringUtils.join(locationStrings, ", "); //$NON-NLS-1$
+			styledString.append(" " + locationString, LINE_NUMBER_STYLE); //$NON-NLS-1$
 		}
 	}
 
 	public static void addFilePathStyle(Object element, StyledString styledString) {
 		if (element instanceof IFileItem) {
 			IReviewItem item = (IReviewItem) element;
-			styledString.append("  " + item.getName(), StyledString.QUALIFIER_STYLER);
+			styledString.append("  " + item.getName(), StyledString.QUALIFIER_STYLER); //$NON-NLS-1$
 		}
 	}
 
@@ -616,7 +616,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 
 	public static String getIndexText(IComment comment) {
 		long index = comment.getIndex();
-		return index < Long.MAX_VALUE ? index + "" : "";
+		return index < Long.MAX_VALUE ? Long.toString(index) : ""; //$NON-NLS-1$
 	}
 
 	public static String getStatsText(ICommentContainer container) {

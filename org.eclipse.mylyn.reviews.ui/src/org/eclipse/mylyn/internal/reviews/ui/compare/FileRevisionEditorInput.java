@@ -48,7 +48,7 @@ public class FileRevisionEditorInput extends PlatformObject implements IWorkbenc
 			//This should not happen at this point, because we already checked that the contents was valid.
 			//In any case, this can be safely ignored as we will fall back to using the Review contents instead.
 			StatusHandler.log(new Status(IStatus.WARNING, ReviewsUiPlugin.PLUGIN_ID,
-					"Cannot retrieve file revision contents from local repository, defaulting to review contents instead"));
+					"Cannot retrieve file revision contents from local repository, defaulting to review contents instead")); //$NON-NLS-1$
 		}
 		return null;
 	}
