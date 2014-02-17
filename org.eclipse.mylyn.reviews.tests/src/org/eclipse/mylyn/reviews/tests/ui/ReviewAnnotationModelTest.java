@@ -23,6 +23,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.NotificationImpl;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.mylyn.internal.reviews.ui.annotations.CommentAnnotation;
 import org.eclipse.mylyn.internal.reviews.ui.annotations.ReviewAnnotationModel;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileVersion;
@@ -85,7 +86,7 @@ public class ReviewAnnotationModelTest extends TestCase {
 	}
 
 	public void testConnect() {
-		Iterator iter = model.getAnnotationIterator();
+		Iterator<CommentAnnotation> iter = model.getAnnotationIterator();
 		assertEquals(1, getCount(iter));
 
 		model.disconnect(doc);
@@ -98,10 +99,10 @@ public class ReviewAnnotationModelTest extends TestCase {
 	}
 
 	public void testNotifyChanged() {
-		Iterator iter = model.getAnnotationIterator();
+		Iterator<CommentAnnotation> iter = model.getAnnotationIterator();
 		assertEquals(1, getCount(iter));
 
-		// Comments sometimes come in with Dates and sometimes with Timestamps, 
+		// Comments sometimes come in with Dates and sometimes with Timestamps,
 		// so we need to be able to handle both.
 		IComment clone = generateComment(DEFAULT_TEXT, new Timestamp(DEFAULT_TIMESTAMP));
 		Notification notification = new NotificationImpl(Notification.ADD, null, clone);
@@ -118,7 +119,7 @@ public class ReviewAnnotationModelTest extends TestCase {
 		assertEquals(2, getCount(iter));
 	}
 
-	private int getCount(Iterator iter) {
+	private int getCount(Iterator<CommentAnnotation> iter) {
 		int count = 0;
 		while (iter.hasNext()) {
 			count++;
