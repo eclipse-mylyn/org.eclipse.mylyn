@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -93,7 +94,8 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 		viewer = new TableViewer(container, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		viewer.setContentProvider(new RepositoryContentProvider());
 		viewer.setSorter(new TaskRepositoriesSorter());
-		viewer.setLabelProvider(new TaskRepositoryLabelProvider());
+		viewer.setLabelProvider(new DecoratingLabelProvider(new TaskRepositoryLabelProvider(),
+				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
 		viewer.setInput(TasksUi.getRepositoryManager().getRepositoryConnectors());
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
