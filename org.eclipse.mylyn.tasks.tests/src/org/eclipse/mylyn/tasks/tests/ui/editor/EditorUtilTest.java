@@ -14,9 +14,12 @@ package org.eclipse.mylyn.tasks.tests.ui.editor;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.commons.ui.CommonUiUtil;
+import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
+import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Scrollable;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -111,6 +114,25 @@ public class EditorUtilTest extends TestCase {
 		assertFalse(composite.getEnabled());
 		CommonUiUtil.setEnabled(composite, true);
 		assertFalse(composite.getEnabled());
+	}
+
+	public void testAddScrollListener() {
+		Scrollable textWidget = new Composite(WorkbenchUtil.getShell(), SWT.V_SCROLL);
+
+		assertNotNull(textWidget.getVerticalBar());
+		assertEquals(0, textWidget.getListeners(SWT.MouseVerticalWheel).length);
+
+		EditorUtil.addScrollListener(textWidget);
+		assertEquals(1, textWidget.getListeners(SWT.MouseVerticalWheel).length);
+
+		// test when there is no vertical bar
+		textWidget = new Composite(WorkbenchUtil.getShell(), SWT.NONE);
+		assertNull(textWidget.getVerticalBar());
+
+		assertEquals(0, textWidget.getListeners(SWT.MouseVerticalWheel).length);
+
+		EditorUtil.addScrollListener(textWidget);
+		assertEquals(1, textWidget.getListeners(SWT.MouseVerticalWheel).length);
 	}
 
 }

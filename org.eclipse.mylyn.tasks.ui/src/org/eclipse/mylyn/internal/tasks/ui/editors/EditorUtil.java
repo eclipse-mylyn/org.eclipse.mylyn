@@ -546,28 +546,26 @@ public class EditorUtil {
 	}
 
 	public static void addScrollListener(final Scrollable textWidget) {
-		if (textWidget.getVerticalBar() != null) {
-			textWidget.addMouseWheelListener(new MouseWheelListener() {
-				public void mouseScrolled(MouseEvent event) {
-					ScrolledComposite form = FormUtil.getScrolledComposite(textWidget);
-					if (form != null) {
-						ScrollBar verticalBar = textWidget.getVerticalBar();
-						if (event.count < 0) {
-							// scroll form down
-							if (verticalBar == null
-									|| verticalBar.getSelection() + verticalBar.getThumb() == verticalBar.getMaximum()) {
-								EditorUtil.scroll(form, 0, form.getVerticalBar().getIncrement());
-							}
-						} else {
-							// scroll form up
-							if (verticalBar == null || verticalBar.getSelection() == verticalBar.getMinimum()) {
-								EditorUtil.scroll(form, 0, -form.getVerticalBar().getIncrement());
-							}
+		textWidget.addMouseWheelListener(new MouseWheelListener() {
+			public void mouseScrolled(MouseEvent event) {
+				ScrolledComposite form = FormUtil.getScrolledComposite(textWidget);
+				if (form != null) {
+					ScrollBar verticalBar = textWidget.getVerticalBar();
+					if (event.count < 0) {
+						// scroll form down
+						if (verticalBar == null
+								|| verticalBar.getSelection() + verticalBar.getThumb() == verticalBar.getMaximum()) {
+							EditorUtil.scroll(form, 0, form.getVerticalBar().getIncrement());
+						}
+					} else {
+						// scroll form up
+						if (verticalBar == null || verticalBar.getSelection() == verticalBar.getMinimum()) {
+							EditorUtil.scroll(form, 0, -form.getVerticalBar().getIncrement());
 						}
 					}
 				}
-			});
-		}
+			}
+		});
 	}
 
 	public static void addScrollListener(final CCombo combo) {
