@@ -16,6 +16,7 @@
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -33,10 +34,12 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipInputStream;
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -403,21 +406,41 @@ public class GerritClient extends ReviewsClient {
 				getPatchDetailService(monitor).patchScriptX(key, leftId, rightId, diffPrefs, this);
 			}
 		});
-		if (patchScript.isBinary() && isVersion27OrLater(monitor)) {
-			final TypeToken<Byte[]> byteArrayType = new TypeToken<Byte[]>() {
-			};
+		if (patchScript.isBinary()) {
 			if (patchScript.getChangeType() != ChangeType.ADDED) {
 				String keyBaseEncoded = encode(key.toString() + "^1"); //$NON-NLS-1$
-				byte[] binBase = executeGetRestRequest("/cat/" + keyBaseEncoded, byteArrayType.getType(), monitor); //$NON-NLS-1$
-				patchScript.setBinaryA(binBase);
+				patchScript.setBinaryA(fetchBinaryContent("/cat/" + keyBaseEncoded, monitor)); //$NON-NLS-1$
 			}
 			if (patchScript.getChangeType() != ChangeType.DELETED) {
 				String keyTargetEncoded = encode(key.toString() + "^0"); //$NON-NLS-1$
-				byte[] binTarget = executeGetRestRequest("/cat/" + keyTargetEncoded, byteArrayType.getType(), monitor); //$NON-NLS-1$
-				patchScript.setBinaryB(binTarget);
+				patchScript.setBinaryB(fetchBinaryContent("/cat/" + keyTargetEncoded, monitor)); //$NON-NLS-1$
 			}
 		}
 		return patchScript;
+	}
+
+	private byte[] fetchBinaryContent(String url, IProgressMonitor monitor) throws GerritException {
+		final TypeToken<Byte[]> byteArrayType = new TypeToken<Byte[]>() {
+		};
+		byte[] bin = executeGetRestRequest(url, byteArrayType.getType(), monitor);
+		if (isVersion27OrLater(monitor)) {
+			return bin;
+		} else if (isVersion26OrLater(monitor)) {
+			return unzip(bin);
+		}
+		return null;
+	}
+
+	private static byte[] unzip(byte[] zip) throws GerritException {
+		ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(zip));
+		try {
+			zis.getNextEntry(); // expecting a single entry
+			return IOUtils.toByteArray(zis);
+		} catch (IOException e) {
+			throw new GerritException(e);
+		} finally {
+			IOUtils.closeQuietly(zis);
+		}
 	}
 
 	private AccountDiffPreference createAccountDiffPreference() {
