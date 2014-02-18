@@ -21,21 +21,21 @@ Require-Bundle: org.eclipse.ui,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: %providerName
-Export-Package: org.eclipse.mylyn.gerrit.dashboard.internal.utils;uses:="org.eclipse.mylyn.tasks.core",
- org.eclipse.mylyn.gerrit.dashboard.ui;
+Export-Package: org.eclipse.mylyn.gerrit.dashboard.internal.utils;x-internal:=true;uses:="org.eclipse.mylyn.tasks.core",
+ org.eclipse.mylyn.gerrit.dashboard.ui;x-internal:=true;
   uses:="org.eclipse.mylyn.gerrit.dashboard.trace,
    org.eclipse.jface.resource,
    org.eclipse.ui.plugin,
    org.osgi.framework",
- org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands;uses:="org.eclipse.core.commands",
- org.eclipse.mylyn.gerrit.dashboard.ui.internal.model;
+ org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands;x-internal:=true;uses:="org.eclipse.core.commands",
+ org.eclipse.mylyn.gerrit.dashboard.ui.internal.model;x-internal:=true;
   uses:="org.eclipse.mylyn.tasks.core,
    org.eclipse.swt.graphics,
    org.eclipse.jface.viewers,
    org.eclipse.mylyn.gerrit.dashboard.core,
    org.eclipse.swt.widgets",
- org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils;uses:="org.eclipse.mylyn.tasks.core,org.eclipse.swt.widgets",
- org.eclipse.mylyn.gerrit.dashboard.ui.views;
+ org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils;x-internal:=true;uses:="org.eclipse.mylyn.tasks.core,org.eclipse.swt.widgets",
+ org.eclipse.mylyn.gerrit.dashboard.ui.views;x-internal:=true;
   uses:="org.eclipse.mylyn.tasks.core,
    org.eclipse.mylyn.internal.tasks.core,
    org.eclipse.jface.viewers,
