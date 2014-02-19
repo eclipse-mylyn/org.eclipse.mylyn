@@ -9,6 +9,8 @@ public class TckFixture extends AbstractTestFixture {
 
 	private final FixtureConfiguration config;
 
+	protected TaskRepository repository;
+
 	public TckFixture(FixtureConfiguration config) {
 		super("org.eclipse.mylyn.bugzilla.rest", config);
 		this.config = config;
@@ -25,7 +27,10 @@ public class TckFixture extends AbstractTestFixture {
 	}
 
 	public TaskRepository repository() {
-		return new TaskRepository(getConnectorKind(), getRepositoryUrl());
+		if (repository == null) {
+			repository = new TaskRepository(getConnectorKind(), getRepositoryUrl());
+		}
+		return repository;
 	}
 
 	@SuppressWarnings("restriction")

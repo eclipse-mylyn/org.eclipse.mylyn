@@ -42,7 +42,7 @@ public class ValidationTest extends AbstractTckTest {
 		org.eclipse.mylyn.commons.net.AuthenticationCredentials invalideCreds = new org.eclipse.mylyn.commons.net.AuthenticationCredentials(
 				"invalidateCredentials", "invalidateCredentials");
 		repository.setCredentials(org.eclipse.mylyn.commons.net.AuthenticationType.REPOSITORY, invalideCreds, true);
-		fixture().connector().validateRepository(fixture().repository(), monitor);
+		fixture().connector().validateRepository(repository, monitor);
 	}
 
 }
