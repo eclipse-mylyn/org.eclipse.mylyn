@@ -20,6 +20,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.core.auth.ICredentialsStore;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -51,6 +53,17 @@ public class TaskRepositoryKeyringMigrator extends KeyringMigrator<TaskRepositor
 		StatusHandler.log(new Status(IStatus.INFO, ITasksCoreConstants.ID_PLUGIN,
 				"Migrating task repository credentials from keyring.")); //$NON-NLS-1$
 		super.migrateCredentials(locations);
+	}
+
+	@Override
+	protected void migrateCredentials(TaskRepository location) {
+		super.migrateCredentials(location);
+		// clear the cachedUserName in case it was set before the migration ran
+		AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
+		if (credentials != null) {
+			location.setCredentials(AuthenticationType.REPOSITORY, credentials,
+					location.getSavePassword(AuthenticationType.REPOSITORY));
+		}
 	}
 
 	@Override
