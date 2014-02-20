@@ -44,7 +44,7 @@ public class AbstractRepositorySettingsPageTest extends AbstractTckTest {
 
 	@Test
 	public void testApplyTo() {
-		TaskRepository repository = fixture().repository();
+		TaskRepository repository = fixture().createRepository();
 		EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
 		dialog = new WizardDialog(new Shell(), wizard);
 		dialog.create();

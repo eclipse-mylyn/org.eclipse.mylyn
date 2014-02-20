@@ -25,11 +25,11 @@ public class ValidationTest extends AbstractTckTest {
 
 	@Test
 	public void testValidateCredentials() throws Exception {
-		TaskRepository repository = fixture().repository();
+		TaskRepository repository = fixture().createRepository();
 		org.eclipse.mylyn.commons.net.AuthenticationCredentials mylynCreds = new org.eclipse.mylyn.commons.net.AuthenticationCredentials(
 				"tests@mylyn.eclipse.org", "mylyntest");
 		repository.setCredentials(org.eclipse.mylyn.commons.net.AuthenticationType.REPOSITORY, mylynCreds, true);
-		RepositoryInfo info = fixture().connector().validateRepository(fixture().repository(), monitor);
+		RepositoryInfo info = fixture().connector().validateRepository(repository, monitor);
 		assertNotNull(info);
 		assertEquals(fixture().getVersion(), info.getVersion().toString());
 	}
@@ -38,7 +38,7 @@ public class ValidationTest extends AbstractTckTest {
 	public void testInvalidateCredentials() throws CoreException {
 		thrown.expect(CoreException.class);
 		thrown.expectMessage("Authentication failed");
-		TaskRepository repository = fixture().repository();
+		TaskRepository repository = fixture().createRepository();
 		org.eclipse.mylyn.commons.net.AuthenticationCredentials invalideCreds = new org.eclipse.mylyn.commons.net.AuthenticationCredentials(
 				"invalidateCredentials", "invalidateCredentials");
 		repository.setCredentials(org.eclipse.mylyn.commons.net.AuthenticationType.REPOSITORY, invalideCreds, true);

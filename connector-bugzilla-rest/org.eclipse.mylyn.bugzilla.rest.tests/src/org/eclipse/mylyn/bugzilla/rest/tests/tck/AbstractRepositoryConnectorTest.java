@@ -31,7 +31,7 @@ public class AbstractRepositoryConnectorTest extends AbstractTckTest {
 
 	@Test
 	public void testApplyDefaultCategory() throws Exception {
-		TaskRepository repository = fixture().repository();
+		TaskRepository repository = fixture().createRepository();
 		assertNull("repository.getCategory() should be null", repository.getCategory());
 		fixture().connector().applyDefaultCategory(repository);
 		assertNotNull("repository.getCategory() should not be null", repository.getCategory());
