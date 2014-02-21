@@ -720,6 +720,15 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	 */
 	@SuppressWarnings("deprecation")
 	private void migrateCredentials(final List<TaskRepository> repositories) {
+		final boolean force = Boolean.parseBoolean(System.getProperty(PROP_FORCE_CREDENTIALS_MIGRATION));
+		final boolean migrateFromSecureStore = force
+				|| !getPluginPreferences().getBoolean(PREF_MIGRATED_TASK_REPOSITORIES_FROM_SECURE_STORE);
+		final boolean migrateFromKeyring = (force || !getPluginPreferences().getBoolean(
+				PREF_MIGRATED_TASK_REPOSITORIES_FROM_KEYRING))
+				&& isKeyringInstalled();
+		if (!migrateFromSecureStore && !migrateFromKeyring) {
+			return;
+		}
 		// Use a UI job to ensure the UI has loaded
 		new UIJob("Credential Migration UI Job") { //$NON-NLS-1$
 			@Override
@@ -728,18 +737,15 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				new Job("Credential Migration") { //$NON-NLS-1$
 					@Override
 					protected IStatus run(IProgressMonitor monitor) {
-						boolean force = Boolean.parseBoolean(System.getProperty(PROP_FORCE_CREDENTIALS_MIGRATION));
 						if (force) {
 							StatusHandler.log(new Status(IStatus.INFO, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
 									"Forcing task repository credential migration because system property {0} is set.", //$NON-NLS-1$
 									PROP_FORCE_CREDENTIALS_MIGRATION)));
 						}
-						if (force
-								|| !getPluginPreferences().getBoolean(PREF_MIGRATED_TASK_REPOSITORIES_FROM_SECURE_STORE)) {
+						if (migrateFromSecureStore) {
 							new TaskRepositorySecureStoreMigrator().migrateCredentials(repositories);
 						}
-						if ((force || !getPluginPreferences().getBoolean(PREF_MIGRATED_TASK_REPOSITORIES_FROM_KEYRING))
-								&& isKeyringInstalled()) {
+						if (migrateFromKeyring) {
 							new TaskRepositoryKeyringMigrator("", "Basic").migrateCredentials(repositories); //$NON-NLS-1$ //$NON-NLS-2$
 						}
 						return Status.OK_STATUS;
