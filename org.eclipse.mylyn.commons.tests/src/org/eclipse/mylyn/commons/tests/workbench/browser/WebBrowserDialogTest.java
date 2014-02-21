@@ -15,6 +15,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.commons.workbench.browser.WebBrowserDialog;
 import org.eclipse.swt.browser.Browser;
@@ -51,6 +52,10 @@ public class WebBrowserDialogTest extends TestCase {
 	}
 
 	public void testCreate() {
+		if (CommonTestUtil.skipBrowserTests()) {
+			System.err.println("Skipping WebBrowserDialogTest.testCreate()");
+			return;
+		}
 		TestWebBrowserDialog dialog = new TestWebBrowserDialog(WorkbenchUtil.getShell(), "title", null, "message", 0,
 				new String[0], 0);
 		dialog.create();
@@ -61,6 +66,10 @@ public class WebBrowserDialogTest extends TestCase {
 	}
 
 	public void testGetUrl() throws InterruptedException {
+		if (CommonTestUtil.skipBrowserTests()) {
+			System.err.println("Skipping WebBrowserDialogTest.testGetUrl()");
+			return;
+		}
 		TestWebBrowserDialog dialog = new TestWebBrowserDialog(WorkbenchUtil.getShell(), "title", null, "message", 0,
 				new String[0], 0);
 		final AtomicBoolean pageLoaded = new AtomicBoolean();
@@ -87,6 +96,10 @@ public class WebBrowserDialogTest extends TestCase {
 	}
 
 	public void testSetShow() {
+		if (CommonTestUtil.skipBrowserTests()) {
+			System.err.println("Skipping WebBrowserDialogTest.testSetShow()");
+			return;
+		}
 		TestWebBrowserDialog dialog = new TestWebBrowserDialog(WorkbenchUtil.getShell(), "title", null, "message", 0,
 				new String[0], 0);
 		dialog.setShowLocation(false);
@@ -97,6 +110,10 @@ public class WebBrowserDialogTest extends TestCase {
 	}
 
 	public void testSetShowAfterCreate() {
+		if (CommonTestUtil.skipBrowserTests()) {
+			System.err.println("Skipping WebBrowserDialogTest.testSetShowAfterCreate()");
+			return;
+		}
 		WebBrowserDialog dialog = new WebBrowserDialog(WorkbenchUtil.getShell(), "title", null, "message", 0,
 				new String[0], 0);
 		dialog.create();
