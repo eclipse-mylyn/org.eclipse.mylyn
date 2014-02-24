@@ -22,6 +22,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.mylyn.reviews.core.spi.remote.AbstractRemoteConsumer;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * Manages the interaction between a remote API and a local EMF object. There can be only one instance of a consumer for
@@ -391,7 +392,8 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 
 	@Override
 	public String getDescription() {
-		return "Retrieving " + factory.getModelDescription(getParentObject(), getModelObject(), getLocalKey());
+		return NLS.bind(Messages.RemoteEmfConsumer_Retrieving_X,
+				factory.getModelDescription(getParentObject(), getModelObject(), getLocalKey()));
 	}
 
 	@Override
