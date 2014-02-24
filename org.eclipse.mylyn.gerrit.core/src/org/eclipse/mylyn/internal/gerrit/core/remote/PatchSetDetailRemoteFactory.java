@@ -60,7 +60,7 @@ public class PatchSetDetailRemoteFactory extends ReviewItemSetRemoteFactory<Patc
 	public IReviewItemSet createModel(IReview review, PatchSetDetail patchSetDetail) {
 		PatchSet patchSet = patchSetDetail.getPatchSet();
 		IReviewItemSet itemSet = IReviewsFactory.INSTANCE.createReviewItemSet();
-		itemSet.setName(NLS.bind("Patch Set {0}", patchSet.getPatchSetId()));
+		itemSet.setName(NLS.bind(Messages.PatchSetContentRemoteFactory_Patch_Set, patchSet.getPatchSetId()));
 		itemSet.setCreationDate(patchSet.getCreatedOn());
 		itemSet.setId(Integer.toString(patchSet.getPatchSetId()));
 		itemSet.setReference(patchSet.getRefName());

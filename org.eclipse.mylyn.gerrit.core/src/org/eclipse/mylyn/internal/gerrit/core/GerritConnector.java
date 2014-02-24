@@ -153,7 +153,7 @@ public class GerritConnector extends ReviewsConnector {
 
 	@Override
 	public String getLabel() {
-		return "Gerrit Code Review (supports 2.4 and later)";
+		return Messages.GerritConnector_Label;
 	}
 
 	@Override
@@ -229,7 +229,7 @@ public class GerritConnector extends ReviewsConnector {
 	public IStatus performQuery(TaskRepository repository, IRepositoryQuery query, TaskDataCollector resultCollector,
 			ISynchronizationSession session, IProgressMonitor monitor) {
 		try {
-			monitor.beginTask("Executing query", IProgressMonitor.UNKNOWN);
+			monitor.beginTask(Messages.GerritConnector_Executing_query, IProgressMonitor.UNKNOWN);
 			GerritClient client = getClient(repository);
 			client.refreshConfigOnce(monitor);
 

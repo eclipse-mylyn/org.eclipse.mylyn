@@ -39,17 +39,17 @@ public class GerritUtil {
 
 	public static String getUserLabel(AccountInfo user) {
 		if (user == null) {
-			return "Anonymous";
+			return Messages.GerritUtil_Anonymous;
 		}
 		if (user.getFullName() != null) {
 			return user.getFullName();
 		}
 		if (user.getPreferredEmail() != null) {
 			String email = user.getPreferredEmail();
-			int i = email.indexOf("@");
+			int i = email.indexOf('@');
 			return (i > 0) ? email.substring(0, i) : email;
 		}
-		return "<Unknown>";
+		return Messages.GerritUtil_Unknown;
 	}
 
 	public static boolean isPermissionOnlyProject(ProjectDetailX projectDetail, GerritConfig config) {
@@ -71,10 +71,10 @@ public class GerritUtil {
 		}
 		for (int i = maxChars - 1; i >= minChars; i--) {
 			if (Character.isWhitespace(t.charAt(i))) {
-				return NLS.bind("{0}...", t.substring(0, i));
+				return NLS.bind(Messages.GerritUtil_X_dot_dot_dot, t.substring(0, i));
 			}
 		}
-		return NLS.bind("{0}...", t.substring(0, minChars));
+		return NLS.bind(Messages.GerritUtil_X_dot_dot_dot, t.substring(0, minChars));
 	}
 
 	public static String getSshCloneUri(TaskRepository repository, GerritConfiguration config, Project project)
@@ -90,7 +90,7 @@ public class GerritUtil {
 				String user = account.getUserName();
 				if (user != null && !user.equals("")) { //$NON-NLS-1$
 					sb.append(user);
-					sb.append("@"); //$NON-NLS-1$
+					sb.append('@');
 				}
 			}
 			if (sshAddress.startsWith("*:") || "".equals(sshAddress)) { //$NON-NLS-1$ //$NON-NLS-2$

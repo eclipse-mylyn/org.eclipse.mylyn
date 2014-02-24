@@ -30,6 +30,7 @@ import org.eclipse.mylyn.commons.core.HtmlTag;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.GerritConfigX;
+import org.eclipse.osgi.util.NLS;
 
 public class GerritHtmlProcessor {
 
@@ -38,8 +39,8 @@ public class GerritHtmlProcessor {
 			JSonSupport support = new JSonSupport();
 			return support.parseResponse(token, GerritConfigX.class);
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
-					"Failed to deserialize Gerrit configuration: '" + token + "'", e));
+			StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, NLS.bind(
+					"Failed to deserialize Gerrit configuration: ''{0}''", token), e)); //$NON-NLS-1$
 			return null;
 		}
 	}

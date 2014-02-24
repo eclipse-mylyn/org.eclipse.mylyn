@@ -41,10 +41,11 @@ public class GerritQueryResultSchema extends AbstractTaskSchema {
 
 	public final Field UPDATED = inheritFrom(parent.DATE_MODIFICATION).create();
 
-	public final Field PROJECT = createField(TaskAttribute.PRODUCT, "Project", TaskAttribute.TYPE_SHORT_TEXT,
-			Flag.READ_ONLY, Flag.ATTRIBUTE);
+	public final Field PROJECT = createField(TaskAttribute.PRODUCT, Messages.GerritQueryResultSchema_Project,
+			TaskAttribute.TYPE_SHORT_TEXT, Flag.READ_ONLY, Flag.ATTRIBUTE);
 
-	public final Field CHANGE_ID = createField("org.eclipse.gerrit.Key", "Change-Id", TaskAttribute.TYPE_LONG_TEXT,
+	public final Field CHANGE_ID = createField(
+			"org.eclipse.gerrit.Key", Messages.GerritQueryResultSchema_ChangeId, TaskAttribute.TYPE_LONG_TEXT, //$NON-NLS-1$
 			Flag.READ_ONLY, Flag.ATTRIBUTE);
 
 	public final Field KEY = inheritFrom(parent.TASK_KEY).create();
@@ -55,18 +56,22 @@ public class GerritQueryResultSchema extends AbstractTaskSchema {
 	public final Field OWNER = inheritFrom(parent.USER_ASSIGNED).flags(Flag.READ_ONLY, Flag.ATTRIBUTE).create();
 
 	// Moved from GerritTaskSchema
-	public final Field BRANCH = createField("org.eclipse.gerrit.Branch", "Branch", TaskAttribute.TYPE_SHORT_TEXT,
+	public final Field BRANCH = createField(
+			"org.eclipse.gerrit.Branch", Messages.GerritQueryResultSchema_Branch, TaskAttribute.TYPE_SHORT_TEXT, //$NON-NLS-1$
 			Flag.READ_ONLY, Flag.ATTRIBUTE);
 
 	// Indicates that the review is 'starred'
-	public final Field IS_STARRED = createField("org.eclipse.gerrit.StarredReview", "Starred",
+	public final Field IS_STARRED = createField(
+			"org.eclipse.gerrit.StarredReview", Messages.GerritQueryResultSchema_Starred, //$NON-NLS-1$
 			TaskAttribute.TYPE_BOOLEAN);
 
 	// The review state (typically -2 .. +2)
-	public final Field REVIEW_STATE = createField("org.eclipse.gerrit.ReviewState", "ReviewState",
+	public final Field REVIEW_STATE = createField(
+			"org.eclipse.gerrit.ReviewState", Messages.GerritQueryResultSchema_ReviewState, //$NON-NLS-1$
 			TaskAttribute.TYPE_INTEGER, Flag.READ_ONLY);
 
 	// The verification state (typically -1 .. +1)
-	public final Field VERIFY_STATE = createField("org.eclipse.gerrit.VerifyState", "VerifyState",
+	public final Field VERIFY_STATE = createField(
+			"org.eclipse.gerrit.VerifyState", Messages.GerritQueryResultSchema_VerifyState, //$NON-NLS-1$
 			TaskAttribute.TYPE_INTEGER, Flag.READ_ONLY);
 }

@@ -172,8 +172,9 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
 						baseVersion.setContent(patchScript.getA().asString());
 					}
 					baseVersion.setPath(patchScript.getA().getPath());
-					baseVersion.setDescription((content.getBase() != null) ? NLS.bind("Patch Set {0}",
-							content.getBase().getPatchSetId()) : "Base");
+					baseVersion.setDescription((content.getBase() != null)
+							? NLS.bind(Messages.PatchSetContentRemoteFactory_Patch_Set, content.getBase()
+									.getPatchSetId()) : Messages.PatchSetContentRemoteFactory_Base);
 					baseVersion.setFile(item);
 					baseVersion.setName(item.getName());
 					getCache().put(baseVersion);
@@ -191,9 +192,8 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
 						targetVersion.setContent(target.asString());
 					}
 					targetVersion.setPath(patchScript.getB().getPath());
-					targetVersion.setDescription(NLS.bind("Patch Set {0}", content.getTargetDetail()
-							.getPatchSet()
-							.getPatchSetId()));
+					targetVersion.setDescription(NLS.bind(Messages.PatchSetContentRemoteFactory_Patch_Set,
+							content.getTargetDetail().getPatchSet().getPatchSetId()));
 					targetVersion.setFile(item);
 					targetVersion.setAddedBy(item.getAddedBy());
 					targetVersion.setCommittedBy(item.getCommittedBy());
@@ -252,7 +252,8 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
 	@Override
 	public String getModelDescription(IReviewItemSet set, List<IFileItem> items, String localKey) {
 		if (set.getReview() != null) {
-			return "Review " + set.getReview().getId() + ", Patch Set " + set.getId();
+			return NLS.bind(Messages.PatchSetContentRemoteFactory_Model_Description, set.getReview().getId(),
+					set.getId());
 		}
 		return set.getName();
 	}

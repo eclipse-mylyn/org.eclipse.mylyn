@@ -98,9 +98,9 @@ public class PatchSetContent {
 	}
 
 	public String getId() {
-		String id = "";
+		String id = ""; //$NON-NLS-1$
 		if (getBase() != null) {
-			id += getBase().getId() + "-";
+			id += getBase().getId() + "-"; //$NON-NLS-1$
 		}
 		if (getTarget() != null) {
 			id += getTarget().getId();

@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Steffen Pingel
@@ -46,7 +47,8 @@ public class GerritOperation<T> extends Job {
 		} catch (OperationCanceledException e) {
 			return Status.CANCEL_STATUS;
 		} catch (GerritException e) {
-			return new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, "Operation Failed: " + e.getMessage(), e);
+			return new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, NLS.bind(
+					Messages.GerritOperation_Operation_Failed, e.getMessage()), e);
 		}
 		return Status.OK_STATUS;
 	}

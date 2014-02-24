@@ -33,9 +33,9 @@ public class GerritTaskSchema extends GerritQueryResultSchema {
 
 	public final Field DESCRIPTION = inheritFrom(parent.DESCRIPTION).addFlags(Flag.READ_ONLY).create();
 
-	public final Field OBJ_REVIEW = createField("org.eclipse.gerrit.Review", "Review", TaskAttribute.TYPE_LONG_TEXT);
+	public final Field OBJ_REVIEW = createField("org.eclipse.gerrit.Review", Messages.GerritTaskSchema_Review, TaskAttribute.TYPE_LONG_TEXT); //$NON-NLS-1$
 
-	public final Field CAN_PUBLISH = createField("org.eclipse.gerrit.CanPublish", "Publish", TaskAttribute.TYPE_BOOLEAN);
+	public final Field CAN_PUBLISH = createField("org.eclipse.gerrit.CanPublish", Messages.GerritTaskSchema_Publish, TaskAttribute.TYPE_BOOLEAN); //$NON-NLS-1$
 
 	public final Field NEW_COMMENT = inheritFrom(parent.NEW_COMMENT).create();
 

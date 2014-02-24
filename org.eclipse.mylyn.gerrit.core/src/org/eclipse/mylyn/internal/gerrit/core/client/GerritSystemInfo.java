@@ -44,7 +44,9 @@ public class GerritSystemInfo {
 	}
 
 	public String getFullName() {
-		return (account != null) ? getAccountName() : "Anonymous";
+		return (account != null)
+				? getAccountName()
+				: org.eclipse.mylyn.internal.gerrit.core.Messages.GerritUtil_Anonymous;
 	}
 
 	private String getAccountName() {
