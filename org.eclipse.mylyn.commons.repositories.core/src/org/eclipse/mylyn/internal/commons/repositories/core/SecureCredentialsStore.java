@@ -12,6 +12,8 @@
 package org.eclipse.mylyn.internal.commons.repositories.core;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
@@ -177,8 +179,37 @@ public class SecureCredentialsStore implements ICredentialsStore {
 
 	protected ISecurePreferences getSecurePreferences() {
 		ISecurePreferences securePreferences = openSecurePreferences().node(ID_NODE);
-		securePreferences = securePreferences.node(EncodingUtils.encodeSlashes(getId()));
+		securePreferences = securePreferences.node(getEncodedId());
 		return securePreferences;
+	}
+
+	private String getEncodedId() {
+		String id = getId();
+		if (containsOnlyValidCharacters(id)) {
+			// bug 429094: this was the format used before Mylyn 3.11 so we continue to use it where possible,
+			// but we can't use it for URLs with characters outside the allowed range for the secure store
+			return EncodingUtils.encodeSlashes(id);
+		}
+		try {
+			return URLEncoder.encode(id, "UTF-8"); //$NON-NLS-1$
+		} catch (UnsupportedEncodingException e) {
+			// should never happen
+			StatusHandler.log(new Status(IStatus.ERROR, RepositoriesCoreInternal.ID_PLUGIN, "Error encoding id", e)); //$NON-NLS-1$
+			return null;
+		}
+	}
+
+	/**
+	 * @return whether id contains only characters that are valid for a path in the secure storage
+	 */
+	private boolean containsOnlyValidCharacters(String id) {
+		char[] chars = id.toCharArray();
+		for (char c : chars) {
+			if (c < 32 || c > 126) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	protected ISecurePreferences openSecurePreferences() {

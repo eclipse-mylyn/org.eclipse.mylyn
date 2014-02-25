@@ -17,6 +17,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Arrays;
 
 import org.eclipse.core.runtime.AssertionFailedException;
@@ -46,6 +48,10 @@ public class SecureCredentialsStoreTest extends AbstractCredentialsStoreTest {
 
 		public StubSecureCredentialsStore() {
 			super(SecureCredentialsStore.class.getName());
+		}
+
+		public StubSecureCredentialsStore(String id) {
+			super(id);
 		}
 
 		@Override
@@ -166,7 +172,7 @@ public class SecureCredentialsStoreTest extends AbstractCredentialsStoreTest {
 	}
 
 	@Test
-	public void testopenSecurePreferencesThrowsExceptionOnUiThread() throws Exception {
+	public void testOpenSecurePreferencesThrowsExceptionOnUiThread() throws Exception {
 		runOnUiThread(new Runnable() {
 			public void run() {
 				assertNotNull(Display.getCurrent());
@@ -231,5 +237,84 @@ public class SecureCredentialsStoreTest extends AbstractCredentialsStoreTest {
 	@Test
 	public void testUiLocationService() throws Exception {
 		assertTrue(new UiLocationService().getCredentialsStore("test") instanceof UiSecureCredentialsStore);
+	}
+
+	@Test
+	public void testSpecialCharactersInId() {
+		StubSecureCredentialsStore store = new StubSecureCredentialsStore("http://ci.mylyn.org/test 1");
+		assertEquals("http://ci.mylyn.org/test 1", store.getId());
+		assertEquals("http:\\2f\\2fci.mylyn.org\\2ftest 1", store.getSecurePreferences().name());
+
+		store = new StubSecureCredentialsStore("http://ci.mylyn.org/\u00E7\u00F1\u00FC");
+		assertEquals("http://ci.mylyn.org/\u00E7\u00F1\u00FC", store.getId());
+		assertEquals("http%3A%2F%2Fci.mylyn.org%2F%C3%A7%C3%B1%C3%BC", store.getSecurePreferences().name());
+
+		store = new StubSecureCredentialsStore("\uABCD  \u1F00");
+		assertEquals("\uABCD  \u1F00", store.getId());
+		assertEquals("%EA%AF%8D++%E1%BC%80", store.getSecurePreferences().name());
+	}
+
+	@Test
+	public void testValidCharactersNotEncoded() {
+		// create a key containing all valid characters
+		StringBuilder sb = new StringBuilder();
+		for (char c = 32; c <= 126; c++) {
+			if (c != '\\' && c != '/') {
+				sb.append(c);
+			}
+		}
+		String key = sb.toString();
+		StubSecureCredentialsStore store = new StubSecureCredentialsStore(key);
+		assertEquals(key, store.getId());
+		assertEquals(key, store.getSecurePreferences().name());
+	}
+
+	@Test
+	public void testInvalidCharactersEncoded() throws UnsupportedEncodingException {
+		for (char c = 0; c < 32; c++) {
+			assertInvalidCharacter(c);
+		}
+		for (char c = 127; c < 256; c++) {
+			assertInvalidCharacter(c);
+		}
+	}
+
+	private void assertInvalidCharacter(char c) throws UnsupportedEncodingException {
+		String key = "key" + Character.toString(c);
+		StubSecureCredentialsStore store = new StubSecureCredentialsStore(key);
+		assertEquals(key, store.getId());
+		assertEquals("key" + URLEncoder.encode(Character.toString(c), "UTF-8"), store.getSecurePreferences().name());
+	}
+
+	@Test
+	public void testSpecialCharactersInIdRetrieveValue() {
+		StubSecureCredentialsStore store = new StubSecureCredentialsStore("http://ci.mylyn.org/\u00E7\u00F1\u00FC");
+		store.put("key", "value", false);
+		assertEquals("[key]", Arrays.toString(store.getSecurePreferences().keys()));
+		assertEquals("value", store.get("key", null));
+	}
+
+	@Test
+	public void testSpecialCharactersInIdRetrieveValueNoPersist() {
+		StubSecureCredentialsStore store = new StubSecureCredentialsStore("http://ci.mylyn.org/\u00E7\u00F1\u00FC");
+		store.put("key", "value", false, false);
+		assertEquals("[key]", Arrays.toString(store.getInMemoryStore().keys()));
+		assertEquals("value", store.get("key", null));
+	}
+
+	@Test
+	public void testSpecialCharactersInIdRetrieveValueEncrypt() {
+		StubSecureCredentialsStore store = new StubSecureCredentialsStore("http://ci.mylyn.org/\u00E7\u00F1\u00FC");
+		store.put("key", "value", true);
+		assertEquals("[key]", Arrays.toString(store.getSecurePreferences().keys()));
+		assertEquals("value", store.get("key", null));
+	}
+
+	@Test
+	public void testSpecialCharactersInIdRetrieveValueEncryptNoPersist() {
+		StubSecureCredentialsStore store = new StubSecureCredentialsStore("http://ci.mylyn.org/\u00E7\u00F1\u00FC");
+		store.put("key", "value", true, false);
+		assertEquals("[key]", Arrays.toString(store.getInMemoryStore().keys()));
+		assertEquals("value", store.get("key", null));
 	}
 }
