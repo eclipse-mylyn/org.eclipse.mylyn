@@ -49,6 +49,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -204,7 +205,7 @@ public abstract class GerritOperationDialog extends ProgressDialog {
 		ILabelProvider proposalLabelProvider = uiFactory.createPersonContentProposalLabelProvider(repository);
 
 		ContentAssistCommandAdapter adapter = new ContentAssistCommandAdapter(editor, new TextContentAdapter(),
-				proposalProvider, ContentAssistCommandAdapter.CONTENT_PROPOSAL_COMMAND, new char[0], true);
+				proposalProvider, IWorkbenchCommandConstants.EDIT_CONTENT_ASSIST, new char[0], true);
 		adapter.setLabelProvider(proposalLabelProvider);
 		adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 
