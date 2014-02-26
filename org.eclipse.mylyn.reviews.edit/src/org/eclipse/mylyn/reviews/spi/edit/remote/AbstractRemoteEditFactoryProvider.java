@@ -52,10 +52,6 @@ import org.eclipse.mylyn.reviews.internal.core.model.ReviewsResourceFactory;
 public abstract class AbstractRemoteEditFactoryProvider<ERootObject extends EObject, EChildObject extends EObject>
 		extends AbstractRemoteEmfFactoryProvider<ERootObject, EChildObject> {
 
-	private static final String DIRECTORY_METADATA = ".metadata"; //$NON-NLS-1$
-
-	private static final String NAME_DATA_DIR = ".mylyn"; //$NON-NLS-1$
-
 	final EditingDomain editingDomain;
 
 	ERootObject rootObject;
