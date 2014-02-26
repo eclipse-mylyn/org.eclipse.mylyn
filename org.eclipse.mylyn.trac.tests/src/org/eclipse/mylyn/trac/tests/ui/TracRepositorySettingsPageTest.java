@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
@@ -105,8 +106,9 @@ public class TracRepositorySettingsPageTest extends TestCase {
 		TaskRepository repository = fixture.repository();
 		page.setAnonymous(false);
 		page.setUrl(repository.getRepositoryUrl());
-		page.setUserId(repository.getCredentials(AuthenticationType.REPOSITORY).getUserName());
-		page.setPassword(repository.getCredentials(AuthenticationType.REPOSITORY).getPassword());
+		AuthenticationCredentials credentials = repository.getCredentials(AuthenticationType.REPOSITORY);
+		page.setUserId(credentials == null ? null : credentials.getUserName());
+		page.setPassword(credentials == null ? null : credentials.getPassword());
 		page.setTracVersion(fixture.getAccessMode());
 
 		validator = page.new TracValidator(page.createTaskRepository(), fixture.getAccessMode());

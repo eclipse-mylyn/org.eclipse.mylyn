@@ -191,6 +191,11 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 			} catch (TracLoginException e) {
 				if (e.isNtlmAuthRequested()) {
 					AuthenticationCredentials credentials = taskRepository.getCredentials(AuthenticationType.REPOSITORY);
+					if (credentials == null || credentials.getUserName() == null || credentials.getPassword() == null) {
+						throw new CoreException(new RepositoryStatus(IStatus.ERROR, TracUiPlugin.ID_PLUGIN,
+								RepositoryStatus.ERROR_EMPTY_PASSWORD,
+								Messages.TracRepositorySettingsPage_auth_failed_missing_credentials, e));
+					}
 					if (!credentials.getUserName().contains("\\")) { //$NON-NLS-1$
 						throw new CoreException(RepositoryStatus.createStatus(repositoryUrl, IStatus.ERROR,
 								TracUiPlugin.ID_PLUGIN,

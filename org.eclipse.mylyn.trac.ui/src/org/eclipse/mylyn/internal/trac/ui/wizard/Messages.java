@@ -91,6 +91,8 @@ public class Messages extends NLS {
 
 	public static String TracRepositorySettingsPage_Access_Type_;
 
+	public static String TracRepositorySettingsPage_auth_failed_missing_credentials;
+
 	public static String TracRepositorySettingsPage_Authentication_credentials_are_valid;
 
 	public static String TracRepositorySettingsPage_Authentication_credentials_valid_Update_to_latest_XmlRpcPlugin_Warning;
