@@ -50,13 +50,13 @@ public class RestoreDialog extends GerritOperationDialog {
 
 	@Override
 	protected Control createPageControls(Composite parent) {
-		setTitle("Restore Change");
-		setMessage("Enter an optional message.");
+		setTitle(Messages.RestoreDialog_Restore_Change);
+		setMessage(Messages.RestoreDialog_Enter_message);
 
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 
-		messageEditor = createRichTextEditor(composite, "");
+		messageEditor = createRichTextEditor(composite, ""); //$NON-NLS-1$
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(messageEditor.getControl());
 
 		return composite;

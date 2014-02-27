@@ -23,7 +23,7 @@ import org.eclipse.mylyn.reviews.ui.spi.factories.IUiContext;
 public class AbandonUiFactory extends AbstractPatchSetUiFactory {
 
 	public AbandonUiFactory(IUiContext context, IReviewItemSet set) {
-		super("Abandon...", context, set);
+		super(Messages.AbandonUiFactory_Abandon, context, set);
 	}
 
 	@Override

@@ -23,7 +23,7 @@ import org.eclipse.mylyn.reviews.ui.spi.factories.IUiContext;
 public class RebaseUiFactory extends AbstractPatchSetUiFactory {
 
 	public RebaseUiFactory(IUiContext context, IReviewItemSet set) {
-		super("Rebase", context, set);
+		super(Messages.RebaseUiFactory_Rebase, context, set);
 	}
 
 	@Override

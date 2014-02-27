@@ -100,8 +100,9 @@ public class PublishDialog extends GerritOperationDialog {
 	protected Control createPageControls(Composite parent) {
 		String changeId = publishDetail.getChange().getKey().abbreviate();
 
-		setTitle("Publish Comments");
-		setMessage(NLS.bind("Change {0} - {1}", changeId, publishDetail.getPatchSetInfo().getSubject()));
+		setTitle(Messages.PublishDialog_Publish_Comments);
+		setMessage(NLS.bind(Messages.PublishDialog_Change_X_dash_Y, changeId, publishDetail.getPatchSetInfo()
+				.getSubject()));
 
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
@@ -113,7 +114,7 @@ public class PublishDialog extends GerritOperationDialog {
 		layout.marginHeight = 0;
 		approvalComposite.setLayout(layout);
 
-		messageEditor = createRichTextEditor(composite, "");
+		messageEditor = createRichTextEditor(composite, ""); //$NON-NLS-1$
 		GridDataFactory.fillDefaults().grab(true, true).hint(600, 200).applyTo(messageEditor.getControl());
 		messageEditor.setText(editorCommentText);
 		messageEditor.getViewer().setSelectedRange(editorCommentText.length(), 0);
@@ -125,7 +126,9 @@ public class PublishDialog extends GerritOperationDialog {
 		}
 		if (drafts > 0) {
 			Label statusLabel = new Label(composite, SWT.NONE);
-			statusLabel.setText(NLS.bind("Publishes {0} draft{1}.", drafts, drafts > 1 ? "s" : ""));
+			statusLabel.setText(drafts > 1
+					? NLS.bind(Messages.PublishDialog_Publishes_X_drafts, drafts)
+					: Messages.PublishDialog_Publishes_1_draft);
 		}
 
 		return composite;

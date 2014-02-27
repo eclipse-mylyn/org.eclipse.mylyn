@@ -70,8 +70,8 @@ public class GerritRepositorySearchPage extends WizardPage implements IRepositor
 
 	public GerritRepositorySearchPage() {
 		super(GerritRepositorySearchPage.class.getName());
-		setTitle("Source Git Repository");
-		setMessage("Select the Gerrit project");
+		setTitle(Messages.GerritRepositorySearchPage_Source_Git_Repository);
+		setMessage(Messages.GerritRepositorySearchPage_Select_Gerrit_project);
 	}
 
 	@Override
@@ -120,7 +120,7 @@ public class GerritRepositorySearchPage extends WizardPage implements IRepositor
 		buttonsComposite.setLayout(new GridLayout(2, false));
 
 		Button addButton = new Button(buttonsComposite, SWT.NONE);
-		addButton.setText("Add...");
+		addButton.setText(Messages.GerritRepositorySearchPage_Add);
 		addButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -139,7 +139,7 @@ public class GerritRepositorySearchPage extends WizardPage implements IRepositor
 		});
 
 		refreshButton = new Button(buttonsComposite, SWT.NONE);
-		refreshButton.setText("Refresh");
+		refreshButton.setText(Messages.GerritRepositorySearchPage_Refresh);
 		refreshButton.setEnabled(false);
 		refreshButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -149,12 +149,12 @@ public class GerritRepositorySearchPage extends WizardPage implements IRepositor
 		});
 
 		final Group repositoryGroup = new Group(composite, SWT.NONE);
-		repositoryGroup.setText("Git Repository");
+		repositoryGroup.setText(Messages.GerritRepositorySearchPage_Git_Repository);
 		GridLayoutFactory.fillDefaults().numColumns(2).applyTo(repositoryGroup);
 		repositoryGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
 		repositoryGroup.setLayout(new GridLayout(2, false));
 
-		new Label(repositoryGroup, SWT.NULL).setText("URI:");
+		new Label(repositoryGroup, SWT.NULL).setText(Messages.GerritRepositorySearchPage_URI);
 		cloneUriCombo = new Combo(repositoryGroup, SWT.DROP_DOWN);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(cloneUriCombo);
 
@@ -174,7 +174,7 @@ public class GerritRepositorySearchPage extends WizardPage implements IRepositor
 					GerritConfiguration config = GerritCorePlugin.getGerritClient(repository).getConfiguration();
 					setCloneUris(GerritUtil.getCloneUris(config, repository, project));
 				} catch (URISyntaxException e) {
-					String message = NLS.bind("Unable to compute Git clone URI for Gerrit project {0}",
+					String message = NLS.bind(Messages.GerritRepositorySearchPage_Unable_to_compute_clone_URI,
 							project.getName());
 					showError(e, message);
 					clearCloneUris();
@@ -209,8 +209,7 @@ public class GerritRepositorySearchPage extends WizardPage implements IRepositor
 			setPageComplete(true);
 		} else {
 			clearCloneUris();
-			showError(null,
-					"No download scheme is offered. Additional schemes may be available after a refresh of the repository configuration.");
+			showError(null, Messages.GerritRepositorySearchPage_No_download_scheme);
 		}
 	}
 
@@ -250,7 +249,9 @@ public class GerritRepositorySearchPage extends WizardPage implements IRepositor
 			final GerritClient client = GerritCorePlugin.getGerritClient(repository);
 			getContainer().run(true, true, new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					monitor.beginTask("Refreshing " + repository.getRepositoryLabel(), IProgressMonitor.UNKNOWN);
+					monitor.beginTask(
+							NLS.bind(Messages.GerritRepositorySearchPage_Refreshing_X, repository.getRepositoryLabel()),
+							IProgressMonitor.UNKNOWN);
 					try {
 						client.refreshConfig(monitor);
 					} catch (GerritException e) {

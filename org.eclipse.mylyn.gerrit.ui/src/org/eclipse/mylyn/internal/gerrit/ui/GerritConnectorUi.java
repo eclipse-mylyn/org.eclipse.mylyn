@@ -91,7 +91,7 @@ public class GerritConnectorUi extends AbstractRepositoryConnectorUi {
 
 	@Override
 	public String getTaskKindLabel(ITask task) {
-		return "Change";
+		return Messages.GerritConnectorUi_Change;
 	}
 
 	@Override

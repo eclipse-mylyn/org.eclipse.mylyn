@@ -99,8 +99,8 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 	private final List<OpenIdProvider> openIdProviders = new ArrayList<OpenIdProvider>();
 
 	public GerritRepositorySettingsPage(TaskRepository taskRepository) {
-		super("Gerrit Repository Settings", "Web based code review and project management for Git based projects.",
-				taskRepository);
+		super(Messages.GerritRepositorySettingsPage_Gerrit_Repository_Settings,
+				Messages.GerritRepositorySettingsPage_Gerrit_Repository_Settings_description, taskRepository);
 		setNeedsAnonymousLogin(true);
 		setNeedsHttpAuth(true);
 		setNeedsAdvanced(true);
@@ -108,8 +108,10 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 		setNeedsTimeZone(false);
 		setNeedsValidation(true);
 
-		openIdProviders.add(new OpenIdProvider("Google Account", "https://www.google.com/accounts/o8/id")); //$NON-NLS-2$
-		openIdProviders.add(new OpenIdProvider("Yahoo Account", "https://me.yahoo.com")); //$NON-NLS-2$
+		openIdProviders.add(new OpenIdProvider(Messages.GerritRepositorySettingsPage_Google_Account,
+				"https://www.google.com/accounts/o8/id")); //$NON-NLS-1$
+		openIdProviders.add(new OpenIdProvider(Messages.GerritRepositorySettingsPage_Yahoo_Account,
+				"https://me.yahoo.com")); //$NON-NLS-1$
 	}
 
 	@SuppressWarnings("restriction")
@@ -148,11 +150,11 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 			String warning = ""; //$NON-NLS-1$
 			if (!gerritValidator.isSupportedVersion()) {
 				warning = NLS.bind(
-						"\nGerrit {0} has not been tested with this version of Mylyn. It may not be fully supported.",
+						Messages.GerritRepositorySettingsPage_Gerrit_may_not_be_supported,
 						gerritValidator.getInfo().getVersion());
 			}
 
-			setMessage(NLS.bind("{0} Logged in as {1}.{2}", new String[] { getMessage(),
+			setMessage(NLS.bind(Messages.GerritRepositorySettingsPage_X_Logged_in_as_Y_dot_Z, new String[] { getMessage(),
 					gerritValidator.getInfo().getFullName(), warning }), warning.isEmpty()
 					? IMessageProvider.INFORMATION
 					: IMessageProvider.WARNING);
@@ -162,7 +164,7 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 	@Override
 	protected void createAdditionalControls(Composite parent) {
 		openIdButton = new Button(parent, SWT.CHECK);
-		openIdButton.setText("OpenID Authentication");
+		openIdButton.setText(Messages.GerritRepositorySettingsPage_OpenID_Authentication);
 		openIdButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -172,7 +174,7 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 		GridDataFactory.fillDefaults().span(2, 1).applyTo(openIdButton);
 
 		Label providerLabel = new Label(parent, SWT.NONE);
-		providerLabel.setText("Provider:");
+		providerLabel.setText(Messages.GerritRepositorySettingsPage_Provider);
 
 		openIdCombo = new Combo(parent, SWT.NONE);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(openIdCombo);

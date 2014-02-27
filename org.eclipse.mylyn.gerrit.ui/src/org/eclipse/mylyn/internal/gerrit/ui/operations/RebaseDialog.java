@@ -48,14 +48,14 @@ public class RebaseDialog extends GerritOperationDialog {
 
 	@Override
 	protected Control createPageControls(final Composite parent) {
-		setTitle("Rebase Patch Set");
-		setMessage("");
+		setTitle(Messages.RebaseDialog_Rebase_Patch_Set);
+		setMessage(""); //$NON-NLS-1$
 
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 
 		Label label = new Label(composite, SWT.NONE);
-		label.setText(NLS.bind("Rebase patch set {0}", patchSet.getRefName()));
+		label.setText(NLS.bind(Messages.RebaseDialog_Rebase_patch_set_X, patchSet.getRefName()));
 
 		parent.getDisplay().asyncExec(new Runnable() {
 			@Override

@@ -61,8 +61,8 @@ public class AddReviewersDialog extends GerritOperationDialog {
 
 	@Override
 	protected Control createPageControls(Composite parent) {
-		setTitle("Add Reviewers");
-		setMessage("Enter a comma separated list of names or email addresses.");
+		setTitle(Messages.AddReviewersDialog_Add_Reviewers);
+		setMessage(Messages.AddReviewersDialog_Enter_list_of_names_or_emails);
 
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = GridLayoutFactory.fillDefaults().margins(8, 8).create();

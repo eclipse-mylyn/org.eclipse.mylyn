@@ -36,7 +36,7 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
 public class GerritTaskEditorPage extends AbstractReviewTaskEditorPage {
 
 	public GerritTaskEditorPage(TaskEditor editor) {
-		super(editor, GerritTaskEditorPage.class.getName(), "Gerrit Page", GerritConnector.CONNECTOR_KIND);
+		super(editor, GerritTaskEditorPage.class.getName(), Messages.GerritTaskEditorPage_Gerrit_Page, GerritConnector.CONNECTOR_KIND);
 		setNeedsPrivateSection(true);
 		setNeedsSubmit(false);
 		setNeedsSubmitButton(false);

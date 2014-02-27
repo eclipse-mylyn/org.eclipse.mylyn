@@ -25,7 +25,7 @@ import com.google.gerrit.reviewdb.ApprovalCategory;
 public class SubmitUiFactory extends AbstractPatchSetUiFactory {
 
 	public SubmitUiFactory(IUiContext context, IReviewItemSet set) {
-		super("Submit", context, set);
+		super(Messages.SubmitUiFactory_Submit, context, set);
 	}
 
 	@Override

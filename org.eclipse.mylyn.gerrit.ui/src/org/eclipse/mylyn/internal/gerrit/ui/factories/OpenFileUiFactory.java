@@ -31,7 +31,7 @@ public class OpenFileUiFactory extends AbstractPatchSetUiFactory {
 	private final IFileItem item;
 
 	public OpenFileUiFactory(IUiContext context, IReviewItemSet set, IFileItem item) {
-		super("Open File", context, set);
+		super(Messages.OpenFileUiFactory_Open_File, context, set);
 		this.item = item;
 	}
 
@@ -44,7 +44,7 @@ public class OpenFileUiFactory extends AbstractPatchSetUiFactory {
 		}
 
 		if (item.getBase() == null || item.getTarget() == null) {
-			getEditor().setMessage("The selected file is not available, yet", IMessageProvider.WARNING);
+			getEditor().setMessage(Messages.OpenFileUiFactory_File_not_available, IMessageProvider.WARNING);
 			return;
 		}
 

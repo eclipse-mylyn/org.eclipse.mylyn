@@ -24,7 +24,7 @@ import org.eclipse.mylyn.reviews.ui.spi.factories.IUiContext;
 public class AddReviewersUiFactory extends AbstractUiFactory<IReview> {
 
 	public AddReviewersUiFactory(IUiContext context, IReview review) {
-		super("Add Reviewers...", context, review);
+		super(Messages.AddReviewersUiFactory_Add_Reviewers, context, review);
 	}
 
 	@Override

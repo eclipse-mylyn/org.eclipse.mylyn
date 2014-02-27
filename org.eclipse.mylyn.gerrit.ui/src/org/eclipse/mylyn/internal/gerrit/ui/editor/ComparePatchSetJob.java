@@ -44,7 +44,7 @@ public class ComparePatchSetJob extends Job {
 	protected final RemoteConfig remote;
 
 	public ComparePatchSetJob(Repository repository, RemoteConfig remote, PatchSet base, PatchSet target) {
-		super("Comparing Patch Set");
+		super(Messages.ComparePatchSetJob_Comparing_Patch_Set);
 		this.repository = repository;
 		this.remote = remote;
 		this.base = base;

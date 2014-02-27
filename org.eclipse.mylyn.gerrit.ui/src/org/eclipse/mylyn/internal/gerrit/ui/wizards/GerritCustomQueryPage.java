@@ -64,7 +64,7 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage2 {
 
 	public GerritCustomQueryPage(TaskRepository repository, String pageName, IRepositoryQuery query) {
 		super(pageName, repository, query);
-		setDescription("Enter title and select a query type.");
+		setDescription(Messages.GerritCustomQueryPage_Enter_title_and_select_query_type);
 		setNeedsClear(true);
 		setNeedsRefresh(true);
 	}
@@ -82,25 +82,25 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage2 {
 		};
 
 		Group group = new Group(composite, SWT.NONE);
-		group.setText("Query type");
+		group.setText(Messages.GerritCustomQueryPage_Query_type);
 		GridLayoutFactory.swtDefaults().numColumns(2).spacing(7, 5).applyTo(group);
 		GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(group);
 
 		// radio button to select query type
 		myChangesButton = new Button(group, SWT.RADIO);
-		myChangesButton.setText("My changes");
+		myChangesButton.setText(Messages.GerritCustomQueryPage_My_changes);
 		GridDataFactory.fillDefaults().span(2, 1).applyTo(myChangesButton);
 
 		watchedChangesButton = new Button(group, SWT.RADIO);
-		watchedChangesButton.setText("My watched changes");
+		watchedChangesButton.setText(Messages.GerritCustomQueryPage_My_watched_changes);
 		GridDataFactory.fillDefaults().span(2, 1).applyTo(watchedChangesButton);
 
 		allOpenChangesButton = new Button(group, SWT.RADIO);
-		allOpenChangesButton.setText("All open changes");
+		allOpenChangesButton.setText(Messages.GerritCustomQueryPage_All_open_changes);
 		GridDataFactory.fillDefaults().span(2, 1).applyTo(allOpenChangesButton);
 
 		byProjectButton = new Button(group, SWT.RADIO);
-		byProjectButton.setText("Open changes by project:");
+		byProjectButton.setText(Messages.GerritCustomQueryPage_Open_changes_by_project);
 
 		projectText = new Text(group, SWT.BORDER);
 		projectText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
@@ -109,7 +109,7 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage2 {
 
 		new Label(composite, SWT.NONE);
 		customQueryButton = new Button(group, SWT.RADIO);
-		customQueryButton.setText("Custom query:");
+		customQueryButton.setText(Messages.GerritCustomQueryPage_Custom_query);
 
 		queryText = new Text(group, SWT.BORDER);
 		queryText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));

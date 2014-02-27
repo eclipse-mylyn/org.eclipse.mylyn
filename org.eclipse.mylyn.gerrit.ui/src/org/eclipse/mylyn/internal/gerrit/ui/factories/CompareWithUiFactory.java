@@ -81,7 +81,7 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 	private IReviewItemSet compareSet;
 
 	public CompareWithUiFactory(IUiContext context, IReviewItemSet set) {
-		super("Compare With...", context, set);
+		super(Messages.CompareWithUiFactory_Compare_With, context, set);
 	}
 
 	@Override
@@ -91,7 +91,7 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 			final Composite compareComposite = toolkit.createComposite(parent);
 			GridLayoutFactory.fillDefaults().numColumns(2).spacing(0, 0).applyTo(compareComposite);
 
-			Button compareButton = toolkit.createButton(compareComposite, "Compare With Base", SWT.PUSH);
+			Button compareButton = toolkit.createButton(compareComposite, Messages.CompareWithUiFactory_Compare_With_Base, SWT.PUSH);
 			compareButton.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -119,7 +119,7 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 						for (final IReviewItemSet otherSet : getModelObject().getReview().getSets()) {
 							if (otherSet != getModelObject()) {
 								MenuItem item = new MenuItem(menu, SWT.NONE);
-								item.setText(NLS.bind("Compare with {0}", otherSet.getName()));
+								item.setText(NLS.bind(Messages.CompareWithUiFactory_Compare_with_X, otherSet.getName()));
 								item.addSelectionListener(new SelectionAdapter() {
 									@Override
 									public void widgetSelected(SelectionEvent e) {
@@ -160,8 +160,8 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 		compareSet = IReviewsFactory.INSTANCE.createReviewItemSet();
 		String basePatchSetLabel = content.getBase() != null
 				? Integer.toString(content.getBase().getPatchSetId())
-				: "Base";
-		compareSet.setName(NLS.bind("Compare Patch Set {0} with {1}", content.getTarget().getPatchSetId(),
+				: Messages.CompareWithUiFactory_Base;
+		compareSet.setName(NLS.bind(Messages.CompareWithUiFactory_Compare_Patch_Set_X_with_Y, content.getTarget().getPatchSetId(),
 				basePatchSetLabel));
 		PatchSetContentCompareRemoteFactory remoteFactory = new PatchSetContentCompareRemoteFactory(
 				getGerritFactoryProvider());

@@ -28,14 +28,14 @@ import org.eclipse.swt.widgets.Display;
 public class OpenCommitUiFactory extends AbstractPatchSetUiFactory {
 
 	public OpenCommitUiFactory(IUiContext context, IReviewItemSet set) {
-		super("Open Commit", context, set);
+		super(Messages.OpenCommitUiFactory_Open_Commit, context, set);
 	}
 
 	@Override
 	public void execute() {
 		GerritToGitMapping mapping = getGitRepository(true);
 		if (mapping != null) {
-			final FetchPatchSetJob job = new FetchPatchSetJob("Opening Commit Viewer", mapping.getRepository(),
+			final FetchPatchSetJob job = new FetchPatchSetJob(Messages.OpenCommitUiFactory_Opening_Commit_Viewer, mapping.getRepository(),
 					mapping.getRemote(), getPatchSetDetail().getPatchSet());
 			job.schedule();
 			job.addJobChangeListener(new JobChangeAdapter() {

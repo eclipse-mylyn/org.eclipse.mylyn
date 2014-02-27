@@ -51,7 +51,7 @@ public class GerritTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 
 	@Override
 	public String getPageText() {
-		return "Gerrit";
+		return Messages.GerritTaskEditorPageFactory_Gerrit;
 	}
 
 	@Override

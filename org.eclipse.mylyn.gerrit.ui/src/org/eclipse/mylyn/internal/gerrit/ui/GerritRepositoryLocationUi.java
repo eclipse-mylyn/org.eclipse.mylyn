@@ -98,8 +98,8 @@ public class GerritRepositoryLocationUi extends TaskRepositoryLocationUi impleme
 		Display.getDefault().syncExec(new Runnable() {
 			@Override
 			public void run() {
-				final WebBrowserDialog dialog = new WebBrowserDialog(WorkbenchUtil.getShell(), "Login", null,
-						"Login to OpenID Provider", MessageDialog.NONE, new String[] { IDialogConstants.CANCEL_LABEL },
+				final WebBrowserDialog dialog = new WebBrowserDialog(WorkbenchUtil.getShell(), Messages.GerritRepositoryLocationUi_Login, null,
+						Messages.GerritRepositoryLocationUi_Login_to_OpenID_Provider, MessageDialog.NONE, new String[] { IDialogConstants.CANCEL_LABEL },
 						0) {
 					@Override
 					protected Point getInitialSize() {

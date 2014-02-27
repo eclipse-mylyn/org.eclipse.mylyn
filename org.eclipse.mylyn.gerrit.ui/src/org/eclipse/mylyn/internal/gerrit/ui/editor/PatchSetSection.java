@@ -24,7 +24,7 @@ import org.eclipse.mylyn.reviews.ui.spi.editor.ReviewSetSection;
 public class PatchSetSection extends ReviewSetSection {
 
 	public PatchSetSection() {
-		setPartName("Patch Sets");
+		setPartName(Messages.PatchSetSection_Patch_Sets);
 	}
 
 	@Override

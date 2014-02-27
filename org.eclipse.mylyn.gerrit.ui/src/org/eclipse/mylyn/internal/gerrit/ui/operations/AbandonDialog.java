@@ -51,8 +51,8 @@ public class AbandonDialog extends GerritOperationDialog {
 
 	@Override
 	protected Control createPageControls(Composite parent) {
-		setTitle("Abandon Change");
-		setMessage("Enter an optional message.");
+		setTitle(Messages.AbandonDialog_Abandon_Change);
+		setMessage(Messages.AbandonDialog_Enter_optional_message);
 
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));

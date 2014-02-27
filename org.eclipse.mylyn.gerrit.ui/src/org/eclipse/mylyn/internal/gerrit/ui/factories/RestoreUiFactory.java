@@ -23,7 +23,7 @@ import org.eclipse.mylyn.reviews.ui.spi.factories.IUiContext;
 public class RestoreUiFactory extends AbstractPatchSetUiFactory {
 
 	public RestoreUiFactory(IUiContext context, IReviewItemSet set) {
-		super("Restore...", context, set);
+		super(Messages.RestoreUiFactory_Restore, context, set);
 	}
 
 	@Override

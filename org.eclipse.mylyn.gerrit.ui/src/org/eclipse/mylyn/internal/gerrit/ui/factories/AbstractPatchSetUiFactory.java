@@ -110,8 +110,8 @@ public abstract class AbstractPatchSetUiFactory extends AbstractUiFactory<IRevie
 				return mapper;
 			} else if (mapper.getGerritProject() != null) {
 				if (displayCloneDialog) {
-					boolean create = MessageDialog.openQuestion(getShell(), "Clone Git Repository",
-							"The referenced Git repository was not found in the workspace. Clone Git repository?");
+					boolean create = MessageDialog.openQuestion(getShell(), Messages.AbstractPatchSetUiFactory_Clone_Git_Repository,
+							Messages.AbstractPatchSetUiFactory_Git_repository_not_found_in_workspace);
 					if (create) {
 						int response = EGitUiUtil.openCloneRepositoryWizard(getShell(), getTaskRepository(),
 								mapper.getGerritProject());
@@ -121,13 +121,13 @@ public abstract class AbstractPatchSetUiFactory extends AbstractUiFactory<IRevie
 					}
 				}
 			} else {
-				String message = NLS.bind("No Git repository found for fetching Gerrit change {0}",
+				String message = NLS.bind(Messages.AbstractPatchSetUiFactory_No_Git_repository_found_for_fetching,
 						getTask().getTaskKey());
 				String reason = NLS.bind(
-						"No remote config found that has fetch URL with host ''{0}'' and path matching ''{1}''",
+						Messages.AbstractPatchSetUiFactory_No_remote_config_found_with_fetch_URL,
 						mapper.getGerritHost(), mapper.getGerritProjectName());
 				GerritCorePlugin.logError(message, null);
-				ErrorDialog.openError(getShell(), "Gerrit Fetch Change Error", message, new Status(IStatus.ERROR,
+				ErrorDialog.openError(getShell(), Messages.AbstractPatchSetUiFactory_Gerrit_Fetch_Change_Error, message, new Status(IStatus.ERROR,
 						GerritUiPlugin.PLUGIN_ID, reason));
 			}
 		} catch (IOException e) {

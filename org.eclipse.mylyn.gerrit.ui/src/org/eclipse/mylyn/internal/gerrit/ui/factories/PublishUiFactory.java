@@ -35,7 +35,7 @@ import com.google.gerrit.reviewdb.PatchSet;
 public class PublishUiFactory extends AbstractPatchSetUiFactory {
 
 	public PublishUiFactory(IUiContext context, IReviewItemSet set) {
-		super("Publish Comments...", context, set);
+		super(Messages.PublishUiFactory_Publish_Comments, context, set);
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class PublishUiFactory extends AbstractPatchSetUiFactory {
 		final PatchSetPublishDetail publishDetail = getChange().getPublishDetailByPatchSetId().get(patchSetId);
 
 		TaskAttribute comment = getTaskData().getRoot().getAttribute(TaskAttribute.COMMENT_NEW);
-		String editorCommentText = comment != null ? comment.getValue() : "";
+		String editorCommentText = comment != null ? comment.getValue() : ""; //$NON-NLS-1$
 		int open = new PublishDialog(getShell(), getTask(), getChange(), publishDetail, getModelObject(),
 				editorCommentText).open(getEditor());
 		if (open == Window.OK && comment != null) {
@@ -56,8 +56,8 @@ public class PublishUiFactory extends AbstractPatchSetUiFactory {
 				TasksUi.getTaskDataManager().discardEdits(getTask());
 			} catch (CoreException e) {
 				Status status = new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID,
-						"Error while clearing task status.", e);
-				TasksUiInternal.displayStatus("Clear outgoing task status failed", status);
+						Messages.PublishUiFactory_Error_while_clearing_status, e);
+				TasksUiInternal.displayStatus(Messages.PublishUiFactory_Clearing_status_failed, status);
 			}
 		}
 	}

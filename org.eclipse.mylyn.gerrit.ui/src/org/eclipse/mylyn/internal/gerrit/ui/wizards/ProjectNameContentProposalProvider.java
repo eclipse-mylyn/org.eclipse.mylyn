@@ -45,7 +45,7 @@ public class ProjectNameContentProposalProvider implements IContentProposalProvi
 
 		@Override
 		public String getLabel() {
-			return "(Repository configuration needs to be refreshed)";
+			return Messages.ProjectNameContentProposalProvider_Repository_configuration_needs_to_be_refreshed;
 		}
 
 		@Override

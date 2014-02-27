@@ -24,7 +24,7 @@ import org.eclipse.mylyn.reviews.ui.spi.factories.IUiContext;
 public class FetchUiFactory extends AbstractPatchSetUiFactory {
 
 	public FetchUiFactory(IUiContext context, IReviewItemSet set) {
-		super("Fetch...", context, set);
+		super(Messages.FetchUiFactory_Fetch, context, set);
 	}
 
 	@Override
