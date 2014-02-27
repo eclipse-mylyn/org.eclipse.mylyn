@@ -11,7 +11,7 @@
  -->
 <site pack200="true">
    <description url="http://download.eclipse.org/mylyn/latest">
-      Mylyn for Eclipse 3.5, 3.6 and 3.7
+      Mylyn for Eclipse 3.8, 4.3, and 4.4
    </description>
 
    <feature url="features/org.eclipse.mylyn_feature_0.0.0.jar" id="org.eclipse.mylyn_feature" version="0.0.0">
