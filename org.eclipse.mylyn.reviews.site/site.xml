@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
    <description url="http://download.eclipse.org/mylyn/reviews/0.7">
-      Mylyn Reviews for Eclipse 3.5, 3.6 and 3.7
+      Mylyn Reviews
    </description>
    <feature url="features/org.eclipse.mylyn.reviews.tasks_0.0.0.jar" id="org.eclipse.mylyn.reviews.tasks" version="0.0.0">
       <category name="Features"/>
