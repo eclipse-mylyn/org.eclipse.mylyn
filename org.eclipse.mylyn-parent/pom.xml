@@ -57,7 +57,7 @@
     <promote.skip>true</promote.skip>
     <promote.prefix>I</promote.prefix>
 
-    <dist.qualifier>'I'yyyyMMdd-HHmm</dist.qualifier>
+    <dist.qualifier>'N'yyyyMMdd-HHmm</dist.qualifier>
     <dist.repository>${project.name}</dist.repository>
     <dist.archive>${basedir}/target/drops</dist.archive>
     <dist.site></dist.site>
@@ -521,6 +521,7 @@
       <properties>
         <sign.skip>false</sign.skip>
         <dist.site>/home/data/httpd/download.eclipse.org/mylyn/snapshots</dist.site>
+        <dist.qualifier>'v'yyyyMMdd-HHmm</dist.qualifier>
       </properties>
     </profile>
     <profile>
@@ -534,6 +535,7 @@
       <properties>
         <sign.skip>false</sign.skip>
         <dist.site>/home/data/httpd/download.eclipse.org/mylyn/snapshots</dist.site>
+        <dist.qualifier>'v'yyyyMMdd-HHmm</dist.qualifier>
         <promote.prefix>v</promote.prefix>
       </properties>
     </profile>
@@ -633,9 +635,9 @@
               <version>${tycho-extras-version}</version>
             </dependency>
             <dependency>
-	      <groupId>org.eclipse.tycho.extras</groupId>
-	      <artifactId>tycho-sourceref-jgit</artifactId>
-	      <version>${tycho-extras-version}</version>
+              <groupId>org.eclipse.tycho.extras</groupId>
+              <artifactId>tycho-sourceref-jgit</artifactId>
+              <version>${tycho-extras-version}</version>
             </dependency>
           </dependencies>
           <configuration>
@@ -647,7 +649,6 @@
             <sourceReferences>
               <generate>true</generate>
             </sourceReferences>
-            <format>yyyyMMdd-HHmm</format>
             <timestampProvider>jgit</timestampProvider>
           </configuration>
         </plugin>
