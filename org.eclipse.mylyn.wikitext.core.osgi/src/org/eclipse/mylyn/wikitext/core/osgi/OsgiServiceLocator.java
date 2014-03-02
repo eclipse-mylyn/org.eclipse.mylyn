@@ -102,8 +102,8 @@ public class OsgiServiceLocator extends ServiceLocator {
 				String file = resourceName.substring(indexOf + SERVICES_SLASH.length());
 				Enumeration<URL> resources = bundle.findEntries(path, file, false);
 				if (resources == null) {
-					// for running within Eclipse as a JUnit plug-in test
-					resources = bundle.findEntries("src/" + path, file, false); //$NON-NLS-1$
+					// for running within Eclipse as a JUnit plug-in test or via self-hosted Eclipse instance
+					resources = bundle.findEntries("bin/" + path, file, false); //$NON-NLS-1$
 					if (resources == null) {
 						continue;
 					}
