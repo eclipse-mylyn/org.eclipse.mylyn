@@ -87,7 +87,15 @@ public class ProjectPropertyPage extends PropertyPage implements IWorkbenchPrope
 			setValid(false);
 		}
 
+		applyDialogFont(container);
+
 		return container;
+	}
+
+	@Override
+	protected void performDefaults() {
+		wikiTextNatureButton.setSelection(false);
+		super.performDefaults();
 	}
 
 	@Override
