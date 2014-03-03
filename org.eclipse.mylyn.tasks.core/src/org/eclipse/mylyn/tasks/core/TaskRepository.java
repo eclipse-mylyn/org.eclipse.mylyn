@@ -16,18 +16,16 @@ package org.eclipse.mylyn.tasks.core;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.PlatformObject;
-import org.eclipse.core.runtime.jobs.ILock;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.core.ILocationService;
@@ -48,7 +46,7 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryPerson;
  * <li>The solution we have come up with thus far is not to interpret the date as a DATE object but rather simply use
  * the date string given to us by the repository itself.</li>
  * </ul>
- * 
+ *
  * @author Mik Kersten
  * @author Rob Elves
  * @author Eugene Kuleshov
@@ -136,7 +134,7 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * Category for repositories that manage tasks.
-	 * 
+	 *
 	 * @see #setCategory(String)
 	 * @since 3.9
 	 */
@@ -144,7 +142,7 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * Category for repositories that manage bugs.
-	 * 
+	 *
 	 * @see #setCategory(String)
 	 * @since 3.9
 	 */
@@ -152,7 +150,7 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * Category for repositories that manage builds.
-	 * 
+	 *
 	 * @see #setCategory(String)
 	 * @since 3.9
 	 */
@@ -160,7 +158,7 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * Category for repositories that manage reviews.
-	 * 
+	 *
 	 * @see #setCategory(String)
 	 * @since 3.9
 	 */
@@ -184,8 +182,6 @@ public final class TaskRepository extends PlatformObject {
 		throw new IllegalArgumentException("Unknown authentication type: " + type); //$NON-NLS-1$
 	}
 
-	private final ILock lock = Job.getJobManager().newLock();
-
 	private boolean isCachedUserName;
 
 	private String cachedUserName;
@@ -196,7 +192,7 @@ public final class TaskRepository extends PlatformObject {
 	 * Stores properties that are not persisted. Note that this map is currently cleared when flushCredentials() is
 	 * invoked.
 	 */
-	private final Map<String, String> transientProperties = new HashMap<String, String>();
+	private final Map<String, String> transientProperties = new ConcurrentHashMap<String, String>();
 
 	/*
 	 * TODO: should be externalized and added to extension point, see bug 183606
@@ -296,16 +292,10 @@ public final class TaskRepository extends PlatformObject {
 		setProperty(getKeyPrefix(AuthenticationType.PROXY) + ENABLED, null);
 		setProperty(getKeyPrefix(AuthenticationType.REPOSITORY) + ENABLED, null);
 
-		try {
-			lock.acquire();
-			transientProperties.clear();
-			isCachedUserName = false;
-		} finally {
-			lock.release();
-		}
+		transientProperties.clear();
+		isCachedUserName = false;
 
-		ICredentialsStore credentialsStore = getCredentialsStore();
-		credentialsStore.clear();
+		getCredentialsStore().clear();
 		this.setProperty(AuthenticationType.REPOSITORY + USERNAME, ""); //$NON-NLS-1$
 	}
 
@@ -313,13 +303,12 @@ public final class TaskRepository extends PlatformObject {
 		if (property.equals(getKeyPrefix(AuthenticationType.REPOSITORY) + USERNAME)) {
 			return getProperty(property);
 		}
-		ICredentialsStore credentialsStore = getCredentialsStore();
-		return credentialsStore.get(property, null);
+		return getCredentialsStore().get(property, null);
 	}
 
 	/**
 	 * Returns {@code} if credentials persisted in the platform keystore.
-	 * 
+	 *
 	 * @since 3.10
 	 * @see #setShouldPersistCredentials(boolean)
 	 */
@@ -332,7 +321,7 @@ public final class TaskRepository extends PlatformObject {
 	 * will not be persisted in the platform keystore.
 	 * <p>
 	 * This flag does not have any effect if not running in an OSGi environment.
-	 * 
+	 *
 	 * @since 3.10
 	 * @see #shouldPersistCredentials()
 	 */
@@ -347,7 +336,7 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * Get the last refresh date as initialized {@link Date} object, null if not set<br />
-	 * 
+	 *
 	 * @return {@link Date} configuration date, null if not set
 	 */
 	public Date getConfigurationDate() {
@@ -376,39 +365,34 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * Returns the credentials for an authentication type.
-	 * 
+	 *
 	 * @param authType
 	 *            the type of authentication
 	 * @return null, if no credentials are set for <code>authType</code>
 	 * @since 3.0
 	 */
 	public AuthenticationCredentials getCredentials(AuthenticationType authType) {
-		try {
-			lock.acquire();
-			String key = getKeyPrefix(authType);
-			if (getBooleanProperty(key + ENABLED)) {
-				String userName = getAuthInfo(key + USERNAME);
-				String password;
+		String key = getKeyPrefix(authType);
+		if (getBooleanProperty(key + ENABLED)) {
+			String userName = getAuthInfo(key + USERNAME);
+			String password;
 
-				if (getBooleanProperty(key + SAVE_PASSWORD)) {
-					password = getAuthInfo(key + PASSWORD);
-				} else {
-					password = transientProperties.get(key + PASSWORD);
-				}
-
-				if (userName == null) {
-					userName = ""; //$NON-NLS-1$
-				}
-				if (password == null) {
-					password = ""; //$NON-NLS-1$
-				}
-
-				return new AuthenticationCredentials(userName, password);
+			if (getBooleanProperty(key + SAVE_PASSWORD)) {
+				password = getAuthInfo(key + PASSWORD);
 			} else {
-				return null;
+				password = transientProperties.get(key + PASSWORD);
 			}
-		} finally {
-			lock.release();
+
+			if (userName == null) {
+				userName = ""; //$NON-NLS-1$
+			}
+			if (password == null) {
+				password = ""; //$NON-NLS-1$
+			}
+
+			return new AuthenticationCredentials(userName, password);
+		} else {
+			return null;
 		}
 	}
 
@@ -518,7 +502,7 @@ public final class TaskRepository extends PlatformObject {
 	public String getUserName() {
 		// NOTE: if anonymous, user name is "" string so we won't go to keyring
 		if (!isCachedUserName) {
-			// do not open secure store for username to avoid prompting user for password during initialization 
+			// do not open secure store for username to avoid prompting user for password during initialization
 			cachedUserName = getProperty(getKeyPrefix(AuthenticationType.REPOSITORY) + USERNAME);
 			isCachedUserName = true;
 		}
@@ -600,12 +584,12 @@ public final class TaskRepository extends PlatformObject {
 	public void setCharacterEncoding(String characterEncoding) {
 		properties.put(IRepositoryConstants.PROPERTY_ENCODING, characterEncoding == null
 				? DEFAULT_CHARACTER_ENCODING
-				: characterEncoding);
+						: characterEncoding);
 	}
 
 	/**
 	 * Set the Configuration date to the {@link Date} indicated.
-	 * 
+	 *
 	 * @param configuration
 	 *            date {@link {@link Date}
 	 */
@@ -617,7 +601,7 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * Sets the credentials for <code>authType</code>.
-	 * 
+	 *
 	 * @param authType
 	 *            the type of authentication
 	 * @param credentials
@@ -628,38 +612,33 @@ public final class TaskRepository extends PlatformObject {
 	 * @since 3.0
 	 */
 	public void setCredentials(AuthenticationType authType, AuthenticationCredentials credentials, boolean savePassword) {
-		try {
-			lock.acquire();
-			String key = getKeyPrefix(authType);
+		String key = getKeyPrefix(authType);
 
-			setBooleanProperty(key + SAVE_PASSWORD, savePassword);
+		setBooleanProperty(key + SAVE_PASSWORD, savePassword);
 
-			if (credentials == null) {
-				setBooleanProperty(key + ENABLED, false);
+		if (credentials == null) {
+			setBooleanProperty(key + ENABLED, false);
+			transientProperties.remove(key + PASSWORD);
+			addAuthInfo(null, null, key + USERNAME, key + PASSWORD);
+		} else {
+			setBooleanProperty(key + ENABLED, true);
+			if (savePassword) {
+				addAuthInfo(credentials.getUserName(), credentials.getPassword(), key + USERNAME, key + PASSWORD);
 				transientProperties.remove(key + PASSWORD);
-				addAuthInfo(null, null, key + USERNAME, key + PASSWORD);
 			} else {
-				setBooleanProperty(key + ENABLED, true);
-				if (savePassword) {
-					addAuthInfo(credentials.getUserName(), credentials.getPassword(), key + USERNAME, key + PASSWORD);
-					transientProperties.remove(key + PASSWORD);
-				} else {
-					addAuthInfo(credentials.getUserName(), null, key + USERNAME, key + PASSWORD);
-					transientProperties.put(key + PASSWORD, credentials.getPassword());
-				}
+				addAuthInfo(credentials.getUserName(), null, key + USERNAME, key + PASSWORD);
+				transientProperties.put(key + PASSWORD, credentials.getPassword());
 			}
+		}
 
-			if (authType == AuthenticationType.REPOSITORY) {
-				if (credentials == null) {
-					this.cachedUserName = null;
-					this.isCachedUserName = false;
-				} else {
-					this.cachedUserName = credentials.getUserName();
-					this.isCachedUserName = true;
-				}
+		if (authType == AuthenticationType.REPOSITORY) {
+			if (credentials == null) {
+				this.cachedUserName = null;
+				this.isCachedUserName = false;
+			} else {
+				this.cachedUserName = credentials.getUserName();
+				this.isCachedUserName = true;
 			}
-		} finally {
-			lock.release();
 		}
 	}
 
@@ -730,7 +709,7 @@ public final class TaskRepository extends PlatformObject {
 	public void setTimeZoneId(String timeZoneId) {
 		setProperty(IRepositoryConstants.PROPERTY_TIMEZONE, timeZoneId == null
 				? TimeZone.getDefault().getID()
-				: timeZoneId);
+						: timeZoneId);
 	}
 
 	/**
@@ -816,7 +795,7 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * If this repository was automatically created from a template <code>value</code> should be set to true.
-	 * 
+	 *
 	 * @since 3.5
 	 * @see #isCreatedFromTemplate()
 	 */
@@ -826,7 +805,7 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * Returns true, if this repository was automatically created from a template.
-	 * 
+	 *
 	 * @since 3.5
 	 * @see #setCreatedFromTemplate(boolean)
 	 */
