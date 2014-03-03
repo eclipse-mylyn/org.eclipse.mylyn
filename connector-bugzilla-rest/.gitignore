@@ -1,0 +1,1 @@
+# empty file to work around bug 428805 which causes a modal dialog prompt on Linux and tests to timeout
