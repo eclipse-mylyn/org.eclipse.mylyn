@@ -22,12 +22,6 @@ public class Messages extends NLS {
 
 	public static String Reviews_GeneralCommentsText;
 
-	public static String Reviews_RetrievingContents;
-
-	public static String Reviews_RetrievingDetails;
-
-	public static String Reviews_UpdateFailure;
-
 	public static String Reviews_NextComment;
 
 	public static String Reviews_NextComment_Tooltip;
@@ -35,6 +29,40 @@ public class Messages extends NLS {
 	public static String Reviews_PreviousComment;
 
 	public static String Reviews_PreviousComment_Tooltip;
+
+	public static String ReviewsLabelProvider_Artifact;
+
+	public static String ReviewsLabelProvider_Author;
+
+	public static String ReviewsLabelProvider_Bracket_X_bracket;
+
+	public static String ReviewsLabelProvider_Change_X;
+
+	public static String ReviewsLabelProvider_Comment;
+
+	public static String ReviewsLabelProvider_Item;
+
+	public static String ReviewsLabelProvider_Items;
+
+	public static String ReviewsLabelProvider_Last_Change;
+
+	public static String ReviewsLabelProvider_Question_mark;
+
+	public static String ReviewsLabelProvider_Unknown;
+
+	public static String ReviewsLabelProvider_X_ago;
+
+	public static String ReviewsLabelProvider_X_comments;
+
+	public static String ReviewsLabelProvider_X_comments_Y_drafts;
+
+	public static String ReviewsLabelProvider_X_dot_dot_dot;
+
+	public static String ReviewsLabelProvider_X_drafts;
+
+	public static String ReviewsLabelProvider_X_renamed_from_Y_Z;
+
+	public static String ReviewsLabelProvider_X_Revision_Y;
 
 	static {
 		// initialize resource bundle

@@ -86,8 +86,8 @@ public abstract class AbstractUiFactory<EObjectType> implements IUiContext {
 
 	protected void handleExecutionStateError() {
 		String message = NLS.bind(
-				"Cannot {0}. Try re-synchronizing the review task. If that fails, there may be a problem with your repository connection.",
-				StringUtils.removeEnd(name, "..."));
+				"Cannot {0}. Try re-synchronizing the review task. If that fails, there may be a problem with your repository connection.", //$NON-NLS-1$
+				StringUtils.removeEnd(name, "...")); //$NON-NLS-1$
 		StatusManager.getManager().handle(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, message),
 				StatusManager.SHOW | StatusManager.LOG);
 	}

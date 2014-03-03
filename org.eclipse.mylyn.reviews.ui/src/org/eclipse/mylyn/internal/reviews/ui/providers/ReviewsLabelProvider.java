@@ -29,6 +29,7 @@ import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.commons.workbench.CommonImageManger;
+import org.eclipse.mylyn.internal.reviews.ui.Messages;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsImages;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.ICommentContainer;
@@ -101,7 +102,8 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 		}
 	};
 
-	public static final TableColumnProvider ITEMS_COLUMN = new TableColumnProvider("Item", 80, 800, true) {
+	public static final TableColumnProvider ITEMS_COLUMN = new TableColumnProvider(Messages.ReviewsLabelProvider_Item,
+			80, 800, true) {
 
 		CommonImageManger imageManager = new CommonImageManger();
 
@@ -163,7 +165,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 				return org.eclipse.mylyn.internal.reviews.ui.Messages.Reviews_GeneralCommentsText;
 			}
 			if (element instanceof RetrievingContentsNode) {
-				return org.eclipse.mylyn.internal.reviews.ui.Messages.Reviews_RetrievingContents;
+				return org.eclipse.mylyn.reviews.ui.spi.editor.Messages.Reviews_RetrievingContents;
 			}
 			if (element instanceof Collection) {
 				Collection<?> collection = (Collection<?>) element;
@@ -173,7 +175,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 			}
 			if (element instanceof IReview) {
 				IReview review = (IReview) element;
-				return "Change " + review.getId();
+				return NLS.bind(Messages.ReviewsLabelProvider_Change_X, review.getId());
 			}
 			if (element instanceof IFileVersion) {
 				IFileVersion version = (IFileVersion) element;
@@ -199,17 +201,18 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 				if (!StringUtils.isEmpty(displayName)) {
 					return displayName;
 				}
-				return "Unknown";
+				return Messages.ReviewsLabelProvider_Unknown;
 			}
 			if (element instanceof Date) {
-				return DateUtil.getRelativeDuration(System.currentTimeMillis() - ((Date) element).getTime()) + " ago";
+				return NLS.bind(Messages.ReviewsLabelProvider_X_ago,
+						DateUtil.getRelativeDuration(System.currentTimeMillis() - ((Date) element).getTime()));
 			}
 			if (element instanceof ILineLocation) {
 				int min = ((ILineLocation) element).getRangeMin();
 				int max = ((ILineLocation) element).getRangeMax();
 				String text = Integer.toString(min);
 				if (min != max) {
-					text += "-" + max;
+					text += "-" + max; //$NON-NLS-1$
 				}
 				return text;
 			}
@@ -266,20 +269,23 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 				IFileVersion base = fileItem.getBase();
 				IFileVersion target = fileItem.getTarget();
 				if (target.getPath() != null && base.getPath() == null) {
-					return target.getPath() + " Revision: " + target.getDescription();
+					return NLS.bind(Messages.ReviewsLabelProvider_X_Revision_Y, target.getPath(),
+							target.getDescription());
 				} else if (target.getPath() == null && base.getPath() != null) {
-					return base.getPath() + " Revision: " + target.getDescription();
+					return NLS.bind(Messages.ReviewsLabelProvider_X_Revision_Y, base.getPath(), target.getDescription());
 				} else if (!target.getPath().equals(base.getPath())) {
-					return target.getPath() + "\n renamed from: " + base.getPath() + " " + target.getDescription();
+					return NLS.bind(Messages.ReviewsLabelProvider_X_renamed_from_Y_Z, new Object[] { target.getPath(),
+							base.getPath(), target.getDescription() });
 				} else {
-					return target.getPath() + " Revision: " + target.getDescription();
+					return NLS.bind(Messages.ReviewsLabelProvider_X_Revision_Y, target.getPath(),
+							target.getDescription());
 				}
 			}
 			if (element instanceof IUser) {
 				IUser user = (IUser) element;
 				String text = user.getDisplayName();
 				if (!StringUtils.isEmpty(user.getEmail())) {
-					text += " <" + user.getEmail() + ">";
+					text += NLS.bind(Messages.ReviewsLabelProvider_Bracket_X_bracket, user.getEmail());
 				}
 				return text;
 			}
@@ -295,8 +301,8 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 		};
 	};
 
-	public static final TableColumnProvider ARTIFACT_COLUMN = new AdaptingTableColumnProvider(ITEMS_COLUMN, "Artifact",
-			50, 400, false) {
+	public static final TableColumnProvider ARTIFACT_COLUMN = new AdaptingTableColumnProvider(ITEMS_COLUMN,
+			Messages.ReviewsLabelProvider_Artifact, 50, 400, false) {
 
 		@Override
 		public Object adapt(Object element) {
@@ -331,8 +337,8 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 		};
 	};
 
-	public static final TableColumnProvider COMMENTS_COLUMN = new AdaptingTableColumnProvider(ITEMS_COLUMN, "Comment",
-			50, 400, true) {
+	public static final TableColumnProvider COMMENTS_COLUMN = new AdaptingTableColumnProvider(ITEMS_COLUMN,
+			Messages.ReviewsLabelProvider_Comment, 50, 400, true) {
 		@Override
 		public Object adapt(Object element) {
 			if (element instanceof IComment) {
@@ -352,8 +358,8 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 		};
 	};
 
-	public static final TableColumnProvider AUTHORS_COLUMN = new AdaptingTableColumnProvider(ITEMS_COLUMN, "Author",
-			10, 120, false) {
+	public static final TableColumnProvider AUTHORS_COLUMN = new AdaptingTableColumnProvider(ITEMS_COLUMN,
+			Messages.ReviewsLabelProvider_Author, 10, 120, false) {
 
 		@Override
 		public Object adapt(Object element) {
@@ -373,8 +379,8 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 		}
 	};
 
-	public static final TableColumnProvider DATE_COLUMN = new AdaptingTableColumnProvider(ITEMS_COLUMN, "Last Change",
-			10, 120, false) {
+	public static final TableColumnProvider DATE_COLUMN = new AdaptingTableColumnProvider(ITEMS_COLUMN,
+			Messages.ReviewsLabelProvider_Last_Change, 10, 120, false) {
 
 		@Override
 		public Object adapt(Object element) {
@@ -395,7 +401,8 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 		};
 	};
 
-	public static final TableColumnProvider SINGLE_COLUMN = new TableColumnProvider("Items", 10, 120, false) {
+	public static final TableColumnProvider SINGLE_COLUMN = new TableColumnProvider(
+			Messages.ReviewsLabelProvider_Items, 10, 120, false) {
 
 		@Override
 		public Image getImage(Object element) {
@@ -415,7 +422,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 			}
 			if (element instanceof IReview) {
 				IReview review = (IReview) element;
-				return "Change " + review.getId();
+				return NLS.bind(Messages.ReviewsLabelProvider_Change_X, review.getId());
 			}
 			if (element instanceof IFileItem) {
 				IFileItem file = (IFileItem) element;
@@ -440,9 +447,9 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 			if (element instanceof ILineLocation) {
 				int min = ((ILineLocation) element).getRangeMin();
 				int max = ((ILineLocation) element).getRangeMax();
-				String text = min + "";
+				String text = min + ""; //$NON-NLS-1$
 				if (min != max) {
-					text += "-" + max;
+					text += "-" + max; //$NON-NLS-1$
 				}
 				return text;
 			}
@@ -458,14 +465,15 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 					IComment comment = (IComment) element;
 					String commentText = text;
 					int textLength = 0;
-					String authorText = "";
+					String authorText = ""; //$NON-NLS-1$
 					if (comment.getAuthor() != null) {
 						authorText = getText(comment.getAuthor());
 						textLength += authorText.length();
 					}
 					int descSpaceRemaining = (MAXIMUM_COMMENT_LENGTH - textLength);
 					if (commentText.length() > descSpaceRemaining + 3) { //Account for ellipses
-						commentText = commentText.substring(0, descSpaceRemaining - 3) + "..."; //$NON-NLS-1$
+						commentText = NLS.bind(Messages.ReviewsLabelProvider_X_dot_dot_dot,
+								commentText.substring(0, descSpaceRemaining - 3));
 					}
 					commentText = StringUtils.rightPad(commentText, MAXIMUM_COMMENT_LENGTH - textLength);
 
@@ -621,7 +629,7 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 
 	public static String getStatsText(ICommentContainer container) {
 		if (container instanceof IReviewItemSet && ((IReviewItemSet) container).getItems().size() == 0) {
-			return "  [?]";
+			return Messages.ReviewsLabelProvider_Question_mark;
 		}
 		List<? extends IComment> comments;
 		if (container instanceof IReview) {
@@ -637,13 +645,13 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 			}
 		}
 		commentCount -= draftCount;
-		String statsText = "";
+		String statsText = ""; //$NON-NLS-1$
 		if (commentCount > 0 && draftCount > 0) {
-			statsText = NLS.bind("  [{0} comments, {1} drafts]", commentCount, draftCount);
+			statsText = NLS.bind(Messages.ReviewsLabelProvider_X_comments_Y_drafts, commentCount, draftCount);
 		} else if (commentCount > 0) {
-			statsText = NLS.bind("  [{0} comments]", commentCount);
+			statsText = NLS.bind(Messages.ReviewsLabelProvider_X_comments, commentCount);
 		} else if (draftCount > 0) {
-			statsText = NLS.bind("  [{0} drafts]", draftCount);
+			statsText = NLS.bind(Messages.ReviewsLabelProvider_X_drafts, draftCount);
 		}
 		return statsText;
 	}

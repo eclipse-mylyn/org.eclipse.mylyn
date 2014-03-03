@@ -52,6 +52,7 @@ import org.eclipse.mylyn.internal.reviews.ui.annotations.CommentAnnotation;
 import org.eclipse.mylyn.internal.reviews.ui.annotations.CommentAnnotationHoverInput;
 import org.eclipse.mylyn.internal.reviews.ui.annotations.CommentInformationControlCreator;
 import org.eclipse.mylyn.internal.reviews.ui.annotations.CommentPopupDialog;
+import org.eclipse.mylyn.internal.reviews.ui.annotations.Messages;
 import org.eclipse.mylyn.internal.reviews.ui.annotations.ReviewAnnotationModel;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -160,7 +161,8 @@ public class CommentAnnotationRulerHover implements IAnnotationHover, IAnnotatio
 	protected String formatMultipleMessages(List<String> messages) {
 		StringBuffer buffer = new StringBuffer();
 		HTMLPrinter.addPageProlog(buffer);
-		HTMLPrinter.addParagraph(buffer, HTMLPrinter.convertToHTMLContent("There are multiple comments on this line"));
+		HTMLPrinter.addParagraph(buffer,
+				HTMLPrinter.convertToHTMLContent(Messages.CommentAnnotationHover_Multiple_comments));
 
 		HTMLPrinter.startBulletList(buffer);
 		for (String message : messages) {

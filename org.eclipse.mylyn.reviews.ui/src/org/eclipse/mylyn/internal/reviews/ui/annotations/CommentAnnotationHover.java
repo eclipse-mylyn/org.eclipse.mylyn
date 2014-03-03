@@ -188,7 +188,7 @@ public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHove
 	protected String formatMultipleMessages(List<String> messages) {
 		StringBuffer buffer = new StringBuffer();
 		HTMLPrinter.addPageProlog(buffer);
-		HTMLPrinter.addParagraph(buffer, HTMLPrinter.convertToHTMLContent("There are multiple comments on this line"));
+		HTMLPrinter.addParagraph(buffer, HTMLPrinter.convertToHTMLContent(Messages.CommentAnnotationHover_Multiple_comments));
 
 		HTMLPrinter.startBulletList(buffer);
 		for (String message : messages) {

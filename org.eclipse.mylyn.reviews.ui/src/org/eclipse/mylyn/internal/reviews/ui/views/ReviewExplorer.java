@@ -54,6 +54,7 @@ import org.eclipse.mylyn.reviews.core.spi.remote.review.IReviewRemoteFactoryProv
 import org.eclipse.mylyn.reviews.ui.spi.editor.AbstractReviewTaskEditorPage;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -206,9 +207,9 @@ public class ReviewExplorer extends CommonNavigator {
 	class ShowListAction extends Action {
 		public ShowListAction() {
 			super("", AS_RADIO_BUTTON); //$NON-NLS-1$
-			setText("Show List");
-			setDescription("Show comments in a flat list");
-			setToolTipText("Show all comments in a flat list (Hide files and patch sets)");
+			setText(Messages.ReviewExplorer_Show_List);
+			setDescription(Messages.ReviewExplorer_Show_List_description);
+			setToolTipText(Messages.ReviewExplorer_Show_List_tooltip);
 			setImageDescriptor(ReviewsImages.FLAT_LAYOUT);
 		}
 
@@ -231,9 +232,9 @@ public class ReviewExplorer extends CommonNavigator {
 
 		public ShowTreeAction() {
 			super("", AS_RADIO_BUTTON); //$NON-NLS-1$
-			setText("Show Tree");
-			setDescription("Show all items in a tree");
-			setToolTipText("Show artifacts, files and global comments in a tree");
+			setText(Messages.ReviewExplorer_Show_Tree);
+			setDescription(Messages.ReviewExplorer_Show_Tree_description);
+			setToolTipText(Messages.ReviewExplorer_Show_Tree_tooltip);
 			setImageDescriptor(ReviewsImages.HIERARCHICAL_LAYOUT);
 		}
 
@@ -256,9 +257,9 @@ public class ReviewExplorer extends CommonNavigator {
 
 		public RefreshReviewsAction() {
 			super("", AS_PUSH_BUTTON); //$NON-NLS-1$
-			setText("Refresh");
-			setDescription("Refresh Review Items");
-			setToolTipText("Refresh Review Items");
+			setText(Messages.ReviewExplorer_Refresh);
+			setDescription(Messages.ReviewExplorer_Refresh_description);
+			setToolTipText(Messages.ReviewExplorer_Refresh_tooltip);
 			setImageDescriptor(ReviewsImages.REFRESH);
 		}
 
@@ -275,9 +276,9 @@ public class ReviewExplorer extends CommonNavigator {
 
 		public FilterNonCommentsReviewsAction() {
 			super("", AS_CHECK_BOX); //$NON-NLS-1$
-			setText("Filter for Comments");
-			setDescription("Filter items for comments.");
-			setToolTipText("Hide items that don't have comments");
+			setText(Messages.ReviewExplorer_Filter_for_Comments);
+			setDescription(Messages.ReviewExplorer_Filter_for_Comments_description);
+			setToolTipText(Messages.ReviewExplorer_Filter_for_Comments_tooltip);
 			setImageDescriptor(ReviewsImages.REVIEW_QUOTE);
 		}
 
@@ -464,10 +465,10 @@ public class ReviewExplorer extends CommonNavigator {
 	}
 
 	protected void updateContentDescription() {
-		String title = "(No Selection)";
+		String title = Messages.ReviewExplorer_No_Selection;
 		if (currentPart != null && currentPart.getTaskEditorInput() != null) {
 			ITask task = currentPart.getTaskEditorInput().getTask();
-			title = "Change " + task.getTaskId() + ": " + task.getSummary();
+			title = NLS.bind(Messages.ReviewExplorer_Change_X_colon_Y, task.getTaskId(), task.getSummary());
 		}
 		setContentDescription(title);
 	}

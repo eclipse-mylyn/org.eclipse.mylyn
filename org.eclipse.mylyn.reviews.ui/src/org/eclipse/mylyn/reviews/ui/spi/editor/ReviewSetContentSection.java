@@ -154,16 +154,17 @@ public class ReviewSetContentSection {
 			String time = DateFormat.getDateTimeInstance().format(set.getCreationDate());
 			int numComments = set.getAllComments().size();
 			if (numComments > 0) {
-				message = NLS.bind("{0}, {1} Comments", time, numComments);
+				message = NLS.bind(Messages.ReviewSetContentSection_X_comma_Y_Comments, time, numComments);
 			} else {
-				message = NLS.bind("{0}", time);
+				message = time;
 			}
 			if (itemListObserver != null && itemListObserver.getConsumer().isRetrieving()) {
-				message += " " + org.eclipse.mylyn.internal.reviews.ui.Messages.Reviews_RetrievingContents; //$NON-NLS-1$
+				message += " " + Messages.Reviews_RetrievingContents; //$NON-NLS-1$
 			}
 		} else {
-			message = org.eclipse.mylyn.internal.reviews.ui.Messages.Reviews_UpdateFailure + ": " //$NON-NLS-1$
-					+ itemListObserver.getConsumer().getStatus().getMessage();
+			message = NLS.bind(Messages.Reviews_UpdateFailure_X, itemListObserver.getConsumer()
+					.getStatus()
+					.getMessage());
 		}
 
 		AbstractReviewSection.appendMessage(getSection(), message);
@@ -177,29 +178,29 @@ public class ReviewSetContentSection {
 		Label authorLabel = new Label(composite, SWT.NONE);
 		FormColors colors = parentSection.getToolkit().getColors();
 		authorLabel.setForeground(colors.getColor(IFormColors.TITLE));
-		authorLabel.setText("Author");
+		authorLabel.setText(Messages.ReviewSetContentSection_Author);
 
 		Text authorText = new Text(composite, SWT.READ_ONLY);
 		if (set.getAddedBy() != null) {
 			authorText.setText(set.getAddedBy().getDisplayName());
 		} else {
-			authorText.setText("Unspecified");
+			authorText.setText(Messages.ReviewSetContentSection_Unspecified);
 		}
 
 		Label committerLabel = new Label(composite, SWT.NONE);
 		committerLabel.setForeground(colors.getColor(IFormColors.TITLE));
-		committerLabel.setText("Committer");
+		committerLabel.setText(Messages.ReviewSetContentSection_Committer);
 
 		Text committerText = new Text(composite, SWT.READ_ONLY);
 		if (set.getCommittedBy() != null) {
 			committerText.setText(set.getCommittedBy().getDisplayName());
 		} else {
-			committerText.setText("Unspecified");
+			committerText.setText(Messages.ReviewSetContentSection_Unspecified);
 		}
 
 		Label commitLabel = new Label(composite, SWT.NONE);
 		commitLabel.setForeground(colors.getColor(IFormColors.TITLE));
-		commitLabel.setText("Commit");
+		commitLabel.setText(Messages.ReviewSetContentSection_Commit);
 
 		ScalingHyperlink commitLink = new ScalingHyperlink(composite, SWT.READ_ONLY);
 		commitLink.setText(set.getRevision());
@@ -216,7 +217,7 @@ public class ReviewSetContentSection {
 
 		Label refLabel = new Label(composite, SWT.NONE);
 		refLabel.setForeground(colors.getColor(IFormColors.TITLE));
-		refLabel.setText("Ref");
+		refLabel.setText(Messages.ReviewSetContentSection_Ref);
 
 		Text refText = new Text(composite, SWT.READ_ONLY);
 		refText.setText(set.getReference());

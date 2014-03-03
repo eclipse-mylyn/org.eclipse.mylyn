@@ -61,7 +61,7 @@ public abstract class TableStyledLabelProvider extends LabelProvider implements 
 		public StyledString getStyledText(Object element) {
 			String columnText = getText(element);
 			if (columnText == null) {
-				columnText = "";
+				columnText = ""; //$NON-NLS-1$
 			}
 			return new StyledString(columnText);
 		}
@@ -117,7 +117,7 @@ public abstract class TableStyledLabelProvider extends LabelProvider implements 
 			if (columnObject != null) {
 				return targetProvider.getText(columnObject);
 			}
-			return "";
+			return ""; //$NON-NLS-1$
 		};
 
 		public abstract Object adapt(Object element);

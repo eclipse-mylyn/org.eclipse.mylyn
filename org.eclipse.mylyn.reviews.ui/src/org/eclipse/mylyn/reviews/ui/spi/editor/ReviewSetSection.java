@@ -39,7 +39,7 @@ public abstract class ReviewSetSection extends AbstractReviewSection {
 	private List<ReviewSetContentSection> reviewSetSections;
 
 	public ReviewSetSection() {
-		setPartName("Patch Sets");
+		setPartName(Messages.ReviewSetSection_Patch_Sets);
 	}
 
 	@Override

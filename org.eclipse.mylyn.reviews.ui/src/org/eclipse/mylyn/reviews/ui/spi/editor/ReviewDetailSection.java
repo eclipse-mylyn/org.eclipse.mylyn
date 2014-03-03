@@ -55,15 +55,15 @@ import org.eclipse.ui.forms.widgets.Section;
 public abstract class ReviewDetailSection extends AbstractReviewSection {
 
 	public ReviewDetailSection() {
-		setPartName("Review");
+		setPartName(Messages.ReviewDetailSection_Review);
 	}
 
 	@Override
 	protected Control createContent(FormToolkit toolkit, Composite parent) {
 		Control content = super.createContent(toolkit, parent);
 		createReviewersSubSection(composite);
-		createDependenciesSubSection(toolkit, composite, "Depends On", getReview().getParents());
-		createDependenciesSubSection(toolkit, composite, "Needed By", getReview().getChildren());
+		createDependenciesSubSection(toolkit, composite, Messages.ReviewDetailSection_Depends_On, getReview().getParents());
+		createDependenciesSubSection(toolkit, composite, Messages.ReviewDetailSection_Needed_By, getReview().getChildren());
 		return content;
 	}
 
@@ -78,7 +78,7 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 		final Section subSection = toolkit.createSection(parent, style);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(subSection);
 		subSection.setTitleBarForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-		subSection.setText("Reviewers");
+		subSection.setText(Messages.ReviewDetailSection_Reviewers);
 
 		Composite composite = toolkit.createComposite(subSection);
 		List<IApprovalType> approvalTypes = getModelRepository().getApprovalTypes();
@@ -152,10 +152,10 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 					Integer value = entry.getValue().getApprovals().get(approvalType);
 					Label approvalValueLabel = new Label(composite, SWT.NONE);
 					GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.FILL).applyTo(approvalValueLabel);
-					String rankingText = " ";
+					String rankingText = " "; //$NON-NLS-1$
 					if (value != null && value != 0) {
 						if (value > 0) {
-							rankingText += "+";
+							rankingText += "+"; //$NON-NLS-1$
 							approvalValueLabel.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN));
 						} else if (value < 0) {
 							approvalValueLabel.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
@@ -173,7 +173,7 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 
 			String headerText = names.toString();
 			if (needs.length() > 0) {
-				headerText += " (needs " + needs.toString() + ")";
+				headerText += NLS.bind(Messages.ReviewDetailSection_Needs_X, needs);
 			}
 			if (headerText.length() > 0) {
 				addTextClient(toolkit, subSection, headerText);
@@ -209,15 +209,15 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 
 		for (final IChange change : changes) {
 			Link link = new Link(composite, SWT.NONE);
-			String changeStatus = change.getState() != null ? NLS.bind(" ({0})",
+			String changeStatus = change.getState() != null ? NLS.bind(Messages.ReviewDetailSection_Bracket_X_bracket,
 					String.valueOf(change.getState().getName())) : " "; //$NON-NLS-1$
 			String ownerName = change.getOwner().getDisplayName();
-			link.setText(NLS.bind("<a>{0}</a>: {1} {3} by {2}", new String[] { StringUtils.left(change.getKey(), 9),
+			link.setText(NLS.bind(Messages.ReviewDetailSection_Link_W_X_Y_by_Z, new String[] { StringUtils.left(change.getKey(), 9),
 					change.getSubject(), ownerName, changeStatus }));
 			link.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					TasksUiUtil.openTask(getTaskEditorPage().getTaskRepository(), change.getId() + ""); //$NON-NLS-1$
+					TasksUiUtil.openTask(getTaskEditorPage().getTaskRepository(), change.getId());
 				}
 			});
 		}

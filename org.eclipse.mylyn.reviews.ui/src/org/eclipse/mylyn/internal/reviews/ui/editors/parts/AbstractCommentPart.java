@@ -185,7 +185,7 @@ public abstract class AbstractCommentPart<V extends ExpandablePart<IComment, V>>
 
 	@Override
 	protected String getAnnotationText() {
-		return comment.isDraft() ? "DRAFT " : ""; //$NON-NLS-1$ //$NON-NLS-2$
+		return comment.isDraft() ? Messages.AbstractCommentPart_Draft : ""; //$NON-NLS-1$
 	}
 
 	private Control createReadOnlyText(FormToolkit toolkit, Composite composite, String value) {
@@ -278,8 +278,8 @@ public abstract class AbstractCommentPart<V extends ExpandablePart<IComment, V>>
 
 		@Override
 		public void run() {
-			MessageDialog.openInformation(getSection().getShell(), "Delete",
-					"Cannot delete comment with replies. You must delete replies first.");
+			MessageDialog.openInformation(getSection().getShell(), Messages.AbstractCommentPart_Delete,
+					Messages.AbstractCommentPart_Cannot_delete_comment_with_replies);
 		}
 
 	}

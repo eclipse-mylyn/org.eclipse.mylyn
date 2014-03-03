@@ -47,7 +47,7 @@ public class AddLineCommentToFileAction extends AbstractReviewAction {
 	private LineRange selectedRange;
 
 	public AddLineCommentToFileAction(IReviewCompareSourceViewer compareSourceViewer) {
-		super("Add Comment...");
+		super(Messages.AddLineCommentToFileAction_Add_Comment);
 		this.compareSourceViewer = compareSourceViewer;
 	}
 
@@ -77,7 +77,7 @@ public class AddLineCommentToFileAction extends AbstractReviewAction {
 			lines = ReviewUiUtil.getSelectedLineNumberRangeFromEditorInput(editorPart, editorInput);
 			if (lines == null) {
 				StatusHandler.log(new Status(IStatus.INFO, ReviewsUiPlugin.PLUGIN_ID,
-						"Editor is not an ITextEditor or there's no text selection available."));
+						"Editor is not an ITextEditor or there's no text selection available.")); //$NON-NLS-1$
 			}
 		}
 
@@ -86,7 +86,7 @@ public class AddLineCommentToFileAction extends AbstractReviewAction {
 
 	@Override
 	public String getToolTipText() {
-		return "Adds a Review Comment For the Selected Line";
+		return Messages.AddLineCommentToFileAction_Add_Comment_tooltip;
 	}
 
 	protected LineRange getSelectedRange() {

@@ -17,6 +17,7 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.spi.ModelUtil;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * Class to represent a comment in a review
@@ -46,7 +47,7 @@ public class CommentAnnotation extends Annotation {
 
 	@Override
 	public String getText() {
-		return comment.getAuthor().getDisplayName() + " - " + comment.getTitle();
+		return NLS.bind(Messages.CommentAnnotation_X_dash_Y, comment.getAuthor().getDisplayName(), comment.getTitle());
 	}
 
 	public IComment getComment() {
