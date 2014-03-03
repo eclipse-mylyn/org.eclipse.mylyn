@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
+import org.eclipse.osgi.util.NLS;
 
 import com.google.gerrit.reviewdb.ApprovalCategoryValue;
 
@@ -54,6 +56,12 @@ public class ReviewInput {
 		labels = new HashMap<String, Short>(approvals.size());
 		for (ApprovalCategoryValue.Id approval : approvals) {
 			String labelName = ApprovalUtil.findCategoryNameById(approval.getParentKey().get());
+			if (labelName == null) {
+				GerritCorePlugin.logWarning(
+						NLS.bind(
+								"Couldn't find label name for {0}. (Expected approval IDs are {1})", approval.getParentKey().get(), ApprovalUtil.BY_ID.keySet()), null); //$NON-NLS-1$
+				continue;
+			}
 			labelName = labelName.replace(' ', '-');
 			Short voteValue = Short.valueOf(approval.get());
 			labels.put(labelName, voteValue);

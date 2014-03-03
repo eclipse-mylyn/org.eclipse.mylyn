@@ -30,7 +30,7 @@ public final class ApprovalUtil {
 
 	private static final Map<String, ApprovalType> BY_NAME;
 
-	private static final Map<String, ApprovalType> BY_ID;
+	static final Map<String, ApprovalType> BY_ID;
 
 	static {
 		ApprovalCategory vrifCategory = new ApprovalCategory(new ApprovalCategory.Id("VRIF"), "Verified"); //$NON-NLS-1$ //$NON-NLS-2$
