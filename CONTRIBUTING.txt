@@ -1,14 +1,19 @@
-Contributing to Mylyn
-=====================
+Contributing to Mylyn Tasks
+===========================
 
 Thanks for your interest in this project.
 
-Project description:
+Mylyn Project description:
 --------------------
 
 Mylyn is a Task-Focused Interface for Eclipse that reduces information overload and makes multi-tasking easy.
 
 - https://projects.eclipse.org/projects/mylyn
+
+Mylyn Tasks Sub-Project description:
+--------------------
+
+Integration with Agile, issue, bug and defect tracking servers. The project provides rich task editing, task list management and offline synchronization for ALM servers. Central portion of the ALM integration framework used by other projects, eg, task-based changed tracking for the SCM project.
 
 Developer resources:
 --------------------
@@ -37,11 +42,11 @@ Search for bugs:
 
 This project uses Bugzilla to track ongoing development and issues.
 
-- https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn
+- https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn Tasks
 
 Create a new bug:
 -----------------
 
 Be sure to search for existing bugs before you create another one. Remember that contributions are always welcome!
 
-- https://bugs.eclipse.org/bugs/enter_bug.cgi?product=Mylyn
+- https://bugs.eclipse.org/bugs/enter_bug.cgi?product=Mylyn Tasks
