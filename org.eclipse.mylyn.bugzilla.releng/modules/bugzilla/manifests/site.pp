@@ -100,13 +100,24 @@ define bugzilla::site (
   }
 
   if $branchTag == "trunk" {
+#
+# always delete existing trunk folders to get the latest version from the trunk
+#
+    exec { "delete bugzilla $version":
+      command => "rm -R $base/$version",
+      cwd     => "$base",
+      user => "root",
+      timeout => 300,
+      logoutput => true,
+      require   => Exec["prepare bugzilla"]
+    }
     exec { "extract bugzilla $version":
       command => "bzr co bzr://bzr.mozilla.org/bugzilla/$branchName $version",
       cwd     => "$base",
       user => "$userOwner",
       timeout => 300,
       creates => "$base/$version",
-      require   => Exec["prepare bugzilla"]
+      require   => Exec["delete bugzilla $version"]
     }
   } else {
     exec { "extract bugzilla $version":
