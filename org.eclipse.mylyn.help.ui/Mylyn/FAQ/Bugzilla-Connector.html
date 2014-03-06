@@ -75,7 +75,7 @@
 			<li>The current version of this caching config.cgi script is hosted at:</li>
 		</ul>
 		<pre> via CVS: :pserver:anonymous@dev.eclipse.org:/cvsroot/technology/org.eclipse.phoenix/infra-scripts/bugzilla/
- or: http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.phoenix/infra-scripts/bugzilla/?root=Technology_Project
+ or: <a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.phoenix/infra-scripts/bugzilla/?root=Technology_Project" target="mylyn_external">http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.phoenix/infra-scripts/bugzilla/?root=Technology_Project</a>
 </pre>
 		<ul>
 			<li>Modifications on this script are followed on 
@@ -143,6 +143,9 @@
 		<ul>
 			<li>If tasks 
 				<b>fail to submit</b> with credentials error, but the repository validates fine, make sure that you’ve correctly setup your account’s username and password and are not using the HTTP authentication fields instead.
+				<ul>
+					<li>Click on the "Submit disabled, please check Credentials and refresh" error, which is a link to the Task Repository page for Bugzilla, for example.  Also accessible via the "Bugzilla" link at the top of the task page.  Removing and re-adding the password for your User ID may help remove this error.</li>
+				</ul>
 			</li>
 		</ul>
 		<ul>
@@ -169,8 +172,7 @@
 		<h2 id="What_time_zone_is_used_in_the_task_editor.3F">What time zone is used in the task editor?</h2>
 		<ul>
 			<li>The 
-				<b>times</b> that appear in the Bugzilla bug editor (ie. created, modified) 
-				<b>are local to the server hosting the Bugzilla repository</b>, not your local machine’s time zone. 
+				<b>times</b> that appear in the Bugzilla bug editor (ie. created, modified) are in your local machine’s time zone. 
 			</li>
 		</ul>
 		<h2 id="Known_limitations">Known limitations</h2>
@@ -188,6 +190,9 @@
 			<li>Version 1.0 of Mylyn presents an error message upon new comment submission to Red Hat’s public Bugzilla repository. The comment is in fact posted. This issue is resolved in Mylyn 2.0M2 and higher. (
 				<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=183251" target="mylyn_external">bug#183251</a>)
 			</li>
+		</ul>
+		<ul>
+			<li>The server setting "Timezone used to display dates and times" must be set to "Same as Server," otherwise you will get a security token error when performing any submit operation other than submitting a new bug.</li>
 		</ul><hr/>
 		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
 			<tr>

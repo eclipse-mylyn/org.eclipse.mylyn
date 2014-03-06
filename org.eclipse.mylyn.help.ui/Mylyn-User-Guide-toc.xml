@@ -1,6 +1,10 @@
 <?xml version='1.0' encoding='utf-8' ?>
 <toc topic="Mylyn/User_Guide/User-Guide.html" label="Mylyn User Guide">
 	<topic href="Mylyn/User_Guide/User-Guide.html" label="Task List">
+		<topic href="Mylyn/User_Guide/User-Guide.html#Finding_Tasks" label="Finding Tasks">
+			<topic href="Mylyn/User_Guide/User-Guide.html#Available_Fields" label="Available Fields"></topic>
+			<topic href="Mylyn/User_Guide/User-Guide.html#Search_Operators" label="Search Operators"></topic>
+		</topic>
 		<topic href="Mylyn/User_Guide/User-Guide.html#Task_List_Presentation" label="Task List Presentation"></topic>
 		<topic href="Mylyn/User_Guide/User-Guide.html#Icon_Legend_and_Color_Coding" label="Icon Legend and Color Coding"></topic>
 		<topic href="Mylyn/User_Guide/User-Guide.html#Creating_New_Tasks" label="Creating New Tasks">
@@ -23,7 +27,7 @@
 	</topic>
 	<topic href="Mylyn/User_Guide/Task-Focused-Interface.html" label="Task-Focused Interface">
 		<topic href="Mylyn/User_Guide/Task-Focused-Interface.html#Focusing_Navigator_Views" label="Focusing Navigator Views"></topic>
-		<topic href="Mylyn/User_Guide/Task-Focused-Interface.html#Alt.2BClick_Navigation" label="Alt+Click Navigation"></topic>
+		<topic href="Mylyn/User_Guide/Task-Focused-Interface.html#Alt.2BClick_Navigation_.2F_Show_Filtered_Children" label="Alt+Click Navigation / Show Filtered Children"></topic>
 		<topic href="Mylyn/User_Guide/Task-Focused-Interface.html#Focusing_Editors" label="Focusing Editors"></topic>
 		<topic href="Mylyn/User_Guide/Task-Focused-Interface.html#Task-focused_Ordering" label="Task-focused Ordering"></topic>
 		<topic href="Mylyn/User_Guide/Task-Focused-Interface.html#Working_Set_Integration" label="Working Set Integration"></topic>
@@ -41,8 +45,8 @@
 		<topic href="Mylyn/User_Guide/Preferences.html#Tasks" label="Tasks"></topic>
 		<topic href="Mylyn/User_Guide/Preferences.html#Context_2" label="Context"></topic>
 		<topic href="Mylyn/User_Guide/Preferences.html#Resources" label="Resources"></topic>
+		<topic href="Mylyn/User_Guide/Preferences.html#Breakpoints" label="Breakpoints"></topic>
 		<topic href="Mylyn/User_Guide/Preferences.html#Team" label="Team"></topic>
-		<topic href="Mylyn/User_Guide/Preferences.html#Shortcuts_2" label="Shortcuts"></topic>
 	</topic>
 	<topic href="Mylyn/User_Guide/Task-Repository-Connectors.html" label="Task Repository Connectors">
 		<topic href="Mylyn/User_Guide/Task-Repository-Connectors.html#Bugzilla_Connector" label="Bugzilla Connector"></topic>

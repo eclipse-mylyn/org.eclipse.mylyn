@@ -45,7 +45,8 @@
 				<b>Focus on Workweek</b> - See only tasks scheduled for this week.
 			</li>
 			<li>
-				<b>Find</b> - search for a task by typing in words from the task summary
+				<b>Find</b> - search for a task by typing in words from the task summary, or specify specific fields to query.  See 
+				<a href="#Finding_Tasks">Finding Tasks</a> for details.
 			</li>
 			<li>
 				<b>Working set indicator</b> - Indicates the currently active working set. Use the black arrow on the left to change the working set.
@@ -54,6 +55,74 @@
 				<b>Current task indicator</b> - Indicates the currently active task. Use the black arrow on the left to re-activate a recently active task.
 			</li>
 		</ul>
+		<h2 id="Finding_Tasks">Finding Tasks</h2>
+		<p>The task list can be filtered by providing a phrase to match against the task summary.  The phrase must appear in the summary of a task for the task to be visible when a filter is applied. The task list filter operates by searching on a locally-maintained index of the tasks in your task list. (In rare cases, it may be necessary to manually refresh the search index by selecting "Refresh Search Index" from the task list menu.)</p>
+		<ul>
+			<li>Search for task summary or task id by entering the value. For example, <tt>NullPointerException</tt> or <tt>12345</tt>.</li>
+			<li>Search for other task fields such as description or assignee by prefixing them with the field name.  For example <tt>description:NullPointerException</tt> will search in the task description rather than the summary.  Content assist can be used to provide a list of common field names, and will provide a list of known user names when searching on user fields.  </li>
+		</ul>
+		<p>
+			<img border="0" src="images/Task-list-index-reporter.png"/>
+		</p>
+		<ul>
+			<li>Search for date ranges by qualifying the range. For example, show tasks that were created in the <tt>(past week)</tt>.</li>
+		</ul>
+		<p>
+			<img border="0" src="images/Task-list-index-content-assist.png"/>
+		</p>
+		<ul>
+			<li>Search for an exact phrase by enclosing it in double-quotes. For example, <tt>description:"user experience"</tt>.</li>
+			<li>Search for partial words by using the "*" wildcard. For example, <tt>exc*tion</tt> matches both "exclamation" and "exception".</li>
+		</ul>
+		<h3 id="Available_Fields">Available Fields</h3>
+		<p>Available fields can be found by using content assist in the search field.  The following fields are available for search with most repositories:</p>
+		<dl>
+			<dt>content</dt>
+			<dd>match against any of summary, description, comments and other long text fields</dd>
+			<dt>summary</dt>
+			<dd>the task summary</dd>
+			<dt>description</dt>
+			<dd>match against the task description</dd>
+			<dt>person</dt>
+			<dd>match against any person field, such as reporter, assignee, watcher, etc.</dd>
+			<dt>task_key</dt>
+			<dd>match against the task or bug id</dd>
+			<dt>attachment</dt>
+			<dd>match against attachment names</dd>
+			<dt>assignee</dt>
+			<dd>match against the assignee of the task</dd>
+			<dt>reporter</dt>
+			<dd>match against the reporter of the task</dd>
+			<dt>product</dt>
+			<dd>match against the product of the task</dd>
+			<dt>component</dt>
+			<dd>match against the component of the task</dd>
+			<dt>creation_date</dt>
+			<dd>match against the date when the task was created</dd>
+			<dt>completion_date</dt>
+			<dd>match against the date when the task was completed</dd>
+			<dt>due_date</dt>
+			<dd>match against the date when the task is due</dd>
+			<dt>modification_date</dt>
+			<dd>match against the date when the task was last modified</dd>
+			<dt>status</dt>
+			<dd>match against the status</dd>
+			<dt>resolution</dt>
+			<dd>match against the resolution</dd>
+			<dt>severity</dt>
+			<dd>match against the severity</dd>
+		</dl>
+		<p>Some fields listed above may not be available depending on the repository and connector.</p>
+		<h3 id="Search_Operators">Search Operators</h3>
+		<p>The Task List provides logical operators. For example, <tt>NPE AND Display</tt>. Note that unlike other search phrases, 
+			<b>search operators are case-sensitive</b>; otherwise, the words are treated as part of the search phrase.
+		</p>
+		<dl>
+			<dt>AND</dt>
+			<dd>Searches for tasks that contain both words.</dd>
+			<dt>OR</dt>
+			<dd>Searches for tasks that contain at least one word.</dd>
+		</dl>
 		<h2 id="Task_List_Presentation">Task List Presentation</h2>
 		<p>The task list supports several ways to present tasks. You can toggle between the following modes by using the "Task Presentation" button in the toolbar.</p>
 		<ul>
@@ -316,13 +385,13 @@
 			<img border="0" src="images/Feature-Reference-3.0-Category-Progress.png"/>
 		</p>
 		<h2 id="Task_List_Settings_and_Operations">Task List Settings and Operations</h2>
-		<p>Click the small white arrow in the top left of the task list to access the following settings:</p>
+		<p>Click the small white arrow in the top right of the Task List view to access the following settings:</p>
 		<ul>
 			<li>
 				<b>Go Up to Root</b> - Return to the normal presentation after previously selecting "Go Into" to see only the tasks in a particular category.
 			</li>
 			<li>
-				<b>Sort</b> - Open a dialog to set the sort order for the task list. This option is only availabe when the task list is not in "Focus on Workweek" mode.
+				<b>Sort</b> - Open a dialog to set the sort order for the task list. This option is only available when the task list is not in "Focus on Workweek" mode.
 			</li>
 			<li>
 				<b>Filter priority lower than</b> - Hide tasks with a priority less than the priority you select. This option is only availabe when the task list is not in "Focus on Workweek" mode. 

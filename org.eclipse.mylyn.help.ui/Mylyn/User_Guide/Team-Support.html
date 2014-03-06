@@ -33,7 +33,7 @@
 		<p>The task-focused interface provides several ways to improve your work flow when working with a source code repository such as CVS or Subversion. CVS support is available out-of-the-box and task-focused interface integration for Subversion is available via the Subclipse or Subversive plugins.</p>
 		<h2 id="Task-focused_Change_Sets">Task-focused Change Sets</h2>
 		<p>When working with a source code repository, you can commit or update only the resources that are in the context of a particular task. This helps you work on several tasks concurrently and avoid polluting your workspace with changes that are not relevant to the current task.</p>
-		<p>To enable this functionality, locate the "Synchronize" view. If the view is not visible, you can open it by navigating to Window -&gt; Show View -&gt; Other... -&gt; Team -&gt; Synchronize. Next, click the small black arrow next to "Show File System Resources" in the Synchronize view toolbar and select "Change Sets".</p>
+		<p>To enable this functionality, locate the "Synchronize" view. If the view is not visible, you can open it by navigating to Window -&gt; Show View -&gt; Other... -&gt; Team -&gt; Synchronize. Next, click the small black arrow next to "Show File System Resources" in the Synchronize view toolbar and select "Change Sets". Note that change sets are not currently supported in the EGit connector.</p>
 		<p>You can now synchronize resources in your workspace as usual (e.g. by right-clicking on a resource in the navigator and selecting "Team" -&gt; "Synchronize with Repository". Your resources will now be grouped by change sets corresponding to tasks. Expanding the task shows individual resources. Changed resources that are not a part of any task context will appear under the root of the Synchronize view. If needed missing resources can be added to the task context Change Set via the Synchronize View by right+clicking the resource and selecting "Add to" and then selecting the corresponding task. Select "no set" to remove a resource from a change set.</p>
 		<p>
 			<img border="0" src="images/Feature-Reference-3.0-Change-Sets.png"/>
@@ -54,7 +54,7 @@
 		<ul>
 			<li>
 				<b>Add to Task Context</b> - Adds all changed files to the active task context, see 
-				<a href="Team-Support.html#Working_with_Patches">Working with Patches</a> for more information
+				<a href="#Working_with_Patches">Working with Patches</a> for more information
 			</li>
 			<li>
 				<b>Open Corresponding Task</b> - Opens the task associated with the Change Set in the Task Editor

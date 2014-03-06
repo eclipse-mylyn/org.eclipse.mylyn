@@ -7,6 +7,7 @@
 		<topic href="Mylyn/FAQ/Installation.html#Which_sub-projects_are_included_in_Mylyn_releases.3F" label="Which sub-projects are included in Mylyn releases?"></topic>
 		<topic href="Mylyn/FAQ/Installation.html#What_versions_of_Eclipse_are_supported.3F" label="What versions of Eclipse are supported?"></topic>
 		<topic href="Mylyn/FAQ/Installation.html#Which_repositories_are_supported.3F" label="Which repositories are supported?">
+			<topic href="Mylyn/FAQ/Installation.html#Mylyn_3.8" label="Mylyn 3.8"></topic>
 			<topic href="Mylyn/FAQ/Installation.html#Mylyn_3.7" label="Mylyn 3.7"></topic>
 			<topic href="Mylyn/FAQ/Installation.html#Mylyn_3.6" label="Mylyn 3.6"></topic>
 			<topic href="Mylyn/FAQ/Installation.html#Mylyn_3.5" label="Mylyn 3.5"></topic>
@@ -44,11 +45,11 @@
 			<topic href="Mylyn/FAQ/Installation.html#Do_I_need_the_Outline_View_when_running_Mylyn.3F" label="Do I need the Outline View when running Mylyn?"></topic>
 			<topic href="Mylyn/FAQ/Installation.html#What_does_the_message_.E2.80.9Ccontent_assist_proposals_no_longer_appear.E2.80.9D_mean.3F" label="What does the message “content assist proposals no longer appear” mean?"></topic>
 			<topic href="Mylyn/FAQ/Installation.html#Why_do_I_get_errors_like_.E2.80.9CHTTP_Response_Code_407.E2.80.9D_or_.E2.80.9CProxy_Authentication_Error.E2.80.9D_when_accessing_repositories_through_a_proxy_server.3F" label="Why do I get errors like “HTTP Response Code 407” or “Proxy Authentication Error” when accessing repositories through a proxy server?"></topic>
-			<topic href="Mylyn/FAQ/Installation.html#I_can.E2.80.99t_use_.3Ccode.3ECtrl.2BAlt.2BShift.2BArrow_Up.3C.2Fcode.3E_for.27.27_Mark_as_Landmark.27.27.__What_do_I_do.3F" label="I can’t use &lt;code&quot;Ctrl+Alt+Shift+Arrow Up&lt;/code&quot; for'' Mark as Landmark''.  What do I do?"></topic>
+			<topic href="Mylyn/FAQ/Installation.html#I_can.E2.80.99t_use_Ctrl.2BAlt.2BShift.2BArrow_Up_for.27.27_Mark_as_Landmark.27.27.__What_do_I_do.3F" label="I can’t use Ctrl+Alt+Shift+Arrow Up for'' Mark as Landmark''.  What do I do?"></topic>
 			<topic href="Mylyn/FAQ/Installation.html#Why_do_I_get_an_error_when_accessing_secured_web_sites.3F" label="Why do I get an error when accessing secured web sites?"></topic>
 		</topic>
 		<topic href="Mylyn/FAQ/Installation.html#Uninstall_troubleshooting" label="Uninstall troubleshooting"></topic>
-		<topic href="Mylyn/FAQ/Installation.html#Why_am_seeing_.3Ccode.3Ejava.lang.OutOfMemoryError:_PermGen_space.3C.2Fcode.3E_errors.3F" label="Why am seeing &lt;code&quot;java.lang.OutOfMemoryError: PermGen space&lt;/code&quot; errors?"></topic>
+		<topic href="Mylyn/FAQ/Installation.html#Why_am_seeing_java.lang.OutOfMemoryError:_PermGen_space_errors.3F" label="Why am seeing java.lang.OutOfMemoryError: PermGen space errors?"></topic>
 		<topic href="Mylyn/FAQ/Installation.html#What_is_Mylyn.E2.80.99s_performance_profile.3F" label="What is Mylyn’s performance profile?"></topic>
 	</topic>
 	<topic href="Mylyn/FAQ/Task-List.html" label="Task List">
@@ -160,6 +161,7 @@
 		<topic href="Mylyn/FAQ/WikiText.html#Can_I_use_WikiText_without_Eclipse.3F" label="Can I use WikiText without Eclipse?"></topic>
 		<topic href="Mylyn/FAQ/WikiText.html#What_output_can_WikiText_create.3F" label="What output can WikiText create?"></topic>
 		<topic href="Mylyn/FAQ/WikiText.html#What_wiki_markup_languages_does_WikiText_support.3F" label="What wiki markup languages does WikiText support?"></topic>
+		<topic href="Mylyn/FAQ/WikiText.html#Why_doesn.27t_the_preview_tab_show_up_in_the_WikiText_editor.3F" label="Why doesn't the preview tab show up in the WikiText editor?"></topic>
 		<topic href="Mylyn/FAQ/WikiText.html#Where_can_I_find_out_more_about_WikiText.3F" label="Where can I find out more about WikiText?"></topic>
 	</topic>
 	<topic href="Mylyn/FAQ/Integration-with-other-tools.html" label="Integration with other tools">

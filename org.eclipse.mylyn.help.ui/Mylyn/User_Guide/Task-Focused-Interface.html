@@ -36,15 +36,26 @@
 		<p>
 			<img border="0" src="images/Feature-Guide-3.0-Package-Explorer-Focused.png"/>
 		</p>
-		<h2 id="Alt.2BClick_Navigation">Alt+Click Navigation</h2>
-		<p>To navigate to a new resource that is not a part of the active task's context, you can toggle "Focus on Active Task" off, browse to the resource, and then click "Focus on Active Task" again to see only relevant resources. A more efficient way to add new resources is to use Alt+Click navigation (Clicking the mouse while holding the Alt key).</p>
-		<p>When a view is in Focused mode, you can Alt+Click a node to temporarily show all of its children.  </p>
+		<h2 id="Alt.2BClick_Navigation_.2F_Show_Filtered_Children">Alt+Click Navigation / Show Filtered Children</h2>
+		<p>To navigate to a new resource that is not a part of the active task's context, you can toggle "Focus on Active Task" off, browse to the resource, and then click "Focus on Active Task" again to see only relevant resources. A more efficient way to add new resources is to use Alt+Click navigation (clicking the mouse while holding the Alt key) or click the 
+			<a href="+">+</a> icon that appears to the right of a tree node when the mouse hovers over it.
+		</p>
+		<p>When a view is in Focused mode, you can click the 
+			<a href="+">+</a> icon to the right of a node, or Alt+Click the node, to temporarily show all of its children.  
+		</p>
 		<ul>
-			<li>Once an element that was previously not interesting is selected with the mouse, it becomes interesting the other child elements will disappear. The clicked element is now a part of the task's context.</li>
+			<li>Once an element that was previously not interesting is selected with the mouse, it becomes interesting and the other child elements will disappear. The clicked element is now a part of the task's context.</li>
+			<li>You can drill down multiple levels of filtered nodes by clicking the 
+				<a href="+">+</a> icon to the right of each node you want to unfilter. Note that trying to expand the node in other ways (e.g. clicking the triangle to the left of the node) will not show its filtered children - clicking anywhere in the view (other than a 
+				<a href="+">+</a> icon) will hide all filtered children again.
+			</li>
 			<li>Alt can be held down while clicking to drill down from a top-level element to a deeply nested element that is to be added to the task context.</li>
 			<li>Multiple Alt+Clicks are supported so that you can add several elements to the task context. As soon as a normal click is made, uninteresting elements will disappear.</li>
 			<li>Ctrl+Clicks (i.e. disjoint selections, use Command key on Mac) are also supported and will cause each element clicked to become interesting.  The first normal click will cause uninteresting elements to disappear.  Note that Ctrl+clicked elements will become interesting (turn from gray to black) but only the most recently-clicked one will be selected while Alt is held down.</li>
 		</ul>
+		<p>
+			<img border="0" src="images/Show_filtered_children.png"/>
+		</p>
 		<h2 id="Focusing_Editors">Focusing Editors</h2>
 		<p>Some editors such as the Java editor support focusing. Clicking the Focus button in the toolbar will fold all declarations that are not part of the active task context.</p>
 		<p>

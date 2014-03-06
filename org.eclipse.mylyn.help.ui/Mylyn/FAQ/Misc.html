@@ -37,7 +37,7 @@
 		</p>
 		<h2 id="Command_Line">Command Line</h2>
 		<p>The system properties below can used to change the behavior of Mylyn. To set a property pass it on the command line when starting Eclipse:
-<code>			eclipse -argument</code>.</p>
+<code>eclipse -argument</code>.</p>
 		<table>
 			<tr>
 				<td>Argument</td>
@@ -52,7 +52,7 @@
 		</table>
 		<h2 id="System_Properties">System Properties</h2>
 		<p>The system properties below can used to change the behavior of Mylyn. To set a property pass it on the command line when starting Eclipse:
-<code>			eclipse -vmargs -Dorg.eclipse.mylyn.property=value</code>.</p>
+<code>eclipse -vmargs -Dorg.eclipse.mylyn.property=value</code>.</p>
 		<table>
 			<tr>
 				<td>System Property</td>
@@ -95,6 +95,7 @@
 			<tr>
 				<td><code>mylyn.test.exclude</code></td>
 				<td><center>3.7</center></td>
+				<td></td>
 				<td>This is a comma separated list of test repository URLs that should be excluded when running tests. Example: 
 					<a href="http://mylyn.org/bugs36,http://mylyn.org/bugs40" target="mylyn_external">http://mylyn.org/bugs36,http://mylyn.org/bugs40</a>
 				</td>
@@ -102,8 +103,17 @@
 			<tr>
 				<td><code>org.eclipse.mylyn.https.protocols</code></td>
 				<td><center>3.7</center></td>
+				<td></td>
 				<td>A comma separated list of 
 					<a href="http://docs.oracle.com/javase/1.4.2/docs/guide/plugin/developer_guide/faq/troubleshooting.html" target="mylyn_external">SSL protocols</a> that should be enabled when connecting through https. Example: SSLv3
+				</td>
+			</tr>
+			<tr>
+				<td><code>mylyn.test.skipBrowserTests</code></td>
+				<td><center>3.10</center></td>
+				<td>false</td>
+				<td>Set to true to skip browser tests that may cause JVM to crash. See 
+					<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=413191" target="mylyn_external">bug 413191</a> for more info.
 				</td>
 			</tr>
 		</table>
@@ -127,9 +137,12 @@
 -Dorg.apache.commons.logging.simplelog.log.httpclient.wire.header=debug
 -Dorg.apache.commons.logging.simplelog.log.org.apache.commons.httpclient=off
 -Dorg.apache.commons.logging.simplelog.log.org.apache.axis.message=debug
+-Dorg.apache.commons.logging.simplelog.log.org.apache.http=debug
+-Dorg.apache.commons.logging.simplelog.log.org.apache.http.wire=error
 </pre>
 		<p>To also enable logging of message content, also add this lines:</p>
 		<pre>-Dorg.apache.commons.logging.simplelog.log.httpclient.wire.content=debug
+-Dorg.apache.commons.logging.simplelog.log.org.apache.http.wire=debug
 </pre>
 		<h2 id="How_do_I_enable_debugging_output_for_plug-ins.3F">How do I enable debugging output for plug-ins?</h2>
 		<p>Create a 

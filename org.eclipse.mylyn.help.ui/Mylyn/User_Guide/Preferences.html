@@ -76,6 +76,18 @@
 		</ul>
 		<h2 id="Resources">Resources</h2>
 		<p>Use this preference page to add or remove resources that should not be included in the context of a task. Typically, excluded files are hidden backup or lock files that are not intented to be opened directly by the user of an application.</p>
+		<h2 id="Breakpoints">Breakpoints</h2>
+		<p>Use this preference page to enable breakpoints in context.</p>
+		<ul>
+			<li>
+				<b>Include breakpoints in task context (Experimental)</b> - When this option is checked, each task will have its own set of breakpoints which will be shared when you attach context to the task. Breakpoints created while a task is active will be removed from the workspace on task deactivation and restored the next time the task is activated. This feature has the following limitations (tracked on 
+				<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=428378" target="mylyn_external">bug 428378</a>): 
+				<ul>
+					<li>Breakpoints in closed projects are deleted from the context on task activation and cannot be recovered. </li>
+					<li>Breakpoints stored in context will not have their locations updated as the code changes, so they may be restored at the wrong location.</li>
+				</ul>
+			</li>
+		</ul>
 		<h2 id="Team">Team</h2>
 		<ul>
 			<li>
@@ -84,37 +96,7 @@
 			<li>
 				<b>Commit Message Template</b> - Set the values that will appear in commit messages that are automatically generated when committing resources associated with a task.
 			</li>
-		</ul>
-		<h2 id="Shortcuts_2">Shortcuts</h2>
-		<p>			<b>&nbsp;Task List view</b>
-						<ul>
-							<li><code>Ctrl+C</code>: copy taks/query URL and description</li>
-							<li><code>Ctrl+F</code>: find</li>
-							<li><code>Insert</code>: new personal task</li>
-							<li><code>F5</code>: synchronize selected</li> 
-							<li>When dragging URLs to the Task List: in Mozilla/Firefox just drag, in Internet Explorer <code>Ctrl+drag</code></li>
-						</ul>
-						<b>&nbsp;General</b>			
-						<ul>
-							<li><code>Alt+click</code> or <code>Alt+RightArrow</code>: show all children of an element in a focused view, then click to select. Hold down alt to keep drilling in, click on whitespace in view to show all root elements.</li> 
-							<li><code>Ctrl+Shift+Alt+RightArrow</code> Quick Context View</li> 
-							<li><code>Ctrl+F9</code>: activate task dialog</li>
-							<li><code>Ctrl+Shift+F9</code>: deactivate task</li>
-							<li><code>Ctrl+F12</code>: open task dialog</li>
-							<li><code>Ctrl+Shift+F12</code>: open repository task dialog</li>
-						</ul>
-						<b>&nbsp;Interest manipulation</b>			
-						<ul>
-							<li><code>Ctrl+Shift+Up</code>: mark as landmark</li>
-							<li><code>Ctrl+Shift+Down</code>: mark less interesting</li>			
-						</ul>
-						<b>&nbsp;Useful Eclipse shortcuts</b>			
-						<ul>
-							<li><code>Alt+Shift+Q, K</code>: show 
-			<i>Task List</i> view</li>
-							<li><code>Ctrl+F10</code>: invoke view menu or ruler menu in editor</li>			
-						</ul>
-		</p><hr/>
+		</ul><hr/>
 		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
 			<tr>
 				<td style="width: 20%" align="left">
