@@ -13,6 +13,8 @@
     <description>
             Generate Eclipse help content for the Mylyn user guide
     </description>
+	
+	<!-- To run this from Eclipse launch "org.eclipse.mylyn.help.ui build-helper.xml.launch" -->		
 
 	<property name="mylyn.help.doc.url.base" value="http://wiki.eclipse.org"/>
 	<property name="mylyn.wiki.url.base" value="${mylyn.help.doc.url.base}/Mylyn"/>
@@ -28,13 +30,14 @@
 		<pathelement location="../../org.eclipse.mylyn.docs/org.eclipse.mylyn.wikitext.core/@dot"/>
 		<pathelement location="../../org.eclipse.mylyn.docs/org.eclipse.mylyn.wikitext.core/bin"/>
 		<pathelement location="../../org.eclipse.mylyn.docs/org.eclipse.mylyn.wikitext.core/bin_ant"/>
+		<pathelement location="../../org.eclipse.mylyn.docs/org.eclipse.mylyn.wikitext.core.ant/bin"/>
 		<pathelement location="../../org.eclipse.mylyn.docs/org.eclipse.mylyn.wikitext.mediawiki.core/@dot"/>
 		<pathelement location="../../org.eclipse.mylyn.docs/org.eclipse.mylyn.wikitext.mediawiki.core/bin"/>
 		<pathelement location="../../org.eclipse.mylyn.docs/org.eclipse.mylyn.wikitext.mediawiki.core/bin_ant"/>
 	</path>
 
 	<taskdef classpathref="wikitext.tasks.classpath" resource="org/eclipse/mylyn/internal/wikitext/mediawiki/core/tasks/tasks.properties"/>
-	<taskdef classpathref="wikitext.tasks.classpath" resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties"/>
+	<taskdef classpathref="wikitext.tasks.classpath" resource="org/eclipse/mylyn/wikitext/core/ant/tasks.properties"/>
 	
 	<target name="init">
 		<mkdir dir="tmp"/>
