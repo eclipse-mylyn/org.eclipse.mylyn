@@ -20,6 +20,14 @@ import org.eclipse.mylyn.commons.core.net.NetUtil;
  */
 public class NetUtilTest extends TestCase {
 
+	static final int /*NetUtil.*/MAX_HTTP_HOST_CONNECTIONS_DEFAULT = 100;
+
+	static final int /*NetUtil.*/MAX_HTTP_TOTAL_CONNECTIONS_DEFAULT = 1000;
+
+	private static final String /*NetUtil.*/PROPERTY_MAX_HTTP_HOST_CONNECTIONS = "org.eclipse.mylyn.http.connections.per.host";
+
+	private static final String /*NetUtil.*/PROPERTY_MAX_HTTP_TOTAL_CONNECTIONS = "org.eclipse.mylyn.http.total.connections";
+
 	public void testGetHostDefault() {
 		String url = "http://example.com/";
 		assertEquals("example.com", NetUtil.getHost(url));
@@ -141,24 +149,82 @@ public class NetUtilTest extends TestCase {
 		assertTrue(NetUtil.isUrlHttps("https://example.com"));
 	}
 
-	public void testIUrlHttpsHttpUrl() {
+	public void testIsUrlHttpsHttpUrl() {
 		assertFalse(NetUtil.isUrlHttps("http://"));
 	}
 
-	public void testIUrlHttpsInvalid() {
+	public void testIsUrlHttpsInvalid() {
 		assertFalse(NetUtil.isUrlHttps("abc"));
 	}
 
-	public void testIUrlHttpsNoHost() {
+	public void testIsUrlHttpsNoHost() {
 		assertTrue(NetUtil.isUrlHttps("https://"));
 	}
 
-	public void testIUrlHttpsNoUrl() {
+	public void testIsUrlHttpsNoUrl() {
 		assertTrue(NetUtil.isUrlHttps("httpsabc"));
 	}
 
-	public void testIUrlHttpsTelnets() {
+	public void testIsUrlHttpsTelnets() {
 		assertFalse(NetUtil.isUrlHttps("telnets://"));
+	}
+
+	public void testGetMaxHttpConnectionsPerHostDefault() {
+		assertEquals(MAX_HTTP_HOST_CONNECTIONS_DEFAULT, NetUtil.getMaxHttpConnectionsPerHost());
+	}
+
+	public void testGetMaxHttpConnectionsDefault() {
+		assertEquals(MAX_HTTP_TOTAL_CONNECTIONS_DEFAULT, NetUtil.getMaxHttpConnections());
+	}
+
+	public void testGetMaxHttpConnectionsPerHost() {
+		String oldValue = System.getProperty(PROPERTY_MAX_HTTP_HOST_CONNECTIONS);
+		int newValue = 7;
+		try {
+			System.setProperty(PROPERTY_MAX_HTTP_HOST_CONNECTIONS, Integer.toString(newValue));
+			assertEquals(newValue, NetUtil.getMaxHttpConnectionsPerHost());
+		} finally {
+			resetSystemProperty(PROPERTY_MAX_HTTP_HOST_CONNECTIONS, oldValue);
+		}
+	}
+
+	public void testGetMaxHttpConnectionsPerHostInvalid() {
+		String oldValue = System.getProperty(PROPERTY_MAX_HTTP_HOST_CONNECTIONS);
+		try {
+			System.setProperty(PROPERTY_MAX_HTTP_HOST_CONNECTIONS, "NaN");
+			assertEquals(MAX_HTTP_HOST_CONNECTIONS_DEFAULT, NetUtil.getMaxHttpConnectionsPerHost());
+		} finally {
+			resetSystemProperty(PROPERTY_MAX_HTTP_HOST_CONNECTIONS, oldValue);
+		}
+	}
+
+	public void testGetMaxHttpConnections() {
+		String oldValue = System.getProperty(PROPERTY_MAX_HTTP_TOTAL_CONNECTIONS);
+		int newValue = 7;
+		try {
+			System.setProperty(PROPERTY_MAX_HTTP_TOTAL_CONNECTIONS, Integer.toString(newValue));
+			assertEquals(newValue, NetUtil.getMaxHttpConnections());
+		} finally {
+			resetSystemProperty(PROPERTY_MAX_HTTP_TOTAL_CONNECTIONS, oldValue);
+		}
+	}
+
+	public void testGetMaxHttpConnectionsInvalid() {
+		String oldValue = System.getProperty(PROPERTY_MAX_HTTP_TOTAL_CONNECTIONS);
+		try {
+			System.setProperty(PROPERTY_MAX_HTTP_TOTAL_CONNECTIONS, "NaN");
+			assertEquals(MAX_HTTP_TOTAL_CONNECTIONS_DEFAULT, NetUtil.getMaxHttpConnections());
+		} finally {
+			resetSystemProperty(PROPERTY_MAX_HTTP_TOTAL_CONNECTIONS, oldValue);
+		}
+	}
+
+	private static void resetSystemProperty(String key, String oldValue) {
+		if (oldValue == null) {
+			System.clearProperty(key);
+		} else {
+			System.setProperty(key, oldValue);
+		}
 	}
 
 }

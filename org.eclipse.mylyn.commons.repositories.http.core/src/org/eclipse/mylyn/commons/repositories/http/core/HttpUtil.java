@@ -318,8 +318,8 @@ public class HttpUtil {
 			if (CoreUtil.TEST_MODE) {
 				connectionManager.setDefaultMaxPerRoute(2);
 			} else {
-				connectionManager.setDefaultMaxPerRoute(100);
-				connectionManager.setMaxTotal(1000);
+				connectionManager.setDefaultMaxPerRoute(NetUtil.getMaxHttpConnectionsPerHost());
+				connectionManager.setMaxTotal(NetUtil.getMaxHttpConnections());
 			}
 
 			IdleConnectionMonitorThread thread = new IdleConnectionMonitorThread(CONNECTION_TIMEOUT_INTERVAL);

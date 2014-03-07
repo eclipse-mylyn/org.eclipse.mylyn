@@ -62,6 +62,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.mylyn.commons.core.CoreUtil;
+import org.eclipse.mylyn.commons.core.net.NetUtil;
 import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
 import org.eclipse.mylyn.internal.commons.net.AuthenticatedProxy;
 import org.eclipse.mylyn.internal.commons.net.CloneableHostConfiguration;
@@ -205,8 +206,9 @@ public class WebUtil {
 		} else {
 			client.getHttpConnectionManager()
 					.getParams()
-					.setMaxConnectionsPerHost(HostConfiguration.ANY_HOST_CONFIGURATION, 100);
-			client.getHttpConnectionManager().getParams().setMaxTotalConnections(1000);
+					.setMaxConnectionsPerHost(HostConfiguration.ANY_HOST_CONFIGURATION,
+							NetUtil.getMaxHttpConnectionsPerHost());
+			client.getHttpConnectionManager().getParams().setMaxTotalConnections(NetUtil.getMaxHttpConnections());
 		}
 	}
 
@@ -614,7 +616,7 @@ public class WebUtil {
 	}
 
 	public static void init() {
-		// initialization is done in the static initializer		
+		// initialization is done in the static initializer
 	}
 
 	private static boolean isRepositoryHttps(String repositoryUrl) {
@@ -802,7 +804,7 @@ public class WebUtil {
 	 */
 	public static void releaseConnection(HttpMethodBase method, IProgressMonitor monitor) {
 		if (monitor != null && monitor.isCanceled()) {
-			// force a connection close on cancel to avoid blocking to do reading the remainder of the response 
+			// force a connection close on cancel to avoid blocking to do reading the remainder of the response
 			method.abort();
 		} else {
 			try {

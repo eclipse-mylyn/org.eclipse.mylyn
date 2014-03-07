@@ -44,9 +44,17 @@ import org.eclipse.osgi.util.NLS;
  */
 public class NetUtil {
 
+	private static final String PROPERTY_MAX_HTTP_HOST_CONNECTIONS = "org.eclipse.mylyn.http.connections.per.host"; //$NON-NLS-1$
+
+	private static final String PROPERTY_MAX_HTTP_TOTAL_CONNECTIONS = "org.eclipse.mylyn.http.total.connections"; //$NON-NLS-1$
+
 	private static final int HTTPS_PORT = 443;
 
 	private static final int HTTP_PORT = 80;
+
+	private static final int MAX_HTTP_HOST_CONNECTIONS_DEFAULT = 100;
+
+	private static final int MAX_HTTP_TOTAL_CONNECTIONS_DEFAULT = 1000;
 
 	private final static String[] enabledProtocols;
 
@@ -283,4 +291,27 @@ public class NetUtil {
 		return socket;
 	}
 
+	/**
+	 * @since 3.12
+	 */
+	public static int getMaxHttpConnectionsPerHost() {
+		return getSystemPropertyAndParseInt(PROPERTY_MAX_HTTP_HOST_CONNECTIONS, MAX_HTTP_HOST_CONNECTIONS_DEFAULT);
+	}
+
+	/**
+	 * @since 3.12
+	 */
+	public static int getMaxHttpConnections() {
+		return getSystemPropertyAndParseInt(PROPERTY_MAX_HTTP_TOTAL_CONNECTIONS, MAX_HTTP_TOTAL_CONNECTIONS_DEFAULT);
+	}
+
+	private static int getSystemPropertyAndParseInt(String key, int defaultValue) {
+		try {
+			return Integer.parseInt(System.getProperty(key));
+		} catch (NumberFormatException e) {
+			StatusHandler.log(new Status(IStatus.WARNING, CommonsCorePlugin.ID_PLUGIN, NLS.bind(
+					"Unable to parse property {0}", key))); //$NON-NLS-1$
+		}
+		return defaultValue;
+	}
 }

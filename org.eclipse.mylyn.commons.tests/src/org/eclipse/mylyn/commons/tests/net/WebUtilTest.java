@@ -11,6 +11,9 @@
 
 package org.eclipse.mylyn.commons.tests.net;
 
+import static org.eclipse.mylyn.commons.tests.net.NetUtilTest.MAX_HTTP_HOST_CONNECTIONS_DEFAULT;
+import static org.eclipse.mylyn.commons.tests.net.NetUtilTest.MAX_HTTP_TOTAL_CONNECTIONS_DEFAULT;
+
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.ConnectException;
@@ -31,11 +34,13 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.IProxyProvider;
@@ -138,6 +143,17 @@ public class WebUtilTest extends TestCase {
 		} catch (ConnectException ignored) {
 			System.err.println("Skipping testConnectCancelStalledConnect() due to blocking firewall");
 		}
+	}
+
+	public void testConfigureClient() throws Exception {
+		WebLocation location = new WebLocation(TestUrl.DEFAULT.getHttpOk().toString());
+
+		WebUtil.createHostConfiguration(client, location, null /*monitor*/);
+
+		HttpConnectionManagerParams params = client.getHttpConnectionManager().getParams();
+		assertEquals(CoreUtil.TEST_MODE ? 2 : MAX_HTTP_HOST_CONNECTIONS_DEFAULT,
+				params.getMaxConnectionsPerHost(HostConfiguration.ANY_HOST_CONFIGURATION));
+		assertEquals(CoreUtil.TEST_MODE ? 20 : MAX_HTTP_TOTAL_CONNECTIONS_DEFAULT, params.getMaxTotalConnections());
 	}
 
 	public void testExecute() throws Exception {
@@ -529,7 +545,7 @@ public class WebUtilTest extends TestCase {
 
 	public void testLocationConnectSslClientCert() throws Exception {
 		if (CommonTestUtil.isCertificateAuthBroken()) {
-			return; // skip test 
+			return; // skip test
 		}
 
 		String url = "https://mylyn.org/secure/";
@@ -606,7 +622,7 @@ public class WebUtilTest extends TestCase {
 	public void testGetTitleFromUrl() throws Exception {
 		assertEquals("Eclipse Mylyn Open Source Project",
 				WebUtil.getTitleFromUrl(new WebLocation(TestUrl.DEFAULT.getHttpOk().toString()), null));
-		// disabled: fails in environments where the DNS resolver redirects for unknown hosts  
+		// disabled: fails in environments where the DNS resolver redirects for unknown hosts
 		//		try {
 //			String title = WebUtil.getTitleFromUrl(new WebLocation("http://invalidurl"), null);
 //			fail("Expected UnknownHostException, got: " + title);

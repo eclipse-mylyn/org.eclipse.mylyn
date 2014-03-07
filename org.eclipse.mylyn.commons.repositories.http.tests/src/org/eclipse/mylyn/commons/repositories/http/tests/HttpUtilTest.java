@@ -23,6 +23,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.HttpProtocolParams;
 import org.eclipse.core.runtime.AssertionFailedException;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.commons.repositories.http.core.HttpUtil;
@@ -36,6 +37,10 @@ import org.junit.Test;
  * @author Steffen Pingel
  */
 public class HttpUtilTest {
+
+	private static final int /*NetUtil.*/MAX_HTTP_HOST_CONNECTIONS_DEFAULT = 100;
+
+	private static final int /*NetUtil.*/MAX_HTTP_TOTAL_CONNECTIONS_DEFAULT = 1000;
 
 	private TestProxy testProxy;
 
@@ -146,5 +151,13 @@ public class HttpUtilTest {
 
 		HttpUtil.configureClient(client, null);
 		assertEquals("Special Agent Fox Mulder", HttpProtocolParams.getUserAgent(client.getParams()));
+	}
+
+	@Test
+	public void testConfigureConnectionManager() {
+		ThreadSafeClientConnManager connManager = HttpUtil.getConnectionManager();
+
+		assertEquals(CoreUtil.TEST_MODE ? 2 : MAX_HTTP_HOST_CONNECTIONS_DEFAULT, connManager.getDefaultMaxPerRoute());
+		assertEquals(CoreUtil.TEST_MODE ? 20 : MAX_HTTP_TOTAL_CONNECTIONS_DEFAULT, connManager.getMaxTotal());
 	}
 }
