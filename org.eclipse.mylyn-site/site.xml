@@ -23,7 +23,7 @@
    <feature url="features/org.eclipse.mylyn.wikitext_feature_0.0.0.jar" id="org.eclipse.mylyn.wikitext_feature" version="0.0.0">
       <category name="Features"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.docs.epub_0.0.0.qualifier.jar" id="org.eclipse.mylyn.docs.epub" version="0.0.0">
+   <feature url="features/org.eclipse.mylyn.docs.epub_0.0.0.jar" id="org.eclipse.mylyn.docs.epub" version="0.0.0">
       <category name="Features"/>
    </feature>
    
@@ -37,6 +37,9 @@
       <category name="Integration"/>
    </feature>
    <feature url="features/org.eclipse.mylyn.gerrit.feature_0.0.0.jar" id="org.eclipse.mylyn.gerrit.feature" version="0.0.0">
+      <category name="Integration"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.gerrit.dashboard.feature_0.0.0.jar" id="org.eclipse.mylyn.gerrit.dashboard.feature" version="0.0.0">
       <category name="Integration"/>
    </feature>
    <feature url="features/org.eclipse.mylyn.git_0.0.0.jar" id="org.eclipse.mylyn.git" version="0.0.0">
