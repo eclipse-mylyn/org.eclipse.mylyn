@@ -9,14 +9,14 @@
    <feature url="features/org.eclipse.mylyn.gerrit.feature_0.0.0.jar" id="org.eclipse.mylyn.gerrit.feature" version="0.0.0">
       <category name="Integration"/>
    </feature>
+   <feature url="features/org.eclipse.mylyn.gerrit.dashboard.feature_0.0.0.jar" id="org.eclipse.mylyn.gerrit.dashboard.feature" version="0.0.0">
+      <category name="Integration"/>
+   </feature>
    <feature url="features/org.eclipse.mylyn.reviews.feature_0.0.0.jar" id="org.eclipse.mylyn.reviews.feature" version="0.0.0">
       <category name="SDK"/>
    </feature>
    <feature url="features/org.eclipse.mylyn.reviews.sdk.feature_0.0.0.jar" id="org.eclipse.mylyn.reviews.sdk.feature" version="0.0.0">
       <category name="SDK"/>
-   </feature>
-   <feature url="features/org.eclipse.mylyn.gerrit.dashboard.feature_1.0.0.qualifier.jar" id="org.eclipse.mylyn.gerrit.dashboard.feature" version="1.0.0.qualifier">
-      <category name="Features"/>
    </feature>
    <category-def name="Features" label="Mylyn Reviews Features">
       <description>

@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylyn.gerrit.dashboard.feature"
       label="%featureName"
-      version="1.0.0.qualifier"
+      version="2.2.0.qualifier"
       provider-name="%providerName">
 
    <description url="http://eclipse.org/mylyn/reviews">
@@ -18,7 +18,7 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.mylyn.gerrit.feature" version="2.2.0.qualifier"/>
+      <import feature="org.eclipse.mylyn.gerrit.feature" version="2.2.0"/>
    </requires>
 
    <plugin
