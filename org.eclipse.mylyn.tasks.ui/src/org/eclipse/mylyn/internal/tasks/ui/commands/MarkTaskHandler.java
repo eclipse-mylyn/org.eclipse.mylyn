@@ -219,8 +219,10 @@ public abstract class MarkTaskHandler extends AbstractTaskHandler {
 	private static void markTasksRead(final ExecutionEvent event, final ITask[] tasks, boolean markRead)
 			throws ExecutionException {
 		Shell shell = HandlerUtil.getActiveShell(event);
-		MarkTaskReadOperation operation = new MarkTaskReadOperation(shell,
-				Messages.MarkTaskHandler_MarkTasksUnreadOperation, markRead, tasks);
+		String label = (markRead)
+				? Messages.MarkTaskHandler_MarkTasksReadOperation
+				: Messages.MarkTaskHandler_MarkTasksUnreadOperation;
+		MarkTaskReadOperation operation = new MarkTaskReadOperation(shell, label, markRead, tasks);
 		operation.execute();
 	}
 
