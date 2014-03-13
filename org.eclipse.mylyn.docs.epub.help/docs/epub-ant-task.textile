@@ -269,7 +269,7 @@ p. No publication is complete without content. So you will have to add at a mini
 
 h3. Primary content files
 
-p. Content is added using the **item** element. At a minimum you will have to specify the **file** attribute. This points to the file that will be added to the __spine__. The __spine__ is a structure within the publication that defines the reading order. So the order you add items does matter. If you're adding other types of files such as cascading style sheets you will have to specify the type and whether or not to add it to the spine.
+p. Content is added using the **item** element. At a minimum you will have to specify the **file** attribute. XHTML files are automatically added to the _spine_. The __spine__ is a structure within the publication that defines the reading order. So the order you add items does matter. If you're adding other types of files such as cascading style sheets you will have to specify whether or not to add it to the spine.
 
 bc.. 
 <!ELEMENT item EMPTY>
@@ -283,6 +283,22 @@ p.
 * **file** - points to a file to include in the manifest
 * **type** - The MIME type of the file. If omitted it will be automatically detected if possible.
 * **spine** - Whether or not to include the file in the reading order of the publication. The default is *true*.
+
+The following file types are so called "core media types" and are described in the EPUB 2 specification. Some of these cannot be automatically detected and must be explicitly specified:
+
+* image/gif
+* image/jpeg
+* image/png
+* image/svg+xml
+* application/xhtml+xml
+* application/x-dtbook+xml (not detected)
+* text/css
+* application/xml
+* text/x-oeb1-document (not detected)
+* text/x-oeb1-css (not detected)
+* application/x-dtbncx+xml (not detected)
+
+Other file types such as TrueType fonts can also be added even though they are not covered in the specifiation. However certain reading systems do support embedded fonts.
 
 h3. Secondary content files
 

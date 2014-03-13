@@ -11,14 +11,11 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.docs.epub.core;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
@@ -26,6 +23,12 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.tika.config.TikaConfig;
+import org.apache.tika.exception.TikaException;
+import org.apache.tika.io.TikaInputStream;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.metadata.TikaMetadataKeys;
+import org.apache.tika.mime.MediaType;
 import org.eclipse.mylyn.docs.epub.core.EPUB;
 
 /**
@@ -36,6 +39,8 @@ import org.eclipse.mylyn.docs.epub.core.EPUB;
 public class EPUBFileUtil {
 
 	static final int BUFFERSIZE = 2048;
+
+	private static TikaConfig tika;
 
 	/**
 	 * Copies the contents of <i>source</i> to the new <i>destination</i> file.
@@ -80,52 +85,22 @@ public class EPUBFileUtil {
 	 *
 	 * @param file
 	 *            the file to determine MIME-type for
-	 * @return the MIME-type or <code>null</code>
+	 * @return the MIME-type or <code>application/octet-stream</code>
 	 */
 	public static String getMimeType(File file) {
-		String name = file.getName().toLowerCase();
-		// These are not (correctly) detected by mechanism below
-		if (name.endsWith("xhtml")) { //$NON-NLS-1$
-			return "application/xhtml+xml"; //$NON-NLS-1$
-		}
-		if (name.endsWith(".otf")) { //$NON-NLS-1$
-			return "font/opentype"; //$NON-NLS-1$
-		}
-		if (name.endsWith(".ttf")) { //$NON-NLS-1$
-			return "font/truetype"; //$NON-NLS-1$
-		}
-		if (name.endsWith(".svg")) { //$NON-NLS-1$
-			return "image/svg+xml"; //$NON-NLS-1$
-		}
-		if (name.endsWith(".css")) { //$NON-NLS-1$
-			return "text/css"; //$NON-NLS-1$
-		}
-		if (name.endsWith(".epub")) { //$NON-NLS-1$
-			return EPUB.MIMETYPE_EPUB;
-		}
-		// Use URLConnection or content type detection
 		try {
-			String mimeType_name = URLConnection.guessContentTypeFromName(file.getName());
-			InputStream is = new BufferedInputStream(new FileInputStream(file));
-			String mimeType_content = URLConnection.guessContentTypeFromStream(is);
-			is.close();
-			// Handle situations where we have file name that indicates we have
-			// plain HTML, but the contents say XML. Hence we are probably
-			// looking at XHTML (see bug 360701).
-			if (mimeType_name != null && mimeType_content != null) {
-				if (mimeType_name.equals("text/html") && mimeType_content.equals("application/xml")) { //$NON-NLS-1$ //$NON-NLS-2$
-					return "application/xhtml+xml"; //$NON-NLS-1$
-				}
+			if (tika == null) {
+				tika = new TikaConfig();
 			}
-			// We trust name over content
-			return mimeType_name == null ? mimeType_content : mimeType_name;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			Metadata metadata = new Metadata();
+			metadata.set(TikaMetadataKeys.RESOURCE_NAME_KEY, file.getName());
+			MediaType detect = tika.getDetector().detect(TikaInputStream.get(file), metadata);
+			return detect.toString();
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
+		} catch (TikaException e) {
+			throw new RuntimeException(e);
 		}
-
-		return null;
 	}
 
 	/**

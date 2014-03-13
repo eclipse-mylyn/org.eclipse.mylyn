@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2011,2012 Torkild U. Resheim.
- * 
+ * Copyright (c) 2011-2014 Torkild U. Resheim.
+ *
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors: 
+ *
+ * Contributors:
  *   Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.tests.core;
@@ -24,13 +24,13 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * Tests for the OPS2 validator.
- * 
+ * Tests for the OPS validator.
+ *
  * @author Torkild U. Resheim
  * @see http://idpf.org/epub/20/spec/OPS_2.0.1_draft.htm
  */
 @SuppressWarnings({ "restriction", "nls" })
-public class TestOPS2Validator extends TestCase {
+public class TestOPSValidator extends TestCase {
 
 	private final String[] illegalAttributes = new String[] { "anything", "goes", "in", "here" };
 
@@ -41,7 +41,7 @@ public class TestOPS2Validator extends TestCase {
 
 	/**
 	 * A list of legal elements according to the EPUB 2.0.1 specification
-	 * 
+	 *
 	 * @see http://idpf.org/epub/20/spec/OPS_2.0.1_draft.htm#Section1.3.4
 	 * @see http://idpf.org/epub/20/spec/OPS_2.0.1_draft.htm#Section2.2
 	 */

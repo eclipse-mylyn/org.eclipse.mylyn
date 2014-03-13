@@ -250,8 +250,8 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.Publication#addMeta(java.lang.String, java.lang.String)} .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#addMeta(java.lang.String, java.lang.String)}
+	 * .
 	 */
 	@Test
 	public final void testAddMeta() {
@@ -444,8 +444,8 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.Publication#addType(java.lang.String, java.lang.String)} .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#addType(java.lang.String, java.lang.String)}
+	 * .
 	 */
 	@Test
 	public final void testAddType() {
@@ -562,8 +562,8 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#pack(java.io.File)}. An EPUB with no
-	 * content shall fail when packed.
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#pack(java.io.File)}. An EPUB with no content
+	 * shall fail when packed.
 	 *
 	 * @throws Exception
 	 */
@@ -587,8 +587,7 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#setCover(java.io.File, java.lang.String)}
-	 * .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#setCover(java.io.File, java.lang.String)} .
 	 * <ul>
 	 * <li>Cover page SVG shall exist in the unpacked folder</li>
 	 * <li>Cover page HTML shall exist in the unpacked folder</li>
@@ -630,9 +629,9 @@ public class TestOPSPublication extends AbstractTest {
 	}
 
 	/**
-	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#setIncludeReferencedResources(boolean)}.
-	 * This is determining whether or not the referenced resources has been picked up and included in the resulting
-	 * EPUB. Also handles <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=375795">bug 375795</a>: [epub][patch]
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#setIncludeReferencedResources(boolean)}. This
+	 * is determining whether or not the referenced resources has been picked up and included in the resulting EPUB.
+	 * Also handles <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=375795">bug 375795</a>: [epub][patch]
 	 * Automatic inclusion of referenced resources fail on anchor references
 	 *
 	 * @throws Exception
@@ -730,7 +729,12 @@ public class TestOPSPublication extends AbstractTest {
 		File svgFile = new File("testdata/drawing.svg");
 
 		FileWriter fw = new FileWriter(htmlFile);
-		fw.write("<html><body>");
+		// A proper declaration must be added or the file type cannot be
+		// correctly detected.
+		fw.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+		fw.write("<!DOCTYPE html\n"
+				+ "  PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">");
+		fw.write("<html xmlns=\"http://www.w3.org/1999/xhtml\"><body>");
 		fw.write("<img src=\"" + svgFile.getAbsolutePath() + "\"/>");
 		fw.write("</body></html>");
 		fw.close();
