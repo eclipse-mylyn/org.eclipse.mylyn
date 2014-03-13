@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.wikitext.html.core;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -63,6 +64,33 @@ public class SpanStrategiesTest {
 		SpanStrategies strategies = new SpanStrategies(Sets.newHashSet(SpanType.BOLD),
 				Collections.<SpanHtmlElementStrategy> emptyList());
 		assertTrue(strategies.getStrategy(SpanType.STRONG, new Attributes()) instanceof SubstitutionSpanStrategy);
+	}
+
+	@Test
+	public void spanWithFontWeightToBold() {
+		SpanStrategies strategies = new SpanStrategies(Sets.newHashSet(SpanType.BOLD),
+				Collections.<SpanHtmlElementStrategy> emptyList());
+		SpanStrategy strategy = strategies.getStrategy(SpanType.SPAN, new Attributes(null, null, "font-weight:  bold",
+				null));
+		assertTrue(strategy instanceof SubstitutionWithoutCssSpanStrategy);
+		assertEquals(SpanType.BOLD, ((SubstitutionWithoutCssSpanStrategy) strategy).getType());
+	}
+
+	@Test
+	public void spanWithFontWeightToStrong() {
+		SpanStrategies strategies = new SpanStrategies(Sets.newHashSet(SpanType.STRONG),
+				Collections.<SpanHtmlElementStrategy> emptyList());
+		SpanStrategy strategy = strategies.getStrategy(SpanType.SPAN, new Attributes(null, null, "font-weight:  bold",
+				null));
+		assertTrue(strategy instanceof SubstitutionWithoutCssSpanStrategy);
+		assertEquals(SpanType.STRONG, ((SubstitutionWithoutCssSpanStrategy) strategy).getType());
+	}
+
+	@Test
+	public void spanWithUnrecognizedCssToUnsupported() {
+		SpanStrategies strategies = new SpanStrategies(Sets.newHashSet(SpanType.BOLD),
+				Collections.<SpanHtmlElementStrategy> emptyList());
+		assertTrue(strategies.getStrategy(SpanType.SPAN, new Attributes(null, null, "font-weight:unknown", null)) instanceof UnsupportedSpanStrategy);
 	}
 
 	private void assertSupported(SpanStrategies strategies, SpanType spanType) {

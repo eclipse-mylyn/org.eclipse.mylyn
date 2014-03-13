@@ -11,31 +11,20 @@
 
 package org.eclipse.mylyn.internal.wikitext.html.core;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 
-class SubstitutionSpanStrategy implements SpanStrategy {
+class SubstitutionWithoutCssSpanStrategy extends SubstitutionSpanStrategy {
 
-	private final SpanType type;
-
-	protected SubstitutionSpanStrategy(SpanType type) {
-		this.type = checkNotNull(type);
+	SubstitutionWithoutCssSpanStrategy(SpanType type) {
+		super(type);
 	}
 
 	@Override
 	public void beginSpan(DocumentBuilder builder, SpanType unsupportedType, Attributes attributes) {
-		builder.beginSpan(type, attributes);
-	}
-
-	@Override
-	public void endSpan(DocumentBuilder builder) {
-		builder.endSpan();
-	}
-
-	SpanType getType() {
-		return type;
+		Attributes attributesCopy = attributes.clone();
+		attributesCopy.setCssStyle(null);
+		super.beginSpan(builder, unsupportedType, attributesCopy);
 	}
 }

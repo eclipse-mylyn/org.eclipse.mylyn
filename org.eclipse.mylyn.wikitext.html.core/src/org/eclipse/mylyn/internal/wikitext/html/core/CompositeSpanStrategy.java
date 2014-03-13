@@ -11,31 +11,35 @@
 
 package org.eclipse.mylyn.internal.wikitext.html.core;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.List;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 
-class SubstitutionSpanStrategy implements SpanStrategy {
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
-	private final SpanType type;
+class CompositeSpanStrategy implements SpanStrategy {
 
-	protected SubstitutionSpanStrategy(SpanType type) {
-		this.type = checkNotNull(type);
+	private final List<SpanStrategy> delegates;
+
+	CompositeSpanStrategy(List<SpanStrategy> delegates) {
+		this.delegates = ImmutableList.copyOf(delegates);
 	}
 
 	@Override
-	public void beginSpan(DocumentBuilder builder, SpanType unsupportedType, Attributes attributes) {
-		builder.beginSpan(type, attributes);
+	public void beginSpan(DocumentBuilder builder, SpanType type, Attributes attributes) {
+		for (SpanStrategy strategy : delegates) {
+			strategy.beginSpan(builder, type, attributes);
+		}
 	}
 
 	@Override
 	public void endSpan(DocumentBuilder builder) {
-		builder.endSpan();
+		for (SpanStrategy strategy : Lists.reverse(delegates)) {
+			strategy.endSpan(builder);
+		}
 	}
 
-	SpanType getType() {
-		return type;
-	}
 }

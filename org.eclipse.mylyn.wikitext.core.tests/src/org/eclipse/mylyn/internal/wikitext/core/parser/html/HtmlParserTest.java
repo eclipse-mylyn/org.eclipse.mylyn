@@ -94,6 +94,22 @@ public class HtmlParserTest {
 				END_BLOCK);
 	}
 
+	@Test
+	public void fontTagWithStyles() {
+		assertParse("<span id=\"id123\" style=\"color: blue; font-size: 10; font-family: monospace;\">text</span>",
+				"<body><font size=\"10\" face=\"monospace\" color=\"blue\" unknown=\"test\" id=\"id123\">text</font></body>");
+	}
+
+	@Test
+	public void fontTagWithIdNoStyles() {
+		assertParse("<span id=\"id123\">text</span>", "<body><font unknown=\"test\" id=\"id123\">text</font></body>");
+	}
+
+	@Test
+	public void fontTagWithoutStylesOrId() {
+		assertParse("text", "<body><font what=\"is this?\">text</font></body>");
+	}
+
 	private void assertParseEventOrder(String content, Object... expectedEventTypes) {
 		final List<Object> actualEventTypes = Lists.newArrayList();
 		DocumentBuilder builder = new NoOpDocumentBuilder() {

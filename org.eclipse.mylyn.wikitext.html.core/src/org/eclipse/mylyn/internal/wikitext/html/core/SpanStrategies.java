@@ -13,15 +13,26 @@ package org.eclipse.mylyn.internal.wikitext.html.core;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.base.Predicates.isNull;
+import static com.google.common.base.Predicates.not;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.mylyn.internal.wikitext.core.util.css.CssParser;
+import org.eclipse.mylyn.internal.wikitext.core.util.css.CssRule;
+import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 
+import com.google.common.base.CharMatcher;
+import com.google.common.base.Objects;
+import com.google.common.base.Splitter;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 public class SpanStrategies extends ElementStrategies<SpanType, SpanStrategy, SpanHtmlElementStrategy> {
@@ -81,4 +92,58 @@ public class SpanStrategies extends ElementStrategies<SpanType, SpanStrategy, Sp
 		return strategy.spanStrategy();
 	}
 
+	@Override
+	public SpanStrategy getStrategy(SpanType elementType, Attributes attributes) {
+		SpanStrategy strategy = super.getStrategy(elementType, attributes);
+		if (elementType == SpanType.SPAN && strategy instanceof UnsupportedSpanStrategy) {
+			strategy = Objects.firstNonNull(calculateAlternateSpanStrategy(attributes), strategy);
+		}
+		return strategy;
+	}
+
+	private SpanStrategy calculateAlternateSpanStrategy(Attributes attributes) {
+		List<SpanStrategy> strategies = Lists.newArrayList();
+		String cssStyle = attributes.getCssStyle();
+		if (cssStyle != null) {
+			Iterator<CssRule> rules = new CssParser().createRuleIterator(cssStyle);
+			while (rules.hasNext()) {
+				CssRule rule = rules.next();
+				if (rule.name.equals("font-weight") && rule.value.equals("bold")) { //$NON-NLS-1$ //$NON-NLS-2$
+					strategies.add(calculateAlternateSpanStrategy(SpanType.BOLD));
+				} else if (rule.name.equals("font-style") && rule.value.equals("italic")) { //$NON-NLS-1$ //$NON-NLS-2$
+					strategies.add(calculateAlternateSpanStrategy(SpanType.ITALIC));
+				} else if (rule.name.equals("font-family")) { //$NON-NLS-1$
+					if (isFontFamilyMonospace(rule)) {
+						strategies.add(new SubstitutionWithoutCssSpanStrategy(SpanType.MONOSPACE));
+					}
+				}
+			}
+		}
+		strategies = FluentIterable.from(strategies).filter(not(isNull())).toImmutableList();
+		if (strategies.isEmpty()) {
+			return null;
+		} else if (strategies.size() == 1) {
+			return strategies.get(0);
+		}
+		return new CompositeSpanStrategy(strategies);
+	}
+
+	private boolean isFontFamilyMonospace(CssRule rule) {
+		for (String value : Splitter.on(',').trimResults(CharMatcher.WHITESPACE).split(rule.value)) {
+			if ("monospace".equalsIgnoreCase(value)) { //$NON-NLS-1$
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private SpanStrategy calculateAlternateSpanStrategy(SpanType spanType) {
+		SpanStrategy strategy = super.getStrategy(spanType, new Attributes());
+		if (strategy instanceof SupportedSpanStrategy) {
+			return new SubstitutionWithoutCssSpanStrategy(spanType);
+		} else if (strategy instanceof SubstitutionSpanStrategy) {
+			return new SubstitutionWithoutCssSpanStrategy(((SubstitutionSpanStrategy) strategy).getType());
+		}
+		return null;
+	}
 }

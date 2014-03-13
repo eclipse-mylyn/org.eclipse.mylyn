@@ -399,6 +399,48 @@ public abstract class AbstractSaxHtmlParser {
 
 		}
 
+		private class FontElementHandler extends ElementHandler {
+
+			private final SpanType spanType;
+
+			private boolean noop;
+
+			private FontElementHandler(SpanType spanType) {
+				this.spanType = spanType;
+			}
+
+			@Override
+			public void start(Attributes atts) {
+				org.eclipse.mylyn.wikitext.core.parser.Attributes attributes = computeFontAttributes(atts);
+				if (spanType == SpanType.SPAN && attributes.getCssClass() == null && attributes.getCssStyle() == null
+						&& attributes.getId() == null) {
+					noop = true;
+				} else {
+					builder.beginSpan(spanType, attributes);
+				}
+			}
+
+			@Override
+			public void end() {
+				if (!noop) {
+					builder.endSpan();
+				}
+			}
+
+			private org.eclipse.mylyn.wikitext.core.parser.Attributes computeFontAttributes(Attributes atts) {
+				org.eclipse.mylyn.wikitext.core.parser.Attributes attributes = computeAttributes(spanType, atts);
+				for (int x = 0; x < atts.getLength(); ++x) {
+					String localName = atts.getLocalName(x);
+					if (localName.equals("face")) { //$NON-NLS-1$
+						attributes.appendCssStyle("font-family: " + atts.getValue(x) + ";"); //$NON-NLS-1$ //$NON-NLS-2$
+					} else if (localName.equals("size")) { //$NON-NLS-1$
+						attributes.appendCssStyle("font-size: " + atts.getValue(x) + ";"); //$NON-NLS-1$ //$NON-NLS-2$
+					}
+				}
+				return attributes;
+			}
+		}
+
 		private class ContentElementHandler extends ElementHandler {
 
 			@Override
@@ -494,6 +536,9 @@ public abstract class AbstractSaxHtmlParser {
 			if (blockType == null) {
 				SpanType spanType = elementNameToSpanType.get(elementName);
 				if (spanType != null) {
+					if (elementName.equals("font")) { //$NON-NLS-1$
+						return new FontElementHandler(spanType);
+					}
 					return new SpanElementHandler(spanType);
 				}
 				if (elementName.equals("img")) { //$NON-NLS-1$

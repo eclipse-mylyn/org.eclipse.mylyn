@@ -213,9 +213,7 @@ public class HtmlLanguageBuilderTest {
 		builder.characters("test");
 		builder.endSpan();
 		builder.characters(" ");
-		builder.beginSpan(SpanType.SPAN, new Attributes(null, null, "color: purple", null));
-		builder.characters("inside font");
-		builder.endSpan();
+		addSpanWithCssColor(builder);
 		builder.endDocument();
 
 		assertEquals("test <font color=\"purple\">inside font</font>", writer.toString());
@@ -236,12 +234,82 @@ public class HtmlLanguageBuilderTest {
 		builder.characters("test");
 		builder.endSpan();
 		builder.characters(" ");
-		builder.beginSpan(SpanType.SPAN, new Attributes(null, null, "color: purple", null));
-		builder.characters("inside font");
-		builder.endSpan();
+		addSpanWithCssColor(builder);
 		builder.endDocument();
 
 		assertEquals("<span>test</span> <font color=\"purple\">inside font</font>", writer.toString());
+	}
+
+	@Test
+	public void spanToBoldTransformation() {
+		StringWriter writer = new StringWriter();
+		HtmlLanguage language = builder.add(BlockType.PARAGRAPH)
+				.add(SpanType.BOLD)
+				.document("", "")
+				.name("Test")
+				.create();
+
+		DocumentBuilder builder = language.createDocumentBuilder(writer);
+		builder.beginDocument();
+		addSpanWithCssFontWeightBold(builder);
+		builder.characters(" ");
+		addSpanWithCssColor(builder);
+		builder.endDocument();
+
+		assertEquals("<b>test</b> inside font", writer.toString());
+	}
+
+	@Test
+	public void spanToStrongTransformation() {
+		StringWriter writer = new StringWriter();
+		HtmlLanguage language = builder.add(BlockType.PARAGRAPH)
+				.add(SpanType.STRONG)
+				.document("", "")
+				.name("Test")
+				.create();
+
+		DocumentBuilder builder = language.createDocumentBuilder(writer);
+		builder.beginDocument();
+		addSpanWithCssFontWeightBold(builder);
+		builder.characters(" ");
+		addSpanWithCssColor(builder);
+		builder.endDocument();
+
+		assertEquals("<strong>test</strong> inside font", writer.toString());
+	}
+
+	@Test
+	public void spanToCompositeTransformation() {
+		StringWriter writer = new StringWriter();
+		HtmlLanguage language = builder.add(BlockType.PARAGRAPH)
+				.add(SpanType.BOLD)
+				.add(SpanType.MONOSPACE)
+				.add(SpanType.EMPHASIS)
+				.document("", "")
+				.name("Test")
+				.create();
+
+		DocumentBuilder builder = language.createDocumentBuilder(writer);
+		builder.beginDocument();
+		builder.beginSpan(SpanType.SPAN, new Attributes(null, null,
+				"font-weight:bold; font-family: courrier, monospace;font-style:italic;unknown: rule", null));
+		builder.characters("test");
+		builder.endSpan();
+		builder.endDocument();
+
+		assertEquals("<b><tt><em>test</em></tt></b>", writer.toString());
+	}
+
+	void addSpanWithCssFontWeightBold(DocumentBuilder builder) {
+		builder.beginSpan(SpanType.SPAN, new Attributes(null, null, "font-weight:bold", null));
+		builder.characters("test");
+		builder.endSpan();
+	}
+
+	private void addSpanWithCssColor(DocumentBuilder builder) {
+		builder.beginSpan(SpanType.SPAN, new Attributes(null, null, "color: purple", null));
+		builder.characters("inside font");
+		builder.endSpan();
 	}
 
 	protected void expectBlacklisted() {

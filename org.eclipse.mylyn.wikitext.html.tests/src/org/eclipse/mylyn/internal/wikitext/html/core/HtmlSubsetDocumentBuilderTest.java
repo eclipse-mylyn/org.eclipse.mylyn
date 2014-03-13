@@ -565,7 +565,7 @@ public class HtmlSubsetDocumentBuilderTest {
 		builder.characters("test2");
 		builder.endSpan();
 
-		assertContent("<font color=\"blue\">test</font> <font size=\"15pt\">test2</font> <font size=\"16em\" color=\"red\">test2</font>");
+		assertContent("<font color=\"blue\">test</font> <font size=\"15pt\">test2</font> <font color=\"red\" size=\"16em\">test2</font>");
 	}
 
 	private void assertSupportedSpan(String expected, SpanType spanType) {
