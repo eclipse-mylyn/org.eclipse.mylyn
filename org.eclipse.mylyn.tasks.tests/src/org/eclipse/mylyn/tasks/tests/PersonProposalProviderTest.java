@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 Frank Becker and others.
+ * Copyright (c) 2004, 2014 Frank Becker and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,6 +28,8 @@ import org.eclipse.mylyn.internal.tasks.ui.PersonContentProposal;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
@@ -39,6 +41,12 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  * @author Steffen Pingel
  */
 public class PersonProposalProviderTest extends TestCase {
+
+	final private static Comparator<IContentProposal> CONTENT_COMPARATOR = new Comparator<IContentProposal>() {
+		public int compare(IContentProposal o1, IContentProposal o2) {
+			return o1.getContent().compareTo(o2.getContent());
+		}
+	};
 
 	@Override
 	protected void setUp() throws Exception {
@@ -61,10 +69,68 @@ public class PersonProposalProviderTest extends TestCase {
 		assertEquals(0, result.length);
 	}
 
-	public void testGetProposalsCurrentTask() {
+	public void testGetProposalsNullContents() throws Exception {
+		PersonProposalProvider provider = new PersonProposalProvider(MockRepositoryConnector.REPOSITORY_URL,
+				MockRepositoryConnector.CONNECTOR_KIND);
+
+		try {
+			provider.getProposals(null, 0);
+			fail();
+		} catch (IllegalArgumentException e) {
+			// expected
+		}
+	}
+
+	public void testInvalidPosition() throws Exception {
+		PersonProposalProvider provider = new PersonProposalProvider(MockRepositoryConnector.REPOSITORY_URL,
+				MockRepositoryConnector.CONNECTOR_KIND);
+
+		try {
+			provider.getProposals("", -1);
+			fail();
+		} catch (IllegalArgumentException e) {
+			// expected
+		}
+	}
+
+	public void testGetProposalsTask() {
 		MockTask task = new MockTask(null, "1", null);
 		task.setOwner("foo");
 		PersonProposalProvider provider = new PersonProposalProvider(task, (TaskData) null);
+
+		assertProposalsForFoo(provider);
+	}
+
+	public void testGetProposalsTaskDataWithReporter() {
+		MockTask task = new MockTask(null, "1", null);
+		TaskData taskData = createMockTaskData();
+		taskData.getRoot().createMappedAttribute(TaskAttribute.USER_REPORTER).setValue("foo");
+		taskData.getRoot().getMappedAttribute(TaskAttribute.USER_REPORTER).getMetaData().setReadOnly(true);
+		PersonProposalProvider provider = new PersonProposalProvider(task, taskData);
+
+		assertProposalsForFoo(provider);
+	}
+
+	public void testGetProposalsTaskDataWithReporterPerson() {
+		MockTask task = new MockTask(null, "1", null);
+		TaskData taskData = createMockTaskData();
+		taskData.getRoot().createMappedAttribute(TaskAttribute.USER_REPORTER).setValue("foo");
+		taskData.getRoot().getMappedAttribute(TaskAttribute.USER_REPORTER).getMetaData().setReadOnly(true);
+		taskData.getRoot()
+				.getMappedAttribute(TaskAttribute.USER_REPORTER)
+				.getMetaData()
+				.setType(TaskAttribute.TYPE_PERSON);
+		PersonProposalProvider provider = new PersonProposalProvider(task, taskData);
+
+		assertProposalsForFoo(provider);
+	}
+
+	private TaskData createMockTaskData() {
+		return new TaskData(new TaskAttributeMapper(TaskTestUtil.createMockRepository()),
+				MockRepositoryConnector.CONNECTOR_KIND, MockRepositoryConnector.REPOSITORY_URL, "1");
+	}
+
+	static private void assertProposalsForFoo(PersonProposalProvider provider) {
 		IContentProposal[] result = provider.getProposals("", 0);
 		assertNotNull(result);
 		assertEquals(1, result.length);
@@ -83,6 +149,16 @@ public class PersonProposalProviderTest extends TestCase {
 		assertNotNull(result);
 		assertEquals(1, result.length);
 		assertEquals("foo", result[0].getContent());
+	}
+
+	public void testGetProposalNoOwnerAndNoPerson() throws Exception {
+		PersonProposalProvider provider = new PersonProposalProvider(MockRepositoryConnector.REPOSITORY_URL,
+				MockRepositoryConnector.CONNECTOR_KIND);
+
+		IContentProposal[] result = provider.getProposals("", 0);
+
+		assertNotNull(result);
+		assertEquals(0, result.length);
 	}
 
 	public void testGetProposalsMultipleAddresses() {
@@ -219,11 +295,7 @@ public class PersonProposalProviderTest extends TestCase {
 
 		PersonProposalProvider provider = new PersonProposalProvider(task1, (TaskData) null, users);
 		IContentProposal[] result = provider.getProposals("", 0);
-		Arrays.sort(result, new Comparator<IContentProposal>() {
-			public int compare(IContentProposal o1, IContentProposal o2) {
-				return o1.getContent().compareTo(o2.getContent());
-			}
-		});
+		Arrays.sort(result, CONTENT_COMPARATOR);
 		assertNotNull(result);
 		assertEquals(4, result.length);
 		assertEquals("11", result[0].getContent());
@@ -232,53 +304,33 @@ public class PersonProposalProviderTest extends TestCase {
 		assertEquals("33", result[3].getContent());
 
 		result = provider.getProposals("f", 1);
-		Arrays.sort(result, new Comparator<IContentProposal>() {
-			public int compare(IContentProposal o1, IContentProposal o2) {
-				return o1.getContent().compareTo(o2.getContent());
-			}
-		});
+		Arrays.sort(result, CONTENT_COMPARATOR);
 		assertNotNull(result);
 		assertEquals(2, result.length);
 		assertEquals("11", result[0].getContent());
 		assertEquals("33", result[1].getContent());
 
 		result = provider.getProposals("b", 1);
-		Arrays.sort(result, new Comparator<IContentProposal>() {
-			public int compare(IContentProposal o1, IContentProposal o2) {
-				return o1.getContent().compareTo(o2.getContent());
-			}
-		});
+		Arrays.sort(result, CONTENT_COMPARATOR);
 		assertNotNull(result);
 		assertEquals(2, result.length);
 		assertEquals("21", result[0].getContent());
 		assertEquals("22", result[1].getContent());
 
 		result = provider.getProposals("1", 1);
-		Arrays.sort(result, new Comparator<IContentProposal>() {
-			public int compare(IContentProposal o1, IContentProposal o2) {
-				return o1.getContent().compareTo(o2.getContent());
-			}
-		});
+		Arrays.sort(result, CONTENT_COMPARATOR);
 		assertNotNull(result);
 		assertEquals(1, result.length);
 		assertEquals("11", result[0].getContent());
 
 		result = provider.getProposals("3", 1);
-		Arrays.sort(result, new Comparator<IContentProposal>() {
-			public int compare(IContentProposal o1, IContentProposal o2) {
-				return o1.getContent().compareTo(o2.getContent());
-			}
-		});
+		Arrays.sort(result, CONTENT_COMPARATOR);
 		assertNotNull(result);
 		assertEquals(1, result.length);
 		assertEquals("33", result[0].getContent());
 
 		result = provider.getProposals("2", 1);
-		Arrays.sort(result, new Comparator<IContentProposal>() {
-			public int compare(IContentProposal o1, IContentProposal o2) {
-				return o1.getContent().compareTo(o2.getContent());
-			}
-		});
+		Arrays.sort(result, CONTENT_COMPARATOR);
 		assertNotNull(result);
 		assertEquals(2, result.length);
 		assertEquals("21", result[0].getContent());

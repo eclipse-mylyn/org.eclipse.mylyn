@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
@@ -103,9 +104,8 @@ public class PersonProposalProvider implements IContentProposalProvider {
 	}
 
 	public IContentProposal[] getProposals(String contents, int position) {
-		if (contents == null) {
-			throw new IllegalArgumentException();
-		}
+		Assert.isLegal(contents != null);
+		Assert.isLegal(position >= 0);
 
 		int leftSeparator = getIndexOfLeftSeparator(contents, position);
 		int rightSeparator = getIndexOfRightSeparator(contents, position);
