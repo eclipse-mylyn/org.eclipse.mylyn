@@ -34,7 +34,7 @@ Require-Bundle: org.junit;bundle-version="4.8",
  org.eclipse.help,
  org.apache.ant,
  org.jsoup;bundle-version="1.7.2",
- com.google.guava;bundle-version="12.0.0"
+ com.google.guava;bundle-version="15.0.0"
 Export-Package: 
  org.eclipse.mylyn.internal.wikitext.core.ant;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.core.parser.builder;x-internal:=true,

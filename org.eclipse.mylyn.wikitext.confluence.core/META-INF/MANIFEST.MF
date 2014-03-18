@@ -6,7 +6,7 @@ Bundle-Version: 2.0.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.mylyn.wikitext.core;bundle-version="2.0.0",
- com.google.guava;bundle-version="12.0.0"
+ com.google.guava;bundle-version="15.0.0"
 Export-Package: org.eclipse.mylyn.internal.wikitext.confluence.core;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.confluence.core.block;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.confluence.core.phrase;x-internal:=true,

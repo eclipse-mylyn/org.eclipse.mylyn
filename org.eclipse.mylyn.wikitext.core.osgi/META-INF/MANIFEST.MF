@@ -8,6 +8,6 @@ Bundle-Localization: META-INF/l10n/bundle
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.mylyn.wikitext.core;bundle-version="2.0.0",
- com.google.guava;bundle-version="12.0.0"
+ com.google.guava;bundle-version="15.0.0"
 Export-Package: org.eclipse.mylyn.wikitext.core.osgi
 Import-Package: org.osgi.framework;version="1.5.0"
