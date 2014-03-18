@@ -28,6 +28,7 @@ import org.junit.Test;
 
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableSet;
 
 @EclipseRuntimeRequired
 public class EclipseServiceLocatorTest {
@@ -48,11 +49,12 @@ public class EclipseServiceLocatorTest {
 	@Test
 	public void getAllMarkupLanguages() {
 		Set<MarkupLanguage> allMarkupLanguages = ServiceLocator.getInstance().getAllMarkupLanguages();
-		Set<String> names = FluentIterable.from(allMarkupLanguages).transform(new Function<MarkupLanguage, String>() {
-			public String apply(MarkupLanguage language) {
-				return language.getName();
-			}
-		}).toImmutableSet();
+		Set<String> names = ImmutableSet.copyOf(FluentIterable.from(allMarkupLanguages).transform(
+				new Function<MarkupLanguage, String>() {
+					public String apply(MarkupLanguage language) {
+						return language.getName();
+					}
+				}));
 		assertEquals(WikiText.getMarkupLanguageNames(), names);
 	}
 }

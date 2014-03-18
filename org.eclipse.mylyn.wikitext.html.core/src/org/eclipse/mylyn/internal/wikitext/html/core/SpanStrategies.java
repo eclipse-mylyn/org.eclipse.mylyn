@@ -119,7 +119,7 @@ public class SpanStrategies extends ElementStrategies<SpanType, SpanStrategy, Sp
 				}
 			}
 		}
-		strategies = FluentIterable.from(strategies).filter(not(isNull())).toImmutableList();
+		strategies = ImmutableList.copyOf(FluentIterable.from(strategies).filter(not(isNull())));
 		if (strategies.isEmpty()) {
 			return null;
 		} else if (strategies.size() == 1) {
