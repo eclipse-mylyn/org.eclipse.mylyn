@@ -108,7 +108,9 @@ public class FocusedTeamPreferencePage extends PreferencePage implements IWorkbe
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
 		group.setText(Messages.FocusedTeamPreferencePage_Commit_Comment_Template);
 		group.setLayout(new GridLayout(2, false));
-		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.heightHint = 200;
+		group.setLayoutData(gd);
 
 //		Label completedLabel = createLabel(group, "Template: ");
 //		completedLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
@@ -119,17 +121,17 @@ public class FocusedTeamPreferencePage extends PreferencePage implements IWorkbe
 
 	private Text addTemplateField(final Composite parent, final String text, IContentProposalProvider provider) {
 		IControlContentAdapter adapter = new TextContentAdapter();
-		Text control = new Text(parent, SWT.BORDER | SWT.MULTI);
+		Text control = new Text(parent, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
 		control.setText(text);
 
 		new ContentAssistCommandAdapter(control, adapter, provider, null, new char[] { '$' }, true);
 
 		GridData gd = new GridData();
-		gd.heightHint = 60;
+		gd.heightHint = 200;
 		gd.horizontalAlignment = GridData.FILL;
 		gd.grabExcessHorizontalSpace = true;
 		gd.verticalAlignment = GridData.CENTER;
-		gd.grabExcessVerticalSpace = false;
+		gd.grabExcessVerticalSpace = true;
 		control.setLayoutData(gd);
 
 		return control;
