@@ -13,7 +13,7 @@
   <version>3.11.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <properties>
-    <sonar.skippedModules>org.eclipse.mylyn.discovery-directory,org.eclipse.myly-parent,org.eclipse.mylyn-site,org.eclipse.mylyn-target</sonar.skippedModules>
+    <sonar.skippedModules>org.eclipse.mylyn.discovery-directory,org.eclipse.mylyn-parent,org.eclipse.mylyn-site,org.eclipse.mylyn-target</sonar.skippedModules>
     <tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/mylyn/org.eclipse.mylyn.git</tycho.scmUrl>
   </properties>
   <profiles>
