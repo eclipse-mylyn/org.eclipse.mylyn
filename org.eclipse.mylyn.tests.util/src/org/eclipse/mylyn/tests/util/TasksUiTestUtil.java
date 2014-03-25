@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.tests.util;
 
+import org.eclipse.mylyn.internal.tasks.core.util.ContributorBlackList;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiExtensionReader;
 
 /**
@@ -22,7 +23,7 @@ public class TasksUiTestUtil {
 	 * Ensures that connector UI extensions are registered (see bug 400370).
 	 */
 	public static void ensureTasksUiInitialization() {
-		TasksUiExtensionReader.initWorkbenchUiExtensions();
+		TasksUiExtensionReader.initWorkbenchUiExtensions(new ContributorBlackList());
 	}
 
 }

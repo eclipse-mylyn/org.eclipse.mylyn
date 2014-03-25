@@ -86,6 +86,7 @@ import org.eclipse.mylyn.internal.tasks.core.externalization.IExternalizationPar
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskActivationExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
+import org.eclipse.mylyn.internal.tasks.core.util.RepositoryConnectorLoader;
 import org.eclipse.mylyn.internal.tasks.core.util.TaskRepositoryKeyringMigrator;
 import org.eclipse.mylyn.internal.tasks.core.util.TaskRepositorySecureStoreMigrator;
 import org.eclipse.mylyn.internal.tasks.core.util.TasksCoreExtensionReader;
@@ -281,68 +282,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		}
 	};
 
-//	private static ITaskListNotificationProvider INCOMING_NOTIFICATION_PROVIDER = new ITaskListNotificationProvider() {
-//
-//		@SuppressWarnings( { "deprecation", "restriction" })
-//		public Set<AbstractNotification> getNotifications() {
-//			Set<AbstractNotification> notifications = new HashSet<AbstractNotification>();
-//			// Incoming Changes
-//			for (TaskRepository repository : getRepositoryManager().getAllRepositories()) {
-//				AbstractRepositoryConnector connector = getRepositoryManager().getRepositoryConnector(
-//						repository.getConnectorKind());
-//				if (connector instanceof AbstractLegacyRepositoryConnector) {
-//					AbstractRepositoryConnectorUi connectorUi = getConnectorUi(repository.getConnectorKind());
-//					if (connectorUi != null && !connectorUi.hasCustomNotifications()) {
-//						for (ITask itask : TasksUiPlugin.getTaskList().getTasks(repository.getRepositoryUrl())) {
-//							if (itask instanceof AbstractTask) {
-//								AbstractTask task = (AbstractTask) itask;
-//								if ((task.getLastReadTimeStamp() == null || task.getSynchronizationState() == SynchronizationState.INCOMING)
-//										&& task.isNotified() == false) {
-//									TaskListNotification notification = LegacyChangeManager.getIncommingNotification(
-//											connector, task);
-//									notifications.add(notification);
-//									task.setNotified(true);
-//								}
-//							}
-//						}
-//					}
-//				}
-//			}
-//			// New query hits
-//			for (RepositoryQuery query : TasksUiPlugin.getTaskList().getQueries()) {
-//				TaskRepository repository = getRepositoryManager().getRepository(query.getRepositoryUrl());
-//				if (repository != null) {
-//					AbstractRepositoryConnector connector = getRepositoryManager().getRepositoryConnector(
-//							repository.getConnectorKind());
-//					if (connector instanceof AbstractLegacyRepositoryConnector) {
-//						AbstractRepositoryConnectorUi connectorUi = getConnectorUi(repository.getConnectorKind());
-//						if (!connectorUi.hasCustomNotifications()) {
-//							for (ITask hit : query.getChildren()) {
-//								if (((AbstractTask) hit).isNotified() == false) {
-//									notifications.add(new TaskListNotificationQueryIncoming(hit));
-//									((AbstractTask) hit).setNotified(true);
-//								}
-//							}
-//						}
-//					}
-//				}
-//			}
-//			return notifications;
-//		}
-//	};
-
-//	private final IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
-//
-//		public void propertyChange(PropertyChangeEvent event) {
-//			// TODO: do we ever get here?
-////			if (event.getProperty().equals(ContextPreferenceContstants.PREF_DATA_DIR)) {
-////				if (event.getOldValue() instanceof String) {
-////					reloadDataDirectory();
-////				}
-////			}
-//		}
-//	};
-
 	private final org.eclipse.jface.util.IPropertyChangeListener PROPERTY_LISTENER = new org.eclipse.jface.util.IPropertyChangeListener() {
 
 		public void propertyChange(org.eclipse.jface.util.PropertyChangeEvent event) {
@@ -392,6 +331,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private SynchronizationManger synchronizationManger;
 
+	private RepositoryConnectorLoader connectorLoader;
+
 	private class TasksUiInitializationJob extends UIJob {
 
 		public TasksUiInitializationJob() {
@@ -408,7 +349,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			try {
 				// Needs to run after workbench is loaded because it
 				// relies on images.
-				TasksUiExtensionReader.initWorkbenchUiExtensions();
+				TasksUiExtensionReader.initWorkbenchUiExtensions(connectorLoader.getBlackList());
 
 				if (externalizationManager.getLoadStatus() != null) {
 					// XXX: recovery from task list load failure  (Rendered in task list)
@@ -634,7 +575,10 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			// NOTE: initializing extensions in start(..) has caused race
 			// conditions previously
-			TasksUiExtensionReader.initStartupExtensions(taskListExternalizer, repositoryManager);
+			connectorLoader = new RepositoryConnectorLoader();
+			connectorLoader.registerConnectors(repositoryManager, taskListExternalizer);
+			connectorLoader.registerTemplates(repositoryManager, repositoryTemplateManager);
+			TasksUiExtensionReader.initStartupExtensions(connectorLoader.getBlackList());
 
 			// instantiate taskDataManager
 			TaskDataStore taskDataStore = new TaskDataStore(repositoryManager);

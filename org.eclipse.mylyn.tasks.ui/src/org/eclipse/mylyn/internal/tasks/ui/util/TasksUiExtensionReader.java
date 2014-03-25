@@ -11,9 +11,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.util;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -23,19 +20,13 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
 import org.eclipse.mylyn.internal.tasks.core.util.ContributorBlackList;
-import org.eclipse.mylyn.internal.tasks.core.util.RepositoryConnectorExtensionReader;
-import org.eclipse.mylyn.internal.tasks.core.util.RepositoryTemplateExtensionReader;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.AbstractTaskListPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
-import org.eclipse.mylyn.tasks.core.spi.RepositoryConnectorDescriptor;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
@@ -47,23 +38,11 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  */
 public class TasksUiExtensionReader {
 
-	public static final String EXTENSION_REPOSITORIES = "org.eclipse.mylyn.tasks.ui.repositories"; //$NON-NLS-1$
-
 	public static final String EXTENSION_REPOSITORY_LINKS_PROVIDERS = "org.eclipse.mylyn.tasks.ui.projectLinkProviders"; //$NON-NLS-1$
 
 	public static final String ELMNT_REPOSITORY_LINK_PROVIDER = "linkProvider"; //$NON-NLS-1$
 
-	public static final String ELMNT_REPOSITORY_UI = "connectorUi"; //$NON-NLS-1$
-
-	public static final String ELMNT_TYPE = "type"; //$NON-NLS-1$
-
-	public static final String ELMNT_QUERY_PAGE = "queryPage"; //$NON-NLS-1$
-
-	public static final String ELMNT_SETTINGS_PAGE = "settingsPage"; //$NON-NLS-1$
-
 	public static final String EXTENSION_TASK_CONTRIBUTOR = "org.eclipse.mylyn.tasks.ui.actions"; //$NON-NLS-1$
-
-	public static final String ATTR_ACTION_CONTRIBUTOR_CLASS = "taskHandlerClass"; //$NON-NLS-1$
 
 	public static final String DYNAMIC_POPUP_ELEMENT = "dynamicPopupMenu"; //$NON-NLS-1$
 
@@ -85,75 +64,42 @@ public class TasksUiExtensionReader {
 
 	private static final String EXTENSION_PRESENTATIONS = "org.eclipse.mylyn.tasks.ui.presentations"; //$NON-NLS-1$
 
-	public static final String ELMNT_PRESENTATION = "presentation"; //$NON-NLS-1$
-
 	public static final String ATTR_ICON = "icon"; //$NON-NLS-1$
 
 	public static final String ATTR_PRIMARY = "primary"; //$NON-NLS-1$
 
 	public static final String ATTR_ID = "id"; //$NON-NLS-1$
 
-	private static boolean coreExtensionsRead = false;
+	public static void initStartupExtensions(ContributorBlackList blackList) {
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
 
-	/**
-	 * Plug-in ids of connector extensions that failed to load.
-	 */
-	private static ContributorBlackList blackList = new ContributorBlackList();
+		IExtensionPoint presentationsExtensionPoint = registry.getExtensionPoint(EXTENSION_PRESENTATIONS);
+		IExtension[] presentations = presentationsExtensionPoint.getExtensions();
+		for (IExtension presentation : presentations) {
+			IConfigurationElement[] elements = presentation.getConfigurationElements();
+			for (IConfigurationElement element : elements) {
+				if (!blackList.isDisabled(element)) {
+					readPresentation(element);
+				}
+			}
+		}
 
-	private static Set<RepositoryConnectorDescriptor> descriptors = new HashSet<RepositoryConnectorDescriptor>();
-
-	public static void initStartupExtensions(TaskListExternalizer taskListExternalizer,
-			TaskRepositoryManager repositoryManager) {
-		if (!coreExtensionsRead) {
-			IExtensionRegistry registry = Platform.getExtensionRegistry();
-
-			// NOTE: has to be read first, consider improving
-			RepositoryConnectorExtensionReader reader = new RepositoryConnectorExtensionReader(taskListExternalizer,
-					repositoryManager);
-			// load core extension point
-			reader.loadConnectorsFromRepositoriesExtension();
-			// load legacy ui extension point
-			reader.loadConnectors(registry.getExtensionPoint(EXTENSION_REPOSITORIES));
-			// load connectors contributed at runtime
-			reader.loadConnectorsFromContributors();
-			reader.registerConnectors();
-			descriptors.addAll(reader.getDescriptors());
-			blackList.merge(reader.getBlackList());
-
-			RepositoryTemplateExtensionReader templateExtensionReader = new RepositoryTemplateExtensionReader(
-					TasksUi.getRepositoryManager(), TasksUiPlugin.getRepositoryTemplateManager());
-			templateExtensionReader.loadExtensions(blackList);
-
-			IExtensionPoint presentationsExtensionPoint = registry.getExtensionPoint(EXTENSION_PRESENTATIONS);
-			IExtension[] presentations = presentationsExtensionPoint.getExtensions();
-			for (IExtension presentation : presentations) {
-				IConfigurationElement[] elements = presentation.getConfigurationElements();
-				for (IConfigurationElement element : elements) {
-					if (!blackList.isDisabled(element)) {
-						readPresentation(element);
+		// NOTE: causes ..mylyn.context.ui to load
+		IExtensionPoint editorsExtensionPoint = registry.getExtensionPoint(EXTENSION_EDITORS);
+		IExtension[] editors = editorsExtensionPoint.getExtensions();
+		for (IExtension editor : editors) {
+			IConfigurationElement[] elements = editor.getConfigurationElements();
+			for (IConfigurationElement element : elements) {
+				if (!blackList.isDisabled(element)) {
+					if (element.getName().equals(ELMNT_TASK_EDITOR_PAGE_FACTORY)) {
+						readTaskEditorPageFactory(element);
 					}
 				}
 			}
-
-			// NOTE: causes ..mylyn.context.ui to load
-			IExtensionPoint editorsExtensionPoint = registry.getExtensionPoint(EXTENSION_EDITORS);
-			IExtension[] editors = editorsExtensionPoint.getExtensions();
-			for (IExtension editor : editors) {
-				IConfigurationElement[] elements = editor.getConfigurationElements();
-				for (IConfigurationElement element : elements) {
-					if (!blackList.isDisabled(element)) {
-						if (element.getName().equals(ELMNT_TASK_EDITOR_PAGE_FACTORY)) {
-							readTaskEditorPageFactory(element);
-						}
-					}
-				}
-			}
-
-			coreExtensionsRead = true;
 		}
 	}
 
-	public static void initWorkbenchUiExtensions() {
+	public static void initWorkbenchUiExtensions(ContributorBlackList blackList) {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 
 		RepositoryConnectorUiExtensionReader reader = new RepositoryConnectorUiExtensionReader(registry, blackList);
