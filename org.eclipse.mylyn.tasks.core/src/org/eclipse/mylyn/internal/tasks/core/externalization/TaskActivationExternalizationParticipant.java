@@ -9,28 +9,26 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.core.externalization;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.mylyn.commons.core.XmlMemento;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
-import org.eclipse.mylyn.internal.tasks.core.externalization.AbstractExternalizationParticipant;
-import org.eclipse.mylyn.internal.tasks.core.externalization.ExternalizationManager;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
-import org.eclipse.ui.IMemento;
-import org.eclipse.ui.XMLMemento;
 
 /**
  * @author Steffen Pingel
@@ -85,9 +83,9 @@ public class TaskActivationExternalizationParticipant extends AbstractExternaliz
 			if (file.exists()) {
 				FileReader reader = new FileReader(file);
 				try {
-					XMLMemento memento = XMLMemento.createReadRoot(reader);
-					IMemento[] items = memento.getChildren("task"); //$NON-NLS-1$
-					for (IMemento child : items) {
+					XmlMemento memento = XmlMemento.createReadRoot(reader);
+					XmlMemento[] items = memento.getChildren("task"); //$NON-NLS-1$
+					for (XmlMemento child : items) {
 						String handle = child.getString("handle"); //$NON-NLS-1$
 						if (handle != null) {
 							AbstractTask task = taskList.getTask(handle);
@@ -100,8 +98,11 @@ public class TaskActivationExternalizationParticipant extends AbstractExternaliz
 					reader.close();
 				}
 			}
+		} catch (InvocationTargetException e) {
+			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+					"Failed to load task activation history", e)); //$NON-NLS-1$
 		} catch (IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 					"Failed to load task activation history", e)); //$NON-NLS-1$
 		}
 	}
@@ -112,9 +113,9 @@ public class TaskActivationExternalizationParticipant extends AbstractExternaliz
 			dirty = false;
 		}
 
-		XMLMemento memento = XMLMemento.createWriteRoot("taskActivationHistory"); //$NON-NLS-1$
+		XmlMemento memento = XmlMemento.createWriteRoot("taskActivationHistory"); //$NON-NLS-1$
 		for (AbstractTask task : activationHistory.getPreviousTasks()) {
-			IMemento child = memento.createChild("task"); //$NON-NLS-1$
+			XmlMemento child = memento.createChild("task"); //$NON-NLS-1$
 			child.putString("handle", task.getHandleIdentifier()); //$NON-NLS-1$
 		}
 
@@ -127,7 +128,7 @@ public class TaskActivationExternalizationParticipant extends AbstractExternaliz
 				writer.close();
 			}
 		} catch (IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 					"Failed to save task activation history", e)); //$NON-NLS-1$
 		}
 	}
@@ -156,7 +157,7 @@ public class TaskActivationExternalizationParticipant extends AbstractExternaliz
 	}
 
 	public void taskDeactivated(ITask task) {
-		// ignore		
+		// ignore
 	}
 
 }

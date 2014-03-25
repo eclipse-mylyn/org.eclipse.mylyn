@@ -32,4 +32,7 @@ public class Messages extends NLS {
 	public static String ExternalizationManager_Task_List_Save_Job;
 
 	public static String TaskListExternalizationParticipant_Task_List;
+
+	public static String TaskActivationExternalizationParticipant_Task_Activation_History;
+
 }

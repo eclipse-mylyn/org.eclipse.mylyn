@@ -83,6 +83,7 @@ import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataStore;
 import org.eclipse.mylyn.internal.tasks.core.externalization.ExternalizationManager;
 import org.eclipse.mylyn.internal.tasks.core.externalization.IExternalizationParticipant;
+import org.eclipse.mylyn.internal.tasks.core.externalization.TaskActivationExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
 import org.eclipse.mylyn.internal.tasks.core.util.TaskRepositoryKeyringMigrator;
