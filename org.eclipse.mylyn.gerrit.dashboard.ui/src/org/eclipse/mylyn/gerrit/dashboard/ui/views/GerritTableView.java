@@ -908,6 +908,9 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
     		} else {
         		query.setAttribute(GerritQuery.QUERY_STRING, queryType);    		
     		}
+
+            query.setAutoUpdate(false);
+
     		TasksUiPlugin.getTaskList().addQuery(query);
     	} else {
     		if (queryType == GerritQuery.CUSTOM ) {
