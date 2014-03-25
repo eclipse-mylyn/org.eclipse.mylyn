@@ -39,7 +39,7 @@
       <import plugin="org.apache.commons.logging" version="1.0.4" match="compatible"/>
       <import plugin="org.apache.commons.httpclient" version="3.1.0" match="compatible"/>
       <import plugin="org.apache.lucene.core" version="2.9.1" match="greaterOrEqual"/>
-      <import plugin="com.google.guava" version="10.0.0" match="greaterOrEqual"/>
+      <import plugin="com.google.guava" version="15.0.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.mylyn.discovery" version="3.11.0" match="compatible"/>
       <import feature="org.eclipse.mylyn.monitor" version="3.11.0" match="compatible"/>
       <import feature="org.eclipse.mylyn.commons" version="3.11.0" match="compatible"/>
