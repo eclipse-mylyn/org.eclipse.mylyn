@@ -23,10 +23,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylyn.internal.tasks.core.activity.DefaultTaskActivityMonitor;
-import org.eclipse.mylyn.internal.tasks.core.context.DefaultTaskContextStore;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
 import org.eclipse.mylyn.internal.tasks.core.util.ContributorBlackList;
 import org.eclipse.mylyn.internal.tasks.core.util.RepositoryConnectorExtensionReader;
@@ -36,13 +33,10 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.AbstractTaskListPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
-import org.eclipse.mylyn.tasks.core.activity.AbstractTaskActivityMonitor;
-import org.eclipse.mylyn.tasks.core.context.AbstractTaskContextStore;
 import org.eclipse.mylyn.tasks.core.spi.RepositoryConnectorDescriptor;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
@@ -210,7 +204,7 @@ public class TasksUiExtensionReader {
 			String name = element.getAttribute(ATTR_NAME);
 
 			String iconPath = element.getAttribute(ATTR_ICON);
-			ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin( // 
+			ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin( //
 					element.getContributor().getName(), iconPath);
 			AbstractTaskListPresentation presentation = (AbstractTaskListPresentation) element.createExecutableExtension(ATTR_CLASS);
 			presentation.setPluginId(element.getNamespaceIdentifier());
@@ -255,7 +249,7 @@ public class TasksUiExtensionReader {
 			} else {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 						"Could not load repository link provider " //$NON-NLS-1$
-								+ repositoryLinkProvider.getClass().getCanonicalName()));
+						+ repositoryLinkProvider.getClass().getCanonicalName()));
 			}
 		} catch (Throwable e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
@@ -280,7 +274,7 @@ public class TasksUiExtensionReader {
 			} else {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 						"Could not load editor page factory " + item.getClass().getCanonicalName() + " must implement " //$NON-NLS-1$ //$NON-NLS-2$
-								+ AbstractTaskEditorPageFactory.class.getCanonicalName()));
+						+ AbstractTaskEditorPageFactory.class.getCanonicalName()));
 			}
 		} catch (Throwable e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load page editor factory", //$NON-NLS-1$
@@ -298,80 +292,12 @@ public class TasksUiExtensionReader {
 			} else {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 						"Could not load dynamic popup menu: " + dynamicPopupContributor.getClass().getCanonicalName() //$NON-NLS-1$
-								+ " must implement " + IDynamicSubMenuContributor.class.getCanonicalName())); //$NON-NLS-1$
+						+ " must implement " + IDynamicSubMenuContributor.class.getCanonicalName())); //$NON-NLS-1$
 			}
 		} catch (Throwable e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 					"Could not load dynamic popup menu extension", e)); //$NON-NLS-1$
 		}
-	}
-
-	public static AbstractTaskActivityMonitor loadTaskActivityMonitor() {
-		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IExtensionPoint connectorsExtensionPoint = registry.getExtensionPoint(ITasksCoreConstants.ID_PLUGIN
-				+ ".activityMonitor"); //$NON-NLS-1$
-		IExtension[] extensions = connectorsExtensionPoint.getExtensions();
-		for (IExtension extension : extensions) {
-			IConfigurationElement[] elements = extension.getConfigurationElements();
-			for (IConfigurationElement element : elements) {
-				if ("activityMonitor".equals(element.getName())) { //$NON-NLS-1$
-					try {
-						Object object = element.createExecutableExtension("class"); //$NON-NLS-1$
-						if (object instanceof AbstractTaskActivityMonitor) {
-							return (AbstractTaskActivityMonitor) object;
-						} else {
-							StatusHandler.log(new Status(
-									IStatus.ERROR,
-									ITasksCoreConstants.ID_PLUGIN,
-									NLS.bind(
-											"Task activity monitor ''{0}'' does not extend expected class for extension contributed by {1}", //$NON-NLS-1$
-											object.getClass().getCanonicalName(), element.getContributor().getName())));
-						}
-					} catch (Throwable e) {
-						StatusHandler.log(new Status(
-								IStatus.ERROR,
-								ITasksCoreConstants.ID_PLUGIN,
-								NLS.bind(
-										"Task activity monitor failed to load for extension contributed by {0}", element.getContributor().getName()), e)); //$NON-NLS-1$
-					}
-				}
-			}
-		}
-		return new DefaultTaskActivityMonitor();
-	}
-
-	public static AbstractTaskContextStore loadTaskContextStore() {
-		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IExtensionPoint connectorsExtensionPoint = registry.getExtensionPoint(ITasksCoreConstants.ID_PLUGIN
-				+ ".contextStore"); //$NON-NLS-1$
-		IExtension[] extensions = connectorsExtensionPoint.getExtensions();
-		for (IExtension extension : extensions) {
-			IConfigurationElement[] elements = extension.getConfigurationElements();
-			for (IConfigurationElement element : elements) {
-				if ("contextStore".equals(element.getName())) { //$NON-NLS-1$
-					try {
-						Object object = element.createExecutableExtension("class"); //$NON-NLS-1$
-						if (object instanceof AbstractTaskContextStore) {
-							return (AbstractTaskContextStore) object;
-						} else {
-							StatusHandler.log(new Status(
-									IStatus.ERROR,
-									ITasksCoreConstants.ID_PLUGIN,
-									NLS.bind(
-											"Task context store ''{0}'' does not extend expected class for extension contributed by {1}", //$NON-NLS-1$
-											object.getClass().getCanonicalName(), element.getContributor().getName())));
-						}
-					} catch (Throwable e) {
-						StatusHandler.log(new Status(
-								IStatus.ERROR,
-								ITasksCoreConstants.ID_PLUGIN,
-								NLS.bind(
-										"Task context store failed to load for extension contributed by {0}", element.getContributor().getName()), e)); //$NON-NLS-1$
-					}
-				}
-			}
-		}
-		return new DefaultTaskContextStore();
 	}
 
 }

@@ -13,7 +13,9 @@ package org.eclipse.mylyn.internal.tasks.core.util;
 
 import org.eclipse.mylyn.commons.core.ExtensionPointReader;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.core.activity.DefaultTaskActivityMonitor;
 import org.eclipse.mylyn.internal.tasks.core.context.DefaultTaskContextStore;
+import org.eclipse.mylyn.tasks.core.activity.AbstractTaskActivityMonitor;
 import org.eclipse.mylyn.tasks.core.context.AbstractTaskContextStore;
 
 public class TasksCoreExtensionReader {
@@ -27,6 +29,17 @@ public class TasksCoreExtensionReader {
 			return contextStore;
 		}
 		return new DefaultTaskContextStore();
+	}
+
+	public static AbstractTaskActivityMonitor loadTaskActivityMonitor() {
+		ExtensionPointReader<AbstractTaskActivityMonitor> reader = new ExtensionPointReader<AbstractTaskActivityMonitor>(
+				ITasksCoreConstants.ID_PLUGIN, "activityMonitor", "activityMonitor", AbstractTaskActivityMonitor.class); //$NON-NLS-1$ //$NON-NLS-2$
+		reader.read();
+		AbstractTaskActivityMonitor activityMonitor = reader.getItem();
+		if (activityMonitor != null) {
+			return activityMonitor;
+		}
+		return new DefaultTaskActivityMonitor();
 	}
 
 }

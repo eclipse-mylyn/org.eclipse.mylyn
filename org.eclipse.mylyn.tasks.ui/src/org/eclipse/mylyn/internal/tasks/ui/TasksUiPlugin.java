@@ -127,7 +127,7 @@ import org.osgi.util.tracker.ServiceTracker;
 
 /**
  * Main entry point for the Tasks UI.
- * 
+ *
  * @author Mik Kersten
  * @since 3.0
  */
@@ -432,7 +432,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				// Needs to happen asynchronously to avoid bug 159706
 				for (AbstractTask task : taskList.getAllTasks()) {
 					if (task.isActive()) {
-						// the externalizer might set multiple tasks active 
+						// the externalizer might set multiple tasks active
 						task.setActive(false);
 						if (activateTask) {
 							// make sure only one task is activated
@@ -570,7 +570,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		try {
 			// initialize framework and settings
 			if (DEBUG_HTTPCLIENT) {
-				// do this before anything else, once commons logging is initialized and an instance 
+				// do this before anything else, once commons logging is initialized and an instance
 				// of Log has been created it's too late
 				initHttpLogging();
 			}
@@ -644,7 +644,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			taskJobFactory = new TaskJobFactory(taskList, taskDataManager, repositoryManager, repositoryModel);
 
-			taskActivityMonitor = TasksUiExtensionReader.loadTaskActivityMonitor();
+			taskActivityMonitor = TasksCoreExtensionReader.loadTaskActivityMonitor();
 			taskActivityMonitor.start(taskActivityManager);
 
 			saveParticipant = new ISaveParticipant() {
@@ -680,7 +680,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			migrateCredentials(repositoryManager.getAllRepositories());
 
-			// make this available early for clients that are not initialized through tasks ui but need access 
+			// make this available early for clients that are not initialized through tasks ui but need access
 			taskListNotificationManager = new TaskListNotificationManager();
 
 			String lastMod = getPreferenceStore().getString(
@@ -692,16 +692,16 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			serviceMessageManager = new ServiceMessageManager(serviceMessageUrl, lastMod, etag, checktime,
 					new NotificationEnvironment() {
-						private Set<String> installedFeatures;
+				private Set<String> installedFeatures;
 
-						@Override
-						public Set<String> getInstalledFeatures(IProgressMonitor monitor) {
-							if (installedFeatures == null) {
-								installedFeatures = DiscoveryUi.createInstallJob().getInstalledFeatures(monitor);
-							}
-							return installedFeatures;
-						}
-					});
+				@Override
+				public Set<String> getInstalledFeatures(IProgressMonitor monitor) {
+					if (installedFeatures == null) {
+						installedFeatures = DiscoveryUi.createInstallJob().getInstalledFeatures(monitor);
+					}
+					return installedFeatures;
+				}
+			});
 
 			// Disabled for initial 3.4 release as per bug#263528
 			if (getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED)) {
@@ -833,7 +833,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	/**
 	 * Returns the local task repository. If the repository does not exist it is created and added to the task
 	 * repository manager.
-	 * 
+	 *
 	 * @return the local task repository; never <code>null</code>
 	 * @since 3.0
 	 */
@@ -923,7 +923,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	 * Persist <code>path</code> as data directory and loads data from <code>path</code>. This method may block if other
 	 * jobs are running that modify tasks data. This method will only execute after all conflicting jobs have been
 	 * completed.
-	 * 
+	 *
 	 * @throws CoreException
 	 *             in case setting of the data directory did not complete normally
 	 * @throws OperationCanceledException
@@ -946,7 +946,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 						getPreferenceStore().setValue(ITasksUiPreferenceConstants.PREF_DATA_DIR, path);
 					}
 
-					// reload data from new directory				
+					// reload data from new directory
 					initializeDataSources();
 				} finally {
 					// FIXME roll back preferences change in case of an error?
@@ -1010,12 +1010,12 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			if (!taskActivityMonitor.getActivationHistory().isEmpty()) {
 				// tasks have been active before so fore preference enabled
 				MonitorUiPlugin.getDefault()
-						.getPreferenceStore()
-						.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED, true);
+				.getPreferenceStore()
+				.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED, true);
 			}
 			MonitorUiPlugin.getDefault()
-					.getPreferenceStore()
-					.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED + ".checked", true); //$NON-NLS-1$
+			.getPreferenceStore()
+			.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED + ".checked", true); //$NON-NLS-1$
 			MonitorUiPlugin.getDefault().savePluginPreferences();
 		}
 
@@ -1313,7 +1313,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Associate a Task Repository with a workbench project
-	 * 
+	 *
 	 * @param resource
 	 *            project or resource belonging to a project
 	 * @param repository
@@ -1456,7 +1456,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	public void initializeNotificationsAndSynchronization() {
 		// this method is invoked by the tasks ui initialization job and the task list view
-		// only proceed if both calls have been made 
+		// only proceed if both calls have been made
 		if (initializationCount.incrementAndGet() != 2) {
 			return;
 		}
