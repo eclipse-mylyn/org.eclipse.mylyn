@@ -29,7 +29,7 @@
    </license>
 
    <requires>
-      <import plugin="com.google.guava" version="10.0.0" match="greaterOrEqual"/>
+      <import plugin="com.google.guava" version="15.0.0" match="greaterOrEqual"/>
    </requires>
 
    <includes
