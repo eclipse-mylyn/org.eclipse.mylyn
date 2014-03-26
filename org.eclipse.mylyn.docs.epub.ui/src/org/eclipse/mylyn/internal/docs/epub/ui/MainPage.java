@@ -325,7 +325,7 @@ public class MainPage extends WizardPage {
 		IObservableValue comboObserveTextObserveWidget = SWTObservables.observeText(combo);
 		final IObservableValue beanLanguageObserveValue = PojoObservables.observeValue(bean, "language"); //$NON-NLS-1$
 		UpdateValueStrategy languageStrategy = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
-		languageStrategy.setBeforeSetValidator(new StringValidator("An language must be specified", combo)); //$NON-NLS-1$
+		languageStrategy.setBeforeSetValidator(new StringValidator("A language must be specified", combo)); //$NON-NLS-1$
 		bindingContext.bindValue(comboObserveTextObserveWidget, beanLanguageObserveValue, languageStrategy, null);
 		//
 		IObservableValue subjectTextObserveTextObserveWidget = SWTObservables.observeText(subjectText, SWT.Modify);
@@ -339,7 +339,7 @@ public class MainPage extends WizardPage {
 		UpdateValueStrategy coverStrategy = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
 		coverStrategy.setBeforeSetValidator(new FileValidator(
 				"The cover image must be a valid image file of type PNG, SVG or JPEG.", coverText, new String[] { //$NON-NLS-1$
-						".png", ".svg", ".jpeg", ".jpg" })); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				".png", ".svg", ".jpeg", ".jpg" })); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		bindingContext.bindValue(coverObserveTextObserveWidget, beanCoverObserveValue, coverStrategy, null);
 		//
 		IObservableValue styleSheetTextObserveTextObserveWidget = SWTObservables.observeText(styleSheetText, SWT.Modify);
