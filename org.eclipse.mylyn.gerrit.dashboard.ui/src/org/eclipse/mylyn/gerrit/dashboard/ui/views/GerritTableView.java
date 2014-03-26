@@ -6,9 +6,6 @@
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Description:
- * 	This class implements the implementation of the Gerrit Dashboard UI view.
- * 
  * Contributors:
  *   Jacques Bouthillier - Initial Implementation of the plug-in
  *   Francois Chouinard - Handle gerrit queries and open reviews in editor
@@ -42,6 +39,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.workbench.DelayedRefreshJob;
 import org.eclipse.mylyn.gerrit.dashboard.GerritPlugin;
 import org.eclipse.mylyn.gerrit.dashboard.core.GerritQueryException;
@@ -51,6 +49,7 @@ import org.eclipse.mylyn.gerrit.dashboard.ui.GerritUi;
 import org.eclipse.mylyn.gerrit.dashboard.ui.internal.model.ReviewTableData;
 import org.eclipse.mylyn.gerrit.dashboard.ui.internal.model.UIReviewTable;
 import org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils.GerritServerUtility;
+import org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils.SelectionDialog;
 import org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils.UIConstants;
 import org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils.UIUtils;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
@@ -628,8 +627,8 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 			//If we did not find the task Repository
 			fMapRepoServer = GerritServerUtility.getInstance().getGerritMapping();
 			//Verify How many gerrit server are defined
+			Set<TaskRepository> mapSet = fMapRepoServer.keySet();
 			if (fMapRepoServer.size() == 1) {
-				Set<TaskRepository> mapSet = fMapRepoServer.keySet();
 				for (TaskRepository key: mapSet) {
 				    fTaskRepository = key;
 					//Save it for the next query time
@@ -637,6 +636,16 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 					break;
 				}
 				
+			} else if (fMapRepoServer.size() > 1) {
+				List<TaskRepository> listTaskRepository = new ArrayList<TaskRepository>();
+				for (TaskRepository key: mapSet) {
+				    listTaskRepository.add(key);
+				}
+				fTaskRepository  = getSelectedRepositoryURL (listTaskRepository);
+				if (fTaskRepository != null) {
+					//Save it for the next query time
+					fServerUtil.saveLastGerritServer(fTaskRepository.getRepositoryUrl());
+				}
 			}
 		}
 		
@@ -690,7 +699,6 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 					version = gerritClient.getVersion(new NullProgressMonitor());
 					GerritUi.Ftracer.traceInfo("Selected version: " + version.toString());
 				} catch (GerritException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -1077,6 +1085,15 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 		if (!fReviewsTotalResultLabel.isDisposed() ) {
 			fReviewsTotalResultLabel.setText(aSt);
 		}
+	}
+
+	private TaskRepository getSelectedRepositoryURL(final List<TaskRepository> listTaskRepository) {
+		String selection = null;
+		SelectionDialog taskSelection = new SelectionDialog (fViewer.getTable().getShell(),  listTaskRepository );
+		if (taskSelection.open() == Window.OK) {
+			selection = taskSelection.getSelection();
+		}
+		return fServerUtil.getTaskRepo(selection);
 	}
 
 }
