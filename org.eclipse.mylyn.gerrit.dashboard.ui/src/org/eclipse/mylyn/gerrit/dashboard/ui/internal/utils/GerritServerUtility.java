@@ -26,17 +26,11 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.egit.core.RepositoryCache;
-import org.eclipse.egit.core.RepositoryUtil;
-import org.eclipse.jgit.lib.Config;
-import org.eclipse.jgit.lib.ConfigConstants;
-import org.eclipse.jgit.lib.Repository;
 import org.eclipse.mylyn.gerrit.dashboard.GerritPlugin;
 import org.eclipse.mylyn.gerrit.dashboard.ui.GerritUi;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
@@ -63,21 +57,6 @@ public class GerritServerUtility {
 	// Constants
 	// ------------------------------------------------------------------------
 
-	/**
-	 * Field GERRIT_PORT. (value is "":29418"")
-	 */
-	private static final String GERRIT_PORT = ":29418"; 
-
-	/**
-	 * Field AT. (value is ""@"")
-	 */
-	private static final String AT = "@"; 
-
-	/**
-	 * Field AT. (value is ""https://"")
-	 */
-	private static final String HTTPS = "https://"; 
-	
 	/**
 	 * Field LAST_GERRIT_FILE. (value is ""lastGerrit.txt"")
 	 */
@@ -187,92 +166,6 @@ public class GerritServerUtility {
 				 }
 			}
 		}
-	}
-
-	private void printTaskRepository(TaskRepository aTask) {
-		Set<Entry<String, String>> value = aTask.getProperties().entrySet();
-		if ( value != null) {
-			for (Map.Entry<String, String> entry : value) {
-			    GerritPlugin.Ftracer.traceInfo("TaskRepo key: " + entry.getKey()
-						+ "\tvalue: " + entry.getValue());
-			}			
-		}
-		GerritPlugin.Ftracer.traceInfo(" UserName: " + aTask.getUserName());
-		GerritPlugin.Ftracer
-				.traceInfo("===================================");
-	}
-
-	/**
-	 * This method use the Gerrit from the git server in the workspace
-	 */
-    private void addWorkspaceGerritRepo () {
-		RepositoryUtil repoUtil = org.eclipse.egit.core.Activator.getDefault().getRepositoryUtil();
-		List<String> repoPaths = repoUtil.getConfiguredRepositories();
-		RepositoryCache repositoryCache = org.eclipse.egit.core.Activator.getDefault().getRepositoryCache();
-        Repository repo = null;
-		
-		for (String repoPath : repoPaths) {
-		    GerritPlugin.Ftracer.traceInfo("List Gerrit repository: " + repoPath );
-			File gitDir = new File(repoPath);
-			if (!gitDir.exists()) {
-			    GerritPlugin.Ftracer.traceInfo("Gerrit repository do not exist: " + gitDir.getPath());
-				continue;		
-			}
-			try {
-				repo = repositoryCache.lookupRepository(gitDir);
-				GerritPlugin.Ftracer.traceInfo("\trepository config after lookup: " +
-						repo.getConfig());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			if (repo != null) {
-				Config config  = new Config(repo.getConfig());
-				//Look to get the remotes URL
-				Set<String> remotes = config.getSubsections(ConfigConstants.CONFIG_REMOTE_SECTION);
-				for (String remote: remotes) {
-					String remoteURL = config.getString(ConfigConstants.CONFIG_REMOTE_SECTION,
-							remote,
-							ConfigConstants.CONFIG_KEY_URL);
-					GerritPlugin.Ftracer.traceInfo("\t\t " + remote +" -> remoteURL: " + remoteURL );
-					
-					//Test if this is a Gerrit server and add it to the Dialogue combo
-					String convertedRemoteURL = getReformatGerritServer(remoteURL) ;
-					if (null != convertedRemoteURL  ) {
-						TaskRepository taskRepo =  new TaskRepository(GerritConnector.CONNECTOR_KIND, convertedRemoteURL);
-						taskRepo.setRepositoryLabel(convertedRemoteURL);
-						fResultTask.put(taskRepo, taskRepo.getRepositoryUrl());
-						adjustTemplatemanager(taskRepo);
-						
-					}
-				}			
-			}
-		}
-	}
-	
-
-	//Note the Gerrit server for "git.eclipse.org" in config is 
-	//      not the same as in the task Repository: "git.eclipse.org/r"
-	/**
-	 * Verify if the gerrit remote URL has the gerrit port (29418 )
-	 * @param aRemoteURL
-	 * @return String remote converted URL
-	 */
-	private String getReformatGerritServer(String aRemoteURL) {
-		//Test if this is a Gerrit server or not
-		String[] strParsePort = aRemoteURL.split(GERRIT_PORT);
-		if (strParsePort.length == 2) {
-			//Do not convert it for now
-			return aRemoteURL;
-//			//We found a Gerrit server, lets build the URL
-//			//String[] strParseServer = strParsePort[0].split(AT);
-//			int index = strParsePort[0].indexOf(AT);
-//			String server = strParsePort[0].substring(++index);
-//			StringBuilder sb = new StringBuilder();
-//			sb.append(HTTPS);
-//			sb.append(server);
-//			return sb.toString();
-		}
-		return null;
 	}
 
 	/**
@@ -585,68 +478,5 @@ public class GerritServerUtility {
 //        }
 //        return results;
 //    }
-
-	/******************************************************************/
-	/******************************************************************/
-	/******************************************************************/
-	/******************************************************************/
-	/********  TEST   *************************************************/
-	/******************************************************************/
-	/******************************************************************/
-	/******************************************************************/
-	/******************************************************************/
-	
-	private void testTaskRepo () {
-	//	TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://repository"); //$NON-NLS-1$
-//		final TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "https://"); //$NON-NLS-1$
-		
-		final TaskRepository repository = getTaskRepository(); //$NON-NLS-1$
-		GerritPlugin.Ftracer.traceInfo("repository:   " + repository.getUrl()); //$NON-NLS-1$
-//		int ret = TasksUiUtil.openEditRepositoryWizard(repository); //Generate a null pointer for the workbench window
-		
-		
-		GerritPlugin.Ftracer.traceInfo("Before: repository url:   " + repository.getUrl() ); //$NON-NLS-1$
-
-	}
-	
-	/**
-	 * Look at the current Gerrit repository and return a default value 
-	 * i.e the first Gerrit if found ???
-	 * @return TaskRepository
-	 */
-	private TaskRepository getTaskRepository () {
-		TaskRepository taskRepo = null;
-		/**
-		 * Field DEFAULT_REPOSITORY. (value is ""https://repository"")
-		 */
-		String DEFAULT_REPOSITORY = "https://";
-		//Reset the list of Gerrit server
-		fResultTask.clear();
-
-
-		//Test to read the TaskRepositories
-		
-		TaskRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
-		
-		//List all repositories in the the TaskRepositories view
-		List <TaskRepository>listallRepo = repositoryManager.getAllRepositories();
-		for (int i = 0;i < listallRepo.size(); i++) {
-		    GerritPlugin.Ftracer.traceInfo("TaskRepositoryManager repository: [ " + i + " ] : " + listallRepo.get(i).getRepositoryLabel() );
-		}
-		
-		//Only get the TaskRepository related to Gerrit review connnector
-		GerritPlugin.Ftracer.traceInfo("--------Review repo ---------------");
-		Set<TaskRepository> reviewRepo = repositoryManager.getRepositories(GerritConnector.CONNECTOR_KIND);
-		for (TaskRepository tp: reviewRepo) {
-		    GerritPlugin.Ftracer.traceInfo("Only Gerrit Review repo: " + tp.getRepositoryLabel() + "\t url: " + tp.getRepositoryUrl());
-		}
-
-		//Testing bugzilla but need to add the mylyn bugzilla in plugin dependencies
-//		for (RepositoryTemplate template : templateManager.getTemplates(BugzillaCorePlugin.CONNECTOR_KIND)) {
-//			GerritPlugin.Ftracer.traceInfo("Gerrit Bugzilla repository: " + template.label + "\t URL: " + template.repositoryUrl);
-//		}
-		
-		return taskRepo;
-	}
 
 }

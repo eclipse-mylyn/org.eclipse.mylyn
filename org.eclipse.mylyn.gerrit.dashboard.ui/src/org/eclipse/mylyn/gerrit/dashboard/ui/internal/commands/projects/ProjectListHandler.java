@@ -6,9 +6,6 @@
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Description:
- * 	This class implements the implementation of the Dashboard-Gerrit UI project list reviews handler.
- * 
  * Contributors:
  *   Jacques Bouthillier - Initial Implementation of the plug-in handler
  ******************************************************************************/
@@ -18,13 +15,13 @@ package org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.projects;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.mylyn.gerrit.dashboard.ui.GerritUi;
-import org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils.UIUtils;
 import org.eclipse.mylyn.gerrit.dashboard.ui.views.GerritTableView;
 import org.eclipse.mylyn.internal.gerrit.core.GerritQuery;
 
 /**
+ * 	This class implements the implementation of the Dashboard-Gerrit UI project list reviews handler.
+ * 
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
  *

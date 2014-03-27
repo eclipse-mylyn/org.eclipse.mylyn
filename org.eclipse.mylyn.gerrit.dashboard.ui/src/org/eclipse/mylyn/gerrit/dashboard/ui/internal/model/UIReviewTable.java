@@ -6,9 +6,6 @@
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Description:
- * 	This class implements the implementation of the review table view.
- * 
  * Contributors:
  *   Jacques Bouthillier - Initial Implementation of the table view
  ******************************************************************************/
@@ -30,8 +27,6 @@ import org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils.UIUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
@@ -45,6 +40,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
 /**
+ * 	This class implements the implementation of the review table view.
+ *
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
  * 
@@ -125,7 +122,6 @@ public class UIReviewTable {
 
 		// Add a Key event and mouse down listener
 		fViewer.getTable().addListener(SWT.MouseDown, mouseButtonListener);
-		// fViewer.getTable().addKeyListener(keyEventListener);
 
 		return fViewer;
 
@@ -170,7 +166,6 @@ public class UIReviewTable {
 				int minimumTableWidth = ReviewTableDefinition.getMinimumWidth();
 				int mimimumSubjectWidth = ReviewTableDefinition.SUBJECT.getWidth();
 				int minProjectWidth = ReviewTableDefinition.PROJECT.getWidth();
-				int proAndSubjetWidth = mimimumSubjectWidth + minProjectWidth;
 				
 				//Adjust the subject and project column to take the remaining space
 				int scrollWidth = table.getVerticalBar().getSize().x;
@@ -245,8 +240,6 @@ public class UIReviewTable {
 					// Process the Item table handling
 					processItemSelection();
 
-					// singleClickFocus(tableIndex);
-
 				}
 				// For now, use button 2 to modify the starred value column 1
 				if (aEvent.button == 2) {
@@ -280,52 +273,6 @@ public class UIReviewTable {
 			}
 		}
 
-	};
-
-	/**
-	 * Key Listener to handle the Mouse down event on the ITEM and ANOMALY table
-	 */
-	private KeyListener keyEventListener = new KeyListener() {
-
-		public void keyReleased(KeyEvent e) {
-		}
-
-		public void keyPressed(KeyEvent e) {
-			Table table = fViewer.getTable();
-			int[] selecteditems = table.getSelectionIndices();
-			int val = selecteditems[0];
-			if (e.keyCode == SWT.ARROW_UP) {
-				// So we need to reduce the selected item
-				GerritUi.Ftracer
-						.traceInfo("keyEventListener() for ARROW_UP "
-								+ e.keyCode);
-				if (val > 0) {
-					val--;
-					table.deselect(selecteditems[0]);
-				}
-			}
-
-			if (e.keyCode == SWT.ARROW_DOWN) {
-				// So we need to increase the selected item
-				GerritUi.Ftracer
-						.traceInfo("keyEventListener() for ARROW_DOWN "
-								+ e.keyCode);
-				if (val < table.getItemCount() - 1) {
-					val++;
-					table.deselect(selecteditems[0]);
-				}
-			}
-
-			// Set the new selection
-			table.select(val);
-
-			// // Process the Item table handling
-			// processItemSelection();
-			//
-			// // Open the file in the editor
-			// singleClickFocus(tableIndex);
-
-		}
 	};
 
 	/**

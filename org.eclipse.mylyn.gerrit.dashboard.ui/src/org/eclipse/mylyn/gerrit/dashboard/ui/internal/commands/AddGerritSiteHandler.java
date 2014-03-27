@@ -22,22 +22,13 @@ import java.util.Set;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.gerrit.dashboard.GerritPlugin;
 import org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils.GerritServerUtility;
-import org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils.UIConstants;
 import org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils.UIUtils;
 import org.eclipse.mylyn.gerrit.dashboard.ui.views.GerritTableView;
-import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.GerritQuery;
-import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.wizards.TaskRepositoryWizardDialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Widget;
@@ -48,15 +39,6 @@ import org.eclipse.swt.widgets.Widget;
  * @version $Revision: 1.0 $
  */
 public class AddGerritSiteHandler extends AbstractHandler {
-
-	// ------------------------------------------------------------------------
-	// Constants
-	// ------------------------------------------------------------------------
-
-	/**
-	 * Field COMMAND_MESSAGE. (value is ""Add a Gerrit location ..."")
-	 */
-	private static final String COMMAND_MESSAGE = "Add a Gerrit location ...";
 
 	// ------------------------------------------------------------------------
 	// Variables
@@ -143,109 +125,6 @@ public class AddGerritSiteHandler extends AbstractHandler {
 		//a new Gerrit Server from the "Add Gerrit Repository.." button
 		UIUtils.showErrorDialog("Use Button [Task Repositories...] to define a new Gerrit Server", "Button [Add Gerrit Repository...] is not ready");
 		return obj;
-	}
-
-	/**
-	 * Initiate a JOB to open the Gerrit definition dialogue
-	 * @return Object
-	 */
-	private Object openDialogue () {
-		final Job job = new Job(COMMAND_MESSAGE) {
-
-			public String familyName = UIConstants.DASHBOARD_UI_JOB_FAMILY;
-
-			@Override
-			public boolean belongsTo(Object aFamily) {
-				return familyName.equals(aFamily);
-			}
-
-			@Override
-			public IStatus run(final IProgressMonitor aMonitor) {
-				aMonitor.beginTask(COMMAND_MESSAGE, IProgressMonitor.UNKNOWN);
-						
-				TaskRepository taskRepository = getTaskRepository(""); 
-				
-				GerritPlugin.Ftracer.traceInfo("repository:   " + taskRepository.getUrl()); //$NON-NLS-1$
-				
-				final EditRepositoryWizard wizard = new EditRepositoryWizard(taskRepository);
-				Display.getDefault().syncExec(new Runnable() {
-					public void run() {
-							WizardDialog dialog = new TaskRepositoryWizardDialog(wizard.getShell(), wizard);
-							dialog.create();
-							dialog.setBlockOnOpen(true);
-							dialog.open();
-					}
-				});
-				
-				//When the wizard is closed
-				taskRepository = wizard.getRepository();//Possibility the taskRepository has changed
-				if (taskRepository.getUrl().isEmpty() || 
-						taskRepository.getUrl().endsWith(UIConstants.DEFAULT_REPOSITORY)) {
-					//User selected the Cancel button
-				    GerritPlugin.Ftracer.traceInfo("AFTER: repository: CANCEL "  ); //$NON-NLS-1$
-				} else {
-				    GerritPlugin.Ftracer.traceInfo("AFTER: repository: :  FINISH " ); //$NON-NLS-1$		
-					fServerUtil.saveLastGerritServer(taskRepository.getUrl());
-					//Test if we already have the Gerrit server in our internal map
-					TaskRepository taskRepositoryTmp = fServerUtil.getTaskRepo (taskRepository.getUrl());
-					if (taskRepositoryTmp == null) {
-						//Need to re-map our internal Gerrit Repo
-						fServerUtil.getGerritMapping();
-					}
-					/*****************************************************/
-					/*                                                   */
-					/*    Now, we need to get the Gerrit repo data       */
-					/*    and populate the list of Reviews               */
-					/*                                                   */
-					/*                                                   */
-					/*****************************************************/
-					fServerUtil.getReviewListFromServer ();
-					GerritTableView reviewTableView = GerritTableView
-							.getActiveView();
-
-					//Set the table view with the last TaskRepo and the default query
-					reviewTableView.processCommands(GerritQuery.MY_WATCHED_CHANGES);
-
-				}
-				
-				GerritPlugin.Ftracer.traceInfo("AFTER: repository: :  " + taskRepository.getUrl() + 
-						"\n\t repo: " + taskRepository.getRepositoryUrl() ); //$NON-NLS-1$
-				
-
-				aMonitor.done();
-				return Status.OK_STATUS;
-			}
-		};
-		job.setUser(true);
-		job.schedule();
-		return null;	
-	}
-	
-	
-	/**
-	 * Look at the current Gerrit repository and return a default value 
-	 * 
-	 * @param String default URL
-	 * @return TaskRepository
-	 */
-	private TaskRepository getTaskRepository (String aUrl) {
-		TaskRepository taskRepo = null;
-		//Search for the current Gerrit connector
-		taskRepo =  GerritServerUtility.getInstance().getTaskRepo(aUrl);
-		
-		if (taskRepo == null) {
-			if (aUrl != null) {
-				taskRepo = new TaskRepository (GerritConnector.CONNECTOR_KIND, aUrl);
-			} else {
-				//Create a default Task repo
-				taskRepo = new TaskRepository (GerritConnector.CONNECTOR_KIND, UIConstants.DEFAULT_REPOSITORY);				
-			}
-			
-		} else {
-		    GerritPlugin.Ftracer.traceInfo("Repo already in list:  " + taskRepo.getRepositoryLabel()); 
-			
-		}
-		return taskRepo;
 	}
 	
 }

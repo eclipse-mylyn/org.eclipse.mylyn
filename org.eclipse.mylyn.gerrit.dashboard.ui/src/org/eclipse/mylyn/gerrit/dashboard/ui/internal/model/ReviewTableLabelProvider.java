@@ -6,9 +6,6 @@
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Description:
- * 	This class implements the implementation of the Dashboard-Gerrit UI view label provider.
- * 
  * Contributors:
  *   Jacques Bouthillier - Initial Implementation of the label provider
  ******************************************************************************/
@@ -27,6 +24,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
 /**
+ * 	This class implements the implementation of the Dashboard-Gerrit UI view label provider.
+ *
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
  * 
@@ -326,11 +325,7 @@ public class ReviewTableLabelProvider extends LabelProvider implements
 	@Override
 	public Color getForeground(Object aElement, int aColumnIndex) {
 		if (aElement instanceof GerritTask) {
-			GerritTask item = (GerritTask) aElement;
 			int value = 0;
-			String st = null;
-			// GerritPlugin.Ftracer.traceWarning("getForeground() object CR : "
-			// + item.getCr() + "\tcolumn : " + aColumnIndex );
 			if (aColumnIndex == ReviewTableDefinition.CR.ordinal()
 //					|| aColumnIndex == ReviewTableDefinition.IC.ordinal()
 					|| aColumnIndex == ReviewTableDefinition.VERIFY.ordinal()) {

@@ -38,7 +38,6 @@ public class UIUtils {
 	 *            
 	 */
 	public static void notInplementedDialog(String aSt) {
-		String msg = "Not Implemented yet !";
 		GerritUi.Ftracer.traceWarning("Not Implemented yet");
 		final ErrorDialog dialog = new ErrorDialog(
 				null,

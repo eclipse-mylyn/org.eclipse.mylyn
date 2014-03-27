@@ -6,10 +6,6 @@
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Description:
- * 	This class implements the Dynamic menu selection to pre-filled the list of gerrit
- * 	project locations.
- * 
  * Contributors:
  *   Jacques Bouthillier - Initial Implementation of the dynamic menu selection
  ******************************************************************************/
@@ -33,6 +29,9 @@ import org.eclipse.ui.menus.IWorkbenchContribution;
 import org.eclipse.ui.services.IServiceLocator;
 
 /**
+ * 	This class implements the Dynamic menu selection to pre-filled the list of gerrit
+ * 	project locations.
+ *
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
  *
@@ -85,7 +84,7 @@ public class DynamicMenuAddition extends CompoundContributionItem implements IWo
 				.traceInfo("\t\t DynamicMenuAddition .getContributionItems()");
 		CommandContributionItem[] contributionItems = new CommandContributionItem[0];
 		if (fServer != null) {
-			fMapServer = fServer.getGerritMapping();
+			fMapServer = GerritServerUtility.getGerritMapping();
 		}
 
 		if (fMapServer != null && !fMapServer.isEmpty()) {
