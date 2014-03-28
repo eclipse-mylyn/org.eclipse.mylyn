@@ -1,4 +1,4 @@
-<project name="build-helper">
+<project name="build-helper" default="discovery">
 
   <target name="discovery">
     <delete file="org.eclipse.mylyn.discovery.jar"/>
