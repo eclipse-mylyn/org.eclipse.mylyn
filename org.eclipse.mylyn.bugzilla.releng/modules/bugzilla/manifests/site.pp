@@ -105,6 +105,7 @@ define bugzilla::site (
 #
     exec { "delete bugzilla $version":
       command => "rm -R $base/$version",
+      onlyif    => "/usr/bin/test -d $base/$version",
       cwd     => "$base",
       user => "root",
       timeout => 300,
