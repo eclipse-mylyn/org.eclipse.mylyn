@@ -350,7 +350,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		manager.addRepository(repository2);
 		assertNotNull(manager.getRepository(repository2.getConnectorKind(), repository2.getRepositoryUrl()));
 
-		manager.removeRepository(repository2, TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		manager.removeRepository(repository2);
 
 		assertNull(manager.getRepository(repository2.getConnectorKind(), repository2.getRepositoryUrl()));
 	}

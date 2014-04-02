@@ -41,7 +41,7 @@ public class ProjectRepositoryAssociationTest extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		ResourceTestUtil.deleteProject(projectWrapper.getProject());
-		TasksUiPlugin.getRepositoryManager().clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		TasksUiPlugin.getRepositoryManager().clearRepositories();
 	}
 
 	public void testRepositoryForProject() throws CoreException {
@@ -55,8 +55,7 @@ public class ProjectRepositoryAssociationTest extends TestCase {
 		assertEquals(REPOSITORY_KIND, returnedRepository.getConnectorKind());
 		assertEquals(REPOSITORY_URL, returnedRepository.getRepositoryUrl());
 
-		TasksUiPlugin.getRepositoryManager().removeRepository(repository,
-				TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		TasksUiPlugin.getRepositoryManager().removeRepository(repository);
 	}
 
 	public void testRepositoryForFolder() throws CoreException {
@@ -71,7 +70,6 @@ public class ProjectRepositoryAssociationTest extends TestCase {
 		assertEquals(REPOSITORY_KIND, returnedRepository.getConnectorKind());
 		assertEquals(REPOSITORY_URL, returnedRepository.getRepositoryUrl());
 
-		TasksUiPlugin.getRepositoryManager().removeRepository(repository,
-				TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		TasksUiPlugin.getRepositoryManager().removeRepository(repository);
 	}
 }

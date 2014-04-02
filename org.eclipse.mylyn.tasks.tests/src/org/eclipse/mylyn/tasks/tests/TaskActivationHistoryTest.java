@@ -26,7 +26,6 @@ import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskHistoryDropDownAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
@@ -102,17 +101,17 @@ public class TaskActivationHistoryTest extends TestCase {
 		taskList.addQuery(query1);
 		taskList.addQuery(query2);
 		createWorkingSet(query1);
-		(new TaskActivateAction()).run(task11);
+		TasksUi.getTaskActivityManager().activateTask(task11);
 		history.addTask(task11);
 		taskList.addTask(task11, query1);
-		(new TaskActivateAction()).run(task12);
+		TasksUi.getTaskActivityManager().activateTask(task12);
 		history.addTask(task12);
 		taskList.addTask(task12, query1);
 
-		(new TaskActivateAction()).run(task21);
+		TasksUi.getTaskActivityManager().activateTask(task21);
 		history.addTask(task21);
 		taskList.addTask(task21, query2);
-		(new TaskActivateAction()).run(task22);
+		TasksUi.getTaskActivityManager().activateTask(task22);
 		history.addTask(task22);
 		taskList.addTask(task22, query2);
 
