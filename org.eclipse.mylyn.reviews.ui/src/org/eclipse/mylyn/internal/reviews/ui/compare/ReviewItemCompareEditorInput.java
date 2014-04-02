@@ -37,6 +37,7 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.menus.CommandContributionItem;
@@ -48,6 +49,7 @@ import org.eclipse.ui.services.IServiceLocator;
  * @author Sebastien Dubois
  * @author Miles Parker
  * @author Guy Perron
+ * @author Jacques Bouthillier
  */
 public abstract class ReviewItemCompareEditorInput extends CompareEditorInput {
 
@@ -116,7 +118,8 @@ public abstract class ReviewItemCompareEditorInput extends CompareEditorInput {
 		if (tbm != null) {
 			IServiceLocator serviceLocator = getServiceLocator();
 			if (serviceLocator != null) {
-				final IHandlerService handlerService = (IHandlerService) serviceLocator.getService(IHandlerService.class);
+				final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(
+						IHandlerService.class);
 				if (handlerService != null) {
 					gotoNextCommentHandler = handlerService.activateHandler(ReviewsUiPlugin.PLUGIN_ID
 							+ ".commands.navigate.comment.next", //$NON-NLS-1$
@@ -135,29 +138,23 @@ public abstract class ReviewItemCompareEditorInput extends CompareEditorInput {
 					});
 				}
 
-				CommandContributionItemParameter p = new CommandContributionItemParameter(serviceLocator, //
+				CommandContributionItemParameter p = new CommandContributionItemParameter(
+						serviceLocator,
 						ReviewsUiPlugin.PLUGIN_ID + ".navigate.comment.next", //$NON-NLS-1$
 						ReviewsUiPlugin.PLUGIN_ID + ".commands.navigate.comment.next", //$NON-NLS-1$ // command id
-						CommandContributionItem.STYLE_PUSH);
-				p.icon = ReviewsImages.NEXT_COMMENT;
-				p.label = Messages.Reviews_NextComment;
-				if (p.label.length() > 0) {
-					p.mnemonic = p.label.substring(0, 1);
-				}
-				p.tooltip = Messages.Reviews_NextComment_Tooltip;
+						null, ReviewsImages.NEXT_COMMENT, ReviewsImages.NEXT_COMMENT, null,
+						Messages.Reviews_NextComment, Messages.Reviews_NextComment.substring(0, 1),
+						Messages.Reviews_NextComment_Tooltip, CommandContributionItem.STYLE_PUSH, null, true);
 
 				tbm.appendToGroup("navigation", new CommandContributionItem(p)); //$NON-NLS-1$
 
-				p = new CommandContributionItemParameter(serviceLocator, //
+				p = new CommandContributionItemParameter(
+						serviceLocator, //
 						ReviewsUiPlugin.PLUGIN_ID + ".navigate.comment.previous", //$NON-NLS-1$
 						ReviewsUiPlugin.PLUGIN_ID + ".commands.navigate.comment.previous", //$NON-NLS-1$ // command id
-						CommandContributionItem.STYLE_PUSH);
-				p.icon = ReviewsImages.PREVIOUS_COMMENT;
-				p.label = Messages.Reviews_PreviousComment;
-				if (p.label.length() > 0) {
-					p.mnemonic = p.label.substring(0, 1);
-				}
-				p.tooltip = Messages.Reviews_PreviousComment_Tooltip;
+						null, ReviewsImages.PREVIOUS_COMMENT, ReviewsImages.PREVIOUS_COMMENT, null,
+						Messages.Reviews_PreviousComment, Messages.Reviews_PreviousComment.substring(0, 1),
+						Messages.Reviews_PreviousComment_Tooltip, CommandContributionItem.STYLE_PUSH, null, true);
 				tbm.appendToGroup("navigation", new CommandContributionItem(p)); //$NON-NLS-1$
 				tbm.update(true);
 			}
