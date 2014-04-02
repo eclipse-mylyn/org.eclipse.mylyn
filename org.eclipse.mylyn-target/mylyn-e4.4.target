@@ -51,7 +51,9 @@
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.cdt.platform.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.ecf.core.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.ecf.core.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.ecf.discovery.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.ecf.discovery.jmdns.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.equinox.concurrent" version="0.0.0"/>
 <unit id="org.eclipse.emf.ecore.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.common.feature.group" version="0.0.0"/>
