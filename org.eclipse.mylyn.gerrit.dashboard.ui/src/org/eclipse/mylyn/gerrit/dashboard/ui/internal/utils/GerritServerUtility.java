@@ -391,7 +391,7 @@ public class GerritServerUtility {
 	 * @param LinkedHashSet<String>
 	 * @return Boolean
 	 */
-	public Boolean saveLastCommandList (LinkedHashSet<String> aCommands) {
+	public Boolean saveLastCommandList (Set<String> aCommands) {
 		Boolean ok = true;
 		File file = getLastGerritFile(LAST_COMMANDS_FILE);
 		try {
@@ -414,9 +414,9 @@ public class GerritServerUtility {
 	
 	/**
 	 * Return the list of the last commands saved
-	 * @return LinkedHashSet
+	 * @return Set
 	 */
-	public LinkedHashSet getListLastCommands () {
+	public Set<String> getListLastCommands () {
 		LinkedHashSet<String> lastCommands = new LinkedHashSet<String>();
 		File file = getLastGerritFile(LAST_COMMANDS_FILE);
 		if (file != null) {

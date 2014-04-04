@@ -174,7 +174,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 	private Combo	fSearchRequestText;
 	private Button	fSearchRequestBtn;
 	
-	private LinkedHashSet<String>   fRequestList = new LinkedHashSet<String>();
+	private Set<String>   fRequestList = new LinkedHashSet<String>();
 	private static TableViewer fViewer;
 	
 	private ReviewTableData fReviewTable = new ReviewTableData();
