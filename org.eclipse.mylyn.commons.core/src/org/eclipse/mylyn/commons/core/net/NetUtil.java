@@ -306,11 +306,14 @@ public class NetUtil {
 	}
 
 	private static int getSystemPropertyAndParseInt(String key, int defaultValue) {
-		try {
-			return Integer.parseInt(System.getProperty(key));
-		} catch (NumberFormatException e) {
-			StatusHandler.log(new Status(IStatus.WARNING, CommonsCorePlugin.ID_PLUGIN, NLS.bind(
-					"Unable to parse property {0}", key))); //$NON-NLS-1$
+		String property = System.getProperty(key);
+		if (property != null) {
+			try {
+				return Integer.parseInt(property);
+			} catch (NumberFormatException e) {
+				StatusHandler.log(new Status(IStatus.WARNING, CommonsCorePlugin.ID_PLUGIN, NLS.bind(
+						"Unable to parse property {0}", key))); //$NON-NLS-1$
+			}
 		}
 		return defaultValue;
 	}

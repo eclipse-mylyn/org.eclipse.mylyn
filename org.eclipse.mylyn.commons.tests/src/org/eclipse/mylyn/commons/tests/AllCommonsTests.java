@@ -22,6 +22,7 @@ import org.eclipse.mylyn.commons.tests.core.CommonListenerListTest;
 import org.eclipse.mylyn.commons.tests.core.CoreUtilTest;
 import org.eclipse.mylyn.commons.tests.core.ExtensionPointReaderTest;
 import org.eclipse.mylyn.commons.tests.core.Html2TextReaderTest;
+import org.eclipse.mylyn.commons.tests.core.StatusHandlerTest;
 import org.eclipse.mylyn.commons.tests.core.storage.CommonStoreTest;
 import org.eclipse.mylyn.commons.tests.net.CommonHttpMethod3Test;
 import org.eclipse.mylyn.commons.tests.net.NetUtilTest;
@@ -67,6 +68,7 @@ public class AllCommonsTests {
 		suite.addTestSuite(CommonHttpMethod3Test.class);
 		suite.addTestSuite(HtmlStreamTokenizerTest.class);
 		suite.addTestSuite(CancellableOperationMonitorThreadTest.class);
+		suite.addTestSuite(StatusHandlerTest.class);
 	}
 
 }

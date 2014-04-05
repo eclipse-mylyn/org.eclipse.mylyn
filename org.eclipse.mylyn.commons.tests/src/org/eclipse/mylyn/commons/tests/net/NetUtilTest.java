@@ -11,6 +11,10 @@
 
 package org.eclipse.mylyn.commons.tests.net;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.commons.core.net.NetUtil;
@@ -169,12 +173,30 @@ public class NetUtilTest extends TestCase {
 		assertFalse(NetUtil.isUrlHttps("telnets://"));
 	}
 
-	public void testGetMaxHttpConnectionsPerHostDefault() {
-		assertEquals(MAX_HTTP_HOST_CONNECTIONS_DEFAULT, NetUtil.getMaxHttpConnectionsPerHost());
+	public void testGetMaxHttpConnectionsPerHostDefault() throws IOException {
+		PrintStream oldErr = System.err;
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		System.setErr(new PrintStream(baos));
+		try {
+			assertEquals(MAX_HTTP_HOST_CONNECTIONS_DEFAULT, NetUtil.getMaxHttpConnectionsPerHost());
+			assertEquals(0, baos.size()); //  no error dumped to console
+		} finally {
+			baos.close();
+			System.setErr(oldErr);
+		}
 	}
 
-	public void testGetMaxHttpConnectionsDefault() {
-		assertEquals(MAX_HTTP_TOTAL_CONNECTIONS_DEFAULT, NetUtil.getMaxHttpConnections());
+	public void testGetMaxHttpConnectionsDefault() throws IOException {
+		PrintStream oldErr = System.err;
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		System.setErr(new PrintStream(baos));
+		try {
+			assertEquals(MAX_HTTP_TOTAL_CONNECTIONS_DEFAULT, NetUtil.getMaxHttpConnections());
+			assertEquals(0, baos.size()); //  no error dumped to console
+		} finally {
+			baos.close();
+			System.setErr(oldErr);
+		}
 	}
 
 	public void testGetMaxHttpConnectionsPerHost() {
