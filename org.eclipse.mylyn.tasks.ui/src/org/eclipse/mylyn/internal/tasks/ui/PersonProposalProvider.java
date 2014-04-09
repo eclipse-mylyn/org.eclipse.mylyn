@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -205,11 +204,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 			return addressSet;
 		}
 
-		addressSet = new TreeSet<String>(new Comparator<String>() {
-			public int compare(String s1, String s2) {
-				return s1.compareToIgnoreCase(s2);
-			}
-		});
+		addressSet = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
 
 		if (errorProposals != null && !errorProposals.isEmpty()) {
 			for (String proposal : errorProposals.keySet()) {
