@@ -45,7 +45,6 @@ public class Junit4TestFixtureRunner extends Suite {
 		String fixtureType();
 	}
 
-	@SuppressWarnings("restriction")
 	private class TestClassRunnerForFixture extends BlockJUnit4ClassRunner {
 		private final int fFixtureSetNumber;
 

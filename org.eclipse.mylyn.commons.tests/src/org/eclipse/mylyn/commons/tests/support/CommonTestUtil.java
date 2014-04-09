@@ -31,7 +31,6 @@ import org.eclipse.osgi.util.NLS;
  * @deprecated use {@link org.eclipse.mylyn.commons.sdk.util.CommonTestUtil} instead
  */
 @Deprecated
-@SuppressWarnings("restriction")
 public class CommonTestUtil {
 
 	private final static int MAX_RETRY = 5;
