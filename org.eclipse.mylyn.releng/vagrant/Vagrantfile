@@ -6,8 +6,8 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 443, host: 2443
   
   config.vm.provider "virtualbox" do |v|
-    v.name = "Mylyn_local_testserver"
-    v.customize ["modifyvm", :id, "--memory", 2048]
+     v.name = "Mylyn - All Repositories"
+     v.customize ["modifyvm", :id, "--memory", 2048]
   end
 
   config.vm.synced_folder   "../../../org.eclipse.mylyn.tasks/org.eclipse.mylyn.bugzilla.releng", "/tmp/vagrant-bugzilla"
