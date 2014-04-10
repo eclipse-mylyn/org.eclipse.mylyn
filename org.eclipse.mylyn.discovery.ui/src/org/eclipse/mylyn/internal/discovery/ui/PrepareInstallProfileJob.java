@@ -49,10 +49,6 @@ import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
 import org.eclipse.equinox.p2.ui.ProvisioningUI;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDescriptor;
-import org.eclipse.mylyn.internal.discovery.ui.AbstractInstallJob;
-import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
-import org.eclipse.mylyn.internal.discovery.ui.InstalledItem;
-import org.eclipse.mylyn.internal.discovery.ui.UninstallRequest;
 import org.eclipse.mylyn.internal.discovery.ui.util.DiscoveryUiUtil;
 import org.eclipse.mylyn.internal.discovery.ui.wizards.Messages;
 import org.eclipse.osgi.util.NLS;
@@ -122,7 +118,7 @@ class PrepareInstallProfileJob extends AbstractInstallJob {
 		IProfile profile = ProvUI.getProfileRegistry(ProvisioningUI.getDefaultUI().getSession()).getProfile(
 				ProvisioningUI.getDefaultUI().getProfileId());
 		if (profile == null) {
-			throw new IllegalStateException("No valid profile defined");
+			throw new IllegalStateException("No valid profile defined"); //$NON-NLS-1$
 		}
 
 		try {
@@ -373,7 +369,7 @@ class PrepareInstallProfileJob extends AbstractInstallJob {
 		URI[] knownRepositories = repositoryTracker.getKnownRepositories(session);
 		if (knownRepositories != null) {
 			for (URI uri : knownRepositories) {
-				if (Pattern.matches("http://download.eclipse.org/releases/.*", uri.toString())) {
+				if (Pattern.matches("http://download.eclipse.org/releases/.*", uri.toString())) { //$NON-NLS-1$
 					repositoryLocations.add(uri);
 				}
 			}
