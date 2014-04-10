@@ -68,10 +68,6 @@ public class PersonLabelProvider extends LabelProvider {
 				}
 			}
 			return image;
-		} else if (object instanceof Account) {
-			Account account = (Account) object;
-//			Image image = TasksUiPlugin.getDefault().getBrandingIcon(account.getKind());
-//			return image;
 		}
 		return null;
 	}
