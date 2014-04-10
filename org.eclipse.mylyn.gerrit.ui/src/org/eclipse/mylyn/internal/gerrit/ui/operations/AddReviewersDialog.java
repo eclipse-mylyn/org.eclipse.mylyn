@@ -35,7 +35,7 @@ import com.google.gerrit.common.data.ReviewerResult;
  */
 public class AddReviewersDialog extends GerritOperationDialog {
 
-	private Text messageEditor;
+	private Text reviewersEditor;
 
 	public AddReviewersDialog(Shell parentShell, ITask task) {
 		super(parentShell, task);
@@ -48,7 +48,7 @@ public class AddReviewersDialog extends GerritOperationDialog {
 	}
 
 	List<String> getReviewers() {
-		String[] reviewers = messageEditor.getText().split(","); //$NON-NLS-1$
+		String[] reviewers = reviewersEditor.getText().split(","); //$NON-NLS-1$
 		List<String> result = new ArrayList<String>(reviewers.length);
 		for (int i = 0; i < reviewers.length; i++) {
 			reviewers[i] = reviewers[i].trim();
@@ -68,8 +68,8 @@ public class AddReviewersDialog extends GerritOperationDialog {
 		GridLayout layout = GridLayoutFactory.fillDefaults().margins(8, 8).create();
 		composite.setLayout(layout);
 
-		messageEditor = createPersonTextEditor(composite, ""); //$NON-NLS-1$
-		GridDataFactory.fillDefaults().grab(true, true).applyTo(messageEditor);
+		reviewersEditor = createPersonTextEditor(composite, ""); //$NON-NLS-1$
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(reviewersEditor);
 
 		return composite;
 	}
@@ -95,7 +95,7 @@ public class AddReviewersDialog extends GerritOperationDialog {
 	 * @see #getReviewers()
 	 */
 	void setText(String text) {
-		messageEditor.setText(text);
+		reviewersEditor.setText(text);
 	}
 
 }

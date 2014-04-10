@@ -63,10 +63,26 @@ public class AddReviewersDialogTest {
 	}
 
 	@Test
+	public void testGetReviewersWithComma() {
+		dialog.setText("a,b,");
+		assertEquals(Arrays.asList("a", "b"), dialog.getReviewers());
+	}
+
+	@Test
 	public void testGetReviewersEmpty() {
 		dialog.setText("");
 		assertEquals(Collections.emptyList(), dialog.getReviewers());
+	}
+
+	@Test
+	public void testGetReviewersBlank() {
 		dialog.setText("   ");
+		assertEquals(Collections.emptyList(), dialog.getReviewers());
+	}
+
+	@Test
+	public void testGetReviewersCommasOnly() {
+		dialog.setText(",,,");
 		assertEquals(Collections.emptyList(), dialog.getReviewers());
 	}
 
