@@ -17,7 +17,6 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
@@ -71,7 +70,7 @@ public class TaskRepositoryKeyringMigrator extends KeyringMigrator<TaskRepositor
 		try {
 			return super.getAuthorizationInfo(url);
 		} catch (MalformedURLException e) {
-			return Platform.getAuthorizationInfo(defaultUrl, url, authScheme);
+			return getAuthorizationInfo(defaultUrl, url, authScheme);
 		}
 	}
 

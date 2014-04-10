@@ -53,7 +53,6 @@ public abstract class KeyringMigrator<T> {
 		}
 	}
 
-	@SuppressWarnings({ "unchecked", "deprecation" })
 	protected void migrateCredentials(T location) {
 		try {
 			Map<String, String> properties = getAuthorizationInfo(getUrl(location));
@@ -65,7 +64,13 @@ public abstract class KeyringMigrator<T> {
 	}
 
 	protected Map<String, String> getAuthorizationInfo(String url) throws MalformedURLException {
-		return Platform.getAuthorizationInfo(new URL(url), authRealm, authScheme);
+		return getAuthorizationInfo(new URL(url), authRealm, authScheme);
+	}
+
+	@SuppressWarnings({ "deprecation", "unchecked" })
+	protected Map<String, String> getAuthorizationInfo(URL url, String realm, String scheme)
+			throws MalformedURLException {
+		return Platform.getAuthorizationInfo(url, realm, scheme);
 	}
 
 	protected void putProperties(Map<String, String> properties, T location) {
