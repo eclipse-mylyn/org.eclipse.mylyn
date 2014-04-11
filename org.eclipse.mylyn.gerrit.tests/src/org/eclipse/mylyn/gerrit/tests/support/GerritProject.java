@@ -115,7 +115,18 @@ public class GerritProject {
 	public void addFile(String fileName, String text) throws Exception {
 		Git gitProject = getGitProject();
 		CommonTestUtil.write(new File(getFolder(), fileName).getAbsolutePath(), new StringBuffer(text));
-		gitProject.add().addFilepattern(".").call();
+		gitProject.add().addFilepattern(fileName).call();
+	}
+
+	public void addFile(String fileName, File file) throws Exception {
+		Git gitProject = getGitProject();
+		CommonTestUtil.copy(file, new File(getFolder(), fileName));
+		gitProject.add().addFilepattern(fileName).call();
+	}
+
+	public void removeFile(String fileName) throws Exception {
+		Git gitProject = getGitProject();
+		gitProject.rm().addFilepattern(fileName).call();
 	}
 
 	public CommitResult commitAndPush(CommitCommand command) throws Exception {

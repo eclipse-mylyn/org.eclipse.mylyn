@@ -13,31 +13,47 @@ package org.eclipse.mylyn.internal.gerrit.core.remote;
 
 import static org.eclipse.mylyn.internal.gerrit.core.remote.TestRemoteObserverConsumer.retrieveForLocalKey;
 import static org.eclipse.mylyn.internal.gerrit.core.remote.TestRemoteObserverConsumer.retrieveForRemoteKey;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jgit.api.CommitCommand;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.PatchSetContent;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchScriptX;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
+import org.hamcrest.Matcher;
 import org.junit.Test;
 
 import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.reviewdb.ApprovalCategoryValue;
 import com.google.gerrit.reviewdb.Change;
 import com.google.gerrit.reviewdb.Patch;
+import com.google.gerrit.reviewdb.Patch.Key;
 import com.google.gerrit.reviewdb.PatchSet;
 
 /**
@@ -105,6 +121,134 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 	}
 
 	@Test
+	public void testFetchBinaryContent() throws Exception {
+		fetchBinaryContent("test.png", "testdata/binary/gerrit.png");
+	}
+
+	@Test
+	public void testFetchZippedBinaryContent() throws Exception {
+		// test servers are configured so that gif files are zipped (the mimetype is not marked safe)
+		fetchBinaryContent("test.gif", "testdata/binary/gerrit.gif");
+	}
+
+	private void fetchBinaryContent(String fileName, String path) throws Exception {
+		byte[] fileContent = commitFile(fileName, path);
+
+		assertThat(getReview().getSets().size(), is(2));
+
+		PatchSetDetail detail = retrievePatchSetDetail(Integer.toString(2));
+		assertThat(detail.getInfo().getKey().get(), is(2));
+
+		IReviewItemSet patchSet = getReview().getSets().get(1);
+		List<IFileItem> fileItems = patchSet.getItems();
+		assertThat(fileItems.size(), is(0));
+		retrievePatchSetContents(patchSet);
+		assertThat(fileItems.size(), is(3));
+
+		IFileItem fileItem = fileItems.get(1);
+		assertThat(fileItem.getName(), is(fileName));
+		assertThat(fileItem.getBase().getContent(), nullValue());
+		assertThat(fileItem.getBase().getBinaryContent(), nullValue());
+		assertThat(fileItem.getTarget().getContent(), nullValue());
+		assertThat(fileItem.getTarget().getBinaryContent(), is(fileContent));
+	}
+
+	@Test
+	public void testUnzipBinaryContent() throws Exception {
+		File imageFile = CommonTestUtil.getFile(this, "testdata/binary/gerrit.png");
+		byte[] zippedBytes = zip(imageFile);
+		assertThat(GerritClient.isZippedContent(zippedBytes), is(true));
+
+		byte[] unzippedBytes = GerritClient.unzip(zippedBytes);
+		byte[] imageBytes = FileUtils.readFileToByteArray(imageFile);
+		assertThat(GerritClient.isZippedContent(imageBytes), is(false));
+		assertThat(unzippedBytes, is(imageBytes));
+	}
+
+	private byte[] zip(File file) throws IOException, FileNotFoundException {
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		ZipOutputStream out = new ZipOutputStream(bytes);
+		out.putNextEntry(new ZipEntry(file.getName()));
+		IOUtils.copy(new FileInputStream(file), out);
+		out.closeEntry();
+		return bytes.toByteArray();
+	}
+
+	@Test
+	public void testCompareBinaryContent() throws Exception {
+		String fileName = "test.png";
+		byte[] fileContent2 = commitFile(fileName, "testdata/binary/gerrit.png");
+		byte[] fileContent3 = commitFile(fileName, "testdata/binary/gerrit2.png");
+		removeFile(fileName);
+
+		PatchSetDetail detail1 = retrievePatchSetDetail("1");
+		PatchSetDetail detail2 = retrievePatchSetDetail("2");
+		PatchSetDetail detail3 = retrievePatchSetDetail("3");
+		PatchSetDetail detail4 = retrievePatchSetDetail("4");
+
+		// compare modified images
+		PatchScriptX patchScript = loadPatchSetContent(fileName, detail2, detail3);
+		assertPatchContent(patchScript, equalTo(fileContent2), equalTo(fileContent3));
+
+		patchScript = loadPatchSetContent(fileName, detail3, detail2);
+		assertPatchContent(patchScript, equalTo(fileContent3), equalTo(fileContent2));
+
+		// compare deleted image
+		patchScript = loadPatchSetContent(fileName, detail2, detail4);
+		assertPatchContent(patchScript, equalTo(fileContent2), empty());
+
+		patchScript = loadPatchSetContent(fileName, detail3, detail1);
+		assertPatchContent(patchScript, equalTo(fileContent3), empty());
+
+		// compare added image
+		patchScript = loadPatchSetContent(fileName, detail1, detail2);
+		assertPatchContent(patchScript, empty(), equalTo(fileContent2));
+
+		patchScript = loadPatchSetContent(fileName, detail4, detail3);
+		assertPatchContent(patchScript, empty(), equalTo(fileContent3));
+	}
+
+	private PatchScriptX loadPatchSetContent(String fileName, PatchSetDetail base, PatchSetDetail target)
+			throws GerritException {
+		PatchSetContent content = new PatchSetContent(base.getPatchSet(), target.getPatchSet());
+		reviewHarness.client.loadPatchSetContent(content, new NullProgressMonitor());
+		return content.getPatchScript(createPatchKey(fileName, target.getInfo().getKey().get()));
+	}
+
+	private Key createPatchKey(String fileName, int patchSet) throws GerritException {
+		Change.Id changeId = new Change.Id(reviewHarness.client.id(reviewHarness.shortId));
+		PatchSet.Id patchSetId = new PatchSet.Id(changeId, patchSet);
+		return new Patch.Key(patchSetId, fileName);
+	}
+
+	private void assertPatchContent(PatchScriptX patchScript, Matcher<byte[]> base, Matcher<byte[]> target) {
+		assertThat(patchScript.getBinaryA(), is(base));
+		assertThat(patchScript.getBinaryB(), is(target));
+	}
+
+	private static Matcher<byte[]> empty() {
+		return nullValue(byte[].class);
+	}
+
+	private byte[] commitFile(String fileName, String path) throws Exception {
+		File file = CommonTestUtil.getFile(this, path);
+		CommitCommand command = reviewHarness.createCommitCommand();
+		reviewHarness.addFile(fileName, file);
+		reviewHarness.commitAndPush(command);
+		reviewHarness.consumer.retrieve(false);
+		reviewHarness.listener.waitForResponse();
+		return FileUtils.readFileToByteArray(file);
+	}
+
+	private void removeFile(String fileName) throws Exception {
+		CommitCommand command = reviewHarness.createCommitCommand();
+		reviewHarness.removeFile(fileName);
+		reviewHarness.commitAndPush(command);
+		reviewHarness.consumer.retrieve(false);
+		reviewHarness.listener.waitForResponse();
+	}
+
+	@Test
 	public void testPatchSetComments() throws Exception {
 		CommitCommand command2 = reviewHarness.createCommitCommand();
 		reviewHarness.addFile("testComments.txt", "line1\nline2\nline3\nline4\nline5\nline6\nline7\n");
@@ -159,7 +303,6 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(details.size(), is(1));
 		PatchSetDetail detail = details.get(0);
 		PatchSetContent content = new PatchSetContent((PatchSet) null, detail);
-		assertThat(content, notNullValue());
 
 		final Change.Id changeId = new Change.Id(reviewHarness.client.id(reviewHarness.shortId));
 		final PatchSet.Id patchSetId = new PatchSet.Id(changeId, 1);

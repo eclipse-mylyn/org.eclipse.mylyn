@@ -303,4 +303,14 @@ public class GerritClientTest extends TestCase {
 		assertEquals(reviewId, client.toReviewId(changeId, null));
 	}
 
+	@Test
+	public void testIsZippedContent() throws Exception {
+		assertTrue(GerritClient.isZippedContent("PK\u0003\u0004somezippedcontent".getBytes()));
+		assertFalse(GerritClient.isZippedContent("PK\u0003notzippedcontent".getBytes()));
+		assertFalse(GerritClient.isZippedContent("PKnotzippedcontent".getBytes()));
+		assertFalse(GerritClient.isZippedContent("notzippedcontent".getBytes()));
+		assertFalse(GerritClient.isZippedContent("PK".getBytes()));
+		assertFalse(GerritClient.isZippedContent("".getBytes()));
+	}
+
 }

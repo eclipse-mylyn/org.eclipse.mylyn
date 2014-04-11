@@ -410,11 +410,11 @@ public class GerritClient extends ReviewsClient {
 		});
 		if (patchScript.isBinary()) {
 			if (patchScript.getChangeType() != ChangeType.ADDED) {
-				String keyBaseEncoded = encode(key.toString() + "^1"); //$NON-NLS-1$
+				String keyBaseEncoded = encode(leftId + "," + key.getFileName() + "^0"); //$NON-NLS-1$ //$NON-NLS-2$
 				patchScript.setBinaryA(fetchBinaryContent("/cat/" + keyBaseEncoded, monitor)); //$NON-NLS-1$
 			}
 			if (patchScript.getChangeType() != ChangeType.DELETED) {
-				String keyTargetEncoded = encode(key.toString() + "^0"); //$NON-NLS-1$
+				String keyTargetEncoded = encode(rightId + "," + key.getFileName() + "^0"); //$NON-NLS-1$ //$NON-NLS-2$
 				patchScript.setBinaryB(fetchBinaryContent("/cat/" + keyTargetEncoded, monitor)); //$NON-NLS-1$
 			}
 		}
@@ -425,15 +425,26 @@ public class GerritClient extends ReviewsClient {
 		final TypeToken<Byte[]> byteArrayType = new TypeToken<Byte[]>() {
 		};
 		byte[] bin = executeGetRestRequest(url, byteArrayType.getType(), monitor);
-		if (isVersion27OrLater(monitor)) {
-			return bin;
-		} else if (isVersion26OrLater(monitor)) {
+		if (isZippedContent(bin)) {
 			return unzip(bin);
+		} else {
+			return bin;
 		}
-		return null;
 	}
 
-	private static byte[] unzip(byte[] zip) throws GerritException {
+	/**
+	 * Checks for the 4 byte header that identifies a ZIP file
+	 * 
+	 * @noreference This method is not intended to be referenced by clients.
+	 */
+	public static boolean isZippedContent(byte[] bin) {
+		return bin != null && bin.length > 4 && bin[0] == 'P' && bin[1] == 'K' && bin[2] == 3 && bin[3] == 4;
+	}
+
+	/**
+	 * @noreference This method is not intended to be referenced by clients.
+	 */
+	public static byte[] unzip(byte[] zip) throws GerritException {
 		ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(zip));
 		try {
 			zis.getNextEntry(); // expecting a single entry

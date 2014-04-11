@@ -20,6 +20,7 @@ import static org.hamcrest.Matchers.sameInstance;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertThat;
 
+import java.io.File;
 import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
@@ -147,6 +148,14 @@ class ReviewHarness {
 
 	public void addFile(String fileName, String text) throws Exception {
 		gerritHarness.project().addFile(fileName, text);
+	}
+
+	public void addFile(String fileName, File file) throws Exception {
+		gerritHarness.project().addFile(fileName, file);
+	}
+
+	public void removeFile(String fileName) throws Exception {
+		gerritHarness.project().removeFile(fileName);
 	}
 
 	public CommitResult commitAndPush(CommitCommand command) throws Exception {
