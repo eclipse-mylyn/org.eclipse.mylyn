@@ -67,7 +67,6 @@ public class AddGerritSiteHandler extends AbstractHandler {
 		String menuItemText = "";
 		fServerUtil = GerritServerUtility.getInstance();
 		Object obj = aEvent.getTrigger();
-		Map<String, String> param = aEvent.getParameters();
 		GerritTableView reviewTableView = GerritTableView
 				.getActiveView();
 		
@@ -78,7 +77,7 @@ public class AddGerritSiteHandler extends AbstractHandler {
 				MenuItem menuItem = (MenuItem) objWidget;
 				menuItemText = menuItem.getText();
 				GerritPlugin.Ftracer.traceInfo("MenuItem: " + menuItemText + "\t value: " +
-						param.get(menuItemText) + " VS saved: "  + fServerUtil.getLastSavedGerritServer());
+						aEvent.getParameter(menuItemText) + " VS saved: "  + fServerUtil.getLastSavedGerritServer());
 				fMapRepoServer = fServerUtil.getGerritMapping();
 				String stURL = fServerUtil.getMenuSelectionURL(menuItemText);
 				GerritPlugin.Ftracer.traceInfo("URL for the menuItemText: " + stURL);
