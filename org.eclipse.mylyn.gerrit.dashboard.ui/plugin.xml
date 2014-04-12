@@ -93,7 +93,7 @@
                 id="GerritDashboardUI.dropdown.toolbar.AddAllOpenReviews"
                 label="All"
                 style="pulldown"
-                tooltip="Find all Opened Reviews for the selected repository">
+                tooltip="Find all Open Reviews for the selected repository">
           </command>
          <separator
                 name="addition1"
@@ -104,7 +104,7 @@
                 id="GerritDashboardUI.dropdown.toolbar.MyWatchedChanges"
                 label="My"
                 style="pulldown"
-                tooltip="Find my watchedChanges reviews for the selected repository">
+                tooltip="Find my Watched Changes reviews for the selected repository">
           </command>
          <separator
                 name="addition2"
@@ -139,7 +139,7 @@
                 id="GerritDashboardUI.dropdown.toolbar.Documentation"
                 label="Documentation"
                 style="pulldown"
-                tooltip="Find Gerrit documentation">
+                tooltip="Open Gerrit documentation">
           </command>
          <separator
                 name="additions"
@@ -157,14 +157,14 @@
                	id="GerritDashboardUI.dropdown.toolbar.addOpenReviews"
                	label="Open"
                	style="push"
-               	tooltip="Find all Openned Reviews for the selected repository">
+               	tooltip="Find all Open Reviews for the selected repository">
          </command>
          <command
                	commandId="org.eclipse.mylyn.gerrit.dashboard.ui.allMergedReviews"
                	id="org.eclipse.mylyn.gerrit.dashboard.ui.allMergedReviews"
                	label="Merged"
                	style="push"
-               	tooltip="Find all Merged Review for the selected repository">
+               	tooltip="Find all Merged Reviews for the selected repository">
          </command>
          <command
 	            commandId="org.eclipse.mylyn.gerrit.dashboard.ui.allAbandonedReviews"
@@ -270,14 +270,14 @@
                id="GerritDashboardUI.dropdown.toolbar.documentationIndex"
                label="Index"
                style="push"
-               tooltip="Find the index of the documentation">
+               tooltip="Open documentation index">
          </command>
          <command
                commandId="org.eclipse.mylyn.gerrit.dashboard.ui.documentationSearching"
                id="GerritDashboardUI.dropdown.toolbar.documentationSearching"
                label="Searching"
                style="push"
-               tooltip="Find the searching of the documentation">
+               tooltip="Open documentation of searching changes">
          </command>
 
          <command
@@ -285,15 +285,15 @@
                id="GerritDashboardUI.dropdown.toolbar.documentationUploading"
                label="Uploading"
                style="push"
-               tooltip="Find the uploading of the documentation">
+               tooltip="Open documentation of uploading changes">
          </command>
 
          <command
                commandId="org.eclipse.mylyn.gerrit.dashboard.ui.documentationAccessControls"
                id="GerritDashboardUI.dropdown.toolbar.documentationAccessControls"
-               label="AccessControls"
+               label="Access Controls"
                style="push"
-               tooltip="Find the access controls of the documentation">
+               tooltip="Open access controls documentation">
          </command>
 
          <command
@@ -301,7 +301,7 @@
                id="GerritDashboardUI.dropdown.toolbar.documentationRestAPI"
                label="REST API"
                style="push"
-               tooltip="Find the REST API of the documentation">
+               tooltip="Open REST API documentation">
          </command>
 
 
@@ -327,7 +327,7 @@
 
       <command
             id="org.eclipse.mylyn.gerrit.dashboard.ui.selectCurrentGerrit"
-            name="selectCurrentGerrit">
+            name="Select current Gerrit repository">
       </command>
 
       <command
