@@ -240,6 +240,7 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 	private void removeIgnore() {
 		int[] selection = ignoreTable.getSelectionIndices();
 		ignoreTable.remove(selection);
+		updateEnablement();
 	}
 
 }
