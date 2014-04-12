@@ -95,6 +95,7 @@ public class UIReviewTable {
 		ReviewTableLabelProvider tableProvider = new ReviewTableLabelProvider();
 		fViewer.setLabelProvider(tableProvider);
 		ReviewTableSorter.bind(fViewer);
+		fViewer.setComparator(new ReviewTableSorter(6)); // sort by Updated, descending
 
 		// Create the help context id for the viewer's control
 		// PlatformUI
