@@ -6,7 +6,7 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 443, host: 2443
   
   config.vm.provider "virtualbox" do |v|
-    v.name = "Mylyn Tasks: Trac Repositories"
+    v.name = "Mylyn Tasks - Trac Repositories"
   end
   
   config.vm.provision :puppet, :module_path => "modules"
