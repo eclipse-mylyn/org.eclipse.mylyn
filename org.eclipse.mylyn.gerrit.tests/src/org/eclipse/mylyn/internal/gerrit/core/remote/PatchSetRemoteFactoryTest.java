@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.remote;
 
+import static org.eclipse.mylyn.internal.gerrit.core.remote.TestRemoteObserverConsumer.retrieveForLocalKey;
+import static org.eclipse.mylyn.internal.gerrit.core.remote.TestRemoteObserverConsumer.retrieveForRemoteKey;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -30,7 +32,6 @@ import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
-import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.junit.Test;
 
 import com.google.gerrit.common.data.PatchSetDetail;
@@ -60,26 +61,12 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 
 		assertThat(getReview().getSets().size(), is(3));
 		IReviewItemSet testPatchSet = getReview().getSets().get(2);
-		RemoteEmfConsumer<IReview, IReviewItemSet, String, PatchSetDetail, PatchSetDetail, String> itemSetConsumer = reviewHarness.provider.getReviewItemSetFactory()
-				.getConsumerForLocalKey(getReview(), "3");
-		TestRemoteObserver<IReview, IReviewItemSet, String, String> itemSetObserver = new TestRemoteObserver<IReview, IReviewItemSet, String, String>(
-				reviewHarness.provider.getReviewItemSetFactory());
-		itemSetConsumer.addObserver(itemSetObserver);
-		itemSetConsumer.retrieve(false);
-		itemSetObserver.waitForResponse(false);
-		PatchSetDetail detail = itemSetConsumer.getRemoteObject();
+		PatchSetDetail detail = retrievePatchSetDetail("3");
 		assertThat(detail.getInfo().getKey().get(), is(3));
 
-		PatchSetContentIdRemoteFactory patchFactory = reviewHarness.provider.getReviewItemSetContentFactory();
 		List<IFileItem> fileItems = testPatchSet.getItems();
 		assertThat(fileItems.size(), is(0));
-		TestRemoteObserver<IReviewItemSet, List<IFileItem>, String, Long> patchSetListener = new TestRemoteObserver<IReviewItemSet, List<IFileItem>, String, Long>(
-				patchFactory);
-		RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, String, PatchSetContent, String, Long> patchSetConsumer = patchFactory.getConsumerForRemoteKey(
-				testPatchSet, "3");
-		patchSetConsumer.addObserver(patchSetListener);
-		patchSetConsumer.retrieve(false);
-		patchSetListener.waitForResponse();
+		retrievePatchSetContents(testPatchSet);
 
 		assertThat(fileItems.size(), is(6));
 		for (IReviewItem fileItem : fileItems) {
@@ -124,25 +111,12 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		reviewHarness.commitAndPush(command2);
 		reviewHarness.consumer.retrieve(false);
 		reviewHarness.listener.waitForResponse();
-		RemoteEmfConsumer<IReview, IReviewItemSet, String, PatchSetDetail, PatchSetDetail, String> itemSetConsumer = reviewHarness.provider.getReviewItemSetFactory()
-				.getConsumerForLocalKey(getReview(), "2");
-		TestRemoteObserver<IReview, IReviewItemSet, String, String> itemSetObserver = new TestRemoteObserver<IReview, IReviewItemSet, String, String>(
-				reviewHarness.provider.getReviewItemSetFactory());
-		itemSetConsumer.addObserver(itemSetObserver);
-		itemSetConsumer.retrieve(false);
-		itemSetObserver.waitForResponse(false);
-		PatchSetDetail detail = itemSetConsumer.getRemoteObject();
+		PatchSetDetail detail = retrievePatchSetDetail("2");
 		assertThat(detail.getInfo().getKey().get(), is(2));
 
 		IReviewItemSet testPatchSet = getReview().getSets().get(1);
-		PatchSetContentIdRemoteFactory patchFactory = reviewHarness.provider.getReviewItemSetContentFactory();
-		TestRemoteObserver<IReviewItemSet, List<IFileItem>, String, Long> patchSetListener = new TestRemoteObserver<IReviewItemSet, List<IFileItem>, String, Long>(
-				patchFactory);
-		RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, String, PatchSetContent, String, Long> patchSetConsumer = patchFactory.getConsumerForRemoteKey(
-				testPatchSet, "2");
-		patchSetConsumer.addObserver(patchSetListener);
-		patchSetConsumer.retrieve(false);
-		patchSetListener.waitForResponse();
+		TestRemoteObserverConsumer<IReviewItemSet, List<IFileItem>, String, PatchSetContent, String, Long> patchSetObserver //
+		= retrievePatchSetContents(testPatchSet);
 
 		IFileItem commentFile = testPatchSet.getItems().get(1);
 		assertThat(commentFile.getName(), is("testComments.txt"));
@@ -151,8 +125,8 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		String id = commentFile.getReference();
 		reviewHarness.client.saveDraft(Patch.Key.parse(id), "Line 2 Comment", 2, (short) 1, null,
 				new NullProgressMonitor());
-		patchSetConsumer.retrieve(false);
-		patchSetListener.waitForResponse();
+		patchSetObserver.retrieve(false);
+		patchSetObserver.waitForResponse();
 
 		commentFile = testPatchSet.getItems().get(1);
 		List<IComment> allComments = commentFile.getAllComments();
@@ -165,8 +139,8 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 
 		reviewHarness.client.publishComments(reviewHarness.shortId, 2, "Submit Comments",
 				Collections.<ApprovalCategoryValue.Id> emptySet(), new NullProgressMonitor());
-		patchSetConsumer.retrieve(false);
-		patchSetListener.waitForResponse();
+		patchSetObserver.retrieve(false);
+		patchSetObserver.waitForResponse();
 		allComments = commentFile.getAllComments();
 		assertThat(allComments.size(), is(1));
 		fileComment = allComments.get(0);
@@ -202,5 +176,18 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		// then
 		assertThat(content.getPatchScript(commitMsgPatchKey), notNullValue());
 		assertThat(content.getPatchScript(testFilePatchKey), notNullValue());
+	}
+
+	private PatchSetDetail retrievePatchSetDetail(String patchSetId) {
+		TestRemoteObserverConsumer<IReview, IReviewItemSet, String, PatchSetDetail, PatchSetDetail, String> itemSetObserver //
+		= retrieveForLocalKey(reviewHarness.provider.getReviewItemSetFactory(), getReview(), patchSetId, false);
+		PatchSetDetail detail = itemSetObserver.getRemoteObject();
+		return detail;
+	}
+
+	private TestRemoteObserverConsumer<IReviewItemSet, List<IFileItem>, String, PatchSetContent, String, Long> retrievePatchSetContents(
+			IReviewItemSet patchSet) {
+		return retrieveForRemoteKey(reviewHarness.provider.getReviewItemSetContentFactory(), patchSet,
+				patchSet.getId(), true);
 	}
 }

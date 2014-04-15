@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.AbstractRemoteEmfFactory;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfObserver;
 
-final class TestRemoteObserver<P extends EObject, T, L, C> extends RemoteEmfObserver<P, T, L, C> {
+class TestRemoteObserver<P extends EObject, T, L, C> extends RemoteEmfObserver<P, T, L, C> {
 
 	static final int TEST_TIMEOUT = 15000;
 
@@ -86,4 +86,5 @@ final class TestRemoteObserver<P extends EObject, T, L, C> extends RemoteEmfObse
 			updated = 0;
 		}
 	}
+
 }

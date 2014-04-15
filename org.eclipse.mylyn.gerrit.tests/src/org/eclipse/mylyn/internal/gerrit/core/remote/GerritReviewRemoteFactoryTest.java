@@ -15,6 +15,7 @@ import static org.eclipse.mylyn.gerrit.tests.core.client.rest.IsEmpty.empty;
 import static org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalUtil.CRVW;
 import static org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalUtil.VRIF;
 import static org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalUtil.toNameWithDash;
+import static org.eclipse.mylyn.internal.gerrit.core.remote.TestRemoteObserverConsumer.retrieveForRemoteKey;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
@@ -57,7 +58,6 @@ import org.eclipse.mylyn.reviews.core.model.IReviewerEntry;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.reviews.core.model.RequirementStatus;
 import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
-import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.junit.Test;
 
 import com.google.gerrit.common.data.ApprovalDetail;
@@ -191,13 +191,9 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		String resultIdDep1 = StringUtils.trimToEmpty(StringUtils.substringAfterLast(resultDep1.push.getMessages(), "/"));
 		assertThat("Bad Push: " + resultDep1.push.getMessages(), resultIdDep1.length(), greaterThan(0));
 
-		TestRemoteObserver<IRepository, IReview, String, Date> reviewListenerDep1 = new TestRemoteObserver<IRepository, IReview, String, Date>(
-				reviewHarness.provider.getReviewFactory());
-		RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> consumerDep1 = reviewHarness.provider.getReviewFactory()
-				.getConsumerForRemoteKey(reviewHarness.getRepository(), resultIdDep1);
-		consumerDep1.addObserver(reviewListenerDep1);
-		consumerDep1.retrieve(false);
-		reviewListenerDep1.waitForResponse();
+		TestRemoteObserverConsumer<IRepository, IReview, String, GerritChange, String, Date> consumerDep1 //
+		= retrieveForRemoteKey(reviewHarness.provider.getReviewFactory(), reviewHarness.getRepository(), resultIdDep1,
+				true);
 		IReview reviewDep1 = consumerDep1.getModelObject();
 
 		assertThat(reviewDep1.getParents().size(), is(1));
