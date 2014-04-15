@@ -46,6 +46,7 @@ import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpResponse;
+import org.eclipse.mylyn.commons.repositories.http.core.HttpUtil;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonServerInfo.Type;
 import org.eclipse.mylyn.internal.hudson.model.HudsonMavenReportersSurefireAggregatedReport;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBuild;
@@ -356,7 +357,12 @@ public class RestfulHudsonClient {
 			@Override
 			protected void doValidate(CommonHttpResponse response, IOperationMonitor monitor) throws IOException,
 					HudsonException {
-				validate(response, HttpStatus.SC_MOVED_TEMPORARILY, monitor);
+
+				int statusCode = response.getStatusCode();
+				if (statusCode != HttpStatus.SC_CREATED && statusCode != HttpStatus.SC_MOVED_TEMPORARILY) {
+					throw new HudsonException(NLS.bind("Unexpected response from Hudson server for ''{0}'': {1}", //$NON-NLS-1$
+							response.getRequestPath(), HttpUtil.getStatusText(statusCode)));
+				}
 			};
 		}.run();
 	}
