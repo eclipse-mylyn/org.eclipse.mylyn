@@ -104,11 +104,9 @@ class ReviewHarness {
 
 	public void pushFileToReview(String testIdent) throws Exception {
 		changeId = "I" + StringUtils.rightPad(testIdent, 40, "a");
-		CommitCommand command = git.commit()
-				.setAll(true)
-				.setMessage("Test Change " + testIdent + "\n\nChange-Id: " + changeId);
-		gerritHarness.project().addFile("testFile1.txt");
-		CommitResult result = gerritHarness.project().commitAndPush(command);
+		CommitCommand command = createCommitCommand(changeId);
+		addFile("testFile1.txt");
+		CommitResult result = commitAndPush(command);
 		shortId = StringUtils.trimToEmpty(StringUtils.substringAfterLast(result.push.getMessages(), "/"));
 		commitId = result.commit.getId().toString();
 		assertThat("Bad Push: " + result.push.getMessages(), shortId.length(), greaterThan(0));
@@ -134,4 +132,25 @@ class ReviewHarness {
 	IRepository getRepository() {
 		return provider.getRoot();
 	}
+
+	public CommitCommand createCommitCommand() {
+		return createCommitCommand(changeId).setAmend(true);
+	}
+
+	public CommitCommand createCommitCommand(String changeId) {
+		return git.commit().setAll(true).setMessage("Test Change " + testIdent + "\n\nChange-Id: " + changeId);
+	}
+
+	public void addFile(String fileName) throws Exception {
+		gerritHarness.project().addFile(fileName);
+	}
+
+	public void addFile(String fileName, String text) throws Exception {
+		gerritHarness.project().addFile(fileName, text);
+	}
+
+	public CommitResult commitAndPush(CommitCommand command) throws Exception {
+		return gerritHarness.project().commitAndPush(command);
+	}
+
 }

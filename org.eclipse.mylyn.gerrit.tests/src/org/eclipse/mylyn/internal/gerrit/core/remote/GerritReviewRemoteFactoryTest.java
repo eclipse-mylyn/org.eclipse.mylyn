@@ -114,12 +114,9 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testNewChange() throws Exception {
-		CommitCommand command2 = reviewHarness.git.commit()
-				.setAmend(true)
-				.setAll(true)
-				.setMessage("Test Change " + reviewHarness.testIdent + " [2]\n\nChange-Id: " + reviewHarness.changeId);
-		reviewHarness.gerritHarness.project().addFile("testFile2.txt");
-		reviewHarness.gerritHarness.project().commitAndPush(command2);
+		CommitCommand command2 = reviewHarness.createCommitCommand();
+		reviewHarness.addFile("testFile2.txt");
+		reviewHarness.commitAndPush(command2);
 		reviewHarness.consumer.retrieve(false);
 		reviewHarness.listener.waitForResponse(2, 2);
 		List<IReviewItemSet> items = getReview().getSets();
@@ -188,11 +185,9 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 	@Test
 	public void testDependencies() throws Exception {
 		String changeIdDep1 = "I" + StringUtils.rightPad(System.currentTimeMillis() + "", 40, "a");
-		CommitCommand commandDep1 = reviewHarness.git.commit()
-				.setAll(true)
-				.setMessage("Test Change Dependent 1 " + reviewHarness.testIdent + "\n\nChange-Id: " + changeIdDep1);
-		reviewHarness.gerritHarness.project().addFile("testFile1.txt", "test 2");
-		CommitResult resultDep1 = reviewHarness.gerritHarness.project().commitAndPush(commandDep1);
+		CommitCommand commandDep1 = reviewHarness.createCommitCommand(changeIdDep1);
+		reviewHarness.addFile("testFile1.txt", "test 2");
+		CommitResult resultDep1 = reviewHarness.commitAndPush(commandDep1);
 		String resultIdDep1 = StringUtils.trimToEmpty(StringUtils.substringAfterLast(resultDep1.push.getMessages(), "/"));
 		assertThat("Bad Push: " + resultDep1.push.getMessages(), resultIdDep1.length(), greaterThan(0));
 

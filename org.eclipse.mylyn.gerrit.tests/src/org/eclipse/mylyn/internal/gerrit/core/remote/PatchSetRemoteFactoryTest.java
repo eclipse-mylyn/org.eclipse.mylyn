@@ -46,21 +46,15 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testPatchSetFiles() throws Exception {
-		CommitCommand command2 = reviewHarness.git.commit()
-				.setAmend(true)
-				.setAll(true)
-				.setMessage("Test Change " + reviewHarness.testIdent + " [2]\n\nChange-Id: " + reviewHarness.changeId);
-		reviewHarness.gerritHarness.project().addFile("testFile2.txt");
-		reviewHarness.gerritHarness.project().addFile("testFile3.txt");
-		reviewHarness.gerritHarness.project().commitAndPush(command2);
-		CommitCommand command3 = reviewHarness.git.commit()
-				.setAmend(true)
-				.setAll(true)
-				.setMessage("Test Change " + reviewHarness.testIdent + " [2]\n\nChange-Id: " + reviewHarness.changeId);
-		reviewHarness.gerritHarness.project().addFile("testFile2.txt", "testmod");
-		reviewHarness.gerritHarness.project().addFile("testFile4.txt");
-		reviewHarness.gerritHarness.project().addFile("testFile5.txt");
-		reviewHarness.gerritHarness.project().commitAndPush(command3);
+		CommitCommand command2 = reviewHarness.createCommitCommand();
+		reviewHarness.addFile("testFile2.txt");
+		reviewHarness.addFile("testFile3.txt");
+		reviewHarness.commitAndPush(command2);
+		CommitCommand command3 = reviewHarness.createCommitCommand();
+		reviewHarness.addFile("testFile2.txt", "testmod");
+		reviewHarness.addFile("testFile4.txt");
+		reviewHarness.addFile("testFile5.txt");
+		reviewHarness.commitAndPush(command3);
 		reviewHarness.consumer.retrieve(false);
 		reviewHarness.listener.waitForResponse(2, 2);
 
@@ -125,13 +119,9 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testPatchSetComments() throws Exception {
-		CommitCommand command2 = reviewHarness.git.commit()
-				.setAmend(true)
-				.setAll(true)
-				.setMessage("Test Change " + reviewHarness.testIdent + " [2]\n\nChange-Id: " + reviewHarness.changeId);
-		reviewHarness.gerritHarness.project().addFile("testComments.txt",
-				"line1\nline2\nline3\nline4\nline5\nline6\nline7\n");
-		reviewHarness.gerritHarness.project().commitAndPush(command2);
+		CommitCommand command2 = reviewHarness.createCommitCommand();
+		reviewHarness.addFile("testComments.txt", "line1\nline2\nline3\nline4\nline5\nline6\nline7\n");
+		reviewHarness.commitAndPush(command2);
 		reviewHarness.consumer.retrieve(false);
 		reviewHarness.listener.waitForResponse(2, 2);
 		RemoteEmfConsumer<IReview, IReviewItemSet, String, PatchSetDetail, PatchSetDetail, String> itemSetConsumer = reviewHarness.provider.getReviewItemSetFactory()
