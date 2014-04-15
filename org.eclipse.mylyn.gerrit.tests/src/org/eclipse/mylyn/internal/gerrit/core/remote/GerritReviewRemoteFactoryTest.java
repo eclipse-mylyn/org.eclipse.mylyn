@@ -84,7 +84,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		reviewHarness.client.publishComments(reviewHarness.shortId, 1, message2,
 				Collections.<ApprovalCategoryValue.Id> emptySet(), null);
 		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse(2, 2);
+		reviewHarness.listener.waitForResponse();
 		List<IComment> comments = getReview().getComments();
 		int offset = getCommentOffset();
 		assertThat(comments.size(), is(offset + 2));
@@ -118,7 +118,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		reviewHarness.addFile("testFile2.txt");
 		reviewHarness.commitAndPush(command2);
 		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse(2, 2);
+		reviewHarness.listener.waitForResponse();
 		List<IReviewItemSet> items = getReview().getSets();
 		assertThat(items.size(), is(2));
 		IReviewItemSet patchSet2 = items.get(1);
@@ -154,7 +154,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 				new HashSet<ApprovalCategoryValue.Id>(Collections.singleton(CRVW.getValue((short) 1).getId())),
 				new NullProgressMonitor());
 		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse(2, 2);
+		reviewHarness.listener.waitForResponse();
 		assertThat(getReview().getReviewerApprovals().size(), is(1));
 		Entry<IUser, IReviewerEntry> reviewerEntry = getReview().getReviewerApprovals().entrySet().iterator().next();
 		Map<IApprovalType, Integer> reviewerApprovals = reviewerEntry.getValue().getApprovals();
@@ -197,7 +197,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 				.getConsumerForRemoteKey(reviewHarness.getRepository(), resultIdDep1);
 		consumerDep1.addObserver(reviewListenerDep1);
 		consumerDep1.retrieve(false);
-		reviewListenerDep1.waitForResponse(1, 1);
+		reviewListenerDep1.waitForResponse();
 		IReview reviewDep1 = consumerDep1.getModelObject();
 
 		assertThat(reviewDep1.getParents().size(), is(1));
@@ -208,7 +208,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(parentChange.getModificationDate().getTime(), is(getReview().getModificationDate().getTime()));
 
 		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse(2, 2);
+		reviewHarness.listener.waitForResponse();
 		assertThat(getReview().getChildren().size(), is(1));
 		IChange childChange = getReview().getChildren().get(0);
 		//Not expected to be same instance
@@ -224,7 +224,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		ChangeDetail changeDetail = reviewHarness.client.abandon(reviewHarness.shortId, 1, message1,
 				new NullProgressMonitor());
 		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse(2, 2);
+		reviewHarness.listener.waitForResponse();
 
 		assertThat(changeDetail, notNullValue());
 		assertThat(changeDetail.getChange().getStatus(), is(Status.ABANDONED));
@@ -249,12 +249,12 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		String message1 = "abandon, time: " + System.currentTimeMillis();
 		reviewHarness.client.abandon(reviewHarness.shortId, 1, message1, new NullProgressMonitor());
 		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse(2, 2);
+		reviewHarness.listener.waitForResponse();
 		String message2 = "restore, time: " + System.currentTimeMillis();
 
 		reviewHarness.client.restore(reviewHarness.shortId, 1, message2, new NullProgressMonitor());
 		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse(3, 3);
+		reviewHarness.listener.waitForResponse();
 
 		assertThat(getReview().getState(), is(ReviewStatus.NEW));
 		List<IComment> comments = getReview().getComments();
@@ -305,7 +305,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		ReviewerResult reviewerResult = reviewHarness.client.addReviewers(reviewHarness.shortId,
 				Collections.<String> emptyList(), new NullProgressMonitor());
 		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse(2, 2);
+		reviewHarness.listener.waitForResponse();
 
 		assertThat(reviewerResult, notNullValue());
 		assertThat(reviewerResult.getErrors().isEmpty(), is(true));
@@ -320,7 +320,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		ReviewerResult reviewerResult = reviewHarness.client.addReviewers(reviewHarness.shortId, reviewers,
 				new NullProgressMonitor());
 		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse(2, 2);
+		reviewHarness.listener.waitForResponse();
 
 		assertThat(reviewerResult, notNullValue());
 		assertThat(reviewerResult.getErrors().size(), is(1));
@@ -337,7 +337,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		ReviewerResult reviewerResult = reviewHarness.client.addReviewers(reviewHarness.shortId, reviewers,
 				new NullProgressMonitor());
 		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse(2, 2);
+		reviewHarness.listener.waitForResponse();
 
 		assertReviewerResult(reviewerResult, "foo");
 	}
@@ -350,7 +350,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		ReviewerResult reviewerResult = reviewHarness.client.addReviewers(reviewHarness.shortId, reviewers,
 				new NullProgressMonitor());
 		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse(2, 2);
+		reviewHarness.listener.waitForResponse();
 
 		assertReviewerResult(reviewerResult, null);
 	}
@@ -362,7 +362,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		ReviewerResult reviewerResult = reviewHarness.client.addReviewers(reviewHarness.shortId, reviewers,
 				new NullProgressMonitor());
 		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse(2, 2);
+		reviewHarness.listener.waitForResponse();
 
 		assertReviewerResult(reviewerResult, null);
 	}

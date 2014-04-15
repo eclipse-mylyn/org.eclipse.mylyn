@@ -88,7 +88,7 @@ class ReviewHarness {
 		consumer = provider.getReviewFactory().getConsumerForRemoteKey(getRepository(), shortId);
 		consumer.addObserver(listener);
 		consumer.retrieve(false);
-		listener.waitForResponse(1, 1);
+		listener.waitForResponse();
 		assertThat(getRepository().getReviews().size(), is(1));
 		IReview review = getRepository().getReviews().get(0);
 		IReview reviewDirect = provider.open(shortId);

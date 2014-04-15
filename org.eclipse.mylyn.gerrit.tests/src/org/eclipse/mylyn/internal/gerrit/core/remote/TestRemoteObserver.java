@@ -47,30 +47,43 @@ final class TestRemoteObserver<P extends EObject, T, L, C> extends RemoteEmfObse
 		}
 	}
 
-	protected void waitForResponse(int response, int update) {
-		long delay;
-		delay = 0;
-		while (delay < TEST_TIMEOUT) {
-			if (responded < response || updated < update) {
-				try {
-					Thread.sleep(10);
-					delay += 10;
-				} catch (InterruptedException e) {
-				}
-			} else {
-				break;
-			}
-		}
+	public void waitForResponse() {
+		waitForResponse(1, 1);
+	}
+
+	public void waitForResponse(boolean updated) {
+		waitForResponse(1, updated ? 1 : 0);
+	}
+
+	private void waitForResponse(int responses, int updates) {
 		try {
-			//wait extra to ensure there aren't remaining jobs
-			Thread.sleep(25);
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-		}
-		assertThat("Wrong # responses: " + responded + ", updated: " + updated, responded, is(response));
-		assertThat("Wrong # updates" + updated, updated, is(update));
-		if (factory != null) {
-			assertThat(factory.getService().isActive(), is(false));
+			long delay;
+			delay = 0;
+			while (delay < TEST_TIMEOUT) {
+				if (responded < responses || updated < updates) {
+					try {
+						Thread.sleep(10);
+						delay += 10;
+					} catch (InterruptedException e) {
+					}
+				} else {
+					break;
+				}
+			}
+			try {
+				//wait extra to ensure there aren't remaining jobs
+				Thread.sleep(25);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+			}
+			assertThat("Wrong # responses: " + responded + ", updated: " + updated, responded, is(responses));
+			assertThat("Wrong # updates" + updated, updated, is(updates));
+			if (factory != null) {
+				assertThat(factory.getService().isActive(), is(false));
+			}
+		} finally {
+			responded = 0;
+			updated = 0;
 		}
 	}
 }

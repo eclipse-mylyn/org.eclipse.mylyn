@@ -56,7 +56,7 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		reviewHarness.addFile("testFile5.txt");
 		reviewHarness.commitAndPush(command3);
 		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse(2, 2);
+		reviewHarness.listener.waitForResponse();
 
 		assertThat(getReview().getSets().size(), is(3));
 		IReviewItemSet testPatchSet = getReview().getSets().get(2);
@@ -66,7 +66,7 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 				reviewHarness.provider.getReviewItemSetFactory());
 		itemSetConsumer.addObserver(itemSetObserver);
 		itemSetConsumer.retrieve(false);
-		itemSetObserver.waitForResponse(1, 0);
+		itemSetObserver.waitForResponse(false);
 		PatchSetDetail detail = itemSetConsumer.getRemoteObject();
 		assertThat(detail.getInfo().getKey().get(), is(3));
 
@@ -79,7 +79,7 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 				testPatchSet, "3");
 		patchSetConsumer.addObserver(patchSetListener);
 		patchSetConsumer.retrieve(false);
-		patchSetListener.waitForResponse(1, 1);
+		patchSetListener.waitForResponse();
 
 		assertThat(fileItems.size(), is(6));
 		for (IReviewItem fileItem : fileItems) {
@@ -123,14 +123,14 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		reviewHarness.addFile("testComments.txt", "line1\nline2\nline3\nline4\nline5\nline6\nline7\n");
 		reviewHarness.commitAndPush(command2);
 		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse(2, 2);
+		reviewHarness.listener.waitForResponse();
 		RemoteEmfConsumer<IReview, IReviewItemSet, String, PatchSetDetail, PatchSetDetail, String> itemSetConsumer = reviewHarness.provider.getReviewItemSetFactory()
 				.getConsumerForLocalKey(getReview(), "2");
 		TestRemoteObserver<IReview, IReviewItemSet, String, String> itemSetObserver = new TestRemoteObserver<IReview, IReviewItemSet, String, String>(
 				reviewHarness.provider.getReviewItemSetFactory());
 		itemSetConsumer.addObserver(itemSetObserver);
 		itemSetConsumer.retrieve(false);
-		itemSetObserver.waitForResponse(1, 0);
+		itemSetObserver.waitForResponse(false);
 		PatchSetDetail detail = itemSetConsumer.getRemoteObject();
 		assertThat(detail.getInfo().getKey().get(), is(2));
 
@@ -142,7 +142,7 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 				testPatchSet, "2");
 		patchSetConsumer.addObserver(patchSetListener);
 		patchSetConsumer.retrieve(false);
-		patchSetListener.waitForResponse(1, 1);
+		patchSetListener.waitForResponse();
 
 		IFileItem commentFile = testPatchSet.getItems().get(1);
 		assertThat(commentFile.getName(), is("testComments.txt"));
@@ -152,7 +152,7 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		reviewHarness.client.saveDraft(Patch.Key.parse(id), "Line 2 Comment", 2, (short) 1, null,
 				new NullProgressMonitor());
 		patchSetConsumer.retrieve(false);
-		patchSetListener.waitForResponse(2, 2);
+		patchSetListener.waitForResponse();
 
 		commentFile = testPatchSet.getItems().get(1);
 		List<IComment> allComments = commentFile.getAllComments();
@@ -166,7 +166,7 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		reviewHarness.client.publishComments(reviewHarness.shortId, 2, "Submit Comments",
 				Collections.<ApprovalCategoryValue.Id> emptySet(), new NullProgressMonitor());
 		patchSetConsumer.retrieve(false);
-		patchSetListener.waitForResponse(3, 3);
+		patchSetListener.waitForResponse();
 		allComments = commentFile.getAllComments();
 		assertThat(allComments.size(), is(1));
 		fileComment = allComments.get(0);
