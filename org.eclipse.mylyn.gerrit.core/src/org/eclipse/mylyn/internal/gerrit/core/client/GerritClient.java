@@ -13,6 +13,7 @@
  *      Christian Trutz - improvements
  *      Francois Chouinard - Added "LABELS" option on selected queries
  *      Jacques Bouthillier - Bug 414253 Add support for Gerrit Dashboard
+ *      Jacques Bouthillier (Ericsson) - Bug 426505 Add Starred functionality
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
@@ -94,6 +95,7 @@ import com.google.gerrit.common.data.GerritConfig;
 import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.common.data.ReviewerResult;
 import com.google.gerrit.common.data.SingleListChangeInfo;
+import com.google.gerrit.common.data.ToggleStarRequest;
 import com.google.gerrit.reviewdb.Account;
 import com.google.gerrit.reviewdb.AccountDiffPreference;
 import com.google.gerrit.reviewdb.AccountDiffPreference.Whitespace;
@@ -755,6 +757,11 @@ public class GerritClient extends ReviewsClient {
 		return GerritVersion.isVersion27OrLater(version);
 	}
 
+	private boolean isVersion28OrLater(IProgressMonitor monitor) throws GerritException {
+		Version version = getCachedVersion(monitor);
+		return GerritVersion.isVersion28OrLater(version);
+	}
+
 	/**
 	 * Returns watched changes of the currently logged in user
 	 */
@@ -1172,6 +1179,34 @@ public class GerritClient extends ReviewsClient {
 		});
 	}
 
+	private <T> T executePutRestRequest(final String url, final Object input, final Type resultType,
+			final ErrorHandler handler, IProgressMonitor monitor) throws GerritException {
+		return execute(monitor, new Operation<T>() {
+			@Override
+			public void execute(IProgressMonitor monitor) throws GerritException {
+				try {
+					setResult(client.<T> putRestRequest(url, input, resultType, handler, monitor));
+				} catch (IOException e) {
+					throw new GerritException(e);
+				}
+			}
+		});
+	}
+
+	private <T> T executeDeleteRestRequest(final String url, final Object input, final Type resultType,
+			final ErrorHandler handler, IProgressMonitor monitor) throws GerritException {
+		return execute(monitor, new Operation<T>() {
+			@Override
+			public void execute(IProgressMonitor monitor) throws GerritException {
+				try {
+					setResult(client.<T> deleteRestRequest(url, input, resultType, handler, monitor));
+				} catch (IOException e) {
+					throw new GerritException(e);
+				}
+			}
+		});
+	}
+
 	private <T> T executeOnce(IProgressMonitor monitor, Operation<T> operation) throws GerritException {
 		operation.execute(monitor);
 		if (operation.getException() instanceof GerritException) {
@@ -1276,5 +1311,44 @@ public class GerritClient extends ReviewsClient {
 		} catch (UnsupportedEncodingException e) {
 			throw new GerritException(e);
 		}
+	}
+
+	public VoidResult setStarred(final String reviewId, final boolean starred, IProgressMonitor monitor)
+			throws GerritException {
+		final Change.Id id = new Change.Id(id(reviewId));
+		final ToggleStarRequest req = new ToggleStarRequest();
+		req.toggle(id, starred);
+		if (isVersion28OrLater(monitor)) {
+			final String uri = "/a/accounts/self/starred.changes/" + id.get(); //$NON-NLS-1$
+
+			return execute(monitor, new Operation<VoidResult>() {
+				@Override
+				public void execute(IProgressMonitor monitor) throws GerritException {
+
+					if (starred) {
+						executePutRestRequest(uri, req, ToggleStarRequest.class, createErrorHandler(), monitor);
+					} else {
+						executeDeleteRestRequest(uri, req, ToggleStarRequest.class, createErrorHandler(), monitor);
+					}
+				}
+			});
+
+		} else {
+			return execute(monitor, new Operation<VoidResult>() {
+				@Override
+				public void execute(IProgressMonitor monitor) throws GerritException {
+					getChangeListService(monitor).toggleStars(req, this);
+				}
+			});
+		}
+	}
+
+	private ErrorHandler createErrorHandler() {
+		return new ErrorHandler() {
+			@Override
+			public void handleError(HttpMethodBase method) throws GerritException {
+				throw new GerritException(method.getStatusLine().getReasonPhrase());
+			}
+		};
 	}
 }

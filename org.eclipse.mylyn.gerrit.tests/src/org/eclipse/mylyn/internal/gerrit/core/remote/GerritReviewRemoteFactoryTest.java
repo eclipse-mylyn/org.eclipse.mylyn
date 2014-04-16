@@ -471,6 +471,27 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(crvwAllowed.getMax(), is(1));
 	}
 
+	@Test
+	public void testSetStarred() throws Exception {
+
+		int reviewId = Integer.parseInt(reviewHarness.shortId);
+		//Set the Starred to a review
+		reviewHarness.client.setStarred(reviewHarness.shortId, true, new NullProgressMonitor());
+
+		ChangeDetailX changeDetail = reviewHarness.client.getChangeDetail(reviewId, new NullProgressMonitor());
+		assertEquals(true, changeDetail.isStarred());
+
+		//Test if already the Starred was set, should react the same way
+		reviewHarness.client.setStarred(reviewHarness.shortId, true, new NullProgressMonitor());
+		changeDetail = reviewHarness.client.getChangeDetail(reviewId, new NullProgressMonitor());
+		assertEquals(true, changeDetail.isStarred());
+
+		reviewHarness.client.setStarred(reviewHarness.shortId, false, new NullProgressMonitor());
+		changeDetail = reviewHarness.client.getChangeDetail(reviewId, new NullProgressMonitor());
+		assertEquals(false, changeDetail.isStarred());
+
+	}
+
 	private int getCommentOffset() throws GerritException {
 		// Version 2.8 adds a comment for each uploaded patch set
 		return isVersion28OrLater() ? 1 : 0;

@@ -9,6 +9,7 @@
  *      Sony Ericsson/ST Ericsson - initial API and implementation
  *      Tasktop Technologies - improvements
  *      Christian Trutz - improvements
+ *      Jacques Bouthillier (Ericsson) Bug 426505 Add Starred functionality
  *********************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core.client;
@@ -29,8 +30,10 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.auth.AuthScope;
+import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.PutMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.eclipse.core.runtime.Assert;
@@ -57,13 +60,14 @@ import com.google.gson.reflect.TypeToken;
  * @author Thomas Westling
  * @author Steffen Pingel
  * @author Christian Trutz
+ * @author Jacques Bouthillier (Ericsson)
  */
 public class GerritHttpClient {
 
 	public static abstract class Request<T> {
 
 		public enum HttpMethod {
-			POST, GET
+			POST, GET, PUT, DELETE
 		}
 
 		public abstract HttpMethodBase createMethod() throws IOException;
@@ -94,9 +98,9 @@ public class GerritHttpClient {
 		public PostMethod createMethod() throws IOException {
 			PostMethod method = new PostMethod(getUrl() + serviceUri);
 			method.setRequestHeader("Content-Type", "application/json; charset=utf-8"); //$NON-NLS-1$//$NON-NLS-2$
-			method.setRequestHeader("Accept", "application/json"); //$NON-NLS-1$//$NON-NLS-2$
+			method.setRequestHeader(ACCEPT, APPLICATION_JSON);
 
-			RequestEntity requestEntity = new StringRequestEntity(entity.getContent(), "application/json", null); //$NON-NLS-1$
+			RequestEntity requestEntity = new StringRequestEntity(entity.getContent(), APPLICATION_JSON, null);
 			method.setRequestEntity(requestEntity);
 			return method;
 		}
@@ -140,10 +144,14 @@ public class GerritHttpClient {
 				method = createPostMethod();
 			} else if (httpMethod == HttpMethod.GET) {
 				method = new GetMethod(getUrl() + serviceUri);
+			} else if (httpMethod == HttpMethod.PUT) {
+				method = createPutMethod();
+			} else if (httpMethod == HttpMethod.DELETE) {
+				method = createDeleteMethod();
 			}
 			Assert.isNotNull(method, "Failed to create method for " + httpMethod); //$NON-NLS-1$
-			method.setRequestHeader("Content-Type", "application/json; charset=utf-8"); //$NON-NLS-1$//$NON-NLS-2$
-			method.setRequestHeader("Accept", "application/json"); //$NON-NLS-1$//$NON-NLS-2$
+
+			method.setRequestHeader(ACCEPT, APPLICATION_JSON);
 
 			return method;
 		}
@@ -151,8 +159,22 @@ public class GerritHttpClient {
 		private HttpMethodBase createPostMethod() throws IOException {
 			PostMethod method = new PostMethod(getUrl() + serviceUri);
 			String content = json.toJson(input);
-			RequestEntity requestEntity = new StringRequestEntity(content, "application/json", null); //$NON-NLS-1$
+			RequestEntity requestEntity = new StringRequestEntity(content, APPLICATION_JSON, null);
 			method.setRequestEntity(requestEntity);
+			return method;
+		}
+
+		private HttpMethodBase createPutMethod() throws IOException {
+			PutMethod method = new PutMethod(getUrl() + serviceUri);
+			String content = json.toJson(input);
+			RequestEntity requestEntity = new StringRequestEntity(content, APPLICATION_JSON, null);
+			method.setRequestEntity(requestEntity);
+			return method;
+		}
+
+		private HttpMethodBase createDeleteMethod() throws IOException {
+			DeleteMethod method = new DeleteMethod(getUrl() + serviceUri);
+			method.setDoAuthentication(false);
 			return method;
 		}
 
@@ -180,6 +202,12 @@ public class GerritHttpClient {
 		public abstract String getContent();
 
 	}
+
+	private static final String ACCEPT = "Accept"; //$NON-NLS-1$
+
+	private static final String APPLICATION_JSON = "application/json"; //$NON-NLS-1$
+
+	private static final String X_GERRIT_AUTHORITY = "X-Gerrit-Auth"; //$NON-NLS-1$
 
 	private static final String LOGIN_COOKIE_NAME = "GerritAccount"; //$NON-NLS-1$
 
@@ -253,6 +281,20 @@ public class GerritHttpClient {
 		return restRequest(HttpMethod.GET, serviceUri, null, resultType, null, monitor);
 	}
 
+	public <T> T putRestRequest(final String serviceUri, final Object input, Type resultType, ErrorHandler handler,
+			IProgressMonitor monitor) throws IOException, GerritException {
+		Assert.isNotNull(input, "Input object must be not null."); //$NON-NLS-1$
+
+		return restRequest(HttpMethod.PUT, serviceUri, input, resultType, handler, monitor);
+	}
+
+	public <T> T deleteRestRequest(final String serviceUri, final Object input, Type resultType, ErrorHandler handler,
+			IProgressMonitor monitor) throws IOException, GerritException {
+		Assert.isNotNull(input, "Input object must be not null."); //$NON-NLS-1$
+
+		return restRequest(HttpMethod.DELETE, serviceUri, input, resultType, handler, monitor);
+	}
+
 	private <T> T restRequest(final HttpMethod httpMethod, final String serviceUri, final Object input,
 			Type resultType, ErrorHandler handler, IProgressMonitor monitor) throws IOException, GerritException {
 		Assert.isNotNull(httpMethod, "HTTP Method must be not null."); //$NON-NLS-1$
@@ -290,7 +332,7 @@ public class GerritHttpClient {
 			if (obtainedXsrfKey) {
 				// required to authenticate against Gerrit 2.6+ REST endpoints
 				// harmless in previous versions
-				method.setRequestHeader("X-Gerrit-Auth", xsrfKey); //$NON-NLS-1$
+				method.setRequestHeader(X_GERRIT_AUTHORITY, xsrfKey);
 			}
 			try {
 				// Execute the method.
@@ -310,6 +352,13 @@ public class GerritHttpClient {
 				} finally {
 					WebUtil.releaseConnection(method, monitor);
 				}
+			} else if (code == HttpURLConnection.HTTP_NO_CONTENT) {
+				try {
+					return null;
+				} finally {
+					WebUtil.releaseConnection(method, monitor);
+				}
+
 			} else {
 				try {
 					request.handleError(method);
@@ -458,7 +507,7 @@ public class GerritHttpClient {
 						OpenIdAuthenticationRequest authenticationRequest = new OpenIdAuthenticationRequest(
 								result.providerUrl, result.providerArgs, returnUrl);
 						authenticationRequest.setAlternateUrl(location.getUrl());
-						authenticationRequest.setCookie("GerritAccount"); //$NON-NLS-1$
+						authenticationRequest.setCookie(LOGIN_COOKIE_NAME);
 						authenticationRequest.setCookieUrl(location.getUrl());
 						try {
 							openIdResponse = ((IOpenIdLocation) location).requestAuthentication(authenticationRequest,
@@ -481,7 +530,7 @@ public class GerritHttpClient {
 		if (openIdResponse.getCookieValue() != null) {
 			URL url = new URL(location.getUrl());
 			boolean isSecure = "https".equals(url.getProtocol()); //$NON-NLS-1$
-			setXsrfCookie(new Cookie(url.getHost(), "GerritAccount", openIdResponse.getCookieValue(), url.getPath(), //$NON-NLS-1$
+			setXsrfCookie(new Cookie(url.getHost(), LOGIN_COOKIE_NAME, openIdResponse.getCookieValue(), url.getPath(),
 					null, isSecure));
 			return HttpStatus.SC_TEMPORARY_REDIRECT;
 		} else {

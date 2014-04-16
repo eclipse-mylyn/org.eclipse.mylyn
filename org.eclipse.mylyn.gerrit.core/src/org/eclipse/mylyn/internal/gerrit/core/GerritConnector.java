@@ -12,6 +12,7 @@
  *      Sascha Scholz (SAP) - improvements
  *      Francois Chouinard (Ericsson) - Bug 414253 Add support for Gerrit Dashboard
  *      Jacques Bouthillier (Ericsson) - Bug 414253 Add support for Gerrit Dashboard
+ *      Jacques Bouthillier (Ericsson) - Bug 426505 Add Starred functionality
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core;
 
@@ -460,5 +461,20 @@ public class GerritConnector extends ReviewsConnector {
 
 	public static boolean isClosed(String status) {
 		return EnumSet.of(ReviewStatus.MERGED, ReviewStatus.ABANDONED).contains(ReviewStatus.get(status));
+	}
+
+	public void setStarred(TaskRepository taskRepository, String taskID, boolean starred,
+			IProgressMonitor progressMonitor) throws CoreException {
+		GerritClient client = getClient(taskRepository);
+		try {
+			client.setStarred(taskID, starred, progressMonitor);
+		} catch (GerritException e) {
+			throw toCoreException(e);
+		}
+	}
+
+	private CoreException toCoreException(GerritException e) {
+		return new CoreException(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
+				"Unable to set the starred flag, the following Status is received", e)); //$NON-NLS-1$
 	}
 }
