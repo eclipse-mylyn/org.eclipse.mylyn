@@ -16,6 +16,8 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.reviews.ui.spi.editor.messages"; //$NON-NLS-1$
 
+	public static String AbstractReviewTaskEditorPage_Show_Review_Navigator;
+
 	public static String ReviewDetailSection_Bracket_X_bracket;
 
 	public static String ReviewDetailSection_Depends_On;

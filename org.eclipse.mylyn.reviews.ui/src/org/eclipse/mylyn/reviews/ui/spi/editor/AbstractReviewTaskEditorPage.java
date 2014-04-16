@@ -14,10 +14,15 @@ package org.eclipse.mylyn.reviews.ui.spi.editor;
 import java.io.File;
 import java.util.Date;
 
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
+import org.eclipse.mylyn.internal.reviews.ui.ReviewsImages;
+import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
-import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IReview;
@@ -82,7 +87,8 @@ public abstract class AbstractReviewTaskEditorPage extends AbstractTaskEditorPag
 				.getFilePath(factoryProvider.getContainerSegment(), "Review", getTask().getTaskId(), "reviews") //$NON-NLS-1$ //$NON-NLS-2$
 				.toOSString();
 		if (!new File(reviewPath).exists()) {
-			getTaskEditor().setMessage(Messages.AbstractTaskEditorPage_Synchronize_to_retrieve_task_data,
+			getTaskEditor().setMessage(
+					org.eclipse.mylyn.internal.tasks.ui.editors.Messages.AbstractTaskEditorPage_Synchronize_to_retrieve_task_data,
 					IMessageProvider.WARNING, new HyperlinkAdapter() {
 						@Override
 						public void linkActivated(HyperlinkEvent e) {
@@ -138,5 +144,17 @@ public abstract class AbstractReviewTaskEditorPage extends AbstractTaskEditorPag
 
 	public IReview getReview() {
 		return reviewConsumer.getModelObject();
+	}
+
+	@Override
+	public void fillToolBar(IToolBarManager toolBarManager) {
+		toolBarManager.add(new Separator());
+		toolBarManager.add(new Action(Messages.AbstractReviewTaskEditorPage_Show_Review_Navigator, ReviewsImages.REVIEW) {
+			@Override
+			public void run() {
+				WorkbenchUtil.showViewInActiveWindow(ReviewsUiConstants.REVIEW_EXPLORER_ID);
+			}
+		});
+		super.fillToolBar(toolBarManager);
 	}
 }
