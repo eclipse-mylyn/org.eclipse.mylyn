@@ -331,13 +331,12 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 	 * Create a group to show the search command and a search text
 	 * @param Composite aParent
 	 */
-	@SuppressWarnings("unchecked")
 	private void createSearchSection(Composite aParent) {
 		
 		final Group formGroup =  new Group(aParent, SWT.SHADOW_ETCHED_IN | SWT.H_SCROLL);
 		
-		GridData gribDataGroup = new GridData(GridData.FILL_HORIZONTAL);
-		formGroup.setLayoutData(gribDataGroup);
+		GridData gridDataGroup = new GridData(GridData.FILL_HORIZONTAL);
+		formGroup.setLayoutData(gridDataGroup);
 		
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
@@ -352,8 +351,8 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 		//Create a form to maintain the search data
 		Composite leftSearchForm = UIUtils.createsGeneralComposite(formGroup, SWT.NONE);
 
-		GridData gribDataViewer = new GridData(GridData.FILL_HORIZONTAL);
-		leftSearchForm.setLayoutData(gribDataViewer);
+		GridData gridDataViewer = new GridData(GridData.FILL_HORIZONTAL);
+		leftSearchForm.setLayoutData(gridDataViewer);
 
 		GridLayout leftLayoutForm = new GridLayout();
 		leftLayoutForm.numColumns = 3;
@@ -378,8 +377,8 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 		
 		//Right side of the Group
 		Composite rightSsearchForm = UIUtils.createsGeneralComposite(formGroup, SWT.NONE);
-		GridData gribDataViewer2 = new GridData(GridData.FILL_HORIZONTAL | GridData.HORIZONTAL_ALIGN_END);
-		rightSsearchForm.setLayoutData(gribDataViewer2);
+		GridData gridDataViewer2 = new GridData(GridData.FILL_HORIZONTAL | GridData.HORIZONTAL_ALIGN_END);
+		rightSsearchForm.setLayoutData(gridDataViewer2);
 		GridLayout rightLayoutForm = new GridLayout();
 		rightLayoutForm.numColumns = 2;
 		rightLayoutForm.marginHeight = 0;
