@@ -20,6 +20,7 @@ import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.gerrit.tests.core.GerritConnectorTest;
 import org.eclipse.mylyn.gerrit.tests.core.GerritSynchronizationTest;
+import org.eclipse.mylyn.gerrit.tests.core.client.GerritCapabilitiesTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.GerritClientTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.GerritVersionTest;
 import org.eclipse.mylyn.gerrit.tests.core.client.OpenIdAuthenticationTest;
@@ -97,6 +98,7 @@ public class AllGerritTests {
 		fixture.add(GerritReviewRemoteFactoryTest.class);
 		fixture.add(PatchSetRemoteFactoryTest.class);
 		fixture.add(GerritUrlHandlerTest.class);
+		fixture.add(GerritCapabilitiesTest.class);
 		fixture.done();
 	}
 
