@@ -21,6 +21,7 @@ import org.eclipse.egit.ui.internal.provisional.wizards.IRepositorySearchResult;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -133,6 +134,7 @@ public class GerritRepositorySearchPage extends WizardPage implements IRepositor
 					if (addedRepository != null) {
 						tv.refresh();
 						refreshConfig(tv, addedRepository);
+						tv.expandToLevel(addedRepository, AbstractTreeViewer.ALL_LEVELS);
 					}
 				}
 			}
