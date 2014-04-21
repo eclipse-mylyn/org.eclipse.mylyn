@@ -105,6 +105,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
  */
 public class BugzillaClient {
 
+	private static final String INPUT_TYPE_HIDDEN_NAME_BUGZILLA_LOGIN_TOKEN = "<input type=\"hidden\" name=\"Bugzilla_login_token"; //$NON-NLS-1$
+
 	private static final String UNKNOWN_REPOSITORY_ERROR = "An unknown repository error has occurred: "; //$NON-NLS-1$
 
 	private static final String COOKIE_BUGZILLA_LOGIN = "Bugzilla_login"; //$NON-NLS-1$
@@ -286,7 +288,7 @@ public class BugzillaClient {
 	 * in order to provide an even better solution for bug 196056 the size of the bugzilla configuration downloaded must
 	 * be reduced. By using a cached version of the config.cgi this can reduce traffic considerably:
 	 * http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.phoenix/infra-scripts/bugzilla/?root=Technology_Project
-	 * 
+	 *
 	 * @param serverURL
 	 * @return a GetMethod with possibly gzip encoded response body, so caller MUST check with
 	 *         "gzip".equals(method.getResponseHeader("Content-encoding") or use the utility method
@@ -414,6 +416,74 @@ public class BugzillaClient {
 		return zipped;
 	}
 
+	private static String getStringFromInputStream(InputStream is) throws IOException {
+
+		BufferedReader br = null;
+		StringBuilder sb = new StringBuilder();
+
+		String line;
+		try {
+
+			br = new BufferedReader(new InputStreamReader(is));
+			while ((line = br.readLine()) != null) {
+				sb.append(line);
+				sb.append("\n");
+			}
+		} finally {
+			if (br != null) {
+				br.close();
+			}
+		}
+
+		return sb.toString();
+
+	}
+
+	private String getBugzillaLoginTokenIfExists(IProgressMonitor monitor) throws CoreException {
+		String loginToken = null;
+		GzipPostMethod getMethod = new GzipPostMethod(WebUtil.getRequestPath(repositoryUrl.toString()) + "/index.cgi",
+				true);
+		try {
+			getMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=" //$NON-NLS-1$ //$NON-NLS-2$
+					+ getCharacterEncoding());
+
+			getMethod.setDoAuthentication(true);
+			getMethod.setFollowRedirects(false);
+			httpClient.getState().clearCookies();
+			// for Bugzilla > 4.4.2 but not 4.5, 4.5.1 or 4.5.2 we need first the Bugzilla_login_request_cookie
+			int code = WebUtil.execute(httpClient, hostConfiguration, getMethod, monitor);
+			WebUtil.releaseConnection(getMethod, monitor);
+			if (code != HttpURLConnection.HTTP_OK) {
+				loggedIn = false;
+				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+						RepositoryStatus.ERROR_NETWORK, "Http error: " + HttpStatus.getStatusText(code))); //$NON-NLS-1$
+			}
+
+			// for Bugzilla > 4.4.2 but not 4.5, 4.5.1 or 4.5.2 we now  do the real authentication
+			code = WebUtil.execute(httpClient, hostConfiguration, getMethod, monitor);
+			if (code != HttpURLConnection.HTTP_OK) {
+				loggedIn = false;
+				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+						RepositoryStatus.ERROR_NETWORK, "Http error: " + HttpStatus.getStatusText(code))); //$NON-NLS-1$
+			}
+			InputStream is = getResponseStream(getMethod, monitor);
+			String result = getStringFromInputStream(is);
+			if (result.lastIndexOf(INPUT_TYPE_HIDDEN_NAME_BUGZILLA_LOGIN_TOKEN) != -1) {
+				int index = result.lastIndexOf(INPUT_TYPE_HIDDEN_NAME_BUGZILLA_LOGIN_TOKEN);
+				String loginTokenAndRest = result.substring(index);
+				int valueStart = loginTokenAndRest.indexOf("value=\"") + 7; //$NON-NLS-1$
+				int valueEnd = loginTokenAndRest.indexOf("\">"); //$NON-NLS-1$
+				loginToken = loginTokenAndRest.substring(valueStart, valueEnd);
+			}
+		} catch (IOException e) {
+			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+					RepositoryStatus.ERROR_IO, repositoryUrl.toString(), e));
+		} finally {
+			WebUtil.releaseConnection(getMethod, monitor);
+		}
+		return loginToken;
+	}
+
 	public void authenticate(IProgressMonitor monitor) throws CoreException {
 		if (loggedIn || (!hasAuthenticationCredentials() && !hasHTTPAuthenticationCredentials())) {
 			return;
@@ -424,10 +494,18 @@ public class BugzillaClient {
 		GzipPostMethod postMethod = null;
 
 		try {
-
 			hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
 
-			NameValuePair[] formData = new NameValuePair[2];
+			NameValuePair[] formData;
+
+			String loginToken = getBugzillaLoginTokenIfExists(monitor);
+			if (loginToken != null) {
+				formData = new NameValuePair[3];
+				formData[2] = new NameValuePair("Bugzilla_login_token", loginToken);
+			} else {
+				formData = new NameValuePair[2];
+			}
+
 			AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
 			AuthenticationCredentials httpAuthCredentials = location.getCredentials(AuthenticationType.HTTP);
 			if (credentials == null && httpAuthCredentials == null) {
@@ -459,7 +537,6 @@ public class BugzillaClient {
 			}
 			postMethod.setDoAuthentication(true);
 			postMethod.setFollowRedirects(false);
-			httpClient.getState().clearCookies();
 
 			if (httpAuthCredentials != null && httpAuthCredentials.getUserName() != null
 					&& httpAuthCredentials.getUserName().length() > 0) {
@@ -914,22 +991,7 @@ public class BugzillaClient {
 			postMethod.getParams().setBooleanParameter(HttpMethodParams.USE_EXPECT_CONTINUE, true);
 			List<PartBase> parts = new ArrayList<PartBase>();
 			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_ACTION, VALUE_ACTION_INSERT, getCharacterEncoding()));
-			AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
-			String username;
-			String password;
-			if (credentials != null) {
-				username = credentials.getUserName();
-				password = credentials.getPassword();
-			} else {
-				username = null;
-				password = null;
 
-			}
-			if (username != null && password != null) {
-				parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGZILLA_LOGIN, username, getCharacterEncoding()));
-				parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGZILLA_PASSWORD, password,
-						getCharacterEncoding()));
-			}
 			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGID, bugReportID, getCharacterEncoding()));
 			if (description != null) {
 				parts.add(new StringPart(IBugzillaConstants.POST_INPUT_DESCRIPTION, description, getCharacterEncoding()));
@@ -1037,7 +1099,7 @@ public class BugzillaClient {
 
 	/**
 	 * calling method must release the connection on the returned PostMethod once finished.
-	 * 
+	 *
 	 * @throws CoreException
 	 */
 	private GzipPostMethod postFormData(String formUrl, NameValuePair[] formData, IProgressMonitor monitor)
@@ -2473,7 +2535,7 @@ public class BugzillaClient {
 
 	/**
 	 * Currently only necessary for testing. Allows setting of the descriptor file property.
-	 * 
+	 *
 	 * @param bugzillaDescriptorFile
 	 * @param canonicalPath
 	 */
@@ -2517,7 +2579,7 @@ public class BugzillaClient {
 
 	/**
 	 * Copies all bytes in the given source stream to the given destination stream. Neither streams are closed.
-	 * 
+	 *
 	 * @param source
 	 *            the given source stream
 	 * @param destination
@@ -2536,7 +2598,7 @@ public class BugzillaClient {
 	/**
 	 * Returns the given file path with its separator character changed from the given old separator to the given new
 	 * separator.
-	 * 
+	 *
 	 * @param path
 	 *            a file path
 	 * @param oldSeparator

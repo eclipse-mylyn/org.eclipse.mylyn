@@ -17,7 +17,12 @@ public abstract class BugzillaTestSupportUtil {
 
 	public static boolean isInvalidLogon(CoreException e) {
 		return e.getMessage().indexOf("invalid username or password") != -1
-				|| e.getMessage().indexOf("invalid login or password") != -1;
+				|| e.getMessage().indexOf("invalid login or password") != -1
+				|| e.getMessage().indexOf("untrusted authentication request:") != -1
+				|| e.getMessage().indexOf("An unknown repository error has occurred: file is empty") != -1
+				|| e.getMessage()
+				.indexOf(
+						"file is empty:  The file you are trying to attach is empty, does not exist, or you don't have permission to read it.") != -1;
 	}
 
 }

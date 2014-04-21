@@ -55,7 +55,7 @@ public interface IBugzillaConstants {
 
 	public static final String POST_INPUT_DATA = "data"; //$NON-NLS-1$
 
-	public static final String URL_POST_LOGIN = "/index.cgi"; //$NON-NLS-1$
+	public static final String URL_POST_LOGIN = "/index.cgi?GoAheadAndLogIn=1"; //$NON-NLS-1$
 
 	public static final String URL_POST_ATTACHMENT_UPLOAD = "/attachment.cgi"; //$NON-NLS-1$
 
@@ -163,7 +163,7 @@ public interface IBugzillaConstants {
 	// Default values for keys
 
 	static final String[] DEFAULT_STATUS_VALUES = { "Unconfirmed", "New", "Assigned", "Reopened", "Resolved", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$
-			"Verified", "Closed" }; //$NON-NLS-1$//$NON-NLS-2$
+		"Verified", "Closed" }; //$NON-NLS-1$//$NON-NLS-2$
 
 	static final String[] DEFAULT_PRESELECTED_STATUS_VALUES = { "New", "Assigned", "Reopened" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
@@ -172,15 +172,15 @@ public interface IBugzillaConstants {
 	// "Worksforme", "Moved" };
 
 	static final String[] DEFAULT_SEVERITY_VALUES = { "blocker", "critical", "major", "normal", "minor", "trivial", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-			"enhancement" }; //$NON-NLS-1$
+	"enhancement" }; //$NON-NLS-1$
 
 	static final String[] DEFAULT_PRIORITY_VALUES = { "P1", "P2", "P3", "P4", "P5" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
 	static final String[] DEFAULT_HARDWARE_VALUES = { "All", "Macintosh", "PC", "Power PC", "Sun", "Other" }; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 
 	static final String[] DEFAULT_OS_VALUES = { "All", "AIX Motif", "Windows 95", "Windows 98", "Windows CE", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$
-			"Windows ME", "Windows 2000", "Windows NT", "Windows XP", "Windows All", "MacOS X", "Linux", "Linux-GTK", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
-			"Linux-Motif", "HP-UX", "Neutrino", "QNX-Photon", "Solaris", "Unix All", "other" }; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$//$NON-NLS-6$//$NON-NLS-7$
+		"Windows ME", "Windows 2000", "Windows NT", "Windows XP", "Windows All", "MacOS X", "Linux", "Linux-GTK", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
+		"Linux-Motif", "HP-UX", "Neutrino", "QNX-Photon", "Solaris", "Unix All", "other" }; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$//$NON-NLS-6$//$NON-NLS-7$
 
 	static final String[] DEFAULT_PRODUCT_VALUES = {};
 
@@ -278,7 +278,7 @@ public interface IBugzillaConstants {
 
 	public static final String BUGZILLA_PREFIX_ISPRIVATE = "isprivate_"; //$NON-NLS-1$
 
-	// Bugzilla Task Attribute Editor Types 
+	// Bugzilla Task Attribute Editor Types
 
 	public static final String EDITOR_TYPE_KEYWORDS = "bugzilla.editor.keywords"; //$NON-NLS-1$
 

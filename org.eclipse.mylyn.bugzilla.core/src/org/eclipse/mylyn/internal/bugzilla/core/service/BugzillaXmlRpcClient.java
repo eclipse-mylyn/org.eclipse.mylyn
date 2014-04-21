@@ -16,6 +16,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -60,9 +61,11 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 
 	public static final String XML_BUGZILLA_VERSION = "Bugzilla.version"; //$NON-NLS-1$
 
-	public static final String XML_BUGZILLA_TIME = "Bugzilla.time"; //$NON-NLS-1$ 
+	public static final String XML_BUGZILLA_TIME = "Bugzilla.time"; //$NON-NLS-1$
 
 	public static final String XML_USER_LOGIN = "User.login"; //$NON-NLS-1$
+
+	public static final String XML_USER_LOGOUT = "User.logout"; //$NON-NLS-1$
 
 	public static final String XML_USER_GET = "User.get"; //$NON-NLS-1$
 
@@ -86,7 +89,7 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 
 	/*
 	 * Parameter Definitions
-	 * 
+	 *
 	 */
 
 	public static final String XML_PARAMETER_LOGIN = "login"; //$NON-NLS-1$
@@ -103,9 +106,11 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 
 	public static final String XML_PARAMETER_EXCLUDE_FIELDS = "exclude_fields"; //$NON-NLS-1$
 
+	public static final String XML_PARAMETER_TOKEN = "Bugzilla_token"; //$NON-NLS-1$
+
 	/*
 	 * Response Parameter Definitions
-	 * 
+	 *
 	 */
 
 	public static final String XML_RESPONSE_DB_TIME = "db_time"; //$NON-NLS-1$
@@ -129,11 +134,15 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 
 	public static final String XML_RESPONSE_BUGS = "bugs"; //$NON-NLS-1$
 
+	public static final String XML_RESPONSE_TOKEN = "token"; //$NON-NLS-1$
+
 	/*
 	 * Fields
-	 * 
+	 *
 	 */
 	private int userID = -1;
+
+	private String token;
 
 	private final BugzillaClient bugzillaClient;
 
@@ -221,6 +230,11 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 							} });
 					if (response != null) {
 						Integer result = response2Integer(response, XML_RESPONSE_ID);
+						if (response.get(XML_RESPONSE_TOKEN) != null) {
+							token = response2String(response, XML_RESPONSE_TOKEN);
+						} else {
+							token = null;
+						}
 						return result;
 					}
 					return null;
@@ -228,6 +242,22 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 			}).execute();
 		}
 		return userID;
+	}
+
+	public void logout(final IProgressMonitor monitor) throws XmlRpcException {
+		try {
+			(new BugzillaXmlRpcOperation<Integer>(this) {
+				@Override
+				public Integer execute() throws XmlRpcException {
+					call(monitor, XML_USER_LOGOUT);
+					return -1;
+				}
+			}).execute();
+		} finally {
+			userID = -1;
+			token = null;
+		}
+		return;
 	}
 
 	private Object[] getUserInfoInternal(final IProgressMonitor monitor, final Object[] callParm)
@@ -245,18 +275,24 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 
 	@SuppressWarnings("serial")
 	public Object[] getUserInfoFromIDs(final IProgressMonitor monitor, final Integer[] ids) throws XmlRpcException {
-		return getUserInfoInternal(monitor, new Object[] { new HashMap<String, Object[]>() {
+		return getUserInfoInternal(monitor, new Object[] { new HashMap<String, Object>() {
 			{
 				put(XML_PARAMETER_IDS, ids);
+				if (token != null) {
+					put(XML_PARAMETER_TOKEN, token);
+				}
 			}
 		} });
 	}
 
 	@SuppressWarnings("serial")
 	public Object[] getUserInfoFromNames(final IProgressMonitor monitor, final String[] names) throws XmlRpcException {
-		return getUserInfoInternal(monitor, new Object[] { new HashMap<String, Object[]>() {
+		return getUserInfoInternal(monitor, new Object[] { new HashMap<String, Object>() {
 			{
 				put(XML_PARAMETER_NAMES, names);
+				if (token != null) {
+					put(XML_PARAMETER_TOKEN, token);
+				}
 			}
 		} });
 	}
@@ -286,18 +322,26 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 
 	@SuppressWarnings("serial")
 	public Object[] getFieldsWithNames(final IProgressMonitor monitor, final String[] names) throws XmlRpcException {
-		return getFieldsInternal(monitor, new Object[] { new HashMap<String, Object[]>() {
+		return getFieldsInternal(monitor, new Object[] { new HashMap<String, Object>() {
 			{
 				put(XML_PARAMETER_NAMES, names);
+				if (token != null) {
+					put(XML_PARAMETER_TOKEN, token);
+				}
+
 			}
 		} });
 	}
 
 	@SuppressWarnings("serial")
 	public Object[] getFieldsWithIDs(final IProgressMonitor monitor, final Integer[] ids) throws XmlRpcException {
-		return getFieldsInternal(monitor, new Object[] { new HashMap<String, Object[]>() {
+		return getFieldsInternal(monitor, new Object[] { new HashMap<String, Object>() {
 			{
 				put(XML_PARAMETER_IDS, ids);
+				if (token != null) {
+					put(XML_PARAMETER_TOKEN, token);
+				}
+
 			}
 		} });
 	}
@@ -307,7 +351,9 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 			@Override
 			public Object[] execute() throws XmlRpcException {
 				Object[] result = null;
-				HashMap<?, ?> response = (HashMap<?, ?>) call(monitor, XML_PRODUCT_GET_SELECTABLE, (Object[]) null);
+				HashMap<?, ?> response = (HashMap<?, ?>) call(monitor, XML_PRODUCT_GET_SELECTABLE, (token == null)
+						? null
+						: new Object[] { Collections.singletonMap(XML_PARAMETER_TOKEN, token) });
 				result = response2ObjectArray(response, XML_RESPONSE_IDS);
 				return result;
 			}
@@ -319,7 +365,9 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 			@Override
 			public Object[] execute() throws XmlRpcException {
 				Object[] result = null;
-				HashMap<?, ?> response = (HashMap<?, ?>) call(monitor, XML_PRODUCT_GET_ENTERABLE, (Object[]) null);
+				HashMap<?, ?> response = (HashMap<?, ?>) call(monitor, XML_PRODUCT_GET_ENTERABLE, (token == null)
+						? null
+						: new Object[] { Collections.singletonMap(XML_PARAMETER_TOKEN, token) });
 				result = response2ObjectArray(response, XML_RESPONSE_IDS);
 				return result;
 			}
@@ -331,7 +379,9 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 			@Override
 			public Object[] execute() throws XmlRpcException {
 				Object[] result = null;
-				HashMap<?, ?> response = (HashMap<?, ?>) call(monitor, XML_PRODUCT_GET_ACCESSIBLE, (Object[]) null);
+				HashMap<?, ?> response = (HashMap<?, ?>) call(monitor, XML_PRODUCT_GET_ACCESSIBLE, (token == null)
+						? null
+						: new Object[] { Collections.singletonMap(XML_PARAMETER_TOKEN, token) });
 				result = response2ObjectArray(response, XML_RESPONSE_IDS);
 				return result;
 			}
@@ -345,9 +395,12 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 			public Object[] execute() throws XmlRpcException {
 				Object[] result = null;
 				HashMap<?, ?> response = (HashMap<?, ?>) call(monitor, XML_PRODUCT_GET,
-						new Object[] { new HashMap<String, Object[]>() {
+						new Object[] { new HashMap<String, Object>() {
 							{
 								put(XML_PARAMETER_IDS, ids);
+								if (token != null) {
+									put(XML_PARAMETER_TOKEN, token);
+								}
 							}
 						} });
 				result = response2ObjectArray(response, XML_RESPONSE_PRODUCTS);
@@ -610,7 +663,7 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 					|| xmlrpcName.equals("assigned_to") || xmlrpcName.equals("classification") //$NON-NLS-1$ //$NON-NLS-2$
 					|| xmlrpcName.equals("cc") || xmlrpcName.equals("remaining_time") //$NON-NLS-1$ //$NON-NLS-2$
 					|| xmlrpcName.equals("estimated_time") || xmlrpcName.equals("deadline") //$NON-NLS-1$ //$NON-NLS-2$
-					|| xmlrpcName.equals("alias")) { //$NON-NLS-1$ 
+					|| xmlrpcName.equals("alias")) { //$NON-NLS-1$
 				return xmlrpcName;
 			} else if (xmlrpcName.equals("last_change_time")) { //$NON-NLS-1$
 				return "delta_ts"; //$NON-NLS-1$
@@ -730,7 +783,7 @@ public class BugzillaXmlRpcClient extends CommonXmlRpcClient {
 				taskIds.removeAll(idsToRetrieve);
 				taskDataMap.clear();
 			} catch (XmlRpcException e) {
-				throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, "XmlRpcException: ", e)); //$NON-NLS-1$				
+				throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, "XmlRpcException: ", e)); //$NON-NLS-1$
 			}
 		}
 	}

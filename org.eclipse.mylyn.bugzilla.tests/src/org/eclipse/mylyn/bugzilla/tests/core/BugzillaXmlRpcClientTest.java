@@ -27,7 +27,6 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaTest;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaHarness;
-import org.eclipse.mylyn.bugzilla.tests.support.BugzillaTestSupportUtil;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.internal.bugzilla.core.AbstractBugzillaOperation;
@@ -51,7 +50,7 @@ import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
 
 /**
  * Tests should be run against Bugzilla 3.6 or greater
- * 
+ *
  * @author Frank Becker
  */
 public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
@@ -374,6 +373,7 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 			return;
 		} else {
 			IProgressMonitor monitor = new NullProgressMonitor();
+			bugzillaClient.logout(monitor);
 			int uID = bugzillaClient.login(monitor);
 			assertEquals(2, uID);
 			Object[] userList0 = bugzillaClient.getUserInfoFromIDs(monitor, new Integer[] { 1, 2 });
@@ -474,7 +474,7 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 
 			/*
 			 * Copy and paste this block to test valid transitions for different start statuses
-			 * 
+			 *
 			 * We check that only valid operations are returned. There is no
 			 * way to determine (using the operation 'reopen') whether "REOPEN" or "UNCONFIRMED"
 			 * is valid.

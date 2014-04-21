@@ -51,52 +51,46 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
     xmlrpc_enabled => false,
   }
 
-  bugzilla::site { "bugzilla-4.0.11":
+  bugzilla::site { "bugzilla-4.0.13":
     major   => "4",
     minor   => "0",
   }
 
-  bugzilla::site { "bugzilla-4.2.7":
+  bugzilla::site { "bugzilla-4.2.9":
     major   => "4",
     minor   => "2",
     envdefault => true,
   }
 
-  bugzilla::site { "bugzilla-4.2.7-bugaliases":
+  bugzilla::site { "bugzilla-4.2.9-bugaliases":
     major   => "4",
     minor   => "2",
-    branchTag      => "bugzilla-4.2.7",
+    branchTag      => "bugzilla-4.2.9",
     usebugaliases => true,
   }
 
-  bugzilla::site { "bugzilla-4.4.1":
+  bugzilla::site { "bugzilla-4.4.4":
     major     => "4",
     minor     => "4",
   }
 
-  bugzilla::site { "bugzilla-4.4.2":
-    major     => "4",
-    minor     => "4",
-  }
-
-bugzilla::site { "bugzilla-4.5.2":
+bugzilla::site { "bugzilla-4.5.4":
     major        => "4",
     minor        => "5",
     branch       => "trunk",
-    branchTag      => "bugzilla-4.5.2",
-    envdefault_rest => true,
-    envversion   => "4.5.2",
+    branchTag      => "bugzilla-4.5.4",
+    envversion   => "4.5.4",
   }
   
-bugzilla::site { "bugzilla-rest-4.5.2":
+bugzilla::site { "bugzilla-rest-4.5.4":
     major        => "4",
     minor        => "5",
     branch       => "trunk",
-    branchTag      => "bugzilla-4.5.2",
+    branchTag      => "bugzilla-4.5.4",
     envdefault_rest => true,
     rest_enabled => true,
-    envversion   => "4.5.2",
-    envinfo => "4.5.2, REST enabled"
+    envversion   => "4.5.4",
+    envinfo => "4.5.4, REST enabled"
   }
   
   bugzilla::site { "bugzilla-trunk":
@@ -104,7 +98,7 @@ bugzilla::site { "bugzilla-rest-4.5.2":
     minor       => "5",
     branch      => "trunk",
     branchTag   => "trunk",
-    envversion   => "4.5.2+",
+    envversion   => "4.5.4",
   }
 
 bugzilla::site { "bugzilla-rest-trunk":
@@ -112,10 +106,9 @@ bugzilla::site { "bugzilla-rest-trunk":
     minor        => "5",
     branch       => "trunk",
     branchTag    => "trunk",
-    envversion   => "4.5.2+",
+    envversion   => "4.5.4",
     envdefault_rest => true,
     rest_enabled => true,
   }
-
 
 }
