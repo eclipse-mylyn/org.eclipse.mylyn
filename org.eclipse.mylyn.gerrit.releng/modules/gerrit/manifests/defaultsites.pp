@@ -23,7 +23,7 @@ define gerrit::defaultsites ($base = $gerrit::base, $userOwner = $gerrit::userOw
   gerrit { "2.7":
   }
 
-  gerrit { "2.8.1":
+  gerrit { "2.8.4":
   }
 
   /* Sites */
@@ -42,20 +42,20 @@ define gerrit::defaultsites ($base = $gerrit::base, $userOwner = $gerrit::userOw
     require => Gerrit["2.7"],
   }
 
-  gerrit::site { "gerrit-2.8.1-dev":
-    version => "2.8.1",
-    port    => 26281,
-    sshport => 27281,
+  gerrit::site { "gerrit-2.8.4-dev":
+    version => "2.8.4",
+    port    => 26284,
+    sshport => 27284,
     authtype => "DEVELOPMENT_BECOME_ANY_ACCOUNT",
-    require => Gerrit["2.8.1"],
+    require => Gerrit["2.8.4"],
   }
 
-  gerrit::site { "gerrit-2.8.1":
-    version => "2.8.1",
-    port    => 28281,
-    sshport => 29281,
+  gerrit::site { "gerrit-2.8.4":
+    version => "2.8.4",
+    port    => 28284,
+    sshport => 29284,
     envdefault => true,
-    require => Gerrit["2.8.1"],
+    require => Gerrit["2.8.4"],
   }
 
 }
