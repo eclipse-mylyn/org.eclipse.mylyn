@@ -24,6 +24,7 @@ import org.eclipse.mylyn.gerrit.dashboard.core.GerritTask;
 import org.eclipse.mylyn.gerrit.dashboard.ui.GerritUi;
 import org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.table.AdjustMyStarredHandler;
 import org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils.UIUtils;
+import org.eclipse.mylyn.tasks.core.IAttributeContainer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
@@ -291,7 +292,7 @@ public class UIReviewTable {
 				Object obj = ((IStructuredSelection) tableSelection).getFirstElement();
 				GerritUi.Ftracer.traceInfo("Selected table selection class: " + obj.getClass() ); 
 				if (obj instanceof  GerritTask) {
-					GerritTask item = (GerritTask) obj;
+					IAttributeContainer item = (IAttributeContainer) obj;
 					GerritUi.Ftracer.traceInfo("Selected table OBJECT selection ID: "  + item.getAttribute(GerritTask.SHORT_CHANGE_ID) + 
 							"\t subject: " + item.getAttribute(GerritTask.SUBJECT)); 				
 				}
