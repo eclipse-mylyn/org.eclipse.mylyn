@@ -24,8 +24,8 @@
   </prerequisites>
 
   <properties>
-    <tycho-version>0.18.1</tycho-version>
-    <tycho-extras-version>0.18.1</tycho-extras-version>
+    <tycho-version>0.20.0</tycho-version>
+    <tycho-extras-version>0.20.0</tycho-extras-version>
 
     <mylyn-test-append></mylyn-test-append>
 
@@ -181,15 +181,6 @@
               <dependency-resolution>
                 <optionalDependencies>ignore</optionalDependencies>
               </dependency-resolution>
-			  <filters>
-				<filter>
-				  <type>eclipse-plugin</type>
-				  <id>org.eclipse.jdt.annotation</id>
-				  <restrictTo>
-				  	<versionRange>[1.0,2.0)</versionRange>
-				  </restrictTo>
-				</filter>
-			  </filters>
               <environments>
                 <environment>
                   <os>macosx</os>
@@ -251,15 +242,6 @@
               <dependency-resolution>
                 <optionalDependencies>ignore</optionalDependencies>
               </dependency-resolution>
-			  <filters>
-				<filter>
-				  <type>eclipse-plugin</type>
-				  <id>org.eclipse.jdt.annotation</id>
-				  <restrictTo>
-				  	<versionRange>[1.0,2.0)</versionRange>
-				  </restrictTo>
-				</filter>
-			  </filters>
               <environments>
                 <environment>
                   <os>macosx</os>
