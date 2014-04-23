@@ -34,6 +34,7 @@ public class AllContextTests {
 		suite.addTestSuite(InteractionEventTest.class);
 		suite.addTestSuite(ShadowsBridgeTest.class);
 		suite.addTestSuite(EditorStateParticipantTest.class);
+		suite.addTestSuite(ToggleFocusActiveViewHandlerTest.class);
 		return suite;
 	}
 

@@ -191,9 +191,16 @@
                optional="false">
          </commandParameter>
       </command>
+      <command
+            categoryId="org.eclipse.mylyn.context.ui.commands"
+            defaultHandler="org.eclipse.mylyn.internal.context.ui.commands.ToggleFocusActiveViewHandler"
+            description="%commands.ToggleFocusActiveViewHandler.description"
+            id="org.eclipse.mylyn.context.ui.commands.toggle.focus.active.view"
+            name="%commands.ToggleFocusActiveViewHandler.name">
+      </command>
    </extension>
-     
-   <extension point="org.eclipse.ui.bindings">     
+
+   <extension point="org.eclipse.ui.bindings">
       <key
             sequence="M1+M2+M3+ARROW_UP"
             commandId="org.eclipse.mylyn.context.ui.commands.interest.increment"
@@ -209,7 +216,12 @@
             commandId="org.eclipse.mylyn.context.ui.commands.open.context.dialog"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>
-   </extension>     
+      <key
+            sequence="M2+M3+H"
+            commandId="org.eclipse.mylyn.context.ui.commands.toggle.focus.active.view"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+   </extension>
 
    <extension point="org.eclipse.ui.decorators">
       <decorator
