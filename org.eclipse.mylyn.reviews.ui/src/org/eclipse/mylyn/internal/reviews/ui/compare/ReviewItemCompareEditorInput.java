@@ -26,9 +26,12 @@ import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.IDiffElement;
 import org.eclipse.compare.structuremergeviewer.StructureDiffViewer;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.reviews.ui.Messages;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsImages;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
@@ -52,6 +55,8 @@ import org.eclipse.ui.services.IServiceLocator;
  * @author Jacques Bouthillier
  */
 public abstract class ReviewItemCompareEditorInput extends CompareEditorInput {
+
+	private static final String NAVIGATION_GROUP = "navigation"; //$NON-NLS-1$
 
 	final ReviewBehavior behavior;
 
@@ -138,24 +143,29 @@ public abstract class ReviewItemCompareEditorInput extends CompareEditorInput {
 					});
 				}
 
-				CommandContributionItemParameter p = new CommandContributionItemParameter(
-						serviceLocator,
-						ReviewsUiPlugin.PLUGIN_ID + ".navigate.comment.next", //$NON-NLS-1$
-						ReviewsUiPlugin.PLUGIN_ID + ".commands.navigate.comment.next", //$NON-NLS-1$ // command id
-						null, ReviewsImages.NEXT_COMMENT, ReviewsImages.NEXT_COMMENT, null,
-						Messages.Reviews_NextComment, Messages.Reviews_NextComment.substring(0, 1),
-						Messages.Reviews_NextComment_Tooltip, CommandContributionItem.STYLE_PUSH, null, true);
+				if (tbm.find(NAVIGATION_GROUP) != null) {
+					CommandContributionItemParameter p = new CommandContributionItemParameter(
+							serviceLocator,
+							ReviewsUiPlugin.PLUGIN_ID + ".navigate.comment.next", //$NON-NLS-1$
+							ReviewsUiPlugin.PLUGIN_ID + ".commands.navigate.comment.next", //$NON-NLS-1$ // command id
+							null, ReviewsImages.NEXT_COMMENT, ReviewsImages.NEXT_COMMENT, null,
+							Messages.Reviews_NextComment, Messages.Reviews_NextComment.substring(0, 1),
+							Messages.Reviews_NextComment_Tooltip, CommandContributionItem.STYLE_PUSH, null, true);
 
-				tbm.appendToGroup("navigation", new CommandContributionItem(p)); //$NON-NLS-1$
+					tbm.appendToGroup(NAVIGATION_GROUP, new CommandContributionItem(p));
 
-				p = new CommandContributionItemParameter(
-						serviceLocator, //
-						ReviewsUiPlugin.PLUGIN_ID + ".navigate.comment.previous", //$NON-NLS-1$
-						ReviewsUiPlugin.PLUGIN_ID + ".commands.navigate.comment.previous", //$NON-NLS-1$ // command id
-						null, ReviewsImages.PREVIOUS_COMMENT, ReviewsImages.PREVIOUS_COMMENT, null,
-						Messages.Reviews_PreviousComment, Messages.Reviews_PreviousComment.substring(0, 1),
-						Messages.Reviews_PreviousComment_Tooltip, CommandContributionItem.STYLE_PUSH, null, true);
-				tbm.appendToGroup("navigation", new CommandContributionItem(p)); //$NON-NLS-1$
+					p = new CommandContributionItemParameter(
+							serviceLocator, //
+							ReviewsUiPlugin.PLUGIN_ID + ".navigate.comment.previous", //$NON-NLS-1$
+							ReviewsUiPlugin.PLUGIN_ID + ".commands.navigate.comment.previous", //$NON-NLS-1$ // command id
+							null, ReviewsImages.PREVIOUS_COMMENT, ReviewsImages.PREVIOUS_COMMENT, null,
+							Messages.Reviews_PreviousComment, Messages.Reviews_PreviousComment.substring(0, 1),
+							Messages.Reviews_PreviousComment_Tooltip, CommandContributionItem.STYLE_PUSH, null, true);
+					tbm.appendToGroup(NAVIGATION_GROUP, new CommandContributionItem(p));
+				} else {// bug 430151
+					StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
+							"Could not create comment navigation buttons", new Exception())); //$NON-NLS-1$
+				}
 				tbm.update(true);
 			}
 		}
