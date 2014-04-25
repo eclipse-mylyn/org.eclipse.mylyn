@@ -945,7 +945,7 @@ public class GerritClient extends ReviewsClient {
 				return method.getStatusCode() == HttpURLConnection.HTTP_CONFLICT;
 			}
 		}, monitor);
-		return getChangeDetail(id.get(), monitor);
+		return getChangeDetail(id.getParentKey().get(), monitor);
 	}
 
 	/**
