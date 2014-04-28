@@ -12,15 +12,18 @@
 
 package org.eclipse.mylyn.internal.team.ui.templates;
 
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.team.ui.AbstractCommitTemplateVariable;
@@ -257,6 +260,14 @@ public class CommitTemplateVariables {
 	public static class TaskURL extends AbstractCommitTemplateVariable {
 		@Override
 		public String getValue(ITask task) {
+			AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(task.getConnectorKind());
+			TaskRepository repository = TasksUiInternal.getRepository(task);
+			if (repository != null) {
+				URL url = connector.getBrowserUrl(repository, task);
+				if (url != null) {
+					return url.toString();
+				}
+			}
 			return task.getUrl();
 		}
 	}

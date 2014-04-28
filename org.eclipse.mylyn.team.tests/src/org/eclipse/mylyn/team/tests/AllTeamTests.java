@@ -30,6 +30,7 @@ public class AllTeamTests {
 		suite.addTestSuite(CommitTemplateTest.class);
 		suite.addTestSuite(TeamPropertiesLinkProviderTest.class);
 		suite.addTestSuite(TaskFinderTest.class);
+		suite.addTestSuite(CommitTemplateVariablesTest.class);
 		return suite;
 	}
 
