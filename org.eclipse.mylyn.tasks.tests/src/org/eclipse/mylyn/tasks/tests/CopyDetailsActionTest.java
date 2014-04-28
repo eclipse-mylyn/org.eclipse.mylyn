@@ -11,6 +11,9 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.commons.ui.ClipboardCopier;
@@ -18,6 +21,8 @@ import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction.Mode;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -82,6 +87,43 @@ public class CopyDetailsActionTest extends TestCase {
 			((TaskRepositoryManager) TasksUi.getRepositoryManager()).addRepositoryConnector(connector);
 			assertEquals("321: s321" + ClipboardCopier.LINE_SEPARATOR + "http://321.com",
 					CopyTaskDetailsAction.getTextForTask(task, Mode.SUMMARY_URL));
+		} finally {
+			if (oldConnector != null) {
+				((TaskRepositoryManager) TasksUi.getRepositoryManager()).addRepositoryConnector(oldConnector);
+			}
+		}
+	}
+
+	public void testGetBrowseableUrl() {
+		MockTask task = new MockTask("123");
+		task.setSummary("Ticket 123");
+		MockRepositoryConnector connector = new MockRepositoryConnector() {
+
+			@Override
+			public String getTaskUrl(String repositoryUrl, String taskId) {
+				return "URI://mock-repo/id/123";
+			}
+
+			@Override
+			public URL getBrowserUrl(TaskRepository repository, IRepositoryElement element) {
+				try {
+					return new URL("http://mock-repo-evolved.com/tickets/123");
+				} catch (MalformedURLException e) {
+					return null;
+				}
+			}
+
+		};
+
+		AbstractRepositoryConnector oldConnector = TasksUi.getRepositoryManager().getRepositoryConnector(
+				MockRepositoryConnector.CONNECTOR_KIND);
+		try {
+			((TaskRepositoryManager) TasksUi.getRepositoryManager()).addRepositoryConnector(connector);
+			assertEquals("123: Ticket 123" + ClipboardCopier.LINE_SEPARATOR
+					+ "http://mock-repo-evolved.com/tickets/123",
+					CopyTaskDetailsAction.getTextForTask(task, Mode.SUMMARY_URL));
+			assertEquals("http://mock-repo-evolved.com/tickets/123",
+					CopyTaskDetailsAction.getTextForTask(task, Mode.URL));
 		} finally {
 			if (oldConnector != null) {
 				((TaskRepositoryManager) TasksUi.getRepositoryManager()).addRepositoryConnector(oldConnector);

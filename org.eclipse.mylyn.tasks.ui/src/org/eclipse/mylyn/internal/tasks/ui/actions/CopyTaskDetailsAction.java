@@ -11,13 +11,17 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
+import java.net.URL;
+
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.commons.ui.ClipboardCopier;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
@@ -143,12 +147,20 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 	}
 
 	private static String getUrl(IRepositoryElement element) {
-		if (element.getUrl() != null) {
-			return element.getUrl();
-		} else if (element instanceof ITask) {
+		if (element instanceof ITask) {
 			ITask task = (ITask) element;
-			return TasksUi.getRepositoryConnector(task.getConnectorKind()).getTaskUrl(task.getRepositoryUrl(),
-					task.getTaskId());
+			AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(task.getConnectorKind());
+			TaskRepository repository = TasksUiInternal.getRepository(task);
+			URL location = connector.getBrowserUrl(repository, element);
+			if (location != null) {
+				return location.toString();
+			} else if (task.getUrl() != null) {
+				return task.getUrl();
+			} else {
+				return connector.getTaskUrl(task.getRepositoryUrl(), task.getTaskId());
+			}
+		} else if (element.getUrl() != null) {
+			return element.getUrl();
 		}
 		return null;
 	}

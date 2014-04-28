@@ -17,6 +17,7 @@ import junit.framework.TestSuite;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.tasks.tests.bugs.SupportHandlerManagerTest;
+import org.eclipse.mylyn.tasks.tests.core.AbstractRepositoryConnectorTest;
 import org.eclipse.mylyn.tasks.tests.core.FileTaskAttachmentSourceTest;
 import org.eclipse.mylyn.tasks.tests.core.ITasksCoreConstantsTest;
 import org.eclipse.mylyn.tasks.tests.core.PriorityLevelTest;
@@ -43,11 +44,11 @@ import org.eclipse.mylyn.tasks.tests.ui.TaskListSynchronizationSchedulerTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskListViewTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskRelationHyperlinkDetectorTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.AttachmentTableLabelProviderTest;
-import org.eclipse.mylyn.tasks.tests.ui.editor.TaskEditorExtensionsTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.EditorUtilTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.PlanningPartTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.RegionComparatorTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.RepositoryCompletionProcessorTest;
+import org.eclipse.mylyn.tasks.tests.ui.editor.TaskEditorExtensionsTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.TaskEditorPartDescriptorTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.TaskMigratorTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.TaskUrlHyperlinkDetectorTest;
@@ -164,6 +165,7 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskInitializationDataTest.class);
 		suite.addTestSuite(TaskDataDiffTest.class);
 		suite.addTestSuite(TaskEditorExtensionsTest.class);
+		suite.addTestSuite(AbstractRepositoryConnectorTest.class);
 	}
 
 }

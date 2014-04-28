@@ -377,6 +377,23 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
+	 * Returns a browsable URL for <code>element</code>.
+	 * <p>
+	 * Returns <code>null</code> by default. Clients may override.
+	 * 
+	 * @param repository
+	 *            the repository for <code>element</code>
+	 * @param element
+	 *            the element to return the url for
+	 * @return null, if no corresponding URL is available for <code>element</code>; the URL otherwise
+	 * @since 3.12
+	 */
+	@Nullable
+	public URL getBrowserUrl(@NonNull TaskRepository repository, @NonNull IRepositoryElement element) {
+		return null;
+	}
+
+	/**
 	 * Returns <code>true</code>, if the state in <code>taskData</code> is different than the state stored in
 	 * <code>task</code>.
 	 * <p>
