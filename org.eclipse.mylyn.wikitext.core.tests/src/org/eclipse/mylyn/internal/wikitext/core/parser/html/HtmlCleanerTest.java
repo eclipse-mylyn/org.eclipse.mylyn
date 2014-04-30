@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Tasktop Technologies.
+ * Copyright (c) 2012, 2014 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,13 +12,13 @@
 
 package org.eclipse.mylyn.internal.wikitext.core.parser.html;
 
-import static junit.framework.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.TextNode;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author David Green
@@ -199,6 +199,60 @@ public class HtmlCleanerTest {
 		String result = cleanToBody("<body><ol><li>item 0</li> <li>item 1</li>\t\n   <li>item 2</li></ol></body>");
 
 		assertEquals("<body><ol><li>item 0</li><li>item 1</li><li>item 2</li></ol></body>", result);
+	}
+
+	@Test
+	public void testWhitespacesBeforeBrTag() {
+		// bug 433872
+		String result = cleanToBody("<body>\n	<br/> foo</body>");
+
+		assertEquals("<body><br /> foo</body>", result);
+	}
+
+	@Test
+	public void testWhitespacesBeforeBrTag2() {
+		// bug 433872
+		String result = cleanToBody("<body><hr>\n	<br/> foo</body>");
+
+		assertEquals("<body><hr /><br /> foo</body>", result);
+	}
+
+	@Test
+	public void testTextAndWhitespacesBeforeBrTag() {
+		// bug 433872
+		String result = cleanToBody("<body>foo \n	<br/> bar</body>");
+
+		assertEquals("<body>foo<br /> bar</body>", result);
+	}
+
+	@Test
+	public void testTextBeforeBrTag() {
+		// bug 433872
+		String result = cleanToBody("<body>foo<br/> bar</body>");
+
+		assertEquals("<body>foo<br /> bar</body>", result);
+	}
+
+	@Test
+	public void testTagBeforeBrTag() {
+		// bug 433872
+		String result = cleanToBody("<body><hr/><br/> bar</body>");
+
+		assertEquals("<body><hr /><br /> bar</body>", result);
+	}
+
+	@Test
+	public void testWhitespacesPreservedAroundHrTag() {
+		String result = cleanToBody("<body>foo\n <hr/> foo</body>");
+
+		assertEquals("<body>foo <hr /> foo</body>", result);
+	}
+
+	@Test
+	public void testWhitespacesPreservedAroundDivTag() {
+		String result = cleanToBody("<body>foo\n <div>bar</div> foo</body>");
+
+		assertEquals("<body>foo <div>bar</div> foo</body>", result);
 	}
 
 	@Test

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2013 Tasktop Technologies.
+ * Copyright (c) 2011, 2014 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,9 +35,12 @@ class WhitespaceCleanupProcessor extends DocumentProcessor {
 	public void process(Document document) {
 		Element body = document.body();
 
-		Set<Node> affectedParents = new HashSet<Node>();
+		moveLeadingOrTrailingSpaceOutOfElements(body);
+		removeWhitespaceImmeditatelyPrecedingBrTags(body);
+	}
 
-		// for every element containing text with leading or trailing whitespace, move the whitespace out of the element.
+	private void moveLeadingOrTrailingSpaceOutOfElements(Element body) {
+		Set<Node> affectedParents = new HashSet<Node>();
 		for (Element element : body.getAllElements()) {
 			if (!Html.isWhitespacePreserve(element)) {
 				normalizeTextNodes(element);
@@ -133,6 +136,27 @@ class WhitespaceCleanupProcessor extends DocumentProcessor {
 					&& CHILD_TAGS.contains(nextElement.tagName());
 			if (isSurroundedByEqualTags) {
 				textNode.remove();
+			}
+		}
+	}
+
+	private void removeWhitespaceImmeditatelyPrecedingBrTags(Element body) {
+		for (Element element : body.getElementsByTag("br")) { //$NON-NLS-1$
+			removeWhitespaceBefore(element);
+		}
+	}
+
+	private void removeWhitespaceBefore(Element element) {
+		Node previousSibling = element.previousSibling();
+		if (previousSibling instanceof TextNode) {
+			TextNode textNode = (TextNode) previousSibling;
+			String text = textNode.getWholeText();
+			int startOfTrailingWhitespace = lastIndexOfNonWhitespace(text) + 1;
+			if (startOfTrailingWhitespace <= 0) {
+				textNode.remove();
+			} else if (startOfTrailingWhitespace < text.length()) {
+				textNode.splitText(startOfTrailingWhitespace);
+				textNode.nextSibling().remove();
 			}
 		}
 	}
