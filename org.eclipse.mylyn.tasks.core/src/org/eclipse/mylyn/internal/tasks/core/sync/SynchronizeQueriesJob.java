@@ -218,6 +218,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 					// synchronize tasks that were marked by the connector
 					SynchronizeTasksJob job = new SynchronizeTasksJob(taskList, taskDataManager, tasksModel, connector,
 							repository, tasksToBeSynchronized);
+					job.setFetchSubtasks(getFetchSubtasks());
 					job.setUser(isUser());
 					job.setSession(session);
 					if (!tasksToBeSynchronized.isEmpty()) {

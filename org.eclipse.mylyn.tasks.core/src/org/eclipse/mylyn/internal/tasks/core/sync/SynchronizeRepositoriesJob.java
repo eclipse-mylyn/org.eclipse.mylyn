@@ -175,6 +175,7 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 				return ITasksCoreConstants.JOB_FAMILY_SYNCHRONIZATION == family;
 			}
 		};
+		job.setFetchSubtasks(getFetchSubtasks());
 		job.setUser(isUser());
 		job.setFullSynchronization(true);
 		job.setPriority(Job.DECORATE);

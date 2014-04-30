@@ -66,6 +66,8 @@ public class TaskJobFactory implements ITaskJobFactory {
 
 	private final IRepositoryModel tasksModel;
 
+	private boolean fetchSubtasks = true;
+
 	protected static synchronized List<TaskJobListener> getTaskJobListeners(AbstractRepositoryConnector connector) {
 		if (taskJobListeners == null) {
 			taskJobListeners = new HashMap<String, List<TaskJobListener>>();
@@ -101,6 +103,7 @@ public class TaskJobFactory implements ITaskJobFactory {
 	public SynchronizationJob createSynchronizeTasksJob(AbstractRepositoryConnector connector, Set<ITask> tasks) {
 		SynchronizeTasksJob job = new SynchronizeTasksJob(taskList, taskDataManager, tasksModel, connector,
 				repositoryManager, tasks);
+		job.setFetchSubtasks(fetchSubtasks);
 		job.setPriority(Job.LONG);
 		return job;
 	}
@@ -109,6 +112,7 @@ public class TaskJobFactory implements ITaskJobFactory {
 			TaskRepository taskRepository, Set<ITask> tasks) {
 		SynchronizeTasksJob job = new SynchronizeTasksJob(taskList, taskDataManager, tasksModel, connector,
 				taskRepository, tasks);
+		job.setFetchSubtasks(fetchSubtasks);
 		job.setPriority(Job.LONG);
 		return job;
 	}
@@ -117,6 +121,7 @@ public class TaskJobFactory implements ITaskJobFactory {
 			TaskRepository repository, Set<RepositoryQuery> queries) {
 		SynchronizationJob job = new SynchronizeQueriesJob(taskList, taskDataManager, tasksModel, connector,
 				repository, queries);
+		job.setFetchSubtasks(fetchSubtasks);
 		job.setPriority(Job.DECORATE);
 		return job;
 	}
@@ -124,6 +129,7 @@ public class TaskJobFactory implements ITaskJobFactory {
 	public SynchronizationJob createSynchronizeRepositoriesJob(Set<TaskRepository> repositories) {
 		SynchronizeRepositoriesJob job = new SynchronizeRepositoriesJob(taskList, taskDataManager, tasksModel,
 				repositoryManager);
+		job.setFetchSubtasks(fetchSubtasks);
 		job.setRepositories(repositories);
 		job.setPriority(Job.DECORATE);
 		job.addJobChangeListener(new JobChangeAdapter() {
@@ -190,5 +196,13 @@ public class TaskJobFactory implements ITaskJobFactory {
 		taskList.notifySynchronizationStateChanged(task);
 		job.setUser(true);
 		return job;
+	}
+
+	public void setFetchSubtasks(boolean fetchSubtasks) {
+		this.fetchSubtasks = fetchSubtasks;
+	}
+
+	public boolean getFetchSubtasks() {
+		return fetchSubtasks;
 	}
 }

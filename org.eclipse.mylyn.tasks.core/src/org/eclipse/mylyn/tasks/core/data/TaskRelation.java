@@ -91,6 +91,20 @@ public class TaskRelation {
 		return new TaskRelation(Kind.DEPENDENCY, direction, taskId);
 	}
 
+	/**
+	 * @since 3.12
+	 */
+	public boolean isParentRelation() {
+		return kind == Kind.CONTAINMENT && direction == Direction.INWARD;
+	}
+
+	/**
+	 * @since 3.12
+	 */
+	public boolean isChildRelation() {
+		return kind == Kind.CONTAINMENT && direction == Direction.OUTWARD;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -118,9 +132,9 @@ public class TaskRelation {
 
 	@Override
 	public String toString() {
-		if (kind == Kind.CONTAINMENT && direction == Direction.INWARD) {
+		if (isParentRelation()) {
 			return Messages.TaskRelation_Parent;
-		} else if (kind == Kind.CONTAINMENT && direction == Direction.OUTWARD) {
+		} else if (isChildRelation()) {
 			return Messages.TaskRelation_Subtask;
 		} else {
 			return Messages.TaskRelation_Dependency;

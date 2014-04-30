@@ -46,8 +46,6 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskRelation;
-import org.eclipse.mylyn.tasks.core.data.TaskRelation.Direction;
-import org.eclipse.mylyn.tasks.core.data.TaskRelation.Kind;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 import org.eclipse.osgi.util.NLS;
 
@@ -163,18 +161,20 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 				TaskRelation[] relations = relationsByTaskId.get(taskId);
 				for (TaskRelation relation : relations) {
-					if (relation.getDirection() == Direction.OUTWARD && relation.getKind() == Kind.CONTAINMENT) {
+					if (relation.isChildRelation()) {
 						ITask task = taskList.getTask(taskRepository.getRepositoryUrl(), relation.getTaskId());
 						if (task == null) {
-							try {
-								task = synchronizeTask(monitor, relation.getTaskId());
-							} catch (CoreException e) {
-								String taskKey = (task != null && task.getTaskKey() != null)
-										? task.getTaskKey()
-										: relation.getTaskId();
-								StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
-										Messages.SynchronizeTasksJob_Synchronization_of_task_ID_REPOSITORY_failed,
-										taskKey, taskRepository.getRepositoryLabel()), e));
+							if (getFetchSubtasks()) {
+								try {
+									task = synchronizeTask(monitor, relation.getTaskId());
+								} catch (CoreException e) {
+									StatusHandler.log(new Status(
+											IStatus.ERROR,
+											ITasksCoreConstants.ID_PLUGIN,
+											NLS.bind(
+													Messages.SynchronizeTasksJob_Synchronization_of_task_ID_REPOSITORY_failed,
+													relation.getTaskId(), taskRepository.getRepositoryLabel()), e));
+								}
 							}
 						} else {
 							removedChildTasks.remove(task);

@@ -31,6 +31,8 @@ public abstract class SynchronizationJob extends Job {
 	 */
 	protected final IDelegatingProgressMonitor monitor;
 
+	private boolean fetchSubtasks = true;
+
 	/**
 	 * @since 3.0
 	 */
@@ -67,5 +69,22 @@ public abstract class SynchronizationJob extends Job {
 	 */
 	public IDelegatingProgressMonitor getMonitor() {
 		return monitor;
+	}
+
+	/**
+	 * Specify whether subtasks should be fetched as part of task synchronization. Defaults to true.
+	 * 
+	 * @since 3.12
+	 */
+	public void setFetchSubtasks(boolean fetchSubtasks) {
+		this.fetchSubtasks = fetchSubtasks;
+	}
+
+	/**
+	 * @return whether subtasks should be fetched as part of task synchronization
+	 * @since 3.12
+	 */
+	public boolean getFetchSubtasks() {
+		return fetchSubtasks;
 	}
 }

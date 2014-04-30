@@ -51,4 +51,14 @@ public interface ITaskJobFactory {
 			TaskRepository taskRepository, ITask task, AbstractTaskAttachmentSource source, String comment,
 			TaskAttribute attachmentAttribute);
 
+	/**
+	 * Specify whether subtasks should be fetched as part of task synchronization. Defaults to true.
+	 */
+	public void setFetchSubtasks(boolean fetchSubtasks);
+
+	/**
+	 * @return whether subtasks should be fetched as part of task synchronization
+	 */
+	public boolean getFetchSubtasks();
+
 }

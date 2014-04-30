@@ -523,6 +523,14 @@ public class SynchronizeTasksJobTest extends TestCase {
 	}
 
 	public void testGetSingleTaskDataWithRelationsAndRemoveRelation() throws Exception {
+		getSingleTaskDataWithRelationsAndRemoveRelation(true);
+	}
+
+	public void testGetSingleTaskDataWithRelationsDisabled() throws Exception {
+		getSingleTaskDataWithRelationsAndRemoveRelation(false);
+	}
+
+	private void getSingleTaskDataWithRelationsAndRemoveRelation(boolean fetchSubtasks) {
 		final List<String> requestedTaskIds = new ArrayList<String>();
 		AbstractRepositoryConnector connector = new MockRepositoryConnectorWithTaskDataHandler() {
 			@Override
@@ -540,32 +548,49 @@ public class SynchronizeTasksJobTest extends TestCase {
 				ArrayList<TaskRelation> relations = new ArrayList<TaskRelation>();
 				relations.add(TaskRelation.subtask("1.sub"));
 				relations.add(TaskRelation.subtask("1.sub5"));
+				relations.add(TaskRelation.subtask("taskToBecomeSubtask"));
 				return relations;
 			}
 		};
-		final ITask task = new MockTask("1");
-		final ITask subtaskToBeGone = new MockTask("1.sub2");
-		final ITask subtaskToStay = new MockTask("1.sub5");
+		ITask task = new MockTask("1");
+		ITask subtaskToBeGone = new MockTask("1.sub2");
+		ITask subtaskToStay = new MockTask("1.sub5");
+		ITask taskToBecomeSubtask = new MockTask("taskToBecomeSubtask");
+
 		taskList.addTask(task);
 		taskList.addTask(subtaskToBeGone, ((AbstractTaskContainer) task));
 		taskList.addTask(subtaskToStay, ((AbstractTaskContainer) task));
-		SynchronizeTasksJob job = createSyncJob(connector, Collections.singleton(task));
-		job.run(new NullProgressMonitor());
-		assertEquals(2, requestedTaskIds.size());
-		assertTrue(requestedTaskIds.contains("1"));
-		assertTrue(requestedTaskIds.contains("1.sub"));
-
-		ITask sub1 = taskList.getTask(MockRepositoryConnector.REPOSITORY_URL, "1.sub");
-		ITask sub2 = taskList.getTask(MockRepositoryConnector.REPOSITORY_URL, "1.sub2");
-		ITask sub5 = taskList.getTask(MockRepositoryConnector.REPOSITORY_URL, "1.sub5");
-		assertNotNull(sub1);
-		assertNotNull(sub2);
-		assertNotNull(sub5);
-
+		taskList.addTask(taskToBecomeSubtask);
 		Collection<ITask> children = ((AbstractTaskContainer) task).getChildren();
 		assertEquals(2, children.size());
-		assertTrue(children.contains(sub1));
-		assertTrue(children.contains(sub5));
+		assertTrue(children.contains(subtaskToBeGone));
+		assertTrue(children.contains(subtaskToStay));
+
+		SynchronizeTasksJob job = createSyncJob(connector, Collections.singleton(task));
+		job.setFetchSubtasks(fetchSubtasks);
+		job.run(new NullProgressMonitor());
+		assertEquals(fetchSubtasks ? 2 : 1, requestedTaskIds.size());
+		assertTrue(requestedTaskIds.contains("1"));
+		if (fetchSubtasks) {
+			assertTrue(requestedTaskIds.contains("1.sub"));
+		}
+
+		ITask newSubtask = taskList.getTask(MockRepositoryConnector.REPOSITORY_URL, "1.sub");
+		subtaskToBeGone = taskList.getTask(MockRepositoryConnector.REPOSITORY_URL, "1.sub2");
+		subtaskToStay = taskList.getTask(MockRepositoryConnector.REPOSITORY_URL, "1.sub5");
+		taskToBecomeSubtask = taskList.getTask(MockRepositoryConnector.REPOSITORY_URL, "taskToBecomeSubtask");
+		assertEquals(fetchSubtasks, newSubtask != null);
+		assertNotNull(subtaskToBeGone);
+		assertNotNull(subtaskToStay);
+		assertNotNull(taskToBecomeSubtask);
+
+		children = ((AbstractTaskContainer) task).getChildren();
+		assertEquals(fetchSubtasks ? 3 : 2, children.size());
+		if (fetchSubtasks) {
+			assertTrue(children.contains(newSubtask));
+		}
+		assertTrue(children.contains(subtaskToStay));
+		assertTrue(children.contains(taskToBecomeSubtask));
 	}
 
 	public void testErrorOnRelationRetrieval() throws Exception {

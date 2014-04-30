@@ -26,6 +26,7 @@ import org.eclipse.mylyn.tasks.tests.core.RepositoryConnectorContributorTest;
 import org.eclipse.mylyn.tasks.tests.core.SynchronizeTasksJobTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskAttributeMetaDataTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskInitializationDataTest;
+import org.eclipse.mylyn.tasks.tests.core.TaskJobFactoryTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskListUnmatchedContainerTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskRepositoryLocationTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskRepositoryTest;
@@ -166,6 +167,7 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskDataDiffTest.class);
 		suite.addTestSuite(TaskEditorExtensionsTest.class);
 		suite.addTestSuite(AbstractRepositoryConnectorTest.class);
+		suite.addTestSuite(TaskJobFactoryTest.class);
 	}
 
 }
