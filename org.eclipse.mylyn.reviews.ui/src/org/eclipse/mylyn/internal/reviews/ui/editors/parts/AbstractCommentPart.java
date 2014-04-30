@@ -13,18 +13,16 @@
 package org.eclipse.mylyn.internal.reviews.ui.editors.parts;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.internal.reviews.ui.IReviewAction;
-import org.eclipse.mylyn.internal.reviews.ui.IReviewActionListener;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorExtensions;
 import org.eclipse.mylyn.reviews.core.model.IComment;
@@ -34,6 +32,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -70,10 +69,10 @@ public abstract class AbstractCommentPart<V extends ExpandablePart<IComment, V>>
 
 	@Override
 	protected String getSectionHeaderText() {
-		String headerText = comment.getAuthor().getDisplayName() + "   "; //$NON-NLS-1$
-		headerText += DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(
-				comment.getCreationDate());
-		return headerText;
+		return NLS.bind(Messages.AbstractCommentPart_Section_header, //
+				comment.getAuthor().getDisplayName(), //
+				DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(comment.getCreationDate()) // 
+		);
 	}
 
 	public ReviewBehavior getBehavior() {
@@ -129,7 +128,6 @@ public abstract class AbstractCommentPart<V extends ExpandablePart<IComment, V>>
 		update();
 
 		return createdControl;
-
 	}
 
 	@Override
@@ -168,24 +166,13 @@ public abstract class AbstractCommentPart<V extends ExpandablePart<IComment, V>>
 
 		GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).applyTo(avatarLabel);
 
-		commentTextComposite = createReadOnlyText(toolkit, twoColumnComposite, getCommentText());
+		commentTextComposite = createReadOnlyText(toolkit, twoColumnComposite, comment.getDescription());
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(commentTextComposite);
-	}
-
-	// TODO could be moved to a util method
-	private String getCommentText() {
-		String commentText = comment.getDescription();
-
-		String customFieldsString = ""; //$NON-NLS-1$
-		if (customFieldsString.length() > 0) {
-			commentText += "  " + customFieldsString; //$NON-NLS-1$
-		}
-		return commentText;
 	}
 
 	@Override
 	protected String getAnnotationText() {
-		return comment.isDraft() ? Messages.AbstractCommentPart_Draft : ""; //$NON-NLS-1$
+		return comment.isDraft() ? Messages.AbstractCommentPart_Draft : StringUtils.EMPTY;
 	}
 
 	private Control createReadOnlyText(FormToolkit toolkit, Composite composite, String value) {
@@ -199,7 +186,7 @@ public abstract class AbstractCommentPart<V extends ExpandablePart<IComment, V>>
 
 		AbstractTaskEditorExtension extension = TaskEditorExtensions.getTaskEditorExtension(repository);
 
-		final RichTextEditor editor = new RichTextEditor(repository, style, null, extension);
+		final RichTextEditor editor = new RichTextEditor(repository, style, null, extension, null);
 		editor.setReadOnly(true);
 		editor.setText(value);
 		editor.createControl(composite, toolkit);
@@ -235,53 +222,7 @@ public abstract class AbstractCommentPart<V extends ExpandablePart<IComment, V>>
 
 	@Override
 	protected List<IReviewAction> getToolbarActions(boolean isExpanded) {
-		List<IReviewAction> actions = new ArrayList<IReviewAction>();
-		if (isExpanded) {
-			// FIXME
-//			if (!comment.isReply() && CrucibleUtil.canAddCommentToReview(crucibleReview)) {
-//				ReplyToCommentAction action = new ReplyToCommentAction();
-//				action.selectionChanged(new StructuredSelection(comment));
-//				actions.add(action);
-//			}
-//
-//			if (CrucibleUiUtil.canModifyComment(crucibleReview, comment)) {
-//				EditCommentAction action = new EditCommentAction();
-//				action.selectionChanged(new StructuredSelection(comment));
-//				actions.add(action);
-//
-//				if (!comment.isReply() && comment.getReplies().size() > 0) {
-//					actions.add(new CannotRemoveCommentAction("Remove Comment", CrucibleImages.COMMENT_DELETE));
-//				} else {
-//					RemoveCommentAction action1 = new RemoveCommentAction();
-//					action1.selectionChanged(new StructuredSelection(comment));
-//					actions.add(action1);
-//				}
-//
-//				if (CrucibleUtil.canPublishDraft(comment)) {
-//					PostDraftCommentAction action1 = new PostDraftCommentAction();
-//					action1.selectionChanged(new StructuredSelection(comment));
-//					actions.add(action1);
-//				}
-//			}
-		}
-		return actions;
-	}
-
-	private final class CannotRemoveCommentAction extends Action implements IReviewAction {
-		public CannotRemoveCommentAction(String text, ImageDescriptor icon) {
-			super(text);
-			setImageDescriptor(icon);
-		}
-
-		public void setActionListener(IReviewActionListener listner) {
-		}
-
-		@Override
-		public void run() {
-			MessageDialog.openInformation(getSection().getShell(), Messages.AbstractCommentPart_Delete,
-					Messages.AbstractCommentPart_Cannot_delete_comment_with_replies);
-		}
-
+		return Collections.<IReviewAction> emptyList();
 	}
 
 }
