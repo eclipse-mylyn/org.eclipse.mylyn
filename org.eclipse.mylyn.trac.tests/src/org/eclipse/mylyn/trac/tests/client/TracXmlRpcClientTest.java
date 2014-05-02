@@ -339,18 +339,18 @@ public class TracXmlRpcClientTest extends TestCase {
 		}
 	}
 
-	public void testGetWikiPageInfoAllVersions() throws Exception {
-		String pageName = "Test";
-		harness.createWikiPage(pageName, "test content " + RandomStringUtils.randomAlphanumeric(6));
-
-		TracWikiPageInfo[] versions = client.getWikiPageInfoAllVersions(pageName, null);
-		assertTrue(versions.length >= 1);
-		int counter = 1;
-		for (TracWikiPageInfo version : versions) {
-			assertTrue(version.getPageName().equals(pageName));
-			assertTrue(version.getVersion() == counter++); // assuming versions are ordered increasingly
-		}
-	}
+//	public void testGetWikiPageInfoAllVersions() throws Exception {
+//		String pageName = "Test";
+//		harness.createWikiPage(pageName, "test content " + RandomStringUtils.randomAlphanumeric(6));
+//
+//		TracWikiPageInfo[] versions = client.getWikiPageInfoAllVersions(pageName, null);
+//		assertTrue(versions.length >= 1);
+//		int counter = 1;
+//		for (TracWikiPageInfo version : versions) {
+//			assertTrue(version.getPageName().equals(pageName));
+//			assertTrue(version.getVersion() == counter++); // assuming versions are ordered increasingly
+//		}
+//	}
 
 	public void testGetRecentWikiChanges() throws Exception {
 		harness.createWikiPage("Test", "test content " + RandomStringUtils.randomAlphanumeric(6));
