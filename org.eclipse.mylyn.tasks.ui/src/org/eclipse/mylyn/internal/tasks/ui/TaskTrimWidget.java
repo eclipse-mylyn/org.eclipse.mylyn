@@ -11,11 +11,15 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 import java.util.Set;
 
+import org.apache.commons.lang.reflect.MethodUtils;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.ui.SelectionProviderAdapter;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
@@ -40,6 +44,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
@@ -229,10 +234,11 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		menuManager.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
 				actionGroup.fillContextMenu(manager);
-				// trims do not have a workbench part so there is no simple way of registering the 
+				// trims do not have a workbench part so there is no simple way of registering the
 				// context menu
-				ObjectActionContributorManager.getManager().contributeObjectActions(null, manager,
-						activeTaskSelectionProvider);
+				if (!contributeObjectActionsOld(manager)) {
+					contributeObjectActionsNew(manager);
+				}
 			}
 		});
 	}
@@ -258,6 +264,36 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		activeTaskLabel.setUnderlined(false);
 		activeTaskLabel.setToolTipText(""); //$NON-NLS-1$
 		activeTaskSelectionProvider.setSelection(StructuredSelection.EMPTY);
+	}
+
+	private boolean contributeObjectActionsOld(IMenuManager manager) {
+		try {
+			MethodUtils.invokeExactMethod(ObjectActionContributorManager.getManager(), "contributeObjectActions", //$NON-NLS-1$
+					new Object[] { null, manager, activeTaskSelectionProvider }, new Class[] { IWorkbenchPart.class,
+				IMenuManager.class, ISelectionProvider.class });
+		} catch (NoSuchMethodException e) {
+			return false;
+		} catch (IllegalAccessException e) {
+			return false;
+		} catch (InvocationTargetException e) {
+			return false;
+		}
+		return true;
+	}
+
+	private boolean contributeObjectActionsNew(IMenuManager manager) {
+		try {
+			MethodUtils.invokeExactMethod(ObjectActionContributorManager.getManager(), "contributeObjectActions", //$NON-NLS-1$
+					new Object[] { null, manager, activeTaskSelectionProvider, Collections.EMPTY_SET }, new Class[] {
+				IWorkbenchPart.class, IMenuManager.class, ISelectionProvider.class, Set.class });
+		} catch (NoSuchMethodException e) {
+			return false;
+		} catch (IllegalAccessException e) {
+			return false;
+		} catch (InvocationTargetException e) {
+			return false;
+		}
+		return true;
 	}
 
 //	// From PerspectiveBarContributionItem
