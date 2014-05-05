@@ -44,7 +44,6 @@ import org.eclipse.swt.widgets.TableItem;
  * 	This class implements the implementation of the review table view.
  *
  * @author Jacques Bouthillier
- * @version $Revision: 1.0 $
  * 
  */
 public class UIReviewTable {
@@ -284,10 +283,7 @@ public class UIReviewTable {
 		ISelection tableSelection = fViewer.getSelection();
 		GerritUi.Ftracer
 				.traceInfo("Selected : " + tableSelection.getClass());
-		if (tableSelection.isEmpty()) {
-			GerritUi.Ftracer.traceInfo("Selected table selection is EMPTY ");
-
-		} else {
+		if (!tableSelection.isEmpty()) {
 			if (tableSelection instanceof IStructuredSelection ) {
 				Object obj = ((IStructuredSelection) tableSelection).getFirstElement();
 				GerritUi.Ftracer.traceInfo("Selected table selection class: " + obj.getClass() ); 
@@ -298,24 +294,6 @@ public class UIReviewTable {
 				}
 			}
 		}
-		// if (tableSelection.length == 1) {
-		// ReviewTableListItem selected = tableSelection[0];
-		// }
-		// if (GerritTableView.getActiveView() != null) {
-		// ArrayList<IReviewEntityItem> itemlist = getSelectedItems();
-		// // Number of item to set the check flag
-		// if (itemlist.size() > 0) {
-		// // Only display the first one
-		// IReviewEntityItem item = itemlist.get(0);
-		// ReviewItemNavigatorViewPart.getInstance().displayInfo(item);
-		// } else {
-		// ReviewItemNavigatorAction.updateItemNavigatorIcon();
-		// }
-		// }
-		// // Set the review view toolbar
-		// ReviewItemNavigatorAction.updateItemNavigatorIcon();
-		//
-		// ReviewTableCommonAction.setToolbarButtonsSensitivity();
 	}
 
 }

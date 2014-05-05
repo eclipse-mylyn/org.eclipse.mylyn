@@ -12,55 +12,105 @@
  * 
  * Contributors:
  *   Jacques Bouthillier - Initial Implementation of the selection of My starred handler
+ *   Jacques Bouthillier - Bug 426580 Add the starred functionality
  ******************************************************************************/
 package org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.table;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.mylyn.gerrit.dashboard.core.GerritTask;
-import org.eclipse.mylyn.gerrit.dashboard.ui.GerritUi;
+import org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils.UIUtils;
 import org.eclipse.mylyn.gerrit.dashboard.ui.views.GerritTableView;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Jacques Bouthillier
- * @version $Revision: 1.0 $
  *
  */
 public class AdjustMyStarredHandler extends AbstractHandler {
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+	private static final String COMMAND_MESSAGE = "Adjust Starred flag...";
+
+	private GerritTask item = null;
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
+	 * ExecutionEvent)
 	 */
 	@SuppressWarnings("restriction")
 	@Override
 	public Object execute(ExecutionEvent aEvent) throws ExecutionException {
-		//GerritPlugin.Ftracer.traceInfo("AdjustMyStarred  " ); //$NON-NLS-1$
-		GerritTask item = null;
-		TableViewer viewer = GerritTableView.getTableViewer();
-		ISelection tableSelection = viewer.getSelection();
-		if (tableSelection.isEmpty()) {
-			GerritUi.Ftracer.traceInfo("Selected table selection is EMPTY " ); 
-			
-		} else {
-			if (tableSelection instanceof IStructuredSelection ) {
-				Object obj = ((IStructuredSelection) tableSelection).getFirstElement();
-				if (obj instanceof  GerritTask) {
-					item = (GerritTask) obj;
-					//GerritPlugin.Ftracer.traceInfo("Selected table OBJECT selection ID: "  + item.getId() ); 				
-					if (Boolean.valueOf(item.getAttribute(GerritTask.IS_STARRED))) {
-						item.setAttribute(GerritTask.IS_STARRED, Boolean.toString(false));
-					} else if (!Boolean.valueOf(item.getAttribute(GerritTask.IS_STARRED))) {
-						item.setAttribute(GerritTask.IS_STARRED, Boolean.toString(true));
-					}
-					viewer.update(item, null);
-				}
-			}
+		final GerritTableView reviewTableView = GerritTableView.getActiveView();
+		final TableViewer viewer = reviewTableView.getTableViewer();
+		final ISelection tableSelection = viewer.getSelection();
+
+		if (!isEnabled()) {
+			return null;
 		}
-		return item;
+
+		final Job job = new Job(COMMAND_MESSAGE) {
+
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				if (tableSelection instanceof IStructuredSelection) {
+					Object obj = ((IStructuredSelection) tableSelection)
+							.getFirstElement();
+					if (obj instanceof GerritTask) {
+						item = (GerritTask) obj;
+
+						try {
+							// Update the Gerrit Server
+							reviewTableView.setStarred(item.getTaskId(),
+									!Boolean.valueOf(item.getAttribute(GerritTask.IS_STARRED)), monitor);
+
+							// Toggle the STARRED value for the Dashboard
+							item.setAttribute(
+									GerritTask.IS_STARRED,
+									Boolean.toString(!Boolean.valueOf(item
+											.getAttribute(GerritTask.IS_STARRED))));
+						} catch (CoreException e) {
+							UIUtils.showErrorDialog(e.getMessage(), e
+									.getStatus().getException().getMessage());
+						}
+
+						Display.getDefault().asyncExec(new Runnable() {
+							public void run() {
+								viewer.update(item, null);
+							}
+						});
+					}
+				}
+				return Status.OK_STATUS;
+			}
+		};
+		job.setUser(false);
+		job.schedule();
+
+		return null;
 	}
 
+	@Override
+	public boolean isEnabled() {
+		final GerritTableView reviewTableView = GerritTableView.getActiveView();
+		final TableViewer viewer = reviewTableView.getTableViewer();
+		final ISelection tableSelection = viewer.getSelection();
+
+		if (tableSelection.isEmpty()) {
+			return false;
+		}
+
+		return true;
+	}
 }

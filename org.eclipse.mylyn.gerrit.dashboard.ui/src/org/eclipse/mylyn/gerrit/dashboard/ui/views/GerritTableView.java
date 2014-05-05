@@ -10,6 +10,7 @@
  *   Jacques Bouthillier - Initial Implementation of the plug-in
  *   Francois Chouinard - Handle gerrit queries and open reviews in editor
  *   Guy Perron			- Add review counter, Add Gerrit button selection
+ *   Jacques Bouthillier - Bug 426580 Add the starred functionality
  ******************************************************************************/
 
 package org.eclipse.mylyn.gerrit.dashboard.ui.views;
@@ -40,6 +41,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.window.Window;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.workbench.DelayedRefreshJob;
 import org.eclipse.mylyn.gerrit.dashboard.GerritPlugin;
 import org.eclipse.mylyn.gerrit.dashboard.core.GerritQueryException;
@@ -133,9 +135,6 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 	 */
 	public static final String VIEW_ID = "org.eclipse.mylyn.gerrit.dashboard.ui.views.GerritTableView";
 	
-	/**
-	 * Field COMMAND_MESSAGE. (value is ""Search Gerrit info ..."")
-	 */
 	private static final String COMMAND_MESSAGE = "Search Gerrit info ...";
 
 	private final String SEARCH_BTN 	= "Search";
@@ -175,7 +174,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 	private Button	fSearchRequestBtn;
 	
 	private Set<String>   fRequestList = new LinkedHashSet<String>();
-	private static TableViewer fViewer;
+	private TableViewer fViewer;
 	
 	private ReviewTableData fReviewTable = new ReviewTableData();
 	private GerritServerUtility fServerUtil = GerritServerUtility.getInstance();
@@ -539,7 +538,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 
 	}
 
-	public static TableViewer getTableViewer() {
+	public TableViewer getTableViewer() {
 		return fViewer;
 	}
 	
@@ -571,9 +570,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 						viewPart = page.showView(VIEW_ID, null,
 								org.eclipse.ui.IWorkbenchPage.VIEW_CREATE);
 					} catch (PartInitException e) {
-						GerritUi.Ftracer.traceWarning("PartInitException:   " 
-								+ e.getLocalizedMessage() ); //$NON-NLS-1$
-						e.printStackTrace();
+						StatusHandler.log(new Status(IStatus.WARNING, GerritCorePlugin.PLUGIN_ID, e.getMessage(), e));
 					}
 					GerritUi.Ftracer.traceWarning("getActiveView() SHOULD (JUST) CREATED A NEW Table:"
 							+ viewPart ); //$NON-NLS-1$
@@ -599,8 +596,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 			try {
 				viewPart = page.showView(VIEW_ID);
 			} catch (PartInitException e) {
-				GerritUi.Ftracer.traceWarning("PartInitException:   " 
-						+ e.getLocalizedMessage() ); //$NON-NLS-1$
+				StatusHandler.log(new Status(IStatus.WARNING, GerritCorePlugin.PLUGIN_ID, e.getMessage(), e));
 			}
 		}
 		// if there exists the view, but if not on the top,
@@ -650,18 +646,31 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 		
 		//We should have a TaskRepository here, otherwise, the user need to define one
 		if (fTaskRepository == null) {
-			String msg = "You need to define a Gerrit repository.";
-			String reason = "No Gerrit repository has been selected yet.";
-			GerritUi.Ftracer.traceInfo(msg );
-			UIUtils.showErrorDialog(msg, reason);
+			UIUtils.showErrorDialog("You need to define a Gerrit repository.", "No Gerrit repository has been selected yet.");
 		} else {
 			if (aQuery != null && !aQuery.equals("")) {
 				updateTable (fTaskRepository, aQuery);				
 			}
 		}
-
 	}
-	
+
+	/**
+	 * Process the command to set the Starred flag on the Gerrit server
+	 * String taskId
+	 * boolean starred
+	 * @param progressMonitor
+	 *
+	 * @return void
+	 * @throws CoreException
+	 */
+	public void setStarred(String taskID, boolean starred, IProgressMonitor progressMonitor) throws CoreException {
+		if (fTaskRepository == null) {
+			UIUtils.showErrorDialog("You need to define a Gerrit repository.", "No Gerrit repository has been selected yet.");
+		} else {
+			fConnector.setStarred(fTaskRepository, taskID, starred, progressMonitor);
+		}
+	}
+
 	/**
 	 * Find the last Gerrit server being used , otherwise consider the Eclipse.org gerrit server version as a default
 	 * @return Version
@@ -698,7 +707,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 					version = gerritClient.getVersion(new NullProgressMonitor());
 					GerritUi.Ftracer.traceInfo("Selected version: " + version.toString());
 				} catch (GerritException e) {
-					e.printStackTrace();
+					StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, e.getMessage(), e));
 				}
 			}
 		}
@@ -740,8 +749,6 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 
 			@Override
 			public IStatus run(final IProgressMonitor aMonitor) {
-				aMonitor.beginTask(COMMAND_MESSAGE, IProgressMonitor.UNKNOWN);
-						
 				GerritPlugin.Ftracer.traceInfo("repository:   " + aTaskRepo.getUrl() +
 						"\t query: " + aQueryType); //$NON-NLS-1$
 				
@@ -769,8 +776,8 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 		                        try {
 									GerritUi.Ftracer.traceInfo("GerritClient: " + gerritClient.getVersion(new NullProgressMonitor()) );
 									setRepositoryVersionLabel (aTaskRepo.getRepositoryLabel(), gerritClient.getVersion(new NullProgressMonitor()).toString() );
-								} catch (GerritException e1) {
-									e1.printStackTrace();
+								} catch (GerritException e) {
+									StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, e.getMessage(), e));
 								}	                        	
 	                        }
 	                    }
@@ -778,10 +785,8 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 	                status = Status.OK_STATUS;
                 }
                 catch (GerritQueryException e) {
-                    status = e.getStatus();
-                    GerritPlugin.Ftracer.traceWarning(status.toString());
-//                    UIUtils.showErrorDialog(e.getMessage(), status.toString());
-                }
+                   StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, e.getStatus().getMessage(), e));
+               }
 
 				aMonitor.done();
 				fJobs.remove(this);
@@ -1067,6 +1072,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 					fReviewTable.updateReviewItem(gtask);
 		        }
 			} catch (CoreException e) {
+				StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, e.getMessage(), e));
 			}
 		}
 		
