@@ -304,10 +304,8 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		PatchSetDetail detail = details.get(0);
 		PatchSetContent content = new PatchSetContent((PatchSet) null, detail);
 
-		final Change.Id changeId = new Change.Id(reviewHarness.client.id(reviewHarness.shortId));
-		final PatchSet.Id patchSetId = new PatchSet.Id(changeId, 1);
-		final Patch.Key commitMsgPatchKey = new Patch.Key(patchSetId, "/COMMIT_MSG");
-		final Patch.Key testFilePatchKey = new Patch.Key(patchSetId, "testFile1.txt");
+		final Patch.Key commitMsgPatchKey = createPatchKey("/COMMIT_MSG", 1);
+		final Patch.Key testFilePatchKey = createPatchKey("testFile1.txt", 1);
 
 		assertThat(content.getTargetDetail(), notNullValue());
 		assertThat(content.getPatchScript(commitMsgPatchKey), nullValue());
