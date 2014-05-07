@@ -311,6 +311,7 @@ public class GerritClientTest extends TestCase {
 		assertFalse(GerritClient.isZippedContent("notzippedcontent".getBytes()));
 		assertFalse(GerritClient.isZippedContent("PK".getBytes()));
 		assertFalse(GerritClient.isZippedContent("".getBytes()));
+		assertFalse(GerritClient.isZippedContent(null));
 	}
 
 }
