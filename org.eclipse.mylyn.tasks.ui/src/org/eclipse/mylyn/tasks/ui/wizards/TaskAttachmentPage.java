@@ -16,16 +16,13 @@ package org.eclipse.mylyn.tasks.ui.wizards;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.ui.CommonImages;
-import org.eclipse.mylyn.commons.workbench.editors.CommonTextSupport;
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor;
-import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorExtensions;
+import org.eclipse.mylyn.internal.tasks.ui.editors.CommentEditor;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.Messages;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -39,11 +36,6 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.ActiveShellExpression;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.contexts.IContextActivation;
-import org.eclipse.ui.contexts.IContextService;
-import org.eclipse.ui.handlers.IHandlerService;
 
 /**
  * A wizard page to enter details of a new attachment.
@@ -57,7 +49,7 @@ public class TaskAttachmentPage extends WizardPage {
 
 	private Button attachContextButton;
 
-	private RichTextEditor commentEditor;
+	private CommentEditor commentEditor;
 
 	private Text descriptionText;
 
@@ -74,12 +66,6 @@ public class TaskAttachmentPage extends WizardPage {
 	private final TaskAttachmentMapper taskAttachment;
 
 	private boolean first = true;
-
-	private IContextService contextService;
-
-	private IContextActivation commentContext;
-
-	private CommonTextSupport textSupport;
 
 	private boolean needsReplaceExisting;
 
@@ -137,32 +123,13 @@ public class TaskAttachmentPage extends WizardPage {
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false));
 		label.setText(Messages.TaskAttachmentPage_Comment);
 
-		AbstractTaskEditorExtension extension = TaskEditorExtensions.getTaskEditorExtension(model.getTaskRepository());
-		if (extension != null) {
-			String contextId = extension.getEditorContextId();
-			if (contextId != null) {
-				contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
-				if (contextService != null) {
-					commentContext = contextService.activateContext(contextId, new ActiveShellExpression(getShell()));
-				}
-			}
-		}
-
-		commentEditor = new RichTextEditor(getModel().getTaskRepository(), SWT.V_SCROLL | SWT.BORDER | SWT.WRAP,
-				contextService, extension, getModel().getTask()) {
+		commentEditor = new CommentEditor(getModel().getTask(), getModel().getTaskRepository()) {
 			@Override
 			protected void valueChanged(String value) {
 				apply();
-			};
+			}
 		};
-		commentEditor.createControl(composite, null);
-		commentEditor.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-
-		IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
-		if (handlerService != null) {
-			textSupport = new CommonTextSupport(handlerService);
-			textSupport.install(commentEditor.getViewer(), true);
-		}
+		commentEditor.createControl(composite);
 
 		new Label(composite, SWT.NONE).setText(Messages.TaskAttachmentPage_Content_Type);// .setBackground(parent.getBackground());
 
@@ -255,7 +222,7 @@ public class TaskAttachmentPage extends WizardPage {
 		if (descriptionText != null) {
 			descriptionText.setFocus();
 		} else {
-			commentEditor.getControl().setFocus();
+			commentEditor.getTextEditor().getControl().setFocus();
 		}
 
 		Dialog.applyDialogFont(composite);
@@ -353,7 +320,7 @@ public class TaskAttachmentPage extends WizardPage {
 			if (descriptionText != null) {
 				descriptionText.setFocus();
 			} else {
-				commentEditor.getControl().setFocus();
+				commentEditor.getTextEditor().getControl().setFocus();
 			}
 			first = false;
 		}
@@ -362,13 +329,7 @@ public class TaskAttachmentPage extends WizardPage {
 	@Override
 	public void dispose() {
 		super.dispose();
-		if (contextService != null && commentContext != null) {
-			contextService.deactivateContext(commentContext);
-			commentContext = null;
-		}
-		if (textSupport != null) {
-			textSupport.dispose();
-		}
+		commentEditor.dispose();
 	}
 
 	/**
