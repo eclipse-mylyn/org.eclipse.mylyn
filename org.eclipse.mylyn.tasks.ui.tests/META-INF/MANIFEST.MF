@@ -14,5 +14,5 @@ Require-Bundle: org.junit;bundle-version="4.8.2",
  org.eclipse.mylyn.tasks.core,
  org.eclipse.mylyn.tasks.tests
 Export-Package: org.eclipse.mylyn.internal.tasks.ui.editors;x-internal:=true,
- org.eclipse.mylyn.tasks.ui.editors;x-internal:=true,
- org.eclipse.mylyn.tasks.ui.wizards;x-internal:=true
+ org.eclipse.mylyn.tasks.ui.editors,
+ org.eclipse.mylyn.tasks.ui.wizards
