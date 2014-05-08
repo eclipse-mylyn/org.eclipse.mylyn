@@ -475,13 +475,12 @@ public class SynchronizeTasksJobTest extends TestCase {
 	}
 
 	public void testGetSingleTaskDataWithRelations() throws Exception {
-		final AtomicReference<List<String>> requestedTaskIds = new AtomicReference<List<String>>();
-		requestedTaskIds.set(new ArrayList<String>());
+		final List<String> requestedTaskIds = new ArrayList<String>();
 		AbstractRepositoryConnector connector = new MockRepositoryConnectorWithTaskDataHandler() {
 			@Override
 			public TaskData getTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
 					throws CoreException {
-				requestedTaskIds.get().add(taskId);
+				requestedTaskIds.add(taskId);
 				return createTaskData(taskId);
 			}
 
@@ -503,10 +502,10 @@ public class SynchronizeTasksJobTest extends TestCase {
 		taskList.addTask(task);
 		SynchronizeTasksJob job = createSyncJob(connector, Collections.singleton(task));
 		job.run(new NullProgressMonitor());
-		assertEquals(3, requestedTaskIds.get().size());
-		assertTrue(requestedTaskIds.get().contains("1"));
-		assertTrue(requestedTaskIds.get().contains("1.sub"));
-		assertTrue(requestedTaskIds.get().contains("1.sub2"));
+		assertEquals(3, requestedTaskIds.size());
+		assertTrue(requestedTaskIds.contains("1"));
+		assertTrue(requestedTaskIds.contains("1.sub"));
+		assertTrue(requestedTaskIds.contains("1.sub2"));
 
 		ITask sub1 = taskList.getTask(MockRepositoryConnector.REPOSITORY_URL, "1.sub");
 		assertNotNull(sub1);
@@ -516,21 +515,20 @@ public class SynchronizeTasksJobTest extends TestCase {
 		assertEquals(SynchronizationState.INCOMING_NEW, ((AbstractTask) sub2).getSynchronizationState());
 
 		// same again but this time we already got them in the task list
-		requestedTaskIds.get().clear();
+		requestedTaskIds.clear();
 		job = createSyncJob(connector, Collections.singleton(task));
 		job.run(new NullProgressMonitor());
-		assertEquals(1, requestedTaskIds.get().size());
-		assertTrue(requestedTaskIds.get().contains("1"));
+		assertEquals(1, requestedTaskIds.size());
+		assertTrue(requestedTaskIds.contains("1"));
 	}
 
 	public void testGetSingleTaskDataWithRelationsAndRemoveRelation() throws Exception {
-		final AtomicReference<List<String>> requestedTaskIds = new AtomicReference<List<String>>();
-		requestedTaskIds.set(new ArrayList<String>());
+		final List<String> requestedTaskIds = new ArrayList<String>();
 		AbstractRepositoryConnector connector = new MockRepositoryConnectorWithTaskDataHandler() {
 			@Override
 			public TaskData getTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
 					throws CoreException {
-				requestedTaskIds.get().add(taskId);
+				requestedTaskIds.add(taskId);
 				return createTaskData(taskId);
 			}
 
@@ -553,9 +551,9 @@ public class SynchronizeTasksJobTest extends TestCase {
 		taskList.addTask(subtaskToStay, ((AbstractTaskContainer) task));
 		SynchronizeTasksJob job = createSyncJob(connector, Collections.singleton(task));
 		job.run(new NullProgressMonitor());
-		assertEquals(2, requestedTaskIds.get().size());
-		assertTrue(requestedTaskIds.get().contains("1"));
-		assertTrue(requestedTaskIds.get().contains("1.sub"));
+		assertEquals(2, requestedTaskIds.size());
+		assertTrue(requestedTaskIds.contains("1"));
+		assertTrue(requestedTaskIds.contains("1.sub"));
 
 		ITask sub1 = taskList.getTask(MockRepositoryConnector.REPOSITORY_URL, "1.sub");
 		ITask sub2 = taskList.getTask(MockRepositoryConnector.REPOSITORY_URL, "1.sub2");
@@ -571,13 +569,12 @@ public class SynchronizeTasksJobTest extends TestCase {
 	}
 
 	public void testErrorOnRelationRetrieval() throws Exception {
-		final AtomicReference<List<String>> requestedTaskIds = new AtomicReference<List<String>>();
-		requestedTaskIds.set(new ArrayList<String>());
+		final List<String> requestedTaskIds = new ArrayList<String>();
 		AbstractRepositoryConnector connector = new MockRepositoryConnectorWithTaskDataHandler() {
 			@Override
 			public TaskData getTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
 					throws CoreException {
-				requestedTaskIds.get().add(taskId);
+				requestedTaskIds.add(taskId);
 				if (taskId.equals("1.sub")) {
 					throw new CoreException(new Status(IStatus.ERROR, "bundle", "log me"));
 				}
@@ -613,13 +610,12 @@ public class SynchronizeTasksJobTest extends TestCase {
 	}
 
 	public void testTasksForSeveralRepositories() throws Exception {
-		final AtomicReference<List<String>> requestedTaskIds = new AtomicReference<List<String>>();
-		requestedTaskIds.set(new ArrayList<String>());
+		final List<String> requestedTaskIds = new ArrayList<String>();
 		AbstractRepositoryConnector connector = new MockRepositoryConnectorWithTaskDataHandler() {
 			@Override
 			public TaskData getTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
 					throws CoreException {
-				requestedTaskIds.get().add(taskId + " on " + taskRepository.getRepositoryUrl());
+				requestedTaskIds.add(taskId + " on " + taskRepository.getRepositoryUrl());
 				return createTaskData(taskId);
 			}
 
@@ -662,8 +658,8 @@ public class SynchronizeTasksJobTest extends TestCase {
 		});
 		assertEquals("beginTask|subTask|subTask|subTask|subTask|done", progressLog.toString());
 
-		assertTrue(requestedTaskIds.get().contains("1 on " + MockRepositoryConnector.REPOSITORY_URL));
-		assertTrue(requestedTaskIds.get().contains("5 on " + MockRepositoryConnector.REPOSITORY_URL + "2"));
+		assertTrue(requestedTaskIds.contains("1 on " + MockRepositoryConnector.REPOSITORY_URL));
+		assertTrue(requestedTaskIds.contains("5 on " + MockRepositoryConnector.REPOSITORY_URL + "2"));
 
 		((TaskRepositoryManager) TasksUi.getRepositoryManager()).removeRepository(secondRepository);
 		((TaskRepositoryManager) TasksUi.getRepositoryManager()).removeRepository(firstRepository);
