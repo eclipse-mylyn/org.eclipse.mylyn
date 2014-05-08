@@ -157,12 +157,6 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 		super.applyValidatorResult(validator);
 	}
 
-	@Override
-	public void applyTo(TaskRepository repository) {
-		super.applyTo(repository);
-		repository.setCategory(TaskRepository.CATEGORY_BUGS);
-	}
-
 	// public for testing
 	public class TracValidator extends Validator {
 
@@ -253,7 +247,7 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 			if (version == Version.XML_RPC //
 					&& (info.isApiVersion(1, 0, 0) //
-					|| (info.isApiVersionOrHigher(1, 0, 3) && info.isApiVersionOrSmaller(1, 0, 5)))) {
+							|| (info.isApiVersionOrHigher(1, 0, 3) && info.isApiVersionOrSmaller(1, 0, 5)))) {
 				setStatus(RepositoryStatus.createStatus(
 						repositoryUrl,
 						IStatus.INFO,
