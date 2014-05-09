@@ -141,7 +141,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 	private final String TOTAL_COUNT 	= "Total reviews: ";
 	private final String GERRIT_LABEL   = " - Gerrit ";
 
-	private final int SEARCH_WIDTH = 200;
+	private final int SEARCH_WIDTH = 350;
 	private final int REPO_WIDTH = 350;
 	private final int VERSION_WIDTH = 35;
 	
