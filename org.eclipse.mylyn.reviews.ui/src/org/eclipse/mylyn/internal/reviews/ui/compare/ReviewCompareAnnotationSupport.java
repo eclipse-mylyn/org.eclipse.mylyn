@@ -162,8 +162,8 @@ public class ReviewCompareAnnotationSupport {
 			selectAndReveal(leftSourceViewer, leftPosition);
 			return leftAnnotation;
 		} else if (leftAnnotation != null && rightAnnotation != null) {
-			if ((direction.isForwards() && leftPosition.offset <= rightPosition.offset)
-					|| (direction.isBackwards() && leftPosition.offset >= rightPosition.offset)) {
+			if ((direction == Direction.FORWARDS && leftPosition.offset <= rightPosition.offset)
+					|| (direction == Direction.BACKWARDS && leftPosition.offset >= rightPosition.offset)) {
 				selectAndReveal(leftSourceViewer, leftPosition);
 				return leftAnnotation;
 			} else {
@@ -285,10 +285,10 @@ public class ReviewCompareAnnotationSupport {
 				continue;
 			}
 
-			if (direction.isForwards() && p.offset == offset || direction.isBackwards()
+			if (direction == Direction.FORWARDS && p.offset == offset || direction == Direction.BACKWARDS
 					&& p.offset + p.getLength() == offset + length) {// || p.includes(offset)) {
 				if (containingAnnotation == null
-						|| (direction.isForwards() && p.length >= containingAnnotationPosition.length || direction.isBackwards()
+						|| (direction == Direction.FORWARDS && p.length >= containingAnnotationPosition.length || direction == Direction.BACKWARDS
 								&& p.length >= containingAnnotationPosition.length)) {
 					containingAnnotation = a;
 					containingAnnotationPosition = p;
@@ -297,7 +297,7 @@ public class ReviewCompareAnnotationSupport {
 			} else {
 				int currentDistance = 0;
 
-				if (direction.isForwards()) {
+				if (direction == Direction.FORWARDS) {
 					currentDistance = p.getOffset() - offset;
 					if (currentDistance < 0) {
 						currentDistance = endOfDocument + currentDistance;

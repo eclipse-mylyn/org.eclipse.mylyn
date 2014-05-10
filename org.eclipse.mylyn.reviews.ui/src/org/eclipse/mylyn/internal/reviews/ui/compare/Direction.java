@@ -11,22 +11,8 @@
 
 package org.eclipse.mylyn.internal.reviews.ui.compare;
 
-public enum Direction {
+enum Direction {
 
-	FORWARDS(true), BACKWARDS(false);
+	FORWARDS, BACKWARDS;
 
-	private final boolean forward;
-
-	private Direction(boolean forward) {
-		this.forward = forward;
-
-	}
-
-	public boolean isForwards() {
-		return forward;
-	}
-
-	public boolean isBackwards() {
-		return !forward;
-	}
 }
