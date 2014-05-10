@@ -43,6 +43,66 @@ import org.eclipse.osgi.util.NLS;
  * @author Steffen Pingel
  */
 public class HudsonDiscovery {
+	/**
+	 * This class works around a source incompatibility between the org.eclipse.ecf.discovery version in Luna and
+	 * earlier versions. Version 5.0 added the triggerDiscovery method to IServiceListener. This class can be extended
+	 * in order to implement this method without the @Overide annotation causing compilation to fail against earlier
+	 * versions (e.g. Kepler).
+	 */
+	private static abstract class AbstractServiceListener {
+		public abstract boolean triggerDiscovery();
+	}
+
+	private final class HudsonServiceListener extends AbstractServiceListener implements IServiceListener {
+		public void serviceDiscovered(IServiceEvent anEvent) {
+			IServiceInfo serviceInfo = anEvent.getServiceInfo();
+			IServiceID serviceId = serviceInfo.getServiceID();
+			IServiceTypeID serviceTypeId = serviceId.getServiceTypeID();
+			// Note that Jenkins will claim that it's both Jenkins and
+			// Hudson for backward compatibility.
+			if (serviceTypeId.getName().equals(JENKINS_MDNS_ID)) {
+				IServiceProperties properties = serviceInfo.getServiceProperties();
+				try {
+					if (properties.getProperty(URL_PROPERTY) == null) {
+						notifyMessage(Messages.JenkinsDiscovery_MessageTitle, NLS.bind(
+								Messages.JenkinsDiscovery_MissingURL, new Object[] { serviceInfo.getLocation()
+										.getHost() }));
+					} else {
+						issueJenkinsNotification(properties);
+					}
+				} catch (URISyntaxException e) {
+					StatusHandler.log(new Status(IStatus.ERROR, HudsonConnectorUi.ID_PLUGIN, NLS.bind(
+							Messages.Discovery_IncorrectURI, new Object[] { properties.getProperty(URL_PROPERTY)
+									.toString() }), e));
+				}
+			}
+			if (serviceTypeId.getName().equals(HUDSON_MDNS_ID)) {
+				IServiceProperties properties = serviceInfo.getServiceProperties();
+				try {
+					if (properties.getProperty(URL_PROPERTY) == null) {
+						notifyMessage(Messages.HudsonDiscovery_MessageTitle, NLS.bind(
+								Messages.HudsonDiscovery_MissingURL,
+								new Object[] { serviceInfo.getLocation().getHost() }));
+					} else {
+						issueHudsonNotification(properties);
+					}
+				} catch (URISyntaxException e) {
+					StatusHandler.log(new Status(IStatus.ERROR, HudsonConnectorUi.ID_PLUGIN, NLS.bind(
+							Messages.Discovery_IncorrectURI, new Object[] { properties.getProperty(URL_PROPERTY)
+									.toString() }), e));
+				}
+			}
+		}
+
+		public void serviceUndiscovered(IServiceEvent anEvent) {
+			// Ignore this for now
+		}
+
+		@Override
+		public boolean triggerDiscovery() {
+			return false;
+		}
+	}
 
 	private static final String ECF_DISCOVERY_JMDNS = "ecf.discovery.jmdns"; //$NON-NLS-1$
 
@@ -90,51 +150,7 @@ public class HudsonDiscovery {
 		try {
 			container = getContainer();
 			final IDiscoveryLocator adapter = (IDiscoveryLocator) container.getAdapter(IDiscoveryLocator.class);
-			adapter.addServiceListener(new IServiceListener() {
-				public void serviceDiscovered(IServiceEvent anEvent) {
-					IServiceInfo serviceInfo = anEvent.getServiceInfo();
-					IServiceID serviceId = serviceInfo.getServiceID();
-					IServiceTypeID serviceTypeId = serviceId.getServiceTypeID();
-					// Note that Jenkins will claim that it's both Jenkins and
-					// Hudson for backward compatibility.
-					if (serviceTypeId.getName().equals(JENKINS_MDNS_ID)) {
-						IServiceProperties properties = serviceInfo.getServiceProperties();
-						try {
-							if (properties.getProperty(URL_PROPERTY) == null) {
-								notifyMessage(Messages.JenkinsDiscovery_MessageTitle, NLS.bind(
-										Messages.JenkinsDiscovery_MissingURL, new Object[] { serviceInfo.getLocation()
-												.getHost() }));
-							} else {
-								issueJenkinsNotification(properties);
-							}
-						} catch (URISyntaxException e) {
-							StatusHandler.log(new Status(IStatus.ERROR, HudsonConnectorUi.ID_PLUGIN, NLS.bind(
-									Messages.Discovery_IncorrectURI,
-									new Object[] { properties.getProperty(URL_PROPERTY).toString() }), e));
-						}
-					}
-					if (serviceTypeId.getName().equals(HUDSON_MDNS_ID)) {
-						IServiceProperties properties = serviceInfo.getServiceProperties();
-						try {
-							if (properties.getProperty(URL_PROPERTY) == null) {
-								notifyMessage(Messages.HudsonDiscovery_MessageTitle, NLS.bind(
-										Messages.HudsonDiscovery_MissingURL, new Object[] { serviceInfo.getLocation()
-												.getHost() }));
-							} else {
-								issueHudsonNotification(properties);
-							}
-						} catch (URISyntaxException e) {
-							StatusHandler.log(new Status(IStatus.ERROR, HudsonConnectorUi.ID_PLUGIN, NLS.bind(
-									Messages.Discovery_IncorrectURI,
-									new Object[] { properties.getProperty(URL_PROPERTY).toString() }), e));
-						}
-					}
-				}
-
-				public void serviceUndiscovered(IServiceEvent anEvent) {
-					// Ignore this for now
-				}
-			});
+			adapter.addServiceListener(new HudsonServiceListener());
 			container.connect(null, null);
 
 		} catch (ContainerCreateException e) {
@@ -172,7 +188,7 @@ public class HudsonDiscovery {
 		String url = properties.getProperty(URL_PROPERTY).toString();
 		String id = getId(properties);
 		if (isNew(url, id)) {
-			// Change the first segment (org.eclipse.mylyn.hudson) to the id of 
+			// Change the first segment (org.eclipse.mylyn.hudson) to the id of
 			// the new repository type when we start differentiation between the two
 			notifyMessage(
 					Messages.JenkinsDiscovery_MessageTitle,
