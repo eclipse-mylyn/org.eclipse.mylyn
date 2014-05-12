@@ -181,6 +181,15 @@
               <dependency-resolution>
                 <optionalDependencies>ignore</optionalDependencies>
               </dependency-resolution>
+			  <filters>
+				<filter>
+				  <type>eclipse-plugin</type>
+				  <id>org.eclipse.jdt.annotation</id>
+				  <restrictTo>
+				  	<versionRange>[1.0,2.0)</versionRange>
+				  </restrictTo>
+				</filter>
+			  </filters>
               <environments>
                 <environment>
                   <os>macosx</os>
@@ -242,6 +251,15 @@
               <dependency-resolution>
                 <optionalDependencies>ignore</optionalDependencies>
               </dependency-resolution>
+			  <filters>
+				<filter>
+				  <type>eclipse-plugin</type>
+				  <id>org.eclipse.jdt.annotation</id>
+				  <restrictTo>
+				  	<versionRange>[1.0,2.0)</versionRange>
+				  </restrictTo>
+				</filter>
+			  </filters>
               <environments>
                 <environment>
                   <os>macosx</os>
