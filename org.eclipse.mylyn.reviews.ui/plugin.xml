@@ -147,19 +147,6 @@
           visibleInUI="true">
     </commonFilter>
  </extension>
-      <extension
-            point="org.eclipse.ui.commands">
-         <command
-               description="Navigates to the next comment annotation in the compare editor when comparing review patch sets."
-               id="org.eclipse.mylyn.reviews.ui.commands.navigate.comment.next"
-               name="Next Comment">
-         </command>
-         <command
-               description="Navigates to the previous comment annotation in the compare editor when comparing review patch sets."
-               id="org.eclipse.mylyn.reviews.ui.commands.navigate.comment.previous"
-               name="Previous Comment">
-         </command>
-      </extension>
 
 	<!--
 	<extension point="org.eclipse.ui.workbench.texteditor.rulerColumns">

@@ -14,10 +14,6 @@
 
 package org.eclipse.mylyn.internal.reviews.ui.compare;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareEditorInput;
 import org.eclipse.compare.CompareViewerPane;
@@ -28,6 +24,7 @@ import org.eclipse.compare.structuremergeviewer.IDiffElement;
 import org.eclipse.compare.structuremergeviewer.StructureDiffViewer;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -36,16 +33,8 @@ import org.eclipse.mylyn.internal.reviews.ui.Messages;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsImages;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.IHandlerActivation;
-import org.eclipse.ui.handlers.IHandlerService;
-import org.eclipse.ui.menus.CommandContributionItem;
-import org.eclipse.ui.menus.CommandContributionItemParameter;
-import org.eclipse.ui.services.IServiceLocator;
 
 /**
  * @author Steffen Pingel
@@ -58,11 +47,11 @@ public abstract class ReviewItemCompareEditorInput extends CompareEditorInput {
 
 	private static final String NAVIGATION_GROUP = "navigation"; //$NON-NLS-1$
 
+	private static final String ID_NEXT_COMMENT = ReviewsUiPlugin.PLUGIN_ID + "navigate.comment.next"; //$NON-NLS-1$
+
+	private static final String ID_PREVIOUS_COMMENT = ReviewsUiPlugin.PLUGIN_ID + "navigate.comment.previous"; //$NON-NLS-1$
+
 	final ReviewBehavior behavior;
-
-	private IHandlerActivation gotoNextCommentHandler;
-
-	private IHandlerActivation gotoPreviousCommentHandler;
 
 	public ReviewItemCompareEditorInput(CompareConfiguration configuration, ReviewBehavior behavior) {
 		super(configuration);
@@ -110,64 +99,45 @@ public abstract class ReviewItemCompareEditorInput extends CompareEditorInput {
 		if (input instanceof FileItemNode && ((FileItemNode) input).getFileItem() != null) {
 			ReviewCompareAnnotationSupport support = ReviewCompareAnnotationSupport.getAnnotationSupport(contentViewer);
 			support.setReviewItem(((FileItemNode) input).getFileItem(), behavior);
-
-			if (gotoNextCommentHandler == null && gotoPreviousCommentHandler == null) {
-				initializeGotoCommentHandlers(parent, support);
-			}
+			initializeGotoCommentHandlers(parent, support);
 		}
 		return contentViewer;
 	}
 
-	private void initializeGotoCommentHandlers(Composite parent, ReviewCompareAnnotationSupport support) {
+	private void initializeGotoCommentHandlers(Composite parent, final ReviewCompareAnnotationSupport support) {
 		ToolBarManager tbm = CompareViewerPane.getToolBarManager(parent);
 		if (tbm != null) {
-			IServiceLocator serviceLocator = getServiceLocator();
-			if (serviceLocator != null) {
-				final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(
-						IHandlerService.class);
-				if (handlerService != null) {
-					gotoNextCommentHandler = handlerService.activateHandler(ReviewsUiPlugin.PLUGIN_ID
-							+ ".commands.navigate.comment.next", //$NON-NLS-1$
-							new GotoCommentHandler(Direction.FORWARDS, support));
-					gotoPreviousCommentHandler = handlerService.activateHandler(ReviewsUiPlugin.PLUGIN_ID
-							+ ".commands.navigate.comment.previous", //$NON-NLS-1$
-							new GotoCommentHandler(Direction.BACKWARDS, support));
-					final List<IHandlerActivation> activations = new ArrayList<IHandlerActivation>(Arrays.asList(
-							gotoNextCommentHandler, gotoPreviousCommentHandler));
-					parent.addDisposeListener(new DisposeListener() {
+			if (tbm.find(NAVIGATION_GROUP) != null) {
+				if (tbm.find(ID_NEXT_COMMENT) == null) {
+					Action goToNextAction = new Action(Messages.Reviews_NextComment, ReviewsImages.NEXT_COMMENT) {
 						@Override
-						public void widgetDisposed(DisposeEvent e) {
-							handlerService.deactivateHandlers(activations);
-							activations.clear();
+						public void run() {
+							support.gotoAnnotation(Direction.FORWARDS);
 						}
-					});
+					};
+					goToNextAction.setId(ID_NEXT_COMMENT);
+					goToNextAction.setToolTipText(Messages.Reviews_NextComment_Tooltip);
+					tbm.appendToGroup(NAVIGATION_GROUP, goToNextAction);
 				}
 
-				if (tbm.find(NAVIGATION_GROUP) != null) {
-					CommandContributionItemParameter p = new CommandContributionItemParameter(
-							serviceLocator,
-							ReviewsUiPlugin.PLUGIN_ID + ".navigate.comment.next", //$NON-NLS-1$
-							ReviewsUiPlugin.PLUGIN_ID + ".commands.navigate.comment.next", //$NON-NLS-1$ // command id
-							null, ReviewsImages.NEXT_COMMENT, ReviewsImages.NEXT_COMMENT, null,
-							Messages.Reviews_NextComment, Messages.Reviews_NextComment.substring(0, 1),
-							Messages.Reviews_NextComment_Tooltip, CommandContributionItem.STYLE_PUSH, null, true);
-
-					tbm.appendToGroup(NAVIGATION_GROUP, new CommandContributionItem(p));
-
-					p = new CommandContributionItemParameter(
-							serviceLocator, //
-							ReviewsUiPlugin.PLUGIN_ID + ".navigate.comment.previous", //$NON-NLS-1$
-							ReviewsUiPlugin.PLUGIN_ID + ".commands.navigate.comment.previous", //$NON-NLS-1$ // command id
-							null, ReviewsImages.PREVIOUS_COMMENT, ReviewsImages.PREVIOUS_COMMENT, null,
-							Messages.Reviews_PreviousComment, Messages.Reviews_PreviousComment.substring(0, 1),
-							Messages.Reviews_PreviousComment_Tooltip, CommandContributionItem.STYLE_PUSH, null, true);
-					tbm.appendToGroup(NAVIGATION_GROUP, new CommandContributionItem(p));
-				} else {// bug 430151
-					StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
-							"Could not create comment navigation buttons", new Exception())); //$NON-NLS-1$
+				if (tbm.find(ID_PREVIOUS_COMMENT) == null) {
+					Action goToPreviousAction = new Action(Messages.Reviews_PreviousComment,
+							ReviewsImages.PREVIOUS_COMMENT) {
+						@Override
+						public void run() {
+							support.gotoAnnotation(Direction.BACKWARDS);
+						}
+					};
+					goToPreviousAction.setId(ID_PREVIOUS_COMMENT);
+					goToPreviousAction.setToolTipText(Messages.Reviews_PreviousComment_Tooltip);
+					tbm.appendToGroup(NAVIGATION_GROUP, goToPreviousAction);
 				}
-				tbm.update(true);
+			} else {// bug 430151
+				StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
+						"Could not create comment navigation buttons", new Exception())); //$NON-NLS-1$
 			}
+			tbm.update(true);
 		}
 	}
+
 }
