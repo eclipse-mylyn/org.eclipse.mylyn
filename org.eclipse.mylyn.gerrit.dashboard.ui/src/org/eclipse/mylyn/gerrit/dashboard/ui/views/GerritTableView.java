@@ -34,6 +34,8 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -756,33 +758,36 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 				IStatus status = null;
 				try {
 	                fReviewTable.createReviewItem(aQueryType, aTaskRepo);
-	                getReviews(aTaskRepo, aQueryType);
-	                Display.getDefault().syncExec(new Runnable() {
-	                    @Override
-	                    public void run() {
-	                        if (aQueryType != GerritQuery.CUSTOM ) {
-	                        String query = 	fCurrentQuery.getAttribute(GerritQuery.QUERY_STRING);
-	                        setSearchText(query);
-	                        } else {
-	                        	//Record the custom query
-	                        	setSearchText (getSearchText());
-	                        }
-	                        boolean ok = setConnector(fConnector); 
-	                        GerritClient gerritClient = null;
-	                        if (ok) {
-	                        	gerritClient = fConnector.getClient(aTaskRepo);
-	                        }
-	                        if (gerritClient != null) {
-		                        try {
-									GerritUi.Ftracer.traceInfo("GerritClient: " + gerritClient.getVersion(new NullProgressMonitor()) );
-									setRepositoryVersionLabel (aTaskRepo.getRepositoryLabel(), gerritClient.getVersion(new NullProgressMonitor()).toString() );
-								} catch (GerritException e) {
-									StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, e.getMessage(), e));
-								}	                        	
-	                        }
-	                    }
-	                });
-	                status = Status.OK_STATUS;
+	                status = getReviews(aTaskRepo, aQueryType);
+	                if (status.isOK()) {
+		                Display.getDefault().syncExec(new Runnable() {
+		                    @Override
+		                    public void run() {
+		                        if (aQueryType != GerritQuery.CUSTOM ) {
+		                            if (fCurrentQuery != null) {
+                                        String query = 	fCurrentQuery.getAttribute(GerritQuery.QUERY_STRING);
+                                        setSearchText(query);
+                                    }
+		                        } else {
+                                    //Record the custom query
+                                    setSearchText (getSearchText());
+		                        }
+		                        boolean ok = setConnector(fConnector);
+		                        GerritClient gerritClient = null;
+		                        if (ok) {
+                                    gerritClient = fConnector.getClient(aTaskRepo);
+		                        }
+		                        if (gerritClient != null) {
+			                        try {
+										GerritUi.Ftracer.traceInfo("GerritClient: " + gerritClient.getVersion(new NullProgressMonitor()) );
+										setRepositoryVersionLabel (aTaskRepo.getRepositoryLabel(), gerritClient.getVersion(new NullProgressMonitor()).toString() );
+									} catch (GerritException e) {
+										StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, e.getMessage(), e));
+									}
+		                        }
+		                    }
+		                });
+	                }
                 }
                 catch (GerritQueryException e) {
                    StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, e.getStatus().getMessage(), e));
@@ -875,15 +880,41 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 	// Query handling
 	// ------------------------------------------------------------------------
 
-    /**
+	private void displayWarning (final String st) {
+		Display.getDefault().syncExec(new Runnable() {
+			public void run() {
+				final MessageDialog dialog = new MessageDialog(null, "Warning",
+						null, st, MessageDialog.WARNING,
+						new String[] { IDialogConstants.CANCEL_LABEL }, 0);
+				dialog.open();
+			}
+		});
+	}
+
+	/**
      * Perform the requested query and convert the resulting tasks in GerritTask:s
      * 
      * @param repository the tasks repository
      * @param queryType	the query
      * 
+     * @return IStatus
      * @throws GerritQueryException
      */
-    private void getReviews(TaskRepository repository, String queryType) throws GerritQueryException {
+    private IStatus getReviews(TaskRepository repository, String queryType) throws GerritQueryException {
+	    if (repository.getUserName() == null) {
+	        //Test for Anonymous user
+	        if (queryType.equals(GerritQuery.MY_CHANGES) || queryType.equals(GerritQuery.QUERY_MY_DRAFTS_COMMENTS_CHANGES) ) {
+                displayWarning ("This operation is not allowed as Anonymous user: " + queryType);
+                return Status.CANCEL_STATUS;
+            } else if (queryType == GerritQuery.CUSTOM ) {
+                int foundSelf = getSearchText().toLowerCase().indexOf("self");
+                int foundhasDraft = getSearchText().toLowerCase().indexOf(GerritQuery.QUERY_MY_DRAFTS_COMMENTS_CHANGES);
+                if (foundSelf != -1 || foundhasDraft != -1) {
+                    displayWarning ("This operation is not allowed as Anonymous user in search field: " + getSearchText());
+                    return Status.CANCEL_STATUS;
+                }
+            }
+        }
 
     	// Format the query id
     	String queryId = rtv.getTitle() + " - " + queryType;
@@ -934,6 +965,11 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
     		}
     	}
 
+        if (query.getAttribute(GerritQuery.QUERY_STRING).isEmpty()) {
+            displayWarning ("The query string cannot be empty, please enter a value.");
+            return Status.CANCEL_STATUS;
+        }
+
     	// Save query
     	fCurrentQuery = query;
     	
@@ -968,6 +1004,8 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 //				job.cancel();
 //			}
 //		}
+		return Status.OK_STATUS;
+
     }
 	
     /**
