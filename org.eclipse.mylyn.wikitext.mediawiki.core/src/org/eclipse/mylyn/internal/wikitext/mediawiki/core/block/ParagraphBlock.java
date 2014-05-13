@@ -77,21 +77,13 @@ public class ParagraphBlock extends Block {
 		for (Block block : dialect.getParagraphBreakingBlocks()) {
 			if (block.canStart(line, offset)) {
 				setClosed(true);
-				return 0;
+				return offset;
 			}
 		}
 
-		Matcher nestedStartMatcher = NESTED_BLOCK_START_PATTERN.matcher(line);
-		if (offset > 0) {
-			nestedStartMatcher.region(offset, line.length());
-		}
-		if (nestedStartMatcher.find()) {
-			nestedStartOffset = nestedStartMatcher.start(NESTED_BLOCK_START_GROUP);
-			if (isEscaped(line, offset, nestedStartOffset)) {
-				nestedStartOffset = -1;
-			} else {
-				nestedLineNumber = getState().getLineNumber();
-			}
+		nestedStartOffset = calculateNestedStartOffset(line, offset);
+		if (nestedStartOffset != -1) {
+			nestedLineNumber = getState().getLineNumber();
 		}
 
 		++blockLineCount;
@@ -113,13 +105,30 @@ public class ParagraphBlock extends Block {
 		if (nestedStartOffset > 0) {
 			line = line.substring(0, nestedStartOffset);
 		}
-		dialect.emitMarkupLine(getParser(), state, line, offset);
+		if (nestedStartOffset != offset) {
+			dialect.emitMarkupLine(getParser(), state, line, offset);
+		}
 
 		lastLineNumber = getState().getLineNumber();
 		return nestedStartOffset;
 	}
 
-	private boolean isEscaped(String line, int lineOffset, int offset) {
+	private static int calculateNestedStartOffset(String line, int offset) {
+		int nestedStartOffset = -1;
+		Matcher nestedStartMatcher = NESTED_BLOCK_START_PATTERN.matcher(line);
+		if (offset > 0) {
+			nestedStartMatcher.region(offset, line.length());
+		}
+		if (nestedStartMatcher.find()) {
+			nestedStartOffset = nestedStartMatcher.start(NESTED_BLOCK_START_GROUP);
+			if (isEscaped(line, offset, nestedStartOffset)) {
+				nestedStartOffset = -1;
+			}
+		}
+		return nestedStartOffset;
+	}
+
+	private static boolean isEscaped(String line, int lineOffset, int offset) {
 		Matcher matcher = ESCAPE_PHRASE_MODIFIER_PATTERN.matcher(line);
 		if (lineOffset > 0) {
 			matcher.region(lineOffset, line.length());

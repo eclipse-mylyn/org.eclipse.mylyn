@@ -103,7 +103,7 @@ public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
 		blocks.add(new CommentBlock());
 
 		for (Block block : blocks) {
-			if (block instanceof ParagraphBlock) {
+			if (block instanceof ParagraphBlock || block instanceof CommentBlock) {
 				continue;
 			}
 			paragraphBreakingBlocks.add(block);

@@ -450,6 +450,24 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><p>normal para  normal *foo*</p></body>"));
 	}
 
+	public void testHtmlCommentEmpty() {
+		String html = parser.parseToHtml("normal para <!-- --> normal *foo*");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>normal para  normal *foo*</p></body>"));
+	}
+
+	public void testHtmlCommentOnSameLineAsAnotherCommentWhitespaceSeparator() {
+		String html = parser.parseToHtml("normal para <!-- --> <!-- --> normal");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>normal para   normal</p></body>"));
+	}
+
+	public void testHtmlCommentOnSameLineAsAnotherComment() {
+		String html = parser.parseToHtml("normal para <!-- -->b<!-- --> normal");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>normal para b normal</p></body>"));
+	}
+
 	public void testHtmlCodeWithNestedFormatting() {
 		// bug 325023
 		String html = parser.parseToHtml("<code>NonItalic=''Italic''</code>");
