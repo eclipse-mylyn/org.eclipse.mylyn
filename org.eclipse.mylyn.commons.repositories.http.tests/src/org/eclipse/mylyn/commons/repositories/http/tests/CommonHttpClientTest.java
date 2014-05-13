@@ -12,8 +12,11 @@
 package org.eclipse.mylyn.commons.repositories.http.tests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.net.ssl.SSLException;
 import javax.net.ssl.TrustManager;
@@ -25,6 +28,7 @@ import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.mylyn.commons.core.net.SslSupport;
 import org.eclipse.mylyn.commons.core.net.TrustAllTrustManager;
@@ -217,6 +221,24 @@ public class CommonHttpClientTest {
 		} finally {
 			HttpUtil.release(request, response, null);
 		}
+	}
+
+	@Test
+	public void testHttpContextPerThread() throws Exception {
+		RepositoryLocation location = new RepositoryLocation("http://mylyn.org/");
+		final CommonHttpClient client = new CommonHttpClient(location);
+		final AtomicReference<HttpContext> otherThreadContext = new AtomicReference<HttpContext>();
+		Thread t = new Thread() {
+			@Override
+			public void run() {
+				otherThreadContext.set(client.getContext());
+			};
+		};
+		t.start();
+		t.join();
+		assertNotNull(otherThreadContext.get());
+		assertNotNull(client.getContext());
+		assertFalse(otherThreadContext.get() == client.getContext());
 	}
 
 	private Scheme setUpDefaultFactory(CommonHttpClient client) {

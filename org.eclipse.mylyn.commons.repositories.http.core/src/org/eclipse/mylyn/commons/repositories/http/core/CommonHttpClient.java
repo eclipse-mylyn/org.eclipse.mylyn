@@ -26,8 +26,8 @@ import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.AbstractHttpClient;
 import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.ContentEncodingHttpClient;
+import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
-import org.apache.http.protocol.SyncBasicHttpContext;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.commons.core.net.SslSupport;
 import org.eclipse.mylyn.commons.core.net.TrustAllTrustManager;
@@ -52,7 +52,7 @@ public class CommonHttpClient {
 
 	private boolean authenticated;
 
-	private final SyncBasicHttpContext context;
+	private final ThreadLocal<BasicHttpContext> context = new ThreadLocal<BasicHttpContext>();
 
 	private AuthenticationType<UserCredentials> httpAuthenticationType;
 
@@ -64,7 +64,6 @@ public class CommonHttpClient {
 
 	public CommonHttpClient(RepositoryLocation location) {
 		this.location = location;
-		this.context = new SyncBasicHttpContext(null);
 		this.httpAuthenticationType = AuthenticationType.HTTP;
 	}
 
@@ -77,11 +76,14 @@ public class CommonHttpClient {
 
 	public HttpResponse execute(HttpRequestBase request, IOperationMonitor monitor) throws IOException {
 		prepareRequest(request, monitor);
-		return HttpUtil.execute(getHttpClient(), HttpUtil.createHost(request), context, request, monitor);
+		return HttpUtil.execute(getHttpClient(), HttpUtil.createHost(request), getContext(), request, monitor);
 	}
 
 	public HttpContext getContext() {
-		return context;
+		if (context.get() == null) {
+			context.set(new BasicHttpContext(null));
+		}
+		return context.get();
 	}
 
 	public AuthenticationType<UserCredentials> getHttpAuthenticationType() {
@@ -131,10 +133,10 @@ public class CommonHttpClient {
 			if (isPreemptiveAuthenticationEnabled()) {
 				// create or pre-populate auth cache 
 				HttpHost host = HttpUtil.createHost(request);
-				Object authCache = context.getAttribute(ClientContext.AUTH_CACHE);
+				Object authCache = getContext().getAttribute(ClientContext.AUTH_CACHE);
 				if (authCache == null) {
 					authCache = new BasicAuthCache();
-					context.setAttribute(ClientContext.AUTH_CACHE, authCache);
+					getContext().setAttribute(ClientContext.AUTH_CACHE, authCache);
 				}
 				if (authCache instanceof BasicAuthCache) {
 					if (((BasicAuthCache) authCache).get(host) == null) {
@@ -153,10 +155,10 @@ public class CommonHttpClient {
 			request.getParams().setParameter(SslSupport.class.getName(), support);
 		} else {
 			// remove the token that associates certificate credentials with the connection
-			context.removeAttribute(ClientContext.USER_TOKEN);
+			getContext().removeAttribute(ClientContext.USER_TOKEN);
 		}
 
-		context.setAttribute(HttpUtil.CONTEXT_KEY_MONITOR_THREAD, getMonitorThread());
+		getContext().setAttribute(HttpUtil.CONTEXT_KEY_MONITOR_THREAD, getMonitorThread());
 	}
 
 	protected void authenticate(IOperationMonitor monitor) throws IOException {
