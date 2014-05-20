@@ -427,7 +427,7 @@ public class BugzillaClient {
 			br = new BufferedReader(new InputStreamReader(is));
 			while ((line = br.readLine()) != null) {
 				sb.append(line);
-				sb.append("\n");
+				sb.append("\n"); //$NON-NLS-1$
 			}
 		} finally {
 			if (br != null) {
@@ -441,7 +441,7 @@ public class BugzillaClient {
 
 	private String getBugzillaLoginTokenIfExists(IProgressMonitor monitor) throws CoreException {
 		String loginToken = null;
-		GzipPostMethod getMethod = new GzipPostMethod(WebUtil.getRequestPath(repositoryUrl.toString()) + "/index.cgi",
+		GzipPostMethod getMethod = new GzipPostMethod(WebUtil.getRequestPath(repositoryUrl.toString()) + "/index.cgi", //$NON-NLS-1$
 				true);
 		try {
 			getMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=" //$NON-NLS-1$ //$NON-NLS-2$
@@ -501,7 +501,7 @@ public class BugzillaClient {
 			String loginToken = getBugzillaLoginTokenIfExists(monitor);
 			if (loginToken != null) {
 				formData = new NameValuePair[3];
-				formData[2] = new NameValuePair("Bugzilla_login_token", loginToken);
+				formData[2] = new NameValuePair("Bugzilla_login_token", loginToken); //$NON-NLS-1$
 			} else {
 				formData = new NameValuePair[2];
 			}
