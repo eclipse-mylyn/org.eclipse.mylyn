@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.tasks.ui;
 
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
@@ -23,6 +24,9 @@ public class MyTasksFilter extends AbstractTaskListFilter {
 
 	@Override
 	public boolean select(Object parent, Object element) {
+		if (element instanceof LocalTask) {
+			return true;
+		}
 		if (element instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) element;
 			String owner = task.getOwner();
