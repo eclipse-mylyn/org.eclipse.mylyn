@@ -26,6 +26,7 @@ import org.eclipse.mylyn.internal.reviews.ui.IReviewAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorExtensions;
 import org.eclipse.mylyn.reviews.core.model.IComment;
+import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 import org.eclipse.mylyn.reviews.ui.SizeCachingComposite;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -69,8 +70,9 @@ public abstract class AbstractCommentPart<V extends ExpandablePart<IComment, V>>
 
 	@Override
 	protected String getSectionHeaderText() {
+		IUser author = comment.getAuthor();
 		return NLS.bind(Messages.AbstractCommentPart_Section_header, //
-				comment.getAuthor().getDisplayName(), //
+				author != null ? author.getDisplayName() : Messages.AbstractCommentPart_No_author, //
 				DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(comment.getCreationDate()) // 
 		);
 	}

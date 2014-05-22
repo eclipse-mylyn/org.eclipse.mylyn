@@ -18,7 +18,10 @@ public class Messages extends NLS {
 
 	public static String AbstractCommentPart_Draft;
 
+	public static String AbstractCommentPart_No_author;
+
 	public static String AbstractCommentPart_Section_header;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
