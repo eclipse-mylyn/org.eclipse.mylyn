@@ -331,7 +331,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		} catch (UnsupportedEncodingException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 					"Repository configured with unsupported encoding: " + repository.getCharacterEncoding() //$NON-NLS-1$
-							+ "\n\n Unable to determine changed tasks.", e)); //$NON-NLS-1$
+					+ "\n\n Unable to determine changed tasks.", e)); //$NON-NLS-1$
 		} finally {
 			monitor.done();
 		}
@@ -361,7 +361,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 
 		if (syncSession.getData() == null && collector.getQueryTimestamp() != null) {
-			// Bugzilla 4.2 does not parse the timezone of the time stamp properly hence it needs to be persisted in 
+			// Bugzilla 4.2 does not parse the timezone of the time stamp properly hence it needs to be persisted in
 			// server time and not local time
 			syncSession.setData(collector.getQueryTimestamp());
 //			Date queryDate = BugzillaAttributeMapper.parseDate(collector.getQueryTimestamp());
@@ -779,7 +779,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				if (configuration == null) {
 					throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 							RepositoryStatus.ERROR_INTERNAL, "Failed to retrieve repository configuration for " //$NON-NLS-1$
-									+ repository.getRepositoryUrl().toString()));
+							+ repository.getRepositoryUrl().toString()));
 
 				}
 				return configuration;
@@ -1011,9 +1011,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			}
 			if (priority.equals("Low")) { //$NON-NLS-1$
 				return LOW;
-			}
-			if (priority.equals("Lowest")) { //$NON-NLS-1$
-				return LOWEST;
 			}
 			if (priority.equals("Lowest")) { //$NON-NLS-1$
 				return LOWEST;
