@@ -326,7 +326,7 @@ public abstract class AbstractRepositoryConnector {
 	 * @since 3.0
 	 */
 	@NonNull
-	public ITaskMapping getTaskMapping(TaskData taskData) {
+	public ITaskMapping getTaskMapping(@NonNull TaskData taskData) {
 		return new TaskMapper(taskData);
 	}
 
@@ -646,7 +646,8 @@ public abstract class AbstractRepositoryConnector {
 	 *             thrown in case the operation fails
 	 * @since 3.11
 	 */
-	public RepositoryInfo validateRepository(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
+	@NonNull
+	public RepositoryInfo validateRepository(@NonNull TaskRepository repository, @Nullable IProgressMonitor monitor) throws CoreException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -659,7 +660,7 @@ public abstract class AbstractRepositoryConnector {
 	 *            the repository
 	 * @since 3.11
 	 */
-	public void applyDefaultCategory(TaskRepository repository) {
+	public void applyDefaultCategory(@NonNull TaskRepository repository) {
 		repository.setCategory(TaskRepository.CATEGORY_BUGS);
 	}
 }
