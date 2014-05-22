@@ -539,7 +539,7 @@ public class Comment extends EObjectImpl implements IComment {
 		IRepository repos = getReview() != null ? getReview().getRepository() : null;
 		return getAuthor() != null
 				&& repos != null
-				&& (repos.getAccount() == getAuthor() || (repos.getAccount().getEmail().equals(getAuthor().getEmail())));
+				&& (repos.getAccount() == getAuthor() || (repos.getAccount() != null && repos.getAccount().getEmail().equals(getAuthor().getEmail())));
 	}
 
 	/**
