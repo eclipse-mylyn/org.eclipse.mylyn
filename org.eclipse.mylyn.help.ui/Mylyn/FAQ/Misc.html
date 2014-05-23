@@ -116,6 +116,18 @@
 					<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=413191" target="mylyn_external">bug 413191</a> for more info.
 				</td>
 			</tr>
+			<tr>
+				<td><code>org.eclipse.mylyn.http.connections.per.host</code></td>
+				<td><center>3.12</center></td>
+				<td>100</td>
+				<td>The maximum number of connections to be used per host by HTTP connection managers.</td>
+			</tr>
+			<tr>
+				<td><code>org.eclipse.mylyn.http.total.connections</code></td>
+				<td><center>3.12</center></td>
+				<td>1000</td>
+				<td>The maximum number of connections allowed by HTTP connection managers.</td>
+			</tr>
 		</table>
 		<h2 id="How_can_I_report_a_dead-lock_or_a_problem_about_a_stalled_UI.3F">How can I report a dead-lock or a problem about a stalled UI?</h2>
 		<p>The recommended way is to file a bug with a full thread dump using jstack which is part of the Java Development Kit 6. These wiki pages have more details on using jstack on different platforms: </p>
