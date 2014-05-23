@@ -37,7 +37,7 @@ import org.junit.Test;
  * </ul>
  * </p>
  * 
- * @generated
+ * @generated NOT
  */
 public class CommentContainerTest {
 
@@ -219,8 +219,81 @@ public class CommentContainerTest {
 	}
 
 	@Test
-	public void testCommentIsMine() {
-		IRepository repos = ReviewsFactory.eINSTANCE.createRepository();
+	public void testIsMineForRepositoryWithoutAccountAndCommentWithoutAuthor() {
+		IComment comment = createReviewWithComment(createRepository());
+
+		assertThat(comment.isMine(), is(false));
+	}
+
+	@Test
+	public void testIsMineForRepositoryAndCommentWithTheSameUser() {
+		IUser user = createUser();
+		IRepository repo = createRepositoryWithAccount(user);
+		IComment comment = createReviewWithCommentAndAuthor(repo, user);
+
+		assertThat(comment.isMine(), is(true));
+	}
+
+	//the following tests should be removed when https://bugs.eclipse.org/bugs/show_bug.cgi?id=418878 is fixed.
+	@Test
+	public void testIsMineForRepositoryAndCommentWithUsersHavingTheSameEmail() {
+		IUser user1 = createUser("foo@bar.com");
+		IUser user2 = createUser("foo@bar.com");
+		IRepository repo = createRepositoryWithAccount(user1);
+		IComment comment = createReviewWithCommentAndAuthor(repo, user2);
+
+		assertThat(comment.isMine(), is(true));
+	}
+
+	@Test
+	public void testIsMineForRepositoryWithAccountAndCommentWithoutAuthor() {
+		IUser user = createUser("foo@bar.com");
+		IRepository repo = createRepositoryWithAccount(user);
+		IComment comment = createReviewWithComment(repo);
+
+		assertThat(comment.isMine(), is(false));
+	}
+
+	@Test
+	public void testIsMineForRepositoryAndCommentWithUsersHavingTheDifferentEmails() {
+		IUser user1 = createUser("foo@bar.com");
+		IUser user2 = createUser("baz@bar.com");
+		IRepository repo = createRepositoryWithAccount(user1);
+		IComment comment = createReviewWithCommentAndAuthor(repo, user2);
+
+		assertThat(comment.isMine(), is(false));
+	}
+
+	@Test
+	public void testIsMineForRepositoryWithoutAccountAndCommentWithAuthor() {
+		IUser user = createUser("foo@bar.com");
+		IRepository repo = createRepository();
+		IComment comment = createReviewWithCommentAndAuthor(repo, user);
+
+		assertThat(comment.isMine(), is(false));
+	}
+
+	@Test
+	public void testIsMineForRepositoryWithAccountAndNullEmailAndCommentWithAuthor() {
+		IUser user1 = createUser(null);
+		IUser user2 = createUser("baz@bar.com");
+		IRepository repo = createRepositoryWithAccount(user1);
+		IComment comment = createReviewWithCommentAndAuthor(repo, user2);
+
+		assertThat(comment.isMine(), is(false));
+	}
+
+	private static IRepository createRepository() {
+		return ReviewsFactory.eINSTANCE.createRepository();
+	}
+
+	private static IRepository createRepositoryWithAccount(IUser user) {
+		IRepository repo = createRepository();
+		repo.setAccount(user);
+		return repo;
+	}
+
+	private static IComment createReviewWithComment(IRepository repos) {
 		IReview review = ReviewsFactory.eINSTANCE.createReview();
 		repos.getReviews().add(review);
 		IReviewItemSet set = ReviewsFactory.eINSTANCE.createReviewItemSet();
@@ -229,18 +302,23 @@ public class CommentContainerTest {
 		IComment comment = ReviewsFactory.eINSTANCE.createComment();
 		set.getItems().add(item);
 		item.getComments().add(comment);
-		assertThat(comment.isMine(), is(false));
-		IUser user = ReviewsFactory.eINSTANCE.createUser();
-		repos.setAccount(user);
-		comment.setAuthor(user);
-		assertThat(comment.isMine(), is(true));
-		//the following tests should be removed when https://bugs.eclipse.org/bugs/show_bug.cgi?id=418878 is fixed.
-		IUser user2 = ReviewsFactory.eINSTANCE.createUser();
-		comment.setAuthor(user2);
-		user.setEmail("foo@bar.com");
-		user2.setEmail("foo@bar.com");
-		assertThat(comment.isMine(), is(true));
-		user2.setEmail("baz@bar.com");
-		assertThat(comment.isMine(), is(false));
+		return comment;
 	}
-} //ReviewItemTest
+
+	private static IComment createReviewWithCommentAndAuthor(IRepository repos, IUser user) {
+		IComment comment = createReviewWithComment(repos);
+		comment.setAuthor(user);
+		return comment;
+	}
+
+	private static IUser createUser() {
+		return ReviewsFactory.eINSTANCE.createUser();
+	}
+
+	private static IUser createUser(String email) {
+		IUser user = createUser();
+		user.setEmail(email);
+		return user;
+	}
+
+}
