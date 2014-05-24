@@ -74,7 +74,7 @@ public class CommonTestUtil {
 	/**
 	 * Returns the given file path with its separator character changed from the given old separator to the given new
 	 * separator.
-	 * 
+	 *
 	 * @param path
 	 *            a file path
 	 * @param oldSeparator
@@ -380,7 +380,7 @@ public class CommonTestUtil {
 	/**
 	 * Unzips the given zip file to the given destination directory extracting only those entries the pass through the
 	 * given filter.
-	 * 
+	 *
 	 * @param zipFile
 	 *            the zip file to unzip
 	 * @param dstDir
@@ -428,7 +428,7 @@ public class CommonTestUtil {
 
 	/**
 	 * Copies all bytes in the given source stream to the given destination stream. Neither streams are closed.
-	 * 
+	 *
 	 * @param source
 	 *            the given source stream
 	 * @param destination
@@ -519,7 +519,7 @@ public class CommonTestUtil {
 	 * configuration is not actually detected resulting in a broken configuration.
 	 * <p>
 	 * Please note that this only works for http proxies. The https proxy system property is ignored.
-	 * 
+	 *
 	 * @see #isHttpsProxyBroken()
 	 */
 	public static boolean fixProxyConfiguration() {
@@ -570,7 +570,7 @@ public class CommonTestUtil {
 	/**
 	 * If Eclipse proxy configuration is set to manual https proxies aren't detected and hence tests that rely on https
 	 * connections may fail. Use this method to detect whether https is configured correctly.
-	 * 
+	 *
 	 * @see #fixProxyConfiguration()
 	 */
 	public static boolean isHttpsProxyBroken() {
@@ -594,6 +594,11 @@ public class CommonTestUtil {
 
 	public static boolean skipBrowserTests() {
 		return Boolean.parseBoolean(System.getProperty("mylyn.test.skipBrowserTests"));
+	}
+
+	public static boolean bundleWithNameIsPresent(String name) {
+		Bundle bundle = Platform.getBundle(name);
+		return bundle != null;
 	}
 
 }
