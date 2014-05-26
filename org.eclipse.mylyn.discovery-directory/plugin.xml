@@ -152,6 +152,28 @@
                url="http://www.foglyn.com/">
          </overview>
       </connectorDescriptor>
+      
+      <connectorDescriptor
+            categoryId="org.eclipse.mylyn.discovery.directory.categories.TaskManagement"
+            description="%connectorDescriptor.description.tuleap"
+            id="org.tuleap"
+            kind="task"
+            license="%connectorDescriptor.license.tuleap"
+            name="%connectorDescriptor.name.tuleap"
+            provider="%connectorDescriptor.provider.tuleap"
+            siteUrl="http://eclipse.tuleap.net/mylyn.tasks/stable"
+            statsUrl="http://stats.mylyn.org/discovery/3.10/org.tuleap">
+         <icon
+               image32="images/tuleap-32.png"
+               image64="images/tuleap-64.png"
+               image128="images/tuleap-128.png">
+         </icon>
+         <overview
+               screenshot="images/tuleap-screenshot-320x240.png"
+               summary="%connectorDescriptor.overview.summary.tuleap"
+               url="http://www.tuleap.org">
+         </overview>
+      </connectorDescriptor>
       <connectorDescriptor
             categoryId="org.eclipse.mylyn.discovery.directory.categories.CodeReview"
             description="%connectorDescriptor.description.gerrit"
