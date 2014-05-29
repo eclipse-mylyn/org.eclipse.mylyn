@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <!--
-    Copyright (c) 2010 Tasktop Technologies and others. 
+    Copyright (c) 2010,2014 Tasktop Technologies and others.
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the Eclipse Public License v1.0
     which accompanies this distribution, and is available at
     http://www.eclipse.org/legal/epl-v10.html
-   
+
     Contributors:
         Tasktop Technologies - initial API and implementation
+        Maarten Meijer       - added handler to delete Servers bug#340986
  -->
 <plugin>
    <extension-point id="connectors" name="Build Connectors" schema="schema/connectors.exsd"/>
@@ -32,7 +33,7 @@
    </extension>
     <extension point="org.eclipse.ui.preferencePages">
 		<page name="Builds"
-			category="org.eclipse.mylyn.preferencePages.Mylyn"		
+			category="org.eclipse.mylyn.preferencePages.Mylyn"
 			class="org.eclipse.mylyn.internal.builds.ui.BuildsPreferencesPage"
 			id="org.eclipse.mylyn.builds.preferences.BuildsPage">
 	    	<keywordReference id="org.eclipse.mylyn.builds.preferences.keywords"/>
@@ -209,7 +210,7 @@
          <activeWhen>
 			<with variable="activePartId">
 			    <equals value="org.eclipse.mylyn.builds.navigator.builds"/>
-			</with> 
+			</with>
          </activeWhen>
          <enabledWhen>
             <and>
@@ -302,6 +303,30 @@
             </and>
          </enabledWhen>
       </handler>
+    <handler
+          class="org.eclipse.mylyn.internal.builds.ui.commands.DeleteBuildElementHandler"
+          commandId="org.eclipse.ui.edit.delete">
+       <activeWhen>
+          <and>
+             <with
+                   variable="activePartId">
+                <equals
+                      value="org.eclipse.mylyn.builds.navigator.builds">
+                </equals>
+             </with>
+             <count
+                   value="1">
+             </count>
+             <iterate>
+                <and>
+                   <instanceof
+                         value="org.eclipse.mylyn.builds.core.IBuildServer">
+                   </instanceof>
+                </and>
+             </iterate>
+          </and>
+       </activeWhen>
+    </handler>
  </extension>
  <extension
        point="org.eclipse.ui.startup">
@@ -519,6 +544,18 @@
              style="push">
        </command>
     </menuContribution>
+     <menuContribution
+          allPopups="true"
+          locationURI="popup:org.eclipse.mylyn.builds.navigator.builds?after=group.refresh">
+       <command
+             commandId="org.eclipse.ui.edit.delete"
+             label="Delete Build Server"
+             style="push">
+          <visibleWhen
+                checkEnabled="true">
+          </visibleWhen>
+       </command>
+    </menuContribution>
  </extension>
  <extension
        point="org.eclipse.ui.menus">
@@ -686,7 +723,7 @@
                   </or>
                </enablement>
             </consolePatternMatchListener>
-   </extension>   
+   </extension>
  <extension
        point="org.eclipse.ui.console.consolePageParticipants">
     <consolePageParticipant
