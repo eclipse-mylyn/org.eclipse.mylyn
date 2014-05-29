@@ -242,6 +242,7 @@
               <dependency-resolution>
                 <optionalDependencies>ignore</optionalDependencies>
               </dependency-resolution>
+              <jgit.dirtyWorkingTree>ignore</jgit.dirtyWorkingTree>
               <environments>
                 <environment>
                   <os>macosx</os>
