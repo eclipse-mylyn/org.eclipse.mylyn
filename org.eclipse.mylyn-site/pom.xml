@@ -12,7 +12,7 @@
   <artifactId>org.eclipse.mylyn-site</artifactId>
   <version>3.12.0-SNAPSHOT</version>
   <packaging>eclipse-update-site</packaging>
-  <name>Mylyn for Eclipse 3.7, 3.8 and 4.2</name>
+  <name>Mylyn for Eclipse 3.8, 4.3 and 4.4</name>
   <properties>
     <qualifier>${project.unqualifiedVersion}</qualifier>
     <sign-dir>tools/mylyn/hudson/signing/mylyn</sign-dir>
