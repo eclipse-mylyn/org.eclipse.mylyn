@@ -13,7 +13,9 @@
       id="org.eclipse.mylyn.test_feature"
       label="%featureName"
       version="3.12.0.qualifier"
-      plugin="org.eclipse.mylyn.tasks.core">
+      plugin="org.eclipse.mylyn.tasks.core"
+      license-feature="org.eclipse.license"
+      license-feature-version="1.0.1">
 
    <description url="http://eclipse.org/mylyn">
       %description
@@ -22,10 +24,6 @@
    <copyright>
       %copyright
    </copyright>
-
-   <license url="license.html">
-      %license
-   </license>
 
    <requires>
       <import feature="org.eclipse.mylyn.sdk_feature" version="3.8.0"/>

@@ -58,6 +58,11 @@
           <layout>p2</layout>
           <url>${mylyn-commons-repository-url}</url>
         </repository>
+        <repository>
+          <id>cbi-license</id>
+          <layout>p2</layout>
+          <url>http://download.eclipse.org/cbi/updates/license/</url>
+        </repository>
       </repositories>
     </profile>
     <profile>
