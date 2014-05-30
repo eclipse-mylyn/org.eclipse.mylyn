@@ -26,9 +26,10 @@
             <configuration>
               <artifacts>
                 <artifact>
-                  <file>mylyn-commons-e3.5.target</file>
+                  <file>mylyn-commons-e3.6.target</file>
                   <type>target</type>
-                  <classifier>mylyn-commons-e3.5</classifier>
+                  <classifier>mylyn-commons-e3.6</classifier>
+                  <!-- used by the gerrit trigger and snapshot build -->
                 </artifact>
               </artifacts>
             </configuration>
