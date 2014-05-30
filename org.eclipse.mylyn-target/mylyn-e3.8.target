@@ -68,5 +68,9 @@
 <unit id="org.tigris.subversion.clientadapter.feature.feature.group" version="1.8.2"/>
 <repository location="http://subclipse.tigris.org/archive/subclipse_1.8.10"/>
 </location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>
+<repository location="http://download.eclipse.org/cbi/updates/license"/>
+</location>
 </locations>
 </target>
