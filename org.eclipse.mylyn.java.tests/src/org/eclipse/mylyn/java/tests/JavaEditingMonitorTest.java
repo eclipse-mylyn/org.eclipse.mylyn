@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Jingwen Ou and others. 
+ * Copyright (c) 2009 Jingwen Ou and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,7 +45,7 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 
 	private int editingCount;
 
-	private final JavaEditingMonitor monitor = new JavaEditingMonitor();
+	private JavaEditingMonitor monitor;
 
 	private IPackageFragment pkg;
 
@@ -59,6 +59,7 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 
 	@Override
 	protected void setUp() throws Exception {
+		monitor = new JavaEditingMonitor();
 		// open editors seem to cause a problem with the selection count
 		UiTestUtil.closeAllEditors();
 
@@ -91,6 +92,7 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 
 	@Override
 	protected void tearDown() throws Exception {
+		monitor.dispose();
 		if (listener != null) {
 			MonitorUi.removeInteractionListener(listener);
 		}
@@ -204,7 +206,7 @@ public class JavaEditingMonitorTest extends AbstractJavaContextTest {
 				.indexOf("caller()"), "caller".length());
 		monitor.handleWorkbenchPartSelection(editorPart, callerSelection, false);
 
-		// on e4 the selectionCount is 3 due to handling of a navigation which propagated as a selection event		
+		// on e4 the selectionCount is 3 due to handling of a navigation which propagated as a selection event
 		assertEquals(0, editingCount);
 		assertEquals(3, selectingCount);
 

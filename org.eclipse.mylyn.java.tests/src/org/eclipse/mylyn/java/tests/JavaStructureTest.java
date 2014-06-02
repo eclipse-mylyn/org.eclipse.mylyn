@@ -40,7 +40,7 @@ public class JavaStructureTest extends AbstractJavaContextTest {
 
 	private final InteractionContextManager manager = ContextCorePlugin.getContextManager();
 
-	private final JavaEditingMonitor monitor = new JavaEditingMonitor();
+	private JavaEditingMonitor monitor;
 
 	private IWorkbenchPart part;
 
@@ -60,6 +60,7 @@ public class JavaStructureTest extends AbstractJavaContextTest {
 
 	@Override
 	protected void setUp() throws Exception {
+		monitor = new JavaEditingMonitor();
 		project = new TestJavaProject(this.getClass().getName());
 		pkg = project.createPackage("pkg1");
 		typeFoo = project.createType(pkg, "Foo.java", "public class Foo { }");
@@ -75,6 +76,7 @@ public class JavaStructureTest extends AbstractJavaContextTest {
 	@Override
 	protected void tearDown() throws Exception {
 		manager.deactivateContext("12312");
+		monitor.dispose();
 		ResourceTestUtil.deleteProject(project.getProject());
 	}
 

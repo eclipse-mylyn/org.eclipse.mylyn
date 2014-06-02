@@ -33,7 +33,7 @@ public abstract class AbstractResourceContextTest extends AbstractContextTest {
 
 	protected InteractionContextManager manager = ContextCorePlugin.getContextManager();
 
-	protected ResourceInteractionMonitor monitor = new ResourceInteractionMonitor();
+	protected ResourceInteractionMonitor monitor;
 
 	protected ResourceStructureBridge structureBridge = new ResourceStructureBridge();
 
@@ -51,6 +51,7 @@ public abstract class AbstractResourceContextTest extends AbstractContextTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		assertNotNull(IdeUiBridgePlugin.getDefault());
+		monitor = new ResourceInteractionMonitor();
 		project = new TestProject(this.getClass().getName());
 		context = new InteractionContext(taskId, scaling);
 		context.reset();
@@ -67,6 +68,7 @@ public abstract class AbstractResourceContextTest extends AbstractContextTest {
 		manager.deactivateContext(taskId);
 		manager.deleteContext(taskId);
 		ContextCorePlugin.getContextStore().getFileForContext(taskId).delete();
+		monitor.dispose();
 		ResourceTestUtil.deleteProject(project.getProject());
 		super.tearDown();
 	}

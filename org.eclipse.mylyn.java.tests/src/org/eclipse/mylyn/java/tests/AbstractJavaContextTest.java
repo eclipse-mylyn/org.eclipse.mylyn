@@ -40,7 +40,7 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 
 	protected InteractionContextManager manager = ContextCorePlugin.getContextManager();
 
-	protected JavaEditingMonitor monitor = new JavaEditingMonitor();
+	protected JavaEditingMonitor monitor;
 
 	protected TestJavaProject project;
 
@@ -62,6 +62,7 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 		ContextTestUtil.triggerContextUiLazyStart();
 		assertNotNull(JavaPlugin.getDefault());
 		assertNotNull(JavaUiBridgePlugin.getDefault());
+		monitor = new JavaEditingMonitor();
 		project = new TestJavaProject(this.getClass().getSimpleName());
 		nonJavaProject = new TestProject(this.getClass().getSimpleName() + "nonJava");
 		p1 = project.createPackage("p1");
@@ -95,6 +96,7 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 			manager.deactivateContext(context.getHandleIdentifier());
 		}
 		assertFalse(manager.isContextActive());
+		monitor.dispose();
 		waitForAutoBuild();
 		super.tearDown();
 	}

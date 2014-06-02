@@ -55,6 +55,8 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 
 	private IWorkbenchPart part;
 
+	private ResourceInteractionMonitor resourceMonitor;
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -63,10 +65,12 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		javaCu = (ICompilationUnit) javaType.getParent();
 		javaPackage = (IPackageFragment) javaCu.getParent();
 		part = UiTestUtil.openResourceNavigator();
+		resourceMonitor = new ResourceInteractionMonitor();
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
+		monitor.dispose();
 		super.tearDown();
 	}
 
@@ -74,7 +78,7 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		IFile file = nonJavaProject.getProject().getFile("foo.txt");
 		file.create(null, true, null);
 		ResourceStructureBridge bridge = new ResourceStructureBridge();
-		new ResourceInteractionMonitor().selectionChanged(part, new StructuredSelection(file));
+		resourceMonitor.selectionChanged(part, new StructuredSelection(file));
 
 		IInteractionElement fileElement = ContextCore.getContextManager().getElement(bridge.getHandleIdentifier(file));
 
@@ -104,7 +108,7 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		file.create(null, true, null);
 		// IFile file = (IFile)javaCu.getAdapter(IResource.class);
 		ResourceStructureBridge bridge = new ResourceStructureBridge();
-		new ResourceInteractionMonitor().selectionChanged(part, new StructuredSelection(file));
+		resourceMonitor.selectionChanged(part, new StructuredSelection(file));
 
 		IInteractionElement fileElement = ContextCore.getContextManager().getElement(bridge.getHandleIdentifier(file));
 		IInteractionElement projectElement = ContextCore.getContextManager().getElement(
