@@ -14,3 +14,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Eclipse Mylyn
 Bundle-Activator: org.eclipse.mylyn.internal.bugzilla.rest.ui.BugzillaRestUiPlugin
+Export-Package: org.eclipse.mylyn.internal.bugzilla.rest.ui

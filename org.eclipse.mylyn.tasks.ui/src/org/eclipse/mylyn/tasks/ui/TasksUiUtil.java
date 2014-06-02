@@ -197,7 +197,7 @@ public class TasksUiUtil {
 			return Window.CANCEL;
 		}
 
-		EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
+		EditRepositoryWizard wizard = new EditRepositoryWizard(repository, TasksUiPlugin.getConnectorUi(repository.getConnectorKind()));
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		if (shell != null && !shell.isDisposed()) {
 			WizardDialog dialog = new TaskRepositoryWizardDialog(shell, wizard);

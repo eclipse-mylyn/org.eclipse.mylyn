@@ -42,7 +42,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * Provides facilities for managing the life-cycle of and access to task repositories.
- * 
+ *
  * @author Mik Kersten
  * @author Rob Elves
  * @author Jevgeni Holodkov

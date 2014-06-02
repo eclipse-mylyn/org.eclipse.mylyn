@@ -21,6 +21,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
@@ -201,7 +202,8 @@ public class TracRepositorySettingsPageTest extends TestCase {
 
 		TasksUiTestUtil.ensureTasksUiInitialization();
 
-		EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
+		EditRepositoryWizard wizard = new EditRepositoryWizard(repository,
+				TasksUiPlugin.getConnectorUi(repository.getConnectorKind()));
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		WizardDialog dialog = new WizardDialog(shell, wizard);
 		try {

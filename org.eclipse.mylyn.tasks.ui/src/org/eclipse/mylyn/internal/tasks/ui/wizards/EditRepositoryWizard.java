@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -41,8 +42,17 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 
 	private final TaskRepository repository;
 
+	private final AbstractRepositoryConnectorUi connectorUi;
+
 	public EditRepositoryWizard(TaskRepository repository) {
+		this(repository, TasksUiPlugin.getConnectorUi(repository.getConnectorKind()));
+	}
+
+	public EditRepositoryWizard(TaskRepository repository, AbstractRepositoryConnectorUi connectorUi) {
+		Assert.isNotNull(repository);
+		Assert.isNotNull(connectorUi);
 		this.repository = repository;
+		this.connectorUi = connectorUi;
 		setNeedsProgressMonitor(true);
 		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY_SETTINGS);
 		setWindowTitle(Messages.EditRepositoryWizard_Properties_for_Task_Repository);
@@ -69,7 +79,7 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 						StatusManager.getManager().handle(
 								new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
 										Messages.EditRepositoryWizard_Failed_to_refactor_repository_urls, e),
-								StatusManager.SHOW | StatusManager.LOG);
+										StatusManager.SHOW | StatusManager.LOG);
 						return false;
 					} catch (InterruptedException e) {
 						// should not get here
@@ -96,7 +106,6 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 
 	@Override
 	public void addPages() {
-		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
 		settingsPage = connectorUi.getSettingsPage(repository);
 		if (settingsPage instanceof AbstractRepositorySettingsPage) {
 			((AbstractRepositorySettingsPage) settingsPage).setRepository(repository);

@@ -7,4 +7,4 @@ Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.bugzilla.rest.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit;bundle-version="4.8.2"
-Export-Package: org.eclipse.mylyn.internal.bugzilla.rest.ui
+Export-Package: org.eclipse.mylyn.internal.bugzilla.rest.ui.tests

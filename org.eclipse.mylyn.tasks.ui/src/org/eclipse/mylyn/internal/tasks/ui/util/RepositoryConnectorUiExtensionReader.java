@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.tasks.ui.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
@@ -68,6 +69,16 @@ public class RepositoryConnectorUiExtensionReader {
 	public void registerConnectorUis() {
 		registerFromExtensionPoint();
 		registerFromAdaptable();
+		registerConnetorToConnectorUi();
+	}
+
+	private void registerConnetorToConnectorUi() {
+		for (AbstractRepositoryConnector connector : TasksUi.getRepositoryManager().getRepositoryConnectors()) {
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(connector.getConnectorKind());
+			if (connectorUi != null) {
+				setConnectorForConnectorUi(connector, connectorUi);
+			}
+		}
 	}
 
 	private void registerFromAdaptable() {
@@ -199,6 +210,18 @@ public class RepositoryConnectorUiExtensionReader {
 			}
 		} catch (Throwable e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load connector ui", e)); //$NON-NLS-1$
+		}
+	}
+
+	private static void setConnectorForConnectorUi(AbstractRepositoryConnector connector,
+			AbstractRepositoryConnectorUi connectorUi) {
+		// need reflection since the field is private
+		try {
+			Field field = AbstractRepositoryConnectorUi.class.getDeclaredField("connector");
+			field.setAccessible(true);
+			field.set(connectorUi, connector);
+		} catch (Exception e) {
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unable to call setConnector()", e)); //$NON-NLS-1$
 		}
 	}
 

@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.bugzilla.rest.ui;
 
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestCore;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -23,7 +24,10 @@ import org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard;
 public class BugzillaRestRepositoryConnectorUi extends AbstractRepositoryConnectorUi {
 
 	public BugzillaRestRepositoryConnectorUi() {
-		// ignore
+	}
+
+	public BugzillaRestRepositoryConnectorUi(AbstractRepositoryConnector connector) {
+		super(connector);
 	}
 
 	@Override
@@ -33,7 +37,7 @@ public class BugzillaRestRepositoryConnectorUi extends AbstractRepositoryConnect
 
 	@Override
 	public ITaskRepositoryPage getSettingsPage(TaskRepository repository) {
-		return new BugzillaRestRepositorySettingsPage(repository);
+		return new BugzillaRestRepositorySettingsPage(repository, getConnector(), this);
 	}
 
 	@Override

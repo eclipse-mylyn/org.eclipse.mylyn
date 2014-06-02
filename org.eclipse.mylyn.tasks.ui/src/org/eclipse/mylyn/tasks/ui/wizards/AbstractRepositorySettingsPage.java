@@ -57,6 +57,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.RepositoryInfo;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -91,7 +92,7 @@ import org.eclipse.ui.statushandlers.StatusManager;
 /**
  * Extend to provide custom repository settings. This page is typically invoked by the user requesting properties via
  * the Task Repositories view.
- * 
+ *
  * @author Mik Kersten
  * @author Rob Elves
  * @author Steffen Pingel
@@ -102,7 +103,7 @@ import org.eclipse.ui.statushandlers.StatusManager;
  * @since 2.0
  */
 public abstract class AbstractRepositorySettingsPage extends AbstractTaskRepositoryPage implements ITaskRepositoryPage,
-		IAdaptable {
+IAdaptable {
 
 	protected static final String PREFS_PAGE_ID_NET_PROXY = "org.eclipse.ui.net.NetPreferences"; //$NON-NLS-1$
 
@@ -123,6 +124,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	protected static final String INVALID_LOGIN = Messages.AbstractRepositorySettingsPage_Unable_to_authenticate_with_repository;
 
 	protected AbstractRepositoryConnector connector;
+
+	private final AbstractRepositoryConnectorUi connectorUi;
 
 	protected StringFieldEditor repositoryLabelEditor;
 
@@ -272,12 +275,24 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	 */
 	public AbstractRepositorySettingsPage(String title, String description, TaskRepository taskRepository,
 			AbstractRepositoryConnector connector) {
+		this(title, description, taskRepository, connector, null);
+	}
+
+	/**
+	 * @since 3.14
+	 */
+	public AbstractRepositorySettingsPage(String title, String description, TaskRepository taskRepository,
+			AbstractRepositoryConnector connector, AbstractRepositoryConnectorUi connectorUi) {
 		super(title, description, taskRepository);
 		repository = taskRepository;
 		if (connector == null) {
 			connector = TasksUi.getRepositoryManager().getRepositoryConnector(getConnectorKind());
 		}
 		this.connector = connector;
+		if (connectorUi == null) {
+			connectorUi = TasksUi.getRepositoryConnectorUi(getConnectorKind());
+		}
+		this.connectorUi = connectorUi;
 		if (repository != null && !repository.getConnectorKind().equals(getConnectorKind())) {
 			throw new IllegalArgumentException(
 					"connectorKind of repository does not match connectorKind of page, expected '" + getConnectorKind() + "', got '" + repository.getConnectorKind() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -422,10 +437,10 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		});
 
 		GridDataFactory.fillDefaults()
-				.hint(300, SWT.DEFAULT)
-				.grab(true, false)
-				.span(2, SWT.DEFAULT)
-				.applyTo(serverUrlCombo);
+		.hint(300, SWT.DEFAULT)
+		.grab(true, false)
+		.span(2, SWT.DEFAULT)
+		.applyTo(serverUrlCombo);
 
 		repositoryLabelEditor = new StringFieldEditor("", LABEL_REPOSITORY_LABEL, StringFieldEditor.UNLIMITED, //$NON-NLS-1$
 				compositeContainer) {
@@ -505,8 +520,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 //					repository = createTaskRepository();
 //				}
 				if (repository != null) {
-					String accountCreationUrl = TasksUiPlugin.getConnectorUi(connector.getConnectorKind())
-							.getAccountCreationUrl(repository);
+					String accountCreationUrl = connectorUi.getAccountCreationUrl(repository);
 					if (accountCreationUrl != null) {
 						BrowserUtil.openUrl(accountCreationUrl, IWorkbenchBrowserSupport.AS_EXTERNAL);
 					}
@@ -525,8 +539,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 					repository = createTaskRepository();
 				}
 				if (repository != null) {
-					String accountManagementUrl = TasksUiPlugin.getConnectorUi(connector.getConnectorKind())
-							.getAccountManagementUrl(repository);
+					String accountManagementUrl = connectorUi.getAccountManagementUrl(repository);
 					if (accountManagementUrl != null) {
 						BrowserUtil.openUrl(accountManagementUrl, IWorkbenchBrowserSupport.AS_EXTERNAL);
 					}
@@ -767,10 +780,10 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 		certAuthButton = new Button(certAuthComp, SWT.CHECK);
 		GridDataFactory.fillDefaults()
-				.indent(0, 5)
-				.align(SWT.LEFT, SWT.TOP)
-				.span(3, SWT.DEFAULT)
-				.applyTo(certAuthButton);
+		.indent(0, 5)
+		.align(SWT.LEFT, SWT.TOP)
+		.span(3, SWT.DEFAULT)
+		.applyTo(certAuthButton);
 
 		certAuthButton.setText(Messages.AbstractRepositorySettingsPage_Enable_certificate_authentification);
 
@@ -862,10 +875,10 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 		httpAuthButton = new Button(httpAuthComp, SWT.CHECK);
 		GridDataFactory.fillDefaults()
-				.indent(0, 5)
-				.align(SWT.LEFT, SWT.TOP)
-				.span(3, SWT.DEFAULT)
-				.applyTo(httpAuthButton);
+		.indent(0, 5)
+		.align(SWT.LEFT, SWT.TOP)
+		.span(3, SWT.DEFAULT)
+		.applyTo(httpAuthButton);
 
 		httpAuthButton.setText(Messages.AbstractRepositorySettingsPage_Enable_http_authentication);
 
@@ -1397,13 +1410,11 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		if (getRepositoryUrl() != null && getRepositoryUrl().length() > 0) {
 			TaskRepository repository = new TaskRepository(connector.getConnectorKind(), getRepositoryUrl());
 
-			String accountCreationUrl = TasksUiPlugin.getConnectorUi(connector.getConnectorKind())
-					.getAccountCreationUrl(repository);
+			String accountCreationUrl = connectorUi.getAccountCreationUrl(repository);
 			createAccountHyperlink.setEnabled(accountCreationUrl != null);
 			createAccountHyperlink.setVisible(accountCreationUrl != null);
 
-			String accountManagementUrl = TasksUiPlugin.getConnectorUi(connector.getConnectorKind())
-					.getAccountManagementUrl(repository);
+			String accountManagementUrl = connectorUi.getAccountManagementUrl(repository);
 			manageAccountHyperlink.setEnabled(accountManagementUrl != null);
 			manageAccountHyperlink.setVisible(accountManagementUrl != null);
 		} else {
@@ -1616,7 +1627,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	/**
 	 * Returns true, if credentials are incomplete. Clients may override this method.
-	 * 
+	 *
 	 * @since 3.4
 	 */
 	protected boolean isMissingCredentials() {
@@ -1702,7 +1713,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	 * Note: The credentials of the created repository are not persisted in the platform keystore. When overriding,
 	 * subclasses must either call super or call {@link TaskRepository#setShouldPersistCredentials(boolean)
 	 * setShouldPersistCredentials(false)} before calling {@link #applyTo(TaskRepository)}.
-	 * 
+	 *
 	 * @since 2.0
 	 */
 	public TaskRepository createTaskRepository() {
@@ -1905,7 +1916,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	 * <p>
 	 * This information is typically used by the wizard to set the enablement of the validation UI affordance.
 	 * </p>
-	 * 
+	 *
 	 * @return <code>true</code> if this page can be validated, and <code>false</code> otherwise
 	 * @see #needsValidation()
 	 * @see IWizardContainer#updateButtons()
@@ -1924,7 +1935,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	/**
 	 * Public for testing.
-	 * 
+	 *
 	 * @since 2.0
 	 */
 	public void setUrl(String url) {
@@ -1933,7 +1944,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	/**
 	 * Public for testing.
-	 * 
+	 *
 	 * @since 2.0
 	 */
 	public void setUserId(String id) {
@@ -1942,7 +1953,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	/**
 	 * Public for testing.
-	 * 
+	 *
 	 * @since 2.0
 	 */
 	public void setPassword(String pass) {
@@ -1991,7 +2002,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	/**
 	 * Validate settings provided by the {@link #getValidator(TaskRepository) validator}, typically the server settings.
-	 * 
+	 *
 	 * @since 2.0
 	 */
 	protected void validateSettings() {
@@ -2027,7 +2038,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			StatusManager.getManager().handle(
 					new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 							Messages.AbstractRepositorySettingsPage_Internal_error_validating_repository, e),
-					StatusManager.SHOW | StatusManager.LOG);
+							StatusManager.SHOW | StatusManager.LOG);
 			return;
 		} catch (InterruptedException e) {
 			// canceled
@@ -2088,7 +2099,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	 * For version 3.11 we change the abstract implementation to a default implementation. The default implementation
 	 * creates an {@link Validator} and deligate the work to
 	 * {@link AbstractRepositoryConnector#validateRepository(TaskRepository, IProgressMonitor)}
-	 * 
+	 *
 	 * @since 2.0
 	 */
 
@@ -2107,7 +2118,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	/**
 	 * Public for testing.
-	 * 
+	 *
 	 * @since 2.0
 	 */
 	public abstract class Validator {
@@ -2128,7 +2139,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	/**
 	 * Provides an adapter for the {@link IValidatable} interface.
-	 * 
+	 *
 	 * @since 3.7
 	 * @see IAdaptable#getAdapter(Class)
 	 */
@@ -2190,7 +2201,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	/**
 	 * Returns the toolkit used to construct sections and hyperlinks.
-	 * 
+	 *
 	 * @return the toolkit
 	 * @throws IllegalStateException
 	 *             if the toolkit has not been initialized

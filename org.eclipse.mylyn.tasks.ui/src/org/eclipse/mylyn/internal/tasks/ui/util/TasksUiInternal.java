@@ -173,7 +173,7 @@ public class TasksUiInternal {
 
 	/**
 	 * get the connector discovery wizard command. Calling code should check {@link Command#isEnabled()} on return.
-	 * 
+	 *
 	 * @return the command, or null if it is not available.
 	 */
 	public static Command getConfiguredDiscoveryWizardCommand() {
@@ -487,7 +487,7 @@ public class TasksUiInternal {
 	/**
 	 * Synchronize a single task. Note that if you have a collection of tasks to synchronize with this connector then
 	 * you should call synchronize(Set<Set<AbstractTask> repositoryTasks, ...)
-	 * 
+	 *
 	 * @param listener
 	 *            can be null
 	 */
@@ -636,7 +636,7 @@ public class TasksUiInternal {
 
 	/**
 	 * Creates a new local task and schedules for today
-	 * 
+	 *
 	 * @param summary
 	 *            if null DEFAULT_SUMMARY (New Task) used.
 	 */
@@ -823,7 +823,7 @@ public class TasksUiInternal {
 	 * return null.
 	 * <p>
 	 * <b>Note: Applied from patch on bug 99472.</b>
-	 * 
+	 *
 	 * @return Shell or <code>null</code>
 	 * @deprecated Use {@link WorkbenchUtil#getShell()} instead
 	 */
@@ -1008,7 +1008,7 @@ public class TasksUiInternal {
 	/**
 	 * Only override if task should be opened by a custom editor, default behavior is to open with a rich editor,
 	 * falling back to the web browser if not available.
-	 * 
+	 *
 	 * @return true if the task was successfully opened
 	 */
 	public static boolean openRepositoryTask(String connectorKind, String repositoryUrl, String id,
@@ -1019,7 +1019,7 @@ public class TasksUiInternal {
 	/**
 	 * Only override if task should be opened by a custom editor, default behavior is to open with a rich editor,
 	 * falling back to the web browser if not available.
-	 * 
+	 *
 	 * @return true if the task was successfully opened
 	 */
 	public static boolean openRepositoryTask(String connectorKind, String repositoryUrl, String id,
@@ -1083,7 +1083,7 @@ public class TasksUiInternal {
 
 	/**
 	 * Returns text masking the &amp;-character from decoration as an accelerator in SWT labels.
-	 * 
+	 *
 	 * @deprecated Use {@link CommonUiUtil#toLabel(String)} instead
 	 */
 	@Deprecated
@@ -1194,7 +1194,7 @@ public class TasksUiInternal {
 
 	/**
 	 * Searches for a task whose URL matches
-	 * 
+	 *
 	 * @return first task with a matching URL.
 	 */
 	public static AbstractTask getTaskByUrl(String taskUrl) {
@@ -1260,7 +1260,7 @@ public class TasksUiInternal {
 
 	/**
 	 * Cleans text for use as the text of an action to ensure that it is displayed properly.
-	 * 
+	 *
 	 * @return the cleaned text
 	 * @deprecated use {@link CommonUiUtil#toMenuLabel(String)} instead
 	 */
@@ -1527,4 +1527,5 @@ public class TasksUiInternal {
 		}
 		return undoContext;
 	}
+
 }

@@ -27,6 +27,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClientFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
+import org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaConnectorUi;
 import org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaRepositorySettingsPage;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -45,6 +46,8 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 
 	private TaskRepository repository;
 
+	private EditRepositoryWizard wizard;
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -56,6 +59,8 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 				new AuthenticationCredentials(credentials.getUserName(), credentials.getPassword()), false);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 		TasksUiTestUtil.ensureTasksUiInitialization();
+		BugzillaConnectorUi connectorUi = new BugzillaConnectorUi();
+		wizard = new EditRepositoryWizard(repository, connectorUi);
 	}
 
 	private BugzillaClient createClient(String hostUrl, String username, String password, String htAuthUser,
@@ -75,7 +80,6 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 
 	public void testValidationInvalidPassword() throws Exception {
 
-		EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
 		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), wizard);
 		dialog.create();
 		BugzillaRepositorySettingsPage page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
@@ -95,7 +99,6 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 	}
 
 	public void testValidationInvalidUserid() throws Exception {
-		EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
 		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), wizard);
 		dialog.create();
 		BugzillaRepositorySettingsPage page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
@@ -111,7 +114,6 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 	}
 
 	public void testValidationInvalidUrl() throws Exception {
-		EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
 		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), wizard);
 		dialog.create();
 		BugzillaRepositorySettingsPage page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
@@ -122,7 +124,7 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 			client.validate(null);
 			fail("UnknownHostException didn't occur!");
 		} catch (CoreException e) {
-			// skip assertion, some environments will still resolve invalid addresses 
+			// skip assertion, some environments will still resolve invalid addresses
 			//assertTrue(e.getStatus().getException() instanceof UnknownHostException);
 		}
 	}
@@ -130,7 +132,6 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 	// TODO: Test locking up?
 	// public void testAutoVersion() throws Exception {
 	// repository.setVersion(BugzillaRepositorySettingsPage.LABEL_AUTOMATIC_VERSION);
-	// EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
 	// WizardDialog dialog = new
 	// WizardDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
 	// wizard);
@@ -148,7 +149,6 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 		assertEquals(1, manager.getAllRepositories().size());
 		String tempUid = repository.getUserName();
 		String tempPass = repository.getPassword();
-		EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
 		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), wizard);
 		dialog.create();
 		BugzillaRepositorySettingsPage page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
@@ -167,7 +167,6 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 
 	public void testValidateOnFinishInvalidUserId() throws Exception {
 		assertEquals(1, manager.getAllRepositories().size());
-		EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
 		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), wizard);
 		dialog.create();
 		BugzillaRepositorySettingsPage page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();

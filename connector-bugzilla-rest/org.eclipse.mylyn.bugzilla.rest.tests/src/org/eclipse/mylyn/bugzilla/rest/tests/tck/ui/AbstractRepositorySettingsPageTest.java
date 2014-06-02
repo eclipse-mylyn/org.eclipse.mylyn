@@ -11,20 +11,19 @@
 
 package org.eclipse.mylyn.bugzilla.rest.tests.tck.ui;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.bugzilla.rest.tests.AbstractTckTest;
 import org.eclipse.mylyn.bugzilla.rest.tests.TckFixture;
 import org.eclipse.mylyn.commons.sdk.util.Junit4TestFixtureRunner.FixtureDefinition;
 import org.eclipse.mylyn.commons.sdk.util.Junit4TestFixtureRunner.RunOnlyWhenProperty;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConnector;
+import org.eclipse.mylyn.internal.bugzilla.rest.ui.BugzillaRestRepositoryConnectorUi;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 import org.eclipse.swt.widgets.Shell;
 import org.junit.After;
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 
 @FixtureDefinition(fixtureClass = TckFixture.class, fixtureType = "bugzillaREST")
@@ -36,6 +35,10 @@ public class AbstractRepositorySettingsPageTest extends AbstractTckTest {
 		super(fixture);
 	}
 
+	@Before
+	public void setup() {
+	}
+
 	@After
 	public void tearDown() throws Exception {
 		if (dialog != null) {
@@ -44,17 +47,18 @@ public class AbstractRepositorySettingsPageTest extends AbstractTckTest {
 	}
 
 	@Test
-	@Ignore
-	//we temporary disable this test (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=436398)
 	public void testApplyTo() {
 		TaskRepository repository = fixture().createRepository();
-		EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
+		BugzillaRestConnector connector = new BugzillaRestConnector();
+		BugzillaRestRepositoryConnectorUi connectorUi = new BugzillaRestRepositoryConnectorUi(connector);
+		EditRepositoryWizard wizard = new EditRepositoryWizard(repository, connectorUi);
 		dialog = new WizardDialog(new Shell(), wizard);
 		dialog.create();
 		ITaskRepositoryPage page = wizard.getSettingsPage();
-		assertNull("repository.getCategory() should be null", repository.getCategory());
+		// we need this because save removes the static import of org.junit.Assert
+		org.junit.Assert.assertNull("repository.getCategory() should be null", repository.getCategory());
 		page.applyTo(repository);
-		assertEquals(TaskRepository.CATEGORY_BUGS, repository.getCategory());
+		org.junit.Assert.assertEquals(TaskRepository.CATEGORY_BUGS, repository.getCategory());
 	}
 
 }

@@ -15,6 +15,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.equinox.security
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.eclipse.mylyn.internal.bugzilla.rest.core;x-friends:="org.eclipse.mylyn.bugzilla.rest.ui,org.eclipse.mylyn.bugzilla.rest.core.tests,org.eclipse.mylyn.bugzilla.rest.ui.tests",
+Export-Package: org.eclipse.mylyn.internal.bugzilla.rest.core,
  org.eclipse.mylyn.internal.bugzilla.rest.core.response.data
 Bundle-Vendor: Eclipse Mylyn

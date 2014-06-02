@@ -14,7 +14,9 @@ package org.eclipse.mylyn.internal.bugzilla.rest.ui;
 import java.text.MessageFormat;
 
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestCore;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.widgets.Composite;
 
@@ -25,8 +27,9 @@ public class BugzillaRestRepositorySettingsPage extends AbstractRepositorySettin
 			"Supports Bugzilla {0} Example: https://bugs.eclipse.org/bugs/ (do not include rest.cgi)",
 			LABEL_VERSION_NUMBER);
 
-	public BugzillaRestRepositorySettingsPage(TaskRepository taskRepository) {
-		super("Bugzilla REST Repository Settings", DESCRIPTION, taskRepository);
+	public BugzillaRestRepositorySettingsPage(TaskRepository taskRepository, AbstractRepositoryConnector connector,
+			AbstractRepositoryConnectorUi connectorUi) {
+		super("Bugzilla REST Repository Settings", DESCRIPTION, taskRepository, connector, connectorUi);
 		setNeedsAnonymousLogin(true);
 		setNeedsValidateOnFinish(true);
 	}
