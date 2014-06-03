@@ -14,7 +14,9 @@
       label="%featureName"
       version="3.12.0.qualifier"
       provider-name="%providerName"
-      plugin="org.eclipse.mylyn.context.core">
+      plugin="org.eclipse.mylyn.context.core"
+      license-feature="org.eclipse.license"
+      license-feature-version="1.0.1">
 
    <description url="http://eclipse.org/mylyn">
       %description
@@ -23,10 +25,6 @@
    <copyright>
       %copyright
    </copyright>
-
-   <license url="license.html">
-      %license
-   </license>
 
    <requires>
       <import feature="org.eclipse.mylyn.java_feature" version="3.12.0" match="equivalent"/>
