@@ -4,7 +4,9 @@
       label="%featureName"
       version="2.0.0.qualifier"
       provider-name="%providerName"
-      plugin="org.eclipse.mylyn.docs.epub.core">
+      plugin="org.eclipse.mylyn.docs.epub.core"
+      license-feature="org.eclipse.license"
+      license-feature-version="1.0.1">
 
    <description>
       %description
@@ -13,10 +15,6 @@
    <copyright>
       %copyright
    </copyright>
-
-   <license url="license.html">
-      %license
-   </license>
 
    <requires>
       <import feature="org.eclipse.mylyn.wikitext_feature" version="2.1.0" match="compatible"/>
