@@ -63,6 +63,11 @@
           <layout>p2</layout>
           <url>http://subclipse.tigris.org/update_1.8.x/</url>
         </repository>
+        <repository>
+          <id>cbi-license</id>
+          <layout>p2</layout>
+          <url>http://download.eclipse.org/cbi/updates/license/</url>
+        </repository>
       </repositories>
     </profile>
   </profiles>
