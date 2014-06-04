@@ -14,7 +14,9 @@
       label="%featureName"
       version="1.4.0.qualifier"
       provider-name="%providerName"
-      plugin="org.eclipse.mylyn.builds.core">
+      plugin="org.eclipse.mylyn.builds.core"
+      license-feature="org.eclipse.license"
+      license-feature-version="1.0.1">
 
    <description url="http://eclipse.org/mylyn">
       %description
@@ -23,10 +25,6 @@
    <copyright>
       %copyright
    </copyright>
-
-   <license url="license.html">
-      %license
-   </license>
 
    <requires>
       <import plugin="com.google.gson" version="2.1.0" match="compatible"/>
