@@ -26,6 +26,10 @@
       %copyright
    </copyright>
 
+   <license url="%licenseURL">
+      %license
+   </license>
+
    <!-- bug 278474 -->   
    <plugin
          id="org.eclipse.core.runtime.compatibility.auth"
