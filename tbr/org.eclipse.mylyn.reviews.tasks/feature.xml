@@ -16,6 +16,10 @@
       %copyright
    </copyright>
 
+   <license url="%licenseURL">
+      %license
+   </license>
+
    <plugin
          id="org.eclipse.mylyn.reviews.tasks.core"
          download-size="0"

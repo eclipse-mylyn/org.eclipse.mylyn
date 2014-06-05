@@ -15,6 +15,10 @@
       %copyright
    </copyright>
 
+   <license url="%licenseURL">
+      %license
+   </license>
+
    <requires>
       <import feature="org.eclipse.mylyn.gerrit.feature" version="2.2.0"/>
    </requires>

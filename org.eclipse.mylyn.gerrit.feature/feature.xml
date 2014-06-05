@@ -26,6 +26,10 @@
       %copyright
    </copyright>
 
+   <license url="%licenseURL">
+      %license
+   </license>
+
    <requires>
       <import feature="org.eclipse.mylyn.reviews.feature" version="2.3.0" match="compatible"/>
       <import feature="org.eclipse.egit" version="1.3.0" match="greaterOrEqual"/>
