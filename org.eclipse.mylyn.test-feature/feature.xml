@@ -25,6 +25,10 @@
       %copyright
    </copyright>
 
+   <license url="%licenseURL">
+      %license
+   </license>
+
    <requires>
       <import feature="org.eclipse.mylyn.sdk_feature" version="3.8.0"/>
    </requires>

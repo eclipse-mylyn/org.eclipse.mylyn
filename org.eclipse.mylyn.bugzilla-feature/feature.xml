@@ -26,6 +26,10 @@
       %copyright
    </copyright>
 
+   <license url="%licenseURL">
+      %license
+   </license>
+
    <requires>
       <import plugin="org.eclipse.mylyn.commons.net" version="3.12.0" match="compatible"/>
       <import plugin="org.eclipse.mylyn.commons.xmlrpc" version="3.12.0" match="compatible"/>

@@ -26,6 +26,10 @@
       %copyright
    </copyright>
 
+   <license url="%licenseURL">
+      %license
+   </license>
+
    <url>
       <discovery label="Mylyn 3.12 for Eclipse 3.8, 4.3 and 4.4" url="http://download.eclipse.org/mylyn/releases/3.12"/>
    </url>
