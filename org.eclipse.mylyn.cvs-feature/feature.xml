@@ -26,6 +26,10 @@
       %copyright
    </copyright>
 
+   <license url="%licenseURL">
+      %license
+   </license>
+
    <requires>
       <import feature="org.eclipse.mylyn.versions" version="1.4.0" match="compatible"/>
    </requires>

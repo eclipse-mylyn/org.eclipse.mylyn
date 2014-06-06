@@ -26,6 +26,10 @@
       %copyright
    </copyright>
 
+   <license url="%licenseURL">
+      %license
+   </license>
+
    <requires>
       <import feature="org.eclipse.mylyn.versions" version="1.4.0" match="compatible"/>
       <import plugin="org.tigris.subversion.subclipse.core" version="1.6.17" match="greaterOrEqual"/>
