@@ -25,6 +25,10 @@
       %copyright
    </copyright>
 
+   <license url="%licenseURL">
+      %license
+   </license>
+
    <includes
          id="org.eclipse.mylyn.wikitext_feature"
          version="0.0.0"/>
