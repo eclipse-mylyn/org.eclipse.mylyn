@@ -11,8 +11,8 @@
          <template name="##### " description="%template.description.h5" content="\n##### ${text}\n\n" block="true"/>
          <template name="###### " description="%template.description.h6" content="\n###### ${text}\n\n" block="true"/>
 
-         <template name="*" description="%template.description.lb" content="\n*   ${first item}\n*   ${second item}\n" block="true"/>
-         <template name="1." description="%template.description.ln" content="\n1.  ${first item}\n2.  ${second item}\n" block="true"/>
+         <template name="*" description="%template.description.lb" content="\n*   ${first_item}\n*   ${second_item}\n" block="true"/>
+         <template name="1." description="%template.description.ln" content="\n1.  ${first_item}\n2.  ${second_item}\n" block="true"/>
          <template name="&gt;" description="%template.description.bq" content="\n&gt; ${text}\n" block="true"/>
 
 		<template name="[]" description="%template.description.li" content="[${text}](${url} &quot;${title}&quot;) $"/>
