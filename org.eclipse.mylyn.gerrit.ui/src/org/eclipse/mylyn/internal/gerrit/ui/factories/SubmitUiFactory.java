@@ -42,10 +42,9 @@ public class SubmitUiFactory extends AbstractPatchSetUiFactory {
 		if (changeDetail != null) {
 			if (changeDetail.getCurrentActions() != null) {
 				return changeDetail.getCurrentActions().contains(ApprovalCategory.SUBMIT);
-			} else if (changeDetail instanceof ChangeDetailX) {
-				// Gerrit 2.2 and later
-				return changeDetail.canSubmit();
 			}
+			// Gerrit 2.2 and later
+			return changeDetail.canSubmit();
 		}
 		return false;
 	}
