@@ -26,8 +26,6 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Version;
 
-//import utils.Tracer;
-
 /**
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
