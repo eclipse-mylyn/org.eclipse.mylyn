@@ -434,7 +434,7 @@ public class GerritHttpClient {
 
 			int code;
 			if (openIdProvider != null) {
-				code = authenticateOpenIdService(openIdProvider, credentials, monitor);
+				code = authenticateOpenIdService(openIdProvider, monitor);
 				if (code == -1) {
 					continue;
 				}
@@ -473,8 +473,8 @@ public class GerritHttpClient {
 		return null;
 	}
 
-	private int authenticateOpenIdService(String openIdProvider, AuthenticationCredentials credentials,
-			IProgressMonitor monitor) throws IOException, GerritException {
+	private int authenticateOpenIdService(String openIdProvider, IProgressMonitor monitor) throws IOException,
+			GerritException {
 		JSonSupport json = new JSonSupport();
 
 		List<Object> args = new ArrayList<Object>(2);
