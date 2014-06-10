@@ -56,13 +56,13 @@ public class GerritCommentLinkDetector {
 			if (replaceMatcher.find()) {
 				String href = replaceMatcher.group(1);
 				Pattern findPattern = Pattern.compile(commentLink.getFind());
-				findHyperlinks(findPattern.matcher(text), text, index, textOffset, href);
+				findHyperlinks(findPattern.matcher(text), index, textOffset, href);
 			}
 		}
 		return links;
 	}
 
-	private void findHyperlinks(Matcher matcher, String text, int index, int textOffset, String href) {
+	private void findHyperlinks(Matcher matcher, int index, int textOffset, String href) {
 		while (matcher.find()) {
 			if (index != -1 && (index < matcher.start() || index > matcher.end())) {
 				continue;
