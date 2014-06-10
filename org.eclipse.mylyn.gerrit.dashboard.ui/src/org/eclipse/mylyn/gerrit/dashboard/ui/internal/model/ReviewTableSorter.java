@@ -221,13 +221,8 @@ public class ReviewTableSorter extends ViewerSorter {
 				public void widgetSelected(final SelectionEvent e) {
 					ReviewTableSorter sorter = new ReviewTableSorter(columnNum);
 					Table table = aTableViewer.getTable();
-					if (table.getSortDirection() == SWT.UP) {
-						table.setSortDirection(SWT.DOWN);
-					} else if (table.getSortDirection() == SWT.DOWN) {
-						table.setSortDirection(SWT.UP);
-					} else {
-						table.setSortDirection(SWT.UP);
-					}
+					table.setSortDirection(table.getSortDirection() == SWT.UP ? SWT.DOWN
+							: SWT.UP);
 					aTableViewer.setComparator(sorter);
 				}
 			});
