@@ -304,7 +304,6 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 		makeActions();
 		hookContextMenu();
 		hookDoubleClickAction();
-		contributeToActionBars();
 
 		// Start the periodic refresh job
 		fTableRefreshJob = new TableRefreshJob(fViewer, "Refresh table");
@@ -431,15 +430,6 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 		getSite().registerContextMenu(menuMgr, fViewer);
 	}
 
-	private void contributeToActionBars() {
-		IActionBars bars = getViewSite().getActionBars();
-		fillLocalPullDown(bars.getMenuManager());
-		fillLocalToolBar(bars.getToolBarManager());
-	}
-
-	private void fillLocalPullDown(IMenuManager manager) {
-	}
-
 	private void fillContextMenu(IMenuManager manager) {
 		CommandContributionItem[] contribItems = buildContributions();
 		for (int index = 0; index < contribItems.length; index++) {
@@ -447,9 +437,6 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 		}
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-	}
-
-	private void fillLocalToolBar(IToolBarManager manager) {
 	}
 
 	private void makeActions() {
