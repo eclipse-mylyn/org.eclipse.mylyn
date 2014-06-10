@@ -29,4 +29,5 @@ Export-Package: org.eclipse.mylyn.builds.tests;x-internal:=true,
  org.eclipse.mylyn.builds.tests.core;x-internal:=true,
  org.eclipse.mylyn.builds.tests.operations;x-internal:=true,
  org.eclipse.mylyn.builds.tests.support;x-internal:=true,
+ org.eclipse.mylyn.builds.tests.ui;x-internal:=true,
  org.eclipse.mylyn.builds.tests.util;x-internal:=true
