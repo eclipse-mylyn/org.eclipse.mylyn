@@ -139,21 +139,21 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 	
 	private static final String COMMAND_MESSAGE = "Search Gerrit info ...";
 
-	private final String SEARCH_BTN 	= "Search";
-	private final String TOTAL_COUNT 	= "Total reviews: ";
-	private final String GERRIT_LABEL   = " - Gerrit ";
+	private static final String SEARCH_BTN 	= "Search";
+	private static final String TOTAL_COUNT 	= "Total reviews: ";
+	private static final String GERRIT_LABEL   = " - Gerrit ";
 
-	private final int SEARCH_WIDTH = 350;
-	private final int REPO_WIDTH = 350;
-	private final int VERSION_WIDTH = 35;
+	private static final int SEARCH_WIDTH = 350;
+	private static final int REPO_WIDTH = 350;
+	private static final int VERSION_WIDTH = 35;
 	
-	private final String SEARCH_TOOLTIP = "Ex. status:open (or is:open) \n status:merged \n "
+	private static final String SEARCH_TOOLTIP = "Ex. status:open (or is:open) \n status:merged \n "
 			+ "is:draft \n status:open project:Foo \n "
 			+ "See explanation by selecting in the toolbar \n "
 			+ "Documentation > Searching";
 	
 	//Numbers of menu items in the Search pulldown menu; SEARCH_SIZE_MENU_LIST + 1 will be the max
-	private final int SEARCH_SIZE_MENU_LIST = 4;
+	private static final int SEARCH_SIZE_MENU_LIST = 4;
 
 	// ------------------------------------------------------------------------
 	// Member variables
