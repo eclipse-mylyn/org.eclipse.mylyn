@@ -50,8 +50,7 @@ public class GerritTask extends AbstractTask {
 	/**
 	 * Gerrit Review Change-Id
 	 */
-	public static final String CHANGE_ID = GerritQueryResultSchema.getDefault().CHANGE_ID
-			.getKey();
+	public static final String CHANGE_ID = GerritQueryResultSchema.getDefault().CHANGE_ID.getKey();
 
 	/**
 	 * Gerrit Review subject
@@ -61,8 +60,7 @@ public class GerritTask extends AbstractTask {
 	/**
 	 * Gerrit Review owner
 	 */
-	public static final String OWNER = GerritTaskSchema.getDefault().OWNER
-			.getKey();
+	public static final String OWNER = GerritTaskSchema.getDefault().OWNER.getKey();
 
 	/**
 	 * Gerrit Review project
@@ -72,8 +70,7 @@ public class GerritTask extends AbstractTask {
 	/**
 	 * Gerrit Review branch
 	 */
-	public static final String BRANCH = GerritTaskSchema.getDefault().BRANCH
-			.getKey();
+	public static final String BRANCH = GerritTaskSchema.getDefault().BRANCH.getKey();
 
 	/**
 	 * Gerrit Review creation date
@@ -93,20 +90,20 @@ public class GerritTask extends AbstractTask {
 	/**
 	 * Gerrit Review flags
 	 */
-	public static final String IS_STARRED = GerritTaskSchema.getDefault().IS_STARRED
-			.getKey();
-	public static final String REVIEW_STATE = GerritTaskSchema.getDefault().REVIEW_STATE
-			.getKey();
-	public static final String VERIFY_STATE = GerritTaskSchema.getDefault().VERIFY_STATE
-			.getKey();
+	public static final String IS_STARRED = GerritTaskSchema.getDefault().IS_STARRED.getKey();
+
+	public static final String REVIEW_STATE = GerritTaskSchema.getDefault().REVIEW_STATE.getKey();
+
+	public static final String VERIFY_STATE = GerritTaskSchema.getDefault().VERIFY_STATE.getKey();
 
 	/**
 	 * Date format
 	 */
 	private static SimpleDateFormat FORMAT_HOUR = new SimpleDateFormat("h:mm a");
+
 	private static SimpleDateFormat FORMAT_MONTH = new SimpleDateFormat("MMM d");
-	private static SimpleDateFormat FORMAT_FULL = new SimpleDateFormat(
-			"MMM d, yyyy");
+
+	private static SimpleDateFormat FORMAT_FULL = new SimpleDateFormat("MMM d, yyyy");
 
 	// -------------------------------------------------------------------------
 	// Attributes
@@ -120,18 +117,16 @@ public class GerritTask extends AbstractTask {
 	// -------------------------------------------------------------------------
 
 	/**
-	 * Construct an GerritTask from a Gerrit query result. Some fields may be
-	 * missing from the task data.
+	 * Construct an GerritTask from a Gerrit query result. Some fields may be missing from the task data.
 	 * 
 	 * @param taskData
 	 *            the Gerrit task data
 	 */
 	public GerritTask(final TaskData taskData) {
-		super(taskData.getRepositoryUrl(), taskData.getTaskId(), taskData
-				.getRoot().getAttribute(TaskAttribute.SUMMARY).getValue()
-				+ " ["
-				+ taskData.getRoot().getAttribute(TaskAttribute.TASK_KEY)
-						.getValue() + "]");
+		super(taskData.getRepositoryUrl(), taskData.getTaskId(), taskData.getRoot()
+				.getAttribute(TaskAttribute.SUMMARY)
+				.getValue()
+				+ " [" + taskData.getRoot().getAttribute(TaskAttribute.TASK_KEY).getValue() + "]");
 
 		fConnectorKind = taskData.getConnectorKind();
 
@@ -148,8 +143,7 @@ public class GerritTask extends AbstractTask {
 		setAttribute(BRANCH, getValue(attributes.get(BRANCH)));
 
 		setAttribute(DATE_CREATION, getValue(attributes.get(DATE_CREATION)));
-		setAttribute(DATE_MODIFICATION,
-				getValue(attributes.get(DATE_MODIFICATION)));
+		setAttribute(DATE_MODIFICATION, getValue(attributes.get(DATE_MODIFICATION)));
 		setAttribute(DATE_COMPLETION, getValue(attributes.get(DATE_COMPLETION)));
 
 		setAttribute(IS_STARRED, getValue(attributes.get(IS_STARRED)));
@@ -179,22 +173,17 @@ public class GerritTask extends AbstractTask {
 	// -------------------------------------------------------------------------
 
 	/**
-	 * Format the requested Gerrit Review attribute as a date string. As in the
-	 * Gerrit web UI, the output format depends on the date relation with
-	 * 'today':
-	 * 
-	 * Same day: 'hh:mm am/pm' Same year, different day: 'Mon DD' Different
-	 * year: 'Mon DD, YYYY' (not implemented)
+	 * Format the requested Gerrit Review attribute as a date string. As in the Gerrit web UI, the output format depends
+	 * on the date relation with 'today': Same day: 'hh:mm am/pm' Same year, different day: 'Mon DD' Different year:
+	 * 'Mon DD, YYYY' (not implemented)
 	 * 
 	 * @param key
 	 *            one of { DATE_CREATION, DATE_MODIFICATION, DATE_COMPLETION }
-	 * 
 	 * @return
 	 */
 	public String getAttributeAsDate(String key) {
 		// Validate the supplied key
-		if (!key.equals(DATE_CREATION) && !key.equals(DATE_MODIFICATION)
-				&& !key.equals(DATE_COMPLETION)) {
+		if (!key.equals(DATE_CREATION) && !key.equals(DATE_MODIFICATION) && !key.equals(DATE_COMPLETION)) {
 			return "";
 		}
 
@@ -227,8 +216,7 @@ public class GerritTask extends AbstractTask {
 		Calendar cal2 = Calendar.getInstance();
 		cal2.setTime(date);
 
-		boolean sameDay = (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && (cal1
-				.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)));
+		boolean sameDay = (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && (cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)));
 
 		return sameDay;
 	}
@@ -274,28 +262,21 @@ public class GerritTask extends AbstractTask {
 	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
-		buffer.append("TaskID  = ").append(getAttribute(GerritTask.TASK_ID))
-				.append("\n");
-		buffer.append("ShortID = ")
-				.append(getAttribute(GerritTask.SHORT_CHANGE_ID)).append("\n");
-		buffer.append("ChangeID= ").append(getAttribute(GerritTask.CHANGE_ID))
-				.append("\n");
-		buffer.append("Subject = ").append(getAttribute(GerritTask.SUBJECT))
-				.append("\n");
-		buffer.append("Owner   = ").append(getAttribute(GerritTask.OWNER))
-				.append("\n");
-		buffer.append("Project = ").append(getAttribute(GerritTask.PROJECT))
-				.append("\n");
-		buffer.append("Branch  = ").append(getAttribute(GerritTask.BRANCH))
-				.append("\n");
-		buffer.append("Updated = ")
-				.append(getAttributeAsDate(GerritTask.DATE_MODIFICATION))
-				.append("\n");
-		buffer.append("STAR = ").append(getAttribute(GerritTask.IS_STARRED))
+		buffer.append("TaskID  = ").append(getAttribute(GerritTask.TASK_ID)).append("\n");
+		buffer.append("ShortID = ").append(getAttribute(GerritTask.SHORT_CHANGE_ID)).append("\n");
+		buffer.append("ChangeID= ").append(getAttribute(GerritTask.CHANGE_ID)).append("\n");
+		buffer.append("Subject = ").append(getAttribute(GerritTask.SUBJECT)).append("\n");
+		buffer.append("Owner   = ").append(getAttribute(GerritTask.OWNER)).append("\n");
+		buffer.append("Project = ").append(getAttribute(GerritTask.PROJECT)).append("\n");
+		buffer.append("Branch  = ").append(getAttribute(GerritTask.BRANCH)).append("\n");
+		buffer.append("Updated = ").append(getAttributeAsDate(GerritTask.DATE_MODIFICATION)).append("\n");
+		buffer.append("STAR = ")
+				.append(getAttribute(GerritTask.IS_STARRED))
 				.append(", CRVW = ")
 				.append(getAttribute(GerritTask.REVIEW_STATE))
 				.append(", VRIF = ")
-				.append(getAttribute(GerritTask.VERIFY_STATE)).append("\n");
+				.append(getAttribute(GerritTask.VERIFY_STATE))
+				.append("\n");
 		return buffer.toString();
 	}
 

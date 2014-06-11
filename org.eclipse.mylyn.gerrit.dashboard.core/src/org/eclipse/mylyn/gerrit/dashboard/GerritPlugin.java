@@ -58,7 +58,7 @@ public class GerritPlugin extends Plugin {
 
 	// The shared instance
 	private static GerritPlugin Fplugin;
-	
+
 	/**
 	 * Field Tracer.
 	 */
@@ -90,10 +90,10 @@ public class GerritPlugin extends Plugin {
 	public void start(BundleContext aContext) throws Exception {
 		super.start(aContext);
 		Fplugin = this;
-		Ftracer =  new Tracer();
+		Ftracer = new Tracer();
 		Ftracer.init(PLUGIN_ID);
 		Ftracer.traceDebug("plugin started");
-		verifyVersion (PLUGIN_ID);
+		verifyVersion(PLUGIN_ID);
 	}
 
 	/**
@@ -107,8 +107,7 @@ public class GerritPlugin extends Plugin {
 			Version ver = bdleCurrent.getVersion();
 			if (ver.getQualifier().equals(DASHBOARD_VERSION_QUALIFIER)) {
 				//We are in a runtime environment, so enable it
-				Ftracer.traceDebug("In a runtime environment for " + aBundleStr + 
-						" Version: " + ver.toString() ); //$NON-NLS-1$
+				Ftracer.traceDebug("In a runtime environment for " + aBundleStr + " Version: " + ver.toString()); //$NON-NLS-1$
 				return;
 			}
 		}
@@ -149,7 +148,7 @@ public class GerritPlugin extends Plugin {
 
 	/**
 	 * Returns the shared instance
-	 *
+	 * 
 	 * @return the shared instance
 	 */
 	public static GerritPlugin getDefault() {

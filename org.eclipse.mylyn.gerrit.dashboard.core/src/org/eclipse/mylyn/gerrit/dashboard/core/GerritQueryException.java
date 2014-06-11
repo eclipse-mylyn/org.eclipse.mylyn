@@ -22,17 +22,17 @@ import org.eclipse.core.runtime.IStatus;
  */
 public class GerritQueryException extends Exception {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private final IStatus fStatus;
-    
-    public GerritQueryException(IStatus status, String message) {
-        super(message);
-        fStatus = status;
-    }
-    
-    public IStatus getStatus() {
-        return fStatus;
-    }
+	private final IStatus fStatus;
+
+	public GerritQueryException(IStatus status, String message) {
+		super(message);
+		fStatus = status;
+	}
+
+	public IStatus getStatus() {
+		return fStatus;
+	}
 
 }

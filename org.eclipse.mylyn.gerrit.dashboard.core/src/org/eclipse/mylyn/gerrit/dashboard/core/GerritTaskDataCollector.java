@@ -23,68 +23,68 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
 /**
  * A minimal list implementation of TaskDataCollector for Dashboard Gerrit queries.
- *  
+ * 
  * @author Francois Chouinard
  * @version 0.1
  */
 public class GerritTaskDataCollector extends TaskDataCollector {
 
-    //-------------------------------------------------------------------------
-    // Attributes
-    //-------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
+	// Attributes
+	//-------------------------------------------------------------------------
 
-    private Map<String, IStatus> fFailureByTaskId;
+	private final Map<String, IStatus> fFailureByTaskId;
 
-    private List<TaskData> fResults;
+	private final List<TaskData> fResults;
 
-    //-------------------------------------------------------------------------
-    // Constructor
-    //-------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
+	// Constructor
+	//-------------------------------------------------------------------------
 
-    /**
-     * Default constructor
-     */
-    public GerritTaskDataCollector() {
-        fResults = new ArrayList<TaskData>();
-        fFailureByTaskId = new HashMap<String, IStatus>();
-    }
+	/**
+	 * Default constructor
+	 */
+	public GerritTaskDataCollector() {
+		fResults = new ArrayList<TaskData>();
+		fFailureByTaskId = new HashMap<String, IStatus>();
+	}
 
-    //-------------------------------------------------------------------------
-    // Getters
-    //-------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
+	// Getters
+	//-------------------------------------------------------------------------
 
-    /**
-     * @return the query failures
-     */
-    public Map<String, IStatus> getFailureByTaskId() {
-        return fFailureByTaskId;
-    }
+	/**
+	 * @return the query failures
+	 */
+	public Map<String, IStatus> getFailureByTaskId() {
+		return fFailureByTaskId;
+	}
 
-    /**
-     * @return the query results
-     */
-    public List<TaskData> getResults() {
-        return fResults;
-    }
+	/**
+	 * @return the query results
+	 */
+	public List<TaskData> getResults() {
+		return fResults;
+	}
 
-    //-------------------------------------------------------------------------
-    // TaskDataCollector
-    //-------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
+	// TaskDataCollector
+	//-------------------------------------------------------------------------
 
-    /* (non-Javadoc)
-     * @see org.eclipse.mylyn.tasks.core.data.TaskDataCollector#accept(org.eclipse.mylyn.tasks.core.data.TaskData)
-     */
-    @Override
-    public void accept(TaskData taskData) {
-        fResults.add(taskData);
-    }
+	/* (non-Javadoc)
+	 * @see org.eclipse.mylyn.tasks.core.data.TaskDataCollector#accept(org.eclipse.mylyn.tasks.core.data.TaskData)
+	 */
+	@Override
+	public void accept(TaskData taskData) {
+		fResults.add(taskData);
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.mylyn.tasks.core.data.TaskDataCollector#failed(java.lang.String, org.eclipse.core.runtime.IStatus)
-     */
-    @Override
-    public void failed(String taskId, IStatus status) {
-        fFailureByTaskId.put(taskId, status);
-    }
+	/* (non-Javadoc)
+	 * @see org.eclipse.mylyn.tasks.core.data.TaskDataCollector#failed(java.lang.String, org.eclipse.core.runtime.IStatus)
+	 */
+	@Override
+	public void failed(String taskId, IStatus status) {
+		fFailureByTaskId.put(taskId, status);
+	}
 
 }

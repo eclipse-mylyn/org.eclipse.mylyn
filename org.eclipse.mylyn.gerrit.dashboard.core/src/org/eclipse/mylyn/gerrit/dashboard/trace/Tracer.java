@@ -50,9 +50,9 @@ public class Tracer {
 
 	private BufferedWriter fTraceFile;
 
-	private SimpleDateFormat fTimeFormat;
+	private final SimpleDateFormat fTimeFormat;
 
-	private StringBuilder fTraceMessage;
+	private final StringBuilder fTraceMessage;
 
 	private boolean fLogToConsole;
 
