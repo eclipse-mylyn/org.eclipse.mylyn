@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Eclipse EGit Mylyn GitHub Tests
 Bundle-SymbolicName: org.eclipse.mylyn.github.tests
-Bundle-Version: 3.4.0.qualifier
+Bundle-Version: 3.4.0.201406110918-r
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.eclipse.jface.text;bundle-version="[3.5.0,4.0.0)",
  org.eclipse.mylyn.tasks.ui;bundle-version="[3.2.0,4.0.0)",
