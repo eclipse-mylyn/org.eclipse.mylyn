@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Guy Perron 423242: Add ability to edit comment from compare navigator popup
  *******************************************************************************/
 
 package org.eclipse.mylyn.reviews.tests.ui;
@@ -38,6 +39,7 @@ import org.eclipse.team.core.history.IFileRevision;
 
 /**
  * @author Leo Dos Santos
+ * @author Guy Perron
  */
 public class ReviewAnnotationModelTest extends TestCase {
 
@@ -64,6 +66,11 @@ public class ReviewAnnotationModelTest extends TestCase {
 
 		@Override
 		public IFileRevision getFileRevision(IFileVersion reviewFileVersion) {
+			return null;
+		}
+
+		@Override
+		public IStatus discardComment(IReviewItem fileItem, IComment comment, IProgressMonitor monitor) {
 			return null;
 		}
 
@@ -117,6 +124,13 @@ public class ReviewAnnotationModelTest extends TestCase {
 
 		iter = model.getAnnotationIterator();
 		assertEquals(2, getCount(iter));
+
+		notification = new NotificationImpl(Notification.REMOVE, newComment, null);
+		model.getItem().eNotify(notification);
+
+		iter = model.getAnnotationIterator();
+		assertEquals(1, getCount(iter));
+
 	}
 
 	private int getCount(Iterator<CommentAnnotation> iter) {

@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Sascha Scholz (SAP) - improvements
+ *     Guy Perron 423242: Add ability to edit comment from compare navigator popup
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core;
@@ -16,6 +17,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.operations.AbandonRequest;
 import org.eclipse.mylyn.internal.gerrit.core.operations.AddReviewersRequest;
+import org.eclipse.mylyn.internal.gerrit.core.operations.DiscardDraftRequest;
 import org.eclipse.mylyn.internal.gerrit.core.operations.GerritOperation;
 import org.eclipse.mylyn.internal.gerrit.core.operations.PublishRequest;
 import org.eclipse.mylyn.internal.gerrit.core.operations.RebaseRequest;
@@ -30,10 +32,12 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import com.google.gerrit.common.data.ChangeDetail;
 import com.google.gerrit.common.data.ReviewerResult;
 import com.google.gerrit.reviewdb.PatchLineComment;
+import com.google.gwtjsonrpc.client.VoidResult;
 
 /**
  * @author Steffen Pingel
  * @author Sascha Scholz
+ * @author Guy Perron
  */
 public class GerritOperationFactory {
 
@@ -45,6 +49,11 @@ public class GerritOperationFactory {
 
 	public GerritOperation<PatchLineComment> createSaveDraftOperation(ITask review, SaveDraftRequest request) {
 		return new GerritOperation<PatchLineComment>(Messages.GerritOperationFactory_Saving_Draft, getClient(review), request);
+	}
+
+	public GerritOperation<VoidResult> createDiscardDraftOperation(ITask review, DiscardDraftRequest request) {
+		return new GerritOperation<VoidResult>(Messages.GerritOperationFactory_Discarding_Draft, getClient(review),
+				request);
 	}
 
 	public GerritOperation<ChangeDetail> createAbandonOperation(ITask review, AbandonRequest request) {

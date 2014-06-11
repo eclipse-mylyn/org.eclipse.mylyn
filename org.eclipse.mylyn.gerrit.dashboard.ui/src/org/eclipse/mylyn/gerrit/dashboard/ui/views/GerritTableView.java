@@ -848,7 +848,8 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 	 * @throws GerritQueryException
 	 */
 	private IStatus getReviews(TaskRepository repository, String queryType) throws GerritQueryException {
-		if (repository.getUserName() == null || repository.getUserName().isEmpty()) {
+	if (repository.getUserName() == null
+		|| repository.getUserName().isEmpty()) {
 			//Test for Anonymous user
 			if (queryType.equals(GerritQuery.MY_CHANGES)
 					|| queryType.equals(GerritQuery.QUERY_MY_DRAFTS_COMMENTS_CHANGES)) {

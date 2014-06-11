@@ -123,6 +123,7 @@ public class AddCommentDialog extends ProgressDialog {
 					new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
 							"Unexpected error during execution of operation", e), //$NON-NLS-1$
 					StatusManager.SHOW | StatusManager.LOG);
+			return false;
 		} catch (InterruptedException e) {
 			// cancelled
 			return false;

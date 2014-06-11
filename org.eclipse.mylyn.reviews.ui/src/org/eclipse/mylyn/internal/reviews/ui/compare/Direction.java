@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.reviews.ui.compare;
 
-enum Direction {
+public enum Direction {
 
 	FORWARDS, BACKWARDS;
 

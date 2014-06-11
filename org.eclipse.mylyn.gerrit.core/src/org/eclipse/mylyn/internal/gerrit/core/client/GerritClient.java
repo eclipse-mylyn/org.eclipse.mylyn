@@ -14,6 +14,7 @@
  *      Francois Chouinard - Added "LABELS" option on selected queries
  *      Jacques Bouthillier - Bug 414253 Add support for Gerrit Dashboard
  *      Jacques Bouthillier (Ericsson) - Bug 426505 Add Starred functionality
+ *      Guy Perron (Ericsson) Bug 423242 Add ability to edit comment from compare navigator popup
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
@@ -125,6 +126,7 @@ import com.google.gwtjsonrpc.client.VoidResult;
  * @author Miles Parker
  * @author Francois Chouinard
  * @author Jacques Bouthillier
+ * @author Guy Perron
  */
 public class GerritClient extends ReviewsClient {
 
@@ -261,8 +263,8 @@ public class GerritClient extends ReviewsClient {
 	}
 
 	public PatchLineComment saveDraft(Patch.Key patchKey, String message, int line, short side, String parentUuid,
-			IProgressMonitor monitor) throws GerritException {
-		PatchLineComment.Key id = new PatchLineComment.Key(patchKey, null);
+			String uuid, IProgressMonitor monitor) throws GerritException {
+		PatchLineComment.Key id = new PatchLineComment.Key(patchKey, uuid);
 		final PatchLineComment comment = new PatchLineComment(id, line, getAccount(monitor).getId(), parentUuid);
 		comment.setMessage(message);
 		comment.setSide(side);
@@ -270,6 +272,20 @@ public class GerritClient extends ReviewsClient {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
 				getPatchDetailService(monitor).saveDraft(comment, this);
+			}
+		});
+	}
+
+	public VoidResult deleteDraft(Patch.Key patchkey, String message, int line, short side, String uuid,
+			IProgressMonitor monitor) throws GerritException {
+		final PatchLineComment.Key id = new PatchLineComment.Key(patchkey, uuid);
+		final PatchLineComment comment = new PatchLineComment(id, line, getAccount(monitor).getId(), uuid);
+		comment.setMessage(message);
+		comment.setSide(side);
+		return execute(monitor, new Operation<VoidResult>() {
+			@Override
+			public void execute(IProgressMonitor monitor) throws GerritException {
+				getPatchDetailService(monitor).deleteDraft(comment.getKey(), this);
 			}
 		});
 	}

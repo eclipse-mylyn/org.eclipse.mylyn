@@ -57,6 +57,11 @@ public class Messages extends NLS {
 	public static String GerritUtil_X_dot_dot_dot;
 
 	public static String GerritUtil_Unknown;
+
+	public static String GerritOperationFactory_Discarding_Draft;
+
+	public static String GerritReviewBehavior_Internal_Exception;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

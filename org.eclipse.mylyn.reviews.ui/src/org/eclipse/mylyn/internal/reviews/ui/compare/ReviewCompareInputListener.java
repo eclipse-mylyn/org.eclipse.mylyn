@@ -51,8 +51,6 @@ import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.swt.custom.LineBackgroundEvent;
 import org.eclipse.swt.custom.LineBackgroundListener;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
@@ -385,12 +383,6 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 			support.setAnnotationPreference((AnnotationPreference) e.next());
 		}
 		support.install(EditorsUI.getPreferenceStore());
-		sourceViewer.getControl().addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent e) {
-				support.dispose();
-			}
-		});
-
 		Field overViewRulerField = sourceViewerClazz.getDeclaredField("fOverviewRuler"); //$NON-NLS-1$
 		overViewRulerField.setAccessible(true);
 

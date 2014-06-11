@@ -104,6 +104,10 @@ public class AddLineCommentToFileAction extends AbstractReviewAction {
 
 	public ILocation getLocation() {
 		LineRange selectedRange = getSelectedRange();
+		int maxNumberOfLines = compareSourceViewer.getAnnotationModel().getDocument().getNumberOfLines();
+		if (selectedRange.getStartLine() == maxNumberOfLines) {
+			selectedRange = new LineRange(maxNumberOfLines - 1, 1);
+		}
 		ILineLocation location = ReviewsFactory.eINSTANCE.createLineLocation();
 		ILineRange range = ReviewsFactory.eINSTANCE.createLineRange();
 		range.setStart(selectedRange.getStartLine());

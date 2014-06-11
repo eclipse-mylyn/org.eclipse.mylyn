@@ -19,6 +19,9 @@ public class Messages extends NLS {
 	public static String CommentAnnotation_X_dash_Y;
 
 	public static String CommentAnnotationHover_Multiple_comments;
+
+	public static String CommentInputDialog_LineNumber;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
