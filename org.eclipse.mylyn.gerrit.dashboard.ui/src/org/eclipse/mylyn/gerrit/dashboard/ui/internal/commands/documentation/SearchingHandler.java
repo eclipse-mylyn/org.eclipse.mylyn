@@ -24,24 +24,20 @@ import org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils.GerritServerUtility;
 /**
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
- *
  */
 
 public class SearchingHandler extends AbstractHandler {
-	
 
-	private final String SEARCHING_DOCUMENTATION = "Documentation/user-search.html";
+	private final String SEARCHING_DOCUMENTATION = "Documentation/user-search.html"; //$NON-NLS-1$
 
-	
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
 	 */
 	@Override
 	public Object execute(ExecutionEvent aEvent) throws ExecutionException {
-		// TODO Auto-generated method stub
-		GerritUi.Ftracer.traceInfo("Search the documentation SearchingHandler  " ); //$NON-NLS-1$
+		GerritUi.Ftracer.traceInfo("Search the documentation SearchingHandler  "); //$NON-NLS-1$
 
-		GerritServerUtility.getInstance().openWebBrowser (SEARCHING_DOCUMENTATION);
+		GerritServerUtility.getInstance().openWebBrowser(SEARCHING_DOCUMENTATION);
 
 		return null;
 	}

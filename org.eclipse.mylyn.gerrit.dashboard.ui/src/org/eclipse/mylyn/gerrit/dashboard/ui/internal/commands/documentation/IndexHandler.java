@@ -24,21 +24,20 @@ import org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils.GerritServerUtility;
 /**
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
- *
  */
 
 public class IndexHandler extends AbstractHandler {
-	
-	private final String INDEX_DOCUMENTATION = "Documentation/index.html";
-	
+
+	private final String INDEX_DOCUMENTATION = "Documentation/index.html"; //$NON-NLS-1$
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
 	 */
 	@Override
 	public Object execute(ExecutionEvent aEvent) throws ExecutionException {
-		GerritUi.Ftracer.traceInfo("Search the documentation IndexHandler  " ); //$NON-NLS-1$
+		GerritUi.Ftracer.traceInfo("Search the documentation IndexHandler  "); //$NON-NLS-1$
 
-		GerritServerUtility.getInstance().openWebBrowser (INDEX_DOCUMENTATION);
+		GerritServerUtility.getInstance().openWebBrowser(INDEX_DOCUMENTATION);
 
 		return null;
 	}

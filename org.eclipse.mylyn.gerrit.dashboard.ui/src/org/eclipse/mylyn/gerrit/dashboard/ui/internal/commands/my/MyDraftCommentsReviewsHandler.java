@@ -25,7 +25,6 @@ import org.eclipse.mylyn.internal.gerrit.core.GerritQuery;
 /**
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
- *
  */
 
 public class MyDraftCommentsReviewsHandler extends AbstractHandler {
@@ -35,15 +34,14 @@ public class MyDraftCommentsReviewsHandler extends AbstractHandler {
 	 */
 	@Override
 	public Object execute(ExecutionEvent aEvent) throws ExecutionException {
-		GerritUi.Ftracer.traceInfo("Search the Gerrit reviews for My Drafts Comments  " ); //$NON-NLS-1$
-		GerritTableView reviewTableView = GerritTableView
-				.getActiveView();
+		GerritUi.Ftracer.traceInfo("Search the Gerrit reviews for My Drafts Comments  "); //$NON-NLS-1$
+		GerritTableView reviewTableView = GerritTableView.getActiveView();
 
 		// see http://gerrit-documentation.googlecode.com/svn/Documentation/2.5.2/user-search.html
 		//for MY > Drafts Comments--> has:draft
-		GerritUi.Ftracer.traceInfo("Execute command :   "  +  "My > Draft Comments"); //$NON-NLS-1$
+		GerritUi.Ftracer.traceInfo("Execute command :   " + "My > Draft Comments"); //$NON-NLS-1$
 		reviewTableView.processCommands(GerritQuery.QUERY_MY_DRAFTS_COMMENTS_CHANGES);
-	 
+
 		return null;
 	}
 

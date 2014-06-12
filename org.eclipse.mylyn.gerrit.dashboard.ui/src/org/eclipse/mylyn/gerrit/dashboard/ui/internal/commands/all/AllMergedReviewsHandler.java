@@ -25,7 +25,6 @@ import org.eclipse.mylyn.internal.gerrit.core.GerritQuery;
 /**
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
- *
  */
 
 public class AllMergedReviewsHandler extends AbstractHandler {
@@ -36,16 +35,15 @@ public class AllMergedReviewsHandler extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent aEvent) throws ExecutionException {
 
-		GerritUi.Ftracer.traceInfo("Search the Gerrit reviews for All Merged  " ); //$NON-NLS-1$
-		GerritTableView reviewTableView = GerritTableView
-				.getActiveView();
+		GerritUi.Ftracer.traceInfo("Search the Gerrit reviews for All Merged  "); //$NON-NLS-1$
+		GerritTableView reviewTableView = GerritTableView.getActiveView();
 
 		// see http://gerrit-documentation.googlecode.com/svn/Documentation/2.5.2/user-search.html
 		//for All > AbandonedOpen--> status:merged
-		GerritUi.Ftracer.traceInfo("Execute command :   "  + GerritQuery.QUERY_ALL_MERGED_CHANGES ); //$NON-NLS-1$
+		GerritUi.Ftracer.traceInfo("Execute command :   " + GerritQuery.QUERY_ALL_MERGED_CHANGES); //$NON-NLS-1$
 		reviewTableView.processCommands(GerritQuery.QUERY_ALL_MERGED_CHANGES);
 
-		return null;	
+		return null;
 	}
 
 }

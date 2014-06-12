@@ -34,7 +34,6 @@ public class UIConstants { // $codepro.audit.disable convertClassToInterface
 	 */
 	public final static long TIME_ZONE_OFFSET = TimeZone.getDefault().getOffset(System.currentTimeMillis());
 
-
 	//Test Constants
 	/**
 	 * Field DASHBOARD_UI_JOB_FAMILY.
@@ -44,26 +43,22 @@ public class UIConstants { // $codepro.audit.disable convertClassToInterface
 	/**
 	 * Field DEFAULT_REPOSITORY. (value is ""https://"")
 	 */
-	public static final  String DEFAULT_REPOSITORY = "https://";
-	
-	
+	public static final String DEFAULT_REPOSITORY = "https://";
+
 	/**
 	 * Field ADD_GERRIT_SITE_COMMAND_ID. (value is ""org.eclipse.mylyn.gerrit.dashboard.ui.addGerritSite"")
 	 */
 	public static final String ADD_GERRIT_SITE_COMMAND_ID = "org.eclipse.mylyn.gerrit.dashboard.ui.addGerritSite";
-
 
 	/**
 	 * Field ADJUST_MY_STARRED_NAME. (value is ""Star Review"")
 	 */
 	public static final String ADJUST_MY_STARRED_NAME = "Star Review";
 
-
 	//Test Constants
 	/**
 	 * Field ADJUST_MY_STARRED_COMMAND_ID. (value is ""org.eclipse.mylyn.gerrit.dashboard.ui.adjustMyStarred"")
 	 */
 	public static final String ADJUST_MY_STARRED_COMMAND_ID = "org.eclipse.mylyn.gerrit.dashboard.ui.adjustMyStarred";
-
 
 }

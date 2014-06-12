@@ -30,7 +30,6 @@ import org.eclipse.swt.widgets.TreeItem;
 /**
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
- *
  */
 public class ReviewTableSorter extends ViewerSorter {
 
@@ -57,6 +56,7 @@ public class ReviewTableSorter extends ViewerSorter {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 	 */
+	@Override
 	@SuppressWarnings("restriction")
 	public int compare(Viewer viewer, Object item1, Object item2) {
 
@@ -73,21 +73,21 @@ public class ReviewTableSorter extends ViewerSorter {
 			String val2 = null;
 
 			switch (columnIndex) {
-			case 0:	// Star
+			case 0: // Star
 				val1 = task1.getAttribute(GerritTask.IS_STARRED);
 				val2 = task2.getAttribute(GerritTask.IS_STARRED);
 				if (val1 != null && val2 != null) {
 					result = val1.compareTo(val2);
 				}
 				break;
-			case 6:	// Updated
+			case 6: // Updated
 				val1 = task1.getAttribute(GerritTask.DATE_MODIFICATION);
 				val2 = task2.getAttribute(GerritTask.DATE_MODIFICATION);
 				if (val1 != null && val2 != null) {
 					result = val1.compareTo(val2);
 				}
 				break;
-			case 7:	// Code Review
+			case 7: // Code Review
 				val1 = task1.getAttribute(GerritTask.REVIEW_STATE);
 				val2 = task2.getAttribute(GerritTask.REVIEW_STATE);
 				if (val1 != null && val2 != null) {
@@ -96,7 +96,7 @@ public class ReviewTableSorter extends ViewerSorter {
 					result = v2 - v1;
 				}
 				break;
-			case 8:	// Verify
+			case 8: // Verify
 				val1 = task1.getAttribute(GerritTask.VERIFY_STATE);
 				val2 = task2.getAttribute(GerritTask.VERIFY_STATE);
 				if (val1 != null && val2 != null) {
@@ -105,7 +105,7 @@ public class ReviewTableSorter extends ViewerSorter {
 					result = v2 - v1;
 				}
 				break;
-			case 9:	// IPLog Clean
+			case 9: // IPLog Clean
 			default:
 				result = defaultCompare(viewer, item1, item2);
 				break;
@@ -146,7 +146,7 @@ public class ReviewTableSorter extends ViewerSorter {
 
 			// Compare the respective fields
 			int order = 0;
-			
+
 			if (idx1 > -1 && idx2 > -1) {
 				String str1 = tv.getTable().getItems()[idx1].getText(this.columnIndex);
 				String str2 = tv.getTable().getItems()[idx2].getText(this.columnIndex);
@@ -157,7 +157,7 @@ public class ReviewTableSorter extends ViewerSorter {
 			}
 			return order;
 		}
-		
+
 		else if (aViewer instanceof TreeViewer) {
 
 			TreeViewer tv = (TreeViewer) aViewer;
@@ -190,10 +190,8 @@ public class ReviewTableSorter extends ViewerSorter {
 
 			int order = 0;
 			if (idx1 > -1 && idx2 > -1) {
-				String str1 = tv.getTree().getItems()[idx1]
-						.getText(this.columnIndex);
-				String str2 = tv.getTree().getItems()[idx2]
-						.getText(this.columnIndex);
+				String str1 = tv.getTree().getItems()[idx1].getText(this.columnIndex);
+				String str2 = tv.getTree().getItems()[idx2].getText(this.columnIndex);
 				order = str1.compareTo(str2);
 				if (tv.getTree().getSortDirection() != SWT.UP) {
 					order *= -1;
@@ -218,15 +216,15 @@ public class ReviewTableSorter extends ViewerSorter {
 			final int columnNum = i;
 			TableColumn column = aTableViewer.getTable().getColumn(i);
 			column.addSelectionListener(new SelectionAdapter() {
+				@Override
 				public void widgetSelected(final SelectionEvent e) {
 					ReviewTableSorter sorter = new ReviewTableSorter(columnNum);
 					Table table = aTableViewer.getTable();
-					table.setSortDirection(table.getSortDirection() == SWT.UP ? SWT.DOWN
-							: SWT.UP);
+					table.setSortDirection(table.getSortDirection() == SWT.UP ? SWT.DOWN : SWT.UP);
 					aTableViewer.setComparator(sorter);
 				}
 			});
 		}
 	}
-	
+
 }

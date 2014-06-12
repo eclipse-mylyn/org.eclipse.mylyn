@@ -27,106 +27,103 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  */
 public class ReviewTableData {
 
-    // ------------------------------------------------------------------------
-    // Member variables
-    // ------------------------------------------------------------------------
+	// ------------------------------------------------------------------------
+	// Member variables
+	// ------------------------------------------------------------------------
 
-    // The list of reviews indexed by the SHORT_CHANGE_ID
-    private Map<String, GerritTask> fReviewList;
+	// The list of reviews indexed by the SHORT_CHANGE_ID
+	private Map<String, GerritTask> fReviewList;
 
-    private TaskRepository fTaskRepo = null;
+	private TaskRepository fTaskRepo = null;
 
-    private String fQuery    = null;
+	private String fQuery = null;
 
-    /**
-     * Create a new review entry to insert to the list of reviews
-     * 
-     * @param Object
-     */
-    @SuppressWarnings("restriction")
-	public void createReviewItem(GerritTask[] aList, String aQuery,
-            TaskRepository aTaskRepo) {
+	/**
+	 * Create a new review entry to insert to the list of reviews
+	 * 
+	 * @param Object
+	 */
+	@SuppressWarnings("restriction")
+	public void createReviewItem(GerritTask[] aList, String aQuery, TaskRepository aTaskRepo) {
 
-        // Create the new object
-        // if (fQuery != aQuery) {
-        fReviewList = new ConcurrentHashMap<String, GerritTask>();
-        for (GerritTask review : aList) {
-            fReviewList.put(
-                    review.getAttribute(GerritTask.SHORT_CHANGE_ID),
-                    review);
-        }
-        fTaskRepo = aTaskRepo;
-        fQuery = aQuery;
+		// Create the new object
+		// if (fQuery != aQuery) {
+		fReviewList = new ConcurrentHashMap<String, GerritTask>();
+		for (GerritTask review : aList) {
+			fReviewList.put(review.getAttribute(GerritTask.SHORT_CHANGE_ID), review);
+		}
+		fTaskRepo = aTaskRepo;
+		fQuery = aQuery;
 
-        // } else {
-        // //Need to reset the list, we just created a null entry
-        // reset();
-        // }
-    }
+		// } else {
+		// //Need to reset the list, we just created a null entry
+		// reset();
+		// }
+	}
 
 	public void createReviewItem(String query, TaskRepository repository) {
-        fReviewList = new HashMap<String, GerritTask>();
-        fTaskRepo = repository;
-        fQuery = query;
-    }
+		fReviewList = new HashMap<String, GerritTask>();
+		fTaskRepo = repository;
+		fQuery = query;
+	}
 
-    @SuppressWarnings("restriction")
+	@SuppressWarnings("restriction")
 	public void updateReviewItem(GerritTask task) {
-        fReviewList.put(task.getTaskId(), task);
-    }
-    
+		fReviewList.put(task.getTaskId(), task);
+	}
+
 	public void deleteReviewItem(String taskId) {
-        fReviewList.remove(taskId);
-    }
-    
-    /**
-     * Provide the list of review available for the table list
-     * 
-     * @return the list of gerrit reviews
-     */
-    public GerritTask[] getReviews() {
-        if (fReviewList == null) {
-            fReviewList = new HashMap<String, GerritTask>();
-        }
-        return fReviewList.values().toArray(new GerritTask[0]);
-    }
+		fReviewList.remove(taskId);
+	}
 
-    /**
-     * Provide the review with the specified ID
-     * 
-     * @param id
-     *            the requested ID (SHORT_CHANGE_ID)
-     * @return the requested review (or null)
-     */
-    public GerritTask getReview(String id) {
-        if (id != null && fReviewList.containsKey(id)) {
-            return fReviewList.get(id);
-        }
-        return null;
-    }
+	/**
+	 * Provide the list of review available for the table list
+	 * 
+	 * @return the list of gerrit reviews
+	 */
+	public GerritTask[] getReviews() {
+		if (fReviewList == null) {
+			fReviewList = new HashMap<String, GerritTask>();
+		}
+		return fReviewList.values().toArray(new GerritTask[0]);
+	}
 
-    /**
-     * Get the current TaskRepo populating the table list view
-     * 
-     * @return TaskRepository
-     */
-    public TaskRepository getCurrentTaskRepo() {
-        return fTaskRepo;
-    }
+	/**
+	 * Provide the review with the specified ID
+	 * 
+	 * @param id
+	 *            the requested ID (SHORT_CHANGE_ID)
+	 * @return the requested review (or null)
+	 */
+	public GerritTask getReview(String id) {
+		if (id != null && fReviewList.containsKey(id)) {
+			return fReviewList.get(id);
+		}
+		return null;
+	}
 
-    /**
-     * Return the query information used to populate the review table
-     * 
-     * @return String
-     */
-    public String getQueryInfo() {
-        return fQuery;
-    }
+	/**
+	 * Get the current TaskRepo populating the table list view
+	 * 
+	 * @return TaskRepository
+	 */
+	public TaskRepository getCurrentTaskRepo() {
+		return fTaskRepo;
+	}
+
+	/**
+	 * Return the query information used to populate the review table
+	 * 
+	 * @return String
+	 */
+	public String getQueryInfo() {
+		return fQuery;
+	}
 
 	@SuppressWarnings("restriction")
 	public void init(GerritTask[] reviews) {
 		for (GerritTask review : reviews) {
-	        fReviewList.put(review.getTaskId(), review);
+			fReviewList.put(review.getTaskId(), review);
 
 		}
 	}

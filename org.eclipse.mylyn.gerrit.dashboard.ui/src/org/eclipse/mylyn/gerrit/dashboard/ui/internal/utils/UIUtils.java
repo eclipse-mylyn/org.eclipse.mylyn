@@ -26,7 +26,6 @@ import org.eclipse.swt.widgets.Display;
 /**
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
- *
  */
 
 public class UIUtils {
@@ -35,15 +34,12 @@ public class UIUtils {
 	 * Method notInplementedDialog.
 	 * 
 	 * @param String
-	 *            
 	 */
 	public static void notInplementedDialog(String aSt) {
 		GerritUi.Ftracer.traceWarning("Not Implemented yet");
-		final ErrorDialog dialog = new ErrorDialog(
-				null,
-				"Gerrit Dashboard Information",
-				"This method [ " + aSt + " ] is not ready yet" ,
-				new Status(IStatus.INFO, GerritUi.PLUGIN_ID, 0, "Not Implemented yet", null), IStatus.INFO);
+		final ErrorDialog dialog = new ErrorDialog(null, "Gerrit Dashboard Information", "This method [ " + aSt
+				+ " ] is not ready yet", new Status(IStatus.INFO, GerritUi.PLUGIN_ID, 0, "Not Implemented yet", null),
+				IStatus.INFO);
 		Display.getDefault().syncExec(new Runnable() {
 			public void run() {
 				dialog.open();
@@ -55,23 +51,21 @@ public class UIUtils {
 	/**
 	 * Method showErrorDialog.
 	 * 
-	 * @param String message
-	 * @param String reason
+	 * @param String
+	 *            message
+	 * @param String
+	 *            reason
 	 */
 	public static void showErrorDialog(String aMsg, String aReason) {
 		GerritUi.Ftracer.traceWarning(aMsg + "\t reason: " + aReason);
-		final ErrorDialog dialog = new ErrorDialog(
-				null,
-				"Gerrit Dashboard Info",
-				aMsg   ,
-				new Status(IStatus.INFO, GerritUi.PLUGIN_ID, 0, aReason, null), IStatus.INFO);
+		final ErrorDialog dialog = new ErrorDialog(null, "Gerrit Dashboard Info", aMsg, new Status(IStatus.INFO,
+				GerritUi.PLUGIN_ID, 0, aReason, null), IStatus.INFO);
 		Display.getDefault().syncExec(new Runnable() {
 			public void run() {
 				dialog.open();
 			}
 		});
 	}
-
 
 	/**
 	 * Creates view preference frame and return the child composite.
@@ -81,7 +75,7 @@ public class UIUtils {
 	 * @return the child composite.
 	 */
 	public static Composite createsGeneralComposite(Composite aParent, int style) {
-		Composite child = new Composite(aParent, style );
+		Composite child = new Composite(aParent, style);
 		FormLayout layout = new FormLayout();
 		layout.marginWidth = 10;
 		layout.marginHeight = 0;

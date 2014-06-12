@@ -44,11 +44,9 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 
-
 /**
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
- *
  */
 @SuppressWarnings("restriction")
 public class GerritServerUtility {
@@ -71,13 +69,11 @@ public class GerritServerUtility {
 	 * Field ECLIPSE_GERRIT_DEFAULT. (value is ""https://git.eclipse.org/r/"")
 	 */
 	private final String ECLIPSE_GERRIT_DEFAULT = "https://git.eclipse.org/r/";
-	
+
 	/**
 	 * Field SLASH. (value is ""/"")
 	 */
 	private final String SLASH = "/";
-
-
 
 	// ------------------------------------------------------------------------
 	// Variables
@@ -85,111 +81,111 @@ public class GerritServerUtility {
 
 	private static GerritServerUtility fInstance = null;
 
-	private Map<TaskRepository, String> fResultTask = new HashMap<TaskRepository,String>();
-	
+	private Map<TaskRepository, String> fResultTask = new HashMap<TaskRepository, String>();
+
 	// ------------------------------------------------------------------------
 	// Constructors
 	// ------------------------------------------------------------------------
 	protected GerritServerUtility() {
 		fInstance = this;
-		
+
 		//LATER: Map the workspace gerrit to the menu option
 		//addWorkspaceGerritRepo();
-		
+
 		//Begin Test
 		//testTaskRepo(); not needed anymore
 		//End Test
 	}
 
-
 	// ------------------------------------------------------------------------
 	// Methods Private
 	// ------------------------------------------------------------------------
-	
+
 	/**
 	 * Build a list of Gerrit server to display in the combo box in the dialogue window
+	 * 
 	 * @param aTaskRepo
 	 */
-	private void adjustTemplatemanager (TaskRepository aTaskRepo) {
+	private void adjustTemplatemanager(TaskRepository aTaskRepo) {
 		RepositoryTemplateManager templateManager = TasksUiPlugin.getRepositoryTemplateManager();
 		//Verify to only add once in the repository template
 		Boolean found = false;
-	//	printTaskRepository(aTaskRepo);
+		//	printTaskRepository(aTaskRepo);
 		for (RepositoryTemplate template : templateManager.getTemplates(GerritConnector.CONNECTOR_KIND)) {
-			String convertedRemoteURL = aTaskRepo.getRepositoryUrl() ;
-			GerritPlugin.Ftracer.traceInfo("\t template.label: " + template.label
-					+ "\t repo label: " + aTaskRepo.getRepositoryLabel() +" repo getname: " + convertedRemoteURL );
+			String convertedRemoteURL = aTaskRepo.getRepositoryUrl();
+			GerritPlugin.Ftracer.traceInfo("\t template.label: " + template.label + "\t repo label: "
+					+ aTaskRepo.getRepositoryLabel() + " repo getname: " + convertedRemoteURL);
 			//Test the name and the remoteURL to reduce duplications
-			if (template.label.equals(aTaskRepo.getRepositoryLabel()) ||
-			    template.repositoryUrl.equals(convertedRemoteURL) ) {
+			if (template.label.equals(aTaskRepo.getRepositoryLabel())
+					|| template.repositoryUrl.equals(convertedRemoteURL)) {
 				found = true;
 				break;
 			}
 		}
-		
+
 		if (!found) {
 			//Set each parameter of the Gerrit server
 			String userName = aTaskRepo.getUserName();
-			Boolean anonymous = (userName != null &&  !userName.isEmpty()) ? false: true;
-			
+			Boolean anonymous = (userName != null && !userName.isEmpty()) ? false : true;
+
 			//Create a repository template
-			RepositoryTemplate templateTest = new RepositoryTemplate(aTaskRepo.getRepositoryLabel(), 
-					aTaskRepo.getRepositoryUrl(),
-					aTaskRepo.getCharacterEncoding(),
-					aTaskRepo.getVersion(),
-					"", "", "", 
+			RepositoryTemplate templateTest = new RepositoryTemplate(aTaskRepo.getRepositoryLabel(),
+					aTaskRepo.getRepositoryUrl(), aTaskRepo.getCharacterEncoding(), aTaskRepo.getVersion(), "", "", "",
 					aTaskRepo.getUserName(), anonymous, true);
-			
+
 			//Set the attributes 
 			Map<String, String> attributes = aTaskRepo.getProperties();
-			
+
 			Set<Entry<String, String>> value = attributes.entrySet();
-			for ( Map.Entry <String, String> entry: value){
+			for (Map.Entry<String, String> entry : value) {
 				templateTest.addAttribute(entry.getKey(), entry.getValue());
 			}
 			templateManager.addTemplate(GerritConnector.CONNECTOR_KIND, templateTest);
-			
+
 		}
 	}
-	
+
 	private void printRepositoryTemplate() {
 		RepositoryTemplateManager templateManager = TasksUiPlugin.getRepositoryTemplateManager();
 		if (templateManager != null) {
 			for (RepositoryTemplate template : templateManager.getTemplates(GerritConnector.CONNECTOR_KIND)) {
-			    GerritPlugin.Ftracer.traceInfo("------------======================------------------");
-				 Set<Entry<String, String>> value = template.getAttributes().entrySet();
-				 if (value != null) {
-						for (Map.Entry <String, String> entry: value) {
-						    GerritPlugin.Ftracer.traceInfo("key: " + entry.getKey() + "\tvalue: " +
-									entry.getValue());
-						}					 
-				 }
+				GerritPlugin.Ftracer.traceInfo("------------======================------------------");
+				Set<Entry<String, String>> value = template.getAttributes().entrySet();
+				if (value != null) {
+					for (Map.Entry<String, String> entry : value) {
+						GerritPlugin.Ftracer.traceInfo("key: " + entry.getKey() + "\tvalue: " + entry.getValue());
+					}
+				}
 			}
 		}
 	}
 
 	/**
 	 * Build and return the File storing the persistent data
-	 * @param String aFile
+	 * 
+	 * @param String
+	 *            aFile
 	 * @return File
 	 */
-	private File getLastGerritFile (String aFile) {
+	private File getLastGerritFile(String aFile) {
 		IPath ipath = GerritPlugin.getDefault().getStateLocation();
 		String fileName = ipath.append(aFile).toPortableString();
-		File file = new File (fileName);
+		File file = new File(fileName);
 		return file;
 	}
-	
+
 	/**
 	 * Build a URL for Gerrit documentation
-	 * @param aRequest specific documentation 
+	 * 
+	 * @param aRequest
+	 *            specific documentation
 	 * @return URL complete URL fo the selected site based on the Gerrit server and version
 	 * @throws MalformedURLException
 	 */
-	private URL buildDocumentationURL (String aRequest) throws MalformedURLException {
+	private URL buildDocumentationURL(String aRequest) throws MalformedURLException {
 		StringBuilder sb = new StringBuilder();
 
-		String lastSaved = getInstance ().getLastSavedGerritServer();
+		String lastSaved = getInstance().getLastSavedGerritServer();
 		if (lastSaved == null) {
 			//Use Default, so ECLIPSE_GERRIT_DEFAULT
 			lastSaved = ECLIPSE_GERRIT_DEFAULT;
@@ -199,80 +195,82 @@ public class GerritServerUtility {
 		}
 		sb.append(lastSaved);
 		sb.append(aRequest);
-		return new URL (sb.toString());
+		return new URL(sb.toString());
 	}
-	
+
 	/**
 	 * Search for a similar page in the eclipse editor
-	 * @param aUrl 
+	 * 
+	 * @param aUrl
 	 * @return String
 	 */
-	private String getEditorId (URL aUrl) {
+	private String getEditorId(URL aUrl) {
 		//Try to get the editor id
-		IEditorDescriptor desc = PlatformUI.getWorkbench().
-		        getEditorRegistry().getDefaultEditor(aUrl.getFile());
+		IEditorDescriptor desc = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(aUrl.getFile());
 		String id = null;
-		if (desc !=null) {
+		if (desc != null) {
 			id = desc.getId();
 		}
 
 		return id;
 	}
-	
+
 	// ------------------------------------------------------------------------
 	// Methods Public
 	// ------------------------------------------------------------------------
-	public static GerritServerUtility getInstance () {
+	public static GerritServerUtility getInstance() {
 		if (fInstance == null) {
 			new GerritServerUtility();
 		}
 		return fInstance;
 	}
-	
+
 	/**
 	 * Return the mapping of the available Gerrit server used in the user workspace
+	 * 
 	 * @return Map<Repository, String>
 	 */
-	public Map<TaskRepository, String> getGerritMapping () {
-		if (fResultTask == null ) {
-			fResultTask = new HashMap<TaskRepository,String>();
+	public Map<TaskRepository, String> getGerritMapping() {
+		if (fResultTask == null) {
+			fResultTask = new HashMap<TaskRepository, String>();
 		}
-			
-		
+
 		//Reset the list of Gerrit server
 		fResultTask.clear();
-		
+
 		TaskRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
 		if (repositoryManager != null) {
 			//Only get the TaskRepository related to Gerrit review connnector
 			GerritPlugin.Ftracer.traceInfo("--------Review repo ---------------");
 			Set<TaskRepository> reviewRepo = repositoryManager.getRepositories(GerritConnector.CONNECTOR_KIND);
-			if (reviewRepo !=null) {
-				for (TaskRepository taskRepo: reviewRepo) {
-				    GerritPlugin.Ftracer.traceInfo("Add Gerrit Review repo: " + taskRepo.getRepositoryLabel() + "\t url: " + taskRepo.getRepositoryUrl());
+			if (reviewRepo != null) {
+				for (TaskRepository taskRepo : reviewRepo) {
+					GerritPlugin.Ftracer.traceInfo("Add Gerrit Review repo: " + taskRepo.getRepositoryLabel()
+							+ "\t url: " + taskRepo.getRepositoryUrl());
 					fResultTask.put(taskRepo, taskRepo.getRepositoryUrl());
-					if (null != taskRepo.getRepositoryUrl()  ) {
-						adjustTemplatemanager(taskRepo);			
+					if (null != taskRepo.getRepositoryUrl()) {
+						adjustTemplatemanager(taskRepo);
 					}
-				}				
+				}
 			}
 			//Print a the end the info for all Gerrit 
 			printRepositoryTemplate();
-			
+
 		}
 		return fResultTask;
 	}
-	
+
 	/**
 	 * Save the selected Gerrit server URL
+	 * 
 	 * @param aURL
 	 * @return Boolean
 	 */
-	public Boolean saveLastGerritServer (String aURL) {
+	public Boolean saveLastGerritServer(String aURL) {
 		Boolean ok = true;
 		File file = getLastGerritFile(LAST_GERRIT_FILE);
 		try {
-			FileWriter fw= new FileWriter(file);
+			FileWriter fw = new FileWriter(file);
 			BufferedWriter out = new BufferedWriter(fw);
 			out.write(aURL);
 			out.close();
@@ -280,87 +278,91 @@ public class GerritServerUtility {
 			e1.printStackTrace();
 			ok = false;
 		}
-		
+
 		return ok;
 	}
-	
+
 	/**
 	 * Return the last selected Gerrit server used
+	 * 
 	 * @return String
 	 */
-	public String getLastSavedGerritServer () {
+	public String getLastSavedGerritServer() {
 		String lastGerritURL = null;
 		File file = getLastGerritFile(LAST_GERRIT_FILE);
 		if (file != null) {
 			try {
-				FileReader fr= new FileReader(file);
+				FileReader fr = new FileReader(file);
 				BufferedReader in = new BufferedReader(fr);
 				lastGerritURL = in.readLine();
 				in.close();
 			} catch (IOException e1) {
 				//When there is no file, 
 				//e1.printStackTrace();
-			}			
+			}
 		}
 		return lastGerritURL;
 	}
-	
+
 	/**
 	 * Get the Gerrit URL based on the provided string
 	 * 
-	 * @param  Menu string aSt
+	 * @param Menu
+	 *            string aSt
 	 * @return URL as a string
-	 * 
 	 */
-	public String getMenuSelectionURL (String aSt) {
+	public String getMenuSelectionURL(String aSt) {
 		String urlStr = null;
 		fResultTask = getGerritMapping();
 		if (!fResultTask.isEmpty()) {
 			Set<TaskRepository> mapSet = fResultTask.keySet();
 			GerritPlugin.Ftracer.traceInfo("-------------------");
-			for (TaskRepository key: mapSet) {
+			for (TaskRepository key : mapSet) {
 				if (key.getRepositoryLabel().equals(aSt)) {
 					urlStr = fResultTask.get(key);
-					
-					GerritPlugin.Ftracer.traceInfo("Map Key: " + key.getRepositoryLabel() + "\t URL: " + fResultTask.get(key));
+
+					GerritPlugin.Ftracer.traceInfo("Map Key: " + key.getRepositoryLabel() + "\t URL: "
+							+ fResultTask.get(key));
 					return urlStr;
 				}
 			}
 		}
-		
+
 		return urlStr;
 	}
 
 	/**
 	 * Get the Gerrit task Repository
 	 * 
-	 * @param  string aSt
+	 * @param string
+	 *            aSt
 	 * @return TaskRepository
-	 * 
 	 */
-	public TaskRepository getTaskRepo (String aStURL) {
+	public TaskRepository getTaskRepo(String aStURL) {
 		fResultTask = getGerritMapping();
 		if (aStURL != null && !fResultTask.isEmpty()) {
 			Set<TaskRepository> mapSet = fResultTask.keySet();
 			GerritPlugin.Ftracer.traceInfo("-------------------");
-			for (TaskRepository key: mapSet) {
+			for (TaskRepository key : mapSet) {
 				if (key.getRepositoryUrl().equals(aStURL)) {
-					
-				    GerritPlugin.Ftracer.traceInfo("Key label : " + key.getRepositoryLabel() + "\t URL: " + fResultTask.get(key));
+
+					GerritPlugin.Ftracer.traceInfo("Key label : " + key.getRepositoryLabel() + "\t URL: "
+							+ fResultTask.get(key));
 					return key;
 				}
 			}
 		}
-		
+
 		return null;
 	}
-	
 
 	/**
 	 * Open the web browser for the specific documentation
-	 * @param String aDocumentation requested documentation
+	 * 
+	 * @param String
+	 *            aDocumentation requested documentation
 	 */
-	public void openWebBrowser (String aDocumentation) {
+	public void openWebBrowser(String aDocumentation) {
 		if (fInstance == null) {
 			fInstance = getInstance();
 		}
@@ -368,12 +370,12 @@ public class GerritServerUtility {
 		IWorkbenchBrowserSupport workBenchSupport = PlatformUI.getWorkbench().getBrowserSupport();
 		URL url = null;
 		try {
-			url = buildDocumentationURL (aDocumentation);
+			url = buildDocumentationURL(aDocumentation);
 			try {
-			
+
 				//Using NULL as a browser id will create a new editor each time, 
 				//so we need to see if there is already an editor for this help
-				String id = getEditorId (url);
+				String id = getEditorId(url);
 				workBenchSupport.createBrowser(id).openURL(url);
 			} catch (PartInitException e) {
 				// TODO Auto-generated catch block
@@ -383,22 +385,24 @@ public class GerritServerUtility {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		GerritUi.Ftracer.traceInfo("openWebBrowser for " + url );
+		GerritUi.Ftracer.traceInfo("openWebBrowser for " + url);
 	}
-	
+
 	/**
 	 * Save the list of the last 5 commands
-	 * @param LinkedHashSet<String>
+	 * 
+	 * @param LinkedHashSet
+	 *            <String>
 	 * @return Boolean
 	 */
-	public Boolean saveLastCommandList (Set<String> aCommands) {
+	public Boolean saveLastCommandList(Set<String> aCommands) {
 		Boolean ok = true;
 		File file = getLastGerritFile(LAST_COMMANDS_FILE);
 		try {
-			FileWriter fw= new FileWriter(file);
+			FileWriter fw = new FileWriter(file);
 			BufferedWriter out = new BufferedWriter(fw);
 			Iterator<String> iter = aCommands.iterator();
-			while ( iter.hasNext()) {
+			while (iter.hasNext()) {
 				String s = iter.next();
 				out.write(s);
 				out.newLine();
@@ -408,20 +412,21 @@ public class GerritServerUtility {
 			e1.printStackTrace();
 			ok = false;
 		}
-		
+
 		return ok;
 	}
-	
+
 	/**
 	 * Return the list of the last commands saved
+	 * 
 	 * @return Set
 	 */
-	public Set<String> getListLastCommands () {
+	public Set<String> getListLastCommands() {
 		LinkedHashSet<String> lastCommands = new LinkedHashSet<String>();
 		File file = getLastGerritFile(LAST_COMMANDS_FILE);
 		if (file != null) {
 			try {
-				FileReader fr= new FileReader(file);
+				FileReader fr = new FileReader(file);
 				BufferedReader in = new BufferedReader(fr);
 				while (in.ready()) {
 					String line = in.readLine();
@@ -431,15 +436,15 @@ public class GerritServerUtility {
 			} catch (IOException e1) {
 				//When there is no file, 
 				//e1.printStackTrace();
-			}			
+			}
 		}
 		return lastCommands;
 	}
-	
+
 	/**
 	 * Read the Gerrit server to populate the list of reviews
 	 */
-	public void getReviewListFromServer () {
+	public void getReviewListFromServer() {
 //		//Get the Gerrit URL to query
 //		String urlToUsed = getLastSavedGerritServer ();
 //		

@@ -26,30 +26,30 @@ import org.eclipse.mylyn.gerrit.dashboard.ui.views.GerritTableView;
 /**
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
- *
  */
 
 public class RestAPIHandler extends AbstractHandler {
 
-	private final String REST_API_DOCUMENTATION = "Documentation/rest-api.html";
+	private final String REST_API_DOCUMENTATION = "Documentation/rest-api.html"; //$NON-NLS-1$
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
 	 */
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		GerritUi.Ftracer.traceInfo("Search the documentation RestAPIHandler  " ); //$NON-NLS-1$
-		GerritTableView view =  GerritTableView.getActiveView();
-		
-        if (view.isGerritVersionBefore_2_5()) {
+		GerritUi.Ftracer.traceInfo("Search the documentation RestAPIHandler  "); //$NON-NLS-1$
+		GerritTableView view = GerritTableView.getActiveView();
+
+		if (view.isGerritVersionBefore_2_5()) {
 			String msg = "Selected Gerrit server: " + view.getlastGerritServerVersion().toString();
 			String reason = "Gerrit server is too old, need at least Gerrit version 2.5 \nto get Gerrit Code Review - REST API documentation.";
-			GerritUi.Ftracer.traceInfo(msg );
+			GerritUi.Ftracer.traceInfo(msg);
 			UIUtils.showErrorDialog(msg, reason);
 			return null;
-        }
-		
-		GerritServerUtility.getInstance().openWebBrowser (REST_API_DOCUMENTATION);
-		
+		}
+
+		GerritServerUtility.getInstance().openWebBrowser(REST_API_DOCUMENTATION);
+
 		return null;
 	}
 

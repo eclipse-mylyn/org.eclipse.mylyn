@@ -34,7 +34,6 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Jacques Bouthillier
- *
  */
 public class AdjustMyStarredHandler extends AbstractHandler {
 
@@ -65,8 +64,7 @@ public class AdjustMyStarredHandler extends AbstractHandler {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				if (tableSelection instanceof IStructuredSelection) {
-					Object obj = ((IStructuredSelection) tableSelection)
-							.getFirstElement();
+					Object obj = ((IStructuredSelection) tableSelection).getFirstElement();
 					if (obj instanceof GerritTask) {
 						item = (GerritTask) obj;
 
@@ -76,13 +74,10 @@ public class AdjustMyStarredHandler extends AbstractHandler {
 									!Boolean.valueOf(item.getAttribute(GerritTask.IS_STARRED)), monitor);
 
 							// Toggle the STARRED value for the Dashboard
-							item.setAttribute(
-									GerritTask.IS_STARRED,
-									Boolean.toString(!Boolean.valueOf(item
-											.getAttribute(GerritTask.IS_STARRED))));
+							item.setAttribute(GerritTask.IS_STARRED,
+									Boolean.toString(!Boolean.valueOf(item.getAttribute(GerritTask.IS_STARRED))));
 						} catch (CoreException e) {
-							UIUtils.showErrorDialog(e.getMessage(), e
-									.getStatus().getException().getMessage());
+							UIUtils.showErrorDialog(e.getMessage(), e.getStatus().getException().getMessage());
 						}
 
 						Display.getDefault().asyncExec(new Runnable() {

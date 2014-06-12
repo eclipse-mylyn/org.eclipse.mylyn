@@ -29,59 +29,53 @@ import org.eclipse.ui.menus.IWorkbenchContribution;
 import org.eclipse.ui.services.IServiceLocator;
 
 /**
- * 	This class implements the Dynamic menu selection to pre-filled the list of gerrit
- * 	project locations.
- *
+ * This class implements the Dynamic menu selection to pre-filled the list of gerrit project locations.
+ * 
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
- *
  */
 public class DynamicMenuAddition extends CompoundContributionItem implements IWorkbenchContribution {
-
 
 	// ------------------------------------------------------------------------
 	// Constants
 	// ------------------------------------------------------------------------
-	
+
 	/**
 	 * Field SELECT_PICTURE_FILE. (value is ""icons/select.png"")
 	 */
 //	private String SELECT_PICTURE_FILE = "icons/select.png";
 	private static String SELECT_PICTURE_FILE = "icons/select.gif";
-	
-    /**
-     * Note: An image registry owns all of the image objects registered with it,
-     * and automatically disposes of them the SWT Display is disposed.
-     */
-    // For the images
-    private static ImageRegistry fImageRegistry = new ImageRegistry();
 
-    static {
-      fImageRegistry
-      .put(SELECT_PICTURE_FILE,
-              GerritUi.getImageDescriptor(SELECT_PICTURE_FILE));
-    }
+	/**
+	 * Note: An image registry owns all of the image objects registered with it, and automatically disposes of them the
+	 * SWT Display is disposed.
+	 */
+	// For the images
+	private static ImageRegistry fImageRegistry = new ImageRegistry();
 
-    // ------------------------------------------------------------------------
+	static {
+		fImageRegistry.put(SELECT_PICTURE_FILE, GerritUi.getImageDescriptor(SELECT_PICTURE_FILE));
+	}
+
+	// ------------------------------------------------------------------------
 	// Variables
 	// ------------------------------------------------------------------------
 
 	private IServiceLocator fServiceLocator;
-	
+
 	private GerritServerUtility fServer = null;
-	
+
 	private Map<TaskRepository, String> fMapServer = null;
-	
+
 	private ImageDescriptor fSelectPicture = null;
-	
+
 	// ------------------------------------------------------------------------
 	// Methods
 	// ------------------------------------------------------------------------
 	@Override
 	protected IContributionItem[] getContributionItems() {
 
-	    GerritPlugin.Ftracer
-				.traceInfo("\t\t DynamicMenuAddition .getContributionItems()");
+		GerritPlugin.Ftracer.traceInfo("\t\t DynamicMenuAddition .getContributionItems()");
 		CommandContributionItem[] contributionItems = new CommandContributionItem[0];
 		if (fServer != null) {
 			fMapServer = GerritServerUtility.getGerritMapping();
@@ -96,24 +90,20 @@ public class DynamicMenuAddition extends CompoundContributionItem implements IWo
 
 			int count = 0;
 			for (TaskRepository key : mapSet) {
-			    GerritPlugin.Ftracer.traceInfo("Map Key: "
-						+ key.getRepositoryLabel() + "\t URL: "
+				GerritPlugin.Ftracer.traceInfo("Map Key: " + key.getRepositoryLabel() + "\t URL: "
 						+ fMapServer.get(key));
 				CommandContributionItemParameter contributionParameter = new CommandContributionItemParameter(
-						fServiceLocator, fMapServer.get(key),
-						UIConstants.ADD_GERRIT_SITE_COMMAND_ID,
+						fServiceLocator, fMapServer.get(key), UIConstants.ADD_GERRIT_SITE_COMMAND_ID,
 						CommandContributionItem.STYLE_PUSH);
 				contributionParameter.label = key.getRepositoryLabel();
 				contributionParameter.visibleEnabled = true;
-				if (lastSelected != null
-						&& lastSelected.equals(fMapServer.get(key))) {
+				if (lastSelected != null && lastSelected.equals(fMapServer.get(key))) {
 					fSelectPicture = fImageRegistry.getDescriptor(SELECT_PICTURE_FILE);
 
 					contributionParameter.icon = fSelectPicture;
 
 				}
-				contributionItems[count++] = new CommandContributionItem(
-						contributionParameter);
+				contributionItems[count++] = new CommandContributionItem(contributionParameter);
 			}
 		}
 
@@ -123,12 +113,11 @@ public class DynamicMenuAddition extends CompoundContributionItem implements IWo
 	@Override
 	public void initialize(IServiceLocator aServiceLocator) {
 		fServiceLocator = aServiceLocator;
-		
+
 		//Read the Gerrit potential servers
 		fServer = new GerritServerUtility();
-		GerritPlugin.Ftracer.traceInfo("\t\t DynamicMenuAddition .initialize()()" );
-		
-	}
+		GerritPlugin.Ftracer.traceInfo("\t\t DynamicMenuAddition .initialize()()");
 
+	}
 
 }

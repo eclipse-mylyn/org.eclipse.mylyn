@@ -20,11 +20,10 @@ import org.eclipse.mylyn.gerrit.dashboard.ui.views.GerritTableView;
 import org.eclipse.mylyn.internal.gerrit.core.GerritQuery;
 
 /**
- * 	This class implements the implementation of the Dashboard-Gerrit UI project list reviews handler.
+ * This class implements the implementation of the Dashboard-Gerrit UI project list reviews handler.
  * 
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
- *
  */
 
 public class ProjectListHandler extends AbstractHandler {
@@ -34,9 +33,9 @@ public class ProjectListHandler extends AbstractHandler {
 	 */
 	@Override
 	public Object execute(ExecutionEvent aEvent) throws ExecutionException {
-		GerritUi.Ftracer.traceInfo("Search the Gerrit reviews for Projects List  " ); //$NON-NLS-1$
+		GerritUi.Ftracer.traceInfo("Search the Gerrit reviews for Projects List  "); //$NON-NLS-1$
 
-		GerritUi.Ftracer.traceInfo("Execute:  ProjectList() "  ); //$NON-NLS-1$
+		GerritUi.Ftracer.traceInfo("Execute:  ProjectList() "); //$NON-NLS-1$
 //		try {
 //			UIUtils.notInplementedDialog(aEvent.getCommand().getName());
 //		} catch (NotDefinedException e) {
@@ -44,13 +43,12 @@ public class ProjectListHandler extends AbstractHandler {
 //			e.printStackTrace();
 //		}
 //		return null;
-		GerritTableView reviewTableView = GerritTableView
-				.getActiveView();
+		GerritTableView reviewTableView = GerritTableView.getActiveView();
 
 		// see http://gerrit-documentation.googlecode.com/svn/Documentation/2.5.2/user-search.html
 		//for Project list
 		reviewTableView.processCommands(GerritQuery.OPEN_CHANGES_BY_PROJECT);
-	 
+
 		return null;
 
 	}

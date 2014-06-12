@@ -24,20 +24,18 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
 /**
- * 	This class implements the implementation of the Dashboard-Gerrit UI view label provider.
- *
+ * This class implements the implementation of the Dashboard-Gerrit UI view label provider.
+ * 
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
- * 
  */
-public class ReviewTableLabelProvider extends LabelProvider implements
-		ITableLabelProvider, ITableColorProvider {
+public class ReviewTableLabelProvider extends LabelProvider implements ITableLabelProvider, ITableColorProvider {
 
 	// ------------------------------------------------------------------------
 	// Constants
 	// ------------------------------------------------------------------------
-	
-    private final String EMPTY_STRING = "";
+
+	private final String EMPTY_STRING = "";
 
 	// +2 Names of images used to represent review-checked
 	public static final String CHECKED_IMAGE = "greenCheck";
@@ -59,17 +57,24 @@ public class ReviewTableLabelProvider extends LabelProvider implements
 
 	// Value stored to define the state of the review item.
 	public static final int NOT_OK_IMAGE_STATE = -2;
+
 	public static final int CHECKED_IMAGE_STATE = 2;
 
 	// Constant for the column with colors: CR, IC and V
 	private static Display fDisplay = Display.getCurrent();
+
 	private static Color RED = fDisplay.getSystemColor(SWT.COLOR_RED);
+
 	private static Color GREEN = fDisplay.getSystemColor(SWT.COLOR_DARK_GREEN);
+
 	//Color used depending on the review state
 	private static Color DEFAULT_COLOR = fDisplay.getSystemColor(SWT.COLOR_LIST_BACKGROUND);
+
 //	private static Color INCOMING_COLOR = fDisplay.getSystemColor(SWT.COLOR_TITLE_BACKGROUND);
 	private static Color INCOMING_COLOR = fDisplay.getSystemColor(SWT.COLOR_WHITE);
+
 	private static Color CLOSED_COLOR = fDisplay.getSystemColor(SWT.COLOR_WHITE);
+
 //	private static Color INCOMING_COLOR = fDisplay.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW);
 //	private static Color CLOSED_COLOR = fDisplay.getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW);
 
@@ -77,30 +82,24 @@ public class ReviewTableLabelProvider extends LabelProvider implements
 	private static ImageRegistry fImageRegistry = new ImageRegistry();
 
 	/**
-	 * Note: An image registry owns all of the image objects registered with it,
-	 * and automatically disposes of them the SWT Display is disposed.
+	 * Note: An image registry owns all of the image objects registered with it, and automatically disposes of them the
+	 * SWT Display is disposed.
 	 */
 	static {
-		
+
 		String iconPath = "icons/view16/";
 
-		fImageRegistry.put(CHECKED_IMAGE,
-				GerritUi.getImageDescriptor(iconPath + CHECKED_IMAGE + ".png"));
+		fImageRegistry.put(CHECKED_IMAGE, GerritUi.getImageDescriptor(iconPath + CHECKED_IMAGE + ".png"));
 
-		fImageRegistry.put(NOT_OK_IMAGE,
-				GerritUi.getImageDescriptor(iconPath + NOT_OK_IMAGE + ".png"));
+		fImageRegistry.put(NOT_OK_IMAGE, GerritUi.getImageDescriptor(iconPath + NOT_OK_IMAGE + ".png"));
 
-		fImageRegistry.put(MINUS_ONE,
-				GerritUi.getImageDescriptor(iconPath + MINUS_ONE + ".png"));
+		fImageRegistry.put(MINUS_ONE, GerritUi.getImageDescriptor(iconPath + MINUS_ONE + ".png"));
 
-		fImageRegistry.put(PLUS_ONE,
-				GerritUi.getImageDescriptor(iconPath + PLUS_ONE + ".png"));
+		fImageRegistry.put(PLUS_ONE, GerritUi.getImageDescriptor(iconPath + PLUS_ONE + ".png"));
 
-		fImageRegistry.put(STAR_FILLED,
-				GerritUi.getImageDescriptor(iconPath + STAR_FILLED + ".gif"));
+		fImageRegistry.put(STAR_FILLED, GerritUi.getImageDescriptor(iconPath + STAR_FILLED + ".gif"));
 
-		fImageRegistry.put(STAR_OPEN,
-				GerritUi.getImageDescriptor(iconPath + STAR_OPEN + ".gif"));
+		fImageRegistry.put(STAR_OPEN, GerritUi.getImageDescriptor(iconPath + STAR_OPEN + ".gif"));
 	}
 
 	// ------------------------------------------------------------------------
@@ -182,7 +181,6 @@ public class ReviewTableLabelProvider extends LabelProvider implements
 	 * @param Object
 	 *            structure of the table
 	 * @param int column index
-	 * 
 	 * @return String text associated to the column
 	 */
 	@SuppressWarnings("restriction")
@@ -196,17 +194,17 @@ public class ReviewTableLabelProvider extends LabelProvider implements
 			case 0:
 				return reviewSummary.getAttribute(GerritTask.IS_STARRED); // Needed for the sorter
 			case 1:
-				return reviewSummary.getAttribute(GerritTask.SHORT_CHANGE_ID); 
+				return reviewSummary.getAttribute(GerritTask.SHORT_CHANGE_ID);
 			case 2:
-				return reviewSummary.getAttribute(GerritTask.SUBJECT); 
+				return reviewSummary.getAttribute(GerritTask.SUBJECT);
 			case 3:
-				return reviewSummary.getAttribute(GerritTask.OWNER); 
+				return reviewSummary.getAttribute(GerritTask.OWNER);
 			case 4:
-				return reviewSummary.getAttribute(GerritTask.PROJECT); 
+				return reviewSummary.getAttribute(GerritTask.PROJECT);
 			case 5:
-				return reviewSummary.getAttribute(GerritTask.BRANCH); 
+				return reviewSummary.getAttribute(GerritTask.BRANCH);
 			case 6:
-				return reviewSummary.getAttributeAsDate(GerritTask.DATE_MODIFICATION); 
+				return reviewSummary.getAttributeAsDate(GerritTask.DATE_MODIFICATION);
 //			case 7:
 //				value = reviewSummary.getAttribute(GerritTask.REVIEW_STATE);
 //				if (null != value && !value.equals(EMPTY_STRING)) {
@@ -231,7 +229,6 @@ public class ReviewTableLabelProvider extends LabelProvider implements
 		return EMPTY_STRING;
 	}
 
-	
 //	/**
 //	 * Format the numbering value to display
 //	 * @param aSt
@@ -253,7 +250,6 @@ public class ReviewTableLabelProvider extends LabelProvider implements
 	 * @param Object
 	 *            structure of the table
 	 * @param int column index
-	 * 
 	 * @return Image Image according to the selected column
 	 */
 	@SuppressWarnings("restriction")
@@ -372,8 +368,7 @@ public class ReviewTableLabelProvider extends LabelProvider implements
 			GerritTask item = (GerritTask) aElement;
 			//
 			// To modify when we can verify the review state
-			String state = item
-					.getAttribute(GerritTask.IS_STARRED);
+			String state = item.getAttribute(GerritTask.IS_STARRED);
 			if (state != null) {
 				if (state.equals("true")) {
 					return INCOMING_COLOR;

@@ -23,27 +23,12 @@ import org.eclipse.mylyn.gerrit.dashboard.ui.GerritUi;
 import org.eclipse.mylyn.gerrit.dashboard.ui.views.GerritTableView;
 import org.eclipse.mylyn.internal.gerrit.core.GerritQuery;
 
-
 /**
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
  */
 
 public class AllOpenReviewsHandler extends AbstractHandler {
-
-	// ------------------------------------------------------------------------
-	// Constants
-	// ------------------------------------------------------------------------
-
-	// ------------------------------------------------------------------------
-	// Variables
-	// ------------------------------------------------------------------------
-
-	
-	
-	// ------------------------------------------------------------------------
-	// Methods
-	// ------------------------------------------------------------------------
 
 	/**
 	 * Method execute.
@@ -55,17 +40,16 @@ public class AllOpenReviewsHandler extends AbstractHandler {
 	 */
 	public Object execute(final ExecutionEvent aEvent) {
 
-		GerritUi.Ftracer.traceInfo("Search the Gerrit reviews for All Open  " ); //$NON-NLS-1$
+		GerritUi.Ftracer.traceInfo("Search the Gerrit reviews for All Open  "); //$NON-NLS-1$
 
-		GerritTableView reviewTableView = GerritTableView
-				.getActiveView();
+		GerritTableView reviewTableView = GerritTableView.getActiveView();
 
 		// see http://gerrit-documentation.googlecode.com/svn/Documentation/2.5.2/user-search.html
 		//for All > Open--> status:open (or is:open)
-		GerritUi.Ftracer.traceInfo("Execute command :   "  + GerritQuery.ALL_OPEN_CHANGES ); //$NON-NLS-1$
+		GerritUi.Ftracer.traceInfo("Execute command :   " + GerritQuery.ALL_OPEN_CHANGES); //$NON-NLS-1$
 		reviewTableView.processCommands(GerritQuery.ALL_OPEN_CHANGES);
 
-		return null;	
+		return null;
 
 	}
 

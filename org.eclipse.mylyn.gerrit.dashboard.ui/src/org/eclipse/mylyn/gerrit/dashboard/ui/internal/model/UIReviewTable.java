@@ -11,8 +11,6 @@
  ******************************************************************************/
 package org.eclipse.mylyn.gerrit.dashboard.ui.internal.model;
 
-
-
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.ISelection;
@@ -41,10 +39,9 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
 /**
- * 	This class implements the implementation of the review table view.
- *
- * @author Jacques Bouthillier
+ * This class implements the implementation of the review table view.
  * 
+ * @author Jacques Bouthillier
  */
 public class UIReviewTable {
 
@@ -69,8 +66,7 @@ public class UIReviewTable {
 
 	public TableViewer createTableViewerSection(Composite aParent) {
 		// Create a form to maintain the search data
-		Composite viewerForm = UIUtils.createsGeneralComposite(aParent,
-				SWT.BORDER | SWT.SHADOW_ETCHED_IN);
+		Composite viewerForm = UIUtils.createsGeneralComposite(aParent, SWT.BORDER | SWT.SHADOW_ETCHED_IN);
 
 		GridData gribDataViewer = new GridData(GridData.FILL_BOTH);
 		viewerForm.setLayoutData(gribDataViewer);
@@ -110,8 +106,7 @@ public class UIReviewTable {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				// TODO Auto-generated method stub
-				GerritUi.Ftracer.traceInfo("Table selection: "
-						+ e.toString());
+				GerritUi.Ftracer.traceInfo("Table selection: " + e.toString());
 			}
 
 			@Override
@@ -136,19 +131,17 @@ public class UIReviewTable {
 	 */
 	private TableViewer buildAndLayoutTable(final TableViewer aViewer) {
 		final Table table = aViewer.getTable();
-		
+
 		//Get the review table definition
 		ReviewTableDefinition[] tableInfo = ReviewTableDefinition.values();
 		int size = tableInfo.length;
 		GerritUi.Ftracer.traceInfo("Table	Name	Width	Resize Moveable");
-		for  (int index = 0; index < size; index++) {
-			GerritUi.Ftracer.traceInfo("index [ " + index + 
-					" ] "  + tableInfo[index].getName() + 
-					"\t: " + tableInfo[index].getWidth() +
-					"\t: " + tableInfo[index].getResize() +
-					"\t: " + tableInfo[index].getMoveable() );
+		for (int index = 0; index < size; index++) {
+			GerritUi.Ftracer.traceInfo("index [ " + index + " ] " + tableInfo[index].getName() + "\t: "
+					+ tableInfo[index].getWidth() + "\t: " + tableInfo[index].getResize() + "\t: "
+					+ tableInfo[index].getMoveable());
 			TableViewerColumn col = createTableViewerColumn(tableInfo[index]);
-			
+
 			GridData gribData = new GridData(GridData.FILL_BOTH);
 			gribData.minimumWidth = tableInfo[index].getWidth();
 			col.getColumn().getParent().setLayoutData(gribData);
@@ -157,7 +150,7 @@ public class UIReviewTable {
 		TableLayout tableLayout = new TableLayout();
 		table.setLayout(tableLayout);
 		table.addControlListener(new ControlListener() {
-			
+
 			@Override
 			public void controlResized(ControlEvent e) {
 				table.setRedraw(false);
@@ -167,7 +160,7 @@ public class UIReviewTable {
 				int minimumTableWidth = ReviewTableDefinition.getMinimumWidth();
 				int mimimumSubjectWidth = ReviewTableDefinition.SUBJECT.getWidth();
 				int minProjectWidth = ReviewTableDefinition.PROJECT.getWidth();
-				
+
 				//Adjust the subject and project column to take the remaining space
 				int scrollWidth = table.getVerticalBar().getSize().x;
 				//If not visible, take the extra space
@@ -175,15 +168,15 @@ public class UIReviewTable {
 					scrollWidth = 0;
 				}
 
-				int computeExtraWidth = parentSize.x - 10 - ( minimumTableWidth ) - scrollWidth ;
+				int computeExtraWidth = parentSize.x - 10 - (minimumTableWidth) - scrollWidth;
 				int newSubjectWidth = mimimumSubjectWidth;
 				int newProjectWidth = minProjectWidth;
 				//If extra space, redistribute it to specific column
 				if (computeExtraWidth > 0) {
 					//Assign some to subject and some to Project
-					int value = 2*computeExtraWidth  /3;
+					int value = 2 * computeExtraWidth / 3;
 					newSubjectWidth = mimimumSubjectWidth + value; // 2/3 of the extra
-					newProjectWidth = minProjectWidth + computeExtraWidth- value;       // 1/3 of the extra
+					newProjectWidth = minProjectWidth + computeExtraWidth - value; // 1/3 of the extra
 				}
 				//Subject column
 				table.getColumn(2).setWidth(newSubjectWidth);
@@ -192,22 +185,20 @@ public class UIReviewTable {
 
 				table.setSize(parentSize.x - 10, tableSize.y);
 				table.setRedraw(true);
-				
+
 			}
-			
+
 			@Override
 			public void controlMoved(ControlEvent e) {
-				
+
 			}
 		});
 
-		
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 
 		return aViewer;
 	}
-	
 
 	/**
 	 * Create each column in the review table list
@@ -215,10 +206,8 @@ public class UIReviewTable {
 	 * @param ReviewTableDefinition
 	 * @return TableViewerColumn
 	 */
-	private TableViewerColumn createTableViewerColumn(
-			ReviewTableDefinition aTableInfo) {
-		final TableViewerColumn viewerColumn = new TableViewerColumn(fViewer,
-				SWT.NONE);
+	private TableViewerColumn createTableViewerColumn(ReviewTableDefinition aTableInfo) {
+		final TableViewerColumn viewerColumn = new TableViewerColumn(fViewer, SWT.NONE);
 		final TableColumn column = viewerColumn.getColumn();
 		column.setText(aTableInfo.getName());
 		column.setWidth(aTableInfo.getWidth());
@@ -229,10 +218,9 @@ public class UIReviewTable {
 
 	}
 
-	private Listener mouseButtonListener = new Listener() {
+	private final Listener mouseButtonListener = new Listener() {
 		public void handleEvent(Event aEvent) {
-			GerritUi.Ftracer.traceInfo("mouseButtonListener() for "
-					+ aEvent.button);
+			GerritUi.Ftracer.traceInfo("mouseButtonListener() for " + aEvent.button);
 			switch (aEvent.type) {
 			case SWT.MouseDown:
 				// Left Click
@@ -250,7 +238,7 @@ public class UIReviewTable {
 					Point p = new Point(aEvent.x, aEvent.y);
 					TableItem tbi = fViewer.getTable().getItem(p);
 					if (tbi != null) {
-						table.setSelection(tbi);						
+						table.setSelection(tbi);
 					}
 
 					// Execute the command to adjust the column: ID with the
@@ -281,16 +269,16 @@ public class UIReviewTable {
 	 */
 	private void processItemSelection() {
 		ISelection tableSelection = fViewer.getSelection();
-		GerritUi.Ftracer
-				.traceInfo("Selected : " + tableSelection.getClass());
+		GerritUi.Ftracer.traceInfo("Selected : " + tableSelection.getClass());
 		if (!tableSelection.isEmpty()) {
-			if (tableSelection instanceof IStructuredSelection ) {
+			if (tableSelection instanceof IStructuredSelection) {
 				Object obj = ((IStructuredSelection) tableSelection).getFirstElement();
-				GerritUi.Ftracer.traceInfo("Selected table selection class: " + obj.getClass() ); 
-				if (obj instanceof  GerritTask) {
+				GerritUi.Ftracer.traceInfo("Selected table selection class: " + obj.getClass());
+				if (obj instanceof GerritTask) {
 					IAttributeContainer item = (IAttributeContainer) obj;
-					GerritUi.Ftracer.traceInfo("Selected table OBJECT selection ID: "  + item.getAttribute(GerritTask.SHORT_CHANGE_ID) + 
-							"\t subject: " + item.getAttribute(GerritTask.SUBJECT)); 				
+					GerritUi.Ftracer.traceInfo("Selected table OBJECT selection ID: "
+							+ item.getAttribute(GerritTask.SHORT_CHANGE_ID) + "\t subject: "
+							+ item.getAttribute(GerritTask.SUBJECT));
 				}
 			}
 		}

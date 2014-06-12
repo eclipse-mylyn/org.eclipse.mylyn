@@ -21,7 +21,6 @@ import org.eclipse.mylyn.gerrit.dashboard.core.GerritTask;
 /**
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
- *
  */
 
 /*
@@ -65,7 +64,7 @@ public class ReviewTableContentProvider implements IStructuredContentProvider {
 		//This null will generate an error if we reach this point, may be we should log an error and 
 		// initiate an empty structure to return
 		//return null;
-		return  new GerritTask[] {};
+		return new GerritTask[] {};
 	}
 
 }

@@ -27,16 +27,18 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 /**
- * 	This class implements the initial Task Selection dialog.
- *
+ * This class implements the initial Task Selection dialog.
+ * 
  * @author Jacques Bouthillier
- *
  */
 public class SelectionDialog extends FormDialog {
 
-	private List<TaskRepository> fListTaskRepository;
+	private final List<TaskRepository> fListTaskRepository;
+
 	private String fSelection = null;
+
 	private final String fTitle = "Select a Gerit server";
+
 	private final String fQuestion = "Question ? ";
 
 	public SelectionDialog(Shell parent, List<TaskRepository> listTaskRepository) {

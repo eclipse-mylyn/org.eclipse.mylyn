@@ -24,22 +24,21 @@ import org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils.GerritServerUtility;
 /**
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
- *
  */
 
 public class UploadingHandler extends AbstractHandler {
 
-	private final String UPLOADING_DOCUMENTATION = "Documentation/user-upload.html";
-	
+	private final String UPLOADING_DOCUMENTATION = "Documentation/user-upload.html"; //$NON-NLS-1$
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
 	 */
 	@Override
 	public Object execute(ExecutionEvent aEvent) throws ExecutionException {
-		GerritUi.Ftracer.traceInfo("Search the documentation UploadingHandler  " ); //$NON-NLS-1$
+		GerritUi.Ftracer.traceInfo("Search the documentation UploadingHandler  "); //$NON-NLS-1$
 
-		GerritServerUtility.getInstance().openWebBrowser (UPLOADING_DOCUMENTATION);
-		
+		GerritServerUtility.getInstance().openWebBrowser(UPLOADING_DOCUMENTATION);
+
 		return null;
 	}
 

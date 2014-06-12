@@ -33,7 +33,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Widget;
 
-
 /**
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
@@ -45,10 +44,9 @@ public class AddGerritSiteHandler extends AbstractHandler {
 	// ------------------------------------------------------------------------
 
 	private GerritServerUtility fServerUtil = null;
-	
+
 	private Map<TaskRepository, String> fMapRepoServer = null;
 
-	
 	// ------------------------------------------------------------------------
 	// Methods
 	// ------------------------------------------------------------------------
@@ -63,40 +61,40 @@ public class AddGerritSiteHandler extends AbstractHandler {
 	 */
 	public Object execute(final ExecutionEvent aEvent) {
 
-	    GerritPlugin.Ftracer.traceInfo("Create the Add button to search the Gerrit location " ); //$NON-NLS-1$
+		GerritPlugin.Ftracer.traceInfo("Create the Add button to search the Gerrit location "); //$NON-NLS-1$
 		String menuItemText = "";
 		fServerUtil = GerritServerUtility.getInstance();
 		Object obj = aEvent.getTrigger();
-		GerritTableView reviewTableView = GerritTableView
-				.getActiveView();
-		
+		GerritTableView reviewTableView = GerritTableView.getActiveView();
+
 		if (obj instanceof Event) {
 			Event ev = (Event) obj;
 			Widget objWidget = ev.widget;
 			if (objWidget instanceof MenuItem) {
 				MenuItem menuItem = (MenuItem) objWidget;
 				menuItemText = menuItem.getText();
-				GerritPlugin.Ftracer.traceInfo("MenuItem: " + menuItemText + "\t value: " +
-						aEvent.getParameter(menuItemText) + " VS saved: "  + fServerUtil.getLastSavedGerritServer());
+				GerritPlugin.Ftracer.traceInfo("MenuItem: " + menuItemText + "\t value: "
+						+ aEvent.getParameter(menuItemText) + " VS saved: " + fServerUtil.getLastSavedGerritServer());
 				fMapRepoServer = fServerUtil.getGerritMapping();
 				String stURL = fServerUtil.getMenuSelectionURL(menuItemText);
 				GerritPlugin.Ftracer.traceInfo("URL for the menuItemText: " + stURL);
 				if (!fMapRepoServer.isEmpty()) {
 					Set<TaskRepository> mapSet = fMapRepoServer.keySet();
 					GerritPlugin.Ftracer.traceInfo("-------------------");
-					for (TaskRepository key: mapSet) {
-					    GerritPlugin.Ftracer.traceInfo("Map Key name: " + key.getRepositoryLabel() + "\t URL: " + fMapRepoServer.get(key));
+					for (TaskRepository key : mapSet) {
+						GerritPlugin.Ftracer.traceInfo("Map Key name: " + key.getRepositoryLabel() + "\t URL: "
+								+ fMapRepoServer.get(key));
 					}
 				}
 				// Open the review table first;
-				reviewTableView.openView(); 
-				
+				reviewTableView.openView();
+
 				//Verify if we selected the "Add.." button or a pre=defined Gerrit
 				if (stURL != null) {
 					if (stURL.equals(fServerUtil.getLastSavedGerritServer())) {
-					    GerritPlugin.Ftracer.traceInfo("LAST SAVED server is the SAME ");
-						fServerUtil.getReviewListFromServer ();
-						
+						GerritPlugin.Ftracer.traceInfo("LAST SAVED server is the SAME ");
+						fServerUtil.getReviewListFromServer();
+
 						//Initiate the request for the list of reviews with a default query
 						reviewTableView.processCommands(GerritQuery.MY_WATCHED_CHANGES);
 
@@ -104,8 +102,8 @@ public class AddGerritSiteHandler extends AbstractHandler {
 					} else {
 						//Store the new Gerrit server into a file
 						fServerUtil.saveLastGerritServer(stURL);
-						fServerUtil.getReviewListFromServer ();
-						
+						fServerUtil.getReviewListFromServer();
+
 						//Initiate the request for the list of reviews with a default query
 						reviewTableView.processCommands(GerritQuery.MY_WATCHED_CHANGES);
 
@@ -118,12 +116,13 @@ public class AddGerritSiteHandler extends AbstractHandler {
 		//Open the Dialogue to enter a new Gerrit URL
 //		Object dialogObj = openDialogue ();
 //		return dialogObj;
-		
+
 		//JB Dec 19, 2013
 		//The previous line are blocked for now until we can add 
 		//a new Gerrit Server from the "Add Gerrit Repository.." button
-		UIUtils.showErrorDialog("Use Button [Task Repositories...] to define a new Gerrit Server", "Button [Add Gerrit Repository...] is not ready");
+		UIUtils.showErrorDialog("Use Button [Task Repositories...] to define a new Gerrit Server",
+				"Button [Add Gerrit Repository...] is not ready");
 		return obj;
 	}
-	
+
 }

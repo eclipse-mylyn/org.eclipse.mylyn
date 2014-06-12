@@ -25,7 +25,6 @@ import org.eclipse.mylyn.internal.gerrit.core.GerritQuery;
 /**
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
- *
  */
 
 public class AllAbandonedReviewsHandler extends AbstractHandler {
@@ -35,17 +34,16 @@ public class AllAbandonedReviewsHandler extends AbstractHandler {
 	 */
 	@Override
 	public Object execute(ExecutionEvent aEvent) throws ExecutionException {
-		GerritUi.Ftracer.traceInfo("Search the Gerrit reviews for All Abandonned  " ); //$NON-NLS-1$
+		GerritUi.Ftracer.traceInfo("Search the Gerrit reviews for All Abandonned  "); //$NON-NLS-1$
 
-		GerritTableView reviewTableView = GerritTableView
-				.getActiveView();
+		GerritTableView reviewTableView = GerritTableView.getActiveView();
 
 		// see http://gerrit-documentation.googlecode.com/svn/Documentation/2.5.2/user-search.html
 		//for All > AbandonedOpen--> status:abandoned
-		GerritUi.Ftracer.traceInfo("Execute command :   "  + GerritQuery.QUERY_ALL_ABANDONED_CHANGES ); //$NON-NLS-1$
+		GerritUi.Ftracer.traceInfo("Execute command :   " + GerritQuery.QUERY_ALL_ABANDONED_CHANGES); //$NON-NLS-1$
 		reviewTableView.processCommands(GerritQuery.QUERY_ALL_ABANDONED_CHANGES);
 
-		return null;	
+		return null;
 	}
 
 }

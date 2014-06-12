@@ -25,7 +25,6 @@ import org.eclipse.mylyn.internal.gerrit.core.GerritQuery;
 /**
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
- *
  */
 
 public class MyWatchedChangesReviewsHandler extends AbstractHandler {
@@ -35,14 +34,13 @@ public class MyWatchedChangesReviewsHandler extends AbstractHandler {
 	 */
 	@Override
 	public Object execute(ExecutionEvent aEvent) throws ExecutionException {
-		GerritTableView reviewTableView = GerritTableView
-				.getActiveView();
+		GerritTableView reviewTableView = GerritTableView.getActiveView();
 
 		// see http://gerrit-documentation.googlecode.com/svn/Documentation/2.5.2/user-search.html
 		//for My > Watched Changes--> status:open is:watched
-		GerritUi.Ftracer.traceInfo("Execute command :   "  + GerritQuery.MY_WATCHED_CHANGES ); //$NON-NLS-1$
+		GerritUi.Ftracer.traceInfo("Execute command :   " + GerritQuery.MY_WATCHED_CHANGES); //$NON-NLS-1$
 		reviewTableView.processCommands(GerritQuery.MY_WATCHED_CHANGES);
-	
+
 		return null;
 	}
 

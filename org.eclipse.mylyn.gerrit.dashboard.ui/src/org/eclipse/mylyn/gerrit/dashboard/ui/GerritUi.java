@@ -23,7 +23,7 @@ import org.osgi.framework.BundleContext;
 /**
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
- *
+ * 
  */
 
 /**
@@ -44,7 +44,7 @@ public class GerritUi extends AbstractUIPlugin {
 
 	// The shared instance
 	private static GerritUi fPlugin;
-	
+
 	/**
 	 * Field Tracer.
 	 */
@@ -68,6 +68,7 @@ public class GerritUi extends AbstractUIPlugin {
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void start(BundleContext aContext) throws Exception {
 		super.start(aContext);
 		fPlugin = this;
@@ -80,6 +81,7 @@ public class GerritUi extends AbstractUIPlugin {
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void stop(BundleContext aContext) throws Exception {
 		fPlugin = null;
 		super.stop(aContext);
@@ -87,7 +89,7 @@ public class GerritUi extends AbstractUIPlugin {
 
 	/**
 	 * Returns the shared instance
-	 *
+	 * 
 	 * @return the shared instance
 	 */
 	public static GerritUi getDefault() {
@@ -95,10 +97,10 @@ public class GerritUi extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns an image descriptor for the image file at the given
-	 * plug-in relative path
-	 *
-	 * @param aPth the path
+	 * Returns an image descriptor for the image file at the given plug-in relative path
+	 * 
+	 * @param aPth
+	 *            the path
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String aPath) {

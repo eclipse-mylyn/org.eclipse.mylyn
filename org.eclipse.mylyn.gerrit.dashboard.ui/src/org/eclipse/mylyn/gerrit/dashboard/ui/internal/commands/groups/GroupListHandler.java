@@ -25,7 +25,6 @@ import org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils.UIUtils;
 /**
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
- *
  */
 
 public class GroupListHandler extends AbstractHandler {
@@ -35,14 +34,12 @@ public class GroupListHandler extends AbstractHandler {
 	 */
 	@Override
 	public Object execute(ExecutionEvent aEvent) throws ExecutionException {
-		// TODO Auto-generated method stub
-		GerritUi.Ftracer.traceInfo("Search the Gerrit reviews for Groups List  " ); //$NON-NLS-1$
+		GerritUi.Ftracer.traceInfo("Search the Gerrit reviews for Groups List  "); //$NON-NLS-1$
 
-		GerritUi.Ftracer.traceInfo("Execute:  GroupList() "  ); //$NON-NLS-1$
+		GerritUi.Ftracer.traceInfo("Execute:  GroupList() "); //$NON-NLS-1$
 		try {
 			UIUtils.notInplementedDialog(aEvent.getCommand().getName());
 		} catch (NotDefinedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
