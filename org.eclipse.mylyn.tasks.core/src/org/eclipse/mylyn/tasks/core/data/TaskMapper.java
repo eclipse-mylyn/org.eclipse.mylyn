@@ -15,6 +15,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
@@ -30,17 +32,17 @@ public class TaskMapper implements ITaskMapping {
 
 	private final TaskData taskData;
 
-	public TaskMapper(TaskData taskData) {
+	public TaskMapper(@NonNull TaskData taskData) {
 		this(taskData, false);
 	}
 
-	public TaskMapper(TaskData taskData, boolean createNonExistingAttributes) {
+	public TaskMapper(@NonNull TaskData taskData, boolean createNonExistingAttributes) {
 		this.createNonExistingAttributes = createNonExistingAttributes;
 		Assert.isNotNull(taskData);
 		this.taskData = taskData;
 	}
 
-	public boolean applyTo(ITask task) {
+	public boolean applyTo(@NonNull ITask task) {
 		boolean changed = false;
 		if (hasChanges(task.getCompletionDate(), getCompletionDate(), TaskAttribute.DATE_COMPLETION)) {
 			task.setCompletionDate(getCompletionDate());
@@ -85,12 +87,13 @@ public class TaskMapper implements ITaskMapping {
 		return changed;
 	}
 
+	@Nullable
 	private String getPriorityLevelString() {
 		PriorityLevel priorityLevel = getPriorityLevel();
 		return (priorityLevel != null) ? priorityLevel.toString() : PriorityLevel.getDefault().toString();
 	}
 
-	private boolean hasChanges(Object existingValue, Object newValue, String attributeId) {
+	private boolean hasChanges(@Nullable Object existingValue, @Nullable Object newValue, @NonNull String attributeId) {
 		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(attributeId);
 		if (attribute != null) {
 			return areNotEquals(existingValue, newValue);
@@ -98,11 +101,11 @@ public class TaskMapper implements ITaskMapping {
 		return false;
 	}
 
-	private boolean areNotEquals(Object existingProperty, Object newProperty) {
+	private boolean areNotEquals(@Nullable Object existingProperty, @Nullable Object newProperty) {
 		return (existingProperty != null) ? !existingProperty.equals(newProperty) : newProperty != null;
 	}
 
-	private void copyAttributeValue(TaskAttribute sourceAttribute, TaskAttribute targetAttribute) {
+	private void copyAttributeValue(@NonNull TaskAttribute sourceAttribute, @Nullable TaskAttribute targetAttribute) {
 		if (targetAttribute == null) {
 			return;
 		}
@@ -132,7 +135,7 @@ public class TaskMapper implements ITaskMapping {
 	 * <li>description
 	 * </ul>
 	 * Other attribute values are only set if they exist on <code>sourceTaskData</code> and <code>targetTaskData</code>.
-	 * 
+	 *
 	 * @param sourceTaskData
 	 *            the source task data values are copied from, the connector kind of repository of
 	 *            <code>sourceTaskData</code> can be different from <code>targetTaskData</code>
@@ -141,7 +144,7 @@ public class TaskMapper implements ITaskMapping {
 	 *            handler
 	 * @since 2.2
 	 */
-	public void merge(ITaskMapping source) {
+	public void merge(@NonNull ITaskMapping source) {
 		if (source.getTaskData() != null && this.getTaskData() != null
 				&& source.getTaskData().getConnectorKind().equals(this.getTaskData().getConnectorKind())) {
 			// task data objects are from the same connector, copy all attributes
@@ -182,7 +185,8 @@ public class TaskMapper implements ITaskMapping {
 		}
 	}
 
-	private TaskAttribute createAttribute(String attributeKey, String type) {
+	@NonNull
+	private TaskAttribute createAttribute(@NonNull String attributeKey, @Nullable String type) {
 		TaskAttribute attribute;
 		Field field = DefaultTaskSchema.getField(attributeKey);
 		if (field != null) {
@@ -194,23 +198,28 @@ public class TaskMapper implements ITaskMapping {
 		return attribute;
 	}
 
+	@Nullable
 	public List<String> getCc() {
 		return getValues(TaskAttribute.USER_CC);
 	}
 
+	@Nullable
 	public Date getCompletionDate() {
 		return getDateValue(TaskAttribute.DATE_COMPLETION);
 	}
 
+	@Nullable
 	public String getComponent() {
 		return getValue(TaskAttribute.COMPONENT);
 	}
 
+	@Nullable
 	public Date getCreationDate() {
 		return getDateValue(TaskAttribute.DATE_CREATION);
 	}
 
-	private Date getDateValue(String attributeKey) {
+	@Nullable
+	private Date getDateValue(@NonNull String attributeKey) {
 		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(attributeKey);
 		if (attribute != null) {
 			return taskData.getAttributeMapper().getDateValue(attribute);
@@ -218,19 +227,23 @@ public class TaskMapper implements ITaskMapping {
 		return null;
 	}
 
+	@Nullable
 	public String getDescription() {
 		return getValue(TaskAttribute.DESCRIPTION);
 	}
 
+	@Nullable
 	public Date getDueDate() {
 		return getDateValue(TaskAttribute.DATE_DUE);
 	}
 
+	@Nullable
 	public List<String> getKeywords() {
 		return getValues(TaskAttribute.KEYWORDS);
 	}
 
-	private TaskAttribute getWriteableAttribute(String attributeKey, String type) {
+	@Nullable
+	private TaskAttribute getWriteableAttribute(@NonNull String attributeKey, String type) {
 		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(attributeKey);
 		if (createNonExistingAttributes) {
 			if (attribute == null) {
@@ -242,31 +255,38 @@ public class TaskMapper implements ITaskMapping {
 		return attribute;
 	}
 
+	@Nullable
 	public Date getModificationDate() {
 		return getDateValue(TaskAttribute.DATE_MODIFICATION);
 	}
 
+	@Nullable
 	public String getOwner() {
 		return getValue(TaskAttribute.USER_ASSIGNED);
 	}
 
+	@Nullable
 	public String getPriority() {
 		return getValue(TaskAttribute.PRIORITY);
 	}
 
+	@Nullable
 	public PriorityLevel getPriorityLevel() {
 		String value = getPriority();
 		return (value != null) ? PriorityLevel.fromString(value) : null;
 	}
 
+	@Nullable
 	public String getProduct() {
 		return getValue(TaskAttribute.PRODUCT);
 	}
 
+	@Nullable
 	public String getReporter() {
 		return getValue(TaskAttribute.USER_REPORTER);
 	}
 
+	@Nullable
 	public String getResolution() {
 		return getValue(TaskAttribute.RESOLUTION);
 	}
@@ -274,39 +294,48 @@ public class TaskMapper implements ITaskMapping {
 	/**
 	 * @since 3.2
 	 */
+	@Nullable
 	public String getSeverity() {
 		return getValue(TaskAttribute.SEVERITY);
 	}
 
+	@Nullable
 	public String getSummary() {
 		return getValue(TaskAttribute.SUMMARY);
 	}
 
+	@Nullable
 	public String getStatus() {
 		return getValue(TaskAttribute.STATUS);
 	}
 
+	@NonNull
 	public TaskData getTaskData() {
 		return taskData;
 	}
 
+	@Nullable
 	public String getTaskKey() {
 		return getValue(TaskAttribute.TASK_KEY);
 	}
 
+	@Nullable
 	public String getTaskKind() {
 		return getValue(TaskAttribute.TASK_KIND);
 	}
 
+	@Nullable
 	public String getTaskStatus() {
 		return getValue(TaskAttribute.STATUS);
 	}
 
+	@Nullable
 	public String getTaskUrl() {
 		return getValue(TaskAttribute.TASK_URL);
 	}
 
-	public String getValue(String attributeKey) {
+	@Nullable
+	public String getValue(@NonNull String attributeKey) {
 		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(attributeKey);
 		if (attribute != null) {
 			return taskData.getAttributeMapper().getValueLabel(attribute);
@@ -314,7 +343,8 @@ public class TaskMapper implements ITaskMapping {
 		return null;
 	}
 
-	private List<String> getValues(String attributeKey) {
+	@Nullable
+	private List<String> getValues(@NonNull String attributeKey) {
 		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(attributeKey);
 		if (attribute != null) {
 			return taskData.getAttributeMapper().getValueLabels(attribute);
@@ -325,11 +355,12 @@ public class TaskMapper implements ITaskMapping {
 	/**
 	 * @since 3.2
 	 */
+	@Nullable
 	public String getVersion() {
 		return getValue(TaskAttribute.VERSION);
 	}
 
-	public boolean hasChanges(ITask task) {
+	public boolean hasChanges(@NonNull ITask task) {
 		boolean changed = false;
 		changed |= hasChanges(task.getCompletionDate(), getCompletionDate(), TaskAttribute.DATE_COMPLETION);
 		changed |= hasChanges(task.getCreationDate(), getCreationDate(), TaskAttribute.DATE_CREATION);
@@ -360,23 +391,24 @@ public class TaskMapper implements ITaskMapping {
 //		return false;
 //	}
 
-	public void setCc(List<String> cc) {
+	public void setCc(@NonNull List<String> cc) {
 		setValues(TaskAttribute.USER_CC, cc);
 	}
 
-	public void setCompletionDate(Date dateCompleted) {
+	public void setCompletionDate(@Nullable Date dateCompleted) {
 		setDateValue(TaskAttribute.DATE_COMPLETION, dateCompleted);
 	}
 
-	public void setComponent(String component) {
+	public void setComponent(@NonNull String component) {
 		setValue(TaskAttribute.COMPONENT, component);
 	}
 
-	public void setCreationDate(Date dateCreated) {
+	public void setCreationDate(@Nullable Date dateCreated) {
 		setDateValue(TaskAttribute.DATE_CREATION, dateCreated);
 	}
 
-	private TaskAttribute setDateValue(String attributeKey, Date value) {
+	@Nullable
+	private TaskAttribute setDateValue(@NonNull String attributeKey, @Nullable Date value) {
 		TaskAttribute attribute = getWriteableAttribute(attributeKey, TaskAttribute.TYPE_DATE);
 		if (attribute != null) {
 			taskData.getAttributeMapper().setDateValue(attribute, value);
@@ -384,7 +416,7 @@ public class TaskMapper implements ITaskMapping {
 		return attribute;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(@NonNull String description) {
 		setValue(TaskAttribute.DESCRIPTION, description);
 	}
 
@@ -392,74 +424,75 @@ public class TaskMapper implements ITaskMapping {
 		setDateValue(TaskAttribute.DATE_DUE, value);
 	}
 
-	public void setKeywords(List<String> keywords) {
+	public void setKeywords(@NonNull List<String> keywords) {
 		setValues(TaskAttribute.KEYWORDS, keywords);
 	}
 
-	public void setModificationDate(Date dateModified) {
+	public void setModificationDate(@Nullable Date dateModified) {
 		setDateValue(TaskAttribute.DATE_MODIFICATION, dateModified);
 	}
 
 	// TODO use Person class?
-	public void setOwner(String owner) {
+	public void setOwner(@NonNull String owner) {
 		setValue(TaskAttribute.USER_ASSIGNED, owner);
 	}
 
-	public void setPriority(String priority) {
+	public void setPriority(@NonNull String priority) {
 		setValue(TaskAttribute.PRIORITY, priority);
 	}
 
-	public void setPriorityLevel(PriorityLevel priority) {
+	public void setPriorityLevel(@NonNull PriorityLevel priority) {
 		setPriority(priority.toString());
 	}
 
-	public void setProduct(String product) {
+	public void setProduct(@NonNull String product) {
 		setValue(TaskAttribute.PRODUCT, product);
 	}
 
 	// TODO use Person class?
-	public void setReporter(String reporter) {
+	public void setReporter(@NonNull String reporter) {
 		setValue(TaskAttribute.USER_REPORTER, reporter);
 	}
 
 	/**
 	 * @since 3.2
 	 */
-	public void setSeverity(String severity) {
+	public void setSeverity(@NonNull String severity) {
 		setValue(TaskAttribute.SEVERITY, severity);
 	}
 
-	public void setSummary(String summary) {
+	public void setSummary(@NonNull String summary) {
 		setValue(TaskAttribute.SUMMARY, summary);
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(@NonNull String status) {
 		setValue(TaskAttribute.STATUS, status);
 	}
 
-	public void setTaskKind(String taskKind) {
+	public void setTaskKind(@NonNull String taskKind) {
 		setValue(TaskAttribute.TASK_KIND, taskKind);
 	}
 
 	/**
 	 * @since 3.3
 	 */
-	public void setTaskKey(String taskKey) {
+	public void setTaskKey(@NonNull String taskKey) {
 		setValue(TaskAttribute.TASK_KEY, taskKey);
 	}
 
-	public void setTaskUrl(String taskUrl) {
+	public void setTaskUrl(@NonNull String taskUrl) {
 		setValue(TaskAttribute.TASK_URL, taskUrl);
 	}
 
 	/**
 	 * @since 3.2
 	 */
-	public void setVersion(String version) {
+	public void setVersion(@NonNull String version) {
 		setValue(TaskAttribute.VERSION, version);
 	}
 
-	public TaskAttribute setValue(String attributeKey, String value) {
+	@Nullable
+	public TaskAttribute setValue(@NonNull String attributeKey, @NonNull String value) {
 		TaskAttribute attribute = getWriteableAttribute(attributeKey, TaskAttribute.TYPE_SHORT_TEXT);
 		if (attribute != null) {
 			taskData.getAttributeMapper().setValue(attribute, value);
@@ -467,7 +500,8 @@ public class TaskMapper implements ITaskMapping {
 		return attribute;
 	}
 
-	private TaskAttribute setValues(String attributeKey, List<String> values) {
+	@Nullable
+	private TaskAttribute setValues(@NonNull String attributeKey, @NonNull List<String> values) {
 		TaskAttribute attribute = getWriteableAttribute(attributeKey, TaskAttribute.TYPE_SHORT_TEXT);
 		if (attribute != null) {
 			taskData.getAttributeMapper().setValues(attribute, values);

@@ -14,6 +14,7 @@ package org.eclipse.mylyn.tasks.core;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
@@ -24,7 +25,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
  */
 public interface ITaskMapping {
 
-	public void merge(ITaskMapping source);
+	public void merge(@NonNull ITaskMapping source);
 
 	public abstract List<String> getCc();
 
