@@ -67,7 +67,7 @@
     <dist.snapshots.url>https://repo.eclipse.org/content/repositories/mylyn-snapshots/</dist.snapshots.url>
 
     <target-platform>mylyn-e${target-version}</target-platform>
-    <egit-repository-url>http://download.eclipse.org/egit/updates-1.3/</egit-repository-url>
+    <egit-repository-url>http://download.eclipse.org/egit/updates/</egit-repository-url>
     <swtbot-repository-url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</swtbot-repository-url>
 
     <!-- alternative target for components that don't build against galileo -->
