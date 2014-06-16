@@ -62,13 +62,11 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
-import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
-import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryModel;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -888,7 +886,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 	 * @throws GerritQueryException
 	 */
 	private IStatus getReviews(TaskRepository repository, String queryType) throws GerritQueryException {
-		if (repository.getUserName() == null) {
+		if (repository.getUserName() == null || repository.getUserName().isEmpty()) {
 			//Test for Anonymous user
 			if (queryType.equals(GerritQuery.MY_CHANGES)
 					|| queryType.equals(GerritQuery.QUERY_MY_DRAFTS_COMMENTS_CHANGES)) {
@@ -908,50 +906,18 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 		// Format the query id
 		String queryId = rtv.getTitle() + " - " + queryType;
 
-		// Retrieve the query from the repository (if previously defined)
-		Set<RepositoryQuery> queries = TasksUiInternal.getTaskList().getQueries();
 		RepositoryQuery query = null;
 
-		//Look to a regular query, otherwise, need to create the proper custom query
+		IRepositoryModel repositoryModel = TasksUi.getRepositoryModel();
+		query = (RepositoryQuery) repositoryModel.createRepositoryQuery(repository);
+		query.setSummary(queryId);
+		query.setAttribute(GerritQuery.TYPE, queryType);
+		query.setAttribute(GerritQuery.PROJECT, null);
 		if (queryType == GerritQuery.CUSTOM) {
-			//For Custom query, need to get the extra data
-			queryId = rtv.getTitle() + " - " + queryType + "- " + getSearchText();
-		}
-
-		for (RepositoryQuery rquery : queries) {
-			if (rquery.getRepositoryUrl().equals(repository.getRepositoryUrl()) && rquery.getSummary().equals(queryId)) {
-				query = rquery;
-				break;
-			}
-		}
-
-		// If not found, create one and save it
-		if (query == null) {
-			IRepositoryModel repositoryModel = TasksUi.getRepositoryModel();
-			query = (RepositoryQuery) repositoryModel.createRepositoryQuery(repository);
-			query.setSummary(queryId);
-			query.setAttribute(GerritQuery.TYPE, queryType);
-			query.setAttribute(GerritQuery.PROJECT, null);
-			// Flag to prevent the query to be displayed in the Task List 
-			// and pop-up list showing all the times
-			query.setAttribute(ITasksCoreConstants.ATTRIBUTE_HIDDEN, Boolean.toString(true));
-			if (queryType == GerritQuery.CUSTOM) {
-				query.setAttribute(GerritQuery.QUERY_STRING, getSearchText());
-			} else {
-				query.setAttribute(GerritQuery.QUERY_STRING, queryType);
-			}
-
-			query.setAutoUpdate(false);
-
-			TasksUiPlugin.getTaskList().addQuery(query);
+			query.setAttribute(GerritQuery.QUERY_STRING, getSearchText());
 		} else {
-			if (queryType == GerritQuery.CUSTOM) {
-				query.setAttribute(GerritQuery.QUERY_STRING, getSearchText());
-			} else {
-				//Look for the matching Gerrit query data type
-				String st = matchQueryTypeRequest(queryType);
-				query.setAttribute(GerritQuery.QUERY_STRING, st);
-			}
+			String st = matchQueryTypeRequest(queryType);
+			query.setAttribute(GerritQuery.QUERY_STRING, st);
 		}
 
 		if (query.getAttribute(GerritQuery.QUERY_STRING).isEmpty()) {
@@ -968,31 +934,6 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 		fReviewTable.init(reviews);
 		refresh();
 
-		// Start the long-running synchronized query; the individual review details
-		// are handled by ITaskListChangeListener.containersChanged()
-		GerritConnector connector = GerritCorePlugin.getDefault().getConnector();
-
-		//Do we re-synch for all Gerrit server version or just Gerrit 2.4 ?
-		if (isGerritVersionBefore_2_5()) {
-			Job job = null;
-			try {
-				job = TasksUiInternal.synchronizeQuery(connector, query, null, true);
-			} catch (Exception e) {
-				if (job != null) {
-					job.cancel();
-				}
-			}
-		}
-
-		//Should sync any Gerrit server instead of waiting the timer re-synch 
-//        Job job = null;
-//        try {
-//            job = TasksUiInternal.synchronizeQuery(connector, query, null, true);
-//		} catch (Exception e) {
-//			if (job != null) {
-//				job.cancel();
-//			}
-//		}
 		return Status.OK_STATUS;
 
 	}
