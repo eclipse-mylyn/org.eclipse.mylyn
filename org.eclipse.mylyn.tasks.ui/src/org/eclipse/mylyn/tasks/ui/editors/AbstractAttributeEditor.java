@@ -13,6 +13,8 @@ package org.eclipse.mylyn.tasks.ui.editors;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
@@ -59,7 +61,7 @@ public abstract class AbstractAttributeEditor {
 
 	private LayoutHint layoutHint;
 
-	private final TaskDataModel manager;
+	private final TaskDataModel dataModel;
 
 	private final TaskAttribute taskAttribute;
 
@@ -108,10 +110,10 @@ public abstract class AbstractAttributeEditor {
 	/**
 	 * @since 3.0
 	 */
-	public AbstractAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
-		Assert.isNotNull(manager);
+	public AbstractAttributeEditor(@NonNull TaskDataModel dataModel, @NonNull TaskAttribute taskAttribute) {
+		Assert.isNotNull(dataModel);
 		Assert.isNotNull(taskAttribute);
-		this.manager = manager;
+		this.dataModel = dataModel;
 		this.taskAttribute = taskAttribute;
 		setDecorationEnabled(true);
 		setReadOnly(taskAttribute.getMetaData().isReadOnly());
@@ -130,12 +132,12 @@ public abstract class AbstractAttributeEditor {
 	/**
 	 * @since 3.0
 	 */
-	public abstract void createControl(Composite parent, FormToolkit toolkit);
+	public abstract void createControl(@NonNull Composite parent, @NonNull FormToolkit toolkit);
 
 	/**
 	 * @since 3.0
 	 */
-	public void createLabelControl(Composite composite, FormToolkit toolkit) {
+	public void createLabelControl(@NonNull Composite composite, @NonNull FormToolkit toolkit) {
 		labelControl = toolkit.createLabel(composite, getLabel());
 		labelControl.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 	}
@@ -151,13 +153,15 @@ public abstract class AbstractAttributeEditor {
 	/**
 	 * @since 3.0
 	 */
+	@NonNull
 	public TaskDataModel getModel() {
-		return manager;
+		return dataModel;
 	}
 
 	/**
 	 * @since 3.0
 	 */
+	@NonNull
 	protected TaskAttributeMapper getAttributeMapper() {
 		return getModel().getTaskData().getAttributeMapper();
 	}
@@ -165,6 +169,7 @@ public abstract class AbstractAttributeEditor {
 	/**
 	 * @since 3.0
 	 */
+	@Nullable
 	public Control getControl() {
 		return control;
 	}
@@ -172,6 +177,7 @@ public abstract class AbstractAttributeEditor {
 	/**
 	 * @since 3.0
 	 */
+	@NonNull
 	public String getLabel() {
 		String label = getAttributeMapper().getLabel(getTaskAttribute());
 		return (label != null) ? LegacyActionTools.escapeMnemonics(label) : ""; //$NON-NLS-1$
@@ -180,6 +186,7 @@ public abstract class AbstractAttributeEditor {
 	/**
 	 * @since 3.0
 	 */
+	@Nullable
 	public Label getLabelControl() {
 		return labelControl;
 	}
@@ -187,6 +194,7 @@ public abstract class AbstractAttributeEditor {
 	/**
 	 * @since 3.0
 	 */
+	@Nullable
 	public LayoutHint getLayoutHint() {
 		return layoutHint;
 	}
@@ -194,6 +202,7 @@ public abstract class AbstractAttributeEditor {
 	/**
 	 * @since 3.0
 	 */
+	@NonNull
 	public TaskAttribute getTaskAttribute() {
 		return taskAttribute;
 	}
@@ -216,7 +225,7 @@ public abstract class AbstractAttributeEditor {
 	/**
 	 * @since 3.0
 	 */
-	protected void setControl(Control control) {
+	protected void setControl(@Nullable Control control) {
 		if (this.control != null && !this.control.isDisposed()) {
 			this.control.removeDisposeListener(disposeListener);
 			getModel().removeModelListener(modelListener);
@@ -239,19 +248,19 @@ public abstract class AbstractAttributeEditor {
 	/**
 	 * @since 3.1
 	 */
-	public void setLayoutHint(LayoutHint layoutHint) {
+	public void setLayoutHint(@Nullable LayoutHint layoutHint) {
 		this.layoutHint = layoutHint;
 	}
 
 	/**
 	 * @since 3.0
 	 */
-	public void decorate(Color color) {
+	public void decorate(@Nullable Color color) {
 		if (isDecorationEnabled()) {
-			if (manager.hasBeenRead() && manager.hasIncomingChanges(getTaskAttribute())) {
+			if (dataModel.hasBeenRead() && dataModel.hasIncomingChanges(getTaskAttribute())) {
 				decorateIncoming(color);
 			}
-			if (manager.hasOutgoingChanges(getTaskAttribute())) {
+			if (dataModel.hasOutgoingChanges(getTaskAttribute())) {
 				decorateOutgoing(color);
 			}
 			updateRequiredDecoration();
@@ -299,7 +308,7 @@ public abstract class AbstractAttributeEditor {
 	/**
 	 * @since 3.0
 	 */
-	protected void decorateOutgoing(Color color) {
+	protected void decorateOutgoing(@Nullable Color color) {
 		if (labelControl != null) {
 			labelControl.setText("*" + labelControl.getText()); //$NON-NLS-1$
 		}
@@ -308,7 +317,7 @@ public abstract class AbstractAttributeEditor {
 	/**
 	 * @since 3.0
 	 */
-	protected void decorateIncoming(Color color) {
+	protected void decorateIncoming(@Nullable Color color) {
 		if (getControl() != null) {
 			getControl().setBackground(color);
 		}
@@ -356,6 +365,7 @@ public abstract class AbstractAttributeEditor {
 	/**
 	 * @since 3.5
 	 */
+	@Nullable
 	public String getDescription() {
 		return description;
 	}
@@ -363,7 +373,7 @@ public abstract class AbstractAttributeEditor {
 	/**
 	 * @since 3.5
 	 */
-	public void setDescription(String description) {
+	public void setDescription(@Nullable String description) {
 		this.description = description;
 	}
 
