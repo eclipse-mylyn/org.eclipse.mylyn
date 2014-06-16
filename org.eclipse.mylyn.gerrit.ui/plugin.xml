@@ -18,8 +18,8 @@
    <extension
          point="org.eclipse.mylyn.tasks.core.templates">
       <repository
-            addAutomatically="true"
-            anonymous="true"
+            addAutomatically="false"
+            anonymous="false"
             label="Eclipse.org Reviews"
             repositoryKind="org.eclipse.mylyn.gerrit"
             urlRepository="https://git.eclipse.org/r/">
