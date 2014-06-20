@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.mylyn.gerrit.dashboard.Messages;
 
 // ESCA-JAVA0100:
 /**
@@ -62,7 +63,7 @@ public class Tracer {
 
 	public Tracer() {
 		fTraceFile = null;
-		fTimeFormat = new SimpleDateFormat("HH:mm:ss:SSS");
+		fTimeFormat = new SimpleDateFormat("HH:mm:ss:SSS"); //$NON-NLS-1$
 		fTraceMessage = new StringBuilder();
 		fLogToConsole = true;
 	}
@@ -83,32 +84,32 @@ public class Tracer {
 		fPluginID = aPluginId;
 
 		// Initialize tracer members from .options plugin file
-		traceKey = Platform.getDebugOption(fPluginID + "/error");
+		traceKey = Platform.getDebugOption(fPluginID + Messages.Tracer_error);
 		if (traceKey != null) {
 			ERROR = (Boolean.valueOf(traceKey)).booleanValue();
 		}
 
-		traceKey = Platform.getDebugOption(fPluginID + "/warning");
+		traceKey = Platform.getDebugOption(fPluginID + Messages.Tracer_warning);
 		if (traceKey != null) {
 			WARNING = (Boolean.valueOf(traceKey)).booleanValue();
 		}
 
-		traceKey = Platform.getDebugOption(fPluginID + "/info");
+		traceKey = Platform.getDebugOption(fPluginID + Messages.Tracer_info);
 		if (traceKey != null) {
 			INFO = (Boolean.valueOf(traceKey)).booleanValue();
 		}
 
-		traceKey = Platform.getDebugOption(fPluginID + "/debug");
+		traceKey = Platform.getDebugOption(fPluginID + Messages.Tracer_debug);
 		if (traceKey != null) {
 			DEBUG = (Boolean.valueOf(traceKey)).booleanValue();
 		}
 
-		traceKey = Platform.getDebugOption(fPluginID + "/consoleLog");
+		traceKey = Platform.getDebugOption(fPluginID + Messages.Tracer_consoleLog);
 		if (traceKey != null) {
 			fLogToConsole = (Boolean.valueOf(traceKey)).booleanValue();
 		}
 
-		traceKey = Platform.getDebugOption(fPluginID + "/logfile");
+		traceKey = Platform.getDebugOption(fPluginID + Messages.Tracer_logFile);
 		if (traceKey != null) {
 			try {
 				fTraceFile = new BufferedWriter(new FileWriter(traceKey));
@@ -203,7 +204,7 @@ public class Tracer {
 			fTraceMessage.setLength(0);
 			// Timestamp
 			writeTimestamp(fTraceMessage);
-			fTraceMessage.append(" E");
+			fTraceMessage.append(" E"); //$NON-NLS-1$
 			writeThread(fTraceMessage);
 			writeLocation(fTraceMessage);
 			fTraceMessage.append(aMsg);
@@ -222,7 +223,7 @@ public class Tracer {
 			fTraceMessage.setLength(0);
 			// Timestamp
 			writeTimestamp(fTraceMessage);
-			fTraceMessage.append(" W");
+			fTraceMessage.append(" W"); //$NON-NLS-1$
 			writeThread(fTraceMessage);
 			writeLocation(fTraceMessage);
 			fTraceMessage.append(aMsg);
@@ -241,7 +242,7 @@ public class Tracer {
 			fTraceMessage.setLength(0);
 			// Timestamp
 			writeTimestamp(fTraceMessage);
-			fTraceMessage.append(" I");
+			fTraceMessage.append(" I"); //$NON-NLS-1$
 			writeThread(fTraceMessage);
 			writeLocation(fTraceMessage);
 			fTraceMessage.append(aMsg);
@@ -260,7 +261,7 @@ public class Tracer {
 			fTraceMessage.setLength(0);
 			// Timestamp
 			writeTimestamp(fTraceMessage);
-			fTraceMessage.append(" D");
+			fTraceMessage.append(" D"); //$NON-NLS-1$
 			writeThread(fTraceMessage);
 			writeLocation(fTraceMessage);
 			fTraceMessage.append(aMsg);
@@ -275,7 +276,7 @@ public class Tracer {
 	 *            - the StringBuilder object (trace line) to append to
 	 */
 	private void writeTimestamp(StringBuilder aSb) {
-		aSb.append("[" + fTimeFormat.format(new Date()) + "]");
+		aSb.append("[" + fTimeFormat.format(new Date()) + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -285,7 +286,7 @@ public class Tracer {
 	 *            - the StringBuilder object (trace line) to append to
 	 */
 	private static void writeThread(StringBuilder aSb) {
-		aSb.append(" T=" + Thread.currentThread().getName());
+		aSb.append(" T=" + Thread.currentThread().getName()); //$NON-NLS-1$
 	}
 
 	/**
@@ -303,11 +304,11 @@ public class Tracer {
 			StackTraceElement s = e[traceElement];
 			if (s != null) {
 				String simpleClassName = s.getClassName();
-				String[] clsNameSegs = simpleClassName.split("\\.");
+				String[] clsNameSegs = simpleClassName.split("\\."); //$NON-NLS-1$
 				if (clsNameSegs.length > 0) {
 					simpleClassName = clsNameSegs[clsNameSegs.length - 1];
 				}
-				aSb.append(" " + simpleClassName + ":" + s.getLineNumber() + " (" + s.getMethodName() + "): ");
+				aSb.append(" " + simpleClassName + ":" + s.getLineNumber() + " (" + s.getMethodName() + "): "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			}
 		}
 	}

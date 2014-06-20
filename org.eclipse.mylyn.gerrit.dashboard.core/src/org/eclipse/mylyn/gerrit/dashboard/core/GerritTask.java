@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.mylyn.gerrit.dashboard.Messages;
 import org.eclipse.mylyn.internal.gerrit.core.GerritQueryResultSchema;
 import org.eclipse.mylyn.internal.gerrit.core.GerritTaskSchema;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -40,7 +41,7 @@ public class GerritTask extends AbstractTask {
 	/**
 	 * Mylyn Task ID
 	 */
-	public static final String TASK_ID = "dashboard.mylyn.task.id";
+	public static final String TASK_ID = "dashboard.mylyn.task.id"; //$NON-NLS-1$
 
 	/**
 	 * Gerrit Review shortened Change-Id
@@ -99,11 +100,11 @@ public class GerritTask extends AbstractTask {
 	/**
 	 * Date format
 	 */
-	private static SimpleDateFormat FORMAT_HOUR = new SimpleDateFormat("h:mm a");
+	private static SimpleDateFormat FORMAT_HOUR = new SimpleDateFormat("h:mm a"); //$NON-NLS-1$
 
-	private static SimpleDateFormat FORMAT_MONTH = new SimpleDateFormat("MMM d");
+	private static SimpleDateFormat FORMAT_MONTH = new SimpleDateFormat("MMM d"); //$NON-NLS-1$
 
-	private static SimpleDateFormat FORMAT_FULL = new SimpleDateFormat("MMM d, yyyy");
+	private static SimpleDateFormat FORMAT_FULL = new SimpleDateFormat("MMM d, yyyy"); //$NON-NLS-1$
 
 	// -------------------------------------------------------------------------
 	// Attributes
@@ -126,7 +127,7 @@ public class GerritTask extends AbstractTask {
 		super(taskData.getRepositoryUrl(), taskData.getTaskId(), taskData.getRoot()
 				.getAttribute(TaskAttribute.SUMMARY)
 				.getValue()
-				+ " [" + taskData.getRoot().getAttribute(TaskAttribute.TASK_KEY).getValue() + "]");
+				+ " [" + taskData.getRoot().getAttribute(TaskAttribute.TASK_KEY).getValue() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		fConnectorKind = taskData.getConnectorKind();
 
@@ -184,13 +185,13 @@ public class GerritTask extends AbstractTask {
 	public String getAttributeAsDate(String key) {
 		// Validate the supplied key
 		if (!key.equals(DATE_CREATION) && !key.equals(DATE_MODIFICATION) && !key.equals(DATE_COMPLETION)) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 
 		// Retrieve the date
 		String rawDate = getAttribute(key);
 		if (rawDate == null) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 
 		// Format the date
@@ -262,21 +263,21 @@ public class GerritTask extends AbstractTask {
 	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
-		buffer.append("TaskID  = ").append(getAttribute(GerritTask.TASK_ID)).append("\n");
-		buffer.append("ShortID = ").append(getAttribute(GerritTask.SHORT_CHANGE_ID)).append("\n");
-		buffer.append("ChangeID= ").append(getAttribute(GerritTask.CHANGE_ID)).append("\n");
-		buffer.append("Subject = ").append(getAttribute(GerritTask.SUBJECT)).append("\n");
-		buffer.append("Owner   = ").append(getAttribute(GerritTask.OWNER)).append("\n");
-		buffer.append("Project = ").append(getAttribute(GerritTask.PROJECT)).append("\n");
-		buffer.append("Branch  = ").append(getAttribute(GerritTask.BRANCH)).append("\n");
-		buffer.append("Updated = ").append(getAttributeAsDate(GerritTask.DATE_MODIFICATION)).append("\n");
-		buffer.append("STAR = ")
+		buffer.append(Messages.GerritTask_taskID).append(getAttribute(GerritTask.TASK_ID)).append("\n"); //$NON-NLS-2$
+		buffer.append(Messages.GerritTask_shortID).append(getAttribute(GerritTask.SHORT_CHANGE_ID)).append("\n"); //$NON-NLS-2$
+		buffer.append(Messages.GerritTask_changeID).append(getAttribute(GerritTask.CHANGE_ID)).append("\n"); //$NON-NLS-2$
+		buffer.append(Messages.GerritTask_subject).append(getAttribute(GerritTask.SUBJECT)).append("\n"); //$NON-NLS-2$
+		buffer.append(Messages.GerritTask_owner).append(getAttribute(GerritTask.OWNER)).append("\n"); //$NON-NLS-2$
+		buffer.append(Messages.GerritTask_project).append(getAttribute(GerritTask.PROJECT)).append("\n"); //$NON-NLS-2$
+		buffer.append(Messages.GerritTask_branch).append(getAttribute(GerritTask.BRANCH)).append("\n"); //$NON-NLS-2$
+		buffer.append(Messages.GerritTask_updated).append(getAttributeAsDate(GerritTask.DATE_MODIFICATION)).append("\n"); //$NON-NLS-2$
+		buffer.append(Messages.GerritTask_star)
 				.append(getAttribute(GerritTask.IS_STARRED))
-				.append(", CRVW = ")
+				.append(", CRVW = ") //$NON-NLS-1$
 				.append(getAttribute(GerritTask.REVIEW_STATE))
-				.append(", VRIF = ")
+				.append(", VRIF = ") //$NON-NLS-1$
 				.append(getAttribute(GerritTask.VERIFY_STATE))
-				.append("\n");
+				.append("\n"); //$NON-NLS-1$
 		return buffer.toString();
 	}
 

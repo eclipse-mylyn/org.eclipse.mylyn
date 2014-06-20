@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.gerrit.dashboard.trace.Tracer;
+import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Version;
@@ -92,7 +93,7 @@ public class GerritPlugin extends Plugin {
 		Fplugin = this;
 		Ftracer = new Tracer();
 		Ftracer.init(PLUGIN_ID);
-		Ftracer.traceDebug("plugin started");
+		Ftracer.traceDebug(Messages.GerritPlugin_started);
 		verifyVersion(PLUGIN_ID);
 	}
 
@@ -107,7 +108,7 @@ public class GerritPlugin extends Plugin {
 			Version ver = bdleCurrent.getVersion();
 			if (ver.getQualifier().equals(DASHBOARD_VERSION_QUALIFIER)) {
 				//We are in a runtime environment, so enable it
-				Ftracer.traceDebug("In a runtime environment for " + aBundleStr + " Version: " + ver.toString()); //$NON-NLS-1$
+				Ftracer.traceDebug(NLS.bind(Messages.GerritPlugin_Version, aBundleStr, ver.toString()));
 				return;
 			}
 		}
@@ -143,7 +144,7 @@ public class GerritPlugin extends Plugin {
 	public void stop(BundleContext aContext) throws Exception {
 		Fplugin = null;
 		super.stop(aContext);
-		Ftracer.traceDebug("plugin stopped");
+		Ftracer.traceDebug(Messages.GerritPlugin_stopped);
 	}
 
 	/**
