@@ -364,7 +364,7 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 		if (detail.getSubmitRecords() != null) {
 			for (SubmitRecord record : detail.getSubmitRecords()) {
 				for (Label label : record.getLabels()) {
-					IApprovalType approvalType = typeForName.get(label.getLabel());
+					IApprovalType approvalType = typeForName.get(ApprovalUtil.toNameWithDash(label.getLabel()));
 					if (approvalType == null) {
 						if (detail.getChange().getStatus().isClosed()) {
 							// typeForName can be empty for a closed* change as it no longer provides approval types info
