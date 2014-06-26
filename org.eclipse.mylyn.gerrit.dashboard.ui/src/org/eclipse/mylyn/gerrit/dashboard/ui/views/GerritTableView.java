@@ -39,7 +39,6 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -60,22 +59,18 @@ import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.GerritQuery;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryModel;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
-import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -90,8 +85,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -456,31 +449,13 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 					return;
 				}
 				Object element = structuredSelection.getFirstElement();
-				if (!(element instanceof AbstractTask)) {
-					return;
+				if (element instanceof ITask) {
+					TasksUiUtil.openTask(fTaskRepository, ((ITask) element).getTaskId());
 				}
-				AbstractTask task = (AbstractTask) element;
-
-				// Open the task in the proper editor
-				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(GerritConnector.CONNECTOR_KIND);
-				IEditorInput editorInput = connectorUi.getTaskEditorInput(getTaskRepository(), task);
-				if (editorInput == null) {
-					editorInput = new TaskEditorInput(fTaskRepository, task);
-				}
-				String editorId = connectorUi.getTaskEditorId(task);
-				IEditorPart editorPart = TasksUiUtil.openEditor(editorInput, editorId, null);
-				if (editorPart instanceof TaskEditor) {
-					TaskEditor taskEditor = (TaskEditor) editorPart;
-					//Allow to open a Task even if not found locally yet
-					SynchronizeEditorAction synchAction = new SynchronizeEditorAction();
-					synchAction.selectionChanged(new StructuredSelection(taskEditor));
-					synchAction.run();
-					if (task instanceof GerritTask) {
-						//Refresh the table column with the appropriate data, so the "CR" and "V" column gets updated
-						fReviewTable.updateReviewItem((GerritTask) task);
-						refresh();
-					}
-
+				if (element instanceof GerritTask) {
+					//Refresh the table column with the appropriate data, so the "CR" and "V" column gets updated
+					fReviewTable.updateReviewItem((GerritTask) element);
+					refresh();
 				}
 			}
 		};
