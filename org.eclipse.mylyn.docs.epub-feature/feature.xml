@@ -21,7 +21,7 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.mylyn.wikitext_feature" version="2.1.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.wikitext_feature" version="2.2.0" match="compatible"/>
    </requires>
 
    <plugin
