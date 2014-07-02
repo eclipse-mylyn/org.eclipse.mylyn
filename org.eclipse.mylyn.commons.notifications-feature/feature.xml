@@ -31,7 +31,7 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.mylyn.commons" version="3.12.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.mylyn.commons" version="3.13.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
