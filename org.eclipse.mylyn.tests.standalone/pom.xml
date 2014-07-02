@@ -45,27 +45,27 @@
     <dependency>
       <groupId>org.eclipse.mylyn.commons</groupId>
       <artifactId>org.eclipse.mylyn.commons.notifications.core</artifactId>
-      <version>1.4.0-SNAPSHOT</version>
+      <version>1.5.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.mylyn.commons</groupId>
       <artifactId>org.eclipse.mylyn.commons.notifications.feed</artifactId>
-      <version>1.4.0-SNAPSHOT</version>
+      <version>1.5.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.mylyn.commons</groupId>
       <artifactId>org.eclipse.mylyn.commons.notifications.tests</artifactId>
-      <version>1.4.0-SNAPSHOT</version>
+      <version>1.5.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.mylyn.commons</groupId>
       <artifactId>org.eclipse.mylyn.commons.repositories.core</artifactId>
-      <version>1.4.0-SNAPSHOT</version>
+      <version>1.5.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.mylyn.commons</groupId>
       <artifactId>org.eclipse.mylyn.commons.repositories.http.core</artifactId>
-      <version>1.4.0-SNAPSHOT</version>
+      <version>1.5.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.mylyn.commons</groupId>
@@ -86,17 +86,17 @@
     <dependency>
       <groupId>org.eclipse.mylyn.builds</groupId>
       <artifactId>org.eclipse.mylyn.builds.core</artifactId>
-      <version>1.4.0-SNAPSHOT</version>
+      <version>1.5.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.mylyn.builds</groupId>
       <artifactId>org.eclipse.mylyn.hudson.core</artifactId>
-      <version>1.4.0-SNAPSHOT</version>
+      <version>1.5.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.mylyn.builds</groupId>
       <artifactId>org.eclipse.mylyn.hudson.tests</artifactId>
-      <version>1.4.0-SNAPSHOT</version>
+      <version>1.5.0-SNAPSHOT</version>
     </dependency>
     <!-- Tasks -->
     <dependency>
@@ -138,7 +138,7 @@
     <dependency>
       <groupId>org.eclipse.mylyn.docs</groupId>
       <artifactId>org.eclipse.mylyn.wikitext.tests</artifactId>
-      <version>2.1.0-SNAPSHOT</version>
+      <version>2.2.0-SNAPSHOT</version>
     </dependency>
     <!-- Eclipse Platform -->
     <dependency>
