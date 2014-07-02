@@ -300,10 +300,34 @@ public class HtmlLanguageBuilderTest {
 		assertEquals("<b><tt><em>test</em></tt></b>", writer.toString());
 	}
 
-	void addSpanWithCssFontWeightBold(DocumentBuilder builder) {
+	@Test
+	public void setXhtmlStrict() {
+		assertXhtmlStrict(true);
+		assertXhtmlStrict(false);
+	}
+
+	@Test
+	public void setXhtmlStrictFalseCharsEmittedDirectlyToTheDocumentBodyTwice() {
+		assertEmittedCharsEqual(false, "foobar", "foo", "bar");
+	}
+
+	@Test
+	public void setXhtmlStrictTrueCharsEmittedDirectlyToTheDocumentBodyTwice() {
+		assertEmittedCharsEqual(true, "<p>foobar</p>", "foo", "bar");
+	}
+
+	private void addSpanWithCssFontWeightBold(DocumentBuilder builder) {
 		builder.beginSpan(SpanType.SPAN, new Attributes(null, null, "font-weight:bold", null));
 		builder.characters("test");
 		builder.endSpan();
+	}
+
+	private void assertXhtmlStrict(boolean xhtmlStrict) {
+		builder.name("Test").add(BlockType.PARAGRAPH);
+		assertSame(builder, builder.setXhtmlStrict(xhtmlStrict));
+
+		HtmlSubsetLanguage language = (HtmlSubsetLanguage) builder.create();
+		assertEquals(xhtmlStrict, language.isXhtmlStrict());
 	}
 
 	private void addSpanWithCssColor(DocumentBuilder builder) {
@@ -315,6 +339,28 @@ public class HtmlLanguageBuilderTest {
 	protected void expectBlacklisted() {
 		thrown.expect(IllegalArgumentException.class);
 		thrown.expectMessage("Name must not be equal to " + HtmlLanguage.NAME_HTML);
+	}
+
+	private void assertEmittedCharsEqual(boolean xhtmlStrict, String expected, String... chars) {
+		StringWriter writer = new StringWriter();
+		DocumentBuilder builder = newDocumentBuilder(writer, xhtmlStrict);
+
+		builder.beginDocument();
+		for (String characters : chars) {
+			builder.characters(characters);
+		}
+		builder.endDocument();
+
+		assertEquals(expected, writer.toString());
+	}
+
+	private DocumentBuilder newDocumentBuilder(StringWriter writer, boolean xhtmlStrict) {
+		return builder.add(BlockType.PARAGRAPH)
+				.setXhtmlStrict(xhtmlStrict)
+				.document("", "")
+				.name("Test")
+				.create()
+				.createDocumentBuilder(writer);
 	}
 
 }

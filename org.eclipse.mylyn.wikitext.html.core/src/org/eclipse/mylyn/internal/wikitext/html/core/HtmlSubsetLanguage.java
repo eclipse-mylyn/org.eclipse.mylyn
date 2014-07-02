@@ -18,7 +18,6 @@ import java.io.Writer;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentHandler;
@@ -39,8 +38,16 @@ public class HtmlSubsetLanguage extends HtmlLanguage {
 
 	private final List<SpanHtmlElementStrategy> spanElementStrategies;
 
+	private final boolean xhtmlStrict;
+
 	public HtmlSubsetLanguage(String name, HtmlDocumentHandler documentHandler, int headingLevel,
 			Set<BlockType> blockTypes, Set<SpanType> spanTypes, List<SpanHtmlElementStrategy> spanElementStrategies) {
+		this(name, documentHandler, headingLevel, blockTypes, spanTypes, spanElementStrategies, false);
+	}
+
+	public HtmlSubsetLanguage(String name, HtmlDocumentHandler documentHandler, int headingLevel,
+			Set<BlockType> blockTypes, Set<SpanType> spanTypes, List<SpanHtmlElementStrategy> spanElementStrategies,
+			boolean xhtmlStrict) {
 		setName(checkNotNull(name));
 		this.documentHandler = documentHandler;
 		checkArgument(headingLevel >= 0 && headingLevel <= 6, "headingLevel must be between 0 and 6"); //$NON-NLS-1$
@@ -48,6 +55,7 @@ public class HtmlSubsetLanguage extends HtmlLanguage {
 		this.supportedBlockTypes = ImmutableSet.copyOf(checkNotNull(blockTypes));
 		this.supportedSpanTypes = ImmutableSet.copyOf(checkNotNull(spanTypes));
 		this.spanElementStrategies = ImmutableList.copyOf(checkNotNull(spanElementStrategies));
+		this.xhtmlStrict = xhtmlStrict;
 	}
 
 	public Set<BlockType> getSupportedBlockTypes() {
@@ -63,11 +71,12 @@ public class HtmlSubsetLanguage extends HtmlLanguage {
 	}
 
 	@Override
-	public DocumentBuilder createDocumentBuilder(Writer out, boolean formatting) {
+	public HtmlSubsetDocumentBuilder createDocumentBuilder(Writer out, boolean formatting) {
 		HtmlSubsetDocumentBuilder builder = new HtmlSubsetDocumentBuilder(out, formatting);
 		builder.setSupportedHeadingLevel(headingLevel);
 		builder.setSupportedSpanTypes(supportedSpanTypes, spanElementStrategies);
 		builder.setSupportedBlockTypes(supportedBlockTypes);
+		builder.setXhtmlStrict(xhtmlStrict);
 		if (documentHandler != null) {
 			builder.setDocumentHandler(documentHandler);
 		}
@@ -77,10 +86,14 @@ public class HtmlSubsetLanguage extends HtmlLanguage {
 	@Override
 	public HtmlSubsetLanguage clone() {
 		HtmlSubsetLanguage copy = new HtmlSubsetLanguage(getName(), documentHandler, headingLevel, supportedBlockTypes,
-				supportedSpanTypes, spanElementStrategies);
+				supportedSpanTypes, spanElementStrategies, xhtmlStrict);
 		copy.setFileExtensions(getFileExtensions());
 		copy.setExtendsLanguage(getExtendsLanguage());
 		copy.setParseCleansHtml(isParseCleansHtml());
 		return copy;
+	}
+
+	public boolean isXhtmlStrict() {
+		return xhtmlStrict;
 	}
 }

@@ -40,6 +40,8 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 
 	private int supportedHeadingLevel;
 
+	private boolean implicitBlock;
+
 	public HtmlSubsetDocumentBuilder(Writer out, boolean formatting) {
 		this(new HtmlDocumentBuilder(checkNotNull(out, "Must provide a writer"), formatting)); //$NON-NLS-1$
 	}
@@ -73,11 +75,13 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 
 	@Override
 	public void endDocument() {
+		assertCloseImplicitBlock();
 		delegate.endDocument();
 	}
 
 	@Override
 	public void beginBlock(BlockType type, Attributes attributes) {
+		assertCloseImplicitBlock();
 		pushBlockStrategy(type, attributes).beginBlock(delegate, type, attributes);
 	}
 
@@ -94,6 +98,7 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 
 	@Override
 	public void beginSpan(SpanType type, Attributes attributes) {
+		assertOpenBlock();
 		SpanStrategy strategy = pushSpanStrategy(type, attributes);
 		strategy.beginSpan(delegate, type, attributes);
 	}
@@ -111,6 +116,7 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 
 	@Override
 	public void beginHeading(int level, Attributes attributes) {
+		assertCloseImplicitBlock();
 		headingState.push(level);
 		if (headingLevelSupported(level)) {
 			delegate.beginHeading(level, attributes);
@@ -137,41 +143,70 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 
 	@Override
 	public void characters(String text) {
+		assertOpenBlock();
 		delegate.characters(text);
 	}
 
 	@Override
 	public void entityReference(String entity) {
+		assertOpenBlock();
 		delegate.entityReference(entity);
 	}
 
 	@Override
 	public void image(Attributes attributes, String url) {
+		assertOpenBlock();
 		delegate.image(attributes, url);
 	}
 
 	@Override
 	public void link(Attributes attributes, String hrefOrHashName, String text) {
+		assertOpenBlock();
 		delegate.link(attributes, hrefOrHashName, text);
 	}
 
 	@Override
 	public void imageLink(Attributes linkAttributes, Attributes imageAttributes, String href, String imageUrl) {
+		assertOpenBlock();
 		delegate.imageLink(linkAttributes, imageAttributes, href, imageUrl);
 	}
 
 	@Override
 	public void acronym(String text, String definition) {
+		assertOpenBlock();
 		delegate.acronym(text, definition);
 	}
 
 	@Override
 	public void lineBreak() {
+		assertOpenBlock();
 		delegate.lineBreak();
 	}
 
 	@Override
 	public void charactersUnescaped(String literal) {
 		delegate.charactersUnescaped(literal);
+	}
+
+	void setXhtmlStrict(boolean xhtmlStrict) {
+		delegate.setXhtmlStrict(xhtmlStrict);
+	}
+
+	private void assertOpenBlock() {
+		if (delegate.isXhtmlStrict() && blockStrategyState.isEmpty() && headingState.isEmpty()) {
+			beginBlock(BlockType.PARAGRAPH, new Attributes());
+			implicitBlock = true;
+		}
+	}
+
+	private void assertCloseImplicitBlock() {
+		if (implicitBlock) {
+			endBlock();
+			implicitBlock = false;
+		}
+	}
+
+	HtmlDocumentBuilder getDelegate() {
+		return delegate;
 	}
 }

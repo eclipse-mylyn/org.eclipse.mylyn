@@ -127,6 +127,33 @@ public class HtmlSubsetLanguageTest {
 		assertEquals(htmlLanguage.isParseCleansHtml(), htmlLanguage.clone().isParseCleansHtml());
 	}
 
+	@Test
+	public void createDocumentBuilder() {
+		DocumentBuilder builder = newHtmlSubsetLanguage(BlockType.PARAGRAPH).createDocumentBuilder(new StringWriter(),
+				false);
+		assertNotNull(builder);
+		assertTrue(builder instanceof HtmlSubsetDocumentBuilder);
+	}
+
+	@Test
+	public void isXhtmlStrict() {
+		assertXhtmlStrict(true);
+		assertXhtmlStrict(false);
+	}
+
+	private void assertXhtmlStrict(boolean xhtmlStrict) {
+		HtmlSubsetLanguage language = createHtmlSubsetLanguage(xhtmlStrict);
+		assertEquals(xhtmlStrict, language.isXhtmlStrict());
+		assertEquals(xhtmlStrict, language.clone().isXhtmlStrict());
+		HtmlSubsetDocumentBuilder documentBuilder = language.createDocumentBuilder(new StringWriter(), false);
+		assertEquals(xhtmlStrict, documentBuilder.getDelegate().isXhtmlStrict());
+	}
+
+	private HtmlSubsetLanguage createHtmlSubsetLanguage(boolean xhtmlStrict) {
+		return new HtmlSubsetLanguage("Test", null, 6, ImmutableSet.<BlockType> of(BlockType.PARAGRAPH),
+				ImmutableSet.<SpanType> of(), Collections.<SpanHtmlElementStrategy> emptyList(), xhtmlStrict);
+	}
+
 	private void assertSupportedHeadingLevel(int level) {
 		assertEquals(level, newHtmlSubsetLanguageWithHeadingLevel(level).getSupportedHeadingLevel());
 	}
@@ -146,11 +173,4 @@ public class HtmlSubsetLanguageTest {
 				Collections.<SpanHtmlElementStrategy> emptyList());
 	}
 
-	@Test
-	public void createDocumentBuilder() {
-		DocumentBuilder builder = newHtmlSubsetLanguage(BlockType.PARAGRAPH).createDocumentBuilder(new StringWriter(),
-				false);
-		assertNotNull(builder);
-		assertTrue(builder instanceof HtmlSubsetDocumentBuilder);
-	}
 }

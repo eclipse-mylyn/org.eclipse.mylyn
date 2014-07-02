@@ -51,6 +51,8 @@ public class HtmlLanguageBuilder {
 
 	private LiteralHtmlDocumentHandler documentHandler;
 
+	private boolean xhtmlStrict;
+
 	HtmlLanguageBuilder() {
 		// prevent direct instantiation
 	}
@@ -127,6 +129,19 @@ public class HtmlLanguageBuilder {
 	}
 
 	/**
+	 * Indicate if the resulting document builder should attempt to conform to strict XHTML rules. The default is false.
+	 * 
+	 * @param xhtmlStrict
+	 *            true if the language should attempt to conform to XHTML strict rules, otherwise false
+	 * @return this builder
+	 * @since 2.2
+	 */
+	public HtmlLanguageBuilder setXhtmlStrict(boolean xhtmlStrict) {
+		this.xhtmlStrict = xhtmlStrict;
+		return this;
+	}
+
+	/**
 	 * Provides a prefix and suffix which are emitted as literals at the start and end of content created using the
 	 * {@link MarkupLanguage#createDocumentBuilder(java.io.Writer, boolean) document builder}.
 	 * 
@@ -150,6 +165,7 @@ public class HtmlLanguageBuilder {
 		checkState(name != null, "Name must be provided to create an HtmlLanguage"); //$NON-NLS-1$
 		checkState(!blockTypes.isEmpty(), "Must provide support for at least one block type"); //$NON-NLS-1$
 
-		return new HtmlSubsetLanguage(name, documentHandler, headingLevel, blockTypes, spanTypes, spanElementStrategies);
+		return new HtmlSubsetLanguage(name, documentHandler, headingLevel, blockTypes, spanTypes,
+				spanElementStrategies, xhtmlStrict);
 	}
 }

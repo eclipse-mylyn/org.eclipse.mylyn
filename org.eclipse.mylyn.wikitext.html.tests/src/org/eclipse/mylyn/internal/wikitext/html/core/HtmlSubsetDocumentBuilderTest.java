@@ -12,8 +12,10 @@
 package org.eclipse.mylyn.internal.wikitext.html.core;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.io.StringWriter;
 import java.util.Collections;
@@ -566,6 +568,15 @@ public class HtmlSubsetDocumentBuilderTest {
 		builder.endSpan();
 
 		assertContent("<font color=\"blue\">test</font> <font size=\"15pt\">test2</font> <font color=\"red\" size=\"16em\">test2</font>");
+	}
+
+	@Test
+	public void setXhtmlStrict() {
+		assertFalse(builder.getDelegate().isXhtmlStrict());
+		builder.setXhtmlStrict(true);
+		assertTrue(builder.getDelegate().isXhtmlStrict());
+		builder.setXhtmlStrict(false);
+		assertFalse(builder.getDelegate().isXhtmlStrict());
 	}
 
 	private void assertSupportedSpan(String expected, SpanType spanType) {

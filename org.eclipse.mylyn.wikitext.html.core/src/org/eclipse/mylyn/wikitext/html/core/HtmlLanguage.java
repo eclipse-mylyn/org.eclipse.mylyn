@@ -43,7 +43,7 @@ import com.google.common.base.Throwables;
  * <li>{@link BlockType#NUMERIC_LIST} maps to HTML tag {@code <ol>}</li>
  * <li>{@link BlockType#PARAGRAPH} maps to HTML tag {@code <p>}</li>
  * <li>{@link BlockType#PREFORMATTED} maps to HTML tag {@code <pre>}</li>
- * <li>{@link BlockType#QUOTE} maps to HTML tag {@code <ul>}</blockquote>
+ * <li>{@link BlockType#QUOTE} maps to HTML tag {@code <blockquote>}</li>
  * <li>{@link BlockType#TABLE} maps to HTML tag {@code <table>}</li>
  * <li>{@link BlockType#TABLE_CELL_HEADER} maps to HTML tag {@code <th>}</li>
  * <li>{@link BlockType#TABLE_CELL_NORMAL} maps to HTML tag {@code <td>}</li>
