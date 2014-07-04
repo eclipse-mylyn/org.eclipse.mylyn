@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2013 Ericsson
- * 
+ *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *   Jacques Bouthillier - Initial Implementation of the table view
  ******************************************************************************/
@@ -13,15 +13,19 @@ package org.eclipse.mylyn.gerrit.dashboard.ui.internal.model;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.gerrit.dashboard.core.GerritTask;
 import org.eclipse.mylyn.gerrit.dashboard.ui.GerritUi;
 import org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.table.AdjustMyStarredHandler;
 import org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils.UIUtils;
+import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.tasks.core.IAttributeContainer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
@@ -40,7 +44,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 /**
  * This class implements the implementation of the review table view.
- * 
+ *
  * @author Jacques Bouthillier
  */
 public class UIReviewTable {
@@ -105,14 +109,11 @@ public class UIReviewTable {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
-				GerritUi.Ftracer.traceInfo("Table selection: " + e.toString());
+				GerritUi.Ftracer.traceInfo("Table selection: " + e.toString()); //$NON-NLS-1$
 			}
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
-
 			}
 		});
 
@@ -125,7 +126,7 @@ public class UIReviewTable {
 
 	/**
 	 * Create each column for the List of Reviews
-	 * 
+	 *
 	 * @param aParent
 	 * @param aViewer
 	 */
@@ -135,10 +136,10 @@ public class UIReviewTable {
 		//Get the review table definition
 		ReviewTableDefinition[] tableInfo = ReviewTableDefinition.values();
 		int size = tableInfo.length;
-		GerritUi.Ftracer.traceInfo("Table	Name	Width	Resize Moveable");
+		GerritUi.Ftracer.traceInfo("Table	Name	Width	Resize Moveable"); //$NON-NLS-1$
 		for (int index = 0; index < size; index++) {
-			GerritUi.Ftracer.traceInfo("index [ " + index + " ] " + tableInfo[index].getName() + "\t: "
-					+ tableInfo[index].getWidth() + "\t: " + tableInfo[index].getResize() + "\t: "
+			GerritUi.Ftracer.traceInfo("index [ " + index + " ] " + tableInfo[index].getName() + "\t: " //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+					+ tableInfo[index].getWidth() + "\t: " + tableInfo[index].getResize() + "\t: " //$NON-NLS-1$ //$NON-NLS-2$
 					+ tableInfo[index].getMoveable());
 			TableViewerColumn col = createTableViewerColumn(tableInfo[index]);
 
@@ -202,7 +203,7 @@ public class UIReviewTable {
 
 	/**
 	 * Create each column in the review table list
-	 * 
+	 *
 	 * @param ReviewTableDefinition
 	 * @return TableViewerColumn
 	 */
@@ -220,7 +221,7 @@ public class UIReviewTable {
 
 	private final Listener mouseButtonListener = new Listener() {
 		public void handleEvent(Event aEvent) {
-			GerritUi.Ftracer.traceInfo("mouseButtonListener() for " + aEvent.button);
+			GerritUi.Ftracer.traceInfo("mouseButtonListener() for " + aEvent.button); //$NON-NLS-1$
 			switch (aEvent.type) {
 			case SWT.MouseDown:
 				// Left Click
@@ -246,9 +247,9 @@ public class UIReviewTable {
 					AdjustMyStarredHandler handler = new AdjustMyStarredHandler();
 					try {
 						handler.execute(new ExecutionEvent());
-					} catch (ExecutionException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					} catch (ExecutionException excutionException) {
+						StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
+								excutionException.getMessage(), excutionException));
 					}
 				}
 				// Right Click
@@ -269,19 +270,16 @@ public class UIReviewTable {
 	 */
 	private void processItemSelection() {
 		ISelection tableSelection = fViewer.getSelection();
-		GerritUi.Ftracer.traceInfo("Selected : " + tableSelection.getClass());
 		if (!tableSelection.isEmpty()) {
 			if (tableSelection instanceof IStructuredSelection) {
 				Object obj = ((IStructuredSelection) tableSelection).getFirstElement();
-				GerritUi.Ftracer.traceInfo("Selected table selection class: " + obj.getClass());
 				if (obj instanceof GerritTask) {
 					IAttributeContainer item = (IAttributeContainer) obj;
-					GerritUi.Ftracer.traceInfo("Selected table OBJECT selection ID: "
-							+ item.getAttribute(GerritTask.SHORT_CHANGE_ID) + "\t subject: "
+					GerritUi.Ftracer.traceInfo("Selected table OBJECT selection ID: " //$NON-NLS-1$
+							+ item.getAttribute(GerritTask.SHORT_CHANGE_ID) + "\t subject: " //$NON-NLS-1$
 							+ item.getAttribute(GerritTask.SUBJECT));
 				}
 			}
 		}
 	}
-
 }

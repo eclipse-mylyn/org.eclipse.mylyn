@@ -18,7 +18,6 @@ package org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.my;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.mylyn.gerrit.dashboard.ui.GerritUi;
 import org.eclipse.mylyn.gerrit.dashboard.ui.views.GerritTableView;
 import org.eclipse.mylyn.internal.gerrit.core.GerritQuery;
 
@@ -34,14 +33,10 @@ public class MyStarredChangesReviewsHandler extends AbstractHandler {
 	 */
 	@Override
 	public Object execute(ExecutionEvent aEvent) throws ExecutionException {
-		GerritUi.Ftracer.traceInfo("Search the Gerrit reviews for My Starred Changes  "); //$NON-NLS-1$
-
 		GerritTableView reviewTableView = GerritTableView.getActiveView();
 
 		// see http://gerrit-documentation.googlecode.com/svn/Documentation/2.5.2/user-search.html
 		//for My > Starred Changess--> is:starred
-		GerritUi.Ftracer.traceInfo("Execute command :   " + "My > Starred Changes"); //$NON-NLS-1$
-
 		reviewTableView.processCommands(GerritQuery.QUERY_MY_STARRED_CHANGES);
 
 		return null;

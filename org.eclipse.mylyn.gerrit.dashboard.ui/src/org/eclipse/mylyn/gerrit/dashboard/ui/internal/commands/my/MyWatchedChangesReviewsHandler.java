@@ -18,7 +18,6 @@ package org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.my;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.mylyn.gerrit.dashboard.ui.GerritUi;
 import org.eclipse.mylyn.gerrit.dashboard.ui.views.GerritTableView;
 import org.eclipse.mylyn.internal.gerrit.core.GerritQuery;
 
@@ -38,7 +37,6 @@ public class MyWatchedChangesReviewsHandler extends AbstractHandler {
 
 		// see http://gerrit-documentation.googlecode.com/svn/Documentation/2.5.2/user-search.html
 		//for My > Watched Changes--> status:open is:watched
-		GerritUi.Ftracer.traceInfo("Execute command :   " + GerritQuery.MY_WATCHED_CHANGES); //$NON-NLS-1$
 		reviewTableView.processCommands(GerritQuery.MY_WATCHED_CHANGES);
 
 		return null;

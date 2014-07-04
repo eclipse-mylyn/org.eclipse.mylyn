@@ -1,34 +1,29 @@
 /*******************************************************************************
  * Copyright (c) 2013 Ericsson AB and others.
- * 
+ *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Description:
- * 
- * This class implements the "Add ..." a new Gerrit 
+ *
+ * This class implements the "Add ..." a new Gerrit
  * project locations.
- * 
+ *
  * Contributors:
  *   Jacques Bouthillier - Created for Mylyn Review Dashboard-Gerrit project
- *   
+ *
  ******************************************************************************/
 package org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands;
-
-import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.gerrit.dashboard.GerritPlugin;
 import org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils.GerritServerUtility;
 import org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils.UIUtils;
 import org.eclipse.mylyn.gerrit.dashboard.ui.views.GerritTableView;
 import org.eclipse.mylyn.internal.gerrit.core.GerritQuery;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Widget;
@@ -45,15 +40,13 @@ public class AddGerritSiteHandler extends AbstractHandler {
 
 	private GerritServerUtility fServerUtil = null;
 
-	private Map<TaskRepository, String> fMapRepoServer = null;
-
 	// ------------------------------------------------------------------------
 	// Methods
 	// ------------------------------------------------------------------------
 
 	/**
 	 * Method execute.
-	 * 
+	 *
 	 * @param aEvent
 	 *            ExecutionEvent
 	 * @return Object
@@ -61,8 +54,7 @@ public class AddGerritSiteHandler extends AbstractHandler {
 	 */
 	public Object execute(final ExecutionEvent aEvent) {
 
-		GerritPlugin.Ftracer.traceInfo("Create the Add button to search the Gerrit location "); //$NON-NLS-1$
-		String menuItemText = "";
+		String menuItemText = ""; //$NON-NLS-1$
 		fServerUtil = GerritServerUtility.getInstance();
 		Object obj = aEvent.getTrigger();
 		GerritTableView reviewTableView = GerritTableView.getActiveView();
@@ -73,27 +65,13 @@ public class AddGerritSiteHandler extends AbstractHandler {
 			if (objWidget instanceof MenuItem) {
 				MenuItem menuItem = (MenuItem) objWidget;
 				menuItemText = menuItem.getText();
-				GerritPlugin.Ftracer.traceInfo("MenuItem: " + menuItemText + "\t value: "
-						+ aEvent.getParameter(menuItemText) + " VS saved: " + fServerUtil.getLastSavedGerritServer());
-				fMapRepoServer = fServerUtil.getGerritMapping();
 				String stURL = fServerUtil.getMenuSelectionURL(menuItemText);
-				GerritPlugin.Ftracer.traceInfo("URL for the menuItemText: " + stURL);
-				if (!fMapRepoServer.isEmpty()) {
-					Set<TaskRepository> mapSet = fMapRepoServer.keySet();
-					GerritPlugin.Ftracer.traceInfo("-------------------");
-					for (TaskRepository key : mapSet) {
-						GerritPlugin.Ftracer.traceInfo("Map Key name: " + key.getRepositoryLabel() + "\t URL: "
-								+ fMapRepoServer.get(key));
-					}
-				}
 				// Open the review table first;
 				reviewTableView.openView();
 
 				//Verify if we selected the "Add.." button or a pre=defined Gerrit
 				if (stURL != null) {
 					if (stURL.equals(fServerUtil.getLastSavedGerritServer())) {
-						GerritPlugin.Ftracer.traceInfo("LAST SAVED server is the SAME ");
-						fServerUtil.getReviewListFromServer();
 
 						//Initiate the request for the list of reviews with a default query
 						reviewTableView.processCommands(GerritQuery.MY_WATCHED_CHANGES);
@@ -102,7 +80,6 @@ public class AddGerritSiteHandler extends AbstractHandler {
 					} else {
 						//Store the new Gerrit server into a file
 						fServerUtil.saveLastGerritServer(stURL);
-						fServerUtil.getReviewListFromServer();
 
 						//Initiate the request for the list of reviews with a default query
 						reviewTableView.processCommands(GerritQuery.MY_WATCHED_CHANGES);
@@ -118,11 +95,10 @@ public class AddGerritSiteHandler extends AbstractHandler {
 //		return dialogObj;
 
 		//JB Dec 19, 2013
-		//The previous line are blocked for now until we can add 
+		//The previous line are blocked for now until we can add
 		//a new Gerrit Server from the "Add Gerrit Repository.." button
-		UIUtils.showErrorDialog("Use Button [Task Repositories...] to define a new Gerrit Server",
-				"Button [Add Gerrit Repository...] is not ready");
+		UIUtils.showErrorDialog(Messages.AddGerritSiteHandler_defineNewServer,
+				Messages.AddGerritSiteHandler_buttonNotReady);
 		return obj;
 	}
-
 }

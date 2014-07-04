@@ -37,10 +37,6 @@ public class SelectionDialog extends FormDialog {
 
 	private String fSelection = null;
 
-	private final String fTitle = "Select a Gerit server";
-
-	private final String fQuestion = "Question ? ";
-
 	public SelectionDialog(Shell parent, List<TaskRepository> listTaskRepository) {
 		super(parent);
 		this.fListTaskRepository = listTaskRepository;
@@ -48,8 +44,8 @@ public class SelectionDialog extends FormDialog {
 
 	@Override
 	protected void createFormContent(final IManagedForm mform) {
-		mform.getForm().setText(fTitle);
-		mform.getForm().getShell().setText(fQuestion);
+		mform.getForm().setText(Messages.SelectionDialog_selectTitle);
+		mform.getForm().getShell().setText(Messages.SelectionDialog_question);
 
 		final ScrolledForm sform = mform.getForm();
 		sform.setExpandHorizontal(true);

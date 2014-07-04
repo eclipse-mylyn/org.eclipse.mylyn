@@ -19,7 +19,6 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.common.NotDefinedException;
-import org.eclipse.mylyn.gerrit.dashboard.ui.GerritUi;
 import org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils.UIUtils;
 
 /**
@@ -34,9 +33,6 @@ public class GroupListHandler extends AbstractHandler {
 	 */
 	@Override
 	public Object execute(ExecutionEvent aEvent) throws ExecutionException {
-		GerritUi.Ftracer.traceInfo("Search the Gerrit reviews for Groups List  "); //$NON-NLS-1$
-
-		GerritUi.Ftracer.traceInfo("Execute:  GroupList() "); //$NON-NLS-1$
 		try {
 			UIUtils.notInplementedDialog(aEvent.getCommand().getName());
 		} catch (NotDefinedException e) {

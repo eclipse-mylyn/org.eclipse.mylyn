@@ -74,7 +74,7 @@ public class GerritUi extends AbstractUIPlugin {
 		fPlugin = this;
 		Ftracer = new Tracer();
 		Ftracer.init(PLUGIN_ID);
-		Ftracer.traceDebug("plugin started");
+		Ftracer.traceDebug("plugin started"); //$NON-NLS-1$
 	}
 
 	/*

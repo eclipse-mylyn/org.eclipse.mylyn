@@ -22,6 +22,7 @@ import org.eclipse.mylyn.gerrit.dashboard.ui.GerritUi;
 import org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils.GerritServerUtility;
 import org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils.UIUtils;
 import org.eclipse.mylyn.gerrit.dashboard.ui.views.GerritTableView;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Jacques Bouthillier
@@ -37,12 +38,11 @@ public class RestAPIHandler extends AbstractHandler {
 	 */
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		GerritUi.Ftracer.traceInfo("Search the documentation RestAPIHandler  "); //$NON-NLS-1$
 		GerritTableView view = GerritTableView.getActiveView();
 
 		if (view.isGerritVersionBefore_2_5()) {
-			String msg = "Selected Gerrit server: " + view.getlastGerritServerVersion().toString();
-			String reason = "Gerrit server is too old, need at least Gerrit version 2.5 \nto get Gerrit Code Review - REST API documentation.";
+			String msg = NLS.bind(Messages.RestAPIHandler_selectedServer, view.getlastGerritServerVersion().toString());
+			String reason = Messages.RestAPIHandler_serverTooOld;
 			GerritUi.Ftracer.traceInfo(msg);
 			UIUtils.showErrorDialog(msg, reason);
 			return null;

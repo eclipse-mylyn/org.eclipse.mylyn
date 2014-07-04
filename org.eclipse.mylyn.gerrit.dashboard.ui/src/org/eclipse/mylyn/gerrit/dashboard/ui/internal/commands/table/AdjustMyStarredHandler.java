@@ -37,8 +37,6 @@ import org.eclipse.swt.widgets.Display;
  */
 public class AdjustMyStarredHandler extends AbstractHandler {
 
-	private static final String COMMAND_MESSAGE = "Adjust Starred flag...";
-
 	private GerritTask item = null;
 
 	/*
@@ -59,7 +57,7 @@ public class AdjustMyStarredHandler extends AbstractHandler {
 			return null;
 		}
 
-		final Job job = new Job(COMMAND_MESSAGE) {
+		final Job job = new Job(Messages.AdjustMyStarredHandler_commandMessage) {
 
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {

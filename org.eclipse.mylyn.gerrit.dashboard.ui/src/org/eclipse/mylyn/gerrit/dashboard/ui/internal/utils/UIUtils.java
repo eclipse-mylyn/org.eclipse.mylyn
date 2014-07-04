@@ -19,13 +19,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.mylyn.gerrit.dashboard.ui.GerritUi;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Jacques Bouthillier
- * @version $Revision: 1.0 $
  */
 
 public class UIUtils {
@@ -36,10 +36,10 @@ public class UIUtils {
 	 * @param String
 	 */
 	public static void notInplementedDialog(String aSt) {
-		GerritUi.Ftracer.traceWarning("Not Implemented yet");
-		final ErrorDialog dialog = new ErrorDialog(null, "Gerrit Dashboard Information", "This method [ " + aSt
-				+ " ] is not ready yet", new Status(IStatus.INFO, GerritUi.PLUGIN_ID, 0, "Not Implemented yet", null),
-				IStatus.INFO);
+		GerritUi.Ftracer.traceWarning(Messages.UIUtils_notImplemented);
+		final ErrorDialog dialog = new ErrorDialog(null, Messages.UIUtils_dashboardInformation, NLS.bind(
+				Messages.UIUtils_methodNotReady, aSt), new Status(IStatus.INFO, GerritUi.PLUGIN_ID, 0,
+				Messages.UIUtils_notImplemented, null), IStatus.INFO);
 		Display.getDefault().syncExec(new Runnable() {
 			public void run() {
 				dialog.open();
@@ -58,7 +58,7 @@ public class UIUtils {
 	 */
 	public static void showErrorDialog(String aMsg, String aReason) {
 		GerritUi.Ftracer.traceWarning(aMsg + "\t reason: " + aReason);
-		final ErrorDialog dialog = new ErrorDialog(null, "Gerrit Dashboard Info", aMsg, new Status(IStatus.INFO,
+		final ErrorDialog dialog = new ErrorDialog(null, Messages.UIUtils_dashboardInfo, aMsg, new Status(IStatus.INFO,
 				GerritUi.PLUGIN_ID, 0, aReason, null), IStatus.INFO);
 		Display.getDefault().syncExec(new Runnable() {
 			public void run() {

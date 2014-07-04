@@ -15,7 +15,6 @@ package org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.projects;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.mylyn.gerrit.dashboard.ui.GerritUi;
 import org.eclipse.mylyn.gerrit.dashboard.ui.views.GerritTableView;
 import org.eclipse.mylyn.internal.gerrit.core.GerritQuery;
 
@@ -33,16 +32,6 @@ public class ProjectListHandler extends AbstractHandler {
 	 */
 	@Override
 	public Object execute(ExecutionEvent aEvent) throws ExecutionException {
-		GerritUi.Ftracer.traceInfo("Search the Gerrit reviews for Projects List  "); //$NON-NLS-1$
-
-		GerritUi.Ftracer.traceInfo("Execute:  ProjectList() "); //$NON-NLS-1$
-//		try {
-//			UIUtils.notInplementedDialog(aEvent.getCommand().getName());
-//		} catch (NotDefinedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		return null;
 		GerritTableView reviewTableView = GerritTableView.getActiveView();
 
 		// see http://gerrit-documentation.googlecode.com/svn/Documentation/2.5.2/user-search.html

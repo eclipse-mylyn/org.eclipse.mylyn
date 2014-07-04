@@ -1,24 +1,21 @@
 /*******************************************************************************
  * Copyright (c) 2013 Ericsson AB and others.
- * 
+ *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Description:
- * 
+ *
  * This class implements the search to pre-filled the list of Gerrit
  * project locations.
- * 
+ *
  * Contributors:
  *   Jacques Bouthillier - Created for Mylyn Review Gerrit Dashboard project
- *   
+ *
  ******************************************************************************/
 package org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands;
-
-import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -32,24 +29,14 @@ import org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils.GerritServerUtility;
 import org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils.UIConstants;
 import org.eclipse.mylyn.gerrit.dashboard.ui.views.GerritTableView;
 import org.eclipse.mylyn.internal.gerrit.core.GerritQuery;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.handlers.IHandlerService;
 
 /**
  * @author Jacques Bouthillier
- * @version $Revision: 1.0 $
  */
 public class SelectReviewSiteHandler extends AbstractHandler {
-
-	// ------------------------------------------------------------------------
-	// Constants
-	// ------------------------------------------------------------------------
-
-	/**
-	 * Field COMMAND_MESSAGE. (value is ""Opening Element..."")
-	 */
-	private static final String COMMAND_MESSAGE = "Search Gerrit locations ...";
 
 	// ------------------------------------------------------------------------
 	// Variables
@@ -57,15 +44,13 @@ public class SelectReviewSiteHandler extends AbstractHandler {
 
 	private GerritServerUtility fServerUtil = null;
 
-	private Map<TaskRepository, String> fMapRepoServer = null;
-
 	// ------------------------------------------------------------------------
 	// Methods
 	// ------------------------------------------------------------------------
 
 	/**
 	 * Method execute.
-	 * 
+	 *
 	 * @param aEvent
 	 *            ExecutionEvent
 	 * @return Object
@@ -80,33 +65,20 @@ public class SelectReviewSiteHandler extends AbstractHandler {
 
 		reviewTableView.openView();
 
-		final Job job = new Job(COMMAND_MESSAGE) {
-
-			public String familyName = UIConstants.DASHBOARD_UI_JOB_FAMILY;
+		final Job job = new Job(Messages.SelectReviewSiteHandler_searchCommand) {
 
 			@Override
 			public boolean belongsTo(Object aFamily) {
-				return familyName.equals(aFamily);
+				return Messages.SelectReviewSiteHandler_dashboardUiJob.equals(aFamily);
+
 			}
 
 			@Override
 			public IStatus run(IProgressMonitor aMonitor) {
-				aMonitor.beginTask(COMMAND_MESSAGE, IProgressMonitor.UNKNOWN);
+				aMonitor.beginTask(Messages.SelectReviewSiteHandler_searchCommand, IProgressMonitor.UNKNOWN);
 
 				//Map the Gerrit server
 				fServerUtil = GerritServerUtility.getInstance();
-
-				//Debug purpose, see which project have a gerrit server
-				fMapRepoServer = fServerUtil.getGerritMapping();
-				if (!fMapRepoServer.isEmpty()) {
-					Set<TaskRepository> mapSet = fMapRepoServer.keySet();
-					GerritPlugin.Ftracer.traceInfo("-------------------");
-					for (TaskRepository key : mapSet) {
-						GerritPlugin.Ftracer.traceInfo("Map Key repo name : " + key.getRepositoryLabel() + "\t URL: "
-								+ fMapRepoServer.get(key));
-					}
-				}
-				//End Debug
 
 				String serverToUsed = fServerUtil.getLastSavedGerritServer();
 				if (serverToUsed != null) {
@@ -114,16 +86,13 @@ public class SelectReviewSiteHandler extends AbstractHandler {
 					reviewTableView.processCommands(GerritQuery.MY_WATCHED_CHANGES);
 
 				} else {
-					//Need to open the Dialogue to fill a Gerrit server
-					GerritPlugin.Ftracer.traceInfo("Need to open the Dialogue to fill a gerrit server ");
-					//Get the service
 					IWorkbench workbench = GerritUi.getDefault().getWorkbench();
 					IHandlerService handlerService = (IHandlerService) workbench.getService(IHandlerService.class);
 					try {
-
 						handlerService.executeCommand(UIConstants.ADD_GERRIT_SITE_COMMAND_ID, null);
 					} catch (Exception ex) {
-						GerritPlugin.Ftracer.traceError("Exception: " + ex.toString());
+						GerritPlugin.Ftracer.traceError(NLS.bind(Messages.SelectReviewSiteHandler_exception,
+								ex.toString()));
 //					      GerritUi.getDefault().logError("Exception: ", ex);
 						//  throw new RuntimeException("org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.AddGerritSite not found");
 

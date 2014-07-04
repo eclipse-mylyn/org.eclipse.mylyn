@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2013 Ericsson
- * 
+ *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *   Jacques Bouthillier - Initial Implementation of the label provider
  ******************************************************************************/
@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * This class implements the implementation of the Dashboard-Gerrit UI view label provider.
- * 
+ *
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
  */
@@ -35,25 +35,25 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 	// Constants
 	// ------------------------------------------------------------------------
 
-	private final String EMPTY_STRING = "";
+	private final String EMPTY_STRING = ""; //$NON-NLS-1$
 
 	// +2 Names of images used to represent review-checked
-	public static final String CHECKED_IMAGE = "greenCheck";
+	public static final String CHECKED_IMAGE = "greenCheck.png"; //$NON-NLS-1$
 
 	// -2 Names of images used to represent review-not OK
-	public static final String NOT_OK_IMAGE = "redNot";
+	public static final String NOT_OK_IMAGE = "redNot.png"; //$NON-NLS-1$
 
 	// -1
-	public static final String MINUS_ONE = "minusOne";
+	public static final String MINUS_ONE = "minusOne.png"; //$NON-NLS-1$
 
 	// +1
-	public static final String PLUS_ONE = "plusOne";
+	public static final String PLUS_ONE = "plusOne.png"; //$NON-NLS-1$
 
 	// Names of images used to represent STAR FILLED
-	public static final String STAR_FILLED = "starFilled";
+	public static final String STAR_FILLED = "starFilled.gif"; //$NON-NLS-1$
 
 	// Names of images used to represent STAR OPEN
-	public static final String STAR_OPEN = "starOpen";
+	public static final String STAR_OPEN = "starOpen.gif"; //$NON-NLS-1$
 
 	// Value stored to define the state of the review item.
 	public static final int NOT_OK_IMAGE_STATE = -2;
@@ -87,19 +87,19 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 	 */
 	static {
 
-		String iconPath = "icons/view16/";
+		String iconPath = "icons/view16/"; //$NON-NLS-1$
 
-		fImageRegistry.put(CHECKED_IMAGE, GerritUi.getImageDescriptor(iconPath + CHECKED_IMAGE + ".png"));
+		fImageRegistry.put(CHECKED_IMAGE, GerritUi.getImageDescriptor(iconPath + CHECKED_IMAGE));
 
-		fImageRegistry.put(NOT_OK_IMAGE, GerritUi.getImageDescriptor(iconPath + NOT_OK_IMAGE + ".png"));
+		fImageRegistry.put(NOT_OK_IMAGE, GerritUi.getImageDescriptor(iconPath + NOT_OK_IMAGE));
 
-		fImageRegistry.put(MINUS_ONE, GerritUi.getImageDescriptor(iconPath + MINUS_ONE + ".png"));
+		fImageRegistry.put(MINUS_ONE, GerritUi.getImageDescriptor(iconPath + MINUS_ONE));
 
-		fImageRegistry.put(PLUS_ONE, GerritUi.getImageDescriptor(iconPath + PLUS_ONE + ".png"));
+		fImageRegistry.put(PLUS_ONE, GerritUi.getImageDescriptor(iconPath + PLUS_ONE));
 
-		fImageRegistry.put(STAR_FILLED, GerritUi.getImageDescriptor(iconPath + STAR_FILLED + ".gif"));
+		fImageRegistry.put(STAR_FILLED, GerritUi.getImageDescriptor(iconPath + STAR_FILLED));
 
-		fImageRegistry.put(STAR_OPEN, GerritUi.getImageDescriptor(iconPath + STAR_OPEN + ".gif"));
+		fImageRegistry.put(STAR_OPEN, GerritUi.getImageDescriptor(iconPath + STAR_OPEN));
 	}
 
 	// ------------------------------------------------------------------------
@@ -114,7 +114,7 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 
 	/**
 	 * Return an image representing the state of the object
-	 * 
+	 *
 	 * @param int aState
 	 * @return Image
 	 */
@@ -138,7 +138,7 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 
 	/**
 	 * Return an image representing the state of the object
-	 * 
+	 *
 	 * @param int aState
 	 * @return Image
 	 */
@@ -160,7 +160,7 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 
 	/**
 	 * Return an image representing the state of the ID object
-	 * 
+	 *
 	 * @param Boolean
 	 *            aState
 	 * @return Image
@@ -177,7 +177,7 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 
 	/**
 	 * Return the text associated to the column
-	 * 
+	 *
 	 * @param Object
 	 *            structure of the table
 	 * @param int column index
@@ -215,13 +215,13 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 //				if (null != value && !value.equals(EMPTY_STRING)) {
 //					return formatValue (value);
 //				}
-//                return EMPTY_STRING; 
+//                return EMPTY_STRING;
 //			case 9:
 //				value = reviewSummary.getAttribute(GerritTask.VERIFY_STATE);
 //				if (null != value && !value.equals(EMPTY_STRING)) {
 //					return formatValue (value);
 //				}
-//                return EMPTY_STRING; 
+//                return EMPTY_STRING;
 			default:
 				return EMPTY_STRING;
 			}
@@ -240,13 +240,13 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 //			String st = "+" + aSt;
 //			return st;
 //		}
-//		return aSt; 
+//		return aSt;
 //
 //	}
 
 	/**
 	 * Return the image associated to the column
-	 * 
+	 *
 	 * @param Object
 	 *            structure of the table
 	 * @param int column index
@@ -313,7 +313,7 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 
 	/**
 	 * Adjust the column color
-	 * 
+	 *
 	 * @param Object
 	 *            ReviewTableListItem
 	 * @param int columnIndex
@@ -330,21 +330,21 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 //					st = item.getAttribute(GerritTask.REVIEW_STATE);
 //					if (st != null) {
 //						value = st.equals(EMPTY_STRING) ? 0 : Integer
-//								.parseInt(st);						
+//								.parseInt(st);
 //					}
 					break;
 				case 8: // ReviewTableDefinition.IC.ordinal():
 //					st = item.getAttribute(GerritTask.IS_IPCLEAN);
 //					if (st != null) {
 //						value = st.equals(EMPTY_STRING) ? 0 : Integer
-//								.parseInt(st);						
+//								.parseInt(st);
 //					}
 //					break;
 //				case 9: // ReviewTableDefinition.VERIFY.ordinal():
 //					st = item.getAttribute(GerritTask.VERIFY_STATE);
 //					if (st != null) {
 //						value = st.equals(EMPTY_STRING) ? 0 : Integer
-//								.parseInt(st);						
+//								.parseInt(st);
 //					}
 					break;
 				}
@@ -370,10 +370,10 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 			// To modify when we can verify the review state
 			String state = item.getAttribute(GerritTask.IS_STARRED);
 			if (state != null) {
-				if (state.equals("true")) {
+				if (state.equals(Boolean.toString(true))) {
 					return INCOMING_COLOR;
 
-				} else if (state.equals("false")) {
+				} else if (state.equals(Boolean.toString(false))) {
 					return CLOSED_COLOR;
 				}
 			}

@@ -52,7 +52,6 @@ import org.eclipse.mylyn.gerrit.dashboard.ui.internal.model.ReviewTableData;
 import org.eclipse.mylyn.gerrit.dashboard.ui.internal.model.UIReviewTable;
 import org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils.GerritServerUtility;
 import org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils.SelectionDialog;
-import org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils.UIConstants;
 import org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils.UIUtils;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
@@ -97,6 +96,8 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.services.IServiceLocator;
 import org.osgi.framework.Version;
 
+import com.google.common.base.Strings;
+
 /**
  * This class initiate a new workbench view. The view shows data obtained from Gerrit Dashboard model. The view is
  * connected to the model using a content provider.
@@ -115,24 +116,16 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 	// ------------------------------------------------------------------------
 
 	//Constant to move to GerritQuery.java. Those values need to match the Gerrit request in GerritClient
-	public static final String MY_CHANGES_STRING = "owner:self OR reviewer:self";
+	public static final String MY_CHANGES_STRING = "owner:self OR reviewer:self"; //$NON-NLS-1$
 
-	public static final String MY_WATCHED_CHANGES_STRING = "is:watched status:open";
+	public static final String MY_WATCHED_CHANGES_STRING = "is:watched status:open"; //$NON-NLS-1$
 
-	public static final String ALL_OPEN_CHANGES_STRING = "status:open";
+	public static final String ALL_OPEN_CHANGES_STRING = "status:open"; //$NON-NLS-1$
 
 	/**
 	 * The ID of the view as specified by the extension.
 	 */
-	public static final String VIEW_ID = "org.eclipse.mylyn.gerrit.dashboard.ui.views.GerritTableView";
-
-	private static final String COMMAND_MESSAGE = "Search Gerrit info ...";
-
-	private static final String SEARCH_BTN = "Search";
-
-	private static final String TOTAL_COUNT = "Total reviews: ";
-
-	private static final String GERRIT_LABEL = " - Gerrit ";
+	public static final String VIEW_ID = "org.eclipse.mylyn.gerrit.dashboard.ui.views.GerritTableView"; //$NON-NLS-1$
 
 	private static final int SEARCH_WIDTH = 350;
 
@@ -140,12 +133,10 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 
 	private static final int VERSION_WIDTH = 35;
 
-	private static final String SEARCH_TOOLTIP = "Ex. status:open (or is:open) \n status:merged \n "
-			+ "is:draft \n status:open project:Foo \n " + "See explanation by selecting in the toolbar \n "
-			+ "Documentation > Searching";
-
 	//Numbers of menu items in the Search pulldown menu; SEARCH_SIZE_MENU_LIST + 1 will be the max
 	private static final int SEARCH_SIZE_MENU_LIST = 4;
+
+	private static final String ADJUST_MY_STARRED_COMMAND_ID = "org.eclipse.mylyn.gerrit.dashboard.ui.adjustMyStarred"; //$NON-NLS-1$
 
 	// ------------------------------------------------------------------------
 	// Member variables
@@ -296,7 +287,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 		hookDoubleClickAction();
 
 		// Start the periodic refresh job
-		fTableRefreshJob = new TableRefreshJob(fViewer, "Refresh table");
+		fTableRefreshJob = new TableRefreshJob(fViewer, Messages.GerritTableView_refreshTable);
 
 		// Listen on query results
 		TasksUiPlugin.getTaskList().addChangeListener(this);
@@ -360,7 +351,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 
 		//Label to display Total reviews
 		fReviewsTotalLabel = new Label(leftSearchForm, SWT.NONE);
-		fReviewsTotalLabel.setText(TOTAL_COUNT);
+		fReviewsTotalLabel.setText(Messages.GerritTableView_totalReview);
 
 		fReviewsTotalResultLabel = new Label(leftSearchForm, SWT.NONE);
 		fReviewsTotalResultLabel.setLayoutData(new GridData(VERSION_WIDTH, SWT.DEFAULT));
@@ -379,10 +370,10 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 		//Create a SEARCH text data entry
 		fSearchRequestText = new Combo(rightSsearchForm, SWT.NONE);
 		fSearchRequestText.setLayoutData(new GridData(SEARCH_WIDTH, SWT.DEFAULT));
-		fSearchRequestText.setToolTipText(SEARCH_TOOLTIP);
+		fSearchRequestText.setToolTipText(Messages.GerritTableView_tooltipSearch);
 		//Get the last saved commands
 		fRequestList = fServerUtil.getListLastCommands();
-		setSearchText("");
+		setSearchText(""); //$NON-NLS-1$
 
 		//Handle the CR in the search text
 		fSearchRequestText.addListener(SWT.DefaultSelection, new Listener() {
@@ -397,7 +388,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 
 		//Create a SEARCH button 
 		fSearchRequestBtn = new Button(rightSsearchForm, SWT.NONE);
-		fSearchRequestBtn.setText(SEARCH_BTN);
+		fSearchRequestBtn.setText(Messages.GerritTableView_search);
 		fSearchRequestBtn.addListener(SWT.Selection, new Listener() {
 
 			@Override
@@ -409,7 +400,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 	}
 
 	private void hookContextMenu() {
-		MenuManager menuMgr = new MenuManager("#PopupMenu");
+		MenuManager menuMgr = new MenuManager(Messages.GerritTableView_popupMenu);
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
@@ -486,10 +477,9 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 		IServiceLocator serviceLocator = getViewSite().getActionBars().getServiceLocator();
 		CommandContributionItem[] contributionItems = new CommandContributionItem[1];
 		CommandContributionItemParameter contributionParameter = new CommandContributionItemParameter(serviceLocator,
-				UIConstants.ADJUST_MY_STARRED_NAME, UIConstants.ADJUST_MY_STARRED_COMMAND_ID,
-				CommandContributionItem.STYLE_PUSH);
+				Messages.GerritTableView_starredName, ADJUST_MY_STARRED_COMMAND_ID, CommandContributionItem.STYLE_PUSH);
 
-		contributionParameter.label = UIConstants.ADJUST_MY_STARRED_NAME;
+		contributionParameter.label = Messages.GerritTableView_starredName;
 		contributionParameter.visibleEnabled = true;
 		contributionItems[0] = new CommandContributionItem(contributionParameter);
 
@@ -502,7 +492,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 	}
 
 	public TaskRepository getTaskRepository() {
-		processCommands(""); //To initialize the fTaskRepository 
+		processCommands(""); //To initialize the fTaskRepository  //$NON-NLS-1$
 		return fTaskRepository;
 	}
 
@@ -602,10 +592,10 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 
 		//We should have a TaskRepository here, otherwise, the user need to define one
 		if (fTaskRepository == null) {
-			UIUtils.showErrorDialog("You need to define a Gerrit repository.",
-					"No Gerrit repository has been selected yet.");
+			UIUtils.showErrorDialog(Messages.GerritTableView_defineRepository,
+					Messages.GerritTableView_noGerritRepository);
 		} else {
-			if (aQuery != null && !aQuery.equals("")) {
+			if (aQuery != null && !aQuery.equals("")) { //$NON-NLS-1$
 				updateTable(fTaskRepository, aQuery);
 			}
 		}
@@ -620,8 +610,8 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 	 */
 	public void setStarred(String taskID, boolean starred, IProgressMonitor progressMonitor) throws CoreException {
 		if (fTaskRepository == null) {
-			UIUtils.showErrorDialog("You need to define a Gerrit repository.",
-					"No Gerrit repository has been selected yet.");
+			UIUtils.showErrorDialog(Messages.GerritTableView_defineRepository,
+					Messages.GerritTableView_noGerritRepository);
 		} else {
 			fConnector.setStarred(fTaskRepository, taskID, starred, progressMonitor);
 		}
@@ -662,7 +652,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 				GerritClient gerritClient = fConnector.getClient(fTaskRepository);
 				try {
 					version = gerritClient.getVersion(new NullProgressMonitor());
-					GerritUi.Ftracer.traceInfo("Selected version: " + version.toString());
+					GerritUi.Ftracer.traceInfo("Selected version: " + version.toString()); //$NON-NLS-1$
 				} catch (GerritException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, e.getMessage(), e));
 				}
@@ -695,19 +685,17 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 	 */
 	private Object updateTable(final TaskRepository aTaskRepo, final String aQueryType) {
 
-		String cmdMessage = COMMAND_MESSAGE + " " + aTaskRepo.getUrl() + " : " + aQueryType;
+		String cmdMessage = NLS.bind(Messages.GerritTableView_commandMessage, aTaskRepo.getUrl(), aQueryType);
 		final Job job = new Job(cmdMessage) {
-
-			public String familyName = UIConstants.DASHBOARD_UI_JOB_FAMILY;
 
 			@Override
 			public boolean belongsTo(Object aFamily) {
-				return familyName.equals(aFamily);
+				return Messages.GerritTableView_dashboardUiJob.equals(aFamily);
 			}
 
 			@Override
 			public IStatus run(final IProgressMonitor aMonitor) {
-				GerritPlugin.Ftracer.traceInfo("repository:   " + aTaskRepo.getUrl() + "\t query: " + aQueryType); //$NON-NLS-1$
+				GerritPlugin.Ftracer.traceInfo("repository:   " + aTaskRepo.getUrl() + "\t query: " + aQueryType); //$NON-NLS-1$ //$NON-NLS-2$
 
 				// If there is only have one Gerrit server, we can proceed as if it was already used before
 				IStatus status = null;
@@ -734,8 +722,6 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 								}
 								if (gerritClient != null) {
 									try {
-										GerritUi.Ftracer.traceInfo("GerritClient: "
-												+ gerritClient.getVersion(new NullProgressMonitor()));
 										setRepositoryVersionLabel(aTaskRepo.getRepositoryLabel(),
 												gerritClient.getVersion(new NullProgressMonitor()).toString());
 									} catch (GerritException e) {
@@ -747,6 +733,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 						});
 					}
 				} catch (GerritQueryException e) {
+					status = e.getStatus();
 					StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, e.getStatus().getMessage(),
 							e));
 				}
@@ -768,7 +755,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 
 	private void setSearchText(String aSt) {
 		if (!fSearchRequestText.isDisposed()) {
-			if (aSt != null && aSt != "") {
+			if (aSt != null && aSt != "") { //$NON-NLS-1$
 				int index = -1;
 				String[] ar = fSearchRequestText.getItems();
 				for (int i = 0; i < ar.length; i++) {
@@ -795,11 +782,11 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 			}
 
 			fSearchRequestText.setItems(reverseOrder(fRequestList.toArray(new String[0])));
-			if (aSt != null && aSt != "") {
+			if (aSt != null && aSt != "") { //$NON-NLS-1$
 				fSearchRequestText.select(0);
 			} else {
 				//Leave the text empty
-				fSearchRequestText.setText("");
+				fSearchRequestText.setText(""); //$NON-NLS-1$
 			}
 		}
 	}
@@ -828,7 +815,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 			Display.getDefault().syncExec(new Runnable() {
 				public void run() {
 					str[0] = fSearchRequestText.getText().trim();
-					GerritUi.Ftracer.traceInfo("Custom string: " + str[0]);
+					GerritUi.Ftracer.traceInfo("Custom string: " + str[0]); //$NON-NLS-1$
 				}
 			});
 			return str[0];
@@ -843,8 +830,8 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 	private void displayWarning(final String st) {
 		Display.getDefault().syncExec(new Runnable() {
 			public void run() {
-				final MessageDialog dialog = new MessageDialog(null, "Warning", null, st, MessageDialog.WARNING,
-						new String[] { IDialogConstants.CANCEL_LABEL }, 0);
+				final MessageDialog dialog = new MessageDialog(null, Messages.GerritTableView_warning, null, st,
+						MessageDialog.WARNING, new String[] { IDialogConstants.CANCEL_LABEL }, 0);
 				dialog.open();
 			}
 		});
@@ -865,21 +852,20 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 			//Test for Anonymous user
 			if (queryType.equals(GerritQuery.MY_CHANGES)
 					|| queryType.equals(GerritQuery.QUERY_MY_DRAFTS_COMMENTS_CHANGES)) {
-				displayWarning("This operation is not allowed as Anonymous user: " + queryType);
+				displayWarning(NLS.bind(Messages.GerritTableView_warningAnonymous, queryType));
 				return Status.CANCEL_STATUS;
 			} else if (queryType == GerritQuery.CUSTOM) {
-				int foundSelf = getSearchText().toLowerCase().indexOf("self");
+				int foundSelf = getSearchText().toLowerCase().indexOf("self"); //$NON-NLS-1$
 				int foundhasDraft = getSearchText().toLowerCase().indexOf(GerritQuery.QUERY_MY_DRAFTS_COMMENTS_CHANGES);
 				if (foundSelf != -1 || foundhasDraft != -1) {
-					displayWarning("This operation is not allowed as Anonymous user in search field: "
-							+ getSearchText());
+					displayWarning(NLS.bind(Messages.GerritTableView_warningSearchAnonymous, getSearchText()));
 					return Status.CANCEL_STATUS;
 				}
 			}
 		}
 
 		// Format the query id
-		String queryId = rtv.getTitle() + " - " + queryType;
+		String queryId = rtv.getTitle() + " - " + queryType; //$NON-NLS-1$
 
 		RepositoryQuery query = null;
 
@@ -896,7 +882,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 		}
 
 		if (query.getAttribute(GerritQuery.QUERY_STRING).isEmpty()) {
-			displayWarning("The query string cannot be empty, please enter a value.");
+			displayWarning(Messages.GerritTableView_warningEmptyValue);
 			return Status.CANCEL_STATUS;
 		}
 
@@ -940,13 +926,12 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 		if (ok) {
 			status = fConnector.performQuery(repository, aQuery, resultCollector, null, new NullProgressMonitor());
 		} else {
-			status = new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, NLS.bind("Missing Git connector for : {0}",
-					aQuery.getAttribute(GerritQuery.PROJECT)));
+			status = new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, NLS.bind(
+					Messages.GerritTableView_missingGitConnector, aQuery.getAttribute(GerritQuery.PROJECT)));
 		}
 
 		if (!status.isOK()) {
-			String msg = "Unable to read the Gerrit server.";
-			throw new GerritQueryException(status, msg);
+			throw new GerritQueryException(status, Messages.GerritTableView_serverNotRead);
 		}
 
 		// Extract the result
@@ -1005,9 +990,8 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 	 * Add/update a review
 	 */
 	private synchronized void updateReview(TaskTask task) {
-		String summary = task.getSummary();
 		boolean ourQuery = task.getParentContainers().contains(fCurrentQuery);
-		if (ourQuery && summary != null && !summary.equals("")) {
+		if (ourQuery && !Strings.isNullOrEmpty(task.getSummary())) {
 			try {
 				TaskData taskData = fConnector.getTaskData(getTaskRepository(), task.getTaskId(),
 						new NullProgressMonitor());
@@ -1025,8 +1009,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 	private void setRepositoryVersionLabel(String aRepo, String aVersion) {
 		if (!fRepositoryVersionResulLabel.isDisposed()) {
 			// e.g. "Eclipse.org Reviews - Gerrit 2.6.1" 
-			String s = aRepo + GERRIT_LABEL + aVersion;
-			fRepositoryVersionResulLabel.setText(s);
+			fRepositoryVersionResulLabel.setText(NLS.bind(Messages.GerritTableView_gerritLabel, aRepo, aVersion));
 		}
 	}
 

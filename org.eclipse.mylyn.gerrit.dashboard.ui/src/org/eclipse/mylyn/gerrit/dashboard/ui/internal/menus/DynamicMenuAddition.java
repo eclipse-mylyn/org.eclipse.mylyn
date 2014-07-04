@@ -45,7 +45,7 @@ public class DynamicMenuAddition extends CompoundContributionItem implements IWo
 	/**
 	 * Field SELECT_PICTURE_FILE. (value is ""icons/select.gif"")
 	 */
-	private static String SELECT_PICTURE_FILE = "icons/select.gif";
+	private static String SELECT_PICTURE_FILE = "icons/select.gif"; //$NON-NLS-1$
 
 //    private static String IMAGE_ID = "imageId";
 
@@ -87,7 +87,7 @@ public class DynamicMenuAddition extends CompoundContributionItem implements IWo
 	@Override
 	protected IContributionItem[] getContributionItems() {
 
-		GerritPlugin.Ftracer.traceInfo("\t\t DynamicMenuAddition .getContributionItems()");
+		GerritPlugin.Ftracer.traceInfo("\t\t DynamicMenuAddition .getContributionItems()"); //$NON-NLS-1$
 		CommandContributionItem[] contributionItems = new CommandContributionItem[0];
 		if (fServer != null) {
 			fMapServer = fServer.getGerritMapping();
@@ -96,13 +96,13 @@ public class DynamicMenuAddition extends CompoundContributionItem implements IWo
 		if (fMapServer != null && !fMapServer.isEmpty()) {
 			Set<TaskRepository> mapSet = fMapServer.keySet();
 			String lastSelected = fServer.getLastSavedGerritServer();
-			GerritPlugin.Ftracer.traceInfo("-------------------");
+			GerritPlugin.Ftracer.traceInfo("-------------------"); //$NON-NLS-1$
 			int size = mapSet.size();
 			contributionItems = new CommandContributionItem[size];
 
 			int count = 0;
 			for (TaskRepository key : mapSet) {
-				GerritPlugin.Ftracer.traceInfo("Map Key: " + key.getRepositoryLabel() + "\t URL: "
+				GerritPlugin.Ftracer.traceInfo("Map Key: " + key.getRepositoryLabel() + "\t URL: " //$NON-NLS-1$//$NON-NLS-2$
 						+ fMapServer.get(key));
 				CommandContributionItemParameter contributionParameter = new CommandContributionItemParameter(
 						fServiceLocator, fMapServer.get(key), UIConstants.ADD_GERRIT_SITE_COMMAND_ID,
@@ -129,8 +129,6 @@ public class DynamicMenuAddition extends CompoundContributionItem implements IWo
 
 		//Read the Gerrit potential servers
 		fServer = GerritServerUtility.getInstance();
-		GerritPlugin.Ftracer.traceInfo("\t\t DynamicMenuAddition .initialize()()");
-
 	}
 
 }
