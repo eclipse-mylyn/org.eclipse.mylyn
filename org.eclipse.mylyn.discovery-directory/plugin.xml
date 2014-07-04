@@ -156,7 +156,7 @@
       <connectorDescriptor
             categoryId="org.eclipse.mylyn.discovery.directory.categories.TaskManagement"
             description="%connectorDescriptor.description.tuleap"
-            id="org.tuleap"
+            id="org.tuleap.mylyn.task-feature"
             kind="task"
             license="%connectorDescriptor.license.tuleap"
             name="%connectorDescriptor.name.tuleap"
