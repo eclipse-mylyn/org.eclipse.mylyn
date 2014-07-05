@@ -11,100 +11,69 @@
 
 package org.eclipse.mylyn.internal.bugzilla.ui.editor;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorPeoplePart;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * @author Rob Elves
  */
-public class BugzillaPeoplePart extends AbstractTaskEditorPart {
+public class BugzillaPeoplePart extends TaskEditorPeoplePart {
 
 	private static final int COLUMN_MARGIN = 5;
 
 	public BugzillaPeoplePart() {
-		setPartName(Messages.BugzillaPeoplePart_People);
-	}
-
-	private void addAttribute(Composite composite, FormToolkit toolkit, TaskAttribute attribute) {
-		AbstractAttributeEditor editor = createAttributeEditor(attribute);
-		if (editor != null) {
-			editor.createLabelControl(composite, toolkit);
-			GridDataFactory.defaultsFor(editor.getLabelControl())
-					.indent(COLUMN_MARGIN, 0)
-					.applyTo(editor.getLabelControl());
-			editor.createControl(composite, toolkit);
-			getTaskEditorPage().getAttributeEditorToolkit().adapt(editor);
-			if (attribute.getId().equals(BugzillaAttribute.CC.getKey())) {
-				GridDataFactory.fillDefaults()
-						.grab(true, true)
-						.align(SWT.FILL, SWT.FILL)
-						.hint(130, 95)
-						.applyTo(editor.getControl());
-			} else {
-				GridDataFactory.fillDefaults()
-						.grab(true, false)
-						.align(SWT.FILL, SWT.TOP)
-						.hint(130, SWT.DEFAULT)
-						.applyTo(editor.getControl());
-			}
-		}
 	}
 
 	@Override
-	public void createControl(Composite parent, FormToolkit toolkit) {
-		Section section = createSection(parent, toolkit, true);
-		Composite peopleComposite = toolkit.createComposite(section);
-		GridLayout layout = new GridLayout(2, false);
-		layout.marginWidth = 5;
-		layout.horizontalSpacing = 10;
-		peopleComposite.setLayout(layout);
-
-		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED));
+	protected Collection<TaskAttribute> getAttributes() {
+		Map<String, TaskAttribute> allAttributes = getTaskData().getRoot().getAttributes();
+		List<TaskAttribute> attributes = new ArrayList<TaskAttribute>(allAttributes.size());
+		attributes.add(getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED));
 		TaskAttribute assignee = getTaskData().getRoot().getAttribute(BugzillaAttribute.SET_DEFAULT_ASSIGNEE.getKey());
 		if (assignee != null) {
-			addAttribute(peopleComposite, toolkit, assignee);
+			attributes.add(assignee);
 		}
-		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_REPORTER));
-		String useParam = getTaskData().getAttributeMapper()
+		attributes.add(getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_REPORTER));
+		String useQaContact = getTaskData().getAttributeMapper()
 				.getTaskRepository()
 				.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USEQACONTACT);
-		if (useParam == null || (useParam != null && useParam.equals("true"))) { //$NON-NLS-1$
-			addAttribute(peopleComposite, toolkit,
-					getTaskData().getRoot().getMappedAttribute(BugzillaAttribute.QA_CONTACT.getKey()));
+		if (useQaContact == null || Boolean.parseBoolean(useQaContact)) {
+			attributes.add(getTaskData().getRoot().getMappedAttribute(BugzillaAttribute.QA_CONTACT.getKey()));
 		}
-		addAttribute(peopleComposite, toolkit,
-				getTaskData().getRoot().getMappedAttribute(BugzillaAttribute.NEWCC.getKey()));
-		addSelfToCC(peopleComposite);
-		TaskAttribute cc = getTaskData().getRoot().getMappedAttribute(BugzillaAttribute.CC.getKey());
-		if (cc != null) {
-			addAttribute(peopleComposite, toolkit, cc);
-			toolkit.createLabel(peopleComposite, ""); //$NON-NLS-1$
-			Label label = toolkit.createLabel(peopleComposite, Messages.BugzillaPeoplePart__Select_to_remove_);
-			GridDataFactory.fillDefaults().indent(0, 5).align(SWT.CENTER, SWT.CENTER).applyTo(label);
-		}
+		attributes.add(getTaskData().getRoot().getMappedAttribute(BugzillaAttribute.NEWCC.getKey()));
+		addSelfToCC(attributes);
+		attributes.add(getTaskData().getRoot().getMappedAttribute(BugzillaAttribute.CC.getKey()));
 
-		toolkit.paintBordersFor(peopleComposite);
-		section.setClient(peopleComposite);
-		setSection(toolkit, section);
+		for (TaskAttribute attribute : allAttributes.values()) {
+			if (TaskAttribute.TYPE_PERSON.equals(attribute.getMetaData().getType())) {
+				if (!attribute.getId().endsWith("_name") //$NON-NLS-1$
+						&& !attribute.getId().equals(BugzillaAttribute.EXPORTER_NAME.getKey())) {
+					if (!attributes.contains(attribute)) {
+						attributes.add(attribute);
+					}
+				}
+			}
+		}
+		return attributes;
 	}
 
 	/**
-	 * Creates a check box for adding the repository user to the cc list. Does nothing if the repository does not have a
-	 * valid username, the repository user is the assignee, reporter or already on the the cc list.
+	 * Adds ADD_SELF_CC attribute. Does nothing if the repository does not have a valid username, the repository user is
+	 * the assignee, reporter or already on the the cc list.
 	 */
-	protected void addSelfToCC(Composite composite) {
+	protected void addSelfToCC(Collection<TaskAttribute> attributes) {
 
 		TaskRepository repository = this.getTaskEditorPage().getTaskRepository();
 
@@ -128,93 +97,19 @@ public class BugzillaPeoplePart extends AbstractTaskEditorPart {
 			return;
 		}
 
-		FormToolkit toolkit = getManagedForm().getToolkit();
 		TaskAttribute attrAddToCC = getTaskData().getRoot().getMappedAttribute(TaskAttribute.ADD_SELF_CC);
 		if (attrAddToCC == null) {
 			attrAddToCC = BugzillaTaskDataHandler.createAttribute(getTaskData(), BugzillaAttribute.ADDSELFCC);
 		}
-		addAttribute(composite, toolkit, attrAddToCC);
+		attributes.add(attrAddToCC);
 	}
 
-//	protected void addCCList(Composite attributesComposite) {
-//
-//		RepositoryTaskAttribute addCCattribute = taskData.getAttribute(RepositoryTaskAttribute.NEW_CC);
-//		if (addCCattribute == null) {
-//			// TODO: remove once TRAC is priming taskData with NEW_CC attribute
-//			taskData.setAttributeValue(RepositoryTaskAttribute.NEW_CC, "");
-//			addCCattribute = taskData.getAttribute(RepositoryTaskAttribute.NEW_CC);
-//		}
-//		if (addCCattribute != null) {
-//			Label label = createLabel(attributesComposite, addCCattribute);
-//			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
-//			Text text = createTextField(attributesComposite, addCCattribute, SWT.FLAT);
-//			GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(text);
-//
-//			if (hasContentAssist(addCCattribute)) {
-//				ContentAssistCommandAdapter adapter = applyContentAssist(text,
-//						createContentProposalProvider(addCCattribute));
-//				ILabelProvider propsalLabelProvider = createProposalLabelProvider(addCCattribute);
-//				if (propsalLabelProvider != null) {
-//					adapter.setLabelProvider(propsalLabelProvider);
-//				}
-//				adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
-//			}
-//		}
-//
-//		TaskAttribute CCattribute = getTaskData().getAttribute(TaskAttribute.USER_CC);
-//		if (CCattribute != null) {
-//			Label label = createLabel(attributesComposite, CCattribute);
-//			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.TOP).applyTo(label);
-//			ccList = new org.eclipse.swt.widgets.List(attributesComposite, SWT.MULTI | SWT.V_SCROLL);// SWT.BORDER
-//			ccList.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-//			ccList.setFont(TEXT_FONT);
-//			GridData ccListData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-//			ccListData.horizontalSpan = 1;
-//			ccListData.widthHint = 150;
-//			ccListData.heightHint = 95;
-//			ccList.setLayoutData(ccListData);
-//			if (hasChanged(taskData.getAttribute(RepositoryTaskAttribute.USER_CC))) {
-//				ccList.setBackground(colorIncoming);
-//			}
-//			java.util.List<String> ccs = taskData.getCc();
-//			if (ccs != null) {
-//				for (String cc : ccs) {
-//					ccList.add(cc);
-//				}
-//			}
-//			java.util.List<String> removedCCs = taskData.getAttributeValues(RepositoryTaskAttribute.REMOVE_CC);
-//			if (removedCCs != null) {
-//				for (String item : removedCCs) {
-//					int i = ccList.indexOf(item);
-//					if (i != -1) {
-//						ccList.select(i);
-//					}
-//				}
-//			}
-//			ccList.addSelectionListener(new SelectionListener() {
-//
-//				public void widgetSelected(SelectionEvent e) {
-//					for (String cc : ccList.getItems()) {
-//						int index = ccList.indexOf(cc);
-//						if (ccList.isSelected(index)) {
-//							List<String> remove = taskData.getAttributeValues(RepositoryTaskAttribute.REMOVE_CC);
-//							if (!remove.contains(cc)) {
-//								taskData.addAttributeValue(RepositoryTaskAttribute.REMOVE_CC, cc);
-//							}
-//						} else {
-//							taskData.removeAttributeValue(RepositoryTaskAttribute.REMOVE_CC, cc);
-//						}
-//					}
-//					attributeChanged(taskData.getAttribute(RepositoryTaskAttribute.REMOVE_CC));
-//				}
-//
-//				public void widgetDefaultSelected(SelectionEvent e) {
-//				}
-//			});
-//			toolkit.createLabel(attributesComposite, "");
-//			label = toolkit.createLabel(attributesComposite, "(Select to remove)");
-//			GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(label);
-//		}
-
-//	}
+	@Override
+	protected GridDataFactory createLayoutData(AbstractAttributeEditor editor) {
+		GridDataFactory dataFactory = super.createLayoutData(editor);
+		if (editor.getTaskAttribute().getId().equals(BugzillaAttribute.CC.getKey())) {
+			dataFactory.grab(true, true).align(SWT.FILL, SWT.FILL).hint(130, 95);
+		}
+		return dataFactory;
+	}
 }

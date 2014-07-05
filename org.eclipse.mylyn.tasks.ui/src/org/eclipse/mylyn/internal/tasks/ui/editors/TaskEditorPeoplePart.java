@@ -12,8 +12,14 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
@@ -38,22 +44,26 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 		if (editor != null) {
 			editor.createLabelControl(composite, toolkit);
 			GridDataFactory.defaultsFor(editor.getLabelControl())
-					.indent(COLUMN_MARGIN, 0)
-					.applyTo(editor.getLabelControl());
+			.indent(COLUMN_MARGIN, 0)
+			.applyTo(editor.getLabelControl());
 			editor.createControl(composite, toolkit);
 			getTaskEditorPage().getAttributeEditorToolkit().adapt(editor);
 
-			GridDataFactory gridDataFactory = GridDataFactory.fillDefaults()
-					.grab(true, false)
-					.align(SWT.FILL, SWT.TOP)
-					.indent(3, 0);// prevent clipping of decorators on Mac
-
-			if (editor instanceof MultiSelectionAttributeEditor) {
-				gridDataFactory.hint(SWT.DEFAULT, 95);
-			}
-
-			gridDataFactory.applyTo(editor.getControl());
+			GridDataFactory dataFactory = createLayoutData(editor);
+			dataFactory.applyTo(editor.getControl());
 		}
+	}
+
+	protected GridDataFactory createLayoutData(AbstractAttributeEditor editor) {
+		GridDataFactory gridDataFactory = GridDataFactory.fillDefaults()
+				.grab(true, false)
+				.align(SWT.FILL, SWT.TOP)
+				.indent(3, 0);// prevent clipping of decorators on Mac
+
+		if (editor instanceof MultiSelectionAttributeEditor) {
+			gridDataFactory.hint(SWT.DEFAULT, 95);
+		}
+		return gridDataFactory;
 	}
 
 	@Override
@@ -73,10 +83,28 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 	}
 
 	protected void createAttributeEditors(FormToolkit toolkit, Composite peopleComposite) {
-		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED));
-		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_REPORTER));
-		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(TaskAttribute.ADD_SELF_CC));
-		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_CC));
+		Collection<TaskAttribute> attributes = getAttributes();
+		for (TaskAttribute attribute : attributes) {
+			addAttribute(peopleComposite, toolkit, attribute);
+		}
+	}
+
+	protected Collection<TaskAttribute> getAttributes() {
+		Map<String, TaskAttribute> allAttributes = getTaskData().getRoot().getAttributes();
+		List<TaskAttribute> attributes = new ArrayList<TaskAttribute>(allAttributes.size());
+		attributes.add(getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED));
+		attributes.add(getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_REPORTER));
+		attributes.add(getTaskData().getRoot().getMappedAttribute(TaskAttribute.ADD_SELF_CC));
+		attributes.add(getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_CC));
+		for (TaskAttribute attribute : allAttributes.values()) {
+			TaskAttributeMetaData properties = attribute.getMetaData();
+			if (TaskAttribute.KIND_PEOPLE.equals(properties.getKind())) {
+				if (!attributes.contains(attribute)) {
+					attributes.add(attribute);
+				}
+			}
+		}
+		return attributes;
 	}
 
 }
