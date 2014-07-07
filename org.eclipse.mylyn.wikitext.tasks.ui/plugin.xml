@@ -79,6 +79,14 @@
             taskEditorExtension="org.eclipse.mylyn.wikitext.tasks.ui.editor.confluenceTaskEditorExtension">
       </repositoryAssociation>
    </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.ui.taskEditorExtensions">
+      <taskEditorExtension
+            class="org.eclipse.mylyn.internal.wikitext.tasks.ui.editor.MarkdownMarkupTaskEditorExtension"
+            id="org.eclipse.mylyn.wikitext.tasks.ui.editor.markdownTaskEditorExtension"
+            name="%taskEditorExtension.name.6">
+      </taskEditorExtension>
+   </extension>
    
      <extension
            point="org.eclipse.ui.preferencePages">
