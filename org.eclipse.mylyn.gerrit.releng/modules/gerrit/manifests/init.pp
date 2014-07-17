@@ -8,7 +8,7 @@ class gerrit {
     onlyif  => "find /var/lib/apt/lists/ -mtime -7 | (grep -q Package; [ $? != 0 ])",
   }
 
-  $requirements = ["apache2", "openjdk-6-jre", "git-core",]
+  $requirements = ["apache2", "openjdk-7-jre", "git-core",]
 
   package { $requirements:
     ensure  => "installed",
