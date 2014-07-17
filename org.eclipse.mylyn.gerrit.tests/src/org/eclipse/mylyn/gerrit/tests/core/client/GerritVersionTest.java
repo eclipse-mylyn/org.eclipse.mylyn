@@ -11,9 +11,7 @@
 
 package org.eclipse.mylyn.gerrit.tests.core.client;
 
-import static org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion.isVersion24x;
-import static org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion.isVersion26OrLater;
-import static org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion.parseGerritVersion;
+import static org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion.*;
 import junit.framework.TestCase;
 
 import org.junit.Test;
@@ -124,6 +122,20 @@ public class GerritVersionTest extends TestCase {
 		assertTrue(isVersion26OrLater(parseGerritVersion("2.6.0-q")));
 		assertTrue(isVersion26OrLater(parseGerritVersion("2.6.1")));
 		assertTrue(isVersion26OrLater(parseGerritVersion("2.6.1-q")));
+	}
+
+	@Test
+	public void testIsVersion29OrLater() throws Exception {
+		assertFalse(isVersion29OrLater(parseGerritVersion("2.8.9")));
+		assertFalse(isVersion29OrLater(parseGerritVersion("2.8.9-q")));
+		assertTrue(isVersion29OrLater(parseGerritVersion("2.9")));
+		assertTrue(isVersion29OrLater(parseGerritVersion("2.9-q")));
+		assertTrue(isVersion29OrLater(parseGerritVersion("2.9.0")));
+		assertTrue(isVersion29OrLater(parseGerritVersion("2.9.0-q")));
+		assertTrue(isVersion29OrLater(parseGerritVersion("2.9.0-rc2")));
+		assertTrue(isVersion29OrLater(parseGerritVersion("2.9.1")));
+		assertTrue(isVersion29OrLater(parseGerritVersion("2.9.1-q")));
+		assertTrue(isVersion29OrLater(parseGerritVersion("2.9.1-rc2")));
 	}
 
 	@Test

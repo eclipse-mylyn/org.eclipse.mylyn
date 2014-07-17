@@ -773,6 +773,11 @@ public class GerritClient extends ReviewsClient {
 		return GerritVersion.isVersion28OrLater(version);
 	}
 
+	private boolean isVersion29OrLater(IProgressMonitor monitor) throws GerritException {
+		Version version = getCachedVersion(monitor);
+		return GerritVersion.isVersion29OrLater(version);
+	}
+
 	/**
 	 * Returns watched changes of the currently logged in user
 	 */
