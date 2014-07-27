@@ -30,8 +30,11 @@ public class BugzillaRestValidateRequest extends BugzillaRestAuthenticatedGetReq
 
 	@Override
 	protected void doValidate(CommonHttpResponse response, IOperationMonitor monitor) throws IOException,
-			BugzillaRestException {
-		validate(response, HttpStatus.SC_BAD_REQUEST, monitor);
+	BugzillaRestException {
+		// since 4.5.5 we get an HttpStatus.SC_NOT_FOUND instead of an HttpStatus.SC_BAD_REQUEST
+		validate(response, response.getStatusCode() == HttpStatus.SC_NOT_FOUND
+				? HttpStatus.SC_NOT_FOUND
+						: HttpStatus.SC_BAD_REQUEST, monitor);
 	}
 
 	@Override

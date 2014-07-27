@@ -15,5 +15,9 @@
 <% if @operatingsystemrelease = "12.04" && @envversion > "4.4" %>
 /usr/bin/perl install-module.pl Template
 <% end %>
+<% if  @envversion > "4.5.4" %>
+/usr/bin/perl install-module.pl DateTime
+/usr/bin/perl install-module.pl DateTime::TimeZone
+/usr/bin/perl install-module.pl File::Slurp
+<% end %>
 echo "Ende1"
-

@@ -56,40 +56,40 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
     minor   => "0",
   }
 
-  bugzilla::site { "bugzilla-4.2.9":
+  bugzilla::site { "bugzilla-4.2.10":
     major   => "4",
     minor   => "2",
   }
 
-  bugzilla::site { "bugzilla-4.2.9-bugaliases":
+  bugzilla::site { "bugzilla-4.2.10-bugaliases":
     major   => "4",
     minor   => "2",
-    branchTag      => "bugzilla-4.2.9",
+    branchTag      => "bugzilla-4.2.10",
     usebugaliases => true,
   }
 
-  bugzilla::site { "bugzilla-4.4.4":
+  bugzilla::site { "bugzilla-4.4.5":
     major     => "4",
     minor     => "4",
     envdefault => true,
   }
 
-bugzilla::site { "bugzilla-4.5.4":
+bugzilla::site { "bugzilla-4.5.5":
     major        => "4",
     minor        => "5",
     branch       => "trunk",
-    branchTag      => "bugzilla-4.5.4",
-    envversion   => "4.5.4",
+    branchTag      => "bugzilla-4.5.5",
+    envversion   => "4.5.5",
   }
-  
-bugzilla::site { "bugzilla-rest-4.5.4":
+ 
+bugzilla::site { "bugzilla-rest-4.5.5":
     major        => "4",
     minor        => "5",
     branch       => "trunk",
-    branchTag      => "bugzilla-4.5.4",
+    branchTag      => "bugzilla-4.5.5",
     rest_enabled => true,
-    envversion   => "4.5.4",
-    envinfo => "4.5.4, REST enabled"
+    envversion   => "4.5.5",
+    envinfo => "4.5.5, REST enabled"
   }
   
   bugzilla::site { "bugzilla-trunk":
@@ -97,7 +97,7 @@ bugzilla::site { "bugzilla-rest-4.5.4":
     minor       => "5",
     branch      => "trunk",
     branchTag   => "trunk",
-    envversion   => "4.5.4+",
+    envversion   => "4.5.5+",
   }
 
 bugzilla::site { "bugzilla-rest-trunk":
@@ -105,9 +105,8 @@ bugzilla::site { "bugzilla-rest-trunk":
     minor        => "5",
     branch       => "trunk",
     branchTag    => "trunk",
-    envversion   => "4.5.4+",
+    envversion   => "4.5.5+",
     envdefault_rest => true,
     rest_enabled => true,
   }
-
 }
