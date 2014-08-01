@@ -45,6 +45,7 @@ public class PullRequestTest {
 		assertEquals(0, request.getChangedFiles());
 		assertNull(request.getClosedAt());
 		assertEquals(0, request.getComments());
+		assertEquals(0, request.getReviewComments());
 		assertEquals(0, request.getCommits());
 		assertNull(request.getCreatedAt());
 		assertEquals(0, request.getDeletions());
@@ -85,6 +86,7 @@ public class PullRequestTest {
 		assertEquals(new Date(1000), request.setClosedAt(new Date(1000))
 				.getClosedAt());
 		assertEquals(30, request.setComments(30).getComments());
+		assertEquals(35, request.setReviewComments(35).getReviewComments());
 		assertEquals(40, request.setCommits(40).getCommits());
 		assertEquals(new Date(2000), request.setCreatedAt(new Date(2000))
 				.getCreatedAt());
