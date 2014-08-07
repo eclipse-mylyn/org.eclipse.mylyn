@@ -119,7 +119,17 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	@Override
 	protected Block computeSpan(SpanType type, Attributes attributes) {
-		throw new UnsupportedOperationException();
+		switch (type) {
+		case ITALIC:
+		case EMPHASIS:
+			return new ContentBlock("*", "*"); //$NON-NLS-1$ //$NON-NLS-2$
+		case BOLD:
+		case STRONG:
+			return new ContentBlock("**", "**"); //$NON-NLS-1$ //$NON-NLS-2$
+		default:
+			Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
+			return new ContentBlock("", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 	}
 
 	@Override

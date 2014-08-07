@@ -19,6 +19,7 @@ import org.eclipse.mylyn.internal.wikitext.markdown.core.MarkdownDocumentBuilder
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
 /**
@@ -56,6 +57,22 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		assertMarkup("A paragraph ends when a blank line begins!\n\n");
 	}
 
+	public void testParagraphWithStrongEmphasis() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("some ");
+		builder.beginSpan(SpanType.STRONG, new Attributes());
+		builder.characters("strong");
+		builder.endSpan();
+		builder.characters(" and ");
+		builder.beginSpan(SpanType.EMPHASIS, new Attributes());
+		builder.characters("emphasis");
+		builder.endSpan();
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("some **strong** and *emphasis*\n\n");
+	}
+
 	public void testImplicitParagraph() {
 		builder.beginDocument();
 		builder.characters("text1");
@@ -65,6 +82,20 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.characters("text3");
 		builder.endDocument();
 		assertMarkup("text1\n\ntext2\n\ntext3\n\n");
+	}
+
+	public void testImplicitParagraphWithStrongEmphasis() {
+		builder.beginDocument();
+		builder.characters("some ");
+		builder.beginSpan(SpanType.STRONG, new Attributes());
+		builder.characters("strong");
+		builder.endSpan();
+		builder.characters(" and ");
+		builder.beginSpan(SpanType.EMPHASIS, new Attributes());
+		builder.characters("emphasis");
+		builder.endSpan();
+		builder.endDocument();
+		assertMarkup("some **strong** and *emphasis*\n\n");
 	}
 
 	public void testLineBreak() {
@@ -100,6 +131,63 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.endHeading();
 		builder.endDocument();
 		assertMarkup("# This is an H1\n\n## This is an H2\n\n###### This is an H6\n\n");
+	}
+
+	// span elements - http://daringfireball.net/projects/markdown/syntax#span
+
+	public void testUnsupportedSpan() {
+		builder.beginDocument();
+		builder.beginSpan(SpanType.UNDERLINED, new Attributes());
+		builder.characters("unsupported");
+		builder.endSpan();
+		builder.endDocument();
+		assertMarkup("unsupported");
+	}
+
+	public void testEmptySpan() {
+		builder.beginDocument();
+		builder.characters("prefix");
+		builder.beginSpan(SpanType.BOLD, new Attributes());
+		builder.endSpan();
+		builder.characters(" suffix");
+		builder.endDocument();
+		assertMarkup("prefix suffix\n\n");
+	}
+
+	public void testEmphasis() {
+		builder.beginDocument();
+		builder.beginSpan(SpanType.EMPHASIS, new Attributes());
+		builder.characters("emphasis");
+		builder.endSpan();
+		builder.endDocument();
+		assertMarkup("*emphasis*");
+	}
+
+	public void testItalic() {
+		builder.beginDocument();
+		builder.beginSpan(SpanType.ITALIC, new Attributes());
+		builder.characters("italic");
+		builder.endSpan();
+		builder.endDocument();
+		assertMarkup("*italic*");
+	}
+
+	public void testStrong() {
+		builder.beginDocument();
+		builder.beginSpan(SpanType.STRONG, new Attributes());
+		builder.characters("strong");
+		builder.endSpan();
+		builder.endDocument();
+		assertMarkup("**strong**");
+	}
+
+	public void testBold() {
+		builder.beginDocument();
+		builder.beginSpan(SpanType.BOLD, new Attributes());
+		builder.characters("bold");
+		builder.endSpan();
+		builder.endDocument();
+		assertMarkup("**bold**");
 	}
 
 	private void assertMarkup(String expected) {
