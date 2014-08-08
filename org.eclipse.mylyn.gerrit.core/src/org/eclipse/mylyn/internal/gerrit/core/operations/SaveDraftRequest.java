@@ -75,4 +75,9 @@ public class SaveDraftRequest extends AbstractRequest<PatchLineComment> {
 		return client.saveDraft(getPatchKey(), getMessage(), getLine(), getSide(), getParentUuid(), getUuid(), monitor);
 	}
 
+	@Override
+	public String getOperationName() {
+		return Messages.GerritOperation_Saving_Draft;
+	}
+
 }

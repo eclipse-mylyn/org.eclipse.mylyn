@@ -46,4 +46,9 @@ public class SubmitRequest extends AbstractRequest<ChangeDetail> {
 		return client.submit(getReviewId(), getPatchSetId(), monitor);
 	}
 
+	@Override
+	public String getOperationName() {
+		return Messages.GerritOperation_Submitting_Change;
+	}
+
 }

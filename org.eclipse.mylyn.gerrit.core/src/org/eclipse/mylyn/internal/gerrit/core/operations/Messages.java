@@ -17,6 +17,25 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.gerrit.core.operations.messages"; //$NON-NLS-1$
 
 	public static String GerritOperation_Operation_Failed;
+
+	public static String GerritOperation_Abandoning_Change;
+
+	public static String GerritOperation_Adding_Reviewers;
+
+	public static String GerritOperation_Publishing_Change;
+
+	public static String GerritOperation_Rebasing_Change;
+
+	public static String GerritOperation_Refreshing_Configuration;
+
+	public static String GerritOperation_Restoring_Change;
+
+	public static String GerritOperation_Saving_Draft;
+
+	public static String GerritOperation_Submitting_Change;
+
+	public static String GerritOperation_Discarding_Draft;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

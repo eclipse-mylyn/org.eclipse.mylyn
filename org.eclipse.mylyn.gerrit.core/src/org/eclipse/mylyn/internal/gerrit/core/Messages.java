@@ -20,22 +20,6 @@ public class Messages extends NLS {
 
 	public static String GerritConnector_Label;
 
-	public static String GerritOperationFactory_Abandoning_Change;
-
-	public static String GerritOperationFactory_Adding_Reviewers;
-
-	public static String GerritOperationFactory_Publishing_Change;
-
-	public static String GerritOperationFactory_Rebasing_Change;
-
-	public static String GerritOperationFactory_Refreshing_Configuration;
-
-	public static String GerritOperationFactory_Restoring_Change;
-
-	public static String GerritOperationFactory_Saving_Draft;
-
-	public static String GerritOperationFactory_Submitting_Change;
-
 	public static String GerritQueryResultSchema_Branch;
 
 	public static String GerritQueryResultSchema_ChangeId;
@@ -57,8 +41,6 @@ public class Messages extends NLS {
 	public static String GerritUtil_X_dot_dot_dot;
 
 	public static String GerritUtil_Unknown;
-
-	public static String GerritOperationFactory_Discarding_Draft;
 
 	public static String GerritReviewBehavior_Internal_Exception;
 

@@ -62,4 +62,9 @@ public class DiscardDraftRequest extends AbstractRequest<VoidResult> {
 		return client.deleteDraft(getPatchKey(), getMessage(), getLine(), getSide(), getUuid(), monitor);
 	}
 
+	@Override
+	public String getOperationName() {
+		return Messages.GerritOperation_Discarding_Draft;
+	}
+
 }

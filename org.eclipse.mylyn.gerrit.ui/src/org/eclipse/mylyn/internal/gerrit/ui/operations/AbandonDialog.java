@@ -46,7 +46,7 @@ public class AbandonDialog extends GerritOperationDialog {
 		int patchSetId = patchSet.getId().get();
 		AbandonRequest request = new AbandonRequest(task.getTaskId(), patchSetId);
 		request.setMessage(messageEditor.getText());
-		return GerritUiPlugin.getDefault().getOperationFactory().createAbandonOperation(task, request);
+		return GerritUiPlugin.getDefault().getOperationFactory().createOperation(task, request);
 	}
 
 	@Override

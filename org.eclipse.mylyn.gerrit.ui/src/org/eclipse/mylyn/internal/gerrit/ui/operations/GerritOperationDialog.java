@@ -151,8 +151,8 @@ public abstract class GerritOperationDialog extends ProgressDialog {
 		if (needsConfig()) {
 			GerritConfig config = getOperationFactory().getClient(getTask()).getGerritConfig();
 			if (config == null) {
-				GerritOperation<GerritConfiguration> operation = getOperationFactory().createRefreshConfigOperation(
-						getTask(), new RefreshConfigRequest());
+				GerritOperation<GerritConfiguration> operation = getOperationFactory().createOperation(getTask(),
+						new RefreshConfigRequest());
 				performOperation(operation);
 				config = operation.getOperationResult().getGerritConfig();
 			}

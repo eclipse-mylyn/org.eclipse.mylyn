@@ -58,4 +58,9 @@ public class PublishRequest extends AbstractRequest<Object> {
 		return null;
 	}
 
+	@Override
+	public String getOperationName() {
+		return Messages.GerritOperation_Publishing_Change;
+	}
+
 }

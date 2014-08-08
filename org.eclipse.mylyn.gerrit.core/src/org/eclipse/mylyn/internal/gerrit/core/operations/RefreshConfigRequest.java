@@ -31,4 +31,9 @@ public class RefreshConfigRequest extends AbstractRequest<GerritConfiguration> {
 		return client.refreshConfig(monitor);
 	}
 
+	@Override
+	public String getOperationName() {
+		return Messages.GerritOperation_Refreshing_Configuration;
+	}
+
 }

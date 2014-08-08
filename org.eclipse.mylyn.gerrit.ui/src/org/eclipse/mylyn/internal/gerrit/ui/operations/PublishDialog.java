@@ -83,7 +83,7 @@ public class PublishDialog extends GerritOperationDialog {
 		int patchSetId = publishDetail.getPatchSetInfo().getKey().get();
 		PublishRequest request = new PublishRequest(task.getTaskId(), patchSetId, getApprovals());
 		request.setMessage(messageEditor.getText());
-		return getOperationFactory().createPublishOperation(task, request);
+		return getOperationFactory().createOperation(task, request);
 	}
 
 	private Set<ApprovalCategoryValue.Id> getApprovals() {

@@ -83,8 +83,7 @@ public class GerritReviewBehavior extends ReviewBehavior {
 					request.setUuid(comment.getId());
 				}
 
-				GerritOperation<PatchLineComment> operation = getOperationFactory().createSaveDraftOperation(getTask(),
-						request);
+				GerritOperation<PatchLineComment> operation = getOperationFactory().createOperation(getTask(), request);
 				IStatus status = operation.run(monitor);
 				PatchLineComment patchLineComment = operation.getOperationResult();
 				// save the value of uuid, and keep it with the comment
@@ -115,8 +114,7 @@ public class GerritReviewBehavior extends ReviewBehavior {
 						comment.getId());
 				request.setMessage(comment.getDescription());
 
-				GerritOperation<VoidResult> operation = getOperationFactory().createDiscardDraftOperation(getTask(),
-						request);
+				GerritOperation<VoidResult> operation = getOperationFactory().createOperation(getTask(), request);
 				return operation.run(monitor);
 			}
 		}

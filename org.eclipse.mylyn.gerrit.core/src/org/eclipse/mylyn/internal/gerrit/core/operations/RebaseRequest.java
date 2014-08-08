@@ -46,4 +46,9 @@ public class RebaseRequest extends AbstractRequest<ChangeDetail> {
 		return client.rebase(getReviewId(), getPatchSetId(), monitor);
 	}
 
+	@Override
+	public String getOperationName() {
+		return Messages.GerritOperation_Rebasing_Change;
+	}
+
 }

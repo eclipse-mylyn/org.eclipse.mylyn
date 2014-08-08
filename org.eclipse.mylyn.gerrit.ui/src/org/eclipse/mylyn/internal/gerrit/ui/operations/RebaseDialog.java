@@ -43,7 +43,7 @@ public class RebaseDialog extends GerritOperationDialog {
 	public GerritOperation<ChangeDetail> createOperation() {
 		int patchSetId = patchSet.getId().get();
 		RebaseRequest request = new RebaseRequest(task.getTaskId(), patchSetId);
-		return GerritUiPlugin.getDefault().getOperationFactory().createRebaseOperation(task, request);
+		return GerritUiPlugin.getDefault().getOperationFactory().createOperation(task, request);
 	}
 
 	@Override

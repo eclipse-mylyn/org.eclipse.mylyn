@@ -51,4 +51,9 @@ public class AddReviewersRequest extends AbstractRequest<ReviewerResult> {
 		return client.addReviewers(getReviewId(), getReviewers(), monitor);
 	}
 
+	@Override
+	public String getOperationName() {
+		return Messages.GerritOperation_Adding_Reviewers;
+	}
+
 }

@@ -32,4 +32,6 @@ public abstract class AbstractRequest<T> {
 
 	abstract T execute(GerritClient client, IProgressMonitor monitor) throws GerritException;
 
+	public abstract String getOperationName();
+
 }

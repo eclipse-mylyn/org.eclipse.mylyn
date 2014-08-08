@@ -41,7 +41,7 @@ public class SubmitDialog extends GerritOperationDialog {
 	public GerritOperation<ChangeDetail> createOperation() {
 		int patchSetId = patchSet.getId().get();
 		SubmitRequest request = new SubmitRequest(task.getTaskId(), patchSetId);
-		return GerritUiPlugin.getDefault().getOperationFactory().createSubmitOperation(task, request);
+		return GerritUiPlugin.getDefault().getOperationFactory().createOperation(task, request);
 	}
 
 	@Override

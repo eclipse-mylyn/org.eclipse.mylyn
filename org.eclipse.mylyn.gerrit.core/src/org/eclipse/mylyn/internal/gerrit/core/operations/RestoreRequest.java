@@ -51,4 +51,9 @@ public class RestoreRequest extends AbstractRequest<ChangeDetail> {
 		return client.restore(getReviewId(), getPatchSetId(), getMessage(), monitor);
 	}
 
+	@Override
+	public String getOperationName() {
+		return Messages.GerritOperation_Restoring_Change;
+	}
+
 }

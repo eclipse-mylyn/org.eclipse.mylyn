@@ -46,4 +46,9 @@ public class AbandonRequest extends AbstractRequest<ChangeDetail> {
 		return client.abandon(getReviewId(), getPatchSetId(), getMessage(), monitor);
 	}
 
+	@Override
+	public String getOperationName() {
+		return Messages.GerritOperation_Abandoning_Change;
+	}
+
 }

@@ -45,7 +45,7 @@ public class RestoreDialog extends GerritOperationDialog {
 		int patchSetId = patchSet.getId().get();
 		RestoreRequest request = new RestoreRequest(task.getTaskId(), patchSetId);
 		request.setMessage(messageEditor.getText());
-		return GerritUiPlugin.getDefault().getOperationFactory().createRestoreOperation(task, request);
+		return GerritUiPlugin.getDefault().getOperationFactory().createOperation(task, request);
 	}
 
 	@Override
