@@ -16,7 +16,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 
-import com.google.gerrit.reviewdb.Patch;
 import com.google.gerrit.reviewdb.Patch.Key;
 import com.google.gerrit.reviewdb.PatchLineComment;
 
@@ -30,16 +29,18 @@ public class SaveDraftRequest extends AbstractRequest<PatchLineComment> {
 
 	private final int line;
 
-	private String uUid = null;
+	private final String uUid;
 
-	private String parentUuid;
+	private final String parentUuid;
 
 	private final short side;
 
-	public SaveDraftRequest(Patch.Key patchKey, int line, short side) {
+	public SaveDraftRequest(Key patchKey, int line, short side, String parentUuid, String uUid) {
 		this.patchKey = patchKey;
 		this.line = line;
 		this.side = side;
+		this.parentUuid = parentUuid;
+		this.uUid = uUid;
 	}
 
 	public int getLine() {
@@ -58,16 +59,8 @@ public class SaveDraftRequest extends AbstractRequest<PatchLineComment> {
 		return side;
 	}
 
-	public void setParentUuid(String parentUuid) {
-		this.parentUuid = parentUuid;
-	}
-
 	public String getUuid() {
 		return uUid;
-	}
-
-	public void setUuid(String uUid) {
-		this.uUid = uUid;
 	}
 
 	@Override

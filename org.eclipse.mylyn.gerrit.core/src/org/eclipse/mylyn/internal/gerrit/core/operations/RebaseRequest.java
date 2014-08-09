@@ -23,9 +23,9 @@ import com.google.gerrit.common.data.ChangeDetail;
  */
 public class RebaseRequest extends AbstractRequest<ChangeDetail> {
 
-	int patchSetId;
+	private final int patchSetId;
 
-	String reviewId;
+	private final String reviewId;
 
 	public RebaseRequest(String reviewId, int patchSetId) {
 		Assert.isNotNull(reviewId);

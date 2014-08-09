@@ -30,7 +30,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.tasks.ui;bundle-version="3.8.0",
  org.eclipse.ui.navigator,
  org.eclipse.team.core,
- org.eclipse.mylyn.reviews.edit;bundle-version="1.1.0"
+ org.eclipse.mylyn.reviews.edit;bundle-version="1.1.0",
+ com.google.guava;bundle-version="15.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: Eclipse Mylyn

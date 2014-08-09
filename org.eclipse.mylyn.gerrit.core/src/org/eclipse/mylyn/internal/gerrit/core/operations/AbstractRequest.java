@@ -20,7 +20,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
  */
 public abstract class AbstractRequest<T> {
 
-	String message;
+	private String message;
 
 	public String getMessage() {
 		return message;

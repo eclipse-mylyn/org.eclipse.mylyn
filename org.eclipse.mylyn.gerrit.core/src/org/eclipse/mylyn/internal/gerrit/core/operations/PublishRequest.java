@@ -27,11 +27,11 @@ import com.google.gerrit.reviewdb.ApprovalCategoryValue;
  */
 public class PublishRequest extends AbstractRequest<Object> {
 
-	int patchSetId;
+	private final int patchSetId;
 
-	String reviewId;
+	private final String reviewId;
 
-	Set<ApprovalCategoryValue.Id> approvals;
+	private final Set<ApprovalCategoryValue.Id> approvals;
 
 	public PublishRequest(String reviewId, int patchSetId, Set<ApprovalCategoryValue.Id> approvals) {
 		Assert.isNotNull(reviewId);

@@ -16,7 +16,6 @@ package org.eclipse.mylyn.internal.gerrit.ui;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.util.StringUtils;
 import org.eclipse.mylyn.internal.gerrit.core.GerritOperationFactory;
 import org.eclipse.mylyn.internal.gerrit.core.Messages;
 import org.eclipse.mylyn.internal.gerrit.core.operations.DiscardDraftRequest;
@@ -33,6 +32,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.team.core.history.IFileRevision;
 
+import com.google.common.base.Strings;
 import com.google.gerrit.reviewdb.Patch;
 import com.google.gerrit.reviewdb.PatchLineComment;
 import com.google.gwtjsonrpc.client.VoidResult;
@@ -77,11 +77,9 @@ public class GerritReviewBehavior extends ReviewBehavior {
 		for (ILocation location : comment.getLocations()) {
 			if (location instanceof ILineLocation) {
 				ILineLocation lineLocation = (ILineLocation) location;
-				SaveDraftRequest request = new SaveDraftRequest(key, lineLocation.getRangeMin(), side);
+				SaveDraftRequest request = new SaveDraftRequest(key, lineLocation.getRangeMin(), side, null,
+						Strings.emptyToNull(comment.getId()));
 				request.setMessage(comment.getDescription());
-				if (!StringUtils.isEmptyOrNull(comment.getId())) {
-					request.setUuid(comment.getId());
-				}
 
 				GerritOperation<PatchLineComment> operation = getOperationFactory().createOperation(getTask(), request);
 				IStatus status = operation.run(monitor);

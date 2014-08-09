@@ -23,19 +23,14 @@ import com.google.gerrit.common.data.ChangeDetail;
  */
 public class RestoreRequest extends AbstractRequest<ChangeDetail> {
 
-	int patchSetId;
+	private final int patchSetId;
 
-	String reviewId;
+	private final String reviewId;
 
 	public RestoreRequest(String reviewId, int patchSetId) {
 		Assert.isNotNull(reviewId);
 		this.reviewId = reviewId;
 		this.patchSetId = patchSetId;
-	}
-
-	@Override
-	public String getMessage() {
-		return message;
 	}
 
 	public int getPatchSetId() {

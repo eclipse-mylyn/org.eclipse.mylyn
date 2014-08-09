@@ -26,7 +26,7 @@ public class DiscardDraftRequest extends AbstractRequest<VoidResult> {
 
 	private final int line;
 
-	private String uuid;
+	private final String uuid;
 
 	private final short side;
 
@@ -43,10 +43,6 @@ public class DiscardDraftRequest extends AbstractRequest<VoidResult> {
 
 	public String getUuid() {
 		return uuid;
-	}
-
-	public void setUuid(String Uuid) {
-		this.uuid = Uuid;
 	}
 
 	public Key getPatchKey() {
