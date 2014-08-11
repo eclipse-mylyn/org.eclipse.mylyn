@@ -20,6 +20,7 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
@@ -175,7 +176,7 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		assertMarkup("This is [an example](http://example.com/ \"Title\") inline link.\n\n");
 	}
 
-	public void testLinkWithAttributes() {
+	public void testLinkWithEmptyAttributes() {
 		builder.beginDocument();
 		builder.characters("This is ");
 		builder.link(new Attributes(), "http://example.com/", "an example");
@@ -229,6 +230,83 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.endSpan();
 		builder.endDocument();
 		assertMarkup("**bold**");
+	}
+
+	public void testImage() {
+		builder.beginDocument();
+		builder.image(new ImageAttributes(), "/path/to/img.jpg");
+		builder.endDocument();
+		assertMarkup("![](/path/to/img.jpg)\n\n");
+	}
+
+	public void testImageWithTitle() {
+		builder.beginDocument();
+		ImageAttributes attr = new ImageAttributes();
+		attr.setAlt("Alt text");
+		attr.setTitle("Optional title");
+		builder.image(attr, "/path/to/img.jpg");
+		builder.endDocument();
+		assertMarkup("![Alt text](/path/to/img.jpg \"Optional title\")\n\n");
+	}
+
+	public void testImageWithEmptyAttributes() {
+		builder.beginDocument();
+		builder.image(new Attributes(), "/path/to/img.jpg");
+		builder.endDocument();
+		assertMarkup("![](/path/to/img.jpg)\n\n");
+	}
+
+	public void testImageImplicitParagraph() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("Below is an image:");
+		builder.endBlock();
+		builder.image(new ImageAttributes(), "/path/to/img.jpg");
+		builder.endDocument();
+		assertMarkup("Below is an image:\n\n![](/path/to/img.jpg)\n\n");
+	}
+
+	public void testImageLink() {
+		builder.beginDocument();
+		builder.imageLink("http://example.net/", "/path/to/img.jpg");
+		builder.endDocument();
+		assertMarkup("[![](/path/to/img.jpg)](http://example.net/)");
+	}
+
+	public void testImageLinkWithSingleEmptyAttributes() {
+		builder.beginDocument();
+		builder.imageLink(new Attributes(), "http://example.net/", "/path/to/img.jpg");
+		builder.endDocument();
+		assertMarkup("[![](/path/to/img.jpg)](http://example.net/)");
+	}
+
+	public void testImageLinkWithBothEmptyAttributes() {
+		builder.beginDocument();
+		builder.imageLink(new Attributes(), new Attributes(), "http://example.net/", "/path/to/img.jpg");
+		builder.endDocument();
+		assertMarkup("[![](/path/to/img.jpg)](http://example.net/)");
+	}
+
+	public void testImageLinkWithImageAttributes() {
+		builder.beginDocument();
+		ImageAttributes attr = new ImageAttributes();
+		attr.setAlt("Alt text");
+		attr.setTitle("Optional title");
+		builder.imageLink(attr, "http://example.net/", "/path/to/img.jpg");
+		builder.endDocument();
+		assertMarkup("[![Alt text](/path/to/img.jpg \"Optional title\")](http://example.net/)");
+	}
+
+	public void testImageLinkWithLinkAttributes() {
+		builder.beginDocument();
+		LinkAttributes linkAttr = new LinkAttributes();
+		linkAttr.setTitle("Optional link title");
+		ImageAttributes imageAttr = new ImageAttributes();
+		imageAttr.setAlt("Alt text");
+		imageAttr.setTitle("Optional image title");
+		builder.imageLink(linkAttr, imageAttr, "http://example.net/", "/path/to/img.jpg");
+		builder.endDocument();
+		assertMarkup("[![Alt text](/path/to/img.jpg \"Optional image title\")](http://example.net/ \"Optional link title\")");
 	}
 
 	private void assertMarkup(String expected) {

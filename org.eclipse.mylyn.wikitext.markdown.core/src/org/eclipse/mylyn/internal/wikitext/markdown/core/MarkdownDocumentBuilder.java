@@ -19,6 +19,7 @@ import java.io.Writer;
 import java.util.logging.Logger;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
+import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.builder.AbstractMarkupDocumentBuilder;
 import org.eclipse.mylyn.wikitext.markdown.core.MarkdownLanguage;
@@ -96,7 +97,7 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	}
 
 	private class ImplicitParagraphBlock extends AbstractMarkupDocumentBuilder.ImplicitParagraphBlock implements
-			MarkdownBlock {
+	MarkdownBlock {
 
 		@Override
 		public void lineBreak() throws IOException {
@@ -191,7 +192,27 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	@Override
 	public void image(Attributes attributes, String url) {
-		throw new UnsupportedOperationException();
+		assertOpenBlock();
+		try {
+			currentBlock.write(computeImage(attributes, url));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private String computeImage(Attributes attributes, String url) {
+		// ![](/path/to/img.jpg) or
+		// ![alt text](path/to/img.jpg "title")
+		String altText = ""; //$NON-NLS-1$
+		String title = ""; //$NON-NLS-1$
+		if (attributes instanceof ImageAttributes) {
+			ImageAttributes imageAttr = (ImageAttributes) attributes;
+			altText = Strings.nullToEmpty(imageAttr.getAlt());
+		}
+		if (!Strings.isNullOrEmpty(attributes.getTitle())) {
+			title = " \"" + attributes.getTitle() + '"'; //$NON-NLS-1$
+		}
+		return "![" + altText + "](" + url + title + ')'; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override
@@ -207,7 +228,7 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	@Override
 	public void imageLink(Attributes linkAttributes, Attributes imageAttributes, String href, String imageUrl) {
-		throw new UnsupportedOperationException();
+		link(linkAttributes, href, computeImage(imageAttributes, imageUrl));
 	}
 
 	@Override
