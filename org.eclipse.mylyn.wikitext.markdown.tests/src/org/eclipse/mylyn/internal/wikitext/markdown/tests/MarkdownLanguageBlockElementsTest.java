@@ -11,10 +11,15 @@
 
 package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 
+import java.util.List;
+
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.builder.RecordingDocumentBuilder.Event;
+
 /**
  * Tests for Markdown block elements. Follows specification at
  * <a>http://daringfireball.net/projects/markdown/syntax#block</a>.
- * 
+ *
  * @author Stefan Seelmann
  */
 public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase {
@@ -277,6 +282,16 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 		String markup = "* Lorem ipsum\nsit amet.\n* Donec sit\namet nisl.";
 		String expectedHtml = "<ul><li>Lorem ipsum\nsit amet.</li><li>Donec sit\namet nisl.</li></ul>";
 		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testListContentOffsets() {
+		String markup = "  * Lorem ipsum *sit* amet.";
+		List<Event> events = recordParseEvents(markup);
+
+		Event spanEvent = findEvent(events, SpanType.EMPHASIS);
+		assertEquals(1, spanEvent.locator.getLineNumber());
+		assertEquals(16, spanEvent.locator.getLineCharacterOffset());
+		assertEquals(21, spanEvent.locator.getLineSegmentEndOffset());
 	}
 
 	/*

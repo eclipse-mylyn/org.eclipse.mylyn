@@ -40,7 +40,6 @@ public class ListBlock extends NestableBlock {
 		String text = line.substring(offset);
 
 		// check start of block/item
-		String content;
 		Matcher itemStartMatcher = itemStartPattern.matcher(text);
 		if (itemStartMatcher.matches()) {
 			if (blockLineCount == 0) {
@@ -58,19 +57,17 @@ public class ListBlock extends NestableBlock {
 			builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
 
 			// extract content
-			content = itemStartMatcher.group(3);
+			offset += itemStartMatcher.start(3);
 		} else if (!text.trim().isEmpty()) {
 			// TODO: improve handling of wrapped lines, e.g. trim left
 			builder.characters("\n"); //$NON-NLS-1$
-			content = text;
 		} else {
 			// TODO: check for multiple paragraphs and nested blocks, for now just close the list block 
 			setClosed(true);
 			return offset;
 		}
 
-		int textStart = 0;
-		markupLanguage.emitMarkupLine(getParser(), state, content, textStart);
+		markupLanguage.emitMarkupLine(getParser(), state, line, offset);
 
 		blockLineCount++;
 		return -1;
