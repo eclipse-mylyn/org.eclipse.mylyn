@@ -13,6 +13,9 @@
 
 package org.eclipse.mylyn.internal.reviews.ui.compare;
 
+import static org.eclipse.mylyn.internal.reviews.ui.compare.ReviewCompareAnnotationSupport.Side.LEFT_SIDE;
+import static org.eclipse.mylyn.internal.reviews.ui.compare.ReviewCompareAnnotationSupport.Side.RIGHT_SIDE;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,14 +62,13 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
  */
 @SuppressWarnings("restriction")
 public class ReviewCompareAnnotationSupport {
+	public static enum Side {
+		LEFT_SIDE, RIGHT_SIDE
+	}
 
 	private static final int INTERRUPT_INTERVAL = 16;
 
 	private static final int PAUSE_DELAY = 250;
-
-	public final int LEFT_SIDE = 0;
-
-	public final int RIGHT_SIDE = 1;
 
 	private static String KEY_ANNOTAION_SUPPORT = ReviewItemSetCompareEditorInput.class.getName();
 
@@ -244,7 +246,7 @@ public class ReviewCompareAnnotationSupport {
 		return null;
 	}
 
-	public int calculateNextAnnotation(Direction direction, Position nextLeftPosition, Position nextRightPosition,
+	public Side calculateNextAnnotation(Direction direction, Position nextLeftPosition, Position nextRightPosition,
 			Integer currentLeftOffset) {
 		if (direction == Direction.FORWARDS) {
 			if (nextLeftPosition.offset == nextRightPosition.offset) {

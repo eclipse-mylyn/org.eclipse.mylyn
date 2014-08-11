@@ -18,8 +18,6 @@ import java.util.Iterator;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.NotificationImpl;
 import org.eclipse.jface.text.Document;
@@ -27,15 +25,13 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.mylyn.internal.reviews.ui.annotations.CommentAnnotation;
 import org.eclipse.mylyn.internal.reviews.ui.annotations.ReviewAnnotationModel;
 import org.eclipse.mylyn.reviews.core.model.IComment;
-import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
 import org.eclipse.mylyn.reviews.core.model.ILineRange;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
 import org.eclipse.mylyn.reviews.core.model.IUser;
-import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
-import org.eclipse.team.core.history.IFileRevision;
+import org.eclipse.mylyn.reviews.tests.util.MockReviewBehavior;
 
 /**
  * @author Leo Dos Santos
@@ -53,29 +49,6 @@ public class ReviewAnnotationModelTest extends TestCase {
 
 	private ReviewAnnotationModel model;
 
-	private class MockReviewBehaviour extends ReviewBehavior {
-
-		public MockReviewBehaviour() {
-			super(null);
-		}
-
-		@Override
-		public IStatus addComment(IReviewItem fileItem, IComment comment, IProgressMonitor monitor) {
-			return null;
-		}
-
-		@Override
-		public IFileRevision getFileRevision(IFileVersion reviewFileVersion) {
-			return null;
-		}
-
-		@Override
-		public IStatus discardComment(IReviewItem fileItem, IComment comment, IProgressMonitor monitor) {
-			return null;
-		}
-
-	}
-
 	@Override
 	protected void setUp() throws Exception {
 		doc = new Document("A test document, nothing special.");
@@ -83,7 +56,7 @@ public class ReviewAnnotationModelTest extends TestCase {
 		generateComment(DEFAULT_TEXT, new Date(DEFAULT_TIMESTAMP));
 
 		model = new ReviewAnnotationModel();
-		model.setItem(review, new MockReviewBehaviour());
+		model.setItem(review, new MockReviewBehavior());
 		model.connect(doc);
 	}
 

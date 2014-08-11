@@ -11,9 +11,10 @@
 
 package org.eclipse.mylyn.reviews.tests.ui;
 
+import static org.eclipse.mylyn.internal.reviews.ui.compare.ReviewCompareAnnotationSupport.Side.LEFT_SIDE;
+import static org.eclipse.mylyn.internal.reviews.ui.compare.ReviewCompareAnnotationSupport.Side.RIGHT_SIDE;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import junit.framework.TestCase;
 
 import org.eclipse.compare.internal.MergeSourceViewer;
@@ -21,213 +22,115 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.mylyn.internal.reviews.ui.compare.Direction;
 import org.eclipse.mylyn.internal.reviews.ui.compare.ReviewCompareAnnotationSupport;
+import org.eclipse.mylyn.internal.reviews.ui.compare.ReviewCompareAnnotationSupport.Side;
 import org.junit.Test;
 import org.mockito.Matchers;
-import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 
 /**
  * @author Guy Perron
  */
 public class ReviewCompareAnnotationSupportTest extends TestCase {
 
-	@Mock
-	private ReviewCompareAnnotationSupport rcaSupportspy;
+	@Spy
+	private final ReviewCompareAnnotationSupport rcaSupportspy = new ReviewCompareAnnotationSupport(
+			mock(ListViewer.class));
 
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		ListViewer mockListViewer = mock(ListViewer.class);
-		ReviewCompareAnnotationSupport rcaSupport = new ReviewCompareAnnotationSupport(mockListViewer);
-
-		rcaSupportspy = spy(rcaSupport);
+		MockitoAnnotations.initMocks(this);
 		doNothing().when(rcaSupportspy).moveToAnnotation((MergeSourceViewer) Matchers.any(),
 				(MergeSourceViewer) Matchers.any(), (Position) Matchers.any());
 
 	}
 
-	//Test FORWARDS direction
-
 	@Test
 	public void testNextAnnotFwdLeftBeforeRightOffsetAfterBoth() throws Exception {
-		int ret;
-
 		// Position left < right, currentLeftOffset > Left and Right position, moving forward 
-		int currentLeftOffset = 10;
-		Position nextLeftPosition = new Position(5, 0);
-		Position nextRightPosition = new Position(8, 0);
-		ret = rcaSupportspy.calculateNextAnnotation(Direction.FORWARDS, nextLeftPosition, nextRightPosition,
-				currentLeftOffset);
-
-		assertEquals(rcaSupportspy.LEFT_SIDE, ret);
+		assertSide(Direction.FORWARDS, 5, 8, 10, LEFT_SIDE);
 	}
 
 	@Test
 	public void testNextAnnotFwdLeftAfterRightOffsetAfterBoth() throws Exception {
-		int ret;
-
 		// Position left > right, currentLeftOffset >Left and Right position, moving forward 
-		int currentLeftOffset = 10;
-		Position nextLeftPosition = new Position(5, 0);
-		Position nextRightPosition = new Position(3, 0);
-		ret = rcaSupportspy.calculateNextAnnotation(Direction.FORWARDS, nextLeftPosition, nextRightPosition,
-				currentLeftOffset);
-
-		assertEquals(rcaSupportspy.RIGHT_SIDE, ret);
+		assertSide(Direction.FORWARDS, 5, 3, 10, RIGHT_SIDE);
 	}
 
 	@Test
 	public void testNextAnnotFwdLeftBeforeRightOffsetBeforeBoth() throws Exception {
-		int ret;
-
 		// Position left < right, currentLeftOffset < Left and Right position, moving forward 
-		int currentLeftOffset = 10;
-		Position nextLeftPosition = new Position(15, 0);
-		Position nextRightPosition = new Position(16, 0);
-		ret = rcaSupportspy.calculateNextAnnotation(Direction.FORWARDS, nextLeftPosition, nextRightPosition,
-				currentLeftOffset);
-
-		assertEquals(rcaSupportspy.LEFT_SIDE, ret);
+		assertSide(Direction.FORWARDS, 15, 16, 10, LEFT_SIDE);
 	}
 
 	@Test
 	public void testNextAnnotFwdLeftAfterRightOffsetBeforeBoth() throws Exception {
-		int ret;
-
 		// Position left > right, currentLeftOffset < Left and Right position, moving forward 
-		int currentLeftOffset = 10;
-		Position nextLeftPosition = new Position(20, 0);
-		Position nextRightPosition = new Position(15, 0);
-		ret = rcaSupportspy.calculateNextAnnotation(Direction.FORWARDS, nextLeftPosition, nextRightPosition,
-				currentLeftOffset);
-
-		assertEquals(rcaSupportspy.RIGHT_SIDE, ret);
+		assertSide(Direction.FORWARDS, 20, 15, 10, RIGHT_SIDE);
 	}
 
 	@Test
 	public void testNextAnnotFwdLeftBeforeRightOffsetAfterLeftBeforeRightAfter() throws Exception {
-		int ret;
-
 		// Position left < right, currentLeftOffset > Left and currentLeftOffset < Right, moving forward 
-		int currentLeftOffset = 10;
-		Position nextLeftPosition = new Position(5, 0);
-		Position nextRightPosition = new Position(15, 0);
-		ret = rcaSupportspy.calculateNextAnnotation(Direction.FORWARDS, nextLeftPosition, nextRightPosition,
-				currentLeftOffset);
-
-		assertEquals(rcaSupportspy.RIGHT_SIDE, ret);
+		assertSide(Direction.FORWARDS, 5, 15, 10, RIGHT_SIDE);
 	}
 
 	@Test
 	public void testNextAnnotFwdLeftAfterRightOffsetBeforeLeftAfterRight() throws Exception {
-		int ret;
-
 		// left > right, currentLeftOffset < left && currentLeftOffset > Right , moving forward 
-		int currentLeftOffset = 1;
-		Position nextLeftPosition = new Position(10, 0);
-		Position nextRightPosition = new Position(0, 0);
-		ret = rcaSupportspy.calculateNextAnnotation(Direction.FORWARDS, nextLeftPosition, nextRightPosition,
-				currentLeftOffset);
-
-		assertEquals(rcaSupportspy.LEFT_SIDE, ret);
+		assertSide(Direction.FORWARDS, 10, 0, 1, LEFT_SIDE);
 	}
 
 	@Test
 	public void testNextAnnotFwdLeftAfterRightOffsetEqualLeftAfterRight() throws Exception {
-		int ret;
-
 		// Position left > right, currentLeftOffset = next left && currentLeftOffset > next Right, moving forward 
-		int currentLeftOffset = 10;
-		Position nextLeftPosition = new Position(10, 0);
-		Position nextRightPosition = new Position(0, 0);
-		ret = rcaSupportspy.calculateNextAnnotation(Direction.FORWARDS, nextLeftPosition, nextRightPosition,
-				currentLeftOffset);
-
-		assertEquals(rcaSupportspy.RIGHT_SIDE, ret);
+		assertSide(Direction.FORWARDS, 10, 0, 10, RIGHT_SIDE);
 	}
 
-	//Test BACKWARDS direction
 	@Test
 	public void testNextAnnotBwdLeftAfterRightOffsetBeforeBoth() throws Exception {
-		int ret;
-
 		// left after right, currentLeftOffset is before both position, moving backwards
-		int currentLeftOffset = 10;
-		Position nextLeftPosition = new Position(20, 0);
-		Position nextRightPosition = new Position(15, 0);
-		ret = rcaSupportspy.calculateNextAnnotation(Direction.BACKWARDS, nextLeftPosition, nextRightPosition,
-				currentLeftOffset);
-
-		assertEquals(rcaSupportspy.LEFT_SIDE, ret);
+		assertSide(Direction.BACKWARDS, 20, 15, 10, LEFT_SIDE);
 	}
 
 	@Test
 	public void testNextAnnotBwdLeftBeforeRightOffsetBeforeBoth() throws Exception {
-		int ret;
-
 		// left before right, currentLeftOffset is before both position, moving backwards
-		int currentLeftOffset = 10;
-		Position nextLeftPosition = new Position(20, 0);
-		Position nextRightPosition = new Position(25, 0);
-		ret = rcaSupportspy.calculateNextAnnotation(Direction.BACKWARDS, nextLeftPosition, nextRightPosition,
-				currentLeftOffset);
-
-		assertEquals(rcaSupportspy.RIGHT_SIDE, ret);
+		assertSide(Direction.BACKWARDS, 20, 25, 10, RIGHT_SIDE);
 	}
 
 	@Test
 	public void testNextAnnotBwdLeftAfterRightOffsetAfterBoth() throws Exception {
-		int ret;
-
 		// left after right, currentLeftOffset is after both position, moving backwards
-		int currentLeftOffset = 15;
-		Position nextLeftPosition = new Position(10, 0);
-		Position nextRightPosition = new Position(0, 0);
-		ret = rcaSupportspy.calculateNextAnnotation(Direction.BACKWARDS, nextLeftPosition, nextRightPosition,
-				currentLeftOffset);
-
-		assertEquals(rcaSupportspy.LEFT_SIDE, ret);
+		assertSide(Direction.BACKWARDS, 10, 0, 15, LEFT_SIDE);
 	}
 
 	@Test
 	public void testNextAnnotBwdLeftBeforeRightOffsetAfterBoth() throws Exception {
-		int ret;
-
 		// left after right, currentLeftOffset is after both position, moving backwards
-		int currentLeftOffset = 10;
-		Position nextLeftPosition = new Position(5, 0);
-		Position nextRightPosition = new Position(8, 0);
-		ret = rcaSupportspy.calculateNextAnnotation(Direction.BACKWARDS, nextLeftPosition, nextRightPosition,
-				currentLeftOffset);
-
-		assertEquals(rcaSupportspy.RIGHT_SIDE, ret);
+		assertSide(Direction.BACKWARDS, 5, 8, 10, RIGHT_SIDE);
 	}
 
 	@Test
 	public void testNextAnnotBwdLeftAfterRightOffsetLeftAfterRightBefore() throws Exception {
-		int ret;
-
 		// left after right, currentLeftOffset is before Left and After Right position, moving backwards
-		int currentLeftOffset = 1;
-		Position nextLeftPosition = new Position(10, 0);
-		Position nextRightPosition = new Position(0, 0);
-		ret = rcaSupportspy.calculateNextAnnotation(Direction.BACKWARDS, nextLeftPosition, nextRightPosition,
-				currentLeftOffset);
-
-		assertEquals(rcaSupportspy.RIGHT_SIDE, ret);
+		assertSide(Direction.BACKWARDS, 10, 0, 1, RIGHT_SIDE);
 	}
 
 	@Test
 	public void testNextAnnotBwdLeftBeforeRightOffsetLeftBeforeRightAfter() throws Exception {
-		int ret;
-
 		// left before right, currentLeftOffset is after Left and Before Right, moving backwards
-		int currentLeftOffset = 10;
-		Position nextLeftPosition = new Position(5, 0);
-		Position nextRightPosition = new Position(15, 0);
-		ret = rcaSupportspy.calculateNextAnnotation(Direction.BACKWARDS, nextLeftPosition, nextRightPosition,
+		assertSide(Direction.BACKWARDS, 5, 15, 10, LEFT_SIDE);
+	}
+
+	private void assertSide(Direction direction, int left, int right, int currentLeftOffset, Side expectedSide) {
+		Position nextLeftPosition = new Position(left, 0);
+		Position nextRightPosition = new Position(right, 0);
+		Side side = rcaSupportspy.calculateNextAnnotation(direction, nextLeftPosition, nextRightPosition,
 				currentLeftOffset);
 
-		assertEquals(rcaSupportspy.LEFT_SIDE, ret);
+		assertEquals(expectedSide, side);
 	}
 
 }
