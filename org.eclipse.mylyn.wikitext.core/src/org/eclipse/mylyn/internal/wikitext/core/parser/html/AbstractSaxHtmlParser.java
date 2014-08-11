@@ -88,6 +88,7 @@ public abstract class AbstractSaxHtmlParser {
 		elementNameToSpanType.put("em", SpanType.EMPHASIS); //$NON-NLS-1$
 		elementNameToSpanType.put("strong", SpanType.STRONG); //$NON-NLS-1$
 		elementNameToSpanType.put("del", SpanType.DELETED); //$NON-NLS-1$
+		elementNameToSpanType.put("strike", SpanType.DELETED); //$NON-NLS-1$
 		elementNameToSpanType.put("ins", SpanType.INSERTED); //$NON-NLS-1$
 		elementNameToSpanType.put("q", SpanType.QUOTE); //$NON-NLS-1$
 		elementNameToSpanType.put("u", SpanType.UNDERLINED); //$NON-NLS-1$

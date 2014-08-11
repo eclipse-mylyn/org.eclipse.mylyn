@@ -126,6 +126,14 @@ public abstract class AbstractSaxParserTest extends TestCase {
 		performTest("<html><body><ul><li>a <code>foo baz</code></li></ul></body></html>", "* a @foo baz@\n\n");
 	}
 
+	public void testSpanDel() throws IOException, SAXException {
+		performTest("<html><body>test 123 <del>foo baz</del></body></html>", "test 123 -foo baz-\n\n");
+	}
+
+	public void testSpanDelFromStrike() throws IOException, SAXException {
+		performTest("<html><body>test 123 <strike>foo baz</strike></body></html>", "test 123 -foo baz-\n\n");
+	}
+
 	public void testNbsp160() throws IOException, SAXException {
 		performTest("<html><body>test&nbsp;two&#160;three</body></html>", "test two three\n\n");
 	}
