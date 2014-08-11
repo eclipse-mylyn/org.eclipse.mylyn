@@ -19,8 +19,11 @@ import java.io.Writer;
 import java.util.logging.Logger;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
+import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.builder.AbstractMarkupDocumentBuilder;
 import org.eclipse.mylyn.wikitext.markdown.core.MarkdownLanguage;
+
+import com.google.common.base.Strings;
 
 /**
  * a document builder that emits Markdown markup
@@ -93,11 +96,40 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	}
 
 	private class ImplicitParagraphBlock extends AbstractMarkupDocumentBuilder.ImplicitParagraphBlock implements
-	MarkdownBlock {
+			MarkdownBlock {
 
 		@Override
 		public void lineBreak() throws IOException {
 			MarkdownDocumentBuilder.this.emitContent("  \n"); //$NON-NLS-1$
+		}
+
+	}
+
+	private class LinkBlock extends ContentBlock {
+
+		private final LinkAttributes attributes;
+
+		private LinkBlock(LinkAttributes attributes) {
+			super("", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			this.attributes = attributes;
+		}
+
+		@Override
+		protected void emitContent(String content) throws IOException {
+			// [label](http://url.com) or
+			// [label](http://url.com "title")
+			MarkdownDocumentBuilder.this.emitContent('[');
+			MarkdownDocumentBuilder.this.emitContent(content);
+			MarkdownDocumentBuilder.this.emitContent(']');
+
+			MarkdownDocumentBuilder.this.emitContent('(');
+			MarkdownDocumentBuilder.this.emitContent(attributes.getHref());
+			if (!Strings.isNullOrEmpty(attributes.getTitle())) {
+				MarkdownDocumentBuilder.this.emitContent(" \""); //$NON-NLS-1$
+				MarkdownDocumentBuilder.this.emitContent(attributes.getTitle());
+				MarkdownDocumentBuilder.this.emitContent('"');
+			}
+			MarkdownDocumentBuilder.this.emitContent(')');
 		}
 
 	}
@@ -120,6 +152,10 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	@Override
 	protected Block computeSpan(SpanType type, Attributes attributes) {
 		switch (type) {
+		case LINK:
+			if (attributes instanceof LinkAttributes) {
+				return new LinkBlock((LinkAttributes) attributes);
+			}
 		case ITALIC:
 		case EMPHASIS:
 			return new ContentBlock("*", "*"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -160,7 +196,13 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	@Override
 	public void link(Attributes attributes, String hrefOrHashName, String text) {
-		throw new UnsupportedOperationException();
+		assertOpenBlock();
+		LinkAttributes linkAttr = new LinkAttributes();
+		linkAttr.setTitle(attributes.getTitle());
+		linkAttr.setHref(hrefOrHashName);
+		beginSpan(SpanType.LINK, linkAttr);
+		characters(text);
+		endSpan();
 	}
 
 	@Override

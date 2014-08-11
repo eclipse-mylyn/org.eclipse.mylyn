@@ -20,6 +20,7 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
 /**
@@ -152,6 +153,46 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.characters(" suffix");
 		builder.endDocument();
 		assertMarkup("prefix suffix\n\n");
+	}
+
+	public void testLink() {
+		builder.beginDocument();
+		builder.characters("This ");
+		builder.link("http://example.net/", "link");
+		builder.characters(" has no title attribute.");
+		builder.endDocument();
+		assertMarkup("This [link](http://example.net/) has no title attribute.\n\n");
+	}
+
+	public void testLinkWithTitle() {
+		builder.beginDocument();
+		builder.characters("This is ");
+		LinkAttributes attr = new LinkAttributes();
+		attr.setTitle("Title");
+		builder.link(attr, "http://example.com/", "an example");
+		builder.characters(" inline link.");
+		builder.endDocument();
+		assertMarkup("This is [an example](http://example.com/ \"Title\") inline link.\n\n");
+	}
+
+	public void testLinkWithAttributes() {
+		builder.beginDocument();
+		builder.characters("This is ");
+		builder.link(new Attributes(), "http://example.com/", "an example");
+		builder.characters(" inline link.");
+		builder.endDocument();
+		assertMarkup("This is [an example](http://example.com/) inline link.\n\n");
+	}
+
+	public void testLinkImplicitParagraph() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("A paragraph.");
+		builder.endBlock();
+		builder.link("http://example.com/", "A link");
+		builder.characters(" opens an implicit paragraph.");
+		builder.endDocument();
+		assertMarkup("A paragraph.\n\n[A link](http://example.com/) opens an implicit paragraph.\n\n");
 	}
 
 	public void testEmphasis() {
