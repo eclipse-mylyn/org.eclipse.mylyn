@@ -279,6 +279,9 @@ public class ReviewCompareAnnotationSupport {
 			} else if ((nextLeftPosition.offset > currentLeftOffset && nextRightPosition.offset < currentLeftOffset)) {
 				moveToAnnotation(rightSourceViewer, leftSourceViewer, nextLeftPosition);
 				return LEFT_SIDE;
+			} else if (nextRightPosition.offset == currentLeftOffset) {
+				moveToAnnotation(rightSourceViewer, leftSourceViewer, nextLeftPosition);
+				return LEFT_SIDE;
 			} else {
 				moveToAnnotation(leftSourceViewer, rightSourceViewer, nextRightPosition);
 				return RIGHT_SIDE;
@@ -326,6 +329,9 @@ public class ReviewCompareAnnotationSupport {
 				return RIGHT_SIDE;
 
 			} else if ((nextLeftPosition.offset < currentLeftOffset && nextRightPosition.offset > currentLeftOffset)) {
+				moveToAnnotation(rightSourceViewer, leftSourceViewer, nextLeftPosition);
+				return LEFT_SIDE;
+			} else if (nextRightPosition.offset == currentLeftOffset) {
 				moveToAnnotation(rightSourceViewer, leftSourceViewer, nextLeftPosition);
 				return LEFT_SIDE;
 			} else {

@@ -89,6 +89,24 @@ public class ReviewCompareAnnotationSupportTest extends TestCase {
 	}
 
 	@Test
+	public void testNextAnnotFwdLeftAfterRightOffsetBeforeLeftEqualRight() throws Exception {
+		// Position left > right, currentLeftOffset < next Left && currentLeftOffset = next right, moving forward 
+		assertSide(Direction.FORWARDS, 10, 0, 0, LEFT_SIDE);
+	}
+
+	@Test
+	public void testNextAnnotFwdLeftBeforeRightOffsetEqualLeftBeforeRight() throws Exception {
+		// Position left > right, currentLeftOffset = next left && currentLeftOffset > next Right, moving forward 
+		assertSide(Direction.FORWARDS, 0, 10, 0, RIGHT_SIDE);
+	}
+
+	@Test
+	public void testNextAnnotFwdLeftBeforeRightOffsetAfterLeftEqualRight() throws Exception {
+		// Position left > right, currentLeftOffset < next Left && currentLeftOffset = next right, moving forward 
+		assertSide(Direction.FORWARDS, 0, 10, 10, LEFT_SIDE);
+	}
+
+	@Test
 	public void testNextAnnotBwdLeftAfterRightOffsetBeforeBoth() throws Exception {
 		// left after right, currentLeftOffset is before both position, moving backwards
 		assertSide(Direction.BACKWARDS, 20, 15, 10, LEFT_SIDE);
@@ -122,6 +140,30 @@ public class ReviewCompareAnnotationSupportTest extends TestCase {
 	public void testNextAnnotBwdLeftBeforeRightOffsetLeftBeforeRightAfter() throws Exception {
 		// left before right, currentLeftOffset is after Left and Before Right, moving backwards
 		assertSide(Direction.BACKWARDS, 5, 15, 10, LEFT_SIDE);
+	}
+
+	@Test
+	public void testNextAnnotBwdLeftAfterRightOffsetEqualLeftAfterRight() throws Exception {
+		// Position left > right, currentLeftOffset = next left && currentLeftOffset > next Right, moving backwards 
+		assertSide(Direction.BACKWARDS, 10, 0, 10, RIGHT_SIDE);
+	}
+
+	@Test
+	public void testNextAnnotBwdLeftAfterRightOffsetBeforeLeftEqualRight() throws Exception {
+		// Position left > right, currentLeftOffset = next left && currentLeftOffset > next Right, moving backwards 
+		assertSide(Direction.BACKWARDS, 10, 0, 0, LEFT_SIDE);
+	}
+
+	@Test
+	public void testNextAnnotBwdLeftBeforeRightOffsetEqualLeftBeforeRight() throws Exception {
+		// Position left > right, currentLeftOffset = next left && currentLeftOffset > next Right, moving backwards 
+		assertSide(Direction.BACKWARDS, 0, 10, 0, RIGHT_SIDE);
+	}
+
+	@Test
+	public void testNextAnnotBwdLeftBeforeRightOffsetAfterLeftEqualRight() throws Exception {
+		// Position left > right, currentLeftOffset = next left && currentLeftOffset > next Right, moving backwards 
+		assertSide(Direction.BACKWARDS, 0, 10, 10, LEFT_SIDE);
 	}
 
 	private void assertSide(Direction direction, int left, int right, int currentLeftOffset, Side expectedSide) {
