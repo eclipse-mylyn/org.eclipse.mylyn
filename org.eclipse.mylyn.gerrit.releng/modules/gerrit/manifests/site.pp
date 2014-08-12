@@ -33,7 +33,7 @@ define gerrit::site (
   }
 
   exec { "configure $envid":
-    command => "java -jar $base/archive/gerrit-$version.war init --batch --site-path $envbase --no-auto-start",
+    command => "/usr/lib/jvm/java-7-openjdk-i386/jre/bin/java -jar $base/archive/gerrit-$version.war init --batch --site-path $envbase --no-auto-start",
     require => Exec["clear $envid"],
     user    => "$gerrit::userOwner",
     creates => "$envbase",
