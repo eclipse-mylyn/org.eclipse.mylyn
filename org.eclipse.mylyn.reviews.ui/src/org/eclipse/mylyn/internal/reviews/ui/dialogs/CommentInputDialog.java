@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -28,8 +29,8 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.text.source.LineRange;
-import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.reviews.core.model.IComment;
@@ -50,8 +51,8 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.ShellAdapter;
@@ -75,10 +76,6 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
  */
 public class CommentInputDialog extends FormDialog {
 
-	// ------------------------------------------------------------------------
-	// Member variables
-	// ------------------------------------------------------------------------
-
 	private Text fCommentInputTextField;
 
 	private static final int BUTTON_REPLY_ID = 2;
@@ -95,29 +92,27 @@ public class CommentInputDialog extends FormDialog {
 
 	private final ReviewBehavior reviewBehavior;
 
-	public IReviewItem reviewitem;
+	private final IReviewItem reviewitem;
 
-	public LineRange range;
+	private final LineRange range;
 
-	public Map<Integer, Comment> commentList;
+	private Map<Integer, Comment> commentList;
 
-	public boolean isUpdate = false;
+	private boolean isUpdate = false;
 
-	public boolean isDiscard = false;
+	private boolean isDiscard = false;
 
-	public boolean isSave = false;
+	private boolean isSave = false;
 
-	public boolean isDone = false;
+	private boolean isDone = false;
 
-	public boolean isReply = false;
+	private boolean isReply = false;
 
-	public String currentUuid;
+	private String currentUuid;
 
-	public String currentAuthor;
+	private Composite buttonparent;
 
-	public Composite buttonparent;
-
-	public Composite buttonBarParent;
+	private Composite buttonBarParent;
 
 	private final Shell parent;
 
@@ -150,9 +145,8 @@ public class CommentInputDialog extends FormDialog {
 
 	@Override
 	protected void buttonPressed(int buttonId) {
-
 		if (buttonId == IDialogConstants.CANCEL_ID) {
-			super.buttonPressed(0);
+			super.buttonPressed(IDialogConstants.OK_ID);
 			parent.setFocus();
 			return;
 		}
@@ -162,7 +156,7 @@ public class CommentInputDialog extends FormDialog {
 		switch (buttonId) {
 		case BUTTON_EDIT_ID:
 			comment.setId(currentUuid);
-			deleteButtons();
+			disposeButtons();
 			createSaveDiscard();
 			return;
 		case BUTTON_DISCARD_ID:
@@ -173,12 +167,8 @@ public class CommentInputDialog extends FormDialog {
 			comment.setId(currentUuid);
 			isSave = true;
 			isReply = true;
-			deleteButtons();
-			if (isOwn()) {
-				createSaveDiscard();
-			} else {
-				createSave();
-			}
+			disposeButtons();
+			createSave();
 			fCommentInputTextField.setText(""); //$NON-NLS-1$
 			break;
 		case BUTTON_REPLY_DONE_ID:
@@ -197,16 +187,10 @@ public class CommentInputDialog extends FormDialog {
 			}
 		}
 		comment.setDraft(true);
-		comment.setAuthor(getIUser());
+		comment.setAuthor(getCurrentUser());
 		comment.setCreationDate(new Date());
 
-		LineRange selectedRange = range;
-		ILineLocation location = ReviewsFactory.eINSTANCE.createLineLocation();
-		ILineRange aRange = ReviewsFactory.eINSTANCE.createLineRange();
-		aRange.setStart(selectedRange.getStartLine());
-		aRange.setEnd(selectedRange.getStartLine() + selectedRange.getNumberOfLines());
-		location.getRanges().add(aRange);
-
+		ILineLocation location = getSelectedLineLocation();
 		if (location != null) {
 			comment.getLocations().add(location);
 		}
@@ -217,32 +201,21 @@ public class CommentInputDialog extends FormDialog {
 
 	}
 
-	private IUser getIUser() {
-		if ((reviewitem != null) && (reviewitem.getReview() != null)
-				&& (reviewitem.getReview().getRepository() != null)
-				&& (reviewitem.getReview().getRepository().getAccount() != null)) {
+	private ILineLocation getSelectedLineLocation() {
+		ILineLocation location = ReviewsFactory.eINSTANCE.createLineLocation();
+		ILineRange lineRange = ReviewsFactory.eINSTANCE.createLineRange();
+		lineRange.setStart(range.getStartLine());
+		lineRange.setEnd(range.getStartLine() + range.getNumberOfLines());
+		location.getRanges().add(lineRange);
+		return location;
+	}
+
+	private IUser getCurrentUser() {
+		if (reviewitem != null && reviewitem.getReview() != null && reviewitem.getReview().getRepository() != null) {
 			return reviewitem.getReview().getRepository().getAccount();
 		} else {
 			return null;
 		}
-	}
-
-	private boolean isOwn() {
-		return (reviewitem != null)
-				&& (reviewitem.getReview() != null)
-				&& (reviewitem.getReview().getRepository() != null)
-				&& (reviewitem.getReview().getRepository().getTaskRepository() != null)
-				&& (reviewitem.getReview()
-						.getRepository()
-						.getTaskRepository()
-						.getCredentials(AuthenticationType.REPOSITORY) != null)
-				&& (reviewitem.getReview()
-						.getRepository()
-						.getTaskRepository()
-						.getCredentials(AuthenticationType.REPOSITORY)
-						.getUserName()
-						.compareTo(currentAuthor) == 0);
-
 	}
 
 	private boolean performOperation(final IComment comment) {
@@ -264,7 +237,6 @@ public class CommentInputDialog extends FormDialog {
 						}
 					} else {
 						status = reviewBehavior.discardComment(item, comment, monitor);
-
 						if (status.isOK()) {
 							result.set(status);
 							updateClient(comment, item);
@@ -286,23 +258,25 @@ public class CommentInputDialog extends FormDialog {
 	}
 
 	private void updateClient(final IComment comment, final IReviewItem item) {
-		comment.setAuthor(getIUser());
+		comment.setAuthor(getCurrentUser());
 
 		if (!isUpdate || isDone) {
 			item.getComments().add(comment);
-		} else if (isDiscard == true) {
+		} else if (isDiscard) {
 			List<IComment> commentlist = item.getComments();
 			for (Iterator<IComment> iter = commentlist.iterator(); iter.hasNext();) {
 				IComment element = iter.next();
-				if (element.getId() != null && element.getId().compareTo(currentUuid) == 0) {
+				if (element.getId() != null && element.getId().equals(currentUuid)) {
 					iter.remove();
+					break;
 				}
 			}
 		} else {
 			List<IComment> commentlist = item.getComments();
 			for (int i = 0; i < commentlist.size(); i++) {
-				if (commentlist.get(i).getId() != null && commentlist.get(i).getId().compareTo(currentUuid) == 0) {
+				if (commentlist.get(i).getId() != null && commentlist.get(i).getId().equals(currentUuid)) {
 					item.getComments().set(i, comment);
+					break;
 				}
 			}
 
@@ -315,7 +289,8 @@ public class CommentInputDialog extends FormDialog {
 			file = ((IFileVersion) item).getFile();
 		}
 		if (file != null && file.getReview() != null) {
-			//Update any review item set observers IFF we belong to a review. (The set might represent a compare, in which case we won't have a relevant model object.)
+			// Update any review item set observers IFF we belong to a review. (The set might represent a compare, 
+			// in which case we won't have a relevant model object.)
 			updateConsumer(file);
 
 		}
@@ -348,7 +323,6 @@ public class CommentInputDialog extends FormDialog {
 
 	@Override
 	protected void createFormContent(final IManagedForm mform) {
-
 		final ScrolledForm scrolledform = mform.getForm();
 		scrolledform.setExpandVertical(true);
 		scrolledform.setExpandHorizontal(true);
@@ -372,39 +346,33 @@ public class CommentInputDialog extends FormDialog {
 			final String uuid = currentComment.getId();
 			final boolean isDraft = currentComment.isDraft();
 			final String commentText = currentComment.getDescription();
-			final String authorName, authorAndDate;
+			final String authorAndDate;
 			IUser author = currentComment.getAuthor();
 			if (author != null) {
-				authorName = currentComment.getAuthor().getDisplayName();
 				authorAndDate = currentComment.getAuthor().getDisplayName() + " " //$NON-NLS-1$
 						+ currentComment.getCreationDate().toString();
 			} else {
-				authorName = Messages.CommentInputDialog_No_author;
-				authorAndDate = authorName + " " //$NON-NLS-1$
+				authorAndDate = Messages.CommentInputDialog_No_author + " " //$NON-NLS-1$
 						+ currentComment.getCreationDate().toString();
-
 			}
 
-			String comment_str = currentComment.getDescription().length() < 50
-					? currentComment.getDescription()
-					: currentComment.getDescription().substring(0, 46) + " ..."; //$NON-NLS-1$
+			String commentPrefix = StringUtils.abbreviate(currentComment.getDescription(), 50);
 			if (isDraft) {
-				button.setText(NLS.bind(Messages.CommentInputDialog_Draft, authorAndDate, comment_str));
+				button.setText(NLS.bind(Messages.CommentInputDialog_Draft, authorAndDate, commentPrefix));
 			} else {
-				button.setText(authorAndDate + " " + comment_str); //$NON-NLS-1$
+				button.setText(authorAndDate + " " + commentPrefix); //$NON-NLS-1$
 			}
 
 			button.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					deleteButtons();
+					disposeButtons();
 					if (isDraft) {
 						createEdit();
 					} else {
 						createReplyReplyDone();
 					}
 					currentUuid = uuid;
-					currentAuthor = authorName;
 					fCommentInputTextField.setText(commentText);
 					isUpdate = true;
 				}
@@ -443,43 +411,22 @@ public class CommentInputDialog extends FormDialog {
 
 	}
 
-	/**
-	 * Configures the button bar.
-	 * 
-	 * @param parent
-	 *            the parent composite
-	 * @return Control
-	 */
 	@Override
 	protected Control createButtonBar(final Composite parent) {
-
 		final Composite composite = new Composite(parent, SWT.NONE);
 		buttonBarParent = parent;
 
-		GridLayout layout = new GridLayout();
-		layout.marginWidth = 0;
-		layout.marginHeight = 0;
-		layout.horizontalSpacing = 0;
-		layout.marginTop = 0;
-		layout.marginBottom = 0;
-		layout.verticalSpacing = 0;
-		composite.setLayout(layout);
+		GridLayoutFactory.fillDefaults().spacing(0, 0).applyTo(composite);
 		composite.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, true, false));
 		composite.setFont(parent.getFont());
 
 		final Control buttonSection = super.createButtonBar(composite);
 		((GridData) buttonSection.getLayoutData()).grabExcessHorizontalSpace = true;
 		((GridData) buttonSection.getLayoutData()).grabExcessVerticalSpace = false;
-		buttonSection.addControlListener(new ControlListener() {
-
+		buttonSection.addControlListener(new ControlAdapter() {
 			@Override
 			public void controlResized(ControlEvent e) {
 				buttonBar.pack();
-			}
-
-			@Override
-			public void controlMoved(ControlEvent e) {
-				// ignore
 			}
 		});
 
@@ -490,9 +437,7 @@ public class CommentInputDialog extends FormDialog {
 	@Override
 	public void createButtonsForButtonBar(Composite parent) {
 		buttonparent = parent;
-
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
-
 	}
 
 	@Override
@@ -504,8 +449,7 @@ public class CommentInputDialog extends FormDialog {
 		this.commentList = commentList;
 	}
 
-	private void deleteButtons() {
-
+	private void disposeButtons() {
 		for (int buttonId : new int[] { BUTTON_REPLY_ID, BUTTON_REPLY_DONE_ID, BUTTON_DISCARD_ID, BUTTON_EDIT_ID,
 				BUTTON_SAVE_ID }) {
 			Button button = getButton(buttonId);
@@ -513,53 +457,24 @@ public class CommentInputDialog extends FormDialog {
 				button.dispose();
 			}
 		}
-//		if (this.getButton(BUTTON_REPLY_ID) != null) {
-//			Button button = (this.getButton(BUTTON_REPLY_ID));
-//			button.dispose();
-//		}
-//
-//		if (this.getButton(BUTTON_REPLY_DONE_ID) != null) {
-//			Button button = (this.getButton(BUTTON_REPLY_DONE_ID));
-//			button.dispose();
-//		}
-//
-//		if (this.getButton(BUTTON_DISCARD_ID) != null) {
-//			Button button = (this.getButton(BUTTON_DISCARD_ID));
-//			button.dispose();
-//		}
-//
-//		if (this.getButton(BUTTON_EDIT_ID) != null) {
-//			Button button = (this.getButton(BUTTON_EDIT_ID));
-//			button.dispose();
-//		}
-//
-//		if (this.getButton(BUTTON_SAVE_ID) != null) {
-//			Button button = (this.getButton(BUTTON_SAVE_ID));
-//			button.dispose();
-//		}
 		fCommentInputTextField.setEnabled(false);
 
 	}
 
 	private void createEdit() {
 		createButton(buttonparent, BUTTON_EDIT_ID, Messages.CommentInputDialog_Edit, true);
-
 		buttonBar.pack();
 	}
 
 	private void createReplyReplyDone() {
 		createButton(buttonparent, BUTTON_REPLY_ID, Messages.CommentInputDialog_Reply, true);
-
 		createButton(buttonparent, BUTTON_REPLY_DONE_ID, Messages.CommentInputDialog_ReplyDone, true);
-
 		buttonBar.pack();
 	}
 
 	private void createSaveDiscard() {
 		createButton(buttonparent, BUTTON_SAVE_ID, Messages.CommentInputDialog_Save, true);
-
 		createButton(buttonparent, BUTTON_DISCARD_ID, Messages.CommentInputDialog_Discard, true);
-
 		fCommentInputTextField.setEnabled(true);
 		buttonBar.pack();
 
@@ -567,7 +482,6 @@ public class CommentInputDialog extends FormDialog {
 
 	private void createSave() {
 		createButton(buttonparent, BUTTON_SAVE_ID, Messages.CommentInputDialog_Save, true);
-
 		fCommentInputTextField.setEnabled(true);
 		buttonBar.pack();
 
