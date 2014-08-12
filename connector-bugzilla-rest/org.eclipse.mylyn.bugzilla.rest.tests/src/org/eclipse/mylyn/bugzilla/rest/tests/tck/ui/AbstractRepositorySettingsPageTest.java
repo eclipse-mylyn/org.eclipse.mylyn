@@ -24,6 +24,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 import org.eclipse.swt.widgets.Shell;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 
 @FixtureDefinition(fixtureClass = TckFixture.class, fixtureType = "bugzillaREST")
@@ -43,6 +44,8 @@ public class AbstractRepositorySettingsPageTest extends AbstractTckTest {
 	}
 
 	@Test
+	@Ignore
+	//we temporary disable this test (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=436398)
 	public void testApplyTo() {
 		TaskRepository repository = fixture().createRepository();
 		EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
