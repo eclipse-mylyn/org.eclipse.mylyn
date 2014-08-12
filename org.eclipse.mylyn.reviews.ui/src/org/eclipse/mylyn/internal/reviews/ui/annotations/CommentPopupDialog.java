@@ -12,8 +12,8 @@
 
 package org.eclipse.mylyn.internal.reviews.ui.annotations;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.PopupDialog;
@@ -202,28 +202,20 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 
 			currentPopupDialog = this;
 
-			final Map<Integer, Comment> commentList = new HashMap<Integer, Comment>();
-
-			int count = 0;
+			final List<Comment> commentList = new ArrayList<Comment>();
 			for (CommentAnnotation annotation : annotationInput.getAnnotations()) {
 
 				if ((reviewitem != null)
 						&& reviewitem.getReview() != null
 						&& reviewitem.getReview().getRepository() != null
 						&& reviewitem.getReview().getRepository().getAccount() != null
-						&& reviewitem.getReview()
-								.getRepository()
-								.getAccount()
-								.toString()
-								.compareTo(((Comment) annotation.getComment()).getAuthor().toString()) != 0
+						&& reviewitem.getReview().getRepository().getAccount() != ((Comment) annotation.getComment()).getAuthor()
 						&& ((Comment) annotation.getComment()).isDraft()) {
 					continue;
 				}
 
 				CommentPart part = new CommentPart(annotation.getComment(), annotationInput.getBehavior());
-				count++;
-
-				commentList.put(new Integer(count), (Comment) annotation.getComment());
+				commentList.add((Comment) annotation.getComment());
 				part.hookCustomActionRunListener(this);
 				Control control = part.createControl(composite, toolkit);
 				toolkit.adapt(control, true, true);
@@ -238,11 +230,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 			focusLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(focusLabel);
 
-			PixelConverter Pc = new PixelConverter(composite.getFont());
-
-			final int avgHeight = Pc.convertHeightInCharsToPixels(1);
-
-			focusLabel.getParent().addMouseTrackListener(mouseTrackAdapter(commentList, avgHeight));
+			focusLabel.getParent().addMouseTrackListener(mouseTrackAdapter(commentList));
 
 		} else {
 			input = null;
@@ -250,7 +238,9 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 
 	}
 
-	private MouseTrackAdapter mouseTrackAdapter(final Map<Integer, Comment> commentList, final int avgHeight) {
+	private MouseTrackAdapter mouseTrackAdapter(final List<Comment> commentList) {
+		PixelConverter Pc = new PixelConverter(composite.getFont());
+		final int lineHeight = Pc.convertHeightInCharsToPixels(1);
 		return new MouseTrackAdapter() {
 
 			@Override
@@ -271,9 +261,9 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 
 					// adjust size to display maximum of 15 lines, which means 5 comments
 					if (annotationInput.getAnnotations().size() < 5) {
-						size.y = size.y + (annotationInput.getAnnotations().size() * 3 * avgHeight);
+						size.y = size.y + (annotationInput.getAnnotations().size() * 3 * lineHeight);
 					} else {
-						size.y = size.y + (15 * avgHeight);
+						size.y = size.y + (15 * lineHeight);
 					}
 					currentCommentInputDialog.getShell().setSize(size);
 					currentCommentInputDialog.open();

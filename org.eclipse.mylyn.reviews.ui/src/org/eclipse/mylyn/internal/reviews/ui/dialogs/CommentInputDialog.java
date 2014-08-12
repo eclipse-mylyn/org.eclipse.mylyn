@@ -16,7 +16,6 @@ package org.eclipse.mylyn.internal.reviews.ui.dialogs;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.lang.StringUtils;
@@ -96,7 +95,7 @@ public class CommentInputDialog extends FormDialog {
 
 	private final LineRange range;
 
-	private Map<Integer, Comment> commentList;
+	private List<Comment> commentList;
 
 	private boolean isUpdate = false;
 
@@ -335,28 +334,24 @@ public class CommentInputDialog extends FormDialog {
 		composite.setLayout(layout);
 		GridData textGridData = null;
 
-		for (int i = 0; i < commentList.size(); i++) {
+		for (Comment comment : commentList) {
 			final Button button = new Button(composite, SWT.RADIO);
-
 			button.setBackground(composite.getBackground());
 
-			@SuppressWarnings("restriction")
-			Comment currentComment = commentList.get(new Integer(i + 1));
-
-			final String uuid = currentComment.getId();
-			final boolean isDraft = currentComment.isDraft();
-			final String commentText = currentComment.getDescription();
+			final String uuid = comment.getId();
+			final boolean isDraft = comment.isDraft();
+			final String commentText = comment.getDescription();
 			final String authorAndDate;
-			IUser author = currentComment.getAuthor();
+			IUser author = comment.getAuthor();
 			if (author != null) {
-				authorAndDate = currentComment.getAuthor().getDisplayName() + " " //$NON-NLS-1$
-						+ currentComment.getCreationDate().toString();
+				authorAndDate = comment.getAuthor().getDisplayName() + " " //$NON-NLS-1$
+						+ comment.getCreationDate().toString();
 			} else {
 				authorAndDate = Messages.CommentInputDialog_No_author + " " //$NON-NLS-1$
-						+ currentComment.getCreationDate().toString();
+						+ comment.getCreationDate().toString();
 			}
 
-			String commentPrefix = StringUtils.abbreviate(currentComment.getDescription(), 50);
+			String commentPrefix = StringUtils.abbreviate(comment.getDescription(), 50);
 			if (isDraft) {
 				button.setText(NLS.bind(Messages.CommentInputDialog_Draft, authorAndDate, commentPrefix));
 			} else {
@@ -445,7 +440,7 @@ public class CommentInputDialog extends FormDialog {
 		return true;
 	}
 
-	public void setComments(Map<Integer, Comment> commentList) {
+	public void setComments(List<Comment> commentList) {
 		this.commentList = commentList;
 	}
 

@@ -227,34 +227,16 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 	}
 
 	private void createCommentAnnotations(IDocument document, AnnotationModelEvent event, IComment comment) {
-		int startLine = 0;
-		int endLine = 0;
 		//TODO We need to ensure that this works properly with cases where 0 or many locations exist.
 		for (ILocation location : comment.getLocations()) {
 			if (location instanceof ILineLocation) {
-				ILineLocation lineLocation = (ILineLocation) location;
 				try {
-					startLine = lineLocation.getRangeMin();
-					endLine = lineLocation.getRangeMax();
-
-					int offset = 0;
-					int length = 0;
-					if (startLine != 0 && startLine <= document.getNumberOfLines()) {
-
-						offset = document.getLineOffset(startLine - 1);
-						if (endLine == 0) {
-							endLine = startLine;
-						}
-						length = Math.max(document.getLineOffset(endLine - 1) - offset, 0);
-
-					}
-					length = Math.max(1, length);
-					CommentAnnotation ca = new CommentAnnotation(offset, length, comment);
+					CommentAnnotation ca = createCommentAnnotation(document, comment, (ILineLocation) location);
 					if (annotations.add(ca)) {
 						event.annotationAdded(ca);
 					}
 				} catch (BadLocationException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, "Unable to add annotation.",
+					StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, "Unable to add annotation.", //$NON-NLS-1$
 							e));
 				}
 			}
@@ -262,37 +244,17 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 	}
 
 	private void removeCommentAnnotations(IDocument document, AnnotationModelEvent event, IComment comment) {
-		int startLine = 0;
-		int endLine = 0;
 		for (ILocation location : comment.getLocations()) {
 			if (location instanceof ILineLocation) {
-				ILineLocation lineLocation = (ILineLocation) location;
 				try {
-					startLine = lineLocation.getRangeMin();
-					endLine = lineLocation.getRangeMax();
-
-					int offset = 0;
-					int length = 0;
-					if (startLine != 0 && startLine <= document.getNumberOfLines()) {
-
-						offset = document.getLineOffset(startLine - 1);
-						if (endLine == 0) {
-							endLine = startLine;
-						}
-						length = Math.max(document.getLineOffset(endLine - 1) - offset, 0);
-
-					}
-					length = Math.max(1, length);
-					CommentAnnotation ca = new CommentAnnotation(offset, length, comment);
-
+					CommentAnnotation ca = createCommentAnnotation(document, comment, (ILineLocation) location);
 					annotations.remove(ca);
-					List<IComment> lst = reviewItem.getComments();
-					lst.remove(comment);
+					reviewItem.getComments().remove(comment);
 					event.annotationRemoved(ca);
 
 				} catch (BadLocationException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
-							"Unable to remove annotation.", e));
+							"Unable to remove annotation.", e)); //$NON-NLS-1$
 				}
 			}
 		}
@@ -300,40 +262,39 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 
 	private void modifyCommentAnnotations(IDocument document, AnnotationModelEvent event, IComment oldcomment,
 			IComment comment) {
-		int startLine = 0;
-		int endLine = 0;
 		for (ILocation location : comment.getLocations()) {
 			if (location instanceof ILineLocation) {
-				ILineLocation lineLocation = (ILineLocation) location;
 				try {
-					startLine = lineLocation.getRangeMin();
-					endLine = lineLocation.getRangeMax();
-
-					int offset = 0;
-					int length = 0;
-					if (startLine != 0 && startLine <= document.getNumberOfLines()) {
-
-						offset = document.getLineOffset(startLine - 1);
-						if (endLine == 0) {
-							endLine = startLine;
-						}
-						length = Math.max(document.getLineOffset(endLine - 1) - offset, 0);
-
-					}
-					length = Math.max(1, length);
-					CommentAnnotation oldca = new CommentAnnotation(offset, length, oldcomment);
-					CommentAnnotation ca = new CommentAnnotation(offset, length, comment);
-					annotations.remove(oldca);
+					CommentAnnotation oldCa = createCommentAnnotation(document, oldcomment, (ILineLocation) location);
+					CommentAnnotation ca = new CommentAnnotation(oldCa.getPosition().offset,
+							oldCa.getPosition().length, comment);
+					annotations.remove(oldCa);
 					annotations.add(ca);
-					event.annotationRemoved(oldca);
+					event.annotationRemoved(oldCa);
 					event.annotationChanged(ca);
 
 				} catch (BadLocationException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
-							"Unable to modify annotation.", e));
+							"Unable to modify annotation.", e)); //$NON-NLS-1$
 				}
 			}
 		}
+	}
+
+	private CommentAnnotation createCommentAnnotation(IDocument document, IComment comment, ILineLocation lineLocation)
+			throws BadLocationException {
+		int startLine = lineLocation.getRangeMin();
+		int endLine = lineLocation.getRangeMax();
+		int offset = 0;
+		int length = 1;
+		if (startLine != 0 && startLine <= document.getNumberOfLines()) {
+			offset = document.getLineOffset(startLine - 1);
+			if (endLine == 0) {
+				endLine = startLine;
+			}
+			length = Math.max(document.getLineOffset(endLine - 1) - offset, 1);
+		}
+		return new CommentAnnotation(offset, length, comment);
 	}
 
 	protected void clear() {

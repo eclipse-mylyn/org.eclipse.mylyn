@@ -92,7 +92,12 @@ public class AddLineCommentToFileAction extends AbstractReviewAction {
 	protected LineRange getSelectedRange() {
 		//if its the action from the compare editor, get currently selected lines
 		if (compareSourceViewer != null) {
-			return compareSourceViewer.getSelection();
+			LineRange selectedRange = compareSourceViewer.getSelection();
+			int maxNumberOfLines = compareSourceViewer.getAnnotationModel().getDocument().getNumberOfLines();
+			if (selectedRange.getStartLine() == maxNumberOfLines) {
+				selectedRange = new LineRange(maxNumberOfLines - 1, 1);
+			}
+			return selectedRange;
 		} else {
 			return getJavaEditorSelection(getEditorInput());
 		}
@@ -102,12 +107,8 @@ public class AddLineCommentToFileAction extends AbstractReviewAction {
 		return editorInput;
 	}
 
-	public ILocation getLocation() {
+	private ILocation getLocation() {
 		LineRange selectedRange = getSelectedRange();
-		int maxNumberOfLines = compareSourceViewer.getAnnotationModel().getDocument().getNumberOfLines();
-		if (selectedRange.getStartLine() == maxNumberOfLines) {
-			selectedRange = new LineRange(maxNumberOfLines - 1, 1);
-		}
 		ILineLocation location = ReviewsFactory.eINSTANCE.createLineLocation();
 		ILineRange range = ReviewsFactory.eINSTANCE.createLineRange();
 		range.setStart(selectedRange.getStartLine());

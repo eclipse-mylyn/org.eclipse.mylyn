@@ -50,6 +50,7 @@ import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
 
@@ -180,7 +181,7 @@ public class ReviewCompareAnnotationSupport {
 
 	public boolean hasAnnotation(Direction direction) {
 		Position rightPosition = new Position(0, 0);
-		return findAnnotation(rightSourceViewer, direction, rightPosition, rightAnnotationModel) == null ? false : true;
+		return findAnnotation(rightSourceViewer, direction, rightPosition, rightAnnotationModel) != null;
 	}
 
 	/**
@@ -194,11 +195,7 @@ public class ReviewCompareAnnotationSupport {
 		if (leftSourceViewer == null) {
 			return null;
 		}
-		ITextSelection selection = (ITextSelection) leftSourceViewer.getSourceViewer()
-				.getSelectionProvider()
-				.getSelection();
-		int currentLeftOffset = selection.getOffset();
-		selection = (ITextSelection) rightSourceViewer.getSourceViewer().getSelectionProvider().getSelection();
+		int currentLeftOffset = getSelection(leftSourceViewer).getOffset();
 
 		Position nextLeftPosition = new Position(0, 0);
 		Annotation leftAnnotation = findAnnotation(leftSourceViewer, direction, nextLeftPosition, leftAnnotationModel);
@@ -212,30 +209,11 @@ public class ReviewCompareAnnotationSupport {
 			selectAndReveal(leftSourceViewer, nextLeftPosition);
 			return leftAnnotation;
 		} else if (leftAnnotation != null && rightAnnotation != null) {
-			int line, offset = 0;
-			try {
-				line = leftAnnotationModel.getDocument().getLineOfOffset(nextLeftPosition.offset);
-				offset = leftAnnotationModel.getDocument().getLineOffset(line);
-			} catch (BadLocationException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, "Error displaying comment", e)); //$NON-NLS-1$
-			}
-			nextLeftPosition.offset = offset;
+			nextLeftPosition.offset = getLineOffset(leftAnnotationModel, nextLeftPosition.offset);
 			nextLeftPosition.length = 1;
-			try {
-				line = rightAnnotationModel.getDocument().getLineOfOffset(nextRightPosition.offset);
-				offset = rightAnnotationModel.getDocument().getLineOffset(line);
-			} catch (BadLocationException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, "Error displaying comment", e)); //$NON-NLS-1$
-			}
-			nextRightPosition.offset = offset;
+			nextRightPosition.offset = getLineOffset(rightAnnotationModel, nextRightPosition.offset);
 			nextRightPosition.length = 1;
-			try {
-				line = leftAnnotationModel.getDocument().getLineOfOffset(currentLeftOffset);
-				offset = leftAnnotationModel.getDocument().getLineOffset(line);
-			} catch (BadLocationException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, "Error displaying comment", e)); //$NON-NLS-1$
-			}
-			currentLeftOffset = offset;
+			currentLeftOffset = getLineOffset(leftAnnotationModel, currentLeftOffset);
 
 			if (calculateNextAnnotation(direction, nextLeftPosition, nextRightPosition, currentLeftOffset) == LEFT_SIDE) {
 				return leftAnnotation;
@@ -244,6 +222,16 @@ public class ReviewCompareAnnotationSupport {
 			}
 		}
 		return null;
+	}
+
+	private int getLineOffset(ReviewAnnotationModel annotationModel, int offset) {
+		try {
+			int line = annotationModel.getDocument().getLineOfOffset(offset);
+			return annotationModel.getDocument().getLineOffset(line);
+		} catch (BadLocationException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, "Error displaying comment", e)); //$NON-NLS-1$
+		}
+		return 0;
 	}
 
 	public Side calculateNextAnnotation(Direction direction, Position nextLeftPosition, Position nextRightPosition,
@@ -256,90 +244,71 @@ public class ReviewCompareAnnotationSupport {
 				rightSourceViewer.getSourceViewer().setSelectedRange(nextLeftPosition.offset - 1,
 						nextLeftPosition.length - 1);
 				return LEFT_SIDE;
-			} else if ((nextLeftPosition.offset < currentLeftOffset && nextRightPosition.offset < currentLeftOffset)) {
+			} else if ((nextLeftPosition.offset < currentLeftOffset && nextRightPosition.offset < currentLeftOffset)
+					|| (nextLeftPosition.offset > currentLeftOffset && nextRightPosition.offset > currentLeftOffset)) {
 				if ((nextLeftPosition.offset < nextRightPosition.offset)) {
-					moveToAnnotation(rightSourceViewer, leftSourceViewer, nextLeftPosition);
-					return LEFT_SIDE;
+					return moveToLeftAnnotation(nextLeftPosition);
 				} else {
-					moveToAnnotation(leftSourceViewer, rightSourceViewer, nextRightPosition);
-					return RIGHT_SIDE;
-				}
-			} else if ((nextLeftPosition.offset > currentLeftOffset && nextRightPosition.offset > currentLeftOffset)) {
-				if ((nextLeftPosition.offset < nextRightPosition.offset)) {
-					moveToAnnotation(rightSourceViewer, leftSourceViewer, nextLeftPosition);
-					return LEFT_SIDE;
-				} else {
-					moveToAnnotation(leftSourceViewer, rightSourceViewer, nextRightPosition);
-					return RIGHT_SIDE;
+					return moveToRightAnnotation(nextRightPosition);
 				}
 			} else if ((nextLeftPosition.offset < currentLeftOffset && nextRightPosition.offset > currentLeftOffset)) {
-				moveToAnnotation(leftSourceViewer, rightSourceViewer, nextRightPosition);
-				return RIGHT_SIDE;
-
+				return moveToRightAnnotation(nextRightPosition);
 			} else if ((nextLeftPosition.offset > currentLeftOffset && nextRightPosition.offset < currentLeftOffset)) {
-				moveToAnnotation(rightSourceViewer, leftSourceViewer, nextLeftPosition);
-				return LEFT_SIDE;
+				return moveToLeftAnnotation(nextLeftPosition);
 			} else if (nextRightPosition.offset == currentLeftOffset) {
-				moveToAnnotation(rightSourceViewer, leftSourceViewer, nextLeftPosition);
-				return LEFT_SIDE;
+				return moveToLeftAnnotation(nextLeftPosition);
 			} else {
-				moveToAnnotation(leftSourceViewer, rightSourceViewer, nextRightPosition);
-				return RIGHT_SIDE;
+				return moveToRightAnnotation(nextRightPosition);
 			}
 
 		} else { // backwards
 			if (nextLeftPosition.offset == nextRightPosition.offset) {
 				moveToAnnotation(leftSourceViewer, rightSourceViewer, nextRightPosition);
-				int line;
-				IRegion region;
-				int offset = 0;
-				int length = 0;
-				try {
-					line = rightAnnotationModel.getDocument().getLineOfOffset(nextRightPosition.offset);
-					region = rightAnnotationModel.getDocument().getLineInformation(line + 1);
-					offset = region.getOffset();
-					length = region.getLength();
-				} catch (BadLocationException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
-							"Error displaying comment", e)); //$NON-NLS-1$
-				}
-				nextLeftPosition.offset = offset;
-				nextLeftPosition.length = length;
-				leftSourceViewer.getSourceViewer().revealRange(nextLeftPosition.offset, nextLeftPosition.length);
-				leftSourceViewer.getSourceViewer().setSelectedRange(nextLeftPosition.offset, nextLeftPosition.length);
+				Position position = getNextLine(nextRightPosition.offset);
+				leftSourceViewer.getSourceViewer().revealRange(position.offset, position.length);
+				leftSourceViewer.getSourceViewer().setSelectedRange(position.offset, position.length);
 				return RIGHT_SIDE;
-			} else if ((nextLeftPosition.offset > currentLeftOffset && nextRightPosition.offset > currentLeftOffset)) {
+			} else if ((nextLeftPosition.offset > currentLeftOffset && nextRightPosition.offset > currentLeftOffset)
+					|| (nextLeftPosition.offset < currentLeftOffset && nextRightPosition.offset < currentLeftOffset)) {
 				if ((nextLeftPosition.offset > nextRightPosition.offset)) {
-					moveToAnnotation(rightSourceViewer, leftSourceViewer, nextLeftPosition);
-					return LEFT_SIDE;
+					return moveToLeftAnnotation(nextLeftPosition);
 				} else {
-					moveToAnnotation(leftSourceViewer, rightSourceViewer, nextRightPosition);
-					return RIGHT_SIDE;
-				}
-			} else if ((nextLeftPosition.offset < currentLeftOffset && nextRightPosition.offset < currentLeftOffset)) {
-				if ((nextLeftPosition.offset > nextRightPosition.offset)) {
-					moveToAnnotation(rightSourceViewer, leftSourceViewer, nextLeftPosition);
-					return LEFT_SIDE;
-				} else {
-					moveToAnnotation(leftSourceViewer, rightSourceViewer, nextRightPosition);
-					return RIGHT_SIDE;
+					return moveToRightAnnotation(nextRightPosition);
 				}
 			} else if ((nextLeftPosition.offset > currentLeftOffset && nextRightPosition.offset < currentLeftOffset)) {
-				moveToAnnotation(leftSourceViewer, rightSourceViewer, nextRightPosition);
-				return RIGHT_SIDE;
-
+				return moveToRightAnnotation(nextRightPosition);
 			} else if ((nextLeftPosition.offset < currentLeftOffset && nextRightPosition.offset > currentLeftOffset)) {
-				moveToAnnotation(rightSourceViewer, leftSourceViewer, nextLeftPosition);
-				return LEFT_SIDE;
+				return moveToLeftAnnotation(nextLeftPosition);
 			} else if (nextRightPosition.offset == currentLeftOffset) {
-				moveToAnnotation(rightSourceViewer, leftSourceViewer, nextLeftPosition);
-				return LEFT_SIDE;
+				return moveToLeftAnnotation(nextLeftPosition);
 			} else {
-				moveToAnnotation(leftSourceViewer, rightSourceViewer, nextRightPosition);
-				return RIGHT_SIDE;
+				return moveToRightAnnotation(nextRightPosition);
 			}
 
 		}
+	}
+
+	private Position getNextLine(int offset) {
+		Position position = new Position(0, 0);
+		try {
+			int line = rightAnnotationModel.getDocument().getLineOfOffset(offset);
+			IRegion region = rightAnnotationModel.getDocument().getLineInformation(line + 1);
+			position.offset = region.getOffset();
+			position.length = region.getLength();
+		} catch (BadLocationException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, "Error displaying comment", e)); //$NON-NLS-1$
+		}
+		return position;
+	}
+
+	private Side moveToLeftAnnotation(Position nextLeftPosition) {
+		moveToAnnotation(rightSourceViewer, leftSourceViewer, nextLeftPosition);
+		return LEFT_SIDE;
+	}
+
+	private Side moveToRightAnnotation(Position nextRightPosition) {
+		moveToAnnotation(leftSourceViewer, rightSourceViewer, nextRightPosition);
+		return RIGHT_SIDE;
 	}
 
 	public void moveToAnnotation(MergeSourceViewer adjacentViewer, MergeSourceViewer annotationViewer, Position position) {
@@ -352,98 +321,87 @@ public class ReviewCompareAnnotationSupport {
 	private void selectAndReveal(MergeSourceViewer sourceViewer, Position position) {
 		StyledText widget = sourceViewer.getSourceViewer().getTextWidget();
 		widget.setRedraw(false);
-		{
-			int currentLineNumber = 0;
-			try {
-				currentLineNumber = sourceViewer.getSourceViewer().getDocument().getLineOfOffset(position.getOffset());
-			} catch (BadLocationException e1) {
-				StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, "Error displaying comment", e1)); //$NON-NLS-1$
-			}
-			adjustHighlightRange(sourceViewer.getSourceViewer(), position.offset, position.length);
-			sourceViewer.getSourceViewer().revealRange(position.offset, position.length);
-			sourceViewer.getSourceViewer().setSelectedRange(position.offset, position.length);
-			SourceViewer srcViewer = sourceViewer.getSourceViewer();
-
-			IReviewItem reviewitem = ((ReviewAnnotationModel) srcViewer.getAnnotationModel()).getItem();
-
-			List<CommentAnnotation> comments = getAnnotationsForLine(srcViewer, position.offset);
-
-			org.eclipse.swt.graphics.Point p = sourceViewer.getLineRange(position, sourceViewer.getSourceViewer()
-					.getSelectedRange());
-			LineRange range = new LineRange(p.x + 1, p.y);
-
-			if (commentPopupDialog != null) {
-				if (watchDog != null) {
-					try {
-						synchronized (myMonitorObject) {
-							sentinel = true;
-							commentPopupDialog.dispose();
-							myMonitorObject.wait();
-						}
-					} catch (InterruptedException e) {
-						StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
-								"Error destroying dialog", e)); //$NON-NLS-1$
-					}
-				}
-			}
-
-			commentPopupDialog = new CommentPopupDialog(ReviewsUiPlugin.getDefault()
-					.getWorkbench()
-					.getActiveWorkbenchWindow()
-					.getShell(), SWT.NO_FOCUS | SWT.ON_TOP, false, reviewitem, range);
-
-			CommentAnnotationHoverInput input = new CommentAnnotationHoverInput(comments,
-					((ReviewAnnotationModel) srcViewer.getAnnotationModel()).getBehavior());
-
-			commentPopupDialog.create();
-			commentPopupDialog.setInput(input);
-
-			commentPopupDialog.setLineNumber(currentLineNumber);
-
-			commentPopupDialog.setSize(50, 150);
-
-			org.eclipse.swt.graphics.Point location = sourceViewer.getSourceViewer().getControl().getLocation();
-			location = Display.getCurrent().getCursorLocation();
-
-			location.y = location.y + (sourceViewer.getViewportHeight() / 2);
-
-			commentPopupDialog.setLocation(location);
-
-			commentPopupDialog.open();
-
-			watchDog = new Thread(new Runnable() {
-				public void run() {
-					try {
-						for (int x = 0; x < INTERRUPT_INTERVAL; x++) {
-							if (sentinel) {
-								Thread.currentThread().interrupt();
-								break;
-							}
-							Thread.sleep(PAUSE_DELAY);
-						}
-					} catch (Exception e) {
-						StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
-								"Error interrupting thread", e)); //$NON-NLS-1$
-					}
-					if (!sentinel) {
-						Display.getDefault().asyncExec(new Runnable() {
-							public void run() {
-								if (commentPopupDialog != null) {
-									commentPopupDialog.dispose();
-									commentPopupDialog = null;
-								}
-							}
-						});
-					}
-					synchronized (myMonitorObject) {
-						myMonitorObject.notify();
-					}
-				}
-			});
-			sentinel = false;
-
-			watchDog.start();
+		int currentLineNumber = 0;
+		try {
+			currentLineNumber = sourceViewer.getSourceViewer().getDocument().getLineOfOffset(position.getOffset());
+		} catch (BadLocationException e1) {
+			StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, "Error displaying comment", e1)); //$NON-NLS-1$
 		}
+		adjustHighlightRange(sourceViewer.getSourceViewer(), position.offset, position.length);
+		sourceViewer.getSourceViewer().revealRange(position.offset, position.length);
+		sourceViewer.getSourceViewer().setSelectedRange(position.offset, position.length);
+		SourceViewer srcViewer = sourceViewer.getSourceViewer();
+
+		IReviewItem reviewitem = ((ReviewAnnotationModel) srcViewer.getAnnotationModel()).getItem();
+
+		List<CommentAnnotation> comments = getAnnotationsForLine(srcViewer, position.offset);
+
+		Point p = sourceViewer.getLineRange(position, sourceViewer.getSourceViewer().getSelectedRange());
+		LineRange range = new LineRange(p.x + 1, p.y);
+
+		if (commentPopupDialog != null) {
+			if (watchDog != null) {
+				try {
+					synchronized (myMonitorObject) {
+						sentinel = true;
+						commentPopupDialog.dispose();
+						myMonitorObject.wait();
+					}
+				} catch (InterruptedException e) {
+					StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, "Error destroying dialog", e)); //$NON-NLS-1$
+				}
+			}
+		}
+
+		commentPopupDialog = new CommentPopupDialog(ReviewsUiPlugin.getDefault()
+				.getWorkbench()
+				.getActiveWorkbenchWindow()
+				.getShell(), SWT.NO_FOCUS | SWT.ON_TOP, false, reviewitem, range);
+		CommentAnnotationHoverInput input = new CommentAnnotationHoverInput(comments,
+				((ReviewAnnotationModel) srcViewer.getAnnotationModel()).getBehavior());
+		commentPopupDialog.create();
+		commentPopupDialog.setInput(input);
+		commentPopupDialog.setLineNumber(currentLineNumber);
+		commentPopupDialog.setSize(50, 150);
+
+		Point location = sourceViewer.getSourceViewer().getControl().getLocation();
+		location = Display.getCurrent().getCursorLocation();
+		location.y = location.y + (sourceViewer.getViewportHeight() / 2);
+		commentPopupDialog.setLocation(location);
+		commentPopupDialog.open();
+
+		watchDog = new Thread(new Runnable() {
+			public void run() {
+				try {
+					for (int x = 0; x < INTERRUPT_INTERVAL; x++) {
+						if (sentinel) {
+							Thread.currentThread().interrupt();
+							break;
+						}
+						Thread.sleep(PAUSE_DELAY);
+					}
+				} catch (Exception e) {
+					StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
+							"Error interrupting thread", e)); //$NON-NLS-1$
+				}
+				if (!sentinel) {
+					Display.getDefault().asyncExec(new Runnable() {
+						public void run() {
+							if (commentPopupDialog != null) {
+								commentPopupDialog.dispose();
+								commentPopupDialog = null;
+							}
+						}
+					});
+				}
+				synchronized (myMonitorObject) {
+					myMonitorObject.notify();
+				}
+			}
+		});
+		sentinel = false;
+
+		watchDog.start();
 		widget.setRedraw(true);
 	}
 
@@ -467,29 +425,20 @@ public class ReviewCompareAnnotationSupport {
 		for (Iterator<Annotation> it = model.getAnnotationIterator(); it.hasNext();) {
 			Annotation annotation = it.next();
 			Position position = model.getPosition(annotation);
-			if (position == null) {
+			if (position == null || !isPositionOnLine(position, line, document)) {
 				continue;
 			}
-
-			if (!isRulerLine(position, document, line)) {
-				continue;
-			}
-
 			if (annotation instanceof AnnotationBag) {
 				AnnotationBag bag = (AnnotationBag) annotation;
 				Iterator<Annotation> e = bag.iterator();
 				while (e.hasNext()) {
 					annotation = e.next();
 					position = model.getPosition(annotation);
-					if (position != null && includeAnnotation(annotation, position, commentAnnotations)
-							&& annotation instanceof CommentAnnotation) {
+					if (position != null && includeAnnotation(annotation, position, commentAnnotations)) {
 						commentAnnotations.add((CommentAnnotation) annotation);
 					}
 				}
-				continue;
-			}
-
-			if (includeAnnotation(annotation, position, commentAnnotations) && annotation instanceof CommentAnnotation) {
+			} else if (includeAnnotation(annotation, position, commentAnnotations)) {
 				commentAnnotations.add((CommentAnnotation) annotation);
 			}
 		}
@@ -498,14 +447,10 @@ public class ReviewCompareAnnotationSupport {
 	}
 
 	private boolean includeAnnotation(Annotation annotation, Position position, List<CommentAnnotation> annotations) {
-		if (!(annotation instanceof CommentAnnotation)) {
-			return false;
-		}
-
-		return (annotation != null && !annotations.contains(annotation));
+		return annotation instanceof CommentAnnotation && !annotations.contains(annotation);
 	}
 
-	private boolean isRulerLine(Position position, IDocument document, int line) {
+	private boolean isPositionOnLine(Position position, int line, IDocument document) {
 		if (position.getOffset() > -1 && position.getLength() > -1) {
 			try {
 				return line == document.getLineOfOffset(position.getOffset());
@@ -589,7 +534,7 @@ public class ReviewCompareAnnotationSupport {
 		if (viewer == null) {
 			return null;
 		}
-		ITextSelection selection = (ITextSelection) viewer.getSourceViewer().getSelectionProvider().getSelection();
+		ITextSelection selection = getSelection(viewer);
 		final int offset = selection.getOffset();
 		final int length = selection.getLength();
 
@@ -666,6 +611,10 @@ public class ReviewCompareAnnotationSupport {
 		}
 
 		return nextAnnotation;
+	}
+
+	private ITextSelection getSelection(MergeSourceViewer viewer) {
+		return (ITextSelection) viewer.getSourceViewer().getSelectionProvider().getSelection();
 	}
 
 }
