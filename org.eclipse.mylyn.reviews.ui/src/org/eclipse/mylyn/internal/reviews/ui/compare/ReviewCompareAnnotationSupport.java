@@ -321,12 +321,6 @@ public class ReviewCompareAnnotationSupport {
 	private void selectAndReveal(MergeSourceViewer sourceViewer, Position position) {
 		StyledText widget = sourceViewer.getSourceViewer().getTextWidget();
 		widget.setRedraw(false);
-		int currentLineNumber = 0;
-		try {
-			currentLineNumber = sourceViewer.getSourceViewer().getDocument().getLineOfOffset(position.getOffset());
-		} catch (BadLocationException e1) {
-			StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, "Error displaying comment", e1)); //$NON-NLS-1$
-		}
 		adjustHighlightRange(sourceViewer.getSourceViewer(), position.offset, position.length);
 		sourceViewer.getSourceViewer().revealRange(position.offset, position.length);
 		sourceViewer.getSourceViewer().setSelectedRange(position.offset, position.length);
@@ -356,12 +350,11 @@ public class ReviewCompareAnnotationSupport {
 		commentPopupDialog = new CommentPopupDialog(ReviewsUiPlugin.getDefault()
 				.getWorkbench()
 				.getActiveWorkbenchWindow()
-				.getShell(), SWT.NO_FOCUS | SWT.ON_TOP, false, reviewitem, range);
+				.getShell(), SWT.NO_FOCUS | SWT.ON_TOP, true, reviewitem, range);
 		CommentAnnotationHoverInput input = new CommentAnnotationHoverInput(comments,
 				((ReviewAnnotationModel) srcViewer.getAnnotationModel()).getBehavior());
 		commentPopupDialog.create();
 		commentPopupDialog.setInput(input);
-		commentPopupDialog.setLineNumber(currentLineNumber);
 		commentPopupDialog.setSize(50, 150);
 
 		Point location = sourceViewer.getSourceViewer().getControl().getLocation();

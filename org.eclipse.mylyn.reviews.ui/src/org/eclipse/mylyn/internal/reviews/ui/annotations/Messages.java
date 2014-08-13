@@ -22,6 +22,8 @@ public class Messages extends NLS {
 
 	public static String CommentInputDialog_LineNumber;
 
+	public static String CommentPopupDialog_Edit_discard_or_reply;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -18,13 +18,14 @@ import java.util.List;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.PopupDialog;
-import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.PixelConverter;
 import org.eclipse.jface.text.source.LineRange;
 import org.eclipse.mylyn.commons.workbench.forms.CommonFormUtil;
 import org.eclipse.mylyn.internal.reviews.ui.IReviewActionListener;
 import org.eclipse.mylyn.internal.reviews.ui.dialogs.CommentInputDialog;
 import org.eclipse.mylyn.internal.reviews.ui.editors.parts.CommentPart;
+import org.eclipse.mylyn.reviews.core.model.ILineLocation;
+import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.internal.core.model.Comment;
 import org.eclipse.osgi.util.NLS;
@@ -39,11 +40,12 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.forms.IFormColors;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Hyperlink;
 
 /**
  * Popup to show the information about the annotation in
@@ -63,8 +65,6 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 
 	private Composite composite;
 
-	private Label focusLabel;
-
 	private ScrolledComposite scrolledComposite;
 
 	private CommentInformationControl informationControl;
@@ -77,19 +77,18 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 
 	private CommentInputDialog currentCommentInputDialog = null;
 
-	public final boolean isHoverActive;
+	public final boolean openDialogOnHover;
 
-	private int lineNumber = 0;
+	private List<Comment> commentList;
 
 	public CommentPopupDialog(Shell parent, int shellStyle) {
-		super(parent, shellStyle, false, false, false, false, false, null, null);
-		isHoverActive = true;
-
+		this(parent, shellStyle, false, null, null);
 	}
 
-	public CommentPopupDialog(Shell parent, int shellStyle, boolean bHoverActive, IReviewItem reviewitm, LineRange range) {
+	public CommentPopupDialog(Shell parent, int shellStyle, boolean openDialogOnHover, IReviewItem reviewitm,
+			LineRange range) {
 		super(parent, shellStyle, false, false, false, false, false, null, null);
-		this.isHoverActive = bHoverActive;
+		this.openDialogOnHover = openDialogOnHover;
 		this.reviewitem = reviewitm;
 		this.range = range;
 	}
@@ -119,10 +118,6 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 
 	public void setFocus() {
 		getShell().forceFocus();
-
-		if (focusLabel != null) {
-			focusLabel.dispose();
-		}
 
 		if (composite.getChildren().length > 0) {
 			composite.getChildren()[0].setFocus();
@@ -203,8 +198,22 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 
 			currentPopupDialog = this;
 
-			final List<Comment> commentList = new ArrayList<Comment>();
+			commentList = new ArrayList<Comment>();
 			for (CommentAnnotation annotation : annotationInput.getAnnotations()) {
+				if (reviewitem == null) {
+					if (annotation.getComment().getItem() instanceof IReviewItem) {
+						reviewitem = (IReviewItem) annotation.getComment().getItem();
+					}
+				}
+				if (range == null) {
+					List<ILocation> locations = annotation.getComment().getLocations();
+					if (!locations.isEmpty()) {
+						ILocation location = locations.get(0);
+						if (location instanceof ILineLocation) {
+							range = new LineRange(((ILineLocation) location).getRangeMin(), 1);
+						}
+					}
+				}
 
 				if ((reviewitem != null)
 						&& reviewitem.getReview() != null
@@ -222,62 +231,59 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 				toolkit.adapt(control, true, true);
 			}
 
+			if (openDialogOnHover) {
+				composite.addMouseTrackListener(new MouseTrackAdapter() {
+					@Override
+					public void mouseEnter(MouseEvent e) {
+						openCommentDialog();
+					}
+				});
+			} else {
+				Hyperlink hyperlink = toolkit.createHyperlink(composite,
+						Messages.CommentPopupDialog_Edit_discard_or_reply, SWT.NONE);
+				hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+					@Override
+					public void linkActivated(HyperlinkEvent e) {
+						openCommentDialog();
+					}
+				});
+			}
+
 			composite.setBackground(toolkit.getColors().getBackground());
 
 			scrolledComposite.layout(true, true);
 			scrolledComposite.setMinSize(composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-
-			focusLabel = toolkit.createLabel(composite, ""); //$NON-NLS-1$
-			focusLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(focusLabel);
-
-			focusLabel.getParent().addMouseTrackListener(mouseTrackAdapter(commentList));
-
 		} else {
 			input = null;
 		}
 
 	}
 
-	private MouseTrackAdapter mouseTrackAdapter(final List<Comment> commentList) {
+	private void openCommentDialog() {
 		PixelConverter Pc = new PixelConverter(composite.getFont());
 		final int lineHeight = Pc.convertHeightInCharsToPixels(1);
-		return new MouseTrackAdapter() {
+		if (range != null && reviewitem != null && currentCommentInputDialog == null) {
+			dispose();
+			Shell ashell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
 
-			@Override
-			public void mouseEnter(MouseEvent e) {
-				if (!isHoverActive && currentCommentInputDialog == null) {
+			currentCommentInputDialog = new CommentInputDialog(ashell, annotationInput.getBehavior(), reviewitem, range);
 
-					Point size = getShell().getSize();
-					dispose();
-					Shell ashell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+			currentCommentInputDialog.setComments(commentList);
+			currentCommentInputDialog.create();
+			currentCommentInputDialog.getShell().setText(
+					NLS.bind(Messages.CommentInputDialog_LineNumber, range.getStartLine(),
+							new Path(reviewitem.getName()).lastSegment()));
 
-					currentCommentInputDialog = new CommentInputDialog(ashell, annotationInput.getBehavior(),
-							reviewitem, range);
-
-					currentCommentInputDialog.setComments(commentList);
-					currentCommentInputDialog.create();
-					currentCommentInputDialog.getShell().setText(
-							NLS.bind(Messages.CommentInputDialog_LineNumber, getLineNumber(),
-									new Path(reviewitem.getName()).lastSegment()));
-
-					// adjust size to display maximum of 15 lines, which means 5 comments
-					if (annotationInput.getAnnotations().size() < 5) {
-						size.y = size.y + (annotationInput.getAnnotations().size() * 3 * lineHeight);
-					} else {
-						size.y = size.y + (15 * lineHeight);
-					}
-					currentCommentInputDialog.getShell().setSize(size);
-					currentCommentInputDialog.open();
-
-				}
+			// adjust size to display maximum of 15 lines, which means 5 comments
+			Point size = new Point(550, 150);
+			if (annotationInput.getAnnotations().size() < 5) {
+				size.y = size.y + (annotationInput.getAnnotations().size() * 3 * lineHeight);
+			} else {
+				size.y = size.y + (15 * lineHeight);
 			}
-
-			@Override
-			public void mouseExit(MouseEvent e) {
-				//ignore
-			};
-		};
+			currentCommentInputDialog.getShell().setSize(size);
+			currentCommentInputDialog.open();
+		}
 	}
 
 	public void actionAboutToRun(Action action) {
@@ -298,14 +304,6 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 
 	public CommentInformationControl getInformationControl() {
 		return informationControl;
-	}
-
-	public void setLineNumber(int lineOfOffset) {
-		lineNumber = lineOfOffset + 1;
-	}
-
-	public int getLineNumber() {
-		return lineNumber;
 	}
 
 }
