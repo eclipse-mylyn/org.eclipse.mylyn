@@ -21,6 +21,7 @@ import org.eclipse.equinox.internal.security.storage.SecurePreferencesRoot;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.commons.repositories.core.SecureCredentialsStore;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * Attempts to detect the deadlock that can occur when opening the secure storage (bug 440918) and fails preemptively.
@@ -37,18 +38,49 @@ public class UiSecureCredentialsStore extends SecureCredentialsStore {
 
 	@Override
 	protected ISecurePreferences getSecurePreferences() {
+		boolean acquiredLock = false;
 		ILock lock = getSecurePreferencesRootLock();
-		if (lock != null && lock.getDepth() > 0) {
+		try {
+			if (lock != null && lock.getDepth() > 0) {
+				// wait and try one more time in case another thread was retrieving the master password from the cache
+				sleep(200);
+				if (lock.getDepth() > 0) {
+					acquiredLock = acquire(lock);
+					// if we acquired the lock, either the thread that alreadly held it is the current thread, or it was released 
+					// in either case, we can safely proceed
+					if (!acquiredLock) {
+						throw new RuntimeException("Aborting request to prevent deadlock accessing secure storage"); //$NON-NLS-1$
+					}
+				}
+			}
+			return super.getSecurePreferences();
+		} finally {
+			if (lock != null && acquiredLock) {
+				lock.release();
+			}
+		}
+	}
+
+	private void sleep(long millis) {
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, RepositoriesUiPlugin.ID_PLUGIN, e.getMessage(), e));
+		}
+	}
+
+	/**
+	 * Check whether the current thread already holds the lock. This can only be true if we're on the main thread.
+	 */
+	private boolean acquire(ILock lock) {
+		if (Display.getCurrent() != null) {
 			try {
-				Thread.sleep(200);// wait and try one more time
+				return lock.acquire(1);
 			} catch (InterruptedException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, RepositoriesUiPlugin.ID_PLUGIN, e.getMessage(), e));
 			}
-			if (lock.getDepth() > 0) {
-				throw new RuntimeException("Aborting request to prevent deadlock accessing secure storage"); //$NON-NLS-1$
-			}
 		}
-		return super.getSecurePreferences();
+		return false;
 	}
 
 	protected static ILock getSecurePreferencesRootLock() {

@@ -16,6 +16,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.core.runtime.jobs.ILock;
@@ -53,11 +54,34 @@ public class UiSecureCredentialsStoreTest {
 		assertNotNull(Display.getCurrent());
 		TestSecureCredentialsStore store = createCredentialsStore();
 		store.put("key", "value", true);
-		ILock lock = store.getLock();
+		final ILock lock = store.getLock();
 		assertNotNull(lock);
-
+		final AtomicBoolean lockAcquired = new AtomicBoolean(false);
+		final AtomicBoolean lockReleased = new AtomicBoolean(false);
+		final AtomicBoolean done = new AtomicBoolean(false);
 		try {
-			assertTrue(lock.acquire(3000));
+
+			runOnBackgroundThread(false, new Runnable() {
+				@Override
+				public void run() {
+					try {
+						assertTrue(lock.acquire(3000));
+						lockAcquired.set(true);
+						while (!done.get()) {
+							// hold the lock
+						}
+					} catch (InterruptedException e) {
+						fail("Interrupted trying to acquire SecurePreferencesRoot lock");
+					} finally {
+						lock.release();
+						lockReleased.set(true);
+					}
+				}
+			});
+			while (!lockAcquired.get()) {
+				// wait for background thread to acquire lock
+			}
+
 			try {
 				store.get("key", null);
 				fail("Expected exception");
@@ -70,15 +94,37 @@ public class UiSecureCredentialsStoreTest {
 			} catch (RuntimeException e) {// expected
 				assertEquals(DEADLOCK_ERROR_MESSAGE, e.getMessage());
 			}
-		} catch (InterruptedException e) {
-			fail("Interrupted trying to acquire SecurePreferencesRoot lock");
 		} finally {
-			lock.release();
+			done.set(true);
+		}
+		while (!lockReleased.get()) {
+			// wait for background thread to release lock
 		}
 		assertEquals("value", store.get("key", null));
 
 		store.put("key", "newValue", true);
 		assertEquals("newValue", store.get("key", null));
+	}
+
+	@Test
+	public void testDoNotDetectDeadlockWhenUiThreadAlreadyHoldsLock() throws Exception {
+		assertNotNull(Display.getCurrent());
+		TestSecureCredentialsStore store = createCredentialsStore();
+		store.put("key", "value", true);
+		ILock lock = store.getLock();
+		assertNotNull(lock);
+
+		try {
+			assertTrue(lock.acquire(3000));
+			assertEquals("value", store.get("key", null));
+
+			store.put("key", "newValue", true);
+			assertEquals("newValue", store.get("key", null));
+		} catch (InterruptedException e) {
+			fail("Interrupted trying to acquire SecurePreferencesRoot lock");
+		} finally {
+			lock.release();
+		}
 	}
 
 	@Test
@@ -91,7 +137,7 @@ public class UiSecureCredentialsStoreTest {
 
 		try {
 			assertTrue(lock.acquire(3000));
-			runOnBackgroundThread(new Runnable() {
+			runOnBackgroundThread(true, new Runnable() {
 				@Override
 				public void run() {
 					try {
@@ -113,7 +159,7 @@ public class UiSecureCredentialsStoreTest {
 		} finally {
 			lock.release();
 		}
-		runOnBackgroundThread(new Runnable() {
+		runOnBackgroundThread(true, new Runnable() {
 			@Override
 			public void run() {
 				assertEquals("value", store.get("key", null));
@@ -124,7 +170,7 @@ public class UiSecureCredentialsStoreTest {
 		});
 	}
 
-	protected void runOnBackgroundThread(final Runnable runnable) throws AssertionError {
+	protected void runOnBackgroundThread(boolean join, final Runnable runnable) throws AssertionError {
 		final AtomicReference<AssertionError> assertionError = new AtomicReference<AssertionError>();
 		Thread thread = new Thread(new Runnable() {
 			public void run() {
@@ -137,10 +183,12 @@ public class UiSecureCredentialsStoreTest {
 			}
 		});
 		thread.start();
-		try {
-			thread.join();
-		} catch (InterruptedException e) {
-			fail("Interrupted while joining thread");
+		if (join) {
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
+				fail("Interrupted while joining thread");
+			}
 		}
 		if (assertionError.get() != null) {
 			throw assertionError.get();
@@ -150,7 +198,7 @@ public class UiSecureCredentialsStoreTest {
 	@Test
 	public void testRunOnBackgroundThread() throws Exception {
 		try {
-			runOnBackgroundThread(new Runnable() {
+			runOnBackgroundThread(true, new Runnable() {
 				public void run() {
 					fail();
 				}
