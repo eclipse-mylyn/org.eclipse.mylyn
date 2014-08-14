@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
@@ -35,6 +37,8 @@ import com.google.common.base.Strings;
  */
 public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
+	private static final Pattern PATTERN_LINE_BREAK = Pattern.compile("(.*(\r\n|\r|\n)?)?"); //$NON-NLS-1$
+
 	private interface MarkdownBlock {
 
 		void lineBreak() throws IOException;
@@ -43,9 +47,9 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	private class ContentBlock extends Block implements MarkdownBlock {
 
-		private final String prefix;
+		protected final String prefix;
 
-		private final String suffix;
+		protected final String suffix;
 
 		ContentBlock(BlockType blockType, String prefix, String suffix) {
 			super(blockType);
@@ -97,7 +101,7 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	}
 
 	private class ImplicitParagraphBlock extends AbstractMarkupDocumentBuilder.ImplicitParagraphBlock implements
-	MarkdownBlock {
+			MarkdownBlock {
 
 		@Override
 		public void lineBreak() throws IOException {
@@ -106,11 +110,44 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	}
 
+	private class PrefixedLineContentBlock extends ContentBlock {
+
+		PrefixedLineContentBlock(BlockType blockType, String prefix, String suffix) {
+			super(blockType, prefix, suffix);
+		}
+
+		@Override
+		protected void emitContent(String content) throws IOException {
+			// break out the block onto its own line if the last character
+			// was not a line break or null character literal
+			char lastChar = getLastChar();
+			if (lastChar != '\n' && lastChar != '\r' && lastChar != '\u0000') {
+				MarkdownDocumentBuilder.this.emitContent('\n');
+			}
+
+			// split out content by line break
+			Matcher matcher = PATTERN_LINE_BREAK.matcher(content);
+			while (matcher.find()) {
+				// if the line is empty, emit no prefix
+				String line = matcher.group(0);
+				if (!line.trim().isEmpty()) {
+					MarkdownDocumentBuilder.this.emitContent(prefix);
+				}
+				MarkdownDocumentBuilder.this.emitContent(line);
+			}
+			// collapse suffix for nested blocks
+			if (!content.endsWith(suffix)) {
+				MarkdownDocumentBuilder.this.emitContent(suffix);
+			}
+		}
+
+	}
+
 	private class LinkBlock extends ContentBlock {
 
 		private final LinkAttributes attributes;
 
-		private LinkBlock(LinkAttributes attributes) {
+		LinkBlock(LinkAttributes attributes) {
 			super("", ""); //$NON-NLS-1$ //$NON-NLS-2$
 			this.attributes = attributes;
 		}
@@ -144,6 +181,8 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		switch (type) {
 		case PARAGRAPH:
 			return new ContentBlock(type, "", "\n\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		case QUOTE:
+			return new PrefixedLineContentBlock(type, "> ", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		default:
 			Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
 			return new ContentBlock(type, "", ""); //$NON-NLS-1$ //$NON-NLS-2$

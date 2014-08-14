@@ -59,6 +59,18 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		assertMarkup("A paragraph ends when a blank line begins!\n\n");
 	}
 
+	public void testParagraphConsecutive() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("Paragraph 1");
+		builder.endBlock();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("Paragraph 2");
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("Paragraph 1\n\nParagraph 2\n\n");
+	}
+
 	public void testParagraphWithStrongEmphasis() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
@@ -133,6 +145,133 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.endHeading();
 		builder.endDocument();
 		assertMarkup("# This is an H1\n\n## This is an H2\n\n###### This is an H6\n\n");
+	}
+
+	public void testBlockQuote() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.QUOTE, new Attributes());
+		builder.characters("A quote by someone important.");
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("> A quote by someone important.\n");
+	}
+
+	public void testBlockQuoteConsecutive() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.QUOTE, new Attributes());
+		builder.characters("Quote 1");
+		builder.endBlock();
+		builder.beginBlock(BlockType.QUOTE, new Attributes());
+		builder.characters("Quote 2");
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("> Quote 1\n> Quote 2\n");
+	}
+
+	public void testBlockQuoteWithParagraph() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.QUOTE, new Attributes());
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("First paragraph.");
+		builder.endBlock();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("Second paragraph.");
+		builder.endBlock();
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("> First paragraph.\n\n> Second paragraph.\n\n");
+	}
+
+	public void testBlockQuoteNested() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.QUOTE, new Attributes());
+		builder.characters("First level.");
+		builder.beginBlock(BlockType.QUOTE, new Attributes());
+		builder.characters("Second level.");
+		builder.endBlock();
+		builder.characters("First level again.");
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("> First level.\n> > Second level.\n> First level again.\n");
+	}
+
+	public void testBlockQuoteNestedParagaphs() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.QUOTE, new Attributes());
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("First level.");
+		builder.endBlock();
+		builder.beginBlock(BlockType.QUOTE, new Attributes());
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("Second level.");
+		builder.endBlock();
+		builder.endBlock();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("First level again.");
+		builder.endBlock();
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("> First level.\n\n> > Second level.\n\n> First level again.\n\n");
+	}
+
+	public void testBlockQuoteTripleNested() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.QUOTE, new Attributes());
+		builder.characters("First level.");
+		builder.beginBlock(BlockType.QUOTE, new Attributes());
+		builder.characters("Second level.");
+		builder.beginBlock(BlockType.QUOTE, new Attributes());
+		builder.characters("Third level.");
+		builder.endBlock();
+		builder.endBlock();
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("> First level.\n> > Second level.\n> > > Third level.\n");
+	}
+
+	public void testBlockQuoteTripleNestedParagraphs() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.QUOTE, new Attributes());
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("First level.");
+		builder.endBlock();
+		builder.beginBlock(BlockType.QUOTE, new Attributes());
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("Second level.");
+		builder.endBlock();
+		builder.beginBlock(BlockType.QUOTE, new Attributes());
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("Third level.");
+		builder.endBlock();
+		builder.endBlock();
+		builder.endBlock();
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("> First level.\n\n> > Second level.\n\n> > > Third level.\n\n");
+	}
+
+	public void testBlockQuoteWithLineBreak() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.QUOTE, new Attributes());
+		builder.characters("Some text...");
+		builder.lineBreak();
+		builder.characters("...with a line break.");
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("> Some text...  \n> ...with a line break.\n");
+	}
+
+	public void testBlockQuoteWithParagraphLineBreak() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.QUOTE, new Attributes());
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("Some text...");
+		builder.lineBreak();
+		builder.characters("...with a line break.");
+		builder.endBlock();
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("> Some text...  \n> ...with a line break.\n\n");
 	}
 
 	// span elements - http://daringfireball.net/projects/markdown/syntax#span
