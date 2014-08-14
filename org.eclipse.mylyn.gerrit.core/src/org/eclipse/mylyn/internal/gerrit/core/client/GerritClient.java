@@ -1142,6 +1142,7 @@ public class GerritClient extends ReviewsClient {
 				throw e;
 			}
 		}
+		Collections.sort(result, new ProjectByNameComparator());
 		return result;
 	}
 
