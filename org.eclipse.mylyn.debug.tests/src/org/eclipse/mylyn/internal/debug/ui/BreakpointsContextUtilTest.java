@@ -24,6 +24,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.model.IBreakpoint;
@@ -77,8 +79,8 @@ public class BreakpointsContextUtilTest {
 	 * If the project isn't in the workspace, breakpoints from context should be ignored
 	 */
 	@Test
-	public void testImportBreakpointsWithMissingProject() {
-		contextManager.activateContext("contextWithBreakpoints"); //$NON-NLS-1$
+	public void testImportBreakpointsWithMissingProject() throws Exception {
+		activateContext();
 		IInteractionContext testContext = contextManager.getActiveContext();
 		List<IBreakpoint> breakpoints = BreakpointsContextUtil.importBreakpoints(testContext, null);
 		assertEquals(Collections.emptyList(), breakpoints);
@@ -87,7 +89,7 @@ public class BreakpointsContextUtilTest {
 	@Test
 	public void testImportBreakpoints() throws Exception {
 		BreakpointsTestUtil.createProject();
-		contextManager.activateContext("contextWithBreakpoints"); //$NON-NLS-1$
+		activateContext();
 		IInteractionContext testContext = contextManager.getActiveContext();
 		List<IBreakpoint> breakpoints = BreakpointsContextUtil.importBreakpoints(testContext, null);
 		assertTrue(breakpoints.size() == 2);
@@ -109,7 +111,7 @@ public class BreakpointsContextUtilTest {
 
 		assertEquals(0, breakpointManager.getBreakpoints().length);
 
-		contextManager.activateContext("contextWithBreakpoints"); //$NON-NLS-1$
+		activateContext();
 		assertEquals(2, breakpointManager.getBreakpoints().length);
 
 		contextManager.deactivateContext("contextWithBreakpoints"); //$NON-NLS-1$
@@ -126,7 +128,7 @@ public class BreakpointsContextUtilTest {
 
 		assertEquals(0, breakpointManager.getBreakpoints().length);
 
-		contextManager.activateContext("contextWithBreakpoints"); //$NON-NLS-1$
+		activateContext();
 		assertEquals(0, breakpointManager.getBreakpoints().length);
 
 		contextManager.deactivateContext("contextWithBreakpoints"); //$NON-NLS-1$
@@ -139,7 +141,7 @@ public class BreakpointsContextUtilTest {
 
 		assertEquals(0, breakpointManager.getBreakpoints().length);
 
-		contextManager.activateContext("contextWithBreakpoints"); //$NON-NLS-1$
+		activateContext();
 		assertEquals(2, breakpointManager.getBreakpoints().length);
 
 		BreakpointsTestUtil.setManageBreakpointsPreference(false);
@@ -177,6 +179,11 @@ public class BreakpointsContextUtilTest {
 
 		BreakpointsContextUtil.removeBreakpoints(breakpointsToRemove);
 		assertEquals(currentBreakpoints, breakpointManager.getBreakpoints().length);
+	}
+
+	private void activateContext() throws OperationCanceledException, InterruptedException {
+		contextManager.activateContext("contextWithBreakpoints"); //$NON-NLS-1$
+		Job.getJobManager().join(BreakpointsContextContributor.JOB_FAMILY, null);
 	}
 
 }
