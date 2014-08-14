@@ -271,7 +271,7 @@ public class CommentInputDialog extends FormDialog {
 							return Status.OK_STATUS;
 						}
 					}
-					processServerError(status.getException().getCause().toString());
+					processServerError(status.getMessage());
 
 					return Status.OK_STATUS;
 				}
