@@ -42,6 +42,15 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 
 	// block elements - http://daringfireball.net/projects/markdown/syntax#block
 
+	public void testUnsupportedBlock() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.FOOTNOTE, new Attributes());
+		builder.characters("unsupported");
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("unsupported\n\n");
+	}
+
 	public void testEmptyBlock() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
@@ -214,6 +223,31 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		assertMarkup("> First level.\n\n> > Second level.\n\n> First level again.\n\n");
 	}
 
+	public void testBlockQuoteNestedList() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.QUOTE, new Attributes());
+		builder.beginHeading(2, new Attributes());
+		builder.characters("Header.");
+		builder.endHeading();
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("First item.");
+		builder.endBlock();
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("Second item.");
+		builder.endBlock();
+		builder.endBlock();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("Some code:");
+		builder.endBlock();
+		builder.beginBlock(BlockType.CODE, new Attributes());
+		builder.characters("return shell_exec(\"echo $input | $markdown_script\");");
+		builder.endBlock();
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("> ## Header.\n\n> * First item.\n> * Second item.\n\n> Some code:\n\n>     return shell_exec(\"echo $input | $markdown_script\");\n\n");
+	}
+
 	public void testBlockQuoteTripleNested() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.QUOTE, new Attributes());
@@ -272,6 +306,132 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.endBlock();
 		builder.endDocument();
 		assertMarkup("> Some text...  \n> ...with a line break.\n\n");
+	}
+
+	public void testListBulleted() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("X");
+		builder.endBlock();
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("Y");
+		builder.endBlock();
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("Z");
+		builder.endBlock();
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("* X\n* Y\n* Z\n\n");
+	}
+
+	public void testListNumeric() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.NUMERIC_LIST, new Attributes());
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("One");
+		builder.endBlock();
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("Two");
+		builder.endBlock();
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("Three");
+		builder.endBlock();
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("1. One\n2. Two\n3. Three\n\n");
+	}
+
+	public void testListConsecutive() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("Food");
+		builder.endBlock();
+		builder.endBlock();
+		builder.beginBlock(BlockType.NUMERIC_LIST, new Attributes());
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("Drink");
+		builder.endBlock();
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("* Food\n\n1. Drink\n\n");
+	}
+
+	public void testListWithParagraphs() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("X");
+		builder.endBlock();
+		builder.endBlock();
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("Y");
+		builder.endBlock();
+		builder.endBlock();
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("Z");
+		builder.endBlock();
+		builder.endBlock();
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("* X\n\n* Y\n\n* Z\n\n");
+	}
+
+	public void testListItemWithHangingParagraph() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("List item with two paragraphs.");
+		builder.endBlock();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("Second paragraph.");
+		builder.endBlock();
+		builder.endBlock();
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("Simple list item.");
+		builder.endBlock();
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("* List item with two paragraphs.\n\n    Second paragraph.\n\n* Simple list item.\n\n");
+	}
+
+	public void testListItemWithBlockQuote() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("A list item with a blockquote:");
+		builder.endBlock();
+		builder.beginBlock(BlockType.QUOTE, new Attributes());
+		builder.characters("This is a blockquote");
+		builder.lineBreak();
+		builder.characters("inside a list item.");
+		builder.endBlock();
+		builder.endBlock();
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("* A list item with a blockquote:\n\n    > This is a blockquote  \n    > inside a list item.\n\n");
+	}
+
+	public void testListItemWithCodeBlock() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("A list item with a code block:");
+		builder.endBlock();
+		builder.beginBlock(BlockType.CODE, new Attributes());
+		builder.characters("code goes here");
+		builder.endBlock();
+		builder.endBlock();
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("* A list item with a code block:\n\n        code goes here\n\n");
 	}
 
 	public void testCodeBlock() {
@@ -408,6 +568,15 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.characters(" opens an implicit paragraph.");
 		builder.endDocument();
 		assertMarkup("A paragraph.\n\n[A link](http://example.com/) opens an implicit paragraph.\n\n");
+	}
+
+	public void testLinkSpanEmptyAttributes() {
+		builder.beginDocument();
+		builder.beginSpan(SpanType.LINK, new Attributes());
+		builder.characters("http://example.com");
+		builder.endSpan();
+		builder.endDocument();
+		assertMarkup("<http://example.com>\n\n");
 	}
 
 	public void testEmphasis() {
@@ -592,6 +761,16 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.characters(" 5");
 		builder.endDocument();
 		assertMarkup("4 < 5\n\n");
+	}
+
+	public void testEntityCopyright() {
+		builder.beginDocument();
+		builder.entityReference("copy");
+		builder.characters(" XY");
+		builder.entityReference("amp");
+		builder.characters("Z 2014");
+		builder.endDocument();
+		assertMarkup("&copy; XY&Z 2014\n\n");
 	}
 
 	private void assertMarkup(String expected) {

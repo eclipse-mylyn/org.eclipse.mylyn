@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.wikitext.markdown.core;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -32,7 +32,7 @@ import com.google.common.base.Strings;
 
 /**
  * a document builder that emits Markdown markup
- * 
+ *
  * @author Leo Dos Santos
  * @see MarkdownLanguage
  * @see MarkdownLanguage#createDocumentBuilder(Writer)
@@ -116,14 +116,10 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		}
 
 		@Override
-		public void lineBreak() throws IOException {
-			MarkdownDocumentBuilder.this.emitContent("  \n"); //$NON-NLS-1$
-		}
-
-		@Override
 		protected boolean isImplicitBlock() {
 			return true;
 		}
+
 	}
 
 	private class PrefixedLineContentBlock extends ContentBlock {
@@ -150,6 +146,78 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 					MarkdownDocumentBuilder.this.emitContent(prefix);
 				}
 				MarkdownDocumentBuilder.this.emitContent(line);
+			}
+			// collapse suffix for nested blocks
+			if (!content.endsWith(suffix)) {
+				MarkdownDocumentBuilder.this.emitContent(suffix);
+			}
+		}
+
+	}
+
+	private class ListBlock extends ContentBlock {
+
+		private int count = 0;
+
+		ListBlock(BlockType blockType, String prefix, String suffix) {
+			super(blockType, prefix, suffix);
+		}
+
+		@Override
+		protected void emitContent(String content) throws IOException {
+			MarkdownDocumentBuilder.this.emitContent(prefix);
+			MarkdownDocumentBuilder.this.emitContent(content);
+			if (!content.endsWith("\n\n")) { //$NON-NLS-1$
+				MarkdownDocumentBuilder.this.emitContent(suffix);
+			}
+		}
+
+		protected void addListItem(ListItemBlock item) {
+			checkNotNull(item);
+			count++;
+		}
+
+		protected int getCount() {
+			return count;
+		}
+
+	}
+
+	private class ListItemBlock extends ContentBlock {
+
+		private int count;
+
+		private ListItemBlock(String prefix, String suffix) {
+			super(BlockType.LIST_ITEM, prefix, suffix);
+		}
+
+		@Override
+		public void open() throws IOException {
+			super.open();
+			if (getPreviousBlock() instanceof ListBlock) {
+				ListBlock list = (ListBlock) getPreviousBlock();
+				list.addListItem(this);
+				count = list.getCount();
+			}
+		}
+
+		@Override
+		protected void emitContent(String content) throws IOException {
+			if (getPreviousBlock().getBlockType() == BlockType.NUMERIC_LIST) {
+				prefix = count + ". "; //$NON-NLS-1$
+			}
+			MarkdownDocumentBuilder.this.emitContent(prefix);
+			// split out content by line
+			Matcher matcher = PATTERN_LINE_BREAK.matcher(content);
+			int lines = 0;
+			while (matcher.find()) {
+				// indent each line hanging past the initial line item
+				String line = matcher.group(0);
+				if (lines > 0 && !line.trim().isEmpty()) {
+					line = "    " + line; //$NON-NLS-1$
+				}
+				MarkdownDocumentBuilder.this.emitContent(line);
+				lines++;
 			}
 			// collapse suffix for nested blocks
 			if (!content.endsWith(suffix)) {
@@ -217,11 +285,19 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			return new ContentBlock(type, "", "\n\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		case QUOTE:
 			return new PrefixedLineContentBlock(type, "> ", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		case BULLETED_LIST:
+		case NUMERIC_LIST:
+			return new ListBlock(type, "", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		case LIST_ITEM:
+			if (computeCurrentListType() == BlockType.NUMERIC_LIST) {
+				return new ListItemBlock("1. ", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			return new ListItemBlock("* ", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		case CODE:
 			return new PrefixedLineContentBlock(type, "    ", "\n\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		default:
 			Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
-			return new ContentBlock(type, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock(type, "", "\n\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -232,6 +308,7 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			if (attributes instanceof LinkAttributes) {
 				return new LinkBlock((LinkAttributes) attributes);
 			}
+			return new ContentBlock("<", ">"); //$NON-NLS-1$ //$NON-NLS-2$
 		case ITALIC:
 		case EMPHASIS:
 			return new ContentBlock("*", "*"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -248,8 +325,7 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	@Override
 	protected Block computeHeading(int level, Attributes attributes) {
-		checkArgument(level >= 1 && level <= 6);
-		return new ContentBlock(new String("######".toCharArray(), 0, level) + " ", "\n\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return new ContentBlock(computePrefix('#', level) + " ", "\n\n"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override
@@ -328,8 +404,6 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		try {
 			if (currentBlock instanceof MarkdownBlock) {
 				((MarkdownBlock) currentBlock).lineBreak();
-			} else {
-				currentBlock.write("\n"); //$NON-NLS-1$
 			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
