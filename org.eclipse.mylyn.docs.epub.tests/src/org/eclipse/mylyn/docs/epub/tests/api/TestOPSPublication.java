@@ -557,7 +557,7 @@ public class TestOPSPublication extends AbstractTest {
 		Report report = new DefaultReportImpl(epubFile.toString());
 		EpubCheck checker = new EpubCheck(epubFile, report);
 		System.out.println("Validating plain EPUB 2.0.1 file");
-		System.out.println("Using version " + EpubCheck.VERSION + " of EpubCheck.");
+		System.out.println("Using version " + EpubCheck.version() + " of EpubCheck.");
 		Assert.assertTrue(checker.validate());
 	}
 

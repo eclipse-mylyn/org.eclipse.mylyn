@@ -77,4 +77,8 @@ public class ValidationReport implements Report {
 		// ignore
 
 	}
+
+	@Override
+	public void hint(String arg0, int arg1, int arg2, String arg3) {
+	}
 }
