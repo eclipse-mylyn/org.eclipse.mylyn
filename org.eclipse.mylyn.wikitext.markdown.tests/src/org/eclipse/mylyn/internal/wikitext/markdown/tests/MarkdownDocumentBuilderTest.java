@@ -274,6 +274,68 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		assertMarkup("> Some text...  \n> ...with a line break.\n\n");
 	}
 
+	public void testCodeBlock() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("Paragraph:");
+		builder.endBlock();
+		builder.beginBlock(BlockType.CODE, new Attributes());
+		builder.characters("Code block.");
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("Paragraph:\n\n    Code block.\n\n");
+	}
+
+	public void testCodeBlockConsecutive() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.CODE, new Attributes());
+		builder.characters("// comment");
+		builder.endBlock();
+		builder.beginBlock(BlockType.CODE, new Attributes());
+		builder.characters("code();");
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("    // comment\n\n    code();\n\n");
+	}
+
+	public void testCodeBlockIndented() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("Below is code:");
+		builder.endBlock();
+		builder.beginBlock(BlockType.CODE, new Attributes());
+		builder.characters("open brace {\n    code\n} end brace");
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("Below is code:\n\n    open brace {\n        code\n    } end brace\n\n");
+	}
+
+	public void testCodeBlockWhiteSpace() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.CODE, new Attributes());
+		builder.characters("foo() {\n    bar();\n\n    baz();\n}");
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("    foo() {\n        bar();\n\n        baz();\n    }\n\n");
+	}
+
+	public void testCodeBlockEscapedHtml() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.CODE, new Attributes());
+		builder.entityReference("lt");
+		builder.characters("body");
+		builder.entityReference("gt");
+		builder.characters("\n    UNIX was created at AT");
+		builder.entityReference("amp");
+		builder.characters("T.\n");
+		builder.entityReference("lt");
+		builder.characters("/body");
+		builder.entityReference("gt");
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("    <body>\n        UNIX was created at AT&T.\n    </body>\n\n");
+	}
+
 	// span elements - http://daringfireball.net/projects/markdown/syntax#span
 
 	public void testUnsupportedSpan() {
@@ -293,6 +355,19 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.characters(" suffix");
 		builder.endDocument();
 		assertMarkup("prefix suffix\n\n");
+	}
+
+	public void testSpanImplicitParagraph() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("Paragraph");
+		builder.endBlock();
+		builder.beginSpan(SpanType.ITALIC, new Attributes());
+		builder.characters("Implicit");
+		builder.endSpan();
+		builder.characters(" paragraph");
+		builder.endDocument();
+		assertMarkup("Paragraph\n\n*Implicit* paragraph\n\n");
 	}
 
 	public void testLink() {
@@ -369,6 +444,32 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.endSpan();
 		builder.endDocument();
 		assertMarkup("**bold**\n\n");
+	}
+
+	public void testCodeSpan() {
+		builder.beginDocument();
+		builder.characters("Here's a ");
+		builder.beginSpan(SpanType.CODE, new Attributes());
+		builder.characters("code()");
+		builder.endSpan();
+		builder.characters(" span.");
+		builder.endBlock();
+		assertMarkup("Here's a `code()` span.\n\n");
+	}
+
+	public void testCodeSpanEscaped() {
+		builder.beginDocument();
+		builder.characters("A single backtick in a code span: ");
+		builder.beginSpan(SpanType.CODE, new Attributes());
+		builder.characters("`");
+		builder.endSpan();
+		builder.lineBreak();
+		builder.characters("A backtick-delimited string in a code span: ");
+		builder.beginSpan(SpanType.CODE, new Attributes());
+		builder.characters("`foo`");
+		builder.endSpan();
+		builder.endDocument();
+		assertMarkup("A single backtick in a code span: `` ` ``  \nA backtick-delimited string in a code span: `` `foo` ``\n\n");
 	}
 
 	public void testImage() {
@@ -457,12 +558,7 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.characters("text2");
 		builder.endBlock();
 		builder.endDocument();
-
-		String markup = out.toString();
-
-		TestUtil.println(markup);
-
-		assertEquals("**text1**\n\ntext2\n\n", markup);
+		assertMarkup("**text1**\n\ntext2\n\n");
 	}
 
 	public void testSpanOpensImplicitParagraph() {
@@ -475,11 +571,27 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.endSpan();
 		builder.characters(" text");
 		builder.endDocument();
+		assertMarkup("text\n\n**bold** text\n\n");
+	}
 
-		String markup = out.toString();
-		TestUtil.println(markup);
+	public void testEntityReference() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("5 ");
+		builder.entityReference("gt");
+		builder.characters(" 4");
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("5 > 4\n\n");
+	}
 
-		assertEquals("text\n\n**bold** text\n\n", markup);
+	public void testEntityReferenceImplicitParagraph() {
+		builder.beginDocument();
+		builder.characters("4 ");
+		builder.entityReference("lt");
+		builder.characters(" 5");
+		builder.endDocument();
+		assertMarkup("4 < 5\n\n");
 	}
 
 	private void assertMarkup(String expected) {

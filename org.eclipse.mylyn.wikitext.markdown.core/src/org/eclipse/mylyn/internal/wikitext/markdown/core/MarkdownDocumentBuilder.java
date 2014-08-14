@@ -16,6 +16,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,6 +41,13 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	private static final Pattern PATTERN_LINE_BREAK = Pattern.compile("(.*(\r\n|\r|\n)?)?"); //$NON-NLS-1$
 
+	private final Map<String, String> entityToLiteral = new HashMap<String, String>();
+	{
+		entityToLiteral.put("amp", "&"); //$NON-NLS-1$ //$NON-NLS-2$
+		entityToLiteral.put("lt", "<"); //$NON-NLS-1$ //$NON-NLS-2$
+		entityToLiteral.put("gt", ">"); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
 	private interface MarkdownBlock {
 
 		void lineBreak() throws IOException;
@@ -47,9 +56,9 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	private class ContentBlock extends Block implements MarkdownBlock {
 
-		protected final String prefix;
+		protected String prefix;
 
-		protected final String suffix;
+		protected String suffix;
 
 		ContentBlock(BlockType blockType, String prefix, String suffix) {
 			super(blockType);
@@ -179,6 +188,23 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	}
 
+	private class CodeSpan extends ContentBlock {
+
+		private CodeSpan() {
+			super("`", "`"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+
+		@Override
+		protected void emitContent(String content) throws IOException {
+			if (content.contains("`")) { //$NON-NLS-1$
+				prefix = "`` "; //$NON-NLS-1$
+				suffix = " ``"; //$NON-NLS-1$
+			}
+			super.emitContent(content);
+		}
+
+	}
+
 	public MarkdownDocumentBuilder(Writer out) {
 		super(out);
 		currentBlock = null;
@@ -191,6 +217,8 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			return new ContentBlock(type, "", "\n\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		case QUOTE:
 			return new PrefixedLineContentBlock(type, "> ", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		case CODE:
+			return new PrefixedLineContentBlock(type, "    ", "\n\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		default:
 			Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
 			return new ContentBlock(type, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
@@ -210,6 +238,8 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		case BOLD:
 		case STRONG:
 			return new ContentBlock("**", "**"); //$NON-NLS-1$ //$NON-NLS-2$
+		case CODE:
+			return new CodeSpan();
 		default:
 			Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
 			return new ContentBlock("", ""); //$NON-NLS-1$ //$NON-NLS-2$
@@ -234,7 +264,16 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	@Override
 	public void entityReference(String entity) {
-		throw new UnsupportedOperationException();
+		assertOpenBlock();
+		String literal = entityToLiteral.get(entity);
+		if (literal == null) {
+			literal = "&" + entity + ";"; //$NON-NLS-1$//$NON-NLS-2$
+		}
+		try {
+			currentBlock.write(literal);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override

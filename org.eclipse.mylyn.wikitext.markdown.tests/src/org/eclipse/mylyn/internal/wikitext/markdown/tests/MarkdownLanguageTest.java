@@ -11,14 +11,19 @@
 
 package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 
+import java.io.StringWriter;
+
+import org.eclipse.mylyn.internal.wikitext.markdown.core.MarkdownDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.osgi.OsgiServiceLocator;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.markdown.core.MarkdownLanguage;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
 /**
  * http://daringfireball.net/projects/markdown/syntax
- * 
+ *
  * @author Stefan Seelmann
  */
 public class MarkdownLanguageTest extends MarkdownLanguageTestBase {
@@ -77,4 +82,23 @@ public class MarkdownLanguageTest extends MarkdownLanguageTestBase {
 		assertFalse(html.contains("[msn]"));
 		assertTrue(html.contains("<p>More text.</p>"));
 	}
+
+	public void testPreserveHtmlEntities() {
+		StringBuilder text = new StringBuilder();
+		text.append("AT&T and\n\n");
+		text.append("AT&amp;T again\n\n");
+
+		String html = parseToHtml(text.toString());
+		TestUtil.println("HTML: " + html);
+		assertTrue(html.contains("<p>AT&amp;T and</p>"));
+		assertTrue(html.contains("<p>AT&amp;T again</p>"));
+	}
+
+	public void testCreateDocumentBuilder() {
+		AbstractMarkupLanguage lang = new MarkdownLanguage();
+		DocumentBuilder builder = lang.createDocumentBuilder(new StringWriter());
+		assertNotNull(builder);
+		assertTrue(builder instanceof MarkdownDocumentBuilder);
+	}
+
 }
