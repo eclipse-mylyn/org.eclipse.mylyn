@@ -21,7 +21,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -54,8 +53,6 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.ShellAdapter;
-import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -111,24 +108,16 @@ public class CommentInputDialog extends FormDialog {
 
 	private Composite buttonparent;
 
-	private Composite buttonBarParent;
-
 	private final Shell parent;
 
 	public CommentInputDialog(Shell aParentShell, ReviewBehavior reviewBehavior, IReviewItem reviewitm, LineRange range) {
 		super(aParentShell);
-		if (!isWindowPlatform()) {
-			setShellStyle(SWT.MODELESS | SWT.SHELL_TRIM | SWT.BORDER);
-		}
+		setShellStyle(SWT.CLOSE | SWT.TITLE | SWT.RESIZE | SWT.MODELESS);
 		this.reviewBehavior = reviewBehavior;
 		this.reviewitem = reviewitm;
 		this.range = range;
 		this.parent = aParentShell;
 
-	}
-
-	private boolean isWindowPlatform() {
-		return Platform.getOS().equals(Platform.WS_WIN32);
 	}
 
 	@Override
@@ -387,21 +376,6 @@ public class CommentInputDialog extends FormDialog {
 		//Set default focus
 		fCommentInputTextField.setFocus();
 
-		if (!isWindowPlatform()) {
-			getShell().addShellListener(new ShellAdapter() {
-				@Override
-				public void shellDeactivated(ShellEvent e) {
-					boolean isExit = MessageDialog.openQuestion(getShell(),
-							Messages.CommentInputDialog_ConfirmExitCaption, Messages.CommentInputDialog_ConfirmExit);
-					if (isExit) {
-						buttonPressed(IDialogConstants.CANCEL_ID);
-					} else {
-						getShell().setFocus();
-					}
-				}
-			});
-		}
-
 		this.setHelpAvailable(false);
 
 	}
@@ -409,8 +383,6 @@ public class CommentInputDialog extends FormDialog {
 	@Override
 	protected Control createButtonBar(final Composite parent) {
 		final Composite composite = new Composite(parent, SWT.NONE);
-		buttonBarParent = parent;
-
 		GridLayoutFactory.fillDefaults().spacing(0, 0).applyTo(composite);
 		composite.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, true, false));
 		composite.setFont(parent.getFont());

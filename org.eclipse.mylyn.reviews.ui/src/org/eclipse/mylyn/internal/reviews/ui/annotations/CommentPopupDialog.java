@@ -15,6 +15,7 @@ package org.eclipse.mylyn.internal.reviews.ui.annotations;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -257,7 +258,8 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 					currentCommentInputDialog.setComments(commentList);
 					currentCommentInputDialog.create();
 					currentCommentInputDialog.getShell().setText(
-							NLS.bind(Messages.CommentInputDialog_LineNumber, getLineNumber()));
+							NLS.bind(Messages.CommentInputDialog_LineNumber, getLineNumber(),
+									new Path(reviewitem.getName()).lastSegment()));
 
 					// adjust size to display maximum of 15 lines, which means 5 comments
 					if (annotationInput.getAnnotations().size() < 5) {

@@ -41,10 +41,6 @@ public class Messages extends NLS {
 
 	public static String CommentInputDialog_No_author;
 
-	public static String CommentInputDialog_ConfirmExit;
-
-	public static String CommentInputDialog_ConfirmExitCaption;
-
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
