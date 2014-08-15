@@ -1,3 +1,0 @@
-metaRequirements.0.namespace = osgi.bundle
-metaRequirements.0.name = org.eclipse.core.runtime
-metaRequirements.0.range = 3.8.0
