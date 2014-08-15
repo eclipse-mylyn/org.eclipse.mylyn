@@ -173,6 +173,13 @@
 	            style="push"
 	            tooltip="%command.tooltipAbandoned">
          </command>
+         <command
+            	commandId="org.eclipse.mylyn.gerrit.dashboard.ui.activeTaskReviews"
+            	id="org.eclipse.mylyn.gerrit.dashboard.ui.activeTaskReviews"
+            	label="%command.activeTaskReviews"
+            	icon="icons/view16/task.gif"
+            	style="push">
+         </command>
 
          <separator
                 name="additions"
@@ -360,6 +367,10 @@
             	id="org.eclipse.mylyn.gerrit.dashboard.ui.allAbandonedReviews"
             	name="%command.name.allAbandonned">
       </command>
+       <command
+            	id="org.eclipse.mylyn.gerrit.dashboard.ui.activeTaskReviews"
+            	name="%command.activeTaskReviews">
+      </command>
          <!-- The following are the commands under the "My" sub-menu
          -->
        <command
@@ -466,6 +477,10 @@
 		  <handler
 		    	class="org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.all.AllAbandonedReviewsHandler"
 		    	commandId="org.eclipse.mylyn.gerrit.dashboard.ui.allAbandonedReviews">
+		  </handler>
+		  <handler
+		    	class="org.eclipse.mylyn.gerrit.dashboard.ui.internal.commands.all.ActiveTaskReviewsHandler"
+		    	commandId="org.eclipse.mylyn.gerrit.dashboard.ui.activeTaskReviews">
 		  </handler>
           <!-- The following are the handlers under the "My" sub-menu
          -->
