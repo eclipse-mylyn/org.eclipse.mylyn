@@ -111,12 +111,12 @@ public class JavaStackTraceFileHyperlink implements IHyperlink, IHighlightingHyp
 						// TODO e3.8 remove reflection
 						try {
 							// e3.7 and earlier: OpenTypeAction.findTypeInWorkspace(typeName);
-							Method findTypeInWorspace = OpenTypeAction.class.getDeclaredMethod("findTypeInWorkspace",
+							Method findTypeInWorspace = OpenTypeAction.class.getDeclaredMethod("findTypeInWorkspace", //$NON-NLS-1$
 									String.class);
 							result = findTypeInWorspace.invoke(null, typeName);
 						} catch (NoSuchMethodException e) {
 							// e3.8: OpenTypeAction.findTypeInWorkspace(typeName, false);
-							Method findTypeInWorspace = OpenTypeAction.class.getDeclaredMethod("findTypeInWorkspace",
+							Method findTypeInWorspace = OpenTypeAction.class.getDeclaredMethod("findTypeInWorkspace", //$NON-NLS-1$
 									String.class, boolean.class);
 							result = findTypeInWorspace.invoke(null, typeName, false);
 						}
@@ -131,7 +131,7 @@ public class JavaStackTraceFileHyperlink implements IHyperlink, IHighlightingHyp
 					if (!reflectionErrorLogged) {
 						reflectionErrorLogged = true;
 						StatusManager.getManager().handle(
-								new Status(IStatus.ERROR, ID_PLUGIN, "Unexpected error searching for Java type", e),
+								new Status(IStatus.ERROR, ID_PLUGIN, "Unexpected error searching for Java type", e), //$NON-NLS-1$
 								StatusManager.LOG);
 					}
 				}

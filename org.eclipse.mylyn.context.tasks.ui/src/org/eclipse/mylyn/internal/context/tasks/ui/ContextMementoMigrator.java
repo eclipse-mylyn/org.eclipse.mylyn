@@ -94,7 +94,7 @@ public class ContextMementoMigrator {
 		IEclipsePreferences[] perspectiveNodes = perspectivePreferenceStore.getPreferenceNodes(false);
 		IEclipsePreferences[] editorNodes = editorPreferenceStore.getPreferenceNodes(false);
 
-		monitor.beginTask("Migrating context information", 100);
+		monitor.beginTask(Messages.ContextMementoMigrator_0, 100);
 
 		if (editorNodes.length > 0) {
 			String[] keys;
@@ -212,8 +212,8 @@ public class ContextMementoMigrator {
 	private void write(ContextState state, ITask task) throws IOException, CoreException {
 		ICommonStorable storable = ((TaskContextStore) TasksUiPlugin.getContextStore()).getStorable(task);
 		try {
-			if (!storable.exists("context-state.xml")) {
-				OutputStream out = storable.write("context-state.xml", null);
+			if (!storable.exists("context-state.xml")) { //$NON-NLS-1$
+				OutputStream out = storable.write("context-state.xml", null); //$NON-NLS-1$
 				try {
 					stateManager.write(out, state);
 				} finally {
