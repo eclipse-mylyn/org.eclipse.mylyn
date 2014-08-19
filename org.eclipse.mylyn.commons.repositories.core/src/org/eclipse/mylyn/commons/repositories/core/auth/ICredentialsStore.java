@@ -44,4 +44,8 @@ public interface ICredentialsStore {
 
 	public void copyTo(ICredentialsStore target);
 
+	/**
+	 * Test whether this store is available for reading and writing. Throws an {@link UnavailableException} if not
+	 */
+	public void testAvailability() throws UnavailableException;
 }

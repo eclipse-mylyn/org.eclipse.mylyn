@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.commons.repositories.tests.core;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -19,6 +20,7 @@ import java.util.Arrays;
 
 import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.StorageException;
+import org.eclipse.mylyn.commons.repositories.core.auth.UnavailableException;
 import org.eclipse.mylyn.commons.repositories.tests.support.DelegatingSecurePreferences;
 import org.eclipse.mylyn.internal.commons.repositories.core.InMemoryCredentialsStore;
 import org.eclipse.mylyn.internal.commons.repositories.core.SecureCredentialsStore;
@@ -30,6 +32,7 @@ import org.junit.Test;
 public class SecureCredentialsStoreTest extends AbstractCredentialsStoreTest {
 
 	private class StubSecureCredentialsStore extends SecureCredentialsStore {
+		private boolean unavailable;
 
 		DelegatingSecurePreferences delegate;
 
@@ -45,11 +48,20 @@ public class SecureCredentialsStoreTest extends AbstractCredentialsStoreTest {
 		protected DelegatingSecurePreferences getSecurePreferences() {
 			if (delegate == null) {
 				delegate = new DelegatingSecurePreferences(getSecurePreferencesSuper()) {
+
 					@Override
 					public void removeNode() {
 						super.removeNode();
 						// re-initialize
 						setDelegate(getSecurePreferencesSuper());
+					}
+
+					@Override
+					public String get(String key, String def) throws StorageException {
+						if (unavailable) {
+							throw new StorageException(0, "Unavailable");
+						}
+						return super.get(key, def);
 					}
 				};
 			}
@@ -63,6 +75,10 @@ public class SecureCredentialsStoreTest extends AbstractCredentialsStoreTest {
 		@Override
 		protected synchronized InMemoryCredentialsStore getInMemoryStore() {
 			return super.getInMemoryStore();
+		}
+
+		public void setUnavailable(boolean unavailable) {
+			this.unavailable = unavailable;
 		}
 	}
 
@@ -232,5 +248,17 @@ public class SecureCredentialsStoreTest extends AbstractCredentialsStoreTest {
 		store.put("key", "value", true, false);
 		assertEquals("[key]", Arrays.toString(store.getInMemoryStore().keys()));
 		assertEquals("value", store.get("key", null));
+	}
+
+	@Test
+	public void testTestAvailability() throws Exception {
+		StubSecureCredentialsStore store = createStubSecureCredentialsStore();
+		store.testAvailability();
+		store.setUnavailable(true);
+		try {
+			store.testAvailability();
+			fail("Expected UnavailableException");
+		} catch (UnavailableException e) {// expected
+		}
 	}
 }

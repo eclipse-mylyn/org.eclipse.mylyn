@@ -20,6 +20,8 @@ public class Messages extends NLS {
 	public static String NewRepositoryHandler_New_Repository;
 
 	public static String RepositoriesView_Root;
+
+	public static String RepositoryUiUtil_secure_storage_unavailable;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

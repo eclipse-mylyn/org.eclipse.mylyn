@@ -20,6 +20,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.ui.dialogs.IValidatable;
+import org.eclipse.mylyn.internal.commons.repositories.ui.RepositoryUiUtil;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -53,6 +54,7 @@ public class RepositoryWizardPage extends WizardPage implements IPartContainer, 
 		Dialog.applyDialogFont(parent);
 
 		setMessage(message);
+		RepositoryUiUtil.testCredentialsStore(getWorkingCopy().getId(), this);
 	}
 
 	protected RepositoryLocationPart doCreateRepositoryPart() {

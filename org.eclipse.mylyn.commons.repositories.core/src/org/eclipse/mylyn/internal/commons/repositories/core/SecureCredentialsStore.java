@@ -24,6 +24,7 @@ import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
 import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.repositories.core.auth.ICredentialsStore;
+import org.eclipse.mylyn.commons.repositories.core.auth.UnavailableException;
 
 /**
  * @author Steffen Pingel
@@ -168,6 +169,15 @@ public class SecureCredentialsStore implements ICredentialsStore {
 
 	public void remove(String key) {
 		getSecurePreferences().remove(key);
+	}
+
+	@Override
+	public void testAvailability() throws UnavailableException {
+		try {
+			getSecurePreferences().get("org.eclipse.mylyn.commons.repositories.core.SecureCredentialsStore", null); //$NON-NLS-1$
+		} catch (StorageException e) {
+			throw new UnavailableException(e);
+		}
 	}
 
 	protected synchronized InMemoryCredentialsStore getInMemoryStore() {

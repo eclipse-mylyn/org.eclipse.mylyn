@@ -82,6 +82,13 @@ public class InMemoryCredentialsStoreTest extends AbstractCredentialsStoreTest {
 		assertEquals(null, store.get("key", null));
 	}
 
+	@Test
+	public void testTestAvailability() throws Exception {
+		InMemoryCredentialsStore store = createCredentialsStore();
+		store.testAvailability();
+	}
+
+	@Test
 	public void testGetId() {
 		assertEquals("id", InMemoryCredentialsStore.getStore("id").getId());
 	}

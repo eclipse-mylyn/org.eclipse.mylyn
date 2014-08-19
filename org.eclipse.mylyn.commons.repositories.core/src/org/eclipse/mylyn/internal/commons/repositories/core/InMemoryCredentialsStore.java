@@ -21,6 +21,7 @@ import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.commons.repositories.core.auth.ICredentialsStore;
+import org.eclipse.mylyn.commons.repositories.core.auth.UnavailableException;
 
 /**
  * @author Steffen Pingel
@@ -187,6 +188,11 @@ public class InMemoryCredentialsStore implements ICredentialsStore {
 		} else {
 			store.remove(key);
 		}
+	}
+
+	@Override
+	public void testAvailability() throws UnavailableException {
+		// always available
 	}
 
 	private Item createItem(Class<?> type, Object value, boolean encrypt, boolean persist) {
