@@ -47,6 +47,7 @@ import org.eclipse.mylyn.commons.ui.dialogs.IValidatable;
 import org.eclipse.mylyn.commons.ui.dialogs.ValidatableWizardDialog;
 import org.eclipse.mylyn.commons.workbench.browser.BrowserUtil;
 import org.eclipse.mylyn.commons.workbench.forms.SectionComposite;
+import org.eclipse.mylyn.internal.commons.repositories.ui.RepositoryUiUtil;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
@@ -90,7 +91,7 @@ import org.eclipse.ui.statushandlers.StatusManager;
 /**
  * Extend to provide custom repository settings. This page is typically invoked by the user requesting properties via
  * the Task Repositories view.
- *
+ * 
  * @author Mik Kersten
  * @author Rob Elves
  * @author Steffen Pingel
@@ -101,7 +102,7 @@ import org.eclipse.ui.statushandlers.StatusManager;
  * @since 2.0
  */
 public abstract class AbstractRepositorySettingsPage extends AbstractTaskRepositoryPage implements ITaskRepositoryPage,
-IAdaptable {
+		IAdaptable {
 
 	protected static final String PREFS_PAGE_ID_NET_PROXY = "org.eclipse.ui.net.NetPreferences"; //$NON-NLS-1$
 
@@ -421,10 +422,10 @@ IAdaptable {
 		});
 
 		GridDataFactory.fillDefaults()
-		.hint(300, SWT.DEFAULT)
-		.grab(true, false)
-		.span(2, SWT.DEFAULT)
-		.applyTo(serverUrlCombo);
+				.hint(300, SWT.DEFAULT)
+				.grab(true, false)
+				.span(2, SWT.DEFAULT)
+				.applyTo(serverUrlCombo);
 
 		repositoryLabelEditor = new StringFieldEditor("", LABEL_REPOSITORY_LABEL, StringFieldEditor.UNLIMITED, //$NON-NLS-1$
 				compositeContainer) {
@@ -660,12 +661,12 @@ IAdaptable {
 				setAnonymous(true);
 			}
 		}
-
 		if (repository != null) {
 			savePasswordButton.setSelection(repository.getSavePassword(AuthenticationType.REPOSITORY));
 		} else {
 			savePasswordButton.setSelection(false);
 		}
+		RepositoryUiUtil.testCredentialsStore(getRepositoryUrl(), this);
 	}
 
 	private void createAdvancedSection() {
@@ -766,10 +767,10 @@ IAdaptable {
 
 		certAuthButton = new Button(certAuthComp, SWT.CHECK);
 		GridDataFactory.fillDefaults()
-		.indent(0, 5)
-		.align(SWT.LEFT, SWT.TOP)
-		.span(3, SWT.DEFAULT)
-		.applyTo(certAuthButton);
+				.indent(0, 5)
+				.align(SWT.LEFT, SWT.TOP)
+				.span(3, SWT.DEFAULT)
+				.applyTo(certAuthButton);
 
 		certAuthButton.setText(Messages.AbstractRepositorySettingsPage_Enable_certificate_authentification);
 
@@ -861,10 +862,10 @@ IAdaptable {
 
 		httpAuthButton = new Button(httpAuthComp, SWT.CHECK);
 		GridDataFactory.fillDefaults()
-		.indent(0, 5)
-		.align(SWT.LEFT, SWT.TOP)
-		.span(3, SWT.DEFAULT)
-		.applyTo(httpAuthButton);
+				.indent(0, 5)
+				.align(SWT.LEFT, SWT.TOP)
+				.span(3, SWT.DEFAULT)
+				.applyTo(httpAuthButton);
 
 		httpAuthButton.setText(Messages.AbstractRepositorySettingsPage_Enable_http_authentication);
 
@@ -1615,7 +1616,7 @@ IAdaptable {
 
 	/**
 	 * Returns true, if credentials are incomplete. Clients may override this method.
-	 *
+	 * 
 	 * @since 3.4
 	 */
 	protected boolean isMissingCredentials() {
@@ -1701,7 +1702,7 @@ IAdaptable {
 	 * Note: The credentials of the created repository are not persisted in the platform keystore. When overriding,
 	 * subclasses must either call super or call {@link TaskRepository#setShouldPersistCredentials(boolean)
 	 * setShouldPersistCredentials(false)} before calling {@link #applyTo(TaskRepository)}.
-	 *
+	 * 
 	 * @since 2.0
 	 */
 	public TaskRepository createTaskRepository() {
@@ -1904,7 +1905,7 @@ IAdaptable {
 	 * <p>
 	 * This information is typically used by the wizard to set the enablement of the validation UI affordance.
 	 * </p>
-	 *
+	 * 
 	 * @return <code>true</code> if this page can be validated, and <code>false</code> otherwise
 	 * @see #needsValidation()
 	 * @see IWizardContainer#updateButtons()
@@ -1923,7 +1924,7 @@ IAdaptable {
 
 	/**
 	 * Public for testing.
-	 *
+	 * 
 	 * @since 2.0
 	 */
 	public void setUrl(String url) {
@@ -1932,7 +1933,7 @@ IAdaptable {
 
 	/**
 	 * Public for testing.
-	 *
+	 * 
 	 * @since 2.0
 	 */
 	public void setUserId(String id) {
@@ -1941,7 +1942,7 @@ IAdaptable {
 
 	/**
 	 * Public for testing.
-	 *
+	 * 
 	 * @since 2.0
 	 */
 	public void setPassword(String pass) {
@@ -1990,7 +1991,7 @@ IAdaptable {
 
 	/**
 	 * Validate settings provided by the {@link #getValidator(TaskRepository) validator}, typically the server settings.
-	 *
+	 * 
 	 * @since 2.0
 	 */
 	protected void validateSettings() {
@@ -2026,7 +2027,7 @@ IAdaptable {
 			StatusManager.getManager().handle(
 					new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 							Messages.AbstractRepositorySettingsPage_Internal_error_validating_repository, e),
-							StatusManager.SHOW | StatusManager.LOG);
+					StatusManager.SHOW | StatusManager.LOG);
 			return;
 		} catch (InterruptedException e) {
 			// canceled
@@ -2087,7 +2088,7 @@ IAdaptable {
 	 * For version 3.11 we change the abstract implementation to a default implementation. The default implementation
 	 * creates an {@link Validator} and deligate the work to
 	 * {@link AbstractRepositoryConnector#validateRepository(TaskRepository, IProgressMonitor)}
-	 *
+	 * 
 	 * @since 2.0
 	 */
 
@@ -2097,15 +2098,16 @@ IAdaptable {
 			@Override
 			public void run(IProgressMonitor monitor) throws CoreException {
 				RepositoryInfo repositoryInfo = connector.validateRepository(repository, monitor);
-				setStatus(new Status(IStatus.OK, TasksUiPlugin.ID_PLUGIN, NLS.bind(
-						Messages.AbstractRepositorySettingsPage_Settings_are_valid_version, repositoryInfo.getVersion())));
+				setStatus(new Status(IStatus.OK, TasksUiPlugin.ID_PLUGIN,
+						NLS.bind(Messages.AbstractRepositorySettingsPage_Settings_are_valid_version,
+								repositoryInfo.getVersion())));
 			}
 		};
 	}
 
 	/**
 	 * Public for testing.
-	 *
+	 * 
 	 * @since 2.0
 	 */
 	public abstract class Validator {
@@ -2126,7 +2128,7 @@ IAdaptable {
 
 	/**
 	 * Provides an adapter for the {@link IValidatable} interface.
-	 *
+	 * 
 	 * @since 3.7
 	 * @see IAdaptable#getAdapter(Class)
 	 */
@@ -2188,7 +2190,7 @@ IAdaptable {
 
 	/**
 	 * Returns the toolkit used to construct sections and hyperlinks.
-	 *
+	 * 
 	 * @return the toolkit
 	 * @throws IllegalStateException
 	 *             if the toolkit has not been initialized
