@@ -18,6 +18,7 @@ import org.eclipse.mylyn.docs.epub.tests.api.TestEPUB;
 import org.eclipse.mylyn.docs.epub.tests.api.TestOPS2Publication;
 import org.eclipse.mylyn.docs.epub.tests.api.TestOPSPublication;
 import org.eclipse.mylyn.docs.epub.tests.core.TestEPUBFileUtil;
+import org.eclipse.mylyn.docs.epub.tests.core.TestEclipseTocImporter;
 import org.eclipse.mylyn.docs.epub.tests.core.TestOPSValidator;
 import org.eclipse.mylyn.docs.epub.tests.core.TestTOCGenerator;
 
@@ -37,6 +38,7 @@ public class AllTests {
 		suite.addTestSuite(TestEPUBFileUtil.class);
 		suite.addTestSuite(TestOPSValidator.class);
 		suite.addTestSuite(TestTOCGenerator.class);
+		suite.addTestSuite(TestEclipseTocImporter.class);
 		// Ant tests
 		//suite.addTestSuite(TestAntTask.class);
 		return suite;

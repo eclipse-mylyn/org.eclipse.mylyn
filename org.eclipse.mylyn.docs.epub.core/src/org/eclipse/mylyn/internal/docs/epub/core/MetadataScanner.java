@@ -23,7 +23,9 @@ import org.xml.sax.SAXException;
 
 /**
  * This type is used to scan XHTML files for information that may be used in EPUB metadata. This can be the publication
- * title, copyright and author. Some of this information can be found inside Dublin Core elements. XXX: Not in use yet
+ * title, copyright and author. Some of this information can be found inside Dublin Core elements. 
+ * 
+ * XXX: Not in use yet
  * 
  * @author Torkild U. Resheim
  * @see http://dublincore.org/documents/dc-html/

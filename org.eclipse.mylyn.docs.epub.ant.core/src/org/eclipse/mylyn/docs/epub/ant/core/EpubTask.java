@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2012 Torkild U. Resheim.
- * 
+ *
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *   Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
@@ -22,13 +22,15 @@ import org.eclipse.mylyn.docs.epub.core.EPUB;
 import org.eclipse.mylyn.docs.epub.core.OPSPublication;
 import org.eclipse.mylyn.docs.epub.core.Publication;
 import org.eclipse.mylyn.docs.epub.opf.Role;
+import org.eclipse.mylyn.internal.docs.epub.core.EclipseTocImporter;
 
 /**
  * Assemble a new EPUB.
- * 
+ *
  * @author Torkild U. Resheim
  * @ant.task name="epub" category="epub"
  */
+@SuppressWarnings("restriction")
 public class EpubTask extends Task {
 
 	private Publication oebps = null;
@@ -104,6 +106,23 @@ public class EpubTask extends Task {
 	 */
 	public void addConfiguredIdentifier(IdentifierType identifier) {
 		oebps.addIdentifier(identifier.id, identifier.scheme, identifier.value);
+	}
+
+	/**
+	 * @since 2.1
+	 */
+	public void addConfiguredImport(ImportType includeType) {
+		if (!"eclipse-help".equals(includeType.format)) { //$NON-NLS-1$
+			throw new BuildException("Unsupported include format specified."); //$NON-NLS-1$
+		}
+		if (!includeType.file.exists()) {
+			throw new BuildException("Include file does not exist."); //$NON-NLS-1$
+		}
+		try {
+			EclipseTocImporter.importFile(oebps, includeType.file);
+		} catch (Exception e) {
+			throw new BuildException("Could not import Eclipse Table of Contents", e); //$NON-NLS-1$
+		}
 	}
 
 	/**
@@ -218,13 +237,6 @@ public class EpubTask extends Task {
 	}
 
 	/**
-	 * @ant.not-required Automatically add referenced resources.
-	 */
-	public void setIncludeReferenced(boolean automatic) {
-		oebps.setIncludeReferencedResources(automatic);
-	}
-
-	/**
 	 * @param file
 	 *            path to the generated EPUB file.
 	 */
@@ -234,6 +246,13 @@ public class EpubTask extends Task {
 
 	public void setIdentifierId(String identifierId) {
 		oebps.setIdentifierId(identifierId);
+	}
+
+	/**
+	 * @ant.not-required Automatically add referenced resources.
+	 */
+	public void setIncludeReferenced(boolean automatic) {
+		oebps.setIncludeReferencedResources(automatic);
 	}
 
 	public void setWorkingFolder(File workingFolder) {

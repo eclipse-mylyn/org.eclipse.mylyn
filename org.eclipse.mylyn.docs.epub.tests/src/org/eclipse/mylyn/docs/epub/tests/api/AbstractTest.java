@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011,2012 Torkild U. Resheim.
+ * Copyright (c) 2011, 2012 Torkild U. Resheim.
  *
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
@@ -25,8 +25,11 @@ import org.eclipse.mylyn.docs.epub.core.OPSPublication;
 import org.eclipse.mylyn.docs.epub.core.Publication;
 import org.eclipse.mylyn.docs.epub.dc.DCType;
 import org.eclipse.mylyn.docs.epub.dc.Identifier;
+import org.eclipse.mylyn.docs.epub.tests.ValidationReport;
 import org.junit.After;
 import org.junit.Before;
+
+import com.adobe.epubcheck.api.EpubCheck;
 
 @SuppressWarnings("nls")
 public abstract class AbstractTest extends TestCase {
@@ -147,18 +150,18 @@ public abstract class AbstractTest extends TestCase {
 	@Override
 	@After
 	public void tearDown() throws Exception {
-//		if (epubFolder.exists()) {
-//			deleteFolder(epubFolder);
-//		}
-//		if (epubFile.exists()) {
-//			ValidationReport report = new ValidationReport(epubFile.toString());
-//			EpubCheck checker = new EpubCheck(epubFile, report);
-//			checker.validate();
-//			final String logMessage = report.getErrors();
-//			epubFile.delete();
-//			if (!errorExpected && report.getErrorCount() > 0) {
-//				fail(logMessage);
-//			}
-//		}
+		if (epubFolder.exists()) {
+			deleteFolder(epubFolder);
+		}
+		if (epubFile.exists()) {
+			ValidationReport report = new ValidationReport(epubFile.toString());
+			EpubCheck checker = new EpubCheck(epubFile, report);
+			checker.validate();
+			final String logMessage = report.getErrors();
+			epubFile.delete();
+			if (!errorExpected && report.getErrorCount() > 0) {
+				fail(logMessage);
+			}
+		}
 	}
 }

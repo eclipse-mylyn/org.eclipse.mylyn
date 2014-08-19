@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<toc topic="help/a.html" label="epub-format">
+	<topic href="help/b.html" label="Lorem Ipsum"></topic>
+	<topic href="help/b.html#h1_1" label="Lorem Ipsum 1"></topic>
+	<topic href="help/b.html#h2_1" label="Lorem Ipsum 2"></topic>
+	<link toc="c.xml"/>
+	<anchor id="additions"/>
+</toc>

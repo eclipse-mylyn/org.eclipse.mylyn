@@ -293,7 +293,7 @@ public abstract class Publication {
 	public Creator addCreator(String id, Locale lang, String name, Role role, String fileAs) {
 		log(MessageFormat.format(Messages.getString("OPSPublication.4"), name, role, lang == null //$NON-NLS-1$
 				? Messages.getString("OPSPublication.3") //$NON-NLS-1$
-						: lang.getDisplayName()), Severity.VERBOSE, indent);
+				: lang.getDisplayName()), Severity.VERBOSE, indent);
 		Creator dc = DCFactory.eINSTANCE.createCreator();
 		setDcLocalized(dc, id, lang, name);
 		if (role != null) {
@@ -1060,7 +1060,8 @@ public abstract class Publication {
 					try {
 						addItem(null, null, file, relativePath.getParent(), null, false, false, false);
 					} catch (Exception e) {
-						throw new RuntimeException(String.format("Could not add file referenced from \"%1$s\"", root), //$NON-NLS-1$
+						throw new RuntimeException(String.format(
+								"Could not add file referenced from \"%1$s\", %2$s", root, e.getMessage()), //$NON-NLS-1$
 								e);
 					}
 				}
@@ -1194,38 +1195,38 @@ public abstract class Publication {
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(OPF_FILE_SUFFIX,
 				new XMLResourceFactoryImpl() {
 
-			@Override
-			public Resource createResource(URI uri) {
-				OPFResourceImpl xmiResource = new OPFResourceImpl(uri) {
-
 					@Override
-					protected XMLHelper createXMLHelper() {
-						EPUBXMLHelperImp xmlHelper = new EPUBXMLHelperImp();
-						return xmlHelper;
+					public Resource createResource(URI uri) {
+						OPFResourceImpl xmiResource = new OPFResourceImpl(uri) {
+
+							@Override
+							protected XMLHelper createXMLHelper() {
+								EPUBXMLHelperImp xmlHelper = new EPUBXMLHelperImp();
+								return xmlHelper;
+							}
+
+						};
+						Map<Object, Object> loadOptions = xmiResource.getDefaultLoadOptions();
+						Map<Object, Object> saveOptions = xmiResource.getDefaultSaveOptions();
+						// We use extended metadata
+						saveOptions.put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
+						loadOptions.put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
+						// Required in order to correctly read in attributes
+						loadOptions.put(XMLResource.OPTION_LAX_FEATURE_PROCESSING, Boolean.TRUE);
+						// Treat "href" attributes as features
+						loadOptions.put(XMLResource.OPTION_USE_ENCODED_ATTRIBUTE_STYLE, Boolean.TRUE);
+						// UTF-8 encoding is required per specification
+						saveOptions.put(XMLResource.OPTION_ENCODING, XML_ENCODING);
+						// Do not download any external DTDs.
+						Map<String, Object> parserFeatures = new HashMap<String, Object>();
+						parserFeatures.put("http://xml.org/sax/features/validation", Boolean.FALSE); //$NON-NLS-1$
+						parserFeatures.put("http://apache.org/xml/features/nonvalidating/load-external-dtd", //$NON-NLS-1$
+								Boolean.FALSE);
+						loadOptions.put(XMLResource.OPTION_PARSER_FEATURES, parserFeatures);
+						return xmiResource;
 					}
 
-				};
-				Map<Object, Object> loadOptions = xmiResource.getDefaultLoadOptions();
-				Map<Object, Object> saveOptions = xmiResource.getDefaultSaveOptions();
-				// We use extended metadata
-				saveOptions.put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
-				loadOptions.put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
-				// Required in order to correctly read in attributes
-				loadOptions.put(XMLResource.OPTION_LAX_FEATURE_PROCESSING, Boolean.TRUE);
-				// Treat "href" attributes as features
-				loadOptions.put(XMLResource.OPTION_USE_ENCODED_ATTRIBUTE_STYLE, Boolean.TRUE);
-				// UTF-8 encoding is required per specification
-				saveOptions.put(XMLResource.OPTION_ENCODING, XML_ENCODING);
-				// Do not download any external DTDs.
-				Map<String, Object> parserFeatures = new HashMap<String, Object>();
-				parserFeatures.put("http://xml.org/sax/features/validation", Boolean.FALSE); //$NON-NLS-1$
-				parserFeatures.put("http://apache.org/xml/features/nonvalidating/load-external-dtd", //$NON-NLS-1$
-						Boolean.FALSE);
-				loadOptions.put(XMLResource.OPTION_PARSER_FEATURES, parserFeatures);
-				return xmiResource;
-			}
-
-		});
+				});
 	}
 
 	/**
@@ -1350,7 +1351,7 @@ public abstract class Publication {
 	 * @throws ParserConfigurationException
 	 */
 	protected abstract List<ValidationMessage> validateContents() throws FileNotFoundException, IOException,
-	SAXException, ParserConfigurationException;
+			SAXException, ParserConfigurationException;
 
 	/**
 	 * Validates the data model contents.
@@ -1477,5 +1478,5 @@ public abstract class Publication {
 	 * @throws Exception
 	 */
 	protected abstract void writeTableOfContents(File rootFolder) throws IOException, ParserConfigurationException,
-	SAXException;
+			SAXException;
 }
