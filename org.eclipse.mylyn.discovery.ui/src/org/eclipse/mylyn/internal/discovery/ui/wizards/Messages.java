@@ -23,8 +23,6 @@ public class Messages extends NLS {
 
 	public static String ConnectorDescriptorToolTip_detailsLink_tooltip;
 
-	public static String ConnectorDiscoveryWizard_cannotInstall;
-
 	public static String ConnectorDiscoveryWizard_connectorDiscovery;
 
 	public static String ConnectorDiscoveryWizard_installProblems;
@@ -32,8 +30,6 @@ public class Messages extends NLS {
 	public static String InstallConnectorsJob_commaSeparator;
 
 	public static String InstallConnectorsJob_connectorsNotAvailable;
-
-	public static String InstallConnectorsJob_profileProblem;
 
 	public static String InstallConnectorsJob_questionProceed;
 
@@ -48,8 +44,6 @@ public class Messages extends NLS {
 	public static String ConnectorDiscoveryWizardMainPage_clearButton_toolTip;
 
 	public static String ConnectorDiscoveryWizardMainPage_connectorDiscovery;
-
-	public static String ConnectorDiscoveryWizardMainPage_errorTitle;
 
 	public static String ConnectorDiscoveryWizardMainPage_filter_documents;
 
@@ -94,12 +88,6 @@ public class Messages extends NLS {
 	public static String DiscoveryViewer_X_installed;
 
 	public static String PrepareInstallProfileJob_notFoundDescriptorDetail;
-
-	public static String PrepareInstallProfileJob_calculatingRequirements;
-
-	public static String PrepareInstallProfileJob_computeProfileChangeRequestFailed;
-
-	public static String PrepareInstallProfileJob_ok;
 
 	static {
 		// initialize resource bundle
