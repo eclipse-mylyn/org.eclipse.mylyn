@@ -18,6 +18,8 @@ import java.util.Stack;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 
+import com.google.common.base.Throwables;
+
 /**
  * Provides default functionality for document builders that emit lightweight wiki markup.
  * 
@@ -139,7 +141,7 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 		}
 	}
 
-	protected Block currentBlock = createImplicitParagraphBlock();
+	protected Block currentBlock;
 
 	private Stack<MarkupWriter> writerState;
 
@@ -334,6 +336,7 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 
 	@Override
 	public void beginSpan(SpanType type, Attributes attributes) {
+		assertOpenBlock();
 		Block block = computeSpan(type, attributes);
 		try {
 			block.open();
@@ -424,7 +427,12 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 
 	protected void assertOpenBlock() {
 		if (currentBlock == null) {
-			currentBlock = createImplicitParagraphBlock();
+			Block block = createImplicitParagraphBlock();
+			try {
+				block.open();
+			} catch (IOException e) {
+				throw Throwables.propagate(e);
+			}
 		}
 	}
 

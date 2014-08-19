@@ -63,33 +63,6 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	}
 
-	private class ImplicitParagraphBlock extends AbstractMarkupDocumentBuilder.ImplicitParagraphBlock implements
-			ConfluenceBlock {
-
-		private int consecutiveLineBreakCount = 0;
-
-		@Override
-		public void write(int c) throws IOException {
-			consecutiveLineBreakCount = 0;
-			super.write(c);
-		}
-
-		@Override
-		public void write(String s) throws IOException {
-			consecutiveLineBreakCount = 0;
-			super.write(s);
-		}
-
-		public void writeLineBreak() throws IOException {
-			++consecutiveLineBreakCount;
-			if (consecutiveLineBreakCount == 1) {
-				ConfluenceDocumentBuilder.this.emitContent('\n');
-			} else {
-				ConfluenceDocumentBuilder.this.emitContent("\\\\"); //$NON-NLS-1$
-			}
-		}
-	}
-
 	private class ContentBlock extends Block implements ConfluenceBlock {
 
 		private final String prefix;
@@ -239,9 +212,21 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		}
 	}
 
+	private class ImplicitParagraphBlock extends ContentBlock {
+
+		ImplicitParagraphBlock() {
+			super(BlockType.PARAGRAPH, "", "\n\n", false, false); //$NON-NLS-1$//$NON-NLS-2$
+		}
+
+		@Override
+		protected boolean isImplicitBlock() {
+			return true;
+		}
+	}
+
 	public ConfluenceDocumentBuilder(Writer out) {
 		super(out);
-		currentBlock = new ImplicitParagraphBlock();
+		currentBlock = null;
 	}
 
 	@Override
@@ -488,9 +473,8 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	}
 
 	@Override
-	protected void assertOpenBlock() {
-		if (currentBlock == null) {
-			currentBlock = new ImplicitParagraphBlock();
-		}
+	protected Block createImplicitParagraphBlock() {
+		return new ImplicitParagraphBlock();
 	}
+
 }

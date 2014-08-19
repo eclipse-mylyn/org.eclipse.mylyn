@@ -30,7 +30,7 @@ import com.google.common.base.Strings;
 
 /**
  * a document builder that emits Markdown markup
- *
+ * 
  * @author Leo Dos Santos
  * @see MarkdownLanguage
  * @see MarkdownLanguage#createDocumentBuilder(Writer)
@@ -100,14 +100,21 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	}
 
-	private class ImplicitParagraphBlock extends AbstractMarkupDocumentBuilder.ImplicitParagraphBlock implements
-			MarkdownBlock {
+	private class ImplicitParagraphBlock extends ContentBlock {
+
+		ImplicitParagraphBlock() {
+			super(BlockType.PARAGRAPH, "", "\n\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 
 		@Override
 		public void lineBreak() throws IOException {
 			MarkdownDocumentBuilder.this.emitContent("  \n"); //$NON-NLS-1$
 		}
 
+		@Override
+		protected boolean isImplicitBlock() {
+			return true;
+		}
 	}
 
 	private class PrefixedLineContentBlock extends ContentBlock {
@@ -174,6 +181,7 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	public MarkdownDocumentBuilder(Writer out) {
 		super(out);
+		currentBlock = null;
 	}
 
 	@Override

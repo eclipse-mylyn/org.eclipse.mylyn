@@ -187,35 +187,15 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	}
 
-	private final class TextileImplicitParagraphBlock extends ImplicitParagraphBlock implements TextileBlock {
+	private final class TextileImplicitParagraphBlock extends ParagraphBlock {
 
-		public void lineBreak() throws IOException {
-			final char lastChar = getLastChar();
-			if (consecutiveNewline(lastChar, '\n')) {
-				return;
-			}
-			TextileDocumentBuilder.this.emitContent('\n');
+		TextileImplicitParagraphBlock() {
+			super(BlockType.PARAGRAPH, previousWasExtended ? "p. " : "", "\n\n", false, false, true); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 		}
 
 		@Override
-		public void write(int c) throws IOException {
-			c = normalizeWhitespace(c);
-			if (c == ' ' && getLastChar() == ' ') {
-				return;
-			}
-			super.write(c);
-		}
-
-		@Override
-		public void write(String s) throws IOException {
-			for (int x = 0; x < s.length(); ++x) {
-				write(s.charAt(x));
-			}
-		}
-
-		@Override
-		protected int normalizeWhitespace(int c) {
-			return TextileDocumentBuilder.this.normalizeWhitespace(c);
+		protected boolean isImplicitBlock() {
+			return true;
 		}
 	}
 
@@ -306,6 +286,7 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	public TextileDocumentBuilder(Writer out) {
 		super(out);
+		currentBlock = null;
 	}
 
 	@Override
@@ -331,7 +312,7 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 				return new ParagraphBlock(type, "", "", false, false, true); //$NON-NLS-1$//$NON-NLS-2$
 			}
 		case FOOTNOTE:
-			return new ParagraphBlock(type, "fn1. ", "\n\n", false, false, true); // FIXME: footnote number?? //$NON-NLS-1$ //$NON-NLS-2$
+			return new ParagraphBlock(type, "fn1. ", "\n\n", false, false, true); //$NON-NLS-1$ //$NON-NLS-2$
 		case INFORMATION:
 		case NOTE:
 		case PANEL:

@@ -690,4 +690,38 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		assertEquals("{noformat}first\n\nsecond{noformat}\n\n\n", markup);
 	}
+
+	public void testImplicitParagrahWithSpan() {
+		builder.beginDocument();
+		builder.beginSpan(SpanType.BOLD, new Attributes());
+		builder.characters("text1");
+		builder.endSpan();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("text2");
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		assertEquals("*text1*\n\ntext2\n\n", markup);
+	}
+
+	public void testSpanOpensImplicitParagraph() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.CODE, new Attributes());
+		builder.characters("// some code");
+		builder.endBlock();
+		builder.beginSpan(SpanType.DELETED, new Attributes());
+		builder.characters("redacted");
+		builder.endSpan();
+		builder.characters(" text");
+		builder.endDocument();
+
+		String markup = out.toString();
+		TestUtil.println(markup);
+
+		assertEquals("{code}// some code{code}\n\n-redacted- text\n\n", markup);
+	}
 }

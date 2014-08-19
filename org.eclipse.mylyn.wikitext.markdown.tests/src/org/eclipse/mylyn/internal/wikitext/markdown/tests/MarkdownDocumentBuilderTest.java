@@ -282,7 +282,7 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.characters("unsupported");
 		builder.endSpan();
 		builder.endDocument();
-		assertMarkup("unsupported");
+		assertMarkup("unsupported\n\n");
 	}
 
 	public void testEmptySpan() {
@@ -341,7 +341,7 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.characters("emphasis");
 		builder.endSpan();
 		builder.endDocument();
-		assertMarkup("*emphasis*");
+		assertMarkup("*emphasis*\n\n");
 	}
 
 	public void testItalic() {
@@ -350,7 +350,7 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.characters("italic");
 		builder.endSpan();
 		builder.endDocument();
-		assertMarkup("*italic*");
+		assertMarkup("*italic*\n\n");
 	}
 
 	public void testStrong() {
@@ -359,7 +359,7 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.characters("strong");
 		builder.endSpan();
 		builder.endDocument();
-		assertMarkup("**strong**");
+		assertMarkup("**strong**\n\n");
 	}
 
 	public void testBold() {
@@ -368,7 +368,7 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.characters("bold");
 		builder.endSpan();
 		builder.endDocument();
-		assertMarkup("**bold**");
+		assertMarkup("**bold**\n\n");
 	}
 
 	public void testImage() {
@@ -409,21 +409,21 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.beginDocument();
 		builder.imageLink("http://example.net/", "/path/to/img.jpg");
 		builder.endDocument();
-		assertMarkup("[![](/path/to/img.jpg)](http://example.net/)");
+		assertMarkup("[![](/path/to/img.jpg)](http://example.net/)\n\n");
 	}
 
 	public void testImageLinkWithSingleEmptyAttributes() {
 		builder.beginDocument();
 		builder.imageLink(new Attributes(), "http://example.net/", "/path/to/img.jpg");
 		builder.endDocument();
-		assertMarkup("[![](/path/to/img.jpg)](http://example.net/)");
+		assertMarkup("[![](/path/to/img.jpg)](http://example.net/)\n\n");
 	}
 
 	public void testImageLinkWithBothEmptyAttributes() {
 		builder.beginDocument();
 		builder.imageLink(new Attributes(), new Attributes(), "http://example.net/", "/path/to/img.jpg");
 		builder.endDocument();
-		assertMarkup("[![](/path/to/img.jpg)](http://example.net/)");
+		assertMarkup("[![](/path/to/img.jpg)](http://example.net/)\n\n");
 	}
 
 	public void testImageLinkWithImageAttributes() {
@@ -433,7 +433,7 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		attr.setTitle("Optional title");
 		builder.imageLink(attr, "http://example.net/", "/path/to/img.jpg");
 		builder.endDocument();
-		assertMarkup("[![Alt text](/path/to/img.jpg \"Optional title\")](http://example.net/)");
+		assertMarkup("[![Alt text](/path/to/img.jpg \"Optional title\")](http://example.net/)\n\n");
 	}
 
 	public void testImageLinkWithLinkAttributes() {
@@ -445,7 +445,41 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		imageAttr.setTitle("Optional image title");
 		builder.imageLink(linkAttr, imageAttr, "http://example.net/", "/path/to/img.jpg");
 		builder.endDocument();
-		assertMarkup("[![Alt text](/path/to/img.jpg \"Optional image title\")](http://example.net/ \"Optional link title\")");
+		assertMarkup("[![Alt text](/path/to/img.jpg \"Optional image title\")](http://example.net/ \"Optional link title\")\n\n");
+	}
+
+	public void testImplicitParagrahWithSpan() {
+		builder.beginDocument();
+		builder.beginSpan(SpanType.BOLD, new Attributes());
+		builder.characters("text1");
+		builder.endSpan();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("text2");
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		assertEquals("**text1**\n\ntext2\n\n", markup);
+	}
+
+	public void testSpanOpensImplicitParagraph() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("text");
+		builder.endBlock();
+		builder.beginSpan(SpanType.BOLD, new Attributes());
+		builder.characters("bold");
+		builder.endSpan();
+		builder.characters(" text");
+		builder.endDocument();
+
+		String markup = out.toString();
+		TestUtil.println(markup);
+
+		assertEquals("text\n\n**bold** text\n\n", markup);
 	}
 
 	private void assertMarkup(String expected) {
