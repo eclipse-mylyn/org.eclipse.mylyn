@@ -13,7 +13,6 @@ package org.eclipse.mylyn.internal.docs.epub.core;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -38,7 +37,7 @@ import org.xml.sax.SAXException;
 public class EclipseTocImporter {
 
 	private static void importTocs(Publication oebps, File rootFile, Node root) throws ParserConfigurationException,
-			SAXException, IOException, DOMException, URISyntaxException {
+	SAXException, IOException, DOMException, URISyntaxException {
 		NodeList childNodes = root.getChildNodes();
 		for (int i = 0; i < childNodes.getLength(); i++) {
 			Node node = childNodes.item(i);
@@ -55,8 +54,11 @@ public class EclipseTocImporter {
 				if (attributes != null) {
 					Node href = attributes.getNamedItem("href"); //$NON-NLS-1$
 					if (href != null) {
-						URI uri = new URI(href.getNodeValue());
-						File hrefFile = new File(rootFile.getParentFile(), uri.getPath());
+						String nodeValue = href.getNodeValue();
+						if (nodeValue.contains("#")) { //$NON-NLS-1$
+							nodeValue = nodeValue.substring(0, nodeValue.lastIndexOf("#")); //$NON-NLS-1$
+						}
+						File hrefFile = new File(rootFile.getParentFile(), nodeValue);
 						// Determine whether or not the file is already
 						// present. We expect there to be no other files with
 						// the same name already in the manifest.
@@ -81,7 +83,7 @@ public class EclipseTocImporter {
 	}
 
 	private static void importFile(Publication oebps, File rootFile, File file) throws ParserConfigurationException,
-			SAXException, IOException, DOMException, URISyntaxException {
+	SAXException, IOException, DOMException, URISyntaxException {
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		Document doc = dBuilder.parse(file);
@@ -103,7 +105,7 @@ public class EclipseTocImporter {
 	 * @throws URISyntaxException
 	 */
 	public static void importFile(Publication oebps, File file) throws ParserConfigurationException, SAXException,
-			IOException, DOMException, URISyntaxException {
+	IOException, DOMException, URISyntaxException {
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		Document doc = dBuilder.parse(file);

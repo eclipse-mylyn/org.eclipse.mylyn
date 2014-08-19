@@ -28,7 +28,8 @@
 						<configuration>
 							<target>
 								<pathconvert refid="maven.compile.classpath" property="compile_classpath"/>
-								<ant antfile="build-docs.xml" inheritAll="true"/>
+								<ant antfile="build-docs.ant" inheritAll="true"/>
+								<ant antfile="build-book.ant" inheritAll="true"/>
 							</target>
 						</configuration>
 						<goals>

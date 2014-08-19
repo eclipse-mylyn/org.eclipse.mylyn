@@ -11,11 +11,12 @@
         Torkild U. Resheim - Adapted for building the EPUB user guide
  -->
 
-<!-- Will currently only work when called from Maven - see pom.xml -->
-<project name="org.eclipse.mylyn.docs.epub.ui.docs" default="all">
+<!-- Will only work when called from Maven — see pom.xml -->
+<project name="org.eclipse.mylyn.docs.epub.ui.docs" default="build">
 
 	<property name="wikitext.help" location="../org.eclipse.mylyn.wikitext.help.ui" />
 
+	<echo message="${compile_classpath}"></echo>
 	<path id="wikitext.ant.classpath">
 		<pathelement path="${compile_classpath}"/>
 	</path>
@@ -24,15 +25,13 @@
 		<delete failonerror="false">
 			<fileset dir="help">
 				<include name="**/*"/>
+				<exclude name="title-page.html"/>
 			</fileset>
 		</delete>
 		<delete dir="${wikitext.ui.textile.bin}" failonerror="false"/>
 	</target>
 
-	<target name="all" depends="plugin-docs">
-	</target>
-
-	<target name="plugin-docs" description="generate plugin help documentation">
+	<target name="build" description="generate plugin help documentation">
 		<taskdef resource="org/eclipse/mylyn/wikitext/core/ant/tasks.properties" classpathref="wikitext.ant.classpath"/>
 
 		<mkdir dir="${basedir}/help"/>
@@ -45,7 +44,7 @@
 			<fileset dir="docs">
 				<include name="*.textile"/>
 			</fileset>
-			<stylesheet url="../../PRODUCT_PLUGIN/book.css"/>
+			<stylesheet url="../book.css"/>
 			<stylesheet file="${wikitext.help}/help/styles/main.css"/>
 			<stylesheet file="${basedir}/docs/style.css"/>
 		</wikitext-to-eclipse-help>

@@ -282,7 +282,7 @@ bc..
 p. 
 * **file** - points to a file to include in the manifest
 * **type** - The MIME type of the file. If omitted it will be automatically detected if possible.
-* **spine** - Whether or not to include the file in the reading order of the publication. The default is *true*.
+* **spine** - whether or not to include the file in the reading order of the publication. The default is *true*.
 
 The following file types are so called "core media types" and are described in the EPUB 2 specification. Some of these cannot be automatically detected and must be explicitly specified:
 
@@ -299,6 +299,20 @@ The following file types are so called "core media types" and are described in t
 * application/x-dtbncx+xml (not detected)
 
 Other file types such as TrueType fonts can also be added even though they are not covered in the specifiation. However certain reading systems do support embedded fonts.
+
+h4. Importing from an __Eclipse Help__ table of contents
+
+A typical use of Mylyn WikiText is to generate documentation in the form of Eclipse Help. In order to be loaded by the Eclipse RCP application or IDE, these help documents must be declared in a table of contents file. This file can be imported by this Ant task and all referenced files will be automatically added to the spine.
+
+bc.. 
+<!ELEMENT import EMPTY>
+<!ATTLIST import
+          file CDATA #REQUIRED
+          format CDATA #REQUIRED>
+
+p. 
+* **file** - points to a table of contents root file
+* **format** - the format of the import. In this case *eclipse-help*.
 
 h3. Secondary content files
 
