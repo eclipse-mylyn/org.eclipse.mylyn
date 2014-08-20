@@ -29,7 +29,11 @@ public class ActiveTaskReviewsHandler extends AbstractHandler {
 		ITask activeTask = TasksUi.getTaskActivityManager().getActiveTask();
 		if (activeTask != null) {
 			GerritTableView reviewTableView = GerritTableView.getActiveView();
-			reviewTableView.processCommands("message:\"" + activeTask.getTaskId() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+			String key = activeTask.getTaskKey();
+			if (key == null) {
+				key = activeTask.getTaskId();
+			}
+			reviewTableView.processCommands("message:\"" + key + "\""); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return null;
 	}
