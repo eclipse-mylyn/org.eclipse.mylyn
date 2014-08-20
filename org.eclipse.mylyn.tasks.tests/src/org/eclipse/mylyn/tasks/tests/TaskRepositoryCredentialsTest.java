@@ -25,6 +25,7 @@ import org.eclipse.mylyn.commons.repositories.core.auth.ICredentialsStore;
 import org.eclipse.mylyn.internal.commons.repositories.core.LocationService;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.tests.util.TestUtils;
 
 /**
  * @author Mik Kersten
@@ -78,6 +79,10 @@ public class TaskRepositoryCredentialsTest extends TestCase {
 
 	@SuppressWarnings("deprecation")
 	public void testPlatformAuthHandlerAvailable() throws Exception {
+		if (!TestUtils.isCompatibilityAuthInstalled()) {
+			System.err.println("Skipping TaskRepositoryCredentialsTest.testPlatformAuthHandlerAvailable()");
+			return;
+		}
 		URL url = new URL("http://mylyn");
 		Platform.addAuthorizationInfo(url, "", "", Collections.EMPTY_MAP);
 		assertNotNull("Tests require org.eclipse.core.runtime.compatibility.auth",

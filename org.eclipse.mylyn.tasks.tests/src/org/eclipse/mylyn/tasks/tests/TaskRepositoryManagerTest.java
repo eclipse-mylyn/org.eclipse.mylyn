@@ -44,6 +44,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
+import org.eclipse.mylyn.tasks.tests.util.TestUtils;
 
 /**
  * @author Mik Kersten
@@ -134,6 +135,10 @@ public class TaskRepositoryManagerTest extends TestCase {
 	}
 
 	public void testMigrationFromKeyring() throws Exception {
+		if (!TestUtils.isCompatibilityAuthInstalled()) {
+			System.err.println("Skipping TaskRepositoryManagerTest.testMigrationFromKeyring()");
+			return;
+		}
 		Map<String, String> authInfo = createAuthInfo();
 
 		TaskRepository repository = new TaskRepository("bugzilla", "http://example.com/");
@@ -150,6 +155,10 @@ public class TaskRepositoryManagerTest extends TestCase {
 	}
 
 	public void testMigrationFromKeyringAfterGetUserNameCalled() throws Exception {
+		if (!TestUtils.isCompatibilityAuthInstalled()) {
+			System.err.println("Skipping TaskRepositoryManagerTest.testMigrationFromKeyringAfterGetUserNameCalled()");
+			return;
+		}
 		Map<String, String> authInfo = createAuthInfo();
 
 		TaskRepository repository = new TaskRepository("bugzilla", "http://example.com/");
@@ -369,7 +378,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 	}
 
 	public void testRepositoryWithCustomAttributes() throws Exception {
-		// Note: if a connector doesn't exist the associated repositories are not loaded (orphaned) 
+		// Note: if a connector doesn't exist the associated repositories are not loaded (orphaned)
 		// causing this test to fail.
 		AbstractRepositoryConnector connector = new MockRepositoryConnector();
 		manager.addRepositoryConnector(connector);
