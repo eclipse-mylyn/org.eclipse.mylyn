@@ -175,7 +175,17 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 	}
 
 	public void setLocation(Point location) {
-		getShell().setLocation(location);
+		Rectangle bounds = getShell().getBounds();
+		Rectangle monitorBounds = getShell().getMonitor().getClientArea();
+		// ensure the popup fits on the shell's monitor
+		bounds.x = contrain(location.x, monitorBounds.x, monitorBounds.x + monitorBounds.width - bounds.width);
+		bounds.y = contrain(location.y, monitorBounds.y, monitorBounds.y + monitorBounds.height - bounds.height);
+
+		getShell().setLocation(new Point(bounds.x, bounds.y));
+	}
+
+	private int contrain(int value, int min, int max) {
+		return Math.max(min, Math.min(max, value));
 	}
 
 	public void setSize(int width, int height) {
