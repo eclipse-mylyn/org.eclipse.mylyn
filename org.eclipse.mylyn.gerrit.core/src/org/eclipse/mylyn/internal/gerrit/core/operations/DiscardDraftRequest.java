@@ -24,21 +24,11 @@ public class DiscardDraftRequest extends AbstractRequest<VoidResult> {
 
 	private final Key patchKey;
 
-	private final int line;
-
 	private final String uuid;
 
-	private final short side;
-
-	public DiscardDraftRequest(Patch.Key patchKey, int line, short side, String uuid) {
+	public DiscardDraftRequest(Patch.Key patchKey, String uuid) {
 		this.patchKey = patchKey;
-		this.line = line;
-		this.side = side;
 		this.uuid = uuid;
-	}
-
-	public int getLine() {
-		return line;
 	}
 
 	public String getUuid() {
@@ -49,13 +39,9 @@ public class DiscardDraftRequest extends AbstractRequest<VoidResult> {
 		return patchKey;
 	}
 
-	public short getSide() {
-		return side;
-	}
-
 	@Override
 	protected VoidResult execute(GerritClient client, IProgressMonitor monitor) throws GerritException {
-		return client.deleteDraft(getPatchKey(), getMessage(), getLine(), getSide(), getUuid(), monitor);
+		return client.deleteDraft(getPatchKey(), getUuid(), monitor);
 	}
 
 	@Override

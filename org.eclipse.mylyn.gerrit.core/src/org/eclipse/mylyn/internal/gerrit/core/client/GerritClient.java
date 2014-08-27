@@ -117,7 +117,7 @@ import com.google.gwtjsonrpc.client.VoidResult;
 
 /**
  * Facade to the Gerrit RPC API.
- * 
+ *
  * @author Mikael Kober
  * @author Thomas Westling
  * @author Steffen Pingel
@@ -276,16 +276,12 @@ public class GerritClient extends ReviewsClient {
 		});
 	}
 
-	public VoidResult deleteDraft(Patch.Key patchkey, String message, int line, short side, String uuid,
-			IProgressMonitor monitor) throws GerritException {
+	public VoidResult deleteDraft(Patch.Key patchkey, String uuid, IProgressMonitor monitor) throws GerritException {
 		final PatchLineComment.Key id = new PatchLineComment.Key(patchkey, uuid);
-		final PatchLineComment comment = new PatchLineComment(id, line, getAccount(monitor).getId(), uuid);
-		comment.setMessage(message);
-		comment.setSide(side);
 		return execute(monitor, new Operation<VoidResult>() {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
-				getPatchDetailService(monitor).deleteDraft(comment.getKey(), this);
+				getPatchDetailService(monitor).deleteDraft(id, this);
 			}
 		});
 	}
@@ -450,7 +446,7 @@ public class GerritClient extends ReviewsClient {
 
 	/**
 	 * Checks for the 4 byte header that identifies a ZIP file
-	 * 
+	 *
 	 * @noreference This method is not intended to be referenced by clients.
 	 */
 	public static boolean isZippedContent(byte[] bin) {
@@ -950,7 +946,7 @@ public class GerritClient extends ReviewsClient {
 
 	/**
 	 * Sends a query for the changes visible to the caller to the gerrit server.
-	 * 
+	 *
 	 * @param monitor
 	 *            A progress monitor
 	 * @param queryString
@@ -966,7 +962,7 @@ public class GerritClient extends ReviewsClient {
 	/**
 	 * Sends a query for the changes visible to the caller to the gerrit server with the possibility of adding options
 	 * to the query.
-	 * 
+	 *
 	 * @param monitor
 	 *            A progress monitor
 	 * @param queryString
@@ -1010,7 +1006,7 @@ public class GerritClient extends ReviewsClient {
 
 	/**
 	 * Sends a query for the changes visible to the caller to the gerrit server. Uses the gerrit REST API.
-	 * 
+	 *
 	 * @param monitor
 	 *            A progress monitor
 	 * @param queryString
@@ -1026,7 +1022,7 @@ public class GerritClient extends ReviewsClient {
 	/**
 	 * Sends a query for the changes visible to the caller to the gerrit server with the possibility of adding options
 	 * to the query. Uses the gerrit REST API.
-	 * 
+	 *
 	 * @param monitor
 	 *            A progress monitor
 	 * @param queryString

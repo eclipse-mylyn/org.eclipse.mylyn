@@ -108,8 +108,7 @@ public class GerritReviewBehavior extends ReviewBehavior {
 		for (ILocation location : comment.getLocations()) {
 			if (location instanceof ILineLocation) {
 				ILineLocation lineLocation = (ILineLocation) location;
-				DiscardDraftRequest request = new DiscardDraftRequest(key, lineLocation.getRangeMin(), side,
-						comment.getId());
+				DiscardDraftRequest request = new DiscardDraftRequest(key, comment.getId());
 				request.setMessage(comment.getDescription());
 
 				GerritOperation<VoidResult> operation = getOperationFactory().createOperation(getTask(), request);

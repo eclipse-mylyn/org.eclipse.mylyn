@@ -281,6 +281,39 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(fileComment.getAuthor().getDisplayName(), is("tests"));
 		assertThat(fileComment.getDescription(), is("Line 2 Comment"));
 
+		reviewHarness.client.deleteDraft(Patch.Key.parse(id), fileComment.getId(), new NullProgressMonitor());
+
+		commentFile = testPatchSet.getItems().get(0);
+		allComments = commentFile.getAllComments();
+		assertThat(allComments.size(), is(0));
+
+		reviewHarness.client.saveDraft(Patch.Key.parse(id), "Line 2 Comment", 2, (short) 1, null, null,
+				new NullProgressMonitor());
+		patchSetObserver.retrieve(false);
+		patchSetObserver.waitForResponse();
+
+		commentFile = testPatchSet.getItems().get(1);
+		allComments = commentFile.getAllComments();
+		fileComment = allComments.get(0);
+		assertThat(fileComment, notNullValue());
+		assertThat(fileComment.isDraft(), is(true));
+		assertThat(fileComment.getAuthor().getDisplayName(), is("tests"));
+		assertThat(fileComment.getDescription(), is("Line 2 Comment"));
+
+		reviewHarness.client.saveDraft(Patch.Key.parse(id), "Line 2 Comment modified", 2, (short) 1, null,
+				fileComment.getId(), new NullProgressMonitor());
+		patchSetObserver.retrieve(false);
+		patchSetObserver.waitForResponse();
+
+		commentFile = testPatchSet.getItems().get(1);
+		allComments = commentFile.getAllComments();
+		assertThat(allComments.size(), is(1));
+		fileComment = allComments.get(0);
+		assertThat(fileComment, notNullValue());
+		assertThat(fileComment.isDraft(), is(true));
+		assertThat(fileComment.getAuthor().getDisplayName(), is("tests"));
+		assertThat(fileComment.getDescription(), is("Line 2 Comment modified"));
+
 		reviewHarness.client.publishComments(reviewHarness.shortId, 2, "Submit Comments",
 				Collections.<ApprovalCategoryValue.Id> emptySet(), new NullProgressMonitor());
 		patchSetObserver.retrieve(false);
@@ -291,7 +324,7 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(fileComment, notNullValue());
 		assertThat(fileComment.isDraft(), is(false));
 		assertThat(fileComment.getAuthor().getDisplayName(), is("tests"));
-		assertThat(fileComment.getDescription(), is("Line 2 Comment"));
+		assertThat(fileComment.getDescription(), is("Line 2 Comment modified"));
 	}
 
 	@Test
