@@ -56,7 +56,7 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
 
 /**
  * Manages annotation models for compare viewers.
- * 
+ *
  * @author Thomas Ehrnhoefer
  * @author Steffen Pingel
  * @author Guy Perron
@@ -66,10 +66,6 @@ public class ReviewCompareAnnotationSupport {
 	public static enum Side {
 		LEFT_SIDE, RIGHT_SIDE
 	}
-
-	private static final int INTERRUPT_INTERVAL = 16;
-
-	private static final int PAUSE_DELAY = 250;
 
 	private static String KEY_ANNOTAION_SUPPORT = ReviewItemSetCompareEditorInput.class.getName();
 
@@ -83,10 +79,6 @@ public class ReviewCompareAnnotationSupport {
 		}
 		return support;
 	}
-
-	private Thread watchDog = null;
-
-	private boolean sentinel = false;
 
 	public class MonitorObject {
 	};
@@ -186,7 +178,7 @@ public class ReviewCompareAnnotationSupport {
 
 	/**
 	 * Jumps to the next annotation according to the given direction.
-	 * 
+	 *
 	 * @param direction
 	 *            the search direction
 	 * @return the selected annotation or <code>null</code> if none
@@ -334,17 +326,8 @@ public class ReviewCompareAnnotationSupport {
 		LineRange range = new LineRange(p.x + 1, p.y);
 
 		if (commentPopupDialog != null) {
-			if (watchDog != null) {
-				try {
-					synchronized (myMonitorObject) {
-						sentinel = true;
-						commentPopupDialog.dispose();
-						myMonitorObject.wait();
-					}
-				} catch (InterruptedException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, "Error destroying dialog", e)); //$NON-NLS-1$
-				}
-			}
+			commentPopupDialog.dispose();
+			commentPopupDialog = null;
 		}
 
 		commentPopupDialog = new CommentPopupDialog(ReviewsUiPlugin.getDefault()
@@ -362,39 +345,8 @@ public class ReviewCompareAnnotationSupport {
 		location.y = location.y + (sourceViewer.getViewportHeight() / 2);
 		commentPopupDialog.setLocation(location);
 		commentPopupDialog.open();
+		commentPopupDialog.setFocus();
 
-		watchDog = new Thread(new Runnable() {
-			public void run() {
-				try {
-					for (int x = 0; x < INTERRUPT_INTERVAL; x++) {
-						if (sentinel) {
-							Thread.currentThread().interrupt();
-							break;
-						}
-						Thread.sleep(PAUSE_DELAY);
-					}
-				} catch (Exception e) {
-					StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
-							"Error interrupting thread", e)); //$NON-NLS-1$
-				}
-				if (!sentinel) {
-					Display.getDefault().asyncExec(new Runnable() {
-						public void run() {
-							if (commentPopupDialog != null) {
-								commentPopupDialog.dispose();
-								commentPopupDialog = null;
-							}
-						}
-					});
-				}
-				synchronized (myMonitorObject) {
-					myMonitorObject.notify();
-				}
-			}
-		});
-		sentinel = false;
-
-		watchDog.start();
 		widget.setRedraw(true);
 	}
 
@@ -454,7 +406,7 @@ public class ReviewCompareAnnotationSupport {
 		return false;
 	}
 
-	// adapted from {@link AbstractTextEditor#selectAndReveal(int, int)}
+// adapted from {@link AbstractTextEditor#selectAndReveal(int, int)}
 	protected void adjustHighlightRange(SourceViewer sourceViewer, int offset, int length) {
 		if (sourceViewer instanceof ITextViewerExtension5) {
 			ITextViewerExtension5 extension = (ITextViewerExtension5) sourceViewer;
@@ -464,7 +416,7 @@ public class ReviewCompareAnnotationSupport {
 		}
 	}
 
-	// adapted from {@link AbstractTextEditor#selectAndReveal(int, int)}
+// adapted from {@link AbstractTextEditor#selectAndReveal(int, int)}
 	private boolean isVisible(SourceViewer viewer, int offset, int length) {
 		if (viewer instanceof ITextViewerExtension5) {
 			ITextViewerExtension5 extension = (ITextViewerExtension5) viewer;
@@ -509,7 +461,7 @@ public class ReviewCompareAnnotationSupport {
 	/**
 	 * Returns the annotation closest to the given range respecting the given direction. If an annotation is found, the
 	 * annotations current position is copied into the provided annotation position.
-	 * 
+	 *
 	 * @param viewer
 	 *            the viewer
 	 * @param direction
@@ -558,7 +510,7 @@ public class ReviewCompareAnnotationSupport {
 					&& p.offset + p.getLength() == offset + length) {// || p.includes(offset)) {
 				if (containingAnnotation == null
 						|| (direction == Direction.FORWARDS && p.length >= containingAnnotationPosition.length || direction == Direction.BACKWARDS
-								&& p.length >= containingAnnotationPosition.length)) {
+						&& p.length >= containingAnnotationPosition.length)) {
 					containingAnnotation = a;
 					containingAnnotationPosition = p;
 					currentAnnotation = p.length == length;
