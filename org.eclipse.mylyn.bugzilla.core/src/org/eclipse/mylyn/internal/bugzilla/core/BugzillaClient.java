@@ -55,7 +55,6 @@ import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.RedirectException;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.HeadMethod;
-import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.PartBase;
@@ -91,7 +90,6 @@ import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
-import org.eclipse.mylyn.tasks.core.data.TaskAttachmentPartSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -999,7 +997,7 @@ public class BugzillaClient {
 			if (comment != null) {
 				parts.add(new StringPart(IBugzillaConstants.POST_INPUT_COMMENT, comment, getCharacterEncoding()));
 			}
-			parts.add(new FilePart(IBugzillaConstants.POST_INPUT_DATA, new TaskAttachmentPartSource(source, filename)));
+			parts.add(new BugzillaFilePart(source, filename, contentType, getCharacterEncoding()));
 
 			if (isPatch) {
 				parts.add(new StringPart(ATTRIBUTE_ISPATCH, VALUE_ISPATCH));

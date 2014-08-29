@@ -19,6 +19,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.OutputStream;
 import java.util.Date;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -308,6 +309,58 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		assertEquals(numAttached + 1,
 				taskData.getAttributeMapper().getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT).size());
 		// use assertion to track clean-up
+		assertTrue(attachFile.delete());
+	}
+
+	public void testAttachmentWithUnicode() throws Exception {
+		testAttachmentWithSpecialCharacters("\u00E7\u00F1\u00A5\u20AC\u00A3\u00BD\u00BC\u03B2\u03B8\u53F0\u5317\u3096\u3097\uFF73");
+	}
+
+	public void testAttachmentWithSpecialCharacters() throws Exception {
+		testAttachmentWithSpecialCharacters("~`!@#$%^&()_-+={[}];',");
+	}
+
+	private void testAttachmentWithSpecialCharacters(String specialCharacters) throws Exception {
+		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, null, null);
+		assertNotNull(taskData);
+
+		TaskAttribute attachmentAttr = taskData.getAttributeMapper().createTaskAttachment(taskData);
+		TaskAttachmentMapper attachmentMapper = TaskAttachmentMapper.createFrom(attachmentAttr);
+
+		String description = "Test attachment " + specialCharacters + System.currentTimeMillis();
+		attachmentMapper.setDescription(description);
+		attachmentMapper.setContentType("text/plain");
+		attachmentMapper.setPatch(false);
+		attachmentMapper.applyTo(attachmentAttr);
+
+		String filename = "test" + specialCharacters + System.currentTimeMillis() + ".txt";
+		File attachFile = new File(filename);
+		attachFile.createNewFile();
+		attachFile.deleteOnExit();
+		BufferedWriter write = new BufferedWriter(new FileWriter(attachFile));
+		write.write("test file content");
+		write.close();
+
+		FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(attachFile);
+		attachment.setContentType("text/plain");
+		attachment.setDescription(description);
+		attachment.setName(filename);
+
+		client.postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment, attachmentAttr,
+				new NullProgressMonitor());
+
+		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
+		assertNotNull(taskData);
+		List<TaskAttribute> attachmentAttrs = taskData.getAttributeMapper().getAttributesByType(taskData,
+				TaskAttribute.TYPE_ATTACHMENT);
+		assertEquals(1, attachmentAttrs.size());
+
+		attachmentMapper = TaskAttachmentMapper.createFrom(attachmentAttrs.get(0));
+		assertEquals(description, attachmentMapper.getDescription());
+		assertEquals(filename, attachmentMapper.getFileName());
+		assertEquals("text/plain", attachmentMapper.getContentType());
+		assertEquals(Boolean.FALSE, attachmentMapper.isPatch());
+
 		assertTrue(attachFile.delete());
 	}
 
