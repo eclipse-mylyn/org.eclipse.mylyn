@@ -11,7 +11,10 @@
 
 package org.eclipse.mylyn.gerrit.tests.core.client;
 
-import static org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion.*;
+import static org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion.isVersion24x;
+import static org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion.isVersion26OrLater;
+import static org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion.isVersion29OrLater;
+import static org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion.parseGerritVersion;
 import junit.framework.TestCase;
 
 import org.junit.Test;
@@ -110,6 +113,15 @@ public class GerritVersionTest extends TestCase {
 		assertEquals(7, v.getMinor());
 		assertEquals(0, v.getMicro());
 		assertEquals("xxx3", v.getQualifier()); // '.1' is lost as '.' cannot be part of a qualifier
+	}
+
+	@Test
+	public void testParse_2861() throws Exception {
+		Version v = parseGerritVersion("2.8.6.1");
+		assertEquals(2, v.getMajor());
+		assertEquals(8, v.getMinor());
+		assertEquals(6, v.getMicro());
+		assertEquals("1", v.getQualifier());
 	}
 
 	@Test
