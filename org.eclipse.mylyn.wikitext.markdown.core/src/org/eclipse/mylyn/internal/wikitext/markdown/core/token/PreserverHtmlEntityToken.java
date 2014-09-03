@@ -13,7 +13,6 @@ package org.eclipse.mylyn.internal.wikitext.markdown.core.token;
 
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
-import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.LiteralPhraseModifierProcessor;
 
 /**
  * A phrase modifier that detects HTML and XML entities in the source.
@@ -22,19 +21,29 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.LiteralPhraseModifie
  */
 public class PreserverHtmlEntityToken extends PatternBasedElement {
 
-   @Override
-   protected String getPattern(int groupOffset) {
-       return "(&[A-Za-z]+;)"; //$NON-NLS-1$
-   }
+	@Override
+	protected String getPattern(int groupOffset) {
+		return "&(#?[a-zA-Z0-9]{2,7});"; //$NON-NLS-1$
+	}
 
-   @Override
-   protected PatternBasedElementProcessor newProcessor() {
-       return new LiteralPhraseModifierProcessor(false);
-   }
+	@Override
+	protected int getPatternGroupCount() {
+		return 1;
+	}
 
-   @Override
-   protected int getPatternGroupCount() {
-       return 1;
-   }
+	@Override
+	protected PatternBasedElementProcessor newProcessor() {
+		return new EntityReferenceProcessor();
+	}
+
+	private static class EntityReferenceProcessor extends PatternBasedElementProcessor {
+
+		@Override
+		public void emit() {
+			String entity = group(1);
+			getBuilder().entityReference(entity);
+		}
+
+	}
 
 }

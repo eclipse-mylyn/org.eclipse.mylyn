@@ -188,4 +188,13 @@ public class MarkdownLanguageMiscellaneousTest extends MarkdownLanguageTestBase 
 		String expectedHtml = "<p>This <a href=\"http://www.google.de/?q=t_es_t\">http://www.google.de/?q=t_es_t</a> is an automatic link.</p>";
 		parseAndAssert(markup, expectedHtml);
 	}
+
+	public void testHtmlEntity() {
+		parseAndAssert("&copy; more text", "<p>&copy; more text</p>");
+		parseAndAssert("more text &copy;", "<p>more text &copy;</p>");
+		parseAndAssert("&copy;", "<p>&copy;</p>");
+		parseAndAssert("start&copy;end", "<p>start&copy;end</p>");
+		parseAndAssert("&#160;&nbsp;&#xa0;&#xA0;", "<p>&#160;&nbsp;&#xa0;&#xA0;</p>");
+		parseAndAssert("&pound;", "<p>&pound;</p>");
+	}
 }
