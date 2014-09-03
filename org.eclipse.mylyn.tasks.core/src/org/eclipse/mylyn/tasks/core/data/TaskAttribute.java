@@ -583,10 +583,10 @@ public final class TaskAttribute {
 	/**
 	 * Adds an attribute option value
 	 * 
-	 * @param readableValue
-	 *            The value displayed on the screen
-	 * @param parameterValue
+	 * @param key
 	 *            The option value used when sending the form to the server
+	 * @param value
+	 *            The value displayed on the screen
 	 */
 	public void putOption(String key, String value) {
 		Assert.isNotNull(key);
