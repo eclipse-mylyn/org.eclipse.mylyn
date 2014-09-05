@@ -12,6 +12,8 @@
 package org.eclipse.mylyn.commons.repositories.tests.core;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import java.io.UnsupportedEncodingException;
@@ -253,7 +255,9 @@ public class SecureCredentialsStoreTest extends AbstractCredentialsStoreTest {
 	@Test
 	public void testTestAvailability() throws Exception {
 		StubSecureCredentialsStore store = createStubSecureCredentialsStore();
+		assertNull(store.get("org.eclipse.mylyn.commons.repositories.core.SecureCredentialsStore", null));
 		store.testAvailability();
+		assertNotNull(store.get("org.eclipse.mylyn.commons.repositories.core.SecureCredentialsStore", null));
 		store.setUnavailable(true);
 		try {
 			store.testAvailability();

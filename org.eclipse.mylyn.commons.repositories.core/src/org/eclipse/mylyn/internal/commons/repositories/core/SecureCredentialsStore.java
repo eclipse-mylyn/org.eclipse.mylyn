@@ -174,7 +174,12 @@ public class SecureCredentialsStore implements ICredentialsStore {
 	@Override
 	public void testAvailability() throws UnavailableException {
 		try {
-			getSecurePreferences().get("org.eclipse.mylyn.commons.repositories.core.SecureCredentialsStore", null); //$NON-NLS-1$
+			String key = "org.eclipse.mylyn.commons.repositories.core.SecureCredentialsStore"; //$NON-NLS-1$
+			// in some cases, we can get the list of keys even though the secure store is broken, so if we just try to get
+			// a non-existant key, it won't try to access the secure store and we won't detect that it's broken. So, create a key
+			// and try to access it.
+			getSecurePreferences().put(key, Boolean.toString(true), true);
+			getSecurePreferences().get(key, null);
 		} catch (StorageException e) {
 			throw new UnavailableException(e);
 		}
