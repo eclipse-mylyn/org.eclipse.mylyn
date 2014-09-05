@@ -87,6 +87,16 @@ public class SpanStrategiesTest {
 	}
 
 	@Test
+	public void spanWithTextDecorationUnderlineToUnderlined() {
+		SpanStrategies strategies = new SpanStrategies(Sets.newHashSet(SpanType.UNDERLINED),
+				Collections.<SpanHtmlElementStrategy> emptyList());
+		SpanStrategy strategy = strategies.getStrategy(SpanType.SPAN, new Attributes(null, null,
+				"text-decoration:  underline;", null));
+		assertTrue(strategy instanceof SubstitutionWithoutCssSpanStrategy);
+		assertEquals(SpanType.UNDERLINED, ((SubstitutionWithoutCssSpanStrategy) strategy).getType());
+	}
+
+	@Test
 	public void spanWithUnrecognizedCssToUnsupported() {
 		SpanStrategies strategies = new SpanStrategies(Sets.newHashSet(SpanType.BOLD),
 				Collections.<SpanHtmlElementStrategy> emptyList());
