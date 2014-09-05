@@ -315,10 +315,10 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		case STRONG:
 			block = new ContentBlock("*" + spanAttributes, "*", true, false); //$NON-NLS-1$//$NON-NLS-2$
 			break;
-		case SUBSCRIPT:
+		case SUPERSCRIPT:
 			block = new ContentBlock("^" + spanAttributes, "^", true, false); //$NON-NLS-1$//$NON-NLS-2$
 			break;
-		case SUPERSCRIPT:
+		case SUBSCRIPT:
 			block = new ContentBlock("~" + spanAttributes, "~", true, false); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case UNDERLINED:

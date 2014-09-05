@@ -724,4 +724,75 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		assertEquals("{code}// some code{code}\n\n-redacted- text\n\n", markup);
 	}
+
+	public void testSpanSuperscript() {
+		assertSpan("begin ^span text^ end\n\n", SpanType.SUPERSCRIPT);
+	}
+
+	public void testSpanSubscript() {
+		assertSpan("begin ~span text~ end\n\n", SpanType.SUBSCRIPT);
+	}
+
+	public void testSpanBold() {
+		assertSpan("begin *span text* end\n\n", SpanType.BOLD);
+	}
+
+	public void testSpanCitation() {
+		assertSpan("begin??span text??end\n\n", SpanType.CITATION);
+	}
+
+	public void testSpanCode() {
+		assertSpan("begin @span text@ end\n\n", SpanType.CODE);
+	}
+
+	public void testSpanDeleted() {
+		assertSpan("begin -span text- end\n\n", SpanType.DELETED);
+	}
+
+	public void testSpanEmphasis() {
+		assertSpan("begin _span text_ end\n\n", SpanType.EMPHASIS);
+	}
+
+	public void testSpanInserted() {
+		assertSpan("begin +span text+ end\n\n", SpanType.INSERTED);
+	}
+
+	public void testSpanItalic() {
+		assertSpan("begin _span text_ end\n\n", SpanType.ITALIC);
+	}
+
+	public void testSpanMonospace() {
+		assertSpan("begin{{span text}}end\n\n", SpanType.MONOSPACE);
+	}
+
+	public void testSpanQuote() {
+		assertSpan("beginspan textend\n\n", SpanType.QUOTE);
+	}
+
+	public void testSpanSpan() {
+		assertSpan("beginspan textend\n\n", SpanType.SPAN);
+	}
+
+	public void testSpanStrong() {
+		assertSpan("begin *span text* end\n\n", SpanType.STRONG);
+	}
+
+	public void testSpanUnderlined() {
+		assertSpan("begin +span text+ end\n\n", SpanType.UNDERLINED);
+	}
+
+	private void assertSpan(String expected, SpanType spanType) {
+		builder.beginDocument();
+		builder.characters("begin");
+		builder.beginSpan(spanType, new Attributes());
+		builder.characters("span text");
+		builder.endSpan();
+		builder.characters("end");
+		builder.endDocument();
+
+		String markup = out.toString();
+		TestUtil.println(markup);
+
+		assertEquals(expected, markup);
+	}
 }
