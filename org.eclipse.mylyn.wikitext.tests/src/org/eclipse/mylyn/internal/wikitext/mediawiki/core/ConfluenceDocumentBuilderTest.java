@@ -725,6 +725,20 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 		assertEquals("{code}// some code{code}\n\n-redacted- text\n\n", markup);
 	}
 
+	public void testBlockQuote() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.QUOTE, new Attributes());
+		builder.characters("block text");
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		assertEquals("{quote}block text{quote}\n\n", markup);
+	}
+
 	public void testSpanSuperscript() {
 		assertSpan("begin ^span text^ end\n\n", SpanType.SUPERSCRIPT);
 	}

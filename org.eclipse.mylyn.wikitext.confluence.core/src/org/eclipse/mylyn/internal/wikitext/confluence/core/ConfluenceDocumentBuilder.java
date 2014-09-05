@@ -264,7 +264,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		case PREFORMATTED:
 			return new ContentBlock(type, "{noformat}", "{noformat}\n\n", false, false); //$NON-NLS-1$ //$NON-NLS-2$ 
 		case QUOTE:
-			return new ContentBlock(type, "bq" + computeAttributes(attributes) + ". ", "\n\n", false, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			return new ContentBlock(type, "{quote}", "{quote}\n\n", false, false); //$NON-NLS-1$ //$NON-NLS-2$ 
 		case TABLE:
 			return new SuffixBlock(type, "\n"); //$NON-NLS-1$
 		case TABLE_CELL_HEADER:
