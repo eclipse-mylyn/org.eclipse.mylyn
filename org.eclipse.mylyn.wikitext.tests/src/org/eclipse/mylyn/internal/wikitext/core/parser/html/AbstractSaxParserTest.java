@@ -56,12 +56,12 @@ public abstract class AbstractSaxParserTest extends TestCase {
 
 	public void testBasicHtmlWithBoldEmphasis() throws IOException, SAXException {
 		performTest("<html><body><p>text <b>bold</b> and <em>emphasis</em></p></body></html>",
-				"text *bold* and _emphasis_\n\n");
+				"text **bold** and _emphasis_\n\n");
 	}
 
 	public void testBasicHtmlWithBoldEmphasis_NoPara() throws IOException, SAXException {
 		performTest("<html><body>text <b>bold</b> and <em>emphasis</em></body></html>",
-				"text *bold* and _emphasis_\n\n");
+				"text **bold** and _emphasis_\n\n");
 	}
 
 	public void testBasicHtmlWithHeadingPara() throws IOException, SAXException {
@@ -83,7 +83,7 @@ public abstract class AbstractSaxParserTest extends TestCase {
 
 	public void testNumericListWithStyles() throws IOException, SAXException {
 		performTest("<html><body><ol><li>first <em>plus</em> <b>text</b></li></ol></body></html>",
-				"# first _plus_ *text*\n\n");
+				"# first _plus_ **text**\n\n");
 	}
 
 	public void testTable() throws IOException, SAXException {

@@ -38,7 +38,7 @@ public class HtmlParserTest extends AbstractSaxParserTest {
 	@Test
 	public void testSignificantWhitespaceNotLost() throws IOException, SAXException {
 		String input = "<html><body><p>one <b>two</b> three</p></body></html>";
-		performTest(input, "one *two* three\n\n");
+		performTest(input, "one **two** three\n\n");
 	}
 
 	@Test
@@ -46,13 +46,13 @@ public class HtmlParserTest extends AbstractSaxParserTest {
 		String input = "<html><body><p>one <b>two</b> three</p></body></html>";
 		new HtmlCleaner().configure((HtmlParser) parser);
 
-		performTest(input, "one *two* three\n\n");
+		performTest(input, "one **two** three\n\n");
 	}
 
 	@Test
 	public void testParseInvalidHtml() throws IOException, SAXException {
 		String input = "</font>one <b>two";
-		performTest(input, "one *two*\n\n");
+		performTest(input, "one **two**\n\n");
 	}
 
 	@Test
@@ -60,7 +60,7 @@ public class HtmlParserTest extends AbstractSaxParserTest {
 		String input = "</font>one <b>two";
 		new HtmlCleaner().configure((HtmlParser) parser);
 
-		performTest(input, "one *two*\n\n");
+		performTest(input, "one **two**\n\n");
 	}
 
 	@Test
@@ -68,7 +68,7 @@ public class HtmlParserTest extends AbstractSaxParserTest {
 		String input = "one <b>two </b>three";
 		new HtmlCleaner().configure((HtmlParser) parser);
 
-		performTest(input, "one *two* three\n\n");
+		performTest(input, "one **two** three\n\n");
 	}
 
 }

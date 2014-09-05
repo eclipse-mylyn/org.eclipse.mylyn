@@ -362,7 +362,7 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		String spanAttributes = computeAttributes(attributes);
 		switch (type) {
 		case BOLD:
-			block = new ContentBlock("*" + spanAttributes, "*", true, false); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("**" + spanAttributes, "**", true, false); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case CITATION:
 			block = new ContentBlock("??" + spanAttributes, "??", true, false); //$NON-NLS-1$//$NON-NLS-2$
@@ -395,10 +395,10 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		case STRONG:
 			block = new ContentBlock("*" + spanAttributes, "*", true, false); //$NON-NLS-1$//$NON-NLS-2$
 			break;
-		case SUBSCRIPT:
+		case SUPERSCRIPT:
 			block = new ContentBlock("^" + spanAttributes, "^", true, false); //$NON-NLS-1$//$NON-NLS-2$
 			break;
-		case SUPERSCRIPT:
+		case SUBSCRIPT:
 			block = new ContentBlock("~" + spanAttributes, "~", true, false); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 
@@ -407,7 +407,7 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		case SPAN:
 		default:
 			if (spanAttributes.length() == 0) {
-				block = new SpanBlock("", false, false); //$NON-NLS-1$ 
+				block = new SpanBlock("", true, false); //$NON-NLS-1$ 
 			} else {
 				block = new SpanBlock(spanAttributes, true, false);
 			}

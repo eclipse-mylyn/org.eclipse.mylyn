@@ -164,7 +164,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		assertEquals("some *bold* and _emphasis_\n\n", markup);
+		assertEquals("some **bold** and _emphasis_\n\n", markup);
 	}
 
 	public void testParagraphWithCssClass() {
@@ -362,7 +362,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 	public void testImplicitParagrahWithSpan() {
 		builder.beginDocument();
-		builder.beginSpan(SpanType.BOLD, new Attributes());
+		builder.beginSpan(SpanType.STRONG, new Attributes());
 		builder.characters("text1");
 		builder.endSpan();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
@@ -381,7 +381,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
 
-		builder.beginSpan(SpanType.BOLD, new Attributes());
+		builder.beginSpan(SpanType.STRONG, new Attributes());
 		builder.characters("text2");
 		builder.endSpan();
 		builder.characters("text3");
@@ -412,7 +412,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		assertEquals("text3 *text2*\n\n", markup);
+		assertEquals("text3 **text2**\n\n", markup);
 	}
 
 	public void testBoldSpanNoWhitespace_spanMidLine() {
@@ -432,7 +432,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		assertEquals("text3 *text2* text4\n\n", markup);
+		assertEquals("text3 **text2** text4\n\n", markup);
 	}
 
 	public void testBoldSpanNoWhitespace_adjacentSpans() {
@@ -453,7 +453,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		assertEquals("*text2* __text3__\n\n", markup);
+		assertEquals("**text2** __text3__\n\n", markup);
 	}
 
 	public void testBoldSpanWithAdjacentPunctuation() {
@@ -472,7 +472,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		assertEquals("*text2*!\n\n", markup);
+		assertEquals("**text2**!\n\n", markup);
 	}
 
 	public void testBulletedList() {
@@ -497,7 +497,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		assertEquals("* text2 *text3*\n* text4\n\n", markup);
+		assertEquals("* text2 **text3**\n* text4\n\n", markup);
 	}
 
 	public void testBulletedList_TwoLevels() {
@@ -550,7 +550,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		assertEquals("prefix *bolded* suffix\n\n", markup);
+		assertEquals("prefix **bolded** suffix\n\n", markup);
 	}
 
 	public void testEmptySpan() {
@@ -643,7 +643,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		assertEquals("test\n\nmore *text*\n# text2\n\n", markup);
+		assertEquals("test\n\nmore **text**\n# text2\n\n", markup);
 	}
 
 	public void testDivWithinTableCell() {
@@ -924,5 +924,76 @@ public class TextileDocumentBuilderTest extends TestCase {
 		TestUtil.println(markup);
 
 		assertEquals("bc. // some code\n\n-redacted- text\n\n", markup);
+	}
+
+	public void testSpanSuperscript() {
+		assertSpan("begin ^span text^ end\n\n", SpanType.SUPERSCRIPT);
+	}
+
+	public void testSpanSubscript() {
+		assertSpan("begin ~span text~ end\n\n", SpanType.SUBSCRIPT);
+	}
+
+	public void testSpanBold() {
+		assertSpan("begin **span text** end\n\n", SpanType.BOLD);
+	}
+
+	public void testSpanCitation() {
+		assertSpan("begin??span text??end\n\n", SpanType.CITATION);
+	}
+
+	public void testSpanCode() {
+		assertSpan("begin @span text@ end\n\n", SpanType.CODE);
+	}
+
+	public void testSpanDeleted() {
+		assertSpan("begin -span text- end\n\n", SpanType.DELETED);
+	}
+
+	public void testSpanEmphasis() {
+		assertSpan("begin _span text_ end\n\n", SpanType.EMPHASIS);
+	}
+
+	public void testSpanInserted() {
+		assertSpan("begin +span text+ end\n\n", SpanType.INSERTED);
+	}
+
+	public void testSpanItalic() {
+		assertSpan("begin __span text__ end\n\n", SpanType.ITALIC);
+	}
+
+	public void testSpanMonospace() {
+		assertSpan("begin %{font-family:monospace;}span text% end\n\n", SpanType.MONOSPACE);
+	}
+
+	public void testSpanQuote() {
+		assertSpan("begin %span text% end\n\n", SpanType.QUOTE);
+	}
+
+	public void testSpanSpan() {
+		assertSpan("begin %span text% end\n\n", SpanType.SPAN);
+	}
+
+	public void testSpanStrong() {
+		assertSpan("begin *span text* end\n\n", SpanType.STRONG);
+	}
+
+	public void testSpanUnderlined() {
+		assertSpan("begin %{text-decoration:underline;}span text% end\n\n", SpanType.UNDERLINED);
+	}
+
+	private void assertSpan(String expected, SpanType spanType) {
+		builder.beginDocument();
+		builder.characters("begin");
+		builder.beginSpan(spanType, new Attributes());
+		builder.characters("span text");
+		builder.endSpan();
+		builder.characters("end");
+		builder.endDocument();
+
+		String markup = out.toString();
+		TestUtil.println(markup);
+
+		assertEquals(expected, markup);
 	}
 }
