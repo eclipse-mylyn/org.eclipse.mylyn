@@ -178,6 +178,18 @@ public class BugzillaTextileLanguageTest extends TestCase {
 				+ "</pre></body>", TestUtil.tagFragment("body", html));
 	}
 
+	public void testJavaStackTraceDetection_bug432153() {
+		String markup = "java.lang.Exception: message\nat com.sun.proxy.$Proxy0.refresh(Unknown Source)";
+
+		String html = parser.parseToHtml(markup);
+
+		TestUtil.println(html);
+
+		assertEquals("<body><pre class=\"javaStackTrace\">java.lang.Exception: message\n" //
+				+ "at com.sun.proxy.$Proxy0.refresh(Unknown Source)\n" //
+				+ "</pre></body>", TestUtil.tagFragment("body", html));
+	}
+
 	public void testEclipseErrorDetailsBlock() {
 		String html = parser.parseToHtml("text\n-- Error Details --\ndetail line 1\n\nno detail");
 		TestUtil.println(html);

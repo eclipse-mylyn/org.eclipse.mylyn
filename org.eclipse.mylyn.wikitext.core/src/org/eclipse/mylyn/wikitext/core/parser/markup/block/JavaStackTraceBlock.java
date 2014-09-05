@@ -33,7 +33,7 @@ public class JavaStackTraceBlock extends Block {
 
 	private static final String PACKAGE_PART = "([a-z][a-z0-9]*)"; //$NON-NLS-1$
 
-	private static final String CLASS_PART = "[A-Za-z][a-zA-Z0-9_$]*"; //$NON-NLS-1$
+	private static final String CLASS_PART = "[A-Za-z$][a-zA-Z0-9_$]*"; //$NON-NLS-1$
 
 	private static final String FQN_PART = "((" + PACKAGE_PART + "(\\." + PACKAGE_PART + ")*\\." + CLASS_PART + ")|(\\$Proxy\\d+))"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
