@@ -1,5 +1,5 @@
 /*********************************************************************
- * Copyright (c) 2010 Sony Ericsson/ST Ericsson and others.
+ * Copyright (c) 2010, 2014 Sony Ericsson/ST Ericsson and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *      Tasktop Technologies - improvements
  *      GitHub, Inc. - fixes for bug 354753
  *      Sascha Scholz (SAP) - improvements
+ *      Marc-Andre Laperle (Ericsson) - Add topic
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core;
 
@@ -311,6 +312,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		setAttributeValue(data, schema.OWNER, (owner != null) ? owner.getName() : ANONYMOUS);
 		setAttributeValue(data, schema.BRANCH, changeInfo.getBranch());
 		setAttributeValue(data, schema.IS_STARRED, (changeInfo.isStarred() ? Boolean.TRUE : Boolean.FALSE).toString());
+		setAttributeValue(data, schema.TOPIC, changeInfo.getTopic());
 
 		GerritReviewLabel reviewLabel = changeInfo.getReviewLabel();
 		if (reviewLabel != null) {

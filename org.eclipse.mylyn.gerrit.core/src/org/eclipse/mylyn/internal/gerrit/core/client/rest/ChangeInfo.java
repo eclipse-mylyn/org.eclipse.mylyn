@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2014 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Marc-Andre Laperle (Ericsson) - Add topic
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core.client.rest;
@@ -52,6 +53,9 @@ public class ChangeInfo {
 
 	// e.g. "I8473b95934b5732ac55d26311a706c9c2bde9940"
 	private String change_id;
+
+	// e.g. "Topic"
+	private String topic;
 
 	// e.g. "Implementing Feature X"
 	private String subject;
@@ -100,6 +104,10 @@ public class ChangeInfo {
 
 	public String getBranch() {
 		return branch;
+	}
+
+	public String getTopic() {
+		return topic;
 	}
 
 	public String getChangeId() {

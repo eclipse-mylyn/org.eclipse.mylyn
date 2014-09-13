@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Marc-Andre Laperle (Ericsson) - Add topic
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core;
@@ -31,6 +32,8 @@ public class Messages extends NLS {
 	public static String GerritQueryResultSchema_Starred;
 
 	public static String GerritQueryResultSchema_VerifyState;
+
+	public static String GerritQueryResultSchema_Topic;
 
 	public static String GerritTaskSchema_Publish;
 

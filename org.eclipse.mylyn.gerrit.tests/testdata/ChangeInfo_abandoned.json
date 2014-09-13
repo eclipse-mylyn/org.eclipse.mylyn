@@ -4,6 +4,7 @@
 	"id": "myProject~master~I8473b95934b5732ac55d26311a706c9c2bde9940",
 	"project": "myProject",
 	"branch": "master",
+	"topic": "My Topic",
 	"change_id": "I8473b95934b5732ac55d26311a706c9c2bde9940",
 	"subject": "Implementing Feature X",
 	"status": "ABANDONED",

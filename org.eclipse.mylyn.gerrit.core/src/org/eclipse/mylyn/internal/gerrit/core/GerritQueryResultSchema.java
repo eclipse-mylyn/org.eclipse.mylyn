@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Tasktop Technologies and others.
+ * Copyright (c) 2012, 2014 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Francois Chouinard - Moved/added fields for Gerrit Dashboard
+ *     Marc-Andre Laperle (Ericsson) - Add topic
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core;
@@ -74,4 +75,8 @@ public class GerritQueryResultSchema extends AbstractTaskSchema {
 	public final Field VERIFY_STATE = createField(
 			"org.eclipse.gerrit.VerifyState", Messages.GerritQueryResultSchema_VerifyState, //$NON-NLS-1$
 			TaskAttribute.TYPE_INTEGER, Flag.READ_ONLY);
+
+	// The topic string, optionally set by the user. Read only for now.
+	public final Field TOPIC = createField("org.eclipse.gerrit.Topic", Messages.GerritQueryResultSchema_Topic, //$NON-NLS-1$
+			TaskAttribute.TYPE_SHORT_TEXT, Flag.READ_ONLY, Flag.ATTRIBUTE);
 }

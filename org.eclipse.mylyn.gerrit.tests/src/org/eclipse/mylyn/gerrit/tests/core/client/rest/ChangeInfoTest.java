@@ -68,6 +68,7 @@ public class ChangeInfoTest extends TestCase {
 		assertNull(changeInfo.getId());
 		assertNull(changeInfo.getProject());
 		assertNull(changeInfo.getBranch());
+		assertNull(changeInfo.getTopic());
 		assertNull(changeInfo.getChangeId());
 		assertNull(changeInfo.getSubject());
 		assertNull(changeInfo.getStatus());
@@ -88,6 +89,7 @@ public class ChangeInfoTest extends TestCase {
 		assertNull(changeInfo.getId());
 		assertNull(changeInfo.getProject());
 		assertNull(changeInfo.getBranch());
+		assertNull(changeInfo.getTopic());
 		assertNull(changeInfo.getChangeId());
 		assertNull(changeInfo.getSubject());
 		assertNull(changeInfo.getStatus());
@@ -107,6 +109,7 @@ public class ChangeInfoTest extends TestCase {
 		assertEquals(changeInfo.getId(), "myProject~master~I8473b95934b5732ac55d26311a706c9c2bde9940");
 		assertEquals(changeInfo.getProject(), "myProject");
 		assertEquals(changeInfo.getBranch(), "master");
+		assertEquals(changeInfo.getTopic(), "My Topic");
 		assertEquals("I8473b95934b5732ac55d26311a706c9c2bde9940", changeInfo.getChangeId());
 		assertEquals("Implementing Feature X", changeInfo.getSubject());
 		assertEquals(Change.Status.ABANDONED, changeInfo.getStatus());

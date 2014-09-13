@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Tasktop Technologies and others.
+ * Copyright (c) 2012, 2014 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Francois Chouinard - Added support for the review labels
+ *     Marc-Andre Laperle (Ericsson) - Add topic
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.gerrit.core.client.data;
@@ -29,6 +30,8 @@ public class GerritQueryResult {
 	private int _number;
 
 	private String branch;
+
+	private String topic;
 
 	private Timestamp created;
 
@@ -63,6 +66,7 @@ public class GerritQueryResult {
 		}
 		setUpdated(changeInfo.getLastUpdatedOn());
 		setStarred(changeInfo.isStarred());
+		setTopic(changeInfo.getTopic());
 	}
 
 	public GerritQueryResult() {
@@ -112,6 +116,10 @@ public class GerritQueryResult {
 		return labels;
 	}
 
+	public String getTopic() {
+		return topic;
+	}
+
 	private void setId(String id) {
 		this.id = id;
 	}
@@ -138,6 +146,10 @@ public class GerritQueryResult {
 
 	private void setStarred(boolean starred) {
 		this.starred = starred;
+	}
+
+	private void setTopic(String topic) {
+		this.topic = topic;
 	}
 
 }
