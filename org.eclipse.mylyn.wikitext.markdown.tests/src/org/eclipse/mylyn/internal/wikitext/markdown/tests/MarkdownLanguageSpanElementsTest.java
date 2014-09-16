@@ -148,25 +148,25 @@ public class MarkdownLanguageSpanElementsTest extends MarkdownLanguageTestBase {
 
 	public void testInlineLinkProcessingWithinAtxStyleHeading() throws Exception {
 		String markup = "# Heading with [link](http://example.com/).";
-		String expectedHtml = "<h1 id=\"Headingwithlinkhttpexample.com.\">Heading with <a href=\"http://example.com/\">link</a>.</h1>";
+		String expectedHtml = "<h1 id=\"heading-with-link-http-example-com\">Heading with <a href=\"http://example.com/\">link</a>.</h1>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testReferenceLinkProcessingWithinAtxStyleHeading() throws Exception {
 		String markup = "# Heading with [link][].\n\n[link]: http://example.com/";
-		String expectedHtml = "<h1 id=\"Headingwithlink.\">Heading with <a href=\"http://example.com/\">link</a>.</h1>";
+		String expectedHtml = "<h1 id=\"heading-with-link\">Heading with <a href=\"http://example.com/\">link</a>.</h1>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testInlineLinkProcessingWithinUnderlinedHeading() throws Exception {
 		String markup = "Heading with [link](http://example.com/).\n===";
-		String expectedHtml = "<h1 id=\"Headingwithlinkhttpexample.com.\">Heading with <a href=\"http://example.com/\">link</a>.</h1>";
+		String expectedHtml = "<h1 id=\"heading-with-link-http-example-com\">Heading with <a href=\"http://example.com/\">link</a>.</h1>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testReferenceLinkProcessingWithinUnderlinedHeading() throws Exception {
 		String markup = "Heading with [link][].\n===\n\n[link]: http://example.com/";
-		String expectedHtml = "<h1 id=\"Headingwithlink.\">Heading with <a href=\"http://example.com/\">link</a>.</h1>";
+		String expectedHtml = "<h1 id=\"heading-with-link\">Heading with <a href=\"http://example.com/\">link</a>.</h1>";
 		parseAndAssert(markup, expectedHtml);
 	}
 

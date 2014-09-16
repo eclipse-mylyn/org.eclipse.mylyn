@@ -216,7 +216,11 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	 * @return the new state.
 	 */
 	protected ContentState createState() {
-		ContentState contentState = new ContentState();
+		return new ContentState();
+	}
+
+	private ContentState newContentState() {
+		ContentState contentState = createState();
 		contentState.getIdGenerator().setGenerationStrategy(getIdGenerationStrategy());
 		return contentState;
 	}
@@ -225,7 +229,7 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	public void processContent(MarkupParser parser, String markupContent, boolean asDocument) {
 		initializeSyntax(false);
 		initProcessors();
-		ContentState state = createState();
+		ContentState state = newContentState();
 		state.setMarkupContent(markupContent);
 
 		DocumentBuilder builder = parser.getBuilder();

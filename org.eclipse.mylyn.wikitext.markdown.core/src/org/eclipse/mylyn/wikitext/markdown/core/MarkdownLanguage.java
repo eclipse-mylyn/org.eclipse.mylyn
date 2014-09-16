@@ -14,6 +14,7 @@ package org.eclipse.mylyn.wikitext.markdown.core;
 import java.io.Writer;
 import java.util.List;
 
+import org.eclipse.mylyn.internal.wikitext.markdown.core.GfmIdGenerationStrategy;
 import org.eclipse.mylyn.internal.wikitext.markdown.core.MarkdownContentState;
 import org.eclipse.mylyn.internal.wikitext.markdown.core.MarkdownDocumentBuilder;
 import org.eclipse.mylyn.internal.wikitext.markdown.core.block.CodeBlock;
@@ -39,6 +40,7 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 import org.eclipse.mylyn.wikitext.core.parser.markup.ContentState;
+import org.eclipse.mylyn.wikitext.core.parser.markup.IdGenerationStrategy;
 import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.HtmlEndTagPhraseModifier;
 import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.HtmlStartTagPhraseModifier;
 import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLineBreakReplacementToken;
@@ -129,6 +131,11 @@ public class MarkdownLanguage extends AbstractMarkupLanguage {
 	@Override
 	public DocumentBuilder createDocumentBuilder(Writer out, boolean formatting) {
 		return new MarkdownDocumentBuilder(out);
+	}
+
+	@Override
+	public IdGenerationStrategy getIdGenerationStrategy() {
+		return new GfmIdGenerationStrategy();
 	}
 
 }

@@ -36,7 +36,7 @@ public class MarkdownReferenceValidationRuleTest extends TestCase {
 	}
 
 	public void testNoErrorInLocalReferenceToExistingAnchor() {
-		final String markup = "# Header 1\n\n[Link to title](#Header1)";
+		final String markup = "# Header 1\n\n[Link to title](#header-1)";
 		List<ValidationProblem> problems = rule.findProblems(markup, 0, markup.length());
 		TestUtil.println(problems);
 		assertNotNull(problems);

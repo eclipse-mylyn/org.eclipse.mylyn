@@ -19,7 +19,7 @@ public class MarkdownHeadingTest extends AbstractMarkupGenerationTest<MarkdownLa
 
 	@Test
 	public void underlinedHeadingsHaveIds() {
-		assertMarkup("<h1 id=\"Heading1\">Heading 1</h1><p>some content</p><h1 id=\"Heading2\">Heading 2</h1>",//
+		assertMarkup("<h1 id=\"heading-1\">Heading 1</h1><p>some content</p><h1 id=\"heading-2\">Heading 2</h1>",//
 				"" + //	
 						"Heading 1\n" + //
 						"=========\n" + "\n" + //
@@ -30,7 +30,7 @@ public class MarkdownHeadingTest extends AbstractMarkupGenerationTest<MarkdownLa
 
 	@Test
 	public void headingsHaveIds() {
-		assertMarkup("<h1 id=\"Heading1\">Heading 1</h1><p>content</p><h1 id=\"Heading2\">Heading 2</h1>",
+		assertMarkup("<h1 id=\"heading-1\">Heading 1</h1><p>content</p><h1 id=\"heading-2\">Heading 2</h1>",
 				"# Heading 1\n\ncontent\n\n# Heading 2");
 	}
 
@@ -39,32 +39,32 @@ public class MarkdownHeadingTest extends AbstractMarkupGenerationTest<MarkdownLa
 	 */
 	@Test
 	public void testAtxStyleHeaderH1() {
-		assertMarkup("<h1 id=\"ThisisanH1\">This is an H1</h1>", "# This is an H1");
+		assertMarkup("<h1 id=\"this-is-an-h1\">This is an H1</h1>", "# This is an H1");
 	}
 
 	@Test
 	public void testAtxStyleHeaderH2() {
-		assertMarkup("<h2 id=\"ThisisanH2\">This is an H2</h2>", "## This is an H2");
+		assertMarkup("<h2 id=\"this-is-an-h2\">This is an H2</h2>", "## This is an H2");
 	}
 
 	@Test
 	public void testAtxStyleHeaderH3() {
-		assertMarkup("<h3 id=\"ThisisanH3\">This is an H3</h3>", "### This is an H3");
+		assertMarkup("<h3 id=\"this-is-an-h3\">This is an H3</h3>", "### This is an H3");
 	}
 
 	@Test
 	public void testAtxStyleHeaderH4() {
-		assertMarkup("<h4 id=\"ThisisanH4\">This is an H4</h4>", "#### This is an H4");
+		assertMarkup("<h4 id=\"this-is-an-h4\">This is an H4</h4>", "#### This is an H4");
 	}
 
 	@Test
 	public void testAtxStyleHeaderH5() {
-		assertMarkup("<h5 id=\"ThisisanH5\">This is an H5</h5>", "##### This is an H5");
+		assertMarkup("<h5 id=\"this-is-an-h5\">This is an H5</h5>", "##### This is an H5");
 	}
 
 	@Test
 	public void testAtxStyleHeaderH6() {
-		assertMarkup("<h6 id=\"ThisisanH6\">This is an H6</h6>", "###### This is an H6");
+		assertMarkup("<h6 id=\"this-is-an-h6\">This is an H6</h6>", "###### This is an H6");
 	}
 
 	/*
@@ -74,42 +74,42 @@ public class MarkdownHeadingTest extends AbstractMarkupGenerationTest<MarkdownLa
 	 */
 	@Test
 	public void testClosedAtxStyleHeaderH1() {
-		assertMarkup("<h1 id=\"ThisisanH1\">This is an H1</h1>", "# This is an H1 #");
+		assertMarkup("<h1 id=\"this-is-an-h1\">This is an H1</h1>", "# This is an H1 #");
 	}
 
 	@Test
 	public void testClosedAtxStyleHeaderH2() {
-		assertMarkup("<h2 id=\"ThisisanH2\">This is an H2</h2>", "## This is an H2 ##");
+		assertMarkup("<h2 id=\"this-is-an-h2\">This is an H2</h2>", "## This is an H2 ##");
 	}
 
 	@Test
 	public void testClosedAtxStyleHeaderH3() {
-		assertMarkup("<h3 id=\"ThisisanH3\">This is an H3</h3>", "### This is an H3 ###");
+		assertMarkup("<h3 id=\"this-is-an-h3\">This is an H3</h3>", "### This is an H3 ###");
 	}
 
 	@Test
 	public void testClosedAtxStyleHeaderH4() {
-		assertMarkup("<h4 id=\"ThisisanH4\">This is an H4</h4>", "#### This is an H4 ####");
+		assertMarkup("<h4 id=\"this-is-an-h4\">This is an H4</h4>", "#### This is an H4 ####");
 	}
 
 	@Test
 	public void testClosedAtxStyleHeaderH5() {
-		assertMarkup("<h5 id=\"ThisisanH5\">This is an H5</h5>", "##### This is an H5 #####");
+		assertMarkup("<h5 id=\"this-is-an-h5\">This is an H5</h5>", "##### This is an H5 #####");
 	}
 
 	@Test
 	public void testClosedAtxStyleHeaderH6() {
-		assertMarkup("<h6 id=\"ThisisanH6\">This is an H6</h6>", "###### This is an H6 ######");
+		assertMarkup("<h6 id=\"this-is-an-h6\">This is an H6</h6>", "###### This is an H6 ######");
 	}
 
 	@Test
 	public void testClosedAtxStyleHeaderWithMoreClosingHashes() {
-		assertMarkup("<h1 id=\"ThisisanH1\">This is an H1</h1>", "# This is an H1 ################################");
+		assertMarkup("<h1 id=\"this-is-an-h1\">This is an H1</h1>", "# This is an H1 ################################");
 	}
 
 	@Test
 	public void testClosedAtxStyleHeaderWithLessCosingHashes() {
-		assertMarkup("<h6 id=\"ThisisanH6\">This is an H6</h6>", "###### This is an H6 #");
+		assertMarkup("<h6 id=\"this-is-an-h6\">This is an H6</h6>", "###### This is an H6 #");
 	}
 
 	/*
@@ -118,22 +118,22 @@ public class MarkdownHeadingTest extends AbstractMarkupGenerationTest<MarkdownLa
 	 */
 	@Test
 	public void testUnderlinedHeaderH1() {
-		assertMarkup("<h1 id=\"ThisisanH1\">This is an H1</h1>", "This is an H1\n============");
+		assertMarkup("<h1 id=\"this-is-an-h1\">This is an H1</h1>", "This is an H1\n============");
 	}
 
 	@Test
 	public void testUnderlinedHeaderH2() {
-		assertMarkup("<h2 id=\"ThisisanH2\">This is an H2</h2>", "This is an H2\n------------");
+		assertMarkup("<h2 id=\"this-is-an-h2\">This is an H2</h2>", "This is an H2\n------------");
 	}
 
 	@Test
 	public void testSingleCharUnderlinedHeaderH1() {
-		assertMarkup("<h1 id=\"ThisisanH1\">This is an H1</h1>", "This is an H1\n= ");
+		assertMarkup("<h1 id=\"this-is-an-h1\">This is an H1</h1>", "This is an H1\n= ");
 	}
 
 	@Test
 	public void testSingleCharUnderlinedHeaderH2() {
-		assertMarkup("<h2 id=\"ThisisanH2\">This is an H2</h2>", "This is an H2\n- ");
+		assertMarkup("<h2 id=\"this-is-an-h2\">This is an H2</h2>", "This is an H2\n- ");
 	}
 
 	@Override

@@ -109,19 +109,19 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 
 	public void testBlockquotesContainingHeader() {
 		String markup = ">#H1";
-		String expectedHtml = "<blockquote><h1 id=\"H1\">H1</h1></blockquote>";
+		String expectedHtml = "<blockquote><h1 id=\"h1\">H1</h1></blockquote>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testBlockquotesContainingUnderlinedHeader1() {
 		String markup = ">H1\n>===";
-		String expectedHtml = "<blockquote><h1 id=\"H1\">H1</h1></blockquote>";
+		String expectedHtml = "<blockquote><h1 id=\"h1\">H1</h1></blockquote>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
 	public void testBlockquotesContainingUnderlinedHeader2() {
 		String markup = ">H2\n>---";
-		String expectedHtml = "<blockquote><h2 id=\"H2\">H2</h2></blockquote>";
+		String expectedHtml = "<blockquote><h2 id=\"h2\">H2</h2></blockquote>";
 		parseAndAssert(markup, expectedHtml);
 	}
 

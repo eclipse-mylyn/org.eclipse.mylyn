@@ -13,17 +13,19 @@ package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 
 import java.io.StringWriter;
 
+import org.eclipse.mylyn.internal.wikitext.markdown.core.GfmIdGenerationStrategy;
 import org.eclipse.mylyn.internal.wikitext.markdown.core.MarkdownDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.osgi.OsgiServiceLocator;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.markup.IdGenerationStrategy;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.markdown.core.MarkdownLanguage;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
 /**
  * http://daringfireball.net/projects/markdown/syntax
- *
+ * 
  * @author Stefan Seelmann
  */
 public class MarkdownLanguageTest extends MarkdownLanguageTestBase {
@@ -64,11 +66,11 @@ public class MarkdownLanguageTest extends MarkdownLanguageTestBase {
 
 		String html = parseToHtml(text.toString());
 		TestUtil.println("HTML: " + html);
-		assertTrue(html.contains("<h1 id=\"Header1\">Header 1"));
+		assertTrue(html.contains("<h1 id=\"header-1\">Header 1"));
 		assertTrue(html.contains("<p>Lorem ipsum"));
 		assertTrue(html.contains("<strong>dolor"));
 		assertTrue(html.contains("<hr/>"));
-		assertTrue(html.contains("<h2 id=\"Header2\">Header 2<"));
+		assertTrue(html.contains("<h2 id=\"header-2\">Header 2<"));
 		assertTrue(html.contains("<blockquote><p>Blockquote"));
 		assertTrue(html.contains("<pre><code>Code block"));
 		assertTrue(html.contains("<ul>"));
@@ -99,6 +101,12 @@ public class MarkdownLanguageTest extends MarkdownLanguageTestBase {
 		DocumentBuilder builder = lang.createDocumentBuilder(new StringWriter());
 		assertNotNull(builder);
 		assertTrue(builder instanceof MarkdownDocumentBuilder);
+	}
+
+	public void testIdGenerationStrategy() {
+		IdGenerationStrategy strategy = new MarkdownLanguage().getIdGenerationStrategy();
+		assertNotNull(strategy);
+		assertEquals(GfmIdGenerationStrategy.class, strategy.getClass());
 	}
 
 }
