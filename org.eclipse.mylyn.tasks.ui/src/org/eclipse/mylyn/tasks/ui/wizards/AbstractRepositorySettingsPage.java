@@ -561,6 +561,8 @@ IAdaptable {
 
 		updateHyperlinks();
 		if (repository != null) {
+			updateLabel();
+			updateUrl();
 			saveToValidatedProperties(createTaskRepository());
 		}
 		GridLayout layout = new GridLayout(3, false);
@@ -647,13 +649,6 @@ IAdaptable {
 
 		if (repository != null) {
 			try {
-				String repositoryLabel = repository.getProperty(IRepositoryConstants.PROPERTY_LABEL);
-				if (repositoryLabel != null && repositoryLabel.length() > 0) {
-					// repositoryLabelCombo.add(repositoryLabel);
-					// repositoryLabelCombo.select(0);
-					repositoryLabelEditor.setStringValue(repositoryLabel);
-				}
-				serverUrlCombo.setText(repository.getRepositoryUrl());
 				AuthenticationCredentials credentials = repository.getCredentials(AuthenticationType.REPOSITORY);
 				if (credentials != null) {
 					repositoryUserNameEditor.setStringValue(credentials.getUserName());
@@ -680,6 +675,17 @@ IAdaptable {
 			savePasswordButton.setSelection(false);
 		}
 		RepositoryUiUtil.testCredentialsStore(getRepositoryUrl(), this);
+	}
+
+	private void updateLabel() {
+		String repositoryLabel = repository.getProperty(IRepositoryConstants.PROPERTY_LABEL);
+		if (repositoryLabel != null && repositoryLabel.length() > 0) {
+			repositoryLabelEditor.setStringValue(repositoryLabel);
+		}
+	}
+
+	private void updateUrl() {
+		serverUrlCombo.setText(repository.getRepositoryUrl());
 	}
 
 	private void createAdvancedSection() {
@@ -1443,14 +1449,22 @@ IAdaptable {
 	 * @since 2.0
 	 */
 	public String getUserName() {
-		return repositoryUserNameEditor.getStringValue();
+		if (needsRepositoryCredentials()) {
+			return repositoryUserNameEditor.getStringValue();
+		} else {
+			return ""; //$NON-NLS-1$
+		}
 	}
 
 	/**
 	 * @since 2.0
 	 */
 	public String getPassword() {
-		return repositoryPasswordEditor.getStringValue();
+		if (needsRepositoryCredentials()) {
+			return repositoryPasswordEditor.getStringValue();
+		} else {
+			return ""; //$NON-NLS-1$
+		}
 	}
 
 	/**

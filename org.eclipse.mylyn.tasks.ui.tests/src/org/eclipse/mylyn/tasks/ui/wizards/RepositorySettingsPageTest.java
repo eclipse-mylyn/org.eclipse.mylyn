@@ -11,11 +11,15 @@
 
 package org.eclipse.mylyn.tasks.ui.wizards;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -28,15 +32,21 @@ public class RepositorySettingsPageTest {
 
 	public static class TestRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
-		public TestRepositorySettingsPage() {
-			super("Title", "Description", new TaskRepository("mock", "url"), MockRepositoryConnector.getDefault());
+		public TestRepositorySettingsPage(TaskRepository taskRepository) {
+			super("Title", "Description", taskRepository, MockRepositoryConnector.getDefault());
 			setNeedsProxy(true);
 		}
 
 		@Override
 		protected Validator getValidator(TaskRepository repository) {
-			// ignore
-			return null;
+			Validator validator = new Validator() {
+
+				@Override
+				public void run(IProgressMonitor monitor) throws CoreException {
+				}
+			};
+			validator.setStatus(Status.OK_STATUS);
+			return validator;
 		}
 
 		@Override
@@ -50,15 +60,50 @@ public class RepositorySettingsPageTest {
 		}
 	}
 
+	public static class RepositorySettingsPageWithNoCredentials extends TestRepositorySettingsPage {
+
+		public RepositorySettingsPageWithNoCredentials(TaskRepository taskRepository) {
+			super(taskRepository);
+			setNeedsRepositoryCredentials(false);
+		}
+	}
+
 	@Test
 	public void proxyPortTriggersValidation() throws Exception {
-		TestRepositorySettingsPage page = new TestRepositorySettingsPage();
+		TestRepositorySettingsPage page = new TestRepositorySettingsPage(createTaskRepository());
 		IWizardContainer container = applyWizardContainer(page);
 		page.createControl(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
-		verify(container, times(1)).updateButtons();
+		verify(container, times(2)).updateButtons();
 
 		page.proxyPortEditor.setStringValue("123");
-		verify(container, times(2)).updateButtons();
+		verify(container, times(3)).updateButtons();
+	}
+
+	@Test
+	public void validatesWithNoCredentials() throws Exception {
+		TestRepositorySettingsPage page = new RepositorySettingsPageWithNoCredentials(createTaskRepository());
+		applyWizardContainer(page);
+		page.createControl(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+		page.validateSettings();
+	}
+
+	@Test
+	public void labelAndUrlUpdatedWhenNoCredentials() throws Exception {
+		TaskRepository repository = createTaskRepository();
+		TestRepositorySettingsPage page = new RepositorySettingsPageWithNoCredentials(repository);
+		applyWizardContainer(page);
+		page.createControl(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+		assertEquals(repository.getRepositoryUrl(), page.getRepositoryUrl());
+		assertEquals(repository.getRepositoryLabel(), page.getRepositoryLabel());
+	}
+
+	@Test
+	public void labelAndUrlNotUpdatedWhenNoTaskRepository() throws Exception {
+		TestRepositorySettingsPage page = new RepositorySettingsPageWithNoCredentials(null);
+		applyWizardContainer(page);
+		page.createControl(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+		assertEquals("", page.getRepositoryUrl());
+		assertEquals("", page.getRepositoryLabel());
 	}
 
 	private IWizardContainer applyWizardContainer(TestRepositorySettingsPage page) {
@@ -67,5 +112,11 @@ public class RepositorySettingsPageTest {
 		when(wizard.getContainer()).thenReturn(container);
 		page.setWizard(wizard);
 		return container;
+	}
+
+	private TaskRepository createTaskRepository() {
+		TaskRepository repository = new TaskRepository("mock", "url");
+		repository.setRepositoryLabel("label");
+		return repository;
 	}
 }
