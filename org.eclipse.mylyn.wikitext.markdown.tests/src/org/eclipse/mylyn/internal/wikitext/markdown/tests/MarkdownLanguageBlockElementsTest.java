@@ -286,7 +286,7 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 
 	public void testListContentOffsets() {
 		String markup = "  * Lorem ipsum *sit* amet.";
-		List<Event> events = recordParseEvents(markup);
+		List<Event> events = parseToEvents(markup);
 
 		Event spanEvent = findEvent(events, SpanType.EMPHASIS);
 		assertEquals(1, spanEvent.locator.getLineNumber());

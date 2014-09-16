@@ -26,7 +26,7 @@ import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
 /**
  * Test base for markdown language tests.
- *
+ * 
  * @author Stefan Seelmann
  */
 public abstract class MarkdownLanguageTestBase extends TestCase {
@@ -54,7 +54,7 @@ public abstract class MarkdownLanguageTestBase extends TestCase {
 		assertEquals(expectedHtml, html);
 	}
 
-	protected List<Event> recordParseEvents(String markupContent) {
+	protected List<Event> parseToEvents(String markupContent) {
 		RecordingDocumentBuilder builder = new RecordingDocumentBuilder();
 		parser.setBuilder(builder);
 		parser.parse(markupContent);
@@ -67,8 +67,7 @@ public abstract class MarkdownLanguageTestBase extends TestCase {
 				return event;
 			}
 		}
-		fail(String.format("Expected span %s but found %s", type, events));
-		throw new IllegalStateException();
+		throw new AssertionError(String.format("Expected span %s but found %s", type, events));
 	}
 
 }
