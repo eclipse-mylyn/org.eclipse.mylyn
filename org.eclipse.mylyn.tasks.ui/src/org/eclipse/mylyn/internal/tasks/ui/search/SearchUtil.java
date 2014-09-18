@@ -68,7 +68,7 @@ public class SearchUtil {
 		List<AbstractSearchProvider> providers = reader.getItems();
 		if (providers.size() == 0) {
 			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-					"No search provider was registed. Tasks search is not available.")); //$NON-NLS-1$
+					"No search provider was registered. Tasks search is not available.")); //$NON-NLS-1$
 		} else if (providers.size() > 1) {
 			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
 					"More than one search provider was registered.")); //$NON-NLS-1$
