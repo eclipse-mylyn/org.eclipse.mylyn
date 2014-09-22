@@ -144,8 +144,8 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 				}
 				if (taskProgressBarWorkingSetListener != null) {
 					PlatformUI.getWorkbench()
-							.getWorkingSetManager()
-							.removePropertyChangeListener(taskProgressBarWorkingSetListener);
+					.getWorkingSetManager()
+					.removePropertyChangeListener(taskProgressBarWorkingSetListener);
 				}
 				actionGroup.setSelectionProvider(null);
 				activeTaskMenuManager.dispose();
@@ -326,9 +326,9 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 							+ "\n" //$NON-NLS-1$
 							+ MessageFormat.format(Messages.TaskListFilteredTree_Estimated_hours, completeTime,
 									completeTime + incompleteTime)
-							+ "\n" //$NON-NLS-1$
-							+ MessageFormat.format(Messages.TaskListFilteredTree_Scheduled_tasks, completeTasks,
-									totalTasks));
+									+ "\n" //$NON-NLS-1$
+									+ MessageFormat.format(Messages.TaskListFilteredTree_Scheduled_tasks, completeTasks,
+											totalTasks));
 				}
 			}
 		});
@@ -411,7 +411,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		TasksUiInternal.getTaskList().addChangeListener(changeListener);
 
 		activeTaskLink.setText(Messages.TaskListFilteredTree_Activate);
-		// avoid having the Hyperlink class show a native tooltip when it shortens the text which would overlap with the task list tooltip 
+		// avoid having the Hyperlink class show a native tooltip when it shortens the text which would overlap with the task list tooltip
 		activeTaskLink.setToolTipText(""); //$NON-NLS-1$
 
 		taskListToolTip = new TaskListToolTip(activeTaskLink);
@@ -598,9 +598,10 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		this.actionGroup.setSelectionProvider(activeTaskSelectionProvider);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected SearchHistoryPopupDialog getHistoryPopupDialog() {
 		return null;
-//		return new TaskListSearchHistoryPopupDialog(getShell(), SWT.TOP);
 	}
+
 }

@@ -56,8 +56,6 @@ public class CustomTaskListDecorationDrawer implements Listener {
 	// see bug 185004
 	private final int platformSpecificSquish;
 
-	private final Rectangle lastClippingArea;
-
 	private boolean useStrikethroughForCompleted;
 
 	private boolean synchronizationOverlaid;
@@ -81,7 +79,6 @@ public class CustomTaskListDecorationDrawer implements Listener {
 
 	public CustomTaskListDecorationDrawer(int activationImageOffset, boolean focusedMode) {
 		this.activationImageOffset = activationImageOffset;
-		this.lastClippingArea = new Rectangle(0, 0, 0, 0);
 		this.platformSpecificSquish = PlatformUiUtil.getTreeItemSquish();
 		this.synchronizationOverlaid = TasksUiPlugin.getDefault()
 				.getPreferenceStore()
@@ -152,7 +149,6 @@ public class CustomTaskListDecorationDrawer implements Listener {
 				break;
 			}
 			case SWT.PaintItem: {
-				Rectangle clipping = null;
 				if (activationImage != null) {
 					drawActivationImage(activationImageOffset, event, activationImage);
 				}
