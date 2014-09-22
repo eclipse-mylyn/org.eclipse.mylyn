@@ -12,6 +12,8 @@
 package org.eclipse.mylyn.tasks.ui.editors;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.mylyn.internal.tasks.ui.editors.BooleanAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.DateAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.DoubleAttributeEditor;
@@ -49,14 +51,15 @@ public class AttributeEditorFactory {
 
 	private AttributeEditorToolkit editorToolkit;
 
-	public AttributeEditorFactory(TaskDataModel model, TaskRepository taskRepository) {
+	public AttributeEditorFactory(@NonNull TaskDataModel model, @NonNull TaskRepository taskRepository) {
 		this(model, taskRepository, null);
 	}
 
 	/**
 	 * @since 3.1
 	 */
-	public AttributeEditorFactory(TaskDataModel model, TaskRepository taskRepository, IServiceLocator serviceLocator) {
+	public AttributeEditorFactory(@NonNull TaskDataModel model, @NonNull TaskRepository taskRepository,
+			@Nullable IServiceLocator serviceLocator) {
 		Assert.isNotNull(model);
 		Assert.isNotNull(taskRepository);
 		this.model = model;
@@ -67,6 +70,7 @@ public class AttributeEditorFactory {
 	/**
 	 * @since 3.1
 	 */
+	@Nullable
 	public AttributeEditorToolkit getEditorToolkit() {
 		return editorToolkit;
 	}
@@ -74,12 +78,14 @@ public class AttributeEditorFactory {
 	/**
 	 * @since 3.1
 	 */
-	public void setEditorToolkit(AttributeEditorToolkit editorToolkit) {
+	public void setEditorToolkit(@Nullable AttributeEditorToolkit editorToolkit) {
 		this.editorToolkit = editorToolkit;
 	}
 
-	public AbstractAttributeEditor createEditor(String type, TaskAttribute taskAttribute) {
+	@NonNull
+	public AbstractAttributeEditor createEditor(@NonNull String type, @NonNull TaskAttribute taskAttribute) {
 		Assert.isNotNull(type);
+		Assert.isNotNull(taskAttribute);
 
 		if (TaskAttribute.TYPE_BOOLEAN.equals(type)) {
 			return new BooleanAttributeEditor(model, taskAttribute);
