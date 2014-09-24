@@ -60,6 +60,13 @@ public class ReviewTableSorter extends ViewerSorter {
 	@SuppressWarnings("restriction")
 	public int compare(Viewer viewer, Object item1, Object item2) {
 
+		int sortDirection = SWT.NONE;
+		if (viewer instanceof TableViewer) {
+			sortDirection = ((TableViewer) viewer).getTable().getSortDirection();
+		} else if (viewer instanceof TreeViewer) {
+			sortDirection = ((TreeViewer) viewer).getTree().getSortDirection();
+		}
+
 		// The comparison result (< 0, == 0, > 0)
 		int result = 0;
 
@@ -110,13 +117,12 @@ public class ReviewTableSorter extends ViewerSorter {
 				result = defaultCompare(viewer, item1, item2);
 				break;
 			}
-
-			if (((TableViewer) viewer).getTable().getSortDirection() != SWT.UP) {
-				result = -result;
-			}
-
 		} else {
 			result = defaultCompare(viewer, item1, item2);
+		}
+
+		if (sortDirection != SWT.UP) {
+			result = -result;
 		}
 
 		return result;
@@ -151,9 +157,6 @@ public class ReviewTableSorter extends ViewerSorter {
 				String str1 = tv.getTable().getItems()[idx1].getText(this.columnIndex);
 				String str2 = tv.getTable().getItems()[idx2].getText(this.columnIndex);
 				order = str1.compareTo(str2);
-			}
-			if (tv.getTable().getSortDirection() != SWT.UP) {
-				order *= -1;
 			}
 			return order;
 		}
@@ -193,9 +196,6 @@ public class ReviewTableSorter extends ViewerSorter {
 				String str1 = tv.getTree().getItems()[idx1].getText(this.columnIndex);
 				String str2 = tv.getTree().getItems()[idx2].getText(this.columnIndex);
 				order = str1.compareTo(str2);
-				if (tv.getTree().getSortDirection() != SWT.UP) {
-					order *= -1;
-				}
 			}
 			return order;
 		}
