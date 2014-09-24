@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Ericsson
+ * Copyright (c) 2013, 2014 Ericsson
  * 
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -8,6 +8,7 @@
  * 
  * Contributors:
  *   Francois Chouinard - Initial implementation
+ *   Marc-Andre Laperle - Add Topic to dashboard
  ******************************************************************************/
 
 package org.eclipse.mylyn.gerrit.dashboard.core;
@@ -72,6 +73,11 @@ public class GerritTask extends AbstractTask {
 	 * Gerrit Review branch
 	 */
 	public static final String BRANCH = GerritTaskSchema.getDefault().BRANCH.getKey();
+
+	/**
+	 * Gerrit Review topic
+	 */
+	public static final String TOPIC = GerritTaskSchema.getDefault().TOPIC.getKey();
 
 	/**
 	 * Gerrit Review creation date
@@ -142,6 +148,7 @@ public class GerritTask extends AbstractTask {
 		setAttribute(OWNER, getValue(attributes.get(OWNER)));
 		setAttribute(PROJECT, getValue(attributes.get(PROJECT)));
 		setAttribute(BRANCH, getValue(attributes.get(BRANCH)));
+		setAttribute(TOPIC, getValue(attributes.get(TOPIC)));
 
 		setAttribute(DATE_CREATION, getValue(attributes.get(DATE_CREATION)));
 		setAttribute(DATE_MODIFICATION, getValue(attributes.get(DATE_MODIFICATION)));
@@ -263,14 +270,15 @@ public class GerritTask extends AbstractTask {
 	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
-		buffer.append(Messages.GerritTask_taskID).append(getAttribute(GerritTask.TASK_ID)).append("\n"); //$NON-NLS-2$
-		buffer.append(Messages.GerritTask_shortID).append(getAttribute(GerritTask.SHORT_CHANGE_ID)).append("\n"); //$NON-NLS-2$
-		buffer.append(Messages.GerritTask_changeID).append(getAttribute(GerritTask.CHANGE_ID)).append("\n"); //$NON-NLS-2$
-		buffer.append(Messages.GerritTask_subject).append(getAttribute(GerritTask.SUBJECT)).append("\n"); //$NON-NLS-2$
-		buffer.append(Messages.GerritTask_owner).append(getAttribute(GerritTask.OWNER)).append("\n"); //$NON-NLS-2$
-		buffer.append(Messages.GerritTask_project).append(getAttribute(GerritTask.PROJECT)).append("\n"); //$NON-NLS-2$
-		buffer.append(Messages.GerritTask_branch).append(getAttribute(GerritTask.BRANCH)).append("\n"); //$NON-NLS-2$
-		buffer.append(Messages.GerritTask_updated).append(getAttributeAsDate(GerritTask.DATE_MODIFICATION)).append("\n"); //$NON-NLS-2$
+		buffer.append(Messages.GerritTask_taskID).append(getAttribute(GerritTask.TASK_ID)).append('\n');
+		buffer.append(Messages.GerritTask_shortID).append(getAttribute(GerritTask.SHORT_CHANGE_ID)).append('\n');
+		buffer.append(Messages.GerritTask_changeID).append(getAttribute(GerritTask.CHANGE_ID)).append('\n');
+		buffer.append(Messages.GerritTask_subject).append(getAttribute(GerritTask.SUBJECT)).append('\n');
+		buffer.append(Messages.GerritTask_owner).append(getAttribute(GerritTask.OWNER)).append('\n');
+		buffer.append(Messages.GerritTask_project).append(getAttribute(GerritTask.PROJECT)).append('\n');
+		buffer.append(Messages.GerritTask_branch).append(getAttribute(GerritTask.BRANCH)).append('\n');
+		buffer.append(Messages.GerritTask_topic).append(getAttribute(GerritTask.TOPIC)).append('\n');
+		buffer.append(Messages.GerritTask_updated).append(getAttributeAsDate(GerritTask.DATE_MODIFICATION)).append('\n');
 		buffer.append(Messages.GerritTask_star)
 				.append(getAttribute(GerritTask.IS_STARRED))
 				.append(", CRVW = ") //$NON-NLS-1$

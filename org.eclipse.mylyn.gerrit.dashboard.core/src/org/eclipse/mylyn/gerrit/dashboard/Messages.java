@@ -8,6 +8,7 @@
  * 
  * Contributors:
  *   Jacques Bouthillier - Initial implementation
+ *   Marc-Andre Laperle - Add Topic to dashboard
  ******************************************************************************/
 package org.eclipse.mylyn.gerrit.dashboard;
 
@@ -23,6 +24,8 @@ public class Messages extends NLS {
 	public static String GerritPlugin_Version;
 
 	public static String GerritTask_branch;
+
+	public static String GerritTask_topic;
 
 	public static String GerritTask_changeID;
 
