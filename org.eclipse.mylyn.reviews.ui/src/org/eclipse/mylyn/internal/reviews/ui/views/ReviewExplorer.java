@@ -327,7 +327,7 @@ public class ReviewExplorer extends CommonNavigator {
 			Tree treeTable = viewer.getTree();
 
 			treeTable.setHeaderVisible(true);
-			treeTable.setLinesVisible(false);
+			treeTable.setLinesVisible(true);
 			treeTable.setLayoutData(new GridData(GridData.FILL_BOTH));
 			currentProvider = null;
 			if (isFlat()) {
