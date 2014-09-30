@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Context SDK Utilities
 Bundle-SymbolicName: org.eclipse.mylyn.context.sdk.util;singleton:=true
-Bundle-Version: 3.13.0.qualifier
+Bundle-Version: 3.14.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Require-Bundle: org.junit;bundle-version="4.8.2",
  org.eclipse.core.resources,
