@@ -8,16 +8,15 @@
 <% if @envversion > "4.2" %>
 /usr/bin/perl install-module.pl List::MoreUtils
 <% end %>
-<% if @envversion > "4.5.2" %>
-/usr/bin/perl install-module.pl URI
-<% end %>
 <% end %>
 <% if @operatingsystemrelease = "12.04" && @envversion > "4.4" %>
 /usr/bin/perl install-module.pl Template
 <% end %>
-<% if  @envversion > "4.5.4" %>
+<% if  @envversion > "4.5" %>
+/usr/bin/perl install-module.pl URI
 /usr/bin/perl install-module.pl DateTime
 /usr/bin/perl install-module.pl DateTime::TimeZone
 /usr/bin/perl install-module.pl File::Slurp
+/usr/bin/perl install-module.pl Email::Sender
 <% end %>
 echo "Ende1"

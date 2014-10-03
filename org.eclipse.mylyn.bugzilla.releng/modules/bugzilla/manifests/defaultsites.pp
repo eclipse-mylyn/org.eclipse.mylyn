@@ -51,7 +51,7 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
     xmlrpc_enabled => false,
   }
 
-  bugzilla::site { "bugzilla-4.0.13":
+  bugzilla::site { "bugzilla-4.0.14":
     major   => "4",
     minor   => "0",
   }
