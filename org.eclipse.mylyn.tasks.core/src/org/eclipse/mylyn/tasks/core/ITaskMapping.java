@@ -45,6 +45,11 @@ public interface ITaskMapping {
 
 	public abstract String getOwner();
 
+	/**
+	 * @since 3.15
+	 */
+	public abstract String getOwnerId();
+
 	public abstract String getPriority();
 
 	public abstract PriorityLevel getPriorityLevel();

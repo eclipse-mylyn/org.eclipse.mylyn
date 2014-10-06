@@ -109,6 +109,17 @@ public class TaskInitializationData implements ITaskMapping {
 
 	}
 
+	/**
+	 * Returns <code>null</code>.
+	 * 
+	 * @since 3.15
+	 */
+	@Nullable
+	public String getOwnerId() {
+		return null;
+
+	}
+
 	@Nullable
 	public String getPriority() {
 		return attributesById.getAttribute(TaskAttribute.PRIORITY);

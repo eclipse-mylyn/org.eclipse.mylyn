@@ -15,6 +15,7 @@ import java.util.Date;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.internal.tasks.core.Messages;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 /**
  * @author Mik Kersten
@@ -280,9 +281,21 @@ public interface ITask extends IRepositoryElement, IAttributeContainer {
 	public abstract Date getModificationDate();
 
 	/**
+	 * Returns the label of the owner, that is, the <i>option label</i> corresponding to the value of the
+	 * {@link TaskAttribute#USER_ASSIGNED} attribute in the TaskData. If the connector does not provide option labels
+	 * for this attribute, the {@link #getOwnerId() ID} is returned instead.
+	 * 
 	 * @since 3.0
 	 */
 	public abstract String getOwner();
+
+	/**
+	 * Returns the ID of the owner, that is, the <i>value</i> of the {@link TaskAttribute#USER_ASSIGNED} attribute in
+	 * the TaskData.
+	 * 
+	 * @since 3.15
+	 */
+	public abstract String getOwnerId();
 
 	/**
 	 * @since 3.0
@@ -356,6 +369,11 @@ public interface ITask extends IRepositoryElement, IAttributeContainer {
 	 * @since 3.0
 	 */
 	public abstract void setOwner(String owner);
+
+	/**
+	 * @since 3.15
+	 */
+	public abstract void setOwnerId(String ownerId);
 
 	/**
 	 * @since 3.0

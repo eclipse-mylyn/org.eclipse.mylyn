@@ -89,6 +89,14 @@ public class TaskMapping implements ITaskMapping {
 	}
 
 	/**
+	 * @since 3.15
+	 */
+	public String getOwnerId() {
+		// ignore
+		return null;
+	}
+
+	/**
 	 * @since 3.0
 	 */
 	public PriorityLevel getPriorityLevel() {

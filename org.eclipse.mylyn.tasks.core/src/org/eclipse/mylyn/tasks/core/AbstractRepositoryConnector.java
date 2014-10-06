@@ -605,10 +605,8 @@ public abstract class AbstractRepositoryConnector {
 	 * @since 3.5
 	 */
 	public boolean isOwnedByUser(@NonNull TaskRepository repository, @NonNull ITask task) {
-		if (task.getOwner() != null) {
-			return task.getOwner().equals(repository.getUserName());
-		}
-		return false;
+		return (task.getOwner() != null && task.getOwner().equals(repository.getUserName()))
+				|| (task.getOwnerId() != null && task.getOwnerId().equals(repository.getUserName()));
 	}
 
 	/**
@@ -647,7 +645,8 @@ public abstract class AbstractRepositoryConnector {
 	 * @since 3.11
 	 */
 	@NonNull
-	public RepositoryInfo validateRepository(@NonNull TaskRepository repository, @Nullable IProgressMonitor monitor) throws CoreException {
+	public RepositoryInfo validateRepository(@NonNull TaskRepository repository, @Nullable IProgressMonitor monitor)
+			throws CoreException {
 		throw new UnsupportedOperationException();
 	}
 

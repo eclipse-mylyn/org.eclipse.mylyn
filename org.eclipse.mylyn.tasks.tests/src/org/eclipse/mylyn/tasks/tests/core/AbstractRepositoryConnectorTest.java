@@ -11,8 +11,11 @@
 
 package org.eclipse.mylyn.tasks.tests.core;
 
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.mylyn.tasks.tests.util.MockRepositoryConnectorTestCase;
 
@@ -47,6 +50,52 @@ public class AbstractRepositoryConnectorTest extends MockRepositoryConnectorTest
 		assertEquals(taskWithBrowserUrl, TasksUiInternal.getTaskByUrl("URI://mock-repo/id/123"));
 		assertNull(TasksUiInternal.getTaskByUrl(null));
 		assertNull(TasksUiInternal.getTaskByUrl(""));
+	}
+
+	public void testIsOwnedByUser() throws Exception {
+		assertIsOwnedByUser("joel.user", "joel.user", "joel.user", true);
+		assertIsOwnedByUser("joel.user", "Joel K. User", "joel.user", true);
+		assertIsOwnedByUser("joel.user", null, "joel.user", true);
+		assertIsOwnedByUser("joel.user", "joel.user", "123", true);
+		assertIsOwnedByUser("joel.user", "joel.user", null, true);
+		assertIsOwnedByUser("joel.user", "Joel K. User", "123", false);
+		assertIsOwnedByUser("joel.user", "Joel K. User", null, false);
+		assertIsOwnedByUser("joel.user", null, "123", false);
+		assertIsOwnedByUser("joel.user", null, null, false);
+		assertIsOwnedByUser(null, null, null, false);
+		assertIsOwnedByUser(null, null, "123", false);
+		assertIsOwnedByUser(null, "Joel K. User", null, false);
+		assertIsOwnedByUser(null, "joel.user", "joel.user", false);
+	}
+
+	private void assertIsOwnedByUser(String repositoryUserName, String taskOwner, String taskOwnerId, boolean expected) {
+		// if one parameter is null, test both the null and empty string cases; if multiple are null, don't bother
+		// testing all possible combinations of null and empty
+		if (repositoryUserName == null) {
+			assertIsOwnedByUserHelper(null, taskOwner, taskOwnerId, expected);
+			assertIsOwnedByUserHelper("", taskOwner, taskOwnerId, expected);
+		} else if (taskOwner == null) {
+			assertIsOwnedByUserHelper(repositoryUserName, null, taskOwnerId, expected);
+			assertIsOwnedByUserHelper(repositoryUserName, "", taskOwnerId, expected);
+		} else if (taskOwnerId == null) {
+			assertIsOwnedByUserHelper(repositoryUserName, taskOwner, null, expected);
+			assertIsOwnedByUserHelper(repositoryUserName, taskOwner, "", expected);
+		} else {
+			assertIsOwnedByUserHelper(repositoryUserName, taskOwner, taskOwnerId, expected);
+		}
+	}
+
+	private void assertIsOwnedByUserHelper(String repositoryUserName, String taskOwner, String taskOwnerId,
+			boolean expected) {
+		TaskRepository repository = new TaskRepository(MockRepositoryWithUrl.CONNECTOR_KIND,
+				MockRepositoryWithUrl.REPOSITORY_URL);
+		if (repositoryUserName != null) {
+			repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(repositoryUserName,
+					""), false);
+		}
+		taskWithUrl.setOwner(taskOwner);
+		taskWithUrl.setOwnerId(taskOwnerId);
+		assertEquals(expected, connectorWithUrl.isOwnedByUser(repository, taskWithUrl));
 	}
 
 }

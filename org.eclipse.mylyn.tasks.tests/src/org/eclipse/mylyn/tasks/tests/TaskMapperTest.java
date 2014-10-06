@@ -17,6 +17,7 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -213,6 +214,37 @@ public class TaskMapperTest extends TestCase {
 			return (mappedKey != null) ? mappedKey : key;
 		}
 
+	}
+
+	public void testApplyOwnerAndId() throws Exception {
+		TaskTask task = new TaskTask("kind", "http://url", "1");
+		TaskAttribute assigneeAttribute = source.getTaskData().getRoot().createAttribute(TaskAttribute.USER_ASSIGNED);
+		assigneeAttribute.putOption("joel.user", "Joel K. User");
+		assigneeAttribute.putOption("jacob.user", "Jacob F. User");
+
+		assigneeAttribute.setValue("joel.user");
+		assertOwnerAndId(task, "joel.user", "Joel K. User");
+
+		assigneeAttribute.setValue("jacob.user");
+		assertOwnerAndId(task, "jacob.user", "Jacob F. User");
+
+		assigneeAttribute.putOption("jacob.user", "Jacob Frederick User");
+		assertOwnerAndId(task, "jacob.user", "Jacob Frederick User");
+
+		assigneeAttribute.clearOptions();
+		assertOwnerAndId(task, "jacob.user", "jacob.user");
+
+		assigneeAttribute.setValue("joel.user");
+		assertOwnerAndId(task, "joel.user", "joel.user");
+	}
+
+	private void assertOwnerAndId(TaskTask task, String ownerId, String owner) {
+		assertTrue(source.hasChanges(task));
+		assertTrue(source.applyTo(task));
+		assertEquals(owner, task.getOwner());
+		assertEquals(ownerId, task.getOwnerId());
+		assertFalse(source.hasChanges(task));
+		assertFalse(source.applyTo(task));
 	}
 
 }

@@ -29,12 +29,10 @@ public class MyTasksFilter extends AbstractTaskListFilter {
 		}
 		if (element instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) element;
-			String owner = task.getOwner();
 			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
 					task.getRepositoryUrl());
-			if (repository != null && repository.getUserName() != null
-					&& repository.getUserName().equalsIgnoreCase(owner)) {
-				return true;
+			if (repository != null) {
+				return TasksUi.getRepositoryConnector(task.getConnectorKind()).isOwnedByUser(repository, task);
 			}
 			return false;
 		}

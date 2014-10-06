@@ -93,6 +93,8 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 
 	private boolean changed;
 
+	private String ownerId;
+
 	public AbstractTask(String repositoryUrl, String taskId, String summary) {
 		super(RepositoryTaskHandleUtil.getHandle(repositoryUrl, taskId));
 		this.repositoryUrl = repositoryUrl;
@@ -169,6 +171,18 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 			String oldValue = this.owner;
 			this.owner = (owner != null) ? owner.intern() : null;
 			firePropertyChange("owner", oldValue, owner); //$NON-NLS-1$
+		}
+	}
+
+	public String getOwnerId() {
+		return ownerId;
+	}
+
+	public void setOwnerId(String ownerId) {
+		if (!areEqual(this.ownerId, ownerId)) {
+			String oldValue = this.ownerId;
+			this.ownerId = (ownerId != null) ? ownerId.intern() : null;
+			firePropertyChange("ownerId", oldValue, ownerId); //$NON-NLS-1$
 		}
 	}
 

@@ -64,6 +64,10 @@ public class TaskMapper implements ITaskMapping {
 			task.setOwner(getOwner());
 			changed = true;
 		}
+		if (hasChanges(task.getOwnerId(), getOwnerId(), TaskAttribute.USER_ASSIGNED)) {
+			task.setOwnerId(getOwnerId());
+			changed = true;
+		}
 		if (hasChanges(task.getPriority(), getPriorityLevelString(), TaskAttribute.PRIORITY)) {
 			task.setPriority(getPriorityLevelString());
 			changed = true;
@@ -135,7 +139,7 @@ public class TaskMapper implements ITaskMapping {
 	 * <li>description
 	 * </ul>
 	 * Other attribute values are only set if they exist on <code>sourceTaskData</code> and <code>targetTaskData</code>.
-	 *
+	 * 
 	 * @param sourceTaskData
 	 *            the source task data values are copied from, the connector kind of repository of
 	 *            <code>sourceTaskData</code> can be different from <code>targetTaskData</code>
@@ -265,6 +269,14 @@ public class TaskMapper implements ITaskMapping {
 		return getValue(TaskAttribute.USER_ASSIGNED);
 	}
 
+	/**
+	 * @since 3.15
+	 */
+	@Nullable
+	public String getOwnerId() {
+		return getValueId(TaskAttribute.USER_ASSIGNED);
+	}
+
 	@Nullable
 	public String getPriority() {
 		return getValue(TaskAttribute.PRIORITY);
@@ -334,11 +346,26 @@ public class TaskMapper implements ITaskMapping {
 		return getValue(TaskAttribute.TASK_URL);
 	}
 
+	/**
+	 * Returns the label of the attribute value.
+	 */
 	@Nullable
 	public String getValue(@NonNull String attributeKey) {
 		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(attributeKey);
 		if (attribute != null) {
 			return taskData.getAttributeMapper().getValueLabel(attribute);
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the id of the attribute value.
+	 */
+	@Nullable
+	private String getValueId(@NonNull String attributeKey) {
+		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(attributeKey);
+		if (attribute != null) {
+			return taskData.getAttributeMapper().getValue(attribute);
 		}
 		return null;
 	}
@@ -367,6 +394,7 @@ public class TaskMapper implements ITaskMapping {
 		changed |= hasChanges(task.getModificationDate(), getModificationDate(), TaskAttribute.DATE_MODIFICATION);
 		changed |= hasChanges(task.getDueDate(), getDueDate(), TaskAttribute.DATE_DUE);
 		changed |= hasChanges(task.getOwner(), getOwner(), TaskAttribute.USER_ASSIGNED);
+		changed |= hasChanges(task.getOwnerId(), getOwnerId(), TaskAttribute.USER_ASSIGNED);
 		changed |= hasChanges(task.getPriority(), getPriorityLevelString(), TaskAttribute.PRIORITY);
 		changed |= hasChanges(task.getSummary(), getSummary(), TaskAttribute.SUMMARY);
 		changed |= hasChanges(task.getTaskKey(), getTaskKey(), TaskAttribute.TASK_KEY);
