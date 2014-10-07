@@ -16,14 +16,6 @@
     <sonar.skippedModules>org.eclipse.mylyn.discovery-directory,org.eclipse.mylyn-parent,org.eclipse.mylyn-site,org.eclipse.mylyn-target</sonar.skippedModules>
     <tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/mylyn/org.eclipse.mylyn.git</tycho.scmUrl>
   </properties>
-  <profiles>
-    <profile>
-      <id>standalone</id>
-      <modules>
-        <module>org.eclipse.mylyn.tests.standalone</module>
-      </modules>
-    </profile>
-  </profiles>
   <modules>
     <module>org.eclipse.mylyn.discovery-directory</module>
     <module>org.eclipse.mylyn.tests</module>
