@@ -48,7 +48,7 @@ public class TaskListIndexCorruptTest extends AbstractTaskListIndexTest {
 	}
 
 	private void corruptFile(File file) throws IOException {
-		Random random = new Random(System.currentTimeMillis());
+		Random random = new Random(123);
 		long length = file.length();
 		OutputStream stream = new FileOutputStream(file);
 		try {
