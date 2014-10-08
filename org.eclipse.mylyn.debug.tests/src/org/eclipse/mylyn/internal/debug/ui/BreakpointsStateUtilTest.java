@@ -38,9 +38,9 @@ import org.junit.Test;
  */
 public class BreakpointsStateUtilTest {
 
-	private static final IPath pluginStateDir = Platform.getStateLocation(DebugUiPlugin.getDefault().getBundle());
+	private final IPath pluginStateDir = Platform.getStateLocation(DebugUiPlugin.getDefault().getBundle());
 
-	private static final File pluginStateFile = pluginStateDir.append(BreakpointsStateUtil.STATE_FILE).toFile();
+	private final File pluginStateFile = pluginStateDir.append(BreakpointsStateUtil.STATE_FILE).toFile();
 
 	private final IBreakpointManager breakpointManager = DebugPlugin.getDefault().getBreakpointManager();
 
