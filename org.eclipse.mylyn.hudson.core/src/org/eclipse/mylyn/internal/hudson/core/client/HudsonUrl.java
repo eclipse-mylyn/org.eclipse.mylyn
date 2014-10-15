@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class HudsonUrl {
 
-	private static final String ENCODING = "UTF-8";
+	private static final String ENCODING = "UTF-8"; //$NON-NLS-1$
 
 	public static HudsonUrl create(String base) {
 		HudsonUrl url = new HudsonUrl();
@@ -78,13 +78,13 @@ public class HudsonUrl {
 	public String toUrl() throws UnsupportedEncodingException {
 		// wrap everything in "hudson" element to handle case of multiple matches
 		StringBuilder sb = new StringBuilder(base);
-		if (!base.endsWith("/")) {
-			sb.append("/");
+		if (!base.endsWith("/")) { //$NON-NLS-1$
+			sb.append("/"); //$NON-NLS-1$
 		}
-		sb.append("api/xml?wrapper=hudson&depth=");
+		sb.append("api/xml?wrapper=hudson&depth="); //$NON-NLS-1$
 		sb.append(depth);
 		if (include != null) {
-			sb.append("&xpath=");
+			sb.append("&xpath="); //$NON-NLS-1$
 			sb.append(include);
 			if (key != null && values != null) {
 				sb.append(getFilter());
@@ -92,34 +92,46 @@ public class HudsonUrl {
 		}
 		if (exclude != null) {
 			for (String value : exclude) {
-				sb.append("&exclude=");
+				sb.append("&exclude="); //$NON-NLS-1$
 				sb.append(value);
 			}
 		}
 		if (tree != null) {
-			sb.append("&tree=");
-			sb.append(URLEncoder.encode(tree, "UTF-8"));
+			sb.append("&tree="); //$NON-NLS-1$
+			sb.append(URLEncoder.encode(tree, "UTF-8")); //$NON-NLS-1$
 		}
 		return sb.toString();
 	}
 
 	protected String getFilter() throws UnsupportedEncodingException {
 		StringBuilder sb = new StringBuilder();
-		sb.append("[");
+		sb.append("["); //$NON-NLS-1$
 		boolean appendSeparator = false;
 		for (String value : values) {
 			if (appendSeparator) {
-				sb.append(" or ");
+				sb.append(" or "); //$NON-NLS-1$
 			} else {
 				appendSeparator = true;
 			}
 			sb.append(key);
-			sb.append("=");
-			sb.append("'");
-			sb.append(value);
-			sb.append("'");
+			sb.append("="); //$NON-NLS-1$
+			quote(sb, value);
 		}
-		sb.append("]");
+		sb.append("]"); //$NON-NLS-1$
 		return URLEncoder.encode(sb.toString(), ENCODING);
+	}
+
+	private void quote(StringBuilder sb, String value) {
+		char quote = '\'';
+		if (value.contains("'")) { //$NON-NLS-1$
+			if (value.contains("\"")) { //$NON-NLS-1$
+				throw new IllegalArgumentException(
+						"Cannot query for a job which contains both a single and double quote in its name"); //$NON-NLS-1$
+			}
+			quote = '"';
+		}
+		sb.append(quote);
+		sb.append(value);
+		sb.append(quote);
 	}
 }
