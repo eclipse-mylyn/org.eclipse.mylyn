@@ -144,7 +144,7 @@ define bugzilla::site (
     cwd     => "$base/$version",
     creates => "$base/$version/CGI.out",
     user => "$userOwner",
-    timeout => 300,
+    timeout => 600,
     require   => File["$base/$version/installPerlModules.sh"]
   }  
   
