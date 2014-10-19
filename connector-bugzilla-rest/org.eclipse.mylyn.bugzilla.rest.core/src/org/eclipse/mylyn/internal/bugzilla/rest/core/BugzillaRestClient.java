@@ -22,6 +22,9 @@ import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.ErrorResponse
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Field;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.FieldResponse;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Named;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Product;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.ProductResponse;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.RestResponse;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.VersionResponse;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
@@ -59,6 +62,7 @@ public class BugzillaRestClient {
 		try {
 			BugzillaRestConfiguration config = new BugzillaRestConfiguration(repository.getUrl());
 			config.setFields(getFields(monitor));
+			config.setProducts(getProducts(monitor));
 			return config;
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN,
@@ -67,10 +71,10 @@ public class BugzillaRestClient {
 		}
 	}
 
-	public <R, E extends Named> Map<String, E> retrieveItems(IOperationMonitor monitor, String path,
-			Function<R, E[]> attributeProvider, TypeToken typeToken) throws BugzillaRestException {
+	public <R extends RestResponse<E>, E extends Named> Map<String, E> retrieveItems(IOperationMonitor monitor,
+			String path, TypeToken typeToken) throws BugzillaRestException {
 		R response = new BugzillaRestAuthenticatedGetRequest<R>(client, path, typeToken).run(monitor);
-		E[] members = attributeProvider.apply(response);
+		E[] members = response.getArray();
 		return Maps.uniqueIndex(Lists.newArrayList(members), new Function<E, String>() {
 			public String apply(E input) {
 				return input.getName();
@@ -78,13 +82,13 @@ public class BugzillaRestClient {
 		});
 	}
 
-	public Map<String, Field> getFields(IOperationMonitor monitor) throws BugzillaRestException {
-		return retrieveItems(monitor, "/field/bug?", new Function<FieldResponse, Field[]>() {
-			public Field[] apply(FieldResponse input) {
-				return input.getFields();
-			}
-		}, new TypeToken<FieldResponse>() {
+	private Map<String, Field> getFields(IOperationMonitor monitor) throws BugzillaRestException {
+		return retrieveItems(monitor, "/field/bug?", new TypeToken<FieldResponse>() {
 		});
 	}
 
+	private Map<String, Product> getProducts(IOperationMonitor monitor) throws BugzillaRestException {
+		return retrieveItems(monitor, "/product?type=accessible", new TypeToken<ProductResponse>() {
+		});
+	}
 }

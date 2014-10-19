@@ -15,14 +15,17 @@ import java.io.Serializable;
 import java.util.Map;
 
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Field;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Product;
 
 public class BugzillaRestConfiguration implements Serializable {
 
-	private static final long serialVersionUID = -4658602653003624954L;
+	private static final long serialVersionUID = -7074388348748659322L;
 
 	private final String repositoryId;
 
 	private Map<String, Field> fields;
+
+	private Map<String, Product> products;
 
 	public BugzillaRestConfiguration(String repositoryId) {
 		this.repositoryId = repositoryId;
@@ -44,4 +47,15 @@ public class BugzillaRestConfiguration implements Serializable {
 		return fields.get(fieldName);
 	}
 
+	void setProducts(Map<String, Product> products) {
+		this.products = products;
+	}
+
+	public Map<String, Product> getProducts() {
+		return products;
+	}
+
+	public Product getProductWithName(String productName) {
+		return products.get(productName);
+	}
 }

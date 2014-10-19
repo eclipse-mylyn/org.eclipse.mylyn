@@ -16,7 +16,6 @@ import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConnector;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.Duration;
 import org.eclipse.mylyn.internal.bugzilla.rest.test.support.BugzillaRestTestFixture;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,8 +29,6 @@ import com.google.common.cache.RemovalNotification;
 @FixtureDefinition(fixtureClass = BugzillaRestTestFixture.class, fixtureType = "bugzillaREST")
 public class BugzillaRestConnectorTest {
 	private final BugzillaRestTestFixture actualFixture;
-
-	private static TaskRepositoryManager manager;
 
 	private BugzillaRestConnector connector;
 
@@ -50,15 +47,10 @@ public class BugzillaRestConnectorTest {
 	public void testReloadCache() throws Exception {
 		connector = new BugzillaRestConnectorLocal(new Duration(5, TimeUnit.SECONDS));
 		assertNotNull(connector);
-		System.out.println(new java.util.Date().toString());
 		configuration = connector.getRepositoryConfiguration(actualFixture.repository());
-		System.out.println(new java.util.Date().toString());
 		assertNotNull(configuration);
 		Thread.sleep(6000L);
-		System.out.println(new java.util.Date().toString());
 		BugzillaRestConfiguration configuration_new = connector.getRepositoryConfiguration(actualFixture.repository());
-		System.out.println("after configuration_new");
-		System.out.println(new java.util.Date().toString());
 		assertEquals(configuration, configuration_new);
 		mySync = this;
 		synchronized (mySync) {
@@ -69,11 +61,7 @@ public class BugzillaRestConnectorTest {
 			}
 		}
 		mySync = null;
-
-		System.out.println("after configuration reload");
-		System.out.println(new java.util.Date().toString());
 		BugzillaRestConfiguration configuration_new1 = connector.getRepositoryConfiguration(actualFixture.repository());
-		System.out.println(new java.util.Date().toString());
 		assertThat(configuration, not(configuration_new1));
 	}
 
@@ -111,16 +99,16 @@ public class BugzillaRestConnectorTest {
 		protected CacheBuilder<Object, Object> createCacheBuilder(Duration expireAfterWriteDuration,
 				Duration refreshAfterWriteDuration) {
 			return super.createCacheBuilder(expireAfterWriteDuration, refreshAfterWriteDuration).removalListener(
-							new RemovalListener<Object, Object>() {
-								@Override
-								public void onRemoval(RemovalNotification<Object, Object> notification) {
-									if (mySync != null) {
-										synchronized (mySync) {
-											mySync.notify();
-										}
-									}
+					new RemovalListener<Object, Object>() {
+						@Override
+						public void onRemoval(RemovalNotification<Object, Object> notification) {
+							if (mySync != null) {
+								synchronized (mySync) {
+									mySync.notify();
 								}
-							});
+							}
+						}
+					});
 		}
 	}
 

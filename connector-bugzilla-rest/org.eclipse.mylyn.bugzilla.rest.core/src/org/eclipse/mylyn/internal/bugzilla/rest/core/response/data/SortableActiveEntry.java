@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Frank Becker and others.
+ * Copyright (c) 2014 Frank Becker and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,12 +11,26 @@
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core.response.data;
 
-public class FieldResponse implements RestResponse<Field> {
-	private Field[] fields;
+import java.io.Serializable;
 
-	@Override
-	public Field[] getArray() {
-		return fields;
+public class SortableActiveEntry implements Serializable {
+	private static final long serialVersionUID = 6555410907399756521L;
+
+	private String name;
+
+	private int sort_key;
+
+	private boolean is_active;
+
+	public String getName() {
+		return name;
 	}
 
+	public int getSortKey() {
+		return sort_key;
+	}
+
+	public boolean isActive() {
+		return is_active;
+	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Frank Becker and others.
+ * Copyright (c) 2014 Frank Becker and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,12 +11,11 @@
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core.response.data;
 
-public class FieldResponse implements RestResponse<Field> {
-	private Field[] fields;
+public class ProductResponse implements RestResponse<Product> {
+	private Product[] products;
 
 	@Override
-	public Field[] getArray() {
-		return fields;
+	public Product[] getArray() {
+		return products;
 	}
-
 }

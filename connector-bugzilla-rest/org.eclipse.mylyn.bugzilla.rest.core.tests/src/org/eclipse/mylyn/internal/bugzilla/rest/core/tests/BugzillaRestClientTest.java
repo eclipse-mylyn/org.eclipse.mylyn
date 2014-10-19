@@ -37,6 +37,7 @@ import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestException;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestVersion;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Field;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.LoginToken;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Product;
 import org.eclipse.mylyn.internal.bugzilla.rest.test.support.BugzillaRestTestFixture;
 import org.eclipse.mylyn.internal.commons.core.operations.NullOperationMonitor;
 import org.eclipse.mylyn.internal.commons.repositories.core.InMemoryCredentialsStore;
@@ -152,25 +153,19 @@ public class BugzillaRestClientTest {
 	}
 
 	@Test
-	public void testGetFields() throws Exception {
-		BugzillaRestClient client = connector.getClient(actualFixture.repository());
-		Map<String, Field> fields = client.getFields(new NullOperationMonitor());
+	public void testGetConfiguration() throws Exception {
+		TaskRepository repository = actualFixture.repository();
+		BugzillaRestClient client = connector.getClient(repository);
+		BugzillaRestConfiguration configuration = client.getConfiguration(repository, new NullOperationMonitor());
+		Map<String, Field> fields = configuration.getFields();
 		Collection<Field> fieldCollection = fields.values();
 		assertConfigurationFieldNames(fieldCollection);
 		assertEquals(
 				IOUtils.toString(CommonTestUtil.getResource(this, "testdata/" + actualFixture.getVersion()
 						+ "/fields.json")), new Gson().toJson(fields));
-	}
-
-	@Test
-	public void testGetConfiguration() throws Exception {
-		TaskRepository repository = actualFixture.repository();
-		BugzillaRestClient client = connector.getClient(repository);
-		BugzillaRestConfiguration configuration = client.getConfiguration(repository, new NullOperationMonitor());
-		Map<String, Field> fields = client.getFields(new NullOperationMonitor());
-		Collection<Field> fieldCollection = fields.values();
-		assertConfigurationFieldNames(fieldCollection);
-		String ss = new Gson().toJson(configuration).replaceAll(repository.getRepositoryUrl(), "http://dummy.url");
+		Map<String, Product> products = configuration.getProducts();
+		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/products.json")),
+				new Gson().toJson(products));
 		assertEquals(
 				IOUtils.toString(CommonTestUtil.getResource(this, "testdata/" + actualFixture.getVersion()
 						+ "/configuration.json")),
