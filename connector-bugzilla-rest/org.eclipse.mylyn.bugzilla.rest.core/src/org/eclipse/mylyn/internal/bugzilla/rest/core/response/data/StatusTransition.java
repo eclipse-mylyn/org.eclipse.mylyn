@@ -9,19 +9,23 @@
  *     Frank Becker - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.bugzilla.rest.core;
+package org.eclipse.mylyn.internal.bugzilla.rest.core.response.data;
 
-import com.google.gson.reflect.TypeToken;
+import java.io.Serializable;
 
-public class BugzillaRestUnauthenticatedGetRequest<T> extends BugzillaRestAuthenticatedGetRequest<T> {
+public class StatusTransition implements Serializable {
 
-	public BugzillaRestUnauthenticatedGetRequest(BugzillaRestHttpClient client, String urlSuffix, TypeToken responseType) {
-		super(client, urlSuffix, responseType);
+	private static final long serialVersionUID = 791312498240951654L;
+
+	public String name;
+
+	public boolean comment_required;
+
+	public String getName() {
+		return name;
 	}
 
-	@Override
-	protected boolean needsAuthentication() {
-		return false;
+	public boolean isCommentRequired() {
+		return comment_required;
 	}
-
 }

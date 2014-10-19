@@ -8,4 +8,8 @@ Fragment-Host: org.eclipse.mylyn.bugzilla.rest.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit;bundle-version="4.8.2",
  org.eclipse.mylyn.commons.sdk.util
+Require-Bundle: org.junit;bundle-version="4.8.2",
+ org.eclipse.mylyn.commons.sdk.util,
+ com.google.guava;bundle-version="10.0.1",
+ org.apache.commons.io
 Export-Package: org.eclipse.mylyn.internal.bugzilla.rest.core;x-internal:=true

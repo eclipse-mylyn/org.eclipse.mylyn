@@ -13,20 +13,20 @@ package org.eclipse.mylyn.internal.bugzilla.rest.core;
 
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
-import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.BugzillaRestLoginToken;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.LoginToken;
 
 public class BugzillaRestHttpClient extends CommonHttpClient {
-	private BugzillaRestLoginToken loginToken = null;
+	private LoginToken loginToken = null;
 
 	public BugzillaRestHttpClient(RepositoryLocation location) {
 		super(location);
 	}
 
-	public BugzillaRestLoginToken getLoginToken() {
+	public LoginToken getLoginToken() {
 		return loginToken;
 	}
 
-	public void setLoginToken(BugzillaRestLoginToken loginToken) {
+	public void setLoginToken(LoginToken loginToken) {
 		this.loginToken = loginToken;
 	}
 

@@ -9,19 +9,27 @@
  *     Frank Becker - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.bugzilla.rest.core;
+package org.eclipse.mylyn.internal.bugzilla.rest.core.response.data;
 
-import com.google.gson.reflect.TypeToken;
+public class LoginToken {
+	private String id;
 
-public class BugzillaRestUnauthenticatedGetRequest<T> extends BugzillaRestAuthenticatedGetRequest<T> {
+	private String token;
 
-	public BugzillaRestUnauthenticatedGetRequest(BugzillaRestHttpClient client, String urlSuffix, TypeToken responseType) {
-		super(client, urlSuffix, responseType);
+	public String getId() {
+		return id;
 	}
 
-	@Override
-	protected boolean needsAuthentication() {
-		return false;
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 
 }

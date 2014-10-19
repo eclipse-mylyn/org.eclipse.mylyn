@@ -12,20 +12,19 @@
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import org.apache.http.HttpStatus;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpResponse;
-import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.BugzillaRestErrorResponse;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.ErrorResponse;
 
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-public class BugzillaRestValidateRequest extends BugzillaRestAuthenticatedGetRequest<BugzillaRestErrorResponse> {
+public class BugzillaRestValidateRequest extends BugzillaRestAuthenticatedGetRequest<ErrorResponse> {
 
 	public BugzillaRestValidateRequest(BugzillaRestHttpClient client) {
-		super(client);
+		super(client, "", new TypeToken<ErrorResponse>() {
+		});
 	}
 
 	@Override
@@ -35,13 +34,6 @@ public class BugzillaRestValidateRequest extends BugzillaRestAuthenticatedGetReq
 		validate(response, response.getStatusCode() == HttpStatus.SC_NOT_FOUND
 				? HttpStatus.SC_NOT_FOUND
 						: HttpStatus.SC_BAD_REQUEST, monitor);
-	}
-
-	@Override
-	protected BugzillaRestErrorResponse parseFromJson(InputStreamReader in) {
-		TypeToken<BugzillaRestErrorResponse> type = new TypeToken<BugzillaRestErrorResponse>() {
-		};
-		return new Gson().fromJson(in, type.getType());
 	}
 
 }

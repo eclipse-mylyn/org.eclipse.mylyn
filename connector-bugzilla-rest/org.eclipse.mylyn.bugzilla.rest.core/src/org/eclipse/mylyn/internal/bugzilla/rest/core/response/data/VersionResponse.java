@@ -11,25 +11,15 @@
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core.response.data;
 
-public class BugzillaRestLoginToken {
-	private String id;
+public class VersionResponse {
 
-	private String token;
+	private String version;
 
-	public String getId() {
-		return id;
+	public String getVersion() {
+		return version;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setVersion(String version) {
+		this.version = version;
 	}
-
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
-
 }

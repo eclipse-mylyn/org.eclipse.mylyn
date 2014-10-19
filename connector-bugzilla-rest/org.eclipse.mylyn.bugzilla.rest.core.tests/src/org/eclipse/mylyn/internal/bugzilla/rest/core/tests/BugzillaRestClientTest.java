@@ -16,19 +16,27 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.io.IOUtils;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
-import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.commons.sdk.util.Junit4TestFixtureRunner;
 import org.eclipse.mylyn.commons.sdk.util.Junit4TestFixtureRunner.FixtureDefinition;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestClient;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConnector;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestException;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestVersion;
-import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.BugzillaRestLoginToken;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Field;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.LoginToken;
 import org.eclipse.mylyn.internal.bugzilla.rest.test.support.BugzillaRestTestFixture;
 import org.eclipse.mylyn.internal.commons.core.operations.NullOperationMonitor;
 import org.eclipse.mylyn.internal.commons.repositories.core.InMemoryCredentialsStore;
@@ -41,6 +49,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+
+import com.google.gson.Gson;
 
 @SuppressWarnings("restriction")
 @RunWith(Junit4TestFixtureRunner.class)
@@ -86,17 +96,6 @@ public class BugzillaRestClientTest {
 	}
 
 	@Test
-	public void testConnectorClientCacheRepositoryNotInManagerFailwithID() throws Exception {
-		TaskRepository repository = new TaskRepository(actualFixture.getConnectorKind(),
-				actualFixture.getRepositoryUrl());
-		UserCredentials credentials = CommonTestUtil.getCredentials(PrivilegeLevel.USER);
-		repository.setCredentials(org.eclipse.mylyn.commons.net.AuthenticationType.REPOSITORY,
-				new AuthenticationCredentials(credentials.getUserName(), credentials.getPassword()), true);
-		BugzillaRestClient client1 = connector.getClient(repository);
-		assertNotNull(client1);
-	}
-
-	@Test
 	public void testGetVersion() throws Exception {
 		BugzillaRestClient client = new BugzillaRestClient(actualFixture.location());
 		assertNotNull(client.getClient());
@@ -113,7 +112,7 @@ public class BugzillaRestClientTest {
 		assertNull(client.getClient().getLoginToken());
 		assertTrue(client.validate(new NullOperationMonitor()));
 		assertNotNull(client.getClient());
-		BugzillaRestLoginToken token = client.getClient().getLoginToken();
+		LoginToken token = client.getClient().getLoginToken();
 		assertNotNull(token);
 		assertEquals("2", token.getId());
 		assertNotNull(token.getToken());
@@ -151,4 +150,43 @@ public class BugzillaRestClientTest {
 		assertNull(client.getClient().getLoginToken());
 		client.validate(new NullOperationMonitor());
 	}
+
+	@Test
+	public void testGetFields() throws Exception {
+		BugzillaRestClient client = connector.getClient(actualFixture.repository());
+		Map<String, Field> fields = client.getFields(new NullOperationMonitor());
+		Collection<Field> fieldCollection = fields.values();
+		assertConfigurationFieldNames(fieldCollection);
+		assertEquals(
+				IOUtils.toString(CommonTestUtil.getResource(this, "testdata/" + actualFixture.getVersion()
+						+ "/fields.json")), new Gson().toJson(fields));
+	}
+
+	@Test
+	public void testGetConfiguration() throws Exception {
+		TaskRepository repository = actualFixture.repository();
+		BugzillaRestClient client = connector.getClient(repository);
+		BugzillaRestConfiguration configuration = client.getConfiguration(repository, new NullOperationMonitor());
+		Map<String, Field> fields = client.getFields(new NullOperationMonitor());
+		Collection<Field> fieldCollection = fields.values();
+		assertConfigurationFieldNames(fieldCollection);
+		String ss = new Gson().toJson(configuration).replaceAll(repository.getRepositoryUrl(), "http://dummy.url");
+		assertEquals(
+				IOUtils.toString(CommonTestUtil.getResource(this, "testdata/" + actualFixture.getVersion()
+						+ "/configuration.json")),
+						new Gson().toJson(configuration).replaceAll(repository.getRepositoryUrl(), "http://dummy.url"));
+
+	}
+
+	private void assertConfigurationFieldNames(Collection<Field> fields) throws IOException {
+		List<String> fieldNameList = new ArrayList<String>(fields.size());
+		for (Field field : fields) {
+			fieldNameList.add(field.getName());
+		}
+		Collections.sort(fieldNameList);
+		assertEquals(
+				IOUtils.toString(CommonTestUtil.getResource(this, "testdata/" + actualFixture.getVersion()
+						+ "/fieldName.json")), new Gson().toJson(fieldNameList));
+	}
+
 }

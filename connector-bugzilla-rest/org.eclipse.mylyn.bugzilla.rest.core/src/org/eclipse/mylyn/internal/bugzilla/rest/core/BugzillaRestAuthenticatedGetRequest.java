@@ -27,15 +27,21 @@ import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpResponse;
 import org.eclipse.mylyn.commons.repositories.http.core.HttpUtil;
-import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.BugzillaRestLoginToken;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.LoginToken;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-public abstract class BugzillaRestAuthenticatedGetRequest<T> extends BugzillaRestRequest<T> {
+public class BugzillaRestAuthenticatedGetRequest<T> extends BugzillaRestRequest<T> {
 
-	public BugzillaRestAuthenticatedGetRequest(BugzillaRestHttpClient client) {
+	private final String urlSuffix;
+
+	private final TypeToken responseType;
+
+	public BugzillaRestAuthenticatedGetRequest(BugzillaRestHttpClient client, String urlSuffix, TypeToken responseType) {
 		super(client);
+		this.urlSuffix = urlSuffix;
+		this.responseType = responseType;
 	}
 
 	@Override
@@ -57,11 +63,11 @@ public abstract class BugzillaRestAuthenticatedGetRequest<T> extends BugzillaRes
 						new AuthenticationRequest<AuthenticationType<UserCredentials>>(getClient().getLocation(),
 								AuthenticationType.REPOSITORY));
 			} else {
-				TypeToken<BugzillaRestLoginToken> type = new TypeToken<BugzillaRestLoginToken>() {
+				TypeToken<LoginToken> type = new TypeToken<LoginToken>() {
 				};
 				InputStream is = response.getEntity().getContent();
 				InputStreamReader in = new InputStreamReader(is);
-				BugzillaRestLoginToken loginToken = new Gson().fromJson(in, type.getType());
+				LoginToken loginToken = new Gson().fromJson(in, type.getType());
 				((BugzillaRestHttpClient) getClient()).setLoginToken(loginToken);
 				getClient().setAuthenticated(true);
 			}
@@ -73,7 +79,7 @@ public abstract class BugzillaRestAuthenticatedGetRequest<T> extends BugzillaRes
 	@Override
 	protected HttpRequestBase createHttpRequestBase() {
 		String bugUrl = getUrlSuffix();
-		BugzillaRestLoginToken token = ((BugzillaRestHttpClient) getClient()).getLoginToken();
+		LoginToken token = ((BugzillaRestHttpClient) getClient()).getLoginToken();
 		if ((!(this instanceof BugzillaRestValidateRequest) && !(this instanceof BugzillaRestUnauthenticatedGetRequest))
 				&& token != null && bugUrl.length() > 0) {
 			if (!bugUrl.endsWith("?")) {
@@ -95,6 +101,16 @@ public abstract class BugzillaRestAuthenticatedGetRequest<T> extends BugzillaRes
 		HttpRequestBase request = createHttpRequestBase();
 		CommonHttpResponse response = execute(request, monitor);
 		return processAndRelease(response, monitor);
+	}
+
+	@Override
+	protected T parseFromJson(InputStreamReader in) {
+		return new Gson().fromJson(in, responseType.getType());
+	}
+
+	@Override
+	protected String getUrlSuffix() {
+		return urlSuffix;
 	}
 
 }

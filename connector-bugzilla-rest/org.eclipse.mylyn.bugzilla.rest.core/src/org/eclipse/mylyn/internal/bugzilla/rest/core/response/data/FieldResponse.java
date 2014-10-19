@@ -11,15 +11,10 @@
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core.response.data;
 
-public class BugzillaRestVersionResponse {
+public class FieldResponse {
+	private Field[] fields;
 
-	private String version;
-
-	public String getVersion() {
-		return version;
-	}
-
-	public void setVersion(String version) {
-		this.version = version;
+	public Field[] getFields() {
+		return fields;
 	}
 }

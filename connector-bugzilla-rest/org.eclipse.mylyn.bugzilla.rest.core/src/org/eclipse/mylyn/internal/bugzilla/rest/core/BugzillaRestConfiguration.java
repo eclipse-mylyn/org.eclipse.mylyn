@@ -12,19 +12,36 @@
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
 
 import java.io.Serializable;
+import java.util.Map;
+
+import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Field;
 
 public class BugzillaRestConfiguration implements Serializable {
 
-	private static final long serialVersionUID = 3433667217913466746L;
+	private static final long serialVersionUID = -4658602653003624954L;
 
-	private final String url;
+	private final String repositoryId;
 
-	public BugzillaRestConfiguration(String url) {
-		this.url = url;
+	private Map<String, Field> fields;
+
+	public BugzillaRestConfiguration(String repositoryId) {
+		this.repositoryId = repositoryId;
 	}
 
-	public String getUrl() {
-		return url;
+	public String getRepositoryId() {
+		return repositoryId;
+	}
+
+	void setFields(Map<String, Field> fields) {
+		this.fields = fields;
+	}
+
+	public Map<String, Field> getFields() {
+		return fields;
+	}
+
+	public Field getFieldWithName(String fieldName) {
+		return fields.get(fieldName);
 	}
 
 }

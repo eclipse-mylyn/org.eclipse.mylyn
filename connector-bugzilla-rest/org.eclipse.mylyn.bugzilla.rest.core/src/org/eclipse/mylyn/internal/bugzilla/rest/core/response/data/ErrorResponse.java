@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core.response.data;
 
-public class BugzillaRestErrorResponse {
+public class ErrorResponse {
 	private boolean error;
 
 	private String message;
