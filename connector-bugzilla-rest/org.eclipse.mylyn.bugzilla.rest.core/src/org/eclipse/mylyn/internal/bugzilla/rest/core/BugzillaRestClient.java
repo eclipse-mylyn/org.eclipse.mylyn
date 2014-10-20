@@ -22,6 +22,7 @@ import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.ErrorResponse
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Field;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.FieldResponse;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Named;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.ParameterResponse;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Product;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.ProductResponse;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.RestResponse;
@@ -63,6 +64,8 @@ public class BugzillaRestClient {
 			BugzillaRestConfiguration config = new BugzillaRestConfiguration(repository.getUrl());
 			config.setFields(getFields(monitor));
 			config.setProducts(getProducts(monitor));
+			ParameterResponse parameterResponse = getParameters(monitor);
+			config.setParameters(parameterResponse != null ? parameterResponse.getParameters() : null);
 			return config;
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN,
@@ -91,4 +94,11 @@ public class BugzillaRestClient {
 		return retrieveItems(monitor, "/product?type=accessible", new TypeToken<ProductResponse>() {
 		});
 	}
+
+	public ParameterResponse getParameters(IOperationMonitor monitor) throws BugzillaRestException {
+		return new BugzillaRestAuthenticatedGetRequest<ParameterResponse>(client, "/parameters?",
+				new TypeToken<ParameterResponse>() {
+				}).run(monitor);
+	}
+
 }

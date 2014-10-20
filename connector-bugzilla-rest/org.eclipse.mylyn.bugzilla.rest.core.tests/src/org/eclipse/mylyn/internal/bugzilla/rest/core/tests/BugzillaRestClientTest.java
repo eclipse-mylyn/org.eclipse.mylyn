@@ -37,15 +37,13 @@ import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestException;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestVersion;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Field;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.LoginToken;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Parameters;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Product;
 import org.eclipse.mylyn.internal.bugzilla.rest.test.support.BugzillaRestTestFixture;
 import org.eclipse.mylyn.internal.commons.core.operations.NullOperationMonitor;
 import org.eclipse.mylyn.internal.commons.repositories.core.InMemoryCredentialsStore;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -66,28 +64,15 @@ public class BugzillaRestClientTest {
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();
 
-	private static TaskRepositoryManager manager;
-
 	private BugzillaRestConnector connector;
 
 	public BugzillaRestClientTest(BugzillaRestTestFixture fixture) {
 		this.actualFixture = fixture;
 	}
 
-	@BeforeClass
-	public static void setUpClass() {
-		manager = new TaskRepositoryManager();
-	}
-
 	@Before
 	public void setUp() {
-		manager.addRepository(actualFixture.repository());
 		connector = new BugzillaRestConnector();
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		manager.clearRepositories();
 	}
 
 	@Test
@@ -166,6 +151,9 @@ public class BugzillaRestClientTest {
 		Map<String, Product> products = configuration.getProducts();
 		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/products.json")),
 				new Gson().toJson(products));
+		Parameters parameter = configuration.getParameters();
+		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/parameters.json")),
+				new Gson().toJson(parameter));
 		assertEquals(
 				IOUtils.toString(CommonTestUtil.getResource(this, "testdata/" + actualFixture.getVersion()
 						+ "/configuration.json")),

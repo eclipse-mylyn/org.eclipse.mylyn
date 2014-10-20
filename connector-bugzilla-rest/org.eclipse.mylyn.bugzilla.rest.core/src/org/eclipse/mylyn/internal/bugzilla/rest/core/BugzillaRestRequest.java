@@ -29,13 +29,13 @@ import org.eclipse.mylyn.commons.repositories.http.core.HttpUtil;
 import org.eclipse.osgi.util.NLS;
 
 public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
-	protected static final String ACCEPT = "Accept"; //$NON-NLS-1$ 	
+	protected static final String ACCEPT = "Accept"; //$NON-NLS-1$
 
-	protected static final String CONTENT_TYPE = "Content-Type"; //$NON-NLS-1$ 	
+	protected static final String CONTENT_TYPE = "Content-Type"; //$NON-NLS-1$
 
-	protected static final String APPLICATION_JSON = "application/json"; //$NON-NLS-1$ 	
+	protected static final String APPLICATION_JSON = "application/json"; //$NON-NLS-1$
 
-	protected static final String TEXT_XML_CHARSET_UTF_8 = "text/xml; charset=UTF-8"; //$NON-NLS-1$ 	
+	protected static final String TEXT_XML_CHARSET_UTF_8 = "text/xml; charset=UTF-8"; //$NON-NLS-1$
 
 	public BugzillaRestRequest(BugzillaRestHttpClient client) {
 		super(client);
@@ -68,14 +68,14 @@ public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
 	}
 
 	protected T doProcess(CommonHttpResponse response, IOperationMonitor monitor) throws IOException,
-			BugzillaRestException {
+	BugzillaRestException {
 		InputStream is = response.getResponseEntityAsStream();
 		InputStreamReader in = new InputStreamReader(is);
 		return parseFromJson(in);
 	}
 
 	protected void doValidate(CommonHttpResponse response, IOperationMonitor monitor) throws IOException,
-			BugzillaRestException {
+	BugzillaRestException {
 		validate(response, HttpStatus.SC_OK, monitor);
 	}
 
@@ -93,7 +93,7 @@ public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
 	}
 
 	protected T processAndRelease(CommonHttpResponse response, IOperationMonitor monitor) throws IOException,
-			BugzillaRestException {
+	BugzillaRestException {
 		try {
 			doValidate(response, monitor);
 			return doProcess(response, monitor);

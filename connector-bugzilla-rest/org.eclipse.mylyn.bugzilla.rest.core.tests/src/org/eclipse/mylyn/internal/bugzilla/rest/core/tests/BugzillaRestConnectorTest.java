@@ -8,6 +8,7 @@ import static org.junit.Assert.assertThat;
 
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.sdk.util.Junit4TestFixtureRunner;
@@ -49,31 +50,33 @@ public class BugzillaRestConnectorTest {
 		assertNotNull(connector);
 		configuration = connector.getRepositoryConfiguration(actualFixture.repository());
 		assertNotNull(configuration);
-		Thread.sleep(6000L);
-		BugzillaRestConfiguration configuration_new = connector.getRepositoryConfiguration(actualFixture.repository());
+
+		// now wait until we know that the configuration is no longer valid
+		// Parameter of Constructor from BugzillaRestConnector
+		// (Default see BugzillaRestConnector.CONFIGURATION_CACHE_REFRESH_AFTER_WRITE_DURATION)
+		BugzillaRestConfiguration configuration_new = waitAndGetConfiguration(6000L);
 		assertEquals(configuration, configuration_new);
-		mySync = this;
-		synchronized (mySync) {
-			try {
-				mySync.wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		mySync = null;
+
+		waitForCacheRemoval();
 		BugzillaRestConfiguration configuration_new1 = connector.getRepositoryConfiguration(actualFixture.repository());
 		assertThat(configuration, not(configuration_new1));
+	}
+
+	private void waitForCacheRemoval() throws InterruptedException {
+		mySync = this;
+		synchronized (mySync) {
+			mySync.wait();
+		}
+		mySync = null;
 	}
 
 	@Test
 	public void testLoadCache() throws Exception {
 		BugzillaRestConfiguration configuration = connector.getRepositoryConfiguration(actualFixture.repository());
 		assertNotNull(configuration);
-		Thread.sleep(7000L);
-		BugzillaRestConfiguration configuration_new = connector.getRepositoryConfiguration(actualFixture.repository());
+		BugzillaRestConfiguration configuration_new = waitAndGetConfiguration(6000L);
 		assertEquals(configuration, configuration_new);
-		Thread.sleep(4000L);
-		BugzillaRestConfiguration configuration_new1 = connector.getRepositoryConfiguration(actualFixture.repository());
+		BugzillaRestConfiguration configuration_new1 = waitAndGetConfiguration(3000L);
 		assertEquals(configuration, configuration_new1);
 	}
 
@@ -88,6 +91,11 @@ public class BugzillaRestConnectorTest {
 	}
 
 	BugzillaRestConnectorTest mySync;
+
+	private BugzillaRestConfiguration waitAndGetConfiguration(long millis) throws InterruptedException, CoreException {
+		Thread.sleep(millis);
+		return connector.getRepositoryConfiguration(actualFixture.repository());
+	}
 
 	class BugzillaRestConnectorLocal extends BugzillaRestConnector {
 
