@@ -1,22 +1,37 @@
 #!/bin/bash
+echo "start: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 <% if @operatingsystemrelease == "10.04" %>
 /usr/bin/perl install-module.pl CGI
+echo "start1: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 /usr/bin/perl install-module.pl Template
+echo "ende1: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 <% if @envversion > "3.6" %>
+echo "start2: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 /usr/bin/perl install-module.pl Email::MIME
+echo "ende2: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 <% end %>
 <% if @envversion > "4.2" %>
+echo "start3: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 /usr/bin/perl install-module.pl List::MoreUtils
+echo "ende3: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 <% end %>
 <% end %>
 <% if @operatingsystemrelease = "12.04" && @envversion > "4.4" %>
+echo "start4: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 /usr/bin/perl install-module.pl Template
+echo "ende4: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 <% end %>
 <% if  @envversion > "4.5" %>
+echo "start5: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 /usr/bin/perl install-module.pl URI
+echo "start6: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 /usr/bin/perl install-module.pl DateTime
+echo "start7: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 /usr/bin/perl install-module.pl DateTime::TimeZone
+echo "start8: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 /usr/bin/perl install-module.pl File::Slurp
+echo "start9: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 /usr/bin/perl install-module.pl Email::Sender
+echo "ende9: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 <% end %>
 echo "Ende1"
