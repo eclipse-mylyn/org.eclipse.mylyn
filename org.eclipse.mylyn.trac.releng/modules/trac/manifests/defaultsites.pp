@@ -53,6 +53,8 @@ define trac::defaultsites ($base = $trac::base, $userOwner = $trac::userOwner, $
 
   /* Sites */
 
+/* Disabling all Sites per bug 448427
+
   trac::site { "trac-1.0":
     version => "1.0",
     require => Trac["1.0"]
@@ -92,5 +94,6 @@ define trac::defaultsites ($base = $trac::base, $userOwner = $trac::userOwner, $
   trac::site { "trac-test":
     envinfo    => "Test",
   }
+*/
 
 }
