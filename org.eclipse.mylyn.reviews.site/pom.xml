@@ -10,5 +10,5 @@
   </parent>
   <artifactId>org.eclipse.mylyn.reviews.site</artifactId>
   <packaging>eclipse-update-site</packaging>
-  <name>Mylyn Reviews</name>
+  <name>org.eclipse.mylyn.reviews.site</name>
 </project>
