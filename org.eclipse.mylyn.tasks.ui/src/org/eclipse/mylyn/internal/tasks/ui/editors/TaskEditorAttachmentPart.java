@@ -98,7 +98,9 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 			case 2:
 				return CoreUtil.compare(attachment1.getLength(), attachment2.getLength());
 			case 3:
-				return CoreUtil.compare(attachment1.getAuthor().toString(), attachment2.getAuthor().toString());
+				String author1 = attachment1.getAuthor() != null ? attachment1.getAuthor().toString() : null;
+				String author2 = attachment2.getAuthor() != null ? attachment2.getAuthor().toString() : null;
+				return CoreUtil.compare(author1, author2);
 			case 4:
 				return CoreUtil.compare(attachment1.getCreationDate(), attachment2.getCreationDate());
 			case 5:
@@ -178,10 +180,10 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		attachmentsTable.setHeaderVisible(true);
 		attachmentsTable.setLayout(new GridLayout());
 		GridDataFactory.fillDefaults()
-				.align(SWT.FILL, SWT.FILL)
-				.grab(true, false)
-				.hint(500, SWT.DEFAULT)
-				.applyTo(attachmentsTable);
+		.align(SWT.FILL, SWT.FILL)
+		.grab(true, false)
+		.hint(500, SWT.DEFAULT)
+		.applyTo(attachmentsTable);
 		attachmentsTable.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 
 		for (int i = 0; i < attachmentsColumns.length; i++) {
