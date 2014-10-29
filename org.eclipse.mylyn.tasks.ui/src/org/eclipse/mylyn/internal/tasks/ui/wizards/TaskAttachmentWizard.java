@@ -46,6 +46,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
 import org.eclipse.mylyn.tasks.core.sync.SubmitJobEvent;
 import org.eclipse.mylyn.tasks.core.sync.SubmitJobListener;
@@ -364,14 +365,17 @@ public class TaskAttachmentWizard extends Wizard {
 			public void taskSubmitted(SubmitJobEvent event, IProgressMonitor monitor) throws CoreException {
 				if (attachContext) {
 					monitor.subTask(Messages.TaskAttachmentWizard_Attaching_context);
-					AttachmentUtil.postContext(connector, model.getTaskRepository(), model.getTask(), null, null,
-							monitor);
+					TaskData taskData = model.getAttribute().getTaskData();
+					TaskAttribute taskAttribute = taskData.getRoot()
+							.createMappedAttribute(TaskAttribute.NEW_ATTACHMENT);
+					AttachmentUtil.postContext(connector, model.getTaskRepository(), model.getTask(), null,
+							taskAttribute, monitor);
 				}
 			}
 
 			@Override
 			public void taskSynchronized(SubmitJobEvent event, IProgressMonitor monitor) throws CoreException {
-				// ignore				
+				// ignore
 			}
 		});
 		if (previewPage.runInBackground()) {

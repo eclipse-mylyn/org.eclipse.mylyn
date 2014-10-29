@@ -195,8 +195,18 @@ public class AttachmentUtil {
 		source.setContentType(CONTEXT_CONTENT_TYPE);
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				repository.getConnectorKind());
+		TaskAttribute taskAttribute = null;
+		try {
+			TaskData taskData = TasksUi.getTaskDataManager().getTaskData(task);
+			if (taskData != null) {
+				taskAttribute = taskData.getRoot().createMappedAttribute(TaskAttribute.NEW_ATTACHMENT);
+			}
+		} catch (CoreException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+					"Unexpected error while attaching context. Continuing with task submission.", e)); //$NON-NLS-1$
+		}
 		final SubmitJob submitJob = TasksUiInternal.getJobFactory().createSubmitTaskAttachmentJob(connector,
-				repository, task, source, comment, null);
+				repository, task, source, comment, taskAttribute);
 		try {
 			context.run(true, true, new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {

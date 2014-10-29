@@ -244,7 +244,12 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		@Override
 		public void taskSubmitted(SubmitJobEvent event, IProgressMonitor monitor) throws CoreException {
 			if (!getModel().getTaskData().isNew() && attachContext) {
-				AttachmentUtil.postContext(connector, getModel().getTaskRepository(), task, "", null, monitor); //$NON-NLS-1$
+				TaskData taskData = getModel().getTaskData();
+				TaskAttribute taskAttribute = null;
+				if (taskData != null) {
+					taskAttribute = taskData.getRoot().createMappedAttribute(TaskAttribute.NEW_ATTACHMENT);
+				}
+				AttachmentUtil.postContext(connector, getModel().getTaskRepository(), task, "", taskAttribute, monitor); //$NON-NLS-1$
 			}
 		}
 
