@@ -106,6 +106,7 @@ class ReviewHarness {
 		listener = new TestRemoteObserver<IRepository, IReview, String, Date>(provider.getReviewFactory());
 
 		consumer = provider.getReviewFactory().getConsumerForRemoteKey(getRepository(), shortId);
+		consumer.setAsynchronous(false);
 		consumer.addObserver(listener);
 		consumer.retrieve(false);
 		listener.waitForResponse();

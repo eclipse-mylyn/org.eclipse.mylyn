@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.gerrit.core.remote;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.AbstractRemoteEmfFactory;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfObserver;
@@ -26,8 +25,6 @@ class TestRemoteObserver<P extends EObject, T, L, C> extends RemoteEmfObserver<P
 	int updated;
 
 	int responded;
-
-	IStatus failure;
 
 	AbstractRemoteEmfFactory<P, T, L, ?, ?, C> factory;
 

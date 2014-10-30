@@ -563,10 +563,10 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(targetCommit.toString(), is(reviewHarness.commitId));
 
 		reviewHarness.git.checkout()
-		.setCreateBranch(true)
-		.setName("change" + "/" + getReview().getId() + "/1")
-		.setStartPoint(targetCommit)
-		.call();
+				.setCreateBranch(true)
+				.setName("change" + "/" + getReview().getId() + "/1")
+				.setStartPoint(targetCommit)
+				.call();
 
 		//create Patch Set 2 for Review 1
 		CommitCommand command2 = reviewHarness.createCommitCommand();
@@ -611,6 +611,16 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 		assertThat(commentByGerrit.getDescription().substring(0, 58),
 				is("Change cannot be merged due to unsatisfiable dependencies."));
+	}
+
+	@Test
+	public void testNoLabels() throws Exception {
+		//create a commit w/ -2, resulting in no labels
+		HashSet<Id> approvals = new HashSet<ApprovalCategoryValue.Id>(Collections.singleton(CRVW.getValue((short) -2)
+				.getId()));
+		reviewHarness.getAdminClient().publishComments(reviewHarness.shortId, 1, "", approvals,
+				new NullProgressMonitor());
+		reviewHarness.consumer.retrieve(false);
 	}
 
 	private int getCommentOffset() throws GerritException {

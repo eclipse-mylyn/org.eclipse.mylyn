@@ -102,14 +102,17 @@ public class SubmitRecord {
 
 	public List<Label> createLabel(SubmitRecord record, HashMap<String, AccountInfo> value, String status) {
 		List<Label> list = new ArrayList<Label>();
-		for (Map.Entry<String, AccountInfo> info : value.entrySet()) {
-			Label label = new Label();
-			label.setLabel(info.getKey());
-			label.setStatus(status);
-			label.setAppliedBy(info.getValue().getId());
-			list.add(label);
+		if (value != null) {
+			for (Map.Entry<String, AccountInfo> info : value.entrySet()) {
+				Label label = new Label();
+				label.setLabel(info.getKey());
+				label.setStatus(status);
+				if (info.getValue().getId() != null) {
+					label.setAppliedBy(info.getValue().getId());
+				}
+				list.add(label);
+			}
 		}
-
 		return list;
 	}
 
