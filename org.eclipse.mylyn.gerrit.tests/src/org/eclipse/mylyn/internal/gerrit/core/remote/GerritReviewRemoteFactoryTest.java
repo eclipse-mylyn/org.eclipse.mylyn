@@ -38,12 +38,16 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jgit.api.CommitCommand;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.mylyn.gerrit.tests.core.client.rest.ChangeInfoTest;
 import org.eclipse.mylyn.gerrit.tests.support.GerritProject.CommitResult;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.GerritSystemAccount;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchSetPublishDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PermissionLabel;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo;
@@ -58,6 +62,7 @@ import org.eclipse.mylyn.reviews.core.model.IReviewerEntry;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.reviews.core.model.RequirementStatus;
 import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
+import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.junit.Test;
 
 import com.google.common.base.CharMatcher;
@@ -66,6 +71,7 @@ import com.google.gerrit.common.data.ChangeDetail;
 import com.google.gerrit.common.data.ReviewerResult;
 import com.google.gerrit.reviewdb.ApprovalCategory;
 import com.google.gerrit.reviewdb.ApprovalCategoryValue;
+import com.google.gerrit.reviewdb.ApprovalCategoryValue.Id;
 import com.google.gerrit.reviewdb.Change;
 import com.google.gerrit.reviewdb.Change.Status;
 import com.google.gerrit.reviewdb.ChangeMessage;
@@ -518,6 +524,93 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		changeDetail = reviewHarness.client.getChangeDetail(reviewId, new NullProgressMonitor());
 		assertEquals(false, changeDetail.isStarred());
 
+	}
+
+	@Test
+	public void testGlobalCommentByGerrit() throws Exception {
+		//create a new commit and Review that depends on Patch Set 1 of the existing Review
+		String changeIdNewChange = "I" + StringUtils.rightPad(System.currentTimeMillis() + "", 40, "a");
+		CommitCommand commandNewChange = reviewHarness.createCommitCommand(changeIdNewChange);
+		reviewHarness.addFile("testFileNewChange.txt");
+		CommitResult result = reviewHarness.commitAndPush(commandNewChange);
+		String newReviewShortId = StringUtils.trimToEmpty(StringUtils.substringAfterLast(result.push.getMessages(), "/"));
+
+		TestRemoteObserver<IRepository, IReview, String, Date> newReviewListener = new TestRemoteObserver<IRepository, IReview, String, Date>(
+				reviewHarness.provider.getReviewFactory());
+
+		RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> newReviewConsumer = reviewHarness.provider.getReviewFactory()
+				.getConsumerForRemoteKey(reviewHarness.getRepository(), newReviewShortId);
+		newReviewConsumer.addObserver(newReviewListener);
+		newReviewConsumer.retrieve(false);
+		newReviewListener.waitForResponse();
+
+		reviewHarness.consumer.retrieve(false);
+		reviewHarness.listener.waitForResponse();
+
+		IReview newReview = reviewHarness.provider.open(newReviewShortId);
+		assertThat(newReview.getId(), is(newReviewShortId));
+
+		assertThat(getReview().getChildren().size(), is(1));
+		assertThat(getReview().getSets().size(), is(1));
+
+		IReviewItemSet patchSet = getReview().getSets().get(0);
+
+		ObjectId ref = reviewHarness.git.getRepository().resolve(patchSet.getRevision());
+		RevWalk walker = new RevWalk(reviewHarness.git.getRepository());
+		RevCommit targetCommit = walker.parseCommit(ref);
+
+		//make sure to checkout the correct commit
+		assertThat(targetCommit.toString(), is(reviewHarness.commitId));
+
+		reviewHarness.git.checkout()
+		.setCreateBranch(true)
+		.setName("change" + "/" + getReview().getId() + "/1")
+		.setStartPoint(targetCommit)
+		.call();
+
+		//create Patch Set 2 for Review 1
+		CommitCommand command2 = reviewHarness.createCommitCommand();
+		reviewHarness.addFile("testFile3.txt");
+		reviewHarness.commitAndPush(command2);
+		reviewHarness.consumer.retrieve(false);
+		reviewHarness.listener.waitForResponse();
+		List<IReviewItemSet> items = getReview().getSets();
+		assertThat(items.size(), is(2));
+		IReviewItemSet patchSet2 = items.get(1);
+		assertThat(patchSet2.getReference(), endsWith("/2"));
+		reviewHarness.assertIsRecent(patchSet2.getCreationDate());
+
+		//now approve, publish and submit Review 2 - this should create a comment authored by Gerrit
+		String approvalMessage = "approval, time: " + System.currentTimeMillis();
+		HashSet<Id> approvals = new HashSet<ApprovalCategoryValue.Id>(Collections.singleton(CRVW.getValue((short) 2)
+				.getId()));
+		reviewHarness.getAdminClient().publishComments(newReviewShortId, 1, approvalMessage, approvals,
+				new NullProgressMonitor());
+		reviewHarness.getAdminClient().submit(newReviewShortId, 1, new NullProgressMonitor());
+
+		newReviewConsumer.retrieve(false);
+		newReviewListener.waitForResponse();
+
+		assertThat(newReview.getState(), is(ReviewStatus.SUBMITTED));
+
+		List<IComment> comments = newReview.getComments();
+
+		int offset = getCommentOffset();
+		assertThat(comments.size(), is(offset + 2));
+
+		IComment commentByGerrit = comments.get(offset + 1);
+
+		if (reviewHarness.client.isVersion29OrLater(new NullProgressMonitor())) {
+			assertNotNull(commentByGerrit.getAuthor());
+			assertThat(commentByGerrit.getAuthor().getId(),
+					is(String.valueOf(GerritSystemAccount.GERRIT_SYSTEM.getId())));
+			assertThat(commentByGerrit.getAuthor().getDisplayName(), is(GerritSystemAccount.GERRIT_SYSTEM_NAME));
+		} else {
+			assertThat(commentByGerrit.getAuthor(), is(nullValue()));
+		}
+
+		assertThat(commentByGerrit.getDescription().substring(0, 58),
+				is("Change cannot be merged due to unsatisfiable dependencies."));
 	}
 
 	private int getCommentOffset() throws GerritException {

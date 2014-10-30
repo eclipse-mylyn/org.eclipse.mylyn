@@ -38,4 +38,12 @@ public class ChangeMessageInfo {
 		return date;
 	}
 
+	/**
+	 * Author of the message as an AccountInfo entity. <b>Unset if written by the Gerrit system</b>.<br>
+	 * See <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#change-message-info"
+	 * >ChangeMessageInfo</a>.
+	 */
+	public AccountInfo getAuthor() {
+		return author;
+	}
 }

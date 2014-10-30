@@ -27,7 +27,6 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -66,6 +65,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailService;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeManageService;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.GerritConfigX;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.GerritSystemAccount;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchDetailService;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchScriptX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchSetPublishDetailX;
@@ -137,7 +137,7 @@ import com.google.gwtjsonrpc.client.VoidResult;
 
 /**
  * Facade to the Gerrit RPC API.
- * 
+ *
  * @author Mikael Kober
  * @author Thomas Westling
  * @author Steffen Pingel
@@ -404,14 +404,18 @@ public class GerritClient extends ReviewsClient {
 		return relatedChangesInfo;
 	}
 
-	private ChangeMessage convertChangeMessage(int reviewId, ChangeInfo changeInfo, Timestamp timeStamp, String message) {
+	private ChangeMessage convertChangeMessage(int reviewId, ChangeInfo changeInfo, ChangeMessageInfo changeMessageInfo) {
 		Change.Id changeId = new Change.Id(reviewId);
 		ChangeMessage.Key changeMessageKey = new ChangeMessage.Key(changeId, changeInfo.getId());
-		Account.Id accountId = new Account.Id(changeInfo.getOwner().getId());
-		ChangeMessage changeMessage = new ChangeMessage(changeMessageKey, accountId, timeStamp);
-		changeMessage.setMessage(message);
+		org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo author = changeMessageInfo.getAuthor();
+		if (author == null) {
+			//if Author is not set, the ChangeMessageInfo was created by the Gerrit system
+			author = GerritSystemAccount.GERRIT_SYSTEM;
+		}
+		Account.Id accountId = new Account.Id(author.getId());
+		ChangeMessage changeMessage = new ChangeMessage(changeMessageKey, accountId, changeMessageInfo.getDate());
+		changeMessage.setMessage(changeMessageInfo.getMesssage());
 		return changeMessage;
-
 	}
 
 	private Branch.NameKey getBranchKey(ChangeInfo changeInfo) {
@@ -454,10 +458,16 @@ public class GerritClient extends ReviewsClient {
 		List<PatchSet> patchSets = getPatchSets29(changeInfo.getChangeId(), reviewId, monitor);
 
 		List<ChangeMessage> listChangeMessage = new ArrayList<ChangeMessage>();
-		List<ChangeMessageInfo> listChangeMesageInfo = changeInfo.getMessages();
-		for (int i = 0; i < listChangeMesageInfo.size(); i++) {
-			ChangeMessage changeMessage = convertChangeMessage(reviewId, changeInfo, listChangeMesageInfo.get(i)
-					.getDate(), listChangeMesageInfo.get(i).getMesssage());
+		List<ChangeMessageInfo> listChangeMessageInfo = changeInfo.getMessages();
+
+		boolean containsMessageFromGerritSystem = false;
+		for (ChangeMessageInfo changeMessageInfo : listChangeMessageInfo) {
+
+			if (changeMessageInfo.getAuthor() == null) {
+				//if Author is not set, the ChangeMessageInfo was created by the Gerrit system
+				containsMessageFromGerritSystem = true;
+			}
+			ChangeMessage changeMessage = convertChangeMessage(reviewId, changeInfo, changeMessageInfo);
 			listChangeMessage.add(changeMessage);
 		}
 
@@ -465,6 +475,12 @@ public class GerritClient extends ReviewsClient {
 
 		AccountInfo accountInfo = convertAuthorFrom29ToAccountInfo(changeInfo);
 		listAccountInfo.add(accountInfo);
+
+		if (containsMessageFromGerritSystem) {
+			//add Gerrit system if there was a ChangeMessageInfo that was created by the Gerrit system
+			listAccountInfo.add(org.eclipse.mylyn.internal.gerrit.core.client.compat.GerritSystemAccount.GERRIT_SYSTEM.getGerritSystemAccountInfo());
+		}
+
 		AccountInfoCache accountInfoCache = new AccountInfoCache(listAccountInfo);
 
 		changeDetail = new ChangeDetailX();
@@ -633,6 +649,9 @@ public class GerritClient extends ReviewsClient {
 
 	private org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo getAccountInfo(String account,
 			IProgressMonitor monitor) throws GerritException, URIException {
+		if (GerritSystemAccount.GERRIT_SYSTEM_NAME.equals(account)) {
+			return GerritSystemAccount.GERRIT_SYSTEM;
+		}
 		String st = URIUtil.encodeQuery(account);
 		final String uri = "/accounts/" + st; //$NON-NLS-1$
 		org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo accountInfo = executeGetRestRequest(uri,
@@ -821,7 +840,7 @@ public class GerritClient extends ReviewsClient {
 
 	/**
 	 * Checks for the 4 byte header that identifies a ZIP file
-	 * 
+	 *
 	 * @noreference This method is not intended to be referenced by clients.
 	 */
 	public static boolean isZippedContent(byte[] bin) {
@@ -1426,7 +1445,7 @@ public class GerritClient extends ReviewsClient {
 
 	/**
 	 * Sends a query for the changes visible to the caller to the gerrit server.
-	 * 
+	 *
 	 * @param monitor
 	 *            A progress monitor
 	 * @param queryString
@@ -1442,7 +1461,7 @@ public class GerritClient extends ReviewsClient {
 	/**
 	 * Sends a query for the changes visible to the caller to the gerrit server with the possibility of adding options
 	 * to the query.
-	 * 
+	 *
 	 * @param monitor
 	 *            A progress monitor
 	 * @param queryString
@@ -1486,7 +1505,7 @@ public class GerritClient extends ReviewsClient {
 
 	/**
 	 * Sends a query for the changes visible to the caller to the gerrit server. Uses the gerrit REST API.
-	 * 
+	 *
 	 * @param monitor
 	 *            A progress monitor
 	 * @param queryString
@@ -1502,7 +1521,7 @@ public class GerritClient extends ReviewsClient {
 	/**
 	 * Sends a query for the changes visible to the caller to the gerrit server with the possibility of adding options
 	 * to the query. Uses the gerrit REST API.
-	 * 
+	 *
 	 * @param monitor
 	 *            A progress monitor
 	 * @param queryString

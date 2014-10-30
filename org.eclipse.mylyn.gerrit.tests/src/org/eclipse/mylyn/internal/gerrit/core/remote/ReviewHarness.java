@@ -21,11 +21,16 @@ import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertThat;
 
 import java.io.File;
+import java.net.Proxy;
 import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.mylyn.commons.net.IProxyProvider;
+import org.eclipse.mylyn.commons.net.WebLocation;
+import org.eclipse.mylyn.commons.net.WebUtil;
+import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.gerrit.tests.support.GerritHarness;
@@ -33,6 +38,8 @@ import org.eclipse.mylyn.gerrit.tests.support.GerritProject.CommitResult;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.spi.remote.JobRemoteService;
@@ -59,6 +66,8 @@ class ReviewHarness {
 	Git git;
 
 	GerritClient client;
+
+	private GerritClient adminClient;
 
 	GerritRemoteFactoryProvider provider;
 
@@ -92,6 +101,7 @@ class ReviewHarness {
 
 	public void init(String refSpec, PrivilegeLevel privilegeLevel) throws Exception {
 		provider.open();
+		assertThat(getRepository().getReviews().size(), is(0));
 		pushFileToReview(testIdent, refSpec, privilegeLevel);
 		listener = new TestRemoteObserver<IRepository, IReview, String, Date>(provider.getReviewFactory());
 
@@ -130,7 +140,7 @@ class ReviewHarness {
 				&& timeDelta < CREATION_TIME_DELTA, is(true));
 	}
 
-	public void dispose() {
+	public void dispose() throws GerritException {
 		if (listener != null) {
 			consumer.removeObserver(listener);
 		}
@@ -175,5 +185,23 @@ class ReviewHarness {
 	public CommitResult commitAndPush(CommitCommand command, String refSpec, PrivilegeLevel privilegeLevel)
 			throws Exception {
 		return gerritHarness.project().commitAndPush(command, refSpec, privilegeLevel);
+	}
+
+	public GerritClient getAdminClient() {
+		if (adminClient == null) {
+			UserCredentials credentials = GerritFixture.current().getCredentials(PrivilegeLevel.ADMIN);
+
+			WebLocation location = new WebLocation(GerritFixture.current().getRepositoryUrl(),
+					credentials.getUserName(), credentials.getPassword(), new IProxyProvider() {
+						public Proxy getProxyForHost(String host, String proxyType) {
+							return WebUtil.getProxyForUrl(GerritFixture.current().getRepositoryUrl());
+						}
+					});
+
+			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+					GerritFixture.current().getRepositoryUrl());
+			adminClient = new GerritClient(repository, location);
+		}
+		return adminClient;
 	}
 }
