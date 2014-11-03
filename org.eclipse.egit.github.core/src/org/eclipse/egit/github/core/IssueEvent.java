@@ -37,6 +37,8 @@ public class IssueEvent implements Serializable {
 
 	private User actor;
 
+	private Label label;
+
 	/**
 	 * @return createdAt
 	 */
@@ -146,6 +148,22 @@ public class IssueEvent implements Serializable {
 	 */
 	public IssueEvent setActor(User actor) {
 		this.actor = actor;
+		return this;
+	}
+
+	/**
+	 * @return label
+	 */
+	public Label getLabel() {
+		return label;
+	}
+
+	/**
+	 * @param label
+	 * @return this issue event
+	 */
+	public IssueEvent setLabel(Label label) {
+		this.label = label;
 		return this;
 	}
 }
