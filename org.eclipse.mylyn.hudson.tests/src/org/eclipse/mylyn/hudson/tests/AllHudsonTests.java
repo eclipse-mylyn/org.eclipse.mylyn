@@ -54,7 +54,8 @@ public class AllHudsonTests {
 			List<HudsonFixture> fixtures = configuration.discover(HudsonFixture.class, "hudson");
 			fixtures.addAll(configuration.discover(HudsonFixture.class, "jenkins"));
 			for (HudsonFixture fixture : fixtures) {
-				if (fixture.isUseCertificateAuthentication() && CommonTestUtil.isCertificateAuthBroken()) {
+				if (fixture.isExcluded()
+						|| (fixture.isUseCertificateAuthentication() && CommonTestUtil.isCertificateAuthBroken())) {
 					continue;
 				}
 				fixture.createSuite(suite);
