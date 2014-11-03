@@ -137,6 +137,8 @@ public interface IGitHubConstants {
 	/** */
 	String SEGMENT_ORGANIZATIONS = "/organizations"; //$NON-NLS-1$
 	/** */
+	String SEGMENT_MEMBERSHIPS = "/memberships"; //$NON-NLS-1$
+	/** */
 	String SEGMENT_ORGS = "/orgs"; //$NON-NLS-1$
 	/** */
 	String SEGMENT_PUBLIC = "/public"; //$NON-NLS-1$
