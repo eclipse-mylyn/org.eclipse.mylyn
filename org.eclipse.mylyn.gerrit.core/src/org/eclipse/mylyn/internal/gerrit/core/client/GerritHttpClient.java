@@ -346,7 +346,8 @@ public class GerritHttpClient {
 			}
 
 			int code = method.getStatusCode();
-			if (code == HttpURLConnection.HTTP_OK) {
+			if (code == HttpURLConnection.HTTP_OK || code == HttpURLConnection.HTTP_ACCEPTED
+					|| code == HttpURLConnection.HTTP_CREATED) {
 				try {
 					return request.process(method);
 				} finally {

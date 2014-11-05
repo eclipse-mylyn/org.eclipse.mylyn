@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritPerson;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.GerritReviewLabel;
@@ -126,7 +127,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 
 	private RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> updateModelData(
 			TaskRepository repository, TaskData taskData, ReviewObserver reviewObserver, IProgressMonitor monitor)
-					throws CoreException {
+			throws CoreException {
 		GerritClient client = connector.getClient(repository);
 		GerritRemoteFactoryProvider factoryProvider = (GerritRemoteFactoryProvider) client.getFactoryProvider();
 		RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> consumer = factoryProvider.getReviewFactory()
@@ -176,7 +177,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 
 	/**
 	 * Get account id for repository
-	 *
+	 * 
 	 * @param client
 	 * @param repository
 	 * @param monitor
@@ -220,7 +221,8 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		updateTaskData(repository, data, new GerritQueryResult(new ChangeInfo(change)));
 		setAttributeValue(data, schema.BRANCH, change.getDest().get());
 		setAttributeValue(data, schema.OWNER, GerritUtil.getUserLabel(owner));
-		setAttributeValue(data, schema.UPLOADED, dateToString(change.getCreatedOn()));
+		setAttributeValue(data, schema.UPLOADED, dateToString(((ChangeDetailX) changeDetail).getDateCreated()));
+		setAttributeValue(data, schema.UPDATED, dateToString(((ChangeDetailX) changeDetail).getLastModified()));
 		setAttributeValue(data, schema.DESCRIPTION, changeDetail.getDescription());
 		int i = 1;
 		String accountName = repository.getUserName();

@@ -7,8 +7,11 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Ericsson AB - added actions support
  *******************************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core.client.rest;
+
+import java.util.Map;
 
 /**
  * Data model object for <a
@@ -20,6 +23,8 @@ public class RevisionInfo {
 
 	private int _number;
 
+	public Map<String, ActionInfo> actions;
+
 	public boolean isDraft() {
 		return draft;
 	}
@@ -27,4 +32,9 @@ public class RevisionInfo {
 	public int getNumber() {
 		return _number;
 	}
+
+	public Map<String, ActionInfo> getActions() {
+		return actions;
+	}
+
 }

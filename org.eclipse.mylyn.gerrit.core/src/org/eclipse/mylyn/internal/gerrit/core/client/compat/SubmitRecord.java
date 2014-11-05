@@ -11,10 +11,16 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.client.compat;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.google.gerrit.common.data.AccountInfo;
 import com.google.gerrit.reviewdb.Account;
+
+//import org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo;
 
 public class SubmitRecord {
 
@@ -52,7 +58,15 @@ public class SubmitRecord {
 
 	String status;
 
-	private List<Label> labels = Collections.emptyList();;
+	private HashMap<String, AccountInfo> ok;
+
+	private HashMap<String, AccountInfo> reject;
+
+	private HashMap<String, AccountInfo> need;
+
+	private HashMap<String, AccountInfo> may;
+
+	private List<Label> labels = Collections.emptyList();
 
 	public String getStatus() {
 		return status;
@@ -69,4 +83,34 @@ public class SubmitRecord {
 	public void setLabels(List<Label> labels) {
 		this.labels = labels;
 	}
+
+	public HashMap<String, AccountInfo> getOkMap() {
+		return ok;
+	}
+
+	public HashMap<String, AccountInfo> getNeedMap() {
+		return need;
+	}
+
+	public HashMap<String, AccountInfo> getRejectMap() {
+		return reject;
+	}
+
+	public HashMap<String, AccountInfo> getMayMap() {
+		return may;
+	}
+
+	public List<Label> createLabel(SubmitRecord record, HashMap<String, AccountInfo> value, String status) {
+		List<Label> list = new ArrayList<Label>();
+		for (Map.Entry<String, AccountInfo> info : value.entrySet()) {
+			Label label = new Label();
+			label.setLabel(info.getKey());
+			label.setStatus(status);
+			label.setAppliedBy(info.getValue().getId());
+			list.add(label);
+		}
+
+		return list;
+	}
+
 }

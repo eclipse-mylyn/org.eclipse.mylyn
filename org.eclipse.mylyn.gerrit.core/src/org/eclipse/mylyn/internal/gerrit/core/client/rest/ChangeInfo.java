@@ -158,7 +158,7 @@ public class ChangeInfo {
 		return permitted_labels;
 	}
 
-	private PatchSet.Id getCurrentPatchSetId() {
+	public PatchSet.Id getCurrentPatchSetId() {
 		Change.Id changeId = new Change.Id(_number);
 		int patchSetId = revisions.get(current_revision).getNumber();
 		return new PatchSet.Id(changeId, patchSetId);

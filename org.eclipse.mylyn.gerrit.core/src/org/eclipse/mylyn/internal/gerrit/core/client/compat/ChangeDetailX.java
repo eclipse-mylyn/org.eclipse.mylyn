@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.client.compat;
 
+import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -52,6 +53,10 @@ public class ChangeDetailX extends ChangeDetail {
 	private boolean canDeleteDraft;
 
 	private boolean canEdit;
+
+	private Timestamp createdOn;
+
+	private Timestamp lastUpdatedOn;
 
 	protected List<SubmitRecord> submitRecords;
 
@@ -126,4 +131,35 @@ public class ChangeDetailX extends ChangeDetail {
 		}
 		return null;
 	}
+
+	//Gerrit 2.9
+	public void setDateCreated(Timestamp ts) {
+		createdOn = ts;
+	}
+
+	//Gerrit 2.9
+	public void setLastModified(Timestamp ts) {
+		lastUpdatedOn = ts;
+	}
+
+	//Gerrit 2.9
+	public Timestamp getDateCreated() {
+		return createdOn;
+	}
+
+	//Gerrit 2.9
+	public Timestamp getLastModified() {
+		return lastUpdatedOn;
+	}
+
+	//Gerrit 2.9
+	public void setCanSubmit(boolean canSubmit) {
+		this.canSubmit = canSubmit;
+	}
+
+	//Gerrit 2.9
+	public void setCanRebase(boolean canRebase) {
+		this.canRebase = canRebase;
+	}
+
 }

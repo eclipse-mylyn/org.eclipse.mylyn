@@ -228,6 +228,10 @@ public class ChangeInfoTest extends TestCase {
 	// Utility methods
 
 	public static void assertHasCodeReviewLabels(ChangeInfo changeInfo) {
+		assertHasCodeReviewLabels(changeInfo, false);
+	}
+
+	public static void assertHasCodeReviewLabels(ChangeInfo changeInfo, boolean version29) {
 		assertThat(changeInfo, notNullValue());
 		Map<String, LabelInfo> labels = changeInfo.getLabels();
 		assertThat(labels, not(empty()));
@@ -241,8 +245,14 @@ public class ChangeInfoTest extends TestCase {
 		assertThat(values, Matchers.<String, String> hasKey(" 0"));
 		assertThat(values, Matchers.<String, String> hasKey("+1"));
 		assertThat(values, Matchers.<String, String> hasKey("+2"));
-		assertThat(values.get("-2"), equalTo(CRVW.getValue((short) -2).getName()));
-		assertThat(values.get("-1"), equalTo(CRVW.getValue((short) -1).getName()));
+		if (version29) {
+			//Text for Gerrit 2.9 has changed for the "-2" values
+			assertThat(values.get("-2"), equalTo("This shall not be merged"));
+			assertThat(values.get("-1"), equalTo("I would prefer this is not merged as is"));
+		} else {
+			assertThat(values.get("-2"), equalTo(CRVW.getValue((short) -2).getName()));
+			assertThat(values.get("-1"), equalTo(CRVW.getValue((short) -1).getName()));
+		}
 		assertThat(values.get(" 0"), equalTo(CRVW.getValue((short) 0).getName()));
 		assertThat(values.get("+1"), equalTo(CRVW.getValue((short) 1).getName()));
 		assertThat(values.get("+2"), equalTo(CRVW.getValue((short) 2).getName()));

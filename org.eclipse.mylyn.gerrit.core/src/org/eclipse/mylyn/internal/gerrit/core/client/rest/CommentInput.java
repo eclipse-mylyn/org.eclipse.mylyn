@@ -62,11 +62,28 @@ public class CommentInput {
 		return path;
 	}
 
+	public void setPath(String path) {
+		this.path = path;
+	}
+
 	public int getLine() {
 		return line;
+	}
+
+	public void setLine(int number) {
+		this.line = number;
+	}
+
+	public void setSide(String side) {
+		this.side = side;
 	}
 
 	public String getMessage() {
 		return message;
 	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
 }

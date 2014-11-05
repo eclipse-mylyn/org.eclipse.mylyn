@@ -140,7 +140,11 @@ public class GerritQueryResult {
 		this.subject = subject;
 	}
 
-	private void setUpdated(Timestamp updated) {
+	public void setCreated(Timestamp created) {
+		this.created = created;
+	}
+
+	public void setUpdated(Timestamp updated) {
 		this.updated = updated;
 	}
 
