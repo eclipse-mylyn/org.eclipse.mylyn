@@ -10,6 +10,7 @@
 <unit id="com.google.gwtjsonrpc" version="1.2.5.v201112241444"/>
 <unit id="com.google.gwtorm" version="1.1.4.v201112241444"/>
 <unit id="javax.el" version="2.2.0.v201303151357"/>
+<unit id="javax.servlet" version="2.5.0.v201103041518"/>
 <unit id="org.antlr.runtime" version="3.0.0.v200803061811"/>
 <unit id="org.apache.commons.codec" version="1.6.0.v201305230611"/>
 <unit id="org.apache.commons.httpclient" version="3.1.0.v201012070820"/>
