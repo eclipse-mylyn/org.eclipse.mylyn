@@ -20,7 +20,6 @@ import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 
 import com.google.gerrit.common.data.PatchSetDetail;
-import com.google.gerrit.reviewdb.PatchSet;
 
 /**
  * Manages retrieval of patch set contents, including file revisions and associated comments, from Gerrit API,
@@ -44,7 +43,7 @@ public class PatchSetContentIdRemoteFactory extends PatchSetContentRemoteFactory
 			detail = itemSetConsumer.getRemoteObject();
 		}
 		if (detail != null) {
-			PatchSetContent content = new PatchSetContent((PatchSet) null, detail);
+			PatchSetContent content = new PatchSetContent(null, detail);
 			return pull(parentObject, content, monitor);
 		}
 		return null;

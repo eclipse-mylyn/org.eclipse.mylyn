@@ -16,13 +16,26 @@
 
 package org.eclipse.mylyn.gerrit.tests.core.client;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
 
 import org.apache.commons.httpclient.Cookie;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
@@ -35,12 +48,18 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritSystemInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.CommentLink;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchScriptX;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.verification.VerificationMode;
 
 import com.google.gerrit.reviewdb.Account;
+import com.google.gerrit.reviewdb.Patch.ChangeType;
+import com.google.gerrit.reviewdb.Patch.Key;
+import com.google.gerrit.reviewdb.PatchSet.Id;
 
 /**
  * @author Steffen Pingel
@@ -49,6 +68,39 @@ import com.google.gerrit.reviewdb.Account;
  * @author Jacques Bouthillier
  */
 public class GerritClientTest extends TestCase {
+	public class TestGerritClient extends GerritClient {
+
+		public TestGerritClient(TaskRepository repository, AbstractWebLocation location) {
+			super(repository, location);
+		}
+
+		@Override
+		protected byte[] fetchBinaryContent(String url, IProgressMonitor monitor) throws GerritException {
+			return super.fetchBinaryContent(url, monitor);
+		}
+
+		@Override
+		protected void fetchRightBinaryContent(PatchScriptX patchScript, Key key, Id rightId, IProgressMonitor monitor)
+				throws GerritException {
+			super.fetchRightBinaryContent(patchScript, key, rightId, monitor);
+		}
+
+		@Override
+		protected void fetchLeftBinaryContent(PatchScriptX patchScript, Key key, Id leftId, IProgressMonitor monitor)
+				throws GerritException {
+			super.fetchLeftBinaryContent(patchScript, key, leftId, monitor);
+		}
+
+		@Override
+		protected String getUrlForPatchSet(Key key, Id id) throws GerritException {
+			return super.getUrlForPatchSet(key, id);
+		}
+
+		@Override
+		protected String getUrlForPatchSetOrBase(Key key, Id id) throws GerritException {
+			return super.getUrlForPatchSetOrBase(key, id);
+		}
+	}
 
 	private static final String GET_LABELS_OPTION = "LABELS"; //$NON-NLS-1$
 
@@ -314,4 +366,74 @@ public class GerritClientTest extends TestCase {
 		assertFalse(GerritClient.isZippedContent(null));
 	}
 
+	@Test
+	public void testFetchLeftBinaryContent() throws Exception {
+		Id ps2 = Id.fromRef("refs/changes/34/1234/2");
+		Id ps4 = Id.fromRef("refs/changes/34/1234/4");
+		Key key = new Key(ps4, "/mylyn/gerrit/File.jpg");
+		PatchScriptX script = mock(PatchScriptX.class);
+
+		for (ChangeType type : ChangeType.values()) {
+			TestGerritClient client = createSpy();
+			doReturn(null).when(client).fetchBinaryContent(any(String.class), any(IProgressMonitor.class));
+			when(script.getChangeType()).thenReturn(type);
+			client.fetchLeftBinaryContent(script, key, ps2, new NullProgressMonitor());
+			verify(client, type == ChangeType.ADDED ? never() : times(1)).fetchBinaryContent(any(String.class),
+					any(IProgressMonitor.class));
+		}
+		fetchBinaryContentForSide(false);
+	}
+
+	@Test
+	public void testFetchRightBinaryContent() throws Exception {
+		fetchBinaryContentForSide(true);
+	}
+
+	private void fetchBinaryContentForSide(boolean rightSide) throws Exception, GerritException {
+		Id ps2 = Id.fromRef("refs/changes/34/1234/2");
+		Id ps4 = Id.fromRef("refs/changes/34/1234/4");
+		Key key = new Key(ps4, "/mylyn/gerrit/File.jpg");
+		PatchScriptX script = mock(PatchScriptX.class);
+
+		for (ChangeType type : ChangeType.values()) {
+			when(script.getChangeType()).thenReturn(type);
+			TestGerritClient client = createSpy();
+			doReturn(null).when(client).fetchBinaryContent(any(String.class), any(IProgressMonitor.class));
+			VerificationMode fetchBinaryContentExpected = times(1);
+			if (rightSide) {
+				client.fetchRightBinaryContent(script, key, ps2, new NullProgressMonitor());
+				if (type == ChangeType.DELETED) {
+					fetchBinaryContentExpected = never();
+				}
+			} else {
+				client.fetchLeftBinaryContent(script, key, ps2, new NullProgressMonitor());
+				if (type == ChangeType.ADDED) {
+					fetchBinaryContentExpected = never();
+				}
+			}
+			verify(client, fetchBinaryContentExpected).fetchBinaryContent(any(String.class),
+					any(IProgressMonitor.class));
+		}
+	}
+
+	@Test
+	public void testGetUrlForPatchSet() throws Exception {
+		TestGerritClient client = createSpy();
+		Id ps2 = Id.fromRef("refs/changes/34/1234/2");
+		Id ps4 = Id.fromRef("refs/changes/34/1234/4");
+		Key key = new Key(ps4, "/mylyn/gerrit/File.jpg");
+		assertEquals(encode("1234,4,/mylyn/gerrit/File.jpg^1"), client.getUrlForPatchSetOrBase(key, null));
+		assertEquals(encode("1234,2,/mylyn/gerrit/File.jpg^0"), client.getUrlForPatchSetOrBase(key, ps2));
+		assertEquals(encode("1234,4,/mylyn/gerrit/File.jpg^0"), client.getUrlForPatchSetOrBase(key, ps4));
+		assertEquals(encode("1234,2,/mylyn/gerrit/File.jpg^0"), client.getUrlForPatchSet(key, ps2));
+		assertEquals(encode("1234,4,/mylyn/gerrit/File.jpg^0"), client.getUrlForPatchSet(key, ps4));
+	}
+
+	private TestGerritClient createSpy() throws Exception {
+		return spy(new TestGerritClient(GerritFixture.current().repository(), GerritFixture.current().location()));
+	}
+
+	private String encode(String s) throws UnsupportedEncodingException {
+		return URLEncoder.encode(s, "UTF-8");
+	}
 }

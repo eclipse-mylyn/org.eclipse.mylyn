@@ -537,13 +537,13 @@ public class GerritClient extends ReviewsClient {
 				}, monitor);
 		for (SubmitRecord element : submitRecordArray) {
 			List<SubmitRecord.Label> list = null;
-			if (element.getStatus().equalsIgnoreCase("OK")) {
+			if (element.getStatus().equalsIgnoreCase("OK")) { //$NON-NLS-1$
 				list = element.createLabel(element, element.getOkMap(), OK);
-			} else if (element.getStatus().equalsIgnoreCase("NOT_READY")) {
+			} else if (element.getStatus().equalsIgnoreCase("NOT_READY")) { //$NON-NLS-1$
 				list = element.createLabel(element, element.getNeedMap(), NEED);
-			} else if (element.getStatus().equalsIgnoreCase("REJECT")) {
+			} else if (element.getStatus().equalsIgnoreCase("REJECT")) { //$NON-NLS-1$
 				list = element.createLabel(element, element.getRejectMap(), REJECT);
-			} else if (element.getStatus().equalsIgnoreCase("MAY")) {
+			} else if (element.getStatus().equalsIgnoreCase("MAY")) { //$NON-NLS-1$
 				list = element.createLabel(element, element.getMayMap(), MAY);
 			}
 			element.setLabels(list);
@@ -760,34 +760,58 @@ public class GerritClient extends ReviewsClient {
 		return new GerritSystemInfo(version, contributorAgreements, account);
 	}
 
-	private PatchScriptX getPatchScript(final Patch.Key key, final PatchSet.Id leftId, final PatchSet.Id rightId,
-			IProgressMonitor monitor) throws GerritException {
-		//final AccountDiffPreference diffPrefs = getDiffPreference(monitor);
-		//final AccountDiffPreference diffPrefs = new AccountDiffPreference(getAccount(monitor).getId());
+	PatchScriptX getPatchScript(final Patch.Key key, final PatchSet.Id leftId, final PatchSet.Id rightId,
+			final IProgressMonitor monitor) throws GerritException {
 		final AccountDiffPreference diffPrefs = createAccountDiffPreference();
-		PatchScriptX patchScript = execute(monitor, new Operation<PatchScriptX>() {
+		final PatchScriptX patchScript = execute(monitor, new Operation<PatchScriptX>() {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
 				getPatchDetailService(monitor).patchScriptX(key, leftId, rightId, diffPrefs, this);
 			}
 		});
 		if (patchScript.isBinary()) {
-			if (patchScript.getChangeType() != ChangeType.ADDED) {
-				String keyBaseEncoded = encode(leftId + "," + key.getFileName() + "^0"); //$NON-NLS-1$ //$NON-NLS-2$
-				patchScript.setBinaryA(fetchBinaryContent("/cat/" + keyBaseEncoded, monitor)); //$NON-NLS-1$
-			}
-			if (patchScript.getChangeType() != ChangeType.DELETED) {
-				String keyTargetEncoded = encode(rightId + "," + key.getFileName() + "^0"); //$NON-NLS-1$ //$NON-NLS-2$
-				patchScript.setBinaryB(fetchBinaryContent("/cat/" + keyTargetEncoded, monitor)); //$NON-NLS-1$
-			}
+			fetchLeftBinaryContent(patchScript, key, leftId, monitor);
+			fetchRightBinaryContent(patchScript, key, rightId, monitor);
 		}
 		return patchScript;
 	}
 
-	private byte[] fetchBinaryContent(String url, IProgressMonitor monitor) throws GerritException {
+	protected void fetchLeftBinaryContent(final PatchScriptX patchScript, final Patch.Key key,
+			final PatchSet.Id leftId, final IProgressMonitor monitor) throws GerritException {
+		if (patchScript.getChangeType() != ChangeType.ADDED) {
+			byte[] binaryContent = fetchBinaryContent(getUrlForPatchSetOrBase(key, leftId), monitor);
+			patchScript.setBinaryA(binaryContent);
+		}
+	}
+
+	protected void fetchRightBinaryContent(final PatchScriptX patchScript, final Patch.Key key,
+			final PatchSet.Id rightId, final IProgressMonitor monitor) throws GerritException {
+		if (patchScript.getChangeType() != ChangeType.DELETED) {
+			byte[] binaryContent = fetchBinaryContent(getUrlForPatchSet(key, rightId), monitor);
+			patchScript.setBinaryB(binaryContent);
+		}
+	}
+
+	protected String getUrlForPatchSetOrBase(final Patch.Key key, final PatchSet.Id id) throws GerritException {
+		if (id == null) {
+			return getUrlForBase(key);
+		} else {
+			return getUrlForPatchSet(key, id);
+		}
+	}
+
+	private String getUrlForBase(final Patch.Key key) throws GerritException {
+		return encode(key.toString() + "^1"); //$NON-NLS-1$
+	}
+
+	protected String getUrlForPatchSet(final Patch.Key key, final PatchSet.Id id) throws GerritException {
+		return encode(id + "," + key.getFileName() + "^0"); //$NON-NLS-1$//$NON-NLS-2$
+	}
+
+	protected byte[] fetchBinaryContent(String url, IProgressMonitor monitor) throws GerritException {
 		final TypeToken<Byte[]> byteArrayType = new TypeToken<Byte[]>() {
 		};
-		byte[] bin = executeGetRestRequest(url, byteArrayType.getType(), monitor);
+		byte[] bin = executeGetRestRequest("/cat/" + url, byteArrayType.getType(), monitor); //$NON-NLS-1$
 		if (isZippedContent(bin)) {
 			return unzip(bin);
 		} else {
