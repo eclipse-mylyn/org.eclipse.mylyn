@@ -92,7 +92,7 @@ public class BreakpointsContextUtilTest {
 		activateContext();
 		IInteractionContext testContext = contextManager.getActiveContext();
 		List<IBreakpoint> breakpoints = BreakpointsContextUtil.importBreakpoints(testContext, null);
-		assertTrue(breakpoints.size() == 2);
+		assertEquals(2, breakpoints.size());
 
 		assertTrue(breakpoints.get(0) instanceof JavaLineBreakpoint);
 		IMarker marker = breakpoints.get(0).getMarker();
