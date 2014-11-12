@@ -49,23 +49,23 @@ define gerrit::defaultsites ($base = $gerrit::base, $userOwner = $gerrit::userOw
     version => "2.8.5",
     port    => 28285,
     sshport => 29285,
-    envdefault => true,
     require => Gerrit["2.8.5"],
   }
 
-  gerrit::site { "gerrit-2.9":
-    version => "2.9",
+  gerrit::site { "gerrit-2.9.1":
+    version => "2.9.1",
     port    => 28290,
     sshport => 29290,
-    require => Gerrit["2.9"],
+    envdefault => true,
+    require => Gerrit["2.9.1"],
   }
 
-  gerrit::site { "gerrit-2.9-dev":
-    version => "2.9",
+  gerrit::site { "gerrit-2.9.1-dev":
+    version => "2.9.1",
     port    => 26290,
     sshport => 27290,
     authtype => "DEVELOPMENT_BECOME_ANY_ACCOUNT",
-    require => Gerrit["2.9"],
+    require => Gerrit["2.9.1"],
   }
 
 }
