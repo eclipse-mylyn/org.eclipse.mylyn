@@ -23,7 +23,7 @@ define gerrit::defaultsites ($base = $gerrit::base, $userOwner = $gerrit::userOw
   gerrit { "2.7":
   }
 
-  gerrit { "2.8.5":
+  gerrit { "2.9.1":
   }
 
   gerrit { "2.9":
