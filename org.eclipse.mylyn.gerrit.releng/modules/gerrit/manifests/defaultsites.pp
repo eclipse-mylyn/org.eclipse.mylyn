@@ -60,12 +60,4 @@ define gerrit::defaultsites ($base = $gerrit::base, $userOwner = $gerrit::userOw
     require => Gerrit["2.9.1"],
   }
 
-  gerrit::site { "gerrit-2.9.1-dev":
-    version => "2.9.1",
-    port    => 26291,
-    sshport => 27291,
-    authtype => "DEVELOPMENT_BECOME_ANY_ACCOUNT",
-    require => Gerrit["2.9.1"],
-  }
-
 }
