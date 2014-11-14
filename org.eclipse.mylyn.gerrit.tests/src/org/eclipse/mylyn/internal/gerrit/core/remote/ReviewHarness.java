@@ -26,6 +26,7 @@ import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.gerrit.tests.support.GerritHarness;
 import org.eclipse.mylyn.gerrit.tests.support.GerritProject.CommitResult;
@@ -68,13 +69,17 @@ class ReviewHarness {
 	GerritHarness gerritHarness;
 
 	ReviewHarness(String testIdent) throws Exception {
+		this(testIdent, PrivilegeLevel.USER);
+	}
+
+	ReviewHarness(String testIdent, PrivilegeLevel privilegeLevel) throws Exception {
 		this.testIdent = testIdent;
 		gerritHarness = GerritFixture.current().harness();
-		git = gerritHarness.project().getGitProject();
+		git = gerritHarness.project().getGitProject(privilegeLevel);
 
 		connector = new GerritConnector();
 		repository = GerritFixture.current().singleRepository();
-		client = gerritHarness.client();
+		client = gerritHarness.client(privilegeLevel);
 
 		provider = new GerritRemoteFactoryProvider(client);
 		provider.setService(new JobRemoteService());
@@ -82,8 +87,12 @@ class ReviewHarness {
 	}
 
 	public void init() throws Exception {
+		init("HEAD:refs/for/master", PrivilegeLevel.USER);
+	}
+
+	public void init(String refSpec, PrivilegeLevel privilegeLevel) throws Exception {
 		provider.open();
-		pushFileToReview(testIdent);
+		pushFileToReview(testIdent, refSpec, privilegeLevel);
 		listener = new TestRemoteObserver<IRepository, IReview, String, Date>(provider.getReviewFactory());
 
 		consumer = provider.getReviewFactory().getConsumerForRemoteKey(getRepository(), shortId);
@@ -103,12 +112,13 @@ class ReviewHarness {
 		assertIsRecent(review.getCreationDate());
 	}
 
-	public void pushFileToReview(String testIdent) throws Exception {
+	public void pushFileToReview(String testIdent, String refSpec, PrivilegeLevel privilegeLevel) throws Exception {
 		changeId = "I" + StringUtils.rightPad(testIdent, 40, "a");
 		CommitCommand command = createCommitCommand(changeId);
 		addFile("testFile1.txt");
-		CommitResult result = commitAndPush(command);
+		CommitResult result = commitAndPush(command, refSpec, privilegeLevel);
 		shortId = StringUtils.trimToEmpty(StringUtils.substringAfterLast(result.push.getMessages(), "/"));
+		shortId = StringUtils.removeEnd(shortId, " [DRAFT]");
 		commitId = result.commit.getId().toString();
 		assertThat("Bad Push: " + result.push.getMessages(), shortId.length(), greaterThan(0));
 
@@ -162,4 +172,8 @@ class ReviewHarness {
 		return gerritHarness.project().commitAndPush(command);
 	}
 
+	public CommitResult commitAndPush(CommitCommand command, String refSpec, PrivilegeLevel privilegeLevel)
+			throws Exception {
+		return gerritHarness.project().commitAndPush(command, refSpec, privilegeLevel);
+	}
 }

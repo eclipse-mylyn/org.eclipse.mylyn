@@ -27,6 +27,7 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.junit.Test;
 
 /**
@@ -67,8 +68,9 @@ public class GerritProject {
 		return folder;
 	}
 
-	private CredentialsProvider getCredentialsProvider() throws Exception {
-		AuthenticationCredentials credentials = fixture.location().getCredentials(AuthenticationType.REPOSITORY);
+	private CredentialsProvider getCredentialsProvider(PrivilegeLevel privilegeLevel) throws Exception {
+		AuthenticationCredentials credentials = fixture.location(privilegeLevel).getCredentials(
+				AuthenticationType.REPOSITORY);
 		return new UsernamePasswordCredentialsProvider(getGitUsername(credentials), credentials.getPassword());
 	}
 
@@ -78,9 +80,14 @@ public class GerritProject {
 	}
 
 	public Git getGitProject() throws Exception {
+		return getGitProject(PrivilegeLevel.USER);
+	}
+
+	public Git getGitProject(PrivilegeLevel privilegeLevel) throws Exception {
 		if (git == null) {
 			String url = fixture.getRepositoryUrl() + PROJECT;
-			AuthenticationCredentials credentials = fixture.location().getCredentials(AuthenticationType.REPOSITORY);
+			AuthenticationCredentials credentials = fixture.location(privilegeLevel).getCredentials(
+					AuthenticationType.REPOSITORY);
 			url = url.replace("://", "://" + getGitUsername(credentials) + ":" + credentials.getPassword() + "@"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			git = Git.cloneRepository().setDirectory(getFolder()).setURI(url).call();
 		}
@@ -130,20 +137,31 @@ public class GerritProject {
 	}
 
 	public CommitResult commitAndPush(CommitCommand command) throws Exception {
-		String email = registerAuthenticator();
+		return commitAndPush(command, "HEAD:refs/for/master", PrivilegeLevel.USER);
+	}
+
+	public CommitResult commitAndPush(CommitCommand command, String refSpec, PrivilegeLevel privilegeLevel)
+			throws Exception {
+		String email = registerAuthenticator(privilegeLevel);
 		RevCommit call = command.setAuthor("Test", email) //$NON-NLS-1$
 				.setCommitter("Test", email)
 				.call();
 		Iterable<PushResult> result = git.push()
-				.setCredentialsProvider(getCredentialsProvider())
-				.setRefSpecs(new RefSpec("HEAD:refs/for/master")).call(); //$NON-NLS-1$
+				.setCredentialsProvider(getCredentialsProvider(privilegeLevel))
+				.setRefSpecs(new RefSpec(refSpec))
+				.call();
 		//Safe to assume one and only one result?
 		return new CommitResult(call, result.iterator().next());
 	}
 
 	public String registerAuthenticator() throws Exception {
+		return registerAuthenticator(PrivilegeLevel.USER);
+	}
+
+	public String registerAuthenticator(PrivilegeLevel privilegeLevel) throws Exception {
 		// register authenticator to avoid HTTP password prompt
-		AuthenticationCredentials credentials = fixture.location().getCredentials(AuthenticationType.REPOSITORY);
+		AuthenticationCredentials credentials = fixture.location(privilegeLevel).getCredentials(
+				AuthenticationType.REPOSITORY);
 		final PasswordAuthentication authentication = new PasswordAuthentication(credentials.getUserName(),
 				credentials.getPassword().toCharArray());
 		Authenticator.setDefault(new Authenticator() {

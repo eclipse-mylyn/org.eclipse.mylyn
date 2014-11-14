@@ -90,12 +90,13 @@ public class PatchSetDetailRemoteFactory extends ReviewItemSetRemoteFactory<Patc
 		RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> reviewConsumer = reviewFactory.getConsumerForModel(
 				parentObject.getRepository(), parentObject);
 		try {
-			int index = Integer.parseInt(localKey) - 1;
 			if (reviewConsumer != null) {
 				GerritChange change = reviewConsumer.getRemoteObject();
 				if (change != null) {
-					if (change.getPatchSetDetails().size() > index) {
-						return change.getPatchSetDetails().get(index);
+					for (PatchSetDetail patchSetDetail : change.getPatchSetDetails()) {
+						if (patchSetDetail.getPatchSet().getPatchSetId() == Integer.parseInt(localKey)) {
+							return patchSetDetail;
+						}
 					}
 				}
 			}

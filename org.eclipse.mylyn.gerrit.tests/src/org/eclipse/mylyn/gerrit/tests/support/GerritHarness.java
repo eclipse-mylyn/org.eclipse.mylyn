@@ -44,12 +44,20 @@ public class GerritHarness {
 	}
 
 	public GerritClient client() {
+		return client(PrivilegeLevel.USER);
+	}
+
+	public GerritClient client(PrivilegeLevel privilegeLevel) {
 		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(fixture.getRepositoryUrl());
-		return new GerritClient(repository, location());
+		return new GerritClient(repository, location(privilegeLevel));
 	}
 
 	public WebLocation location() {
-		readCredentials();
+		return location(PrivilegeLevel.USER);
+	}
+
+	public WebLocation location(PrivilegeLevel privilegeLevel) {
+		readCredentials(privilegeLevel);
 		String username = credentials.getUserName();
 		String password = credentials.getPassword();
 		if (!fixture.canAuthenticate()) {
@@ -81,8 +89,12 @@ public class GerritHarness {
 	}
 
 	public UserCredentials readCredentials() {
+		return readCredentials(PrivilegeLevel.USER);
+	}
+
+	public UserCredentials readCredentials(PrivilegeLevel privilegeLevel) {
 		if (credentials == null) {
-			credentials = CommonTestUtil.getCredentials(PrivilegeLevel.USER);
+			credentials = CommonTestUtil.getCredentials(privilegeLevel);
 		}
 		return credentials;
 	}

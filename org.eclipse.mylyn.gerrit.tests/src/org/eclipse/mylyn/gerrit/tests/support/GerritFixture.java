@@ -11,6 +11,10 @@
 
 package org.eclipse.mylyn.gerrit.tests.support;
 
+import junit.framework.AssertionFailedError;
+
+import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.commons.sdk.util.FixtureConfiguration;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
@@ -96,4 +100,16 @@ public class GerritFixture extends TestFixture {
 		return new GerritCapabilities(getGerritVersion());
 	}
 
+	@Override
+	public UserCredentials getCredentials(PrivilegeLevel level) {
+		try {
+			return super.getCredentials(level);
+		} catch (AssertionFailedError e) {
+			if (level == PrivilegeLevel.ADMIN) {
+				UserCredentials credentials = super.getCredentials(PrivilegeLevel.USER);
+				return new UserCredentials("admin@mylyn.eclipse.org", credentials.getPassword());
+			}
+			throw e;
+		}
+	}
 }
