@@ -329,7 +329,7 @@ public class UiLegendControl extends Composite {
 
 		imageLabel = toolkit.createLabel(activityClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(CommonImages.OVERLAY_DATE_OVERDUE));
-		Label textLabel = toolkit.createLabel(activityClient, Messages.UiLegendControl_Past_Due_date);
+		Label textLabel = toolkit.createLabel(activityClient, Messages.UiLegendControl_Past_due_date);
 		textLabel.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_OVERDUE));
 
 		imageLabel = toolkit.createLabel(activityClient, ""); //$NON-NLS-1$

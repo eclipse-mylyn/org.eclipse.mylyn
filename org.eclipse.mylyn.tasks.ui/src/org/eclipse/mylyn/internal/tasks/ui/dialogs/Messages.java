@@ -103,7 +103,7 @@ public class Messages extends NLS {
 
 	public static String UiLegendControl_Outgoing_changes;
 
-	public static String UiLegendControl_Past_Due_date;
+	public static String UiLegendControl_Past_due_date;
 
 	public static String UiLegendControl_Past_scheduled_date;
 
