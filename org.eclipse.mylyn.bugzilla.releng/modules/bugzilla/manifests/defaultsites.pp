@@ -23,11 +23,6 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
   
   /* Sites */
 
-  bugzilla::site { "bugzilla-3.6.13":
-    major     => "3",
-    minor     => "6",
-  }
-
   bugzilla::site { "bugzilla-3.6.13-custom-wf":
     major       => "3",
     minor       => "6",
@@ -42,13 +37,6 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
     custom_wf_and_status => true,
     xmlrpc_enabled       => false,
     desciptorfile        => "DescriptorFile-custom-wf-and-status.txt"
-  }
-
-  bugzilla::site { "bugzilla-3.6.13-xml-rpc-disabled":
-    major          => "3",
-    minor          => "6",
-    branchTag      => "bugzilla-3.6.13",
-    xmlrpc_enabled => false,
   }
 
   bugzilla::site { "bugzilla-4.0.15":
@@ -74,39 +62,40 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
     envdefault => true,
   }
 
-bugzilla::site { "bugzilla-4.5.6":
-    major        => "4",
-    minor        => "5",
-    branch       => "trunk",
-    branchTag      => "bugzilla-4.5.6",
-    envversion   => "4.5.6",
+/*
+  bugzilla::site { "bugzilla-master":
+    major       => "5",
+    minor       => "1",
+    branchTag   => "HEAD",
+    envversion   => "5.1",
   }
- 
-bugzilla::site { "bugzilla-rest-4.5.6":
-    major        => "4",
-    minor        => "5",
-    branch       => "trunk",
-    branchTag      => "bugzilla-4.5.6",
+
+  bugzilla::site { "bugzilla-rest-master":
+    major        => "5",
+    minor        => "1",
+    branchTag   => "HEAD",
+    envversion   => "5.1",
+    envtype      => "bugzillaREST",
     rest_enabled => true,
-    envversion   => "4.5.6",
-    envinfo => "4.5.6, REST enabled"
   }
-  
-  bugzilla::site { "bugzilla-trunk":
-    major       => "4",
-    minor       => "5",
-    branch      => "trunk",
-    branchTag   => "trunk",
+*/
+  bugzilla::site { "bugzilla-5.0":
+    major       => "5",
+    minor       => "0",
+    branch      => "5.0",
+    branchTag   => "5.0",
     envversion   => "4.5.6+",
   }
 
-bugzilla::site { "bugzilla-rest-trunk":
-    major        => "4",
-    minor        => "5",
-    branch       => "trunk",
-    branchTag    => "trunk",
-    envversion   => "4.5.6+",
-    envdefault_rest => true,
+  bugzilla::site { "bugzilla-5.0-rest":
+    major       => "5",
+    minor       => "0",
+    branch      => "5.0",
+    branchTag   => "5.0",
+    envtype      => "bugzillaREST",
     rest_enabled => true,
+    envdefault_rest => true,
+    envversion   => "4.5.6+",
   }
+
 }

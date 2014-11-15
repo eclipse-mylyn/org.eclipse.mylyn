@@ -16,7 +16,7 @@ echo "start3: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 echo "ende3: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 <% end %>
 <% end %>
-<% if @operatingsystemrelease = "12.04" && @envversion > "4.4" %>
+<% if @operatingsystemrelease == "12.04" %>
 echo "start4: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 /usr/bin/perl install-module.pl Template
 echo "ende4: $(date +'%d/%m/%Y %H:%M:%S:%3N')"

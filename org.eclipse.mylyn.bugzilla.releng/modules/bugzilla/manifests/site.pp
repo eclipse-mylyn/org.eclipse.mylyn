@@ -12,7 +12,7 @@
 define bugzilla::site (
   $major,
   $minor,
-  $branch               = " ",
+  $branch               = "${major}.${minor}",
   $bugz_dbname          =  regsubst($title, '([^.-]+)([.-]+)', '\1_', 'G'),
   $bugz_user            = $bugzilla::dbuser,
   $bugz_password        = $bugzilla::dbuserPassword,
@@ -41,9 +41,7 @@ define bugzilla::site (
   $propertyanz = 0
   $confDir = "$base/conf.d"
 
-  if $branch == "trunk" {
-    $envinfo1 = "trunk"  
-  } elsif $custom_wf {
+  if $custom_wf {
     $envinfo1 = "Custom Workflow"  
   } elsif $custom_wf_and_status {
     $envinfo1 = "Custom Workflow and Status"  
@@ -92,51 +90,96 @@ define bugzilla::site (
   } else {
     $VersionCreateName = "value"
   }
-  
-  if ($branch == "trunk") {
-  	$branchName = "$branch"
+ 
+  if $branch == "master" {
+    if $branchTag == "HEAD" {
+      exec { "master master git fetch $version":
+        command => "git fetch",
+        onlyif    => "/usr/bin/test -d $base/$version",
+        cwd     => "$base/$version",
+        user => "root",
+        timeout => 300,
+        logoutput => true,
+        require   => Exec["prepare bugzilla"],
+        notify => Exec["end extract bugzilla $version"],
+      }  
+      exec { "master master git clone $version":
+        command => "git clone http://git.mozilla.org/bugzilla/bugzilla $base/$version",
+        cwd     => "$base",
+        user => "$userOwner",
+        timeout => 300,
+        creates => "$base/$version",
+        require   => Exec["prepare bugzilla"],
+        notify => Exec["end extract bugzilla $version"],
+      }
+    } else {
+      exec { "master $branchTag git clone $version":
+        command => "git clone -b $branch http://git.mozilla.org/bugzilla/bugzilla $base/$version",
+        cwd     => "$base",
+        user => "$userOwner",
+        timeout => 300,
+        creates => "$base/$version",
+        require   => Exec["prepare bugzilla"],
+      }
+      exec { "master $branchTag git checkout $version":
+        command => "git checkout $branchTag",
+        cwd     => "$base/$version",
+        user => "$userOwner",
+        logoutput => true,
+        timeout => 300,
+        require   => Exec["master $branchTag git clone $version"],
+        notify => Exec["end extract bugzilla $version"],
+      }
+    }
   } else {
-   	$branchName = "${major}.${minor}"
-  }
-
-  if $branchTag == "trunk" {
-#
-# always delete existing trunk folders to get the latest version from the trunk
-#
-    exec { "delete bugzilla $version":
-      command => "rm -R $base/$version",
+    exec { "$branch $branchTag git fetch $version":
+      command => "git fetch",
       onlyif    => "/usr/bin/test -d $base/$version",
-      cwd     => "$base",
+      cwd     => "$base/$version",
       user => "root",
       timeout => 300,
       logoutput => true,
-      require   => Exec["prepare bugzilla"]
-    }
-    exec { "extract bugzilla $version":
-      command => "bzr co bzr://bzr.mozilla.org/bugzilla/$branchName $version",
+      require   => Exec["prepare bugzilla"],
+      notify => Exec["end extract bugzilla $version"],
+    }  
+    exec { "$branch $branchTag git clone $version":
+      command => "git clone http://git.mozilla.org/bugzilla/bugzilla $base/$version",
       cwd     => "$base",
       user => "$userOwner",
       timeout => 300,
       creates => "$base/$version",
-      require   => Exec["delete bugzilla $version"]
+      require   => Exec["prepare bugzilla"],
     }
-  } else {
-    exec { "extract bugzilla $version":
-      command => "bzr co -r tag:$branchTag bzr://bzr.mozilla.org/bugzilla/$branchName $version",
-      cwd     => "$base",
-      user => "$userOwner",
-      timeout => 300,
-      creates => "$base/$version",
-      require   => Exec["prepare bugzilla"]
+    if $branchTag == "HEAD" {
+      exec { "$branch $branchTag dummy git checkout $version":
+        command => "echo '$branch $branchTag dummy git checkout $version'",
+        logoutput => true,
+        require   => Exec["$branch $branchTag git clone $version"],
+        notify => Exec["end extract bugzilla $version"],
+      }
+    } else {
+      exec { "$branch $branchTag git checkout $version":
+        command => "git checkout $branchTag",
+        cwd     => "$base/$version",
+        user => "$userOwner",
+        timeout => 300,
+        require   => Exec["$branch $branchTag git clone $version"],
+        notify => Exec["end extract bugzilla $version"],
+      }
     }
   }
+  
+  exec { "end extract bugzilla $version":
+      command => "echo 'end extract bugzilla $version $branch $branchTag'",
+      logoutput => true,
+    }
  
   file { "$base/$version/installPerlModules.sh":
     content => template('bugzilla/installPerlModules.sh.erb'),
     owner   => "$userOwner",
     group   => "$userGroup",
     mode    => 0755,
-    require => Exec["extract bugzilla $version"],
+    require => Exec["end extract bugzilla $version"],
   }
 
   exec { "post extract bugzilla $version":
@@ -144,7 +187,7 @@ define bugzilla::site (
     cwd     => "$base/$version",
     creates => "$base/$version/CGI.out",
     user => "$userOwner",
-    timeout => 600,
+    timeout => 3000,
     require   => File["$base/$version/installPerlModules.sh"]
   }  
   

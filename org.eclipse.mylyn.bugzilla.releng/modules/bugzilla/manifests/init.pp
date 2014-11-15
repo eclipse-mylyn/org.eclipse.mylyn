@@ -30,7 +30,6 @@ class bugzilla {
     "libapache2-mod-fcgid",
     "libapache2-mod-php5",
     "mysql-server",
-    "bzr",
     "make",
     "perl-doc",
     "php5",
@@ -49,7 +48,9 @@ class bugzilla {
     "liburi-perl",
     "libsoap-lite-perl",
     "libtemplate-perl",
-    "patchutils",]
+    "patchutils",
+    "git",
+    ]
 
   package { $requirements:
     ensure  => "installed",
