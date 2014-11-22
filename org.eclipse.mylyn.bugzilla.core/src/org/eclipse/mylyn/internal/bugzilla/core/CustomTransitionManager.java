@@ -76,7 +76,7 @@ public class CustomTransitionManager implements Serializable {
 	/**
 	 * Searches for a valid transition description file. Returns true if a file exists and was sucessfully parsed, false
 	 * otherwise
-	 * 
+	 *
 	 * @param filePath
 	 * @return true if anything was changed, false otherwise.
 	 * @throws CoreException
@@ -204,7 +204,7 @@ public class CustomTransitionManager implements Serializable {
 			operationMapByEndStatus.put("REOPENED", list); //$NON-NLS-1$
 
 			list = new ArrayList<AbstractBugzillaOperation>();
-			list.add(BugzillaOperation.reopen);
+			list.add(BugzillaOperation.unconfirmed);
 			operationMapByEndStatus.put("UNCONFIRMED", list); //$NON-NLS-1$
 
 			list = new ArrayList<AbstractBugzillaOperation>();
@@ -240,7 +240,7 @@ public class CustomTransitionManager implements Serializable {
 	/**
 	 * Sets whether or not this class is valid. If set to false, the filePath will be set to "" so that subsequent calls
 	 * to parse(filePath) will work.
-	 * 
+	 *
 	 * @param val
 	 */
 	public void setValid(boolean val) {
@@ -258,7 +258,7 @@ public class CustomTransitionManager implements Serializable {
 	 * Returns the duplicate status. Standard Bugzilla installations will have a duplicate status of RESOLVED, VERIFIED
 	 * or CLOSED. <br>
 	 * By default, the duplicate status will be RESOLVED.
-	 * 
+	 *
 	 * @return The status to send if a bug is set to Duplicate
 	 */
 	public String getDuplicateStatus() {
@@ -274,7 +274,7 @@ public class CustomTransitionManager implements Serializable {
 	 * permissions setting currently cannot be accessed, so this function does not try to guess and returns either the
 	 * default status (NEW) or whichever status was set by a transition file. <br>
 	 * Fix for bug #318128, set startStatus to NEW if startStatus is somehow null at this point.
-	 * 
+	 *
 	 * @return The valid start status. Default value is NEW.
 	 */
 	public String getStartStatus() {
@@ -380,7 +380,7 @@ public class CustomTransitionManager implements Serializable {
 	/**
 	 * Creates a new status with a single operation with the same name as the status itself. Does nothing if a status of
 	 * that name already exists.
-	 * 
+	 *
 	 * @param status
 	 */
 	private void addNewStatus(String status) {

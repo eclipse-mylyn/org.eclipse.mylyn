@@ -85,11 +85,6 @@ public class AllBugzillaTests {
 		fixture.add(BugzillaRepositoryConnectorTest.class);
 		fixture.add(BugzillaAttachmentHandlerTest.class);
 
-		// Only run this if we have custom status and Workflow
-		if (fixture.isCustomWorkflowAndStatus()) {
-			fixture.add(BugzillaCustomRepositoryTest.class);
-		}
-
 		fixture.done();
 	}
 

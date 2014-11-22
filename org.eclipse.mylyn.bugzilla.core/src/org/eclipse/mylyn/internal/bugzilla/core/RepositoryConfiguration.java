@@ -34,7 +34,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 
 /**
  * Class describing the configuration of products and components for a given Bugzilla installation.
- * 
+ *
  * @author Rob Elves
  * @author Charley Wang
  * @author Frank Becker
@@ -354,7 +354,7 @@ public class RepositoryConfiguration implements Serializable {
 	/**
 	 * Create a custom transition manager. If fileName is invalid, the resulting transition manager will also be
 	 * invalid.
-	 * 
+	 *
 	 * @param fileName
 	 * @throws CoreException
 	 */
@@ -727,7 +727,7 @@ public class RepositoryConfiguration implements Serializable {
 			} else {
 				addOperation(bugReport, BugzillaOperation.none);
 				for (AbstractBugzillaOperation b : validTransitions.getValidTransitions(attributeStatus.getValue())) {
-					//Special case: the CLOSED status needs a Resolution input. 
+					//Special case: the CLOSED status needs a Resolution input.
 					//This happens automatically if current status is RESOLVED, else we need to supply one
 					if (b.toString().equals(BugzillaOperation.close.toString())) {
 						if (attributeStatus.getValue().equals("RESOLVED") && b.getInputId() != null) { //$NON-NLS-1$
@@ -806,11 +806,11 @@ public class RepositoryConfiguration implements Serializable {
 		if (operationAttribute == null) {
 			operationAttribute = bugReport.getRoot().createAttribute(key.getKey());
 			operationAttribute.getMetaData()
-					.defaults()
-					.setReadOnly(key.isReadOnly())
-					.setKind(key.getKind())
-					.setLabel(key.toString())
-					.setType(key.getType());
+			.defaults()
+			.setReadOnly(key.isReadOnly())
+			.setKind(key.getKind())
+			.setLabel(key.toString())
+			.setType(key.getType());
 			operationAttribute.setValue("0"); //$NON-NLS-1$
 		}
 		operationAttribute = bugReport.getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED);
@@ -840,7 +840,7 @@ public class RepositoryConfiguration implements Serializable {
 			//Handle custom operations. Currently only tuned for transitions based on default status names
 			addOperation(bugReport, BugzillaOperation.none);
 			for (AbstractBugzillaOperation b : validTransitions.getValidTransitions(attributeStatus.getValue())) {
-				//Special case: the CLOSED status needs a Resolution input. 
+				//Special case: the CLOSED status needs a Resolution input.
 				//This happens automatically if current status is RESOLVED, else we need to supply one
 				if (b.toString().equals(BugzillaOperation.close.toString())) {
 					if (attributeStatus.getValue().equals("RESOLVED") && b.getInputId() != null) { //$NON-NLS-1$
@@ -855,7 +855,7 @@ public class RepositoryConfiguration implements Serializable {
 			}
 		} else {
 //			Eclipse Bugzilla State transitions
-//			UNCONFIRMED	
+//			UNCONFIRMED
 //			NEW				ASSIGNED RESOLVED# CLOSED#
 //			ASSIGNED		NEW RESOLVED# CLOSED#
 //			REOPENED		NEW ASSIGNED RESOLVED# CLOSED#
@@ -868,7 +868,7 @@ public class RepositoryConfiguration implements Serializable {
 				addOperation(bugReport, BugzillaOperation.none);
 				addOperation(bugReport, BugzillaOperation.accept);
 				addOperation(bugReport, BugzillaOperation.resolve);
-				// This is not the standard workflow add with bug 326216 to support eclipse.org				
+				// This is not the standard workflow add with bug 326216 to support eclipse.org
 				if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_2) >= 0) {
 					addOperation(bugReport, BugzillaOperation.close_with_resolution);
 				}
@@ -879,7 +879,7 @@ public class RepositoryConfiguration implements Serializable {
 				addOperation(bugReport, BugzillaOperation.none);
 				addOperation(bugReport, BugzillaOperation.accept);
 				addOperation(bugReport, BugzillaOperation.resolve);
-				// This is not the standard workflow add with bug 326216 to support eclipse.org				
+				// This is not the standard workflow add with bug 326216 to support eclipse.org
 				if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_2) >= 0) {
 					addOperation(bugReport, BugzillaOperation.close_with_resolution);
 				}
@@ -891,7 +891,7 @@ public class RepositoryConfiguration implements Serializable {
 			case ASSIGNED:
 				addOperation(bugReport, BugzillaOperation.none);
 				addOperation(bugReport, BugzillaOperation.resolve);
-				// This is not the standard workflow add with bug 326216 to support eclipse.org				
+				// This is not the standard workflow add with bug 326216 to support eclipse.org
 				if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_2) >= 0) {
 					addOperation(bugReport, BugzillaOperation.close_with_resolution);
 				}
@@ -948,11 +948,11 @@ public class RepositoryConfiguration implements Serializable {
 			if (operationAttribute == null) {
 				operationAttribute = bugReport.getRoot().createAttribute(key.getKey());
 				operationAttribute.getMetaData()
-						.defaults()
-						.setReadOnly(key.isReadOnly())
-						.setKind(key.getKind())
-						.setLabel(key.toString())
-						.setType(key.getType());
+				.defaults()
+				.setReadOnly(key.isReadOnly())
+				.setKind(key.getKind())
+				.setLabel(key.toString())
+				.setType(key.getType());
 				operationAttribute.setValue("0"); //$NON-NLS-1$
 			}
 			operationAttribute = bugReport.getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED);
@@ -1227,7 +1227,7 @@ public class RepositoryConfiguration implements Serializable {
 	public String getDuplicateStatus() {
 		return validTransitions == null
 				? IBugzillaConstants.BUGZILLA_REPORT_STATUS.RESOLVED.toString()
-				: validTransitions.getDuplicateStatus();
+						: validTransitions.getDuplicateStatus();
 	}
 
 	public String getStartStatus() {
@@ -1235,9 +1235,9 @@ public class RepositoryConfiguration implements Serializable {
 			return version.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0
 					|| !(getOptionValues(BugzillaAttribute.BUG_STATUS).contains(
 							BUGZILLA_REPORT_STATUS_4_0.IN_PROGRESS.toString()) || getOptionValues(
-							BugzillaAttribute.BUG_STATUS).contains(BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString()))
-					? IBugzillaConstants.BUGZILLA_REPORT_STATUS.NEW.toString()
-					: IBugzillaConstants.BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString();
+									BugzillaAttribute.BUG_STATUS).contains(BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString()))
+									? IBugzillaConstants.BUGZILLA_REPORT_STATUS.NEW.toString()
+											: IBugzillaConstants.BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString();
 		} else {
 			return validTransitions.getStartStatus();
 		}

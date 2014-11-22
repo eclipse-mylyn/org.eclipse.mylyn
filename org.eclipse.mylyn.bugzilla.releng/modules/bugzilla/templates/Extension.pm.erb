@@ -28,15 +28,11 @@ our $VERSION = '0.01';
 
 <% if @custom_wf %>
 use constant STATUS_WORKFLOW => (
-	['REOPENED','UNCONFIRMED'],
-	['REOPENED','VERIFIED'],
-	['REOPENED','CLOSED'],
-	['NEW','CLOSED'],
+	['IN_PROGRESS','UNCONFIRMED'],
+	['CONFIRMED','VERIFIED'],
 );
 use constant STATUS_WORKFLOW_DELETE => (
-	['CLOSED','UNCONFIRMED'],
-	['CLOSED','REOPENED'],
-	['ASSIGNED','NEW'],
+	['IN_PROGRESS','CONFIRMED'],
 );
 <% end %>
 <% if @custom_wf_and_status %>
@@ -44,26 +40,11 @@ use constant STATUS_WORKFLOW => (
 	['VERIFIED','MODIFIED'],
 	['ON_DEV','POST'],
 	['MODIFIED','ON_DEV'],
-	['CLOSED','VERIFIED'],
-	['NEW','UNCONFIRMED'],
 );
 use constant STATUS_WORKFLOW_DELETE => (
 	['UNCONFIRMED','ASSIGNED'],
 	['RESOLVED','UNCONFIRMED'],
 	['VERIFIED','UNCONFIRMED'],
-	['CLOSED','UNCONFIRMED'],
-	['ASSIGNED','NEW'],
-	['REOPENED','NEW'],
-	['REOPENED','ASSIGNED'],
-	['RESOLVED','REOPENED'],
-	['VERIFIED','REOPENED'],
-	['CLOSED','REOPENED'],
-	['UNCONFIRMED','RESOLVED'],
-	['NEW','RESOLVED'],
-	['ASSIGNED','RESOLVED'],
-	['REOPENED','RESOLVED'],
-	['RESOLVED','VERIFIED'],
-
 );
 <% end %>
 
@@ -384,9 +365,9 @@ sub install_before_final_checks {
 <% if @custom_wf %>
 	my %status_ids = @{ $dbh->selectcol_arrayref(
 		'SELECT value, id FROM bug_status', {Columns=>[1,2]}) };
-		my $old_id =  $status_ids{'REOPENED'};
+		my $old_id =  $status_ids{'IN_PROGRESS'};
 		my $new_id = $status_ids{'UNCONFIRMED'};
-    if (!$dbh->selectrow_array('SELECT 1 FROM status_workflow where old_status ='. $old_id . ' and new_status ='.$new_id)) {
+    if (!$dbh->selectrow_array('SELECT 1 FROM status_workflow where old_status = '. $old_id . ' and new_status = '.$new_id)) {
 		print "create additional status_workflow...\n" unless $args->{silent};
 		my $sth_insert = $dbh->prepare('INSERT INTO status_workflow (old_status, new_status)
 										VALUES (?, ?)');
@@ -414,9 +395,9 @@ sub install_before_final_checks {
 	}
 	my %status_ids = @{ $dbh->selectcol_arrayref(
 		'SELECT value, id FROM bug_status', {Columns=>[1,2]}) };
-		my $old_id =  $status_ids{'REOPENED'};
+		my $old_id =  $status_ids{'IN_PROGRESS'};
 		my $new_id = $status_ids{'UNCONFIRMED'};
-    if (!$dbh->selectrow_array('SELECT 1 FROM status_workflow where old_status ='. $old_id . ' and new_status ='.$new_id)) {
+    if (!$dbh->selectrow_array('SELECT 1 FROM status_workflow where old_status = '. $old_id . ' and new_status = '.$new_id)) {
 		print "create additional status_workflow...\n" unless $args->{silent};
 		my $sth_insert = $dbh->prepare('INSERT INTO status_workflow (old_status, new_status)
 										VALUES (?, ?)');

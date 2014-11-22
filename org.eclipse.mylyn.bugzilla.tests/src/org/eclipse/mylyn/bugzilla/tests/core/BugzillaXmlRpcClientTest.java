@@ -147,15 +147,13 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 					put("RESOLVED", new ArrayList<String>() {
 						{
 							add("verify");
-							add("reopen");
+							add("unconfirmed");
 							add("CONFIRMED");
 						}
 					});
 					put("VERIFIED", new ArrayList<String>() {
 						{
-							add("reopen");
-							add("resolve");
-							add("duplicate");
+							add("unconfirmed");
 							add("CONFIRMED");
 						}
 					});
@@ -163,140 +161,99 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 			});
 			put(BugzillaFixture.CUSTOM_WF, new HashMap<String, ArrayList<String>>() {
 				{
-					put("NEW", new ArrayList<String>() {
-						{
-							add("resolve");
-							add("accept");
-							add("duplicate");
-							add("close");
-						}
-					});
 					put("UNCONFIRMED", new ArrayList<String>() {
 						{
 							add("resolve");
-							add("accept");
+							add("CONFIRMED");
+							add("IN_PROGRESS");
 							add("duplicate");
-							add("markNew");
 						}
 					});
-					put("ASSIGNED", new ArrayList<String>() {
+					put("CONFIRMED", new ArrayList<String>() {
 						{
 							add("resolve");
-							add("duplicate");
-							add("markNew");
-						}
-					});
-					put("REOPENED", new ArrayList<String>() {
-						{
-							add("resolve");
-							add("accept");
-							add("duplicate");
-							add("markNew");
-							add("reopen");
-							add("close");
 							add("verify");
+							add("IN_PROGRESS");
+							add("duplicate");
+						}
+					});
+					put("IN_PROGRESS", new ArrayList<String>() {
+						{
+							add("unconfirmed");
+							add("resolve");
+							add("duplicate");
 						}
 					});
 					put("RESOLVED", new ArrayList<String>() {
 						{
+							add("unconfirmed");
+							add("CONFIRMED");
 							add("verify");
-							add("reopen");
-							add("close");
 						}
 					});
 					put("VERIFIED", new ArrayList<String>() {
 						{
-							add("reopen");
+							add("unconfirmed");
+							add("CONFIRMED");
 							add("resolve");
-							add("duplicate");
-							add("close");
-						}
-					});
-					put("CLOSED", new ArrayList<String>() {
-						{
-							add("reopen");
-							add("resolve");
-							add("duplicate");
 						}
 					});
 				}
 			});
 			put(BugzillaFixture.CUSTOM_WF_AND_STATUS, new HashMap<String, ArrayList<String>>() {
 				{
-					put("NEW", new ArrayList<String>() {
-						{
-							add("resolve");
-							add("accept");
-							add("duplicate");
-							add("close");
-							add("reopen");
-						}
-					});
 					put("UNCONFIRMED", new ArrayList<String>() {
 						{
 							add("resolve");
-							add("accept");
+							add("CONFIRMED");
+							add("IN_PROGRESS");
 							add("duplicate");
-							add("markNew");
-							add("close");
+							add("verify");
 						}
 					});
-					put("ASSIGNED", new ArrayList<String>() {
+					put("CONFIRMED", new ArrayList<String>() {
 						{
 							add("resolve");
+							add("verify");
+							add("IN_PROGRESS");
 							add("duplicate");
-							add("markNew");
-							add("close");
 						}
 					});
-					put("REOPENED", new ArrayList<String>() {
+					put("IN_PROGRESS", new ArrayList<String>() {
 						{
+							add("CONFIRMED");
 							add("resolve");
-							add("accept");
 							add("duplicate");
-							add("markNew");
-							add("reopen");
-							add("close");
+							add("verify");
 						}
 					});
 					put("RESOLVED", new ArrayList<String>() {
 						{
+							add("unconfirmed");
+							add("CONFIRMED");
 							add("verify");
-							add("reopen");
-							add("close");
 						}
 					});
 					put("VERIFIED", new ArrayList<String>() {
 						{
-							add("reopen");
-							add("resolve");
-							add("duplicate");
-							add("close");
 							add("MODIFIED");
-						}
-					});
-					put("CLOSED", new ArrayList<String>() {
-						{
-							add("reopen");
-							add("resolve");
-							add("duplicate");
-							add("verify");
+							add("CONFIRMED");
 						}
 					});
 					put("ON_DEV", new ArrayList<String>() {
 						{
-							add("close");
+							add("verify");
 							add("POST");
 						}
 					});
 					put("POST", new ArrayList<String>() {
 						{
-							add("close");
+							add("verify");
 						}
 					});
 					put("MODIFIED", new ArrayList<String>() {
 						{
-							add("close");
+							add("verify");
 							add("ON_DEV");
 						}
 					});
@@ -339,21 +296,6 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 		}
 	}
 
-//	@SuppressWarnings("unused")
-// only for local development work
-//	public void testXmlRpc() throws Exception {
-//		if (!BugzillaFixture.current().getDescription().equals(BugzillaFixture.XML_RPC_DISABLED)) {
-//			IProgressMonitor monitor = new NullProgressMonitor();
-//			HashMap<?, ?> x1 = bugzillaClient.getTime(monitor);
-//			Date x2 = bugzillaClient.getDBTime(monitor);
-//			Date x3 = bugzillaClient.getWebTime(monitor);
-//			if (BugzillaVersion.BUGZILLA_3_4.compareTo(BugzillaFixture.current().getBugzillaVersion()) == 0) {
-//				Object[] xx3 = bugzillaClient.getAllFields(monitor);
-//				Object[] xx4 = bugzillaClient.getFieldsWithNames(monitor, new String[] { "qa_contact" });
-//				Object[] xx5 = bugzillaClient.getFieldsWithIDs(monitor, new Integer[] { 12, 18 });
-//			}
-//		}
-//	}
 	public void testGetVersion() throws Exception {
 		if (!BugzillaFixture.current().isXmlRpcEnabled()) {
 			return;
