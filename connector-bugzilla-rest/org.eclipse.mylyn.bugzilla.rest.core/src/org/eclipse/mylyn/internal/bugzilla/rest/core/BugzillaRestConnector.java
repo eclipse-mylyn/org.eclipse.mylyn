@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -27,6 +29,7 @@ import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.internal.commons.core.operations.NullOperationMonitor;
+import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -57,6 +60,46 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 
 	private static final ThreadLocal<IOperationMonitor> context = new ThreadLocal<IOperationMonitor>();
 
+	private boolean ignoredProperty(String propertyName) {
+		if (propertyName.equals(RepositoryLocation.PROPERTY_LABEL) || propertyName.equals(TaskRepository.OFFLINE)
+				|| propertyName.equals(IRepositoryConstants.PROPERTY_ENCODING)
+				|| propertyName.equals(TaskRepository.PROXY_HOSTNAME) || propertyName.equals(TaskRepository.PROXY_PORT)
+				|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.savePassword")
+				|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.proxy.usedefault")
+				|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.proxy.savePassword")
+				|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.proxy.username")
+				|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.proxy.password")
+				|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.proxy.enabled")) {
+			return true;
+		}
+		return false;
+	}
+
+	private final PropertyChangeListener repositoryChangeListener4ClientCache = new PropertyChangeListener() {
+
+		@Override
+		public void propertyChange(PropertyChangeEvent evt) {
+			if (ignoredProperty(evt.getPropertyName())) {
+				return;
+			}
+			TaskRepository taskRepository = (TaskRepository) evt.getSource();
+			clientCache.invalidate(new RepositoryKey(taskRepository));
+		}
+	};
+
+	private final PropertyChangeListener repositoryChangeListener4ConfigurationCache = new PropertyChangeListener() {
+
+		@Override
+		public void propertyChange(PropertyChangeEvent evt) {
+			if (ignoredProperty(evt.getPropertyName())
+					|| evt.getPropertyName().equals("org.eclipse.mylyn.tasklist.repositories.password")) {
+				return;
+			}
+			TaskRepository taskRepository = (TaskRepository) evt.getSource();
+			configurationCache.invalidate(new RepositoryKey(taskRepository));
+		}
+	};
+
 	private final LoadingCache<RepositoryKey, BugzillaRestClient> clientCache = CacheBuilder.newBuilder()
 			.expireAfterAccess(CLIENT_CACHE_DURATION.getValue(), CLIENT_CACHE_DURATION.getUnit())
 			.build(new CacheLoader<RepositoryKey, BugzillaRestClient>() {
@@ -64,6 +107,7 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 				@Override
 				public BugzillaRestClient load(RepositoryKey key) throws Exception {
 					TaskRepository repository = key.getRepository();
+					repository.addChangeListener(repositoryChangeListener4ClientCache);
 					return createClient(repository);
 				}
 			});
@@ -82,6 +126,8 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 					@Override
 					public Optional<BugzillaRestConfiguration> load(RepositoryKey key) throws Exception {
 						BugzillaRestClient client = clientCache.get(key);
+						TaskRepository repository = key.getRepository();
+						repository.addChangeListener(repositoryChangeListener4ConfigurationCache);
 						return Optional.fromNullable(client.getConfiguration(key.getRepository(), context.get()));
 					}
 

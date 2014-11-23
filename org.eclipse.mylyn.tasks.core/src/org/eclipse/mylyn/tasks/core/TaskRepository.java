@@ -35,6 +35,8 @@ import org.eclipse.mylyn.internal.commons.repositories.core.LocationService;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryPerson;
 
+import com.google.common.base.Objects;
+
 /**
  * Note that task repositories use Strings for storing time stamps because using Date objects led to the following
  * problems:
@@ -261,9 +263,17 @@ public final class TaskRepository extends PlatformObject {
 		if (userProperty.equals(getKeyPrefix(AuthenticationType.REPOSITORY) + USERNAME)) {
 			this.setProperty(userProperty, username);
 		} else {
+			String oldUserValue = credentialsStore.get(userProperty, "");
 			credentialsStore.put(userProperty, username, false);
+			if (!Objects.equal(oldUserValue, username)) {
+				notifyChangeListeners(userProperty, oldUserValue, username);
+			}
 		}
+		String oldPasswordValue = credentialsStore.get(passwordProperty, "");
 		credentialsStore.put(passwordProperty, password, true);
+		if (!Objects.equal(oldPasswordValue, password)) {
+			notifyChangeListeners(passwordProperty, "", "");
+		}
 	}
 
 	/**

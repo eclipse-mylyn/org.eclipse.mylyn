@@ -7,9 +7,11 @@ Bundle-Vendor: Eclipse Mylyn
 Fragment-Host: org.eclipse.mylyn.bugzilla.rest.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit;bundle-version="4.8.2",
- org.eclipse.mylyn.commons.sdk.util
-Require-Bundle: org.junit;bundle-version="4.8.2",
+ org.hamcrest;bundle-version="[1.0.0,1.2.0)",
+ org.hamcrest.library;bundle-version="[1.0.0,1.2.0)",
  org.eclipse.mylyn.commons.sdk.util,
  com.google.guava;bundle-version="10.0.1",
  org.apache.commons.io
-Export-Package: org.eclipse.mylyn.internal.bugzilla.rest.core;x-internal:=true
+Export-Package: org.eclipse.mylyn.internal.bugzilla.rest.core;x-internal:=true,
+ org.eclipse.mylyn.internal.bugzilla.rest.core.tests;x-internal:=true,
+ org.eclipse.mylyn.internal.bugzilla.rest.test.support;x-internal:=true
