@@ -9,6 +9,7 @@
  * Contributors:
  *   Jacques Bouthillier - Initial Implementation of the label provider
  *   Marc-Andre Laperle - Add Topic to dashboard
+ *   Marc-Andre Laperle - Add Status to dashboard
  ******************************************************************************/
 
 package org.eclipse.mylyn.gerrit.dashboard.ui.internal.model;
@@ -199,30 +200,33 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 			case 2:
 				return reviewSummary.getAttribute(GerritTask.SUBJECT);
 			case 3:
-				return reviewSummary.getAttribute(GerritTask.OWNER);
+				String attribute = reviewSummary.getAttribute(GerritTask.STATUS);
+				return attribute;
 			case 4:
-				return reviewSummary.getAttribute(GerritTask.PROJECT);
+				return reviewSummary.getAttribute(GerritTask.OWNER);
 			case 5:
+				return reviewSummary.getAttribute(GerritTask.PROJECT);
+			case 6:
 				String branch = reviewSummary.getAttribute(GerritTask.BRANCH);
 				String topic = reviewSummary.getAttribute(GerritTask.TOPIC);
 				if (topic != null && !topic.isEmpty()) {
 					branch += " (" + reviewSummary.getAttribute(GerritTask.TOPIC) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				return branch;
-			case 6:
+			case 7:
 				return reviewSummary.getAttributeAsDate(GerritTask.DATE_MODIFICATION);
-//			case 7:
+//			case 8:
 //				value = reviewSummary.getAttribute(GerritTask.REVIEW_STATE);
 //				if (null != value && !value.equals(EMPTY_STRING)) {
 //					return formatValue (value);
 //				}
-//			case 8:
+//			case 9:
 //				value = reviewSummary.getAttribute(GerritTask.IS_IPCLEAN);
 //				if (null != value && !value.equals(EMPTY_STRING)) {
 //					return formatValue (value);
 //				}
 //                return EMPTY_STRING;
-//			case 9:
+//			case 10:
 //				value = reviewSummary.getAttribute(GerritTask.VERIFY_STATE);
 //				if (null != value && !value.equals(EMPTY_STRING)) {
 //					return formatValue (value);

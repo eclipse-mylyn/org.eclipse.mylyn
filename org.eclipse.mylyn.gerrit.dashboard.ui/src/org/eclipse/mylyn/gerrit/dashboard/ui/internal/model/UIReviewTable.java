@@ -95,7 +95,7 @@ public class UIReviewTable {
 		ReviewTableLabelProvider tableProvider = new ReviewTableLabelProvider();
 		fViewer.setLabelProvider(tableProvider);
 		ReviewTableSorter.bind(fViewer);
-		fViewer.setComparator(new ReviewTableSorter(6)); // sort by Updated, descending
+		fViewer.setComparator(new ReviewTableSorter(7)); // sort by Updated, descending
 
 		// Create the help context id for the viewer's control
 		// PlatformUI
@@ -182,7 +182,7 @@ public class UIReviewTable {
 				//Subject column
 				table.getColumn(2).setWidth(newSubjectWidth);
 				//Project column
-				table.getColumn(4).setWidth(newProjectWidth);
+				table.getColumn(5).setWidth(newProjectWidth);
 
 				table.setSize(parentSize.x - 10, tableSize.y);
 				table.setRedraw(true);

@@ -8,6 +8,7 @@
  *
  * Contributors:
  *     Jacques Bouthillier - initial API and implementation
+ *     Marc-Andre Laperle - Add Status to dashboard
  *******************************************************************************/
 
 package org.eclipse.mylyn.gerrit.dashboard.ui.internal.model;
@@ -28,6 +29,8 @@ public class Messages extends NLS {
 	public static String ReviewTableDefinition_project;
 
 	public static String ReviewTableDefinition_subject;
+
+	public static String ReviewTableDefinition_status;
 
 	public static String ReviewTableDefinition_updated;
 

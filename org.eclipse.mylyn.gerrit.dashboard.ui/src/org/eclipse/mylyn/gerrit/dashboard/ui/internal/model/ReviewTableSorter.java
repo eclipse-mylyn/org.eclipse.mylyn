@@ -12,6 +12,7 @@
  * Contributors:
  *   Jacques Bouthillier - Initial Implementation of the view sorter
  *   Francois Chouinard - Refined the sorting of 1) dates and 2) flags 
+ *   Marc-Andre Laperle - Add Status to dashboard
  ******************************************************************************/
 package org.eclipse.mylyn.gerrit.dashboard.ui.internal.model;
 
@@ -87,14 +88,14 @@ public class ReviewTableSorter extends ViewerSorter {
 					result = val1.compareTo(val2);
 				}
 				break;
-			case 6: // Updated
+			case 7: // Updated
 				val1 = task1.getAttribute(GerritTask.DATE_MODIFICATION);
 				val2 = task2.getAttribute(GerritTask.DATE_MODIFICATION);
 				if (val1 != null && val2 != null) {
 					result = val1.compareTo(val2);
 				}
 				break;
-			case 7: // Code Review
+			case 8: // Code Review
 				val1 = task1.getAttribute(GerritTask.REVIEW_STATE);
 				val2 = task2.getAttribute(GerritTask.REVIEW_STATE);
 				if (val1 != null && val2 != null) {
@@ -103,7 +104,7 @@ public class ReviewTableSorter extends ViewerSorter {
 					result = v2 - v1;
 				}
 				break;
-			case 8: // Verify
+			case 9: // Verify
 				val1 = task1.getAttribute(GerritTask.VERIFY_STATE);
 				val2 = task2.getAttribute(GerritTask.VERIFY_STATE);
 				if (val1 != null && val2 != null) {
@@ -112,7 +113,7 @@ public class ReviewTableSorter extends ViewerSorter {
 					result = v2 - v1;
 				}
 				break;
-			case 9: // IPLog Clean
+			case 10: // IPLog Clean
 			default:
 				result = defaultCompare(viewer, item1, item2);
 				break;

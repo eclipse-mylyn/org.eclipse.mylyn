@@ -9,6 +9,7 @@
  * Contributors:
  *   Francois Chouinard - Initial implementation
  *   Marc-Andre Laperle - Add Topic to dashboard
+ *   Marc-Andre Laperle - Add Status to dashboard
  ******************************************************************************/
 
 package org.eclipse.mylyn.gerrit.dashboard.core;
@@ -58,6 +59,11 @@ public class GerritTask extends AbstractTask {
 	 * Gerrit Review subject
 	 */
 	public static final String SUBJECT = TaskAttribute.SUMMARY;
+
+	/**
+	 * Gerrit Review status
+	 */
+	public static final String STATUS = GerritTaskSchema.getDefault().STATUS.getKey();
 
 	/**
 	 * Gerrit Review owner
@@ -144,6 +150,7 @@ public class GerritTask extends AbstractTask {
 		setAttribute(SHORT_CHANGE_ID, getValue(attributes.get(SHORT_CHANGE_ID)));
 		setAttribute(CHANGE_ID, getValue(attributes.get(CHANGE_ID)));
 		setAttribute(SUBJECT, getValue(attributes.get(SUBJECT)));
+		setAttribute(STATUS, getValue(attributes.get(STATUS)));
 
 		setAttribute(OWNER, getValue(attributes.get(OWNER)));
 		setAttribute(PROJECT, getValue(attributes.get(PROJECT)));
@@ -274,6 +281,7 @@ public class GerritTask extends AbstractTask {
 		buffer.append(Messages.GerritTask_shortID).append(getAttribute(GerritTask.SHORT_CHANGE_ID)).append('\n');
 		buffer.append(Messages.GerritTask_changeID).append(getAttribute(GerritTask.CHANGE_ID)).append('\n');
 		buffer.append(Messages.GerritTask_subject).append(getAttribute(GerritTask.SUBJECT)).append('\n');
+		buffer.append(Messages.GerritTask_status).append(getAttribute(GerritTask.STATUS)).append('\n');
 		buffer.append(Messages.GerritTask_owner).append(getAttribute(GerritTask.OWNER)).append('\n');
 		buffer.append(Messages.GerritTask_project).append(getAttribute(GerritTask.PROJECT)).append('\n');
 		buffer.append(Messages.GerritTask_branch).append(getAttribute(GerritTask.BRANCH)).append('\n');

@@ -11,6 +11,7 @@
  * 
  * Contributors:
  *   Jacques Bouthillier - Initial Implementation of the table view information
+ *   Marc-Andre Laperle - Add Status to dashboard
  ******************************************************************************/
 
 package org.eclipse.mylyn.gerrit.dashboard.ui.internal.model;
@@ -33,6 +34,7 @@ public enum ReviewTableDefinition {
 	STARRED("", 20, false, true, SWT.LEFT), //$NON-NLS-1$
 	ID(Messages.ReviewTableDefinition_id, 80, false, true, SWT.LEFT), //
 	SUBJECT(Messages.ReviewTableDefinition_subject, 200, true, true, SWT.LEFT), //
+	STATUS(Messages.ReviewTableDefinition_status, 100, true, true, SWT.LEFT),
 	OWNER(Messages.ReviewTableDefinition_owner, 140, true, true, SWT.LEFT), //
 	PROJECT(Messages.ReviewTableDefinition_project, 200, true, true, SWT.LEFT), //
 	BRANCH(Messages.ReviewTableDefinition_branch, 100, true, true, SWT.LEFT), //
