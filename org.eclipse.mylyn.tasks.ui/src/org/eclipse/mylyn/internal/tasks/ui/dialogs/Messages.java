@@ -85,7 +85,7 @@ public class Messages extends NLS {
 
 	public static String UiLegendControl_Focus_view_on_active_task;
 
-	public static String UiLegendControl_Has_due_date;
+	public static String UiLegendControl_Has_Due_date;
 
 	public static String UiLegendControl_http_www_eclipse_org_mylyn_start;
 
