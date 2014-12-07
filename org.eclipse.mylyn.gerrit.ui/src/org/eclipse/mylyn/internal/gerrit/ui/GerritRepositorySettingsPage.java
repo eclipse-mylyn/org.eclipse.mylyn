@@ -23,6 +23,7 @@ import org.eclipse.mylyn.commons.workbench.forms.CommonFormUtil;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritSystemInfo;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
@@ -38,7 +39,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 
 /**
  * Wizard page to specify Gerrit connection details.
- * 
+ *
  * @author Mikael Kober
  * @author Thomas Westling
  * @author Steffen Pingel
@@ -149,13 +150,12 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 
 			String warning = ""; //$NON-NLS-1$
 			if (!gerritValidator.isSupportedVersion()) {
-				warning = NLS.bind(
-						Messages.GerritRepositorySettingsPage_Gerrit_may_not_be_supported,
+				warning = NLS.bind(Messages.GerritRepositorySettingsPage_Gerrit_may_not_be_supported,
 						gerritValidator.getInfo().getVersion());
 			}
 
-			setMessage(NLS.bind(Messages.GerritRepositorySettingsPage_X_Logged_in_as_Y_dot_Z, new String[] { getMessage(),
-					gerritValidator.getInfo().getFullName(), warning }), warning.isEmpty()
+			setMessage(NLS.bind(Messages.GerritRepositorySettingsPage_X_Logged_in_as_Y_dot_Z, new String[] {
+					getMessage(), gerritValidator.getInfo().getFullName(), warning }), warning.isEmpty()
 					? IMessageProvider.INFORMATION
 					: IMessageProvider.WARNING);
 		}
@@ -217,4 +217,14 @@ public class GerritRepositorySettingsPage extends AbstractRepositorySettingsPage
 		getContainer().updateButtons();
 	}
 
+	@Override
+	public String getRepositoryUrl() {
+		// remove the fragment part of a copy/paste gerrit URL to avoid errors afterwards
+		String url = super.getRepositoryUrl();
+		int hashIndex = url.indexOf('#');
+		if (hashIndex >= 0) {
+			url = TaskRepositoryManager.stripSlashes(url.substring(0, hashIndex));
+		}
+		return url;
+	}
 }
