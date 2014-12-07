@@ -42,13 +42,13 @@ define bugzilla::site (
   $confDir = "$base/conf.d"
 
   if $custom_wf {
-    $envinfo1 = "Custom Workflow"  
+    $envinfo1 = "Custom Workflow"
   } elsif $custom_wf_and_status {
-    $envinfo1 = "Custom Workflow and Status"  
+    $envinfo1 = "Custom Workflow and Status"
   } elsif $usebugaliases {
-    $envinfo1 = "Use Bugaliases"  
+    $envinfo1 = "Use Bugaliases"
   } else {
-    $envinfo1 = ""  
+    $envinfo1 = ""
   }
   if $envinfo1 != "" {
     if !$xmlrpc_enabled {
@@ -90,7 +90,7 @@ define bugzilla::site (
   } else {
     $VersionCreateName = "value"
   }
- 
+
   if $branch == "master" {
     if $branchTag == "HEAD" {
       exec { "master master git fetch $version":
@@ -102,7 +102,7 @@ define bugzilla::site (
         logoutput => true,
         require   => Exec["prepare bugzilla"],
         notify => Exec["end extract bugzilla $version"],
-      }  
+      }
       exec { "master master git clone $version":
         command => "git clone http://git.mozilla.org/bugzilla/bugzilla $base/$version",
         cwd     => "$base",
@@ -141,7 +141,8 @@ define bugzilla::site (
       logoutput => true,
       require   => Exec["prepare bugzilla"],
       notify => Exec["end extract bugzilla $version"],
-    }  
+    }
+
     exec { "$branch $branchTag git clone $version":
       command => "git clone http://git.mozilla.org/bugzilla/bugzilla $base/$version",
       cwd     => "$base",
@@ -168,12 +169,12 @@ define bugzilla::site (
       }
     }
   }
-  
+
   exec { "end extract bugzilla $version":
       command => "echo 'end extract bugzilla $version $branch $branchTag'",
       logoutput => true,
     }
- 
+
   file { "$base/$version/installPerlModules.sh":
     content => template('bugzilla/installPerlModules.sh.erb'),
     owner   => "$userOwner",
@@ -189,10 +190,10 @@ define bugzilla::site (
     user => "$userOwner",
     timeout => 3000,
     require   => File["$base/$version/installPerlModules.sh"]
-  }  
-  
+  }
+
   exec { "mysql-grant-${bugz_dbname}-${bugzilla::dbuser}":
-    unless    => 
+    unless    =>
     "/usr/bin/mysql --user=root --batch -e \"SELECT user FROM db WHERE Host='localhost' and Db='${bugz_dbname}' and User='${bugzilla::dbuser}'\" mysql | /bin/grep '${bugzilla::dbuser}'",
     command   => "/usr/bin/mysql --verbose --user=root -e \"GRANT ALL ON ${bugz_dbname}.* TO '${bugzilla::dbuser}'@localhost\" \
         		; /usr/bin/mysqladmin --verbose --user=root flush-privileges",

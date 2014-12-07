@@ -115,7 +115,7 @@ class bugzilla {
     target => "/etc/apache2/sites-available/default-ssl",
   }
 
- if $envhost != "mylyn.org"{ 
+ if $envhost != "mylyn.org"{
     file { "$bugzillaBase/servicephpmyadmin.json":
       source  => "puppet:///modules/bugzilla/servicephpmyadmin.json",		
       owner   => "$userOwner",
@@ -130,7 +130,7 @@ class bugzilla {
     mode => 755,		
     require => Package[$requirements],
   }
-  
+
   $_exists =inline_template("<%= File.exists?('/etc/bugzilla_clear_mode') %>")
   if $_exists == "true"  {
     $clearMode            = regsubst(file("/etc/bugzilla_clear_mode"), '\n', '')
@@ -138,7 +138,7 @@ class bugzilla {
     $clearMode            = "noclear"
     exec { "create clearMode":
       command => "echo \"noclear\" >/etc/bugzilla_clear_mode",
-      creates => '/etc/bugzilla_clear_mode', 
+      creates => '/etc/bugzilla_clear_mode',
     }
   }
 
