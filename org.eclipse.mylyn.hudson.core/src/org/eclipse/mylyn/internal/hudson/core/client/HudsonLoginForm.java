@@ -37,15 +37,15 @@ public class HudsonLoginForm {
 	public UrlEncodedFormEntity createEntity() throws UnsupportedEncodingException {
 		// set form content
 		List<NameValuePair> requestParameters = new ArrayList<NameValuePair>();
-		requestParameters.add(new BasicNameValuePair("j_username", j_username));
-		requestParameters.add(new BasicNameValuePair("j_password", j_password));
-		requestParameters.add(new BasicNameValuePair("from", from));
+		requestParameters.add(new BasicNameValuePair("j_username", j_username)); //$NON-NLS-1$
+		requestParameters.add(new BasicNameValuePair("j_password", j_password)); //$NON-NLS-1$
+		requestParameters.add(new BasicNameValuePair("from", from)); //$NON-NLS-1$
 
 		// set json encoded content
 		requestParameters.add(new BasicNameValuePair("json", new Gson().toJson(this))); //$NON-NLS-1$
 
 		// set form parameters
-		requestParameters.add(new BasicNameValuePair("Submit", "log in"));
+		requestParameters.add(new BasicNameValuePair("Submit", "log in")); //$NON-NLS-1$ //$NON-NLS-2$
 
 		// create entity
 		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(requestParameters);

@@ -53,7 +53,7 @@ import org.eclipse.osgi.util.NLS;
  */
 public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 
-	private static final String ID_CONTEXT_CRUMB = ".crumb";
+	private static final String ID_CONTEXT_CRUMB = ".crumb"; //$NON-NLS-1$
 
 	public HudsonOperation(CommonHttpClient client) {
 		super(client);
@@ -98,8 +98,8 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 			}
 
 			// validate form response
-			Header header = response.getFirstHeader("Location");
-			if (header != null && header.getValue().endsWith("/loginError")) {
+			Header header = response.getFirstHeader("Location"); //$NON-NLS-1$
+			if (header != null && header.getValue().endsWith("/loginError")) { //$NON-NLS-1$
 				getClient().setAuthenticated(false);
 				throw new AuthenticationException("Authentication failed",
 						new AuthenticationRequest<AuthenticationType<UserCredentials>>(getClient().getLocation(),
@@ -135,7 +135,7 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 				String charSet = EntityUtils.getContentCharSet(response.getEntity());
 				BufferedReader reader = new BufferedReader(new InputStreamReader(in, (charSet != null)
 						? charSet
-						: "UTF-8"));
+						: "UTF-8")); //$NON-NLS-1$
 				HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
 				for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 					if (token.getType() == Token.TAG) {
@@ -190,16 +190,16 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 			doValidate(response, monitor);
 			return doProcess(response, monitor);
 		} catch (IOException e) {
-			response.release(monitor);
+			response.release();
 			throw e;
 		} catch (HudsonException e) {
-			response.release(monitor);
+			response.release();
 			throw e;
 		} catch (JAXBException e) {
-			response.release(monitor);
+			response.release();
 			throw e;
 		} catch (RuntimeException e) {
-			response.release(monitor);
+			response.release();
 			throw e;
 		}
 	}
@@ -220,7 +220,7 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 			doValidate(response, monitor);
 			return doProcess(response, monitor);
 		} finally {
-			response.release(monitor);
+			response.release();
 		}
 	}
 
@@ -254,7 +254,7 @@ public abstract class HudsonOperation<T> extends CommonHttpOperation<T> {
 		List<Cookie> cookies = new ArrayList<Cookie>(getClient().getHttpClient().getCookieStore().getCookies());
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {
-				if ("JSESSIONID".equals(cookie.getName())) {
+				if ("JSESSIONID".equals(cookie.getName())) { //$NON-NLS-1$
 					return !cookie.isExpired(new Date());
 				}
 			}
