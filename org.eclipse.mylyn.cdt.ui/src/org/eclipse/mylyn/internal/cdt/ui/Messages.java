@@ -16,10 +16,6 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.cdt.ui.messages"; //$NON-NLS-1$
 
-	public static String CDTContextLabelProvider_Containment;
-
-	public static String CDTContextLabelProvider_Missing_Element;
-
 	public static String CDTUIBridgePlugin_Initializing_Content_Assist;
 
 	public static String LandmarkMarkerManager_Mylyn_Landmark;
