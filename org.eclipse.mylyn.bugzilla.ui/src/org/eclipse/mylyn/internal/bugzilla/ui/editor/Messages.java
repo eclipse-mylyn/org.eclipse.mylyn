@@ -43,10 +43,6 @@ public class Messages extends NLS {
 
 	public static String BugzillaFlagPart_used_flags;
 
-	public static String BugzillaPeoplePart_People;
-
-	public static String BugzillaPeoplePart__Select_to_remove_;
-
 	public static String BugzillaPlanningEditorPart_Current_Estimate;
 
 	public static String BugzillaPlanningEditorPart_Team_Planning;
