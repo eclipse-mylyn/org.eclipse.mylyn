@@ -31,16 +31,16 @@
 		</table><hr/>
 		<h1 id="Task-Focused_UI">Task-Focused UI</h1>
 		<h2 id="What_is_the_Task-Focused_UI.3F">What is the Task-Focused UI?</h2>
-		<p>When you activate a task, Mylyn automatically maintains a task context by monitoring your interaction.  The task context provides a predictable degree-of-interest weighting of the relevance of the elements and relations that you work with to the task-at-hand (as described in the 
-			<a href="http://kerstens.org/mik/publications/2006-11-mylar-fse.pdf" target="mylyn_external">Foundations of Software Engineering conference paper</a>).  The Task-Focused UI is the mechanism by which Mylyn presents Mylyn the task-context model in order to reduce information overload and to automate the manual management of UI elements like editors and change sets.  Examples:
-		</p>
+		<p>When you activate a task, Mylyn automatically maintains a task context by monitoring your interaction. The task context provides a predictable degree-of-interest weighting of the relevance of the elements (files, classes, methods, etc.) and relations that you work with to the active task. The Task-Focused UI uses the task context to reduce information overload and to automate the management of editors, views, change sets and other UI elements. This increases productivity while working on the task and also makes it much easier to multitask because you can switch task contexts with a single click. </p>
+		<p>Here are some of the ways the context is used to focus the UI on the active task:</p>
 		<ul>
-			<li>Filtering, decoration and expansion management in views</li>
-			<li>Automatic folding in editors</li>
-			<li>Ranking in content assist</li>
-			<li>Editor management</li>
-			<li>Perspective management</li>
-			<li>Change set management</li>
+			<li>Filtering uninteresting elements from views (e.g. the Package Explorer) and decorating the most interesting elements</li>
+			<li>Automatic expansion management in views </li>
+			<li>Automatic code folding in editors</li>
+			<li>Reordering of content assist proposals</li>
+			<li>Automatic management of open editors</li>
+			<li>Automatic change set management</li>
+			<li>Commit message auto-population</li>
 		</ul>
 		<h2 id="Why_do_files_disappear_from_Focused_views_when_I_close_them.3F">Why do files disappear from Focused views when I close them?</h2>
 		<p>By default Mylyn automatically manages the set of open files to match the task context, so that you don’t have to.  This ensures that the editor list (viewable via mechanisms like Ctrl+E) corresponds to what you in views like the 
