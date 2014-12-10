@@ -40,8 +40,8 @@
   </licenses>
 
   <properties>
-    <tycho-version>0.20.0</tycho-version>
-    <tycho-extras-version>0.20.0</tycho-extras-version>
+    <tycho-version>0.22.0</tycho-version>
+    <tycho-extras-version>${tycho-version}</tycho-extras-version>
     <egit-site>file:/${basedir}/../../egit/org.eclipse.egit.repository/target/repository</egit-site>
     <platform-version-name>kepler</platform-version-name>
     <mylyn-site>http://download.eclipse.org/mylyn/releases/3.7</mylyn-site>
