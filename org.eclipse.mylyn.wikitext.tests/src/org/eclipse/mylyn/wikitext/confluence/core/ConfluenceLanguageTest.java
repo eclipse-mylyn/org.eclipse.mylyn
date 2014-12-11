@@ -23,6 +23,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.regex.Pattern;
 
+
 import org.eclipse.mylyn.wikitext.core.osgi.OsgiServiceLocator;
 import org.eclipse.mylyn.wikitext.core.parser.builder.DocBookDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
@@ -284,6 +285,13 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 		String html = parser.parseToHtml("a [http://example.com] hyperlink");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<body><p>a <a href=\"http://example.com\">http://example.com</a> hyperlink</p></body>"));
+	}
+
+	@Test
+	public void testHyperlinkNoText() {
+		String html = parser.parseToHtml("a [] nothing");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>a [] nothing</p></body>"));
 	}
 
 	@Test

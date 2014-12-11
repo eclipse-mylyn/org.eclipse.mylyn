@@ -460,6 +460,26 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 		assertEquals("prefix [Test 123 | #test] suffix\n\n", markup);
 	}
 
+	public void testLinkSpanNoHref() {
+		builder.beginDocument();
+
+		builder.characters("prefix ");
+
+		LinkAttributes attributes = new LinkAttributes();
+		builder.beginSpan(SpanType.LINK, attributes);
+		builder.endSpan();
+
+		builder.characters(" suffix");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		assertEquals("prefix [] suffix\n\n", markup);
+	}
+
 	public void testTableWithEmptyCells() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.TABLE, new Attributes());

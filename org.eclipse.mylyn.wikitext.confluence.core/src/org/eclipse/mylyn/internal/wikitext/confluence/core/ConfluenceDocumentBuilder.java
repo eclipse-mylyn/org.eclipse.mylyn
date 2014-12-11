@@ -189,7 +189,9 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 				ConfluenceDocumentBuilder.this.emitContent(content);
 				ConfluenceDocumentBuilder.this.emitContent(" | "); //$NON-NLS-1$
 			}
-			ConfluenceDocumentBuilder.this.emitContent(attributes.getHref());
+			if (attributes.getHref() != null) {
+				ConfluenceDocumentBuilder.this.emitContent(attributes.getHref());
+			}
 			if (!Strings.isNullOrEmpty(attributes.getTitle())) {
 				ConfluenceDocumentBuilder.this.emitContent(" | "); //$NON-NLS-1$
 				ConfluenceDocumentBuilder.this.emitContent(attributes.getTitle());
