@@ -137,7 +137,7 @@ import com.google.gwtjsonrpc.client.VoidResult;
 
 /**
  * Facade to the Gerrit RPC API.
- *
+ * 
  * @author Mikael Kober
  * @author Thomas Westling
  * @author Steffen Pingel
@@ -375,7 +375,7 @@ public class GerritClient extends ReviewsClient {
 			throws GerritException {
 
 		List<PatchSet> patchSets = new ArrayList<PatchSet>();
-		String query = "/changes/?q=" + changeInfoId + "&o=ALL_REVISIONS"; //$NON-NLS-1$ //$NON-NLS-2$
+		String query = "/changes/?q=" + changeInfoId + "+change:" + reviewId + "&o=ALL_REVISIONS"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		ChangeInfo29[] changeInfo = (ChangeInfo29[]) getChangeInfo29(query, ChangeInfo29[].class, monitor);
 
 		for (ChangeInfo element : changeInfo) {
