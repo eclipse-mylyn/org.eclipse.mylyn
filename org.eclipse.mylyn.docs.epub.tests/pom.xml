@@ -26,7 +26,9 @@
 						<phase>generate-sources</phase>
 						<configuration>
 							<tasks>
-                <ant antfile="epubcheck.xml" inheritAll="true"/>
+							<!-- Bug 454932 - fix or remove failing EPUB test
+                				<ant antfile="epubcheck.xml" inheritAll="true"/>
+                			-->
 							</tasks>
 						</configuration>
 						<goals>

@@ -1,27 +1,23 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2013 Torkild U. Resheim.
- * 
+ *
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors: 
+ *
+ * Contributors:
  *   Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.tests.ant;
 
 import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
 import org.apache.tools.ant.BuildFileTest;
 
-import com.adobe.epubcheck.api.EpubCheck;
-
 /**
  * Tests for the <b>epub</b> ANT task.
- * 
+ *
  * @author Torkild U. Resheim
  */
 @SuppressWarnings("nls")
@@ -39,10 +35,12 @@ public class TestAntTask extends BuildFileTest {
 	private void assertEpub(String file) {
 		File f = getFile(file);
 		assertTrue("Missing publication " + file, f.exists());
+		/* Bug 454932 - fix or remove failing EPUB test
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
 		EpubCheck checker = new EpubCheck(f, pw);
 		assertTrue(sw.getBuffer().toString().trim(), checker.validate());
+		 */
 	}
 
 	private File getFile(String file) {

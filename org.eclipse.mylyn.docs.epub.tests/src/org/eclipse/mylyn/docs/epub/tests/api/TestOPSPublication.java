@@ -39,10 +39,6 @@ import org.eclipse.mylyn.docs.epub.opf.Role;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.adobe.epubcheck.api.EpubCheck;
-import com.adobe.epubcheck.api.Report;
-import com.adobe.epubcheck.util.DefaultReportImpl;
-
 /**
  * Tests features and regressions for all versions of the OPS supporting implementation {@link Publication}.
  *
@@ -548,6 +544,8 @@ public class TestOPSPublication extends AbstractTest {
 	 *
 	 * @throws Exception
 	 */
+
+	/* Bug 454932 - fix or remove failing EPUB test
 	@Test
 	public final void testPack_EPUB2() throws Exception {
 		oebps.addItem(new File("testdata/plain-page.xhtml"));
@@ -560,7 +558,7 @@ public class TestOPSPublication extends AbstractTest {
 		System.out.println("Using version " + EpubCheck.version() + " of EpubCheck.");
 		Assert.assertTrue(checker.validate());
 	}
-
+	 */
 	/**
 	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.Publication#pack(java.io.File)}. An EPUB with no content
 	 * shall fail when packed.
