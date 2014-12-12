@@ -408,7 +408,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 				if (showEmptyViewMessage && viewer instanceof TreeViewer) {
 					Tree tree = ((TreeViewer) viewer).getTree();
 					Listener drawingListener = viewerToDrawerMap.get(viewer);
-					if (drawingListener == null) {
+					if (drawingListener == null && !tree.isDisposed()) {
 						EmptyContextDrawer drawer = new EmptyContextDrawer(tree);
 						viewerToDrawerMap.put(viewer, drawer);
 						tree.addListener(SWT.Paint, drawer);
@@ -421,7 +421,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 				if (showEmptyViewMessage && viewer instanceof TreeViewer) {
 					Tree tree = ((TreeViewer) viewer).getTree();
 					EmptyContextDrawer drawer = viewerToDrawerMap.remove(viewer);
-					if (drawer != null) {
+					if (drawer != null && !tree.isDisposed()) {
 						tree.removeListener(SWT.Paint, drawer);
 					}
 				}
