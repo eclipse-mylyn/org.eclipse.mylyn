@@ -164,13 +164,15 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 			Set<String> excludedFilters = getPreservedFilterClasses(false);
 			for (StructuredViewer viewer : viewers) {
 				if (previousFilters.containsKey(viewer)) {
-					for (ViewerFilter filter : previousFilters.get(viewer)) {
-						if (!excludedFilters.contains(filter.getClass().getName())) {
-							try {
-								viewer.addFilter(filter);
-							} catch (Throwable t) {
-								StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-										"Failed to restore filter: " + filter, t)); //$NON-NLS-1$
+					if (!viewer.getControl().isDisposed()) {
+						for (ViewerFilter filter : previousFilters.get(viewer)) {
+							if (!excludedFilters.contains(filter.getClass().getName())) {
+								try {
+									viewer.addFilter(filter);
+								} catch (Throwable t) {
+									StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+											"Failed to restore filter: " + filter, t)); //$NON-NLS-1$
+								}
 							}
 						}
 					}
