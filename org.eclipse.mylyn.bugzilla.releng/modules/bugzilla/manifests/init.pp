@@ -25,32 +25,36 @@ class bugzilla {
 
   $requirements = [
     "apache2",
-    "apache2.2-common",
+    "emacs",
+    "git-core",
+    "language-pack-en",
     "libapache2-mod-auth-mysql",
     "libapache2-mod-fcgid",
     "libapache2-mod-php5",
-    "mysql-server",
-    "make",
-    "perl-doc",
-    "php5",
-    "php5-mysql",
-    "phpmyadmin",
     "libcgi-pm-perl",
-    "libdbd-mysql-perl",
     "libdatetime-perl",
     "libdatetime-timezone-perl",
+    "libdbd-mysql-perl",
     "libemail-mime-perl",
     "libemail-send-perl",
     "libjson-rpc-perl",
     "libmail-sendmail-perl",
     "libmath-random-isaac-perl",
-    "libtest-taint-perl",
-    "liburi-perl",
     "libsoap-lite-perl",
     "libtemplate-perl",
+    "libtest-taint-perl",
+    "liburi-perl",
+    "make",
+    "mysql-server",
+    "openjdk-7-jdk",
     "patchutils",
-    "git",
+    "perl-doc",
+    "php5-mysql",
+    "php5",
+    "phpmyadmin",
+    "puppet",
     ]
+    
 
   package { $requirements:
     ensure  => "installed",
@@ -97,6 +101,11 @@ class bugzilla {
     require => Package["apache2"],
     creates => "/etc/apache2/mods-enabled/ssl.load",
   }
+  exec { "Enable cgi module":
+    command => "a2enmod cgi",
+    require => Package["apache2"],
+    creates => "/etc/apache2/mods-enabled/cgi.load",
+  }
 
   service { "mysql":
     ensure  => "running",
@@ -108,11 +117,6 @@ class bugzilla {
     command => "echo '#phpmyadmin\nInclude /etc/phpmyadmin/apache.conf' >>/etc/apache2/apache2.conf",
     require => [Package["phpmyadmin"], Package["libapache2-mod-php5"]],
     unless  => 'cat /etc/apache2/apache2.conf | grep "#phpmyadmin"'
-  }
-
-  file { "/etc/apache2/sites-enabled/001-default-ssl":
-    ensure => link,
-    target => "/etc/apache2/sites-available/default-ssl",
   }
 
  if $envhost != "mylyn.org"{

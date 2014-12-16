@@ -77,23 +77,24 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
     rest_enabled => true,
   }
 */
+
   bugzilla::site { "bugzilla-5.0":
     major       => "5",
     minor       => "0",
     branch      => "5.0",
-    branchTag   => "bugzilla-4.5.5",
-    envversion   => "4.5.5",
+    branchTag   => "5.0",
+    envversion   => "4.5.6+",
   }
 
   bugzilla::site { "bugzilla-5.0-rest":
     major       => "5",
     minor       => "0",
     branch      => "5.0",
-    branchTag   => "bugzilla-4.5.5",
+    branchTag   => "5.0",
     envtype      => "bugzillaREST",
     rest_enabled => true,
     envdefault_rest => true,
-    envversion   => "4.5.5",
+    envversion   => "4.5.6+",
   }
 
 }

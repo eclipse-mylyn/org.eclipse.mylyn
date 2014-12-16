@@ -21,6 +21,9 @@ echo "start4: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 /usr/bin/perl install-module.pl Template
 echo "ende4: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 <% end %>
+echo "start10: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
+/usr/bin/perl install-module.pl DBI
+echo "ende10: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 <% if  @envversion > "4.5" %>
 echo "start5: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 /usr/bin/perl install-module.pl URI

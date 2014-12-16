@@ -4,6 +4,5 @@ Alias /<%= @www_url %> <%= @base %>/<%= @version %>
     Options +Indexes +ExecCGI
     DirectoryIndex index.cgi
     AllowOverride None
-    Order allow,deny
-    Allow from all
+    Require all granted
 </Directory>

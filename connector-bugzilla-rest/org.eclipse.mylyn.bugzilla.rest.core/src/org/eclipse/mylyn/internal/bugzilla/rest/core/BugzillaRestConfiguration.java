@@ -18,6 +18,11 @@ import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Field;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Parameters;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Product;
 
+import com.google.common.base.Function;
+import com.google.common.base.Functions;
+import com.google.common.collect.ImmutableSortedMap;
+import com.google.common.collect.Ordering;
+
 public class BugzillaRestConfiguration implements Serializable {
 
 	private static final long serialVersionUID = 4078343382335204804L;
@@ -39,7 +44,14 @@ public class BugzillaRestConfiguration implements Serializable {
 	}
 
 	void setFields(Map<String, Field> fields) {
-		this.fields = fields;
+		Function<Field, String> getName = new Function<Field, String>() {
+			public String apply(Field item) {
+				return item.getName();
+			}
+		};
+		Function<String, String> comparatorFunction = Functions.compose(getName, Functions.forMap(fields));
+		Ordering<String> comparator = Ordering.natural().onResultOf(comparatorFunction);
+		this.fields = ImmutableSortedMap.copyOf(fields, comparator);
 	}
 
 	public Map<String, Field> getFields() {
@@ -51,7 +63,14 @@ public class BugzillaRestConfiguration implements Serializable {
 	}
 
 	void setProducts(Map<String, Product> products) {
-		this.products = products;
+		Function<Product, String> getName = new Function<Product, String>() {
+			public String apply(Product item) {
+				return item.getName();
+			}
+		};
+		Function<String, String> comparatorFunction = Functions.compose(getName, Functions.forMap(products));
+		Ordering<String> comparator = Ordering.natural().onResultOf(comparatorFunction);
+		this.products = ImmutableSortedMap.copyOf(products, comparator);
 	}
 
 	public Map<String, Product> getProducts() {

@@ -97,7 +97,7 @@ define bugzilla::site (
         command => "git fetch",
         onlyif    => "/usr/bin/test -d $base/$version",
         cwd     => "$base/$version",
-        user => "root",
+        user => "$userOwner",
         timeout => 300,
         logoutput => true,
         require   => Exec["prepare bugzilla"],
@@ -136,7 +136,7 @@ define bugzilla::site (
       command => "git fetch",
       onlyif    => "/usr/bin/test -d $base/$version",
       cwd     => "$base/$version",
-      user => "root",
+      user => "$userOwner",
       timeout => 300,
       logoutput => true,
       require   => Exec["prepare bugzilla"],
@@ -258,7 +258,7 @@ define bugzilla::site (
     command => "$base/$version/callchecksetup.pl",
     cwd     => "$base/$version",
     creates => "$base/$version/localconfig",
-#    user => "$userOwner",
+    user => "$userOwner",
     logoutput => true,
     require => [
       Exec["mysql-createdb-$version"],
@@ -271,7 +271,7 @@ define bugzilla::site (
     command   => "$base/$version/callchecksetup.pl",
     cwd       => "$base/$version",
     logoutput => true,
-#    user => "$userOwner",
+    user => "$userOwner",
     require   => [
       Exec["mysql-createdb-$version"],
       Exec["init bugzilla_checksetup $version"],
@@ -304,10 +304,11 @@ define bugzilla::site (
     notify  => Service["apache2"],
   }
 
-  exec { "add $version to /etc/apache2/conf.d/bugzilla.conf":
-    command => "echo 'Include $base/conf.d/[^.#]*\n' >> /etc/apache2/conf.d/bugzilla.conf",
+  exec { "add $version to /etc/apache2/conf-enabled/bugzilla.conf":
+    command => "echo 'Include $base/conf.d/[^.#]*\n' >> /etc/apache2/conf-enabled/bugzilla.conf",
     require => File["$confDir/$version.conf"],
     notify  => Service["apache2"],
-    onlyif  => "grep -qe '^Include $base/conf.d' /etc/apache2/conf.d/bugzilla.conf; test $? != 0"
+    onlyif  => "grep -qe '^Include $base/conf.d' /etc/apache2/conf-enabled/bugzilla.conf; test $? != 0"
   }
+
 }
