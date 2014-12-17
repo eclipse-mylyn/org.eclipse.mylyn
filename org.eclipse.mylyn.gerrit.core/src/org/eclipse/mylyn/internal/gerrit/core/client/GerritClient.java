@@ -76,6 +76,8 @@ import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.AbandonInput;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ActionInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.AddReviewerResult;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.BranchInfo;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.BranchInput;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo29;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeMessageInfo;
@@ -290,6 +292,22 @@ public class GerritClient extends ReviewsClient {
 		}
 		this.serviceByClass = new HashMap<Class<? extends RemoteJsonService>, RemoteJsonService>();
 		this.config = config;
+	}
+
+	public void createRemoteBranch(String projectName, String branchName, String revision, IProgressMonitor monitor)
+			throws GerritException {
+		String url = getProjectBranchesUrl(projectName) + branchName;
+		BranchInput input = new BranchInput(branchName, revision);
+		executePutRestRequest(url, input, BranchInput.class, createErrorHandler(), monitor);
+	}
+
+	public BranchInfo[] getRemoteProjectBranches(String projectName, IProgressMonitor monitor) throws GerritException {
+		String url = getProjectBranchesUrl(projectName);
+		return executeGetRestRequest(url, BranchInfo[].class, monitor);
+	}
+
+	private String getProjectBranchesUrl(String projectName) {
+		return "/projects/" + projectName + "/branches/"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public PatchLineComment saveDraft(Patch.Key patchKey, String message, int line, short side, String parentUuid,

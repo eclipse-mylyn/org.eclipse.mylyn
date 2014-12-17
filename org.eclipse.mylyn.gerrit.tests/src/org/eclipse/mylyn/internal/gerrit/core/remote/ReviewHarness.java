@@ -51,6 +51,8 @@ class ReviewHarness {
 	//The maximum difference between two dates to account for clock skew between test machines
 	static final long CREATION_TIME_DELTA = 30 * 60 * 1000; //30 Minutes
 
+	private static final String DEFAULT_TEST_FILE = "testFile1.txt";
+
 	TestRemoteObserver<IRepository, IReview, String, Date> listener;
 
 	RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> consumer;
@@ -100,9 +102,13 @@ class ReviewHarness {
 	}
 
 	public void init(String refSpec, PrivilegeLevel privilegeLevel) throws Exception {
+		init(refSpec, privilegeLevel, DEFAULT_TEST_FILE);
+	}
+
+	public void init(String refSpec, PrivilegeLevel privilegeLevel, String fileName) throws Exception {
 		provider.open();
 		assertThat(getRepository().getReviews().size(), is(0));
-		pushFileToReview(testIdent, refSpec, privilegeLevel);
+		pushFileToReview(testIdent, refSpec, privilegeLevel, fileName);
 		listener = new TestRemoteObserver<IRepository, IReview, String, Date>(provider.getReviewFactory());
 
 		consumer = provider.getReviewFactory().getConsumerForRemoteKey(getRepository(), shortId);
@@ -124,9 +130,14 @@ class ReviewHarness {
 	}
 
 	public void pushFileToReview(String testIdent, String refSpec, PrivilegeLevel privilegeLevel) throws Exception {
+		pushFileToReview(testIdent, refSpec, privilegeLevel, DEFAULT_TEST_FILE);
+	}
+
+	public void pushFileToReview(String testIdent, String refSpec, PrivilegeLevel privilegeLevel, String fileName)
+			throws Exception {
 		changeId = "I" + StringUtils.rightPad(testIdent, 40, "a");
 		CommitCommand command = createCommitCommand(changeId);
-		addFile("testFile1.txt");
+		addFile(fileName);
 		CommitResult result = commitAndPush(command, refSpec, privilegeLevel);
 		shortId = StringUtils.trimToEmpty(StringUtils.substringAfterLast(result.push.getMessages(), "/"));
 		shortId = StringUtils.removeEnd(shortId, " [DRAFT]");

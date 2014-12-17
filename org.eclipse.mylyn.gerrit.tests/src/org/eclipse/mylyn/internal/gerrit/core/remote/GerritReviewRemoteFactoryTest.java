@@ -15,6 +15,7 @@ import static org.eclipse.mylyn.gerrit.tests.core.client.rest.IsEmpty.empty;
 import static org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalUtil.CRVW;
 import static org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalUtil.VRIF;
 import static org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalUtil.toNameWithDash;
+import static org.eclipse.mylyn.internal.gerrit.core.remote.TestRemoteObserverConsumer.retrieveForLocalKey;
 import static org.eclipse.mylyn.internal.gerrit.core.remote.TestRemoteObserverConsumer.retrieveForRemoteKey;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.greaterThan;
@@ -41,6 +42,7 @@ import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.gerrit.tests.core.client.rest.ChangeInfoTest;
 import org.eclipse.mylyn.gerrit.tests.support.GerritProject.CommitResult;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
@@ -50,6 +52,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.GerritSystemAccount;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchSetPublishDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PermissionLabel;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.BranchInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo;
 import org.eclipse.mylyn.reviews.core.model.IApprovalType;
 import org.eclipse.mylyn.reviews.core.model.IChange;
@@ -68,6 +71,7 @@ import org.junit.Test;
 import com.google.common.base.CharMatcher;
 import com.google.gerrit.common.data.ApprovalDetail;
 import com.google.gerrit.common.data.ChangeDetail;
+import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.common.data.ReviewerResult;
 import com.google.gerrit.reviewdb.ApprovalCategory;
 import com.google.gerrit.reviewdb.ApprovalCategoryValue;
@@ -527,6 +531,39 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 	}
 
 	@Test
+	public void testReviewsWithSameChangeId() throws Exception {
+		String branchName = "test_side_branch";
+		createBranchIfNonExistent(branchName);
+		ReviewHarness reviewHarness2 = new ReviewHarness(reviewHarness.testIdent); //same ChangeId
+		reviewHarness2.init("HEAD:refs/for/" + branchName, PrivilegeLevel.USER, "otherTestFile.txt");
+
+		reviewHarness.consumer.retrieve(false);
+		reviewHarness.listener.waitForResponse();
+		reviewHarness2.consumer.retrieve(false);
+		reviewHarness2.listener.waitForResponse();
+
+		IReview review = getReview(reviewHarness);
+		IReview review2 = getReview(reviewHarness2);
+
+		assertEquals(review.getKey(), review2.getKey()); // same changeId
+		assertThat(review.getId(), is(not(review2.getId()))); // different reviewId
+
+		assertThat(review.getSets().size(), is(1));
+		assertThat(review.getSets().get(0).getId(), is("1"));
+		PatchSetDetail detail = retrievePatchSetDetail(reviewHarness, "1");
+		assertThat(detail.getPatches().size(), is(2));
+		assertThat(detail.getPatches().get(0).getFileName(), is("/COMMIT_MSG"));
+		assertThat(detail.getPatches().get(1).getFileName(), is("testFile1.txt"));
+
+		assertThat(review2.getSets().size(), is(1));
+		assertThat(review2.getSets().get(0).getId(), is("1"));
+		PatchSetDetail detail2 = retrievePatchSetDetail(reviewHarness2, "1");
+		assertThat(detail2.getPatches().size(), is(2));
+		assertThat(detail2.getPatches().get(0).getFileName(), is("/COMMIT_MSG"));
+		assertThat(detail2.getPatches().get(1).getFileName(), is("otherTestFile.txt"));
+	}
+
+	@Test
 	public void testGlobalCommentByGerrit() throws Exception {
 		//create a new commit and Review that depends on Patch Set 1 of the existing Review
 		String changeIdNewChange = "I" + StringUtils.rightPad(System.currentTimeMillis() + "", 40, "a");
@@ -611,6 +648,37 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 		assertThat(commentByGerrit.getDescription().substring(0, 58),
 				is("Change cannot be merged due to unsatisfiable dependencies."));
+	}
+
+	private void createBranchIfNonExistent(String branchName) throws GerritException {
+		if (!branchExists(branchName)) {
+			reviewHarness.getAdminClient().createRemoteBranch("org.eclipse.mylyn.test", branchName, null,
+					new NullProgressMonitor());
+		}
+	}
+
+	private boolean branchExists(String branchName) throws GerritException {
+		BranchInfo[] branches = reviewHarness.getAdminClient().getRemoteProjectBranches("org.eclipse.mylyn.test",
+				new NullProgressMonitor());
+		for (BranchInfo branch : branches) {
+			String branchRef = StringUtils.trimToEmpty(StringUtils.substringAfterLast(branch.getRef(), "/"));
+			if (branchRef.equals(branchName)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private PatchSetDetail retrievePatchSetDetail(ReviewHarness reviewHarness, String patchSetId) {
+		TestRemoteObserverConsumer<IReview, IReviewItemSet, String, PatchSetDetail, PatchSetDetail, String> itemSetObserver //
+		= retrieveForLocalKey(reviewHarness.provider.getReviewItemSetFactory(), getReview(reviewHarness), patchSetId,
+				false);
+		PatchSetDetail detail = itemSetObserver.getRemoteObject();
+		return detail;
+	}
+
+	private IReview getReview(ReviewHarness reviewHarness) {
+		return reviewHarness.consumer.getModelObject();
 	}
 
 	@Test
