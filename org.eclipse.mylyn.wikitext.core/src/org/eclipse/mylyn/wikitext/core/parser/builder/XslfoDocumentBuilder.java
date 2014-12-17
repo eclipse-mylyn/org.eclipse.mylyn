@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
- *     Torkild U. Resheim - bugs 337405, 336592, 336683, 336813 
+ *     Torkild U. Resheim - bugs 337405, 336592, 336683, 336813
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.core.parser.builder;
@@ -26,6 +26,7 @@ import org.eclipse.mylyn.internal.wikitext.core.util.css.CssParser;
 import org.eclipse.mylyn.internal.wikitext.core.util.css.CssRule;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
+import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.ListAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.TableAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.TableCellAttributes;
@@ -35,7 +36,7 @@ import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 
 /**
  * A document builder that produces XSL-FO output. XSL-FO is suitable for conversion to other formats such as PDF.
- * 
+ *
  * @see XslfoDocumentBuilder.Configuration Configuration for configurable settings
  * @see <a href="http://www.w3.org/TR/2001/REC-xsl-20011015/">XSL-FO 1.0 specification</a>
  * @see <a href="http://en.wikipedia.org/wiki/XSL_Formatting_Objects">XSL-FO (WikiPedia)</a>
@@ -130,7 +131,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 	/**
 	 * If an outline item is set, the document builder will output XSL:FO bookmarks at the beginning of the resulting
 	 * document.
-	 * 
+	 *
 	 * @param outline
 	 *            the root outline item.
 	 * @since 1.6
@@ -227,7 +228,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 			}
 			if (parentBlock.previousChild == null || parentBlock.previousChild.type != BlockType.DEFINITION_TERM) {
 				writer.writeStartElement(foNamespaceUri, "list-item"); //$NON-NLS-1$
-				writer.writeAttribute("space-before", "0.2em"); //$NON-NLS-1$ //$NON-NLS-2$ 
+				writer.writeAttribute("space-before", "0.2em"); //$NON-NLS-1$ //$NON-NLS-2$
 				++parentBlock.size;
 				writer.writeStartElement(foNamespaceUri, "list-item-label"); //$NON-NLS-1$
 				writer.writeAttribute("end-indent", "label-end()"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -493,7 +494,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 			}
 			// Expecting values left, right, center, justify or inherit
 			if (cellAttributes.getAlign() != null) {
-				writer.writeAttribute("text-align", cellAttributes.getAlign()); //$NON-NLS-1$				
+				writer.writeAttribute("text-align", cellAttributes.getAlign()); //$NON-NLS-1$
 			}
 			// Vertical align may be top, middle and bottom
 			if (cellAttributes.getValign() != null) {
@@ -506,7 +507,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 					value = "after"; //$NON-NLS-1$
 				}
 				if (value != null) {
-					writer.writeAttribute("display-align", value); //$NON-NLS-1$									
+					writer.writeAttribute("display-align", value); //$NON-NLS-1$
 				}
 			}
 		}
@@ -529,7 +530,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 					value = "after"; //$NON-NLS-1$
 				}
 				if (value != null) {
-					writer.writeAttribute("display-align", value); //$NON-NLS-1$									
+					writer.writeAttribute("display-align", value); //$NON-NLS-1$
 				}
 			}
 		}
@@ -579,7 +580,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		writer.writeAttribute("margin-top", String.format("%scm", margins.marginTop)); //$NON-NLS-1$ //$NON-NLS-2$
 		writer.writeAttribute("margin-bottom", String.format("%scm", margins.marginBottom)); //$NON-NLS-1$ //$NON-NLS-2$
 		writer.writeAttribute("margin-left", String.format("%scm", margins.marginLeft)); //$NON-NLS-1$ //$NON-NLS-2$
-		writer.writeAttribute("margin-right", String.format("%scm", margins.marginRight)); //$NON-NLS-1$ //$NON-NLS-2$		
+		writer.writeAttribute("margin-right", String.format("%scm", margins.marginRight)); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private void writeRegion(Region region, XmlStreamWriter writer) {
@@ -838,18 +839,18 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 					mapping.put("font-size", "75%"); //$NON-NLS-1$ //$NON-NLS-2$
 					mapping.put("baseline-shift", "sub"); //$NON-NLS-1$ //$NON-NLS-2$
 				} else if (cssValue.equals("top")) { //$NON-NLS-1$
-					mapping.put("display-align", "before"); //$NON-NLS-1$ //$NON-NLS-2$									
+					mapping.put("display-align", "before"); //$NON-NLS-1$ //$NON-NLS-2$
 				} else if (cssValue.equals("middle")) { //$NON-NLS-1$
-					mapping.put("display-align", "center"); //$NON-NLS-1$ //$NON-NLS-2$									
+					mapping.put("display-align", "center"); //$NON-NLS-1$ //$NON-NLS-2$
 				} else if (cssValue.equals("bottom")) { //$NON-NLS-1$
-					mapping.put("display-align", "after"); //$NON-NLS-1$ //$NON-NLS-2$									
+					mapping.put("display-align", "after"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
-			} else if (CSS_RULE_TEXT_DECORATION.equals(rule.name) || // 
-					CSS_RULE_FONT_FAMILY.equals(rule.name) || // 
-					CSS_RULE_FONT_SIZE.equals(rule.name) || // 
-					CSS_RULE_FONT_WEIGHT.equals(rule.name) || // 
+			} else if (CSS_RULE_TEXT_DECORATION.equals(rule.name) || //
+					CSS_RULE_FONT_FAMILY.equals(rule.name) || //
+					CSS_RULE_FONT_SIZE.equals(rule.name) || //
+					CSS_RULE_FONT_WEIGHT.equals(rule.name) || //
 					CSS_RULE_FONT_STYLE.equals(rule.name) || //
-					CSS_RULE_BACKGROUND_COLOR.equals(rule.name) || // 
+					CSS_RULE_BACKGROUND_COLOR.equals(rule.name) || //
 					CSS_RULE_COLOR.equals(rule.name)) {
 				mapping.put(rule.name, rule.value);
 			} else if (CSS_RULE_BORDER_STYLE.equals(rule.name)) {
@@ -867,10 +868,15 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	@Override
 	public void beginSpan(SpanType type, Attributes attributes) {
-		SpanInfo info = new SpanInfo(type);
+		final SpanInfo info = new SpanInfo(type);
+		elementInfos.push(info);
 
-		writer.writeStartElement(foNamespaceUri, "inline"); //$NON-NLS-1$
-
+		if (type == SpanType.LINK && attributes instanceof LinkAttributes) {
+			String href = ((LinkAttributes) attributes).getHref();
+			emitLink(attributes, href);
+		} else {
+			writer.writeStartElement(foNamespaceUri, "inline"); //$NON-NLS-1$
+		}
 		String cssStyles = spanTypeToCssStyles.get(type);
 		Map<String, String> attrs = cssStyles == null ? null : attributesFromCssStyles(cssStyles);
 		if (attributes.getCssStyle() != null) {
@@ -887,8 +893,6 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 				writer.writeAttribute(ent.getKey(), ent.getValue());
 			}
 		}
-
-		elementInfos.push(info);
 	}
 
 	@Override
@@ -973,33 +977,35 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	@Override
 	public void link(Attributes attributes, String hrefOrHashName, String text) {
+		emitLink(attributes, hrefOrHashName);
+		characters(text);
+		writer.writeEndElement();// basic-link
+
+	}
+
+	private void emitLink(Attributes attributes, String hrefOrHashName) {
 		writer.writeStartElement(foNamespaceUri, "basic-link"); //$NON-NLS-1$
 		String destinationUrl = makeUrlAbsolute(hrefOrHashName);
 		boolean internal = destinationUrl.startsWith("#"); //$NON-NLS-1$
-		if (configuration.underlineLinks) {
-			writer.writeAttribute("text-decoration", "underline"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
 		if (internal) {
+			if (configuration.underlineLinks) {
+				writer.writeAttribute("text-decoration", "underline"); //$NON-NLS-1$ //$NON-NLS-2$
+			}
 			writer.writeAttribute("internal-destination", destinationUrl.substring(1)); //$NON-NLS-1$
 		} else {
-			writer.writeAttribute("external-destination", String.format("url(%s)", destinationUrl)); //$NON-NLS-1$//$NON-NLS-2$
-		}
-		characters(text);
-		writer.writeEndElement();// basic-link
-		if (configuration.showExternalLinks && !internal) {
-			characters(Messages.getString("XslfoDocumentBuilder.beforeLink")); //$NON-NLS-1$
-			writer.writeStartElement(foNamespaceUri, "basic-link"); //$NON-NLS-1$
-			writer.writeAttribute("external-destination", String.format("url(%s)", destinationUrl)); //$NON-NLS-1$//$NON-NLS-2$
-			characters(destinationUrl);
-			characters(Messages.getString("XslfoDocumentBuilder.afterLink")); //$NON-NLS-1$
-			writer.writeEndElement(); // basic-link
+			if (configuration.showExternalLinks) {
+				if (configuration.underlineLinks) {
+					writer.writeAttribute("text-decoration", "underline"); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+				writer.writeAttribute("external-destination", String.format("url(%s)", destinationUrl)); //$NON-NLS-1$//$NON-NLS-2$
+			}
 		}
 	}
 
 	/**
 	 * The current configuration of this builder. The returned value is mutable and changes to it affect this builder's
 	 * configuration.
-	 * 
+	 *
 	 * @see Configuration Configuration class for configurable settings
 	 */
 	public Configuration getConfiguration() {
@@ -1008,7 +1014,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	/**
 	 * The current configuration of this builder.
-	 * 
+	 *
 	 * @see Configuration Configuration class for configurable settings
 	 */
 	public void setConfiguration(Configuration configuration) {
@@ -1020,7 +1026,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	/**
 	 * This type represents a XSL:FO page region.
-	 * 
+	 *
 	 * @author Torkild U. Resheim, MARINTEK
 	 * @since 1.6
 	 */
@@ -1056,7 +1062,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		/**
 		 * Sets the extent of the region in cm.
-		 * 
+		 *
 		 * @param extent
 		 *            the region extent in cm
 		 */
@@ -1066,7 +1072,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		/**
 		 * Return the region extent in cm. Defaults to 3cm.
-		 * 
+		 *
 		 * @return value of the region extent in cms
 		 */
 		public float getExtent() {
@@ -1075,7 +1081,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		/**
 		 * Sets the precedence of the region. Defaults to <code>false</code>
-		 * 
+		 *
 		 * @param precedence
 		 *            the new precedence value
 		 */
@@ -1085,7 +1091,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		/**
 		 * Returns whether or not the region has precedence. Defaults to <code>false</code>.
-		 * 
+		 *
 		 * @return the region precedence
 		 */
 		public boolean isPrecedence() {
@@ -1094,7 +1100,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		/**
 		 * Assigns a name to the region. The default is to have no name.
-		 * 
+		 *
 		 * @param name
 		 *            the region name
 		 */
@@ -1104,7 +1110,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		/**
 		 * Returns the name of the region. The default is to have no name.
-		 * 
+		 *
 		 * @return the region name
 		 */
 		public String getName() {
@@ -1115,7 +1121,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	/**
 	 * This type represents a XSL:FO page or body margin.
-	 * 
+	 *
 	 * @author Torkild U. Resheim, MARINTEK
 	 * @since 1.6
 	 */
@@ -1138,7 +1144,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		/**
 		 * Creates a new set of margins with the specified values.
-		 * 
+		 *
 		 * @param top
 		 *            value of the top margin in cm
 		 * @param bottom
@@ -1157,7 +1163,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		/**
 		 * Sets the <b>margin-top</b> property in cm. Defaults to 1.5cm.
-		 * 
+		 *
 		 * @param marginTop
 		 *            new value of the top margin in cm
 		 */
@@ -1167,7 +1173,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		/**
 		 * Returns the <b>margin-top</b> propert in cm. Defaults to 1.5cm.
-		 * 
+		 *
 		 * @return value of the top margin in cm.
 		 */
 		public float getMarginTop() {
@@ -1176,7 +1182,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		/**
 		 * Sets the <b>margin-bottom</b> property in cm. Defaults to 1.5cm.
-		 * 
+		 *
 		 * @param marginBottom
 		 *            new value of the top margin in cm
 		 */
@@ -1186,7 +1192,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		/**
 		 * Returns the <b>margin-bottom</b> property in cm. Defaults to 1.5cm.
-		 * 
+		 *
 		 * @return value of the bottom margin in cm.
 		 */
 		public float getMarginBottom() {
@@ -1195,7 +1201,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		/**
 		 * Sets the <b>margin-left</b> property in cm. Defaults to 1.5cm.
-		 * 
+		 *
 		 * @param marginLeft
 		 *            new value of the left margin in cm
 		 */
@@ -1205,7 +1211,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		/**
 		 * Returns the <b>margin-left</b> property in cm. Defaults to 1.5cm.
-		 * 
+		 *
 		 * @return value of the left margin in cm.
 		 */
 		public float getMarginLeft() {
@@ -1214,7 +1220,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		/**
 		 * Sets the <b>margin-right</b> property in cm. Defaults to 1.5cm.
-		 * 
+		 *
 		 * @param marginRight
 		 *            new value of the right margin in cm
 		 */
@@ -1224,7 +1230,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		/**
 		 * Returns the <b>margin-right</b> property of the master page in cm. Defaults to 1.5cm.
-		 * 
+		 *
 		 * @return the master page right margin in cm.
 		 */
 		public float getMarginRight() {
@@ -1236,7 +1242,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 	/**
 	 * A class that encapsulates all configurable settings of the {@link XslfoDocumentBuilder}. This class implements
 	 * the template design pattern via {@link Configuration#clone()}.
-	 * 
+	 *
 	 * @author David Green
 	 * @author Torkild U. Resheim, MARINTEK
 	 */
@@ -1321,7 +1327,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		/**
 		 * Set the font size multipliers. Multipliers are used to determine the actual size of fonts by multiplying the
 		 * {@link #getFontSize() base font size} by the multiplier to determine the size of a font for a heading.
-		 * 
+		 *
 		 * @param fontSizeMultipliers
 		 *            an array of size 7, where position 1-6 correspond to headings h1 to h6
 		 */
@@ -1340,7 +1346,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		/**
 		 * The font size multipliers. Multipliers are used to determine the actual size of fonts by multiplying the
 		 * {@link #getFontSize() base font size} by the multiplier to determine the size of a font for a heading.
-		 * 
+		 *
 		 * @return an array of size 7, where position 1-6 correspond to headings h1 to h6
 		 */
 		public float[] getFontSizeMultipliers() {
@@ -1549,7 +1555,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		/**
 		 * Sets the <b>reference-orientation</b> property of the master page in degrees. Defaults to 90 degrees.
-		 * 
+		 *
 		 * @param referenceOrientation
 		 *            the master page orientation in degrees.
 		 * @since 1.6
@@ -1560,7 +1566,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		/**
 		 * The <b>reference-orientation</b> property of the master page in degrees. Defaults to 90 degrees.
-		 * 
+		 *
 		 * @return the master page orientation in degrees.
 		 * @since 1.6
 		 */
@@ -1570,7 +1576,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		/**
 		 * Returns the margins of the master page.
-		 * 
+		 *
 		 * @return master page margins
 		 * @since 1.6
 		 */
@@ -1580,7 +1586,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		/**
 		 * Returns the body margins.
-		 * 
+		 *
 		 * @return body margins
 		 * @since 1.6
 		 */
@@ -1590,7 +1596,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		/**
 		 * Sets the page margins. This method allows each margin to be specified individually.
-		 * 
+		 *
 		 * @param pageMargins
 		 *            the page margins.
 		 * @see #setPageMargin(float)
@@ -1602,7 +1608,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		/**
 		 * Sets the body margins. This method allows each margin to be specified individually.
-		 * 
+		 *
 		 * @param boduMargins
 		 *            the page margins.
 		 * @since 1.6

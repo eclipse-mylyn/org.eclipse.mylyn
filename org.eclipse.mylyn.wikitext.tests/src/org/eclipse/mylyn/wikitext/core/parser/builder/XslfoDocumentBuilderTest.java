@@ -21,8 +21,8 @@ import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
 import org.eclipse.mylyn.wikitext.core.util.DefaultXmlStreamWriter;
-import org.eclipse.mylyn.wikitext.core.util.FormattingXMLStreamWriter;
 import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
+import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
  * @author David Green
@@ -39,7 +39,7 @@ public class XslfoDocumentBuilderTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		out = new StringWriter();
-		documentBuilder = new XslfoDocumentBuilder(new FormattingXMLStreamWriter(new DefaultXmlStreamWriter(out)));
+		documentBuilder = new XslfoDocumentBuilder(new DefaultXmlStreamWriter(out));
 		parser = new MarkupParser();
 		parser.setBuilder(documentBuilder);
 	}
@@ -202,4 +202,23 @@ public class XslfoDocumentBuilderTest extends TestCase {
 		// From css styling
 		assertTrue(Pattern.compile("<block font-size=\"10.0pt\" text-align=\"right\">").matcher(xslfo).find());
 	}
+
+	public void testforXslFoLinks() {
+		final String markup = "\"INTERN-LABEL\":#intern_label\n" + "\"*INTERN-BOLD-LABEL*\":#intern_bold_label\n"
+				+ "\"EXTERN-LABEL\":http://extern-label.com/\n";
+
+		documentBuilder.getConfiguration().setPageNumbering(false);
+		documentBuilder.getConfiguration().setTitle("Title");
+
+		parser.setMarkupLanguage(new TextileLanguage());
+		parser.parse(markup);
+
+		final String xslfo = out.toString();
+
+		assertTrue(xslfo.contains("<basic-link internal-destination=\"intern_label\">INTERN-LABEL</basic-link>"));
+		assertTrue(xslfo.contains("<basic-link internal-destination=\"intern_bold_label\"><inline font-weight=\"bold\">INTERN-BOLD-LABEL</inline></basic-link>"));
+		assertTrue(xslfo.contains("<basic-link external-destination=\"url(http://extern-label.com/)\">EXTERN-LABEL</basic-link>"));
+
+	}
+
 }
