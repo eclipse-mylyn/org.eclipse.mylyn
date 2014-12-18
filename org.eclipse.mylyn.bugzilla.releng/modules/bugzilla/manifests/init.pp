@@ -37,6 +37,7 @@ class bugzilla {
     "libdbd-mysql-perl",
     "libemail-mime-perl",
     "libemail-send-perl",
+    "libfile-slurp-perl",
     "libjson-rpc-perl",
     "libmail-sendmail-perl",
     "libmath-random-isaac-perl",
