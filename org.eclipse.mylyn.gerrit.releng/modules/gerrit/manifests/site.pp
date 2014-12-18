@@ -33,7 +33,7 @@ define gerrit::site (
   }
 
   exec { "configure $envid":
-    command => "/usr/lib/jvm/java-7-openjdk-i386/jre/bin/java -jar $base/archive/gerrit-$version.war init --batch --site-path $envbase --no-auto-start",
+    command => "/usr/bin/java -jar $base/archive/gerrit-$version.war init --batch --site-path $envbase --no-auto-start",
     require => Exec["clear $envid"],
     user    => "$gerrit::userOwner",
     creates => "$envbase",
@@ -135,10 +135,10 @@ define gerrit::site (
   }
 
   exec { "add $envbase to apache":
-    command => "echo 'Include $base/conf.d/[^.#]*\n' >> /etc/apache2/conf.d/gerrit.conf",
+    command => "echo 'Include $base/conf.d/[^.#]*\n' >> /etc/apache2/conf-enabled/gerrit.conf",
     require => File["$conf/$envid.conf"],
     notify  => Service["apache2"],
-    onlyif => "grep -qe '^Include $base/conf.d' /etc/apache2/conf.d/gerrit.conf; test $? != 0"
+    onlyif => "grep -qe '^Include $base/conf.d' /etc/apache2/conf-enabled/gerrit.conf; test $? != 0"
   }
   
 }

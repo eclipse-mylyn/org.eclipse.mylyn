@@ -8,7 +8,7 @@ class gerrit {
     onlyif  => "find /var/lib/apt/lists/ -mtime -7 | (grep -q Package; [ $? != 0 ])",
   }
 
-  $requirements = ["apache2", "openjdk-7-jre", "git-core",]
+  $requirements = ["apache2", "openjdk-7-jre-headless:i386", "git-core",]
 
   package { $requirements:
     ensure  => "installed",
@@ -50,7 +50,7 @@ class gerrit {
     require => Exec["Enable ssl module"],
   }
 
-  file { "/etc/apache2/conf.d/proxy.conf":
+  file { "/etc/apache2/conf-enabled/proxy.conf":
     source  => "puppet:/modules/gerrit/proxy.conf",
     require => Package["apache2"],
     notify  => Service["apache2"],

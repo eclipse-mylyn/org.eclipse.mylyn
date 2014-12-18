@@ -1,5 +1,5 @@
-ProxyPass        /<%= envid %> http://localhost:<%= port %>/<%= envid %>
-ProxyPassReverse /<%= envid %> http://localhost:<%= port %>/<%= envid %>
+ProxyPass        /<%= @envid %> http://localhost:<%= @port %>/<%= @envid %>
+ProxyPassReverse /<%= @envid %> http://localhost:<%= @port %>/<%= @envid %>
 
 <% if @authtype == "HTTP" %>
 <% if @allbasicauth %>

@@ -9,7 +9,7 @@ define gerrit::user ($username, $userid, $useremail, $usergroup, $userkey, $envi
   }
 
   exec { "add user $username for $envid":
-    command => "/usr/lib/jvm/java-7-openjdk-i386/jre/bin/java -jar bin/gerrit.war gsql < $envbase/adduser.${username}.sql",
+    command => "/usr/bin/java -jar bin/gerrit.war gsql < $envbase/adduser.${username}.sql",
     cwd     => "$envbase",
     user    => "$gerrit::userOwner",
     require => [File["$envbase/adduser.${username}.sql"],],
