@@ -84,10 +84,10 @@ define hudson::site(
   }
 
   exec { "add $envbase to apache":
-    command => "echo 'Include $base/conf.d/[^.#]*\n' >> /etc/apache2/conf.d/hudson.conf",
+    command => "echo 'Include $base/conf.d/[^.#]*\n' >> /etc/apache2/conf-enabled/hudson.conf",
     require => File["$conf/$envid.conf"],
     notify  => Service["apache2"],
-    onlyif => "grep -qe '^Include $base/conf.d' /etc/apache2/conf.d/hudson.conf; test $? != 0"
+    onlyif => "grep -qe '^Include $base/conf.d' /etc/apache2/conf-enabled/hudson.conf; test $? != 0"
   }
 
 }

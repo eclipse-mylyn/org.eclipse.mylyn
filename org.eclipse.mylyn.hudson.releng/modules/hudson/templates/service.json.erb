@@ -1,8 +1,8 @@
 { 
-  "type": "<%= envtype %>", 
-  "url": "/<%= envid %>/", 
-  "version": "<%= version %>", 
-  "info": "<%= envinfo %>",
+  "type": "<%= @envtype %>",
+  "url": "/<%= @envid %>/",
+  "version": "<%= @version %>",
+  "info": "<%= @envinfo %>",
   "properties":{
 <% if @envdefault == true %>
     "default": "1"
