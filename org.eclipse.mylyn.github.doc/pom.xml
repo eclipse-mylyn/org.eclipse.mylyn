@@ -18,7 +18,7 @@ http://www.eclipse.org/legal/epl-v10.html
   <parent>
      <groupId>org.eclipse.mylyn.github</groupId>
      <artifactId>github-parent</artifactId>
-     <version>3.5.1-SNAPSHOT</version>
+     <version>3.5.3.201412180710-r</version>
   </parent>
 
   <artifactId>org.eclipse.mylyn.github.doc</artifactId>
