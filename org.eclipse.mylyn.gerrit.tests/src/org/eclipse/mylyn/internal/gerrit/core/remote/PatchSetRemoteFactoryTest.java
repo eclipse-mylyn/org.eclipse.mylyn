@@ -193,7 +193,7 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 
 		// compare deleted image
 		patchScript = loadPatchSetContent(fileName, detail2, detail4);
-		boolean isVersion29OrLater = reviewHarness.getClient().isVersion29OrLater(new NullProgressMonitor());
+		boolean isVersion29OrLater = isVersion29OrLater();
 		if (isVersion29OrLater) {
 			//In Gerrit 2.9, if the file (test.png)is not in the target environment (Detail 4), it returns NULL
 			assertThat(patchScript, nullValue());
@@ -336,7 +336,8 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 	@Test
 	public void testLoadPatchSet() throws Exception {
 		// given
-		GerritChange change = reviewHarness.getClient().getChange(reviewHarness.getShortId(), new NullProgressMonitor());
+		GerritChange change = reviewHarness.getClient()
+				.getChange(reviewHarness.getShortId(), new NullProgressMonitor());
 		List<PatchSetDetail> details = change.getPatchSetDetails();
 		assertThat(details, notNullValue());
 		assertThat(details.size(), is(1));

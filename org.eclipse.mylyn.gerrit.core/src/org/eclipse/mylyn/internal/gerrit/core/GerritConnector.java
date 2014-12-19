@@ -37,6 +37,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritAuthenticationState;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritClientStateListener;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpException;
@@ -64,7 +65,7 @@ import com.google.gwtorm.server.StandardKeyEncoder;
 
 /**
  * The Gerrit connector core.
- * 
+ *
  * @author Mikael Kober
  * @author Thomas Westling
  * @author Sascha Scholz
@@ -329,22 +330,22 @@ public class GerritConnector extends ReviewsConnector {
 	protected GerritClient createReviewClient(final TaskRepository repository, boolean b) {
 		GerritConfiguration config = loadConfiguration(repository);
 		GerritAuthenticationState authState = loadAuthState(repository);
-		return new GerritClient(repository, taskRepositoryLocationFactory.createWebLocation(repository), config,
-				authState) {
-			@Override
-			protected void configurationChanged(GerritConfiguration config) {
-				saveConfiguration(repository, config);
-			}
+		return GerritClient.create(repository, taskRepositoryLocationFactory.createWebLocation(repository), config,
+				authState, null, new GerritClientStateListener() {
+					@Override
+					protected void configurationChanged(GerritConfiguration config) {
+						saveConfiguration(repository, config);
+					}
 
-			@Override
-			protected void authStateChanged(GerritAuthenticationState authState) {
-				repository.setProperty(KEY_REPOSITORY_AUTH, GerritClient.authStateToString(authState));
-			}
-		};
+					@Override
+					protected void authStateChanged(GerritAuthenticationState authState) {
+						repository.setProperty(KEY_REPOSITORY_AUTH, GerritClient.authStateToString(authState));
+					}
+				});
 	}
 
 	protected GerritClient createTransientReviewClient(final TaskRepository repository) {
-		return new GerritClient(repository, taskRepositoryLocationFactory.createWebLocation(repository));
+		return GerritClient.create(repository, taskRepositoryLocationFactory.createWebLocation(repository));
 	}
 
 	private GerritAuthenticationState loadAuthState(final TaskRepository repository) {

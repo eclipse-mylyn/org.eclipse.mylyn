@@ -19,19 +19,19 @@ import java.util.regex.Pattern;
 import org.eclipse.core.runtime.Assert;
 import org.osgi.framework.Version;
 
-public class GerritVersion extends Version {
+public class GerritVersion {
 
-	private static final Version VERSION_2_4_0 = new Version(2, 4, 0);
+	public static final Version VERSION_2_4_0 = new Version(2, 4, 0);
 
-	private static final Version VERSION_2_5_0 = new Version(2, 5, 0);
+	public static final Version VERSION_2_5_0 = new Version(2, 5, 0);
 
-	private static final Version VERSION_2_6_0 = new Version(2, 6, 0);
+	public static final Version VERSION_2_6_0 = new Version(2, 6, 0);
 
-	private static final Version VERSION_2_7_0 = new Version(2, 7, 0);
+	public static final Version VERSION_2_7_0 = new Version(2, 7, 0);
 
-	private static final Version VERSION_2_8_0 = new Version(2, 8, 0);
+	public static final Version VERSION_2_8_0 = new Version(2, 8, 0);
 
-	private static final Version VERSION_2_9_0 = new Version(2, 9, 0);
+	public static final Version VERSION_2_9_0 = new Version(2, 9, 0);
 
 	// e.g. 2.6 or 2.6.0
 	private static final Pattern MAJOR_MINOR_MICRO_VERSION_PATTERN = Pattern.compile("V?\\d+\\.\\d+(\\.\\d+)?"); //$NON-NLS-1$
@@ -42,8 +42,7 @@ public class GerritVersion extends Version {
 	// e.g. 2.6.1-rc1, 2.8.6.1
 	private static final Pattern MAJOR_MINOR_MICRO_QUALIFIER_VERSION_PATTERN = Pattern.compile("V?(\\d+)\\.(\\d+)\\.(\\d+)[-\\.]([-\\w]+).*"); //$NON-NLS-1$
 
-	public GerritVersion(String version) {
-		super(version);
+	private GerritVersion() {
 	}
 
 	public static Version parseGerritVersion(String version) {

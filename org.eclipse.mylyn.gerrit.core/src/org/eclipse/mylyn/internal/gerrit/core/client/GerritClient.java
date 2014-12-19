@@ -29,7 +29,6 @@ import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -43,17 +42,13 @@ import java.util.zip.ZipInputStream;
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
@@ -65,33 +60,22 @@ import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailService;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeManageService;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.GerritConfigX;
-import org.eclipse.mylyn.internal.gerrit.core.client.compat.GerritSystemAccount;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchDetailService;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchScriptX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchSetPublishDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectAdminService;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectDetailX;
-import org.eclipse.mylyn.internal.gerrit.core.client.compat.SubmitRecord;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.AbandonInput;
-import org.eclipse.mylyn.internal.gerrit.core.client.rest.ActionInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.AddReviewerResult;
-import org.eclipse.mylyn.internal.gerrit.core.client.rest.BranchInfo;
-import org.eclipse.mylyn.internal.gerrit.core.client.rest.BranchInput;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo;
-import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo29;
-import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeMessageInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.CommentInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.CommentInput;
-import org.eclipse.mylyn.internal.gerrit.core.client.rest.ProjectInfo;
-import org.eclipse.mylyn.internal.gerrit.core.client.rest.RelatedChangeAndCommitInfo;
-import org.eclipse.mylyn.internal.gerrit.core.client.rest.RelatedChangesInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.RestoreInput;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ReviewInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ReviewInput;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ReviewerInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ReviewerInput;
-import org.eclipse.mylyn.internal.gerrit.core.client.rest.RevisionInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.SubmitInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.SubmitInput;
 import org.eclipse.mylyn.internal.gerrit.core.remote.GerritRemoteFactoryProvider;
@@ -103,7 +87,6 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Version;
 
-import com.google.gerrit.common.data.AccountDashboardInfo;
 import com.google.gerrit.common.data.AccountInfo;
 import com.google.gerrit.common.data.AccountInfoCache;
 import com.google.gerrit.common.data.AccountService;
@@ -113,25 +96,19 @@ import com.google.gerrit.common.data.ChangeListService;
 import com.google.gerrit.common.data.GerritConfig;
 import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.common.data.ReviewerResult;
-import com.google.gerrit.common.data.SingleListChangeInfo;
 import com.google.gerrit.common.data.ToggleStarRequest;
 import com.google.gerrit.reviewdb.Account;
 import com.google.gerrit.reviewdb.AccountDiffPreference;
 import com.google.gerrit.reviewdb.AccountDiffPreference.Whitespace;
 import com.google.gerrit.reviewdb.ApprovalCategoryValue;
-import com.google.gerrit.reviewdb.Branch;
 import com.google.gerrit.reviewdb.Change;
-import com.google.gerrit.reviewdb.ChangeMessage;
 import com.google.gerrit.reviewdb.ContributorAgreement;
 import com.google.gerrit.reviewdb.Patch;
 import com.google.gerrit.reviewdb.Patch.ChangeType;
 import com.google.gerrit.reviewdb.PatchLineComment;
 import com.google.gerrit.reviewdb.PatchSet;
 import com.google.gerrit.reviewdb.PatchSet.Id;
-import com.google.gerrit.reviewdb.PatchSetInfo;
 import com.google.gerrit.reviewdb.Project;
-import com.google.gerrit.reviewdb.Project.NameKey;
-import com.google.gerrit.reviewdb.UserIdentity;
 import com.google.gson.reflect.TypeToken;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtjsonrpc.client.RemoteJsonService;
@@ -152,21 +129,13 @@ import com.google.gwtjsonrpc.client.VoidResult;
  */
 public class GerritClient extends ReviewsClient {
 
+	final String NOT_SIGNED_IN = "Not Signed In"; //$NON-NLS-1$
+
 	private static final Pattern GERRIT_VERSION_PATTERN = Pattern.compile("Powered by Gerrit Code Review (.+)</p>"); //$NON-NLS-1$
 
 	private static final String GET_LABELS_OPTION = "LABELS"; //$NON-NLS-1$
 
-	private final String NOT_SIGNED_IN = "Not Signed In"; //$NON-NLS-1$
-
-	private final String OK = "OK"; //$NON-NLS-1$
-
-	private final String NEED = "NEED"; //$NON-NLS-1$
-
-	private final String REJECT = "REJECT"; //$NON-NLS-1$
-
-	final String MAY = "MAY"; //$NON-NLS-1$
-
-	private abstract class Operation<T> implements AsyncCallback<T> {
+	abstract class Operation<T> implements AsyncCallback<T> {
 
 		private Throwable exception;
 
@@ -205,7 +174,7 @@ public class GerritClient extends ReviewsClient {
 
 	}
 
-	public boolean isAuthenticationException(Throwable exception) {
+	private boolean isAuthenticationException(Throwable exception) {
 		if (exception instanceof GerritException) {
 			return ((GerritException) exception).getCode() == -32603
 					&& "Invalid xsrfKey in request".equals(((GerritException) exception).getMessage()); //$NON-NLS-1$
@@ -246,42 +215,70 @@ public class GerritClient extends ReviewsClient {
 		}
 	}
 
-	private final GerritHttpClient client;
+	private GerritHttpClient client;
 
 	private volatile GerritConfiguration config;
 
 	private Account myAcount;
 
-	private Version myVersion;
+	private final Version version;
 
-	private final Map<Class<? extends RemoteJsonService>, RemoteJsonService> serviceByClass;
+	private Map<Class<? extends RemoteJsonService>, RemoteJsonService> serviceByClass;
+
+	private GerritClientStateListener stateListener;
 
 	private volatile boolean configRefreshed;
 
-	/**
-	 * The GWT query API was removed in Gerrit 2.5 and replaced with a REST API. If this flag is true, the REST API is
-	 * used.
-	 */
-	private boolean restQueryAPIEnabled;
-
-	public GerritClient(TaskRepository repository, AbstractWebLocation location) {
-		this(repository, location, null, null, null);
+	public static GerritClient create(TaskRepository repository, AbstractWebLocation location) {
+		return create(repository, location, null, null, null, null);
 	}
 
-	public GerritClient(TaskRepository repository, AbstractWebLocation location, GerritConfiguration config,
-			GerritAuthenticationState authState) {
-		this(repository, location, config, authState, null);
+	public static GerritClient create(TaskRepository repository, AbstractWebLocation location,
+			GerritConfiguration config, GerritAuthenticationState authState, String xsrfKey,
+			GerritClientStateListener stateListener) {
+		Version version = Version.emptyVersion;
+		GerritClient versionDiscoveryClient = new GerritClient(repository, version);
+		versionDiscoveryClient.initialize(location, config, authState, xsrfKey, stateListener);
+		try {
+			version = versionDiscoveryClient.getVersion(new NullProgressMonitor());
+		} catch (GerritException e) {
+			//Ignore, we'll just use the base client.
+		}
+		GerritClient client = null;
+		if (GerritVersion.isVersion29OrLater(version)) {
+			client = new GerritClient29(repository, version);
+		} else if (GerritVersion.isVersion28OrLater(version)) {
+			client = new GerritClient28(repository, version);
+		} else if (GerritVersion.isVersion27OrLater(version)) {
+			client = new GerritClient27(repository, version);
+		} else if (GerritVersion.isVersion26OrLater(version)) {
+			client = new GerritClient26(repository, version);
+		} else if (GerritVersion.isVersion24x(version)) {
+			client = new GerritClient24(repository, version);
+		} else {
+			client = new GerritClient(repository, version);
+		}
+		client.initialize(location, config, authState, xsrfKey, stateListener);
+		return client;
 	}
 
-	public GerritClient(TaskRepository repository, AbstractWebLocation location, GerritConfiguration config,
-			GerritAuthenticationState authState, String xsrfKey) {
+	protected GerritClient(TaskRepository repository, Version version) {
 		super(repository);
+		Assert.isNotNull(version);
+		this.version = version;
+	}
+
+	protected void initialize(AbstractWebLocation location, GerritConfiguration config,
+			GerritAuthenticationState authState, String xsrfKey, final GerritClientStateListener stateListener) {
+		this.stateListener = stateListener;
 		this.client = new GerritHttpClient(location) {
 			@Override
 			protected void sessionChanged(Cookie cookie) {
 				GerritAuthenticationState authState = new GerritAuthenticationState();
 				authState.setCookie(cookie);
-				authStateChanged(authState);
+				if (stateListener != null) {
+					stateListener.authStateChanged(authState);
+				}
 			}
 		};
 		if (authState != null) {
@@ -294,331 +291,42 @@ public class GerritClient extends ReviewsClient {
 		this.config = config;
 	}
 
-	public void createRemoteBranch(String projectName, String branchName, String revision, IProgressMonitor monitor)
-			throws GerritException {
-		Assert.isTrue(isVersion29OrLater(monitor), 
-				"Creating branches is only supported in Gerrit versions 2.9 or later"); //$NON-NLS-1$
-		String url = getProjectBranchesUrl(projectName) + branchName;
-		BranchInput input = new BranchInput(branchName, revision);
-		executePutRestRequest(url, input, BranchInput.class, createErrorHandler(), monitor);
-	}
-
-	public BranchInfo[] getRemoteProjectBranches(String projectName, IProgressMonitor monitor) throws GerritException {
-		Assert.isTrue(isVersion29OrLater(monitor), 
-				"Querying branches is only supported in Gerrit versions 2.9 or later"); //$NON-NLS-1$
-		String url = getProjectBranchesUrl(projectName);
-		return executeGetRestRequest(url, BranchInfo[].class, monitor);
-	}
-
-	private String getProjectBranchesUrl(String projectName) {
-		return "/projects/" + projectName + "/branches/"; //$NON-NLS-1$ //$NON-NLS-2$
-	}
-
-	public PatchLineComment saveDraft(Patch.Key patchKey, String message, int line, short side, String parentUuid,
-			String uuid, IProgressMonitor monitor) throws GerritException {
+	protected PatchLineComment createDraftComment(Patch.Key patchKey, String message, int line, short side,
+			String parentUuid, String uuid, IProgressMonitor monitor) throws GerritException {
 		PatchLineComment.Key id = new PatchLineComment.Key(patchKey, uuid);
 		final PatchLineComment comment = new PatchLineComment(id, line, getAccount(monitor).getId(), parentUuid);
 		comment.setMessage(message);
 		comment.setSide(side);
-		if (isVersion29OrLater(monitor)) {
-			if (uuid == null) {
-				uuid = ""; //$NON-NLS-1$
-			}
-			CommentInput commentInput = new CommentInput();
-			commentInput.setLine(line);
-			commentInput.setMessage(message);
-			commentInput.setPath(patchKey.getFileName());
-			if (side == 0) {
-				commentInput.setSide("PARENT"); //$NON-NLS-1$
-			} else {
-				commentInput.setSide("REVISION"); //$NON-NLS-1$
-			}
+		return comment;
+	}
 
-			String uri = "/changes/" + Integer.toString(patchKey.getParentKey().getParentKey().get()) //$NON-NLS-1$
-					+ "/revisions/" + patchKey.getParentKey().get() + "/drafts"; //$NON-NLS-1$ //$NON-NLS-2$
-			if (!uuid.isEmpty()) {
-				uri = uri.concat("/" + uuid); //$NON-NLS-1$
+	public PatchLineComment saveDraft(Patch.Key patchKey, String message, int line, short side, String parentUuid,
+			String uuid, IProgressMonitor monitor) throws GerritException {
+		final PatchLineComment comment = createDraftComment(patchKey, message, line, side, parentUuid, uuid, monitor);
+		return execute(monitor, new Operation<PatchLineComment>() {
+			@Override
+			public void execute(IProgressMonitor monitor) throws GerritException {
+				getPatchDetailService(monitor).saveDraft(comment, this);
 			}
-
-			executePutRestRequest(uri, commentInput, CommentInput.class, null/*no error handler*/, monitor);
-
-			return comment;
-		} else {
-			return execute(monitor, new Operation<PatchLineComment>() {
-				@Override
-				public void execute(IProgressMonitor monitor) throws GerritException {
-					getPatchDetailService(monitor).saveDraft(comment, this);
-				}
-			});
-		}
+		});
 	}
 
 	public VoidResult deleteDraft(Patch.Key patchkey, String uuid, IProgressMonitor monitor) throws GerritException {
 		final PatchLineComment.Key id = new PatchLineComment.Key(patchkey, uuid);
-		if (isVersion29OrLater(monitor)) {
-			CommentInput commentInput = new CommentInput();
-			String uri = "/changes/" + Integer.toString(patchkey.getParentKey().getParentKey().get()) //$NON-NLS-1$
-					+ "/revisions/" + patchkey.getParentKey().get() + "/drafts/" + uuid; //$NON-NLS-1$ //$NON-NLS-2$
-
-			executeDeleteRestRequest(uri, commentInput, CommentInput.class, null/*no error handler*/, monitor);
-			return null;
-		} else {
-			return execute(monitor, new Operation<VoidResult>() {
-				@Override
-				public void execute(IProgressMonitor monitor) throws GerritException {
-					getPatchDetailService(monitor).deleteDraft(id, this);
-				}
-			});
-		}
+		return execute(monitor, new Operation<VoidResult>() {
+			@Override
+			public void execute(IProgressMonitor monitor) throws GerritException {
+				getPatchDetailService(monitor).deleteDraft(id, this);
+			}
+		});
 	}
 
 	public ChangeDetail abandon(String reviewId, int patchSetId, final String message, IProgressMonitor monitor)
 			throws GerritException {
 		final PatchSet.Id id = new PatchSet.Id(new Change.Id(id(reviewId)), patchSetId);
-		if (hasJsonRpcApi(monitor)) {
-			return execute(monitor, new Operation<ChangeDetail>() {
-				@Override
-				public void execute(IProgressMonitor monitor) throws GerritException {
-					getChangeManageService(monitor).abandonChange(id, message, this);
-				}
-			});
-		} else {
-			final String uri = "/a/changes/" + id.getParentKey().get() + "/abandon"; //$NON-NLS-1$ //$NON-NLS-2$
-			executePostRestRequest(uri, new AbandonInput(message), ChangeInfo.class, null/*no error handler*/, monitor);
-			return getChangeDetail(id.getParentKey().get(), monitor);
-		}
-	}
-
-	public Object getChangeInfo29(String query, Class returnClass, IProgressMonitor monitor) throws GerritException {
-		return executeGetRestRequest(query, returnClass, monitor);
-	}
-
-	private List<PatchSet> getPatchSets29(final String changeInfoId, int reviewId, IProgressMonitor monitor)
-			throws GerritException {
-
-		List<PatchSet> patchSets = new ArrayList<PatchSet>();
-		String query = "/changes/?q=" + changeInfoId + "+change:" + reviewId + "&o=ALL_REVISIONS"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		ChangeInfo29[] changeInfo = (ChangeInfo29[]) getChangeInfo29(query, ChangeInfo29[].class, monitor);
-
-		for (ChangeInfo element : changeInfo) {
-			for (Entry<String, RevisionInfo> revisionInfo : element.getRevisions().entrySet()) {
-				PatchSet.Id patchSetId = new PatchSet.Id(new Change.Id(reviewId), revisionInfo.getValue().getNumber());
-				patchSets.add(new PatchSet(patchSetId));
-			}
-
-		}
-		Collections.sort(patchSets, new Comparator<PatchSet>() {
-
-			@Override
-			public int compare(PatchSet p1, PatchSet p2) {
-				return p1.getPatchSetId() - p2.getPatchSetId();
-			}
-
-		});
-		return patchSets;
-	}
-
-	public RelatedChangesInfo getRelatedChanges(final int reviewId, String revisionId, IProgressMonitor monitor)
-			throws GerritException {
-		String query = "/changes/" + Integer.toString(reviewId) + "/revisions/" + revisionId + "/related"; //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
-		RelatedChangesInfo relatedChangesInfo = (RelatedChangesInfo) getChangeInfo29(query, RelatedChangesInfo.class,
-				monitor);
-		return relatedChangesInfo;
-	}
-
-	private ChangeMessage convertChangeMessage(int reviewId, ChangeInfo changeInfo, ChangeMessageInfo changeMessageInfo) {
-		Change.Id changeId = new Change.Id(reviewId);
-		ChangeMessage.Key changeMessageKey = new ChangeMessage.Key(changeId, changeInfo.getId());
-		org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo author = changeMessageInfo.getAuthor();
-		if (author == null) {
-			//if Author is not set, the ChangeMessageInfo was created by the Gerrit system
-			author = GerritSystemAccount.GERRIT_SYSTEM;
-		}
-		Account.Id accountId = new Account.Id(author.getId());
-		ChangeMessage changeMessage = new ChangeMessage(changeMessageKey, accountId, changeMessageInfo.getDate());
-		changeMessage.setMessage(changeMessageInfo.getMesssage());
-		return changeMessage;
-	}
-
-	private Branch.NameKey getBranchKey(ChangeInfo changeInfo) {
-		Project.NameKey projectKey = new Project.NameKey(changeInfo.getProject());
-		Branch.NameKey branchKey = new Branch.NameKey(projectKey, changeInfo.getBranch());
-		return branchKey;
-	}
-
-	private Change createChange(String keyString, int changeIdValue, AccountInfo accountInfo, Branch.NameKey branchKey) {
-		Change.Key key = new Change.Key(keyString);
-		Change.Id changeId = new Change.Id(changeIdValue);
-		Change change = new Change(key, changeId, accountInfo.getId(), branchKey);
-		return change;
-	}
-
-	private PatchSetInfo getPatchSetInfo(PatchSet.Id patchsetId, String subject) {
-		PatchSetInfo patchSetInfo = new PatchSetInfo(patchsetId);
-		patchSetInfo.setSubject(subject);
-		return patchSetInfo;
-	}
-
-	private com.google.gerrit.common.data.ChangeInfo convertToGoogleChangeInfo(RelatedChangeAndCommitInfo info,
-			AccountInfo accountInfo, Branch.NameKey branchKey) {
-
-		Change change = createChange(info.getChangeId(), info.getChangeNumber(), accountInfo, branchKey);
-		PatchSet.Id patchsetId = new PatchSet.Id(change.getId(), info.getCurrentRevisionNumbe());
-
-		PatchSetInfo patchSetInfo = getPatchSetInfo(patchsetId, info.getCommitInfo().getSubject());
-		change.setCurrentPatchSet(patchSetInfo);
-		com.google.gerrit.common.data.ChangeInfo googleChangeInfo = new com.google.gerrit.common.data.ChangeInfo(change);
-
-		return googleChangeInfo;
-	}
-
-	public ChangeDetailX getChangeDetail29(int reviewId, IProgressMonitor monitor) throws GerritException {
-		ChangeDetailX changeDetail = null;
-		String query = "/changes/" + Integer.toString(reviewId) + "/detail/?o=ALL_REVISIONS&o=MESSAGES"; //$NON-NLS-1$//$NON-NLS-2$
-		ChangeInfo29 changeInfo = (ChangeInfo29) getChangeInfo29(query, ChangeInfo29.class, monitor);
-
-		List<PatchSet> patchSets = getPatchSets29(changeInfo.getChangeId(), reviewId, monitor);
-
-		List<ChangeMessage> listChangeMessage = new ArrayList<ChangeMessage>();
-		List<ChangeMessageInfo> listChangeMessageInfo = changeInfo.getMessages();
-
-		boolean containsMessageFromGerritSystem = false;
-		for (ChangeMessageInfo changeMessageInfo : listChangeMessageInfo) {
-
-			if (changeMessageInfo.getAuthor() == null) {
-				//if Author is not set, the ChangeMessageInfo was created by the Gerrit system
-				containsMessageFromGerritSystem = true;
-			}
-			ChangeMessage changeMessage = convertChangeMessage(reviewId, changeInfo, changeMessageInfo);
-			listChangeMessage.add(changeMessage);
-		}
-
-		List<AccountInfo> listAccountInfo = new ArrayList<AccountInfo>();
-
-		AccountInfo accountInfo = convertAuthorFrom29ToAccountInfo(changeInfo);
-		listAccountInfo.add(accountInfo);
-
-		if (containsMessageFromGerritSystem) {
-			//add Gerrit system if there was a ChangeMessageInfo that was created by the Gerrit system
-			listAccountInfo.add(org.eclipse.mylyn.internal.gerrit.core.client.compat.GerritSystemAccount.GERRIT_SYSTEM.getGerritSystemAccountInfo());
-		}
-
-		AccountInfoCache accountInfoCache = new AccountInfoCache(listAccountInfo);
-
-		changeDetail = new ChangeDetailX();
-		changeDetail.setDateCreated(changeInfo.getCreated());
-		changeDetail.setLastModified(changeInfo.getUpdated());
-		changeDetail.setStarred(changeInfo.getStarred() != null ? true : false);
-		changeDetail.setAccounts(accountInfoCache);
-		changeDetail.setMessages(listChangeMessage);
-
-		Branch.NameKey branchKey = getBranchKey(changeInfo);
-
-		setChangeDetailDependency(reviewId, changeInfo, changeDetail, accountInfo, monitor);
-		PatchSetInfo patchSetInfo = getPatchSetInfo(changeInfo.getCurrentPatchSetId(), changeInfo.getSubject());
-
-		changeDetail.setApprovals(changeInfo.convertToApprovalDetails());
-		changeDetail.setApprovalTypes(changeInfo.convertToApprovalTypes());
-
-		//Fill the submit records
-		String querysubmit = "/changes/" + Integer.toString(reviewId) + "/revisions/current/test.submit_rule?filters=SKIP"; //$NON-NLS-1$//$NON-NLS-2$
-		List<SubmitRecord> submitRecord = currentSubmitRecord29(querysubmit, monitor);
-		changeDetail.setSubmitRecords(submitRecord);
-		if (changeDetail.getApprovalTypes() == null && getGerritConfig() != null) {
-			changeDetail.convertSubmitRecordsToApprovalTypes(getGerritConfig().getApprovalTypes());
-		}
-
-		changeDetail.setPatchSets(patchSets);
-		List<ReviewerInfo> reviewers = listReviewers(reviewId, monitor);
-		if (!hasAllReviewers(changeDetail.getAccounts(), reviewers)) {
-			merge(changeDetail.getAccounts(), reviewers);
-		}
-
-		Change initialChange = createChange(changeInfo.getChangeId(), reviewId, accountInfo, branchKey);
-
-		initialChange.setCurrentPatchSet(patchSetInfo);
-
-		initialChange.setStatus(changeInfo.getStatus());
-		changeDetail.setChange(initialChange);
-		setActions29(reviewId, changeDetail, monitor);
-		return changeDetail;
-	}
-
-	private List<SubmitRecord> currentSubmitRecord29(String uri, IProgressMonitor monitor) throws GerritException {
-		List<SubmitRecord> submitRecordList = new ArrayList<SubmitRecord>();
-		SubmitRecord[] submitRecordArray = executePostRestRequest(uri, new SubmitRecord(), SubmitRecord[].class,
-				new ErrorHandler() {
-					@Override
-					public void handleError(HttpMethodBase method) throws GerritException {
-						String errorMsg = getResponseBodyAsString(method);
-						if (isNotPermitted(method, errorMsg) || isConflict(method)) {
-							throw new GerritException(NLS.bind("Cannot get submit change: {0}", errorMsg)); //$NON-NLS-1$
-						}
-					}
-
-					private String getResponseBodyAsString(HttpMethodBase method) {
-						try {
-							return method.getResponseBodyAsString();
-						} catch (IOException e) {
-							return null;
-						}
-					}
-
-					private boolean isNotPermitted(HttpMethodBase method, String msg) {
-						return method.getStatusCode() == HttpURLConnection.HTTP_FORBIDDEN
-								&& "submit not permitted\n".equals(msg); //$NON-NLS-1$
-					}
-
-					private boolean isConflict(HttpMethodBase method) {
-						return method.getStatusCode() == HttpURLConnection.HTTP_CONFLICT;
-					}
-				}, monitor);
-		for (SubmitRecord element : submitRecordArray) {
-			List<SubmitRecord.Label> list = null;
-			if (element.getStatus().equalsIgnoreCase("OK")) { //$NON-NLS-1$
-				list = element.createLabel(element, element.getOkMap(), OK);
-			} else if (element.getStatus().equalsIgnoreCase("NOT_READY")) { //$NON-NLS-1$
-				list = element.createLabel(element, element.getNeedMap(), NEED);
-			} else if (element.getStatus().equalsIgnoreCase("REJECT")) { //$NON-NLS-1$
-				list = element.createLabel(element, element.getRejectMap(), REJECT);
-			} else if (element.getStatus().equalsIgnoreCase("MAY")) { //$NON-NLS-1$
-				list = element.createLabel(element, element.getMayMap(), MAY);
-			}
-			element.setLabels(list);
-			submitRecordList.add(element);
-		}
-
-		return submitRecordList;
-	}
-
-	private void setChangeDetailDependency(int reviewId, ChangeInfo29 changeInfo29, ChangeDetailX changeDetail,
-			AccountInfo accountInfo, IProgressMonitor monitor) throws GerritException {
-		List<com.google.gerrit.common.data.ChangeInfo> dependsOn = new ArrayList<com.google.gerrit.common.data.ChangeInfo>();
-		List<com.google.gerrit.common.data.ChangeInfo> neededBy = new ArrayList<com.google.gerrit.common.data.ChangeInfo>();
-		Branch.NameKey branchKey = getBranchKey(changeInfo29);
-
-		RelatedChangesInfo relatedChangesInfo = getRelatedChanges(reviewId, changeInfo29.getCurrentRevision(), monitor);
-		List<RelatedChangeAndCommitInfo> listCommitInfo = relatedChangesInfo.getCommitInfo();
-		boolean needed = true;
-		for (RelatedChangeAndCommitInfo relatedChangeAndCommitInfo : listCommitInfo) {
-			if (relatedChangeAndCommitInfo.getCommitInfo()
-					.getCommit()
-					.equalsIgnoreCase(changeInfo29.getCurrentRevision())) {
-				needed = false;
-			} else {
-				if (relatedChangeAndCommitInfo.getChangeNumber() > 0) {
-					com.google.gerrit.common.data.ChangeInfo googleChangeInfo = convertToGoogleChangeInfo(
-							relatedChangeAndCommitInfo, accountInfo, branchKey);
-					if (needed) {
-						neededBy.add(googleChangeInfo);
-					} else {
-						dependsOn.add(googleChangeInfo);
-					}
-				}
-			}
-		}
-		changeDetail.setNeededBy(neededBy);
-		changeDetail.setDependsOn(dependsOn);
+		final String uri = "/a/changes/" + id.getParentKey().get() + "/abandon"; //$NON-NLS-1$ //$NON-NLS-2$
+		executePostRestRequest(uri, new AbandonInput(message), ChangeInfo.class, null/*no error handler*/, monitor);
+		return getChangeDetail(id.getParentKey().get(), monitor);
 	}
 
 	/**
@@ -628,114 +336,25 @@ public class GerritClient extends ReviewsClient {
 		final Change.Id changeId = new Change.Id(reviewId);
 		ChangeDetailX changeDetail = null;
 
-		if (isVersion29OrLater(monitor)) {
-			changeDetail = getChangeDetail29(reviewId, monitor);
-		} else {
-			changeDetail = execute(monitor, new Operation<ChangeDetailX>() {
-				@Override
-				public void execute(IProgressMonitor monitor) throws GerritException {
-					getChangeDetailService(monitor).changeDetailX(changeId, this);
-				}
-			});
-			if (isVersion26OrLater(monitor)) {
-				if (changeDetail.getApprovals() == null) {
-					ChangeInfo changeInfo = getChangeInfo(reviewId, monitor);
-					changeDetail.setApprovals(changeInfo.convertToApprovalDetails());
-					changeDetail.setApprovalTypes(changeInfo.convertToApprovalTypes());
-				}
-				List<ReviewerInfo> reviewers = listReviewers(reviewId, monitor);
-				if (!hasAllReviewers(changeDetail.getAccounts(), reviewers)) {
-					merge(changeDetail.getAccounts(), reviewers);
-				}
-			} else if (changeDetail.getApprovalTypes() == null && getGerritConfig() != null) {
-				changeDetail.convertSubmitRecordsToApprovalTypes(getGerritConfig().getApprovalTypes());
+		changeDetail = execute(monitor, new Operation<ChangeDetailX>() {
+			@Override
+			public void execute(IProgressMonitor monitor) throws GerritException {
+				getChangeDetailService(monitor).changeDetailX(changeId, this);
 			}
-			changeDetail.setDateCreated(changeDetail.getChange().getCreatedOn());
-			changeDetail.setLastModified(changeDetail.getChange().getLastUpdatedOn());
-
-		}
+		});
+		changeDetail.setDateCreated(changeDetail.getChange().getCreatedOn());
+		changeDetail.setLastModified(changeDetail.getChange().getLastUpdatedOn());
 		return changeDetail;
 	}
 
-	private AccountInfo convertAuthorFrom29ToAccountInfo(ChangeInfo changeInfo) {
-		AccountInfo accountInfo;
-		Account account;
-		account = new Account(new Account.Id(changeInfo.getOwner().getId()));
-		account.setFullName(changeInfo.getOwner().getName());
-		account.setUserName(changeInfo.getOwner().getUsername());
-		account.setPreferredEmail(changeInfo.getOwner().getEmail());
-		accountInfo = new AccountInfo(account);
-
-		return accountInfo;
-	}
-
-	private org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo getAccountInfo(String account,
-			IProgressMonitor monitor) throws GerritException, URIException {
-		if (GerritSystemAccount.GERRIT_SYSTEM_NAME.equals(account)) {
-			return GerritSystemAccount.GERRIT_SYSTEM;
-		}
-		String st = URIUtil.encodeQuery(account);
-		final String uri = "/accounts/" + st; //$NON-NLS-1$
-		org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo accountInfo = executeGetRestRequest(uri,
-				org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo.class, monitor);
-		return accountInfo;
-	}
-
-	private void setActions29(int reviewId, ChangeDetailX changeDetail, IProgressMonitor monitor) {
-		ChangeInfo29 changeInfo29 = null;
-		try {
-			changeInfo29 = executeGetRestRequest("/changes/" + Integer.toString(reviewId) //$NON-NLS-1$
-					+ "/?o=CURRENT_REVISION&o=CURRENT_ACTIONS", ChangeInfo29.class, monitor); //$NON-NLS-1$
-		} catch (GerritException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
-					"ChangeDetailX GerritException running rest query", e)); //$NON-NLS-1$
-		}
-
-		if (changeInfo29 != null) {
-			if (changeInfo29.getRevisions() != null) {
-				setRevisionActions29(changeInfo29, changeDetail);
-			}
-
-			if (changeInfo29.getActions() != null) {
-				setGlobalActions29(changeInfo29, changeDetail);
-			}
-		}
-	}
-
-	private void setRevisionActions29(ChangeInfo29 changeInfo29, ChangeDetailX changeDetail) {
-		for (Entry<String, RevisionInfo> mapRevisions : changeInfo29.getRevisions().entrySet()) {
-			if (mapRevisions.getValue().getActions() != null) {
-				for (Entry<String, ActionInfo> mapActions : mapRevisions.getValue().getActions().entrySet()) {
-					if (mapActions.getKey().equalsIgnoreCase("submit")) { //$NON-NLS-1$
-						changeDetail.setCanSubmit(mapActions.getValue().getEnabled());
-					} else if (mapActions.getKey().equalsIgnoreCase("rebase")) { //$NON-NLS-1$
-						changeDetail.setCanRebase(mapActions.getValue().getEnabled());
-					}
-				}
-			}
-		}
-	}
-
-	private void setGlobalActions29(ChangeInfo29 changeInfo29, ChangeDetailX changeDetail) {
-		for (Entry<String, ActionInfo> mapActions : changeInfo29.getActions().entrySet()) {
-			if (mapActions.getKey().equalsIgnoreCase("abandon")) { //$NON-NLS-1$
-				changeDetail.setCanAbandon(mapActions.getValue().getEnabled());
-				changeDetail.setCanRestore(!mapActions.getValue().getEnabled());
-			} else if (mapActions.getKey().equalsIgnoreCase("restore")) { //$NON-NLS-1$
-				changeDetail.setCanAbandon(!mapActions.getValue().getEnabled());
-				changeDetail.setCanRestore(mapActions.getValue().getEnabled());
-			}
-		}
-	}
-
-	private List<ReviewerInfo> listReviewers(final int reviewId, IProgressMonitor monitor) throws GerritException {
+	protected List<ReviewerInfo> listReviewers(final int reviewId, IProgressMonitor monitor) throws GerritException {
 		final String uri = "/changes/" + reviewId + "/reviewers/"; //$NON-NLS-1$ //$NON-NLS-2$
 		TypeToken<List<ReviewerInfo>> reviewersListType = new TypeToken<List<ReviewerInfo>>() {
 		};
 		return executeGetRestRequest(uri, reviewersListType.getType(), monitor);
 	}
 
-	private boolean hasAllReviewers(AccountInfoCache accounts, List<ReviewerInfo> reviewers) {
+	protected boolean hasAllReviewers(AccountInfoCache accounts, List<ReviewerInfo> reviewers) {
 		for (ReviewerInfo reviewer : reviewers) {
 			AccountInfo cachedAccount = accounts.get(new Account.Id(reviewer.getId()));
 			if (cachedAccount == null || isAnonymous(cachedAccount)) {
@@ -749,7 +368,7 @@ public class GerritClient extends ReviewsClient {
 		return accountInfo.getFullName() == null && accountInfo.getPreferredEmail() == null;
 	}
 
-	private void merge(AccountInfoCache accounts, List<ReviewerInfo> reviewers) {
+	protected void merge(AccountInfoCache accounts, List<ReviewerInfo> reviewers) {
 		Set<com.google.gerrit.common.data.AccountInfo> accountInfos = new HashSet<com.google.gerrit.common.data.AccountInfo>(
 				reviewers.size());
 		for (ReviewerInfo reviewer : reviewers) {
@@ -788,7 +407,6 @@ public class GerritClient extends ReviewsClient {
 	}
 
 	public GerritSystemInfo getInfo(IProgressMonitor monitor) throws GerritException {
-		Version version = getCachedVersion(monitor);
 		List<ContributorAgreement> contributorAgreements = null;
 		Account account = null;
 		if (!isAnonymous()) {
@@ -798,7 +416,7 @@ public class GerritClient extends ReviewsClient {
 			executeQuery(monitor, "status:open"); //$NON-NLS-1$
 		}
 		refreshConfigOnce(monitor);
-		return new GerritSystemInfo(version, contributorAgreements, account);
+		return new GerritSystemInfo(getVersion(), contributorAgreements, account);
 	}
 
 	PatchScriptX getPatchScript(final Patch.Key key, final PatchSet.Id leftId, final PatchSet.Id rightId,
@@ -862,7 +480,7 @@ public class GerritClient extends ReviewsClient {
 
 	/**
 	 * Checks for the 4 byte header that identifies a ZIP file
-	 *
+	 * 
 	 * @noreference This method is not intended to be referenced by clients.
 	 */
 	public static boolean isZippedContent(byte[] bin) {
@@ -943,56 +561,14 @@ public class GerritClient extends ReviewsClient {
 		return message != null && message.contains("No such service method"); //$NON-NLS-1$
 	}
 
-	public PatchSetPublishDetailX getPatchSetPublishDetail29(final PatchSet.Id id, IProgressMonitor monitor)
-			throws GerritException {
-		PatchSetPublishDetailX publishDetail = null;
-		publishDetail = new PatchSetPublishDetailX();
-		ChangeInfo changeInfo = getChangeInfo(id.getParentKey().get(), monitor);
-
-		List<AccountInfo> listAccountInfo = new ArrayList<AccountInfo>();
-
-		AccountInfo accountInfo = convertAuthorFrom29ToAccountInfo(changeInfo);
-		listAccountInfo.add(accountInfo);
-		AccountInfoCache accountInfoCache = new AccountInfoCache(listAccountInfo);
-		publishDetail.setAccounts(accountInfoCache);
-
-		Branch.NameKey branchKey = getBranchKey(changeInfo);
-		Change currentChange = createChange(changeInfo.getChangeId(), id.getParentKey().get(), accountInfo, branchKey);
-		currentChange.setStatus(changeInfo.getStatus());
-
-		publishDetail.setChange(currentChange);
-
-		PatchSetInfo patchSetInfo = getPatchSetInfo(changeInfo.getCurrentPatchSetId(), changeInfo.getSubject());
-		publishDetail.setPatchSetInfo(patchSetInfo);
-		publishDetail.setLabels(changeInfo.convertToPermissionLabels());
-
-		if (publishDetail.getGiven() == null) {
-			publishDetail.setGiven(changeInfo.convertToPatchSetApprovals(id, getAccount(monitor)));
-		}
-		return publishDetail;
-	}
-
 	public PatchSetPublishDetailX getPatchSetPublishDetail(final PatchSet.Id id, IProgressMonitor monitor)
 			throws GerritException {
-		PatchSetPublishDetailX publishDetail = null;
-		if (isVersion29OrLater(monitor)) {
-			publishDetail = getPatchSetPublishDetail29(id, monitor);
-		} else {
-			publishDetail = execute(monitor, new Operation<PatchSetPublishDetailX>() {
-				@Override
-				public void execute(IProgressMonitor monitor) throws GerritException {
-					getChangeDetailService(monitor).patchSetPublishDetailX(id, this);
-				}
-			});
-			if (publishDetail.getLabels() == null && isVersion26OrLater(monitor)) {
-				ChangeInfo changeInfo = getChangeInfo(id.getParentKey().get(), monitor);
-				publishDetail.setLabels(changeInfo.convertToPermissionLabels());
-				if (publishDetail.getGiven() == null) {
-					publishDetail.setGiven(changeInfo.convertToPatchSetApprovals(id, getAccount(monitor)));
-				}
+		PatchSetPublishDetailX publishDetail = execute(monitor, new Operation<PatchSetPublishDetailX>() {
+			@Override
+			public void execute(IProgressMonitor monitor) throws GerritException {
+				getChangeDetailService(monitor).patchSetPublishDetailX(id, this);
 			}
-
-		}
+		});
 		return publishDetail;
 	}
 
@@ -1019,10 +595,7 @@ public class GerritClient extends ReviewsClient {
 				if (!isAnonymous()) {
 					PatchSetPublishDetailX patchSetPublishDetail = getPatchSetPublishDetail(patchSet.getId(), monitor);
 
-					if (isVersion29OrLater(monitor)) {
-						//To add the AccountId if available
-						patchSetPublishDetail.setPatchSetInfo(setAccountPatchSetInfo(patchSetDetail.getInfo(), monitor));
-					}
+					applyPatchSetInfo(patchSetDetail, patchSetPublishDetail, monitor);
 					patchSetPublishDetailByPatchSetId.put(patchSet.getId(), patchSetPublishDetail);
 					changeDetail.setCurrentPatchSetDetail(patchSetDetail);
 				}
@@ -1038,34 +611,8 @@ public class GerritClient extends ReviewsClient {
 		return gerritChange;
 	}
 
-	private PatchSetInfo setAccountPatchSetInfo(PatchSetInfo patchSetInfo, IProgressMonitor monitor) {
-		if (patchSetInfo.getAuthor().getAccount() == null) {
-			patchSetInfo.setAuthor(setUserIdentity(patchSetInfo.getAuthor().getName(), patchSetInfo.getAuthor(),
-					"Author", monitor)); //$NON-NLS-1$
-		}
-		if (patchSetInfo.getCommitter().getAccount() == null) {
-			patchSetInfo.setCommitter(setUserIdentity(patchSetInfo.getCommitter().getName(),
-					patchSetInfo.getCommitter(), "Committer", monitor)); //$NON-NLS-1$
-		}
-		return patchSetInfo;
-	}
-
-	private UserIdentity setUserIdentity(String name, UserIdentity userIdentity, String user, IProgressMonitor monitor) {
-		org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo accountInfo = null;
-		try {
-			accountInfo = getAccountInfo(name, monitor);
-			Account.Id accountId = new Account.Id(accountInfo.getId());
-			userIdentity.setAccount(accountId);
-		} catch (GerritException gerritException) {
-			if (gerritException.getMessage().indexOf(HttpStatus.SC_NOT_FOUND) != 0) {
-				StatusHandler.log(new Status(IStatus.WARNING, GerritCorePlugin.PLUGIN_ID, NLS.bind(
-						"GerritException {0} not found", user), gerritException)); //$NON-NLS-1$
-			}
-		} catch (URIException uriException) {
-			StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
-					NLS.bind("{0} URIException: ", user), uriException)); //$NON-NLS-1$
-		}
-		return userIdentity;
+	protected void applyPatchSetInfo(PatchSetDetail patchSetDetail, PatchSetPublishDetailX patchSetPublishDetail,
+			IProgressMonitor monitor) throws GerritException {
 	}
 
 	private void handleMissingPatchSet(String desc, GerritException e) {
@@ -1087,45 +634,36 @@ public class GerritClient extends ReviewsClient {
 	public void publishComments(String reviewId, int patchSetId, final String message,
 			final Set<ApprovalCategoryValue.Id> approvals, IProgressMonitor monitor) throws GerritException {
 		final PatchSet.Id id = new PatchSet.Id(new Change.Id(id(reviewId)), patchSetId);
-		if (hasJsonRpcApi(monitor)) {
-			execute(monitor, new Operation<VoidResult>() {
-				@Override
-				public void execute(IProgressMonitor monitor) throws GerritException {
-					getPatchDetailService(monitor).publishComments(id, message, approvals, this);
-				}
-			});
-		} else {
-			ReviewInput reviewInput = new ReviewInput(message);
-			Map<String, CommentInfo[]> drafts = listDrafts(id, monitor);
-			Map<String, CommentInput[]> comments = convert(drafts);
-			if (!comments.isEmpty()) {
-				reviewInput.setComments(comments);
-			}
-			reviewInput.setApprovals(approvals);
-			final String uri = "/a/changes/" + id.getParentKey().get() + "/revisions/" + id.get() + "/review"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			executePostRestRequest(uri, reviewInput, ReviewInfo.class, new ErrorHandler() {
-
-				@Override
-				public void handleError(HttpMethodBase method) throws GerritException {
-					if (method.getStatusCode() == HttpURLConnection.HTTP_FORBIDDEN) {
-						String msg = getResponseBodyAsString(method);
-						if (msg.startsWith("Applying label") && msg.endsWith("is restricted")) { //$NON-NLS-1$ //$NON-NLS-2$
-							throw new GerritException(msg);
-						}
-					}
-				}
-
-				private String getResponseBodyAsString(HttpMethodBase method) {
-					try {
-						String msg = method.getResponseBodyAsString();
-						return msg.trim();
-					} catch (IOException e) {
-						// ignore
-					}
-					return null;
-				}
-			}, monitor);
+		ReviewInput reviewInput = new ReviewInput(message);
+		Map<String, CommentInfo[]> drafts = listDrafts(id, monitor);
+		Map<String, CommentInput[]> comments = convert(drafts);
+		if (!comments.isEmpty()) {
+			reviewInput.setComments(comments);
 		}
+		reviewInput.setApprovals(approvals);
+		final String uri = "/a/changes/" + id.getParentKey().get() + "/revisions/" + id.get() + "/review"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		executePostRestRequest(uri, reviewInput, ReviewInfo.class, new ErrorHandler() {
+
+			@Override
+			public void handleError(HttpMethodBase method) throws GerritException {
+				if (method.getStatusCode() == HttpURLConnection.HTTP_FORBIDDEN) {
+					String msg = getResponseBodyAsString(method);
+					if (msg.startsWith("Applying label") && msg.endsWith("is restricted")) { //$NON-NLS-1$ //$NON-NLS-2$
+						throw new GerritException(msg);
+					}
+				}
+			}
+
+			private String getResponseBodyAsString(HttpMethodBase method) {
+				try {
+					String msg = method.getResponseBodyAsString();
+					return msg.trim();
+				} catch (IOException e) {
+					// ignore
+				}
+				return null;
+			}
+		}, monitor);
 	}
 
 	private Map<String, CommentInfo[]> listDrafts(final PatchSet.Id id, IProgressMonitor monitor)
@@ -1158,56 +696,32 @@ public class GerritClient extends ReviewsClient {
 			throws GerritException {
 		Assert.isLegal(reviewers != null, "reviewers cannot be null"); //$NON-NLS-1$
 		final Change.Id id = new Change.Id(id(reviewId));
-		if (hasJsonRpcApi(monitor)) {
+		final String uri;
+		uri = "/a/changes/" + id.get() + "/reviewers"; //$NON-NLS-1$ //$NON-NLS-2$
+
+		Set<ReviewerInfo> reviewerInfos = new HashSet<ReviewerInfo>(reviewers.size());
+		ReviewerResult reviewerResult = new ReviewerResult();
+		for (final String reviewerId : reviewers) {
 			try {
-				return execute(monitor, new Operation<ReviewerResult>() {
-					@Override
-					public void execute(IProgressMonitor monitor) throws GerritException {
-						getPatchDetailService(monitor).addReviewers(id, reviewers, this);
-					}
-				});
-			} catch (GerritException e) {
-				// Gerrit 2.2
-				String message = e.getMessage();
-				if (message != null && message.contains("Error parsing request")) { //$NON-NLS-1$
-					return execute(monitor, new Operation<ReviewerResult>() {
-						@Override
-						public void execute(IProgressMonitor monitor) throws GerritException {
-							getPatchDetailService(monitor).addReviewers(id, reviewers, false, this);
-						}
-					});
-				} else {
-					throw e;
+				AddReviewerResult addReviewerResult = executePostRestRequest(uri, new ReviewerInput(reviewerId),
+						AddReviewerResult.class, null /*no error handler*/, monitor);
+				reviewerInfos.addAll(addReviewerResult.getReviewers());
+			} catch (GerritHttpException e) {
+				if (e.getResponseCode() == HttpStatus.SC_UNPROCESSABLE_ENTITY) {
+					reviewerResult.addError(new ReviewerResult.Error(null /* no type*/, reviewerId));
 				}
 			}
-		} else {
-			final String uri;
-			uri = "/a/changes/" + id.get() + "/reviewers"; //$NON-NLS-1$ //$NON-NLS-2$
-
-			Set<ReviewerInfo> reviewerInfos = new HashSet<ReviewerInfo>(reviewers.size());
-			ReviewerResult reviewerResult = new ReviewerResult();
-			for (final String reviewerId : reviewers) {
-				try {
-					AddReviewerResult addReviewerResult = executePostRestRequest(uri, new ReviewerInput(reviewerId),
-							AddReviewerResult.class, null /*no error handler*/, monitor);
-					reviewerInfos.addAll(addReviewerResult.getReviewers());
-				} catch (GerritHttpException e) {
-					if (e.getResponseCode() == HttpStatus.SC_UNPROCESSABLE_ENTITY) {
-						reviewerResult.addError(new ReviewerResult.Error(null /* no type*/, reviewerId));
-					}
-				}
-			}
-
-			ChangeDetail changeDetail = getChangeDetail(id.get(), monitor);
-
-			List<ApprovalDetail> approvalDetails = new ArrayList<ApprovalDetail>(reviewerInfos.size());
-			for (ReviewerInfo reviewerInfo : reviewerInfos) {
-				approvalDetails.add(reviewerInfo.toApprovalDetail(changeDetail.getCurrentPatchSet()));
-			}
-			changeDetail.setApprovals(approvalDetails);
-			reviewerResult.setChange(changeDetail);
-			return reviewerResult;
 		}
+
+		ChangeDetail changeDetail = getChangeDetail(id.get(), monitor);
+
+		List<ApprovalDetail> approvalDetails = new ArrayList<ApprovalDetail>(reviewerInfos.size());
+		for (ReviewerInfo reviewerInfo : reviewerInfos) {
+			approvalDetails.add(reviewerInfo.toApprovalDetail(changeDetail.getCurrentPatchSet()));
+		}
+		changeDetail.setApprovals(approvalDetails);
+		reviewerResult.setChange(changeDetail);
+		return reviewerResult;
 	}
 
 	/**
@@ -1230,54 +744,7 @@ public class GerritClient extends ReviewsClient {
 	 * user. On Gerrit 2.4 and earlier closed reviews are not included.
 	 */
 	public List<GerritQueryResult> queryMyReviews(IProgressMonitor monitor) throws GerritException {
-		if (hasJsonRpcApi(monitor) && !restQueryAPIEnabled) {
-			try {
-				final Account account = getAccount(monitor);
-				AccountDashboardInfo ad = execute(monitor, new Operation<AccountDashboardInfo>() {
-					@Override
-					public void execute(IProgressMonitor monitor) throws GerritException {
-						getChangeListService(monitor).forAccount(account.getId(), this);
-					}
-				});
-
-				List<com.google.gerrit.common.data.ChangeInfo> allMyChanges = ad.getByOwner();
-				allMyChanges.addAll(ad.getForReview());
-				allMyChanges.addAll(ad.getClosed());
-				return convert(allMyChanges);
-			} catch (GerritException e) {
-				if (isNoSuchServiceError(e)) {
-					restQueryAPIEnabled = true;
-				} else {
-					throw e;
-				}
-			}
-		}
-		// the "self" alias is only supported in Gerrit 2.5 and later
 		return executeQueryRest(monitor, "owner:self OR reviewer:self", GET_LABELS_OPTION); //$NON-NLS-1$
-	}
-
-	private boolean hasJsonRpcApi(IProgressMonitor monitor) throws GerritException {
-		return !isVersion26OrLater(monitor);
-	}
-
-	private boolean isVersion26OrLater(IProgressMonitor monitor) throws GerritException {
-		Version version = getCachedVersion(monitor);
-		return GerritVersion.isVersion26OrLater(version);
-	}
-
-	private boolean isVersion27OrLater(IProgressMonitor monitor) throws GerritException {
-		Version version = getCachedVersion(monitor);
-		return GerritVersion.isVersion27OrLater(version);
-	}
-
-	private boolean isVersion28OrLater(IProgressMonitor monitor) throws GerritException {
-		Version version = getCachedVersion(monitor);
-		return GerritVersion.isVersion28OrLater(version);
-	}
-
-	public boolean isVersion29OrLater(IProgressMonitor monitor) throws GerritException {
-		Version version = getCachedVersion(monitor);
-		return GerritVersion.isVersion29OrLater(version);
 	}
 
 	/**
@@ -1340,7 +807,9 @@ public class GerritClient extends ReviewsClient {
 			}
 		}
 		config = new GerritConfiguration(gerritConfig, projects, account);
-		configurationChanged(config);
+		if (stateListener != null) {
+			stateListener.configurationChanged(config);
+		}
 		return config;
 	}
 
@@ -1357,81 +826,31 @@ public class GerritClient extends ReviewsClient {
 
 	public ChangeDetail rebase(String reviewId, int patchSetId, IProgressMonitor monitor) throws GerritException {
 		final PatchSet.Id id = new PatchSet.Id(new Change.Id(id(reviewId)), patchSetId);
-		if (isVersion29OrLater(monitor)) {
-			return rebaseRest(id, monitor);
-		} else {
-			return execute(monitor, new Operation<ChangeDetail>() {
-				@Override
-				public void execute(IProgressMonitor monitor) throws GerritException {
-					getChangeManageService(monitor).rebaseChange(id, this);
-				}
-			});
-		}
-	}
-
-	private ChangeDetail rebaseRest(final PatchSet.Id id, IProgressMonitor monitor) throws GerritException {
-		final String uri = "/a/changes/" + id.getParentKey().get() + "/revisions/" + id.get() + "/rebase"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-		executePostRestRequest(uri, new ChangeInfo29(), ChangeInfo29.class, new ErrorHandler() {
+		return execute(monitor, new Operation<ChangeDetail>() {
 			@Override
-			public void handleError(HttpMethodBase method) throws GerritException {
-				String errorMsg = getResponseBodyAsString(method);
-				if (isConflict(method)) {
-					throw new GerritException(errorMsg);
-				}
+			public void execute(IProgressMonitor monitor) throws GerritException {
+				getChangeManageService(monitor).rebaseChange(id, this);
 			}
-
-			private String getResponseBodyAsString(HttpMethodBase method) {
-				try {
-					return method.getResponseBodyAsString();
-				} catch (IOException e) {
-					return null;
-				}
-			}
-
-			private boolean isConflict(HttpMethodBase method) {
-				return method.getStatusCode() == HttpURLConnection.HTTP_CONFLICT;
-			}
-		}, monitor);
-		return getChangeDetail(id.getParentKey().get(), monitor);
+		});
 	}
 
 	public ChangeDetail restore(String reviewId, int patchSetId, final String message, IProgressMonitor monitor)
 			throws GerritException {
 		final PatchSet.Id id = new PatchSet.Id(new Change.Id(id(reviewId)), patchSetId);
-		if (hasJsonRpcApi(monitor)) {
-			return execute(monitor, new Operation<ChangeDetail>() {
-				@Override
-				public void execute(IProgressMonitor monitor) throws GerritException {
-					getChangeManageService(monitor).restoreChange(id, message, this);
-				}
-			});
-		} else {
-			final String uri = "/a/changes/" + id.getParentKey().get() + "/restore"; //$NON-NLS-1$ //$NON-NLS-2$
-			try {
-				executePostRestRequest(uri, new RestoreInput(message), ChangeInfo.class, null/*no error handler*/,
-						monitor);
-			} catch (GerritHttpException e) {
-				if (e.getResponseCode() == HttpURLConnection.HTTP_CONFLICT) {
-					throw new GerritException("Not Found", e); //$NON-NLS-1$
-				}
+		final String uri = "/a/changes/" + id.getParentKey().get() + "/restore"; //$NON-NLS-1$ //$NON-NLS-2$
+		try {
+			executePostRestRequest(uri, new RestoreInput(message), ChangeInfo.class, null/*no error handler*/, monitor);
+		} catch (GerritHttpException e) {
+			if (e.getResponseCode() == HttpURLConnection.HTTP_CONFLICT) {
+				throw new GerritException("Not Found", e); //$NON-NLS-1$
 			}
-			return getChangeDetail(id.getParentKey().get(), monitor);
 		}
+		return getChangeDetail(id.getParentKey().get(), monitor);
 	}
 
 	public ChangeDetail submit(String reviewId, int patchSetId, IProgressMonitor monitor) throws GerritException {
 		final PatchSet.Id id = new PatchSet.Id(new Change.Id(id(reviewId)), patchSetId);
-		if (hasJsonRpcApi(monitor)) {
-			return execute(monitor, new Operation<ChangeDetail>() {
-				@Override
-				public void execute(IProgressMonitor monitor) throws GerritException {
-					getChangeManageService(monitor).submit(id, this);
-				}
-			});
-		} else {
-			return submitRest(id, monitor);
-		}
+		return submitRest(id, monitor);
 	}
 
 	private ChangeDetail submitRest(PatchSet.Id id, IProgressMonitor monitor) throws GerritException {
@@ -1467,7 +886,7 @@ public class GerritClient extends ReviewsClient {
 
 	/**
 	 * Sends a query for the changes visible to the caller to the gerrit server.
-	 *
+	 * 
 	 * @param monitor
 	 *            A progress monitor
 	 * @param queryString
@@ -1483,7 +902,7 @@ public class GerritClient extends ReviewsClient {
 	/**
 	 * Sends a query for the changes visible to the caller to the gerrit server with the possibility of adding options
 	 * to the query.
-	 *
+	 * 
 	 * @param monitor
 	 *            A progress monitor
 	 * @param queryString
@@ -1495,39 +914,12 @@ public class GerritClient extends ReviewsClient {
 	 */
 	public List<GerritQueryResult> executeQuery(IProgressMonitor monitor, final String queryString, String optionString)
 			throws GerritException {
-		if (hasJsonRpcApi(monitor) && !restQueryAPIEnabled) {
-			try {
-				SingleListChangeInfo sl = execute(monitor, new Operation<SingleListChangeInfo>() {
-					@Override
-					public void execute(IProgressMonitor monitor) throws GerritException {
-						getChangeListService(monitor).allQueryNext(queryString, "z", -1, this); //$NON-NLS-1$
-					}
-				});
-				return convert(sl.getChanges());
-			} catch (GerritException e) {
-				if (isNoSuchServiceError(e)) {
-					restQueryAPIEnabled = true;
-				} else {
-					throw e;
-				}
-			}
-		}
-
 		return executeQueryRest(monitor, queryString, optionString);
-	}
-
-	private List<GerritQueryResult> convert(List<com.google.gerrit.common.data.ChangeInfo> changes) {
-		List<GerritQueryResult> results = new ArrayList<GerritQueryResult>(changes.size());
-		for (com.google.gerrit.common.data.ChangeInfo changeInfo : changes) {
-			GerritQueryResult result = new GerritQueryResult(changeInfo);
-			results.add(result);
-		}
-		return results;
 	}
 
 	/**
 	 * Sends a query for the changes visible to the caller to the gerrit server. Uses the gerrit REST API.
-	 *
+	 * 
 	 * @param monitor
 	 *            A progress monitor
 	 * @param queryString
@@ -1543,7 +935,7 @@ public class GerritClient extends ReviewsClient {
 	/**
 	 * Sends a query for the changes visible to the caller to the gerrit server with the possibility of adding options
 	 * to the query. Uses the gerrit REST API.
-	 *
+	 * 
 	 * @param monitor
 	 *            A progress monitor
 	 * @param queryString
@@ -1582,32 +974,13 @@ public class GerritClient extends ReviewsClient {
 		return myAcount;
 	}
 
-	private Account executeAccount(IProgressMonitor monitor) throws GerritException {
-		if (isVersion29OrLater(monitor)) {
-			return getAccount29(monitor);
-		} else {
-			return execute(monitor, new Operation<Account>() {
-				@Override
-				public void execute(IProgressMonitor monitor) throws GerritException {
-					getAccountService(monitor).myAccount(this);
-				}
-			});
-		}
-	}
-
-	private Account getAccount29(IProgressMonitor monitor) throws GerritException {
-		if (isAnonymous()) {
-			throw new GerritException(NOT_SIGNED_IN, -32603);
-		}
-		String query = "/accounts/self"; //$NON-NLS-1$/
-		org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo accountInfo = executeGetRestRequest(query,
-				org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo.class, monitor);
-
-		Account account = new Account(new Account.Id(accountInfo.getId()));
-		account.setFullName(accountInfo.getName());
-		account.setUserName(accountInfo.getUsername());
-		account.setPreferredEmail(accountInfo.getEmail());
-		return account;
+	protected Account executeAccount(IProgressMonitor monitor) throws GerritException {
+		return execute(monitor, new Operation<Account>() {
+			@Override
+			public void execute(IProgressMonitor monitor) throws GerritException {
+				getAccountService(monitor).myAccount(this);
+			}
+		});
 	}
 
 	private AccountService getAccountService(IProgressMonitor monitor) {
@@ -1618,15 +991,15 @@ public class GerritClient extends ReviewsClient {
 		return getService(ChangeDetailService.class, monitor);
 	}
 
-	private ChangeListService getChangeListService(IProgressMonitor monitor) {
+	ChangeListService getChangeListService(IProgressMonitor monitor) {
 		return getService(ChangeListService.class, monitor);
 	}
 
-	private ChangeManageService getChangeManageService(IProgressMonitor monitor) {
+	ChangeManageService getChangeManageService(IProgressMonitor monitor) {
 		return getService(ChangeManageService.class, monitor);
 	}
 
-	private PatchDetailService getPatchDetailService(IProgressMonitor monitor) {
+	PatchDetailService getPatchDetailService(IProgressMonitor monitor) {
 		return getService(PatchDetailService.class, monitor);
 	}
 
@@ -1647,27 +1020,7 @@ public class GerritClient extends ReviewsClient {
 			}
 		} catch (GerritException e) {
 			if (isNoSuchServiceError(e)) {
-				if (isVersion27OrLater(monitor)) {
-					Map<String, ProjectInfo> projects = listProjects(monitor);
-					for (String projectName : projects.keySet()) {
-						result.add(new Project(new NameKey(projectName)));
-					}
-				} else {
-					// Gerrit <= 2.2.1
-					List<Project> projects = execute(monitor, new Operation<List<Project>>() {
-						@Override
-						public void execute(IProgressMonitor monitor) throws GerritException {
-							getProjectAdminService(monitor).visibleProjects(this);
-						}
-					});
-					for (Project project : projects) {
-						ProjectDetailX projectDetail = new ProjectDetailX();
-						projectDetail.setProject(project);
-						if (!GerritUtil.isPermissionOnlyProject(projectDetail, gerritConfig)) {
-							result.add(project);
-						}
-					}
-				}
+				addProjectsWhenNoSuchService(monitor, gerritConfig, result);
 			} else {
 				throw e;
 			}
@@ -1676,11 +1029,22 @@ public class GerritClient extends ReviewsClient {
 		return result;
 	}
 
-	private Map<String, ProjectInfo> listProjects(IProgressMonitor monitor) throws GerritException {
-		final String uri = "/projects/"; //$NON-NLS-1$
-		TypeToken<Map<String, ProjectInfo>> resultType = new TypeToken<Map<String, ProjectInfo>>() {
-		};
-		return executeGetRestRequest(uri, resultType.getType(), monitor);
+	protected void addProjectsWhenNoSuchService(IProgressMonitor monitor, GerritConfig gerritConfig,
+			List<Project> result) throws GerritException {
+		// Gerrit <= 2.2.1
+		List<Project> projects = execute(monitor, new Operation<List<Project>>() {
+			@Override
+			public void execute(IProgressMonitor monitor) throws GerritException {
+				getProjectAdminService(monitor).visibleProjects(this);
+			}
+		});
+		for (Project project : projects) {
+			ProjectDetailX projectDetail = new ProjectDetailX();
+			projectDetail.setProject(project);
+			if (!GerritUtil.isPermissionOnlyProject(projectDetail, gerritConfig)) {
+				result.add(project);
+			}
+		}
 	}
 
 	private ProjectAdminService getProjectAdminService(IProgressMonitor monitor) {
@@ -1689,12 +1053,6 @@ public class GerritClient extends ReviewsClient {
 
 	public boolean isAnonymous() {
 		return client.isAnonymous();
-	}
-
-	protected void configurationChanged(GerritConfiguration config) {
-	}
-
-	protected void authStateChanged(GerritAuthenticationState config) {
 	}
 
 	protected <T> T execute(IProgressMonitor monitor, Operation<T> operation) throws GerritException {
@@ -1714,7 +1072,7 @@ public class GerritClient extends ReviewsClient {
 		}
 	}
 
-	private <T> T executePostRestRequest(final String url, final Object input, final Type resultType,
+	protected <T> T executePostRestRequest(final String url, final Object input, final Type resultType,
 			final ErrorHandler handler, IProgressMonitor monitor) throws GerritException {
 		return execute(monitor, new Operation<T>() {
 			@Override
@@ -1728,7 +1086,7 @@ public class GerritClient extends ReviewsClient {
 		});
 	}
 
-	private <T> T executeGetRestRequest(final String url, final Type resultType, IProgressMonitor monitor)
+	protected <T> T executeGetRestRequest(final String url, final Type resultType, IProgressMonitor monitor)
 			throws GerritException {
 		return execute(monitor, new Operation<T>() {
 			@Override
@@ -1742,7 +1100,7 @@ public class GerritClient extends ReviewsClient {
 		});
 	}
 
-	private <T> T executePutRestRequest(final String url, final Object input, final Type resultType,
+	protected <T> T executePutRestRequest(final String url, final Object input, final Type resultType,
 			final ErrorHandler handler, IProgressMonitor monitor) throws GerritException {
 		return execute(monitor, new Operation<T>() {
 			@Override
@@ -1756,7 +1114,7 @@ public class GerritClient extends ReviewsClient {
 		});
 	}
 
-	private <T> T executeDeleteRestRequest(final String url, final Object input, final Type resultType,
+	protected <T> T executeDeleteRestRequest(final String url, final Object input, final Type resultType,
 			final ErrorHandler handler, IProgressMonitor monitor) throws GerritException {
 		return execute(monitor, new Operation<T>() {
 			@Override
@@ -1770,7 +1128,7 @@ public class GerritClient extends ReviewsClient {
 		});
 	}
 
-	private <T> T executeOnce(IProgressMonitor monitor, Operation<T> operation) throws GerritException {
+	protected <T> T executeOnce(IProgressMonitor monitor, Operation<T> operation) throws GerritException {
 		operation.execute(monitor);
 		if (operation.getException() instanceof GerritException) {
 			throw (GerritException) operation.getException();
@@ -1786,16 +1144,10 @@ public class GerritClient extends ReviewsClient {
 		return operation.getResult();
 	}
 
-	protected synchronized <T extends RemoteJsonService> T getService(Class<T> clazz, IProgressMonitor monitor) {
-		Version version = Version.emptyVersion;
-		try {
-			version = getCachedVersion(monitor);
-		} catch (GerritException e) {
-			// ignore, continue with emptyVersion
-		}
+	private synchronized <T extends RemoteJsonService> T getService(Class<T> clazz, IProgressMonitor monitor) {
 		RemoteJsonService service = serviceByClass.get(clazz);
 		if (service == null) {
-			service = GerritService.create(clazz, client, version);
+			service = GerritService.create(clazz, client, getVersion());
 			serviceByClass.put(clazz, service);
 		}
 		return clazz.cast(service);
@@ -1806,18 +1158,8 @@ public class GerritClient extends ReviewsClient {
 		return new GerritRemoteFactoryProvider(this);
 	}
 
-	private Version getCachedVersion(IProgressMonitor monitor) throws GerritException {
-		synchronized (this) {
-			if (myVersion != null) {
-				return myVersion;
-			}
-		}
-		Version version = getVersion(monitor);
-
-		synchronized (this) {
-			myVersion = version;
-		}
-		return myVersion;
+	public Version getVersion() {
+		return version;
 	}
 
 	public Version getVersion(IProgressMonitor monitor) throws GerritException {
@@ -1881,32 +1223,15 @@ public class GerritClient extends ReviewsClient {
 		final Change.Id id = new Change.Id(id(reviewId));
 		final ToggleStarRequest req = new ToggleStarRequest();
 		req.toggle(id, starred);
-		if (isVersion28OrLater(monitor)) {
-			final String uri = "/a/accounts/self/starred.changes/" + id.get(); //$NON-NLS-1$
-
-			return execute(monitor, new Operation<VoidResult>() {
-				@Override
-				public void execute(IProgressMonitor monitor) throws GerritException {
-
-					if (starred) {
-						executePutRestRequest(uri, req, ToggleStarRequest.class, createErrorHandler(), monitor);
-					} else {
-						executeDeleteRestRequest(uri, req, ToggleStarRequest.class, createErrorHandler(), monitor);
-					}
-				}
-			});
-
-		} else {
-			return execute(monitor, new Operation<VoidResult>() {
-				@Override
-				public void execute(IProgressMonitor monitor) throws GerritException {
-					getChangeListService(monitor).toggleStars(req, this);
-				}
-			});
-		}
+		return execute(monitor, new Operation<VoidResult>() {
+			@Override
+			public void execute(IProgressMonitor monitor) throws GerritException {
+				getChangeListService(monitor).toggleStars(req, this);
+			}
+		});
 	}
 
-	private ErrorHandler createErrorHandler() {
+	ErrorHandler createErrorHandler() {
 		return new ErrorHandler() {
 			@Override
 			public void handleError(HttpMethodBase method) throws GerritException {
@@ -1914,4 +1239,5 @@ public class GerritClient extends ReviewsClient {
 			}
 		};
 	}
+
 }

@@ -71,7 +71,8 @@ public class GerritClientTest extends TestCase {
 	public class TestGerritClient extends GerritClient {
 
 		public TestGerritClient(TaskRepository repository, AbstractWebLocation location) {
-			super(repository, location);
+			super(repository, GerritFixture.current().getGerritVersion());
+			initialize(location, null, null, null, null);
 		}
 
 		@Override
@@ -186,7 +187,7 @@ public class GerritClientTest extends TestCase {
 		WebLocation location = harness.location();
 		GerritAuthenticationState authState = new GerritAuthenticationState();
 		authState.setCookie(new Cookie(WebUtil.getHost(location.getUrl()), "xrsfKey", "invalid"));
-		client = new GerritClient(null, location, null, authState, "invalid");
+		client = GerritClient.create(null, location, null, authState, "invalid", null);
 		client.getAccount(null);
 	}
 

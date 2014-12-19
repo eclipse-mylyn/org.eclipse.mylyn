@@ -209,10 +209,10 @@ class ReviewHarness {
 		assertThat(targetCommit.toString(), is(commitId));
 
 		git.checkout()
-		.setCreateBranch(true)
-		.setName("change" + "/" + getReview().getId() + "/" + number)
-		.setStartPoint(targetCommit)
-		.call();
+				.setCreateBranch(true)
+				.setName("change" + "/" + getReview().getId() + "/" + number)
+				.setStartPoint(targetCommit)
+				.call();
 	}
 
 	GerritClient getClient() {
@@ -225,14 +225,14 @@ class ReviewHarness {
 
 			WebLocation location = new WebLocation(GerritFixture.current().getRepositoryUrl(),
 					credentials.getUserName(), credentials.getPassword(), new IProxyProvider() {
-				public Proxy getProxyForHost(String host, String proxyType) {
-					return WebUtil.getProxyForUrl(GerritFixture.current().getRepositoryUrl());
-				}
-			});
+						public Proxy getProxyForHost(String host, String proxyType) {
+							return WebUtil.getProxyForUrl(GerritFixture.current().getRepositoryUrl());
+						}
+					});
 
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 					GerritFixture.current().getRepositoryUrl());
-			adminClient = new GerritClient(repository, location);
+			adminClient = GerritClient.create(repository, location);
 		}
 		return adminClient;
 	}

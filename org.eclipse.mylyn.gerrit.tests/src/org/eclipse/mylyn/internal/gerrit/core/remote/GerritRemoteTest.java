@@ -13,6 +13,8 @@ package org.eclipse.mylyn.internal.gerrit.core.remote;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.junit.After;
 import org.junit.Before;
@@ -44,4 +46,19 @@ public class GerritRemoteTest extends TestCase {
 		reviewHarness.dispose();
 	}
 
+	boolean isVersion24x() throws GerritException {
+		return GerritVersion.isVersion24x(reviewHarness.getClient().getVersion());
+	}
+
+	boolean isVersion26OrLater() throws GerritException {
+		return GerritVersion.isVersion26OrLater(reviewHarness.getClient().getVersion());
+	}
+
+	boolean isVersion28OrLater() throws GerritException {
+		return GerritVersion.isVersion28OrLater(reviewHarness.getClient().getVersion());
+	}
+
+	boolean isVersion29OrLater() throws GerritException {
+		return GerritVersion.isVersion29OrLater(reviewHarness.getClient().getVersion());
+	}
 }

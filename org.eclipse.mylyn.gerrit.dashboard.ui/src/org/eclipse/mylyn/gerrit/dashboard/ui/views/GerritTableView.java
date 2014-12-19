@@ -57,7 +57,6 @@ import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.GerritQuery;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
-import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
@@ -650,12 +649,8 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 		if (fTaskRepository != null) {
 			if (setConnector(fConnector)) {
 				GerritClient gerritClient = fConnector.getClient(fTaskRepository);
-				try {
-					version = gerritClient.getVersion(new NullProgressMonitor());
-					GerritUi.Ftracer.traceInfo("Selected version: " + version.toString()); //$NON-NLS-1$
-				} catch (GerritException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, e.getMessage(), e));
-				}
+				version = gerritClient.getVersion();
+				GerritUi.Ftracer.traceInfo("Selected version: " + version.toString()); //$NON-NLS-1$
 			}
 		}
 		return version;
@@ -721,13 +716,8 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 									gerritClient = fConnector.getClient(aTaskRepo);
 								}
 								if (gerritClient != null) {
-									try {
-										setRepositoryVersionLabel(aTaskRepo.getRepositoryLabel(),
-												gerritClient.getVersion(new NullProgressMonitor()).toString());
-									} catch (GerritException e) {
-										StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
-												e.getMessage(), e));
-									}
+									setRepositoryVersionLabel(aTaskRepo.getRepositoryLabel(), gerritClient.getVersion()
+											.toString());
 								}
 							}
 						});
@@ -848,8 +838,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 	 * @throws GerritQueryException
 	 */
 	private IStatus getReviews(TaskRepository repository, String queryType) throws GerritQueryException {
-	if (repository.getUserName() == null
-		|| repository.getUserName().isEmpty()) {
+		if (repository.getUserName() == null || repository.getUserName().isEmpty()) {
 			//Test for Anonymous user
 			if (queryType.equals(GerritQuery.MY_CHANGES)
 					|| queryType.equals(GerritQuery.QUERY_MY_DRAFTS_COMMENTS_CHANGES)) {

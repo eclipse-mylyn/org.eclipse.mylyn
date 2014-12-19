@@ -85,8 +85,8 @@ public class GerritSynchronizationTest extends TestCase {
 //		GerritCorePlugin.getDefault().getConnector().setFactoryProviderConfigurer(configurer);
 		GerritUiPlugin.getDefault();
 		TasksUiPlugin.getDefault()
-		.getPreferenceStore()
-		.setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
+				.getPreferenceStore()
+				.setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 		// cancel any parallel query synchronization jobs
 		Job.getJobManager().cancel(ITasksCoreConstants.JOB_FAMILY_SYNCHRONIZATION);
 
@@ -95,14 +95,14 @@ public class GerritSynchronizationTest extends TestCase {
 		harness = GerritFixture.current().harness();
 		repository = GerritFixture.current().singleRepository();
 		GerritCorePlugin.getDefault()
-		.getConnector()
-		.setFactoryProviderConfigurer(new RemoteUiFactoryProviderConfigurer());
+				.getConnector()
+				.setFactoryProviderConfigurer(new RemoteUiFactoryProviderConfigurer());
 		client = GerritCorePlugin.getDefault().getConnector().getClient(repository);
 		AbstractRemoteEditFactoryProvider abstractRemoteEditFactoryProvider = (AbstractRemoteEditFactoryProvider) client.getFactoryProvider();
 		GerritCorePlugin.getDefault()
-		.getConnector()
-		.getFactoryProviderConfigurer()
-		.configure(abstractRemoteEditFactoryProvider);
+				.getConnector()
+				.getFactoryProviderConfigurer()
+				.configure(abstractRemoteEditFactoryProvider);
 
 		assertThat(abstractRemoteEditFactoryProvider.getService(), instanceOf(RemoteUiService.class));
 		taskList = TasksUiPlugin.getTaskList();
@@ -175,7 +175,7 @@ public class GerritSynchronizationTest extends TestCase {
 
 	private String addComment(ITask task) throws GerritException {
 		taskDataManager.setTaskRead(task, true);
-		GerritClient client = new GerritClient(null, harness.location());
+		GerritClient client = GerritClient.create(null, harness.location());
 		String message = "new comment, time: " + System.currentTimeMillis(); //$NON-NLS-1$
 		client.publishComments(task.getTaskId(), 1, message, Collections.<ApprovalCategoryValue.Id> emptySet(), null);
 		return message;

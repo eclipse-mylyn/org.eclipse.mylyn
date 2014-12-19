@@ -49,7 +49,7 @@ public class GerritHarness {
 
 	public GerritClient client(PrivilegeLevel privilegeLevel) {
 		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(fixture.getRepositoryUrl());
-		return new GerritClient(repository, location(privilegeLevel));
+		return GerritClient.create(repository, location(privilegeLevel));
 	}
 
 	public WebLocation location() {
@@ -79,7 +79,7 @@ public class GerritHarness {
 				return WebUtil.getProxyForUrl(fixture.getRepositoryUrl());
 			}
 		});
-		return new GerritClient(repository, location);
+		return GerritClient.create(repository, location);
 	}
 
 	public void dispose() {
