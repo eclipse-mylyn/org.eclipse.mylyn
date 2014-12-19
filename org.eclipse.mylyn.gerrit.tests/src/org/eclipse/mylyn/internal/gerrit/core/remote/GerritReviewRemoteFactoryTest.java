@@ -39,9 +39,6 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jgit.api.CommitCommand;
-import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.gerrit.tests.core.client.rest.ChangeInfoTest;
 import org.eclipse.mylyn.gerrit.tests.support.GerritProject.CommitResult;
@@ -89,13 +86,12 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 	public void testGlobalComments() throws Exception {
 		String message1 = "new comment, time: " + System.currentTimeMillis(); //$NON-NLS-1$
-		reviewHarness.client.publishComments(reviewHarness.shortId, 1, message1,
+		reviewHarness.getClient().publishComments(reviewHarness.getShortId(), 1, message1,
 				Collections.<ApprovalCategoryValue.Id> emptySet(), null);
 		String message2 = "new comment, time: " + System.currentTimeMillis(); //$NON-NLS-1$
-		reviewHarness.client.publishComments(reviewHarness.shortId, 1, message2,
+		reviewHarness.getClient().publishComments(reviewHarness.getShortId(), 1, message2,
 				Collections.<ApprovalCategoryValue.Id> emptySet(), null);
-		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse();
+		reviewHarness.retrieve();
 		List<IComment> comments = getReview().getComments();
 		int offset = getCommentOffset();
 		assertThat(comments.size(), is(offset + 2));
@@ -128,8 +124,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		CommitCommand command2 = reviewHarness.createCommitCommand();
 		reviewHarness.addFile("testFile2.txt");
 		reviewHarness.commitAndPush(command2);
-		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse();
+		reviewHarness.retrieve();
 		List<IReviewItemSet> items = getReview().getSets();
 		assertThat(items.size(), is(2));
 		IReviewItemSet patchSet2 = items.get(1);
@@ -161,11 +156,10 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(codeReviewApproval.getName(), is(CRVW.getCategory().getName()));
 
 		String approvalMessage = "approval, time: " + System.currentTimeMillis(); //$NON-NLS-1$
-		reviewHarness.client.publishComments(reviewHarness.shortId, 1, approvalMessage,
+		reviewHarness.getClient().publishComments(reviewHarness.getShortId(), 1, approvalMessage,
 				new HashSet<ApprovalCategoryValue.Id>(Collections.singleton(CRVW.getValue((short) 1).getId())),
 				new NullProgressMonitor());
-		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse();
+		reviewHarness.retrieve();
 		assertThat(getReview().getReviewerApprovals().size(), is(1));
 		Entry<IUser, IReviewerEntry> reviewerEntry = getReview().getReviewerApprovals().entrySet().iterator().next();
 		Map<IApprovalType, Integer> reviewerApprovals = reviewerEntry.getValue().getApprovals();
@@ -195,7 +189,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testDependencies() throws Exception {
-		boolean isversion29OrLater = reviewHarness.client.isVersion29OrLater(new NullProgressMonitor());
+		boolean isversion29OrLater = reviewHarness.getClient().isVersion29OrLater(new NullProgressMonitor());
 		String changeIdDep1 = "I" + StringUtils.rightPad(System.currentTimeMillis() + "", 40, "a");
 		CommitCommand commandDep1 = reviewHarness.createCommitCommand(changeIdDep1);
 		reviewHarness.addFile("testFile1.txt", "test 2");
@@ -204,8 +198,8 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		assertThat("Bad Push: " + resultDep1.push.getMessages(), resultIdDep1.length(), greaterThan(0));
 
 		TestRemoteObserverConsumer<IRepository, IReview, String, GerritChange, String, Date> consumerDep1 //
-		= retrieveForRemoteKey(reviewHarness.provider.getReviewFactory(), reviewHarness.getRepository(), resultIdDep1,
-				true);
+		= retrieveForRemoteKey(reviewHarness.getProvider().getReviewFactory(), reviewHarness.getRepository(),
+				resultIdDep1, true);
 		IReview reviewDep1 = consumerDep1.getModelObject();
 
 		assertThat(reviewDep1.getParents().size(), is(1));
@@ -219,8 +213,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 			assertThat(parentChange.getModificationDate().getTime(), is(getReview().getModificationDate().getTime()));
 		}
 
-		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse();
+		reviewHarness.retrieve();
 		assertThat(getReview().getChildren().size(), is(1));
 		IChange childChange = getReview().getChildren().get(0);
 		//Not expected to be same instance
@@ -237,11 +230,9 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 	public void testAbandonChange() throws Exception {
 		String message1 = "abandon, time: " + System.currentTimeMillis(); //$NON-NLS-1$
 
-		ChangeDetail changeDetail = reviewHarness.client.abandon(reviewHarness.shortId, 1, message1,
+		ChangeDetail changeDetail = reviewHarness.getClient().abandon(reviewHarness.getShortId(), 1, message1,
 				new NullProgressMonitor());
-		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse();
-
+		reviewHarness.retrieve();
 		assertThat(changeDetail, notNullValue());
 		assertThat(changeDetail.getChange().getStatus(), is(Status.ABANDONED));
 		List<ChangeMessage> messages = changeDetail.getMessages();
@@ -263,15 +254,12 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 	@Test
 	public void testRestoreChange() throws Exception {
 		String message1 = "abandon, time: " + System.currentTimeMillis();
-		reviewHarness.client.abandon(reviewHarness.shortId, 1, message1, new NullProgressMonitor());
-		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse();
+		reviewHarness.getClient().abandon(reviewHarness.getShortId(), 1, message1, new NullProgressMonitor());
+		reviewHarness.retrieve();
 		String message2 = "restore, time: " + System.currentTimeMillis();
 
-		reviewHarness.client.restore(reviewHarness.shortId, 1, message2, new NullProgressMonitor());
-		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse();
-
+		reviewHarness.getClient().restore(reviewHarness.getShortId(), 1, message2, new NullProgressMonitor());
+		reviewHarness.retrieve();
 		assertThat(getReview().getState(), is(ReviewStatus.NEW));
 		List<IComment> comments = getReview().getComments();
 		int offset = getCommentOffset();
@@ -286,7 +274,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(getReview().getState(), is(ReviewStatus.NEW));
 		String message1 = "restore, time: " + System.currentTimeMillis();
 		try {
-			reviewHarness.client.restore(reviewHarness.shortId, 1, message1, new NullProgressMonitor());
+			reviewHarness.getClient().restore(reviewHarness.getShortId(), 1, message1, new NullProgressMonitor());
 			fail("Expected to fail when restoring a new change");
 		} catch (GerritException e) {
 			if (isVersion24x()) {
@@ -299,7 +287,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 	public void testCannotSubmitChange() throws Exception {
 		try {
-			reviewHarness.client.submit(reviewHarness.shortId, 1, new NullProgressMonitor());
+			reviewHarness.getClient().submit(reviewHarness.getShortId(), 1, new NullProgressMonitor());
 			fail("Expected to fail when submitting a change without approvals");
 		} catch (GerritException e) {
 			assertThat(e.getMessage(), startsWith("Cannot submit change"));
@@ -309,7 +297,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 	@Test
 	public void testAddNullReviewers() throws Exception {
 		try {
-			reviewHarness.client.addReviewers(reviewHarness.shortId, null, new NullProgressMonitor());
+			reviewHarness.getClient().addReviewers(reviewHarness.getShortId(), null, new NullProgressMonitor());
 			fail("Expected to fail when trying to add null reviewers");
 		} catch (IllegalArgumentException e) {
 			assertThat(e.getMessage(), is("reviewers cannot be null"));
@@ -318,11 +306,9 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testAddEmptyReviewers() throws Exception {
-		ReviewerResult reviewerResult = reviewHarness.client.addReviewers(reviewHarness.shortId,
+		ReviewerResult reviewerResult = reviewHarness.getClient().addReviewers(reviewHarness.getShortId(),
 				Collections.<String> emptyList(), new NullProgressMonitor());
-		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse();
-
+		reviewHarness.retrieve();
 		assertThat(reviewerResult, notNullValue());
 		assertThat(reviewerResult.getErrors().isEmpty(), is(true));
 		assertThat(reviewerResult.getChange().getApprovals().isEmpty(), is(true));
@@ -333,11 +319,9 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 	public void testAddInvalidReviewers() throws Exception {
 		List<String> reviewers = Arrays.asList(new String[] { "foo" });
 
-		ReviewerResult reviewerResult = reviewHarness.client.addReviewers(reviewHarness.shortId, reviewers,
+		ReviewerResult reviewerResult = reviewHarness.getClient().addReviewers(reviewHarness.getShortId(), reviewers,
 				new NullProgressMonitor());
-		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse();
-
+		reviewHarness.retrieve();
 		assertThat(reviewerResult, notNullValue());
 		assertThat(reviewerResult.getErrors().size(), is(1));
 		assertThat(reviewerResult.getErrors().get(0).getName(), is("foo"));
@@ -350,17 +334,15 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 	public void testAddSomeInvalidReviewers() throws Exception {
 		List<String> reviewers = Arrays.asList(new String[] { "tests", "foo" });
 		int userid = 1000001; //user id for tests
-		if (reviewHarness.client.isVersion29OrLater(new NullProgressMonitor())) {
+		if (reviewHarness.getClient().isVersion29OrLater(new NullProgressMonitor())) {
 			//use "admin " since this is a valid user in 2.9
 			reviewers = Arrays.asList(new String[] { "admin", "foo" });
 			userid = 1000000; //user id for admin
 		}
 
-		ReviewerResult reviewerResult = reviewHarness.client.addReviewers(reviewHarness.shortId, reviewers,
+		ReviewerResult reviewerResult = reviewHarness.getClient().addReviewers(reviewHarness.getShortId(), reviewers,
 				new NullProgressMonitor());
-		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse();
-
+		reviewHarness.retrieve();
 		assertReviewerResult(reviewerResult, "foo", userid);
 	}
 
@@ -369,17 +351,15 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(getReview().getReviewerApprovals().isEmpty(), is(true));
 		List<String> reviewers = Arrays.asList(new String[] { "tests" });
 		int userid = 1000001; //user id for tests
-		if (reviewHarness.client.isVersion29OrLater(new NullProgressMonitor())) {
+		if (reviewHarness.getClient().isVersion29OrLater(new NullProgressMonitor())) {
 			//Need a user and not the review owner
 			reviewers = Arrays.asList(new String[] { "admin" });
 			userid = 1000000; //user id for admin
 		}
 
-		ReviewerResult reviewerResult = reviewHarness.client.addReviewers(reviewHarness.shortId, reviewers,
+		ReviewerResult reviewerResult = reviewHarness.getClient().addReviewers(reviewHarness.getShortId(), reviewers,
 				new NullProgressMonitor());
-		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse();
-
+		reviewHarness.retrieve();
 		assertReviewerResult(reviewerResult, null, userid);
 	}
 
@@ -387,17 +367,15 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 	public void testAddReviewersByEmail() throws Exception {
 		List<String> reviewers = Arrays.asList(new String[] { "tests@mylyn.eclipse.org" });
 		int userid = 1000001; //user id for tests
-		if (reviewHarness.client.isVersion29OrLater(new NullProgressMonitor())) {
+		if (reviewHarness.getClient().isVersion29OrLater(new NullProgressMonitor())) {
 			//Need a user and not the review owner
 			reviewers = Arrays.asList(new String[] { "admin@mylyn.eclipse.org" });
 			userid = 1000000; //user id for admin
 		}
 
-		ReviewerResult reviewerResult = reviewHarness.client.addReviewers(reviewHarness.shortId, reviewers,
+		ReviewerResult reviewerResult = reviewHarness.getClient().addReviewers(reviewHarness.getShortId(), reviewers,
 				new NullProgressMonitor());
-		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse();
-
+		reviewHarness.retrieve();
 		assertReviewerResult(reviewerResult, null, userid);
 	}
 
@@ -438,7 +416,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 	@Test
 	public void testCannotRebaseChangeAlreadyUpToDate() throws Exception {
 		try {
-			reviewHarness.client.rebase(reviewHarness.shortId, 1, new NullProgressMonitor());
+			reviewHarness.getClient().rebase(reviewHarness.getShortId(), 1, new NullProgressMonitor());
 			fail("Expected to fail when rebasing a change that is already up to date");
 		} catch (GerritException e) {
 			String message = CharMatcher.JAVA_ISO_CONTROL.removeFrom(e.getMessage());
@@ -448,9 +426,9 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testGetChangeDetailWithNoApprovals() throws Exception {
-		int reviewId = Integer.parseInt(reviewHarness.shortId);
+		int reviewId = Integer.parseInt(reviewHarness.getShortId());
 
-		ChangeDetailX changeDetail = reviewHarness.client.getChangeDetail(reviewId, new NullProgressMonitor());
+		ChangeDetailX changeDetail = reviewHarness.getClient().getChangeDetail(reviewId, new NullProgressMonitor());
 
 		assertThat(changeDetail, notNullValue());
 		assertThat(changeDetail.getApprovals(), empty());
@@ -461,10 +439,10 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		if (!isVersion26OrLater()) {
 			return; // testing Gerrit REST API, available in 2.6 and later
 		}
-		int reviewId = Integer.parseInt(reviewHarness.shortId);
+		int reviewId = Integer.parseInt(reviewHarness.getShortId());
 
-		ChangeInfo changeInfo = reviewHarness.client.getChangeInfo(reviewId, new NullProgressMonitor());
-		if (reviewHarness.client.isVersion29OrLater(new NullProgressMonitor())) {
+		ChangeInfo changeInfo = reviewHarness.getClient().getChangeInfo(reviewId, new NullProgressMonitor());
+		if (reviewHarness.getClient().isVersion29OrLater(new NullProgressMonitor())) {
 			ChangeInfoTest.assertHasCodeReviewLabels(changeInfo, true);
 		} else {
 			ChangeInfoTest.assertHasCodeReviewLabels(changeInfo, false);
@@ -475,7 +453,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 	public void testUnpermittedApproval() throws Exception {
 		String approvalMessage = "approval, time: " + System.currentTimeMillis();
 		try {
-			reviewHarness.client.publishComments(reviewHarness.shortId, 1, approvalMessage,
+			reviewHarness.getClient().publishComments(reviewHarness.getShortId(), 1, approvalMessage,
 					new HashSet<ApprovalCategoryValue.Id>(Collections.singleton(CRVW.getValue((short) 2).getId())),
 					new NullProgressMonitor());
 			fail("Expected to fail when trying to vote +2 when it's not permitted");
@@ -491,10 +469,10 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testGetPatchSetPublishDetail() throws Exception {
-		int reviewId = Integer.parseInt(reviewHarness.shortId);
+		int reviewId = Integer.parseInt(reviewHarness.getShortId());
 		PatchSet.Id id = new PatchSet.Id(new Change.Id(reviewId), 1);
 
-		PatchSetPublishDetailX patchSetDetail = reviewHarness.client.getPatchSetPublishDetail(id,
+		PatchSetPublishDetailX patchSetDetail = reviewHarness.getClient().getPatchSetPublishDetail(id,
 				new NullProgressMonitor());
 
 		assertThat(patchSetDetail, notNullValue());
@@ -512,20 +490,20 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 	@Test
 	public void testSetStarred() throws Exception {
 
-		int reviewId = Integer.parseInt(reviewHarness.shortId);
+		int reviewId = Integer.parseInt(reviewHarness.getShortId());
 		//Set the Starred to a review
-		reviewHarness.client.setStarred(reviewHarness.shortId, true, new NullProgressMonitor());
+		reviewHarness.getClient().setStarred(reviewHarness.getShortId(), true, new NullProgressMonitor());
 
-		ChangeDetailX changeDetail = reviewHarness.client.getChangeDetail(reviewId, new NullProgressMonitor());
+		ChangeDetailX changeDetail = reviewHarness.getClient().getChangeDetail(reviewId, new NullProgressMonitor());
 		assertEquals(true, changeDetail.isStarred());
 
 		//Test if already the Starred was set, should react the same way
-		reviewHarness.client.setStarred(reviewHarness.shortId, true, new NullProgressMonitor());
-		changeDetail = reviewHarness.client.getChangeDetail(reviewId, new NullProgressMonitor());
+		reviewHarness.getClient().setStarred(reviewHarness.getShortId(), true, new NullProgressMonitor());
+		changeDetail = reviewHarness.getClient().getChangeDetail(reviewId, new NullProgressMonitor());
 		assertEquals(true, changeDetail.isStarred());
 
-		reviewHarness.client.setStarred(reviewHarness.shortId, false, new NullProgressMonitor());
-		changeDetail = reviewHarness.client.getChangeDetail(reviewId, new NullProgressMonitor());
+		reviewHarness.getClient().setStarred(reviewHarness.getShortId(), false, new NullProgressMonitor());
+		changeDetail = reviewHarness.getClient().getChangeDetail(reviewId, new NullProgressMonitor());
 		assertEquals(false, changeDetail.isStarred());
 
 	}
@@ -534,29 +512,24 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 	public void testReviewsWithSameChangeId() throws Exception {
 		String branchName = "test_side_branch";
 		createBranchIfNonExistent(branchName);
-		ReviewHarness reviewHarness2 = new ReviewHarness(reviewHarness.testIdent); //same ChangeId
-		reviewHarness2.init("HEAD:refs/for/" + branchName, PrivilegeLevel.USER, "otherTestFile.txt");
+		ReviewHarness reviewHarness2 = reviewHarness.duplicate(); //same ChangeId
+		reviewHarness2.init("HEAD:refs/for/" + branchName, PrivilegeLevel.USER, "otherTestFile.txt", true);
 
-		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse();
-		reviewHarness2.consumer.retrieve(false);
-		reviewHarness2.listener.waitForResponse();
+		reviewHarness.retrieve();
+		reviewHarness2.retrieve();
 
-		IReview review = getReview(reviewHarness);
-		IReview review2 = getReview(reviewHarness2);
+		assertEquals(reviewHarness.getReview().getKey(), reviewHarness2.getReview().getKey()); // same changeId
+		assertThat(reviewHarness.getReview().getId(), is(not(reviewHarness2.getReview().getId()))); // different reviewId
 
-		assertEquals(review.getKey(), review2.getKey()); // same changeId
-		assertThat(review.getId(), is(not(review2.getId()))); // different reviewId
-
-		assertThat(review.getSets().size(), is(1));
-		assertThat(review.getSets().get(0).getId(), is("1"));
+		assertThat(reviewHarness.getReview().getSets().size(), is(1));
+		assertThat(reviewHarness.getReview().getSets().get(0).getId(), is("1"));
 		PatchSetDetail detail = retrievePatchSetDetail(reviewHarness, "1");
 		assertThat(detail.getPatches().size(), is(2));
 		assertThat(detail.getPatches().get(0).getFileName(), is("/COMMIT_MSG"));
 		assertThat(detail.getPatches().get(1).getFileName(), is("testFile1.txt"));
 
-		assertThat(review2.getSets().size(), is(1));
-		assertThat(review2.getSets().get(0).getId(), is("1"));
+		assertThat(reviewHarness2.getReview().getSets().size(), is(1));
+		assertThat(reviewHarness2.getReview().getSets().get(0).getId(), is("1"));
 		PatchSetDetail detail2 = retrievePatchSetDetail(reviewHarness2, "1");
 		assertThat(detail2.getPatches().size(), is(2));
 		assertThat(detail2.getPatches().get(0).getFileName(), is("/COMMIT_MSG"));
@@ -573,44 +546,29 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		String newReviewShortId = StringUtils.trimToEmpty(StringUtils.substringAfterLast(result.push.getMessages(), "/"));
 
 		TestRemoteObserver<IRepository, IReview, String, Date> newReviewListener = new TestRemoteObserver<IRepository, IReview, String, Date>(
-				reviewHarness.provider.getReviewFactory());
+				reviewHarness.getProvider().getReviewFactory());
 
-		RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> newReviewConsumer = reviewHarness.provider.getReviewFactory()
+		RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> newReviewConsumer = reviewHarness.getProvider()
+				.getReviewFactory()
 				.getConsumerForRemoteKey(reviewHarness.getRepository(), newReviewShortId);
 		newReviewConsumer.addObserver(newReviewListener);
 		newReviewConsumer.retrieve(false);
 		newReviewListener.waitForResponse();
 
-		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse();
-
-		IReview newReview = reviewHarness.provider.open(newReviewShortId);
+		reviewHarness.retrieve();
+		IReview newReview = reviewHarness.getProvider().open(newReviewShortId);
 		assertThat(newReview.getId(), is(newReviewShortId));
 
 		assertThat(getReview().getChildren().size(), is(1));
 		assertThat(getReview().getSets().size(), is(1));
 
-		IReviewItemSet patchSet = getReview().getSets().get(0);
-
-		ObjectId ref = reviewHarness.git.getRepository().resolve(patchSet.getRevision());
-		RevWalk walker = new RevWalk(reviewHarness.git.getRepository());
-		RevCommit targetCommit = walker.parseCommit(ref);
-
-		//make sure to checkout the correct commit
-		assertThat(targetCommit.toString(), is(reviewHarness.commitId));
-
-		reviewHarness.git.checkout()
-				.setCreateBranch(true)
-				.setName("change" + "/" + getReview().getId() + "/1")
-				.setStartPoint(targetCommit)
-				.call();
+		reviewHarness.checkoutPatchSet(1);
 
 		//create Patch Set 2 for Review 1
 		CommitCommand command2 = reviewHarness.createCommitCommand();
 		reviewHarness.addFile("testFile3.txt");
 		reviewHarness.commitAndPush(command2);
-		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse();
+		reviewHarness.retrieve();
 		List<IReviewItemSet> items = getReview().getSets();
 		assertThat(items.size(), is(2));
 		IReviewItemSet patchSet2 = items.get(1);
@@ -637,7 +595,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 		IComment commentByGerrit = comments.get(offset + 1);
 
-		if (reviewHarness.client.isVersion29OrLater(new NullProgressMonitor())) {
+		if (reviewHarness.getClient().isVersion29OrLater(new NullProgressMonitor())) {
 			assertNotNull(commentByGerrit.getAuthor());
 			assertThat(commentByGerrit.getAuthor().getId(),
 					is(String.valueOf(GerritSystemAccount.GERRIT_SYSTEM.getId())));
@@ -671,14 +629,10 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 	private PatchSetDetail retrievePatchSetDetail(ReviewHarness reviewHarness, String patchSetId) {
 		TestRemoteObserverConsumer<IReview, IReviewItemSet, String, PatchSetDetail, PatchSetDetail, String> itemSetObserver //
-		= retrieveForLocalKey(reviewHarness.provider.getReviewItemSetFactory(), getReview(reviewHarness), patchSetId,
-				false);
+		= retrieveForLocalKey(reviewHarness.getProvider().getReviewItemSetFactory(), reviewHarness.getReview(),
+				patchSetId, false);
 		PatchSetDetail detail = itemSetObserver.getRemoteObject();
 		return detail;
-	}
-
-	private IReview getReview(ReviewHarness reviewHarness) {
-		return reviewHarness.consumer.getModelObject();
 	}
 
 	@Test
@@ -686,9 +640,9 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		//create a commit w/ -2, resulting in no labels
 		HashSet<Id> approvals = new HashSet<ApprovalCategoryValue.Id>(Collections.singleton(CRVW.getValue((short) -2)
 				.getId()));
-		reviewHarness.getAdminClient().publishComments(reviewHarness.shortId, 1, "", approvals,
+		reviewHarness.getAdminClient().publishComments(reviewHarness.getShortId(), 1, "", approvals,
 				new NullProgressMonitor());
-		reviewHarness.consumer.retrieve(false);
+		reviewHarness.retrieve();
 	}
 
 	private int getCommentOffset() throws GerritException {
@@ -697,14 +651,14 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 	}
 
 	private boolean isVersion28OrLater() throws GerritException {
-		return GerritVersion.isVersion28OrLater(reviewHarness.client.getVersion(new NullProgressMonitor()));
+		return GerritVersion.isVersion28OrLater(reviewHarness.getClient().getVersion(new NullProgressMonitor()));
 	}
 
 	private boolean isVersion26OrLater() throws GerritException {
-		return GerritVersion.isVersion26OrLater(reviewHarness.client.getVersion(new NullProgressMonitor()));
+		return GerritVersion.isVersion26OrLater(reviewHarness.getClient().getVersion(new NullProgressMonitor()));
 	}
 
 	private boolean isVersion24x() throws GerritException {
-		return GerritVersion.isVersion24x(reviewHarness.client.getVersion(new NullProgressMonitor()));
+		return GerritVersion.isVersion24x(reviewHarness.getClient().getVersion(new NullProgressMonitor()));
 	}
 }

@@ -11,22 +11,25 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.remote;
 
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.sameInstance;
-import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertThat;
 
 import java.io.File;
+import java.math.BigInteger;
 import java.net.Proxy;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.Random;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.mylyn.commons.net.IProxyProvider;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
@@ -35,13 +38,13 @@ import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.gerrit.tests.support.GerritHarness;
 import org.eclipse.mylyn.gerrit.tests.support.GerritProject.CommitResult;
-import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IReview;
+import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.core.spi.remote.JobRemoteService;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -49,101 +52,103 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 class ReviewHarness {
 
 	//The maximum difference between two dates to account for clock skew between test machines
-	static final long CREATION_TIME_DELTA = 30 * 60 * 1000; //30 Minutes
+	private static final long CREATION_TIME_DELTA = 30 * 60 * 1000; //30 Minutes
 
 	private static final String DEFAULT_TEST_FILE = "testFile1.txt";
 
-	TestRemoteObserver<IRepository, IReview, String, Date> listener;
+	private TestRemoteObserver<IRepository, IReview, String, Date> listener;
 
-	RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> consumer;
+	private RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> consumer;
 
-	String shortId;
+	private String shortId;
 
-	String commitId;
+	private String commitId;
 
-	String changeId;
+	private String changeId;
 
-	String testIdent;
+	private final Git git;
 
-	Git git;
-
-	GerritClient client;
+	private final GerritClient client;
 
 	private GerritClient adminClient;
 
-	GerritRemoteFactoryProvider provider;
+	private final GerritRemoteFactoryProvider provider;
 
-	GerritConnector connector;
+	private final TaskRepository taskRepository;
 
-	TaskRepository repository;
+	private final GerritHarness gerritHarness;
 
-	GerritHarness gerritHarness;
-
-	ReviewHarness(String testIdent) throws Exception {
-		this(testIdent, PrivilegeLevel.USER);
-	}
-
-	ReviewHarness(String testIdent, PrivilegeLevel privilegeLevel) throws Exception {
-		this.testIdent = testIdent;
+	ReviewHarness() throws Exception {
+		this.changeId = generateChangeId();
 		gerritHarness = GerritFixture.current().harness();
-		git = gerritHarness.project().getGitProject(privilegeLevel);
+		git = gerritHarness.project().getGitProject(PrivilegeLevel.USER);
 
-		connector = new GerritConnector();
-		repository = GerritFixture.current().singleRepository();
-		client = gerritHarness.client(privilegeLevel);
+		taskRepository = GerritFixture.current().singleRepository();
+		client = gerritHarness.client(PrivilegeLevel.USER);
 
 		provider = new GerritRemoteFactoryProvider(client);
 		provider.setService(new JobRemoteService());
 		provider.setDataLocator(new TestDataLocator());
 	}
 
-	public void init() throws Exception {
-		init("HEAD:refs/for/master", PrivilegeLevel.USER);
+	private static String generateChangeId() throws NoSuchAlgorithmException {
+		byte[] bytes = new byte[22];
+		new Random().nextBytes(bytes);
+		return "I" + new BigInteger(bytes).toString(16).replace("-", "").substring(0, 40);
 	}
 
-	public void init(String refSpec, PrivilegeLevel privilegeLevel) throws Exception {
-		init(refSpec, privilegeLevel, DEFAULT_TEST_FILE);
+	ReviewHarness duplicate() throws Exception {
+		ReviewHarness reviewHarness = new ReviewHarness();
+		reviewHarness.changeId = this.changeId;
+		return reviewHarness;
 	}
 
-	public void init(String refSpec, PrivilegeLevel privilegeLevel, String fileName) throws Exception {
-		provider.open();
-		assertThat(getRepository().getReviews().size(), is(0));
-		pushFileToReview(testIdent, refSpec, privilegeLevel, fileName);
-		listener = new TestRemoteObserver<IRepository, IReview, String, Date>(provider.getReviewFactory());
-
-		consumer = provider.getReviewFactory().getConsumerForRemoteKey(getRepository(), shortId);
-		consumer.setAsynchronous(false);
-		consumer.addObserver(listener);
+	void retrieve() {
 		consumer.retrieve(false);
 		listener.waitForResponse();
+	}
+
+	void init() throws Exception {
+		init("HEAD:refs/for/master", PrivilegeLevel.USER, DEFAULT_TEST_FILE, true);
+	}
+
+	void init(String refSpec, PrivilegeLevel privilegeLevel, String fileName, boolean wait) throws Exception {
+		provider.open();
+		assertThat(getRepository().getReviews().size(), is(0));
+		pushFileToReview(refSpec, privilegeLevel, fileName);
+		listener = new TestRemoteObserver<IRepository, IReview, String, Date>(provider.getReviewFactory());
+
+		consumer = provider.getReviewFactory().getConsumerForRemoteKey(getRepository(), getShortId());
+		consumer.setAsynchronous(false);
+		consumer.addObserver(listener);
+		if (!wait) {
+			return;
+		}
+		retrieve();
 		assertThat(getRepository().getReviews().size(), is(1));
 		IReview review = getRepository().getReviews().get(0);
-		IReview reviewDirect = provider.open(shortId);
+		IReview reviewDirect = provider.open(getShortId());
 		assertThat(review, sameInstance(reviewDirect));
 		assertThat(review, notNullValue());
-		assertThat(review.getId(), is(shortId));
+		assertThat(review.getId(), is(getShortId()));
 		assertThat(review.getKey(), is(changeId));
-		assertThat(review.getSubject(), is("Test Change " + testIdent));
-		assertThat(review.getMessage(), allOf(startsWith("Test Change"), endsWith("aaa")));
+		assertThat(review.getSubject(), is("Test Change " + changeId));
 		assertThat(review.getOwner().getDisplayName(), is("tests"));
 		assertIsRecent(review.getCreationDate());
 	}
 
-	public void pushFileToReview(String testIdent, String refSpec, PrivilegeLevel privilegeLevel) throws Exception {
-		pushFileToReview(testIdent, refSpec, privilegeLevel, DEFAULT_TEST_FILE);
+	public void pushFileToReview(String refSpec, PrivilegeLevel privilegeLevel) throws Exception {
+		pushFileToReview(refSpec, privilegeLevel, DEFAULT_TEST_FILE);
 	}
 
-	public void pushFileToReview(String testIdent, String refSpec, PrivilegeLevel privilegeLevel, String fileName)
-			throws Exception {
-		changeId = "I" + StringUtils.rightPad(testIdent, 40, "a");
+	public void pushFileToReview(String refSpec, PrivilegeLevel privilegeLevel, String fileName) throws Exception {
 		CommitCommand command = createCommitCommand(changeId);
 		addFile(fileName);
 		CommitResult result = commitAndPush(command, refSpec, privilegeLevel);
 		shortId = StringUtils.trimToEmpty(StringUtils.substringAfterLast(result.push.getMessages(), "/"));
-		shortId = StringUtils.removeEnd(shortId, " [DRAFT]");
+		shortId = StringUtils.removeEnd(getShortId(), " [DRAFT]");
 		commitId = result.commit.getId().toString();
-		assertThat("Bad Push: " + result.push.getMessages(), shortId.length(), greaterThan(0));
-
+		assertThat("Bad Push: " + result.push.getMessages(), getShortId().length(), greaterThan(0));
 	}
 
 	void assertIsRecent(Date date) {
@@ -162,58 +167,93 @@ class ReviewHarness {
 		gerritHarness.dispose();
 	}
 
-	IRepository getRepository() {
-		return provider.getRoot();
-	}
-
-	public CommitCommand createCommitCommand() {
+	CommitCommand createCommitCommand() {
 		return createCommitCommand(changeId).setAmend(true);
 	}
 
-	public CommitCommand createCommitCommand(String changeId) {
-		return git.commit().setAll(true).setMessage("Test Change " + testIdent + "\n\nChange-Id: " + changeId);
+	CommitCommand createCommitCommand(String changeId) {
+		return git.commit().setAll(true).setMessage("Test Change " + changeId + "\n\nChange-Id: " + changeId);
 	}
 
-	public void addFile(String fileName) throws Exception {
+	void addFile(String fileName) throws Exception {
 		gerritHarness.project().addFile(fileName);
 	}
 
-	public void addFile(String fileName, String text) throws Exception {
+	void addFile(String fileName, String text) throws Exception {
 		gerritHarness.project().addFile(fileName, text);
 	}
 
-	public void addFile(String fileName, File file) throws Exception {
+	void addFile(String fileName, File file) throws Exception {
 		gerritHarness.project().addFile(fileName, file);
 	}
 
-	public void removeFile(String fileName) throws Exception {
+	void removeFile(String fileName) throws Exception {
 		gerritHarness.project().removeFile(fileName);
 	}
 
-	public CommitResult commitAndPush(CommitCommand command) throws Exception {
+	CommitResult commitAndPush(CommitCommand command) throws Exception {
 		return gerritHarness.project().commitAndPush(command);
 	}
 
-	public CommitResult commitAndPush(CommitCommand command, String refSpec, PrivilegeLevel privilegeLevel)
-			throws Exception {
+	CommitResult commitAndPush(CommitCommand command, String refSpec, PrivilegeLevel privilegeLevel) throws Exception {
 		return gerritHarness.project().commitAndPush(command, refSpec, privilegeLevel);
 	}
 
-	public GerritClient getAdminClient() {
+	void checkoutPatchSet(int number) throws Exception {
+		IReviewItemSet patchSet = getReview().getSets().get(0);
+		ObjectId ref = git.getRepository().resolve(patchSet.getRevision());
+		RevWalk walker = new RevWalk(git.getRepository());
+		RevCommit targetCommit = walker.parseCommit(ref);
+
+		//make sure to checkout the correct commit
+		assertThat(targetCommit.toString(), is(commitId));
+
+		git.checkout()
+		.setCreateBranch(true)
+		.setName("change" + "/" + getReview().getId() + "/" + number)
+		.setStartPoint(targetCommit)
+		.call();
+	}
+
+	GerritClient getClient() {
+		return client;
+	}
+
+	GerritClient getAdminClient() {
 		if (adminClient == null) {
 			UserCredentials credentials = GerritFixture.current().getCredentials(PrivilegeLevel.ADMIN);
 
 			WebLocation location = new WebLocation(GerritFixture.current().getRepositoryUrl(),
 					credentials.getUserName(), credentials.getPassword(), new IProxyProvider() {
-						public Proxy getProxyForHost(String host, String proxyType) {
-							return WebUtil.getProxyForUrl(GerritFixture.current().getRepositoryUrl());
-						}
-					});
+				public Proxy getProxyForHost(String host, String proxyType) {
+					return WebUtil.getProxyForUrl(GerritFixture.current().getRepositoryUrl());
+				}
+			});
 
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 					GerritFixture.current().getRepositoryUrl());
 			adminClient = new GerritClient(repository, location);
 		}
 		return adminClient;
+	}
+
+	IReview getReview() {
+		return consumer.getModelObject();
+	}
+
+	IRepository getRepository() {
+		return provider.getRoot();
+	}
+
+	public TaskRepository getTaskRepository() {
+		return taskRepository;
+	}
+
+	String getShortId() {
+		return shortId;
+	}
+
+	GerritRemoteFactoryProvider getProvider() {
+		return provider;
 	}
 }

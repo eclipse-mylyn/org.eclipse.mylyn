@@ -48,8 +48,8 @@ public class GerritDataLocatorTest extends TestCase {
 			FileUtils.forceDelete(rootDir);
 		}
 		FileUtils.forceMkdir(rootDir);
-		reviewHarness = new ReviewHarness(System.currentTimeMillis() + "");
-		provider = new GerritRemoteFactoryProvider(reviewHarness.client);
+		reviewHarness = new ReviewHarness();
+		provider = new GerritRemoteFactoryProvider(reviewHarness.getClient());
 		provider.setDataLocator(locator);
 		provider.setService(new JobRemoteService());
 	}
@@ -64,14 +64,14 @@ public class GerritDataLocatorTest extends TestCase {
 	public void testCreateRoot() throws Exception {
 		String testPath = FileUtils.getTempDirectory().getAbsolutePath() + File.separator + "gerrit_tests";
 		String filePath = testPath + File.separator + "reviews_bin" + File.separator + "org.eclipse.mylyn.gerrit-"
-				+ ReviewsRemoteEditFactoryProvider.asFileName(reviewHarness.repository.getUrl()) + File.separator
-				+ "Repository" + File.separator + "Repository.reviews";
+				+ ReviewsRemoteEditFactoryProvider.asFileName(reviewHarness.getTaskRepository().getUrl())
+				+ File.separator + "Repository" + File.separator + "Repository.reviews";
 		File file = new File(filePath);
 		assertThat("File should not exist at: " + filePath, file.exists(), is(false));
 		provider.open();
 		assertThat("File should exist at: " + filePath, file.exists(), is(true));
 		assertThat(provider.getRoot(), instanceOf(IRepository.class));
-		assertThat(provider.getRoot().getTaskRepositoryUrl(), is(reviewHarness.repository.getUrl()));
+		assertThat(provider.getRoot().getTaskRepositoryUrl(), is(reviewHarness.getTaskRepository().getUrl()));
 		assertThat(provider.getEditingDomain().getResourceSet().getResources().size(), is(1));
 		assertThat(provider.getEditingDomain().getResourceSet().getResources().get(0).getContents().size(), is(1));
 		assertThat(provider.getEditingDomain().getResourceSet().getResources().get(0).getContents().get(0),
@@ -81,7 +81,7 @@ public class GerritDataLocatorTest extends TestCase {
 		assertThat("File should exist at: " + filePath, file.exists(), is(true));
 		provider.open();
 		assertThat(provider.getRoot(), notNullValue());
-		assertThat(provider.getRoot().getTaskRepositoryUrl(), is(reviewHarness.repository.getUrl()));
+		assertThat(provider.getRoot().getTaskRepositoryUrl(), is(reviewHarness.getTaskRepository().getUrl()));
 	}
 
 	@Test
@@ -111,8 +111,8 @@ public class GerritDataLocatorTest extends TestCase {
 	public void testCreateChild() throws Exception {
 		String testPath = FileUtils.getTempDirectory().getAbsolutePath() + File.separator + "gerrit_tests";
 		String filePath = testPath + File.separator + "reviews_bin" + File.separator + "org.eclipse.mylyn.gerrit-"
-				+ ReviewsRemoteEditFactoryProvider.asFileName(reviewHarness.repository.getUrl()) + File.separator
-				+ "Review" + File.separator + "2.reviews";
+				+ ReviewsRemoteEditFactoryProvider.asFileName(reviewHarness.getTaskRepository().getUrl())
+				+ File.separator + "Review" + File.separator + "2.reviews";
 		File file = new File(filePath);
 		assertThat("File should not exist at: " + filePath, file.exists(), is(false));
 		provider.open();

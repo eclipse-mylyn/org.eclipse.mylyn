@@ -28,13 +28,13 @@ public class GerritRemoteTest extends TestCase {
 	ReviewHarness reviewHarness;
 
 	IReview getReview() {
-		return reviewHarness.consumer.getModelObject();
+		return reviewHarness.getReview();
 	}
 
 	@Override
 	@Before
 	public void setUp() throws Exception {
-		reviewHarness = new ReviewHarness(System.currentTimeMillis() + "");
+		reviewHarness = new ReviewHarness();
 		reviewHarness.init();
 	}
 

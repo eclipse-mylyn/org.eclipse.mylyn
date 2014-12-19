@@ -44,11 +44,11 @@ class TestRemoteObserver<P extends EObject, T, L, C> extends RemoteEmfObserver<P
 		}
 	}
 
-	public void waitForResponse() {
+	void waitForResponse() {
 		waitForResponse(1, 1);
 	}
 
-	public void waitForResponse(boolean updated) {
+	void waitForResponse(boolean updated) {
 		waitForResponse(1, updated ? 1 : 0);
 	}
 
@@ -74,7 +74,7 @@ class TestRemoteObserver<P extends EObject, T, L, C> extends RemoteEmfObserver<P
 				Thread.currentThread().interrupt();
 			}
 			assertThat("Wrong # responses: " + responded + ", updated: " + updated, responded, is(responses));
-			assertThat("Wrong # updates" + updated, updated, is(updates));
+			assertThat("Wrong # updates " + updated, updated, is(updates));
 			if (factory != null) {
 				assertThat(factory.getService().isActive(), is(false));
 			}

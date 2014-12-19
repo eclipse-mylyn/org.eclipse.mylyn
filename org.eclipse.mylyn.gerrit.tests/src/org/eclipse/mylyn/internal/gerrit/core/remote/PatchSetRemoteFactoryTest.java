@@ -72,9 +72,7 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		reviewHarness.addFile("testFile4.txt");
 		reviewHarness.addFile("testFile5.txt");
 		reviewHarness.commitAndPush(command3);
-		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse();
-
+		reviewHarness.retrieve();
 		assertThat(getReview().getSets().size(), is(3));
 		IReviewItemSet testPatchSet = getReview().getSets().get(2);
 		PatchSetDetail detail = retrievePatchSetDetail("3");
@@ -103,7 +101,7 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(base2.getAddedBy(), nullValue());
 		assertThat(base2.getCommittedBy(), nullValue());
 		assertThat(base2.getContent(), is(""));
-		assertThat(base2.getId(), is("base-" + reviewHarness.shortId + ",3,testFile2.txt"));
+		assertThat(base2.getId(), is("base-" + reviewHarness.getShortId() + ",3,testFile2.txt"));
 		assertThat(base2.getName(), is("testFile2.txt"));
 		assertThat(base2.getPath(), nullValue());
 		assertThat(base2.getReference(), nullValue());
@@ -113,7 +111,7 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(target2.getAddedBy().getDisplayName(), is("tests"));
 		assertThat(target2.getCommittedBy().getDisplayName(), is("tests"));
 		assertThat(target2.getContent(), is("testmod"));
-		assertThat(target2.getId(), is(reviewHarness.shortId + ",3,testFile2.txt"));
+		assertThat(target2.getId(), is(reviewHarness.getShortId() + ",3,testFile2.txt"));
 		assertThat(target2.getName(), is("testFile2.txt"));
 		assertThat(target2.getPath(), is("testFile2.txt"));
 		assertThat(target2.getReference(), nullValue());
@@ -195,7 +193,7 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 
 		// compare deleted image
 		patchScript = loadPatchSetContent(fileName, detail2, detail4);
-		boolean isVersion29OrLater = reviewHarness.client.isVersion29OrLater(new NullProgressMonitor());
+		boolean isVersion29OrLater = reviewHarness.getClient().isVersion29OrLater(new NullProgressMonitor());
 		if (isVersion29OrLater) {
 			//In Gerrit 2.9, if the file (test.png)is not in the target environment (Detail 4), it returns NULL
 			assertThat(patchScript, nullValue());
@@ -222,12 +220,12 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 	private PatchScriptX loadPatchSetContent(String fileName, PatchSetDetail base, PatchSetDetail target)
 			throws GerritException {
 		PatchSetContent content = new PatchSetContent(base.getPatchSet(), target.getPatchSet());
-		reviewHarness.client.loadPatchSetContent(content, new NullProgressMonitor());
+		reviewHarness.getClient().loadPatchSetContent(content, new NullProgressMonitor());
 		return content.getPatchScript(createPatchKey(fileName, target.getInfo().getKey().get()));
 	}
 
 	private Key createPatchKey(String fileName, int patchSet) throws GerritException {
-		Change.Id changeId = new Change.Id(reviewHarness.client.id(reviewHarness.shortId));
+		Change.Id changeId = new Change.Id(reviewHarness.getClient().id(reviewHarness.getShortId()));
 		PatchSet.Id patchSetId = new PatchSet.Id(changeId, patchSet);
 		return new Patch.Key(patchSetId, fileName);
 	}
@@ -246,8 +244,7 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		CommitCommand command = reviewHarness.createCommitCommand();
 		reviewHarness.addFile(fileName, file);
 		reviewHarness.commitAndPush(command);
-		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse();
+		reviewHarness.retrieve();
 		return FileUtils.readFileToByteArray(file);
 	}
 
@@ -255,8 +252,7 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		CommitCommand command = reviewHarness.createCommitCommand();
 		reviewHarness.removeFile(fileName);
 		reviewHarness.commitAndPush(command);
-		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse();
+		reviewHarness.retrieve();
 	}
 
 	@Test
@@ -264,8 +260,7 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		CommitCommand command2 = reviewHarness.createCommitCommand();
 		reviewHarness.addFile("testComments.txt", "line1\nline2\nline3\nline4\nline5\nline6\nline7\n");
 		reviewHarness.commitAndPush(command2);
-		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse();
+		reviewHarness.retrieve();
 		PatchSetDetail detail = retrievePatchSetDetail("2");
 		assertThat(detail.getInfo().getKey().get(), is(2));
 
@@ -278,7 +273,7 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(commentFile.getAllComments().size(), is(0));
 
 		String id = commentFile.getReference();
-		reviewHarness.client.saveDraft(Patch.Key.parse(id), "Line 2 Comment", 2, (short) 1, null, null,
+		reviewHarness.getClient().saveDraft(Patch.Key.parse(id), "Line 2 Comment", 2, (short) 1, null, null,
 				new NullProgressMonitor());
 		patchSetObserver.retrieve(false);
 		patchSetObserver.waitForResponse();
@@ -292,13 +287,13 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(fileComment.getAuthor().getDisplayName(), is("tests"));
 		assertThat(fileComment.getDescription(), is("Line 2 Comment"));
 
-		reviewHarness.client.deleteDraft(Patch.Key.parse(id), fileComment.getId(), new NullProgressMonitor());
+		reviewHarness.getClient().deleteDraft(Patch.Key.parse(id), fileComment.getId(), new NullProgressMonitor());
 
 		commentFile = testPatchSet.getItems().get(0);
 		allComments = commentFile.getAllComments();
 		assertThat(allComments.size(), is(0));
 
-		reviewHarness.client.saveDraft(Patch.Key.parse(id), "Line 2 Comment", 2, (short) 1, null, null,
+		reviewHarness.getClient().saveDraft(Patch.Key.parse(id), "Line 2 Comment", 2, (short) 1, null, null,
 				new NullProgressMonitor());
 		patchSetObserver.retrieve(false);
 		patchSetObserver.waitForResponse();
@@ -311,7 +306,7 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(fileComment.getAuthor().getDisplayName(), is("tests"));
 		assertThat(fileComment.getDescription(), is("Line 2 Comment"));
 
-		reviewHarness.client.saveDraft(Patch.Key.parse(id), "Line 2 Comment modified", 2, (short) 1, null,
+		reviewHarness.getClient().saveDraft(Patch.Key.parse(id), "Line 2 Comment modified", 2, (short) 1, null,
 				fileComment.getId(), new NullProgressMonitor());
 		patchSetObserver.retrieve(false);
 		patchSetObserver.waitForResponse();
@@ -325,7 +320,7 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(fileComment.getAuthor().getDisplayName(), is("tests"));
 		assertThat(fileComment.getDescription(), is("Line 2 Comment modified"));
 
-		reviewHarness.client.publishComments(reviewHarness.shortId, 2, "Submit Comments",
+		reviewHarness.getClient().publishComments(reviewHarness.getShortId(), 2, "Submit Comments",
 				Collections.<ApprovalCategoryValue.Id> emptySet(), new NullProgressMonitor());
 		patchSetObserver.retrieve(false);
 		patchSetObserver.waitForResponse();
@@ -341,7 +336,7 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 	@Test
 	public void testLoadPatchSet() throws Exception {
 		// given
-		GerritChange change = reviewHarness.client.getChange(reviewHarness.shortId, new NullProgressMonitor());
+		GerritChange change = reviewHarness.getClient().getChange(reviewHarness.getShortId(), new NullProgressMonitor());
 		List<PatchSetDetail> details = change.getPatchSetDetails();
 		assertThat(details, notNullValue());
 		assertThat(details.size(), is(1));
@@ -356,7 +351,7 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(content.getPatchScript(testFilePatchKey), nullValue());
 
 		// when
-		reviewHarness.client.loadPatchSetContent(content, new NullProgressMonitor());
+		reviewHarness.getClient().loadPatchSetContent(content, new NullProgressMonitor());
 
 		// then
 		assertThat(content.getPatchScript(commitMsgPatchKey), notNullValue());
@@ -365,14 +360,14 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 
 	private PatchSetDetail retrievePatchSetDetail(String patchSetId) {
 		TestRemoteObserverConsumer<IReview, IReviewItemSet, String, PatchSetDetail, PatchSetDetail, String> itemSetObserver //
-		= retrieveForLocalKey(reviewHarness.provider.getReviewItemSetFactory(), getReview(), patchSetId, false);
+		= retrieveForLocalKey(reviewHarness.getProvider().getReviewItemSetFactory(), getReview(), patchSetId, false);
 		PatchSetDetail detail = itemSetObserver.getRemoteObject();
 		return detail;
 	}
 
 	private TestRemoteObserverConsumer<IReviewItemSet, List<IFileItem>, String, PatchSetContent, String, Long> retrievePatchSetContents(
 			IReviewItemSet patchSet) {
-		return retrieveForRemoteKey(reviewHarness.provider.getReviewItemSetContentFactory(), patchSet,
+		return retrieveForRemoteKey(reviewHarness.getProvider().getReviewItemSetContentFactory(), patchSet,
 				patchSet.getId(), true);
 	}
 }

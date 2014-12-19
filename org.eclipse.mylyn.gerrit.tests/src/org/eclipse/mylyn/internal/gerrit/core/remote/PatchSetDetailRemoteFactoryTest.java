@@ -15,7 +15,6 @@ import static org.eclipse.mylyn.internal.gerrit.core.remote.TestRemoteObserverCo
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.util.Date;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -24,7 +23,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
-import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.junit.After;
@@ -46,9 +44,9 @@ public class PatchSetDetailRemoteFactoryTest extends TestCase {
 	@Before
 	public void setUp() throws Exception {
 		// sets who is signed-in to view the review (performs the retrieval)
-		reviewHarness = new ReviewHarness(System.currentTimeMillis() + "", PrivilegeLevel.USER);
+		reviewHarness = new ReviewHarness();
 		// set who makes the initial commit (and consequentially, becomes the review owner)
-		initializeReviewHarness(DRAFT_BRANCH, PrivilegeLevel.ADMIN);
+		reviewHarness.init(DRAFT_BRANCH, PrivilegeLevel.ADMIN, "testFile1.txt", false);
 	}
 
 	@Override
@@ -61,11 +59,9 @@ public class PatchSetDetailRemoteFactoryTest extends TestCase {
 	public void testUserHasNoAccessToAdminDraft() throws Exception {
 		createPatchSet(NON_DRAFT_BRANCH, PrivilegeLevel.ADMIN, ImmutableList.of("testFile2.txt", "testFile3.txt"));
 
-		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse();
-
-		assertThat(getReview().getSets().size(), is(1));
-		assertThat(getReview().getSets().get(0).getId(), is("2"));
+		reviewHarness.retrieve();
+		assertThat(reviewHarness.getReview().getSets().size(), is(1));
+		assertThat(reviewHarness.getReview().getSets().get(0).getId(), is("2"));
 
 		assertNull(retrievePatchSetDetail("1"));
 		PatchSetDetail detail = retrievePatchSetDetail("2");
@@ -75,16 +71,14 @@ public class PatchSetDetailRemoteFactoryTest extends TestCase {
 	@Test
 	public void testUserHasAccessToAdminDraft() throws Exception {
 		createPatchSet(NON_DRAFT_BRANCH, PrivilegeLevel.ADMIN, ImmutableList.of("testFile2.txt", "testFile3.txt"));
-		reviewHarness.client.addReviewers(reviewHarness.shortId,
+		reviewHarness.getClient().addReviewers(reviewHarness.getShortId(),
 				ImmutableList.of(GerritFixture.current().getCredentials(PrivilegeLevel.USER).getUserName()),
 				new NullProgressMonitor());
 
-		reviewHarness.consumer.retrieve(false);
-		reviewHarness.listener.waitForResponse();
-
-		assertThat(getReview().getSets().size(), is(2));
-		assertThat(getReview().getSets().get(0).getId(), is("1"));
-		assertThat(getReview().getSets().get(1).getId(), is("2"));
+		reviewHarness.retrieve();
+		assertThat(reviewHarness.getReview().getSets().size(), is(2));
+		assertThat(reviewHarness.getReview().getSets().get(0).getId(), is("1"));
+		assertThat(reviewHarness.getReview().getSets().get(1).getId(), is("2"));
 
 		PatchSetDetail detail = retrievePatchSetDetail("1");
 		assertThat(detail.getInfo().getKey().get(), is(1));
@@ -98,27 +92,14 @@ public class PatchSetDetailRemoteFactoryTest extends TestCase {
 		for (String fileName : files) {
 			reviewHarness.addFile(fileName);
 		}
-		reviewHarness.gerritHarness.project().commitAndPush(command, pushTo, privilegeLevel);
+		reviewHarness.commitAndPush(command, pushTo, privilegeLevel);
 	}
 
 	private PatchSetDetail retrievePatchSetDetail(String patchSetId) {
 		TestRemoteObserverConsumer<IReview, IReviewItemSet, String, PatchSetDetail, PatchSetDetail, String> itemSetObserver //
-		= retrieveForLocalKey(reviewHarness.provider.getReviewItemSetFactory(), getReview(), patchSetId, false);
+		= retrieveForLocalKey(reviewHarness.getProvider().getReviewItemSetFactory(), reviewHarness.getReview(), patchSetId,
+				false);
 		PatchSetDetail detail = itemSetObserver.getRemoteObject();
 		return detail;
-	}
-
-	private void initializeReviewHarness(String refSpec, PrivilegeLevel privilegeLevel) throws Exception {
-		reviewHarness.provider.open();
-		reviewHarness.pushFileToReview(reviewHarness.testIdent, refSpec, privilegeLevel);
-		reviewHarness.listener = new TestRemoteObserver<IRepository, IReview, String, Date>(
-				reviewHarness.provider.getReviewFactory());
-		reviewHarness.consumer = reviewHarness.provider.getReviewFactory().getConsumerForRemoteKey(
-				reviewHarness.getRepository(), reviewHarness.shortId);
-		reviewHarness.consumer.addObserver(reviewHarness.listener);
-	}
-
-	private IReview getReview() {
-		return reviewHarness.consumer.getModelObject();
 	}
 }
