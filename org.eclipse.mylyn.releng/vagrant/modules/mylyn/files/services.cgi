@@ -13,7 +13,7 @@ my @verzeichnisse = (
 );
 
 my @files = File::Find::Rule->file()
-    ->mindepth(3)
+    ->mindepth(2)
     ->maxdepth(4)
     ->name( $muster )
     ->in( @verzeichnisse );
