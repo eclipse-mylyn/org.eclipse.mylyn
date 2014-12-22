@@ -70,7 +70,6 @@ class bugzilla {
     "libxml-twig-perl",
     "make",
     "mysql-server",
-    "openjdk-7-jdk",
     "patchutils",
     "perl-doc",
     "perlmagick",
