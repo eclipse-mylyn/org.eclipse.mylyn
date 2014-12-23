@@ -13,14 +13,13 @@
 package org.eclipse.mylyn.internal.gerrit.ui.providers;
 
 import org.eclipse.compare.CompareConfiguration;
-import org.eclipse.compare.CompareUI;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylyn.internal.gerrit.ui.GerritCompareUi;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritReviewBehavior;
 import org.eclipse.mylyn.internal.reviews.ui.ActiveReviewManager;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
-import org.eclipse.mylyn.internal.reviews.ui.compare.FileItemCompareEditorInput;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IFileVersion;
@@ -62,8 +61,7 @@ public class OpenCompareEditorProvider extends CommonActionProvider {
 									TaskEditorInput input = (TaskEditorInput) part.getEditorInput();
 									GerritReviewBehavior behavior = new GerritReviewBehavior(input.getTask());
 									CompareConfiguration configuration = new CompareConfiguration();
-									CompareUI.openCompareEditor(new FileItemCompareEditorInput(configuration, fileItem,
-											behavior));
+									GerritCompareUi.openFileComparisonEditor(configuration, fileItem, behavior);
 								}
 							}
 						}

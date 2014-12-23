@@ -140,4 +140,7 @@ public abstract class ReviewItemCompareEditorInput extends CompareEditorInput {
 		}
 	}
 
+	public String getItemTaskId() {
+		return behavior.getTask().getTaskId();
+	}
 }

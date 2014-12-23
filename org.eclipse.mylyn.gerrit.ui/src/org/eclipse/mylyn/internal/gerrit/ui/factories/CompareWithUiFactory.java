@@ -17,13 +17,14 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.compare.CompareConfiguration;
-import org.eclipse.compare.CompareUI;
+import org.eclipse.compare.CompareEditorInput;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.mylyn.internal.gerrit.core.client.PatchSetContent;
 import org.eclipse.mylyn.internal.gerrit.core.remote.PatchSetContentCompareRemoteFactory;
+import org.eclipse.mylyn.internal.gerrit.ui.GerritCompareUi;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritReviewBehavior;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
 import org.eclipse.mylyn.internal.reviews.ui.compare.ReviewItemSetCompareEditorInput;
@@ -89,9 +90,7 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 						}
 					}
 				}
-				CompareConfiguration configuration = new CompareConfiguration();
-				CompareUI.openCompareEditor(new ReviewItemSetCompareEditorInput(configuration, compareSet, null,
-						new GerritReviewBehavior(getTask(), resolveGitRepository())));
+				GerritCompareUi.openCompareEditor(createCompareEditorInput(compareSet));
 				dispose();
 			} else {
 				StatusManager.getManager().handle(
@@ -207,7 +206,15 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 				compareSet, content);
 		consumer.setUiJob(true);
 		consumer.addObserver(new ItemListClient(baseSet, targetSet, compareSet));
-		consumer.retrieve(true);
+		int delimiterIndex = consumer.getLocalKey().indexOf(',');
+		String taskId = consumer.getLocalKey().substring(0, delimiterIndex);
+		ReviewItemSetCompareEditorInput input = createCompareEditorInput(compareSet);
+		CompareEditorInput newInput = GerritCompareUi.getReviewItemSetComparisonEditor(input, compareSet, taskId);
+		if (newInput == input) {// no existing compare editor was found
+			consumer.retrieve(true);
+		} else {
+			GerritCompareUi.openCompareEditor(newInput);
+		}
 	}
 
 	@Override
@@ -218,5 +225,11 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 	@Override
 	public boolean isExecutable() {
 		return true;
+	}
+
+	private ReviewItemSetCompareEditorInput createCompareEditorInput(IReviewItemSet compareSet) {
+		CompareConfiguration configuration = new CompareConfiguration();
+		GerritReviewBehavior behavior = new GerritReviewBehavior(getTask(), resolveGitRepository());
+		return new ReviewItemSetCompareEditorInput(configuration, compareSet, null, behavior);
 	}
 }
