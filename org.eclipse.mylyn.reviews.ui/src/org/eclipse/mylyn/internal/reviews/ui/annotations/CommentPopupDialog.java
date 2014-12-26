@@ -24,10 +24,10 @@ import org.eclipse.mylyn.commons.workbench.forms.CommonFormUtil;
 import org.eclipse.mylyn.internal.reviews.ui.IReviewActionListener;
 import org.eclipse.mylyn.internal.reviews.ui.dialogs.CommentInputDialog;
 import org.eclipse.mylyn.internal.reviews.ui.editors.parts.CommentPart;
+import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
 import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
-import org.eclipse.mylyn.reviews.internal.core.model.Comment;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -49,7 +49,7 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 
 /**
  * Popup to show the information about the annotation in
- * 
+ *
  * @author Shawn Minto
  * @author Guy Perron
  */
@@ -79,7 +79,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 
 	public final boolean openDialogOnHover;
 
-	private List<Comment> commentList;
+	private List<IComment> commentList;
 
 	public CommentPopupDialog(Shell parent, int shellStyle) {
 		this(parent, shellStyle, false, null, null);
@@ -208,7 +208,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 
 			currentPopupDialog = this;
 
-			commentList = new ArrayList<Comment>();
+			commentList = new ArrayList<IComment>();
 			for (CommentAnnotation annotation : annotationInput.getAnnotations()) {
 				if (reviewitem == null) {
 					if (annotation.getComment().getItem() instanceof IReviewItem) {
@@ -225,17 +225,16 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 					}
 				}
 
-				if ((reviewitem != null)
-						&& reviewitem.getReview() != null
+				if ((reviewitem != null) && reviewitem.getReview() != null
 						&& reviewitem.getReview().getRepository() != null
 						&& reviewitem.getReview().getRepository().getAccount() != null
-						&& reviewitem.getReview().getRepository().getAccount() != ((Comment) annotation.getComment()).getAuthor()
-						&& ((Comment) annotation.getComment()).isDraft()) {
+						&& reviewitem.getReview().getRepository().getAccount() != annotation.getComment().getAuthor()
+						&& annotation.getComment().isDraft()) {
 					continue;
 				}
 
 				CommentPart part = new CommentPart(annotation.getComment(), annotationInput.getBehavior());
-				commentList.add((Comment) annotation.getComment());
+				commentList.add(annotation.getComment());
 				part.hookCustomActionRunListener(this);
 				Control control = part.createControl(composite, toolkit);
 				toolkit.adapt(control, true, true);

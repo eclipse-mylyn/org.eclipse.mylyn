@@ -13,6 +13,7 @@
 
 package org.eclipse.mylyn.internal.reviews.ui.dialogs;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -38,12 +39,11 @@ import org.eclipse.mylyn.reviews.core.model.ILineLocation;
 import org.eclipse.mylyn.reviews.core.model.ILineRange;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
+import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.reviews.core.spi.ReviewsConnector;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.eclipse.mylyn.reviews.core.spi.remote.review.IReviewRemoteFactoryProvider;
-import org.eclipse.mylyn.reviews.internal.core.model.Comment;
-import org.eclipse.mylyn.reviews.internal.core.model.ReviewsFactory;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -67,7 +67,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 /**
  * This class implements the dialog used to fill-in the Comment element details.
- * 
+ *
  * @author Guy Perron
  */
 public class CommentInputDialog extends FormDialog {
@@ -92,7 +92,9 @@ public class CommentInputDialog extends FormDialog {
 
 	private final LineRange range;
 
-	private List<Comment> commentList;
+	private List<IComment> commentList;
+
+	private List<Button> commentButtons;
 
 	private boolean isUpdate = false;
 
@@ -139,7 +141,7 @@ public class CommentInputDialog extends FormDialog {
 			return;
 		}
 
-		IComment comment = ReviewsFactory.eINSTANCE.createComment();
+		IComment comment = IReviewsFactory.INSTANCE.createComment();
 		comment.setDescription(fCommentInputTextField.getText().trim());
 		switch (buttonId) {
 		case BUTTON_EDIT_ID:
@@ -190,8 +192,8 @@ public class CommentInputDialog extends FormDialog {
 	}
 
 	private ILineLocation getSelectedLineLocation() {
-		ILineLocation location = ReviewsFactory.eINSTANCE.createLineLocation();
-		ILineRange lineRange = ReviewsFactory.eINSTANCE.createLineRange();
+		ILineLocation location = IReviewsFactory.INSTANCE.createLineLocation();
+		ILineRange lineRange = IReviewsFactory.INSTANCE.createLineRange();
 		lineRange.setStart(range.getStartLine());
 		lineRange.setEnd(range.getStartLine() + range.getNumberOfLines());
 		location.getRanges().add(lineRange);
@@ -277,7 +279,7 @@ public class CommentInputDialog extends FormDialog {
 			file = ((IFileVersion) item).getFile();
 		}
 		if (file != null && file.getReview() != null) {
-			// Update any review item set observers IFF we belong to a review. (The set might represent a compare, 
+			// Update any review item set observers IFF we belong to a review. (The set might represent a compare,
 			// in which case we won't have a relevant model object.)
 			updateConsumer(file);
 
@@ -310,6 +312,14 @@ public class CommentInputDialog extends FormDialog {
 	}
 
 	@Override
+	protected Control createContents(Composite parent) {
+		Control contents = super.createContents(parent);
+		selectComment(commentList.get(commentList.size() - 1));
+		commentButtons.get(commentButtons.size() - 1).setSelection(true);
+		return contents;
+	}
+
+	@Override
 	protected void createFormContent(final IManagedForm mform) {
 		final ScrolledForm scrolledform = mform.getForm();
 		scrolledform.setExpandVertical(true);
@@ -323,16 +333,13 @@ public class CommentInputDialog extends FormDialog {
 		composite.setLayout(layout);
 		GridData textGridData = null;
 
-		for (Comment comment : commentList) {
-			final Button button = new Button(composite, SWT.RADIO);
-			button.setBackground(composite.getBackground());
+		commentButtons = new ArrayList<Button>();
+		for (final IComment comment : commentList) {
+			final Button commentSelectionButton = new Button(composite, SWT.RADIO);
+			commentSelectionButton.setBackground(composite.getBackground());
 
-			final String uuid = comment.getId();
-			final boolean isDraft = comment.isDraft();
-			final String commentText = comment.getDescription();
 			final String authorAndDate;
-			IUser author = comment.getAuthor();
-			if (author != null) {
+			if (comment.getAuthor() != null) {
 				authorAndDate = comment.getAuthor().getDisplayName() + " " //$NON-NLS-1$
 						+ comment.getCreationDate().toString();
 			} else {
@@ -341,27 +348,20 @@ public class CommentInputDialog extends FormDialog {
 			}
 
 			String commentPrefix = StringUtils.abbreviate(comment.getDescription(), 50);
-			if (isDraft) {
-				button.setText(NLS.bind(Messages.CommentInputDialog_Draft, authorAndDate, commentPrefix));
+			if (comment.isDraft()) {
+				commentSelectionButton.setText(NLS.bind(Messages.CommentInputDialog_Draft, authorAndDate, commentPrefix));
 			} else {
-				button.setText(authorAndDate + " " + commentPrefix); //$NON-NLS-1$
+				commentSelectionButton.setText(authorAndDate + " " + commentPrefix); //$NON-NLS-1$
 			}
 
-			button.addSelectionListener(new SelectionAdapter() {
+			commentSelectionButton.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					disposeButtons();
-					if (isDraft) {
-						createEdit();
-					} else {
-						createReplyReplyDone();
-					}
-					currentUuid = uuid;
-					fCommentInputTextField.setText(commentText);
-					isUpdate = true;
+					selectComment(comment);
 				}
 			});
-			GridDataFactory.fillDefaults().span(2, 1).applyTo(button);
+			GridDataFactory.fillDefaults().span(2, 1).applyTo(commentSelectionButton);
+			commentButtons.add(commentSelectionButton);
 		}
 
 		fCommentInputTextField = new Text(composite, SWT.BORDER | SWT.MULTI | SWT.WRAP);
@@ -377,7 +377,6 @@ public class CommentInputDialog extends FormDialog {
 		fCommentInputTextField.setFocus();
 
 		this.setHelpAvailable(false);
-
 	}
 
 	@Override
@@ -412,8 +411,20 @@ public class CommentInputDialog extends FormDialog {
 		return true;
 	}
 
-	public void setComments(List<Comment> commentList) {
+	public void setComments(List<IComment> commentList) {
 		this.commentList = commentList;
+	}
+
+	private void selectComment(final IComment comment) {
+		disposeButtons();
+		if (comment.isDraft()) {
+			createEdit();
+		} else {
+			createReplyReplyDone();
+		}
+		currentUuid = comment.getId();
+		fCommentInputTextField.setText(comment.getDescription());
+		isUpdate = true;
 	}
 
 	private void disposeButtons() {
@@ -424,8 +435,9 @@ public class CommentInputDialog extends FormDialog {
 				button.dispose();
 			}
 		}
-		fCommentInputTextField.setEnabled(false);
-
+		if (fCommentInputTextField != null) {
+			fCommentInputTextField.setEnabled(false);
+		}
 	}
 
 	private void createEdit() {
@@ -453,5 +465,4 @@ public class CommentInputDialog extends FormDialog {
 		buttonBar.pack();
 
 	}
-
 }
