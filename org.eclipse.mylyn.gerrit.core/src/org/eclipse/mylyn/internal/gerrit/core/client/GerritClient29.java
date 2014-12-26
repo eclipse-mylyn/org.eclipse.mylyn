@@ -34,8 +34,6 @@ import org.eclipse.mylyn.internal.gerrit.core.client.compat.GerritSystemAccount;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchSetPublishDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.SubmitRecord;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ActionInfo;
-import org.eclipse.mylyn.internal.gerrit.core.client.rest.BranchInfo;
-import org.eclipse.mylyn.internal.gerrit.core.client.rest.BranchInput;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo28;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeMessageInfo;
@@ -148,22 +146,6 @@ public class GerritClient29 extends GerritClient28 {
 		Change.Id changeId = new Change.Id(changeIdValue);
 		Change change = new Change(key, changeId, accountInfo.getId(), branchKey);
 		return change;
-	}
-
-	private String getProjectBranchesUrl(String projectName) {
-		return "/projects/" + projectName + "/branches/"; //$NON-NLS-1$ //$NON-NLS-2$
-	}
-
-	public void createRemoteBranch(String projectName, String branchName, String revision, IProgressMonitor monitor)
-			throws GerritException {
-		String url = getProjectBranchesUrl(projectName) + branchName;
-		BranchInput input = new BranchInput(branchName, revision);
-		executePutRestRequest(url, input, BranchInput.class, createErrorHandler(), monitor);
-	}
-
-	public BranchInfo[] getRemoteProjectBranches(String projectName, IProgressMonitor monitor) throws GerritException {
-		String url = getProjectBranchesUrl(projectName);
-		return executeGetRestRequest(url, BranchInfo[].class, monitor);
 	}
 
 	private PatchSetInfo getPatchSetInfo(PatchSet.Id patchsetId, String subject) {
@@ -455,6 +437,8 @@ public class GerritClient29 extends GerritClient28 {
 							changeDetail.setCanSubmit(actions.getValue().getEnabled());
 						} else if (actions.getKey().equalsIgnoreCase("rebase")) { //$NON-NLS-1$
 							changeDetail.setCanRebase(actions.getValue().getEnabled());
+						} else if (actions.getKey().equalsIgnoreCase("cherrypick")) { //$NON-NLS-1$
+							changeDetail.setCanCherryPick(actions.getValue().getEnabled());
 						}
 					}
 				}

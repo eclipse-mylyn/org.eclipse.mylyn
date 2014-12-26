@@ -11,17 +11,29 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+
+import org.apache.commons.httpclient.HttpMethodBase;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient.ErrorHandler;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.BranchInfo;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.BranchInput;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo28;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.CherryPickInput;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Version;
 
+import com.google.gerrit.common.data.ChangeDetail;
 import com.google.gerrit.common.data.ToggleStarRequest;
 import com.google.gerrit.reviewdb.Change;
+import com.google.gerrit.reviewdb.PatchSet;
 import com.google.gwtjsonrpc.client.VoidResult;
 
 public class GerritClient28 extends GerritClient27 {
@@ -61,4 +73,73 @@ public class GerritClient28 extends GerritClient27 {
 		}
 		return changeInfo28;
 	}
+
+	@Override
+	public ChangeDetail cherryPick(String reviewId, int patchSetId, final String message, final String destBranch,
+			IProgressMonitor monitor) throws GerritException {
+		final PatchSet.Id id = new PatchSet.Id(new Change.Id(id(reviewId)), patchSetId);
+		String url = "/changes/" + id.getParentKey() + "/revisions/" + id.get() + "/cherrypick"; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+		CherryPickInput input = new CherryPickInput(message, destBranch);
+		ChangeInfo result = executePostRestRequest(url, input, ChangeInfo.class, new ErrorHandler() {
+			@Override
+			public void handleError(HttpMethodBase method) throws GerritException {
+				String errorMsg = getResponseBodyAsString(method);
+				if (isNotPermitted(method, errorMsg)) {
+					errorMsg = NLS.bind("Cannot cherry pick: {0}", errorMsg); //$NON-NLS-1$
+				} else if (isConflict(method)) {
+					errorMsg = NLS.bind("Request Conflict: {0}", errorMsg); //$NON-NLS-1$
+				} else if (isBadRequest(method)) {
+					errorMsg = NLS.bind("Bad Request: {0}", errorMsg); //$NON-NLS-1$
+				}
+				throw new GerritException(errorMsg);
+			}
+
+			private String getResponseBodyAsString(HttpMethodBase method) {
+				try {
+					return method.getResponseBodyAsString();
+				} catch (IOException e) {
+					return null;
+				}
+			}
+
+			private boolean isNotPermitted(HttpMethodBase method, String msg) {
+				return method.getStatusCode() == HttpURLConnection.HTTP_FORBIDDEN
+						&& msg.toLowerCase().startsWith("cherry pick not permitted"); //$NON-NLS-1$
+			}
+
+			private boolean isConflict(HttpMethodBase method) {
+				return method.getStatusCode() == HttpURLConnection.HTTP_CONFLICT;
+			}
+
+			private boolean isBadRequest(HttpMethodBase method) {
+				return method.getStatusCode() == HttpURLConnection.HTTP_BAD_REQUEST;
+			}
+		}, monitor);
+
+		return getChangeDetail(result.getNumber(), monitor);
+	}
+
+	@Override
+	public boolean supportsBranchCreation() throws GerritException {
+		return true;
+	}
+
+	@Override
+	public BranchInfo[] getRemoteProjectBranches(String projectName, IProgressMonitor monitor) throws GerritException {
+		String url = getProjectBranchesUrl(projectName);
+		return executeGetRestRequest(url, BranchInfo[].class, monitor);
+	}
+
+	@Override
+	public void createRemoteBranch(String projectName, String branchName, String revision, IProgressMonitor monitor)
+			throws GerritException {
+		String url = getProjectBranchesUrl(projectName) + branchName;
+		BranchInput input = new BranchInput(branchName, revision);
+		executePutRestRequest(url, input, BranchInput.class, createErrorHandler(), monitor);
+	}
+
+	private String getProjectBranchesUrl(String projectName) {
+		return "/projects/" + projectName + "/branches/"; //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
 }

@@ -27,7 +27,8 @@ Export-Package: org.eclipse.mylyn.internal.gerrit.core;x-friends:="org.eclipse.m
  org.eclipse.mylyn.internal.gerrit.core.operations;x-friends:="org.eclipse.mylyn.gerrit.ui",
  org.eclipse.mylyn.internal.gerrit.core.remote;x-friends:="org.eclipse.mylyn.gerrit.ui"
 Bundle-Vendor: Eclipse Mylyn
-Import-Package: com.google.gerrit.common.auth;version="2.1.5",
+Import-Package: com.google.common.base;version="15.0.0",
+ com.google.gerrit.common.auth;version="2.1.5",
  com.google.gerrit.common.auth.openid;version="2.1.5",
  com.google.gerrit.common.auth.userpass;version="2.1.5",
  com.google.gerrit.common.data;version="2.1.5",

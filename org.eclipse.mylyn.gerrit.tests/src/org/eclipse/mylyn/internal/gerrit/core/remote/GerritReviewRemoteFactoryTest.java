@@ -43,7 +43,6 @@ import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.gerrit.tests.core.client.rest.ChangeInfoTest;
 import org.eclipse.mylyn.gerrit.tests.support.GerritProject.CommitResult;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
-import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient29;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.GerritSystemAccount;
@@ -509,7 +508,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testReviewsWithSameChangeId() throws Exception {
-		if (!supportsBranchCreation()) {
+		if (!reviewHarness.getClient().supportsBranchCreation()) {
 			return;
 		}
 		String branchName = "test_side_branch";
@@ -536,6 +535,73 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(detail2.getPatches().size(), is(2));
 		assertThat(detail2.getPatches().get(0).getFileName(), is("/COMMIT_MSG"));
 		assertThat(detail2.getPatches().get(1).getFileName(), is("otherTestFile.txt"));
+	}
+
+	@Test
+	public void testCherryPick() throws Exception {
+		if (!isVersion28OrLater()) {
+			return;
+		}
+		String testMessage = "Test Cherry Pick";
+		String branchName = "test_side_branch";
+		createBranchIfNonExistent(branchName);
+		String refSpec = "refs/heads/" + branchName;
+
+		ChangeDetail changeDetail = reviewHarness.getClient().cherryPick(reviewHarness.getShortId(), 1, testMessage,
+				refSpec, new NullProgressMonitor());
+		Change change = changeDetail.getChange();
+
+		IReview review = reviewHarness.getReview();
+
+		assertThat(change.getChangeId(), is(not(Integer.parseInt(review.getId())))); //changeId deprecated, yet still used.
+		assertThat(change.getKey().get(), is(not(review.getKey())));
+		assertThat(change.getSubject(), is(testMessage));
+		if (isVersion29OrLater()) {
+			assertThat(change.getDest().get(), is(branchName));
+		} else {
+			assertThat(change.getDest().get(), is(refSpec));
+		}
+	}
+
+	@Test
+	public void testCannotCherryPick() throws Exception {
+		if (!isVersion28OrLater()) {
+			return;
+		}
+		String testMessage = "Test Cherry Pick";
+		String testDest = "refs/heads/test_side_branch";
+
+		badRequestCherryPick(null, testDest, "message must be non-empty");
+		badRequestCherryPick("", testDest, "message must be non-empty");
+
+		badRequestCherryPick(testMessage, null, "destination must be non-empty");
+		badRequestCherryPick(testMessage, "", "destination must be non-empty");
+
+		badRequestCherryPick(testMessage, "no_such_branch", "Branch no_such_branch does not exist.");
+	}
+
+	private void badRequestCherryPick(String message, String dest, String errMsg) {
+		failedCherryPick(message, dest, "Bad Request: " + errMsg);
+	}
+
+	@Test
+	public void unsupportedVersionCherryPick(String message, String dest, String errMsg) throws GerritException {
+		if (isVersion28OrLater()) {
+			return;
+		}
+		failedCherryPick("Test Cherry Pick", "refs/heads/test_side_branch",
+				"Cherry Picking not supported before version 2.8");
+	}
+
+	private void failedCherryPick(String message, String dest, String errMsg) {
+		try {
+			reviewHarness.getClient().cherryPick(reviewHarness.getShortId(), 1, message, dest,
+					new NullProgressMonitor());
+			fail("Expected to get an exception when cherry picking");
+		} catch (GerritException e) {
+			String receivedMessage = CharMatcher.JAVA_ISO_CONTROL.removeFrom(e.getMessage());
+			assertThat(receivedMessage, is(errMsg));
+		}
 	}
 
 	@Test
@@ -612,14 +678,14 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 	private void createBranchIfNonExistent(String branchName) throws GerritException {
 		if (!branchExists(branchName)) {
-			((GerritClient29) reviewHarness.getAdminClient()).createRemoteBranch("org.eclipse.mylyn.test", branchName,
-					null, new NullProgressMonitor());
+			reviewHarness.getAdminClient().createRemoteBranch("org.eclipse.mylyn.test", branchName, null,
+					new NullProgressMonitor());
 		}
 	}
 
 	private boolean branchExists(String branchName) throws GerritException {
-		BranchInfo[] branches = ((GerritClient29) reviewHarness.getAdminClient()).getRemoteProjectBranches(
-				"org.eclipse.mylyn.test", new NullProgressMonitor());
+		BranchInfo[] branches = reviewHarness.getAdminClient().getRemoteProjectBranches("org.eclipse.mylyn.test",
+				new NullProgressMonitor());
 		for (BranchInfo branch : branches) {
 			String branchRef = StringUtils.trimToEmpty(StringUtils.substringAfterLast(branch.getRef(), "/"));
 			if (branchRef.equals(branchName)) {
@@ -651,7 +717,4 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		return isVersion28OrLater() ? 1 : 0;
 	}
 
-	private boolean supportsBranchCreation() throws GerritException {
-		return isVersion29OrLater();
-	}
 }

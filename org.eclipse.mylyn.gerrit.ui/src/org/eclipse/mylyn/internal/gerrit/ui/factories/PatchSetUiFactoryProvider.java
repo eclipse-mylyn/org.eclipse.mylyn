@@ -32,6 +32,7 @@ public class PatchSetUiFactoryProvider extends AbstractReviewItemSetUiFactoryPro
 		factories.add(new FetchUiFactory(context, set));
 		factories.add(new CompareWithUiFactory(context, set));
 		factories.add(new RebaseUiFactory(context, set));
+		factories.add(new CherryPickUiFactory(context, set));
 		factories.add(new SubmitUiFactory(context, set));
 		factories.add(new AbandonUiFactory(context, set));
 		factories.add(new RestoreUiFactory(context, set));

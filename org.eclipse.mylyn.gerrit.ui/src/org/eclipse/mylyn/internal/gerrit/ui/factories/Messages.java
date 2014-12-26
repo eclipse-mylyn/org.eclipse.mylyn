@@ -19,6 +19,7 @@ public class Messages extends NLS {
 	public static String AbandonUiFactory_Abandon;
 
 	public static String AbstractPatchSetUiFactory_Clone_Git_Repository;
+
 	public static String AbstractPatchSetUiFactory_Gerrit_Fetch_Change_Error;
 
 	public static String AbstractPatchSetUiFactory_Git_repository_not_found_in_workspace;
@@ -28,6 +29,9 @@ public class Messages extends NLS {
 	public static String AbstractPatchSetUiFactory_No_remote_config_found_with_fetch_URL;
 
 	public static String AddReviewersUiFactory_Add_Reviewers;
+
+	public static String CherryPickUiFactory_Cherry_Pick;
+
 	public static String CompareWithUiFactory_Base;
 
 	public static String CompareWithUiFactory_Compare_Patch_Set_X_with_Y;
@@ -43,9 +47,11 @@ public class Messages extends NLS {
 	public static String OpenCommitUiFactory_Open_Commit;
 
 	public static String OpenCommitUiFactory_Opening_Commit_Viewer;
+
 	public static String OpenFileUiFactory_File_not_available;
 
 	public static String OpenFileUiFactory_Open_File;
+
 	public static String PublishUiFactory_Clearing_status_failed;
 
 	public static String PublishUiFactory_Error_while_clearing_status;

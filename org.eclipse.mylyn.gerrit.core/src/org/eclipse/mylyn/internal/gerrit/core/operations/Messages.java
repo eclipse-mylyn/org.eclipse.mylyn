@@ -22,6 +22,8 @@ public class Messages extends NLS {
 
 	public static String GerritOperation_Adding_Reviewers;
 
+	public static String GerritOperation_Cherry_Picking;
+
 	public static String GerritOperation_Publishing_Change;
 
 	public static String GerritOperation_Rebasing_Change;

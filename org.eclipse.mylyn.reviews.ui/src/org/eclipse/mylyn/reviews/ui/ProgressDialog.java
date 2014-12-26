@@ -275,4 +275,9 @@ public abstract class ProgressDialog extends TitleAreaDialog {
 		setButtonLayoutData(button);
 		return button;
 	}
+
+	@Override
+	protected Button getButton(int id) {
+		return buttons.get(id);
+	}
 }

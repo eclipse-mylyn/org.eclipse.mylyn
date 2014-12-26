@@ -48,6 +48,11 @@ public class ChangeDetailX extends ChangeDetail {
 	private boolean canRebase;
 
 	/**
+	 * Available since Gerrit 2.8.
+	 */
+	private boolean canCherryPick;
+
+	/**
 	 * Available since Gerrit 2.3.
 	 */
 	private boolean canDeleteDraft;
@@ -72,6 +77,10 @@ public class ChangeDetailX extends ChangeDetail {
 
 	public boolean canRebase() {
 		return canRebase;
+	}
+
+	public boolean canCherryPick() {
+		return canCherryPick;
 	}
 
 	public boolean canEdit() {
@@ -132,34 +141,32 @@ public class ChangeDetailX extends ChangeDetail {
 		return null;
 	}
 
-	//Gerrit 2.9
 	public void setDateCreated(Timestamp ts) {
 		createdOn = ts;
 	}
 
-	//Gerrit 2.9
 	public void setLastModified(Timestamp ts) {
 		lastUpdatedOn = ts;
 	}
 
-	//Gerrit 2.9
 	public Timestamp getDateCreated() {
 		return createdOn;
 	}
 
-	//Gerrit 2.9
 	public Timestamp getLastModified() {
 		return lastUpdatedOn;
 	}
 
-	//Gerrit 2.9
 	public void setCanSubmit(boolean canSubmit) {
 		this.canSubmit = canSubmit;
 	}
 
-	//Gerrit 2.9
 	public void setCanRebase(boolean canRebase) {
 		this.canRebase = canRebase;
+	}
+
+	public void setCanCherryPick(boolean canCherryPick) {
+		this.canCherryPick = canCherryPick;
 	}
 
 }

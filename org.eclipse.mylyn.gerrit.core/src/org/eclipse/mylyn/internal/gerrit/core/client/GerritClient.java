@@ -68,6 +68,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.AbandonInput;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.AddReviewerResult;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.BranchInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.CommentInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.CommentInput;
@@ -824,6 +825,15 @@ public class GerritClient extends ReviewsClient {
 		return getConfiguration();
 	}
 
+	public void createRemoteBranch(String projectName, String branchName, String revision, IProgressMonitor monitor)
+			throws GerritException {
+		throw new GerritException("Branch creation requests can only be done in Gerrit versions 2.8 or later"); //$NON-NLS-1$
+	}
+
+	public BranchInfo[] getRemoteProjectBranches(String projectName, IProgressMonitor monitor) throws GerritException {
+		throw new GerritException("Executing Branch Info requests can only be done in Gerrit versions 2.8 or later"); //$NON-NLS-1$
+	}
+
 	public ChangeDetail rebase(String reviewId, int patchSetId, IProgressMonitor monitor) throws GerritException {
 		final PatchSet.Id id = new PatchSet.Id(new Change.Id(id(reviewId)), patchSetId);
 		return execute(monitor, new Operation<ChangeDetail>() {
@@ -1158,6 +1168,10 @@ public class GerritClient extends ReviewsClient {
 		return new GerritRemoteFactoryProvider(this);
 	}
 
+	public boolean supportsBranchCreation() throws GerritException {
+		return false;
+	}
+
 	public Version getVersion() {
 		return version;
 	}
@@ -1240,4 +1254,8 @@ public class GerritClient extends ReviewsClient {
 		};
 	}
 
+	public ChangeDetail cherryPick(String reviewId, int patchSetId, final String message, final String destBranch,
+			IProgressMonitor monitor) throws GerritException {
+		throw new GerritException("Cherry Picking not supported before version 2.8"); //$NON-NLS-1$
+	}
 }

@@ -90,6 +90,10 @@ public class ChangeInfo {
 	// e.g. 3965
 	private int _number;
 
+	public int getNumber() {
+		return _number;
+	}
+
 	public String getKind() {
 		return kind;
 	}
