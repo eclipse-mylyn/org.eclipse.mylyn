@@ -18,8 +18,9 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritReviewBehavior;
+import org.eclipse.mylyn.internal.reviews.ui.ActiveReviewManager;
+import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.internal.reviews.ui.compare.FileItemCompareEditorInput;
-import org.eclipse.mylyn.internal.reviews.ui.views.ReviewExplorer;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IFileVersion;
@@ -28,7 +29,6 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.navigator.CommonActionProvider;
-import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.navigator.ICommonActionConstants;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
@@ -45,8 +45,6 @@ public class OpenCompareEditorProvider extends CommonActionProvider {
 		if (site.getViewSite() instanceof ICommonViewerWorkbenchSite) {
 			final ICommonViewerWorkbenchSite viewSite = (ICommonViewerWorkbenchSite) site.getViewSite();
 			final ISelectionProvider selectionProvider = viewSite.getSelectionProvider();
-			CommonViewer viewer = (CommonViewer) selectionProvider;
-			final ReviewExplorer explorer = (ReviewExplorer) viewer.getCommonNavigator();
 			openAction = new Action() {
 
 				@Override
@@ -55,24 +53,18 @@ public class OpenCompareEditorProvider extends CommonActionProvider {
 					if (selection.size() == 1) {
 						IFileItem fileItem = getFileFor(selection.getFirstElement());
 						if (fileItem != null) {
-							IWorkbenchPart currentPart = explorer.getCurrentPart();
-							if (currentPart instanceof TaskEditor) {
+							ActiveReviewManager reviewManager = ReviewsUiPlugin.getDefault().getReviewManager();
+							if (reviewManager != null) {
+								IWorkbenchPart currentPart = reviewManager.getCurrentPart();
+								if (currentPart instanceof TaskEditor) {
 
-								//Here we try to resolve the Git repository in the workspace for this Patch Set.  
-								//If so, we will use the appropriate file revision to provide navigability in the Compare Editor.
-								//TODO:  Here we need to find a way to get a IUiContext and IReviewItemSet from the fileItem
-								//TODO:  Once this is done, we can get use the  OpenFileUiFactory#execute command here
-								//IUiContext context...;
-								//IReviewItemSet set...context;
-								//OpenFileUiFactory openFileFactory = new OpenFileUiFactory(context, set, fileItem);
-								//openFileFactory.execute();
-
-								TaskEditor part = (TaskEditor) currentPart;
-								TaskEditorInput input = (TaskEditorInput) part.getEditorInput();
-								GerritReviewBehavior behavior = new GerritReviewBehavior(input.getTask());
-								CompareConfiguration configuration = new CompareConfiguration();
-								CompareUI.openCompareEditor(new FileItemCompareEditorInput(configuration, fileItem,
-										behavior));
+									TaskEditor part = (TaskEditor) currentPart;
+									TaskEditorInput input = (TaskEditorInput) part.getEditorInput();
+									GerritReviewBehavior behavior = new GerritReviewBehavior(input.getTask());
+									CompareConfiguration configuration = new CompareConfiguration();
+									CompareUI.openCompareEditor(new FileItemCompareEditorInput(configuration, fileItem,
+											behavior));
+								}
 							}
 						}
 					}

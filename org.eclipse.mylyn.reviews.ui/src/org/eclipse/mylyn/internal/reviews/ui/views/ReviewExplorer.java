@@ -36,8 +36,10 @@ import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.mylyn.internal.reviews.ui.IActiveReviewListener;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsImages;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiConstants;
+import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.internal.reviews.ui.providers.ReviewsLabelProvider;
 import org.eclipse.mylyn.internal.reviews.ui.providers.TableStyledLabelProvider;
 import org.eclipse.mylyn.internal.reviews.ui.providers.TableStyledLabelProvider.TableColumnProvider;
@@ -51,9 +53,6 @@ import org.eclipse.mylyn.reviews.core.spi.ReviewsConnector;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfObserver;
 import org.eclipse.mylyn.reviews.core.spi.remote.review.IReviewRemoteFactoryProvider;
-import org.eclipse.mylyn.reviews.ui.spi.editor.AbstractReviewTaskEditorPage;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -63,12 +62,6 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IMemento;
-import org.eclipse.ui.IPageListener;
-import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.navigator.ICommonFilterDescriptor;
@@ -95,10 +88,6 @@ public class ReviewExplorer extends CommonNavigator {
 	private boolean showList;
 
 	private boolean filterForComments;
-
-	private IReview review = null;
-
-	private TaskEditor currentPart;
 
 	private ReviewsLabelProvider treeLabelProvider;
 
@@ -145,62 +134,6 @@ public class ReviewExplorer extends CommonNavigator {
 	};
 
 	private final Map<IReviewItemSet, RemoteItemSetContentObserver> patchSetObservers = new HashMap<IReviewItemSet, RemoteItemSetContentObserver>();
-
-	private final IPartListener editorPartListener = new IPartListener() {
-		public void partOpened(IWorkbenchPart part) {
-		}
-
-		public void partDeactivated(IWorkbenchPart part) {
-		}
-
-		public void partClosed(IWorkbenchPart part) {
-			if (part == currentPart) {
-				currentPart = null;
-				setReview(null);
-			}
-		}
-
-		public void partBroughtToTop(IWorkbenchPart part) {
-		}
-
-		public void partActivated(IWorkbenchPart part) {
-			if (part instanceof TaskEditor && currentPart != part) {
-				TaskEditor editor = (TaskEditor) part;
-				IFormPage page = editor.getActivePageInstance();
-				if (page instanceof AbstractReviewTaskEditorPage) {
-					currentPart = (TaskEditor) part;
-					AbstractReviewTaskEditorPage reviewPage = (AbstractReviewTaskEditorPage) page;
-					setReview(reviewPage.getReview());
-					updateContentDescription();
-				}
-			}
-		}
-	};
-
-	private final IPageListener pageListener = new IPageListener() {
-
-		private IWorkbenchPage activePage;
-
-		public void pageOpened(IWorkbenchPage page) {
-		}
-
-		public void pageClosed(IWorkbenchPage page) {
-			pageActivated(null);
-		}
-
-		public void pageActivated(IWorkbenchPage page) {
-			if (page != activePage) {
-				if (activePage != null) {
-					activePage.removePartListener(editorPartListener);
-				}
-				if (page != null) {
-					page.addPartListener(editorPartListener);
-					editorPartListener.partActivated(page.getActiveEditor());
-				}
-				activePage = page;
-			}
-		}
-	};
 
 	private IReviewRemoteFactoryProvider factoryProvider;
 
@@ -460,26 +393,37 @@ public class ReviewExplorer extends CommonNavigator {
 
 		updateActivations();
 
-		pageListener.pageActivated(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage());
-		update();
-	}
+		ReviewsUiPlugin.getDefault().getReviewManager().addReviewListener(new IActiveReviewListener() {
 
-	protected void updateContentDescription() {
-		String title = Messages.ReviewExplorer_No_Selection;
-		if (currentPart != null && currentPart.getTaskEditorInput() != null) {
-			ITask task = currentPart.getTaskEditorInput().getTask();
-			title = NLS.bind(Messages.ReviewExplorer_Change_X_colon_Y, task.getTaskId(), task.getSummary());
-		}
-		setContentDescription(title);
+			@Override
+			public void reviewDeactivated() {
+				setReview(null);
+			}
+
+			@Override
+			public void reviewActivated(IReview review) {
+				setReview(review);
+			}
+		});
+		setReview(getActiveReview());
 	}
 
 	protected void update() {
-		updateContentDescription();
+		String title = Messages.ReviewExplorer_No_Selection;
+		if (getActiveReview() != null) {
+			title = NLS.bind(Messages.ReviewExplorer_Change_X_colon_Y, getActiveReview().getId(),
+					getActiveReview().getSubject());
+		}
+		setContentDescription(title);
 		if (!getCommonViewer().getControl().isDisposed()) {
-			refreshAction.setEnabled(review != null);
-			getCommonViewer().setInput(review);
+			refreshAction.setEnabled(getActiveReview() != null);
+			getCommonViewer().setInput(getActiveReview());
 			getCommonViewer().refresh();
 		}
+	}
+
+	private IReview getActiveReview() {
+		return ReviewsUiPlugin.getDefault().getReviewManager().getReview();
 	}
 
 	protected void refresh() {
@@ -502,10 +446,10 @@ public class ReviewExplorer extends CommonNavigator {
 			getCommonViewer().getControl().setRedraw(false);
 			update();
 			Collection<Object> newExpanded = matchingElements(
-					(ITreeContentProvider) getCommonViewer().getContentProvider(), review,
+					(ITreeContentProvider) getCommonViewer().getContentProvider(), getActiveReview(),
 					new HashSet<Object>(Arrays.asList(priorExpanded)), true);
 			Collection<Object> newSelection = matchingElements(
-					(ITreeContentProvider) getCommonViewer().getContentProvider(), review,
+					(ITreeContentProvider) getCommonViewer().getContentProvider(), getActiveReview(),
 					new HashSet<Object>(Arrays.asList(priorSelection)), false);
 			getCommonViewer().setExpandedElements(newExpanded.toArray());
 			getCommonViewer().setSelection(new StructuredSelection(newSelection.toArray()), true);
@@ -515,29 +459,23 @@ public class ReviewExplorer extends CommonNavigator {
 	}
 
 	public void setReview(IReview review) {
-		if (this.review != review) {
-			this.review = review;
-
-			for (RemoteEmfObserver<IReviewItemSet, List<IFileItem>, String, Long> observer : patchSetObservers.values()) {
-				observer.dispose();
-			}
-			patchSetObservers.clear();
-			if (reviewConsumer != null) {
-				reviewConsumer.removeObserver(reviewObserver);
-			}
-			if (review != null) {
-				ReviewsConnector connector = (ReviewsConnector) TasksUiPlugin.getConnector(review.getRepository()
-						.getTaskConnectorKind());
-				ReviewsClient reviewsClient = connector.getReviewClient(review.getRepository().getTaskRepository());
-				factoryProvider = (IReviewRemoteFactoryProvider) reviewsClient.getFactoryProvider();
-				reviewConsumer = factoryProvider.getReviewFactory().getConsumerForModel(factoryProvider.getRoot(),
-						review);
-				reviewConsumer.addObserver(reviewObserver);
-				updatePatchSetObservers();
-			}
-
-			update();
+		for (RemoteEmfObserver<IReviewItemSet, List<IFileItem>, String, Long> observer : patchSetObservers.values()) {
+			observer.dispose();
 		}
+		patchSetObservers.clear();
+		if (reviewConsumer != null) {
+			reviewConsumer.removeObserver(reviewObserver);
+		}
+		if (review != null) {
+			ReviewsConnector connector = (ReviewsConnector) TasksUiPlugin.getConnector(review.getRepository()
+					.getTaskConnectorKind());
+			ReviewsClient reviewsClient = connector.getReviewClient(review.getRepository().getTaskRepository());
+			factoryProvider = (IReviewRemoteFactoryProvider) reviewsClient.getFactoryProvider();
+			reviewConsumer = factoryProvider.getReviewFactory().getConsumerForModel(factoryProvider.getRoot(), review);
+			reviewConsumer.addObserver(reviewObserver);
+			updatePatchSetObservers();
+		}
+		update();
 	}
 
 	/**
@@ -553,7 +491,7 @@ public class ReviewExplorer extends CommonNavigator {
 	}
 
 	public void updatePatchSetObservers() {
-		for (IReviewItemSet set : review.getSets()) {
+		for (IReviewItemSet set : getActiveReview().getSets()) {
 			RemoteItemSetContentObserver client = patchSetObservers.get(set);
 			if (client == null) {
 				RemoteItemSetContentObserver patchSetObserver = new RemoteItemSetContentObserver();
@@ -574,9 +512,7 @@ public class ReviewExplorer extends CommonNavigator {
 		//Don't hang on to references
 		flatLabelProvider.doDispose();
 		treeLabelProvider.doDispose();
-		currentPart = null;
 		setReview(null);
-		pageListener.pageActivated(null);
 	}
 
 	public boolean isFlat() {
@@ -647,9 +583,5 @@ public class ReviewExplorer extends CommonNavigator {
 
 		updateTreeViewer(getCommonViewer());
 		getCommonViewer().refresh();
-	}
-
-	public IWorkbenchPart getCurrentPart() {
-		return currentPart;
 	}
 }
