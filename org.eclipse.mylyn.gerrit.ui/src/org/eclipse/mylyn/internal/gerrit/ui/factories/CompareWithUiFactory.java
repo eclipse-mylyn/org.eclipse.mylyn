@@ -12,7 +12,9 @@
 
 package org.eclipse.mylyn.internal.gerrit.ui.factories;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareUI;
@@ -46,6 +48,9 @@ import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
 import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.statushandlers.StatusManager;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Sets;
 import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.reviewdb.PatchSet;
 
@@ -56,12 +61,34 @@ import com.google.gerrit.reviewdb.PatchSet;
  */
 public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 
-	private final RemoteEmfObserver<IReviewItemSet, List<IFileItem>, String, Long> itemListClient = new RemoteEmfObserver<IReviewItemSet, List<IFileItem>, String, Long>() {
+	private final class ItemListClient extends RemoteEmfObserver<IReviewItemSet, List<IFileItem>, String, Long> {
+		private final IReviewItemSet baseSet;
+
+		private final IReviewItemSet targetSet;
+
+		private final IReviewItemSet compareSet;
+
+		public ItemListClient(IReviewItemSet baseSet, IReviewItemSet targetSet, IReviewItemSet compareSet) {
+			this.baseSet = baseSet;
+			this.targetSet = targetSet;
+			this.compareSet = compareSet;
+		}
 
 		@Override
 		public void updated(boolean modified) {
-			IStatus status = itemListClient.getConsumer().getStatus();
+			IStatus status = getConsumer().getStatus();
 			if (status.isOK()) {
+				Set<String> fileNames = Sets.newHashSet();
+				addItems(baseSet, fileNames);
+				addItems(targetSet, fileNames);
+				if (!fileNames.isEmpty()) {
+					for (Iterator<IFileItem> iter = compareSet.getItems().iterator(); iter.hasNext();) {
+						IFileItem file = iter.next();
+						if (!fileNames.contains(file.getName())) {
+							iter.remove();
+						}
+					}
+				}
 				CompareConfiguration configuration = new CompareConfiguration();
 				CompareUI.openCompareEditor(new ReviewItemSetCompareEditorInput(configuration, compareSet, null,
 						new GerritReviewBehavior(getTask(), resolveGitRepository())));
@@ -72,7 +99,17 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 								status.getException()), StatusManager.SHOW | StatusManager.LOG);
 			}
 		}
-	};
+
+		private void addItems(IReviewItemSet itemSet, Set<String> fileNames) {
+			if (itemSet != null) {
+				fileNames.addAll(Collections2.transform(itemSet.getItems(), new Function<IFileItem, String>() {
+					public String apply(IFileItem f) {
+						return f.getName();
+					}
+				}));
+			}
+		}
+	}
 
 	private IReviewItemSet baseSet;
 
@@ -91,7 +128,8 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 			final Composite compareComposite = toolkit.createComposite(parent);
 			GridLayoutFactory.fillDefaults().numColumns(2).spacing(0, 0).applyTo(compareComposite);
 
-			Button compareButton = toolkit.createButton(compareComposite, Messages.CompareWithUiFactory_Compare_With_Base, SWT.PUSH);
+			Button compareButton = toolkit.createButton(compareComposite,
+					Messages.CompareWithUiFactory_Compare_With_Base, SWT.PUSH);
 			compareButton.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -161,14 +199,14 @@ public class CompareWithUiFactory extends AbstractPatchSetUiFactory {
 		String basePatchSetLabel = content.getBase() != null
 				? Integer.toString(content.getBase().getPatchSetId())
 				: Messages.CompareWithUiFactory_Base;
-		compareSet.setName(NLS.bind(Messages.CompareWithUiFactory_Compare_Patch_Set_X_with_Y, content.getTarget().getPatchSetId(),
-				basePatchSetLabel));
+		compareSet.setName(NLS.bind(Messages.CompareWithUiFactory_Compare_Patch_Set_X_with_Y, content.getTarget()
+				.getPatchSetId(), basePatchSetLabel));
 		PatchSetContentCompareRemoteFactory remoteFactory = new PatchSetContentCompareRemoteFactory(
 				getGerritFactoryProvider());
 		final RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, String, PatchSetContent, PatchSetContent, Long> consumer = remoteFactory.getConsumerForRemoteObject(
 				compareSet, content);
 		consumer.setUiJob(true);
-		consumer.addObserver(itemListClient);
+		consumer.addObserver(new ItemListClient(baseSet, targetSet, compareSet));
 		consumer.retrieve(true);
 	}
 
