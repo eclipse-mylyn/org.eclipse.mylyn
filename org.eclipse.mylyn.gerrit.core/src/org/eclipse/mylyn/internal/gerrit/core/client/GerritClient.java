@@ -296,12 +296,16 @@ public class GerritClient extends ReviewsClient {
 
 	public void createRemoteBranch(String projectName, String branchName, String revision, IProgressMonitor monitor)
 			throws GerritException {
+		Assert.isTrue(isVersion29OrLater(monitor), 
+				"Creating branches is only supported in Gerrit versions 2.9 or later"); //$NON-NLS-1$
 		String url = getProjectBranchesUrl(projectName) + branchName;
 		BranchInput input = new BranchInput(branchName, revision);
 		executePutRestRequest(url, input, BranchInput.class, createErrorHandler(), monitor);
 	}
 
 	public BranchInfo[] getRemoteProjectBranches(String projectName, IProgressMonitor monitor) throws GerritException {
+		Assert.isTrue(isVersion29OrLater(monitor), 
+				"Querying branches is only supported in Gerrit versions 2.9 or later"); //$NON-NLS-1$
 		String url = getProjectBranchesUrl(projectName);
 		return executeGetRestRequest(url, BranchInfo[].class, monitor);
 	}

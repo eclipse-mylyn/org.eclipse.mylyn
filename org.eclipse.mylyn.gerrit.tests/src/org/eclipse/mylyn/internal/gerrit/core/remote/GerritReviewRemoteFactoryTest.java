@@ -510,6 +510,9 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testReviewsWithSameChangeId() throws Exception {
+		if (!supportsBranchCreation()) {
+			return;
+		}
 		String branchName = "test_side_branch";
 		createBranchIfNonExistent(branchName);
 		ReviewHarness reviewHarness2 = reviewHarness.duplicate(); //same ChangeId
@@ -650,6 +653,10 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		return isVersion28OrLater() ? 1 : 0;
 	}
 
+	private boolean isVersion29OrLater() throws GerritException {
+		return GerritVersion.isVersion29OrLater(reviewHarness.getClient().getVersion(new NullProgressMonitor()));
+	}
+
 	private boolean isVersion28OrLater() throws GerritException {
 		return GerritVersion.isVersion28OrLater(reviewHarness.getClient().getVersion(new NullProgressMonitor()));
 	}
@@ -660,5 +667,9 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 	private boolean isVersion24x() throws GerritException {
 		return GerritVersion.isVersion24x(reviewHarness.getClient().getVersion(new NullProgressMonitor()));
+	}
+
+	private boolean supportsBranchCreation() throws GerritException {
+		return isVersion29OrLater();
 	}
 }
