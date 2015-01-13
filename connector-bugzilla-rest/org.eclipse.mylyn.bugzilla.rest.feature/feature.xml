@@ -31,7 +31,7 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.mylyn_feature" version="3.14.0.qualifier"/>
+      <import feature="org.eclipse.mylyn_feature" version="3.15.0.qualifier"/>
    </requires>
 
    <plugin

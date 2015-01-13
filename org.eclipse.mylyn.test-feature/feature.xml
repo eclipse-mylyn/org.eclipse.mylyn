@@ -12,7 +12,7 @@
 <feature
       id="org.eclipse.mylyn.test_feature"
       label="%featureName"
-      version="3.14.0.qualifier"
+      version="3.15.0.qualifier"
       plugin="org.eclipse.mylyn.tasks.core"
       license-feature="org.eclipse.license"
       license-feature-version="1.0.1">
