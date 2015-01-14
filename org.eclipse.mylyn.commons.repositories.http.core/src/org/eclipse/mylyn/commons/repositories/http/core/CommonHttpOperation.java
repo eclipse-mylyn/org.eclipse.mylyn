@@ -44,6 +44,12 @@ public abstract class CommonHttpOperation<T> {
 		client.authenticate(monitor);
 	}
 
+	/**
+	 * Clients may override to configure the request after authentication
+	 */
+	protected void configure(HttpRequestBase request) {
+	}
+
 	protected HttpGet createGetRequest(String requestPath) {
 		return new HttpGet(requestPath);
 	}
@@ -112,6 +118,7 @@ public abstract class CommonHttpOperation<T> {
 		// force authentication
 		if (needsAuthentication()) {
 			authenticate(monitor);
+			configure(request);
 		}
 
 		HttpResponse response = client.execute(request, monitor);
