@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * This class implements the implementation of the Dashboard-Gerrit UI view label provider.
- *
+ * 
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
  */
@@ -116,7 +116,7 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 
 	/**
 	 * Return an image representing the state of the object
-	 *
+	 * 
 	 * @param int aState
 	 * @return Image
 	 */
@@ -140,7 +140,7 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 
 	/**
 	 * Return an image representing the state of the object
-	 *
+	 * 
 	 * @param int aState
 	 * @return Image
 	 */
@@ -162,7 +162,7 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 
 	/**
 	 * Return an image representing the state of the ID object
-	 *
+	 * 
 	 * @param Boolean
 	 *            aState
 	 * @return Image
@@ -179,7 +179,7 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 
 	/**
 	 * Return the text associated to the column
-	 *
+	 * 
 	 * @param Object
 	 *            structure of the table
 	 * @param int column index
@@ -256,7 +256,7 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 
 	/**
 	 * Return the image associated to the column
-	 *
+	 * 
 	 * @param Object
 	 *            structure of the table
 	 * @param int column index
@@ -264,9 +264,6 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 	 */
 	@SuppressWarnings("restriction")
 	public Image getColumnImage(Object aObj, int aIndex) {
-		// GerritPlugin.Ftracer
-		// .traceWarning("getColumnImage column: " + aIndex);
-		Image image = null;
 		String value = null;
 		if (aObj instanceof GerritTask) {
 			GerritTask reviewSummary = (GerritTask) aObj;
@@ -277,19 +274,7 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 					return getReviewId(Boolean.valueOf(value.toLowerCase()));
 				}
 				break;
-			case 1:
-				return image;
-			case 2:
-				return image;
-			case 3:
-				return image;
-			case 4:
-				return image;
-			case 5:
-				return image;
-			case 6:
-				return image;
-			case 7:
+			case 8:
 				value = reviewSummary.getAttribute(GerritTask.REVIEW_STATE);
 
 				if (null != value && !value.equals(EMPTY_STRING)) {
@@ -297,15 +282,7 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 					return getReviewStateImage(val);
 				}
 				break;
-			case 8:
-//				value = reviewSummary.getAttribute(GerritTask.IS_IPCLEAN);
-//
-//				if (null != value && !value.equals(EMPTY_STRING)) {
-//					int val = Integer.parseInt(value);
-//					return getReviewSate(val);
-//				}
-//				break;
-//			case 9:
+			case 9:
 				value = reviewSummary.getAttribute(GerritTask.VERIFY_STATE);
 
 				if (null != value && !value.equals(EMPTY_STRING)) {
@@ -313,17 +290,14 @@ public class ReviewTableLabelProvider extends LabelProvider implements ITableLab
 					return getVerifyStateImage(val);
 				}
 				break;
-			default:
-				return image;
 			}
 		}
-
-		return image;
+		return null;
 	}
 
 	/**
 	 * Adjust the column color
-	 *
+	 * 
 	 * @param Object
 	 *            ReviewTableListItem
 	 * @param int columnIndex
