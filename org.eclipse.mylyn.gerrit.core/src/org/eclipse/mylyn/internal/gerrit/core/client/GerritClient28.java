@@ -12,6 +12,11 @@
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo28;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.osgi.framework.Version;
 
@@ -44,5 +49,16 @@ public class GerritClient28 extends GerritClient27 {
 				}
 			}
 		});
+	}
+
+	protected ChangeInfo28 getAdditionalChangeInfo(int reviewId, IProgressMonitor monitor) {
+		ChangeInfo28 changeInfo28 = null;
+		try {
+			changeInfo28 = executeGetRestRequest("/changes/" + Integer.toString(reviewId) //$NON-NLS-1$
+					+ "/?o=CURRENT_REVISION&o=CURRENT_ACTIONS", ChangeInfo28.class, monitor); //$NON-NLS-1$
+		} catch (GerritException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, e.getMessage(), e));
+		}
+		return changeInfo28;
 	}
 }

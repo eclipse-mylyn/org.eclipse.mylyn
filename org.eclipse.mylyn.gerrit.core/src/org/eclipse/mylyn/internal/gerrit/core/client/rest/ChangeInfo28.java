@@ -15,7 +15,7 @@ package org.eclipse.mylyn.internal.gerrit.core.client.rest;
 import java.util.List;
 import java.util.Map;
 
-public class ChangeInfo29 extends ChangeInfo {
+public class ChangeInfo28 extends ChangeInfo {
 
 	public Boolean starred;
 

@@ -37,7 +37,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.rest.ActionInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.BranchInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.BranchInput;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo;
-import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo29;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo28;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeMessageInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.CommentInput;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.RelatedChangeAndCommitInfo;
@@ -99,7 +99,7 @@ public class GerritClient29 extends GerritClient28 {
 		final PatchSet.Id id = new PatchSet.Id(new Change.Id(id(reviewId)), patchSetId);
 		final String uri = "/a/changes/" + id.getParentKey().get() + "/revisions/" + id.get() + "/rebase"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-		executePostRestRequest(uri, new ChangeInfo29(), ChangeInfo29.class, new ErrorHandler() {
+		executePostRestRequest(uri, new ChangeInfo28(), ChangeInfo28.class, new ErrorHandler() {
 			@Override
 			public void handleError(HttpMethodBase method) throws GerritException {
 				String errorMsg = getResponseBodyAsString(method);
@@ -227,16 +227,12 @@ public class GerritClient29 extends GerritClient28 {
 		return publishDetail;
 	}
 
-	private Object getChangeInfo(String query, Class returnClass, IProgressMonitor monitor) throws GerritException {
-		return executeGetRestRequest(query, returnClass, monitor);
-	}
-
 	private List<PatchSet> getPatchSets(final String changeInfoId, int reviewId, IProgressMonitor monitor)
 			throws GerritException {
 
 		List<PatchSet> patchSets = new ArrayList<PatchSet>();
 		String query = "/changes/?q=" + changeInfoId + "+change:" + reviewId + "&o=ALL_REVISIONS"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		ChangeInfo29[] changeInfo = (ChangeInfo29[]) getChangeInfo(query, ChangeInfo29[].class, monitor);
+		ChangeInfo28[] changeInfo = (ChangeInfo28[]) executeGetRestRequest(query, ChangeInfo28[].class, monitor);
 
 		for (ChangeInfo element : changeInfo) {
 			for (Entry<String, RevisionInfo> revisionInfo : element.getRevisions().entrySet()) {
@@ -307,7 +303,7 @@ public class GerritClient29 extends GerritClient28 {
 	public ChangeDetailX getChangeDetail(int reviewId, IProgressMonitor monitor) throws GerritException {
 		ChangeDetailX changeDetail = null;
 		String query = "/changes/" + Integer.toString(reviewId) + "/detail/?o=ALL_REVISIONS&o=MESSAGES"; //$NON-NLS-1$//$NON-NLS-2$
-		ChangeInfo29 changeInfo = (ChangeInfo29) getChangeInfo(query, ChangeInfo29.class, monitor);
+		ChangeInfo28 changeInfo = (ChangeInfo28) executeGetRestRequest(query, ChangeInfo28.class, monitor);
 
 		List<PatchSet> patchSets = getPatchSets(changeInfo.getChangeId(), reviewId, monitor);
 
@@ -372,31 +368,31 @@ public class GerritClient29 extends GerritClient28 {
 
 		initialChange.setStatus(changeInfo.getStatus());
 		changeDetail.setChange(initialChange);
-		setActions(reviewId, changeDetail, monitor);
+		getAdditionalChangeInfo(reviewId, changeDetail, monitor);
 		return changeDetail;
 	}
 
 	private RelatedChangesInfo getRelatedChanges(final int reviewId, String revisionId, IProgressMonitor monitor)
 			throws GerritException {
 		String query = "/changes/" + Integer.toString(reviewId) + "/revisions/" + revisionId + "/related"; //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
-		RelatedChangesInfo relatedChangesInfo = (RelatedChangesInfo) getChangeInfo(query, RelatedChangesInfo.class,
-				monitor);
+		RelatedChangesInfo relatedChangesInfo = (RelatedChangesInfo) executeGetRestRequest(query,
+				RelatedChangesInfo.class, monitor);
 		return relatedChangesInfo;
 	}
 
-	private void setChangeDetailDependency(int reviewId, ChangeInfo29 changeInfo29, ChangeDetailX changeDetail,
+	private void setChangeDetailDependency(int reviewId, ChangeInfo28 changeInfo28, ChangeDetailX changeDetail,
 			AccountInfo accountInfo, IProgressMonitor monitor) throws GerritException {
 		List<com.google.gerrit.common.data.ChangeInfo> dependsOn = new ArrayList<com.google.gerrit.common.data.ChangeInfo>();
 		List<com.google.gerrit.common.data.ChangeInfo> neededBy = new ArrayList<com.google.gerrit.common.data.ChangeInfo>();
-		Branch.NameKey branchKey = getBranchKey(changeInfo29);
+		Branch.NameKey branchKey = getBranchKey(changeInfo28);
 
-		RelatedChangesInfo relatedChangesInfo = getRelatedChanges(reviewId, changeInfo29.getCurrentRevision(), monitor);
+		RelatedChangesInfo relatedChangesInfo = getRelatedChanges(reviewId, changeInfo28.getCurrentRevision(), monitor);
 		List<RelatedChangeAndCommitInfo> listCommitInfo = relatedChangesInfo.getCommitInfo();
 		boolean needed = true;
 		for (RelatedChangeAndCommitInfo relatedChangeAndCommitInfo : listCommitInfo) {
 			if (relatedChangeAndCommitInfo.getCommitInfo()
 					.getCommit()
-					.equalsIgnoreCase(changeInfo29.getCurrentRevision())) {
+					.equalsIgnoreCase(changeInfo28.getCurrentRevision())) {
 				needed = false;
 			} else {
 				if (relatedChangeAndCommitInfo.getChangeNumber() > 0) {
@@ -442,28 +438,40 @@ public class GerritClient29 extends GerritClient28 {
 		return comment;
 	}
 
-	private void setRevisionActions(ChangeInfo29 changeInfo29, ChangeDetailX changeDetail) {
-		for (Entry<String, RevisionInfo> mapRevisions : changeInfo29.getRevisions().entrySet()) {
-			if (mapRevisions.getValue().getActions() != null) {
-				for (Entry<String, ActionInfo> mapActions : mapRevisions.getValue().getActions().entrySet()) {
-					if (mapActions.getKey().equalsIgnoreCase("submit")) { //$NON-NLS-1$
-						changeDetail.setCanSubmit(mapActions.getValue().getEnabled());
-					} else if (mapActions.getKey().equalsIgnoreCase("rebase")) { //$NON-NLS-1$
-						changeDetail.setCanRebase(mapActions.getValue().getEnabled());
+	private void getAdditionalChangeInfo(int reviewId, ChangeDetailX changeDetail, IProgressMonitor monitor) {
+		ChangeInfo28 changeInfo = getAdditionalChangeInfo(reviewId, monitor);
+		if (changeInfo != null) {
+			setRevisionActions(changeInfo, changeDetail);
+			setGlobalActions(changeInfo, changeDetail);
+		}
+	}
+
+	private void setRevisionActions(ChangeInfo28 changeInfo, ChangeDetailX changeDetail) {
+		if (changeInfo.getRevisions() != null) {
+			for (Entry<String, RevisionInfo> revisions : changeInfo.getRevisions().entrySet()) {
+				if (revisions.getValue().getActions() != null) {
+					for (Entry<String, ActionInfo> actions : revisions.getValue().getActions().entrySet()) {
+						if (actions.getKey().equalsIgnoreCase("submit")) { //$NON-NLS-1$
+							changeDetail.setCanSubmit(actions.getValue().getEnabled());
+						} else if (actions.getKey().equalsIgnoreCase("rebase")) { //$NON-NLS-1$
+							changeDetail.setCanRebase(actions.getValue().getEnabled());
+						}
 					}
 				}
 			}
 		}
 	}
 
-	private void setGlobalActions(ChangeInfo29 changeInfo29, ChangeDetailX changeDetail) {
-		for (Entry<String, ActionInfo> mapActions : changeInfo29.getActions().entrySet()) {
-			if (mapActions.getKey().equalsIgnoreCase("abandon")) { //$NON-NLS-1$
-				changeDetail.setCanAbandon(mapActions.getValue().getEnabled());
-				changeDetail.setCanRestore(!mapActions.getValue().getEnabled());
-			} else if (mapActions.getKey().equalsIgnoreCase("restore")) { //$NON-NLS-1$
-				changeDetail.setCanAbandon(!mapActions.getValue().getEnabled());
-				changeDetail.setCanRestore(mapActions.getValue().getEnabled());
+	private void setGlobalActions(ChangeInfo28 changeInfo, ChangeDetailX changeDetail) {
+		if (changeInfo.getActions() != null) {
+			for (Entry<String, ActionInfo> actions : changeInfo.getActions().entrySet()) {
+				if (actions.getKey().equalsIgnoreCase("abandon")) { //$NON-NLS-1$
+					changeDetail.setCanAbandon(actions.getValue().getEnabled());
+					changeDetail.setCanRestore(!actions.getValue().getEnabled());
+				} else if (actions.getKey().equalsIgnoreCase("restore")) { //$NON-NLS-1$
+					changeDetail.setCanAbandon(!actions.getValue().getEnabled());
+					changeDetail.setCanRestore(actions.getValue().getEnabled());
+				}
 			}
 		}
 	}
@@ -476,27 +484,6 @@ public class GerritClient29 extends GerritClient28 {
 
 		executeDeleteRestRequest(uri, commentInput, CommentInput.class, null/*no error handler*/, monitor);
 		return null;
-	}
-
-	private void setActions(int reviewId, ChangeDetailX changeDetail, IProgressMonitor monitor) {
-		ChangeInfo29 changeInfo29 = null;
-		try {
-			changeInfo29 = executeGetRestRequest("/changes/" + Integer.toString(reviewId) //$NON-NLS-1$
-					+ "/?o=CURRENT_REVISION&o=CURRENT_ACTIONS", ChangeInfo29.class, monitor); //$NON-NLS-1$
-		} catch (GerritException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
-					"ChangeDetailX GerritException running rest query", e)); //$NON-NLS-1$
-		}
-
-		if (changeInfo29 != null) {
-			if (changeInfo29.getRevisions() != null) {
-				setRevisionActions(changeInfo29, changeDetail);
-			}
-
-			if (changeInfo29.getActions() != null) {
-				setGlobalActions(changeInfo29, changeDetail);
-			}
-		}
 	}
 
 	private PatchSetInfo setAccountPatchSetInfo(PatchSetInfo patchSetInfo, IProgressMonitor monitor) {
