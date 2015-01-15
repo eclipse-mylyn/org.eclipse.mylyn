@@ -31,6 +31,8 @@ public class BugzillaRestRepositorySettingsPage extends AbstractRepositorySettin
 			AbstractRepositoryConnectorUi connectorUi) {
 		super("Bugzilla REST Repository Settings", DESCRIPTION, taskRepository, connector, connectorUi);
 		setNeedsAnonymousLogin(true);
+		setNeedsEncoding(false);
+		setNeedsAdvanced(false);
 		setNeedsValidateOnFinish(true);
 	}
 

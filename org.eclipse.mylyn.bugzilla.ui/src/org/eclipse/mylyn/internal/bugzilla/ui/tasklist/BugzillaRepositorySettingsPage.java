@@ -325,7 +325,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				try {
 					getWizard().getContainer().run(true, true, new IRunnableWithProgress() {
 						public void run(IProgressMonitor monitor) throws InvocationTargetException,
-								InterruptedException {
+						InterruptedException {
 							if (monitor == null) {
 								monitor = new NullProgressMonitor();
 							}
