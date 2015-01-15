@@ -17,13 +17,14 @@ import java.io.IOException;
 import org.eclipse.mylyn.internal.wikitext.core.parser.html.AbstractSaxHtmlParser;
 import org.eclipse.mylyn.internal.wikitext.core.parser.html.HtmlCleaner;
 import org.eclipse.mylyn.internal.wikitext.core.parser.html.XHtmlParser;
+import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
  * A parser for HTML, driving {@link DocumentBuilder}. Depending on parsers available at runtime, input may need to be
  * well-formed XHTML.
- * 
+ *
  * @see DocumentBuilder
  * @author David Green
  * @since 1.6
@@ -50,7 +51,7 @@ public class HtmlParser {
 
 	/**
 	 * Provides a parser instance with cleanup rules that make the result more suitable for generating wiki markup.
-	 * 
+	 *
 	 * @since 2.0
 	 */
 	public static HtmlParser instanceWithHtmlCleanupRules() {
@@ -62,7 +63,7 @@ public class HtmlParser {
 
 	/**
 	 * Creates a new parser instance.
-	 * 
+	 *
 	 * @since 2.0
 	 */
 	public static HtmlParser instance() {
@@ -75,8 +76,8 @@ public class HtmlParser {
 
 	/**
 	 * Parses well-formed XHTML from the given input, and emit an approximation of the source document to the given
-	 * document builder. Equivalent to {@code parse(input,builder,true)}
-	 * 
+	 * document builder.
+	 *
 	 * @param input
 	 *            the source input
 	 * @param builder
@@ -85,13 +86,17 @@ public class HtmlParser {
 	 * @throws SAXException
 	 */
 	public void parse(InputSource input, DocumentBuilder builder) throws IOException, SAXException {
-		parse(input, builder, true);
+		boolean asDocument = true;
+		if (builder instanceof HtmlDocumentBuilder) {
+			asDocument = ((HtmlDocumentBuilder) builder).isEmitAsDocument();
+		}
+		parse(input, builder, asDocument);
 	}
 
 	/**
 	 * Parses well-formed XHTML or HTML from the given input, and emit an approximation of the source document to the
 	 * given document builder.
-	 * 
+	 *
 	 * @param input
 	 *            the source input
 	 * @param builder
