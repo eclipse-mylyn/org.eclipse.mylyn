@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 David Green and others.
+ * Copyright (c) 2007, 2015 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,7 @@ import java.util.Stack;
 
 /**
  * An {@link XmlStreamWriter} that creates formatted output by emitting whitespace into the document output stream.
- * 
+ *
  * @author David Green
  * @since 1.0
  */
@@ -49,6 +49,11 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 	@Override
 	public String getPrefix(String uri) {
 		return delegate.getPrefix(uri);
+	}
+
+	@Override
+	public String getNamespaceURI(String prefix) {
+		return delegate.getNamespaceURI(prefix);
 	}
 
 	@Override
@@ -305,7 +310,7 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 
 	/**
 	 * Override this method to indicate which elements must have whitespace preserved.
-	 * 
+	 *
 	 * @param elementName
 	 *            the local name of the element
 	 */

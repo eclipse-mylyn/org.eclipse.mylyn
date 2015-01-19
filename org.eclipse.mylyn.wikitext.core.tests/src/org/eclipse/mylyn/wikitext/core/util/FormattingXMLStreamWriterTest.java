@@ -9,7 +9,7 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.core.util;
+package org.eclipse.mylyn.wikitext.core.util;
 
 import static org.junit.Assert.assertEquals;
 
@@ -20,7 +20,7 @@ import org.eclipse.mylyn.wikitext.core.util.FormattingXMLStreamWriter;
 import org.junit.Before;
 import org.junit.Test;
 
-public class FormattingXmlStreamWriterTest {
+public class FormattingXMLStreamWriterTest {
 
 	private StringWriter out;
 
