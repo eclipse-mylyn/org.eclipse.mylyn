@@ -189,9 +189,9 @@ public class MediaWikiLanguageTest extends TestCase {
 								+ " id=\"[^\"]+\">heading text</h"
 								+ x
 								+ "><p>first para<br/>\\s*first para line2</p><p>second para</p><p>third para</p></body>",
-						Pattern.MULTILINE)
-						.matcher(html)
-						.find());
+								Pattern.MULTILINE)
+								.matcher(html)
+								.find());
 			}
 		}
 	}
@@ -393,8 +393,8 @@ public class MediaWikiLanguageTest extends TestCase {
 				"<body><p>example:</p><pre>"
 						+ Pattern.quote("&lt;a href=\"show_bug.cgi\\?id\\=(.+?)\"&gt;.+?&lt;span class=\"summary\"&gt;(.+?)&lt;/span&gt;")
 						+ "\\s+</pre><p>If</p></body>")
-				.matcher(html)
-				.find());
+						.matcher(html)
+						.find());
 	}
 
 	public void testPreformattedSource_bug349724() {
@@ -414,8 +414,8 @@ public class MediaWikiLanguageTest extends TestCase {
 				"<body><p>example:</p><pre>"
 						+ "a block\\s+With '''Bold text''' or ''Italic text'' style\\s+Is not converted"
 						+ "\\s+</pre><p>If</p></body>")
-				.matcher(html)
-				.find());
+						.matcher(html)
+						.find());
 	}
 
 	public void testPreformattedWithMarkup() {
@@ -604,7 +604,7 @@ public class MediaWikiLanguageTest extends TestCase {
 		String html = parser.parseToHtml("[[Image:IFF Logo.JPG|left|the logo|Official logo of the [[International Floorball Federation]], floorball's governing body.]]");
 
 		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<img align=\"left\" alt=\"the logo\" title=\"Official logo of the [[International Floorball Federation]], floorball's governing body.\" border=\"0\" src=\"IFF_Logo.JPG\"/>"));
+		assertTrue(html.contains("<img align=\"left\" alt=\"the logo\" title=\"Official logo of the [[International Floorball Federation]], floorball&apos;s governing body.\" border=\"0\" src=\"IFF_Logo.JPG\"/>"));
 	}
 
 	public void testImageWithLinkInCaptionThumbnail() {

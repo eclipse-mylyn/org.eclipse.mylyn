@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 David Green and others.
+ * Copyright (c) 2007, 2015 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.util;
 
+import javax.xml.stream.XMLStreamWriter;
+
 /**
  * A means of writing XML content to a stream. Modeled after StAX with some small differences, notably:
  * <ul>
@@ -17,7 +19,7 @@ package org.eclipse.mylyn.wikitext.core.util;
  * <li>The methods of this API only throw unchecked exceptions</li>
  * <li>This API provides a means for writing {@link #writeLiteral(String) unescaped XML}</li>
  * </ul>
- * 
+ *
  * @author David Green
  * @since 1.0
  */
@@ -28,6 +30,13 @@ public abstract class XmlStreamWriter {
 	public abstract void flush();
 
 	public abstract String getPrefix(String uri);
+
+	/**
+	 * @since 2.3.1
+	 */
+	public String getNamespaceURI(String prefix) {
+		return null;
+	}
 
 	public abstract void setDefaultNamespace(String uri);
 
@@ -87,4 +96,12 @@ public abstract class XmlStreamWriter {
 	 */
 	public abstract void writeLiteral(String literal);
 
+	/**
+	 * Creates an {@link XMLStreamWriter} for this {@link XmlStreamWriter}.
+	 *
+	 * @since 2.3.1
+	 */
+	public XMLStreamWriter toXMLStreamWriter() {
+		return new XmlStreamWriterAdapter(this);
+	}
 }

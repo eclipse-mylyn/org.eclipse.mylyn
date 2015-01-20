@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 David Green and others.
+ * Copyright (c) 2007, 2015 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.util;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -20,15 +19,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-import org.eclipse.mylyn.internal.wikitext.core.util.XML11Char;
+import com.google.common.escape.Escaper;
+import com.google.common.xml.XmlEscapers;
 
 /**
  * A default implementation of {@link XmlStreamWriter} that creates XML character output.
- * 
+ *
  * @author David Green
  * @since 1.0
  */
 public class DefaultXmlStreamWriter extends XmlStreamWriter {
+
+	private final Escaper attributeEscaper = XmlEscapers.xmlAttributeEscaper();
+
+	private final Escaper contentEscaper = XmlEscapers.xmlContentEscaper();
 
 	private PrintWriter out;
 
@@ -42,7 +46,7 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 
 	private final Stack<String> elements = new Stack<String>();
 
-	private char xmlHederQuoteChar = '\'';
+	private char xmlHeaderQuoteChar = '\'';
 
 	public DefaultXmlStreamWriter(OutputStream out) throws UnsupportedEncodingException {
 		this.out = createUtf8PrintWriter(out);
@@ -54,7 +58,7 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 
 	public DefaultXmlStreamWriter(Writer out, char xmlHeaderQuoteChar) {
 		this.out = new PrintWriter(out);
-		this.xmlHederQuoteChar = xmlHeaderQuoteChar;
+		this.xmlHeaderQuoteChar = xmlHeaderQuoteChar;
 	}
 
 	protected PrintWriter createUtf8PrintWriter(java.io.OutputStream out) throws UnsupportedEncodingException {
@@ -78,6 +82,11 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 	@Override
 	public String getPrefix(String uri) {
 		return uriToPrefix.get(uri);
+	}
+
+	@Override
+	public String getNamespaceURI(String prefix) {
+		return prefixToUri.get(prefix);
 	}
 
 	public Object getProperty(String name) throws IllegalArgumentException {
@@ -108,18 +117,8 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 
 	@Override
 	public void writeAttribute(String namespaceURI, String localName, String value) {
-		out.write(' ');
 		String prefix = uriToPrefix.get(namespaceURI);
-		if (prefix != null && prefix.length() > 0) {
-			out.write(prefix);
-			out.write(':');
-		}
-		out.write(localName);
-		out.write("=\""); //$NON-NLS-1$
-		if (value != null) {
-			attrEncode(value);
-		}
-		out.write("\""); //$NON-NLS-1$
+		writeAttribute(prefix, namespaceURI, localName, value);
 	}
 
 	@Override
@@ -272,8 +271,8 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 
 	@Override
 	public void writeNamespace(String prefix, String namespaceURI) {
-		if (prefix == null || prefix.length() == 0) {
-			writeAttribute("xmlns", namespaceURI); //$NON-NLS-1$
+		if (prefix == null || prefix.length() == 0 || prefix.equals("xmlns")) { //$NON-NLS-1$
+			writeDefaultNamespace(namespaceURI);
 		} else {
 			writeAttribute("xmlns:" + prefix, namespaceURI); //$NON-NLS-1$
 		}
@@ -316,9 +315,14 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 
 	@Override
 	public void writeStartElement(String namespaceURI, String localName) {
+		String prefix = uriToPrefix.get(namespaceURI);
+		writeStartElement(prefix, localName, namespaceURI);
+	}
+
+	@Override
+	public void writeStartElement(String prefix, String localName, String namespaceURI) {
 		closeElement();
 		inStartElement = true;
-		String prefix = uriToPrefix.get(namespaceURI);
 		out.write('<');
 		if (prefix != null && prefix.length() > 0) {
 			out.write(prefix);
@@ -330,79 +334,49 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 		out.write(localName);
 	}
 
-	@Override
-	public void writeStartElement(String prefix, String localName, String namespaceURI) {
-		closeElement();
-		inStartElement = true;
-		elements.push(localName);
-		out.write('<');
-		if (prefix != null && prefix.length() > 0) {
-			out.write(prefix);
-			out.write(':');
-		}
-		out.write(localName);
+	/**
+	 * @since 2.4
+	 */
+	public char getXmlHeaderQuoteChar() {
+		return xmlHeaderQuoteChar;
 	}
 
+	/**
+	 * @since 2.4
+	 */
+	public void setXmlHeaderQuoteChar(char xmlHederQuoteChar) {
+		this.xmlHeaderQuoteChar = xmlHederQuoteChar;
+	}
+
+	/**
+	 * @deprecated use {@link #getXmlHeaderQuoteChar()}
+	 */
+	@Deprecated
 	public char getXmlHederQuoteChar() {
-		return xmlHederQuoteChar;
+		return getXmlHeaderQuoteChar();
 	}
 
+	/**
+	 * @deprecated use {@link #setXmlHeaderQuoteChar(char)}
+	 */
+	@Deprecated
 	public void setXmlHederQuoteChar(char xmlHederQuoteChar) {
-		this.xmlHederQuoteChar = xmlHederQuoteChar;
+		setXmlHeaderQuoteChar(xmlHederQuoteChar);
 	}
 
 	private String processXmlHeader(String header) {
-		return xmlHederQuoteChar == '\'' ? header : header.replace('\'', xmlHederQuoteChar);
+		return xmlHeaderQuoteChar == '\'' ? header : header.replace('\'', xmlHeaderQuoteChar);
 	}
 
-	private static void printEscaped(PrintWriter writer, CharSequence s, boolean attribute) {
-		int length = s.length();
-
-		try {
-			for (int x = 0; x < length; ++x) {
-				char ch = s.charAt(x);
-				printEscaped(writer, ch, attribute);
-			}
-		} catch (IOException ioe) {
-			throw new IllegalStateException();
-		}
+	private void printEscaped(PrintWriter writer, CharSequence s, boolean attribute) {
+		Escaper escaper = attribute ? attributeEscaper : contentEscaper;
+		writer.write(escaper.escape(s.toString()));
 	}
 
 	/**
-	 * Print an XML character in its escaped form.
-	 * 
-	 * @param writer
-	 *            The writer to which the character should be printed.
-	 * @param ch
-	 *            the character to print.
-	 * @throws IOException
+	 * @deprecated
 	 */
-	private static void printEscaped(PrintWriter writer, int ch, boolean attribute) throws IOException {
-
-		String ref = getEntityRef(ch, attribute);
-		if (ref != null) {
-			writer.write('&');
-			writer.write(ref);
-			writer.write(';');
-		} else if (ch == '\r' || ch == 0x0085 || ch == 0x2028) {
-			printHex(writer, ch);
-		} else if ((ch >= ' ' && ch != 160 && isUtf8Printable((char) ch) && XML11Char.isXML11ValidLiteral(ch))
-				|| ch == '\t' || ch == '\n' || ch == '\r') {
-			writer.write((char) ch);
-		} else {
-			printHex(writer, ch);
-		}
-	}
-
-	/**
-	 * Escapes chars
-	 */
-	final static void printHex(PrintWriter writer, int ch) throws IOException {
-		writer.write("&#x"); //$NON-NLS-1$
-		writer.write(Integer.toHexString(ch));
-		writer.write(';');
-	}
-
+	@Deprecated
 	protected static String getEntityRef(int ch, boolean attribute) {
 		// Encode special XML characters into the equivalent character
 		// references.
@@ -432,6 +406,10 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 		return null;
 	}
 
+	/**
+	 * @deprecated
+	 */
+	@Deprecated
 	protected static boolean isUtf8Printable(char ch) {
 		// fall-back method here.
 		if ((ch >= ' ' && ch <= 0x10FFFF && ch != 0xF7) || ch == '\n' || ch == '\r' || ch == '\t') {
