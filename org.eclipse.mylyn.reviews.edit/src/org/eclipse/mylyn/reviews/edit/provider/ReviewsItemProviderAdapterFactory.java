@@ -442,6 +442,29 @@ public class ReviewsItemProviderAdapterFactory extends ReviewsAdapterFactory imp
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.mylyn.reviews.core.model.ICommit} instances.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected CommitItemProvider commitItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.mylyn.reviews.core.model.ICommit}. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createCommitAdapter() {
+		if (commitItemProvider == null) {
+			commitItemProvider = new CommitItemProvider(this);
+		}
+
+		return commitItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
@@ -535,38 +558,57 @@ public class ReviewsItemProviderAdapterFactory extends ReviewsAdapterFactory imp
 	 * @generated
 	 */
 	public void dispose() {
-		if (changeItemProvider != null)
+		if (changeItemProvider != null) {
 			changeItemProvider.dispose();
-		if (reviewItemProvider != null)
+		}
+		if (reviewItemProvider != null) {
 			reviewItemProvider.dispose();
-		if (commentItemProvider != null)
+		}
+		if (commentItemProvider != null) {
 			commentItemProvider.dispose();
-		if (userItemProvider != null)
+		}
+		if (userItemProvider != null) {
 			userItemProvider.dispose();
-		if (repositoryItemProvider != null)
+		}
+		if (repositoryItemProvider != null) {
 			repositoryItemProvider.dispose();
-		if (fileItemItemProvider != null)
+		}
+		if (fileItemItemProvider != null) {
 			fileItemItemProvider.dispose();
-		if (reviewItemSetItemProvider != null)
+		}
+		if (reviewItemSetItemProvider != null) {
 			reviewItemSetItemProvider.dispose();
-		if (lineLocationItemProvider != null)
+		}
+		if (lineLocationItemProvider != null) {
 			lineLocationItemProvider.dispose();
-		if (lineRangeItemProvider != null)
+		}
+		if (lineRangeItemProvider != null) {
 			lineRangeItemProvider.dispose();
-		if (fileVersionItemProvider != null)
+		}
+		if (fileVersionItemProvider != null) {
 			fileVersionItemProvider.dispose();
-		if (approvalTypeItemProvider != null)
+		}
+		if (approvalTypeItemProvider != null) {
 			approvalTypeItemProvider.dispose();
-		if (userApprovalsMapItemProvider != null)
+		}
+		if (userApprovalsMapItemProvider != null) {
 			userApprovalsMapItemProvider.dispose();
-		if (reviewerEntryItemProvider != null)
+		}
+		if (reviewerEntryItemProvider != null) {
 			reviewerEntryItemProvider.dispose();
-		if (approvalValueMapItemProvider != null)
+		}
+		if (approvalValueMapItemProvider != null) {
 			approvalValueMapItemProvider.dispose();
-		if (requirementEntryItemProvider != null)
+		}
+		if (requirementEntryItemProvider != null) {
 			requirementEntryItemProvider.dispose();
-		if (reviewRequirementsMapItemProvider != null)
+		}
+		if (reviewRequirementsMapItemProvider != null) {
 			reviewRequirementsMapItemProvider.dispose();
+		}
+		if (commitItemProvider != null) {
+			commitItemProvider.dispose();
+		}
 	}
 
 }

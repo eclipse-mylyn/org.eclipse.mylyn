@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  */
@@ -15,35 +15,25 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EStructuralFeature;
-
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
-import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
-import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
-import org.eclipse.emf.edit.provider.IItemPropertySource;
-import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
-import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ViewerNotification;
-
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
-
 import org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage;
 
 /**
  * This is the item provider adapter for a {@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet} object. <!--
  * begin-user-doc --> <!-- end-user-doc -->
- * 
+ *
  * @generated
  */
-public class ReviewItemSetItemProvider extends ReviewItemItemProvider implements IEditingDomainItemProvider,
-		IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class ReviewItemSetItemProvider extends ReviewItemItemProvider {
 	/**
-	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This constructs an instance from a factory and a notifier.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public ReviewItemSetItemProvider(AdapterFactory adapterFactory) {
@@ -51,8 +41,8 @@ public class ReviewItemSetItemProvider extends ReviewItemItemProvider implements
 	}
 
 	/**
-	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This returns the property descriptors for the adapted class.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -68,8 +58,8 @@ public class ReviewItemSetItemProvider extends ReviewItemItemProvider implements
 	}
 
 	/**
-	 * This adds a property descriptor for the Creation Date feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This adds a property descriptor for the Creation Date feature.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected void addCreationDatePropertyDescriptor(Object object) {
@@ -83,8 +73,8 @@ public class ReviewItemSetItemProvider extends ReviewItemItemProvider implements
 	}
 
 	/**
-	 * This adds a property descriptor for the Modification Date feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This adds a property descriptor for the Modification Date feature.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected void addModificationDatePropertyDescriptor(Object object) {
@@ -98,8 +88,8 @@ public class ReviewItemSetItemProvider extends ReviewItemItemProvider implements
 	}
 
 	/**
-	 * This adds a property descriptor for the Revision feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This adds a property descriptor for the Revision feature.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected void addRevisionPropertyDescriptor(Object object) {
@@ -116,9 +106,9 @@ public class ReviewItemSetItemProvider extends ReviewItemItemProvider implements
 	/**
 	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
 	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
-	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}. <!-- begin-user-doc --> <!--
+	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -126,13 +116,13 @@ public class ReviewItemSetItemProvider extends ReviewItemItemProvider implements
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
 			childrenFeatures.add(ReviewsPackage.Literals.REVIEW_ITEM_SET__ITEMS);
+			childrenFeatures.add(ReviewsPackage.Literals.REVIEW_ITEM_SET__PARENT_COMMITS);
 		}
 		return childrenFeatures;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -144,8 +134,8 @@ public class ReviewItemSetItemProvider extends ReviewItemItemProvider implements
 	}
 
 	/**
-	 * This returns ReviewItemSet.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This returns ReviewItemSet.gif.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -154,8 +144,8 @@ public class ReviewItemSetItemProvider extends ReviewItemItemProvider implements
 	}
 
 	/**
-	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This returns the label text for the adapted class.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -169,7 +159,7 @@ public class ReviewItemSetItemProvider extends ReviewItemItemProvider implements
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and by creating
 	 * a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -183,6 +173,7 @@ public class ReviewItemSetItemProvider extends ReviewItemItemProvider implements
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 			return;
 		case ReviewsPackage.REVIEW_ITEM_SET__ITEMS:
+		case ReviewsPackage.REVIEW_ITEM_SET__PARENT_COMMITS:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 			return;
 		}
@@ -190,9 +181,9 @@ public class ReviewItemSetItemProvider extends ReviewItemItemProvider implements
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be created
-	 * under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
+	 * that can be created under this object.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -201,12 +192,15 @@ public class ReviewItemSetItemProvider extends ReviewItemItemProvider implements
 
 		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.REVIEW_ITEM_SET__ITEMS,
 				IReviewsFactory.INSTANCE.createFileItem()));
+
+		newChildDescriptors.add(createChildParameter(ReviewsPackage.Literals.REVIEW_ITEM_SET__PARENT_COMMITS,
+				IReviewsFactory.INSTANCE.createCommit()));
 	}
 
 	/**
-	 * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}. <!-- begin-user-doc -->
+	 * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

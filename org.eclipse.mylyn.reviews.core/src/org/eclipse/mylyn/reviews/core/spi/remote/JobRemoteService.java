@@ -71,6 +71,7 @@ public class JobRemoteService extends AbstractRemoteService {
 				@Override
 				public void done(final IJobChangeEvent event) {
 					modelExec(new Runnable() {
+						@Override
 						public void run() {
 							final IStatus result = event.getResult();
 							if (result.isOK()) {
@@ -91,6 +92,7 @@ public class JobRemoteService extends AbstractRemoteService {
 				return;
 			}
 			modelExec(new Runnable() {
+				@Override
 				public void run() {
 					process.applyModel(force);
 					process.notifyDone(Status.OK_STATUS);

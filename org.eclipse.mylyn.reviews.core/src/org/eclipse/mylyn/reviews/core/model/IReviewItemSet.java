@@ -20,6 +20,7 @@ import java.util.List;
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getItems <em>Items</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getRevision <em>Revision</em>}</li>
  * <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getParentReview <em>Parent Review</em>}</li>
+ * <li>{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getParentCommits <em>Parent Commits</em>}</li>
  * </ul>
  * </p>
  * 
@@ -94,5 +95,19 @@ public interface IReviewItemSet extends IReviewItem, IDated {
 	 * @generated
 	 */
 	void setParentReview(IReview value);
+
+	/**
+	 * Returns the value of the '<em><b>Parent Commits</b></em>' containment reference list. The list contents are of
+	 * type {@link org.eclipse.mylyn.reviews.core.model.ICommit}. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Parent Commits</em>' containment reference list isn't clear, there really should be
+	 * more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Parent Commits</em>' containment reference list.
+	 * @generated
+	 */
+	List<ICommit> getParentCommits();
 
 } // IReviewItemSet

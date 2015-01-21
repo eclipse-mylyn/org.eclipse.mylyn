@@ -113,6 +113,14 @@ public interface IReviewsFactory {
 	IRequirementEntry createRequirementEntry();
 
 	/**
+	 * Returns a new object of class '<em>Commit</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>Commit</em>'.
+	 * @generated0
+	 */
+	ICommit createCommit();
+
+	/**
 	 * Returns a new object of class '<em>Approval Type</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return a new object of class '<em>Approval Type</em>'.

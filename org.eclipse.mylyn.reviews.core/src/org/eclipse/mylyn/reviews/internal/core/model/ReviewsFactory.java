@@ -10,7 +10,6 @@
  */
 package org.eclipse.mylyn.reviews.internal.core.model;
 
-import java.util.List;
 import java.util.Map;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -43,7 +42,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 */
 	public static ReviewsFactory init() {
 		try {
-			ReviewsFactory theReviewsFactory = (ReviewsFactory) EPackage.Registry.INSTANCE.getEFactory("http://eclipse.org/mylyn/reviews/core/1.0"); //$NON-NLS-1$ 
+			ReviewsFactory theReviewsFactory = (ReviewsFactory) EPackage.Registry.INSTANCE.getEFactory(ReviewsPackage.eNS_URI);
 			if (theReviewsFactory != null) {
 				return theReviewsFactory;
 			}
@@ -102,6 +101,8 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 			return createRequirementEntry();
 		case ReviewsPackage.REVIEW_REQUIREMENTS_MAP:
 			return (EObject) createReviewRequirementsMap();
+		case ReviewsPackage.COMMIT:
+			return createCommit();
 		default:
 			throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -286,10 +287,19 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 * 
 	 * @generated
 	 */
+	public ICommit createCommit() {
+		Commit commit = new Commit();
+		return commit;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	public RequirementStatus createRequirementStatusFromString(EDataType eDataType, String initialValue) {
 		RequirementStatus result = RequirementStatus.get(initialValue);
-		if (result == null)
-		 {
+		if (result == null) {
 			throw new IllegalArgumentException(
 					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
@@ -312,8 +322,7 @@ public class ReviewsFactory extends EFactoryImpl implements IReviewsFactory {
 	 */
 	public ReviewStatus createReviewStatusFromString(EDataType eDataType, String initialValue) {
 		ReviewStatus result = ReviewStatus.get(initialValue);
-		if (result == null)
-		 {
+		if (result == null) {
 			throw new IllegalArgumentException(
 					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}

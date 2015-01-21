@@ -104,6 +104,8 @@
         defaultValueLiteral=""/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parentReview" lowerBound="1"
         eType="#//Review" transient="true" eOpposite="#//Review/sets"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parentCommits" upperBound="-1"
+        eType="#//Commit" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LineLocation" eSuperTypes="#//Location">
     <eStructuralFeatures xsi:type="ecore:EReference" name="ranges" upperBound="-1"
@@ -185,4 +187,8 @@
       serializable="false"/>
   <eClassifiers xsi:type="ecore:EDataType" name="TaskRepository" instanceClassName="org.eclipse.mylyn.tasks.core.TaskRepository"
       serializable="false"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Commit">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="subject" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
 </ecore:EPackage>

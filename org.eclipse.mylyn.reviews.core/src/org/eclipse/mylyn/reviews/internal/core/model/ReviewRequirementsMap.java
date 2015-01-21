@@ -370,7 +370,7 @@ public class ReviewRequirementsMap extends EObjectImpl implements BasicEMap.Entr
 		EObject container = eContainer();
 		return container == null
 				? null
-				: (EMap<IApprovalType, IRequirementEntry>) container.eGet(eContainmentFeature());
+						: (EMap<IApprovalType, IRequirementEntry>) container.eGet(eContainmentFeature());
 	}
 
 } //ReviewRequirementsMap

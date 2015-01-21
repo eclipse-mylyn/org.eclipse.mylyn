@@ -21,11 +21,13 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EObjectEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.mylyn.reviews.core.model.IComment;
+import org.eclipse.mylyn.reviews.core.model.ICommit;
 import org.eclipse.mylyn.reviews.core.model.IDated;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IReview;
@@ -118,6 +120,16 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	 * @ordered
 	 */
 	protected String revision = REVISION_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getParentCommits() <em>Parent Commits</em>}' containment reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getParentCommits()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<ICommit> parentCommits;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -216,7 +228,6 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	 * 
 	 * @generated NOT
 	 */
-	@Override
 	public List<IComment> getAllComments() {
 		List<IComment> all = new ArrayList<IComment>(getComments());
 		for (IReviewItem item : getItems()) {
@@ -318,6 +329,19 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	 * 
 	 * @generated
 	 */
+	public List<ICommit> getParentCommits() {
+		if (parentCommits == null) {
+			parentCommits = new EObjectContainmentEList.Resolving<ICommit>(ICommit.class, this,
+					ReviewsPackage.REVIEW_ITEM_SET__PARENT_COMMITS);
+		}
+		return parentCommits;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
@@ -345,6 +369,8 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 			return ((InternalEList<?>) getItems()).basicRemove(otherEnd, msgs);
 		case ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW:
 			return basicSetParentReview(null, msgs);
+		case ReviewsPackage.REVIEW_ITEM_SET__PARENT_COMMITS:
+			return ((InternalEList<?>) getParentCommits()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -384,6 +410,8 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 				return getParentReview();
 			}
 			return basicGetParentReview();
+		case ReviewsPackage.REVIEW_ITEM_SET__PARENT_COMMITS:
+			return getParentCommits();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -413,6 +441,10 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 		case ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW:
 			setParentReview((IReview) newValue);
 			return;
+		case ReviewsPackage.REVIEW_ITEM_SET__PARENT_COMMITS:
+			getParentCommits().clear();
+			getParentCommits().addAll((Collection<? extends ICommit>) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -440,6 +472,9 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 		case ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW:
 			setParentReview((IReview) null);
 			return;
+		case ReviewsPackage.REVIEW_ITEM_SET__PARENT_COMMITS:
+			getParentCommits().clear();
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -456,14 +491,16 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 			return CREATION_DATE_EDEFAULT == null ? creationDate != null : !CREATION_DATE_EDEFAULT.equals(creationDate);
 		case ReviewsPackage.REVIEW_ITEM_SET__MODIFICATION_DATE:
 			return MODIFICATION_DATE_EDEFAULT == null
-					? modificationDate != null
-					: !MODIFICATION_DATE_EDEFAULT.equals(modificationDate);
+			? modificationDate != null
+			: !MODIFICATION_DATE_EDEFAULT.equals(modificationDate);
 		case ReviewsPackage.REVIEW_ITEM_SET__ITEMS:
 			return items != null && !items.isEmpty();
 		case ReviewsPackage.REVIEW_ITEM_SET__REVISION:
 			return REVISION_EDEFAULT == null ? revision != null : !REVISION_EDEFAULT.equals(revision);
 		case ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW:
 			return basicGetParentReview() != null;
+		case ReviewsPackage.REVIEW_ITEM_SET__PARENT_COMMITS:
+			return parentCommits != null && !parentCommits.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

@@ -10,16 +10,31 @@
  */
 package org.eclipse.mylyn.reviews.internal.core.model;
 
-import java.util.List;
 import java.util.Map;
+
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
-
-import org.eclipse.mylyn.reviews.core.model.*;
+import org.eclipse.mylyn.reviews.core.model.IApprovalType;
+import org.eclipse.mylyn.reviews.core.model.IChange;
+import org.eclipse.mylyn.reviews.core.model.IComment;
+import org.eclipse.mylyn.reviews.core.model.ICommentContainer;
+import org.eclipse.mylyn.reviews.core.model.ICommit;
+import org.eclipse.mylyn.reviews.core.model.IDated;
+import org.eclipse.mylyn.reviews.core.model.IFileItem;
+import org.eclipse.mylyn.reviews.core.model.IFileVersion;
+import org.eclipse.mylyn.reviews.core.model.IIndexed;
+import org.eclipse.mylyn.reviews.core.model.ILineLocation;
+import org.eclipse.mylyn.reviews.core.model.ILineRange;
+import org.eclipse.mylyn.reviews.core.model.ILocation;
+import org.eclipse.mylyn.reviews.core.model.IRepository;
+import org.eclipse.mylyn.reviews.core.model.IRequirementEntry;
+import org.eclipse.mylyn.reviews.core.model.IReview;
+import org.eclipse.mylyn.reviews.core.model.IReviewItem;
+import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
+import org.eclipse.mylyn.reviews.core.model.IReviewerEntry;
+import org.eclipse.mylyn.reviews.core.model.IUser;
 
 /**
  * <!-- begin-user-doc --> The <b>Adapter Factory</b> for the model. It provides an adapter <code>createXXX</code>
@@ -175,6 +190,11 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 		@Override
 		public Adapter caseReviewRequirementsMap(Map.Entry<IApprovalType, IRequirementEntry> object) {
 			return createReviewRequirementsMapAdapter();
+		}
+
+		@Override
+		public Adapter caseCommit(ICommit object) {
+			return createCommitAdapter();
 		}
 
 		@Override
@@ -452,6 +472,19 @@ public class ReviewsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createReviewRequirementsMapAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.mylyn.reviews.core.model.ICommit
+	 * <em>Commit</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore
+	 * cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.mylyn.reviews.core.model.ICommit
+	 * @generated
+	 */
+	public Adapter createCommitAdapter() {
 		return null;
 	}
 

@@ -304,6 +304,14 @@ public class ReviewsSwitch<T> {
 			}
 			return result;
 		}
+		case ReviewsPackage.COMMIT: {
+			ICommit commit = (ICommit) theEObject;
+			T result = caseCommit(commit);
+			if (result == null) {
+				result = defaultCase(theEObject);
+			}
+			return result;
+		}
 		default:
 			return defaultCase(theEObject);
 		}
@@ -578,6 +586,20 @@ public class ReviewsSwitch<T> {
 	 * @generated
 	 */
 	public T caseReviewRequirementsMap(Map.Entry<IApprovalType, IRequirementEntry> object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Commit</em>'. <!-- begin-user-doc --> This
+	 * implementation returns null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Commit</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseCommit(ICommit object) {
 		return null;
 	}
 

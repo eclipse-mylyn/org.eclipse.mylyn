@@ -25,6 +25,7 @@ import org.eclipse.mylyn.reviews.core.model.IApprovalType;
 import org.eclipse.mylyn.reviews.core.model.IChange;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.ICommentContainer;
+import org.eclipse.mylyn.reviews.core.model.ICommit;
 import org.eclipse.mylyn.reviews.core.model.IDated;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IFileVersion;
@@ -1104,13 +1105,22 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int REVIEW_ITEM_SET__PARENT_REVIEW = REVIEW_ITEM_FEATURE_COUNT + 4;
 
 	/**
+	 * The feature id for the '<em><b>Parent Commits</b></em>' containment reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REVIEW_ITEM_SET__PARENT_COMMITS = REVIEW_ITEM_FEATURE_COUNT + 5;
+
+	/**
 	 * The number of structural features of the '<em>Review Item Set</em>' class. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REVIEW_ITEM_SET_FEATURE_COUNT = REVIEW_ITEM_FEATURE_COUNT + 5;
+	public static final int REVIEW_ITEM_SET_FEATURE_COUNT = REVIEW_ITEM_FEATURE_COUNT + 6;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.LineLocation
@@ -1554,6 +1564,40 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int REVIEW_REQUIREMENTS_MAP_FEATURE_COUNT = 2;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.Commit <em>Commit</em>}' class.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.mylyn.reviews.internal.core.model.Commit
+	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getCommit()
+	 * @generated
+	 */
+	public static final int COMMIT = 21;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int COMMIT__ID = 0;
+
+	/**
+	 * The feature id for the '<em><b>Subject</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int COMMIT__SUBJECT = 1;
+
+	/**
+	 * The number of structural features of the '<em>Commit</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int COMMIT_FEATURE_COUNT = 2;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.core.model.RequirementStatus
 	 * <em>Requirement Status</em>}' enum. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -1561,7 +1605,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getRequirementStatus()
 	 * @generated
 	 */
-	public static final int REQUIREMENT_STATUS = 21;
+	public static final int REQUIREMENT_STATUS = 22;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.core.model.ReviewStatus <em>Review Status</em>}'
@@ -1571,7 +1615,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getReviewStatus()
 	 * @generated
 	 */
-	public static final int REVIEW_STATUS = 22;
+	public static final int REVIEW_STATUS = 23;
 
 	/**
 	 * The meta object id for the '<em>IFile Revision</em>' data type. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1580,7 +1624,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getIFileRevision()
 	 * @generated
 	 */
-	public static final int IFILE_REVISION = 23;
+	public static final int IFILE_REVISION = 24;
 
 	/**
 	 * The meta object id for the '<em>Task Repository</em>' data type. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1589,7 +1633,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getTaskRepository()
 	 * @generated
 	 */
-	public static final int TASK_REPOSITORY = 24;
+	public static final int TASK_REPOSITORY = 25;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1743,6 +1787,13 @@ public class ReviewsPackage extends EPackageImpl {
 	 * 
 	 * @generated
 	 */
+	private EClass commitEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	private EEnum requirementStatusEEnum = null;
 
 	/**
@@ -1810,7 +1861,7 @@ public class ReviewsPackage extends EPackageImpl {
 		// Obtain or create and register package
 		ReviewsPackage theReviewsPackage = (ReviewsPackage) (EPackage.Registry.INSTANCE.get(eNS_URI) instanceof ReviewsPackage
 				? EPackage.Registry.INSTANCE.get(eNS_URI)
-				: new ReviewsPackage());
+						: new ReviewsPackage());
 
 		isInited = true;
 
@@ -2610,6 +2661,20 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for the containment reference list '
+	 * {@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getParentCommits <em>Parent Commits</em>}'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the containment reference list '<em>Parent Commits</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getParentCommits()
+	 * @see #getReviewItemSet()
+	 * @generated
+	 */
+	public EReference getReviewItemSet_ParentCommits() {
+		return (EReference) reviewItemSetEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.ILineLocation
 	 * <em>Line Location</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -3073,6 +3138,44 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.ICommit <em>Commit</em>}'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>Commit</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.ICommit
+	 * @generated
+	 */
+	public EClass getCommit() {
+		return commitEClass;
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.reviews.core.model.ICommit#getId <em>Id</em>}
+	 * '. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Id</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.ICommit#getId()
+	 * @see #getCommit()
+	 * @generated
+	 */
+	public EAttribute getCommit_Id() {
+		return (EAttribute) commitEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.reviews.core.model.ICommit#getSubject
+	 * <em>Subject</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Subject</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.ICommit#getSubject()
+	 * @see #getCommit()
+	 * @generated
+	 */
+	public EAttribute getCommit_Subject() {
+		return (EAttribute) commitEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
 	 * Returns the meta object for enum '{@link org.eclipse.mylyn.reviews.core.model.RequirementStatus
 	 * <em>Requirement Status</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -3218,6 +3321,7 @@ public class ReviewsPackage extends EPackageImpl {
 		createEReference(reviewItemSetEClass, REVIEW_ITEM_SET__ITEMS);
 		createEAttribute(reviewItemSetEClass, REVIEW_ITEM_SET__REVISION);
 		createEReference(reviewItemSetEClass, REVIEW_ITEM_SET__PARENT_REVIEW);
+		createEReference(reviewItemSetEClass, REVIEW_ITEM_SET__PARENT_COMMITS);
 
 		lineLocationEClass = createEClass(LINE_LOCATION);
 		createEReference(lineLocationEClass, LINE_LOCATION__RANGES);
@@ -3265,6 +3369,10 @@ public class ReviewsPackage extends EPackageImpl {
 		reviewRequirementsMapEClass = createEClass(REVIEW_REQUIREMENTS_MAP);
 		createEReference(reviewRequirementsMapEClass, REVIEW_REQUIREMENTS_MAP__KEY);
 		createEReference(reviewRequirementsMapEClass, REVIEW_REQUIREMENTS_MAP__VALUE);
+
+		commitEClass = createEClass(COMMIT);
+		createEAttribute(commitEClass, COMMIT__ID);
+		createEAttribute(commitEClass, COMMIT__SUBJECT);
 
 		// Create enums
 		requirementStatusEEnum = createEEnum(REQUIREMENT_STATUS);
@@ -3574,6 +3682,11 @@ public class ReviewsPackage extends EPackageImpl {
 				this.getReview(),
 				this.getReview_Sets(),
 				"parentReview", null, 1, 1, IReviewItemSet.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getReviewItemSet_ParentCommits(),
+				this.getCommit(),
+				null,
+				"parentCommits", null, 0, -1, IReviewItemSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(lineLocationEClass, ILineLocation.class,
 				"LineLocation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -3714,6 +3827,16 @@ public class ReviewsPackage extends EPackageImpl {
 				this.getRequirementEntry(),
 				null,
 				"value", null, 1, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(commitEClass, ICommit.class, "Commit", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(
+				getCommit_Id(),
+				ecorePackage.getEString(),
+				"id", null, 1, 1, ICommit.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getCommit_Subject(),
+				ecorePackage.getEString(),
+				"subject", null, 0, 1, ICommit.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		// Initialize enums and add enum literals
 		initEEnum(requirementStatusEEnum, RequirementStatus.class, "RequirementStatus"); //$NON-NLS-1$
@@ -4248,6 +4371,14 @@ public class ReviewsPackage extends EPackageImpl {
 		public static final EReference REVIEW_ITEM_SET__PARENT_REVIEW = eINSTANCE.getReviewItemSet_ParentReview();
 
 		/**
+		 * The meta object literal for the '<em><b>Parent Commits</b></em>' containment reference list feature. <!--
+		 * begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EReference REVIEW_ITEM_SET__PARENT_COMMITS = eINSTANCE.getReviewItemSet_ParentCommits();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.internal.core.model.LineLocation
 		 * <em>Line Location</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
@@ -4556,6 +4687,32 @@ public class ReviewsPackage extends EPackageImpl {
 		 * @generated
 		 */
 		public static final EReference REVIEW_REQUIREMENTS_MAP__VALUE = eINSTANCE.getReviewRequirementsMap_Value();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.internal.core.model.Commit <em>Commit</em>}
+		 * ' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.mylyn.reviews.internal.core.model.Commit
+		 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getCommit()
+		 * @generated
+		 */
+		public static final EClass COMMIT = eINSTANCE.getCommit();
+
+		/**
+		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute COMMIT__ID = eINSTANCE.getCommit_Id();
+
+		/**
+		 * The meta object literal for the '<em><b>Subject</b></em>' attribute feature. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute COMMIT__SUBJECT = eINSTANCE.getCommit_Subject();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.core.model.RequirementStatus
