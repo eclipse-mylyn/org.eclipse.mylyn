@@ -607,7 +607,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 	@Test
 	public void testGlobalCommentByGerrit() throws Exception {
 		//create a new commit and Review that depends on Patch Set 1 of the existing Review
-		String changeIdNewChange = "I" + StringUtils.rightPad(System.currentTimeMillis() + "", 40, "a");
+		String changeIdNewChange = ReviewHarness.generateChangeId();
 		CommitCommand commandNewChange = reviewHarness.createCommitCommand(changeIdNewChange);
 		reviewHarness.addFile("testFileNewChange.txt");
 		CommitResult result = reviewHarness.commitAndPush(commandNewChange);
@@ -674,6 +674,41 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 		assertThat(commentByGerrit.getDescription().substring(0, 58),
 				is("Change cannot be merged due to unsatisfiable dependencies."));
+	}
+
+	@Test
+	public void testParentCommit() throws Exception {
+		String changeIdNewChange = ReviewHarness.generateChangeId();
+		CommitCommand commandNewChange = reviewHarness.createCommitCommand(changeIdNewChange);
+		reviewHarness.addFile("testFileNewChange.txt");
+		CommitResult result = reviewHarness.commitAndPush(commandNewChange);
+		String newReviewShortId = StringUtils.trimToEmpty(StringUtils.substringAfterLast(result.push.getMessages(), "/"));
+
+		TestRemoteObserver<IRepository, IReview, String, Date> newReviewListener = new TestRemoteObserver<IRepository, IReview, String, Date>(
+				reviewHarness.getProvider().getReviewFactory());
+
+		RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> newReviewConsumer = reviewHarness.getProvider()
+				.getReviewFactory()
+				.getConsumerForRemoteKey(reviewHarness.getRepository(), newReviewShortId);
+		newReviewConsumer.addObserver(newReviewListener);
+		newReviewConsumer.retrieve(false);
+		newReviewListener.waitForResponse();
+
+		reviewHarness.retrieve();
+		IReview parentReview = getReview();
+		IReview childReview = reviewHarness.getProvider().open(newReviewShortId);
+		assertThat(childReview.getId(), is(newReviewShortId));
+
+		assertThat(parentReview.getChildren().size(), is(1));
+		assertThat(parentReview.getSets().size(), is(1));
+		assertThat(childReview.getSets().size(), is(1));
+
+		IReviewItemSet childPatchSet = childReview.getSets().get(0);
+		IReviewItemSet parentPatchSet = parentReview.getSets().get(0);
+
+		assertThat(childPatchSet.getParentCommits().size(), is(1));
+		String parentCommitId = childPatchSet.getParentCommits().get(0).getId();
+		assertThat(parentCommitId, is(parentPatchSet.getRevision()));
 	}
 
 	private void createBranchIfNonExistent(String branchName) throws GerritException {

@@ -91,7 +91,7 @@ class ReviewHarness {
 		provider.setDataLocator(new TestDataLocator());
 	}
 
-	private static String generateChangeId() throws NoSuchAlgorithmException {
+	static String generateChangeId() throws NoSuchAlgorithmException {
 		byte[] bytes = new byte[22];
 		new Random().nextBytes(bytes);
 		return "I" + new BigInteger(bytes).toString(16).replace("-", "").substring(0, 40);

@@ -13,12 +13,14 @@
 package org.eclipse.mylyn.reviews.ui.spi.editor;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.IOpenListener;
@@ -32,6 +34,7 @@ import org.eclipse.mylyn.commons.ui.compatibility.CommonColors;
 import org.eclipse.mylyn.commons.workbench.forms.ScalingHyperlink;
 import org.eclipse.mylyn.internal.reviews.ui.providers.ReviewsLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
+import org.eclipse.mylyn.reviews.core.model.ICommit;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IReview;
@@ -172,11 +175,35 @@ public class ReviewSetContentSection {
 
 	void createMainSection() {
 		Composite composite = parentSection.getToolkit().createComposite(section);
-		GridLayoutFactory.fillDefaults().numColumns(2).applyTo(composite);
+		GridLayoutFactory.fillDefaults().numColumns(2).spacing(60, LayoutConstants.getSpacing().y).applyTo(composite);
+		Composite leftColumn = parentSection.getToolkit().createComposite(composite);
+		GridLayoutFactory.fillDefaults().numColumns(2).applyTo(leftColumn);
+		Composite rightColumn = parentSection.getToolkit().createComposite(composite);
+		GridLayoutFactory.fillDefaults().numColumns(2).applyTo(rightColumn);
 		section.setClient(composite);
-
-		Label authorLabel = new Label(composite, SWT.NONE);
 		FormColors colors = parentSection.getToolkit().getColors();
+
+		createAuthorLabel(leftColumn, colors);
+		createCommitterLabel(leftColumn, colors);
+		createCommitLink(rightColumn, colors);
+		createRefLabel(rightColumn, colors);
+		createParentsLinks(composite, colors);
+
+		tableContainer = new Composite(composite, SWT.NONE);
+		tableContainer.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GRAY));
+		GridDataFactory.fillDefaults().span(4, 1).grab(true, true).applyTo(tableContainer);
+		GridLayoutFactory.fillDefaults().numColumns(2).applyTo(tableContainer);
+
+		actionContainer = new Composite(composite, SWT.NONE);
+		GridDataFactory.fillDefaults().span(4, 1).grab(true, true).applyTo(actionContainer);
+		GridLayoutFactory.fillDefaults().numColumns(4).applyTo(actionContainer);
+		createButtons();
+
+		parentSection.getTaskEditorPage().reflow();
+	}
+
+	private void createAuthorLabel(Composite composite, FormColors colors) {
+		Label authorLabel = new Label(composite, SWT.NONE);
 		authorLabel.setForeground(colors.getColor(IFormColors.TITLE));
 		authorLabel.setText(Messages.ReviewSetContentSection_Author);
 
@@ -186,7 +213,9 @@ public class ReviewSetContentSection {
 		} else {
 			authorText.setText(Messages.ReviewSetContentSection_Unspecified);
 		}
+	}
 
+	private void createCommitterLabel(Composite composite, FormColors colors) {
 		Label committerLabel = new Label(composite, SWT.NONE);
 		committerLabel.setForeground(colors.getColor(IFormColors.TITLE));
 		committerLabel.setText(Messages.ReviewSetContentSection_Committer);
@@ -197,7 +226,9 @@ public class ReviewSetContentSection {
 		} else {
 			committerText.setText(Messages.ReviewSetContentSection_Unspecified);
 		}
+	}
 
+	private void createCommitLink(Composite composite, FormColors colors) {
 		Label commitLabel = new Label(composite, SWT.NONE);
 		commitLabel.setForeground(colors.getColor(IFormColors.TITLE));
 		commitLabel.setText(Messages.ReviewSetContentSection_Commit);
@@ -214,25 +245,56 @@ public class ReviewSetContentSection {
 						.execute();
 			}
 		});
+	}
 
+	private void createRefLabel(Composite composite, FormColors colors) {
 		Label refLabel = new Label(composite, SWT.NONE);
 		refLabel.setForeground(colors.getColor(IFormColors.TITLE));
 		refLabel.setText(Messages.ReviewSetContentSection_Ref);
 
 		Text refText = new Text(composite, SWT.READ_ONLY);
 		refText.setText(set.getReference());
+	}
 
-		tableContainer = new Composite(composite, SWT.NONE);
-		tableContainer.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GRAY));
-		GridDataFactory.fillDefaults().span(2, 1).grab(true, true).applyTo(tableContainer);
-		GridLayoutFactory.fillDefaults().numColumns(2).applyTo(tableContainer);
+	private void createParentsLinks(Composite composite, FormColors colors) {
+		if (set.getParentCommits().isEmpty()) {
+			return;// for Gerrit versions earlier than 2.8 we don't support getting the parents
+		}
+		Composite parentsComposite = new Composite(composite, SWT.NONE);
+		GridLayoutFactory.fillDefaults().numColumns(3).applyTo(parentsComposite);
+		GridDataFactory.fillDefaults().span(2, 1).applyTo(parentsComposite);
+		Label parentsLabel = new Label(parentsComposite, SWT.NONE);
+		parentsLabel.setForeground(colors.getColor(IFormColors.TITLE));
+		parentsLabel.setText(Messages.ReviewSetContentSection_Parents);
 
-		actionContainer = new Composite(composite, SWT.NONE);
-		GridDataFactory.fillDefaults().span(2, 1).grab(true, true).applyTo(actionContainer);
-		GridLayoutFactory.fillDefaults().numColumns(1).applyTo(actionContainer);
-		createButtons();
+		final List<String> parentCommitIds = new ArrayList<String>();
+		for (ICommit commit : set.getParentCommits()) {
+			parentCommitIds.add(commit.getId());
+		}
 
-		parentSection.getTaskEditorPage().reflow();
+		ScalingHyperlink parentOne = new ScalingHyperlink(parentsComposite, SWT.READ_ONLY);
+		if (parentCommitIds.size() > 0) {
+			addParentCommitHyperlink(parentOne, parentCommitIds.get(0));
+		}
+
+		if (parentCommitIds.size() == 2 && parentCommitIds.get(1) != null) {
+			ScalingHyperlink parentTwo = new ScalingHyperlink(parentsComposite, SWT.READ_ONLY);
+			addParentCommitHyperlink(parentTwo, parentCommitIds.get(1));
+		}
+	}
+
+	private void addParentCommitHyperlink(ScalingHyperlink commit, final String commitId) {
+		commit.setText(commitId);
+		commit.setForeground(CommonColors.HYPERLINK_WIDGET);
+		commit.registerMouseTrackListener();
+		commit.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent event) {
+				getParentSection().getUiFactoryProvider()
+						.getOpenParentCommitFactory(ReviewSetContentSection.this.getParentSection(), set, commitId)
+						.execute();
+			}
+		});
 	}
 
 	public void createItemSetTable() {

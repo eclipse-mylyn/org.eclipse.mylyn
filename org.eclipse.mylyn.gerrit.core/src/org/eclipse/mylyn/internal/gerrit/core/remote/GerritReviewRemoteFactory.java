@@ -32,9 +32,11 @@ import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.SubmitRecord;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.SubmitRecord.Label;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalUtil;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.CommitInfo;
 import org.eclipse.mylyn.reviews.core.model.IApprovalType;
 import org.eclipse.mylyn.reviews.core.model.IChange;
 import org.eclipse.mylyn.reviews.core.model.IComment;
+import org.eclipse.mylyn.reviews.core.model.ICommit;
 import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IRequirementEntry;
 import org.eclipse.mylyn.reviews.core.model.IReview;
@@ -47,6 +49,9 @@ import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.eclipse.mylyn.reviews.core.spi.remote.review.ReviewRemoteFactory;
 
+import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.gerrit.common.data.AccountInfo;
 import com.google.gerrit.common.data.ApprovalDetail;
 import com.google.gerrit.common.data.ApprovalType;
@@ -215,7 +220,49 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 		updatePatchSets(parent, review, gerritChange);
 		updateApprovalsAndRequirements(parent, review, detail);
 		updateDependencies(parent, review, detail);
+		updateParentCommits(parent, review, detail);
 		return true;
+	}
+
+	public void updateParentCommits(IRepository parent, IReview review, ChangeDetailX detail) {
+		Map<Integer, CommitInfo[]> parents = detail.getParents();
+		if (parents == null) {
+			return;
+		}
+		List<IReviewItemSet> sets = review.getSets();
+		for (Entry<Integer, CommitInfo[]> parentCommits : parents.entrySet()) {
+			IReviewItemSet reviewItemSet = getReviewItemSet(sets, parentCommits.getKey());
+			if (reviewItemSet == null) {
+				continue;
+			}
+			for (CommitInfo parentCommit : parentCommits.getValue()) {
+				ICommit commit = IReviewsFactory.INSTANCE.createCommit();
+				commit.setId(parentCommit.getCommit());
+				commit.setSubject(parentCommit.getSubject());
+				List<ICommit> parentICommits = reviewItemSet.getParentCommits();
+				if (!hasCommit(parentICommits, commit)) {
+					parentICommits.add(commit);
+				}
+			}
+		}
+	}
+
+	private IReviewItemSet getReviewItemSet(List<IReviewItemSet> sets, Integer parentKey) {
+		final String patchSetNumber = parentKey.toString();
+		return Iterables.tryFind(sets, new Predicate<IReviewItemSet>() {
+			public boolean apply(IReviewItemSet set) {
+				return set.getId().equals(patchSetNumber);
+			}
+		}).orNull();
+	}
+
+	private boolean hasCommit(List<ICommit> parentCommits, final ICommit commit) {
+		Optional<ICommit> optional = Iterables.tryFind(parentCommits, new Predicate<ICommit>() {
+			public boolean apply(ICommit candidateCommit) {
+				return commit.getId().equals(candidateCommit.getId());
+			}
+		});
+		return optional.isPresent();
 	}
 
 	public void updateComments(IRepository parent, IReview review, ChangeDetailX detail) {

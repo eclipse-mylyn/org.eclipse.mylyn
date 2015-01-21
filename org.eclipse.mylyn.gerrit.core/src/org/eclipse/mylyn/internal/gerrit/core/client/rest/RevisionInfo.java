@@ -25,6 +25,8 @@ public class RevisionInfo {
 
 	public Map<String, ActionInfo> actions;
 
+	private CommitInfo commit;
+
 	public boolean isDraft() {
 		return draft;
 	}
@@ -37,4 +39,7 @@ public class RevisionInfo {
 		return actions;
 	}
 
+	public CommitInfo getCommit() {
+		return commit;
+	}
 }

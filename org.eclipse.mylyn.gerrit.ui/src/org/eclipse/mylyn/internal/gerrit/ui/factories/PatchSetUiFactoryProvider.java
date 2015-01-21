@@ -45,6 +45,12 @@ public class PatchSetUiFactoryProvider extends AbstractReviewItemSetUiFactoryPro
 	}
 
 	@Override
+	public AbstractUiFactory<IReviewItemSet> getOpenParentCommitFactory(IUiContext context, IReviewItemSet set,
+			String commitId) {
+		return new OpenParentCommitUiFactory(context, set, commitId);
+	}
+
+	@Override
 	public AbstractUiFactory<IReviewItemSet> getOpenFileFactory(IUiContext context, IReviewItemSet set, IFileItem item) {
 		return new OpenFileUiFactory(context, set, item);
 	}

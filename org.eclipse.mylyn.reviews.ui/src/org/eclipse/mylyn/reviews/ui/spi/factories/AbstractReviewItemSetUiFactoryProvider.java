@@ -25,4 +25,8 @@ public abstract class AbstractReviewItemSetUiFactoryProvider extends AbstractUiF
 			IFileItem item);
 
 	public abstract AbstractUiFactory<IReviewItemSet> getOpenCommitFactory(IUiContext context, IReviewItemSet set);
+
+	public abstract AbstractUiFactory<IReviewItemSet> getOpenParentCommitFactory(IUiContext context,
+			IReviewItemSet set, String commitId);
+
 }

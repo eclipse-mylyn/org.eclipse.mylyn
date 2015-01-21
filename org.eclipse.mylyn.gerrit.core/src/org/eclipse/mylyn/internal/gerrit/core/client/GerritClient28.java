@@ -13,6 +13,8 @@ package org.eclipse.mylyn.internal.gerrit.core.client;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -21,11 +23,14 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient.ErrorHandler;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.BranchInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.BranchInput;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo28;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.CherryPickInput;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.CommitInfo;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.RevisionInfo;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Version;
@@ -63,11 +68,42 @@ public class GerritClient28 extends GerritClient27 {
 		});
 	}
 
+	@Override
+	public ChangeDetailX getChangeDetail(int reviewId, IProgressMonitor monitor) throws GerritException {
+		ChangeDetailX changeDetail = super.getChangeDetail(reviewId, monitor);
+		ChangeInfo28 changeInfo = getAdditionalChangeInfo(reviewId, monitor);
+		if (changeInfo != null) {
+			setRevisionParentCommit(changeInfo, changeDetail);
+		}
+		return changeDetail;
+	}
+
+	protected void setRevisionParentCommit(ChangeInfo changeInfo, ChangeDetailX changeDetail) {
+		if (changeInfo.getRevisions() != null) {
+			for (Entry<String, RevisionInfo> revisions : changeInfo.getRevisions().entrySet()) {
+				RevisionInfo revision = revisions.getValue();
+				if (revision.getCommit() != null) {
+					CommitInfo commit = revision.getCommit();
+					if (commit.getParents().length >= 1) {
+						if (changeDetail.getParents() == null) {
+							changeDetail.setParents(new HashMap<Integer, CommitInfo[]>());
+						}
+						changeDetail.getParents().put(revision.getNumber(), commit.getParents());
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Contains different information than the ChangeInfo returned by {@link #getChangeInfo(int, IProgressMonitor)}.
+	 * Introduced in 2.8.
+	 */
 	protected ChangeInfo28 getAdditionalChangeInfo(int reviewId, IProgressMonitor monitor) {
 		ChangeInfo28 changeInfo28 = null;
 		try {
 			changeInfo28 = executeGetRestRequest("/changes/" + Integer.toString(reviewId) //$NON-NLS-1$
-					+ "/?o=CURRENT_REVISION&o=CURRENT_ACTIONS", ChangeInfo28.class, monitor); //$NON-NLS-1$
+					+ "/?o=ALL_REVISIONS&o=CURRENT_ACTIONS&o=ALL_COMMITS", ChangeInfo28.class, monitor); //$NON-NLS-1$
 		} catch (GerritException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, e.getMessage(), e));
 		}

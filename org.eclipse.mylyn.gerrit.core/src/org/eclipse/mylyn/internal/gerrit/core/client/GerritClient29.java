@@ -425,6 +425,7 @@ public class GerritClient29 extends GerritClient28 {
 		if (changeInfo != null) {
 			setRevisionActions(changeInfo, changeDetail);
 			setGlobalActions(changeInfo, changeDetail);
+			setRevisionParentCommit(changeInfo, changeDetail);
 		}
 	}
 

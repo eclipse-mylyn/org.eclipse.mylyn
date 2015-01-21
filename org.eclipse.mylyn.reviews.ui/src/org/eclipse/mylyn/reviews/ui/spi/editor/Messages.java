@@ -42,6 +42,8 @@ public class Messages extends NLS {
 
 	public static String ReviewSetContentSection_Committer;
 
+	public static String ReviewSetContentSection_Parents;
+
 	public static String ReviewSetContentSection_Ref;
 
 	public static String ReviewSetContentSection_Unspecified;

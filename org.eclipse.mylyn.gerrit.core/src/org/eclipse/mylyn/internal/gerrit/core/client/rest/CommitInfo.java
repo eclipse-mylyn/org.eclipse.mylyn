@@ -11,7 +11,6 @@
  ******************************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core.client.rest;
 
-import java.util.List;
 
 /**
  * Data model object for <a
@@ -21,7 +20,7 @@ public class CommitInfo {
 
 	private String commit;
 
-	private List<CommitInfo> parents;
+	private CommitInfo[] parents;
 
 	private GitPersonalInfo author;
 
@@ -45,5 +44,9 @@ public class CommitInfo {
 
 	public String getMessage() {
 		return message;
+	}
+
+	public CommitInfo[] getParents() {
+		return parents;
 	}
 }

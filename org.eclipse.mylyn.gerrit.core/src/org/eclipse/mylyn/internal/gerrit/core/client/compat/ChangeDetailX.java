@@ -15,9 +15,11 @@ import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.SubmitRecord.Label;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.CommitInfo;
 
 import com.google.gerrit.common.data.ApprovalType;
 import com.google.gerrit.common.data.ApprovalTypes;
@@ -66,6 +68,8 @@ public class ChangeDetailX extends ChangeDetail {
 	protected List<SubmitRecord> submitRecords;
 
 	private Set<ApprovalType> approvalTypes;
+
+	private Map<Integer, CommitInfo[]> parents;
 
 	public boolean canRevert() {
 		return canRevert;
@@ -167,6 +171,14 @@ public class ChangeDetailX extends ChangeDetail {
 
 	public void setCanCherryPick(boolean canCherryPick) {
 		this.canCherryPick = canCherryPick;
+	}
+
+	public Map<Integer, CommitInfo[]> getParents() {
+		return parents;
+	}
+
+	public void setParents(Map<Integer, CommitInfo[]> parents) {
+		this.parents = parents;
 	}
 
 }
