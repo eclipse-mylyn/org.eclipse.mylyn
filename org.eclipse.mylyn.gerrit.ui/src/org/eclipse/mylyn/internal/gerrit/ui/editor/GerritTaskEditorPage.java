@@ -10,11 +10,15 @@
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.ui.editor;
 
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
+import org.eclipse.mylyn.internal.gerrit.core.GerritQueryResultSchema;
 import org.eclipse.mylyn.internal.gerrit.core.GerritTaskSchema;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorAttributePart;
 import org.eclipse.mylyn.reviews.ui.spi.editor.AbstractReviewTaskEditorPage;
 import org.eclipse.mylyn.reviews.ui.spi.editor.ReviewDetailSection;
 import org.eclipse.mylyn.reviews.ui.spi.editor.ReviewSetSection;
@@ -35,8 +39,26 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
  */
 public class GerritTaskEditorPage extends AbstractReviewTaskEditorPage {
 
+	final class GerritAttributePart extends TaskEditorAttributePart {
+		@Override
+		protected List<TaskAttribute> getOverlayAttributes() {
+			TaskAttribute root = getModel().getTaskData().getRoot();
+			List<TaskAttribute> attributes = new ArrayList<TaskAttribute>();
+			TaskAttribute project = root.getAttribute(GerritQueryResultSchema.getDefault().PROJECT.getKey());
+			TaskAttribute branch = root.getAttribute(GerritQueryResultSchema.getDefault().BRANCH.getKey());
+			if (project != null) {
+				attributes.add(project);
+			}
+			if (branch != null) {
+				attributes.add(branch);
+			}
+			return attributes;
+		}
+	}
+
 	public GerritTaskEditorPage(TaskEditor editor) {
-		super(editor, GerritTaskEditorPage.class.getName(), Messages.GerritTaskEditorPage_Gerrit_Page, GerritConnector.CONNECTOR_KIND);
+		super(editor, GerritTaskEditorPage.class.getName(), Messages.GerritTaskEditorPage_Gerrit_Page,
+				GerritConnector.CONNECTOR_KIND);
 		setNeedsPrivateSection(true);
 		setNeedsSubmit(false);
 		setNeedsSubmitButton(false);
@@ -63,25 +85,22 @@ public class GerritTaskEditorPage extends AbstractReviewTaskEditorPage {
 
 	@Override
 	protected Set<TaskEditorPartDescriptor> createPartDescriptors() {
-		Set<TaskEditorPartDescriptor> descriptors = super.createPartDescriptors();
+		Set<TaskEditorPartDescriptor> descriptors = new LinkedHashSet<TaskEditorPartDescriptor>();
+		Set<TaskEditorPartDescriptor> superDescriptors = super.createPartDescriptors();
 		TaskEditorPartDescriptor commentsDescriptor = null;
 		TaskEditorPartDescriptor newCommentsDescriptor = null;
-		for (Iterator<TaskEditorPartDescriptor> it = descriptors.iterator(); it.hasNext();) {
-			TaskEditorPartDescriptor descriptor = it.next();
-			if (PATH_ACTIONS.equals(descriptor.getPath())) {
-				it.remove();
+		for (TaskEditorPartDescriptor taskEditorPartDescriptor : superDescriptors) {
+			TaskEditorPartDescriptor descriptor = getNewDescriptor(taskEditorPartDescriptor);
+			if (descriptor != null) {
+				if (ID_PART_COMMENTS.equals(descriptor.getId())) {
+					commentsDescriptor = descriptor;
+				} else if (ID_PART_NEW_COMMENT.equals(descriptor.getId())) {
+					newCommentsDescriptor = descriptor;
+				} else {
+					descriptors.add(descriptor);
+				}
 			}
-			if (PATH_PEOPLE.equals(descriptor.getPath())) {
-				it.remove();
-			}
-			if (ID_PART_COMMENTS.equals(descriptor.getId())) {
-				it.remove();
-				commentsDescriptor = descriptor;
-			}
-			if (ID_PART_NEW_COMMENT.equals(descriptor.getId())) {
-				it.remove();
-				newCommentsDescriptor = descriptor;
-			}
+
 		}
 		descriptors.add(new TaskEditorPartDescriptor(ReviewDetailSection.class.getName()) {
 			@Override
@@ -102,5 +121,20 @@ public class GerritTaskEditorPage extends AbstractReviewTaskEditorPage {
 			descriptors.add(newCommentsDescriptor);
 		}
 		return descriptors;
+	}
+
+	private TaskEditorPartDescriptor getNewDescriptor(TaskEditorPartDescriptor descriptor) {
+		if (PATH_ACTIONS.equals(descriptor.getPath()) || PATH_PEOPLE.equals(descriptor.getPath())) {
+			return null;
+		} else if (ID_PART_ATTRIBUTES.equals(descriptor.getId())) {
+			return new TaskEditorPartDescriptor(ID_PART_ATTRIBUTES) {
+
+				@Override
+				public AbstractTaskEditorPart createPart() {
+					return new GerritAttributePart();
+				}
+			};
+		}
+		return descriptor;
 	}
 }
