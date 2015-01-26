@@ -678,6 +678,9 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testParentCommit() throws Exception {
+		if (!isVersion28OrLater()) {
+			return;
+		}
 		String changeIdNewChange = ReviewHarness.generateChangeId();
 		CommitCommand commandNewChange = reviewHarness.createCommitCommand(changeIdNewChange);
 		reviewHarness.addFile("testFileNewChange.txt");
