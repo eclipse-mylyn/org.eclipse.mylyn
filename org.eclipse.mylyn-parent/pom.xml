@@ -16,7 +16,7 @@
 
   <groupId>org.eclipse.mylyn</groupId>
   <artifactId>org.eclipse.mylyn-parent</artifactId>
-  <version>3.14.0-SNAPSHOT</version>
+  <version>3.14.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <prerequisites>
@@ -173,7 +173,7 @@
                 <artifact>
                   <groupId>org.eclipse.mylyn</groupId>
                   <artifactId>org.eclipse.mylyn-target</artifactId>
-                  <version>3.14.0-SNAPSHOT</version>
+                  <version>3.14.1-SNAPSHOT</version>
                   <classifier>${target-platform}</classifier>
                 </artifact>
               </target>
