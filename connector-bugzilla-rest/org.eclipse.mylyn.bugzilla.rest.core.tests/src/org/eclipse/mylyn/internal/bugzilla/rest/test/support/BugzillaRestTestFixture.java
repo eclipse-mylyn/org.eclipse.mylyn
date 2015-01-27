@@ -53,4 +53,7 @@ public class BugzillaRestTestFixture extends AbstractTestFixture {
 		return repository;
 	}
 
+	public String getTestDataFolder() {
+		return "testdata/" + getProperty("testdataVersion");
+	}
 }

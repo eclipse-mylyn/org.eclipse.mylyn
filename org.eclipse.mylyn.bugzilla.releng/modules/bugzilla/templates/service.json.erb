@@ -14,5 +14,6 @@
 <% if @branch               %><% if @propertyanz.to_i > 0 %>   ,<% else %>    <% end %><% @propertyanz = @propertyanz.to_i -%><% @propertyanz += 1 -%>"branch": "<%= @branch %>"<% end %>
 <% if @branchTag            %><% if @propertyanz.to_i > 0 %>   ,<% else %>    <% end %><% @propertyanz = @propertyanz.to_i -%><% @propertyanz += 1 -%>"branchTag": "<%= @branchTag %>"<% end %>
 <% if @rest_enabled         %><% if @propertyanz.to_i > 0 %>   ,<% else %>    <% end %><% @propertyanz = @propertyanz.to_i -%><% @propertyanz += 1 -%>"rest_enabled": "<%= @rest_enabled %>"<% end %>
+<% if @testdataVersion      %><% if @propertyanz.to_i > 0 %>   ,<% else %>    <% end %><% @propertyanz = @propertyanz.to_i -%><% @propertyanz += 1 -%>"testdataVersion": "<%= @testdataVersion %>"<% end %>
     }
 }

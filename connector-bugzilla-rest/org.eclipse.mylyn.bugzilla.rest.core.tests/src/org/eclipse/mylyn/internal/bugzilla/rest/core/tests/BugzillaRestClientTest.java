@@ -146,16 +146,18 @@ public class BugzillaRestClientTest {
 		Collection<Field> fieldCollection = fields.values();
 		assertConfigurationFieldNames(fieldCollection);
 		assertEquals(
-				IOUtils.toString(CommonTestUtil.getResource(this, "testdata/" + actualFixture.getVersion()
-						+ "/fields.json")), new Gson().toJson(fields));
+				IOUtils.toString(CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/fields.json")),
+				new Gson().toJson(fields));
 		Map<String, Product> products = configuration.getProducts();
-		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/products.json")),
+		assertEquals(
+				IOUtils.toString(CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/products.json")),
 				new Gson().toJson(products));
 		Parameters parameter = configuration.getParameters();
-		assertEquals(IOUtils.toString(CommonTestUtil.getResource(this, "testdata/parameters.json")),
-				new Gson().toJson(parameter));
 		assertEquals(
-				IOUtils.toString(CommonTestUtil.getResource(this, "testdata/" + actualFixture.getVersion()
+				IOUtils.toString(CommonTestUtil.getResource(this, actualFixture.getTestDataFolder()
+						+ "/parameters.json")), new Gson().toJson(parameter));
+		assertEquals(
+				IOUtils.toString(CommonTestUtil.getResource(this, actualFixture.getTestDataFolder()
 						+ "/configuration.json")),
 						new Gson().toJson(configuration).replaceAll(repository.getRepositoryUrl(), "http://dummy.url"));
 
@@ -168,8 +170,8 @@ public class BugzillaRestClientTest {
 		}
 		Collections.sort(fieldNameList);
 		assertEquals(
-				IOUtils.toString(CommonTestUtil.getResource(this, "testdata/" + actualFixture.getVersion()
-						+ "/fieldName.json")), new Gson().toJson(fieldNameList));
+				IOUtils.toString(CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/fieldName.json")),
+				new Gson().toJson(fieldNameList));
 	}
 
 }

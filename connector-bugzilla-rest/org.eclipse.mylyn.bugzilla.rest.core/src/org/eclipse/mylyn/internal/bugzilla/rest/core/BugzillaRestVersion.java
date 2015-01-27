@@ -135,7 +135,7 @@ public class BugzillaRestVersion implements Comparable<BugzillaRestVersion>, Ser
 		if (micro > 0) {
 			sb.append(".").append(Integer.toString(micro)); //$NON-NLS-1$
 		} else if (micro < 0) {
-			sb.append("RC").append(Integer.toString(micro + 100)); //$NON-NLS-1$
+			sb.append("rc").append(Integer.toString(micro + 100)); //$NON-NLS-1$
 		}
 		if (plus) {
 			sb.append("+"); //$NON-NLS-1$

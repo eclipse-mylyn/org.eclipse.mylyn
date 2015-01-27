@@ -35,6 +35,7 @@ define bugzilla::site (
   $clearMode            = $bugzilla::clearMode,
   $rest_enabled         = false,
   $envinfo              = "",
+  $testdataVersion      = "",
   ) {
 
   include "bugzilla"
