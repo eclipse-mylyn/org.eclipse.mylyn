@@ -95,6 +95,8 @@ GITHUB_N=$(next_version "$GITHUB_V")
 
 perl -pi~ -e '
 	s/^(Bundle-Version:\s*).*$/${1}'"$OSGI_V"'/;
+	s/(org.eclipse.egit.github.*;version=")[^"[(]*(")/${1}'"$GITHUB_V"'${2}/;
+	s/(org.eclipse.egit.github.*;version="\[)[^"]*(\)")/${1}'"$GITHUB_V,$GITHUB_N"'${2}/;
 	s/(org.eclipse.mylyn.internal.github.*;version=")[^"[(]*(")/${1}'"$GITHUB_V"'${2}/;
 	s/(org.eclipse.mylyn.internal.github.*;version="\[)[^"]*(\)")/${1}'"$GITHUB_V,$GITHUB_N"'${2}/;
 	' $(git ls-files | egrep "META-INF/MANIFEST.MF|META-INF/SOURCE-MANIFEST.MF")
@@ -108,6 +110,7 @@ perl -pi~ -e '
 		$seen_version = 1 if (!/<\?xml/ &&
 		s/(version=")[^"]*(")/${1}'"$OSGI_V"'${2}/);
 	}
+	s/(feature="org.eclipse.egit.github.core" version=")[^"]*(")/${1}'"$GITHUB_V"'${2}/;
 	s/(feature="org.eclipse.mylyn.github.core" version=")[^"]*(")/${1}'"$GITHUB_V"'${2}/;
 	s/(feature="org.eclipse.mylyn.github.ui" version=")[^"]*(")/${1}'"$GITHUB_V"'${2}/;
 	' org.eclipse.mylyn.github-feature/feature.xml
