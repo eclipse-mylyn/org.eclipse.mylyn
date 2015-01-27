@@ -5,7 +5,7 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.mylyn.github.core;singleton:=true
 Bundle-Version: 4.0.0.qualifier
 Bundle-Vendor: %providerName
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.eclipse.mylyn.internal.github.core;version="4.0.0";x-friends:="org.eclipse.mylyn.github.ui",
  org.eclipse.mylyn.internal.github.core.gist;version="4.0.0";x-friends:="org.eclipse.mylyn.github.ui",
  org.eclipse.mylyn.internal.github.core.issue;version="4.0.0";x-friends:="org.eclipse.mylyn.github.ui",
