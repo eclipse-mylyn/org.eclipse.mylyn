@@ -30,7 +30,7 @@ import com.google.common.base.Strings;
 
 /**
  * a document builder that emits Confluence markup
- * 
+ *
  * @see HtmlParser
  * @author David Green
  * @since 1.6
@@ -247,7 +247,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			return new ContentBlock(type, computePrefix(prefixChar, computeListLevel()) + " ", "\n", false, true); //$NON-NLS-1$ //$NON-NLS-2$
 		case DIV:
 			if (currentBlock == null) {
-				return new ContentBlock(type, "", "\n", false, false); //$NON-NLS-1$ //$NON-NLS-2$
+				return new ContentBlock(type, "", "\n\n", false, false); //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
 				return new ContentBlock(type, "", "", false, false); //$NON-NLS-1$//$NON-NLS-2$
 			}
@@ -264,9 +264,9 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 			return new ContentBlock(type, attributesMarkup, "\n\n", false, false); //$NON-NLS-1$
 		case PREFORMATTED:
-			return new ContentBlock(type, "{noformat}", "{noformat}\n\n", false, false); //$NON-NLS-1$ //$NON-NLS-2$ 
+			return new ContentBlock(type, "{noformat}", "{noformat}\n\n", false, false); //$NON-NLS-1$ //$NON-NLS-2$
 		case QUOTE:
-			return new ContentBlock(type, "{quote}", "{quote}\n\n", false, false); //$NON-NLS-1$ //$NON-NLS-2$ 
+			return new ContentBlock(type, "{quote}", "{quote}\n\n", false, false); //$NON-NLS-1$ //$NON-NLS-2$
 		case TABLE:
 			return new SuffixBlock(type, "\n"); //$NON-NLS-1$
 		case TABLE_CELL_HEADER:
@@ -326,7 +326,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		case UNDERLINED:
 			block = new ContentBlock("+", "+", true, false); //$NON-NLS-1$//$NON-NLS-2$
 			break;
-//			case QUOTE: not supported		
+//			case QUOTE: not supported
 
 		case SPAN:
 		default:

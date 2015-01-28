@@ -530,7 +530,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		assertEquals("test\n\nmore *text*\n# text2\n\n", markup);
+		assertEquals("test\n\nmore *text*\n\n# text2\n\n", markup);
 	}
 
 	public void testDivWithinTableCell() {
