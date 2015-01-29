@@ -393,6 +393,11 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 	}
 
 	@Override
+	public void horizontalRule() {
+		out.horizontalRule();
+	}
+
+	@Override
 	public void link(Attributes attributes, String hrefOrHashName, String text) {
 		hrefOrHashName = adjustHref(hrefOrHashName);
 		out.link(attributes, hrefOrHashName, text);

@@ -38,6 +38,7 @@ import org.eclipse.mylyn.wikitext.core.parser.builder.event.EndDocumentEvent;
 import org.eclipse.mylyn.wikitext.core.parser.builder.event.EndHeadingEvent;
 import org.eclipse.mylyn.wikitext.core.parser.builder.event.EndSpanEvent;
 import org.eclipse.mylyn.wikitext.core.parser.builder.event.EntityReferenceEvent;
+import org.eclipse.mylyn.wikitext.core.parser.builder.event.HorizontalRuleEvent;
 import org.eclipse.mylyn.wikitext.core.parser.builder.event.ImageEvent;
 import org.eclipse.mylyn.wikitext.core.parser.builder.event.ImageLinkEvent;
 import org.eclipse.mylyn.wikitext.core.parser.builder.event.LineBreakEvent;
@@ -111,6 +112,12 @@ public class MultiplexingDocumentBuilderTest {
 	public void charactersUnescaped() {
 		multiplexer.charactersUnescaped("test 123");
 		assertEvents(new CharactersUnescapedEvent("test 123"));
+	}
+
+	@Test
+	public void horizontalRule() {
+		multiplexer.horizontalRule();
+		assertEvents(new HorizontalRuleEvent());
 	}
 
 	@Test

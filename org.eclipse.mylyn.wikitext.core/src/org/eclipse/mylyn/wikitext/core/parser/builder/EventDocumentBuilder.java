@@ -29,6 +29,7 @@ import org.eclipse.mylyn.wikitext.core.parser.builder.event.EndDocumentEvent;
 import org.eclipse.mylyn.wikitext.core.parser.builder.event.EndHeadingEvent;
 import org.eclipse.mylyn.wikitext.core.parser.builder.event.EndSpanEvent;
 import org.eclipse.mylyn.wikitext.core.parser.builder.event.EntityReferenceEvent;
+import org.eclipse.mylyn.wikitext.core.parser.builder.event.HorizontalRuleEvent;
 import org.eclipse.mylyn.wikitext.core.parser.builder.event.ImageEvent;
 import org.eclipse.mylyn.wikitext.core.parser.builder.event.ImageLinkEvent;
 import org.eclipse.mylyn.wikitext.core.parser.builder.event.LineBreakEvent;
@@ -38,7 +39,7 @@ import com.google.common.collect.Lists;
 
 /**
  * A {@link DocumentBuilder} that produces {@link DocumentBuilderEvents} as its output.
- * 
+ *
  * @author david.green
  * @since 2.0
  */
@@ -47,7 +48,7 @@ public class EventDocumentBuilder extends DocumentBuilder {
 
 	/**
 	 * Provides the {@link DocumentBuilderEvents} that were created as a result of using this builder.
-	 * 
+	 *
 	 * @return the events
 	 */
 	public DocumentBuilderEvents getDocumentBuilderEvents() {
@@ -127,6 +128,11 @@ public class EventDocumentBuilder extends DocumentBuilder {
 	@Override
 	public void lineBreak() {
 		events.add(new LineBreakEvent());
+	}
+
+	@Override
+	public void horizontalRule() {
+		events.add(new HorizontalRuleEvent());
 	}
 
 	@Override

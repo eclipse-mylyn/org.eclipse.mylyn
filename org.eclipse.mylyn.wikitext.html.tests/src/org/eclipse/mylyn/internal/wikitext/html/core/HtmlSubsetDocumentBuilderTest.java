@@ -84,6 +84,14 @@ public class HtmlSubsetDocumentBuilderTest {
 	}
 
 	@Test
+	public void horizontalRule() {
+		builder.beginDocument();
+		builder.horizontalRule();
+		builder.endDocument();
+		assertContent("<hr/>");
+	}
+
+	@Test
 	public void charactersUnescaped() {
 		builder.charactersUnescaped("<specialTag/>");
 		assertContent("<specialTag/>");

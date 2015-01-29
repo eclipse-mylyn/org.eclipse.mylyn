@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 David Green and others.
+ * Copyright (c) 2007, 2015 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,7 +17,7 @@ package org.eclipse.mylyn.wikitext.core.parser;
  * Note that many methods take {@link Attributes} to specify attributes of the element, however most of these methods
  * may take a more specific subclass of {@link Attributes}.
  * </p>
- * 
+ *
  * @author David Green
  */
 public abstract class DocumentBuilder {
@@ -48,7 +48,7 @@ public abstract class DocumentBuilder {
 		PANEL,
 		/**
 		 * a content delimiter with no meaning
-		 * 
+		 *
 		 * @since 1.1
 		 */
 		DIV, FOOTNOTE, QUOTE, CODE, PREFORMATTED, NUMERIC_LIST, BULLETED_LIST, LIST_ITEM, TABLE, TABLE_ROW, TABLE_CELL_HEADER, TABLE_CELL_NORMAL, DEFINITION_LIST, DEFINITION_TERM, DEFINITION_ITEM;
@@ -59,14 +59,14 @@ public abstract class DocumentBuilder {
 		EMPHASIS, STRONG, ITALIC, BOLD, CITATION, DELETED, INSERTED, SUPERSCRIPT, SUBSCRIPT, SPAN, CODE, MONOSPACE, UNDERLINED,
 		/**
 		 * a short inline quotation
-		 * 
+		 *
 		 * @since 1.1
 		 */
 		QUOTE,
 
 		/**
 		 * a hyperlink
-		 * 
+		 *
 		 * @since 1.2
 		 */
 		LINK
@@ -75,14 +75,14 @@ public abstract class DocumentBuilder {
 	/**
 	 * Begin a document. Calling this method is optional for some builders, however if called then it must be matched by
 	 * a corresponding call to {@link #endDocument()}.
-	 * 
+	 *
 	 * @see #endDocument()
 	 */
 	public abstract void beginDocument();
 
 	/**
 	 * End a document.
-	 * 
+	 *
 	 * @see #endDocument()
 	 */
 	public abstract void endDocument();
@@ -93,7 +93,7 @@ public abstract class DocumentBuilder {
 	 * the builder may attempt to apply the attributes specified. Builders may choose to ignore attributes, and should
 	 * fail silently if the given attributes are not as expected. Each call to this method must be matched by a
 	 * corresponding call to {@link #endBlock()}.
-	 * 
+	 *
 	 * @param type
 	 * @param attributes
 	 *            the attributes to apply to the block. Callers may choose to specify a more specialized set of
@@ -111,7 +111,7 @@ public abstract class DocumentBuilder {
 	/**
 	 * Begin a span of the specified type. Builder implementations may do a best-effort application of the provided
 	 * attributes. Each call to this method must be matched by a corresponding call to {@link #endSpan()}.
-	 * 
+	 *
 	 * @param type
 	 * @param attributes
 	 *            the attributes to apply to the span
@@ -122,7 +122,7 @@ public abstract class DocumentBuilder {
 	/**
 	 * End a span that was {@link #beginSpan(org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType, Attributes)
 	 * started}.
-	 * 
+	 *
 	 * @see #beginSpan(org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType, Attributes)
 	 */
 	public abstract void endSpan();
@@ -131,7 +131,7 @@ public abstract class DocumentBuilder {
 	 * Begin a heading of the specified level (usually 1-6). Builder implementations may do a best-effort application of
 	 * the provided attributes. Each call to this method must be matched by a corresponding call to
 	 * {@link #endHeading()}.
-	 * 
+	 *
 	 * @param level
 	 *            the level of the heading, usually 1-6
 	 * @param attributes
@@ -142,14 +142,14 @@ public abstract class DocumentBuilder {
 
 	/**
 	 * End a span that was {@link #beginHeading(int, Attributes) started}.
-	 * 
+	 *
 	 * @see #beginHeading(int, Attributes)
 	 */
 	public abstract void endHeading();
 
 	/**
 	 * Emit the given text as characters where special characters are encoded according to the output format rules.
-	 * 
+	 *
 	 * @param text
 	 *            the text to emit.
 	 */
@@ -157,7 +157,7 @@ public abstract class DocumentBuilder {
 
 	/**
 	 * An XML entity reference.
-	 * 
+	 *
 	 * @param entity
 	 *            the entity
 	 */
@@ -165,7 +165,7 @@ public abstract class DocumentBuilder {
 
 	/**
 	 * Build the image with the given attributes
-	 * 
+	 *
 	 * @param attributes
 	 *            the attributes, which may be an {@link ImageAttributes}.
 	 * @param url
@@ -176,7 +176,7 @@ public abstract class DocumentBuilder {
 	/**
 	 * Create a hyperlink to the given url. If {@link LinkAttributes} are used, the attributes must not have the
 	 * {@link LinkAttributes#getHref() href} attribute set.
-	 * 
+	 *
 	 * @param attributes
 	 *            the attributes of the link
 	 * @param hrefOrHashName
@@ -191,7 +191,7 @@ public abstract class DocumentBuilder {
 	 * image tag. For example, if the builder constructs HTML, the builder would emit
 	 * <code>&lt;a href="...">&lt;img src="..."/>&lt;/a></code>. In this case if the attributes define a css class then
 	 * the resulting HTML should look like this: <code>&lt;a href="...">&lt;img src="..." class="..."/>&lt;/a></code>
-	 * 
+	 *
 	 * @param linkAttributes
 	 *            the attributes of the link, which may be {@link LinkAttributes}
 	 * @param imageAttributes
@@ -208,7 +208,7 @@ public abstract class DocumentBuilder {
 	 * image tag. For example, if the builder constructs HTML, the builder would emit
 	 * <code>&lt;a href="...">&lt;img src="..."/>&lt;/a></code>. In this case if the attributes define a css class then
 	 * the resulting HTML should look like this: <code>&lt;a href="...">&lt;img src="..." class="..."/>&lt;/a></code>
-	 * 
+	 *
 	 * @param attributes
 	 *            the attributes of the image, which may be {@link ImageAttributes}
 	 * @param href
@@ -237,7 +237,7 @@ public abstract class DocumentBuilder {
 
 	/**
 	 * Emit an acronym
-	 * 
+	 *
 	 * @param text
 	 *            the acronym to emit
 	 * @param definition
@@ -251,9 +251,19 @@ public abstract class DocumentBuilder {
 	public abstract void lineBreak();
 
 	/**
+	 * Create a horizontal rule (eg: hr in html). Not all builders need support horizontal rule. The default
+	 * implementation does nothing.
+	 *
+	 * @since 2.4
+	 */
+	public void horizontalRule() {
+		// nothing to do
+	}
+
+	/**
 	 * Create unescaped characters, usually with some embedded HTML markup. Note that using this method causes the
 	 * output to be HTML-centric
-	 * 
+	 *
 	 * @param literal
 	 *            the literal characters to emit
 	 */
@@ -261,7 +271,7 @@ public abstract class DocumentBuilder {
 
 	/**
 	 * Set the locator for the current session
-	 * 
+	 *
 	 * @param locator
 	 *            the locator that provides information about the current location in the markup
 	 */

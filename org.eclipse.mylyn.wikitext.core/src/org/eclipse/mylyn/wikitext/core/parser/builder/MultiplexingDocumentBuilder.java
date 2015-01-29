@@ -20,7 +20,7 @@ import org.eclipse.mylyn.wikitext.core.parser.Locator;
 
 /**
  * A document builder that dispatches events to one or more delegates.
- * 
+ *
  * @author David Green
  * @since 1.0
  */
@@ -138,6 +138,13 @@ public class MultiplexingDocumentBuilder extends DocumentBuilder {
 	public void lineBreak() {
 		for (DocumentBuilder builder : builders) {
 			builder.lineBreak();
+		}
+	}
+
+	@Override
+	public void horizontalRule() {
+		for (DocumentBuilder builder : builders) {
+			builder.horizontalRule();
 		}
 	}
 

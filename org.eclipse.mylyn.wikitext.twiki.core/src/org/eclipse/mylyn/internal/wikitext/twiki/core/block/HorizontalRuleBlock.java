@@ -26,7 +26,7 @@ public class HorizontalRuleBlock extends Block {
 
 	@Override
 	public int processLineContent(String line, int offset) {
-		builder.charactersUnescaped("<hr/>"); //$NON-NLS-1$
+		builder.horizontalRule();
 		setClosed(true);
 		return -1;
 	}

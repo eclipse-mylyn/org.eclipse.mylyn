@@ -35,6 +35,7 @@ import org.eclipse.mylyn.internal.wikitext.confluence.core.phrase.SimplePhraseMo
 import org.eclipse.mylyn.internal.wikitext.confluence.core.phrase.SimpleWrappedPhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.confluence.core.token.AnchorReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.confluence.core.token.EscapedCharacterReplacementToken;
+import org.eclipse.mylyn.internal.wikitext.confluence.core.token.HorizontalRuleToken;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
@@ -44,11 +45,10 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.EntityReferenceReplac
 import org.eclipse.mylyn.wikitext.core.parser.markup.token.ImpliedHyperlinkReplacementToken;
 import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternEntityReferenceReplacementToken;
 import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLineBreakReplacementToken;
-import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLiteralReplacementToken;
 
 /**
  * A confluence language for parsing Confluence markup.
- * 
+ *
  * @author David Green
  * @since 1.0
  * @see <a href="http://confluence.atlassian.com/display/DOC/Confluence+Notation+Guide+Overview">Confluence Notation
@@ -57,7 +57,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLiteralReplace
 public class ConfluenceLanguage extends AbstractMarkupLanguage {
 	/**
 	 * blocks that may be nested in side a quote block
-	 * 
+	 *
 	 * @see ExtendedQuoteBlock
 	 */
 	private final List<Block> nestedBlocks = new ArrayList<Block>();
@@ -126,7 +126,7 @@ public class ConfluenceLanguage extends AbstractMarkupLanguage {
 		phraseModifierSyntax.add(new SimplePhraseModifier("^", SpanType.SUPERSCRIPT, false)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new SimplePhraseModifier("~", SpanType.SUBSCRIPT, false)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new SimpleWrappedPhraseModifier("{{", "}}", SpanType.MONOSPACE, false)); //$NON-NLS-1$ //$NON-NLS-2$
-		phraseModifierSyntax.add(new ConfluenceWrappedPhraseModifier("{quote}", SpanType.QUOTE, true)); //$NON-NLS-1$ 
+		phraseModifierSyntax.add(new ConfluenceWrappedPhraseModifier("{quote}", SpanType.QUOTE, true)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new ColorPhraseModifier());
 		phraseModifierSyntax.add(new ImagePhraseModifier());
 		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0); //$NON-NLS-1$
@@ -144,7 +144,7 @@ public class ConfluenceLanguage extends AbstractMarkupLanguage {
 		tokenSyntax.add(new EntityReferenceReplacementToken("(R)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
 		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=(?:\\w\\s)|^)(---)(?=\\s\\w))", "#8212")); // emdash //$NON-NLS-1$ //$NON-NLS-2$
 		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=(?:\\w\\s)|^)(--)(?=\\s\\w))", "#8211")); // endash //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new PatternLiteralReplacementToken("(----)", "<hr/>")); // horizontal rule //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new HorizontalRuleToken());
 		tokenSyntax.add(new ImpliedHyperlinkReplacementToken());
 		tokenSyntax.add(new AnchorReplacementToken());
 	}

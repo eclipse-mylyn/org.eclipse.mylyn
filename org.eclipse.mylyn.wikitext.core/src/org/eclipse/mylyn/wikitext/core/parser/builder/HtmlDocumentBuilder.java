@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 David Green and others.
+ * Copyright (c) 2007, 2015 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,7 +45,7 @@ import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 
 /**
  * A builder that produces XHTML output. The nature of the output is affected by various settings on the builder.
- * 
+ *
  * @author David Green
  * @author Matthias Kempka extensibility improvements, see bug 259089
  * @author Torkild U. Resheim
@@ -244,7 +244,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	/**
 	 * construct the HtmlDocumentBuilder.
-	 * 
+	 *
 	 * @param out
 	 *            the writer to which content is written
 	 */
@@ -254,7 +254,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	/**
 	 * construct the HtmlDocumentBuilder.
-	 * 
+	 *
 	 * @param out
 	 *            the writer to which content is written
 	 * @param formatting
@@ -266,7 +266,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	/**
 	 * construct the HtmlDocumentBuilder.
-	 * 
+	 *
 	 * @param writer
 	 *            the writer to which content is written
 	 */
@@ -278,7 +278,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * Copy the configuration of this builder to the provided one. After calling this method the configuration of the
 	 * other builder should be the same as this one, including stylesheets. Subclasses that have configurable settings
 	 * should override this method to ensure that those settings are properly copied.
-	 * 
+	 *
 	 * @param other
 	 *            the builder to which settings are copied.
 	 */
@@ -339,7 +339,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	/**
 	 * The DTD to emit, if {@link #isEmitDtd()} and {@link #isEmitAsDocument()}.
-	 * 
+	 *
 	 * @see #getHtmlDtd()
 	 */
 	public void setHtmlDtd(String htmlDtd) {
@@ -391,7 +391,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * Specify the character encoding for use in the HTML meta tag. For example, if the charset is specified as
 	 * <code>"utf-8"</code>: <code>&lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8"/&gt;</code> The
 	 * default is <code>"utf-8"</code>.
-	 * 
+	 *
 	 * @param encoding
 	 *            the character encoding to use, or null if the HTML meta tag should not be emitted Ignored unless
 	 *            {@link #isEmitAsDocument()}
@@ -403,7 +403,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	/**
 	 * Set the document title, which will be emitted into the &lt;title&gt; element. Ignored unless
 	 * {@link #isEmitAsDocument()}
-	 * 
+	 *
 	 * @return the title or null if there is none
 	 */
 	public String getTitle() {
@@ -413,7 +413,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	/**
 	 * Set the document title, which will be emitted into the &lt;title&gt; element. Ignored unless
 	 * {@link #isEmitAsDocument()}
-	 * 
+	 *
 	 * @param title
 	 *            the title or null if there is none
 	 */
@@ -459,7 +459,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * the following: <code>
 	 *   &lt;link type="text/css" rel="stylesheet" href="url"/>
 	 * </code>
-	 * 
+	 *
 	 * @param url
 	 *            the CSS url to use, which may be relative or absolute
 	 * @return the stylesheet, whose attributes may be modified
@@ -475,7 +475,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * Add a CSS stylesheet to the output document, where the contents of the CSS stylesheet are embedded in the HTML.
 	 * Calling this method after {@link #beginDocument() starting the document} has no effect. Generates code similar to
 	 * the following:
-	 * 
+	 *
 	 * <pre>
 	 * &lt;code&gt;
 	 *   &lt;style type=&quot;text/css&quot;&gt;
@@ -483,7 +483,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 *   &lt;/style&gt;
 	 * &lt;/code&gt;
 	 * </pre>
-	 * 
+	 *
 	 * @param file
 	 *            the CSS file whose contents must be available
 	 * @return the stylesheet, whose attributes may be modified
@@ -527,7 +527,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * suppressed and CSS classes are used instead, with the default styles emitted as a stylesheet in the document
 	 * head. If disabled and {@link #isEmitAsDocument()} is false, this option has the same effect as
 	 * {@link #isSuppressBuiltInStyles()}. The default is true.
-	 * 
+	 *
 	 * @see #isSuppressBuiltInStyles()
 	 */
 	public boolean isUseInlineStyles() {
@@ -548,7 +548,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * indicate if default built-in CSS styles should be suppressed. Built-in styles are styles that are emitted by this
 	 * builder to create the desired visual effect when rendering certain types of elements, such as warnings or infos.
 	 * the default is false.
-	 * 
+	 *
 	 * @see #isUseInlineStyles()
 	 */
 	public boolean isSuppressBuiltInStyles() {
@@ -569,7 +569,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * default value is null. Setting this value to "nofollow" is recommended for rendering HTML in areas where users
 	 * may add links, for example in a blog comment. See <a
 	 * href="http://en.wikipedia.org/wiki/Nofollow">http://en.wikipedia.org/wiki/Nofollow</a> for more information.
-	 * 
+	 *
 	 * @return the rel or null if there is none.
 	 * @see LinkAttributes#getRel()
 	 */
@@ -582,7 +582,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * default value is null. Setting this value to "nofollow" is recommended for rendering HTML in areas where users
 	 * may add links, for example in a blog comment. See <a
 	 * href="http://en.wikipedia.org/wiki/Nofollow">http://en.wikipedia.org/wiki/Nofollow</a> for more information.
-	 * 
+	 *
 	 * @param linkRel
 	 *            the rel or null if there is none.
 	 * @see LinkAttributes#getRel()
@@ -593,7 +593,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	/**
 	 * Provides an {@link HtmlDocumentHandler} for this builder.
-	 * 
+	 *
 	 * @param documentHandler
 	 *            the document handler
 	 * @since 2.0
@@ -653,7 +653,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	/**
 	 * Emit the HTML head, including the head tag itself.
-	 * 
+	 *
 	 * @since 1.8
 	 * @see #emitHeadContents()
 	 */
@@ -667,7 +667,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * emit the contents of the HTML head, excluding the head tag itself. Subclasses may override to change the contents
 	 * of the head. Subclasses should consider calling <code>super.emitHeadContents()</code> in order to preserve
 	 * features such as emitting the base, title and stylesheets.
-	 * 
+	 *
 	 * @see #emitHead()
 	 */
 	protected void emitHeadContents() {
@@ -778,7 +778,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	/**
 	 * begin the body by emitting the body element. Overriding methods should call <code>super.beginBody()</code>.
-	 * 
+	 *
 	 * @see #endBody()
 	 */
 	protected void beginBody() {
@@ -787,7 +787,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	/**
 	 * end the body by emitting the body end element tag. Overriding methods should call <code>super.endBody()</code>.
-	 * 
+	 *
 	 * @see #beginBody()
 	 */
 	protected void endBody() {
@@ -1185,7 +1185,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * emit the href attribute of an anchor. Subclasses may override to alter the default href or to add other
 	 * attributes such as <code>onclick</code>. Overriding classes should pass the href to
 	 * {@link #makeUrlAbsolute(String)} prior to writing it to the writer.
-	 * 
+	 *
 	 * @param href
 	 *            the url for the href attribute
 	 * @see #getHtmlFilenameFormat()
@@ -1197,7 +1197,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	/**
 	 * Applies the {@link #getHtmlFilenameFormat() HTML filename format} to links that are missing a filename extension
 	 * using the format specified by {@link #getHtmlFilenameFormat()}.
-	 * 
+	 *
 	 * @param href
 	 *            the link
 	 * @return the given {@code href} with the {@link #getHtmlFilenameFormat() HTML filename format} applied, or the
@@ -1224,7 +1224,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	/**
 	 * Determines whether or not the {@code href} has a a filename extension
-	 * 
+	 *
 	 * @param href
 	 *            the reference to test
 	 * @return {@code true} if the {@code href} is relative and missing a filename extension, otherwise {@code false}
@@ -1239,7 +1239,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * the HTML filename format enables content to have relative hyperlinks to generated files without having to specify
 	 * the filename extension in the hyperlink. If specified, the returned value is a pattern where "$1" indicates the
 	 * location of the filename. For example "$1.html". The default value is {@code null}.
-	 * 
+	 *
 	 * @see #setHtmlFilenameFormat(String)
 	 * @return the HTML filename format or {@code null}
 	 * @since 2.0
@@ -1253,7 +1253,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * HTML filename format enables content to have relative hyperlinks to generated files without having to specify the
 	 * filename extension in the hyperlink. If specified, the returned value is a pattern where "$1" indicates the
 	 * location of the filename. For example "$1.html". The default value is {@code null}.
-	 * 
+	 *
 	 * @param htmlFilenameFormat
 	 *            the HTML filename format or <code>null</code>
 	 * @since 2.0
@@ -1283,6 +1283,11 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	@Override
 	public void lineBreak() {
 		writer.writeEmptyElement(htmlNsUri, "br"); //$NON-NLS-1$
+	}
+
+	@Override
+	public void horizontalRule() {
+		writer.writeEmptyElement(htmlNsUri, "hr"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -1335,7 +1340,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		/**
 		 * Create a CSS stylesheet where the contents of the CSS stylesheet are embedded in the HTML. Generates code
 		 * similar to the following:
-		 * 
+		 *
 		 * <pre>
 		 * &lt;code&gt;
 		 *   &lt;style type=&quot;text/css&quot;&gt;
@@ -1343,7 +1348,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		 *   &lt;/style&gt;
 		 * &lt;/code&gt;
 		 * </pre>
-		 * 
+		 *
 		 * @param file
 		 *            the CSS file whose contents must be available
 		 */
@@ -1360,11 +1365,11 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		 * Create a CSS stylesheet to the output document as an URL where the CSS stylesheet is referenced as an HTML
 		 * link. Calling this method after {@link #beginDocument() starting the document} has no effect. Generates code
 		 * similar to the following:
-		 * 
+		 *
 		 * <pre>
 		 *   &lt;link type=&quot;text/css&quot; rel=&quot;stylesheet&quot; href=&quot;url&quot;/&gt;
 		 * </pre>
-		 * 
+		 *
 		 * @param url
 		 *            the CSS url to use, which may be relative or absolute
 		 */
@@ -1380,7 +1385,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		/**
 		 * Create a CSS stylesheet where the contents of the CSS stylesheet are embedded in the HTML. Generates code
 		 * similar to the following:
-		 * 
+		 *
 		 * <pre>
 		 * &lt;code&gt;
 		 *   &lt;style type=&quot;text/css&quot;&gt;
@@ -1388,9 +1393,9 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		 *   &lt;/style&gt;
 		 * &lt;/code&gt;
 		 * </pre>
-		 * 
+		 *
 		 * The caller is responsible for closing the reader.
-		 * 
+		 *
 		 * @param reader
 		 *            the reader from which content is provided.
 		 */
@@ -1477,7 +1482,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * Indicates that {@link #entityReference(String) entity references} should be filtered. Defaults to false. When
 	 * filtered, known HTML entity references are converted to their numeric counterpart, and unknown entity references
 	 * are emitted as plain text.
-	 * 
+	 *
 	 * @since 1.6
 	 * @see <a href="http://www.w3schools.com/tags/ref_entities.asp">HTML Entity Reference</a>
 	 */
@@ -1489,7 +1494,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * Indicates that {@link #entityReference(String) entity references} should be filtered. Defaults to false. When
 	 * filtered, known HTML entity references are converted to their numeric counterpart, and unknown entity references
 	 * are emitted as plain text.
-	 * 
+	 *
 	 * @since 1.6
 	 * @see <a href="http://www.w3schools.com/tags/ref_entities.asp">HTML Entity Reference</a>
 	 */
@@ -1499,7 +1504,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	/**
 	 * the copyright notice that should appear in the generated output
-	 * 
+	 *
 	 * @since 1.8
 	 */
 	public String getCopyrightNotice() {
@@ -1508,7 +1513,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	/**
 	 * the copyright notice that should appear in the generated output
-	 * 
+	 *
 	 * @param copyrightNotice
 	 *            the notice, or null if there should be none
 	 * @since 1.8

@@ -188,6 +188,11 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 		delegate.charactersUnescaped(literal);
 	}
 
+	@Override
+	public void horizontalRule() {
+		delegate.horizontalRule();
+	}
+
 	void setXhtmlStrict(boolean xhtmlStrict) {
 		delegate.setXhtmlStrict(xhtmlStrict);
 	}
