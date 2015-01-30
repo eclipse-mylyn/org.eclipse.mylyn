@@ -799,7 +799,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		if (filterEntityReferences) {
 			String emitEntity = entity.length() > 0 && entity.charAt(0) == '#'
 					? entity
-					: entityReferenceToNumericEquivalent.get(entity);
+							: entityReferenceToNumericEquivalent.get(entity);
 			if (emitEntity == null) {
 				writer.writeCharacters("&"); //$NON-NLS-1$
 				writer.writeCharacters(entity);
@@ -1285,6 +1285,9 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		writer.writeEmptyElement(htmlNsUri, "br"); //$NON-NLS-1$
 	}
 
+	/**
+	 * @since 2.4
+	 */
 	@Override
 	public void horizontalRule() {
 		writer.writeEmptyElement(htmlNsUri, "hr"); //$NON-NLS-1$

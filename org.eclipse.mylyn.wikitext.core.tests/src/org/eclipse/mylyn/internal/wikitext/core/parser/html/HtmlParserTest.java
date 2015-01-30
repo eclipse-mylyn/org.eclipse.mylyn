@@ -110,6 +110,16 @@ public class HtmlParserTest {
 		assertParse("text", "<body><font what=\"is this?\">text</font></body>");
 	}
 
+	@Test
+	public void paragraphWithBr() {
+		assertParse("<p>first<br/>second</p>", "<body><p>first<br/>\nsecond</p></body>");
+	}
+
+	@Test
+	public void horizontalRule() {
+		assertParse("<p>first</p><hr/><p>second</p>", "<body><p>first</p>\n<hr/><p>second</p></body>");
+	}
+
 	private void assertParseEventOrder(String content, Object... expectedEventTypes) {
 		final List<Object> actualEventTypes = Lists.newArrayList();
 		DocumentBuilder builder = new NoOpDocumentBuilder() {

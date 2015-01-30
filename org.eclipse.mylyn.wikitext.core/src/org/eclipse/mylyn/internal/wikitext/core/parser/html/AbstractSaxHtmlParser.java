@@ -525,6 +525,19 @@ public abstract class AbstractSaxHtmlParser {
 			}
 		}
 
+		private class HorizontalRuleHandler extends ElementHandler {
+
+			@Override
+			public void start(Attributes atts) {
+				// ignore
+			}
+
+			@Override
+			public void end() {
+				builder.horizontalRule();
+			}
+		}
+
 		private ElementHandler computeElementHandler(String elementName) {
 
 			BlockType blockType = elementNameToBlockType.get(elementName);
@@ -541,6 +554,9 @@ public abstract class AbstractSaxHtmlParser {
 				}
 				if (elementName.equals("br")) { //$NON-NLS-1$
 					return new LineBreakHandler();
+				}
+				if (elementName.equals("hr")) { //$NON-NLS-1$
+					return new HorizontalRuleHandler();
 				}
 				Matcher headingMatcher = HEADING_PATTERN.matcher(elementName);
 				if (headingMatcher.matches()) {
