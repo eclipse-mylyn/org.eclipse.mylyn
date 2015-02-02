@@ -109,9 +109,12 @@ public class ActiveReviewManager {
 	};
 
 	public ActiveReviewManager() {
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().addPageListener(pageListener);
 		PlatformUI.getWorkbench().addWindowListener(windowListener);
-		windowListener.windowActivated(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+		IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (activeWorkbenchWindow != null) {
+			activeWorkbenchWindow.addPageListener(pageListener);
+			windowListener.windowActivated(activeWorkbenchWindow);
+		}
 	}
 
 	public void setReview(IReview review) {
