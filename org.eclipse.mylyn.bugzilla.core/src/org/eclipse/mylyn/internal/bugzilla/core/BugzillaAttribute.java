@@ -129,18 +129,22 @@ public enum BugzillaAttribute {
 
 	REPORTER_NAME(Messages.BugzillaAttribute_REPORT_NAME, "reporter_name", TaskAttribute.TYPE_PERSON, Flag.READ_ONLY), //$NON-NLS-1$
 
-	REPORTER_ACCESSIBLE(Messages.BugzillaAttribute_REPORT_ACCESSIBLE, "reporter_accessible", //$NON-NLS-1$
-			TaskAttribute.TYPE_BOOLEAN),
+	REPORTER_ACCESSIBLE(Messages.BugzillaAttribute_REPORT_ACCESSIBLE, "reporter_accessible", TaskAttribute.TYPE_BOOLEAN), //$NON-NLS-1$
 
 	RESOLUTION(Messages.BugzillaAttribute_Resolution,
 			"resolution", TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE, Flag.READ_ONLY), //$NON-NLS-1$
 
 	REMAINING_TIME(Messages.BugzillaAttribute_Remaining, "remaining_time", TaskAttribute.TYPE_SHORT_TEXT), //$NON-NLS-1$
 
-	SEE_ALSO(Messages.BugzillaAttribute_See_Also, "see_also", TaskAttribute.TYPE_SHORT_TEXT), //$NON-NLS-1$
+	REMOVE_SEE_ALSO(Messages.BugzillaAttribute_See_Also, "remove_see_also", IBugzillaConstants.EDITOR_TYPE_SEEALSO), //$NON-NLS-1$
 
-	SET_DEFAULT_ASSIGNEE(Messages.BugzillaAttribute_Reassign_to_default_assignee, "set_default_assignee", //$NON-NLS-1$
-			TaskAttribute.TYPE_BOOLEAN),
+	SEE_ALSO(Messages.BugzillaAttribute_AddSeeAlso, "see_also", TaskAttribute.TYPE_URL, Flag.ATTRIBUTE), //$NON-NLS-1$
+
+	SEE_ALSO_READ(Messages.BugzillaAttribute_See_Also,
+			"read_see_also", IBugzillaConstants.EDITOR_TYPE_SEEALSO, Flag.ATTRIBUTE), //$NON-NLS-1$
+
+	SET_DEFAULT_ASSIGNEE(Messages.BugzillaAttribute_Reassign_to_default_assignee,
+			"set_default_assignee", TaskAttribute.TYPE_BOOLEAN), //$NON-NLS-1$
 
 	SHORT_DESC(Messages.BugzillaAttribute_Summary, "short_desc", TaskAttribute.TYPE_SHORT_RICH_TEXT), //$NON-NLS-1$
 

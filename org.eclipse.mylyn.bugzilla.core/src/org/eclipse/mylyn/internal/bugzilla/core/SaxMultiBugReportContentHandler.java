@@ -32,7 +32,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Parser for xml bugzilla reports.
- * 
+ *
  * @author Rob Elves
  * @author Hiroyuki Inaba (internationalization)
  */
@@ -575,8 +575,20 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			}
 			break;
 		case SEE_ALSO:
-			BugzillaUtil.createAttributeWithKindDefaultIfUsed(parsedText, tag, repositoryTaskData,
-					IBugzillaConstants.BUGZILLA_PARAM_USE_SEE_ALSO, false);
+			TaskAttribute seeAlso = repositoryTaskData.getRoot().getMappedAttribute(
+					BugzillaAttribute.SEE_ALSO_READ.getKey());
+			if (seeAlso == null) {
+				BugzillaUtil.createAttributeWithKindDefaultIfUsed(null, tag, repositoryTaskData,
+						IBugzillaConstants.BUGZILLA_PARAM_USE_SEE_ALSO, false);
+				BugzillaUtil.createAttributeWithKindDefaultIfUsed(parsedText, BugzillaAttribute.SEE_ALSO_READ,
+						repositoryTaskData, IBugzillaConstants.BUGZILLA_PARAM_USE_SEE_ALSO, false);
+			} else {
+				if (seeAlso.getValue().equals("")) { //$NON-NLS-1$
+					seeAlso.setValue(parsedText);
+				} else {
+					seeAlso.addValue(parsedText);
+				}
+			}
 			break;
 		case COMMENTID:
 			if (taskComment != null) {

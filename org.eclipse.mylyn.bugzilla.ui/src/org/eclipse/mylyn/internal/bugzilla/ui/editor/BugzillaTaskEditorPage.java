@@ -103,7 +103,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 
 	/**
 	 * Call this constructor if extending the Bugzilla connector
-	 * 
+	 *
 	 * @param editor
 	 * @param connectorKind
 	 */
@@ -239,6 +239,8 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 					editor = new BugzillaVotesEditor(getModel(), taskAttribute);
 				} else if (IBugzillaConstants.EDITOR_TYPE_FLAG.equals(type)) {
 					editor = new FlagAttributeEditor(getModel(), taskAttribute);
+				} else if (IBugzillaConstants.EDITOR_TYPE_SEEALSO.equals(type)) {
+					editor = new BugzillaSeeAlsoAttributeEditor(getModel(), taskAttribute);
 				} else {
 					editor = super.createEditor(type, taskAttribute);
 					if (TaskAttribute.TYPE_BOOLEAN.equals(type)) {
@@ -580,12 +582,12 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 				if (bugzillaResponse.getResponseData().size() > 0) {
 					getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_Changes_Submitted_Message,
 							IMessageProvider.INFORMATION, new HyperlinkAdapter() {
-								@Override
-								public void linkActivated(HyperlinkEvent event) {
-									showSubmitResponse(bugzillaResponse);
-								}
+						@Override
+						public void linkActivated(HyperlinkEvent event) {
+							showSubmitResponse(bugzillaResponse);
+						}
 
-							});
+					});
 				} else {
 					getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_Changes_Submitted_Message,
 							IMessageProvider.INFORMATION);
@@ -610,12 +612,12 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 				public void run() {
 					getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_Anonymous_can_not_submit_Tasks, type,
 							new HyperlinkAdapter() {
-								@Override
-								public void linkActivated(HyperlinkEvent e) {
-									TasksUiUtil.openEditRepositoryWizard(taskRepository);
-									refresh();
-								}
-							});
+						@Override
+						public void linkActivated(HyperlinkEvent e) {
+							TasksUiUtil.openEditRepositoryWizard(taskRepository);
+							refresh();
+						}
+					});
 				}
 			});
 			return false;
@@ -629,12 +631,12 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 					public void run() {
 						getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_submit_disabled_please_refresh,
 								type, new HyperlinkAdapter() {
-									@Override
-									public void linkActivated(HyperlinkEvent e) {
-										TasksUiUtil.openEditRepositoryWizard(taskRepository);
-										refresh();
-									}
-								});
+							@Override
+							public void linkActivated(HyperlinkEvent e) {
+								TasksUiUtil.openEditRepositoryWizard(taskRepository);
+								refresh();
+							}
+						});
 					}
 				});
 				return false;
@@ -787,7 +789,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 		final ControlDecoration decoration = new ControlDecoration(control, SWT.LEFT | SWT.DOWN);
 		decoration.setImage(newPersonProposalMap.size() == 1
 				? fieldDecorationWarning.getImage()
-				: fieldDecoration.getImage());
+						: fieldDecoration.getImage());
 		IBindingService bindingService = (IBindingService) PlatformUI.getWorkbench().getService(IBindingService.class);
 		if (message != null && !message.equals("")) { //$NON-NLS-1$
 			decoration.setDescriptionText(message);

@@ -47,6 +47,20 @@ public class Messages extends NLS {
 
 	public static String BugzillaPlanningEditorPart_Team_Planning;
 
+	public static String BugzillaSeeAlsoAttributeEditor_CopyURL;
+
+	public static String BugzillaSeeAlsoAttributeEditor_No;
+
+	public static String BugzillaSeeAlsoAttributeEditor_Open;
+
+	public static String BugzillaSeeAlsoAttributeEditor_Remove;
+
+	public static String BugzillaSeeAlsoAttributeEditor_ToggelRemoveState;
+
+	public static String BugzillaSeeAlsoAttributeEditor_URL;
+
+	public static String BugzillaSeeAlsoAttributeEditor_Yes;
+
 	public static String BugzillaTaskEditorPage_Bug_Line;
 
 	public static String BugzillaTaskEditorPage_Action_Line;

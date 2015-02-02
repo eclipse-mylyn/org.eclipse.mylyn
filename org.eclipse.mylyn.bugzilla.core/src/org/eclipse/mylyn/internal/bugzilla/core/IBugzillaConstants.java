@@ -284,6 +284,8 @@ public interface IBugzillaConstants {
 
 	public static final String EDITOR_TYPE_REMOVECC = "bugzilla.editor.removecc"; //$NON-NLS-1$
 
+	public static final String EDITOR_TYPE_SEEALSO = "bugzilla.editor.seealso"; //$NON-NLS-1$
+
 	public static final String EDITOR_TYPE_VOTES = "bugzilla.editor.votes"; //$NON-NLS-1$
 
 	public static final String EDITOR_TYPE_FLAG = "bugzilla.editor.flag"; //$NON-NLS-1$

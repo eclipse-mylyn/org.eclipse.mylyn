@@ -165,7 +165,7 @@ public class BugzillaClient {
 	private static final String CONTENT_TYPE_TEXT_XML = "text/xml"; //$NON-NLS-1$
 
 	private static final String[] VALID_CONFIG_CONTENT_TYPES = { CONTENT_TYPE_APP_RDF_XML, CONTENT_TYPE_APP_XML,
-			CONTENT_TYPE_TEXT_XML };
+		CONTENT_TYPE_TEXT_XML };
 
 	private static final String ATTR_CHARSET = "charset"; //$NON-NLS-1$
 
@@ -197,7 +197,7 @@ public class BugzillaClient {
 
 	public BugzillaClient(AbstractWebLocation location, String characterEncoding, Map<String, String> configParameters,
 			BugzillaLanguageSettings languageSettings, BugzillaRepositoryConnector connector)
-			throws MalformedURLException {
+					throws MalformedURLException {
 		this.repositoryUrl = new URL(location.getUrl());
 		this.location = location;
 		this.characterEncoding = characterEncoding;
@@ -278,7 +278,7 @@ public class BugzillaClient {
 	}
 
 	protected GzipGetMethod getConnectGzip(String serverURL, IProgressMonitor monitor) throws IOException,
-			CoreException {
+	CoreException {
 		return getConnectGzip(serverURL, monitor, null);
 	}
 
@@ -376,7 +376,7 @@ public class BugzillaClient {
 
 		throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 				RepositoryStatus.ERROR_REPOSITORY_LOGIN, "All connection attempts to " + repositoryUrl.toString() //$NON-NLS-1$
-						+ " failed. Please verify connection and authentication information.")); //$NON-NLS-1$
+				+ " failed. Please verify connection and authentication information.")); //$NON-NLS-1$
 	}
 
 	public void logout(IProgressMonitor monitor) throws IOException, CoreException {
@@ -409,8 +409,8 @@ public class BugzillaClient {
 				||
 				// content-type: application/x-gzip can be set by any apache after 302 redirect, based on .gz suffix
 				(null != method.getResponseHeader("Content-Type") && method.getResponseHeader("Content-Type") //$NON-NLS-1$ //$NON-NLS-2$
-						.getValue()
-						.equals("application/x-gzip")); //$NON-NLS-1$
+				.getValue()
+				.equals("application/x-gzip")); //$NON-NLS-1$
 		return zipped;
 	}
 
@@ -630,7 +630,7 @@ public class BugzillaClient {
 	}
 
 	private static String computeErrorMessage(HtmlStreamTokenizer tokenizer, Token token) throws IOException,
-			ParseException {
+	ParseException {
 		int tagDepth = 0;
 		String errorMessage = ""; //$NON-NLS-1$
 		for (token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
@@ -774,6 +774,10 @@ public class BugzillaClient {
 				IBugzillaConstants.BUGZILLA_PARAM_USECLASSIFICATION, taskRepository, existingReport, false);
 		BugzillaUtil.addAttributeIfUsed(BugzillaAttribute.SEE_ALSO, IBugzillaConstants.BUGZILLA_PARAM_USE_SEE_ALSO,
 				taskRepository, existingReport, false);
+		BugzillaUtil.addAttributeIfUsed(BugzillaAttribute.REMOVE_SEE_ALSO,
+				IBugzillaConstants.BUGZILLA_PARAM_USE_SEE_ALSO, taskRepository, existingReport, false);
+		BugzillaUtil.addAttributeIfUsed(BugzillaAttribute.SEE_ALSO_READ,
+				IBugzillaConstants.BUGZILLA_PARAM_USE_SEE_ALSO, taskRepository, existingReport, false);
 		if (repositoryConfiguration == null) {
 			repositoryConfiguration = connector.getRepositoryConfiguration(serverUrl);
 		}
@@ -810,7 +814,7 @@ public class BugzillaClient {
 
 	@Deprecated
 	public RepositoryConfiguration getRepositoryConfiguration(IProgressMonitor monitor) throws IOException,
-			CoreException {
+	CoreException {
 		return getRepositoryConfiguration(monitor, null);
 	}
 
@@ -902,7 +906,7 @@ public class BugzillaClient {
 	}
 
 	public InputStream getAttachmentData(String attachmentId, IProgressMonitor monitor) throws IOException,
-			CoreException {
+	CoreException {
 		String url = repositoryUrl + IBugzillaConstants.URL_GET_ATTACHMENT_DOWNLOAD + attachmentId;
 		GetMethod method = getConnect(url, monitor);
 		Status status = null;
@@ -1083,7 +1087,7 @@ public class BugzillaClient {
 				WebUtil.releaseConnection(postMethod, monitor);
 				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_NETWORK, repositoryUrl.toString(), "Http error: " //$NON-NLS-1$
-								+ HttpStatus.getStatusText(status)));
+						+ HttpStatus.getStatusText(status)));
 				// throw new IOException("Communication error occurred during
 				// upload. \n\n"
 				// + HttpStatus.getStatusText(status));
@@ -1276,7 +1280,7 @@ public class BugzillaClient {
 	}
 
 	public RepositoryResponse postTaskData(TaskData taskData, IProgressMonitor monitor) throws IOException,
-			CoreException {
+	CoreException {
 		try {
 			return postTaskDataInternal(taskData, monitor);
 		} catch (CoreException e) {
@@ -1365,7 +1369,7 @@ public class BugzillaClient {
 	}
 
 	public RepositoryResponse postTaskDataInternal(TaskData taskData, IProgressMonitor monitor) throws IOException,
-			CoreException {
+	CoreException {
 		NameValuePair[] formData = null;
 		monitor = Policy.monitorFor(monitor);
 		BugzillaRepositoryResponse response;
@@ -1390,7 +1394,7 @@ public class BugzillaClient {
 
 				token = getTokenInternal(
 						taskData.getRepositoryUrl() + ENTER_BUG_PRODUCT_CGI
-								+ URLEncoder.encode(productAttribute.getValue(), IBugzillaConstants.ENCODING_UTF_8),
+						+ URLEncoder.encode(productAttribute.getValue(), IBugzillaConstants.ENCODING_UTF_8),
 						monitor);
 			}
 			formData = getPairsForNew(taskData, token);
@@ -1472,11 +1476,11 @@ public class BugzillaClient {
 				if (id.equals(BugzillaAttribute.NEWCC.getKey())) {
 					TaskAttribute b = taskData.getRoot().createAttribute(BugzillaAttribute.CC.getKey());
 					b.getMetaData()
-							.defaults()
-							.setReadOnly(BugzillaAttribute.CC.isReadOnly())
-							.setKind(BugzillaAttribute.CC.getKind())
-							.setLabel(BugzillaAttribute.CC.toString())
-							.setType(BugzillaAttribute.CC.getType());
+					.defaults()
+					.setReadOnly(BugzillaAttribute.CC.isReadOnly())
+					.setKind(BugzillaAttribute.CC.getKind())
+					.setLabel(BugzillaAttribute.CC.toString())
+					.setType(BugzillaAttribute.CC.getType());
 					for (String val : a.getValues()) {
 						if (val != null) {
 							b.addValue(val);
@@ -1563,6 +1567,8 @@ public class BugzillaClient {
 					cleanIfShortLogin(a);
 				} else if (id.equals(BugzillaAttribute.REPORTER.getKey()) || id.equals(BugzillaAttribute.CC.getKey())
 						|| id.equals(BugzillaAttribute.REMOVECC.getKey())
+						|| id.equals(BugzillaAttribute.REMOVE_SEE_ALSO.getKey())
+						|| id.equals(BugzillaAttribute.SEE_ALSO_READ.getKey())
 						|| id.equals(BugzillaAttribute.CREATION_TS.getKey())
 						|| id.equals(BugzillaAttribute.BUG_STATUS.getKey())
 						|| id.equals(BugzillaAttribute.VOTES.getKey())) {
@@ -1834,6 +1840,16 @@ public class BugzillaClient {
 						VAL_TRUE));
 			}
 		}
+		TaskAttribute attributeRemoveSeeAlso = model.getRoot().getMappedAttribute(
+				BugzillaAttribute.REMOVE_SEE_ALSO.getKey());
+		if (attributeRemoveSeeAlso != null) {
+			List<String> removeSeeAlso = attributeRemoveSeeAlso.getValues();
+			int idx = 0;
+			for (String string : removeSeeAlso) {
+				fields.put(BugzillaAttribute.REMOVE_SEE_ALSO.getKey() + idx++, new NameValuePair(
+						BugzillaAttribute.REMOVE_SEE_ALSO.getKey(), string));
+			}
+		}
 
 		// check for security token (required for successful submit on Bugzilla 3.2.1 and greater but not in xml until Bugzilla 3.2.3  bug#263318)
 
@@ -1966,14 +1982,14 @@ public class BugzillaClient {
 	}
 
 	private BugzillaRepositoryResponse parsePostResponse(String taskId, InputStream inputStream) throws IOException,
-			CoreException {
+	CoreException {
 
 		BufferedReader in = new BufferedReader(new InputStreamReader(inputStream, getCharacterEncoding()));
 		return parseRepositoryResponse(taskId, in);
 	}
 
 	private BugzillaRepositoryResponse parseRepositoryResponse(String taskId, BufferedReader in) throws IOException,
-			CoreException {
+	CoreException {
 
 		HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
 		BugzillaRepositoryResponse response;
@@ -2392,7 +2408,7 @@ public class BugzillaClient {
 
 		throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 				RepositoryStatus.ERROR_REPOSITORY_LOGIN, "All connection attempts to " + repositoryUrl.toString() //$NON-NLS-1$
-						+ " failed. Please verify connection and authentication information.")); //$NON-NLS-1$
+				+ " failed. Please verify connection and authentication information.")); //$NON-NLS-1$
 	}
 
 	public void setRepositoryConfiguration(RepositoryConfiguration repositoryConfiguration) {
@@ -2466,7 +2482,7 @@ public class BugzillaClient {
 	}
 
 	private void parseResultOK(HtmlStreamTokenizer tokenizer, BugzillaRepositoryResponse response) throws IOException,
-			CoreException {
+	CoreException {
 		String codeString = ""; //$NON-NLS-1$
 		boolean inBugzillaBody = false;
 		int dlLevel = 0;

@@ -38,6 +38,10 @@ public class BugzillaImages {
 
 	public static final ImageDescriptor BUG = create(T_ELCL, "bug.gif"); //$NON-NLS-1$
 
+	public static final ImageDescriptor GERRIT = create(T_ELCL, "gerrit.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor GIT = create(T_ELCL, "git.png"); //$NON-NLS-1$
+
 	public static final ImageDescriptor BUG_COMMENT = create(T_ELCL, "bug-comment.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor REMOVE_ALL = create("", "remove-all.gif"); //$NON-NLS-1$ //$NON-NLS-2$
