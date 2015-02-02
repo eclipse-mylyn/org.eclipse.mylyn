@@ -1,5 +1,6 @@
 #!/bin/bash
 echo "start: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
+/usr/bin/perl install-module.pl Text::Wrap
 <% if  @envversion > "4.5" %>
 echo "start1: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 /usr/bin/perl install-module.pl DateTime::TimeZone
