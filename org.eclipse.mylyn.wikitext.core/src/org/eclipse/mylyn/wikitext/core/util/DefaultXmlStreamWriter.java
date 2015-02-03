@@ -76,7 +76,9 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 
 	@Override
 	public void flush() {
-		out.flush();
+		if (out != null) {
+			out.flush();
+		}
 	}
 
 	@Override

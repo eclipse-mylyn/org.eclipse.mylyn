@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2014 David Green and others.
+ * Copyright (c) 2007, 2015 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,13 +40,12 @@ public abstract class AbstractXmlDocumentBuilder extends DocumentBuilder {
 	}
 
 	protected XmlStreamWriter createXmlStreamWriter(Writer out) {
-		XmlStreamWriter writer = new DefaultXmlStreamWriter(out);
-		return writer;
+		return new DefaultXmlStreamWriter(out);
 	}
 
 	/**
 	 * Provides access to the underlying writer.
-	 * 
+	 *
 	 * @since 2.0
 	 * @noreference This method is not intended to be referenced by clients.
 	 */
@@ -79,7 +78,7 @@ public abstract class AbstractXmlDocumentBuilder extends DocumentBuilder {
 
 	/**
 	 * indicate if the given URL is a link to an external source
-	 * 
+	 *
 	 * @param url
 	 *            the URL
 	 * @return true if the given URL links to an external source
@@ -96,10 +95,17 @@ public abstract class AbstractXmlDocumentBuilder extends DocumentBuilder {
 		return false;
 	}
 
+	@Override
+	public void flush() {
+		if (writer != null) {
+			writer.flush();
+		}
+	}
+
 	/**
 	 * Set the base URI of the HTML document. Causes all relative URLs to be prefixed with the base URI. The base URI is
 	 * assumed to refer to a folder-like resource.
-	 * 
+	 *
 	 * @param uri
 	 *            the URI, or null
 	 */

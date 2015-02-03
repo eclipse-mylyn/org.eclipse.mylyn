@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2015 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -324,6 +324,21 @@ public class HtmlSubsetDocumentBuilderTest {
 		assertContent("\n\n<p>test 0/0</p><p>test 1/0</p><p>test 2/0</p>\n\n<p>test 0/1</p><p>test 1/1</p><p>test 2/1</p>\n\n");
 	}
 
+	@Test
+	public void flush() {
+		builder.characters("test");
+		builder.flush();
+		assertContent("test");
+	}
+
+	@Test
+	public void flushAfterEndDocument() {
+		builder.characters("test");
+		builder.endDocument();
+		builder.flush();
+		assertContent("test");
+	}
+
 	private void buildTable() {
 		builder.beginBlock(BlockType.TABLE, new Attributes());
 		for (int y = 0; y < 2; ++y) {
@@ -585,6 +600,22 @@ public class HtmlSubsetDocumentBuilderTest {
 		assertTrue(builder.getDelegate().isXhtmlStrict());
 		builder.setXhtmlStrict(false);
 		assertFalse(builder.getDelegate().isXhtmlStrict());
+	}
+
+	@Test
+	public void xhtmlStrictImplicitBlock() {
+		builder.setXhtmlStrict(true);
+		builder.characters("test");
+		builder.endDocument();
+		assertContent("<p>test</p>");
+	}
+
+	@Test
+	public void xhtmlStrictImplicitBlockFlush() {
+		builder.setXhtmlStrict(true);
+		builder.characters("test");
+		builder.flush();
+		assertContent("<p>test</p>");
 	}
 
 	private void assertSupportedSpan(String expected, SpanType spanType) {

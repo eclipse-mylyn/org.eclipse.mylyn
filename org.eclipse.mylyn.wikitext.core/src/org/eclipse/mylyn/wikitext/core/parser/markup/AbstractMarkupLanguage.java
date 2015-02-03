@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2013 David Green and others.
+ * Copyright (c) 2009, 2015 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,7 +30,7 @@ import org.eclipse.mylyn.wikitext.core.util.LocationTrackingReader;
 /**
  * a standard implementation of a markup language usually extends this class, which provides default support for common
  * functionality.
- * 
+ *
  * @author David Green
  * @since 2.0
  */
@@ -100,7 +100,7 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 		}
 
 		/**
-		 * 
+		 *
 		 */
 		protected List<PatternBasedElement> getElements() {
 			return Collections.unmodifiableList(elements);
@@ -212,7 +212,7 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	/**
 	 * Create new state for tracking a document and its contents during a parse session. Subclasses may override this
 	 * method to provide additional state tracking capability.
-	 * 
+	 *
 	 * @return the new state.
 	 */
 	protected ContentState createState() {
@@ -351,6 +351,7 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 			if (asDocument) {
 				builder.endDocument();
 			}
+			builder.flush();
 		} finally {
 			builder.setLocator(null);
 		}
@@ -392,7 +393,7 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	/**
 	 * indicate if the given line is considered 'empty'. The default implementation returns true for lines of length 0,
 	 * and for lines whose only content is whitespace.
-	 * 
+	 *
 	 * @param line
 	 *            the line content
 	 * @return true if the given line is considered empty by this markup language
@@ -411,7 +412,7 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 
 	/**
 	 * Emit a markup line that may contain phrase modifiers and replacement tokens, but no block modifiers.
-	 * 
+	 *
 	 * @param parser
 	 * @param state
 	 * @param textLineOffset
@@ -464,7 +465,7 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 
 	/**
 	 * Emit a markup line that may contain phrase modifiers and replacement tokens, but no block modifiers.
-	 * 
+	 *
 	 * @param parser
 	 * @param state
 	 * @param line
@@ -476,7 +477,7 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 
 	/**
 	 * Emit markup that may contain replacement tokens but no phrase or block modifiers.
-	 * 
+	 *
 	 * @param parser
 	 * @param state
 	 * @param text
@@ -592,7 +593,7 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	 * subclasses may override this method to add blocks to the language. Overriding classes should call
 	 * <code>super.addBlockExtensions(blocks,paragraphBreakingBlocks)</code> if the default language extensions are
 	 * desired.
-	 * 
+	 *
 	 * @param blocks
 	 *            the list of blocks to which extensions may be added
 	 * @param paragraphBreakingBlocks
@@ -605,7 +606,7 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	/**
 	 * subclasses may override this method to add tokens to the language. Overriding classes should call
 	 * <code>super.addTokenExtensions(tokenSyntax)</code> if the default language extensions are desired.
-	 * 
+	 *
 	 * @param tokenSyntax
 	 *            the token syntax
 	 * @since 2.0
@@ -618,7 +619,7 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	 * subclasses may override this method to add phrases to the language. Overriding classes should call
 	 * <code>super.addPhraseModifierExtensions(phraseModifierSyntax)</code> if the default language extensions are
 	 * desired.
-	 * 
+	 *
 	 * @param phraseModifierSyntax
 	 *            the phrase modifier syntax
 	 * @since 2.0
@@ -631,7 +632,7 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	 * Indicate if this markup language detects 'raw' hyperlinks; that is hyperlinks without any special markup. The
 	 * default implementation checks the markup syntax for use of {@link ImpliedHyperlinkReplacementToken} and returns
 	 * true if it is in the syntax.
-	 * 
+	 *
 	 * @return true if raw hyperlinks are detected by this markup language, otherwise false.
 	 */
 	public boolean isDetectingRawHyperlinks() {
@@ -695,7 +696,7 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	 * The pattern to use when creating hyperlink targets for internal links. The pattern is implementation-specific,
 	 * however implementations are encouraged to use {@link MessageFormat}, where the 0th parameter is the internal
 	 * link.
-	 * 
+	 *
 	 * @see MessageFormat
 	 */
 	public String getInternalLinkPattern() {
@@ -706,7 +707,7 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	 * The pattern to use when creating hyperlink targets for internal links. The pattern is implementation-specific,
 	 * however implementations are encouraged to use {@link MessageFormat}, where the 0th parameter is the internal
 	 * link.
-	 * 
+	 *
 	 * @see MessageFormat
 	 */
 	public void setInternalLinkPattern(String internalLinkPattern) {
@@ -723,7 +724,7 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	 * <p>
 	 * The default value is true.
 	 * </p>
-	 * 
+	 *
 	 * @return true if macros are enabled, otherwise false
 	 */
 	public boolean isEnableMacros() {
@@ -737,7 +738,7 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	 * Macros are defined as text substitution prior to normal processing. Such preprocessing changes the markup before
 	 * it is processed, and as such has the side-effect of changing computed offsets when parsing markup.
 	 * </p>
-	 * 
+	 *
 	 * @param enableMacros
 	 *            true if macros are enabled, otherwise false
 	 */

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 David Green and others.
+ * Copyright (c) 2007, 2015 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -343,6 +343,13 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 			}
 		}
 		out = null;
+	}
+
+	@Override
+	public void flush() {
+		if (out != null) {
+			out.flush();
+		}
 	}
 
 	@Override

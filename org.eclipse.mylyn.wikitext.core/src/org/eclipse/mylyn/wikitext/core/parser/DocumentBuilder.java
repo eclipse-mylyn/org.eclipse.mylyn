@@ -81,9 +81,22 @@ public abstract class DocumentBuilder {
 	public abstract void beginDocument();
 
 	/**
+	 * Flushes the content of the builder. {@link #flush()} should be called when done with a builder in cases where
+	 * {@link #endDocument()} is not called. Calling {@link #flush()} after {@link #endDocument()} has no effect.
+	 * <p>
+	 * Subclasses should override to provide behaviour; the default implementation does nothing.
+	 * </p>
+	 *
+	 * @since 2.4
+	 */
+	public void flush() {
+	}
+
+	/**
 	 * End a document.
 	 *
-	 * @see #endDocument()
+	 * @see #beginDocument()
+	 * @see #flush()
 	 */
 	public abstract void endDocument();
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2014 Tasktop Technologies.
+ * Copyright (c) 2011, 2015 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,7 +33,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A parser for (X)HTML that is based on SAX. Subclasses determine the source of SAX events.
- * 
+ *
  * @author David Green
  * @since 2.0
  */
@@ -252,7 +252,7 @@ public abstract class AbstractSaxHtmlParser {
 				if ((elementState.noWhitespaceTextContainer && (elementState.lastChild == null || elementState.lastChild.blockElement))
 						|| (elementState.blockElement && !elementState.preserveWhitespace
 								&& elementState.textChildCount == 0 && elementState.childCount == 0)
-						|| (elementState.lastChild != null && elementState.lastChild.collapsesAdjacentWhitespace)) {
+								|| (elementState.lastChild != null && elementState.lastChild.collapsesAdjacentWhitespace)) {
 					// trim left here
 					int skip = 0;
 					while (skip < length && Character.isWhitespace(ch[start + skip])) {
@@ -308,6 +308,8 @@ public abstract class AbstractSaxHtmlParser {
 		public void endDocument() throws SAXException {
 			if (asDocument) {
 				builder.endDocument();
+			} else {
+				builder.flush();
 			}
 		}
 
@@ -587,15 +589,15 @@ public abstract class AbstractSaxHtmlParser {
 	private org.eclipse.mylyn.wikitext.core.parser.Attributes computeAttributes(SpanType spanType, Attributes atts) {
 		org.eclipse.mylyn.wikitext.core.parser.Attributes attributes = spanType == SpanType.LINK
 				? new LinkAttributes()
-				: new org.eclipse.mylyn.wikitext.core.parser.Attributes();
-		populateCommonAttributes(attributes, atts);
-		if (spanType == SpanType.LINK) {
-			String href = getValue("href", atts); //$NON-NLS-1$
-			if (href != null) {
-				((LinkAttributes) attributes).setHref(href);
-			}
-		}
-		return attributes;
+		: new org.eclipse.mylyn.wikitext.core.parser.Attributes();
+				populateCommonAttributes(attributes, atts);
+				if (spanType == SpanType.LINK) {
+					String href = getValue("href", atts); //$NON-NLS-1$
+					if (href != null) {
+						((LinkAttributes) attributes).setHref(href);
+					}
+				}
+				return attributes;
 	}
 
 	private String getValue(String name, Attributes atts) {

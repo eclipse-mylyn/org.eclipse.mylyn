@@ -180,6 +180,30 @@ public class DefaultXmlStreamWriterTest {
 		assertXml("<?xml version='1.0' ?><test a=\"one&#xA;two &lt;&gt;&apos;&quot;&#xD;&#xA;\"/>");
 	}
 
+	@Test
+	public void flushAfterClose() {
+		writer.writeStartDocument();
+		writer.writeEndDocument();
+		writer.close();
+		writer.flush();
+		assertXml("<?xml version='1.0' ?>");
+	}
+
+	@Test
+	public void flush() {
+		writer.writeStartDocument();
+		writer.flush();
+		assertXml("<?xml version='1.0' ?>");
+	}
+
+	@Test
+	public void closeMultipleTimes() {
+		writer.writeStartDocument();
+		writer.close();
+		writer.close();
+		assertXml("<?xml version='1.0' ?>");
+	}
+
 	private void assertXml(String expected) {
 		writer.writeEndDocument();
 		writer.close();

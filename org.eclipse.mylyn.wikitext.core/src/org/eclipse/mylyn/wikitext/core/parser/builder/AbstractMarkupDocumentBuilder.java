@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2013 Tasktop Technologies
+ * Copyright (c) 2011, 2015 Tasktop Technologies
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,7 +22,7 @@ import com.google.common.base.Throwables;
 
 /**
  * Provides default functionality for document builders that emit lightweight wiki markup.
- * 
+ *
  * @author David Green
  * @since 1.6
  */
@@ -228,7 +228,7 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 	 * {@link #getLastChar() last character} is a separator character, or if the content to be emitted starts with a
 	 * separator. If neither are true, then a single space character is inserted into the content stream. Subsequent
 	 * calls to <code>emitContent</code> are not affected.
-	 * 
+	 *
 	 * @see #clearRequireAdjacentSeparator()
 	 */
 	protected void requireAdjacentSeparator() {
@@ -274,6 +274,11 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 
 	@Override
 	public void endDocument() {
+		flush();
+	}
+
+	@Override
+	public void flush() {
 		while (currentBlock != null) {
 			endBlock();
 		}
@@ -282,7 +287,7 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 	/**
 	 * Subclasses may push a writer in order to intercept emitted content. Calls to this method must be matched by
 	 * corresponding calls to {@link #popWriter()}.
-	 * 
+	 *
 	 * @see #popWriter()
 	 */
 	protected void pushWriter(Writer writer) {
@@ -456,7 +461,7 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 	/**
 	 * Creates paragraph blocks in cases where content is emitted but no block is currently open. Subclasses may
 	 * override to alter the default paragraph block implementation.
-	 * 
+	 *
 	 * @since 1.8
 	 */
 	protected Block createImplicitParagraphBlock() {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2015 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -75,8 +75,14 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 
 	@Override
 	public void endDocument() {
-		assertCloseImplicitBlock();
+		flush();
 		delegate.endDocument();
+	}
+
+	@Override
+	public void flush() {
+		assertCloseImplicitBlock();
+		delegate.flush();
 	}
 
 	@Override

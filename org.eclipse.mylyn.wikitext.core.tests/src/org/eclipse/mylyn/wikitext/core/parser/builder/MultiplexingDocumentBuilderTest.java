@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Benjamin Muskalla and others.
+ * Copyright (c) 2014, 2015 Benjamin Muskalla and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,15 +7,18 @@
  *
  * Contributors:
  *     Benjamin Muskalla - initial API and implementation
+ *     David Green - bug 457648
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.core.parser.builder;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
@@ -182,6 +185,20 @@ public class MultiplexingDocumentBuilderTest {
 
 		assertEvents(new LineBreakEvent(), new AcronymEvent("a", "b"));
 		assertEquals(Arrays.asList(new AcronymEvent("a", "b")), delegate3.getDocumentBuilderEvents().getEvents());
+	}
+
+	@Test
+	public void flush() {
+		final AtomicBoolean flushed = new AtomicBoolean();
+		DocumentBuilder delegate = new NoOpDocumentBuilder() {
+			@Override
+			public void flush() {
+				flushed.set(true);
+			}
+		};
+		multiplexer = new MultiplexingDocumentBuilder(delegate);
+		multiplexer.flush();
+		assertTrue(flushed.get());
 	}
 
 	private void assertEvents(DocumentBuilderEvent... events) {
