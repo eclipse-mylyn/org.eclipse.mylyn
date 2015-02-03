@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2015 David Green and others.
+ * Copyright (c) 2007, 2013 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.wikitext.core.parser;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -71,41 +70,5 @@ public class HtmlParserTest {
 			}
 		};
 		assertCanParseSomething(parser);
-	}
-
-	@Test
-	public void parseAsDocumentTrue() throws IOException, SAXException {
-		String result = parseHtmlToHtml("some <b>text</b> and more", true);
-		assertEquals(
-				"<?xml version='1.0' encoding='utf-8' ?><html xmlns=\"http://www.w3.org/1999/xhtml\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/></head><body>some <b>text</b> and more</body></html>",
-				result);
-	}
-
-	@Test
-	public void parseAsDocumentFalse() throws IOException, SAXException {
-		String result = parseHtmlToHtml("some <b>text</b> and more", false);
-		assertEquals("some <b>text</b> and more", result);
-	}
-
-	@Test
-	public void parsePreservesAsDocumentSetting() throws IOException, SAXException {
-		HtmlParser parser = new HtmlParser();
-		StringWriter out = new StringWriter();
-		HtmlDocumentBuilder builder = new HtmlDocumentBuilder(out);
-		builder.setEmitAsDocument(false);
-
-		parser.parse(new InputSource(new StringReader("before <em>emphasis</em> after")), builder);
-
-		assertEquals("before <em>emphasis</em> after", out.toString());
-	}
-
-	private String parseHtmlToHtml(String input, boolean asDocument) throws IOException, SAXException {
-		HtmlParser parser = new HtmlParser();
-		StringWriter out = new StringWriter();
-		HtmlDocumentBuilder builder = new HtmlDocumentBuilder(out);
-
-		parser.parse(new InputSource(new StringReader(input)), builder, asDocument);
-
-		return out.toString();
 	}
 }

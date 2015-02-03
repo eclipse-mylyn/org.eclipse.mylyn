@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2015 Tasktop Technologies.
+ * Copyright (c) 2011, 2014 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,7 +24,6 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
-import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
@@ -34,7 +33,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A parser for (X)HTML that is based on SAX. Subclasses determine the source of SAX events.
- *
+ * 
  * @author David Green
  * @since 2.0
  */
@@ -170,8 +169,11 @@ public abstract class AbstractSaxHtmlParser {
 
 		private final StringBuilder elementText = new StringBuilder();
 
-		public DocumentBuilderAdapter(DocumentBuilder builder) {
+		private final boolean asDocument;
+
+		public DocumentBuilderAdapter(DocumentBuilder builder, boolean asDocument) {
 			this.builder = builder;
+			this.asDocument = asDocument;
 		}
 
 		public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
@@ -298,11 +300,15 @@ public abstract class AbstractSaxHtmlParser {
 		}
 
 		public void startDocument() throws SAXException {
-			builder.beginDocument();
+			if (asDocument) {
+				builder.beginDocument();
+			}
 		}
 
 		public void endDocument() throws SAXException {
-			builder.endDocument();
+			if (asDocument) {
+				builder.endDocument();
+			}
 		}
 
 		public void startPrefixMapping(String prefix, String uri) throws SAXException {
@@ -657,14 +663,15 @@ public abstract class AbstractSaxHtmlParser {
 		parse(input, builder, createContentHandler(builder, asDocument));
 	}
 
+	protected ContentHandler createContentHandler(DocumentBuilder builder) {
+		return createContentHandler(builder, true);
+	}
+
 	/**
 	 * @since 2.0
 	 */
 	protected ContentHandler createContentHandler(DocumentBuilder builder, boolean asDocument) {
-		if (!asDocument && builder instanceof HtmlDocumentBuilder) {
-			((HtmlDocumentBuilder) builder).setEmitAsDocument(false);
-		}
-		return new DocumentBuilderAdapter(builder);
+		return new DocumentBuilderAdapter(builder, asDocument);
 	}
 
 }
