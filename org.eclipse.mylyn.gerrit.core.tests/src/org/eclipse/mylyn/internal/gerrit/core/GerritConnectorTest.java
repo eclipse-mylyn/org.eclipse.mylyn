@@ -15,14 +15,22 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.GerritConfigX;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Test;
 
 import com.google.gerrit.reviewdb.Project;
@@ -135,4 +143,57 @@ public class GerritConnectorTest {
 		assertNull(client.getGerritConfig());
 	}
 
+	@Test
+	public void testHasTaskChangedSameDate() {
+		assertFalse(hasTaskChanged(123456000, 123456000));
+	}
+
+	@Test
+	public void testHasTaskChangedSameDateWithMillis() {
+		assertFalse(hasTaskChanged(123456123, 123456123));
+	}
+
+	@Test
+	public void testHasTaskChangedMillisMissingFromLocal() {
+		assertFalse(hasTaskChanged(123456000, 123456123));
+	}
+
+	@Test
+	public void testHasTaskChangedMillisMissingFromLocalRoundedUp() {
+		assertFalse(hasTaskChanged(123456000, 123455911));
+	}
+
+	@Test
+	public void testHasTaskChangedMillisMissingFromLocalDatesDifferByMoreThanOneSecond() {
+		assertTrue(hasTaskChanged(123456000, 123454123));
+		assertTrue(hasTaskChanged(123456000, 123457123));
+	}
+
+	@Test
+	public void testHasTaskChangedMillisMissingFromRepository() {
+		assertTrue(hasTaskChanged(123456123, 123456000));
+	}
+
+	@Test
+	public void testHasTaskChangedMillisDiffer() {
+		assertTrue(hasTaskChanged(123456123, 123456122));
+		assertTrue(hasTaskChanged(123456123, 123456124));
+	}
+
+	@Test
+	public void testHasTaskChangedSecondsDiffer() {
+		assertTrue(hasTaskChanged(123456123, 123455123));
+		assertTrue(hasTaskChanged(123456123, 123457123));
+	}
+
+	private boolean hasTaskChanged(int localDate, int repositoryDate) {
+		ITask task = mock(ITask.class);
+		when(task.getModificationDate()).thenReturn(new Date(localDate));
+		TaskData taskData = new TaskData(new TaskAttributeMapper(new TaskRepository(GerritConnector.CONNECTOR_KIND,
+				"http://mock")), GerritConnector.CONNECTOR_KIND, "http://mock", "1");
+		taskData.getRoot()
+				.createMappedAttribute(TaskAttribute.DATE_MODIFICATION)
+				.setValue(String.valueOf(repositoryDate));
+		return connector.hasTaskChanged(null, task, taskData);
+	}
 }

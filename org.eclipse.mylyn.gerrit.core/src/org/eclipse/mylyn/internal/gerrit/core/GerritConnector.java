@@ -17,6 +17,7 @@
 package org.eclipse.mylyn.internal.gerrit.core;
 
 import java.net.UnknownHostException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
@@ -65,7 +66,7 @@ import com.google.gwtorm.server.StandardKeyEncoder;
 
 /**
  * The Gerrit connector core.
- *
+ * 
  * @author Mikael Kober
  * @author Thomas Westling
  * @author Sascha Scholz
@@ -224,7 +225,22 @@ public class GerritConnector extends ReviewsConnector {
 		ITaskMapping taskMapping = getTaskMapping(taskData);
 		Date repositoryDate = taskMapping.getModificationDate();
 		Date localDate = task.getModificationDate();
+		if (areMillisecondsMissingFromLocalDate(localDate, repositoryDate)) {
+			return false;
+		}
 		return repositoryDate == null || !repositoryDate.equals(localDate);
+	}
+
+	protected boolean areMillisecondsMissingFromLocalDate(Date localDate, Date repositoryDate) {
+		if (localDate == null || repositoryDate == null) {
+			return false;
+		}
+		Calendar repositoryCalendar = Calendar.getInstance();
+		repositoryCalendar.setTime(repositoryDate);
+		Calendar localCalendar = Calendar.getInstance();
+		localCalendar.setTime(localDate);
+		return localCalendar.get(Calendar.MILLISECOND) == 0 && repositoryCalendar.get(Calendar.MILLISECOND) != 0
+				&& Math.abs(repositoryCalendar.getTimeInMillis() - localCalendar.getTimeInMillis()) < 1000;
 	}
 
 	@Override
