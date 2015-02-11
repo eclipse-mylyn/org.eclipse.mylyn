@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Stefan Seelmann and others.
+ * Copyright (c) 2012, 2015 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,7 +47,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLineBreakRepla
 
 /**
  * A markup language implementing Markdown syntax. http://daringfireball.net/projects/markdown/syntax
- * 
+ *
  * @author Stefan Seelmann
  * @since 1.8
  */
@@ -106,13 +106,26 @@ public class MarkdownLanguage extends AbstractMarkupLanguage {
 
 	@Override
 	protected void addStandardBlocks(List<Block> blocks, List<Block> paragraphBreakingBlocks) {
-		blocks.add(new CodeBlock());
-		blocks.add(new HorizontalRuleBlock());
-		blocks.add(new HeadingBlock());
-		blocks.add(new InlineHtmlBlock());
-		blocks.add(new QuoteBlock());
-		blocks.add(new ListBlock());
-		blocks.add(new LinkDefinitionBlock());
+		CodeBlock codeBlock = new CodeBlock();
+		HorizontalRuleBlock horizontalRuleBlock = new HorizontalRuleBlock();
+		HeadingBlock headingBlock = new HeadingBlock();
+		InlineHtmlBlock inlineHtmlBlock = new InlineHtmlBlock();
+		QuoteBlock quoteBlock = new QuoteBlock();
+		ListBlock listBlock = new ListBlock();
+		LinkDefinitionBlock linkDefinitionBlock = new LinkDefinitionBlock();
+
+		blocks.add(codeBlock);
+		blocks.add(horizontalRuleBlock);
+		blocks.add(headingBlock);
+		blocks.add(inlineHtmlBlock);
+		blocks.add(quoteBlock);
+		blocks.add(listBlock);
+		blocks.add(linkDefinitionBlock);
+
+		paragraphBreakingBlocks.add(horizontalRuleBlock);
+		paragraphBreakingBlocks.add(headingBlock);
+		paragraphBreakingBlocks.add(quoteBlock);
+		paragraphBreakingBlocks.add(listBlock);
 	}
 
 	@Override

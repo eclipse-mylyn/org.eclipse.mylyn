@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Stefan Seelmann and others.
+ * Copyright (c) 2012, 2015 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,7 +20,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
  * Markdown blockquote.
- * 
+ *
  * @author Stefan Seelmann
  */
 public class QuoteBlock extends NestableBlock {
@@ -62,17 +62,11 @@ public class QuoteBlock extends NestableBlock {
 		int contentStart = offset + matcher.start(1);
 
 		if (nestedBlock != null) {
-			if (!(nestedBlock instanceof QuoteBlock) && this.canStart(line, contentStart)) {
-				nestedBlock.setClosed(true);
+			int processed = nestedBlock.processLine(line, contentStart);
+			if (nestedBlock.isClosed()) {
 				nestedBlock = null;
-				processNextBlock(line, contentStart);
-			} else {
-				int processed = nestedBlock.processLine(line, contentStart);
-				if (nestedBlock.isClosed()) {
-					nestedBlock = null;
-					if (processed >= contentStart && processed < line.length()) {
-						processNextBlock(line, contentStart);
-					}
+				if (processed >= contentStart && processed < line.length()) {
+					processNextBlock(line, contentStart);
 				}
 			}
 		} else {

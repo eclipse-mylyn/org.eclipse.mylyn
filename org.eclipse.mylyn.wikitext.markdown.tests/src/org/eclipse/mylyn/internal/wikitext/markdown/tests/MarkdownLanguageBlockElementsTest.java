@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Stefan Seelmann and others.
+ * Copyright (c) 2012, 2015 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -370,4 +370,35 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 	public void testHorizontalRulesWithUnderscores() {
 		parseAndAssert("___", "<hr/>");
 	}
+
+	public void testParagraphsBrokenByHorizontalRuleBlock() {
+		String markup = "a paragraph\nfollowed by a horizontal rule\n---";
+		String expectedHtml = "<p>a paragraph\nfollowed by a horizontal rule</p><hr/>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testParagraphsBrokenByHeadingBlock() {
+		String markup = "a paragraph\n# A header";
+		String expectedHtml = "<p>a paragraph</p><h1 id=\"a-header\">A header</h1>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testParagraphsBrokenByQuoteBlock() {
+		String markup = "a paragraph\n> a quote block paragraph";
+		String expectedHtml = "<p>a paragraph</p><blockquote><p>a quote block paragraph</p></blockquote>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testParagraphsBrokenByUListBlock() {
+		String markup = "a paragraph\n- a list item";
+		String expectedHtml = "<p>a paragraph</p><ul><li>a list item</li></ul>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testParagraphsBrokenByOListBlock() {
+		String markup = "a paragraph\n1. a list item";
+		String expectedHtml = "<p>a paragraph</p><ol><li>a list item</li></ol>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
 }
