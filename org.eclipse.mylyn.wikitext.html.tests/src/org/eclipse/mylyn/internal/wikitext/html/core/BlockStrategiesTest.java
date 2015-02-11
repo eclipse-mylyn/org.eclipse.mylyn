@@ -39,8 +39,8 @@ public class BlockStrategiesTest {
 
 	@Test
 	public void createEmpty() {
-		thrown.expect(IllegalArgumentException.class);
-		new BlockStrategies(Sets.<BlockType> newHashSet());
+		BlockStrategies strategies = new BlockStrategies(Sets.<BlockType> newHashSet());
+		assertUnsupported(strategies, BlockType.PARAGRAPH);
 	}
 
 	@Test

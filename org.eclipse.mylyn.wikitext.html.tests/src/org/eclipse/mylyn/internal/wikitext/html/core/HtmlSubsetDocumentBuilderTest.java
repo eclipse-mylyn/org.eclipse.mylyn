@@ -175,8 +175,8 @@ public class HtmlSubsetDocumentBuilderTest {
 
 	@Test
 	public void setSupportedBlockTypesEmpty() {
-		thrown.expect(IllegalArgumentException.class);
 		builder.setSupportedBlockTypes(Sets.<BlockType> newHashSet());
+		assertSame(UnsupportedBlockStrategy.instance, builder.pushBlockStrategy(BlockType.PARAGRAPH, new Attributes()));
 	}
 
 	@Test
@@ -325,6 +325,12 @@ public class HtmlSubsetDocumentBuilderTest {
 	}
 
 	@Test
+	public void testParagraphUnsupported() {
+		builder.setSupportedBlockTypes(Collections.<BlockType> emptySet());
+		assertUnsupportedBlock("\ntest\n", BlockType.PARAGRAPH);
+	}
+
+	@Test
 	public void flush() {
 		builder.characters("test");
 		builder.flush();
@@ -365,14 +371,15 @@ public class HtmlSubsetDocumentBuilderTest {
 
 	private void assertSupportedBlock(String expected, BlockType blockType) {
 		builder.setSupportedBlockTypes(Sets.newHashSet(blockType));
-		builder.beginBlock(blockType, new Attributes());
-		builder.characters("test");
-		builder.endBlock();
-		assertContent(expected);
+		assertUnsupportedBlock(expected, blockType);
 	}
 
 	private void assertUnsupportedBlock(String expected, BlockType unsupported, BlockType supported) {
 		builder.setSupportedBlockTypes(Sets.newHashSet(supported));
+		assertUnsupportedBlock(expected, unsupported);
+	}
+
+	private void assertUnsupportedBlock(String expected, BlockType unsupported) {
 		builder.beginBlock(unsupported, new Attributes());
 		builder.characters("test");
 		builder.endBlock();

@@ -62,7 +62,6 @@ class BlockStrategies extends ElementStrategies<BlockType, BlockStrategy, HtmlEl
 
 	BlockStrategies(Set<BlockType> blockTypes) {
 		super(BlockType.class, blockTypes, Collections.<HtmlElementStrategy<BlockType>> emptyList());
-		checkArgument(!blockTypes.isEmpty());
 	}
 
 	@Override

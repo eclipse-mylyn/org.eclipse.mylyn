@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.wikitext.html.core;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
@@ -113,9 +114,9 @@ public class HtmlLanguageBuilderTest {
 
 	@Test
 	public void createWithoutBlockType() {
-		thrown.expect(IllegalStateException.class);
-		thrown.expectMessage("Must provide support for at least one block type");
-		builder.name("Test").create();
+		HtmlLanguage language = builder.document("", "").name("Test").create();
+		checkNotNull(language);
+		checkNotNull(language.createDocumentBuilder(new StringWriter()));
 	}
 
 	@Test

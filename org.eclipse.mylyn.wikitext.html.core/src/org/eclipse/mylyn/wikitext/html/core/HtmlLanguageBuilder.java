@@ -33,7 +33,7 @@ import com.google.common.collect.Sets;
 
 /**
  * Provides a way to build HTML languages that support a specific set of HTML tags.
- * 
+ *
  * @author david.green
  * @see HtmlLanguage#builder()
  * @since 2.0
@@ -59,7 +59,7 @@ public class HtmlLanguageBuilder {
 
 	/**
 	 * Sets the {@link MarkupLanguage#getName() name} of the markup language.
-	 * 
+	 *
 	 * @param name
 	 *            the name
 	 * @return this builder
@@ -81,7 +81,7 @@ public class HtmlLanguageBuilder {
 	 * {@link BlockType#DEFINITION_LIST} will cause the corresponding related blocks to be added. For example, adding
 	 * {@link BlockType#BULLETED_LIST} also adds {@link BlockType#LIST_ITEM}.
 	 * </p>
-	 * 
+	 *
 	 * @param blockType
 	 *            the block type
 	 * @return this builder
@@ -93,7 +93,7 @@ public class HtmlLanguageBuilder {
 
 	/**
 	 * Adds the given {@link SpanType} to the supported syntax of the language created by this builder.
-	 * 
+	 *
 	 * @param spanType
 	 *            the span type
 	 * @return this builder
@@ -105,7 +105,7 @@ public class HtmlLanguageBuilder {
 
 	/**
 	 * Adds support for headings up to and including the specified level.
-	 * 
+	 *
 	 * @param level
 	 *            the level which must be a number between 1 and 6 inclusive
 	 * @return this builder
@@ -120,7 +120,7 @@ public class HtmlLanguageBuilder {
 	 * Adds support for the {@code <font>} HTML tag as a {@link SpanType#SPAN}. The resulting document builder will
 	 * convert {@link SpanType#SPAN} with {@code size} or {@code colour} CSS rules to {@code <font>} when generating
 	 * HTML.
-	 * 
+	 *
 	 * @return
 	 */
 	public HtmlLanguageBuilder addSpanFont() {
@@ -130,7 +130,7 @@ public class HtmlLanguageBuilder {
 
 	/**
 	 * Indicate if the resulting document builder should attempt to conform to strict XHTML rules. The default is false.
-	 * 
+	 *
 	 * @param xhtmlStrict
 	 *            true if the language should attempt to conform to XHTML strict rules, otherwise false
 	 * @return this builder
@@ -144,7 +144,7 @@ public class HtmlLanguageBuilder {
 	/**
 	 * Provides a prefix and suffix which are emitted as literals at the start and end of content created using the
 	 * {@link MarkupLanguage#createDocumentBuilder(java.io.Writer, boolean) document builder}.
-	 * 
+	 *
 	 * @param prefix
 	 *            the prefix which is an HTML literal value that precedes the content, for example {@code "<div>"} or
 	 *            {@code "<html><body>"}. May be empty.
@@ -163,7 +163,6 @@ public class HtmlLanguageBuilder {
 
 	public HtmlLanguage create() {
 		checkState(name != null, "Name must be provided to create an HtmlLanguage"); //$NON-NLS-1$
-		checkState(!blockTypes.isEmpty(), "Must provide support for at least one block type"); //$NON-NLS-1$
 
 		return new HtmlSubsetLanguage(name, documentHandler, headingLevel, blockTypes, spanTypes,
 				spanElementStrategies, xhtmlStrict);
