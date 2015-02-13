@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Tasktop Technologies and others.
+ * Copyright (c) 2015 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,9 +15,9 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 
-class UnsupportedBlockStrategy implements BlockStrategy {
+public class NoOpBlockStrategy implements BlockStrategy {
 
-	static final UnsupportedBlockStrategy instance = new UnsupportedBlockStrategy();
+	static final NoOpBlockStrategy instance = new NoOpBlockStrategy();
 
 	@Override
 	public void beginBlock(DocumentBuilder builder, BlockType type, Attributes attributes) {
@@ -25,8 +25,6 @@ class UnsupportedBlockStrategy implements BlockStrategy {
 
 	@Override
 	public void endBlock(DocumentBuilder builder) {
-		builder.lineBreak();
-		builder.lineBreak();
 	}
 
 }

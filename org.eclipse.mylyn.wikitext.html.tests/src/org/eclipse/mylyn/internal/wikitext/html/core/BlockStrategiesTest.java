@@ -100,12 +100,20 @@ public class BlockStrategiesTest {
 	@Test
 	public void fallBackToUnsupported() {
 		BlockStrategies strategies = new BlockStrategies(Sets.newHashSet(BlockType.PARAGRAPH));
-		List<BlockType> unsupportedBlockTypes = ImmutableList.of(BlockType.TABLE, BlockType.TABLE_ROW,
-				BlockType.BULLETED_LIST, BlockType.NUMERIC_LIST, BlockType.DEFINITION_LIST);
+		BlockStrategy strategy = strategies.getStrategy(BlockType.TABLE_ROW, new Attributes());
+		assertNotNull(strategy);
+		assertTrue(UnsupportedBlockStrategy.class.equals(strategy.getClass()));
+	}
+
+	@Test
+	public void fallBackToNoOp() {
+		BlockStrategies strategies = new BlockStrategies(Sets.newHashSet(BlockType.PARAGRAPH));
+		List<BlockType> unsupportedBlockTypes = ImmutableList.of(BlockType.TABLE, BlockType.BULLETED_LIST,
+				BlockType.NUMERIC_LIST, BlockType.DEFINITION_LIST);
 		for (BlockType blockType : unsupportedBlockTypes) {
 			BlockStrategy strategy = strategies.getStrategy(blockType, new Attributes());
 			assertNotNull(strategy);
-			assertEquals(UnsupportedBlockStrategy.class, strategy.getClass());
+			assertTrue(NoOpBlockStrategy.class.equals(strategy.getClass()));
 		}
 	}
 

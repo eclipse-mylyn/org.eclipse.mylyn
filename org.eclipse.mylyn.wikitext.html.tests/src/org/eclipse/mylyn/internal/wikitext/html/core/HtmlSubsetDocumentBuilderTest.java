@@ -51,6 +51,7 @@ public class HtmlSubsetDocumentBuilderTest {
 		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
 		builder.setSupportedSpanTypes(Sets.newHashSet(SpanType.BOLD), Collections.<SpanHtmlElementStrategy> emptyList());
 		builder.setSupportedHeadingLevel(3);
+		builder.beginDocument();
 	}
 
 	@Test
@@ -72,7 +73,8 @@ public class HtmlSubsetDocumentBuilderTest {
 		writer = new StringWriter();
 		builder = new HtmlSubsetDocumentBuilder(writer, false);
 		builder.characters("test");
-		assertContent("test");
+		builder.flush();
+		assertEquals("test", writer.toString());
 	}
 
 	@Test
@@ -223,7 +225,7 @@ public class HtmlSubsetDocumentBuilderTest {
 
 	@Test
 	public void blockParagraphUnsupportedWithoutFallback() {
-		assertUnsupportedBlock("\ntest\n", BlockType.PARAGRAPH, BlockType.CODE);
+		assertUnsupportedBlock("test<br/><br/>", BlockType.PARAGRAPH, BlockType.CODE);
 	}
 
 	@Test
@@ -238,7 +240,7 @@ public class HtmlSubsetDocumentBuilderTest {
 
 	@Test
 	public void blockCodeUnsupportedWithoutFallback() {
-		assertUnsupportedBlock("\ntest\n", BlockType.CODE, BlockType.LIST_ITEM);
+		assertUnsupportedBlock("test<br/><br/>", BlockType.CODE, BlockType.LIST_ITEM);
 	}
 
 	@Test
@@ -258,7 +260,7 @@ public class HtmlSubsetDocumentBuilderTest {
 
 	@Test
 	public void blockQuoteUnsupportedWithoutFallback() {
-		assertUnsupportedBlock("\ntest\n", BlockType.QUOTE, BlockType.CODE);
+		assertUnsupportedBlock("test<br/><br/>", BlockType.QUOTE, BlockType.CODE);
 	}
 
 	@Test
@@ -293,7 +295,7 @@ public class HtmlSubsetDocumentBuilderTest {
 	public void blockBulletedListUnsupported() {
 		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
 		buildList(BlockType.BULLETED_LIST);
-		assertContent("\n<p>test 0</p><p>test 1</p>\n");
+		assertContent("<p>test 0</p><p>test 1</p>");
 	}
 
 	@Test
@@ -307,7 +309,7 @@ public class HtmlSubsetDocumentBuilderTest {
 	public void blockNumericListUnsupported() {
 		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
 		buildList(BlockType.NUMERIC_LIST);
-		assertContent("\n<p>test 0</p><p>test 1</p>\n");
+		assertContent("<p>test 0</p><p>test 1</p>");
 	}
 
 	@Test
@@ -321,13 +323,13 @@ public class HtmlSubsetDocumentBuilderTest {
 	public void testTableUnsupported() {
 		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
 		buildTable();
-		assertContent("\n\n<p>test 0/0</p><p>test 1/0</p><p>test 2/0</p>\n\n<p>test 0/1</p><p>test 1/1</p><p>test 2/1</p>\n\n");
+		assertContent("<p>test 0/0</p><p>test 1/0</p><p>test 2/0</p><br/><br/><p>test 0/1</p><p>test 1/1</p><p>test 2/1</p><br/><br/>");
 	}
 
 	@Test
 	public void testParagraphUnsupported() {
 		builder.setSupportedBlockTypes(Collections.<BlockType> emptySet());
-		assertUnsupportedBlock("\ntest\n", BlockType.PARAGRAPH);
+		assertUnsupportedBlock("test<br/><br/>", BlockType.PARAGRAPH);
 	}
 
 	@Test
@@ -642,6 +644,7 @@ public class HtmlSubsetDocumentBuilderTest {
 	}
 
 	private void assertContent(String expectedContent) {
+		builder.endDocument();
 		assertEquals(expectedContent, writer.toString());
 	}
 }

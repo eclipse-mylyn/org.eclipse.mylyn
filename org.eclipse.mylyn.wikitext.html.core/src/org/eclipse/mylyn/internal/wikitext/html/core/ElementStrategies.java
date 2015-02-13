@@ -80,7 +80,7 @@ abstract class ElementStrategies<ElementType extends Enum<ElementType>, ElementS
 
 	abstract ElementStrategy getSupportedStrategy(ElementType elementType);
 
-	abstract ElementStrategy getUnsupportedElementStrategy();
+	abstract ElementStrategy getUnsupportedElementStrategy(ElementType elementType);
 
 	abstract ElementStrategy createSubstitutionElementStrategy(ElementType alternative);
 
@@ -99,7 +99,7 @@ abstract class ElementStrategies<ElementType extends Enum<ElementType>, ElementS
 			}
 		}
 		if (elementStrategy == null) {
-			elementStrategy = getUnsupportedElementStrategy();
+			elementStrategy = getUnsupportedElementStrategy(elementType);
 		}
 		return elementStrategy;
 	}

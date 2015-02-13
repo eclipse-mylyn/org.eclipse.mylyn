@@ -188,7 +188,7 @@ public class HtmlSubsetDocumentBuilderXhtmlStrictTest {
 	public void paragraphAndDivNotSupported() {
 		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.CODE));
 		builder.characters("foo");
-		assertContent("\nfoo\n");
+		assertContent("foo<br/><br/>");
 	}
 
 	@Test

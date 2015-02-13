@@ -73,7 +73,7 @@ public class SpanStrategies extends ElementStrategies<SpanType, SpanStrategy, Sp
 	}
 
 	@Override
-	SpanStrategy getUnsupportedElementStrategy() {
+	SpanStrategy getUnsupportedElementStrategy(SpanType elementType) {
 		return UnsupportedSpanStrategy.instance;
 	}
 
