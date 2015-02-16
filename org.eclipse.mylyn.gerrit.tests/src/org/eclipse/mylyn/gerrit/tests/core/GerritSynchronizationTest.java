@@ -29,11 +29,14 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.sdk.util.UiTestUtil;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.gerrit.tests.support.GerritHarness;
+import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.GerritQuery;
 import org.eclipse.mylyn.internal.gerrit.core.GerritTaskSchema;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient28;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
 import org.eclipse.mylyn.internal.reviews.ui.RemoteUiFactoryProviderConfigurer;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
@@ -61,6 +64,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gerrit.reviewdb.ApprovalCategoryValue;
+import com.google.gerrit.reviewdb.Project;
 
 /**
  * @author Steffen Pingel
@@ -160,9 +164,20 @@ public class GerritSynchronizationTest extends TestCase {
 	public void testGetFromChangeId() throws Exception {
 		ITask task = createAndSynchronizeQuery(true);
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(repository.getConnectorKind());
+		GerritClient client = ((GerritConnector) connector).getClient(repository);
+		Project.NameKey project = new Project.NameKey(taskDataManager.getTaskData(task)
+				.getRoot()
+				.getMappedAttribute(TaskAttribute.PRODUCT)
+				.getValue());
+		if (GerritVersion.isVersion28OrLater(client.getVersion())) {
+			((GerritClient28) client).clearCachedBranches(project);
+			assertNull(client.getCachedBranches(project));
+		}
 		TaskData taskData = connector.getTaskData(repository, task.getTaskId(), new NullProgressMonitor());
 		assertEquals(task.getTaskId(), taskData.getTaskId());
-
+		if (GerritVersion.isVersion28OrLater(client.getVersion())) {
+			assertNotNull(client.getCachedBranches(project));
+		}
 		TaskAttribute changeIdAttribute = taskData.getRoot().getAttribute(
 				GerritTaskSchema.getDefault().CHANGE_ID.getKey());
 		assertNotNull(changeIdAttribute);

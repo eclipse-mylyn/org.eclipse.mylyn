@@ -815,6 +815,11 @@ public class GerritClient extends ReviewsClient {
 	}
 
 	public GerritConfiguration refreshConfigOnce(IProgressMonitor monitor) throws GerritException {
+		return refreshConfigOnce(null, monitor);
+	}
+
+	public GerritConfiguration refreshConfigOnce(Project.NameKey project, IProgressMonitor monitor)
+			throws GerritException {
 		if (!configRefreshed && config == null) {
 			try {
 				refreshConfig(monitor);
@@ -825,9 +830,18 @@ public class GerritClient extends ReviewsClient {
 		return getConfiguration();
 	}
 
+	public Set<String> getCachedBranches(Project.NameKey project) {
+		return Collections.emptySet();
+	}
+
 	public void createRemoteBranch(String projectName, String branchName, String revision, IProgressMonitor monitor)
 			throws GerritException {
 		throw new GerritException("Branch creation requests can only be done in Gerrit versions 2.8 or later"); //$NON-NLS-1$
+	}
+
+	public void deleteRemoteBranch(String projectName, String branchName, String revision, IProgressMonitor monitor)
+			throws GerritException {
+		throw new GerritException("Branch deletion requests can only be done in Gerrit versions 2.8 or later"); //$NON-NLS-1$
 	}
 
 	public BranchInfo[] getRemoteProjectBranches(String projectName, IProgressMonitor monitor) throws GerritException {

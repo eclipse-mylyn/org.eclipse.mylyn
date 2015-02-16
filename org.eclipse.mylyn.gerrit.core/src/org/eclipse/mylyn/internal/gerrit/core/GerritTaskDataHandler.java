@@ -53,6 +53,7 @@ import com.google.gerrit.reviewdb.ApprovalCategory;
 import com.google.gerrit.reviewdb.Change;
 import com.google.gerrit.reviewdb.ChangeMessage;
 import com.google.gerrit.reviewdb.PatchSetApproval;
+import com.google.gerrit.reviewdb.Project;
 
 /**
  * @author Mikael Kober
@@ -98,7 +99,6 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		ReviewObserver reviewObserver = new ReviewObserver();
 		try {
 			GerritClient client = connector.getClient(repository);
-			client.refreshConfigOnce(monitor);
 			boolean anonymous = client.isAnonymous();
 			String id = null;
 			if (!anonymous) {
@@ -109,12 +109,15 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 
 			RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> consumer = updateModelData(
 					repository, taskData, reviewObserver, monitor);
-			if (consumer.getRemoteObject() == null) {
+			GerritChange gerritChange = consumer.getRemoteObject();
+			if (gerritChange == null) {
 				throw new CoreException(connector.createErrorStatus(repository,
 						NLS.bind("Couldn't retrieve remote object for task: {0}. Check remote connection", taskId))); //$NON-NLS-1$
 			}
+			Project.NameKey project = gerritChange.getChangeDetail().getChange().getProject();
+			client.refreshConfigOnce(project, monitor);
 			if (!monitor.isCanceled()) {
-				updateTaskData(repository, taskData, consumer.getRemoteObject(), !anonymous, id);
+				updateTaskData(repository, taskData, gerritChange, !anonymous, id);
 			}
 			return taskData;
 		} catch (GerritException e) {

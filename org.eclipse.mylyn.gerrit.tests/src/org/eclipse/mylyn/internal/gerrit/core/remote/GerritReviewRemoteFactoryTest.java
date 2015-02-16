@@ -41,8 +41,10 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.gerrit.tests.core.client.rest.ChangeInfoTest;
+import org.eclipse.mylyn.gerrit.tests.support.GerritProject;
 import org.eclipse.mylyn.gerrit.tests.support.GerritProject.CommitResult;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.GerritSystemAccount;
@@ -77,6 +79,7 @@ import com.google.gerrit.reviewdb.Change.Status;
 import com.google.gerrit.reviewdb.ChangeMessage;
 import com.google.gerrit.reviewdb.PatchSet;
 import com.google.gerrit.reviewdb.PatchSetApproval;
+import com.google.gerrit.reviewdb.Project.NameKey;
 
 /**
  * @author Miles Parker
@@ -714,15 +717,56 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(parentCommitId, is(parentPatchSet.getRevision()));
 	}
 
+	@Test
+	public void testGetCachedBranches() throws GerritException {
+		if (!isVersion28OrLater()) {
+			return;
+		}
+		GerritClient client = reviewHarness.getClient();
+		NullProgressMonitor monitor = new NullProgressMonitor();
+		NameKey project = client.getChange(reviewHarness.getShortId(), monitor)
+				.getChangeDetail()
+				.getChange()
+				.getProject();
+		assertNull(client.getCachedBranches(project));
+
+		client.refreshConfigOnce(project, monitor);
+
+		Set<String> branches = client.getCachedBranches(project);
+		assertNotNull(branches);
+		assertTrue(branches.contains("refs/heads/master"));
+
+		String newBranch = "branch-" + System.currentTimeMillis();
+		String newBranchRef = "refs/heads/" + newBranch;
+		try {
+			createBranchIfNonExistent(newBranch);
+
+			assertFalse(client.getCachedBranches(project).contains(newBranchRef));
+
+			client.refreshConfigOnce(project, monitor);
+			assertFalse(client.getCachedBranches(project).contains(newBranchRef));
+
+			client.refreshConfig(monitor);
+			assertTrue(client.getCachedBranches(project).contains(newBranchRef));
+		} finally {
+			deleteBranch(newBranch);
+		}
+	}
+
 	private void createBranchIfNonExistent(String branchName) throws GerritException {
 		if (!branchExists(branchName)) {
-			reviewHarness.getAdminClient().createRemoteBranch("org.eclipse.mylyn.test", branchName, null,
+			reviewHarness.getAdminClient().createRemoteBranch(GerritProject.PROJECT, branchName, null,
 					new NullProgressMonitor());
 		}
 	}
 
+	private void deleteBranch(String branchName) throws GerritException {
+		reviewHarness.getAdminClient().deleteRemoteBranch(GerritProject.PROJECT, branchName, null,
+				new NullProgressMonitor());
+	}
+
 	private boolean branchExists(String branchName) throws GerritException {
-		BranchInfo[] branches = reviewHarness.getAdminClient().getRemoteProjectBranches("org.eclipse.mylyn.test",
+		BranchInfo[] branches = reviewHarness.getAdminClient().getRemoteProjectBranches(GerritProject.PROJECT,
 				new NullProgressMonitor());
 		for (BranchInfo branch : branches) {
 			String branchRef = StringUtils.trimToEmpty(StringUtils.substringAfterLast(branch.getRef(), "/"));

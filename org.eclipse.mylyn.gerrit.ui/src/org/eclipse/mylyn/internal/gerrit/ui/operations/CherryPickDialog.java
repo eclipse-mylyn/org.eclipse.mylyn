@@ -12,13 +12,20 @@
 package org.eclipse.mylyn.internal.gerrit.ui.operations;
 
 import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.fieldassist.ContentProposalAdapter;
+import org.eclipse.jface.fieldassist.IContentProposalProvider;
+import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
+import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.operations.CherryPickRequest;
 import org.eclipse.mylyn.internal.gerrit.core.operations.GerritOperation;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
@@ -36,8 +43,11 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
+import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Sets;
 import com.google.gerrit.common.data.ChangeDetail;
 import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.reviewdb.PatchSet;
@@ -108,6 +118,11 @@ public class CherryPickDialog extends GerritOperationDialog {
 			}
 		});
 
+		ContentAssistCommandAdapter adapter = new ContentAssistCommandAdapter(destination, new TextContentAdapter(),
+				createContentProposalProvider(), ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS, null, true);
+		adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
+		adapter.setAutoActivationCharacters(null);
+
 		destination.setFocus();
 		return composite;
 	}
@@ -135,11 +150,9 @@ public class CherryPickDialog extends GerritOperationDialog {
 	protected boolean processOperationResult(GerritOperation<?> operation) {
 		if (operation != null) {
 			ChangeDetail changeDetail = (ChangeDetail) operation.getOperationResult();
-			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
-					task.getRepositoryUrl());
 			if (changeDetail != null && changeDetail.getChange() != null) {
 				// changeId is deprecated, yet gerrit still uses it as an identifier, as does mylyn reviews
-				TasksUiUtil.openTask(repository, changeDetail.getChange().getChangeId() + ""); //$NON-NLS-1$
+				TasksUiUtil.openTask(getRepository(), changeDetail.getChange().getChangeId() + ""); //$NON-NLS-1$
 			}
 		}
 		return super.processOperationResult(operation);
@@ -155,4 +168,16 @@ public class CherryPickDialog extends GerritOperationDialog {
 		getButton(IDialogConstants.OK_ID).setEnabled(enable);
 	}
 
+	private IContentProposalProvider createContentProposalProvider() {
+		GerritClient client = ((GerritConnector) TasksUi.getRepositoryConnector(task.getConnectorKind())).getClient(getRepository());
+		Set<String> allProjectBranches = client.getCachedBranches(change.getChangeDetail().getChange().getProject());
+		SortedSet<String> proposals = allProjectBranches != null
+				? Sets.newTreeSet(allProjectBranches)
+				: Sets.<String> newTreeSet();
+		return new BranchProposalProvider(proposals);
+	}
+
+	private TaskRepository getRepository() {
+		return TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(), task.getRepositoryUrl());
+	}
 }

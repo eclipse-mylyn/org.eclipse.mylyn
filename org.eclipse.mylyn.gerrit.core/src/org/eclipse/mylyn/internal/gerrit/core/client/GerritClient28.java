@@ -13,8 +13,10 @@ package org.eclipse.mylyn.internal.gerrit.core.client;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -35,13 +37,21 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Version;
 
+import com.google.common.base.Function;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableSet;
 import com.google.gerrit.common.data.ChangeDetail;
 import com.google.gerrit.common.data.ToggleStarRequest;
 import com.google.gerrit.reviewdb.Change;
 import com.google.gerrit.reviewdb.PatchSet;
+import com.google.gerrit.reviewdb.Project;
 import com.google.gwtjsonrpc.client.VoidResult;
 
 public class GerritClient28 extends GerritClient27 {
+
+	private final Cache<Project.NameKey, Set<String>> projectBranchMap = CacheBuilder.newBuilder().build();
 
 	protected GerritClient28(TaskRepository repository, Version version) {
 		super(repository, version);
@@ -156,6 +166,46 @@ public class GerritClient28 extends GerritClient27 {
 	}
 
 	@Override
+	public GerritConfiguration refreshConfigOnce(Project.NameKey project, IProgressMonitor monitor)
+			throws GerritException {
+		GerritConfiguration config = super.refreshConfigOnce(project, monitor);
+		// the order is important here: calling super first ensures that we won't fetch the branches twice
+		if (project != null && getCachedBranches(project) == null) {
+			cacheBranches(project, monitor);
+		}
+		return config;
+	}
+
+	@Override
+	public GerritConfiguration refreshConfig(IProgressMonitor monitor) throws GerritException {
+		refreshAllCachedProjectBranches(monitor);
+		return super.refreshConfig(monitor);
+	}
+
+	private void refreshAllCachedProjectBranches(IProgressMonitor monitor) throws GerritException {
+		Set<Project.NameKey> projects = projectBranchMap.asMap().keySet();
+		for (Project.NameKey project : projects) {
+			cacheBranches(project, monitor);
+		}
+	}
+
+	private void cacheBranches(Project.NameKey project, IProgressMonitor monitor) throws GerritException {
+		Set<String> branchNames = getBranchNames(project, monitor);
+		projectBranchMap.put(project, branchNames);
+	}
+
+	private ImmutableSet<String> getBranchNames(Project.NameKey project, IProgressMonitor monitor)
+			throws GerritException {
+		return FluentIterable.from(Arrays.asList(getRemoteProjectBranches(project.get(), monitor)))
+				.transform(new Function<BranchInfo, String>() {
+					public String apply(BranchInfo input) {
+						return input.getRef();
+					}
+				})
+				.toSet();
+	}
+
+	@Override
 	public boolean supportsBranchCreation() throws GerritException {
 		return true;
 	}
@@ -174,8 +224,25 @@ public class GerritClient28 extends GerritClient27 {
 		executePutRestRequest(url, input, BranchInput.class, createErrorHandler(), monitor);
 	}
 
+	@Override
+	public void deleteRemoteBranch(String projectName, String branchName, String revision, IProgressMonitor monitor)
+			throws GerritException {
+		String url = getProjectBranchesUrl(projectName) + branchName;
+		BranchInput input = new BranchInput(branchName, revision);
+		executeDeleteRestRequest(url, input, BranchInput.class, createErrorHandler(), monitor);
+	}
+
+	@Override
+	public Set<String> getCachedBranches(Project.NameKey project) {
+		return projectBranchMap.getIfPresent(project);
+	}
+
 	private String getProjectBranchesUrl(String projectName) {
 		return "/projects/" + projectName + "/branches/"; //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+	public void clearCachedBranches(Project.NameKey project) {
+		projectBranchMap.invalidate(project);
 	}
 
 }

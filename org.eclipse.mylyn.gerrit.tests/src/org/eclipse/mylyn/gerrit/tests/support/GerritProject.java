@@ -49,7 +49,7 @@ public class GerritProject {
 
 	}
 
-	private static String PROJECT = "org.eclipse.mylyn.test"; //$NON-NLS-1$
+	public static final String PROJECT = "org.eclipse.mylyn.test"; //$NON-NLS-1$
 
 	private File folder;
 
