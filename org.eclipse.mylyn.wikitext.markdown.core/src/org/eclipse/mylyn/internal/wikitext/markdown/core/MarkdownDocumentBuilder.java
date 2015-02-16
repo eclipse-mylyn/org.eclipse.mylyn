@@ -374,7 +374,7 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		if (!Strings.isNullOrEmpty(attributes.getTitle())) {
 			title = " \"" + attributes.getTitle() + '"'; //$NON-NLS-1$
 		}
-		return "![" + altText + "](" + url + title + ')'; //$NON-NLS-1$ //$NON-NLS-2$
+		return "![" + altText + "](" + Strings.nullToEmpty(url) + title + ')'; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override

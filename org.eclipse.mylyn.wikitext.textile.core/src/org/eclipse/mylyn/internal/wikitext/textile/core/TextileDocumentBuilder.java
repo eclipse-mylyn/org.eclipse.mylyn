@@ -481,14 +481,16 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	@Override
 	public void image(Attributes attributes, String url) {
-		assertOpenBlock();
-		try {
-			currentBlock.write('!');
-			writeAttributes(attributes);
-			currentBlock.write(url);
-			currentBlock.write('!');
-		} catch (IOException e) {
-			throw new RuntimeException(e);
+		if (url != null) {
+			assertOpenBlock();
+			try {
+				currentBlock.write('!');
+				writeAttributes(attributes);
+				currentBlock.write(url);
+				currentBlock.write('!');
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 		}
 	}
 

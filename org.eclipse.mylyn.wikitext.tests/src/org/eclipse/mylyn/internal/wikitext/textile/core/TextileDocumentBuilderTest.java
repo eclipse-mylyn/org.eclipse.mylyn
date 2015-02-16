@@ -851,6 +851,18 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("a !fooImage.png! test\n\n", markup);
 	}
 
+	public void testImageNoUrl() {
+		builder.beginDocument();
+		builder.characters("a ");
+		builder.image(new ImageAttributes(), null);
+		builder.characters(" test");
+		builder.endDocument();
+
+		String markup = out.toString();
+		TestUtil.println(markup);
+		assertEquals("a test\n\n", markup);
+	}
+
 	public void testEntityReference() {
 		builder.beginDocument();
 

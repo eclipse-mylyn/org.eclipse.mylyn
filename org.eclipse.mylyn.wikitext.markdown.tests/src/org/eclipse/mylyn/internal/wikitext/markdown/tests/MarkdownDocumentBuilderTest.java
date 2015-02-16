@@ -665,6 +665,16 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		assertMarkup("![](/path/to/img.jpg)\n\n");
 	}
 
+	public void testImageNoUrl() {
+		builder.beginDocument();
+		ImageAttributes attr = new ImageAttributes();
+		attr.setAlt("Alt text");
+		attr.setTitle("Optional title");
+		builder.image(attr, null);
+		builder.endDocument();
+		assertMarkup("![Alt text]( \"Optional title\")\n\n");
+	}
+
 	public void testImageImplicitParagraph() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());

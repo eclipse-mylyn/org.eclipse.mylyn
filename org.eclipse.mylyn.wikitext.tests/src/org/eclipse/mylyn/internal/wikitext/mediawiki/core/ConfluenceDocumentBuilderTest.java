@@ -20,6 +20,7 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
@@ -757,6 +758,42 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 		TestUtil.println(markup);
 
 		assertEquals("{quote}block text{quote}\n\n", markup);
+	}
+
+	public void testImageLink() {
+		builder.beginDocument();
+		builder.characters("a ");
+		builder.imageLink(new LinkAttributes(), new ImageAttributes(), "#foo", "fooImage.png");
+		builder.characters(" test");
+		builder.endDocument();
+
+		String markup = out.toString();
+		TestUtil.println(markup);
+		assertEquals("a !fooImage.png!:#foo test\n\n", markup);
+	}
+
+	public void testImage() {
+		builder.beginDocument();
+		builder.characters("a ");
+		builder.image(new ImageAttributes(), "fooImage.png");
+		builder.characters(" test");
+		builder.endDocument();
+
+		String markup = out.toString();
+		TestUtil.println(markup);
+		assertEquals("a !fooImage.png! test\n\n", markup);
+	}
+
+	public void testImageNoUrl() {
+		builder.beginDocument();
+		builder.characters("a ");
+		builder.image(new ImageAttributes(), null);
+		builder.characters(" test");
+		builder.endDocument();
+
+		String markup = out.toString();
+		TestUtil.println(markup);
+		assertEquals("a  test\n\n", markup);
 	}
 
 	public void testSpanSuperscript() {
