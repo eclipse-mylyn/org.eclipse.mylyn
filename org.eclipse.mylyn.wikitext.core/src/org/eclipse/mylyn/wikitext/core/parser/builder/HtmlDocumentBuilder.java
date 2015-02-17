@@ -13,12 +13,14 @@ package org.eclipse.mylyn.wikitext.core.parser.builder;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Writer;
 import java.text.MessageFormat;
@@ -43,6 +45,12 @@ import org.eclipse.mylyn.wikitext.core.util.DefaultXmlStreamWriter;
 import org.eclipse.mylyn.wikitext.core.util.FormattingXMLStreamWriter;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 
+import com.google.common.base.CharMatcher;
+import com.google.common.base.Charsets;
+import com.google.common.base.Splitter;
+import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableMap;
+
 /**
  * A builder that produces XHTML output. The nature of the output is affected by various settings on the builder.
  *
@@ -55,105 +63,29 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private static final Pattern ABSOLUTE_URL_PATTERN = Pattern.compile("[a-zA-Z]{3,8}://?.*"); //$NON-NLS-1$
 
-	private static final Map<String, String> entityReferenceToNumericEquivalent = new HashMap<String, String>();
-	static {
-		entityReferenceToNumericEquivalent.put("nbsp", "#160"); //$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("iexcl", "#161");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("cent", "#162");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("pound", "#163");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("curren", "#164");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("yen", "#165");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("brvbar", "#166");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("sect", "#167");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("uml", "#168");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("copy", "#169");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("ordf", "#170");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("laquo", "#171");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("not", "#172");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("shy", "#173");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("reg", "#174");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("macr", "#175");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("deg", "#176");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("plusmn", "#177");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("sup2", "#178");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("sup3", "#179");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("acute", "#180");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("micro", "#181");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("para", "#182");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("middot", "#183");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("cedil", "#184");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("sup1", "#185");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("ordm", "#186");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("raquo", "#187");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("frac14", "#188");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("frac12", "#189");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("frac34", "#190");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("iquest", "#191");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("times", "#215");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("divide", "#247");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("Agrave", "#192");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("Aacute", "#193");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("Acirc", "#194");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("Atilde", "#195");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("Auml", "#196");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("Aring", "#197");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("AElig", "#198");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("Ccedil", "#199");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("Egrave", "#200");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("Eacute", "#201");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("Ecirc", "#202");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("Euml", "#203");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("Igrave", "#204");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("Iacute", "#205");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("Icirc", "#206");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("Iuml", "#207");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("ETH", "#208");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("Ntilde", "#209");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("Ograve", "#210");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("Oacute", "#211");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("Ocirc", "#212");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("Otilde", "#213");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("Ouml", "#214");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("Oslash", "#216");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("Ugrave", "#217");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("Uacute", "#218");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("Ucirc", "#219");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("Uuml", "#220");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("Yacute", "#221");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("THORN", "#222");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("szlig", "#223");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("agrave", "#224");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("aacute", "#225");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("acirc", "#226");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("atilde", "#227");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("auml", "#228");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("aring", "#229");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("aelig", "#230");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("ccedil", "#231");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("egrave", "#232");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("eacute", "#233");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("ecirc", "#234");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("euml", "#235");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("igrave", "#236");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("iacute", "#237");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("icirc", "#238");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("iuml", "#239");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("eth", "#240");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("ntilde", "#241");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("ograve", "#242");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("oacute", "#243");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("ocirc", "#244");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("otilde", "#245");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("ouml", "#246");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("oslash", "#248");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("ugrave", "#249");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("uacute", "#250");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("ucirc", "#251");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("uuml", "#252");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("yacute", "#253");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("thorn", "#254");//$NON-NLS-1$ //$NON-NLS-2$
-		entityReferenceToNumericEquivalent.put("yuml", "#255");//$NON-NLS-1$ //$NON-NLS-2$
+	private static final Map<String, String> entityReferenceToNumericEquivalent = readHtmlEntities();
 
+	private static Map<String, String> readHtmlEntities() {
+		ImmutableMap.Builder<String, String> entityToNumericBuilder = ImmutableMap.builder();
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					HtmlDocumentBuilder.class.getResourceAsStream("html-entity-references.txt"), Charsets.UTF_8)); //$NON-NLS-1$
+			try {
+				Splitter splitter = Splitter.on(CharMatcher.WHITESPACE).trimResults().omitEmptyStrings();
+
+				String line;
+				while ((line = reader.readLine()) != null) {
+					List<String> lineItems = splitter.splitToList(line);
+					checkState(lineItems.size() == 2 && lineItems.get(1).startsWith("#")); //$NON-NLS-1$
+					entityToNumericBuilder.put(lineItems.get(0), lineItems.get(1));
+				}
+			} finally {
+				reader.close();
+			}
+		} catch (IOException e) {
+			throw Throwables.propagate(e);
+		}
+		return entityToNumericBuilder.build();
 	}
 
 	private static final Map<SpanType, String> spanTypeToElementName = new HashMap<SpanType, String>();

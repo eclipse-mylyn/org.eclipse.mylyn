@@ -146,6 +146,43 @@ public class HtmlDocumentBuilderTest {
 		assertEquals("<hr/>", out.toString());
 	}
 
+	@Test
+	public void entityFiltered() {
+		assertEntityFiltered("&#732;", "tilde");
+		assertEntityFiltered("&#9;", "Tab");
+		assertEntityFiltered("&#169;", "copy");
+		assertEntityFiltered("&#169;", "COPY");
+	}
+
+	@Test
+	public void entityFilteredUnmatched() {
+		assertEntityFiltered("&amp;bogus;", "bogus");
+	}
+
+	@Test
+	public void entityUnfiltered() {
+		builder.setFilterEntityReferences(false);
+		assertEntity("&tilde;", "tilde");
+	}
+
+	private void assertEntityFiltered(String expected, String entity) {
+		setup();
+		builder.setFilterEntityReferences(true);
+		builder.setEmitAsDocument(false);
+		builder.beginDocument();
+		builder.entityReference(entity);
+		builder.endDocument();
+		assertEquals(expected, out.toString());
+	}
+
+	private void assertEntity(String expected, String entity) {
+		builder.setEmitAsDocument(false);
+		builder.beginDocument();
+		builder.entityReference(entity);
+		builder.endDocument();
+		assertEquals(expected, out.toString());
+	}
+
 	protected void setupFormatting() {
 		builder = new HtmlDocumentBuilder(out, true);
 	}
