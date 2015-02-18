@@ -90,7 +90,7 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
     envversion      => "5.0rc2",
     testdataVersion => "Version1",
   }
- 
+
   bugzilla::site { "bugzilla-rest-master":
     major           => "5",
     minor           => "1",
