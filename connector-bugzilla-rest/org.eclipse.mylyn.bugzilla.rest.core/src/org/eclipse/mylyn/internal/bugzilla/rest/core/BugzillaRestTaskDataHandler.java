@@ -45,16 +45,24 @@ public class BugzillaRestTaskDataHandler extends AbstractTaskDataHandler {
 		// fresh from the repository (not locally stored data that may not have
 		// been migrated).
 		data.setVersion("0"); //$NON-NLS-1$
-		BugzillaRestTaskSchema.getDefault().initialize(data);
+		if (data.isNew()) {
+			BugzillaRestCreateTaskSchema.getDefault().initialize(data);
+		} else {
+			BugzillaRestTaskSchema.getDefault().initialize(data);
+		}
 		if (initializationData != null) {
 			connector.getTaskMapping(data).merge(initializationData);
+		}
+		BugzillaRestConfiguration config = connector.getRepositoryConfiguration(repository);
+		if (config != null) {
+			config.updateInitialTaskData(data);
 		}
 		return true;
 	}
 
 	@Override
 	public TaskAttributeMapper getAttributeMapper(TaskRepository repository) {
-		return new TaskAttributeMapper(repository);
+		return new BugzillaRestTaskAttributeMapper(repository, connector);
 	}
 
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Frank Becker and others.
+ * Copyright (c) 2015 Frank Becker and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,19 +14,16 @@ package org.eclipse.mylyn.internal.bugzilla.rest.core;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema;
 import org.eclipse.mylyn.tasks.core.data.DefaultTaskSchema;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.core.data.TaskData;
 
-public class BugzillaRestTaskSchema extends AbstractTaskSchema {
+public class BugzillaRestCreateTaskSchema extends AbstractTaskSchema {
 
-	private static final BugzillaRestTaskSchema instance = new BugzillaRestTaskSchema();
+	private static final BugzillaRestCreateTaskSchema instance = new BugzillaRestCreateTaskSchema();
 
-	public static BugzillaRestTaskSchema getDefault() {
+	public static BugzillaRestCreateTaskSchema getDefault() {
 		return instance;
 	}
 
 	private final DefaultTaskSchema parent = DefaultTaskSchema.getInstance();
-
-	public final Field BUG_ID = createField("bug_id", "ID:", TaskAttribute.TYPE_SHORT_TEXT, Flag.REQUIRED);
 
 	public final Field PRODUCT = inheritFrom(parent.PRODUCT).addFlags(Flag.REQUIRED).create();
 
@@ -36,10 +33,10 @@ public class BugzillaRestTaskSchema extends AbstractTaskSchema {
 
 	public final Field SUMMARY = inheritFrom(parent.SUMMARY).addFlags(Flag.REQUIRED).create();
 
-	public final Field VERSION = createField("version", "Version", TaskAttribute.TYPE_SINGLE_SELECT, null,
+	public final Field VERSION = createField(TaskAttribute.VERSION, "Version", TaskAttribute.TYPE_SINGLE_SELECT, null,
 			PRODUCT.getKey(), Flag.ATTRIBUTE, Flag.REQUIRED);
 
-	public final Field DESCRIPTION = inheritFrom(parent.DESCRIPTION).addFlags(Flag.REQUIRED, Flag.READ_ONLY).create();
+	public final Field DESCRIPTION = inheritFrom(parent.DESCRIPTION).addFlags(Flag.REQUIRED).create();
 
 	public final Field OS = createField("os", "OS", TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE);
 
@@ -48,8 +45,6 @@ public class BugzillaRestTaskSchema extends AbstractTaskSchema {
 	public final Field PRIORITY = inheritFrom(parent.PRIORITY).create();
 
 	public final Field SEVERITY = inheritFrom(parent.SEVERITY).create();
-
-	public final Field STATUS = inheritFrom(parent.STATUS).create();
 
 	public final Field ALIAS = createField("alias", "Alias", TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE);
 
@@ -61,34 +56,18 @@ public class BugzillaRestTaskSchema extends AbstractTaskSchema {
 
 	public final Field ADD_SELF_CC = inheritFrom(parent.ADD_SELF_CC).addFlags(Flag.PEOPLE).create();
 
-	public final Field COMMENT_ISPRIVATE = inheritFrom(parent.COMMENT_ISPRIVATE).addFlags(Flag.ATTRIBUTE).create();
-
-	public final Field COMMENT_NUMBER = inheritFrom(parent.COMMENT_NUMBER).addFlags(Flag.ATTRIBUTE).create();
+	public final Field COMMENT_IS_PRIVATE = createField("comment_is_private", "Description is private",
+			TaskAttribute.TYPE_BOOLEAN, Flag.ATTRIBUTE);
 
 	public final Field QA_CONTACT = createField("qa_contact", "QA Contact", TaskAttribute.TYPE_PERSON, null,
 			COMPONENT.getKey(), Flag.PEOPLE);
 
-	public final Field NEW_COMMENT = inheritFrom(parent.NEW_COMMENT).create();
-
-	public final Field RESOLUTION = inheritFrom(parent.RESOLUTION).create();
-
 	public final Field TARGET_MILESTONE = createField("target_milestone", "Target milestone",
 			TaskAttribute.TYPE_SINGLE_SELECT, null, PRODUCT.getKey(), Flag.ATTRIBUTE);
 
+	public final Field RESOLUTION = inheritFrom(parent.RESOLUTION).create();
+
 	public final Field OPERATION = createField(TaskAttribute.OPERATION, "Operation", TaskAttribute.TYPE_OPERATION);
 
-	@Override
-	public void initialize(TaskData taskData) {
-		for (Field field : getFields()) {
-			if (field.equals(COMMENT_ISPRIVATE) || field.equals(COMMENT_NUMBER)) {
-				continue;
-			}
-			TaskAttribute newField = field.createAttribute(taskData.getRoot());
-			if (field.equals(DESCRIPTION)) {
-				COMMENT_ISPRIVATE.createAttribute(newField);
-				COMMENT_NUMBER.createAttribute(newField);
-			}
-		}
-	}
-
+	public final Field STATUS = inheritFrom(parent.STATUS).create();
 }

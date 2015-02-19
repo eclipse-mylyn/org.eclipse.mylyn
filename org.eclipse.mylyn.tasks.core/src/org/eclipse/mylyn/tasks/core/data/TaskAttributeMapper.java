@@ -39,8 +39,8 @@ public class TaskAttributeMapper {
 
 	@NonNull
 	public TaskAttribute createTaskAttachment(@NonNull TaskData taskData) {
-		TaskAttribute taskAttribute = taskData.getRoot().createAttribute(
-				mapToRepositoryKey(taskData.getRoot(), TaskAttribute.NEW_ATTACHMENT));
+		TaskAttribute taskAttribute = taskData.getRoot()
+				.createAttribute(mapToRepositoryKey(taskData.getRoot(), TaskAttribute.NEW_ATTACHMENT));
 //		TaskAttachmentMapper mapper = TaskAttachmentMapper.createFrom(taskAttribute);
 //		mapper.setContentType("");
 //		mapper.setFileName("");
@@ -54,11 +54,11 @@ public class TaskAttributeMapper {
 			if (newAttribute.getValues().equals(oldAttribute.getValues())) {
 				return true;
 			}
-			// the comment mapping accidentally changed throughout the Mylyn 3.7 cycle therefore some 
+			// the comment mapping accidentally changed throughout the Mylyn 3.7 cycle therefore some
 			// cases need to be considered equal even though attribute values differ
 			if (oldAttribute != null) {
 				TaskAttribute commentIdAttribute = oldAttribute.getAttribute("task.common.comment.id"); //$NON-NLS-1$
-				// ID not present 
+				// ID not present
 				if ((commentIdAttribute == null || commentIdAttribute.getValue().equals("")) //$NON-NLS-1$
 						&& newAttribute.getValue().equals("")) { //$NON-NLS-1$
 					return true;

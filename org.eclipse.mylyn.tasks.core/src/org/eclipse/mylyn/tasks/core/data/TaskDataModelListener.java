@@ -28,5 +28,4 @@ public abstract class TaskDataModelListener {
 	 */
 	public void modelRefreshed() {
 	}
-
 }

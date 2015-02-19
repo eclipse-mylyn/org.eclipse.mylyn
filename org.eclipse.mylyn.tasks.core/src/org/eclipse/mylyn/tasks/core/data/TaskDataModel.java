@@ -66,7 +66,7 @@ public class TaskDataModel {
 
 	/**
 	 * Invoke upon change to attribute value.
-	 * 
+	 *
 	 * @param attribute
 	 *            changed attribute
 	 */
@@ -77,14 +77,15 @@ public class TaskDataModel {
 		}
 
 		unsavedChangedAttributes.add(attribute);
-
 		if (this.listeners != null) {
 			final TaskDataModelEvent event = new TaskDataModelEvent(this, EventKind.CHANGED, attribute);
 			TaskDataModelListener[] listeners = this.listeners.toArray(new TaskDataModelListener[0]);
+
 			for (final TaskDataModelListener listener : listeners) {
 				SafeRunner.run(new ISafeRunnable() {
 					public void handleException(Throwable e) {
-						StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Listener failed", e)); //$NON-NLS-1$
+						StatusHandler
+								.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Listener failed", e)); //$NON-NLS-1$
 					}
 
 					public void run() throws Exception {
@@ -97,7 +98,7 @@ public class TaskDataModel {
 
 	/**
 	 * Returns the instance of <code>taskAttribute</code> that the user last read.
-	 * 
+	 *
 	 * @param taskAttribute
 	 *            the attribute
 	 * @return the last read state; null, if <code>taskAttribute</code> has never been read
@@ -181,7 +182,8 @@ public class TaskDataModel {
 			for (final TaskDataModelListener listener : listeners) {
 				SafeRunner.run(new ISafeRunnable() {
 					public void handleException(Throwable e) {
-						StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Listener failed", e)); //$NON-NLS-1$
+						StatusHandler
+								.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Listener failed", e)); //$NON-NLS-1$
 					}
 
 					public void run() throws Exception {

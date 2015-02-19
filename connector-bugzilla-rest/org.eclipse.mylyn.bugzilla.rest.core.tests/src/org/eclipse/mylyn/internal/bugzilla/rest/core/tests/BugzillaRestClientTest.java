@@ -42,7 +42,11 @@ import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Product;
 import org.eclipse.mylyn.internal.bugzilla.rest.test.support.BugzillaRestTestFixture;
 import org.eclipse.mylyn.internal.commons.core.operations.NullOperationMonitor;
 import org.eclipse.mylyn.internal.commons.repositories.core.InMemoryCredentialsStore;
+import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -175,6 +179,48 @@ public class BugzillaRestClientTest {
 				IOUtils.toString(
 						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/fieldName.json")),
 				new Gson().toJson(fieldNameList));
+	}
+
+	@Test
+	public void testinitializeTaskData() throws Exception {
+		final TaskMapping taskMappingInit = new TaskMapping() {
+			@Override
+			public String getSummary() {
+				return "The Summary";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The Description";
+			}
+		};
+		final TaskMapping taskMappingSelect = new TaskMapping() {
+			@Override
+			public String getProduct() {
+				return "TestProduct";
+			}
+		};
+
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		TaskRepository repository = actualFixture.repository();
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(repository);
+		TaskData taskData = new TaskData(mapper, repository.getConnectorKind(), repository.getRepositoryUrl(), "");
+		assertTrue(taskDataHandler.initializeTaskData(repository, taskData, null, null));
+		assertEquals(
+				IOUtils.toString(CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/taskData.txt")),
+				taskData.getRoot().toString());
+		taskData = new TaskData(mapper, repository.getConnectorKind(), repository.getRepositoryUrl(), "");
+		assertTrue(taskDataHandler.initializeTaskData(repository, taskData, taskMappingInit, null));
+		assertEquals(
+				IOUtils.toString(
+						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/taskData1.txt")),
+				taskData.getRoot().toString());
+		taskData = new TaskData(mapper, repository.getConnectorKind(), repository.getRepositoryUrl(), "");
+		assertTrue(taskDataHandler.initializeTaskData(repository, taskData, taskMappingSelect, null));
+		assertEquals(
+				IOUtils.toString(
+						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/taskData2.txt")),
+				taskData.getRoot().toString());
 	}
 
 }

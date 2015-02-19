@@ -44,12 +44,14 @@ public abstract class AbstractTaskSchema {
 
 		private final String indexKey;
 
+		private final String dependsOn;
+
 		protected Field(String key, String label, String type) {
-			this(key, label, type, null, (Flag[]) null);
+			this(key, label, type, null, null, (Flag[]) null);
 		}
 
 		protected Field(String key, String label, String type, Flag... flags) {
-			this(key, label, type, null, flags);
+			this(key, label, type, null, null, flags);
 		}
 
 		/**
@@ -68,6 +70,27 @@ public abstract class AbstractTaskSchema {
 		 * @since 3.7
 		 */
 		public Field(String key, String label, String type, String indexKey, Flag... flags) {
+			this(key, label, type, indexKey, null, flags);
+		}
+
+		/**
+		 * @param key
+		 *            the task attribute key, which may be a common task attribute key defined in defined in
+		 *            {@link TaskAttribute}
+		 * @param label
+		 *            the user-visible label that is used by the user to identify this field
+		 * @param type
+		 *            the type of the field, should be one of the constants defined in TaskAttribute (
+		 *            <code>TaskAttribute.TYPE_*</code>)
+		 * @param indexKey
+		 *            the index key, or null if this should not be indexed
+		 * @param dependsOn
+		 *            the key of the TaskAttribute which is the parent of the dependency
+		 * @param flags
+		 *            the flags, or null
+		 * @since 3.17
+		 */
+		public Field(String key, String label, String type, String indexKey, String dependsOn, Flag... flags) {
 			Assert.isNotNull(key);
 			Assert.isNotNull(label);
 			Assert.isNotNull(type);
@@ -75,6 +98,7 @@ public abstract class AbstractTaskSchema {
 			this.label = label;
 			this.type = type;
 			this.indexKey = indexKey;
+			this.dependsOn = dependsOn;
 			if (flags == null || flags.length == 0) {
 				this.flags = EnumSet.noneOf(Flag.class);
 			} else {
@@ -91,6 +115,9 @@ public abstract class AbstractTaskSchema {
 			metaData.setReadOnly(isReadOnly());
 			metaData.setKind(getKind());
 			metaData.setRequired(isRequired());
+			if (getDependsOn() != null) {
+				metaData.setDependsOn(getDependsOn());
+			}
 			// options
 			Map<String, String> options = getDefaultOptions();
 			if (options != null) {
@@ -200,23 +227,29 @@ public abstract class AbstractTaskSchema {
 			return flags.contains(Flag.REQUIRED);
 		}
 
+		/**
+		 * @since 3.17
+		 */
+		public String getDependsOn() {
+			return dependsOn;
+		}
+
 	}
 
 	public enum Flag {
-		ATTRIBUTE, OPERATION, PEOPLE, READ_ONLY,
-		/**
-		 * A flag used to indicate that the field is related to a description.
-		 *
-		 * @since 3.11
-		 * @see TaskAttribute#KIND_DESCRIPTION
-		 */
-		DESCRIPTION,
-		/**
-		 * A flag used to indicate that the field is required.
-		 *
-		 * @since 3.11
-		 * @see TaskAttribute#META_REQUIRED
-		 */
+		ATTRIBUTE, OPERATION, PEOPLE, READ_ONLY, /**
+													 * A flag used to indicate that the field is related to a
+													 * description.
+													 *
+													 * @since 3.11
+													 * @see TaskAttribute#KIND_DESCRIPTION
+													 */
+		DESCRIPTION, /**
+						 * A flag used to indicate that the field is required.
+						 *
+						 * @since 3.11
+						 * @see TaskAttribute#META_REQUIRED
+						 */
 		REQUIRED
 
 	};
@@ -231,11 +264,14 @@ public abstract class AbstractTaskSchema {
 
 		private String type;
 
+		private String dependsOn;
+
 		public FieldFactory(Field source) {
 			this.flags = EnumSet.copyOf(source.flags);
 			this.key = source.key;
 			this.label = source.label;
 			this.type = source.type;
+			this.dependsOn = source.dependsOn;
 		}
 
 		public FieldFactory addFlags(Flag... flags) {
@@ -244,7 +280,8 @@ public abstract class AbstractTaskSchema {
 		}
 
 		public Field create() {
-			return createField(key, label, type, (!flags.isEmpty()) ? flags.toArray(new Flag[0]) : null);
+			return createField(key, label, type, null, dependsOn,
+					(!flags.isEmpty()) ? flags.toArray(new Flag[0]) : null);
 		}
 
 		public FieldFactory flags(Flag... flags) {
@@ -269,6 +306,14 @@ public abstract class AbstractTaskSchema {
 
 		public FieldFactory type(String type) {
 			this.type = type;
+			return this;
+		}
+
+		/**
+		 * @since 3.17
+		 */
+		public FieldFactory dependsOn(String dependsOn) {
+			this.dependsOn = dependsOn;
 			return this;
 		}
 
@@ -316,7 +361,15 @@ public abstract class AbstractTaskSchema {
 	 * @see Field#Field(String, String, String, String, Flag...)
 	 */
 	protected Field createField(String key, String label, String type, String indexKey, Flag... flags) {
-		Field field = new Field(key, label, type, indexKey, flags);
+		return createField(key, label, type, indexKey, null, flags);
+	}
+
+	/**
+	 * @since 3.17
+	 */
+	protected Field createField(String key, String label, String type, String indexKey, String dependsOn,
+			Flag... flags) {
+		Field field = new Field(key, label, type, indexKey, dependsOn, flags);
 		fieldByKey.put(key, field);
 		return field;
 	}

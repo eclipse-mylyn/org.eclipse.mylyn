@@ -16,14 +16,15 @@ import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 
 public class BugzillaRestTaskEditorPage extends AbstractTaskEditorPage {
+
 	public BugzillaRestTaskEditorPage(TaskEditor editor) {
 		this(editor, BugzillaRestCore.CONNECTOR_KIND);
 	}
 
 	public BugzillaRestTaskEditorPage(TaskEditor editor, String connectorKind) {
 		super(editor, connectorKind);
-		setNeedsPrivateSection(false);
-		setNeedsSubmitButton(false);
+		setNeedsPrivateSection(true);
+		setNeedsSubmitButton(true);
 	}
 
 }

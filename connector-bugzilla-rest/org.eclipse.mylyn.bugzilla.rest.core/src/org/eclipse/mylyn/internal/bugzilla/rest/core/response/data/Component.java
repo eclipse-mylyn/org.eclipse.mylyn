@@ -11,14 +11,11 @@
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core.response.data;
 
-import java.io.Serializable;
+public class Component extends SortableActiveEntry {
 
-public class Component implements Serializable {
-	private static final long serialVersionUID = -3420463254677859338L;
+	private static final long serialVersionUID = -285913855003802343L;
 
 	private int id;
-
-	private String name;
 
 	private String description;
 
@@ -26,18 +23,10 @@ public class Component implements Serializable {
 
 	private String default_qa_contact;
 
-	private int sort_key;
-
-	private boolean is_active;
-
 	private FlagTypes flag_types;
 
 	public int getId() {
 		return id;
-	}
-
-	public String getName() {
-		return name;
 	}
 
 	public String getDescription() {
@@ -50,14 +39,6 @@ public class Component implements Serializable {
 
 	public String getDefaultQaContact() {
 		return default_qa_contact;
-	}
-
-	public int getSortKey() {
-		return sort_key;
-	}
-
-	public boolean isActive() {
-		return is_active;
 	}
 
 	public FlagTypes getFlagTypes() {

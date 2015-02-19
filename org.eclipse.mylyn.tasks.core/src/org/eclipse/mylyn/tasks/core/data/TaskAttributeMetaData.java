@@ -115,6 +115,14 @@ public class TaskAttributeMetaData {
 		return taskAttribute.getMetaDatum(TaskAttribute.META_ATTRIBUTE_MEDIA_TYPE);
 	}
 
+	/**
+	 * @since 3.17
+	 * @see TaskAttribute#META_DEPENDS_ON_ATTRIBUTE_ID
+	 */
+	public String getDependsOn() {
+		return taskAttribute.getMetaDatum(TaskAttribute.META_DEPENDS_ON_ATTRIBUTE_ID);
+	}
+
 	public TaskAttributeMetaData putValue(String key, String value) {
 		taskAttribute.putMetaDatum(key, value);
 		return this;
@@ -124,7 +132,7 @@ public class TaskAttributeMetaData {
 	 * The default option property is not used. Connectors are expected to set default values in
 	 * {@link AbstractTaskDataHandler#initializeTaskData(org.eclipse.mylyn.tasks.core.TaskRepository, TaskData, org.eclipse.mylyn.tasks.core.ITaskMapping, org.eclipse.core.runtime.IProgressMonitor)}
 	 * .
-	 * 
+	 *
 	 * @deprecated Not used, set default value in
 	 *             {@link AbstractTaskDataHandler#initializeTaskData(org.eclipse.mylyn.tasks.core.TaskRepository, TaskData, org.eclipse.mylyn.tasks.core.ITaskMapping, org.eclipse.core.runtime.IProgressMonitor)}
 	 *             instead.
@@ -146,7 +154,7 @@ public class TaskAttributeMetaData {
 //			taskAttribute.removeMetaDatum(TaskAttribute.META_DETAIL_LEVEL);
 //		}
 //		return this;
-//	}	
+//	}
 
 	public TaskAttributeMetaData setKind(String value) {
 		if (value != null) {
@@ -211,6 +219,16 @@ public class TaskAttributeMetaData {
 		} else {
 			taskAttribute.removeMetaDatum(TaskAttribute.META_ATTRIBUTE_MEDIA_TYPE);
 		}
+		return this;
+	}
+
+	/**
+	 * @since 3.17
+	 * @see TaskAttribute#META_DEPENDS_ON_ATTRIBUTE_ID
+	 * @return this
+	 */
+	public TaskAttributeMetaData setDependsOn(String value) {
+		taskAttribute.putMetaDatum(TaskAttribute.META_DEPENDS_ON_ATTRIBUTE_ID, value);
 		return this;
 	}
 

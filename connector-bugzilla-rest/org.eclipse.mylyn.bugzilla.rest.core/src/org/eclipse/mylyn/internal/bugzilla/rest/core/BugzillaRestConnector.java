@@ -14,8 +14,6 @@ package org.eclipse.mylyn.internal.bugzilla.rest.core;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.runtime.CoreException;
@@ -55,8 +53,6 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 	public static final Duration CONFIGURATION_CACHE_EXPIRE_DURATION = new Duration(7, TimeUnit.DAYS);
 
 	public static final Duration CONFIGURATION_CACHE_REFRESH_AFTER_WRITE_DURATION = new Duration(1, TimeUnit.DAYS);
-
-	private final ExecutorService executor = Executors.newFixedThreadPool(3);
 
 	private static final ThreadLocal<IOperationMonitor> context = new ThreadLocal<IOperationMonitor>();
 
@@ -135,7 +131,8 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 					public ListenableFuture<Optional<BugzillaRestConfiguration>> reload(final RepositoryKey key,
 							Optional<BugzillaRestConfiguration> oldValue) throws Exception {
 						// asynchronous!
-						ListenableFutureJob<Optional<BugzillaRestConfiguration>> job = new ListenableFutureJob("") {
+						ListenableFutureJob<Optional<BugzillaRestConfiguration>> job = new ListenableFutureJob<Optional<BugzillaRestConfiguration>>(
+								"") {
 
 							@Override
 							protected IStatus run(IProgressMonitor monitor) {

@@ -150,14 +150,14 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 /**
  * Extend to provide a task editor page.
- * 
+ *
  * @author Mik Kersten
  * @author Rob Elves
  * @author Steffen Pingel
  * @since 3.0
  */
-public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISelectionProvider,
-		ISelectionChangedListener {
+public abstract class AbstractTaskEditorPage extends TaskFormPage
+		implements ISelectionProvider, ISelectionChangedListener {
 
 	/**
 	 * Causes the form page to reflow on resize.
@@ -225,8 +225,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 								TaskMigrator migrator = new TaskMigrator(oldTask);
 								migrator.setDelete(true);
 								migrator.setEditor(getTaskEditor());
-								migrator.setMigrateDueDate(!connector.hasRepositoryDueDate(getTaskRepository(),
-										newTask, taskData));
+								migrator.setMigrateDueDate(
+										!connector.hasRepositoryDueDate(getTaskRepository(), newTask, taskData));
 								migrator.execute(newTask);
 							}
 							if (expandLastComment) {
@@ -319,11 +319,11 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 					} else {
 						getTaskEditor().setMessage(Messages.AbstractTaskEditorPage_Task_has_incoming_changes,
 								IMessageProvider.WARNING, new HyperlinkAdapter() {
-									@Override
-									public void linkActivated(HyperlinkEvent e) {
-										AbstractTaskEditorPage.this.refresh();
-									}
-								});
+							@Override
+							public void linkActivated(HyperlinkEvent e) {
+								AbstractTaskEditorPage.this.refresh();
+							}
+						});
 						setSubmitEnabled(false);
 					}
 				}
@@ -664,11 +664,11 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 						getTaskEditor().setMessage(
 								Messages.AbstractTaskEditorPage_Synchronize_to_update_editor_contents,
 								IMessageProvider.INFORMATION, new HyperlinkAdapter() {
-									@Override
-									public void linkActivated(HyperlinkEvent e) {
-										AbstractTaskEditorPage.this.refresh();
-									}
-								});
+							@Override
+							public void linkActivated(HyperlinkEvent e) {
+								AbstractTaskEditorPage.this.refresh();
+							}
+						});
 					}
 				});
 			}
@@ -719,7 +719,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 			attributeEditorToolkit.dispose();
 		}
 
-		// start life-cycle of previous editor controls 
+		// start life-cycle of previous editor controls
 		if (attributeEditorFactory == null) {
 			attributeEditorFactory = createAttributeEditorFactory();
 			Assert.isNotNull(attributeEditorFactory);
@@ -749,6 +749,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		}
 		TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(taskDataState.getConnectorKind(),
 				taskDataState.getRepositoryUrl());
+
 		return new TaskDataModel(taskRepository, input.getTask(), taskDataState);
 	}
 
@@ -853,7 +854,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	}
 
-	private void createParts(String path, final Composite parent, final Collection<TaskEditorPartDescriptor> descriptors) {
+	private void createParts(String path, final Composite parent,
+			final Collection<TaskEditorPartDescriptor> descriptors) {
 		for (Iterator<TaskEditorPartDescriptor> it = descriptors.iterator(); it.hasNext();) {
 			final TaskEditorPartDescriptor descriptor = it.next();
 			if (path == null || path.equals(descriptor.getPath())) {
@@ -1217,7 +1219,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	 * Invoked after task submission has completed. This method is invoked on the UI thread in all cases whether
 	 * submission was successful, canceled or failed. The value returned by <code>event.getJob().getStatus()</code>
 	 * indicates the result of the submit job. Sub-classes may override but are encouraged to invoke the super method.
-	 * 
+	 *
 	 * @since 3.2
 	 * @see SubmitJob
 	 */
@@ -1358,7 +1360,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	/**
 	 * Subclasses may override to disable the task editor find functionality.
-	 * 
+	 *
 	 * @since 3.11
 	 */
 	protected void createFindSupport() {
@@ -1406,7 +1408,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	/**
 	 * Updates the editor contents in place.
-	 * 
+	 *
 	 * @deprecated Use {@link #refresh()} instead
 	 */
 	@Deprecated
@@ -1507,7 +1509,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 	 * <p>
 	 * Clients may override.
 	 * </p>
-	 * 
+	 *
 	 * @param control
 	 *            the control to register the listener for
 	 */
@@ -1540,7 +1542,8 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 		ISelection selection = event.getSelection();
 		if (selection instanceof TextSelection) {
 			// only update global actions
-			((TaskEditorActionContributor) getEditorSite().getActionBarContributor()).updateSelectableActions(event.getSelection());
+			((TaskEditorActionContributor) getEditorSite().getActionBarContributor())
+					.updateSelectableActions(event.getSelection());
 			return;
 		}
 		if (selection.isEmpty()) {
@@ -1648,7 +1651,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	/**
 	 * Returns true, if the page has an always visible footer.
-	 * 
+	 *
 	 * @see #setNeedsFooter(boolean)
 	 */
 	private boolean needsFooter() {
@@ -1657,7 +1660,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	/**
 	 * Specifies that the page should provide an always visible footer. This flag is not set by default.
-	 * 
+	 *
 	 * @see #createFooterContent(Composite)
 	 * @see #needsFooter()
 	 */
@@ -1684,7 +1687,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	/**
 	 * Returns true, if the page supports a submit operation.
-	 * 
+	 *
 	 * @since 3.2
 	 * @see #setNeedsSubmit(boolean)
 	 */
@@ -1694,7 +1697,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	/**
 	 * Specifies that the page supports the submit operation. This flag is set to true by default.
-	 * 
+	 *
 	 * @since 3.2
 	 * @see #needsSubmit()
 	 * @see #doSubmit()
@@ -1705,7 +1708,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	/**
 	 * Returns true, if the page provides a submit button.
-	 * 
+	 *
 	 * @since 3.2
 	 * @see #setNeedsSubmitButton(boolean)
 	 */
@@ -1715,7 +1718,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	/**
 	 * Specifies that the page supports submitting. This flag is set to false by default.
-	 * 
+	 *
 	 * @since 3.2
 	 * @see #needsSubmitButton()
 	 */
@@ -1725,7 +1728,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	/**
 	 * Returns true, if the page provides a submit button.
-	 * 
+	 *
 	 * @since 3.2
 	 * @see #setNeedsPrivateSection(boolean)
 	 */
@@ -1735,7 +1738,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 
 	/**
 	 * Specifies that the page should provide the private section. This flag is not set by default.
-	 * 
+	 *
 	 * @since 3.2
 	 * @see #needsPrivateSection()
 	 */
