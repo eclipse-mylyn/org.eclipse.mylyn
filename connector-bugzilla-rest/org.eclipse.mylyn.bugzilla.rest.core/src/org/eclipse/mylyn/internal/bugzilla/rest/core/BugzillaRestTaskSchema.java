@@ -35,12 +35,38 @@ public class BugzillaRestTaskSchema extends AbstractTaskSchema {
 			.put("op_sys", getDefault().OS.getKey())
 			.put("resolution", getDefault().RESOLUTION.getKey())
 			.put("version", getDefault().VERSION.getKey())
+			.put("dup_id", getDefault().DUPE_OF.getKey())
+			.build();
+
+	private static ImmutableMap<String, String> attribute2FieldMapper = new ImmutableMap.Builder()
+			.put(getDefault().SUMMARY.getKey(), "summary")
+			.put(getDefault().DESCRIPTION.getKey(), "description")
+			.put(getDefault().OPERATION.getKey(), "status")
+			.put(getDefault().PRODUCT.getKey(), "product")
+			.put(getDefault().COMPONENT.getKey(), "component")
+			.put(getDefault().CC.getKey(), "cc")
+			.put(getDefault().SEVERITY.getKey(), "severity")
+			.put(getDefault().PRIORITY.getKey(), "priority")
+			.put(getDefault().ASSIGNED_TO.getKey(), "assigned_to")
+			.put(getDefault().OS.getKey(), "op_sys")
+			.put(getDefault().VERSION.getKey(), "version")
+			.put(getDefault().RESOLUTION.getKey(), "resolution")
+			.put(getDefault().getDefault().DUPE_OF.getKey(), "dup_id")
+			.put("resolutionInput", "resolution")
 			.build();
 
 	public static String getAttributeNameFromFieldName(String fieldName) {
 		String result = field2AttributeFieldMapper.get(fieldName);
 		if (result == null) {
 			result = fieldName;
+		}
+		return result;
+	}
+
+	public static String getFieldNameFromAttributeName(String attributeName) {
+		String result = attribute2FieldMapper.get(attributeName);
+		if (result == null) {
+			result = attributeName;
 		}
 		return result;
 	}
@@ -96,11 +122,13 @@ public class BugzillaRestTaskSchema extends AbstractTaskSchema {
 	public final Field TARGET_MILESTONE = createField("target_milestone", "Target milestone",
 			TaskAttribute.TYPE_SINGLE_SELECT, null, PRODUCT.getKey(), Flag.ATTRIBUTE, Flag.REQUIRED);
 
-	public final Field RESOLUTION = inheritFrom(parent.RESOLUTION).create();
+	public final Field RESOLUTION = inheritFrom(parent.RESOLUTION).removeFlags(Flag.READ_ONLY).create();
 
 	public final Field OPERATION = createField(TaskAttribute.OPERATION, "Operation", TaskAttribute.TYPE_OPERATION);
 
 	public final Field NEW_COMMENT = inheritFrom(parent.NEW_COMMENT).create();
+
+	public final Field DUPE_OF = createField("dupe_of", "Dup", TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID);
 
 	@Override
 	public void initialize(TaskData taskData) {

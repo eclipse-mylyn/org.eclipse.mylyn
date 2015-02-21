@@ -120,6 +120,7 @@ public class BugzillaRestConfiguration implements Serializable {
 		for (String key : data.getRoot().getAttributes().keySet()) {
 			if (key.equals(BugzillaRestTaskSchema.getDefault().ADD_SELF_CC.getKey())
 					|| key.equals(BugzillaRestTaskSchema.getDefault().NEW_COMMENT.getKey())
+					|| key.equals(BugzillaRestTaskSchema.getDefault().DUPE_OF.getKey())
 					|| key.equals(TaskAttribute.OPERATION)) {
 				continue;
 			}
@@ -396,6 +397,11 @@ public class BugzillaRestConfiguration implements Serializable {
 		}
 		TaskAttribute attribute = bugReport.getRoot()
 				.createAttribute(TaskAttribute.PREFIX_OPERATION + attributeStatusValue);
+		if (attributeStatusValue.equals("RESOLVED")) {
+			attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID,
+					BugzillaRestTaskSchema.getDefault().RESOLUTION.getKey());
+		}
+
 		TaskOperation.applyTo(attribute, attributeStatusValue, attributeStatusValue);
 		// set as default
 		TaskOperation.applyTo(operationAttribute, attributeStatusValue, attributeStatusValue);
@@ -425,8 +431,15 @@ public class BugzillaRestConfiguration implements Serializable {
 		}
 		attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + "duplicate");
 		TaskOperation.applyTo(attribute, "duplicate", "Mark as Duplicate");
-		TaskAttribute attrResolvedInput = attribute.getTaskData().getRoot().createAttribute("dup_id");
+		TaskAttribute attrResolvedInput = attribute.getTaskData()
+				.getRoot()
+				.getAttribute(BugzillaRestTaskSchema.getDefault().DUPE_OF.getKey());
+		if (attrResolvedInput == null) {
+			attrResolvedInput = attribute.getTaskData()
+					.getRoot()
+					.createAttribute(BugzillaRestTaskSchema.getDefault().DUPE_OF.getKey());
+		}
 		attrResolvedInput.getMetaData().setType(TaskAttribute.TYPE_TASK_DEPENDENCY);
-		attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, "dup_id");
+		attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, attrResolvedInput.getId());
 	}
 }

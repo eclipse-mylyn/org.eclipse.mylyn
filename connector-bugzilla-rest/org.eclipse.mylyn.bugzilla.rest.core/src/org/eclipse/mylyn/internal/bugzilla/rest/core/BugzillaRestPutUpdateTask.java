@@ -1,0 +1,214 @@
+/*******************************************************************************
+ * Copyright (c) 2015 Frank Becker and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Frank Becker - initial API and implementation
+ *******************************************************************************/
+
+package org.eclipse.mylyn.internal.bugzilla.rest.core;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.StringEntity;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.LoginToken;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.PutUpdateResult;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
+
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapter;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+
+public class BugzillaRestPutUpdateTask extends BugzillaRestAuthenticatedPutRequest<PutUpdateResult> {
+	private final TaskData taskData;
+
+	class OldAttributes {
+		private final Set<TaskAttribute> oldAttributes;
+
+		public OldAttributes(Set<TaskAttribute> oldAttributes) {
+			super();
+			this.oldAttributes = oldAttributes;
+		}
+
+	}
+
+	OldAttributes oldAttributes;
+
+	ImmutableList<String> legalUpdateAttributes = new ImmutableList.Builder<String>()
+			.add(BugzillaRestTaskSchema.getDefault().PRODUCT.getKey())
+			.add(BugzillaRestTaskSchema.getDefault().COMPONENT.getKey())
+			.add(BugzillaRestTaskSchema.getDefault().SUMMARY.getKey())
+			.add(BugzillaRestTaskSchema.getDefault().VERSION.getKey())
+			.add(BugzillaRestTaskSchema.getDefault().DESCRIPTION.getKey())
+			.add(BugzillaRestTaskSchema.getDefault().OS.getKey())
+			.add(BugzillaRestTaskSchema.getDefault().PLATFORM.getKey())
+			.add(BugzillaRestTaskSchema.getDefault().PRIORITY.getKey())
+			.add(BugzillaRestTaskSchema.getDefault().SEVERITY.getKey())
+			.add(BugzillaRestTaskSchema.getDefault().ALIAS.getKey())
+			.add(BugzillaRestTaskSchema.getDefault().ASSIGNED_TO.getKey())
+			.add(BugzillaRestTaskSchema.getDefault().QA_CONTACT.getKey())
+			.add(TaskAttribute.OPERATION)
+			.add(BugzillaRestTaskSchema.getDefault().TARGET_MILESTONE.getKey())
+			.add(BugzillaRestTaskSchema.getDefault().NEW_COMMENT.getKey())
+			.add("resolutionInput") //$NON-NLS-1$
+			.add(BugzillaRestTaskSchema.getDefault().RESOLUTION.getKey())
+			.add(BugzillaRestTaskSchema.getDefault().DUPE_OF.getKey())
+			.build();
+
+	class TaskAttributeTypeAdapter extends TypeAdapter<OldAttributes> {
+		LoginToken token;
+
+		public TaskAttributeTypeAdapter(LoginToken token) {
+			super();
+			this.token = token;
+		}
+
+		private final Function<String, String> function = new Function<String, String>() {
+
+			@Override
+			public String apply(String input) {
+				return BugzillaRestGsonUtil.convertString2GSonString(input);
+			}
+		};
+
+		@Override
+		public void write(JsonWriter out, OldAttributes oldValues) throws IOException {
+			out.beginObject();
+			out.name("Bugzilla_token").value(token.getToken()); //$NON-NLS-1$
+			for (TaskAttribute element : oldValues.oldAttributes) {
+				TaskAttribute taskAttribute = taskData.getRoot().getAttribute(element.getId());
+				String id = taskAttribute.getId();
+				String value = BugzillaRestGsonUtil.convertString2GSonString(taskAttribute.getValue());
+				if ((legalUpdateAttributes.contains(id) || id.startsWith("cf_")) && value != null) { //$NON-NLS-1$
+					id = BugzillaRestTaskSchema.getFieldNameFromAttributeName(id);
+					if (id.equals("status")) { //$NON-NLS-1$
+						if (value != null && value.equals(TaskAttribute.PREFIX_OPERATION + "default")) { //$NON-NLS-1$
+							continue;
+						}
+						if (value.equals("duplicate")) { //$NON-NLS-1$
+							TaskAttribute res = element.getParentAttribute()
+									.getAttribute(BugzillaRestTaskSchema.getDefault().RESOLUTION.getKey());
+							if (!oldAttributes.oldAttributes.contains(res)) {
+								out.name("resolution").value("DUPLICATE"); //$NON-NLS-1$ //$NON-NLS-2$
+							} else {
+								TaskAttribute res1 = taskData.getRoot()
+										.getAttribute(BugzillaRestTaskSchema.getDefault().RESOLUTION.getKey());
+								res1.setValue("DUPLICATE"); //$NON-NLS-1$
+							}
+							value = "RESOLVED"; //$NON-NLS-1$
+						}
+					}
+					if (taskAttribute.getMetaData().getType() != null
+							&& taskAttribute.getMetaData().getType().equals(TaskAttribute.TYPE_MULTI_SELECT)) {
+						Iterable<String> taskIdsTemp = Iterables.transform(taskAttribute.getValues(), function);
+						Joiner joiner = Joiner.on(",").skipNulls(); //$NON-NLS-1$
+						value = joiner.join(taskIdsTemp);
+					}
+					if (id.equals(BugzillaRestTaskSchema.getDefault().NEW_COMMENT.getKey())) {
+						out.name("comment").beginObject(); //$NON-NLS-1$
+						out.name("body").value(value); //$NON-NLS-1$
+						out.endObject();
+						continue;
+					}
+					out.name(id).value(value);
+					if (id.equals("description")) { //$NON-NLS-1$
+						TaskAttribute descriptionpri = taskAttribute
+								.getAttribute(BugzillaRestTaskSchema.getDefault().COMMENT_ISPRIVATE.getKey());
+						Boolean descriptionprivalue = (descriptionpri != null)
+								? (descriptionpri.getValue().equals("1")) //$NON-NLS-1$
+								: false;
+						out.name("comment_is_private").value(Boolean.toString(descriptionprivalue)); //$NON-NLS-1$
+					}
+				}
+			}
+			out.endObject();
+		}
+
+		@Override
+		public OldAttributes read(JsonReader in) throws IOException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+	}
+
+	public BugzillaRestPutUpdateTask(BugzillaRestHttpClient client, TaskData taskData,
+			Set<TaskAttribute> oldAttributes) {
+		super(client);
+		this.taskData = taskData;
+		this.oldAttributes = new OldAttributes(oldAttributes);
+	}
+
+	@Override
+	protected String getUrlSuffix() {
+		return "/bug/" + taskData.getTaskId(); //$NON-NLS-1$
+	}
+
+	List<NameValuePair> requestParameters;
+
+	@Override
+	protected HttpRequestBase createHttpRequestBase() {
+		String bugUrl = getUrlSuffix();
+		LoginToken token = ((BugzillaRestHttpClient) getClient()).getLoginToken();
+
+		HttpPut request = new HttpPut(baseUrl() + bugUrl);
+		request.setHeader(CONTENT_TYPE, APPLICATION_JSON);
+		request.setHeader(ACCEPT, APPLICATION_JSON);
+
+		try {
+			Gson gson = new GsonBuilder().registerTypeAdapter(OldAttributes.class, new TaskAttributeTypeAdapter(token))
+					.create();
+			StringEntity requestEntity = new StringEntity(gson.toJson(oldAttributes));
+			request.setEntity(requestEntity);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return request;
+	}
+
+	public static String convert(String str) {
+		str = str.replace("\"", "\\\"").replace("\n", "\\\n"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$//$NON-NLS-4$
+		StringBuffer ostr = new StringBuffer();
+		for (int i = 0; i < str.length(); i++) {
+			char ch = str.charAt(i);
+			if ((ch >= 0x0020) && (ch <= 0x007e)) {
+				ostr.append(ch);
+			} else {
+				ostr.append("\\u"); //$NON-NLS-1$
+				String hex = Integer.toHexString(str.charAt(i) & 0xFFFF);
+				for (int j = 0; j < 4 - hex.length(); j++) {
+					ostr.append("0"); //$NON-NLS-1$
+				}
+				ostr.append(hex.toLowerCase());
+			}
+		}
+		return (new String(ostr));
+	}
+
+	@Override
+	protected PutUpdateResult parseFromJson(InputStreamReader in) {
+		TypeToken<PutUpdateResult> type = new TypeToken<PutUpdateResult>() {
+		};
+		return new Gson().fromJson(in, type.getType());
+	}
+
+}

@@ -47,7 +47,7 @@ public class BugzillaRestTaskDataHandler extends AbstractTaskDataHandler {
 			BugzillaRestClient client = connector.getClient(repository);
 			try {
 				IOperationMonitor progress = OperationUtil.convert(monitor, "post taskdata", 3);
-				return client.postTaskData(taskData, progress);
+				return client.postTaskData(taskData, oldAttributes, progress);
 			} catch (BugzillaRestException e) {
 				throw new CoreException(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, 2,
 						"Error post taskdata.\n\n" + e.getMessage(), e));
@@ -119,5 +119,4 @@ public class BugzillaRestTaskDataHandler extends AbstractTaskDataHandler {
 			monitor.done();
 		}
 	}
-
 }

@@ -11,14 +11,17 @@
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core.tests;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -38,12 +41,13 @@ import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConnector;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestCreateTaskSchema;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestException;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestTaskSchema;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestVersion;
-import org.eclipse.mylyn.internal.bugzilla.rest.core.SingleTaskDataCollector;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Field;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.LoginToken;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Parameters;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Product;
+import org.eclipse.mylyn.internal.bugzilla.rest.test.support.BugzillaRestHarness;
 import org.eclipse.mylyn.internal.bugzilla.rest.test.support.BugzillaRestTestFixture;
 import org.eclipse.mylyn.internal.commons.core.operations.NullOperationMonitor;
 import org.eclipse.mylyn.internal.commons.repositories.core.InMemoryCredentialsStore;
@@ -54,6 +58,7 @@ import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
@@ -80,13 +85,16 @@ public class BugzillaRestClientTest {
 
 	private BugzillaRestConnector connector;
 
+	private BugzillaRestHarness harness;
+
 	public BugzillaRestClientTest(BugzillaRestTestFixture fixture) {
 		this.actualFixture = fixture;
 	}
 
 	@Before
 	public void setUp() {
-		connector = new BugzillaRestConnector();
+		connector = actualFixture.connector();
+		harness = actualFixture.createHarness();
 	}
 
 	@Test
@@ -254,8 +262,8 @@ public class BugzillaRestClientTest {
 		taskDataHandler.initializeTaskData(actualFixture.repository(), taskData, taskMappingInit, null);
 		taskData.getRoot().getAttribute("cf_dropdown").setValue("one");
 		try {
-			connector.getClient(actualFixture.repository()).postTaskData(taskData, null);
-			fail("BugzillaRestException expected, never reach this!");
+			connector.getClient(actualFixture.repository()).postTaskData(taskData, null, null);
+			fail("never reach this!");
 		} catch (BugzillaRestException e) {
 			String url = actualFixture.getRepositoryUrl();
 			assertEquals("You must select/enter a product.  (status: Bad Request from "
@@ -298,7 +306,7 @@ public class BugzillaRestClientTest {
 		taskDataHandler.initializeTaskData(actualFixture.repository(), taskData, taskMappingInit, null);
 		taskData.getRoot().getAttribute("cf_dropdown").setValue("one");
 		try {
-			connector.getClient(actualFixture.repository()).postTaskData(taskData, null);
+			connector.getClient(actualFixture.repository()).postTaskData(taskData, null, null);
 			fail("never reach this!");
 		} catch (BugzillaRestException e) {
 			String url = actualFixture.getRepositoryUrl();
@@ -344,7 +352,8 @@ public class BugzillaRestClientTest {
 		taskData.getRoot()
 				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())
 				.setValue("M2");
-		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskData, null);
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskData, null,
+				null);
 		assertEquals(ResponseKind.TASK_CREATED, reposonse.getReposonseKind());
 	}
 
@@ -393,7 +402,7 @@ public class BugzillaRestClientTest {
 		connector.getTaskMapping(taskDataSubmit).merge(mapper1);
 
 		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskDataSubmit,
-				null);
+				null, null);
 		assertEquals(ResponseKind.TASK_CREATED, reposonse.getReposonseKind());
 	}
 
@@ -425,30 +434,24 @@ public class BugzillaRestClientTest {
 				return "R1";
 			}
 		};
-		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
-		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(actualFixture.repository());
-		TaskData taskData = new TaskData(mapper, actualFixture.repository().getConnectorKind(),
-				actualFixture.repository().getRepositoryUrl(), "");
-		taskDataHandler.initializeTaskData(actualFixture.repository(), taskData, taskMappingInit, null);
+		TaskData taskData = harness.createTaskData(taskMappingInit, null, null);
+
 		taskData.getRoot().getAttribute("cf_dropdown").setValue("one");
 		taskData.getRoot()
 				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())
 				.setValue("M2");
-		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskData, null);
-		assertEquals(ResponseKind.TASK_CREATED, reposonse.getReposonseKind());
-		String taskId = reposonse.getTaskId();
-		Set<String> taskIds = new HashSet<String>();
-		taskIds.add(taskId);
-		SingleTaskDataCollector singleTaskDataCollector = new SingleTaskDataCollector();
-		connector.getClient(actualFixture.repository()).getTaskData(taskIds, actualFixture.repository(),
-				singleTaskDataCollector, null);
-		TaskData taskDataGet = singleTaskDataCollector.getTaskData();
-		assertNotNull(taskDataGet);
-		assertNotNull(taskDataGet.getRoot());
+		String taskId = harness.submitNewTask(taskData);
+		TaskData taskDataGet = harness.getTaskFromServer(taskId);
 
 		// actual we read no comments and so we also can not get the description
 		taskData.getRoot().removeAttribute("task.common.description");
 		taskDataGet.getRoot().removeAttribute("task.common.description");
+
+		// resolution is only for new tasks readonly
+		taskData.getRoot()
+				.getAttribute(BugzillaRestTaskSchema.getDefault().RESOLUTION.getKey())
+				.getMetaData()
+				.setReadOnly(false);
 
 		// attributes we know that they can not be equal
 		taskData.getRoot().removeAttribute("task.common.status");
@@ -471,9 +474,65 @@ public class BugzillaRestClientTest {
 		taskDataGet.getRoot().removeAttribute("task.common.operation-RESOLVED");
 		taskDataGet.getRoot().removeAttribute("resolutionInput");
 		taskDataGet.getRoot().removeAttribute("task.common.operation-duplicate");
-		taskDataGet.getRoot().removeAttribute("dup_id");
+		taskDataGet.getRoot().removeAttribute("dupe_of");
 
 		assertEquals(taskData.getRoot().toString(), taskDataGet.getRoot().toString());
+	}
+
+	@Test
+	public void testUpdateTaskData() throws Exception {
+		String taskId = harness.getTaksId4TestProduct();
+		TaskData taskDataGet = harness.getTaskFromServer(taskId);
+
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+
+		TaskAttribute attribute = taskDataGet.getRoot()
+				.getMappedAttribute(BugzillaRestCreateTaskSchema.getDefault().PRODUCT.getKey());
+		attribute.setValue("Product with Spaces");
+		changed.add(attribute);
+		attribute = taskDataGet.getRoot()
+				.getMappedAttribute(BugzillaRestCreateTaskSchema.getDefault().COMPONENT.getKey());
+		attribute.setValue("Component 1");
+		changed.add(attribute);
+		attribute = taskDataGet.getRoot()
+				.getMappedAttribute(BugzillaRestCreateTaskSchema.getDefault().VERSION.getKey());
+		attribute.setValue("b");
+		changed.add(attribute);
+		attribute = taskDataGet.getRoot()
+				.getMappedAttribute(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey());
+		attribute.setValue("M3.0");
+		changed.add(attribute);
+
+		attribute = taskDataGet.getRoot().getAttribute("cf_dropdown");
+		attribute.setValue("two");
+		changed.add(attribute);
+		attribute = taskDataGet.getRoot().getAttribute("cf_multiselect");
+		attribute.setValues(Arrays.asList("Red", "Yellow"));
+		changed.add(attribute);
+
+		//Act
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskDataGet,
+				changed, null);
+
+		//Assert
+		TaskData taskDataUpdate = harness.getTaskFromServer(taskId);
+
+		attribute = taskDataGet.getRoot()
+				.getMappedAttribute(BugzillaRestCreateTaskSchema.getDefault().PRODUCT.getKey());
+		assertThat(attribute.getValue(), is("Product with Spaces"));
+		attribute = taskDataGet.getRoot()
+				.getMappedAttribute(BugzillaRestCreateTaskSchema.getDefault().COMPONENT.getKey());
+		assertThat(attribute.getValue(), is("Component 1"));
+		attribute = taskDataGet.getRoot()
+				.getMappedAttribute(BugzillaRestCreateTaskSchema.getDefault().VERSION.getKey());
+		assertThat(attribute.getValue(), is("b"));
+		attribute = taskDataGet.getRoot()
+				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey());
+		assertThat(attribute.getValue(), is("M3.0"));
+		attribute = taskDataUpdate.getRoot().getAttribute("cf_dropdown");
+		assertThat(attribute.getValue(), is("two"));
+		attribute = taskDataUpdate.getRoot().getAttribute("cf_multiselect");
+		assertThat(attribute.getValues(), is(Arrays.asList("Red", "Yellow")));
 	}
 
 }

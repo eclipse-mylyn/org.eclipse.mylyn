@@ -29,11 +29,13 @@ import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Named;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.ParameterResponse;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Product;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.ProductResponse;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.PutUpdateResult;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.RestResponse;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.VersionResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
@@ -116,12 +118,14 @@ public class BugzillaRestClient {
 				}).run(monitor);
 	}
 
-	public RepositoryResponse postTaskData(TaskData taskData, IOperationMonitor monitor) throws BugzillaRestException {
+	public RepositoryResponse postTaskData(TaskData taskData, Set<TaskAttribute> oldAttributes,
+			IOperationMonitor monitor) throws BugzillaRestException {
 		if (taskData.isNew()) {
 			BugzillaRestIdResult result = new BugzillaRestPostNewTask(client, taskData).run(monitor);
 			return new RepositoryResponse(ResponseKind.TASK_CREATED, result.getId());
 		} else {
-			throw new UnsupportedOperationException();
+			PutUpdateResult result = new BugzillaRestPutUpdateTask(client, taskData, oldAttributes).run(monitor);
+			return new RepositoryResponse(ResponseKind.TASK_UPDATED, result.getBugs()[0].getId());
 		}
 	}
 
