@@ -35,8 +35,11 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageProvider;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
 import com.google.common.io.Closeables;
 
 /**
@@ -51,7 +54,7 @@ import com.google.common.io.Closeables;
  * <li><tt>services/org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageProvider</tt></li>
  * </ul>
  * </p>
- * 
+ *
  * @author David Green
  * @since 1.0
  * @see MarkupLanguage
@@ -73,7 +76,7 @@ public class ServiceLocator {
 
 	/**
 	 * Get an instance of the service locator
-	 * 
+	 *
 	 * @param classLoader
 	 *            the class loader to use when looking up services
 	 * @see #getInstance()
@@ -93,7 +96,7 @@ public class ServiceLocator {
 
 	/**
 	 * Get an instance of the service locator
-	 * 
+	 *
 	 * @see #getInstance(ClassLoader)
 	 */
 	public static ServiceLocator getInstance() {
@@ -106,7 +109,7 @@ public class ServiceLocator {
 
 	/**
 	 * get a markup language by name
-	 * 
+	 *
 	 * @param languageName
 	 *            the {@link MarkupLanguage#getName() name} of the markup language, or the fully qualified name of the
 	 *            class that implements the language
@@ -183,7 +186,7 @@ public class ServiceLocator {
 
 	/**
 	 * Get all known markup languages
-	 * 
+	 *
 	 * @since 1.6
 	 */
 	public Set<MarkupLanguage> getAllMarkupLanguages() {
@@ -195,7 +198,18 @@ public class ServiceLocator {
 				return true;
 			}
 		});
-		return markupLanguages;
+		return filterDuplicates(markupLanguages);
+	}
+
+	private Set<MarkupLanguage> filterDuplicates(Set<MarkupLanguage> markupLanguages) {
+		Multimap<String, Class<?>> markupLanguageClassesByName = HashMultimap.create();
+		ImmutableSet.Builder<MarkupLanguage> builder = ImmutableSet.builder();
+		for (MarkupLanguage language : markupLanguages) {
+			if (markupLanguageClassesByName.put(language.getName(), language.getClass())) {
+				builder.add(language);
+			}
+		}
+		return builder.build();
 	}
 
 	public static void setImplementation(Class<? extends ServiceLocator> implementationClass) {
@@ -204,11 +218,11 @@ public class ServiceLocator {
 		}
 	}
 
-	private interface MarkupLanguageVisitor {
+	interface MarkupLanguageVisitor {
 		public boolean accept(MarkupLanguage language);
 	}
 
-	private void loadMarkupLanguages(MarkupLanguageVisitor visitor) {
+	void loadMarkupLanguages(MarkupLanguageVisitor visitor) {
 		for (ResourceDescriptor descriptor : discoverServiceResources()) {
 			List<String> classNames = readServiceClassNames(descriptor.getUrl());
 			for (String className : classNames) {
@@ -253,7 +267,7 @@ public class ServiceLocator {
 
 	/**
 	 * Loads the specified class.
-	 * 
+	 *
 	 * @param resourceUrl
 	 *            the service resource from which the class name was discovered
 	 * @param className
@@ -289,7 +303,7 @@ public class ServiceLocator {
 
 	/**
 	 * Provides the list of service resource names from which Java services should be loaded.
-	 * 
+	 *
 	 * @return the list of service resource names
 	 * @since 2.0
 	 */
@@ -307,7 +321,7 @@ public class ServiceLocator {
 	/**
 	 * Reads the services provided in the file with the given URL. The URL must provide a file in the format expected by
 	 * {@link ServiceLoader}.
-	 * 
+	 *
 	 * @since 2.0
 	 * @see ServiceLoader
 	 */

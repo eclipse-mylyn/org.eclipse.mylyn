@@ -31,6 +31,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.mylyn.internal.wikitext.MockMarkupLanguage;
 import org.eclipse.mylyn.internal.wikitext.MockMarkupLanguageProvider;
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageProvider;
 import org.junit.Before;
@@ -40,14 +41,26 @@ import org.junit.rules.ExpectedException;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 
 /**
  * Tests for {@link ServiceLocator}
- * 
+ *
  * @author David Green
  */
 public class ServiceLocatorTest {
+
+	static class TestMarkupLanguage extends MarkupLanguage {
+		public TestMarkupLanguage(String name) {
+			setName(name);
+		}
+
+		@Override
+		public void processContent(MarkupParser parser, String markupContent, boolean asDocument) {
+			throw new IllegalStateException();
+		}
+	}
 
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();
@@ -226,6 +239,37 @@ public class ServiceLocatorTest {
 		assertNotNull(names);
 		assertTrue(names.contains("META-INF/services/" + MarkupLanguage.class.getName()));
 		assertTrue(names.contains("services/" + MarkupLanguage.class.getName()));
+	}
+
+	@Test
+	public void getAllMarkupLanguagesFiltersDuplicates() {
+		final MarkupLanguage language1 = new TestMarkupLanguage("Language 1");
+		final MarkupLanguage language1b = new MarkupLanguage() {
+			{
+				setName("Language 1");
+			}
+
+			@Override
+			public void processContent(MarkupParser parser, String markupContent, boolean asDocument) {
+				throw new IllegalStateException();
+			}
+		};
+		final MarkupLanguage language2 = new TestMarkupLanguage("Language 3");
+		final MarkupLanguage language2b = new TestMarkupLanguage("Language 3");
+
+		ServiceLocator locator = new ServiceLocator(ServiceLocatorTest.class.getClassLoader()) {
+			@Override
+			void loadMarkupLanguages(MarkupLanguageVisitor visitor) {
+				visitor.accept(language1);
+				visitor.accept(language1b);
+				visitor.accept(language2);
+				visitor.accept(language2b);
+			}
+		};
+		Set<MarkupLanguage> markupLanguages = locator.getAllMarkupLanguages();
+		assertEquals(3, markupLanguages.size());
+		assertTrue(markupLanguages.containsAll(ImmutableSet.of(language1, language1b)));
+		assertTrue(markupLanguages.contains(language2) || markupLanguages.contains(language2b));
 	}
 
 	private InputStream createInput(String content) {
