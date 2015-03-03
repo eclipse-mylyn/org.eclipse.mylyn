@@ -13,7 +13,6 @@ package org.eclipse.mylyn.internal.wikitext.core.parser.html;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
@@ -31,6 +30,8 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
+import com.google.common.collect.ImmutableSet;
+
 /**
  * A parser for (X)HTML that is based on SAX. Subclasses determine the source of SAX events.
  *
@@ -44,39 +45,54 @@ public abstract class AbstractSaxHtmlParser {
 	/**
 	 * element names for block elements
 	 */
-	private static Set<String> blockElements = new HashSet<String>();
+	private static Set<String> blockElements;
 
 	/**
 	 * element names for elements that cause adjacent whitespace to be collapsed
 	 */
-	private static Set<String> whitespaceCollapsingElements = new HashSet<String>();
-	static {
-		blockElements.add("div"); //$NON-NLS-1$
-		blockElements.add("dl"); //$NON-NLS-1$
-		blockElements.add("form"); //$NON-NLS-1$
-		blockElements.add("h1"); //$NON-NLS-1$
-		blockElements.add("h2"); //$NON-NLS-1$
-		blockElements.add("h3"); //$NON-NLS-1$
-		blockElements.add("h4"); //$NON-NLS-1$
-		blockElements.add("h5"); //$NON-NLS-1$
-		blockElements.add("h6"); //$NON-NLS-1$
-		blockElements.add("ol"); //$NON-NLS-1$
-		blockElements.add("p"); //$NON-NLS-1$
-		blockElements.add("pre"); //$NON-NLS-1$
-		blockElements.add("table"); //$NON-NLS-1$
-		blockElements.add("textarea"); //$NON-NLS-1$
-		blockElements.add("td"); //$NON-NLS-1$
-		blockElements.add("tr"); //$NON-NLS-1$
-		blockElements.add("ul"); //$NON-NLS-1$
-		blockElements.add("tbody"); //$NON-NLS-1$
-		blockElements.add("thead"); //$NON-NLS-1$
-		blockElements.add("tfoot"); //$NON-NLS-1$
-		blockElements.add("li"); //$NON-NLS-1$
-		blockElements.add("dd"); //$NON-NLS-1$
-		blockElements.add("dt"); //$NON-NLS-1$
+	private static Set<String> whitespaceCollapsingElements;
 
-		whitespaceCollapsingElements.add("br"); //$NON-NLS-1$
-		whitespaceCollapsingElements.add("hr"); //$NON-NLS-1$
+	private static Set<String> noCharacterContentElements;
+	static {
+		ImmutableSet.Builder<String> blockElementsBuilder = ImmutableSet.builder();
+		blockElementsBuilder.add("div"); //$NON-NLS-1$
+		blockElementsBuilder.add("dl"); //$NON-NLS-1$
+		blockElementsBuilder.add("form"); //$NON-NLS-1$
+		blockElementsBuilder.add("h1"); //$NON-NLS-1$
+		blockElementsBuilder.add("h2"); //$NON-NLS-1$
+		blockElementsBuilder.add("h3"); //$NON-NLS-1$
+		blockElementsBuilder.add("h4"); //$NON-NLS-1$
+		blockElementsBuilder.add("h5"); //$NON-NLS-1$
+		blockElementsBuilder.add("h6"); //$NON-NLS-1$
+		blockElementsBuilder.add("ol"); //$NON-NLS-1$
+		blockElementsBuilder.add("p"); //$NON-NLS-1$
+		blockElementsBuilder.add("pre"); //$NON-NLS-1$
+		blockElementsBuilder.add("table"); //$NON-NLS-1$
+		blockElementsBuilder.add("textarea"); //$NON-NLS-1$
+		blockElementsBuilder.add("td"); //$NON-NLS-1$
+		blockElementsBuilder.add("tr"); //$NON-NLS-1$
+		blockElementsBuilder.add("ul"); //$NON-NLS-1$
+		blockElementsBuilder.add("tbody"); //$NON-NLS-1$
+		blockElementsBuilder.add("thead"); //$NON-NLS-1$
+		blockElementsBuilder.add("tfoot"); //$NON-NLS-1$
+		blockElementsBuilder.add("li"); //$NON-NLS-1$
+		blockElementsBuilder.add("dd"); //$NON-NLS-1$
+		blockElementsBuilder.add("dt"); //$NON-NLS-1$
+		blockElements = blockElementsBuilder.build();
+
+		ImmutableSet.Builder<String> whitespaceCollapsingElementsBuilder = ImmutableSet.builder();
+		whitespaceCollapsingElementsBuilder.add("br"); //$NON-NLS-1$
+		whitespaceCollapsingElementsBuilder.add("hr"); //$NON-NLS-1$
+		whitespaceCollapsingElements = whitespaceCollapsingElementsBuilder.build();
+
+		ImmutableSet.Builder<String> noCharacterContentElementsBuilder = ImmutableSet.builder();
+		noCharacterContentElementsBuilder.add("ul"); //$NON-NLS-1$
+		noCharacterContentElementsBuilder.add("ol"); //$NON-NLS-1$
+		noCharacterContentElementsBuilder.add("table"); //$NON-NLS-1$
+		noCharacterContentElementsBuilder.add("tbody"); //$NON-NLS-1$
+		noCharacterContentElementsBuilder.add("thead"); //$NON-NLS-1$
+		noCharacterContentElementsBuilder.add("tr"); //$NON-NLS-1$
+		noCharacterContentElements = noCharacterContentElementsBuilder.build();
 	}
 
 	private static final Map<String, SpanType> elementNameToSpanType = new HashMap<String, SpanType>();
@@ -134,6 +150,8 @@ public abstract class AbstractSaxHtmlParser {
 
 		final boolean collapsesAdjacentWhitespace;
 
+		final boolean canHaveCharacterContent;
+
 		private ElementState(ElementState parent, String elementName) {
 			this.parent = parent;
 			this.elementName = elementName;
@@ -141,6 +159,7 @@ public abstract class AbstractSaxHtmlParser {
 			collapsesAdjacentWhitespace = whitespaceCollapsingElements.contains(elementName);
 			noWhitespaceTextContainer = "body".equals(elementName); //$NON-NLS-1$
 			preserveWhitespace = (parent != null && parent.preserveWhitespace) || "pre".equals(elementName); //$NON-NLS-1$
+			canHaveCharacterContent = !noCharacterContentElements.contains(elementName);
 			if (parent != null) {
 				parent.lastChild = this;
 			}
@@ -219,7 +238,9 @@ public abstract class AbstractSaxHtmlParser {
 
 		private void emitText(ElementState elementState, boolean elementClosing) {
 			String text = elementText.toString();
-			if (!elementState.preserveWhitespace) {
+			if (!elementState.canHaveCharacterContent) {
+				text = text.trim();
+			} else if (!elementState.preserveWhitespace) {
 				if (elementClosing) {
 					if (elementState.childCount == 0) {
 						if (elementState.blockElement) {
@@ -241,6 +262,7 @@ public abstract class AbstractSaxHtmlParser {
 					}
 				}
 			}
+
 			elementText.delete(0, elementText.length());
 			if (text.length() > 0) {
 				handlers.peek().characters(text);
@@ -261,7 +283,6 @@ public abstract class AbstractSaxHtmlParser {
 					start += skip;
 					length -= skip;
 				}
-
 				// receiving characters makes the last element child irrelevant
 				elementState.lastChild = null;
 

@@ -25,6 +25,8 @@ import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.google.common.base.Throwables;
+
 /**
  * @author David Green
  */
@@ -152,6 +154,33 @@ public abstract class AbstractSaxParserTest extends TestCase {
 
 	public void testEntityReferences() throws IOException, SAXException {
 		performTest("<html><body>&copy;&reg;&euro;</body></html>", "(c)(r)\u20ac\n\n");
+	}
+
+	public void testListWithWhitespace() {
+		assertParseHtml("<ul><li>one</li><li>two</li></ul>",
+				"<html><body><ul> <li>one</li> \n <li>two</li>  </ul></body></html>");
+	}
+
+	public void testOrderedListWithWhitespace() {
+		assertParseHtml("<ol><li>one</li><li>two</li></ol>",
+				"<html><body><ol> <li>one</li> \n <li>two</li>  </ol></body></html>");
+	}
+
+	public void testTableWithRowCharacterContent() {
+		assertParseHtml("<table><tr>ab<td>one</td></tr></table>",
+				"<html><body><table> <tr>\t\r\nab <td>one</td>\n</tr>\n</table></body></html>");
+	}
+
+	private void assertParseHtml(String expectedResult, String html) {
+		StringWriter out = new StringWriter();
+		HtmlDocumentBuilder htmlBuilder = new HtmlDocumentBuilder(out);
+		htmlBuilder.setEmitAsDocument(false);
+		try {
+			parser.parse(sourceForHtml(html), htmlBuilder, true);
+		} catch (Exception e) {
+			throw Throwables.propagate(e);
+		}
+		assertEquals(expectedResult, out.toString());
 	}
 
 	protected void performTest(String html, String expectedResult) throws IOException, SAXException {
