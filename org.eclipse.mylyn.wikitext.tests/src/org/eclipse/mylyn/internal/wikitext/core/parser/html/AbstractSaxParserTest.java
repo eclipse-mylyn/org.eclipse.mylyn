@@ -190,6 +190,11 @@ public abstract class AbstractSaxParserTest extends TestCase {
 				"<html><body><ol><li>one\n <ul><li>point two</li><li>point three</li></ul> more</li></ol></body></html>");
 	}
 
+	public void testBlockQuote() {
+		assertParseHtml("<blockquote></blockquote><div>and</div><blockquote>one<p>two</p></blockquote>",
+				"<html><body><blockquote> </blockquote> <div>and</div> <blockquote> one <p>two</p> </blockquote></body></html>");
+	}
+
 	private void assertParseHtml(String expectedResult, String html) {
 		StringWriter out = new StringWriter();
 		HtmlDocumentBuilder htmlBuilder = new HtmlDocumentBuilder(out);

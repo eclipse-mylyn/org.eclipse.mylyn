@@ -78,6 +78,7 @@ public abstract class AbstractSaxHtmlParser {
 		blockElementsBuilder.add("li"); //$NON-NLS-1$
 		blockElementsBuilder.add("dd"); //$NON-NLS-1$
 		blockElementsBuilder.add("dt"); //$NON-NLS-1$
+		blockElementsBuilder.add("blockquote"); //$NON-NLS-1$
 		blockElements = blockElementsBuilder.build();
 
 		ImmutableSet.Builder<String> whitespaceCollapsingElementsBuilder = ImmutableSet.builder();
@@ -276,7 +277,7 @@ public abstract class AbstractSaxHtmlParser {
 				if ((elementState.noWhitespaceTextContainer && (elementState.lastChild == null || elementState.lastChild.blockElement))
 						|| (elementState.blockElement && !elementState.preserveWhitespace
 								&& elementState.textChildCount == 0 && elementState.childCount == 0)
-						|| (elementState.lastChild != null && elementState.lastChild.collapsesAdjacentWhitespace)) {
+								|| (elementState.lastChild != null && elementState.lastChild.collapsesAdjacentWhitespace)) {
 					// trim left here
 					int skip = 0;
 					while (skip < length && Character.isWhitespace(ch[start + skip])) {
@@ -612,15 +613,15 @@ public abstract class AbstractSaxHtmlParser {
 	private org.eclipse.mylyn.wikitext.core.parser.Attributes computeAttributes(SpanType spanType, Attributes atts) {
 		org.eclipse.mylyn.wikitext.core.parser.Attributes attributes = spanType == SpanType.LINK
 				? new LinkAttributes()
-				: new org.eclipse.mylyn.wikitext.core.parser.Attributes();
-		populateCommonAttributes(attributes, atts);
-		if (spanType == SpanType.LINK) {
-			String href = getValue("href", atts); //$NON-NLS-1$
-			if (href != null) {
-				((LinkAttributes) attributes).setHref(href);
-			}
-		}
-		return attributes;
+		: new org.eclipse.mylyn.wikitext.core.parser.Attributes();
+				populateCommonAttributes(attributes, atts);
+				if (spanType == SpanType.LINK) {
+					String href = getValue("href", atts); //$NON-NLS-1$
+					if (href != null) {
+						((LinkAttributes) attributes).setHref(href);
+					}
+				}
+				return attributes;
 	}
 
 	private String getValue(String name, Attributes atts) {
