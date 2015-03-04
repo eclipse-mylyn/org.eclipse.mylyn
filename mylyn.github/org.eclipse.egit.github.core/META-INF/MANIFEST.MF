@@ -9,7 +9,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.google.gson;version="[1.6.0,2.2.0]",
  com.google.gson.annotations;version="[1.6.0,2.2.0]",
  com.google.gson.reflect;version="[1.6.0,2.2.0]",
- com.google.gson.stream;version="[1.6.0,2.2.0]
+ com.google.gson.stream;version="[1.6.0,2.2.0]"
 Export-Package: org.eclipse.egit.github.core;version="4.0.0",
  org.eclipse.egit.github.core.client;version="4.0.0",
  org.eclipse.egit.github.core.event;version="4.0.0",
