@@ -171,6 +171,25 @@ public abstract class AbstractSaxParserTest extends TestCase {
 				"<html><body><table> <tr>\t\r\nab <td>one</td>\n</tr>\n</table></body></html>");
 	}
 
+	public void testAdjacentParagraphBlocksInListItem() {
+		assertParseHtml("<ul><li><p>one</p><p>two</p></li></ul>",
+				"<html><body><ul><li>\n<p>one</p>\n<p>two</p>\n</li></ul></body></html>");
+	}
+
+	public void testAdjacentParagraphBlocks() {
+		assertParseHtml("<p>one</p><p>two</p>", "<html><body>\n<p>one</p>\n<p>two</p>\n</body></html>");
+	}
+
+	public void testInsignificantWhitespace() {
+		assertParseHtml("<p>one</p><p>two three</p><pre> <pre><code>one\n\ntwo </code></pre> </pre>",
+				"<html><body>\n<p>one </p>\n<p>two\n  \tthree</p>\n<pre> <code>one\n\ntwo </code> </pre></body></html>");
+	}
+
+	public void testInsignificantWhitespaceNestedBlocks() {
+		assertParseHtml("<ol><li>one<ul><li>point two</li><li>point three</li></ul>more</li></ol>",
+				"<html><body><ol><li>one\n <ul><li>point two</li><li>point three</li></ul> more</li></ol></body></html>");
+	}
+
 	private void assertParseHtml(String expectedResult, String html) {
 		StringWriter out = new StringWriter();
 		HtmlDocumentBuilder htmlBuilder = new HtmlDocumentBuilder(out);

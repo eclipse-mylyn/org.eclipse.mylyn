@@ -156,7 +156,7 @@ public abstract class AbstractSaxHtmlParser {
 			this.parent = parent;
 			this.elementName = elementName;
 			blockElement = blockElements.contains(elementName);
-			collapsesAdjacentWhitespace = whitespaceCollapsingElements.contains(elementName);
+			collapsesAdjacentWhitespace = blockElement || whitespaceCollapsingElements.contains(elementName);
 			noWhitespaceTextContainer = "body".equals(elementName); //$NON-NLS-1$
 			preserveWhitespace = (parent != null && parent.preserveWhitespace) || "pre".equals(elementName); //$NON-NLS-1$
 			canHaveCharacterContent = !noCharacterContentElements.contains(elementName);
@@ -196,11 +196,10 @@ public abstract class AbstractSaxHtmlParser {
 		}
 
 		public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-			if (processingContent) {
-				emitText(elementState, false);
-			}
-
 			final String lowerCaseName = localName.toLowerCase();
+			if (processingContent) {
+				emitText(elementState, lowerCaseName, false);
+			}
 			elementState = new ElementState(elementState, lowerCaseName);
 
 			if (!processingContent) {
@@ -219,7 +218,7 @@ public abstract class AbstractSaxHtmlParser {
 		}
 
 		public void endElement(String uri, String localName, String qName) throws SAXException {
-			emitText(elementState, true);
+			emitText(elementState, null, true);
 
 			final String lowerCaseName = localName.toLowerCase();
 			elementState = elementState.parent;
@@ -236,7 +235,7 @@ public abstract class AbstractSaxHtmlParser {
 			handler.end();
 		}
 
-		private void emitText(ElementState elementState, boolean elementClosing) {
+		private void emitText(ElementState elementState, String nextElementName, boolean elementClosing) {
 			String text = elementText.toString();
 			if (!elementState.canHaveCharacterContent) {
 				text = text.trim();
@@ -260,6 +259,9 @@ public abstract class AbstractSaxHtmlParser {
 							text = originalText.substring(0, 1);
 						}
 					}
+					if (nextElementName != null && blockElements.contains(nextElementName)) {
+						text = trimRight(text);
+					}
 				}
 			}
 
@@ -274,7 +276,7 @@ public abstract class AbstractSaxHtmlParser {
 				if ((elementState.noWhitespaceTextContainer && (elementState.lastChild == null || elementState.lastChild.blockElement))
 						|| (elementState.blockElement && !elementState.preserveWhitespace
 								&& elementState.textChildCount == 0 && elementState.childCount == 0)
-								|| (elementState.lastChild != null && elementState.lastChild.collapsesAdjacentWhitespace)) {
+						|| (elementState.lastChild != null && elementState.lastChild.collapsesAdjacentWhitespace)) {
 					// trim left here
 					int skip = 0;
 					while (skip < length && Character.isWhitespace(ch[start + skip])) {
@@ -610,15 +612,15 @@ public abstract class AbstractSaxHtmlParser {
 	private org.eclipse.mylyn.wikitext.core.parser.Attributes computeAttributes(SpanType spanType, Attributes atts) {
 		org.eclipse.mylyn.wikitext.core.parser.Attributes attributes = spanType == SpanType.LINK
 				? new LinkAttributes()
-		: new org.eclipse.mylyn.wikitext.core.parser.Attributes();
-				populateCommonAttributes(attributes, atts);
-				if (spanType == SpanType.LINK) {
-					String href = getValue("href", atts); //$NON-NLS-1$
-					if (href != null) {
-						((LinkAttributes) attributes).setHref(href);
-					}
-				}
-				return attributes;
+				: new org.eclipse.mylyn.wikitext.core.parser.Attributes();
+		populateCommonAttributes(attributes, atts);
+		if (spanType == SpanType.LINK) {
+			String href = getValue("href", atts); //$NON-NLS-1$
+			if (href != null) {
+				((LinkAttributes) attributes).setHref(href);
+			}
+		}
+		return attributes;
 	}
 
 	private String getValue(String name, Attributes atts) {
