@@ -55,7 +55,7 @@ public class CommitStatusTest {
 		assertEquals("con/text", status.setContext("con/text").getContext());
 		assertEquals("desc", status.setDescription("desc").getDescription());
 		assertEquals(40, status.setId(40).getId());
-		assertEquals("state", status.setState("state").getState());
+		assertEquals("success", status.setState("success").getState());
 		assertEquals("targetUrl", status.setTargetUrl("targetUrl")
 				.getTargetUrl());
 		assertEquals(new Date(5678), status.setUpdatedAt(new Date(5678))
