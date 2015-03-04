@@ -451,4 +451,20 @@ public class CommitServiceTest {
 	public void createStatusNullStatus() throws IOException {
 		service.createStatus(new RepositoryId("o", "n"), "123", null);
 	}
+
+	/**
+	 * Create status
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void createStatusInvalidState() throws IOException {
+		RepositoryId repo = new RepositoryId("o", "n");
+		CommitStatus status = new CommitStatus();
+		status.setState("non-existing-state");
+		status.setDescription("description");
+		status.setTargetUrl("http://target/url");
+		status.setContext("context");
+		service.createStatus(repo, "123", status);
+	}
 }
