@@ -1,5 +1,5 @@
 /******************************************************************************
- *  Copyright (c) 2012 GitHub Inc.
+ *  Copyright (c) 2012, 2015 GitHub Inc. and others.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -32,6 +32,7 @@ public class CommitStatusTest {
 		CommitStatus status = new CommitStatus();
 		assertNull(status.getCreatedAt());
 		assertNull(status.getCreator());
+		assertNull(status.getContext());
 		assertNull(status.getDescription());
 		assertEquals(0, status.getId());
 		assertNull(status.getState());
@@ -50,6 +51,7 @@ public class CommitStatusTest {
 				.getCreatedAt());
 		User creator = new User().setId(1);
 		assertEquals(creator, status.setCreator(creator).getCreator());
+		assertEquals("con/text", status.setContext("con/text").getContext());
 		assertEquals("desc", status.setDescription("desc").getDescription());
 		assertEquals(40, status.setId(40).getId());
 		assertEquals("state", status.setState("state").getState());
