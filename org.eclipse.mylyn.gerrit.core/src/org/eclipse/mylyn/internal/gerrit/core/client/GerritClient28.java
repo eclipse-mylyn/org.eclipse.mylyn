@@ -12,7 +12,9 @@
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -237,8 +239,13 @@ public class GerritClient28 extends GerritClient27 {
 		return projectBranchMap.getIfPresent(project);
 	}
 
-	private String getProjectBranchesUrl(String projectName) {
-		return "/projects/" + projectName + "/branches/"; //$NON-NLS-1$ //$NON-NLS-2$
+	private String getProjectBranchesUrl(String projectName) throws GerritException {
+		try {
+			String encodedProjectName = URLEncoder.encode(projectName, "UTF-8"); //$NON-NLS-1$
+			return "/projects/" + encodedProjectName + "/branches/"; //$NON-NLS-1$ //$NON-NLS-2$
+		} catch (UnsupportedEncodingException e) {
+			throw new GerritException(e);
+		}
 	}
 
 	public void clearCachedBranches(Project.NameKey project) {
