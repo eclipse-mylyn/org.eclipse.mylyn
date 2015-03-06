@@ -663,6 +663,10 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.characters("content");
 		builder.endBlock(); // div
 
+		builder.beginBlock(BlockType.DIV, new Attributes());
+		builder.characters("content2");
+		builder.endBlock(); // div
+
 		builder.endBlock(); // cell
 
 		builder.endBlock(); // row
@@ -675,7 +679,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		assertEquals("|first|content|\n\n", markup);
+		assertEquals("|first| content content2|\n\n", markup);
 	}
 
 	public void testEmptyBoldSpan() {

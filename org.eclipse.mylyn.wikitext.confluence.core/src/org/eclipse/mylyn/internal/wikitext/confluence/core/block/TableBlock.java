@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 David Green and others.
+ * Copyright (c) 2007, 2015 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,16 +17,18 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
+import com.google.common.base.CharMatcher;
+
 /**
  * Table block, matches blocks that start with <code>table. </code> or those that start with a table row.
- * 
+ *
  * @author David Green
  */
 public class TableBlock extends Block {
 
-	static final Pattern startPattern = Pattern.compile("(\\|(.*)?(\\|\\s*$))"); //$NON-NLS-1$
+	static final Pattern startPattern = Pattern.compile("(\\|\\s*(.*)?(\\|\\s*$))"); //$NON-NLS-1$
 
-	static final Pattern TABLE_ROW_PATTERN = Pattern.compile("\\|(\\|)?" + "((?:(?:[^\\|\\[]*)(?:\\[[^\\]]*\\])?)*)" //$NON-NLS-1$ //$NON-NLS-2$
+	static final Pattern TABLE_ROW_PATTERN = Pattern.compile("\\|(\\|)?\\s*" + "((?:(?:[^\\|\\[]*)(?:\\[[^\\]]*\\])?)*)" //$NON-NLS-1$ //$NON-NLS-2$
 			+ "(\\|\\|?\\s*$)?"); //$NON-NLS-1$
 
 	private int blockLineCount = 0;
@@ -75,7 +77,8 @@ public class TableBlock extends Block {
 			Attributes attributes = new Attributes();
 			builder.beginBlock(header ? BlockType.TABLE_CELL_HEADER : BlockType.TABLE_CELL_NORMAL, attributes);
 
-			markupLanguage.emitMarkupLine(getParser(), state, lineOffset, text, 0);
+			markupLanguage.emitMarkupLine(getParser(), state, lineOffset,
+					CharMatcher.WHITESPACE.trimTrailingFrom(text), 0);
 
 			builder.endBlock(); // table cell
 		} while (rowMatcher.find());

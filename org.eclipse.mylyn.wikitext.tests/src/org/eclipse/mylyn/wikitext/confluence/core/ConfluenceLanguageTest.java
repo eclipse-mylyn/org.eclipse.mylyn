@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2014 David Green and others.
+ * Copyright (c) 2007, 2015 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,7 +22,6 @@ import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.regex.Pattern;
-
 
 import org.eclipse.mylyn.wikitext.core.osgi.OsgiServiceLocator;
 import org.eclipse.mylyn.wikitext.core.parser.builder.DocBookDocumentBuilder;
@@ -660,17 +659,16 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	@Test
 	public void testTableWithLinkAndPipes() {
 		// test for bug# 244240
-		String html = parser.parseToHtml("| [Website|https://textile-j.dev.java.net/] |");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><table><tr><td> <a href=\"https://textile-j.dev.java.net/\">Website</a> </td></tr></table></body>"));
+		assertMarkup("<table><tr><td><a href=\"https://textile-j.dev.java.net/\">Website</a></td></tr></table>",
+				"| [Website|https://textile-j.dev.java.net/] |");
 	}
 
 	@Test
 	public void testTableWithLinkAndPipes2() {
 		// test for bug# 244240
-		String html = parser.parseToHtml("| [Website|https://textile-j.dev.java.net/] | another cell | [Eclipse|http://www.eclipse.org] |");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><table><tr><td> <a href=\"https://textile-j.dev.java.net/\">Website</a> </td><td> another cell </td><td> <a href=\"http://www.eclipse.org\">Eclipse</a> </td></tr></table></body>"));
+		assertMarkup(
+				"<table><tr><td><a href=\"https://textile-j.dev.java.net/\">Website</a></td><td>another cell</td><td><a href=\"http://www.eclipse.org\">Eclipse</a></td></tr></table>",
+				"| [Website|https://textile-j.dev.java.net/] | another cell | [Eclipse|http://www.eclipse.org] |");
 	}
 
 	@Test

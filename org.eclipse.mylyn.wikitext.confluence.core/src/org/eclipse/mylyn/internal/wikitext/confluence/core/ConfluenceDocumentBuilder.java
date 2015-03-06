@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2014 Tasktop Technologies.
+ * Copyright (c) 2011, 2015 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -210,6 +210,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			if (content.length() == 0) {
 				content = " "; //$NON-NLS-1$
 			}
+			content = content.replaceAll("(\\r|\\n)+", " "); //$NON-NLS-1$ //$NON-NLS-2$
 			super.emitContent(content, extended);
 		}
 	}
@@ -249,7 +250,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			if (currentBlock == null) {
 				return new ContentBlock(type, "", "\n\n", false, false); //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
-				return new ContentBlock(type, "", "", false, false); //$NON-NLS-1$//$NON-NLS-2$
+				return new ContentBlock(type, "", "", true, false); //$NON-NLS-1$//$NON-NLS-2$
 			}
 		case FOOTNOTE:
 			return new ContentBlock(type, "fn1. ", "\n\n", false, false); // FIXME: footnote number?? //$NON-NLS-1$ //$NON-NLS-2$

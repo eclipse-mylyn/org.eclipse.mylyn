@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 David Green and others.
+ * Copyright (c) 2007, 2015 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,12 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.textile.core;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.LinkedHashMap;
@@ -19,8 +25,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.wikitext.core.osgi.OsgiServiceLocator;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
@@ -29,44 +33,38 @@ import org.eclipse.mylyn.wikitext.core.parser.builder.RecordingDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.RecordingDocumentBuilder.Event;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
+import org.eclipse.mylyn.wikitext.tests.AbstractMarkupGenerationTest;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
+import org.junit.Test;
 
 /**
  * NOTE: most textile test cases can be found in {@link MarkupParserTest}
- * 
+ *
  * @author David Green
  * @see TextileLanguageTasksTest
  */
-public class TextileLanguageTest extends TestCase {
+public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLanguage> {
 
 	private static final String REGEX_NEWLINE = "(?:\\s*?^)";
 
-	private MarkupParser parser;
-
-	private TextileLanguage markupLanguage;
-
 	@Override
-	public void setUp() throws Exception {
-		super.setUp();
-		initParser();
+	protected TextileLanguage createMarkupLanguage() {
+		return new TextileLanguage();
 	}
 
-	private void initParser() throws IOException {
-		parser = new MarkupParser();
-		markupLanguage = new TextileLanguage();
-		parser.setMarkupLanguage(markupLanguage);
-	}
-
+	@Test
 	public void testDiscoverable() {
 		MarkupLanguage language = OsgiServiceLocator.getApplicableInstance().getMarkupLanguage("Textile");
 		assertNotNull(language);
 		assertTrue(language instanceof TextileLanguage);
 	}
 
+	@Test
 	public void testIsDetectingRawHyperlinks() {
 		assertFalse(markupLanguage.isDetectingRawHyperlinks());
 	}
 
+	@Test
 	public void testSimpleHeaders() {
 		String html = parser.parseToHtml("h1. a header\n\nh2. another header");
 		TestUtil.println("HTML: \n" + html);
@@ -74,6 +72,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<h2 id=\"anotherheader\">another header</h2>"));
 	}
 
+	@Test
 	public void testMultilineBlockCode() {
 		String html = parser.parseToHtml("bc. one\ntwo\n\nthree");
 		TestUtil.println("HTML: \n" + html);
@@ -82,36 +81,42 @@ public class TextileLanguageTest extends TestCase {
 				.find());
 	}
 
+	@Test
 	public void testPhraseModifierWorksAtStartOfLine() {
 		String html = parser.parseToHtml("-a phrase modifier- at the start of a line");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<del>a phrase modifier</del> at"));
 	}
 
+	@Test
 	public void testPhraseModifierWorksAtEndOfLine() {
 		String html = parser.parseToHtml("at the start of a line: -a phrase modifier-");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("line: <del>a phrase modifier</del>"));
 	}
 
+	@Test
 	public void testPhraseModifierSingleChar() {
 		String html = parser.parseToHtml("a single character phrase modifier -b- is there");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("modifier <del>b</del>"));
 	}
 
+	@Test
 	public void testPhraseModifierFalsePositives() {
 		String html = parser.parseToHtml("this is - not a phrase modifier- and -neither is this - so there");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(!html.contains("<del>"));
 	}
 
+	@Test
 	public void testPhraseModifierFalsePositives2() {
 		String html = parser.parseToHtml("this is - not a phrase modifier - ");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(!html.contains("<del>"));
 	}
 
+	@Test
 	public void testBlockCodeAtEndOfDocument() {
 		String html = parser.parseToHtml("bc. one\ntwo\n");
 		TestUtil.println("HTML: \n" + html);
@@ -120,6 +125,7 @@ public class TextileLanguageTest extends TestCase {
 				.find());
 	}
 
+	@Test
 	public void testBlockCodeAtEndOfDocument2() {
 		String html = parser.parseToHtml("bc. one\ntwo");
 		TestUtil.println("HTML: \n" + html);
@@ -128,12 +134,14 @@ public class TextileLanguageTest extends TestCase {
 				.find());
 	}
 
+	@Test
 	public void testPhraseModifierStrong() {
 		String html = parser.parseToHtml("*strong text*");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<strong>strong text</strong>"));
 	}
 
+	@Test
 	public void testPhraseModifiers() {
 		String html = parser.parseToHtml("_emphasis_ *strong text* __italic__ **bold** ??citation?? -deleted text- +inserted text+ ^superscript^ ~subscript~ %spanned text% @code text@");
 		TestUtil.println("HTML: \n" + html);
@@ -150,6 +158,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<code>code text</code>"));
 	}
 
+	@Test
 	public void testPhraseModifiersWithNonWordCharacters() {
 		String html = parser.parseToHtml("_emphasis:_ *strong text:* __italic:__ **bold:** ??citation:?? -deleted text:- +inserted text:+ ^superscript:^ ~subscript:~ %spanned text:% @code text:@");
 		TestUtil.println("HTML: \n" + html);
@@ -166,12 +175,14 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<code>code text:</code>"));
 	}
 
+	@Test
 	public void testDeleted() {
 		String html = parser.parseToHtml("one -two three-four five- six");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<del>two three-four five</del>"));
 	}
 
+	@Test
 	public void testAdjacentPhraseModifiers() {
 		String html = parser.parseToHtml("_emphasis_ *strong text*");
 		TestUtil.println("HTML: \n" + html);
@@ -179,6 +190,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<strong>strong text</strong>"));
 	}
 
+	@Test
 	public void testPhraseModifiersEnclosingText() {
 		String html = parser.parseToHtml("_emphasis_ some text *strong text*");
 		TestUtil.println("HTML: \n" + html);
@@ -188,6 +200,7 @@ public class TextileLanguageTest extends TestCase {
 				.matches());
 	}
 
+	@Test
 	public void testPhraseModifierCode() {
 		String html = parser.parseToHtml("@code1@:");
 		TestUtil.println("HTML: \n" + html);
@@ -196,6 +209,7 @@ public class TextileLanguageTest extends TestCase {
 				.matches());
 	}
 
+	@Test
 	public void testCodeWithCurlyBrace() {
 		String html = parser.parseToHtml("for example: @{{bug|244618}}@");
 		TestUtil.println("HTML: \n" + html);
@@ -205,18 +219,21 @@ public class TextileLanguageTest extends TestCase {
 	/**
 	 * bug 276395 Incorrect quotation characters inside code
 	 */
+	@Test
 	public void testPhraseModifierCodeWithNestedMarkup() {
 		String html = parser.parseToHtml("a @code 'test' or \"test\" or *b* or <b>bo</b> sample@ more");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<body><p>a <code>code 'test' or \"test\" or *b* or &lt;b&gt;bo&lt;/b&gt; sample</code> more</p></body>"));
 	}
 
+	@Test
 	public void testRelativeUrlNoBase() {
 		String html = parser.parseToHtml("\"An URL\":foo/bar.html");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<a href=\"foo/bar.html\">An URL</a>"));
 	}
 
+	@Test
 	public void testGlossaryValidHtml() {
 		String html = parser.parseToHtml("h1. Foo\n\none TWO(Two Ways Out) and MDD(Model-Driven Development)\n\nh1. Glossary\n\n{glossary}");
 		TestUtil.println("HTML: \n" + html);
@@ -224,54 +241,63 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("</h1><dl"));
 	}
 
+	@Test
 	public void testLineStartingWithDeletedPhraseModifier() {
 		String html = parser.parseToHtml("-this is deleted text-");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<p><del>this is deleted text</del></p>"));
 	}
 
+	@Test
 	public void testListItemWithDeletedText() {
 		String html = parser.parseToHtml("- this is a list item with -deleted text-");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<p>- this is a list item with <del>deleted text</del></p>"));
 	}
 
+	@Test
 	public void testListItemWithDeletedText2() {
 		String html = parser.parseToHtml("* this is a list item with -deleted text-");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<ul><li>this is a list item with <del>deleted text</del></li></ul>"));
 	}
 
+	@Test
 	public void testHtmlEntityEncoding() {
 		String html = parser.parseToHtml("Some A&BC Thing");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("A&amp;BC"));
 	}
 
+	@Test
 	public void testHtmlEntityEncoding2() {
 		String html = parser.parseToHtml("Some A&BC Thing; two");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<p>Some A&amp;BC Thing; two</p>"));
 	}
 
+	@Test
 	public void testHtmlEntityEncoding3() {
 		String html = parser.parseToHtml("Some A&BCThing; two");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<p>Some A&BCThing; two</p>"));
 	}
 
+	@Test
 	public void testHtmlEntityEncoding4() {
 		String html = parser.parseToHtml("Some A&#60; two");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<p>Some A&#60; two</p>"));
 	}
 
+	@Test
 	public void testHtmlEntityEncoding5() {
 		String html = parser.parseToHtml("Some A&#x27; two");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<p>Some A&#x27; two</p>"));
 	}
 
+	@Test
 	public void testParagraphs() throws IOException {
 		String html = parser.parseToHtml("first para\nnew line\n\nsecond para\n\n\n\n");
 		TestUtil.println(html);
@@ -281,36 +307,42 @@ public class TextileLanguageTest extends TestCase {
 				.find());
 	}
 
+	@Test
 	public void testParagraphWithId() throws IOException {
 		String html = parser.parseToHtml("p(#ab). first para");
 		TestUtil.println(html);
 		assertTrue(html.contains("<p id=\"ab\">first para</p>"));
 	}
 
+	@Test
 	public void testParagraphWithClass() throws IOException {
 		String html = parser.parseToHtml("p(foo). first para");
 		TestUtil.println(html);
 		assertTrue(html.contains("<p class=\"foo\">first para</p>"));
 	}
 
+	@Test
 	public void testParagraphWithClassAndId() throws IOException {
 		String html = parser.parseToHtml("p(foo#ab). first para");
 		TestUtil.println(html);
 		assertTrue(html.contains("<p id=\"ab\" class=\"foo\">first para</p>"));
 	}
 
+	@Test
 	public void testParagraphWithClassAndIdAndStyle() throws IOException {
 		String html = parser.parseToHtml("p(foo#ab){color:black;}. first para");
 		TestUtil.println(html);
 		assertTrue(html.contains("<p id=\"ab\" class=\"foo\" style=\"color:black;\">first para</p>"));
 	}
 
+	@Test
 	public void testParagraphLeftAligned() throws IOException {
 		String html = parser.parseToHtml("p<. first para");
 		TestUtil.println(html);
 		assertTrue(html.contains("<p style=\"text-align: left;\">first para</p>"));
 	}
 
+	@Test
 	public void testParagraphWithNestedList() throws IOException {
 		String html = parser.parseToHtml("first para\n# numeric list\nfirst para second line");
 		TestUtil.println(html);
@@ -319,6 +351,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><p>first para</p><ol><li>numeric list</li></ol><p>first para second line</p></body>"));
 	}
 
+	@Test
 	public void testPreformattedDoesntMarkupContent() throws IOException {
 		String html = parser.parseToHtml("pre. \n|_. a|_. table|_. header|\n|a|table|row|\n|a|table|row|\n");
 		TestUtil.println(html);
@@ -330,6 +363,7 @@ public class TextileLanguageTest extends TestCase {
 				.find());
 	}
 
+	@Test
 	public void testHeading1() throws IOException {
 		String html = parser.parseToHtml("h1(#ab). heading1\n\nnew para\n\na para");
 		TestUtil.println(html);
@@ -339,6 +373,7 @@ public class TextileLanguageTest extends TestCase {
 				.find());
 	}
 
+	@Test
 	public void testHeadingMultiline() throws IOException {
 		String html = parser.parseToHtml("h1. heading1\nsecondline\n\na para");
 		TestUtil.println(html);
@@ -348,6 +383,7 @@ public class TextileLanguageTest extends TestCase {
 				.find());
 	}
 
+	@Test
 	public void testHeading0NoHeading() throws IOException {
 		String html = parser.parseToHtml("h0. heading0\n\nnew para\n\na para");
 		TestUtil.println(html);
@@ -356,6 +392,7 @@ public class TextileLanguageTest extends TestCase {
 				.find());
 	}
 
+	@Test
 	public void testMultilinePreformatted() throws IOException {
 		String html = parser.parseToHtml("pre. one\ntwo\n\nthree");
 		TestUtil.println(html);
@@ -364,6 +401,7 @@ public class TextileLanguageTest extends TestCase {
 				.find());
 	}
 
+	@Test
 	public void testBlockQuote() throws IOException {
 		String html = parser.parseToHtml("bq. one\ntwo\n\nthree");
 
@@ -374,6 +412,7 @@ public class TextileLanguageTest extends TestCase {
 				.find());
 	}
 
+	@Test
 	public void testBlockQuoteWithCitation() throws IOException {
 		String html = parser.parseToHtml("bq.:http://www.example.com some text");
 		TestUtil.println("HTML: \n" + html);
@@ -386,12 +425,14 @@ public class TextileLanguageTest extends TestCase {
 	/**
 	 * bug 304765
 	 */
+	@Test
 	public void testBlockQuote_bug304765() {
 		String html = parser.parseToHtml("bq.. src/\n" + "  main/\n" + "    java/  (Java src folder)\n"
 				+ "      META-INF\n" + "     file.txt\n\n  \na");
 		TestUtil.println("HTML: \n" + html);
 	}
 
+	@Test
 	public void testBlockCode() throws IOException {
 		String html = parser.parseToHtml("bc. one\ntwo\n\nthree");
 
@@ -404,6 +445,7 @@ public class TextileLanguageTest extends TestCase {
 	/**
 	 * bug 320007
 	 */
+	@Test
 	public void testBlockCodeWithTabs() throws IOException {
 		String html = parser.parseToHtml("bc. one\n\ttwo\n\nthree");
 
@@ -414,6 +456,7 @@ public class TextileLanguageTest extends TestCase {
 	/**
 	 * bug 320007
 	 */
+	@Test
 	public void testBlockCodeWithTabsFormatted() throws IOException {
 		StringWriter out = new StringWriter();
 		HtmlDocumentBuilder documentBuilder = new HtmlDocumentBuilder(out, true);
@@ -425,6 +468,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("one\n\ttwo"));
 	}
 
+	@Test
 	public void testBlockCodeWithEmbeddedHtmlTags() throws IOException {
 		String html = parser.parseToHtml("bc. \nhere is <a href=\"#\">a working example</a>\n\n");
 
@@ -436,6 +480,7 @@ public class TextileLanguageTest extends TestCase {
 				.find());
 	}
 
+	@Test
 	public void testBlockCodeWithLeadingNewline() throws IOException {
 		String html = parser.parseToHtml("bc. \none\ntwo\n\nthree");
 
@@ -445,6 +490,7 @@ public class TextileLanguageTest extends TestCase {
 				.find());
 	}
 
+	@Test
 	public void testBlockCodeWithLeadingNewlines() throws IOException {
 		String html = parser.parseToHtml("bc.. \n\none\ntwo\np. three");
 
@@ -455,6 +501,7 @@ public class TextileLanguageTest extends TestCase {
 				.find());
 	}
 
+	@Test
 	public void testFootnote() throws IOException {
 		String html = parser.parseToHtml("See foo[1].\n\nfn1. Foo.");
 
@@ -467,6 +514,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(Pattern.compile("<sup class=\"footnote\"><a href=\"#___fn[^\"]+\">1</a></sup>").matcher(html).find());
 	}
 
+	@Test
 	public void testFootnoteRefNoFootnote() throws IOException {
 		markupLanguage.setPreprocessFootnotes(true);
 		String html = parser.parseToHtml("See foo[1].\n\nNo such footnote!");
@@ -475,6 +523,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><p>See foo[1].</p><p>No such footnote!</p></body>"));
 	}
 
+	@Test
 	public void testListUnordered() throws IOException {
 		String html = parser.parseToHtml("* a list\n* with two lines");
 
@@ -485,12 +534,14 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("</ul>"));
 	}
 
+	@Test
 	public void testListUnordered2() throws IOException {
 		String html = parser.parseToHtml("* a list\n** with several lines\n*** foo\n**  ??foo?? intentional two spaces leading content");
 
 		TestUtil.println("HTML: \n" + html);
 	}
 
+	@Test
 	public void testListOrdered() throws IOException {
 		String html = parser.parseToHtml("# a list\n# with two lines");
 
@@ -501,6 +552,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("</ol>"));
 	}
 
+	@Test
 	public void testListNested() throws IOException {
 		String html = parser.parseToHtml("# a list\n## nested\n## nested2\n# level1\n\npara");
 
@@ -511,6 +563,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("</ol>"));
 	}
 
+	@Test
 	public void testListMixed() throws IOException {
 		// test for bug# 47
 		String html = parser.parseToHtml("# first\n* second");
@@ -519,6 +572,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<ol><li>first</li></ol><ul><li>second</li></ul>"));
 	}
 
+	@Test
 	public void testListNestedMixed() throws IOException {
 		String html = parser.parseToHtml("# a list\n#* nested\n#* nested2\n# level1\n\npara");
 
@@ -526,6 +580,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<ol><li>a list<ul><li>nested</li><li>nested2</li></ul></li><li>level1</li></ol>"));
 	}
 
+	@Test
 	public void testListWithStyle() throws IOException {
 		String html = parser.parseToHtml("#{color: blue} a list with style");
 
@@ -535,6 +590,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("</ol>"));
 	}
 
+	@Test
 	public void testListNotAList() throws IOException {
 		// test for bug 263074
 		String html = parser.parseToHtml("- first\n- second");
@@ -543,6 +599,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><p>- first<br/>- second</p></body>"));
 	}
 
+	@Test
 	public void testTable() throws IOException {
 		String html = parser.parseToHtml("table. \n|a|row with|three columns|");
 
@@ -550,6 +607,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<table><tr><td>a</td><td>row with</td><td>three columns</td></tr></table>"));
 	}
 
+	@Test
 	public void testTable2() throws IOException {
 		String html = parser.parseToHtml("foo bar\n|a|row with|three columns|\n|another|row|with three columns|\n\na para");
 
@@ -557,6 +615,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<table><tr><td>a</td><td>row with</td><td>three columns</td></tr><tr><td>another</td><td>row</td><td>with three columns</td></tr></table>"));
 	}
 
+	@Test
 	public void testTableHeader() throws IOException {
 		String html = parser.parseToHtml("table.\n|_. a|row with|three columns|");
 
@@ -564,6 +623,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<table><tr><th>a</th><td>row with</td><td>three columns</td></tr></table>"));
 	}
 
+	@Test
 	public void testTableCellAlignment() throws IOException {
 		String html = parser.parseToHtml("table.\n|^a|<row with|>four|<>columns|");
 
@@ -571,6 +631,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<table><tr><td style=\"vertical-align: top;\">a</td><td style=\"text-align: left;\">row with</td><td style=\"text-align: right;\">four</td><td style=\"text-align: center;\">columns</td></tr></table>"));
 	}
 
+	@Test
 	public void testTableCellColspan() throws IOException {
 		String html = parser.parseToHtml("table.\n|\\2a|\\3b|");
 
@@ -578,6 +639,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<table><tr><td colspan=\"2\">a</td><td colspan=\"3\">b</td></tr></table>"));
 	}
 
+	@Test
 	public void testTableCellRowspan() throws IOException {
 		String html = parser.parseToHtml("table.\n|/2a|/3b|");
 
@@ -585,6 +647,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<table><tr><td rowspan=\"2\">a</td><td rowspan=\"3\">b</td></tr></table>"));
 	}
 
+	@Test
 	public void testTableCellColspanRowspan() throws IOException {
 		String html = parser.parseToHtml("table.\n|\\4/2a|\\5/3b|");
 
@@ -592,6 +655,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<table><tr><td rowspan=\"2\" colspan=\"4\">a</td><td rowspan=\"3\" colspan=\"5\">b</td></tr></table>"));
 	}
 
+	@Test
 	public void testTableWithEmbeddedTextile() throws IOException {
 		String html = parser.parseToHtml("table.\n|*a*|row _with_|stuff|");
 
@@ -599,6 +663,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<table><tr><td><strong>a</strong></td><td>row <em>with</em></td><td>stuff</td></tr></table>"));
 	}
 
+	@Test
 	public void testTableWithAttributes() throws IOException {
 		String html = parser.parseToHtml("table.\n|{color: red;}a|(foo)row with|(#bar)three columns|");
 
@@ -606,6 +671,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<table><tr><td style=\"color: red;\">a</td><td class=\"foo\">row with</td><td id=\"bar\">three columns</td></tr></table>"));
 	}
 
+	@Test
 	public void testTableWithAttributes2() throws IOException {
 		String html = parser.parseToHtml("table{border:1px solid black;}.\n" + "|This|is|a|row|\n" + "|This|is|a|row|");
 
@@ -613,6 +679,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<table style=\"border:1px solid black;\"><tr><td>This</td><td>is</td><td>a</td><td>row</td></tr><tr><td>This</td><td>is</td><td>a</td><td>row</td></tr></table>"));
 	}
 
+	@Test
 	public void testTableWithAttributes3() throws IOException {
 		String html = parser.parseToHtml("|This|is|a|row|\n" + "{background:#ddd}. |This|is|grey|row|");
 
@@ -620,18 +687,21 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<table><tr><td>This</td><td>is</td><td>a</td><td>row</td></tr><tr style=\"background:#ddd\"><td>This</td><td>is</td><td>grey</td><td>row</td></tr></table>"));
 	}
 
+	@Test
 	public void testTableWithStyles() {
 		String html = parser.parseToHtml("table{border: 1px solid black}.\n|a|table|row|");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<body><table style=\"border: 1px solid black\"><tr><td>a</td><td>table</td><td>row</td></tr></table></body>"));
 	}
 
+	@Test
 	public void testTableWithStylesAndTrailingWhitespace() {
 		String html = parser.parseToHtml("table{border: 1px solid black}. \n|a|table|row|");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<body><table style=\"border: 1px solid black\"><tr><td>a</td><td>table</td><td>row</td></tr></table></body>"));
 	}
 
+	@Test
 	public void testPhraseModifierBold() throws IOException {
 		String html = parser.parseToHtml("a paragraph with **bold content**");
 
@@ -639,6 +709,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<p>a paragraph with <b>bold content</b></p>"));
 	}
 
+	@Test
 	public void testPhraseModifierBoldWithId() throws IOException {
 		String html = parser.parseToHtml("a paragraph with **(#1)bold content**");
 
@@ -646,6 +717,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<p>a paragraph with <b id=\"1\">bold content</b></p>"));
 	}
 
+	@Test
 	public void testSimplePhraseModifiers() throws IOException {
 		String[][] pairs = new String[][] { { "**", "b" }, { "??", "cite" }, { "__", "i" }, { "_", "em" },
 				{ "*", "strong" }, { "-", "del" }, { "+", "ins" }, { "~", "sub" }, { "^", "sup" }, { "%", "span" },
@@ -692,6 +764,7 @@ public class TextileLanguageTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testDeletedIssue22() {
 		// test for a false-positive
 		String html = parser.parseToHtml("Foo bar-baz one two three four-five.");
@@ -699,6 +772,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<p>Foo bar-baz one two three four-five.</p>"));
 	}
 
+	@Test
 	public void testDeletedBug338284() {
 		Map<String, String> markupAndExpected = new LinkedHashMap<String, String>();
 		markupAndExpected.put("Foo -one two-three four-", "<p>Foo <del>one two-three four</del></p>");
@@ -722,6 +796,7 @@ public class TextileLanguageTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testPhraseModifierDeletedWithHyphens_bug321538() {
 		String html = parser.parseToHtml("as I said, -hello oh-so-cruel world- again.\n\nThis works: -hell world-\n\nThis doesn't: -hello oh-so-cruel world-");
 		TestUtil.println("HTML: \n" + html);
@@ -730,6 +805,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<p>This doesn&#8217;t: <del>hello oh-so-cruel world</del></p>"));
 	}
 
+	@Test
 	public void testImage() throws IOException {
 		String html = parser.parseToHtml("Here comes an !imageUrl! with more text");
 
@@ -737,6 +813,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<img border=\"0\" src=\"imageUrl\"/>"));
 	}
 
+	@Test
 	public void testImageWithAltAndTitle() throws IOException {
 		String html = parser.parseToHtml("Here comes an !imageUrl(alt text)! with more text");
 
@@ -744,6 +821,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<img alt=\"alt text\" title=\"alt text\" border=\"0\" src=\"imageUrl\"/>"));
 	}
 
+	@Test
 	public void testImageAlignLeft() throws IOException {
 		String html = parser.parseToHtml("Here comes an !<imageUrl! with more text");
 
@@ -751,6 +829,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<img align=\"left\" border=\"0\" src=\"imageUrl\"/>"));
 	}
 
+	@Test
 	public void testImageAlignRight() throws IOException {
 		String html = parser.parseToHtml("Here comes an !>imageUrl! with more text");
 
@@ -758,6 +837,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<img align=\"right\" border=\"0\" src=\"imageUrl\"/>"));
 	}
 
+	@Test
 	public void testImageAlignCenter() throws IOException {
 		String html = parser.parseToHtml("Here comes an !=imageUrl! with more text");
 
@@ -765,6 +845,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<img align=\"center\" border=\"0\" src=\"imageUrl\"/>"));
 	}
 
+	@Test
 	public void testImageRelative() throws IOException {
 		String html = parser.parseToHtml("Here comes an !foo/bar/baz.jpg! with more text");
 
@@ -772,6 +853,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<img border=\"0\" src=\"foo/bar/baz.jpg\"/>"));
 	}
 
+	@Test
 	public void testImageHyperlink() throws IOException {
 		String html = parser.parseToHtml("Here comes a !hyperlink!:http://www.google.com to something");
 
@@ -781,6 +863,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("</a> to something"));
 	}
 
+	@Test
 	public void testImageHyperlinkWithAttributes() throws IOException {
 		String html = parser.parseToHtml("Here comes a !(foo-bar)hyperlink!:http://www.google.com to something");
 
@@ -790,12 +873,14 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("</a> to something"));
 	}
 
+	@Test
 	public void testImageFalsePositiveOnMultipleExclamationMarks() throws IOException {
 		String html = parser.parseToHtml("Here comes a non-image!!! more text !!! and more");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<body><p>Here comes a non-image!!! more text !!! and more</p></body>"));
 	}
 
+	@Test
 	public void testHtmlLiteral() throws IOException {
 		String htmlFragment = "<a href=\"foo-bar\"><img src=\"some-image.jpg\"/></a>";
 		String html = parser.parseToHtml("a paragraph " + htmlFragment + " with HTML literal");
@@ -805,6 +890,7 @@ public class TextileLanguageTest extends TestCase {
 
 	}
 
+	@Test
 	public void testHtmlLiteralSelfClosingTag() throws IOException {
 		String html = parser.parseToHtml("a <br/> br tag");
 
@@ -812,6 +898,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("a <br/> br tag"));
 	}
 
+	@Test
 	public void testHtmlLiteralTwoLinesWithAnchors() throws IOException {
 		String html = parser.parseToHtml("Link 1 <a href=\"x\">x</a>\nand line 2 <a href=\"y\">y</a>");
 
@@ -820,6 +907,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("and line 2 <a href=\"y\">y</a></p></body>"));
 	}
 
+	@Test
 	public void testHtmlLiteralUnclosedTag() throws IOException {
 		String html = parser.parseToHtml("<b>bold text with no terminating tag");
 
@@ -827,6 +915,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<b>bold text"));
 	}
 
+	@Test
 	public void testHtmlLiteralAdjacentTags() throws IOException {
 		String html = parser.parseToHtml("<span><a>some text</a></span>");
 
@@ -834,6 +923,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<span><a>some text</a></span>"));
 	}
 
+	@Test
 	public void testHtmlLiteralAdjacentTags2() throws IOException {
 		String html = parser.parseToHtml("<span>abc</span><a>some text</a>");
 
@@ -841,6 +931,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<span>abc</span><a>some text</a>"));
 	}
 
+	@Test
 	public void testHtmlLiteralWithEmbeddedPhraseModifiers() throws IOException {
 		Pattern pattern = Pattern.compile("(<[a-zA-Z][a-zA-Z0-9_-]*(?:\\s*[a-zA-Z][a-zA-Z0-9_:-]*=\"[^\"]*\")*\\s*/?>)");
 		Matcher matcher = pattern.matcher("This document was authored using Textile markup: <a href=\"https://textile-j.dev.java.net/source/browse/*checkout*/textile-j/trunk/java/org.eclipse.mylyn.wikitext.ui.doc/help/Textile-J%20User%20Guide.textile\">original Textile markup for this document</a> ");
@@ -853,6 +944,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("markup: <a href=\"https://textile-j.dev.java.net/source/browse/*checkout*/textile-j/trunk/java/org.eclipse.mylyn.wikitext.ui.doc/help/Textile-J%20User%20Guide.textile\">original Textile markup for this document</a>"));
 	}
 
+	@Test
 	public void testHtmlLiteralLoneCloseTag() throws IOException {
 		String html = parser.parseToHtml("bold text with only a terminating</b> tag");
 
@@ -860,6 +952,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("terminating</b> tag"));
 	}
 
+	@Test
 	public void testHtmlLiteralTerminatingTagWithLegalWhitespace() throws IOException {
 		String html = parser.parseToHtml("<b>bold text</b  >");
 
@@ -867,6 +960,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<b>bold text</b  >"));
 	}
 
+	@Test
 	public void testHtmlLiteralFalsePositive() throws IOException {
 		String html = parser.parseToHtml("a <br br tag that is not real");
 
@@ -874,6 +968,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("a &lt;br br tag"));
 	}
 
+	@Test
 	public void testHtmlLiteralFalsePositive2() throws IOException {
 		String html = parser.parseToHtml("some no tag <!-- nt");
 
@@ -881,6 +976,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("&lt;!&#8212;"));
 	}
 
+	@Test
 	public void testHtmlLiteralFalsePositive3() throws IOException {
 		String html = parser.parseToHtml("some no tag <0nt");
 
@@ -888,6 +984,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("&lt;0nt"));
 	}
 
+	@Test
 	public void testHtmlLiteralFalsePositive4() throws IOException {
 		String html = parser.parseToHtml("some no tag <_nt");
 
@@ -895,6 +992,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("&lt;_nt"));
 	}
 
+	@Test
 	public void testEscaping() throws IOException {
 		String html = parser.parseToHtml("==no <b>textile</b> *none* _at_ all==");
 
@@ -902,6 +1000,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("no <b>textile</b> *none* _at_ all"));
 	}
 
+	@Test
 	public void testEscaping2() throws IOException {
 		String html = parser.parseToHtml("==*none*==");
 
@@ -909,6 +1008,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<p>*none*</p>"));
 	}
 
+	@Test
 	public void testEscaping3() throws IOException {
 		String html = parser.parseToHtml("Link 1 ==<a href=\"x\">x</a>==\nand line 2 ==<a href=\"y\">y</a>==");
 
@@ -917,6 +1017,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("and line 2 <a href=\"y\">y</a></p>"));
 	}
 
+	@Test
 	public void testEscaping4() throws IOException {
 		String html = parser.parseToHtml("=={toc}== Generates a table of contents.  Eg: =={toc}== or =={toc:style=disc|maxLevel=3}==");
 
@@ -925,6 +1026,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><p>{toc} Generates a table of contents.  Eg: {toc} or {toc:style=disc|maxLevel=3}</p></body>"));
 	}
 
+	@Test
 	public void testEscaping_NoTextile() throws IOException {
 		String html = parser.parseToHtml("notextile. foo <b>bar</b>\n<i>baz</i>\n\ntextile *here*");
 
@@ -935,6 +1037,7 @@ public class TextileLanguageTest extends TestCase {
 				.find());
 	}
 
+	@Test
 	public void testEscaping_NoTextile_Extended() throws IOException {
 		String html = parser.parseToHtml("notextile.. foo <b>bar</b>\n<i>baz</i>\n\nnotextile *here*\n\np. textile *here*");
 
@@ -947,6 +1050,7 @@ public class TextileLanguageTest extends TestCase {
 				.find());
 	}
 
+	@Test
 	public void testReplacements() throws IOException {
 		String html = parser.parseToHtml("some text with copyright(c), trademark(tm) and registered(r)");
 
@@ -957,6 +1061,7 @@ public class TextileLanguageTest extends TestCase {
 				.matches());
 	}
 
+	@Test
 	public void testApostrophe() throws IOException {
 		String html = parser.parseToHtml("it's");
 
@@ -964,6 +1069,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("it&#8217;s"));
 	}
 
+	@Test
 	public void testQuotations() throws IOException {
 		String html = parser.parseToHtml("some 'thing is' quoted");
 
@@ -971,6 +1077,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("some &#8216;thing is&#8217; quoted"));
 	}
 
+	@Test
 	public void testDoubleQuotations() throws IOException {
 		String html = parser.parseToHtml("some \"thing is\" quoted");
 
@@ -978,6 +1085,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("some &#8220;thing is&#8221; quoted"));
 	}
 
+	@Test
 	public void testDoubleQuotationsGerman() throws IOException {
 		MarkupLanguageConfiguration configuration = new MarkupLanguageConfiguration();
 		configuration.setLocale(Locale.GERMAN);
@@ -989,13 +1097,12 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("some &#8222;thing is&#8221; quoted"));
 	}
 
+	@Test
 	public void testDoubleQuotationsInTable() throws IOException {
-		String html = parser.parseToHtml("| \"thing is\" |");
-
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("&#8220;thing is&#8221;"));
+		assertMarkup("<table><tr><td>\"thing is\"</td></tr></table>", "| \"thing is\" |");
 	}
 
+	@Test
 	public void testCopyright() throws IOException {
 		String html = parser.parseToHtml("copy(c)");
 
@@ -1003,6 +1110,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("copy&#169;"));
 	}
 
+	@Test
 	public void testTrademark() throws IOException {
 		String html = parser.parseToHtml("trade(tm)");
 
@@ -1010,6 +1118,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("trade&#8482;"));
 	}
 
+	@Test
 	public void testRegistered() throws IOException {
 		String html = parser.parseToHtml("registered(r)");
 
@@ -1017,6 +1126,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("registered&#174;"));
 	}
 
+	@Test
 	public void testCopyright2() throws IOException {
 		String html = parser.parseToHtml("Copyright (C)");
 
@@ -1024,6 +1134,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("Copyright &#169;"));
 	}
 
+	@Test
 	public void testRegistered2() throws IOException {
 		String html = parser.parseToHtml("Registered (R)");
 
@@ -1031,6 +1142,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("Registered &#174;"));
 	}
 
+	@Test
 	public void testTrademark2() throws IOException {
 		String html = parser.parseToHtml("Trademark (TM)");
 
@@ -1038,6 +1150,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("Trademark &#8482;"));
 	}
 
+	@Test
 	public void testCopyright3() throws IOException {
 		String html = parser.parseToHtml("copy (c)");
 
@@ -1045,6 +1158,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("copy &#169;"));
 	}
 
+	@Test
 	public void testTrademark3() throws IOException {
 		String html = parser.parseToHtml("trade (tm)");
 
@@ -1052,6 +1166,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("trade &#8482;"));
 	}
 
+	@Test
 	public void testRegistered3() throws IOException {
 		String html = parser.parseToHtml("registered (r)");
 
@@ -1059,6 +1174,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("registered &#174;"));
 	}
 
+	@Test
 	public void testEmDash() throws IOException {
 		String html = parser.parseToHtml("one -- two");
 
@@ -1066,6 +1182,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("one &#8212; two"));
 	}
 
+	@Test
 	public void testEmDashAtStartOfLine() throws IOException {
 		String html = parser.parseToHtml("-- two");
 
@@ -1073,6 +1190,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("&#8212; two"));
 	}
 
+	@Test
 	public void testEmDashNegativeNoPrecedingSpace() throws IOException {
 		String html = parser.parseToHtml("one-- two");
 
@@ -1080,6 +1198,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("one&#8212; two"));
 	}
 
+	@Test
 	public void testEmDashAfterImage() throws IOException {
 		String html = parser.parseToHtml("!images/button.png(Button)! -- Button");
 		TestUtil.println("HTML: \n" + html);
@@ -1087,6 +1206,7 @@ public class TextileLanguageTest extends TestCase {
 				+ "/> &#8212; Button</p>"));
 	}
 
+	@Test
 	public void testEnDash() throws IOException {
 		String html = parser.parseToHtml("one - two");
 
@@ -1094,6 +1214,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("one &#8211; two"));
 	}
 
+	@Test
 	public void testMul() throws IOException {
 		String html = parser.parseToHtml("2 x 4");
 
@@ -1101,6 +1222,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("2 &#215; 4"));
 	}
 
+	@Test
 	public void testFalseMul() throws IOException {
 		String html = parser.parseToHtml("a x 4");
 
@@ -1108,6 +1230,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("a x 4"));
 	}
 
+	@Test
 	public void testHyperlink() throws IOException {
 		String html = parser.parseToHtml("Here comes a \"hyperlink\":http://www.google.com to something");
 
@@ -1115,6 +1238,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<a href=\"http://www.google.com\">hyperlink</a>"));
 	}
 
+	@Test
 	public void testHyperlinkWithClass() throws IOException {
 		String html = parser.parseToHtml("Here comes a \"(test)hyperlink\":http://www.google.com to something");
 
@@ -1122,6 +1246,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<a href=\"http://www.google.com\" class=\"test\">hyperlink</a>"));
 	}
 
+	@Test
 	public void testHyperlinkWithEmphasis() throws IOException {
 		String html = parser.parseToHtml("Here comes a \"_Click me_\":/stories/10146 to something");
 
@@ -1129,6 +1254,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<a href=\"/stories/10146\"><em>Click me</em></a>"));
 	}
 
+	@Test
 	public void testHyperlinkWithEmphasis2() throws IOException {
 		String html = parser.parseToHtml("\"_Eclipse_\":http://eclipse.org");
 
@@ -1136,6 +1262,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<a href=\"http://eclipse.org\"><em>Eclipse</em></a>"));
 	}
 
+	@Test
 	public void testHyperlinkWithPunctuation() throws IOException {
 		String html = parser.parseToHtml("Here comes a \"Click me!\":/stories/10146 to something");
 
@@ -1143,6 +1270,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<a href=\"/stories/10146\">Click me!</a>"));
 	}
 
+	@Test
 	public void testHyperlinkWithBold() throws IOException {
 		String html = parser.parseToHtml("Here comes a \"*Click me*\":/stories/10146 to something");
 
@@ -1150,6 +1278,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<a href=\"/stories/10146\"><strong>Click me</strong></a>"));
 	}
 
+	@Test
 	public void testHyperlinkWithBoldWrapper() throws IOException {
 		String html = parser.parseToHtml("Here comes a *\"Click me\":/stories/10146* to something");
 
@@ -1157,6 +1286,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<strong><a href=\"/stories/10146\">Click me</a></strong>"));
 	}
 
+	@Test
 	public void testHyperlinkWithBoldWrapper2() throws IOException {
 		String html = parser.parseToHtml("*\"text\":url*");
 
@@ -1164,6 +1294,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<strong><a href=\"url\">text</a></strong>"));
 	}
 
+	@Test
 	public void testHyperlinkTailNegative() throws IOException {
 		String[] tails = new String[] { ",", ".", ":", ";" };
 		for (String tail : tails) {
@@ -1175,6 +1306,7 @@ public class TextileLanguageTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testHyperlinkTailPositive() throws IOException {
 		String[] tails = new String[] { ")" };
 		for (String tail : tails) {
@@ -1186,6 +1318,7 @@ public class TextileLanguageTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testHyperlinkRelative() throws IOException {
 		String html = parser.parseToHtml("Here comes a \"hyperlink\":foo/bar/baz.jpg to something");
 
@@ -1193,6 +1326,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<a href=\"foo/bar/baz.jpg\">hyperlink</a>"));
 	}
 
+	@Test
 	public void testAcronym() throws IOException {
 		String html = parser.parseToHtml("ABC(A Better Comb)");
 
@@ -1200,6 +1334,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<acronym title=\"A Better Comb\">ABC</acronym>"));
 	}
 
+	@Test
 	public void testAcronym2() throws IOException {
 		String html = parser.parseToHtml("Some preceding text ABC(A Better Comb)");
 
@@ -1207,6 +1342,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<acronym title=\"A Better Comb\">ABC</acronym>"));
 	}
 
+	@Test
 	public void testAcronym3() throws IOException {
 		String html = parser.parseToHtml("Some preceding text ABCR(A Better Comb)");
 
@@ -1214,6 +1350,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<acronym title=\"A Better Comb\">ABCR</acronym>"));
 	}
 
+	@Test
 	public void testAcronymNegative() throws IOException {
 		// must have 3 or more upper-case letters for an acronym
 		String html = parser.parseToHtml("Some preceding text AB(A Better Comb)");
@@ -1225,6 +1362,7 @@ public class TextileLanguageTest extends TestCase {
 	/**
 	 * test for bug# 240743
 	 */
+	@Test
 	public void testAcronymBug240743() {
 		String markup = "As a very minor improvement to Textile-J(as what I proposed here http://www.cs.ubc.ca/~jingweno/soc/SoC2008.pdf)";
 		String html = parser.parseToHtml(markup);
@@ -1233,6 +1371,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<p>As a very minor improvement to Textile-J(as what I proposed here http://www.cs.ubc.ca/~jingweno/soc/SoC2008.pdf)</p>"));
 	}
 
+	@Test
 	public void testGlossary() throws IOException {
 		String html = parser.parseToHtml("Some preceding text ABC(A Better Comb)\n\n{glossary}");
 
@@ -1241,6 +1380,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<dl><dt>ABC</dt><dd>A Better Comb</dd></dl>"));
 	}
 
+	@Test
 	public void testGlossaryWithStyle() throws IOException {
 		String html = parser.parseToHtml("Some preceding text ABC(A Better Comb)\n\n{glossary:style=bullet}");
 
@@ -1249,6 +1389,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<dl style=\"list-style: bullet\"><dt>ABC</dt><dd>A Better Comb</dd></dl>"));
 	}
 
+	@Test
 	public void testTableOfContents() throws IOException {
 		String html = parser.parseToHtml("h1. Table Of Contents\n\n{toc}\n\nh1. Top Header\n\nsome text\n\nh2. Subhead\n\nh2. Subhead2\n\nh1. Top Header 2\n\nh2. Subhead 3\n\nh3. Subhead 4");
 
@@ -1260,6 +1401,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<h3 id=\"Subhead4\">"));
 	}
 
+	@Test
 	public void testTableOfContentsWithNoClass() throws IOException {
 		String html = parser.parseToHtml("h1. Table Of Contents\n\n{toc}\n\nh1. Top Header\n\nsome text\n\nh2. Subhead\n\nh2. Subhead2\n\nh1. Top Header 2\n\nh2. Subhead 3\n\nh3. Subhead 4");
 
@@ -1268,6 +1410,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<ol class=\"toc\""));
 	}
 
+	@Test
 	public void testTableOfContentsWithClass() throws IOException {
 		String html = parser.parseToHtml("h1. Table Of Contents\n\n{toc:class=test}\n\nh1. Top Header\n\nsome text\n\nh2. Subhead\n\nh2. Subhead2\n\nh1. Top Header 2\n\nh2. Subhead 3\n\nh3. Subhead 4");
 
@@ -1276,6 +1419,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<ol class=\"test\""));
 	}
 
+	@Test
 	public void testTableOfContentsWithClassAtTopLevel_bug341019() throws IOException {
 		String html = parser.parseToHtml("h1. Table Of Contents\n\n{toc:class=test}\n\nh1. Top Header\n\nsome text\n\nh2. Subhead\n\nh2. Subhead2\n\nh1. Top Header 2\n\nh2. Subhead 3\n\nh3. Subhead 4");
 
@@ -1285,6 +1429,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<ol style=\"list-style: none;\">"));
 	}
 
+	@Test
 	public void testTableOfContentsWithMaxLevel() throws IOException {
 		String html = parser.parseToHtml("h1. Table Of Contents\n\n{toc:maxLevel=2}\n\nh1. Top Header\n\nsome text\n\nh2. Subhead\n\nh2. Subhead2\n\nh1. Top Header 2\n\nh2. Subhead 3\n\nh3. Subhead 4");
 
@@ -1296,6 +1441,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<h3 id=\"Subhead4\">"));
 	}
 
+	@Test
 	public void testExtendedBlockQuote() {
 		String html = parser.parseToHtml("bq.. one\ntwo\n\nthree\np. some para");
 		TestUtil.println("HTML: \n" + html);
@@ -1305,6 +1451,7 @@ public class TextileLanguageTest extends TestCase {
 				.find());
 	}
 
+	@Test
 	public void testExtendedBlockCode() {
 		String html = parser.parseToHtml("bc.. one\ntwo\n\nthree\n\n\nblah");
 		TestUtil.println("HTML: \n" + html);
@@ -1316,6 +1463,7 @@ public class TextileLanguageTest extends TestCase {
 				.find());
 	}
 
+	@Test
 	public void testExtendedBlockCode2() {
 		String html = parser.parseToHtml("bc.. \none\ntwo\n\nthree\n\n\nmore\n\np. some para");
 		TestUtil.println("HTML: \n" + html);
@@ -1327,6 +1475,7 @@ public class TextileLanguageTest extends TestCase {
 				.find());
 	}
 
+	@Test
 	public void testExtendedPre() {
 		String html = parser.parseToHtml("pre.. one\ntwo\n\nthree\n\n\nblah\np. para");
 		TestUtil.println("HTML: \n" + html);
@@ -1338,6 +1487,7 @@ public class TextileLanguageTest extends TestCase {
 				.find());
 	}
 
+	@Test
 	public void testParagraphWithLeadingSpace() {
 		String markup = " <div>\n\n" + "some text\n\n" + " </div>";
 		String html = parser.parseToHtml(markup);
@@ -1346,6 +1496,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><div><p>some text</p></div></body>"));
 	}
 
+	@Test
 	public void testParagraphWithLeadingSpace2() {
 		String markup = " para text\n" + "para line 2\n" + "\n" + "new para";
 		String html = parser.parseToHtml(markup);
@@ -1357,6 +1508,7 @@ public class TextileLanguageTest extends TestCase {
 				.find());
 	}
 
+	@Test
 	public void testParagraphsWithLineBreak() {
 		String html = parser.parseToHtml("first\nsecond\n\np. third\nfourth\n\nfifth");
 		TestUtil.println("HTML: \n" + html);
@@ -1365,6 +1517,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<p>fifth</p>"));
 	}
 
+	@Test
 	public void testParagraphsWithLineThatHasWhitespaceInDelimitingLine() {
 		// see issue 44
 		String html = parser.parseToHtml("first\n \nsecond");
@@ -1372,6 +1525,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><p>first</p><p>second</p></body>"));
 	}
 
+	@Test
 	public void testBug50XHTMLCompliance() throws Exception {
 		StringWriter writer = new StringWriter();
 
@@ -1389,6 +1543,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<a href=\"http://foo.bar\"><img style=\"border-width: 0px;text-align: left;\" alt=\"\" src=\"image.png\"/></a>"));
 	}
 
+	@Test
 	public void testBug50NoXHTMLCompliance() throws Exception {
 		StringWriter writer = new StringWriter();
 
@@ -1405,6 +1560,7 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<a href=\"http://foo.bar\"><img align=\"left\" border=\"0\" src=\"image.png\"/></a>"));
 	}
 
+	@Test
 	public void testNamedLinks() {
 		String markup = "I am crazy about \"TextileJ\":textilej\n" + "and \"it's\":textilej \"all\":textilej I ever\n"
 				+ "\"link to\":textilej!\n\n" + "[textilej]https://textile-j.dev.java.net";
@@ -1414,18 +1570,21 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<p>I am crazy about <a href=\"https://textile-j.dev.java.net\">TextileJ</a><br/>and <a href=\"https://textile-j.dev.java.net\">it&#8217;s</a> <a href=\"https://textile-j.dev.java.net\">all</a> I ever<br/><a href=\"https://textile-j.dev.java.net\">link to</a>!</p><p>[textilej]https://textile-j.dev.java.net</p>"));
 	}
 
+	@Test
 	public void testXmlEscaping() {
 		String html = parser.parseToHtml("some <start>mark</start> up");
 		TestUtil.println(html);
 		assertTrue(html.contains("<p>some <start>mark</start> up</p>"));
 	}
 
+	@Test
 	public void testHtmlEscaping() {
 		String html = parser.parseToHtml("some <span class=\"s\">mark</span> up");
 		TestUtil.println(html);
 		assertTrue(html.contains("<p>some <span class=\"s\">mark</span> up</p>"));
 	}
 
+	@Test
 	public void testFootnoteReferenceLexicalPosition() {
 		RecordingDocumentBuilder builder = new RecordingDocumentBuilder();
 		parser.setBuilder(builder);
@@ -1441,6 +1600,7 @@ public class TextileLanguageTest extends TestCase {
 		fail("expected to find superscript span");
 	}
 
+	@Test
 	public void testLinkWithItalicStyle() {
 		RecordingDocumentBuilder builder = new RecordingDocumentBuilder();
 		parser.setBuilder(builder);
@@ -1464,24 +1624,28 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue("expected to find text", textFound);
 	}
 
+	@Test
 	public void testBoldItalicsBold() {
 		String html = parser.parseToHtml("*bold _ital ics_ bold*");
 		TestUtil.println(html);
 		assertTrue(html.contains("<strong>bold <em>ital ics</em> bold</strong>"));
 	}
 
+	@Test
 	public void testItalicsBold() {
 		String html = parser.parseToHtml("_italics **bol d** italics_");
 		TestUtil.println(html);
 		assertTrue(html.contains("<em>italics <b>bol d</b> italics</em>"));
 	}
 
+	@Test
 	public void testBoldItalics() {
 		String html = parser.parseToHtml("*_bold and italic_ not just bold*");
 		TestUtil.println(html);
 		assertTrue(html.contains("<strong><em>bold and italic</em> not just bold</strong>"));
 	}
 
+	@Test
 	public void testNestedPhraseModifiersLexicalPosition() {
 		RecordingDocumentBuilder builder = new RecordingDocumentBuilder();
 		parser.setBuilder(builder);
@@ -1507,6 +1671,7 @@ public class TextileLanguageTest extends TestCase {
 		assertEquals(3, found);
 	}
 
+	@Test
 	public void testMarkupContainingCDATA() {
 		// bug 302291 text containing CDATA produces invalid HTML
 
@@ -1519,6 +1684,7 @@ public class TextileLanguageTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testEntityReferences() {
 		String[] entities = new String[] { "copy", "amp", "foobar", "#28", "x3C", "x3E" };
 		for (String entity : entities) {
@@ -1539,6 +1705,7 @@ public class TextileLanguageTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testEntityReferences_NegativeMatch() {
 		String[] entities = new String[] { "copy", "amp", "foobar", "#28", "x3C", "x3E" };
 		for (String entity : entities) {

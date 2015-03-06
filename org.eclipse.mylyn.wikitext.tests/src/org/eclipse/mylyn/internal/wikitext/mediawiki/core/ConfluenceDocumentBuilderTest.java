@@ -550,6 +550,9 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 		builder.beginBlock(BlockType.DIV, new Attributes());
 		builder.characters("content");
 		builder.endBlock(); // div
+		builder.beginBlock(BlockType.DIV, new Attributes());
+		builder.characters("content2");
+		builder.endBlock(); // div
 
 		builder.endBlock(); // cell
 
@@ -563,7 +566,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		assertEquals("|first|content|\n\n", markup);
+		assertEquals("|first| content content2|\n\n", markup);
 	}
 
 	public void testItalics() {

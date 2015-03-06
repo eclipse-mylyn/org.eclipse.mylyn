@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 David Green and others.
+ * Copyright (c) 2007, 2015 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,9 +20,11 @@ import org.eclipse.mylyn.wikitext.core.parser.TableCellAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.TableRowAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
+import com.google.common.base.CharMatcher;
+
 /**
  * Table block, matches blocks that start with <code>table. </code> or those that start with a table row.
- * 
+ *
  * @author David Green
  */
 public class TableBlock extends Block {
@@ -120,7 +122,8 @@ public class TableBlock extends Block {
 			state.setLineCharacterOffset(start);
 			builder.beginBlock(header ? BlockType.TABLE_CELL_HEADER : BlockType.TABLE_CELL_NORMAL, attributes);
 
-			markupLanguage.emitMarkupLine(getParser(), state, textLineOffset, text, 0);
+			markupLanguage.emitMarkupLine(getParser(), state, textLineOffset,
+					CharMatcher.WHITESPACE.trimTrailingFrom(text), 0);
 
 			builder.endBlock(); // table cell
 		} while (rowMatcher.find());

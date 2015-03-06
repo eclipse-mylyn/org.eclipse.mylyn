@@ -28,7 +28,7 @@ public abstract class AbstractMarkupGenerationTest<L extends MarkupLanguage> {
 
 	protected MarkupParser parser;
 
-	protected MarkupLanguage markupLanguage;
+	protected L markupLanguage;
 
 	@Before
 	public void initParser() {

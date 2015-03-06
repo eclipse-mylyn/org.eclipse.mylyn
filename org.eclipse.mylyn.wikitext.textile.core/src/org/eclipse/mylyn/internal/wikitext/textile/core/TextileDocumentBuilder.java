@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2014 Tasktop Technologies.
+ * Copyright (c) 2011, 2015 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,7 +27,7 @@ import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
  * a document builder that emits Textile markup
- * 
+ *
  * @see HtmlParser
  * @author David Green
  * @since 1.6
@@ -267,6 +267,7 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			if (content.length() == 0) {
 				content = " "; //$NON-NLS-1$
 			}
+			content = content.replaceAll("(\\r|\\n)+", " "); //$NON-NLS-1$ //$NON-NLS-2$
 			super.emitContent(content, extended);
 		}
 	}
@@ -309,7 +310,7 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			if (currentBlock == null) {
 				return new ParagraphBlock(type, "", "\n", false, false, true); //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
-				return new ParagraphBlock(type, "", "", false, false, true); //$NON-NLS-1$//$NON-NLS-2$
+				return new ParagraphBlock(type, "", "", true, false, true); //$NON-NLS-1$//$NON-NLS-2$
 			}
 		case FOOTNOTE:
 			return new ParagraphBlock(type, "fn1. ", "\n\n", false, false, true); //$NON-NLS-1$ //$NON-NLS-2$
@@ -402,12 +403,12 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			block = new ContentBlock("~" + spanAttributes, "~", true, false); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 
-//			case QUOTE: not supported by Textile		
+//			case QUOTE: not supported by Textile
 		case UNDERLINED:
 		case SPAN:
 		default:
 			if (spanAttributes.length() == 0) {
-				block = new SpanBlock("", true, false); //$NON-NLS-1$ 
+				block = new SpanBlock("", true, false); //$NON-NLS-1$
 			} else {
 				block = new SpanBlock(spanAttributes, true, false);
 			}
