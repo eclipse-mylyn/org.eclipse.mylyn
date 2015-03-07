@@ -20,6 +20,7 @@ import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.IssueEvent;
 import org.eclipse.egit.github.core.Label;
 import org.eclipse.egit.github.core.Milestone;
+import org.eclipse.egit.github.core.Rename;
 import org.eclipse.egit.github.core.User;
 import org.junit.Test;
 
@@ -43,6 +44,7 @@ public class IssueEventTest {
 		assertNull(event.getLabel());
 		assertNull(event.getAssignee());
 		assertNull(event.getMilestone());
+		assertNull(event.getRename());
 		assertNull(event.getIssue());
 	}
 
@@ -66,6 +68,8 @@ public class IssueEventTest {
 		assertEquals(assignee, event.setAssignee(assignee).getAssignee());
 		Milestone milestone = new Milestone().setTitle("Milestone");
 		assertEquals(milestone, event.setMilestone(milestone).getMilestone());
+		Rename rename = new Rename().setFrom("from").setTo("to");
+		assertEquals(rename, event.setRename(rename).getRename());
 		Issue issue = new Issue().setNumber(30);
 		assertEquals(issue, event.setIssue(issue).getIssue());
 	}

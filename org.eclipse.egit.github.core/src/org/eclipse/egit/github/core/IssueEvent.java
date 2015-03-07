@@ -126,6 +126,8 @@ public class IssueEvent implements Serializable {
 
     private Milestone milestone;
 
+    private Rename rename;
+
     private Issue issue;
 
     /**
@@ -269,6 +271,22 @@ public class IssueEvent implements Serializable {
      */
     public IssueEvent setMilestone(Milestone milestone) {
         this.milestone = milestone;
+        return this;
+    }
+
+    /**
+     * @return rename
+     */
+    public Rename getRename() {
+        return rename;
+    }
+
+    /**
+     * @param rename
+     * @return this issue event
+     */
+    public IssueEvent setRename(Rename rename) {
+        this.rename = rename;
         return this;
     }
 
