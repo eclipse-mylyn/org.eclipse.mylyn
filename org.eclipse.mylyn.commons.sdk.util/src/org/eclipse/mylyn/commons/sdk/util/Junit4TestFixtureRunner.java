@@ -64,14 +64,14 @@ public class Junit4TestFixtureRunner extends Suite {
 
 		@Override
 		protected String getName() {
-			return String.format("[%s %s]", fFixtureSetNumber, fFixtureList.get(fFixtureSetNumber).getDescription());
+			return String.format("[%s %s]", fFixtureSetNumber, fFixtureList.get(fFixtureSetNumber).getSimpleInfo());
 		}
 
 		@Override
 		protected String testName(final FrameworkMethod method) {
 			if (Boolean.parseBoolean(System.getProperty("org.eclipse.mylyn.tests.all"))) {
 				return String.format("%s[%s %s]", method.getName(), fFixtureSetNumber, fFixtureList.get(0)
-						.getDescription());
+						.getSimpleInfo());
 			} else {
 				return super.testName(method);
 			}
