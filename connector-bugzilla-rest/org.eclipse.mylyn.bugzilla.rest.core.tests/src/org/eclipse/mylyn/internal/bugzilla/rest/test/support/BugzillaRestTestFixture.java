@@ -18,6 +18,7 @@ import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.commons.sdk.util.FixtureConfiguration;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConnector;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestCore;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
@@ -26,6 +27,8 @@ public class BugzillaRestTestFixture extends AbstractTestFixture {
 	public final String version;
 
 	protected TaskRepository repository;
+
+	private final BugzillaRestConnector connector = new BugzillaRestConnector();
 
 	@Override
 	protected AbstractTestFixture getDefault() {
@@ -53,7 +56,16 @@ public class BugzillaRestTestFixture extends AbstractTestFixture {
 		return repository;
 	}
 
+	public BugzillaRestConnector connector() {
+		return connector;
+	}
+
 	public String getTestDataFolder() {
 		return "testdata/" + getProperty("testdataVersion");
 	}
+
+	public BugzillaRestHarness createHarness() {
+		return new BugzillaRestHarness(this);
+	}
+
 }
