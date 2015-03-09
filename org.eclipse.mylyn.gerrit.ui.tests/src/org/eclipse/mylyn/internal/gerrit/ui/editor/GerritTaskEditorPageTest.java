@@ -47,6 +47,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 @SuppressWarnings("restriction")
 public class GerritTaskEditorPageTest extends TestCase {
@@ -105,7 +106,12 @@ public class GerritTaskEditorPageTest extends TestCase {
 				}));
 		assertEquals(ImmutableList.of(GerritReviewDetailSection.class, PatchSetSection.class,
 				TaskEditorCommentPart.class, TaskEditorNewCommentPart.class), partClasses);
-		assertThat(descriptors.size(), greaterThanOrEqualTo(7));
+		List<String> ids = Lists.transform(descriptors, new Function<TaskEditorPartDescriptor, String>() {
+			public String apply(TaskEditorPartDescriptor o) {
+				return o.getId();
+			}
+		});
+		assertThat("Missing descriptors. Found " + ids, descriptors.size(), greaterThanOrEqualTo(7));
 	}
 
 	public void testCreateAttributesSectionOverlayAttributes() {
