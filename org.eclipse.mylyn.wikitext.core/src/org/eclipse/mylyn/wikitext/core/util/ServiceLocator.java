@@ -40,7 +40,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
-import com.google.common.io.Closeables;
 
 /**
  * A service locator for use both inside and outside of an Eclipse environment. Provides access to markup languages by
@@ -326,23 +325,17 @@ public class ServiceLocator {
 	 * @see ServiceLoader
 	 */
 	protected List<String> readServiceClassNames(URL url) {
-		InputStream stream = null;
-		try {
-			stream = url.openStream();
+		try (InputStream stream = url.openStream()) {
 			return readServiceClassNames(stream);
 		} catch (IOException e) {
 			logReadServiceClassNamesFailure(e);
-		} finally {
-			Closeables.closeQuietly(stream);
 		}
 		return Collections.emptyList();
 	}
 
 	List<String> readServiceClassNames(InputStream stream) {
 		List<String> serviceClassNames = Lists.newArrayList();
-		BufferedReader reader = null;
-		try {
-			reader = new BufferedReader(new InputStreamReader(stream, Charsets.UTF_8));
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream, Charsets.UTF_8))) {
 			String line;
 			while ((line = reader.readLine()) != null) {
 				Matcher matcher = CLASS_NAME_PATTERN.matcher(line);
@@ -355,8 +348,6 @@ public class ServiceLocator {
 			}
 		} catch (IOException e) {
 			logReadServiceClassNamesFailure(e);
-		} finally {
-			Closeables.closeQuietly(reader);
 		}
 		return serviceClassNames;
 	}
