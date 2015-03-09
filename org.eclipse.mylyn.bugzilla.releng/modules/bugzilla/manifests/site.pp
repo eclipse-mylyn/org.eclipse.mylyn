@@ -64,23 +64,10 @@ define bugzilla::site (
        $envinfo2 = ""
     }
   }
-  if $envinfo2 != "" {
-    if $rest_enabled {
-      $envinfo3 = "$envinfo2, REST enabled"
-    } else {
-       $envinfo3 = "$envinfo2"
-    }
-  } else {
-    if $rest_enabled {
-      $envinfo3 = "REST enabled"
-    } else {
-       $envinfo3 = ""
-    }
-  }
   if $envinfo != "" {
       $envinfo_intern = $envinfo
   } else {
-      $envinfo_intern = $envinfo3
+      $envinfo_intern = $envinfo2
   }
   if $major == "3" {
     if $minor == "6" {

@@ -34,15 +34,15 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
   }
 
   bugzilla::site { "bugzilla-4.2.13-bugaliases":
-    major   => "4",
-    minor   => "2",
-    branchTag      => "bugzilla-4.2.13",
+    major         => "4",
+    minor         => "2",
+    branchTag     => "bugzilla-4.2.13",
     usebugaliases => true,
   }
 
   bugzilla::site { "bugzilla-4.4.8":
-    major     => "4",
-    minor     => "4",
+    major      => "4",
+    minor      => "4",
     envdefault => true,
   }
 
@@ -64,14 +64,15 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
     major       => "5",
     minor       => "0",
     branch      => "5.0",
-    envversion   => "5.0rc2",
+    envversion  => "5.0rc2",
   }
 
   bugzilla::site { "bugzilla-master":
     major       => "5",
     minor       => "1",
     branchTag   => "HEAD",
-    envversion   => "5.1",
+    envversion  => "5.1",
+    envinfo     => "Master",
   }
 
 /*******************************************************************************
@@ -79,24 +80,25 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
  *******************************************************************************/
 
   bugzilla::site { "bugzilla-5.0rc2-rest":
-    major       => "5",
-    minor       => "0",
-    branch      => "5.0",
-    branchTag   => "bugzilla-5.0rc2",
-    envtype      => "bugzillaREST",
-    rest_enabled => true,
+    major           => "5",
+    minor           => "0",
+    branch          => "5.0",
+    branchTag       => "bugzilla-5.0rc2",
+    envtype         => "bugzillaREST",
+    rest_enabled    => true,
     envdefault_rest => true,
-    envversion   => "5.0rc2",
+    envversion      => "5.0rc2",
     testdataVersion => "Version1",
   }
  
   bugzilla::site { "bugzilla-rest-master":
-    major        => "5",
-    minor        => "1",
-    branchTag   => "HEAD",
-    envversion   => "5.1",
-    envtype      => "bugzillaREST",
-    rest_enabled => true,
+    major           => "5",
+    minor           => "1",
+    branchTag       => "HEAD",
+    envversion      => "5.1",
+    envinfo         => "Master",
+    envtype         => "bugzillaREST",
+    rest_enabled    => true,
     testdataVersion => "Version1",
   }
 
