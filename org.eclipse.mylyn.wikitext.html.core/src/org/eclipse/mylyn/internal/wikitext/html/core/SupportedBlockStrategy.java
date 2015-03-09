@@ -27,4 +27,9 @@ class SupportedBlockStrategy implements BlockStrategy {
 	public void endBlock(DocumentBuilder builder) {
 		builder.endBlock();
 	}
+
+	@Override
+	public BlockSeparator trailingSeparator() {
+		return null;
+	}
 }

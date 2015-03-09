@@ -17,6 +17,14 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 
 class UnsupportedBlockStrategy implements BlockStrategy {
 
+	private static class DoubleLineBreakSeparator implements BlockSeparator {
+		@Override
+		public void emit(DocumentBuilder builder) {
+			builder.lineBreak();
+			builder.lineBreak();
+		}
+	}
+
 	static final UnsupportedBlockStrategy instance = new UnsupportedBlockStrategy();
 
 	@Override
@@ -25,8 +33,11 @@ class UnsupportedBlockStrategy implements BlockStrategy {
 
 	@Override
 	public void endBlock(DocumentBuilder builder) {
-		builder.lineBreak();
-		builder.lineBreak();
+	}
+
+	@Override
+	public BlockSeparator trailingSeparator() {
+		return new DoubleLineBreakSeparator();
 	}
 
 }

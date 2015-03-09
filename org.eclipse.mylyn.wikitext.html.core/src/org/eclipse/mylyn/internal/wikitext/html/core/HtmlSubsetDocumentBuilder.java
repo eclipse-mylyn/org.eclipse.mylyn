@@ -42,6 +42,8 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 
 	private boolean implicitBlock;
 
+	private BlockSeparator blockSeparator;
+
 	public HtmlSubsetDocumentBuilder(Writer out, boolean formatting) {
 		this(new HtmlDocumentBuilder(checkNotNull(out, "Must provide a writer"), formatting)); //$NON-NLS-1$
 	}
@@ -88,6 +90,7 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 	@Override
 	public void beginBlock(BlockType type, Attributes attributes) {
 		assertCloseImplicitBlock();
+		emitBlockSeparator();
 		pushBlockStrategy(type, attributes).beginBlock(delegate, type, attributes);
 	}
 
@@ -99,7 +102,9 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 
 	@Override
 	public void endBlock() {
-		blockStrategyState.pop().endBlock(delegate);
+		BlockStrategy blockStrategy = blockStrategyState.pop();
+		blockStrategy.endBlock(delegate);
+		this.blockSeparator = blockStrategy.trailingSeparator();
 	}
 
 	@Override
@@ -123,12 +128,20 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 	@Override
 	public void beginHeading(int level, Attributes attributes) {
 		assertCloseImplicitBlock();
+		emitBlockSeparator();
 		headingState.push(level);
 		if (headingLevelSupported(level)) {
 			delegate.beginHeading(level, attributes);
 		} else {
 			beginBlock(BlockType.PARAGRAPH, attributes);
 			beginSpan(SpanType.BOLD, new Attributes());
+		}
+	}
+
+	private void emitBlockSeparator() {
+		if (blockSeparator != null) {
+			blockSeparator.emit(delegate);
+			blockSeparator = null;
 		}
 	}
 
@@ -204,9 +217,12 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 	}
 
 	private void assertOpenBlock() {
-		if (delegate.isXhtmlStrict() && blockStrategyState.isEmpty() && headingState.isEmpty()) {
-			beginBlock(BlockType.PARAGRAPH, new Attributes());
-			implicitBlock = true;
+		if (blockStrategyState.isEmpty() && headingState.isEmpty()) {
+			emitBlockSeparator();
+			if (delegate.isXhtmlStrict()) {
+				beginBlock(BlockType.PARAGRAPH, new Attributes());
+				implicitBlock = true;
+			}
 		}
 	}
 

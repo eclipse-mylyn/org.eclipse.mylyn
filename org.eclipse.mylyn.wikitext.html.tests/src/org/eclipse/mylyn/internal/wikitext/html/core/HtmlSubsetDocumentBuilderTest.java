@@ -225,7 +225,7 @@ public class HtmlSubsetDocumentBuilderTest {
 
 	@Test
 	public void blockParagraphUnsupportedWithoutFallback() {
-		assertUnsupportedBlock("test<br/><br/>", BlockType.PARAGRAPH, BlockType.CODE);
+		assertUnsupportedBlock("test", BlockType.PARAGRAPH, BlockType.CODE);
 	}
 
 	@Test
@@ -240,7 +240,7 @@ public class HtmlSubsetDocumentBuilderTest {
 
 	@Test
 	public void blockCodeUnsupportedWithoutFallback() {
-		assertUnsupportedBlock("test<br/><br/>", BlockType.CODE, BlockType.LIST_ITEM);
+		assertUnsupportedBlock("test", BlockType.CODE, BlockType.LIST_ITEM);
 	}
 
 	@Test
@@ -260,7 +260,7 @@ public class HtmlSubsetDocumentBuilderTest {
 
 	@Test
 	public void blockQuoteUnsupportedWithoutFallback() {
-		assertUnsupportedBlock("test<br/><br/>", BlockType.QUOTE, BlockType.CODE);
+		assertUnsupportedBlock("test", BlockType.QUOTE, BlockType.CODE);
 	}
 
 	@Test
@@ -323,13 +323,13 @@ public class HtmlSubsetDocumentBuilderTest {
 	public void testTableUnsupported() {
 		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
 		buildTable();
-		assertContent("<p>test 0/0</p><p>test 1/0</p><p>test 2/0</p><br/><br/><p>test 0/1</p><p>test 1/1</p><p>test 2/1</p><br/><br/>");
+		assertContent("<p>test 0/0</p><p>test 1/0</p><p>test 2/0</p><br/><br/><p>test 0/1</p><p>test 1/1</p><p>test 2/1</p>");
 	}
 
 	@Test
 	public void testParagraphUnsupported() {
 		builder.setSupportedBlockTypes(Collections.<BlockType> emptySet());
-		assertUnsupportedBlock("test<br/><br/>", BlockType.PARAGRAPH);
+		assertUnsupportedBlock("test", BlockType.PARAGRAPH);
 	}
 
 	@Test
@@ -345,6 +345,52 @@ public class HtmlSubsetDocumentBuilderTest {
 		builder.endDocument();
 		builder.flush();
 		assertContent("test");
+	}
+
+	@Test
+	public void testUnsupportedMultiple() {
+		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.CODE));
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("test");
+		builder.endBlock();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("test2");
+		builder.endBlock();
+		assertContent("test<br/><br/>test2");
+	}
+
+	@Test
+	public void testSupportedUnsupportedCombination() {
+		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.CODE));
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("test");
+		builder.endBlock();
+		builder.beginBlock(BlockType.CODE, new Attributes());
+		builder.characters("test2");
+		builder.endBlock();
+		assertContent("test<br/><br/><pre><code>test2</code></pre>");
+	}
+
+	@Test
+	public void testUnsuportedBeforeHeading() {
+		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.CODE));
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("test");
+		builder.endBlock();
+		builder.beginHeading(2, new Attributes());
+		builder.characters("heading text");
+		builder.endHeading();
+		assertContent("test<br/><br/><h2>heading text</h2>");
+	}
+
+	@Test
+	public void testUnsuportedBeforeImplicitParagraph() {
+		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.CODE));
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("test");
+		builder.endBlock();
+		builder.characters("test2");
+		assertContent("test<br/><br/>test2");
 	}
 
 	private void buildTable() {

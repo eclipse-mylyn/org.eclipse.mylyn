@@ -19,4 +19,6 @@ interface BlockStrategy {
 	void beginBlock(DocumentBuilder builder, BlockType type, Attributes attributes);
 
 	void endBlock(DocumentBuilder builder);
+
+	BlockSeparator trailingSeparator();
 }

@@ -39,4 +39,8 @@ class SubstitutionBlockStrategy implements BlockStrategy {
 		builder.endBlock();
 	}
 
+	@Override
+	public BlockSeparator trailingSeparator() {
+		return null;
+	}
 }

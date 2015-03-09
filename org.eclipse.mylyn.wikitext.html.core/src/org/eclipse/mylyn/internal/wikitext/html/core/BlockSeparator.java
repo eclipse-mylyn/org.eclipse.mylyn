@@ -11,24 +11,9 @@
 
 package org.eclipse.mylyn.internal.wikitext.html.core;
 
-import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 
-public class NoOpBlockStrategy implements BlockStrategy {
+public interface BlockSeparator {
 
-	static final NoOpBlockStrategy instance = new NoOpBlockStrategy();
-
-	@Override
-	public void beginBlock(DocumentBuilder builder, BlockType type, Attributes attributes) {
-	}
-
-	@Override
-	public void endBlock(DocumentBuilder builder) {
-	}
-
-	@Override
-	public BlockSeparator trailingSeparator() {
-		return null;
-	}
+	public void emit(DocumentBuilder builder);
 }
