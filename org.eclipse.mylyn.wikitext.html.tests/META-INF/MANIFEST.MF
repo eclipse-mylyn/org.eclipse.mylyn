@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.eclipse.mylyn.wikitext.html.tests
 Fragment-Host: org.eclipse.mylyn.wikitext.html.core;bundle-version="2.0.0"
 Bundle-Version: 2.4.0.qualifier
 Bundle-Vendor: Eclipse.org
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.eclipse.mylyn.wikitext.core;bundle-version="2.0.0", 
  org.eclipse.mylyn.wikitext.core.osgi;bundle-version="2.0.0", 
  com.google.guava;bundle-version="15.0.0",

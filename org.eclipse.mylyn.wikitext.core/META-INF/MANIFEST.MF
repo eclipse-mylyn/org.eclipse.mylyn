@@ -22,5 +22,5 @@ Export-Package: org.eclipse.mylyn.internal.wikitext.core.parser.builder;x-intern
  org.eclipse.mylyn.wikitext.core.validation
 Require-Bundle: org.jsoup;bundle-version="1.7.2";resolution:=optional;x-installation:=greedy,
  com.google.guava;bundle-version="15.0.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Localization: plugin
