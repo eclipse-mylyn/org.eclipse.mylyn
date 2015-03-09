@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -40,7 +41,6 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.util.MarkupToEclipseToc;
 import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 
-import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 
 /**
@@ -183,7 +183,7 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 	 * 
 	 * @parameter
 	 */
-	protected List<String> stylesheetUrls = Lists.newArrayList();
+	protected List<String> stylesheetUrls = new ArrayList<>();
 
 	/**
 	 * the prefix to URLs in the toc.xml, typically the relative path from the plugin to the help files. For example, if

@@ -20,6 +20,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -33,7 +34,6 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 import com.google.common.base.Throwables;
-import com.google.common.collect.Lists;
 
 public class OsgiServiceLocatorTest {
 	@Rule
@@ -104,7 +104,7 @@ public class OsgiServiceLocatorTest {
 		Bundle bundle = mock(Bundle.class);
 		try {
 			URL url = new URL("file:" + markupLanguage.getName());
-			List<URL> resources = Lists.newArrayList(url);
+			List<URL> resources = Collections.singletonList(url);
 			doReturn(Collections.enumeration(resources)).when(bundle).findEntries(eq(servicesFolder),
 					eq(MarkupLanguage.class.getName()), eq(false));
 			doReturn(1234L).when(bundle).getBundleId();
@@ -126,7 +126,7 @@ public class OsgiServiceLocatorTest {
 
 			@Override
 			protected List<String> readServiceClassNames(URL url) {
-				List<String> names = Lists.newArrayList();
+				List<String> names = new ArrayList<>();
 				names.add(url.getPath());
 				return names;
 			}

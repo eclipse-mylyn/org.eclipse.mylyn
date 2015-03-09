@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -38,7 +39,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
 /**
@@ -120,8 +120,8 @@ public class ServiceLocator {
 		checkArgument(!Strings.isNullOrEmpty(languageName), "Must provide a languageName"); //$NON-NLS-1$
 		Pattern classNamePattern = Pattern.compile("\\s*([^\\s#]+)?#?.*"); //$NON-NLS-1$
 		// first try Java services (jar-based)
-		final List<String> names = Lists.newArrayList();
-		final List<MarkupLanguage> languages = Lists.newArrayList();
+		final List<String> names = new ArrayList<>();
+		final List<MarkupLanguage> languages = new ArrayList<>();
 
 		final MarkupLanguage[] result = new MarkupLanguage[1];
 
@@ -286,7 +286,7 @@ public class ServiceLocator {
 	 * @see #getClasspathServiceResourceNames()
 	 */
 	protected List<ResourceDescriptor> discoverServiceResources() {
-		List<ResourceDescriptor> serviceResources = Lists.newArrayList();
+		List<ResourceDescriptor> serviceResources = new ArrayList<>();
 		for (String serviceResourceName : getClasspathServiceResourceNames()) {
 			try {
 				Enumeration<URL> resources = classLoader.getResources(serviceResourceName);
@@ -307,7 +307,7 @@ public class ServiceLocator {
 	 * @since 2.0
 	 */
 	protected List<String> getClasspathServiceResourceNames() {
-		List<String> paths = Lists.newArrayList();
+		List<String> paths = new ArrayList<>();
 		for (String suffix : new String[] { "services/" + MarkupLanguage.class.getName(), //$NON-NLS-1$
 				"services/" + MarkupLanguageProvider.class.getName() }) { //$NON-NLS-1$
 			for (String prefix : new String[] { "", "META-INF/" }) { //$NON-NLS-1$//$NON-NLS-2$
@@ -334,7 +334,7 @@ public class ServiceLocator {
 	}
 
 	List<String> readServiceClassNames(InputStream stream) {
-		List<String> serviceClassNames = Lists.newArrayList();
+		List<String> serviceClassNames = new ArrayList<>();
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream, Charsets.UTF_8))) {
 			String line;
 			while ((line = reader.readLine()) != null) {

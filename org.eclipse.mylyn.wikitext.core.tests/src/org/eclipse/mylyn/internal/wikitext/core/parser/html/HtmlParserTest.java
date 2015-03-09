@@ -16,6 +16,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
@@ -32,7 +33,6 @@ import org.xml.sax.SAXException;
 import com.google.common.base.Objects;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 
 public class HtmlParserTest {
 	static class EndEvent {
@@ -121,7 +121,7 @@ public class HtmlParserTest {
 	}
 
 	private void assertParseEventOrder(String content, Object... expectedEventTypes) {
-		final List<Object> actualEventTypes = Lists.newArrayList();
+		final List<Object> actualEventTypes = new ArrayList<>();
 		DocumentBuilder builder = new NoOpDocumentBuilder() {
 			@Override
 			public void beginBlock(BlockType type, Attributes attributes) {

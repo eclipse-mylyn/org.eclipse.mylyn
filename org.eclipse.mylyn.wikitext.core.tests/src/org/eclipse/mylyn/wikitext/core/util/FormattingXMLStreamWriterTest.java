@@ -15,8 +15,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.StringWriter;
 
-import org.eclipse.mylyn.wikitext.core.util.DefaultXmlStreamWriter;
-import org.eclipse.mylyn.wikitext.core.util.FormattingXMLStreamWriter;
 import org.junit.Before;
 import org.junit.Test;
 

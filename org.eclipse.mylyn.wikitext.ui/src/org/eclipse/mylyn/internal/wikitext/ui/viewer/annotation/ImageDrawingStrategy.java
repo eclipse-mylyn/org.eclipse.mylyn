@@ -13,8 +13,8 @@ package org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation;
 
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
-import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.AnnotationPainter.IDrawingStrategy;
+import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;

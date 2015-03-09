@@ -15,6 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
@@ -29,7 +30,6 @@ import org.osgi.framework.FrameworkUtil;
 import com.google.common.base.Predicate;
 import com.google.common.base.Throwables;
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
@@ -92,7 +92,7 @@ public class OsgiServiceLocator extends ServiceLocator {
 	@Override
 	protected List<ResourceDescriptor> discoverServiceResources() {
 		Set<URL> resourceUrls = Sets.newHashSet();
-		List<ResourceDescriptor> descriptors = Lists.newArrayList();
+		List<ResourceDescriptor> descriptors = new ArrayList<>();
 		for (Bundle bundle : bundles()) {
 			for (String resourceName : getClasspathServiceResourceNames()) {
 				int indexOf = resourceName.indexOf(SERVICES_SLASH);

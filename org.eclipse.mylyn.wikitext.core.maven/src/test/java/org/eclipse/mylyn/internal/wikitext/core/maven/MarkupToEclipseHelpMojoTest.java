@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.UUID;
 
 import org.apache.maven.plugin.MojoExecutionException;
@@ -45,7 +46,6 @@ import org.junit.rules.TemporaryFolder;
 import org.mockito.ArgumentCaptor;
 
 import com.google.common.base.Charsets;
-import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 
 public class MarkupToEclipseHelpMojoTest {
@@ -146,7 +146,7 @@ public class MarkupToEclipseHelpMojoTest {
 
 	@Test
 	public void configureStylesheetUrls() {
-		markupToEclipseHelp.stylesheetUrls = Lists.newArrayList("test/foo.css", "bar.css");
+		markupToEclipseHelp.stylesheetUrls = Arrays.asList("test/foo.css", "bar.css");
 		HtmlDocumentBuilder builder = mock(HtmlDocumentBuilder.class);
 		markupToEclipseHelp.configureStylesheets(builder, "");
 		verify(builder, times(2)).addCssStylesheet(any(Stylesheet.class));
@@ -154,7 +154,7 @@ public class MarkupToEclipseHelpMojoTest {
 
 	@Test
 	public void configureStylesheetUrlsWithRelativePath() {
-		markupToEclipseHelp.stylesheetUrls = Lists.newArrayList("bar.css");
+		markupToEclipseHelp.stylesheetUrls = Arrays.asList("bar.css");
 		HtmlDocumentBuilder builder = mock(HtmlDocumentBuilder.class);
 		markupToEclipseHelp.configureStylesheets(builder, "one/two");
 		ArgumentCaptor<Stylesheet> captor = ArgumentCaptor.forClass(Stylesheet.class);

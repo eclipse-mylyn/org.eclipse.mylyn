@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.wikitext.core.parser.builder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
@@ -35,8 +36,6 @@ import org.eclipse.mylyn.wikitext.core.parser.builder.event.ImageLinkEvent;
 import org.eclipse.mylyn.wikitext.core.parser.builder.event.LineBreakEvent;
 import org.eclipse.mylyn.wikitext.core.parser.builder.event.LinkEvent;
 
-import com.google.common.collect.Lists;
-
 /**
  * A {@link DocumentBuilder} that produces {@link DocumentBuilderEvents} as its output.
  *
@@ -44,7 +43,7 @@ import com.google.common.collect.Lists;
  * @since 2.0
  */
 public class EventDocumentBuilder extends DocumentBuilder {
-	private final List<DocumentBuilderEvent> events = Lists.newArrayList();
+	private final List<DocumentBuilderEvent> events = new ArrayList<>();
 
 	/**
 	 * Provides the {@link DocumentBuilderEvents} that were created as a result of using this builder.

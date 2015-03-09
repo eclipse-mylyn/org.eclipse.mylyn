@@ -14,8 +14,8 @@ package org.eclipse.mylyn.internal.wikitext.tasks.ui.editor;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.wikitext.tasks.ui.editor.MarkupTaskEditorExtension;
 import org.eclipse.mylyn.wikitext.tracwiki.core.TracWikiLanguage;
-import org.eclipse.mylyn.wikitext.ui.viewer.MarkupViewer;
 import org.eclipse.mylyn.wikitext.ui.viewer.AbstractTextSourceViewerConfiguration.HyperlinkDetectorDescriptorFilter;
+import org.eclipse.mylyn.wikitext.ui.viewer.MarkupViewer;
 import org.eclipse.ui.texteditor.HyperlinkDetectorDescriptor;
 
 /**

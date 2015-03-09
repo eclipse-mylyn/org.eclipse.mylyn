@@ -42,7 +42,6 @@ import org.junit.rules.ExpectedException;
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
 
 /**
  * Tests for {@link ServiceLocator}
@@ -110,12 +109,12 @@ public class ServiceLocatorTest {
 
 			@Override
 			protected List<ResourceDescriptor> discoverServiceResources() {
-				return Lists.newArrayList(new ResourceDescriptor(url));
+				return Collections.singletonList(new ResourceDescriptor(url));
 			}
 
 			@Override
 			protected List<String> readServiceClassNames(URL url) {
-				return Lists.newArrayList("test.TestLanguage");
+				return Collections.singletonList("test.TestLanguage");
 			}
 		};
 		Set<MarkupLanguage> languages = locator.getAllMarkupLanguages();
@@ -133,7 +132,7 @@ public class ServiceLocatorTest {
 	protected void setupServiceLocatorWithMockMarkupLanguage(boolean metaInf) {
 		try {
 			ClassLoader classLoader = mock(ClassLoader.class);
-			Collection<URL> resources = Lists.newArrayList(new URL("file:" + MockMarkupLanguage.class.getName()));
+			Collection<URL> resources = Collections.singletonList(new URL("file:" + MockMarkupLanguage.class.getName()));
 
 			Enumeration<Object> empty = Collections.enumeration(Collections.emptyList());
 			doReturn(empty).when(classLoader).getResources(any(String.class));
@@ -158,7 +157,8 @@ public class ServiceLocatorTest {
 	protected void setupServiceLocatorWithMockMarkupLanguageProvider(boolean metaInf) {
 		try {
 			ClassLoader classLoader = mock(ClassLoader.class);
-			Collection<URL> resources = Lists.newArrayList(new URL("file:" + MockMarkupLanguageProvider.class.getName()));
+			Collection<URL> resources = Collections.singletonList(new URL("file:"
+					+ MockMarkupLanguageProvider.class.getName()));
 
 			Enumeration<Object> empty = Collections.enumeration(Collections.emptyList());
 			doReturn(empty).when(classLoader).getResources(any(String.class));

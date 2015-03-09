@@ -15,6 +15,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -28,7 +29,6 @@ import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentHandler;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
@@ -45,7 +45,7 @@ public class HtmlLanguageBuilder {
 
 	private final Set<SpanType> spanTypes = Sets.newHashSet();
 
-	private final List<SpanHtmlElementStrategy> spanElementStrategies = Lists.newArrayList();
+	private final List<SpanHtmlElementStrategy> spanElementStrategies = new ArrayList<>();
 
 	private int headingLevel;
 

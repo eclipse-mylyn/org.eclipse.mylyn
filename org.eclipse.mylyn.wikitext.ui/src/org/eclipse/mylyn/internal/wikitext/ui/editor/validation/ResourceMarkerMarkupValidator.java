@@ -25,8 +25,8 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
-import org.eclipse.mylyn.wikitext.core.validation.ValidationRule;
 import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem.Severity;
+import org.eclipse.mylyn.wikitext.core.validation.ValidationRule;
 
 /**
  * Markup validators are capable of validating a region of a document. Any validation problems or errors are created as

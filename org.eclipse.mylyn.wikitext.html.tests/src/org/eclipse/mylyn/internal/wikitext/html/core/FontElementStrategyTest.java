@@ -18,6 +18,7 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.StringWriter;
+import java.util.Arrays;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
@@ -30,8 +31,6 @@ import org.eclipse.mylyn.wikitext.core.parser.builder.event.CharactersEvent;
 import org.eclipse.mylyn.wikitext.core.parser.builder.event.EndSpanEvent;
 import org.eclipse.mylyn.wikitext.html.core.HtmlLanguage;
 import org.junit.Test;
-
-import com.google.common.collect.Lists;
 
 public class FontElementStrategyTest {
 
@@ -91,9 +90,8 @@ public class FontElementStrategyTest {
 		builder.characters("test");
 		spanStrategy.endSpan(builder);
 
-		assertEquals(Lists.newArrayList(new BeginSpanEvent(SpanType.SPAN,
-				new Attributes(null, null, "color: red", null)), new CharactersEvent("test"), new EndSpanEvent()),
-				builder.getDocumentBuilderEvents().getEvents());
+		assertEquals(Arrays.asList(new BeginSpanEvent(SpanType.SPAN, new Attributes(null, null, "color: red", null)),
+				new CharactersEvent("test"), new EndSpanEvent()), builder.getDocumentBuilderEvents().getEvents());
 	}
 
 	@Test

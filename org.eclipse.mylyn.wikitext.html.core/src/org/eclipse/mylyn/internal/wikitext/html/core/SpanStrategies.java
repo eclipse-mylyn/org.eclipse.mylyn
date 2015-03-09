@@ -16,6 +16,7 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Predicates.isNull;
 import static com.google.common.base.Predicates.not;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,6 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 public class SpanStrategies extends ElementStrategies<SpanType, SpanStrategy, SpanHtmlElementStrategy> {
@@ -102,7 +102,7 @@ public class SpanStrategies extends ElementStrategies<SpanType, SpanStrategy, Sp
 	}
 
 	private SpanStrategy calculateAlternateSpanStrategy(Attributes attributes) {
-		List<SpanStrategy> strategies = Lists.newArrayList();
+		List<SpanStrategy> strategies = new ArrayList<>();
 		String cssStyle = attributes.getCssStyle();
 		if (cssStyle != null) {
 			Iterator<CssRule> rules = new CssParser().createRuleIterator(cssStyle);

@@ -11,8 +11,6 @@
 
 package org.eclipse.mylyn.internal.wikitext.core.parser.html;
 
-import org.eclipse.mylyn.internal.wikitext.core.parser.html.AbstractSaxHtmlParser;
-import org.eclipse.mylyn.internal.wikitext.core.parser.html.XHtmlParser;
 
 /**
  * @author David Green

@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.wikitext.core.parser.html;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,7 +23,6 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
 
 /**
  * @author David Green
@@ -115,7 +115,7 @@ class WhitespaceCleanupProcessor extends DocumentProcessor {
 	private void normalizeEmptySpaceBetweenNodes(Element parent) {
 		List<Node> children = parent.childNodes();
 		if (!children.isEmpty()) {
-			children = Lists.newArrayList(children);
+			children = new ArrayList<>(children);
 			for (Node child : children) {
 				Node previousSibling = child.previousSibling();
 				Node nextSibling = child.nextSibling();

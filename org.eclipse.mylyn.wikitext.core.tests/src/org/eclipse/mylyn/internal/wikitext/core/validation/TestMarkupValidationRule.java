@@ -14,8 +14,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
-import org.eclipse.mylyn.wikitext.core.validation.ValidationRule;
 import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem.Severity;
+import org.eclipse.mylyn.wikitext.core.validation.ValidationRule;
 
 /**
  * a test markup validation rule that creates errors for text matching "ERROR" or "WARNING".
