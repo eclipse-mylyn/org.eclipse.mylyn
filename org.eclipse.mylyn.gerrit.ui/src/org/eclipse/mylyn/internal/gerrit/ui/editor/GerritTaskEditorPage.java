@@ -18,6 +18,7 @@ import java.util.Set;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.GerritQueryResultSchema;
 import org.eclipse.mylyn.internal.gerrit.core.GerritTaskSchema;
+import org.eclipse.mylyn.internal.tasks.ui.editors.PersonAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorAttributePart;
 import org.eclipse.mylyn.reviews.ui.spi.editor.AbstractReviewTaskEditorPage;
 import org.eclipse.mylyn.reviews.ui.spi.editor.ReviewDetailSection;
@@ -77,6 +78,18 @@ public class GerritTaskEditorPage extends AbstractReviewTaskEditorPage {
 					AbstractAttributeEditor editor = super.createEditor(type, taskAttribute);
 					editor.setLayoutHint(new LayoutHint(RowSpan.SINGLE, ColumnSpan.MULTIPLE));
 					return editor;
+				} else if (TaskAttribute.TYPE_PERSON.equals(type)) {
+					return new PersonAttributeEditor(getModel(), taskAttribute) {
+						@Override
+						public String getValue() {
+							if (isReadOnly()) {
+								// "label <id>" format doesn't fit in attributes section so just return label
+								return getModel().getTaskData().getAttributeMapper().getValueLabel(getTaskAttribute());
+							} else {
+								return getTaskAttribute().getValue();
+							}
+						}
+					};
 				}
 				return super.createEditor(type, taskAttribute);
 			}

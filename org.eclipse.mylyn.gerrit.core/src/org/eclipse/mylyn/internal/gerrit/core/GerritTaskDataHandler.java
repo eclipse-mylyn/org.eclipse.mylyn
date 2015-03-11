@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritPerson;
@@ -221,9 +222,14 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		Change change = changeDetail.getChange();
 		AccountInfo owner = changeDetail.getAccounts().get(change.getOwner());
 
-		updateTaskData(repository, data, new GerritQueryResult(new ChangeInfo(change)));
+		updatePartialTaskData(repository, data, new GerritQueryResult(new ChangeInfo(change)));
 		setAttributeValue(data, schema.BRANCH, change.getDest().get());
-		setAttributeValue(data, schema.OWNER, GerritUtil.getUserLabel(owner));
+		String userId = GerritUtil.getUserId(owner);
+		String userLabel = GerritUtil.getUserLabel(owner);
+		TaskAttribute ownerAttribute = setAttributeValue(data, schema.OWNER, userId);
+		if (ownerAttribute != null) {
+			ownerAttribute.putOption(userId, userLabel);
+		}
 		setAttributeValue(data, schema.UPLOADED, dateToString(((ChangeDetailX) changeDetail).getDateCreated()));
 		setAttributeValue(data, schema.UPDATED, dateToString(((ChangeDetailX) changeDetail).getLastModified()));
 		setAttributeValue(data, schema.DESCRIPTION, changeDetail.getDescription());
@@ -299,27 +305,39 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		}
 	}
 
-	public void updateTaskData(TaskRepository repository, TaskData data, GerritQueryResult changeInfo) {
+	public void updatePartialTaskData(TaskRepository repository, TaskData data, GerritQueryResult queryResult) {
 		GerritQueryResultSchema schema = GerritQueryResultSchema.getDefault();
-		setAttributeValue(data, schema.KEY, shortenChangeId(changeInfo.getId()));
-		setAttributeValue(data, schema.PROJECT, changeInfo.getProject());
-		setAttributeValue(data, schema.SUMMARY, changeInfo.getSubject());
-		setAttributeValue(data, schema.STATUS, changeInfo.getStatus());
+		setAttributeValue(data, schema.KEY, shortenChangeId(queryResult.getId()));
+		setAttributeValue(data, schema.PROJECT, queryResult.getProject());
+		setAttributeValue(data, schema.SUMMARY, queryResult.getSubject());
+		setAttributeValue(data, schema.STATUS, queryResult.getStatus());
 		setAttributeValue(data, schema.URL, connector.getTaskUrl(repository.getUrl(), data.getTaskId()));
-		setAttributeValue(data, schema.UPDATED, dateToString(changeInfo.getUpdated()));
-		setAttributeValue(data, schema.CHANGE_ID, changeInfo.getId());
-		if (GerritConnector.isClosed(changeInfo.getStatus())) {
-			setAttributeValue(data, schema.COMPLETED, dateToString(changeInfo.getUpdated()));
+		setAttributeValue(data, schema.UPDATED, dateToString(queryResult.getUpdated()));
+		setAttributeValue(data, schema.CHANGE_ID, queryResult.getId());
+		if (GerritConnector.isClosed(queryResult.getStatus())) {
+			setAttributeValue(data, schema.COMPLETED, dateToString(queryResult.getUpdated()));
 		}
 
-		// Add fields for the Gerrit Dashboard viewer entries
-		GerritPerson owner = changeInfo.getOwner();
-		setAttributeValue(data, schema.OWNER, (owner != null) ? owner.getName() : ANONYMOUS);
-		setAttributeValue(data, schema.BRANCH, changeInfo.getBranch());
-		setAttributeValue(data, schema.IS_STARRED, (changeInfo.isStarred() ? Boolean.TRUE : Boolean.FALSE).toString());
-		setAttributeValue(data, schema.TOPIC, changeInfo.getTopic());
+		GerritPerson owner = queryResult.getOwner();
+		if (owner != null) {
+			String fullName = getFullNameFromAccount(repository);
+			if (fullName != null && fullName.equals(owner.getName())) {
+				// populate ITask.ownerId so that My Tasks filter works 
+				String preferredEmail = getPreferredEmailFromAccount(repository);
+				TaskAttribute ownerAttribute = setAttributeValue(data, schema.OWNER, preferredEmail);
+				ownerAttribute.putOption(preferredEmail, fullName);
+			} else {
+				// we don't have the owner id and it could be expensive to include it in the query results
+				setAttributeValue(data, schema.OWNER, owner.getName());
+			}
+		} else {
+			setAttributeValue(data, schema.OWNER, ANONYMOUS);
+		}
+		setAttributeValue(data, schema.BRANCH, queryResult.getBranch());
+		setAttributeValue(data, schema.IS_STARRED, (queryResult.isStarred() ? Boolean.TRUE : Boolean.FALSE).toString());
+		setAttributeValue(data, schema.TOPIC, queryResult.getTopic());
 
-		GerritReviewLabel reviewLabel = changeInfo.getReviewLabel();
+		GerritReviewLabel reviewLabel = queryResult.getReviewLabel();
 		if (reviewLabel != null) {
 			if (reviewLabel.getVerifyStatus() != null) {
 				setAttributeValue(data, schema.VERIFY_STATE, reviewLabel.getVerifyStatus().getStatus());
@@ -328,6 +346,22 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 				setAttributeValue(data, schema.REVIEW_STATE, reviewLabel.getCodeReviewStatus().getStatus());
 			}
 		}
+	}
+
+	private String getFullNameFromAccount(TaskRepository repository) {
+		GerritConfiguration config = connector.getConfiguration(repository);
+		if (config != null && config.getAccount() != null) {
+			return config.getAccount().getFullName();
+		}
+		return null;
+	}
+
+	private String getPreferredEmailFromAccount(TaskRepository repository) {
+		GerritConfiguration config = connector.getConfiguration(repository);
+		if (config != null && config.getAccount() != null) {
+			return config.getAccount().getPreferredEmail();
+		}
+		return null;
 	}
 
 	private String shortenChangeId(String changeId) {

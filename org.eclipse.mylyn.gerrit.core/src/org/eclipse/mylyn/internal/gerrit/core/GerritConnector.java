@@ -275,7 +275,7 @@ public class GerritConnector extends ReviewsConnector {
 				for (GerritQueryResult changeInfo : result) {
 					TaskData taskData = taskDataHandler.createPartialTaskData(repository,
 							Integer.toString(changeInfo.getNumber()), monitor);
-					taskDataHandler.updateTaskData(repository, taskData, changeInfo);
+					taskDataHandler.updatePartialTaskData(repository, taskData, changeInfo);
 					if (monitor.isCanceled()) {
 						break;
 					}

@@ -27,6 +27,7 @@ import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.GerritQueryResultSchema;
 import org.eclipse.mylyn.internal.gerrit.ui.editor.GerritTaskEditorPage.GerritAttributePart;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
+import org.eclipse.mylyn.internal.tasks.ui.editors.PersonAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorCommentPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorNewCommentPart;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -59,18 +60,20 @@ public class GerritTaskEditorPageTest extends TestCase {
 		public TestGerritTaskEditorPage() {
 			super(mock(TaskEditor.class));
 			model = mock(TaskDataModel.class);
-			TaskAttributeMapper mapper = mock(TaskAttributeMapper.class);
-			TaskData taskData = new TaskData(mapper, GerritConnector.CONNECTOR_KIND, "mock", "mock");
+			TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "mock");
+			TaskData taskData = new TaskData(new TaskAttributeMapper(repository), GerritConnector.CONNECTOR_KIND,
+					"mock", "mock");
 			taskData.getRoot().createAttribute(GerritQueryResultSchema.getDefault().BRANCH.getKey());
 			taskData.getRoot().createAttribute(GerritQueryResultSchema.getDefault().PROJECT.getKey());
 			taskData.getRoot().createAttribute(GerritQueryResultSchema.getDefault().STATUS.getKey());
 			when(model.getTaskData()).thenReturn(taskData);
+			when(model.getTaskRepository()).thenReturn(repository);
 
 			IEditorSite editorSite = mock(IEditorSite.class);
 			IHandlerService service = mock(IHandlerService.class);
 			when(editorSite.getService(IHandlerService.class)).thenReturn(service);
-			TaskEditorInput taskEditorInput = new TaskEditorInput(new TaskRepository(GerritConnector.CONNECTOR_KIND,
-					"mock"), new TaskTask(GerritConnector.CONNECTOR_KIND, "mock", "mock"));
+			TaskEditorInput taskEditorInput = new TaskEditorInput(repository, new TaskTask(
+					GerritConnector.CONNECTOR_KIND, "mock", "mock"));
 			when(getTaskEditor().getTaskEditorInput()).thenReturn(taskEditorInput);
 			init(editorSite, taskEditorInput);
 		}
@@ -147,5 +150,25 @@ public class GerritTaskEditorPageTest extends TestCase {
 				return descriptor.getId().equals(id);
 			}
 		});
+	}
+
+	public void testCreatePersonAttribute() throws Exception {
+		TaskAttribute assigneeAttribute = page.getModel()
+				.getTaskData()
+				.getRoot()
+				.createAttribute(TaskAttribute.USER_ASSIGNED);
+		assigneeAttribute.getMetaData().setReadOnly(true);
+		PersonAttributeEditor editor = (PersonAttributeEditor) page.createAttributeEditorFactory().createEditor(
+				TaskAttribute.TYPE_PERSON, assigneeAttribute);
+		assertTrue(editor.isReadOnly());
+
+		assigneeAttribute.setValue("joel.user");
+		assertEquals("joel.user", editor.getValue());
+
+		assigneeAttribute.putOption("joel.user", "Joel K. User");
+		assertEquals("Joel K. User", editor.getValue());
+
+		editor.setReadOnly(false);
+		assertEquals("joel.user", editor.getValue());
 	}
 }

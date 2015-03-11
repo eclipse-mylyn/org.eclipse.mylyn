@@ -152,7 +152,7 @@ public class GerritTask extends AbstractTask {
 		setAttribute(SUBJECT, getValue(attributes.get(SUBJECT)));
 		setAttribute(STATUS, getValue(attributes.get(STATUS)));
 
-		setAttribute(OWNER, getValue(attributes.get(OWNER)));
+		setAttribute(OWNER, taskData.getAttributeMapper().getValueLabel(attributes.get(OWNER)));
 		setAttribute(PROJECT, getValue(attributes.get(PROJECT)));
 		setAttribute(BRANCH, getValue(attributes.get(BRANCH)));
 		setAttribute(TOPIC, getValue(attributes.get(TOPIC)));
@@ -286,10 +286,10 @@ public class GerritTask extends AbstractTask {
 		buffer.append(Messages.GerritTask_project).append(getAttribute(GerritTask.PROJECT)).append('\n');
 		buffer.append(Messages.GerritTask_branch).append(getAttribute(GerritTask.BRANCH)).append('\n');
 		buffer.append(Messages.GerritTask_topic).append(getAttribute(GerritTask.TOPIC)).append('\n');
-		buffer.append(Messages.GerritTask_updated).append(getAttributeAsDate(GerritTask.DATE_MODIFICATION)).append('\n');
-		buffer.append(Messages.GerritTask_star)
-				.append(getAttribute(GerritTask.IS_STARRED))
-				.append(", CRVW = ") //$NON-NLS-1$
+		buffer.append(Messages.GerritTask_updated)
+				.append(getAttributeAsDate(GerritTask.DATE_MODIFICATION))
+				.append('\n');
+		buffer.append(Messages.GerritTask_star).append(getAttribute(GerritTask.IS_STARRED)).append(", CRVW = ") //$NON-NLS-1$
 				.append(getAttribute(GerritTask.REVIEW_STATE))
 				.append(", VRIF = ") //$NON-NLS-1$
 				.append(getAttribute(GerritTask.VERIFY_STATE))

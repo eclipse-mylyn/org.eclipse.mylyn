@@ -37,6 +37,16 @@ import com.google.gerrit.reviewdb.Project;
  */
 public class GerritUtil {
 
+	public static String getUserId(AccountInfo user) {
+		if (user == null) {
+			return Messages.GerritUtil_Anonymous;
+		}
+		if (user.getPreferredEmail() != null) {
+			return user.getPreferredEmail();
+		}
+		return Messages.GerritUtil_Unknown;
+	}
+
 	public static String getUserLabel(AccountInfo user) {
 		if (user == null) {
 			return Messages.GerritUtil_Anonymous;
