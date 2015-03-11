@@ -19,6 +19,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
@@ -56,6 +57,17 @@ public class BooleanAttributeEditor extends AbstractAttributeEditor {
 		button.setToolTipText(getDescription());
 		refresh();
 		setControl(button);
+		if (!getTaskAttribute().hasValue()) {
+			// set initial value to false to match what the editor shows 
+			// use asyncExec to ensure this happens after decorating, otherwise this appears as an incoming change
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					if (!getTaskAttribute().hasValue()) {
+						getAttributeMapper().setBooleanValue(getTaskAttribute(), false);
+					}
+				}
+			});
+		}
 	}
 
 	@Override

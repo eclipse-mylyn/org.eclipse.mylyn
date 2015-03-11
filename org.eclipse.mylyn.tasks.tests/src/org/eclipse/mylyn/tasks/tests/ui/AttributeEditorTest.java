@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.tasks.tests.ui;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
@@ -23,12 +25,15 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModelEvent;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModelListener;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -212,12 +217,43 @@ public class AttributeEditorTest extends TestCase {
 	}
 
 	public void testBooleanAttribute() throws Exception {
+		FormToolkit toolkit = new FormToolkit(Display.getDefault());
 		TaskAttribute attribute = new TaskAttribute(taskData.getRoot(), "a.required.boolean");
 		attribute.getMetaData().setType(TaskAttribute.TYPE_BOOLEAN);
 		attribute.getMetaData().setRequired(true);
+		final AtomicBoolean firedAttributeChanged = new AtomicBoolean();
+		manager.addModelListener(new TaskDataModelListener() {
+			@Override
+			public void attributeChanged(TaskDataModelEvent event) {
+				firedAttributeChanged.set(true);
+			}
+		});
 
 		MockBooleanAttributeEditor editor = new MockBooleanAttributeEditor(manager, attribute);
 		assertFalse(editor.needsValue());
+		assertFalse(editor.getValue());
+		assertFalse(attribute.hasValue());
+		editor.createControl(WorkbenchUtil.getShell(), toolkit);
+		assertFalse(attribute.hasValue());
+		processAllEvents();
+		assertTrue(attribute.hasValue());
+		assertEquals(Boolean.toString(false), attribute.getValue());
+		assertFalse(firedAttributeChanged.get());
+
+		attribute.setValue(Boolean.toString(true));
+		editor = new MockBooleanAttributeEditor(manager, attribute);
+		editor.createControl(WorkbenchUtil.getShell(), toolkit);
+		processAllEvents();
+		assertEquals(Boolean.toString(true), attribute.getValue());
+		assertFalse(firedAttributeChanged.get());
+	}
+
+	/**
+	 * wait for the async call in BooleanAttributeEditor to run
+	 */
+	private void processAllEvents() {
+		while (Display.getDefault().readAndDispatch()) {
+		}
 	}
 
 	private TaskDataModel createManager() throws Exception {
