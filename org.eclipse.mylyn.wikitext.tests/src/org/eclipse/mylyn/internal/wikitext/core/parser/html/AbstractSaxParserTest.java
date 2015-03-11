@@ -85,7 +85,7 @@ public abstract class AbstractSaxParserTest extends TestCase {
 
 	public void testNumericListWithStyles() throws IOException, SAXException {
 		performTest("<html><body><ol><li>first <em>plus</em> <b>text</b></li></ol></body></html>",
-				"# first _plus_ **text**\n\n");
+				"# first _plus_ **text**\n");
 	}
 
 	public void testTable() throws IOException, SAXException {
@@ -107,7 +107,7 @@ public abstract class AbstractSaxParserTest extends TestCase {
 
 	public void testPreExtended() throws IOException, SAXException {
 		performTest("<html><body>test 123<pre>xfoo\nbar\n\nbaz</pre></body></html>",
-				"test 123\n\npre.. xfoo\nbar\n\nbaz\n\n\n");
+				"test 123\n\npre.. xfoo\nbar\n\nbaz\n\n");
 	}
 
 	public void testPre() throws IOException, SAXException {
@@ -125,7 +125,7 @@ public abstract class AbstractSaxParserTest extends TestCase {
 	}
 
 	public void testSpanCode2() throws IOException, SAXException {
-		performTest("<html><body><ul><li>a <code>foo baz</code></li></ul></body></html>", "* a @foo baz@\n\n");
+		performTest("<html><body><ul><li>a <code>foo baz</code></li></ul></body></html>", "* a @foo baz@\n");
 	}
 
 	public void testSpanDel() throws IOException, SAXException {

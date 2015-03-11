@@ -63,7 +63,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	}
 
-	private class ContentBlock extends Block implements ConfluenceBlock {
+	private class ContentBlock extends NewlineDelimitedBlock implements ConfluenceBlock {
 
 		private final String prefix;
 
@@ -76,16 +76,17 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		private int consecutiveLineBreakCount = 0;
 
 		ContentBlock(BlockType blockType, String prefix, String suffix, boolean requireAdjacentSeparator,
-				boolean emitWhenEmpty) {
-			super(blockType);
+				boolean emitWhenEmpty, int leadingNewlines, int trailingNewlines) {
+			super(blockType, leadingNewlines, trailingNewlines);
 			this.prefix = prefix;
 			this.suffix = suffix;
 			this.requireAdjacentSeparator = requireAdjacentSeparator;
 			this.emitWhenEmpty = emitWhenEmpty;
 		}
 
-		ContentBlock(String prefix, String suffix, boolean requireAdjacentWhitespace, boolean emitWhenEmpty) {
-			this(null, prefix, suffix, requireAdjacentWhitespace, emitWhenEmpty);
+		ContentBlock(String prefix, String suffix, boolean requireAdjacentWhitespace, boolean emitWhenEmpty,
+				int leadingNewlines, int trailingNewlines) {
+			this(null, prefix, suffix, requireAdjacentWhitespace, emitWhenEmpty, leadingNewlines, trailingNewlines);
 		}
 
 		@Override
@@ -176,7 +177,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		private final LinkAttributes attributes;
 
 		private LinkBlock(LinkAttributes attributes) {
-			super(null, "", "", true, true); //$NON-NLS-1$//$NON-NLS-2$
+			super(null, "", "", true, true, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			this.attributes = attributes;
 		}
 
@@ -202,7 +203,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	private class TableCellBlock extends ContentBlock {
 		public TableCellBlock(BlockType blockType) {
-			super(blockType, blockType == BlockType.TABLE_CELL_NORMAL ? "|" : "||", "", false, true); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			super(blockType, blockType == BlockType.TABLE_CELL_NORMAL ? "|" : "||", "", false, true, 0, 0); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 
 		@Override
@@ -218,7 +219,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	private class ImplicitParagraphBlock extends ContentBlock {
 
 		ImplicitParagraphBlock() {
-			super(BlockType.PARAGRAPH, "", "\n\n", false, false); //$NON-NLS-1$//$NON-NLS-2$
+			super(BlockType.PARAGRAPH, "", "", false, false, 2, 2); //$NON-NLS-1$//$NON-NLS-2$
 		}
 
 		@Override
@@ -238,22 +239,29 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		case BULLETED_LIST:
 		case DEFINITION_LIST:
 		case NUMERIC_LIST:
-			return new SuffixBlock(type, "\n"); //$NON-NLS-1$
+			if (currentBlock != null) {
+				BlockType currentBlockType = currentBlock.getBlockType();
+				if (currentBlockType == BlockType.LIST_ITEM || currentBlockType == BlockType.DEFINITION_ITEM
+						|| currentBlockType == BlockType.DEFINITION_TERM) {
+					return new NewlineDelimitedBlock(type, 1, 1);
+				}
+			}
+			return new NewlineDelimitedBlock(type, 2, 1);
 		case CODE:
-			return new ContentBlock(type, "{code}", "{code}\n\n", false, false); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock(type, "{code}", "{code}\n\n", false, false, 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
 		case DEFINITION_ITEM:
 		case DEFINITION_TERM:
 		case LIST_ITEM:
 			char prefixChar = computeCurrentListType() == BlockType.NUMERIC_LIST ? '#' : '*';
-			return new ContentBlock(type, computePrefix(prefixChar, computeListLevel()) + " ", "\n", false, true); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock(type, computePrefix(prefixChar, computeListLevel()) + " ", "", false, true, 1, 1); //$NON-NLS-1$ //$NON-NLS-2$
 		case DIV:
 			if (currentBlock == null) {
-				return new ContentBlock(type, "", "\n\n", false, false); //$NON-NLS-1$ //$NON-NLS-2$
+				return new ContentBlock(type, "", "", false, false, 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
-				return new ContentBlock(type, "", "", true, false); //$NON-NLS-1$//$NON-NLS-2$
+				return new ContentBlock(type, "", "", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			}
 		case FOOTNOTE:
-			return new ContentBlock(type, "fn1. ", "\n\n", false, false); // FIXME: footnote number?? //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock(type, "fn1. ", "", false, false, 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
 		case INFORMATION:
 		case NOTE:
 		case PANEL:
@@ -263,11 +271,11 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		case PARAGRAPH:
 			String attributesMarkup = computeAttributes(attributes);
 
-			return new ContentBlock(type, attributesMarkup, "\n\n", false, false); //$NON-NLS-1$
+			return new ContentBlock(type, attributesMarkup, "", false, false, 2, 2); //$NON-NLS-1$
 		case PREFORMATTED:
-			return new ContentBlock(type, "{noformat}", "{noformat}\n\n", false, false); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock(type, "{noformat}", "{noformat}", false, false, 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
 		case QUOTE:
-			return new ContentBlock(type, "{quote}", "{quote}\n\n", false, false); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock(type, "{quote}", "{quote}", false, false, 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
 		case TABLE:
 			return new SuffixBlock(type, "\n"); //$NON-NLS-1$
 		case TABLE_CELL_HEADER:
@@ -277,7 +285,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			return new SuffixBlock(type, "|\n"); //$NON-NLS-1$
 		default:
 			Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
-			return new ContentBlock(type, "", "", false, false); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock(type, "", "", false, false, 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -287,45 +295,45 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		String spanAttributes = computeAttributes(attributes);
 		switch (type) {
 		case BOLD:
-			block = new ContentBlock("*" + spanAttributes, "*", true, false); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("*" + spanAttributes, "*", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case CITATION:
-			block = new ContentBlock("??" + spanAttributes, "??", true, false); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("??" + spanAttributes, "??", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case DELETED:
-			block = new ContentBlock("-" + spanAttributes, "-", true, false); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("-" + spanAttributes, "-", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case EMPHASIS:
 		case ITALIC:
-			block = new ContentBlock("_" + spanAttributes, "_", true, false); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("_" + spanAttributes, "_", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case INSERTED:
-			block = new ContentBlock("+" + spanAttributes, "+", true, false); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("+" + spanAttributes, "+", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case CODE:
-			block = new ContentBlock("@" + spanAttributes, "@", true, false); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("@" + spanAttributes, "@", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case LINK:
 			if (attributes instanceof LinkAttributes) {
 				block = new LinkBlock((LinkAttributes) attributes);
 			} else {
-				block = new ContentBlock("%" + spanAttributes, "%", true, true); //$NON-NLS-1$//$NON-NLS-2$
+				block = new ContentBlock("%" + spanAttributes, "%", true, true, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			}
 			break;
 		case MONOSPACE:
-			block = new ContentBlock("{{", "}}", true, false); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("{{", "}}", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case STRONG:
-			block = new ContentBlock("*" + spanAttributes, "*", true, false); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("*" + spanAttributes, "*", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case SUPERSCRIPT:
-			block = new ContentBlock("^" + spanAttributes, "^", true, false); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("^" + spanAttributes, "^", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case SUBSCRIPT:
-			block = new ContentBlock("~" + spanAttributes, "~", true, false); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("~" + spanAttributes, "~", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case UNDERLINED:
-			block = new ContentBlock("+", "+", true, false); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("+", "+", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 //			case QUOTE: not supported
 
@@ -340,12 +348,12 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 						color = null;
 					}
 					if (color != null) {
-						block = new ContentBlock("{color:" + color + "}", "{color}", true, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						block = new ContentBlock("{color:" + color + "}", "{color}", true, false, 0, 0); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					}
 				}
 			}
 			if (block == null) {
-				block = new ContentBlock("", "", false, false); //$NON-NLS-1$//$NON-NLS-2$
+				block = new ContentBlock("", "", false, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			}
 		}
 		return block;
@@ -359,7 +367,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	@Override
 	protected ContentBlock computeHeading(int level, Attributes attributes) {
-		return new ContentBlock("h" + level + ". ", "\n\n", false, false); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+		return new ContentBlock("h" + level + ". ", "", false, false, 2, 2); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	@Override

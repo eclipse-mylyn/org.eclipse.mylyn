@@ -29,9 +29,9 @@ import org.eclipse.mylyn.wikitext.tests.TestUtil;
 public class TextileDocumentBuilderTest extends TestCase {
 
 	private static final String[] PLATFORM_NEWLINES = new String[] {//
-	"\r\n", // Windows
-			"\r", // Mac
-			"\n", // Unix, Linux
+		"\r\n", // Windows
+		"\r", // Mac
+		"\n", // Unix, Linux
 	};
 
 	private TextileDocumentBuilder builder;
@@ -254,7 +254,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		assertEquals("bc.. text\n\nmore text\n\n\n", markup);
+		assertEquals("bc.. text\n\nmore text\n\n", markup);
 	}
 
 	public void testParagraphFollowingExtendedBlockCode() {
@@ -274,7 +274,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		assertEquals("bc.. text\n\nmore text\n\n\np. text\n\ntext2\n\n", markup);
+		assertEquals("bc.. text\n\nmore text\n\np. text\n\ntext2\n\n", markup);
 	}
 
 	public void testHeading1() {
@@ -486,9 +486,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endSpan();
 		builder.endBlock();
 
-		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
-		builder.characters("text4");
-		builder.endBlock();
+		emitListItem("text4");
 
 		builder.endBlock();
 		builder.endDocument();
@@ -497,39 +495,101 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		assertEquals("* text2 **text3**\n* text4\n\n", markup);
+		assertEquals("* text2 **text3**\n* text4\n", markup);
 	}
 
-	public void testBulletedList_TwoLevels() {
+	public void testBulletedListWithNestedSublist() {
 		builder.beginDocument();
-		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
-
-		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
-		builder.characters("text2");
-		builder.endSpan();
 
 		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
 
 		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
-		builder.characters("text3");
-		builder.endBlock();
+		builder.characters("first");
 
-		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
-		builder.characters("text4");
-		builder.endBlock();
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+		emitListItem("first.1");
+		emitListItem("first.2");
+		builder.endBlock(); // list
+		builder.endBlock(); // list item
 
-		builder.endBlock();
+		emitListItem("second");
 
-		builder.endBlock();
+		builder.endBlock(); // list
 
-		builder.endBlock();
 		builder.endDocument();
 
 		String markup = out.toString();
 
 		TestUtil.println(markup);
 
-		assertEquals("* text2\n** text3\n** text4\n\n\n", markup);
+		assertEquals("* first\n** first.1\n** first.2\n* second\n", markup);
+	}
+
+	public void testBulletedListWithNestedSublist2() {
+		builder.beginDocument();
+
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+
+		emitListItem("first");
+
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("second");
+
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+		emitListItem("second.1");
+		builder.endBlock(); // list
+		builder.endBlock(); // list item
+		builder.endBlock(); // list
+
+		builder.beginBlock(BlockType.NUMERIC_LIST, new Attributes());
+		emitListItem("third");
+
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("fourth");
+		builder.beginBlock(BlockType.NUMERIC_LIST, new Attributes());
+		emitListItem("fourth.1");
+		builder.endBlock(); // list
+		builder.endBlock(); // list item
+
+		builder.endBlock(); // list
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		assertEquals("* first\n* second\n** second.1\n\n# third\n# fourth\n## fourth.1\n", markup);
+	}
+
+	public void testParagraphListParagraph() {
+		builder.beginDocument();
+		paragraph("para 1");
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+		emitListItem("list item 1");
+		emitListItem("list item 2");
+		builder.endBlock(); // list
+		paragraph("para 2");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		assertEquals("para 1\n\n* list item 1\n* list item 2\n\npara 2\n\n", markup);
+	}
+
+	private void paragraph(String text) {
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters(text);
+		builder.endBlock();
+	}
+
+	private void emitListItem(String text) {
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters(text);
+		builder.endBlock();
 	}
 
 	public void testSpanWithAdjacentWhitespace() {
@@ -643,7 +703,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		assertEquals("test\n\nmore **text**\n# text2\n\n", markup);
+		assertEquals("test\n\nmore **text**\n\n# text2\n", markup);
 	}
 
 	public void testDivWithinTableCell() {
@@ -755,7 +815,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		assertEquals("bc.. one\n\n\ntwo\n\n\np. line\nbreak\n\n", markup);
+		assertEquals("bc.. one\n\n\ntwo\n\np. line\nbreak\n\n", markup);
 	}
 
 	public void testLineBreakInFootnote() {
@@ -788,7 +848,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		assertEquals("pre.. line\n\nbreak\n\n\n", markup);
+		assertEquals("pre.. line\n\nbreak\n\n", markup);
 	}
 
 	public void testLineBreakInPreformatted() {

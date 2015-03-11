@@ -47,7 +47,7 @@ public class TextileDocumentBuilderDefinitionListTest {
 		endDl();
 		builder.endDocument();
 
-		assertEquals("- a term := a definition\n\n", out.toString());
+		assertEquals("- a term := a definition\n", out.toString());
 	}
 
 	@Test
@@ -61,7 +61,7 @@ public class TextileDocumentBuilderDefinitionListTest {
 		endDl();
 		builder.endDocument();
 
-		assertEquals("- a term := a definition\n- term2 := definition2\n\n", out.toString());
+		assertEquals("- a term := a definition\n- term2 := definition2\n", out.toString());
 	}
 
 	@Test
@@ -80,7 +80,7 @@ public class TextileDocumentBuilderDefinitionListTest {
 		endDl();
 		builder.endDocument();
 
-		assertEquals("- a multi line entry := line one\nline two =:\n\n", out.toString());
+		assertEquals("- a multi line entry := line one\nline two =:\n", out.toString());
 	}
 
 	protected void dtDd(String term, String definition) {

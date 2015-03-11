@@ -90,6 +90,45 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 	}
 
 	/**
+	 * A block that is delimited by newlines.
+	 *
+	 * @since 2.4
+	 */
+	protected class NewlineDelimitedBlock extends Block {
+
+		private final int precedingNewlineCount;
+
+		private final int trailingNewlineCount;
+
+		public NewlineDelimitedBlock(BlockType blockType, int precedingNewlineCount, int trailingNewlineCount) {
+			super(blockType);
+			this.precedingNewlineCount = precedingNewlineCount;
+			this.trailingNewlineCount = trailingNewlineCount;
+		}
+
+		@Override
+		public void open() throws IOException {
+			super.open();
+			emitDelimiter(precedingNewlineCount);
+		}
+
+		private void emitDelimiter(int newlineCount) throws IOException {
+			if (getLastChar() != 0) {
+				int delimiterSize = newlineCount - getTrailingNewlineCount();
+				for (int x = delimiterSize; x > 0; --x) {
+					emitContent('\n');
+				}
+			}
+		}
+
+		@Override
+		public void close() throws IOException {
+			emitDelimiter(trailingNewlineCount);
+			super.close();
+		}
+	}
+
+	/**
 	 * a block that provides default paragraph functionality, for emitting content when no explicit block has been
 	 * opened.
 	 */
@@ -155,6 +194,10 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 
 		private char lastChar;
 
+		private int trailingNewlineCount;
+
+		private int characterCount;
+
 		public MarkupWriter(Writer delegate) {
 			this.delegate = delegate;
 		}
@@ -165,9 +208,27 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 				return;
 			}
 			delegate.write(cbuf, off, len);
+			characterCount += len;
 			int lastCharIndex = off + len - 1;
 			lastChar = cbuf[lastCharIndex];
+			int newlineCount = countTailingNewlines(cbuf, off, len);
+			if (newlineCount == len) {
+				trailingNewlineCount += newlineCount;
+			} else {
+				trailingNewlineCount = newlineCount;
+			}
+		}
 
+		private int countTailingNewlines(char[] cbuf, int off, int len) {
+			int newlineCount = 0;
+			for (int x = off + len - 1; x >= off; --x) {
+				char c = cbuf[x];
+				if (c != '\n') {
+					break;
+				}
+				++newlineCount;
+			}
+			return newlineCount;
 		}
 
 		/**
@@ -175,6 +236,14 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 		 */
 		public char getLastChar() {
 			return lastChar;
+		}
+
+		public int getTrailingNewlineCount() {
+			return trailingNewlineCount;
+		}
+
+		public int getCharacterCount() {
+			return characterCount;
 		}
 
 		@Override
@@ -321,6 +390,26 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 			}
 		}
 		return c;
+	}
+
+	/**
+	 * Provides the number of trailing newlines that were emitted, or 0 if no trailing newlines were written.
+	 *
+	 * @since 2.4
+	 */
+	protected int getTrailingNewlineCount() {
+		int count = writer.getTrailingNewlineCount();
+		if (writer.getCharacterCount() == count) {
+			for (int x = writerState.size() - 1; x >= 0; --x) {
+				MarkupWriter markupWriter = writerState.get(x);
+				int trailingNewlineCount = markupWriter.getTrailingNewlineCount();
+				count += trailingNewlineCount;
+				if (markupWriter.getCharacterCount() > trailingNewlineCount) {
+					break;
+				}
+			}
+		}
+		return count;
 	}
 
 	@Override

@@ -531,7 +531,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		assertEquals("test\n\nmore *text*\n\n# text2\n\n", markup);
+		assertEquals("test\n\nmore *text*\n\n# text2\n", markup);
 	}
 
 	public void testDivWithinTableCell() {
@@ -666,7 +666,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		assertEquals("* first\nsecond\n* another\n\n", markup);
+		assertEquals("* first\nsecond\n* another\n", markup);
 	}
 
 	public void testListItemWithMultipleNewlines() {
@@ -693,7 +693,96 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		assertEquals("* first\n\\\\second\n* another\n\n", markup);
+		assertEquals("* first\n\\\\second\n* another\n", markup);
+	}
+
+	public void testListWithMultipleItems() {
+		builder.beginDocument();
+
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+
+		emitListItem("first");
+		emitListItem("second");
+
+		builder.endBlock(); // list
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		assertEquals("* first\n* second\n", markup);
+	}
+
+	private void emitListItem(String text) {
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters(text);
+		builder.endBlock(); // list item
+	}
+
+	public void testListWithNestedSublist() {
+		builder.beginDocument();
+
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("first");
+
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+		emitListItem("first.1");
+		emitListItem("first.2");
+		builder.endBlock(); // list
+		builder.endBlock(); // list item
+
+		emitListItem("second");
+
+		builder.endBlock(); // list
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		assertEquals("* first\n** first.1\n** first.2\n* second\n", markup);
+	}
+
+	public void testListWithNestedSublist2() {
+		builder.beginDocument();
+
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+
+		emitListItem("first");
+
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("second");
+
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+		emitListItem("second.1");
+		builder.endBlock(); // list
+		builder.endBlock(); // list item
+		builder.endBlock(); // list
+
+		builder.beginBlock(BlockType.NUMERIC_LIST, new Attributes());
+		emitListItem("third");
+
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("fourth");
+		builder.beginBlock(BlockType.NUMERIC_LIST, new Attributes());
+		emitListItem("fourth.1");
+		builder.endBlock(); // list
+		builder.endBlock(); // list item
+
+		builder.endBlock(); // list
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		assertEquals("* first\n* second\n** second.1\n\n# third\n# fourth\n## fourth.1\n", markup);
 	}
 
 	public void testPreformattedWithMultipleNewlines() {
@@ -712,7 +801,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		assertEquals("{noformat}first\n\nsecond{noformat}\n\n\n", markup);
+		assertEquals("{noformat}first\n\nsecond{noformat}\n\n", markup);
 	}
 
 	public void testImplicitParagrahWithSpan() {
