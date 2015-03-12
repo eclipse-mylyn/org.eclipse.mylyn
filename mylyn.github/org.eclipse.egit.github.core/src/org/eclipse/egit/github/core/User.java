@@ -59,6 +59,8 @@ public class User implements Serializable {
 
 	private String avatarUrl;
 
+	private String bio;
+
 	private String blog;
 
 	private String company;
@@ -286,6 +288,22 @@ public class User implements Serializable {
 	 */
 	public User setAvatarUrl(String avatarUrl) {
 		this.avatarUrl = avatarUrl;
+		return this;
+	}
+
+	/**
+	 * @return bio
+	 */
+	public String getBio() {
+		return bio;
+	}
+
+	/**
+	 * @param bio
+	 * @return this user
+	 */
+	public User setBio(String bio) {
+		this.bio = bio;
 		return this;
 	}
 
