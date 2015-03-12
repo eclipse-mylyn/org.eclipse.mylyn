@@ -31,6 +31,7 @@ import static org.eclipse.egit.github.core.client.IGitHubConstants.HOST_DEFAULT;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.HOST_GISTS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.PROTOCOL_HTTPS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_V3_API;
+import static org.eclipse.egit.github.core.service.GitHubService.ACCEPT_DEFAULT;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
@@ -227,8 +228,7 @@ public class GitHubClient {
 		if (credentials != null)
 			request.setRequestProperty(HEADER_AUTHORIZATION, credentials);
 		request.setRequestProperty(HEADER_USER_AGENT, userAgent);
-		request.setRequestProperty(HEADER_ACCEPT,
-				"application/vnd.github.beta+json"); //$NON-NLS-1$
+		request.setRequestProperty(HEADER_ACCEPT, ACCEPT_DEFAULT);
 		return request;
 	}
 
