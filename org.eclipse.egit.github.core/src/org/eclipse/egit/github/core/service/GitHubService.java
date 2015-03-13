@@ -32,24 +32,24 @@ import org.eclipse.egit.github.core.client.RequestException;
 public abstract class GitHubService {
 
 	/**
-	 * Accept header for default response
+	 * Accept header for raw response (only body)
 	 */
-	public static final String ACCEPT_DEFAULT = "application/vnd.github.v3+json"; //$NON-NLS-1$
+	public static final String ACCEPT_RAW = "application/vnd.github.v3.raw+json"; //$NON-NLS-1$
 
 	/**
-	 * Accept header for full response
-	 */
-	public static final String ACCEPT_FULL = "application/vnd.github.v3.full+json"; //$NON-NLS-1$
-
-	/**
-	 * Accept header for HTML response
+	 * Accept header for HTML response (only bodyHtml)
 	 */
 	public static final String ACCEPT_HTML = "application/vnd.github.v3.html+json"; //$NON-NLS-1$
 
 	/**
-	 * Accept header for text response
+	 * Accept header for text response (only bodyText)
 	 */
 	public static final String ACCEPT_TEXT = "application/vnd.github.v3.text+json"; //$NON-NLS-1$
+
+	/**
+	 * Accept header for full response (body, bodyText and bodyHtml)
+	 */
+	public static final String ACCEPT_FULL = "application/vnd.github.v3.full+json"; //$NON-NLS-1$
 
 	/**
 	 * Client field
