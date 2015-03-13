@@ -883,6 +883,24 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("a \"link to foo\":#foo test\n\n", markup);
 	}
 
+	public void testLinkWithNullHref() {
+		builder.beginDocument();
+
+		builder.characters("a ");
+		builder.beginSpan(SpanType.LINK, new LinkAttributes());
+		builder.characters("link text");
+		builder.endSpan();
+		builder.characters(" test");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		assertEquals("a \"link text\": test\n\n", markup);
+	}
+
 	public void testImageLink() {
 		builder.beginDocument();
 

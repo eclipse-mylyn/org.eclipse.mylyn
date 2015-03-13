@@ -283,8 +283,16 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 		}
 	}
 
+	/**
+	 * Emits the given string
+	 * 
+	 * @param str
+	 *            the string to emit, or null
+	 * @throws IOException
+	 *             if the writer throws an IOException
+	 */
 	protected void emitContent(String str) throws IOException {
-		if (str.length() == 0) {
+		if (str == null || str.length() == 0) {
 			return;
 		}
 		maybeInsertAdjacentWhitespace(str.charAt(0));
