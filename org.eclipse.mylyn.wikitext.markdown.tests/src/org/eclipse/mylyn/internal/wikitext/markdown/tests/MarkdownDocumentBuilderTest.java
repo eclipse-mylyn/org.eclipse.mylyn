@@ -322,7 +322,7 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.endBlock();
 		builder.endBlock();
 		builder.endDocument();
-		assertMarkup("* X\n* Y\n* Z\n\n");
+		assertMarkup("* X\n* Y\n* Z\n");
 	}
 
 	public void testListNumeric() {
@@ -339,7 +339,7 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.endBlock();
 		builder.endBlock();
 		builder.endDocument();
-		assertMarkup("1. One\n2. Two\n3. Three\n\n");
+		assertMarkup("1. One\n2. Two\n3. Three\n");
 	}
 
 	public void testListConsecutive() {
@@ -355,7 +355,7 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.endBlock();
 		builder.endBlock();
 		builder.endDocument();
-		assertMarkup("* Food\n\n1. Drink\n\n");
+		assertMarkup("* Food\n\n1. Drink\n");
 	}
 
 	public void testListWithParagraphs() {
@@ -397,7 +397,7 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.endBlock();
 		builder.endBlock();
 		builder.endDocument();
-		assertMarkup("* List item with two paragraphs.\n\n    Second paragraph.\n\n* Simple list item.\n\n");
+		assertMarkup("* List item with two paragraphs.\n\n  Second paragraph.\n\n* Simple list item.\n");
 	}
 
 	public void testListItemWithBlockQuote() {
@@ -415,7 +415,7 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.endBlock();
 		builder.endBlock();
 		builder.endDocument();
-		assertMarkup("* A list item with a blockquote:\n\n    > This is a blockquote  \n    > inside a list item.\n\n");
+		assertMarkup("* A list item with a blockquote:\n\n  > This is a blockquote  \n  > inside a list item.\n");
 	}
 
 	public void testListItemWithCodeBlock() {
@@ -431,7 +431,7 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.endBlock();
 		builder.endBlock();
 		builder.endDocument();
-		assertMarkup("* A list item with a code block:\n\n        code goes here\n\n");
+		assertMarkup("* A list item with a code block:\n\n      code goes here\n\n");
 	}
 
 	public void testCodeBlock() {
@@ -781,6 +781,58 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.characters("Z 2014");
 		builder.endDocument();
 		assertMarkup("&copy; XY&Z 2014\n\n");
+	}
+
+	public void testBulletedListWithNestedSublist2() {
+		builder.beginDocument();
+
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+
+		emitListItem("first");
+
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("second");
+
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+		emitListItem("second.1");
+		builder.endBlock(); // list
+		builder.endBlock(); // list item
+		builder.endBlock(); // list
+
+		builder.beginBlock(BlockType.NUMERIC_LIST, new Attributes());
+		emitListItem("third");
+
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("fourth");
+		builder.beginBlock(BlockType.NUMERIC_LIST, new Attributes());
+		emitListItem("fourth.1");
+
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("fourth.2");
+		builder.lineBreak();
+		builder.characters("fourth.2 line 2");
+		builder.endBlock(); // list item
+
+		builder.endBlock(); // list
+		builder.endBlock(); // list item
+
+		builder.endBlock(); // list
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		assertEquals(
+				"* first\n* second\n  * second.1\n\n1. third\n2. fourth\n   1. fourth.1\n   2. fourth.2  \n      fourth.2 line 2\n",
+				markup);
+	}
+
+	private void emitListItem(String text) {
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters(text);
+		builder.endBlock();
 	}
 
 	private void assertMarkup(String expected) {

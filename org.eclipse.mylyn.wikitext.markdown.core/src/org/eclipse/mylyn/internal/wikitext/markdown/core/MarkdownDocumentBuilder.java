@@ -54,20 +54,20 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	}
 
-	private class ContentBlock extends Block implements MarkdownBlock {
+	private class ContentBlock extends NewlineDelimitedBlock implements MarkdownBlock {
 
 		protected String prefix;
 
 		protected String suffix;
 
-		ContentBlock(BlockType blockType, String prefix, String suffix) {
-			super(blockType);
+		ContentBlock(BlockType blockType, String prefix, String suffix, int leadingNewlines, int trailingNewlines) {
+			super(blockType, leadingNewlines, trailingNewlines);
 			this.prefix = prefix;
 			this.suffix = suffix;
 		}
 
-		ContentBlock(String prefix, String suffix) {
-			this(null, prefix, suffix);
+		ContentBlock(String prefix, String suffix, int leadingNewlines, int trailingNewlines) {
+			this(null, prefix, suffix, leadingNewlines, trailingNewlines);
 		}
 
 		@Override
@@ -112,7 +112,7 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	private class ImplicitParagraphBlock extends ContentBlock {
 
 		ImplicitParagraphBlock() {
-			super(BlockType.PARAGRAPH, "", "\n\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			super(BlockType.PARAGRAPH, "", "", 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		@Override
@@ -124,8 +124,9 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	private class PrefixedLineContentBlock extends ContentBlock {
 
-		PrefixedLineContentBlock(BlockType blockType, String prefix, String suffix) {
-			super(blockType, prefix, suffix);
+		PrefixedLineContentBlock(BlockType blockType, String prefix, String suffix, int leadingNewlines,
+				int trailingNewlines) {
+			super(blockType, prefix, suffix, leadingNewlines, trailingNewlines);
 		}
 
 		@Override
@@ -159,8 +160,8 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 		private int count = 0;
 
-		ListBlock(BlockType blockType, String prefix, String suffix) {
-			super(blockType, prefix, suffix);
+		ListBlock(BlockType blockType, int leadingNewlines) {
+			super(blockType, "", "", leadingNewlines, 1); //$NON-NLS-1$//$NON-NLS-2$
 		}
 
 		@Override
@@ -187,8 +188,8 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 		private int count;
 
-		private ListItemBlock(String prefix, String suffix) {
-			super(BlockType.LIST_ITEM, prefix, suffix);
+		private ListItemBlock(String prefix) {
+			super(BlockType.LIST_ITEM, prefix, "", 1, 1); //$NON-NLS-1$
 		}
 
 		@Override
@@ -206,6 +207,8 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			if (getPreviousBlock().getBlockType() == BlockType.NUMERIC_LIST) {
 				prefix = count + ". "; //$NON-NLS-1$
 			}
+			String indent = Strings.repeat(" ", prefix.length()); //$NON-NLS-1$			
+
 			MarkdownDocumentBuilder.this.emitContent(prefix);
 			// split out content by line
 			Matcher matcher = PATTERN_LINE_BREAK.matcher(content);
@@ -214,7 +217,7 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 				// indent each line hanging past the initial line item
 				String line = matcher.group(0);
 				if (lines > 0 && !line.trim().isEmpty()) {
-					line = "    " + line; //$NON-NLS-1$
+					line = indent + line;
 				}
 				MarkdownDocumentBuilder.this.emitContent(line);
 				lines++;
@@ -232,7 +235,7 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		private final LinkAttributes attributes;
 
 		LinkBlock(LinkAttributes attributes) {
-			super("", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			super("", "", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
 			this.attributes = attributes;
 		}
 
@@ -259,7 +262,7 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	private class CodeSpan extends ContentBlock {
 
 		private CodeSpan() {
-			super("`", "`"); //$NON-NLS-1$ //$NON-NLS-2$
+			super("`", "`", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		@Override
@@ -282,22 +285,29 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	protected Block computeBlock(BlockType type, Attributes attributes) {
 		switch (type) {
 		case PARAGRAPH:
-			return new ContentBlock(type, "", "\n\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock(type, "", "", 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
 		case QUOTE:
-			return new PrefixedLineContentBlock(type, "> ", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			return new PrefixedLineContentBlock(type, "> ", "", 1, 1); //$NON-NLS-1$ //$NON-NLS-2$
 		case BULLETED_LIST:
 		case NUMERIC_LIST:
-			return new ListBlock(type, "", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			if (currentBlock != null) {
+				BlockType currentBlockType = currentBlock.getBlockType();
+				if (currentBlockType == BlockType.LIST_ITEM || currentBlockType == BlockType.DEFINITION_ITEM
+						|| currentBlockType == BlockType.DEFINITION_TERM) {
+					return new ListBlock(type, 1);
+				}
+			}
+			return new ListBlock(type, 2);
 		case LIST_ITEM:
 			if (computeCurrentListType() == BlockType.NUMERIC_LIST) {
-				return new ListItemBlock("1. ", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				return new ListItemBlock("1. "); //$NON-NLS-1$
 			}
-			return new ListItemBlock("* ", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ListItemBlock("* "); //$NON-NLS-1$
 		case CODE:
-			return new PrefixedLineContentBlock(type, "    ", "\n\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			return new PrefixedLineContentBlock(type, "    ", "", 1, 2); //$NON-NLS-1$ //$NON-NLS-2$
 		default:
 			Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
-			return new ContentBlock(type, "", "\n\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock(type, "", "", 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -308,24 +318,24 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			if (attributes instanceof LinkAttributes) {
 				return new LinkBlock((LinkAttributes) attributes);
 			}
-			return new ContentBlock("<", ">"); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock("<", ">", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
 		case ITALIC:
 		case EMPHASIS:
-			return new ContentBlock("*", "*"); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock("*", "*", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
 		case BOLD:
 		case STRONG:
-			return new ContentBlock("**", "**"); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock("**", "**", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
 		case CODE:
 			return new CodeSpan();
 		default:
 			Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
-			return new ContentBlock("", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock("", "", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
 	@Override
 	protected Block computeHeading(int level, Attributes attributes) {
-		return new ContentBlock(computePrefix('#', level) + " ", "\n\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		return new ContentBlock(computePrefix('#', level) + " ", "", 1, 2); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override
