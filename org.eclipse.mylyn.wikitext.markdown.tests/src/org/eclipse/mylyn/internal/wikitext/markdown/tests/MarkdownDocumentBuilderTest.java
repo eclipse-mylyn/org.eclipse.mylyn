@@ -425,13 +425,21 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
 		builder.characters("A list item with a code block:");
 		builder.endBlock();
+
 		builder.beginBlock(BlockType.CODE, new Attributes());
 		builder.characters("code goes here");
+		builder.lineBreak();
+		builder.characters("code second line");
 		builder.endBlock();
+
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("another para");
+		builder.endBlock();
+
 		builder.endBlock();
 		builder.endBlock();
 		builder.endDocument();
-		assertMarkup("* A list item with a code block:\n\n      code goes here\n\n");
+		assertMarkup("* A list item with a code block:\n\n        code goes here  \n        code second line\n\n  another para\n\n");
 	}
 
 	public void testCodeBlock() {

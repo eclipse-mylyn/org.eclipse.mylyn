@@ -28,6 +28,7 @@ import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.builder.AbstractMarkupDocumentBuilder;
 import org.eclipse.mylyn.wikitext.markdown.core.MarkdownLanguage;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.base.Strings;
 
 /**
@@ -207,7 +208,7 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			if (getPreviousBlock().getBlockType() == BlockType.NUMERIC_LIST) {
 				prefix = count + ". "; //$NON-NLS-1$
 			}
-			String indent = Strings.repeat(" ", prefix.length()); //$NON-NLS-1$			
+			String indent = Strings.repeat(" ", prefix.length()); //$NON-NLS-1$
 
 			MarkdownDocumentBuilder.this.emitContent(prefix);
 			// split out content by line
@@ -217,7 +218,12 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 				// indent each line hanging past the initial line item
 				String line = matcher.group(0);
 				if (lines > 0 && !line.trim().isEmpty()) {
-					line = indent + line;
+					int indexOfFirstNonSpace = CharMatcher.isNot(' ').indexIn(line);
+					if (indexOfFirstNonSpace >= 4) {
+						line = Strings.repeat(" ", 4) + line; //$NON-NLS-1$
+					} else {
+						line = indent + line;
+					}
 				}
 				MarkdownDocumentBuilder.this.emitContent(line);
 				lines++;
