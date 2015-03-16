@@ -195,6 +195,11 @@ public abstract class AbstractSaxParserTest extends TestCase {
 				"<html><body><blockquote> </blockquote> <div>and</div> <blockquote> one <p>two</p> </blockquote></body></html>");
 	}
 
+	public void testOrderedListWithStart() {
+		assertParseHtml("<ol start=\"3\"><li>first</li><li>second</li></ol>",
+				"<html><body><ol start=\"3\"><li>first</li><li>second</li></ol></body></html>");
+	}
+
 	private void assertParseHtml(String expectedResult, String html) {
 		StringWriter out = new StringWriter();
 		HtmlDocumentBuilder htmlBuilder = new HtmlDocumentBuilder(out);

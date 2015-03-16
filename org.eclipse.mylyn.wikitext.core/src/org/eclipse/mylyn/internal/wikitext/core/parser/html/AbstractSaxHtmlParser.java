@@ -23,6 +23,7 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
+import org.eclipse.mylyn.wikitext.core.parser.ListAttributes;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
@@ -277,7 +278,7 @@ public abstract class AbstractSaxHtmlParser {
 				if ((elementState.noWhitespaceTextContainer && (elementState.lastChild == null || elementState.lastChild.blockElement))
 						|| (elementState.blockElement && !elementState.preserveWhitespace
 								&& elementState.textChildCount == 0 && elementState.childCount == 0)
-								|| (elementState.lastChild != null && elementState.lastChild.collapsesAdjacentWhitespace)) {
+						|| (elementState.lastChild != null && elementState.lastChild.collapsesAdjacentWhitespace)) {
 					// trim left here
 					int skip = 0;
 					while (skip < length && Character.isWhitespace(ch[start + skip])) {
@@ -375,7 +376,7 @@ public abstract class AbstractSaxHtmlParser {
 
 			private final BlockType blockType;
 
-			private BlockElementHandler(BlockType blockType) {
+			BlockElementHandler(BlockType blockType) {
 				this.blockType = blockType;
 			}
 
@@ -394,6 +395,21 @@ public abstract class AbstractSaxHtmlParser {
 				builder.characters(s);
 			}
 
+		}
+
+		private class NumericListElementHandler extends BlockElementHandler {
+
+			NumericListElementHandler() {
+				super(BlockType.NUMERIC_LIST);
+			}
+
+			@Override
+			public void start(Attributes atts) {
+				ListAttributes listAttributes = new ListAttributes();
+				populateCommonAttributes(listAttributes, atts);
+				listAttributes.setStart(getAttribute(atts, "start")); //$NON-NLS-1$
+				builder.beginBlock(BlockType.NUMERIC_LIST, listAttributes);
+			}
 		}
 
 		private class SpanElementHandler extends ElementHandler {
@@ -605,6 +621,9 @@ public abstract class AbstractSaxHtmlParser {
 			if (blockType == BlockType.PREFORMATTED) {
 				return new PreformattedBlockElementHandler();
 			}
+			if (blockType == BlockType.NUMERIC_LIST) {
+				return new NumericListElementHandler();
+			}
 			return new BlockElementHandler(blockType);
 		}
 
@@ -613,15 +632,15 @@ public abstract class AbstractSaxHtmlParser {
 	private org.eclipse.mylyn.wikitext.core.parser.Attributes computeAttributes(SpanType spanType, Attributes atts) {
 		org.eclipse.mylyn.wikitext.core.parser.Attributes attributes = spanType == SpanType.LINK
 				? new LinkAttributes()
-		: new org.eclipse.mylyn.wikitext.core.parser.Attributes();
-				populateCommonAttributes(attributes, atts);
-				if (spanType == SpanType.LINK) {
-					String href = getValue("href", atts); //$NON-NLS-1$
-					if (href != null) {
-						((LinkAttributes) attributes).setHref(href);
-					}
-				}
-				return attributes;
+				: new org.eclipse.mylyn.wikitext.core.parser.Attributes();
+		populateCommonAttributes(attributes, atts);
+		if (spanType == SpanType.LINK) {
+			String href = getValue("href", atts); //$NON-NLS-1$
+			if (href != null) {
+				((LinkAttributes) attributes).setHref(href);
+			}
+		}
+		return attributes;
 	}
 
 	private String getValue(String name, Attributes atts) {
@@ -638,6 +657,16 @@ public abstract class AbstractSaxHtmlParser {
 		org.eclipse.mylyn.wikitext.core.parser.Attributes attributes = new org.eclipse.mylyn.wikitext.core.parser.Attributes();
 		populateCommonAttributes(attributes, atts);
 		return attributes;
+	}
+
+	private String getAttribute(Attributes atts, String name) {
+		for (int x = 0; x < atts.getLength(); ++x) {
+			String localName = atts.getLocalName(x);
+			if (name.equals(localName)) {
+				return atts.getValue(x);
+			}
+		}
+		return null;
 	}
 
 	private void populateCommonAttributes(org.eclipse.mylyn.wikitext.core.parser.Attributes attributes, Attributes atts) {
