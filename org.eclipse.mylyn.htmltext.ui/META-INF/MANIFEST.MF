@@ -21,6 +21,5 @@ Export-Package: org.eclipse.mylyn.htmltext,
  org.eclipse.mylyn.htmltext.events,
  org.eclipse.mylyn.htmltext.listener,
  org.eclipse.mylyn.htmltext.model
-Bundle-ClassPath: htmltext.jar
 Bundle-Localization: OSGI-INF/l10n/bundle
 
