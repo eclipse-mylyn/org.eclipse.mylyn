@@ -34,7 +34,6 @@
 <unit id="org.antlr.runtime" version="3.0.0.v200803061811"/>
 <unit id="org.apache.ant" version="1.8.4.v201404171501"/>
 <unit id="org.apache.ant.source" version="1.8.4.v201404171501"/>
-<unit id="org.apache.axis" version="1.4.0.v201005080400"/>
 <unit id="org.apache.commons.codec" version="1.6.0.v201305230611"/>
 <unit id="org.apache.commons.discovery" version="0.2.0.v201004190315"/>
 <unit id="org.apache.commons.httpclient" version="3.1.0.v201012070820"/>
@@ -52,7 +51,7 @@
 <unit id="org.apache.xml.serializer" version="2.7.1.v201005080400"/>
 <unit id="org.apache.xmlrpc" version="3.0.0.v20100427-1100"/>
 <unit id="org.jdom" version="1.1.1.v201101151400"/>
-<unit id="org.jsoup" version="1.7.2.v201304221138"/>
+<unit id="org.jsoup" version="1.7.2.v201411291515"/>
 <unit id="org.mockito" version="1.8.4.v201303031500"/>
 <unit id="org.objenesis" version="1.0.0.v201105211943"/>
 <unit id="org.hamcrest" version="1.1.0.v20090501071000"/>
@@ -65,14 +64,14 @@
 <unit id="org.hamcrest.core" version="1.1.0.v20090501071000"/>
 <unit id="org.hamcrest.library" version="1.1.0.v20090501071000"/>
 <unit id="org.hamcrest.generator" version="1.1.0.v20090501071000"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20150202203538/repository/"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20150316021154/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.swtbot.eclipse.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/technology/swtbot/snapshots/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.sdk.ide" version="4.5.0.I20150129-1830"/>
+<unit id="org.eclipse.sdk.ide" version="4.5.0.I20150320-0800"/>
 <repository location="http://download.eclipse.org/eclipse/updates/4.5milestones"/>
 </location>
 </locations>
