@@ -24,8 +24,8 @@
   </prerequisites>
 
   <properties>
-    <tycho-version>0.23.0-SNAPSHOT</tycho-version>
-    <tycho-extras-version>0.23.0-SNAPSHOT</tycho-extras-version>
+    <tycho-version>0.23.0</tycho-version>
+    <tycho-extras-version>0.23.0</tycho-extras-version>
 
     <mylyn-test-append></mylyn-test-append>
 
@@ -474,7 +474,7 @@
       <pluginRepositories>
         <pluginRepository>
           <id>tycho-snapshots</id>
-          <url>https://oss.sonatype.org/content/groups/public/</url>
+          <url>https://repo.eclipse.org/content/repositories/tycho-snapshots/</url>
         </pluginRepository>
       </pluginRepositories>
     </profile>
