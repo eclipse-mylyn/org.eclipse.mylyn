@@ -185,11 +185,6 @@
                 <environment>
                   <os>macosx</os>
                   <ws>cocoa</ws>
-                  <arch>x86</arch>
-                </environment>
-                <environment>
-                  <os>macosx</os>
-                  <ws>cocoa</ws>
                   <arch>x86_64</arch>
                 </environment>
                 <environment>
@@ -244,11 +239,6 @@
               </dependency-resolution>
               <jgit.dirtyWorkingTree>ignore</jgit.dirtyWorkingTree>
               <environments>
-                <environment>
-                  <os>macosx</os>
-                  <ws>cocoa</ws>
-                  <arch>x86</arch>
-                </environment>
                 <environment>
                   <os>macosx</os>
                   <ws>cocoa</ws>
