@@ -14,14 +14,14 @@ package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 /**
  * Tests for Markdown span elements. Follows specification at
  * <a>http://daringfireball.net/projects/markdown/syntax#span</a>.
- * 
+ *
  * @author Stefan Seelmann
  */
 public class MarkdownLanguageSpanElementsTest extends MarkdownLanguageTestBase {
 
 	/*
-	 * Links. To create an inline link, use a set of regular parentheses immediately after the link text's 
-	 * closing square bracket. Inside the parentheses, put the URL where you want the link to point, along 
+	 * Links. To create an inline link, use a set of regular parentheses immediately after the link text's
+	 * closing square bracket. Inside the parentheses, put the URL where you want the link to point, along
 	 * with an optional title for the link, surrounded in quotes.
 	 */
 	public void testInlineLinkWithTitle() {
@@ -60,7 +60,7 @@ public class MarkdownLanguageSpanElementsTest extends MarkdownLanguageTestBase {
 	/*
 	 * Reference-style links use a second set of square brackets, inside which you place a label of your choosing to
 	 * identify the link. Then, anywhere in the document, you define your link label like this, on a line by itself.
-	 * Link definitions are only used for creating links during Markdown processing, and are stripped from your 
+	 * Link definitions are only used for creating links during Markdown processing, and are stripped from your
 	 * document in the HTML output.
 	 * Note: Reference parsing is tested in LinkReferencesTest.
 	 */
@@ -104,7 +104,7 @@ public class MarkdownLanguageSpanElementsTest extends MarkdownLanguageTestBase {
 	}
 
 	/*
-	 * The implicit link name shortcut allows you to omit the name of the link, in which case the link text itself 
+	 * The implicit link name shortcut allows you to omit the name of the link, in which case the link text itself
 	 * is used as the name. Just use an empty set of square brackets.
 	 */
 	public void testReferenceStyleLinkWithoutName() {

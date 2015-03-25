@@ -12,8 +12,8 @@
  -->
 <plugin>
    <extension point="org.eclipse.mylyn.wikitext.core.markupLanguage">
-      <language class="org.eclipse.mylyn.wikitext.asciidoc.core.AsciidocLanguage"
-            name="Asciidoc" fileExtensions="asciidoc,ad,adoc">
+      <language class="org.eclipse.mylyn.wikitext.asciidoc.core.AsciiDocLanguage"
+            name="AsciiDoc" fileExtensions="asciidoc,ad,adoc">
       </language>
    </extension>
 

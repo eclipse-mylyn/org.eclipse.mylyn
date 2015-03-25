@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 Stefan Seelmann and others.
+ * Copyright (c) 2015 Max Rydahl Andersen and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,9 +7,10 @@
  *
  * Contributors:
  *     Stefan Seelmann - initial API and implementation
+ *     Max Rydahl Andersen - copied from markdown to get base for asciidoc
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.markdown.core.phrase;
+package org.eclipse.mylyn.internal.wikitext.asciidoc.core.phrase;
 
 import java.util.regex.Pattern;
 
@@ -18,6 +19,11 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
+/**
+ * 
+ * @author Stefan Seelmann
+ *
+ */
 public class SimplePhraseModifier extends PatternBasedElement {
 
 	private final String delimiter;

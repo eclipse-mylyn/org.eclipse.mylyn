@@ -1,0 +1,137 @@
+/*******************************************************************************
+ * Copyright (c) 2012 Max Rydahl Andersen and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Max Rydahl Andersen - copied from markdown to get base for asciidoc
+ *******************************************************************************/
+
+package org.eclipse.mylyn.internal.wikitext.asciidoc.tests;
+
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+
+/**
+ * Tests for asciidoc overview and miscellaneous.
+ *
+ * @author Max Rydahl Andersen
+ */
+public class AsciiDocLanguageMiscellaneousTest extends AsciiDocLanguageTestBase {
+
+	@Test
+	public void emptyLine() {
+		String html = parseToHtml("    ");
+		assertEquals("", html);
+	}
+
+	@Test
+	public void preserveHtmlEntities() {
+		String html = parseToHtml("&copy; &amp;");
+		assertEquals("<p>&copy; &amp;</p>\n", html);
+	}
+
+	@Test
+	public void ampersandIsEscaped() {
+		String html = parseToHtml("AT&T, a & b");
+		assertEquals("<p>AT&amp;T, a &amp; b</p>\n", html);
+	}
+
+	@Test
+	public void angleBracketsAreEscaped() {
+		// lower than:
+		String html = parseToHtml("4 < 5");
+		assertEquals("<p>4 &lt; 5</p>\n", html);
+
+		// greater than:
+		html = parseToHtml("6 > 5");
+		assertEquals("<p>6 &gt; 5</p>\n", html);
+	}
+
+	@Test
+	public void backslashBackslash() {
+		// this is not an escaped backslash
+		String html = parseToHtml("\\\\");
+		assertEquals("<p>\\\\</p>\n", html);
+	}
+
+	@Test
+	public void backslashBacktick() {
+		// this is not an escaped backtick
+		String html = parseToHtml("\\`");
+		assertEquals("<p>\\`</p>\n", html);
+	}
+
+	@Test
+	public void backslashOpeningCurlyBrace() {
+		// this is not an escaped opening curly brace
+		String html = parseToHtml("\\{");
+		assertEquals("<p>\\{</p>\n", html);
+	}
+
+	@Test
+	public void backslashClosingCurlyBrace() {
+		// this is not an escaped closing curly brace
+		String html = parseToHtml("\\}");
+		assertEquals("<p>\\}</p>\n", html);
+	}
+
+	@Test
+	public void backslashOpeningSquareBracket() {
+		// this is not an escaped opening square bracket
+		String html = parseToHtml("\\[");
+		assertEquals("<p>\\[</p>\n", html);
+	}
+
+	@Test
+	public void backslashClosingSquareBracket() {
+		// this is not an escaped closing square bracket
+		String html = parseToHtml("\\]");
+		assertEquals("<p>\\]</p>\n", html);
+	}
+
+	@Test
+	public void backslashOpeningParenthesis() {
+		// this is not an escaped opening parenthesis
+		String html = parseToHtml("\\(");
+		assertEquals("<p>\\(</p>\n", html);
+	}
+
+	@Test
+	public void backslashClosingParenthesis() {
+		// this is not an escaped closing parenthesis
+		String html = parseToHtml("\\)");
+		assertEquals("<p>\\)</p>\n", html);
+	}
+
+	@Test
+	public void backslashHashMark() {
+		// this is not an escaped hash mark
+		String html = parseToHtml("\\#");
+		assertEquals("<p>\\#</p>\n", html);
+	}
+
+	@Test
+	public void backslashMinusSign() {
+		// this is not an escaped minus sign
+		String html = parseToHtml("\\-");
+		assertEquals("<p>\\-</p>\n", html);
+	}
+
+	@Test
+	public void backslashDot() {
+		// this is not an escaped dot
+		String html = parseToHtml("\\.");
+		assertEquals("<p>\\.</p>\n", html);
+	}
+
+	@Test
+	public void backslashExclamationMark() {
+		// this is not an escaped exclamation mark
+		String html = parseToHtml("\\!");
+		assertEquals("<p>\\!</p>\n", html);
+	}
+}

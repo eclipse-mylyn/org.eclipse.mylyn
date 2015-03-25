@@ -13,9 +13,7 @@ package org.eclipse.mylyn.internal.wikitext.asciidoc.tests;
 
 import java.io.StringWriter;
 
-import junit.framework.TestCase;
-
-import org.eclipse.mylyn.wikitext.asciidoc.core.AsciidocLanguage;
+import org.eclipse.mylyn.wikitext.asciidoc.core.AsciiDocLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.junit.Before;
@@ -25,14 +23,14 @@ import org.junit.Before;
  * 
  * @author Max Rydahl Andersen
  */
-public abstract class AsciidocLanguageTestBase {
+public abstract class AsciiDocLanguageTestBase {
 
 	private MarkupParser parser;
 
 	@Before
 	public void setUp() throws Exception {
 	
-		parser = new MarkupParser(new AsciidocLanguage());
+		parser = new MarkupParser(new AsciiDocLanguage());
 	}
 
 	public String parseToHtml(String markup) {
