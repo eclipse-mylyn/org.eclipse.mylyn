@@ -13,11 +13,16 @@
 <!-- Will only work when called from Maven — see pom.xml -->
 <project name="Build User Guide EPUB" basedir="." default="build">
 
+	<echo message="${compile_classpath}"/>
 	<path id="wikitext.ant.classpath">
 		<pathelement path="${compile_classpath}"/>
+		<pathelement location="../org.eclipse.mylyn.docs.epub.core/@dot"/>
+		<pathelement location="../org.eclipse.mylyn.docs.epub.core/bin"/>
+		<pathelement location="../org.eclipse.mylyn.docs.epub.ant.core/@dot"/>
+		<pathelement location="../org.eclipse.mylyn.docs.epub.ant.core/bin"/>
 	</path>
 			
-	<taskdef classpathref="wikitext.ant.classpath" 
+	<taskdef classpathref="wikitext.ant.classpath" 		
 		resource="org/eclipse/mylyn/docs/epub/ant/tasks.properties" />
 
 	<target name="build">	

@@ -16,9 +16,13 @@
 
 	<property name="wikitext.help" location="../org.eclipse.mylyn.wikitext.help.ui" />
 
-	<echo message="${compile_classpath}"></echo>
+	<property name="wikitext.ui.textile.bin" value="../org.eclipse.mylyn.wikitext.textile.core/.tmp.bin"/>
+
 	<path id="wikitext.ant.classpath">
-		<pathelement path="${compile_classpath}"/>
+		<pathelement location="../org.eclipse.mylyn.wikitext.core/@dot"/>
+		<pathelement location="../org.eclipse.mylyn.wikitext.core/bin"/>
+		<pathelement location="../org.eclipse.mylyn.wikitext.core/bin_ant"/>
+		<pathelement location="${wikitext.ui.textile.bin}"/>
 	</path>
 
 	<target name="clean">
