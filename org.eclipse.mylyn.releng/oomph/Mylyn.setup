@@ -156,6 +156,107 @@
       </repositoryList>
     </targlet>
   </setupTask>
+  <project name="builds"
+      label="Builds">
+    <setupTask
+        xsi:type="setup:StringSubstitutionTask"
+        name="git.clone.mylyn.builds"
+        value="${git.clone.mylyn.builds.location}"/>
+    <setupTask
+        xsi:type="git:GitCloneTask"
+        id="git.clone.mylyn.builds"
+        remoteURI="mylyn/org.eclipse.mylyn.builds">
+      <annotation
+          source="http://www.eclipse.org/oomph/setup/InducedChoices">
+        <detail
+            key="inherit">
+          <value>eclipse.git.gerrit.remoteURIs</value>
+        </detail>
+        <detail
+            key="label">
+          <value>Mylyn Builds Git or Gerrit Repository</value>
+        </detail>
+        <detail
+            key="target">
+          <value>remoteURI</value>
+        </detail>
+      </annotation>
+      <description>Mylyn Builds</description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup.targlets:TargletTask">
+      <targlet
+          name="Mylyn Builds"
+          activeRepositoryList="${eclipse.target.platform}">
+        <requirement
+            name="org.eclipse.mylyn.builds.sdk.feature.group"/>
+        <requirement
+            name="org.eclipse.jdt.core"/>
+        <requirement
+            name="org.eclipse.jdt.debug.ui"/>
+        <requirement
+            name="org.eclipse.jdt.junit"/>
+        <requirement
+            name="org.eclipse.jdt.ui"/>
+        <requirement
+            name="org.eclipse.ecf.discovery"/>
+        <requirement
+            name="org.eclipse.ecf.provider.discovery"/>
+        <requirement
+            name="org.eclipse.ecf.provider.jmdns"/>
+        <sourceLocator
+            rootFolder="${git.clone.mylyn.builds.location}"/>
+      </targlet>
+    </setupTask>
+    <setupTask
+        xsi:type="setup.workingsets:WorkingSetTask">
+      <workingSet
+          name="Mylyn Builds">
+        <predicate
+            xsi:type="predicates:RepositoryPredicate"
+            project="org.eclipse.mylyn.builds.core"/>
+      </workingSet>
+    </setupTask>
+    <setupTask
+        xsi:type="mylyn:MylynQueriesTask"
+        repositoryURL="https://bugs.eclipse.org/bugs"
+        userID="${bugzilla.id}"
+        password="${eclipse.user.password}">
+      <query
+          summary="Mylyn Builds Bugs"
+          url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Builds&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial"/>
+      <query
+          summary="Mylyn Builds Features"
+          url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Builds&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=enhancement"/>
+    </setupTask>
+    <setupTask
+        xsi:type="mylyn:MylynQueriesTask"
+        connectorKind="org.eclipse.mylyn.gerrit"
+        repositoryURL="https://git.eclipse.org/r"
+        userID="${bugzilla.id}"
+        password="${eclipse.user.password}">
+      <query
+          summary="Mylyn Builds Reviews in ${git.clone.mylyn.builds.checkoutBranch}">
+        <attribute
+            key="gerrit query type"
+            value="custom"/>
+        <attribute
+            key="gerrit query string"
+            value="project:mylyn/org.eclipse.mylyn.builds status:open branch:${git.clone.mylyn.builds.checkoutBranch}"/>
+      </query>
+    </setupTask>
+    <setupTask
+        xsi:type="mylyn:MylynBuildsTask"
+        serverURL="https://hudson.eclipse.org/hudson"
+        userID="${bugzilla.id}"
+        password="${eclipse.user.password}">
+      <buildPlan
+          name="mylyn-builds-nightly"/>
+    </setupTask>
+    <stream
+        name="master"
+        label="Master"/>
+  </project>
   <project name="commons"
       label="Commons">
     <setupTask
@@ -370,6 +471,255 @@
         name="master"
         label="Master"/>
   </project>
+  <project name="docs"
+      label="Docs">
+    <setupTask
+        xsi:type="setup:StringSubstitutionTask"
+        name="git.clone.mylyn.docs"
+        value="${git.clone.mylyn.docs.location}"/>
+    <setupTask
+        xsi:type="git:GitCloneTask"
+        id="git.clone.mylyn.docs"
+        remoteURI="mylyn/org.eclipse.mylyn.docs">
+      <annotation
+          source="http://www.eclipse.org/oomph/setup/InducedChoices">
+        <detail
+            key="inherit">
+          <value>eclipse.git.gerrit.remoteURIs</value>
+        </detail>
+        <detail
+            key="label">
+          <value>Mylyn Docs Git or Gerrit Repository</value>
+        </detail>
+        <detail
+            key="target">
+          <value>remoteURI</value>
+        </detail>
+      </annotation>
+      <description>Mylyn Docs</description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup.targlets:TargletTask">
+      <targlet
+          name="Mylyn Docs"
+          activeRepositoryList="${eclipse.target.platform}">
+        <requirement
+            name="org.eclipse.mylyn.docs.sdk.feature.group"/>
+        <sourceLocator
+            rootFolder="${git.clone.mylyn.docs.location}"/>
+      </targlet>
+    </setupTask>
+    <setupTask
+        xsi:type="setup.workingsets:WorkingSetTask">
+      <workingSet
+          name="Mylyn Docs">
+        <predicate
+            xsi:type="predicates:RepositoryPredicate"
+            project="org.eclipse.mylyn.wikitext.core"/>
+      </workingSet>
+    </setupTask>
+    <setupTask
+        xsi:type="mylyn:MylynQueriesTask"
+        repositoryURL="https://bugs.eclipse.org/bugs"
+        userID="${bugzilla.id}"
+        password="${eclipse.user.password}">
+      <query
+          summary="Mylyn Docs Bugs"
+          url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Docs&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial"/>
+      <query
+          summary="Mylyn Docs Features"
+          url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Docs&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=enhancement"/>
+    </setupTask>
+    <setupTask
+        xsi:type="mylyn:MylynQueriesTask"
+        connectorKind="org.eclipse.mylyn.gerrit"
+        repositoryURL="https://git.eclipse.org/r"
+        userID="${bugzilla.id}"
+        password="${eclipse.user.password}">
+      <query
+          summary="Mylyn Docs Reviews in ${git.clone.mylyn.docs.checkoutBranch}">
+        <attribute
+            key="gerrit query type"
+            value="custom"/>
+        <attribute
+            key="gerrit query string"
+            value="project:mylyn/org.eclipse.mylyn.docs status:open branch:${git.clone.mylyn.docs.checkoutBranch}"/>
+      </query>
+    </setupTask>
+    <setupTask
+        xsi:type="mylyn:MylynBuildsTask"
+        serverURL="https://hudson.eclipse.org/hudson"
+        userID="${bugzilla.id}"
+        password="${eclipse.user.password}">
+      <buildPlan
+          name="mylyn-docs-nightly"/>
+    </setupTask>
+    <stream
+        name="master"
+        label="Master"/>
+  </project>
+  <project name="incubator"
+      label="Incubator">
+    <setupTask
+        xsi:type="setup:StringSubstitutionTask"
+        name="git.clone.mylyn.incubator"
+        value="${git.clone.mylyn.incubator.location}"/>
+    <setupTask
+        xsi:type="git:GitCloneTask"
+        id="git.clone.mylyn.incubator"
+        remoteURI="mylyn/org.eclipse.mylyn.incubator">
+      <annotation
+          source="http://www.eclipse.org/oomph/setup/InducedChoices">
+        <detail
+            key="inherit">
+          <value>eclipse.git.gerrit.remoteURIs</value>
+        </detail>
+        <detail
+            key="label">
+          <value>Mylyn Incubator Git or Gerrit Repository</value>
+        </detail>
+        <detail
+            key="target">
+          <value>remoteURI</value>
+        </detail>
+      </annotation>
+      <description>Mylyn Incubator</description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup.targlets:TargletTask">
+      <targlet
+          name="Mylyn Incubator"
+          activeRepositoryList="${eclipse.target.platform}">
+        <requirement
+            name="org.eclipse.mylyn.experimental_sdk_feature.feature.group"/>
+        <sourceLocator
+            rootFolder="${git.clone.mylyn.incubator.location}"/>
+      </targlet>
+    </setupTask>
+    <setupTask
+        xsi:type="setup.workingsets:WorkingSetTask">
+      <workingSet
+          name="Mylyn Incubator">
+        <predicate
+            xsi:type="predicates:RepositoryPredicate"
+            project="org.eclipse.mylyn.sandbox.ui"/>
+      </workingSet>
+    </setupTask>
+    <setupTask
+        xsi:type="mylyn:MylynQueriesTask"
+        repositoryURL="https://bugs.eclipse.org/bugs"
+        userID="${bugzilla.id}"
+        password="${eclipse.user.password}">
+      <query
+          summary="Mylyn Incubator Bugs"
+          url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Incubator&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial"/>
+      <query
+          summary="Mylyn Incubator Features"
+          url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Incubator&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=enhancement"/>
+    </setupTask>
+    <setupTask
+        xsi:type="mylyn:MylynQueriesTask"
+        connectorKind="org.eclipse.mylyn.gerrit"
+        repositoryURL="https://git.eclipse.org/r"
+        userID="${bugzilla.id}"
+        password="${eclipse.user.password}">
+      <query
+          summary="Mylyn Incubator Reviews in ${git.clone.mylyn.incubator.checkoutBranch}">
+        <attribute
+            key="gerrit query type"
+            value="custom"/>
+        <attribute
+            key="gerrit query string"
+            value="project:mylyn/org.eclipse.mylyn.incubator status:open branch:${git.clone.mylyn.incubator.checkoutBranch}"/>
+      </query>
+    </setupTask>
+    <setupTask
+        xsi:type="mylyn:MylynBuildsTask"
+        serverURL="https://hudson.eclipse.org/hudson"
+        userID="${bugzilla.id}"
+        password="${eclipse.user.password}">
+      <buildPlan
+          name="mylyn-incubator-nightly"/>
+    </setupTask>
+    <stream
+        name="master"
+        label="Master"/>
+  </project>
+  <project name="reviews"
+      label="Reviews">
+    <setupTask
+        xsi:type="setup:StringSubstitutionTask"
+        name="git.clone.mylyn.reviews"
+        value="${git.clone.mylyn.reviews.location}"/>
+    <setupTask
+        xsi:type="git:GitCloneTask"
+        id="git.clone.mylyn.reviews"
+        remoteURI="mylyn/org.eclipse.mylyn.reviews">
+      <annotation
+          source="http://www.eclipse.org/oomph/setup/InducedChoices">
+        <detail
+            key="inherit">
+          <value>eclipse.git.gerrit.remoteURIs</value>
+        </detail>
+        <detail
+            key="label">
+          <value>Mylyn Reviews Git or Gerrit Repository</value>
+        </detail>
+        <detail
+            key="target">
+          <value>remoteURI</value>
+        </detail>
+      </annotation>
+      <description>Mylyn Reviews</description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup.targlets:TargletTask">
+      <targlet
+          name="Mylyn Reviews"
+          activeRepositoryList="${eclipse.target.platform}">
+        <requirement
+            name="org.eclipse.mylyn.reviews.sdk.feature.feature.group"/>
+        <sourceLocator
+            rootFolder="${git.clone.mylyn.reviews.location}"/>
+      </targlet>
+    </setupTask>
+    <setupTask
+        xsi:type="setup.workingsets:WorkingSetTask">
+      <workingSet
+          name="Mylyn Reviews">
+        <predicate
+            xsi:type="predicates:RepositoryPredicate"
+            project="org.eclipse.mylyn.reviews.core"/>
+      </workingSet>
+    </setupTask>
+    <setupTask
+        xsi:type="mylyn:MylynQueriesTask"
+        connectorKind="org.eclipse.mylyn.gerrit"
+        repositoryURL="https://git.eclipse.org/r"
+        userID="${bugzilla.id}"
+        password="${eclipse.user.password}">
+      <query
+          summary="Mylyn Reviews Reviews in ${git.clone.mylyn.reviews.checkoutBranch}">
+        <attribute
+            key="gerrit query type"
+            value="custom"/>
+        <attribute
+            key="gerrit query string"
+            value="project:mylyn/org.eclipse.mylyn.reviews status:open branch:${git.clone.mylyn.reviews.checkoutBranch}"/>
+      </query>
+    </setupTask>
+    <setupTask
+        xsi:type="mylyn:MylynBuildsTask"
+        serverURL="https://hudson.eclipse.org/hudson"
+        userID="${bugzilla.id}"
+        password="${eclipse.user.password}">
+      <buildPlan
+          name="mylyn-reviews-nightly"/>
+    </setupTask>
+    <stream
+        name="master"
+        label="Master"/>
+  </project>
   <project name="tasks"
       label="Tasks">
     <setupTask
@@ -505,16 +855,16 @@
         name="master"
         label="Master"/>
   </project>
-  <project name="docs"
-      label="Docs">
+  <project name="versions"
+      label="Versions">
     <setupTask
         xsi:type="setup:StringSubstitutionTask"
-        name="git.clone.mylyn.docs"
-        value="${git.clone.mylyn.docs.location}"/>
+        name="git.clone.mylyn.versions"
+        value="${git.clone.mylyn.versions.location}"/>
     <setupTask
         xsi:type="git:GitCloneTask"
-        id="git.clone.mylyn.docs"
-        remoteURI="mylyn/org.eclipse.mylyn.docs">
+        id="git.clone.mylyn.versions"
+        remoteURI="mylyn/org.eclipse.mylyn.versions">
       <annotation
           source="http://www.eclipse.org/oomph/setup/InducedChoices">
         <detail
@@ -523,32 +873,58 @@
         </detail>
         <detail
             key="label">
-          <value>Mylyn Docs Git or Gerrit Repository</value>
+          <value>Mylyn Versions Git or Gerrit Repository</value>
         </detail>
         <detail
             key="target">
           <value>remoteURI</value>
         </detail>
       </annotation>
-      <description>Mylyn Docs</description>
+      <description>Mylyn Versions</description>
     </setupTask>
     <setupTask
         xsi:type="setup.targlets:TargletTask">
       <targlet
-          name="Mylyn Docs"
+          name="Mylyn Versions"
           activeRepositoryList="${eclipse.target.platform}">
         <requirement
-            name="org.eclipse.mylyn.docs.sdk.feature.group"/>
+            name="org.eclipse.mylyn.versions.sdk.feature.group"/>
         <sourceLocator
-            rootFolder="${git.clone.mylyn.docs.location}"/>
+            rootFolder="${git.clone.mylyn.versions.location}"/>
+        <repositoryList
+            name="Mars">
+          <repository
+              url="http://subclipse.tigris.org/update_1.8.x"/>
+        </repositoryList>
+        <repositoryList
+            name="Luna">
+          <repository
+              url="http://subclipse.tigris.org/update_1.8.x"/>
+        </repositoryList>
+        <repositoryList
+            name="Kepler">
+          <repository
+              url="http://subclipse.tigris.org/update_1.8.x"/>
+        </repositoryList>
+        <repositoryList
+            name="Juno">
+          <repository
+              url="http://subclipse.tigris.org/update_1.8.x"/>
+        </repositoryList>
+        <repositoryList
+            name="Indigo">
+          <repository
+              url="http://subclipse.tigris.org/update_1.8.x"/>
+        </repositoryList>
       </targlet>
     </setupTask>
     <setupTask
         xsi:type="setup.workingsets:WorkingSetTask">
       <workingSet
-          name="Mylyn Docs">
+          name="Mylyn Versions">
         <predicate
-            xsi:type="predicates:RepositoryPredicate"/>
+            xsi:type="predicates:RepositoryPredicate"
+            project="org.eclipse.mylyn.versions.core"/>
       </workingSet>
     </setupTask>
     <setupTask
@@ -557,11 +933,11 @@
         userID="${bugzilla.id}"
         password="${eclipse.user.password}">
       <query
-          summary="Mylyn Docs Bugs"
-          url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Docs&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial"/>
+          summary="Mylyn Versions Bugs"
+          url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Versions&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial"/>
       <query
-          summary="Mylyn Docs Features"
-          url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Docs&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=enhancement"/>
+          summary="Mylyn Versions Features"
+          url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Versions&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=enhancement"/>
     </setupTask>
     <setupTask
         xsi:type="mylyn:MylynQueriesTask"
@@ -570,13 +946,13 @@
         userID="${bugzilla.id}"
         password="${eclipse.user.password}">
       <query
-          summary="Mylyn Docs Reviews in ${git.clone.mylyn.docs.checkoutBranch}">
+          summary="Mylyn Versions Reviews in ${git.clone.mylyn.versions.checkoutBranch}">
         <attribute
             key="gerrit query type"
             value="custom"/>
         <attribute
             key="gerrit query string"
-            value="project:mylyn/org.eclipse.mylyn.docs status:open branch:${git.clone.mylyn.docs.checkoutBranch}"/>
+            value="project:mylyn/org.eclipse.mylyn.versions status:open branch:${git.clone.mylyn.versions.checkoutBranch}"/>
       </query>
     </setupTask>
     <setupTask
@@ -585,11 +961,12 @@
         userID="${bugzilla.id}"
         password="${eclipse.user.password}">
       <buildPlan
-          name="mylyn-docs-nightly"/>
+          name="mylyn-versions-nightly"/>
     </setupTask>
     <stream
         name="master"
         label="Master"/>
+    <description></description>
   </project>
   <logicalProjectContainer
       xsi:type="setup:ProjectCatalog"
