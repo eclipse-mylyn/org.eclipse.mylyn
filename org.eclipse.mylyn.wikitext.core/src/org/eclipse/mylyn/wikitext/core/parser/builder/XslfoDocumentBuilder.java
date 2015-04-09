@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2012 David Green and others.
+ * Copyright (c) 2009, 2015 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -588,7 +588,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 			return;
 		}
 		writer.writeEmptyElement(foNamespaceUri, "region-" + region.location); //$NON-NLS-1$
-		writer.writeAttribute("extent", String.format("%scm", configuration.pageHeight)); //$NON-NLS-1$//$NON-NLS-2$
+		writer.writeAttribute("extent", String.format("%scm", region.extent)); //$NON-NLS-1$//$NON-NLS-2$
 		writer.writeAttribute("precedence", Boolean.toString(region.precedence)); //$NON-NLS-1$
 		if (region.name != null) {
 			writer.writeAttribute("region-name", region.name); //$NON-NLS-1$

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2014 David Green and others.
+ * Copyright (c) 2010, 2015 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,10 @@
 
 package org.eclipse.mylyn.wikitext.core.parser.builder;
 
+import java.io.IOException;
 import java.io.StringWriter;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
@@ -23,6 +26,9 @@ import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
 import org.eclipse.mylyn.wikitext.core.util.DefaultXmlStreamWriter;
 import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
+
+import com.google.common.base.Throwables;
+import com.google.common.io.Resources;
 
 /**
  * @author David Green
@@ -218,7 +224,24 @@ public class XslfoDocumentBuilderTest extends TestCase {
 		assertTrue(xslfo.contains("<basic-link internal-destination=\"intern_label\">INTERN-LABEL</basic-link>"));
 		assertTrue(xslfo.contains("<basic-link internal-destination=\"intern_bold_label\"><inline font-weight=\"bold\">INTERN-BOLD-LABEL</inline></basic-link>"));
 		assertTrue(xslfo.contains("<basic-link external-destination=\"url(http://extern-label.com/)\">EXTERN-LABEL</basic-link>"));
-
 	}
 
+	public void testCopyrightExtent() {
+		documentBuilder.getConfiguration().setCopyright("Test Copyright");
+
+		parser.setMarkupLanguage(new TextileLanguage());
+		parser.parse("test");
+
+		assertEquals(resource("testCopyrightExtent.xml"), out.toString());
+	}
+
+	private String resource(String resourceName) {
+		URL resource = XslfoDocumentBuilderTest.class.getResource("resources/"
+				+ XslfoDocumentBuilderTest.class.getSimpleName() + "_" + resourceName);
+		try {
+			return Resources.toString(resource, StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			throw Throwables.propagate(e);
+		}
+	}
 }
