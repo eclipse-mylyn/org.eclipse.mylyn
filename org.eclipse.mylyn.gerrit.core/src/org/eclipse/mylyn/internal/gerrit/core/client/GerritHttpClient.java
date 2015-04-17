@@ -369,6 +369,8 @@ public class GerritHttpClient {
 				if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
 					// login or re-authenticate due to an expired session
 					authenticate(openIdProvider, monitor);
+
+					this.obtainedXsrfKey = false;
 				} else {
 					throw new GerritHttpException(code);
 				}
