@@ -28,6 +28,7 @@ import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpResponse;
 import org.eclipse.mylyn.commons.repositories.http.core.HttpUtil;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.LoginToken;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.RestResult;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -38,7 +39,8 @@ public class BugzillaRestAuthenticatedGetRequest<T> extends BugzillaRestRequest<
 
 	private final TypeToken responseType;
 
-	public BugzillaRestAuthenticatedGetRequest(BugzillaRestHttpClient client, String urlSuffix, TypeToken responseType) {
+	public BugzillaRestAuthenticatedGetRequest(BugzillaRestHttpClient client, String urlSuffix,
+			TypeToken responseType) {
 		super(client);
 		this.urlSuffix = urlSuffix;
 		this.responseType = responseType;
@@ -50,9 +52,8 @@ public class BugzillaRestAuthenticatedGetRequest<T> extends BugzillaRestRequest<
 		if (credentials == null) {
 			throw new IllegalStateException("Authentication requested without valid credentials");
 		}
-		HttpRequestBase request = new HttpGet(baseUrl()
-				+ MessageFormat.format("/login?login={0}&password={1}", new Object[] { credentials.getUserName(),
-						credentials.getPassword() }));
+		HttpRequestBase request = new HttpGet(baseUrl() + MessageFormat.format("/login?login={0}&password={1}",
+				new Object[] { credentials.getUserName(), credentials.getPassword() }));
 		request.setHeader(CONTENT_TYPE, TEXT_XML_CHARSET_UTF_8);
 		request.setHeader(ACCEPT, APPLICATION_JSON);
 		HttpResponse response = getClient().execute(request, monitor);
@@ -63,12 +64,12 @@ public class BugzillaRestAuthenticatedGetRequest<T> extends BugzillaRestRequest<
 						new AuthenticationRequest<AuthenticationType<UserCredentials>>(getClient().getLocation(),
 								AuthenticationType.REPOSITORY));
 			} else {
-				TypeToken<LoginToken> type = new TypeToken<LoginToken>() {
+				TypeToken<RestResult<LoginToken>> type = new TypeToken<RestResult<LoginToken>>() {
 				};
 				InputStream is = response.getEntity().getContent();
 				InputStreamReader in = new InputStreamReader(is);
-				LoginToken loginToken = new Gson().fromJson(in, type.getType());
-				((BugzillaRestHttpClient) getClient()).setLoginToken(loginToken);
+				RestResult<LoginToken> loginToken = new Gson().fromJson(in, type.getType());
+				((BugzillaRestHttpClient) getClient()).setLoginToken(loginToken.getResult());
 				getClient().setAuthenticated(true);
 			}
 		} finally {
@@ -104,7 +105,7 @@ public class BugzillaRestAuthenticatedGetRequest<T> extends BugzillaRestRequest<
 	}
 
 	@Override
-	protected T parseFromJson(InputStreamReader in) {
+	protected T parseFromJson(InputStreamReader in) throws BugzillaRestException {
 		return new Gson().fromJson(in, responseType.getType());
 	}
 

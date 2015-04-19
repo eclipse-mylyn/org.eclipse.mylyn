@@ -43,7 +43,7 @@ public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
 
 	protected abstract T execute(IOperationMonitor monitor) throws IOException, BugzillaRestException;
 
-	protected abstract T parseFromJson(InputStreamReader in);
+	protected abstract T parseFromJson(InputStreamReader in) throws BugzillaRestException;
 
 	protected abstract HttpRequestBase createHttpRequestBase();
 
@@ -67,15 +67,15 @@ public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
 		}
 	}
 
-	protected T doProcess(CommonHttpResponse response, IOperationMonitor monitor) throws IOException,
-	BugzillaRestException {
+	protected T doProcess(CommonHttpResponse response, IOperationMonitor monitor)
+			throws IOException, BugzillaRestException {
 		InputStream is = response.getResponseEntityAsStream();
 		InputStreamReader in = new InputStreamReader(is);
 		return parseFromJson(in);
 	}
 
-	protected void doValidate(CommonHttpResponse response, IOperationMonitor monitor) throws IOException,
-	BugzillaRestException {
+	protected void doValidate(CommonHttpResponse response, IOperationMonitor monitor)
+			throws IOException, BugzillaRestException {
 		validate(response, HttpStatus.SC_OK, monitor);
 	}
 
@@ -84,16 +84,16 @@ public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
 		int statusCode = response.getStatusCode();
 		if (statusCode != expected) {
 			if (statusCode == HttpStatus.SC_NOT_FOUND) {
-				throw new BugzillaRestResourceNotFoundException(NLS.bind("Requested resource ''{0}'' does not exist",
-						response.getRequestPath()));
+				throw new BugzillaRestResourceNotFoundException(
+						NLS.bind("Requested resource ''{0}'' does not exist", response.getRequestPath()));
 			}
 			throw new BugzillaRestException(NLS.bind("Unexpected response from Bugzilla REST server for ''{0}'': {1}",
 					response.getRequestPath(), HttpUtil.getStatusText(statusCode)));
 		}
 	}
 
-	protected T processAndRelease(CommonHttpResponse response, IOperationMonitor monitor) throws IOException,
-	BugzillaRestException {
+	protected T processAndRelease(CommonHttpResponse response, IOperationMonitor monitor)
+			throws IOException, BugzillaRestException {
 		try {
 			doValidate(response, monitor);
 			return doProcess(response, monitor);
