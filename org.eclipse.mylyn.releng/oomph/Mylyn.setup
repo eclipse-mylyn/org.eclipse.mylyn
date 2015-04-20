@@ -223,7 +223,7 @@
           name="Mylyn Builds"
           activeRepositoryList="${eclipse.target.platform}">
         <requirement
-            name="org.eclipse.mylyn.builds.sdk.feature.group"/>
+            name="org.eclipse.mylyn.builds.development.feature.group"/>
         <requirement
             name="org.eclipse.jdt.core"/>
         <requirement
@@ -326,7 +326,7 @@
           name="Mylyn Commons"
           activeRepositoryList="${eclipse.target.platform}">
         <requirement
-            name="org.eclipse.mylyn.commons.sdk.feature.group"/>
+            name="org.eclipse.mylyn.commons.development.feature.group"/>
         <sourceLocator
             rootFolder="${git.clone.mylyn.commons.location}"/>
       </targlet>
@@ -451,7 +451,7 @@
           name="Mylyn Context"
           activeRepositoryList="${eclipse.target.platform}">
         <requirement
-            name="org.eclipse.mylyn.context.sdk.feature.group"/>
+            name="org.eclipse.mylyn.context.development.feature.group"/>
         <sourceLocator
             rootFolder="${git.clone.mylyn.context.location}"/>
       </targlet>
@@ -538,7 +538,7 @@
           name="Mylyn Docs"
           activeRepositoryList="${eclipse.target.platform}">
         <requirement
-            name="org.eclipse.mylyn.docs.sdk.feature.group"/>
+            name="org.eclipse.mylyn.docs.development.feature.group"/>
         <sourceLocator
             rootFolder="${git.clone.mylyn.docs.location}"/>
       </targlet>
@@ -625,7 +625,7 @@
           name="Mylyn Incubator"
           activeRepositoryList="${eclipse.target.platform}">
         <requirement
-            name="org.eclipse.mylyn.experimental_sdk_feature.feature.group"/>
+            name="org.eclipse.mylyn.incubator.development.feature.group"/>
         <sourceLocator
             rootFolder="${git.clone.mylyn.incubator.location}"/>
       </targlet>
@@ -772,7 +772,7 @@
           name="Mylyn Reviews"
           activeRepositoryList="${eclipse.target.platform}">
         <requirement
-            name="org.eclipse.mylyn.reviews.sdk.feature.feature.group"/>
+            name="org.eclipse.mylyn.reviews.development.feature.feature.group"/>
         <sourceLocator
             rootFolder="${git.clone.mylyn.reviews.location}"/>
       </targlet>
@@ -988,7 +988,7 @@
           name="Mylyn Versions"
           activeRepositoryList="${eclipse.target.platform}">
         <requirement
-            name="org.eclipse.mylyn.versions.sdk.feature.group"/>
+            name="org.eclipse.mylyn.versions.development.feature.group"/>
         <sourceLocator
             rootFolder="${git.clone.mylyn.versions.location}"/>
         <repositoryList
@@ -1070,5 +1070,5 @@
   </project>
   <logicalProjectContainer
       xsi:type="setup:ProjectCatalog"
-      href="index:/org.eclipse.setup#//@projectCatalogs[name='org.eclipse']"/>
+      href="index:/org.eclipse.projects.setup#/"/>
 </setup:Project>
