@@ -17,19 +17,15 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.ui.AbstractFocusViewAction;
 import org.eclipse.mylyn.context.ui.InterestFilter;
 import org.eclipse.mylyn.internal.ide.ui.IdeUiBridgePlugin;
 import org.eclipse.mylyn.internal.ide.ui.MarkerInterestFilter;
-import org.eclipse.mylyn.internal.ide.ui.MarkerViewLabelProvider;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.internal.views.markers.ExtendedMarkersView;
 import org.eclipse.ui.internal.views.markers.MarkersTreeViewer;
-import org.eclipse.ui.views.markers.internal.TableViewLabelProvider;
 
 /**
  * @author Mik Kersten
@@ -49,18 +45,10 @@ public abstract class AbstractFocusMarkerViewAction extends AbstractFocusViewAct
 	}
 
 	/**
-	 * HACK: should use platform decorating label provider
-	 * 
-	 * @param viewer
+	 * @deprecated This functionality is no longer supported
 	 */
+	@Deprecated
 	protected void updateMarkerViewLabelProvider(StructuredViewer viewer) {
-		if (viewer != null) {
-			IBaseLabelProvider currentProvider = viewer.getLabelProvider();
-			if (currentProvider instanceof TableViewLabelProvider
-					&& !(currentProvider instanceof MarkerViewLabelProvider)) {
-				viewer.setLabelProvider(new MarkerViewLabelProvider((TableViewLabelProvider) currentProvider));
-			}
-		}
 	}
 
 	/**
@@ -78,9 +66,6 @@ public abstract class AbstractFocusMarkerViewAction extends AbstractFocusViewAct
 					Field field = clazz.getDeclaredField("viewer"); //$NON-NLS-1$
 					field.setAccessible(true);
 					cachedViewer = (MarkersTreeViewer) field.get(viewPart);
-					if (cachedViewer != null && !cachedViewer.getControl().isDisposed()) {
-						updateMarkerViewLabelProvider(cachedViewer);
-					}
 				}
 			} catch (Exception e) {
 				StatusHandler.log(new Status(IStatus.ERROR, IdeUiBridgePlugin.ID_PLUGIN,
@@ -91,20 +76,5 @@ public abstract class AbstractFocusMarkerViewAction extends AbstractFocusViewAct
 			viewers.add(cachedViewer);
 		}
 		return viewers;
-	}
-
-	@Override
-	public void update() {
-		super.update();
-		cachedViewer = null;
-		for (StructuredViewer viewer : getViewers()) {
-			if (viewer instanceof TableViewer) {
-				TableViewer tableViewer = (TableViewer) viewer;
-				if (!(tableViewer.getLabelProvider() instanceof MarkerViewLabelProvider)) {
-					tableViewer.setLabelProvider(new MarkerViewLabelProvider(
-							(TableViewLabelProvider) tableViewer.getLabelProvider()));
-				}
-			}
-		}
 	}
 }

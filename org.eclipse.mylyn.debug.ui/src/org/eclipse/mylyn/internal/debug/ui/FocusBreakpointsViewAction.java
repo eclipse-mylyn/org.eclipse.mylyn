@@ -36,7 +36,6 @@ public class FocusBreakpointsViewAction extends AbstractFocusMarkerViewAction {
 			IDebugView view = (IDebugView) viewPart;
 			Viewer viewer = view.getViewer();
 			if (viewer instanceof StructuredViewer) {
-				updateMarkerViewLabelProvider((StructuredViewer) viewer);
 				viewers.add((StructuredViewer) viewer);
 			}
 		}
