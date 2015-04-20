@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn WikiText Core Tests
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.core.osgi.tests
 Fragment-Host: org.eclipse.mylyn.wikitext.core.osgi;bundle-version="2.0.0"
-Bundle-Version: 2.4.0.qualifier
+Bundle-Version: 2.5.0.qualifier
 Bundle-Vendor: Eclipse.org
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: com.google.guava;bundle-version="15.0.0",

@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-Vendor: %Bundle-Vendor
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.core.ant
-Bundle-Version: 2.4.0.qualifier
+Bundle-Version: 2.5.0.qualifier
 Bundle-Localization: META-INF/l10n/bundle
 Export-Package: org.eclipse.mylyn.internal.wikitext.core.ant;x-internal:=true,
  org.eclipse.mylyn.wikitext.core.ant
