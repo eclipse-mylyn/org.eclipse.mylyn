@@ -12,7 +12,7 @@
 <feature
       id="org.eclipse.cdt.mylyn"
       label="%featureName"
-      version="5.11.0.qualifier"
+      version="5.12.0.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.mylyn.context.core"
       license-feature="org.eclipse.license"
@@ -32,7 +32,7 @@
 
    <requires>
       <import feature="org.eclipse.cdt.platform" version="7.0.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.mylyn.context_feature" version="3.15.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.context_feature" version="3.16.0" match="compatible"/>
    </requires>
 
    <plugin
