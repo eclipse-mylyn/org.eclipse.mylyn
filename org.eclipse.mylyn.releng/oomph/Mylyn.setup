@@ -99,8 +99,14 @@
           versionRange="[1.0.0,2.0.0)"/>
       <repositoryList
           name="Mars">
+         <repository
+            url="http://download.eclipse.org/modeling/emf/emf/updates/2.11milestones/core"/>
         <repository
-            url="http://download.eclipse.org/releases/mars"/>
+            url="http://download.eclipse.org/egit/updates"/>
+        <repository
+            url="http://download.eclipse.org/rt/ecf/latest/site.p2"/>
+        <repository
+            url="http://download.eclipse.org/tools/cdt/builds/mars/milestones"/>
         <repository
             url="http://download.eclipse.org/cbi/updates/license"/>
         <repository
