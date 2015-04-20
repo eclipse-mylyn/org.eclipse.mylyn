@@ -16,6 +16,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.math.BigInteger;
@@ -145,10 +146,20 @@ class ReviewHarness {
 		CommitCommand command = createCommitCommand(changeId);
 		addFile(fileName);
 		CommitResult result = commitAndPush(command, refSpec, privilegeLevel);
-		shortId = StringUtils.trimToEmpty(StringUtils.substringAfterLast(result.push.getMessages(), "/"));
-		shortId = StringUtils.removeEnd(getShortId(), " [DRAFT]");
+		shortId = parseShortId(result.push.getMessages());
 		commitId = result.commit.getId().toString();
 		assertThat("Bad Push: " + result.push.getMessages(), getShortId().length(), greaterThan(0));
+	}
+
+	String parseShortId(String commitMessage) {
+		String shortId = StringUtils.trimToEmpty(StringUtils.substringAfterLast(commitMessage, "/"));
+		shortId = StringUtils.substringBefore(shortId, " ");
+		try {
+			Integer.parseInt(shortId);
+		} catch (NumberFormatException e) {
+			fail("ShortId could not be parsed: " + e.getMessage());
+		}
+		return shortId;
 	}
 
 	void assertIsRecent(Date date) {

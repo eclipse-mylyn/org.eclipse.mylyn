@@ -180,7 +180,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		CommitCommand commandDep1 = reviewHarness.createCommitCommand(changeIdDep1);
 		reviewHarness.addFile("testFile1.txt", "test 2");
 		CommitResult resultDep1 = reviewHarness.commitAndPush(commandDep1);
-		String resultIdDep1 = StringUtils.trimToEmpty(StringUtils.substringAfterLast(resultDep1.push.getMessages(), "/"));
+		String resultIdDep1 = reviewHarness.parseShortId(resultDep1.push.getMessages());
 		assertThat("Bad Push: " + resultDep1.push.getMessages(), resultIdDep1.length(), greaterThan(0));
 
 		TestRemoteObserverConsumer<IRepository, IReview, String, GerritChange, String, Date> consumerDep1 = retrieveForRemoteKey(
@@ -552,7 +552,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		CommitCommand commandNewChange = reviewHarness.createCommitCommand(changeIdNewChange);
 		reviewHarness.addFile("testFileNewChange.txt");
 		CommitResult result = reviewHarness.commitAndPush(commandNewChange);
-		String newReviewShortId = StringUtils.trimToEmpty(StringUtils.substringAfterLast(result.push.getMessages(), "/"));
+		String newReviewShortId = reviewHarness.parseShortId(result.push.getMessages());
 
 		TestRemoteObserver<IRepository, IReview, String, Date> newReviewListener = new TestRemoteObserver<IRepository, IReview, String, Date>(
 				reviewHarness.getProvider().getReviewFactory());
@@ -617,7 +617,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		CommitCommand commandNewChange = reviewHarness.createCommitCommand(changeIdNewChange);
 		reviewHarness.addFile("testFileNewChange.txt");
 		CommitResult result = reviewHarness.commitAndPush(commandNewChange);
-		String newReviewShortId = StringUtils.trimToEmpty(StringUtils.substringAfterLast(result.push.getMessages(), "/"));
+		String newReviewShortId = reviewHarness.parseShortId(result.push.getMessages());
 
 		TestRemoteObserver<IRepository, IReview, String, Date> newReviewListener = new TestRemoteObserver<IRepository, IReview, String, Date>(
 				reviewHarness.getProvider().getReviewFactory());
