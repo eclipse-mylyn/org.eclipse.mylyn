@@ -195,8 +195,10 @@ public class GerritClient29 extends GerritClient {
 
 		Branch.NameKey branchKey = getBranchKey(changeInfo);
 		Change currentChange = createChange(changeInfo.getChangeId(), id.getParentKey().get(), accountInfo, branchKey);
-		currentChange.setStatus(changeInfo.getStatus());
-
+		com.google.gerrit.reviewdb.Change.Status status = changeInfo.getStatus();
+		if (status != null) {
+			currentChange.setStatus(status);
+		}
 		publishDetail.setChange(currentChange);
 
 		PatchSetInfo patchSetInfo = getPatchSetInfo(changeInfo.getCurrentPatchSetId(), changeInfo.getSubject());
@@ -348,7 +350,10 @@ public class GerritClient29 extends GerritClient {
 
 		initialChange.setCurrentPatchSet(patchSetInfo);
 
-		initialChange.setStatus(changeInfo.getStatus());
+		com.google.gerrit.reviewdb.Change.Status status = changeInfo.getStatus();
+		if (status != null) {
+			initialChange.setStatus(status);
+		}
 		changeDetail.setChange(initialChange);
 		getAdditionalChangeInfo(reviewId, changeDetail, monitor);
 		return changeDetail;

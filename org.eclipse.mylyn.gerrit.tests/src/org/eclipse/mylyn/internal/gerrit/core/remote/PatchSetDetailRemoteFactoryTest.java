@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.gerrit.core.remote;
 
 import static org.eclipse.mylyn.internal.gerrit.core.remote.TestRemoteObserverConsumer.retrieveForLocalKey;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 import java.util.List;
@@ -23,6 +24,9 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchSetPublishDetailX;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.junit.After;
@@ -31,6 +35,8 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gerrit.common.data.PatchSetDetail;
+import com.google.gerrit.reviewdb.Change;
+import com.google.gerrit.reviewdb.PatchSet;
 
 public class PatchSetDetailRemoteFactoryTest extends TestCase {
 
@@ -87,6 +93,39 @@ public class PatchSetDetailRemoteFactoryTest extends TestCase {
 
 	}
 
+	@Test
+	public void testGetPatchSetPublishDetailOfDraftIffAdmin() throws Exception {
+		int reviewId = Integer.parseInt(reviewHarness.getShortId());
+		PatchSet.Id id = new PatchSet.Id(new Change.Id(reviewId), 1);
+		PatchSetPublishDetailX patchSetDetail;
+		try {
+			patchSetDetail = reviewHarness.getClient().getPatchSetPublishDetail(id, new NullProgressMonitor());
+			fail("Expected Gerrit Exception");
+		} catch (GerritException e) {
+		} // Needs admin client to view admin-created draft
+		patchSetDetail = reviewHarness.getAdminClient().getPatchSetPublishDetail(id, new NullProgressMonitor());
+
+		assertThat(patchSetDetail, notNullValue());
+		// DRAFT is not correctly parsed for ChangeInfo since Change.Status does not define the corresponding enum field
+		assertThat(patchSetDetail.getChange().getStatus(), is(Change.Status.NEW));
+	}
+
+	@Test
+	public void testGetChangeDetailOfDraftIffAdmin() throws Exception {
+		int reviewId = Integer.parseInt(reviewHarness.getShortId());
+		ChangeDetailX changeDetail;
+		try {
+			changeDetail = reviewHarness.getClient().getChangeDetail(reviewId, new NullProgressMonitor());
+			fail("Expected Gerrit Exception");
+		} catch (GerritException e) {
+		} // Needs admin client to view admin-created draft
+		changeDetail = reviewHarness.getAdminClient().getChangeDetail(reviewId, new NullProgressMonitor());
+
+		assertThat(changeDetail, notNullValue());
+		// DRAFT is not correctly parsed for ChangeInfo since Change.Status does not define the corresponding enum field
+		assertThat(changeDetail.getChange().getStatus(), is(Change.Status.NEW));
+	}
+
 	private void createPatchSet(String pushTo, PrivilegeLevel privilegeLevel, List<String> files) throws Exception {
 		CommitCommand command = reviewHarness.createCommitCommand();
 		for (String fileName : files) {
@@ -97,8 +136,8 @@ public class PatchSetDetailRemoteFactoryTest extends TestCase {
 
 	private PatchSetDetail retrievePatchSetDetail(String patchSetId) {
 		TestRemoteObserverConsumer<IReview, IReviewItemSet, String, PatchSetDetail, PatchSetDetail, String> itemSetObserver //
-		= retrieveForLocalKey(reviewHarness.getProvider().getReviewItemSetFactory(), reviewHarness.getReview(), patchSetId,
-				false);
+		= retrieveForLocalKey(reviewHarness.getProvider().getReviewItemSetFactory(), reviewHarness.getReview(),
+				patchSetId, false);
 		PatchSetDetail detail = itemSetObserver.getRemoteObject();
 		return detail;
 	}
