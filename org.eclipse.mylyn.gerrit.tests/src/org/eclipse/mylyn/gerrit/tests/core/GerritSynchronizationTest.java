@@ -34,9 +34,7 @@ import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.GerritQuery;
 import org.eclipse.mylyn.internal.gerrit.core.GerritTaskSchema;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
-import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient28;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
-import org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
 import org.eclipse.mylyn.internal.reviews.ui.RemoteUiFactoryProviderConfigurer;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
@@ -169,15 +167,13 @@ public class GerritSynchronizationTest extends TestCase {
 				.getRoot()
 				.getMappedAttribute(TaskAttribute.PRODUCT)
 				.getValue());
-		if (GerritVersion.isVersion28OrLater(client.getVersion())) {
-			((GerritClient28) client).clearCachedBranches(project);
-			assertNull(client.getCachedBranches(project));
-		}
+		client.clearCachedBranches(project);
+		assertNull(client.getCachedBranches(project));
+
 		TaskData taskData = connector.getTaskData(repository, task.getTaskId(), new NullProgressMonitor());
 		assertEquals(task.getTaskId(), taskData.getTaskId());
-		if (GerritVersion.isVersion28OrLater(client.getVersion())) {
-			assertNotNull(client.getCachedBranches(project));
-		}
+		assertNotNull(client.getCachedBranches(project));
+
 		TaskAttribute changeIdAttribute = taskData.getRoot().getAttribute(
 				GerritTaskSchema.getDefault().CHANGE_ID.getKey());
 		assertNotNull(changeIdAttribute);

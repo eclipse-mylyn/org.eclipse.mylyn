@@ -13,7 +13,6 @@ package org.eclipse.mylyn.internal.gerrit.core.remote;
 
 import static org.eclipse.mylyn.gerrit.tests.core.client.rest.IsEmpty.empty;
 import static org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalUtil.CRVW;
-import static org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalUtil.VRIF;
 import static org.eclipse.mylyn.internal.gerrit.core.client.rest.ApprovalUtil.toNameWithDash;
 import static org.eclipse.mylyn.internal.gerrit.core.remote.TestRemoteObserverConsumer.retrieveForLocalKey;
 import static org.eclipse.mylyn.internal.gerrit.core.remote.TestRemoteObserverConsumer.retrieveForRemoteKey;
@@ -95,18 +94,14 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 				Collections.<ApprovalCategoryValue.Id> emptySet(), null);
 		reviewHarness.retrieve();
 		List<IComment> comments = getReview().getComments();
-		int offset = getCommentOffset();
-		assertThat(comments.size(), is(offset + 2));
-		if (isVersion28OrLater()) {
-			IComment comment1 = comments.get(0);
-			assertThat(comment1.getAuthor().getDisplayName(), is("tests"));
-			assertThat(comment1.getDescription(), is("Uploaded patch set 1."));
-
-		}
-		IComment comment1 = comments.get(offset + 0);
+		assertThat(comments.size(), is(3));
+		IComment uploadComment = comments.get(0);
+		assertThat(uploadComment.getAuthor().getDisplayName(), is("tests"));
+		assertThat(uploadComment.getDescription(), is("Uploaded patch set 1."));
+		IComment comment1 = comments.get(1);
 		assertThat(comment1.getAuthor().getDisplayName(), is("tests"));
 		assertThat(comment1.getDescription(), is("Patch Set 1:\n\n" + message1));
-		IComment comment2 = comments.get(offset + 1);
+		IComment comment2 = comments.get(2);
 		assertThat(comment2.getAuthor().getDisplayName(), is("tests"));
 		assertThat(comment2.getDescription(), is("Patch Set 1:\n\n" + message2));
 	}
@@ -151,7 +146,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testApprovals() throws Exception {
-		int approvals = isVersion26OrLater() ? 1 : 2;
+		int approvals = 1;
 		assertThat(reviewHarness.getRepository().getApprovalTypes().size(), is(approvals));
 		IApprovalType codeReviewApproval = reviewHarness.getRepository().getApprovalTypes().get(approvals - 1);
 		assertThat(codeReviewApproval.getKey(), is(CRVW.getCategory().getId().get()));
@@ -176,22 +171,11 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(codeReviewEntry, notNullValue());
 		assertThat(codeReviewEntry.getBy(), nullValue());
 		assertThat(codeReviewEntry.getStatus(), is(RequirementStatus.NOT_SATISFIED));
-		if (!isVersion26OrLater()) {
-			IApprovalType verifyApproval = reviewHarness.getRepository().getApprovalTypes().get(0);
-			assertThat(verifyApproval.getKey(), is(VRIF.getCategory().getId().get()));
-			assertThat(verifyApproval.getName(), is(VRIF.getCategory().getName()));
-
-			IRequirementEntry verifyEntry = getReview().getRequirements().get(verifyApproval);
-			assertThat(verifyEntry, notNullValue());
-			assertThat(verifyEntry.getBy(), nullValue());
-			assertThat(verifyEntry.getStatus(), is(RequirementStatus.NOT_SATISFIED));
-		}
 		assertThat(getReview().getState(), is(ReviewStatus.NEW));
 	}
 
 	@Test
 	public void testDependencies() throws Exception {
-		boolean isversion29OrLater = isVersion29OrLater();
 		String changeIdDep1 = "I" + StringUtils.rightPad(System.currentTimeMillis() + "", 40, "a");
 		CommitCommand commandDep1 = reviewHarness.createCommitCommand(changeIdDep1);
 		reviewHarness.addFile("testFile1.txt", "test 2");
@@ -208,11 +192,8 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		//Not expected to be same instance
 		assertThat(parentChange.getId(), is(getReview().getId()));
 		assertThat(parentChange.getSubject(), is(getReview().getSubject()));
-		if (isversion29OrLater) {
-			//There s an offset ~ 1 sec, so no test for now
-		} else {
-			assertThat(parentChange.getModificationDate().getTime(), is(getReview().getModificationDate().getTime()));
-		}
+		//There s an offset ~ 1 sec, so no test for now
+//		assertThat(parentChange.getModificationDate().getTime(), is(getReview().getModificationDate().getTime()));
 
 		reviewHarness.retrieve();
 		assertThat(getReview().getChildren().size(), is(1));
@@ -220,11 +201,8 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		//Not expected to be same instance
 		assertThat(childChange.getId(), is(reviewDep1.getId()));
 		assertThat(childChange.getSubject(), is(reviewDep1.getSubject()));
-		if (isversion29OrLater) {
-			//There s an offset ~ 1 sec, so no test for now
-		} else {
-			assertThat(childChange.getModificationDate().getTime(), is(reviewDep1.getModificationDate().getTime()));
-		}
+		//There s an offset ~ 1 sec, so no test for now
+//		assertThat(childChange.getModificationDate().getTime(), is(reviewDep1.getModificationDate().getTime()));
 	}
 
 	@Test
@@ -237,16 +215,15 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(changeDetail, notNullValue());
 		assertThat(changeDetail.getChange().getStatus(), is(Status.ABANDONED));
 		List<ChangeMessage> messages = changeDetail.getMessages();
-		int offset = getCommentOffset();
-		assertThat(messages.size(), is(offset + 1));
-		ChangeMessage lastMessage = messages.get(offset + 0);
+		assertThat(messages.size(), is(2));
+		ChangeMessage lastMessage = messages.get(1);
 		assertThat(lastMessage.getAuthor().get(), is(1000001));
 		assertThat(lastMessage.getMessage(), endsWith("Abandoned\n\n" + message1));
 
 		assertThat(getReview().getState(), is(ReviewStatus.ABANDONED));
 		List<IComment> comments = getReview().getComments();
-		assertThat(comments.size(), is(offset + 1));
-		IComment lastComment = comments.get(offset + 0);
+		assertThat(comments.size(), is(2));
+		IComment lastComment = comments.get(1);
 		assertThat(lastComment.getAuthor().getDisplayName(), is("tests"));
 		assertThat(lastComment.getAuthor().getId(), is("1000001"));
 		assertThat(lastComment.getDescription(), endsWith("Abandoned\n\n" + message1));
@@ -263,9 +240,8 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		reviewHarness.retrieve();
 		assertThat(getReview().getState(), is(ReviewStatus.NEW));
 		List<IComment> comments = getReview().getComments();
-		int offset = getCommentOffset();
-		assertThat(comments.size(), is(offset + 2)); // abandon + restore
-		IComment lastComment = comments.get(offset + 1);
+		assertThat(comments.size(), is(3)); // abandon + restore
+		IComment lastComment = comments.get(2);
 		assertThat(lastComment.getAuthor().getDisplayName(), is("tests"));
 		assertThat(lastComment.getDescription(), endsWith("Restored\n\n" + message2));
 	}
@@ -278,11 +254,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 			reviewHarness.getClient().restore(reviewHarness.getShortId(), 1, message1, new NullProgressMonitor());
 			fail("Expected to fail when restoring a new change");
 		} catch (GerritException e) {
-			if (isVersion24x()) {
-				assertThat(e.getMessage(), is("Change is not abandoned or patchset is not latest"));
-			} else {
-				assertThat(e.getMessage(), is("Not Found"));
-			}
+			assertThat(e.getMessage(), is("Not Found"));
 		}
 	}
 
@@ -335,11 +307,9 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 	public void testAddSomeInvalidReviewers() throws Exception {
 		List<String> reviewers = Arrays.asList(new String[] { "tests", "foo" });
 		int userid = 1000001; //user id for tests
-		if (isVersion29OrLater()) {
-			//use "admin " since this is a valid user in 2.9
-			reviewers = Arrays.asList(new String[] { "admin", "foo" });
-			userid = 1000000; //user id for admin
-		}
+		//use "admin " since this is a valid user in 2.9
+		reviewers = Arrays.asList(new String[] { "admin", "foo" });
+		userid = 1000000; //user id for admin
 
 		ReviewerResult reviewerResult = reviewHarness.getClient().addReviewers(reviewHarness.getShortId(), reviewers,
 				new NullProgressMonitor());
@@ -352,11 +322,9 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(getReview().getReviewerApprovals().isEmpty(), is(true));
 		List<String> reviewers = Arrays.asList(new String[] { "tests" });
 		int userid = 1000001; //user id for tests
-		if (isVersion29OrLater()) {
-			//Need a user and not the review owner
-			reviewers = Arrays.asList(new String[] { "admin" });
-			userid = 1000000; //user id for admin
-		}
+		//Need a user and not the review owner
+		reviewers = Arrays.asList(new String[] { "admin" });
+		userid = 1000000; //user id for admin
 
 		ReviewerResult reviewerResult = reviewHarness.getClient().addReviewers(reviewHarness.getShortId(), reviewers,
 				new NullProgressMonitor());
@@ -368,11 +336,9 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 	public void testAddReviewersByEmail() throws Exception {
 		List<String> reviewers = Arrays.asList(new String[] { "tests@mylyn.eclipse.org" });
 		int userid = 1000001; //user id for tests
-		if (isVersion29OrLater()) {
-			//Need a user and not the review owner
-			reviewers = Arrays.asList(new String[] { "admin@mylyn.eclipse.org" });
-			userid = 1000000; //user id for admin
-		}
+		//Need a user and not the review owner
+		reviewers = Arrays.asList(new String[] { "admin@mylyn.eclipse.org" });
+		userid = 1000000; //user id for admin
 
 		ReviewerResult reviewerResult = reviewHarness.getClient().addReviewers(reviewHarness.getShortId(), reviewers,
 				new NullProgressMonitor());
@@ -437,17 +403,10 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testGetChangeInfo() throws Exception {
-		if (!isVersion26OrLater()) {
-			return; // testing Gerrit REST API, available in 2.6 and later
-		}
 		int reviewId = Integer.parseInt(reviewHarness.getShortId());
 
 		ChangeInfo changeInfo = reviewHarness.getClient().getChangeInfo(reviewId, new NullProgressMonitor());
-		if (isVersion29OrLater()) {
-			ChangeInfoTest.assertHasCodeReviewLabels(changeInfo, true);
-		} else {
-			ChangeInfoTest.assertHasCodeReviewLabels(changeInfo, false);
-		}
+		ChangeInfoTest.assertHasCodeReviewLabels(changeInfo, true);
 	}
 
 	@Test
@@ -459,12 +418,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 					new NullProgressMonitor());
 			fail("Expected to fail when trying to vote +2 when it's not permitted");
 		} catch (GerritException e) {
-			if (isVersion26OrLater()) {
-				assertEquals("Applying label \"Code-Review\": 2 is restricted", e.getMessage());
-			} else {
-				assertEquals("Code-Review=2 not permitted", e.getMessage());
-			}
-
+			assertEquals("Applying label \"Code-Review\": 2 is restricted", e.getMessage());
 		}
 	}
 
@@ -511,9 +465,6 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testReviewsWithSameChangeId() throws Exception {
-		if (!reviewHarness.getClient().supportsBranchCreation()) {
-			return;
-		}
 		String branchName = "test_side_branch";
 		createBranchIfNonExistent(branchName);
 		ReviewHarness reviewHarness2 = reviewHarness.duplicate(); //same ChangeId
@@ -542,9 +493,6 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testCherryPick() throws Exception {
-		if (!isVersion28OrLater()) {
-			return;
-		}
 		String testMessage = "Test Cherry Pick";
 		String branchName = "test_side_branch";
 		createBranchIfNonExistent(branchName);
@@ -559,18 +507,11 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(change.getChangeId(), is(not(Integer.parseInt(review.getId())))); //changeId deprecated, yet still used.
 		assertThat(change.getKey().get(), is(not(review.getKey())));
 		assertThat(change.getSubject(), is(testMessage));
-		if (isVersion29OrLater()) {
-			assertThat(change.getDest().get(), is(branchName));
-		} else {
-			assertThat(change.getDest().get(), is(refSpec));
-		}
+		assertThat(change.getDest().get(), is(branchName));
 	}
 
 	@Test
 	public void testCannotCherryPick() throws Exception {
-		if (!isVersion28OrLater()) {
-			return;
-		}
 		String testMessage = "Test Cherry Pick";
 		String testDest = "refs/heads/test_side_branch";
 
@@ -589,9 +530,6 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void unsupportedVersionCherryPick(String message, String dest, String errMsg) throws GerritException {
-		if (isVersion28OrLater()) {
-			return;
-		}
 		failedCherryPick("Test Cherry Pick", "refs/heads/test_side_branch",
 				"Cherry Picking not supported before version 2.8");
 	}
@@ -661,19 +599,13 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 		List<IComment> comments = newReview.getComments();
 
-		int offset = getCommentOffset();
-		assertThat(comments.size(), is(offset + 2));
+		assertThat(comments.size(), is(3));
 
-		IComment commentByGerrit = comments.get(offset + 1);
+		IComment commentByGerrit = comments.get(2);
 
-		if (isVersion29OrLater()) {
-			assertNotNull(commentByGerrit.getAuthor());
-			assertThat(commentByGerrit.getAuthor().getId(),
-					is(String.valueOf(GerritSystemAccount.GERRIT_SYSTEM.getId())));
-			assertThat(commentByGerrit.getAuthor().getDisplayName(), is(GerritSystemAccount.GERRIT_SYSTEM_NAME));
-		} else {
-			assertThat(commentByGerrit.getAuthor(), is(nullValue()));
-		}
+		assertNotNull(commentByGerrit.getAuthor());
+		assertThat(commentByGerrit.getAuthor().getId(), is(String.valueOf(GerritSystemAccount.GERRIT_SYSTEM.getId())));
+		assertThat(commentByGerrit.getAuthor().getDisplayName(), is(GerritSystemAccount.GERRIT_SYSTEM_NAME));
 
 		assertThat(commentByGerrit.getDescription().substring(0, 58),
 				is("Change cannot be merged due to unsatisfiable dependencies."));
@@ -681,9 +613,6 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testParentCommit() throws Exception {
-		if (!isVersion28OrLater()) {
-			return;
-		}
 		String changeIdNewChange = ReviewHarness.generateChangeId();
 		CommitCommand commandNewChange = reviewHarness.createCommitCommand(changeIdNewChange);
 		reviewHarness.addFile("testFileNewChange.txt");
@@ -719,9 +648,6 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testGetCachedBranches() throws GerritException {
-		if (!isVersion28OrLater()) {
-			return;
-		}
 		GerritClient client = reviewHarness.getClient();
 		NullProgressMonitor monitor = new NullProgressMonitor();
 		NameKey project = client.getChange(reviewHarness.getShortId(), monitor)
@@ -793,10 +719,4 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 				new NullProgressMonitor());
 		reviewHarness.retrieve();
 	}
-
-	private int getCommentOffset() throws GerritException {
-		// Version 2.8 adds a comment for each uploaded patch set
-		return isVersion28OrLater() ? 1 : 0;
-	}
-
 }

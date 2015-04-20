@@ -46,19 +46,11 @@ public class GerritRemoteTest extends TestCase {
 		reviewHarness.dispose();
 	}
 
-	boolean isVersion24x() throws GerritException {
-		return GerritVersion.isVersion24x(reviewHarness.getClient().getVersion());
+	boolean isVersion29x() throws GerritException {
+		return GerritVersion.isVersion29x(reviewHarness.getClient().getVersion());
 	}
 
-	boolean isVersion26OrLater() throws GerritException {
-		return GerritVersion.isVersion26OrLater(reviewHarness.getClient().getVersion());
-	}
-
-	boolean isVersion28OrLater() throws GerritException {
-		return GerritVersion.isVersion28OrLater(reviewHarness.getClient().getVersion());
-	}
-
-	boolean isVersion29OrLater() throws GerritException {
-		return GerritVersion.isVersion29OrLater(reviewHarness.getClient().getVersion());
+	boolean isVersion210OrLater() throws GerritException {
+		return GerritVersion.isVersion210OrLater(reviewHarness.getClient().getVersion());
 	}
 }

@@ -27,7 +27,6 @@ import static org.mockito.Mockito.when;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -44,10 +43,10 @@ import org.eclipse.mylyn.gerrit.tests.support.GerritHarness;
 import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritAuthenticationState;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient29;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritSystemInfo;
-import org.eclipse.mylyn.internal.gerrit.core.client.compat.CommentLink;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchScriptX;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -68,7 +67,7 @@ import com.google.gerrit.reviewdb.PatchSet.Id;
  * @author Jacques Bouthillier
  */
 public class GerritClientTest extends TestCase {
-	public class TestGerritClient extends GerritClient {
+	public class TestGerritClient extends GerritClient29 {
 
 		public TestGerritClient(TaskRepository repository, AbstractWebLocation location) {
 			super(repository, GerritFixture.current().getGerritVersion());
@@ -158,24 +157,6 @@ public class GerritClientTest extends TestCase {
 		} else {
 			assertEquals("Anonymous", info.getFullName());
 		}
-	}
-
-	@Test
-	public void testRefreshConfigCommentLinks() throws Exception {
-		if (!GerritFixture.current().canAuthenticate()
-				|| !GerritFixture.current().getCapabilities().supportsCommentLinks()) {
-			return; // skip
-		}
-
-		List<CommentLink> expected = new ArrayList<CommentLink>();
-		expected.add(new CommentLink("(I[0-9a-f]{8,40})", "<a href=\"#q,$1,n,z\">$&</a>"));
-		expected.add(new CommentLink("(bug\\s+)(\\d+)", "<a href=\"http://bugs.mylyn.org/show_bug.cgi?id=$2\">$&</a>"));
-		expected.add(new CommentLink("([Tt]ask:\\s+)(\\d+)", "$1<a href=\"http://tracker.mylyn.org/$2\">$2</a>"));
-
-		client = harness.client();
-		GerritConfiguration config = client.refreshConfig(new NullProgressMonitor());
-		List<CommentLink> links = config.getGerritConfig().getCommentLinks2();
-		assertEquals(expected, links);
 	}
 
 	@Test

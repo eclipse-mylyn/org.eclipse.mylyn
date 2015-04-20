@@ -18,8 +18,6 @@ import org.osgi.framework.Version;
  */
 public class GerritCapabilities {
 
-	private static final Version VERSION_2_7_0 = new Version(2, 7, 0);
-
 	private static final Version VERSION_2_10_0 = new Version(2, 10, 0);
 
 	private final Version version;
@@ -34,10 +32,4 @@ public class GerritCapabilities {
 	public boolean isSupported() {
 		return version.compareTo(VERSION_2_10_0) < 0;
 	}
-
-	public boolean supportsCommentLinks() {
-		// see bug 417271
-		return version.compareTo(VERSION_2_7_0) < 0;
-	}
-
 }

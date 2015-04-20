@@ -193,21 +193,10 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 
 		// compare deleted image
 		patchScript = loadPatchSetContent(fileName, detail2, detail4);
-		boolean isVersion29OrLater = isVersion29OrLater();
-		if (isVersion29OrLater) {
-			//In Gerrit 2.9, if the file (test.png)is not in the target environment (Detail 4), it returns NULL
-			assertThat(patchScript, nullValue());
-		} else {
-			assertPatchContent(patchScript, equalTo(fileContent2), empty());
-		}
+		assertThat(patchScript, nullValue());
 
 		patchScript = loadPatchSetContent(fileName, detail3, detail1);
-		if (isVersion29OrLater) {
-			//In Gerrit 2.9, if the file (test.png) is not in the target environment (Detail 1), it returns NULL
-			assertThat(patchScript, nullValue());
-		} else {
-			assertPatchContent(patchScript, equalTo(fileContent3), empty());
-		}
+		assertThat(patchScript, nullValue());
 
 		// compare added image
 		patchScript = loadPatchSetContent(fileName, detail1, detail2);

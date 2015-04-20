@@ -355,9 +355,22 @@ public class GerritConnector extends ReviewsConnector {
 
 					@Override
 					protected void authStateChanged(GerritAuthenticationState authState) {
-						repository.setProperty(KEY_REPOSITORY_AUTH, GerritClient.authStateToString(authState));
+						repository.setProperty(KEY_REPOSITORY_AUTH, authStateToString(authState));
 					}
 				});
+	}
+
+	private static String authStateToString(GerritAuthenticationState authState) {
+		if (authState == null) {
+			return null;
+		}
+		try {
+			JSonSupport support = new JSonSupport();
+			return support.toJson(authState);
+		} catch (Exception e) {
+			// ignore
+			return null;
+		}
 	}
 
 	protected GerritClient createTransientReviewClient(final TaskRepository repository) {
@@ -367,9 +380,19 @@ public class GerritConnector extends ReviewsConnector {
 	private GerritAuthenticationState loadAuthState(final TaskRepository repository) {
 		String authState = repository.getProperty(KEY_REPOSITORY_AUTH);
 		if (authState != null) {
-			return GerritClient.authStateFromString(authState);
+			return authStateFromString(authState);
 		}
 		return null;
+	}
+
+	private static GerritAuthenticationState authStateFromString(String token) {
+		try {
+			JSonSupport support = new JSonSupport();
+			return support.parseResponse(token, GerritAuthenticationState.class);
+		} catch (Exception e) {
+			// ignore
+			return null;
+		}
 	}
 
 	protected GerritConfiguration loadConfiguration(TaskRepository repository) {

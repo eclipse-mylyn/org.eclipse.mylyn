@@ -62,7 +62,7 @@ import com.google.gerrit.reviewdb.Project;
 import com.google.gerrit.reviewdb.UserIdentity;
 import com.google.gwtjsonrpc.client.VoidResult;
 
-public class GerritClient29 extends GerritClient28 {
+public class GerritClient29 extends GerritClient {
 
 	private final String OK = "OK"; //$NON-NLS-1$
 

@@ -57,16 +57,10 @@ public class GerritService implements InvocationHandler {
 
 	public static <T extends RemoteJsonService> T create(Class<T> serviceClass, GerritHttpClient gerritHttpClient,
 			Version version) {
-		String uri = getGerritRpcUri(version);
-		InvocationHandler handler = new GerritService(gerritHttpClient, uri + serviceClass.getSimpleName());
+		InvocationHandler handler = new GerritService(gerritHttpClient, GerritConnector.GERRIT_260_RPC_URI
+				+ serviceClass.getSimpleName());
 		return serviceClass.cast(Proxy.newProxyInstance(GerritService.class.getClassLoader(),
 				new Class<?>[] { serviceClass }, handler));
-	}
-
-	private static String getGerritRpcUri(Version version) {
-		return GerritVersion.isVersion26OrLater(version)
-				? GerritConnector.GERRIT_260_RPC_URI
-				: GerritConnector.GERRIT_RPC_URI;
 	}
 
 	private final String uri;
