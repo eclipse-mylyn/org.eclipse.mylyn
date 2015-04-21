@@ -136,6 +136,7 @@
     <module>org.eclipse.mylyn.context-site</module>
     <module>org.eclipse.mylyn.context-target</module>
     <module>org.eclipse.mylyn.context.core</module>
+    <module>org.eclipse.mylyn.context.development-feature</module>
     <module>org.eclipse.mylyn.context.sdk-feature</module>
     <module>org.eclipse.mylyn.context.sdk.java</module>
     <module>org.eclipse.mylyn.context.sdk.util</module>

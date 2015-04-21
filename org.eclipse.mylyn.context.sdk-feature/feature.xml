@@ -54,11 +54,9 @@
          id="org.eclipse.mylyn.java_feature"
          version="0.0.0"/>
 
-   <!--
    <includes
-         id="org.eclipse.mylyn.sdk_feature"
+         id="org.eclipse.mylyn.team.cvs"
          version="0.0.0"/>
-   -->
 
    <plugin
          id="org.eclipse.mylyn.context.sdk.java"
@@ -66,7 +64,7 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-         
+
    <plugin
          id="org.eclipse.mylyn.context.sdk.util"
          download-size="0"
