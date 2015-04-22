@@ -6,13 +6,14 @@
     xmlns:git="http://www.eclipse.org/oomph/setup/git/1.0"
     xmlns:jdt="http://www.eclipse.org/oomph/setup/jdt/1.0"
     xmlns:mylyn="http://www.eclipse.org/oomph/setup/mylyn/1.0"
+    xmlns:pde="http://www.eclipse.org/oomph/setup/pde/1.0"
     xmlns:predicates="http://www.eclipse.org/oomph/predicates/1.0"
     xmlns:projects="http://www.eclipse.org/oomph/setup/projects/1.0"
     xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
     xmlns:setup.p2="http://www.eclipse.org/oomph/setup/p2/1.0"
     xmlns:setup.targlets="http://www.eclipse.org/oomph/setup/targlets/1.0"
     xmlns:setup.workingsets="http://www.eclipse.org/oomph/setup/workingsets/1.0"
-    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/jdt/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/JDT.ecore http://www.eclipse.org/oomph/setup/mylyn/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Mylyn.ecore http://www.eclipse.org/oomph/predicates/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupWorkingSets.ecore"
+    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/jdt/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/JDT.ecore http://www.eclipse.org/oomph/setup/mylyn/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Mylyn.ecore http://www.eclipse.org/oomph/setup/pde/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/PDE.ecore http://www.eclipse.org/oomph/predicates/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupWorkingSets.ecore"
     name="mylyn"
     label="Mylyn">
   <setupTask
@@ -32,7 +33,7 @@
       <setupTask
           xsi:type="setup:PreferenceTask"
           key="/instance/org.eclipse.pde.api.tools/missing_default_api_profile"
-          value="Ignore"/>
+          value="Error"/>
       <setupTask
           xsi:type="setup:PreferenceTask"
           key="/instance/org.eclipse.pde.api.tools/MISSING_EE_DESCRIPTIONS"
@@ -99,7 +100,7 @@
           versionRange="[1.0.0,2.0.0)"/>
       <repositoryList
           name="Mars">
-         <repository
+        <repository
             url="http://download.eclipse.org/modeling/emf/emf/updates/2.11milestones/core"/>
         <repository
             url="http://download.eclipse.org/egit/updates"/>
@@ -161,6 +162,27 @@
             url="http://download.eclipse.org/mylyn/snapshots/jdt-annotation"/>
       </repositoryList>
     </targlet>
+  </setupTask>
+  <setupTask
+      xsi:type="setup:CompoundTask"
+      id="mylyn.basline"
+      name="Baseline">
+    <setupTask
+        xsi:type="setup:VariableTask"
+        type="FOLDER"
+        name="mylyn.baseline.location"
+        defaultValue="$${workspace.location/../api.baseline}"
+        storageURI="scope://Workspace"
+        label="Mylyn API baseline location">
+      <description>The root install folder where the Mylyn API Baseline is installed.</description>
+    </setupTask>
+    <setupTask
+        xsi:type="pde:APIBaselineTask"
+        id="mylyn.baseline"
+        name="Mylyn"
+        version="3.15"
+        location="${mylyn.baseline.location}"
+        remoteURI="http://download.eclipse.org/mylyn/drops/3.15.0/mylyn-3.15.0-api.zip"/>
   </setupTask>
   <project name="builds"
       label="Builds">
