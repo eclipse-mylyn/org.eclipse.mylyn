@@ -165,7 +165,7 @@ public class TaskJobFactory implements ITaskJobFactory {
 	public TaskJob createUpdateRepositoryConfigurationJob(final AbstractRepositoryConnector connector,
 			final TaskRepository taskRepository, final ITask task) {
 		UpdateRepositoryConfigurationJob updateJob = new UpdateRepositoryConfigurationJob(
-				Messages.TaskJobFactory_Refreshing_repository_configuration, taskRepository, connector);
+				Messages.TaskJobFactory_Refreshing_repository_configuration, taskRepository, task, connector);
 		updateJob.setPriority(Job.INTERACTIVE);
 		updateJob.setRule(new ObjectSchedulingRule(taskRepository));
 		updateJob.setUser(true);

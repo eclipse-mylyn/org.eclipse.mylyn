@@ -15,7 +15,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.sync.TaskJob;
 
@@ -26,11 +29,19 @@ public class UpdateRepositoryConfigurationJob extends TaskJob {
 
 	private IStatus error;
 
-	public UpdateRepositoryConfigurationJob(String name, TaskRepository repository,
-			AbstractRepositoryConnector connector) {
+	private final ITask task;
+
+	public UpdateRepositoryConfigurationJob(@NonNull String name, @NonNull TaskRepository repository,
+			@NonNull AbstractRepositoryConnector connector) {
+		this(name, repository, null, connector);
+	}
+
+	public UpdateRepositoryConfigurationJob(@NonNull String name, @NonNull TaskRepository repository,
+			@Nullable ITask task, @NonNull AbstractRepositoryConnector connector) {
 		super(name);
-		this.connector = connector;
 		this.repository = repository;
+		this.task = task;
+		this.connector = connector;
 	}
 
 	@Override
@@ -39,11 +50,11 @@ public class UpdateRepositoryConfigurationJob extends TaskJob {
 	}
 
 	@Override
-	protected IStatus run(IProgressMonitor monitor) {
+	protected IStatus run(@NonNull IProgressMonitor monitor) {
 		monitor.beginTask(Messages.UpdateRepositoryConfigurationJob_Receiving_configuration, 100);
 		try {
 			try {
-				connector.updateRepositoryConfiguration(repository, subMonitorFor(monitor, 100));
+				connector.updateRepositoryConfiguration(repository, task, subMonitorFor(monitor, 100));
 			} catch (CoreException e) {
 				error = e.getStatus();
 			}
