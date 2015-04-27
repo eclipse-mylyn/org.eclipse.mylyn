@@ -18,7 +18,7 @@ import org.osgi.framework.Version;
  */
 public class GerritCapabilities {
 
-	private static final Version VERSION_2_10_0 = new Version(2, 10, 0);
+	private static final Version VERSION_2_11_0 = new Version(2, 11, 0);
 
 	private final Version version;
 
@@ -30,6 +30,6 @@ public class GerritCapabilities {
 	 * Returns true, if this version of Gerrit has been tested with the connector.
 	 */
 	public boolean isSupported() {
-		return version.compareTo(VERSION_2_10_0) < 0;
+		return version.compareTo(VERSION_2_11_0) < 0;
 	}
 }
