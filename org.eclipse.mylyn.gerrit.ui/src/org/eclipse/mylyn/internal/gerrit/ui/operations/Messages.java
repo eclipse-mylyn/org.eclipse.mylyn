@@ -40,8 +40,6 @@ public class Messages extends NLS {
 
 	public static String CherryPickDialog_Cherry_Pick_Commit_Message;
 
-	public static String CherryPickDialog_Cherry_Pick_Commit_Message_Template;
-
 	public static String RebaseDialog_Rebase_Patch_Set;
 
 	public static String RebaseDialog_Rebase_patch_set_X;
