@@ -44,6 +44,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritLoginException;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritRestClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritSystemInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
@@ -247,24 +248,25 @@ public class GerritConnector extends ReviewsConnector {
 			monitor.beginTask(Messages.GerritConnector_Executing_query, IProgressMonitor.UNKNOWN);
 			GerritClient client = getClient(repository);
 			client.refreshConfigOnce(monitor);
+			GerritRestClient restClient = client.getRestClient();
 
 			List<GerritQueryResult> result = null;
 			if (GerritQuery.ALL_OPEN_CHANGES.equals(query.getAttribute(GerritQuery.TYPE))) {
-				result = client.queryAllReviews(monitor);
+				result = restClient.queryAllReviews(monitor);
 			} else if (GerritQuery.MY_CHANGES.equals(query.getAttribute(GerritQuery.TYPE))) {
-				result = client.queryMyReviews(monitor);
+				result = restClient.queryMyReviews(monitor);
 			} else if (GerritQuery.MY_WATCHED_CHANGES.equals(query.getAttribute(GerritQuery.TYPE))) {
-				result = client.queryWatchedReviews(monitor);
+				result = restClient.queryWatchedReviews(monitor);
 			} else if (GerritQuery.CUSTOM.equals(query.getAttribute(GerritQuery.TYPE))) {
 				String queryString = query.getAttribute(GerritQuery.QUERY_STRING);
-				result = client.executeQuery(monitor, queryString);
+				result = restClient.executeQuery(monitor, queryString);
 			} else if (GerritQuery.OPEN_CHANGES_BY_PROJECT.equals(query.getAttribute(GerritQuery.TYPE))) {
 				String project = query.getAttribute(GerritQuery.PROJECT);
-				result = client.queryByProject(monitor, project);
+				result = restClient.queryByProject(monitor, project);
 			} else {
 				String queryString = query.getAttribute(GerritQuery.QUERY_STRING);
 				if (StringUtils.isNotBlank(queryString)) {
-					result = client.executeQuery(monitor, queryString);
+					result = restClient.executeQuery(monitor, queryString);
 				}
 			}
 

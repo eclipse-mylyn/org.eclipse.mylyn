@@ -82,8 +82,8 @@ public class GerritClient29 extends GerritClient {
 			throw new GerritException(NOT_SIGNED_IN, -32603);
 		}
 		String query = "/accounts/self"; //$NON-NLS-1$/
-		org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo accountInfo = executeGetRestRequest(query,
-				org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo.class, monitor);
+		org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo accountInfo = getRestClient().executeGetRestRequest(
+				query, org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo.class, monitor);
 
 		Account account = new Account(new Account.Id(accountInfo.getId()));
 		account.setFullName(accountInfo.getName());
@@ -97,7 +97,7 @@ public class GerritClient29 extends GerritClient {
 		final PatchSet.Id id = new PatchSet.Id(new Change.Id(id(reviewId)), patchSetId);
 		final String uri = "/a/changes/" + id.getParentKey().get() + "/revisions/" + id.get() + "/rebase"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-		executePostRestRequest(uri, new ChangeInfo28(), ChangeInfo28.class, new ErrorHandler() {
+		getRestClient().executePostRestRequest(uri, new ChangeInfo28(), ChangeInfo28.class, new ErrorHandler() {
 			@Override
 			public void handleError(HttpMethodBase method) throws GerritException {
 				String errorMsg = getResponseBodyAsString(method);
@@ -216,7 +216,8 @@ public class GerritClient29 extends GerritClient {
 
 		List<PatchSet> patchSets = new ArrayList<PatchSet>();
 		String query = "/changes/?q=" + changeInfoId + "+change:" + reviewId + "&o=ALL_REVISIONS"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		ChangeInfo28[] changeInfo = (ChangeInfo28[]) executeGetRestRequest(query, ChangeInfo28[].class, monitor);
+		ChangeInfo28[] changeInfo = (ChangeInfo28[]) getRestClient().executeGetRestRequest(query, ChangeInfo28[].class,
+				monitor);
 
 		for (ChangeInfo element : changeInfo) {
 			for (Entry<String, RevisionInfo> revisionInfo : element.getRevisions().entrySet()) {
@@ -238,8 +239,8 @@ public class GerritClient29 extends GerritClient {
 
 	private List<SubmitRecord> currentSubmitRecord(String uri, IProgressMonitor monitor) throws GerritException {
 		List<SubmitRecord> submitRecordList = new ArrayList<SubmitRecord>();
-		SubmitRecord[] submitRecordArray = executePostRestRequest(uri, new SubmitRecord(), SubmitRecord[].class,
-				new ErrorHandler() {
+		SubmitRecord[] submitRecordArray = getRestClient().executePostRestRequest(uri, new SubmitRecord(),
+				SubmitRecord[].class, new ErrorHandler() {
 					@Override
 					public void handleError(HttpMethodBase method) throws GerritException {
 						String errorMsg = getResponseBodyAsString(method);
@@ -287,7 +288,8 @@ public class GerritClient29 extends GerritClient {
 	public ChangeDetailX getChangeDetail(int reviewId, IProgressMonitor monitor) throws GerritException {
 		ChangeDetailX changeDetail = null;
 		String query = "/changes/" + Integer.toString(reviewId) + "/detail/?o=ALL_REVISIONS&o=MESSAGES"; //$NON-NLS-1$//$NON-NLS-2$
-		ChangeInfo28 changeInfo = (ChangeInfo28) executeGetRestRequest(query, ChangeInfo28.class, monitor);
+		ChangeInfo28 changeInfo = (ChangeInfo28) getRestClient().executeGetRestRequest(query, ChangeInfo28.class,
+				monitor);
 
 		List<PatchSet> patchSets = getPatchSets(changeInfo.getChangeId(), reviewId, monitor);
 
@@ -362,7 +364,7 @@ public class GerritClient29 extends GerritClient {
 	private RelatedChangesInfo getRelatedChanges(final int reviewId, String revisionId, IProgressMonitor monitor)
 			throws GerritException {
 		String query = "/changes/" + Integer.toString(reviewId) + "/revisions/" + revisionId + "/related"; //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
-		RelatedChangesInfo relatedChangesInfo = (RelatedChangesInfo) executeGetRestRequest(query,
+		RelatedChangesInfo relatedChangesInfo = (RelatedChangesInfo) getRestClient().executeGetRestRequest(query,
 				RelatedChangesInfo.class, monitor);
 		return relatedChangesInfo;
 	}
@@ -420,7 +422,7 @@ public class GerritClient29 extends GerritClient {
 			uri = uri.concat("/" + uuid); //$NON-NLS-1$
 		}
 
-		executePutRestRequest(uri, commentInput, CommentInput.class, null/*no error handler*/, monitor);
+		getRestClient().executePutRestRequest(uri, commentInput, CommentInput.class, null, monitor);
 
 		return comment;
 	}
@@ -472,7 +474,7 @@ public class GerritClient29 extends GerritClient {
 		String uri = "/changes/" + Integer.toString(patchkey.getParentKey().getParentKey().get()) //$NON-NLS-1$
 				+ "/revisions/" + patchkey.getParentKey().get() + "/drafts/" + uuid; //$NON-NLS-1$ //$NON-NLS-2$
 
-		executeDeleteRestRequest(uri, commentInput, CommentInput.class, null/*no error handler*/, monitor);
+		getRestClient().executeDeleteRestRequest(uri, commentInput, CommentInput.class, null, monitor);
 		return null;
 	}
 
@@ -495,8 +497,8 @@ public class GerritClient29 extends GerritClient {
 		}
 		String st = URIUtil.encodeQuery(account);
 		final String uri = "/accounts/" + st; //$NON-NLS-1$
-		org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo accountInfo = executeGetRestRequest(uri,
-				org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo.class, monitor);
+		org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo accountInfo = getRestClient().executeGetRestRequest(
+				uri, org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo.class, monitor);
 		return accountInfo;
 	}
 

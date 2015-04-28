@@ -179,13 +179,13 @@ public class GerritClientTest extends TestCase {
 
 	private List<GerritQueryResult> executeQuery(String query) throws GerritException {
 		List<GerritQueryResult> results = null;
-		results = client.executeQuery(new NullProgressMonitor(), query);
+		results = client.getRestClient().executeQuery(new NullProgressMonitor(), query);
 		return results;
 	}
 
 	private List<GerritQueryResult> executeQuery(String query, String option) throws GerritException {
 		List<GerritQueryResult> results = null;
-		results = client.executeQuery(new NullProgressMonitor(), query, option);
+		results = client.getRestClient().executeQuery(new NullProgressMonitor(), query, option);
 		return results;
 	}
 
@@ -225,11 +225,11 @@ public class GerritClientTest extends TestCase {
 	}
 
 	private List<GerritQueryResult> executeQueryRest(String query) throws GerritException {
-		return client.executeQueryRest(new NullProgressMonitor(), query);
+		return client.getRestClient().executeQuery(new NullProgressMonitor(), query);
 	}
 
 	private List<GerritQueryResult> executeQueryRest(String query, String option) throws GerritException {
-		return client.executeQueryRest(new NullProgressMonitor(), query, option);
+		return client.getRestClient().executeQuery(new NullProgressMonitor(), query, option);
 	}
 
 	@Test
