@@ -112,8 +112,7 @@ public class GerritHtmlProcessor {
 			Matcher m = p.matcher(token);
 			if (m.find()) {
 				token = token.substring(m.toMatchResult().group(0).length());
-				// remove closing }
-				token = token.substring(0, token.length() - 1);
+				token = removeExcessJson(token);
 				this.config = gerritConfigFromString(token);
 			} else if (token.startsWith(configXsrfToken)) {
 				token = token.substring(configXsrfToken.length());
@@ -127,5 +126,17 @@ public class GerritHtmlProcessor {
 				this.xGerritAuth = token;
 			}
 		}
+	}
+
+	/**
+	 * Remove everything after second to last '}'
+	 * 
+	 * @param token
+	 *            a non-parsable Json string of the form '{ ... }}' or '{ ... } ...}' where '...' is any valid JSON
+	 */
+	private String removeExcessJson(String token) {
+		int lastCurlyIndex = token.lastIndexOf("}"); //$NON-NLS-1$
+		int secondLastCurlyIndex = token.lastIndexOf("}", lastCurlyIndex - 1); //$NON-NLS-1$
+		return token.substring(0, secondLastCurlyIndex + 1);
 	}
 }
