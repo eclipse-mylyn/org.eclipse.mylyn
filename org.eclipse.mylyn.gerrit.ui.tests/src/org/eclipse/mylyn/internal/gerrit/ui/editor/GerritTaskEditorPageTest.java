@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.internal.gerrit.ui.editor;
 
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -114,7 +113,7 @@ public class GerritTaskEditorPageTest extends TestCase {
 				return o.getId();
 			}
 		});
-		assertThat("Missing descriptors. Found " + ids, descriptors.size(), greaterThanOrEqualTo(7));
+		assertTrue("Missing descriptors. Found " + ids, descriptors.size() >= 7);
 	}
 
 	public void testCreateAttributesSectionOverlayAttributes() {
