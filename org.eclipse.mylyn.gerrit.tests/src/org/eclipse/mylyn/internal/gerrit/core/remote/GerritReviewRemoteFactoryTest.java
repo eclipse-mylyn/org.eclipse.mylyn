@@ -66,6 +66,8 @@ import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.junit.Test;
 
 import com.google.common.base.CharMatcher;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.gerrit.common.data.ApprovalDetail;
 import com.google.gerrit.common.data.ChangeDetail;
 import com.google.gerrit.common.data.PatchSetDetail;
@@ -135,13 +137,6 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(reviewHarness.getRepository().getAccount().getDisplayName(), is("tests"));
 		assertThat(reviewHarness.getRepository().getAccount().getEmail(), is("tests@mylyn.eclipse.org"));
 		assertThat(reviewHarness.getRepository().getUsers().get(0), is(reviewHarness.getRepository().getAccount()));
-	}
-
-	@Test
-	public void testUsers() throws Exception {
-		assertThat(reviewHarness.getRepository().getUsers().size(), is(1));
-		assertThat(reviewHarness.getRepository().getUsers().get(0).getDisplayName(), is("tests"));
-		assertThat(reviewHarness.getRepository().getUsers().get(0).getEmail(), is("tests@mylyn.eclipse.org"));
 	}
 
 	@Test
@@ -609,6 +604,21 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 		assertThat(commentByGerrit.getDescription().substring(0, 58),
 				is("Change cannot be merged due to unsatisfiable dependencies."));
+
+		// After running this test, we should have at least the following users
+		assertThat(findUser("tests").getEmail(), is("tests@mylyn.eclipse.org"));
+		assertThat(findUser("admin").getEmail(), is("admin@mylyn.eclipse.org"));
+		IUser systemUser = findUser("Gerrit Code Review");
+		assertThat(systemUser.getEmail(), nullValue());
+		assertThat(systemUser.getId(), is("-2"));
+	}
+
+	private IUser findUser(final String displayName) {
+		return Iterables.find(reviewHarness.getRepository().getUsers(), new Predicate<IUser>() {
+			public boolean apply(IUser user) {
+				return user.getDisplayName().equals(displayName);
+			}
+		});
 	}
 
 	@Test
