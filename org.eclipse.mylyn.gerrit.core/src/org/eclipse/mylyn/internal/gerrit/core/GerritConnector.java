@@ -37,6 +37,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritAuthenticationState;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritCapabilities;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClientStateListener;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
@@ -101,11 +102,6 @@ public class GerritConnector extends ReviewsConnector {
 	 */
 	public static final String CONNECTOR_KIND = "org.eclipse.mylyn.gerrit"; //$NON-NLS-1$
 
-	/**
-	 * Label for the connector.
-	 */
-	public static final String CONNECTOR_LABEL = "Gerrit Code Review"; //$NON-NLS-1$
-
 	public static final String KEY_REPOSITORY_CONFIG = CONNECTOR_KIND + ".config"; //$NON-NLS-1$
 
 	public static final String KEY_REPOSITORY_AUTH = CONNECTOR_KIND + ".auth"; //$NON-NLS-1$
@@ -156,7 +152,8 @@ public class GerritConnector extends ReviewsConnector {
 
 	@Override
 	public String getLabel() {
-		return Messages.GerritConnector_Label;
+		return NLS.bind(Messages.GerritConnector_Label, GerritCapabilities.MINIMUM_SUPPORTED_VERSION,
+				GerritCapabilities.MAXIMUM_SUPPORTED_VERSION);
 	}
 
 	@Override
