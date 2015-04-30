@@ -266,7 +266,7 @@ public class GerritClient29 extends GerritClient {
 					}
 				}, monitor);
 		for (SubmitRecord element : submitRecordArray) {
-			List<SubmitRecord.Label> list = null;
+			List<SubmitRecord.Label> list = Collections.emptyList();
 			if (element.getStatus().equalsIgnoreCase("OK")) { //$NON-NLS-1$
 				list = element.createLabel(element, element.getOkMap(), OK);
 			} else if (element.getStatus().equalsIgnoreCase("NOT_READY")) { //$NON-NLS-1$
