@@ -1304,7 +1304,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISe
 				@Override
 				public void attributeChanged(TaskDataModelEvent event) {
 					IManagedForm form = getManagedForm();
-					if (form != null) {
+					if (form != null && !form.isDirty()) {
 						form.dirtyStateChanged();
 					}
 				}
