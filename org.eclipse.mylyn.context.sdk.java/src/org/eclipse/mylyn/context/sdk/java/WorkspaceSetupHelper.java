@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.context.sdk.java;
 
+import static org.junit.Assert.assertFalse;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -135,7 +137,15 @@ public class WorkspaceSetupHelper {
 
 	public static void clearWorkspace() throws CoreException, IOException {
 		isSetup = false;
-		ResourcesPlugin.getWorkspace().getRoot().delete(true, true, new NullProgressMonitor());
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		root.delete(true, true, new NullProgressMonitor());
+		File workspace = root.getLocation().toFile();
+		File mylynMetadata = new File(workspace, ".metadata/.mylyn");
+		if (mylynMetadata.isDirectory()) {
+			CommonTestUtil.deleteFolderRecursively(mylynMetadata);
+			assertFalse("Failed to delete test workspace metadata at " + mylynMetadata.getAbsolutePath(),
+					mylynMetadata.exists());
+		}
 		clearDoiModel();
 	}
 
