@@ -185,6 +185,9 @@ public class GradientCanvas extends Canvas {
 			return;
 		}
 		Rectangle carea = getClientArea();
+		if (carea.width <= 0 || carea.height <= 0) {
+			return;
+		}
 		Image buffer = new Image(getDisplay(), carea.width, carea.height);
 		buffer.setBackground(getBackground());
 		GC igc = new GC(buffer);
