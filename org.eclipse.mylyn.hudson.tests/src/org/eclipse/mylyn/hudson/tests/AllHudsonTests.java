@@ -11,11 +11,15 @@
 
 package org.eclipse.mylyn.hudson.tests;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
@@ -26,6 +30,7 @@ import org.eclipse.mylyn.hudson.tests.core.HudsonConnectorTest;
 import org.eclipse.mylyn.hudson.tests.core.HudsonServerBehaviourTest;
 import org.eclipse.mylyn.hudson.tests.integration.HudsonIntegrationTest;
 import org.eclipse.mylyn.hudson.tests.support.HudsonFixture;
+import org.eclipse.mylyn.internal.hudson.core.HudsonCorePlugin;
 
 /**
  * @author Steffen Pingel
@@ -51,7 +56,14 @@ public class AllHudsonTests {
 		if (!configuration.isLocalOnly()) {
 			// network tests
 			suite.addTestSuite(HudsonValidationTest.class);
-			List<HudsonFixture> fixtures = configuration.discover(HudsonFixture.class, "hudson");
+			List<HudsonFixture> fixtures;
+			try {
+				fixtures = configuration.discover(HudsonFixture.class, "hudson");
+			} catch (RuntimeException e) {
+				StatusHandler.log(new Status(IStatus.ERROR, HudsonCorePlugin.ID_PLUGIN,
+						"No hudson fixtures found, will look for jenkins fixtures", e));
+				fixtures = new ArrayList<HudsonFixture>();
+			}
 			fixtures.addAll(configuration.discover(HudsonFixture.class, "jenkins"));
 			for (HudsonFixture fixture : fixtures) {
 				if (fixture.isExcluded()

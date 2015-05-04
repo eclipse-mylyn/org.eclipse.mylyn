@@ -13,6 +13,9 @@
 
 package org.eclipse.mylyn.hudson.tests.support;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.sdk.util.FixtureConfiguration;
 import org.eclipse.mylyn.commons.sdk.util.RepositoryTestFixture;
@@ -28,8 +31,17 @@ import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
  */
 public class HudsonFixture extends RepositoryTestFixture {
 
-	public static final HudsonFixture DEFAULT = TestConfiguration.getDefault().discoverDefault(HudsonFixture.class,
-			"hudson");
+	public static final HudsonFixture DEFAULT = discoverDefault();
+
+	private static HudsonFixture discoverDefault() {
+		try {
+			return TestConfiguration.getDefault().discoverDefault(HudsonFixture.class, "hudson");
+		} catch (RuntimeException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, HudsonCorePlugin.ID_PLUGIN,
+					"No default hudson fixture found, will look for default jenkins fixture", e));
+		}
+		return TestConfiguration.getDefault().discoverDefault(HudsonFixture.class, "jenkins");
+	}
 
 	private static HudsonFixture current;
 
