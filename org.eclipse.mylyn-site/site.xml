@@ -60,6 +60,9 @@
    <feature url="features/org.eclipse.mylyn.team_feature_0.0.0.jar" id="org.eclipse.mylyn.team_feature" version="0.0.0">
       <category name="Integration"/>
    </feature>
+   <feature url="features/org.eclipse.mylyn.team.cvs_0.0.0.jar" id="org.eclipse.mylyn.team.cvs" version="0.0.0">
+      <category name="Integration"/>
+   </feature>
    <feature url="features/org.eclipse.mylyn.subclipse_0.0.0.jar" id="org.eclipse.mylyn.subclipse" version="0.0.0">
       <category name="Integration"/>
    </feature>
