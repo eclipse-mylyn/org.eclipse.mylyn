@@ -346,12 +346,17 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	@Override
 	public void characters(String text) {
+		text = escapeAmpersand(text);
 		assertOpenBlock();
 		try {
 			currentBlock.write(text);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private String escapeAmpersand(String text) {
+		return text.replace("&","&amp;"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override
