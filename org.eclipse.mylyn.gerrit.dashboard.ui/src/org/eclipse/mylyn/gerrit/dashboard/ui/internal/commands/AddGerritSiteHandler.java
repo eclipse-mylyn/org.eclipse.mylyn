@@ -57,7 +57,7 @@ public class AddGerritSiteHandler extends AbstractHandler {
 		String menuItemText = ""; //$NON-NLS-1$
 		fServerUtil = GerritServerUtility.getInstance();
 		Object obj = aEvent.getTrigger();
-		GerritTableView reviewTableView = GerritTableView.getActiveView();
+		GerritTableView reviewTableView = GerritTableView.getActiveView(true);
 
 		if (obj instanceof Event) {
 			Event ev = (Event) obj;

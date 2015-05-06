@@ -38,7 +38,7 @@ public class AllOpenReviewsHandler extends AbstractHandler {
 	 * @see org.eclipse.core.commands.IHandler#execute(ExecutionEvent)
 	 */
 	public Object execute(final ExecutionEvent aEvent) {
-		GerritTableView reviewTableView = GerritTableView.getActiveView();
+		GerritTableView reviewTableView = GerritTableView.getActiveView(true);
 
 		// see http://gerrit-documentation.googlecode.com/svn/Documentation/2.5.2/user-search.html
 		//for All > Open--> status:open (or is:open)

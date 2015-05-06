@@ -35,7 +35,7 @@ public class MyChangesReviewsHandler extends AbstractHandler {
 	public Object execute(ExecutionEvent aEvent) throws ExecutionException {
 		// see http://gerrit-documentation.googlecode.com/svn/Documentation/2.5.2/user-search.html
 		//for MY > Changes--> has:draft
-		GerritTableView reviewTableView = GerritTableView.getActiveView();
+		GerritTableView reviewTableView = GerritTableView.getActiveView(true);
 
 		reviewTableView.processCommands(GerritQuery.MY_CHANGES);
 

@@ -38,7 +38,7 @@ public class RestAPIHandler extends AbstractHandler {
 	 */
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		GerritTableView view = GerritTableView.getActiveView();
+		GerritTableView view = GerritTableView.getActiveView(true);
 
 		if (view.isGerritVersionBefore_2_5()) {
 			String msg = NLS.bind(Messages.RestAPIHandler_selectedServer, view.getlastGerritServerVersion().toString());

@@ -49,7 +49,7 @@ public class AdjustMyStarredHandler extends AbstractHandler {
 	@SuppressWarnings("restriction")
 	@Override
 	public Object execute(ExecutionEvent aEvent) throws ExecutionException {
-		final GerritTableView reviewTableView = GerritTableView.getActiveView();
+		final GerritTableView reviewTableView = GerritTableView.getActiveView(true);
 		final TableViewer viewer = reviewTableView.getTableViewer();
 		final ISelection tableSelection = viewer.getSelection();
 
@@ -96,11 +96,12 @@ public class AdjustMyStarredHandler extends AbstractHandler {
 
 	@Override
 	public boolean isEnabled() {
-		final GerritTableView reviewTableView = GerritTableView.getActiveView();
+		final GerritTableView reviewTableView = GerritTableView.getActiveView(false);
+		if (reviewTableView == null) {
+			return false;
+		}
 		final TableViewer viewer = reviewTableView.getTableViewer();
-		final ISelection tableSelection = viewer.getSelection();
-
-		if (tableSelection.isEmpty()) {
+		if (viewer.getSelection().isEmpty()) {
 			return false;
 		}
 

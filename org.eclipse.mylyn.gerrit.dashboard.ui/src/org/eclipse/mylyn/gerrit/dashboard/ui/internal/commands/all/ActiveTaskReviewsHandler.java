@@ -28,7 +28,7 @@ public class ActiveTaskReviewsHandler extends AbstractHandler {
 	public Object execute(ExecutionEvent aEvent) throws ExecutionException {
 		ITask activeTask = TasksUi.getTaskActivityManager().getActiveTask();
 		if (activeTask != null) {
-			GerritTableView reviewTableView = GerritTableView.getActiveView();
+			GerritTableView reviewTableView = GerritTableView.getActiveView(true);
 			String key = activeTask.getTaskKey();
 			if (key == null) {
 				key = activeTask.getTaskId();

@@ -33,7 +33,7 @@ public class MyDraftsReviewsHandler extends AbstractHandler {
 	 */
 	@Override
 	public Object execute(ExecutionEvent aEvent) throws ExecutionException {
-		GerritTableView reviewTableView = GerritTableView.getActiveView();
+		GerritTableView reviewTableView = GerritTableView.getActiveView(true);
 
 		// see http://gerrit-documentation.googlecode.com/svn/Documentation/2.5.2/user-search.html
 		//for MY > Drafts --> is:draft

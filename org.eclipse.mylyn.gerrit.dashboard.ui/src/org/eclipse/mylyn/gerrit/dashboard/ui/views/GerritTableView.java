@@ -147,8 +147,6 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 
 	private RepositoryQuery fCurrentQuery = null;
 
-	private static GerritTableView rtv = null;
-
 	private Label fRepositoryVersionResulLabel;
 
 	private Label fReviewsTotalLabel;
@@ -200,16 +198,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 		}
 	}
 
-	// ------------------------------------------------------------------------
-	// Constructor and life cycle
-	// ------------------------------------------------------------------------
-
-	/**
-	 * The constructor.
-	 */
 	public GerritTableView() {
-		super();
-		rtv = this;
 	}
 
 	public boolean setConnector(GerritConnector aConnector) {
@@ -243,7 +232,6 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 		TasksUiPlugin.getTaskList().removeChangeListener(this);
 		fTableRefreshJob.cancel();
 		cleanJobs();
-		rtv = null;
 	}
 
 	private void cleanJobs() {
@@ -495,36 +483,33 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 		return fTaskRepository;
 	}
 
-	public static GerritTableView getActiveView() {
-		IViewPart viewPart = null;
-		if (rtv != null) {
-			return rtv;
-		} else {
-			IWorkbench workbench = GerritUi.getDefault().getWorkbench();
-			IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-			IWorkbenchPage page = null;
-			if (window != null) {
-				page = workbench.getActiveWorkbenchWindow().getActivePage();
-			}
-
+	/**
+	 * @param create
+	 *            whether to create the view if it doesn't already exist
+	 */
+	public static GerritTableView getActiveView(boolean create) {
+		IWorkbench workbench = GerritUi.getDefault().getWorkbench();
+		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+		if (window != null) {
+			IWorkbenchPage page = workbench.getActiveWorkbenchWindow().getActivePage();
 			if (page != null) {
-				viewPart = page.findView(VIEW_ID);
-				// The following can occurs in LINUX environment since
-				// killing the window call the dispose() method
-
-				if (viewPart == null) {
-					try {
-						viewPart = page.showView(VIEW_ID, null, org.eclipse.ui.IWorkbenchPage.VIEW_CREATE);
-					} catch (PartInitException e) {
-						StatusHandler.log(new Status(IStatus.WARNING, GerritCorePlugin.PLUGIN_ID, e.getMessage(), e));
-					}
-					GerritUi.Ftracer.traceWarning("getActiveView() SHOULD (JUST) CREATED A NEW Table:" + viewPart);
-
+				IViewPart viewPart = page.findView(VIEW_ID);
+				if (viewPart == null && create) {
+					viewPart = createView(page);
 				}
+				return (GerritTableView) viewPart;
 			}
-
-			return (GerritTableView) viewPart;
 		}
+		return null;
+	}
+
+	private static IViewPart createView(IWorkbenchPage page) {
+		try {
+			return page.showView(VIEW_ID, null, org.eclipse.ui.IWorkbenchPage.VIEW_CREATE);
+		} catch (PartInitException e) {
+			StatusHandler.log(new Status(IStatus.WARNING, GerritCorePlugin.PLUGIN_ID, e.getMessage(), e));
+		}
+		return null;
 	}
 
 	/**
@@ -855,7 +840,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 		}
 
 		// Format the query id
-		String queryId = rtv.getTitle() + " - " + queryType; //$NON-NLS-1$
+		String queryId = getTitle() + " - " + queryType; //$NON-NLS-1$
 
 		RepositoryQuery query = null;
 

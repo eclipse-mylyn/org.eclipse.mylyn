@@ -61,7 +61,7 @@ public class SelectReviewSiteHandler extends AbstractHandler {
 		GerritPlugin.Ftracer.traceInfo("Collecting the gerrit review locations"); //$NON-NLS-1$
 
 		// Open the review table first;
-		final GerritTableView reviewTableView = GerritTableView.getActiveView();
+		final GerritTableView reviewTableView = GerritTableView.getActiveView(true);
 
 		reviewTableView.openView();
 
