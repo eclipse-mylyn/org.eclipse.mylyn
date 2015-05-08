@@ -43,10 +43,10 @@
     <tycho-version>0.22.0</tycho-version>
     <tycho-extras-version>${tycho-version}</tycho-extras-version>
     <egit-site>file:/${basedir}/../../egit/org.eclipse.egit.repository/target/repository</egit-site>
-    <platform-version-name>kepler</platform-version-name>
+    <platform-version-name>mars</platform-version-name>
     <mylyn-site>http://download.eclipse.org/mylyn/releases/3.7</mylyn-site>
     <eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
-	<orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/R20130827064939/repository/</orbit-site>
+    <orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/S20150202203538/repository/</orbit-site>
     <download-publish-path>/home/data/httpd/download.eclipse.org/egit/github/updates-nightly</download-publish-path>
   </properties>
 
@@ -159,11 +159,6 @@
 							<environment>
 								<os>macosx</os>
 								<ws>cocoa</ws>
-								<arch>x86</arch>
-							</environment>
-							<environment>
-								<os>macosx</os>
-								<ws>cocoa</ws>
 								<arch>x86_64</arch>
 							</environment>
 						</environments>
@@ -257,7 +252,6 @@
       </activation>
       <properties>
         <eclipse-site>http://download.eclipse.org/releases/juno</eclipse-site>
-        <platform-version>[3.8,3.9)</platform-version>
       </properties>
     </profile>
     <profile>
@@ -270,7 +264,30 @@
       </activation>
       <properties>
         <eclipse-site>http://download.eclipse.org/releases/kepler</eclipse-site>
-        <platform-version>[3.9,4.0)</platform-version>
+      </properties>
+    </profile>
+    <profile>
+      <id>platform-luna</id>
+      <activation>
+        <property>
+          <name>platform-version-name</name>
+          <value>luna</value>
+        </property>
+      </activation>
+      <properties>
+        <eclipse-site>http://download.eclipse.org/releases/luna</eclipse-site>
+      </properties>
+    </profile>
+    <profile>
+      <id>platform-mars</id>
+      <activation>
+        <property>
+          <name>platform-version-name</name>
+          <value>mars</value>
+        </property>
+      </activation>
+      <properties>
+        <eclipse-site>http://download.eclipse.org/releases/mars</eclipse-site>
       </properties>
     </profile>
 	<profile>
