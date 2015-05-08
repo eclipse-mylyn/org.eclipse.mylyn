@@ -66,10 +66,11 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
     branch      => "5.0",
     envversion  => "5.0rc3",
   }
-
+ 
   bugzilla::site { "bugzilla-master":
     major       => "5",
     minor       => "1",
+    branch      => "master",
     branchTag   => "HEAD",
     envversion  => "5.1",
     envinfo     => "Master",
@@ -79,21 +80,23 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
  * REST sites
  *******************************************************************************/
 
-  bugzilla::site { "bugzilla-5.0rc3-rest":
+  bugzilla::site { "bugzilla-rest-5.0-head":
     major           => "5",
     minor           => "0",
     branch          => "5.0",
-    branchTag       => "bugzilla-5.0rc3",
+    branchTag       => "HEAD",
     envtype         => "bugzillaREST",
     rest_enabled    => true,
     envdefault_rest => true,
-    envversion      => "5.0rc3",
+    envversion      => "5.0rc3+",
     testdataVersion => "Version1",
   }
+  
 
   bugzilla::site { "bugzilla-rest-master":
     major           => "5",
     minor           => "1",
+    branch          => "master",
     branchTag       => "HEAD",
     envversion      => "5.1",
     envinfo         => "Master",

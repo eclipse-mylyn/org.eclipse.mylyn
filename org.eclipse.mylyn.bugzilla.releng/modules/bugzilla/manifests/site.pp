@@ -132,7 +132,7 @@ define bugzilla::site (
     }
 
     exec { "$branch $branchTag git clone $version":
-      command => "git clone http://git.mozilla.org/bugzilla/bugzilla $base/$version",
+      command => "git clone -b $branch http://git.mozilla.org/bugzilla/bugzilla $base/$version",
       cwd     => "$base",
       user => "$userOwner",
       timeout => 300,

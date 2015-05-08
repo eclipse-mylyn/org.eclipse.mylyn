@@ -26,7 +26,6 @@ import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.ParameterResp
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Product;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.ProductResponse;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.RestResponse;
-import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.RestResult;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.VersionResponse;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
@@ -49,10 +48,10 @@ public class BugzillaRestClient {
 
 	public BugzillaRestVersion getVersion(IOperationMonitor monitor) throws BugzillaRestException {
 
-		RestResult<VersionResponse> versionResponse = new BugzillaRestUnauthenticatedGetRequest<RestResult<VersionResponse>>(
-				client, "/version", new TypeToken<RestResult<VersionResponse>>() {
+		VersionResponse versionResponse = new BugzillaRestUnauthenticatedGetRequest<VersionResponse>(client, "/version",
+				new TypeToken<VersionResponse>() {
 				}).run(monitor);
-		return new BugzillaRestVersion(versionResponse.getResult().getVersion());
+		return new BugzillaRestVersion(versionResponse.getVersion());
 	}
 
 	public boolean validate(IOperationMonitor monitor) throws BugzillaRestException {
@@ -70,15 +69,15 @@ public class BugzillaRestClient {
 			return config;
 		} catch (Exception e) {
 			StatusHandler
-			.log(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, "Could not get the Configuration", e)); //$NON-NLS-1$
+					.log(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, "Could not get the Configuration", e)); //$NON-NLS-1$
 			return null;
 		}
 	}
 
-	public <R extends RestResult<RestResponse<E>>, E extends Named> Map<String, E> retrieveItems(
-			IOperationMonitor monitor, String path, TypeToken typeToken) throws BugzillaRestException {
+	public <R extends RestResponse<E>, E extends Named> Map<String, E> retrieveItems(IOperationMonitor monitor,
+			String path, TypeToken typeToken) throws BugzillaRestException {
 		R response = new BugzillaRestAuthenticatedGetRequest<R>(client, path, typeToken).run(monitor);
-		E[] members = response.getResult().getArray();
+		E[] members = response.getArray();
 		return Maps.uniqueIndex(Lists.newArrayList(members), new Function<E, String>() {
 			public String apply(E input) {
 				return input.getName();
@@ -87,19 +86,19 @@ public class BugzillaRestClient {
 	}
 
 	private Map<String, Field> getFields(IOperationMonitor monitor) throws BugzillaRestException {
-		return retrieveItems(monitor, "/field/bug?", new TypeToken<RestResult<FieldResponse>>() {
+		return retrieveItems(monitor, "/field/bug?", new TypeToken<FieldResponse>() {
 		});
 	}
 
 	private Map<String, Product> getProducts(IOperationMonitor monitor) throws BugzillaRestException {
-		return retrieveItems(monitor, "/product?type=accessible", new TypeToken<RestResult<ProductResponse>>() { //$NON-NLS-1$
+		return retrieveItems(monitor, "/product?type=accessible", new TypeToken<ProductResponse>() { //$NON-NLS-1$
 		});
 	}
 
 	public ParameterResponse getParameters(IOperationMonitor monitor) throws BugzillaRestException {
-		return new BugzillaRestAuthenticatedGetRequest<RestResult<ParameterResponse>>(client, "/parameters?",
-				new TypeToken<RestResult<ParameterResponse>>() {
-		}).run(monitor).getResult();
+		return new BugzillaRestAuthenticatedGetRequest<ParameterResponse>(client, "/parameters?",
+				new TypeToken<ParameterResponse>() {
+				}).run(monitor);
 	}
 
 }

@@ -28,7 +28,6 @@ import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpResponse;
 import org.eclipse.mylyn.commons.repositories.http.core.HttpUtil;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.LoginToken;
-import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.RestResult;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -64,12 +63,12 @@ public class BugzillaRestAuthenticatedGetRequest<T> extends BugzillaRestRequest<
 						new AuthenticationRequest<AuthenticationType<UserCredentials>>(getClient().getLocation(),
 								AuthenticationType.REPOSITORY));
 			} else {
-				TypeToken<RestResult<LoginToken>> type = new TypeToken<RestResult<LoginToken>>() {
+				TypeToken<LoginToken> type = new TypeToken<LoginToken>() {
 				};
 				InputStream is = response.getEntity().getContent();
 				InputStreamReader in = new InputStreamReader(is);
-				RestResult<LoginToken> loginToken = new Gson().fromJson(in, type.getType());
-				((BugzillaRestHttpClient) getClient()).setLoginToken(loginToken.getResult());
+				LoginToken loginToken = new Gson().fromJson(in, type.getType());
+				((BugzillaRestHttpClient) getClient()).setLoginToken(loginToken);
 				getClient().setAuthenticated(true);
 			}
 		} finally {
