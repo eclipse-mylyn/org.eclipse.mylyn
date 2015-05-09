@@ -6,11 +6,13 @@ echo "start1: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 /usr/bin/perl install-module.pl DateTime::TimeZone
 echo "start2: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 /usr/bin/perl install-module.pl Email::Sender
-echo "ende2: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
+echo "start3: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
+/usr/bin/perl install-module.pl Moo
+echo "ende3: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 <% end %>
 <% if  @envversion < "4.1" %>
-echo "start3: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
+echo "start4: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 /usr/bin/perl install-module.pl DBI
-echo "ende3: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
+echo "ende4: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 <% end %>
 echo "Ende1"

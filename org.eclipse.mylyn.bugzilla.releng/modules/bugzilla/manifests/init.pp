@@ -143,7 +143,10 @@ class bugzilla {
     unless  => 'cat /etc/apache2/apache2.conf | grep "#phpmyadmin"'
   }
 
- if $envhost != "mylyn.org"{
+/* lvps92-51-163-75.dedicated.hosteurope.de is the actual hostname for mylyn.org 
+   so we not show the mysql admin for that suite 
+*/
+ if $envhost != "lvps92-51-163-75.dedicated.hosteurope.de"{
     file { "$bugzillaBase/servicephpmyadmin.json":
       source  => "puppet:///modules/bugzilla/servicephpmyadmin.json",		
       owner   => "$userOwner",
