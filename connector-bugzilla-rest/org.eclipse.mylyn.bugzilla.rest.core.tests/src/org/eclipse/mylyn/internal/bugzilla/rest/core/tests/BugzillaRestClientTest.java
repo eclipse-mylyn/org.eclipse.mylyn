@@ -15,6 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ import org.eclipse.mylyn.commons.sdk.util.Junit4TestFixtureRunner.FixtureDefinit
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestClient;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConnector;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestCreateTaskSchema;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestException;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestVersion;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Field;
@@ -42,11 +44,16 @@ import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Product;
 import org.eclipse.mylyn.internal.bugzilla.rest.test.support.BugzillaRestTestFixture;
 import org.eclipse.mylyn.internal.commons.core.operations.NullOperationMonitor;
 import org.eclipse.mylyn.internal.commons.repositories.core.InMemoryCredentialsStore;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
+import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -87,7 +94,7 @@ public class BugzillaRestClientTest {
 
 	@Test
 	public void testGetVersion() throws Exception {
-		BugzillaRestClient client = new BugzillaRestClient(actualFixture.location());
+		BugzillaRestClient client = new BugzillaRestClient(actualFixture.location(), connector);
 		assertNotNull(client.getClient());
 		assertNull(client.getClient().getLoginToken());
 		BugzillaRestVersion version = client.getVersion(new NullOperationMonitor());
@@ -97,7 +104,7 @@ public class BugzillaRestClientTest {
 
 	@Test
 	public void testValidate() throws Exception {
-		BugzillaRestClient client = new BugzillaRestClient(actualFixture.location());
+		BugzillaRestClient client = new BugzillaRestClient(actualFixture.location(), connector);
 		assertNotNull(client.getClient());
 		assertNull(client.getClient().getLoginToken());
 		assertTrue(client.validate(new NullOperationMonitor()));
@@ -119,7 +126,7 @@ public class BugzillaRestClientTest {
 		thrown.expect(BugzillaRestException.class);
 		thrown.expectMessage("Authentication failed");
 		BugzillaRestClient client;
-		client = new BugzillaRestClient(location);
+		client = new BugzillaRestClient(location, connector);
 		assertNotNull(client.getClient());
 		assertNull(client.getClient().getLoginToken());
 		client.validate(new NullOperationMonitor());
@@ -135,7 +142,7 @@ public class BugzillaRestClientTest {
 		thrown.expect(IllegalStateException.class);
 		thrown.expectMessage("Authentication requested without valid credentials");
 		BugzillaRestClient client;
-		client = new BugzillaRestClient(location);
+		client = new BugzillaRestClient(location, connector);
 		assertNotNull(client.getClient());
 		assertNull(client.getClient().getLoginToken());
 		client.validate(new NullOperationMonitor());
@@ -223,4 +230,166 @@ public class BugzillaRestClientTest {
 				taskData.getRoot().toString());
 	}
 
+	@Test
+	public void testPostTaskDataWithoutProduct() throws Exception {
+		final TaskMapping taskMappingInit = new TaskMapping() {
+			@Override
+			public String getSummary() {
+				return "The Summary";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The Description";
+			}
+
+		};
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(actualFixture.repository());
+		TaskData taskData = new TaskData(mapper, actualFixture.repository().getConnectorKind(),
+				actualFixture.repository().getRepositoryUrl(), "");
+		taskDataHandler.initializeTaskData(actualFixture.repository(), taskData, taskMappingInit, null);
+		taskData.getRoot().getAttribute("cf_dropdown").setValue("one");
+		try {
+			connector.getClient(actualFixture.repository()).postTaskData(taskData, null);
+			fail("BugzillaRestException expected, never reach this!");
+		} catch (BugzillaRestException e) {
+			String url = actualFixture.getRepositoryUrl();
+			assertEquals("You must select/enter a product.  (status: Bad Request from "
+					+ url.substring(url.lastIndexOf('/')) + "/rest.cgi/bug)", e.getMessage());
+		}
+	}
+
+	@Test
+	public void testPostTaskDataWithoutMilestone() throws Exception {
+		final TaskMapping taskMappingInit = new TaskMapping() {
+			@Override
+			public String getSummary() {
+				return "The Summary";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The Description";
+			}
+
+			@Override
+			public String getProduct() {
+				return "ManualTest";
+			}
+
+			@Override
+			public String getComponent() {
+				return "ManualC1";
+			}
+
+			@Override
+			public String getVersion() {
+				return "R1";
+			}
+		};
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(actualFixture.repository());
+		TaskData taskData = new TaskData(mapper, actualFixture.repository().getConnectorKind(),
+				actualFixture.repository().getRepositoryUrl(), "");
+		taskDataHandler.initializeTaskData(actualFixture.repository(), taskData, taskMappingInit, null);
+		taskData.getRoot().getAttribute("cf_dropdown").setValue("one");
+		try {
+			connector.getClient(actualFixture.repository()).postTaskData(taskData, null);
+			fail("never reach this!");
+		} catch (BugzillaRestException e) {
+			String url = actualFixture.getRepositoryUrl();
+			assertEquals("You must select/enter a milestone.  (status: Bad Request from "
+					+ url.substring(url.lastIndexOf('/')) + "/rest.cgi/bug)", e.getMessage());
+		}
+	}
+
+	@Test
+	public void testPostTaskData() throws Exception {
+		final TaskMapping taskMappingInit = new TaskMapping() {
+			@Override
+			public String getSummary() {
+				return "The Summary";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The Description";
+			}
+
+			@Override
+			public String getProduct() {
+				return "ManualTest";
+			}
+
+			@Override
+			public String getComponent() {
+				return "ManualC1";
+			}
+
+			@Override
+			public String getVersion() {
+				return "R1";
+			}
+		};
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(actualFixture.repository());
+		TaskData taskData = new TaskData(mapper, actualFixture.repository().getConnectorKind(),
+				actualFixture.repository().getRepositoryUrl(), "");
+		taskDataHandler.initializeTaskData(actualFixture.repository(), taskData, taskMappingInit, null);
+		taskData.getRoot().getAttribute("cf_dropdown").setValue("one");
+		taskData.getRoot()
+				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())
+				.setValue("M2");
+		RepositoryResponse xx = connector.getClient(actualFixture.repository()).postTaskData(taskData, null);
+		assertEquals(ResponseKind.TASK_CREATED, xx.getReposonseKind());
+	}
+
+	@Test
+	public void testPostTaskDataFromTaskdata() throws Exception {
+		final TaskMapping taskMappingInit = new TaskMapping() {
+			@Override
+			public String getSummary() {
+				return "The Summary";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The Description";
+			}
+
+			@Override
+			public String getProduct() {
+				return "ManualTest";
+			}
+
+			@Override
+			public String getComponent() {
+				return "ManualC1";
+			}
+
+			@Override
+			public String getVersion() {
+				return "R1";
+			}
+		};
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(actualFixture.repository());
+		TaskData taskData = new TaskData(mapper, actualFixture.repository().getConnectorKind(),
+				actualFixture.repository().getRepositoryUrl(), "");
+		taskDataHandler.initializeTaskData(actualFixture.repository(), taskData, taskMappingInit, null);
+		taskData.getRoot().getAttribute("cf_dropdown").setValue("one");
+		taskData.getRoot()
+				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())
+				.setValue("M2");
+
+		TaskData taskDataSubmit = new TaskData(mapper, actualFixture.repository().getConnectorKind(),
+				actualFixture.repository().getRepositoryUrl(), "");
+		taskDataHandler.initializeTaskData(actualFixture.repository(), taskDataSubmit, null, null);
+		TaskMapper mapper1 = new TaskMapper(taskData);
+		connector.getTaskMapping(taskDataSubmit).merge(mapper1);
+
+		RepositoryResponse xx = connector.getClient(actualFixture.repository()).postTaskData(taskDataSubmit, null);
+		assertEquals(ResponseKind.TASK_CREATED, xx.getReposonseKind());
+	}
 }

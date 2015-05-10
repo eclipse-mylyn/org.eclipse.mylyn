@@ -15,12 +15,36 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema;
 import org.eclipse.mylyn.tasks.core.data.DefaultTaskSchema;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
+import com.google.common.collect.ImmutableMap;
+
 public class BugzillaRestCreateTaskSchema extends AbstractTaskSchema {
 
 	private static final BugzillaRestCreateTaskSchema instance = new BugzillaRestCreateTaskSchema();
 
 	public static BugzillaRestCreateTaskSchema getDefault() {
 		return instance;
+	}
+
+	private static ImmutableMap<String, String> attribute2FieldMapper = new ImmutableMap.Builder()
+			.put(getDefault().SUMMARY.getKey(), "summary")
+			.put(getDefault().DESCRIPTION.getKey(), "description")
+			.put(getDefault().OPERATION.getKey(), "status")
+			.put(getDefault().PRODUCT.getKey(), "product")
+			.put(getDefault().COMPONENT.getKey(), "component")
+			.put(getDefault().CC.getKey(), "cc")
+			.put(getDefault().SEVERITY.getKey(), "severity")
+			.put(getDefault().PRIORITY.getKey(), "priority")
+			.put(getDefault().ASSIGNED_TO.getKey(), "assigned_to")
+			.put(getDefault().OS.getKey(), "op_sys")
+			.put(getDefault().VERSION.getKey(), "version")
+			.build();
+
+	public static String getFieldNameFromAttributeName(String attributeName) {
+		String result = attribute2FieldMapper.get(attributeName);
+		if (result == null) {
+			result = attributeName;
+		}
+		return result;
 	}
 
 	private final DefaultTaskSchema parent = DefaultTaskSchema.getInstance();

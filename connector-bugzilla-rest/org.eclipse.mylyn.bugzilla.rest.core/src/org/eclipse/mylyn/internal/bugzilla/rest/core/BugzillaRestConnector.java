@@ -35,6 +35,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryInfo;
 import org.eclipse.mylyn.tasks.core.RepositoryVersion;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
@@ -195,8 +196,11 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 	@Override
 	public TaskData getTaskData(TaskRepository repository, String taskIdOrKey, IProgressMonitor monitor)
 			throws CoreException {
-		// ignore
-		return null;
+		// only to not generate NPE in SubmitTaskJob.createTask()
+		// we replace this with the next review
+		AbstractTaskDataHandler taskDataHandler = getTaskDataHandler();
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(repository);
+		return new TaskData(mapper, repository.getConnectorKind(), repository.getRepositoryUrl(), taskIdOrKey);
 	}
 
 	@Override
@@ -248,7 +252,7 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 		UserCredentials credentials = new UserCredentials(credentials1.getUserName(), credentials1.getPassword(), null,
 				true);
 		location.setCredentials(AuthenticationType.REPOSITORY, credentials);
-		BugzillaRestClient client = new BugzillaRestClient(location);
+		BugzillaRestClient client = new BugzillaRestClient(location, this);
 
 		return client;
 	}

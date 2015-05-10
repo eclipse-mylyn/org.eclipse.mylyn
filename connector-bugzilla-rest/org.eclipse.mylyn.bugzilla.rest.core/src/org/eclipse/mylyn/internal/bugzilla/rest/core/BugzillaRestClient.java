@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.BugzillaRestIdResult;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.ErrorResponse;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Field;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.FieldResponse;
@@ -27,7 +28,10 @@ import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Product;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.ProductResponse;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.RestResponse;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.VersionResponse;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
@@ -38,8 +42,13 @@ public class BugzillaRestClient {
 
 	private final BugzillaRestHttpClient client;
 
-	public BugzillaRestClient(RepositoryLocation location) {
+	private final BugzillaRestConnector connector;
+
+	public static final int MAX_RETRIEVED_PER_QUERY = 50;
+
+	public BugzillaRestClient(RepositoryLocation location, BugzillaRestConnector connector) {
 		client = new BugzillaRestHttpClient(location);
+		this.connector = connector;
 	}
 
 	public BugzillaRestHttpClient getClient() {
@@ -99,6 +108,15 @@ public class BugzillaRestClient {
 		return new BugzillaRestAuthenticatedGetRequest<ParameterResponse>(client, "/parameters?",
 				new TypeToken<ParameterResponse>() {
 				}).run(monitor);
+	}
+
+	public RepositoryResponse postTaskData(TaskData taskData, IOperationMonitor monitor) throws BugzillaRestException {
+		if (taskData.isNew()) {
+			BugzillaRestIdResult result = new BugzillaRestPostNewTask(client, taskData).run(monitor);
+			return new RepositoryResponse(ResponseKind.TASK_CREATED, result.getId());
+		} else {
+			throw new UnsupportedOperationException();
+		}
 	}
 
 }

@@ -15,6 +15,11 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
+import org.eclipse.mylyn.commons.core.operations.OperationUtil;
+import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -33,8 +38,20 @@ public class BugzillaRestTaskDataHandler extends AbstractTaskDataHandler {
 	@Override
 	public RepositoryResponse postTaskData(TaskRepository repository, TaskData taskData,
 			Set<TaskAttribute> oldAttributes, IProgressMonitor monitor) throws CoreException {
-		// ignore
-		return null;
+		monitor = Policy.monitorFor(monitor);
+		try {
+			monitor.beginTask("Submitting_task", IProgressMonitor.UNKNOWN);
+			BugzillaRestClient client = connector.getClient(repository);
+			try {
+				IOperationMonitor progress = OperationUtil.convert(monitor, "post taskdata", 3);
+				return client.postTaskData(taskData, progress);
+			} catch (BugzillaRestException e) {
+				throw new CoreException(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, 2,
+						"Error post taskdata.\n\n" + e.getMessage(), e));
+			}
+		} finally {
+			monitor.done();
+		}
 	}
 
 	@Override

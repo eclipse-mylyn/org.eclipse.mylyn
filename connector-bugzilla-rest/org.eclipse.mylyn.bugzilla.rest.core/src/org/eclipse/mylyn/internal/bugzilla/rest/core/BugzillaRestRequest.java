@@ -45,7 +45,7 @@ public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
 
 	protected abstract T parseFromJson(InputStreamReader in) throws BugzillaRestException;
 
-	protected abstract HttpRequestBase createHttpRequestBase();
+	protected abstract HttpRequestBase createHttpRequestBase() throws IOException;
 
 	protected String baseUrl() {
 		String url = getClient().getLocation().getUrl();
@@ -56,7 +56,7 @@ public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
 	}
 
 	protected String getUrlSuffix() {
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	public T run(IOperationMonitor monitor) throws BugzillaRestException {
