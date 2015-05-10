@@ -83,8 +83,8 @@ public class BugzillaRestConfigurationTest {
 		BugzillaRestConfiguration configuration = connector.getRepositoryConfiguration(actualFixture.repository());
 		assertNotNull(configuration);
 		assertEquals(
-				IOUtils.toString(CommonTestUtil.getResource(this, actualFixture.getTestDataFolder()
-						+ "/configuration.json")),
+				IOUtils.toString(
+						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/configuration.json")),
 				new Gson().toJson(configuration).replaceAll(actualFixture.repository().getRepositoryUrl(),
 						"http://dummy.url"));
 	}

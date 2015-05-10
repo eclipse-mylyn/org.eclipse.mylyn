@@ -203,8 +203,8 @@ public class BugzillaRestConnectorTest {
 		@Override
 		protected CacheBuilder<Object, Object> createCacheBuilder(Duration expireAfterWriteDuration,
 				Duration refreshAfterWriteDuration) {
-			return super.createCacheBuilder(expireAfterWriteDuration, refreshAfterWriteDuration).removalListener(
-					new RemovalListener<Object, Object>() {
+			return super.createCacheBuilder(expireAfterWriteDuration, refreshAfterWriteDuration)
+					.removalListener(new RemovalListener<Object, Object>() {
 						@Override
 						public void onRemoval(RemovalNotification<Object, Object> notification) {
 							if (mySync != null) {

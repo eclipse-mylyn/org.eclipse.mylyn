@@ -120,8 +120,8 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 
 	public BugzillaRestConnector(Duration refreshAfterWriteDuration) {
 		super();
-		configurationCache = createCacheBuilder(CONFIGURATION_CACHE_EXPIRE_DURATION, refreshAfterWriteDuration).build(
-				new CacheLoader<RepositoryKey, Optional<BugzillaRestConfiguration>>() {
+		configurationCache = createCacheBuilder(CONFIGURATION_CACHE_EXPIRE_DURATION, refreshAfterWriteDuration)
+				.build(new CacheLoader<RepositoryKey, Optional<BugzillaRestConfiguration>>() {
 
 					@Override
 					public Optional<BugzillaRestConfiguration> load(RepositoryKey key) throws Exception {
@@ -142,8 +142,8 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 								BugzillaRestClient client;
 								try {
 									client = clientCache.get(key);
-									set(Optional.fromNullable(client.getConfiguration(key.getRepository(),
-											context.get())));
+									set(Optional
+											.fromNullable(client.getConfiguration(key.getRepository(), context.get())));
 								} catch (ExecutionException e) {
 									e.printStackTrace();
 									return new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN,
@@ -245,7 +245,8 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 
 	private BugzillaRestClient createClient(TaskRepository repository) {
 		RepositoryLocation location = new RepositoryLocation(repository.getProperties());
-		AuthenticationCredentials credentials1 = repository.getCredentials(org.eclipse.mylyn.commons.net.AuthenticationType.REPOSITORY);
+		AuthenticationCredentials credentials1 = repository
+				.getCredentials(org.eclipse.mylyn.commons.net.AuthenticationType.REPOSITORY);
 		UserCredentials credentials = new UserCredentials(credentials1.getUserName(), credentials1.getPassword(), null,
 				true);
 		location.setCredentials(AuthenticationType.REPOSITORY, credentials);
@@ -266,8 +267,8 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 		try {
 			return clientCache.get(new RepositoryKey(repository));
 		} catch (ExecutionException e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN,
-					"TaskRepositoryManager is null"));
+			throw new CoreException(
+					new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, "TaskRepositoryManager is null"));
 		}
 	}
 
@@ -276,7 +277,8 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 		try {
 			BugzillaRestClient client = createClient(repository);
 			if (!client.validate(OperationUtil.convert(monitor))) {
-				throw new CoreException(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, "repository is invalide"));
+				throw new CoreException(
+						new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, "repository is invalide"));
 			}
 			BugzillaRestVersion version = client.getVersion(OperationUtil.convert(monitor));
 			return new RepositoryInfo(new RepositoryVersion(version.toString()));
@@ -290,8 +292,8 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 			getClient(repository);
 		}
 		try {
-			Optional<BugzillaRestConfiguration> configurationOptional = configurationCache.get(new RepositoryKey(
-					repository));
+			Optional<BugzillaRestConfiguration> configurationOptional = configurationCache
+					.get(new RepositoryKey(repository));
 			return configurationOptional.isPresent() ? configurationOptional.get() : null;
 		} catch (UncheckedExecutionException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, e.getMessage(), e));

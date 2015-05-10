@@ -20,7 +20,7 @@ public class BugzillaRestUiPlugin extends AbstractUIPlugin {
 
 	// The shared instance
 	private static BugzillaRestUiPlugin plugin;
-	
+
 	/**
 	 * The constructor
 	 */

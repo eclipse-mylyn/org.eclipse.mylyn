@@ -36,7 +36,7 @@ public class BugzillaRestValidateRequest extends BugzillaRestAuthenticatedGetReq
 		// since 4.5.5 we get an HttpStatus.SC_NOT_FOUND instead of an HttpStatus.SC_BAD_REQUEST
 		validate(response, response.getStatusCode() == HttpStatus.SC_NOT_FOUND
 				? HttpStatus.SC_NOT_FOUND
-						: HttpStatus.SC_BAD_REQUEST, monitor);
+				: HttpStatus.SC_BAD_REQUEST, monitor);
 	}
 
 	@Override

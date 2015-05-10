@@ -38,8 +38,8 @@ public class BugzillaRestHarness {
 		return fixture.repository();
 	}
 
-	public TaskData createTaskData(ITaskMapping initializationData, ITaskMapping selectionData, IProgressMonitor monitor)
-			throws CoreException {
+	public TaskData createTaskData(ITaskMapping initializationData, ITaskMapping selectionData,
+			IProgressMonitor monitor) throws CoreException {
 		AbstractTaskDataHandler taskDataHandler = connector().getTaskDataHandler();
 		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(repository());
 		TaskData taskData = new TaskData(mapper, repository().getConnectorKind(), repository().getRepositoryUrl(), ""); //$NON-NLS-1$
