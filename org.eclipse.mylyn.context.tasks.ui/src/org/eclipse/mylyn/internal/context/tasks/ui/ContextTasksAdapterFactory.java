@@ -23,7 +23,7 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 
 /**
  * Adapts the active task to the active context.
- * 
+ *
  * @author Steffen Pingel
  * @author Sebastian Schmidt
  */
@@ -42,7 +42,7 @@ public class ContextTasksAdapterFactory implements IAdapterFactory {
 			}
 		} else if (adapterType == ContextAwareEditorInput.class) {
 			if (adaptableObject instanceof TaskEditorInput) {
-				// forces closing of task editors that do not show the active task 
+				// forces closing of task editors that do not show the active task
 				final TaskEditorInput input = (TaskEditorInput) adaptableObject;
 				return new ContextAwareEditorInput() {
 					@Override

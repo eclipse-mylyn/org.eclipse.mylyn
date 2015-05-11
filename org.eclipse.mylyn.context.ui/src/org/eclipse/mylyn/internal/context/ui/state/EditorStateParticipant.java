@@ -247,7 +247,7 @@ public class EditorStateParticipant extends ContextStateParticipant {
 			}
 		}
 
-		// retain the state in case editor save/restore fails on e4 
+		// retain the state in case editor save/restore fails on e4
 		if (failed && savedMemento != null && savedContextHandle != null
 				&& savedContextHandle.equals(state.getContextHandle())) {
 			IMemento memento = state.createMemento(MEMENTO_EDITORS);

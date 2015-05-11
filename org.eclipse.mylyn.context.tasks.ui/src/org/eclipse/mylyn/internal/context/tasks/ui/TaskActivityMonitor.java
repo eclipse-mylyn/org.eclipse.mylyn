@@ -15,8 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
@@ -35,6 +39,18 @@ import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.ITaskActivityManager;
 import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.core.activity.AbstractTaskActivityMonitor;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Iterables;
 
 /**
  * Monitors task activity and maintains task activation history
@@ -45,6 +61,101 @@ import org.eclipse.mylyn.tasks.core.activity.AbstractTaskActivityMonitor;
  */
 @SuppressWarnings("restriction")
 public class TaskActivityMonitor extends AbstractTaskActivityMonitor {
+
+	public static class ContextTaskActivationListener extends TaskActivationAdapter {
+
+		@Override
+		public boolean canDeactivateTask(ITask task) {
+			List<IEditorReference> dirtyRefs = findDirtyEditors();
+			if (dirtyRefs.size() == 1) {
+				IWorkbenchPart part = dirtyRefs.get(0).getPart(false);
+				if (part instanceof TaskEditor) {
+					// If the only dirty editor is the active task and the editor is active, do not display the dialog below
+					TaskEditor editor = ((TaskEditor) part);
+					TaskEditorInput input = editor.getTaskEditorInput();
+					if (input != null
+							&& task.equals(input.getTask())
+							&& editor.equals(PlatformUI.getWorkbench()
+									.getActiveWorkbenchWindow()
+									.getActivePage()
+									.getActiveEditor())) {
+						return true;
+					}
+				}
+			}
+			if (!dirtyRefs.isEmpty()) {
+				int returnCode = openTaskDeactivationDialog(dirtyRefs);
+				if (returnCode == 0) {
+					saveEditors(dirtyRefs);
+				} else if (returnCode == 2) {
+					activateEditors(dirtyRefs);
+					return false;
+				}
+			}
+			return true;
+		}
+
+		private void saveEditors(List<IEditorReference> refs) {
+			for (IEditorReference ref : refs) {
+				IEditorPart editor = ref.getEditor(false);
+				if (editor != null) {
+					editor.doSave(new NullProgressMonitor());
+				}
+			}
+		}
+
+		private void activateEditors(List<IEditorReference> refs) {
+			for (IEditorReference ref : refs) {
+				IWorkbenchPart part = ref.getPart(true);
+				if (part != null) {
+					ref.getPage().activate(part);
+				}
+			}
+		}
+
+		public int openTaskDeactivationDialog(List<IEditorReference> dirtyRefs) {
+			String editors = Joiner.on('\n').join(
+					Iterables.transform(dirtyRefs, new Function<IEditorReference, String>() {
+						@Override
+						public String apply(IEditorReference ref) {
+							return ref.getTitle();
+						}
+					}));
+
+			return new MessageDialog(WorkbenchUtil.getShell(), Messages.TaskActivityMonitor_Task_Deactivation, null,
+					NLS.bind(Messages.TaskActivityMonitor_Task_Deactivation_Message, editors), MessageDialog.QUESTION,
+					new String[] { Messages.TaskActivityMonitor_Deactivate_Task_and_Save_All,
+							Messages.TaskActivityMonitor_Deactivate_and_Save_Some, IDialogConstants.CANCEL_LABEL }, 1).open();
+		}
+
+		public List<IEditorReference> findDirtyEditors() {
+			List<IEditorReference> dirtyRefs = new ArrayList<IEditorReference>();
+			for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+				for (IEditorReference ref : window.getActivePage().getEditorReferences()) {
+					if (ref.isDirty()) {
+						dirtyRefs.add(ref);
+					}
+				}
+			}
+			return dirtyRefs;
+		}
+
+		@Override
+		public void preTaskActivated(ITask task) {
+			// make sure that org.eclipse.mylyn.context.ui is active prior to the first task activation
+			ContextUiPlugin.getDefault();
+		}
+
+		@Override
+		public void taskActivated(final ITask task) {
+			ContextCore.getContextManager().activateContext(task.getHandleIdentifier());
+		}
+
+		@Override
+		public void taskDeactivated(final ITask task) {
+			ContextCore.getContextManager().deactivateContext(task.getHandleIdentifier());
+		}
+	}
 
 	private final AbstractContextListener CONTEXT_LISTENER = new AbstractContextListener() {
 
@@ -62,25 +173,7 @@ public class TaskActivityMonitor extends AbstractTaskActivityMonitor {
 		}
 	};
 
-	private static ITaskActivationListener CONTEXT_TASK_ACTIVATION_LISTENER = new TaskActivationAdapter() {
-
-		@Override
-		public void preTaskActivated(ITask task) {
-			// make sure that org.eclipse.mylyn.context.ui is active prior to the first task activation
-			ContextUiPlugin.getDefault();
-		}
-
-		@Override
-		public void taskActivated(final ITask task) {
-			ContextCore.getContextManager().activateContext(task.getHandleIdentifier());
-		}
-
-		@Override
-		public void taskDeactivated(final ITask task) {
-			ContextCore.getContextManager().deactivateContext(task.getHandleIdentifier());
-		}
-
-	};
+	private static ITaskActivationListener CONTEXT_TASK_ACTIVATION_LISTENER = new ContextTaskActivationListener();
 
 	private final InteractionContextManager contextManager;
 

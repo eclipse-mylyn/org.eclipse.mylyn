@@ -142,6 +142,7 @@
     <module>org.eclipse.mylyn.context.sdk.util</module>
     <module>org.eclipse.mylyn.context.tasks.tests</module>
     <module>org.eclipse.mylyn.context.tasks.ui</module>
+    <module>org.eclipse.mylyn.context.tasks.ui.tests</module>
     <module>org.eclipse.mylyn.context.tests</module>
     <module>org.eclipse.mylyn.context.ui</module>
     <module>org.eclipse.mylyn.debug.ui</module>
