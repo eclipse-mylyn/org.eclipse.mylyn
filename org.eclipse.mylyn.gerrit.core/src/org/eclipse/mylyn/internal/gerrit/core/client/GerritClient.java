@@ -23,7 +23,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
@@ -117,7 +116,6 @@ import com.google.gerrit.reviewdb.ContributorAgreement;
 import com.google.gerrit.reviewdb.Patch;
 import com.google.gerrit.reviewdb.Patch.ChangeType;
 import com.google.gerrit.reviewdb.Patch.Key;
-import com.google.gerrit.reviewdb.PatchLineComment;
 import com.google.gerrit.reviewdb.PatchSet;
 import com.google.gerrit.reviewdb.PatchSet.Id;
 import com.google.gerrit.reviewdb.Project;
@@ -173,7 +171,7 @@ public abstract class GerritClient extends ReviewsClient {
 	public abstract PatchSetPublishDetailX getPatchSetPublishDetail(final PatchSet.Id id, IProgressMonitor monitor)
 			throws GerritException;
 
-	public abstract PatchLineComment saveDraft(Key patchKey, String message, int line, short side, String parentUuid,
+	public abstract CommentInput saveDraft(Key patchKey, String message, int line, short side, String parentUuid,
 			String uuid, IProgressMonitor monitor) throws GerritException;
 
 	public abstract VoidResult deleteDraft(Key patchkey, String uuid, IProgressMonitor monitor) throws GerritException;
@@ -554,15 +552,6 @@ public abstract class GerritClient extends ReviewsClient {
 		return clazz.cast(service);
 	}
 
-	protected PatchLineComment createDraftComment(Patch.Key patchKey, String message, int line, short side,
-			String parentUuid, String uuid, IProgressMonitor monitor) throws GerritException {
-		PatchLineComment.Key id = new PatchLineComment.Key(patchKey, uuid);
-		final PatchLineComment comment = new PatchLineComment(id, line, getAccount(monitor).getId(), parentUuid);
-		comment.setMessage(message);
-		comment.setSide(side);
-		return comment;
-	}
-
 	protected List<ReviewerInfo> listReviewers(final int reviewId, IProgressMonitor monitor) throws GerritException {
 		final String uri = "/changes/" + reviewId + "/reviewers/"; //$NON-NLS-1$ //$NON-NLS-2$
 		TypeToken<List<ReviewerInfo>> reviewersListType = new TypeToken<List<ReviewerInfo>>() {
@@ -591,7 +580,8 @@ public abstract class GerritClient extends ReviewsClient {
 		ReviewerResult reviewerResult = new ReviewerResult();
 		for (final String reviewerId : reviewers) {
 			try {
-				AddReviewerResult addReviewerResult = restClient.executePostRestRequest(uri, new ReviewerInput(reviewerId), AddReviewerResult.class, null, monitor);
+				AddReviewerResult addReviewerResult = restClient.executePostRestRequest(uri, new ReviewerInput(
+						reviewerId), AddReviewerResult.class, null, monitor);
 				reviewerInfos.addAll(addReviewerResult.getReviewers());
 			} catch (GerritHttpException e) {
 				if (e.getResponseCode() == HttpStatus.SC_UNPROCESSABLE_ENTITY) {
@@ -695,7 +685,8 @@ public abstract class GerritClient extends ReviewsClient {
 				if (starred) {
 					restClient.executePutRestRequest(uri, req, ToggleStarRequest.class, createErrorHandler(), monitor);
 				} else {
-					restClient.executeDeleteRestRequest(uri, req, ToggleStarRequest.class, createErrorHandler(), monitor);
+					restClient.executeDeleteRestRequest(uri, req, ToggleStarRequest.class, createErrorHandler(),
+							monitor);
 				}
 			}
 		});
@@ -726,7 +717,7 @@ public abstract class GerritClient extends ReviewsClient {
 		ChangeInfo28 changeInfo28 = null;
 		try {
 			changeInfo28 = restClient.executeGetRestRequest("/changes/" + Integer.toString(reviewId) //$NON-NLS-1$
-			+ "/?o=ALL_REVISIONS&o=CURRENT_ACTIONS&o=ALL_COMMITS", ChangeInfo28.class, monitor); //$NON-NLS-1$
+					+ "/?o=ALL_REVISIONS&o=CURRENT_ACTIONS&o=ALL_COMMITS", ChangeInfo28.class, monitor); //$NON-NLS-1$
 		} catch (GerritException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, e.getMessage(), e));
 		}
@@ -829,7 +820,7 @@ public abstract class GerritClient extends ReviewsClient {
 		reviewInput.setApprovals(approvals);
 		final String uri = "/a/changes/" + id.getParentKey().get() + "/revisions/" + id.get() + "/review"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		restClient.executePostRestRequest(uri, reviewInput, ReviewInfo.class, new ErrorHandler() {
-		
+
 			@Override
 			public void handleError(HttpMethodBase method) throws GerritException {
 				if (method.getStatusCode() == HttpURLConnection.HTTP_FORBIDDEN) {
@@ -839,7 +830,7 @@ public abstract class GerritClient extends ReviewsClient {
 					}
 				}
 			}
-		
+
 			private String getResponseBodyAsString(HttpMethodBase method) {
 				try {
 					String msg = method.getResponseBodyAsString();
@@ -945,7 +936,7 @@ public abstract class GerritClient extends ReviewsClient {
 					throw new GerritException(NLS.bind("Cannot submit change: {0}", errorMsg)); //$NON-NLS-1$
 				}
 			}
-		
+
 			private String getResponseBodyAsString(HttpMethodBase method) {
 				try {
 					return method.getResponseBodyAsString();
@@ -953,12 +944,12 @@ public abstract class GerritClient extends ReviewsClient {
 					return null;
 				}
 			}
-		
+
 			private boolean isNotPermitted(HttpMethodBase method, String msg) {
 				return method.getStatusCode() == HttpURLConnection.HTTP_FORBIDDEN
 						&& "submit not permitted\n".equals(msg); //$NON-NLS-1$
 			}
-		
+
 			private boolean isConflict(HttpMethodBase method) {
 				return method.getStatusCode() == HttpURLConnection.HTTP_CONFLICT;
 			}

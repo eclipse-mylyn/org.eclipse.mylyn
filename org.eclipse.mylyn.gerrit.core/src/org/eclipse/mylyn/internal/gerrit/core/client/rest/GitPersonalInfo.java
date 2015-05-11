@@ -22,10 +22,6 @@ public class GitPersonalInfo {
 
 	private String email;
 
-	private String date;
-
-	private int tz;
-
 	public String getName() {
 		return name;
 	}

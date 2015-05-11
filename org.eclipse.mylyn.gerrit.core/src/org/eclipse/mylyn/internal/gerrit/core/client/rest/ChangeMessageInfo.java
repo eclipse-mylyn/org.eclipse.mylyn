@@ -20,15 +20,11 @@ import java.sql.Timestamp;
  */
 public class ChangeMessageInfo {
 
-	private String id;
-
 	private AccountInfo author;
 
 	private Timestamp date;
 
 	private String message;
-
-	private Integer _revisionNumber;
 
 	public String getMesssage() {
 		return message;

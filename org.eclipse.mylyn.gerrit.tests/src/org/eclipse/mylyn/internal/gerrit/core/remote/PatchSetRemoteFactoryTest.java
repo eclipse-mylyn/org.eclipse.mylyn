@@ -40,6 +40,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.PatchSetContent;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchScriptX;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.CommentInput;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IFileVersion;
@@ -262,8 +263,8 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(commentFile.getAllComments().size(), is(0));
 
 		String id = commentFile.getReference();
-		reviewHarness.getClient().saveDraft(Patch.Key.parse(id), "Line 2 Comment", 2, (short) 1, null, null,
-				new NullProgressMonitor());
+		CommentInput commentInput = reviewHarness.getClient().saveDraft(Patch.Key.parse(id), "Line 2 Comment", 2,
+				(short) 1, null, null, new NullProgressMonitor());
 		patchSetObserver.retrieve(false);
 		patchSetObserver.waitForResponse();
 
@@ -271,6 +272,7 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		List<IComment> allComments = commentFile.getAllComments();
 		assertThat(allComments.size(), is(1));
 		IComment fileComment = allComments.get(0);
+		assertThat("saveDraft returned wrong comment id", fileComment.getId(), is(commentInput.getId()));
 		assertThat(fileComment, notNullValue());
 		assertThat(fileComment.isDraft(), is(true));
 		assertThat(fileComment.getAuthor().getDisplayName(), is("tests"));

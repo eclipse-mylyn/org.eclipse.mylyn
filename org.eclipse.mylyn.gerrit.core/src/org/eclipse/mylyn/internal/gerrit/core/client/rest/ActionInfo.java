@@ -16,13 +16,6 @@ package org.eclipse.mylyn.internal.gerrit.core.client.rest;
  * href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#action-info">ActionInfo</a>.
  */
 public class ActionInfo {
-	// e.g. "gerritcodereview#change"
-	private String method;
-
-	private String label;
-
-	private String title;
-
 	private boolean enabled;
 
 	public boolean getEnabled() {

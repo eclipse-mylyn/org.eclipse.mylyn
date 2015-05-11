@@ -55,7 +55,6 @@ import com.google.gerrit.reviewdb.Branch;
 import com.google.gerrit.reviewdb.Change;
 import com.google.gerrit.reviewdb.ChangeMessage;
 import com.google.gerrit.reviewdb.Patch.Key;
-import com.google.gerrit.reviewdb.PatchLineComment;
 import com.google.gerrit.reviewdb.PatchSet;
 import com.google.gerrit.reviewdb.PatchSetInfo;
 import com.google.gerrit.reviewdb.Project;
@@ -400,9 +399,8 @@ public class GerritClient29 extends GerritClient {
 	}
 
 	@Override
-	public PatchLineComment saveDraft(Key patchKey, String message, int line, short side, String parentUuid,
-			String uuid, IProgressMonitor monitor) throws GerritException {
-		final PatchLineComment comment = createDraftComment(patchKey, message, line, side, parentUuid, uuid, monitor);
+	public CommentInput saveDraft(Key patchKey, String message, int line, short side, String parentUuid, String uuid,
+			IProgressMonitor monitor) throws GerritException {
 		if (uuid == null) {
 			uuid = ""; //$NON-NLS-1$
 		}
@@ -422,9 +420,7 @@ public class GerritClient29 extends GerritClient {
 			uri = uri.concat("/" + uuid); //$NON-NLS-1$
 		}
 
-		getRestClient().executePutRestRequest(uri, commentInput, CommentInput.class, null, monitor);
-
-		return comment;
+		return getRestClient().executePutRestRequest(uri, commentInput, CommentInput.class, null, monitor);
 	}
 
 	private void getAdditionalChangeInfo(int reviewId, ChangeDetailX changeDetail, IProgressMonitor monitor) {

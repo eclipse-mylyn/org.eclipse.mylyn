@@ -15,15 +15,15 @@ package org.eclipse.mylyn.internal.gerrit.core.operations;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.CommentInput;
 
 import com.google.gerrit.reviewdb.Patch.Key;
-import com.google.gerrit.reviewdb.PatchLineComment;
 
 /**
  * @author Steffen Pingel
  * @author Guy Perron
  */
-public class SaveDraftRequest extends AbstractRequest<PatchLineComment> {
+public class SaveDraftRequest extends AbstractRequest<CommentInput> {
 
 	private final Key patchKey;
 
@@ -64,7 +64,7 @@ public class SaveDraftRequest extends AbstractRequest<PatchLineComment> {
 	}
 
 	@Override
-	protected PatchLineComment execute(GerritClient client, IProgressMonitor monitor) throws GerritException {
+	protected CommentInput execute(GerritClient client, IProgressMonitor monitor) throws GerritException {
 		return client.saveDraft(getPatchKey(), getMessage(), getLine(), getSide(), getParentUuid(), getUuid(), monitor);
 	}
 

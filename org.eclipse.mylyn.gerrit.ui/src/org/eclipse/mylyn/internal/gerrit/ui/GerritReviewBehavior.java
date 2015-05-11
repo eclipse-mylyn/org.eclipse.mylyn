@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.mylyn.internal.gerrit.core.GerritOperationFactory;
 import org.eclipse.mylyn.internal.gerrit.core.Messages;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.CommentInput;
 import org.eclipse.mylyn.internal.gerrit.core.operations.DiscardDraftRequest;
 import org.eclipse.mylyn.internal.gerrit.core.operations.GerritOperation;
 import org.eclipse.mylyn.internal.gerrit.core.operations.SaveDraftRequest;
@@ -34,7 +35,6 @@ import org.eclipse.team.core.history.IFileRevision;
 
 import com.google.common.base.Strings;
 import com.google.gerrit.reviewdb.Patch;
-import com.google.gerrit.reviewdb.PatchLineComment;
 import com.google.gwtjsonrpc.client.VoidResult;
 
 /**
@@ -81,12 +81,12 @@ public class GerritReviewBehavior extends ReviewBehavior {
 						Strings.emptyToNull(comment.getId()));
 				request.setMessage(comment.getDescription());
 
-				GerritOperation<PatchLineComment> operation = getOperationFactory().createOperation(getTask(), request);
+				GerritOperation<CommentInput> operation = getOperationFactory().createOperation(getTask(), request);
 				IStatus status = operation.run(monitor);
-				PatchLineComment patchLineComment = operation.getOperationResult();
+				CommentInput commentInput = operation.getOperationResult();
 				// save the value of uuid, and keep it with the comment
-				if (patchLineComment != null && patchLineComment.getKey() != null) {
-					comment.setId(patchLineComment.getKey().get());
+				if (commentInput != null) {
+					comment.setId(commentInput.getId());
 				}
 				return status;
 			}

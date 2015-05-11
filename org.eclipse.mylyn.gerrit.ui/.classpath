@@ -12,6 +12,8 @@
 			<accessrule kind="accessible" pattern="org/eclipse/mylyn/internal/reviews/ui/providers/**"/>
 			<accessrule kind="accessible" pattern="org/eclipse/mylyn/internal/reviews/ui/compare/**"/>
 			<accessrule kind="accessible" pattern="org/eclipse/mylyn/internal/tasks/ui/editors/**"/>
+			<accessrule kind="accessible" pattern="org/eclipse/mylyn/internal/gerrit/core/client/rest/*"/>
+			<accessrule kind="accessible" pattern="org/eclipse/egit/**"/>
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
