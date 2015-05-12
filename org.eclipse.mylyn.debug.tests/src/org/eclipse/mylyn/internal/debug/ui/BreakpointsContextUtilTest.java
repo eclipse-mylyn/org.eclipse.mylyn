@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -139,15 +140,29 @@ public class BreakpointsContextUtilTest {
 	public void testDeactivateTaskDisabled() throws Exception {
 		BreakpointsTestUtil.createProject();
 
-		assertEquals(0, breakpointManager.getBreakpoints().length);
+		assertEquals(getBreakpointsAsString(), 0, breakpointManager.getBreakpoints().length);
 
 		activateContext();
-		assertEquals(2, breakpointManager.getBreakpoints().length);
+		try {
+			assertEquals(getBreakpointsAsString(), 2, breakpointManager.getBreakpoints().length);
+		} catch (AssertionError e) {
+			Thread.sleep(100);
+			System.out.println("# Slept once");
+			System.out.println(getBreakpointsAsString());
+			Thread.sleep(1000);
+			System.out.println("# Slept twice");
+			System.out.println(getBreakpointsAsString());
+			throw e;
+		}
 
 		BreakpointsTestUtil.setManageBreakpointsPreference(false);
 
 		contextManager.deactivateContext("contextWithBreakpoints"); //$NON-NLS-1$
-		assertEquals(2, breakpointManager.getBreakpoints().length);
+		assertEquals(getBreakpointsAsString(), 2, breakpointManager.getBreakpoints().length);
+	}
+
+	private String getBreakpointsAsString() {
+		return Arrays.asList(breakpointManager.getBreakpoints()).toString();
 	}
 
 	@Test
