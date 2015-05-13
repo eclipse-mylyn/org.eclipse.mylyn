@@ -88,6 +88,8 @@ public class BuildImages {
 
 	public static final ImageDescriptor CONSOLE = create(T_ETOOL, "console.gif"); //$NON-NLS-1$
 
+	public static final ImageDescriptor FILTER_SUCCEEDING = create(T_ETOOL, "filter_succeeding.png"); //$NON-NLS-1$
+
 	public static final ImageDescriptor JUNIT = create(T_VIEW, "junit.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor DECORATION_RUNNING = create(T_OVR, "run_co.gif"); //$NON-NLS-1$;

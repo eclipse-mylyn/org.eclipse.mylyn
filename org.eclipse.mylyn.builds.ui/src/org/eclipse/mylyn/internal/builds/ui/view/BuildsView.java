@@ -199,6 +199,8 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 
 	private FilterByStatusAction filterDisabledAction;
 
+	private FilterByStatusAction filterSucceedingAction;
+
 	private Date lastRefresh;
 
 	private Composite messageComposite;
@@ -456,6 +458,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		manager.add(expandAllAction);
 		manager.add(new Separator(BuildsUiConstants.GROUP_FILTER));
 		manager.add(filterDisabledAction);
+		manager.add(filterSucceedingAction);
 		manager.add(new Separator(BuildsUiConstants.GROUP_NAVIGATE));
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		manager.add(new Separator(BuildsUiConstants.GROUP_PROPERTIES));
@@ -471,7 +474,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 
 		RefreshAction refresh = new RefreshAction();
 		manager.add(refresh);
-
+		manager.add(filterSucceedingAction);
 		manager.add(new Separator(BuildsUiConstants.GROUP_OPEN));
 
 		OpenWithBrowserAction openInBrowserAction = new OpenWithBrowserAction();
@@ -551,6 +554,9 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		propertiesAction = new BuildElementPropertiesAction();
 		refreshAutomaticallyAction = new RefreshAutomaticallyAction();
 		filterDisabledAction = new FilterByStatusAction(this, BuildStatus.DISABLED);
+		filterSucceedingAction = new FilterByStatusAction(this, BuildStatus.SUCCESS);
+		filterSucceedingAction.setText("Hide Succeeding Plans");
+		filterSucceedingAction.setImageDescriptor(BuildImages.FILTER_SUCCEEDING);
 		presentationsMenuAction = new PresentationMenuAction(this);
 	}
 
@@ -567,6 +573,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 			}
 			if (changed) {
 				filterDisabledAction.update();
+				filterSucceedingAction.update();
 			}
 		}
 		child = memento.getChild("presentation");
