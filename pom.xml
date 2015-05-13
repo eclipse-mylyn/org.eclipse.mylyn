@@ -120,6 +120,10 @@
     <module>org.eclipse.mylyn.wikitext.asciidoc.tests</module>
     <module>org.eclipse.mylyn.wikitext.html.core</module>
     <module>org.eclipse.mylyn.wikitext.html.tests</module>
+    <module>org.eclipse.mylyn.wikitext.commonmark</module>
+    <module>org.eclipse.mylyn.wikitext.commonmark.tests</module>
+    <module>org.eclipse.mylyn.wikitext.commonmark.ui</module>
+    
     <module>org.eclipse.mylyn.wikitext-standalone</module>
 
     <module>org.eclipse.mylyn.docs.epub.core</module>
