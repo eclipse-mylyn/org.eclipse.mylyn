@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: WikiText CommonMark Tests
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.commonmark.tests
 Fragment-Host: org.eclipse.mylyn.wikitext.commonmark;bundle-version="2.5.0"
 Bundle-Version: 2.5.0.qualifier
@@ -18,3 +18,4 @@ Export-Package: org.eclipse.mylyn.internal.wikitext.commonmark;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.commonmark.inlines;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.commonmark.spec;x-internal:=true,
  org.eclipse.mylyn.wikitext.commonmark
+Bundle-Localization: META-INF/l10n/bundle

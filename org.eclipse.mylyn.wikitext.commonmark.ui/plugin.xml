@@ -17,7 +17,7 @@
             default-charset="utf-8"
             file-extensions="cm,md,markdown"
             id="org.eclipse.mylyn.wikitext.commonmark"
-            name="CommonMark"
+            name="%content-type.name"
             priority="normal">
       </content-type>
    </extension>

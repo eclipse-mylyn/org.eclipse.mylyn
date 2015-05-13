@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: WikiText CommonMark
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.commonmark
 Bundle-Version: 2.5.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
@@ -11,4 +11,5 @@ Export-Package: org.eclipse.mylyn.internal.wikitext.commonmark;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.commonmark.inlines;x-internal:=true,
  org.eclipse.mylyn.wikitext.commonmark,
  services
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: %Bundle-Vendor
+Bundle-Localization: META-INF/l10n/bundle
