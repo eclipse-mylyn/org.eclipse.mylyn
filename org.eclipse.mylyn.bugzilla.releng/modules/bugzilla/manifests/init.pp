@@ -125,6 +125,13 @@ class bugzilla {
     require => Package["apache2"],
     creates => "/etc/apache2/mods-enabled/ssl.load",
   }
+  
+  exec { "Enable rewrite module":
+    command => "a2enmod rewrite",
+    require => Package["apache2"],
+    creates => "/etc/apache2/mods-enabled/rewrite.load",
+  }
+  
   exec { "Enable cgi module":
     command => "a2enmod cgi",
     require => Package["apache2"],
