@@ -71,3 +71,11 @@ else
  echo "composite.index not found"
  exit 1
 fi
+
+cd /home/data/httpd/download.eclipse.org/mylyn/drops
+echo "<html><body><h1>Mylyn Snapshot Builds</h1>" > index.html
+echo "<p>Weekly builds are production quality, but subject to UI changes.</p><p>" >> index.html
+for f in `find -name *3.1*.zip -not -name *-api.zip | sort`; do 
+	echo "<a href=\"$f\">${f##.*/}</a><br/>" >> index.html
+done
+echo "</p></body><html>"
