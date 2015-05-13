@@ -61,7 +61,7 @@ public class TaskDataManagerTest extends TestCase {
 		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
 	}
 
-	public void testIncomming() throws Exception {
+	public void testIncoming() throws Exception {
 		TaskTask task = TaskTestUtil.createMockTask("1");
 		task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
 		TaskData taskData = TaskTestUtil.createTaskData(taskRepository, "1");
@@ -71,10 +71,10 @@ public class TaskDataManagerTest extends TestCase {
 		assertEquals(SynchronizationState.INCOMING, task.getSynchronizationState());
 	}
 
-	public void testIncommingSupressed() throws Exception {
-		TaskTask task = TaskTestUtil.createMockTask("1");
+	public void testIncomingSupressed() throws Exception {
+		TaskTask task = TaskTestUtil.createMockTask("testIncomingSupressed");
 		task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
-		TaskData taskData = TaskTestUtil.createTaskData(taskRepository, "1");
+		TaskData taskData = TaskTestUtil.createTaskData(taskRepository, "testIncomingSupressed");
 		TaskAttribute root = taskData.getRoot();
 		TaskAttribute version = root.createAttribute(TaskAttribute.VERSION);
 		version.getMetaData().defaults().setKind("default");
@@ -85,7 +85,7 @@ public class TaskDataManagerTest extends TestCase {
 		assertEquals("true", task.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING));
 	}
 
-	public void testIncommingSupressedWithSave() throws Exception {
+	public void testIncomingSupressedWithSave() throws Exception {
 		TasksUi.getRepositoryManager().addRepository(taskRepository);
 		TaskTask task = TaskTestUtil.createMockTask("1");
 		task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
@@ -107,7 +107,7 @@ public class TaskDataManagerTest extends TestCase {
 		assertNull(task.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING));
 	}
 
-	public void testIncommingSupressedWithRead() throws Exception {
+	public void testIncomingSupressedWithRead() throws Exception {
 		TasksUi.getRepositoryManager().addRepository(taskRepository);
 		TaskTask task = TaskTestUtil.createMockTask("1");
 		task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
