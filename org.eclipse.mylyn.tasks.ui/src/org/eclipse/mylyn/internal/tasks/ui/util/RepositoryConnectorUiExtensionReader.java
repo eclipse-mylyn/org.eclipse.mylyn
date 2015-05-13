@@ -30,6 +30,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.util.ContributorBlackList;
+import org.eclipse.mylyn.internal.tasks.ui.BrandManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.spi.RepositoryConnectorBranding;
@@ -100,53 +101,31 @@ public class RepositoryConnectorUiExtensionReader {
 
 				RepositoryConnectorBranding branding = loadAdapter(connector, RepositoryConnectorBranding.class);
 				if (branding != null) {
-					InputStream brandingImageData = branding.getBrandingImageData();
-					if (brandingImageData != null) {
-						try {
-							TasksUiPlugin.getDefault().addBrandingIcon(connector.getConnectorKind(),
-									getImage(brandingImageData));
-						} finally {
-							closeQuietly(brandingImageData);
-						}
-					}
-					InputStream overlayImageData = branding.getOverlayImageData();
-					if (overlayImageData != null) {
-						try {
-							TasksUiPlugin.getDefault().addOverlayIcon(connector.getConnectorKind(),
-									getImageDescriptor(overlayImageData));
-						} finally {
-							closeQuietly(brandingImageData);
-						}
+					addDefaultImageData(connector, branding);
+					addBranding(connector.getConnectorKind(), branding);
+				}
+			}
+
+			protected void addDefaultImageData(final AbstractRepositoryConnector connector,
+					RepositoryConnectorBranding branding) throws IOException {
+				InputStream brandingImageData = branding.getBrandingImageData();
+				if (brandingImageData != null) {
+					try {
+						((BrandManager) TasksUiPlugin.getDefault().getBrandManager()).addDefaultBrandingIcon(
+								connector.getConnectorKind(), getImage(brandingImageData));
+					} finally {
+						closeQuietly(brandingImageData);
 					}
 				}
-			}
-
-			private void closeQuietly(InputStream in) {
-				try {
-					in.close();
-				} catch (IOException e) {
-					// ignore
+				InputStream overlayImageData = branding.getOverlayImageData();
+				if (overlayImageData != null) {
+					try {
+						((BrandManager) TasksUiPlugin.getDefault().getBrandManager()).addDefaultOverlayIcon(
+								connector.getConnectorKind(), getImageDescriptor(overlayImageData));
+					} finally {
+						closeQuietly(brandingImageData);
+					}
 				}
-			}
-
-			@SuppressWarnings("unchecked")
-			public <T> T loadAdapter(final AbstractRepositoryConnector connector, Class<T> klass) {
-				T adapter = null;
-				if (connector instanceof IAdaptable) {
-					adapter = (T) ((IAdaptable) connector).getAdapter(klass);
-				}
-				if (adapter == null) {
-					adapter = (T) Platform.getAdapterManager().loadAdapter(connector, klass.getName());
-				}
-				return adapter;
-			}
-
-			private ImageDescriptor getImageDescriptor(InputStream in) {
-				return ImageDescriptor.createFromImageData(new ImageData(in));
-			}
-
-			private Image getImage(InputStream in) {
-				return CommonImages.getImage(getImageDescriptor(in));
 			}
 
 			@Override
@@ -155,6 +134,70 @@ public class RepositoryConnectorUiExtensionReader {
 						"Loading of connector ui for kind ''{0}'' failed.", connector.getConnectorKind()), e)); //$NON-NLS-1$
 			}
 		});
+	}
+
+	protected void addBranding(final String connectorKind, RepositoryConnectorBranding branding) throws IOException {
+		BrandManager brandManager = (BrandManager) TasksUiPlugin.getDefault().getBrandManager();
+		for (String brand : branding.getBrands()) {
+			if (brand == null) {
+				continue;
+			}
+			try {
+				String connectorLabel = branding.getConnectorLabel(brand);
+				if (connectorLabel != null) {
+					brandManager.addConnectorLabel(connectorKind, brand, connectorLabel);
+				}
+
+				InputStream brandingImageData = branding.getBrandingImageData(brand);
+				if (brandingImageData != null) {
+					try {
+						brandManager.addBrandingIcon(connectorKind, brand, getImage(brandingImageData));
+					} finally {
+						closeQuietly(brandingImageData);
+					}
+				}
+
+				InputStream overlayImageData = branding.getOverlayImageData(brand);
+				if (overlayImageData != null) {
+					try {
+						brandManager.addOverlayIcon(connectorKind, brand, getImageDescriptor(overlayImageData));
+					} finally {
+						closeQuietly(brandingImageData);
+					}
+				}
+			} catch (Exception e) {
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
+						"Loading of brand '{0}' for kind '{1}' failed.", brand, connectorKind), e)); //$NON-NLS-1$
+			}
+		}
+	}
+
+	private void closeQuietly(InputStream in) {
+		try {
+			in.close();
+		} catch (IOException e) {
+			// ignore
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> T loadAdapter(final AbstractRepositoryConnector connector, Class<T> klass) {
+		T adapter = null;
+		if (connector instanceof IAdaptable) {
+			adapter = (T) ((IAdaptable) connector).getAdapter(klass);
+		}
+		if (adapter == null) {
+			adapter = (T) Platform.getAdapterManager().loadAdapter(connector, klass.getName());
+		}
+		return adapter;
+	}
+
+	private ImageDescriptor getImageDescriptor(InputStream in) {
+		return ImageDescriptor.createFromImageData(new ImageData(in));
+	}
+
+	private Image getImage(InputStream in) {
+		return CommonImages.getImage(getImageDescriptor(in));
 	}
 
 	private void registerFromExtensionPoint() {
@@ -177,7 +220,8 @@ public class RepositoryConnectorUiExtensionReader {
 			Object connectorUiObject = element.createExecutableExtension(ATTR_CLASS);
 			if (connectorUiObject instanceof AbstractRepositoryConnectorUi) {
 				AbstractRepositoryConnectorUi connectorUi = (AbstractRepositoryConnectorUi) connectorUiObject;
-				if (TasksUiPlugin.getConnector(connectorUi.getConnectorKind()) != null) {
+				AbstractRepositoryConnector connector = TasksUiPlugin.getConnector(connectorUi.getConnectorKind());
+				if (connector != null) {
 					TasksUiPlugin.getDefault().addRepositoryConnectorUi(connectorUi);
 
 					String iconPath = element.getAttribute(ATTR_BRANDING_ICON);
@@ -185,8 +229,8 @@ public class RepositoryConnectorUiExtensionReader {
 						ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(
 								element.getContributor().getName(), iconPath);
 						if (descriptor != null) {
-							TasksUiPlugin.getDefault().addBrandingIcon(connectorUi.getConnectorKind(),
-									CommonImages.getImage(descriptor));
+							((BrandManager) TasksUiPlugin.getDefault().getBrandManager()).addDefaultBrandingIcon(
+									connectorUi.getConnectorKind(), CommonImages.getImage(descriptor));
 						}
 					}
 					String overlayIconPath = element.getAttribute(ATTR_OVERLAY_ICON);
@@ -194,8 +238,14 @@ public class RepositoryConnectorUiExtensionReader {
 						ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(
 								element.getContributor().getName(), overlayIconPath);
 						if (descriptor != null) {
-							TasksUiPlugin.getDefault().addOverlayIcon(connectorUi.getConnectorKind(), descriptor);
+							((BrandManager) TasksUiPlugin.getDefault().getBrandManager()).addDefaultOverlayIcon(
+									connectorUi.getConnectorKind(), descriptor);
 						}
+					}
+
+					RepositoryConnectorBranding branding = loadAdapter(connector, RepositoryConnectorBranding.class);
+					if (branding != null) {
+						addBranding(connector.getConnectorKind(), branding);
 					}
 				} else {
 					StatusHandler.log(new Status(

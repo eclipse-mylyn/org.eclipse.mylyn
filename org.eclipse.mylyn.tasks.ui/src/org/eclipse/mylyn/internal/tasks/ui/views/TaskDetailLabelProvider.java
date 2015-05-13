@@ -17,7 +17,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -37,9 +36,7 @@ public class TaskDetailLabelProvider extends LabelProvider implements ILabelProv
 			return super.getImage(element);
 		}
 
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				((ITask) element).getConnectorKind());
-		ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(connector.getConnectorKind());
+		ImageDescriptor overlay = TasksUiPlugin.getDefault().getBrandManager().getOverlayIcon((ITask) element);
 		if (overlay != null) {
 			return CommonImages.getImageWithOverlay(TasksUiImages.REPOSITORY, overlay, false, false);
 		} else {

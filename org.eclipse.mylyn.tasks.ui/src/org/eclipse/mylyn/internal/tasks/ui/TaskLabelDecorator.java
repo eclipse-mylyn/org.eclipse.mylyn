@@ -58,8 +58,7 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 				decoration.addSuffix("   [" + taskRepository.getRepositoryLabel() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		} else if (element instanceof TaskRepository) {
-			ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(
-					((TaskRepository) element).getConnectorKind());
+			ImageDescriptor overlay = TasksUiPlugin.getDefault().getBrandManager().getOverlayIcon((TaskRepository) element);
 			if (overlay != null) {
 				decoration.addOverlay(overlay, IDecoration.BOTTOM_RIGHT);
 			}

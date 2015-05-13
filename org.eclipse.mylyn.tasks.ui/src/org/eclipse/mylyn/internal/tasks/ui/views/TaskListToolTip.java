@@ -418,18 +418,18 @@ public class TaskListToolTip extends GradientToolTip {
 	private Image getImage(IRepositoryElement element) {
 		if (element instanceof IRepositoryQuery) {
 			IRepositoryQuery query = (IRepositoryQuery) element;
-			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-					query.getConnectorKind());
-			if (connector != null) {
-				return TasksUiPlugin.getDefault().getBrandingIcon(connector.getConnectorKind());
+			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(query.getRepositoryUrl());
+			if (repository != null) {
+				return TasksUiPlugin.getDefault().getBrandManager().getBrandingIcon(repository);
 			}
+			return TasksUiPlugin.getDefault().getBrandManager().getDefaultBrandingIcon(query.getConnectorKind());
 		} else if (element instanceof ITask) {
-			ITask repositoryTask = (ITask) element;
-			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-					repositoryTask.getConnectorKind());
-			if (connector != null) {
-				return TasksUiPlugin.getDefault().getBrandingIcon(connector.getConnectorKind());
+			ITask task = (ITask) element;
+			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryUrl());
+			if (repository != null) {
+				return TasksUiPlugin.getDefault().getBrandManager().getBrandingIcon(repository);
 			}
+			return TasksUiPlugin.getDefault().getBrandManager().getDefaultBrandingIcon(task.getConnectorKind());
 		} else if (element instanceof ScheduledTaskContainer) {
 			return CommonImages.getImage(CommonImages.CALENDAR);
 		}

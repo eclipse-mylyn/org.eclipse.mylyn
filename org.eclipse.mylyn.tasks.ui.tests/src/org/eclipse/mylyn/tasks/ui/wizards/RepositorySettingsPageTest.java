@@ -12,7 +12,10 @@
 package org.eclipse.mylyn.tasks.ui.wizards;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -22,12 +25,17 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardContainer;
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.NewRepositoryWizard;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.junit.Test;
 
+@SuppressWarnings("restriction")
 public class RepositorySettingsPageTest {
 
 	public static class TestRepositorySettingsPage extends AbstractRepositorySettingsPage {
@@ -104,6 +112,39 @@ public class RepositorySettingsPageTest {
 		page.createControl(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
 		assertEquals("", page.getRepositoryUrl());
 		assertEquals("", page.getRepositoryLabel());
+	}
+
+	@Test
+	public void applyToNewRepository() {
+		NewRepositoryWizard wizard = mock(NewRepositoryWizard.class);
+		when(wizard.getBrand()).thenReturn("org.mylyn");
+		AbstractRepositorySettingsPage page = createPage(wizard);
+		TaskRepository repository = createTaskRepository();
+
+		page.applyTo(repository);
+		assertEquals("org.mylyn", repository.getProperty(ITasksCoreConstants.PROPERTY_BRAND_ID));
+	}
+
+	@Test
+	public void applyToExistingRepository() {
+		EditRepositoryWizard wizard = mock(EditRepositoryWizard.class);
+		AbstractRepositorySettingsPage page = createPage(wizard);
+		TaskRepository repository = createTaskRepository();
+
+		page.applyTo(repository);
+		assertNull(repository.getProperty(ITasksCoreConstants.PROPERTY_BRAND_ID));
+
+		repository.setProperty(ITasksCoreConstants.PROPERTY_BRAND_ID, "org.mylyn");
+		page.applyTo(repository);
+		assertEquals("org.mylyn", repository.getProperty(ITasksCoreConstants.PROPERTY_BRAND_ID));
+	}
+
+	protected AbstractRepositorySettingsPage createPage(Wizard wizard) {
+		AbstractRepositorySettingsPage page = spy(new RepositorySettingsPageWithNoCredentials(null));
+		doReturn("label").when(page).getRepositoryLabel();
+		when(page.needsProxy()).thenReturn(false);
+		when(page.getWizard()).thenReturn(wizard);
+		return page;
 	}
 
 	private IWizardContainer applyWizardContainer(TestRepositorySettingsPage page) {

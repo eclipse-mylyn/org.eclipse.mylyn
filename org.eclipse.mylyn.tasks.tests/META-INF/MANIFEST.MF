@@ -31,7 +31,8 @@ Require-Bundle: org.junit;bundle-version="4.8.2",
  org.eclipse.mylyn.tasks.ui,
  org.eclipse.mylyn.tests.util,
  org.eclipse.mylyn.commons.repositories.core,
- org.eclipse.core.runtime.compatibility.auth;resolution:=optional
+ org.eclipse.core.runtime.compatibility.auth;resolution:=optional,
+ com.google.guava;bundle-version="15.0.0"
 Export-Package: org.eclipse.mylyn.tasks.tests;x-internal:=true,
  org.eclipse.mylyn.tasks.tests.bugs;x-internal:=true,
  org.eclipse.mylyn.tasks.tests.connector;x-friends:="org.eclipse.mylyn.tasks.ui.tests",

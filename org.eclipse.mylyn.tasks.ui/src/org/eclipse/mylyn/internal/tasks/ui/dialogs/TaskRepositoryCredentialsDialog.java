@@ -135,7 +135,7 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 					.applyTo(labelComposite);
 
 			Label label = new Label(labelComposite, SWT.NONE);
-			label.setImage(TasksUiPlugin.getDefault().getBrandingIcon(taskRepository.getConnectorKind()));
+			label.setImage(TasksUiPlugin.getDefault().getBrandManager().getBrandingIcon(taskRepository));
 
 			label = new Label(labelComposite, SWT.NONE);
 			label.setText(Messages.TaskRepositoryCredentialsDialog_Task_Repository);
@@ -285,6 +285,7 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 				.applyTo(label);
 	}
 
+	@Override
 	public String getMessage() {
 		return message;
 	}

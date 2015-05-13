@@ -128,7 +128,7 @@ import org.osgi.util.tracker.ServiceTracker;
 
 /**
  * Main entry point for the Tasks UI.
- *
+ * 
  * @author Mik Kersten
  * @since 3.0
  */
@@ -183,9 +183,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private TaskListExternalizer taskListExternalizer;
 
-	private final Map<String, Image> brandingIcons = new HashMap<String, Image>();
-
-	private final Map<String, ImageDescriptor> overlayIcons = new HashMap<String, ImageDescriptor>();
+	private final BrandManager brandManager = new BrandManager();
 
 	private final Set<AbstractDuplicateDetector> duplicateDetectors = new HashSet<AbstractDuplicateDetector>();
 
@@ -636,16 +634,16 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			serviceMessageManager = new ServiceMessageManager(serviceMessageUrl, lastMod, etag, checktime,
 					new NotificationEnvironment() {
-				private Set<String> installedFeatures;
+						private Set<String> installedFeatures;
 
-				@Override
-				public Set<String> getInstalledFeatures(IProgressMonitor monitor) {
-					if (installedFeatures == null) {
-						installedFeatures = DiscoveryUi.createInstallJob().getInstalledFeatures(monitor);
-					}
-					return installedFeatures;
-				}
-			});
+						@Override
+						public Set<String> getInstalledFeatures(IProgressMonitor monitor) {
+							if (installedFeatures == null) {
+								installedFeatures = DiscoveryUi.createInstallJob().getInstalledFeatures(monitor);
+							}
+							return installedFeatures;
+						}
+					});
 
 			// Disabled for initial 3.4 release as per bug#263528
 			if (getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED)) {
@@ -777,7 +775,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	/**
 	 * Returns the local task repository. If the repository does not exist it is created and added to the task
 	 * repository manager.
-	 *
+	 * 
 	 * @return the local task repository; never <code>null</code>
 	 * @since 3.0
 	 */
@@ -867,7 +865,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	 * Persist <code>path</code> as data directory and loads data from <code>path</code>. This method may block if other
 	 * jobs are running that modify tasks data. This method will only execute after all conflicting jobs have been
 	 * completed.
-	 *
+	 * 
 	 * @throws CoreException
 	 *             in case setting of the data directory did not complete normally
 	 * @throws OperationCanceledException
@@ -954,12 +952,12 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			if (!taskActivityMonitor.getActivationHistory().isEmpty()) {
 				// tasks have been active before so fore preference enabled
 				MonitorUiPlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED, true);
+						.getPreferenceStore()
+						.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED, true);
 			}
 			MonitorUiPlugin.getDefault()
-			.getPreferenceStore()
-			.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED + ".checked", true); //$NON-NLS-1$
+					.getPreferenceStore()
+					.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED + ".checked", true); //$NON-NLS-1$
 			MonitorUiPlugin.getDefault().savePluginPreferences();
 		}
 
@@ -1119,20 +1117,44 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		return INSTANCE.repositoryTemplateManager;
 	}
 
+	/**
+	 * @deprecated Use {@link BrandManager#addDefaultBrandingIcon(String, Image)} instead
+	 * @see #getBrandManager()
+	 */
+	@Deprecated
 	public void addBrandingIcon(String repositoryType, Image icon) {
-		brandingIcons.put(repositoryType, icon);
+		brandManager.addDefaultBrandingIcon(repositoryType, icon);
 	}
 
+	/**
+	 * @deprecated Use {@link BrandManager#getDefaultBrandingIcon(String)} instead
+	 * @see #getBrandManager()
+	 */
+	@Deprecated
 	public Image getBrandingIcon(String repositoryType) {
-		return brandingIcons.get(repositoryType);
+		return brandManager.getDefaultBrandingIcon(repositoryType);
 	}
 
+	/**
+	 * @deprecated Use {@link BrandManager#addDefaultOverlayIcon(String, ImageDescriptor)} instead
+	 * @see #getBrandManager()
+	 */
+	@Deprecated
 	public void addOverlayIcon(String repositoryType, ImageDescriptor icon) {
-		overlayIcons.put(repositoryType, icon);
+		brandManager.addDefaultOverlayIcon(repositoryType, icon);
 	}
 
+	/**
+	 * @deprecated Use {@link BrandManager#getDefaultOverlayIcon(String)} instead
+	 * @see #getBrandManager()
+	 */
+	@Deprecated
 	public ImageDescriptor getOverlayIcon(String repositoryType) {
-		return overlayIcons.get(repositoryType);
+		return brandManager.getDefaultOverlayIcon(repositoryType);
+	}
+
+	public IBrandManager getBrandManager() {
+		return brandManager;
 	}
 
 	public void addRepositoryLinkProvider(AbstractTaskRepositoryLinkProvider repositoryLinkProvider) {
@@ -1257,7 +1279,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Associate a Task Repository with a workbench project
-	 *
+	 * 
 	 * @param resource
 	 *            project or resource belonging to a project
 	 * @param repository

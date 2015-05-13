@@ -60,6 +60,8 @@ public class NewRepositoryWizard extends Wizard implements INewWizard {
 
 	private boolean showNewQueryPromptOnFinish;
 
+	private String brand;
+
 	public NewRepositoryWizard() {
 		this(null);
 	}
@@ -99,6 +101,7 @@ public class NewRepositoryWizard extends Wizard implements INewWizard {
 	public IWizardPage getNextPage(IWizardPage page) {
 		if (page == selectConnectorPage) {
 			connector = selectConnectorPage.getConnector();
+			brand = selectConnectorPage.getBrand();
 			updateSettingsPage();
 			return settingsPage;
 		}
@@ -132,7 +135,7 @@ public class NewRepositoryWizard extends Wizard implements INewWizard {
 		return taskRepository;
 	}
 
-	private void updateSettingsPage() {
+	void updateSettingsPage() {
 		assert connector != null;
 		if (!connector.getConnectorKind().equals(lastConnectorKind)) {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(connector.getConnectorKind());
@@ -180,6 +183,10 @@ public class NewRepositoryWizard extends Wizard implements INewWizard {
 
 	public void setShowNewQueryPromptOnFinish(boolean showNewQueryPromptOnFinish) {
 		this.showNewQueryPromptOnFinish = showNewQueryPromptOnFinish;
+	}
+
+	public String getBrand() {
+		return brand;
 	}
 
 }

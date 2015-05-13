@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.commands.Command;
@@ -31,6 +32,8 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.ui.ConnectorBrand;
+import org.eclipse.mylyn.internal.tasks.ui.IBrandManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesSorter;
@@ -54,9 +57,19 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 
 	private TableViewer viewer;
 
-	private AbstractRepositoryConnector connector;
+	private ConnectorBrand connectorBrand;
 
-	static class RepositoryContentProvider implements IStructuredContentProvider {
+	static class ConnectorBrandContentProvider implements IStructuredContentProvider {
+
+		private final Collection<? extends AbstractRepositoryConnector> connectors;
+
+		private final IBrandManager brandManager;
+
+		public ConnectorBrandContentProvider(IBrandManager brandManager,
+				Collection<? extends AbstractRepositoryConnector> connectors) {
+			this.brandManager = brandManager;
+			this.connectors = connectors;
+		}
 
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		}
@@ -65,14 +78,16 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 		}
 
 		public Object[] getElements(Object parent) {
-			List<AbstractRepositoryConnector> userManagedRepositories = new ArrayList<AbstractRepositoryConnector>();
-			for (AbstractRepositoryConnector connector : TasksUi.getRepositoryManager().getRepositoryConnectors()) {
+			List<ConnectorBrand> connectorBrands = new ArrayList<ConnectorBrand>();
+			for (AbstractRepositoryConnector connector : connectors) {
 				if (connector.isUserManaged() && connector.canCreateRepository()) {
-					userManagedRepositories.add(connector);
+					connectorBrands.add(new ConnectorBrand(connector, null));
+					for (String brand : brandManager.getBrands(connector.getConnectorKind())) {
+						connectorBrands.add(new ConnectorBrand(connector, brand));
+					}
 				}
 			}
-
-			return userManagedRepositories.toArray();
+			return connectorBrands.toArray();
 		}
 	}
 
@@ -84,7 +99,7 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 
 	@Override
 	public boolean canFlipToNextPage() {
-		return connector != null;
+		return connectorBrand != null;
 	}
 
 	public void createControl(Composite parent) {
@@ -92,7 +107,8 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 		GridLayoutFactory.fillDefaults().numColumns(1).spacing(0, 3).applyTo(container);
 
 		viewer = new TableViewer(container, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		viewer.setContentProvider(new RepositoryContentProvider());
+		viewer.setContentProvider(new ConnectorBrandContentProvider(TasksUiPlugin.getDefault().getBrandManager(),
+				TasksUi.getRepositoryManager().getRepositoryConnectors()));
 		viewer.setSorter(new TaskRepositoriesSorter());
 		viewer.setLabelProvider(new DecoratingLabelProvider(new TaskRepositoryLabelProvider(),
 				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
@@ -100,8 +116,8 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-				if (selection.getFirstElement() instanceof AbstractRepositoryConnector) {
-					connector = (AbstractRepositoryConnector) selection.getFirstElement();
+				if (selection.getFirstElement() instanceof ConnectorBrand) {
+					setConnectorBrand((ConnectorBrand) selection.getFirstElement());
 					setPageComplete(true);
 				}
 			}
@@ -146,8 +162,16 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 		setControl(container);
 	}
 
+	void setConnectorBrand(ConnectorBrand connectorBrand) {
+		this.connectorBrand = connectorBrand;
+	}
+
 	public AbstractRepositoryConnector getConnector() {
-		return connector;
+		return connectorBrand == null ? null : connectorBrand.getConnector();
+	}
+
+	public String getBrand() {
+		return connectorBrand == null ? null : connectorBrand.getBrandId();
 	}
 
 }

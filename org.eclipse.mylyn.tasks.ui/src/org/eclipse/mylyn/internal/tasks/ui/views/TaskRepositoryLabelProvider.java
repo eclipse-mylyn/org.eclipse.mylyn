@@ -15,6 +15,8 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.Category;
+import org.eclipse.mylyn.internal.tasks.ui.ConnectorBrand;
+import org.eclipse.mylyn.internal.tasks.ui.IBrandManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DisconnectRepositoryAction;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -42,7 +44,16 @@ public class TaskRepositoryLabelProvider implements ILabelProvider {
 			return CommonImages.getImage(TasksUiImages.CATEGORY);
 		} else if (object instanceof AbstractRepositoryConnector) {
 			AbstractRepositoryConnector repositoryConnector = (AbstractRepositoryConnector) object;
-			Image image = TasksUiPlugin.getDefault().getBrandingIcon(repositoryConnector.getConnectorKind());
+			Image image = getBrandManager().getDefaultBrandingIcon(repositoryConnector.getConnectorKind());
+			if (image != null) {
+				return image;
+			} else {
+				return CommonImages.getImage(TasksUiImages.REPOSITORY);
+			}
+		} else if (object instanceof ConnectorBrand) {
+			ConnectorBrand connectorBrand = (ConnectorBrand) object;
+			Image image = getBrandManager().getBrandingIcon(connectorBrand.getConnector().getConnectorKind(),
+					connectorBrand.getBrandId());
 			if (image != null) {
 				return image;
 			} else {
@@ -59,7 +70,6 @@ public class TaskRepositoryLabelProvider implements ILabelProvider {
 	}
 
 	public String getText(Object object) {
-
 		if (object instanceof TaskRepository) {
 			TaskRepository repository = (TaskRepository) object;
 			StringBuilder label = new StringBuilder();
@@ -70,11 +80,18 @@ public class TaskRepositoryLabelProvider implements ILabelProvider {
 			return label.toString();
 		} else if (object instanceof AbstractRepositoryConnector) {
 			return ((AbstractRepositoryConnector) object).getLabel();
+		} else if (object instanceof ConnectorBrand) {
+			ConnectorBrand connectorBrand = (ConnectorBrand) object;
+			return getBrandManager().getConnectorLabel(connectorBrand.getConnector(), connectorBrand.getBrandId());
 		} else if (object instanceof Category) {
 			return ((Category) object).getLabel();
 		} else {
 			return null;
 		}
+	}
+
+	protected IBrandManager getBrandManager() {
+		return TasksUiPlugin.getDefault().getBrandManager();
 	}
 
 	public void addListener(ILabelProviderListener listener) {

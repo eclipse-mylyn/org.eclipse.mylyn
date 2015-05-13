@@ -71,6 +71,8 @@ public interface ITasksCoreConstants {
 	@Deprecated
 	public static final String PROPERTY_USE_SECURE_STORAGE = "org.eclipse.mylyn.tasklist.repositories.configuration.securestorage"; //$NON-NLS-1$
 
+	public static final String PROPERTY_BRAND_ID = "org.eclipse.mylyn.brand.id"; //$NON-NLS-1$
+
 	/**
 	 * Jobs that have the same instances of this rule set are mutually exclusive.
 	 */

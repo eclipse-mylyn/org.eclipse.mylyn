@@ -1144,7 +1144,12 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		if (LocalRepositoryConnector.CONNECTOR_KIND.equals(connectorKind)) {
 			return CommonImages.getImage(TasksUiImages.TASK);
 		} else {
-			ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(connectorKind);
+			ImageDescriptor overlay;
+			if (outgoingNewRepository != null) {
+				overlay = TasksUiPlugin.getDefault().getBrandManager().getOverlayIcon(outgoingNewRepository);
+			} else {
+				overlay = TasksUiPlugin.getDefault().getBrandManager().getOverlayIcon(task);
+			}
 			Image image = CommonImages.getImageWithOverlay(TasksUiImages.REPOSITORY, overlay, false, false);
 			return image;
 		}
