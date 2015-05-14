@@ -21,8 +21,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
@@ -37,6 +39,7 @@ import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConnector;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestCreateTaskSchema;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestException;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestVersion;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.SingleTaskDataCollector;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Field;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.LoginToken;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Parameters;
@@ -341,8 +344,8 @@ public class BugzillaRestClientTest {
 		taskData.getRoot()
 				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())
 				.setValue("M2");
-		RepositoryResponse xx = connector.getClient(actualFixture.repository()).postTaskData(taskData, null);
-		assertEquals(ResponseKind.TASK_CREATED, xx.getReposonseKind());
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskData, null);
+		assertEquals(ResponseKind.TASK_CREATED, reposonse.getReposonseKind());
 	}
 
 	@Test
@@ -389,7 +392,88 @@ public class BugzillaRestClientTest {
 		TaskMapper mapper1 = new TaskMapper(taskData);
 		connector.getTaskMapping(taskDataSubmit).merge(mapper1);
 
-		RepositoryResponse xx = connector.getClient(actualFixture.repository()).postTaskData(taskDataSubmit, null);
-		assertEquals(ResponseKind.TASK_CREATED, xx.getReposonseKind());
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskDataSubmit,
+				null);
+		assertEquals(ResponseKind.TASK_CREATED, reposonse.getReposonseKind());
 	}
+
+	@Test
+	public void testGetTaskData() throws Exception {
+		final TaskMapping taskMappingInit = new TaskMapping() {
+			@Override
+			public String getSummary() {
+				return "The Summary";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The Description";
+			}
+
+			@Override
+			public String getProduct() {
+				return "ManualTest";
+			}
+
+			@Override
+			public String getComponent() {
+				return "ManualC1";
+			}
+
+			@Override
+			public String getVersion() {
+				return "R1";
+			}
+		};
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(actualFixture.repository());
+		TaskData taskData = new TaskData(mapper, actualFixture.repository().getConnectorKind(),
+				actualFixture.repository().getRepositoryUrl(), "");
+		taskDataHandler.initializeTaskData(actualFixture.repository(), taskData, taskMappingInit, null);
+		taskData.getRoot().getAttribute("cf_dropdown").setValue("one");
+		taskData.getRoot()
+				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())
+				.setValue("M2");
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskData, null);
+		assertEquals(ResponseKind.TASK_CREATED, reposonse.getReposonseKind());
+		String taskId = reposonse.getTaskId();
+		Set<String> taskIds = new HashSet<String>();
+		taskIds.add(taskId);
+		SingleTaskDataCollector singleTaskDataCollector = new SingleTaskDataCollector();
+		connector.getClient(actualFixture.repository()).getTaskData(taskIds, actualFixture.repository(),
+				singleTaskDataCollector, null);
+		TaskData taskDataGet = singleTaskDataCollector.getTaskData();
+		assertNotNull(taskDataGet);
+		assertNotNull(taskDataGet.getRoot());
+
+		// actual we read no comments and so we also can not get the description
+		taskData.getRoot().removeAttribute("task.common.description");
+		taskDataGet.getRoot().removeAttribute("task.common.description");
+
+		// attributes we know that they can not be equal
+		taskData.getRoot().removeAttribute("task.common.status");
+		taskDataGet.getRoot().removeAttribute("task.common.status");
+		taskData.getRoot().removeAttribute("task.common.user.assigned");
+		taskDataGet.getRoot().removeAttribute("task.common.user.assigned");
+		taskData.getRoot().removeAttribute("task.common.operation");
+		taskDataGet.getRoot().removeAttribute("task.common.operation");
+
+		// attributes only in new tasks
+		taskData.getRoot().removeAttribute("description_is_private");
+
+		// attributes only in old tasks
+		taskDataGet.getRoot().removeAttribute("bug_id");
+		taskDataGet.getRoot().removeAttribute("task.common.comment.new");
+
+		// attributes for operations
+		taskDataGet.getRoot().removeAttribute("task.common.operation-CONFIRMED");
+		taskDataGet.getRoot().removeAttribute("task.common.operation-IN_PROGRESS");
+		taskDataGet.getRoot().removeAttribute("task.common.operation-RESOLVED");
+		taskDataGet.getRoot().removeAttribute("resolutionInput");
+		taskDataGet.getRoot().removeAttribute("task.common.operation-duplicate");
+		taskDataGet.getRoot().removeAttribute("dup_id");
+
+		assertEquals(taskData.getRoot().toString(), taskDataGet.getRoot().toString());
+	}
+
 }

@@ -12,13 +12,14 @@
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Component;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Field;
@@ -37,6 +38,8 @@ import com.google.common.collect.ImmutableSortedMap;
 import com.google.common.collect.Ordering;
 
 public class BugzillaRestConfiguration implements Serializable {
+
+	private static final BugzillaRestCreateTaskSchema SCHEMA = BugzillaRestCreateTaskSchema.getDefault();
 
 	private static final long serialVersionUID = 4173223872076958202L;
 
@@ -112,6 +115,8 @@ public class BugzillaRestConfiguration implements Serializable {
 	}
 
 	public void updateInitialTaskData(TaskData data) throws CoreException {
+		setProductOptions(data);
+		updateProductOptions(data);
 		for (String key : data.getRoot().getAttributes().keySet()) {
 			if (key.equals(BugzillaRestTaskSchema.getDefault().ADD_SELF_CC.getKey())
 					|| key.equals(BugzillaRestTaskSchema.getDefault().NEW_COMMENT.getKey())
@@ -119,65 +124,41 @@ public class BugzillaRestConfiguration implements Serializable {
 				continue;
 			}
 			TaskAttribute attribute = data.getRoot().getAttribute(key);
-			if (key.equals(BugzillaRestCreateTaskSchema.getDefault().PRODUCT.getKey())) {
-				List<String> products = new ArrayList<String>();
-				Field configFieldComponent = getFieldWithName("component");
-				FieldValues[] val = configFieldComponent.getValues();
-				if (val != null && val.length > 0) {
-					for (FieldValues fieldValues : val) {
-						fieldValues.getVisibilityValues();
-						for (String visibilityValue : fieldValues.getVisibilityValues()) {
-							if (!products.contains(visibilityValue)) {
-								products.add(visibilityValue);
-							}
-						}
-					}
-					attribute.clearOptions();
-					for (String productName : products) {
-						attribute.putOption(productName, productName);
-					}
-				}
-			} else {
+			if (!key.equals(SCHEMA.PRODUCT.getKey())) {
 				String configName = mapTaskAttributeKey2ConfigurationFields(key);
 				Field configField = getFieldWithName(configName);
 				if (configField == null) {
 					continue;
 				}
-				FieldValues[] val = configField.getValues();
-				if (val != null && val.length > 0) {
-					for (FieldValues fieldValues : val) {
-						if (configName.equals("bug_status")) {
-							if (fieldValues.getName() == null) {
-								for (StatusTransition bugzillaRestBugStatusTransition : fieldValues.getCanChangeTo()) {
-									attribute.putOption(bugzillaRestBugStatusTransition.getName(),
-											bugzillaRestBugStatusTransition.getName());
-								}
-							}
-						} else if (configName.equals("component") || configName.equals("version")
-								|| configName.equals("target_milestone")) {
-							TaskAttribute productAttribute = data.getRoot()
-									.getAttribute(BugzillaRestCreateTaskSchema.getDefault().PRODUCT.getKey());
-							String productValue = productAttribute.getValue();
-							for (String visibilityValue : fieldValues.getVisibilityValues()) {
-								if (visibilityValue.equals(productValue) || productValue.equals("")) {
-									attribute.putOption(fieldValues.getName(), fieldValues.getName());
-								}
-							}
-						} else {
-							attribute.putOption(fieldValues.getName(), fieldValues.getName());
-						}
-
-					}
-					if ((configName.equals("component") || configName.equals("version")
-							|| configName.equals("target_milestone")) && attribute.getOptions().size() == 1
-							&& attribute.getValue().equals("")) {
+				if (configName.equals("component") || configName.equals("version")
+						|| configName.equals("target_milestone")) {
+					if (attribute.getOptions().size() == 1 && attribute.getValue().isEmpty()) {
 						attribute.setValue((String) attribute.getOptions().values().toArray()[0]);
 					}
-					if ("".equals(attribute.getValue())) {
-						attribute.setValue(getValueFromParameter(key));
+				} else {
+					FieldValues[] val = configField.getValues();
+					if (val != null && val.length > 0) {
+						for (FieldValues fieldValues : val) {
+							if (configName.equals("bug_status")) {
+								if (fieldValues.getName() == null) {
+									for (StatusTransition bugzillaRestBugStatusTransition : fieldValues
+											.getCanChangeTo()) {
+										attribute.putOption(bugzillaRestBugStatusTransition.getName(),
+												bugzillaRestBugStatusTransition.getName());
+									}
+								}
+							} else {
+								attribute.putOption(fieldValues.getName(), fieldValues.getName());
+							}
+
+						}
 					}
 				}
 			}
+			if (attribute.getValue().isEmpty()) {
+				attribute.setValue(getValueFromParameter(key));
+			}
+
 		}
 		for (Field Field : fields.values()) {
 			if (Field.isCustom() && Field.isOnBugEntry()) {
@@ -209,13 +190,13 @@ public class BugzillaRestConfiguration implements Serializable {
 		} else if (attributeId.equals(TaskAttribute.SEVERITY)) {
 			return getParameters().getDefaultseverity();
 		} else if (attributeId.equals("platform")) {
-			if (getParameters().getDefaultplatform() == null || getParameters().getDefaultplatform().equals("")) {
+			if (getParameters().getDefaultplatform() == null || getParameters().getDefaultplatform().isEmpty()) {
 				return "All";
 			} else {
 				return getParameters().getDefaultplatform();
 			}
 		} else if (attributeId.equals("os")) {
-			if (getParameters().getDefaultopsys() == null || getParameters().getDefaultopsys().equals("")) {
+			if (getParameters().getDefaultopsys() == null || getParameters().getDefaultopsys().isEmpty()) {
 				return "All";
 			} else {
 				return getParameters().getDefaultopsys();
@@ -266,7 +247,7 @@ public class BugzillaRestConfiguration implements Serializable {
 			resultString = "cc";
 		} else if (taskAttributeKey.equals(TaskAttribute.DESCRIPTION)) {
 			resultString = "longdesc";
-		} else if (taskAttributeKey.equals("comment_is_private")) {
+		} else if (taskAttributeKey.equals("description_is_private")) {
 			resultString = "longdescs.isprivate";
 		} else if (taskAttributeKey.equals("os")) {
 			resultString = "op_sys";
@@ -284,11 +265,11 @@ public class BugzillaRestConfiguration implements Serializable {
 
 	private void setAttributeOptionsForProduct(TaskAttribute taskAttribute, Product actualProduct) {
 		taskAttribute.clearOptions();
-		if (taskAttribute.getId().equals(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())) {
+		if (taskAttribute.getId().equals(SCHEMA.TARGET_MILESTONE.getKey())) {
 			internalSetAttributeOptions(taskAttribute, actualProduct.getMilestones());
-		} else if (taskAttribute.getId().equals(BugzillaRestCreateTaskSchema.getDefault().VERSION.getKey())) {
+		} else if (taskAttribute.getId().equals(SCHEMA.VERSION.getKey())) {
 			internalSetAttributeOptions(taskAttribute, actualProduct.getVersions());
-		} else if (taskAttribute.getId().equals(BugzillaRestCreateTaskSchema.getDefault().COMPONENT.getKey())) {
+		} else if (taskAttribute.getId().equals(SCHEMA.COMPONENT.getKey())) {
 			internalSetAttributeOptions(taskAttribute, actualProduct.getComponents());
 		}
 	}
@@ -311,23 +292,21 @@ public class BugzillaRestConfiguration implements Serializable {
 
 	public boolean updateAfterComponentChange(TaskAttribute taskAttribute) {
 		if (taskAttribute != null) {
-			if (taskAttribute.getId().equals(BugzillaRestCreateTaskSchema.getDefault().COMPONENT.getKey())) {
+			if (taskAttribute.getId().equals(SCHEMA.COMPONENT.getKey())) {
 				TaskAttribute rootAttribute = taskAttribute.getTaskData().getRoot();
 				TaskAttribute productAttribute = taskAttribute.getTaskData()
 						.getRoot()
-						.getMappedAttribute(BugzillaRestCreateTaskSchema.getDefault().PRODUCT.getKey());
+						.getMappedAttribute(SCHEMA.PRODUCT.getKey());
 				Product actualProduct = getProductWithName(productAttribute.getValue());
 				Component actualComponent = getProductComponentWithName(actualProduct, taskAttribute.getValue());
 				if (actualComponent != null) {
 					taskAttribute.getMetaData().putValue(TaskAttribute.META_DESCRIPTION,
 							actualComponent.getDescription());
-					TaskAttribute attributeQaContact = rootAttribute
-							.getMappedAttribute(BugzillaRestCreateTaskSchema.getDefault().QA_CONTACT.getKey());
+					TaskAttribute attributeQaContact = rootAttribute.getMappedAttribute(SCHEMA.QA_CONTACT.getKey());
 					if (attributeQaContact != null) {
 						attributeQaContact.setValue(actualComponent.getDefaultQaContact());
 					}
-					TaskAttribute attributeAssignedTo = rootAttribute
-							.getMappedAttribute(BugzillaRestCreateTaskSchema.getDefault().ASSIGNED_TO.getKey());
+					TaskAttribute attributeAssignedTo = rootAttribute.getMappedAttribute(SCHEMA.ASSIGNED_TO.getKey());
 					if (attributeAssignedTo != null) {
 						attributeAssignedTo.setValue(actualComponent.getDefaultAssignedTo());
 					}
@@ -338,31 +317,74 @@ public class BugzillaRestConfiguration implements Serializable {
 		return false;
 	}
 
-	public boolean updateProductOptions(TaskAttribute taskAttribute) {
-		if (taskAttribute != null) {
-			if (taskAttribute.getId().equals(BugzillaRestCreateTaskSchema.getDefault().PRODUCT.getKey())) {
-				TaskAttribute rootAttribute = taskAttribute.getTaskData().getRoot();
-				Product actualProduct = getProductWithName(taskAttribute.getValue());
-
-				TaskAttribute attributeComponent = rootAttribute
-						.getMappedAttribute(BugzillaRestCreateTaskSchema.getDefault().COMPONENT.getKey());
-				if (attributeComponent != null) {
-					setAttributeOptionsForProduct(attributeComponent, actualProduct);
+	public boolean setProductOptions(@NonNull TaskData taskData) {
+		TaskAttribute attributeProduct = taskData.getRoot().getMappedAttribute(SCHEMA.PRODUCT.getKey());
+		if (attributeProduct != null) {
+			SortedSet<String> products = new TreeSet<String>();
+			Field configFieldComponent = getFieldWithName("component");
+			FieldValues[] val = configFieldComponent.getValues();
+			if (val != null && val.length > 0) {
+				for (FieldValues fieldValues : val) {
+					for (String visibilityValue : fieldValues.getVisibilityValues()) {
+						if (!products.contains(visibilityValue)) {
+							products.add(visibilityValue);
+						}
+					}
 				}
-				TaskAttribute attributeVersion = rootAttribute
-						.getMappedAttribute(BugzillaRestCreateTaskSchema.getDefault().VERSION.getKey());
-				if (attributeVersion != null) {
-					setAttributeOptionsForProduct(attributeVersion, actualProduct);
-				}
-				TaskAttribute attributeTargetMilestone = rootAttribute
-						.getMappedAttribute(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey());
-				if (attributeTargetMilestone != null) {
-					setAttributeOptionsForProduct(attributeTargetMilestone, actualProduct);
+				attributeProduct.clearOptions();
+				for (String productName : products) {
+					attributeProduct.putOption(productName, productName);
 				}
 			}
+
 			return true;
 		}
 		return false;
+	}
+
+	public boolean updateProductOptions(@NonNull TaskData taskData) {
+		TaskAttribute attributeProduct = taskData.getRoot().getMappedAttribute(SCHEMA.PRODUCT.getKey());
+		if (!attributeProduct.getValue().isEmpty()) {
+			Product actualProduct = getProductWithName(attributeProduct.getValue());
+
+			TaskAttribute attributeComponent = taskData.getRoot().getMappedAttribute(SCHEMA.COMPONENT.getKey());
+			if (attributeComponent != null) {
+				setAttributeOptionsForProduct(attributeComponent, actualProduct);
+			}
+			TaskAttribute attributeVersion = taskData.getRoot().getMappedAttribute(SCHEMA.VERSION.getKey());
+			if (attributeVersion != null) {
+				setAttributeOptionsForProduct(attributeVersion, actualProduct);
+			}
+			TaskAttribute attributeTargetMilestone = taskData.getRoot()
+					.getMappedAttribute(SCHEMA.TARGET_MILESTONE.getKey());
+			if (attributeTargetMilestone != null) {
+				setAttributeOptionsForProduct(attributeTargetMilestone, actualProduct);
+			}
+		} else {
+			TaskAttribute attributeComponent = taskData.getRoot().getMappedAttribute(SCHEMA.COMPONENT.getKey());
+			if (attributeComponent != null) {
+				setAllAttributeOptions(attributeComponent, getFieldWithName("component")); //$NON-NLS-1$
+			}
+			TaskAttribute attributeVersion = taskData.getRoot().getMappedAttribute(SCHEMA.VERSION.getKey());
+			if (attributeVersion != null) {
+				setAllAttributeOptions(attributeVersion, getFieldWithName("version")); //$NON-NLS-1$
+			}
+			TaskAttribute attributeTargetMilestone = taskData.getRoot()
+					.getMappedAttribute(SCHEMA.TARGET_MILESTONE.getKey());
+			if (attributeTargetMilestone != null) {
+				setAllAttributeOptions(attributeTargetMilestone, getFieldWithName("target_milestone")); //$NON-NLS-1$
+			}
+		}
+		return true;
+	}
+
+	private void setAllAttributeOptions(TaskAttribute updateAttribute, Field configField) {
+		FieldValues[] val = configField.getValues();
+		if (val != null && val.length > 0) {
+			for (FieldValues fieldValues : val) {
+				updateAttribute.putOption(fieldValues.getName(), fieldValues.getName());
+			}
+		}
 	}
 
 	public void addValidOperations(TaskData bugReport) {
@@ -379,7 +401,7 @@ public class BugzillaRestConfiguration implements Serializable {
 		TaskOperation.applyTo(operationAttribute, attributeStatusValue, attributeStatusValue);
 		Field status = getFieldWithName("bug_status");
 		for (FieldValues fieldValues : status.getValues()) {
-			if (((attributeStatusValue == null || attributeStatusValue.equals("")) && fieldValues.getName() == null)
+			if (((attributeStatusValue == null || attributeStatusValue.isEmpty()) && fieldValues.getName() == null)
 					|| (attributeStatusValue != null && attributeStatusValue.equals(fieldValues.getName()))) {
 				for (StatusTransition statusTransition : fieldValues.getCanChangeTo()) {
 					attribute = bugReport.getRoot()

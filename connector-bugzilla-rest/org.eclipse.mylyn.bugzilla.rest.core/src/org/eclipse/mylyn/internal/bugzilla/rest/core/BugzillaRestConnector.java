@@ -31,13 +31,15 @@ import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryInfo;
 import org.eclipse.mylyn.tasks.core.RepositoryVersion;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
-import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 
 import com.google.common.base.Optional;
@@ -196,11 +198,7 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 	@Override
 	public TaskData getTaskData(TaskRepository repository, String taskIdOrKey, IProgressMonitor monitor)
 			throws CoreException {
-		// only to not generate NPE in SubmitTaskJob.createTask()
-		// we replace this with the next review
-		AbstractTaskDataHandler taskDataHandler = getTaskDataHandler();
-		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(repository);
-		return new TaskData(mapper, repository.getConnectorKind(), repository.getRepositoryUrl(), taskIdOrKey);
+		return ((BugzillaRestTaskDataHandler) getTaskDataHandler()).getTaskData(repository, taskIdOrKey, monitor);
 	}
 
 	@Override
@@ -321,6 +319,32 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 	public boolean isRepositoryConfigurationStale(TaskRepository repository, IProgressMonitor monitor)
 			throws CoreException {
 		return false;
+	}
+
+	@Override
+	public ITaskMapping getTaskMapping(final TaskData taskData) {
+
+		return new TaskMapper(taskData) {
+			@Override
+			public String getTaskKey() {
+				TaskAttribute attribute = getTaskData().getRoot()
+						.getAttribute(BugzillaRestTaskSchema.getDefault().BUG_ID.getKey());
+				if (attribute != null) {
+					return attribute.getValue();
+				}
+				return super.getTaskKey();
+			}
+
+			@Override
+			public String getTaskKind() {
+				return taskData.getConnectorKind();
+			}
+
+			@Override
+			public String getTaskUrl() {
+				return taskData.getRepositoryUrl();
+			}
+		};
 	}
 
 }

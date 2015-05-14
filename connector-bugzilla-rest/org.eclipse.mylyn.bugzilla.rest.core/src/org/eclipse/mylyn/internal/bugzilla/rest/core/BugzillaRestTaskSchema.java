@@ -16,9 +16,34 @@ import org.eclipse.mylyn.tasks.core.data.DefaultTaskSchema;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
+import com.google.common.collect.ImmutableMap;
+
 public class BugzillaRestTaskSchema extends AbstractTaskSchema {
 
 	private static final BugzillaRestTaskSchema instance = new BugzillaRestTaskSchema();
+
+	private static ImmutableMap<String, String> field2AttributeFieldMapper = new ImmutableMap.Builder()
+			.put("summary", getDefault().SUMMARY.getKey())
+			.put("description", getDefault().DESCRIPTION.getKey())
+			.put("status", getDefault().STATUS.getKey())
+			.put("product", getDefault().PRODUCT.getKey())
+			.put("component", getDefault().COMPONENT.getKey())
+			.put("CC", getDefault().CC.getKey())
+			.put("severity", getDefault().SEVERITY.getKey())
+			.put("priority", getDefault().PRIORITY.getKey())
+			.put("assigned_to", getDefault().ASSIGNED_TO.getKey())
+			.put("op_sys", getDefault().OS.getKey())
+			.put("resolution", getDefault().RESOLUTION.getKey())
+			.put("version", getDefault().VERSION.getKey())
+			.build();
+
+	public static String getAttributeNameFromFieldName(String fieldName) {
+		String result = field2AttributeFieldMapper.get(fieldName);
+		if (result == null) {
+			result = fieldName;
+		}
+		return result;
+	}
 
 	public static BugzillaRestTaskSchema getDefault() {
 		return instance;
@@ -36,7 +61,7 @@ public class BugzillaRestTaskSchema extends AbstractTaskSchema {
 
 	public final Field SUMMARY = inheritFrom(parent.SUMMARY).addFlags(Flag.REQUIRED).create();
 
-	public final Field VERSION = createField("version", "Version", TaskAttribute.TYPE_SINGLE_SELECT, null,
+	public final Field VERSION = createField(TaskAttribute.VERSION, "Version", TaskAttribute.TYPE_SINGLE_SELECT, null,
 			PRODUCT.getKey(), Flag.ATTRIBUTE, Flag.REQUIRED);
 
 	public final Field DESCRIPTION = inheritFrom(parent.DESCRIPTION).addFlags(Flag.REQUIRED, Flag.READ_ONLY).create();
@@ -68,14 +93,14 @@ public class BugzillaRestTaskSchema extends AbstractTaskSchema {
 	public final Field QA_CONTACT = createField("qa_contact", "QA Contact", TaskAttribute.TYPE_PERSON, null,
 			COMPONENT.getKey(), Flag.PEOPLE);
 
-	public final Field NEW_COMMENT = inheritFrom(parent.NEW_COMMENT).create();
+	public final Field TARGET_MILESTONE = createField("target_milestone", "Target milestone",
+			TaskAttribute.TYPE_SINGLE_SELECT, null, PRODUCT.getKey(), Flag.ATTRIBUTE, Flag.REQUIRED);
 
 	public final Field RESOLUTION = inheritFrom(parent.RESOLUTION).create();
 
-	public final Field TARGET_MILESTONE = createField("target_milestone", "Target milestone",
-			TaskAttribute.TYPE_SINGLE_SELECT, null, PRODUCT.getKey(), Flag.ATTRIBUTE);
-
 	public final Field OPERATION = createField(TaskAttribute.OPERATION, "Operation", TaskAttribute.TYPE_OPERATION);
+
+	public final Field NEW_COMMENT = inheritFrom(parent.NEW_COMMENT).create();
 
 	@Override
 	public void initialize(TaskData taskData) {

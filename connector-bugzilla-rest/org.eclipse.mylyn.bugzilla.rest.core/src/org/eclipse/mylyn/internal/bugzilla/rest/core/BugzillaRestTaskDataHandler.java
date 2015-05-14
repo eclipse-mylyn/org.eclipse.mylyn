@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -18,6 +19,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
+import org.eclipse.mylyn.commons.core.operations.IOperationMonitor.OperationFlag;
 import org.eclipse.mylyn.commons.core.operations.OperationUtil;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
@@ -27,6 +29,7 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
 public class BugzillaRestTaskDataHandler extends AbstractTaskDataHandler {
 	protected final BugzillaRestConnector connector;
@@ -80,6 +83,41 @@ public class BugzillaRestTaskDataHandler extends AbstractTaskDataHandler {
 	@Override
 	public TaskAttributeMapper getAttributeMapper(TaskRepository repository) {
 		return new BugzillaRestTaskAttributeMapper(repository, connector);
+	}
+
+	public TaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
+			throws CoreException {
+
+		Set<String> taskIds = new HashSet<String>();
+		taskIds.add(taskId);
+		SingleTaskDataCollector singleTaskDataCollector = new SingleTaskDataCollector();
+		getMultiTaskData(repository, taskIds, singleTaskDataCollector, monitor);
+
+		if (singleTaskDataCollector.getTaskData() == null) {
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN,
+					"Task data could not be retrieved. Please re-synchronize task")); //$NON-NLS-1$
+		}
+		return singleTaskDataCollector.getTaskData();
+	}
+
+	@Override
+	public void getMultiTaskData(final TaskRepository repository, Set<String> taskIds,
+			final TaskDataCollector collector, IProgressMonitor monitor) throws CoreException {
+		monitor = Policy.monitorFor(monitor);
+		try {
+			monitor.beginTask("retrive_task", IProgressMonitor.UNKNOWN);
+			BugzillaRestClient client = connector.getClient(repository);
+			try {
+				IOperationMonitor progress = OperationUtil.convert(monitor, "post taskdata", 3);
+				progress.addFlag(OperationFlag.BACKGROUND);
+				client.getTaskData(taskIds, repository, collector, progress);
+			} catch (BugzillaRestException e) {
+				throw new CoreException(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, 2,
+						"Error get taskdata.\n\n" + e.getMessage(), e));
+			}
+		} finally {
+			monitor.done();
+		}
 	}
 
 }

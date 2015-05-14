@@ -11,8 +11,11 @@
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -32,8 +35,11 @@ import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
 import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.reflect.TypeToken;
@@ -117,6 +123,56 @@ public class BugzillaRestClient {
 		} else {
 			throw new UnsupportedOperationException();
 		}
+	}
+
+	private final Function<String, String> function = new Function<String, String>() {
+
+		@Override
+		public String apply(String input) {
+			while (input.startsWith("0")) { //$NON-NLS-1$
+				input = input.substring(1);
+			}
+			return input;
+		}
+	};
+
+	public void getTaskData(Set<String> taskIds, TaskRepository taskRepository, TaskDataCollector collector,
+			IOperationMonitor monitor) throws BugzillaRestException {
+		BugzillaRestConfiguration config;
+		try {
+			config = connector.getRepositoryConfiguration(taskRepository);
+		} catch (CoreException e1) {
+			throw new BugzillaRestException(e1);
+		}
+
+		Iterable<String> taskIdsTemp = Iterables.transform(taskIds, function);
+		Iterable<List<String>> partitions = Iterables.partition(taskIdsTemp, MAX_RETRIEVED_PER_QUERY);
+		for (List<String> list : partitions) {
+			Joiner joiner = Joiner.on(",id=").skipNulls(); //$NON-NLS-1$
+			String urlIDList = "id=" + joiner.join(list); //$NON-NLS-1$
+			try {
+
+				List<TaskData> taskDataArray = new BugzillaRestGetTaskData(client, connector, urlIDList, taskRepository)
+						.run(monitor);
+				for (TaskData taskData : taskDataArray) {
+					config.updateProductOptions(taskData);
+					config.addValidOperations(taskData);
+					collector.accept(taskData);
+				}
+			} catch (BugzillaRestException e) {
+				throw e;
+			} catch (RuntimeException e) {
+				// if the Throwable was warped in a RuntimeException in
+				// BugzillaRestGetTaskData.JSonTaskDataDeserializer.deserialize()
+				// we now remove the warper and throw a  BugzillaRestException
+				Throwable cause = e.getCause();
+				if (cause instanceof CoreException) {
+					throw new BugzillaRestException(cause);
+				}
+				throw e;
+			}
+		}
+
 	}
 
 }

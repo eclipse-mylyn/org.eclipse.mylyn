@@ -90,8 +90,8 @@ public class BugzillaRestPostNewTask extends BugzillaRestAuthenticatedPostReques
 					}
 					out.name(id).value(value1);
 					if (id.equals("description")) { //$NON-NLS-1$
-						TaskAttribute descriptionpri = taskAttribute
-								.getAttribute(BugzillaRestCreateTaskSchema.getDefault().COMMENT_IS_PRIVATE.getKey());
+						TaskAttribute descriptionpri = taskAttribute.getAttribute(
+								BugzillaRestCreateTaskSchema.getDefault().DESCRIPTION_IS_PRIVATE.getKey());
 						Boolean descriptionprivalue = (descriptionpri != null)
 								? (descriptionpri.getValue().equals("1")) //$NON-NLS-1$
 								: false;

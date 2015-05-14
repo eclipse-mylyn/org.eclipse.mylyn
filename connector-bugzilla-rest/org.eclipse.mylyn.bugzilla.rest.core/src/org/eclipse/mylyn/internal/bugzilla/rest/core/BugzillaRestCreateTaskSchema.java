@@ -70,6 +70,8 @@ public class BugzillaRestCreateTaskSchema extends AbstractTaskSchema {
 
 	public final Field SEVERITY = inheritFrom(parent.SEVERITY).create();
 
+	public final Field STATUS = inheritFrom(parent.STATUS).create();
+
 	public final Field ALIAS = createField("alias", "Alias", TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE);
 
 	public final Field ASSIGNED_TO = inheritFrom(parent.USER_ASSIGNED).label("Assigned to")
@@ -80,18 +82,16 @@ public class BugzillaRestCreateTaskSchema extends AbstractTaskSchema {
 
 	public final Field ADD_SELF_CC = inheritFrom(parent.ADD_SELF_CC).addFlags(Flag.PEOPLE).create();
 
-	public final Field COMMENT_IS_PRIVATE = createField("comment_is_private", "Description is private",
+	public final Field DESCRIPTION_IS_PRIVATE = createField("description_is_private", "Description is private",
 			TaskAttribute.TYPE_BOOLEAN, Flag.ATTRIBUTE);
 
 	public final Field QA_CONTACT = createField("qa_contact", "QA Contact", TaskAttribute.TYPE_PERSON, null,
 			COMPONENT.getKey(), Flag.PEOPLE);
 
 	public final Field TARGET_MILESTONE = createField("target_milestone", "Target milestone",
-			TaskAttribute.TYPE_SINGLE_SELECT, null, PRODUCT.getKey(), Flag.ATTRIBUTE);
+			TaskAttribute.TYPE_SINGLE_SELECT, null, PRODUCT.getKey(), Flag.ATTRIBUTE, Flag.REQUIRED);
 
 	public final Field RESOLUTION = inheritFrom(parent.RESOLUTION).create();
 
 	public final Field OPERATION = createField(TaskAttribute.OPERATION, "Operation", TaskAttribute.TYPE_OPERATION);
-
-	public final Field STATUS = inheritFrom(parent.STATUS).create();
 }
