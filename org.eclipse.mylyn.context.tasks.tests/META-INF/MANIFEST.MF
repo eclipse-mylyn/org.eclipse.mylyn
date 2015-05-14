@@ -23,6 +23,9 @@ Require-Bundle: org.junit;bundle-version="4.8.2",
  org.eclipse.mylyn.tasks.core,
  org.eclipse.mylyn.tasks.tests,
  org.eclipse.mylyn.tasks.ui,
- org.eclipse.mylyn.tests.util
+ org.eclipse.mylyn.tests.util,
+ org.eclipse.ui.editors,
+ org.eclipse.ui.forms,
+ com.google.guava;bundle-version="15.0.0"
 Export-Package: org.eclipse.mylyn.context.tasks.tests;x-internal:=true
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

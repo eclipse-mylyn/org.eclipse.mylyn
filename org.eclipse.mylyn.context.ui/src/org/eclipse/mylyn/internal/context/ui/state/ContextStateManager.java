@@ -133,7 +133,7 @@ public class ContextStateManager {
 	}
 
 	public void saveState(IInteractionContext context, OutputStream storable, final boolean allowModifications) {
-		final ContextState memento = createMemento(context, CHARSET);
+		final ContextState memento = createMemento(context, context.getHandleIdentifier());
 		participants.notify(new Notifier<ContextStateParticipant>() {
 			@Override
 			public void run(ContextStateParticipant participant) throws Exception {
