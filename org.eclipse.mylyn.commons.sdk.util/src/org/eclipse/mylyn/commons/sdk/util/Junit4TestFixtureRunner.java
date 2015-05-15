@@ -40,7 +40,7 @@ public class Junit4TestFixtureRunner extends Suite {
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.TYPE)
 	public static @interface FixtureDefinition {
-		Class<?> fixtureClass();
+		Class<?>fixtureClass();
 
 		String fixtureType();
 	}
@@ -70,8 +70,8 @@ public class Junit4TestFixtureRunner extends Suite {
 		@Override
 		protected String testName(final FrameworkMethod method) {
 			if (Boolean.parseBoolean(System.getProperty("org.eclipse.mylyn.tests.all"))) {
-				return String.format("%s[%s %s]", method.getName(), fFixtureSetNumber, fFixtureList.get(0)
-						.getSimpleInfo());
+				return String.format("%s[%s %s]", method.getName(), fFixtureSetNumber,
+						fFixtureList.get(fFixtureSetNumber).getSimpleInfo());
 			} else {
 				return super.testName(method);
 			}
@@ -102,14 +102,14 @@ public class Junit4TestFixtureRunner extends Suite {
 
 		String fixtureType = null;
 		for (Annotation annotation : getTestClass().getAnnotations()) {
-			if ("org.eclipse.mylyn.commons.sdk.util.Junit4TestFixtureRunner.OnlyRunWithProperty".equals(annotation.annotationType()
-					.getCanonicalName())) {
+			if ("org.eclipse.mylyn.commons.sdk.util.Junit4TestFixtureRunner.OnlyRunWithProperty"
+					.equals(annotation.annotationType().getCanonicalName())) {
 				RunOnlyWhenProperty onlyWhenProperty = (RunOnlyWhenProperty) annotation;
 				restrictProperty = onlyWhenProperty.property();
 				restrictValue = onlyWhenProperty.value();
 			}
-			if ("org.eclipse.mylyn.commons.sdk.util.Junit4TestFixtureRunner.FixtureDefinition".equals(annotation.annotationType()
-					.getCanonicalName())) {
+			if ("org.eclipse.mylyn.commons.sdk.util.Junit4TestFixtureRunner.FixtureDefinition"
+					.equals(annotation.annotationType().getCanonicalName())) {
 				FixtureDefinition fixtueDef = (FixtureDefinition) annotation;
 				fixtureClass = fixtueDef.fixtureClass();
 				fixtureType = fixtueDef.fixtureType();
