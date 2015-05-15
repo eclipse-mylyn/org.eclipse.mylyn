@@ -36,3 +36,5 @@ if [ -n "$SITE" ]; then
   fi
  done
 fi
+
+$(dirname $0)/../../org.eclipse.mylyn.releng/bin/generate-snapshot-index.sh
