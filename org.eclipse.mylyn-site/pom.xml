@@ -97,7 +97,7 @@
                   <property name="skipPromote" value="${promote.skip}"/>
                   
                   <property name="version" value="${unqualifiedVersion}"/>
-                  <property name="qualifier" value="${promote.prefix}${buildQualifier}"/>
+                  <property name="qualifier" value="${buildQualifier}"/>
                 </ant>
                 <echo file="${project.build.directory}/version.properties">
                   <![CDATA[
