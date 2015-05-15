@@ -12,9 +12,31 @@
 package org.eclipse.mylyn.internal.gerrit.ui;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
+
+import org.eclipse.mylyn.commons.workbench.EditorHandle;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
+import org.eclipse.mylyn.internal.gerrit.ui.editor.GerritTaskEditorPage;
+import org.eclipse.mylyn.reviews.core.model.IFileItem;
+import org.eclipse.mylyn.reviews.core.model.IReview;
+import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 import org.junit.Test;
 
 /**
@@ -22,125 +44,243 @@ import org.junit.Test;
  */
 public class GerritUrlHandlerTest {
 
+	private final TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND,
+			"http://review.mylyn.org");
+
 	private final GerritUrlHandler handler = new GerritUrlHandler();
+
+	private IWorkbenchPage page;
+
+	private String taskId;
+
+	private int patchSetNumber;
+
+	private String path;
 
 	@Test
 	public void testGetTaskId() {
-		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org");
 		assertEquals("123", handler.getTaskId(repository, "http://review.mylyn.org/123"));
 	}
 
 	@Test
 	public void testGetTaskIdTrailingSlashAfterId() {
-		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org");
 		assertEquals("123", handler.getTaskId(repository, "http://review.mylyn.org/123/foo/bar"));
 	}
 
 	@Test
 	public void testGetTaskIdInvalidId() {
-		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://mylyn.org/reviews");
-		assertEquals(null, handler.getTaskId(repository, "http://mylyn.org/reviews/ab123"));
+		assertEquals(null, handler.getTaskId(repository, "http://review.mylyn.org/ab123"));
 	}
 
 	@Test
 	public void testGetTaskIdRepositoryMismatch() {
-		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org/");
 		assertEquals(null, handler.getTaskId(repository, "http://mylyn.org/reviews/123"));
 	}
 
 	@Test
 	public void testGetTaskIdSubPath() {
-		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://mylyn.org/reviews");
-		assertEquals("123", handler.getTaskId(repository, "http://mylyn.org/reviews/123"));
-	}
-
-	@Test
-	public void testGetTaskIdTrailingSlash() {
-		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org/");
 		assertEquals("123", handler.getTaskId(repository, "http://review.mylyn.org/123"));
 	}
 
 	@Test
+	public void testGetTaskIdTrailingSlash() {
+		TaskRepository trailingSlashRepository = new TaskRepository(GerritConnector.CONNECTOR_KIND,
+				"http://review.mylyn.org/");
+		assertEquals("123", handler.getTaskId(trailingSlashRepository, "http://review.mylyn.org/123"));
+	}
+
+	@Test
 	public void testGetTaskIdAbsolute() {
-		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org/");
 		assertEquals("123", handler.getTaskId(repository, "http://review.mylyn.org/#/c/123"));
 	}
 
 	@Test
 	public void testGetTaskIdLetters() {
-		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org");
 		assertEquals(null, handler.getTaskId(repository, "http://review.mylyn.org/#/c/abc/"));
 	}
 
 	@Test
 	public void testGetTaskIdEmpty() {
-		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org");
 		assertEquals(null, handler.getTaskId(repository, "http://review.mylyn.org/#/c//"));
 	}
 
 	@Test
 	public void testGetTaskIdAbsoluteTrailingSlash() {
-		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org/");
 		assertEquals("123", handler.getTaskId(repository, "http://review.mylyn.org/#/c/123/"));
 	}
 
 	@Test
 	public void testGetTaskIdPatchSet() {
-		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org/");
 		assertEquals("4698", handler.getTaskId(repository, "http://review.mylyn.org/#/c/4698/5"));
 	}
 
 	@Test
 	public void testGetTaskIdFile() {
-		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org/");
 		assertEquals("4698", handler.getTaskId(repository, "http://review.mylyn.org/#/c/4698/5/foo/bar"));
 	}
 
 	@Test
 	public void testGetPatchSetNumberPatchSet() {
-		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org/");
 		String url = "http://review.mylyn.org/#/c/4698/5";
-		String taskId = handler.getTaskId(repository, url);
+		taskId = handler.getTaskId(repository, url);
 		assertEquals(5, handler.getPatchSetNumber(repository, url, taskId));
 	}
 
 	@Test
 	public void testGetPatchSetNumberPatchSetTrailingSlash() {
-		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org/");
 		String url = "http://review.mylyn.org/#/c/4698/5/";
-		String taskId = handler.getTaskId(repository, url);
+		taskId = handler.getTaskId(repository, url);
 		assertEquals(5, handler.getPatchSetNumber(repository, url, taskId));
 	}
 
 	@Test
 	public void testGetPatchSetNumberPatchSetFile() {
-		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org/");
 		String url = "http://review.mylyn.org/#/c/4698/5/foo/bar";
-		String taskId = handler.getTaskId(repository, url);
+		taskId = handler.getTaskId(repository, url);
 		assertEquals(5, handler.getPatchSetNumber(repository, url, taskId));
 	}
 
 	@Test
 	public void testGetPatchSetNumberNoneSpecified() {
-		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org/");
 		String url = "http://review.mylyn.org/#/c/4698";
-		String taskId = handler.getTaskId(repository, url);
+		taskId = handler.getTaskId(repository, url);
 		assertEquals(-1, handler.getPatchSetNumber(repository, url, taskId));
 	}
 
 	@Test
 	public void testGetPatchSetNumberNoneSpecifiedTrailingSlash() {
-		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org/");
 		String url = "http://review.mylyn.org/#/c/4698/";
-		String taskId = handler.getTaskId(repository, url);
+		taskId = handler.getTaskId(repository, url);
 		assertEquals(-1, handler.getPatchSetNumber(repository, url, taskId));
 	}
 
 	@Test
 	public void testGetPatchSetNumberNoneSpecifiedNotAnInteger() {
-		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://review.mylyn.org/");
 		String url = "http://review.mylyn.org/#/c/A1";
-		String taskId = handler.getTaskId(repository, url);
+		taskId = handler.getTaskId(repository, url);
 		assertEquals(-1, handler.getPatchSetNumber(repository, url, taskId));
+	}
+
+	@Test
+	public void testGetPathNoneSpecified() {
+		assertPath(null, "http://review.mylyn.org/#/c/4698/5");
+	}
+
+	@Test
+	public void testGetPathNoneSpecifiedTrailingSlash() {
+		assertPath(null, "http://review.mylyn.org/#/c/4698/5/");
+	}
+
+	@Test
+	public void testGetPathNoneSpecifiedInvalidPatchNumber() {
+		assertPath(null, "http://review.mylyn.org/#/c/4698/-1abcd");
+	}
+
+	@Test
+	public void testGetPathNoneSpecifiedInvalidPatchNumberTrailingSlash() {
+		assertPath(null, "http://review.mylyn.org/#/c/4698/-1abcd/");
+	}
+
+	@Test
+	public void testGetPath() {
+		assertPath("foo/bar.java", "http://review.mylyn.org/#/c/4698/5/foo/bar.java");
+	}
+
+	@Test
+	public void testGetPathWithTrailingSlash() {
+		assertPath("foo/bar.java", "http://review.mylyn.org/#/c/4698/5/foo/bar.java/");
+	}
+
+	@Test
+	public void testOpenUrlWithInvalidReview() throws Exception {
+		String url = "http://review.mylyn.org/#/c/4698/1/foo/bar.java";
+		GerritUrlHandler spy = setUpOpenUrlTests(url);
+		doReturn(null).when(spy).revealPatchSet(any(EditorHandle.class), anyInt());
+
+		spy.openUrl(page, url, 0);
+
+		verify(spy, times(1)).revealPatchSet(any(EditorHandle.class), anyInt());
+		verify(spy, never()).getFileItem(any(IReview.class), anyInt(), anyString());
+		verify(spy, never()).openCompareEditor(null);
+	}
+
+	@Test
+	public void testOpenUrlWithValidPathOpenReview() throws Exception {
+		String url = "http://review.mylyn.org/#/c/4698/1/foo/bar.java";
+		GerritUrlHandler spy = setUpOpenUrlTests(url);
+		GerritTaskEditorPage page = mock(GerritTaskEditorPage.class);
+		IReview review = createMockReview();
+		when(page.getReview()).thenReturn(review);
+		doReturn(page).when(spy).revealPatchSet(any(EditorHandle.class), anyInt());
+		openReviewTest(spy, url);
+
+		verify(spy, times(1)).getFileItem(review, 1, "foo/bar.java");
+		assertEquals(path, spy.getFileItem(review, patchSetNumber, path).getName());
+	}
+
+	@Test
+	public void testOpenUrlWithInvalidPatchSetNumberOpenReview() throws Exception {
+		String url = "http://review.mylyn.org/#/c/4698/5/foo/bar.java";
+		GerritUrlHandler spy = setUpOpenUrlTests(url);
+		GerritTaskEditorPage page = mock(GerritTaskEditorPage.class);
+		IReview review = createMockReview();
+		when(page.getReview()).thenReturn(review);
+		doReturn(page).when(spy).revealPatchSet(any(EditorHandle.class), anyInt());
+		openReviewTest(spy, url);
+
+		verify(spy, times(1)).getFileItem(review, 5, "foo/bar.java");
+		assertNull(spy.getFileItem(review, patchSetNumber, path));
+	}
+
+	@Test
+	public void testOpenUrlWithInvalidPathOpenReview() throws Exception {
+		String url = "http://review.mylyn.org/#/c/4698/1/foo/bar.jav";
+		GerritUrlHandler spy = setUpOpenUrlTests(url);
+		GerritTaskEditorPage page = mock(GerritTaskEditorPage.class);
+		IReview review = createMockReview();
+		when(page.getReview()).thenReturn(review);
+		doReturn(page).when(spy).revealPatchSet(any(EditorHandle.class), anyInt());
+		openReviewTest(spy, url);
+
+		verify(spy, times(1)).getFileItem(review, 1, "foo/bar.jav");
+		assertNull(spy.getFileItem(review, patchSetNumber, path));
+	}
+
+	private GerritUrlHandler setUpOpenUrlTests(String url) {
+		page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		GerritUrlHandler spy = spy(handler);
+		TasksUi.getRepositoryManager().addRepository(repository);
+		taskId = spy.getTaskId(repository, url);
+		patchSetNumber = spy.getPatchSetNumber(repository, url, taskId);
+		path = spy.getFilePath(repository, url, taskId, patchSetNumber);
+
+		return spy;
+	}
+
+	private IReview createMockReview() {
+		IReview mockReview = mock(IReview.class);
+		IReviewItemSet mockSet = mock(IReviewItemSet.class);
+		IFileItem mockFile = mock(IFileItem.class);
+
+		when(mockFile.getName()).thenReturn("foo/bar.java");
+		when(mockSet.getId()).thenReturn("1");
+		when(mockSet.getItems()).thenReturn(Arrays.asList(mockFile));
+		when(mockReview.getSets()).thenReturn(Arrays.asList(mockSet));
+
+		return mockReview;
+	}
+
+	private void openReviewTest(GerritUrlHandler spy, String url) {
+		doNothing().when(spy).openCompareEditor(any(IFileItem.class));
+		spy.openUrl(page, url, 0);
+
+		verify(spy, times(1)).revealPatchSet(any(EditorHandle.class), anyInt());
+		verify(spy, times(1)).openCompareEditor(any(IFileItem.class));
+	}
+
+	private void assertPath(String expectedPath, String testUrl) {
+		taskId = handler.getTaskId(repository, testUrl);
+		patchSetNumber = handler.getPatchSetNumber(repository, testUrl, taskId);
+		assertEquals(expectedPath, handler.getFilePath(repository, testUrl, taskId, patchSetNumber));
 	}
 }
