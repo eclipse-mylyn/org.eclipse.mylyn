@@ -15,28 +15,19 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+
+import com.google.common.io.CharStreams;
 
 public class IOUtil {
 	/**
 	 * Reads the content of the given file into a string.
 	 */
-	public static String readFully(IFile file) throws UnsupportedEncodingException, CoreException, IOException {
-		StringWriter w = new StringWriter();
-		Reader r = new InputStreamReader(new BufferedInputStream(file.getContents()), file.getCharset());
-		try {
-			int i;
-			while ((i = r.read()) != -1) {
-				w.write((char) i);
-			}
-		} finally {
-			r.close();
+	public static String readFully(IFile file) throws CoreException, IOException {
+		try (Reader r = new InputStreamReader(new BufferedInputStream(file.getContents()), file.getCharset())) {
+			return CharStreams.toString(r);
 		}
-		String inputContent = w.toString();
-		return inputContent;
 	}
 }

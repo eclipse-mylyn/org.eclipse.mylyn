@@ -13,8 +13,8 @@ package org.eclipse.mylyn.wikitext.ui.commands;
 import java.io.ByteArrayInputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -24,7 +24,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.internal.wikitext.ui.util.IOUtil;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 
@@ -39,19 +38,14 @@ public class ConvertMarkupToHtml extends AbstractMarkupResourceHandler {
 		final IFile newFile = file.getParent().getFile(new Path(name + ".html")); //$NON-NLS-1$
 		if (newFile.exists()) {
 			if (!MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					Messages.ConvertMarkupToHtml_overwrite,
-					NLS.bind(Messages.ConvertMarkupToHtml_fileExistsOverwrite, new Object[] { newFile.getFullPath() }))) {
+					Messages.ConvertMarkupToHtml_overwrite, NLS.bind(Messages.ConvertMarkupToHtml_fileExistsOverwrite,
+							new Object[] { newFile.getFullPath() }))) {
 				return;
 			}
 		}
 
 		final StringWriter writer = new StringWriter();
-		HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer) {
-			@Override
-			protected XmlStreamWriter createXmlStreamWriter(Writer out) {
-				return super.createFormattingXmlStreamWriter(out);
-			}
-		};
+		HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer, true);
 		final MarkupParser parser = new MarkupParser();
 		parser.setMarkupLanguage(markupLanguage);
 		parser.setBuilder(builder);
@@ -72,7 +66,7 @@ public class ConvertMarkupToHtml extends AbstractMarkupResourceHandler {
 						} else {
 							newFile.create(new ByteArrayInputStream(xhtmlContent.getBytes("utf-8")), false, monitor); //$NON-NLS-1$
 						}
-						newFile.setCharset("utf-8", monitor); //$NON-NLS-1$
+						newFile.setCharset(StandardCharsets.UTF_8.name(), monitor);
 					} catch (Exception e) {
 						throw new InvocationTargetException(e);
 					}
