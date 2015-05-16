@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.wikitext.commonmark.spec;
 
 import static org.eclipse.mylyn.internal.wikitext.commonmark.CommonMarkAsserts.assertContent;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeFalse;
+import static org.junit.Assume.assumeTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -93,8 +93,8 @@ public class CommonMarkSpecTest {
 
 	@Before
 	public void preconditions() {
-		assumeFalse(HEADING_EXCLUSIONS.contains(heading));
-		assumeFalse(LINE_EXCLUSIONS.contains(Integer.valueOf(lineNumber)));
+		assumeTrue(!HEADING_EXCLUSIONS.contains(heading));
+		assumeTrue(!LINE_EXCLUSIONS.contains(Integer.valueOf(lineNumber)));
 	}
 
 	@Test
