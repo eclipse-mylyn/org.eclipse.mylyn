@@ -29,24 +29,34 @@ public class CommonMarkLanguageDocumentOffsetsTest {
 
 	@Test
 	public void blockQuoteWithBoldSpanUnix() {
-		assertSpanOffsets(6, 15, "> one **two\n> three** four");
+		assertSpanOffsets(6, 15, "<blockquote><p>one <strong>two\nthree</strong> four</p></blockquote>",
+				"> one **two\n> three** four");
 	}
 
 	@Test
 	public void blockQuoteWithBoldSpanWindows() {
-		assertSpanOffsets(6, 16, "> one **two\r\n> three** four");
+		assertSpanOffsets(6, 16, "<blockquote><p>one <strong>two\nthree</strong> four</p></blockquote>",
+				"> one **two\r\n> three** four");
 	}
 
 	@Test
 	public void blockQuoteWithBoldSpanMac() {
-		assertSpanOffsets(6, 15, "> one **two\r> three** four");
+		assertSpanOffsets(6, 15, "<blockquote><p>one <strong>two\nthree</strong> four</p></blockquote>",
+				"> one **two\r> three** four");
 	}
 
-	private void assertSpanOffsets(int offset, int length, String markup) {
+	@Test
+	public void blockQuoteWithNestedListAndEmphasis() {
+		assertSpanOffsets(8, 16, "<blockquote><ul><li>one <em>two\nthree</em></li></ul></blockquote>",
+				"> * one *two\r\n>   three*");
+	}
+
+	private void assertSpanOffsets(int offset, int length, String expectedHtml, String markup) {
 		final AtomicReference<Locator> spanLocator = new AtomicReference<Locator>();
 		CommonMarkLanguage language = new CommonMarkLanguage();
 		MarkupParser parser = new MarkupParser(language);
-		parser.setBuilder(new HtmlDocumentBuilder(new StringWriter()) {
+		StringWriter out = new StringWriter();
+		HtmlDocumentBuilder builder = new HtmlDocumentBuilder(out) {
 
 			@Override
 			public void beginSpan(SpanType type, Attributes attributes) {
@@ -54,8 +64,12 @@ public class CommonMarkLanguageDocumentOffsetsTest {
 				spanLocator.set(new LocatorImpl(getLocator()));
 				super.beginSpan(type, attributes);
 			}
-		});
+		};
+		builder.setEmitAsDocument(false);
+		parser.setBuilder(builder);
 		parser.parse(markup);
+
+		assertEquals(expectedHtml, out.toString());
 
 		Locator locator = spanLocator.get();
 		assertNotNull(locator);
