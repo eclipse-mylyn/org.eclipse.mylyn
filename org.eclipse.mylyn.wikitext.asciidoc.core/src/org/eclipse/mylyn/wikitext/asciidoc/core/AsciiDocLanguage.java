@@ -23,6 +23,7 @@ import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.EmailLinkReplacem
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.ExplicitLinkReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.ImplicitFormattedLinkReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.ImplicitLinkReplacementToken;
+import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.InlineImageReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.PreserverHtmlEntityToken;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.util.ReadAheadDispatcher;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
@@ -63,6 +64,9 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("+")); //$NON-NLS-1$
 		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("*")); //$NON-NLS-1$
 		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("_")); //$NON-NLS-1$
+
+		phraseModifierSyntax.add(new InlineImageReplacementToken());
+
 		// emphasis span elements
 		phraseModifierSyntax.add(new SimplePhraseModifier("`", SpanType.CODE)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new SimplePhraseModifier("+", SpanType.CODE)); //$NON-NLS-1$

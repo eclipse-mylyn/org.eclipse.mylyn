@@ -13,3 +13,4 @@ Export-Package: org.eclipse.mylyn.internal.wikitext.asciidoc.core.block;x-intern
  org.eclipse.mylyn.internal.wikitext.asciidoc.core.util;x-internal:=true,
  org.eclipse.mylyn.wikitext.asciidoc.core
 Bundle-Localization: plugin
+
