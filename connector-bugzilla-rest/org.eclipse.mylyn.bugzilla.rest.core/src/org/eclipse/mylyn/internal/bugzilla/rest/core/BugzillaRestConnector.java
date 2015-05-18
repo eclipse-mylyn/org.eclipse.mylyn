@@ -188,8 +188,11 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public String getRepositoryUrlFromTaskUrl(String taskUrl) {
-		// ignore
-		return null;
+		if (taskUrl == null) {
+			return null;
+		}
+		int index = taskUrl.indexOf("/rest.cgi/");
+		return index == -1 ? null : taskUrl.substring(0, index);
 	}
 
 	@Override
@@ -207,8 +210,7 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public String getTaskUrl(String repositoryUrl, String taskIdOrKey) {
-		// ignore
-		return null;
+		return repositoryUrl + "/rest.cgi/bug/" + taskIdOrKey;
 	}
 
 	@Override
@@ -234,8 +236,7 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public void updateTaskFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData) {
-		// ignore
-
+		task.setUrl(taskData.getRepositoryUrl() + "/rest.cgi/bug/" + taskData.getTaskId());
 	}
 
 	@Override

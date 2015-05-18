@@ -23,7 +23,11 @@ import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConnector;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.Duration;
 import org.eclipse.mylyn.internal.bugzilla.rest.test.support.BugzillaRestTestFixture;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
+import org.eclipse.mylyn.internal.tasks.core.TaskTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -170,11 +174,6 @@ public class BugzillaRestConnectorTest {
 		newConfiguration = connector.getRepositoryConfiguration(repository);
 		assertNotNull(newConfiguration);
 		assertThat(configurationForCompare, not(equalTo(newConfiguration)));
-
-		int i = 9;
-		i++;
-
-		//version=unknown, encoding=UTF-8, timezone=Europe/Berlin
 	}
 
 	@Test
@@ -215,6 +214,33 @@ public class BugzillaRestConnectorTest {
 						}
 					});
 		}
+	}
+
+	@Test
+	public void testGetRepositoryUrlFromTaskUrl() throws Exception {
+		assertNull(
+				connector.getRepositoryUrlFromTaskUrl(actualFixture.repository().getRepositoryUrl() + "/rest/bug/1"));
+		assertThat(
+				connector
+						.getRepositoryUrlFromTaskUrl(actualFixture.repository().getRepositoryUrl() + "/rest.cgi/bug/1"),
+				equalTo(actualFixture.repository().getRepositoryUrl()));
+	}
+
+	@Test
+	public void testGetTaskUrl() throws Exception {
+		assertThat(connector.getTaskUrl(actualFixture.repository().getRepositoryUrl(), "123"),
+				equalTo(actualFixture.repository().getRepositoryUrl() + "/rest.cgi/bug/123"));
+		assertThat(connector.getTaskUrl(actualFixture.repository().getRepositoryUrl(), "Test"),
+				equalTo(actualFixture.repository().getRepositoryUrl() + "/rest.cgi/bug/Test"));
+	}
+
+	@Test
+	public void testUpdateTaskFromTaskData() throws Exception {
+		TaskData taskData = new TaskData(new TaskAttributeMapper(actualFixture.repository()),
+				connector.getConnectorKind(), actualFixture.repository().getRepositoryUrl(), "123");
+		ITask task = new TaskTask(connector.getConnectorKind(), actualFixture.repository().getRepositoryUrl(), "");
+		connector.updateTaskFromTaskData(actualFixture.repository(), task, taskData);
+		assertThat(task.getUrl(), equalTo(actualFixture.repository().getRepositoryUrl() + "/rest.cgi/bug/123"));
 	}
 
 }
