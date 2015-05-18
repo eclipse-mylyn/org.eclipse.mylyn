@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Stefan Seelmann and others.
+ * Copyright (c) 2012, 2015 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.mylyn.wikitext.asciidoc.core;
 
 import java.util.List;
 
+import org.eclipse.mylyn.internal.wikitext.asciidoc.core.AsciiDocPreProcessor;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.HeadingBlock;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.ParagraphBlock;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.PreformattedBlock;
@@ -23,10 +24,12 @@ import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.EmailLinkReplacem
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.ExplicitLinkReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.ImplicitFormattedLinkReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.ImplicitLinkReplacementToken;
+import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.InlineCommentReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.InlineImageReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.PreserverHtmlEntityToken;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.util.ReadAheadDispatcher;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLineBreakReplacementToken;
@@ -53,7 +56,25 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 	}
 
 	@Override
+	public void processContent(MarkupParser parser, String markupContent, boolean asDocument) {
+		if (isEnableMacros()) {
+			markupContent = preprocessContent(markupContent);
+		}
+		super.processContent(parser, markupContent, asDocument);
+	}
+
+	/**
+	 * preprocess content, which involves attribute substitution.
+	 */
+	protected String preprocessContent(String markupContent) {
+		return new AsciiDocPreProcessor().process(markupContent);
+	}
+
+	@Override
 	protected void addStandardPhraseModifiers(PatternBasedSyntax phraseModifierSyntax) {
+		// comments
+		phraseModifierSyntax.add(new InlineCommentReplacementToken());
+
 		// links
 		phraseModifierSyntax.add(new EmailLinkReplacementToken());
 		phraseModifierSyntax.add(new ExplicitLinkReplacementToken());

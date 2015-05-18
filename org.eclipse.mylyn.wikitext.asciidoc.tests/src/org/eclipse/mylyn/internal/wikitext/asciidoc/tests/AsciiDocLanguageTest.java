@@ -30,13 +30,14 @@ public class AsciiDocLanguageTest extends AsciiDocLanguageTestBase {
 		text.append("\n");
 		text.append("Lorem ipsum *dolor* sit amet, \n");
 		text.append("\n");
+		text.append(":var2: two\n");
 		text.append("=== Header 3\n");
 		text.append("\n");
-		text.append("consetetur _adipisici_ elit.\n");
+		text.append("consetetur _adipisici_ {var2} elit.\n");
 
 		String html = parseToHtml(text.toString());
 
 		assertEquals("<h2>Header 2</h2><p>Lorem ipsum <strong>dolor</strong> sit amet, </p>\n"
-				+ "<h3>Header 3</h3><p>consetetur <em>adipisici</em> elit.</p>\n", html);
+				+ "<h3>Header 3</h3><p>consetetur <em>adipisici</em> two elit.</p>\n", html);
 	}
 }

@@ -134,4 +134,22 @@ public class AsciiDocLanguageMiscellaneousTest extends AsciiDocLanguageTestBase 
 		String html = parseToHtml("\\!");
 		assertEquals("<p>\\!</p>\n", html);
 	}
+
+	@Test
+	public void ignoreComments() {
+		String html = parseToHtml("// ignore this\nInclude this");
+		assertEquals("<p>\nInclude this</p>\n", html);
+	}
+
+	@Test
+	public void ignoreBooleanAttribute() {
+		String html = parseToHtml(":attr:");
+		assertEquals("", html);
+	}
+
+	@Test
+	public void ignoreKeyValueAttribute() {
+		String html = parseToHtml(":attr: 42");
+		assertEquals("", html);
+	}
 }
