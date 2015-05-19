@@ -7,18 +7,24 @@
  *
  * Contributors:
  *     Stefan Seelmann - initial API and implementation
- *     Patrik Suzzi - Bug 481670 - [asciidoc] support for lists
+ *     Max Rydahl Andersen - Bug 474084
+ *     Patrik Suzzi <psuzzi@gmail.com> - Bug 481670, 474084
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.asciidoc.core;
 
 import java.util.List;
 
+import org.eclipse.mylyn.internal.wikitext.asciidoc.core.AsciiDocContentState;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.AsciiDocPreProcessor;
+import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.CodeBlock;
+import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.CommentBlock;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.HeadingBlock;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.ListBlock;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.ParagraphBlock;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.PreformattedBlock;
+import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.PropertiesLineBlock;
+import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.TitleLineBlock;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.UnderlinedHeadingBlock;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.phrase.BackslashEscapePhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.phrase.SimplePhraseModifier;
@@ -34,6 +40,7 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.core.parser.markup.ContentState;
 import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLineBreakReplacementToken;
 
 /**
@@ -47,6 +54,11 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 
 	public AsciiDocLanguage() {
 		setName("AsciiDoc"); //$NON-NLS-1$
+	}
+
+	@Override
+	protected ContentState createState() {
+		return new AsciiDocContentState();
 	}
 
 	@Override
@@ -104,8 +116,26 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 		blocks.add(listBlock);
 		paragraphBreakingBlocks.add(listBlock);
 
-		blocks.add(new PreformattedBlock());
-		blocks.add(new HeadingBlock());
+		TitleLineBlock titleLineBlock = new TitleLineBlock();
+		PropertiesLineBlock propertiesLineBlock = new PropertiesLineBlock();
+
+		PreformattedBlock preformattedBlock = new PreformattedBlock();
+		CommentBlock commentBlock = new CommentBlock();
+		HeadingBlock headingBlock = new HeadingBlock();
+		CodeBlock codeBlock = new CodeBlock();
+
+		blocks.add(titleLineBlock);
+		blocks.add(propertiesLineBlock);
+
+		blocks.add(preformattedBlock);
+		blocks.add(headingBlock);
+		blocks.add(codeBlock);
+		blocks.add(commentBlock);
+
+		paragraphBreakingBlocks.add(codeBlock);
+		paragraphBreakingBlocks.add(commentBlock);
+		paragraphBreakingBlocks.add(preformattedBlock);
+
 	}
 
 	@Override

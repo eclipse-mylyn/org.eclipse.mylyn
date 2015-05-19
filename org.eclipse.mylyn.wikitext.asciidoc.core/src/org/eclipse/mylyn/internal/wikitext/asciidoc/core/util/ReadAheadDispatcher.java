@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Stefan Seelmann and others.
+ * Copyright (c) 2012, 2016 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,9 +7,14 @@
  *
  * Contributors:
  *     Stefan Seelmann - initial API and implementation
+ *     Max Rydahl Andersen - Bug 474084
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.asciidoc.core.util;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
@@ -17,20 +22,20 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.ContentState;
 
 /**
  * Adapter {@link Block} for {@link ReadAheadBlock}s.
- * 
- * @author Stefan Seelmann 
+ *
+ * @author Stefan Seelmann
  * @author Max Rydahl Andersen
  */
 public class ReadAheadDispatcher extends Block {
 
 	private final LookAheadReader lookAheadReader;
 
-	private Block[] blocks;
+	private List<Block> blocks;
 
 	private Block dispatchedBlock;
 
 	public ReadAheadDispatcher(Block... blocks) {
-		this.blocks = blocks;
+		this.blocks = cloneBlocks(Arrays.asList(blocks));
 		this.lookAheadReader = new LookAheadReader();
 	}
 
@@ -92,13 +97,15 @@ public class ReadAheadDispatcher extends Block {
 	@Override
 	public Block clone() {
 		ReadAheadDispatcher clone = (ReadAheadDispatcher) super.clone();
-		Block[] clonedBlocks = new Block[blocks.length];
-		int i = 0;
-		for (Block block : blocks) {
-			clonedBlocks[i++] = block.clone();
-		}
-		clone.blocks = clonedBlocks;
+		clone.blocks = cloneBlocks(blocks);
 		return clone;
 	}
 
+	private List<Block> cloneBlocks(List<Block> blocks) {
+		List<Block> clonedBlocks = new ArrayList<Block>();
+		for (Block block : blocks) {
+			clonedBlocks.add(block.clone());
+		}
+		return clonedBlocks;
+	}
 }

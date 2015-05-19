@@ -1,23 +1,22 @@
 /*******************************************************************************
- * Copyright (c) 2015 Max Rydahl Andersen and others.
+ * Copyright (c) 2015, 2016 Max Rydahl Andersen and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Max Rydahl Andersen- initial API and implementation
+ *     Max Rydahl Andersen - initial API and implementation, Bug 474084
+ *     Patrik Suzzi <psuzzi@gmail.com> - Bug 474084
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.asciidoc.core.token;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+import org.eclipse.mylyn.internal.wikitext.asciidoc.core.util.LanguageSupport;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
@@ -55,7 +54,7 @@ public class InlineImageReplacementToken extends PatternBasedElement {
 		return new InlineImageReplacementTokenProcessor();
 	}
 
-	private static class InlineImageReplacementTokenProcessor extends PatternBasedElementProcessor {
+	public static class InlineImageReplacementTokenProcessor extends PatternBasedElementProcessor {
 
 		private static final String LINK = "link"; //$NON-NLS-1$
 
@@ -71,8 +70,6 @@ public class InlineImageReplacementToken extends PatternBasedElement {
 
 		private static final String ALT = "alt"; //$NON-NLS-1$
 
-		Pattern keyValuePattern = Pattern.compile("(.*)=\"(.*)\""); //$NON-NLS-1$
-
 		@Override
 		public void emit() {
 			String src = group(1);
@@ -83,7 +80,7 @@ public class InlineImageReplacementToken extends PatternBasedElement {
 			positional.add(WIDTH);
 			positional.add(HEIGHT);
 
-			Map<String, String> properties = getFormattingProperties(formatting, positional);
+			Map<String, String> properties = LanguageSupport.parseFormattingProperties(formatting, positional);
 
 			if (!properties.containsKey(ALT) || properties.get(ALT).isEmpty()) {
 				// if no alt provided make one up using base filename
@@ -139,45 +136,6 @@ public class InlineImageReplacementToken extends PatternBasedElement {
 
 			}
 
-		}
-
-		/**
-		 * Parses format string into a Map of key/value pairs. Supports positional parameters too.
-		 *
-		 * @param rawFormat
-		 *            The raw format string found in AsciiDoc source
-		 * @param positionalParameters
-		 *            a list of strings for the positional parameters (i.e. "alt", "width", "height" for images)
-		 * @param defaultValueKey
-		 *            the key to use if no parameters found (i.e. "alt" for images)
-		 * @return
-		 */
-		private Map<String, String> getFormattingProperties(String rawFormat, List<String> positionalParameters) {
-			Map<String, String> properties = new HashMap<>();
-
-			// TODO: handle escaped strings and default sequence of parameters
-			// i.e. sunset,100,200,title="test"
-			String[] valpairs = rawFormat.split(","); //$NON-NLS-1$
-			for (String pair : valpairs) {
-				Matcher matcher = keyValuePattern.matcher(pair.trim());
-
-				String key, value;
-
-				if (matcher.find()) {
-					key = matcher.group(1);
-					value = matcher.group(2);
-					properties.put(key, value);
-				} else {
-					// could not parse key/value pairs
-					if (positionalParameters.isEmpty()) {
-						//no more positional items left - ignoring
-					} else {
-						properties.put(positionalParameters.remove(0), pair.trim());
-					}
-				}
-			}
-
-			return properties;
 		}
 
 		static private void emitImage(DocumentBuilder builder, String src, Map<String, String> properties) {

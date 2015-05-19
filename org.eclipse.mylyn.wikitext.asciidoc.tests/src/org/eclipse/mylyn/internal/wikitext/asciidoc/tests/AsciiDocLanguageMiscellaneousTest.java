@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2012 Max Rydahl Andersen and others.
+ * Copyright (c) 2012, 2016 Max Rydahl Andersen and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Max Rydahl Andersen - copied from markdown to get base for asciidoc
+ *     Max Rydahl Andersen - copied from markdown to get base for asciidoc, Bug 474084
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.asciidoc.tests;
@@ -138,6 +138,12 @@ public class AsciiDocLanguageMiscellaneousTest extends AsciiDocLanguageTestBase 
 	@Test
 	public void ignoreComments() {
 		String html = parseToHtml("// ignore this\nInclude this");
+		assertEquals("<p>\nInclude this</p>\n", html);
+	}
+
+	@Test
+	public void ignoreEmptyComment() {
+		String html = parseToHtml("//\nInclude this");
 		assertEquals("<p>\nInclude this</p>\n", html);
 	}
 

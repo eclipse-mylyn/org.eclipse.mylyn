@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2015 Max Rydahl Andersen and others.
+ * Copyright (c) 2015, 2016 Max Rydahl Andersen and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Max Rydahl Andersen- initial API and implementation
+ *     Max Rydahl Andersen- initial API and implementation, Bug 474084
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.asciidoc.core.token;
@@ -18,7 +18,7 @@ public class InlineCommentReplacementToken extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "^(//.*)"; //$NON-NLS-1$
+		return "^(//[^/]*)"; //$NON-NLS-1$
 	}
 
 	@Override

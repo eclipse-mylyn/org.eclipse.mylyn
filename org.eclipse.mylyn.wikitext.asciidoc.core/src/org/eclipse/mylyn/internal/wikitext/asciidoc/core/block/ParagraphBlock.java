@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Max Rydahl Andersen and others.
+ * Copyright (c) 2015, 2016 Max Rydahl Andersen and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     Stefan Seelmann - initial API and implementation
- *     Max Rydahl Andersen - copied from markdown to get base for asciidoc
+ *     Max Rydahl Andersen - copied from markdown to get base for asciidoc, Bug 474084
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.asciidoc.core.block;
@@ -18,7 +18,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
  * AsciiDoc default paragraph.
- * 
+ *
  * @author Stefan Seelmann
  * @author Max Rydahl Andersen - based/copied from markdown to adopt for asciidoc
  */
@@ -43,6 +43,13 @@ public class ParagraphBlock extends Block {
 		if (markupLanguage.isEmptyLine(line)) {
 			setClosed(true);
 			return 0;
+		}
+
+		for (Block block : markupLanguage.getParagraphBreakingBlocks()) {
+			if (block.canStart(line, offset)) {
+				setClosed(true);
+				return offset;
+			}
 		}
 
 		// next line, does not convert to line break
