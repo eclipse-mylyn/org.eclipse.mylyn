@@ -159,6 +159,7 @@ public class BugzillaRestClient {
 				List<TaskData> taskDataArray = new BugzillaRestGetTaskData(client, connector, urlIDList, taskRepository)
 						.run(monitor);
 				for (TaskData taskData : taskDataArray) {
+					new BugzillaRestGetTaskComments(getClient(), taskData).run(monitor);
 					config.updateProductOptions(taskData);
 					config.addValidOperations(taskData);
 					collector.accept(taskData);

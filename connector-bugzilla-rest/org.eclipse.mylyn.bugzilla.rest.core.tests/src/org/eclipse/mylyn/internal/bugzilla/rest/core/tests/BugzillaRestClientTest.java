@@ -512,26 +512,62 @@ public class BugzillaRestClientTest {
 		//Act
 		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskDataGet,
 				changed, null);
-
+		assertNotNull(reposonse);
+		assertNotNull(reposonse.getReposonseKind());
+		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_UPDATED));
 		//Assert
 		TaskData taskDataUpdate = harness.getTaskFromServer(taskId);
 
-		attribute = taskDataGet.getRoot()
+		attribute = taskDataUpdate.getRoot()
 				.getMappedAttribute(BugzillaRestCreateTaskSchema.getDefault().PRODUCT.getKey());
 		assertThat(attribute.getValue(), is("Product with Spaces"));
-		attribute = taskDataGet.getRoot()
+		attribute = taskDataUpdate.getRoot()
 				.getMappedAttribute(BugzillaRestCreateTaskSchema.getDefault().COMPONENT.getKey());
 		assertThat(attribute.getValue(), is("Component 1"));
-		attribute = taskDataGet.getRoot()
+		attribute = taskDataUpdate.getRoot()
 				.getMappedAttribute(BugzillaRestCreateTaskSchema.getDefault().VERSION.getKey());
 		assertThat(attribute.getValue(), is("b"));
-		attribute = taskDataGet.getRoot()
+		attribute = taskDataUpdate.getRoot()
 				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey());
 		assertThat(attribute.getValue(), is("M3.0"));
 		attribute = taskDataUpdate.getRoot().getAttribute("cf_dropdown");
 		assertThat(attribute.getValue(), is("two"));
 		attribute = taskDataUpdate.getRoot().getAttribute("cf_multiselect");
 		assertThat(attribute.getValues(), is(Arrays.asList("Red", "Yellow")));
+	}
+
+	@Test
+	public void testAddComment() throws Exception {
+		String taskId = harness.getTaksId4TestProduct();
+		TaskData taskDataGet = harness.getTaskFromServer(taskId);
+
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+
+		TaskAttribute attribute = taskDataGet.getRoot()
+				.getAttribute(BugzillaRestTaskSchema.getDefault().NEW_COMMENT.getKey());
+		attribute.setValue("The Comment");
+		changed.add(attribute);
+
+		//Act
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskDataGet,
+				changed, null);
+		assertNotNull(reposonse);
+		assertNotNull(reposonse.getReposonseKind());
+		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_UPDATED));
+		//Assert
+		TaskData taskDataUpdate = harness.getTaskFromServer(taskId);
+
+		attribute = taskDataUpdate.getRoot().getMappedAttribute(TaskAttribute.PREFIX_COMMENT + "1");
+		assertNotNull(attribute);
+		TaskAttribute commentAttribute = attribute.getMappedAttribute(TaskAttribute.COMMENT_TEXT);
+		assertNotNull(commentAttribute);
+		assertThat(commentAttribute.getValue(), is("The Comment"));
+		commentAttribute = attribute.getMappedAttribute(TaskAttribute.COMMENT_NUMBER);
+		assertNotNull(commentAttribute);
+		assertThat(commentAttribute.getValue(), is("1"));
+		commentAttribute = attribute.getMappedAttribute(TaskAttribute.COMMENT_ISPRIVATE);
+		assertNotNull(commentAttribute);
+		assertThat(commentAttribute.getValue(), is("false"));
 	}
 
 }
