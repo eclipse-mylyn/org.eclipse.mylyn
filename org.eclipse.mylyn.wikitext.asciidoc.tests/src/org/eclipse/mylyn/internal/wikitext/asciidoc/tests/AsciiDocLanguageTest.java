@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Stefan Seelmann and others.
+ * Copyright (c) 2015 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,12 +12,12 @@
 package org.eclipse.mylyn.internal.wikitext.asciidoc.tests;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
 /**
- * @author Stefan Seelmann @author Max Rydahl Andersen
+ * @author Stefan Seelmann
+ * @author Max Rydahl Andersen
  */
 public class AsciiDocLanguageTest extends AsciiDocLanguageTestBase {
 
@@ -35,9 +35,8 @@ public class AsciiDocLanguageTest extends AsciiDocLanguageTestBase {
 		text.append("consetetur _adipisici_ elit.\n");
 
 		String html = parseToHtml(text.toString());
-		
-		assertEquals(
-					"<h2>Header 2</h2><p>Lorem ipsum <strong>dolor</strong> sit amet, </p>\n" +
-					"<h3>Header 3</h3><p>consetetur <em>adipisici</em> elit.</p>\n"	
-				, html);	}
+
+		assertEquals("<h2>Header 2</h2><p>Lorem ipsum <strong>dolor</strong> sit amet, </p>\n"
+				+ "<h3>Header 3</h3><p>consetetur <em>adipisici</em> elit.</p>\n", html);
+	}
 }

@@ -22,7 +22,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 /**
  * AsciiDoc preformatted block.
  *
- * @author Stefan Seelmann 
+ * @author Stefan Seelmann
  * @author Max Rydahl Andersen
  */
 public class PreformattedBlock extends Block {
@@ -35,9 +35,8 @@ public class PreformattedBlock extends Block {
 	public boolean canStart(String line, int lineOffset) {
 		if (lineOffset == 0) {
 			return startPattern.matcher(line).matches();
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	@Override

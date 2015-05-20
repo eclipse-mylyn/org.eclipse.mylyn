@@ -23,15 +23,19 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 /**
  * AsciiDoc setext underlined headings.
  *
- * @author Stefan Seelmann 
+ * @author Stefan Seelmann
  * @author Max Rydahl Andersen
  */
 public class UnderlinedHeadingBlock extends Block implements ReadAheadBlock {
 
 	private static final Pattern h1pattern = Pattern.compile("(=+)\\s*"); //$NON-NLS-1$
+
 	private static final Pattern h2pattern = Pattern.compile("(-+)\\s*"); //$NON-NLS-1$
+
 	private static final Pattern h3pattern = Pattern.compile("(~+)\\s*"); //$NON-NLS-1$
+
 	private static final Pattern h4pattern = Pattern.compile("(\\^+)\\s*"); //$NON-NLS-1$
+
 	private static final Pattern h5pattern = Pattern.compile("(\\++)\\s*"); //$NON-NLS-1$
 
 	private int blockLineCount;
@@ -56,26 +60,30 @@ public class UnderlinedHeadingBlock extends Block implements ReadAheadBlock {
 				return true;
 			} else if (checkNextLine(expectedLength, nextLine, h5pattern, 5)) {
 				return true;
-			} else {
-				return false;
 			}
+			return false;
 		}
 	}
 
 	/**
-	 * The next line should be a sequence of same chars. The nextLine length (nextineLength) should:
-	 * nextlineLength - 1 <= titleLength <= nextlineLength + 1
-	 * @param length length of the current line (title)
-	 * @param nextLine next line in the document
-	 * @param pattern regular expression in a Pattern to match a line of chars in the next line
-	 * @param l level that is set if the next line matches
+	 * The next line should be a sequence of same chars. The nextLine length (nextineLength) should: nextlineLength - 1
+	 * <= titleLength <= nextlineLength + 1
+	 * 
+	 * @param length
+	 *            length of the current line (title)
+	 * @param nextLine
+	 *            next line in the document
+	 * @param pattern
+	 *            regular expression in a Pattern to match a line of chars in the next line
+	 * @param l
+	 *            level that is set if the next line matches
 	 * @return
 	 */
 	private boolean checkNextLine(int length, String nextLine, Pattern pattern, int l) {
 		Matcher matcher = pattern.matcher(nextLine);
-		if(matcher.matches()) {
+		if (matcher.matches()) {
 			int lineLength = matcher.group(1).length();
-			if((lineLength > length - 2) && (lineLength < length + 2)) {
+			if ((lineLength > length - 2) && (lineLength < length + 2)) {
 				level = l;
 				return true;
 			}
