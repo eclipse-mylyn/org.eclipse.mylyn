@@ -62,6 +62,7 @@
 			<fileset dir="${wikitext.sources.location}">
 				<include name="org.eclipse.mylyn.wikitext.*core*/src/**/*.java"/>
 				<exclude name="org.eclipse.mylyn.wikitext.*core*/**/internal/**/*"/>
+				<exclude name="org.eclipse.mylyn.wikitext.*tests*/**/*"/>
 			</fileset>
 			<classpath>
 				<fileset dir="${wikitext.plugin.jars.location}">
