@@ -198,7 +198,7 @@ public class ContextTasksStartupHandler implements IContextUiStartup {
 			});
 		} catch (InvocationTargetException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-					"Unexpected error migrating context state", e));
+					"Unexpected error migrating context state", e)); //$NON-NLS-1$
 		} catch (InterruptedException e) {
 			// ignore
 		}

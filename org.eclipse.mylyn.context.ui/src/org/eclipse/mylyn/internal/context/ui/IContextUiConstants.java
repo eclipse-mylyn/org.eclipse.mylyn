@@ -24,5 +24,5 @@ public class IContextUiConstants {
 
 	public static String ID_COMMAND_CLEAR_CONTEXT = "org.eclipse.mylyn.context.ui.commands.task.clearContext"; //$NON-NLS-1$
 
-	public static String ID_CONTEXT_UI_ACTION_SET = "org.eclipse.mylyn.context.ui.actionSet";
+	public static String ID_CONTEXT_UI_ACTION_SET = "org.eclipse.mylyn.context.ui.actionSet"; //$NON-NLS-1$
 }

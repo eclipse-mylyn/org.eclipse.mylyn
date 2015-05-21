@@ -52,7 +52,7 @@ public class E4EditorReflector {
 			partStateClazz = Class.forName("org.eclipse.e4.ui.workbench.modeling.EPartService$PartState"); //$NON-NLS-1$
 			mUiElementClazz = Class.forName("org.eclipse.e4.ui.model.application.ui.MUIElement"); //$NON-NLS-1$
 			mPartClazz = Class.forName("org.eclipse.e4.ui.model.application.ui.basic.MPart"); //$NON-NLS-1$
-			mApplicationElementClazz = Class.forName("org.eclipse.e4.ui.model.application.MApplicationElement");
+			mApplicationElementClazz = Class.forName("org.eclipse.e4.ui.model.application.MApplicationElement"); //$NON-NLS-1$
 		} catch (Exception e) {
 			throw handleException(e);
 		}
@@ -93,7 +93,7 @@ public class E4EditorReflector {
 	public Map<String, String> getPersistedState(Object editor) {
 		try {
 			//String state = editor.getPersistedState().get("memento");
-			Method getPersistedStateMethod = mApplicationElementClazz.getDeclaredMethod("getPersistedState");
+			Method getPersistedStateMethod = mApplicationElementClazz.getDeclaredMethod("getPersistedState"); //$NON-NLS-1$
 			Map<String, String> persistedState = (Map<String, String>) getPersistedStateMethod.invoke(editor);
 			return persistedState;
 		} catch (Exception e) {
@@ -115,10 +115,10 @@ public class E4EditorReflector {
 	public IEditorReference showPart(WorkbenchPage page, Object editorPart) {
 		try {
 			//EditorReference reference = page.createEditorReferenceForPart(editor, null, editor.getElementId(), null);
-			Method method = mApplicationElementClazz.getDeclaredMethod("getElementId");
+			Method method = mApplicationElementClazz.getDeclaredMethod("getElementId"); //$NON-NLS-1$
 			String elementId = (String) method.invoke(editorPart);
 
-			method = WorkbenchPage.class.getDeclaredMethod("createEditorReferenceForPart", mPartClazz,
+			method = WorkbenchPage.class.getDeclaredMethod("createEditorReferenceForPart", mPartClazz, //$NON-NLS-1$
 					IEditorInput.class, String.class, IMemento.class);
 			Object editorReference = method.invoke(page, editorPart, null, elementId, null);
 
@@ -126,7 +126,7 @@ public class E4EditorReflector {
 			// PartState.ACTIVATE
 			Object partStateActivate = partStateClazz.getEnumConstants()[0];
 			//partService.showPart(editor, PartState.ACTIVATE);
-			method = ePartServiceClazz.getDeclaredMethod("showPart", mPartClazz, partStateClazz);
+			method = ePartServiceClazz.getDeclaredMethod("showPart", mPartClazz, partStateClazz); //$NON-NLS-1$
 			method.invoke(partService, editorPart, partStateActivate);
 
 			return (IEditorReference) editorReference;
