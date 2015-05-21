@@ -116,7 +116,7 @@ public class GerritProject {
 	}
 
 	public void addFile(String fileName) throws Exception {
-		addFile(fileName, "test");
+		addFile(fileName, "this is line 1\nhere is another line\nline3");
 	}
 
 	public void addFile(String fileName, String text) throws Exception {
