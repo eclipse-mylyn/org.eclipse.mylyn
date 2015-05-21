@@ -27,6 +27,7 @@ public class AllContextTasksTests {
 		suite.addTestSuite(RefactorRepositoryUrlOperationTest.class);
 		suite.addTestSuite(TaskActivityTimingTest.class);
 		suite.addTestSuite(TaskContextStoreTest.class);
+		suite.addTestSuite(TaskEditorRestoreTest.class);
 		return suite;
 	}
 
