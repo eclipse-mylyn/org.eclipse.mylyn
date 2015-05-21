@@ -263,16 +263,16 @@ public final class TaskRepository extends PlatformObject {
 		if (userProperty.equals(getKeyPrefix(AuthenticationType.REPOSITORY) + USERNAME)) {
 			this.setProperty(userProperty, username);
 		} else {
-			String oldUserValue = credentialsStore.get(userProperty, "");
+			String oldUserValue = credentialsStore.get(userProperty, ""); //$NON-NLS-1$
 			credentialsStore.put(userProperty, username, false);
 			if (!Objects.equal(oldUserValue, username)) {
 				notifyChangeListeners(userProperty, oldUserValue, username);
 			}
 		}
-		String oldPasswordValue = credentialsStore.get(passwordProperty, "");
+		String oldPasswordValue = credentialsStore.get(passwordProperty, ""); //$NON-NLS-1$
 		credentialsStore.put(passwordProperty, password, true);
 		if (!Objects.equal(oldPasswordValue, password)) {
-			notifyChangeListeners(passwordProperty, "", "");
+			notifyChangeListeners(passwordProperty, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 

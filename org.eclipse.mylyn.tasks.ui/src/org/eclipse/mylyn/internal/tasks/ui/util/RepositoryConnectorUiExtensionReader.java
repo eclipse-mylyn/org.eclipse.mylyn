@@ -217,7 +217,7 @@ public class RepositoryConnectorUiExtensionReader {
 			AbstractRepositoryConnectorUi connectorUi) {
 		// need reflection since the field is private
 		try {
-			Field field = AbstractRepositoryConnectorUi.class.getDeclaredField("connector");
+			Field field = AbstractRepositoryConnectorUi.class.getDeclaredField("connector"); //$NON-NLS-1$
 			field.setAccessible(true);
 			field.set(connectorUi, connector);
 		} catch (Exception e) {
