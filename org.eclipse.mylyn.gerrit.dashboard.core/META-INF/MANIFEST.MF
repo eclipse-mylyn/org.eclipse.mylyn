@@ -13,7 +13,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jgit,
  org.eclipse.egit.core
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Vendor: %providerName
 Export-Package: org.eclipse.mylyn.gerrit.dashboard;x-friends:="org.eclipse.mylyn.gerrit.dashboard.ui";
   uses:="org.eclipse.core.runtime,
