@@ -54,7 +54,7 @@ Export-Package: org.eclipse.mylyn.internal.tasks.ui;x-internal:=true,
  org.eclipse.mylyn.tasks.ui,
  org.eclipse.mylyn.tasks.ui.editors,
  org.eclipse.mylyn.tasks.ui.wizards
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Localization: plugin
 Import-Package: com.ibm.icu.text,
  org.apache.commons.logging;version="[1.0.4,2.0.0)"

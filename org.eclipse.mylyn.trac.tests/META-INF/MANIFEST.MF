@@ -26,5 +26,5 @@ Export-Package: org.eclipse.mylyn.trac.tests;x-internal:=true,
  org.eclipse.mylyn.trac.tests.core;x-internal:=true,
  org.eclipse.mylyn.trac.tests.support;x-internal:=true,
  org.eclipse.mylyn.trac.tests.ui;x-internal:=true
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Vendor: Eclipse Mylyn

@@ -16,7 +16,7 @@ Export-Package: org.eclipse.mylyn.internal.trac.core;x-friends:="org.eclipse.myl
  org.eclipse.mylyn.internal.trac.core.model;x-friends:="org.eclipse.mylyn.trac.ui",
  org.eclipse.mylyn.internal.trac.core.util;x-friends:="org.eclipse.mylyn.trac.ui"
 Bundle-Activator: org.eclipse.mylyn.internal.trac.core.TracCorePlugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Localization: plugin
 Import-Package: com.google.gson;version="[2.1.0,3.0.0)",
  com.google.gson.reflect;version="[2.1.0,3.0.0)"
