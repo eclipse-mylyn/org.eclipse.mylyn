@@ -25,4 +25,4 @@ Require-Bundle: org.junit;bundle-version="4.8.2",
  org.eclipse.mylyn.resources.ui
 Export-Package: org.eclipse.mylyn.context.sdk.java;x-internal:=true,
  org.eclipse.mylyn.context.sdk.java.search;x-internal:=true
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
