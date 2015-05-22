@@ -43,6 +43,7 @@ import com.google.common.base.Functions;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 
+@SuppressWarnings("restriction")
 public class TaskEditorRestoreTest extends TestCase {
 
 	private IWorkbenchPage page;
@@ -82,6 +83,7 @@ public class TaskEditorRestoreTest extends TestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
+		taskActivityManager.deactivateActiveTask();
 		if (project != null) {
 			project.delete(true, null);
 		}
@@ -106,7 +108,7 @@ public class TaskEditorRestoreTest extends TestCase {
 		taskActivityManager.activateTask(task1);
 
 		assertOnlyTask1IsOpen();
-		assertEquals(Collections.emptySet(), getOpenEditorsByType(TextEditor.class, Functions.identity()));
+		assertEquals(Collections.emptySet(), getOpenEditorsByType(TextEditor.class, Functions.<TextEditor> identity()));
 	}
 
 	public void testDeactivateRestoresActiveTaskEditorAndFiles() throws Exception {
@@ -132,8 +134,8 @@ public class TaskEditorRestoreTest extends TestCase {
 	}
 
 	private void assertNoTaskOrTextEditorsOpen() {
-		assertEquals(Collections.emptySet(), getOpenEditorsByType(TextEditor.class, Functions.identity()));
-		assertEquals(Collections.emptySet(), getOpenEditorsByType(TaskEditor.class, Functions.identity()));
+		assertEquals(Collections.emptySet(), getOpenEditorsByType(TextEditor.class, Functions.<TextEditor> identity()));
+		assertEquals(Collections.emptySet(), getOpenEditorsByType(TaskEditor.class, Functions.<TaskEditor> identity()));
 	}
 
 	private void assertOnlyTask1IsOpen() {
@@ -156,7 +158,7 @@ public class TaskEditorRestoreTest extends TestCase {
 		assertEquals(ImmutableSet.of(fileA.getName(), fileB.getName()), editorTitles);
 	}
 
-	private <T> Set getOpenEditorsByType(Class<T> clazz, Function propertyFunction) {
+	private <T extends IEditorPart, S> Set<S> getOpenEditorsByType(Class<T> clazz, Function<T, S> propertyFunction) {
 		return FluentIterable.from(Arrays.asList(page.getEditorReferences()))
 				.transform(new Function<IEditorReference, IEditorPart>() {
 					@Override
