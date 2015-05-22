@@ -1,0 +1,79 @@
+### Markdown Cheat Sheet
+
+#### Phrase Modifiers
+
+<table>
+<tr><td><tt>*emphasis*</tt></td><td><em>emphasis</em></td></tr>
+<tr><td><tt>_emphasis_</tt></td><td><em>emphasis</em></td></tr>
+<tr><td><tt>**strong emphasis**</tt></td><td><strong>strong emphasis</strong></td></tr>
+<tr><td><tt>__strong emphasis__</tt></td><td><strong>strong emphasis</strong></td></tr>
+<tr><td><tt>`code span`</tt></td><td><code>code span</code></td></tr>
+</table> 
+
+#### Headings
+
+<pre># Heading Level 1
+## Heading Level 2
+### Heading Level 3
+</pre>
+
+or
+
+<tt>Heading Level 1\
+===============</tt>
+
+<tt>Heading Level 2\
+---------------</tt>
+
+
+#### Links
+
+<tt>&lt;http://example.com&gt;</tt><br/>
+<tt>\[link text](http://example.com)</tt><br/>
+<tt>\[link text](http://example.com "title")</tt><br/>
+
+#### Images
+
+<tt>\!\[](http://example.com/img.png)</tt><br/>
+<tt>\!\[altText](http://example.com/img.png)</tt><br/>
+<tt>\!\[altText](http://example.com/img.png "title")</tt>
+
+#### Lists
+
+<pre>* one
+* two
+  two continued
+* three
+</pre>
+
+#### Numeric Lists
+
+<pre>1. one
+2. two
+   two continued
+3. three
+</pre>
+
+or
+
+<pre>1) one
+2) two
+   two continued
+3) three
+</pre>
+
+### Block Quotes
+
+<pre>&gt; example of
+&gt; a block quote
+</pre>
+
+### Code Blocks
+
+<pre>```
+if (true) {
+  // this is code
+}
+```
+</pre>
+

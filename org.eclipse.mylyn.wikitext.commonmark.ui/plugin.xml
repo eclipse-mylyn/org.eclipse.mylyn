@@ -42,6 +42,15 @@
    </extension>
    
    <extension
+         point="org.eclipse.mylyn.wikitext.ui.cheatSheet">
+      <content
+            contentLanguage="CommonMark"
+            markupLanguage="CommonMark"
+            resource="help/cheatSheet/CommonMark.commonmark">
+      </content>
+   </extension>
+   
+   <extension
          point="org.eclipse.mylyn.wikitext.core.markupLanguage">
       <language
             class="org.eclipse.mylyn.wikitext.commonmark.CommonMarkLanguage"

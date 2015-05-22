@@ -10,11 +10,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.ui.editor.help;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -24,6 +22,8 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.ui.WikiText;
 import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Bundle;
+
+import com.google.common.io.Resources;
 
 /**
  * A handle to help content. HelpContent is retrieved from a resource path from a bundle. Help content is retrieved in a
@@ -38,7 +38,7 @@ import org.osgi.framework.Bundle;
  * <li><code>help/cheatSheet.textile</code></li>
  * </ul>
  * In this way the user is presented with the most locale-specific help resource.
- * 
+ *
  * @author David Green
  */
 public class HelpContent {
@@ -91,26 +91,15 @@ public class HelpContent {
 	@SuppressWarnings("serial")
 	public String getContent() throws IOException {
 		try {
-			String content = null;
 			URL resource = getResource();
-			Reader reader = new InputStreamReader(new BufferedInputStream(resource.openStream()));
-			try {
-				StringBuilder buf = new StringBuilder();
-				int i;
-				while ((i = reader.read()) != -1) {
-					buf.append((char) i);
-				}
-				content = buf.toString();
-			} finally {
-				reader.close();
-			}
+			String content = Resources.toString(resource, StandardCharsets.UTF_8);
 			if (resourceContentLanguage == null || "html".equalsIgnoreCase(resourceContentLanguage)) { //$NON-NLS-1$
 				return content;
 			}
 			MarkupLanguage markupLanguage = WikiText.getMarkupLanguage(resourceContentLanguage);
 			if (markupLanguage == null) {
-				throw new IOException(NLS.bind(Messages.HelpContent_noSuchMarkupLanguage,
-						new Object[] { resourceContentLanguage }));
+				throw new IOException(
+						NLS.bind(Messages.HelpContent_noSuchMarkupLanguage, new Object[] { resourceContentLanguage }));
 			}
 			MarkupParser markupParser = new MarkupParser(markupLanguage);
 			return markupParser.parseToHtml(content);
