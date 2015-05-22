@@ -73,7 +73,6 @@ import org.eclipse.mylyn.internal.gerrit.core.client.rest.BranchInput;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo28;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.CherryPickInput;
-import org.eclipse.mylyn.internal.gerrit.core.client.rest.CommentInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.CommentInput;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.CommitInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ProjectInfo;
@@ -812,10 +811,9 @@ public abstract class GerritClient extends ReviewsClient {
 			final Set<ApprovalCategoryValue.Id> approvals, IProgressMonitor monitor) throws GerritException {
 		final PatchSet.Id id = new PatchSet.Id(new Change.Id(id(reviewId)), patchSetId);
 		ReviewInput reviewInput = new ReviewInput(message);
-		Map<String, CommentInfo[]> drafts = listDrafts(id, monitor);
-		Map<String, CommentInput[]> comments = convert(drafts);
-		if (!comments.isEmpty()) {
-			reviewInput.setComments(comments);
+		Map<String, CommentInput[]> drafts = listDrafts(id, monitor);
+		if (!drafts.isEmpty()) {
+			reviewInput.setComments(drafts);
 		}
 		reviewInput.setApprovals(approvals);
 		final String uri = "/a/changes/" + id.getParentKey().get() + "/revisions/" + id.get() + "/review"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -957,27 +955,10 @@ public abstract class GerritClient extends ReviewsClient {
 		return getChangeDetail(id.getParentKey().get(), monitor);
 	}
 
-	private Map<String, CommentInput[]> convert(Map<String, CommentInfo[]> commentInfos) {
-		if (commentInfos == null || commentInfos.isEmpty()) {
-			return Collections.<String, CommentInput[]> emptyMap();
-		}
-		Map<String, CommentInput[]> commentInputs = new HashMap<String, CommentInput[]>(commentInfos.size());
-		Set<Entry<String, CommentInfo[]>> entrySet = commentInfos.entrySet();
-		for (Entry<String, CommentInfo[]> entry : entrySet) {
-			CommentInfo[] infos = entry.getValue();
-			List<CommentInput> inputs = new ArrayList<CommentInput>(infos.length);
-			for (CommentInfo info : infos) {
-				inputs.add(new CommentInput(info));
-			}
-			commentInputs.put(entry.getKey(), inputs.toArray(new CommentInput[inputs.size()]));
-		}
-		return commentInputs;
-	}
-
-	private Map<String, CommentInfo[]> listDrafts(final PatchSet.Id id, IProgressMonitor monitor)
+	private Map<String, CommentInput[]> listDrafts(final PatchSet.Id id, IProgressMonitor monitor)
 			throws GerritException {
 		String uri = "/changes/" + id.getParentKey().get() + "/revisions/" + id.get() + "/drafts/"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		TypeToken<Map<String, CommentInfo[]>> resultType = new TypeToken<Map<String, CommentInfo[]>>() {
+		TypeToken<Map<String, CommentInput[]>> resultType = new TypeToken<Map<String, CommentInput[]>>() {
 		};
 
 		return restClient.executeGetRestRequest(uri, resultType.getType(), monitor);

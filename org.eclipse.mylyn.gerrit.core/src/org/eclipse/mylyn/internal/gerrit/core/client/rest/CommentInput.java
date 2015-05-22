@@ -15,7 +15,8 @@ import java.sql.Timestamp;
 
 /**
  * Data model object for <a
- * href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#comment-input">CommentInput</a>.
+ * href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#comment-input">CommentInput</a> and
+ * <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#comment-info">CommentInfo</a>.
  */
 public class CommentInput {
 
@@ -39,16 +40,6 @@ public class CommentInput {
 	private Timestamp updated;
 
 	private String message;
-
-	public CommentInput() {
-	}
-
-	public CommentInput(CommentInfo info) {
-		this.id = info.getId();
-		this.path = info.getPath();
-		this.line = info.getLine();
-		this.message = info.getMessage();
-	}
 
 	public String getKind() {
 		return kind;
