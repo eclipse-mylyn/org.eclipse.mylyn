@@ -1,6 +1,5 @@
-// $codepro.audit.disable com.instantiations.assist.eclipse.analysis.audit.rule.effectivejava.alwaysOverridetoString.alwaysOverrideToString, com.instantiations.assist.eclipse.analysis.deserializeabilitySecurity, com.instantiations.assist.eclipse.analysis.enforceCloneableUsageSecurity
 /*******************************************************************************
- * Copyright (c) 2013 Ericsson AB and others.
+ * Copyright (c) 2013, 2014 Ericsson AB and others.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -17,12 +16,11 @@
  ******************************************************************************/
 package org.eclipse.mylyn.gerrit.dashboard.ui.internal.utils;
 
-
 /**
  * @authot Jacques Bouthillier
  * @version $Revision: 1.0 $
  */
-public class UIConstants { // $codepro.audit.disable convertClassToInterface
+public class UIConstants {
 
 	public static final String ADD_GERRIT_SITE_COMMAND_ID = "org.eclipse.mylyn.gerrit.dashboard.ui.addGerritSite"; //$NON-NLS-1$
 
