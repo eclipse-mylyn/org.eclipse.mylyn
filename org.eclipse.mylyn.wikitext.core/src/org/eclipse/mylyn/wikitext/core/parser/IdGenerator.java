@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.parser;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,7 +41,7 @@ public class IdGenerator {
 	/**
 	 * reserve the given id, ensuring that the generator will not generate the same id. An id can only be reserved if it
 	 * has not already been reserved and if it has not already been {@link #newId(String,String) generated}.
-	 * 
+	 *
 	 * @param id
 	 *            the id to reserve
 	 * @return true if the id was reserved, otherwise false
@@ -51,7 +53,7 @@ public class IdGenerator {
 	/**
 	 * create a new ID based on the given type and label text. Guarantees to return an id once and only once; duplicates
 	 * are never created.
-	 * 
+	 *
 	 * @param type
 	 *            the type of id to produce, usually an indication of what the id is created for. For example, 'h1', or
 	 *            'h2'. may be null.
@@ -89,13 +91,23 @@ public class IdGenerator {
 	}
 
 	/**
-	 * get the set of anchor names that were either {@link #reserveId(String) reserved} or
-	 * {@link #newId(String, String) created}.
-	 * 
+	 * get the set of anchor names that were either {@link #reserveId(String) reserved} or {@link #newId(String, String)
+	 * created}.
+	 *
 	 * @return the set of names
 	 */
 	public Set<String> getAnchorNames() {
 		return Collections.unmodifiableSet(anchorNames);
+	}
+
+	/**
+	 * Indicates whether there are any {@link #getAnchorNames() anchor names}.
+	 *
+	 * @return true if there are anchor names, otherwise false
+	 * @since 2.5
+	 */
+	public boolean hasAnchorNames() {
+		return !anchorNames.isEmpty();
 	}
 
 	public IdGenerationStrategy getGenerationStrategy() {
@@ -103,9 +115,6 @@ public class IdGenerator {
 	}
 
 	public void setGenerationStrategy(IdGenerationStrategy generationStrategy) {
-		if (generationStrategy == null) {
-			throw new IllegalArgumentException();
-		}
-		this.generationStrategy = generationStrategy;
+		this.generationStrategy = checkNotNull(generationStrategy, "Must provide a generationStrategy"); //$NON-NLS-1$
 	}
 }
