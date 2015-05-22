@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.eclipse.mylyn.commons.repositories.http.core;singleton:
 Bundle-Version: 1.8.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.net,
  org.eclipse.mylyn.commons.core,

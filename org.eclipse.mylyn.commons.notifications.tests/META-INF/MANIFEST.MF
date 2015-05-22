@@ -13,4 +13,4 @@ Require-Bundle: org.eclipse.core.runtime,
 Export-Package: org.eclipse.mylyn.commons.notifications.tests;x-internal:=true,
  org.eclipse.mylyn.commons.notifications.tests.core;x-internal:=true,
  org.eclipse.mylyn.commons.notifications.tests.feed;x-internal:=true
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
