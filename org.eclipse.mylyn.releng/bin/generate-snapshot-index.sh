@@ -8,6 +8,5 @@ for f in `find -name *3.1*.zip -not -name *-api.zip | sort`; do
 done
 echo "</p></body><html>" >> index.html.temp
 
-rm -f index.html
-mv index.html.temp index.html
+cp index.html.temp index.html
 popd > /dev/null
