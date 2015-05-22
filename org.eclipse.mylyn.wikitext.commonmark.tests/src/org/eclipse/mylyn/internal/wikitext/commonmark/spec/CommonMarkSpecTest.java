@@ -108,7 +108,7 @@ public class CommonMarkSpecTest {
 		}
 	}
 
-	@Parameters(name = "{0} test {index}")
+	@Parameters //(name = "{0} test {index}")
 	public static List<Object[]> parameters() {
 		ImmutableList.Builder<Object[]> parameters = ImmutableList.builder();
 
