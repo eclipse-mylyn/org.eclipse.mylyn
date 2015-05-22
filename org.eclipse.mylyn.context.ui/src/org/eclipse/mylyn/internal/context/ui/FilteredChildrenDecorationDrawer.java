@@ -1,3 +1,10 @@
+/*******************************************************************************
+ * Copyright (c) 2015 Tasktop Technologies.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Tasktop EULA
+ * which accompanies this distribution, and is available at
+ * http://tasktop.com/legal
+ *******************************************************************************/
 package org.eclipse.mylyn.internal.context.ui;
 
 import org.eclipse.jface.viewers.StructuredSelection;
