@@ -19,11 +19,11 @@
 		<topic href="Mylyn/FAQ/Installation.html#My_tasks_or_queries_disappeared.2C_what_do_I_do.3F" label="My tasks or queries disappeared, what do I do?"></topic>
 		<topic href="Mylyn/FAQ/Installation.html#General_Installation_Troubleshooting" label="General Installation Troubleshooting"></topic>
 		<topic href="Mylyn/FAQ/Installation.html#Installation_Troubleshooting_on_Eclipse_3.4_and_later" label="Installation Troubleshooting on Eclipse 3.4 and later">
-			<topic href="Mylyn/FAQ/Installation.html#Why_does_the_installation_fail_with_.27.27No_repository_found.27.27.3F" label="Why does the installation fail with ''No repository found''?"></topic>
-			<topic href="Mylyn/FAQ/Installation.html#Why_does_update_fail_with_.27.27Cannot_complete_the_request.27.27.3F" label="Why does update fail with ''Cannot complete the request''?"></topic>
+			<topic href="Mylyn/FAQ/Installation.html#Why_does_the_installation_fail_with_.27.27No_repository_found.27.27.3F" label="Why does the installation fail with &apos;&apos;No repository found&apos;&apos;?"></topic>
+			<topic href="Mylyn/FAQ/Installation.html#Why_does_update_fail_with_.27.27Cannot_complete_the_request.27.27.3F" label="Why does update fail with &apos;&apos;Cannot complete the request&apos;&apos;?"></topic>
 		</topic>
 		<topic href="Mylyn/FAQ/Installation.html#Installation_Troubleshooting_on_Eclipse_3.3_and_earlier" label="Installation Troubleshooting on Eclipse 3.3 and earlier"></topic>
-		<topic href="Mylyn/FAQ/Installation.html#Why_can.27t_I_update_Mylyn_3.0_to_a_newer_release.3F" label="Why can't I update Mylyn 3.0 to a newer release?"></topic>
+		<topic href="Mylyn/FAQ/Installation.html#Why_can.27t_I_update_Mylyn_3.0_to_a_newer_release.3F" label="Why can&apos;t I update Mylyn 3.0 to a newer release?"></topic>
 		<topic href="Mylyn/FAQ/Installation.html#Installing_on_Linux" label="Installing on Linux">
 			<topic href="Mylyn/FAQ/Installation.html#How_can_I_get_the_SWT_internal_browser_to_work_under_Linux.3F" label="How can I get the SWT internal browser to work under Linux?"></topic>
 			<topic href="Mylyn/FAQ/Installation.html#I.E2.80.99m_getting_a_.E2.80.9CCould_not_create_Browser_page:_No_more_handles.E2.80.9D_error" label="I’m getting a “Could not create Browser page: No more handles” error"></topic>
@@ -45,7 +45,7 @@
 			<topic href="Mylyn/FAQ/Installation.html#Do_I_need_the_Outline_View_when_running_Mylyn.3F" label="Do I need the Outline View when running Mylyn?"></topic>
 			<topic href="Mylyn/FAQ/Installation.html#What_does_the_message_.E2.80.9Ccontent_assist_proposals_no_longer_appear.E2.80.9D_mean.3F" label="What does the message “content assist proposals no longer appear” mean?"></topic>
 			<topic href="Mylyn/FAQ/Installation.html#Why_do_I_get_errors_like_.E2.80.9CHTTP_Response_Code_407.E2.80.9D_or_.E2.80.9CProxy_Authentication_Error.E2.80.9D_when_accessing_repositories_through_a_proxy_server.3F" label="Why do I get errors like “HTTP Response Code 407” or “Proxy Authentication Error” when accessing repositories through a proxy server?"></topic>
-			<topic href="Mylyn/FAQ/Installation.html#I_can.E2.80.99t_use_Ctrl.2BAlt.2BShift.2BArrow_Up_for.27.27_Mark_as_Landmark.27.27.__What_do_I_do.3F" label="I can’t use Ctrl+Alt+Shift+Arrow Up for'' Mark as Landmark''.  What do I do?"></topic>
+			<topic href="Mylyn/FAQ/Installation.html#I_can.E2.80.99t_use_Ctrl.2BAlt.2BShift.2BArrow_Up_for.27.27_Mark_as_Landmark.27.27.__What_do_I_do.3F" label="I can’t use Ctrl+Alt+Shift+Arrow Up for&apos;&apos; Mark as Landmark&apos;&apos;.  What do I do?"></topic>
 			<topic href="Mylyn/FAQ/Installation.html#Why_do_I_get_an_error_when_accessing_secured_web_sites.3F" label="Why do I get an error when accessing secured web sites?"></topic>
 		</topic>
 		<topic href="Mylyn/FAQ/Installation.html#Uninstall_troubleshooting" label="Uninstall troubleshooting"></topic>
@@ -56,7 +56,7 @@
 		<topic href="Mylyn/FAQ/Task-List.html#How_do_I_restore_my_tasks_from_backup.3F" label="How do I restore my tasks from backup?"></topic>
 		<topic href="Mylyn/FAQ/Task-List.html#How_do_I_clear_outgoing_changes_on_a_task.3F" label="How do I clear outgoing changes on a task?"></topic>
 		<topic href="Mylyn/FAQ/Task-List.html#Why_do_my_tasks_not_appear_in_the_Task_List.3F" label="Why do my tasks not appear in the Task List?"></topic>
-		<topic href="Mylyn/FAQ/Task-List.html#Why_do_tasks_appear_in_the_.27.27Unmatched.27.27_container.3F" label="Why do tasks appear in the ''Unmatched'' container?"></topic>
+		<topic href="Mylyn/FAQ/Task-List.html#Why_do_tasks_appear_in_the_.27.27Unmatched.27.27_container.3F" label="Why do tasks appear in the &apos;&apos;Unmatched&apos;&apos; container?"></topic>
 		<topic href="Mylyn/FAQ/Task-List.html#How_do_I_change_the_Task_List_colors.3F" label="How do I change the Task List colors?"></topic>
 		<topic href="Mylyn/FAQ/Task-List.html#The_Unmatched_category_contains_many_irrelevant_tasks.2C_how_do_I_clean_it_up.3F" label="The Unmatched category contains many irrelevant tasks, how do I clean it up?"></topic>
 		<topic href="Mylyn/FAQ/Task-List.html#How_does_Mylyn_count_the_active_time_for_a_task.3F" label="How does Mylyn count the active time for a task?"></topic>
@@ -129,7 +129,7 @@
 		<topic href="Mylyn/FAQ/Task-Focused-UI.html#How_do_I_get_rid_of_an_element_if_it_is_not_interesting.3F" label="How do I get rid of an element if it is not interesting?"></topic>
 		<topic href="Mylyn/FAQ/Task-Focused-UI.html#Which_Focused_UI_features_can_I_turn_off.3F" label="Which Focused UI features can I turn off?"></topic>
 		<topic href="Mylyn/FAQ/Task-Focused-UI.html#Why_can.E2.80.99t_I_Alt.2BClick_to_references_libraries.3F" label="Why can’t I Alt+Click to references libraries?"></topic>
-		<topic href="Mylyn/FAQ/Task-Focused-UI.html#Why_is_the_.27.27Link_with_Editor.27.27_button_disabled.3F" label="Why is the ''Link with Editor'' button disabled?"></topic>
+		<topic href="Mylyn/FAQ/Task-Focused-UI.html#Why_is_the_.27.27Link_with_Editor.27.27_button_disabled.3F" label="Why is the &apos;&apos;Link with Editor&apos;&apos; button disabled?"></topic>
 		<topic href="Mylyn/FAQ/Task-Focused-UI.html#What_happened_to_the_Active_Search_and_Active_Hierarchy_views.3F" label="What happened to the Active Search and Active Hierarchy views?"></topic>
 		<topic href="Mylyn/FAQ/Task-Focused-UI.html#Why_does_startup_of_org.eclipse.mylyn.context.ui_take_so_long.3F" label="Why does startup of org.eclipse.mylyn.context.ui take so long?"></topic>
 	</topic>
@@ -161,7 +161,7 @@
 		<topic href="Mylyn/FAQ/WikiText.html#Can_I_use_WikiText_without_Eclipse.3F" label="Can I use WikiText without Eclipse?"></topic>
 		<topic href="Mylyn/FAQ/WikiText.html#What_output_can_WikiText_create.3F" label="What output can WikiText create?"></topic>
 		<topic href="Mylyn/FAQ/WikiText.html#What_wiki_markup_languages_does_WikiText_support.3F" label="What wiki markup languages does WikiText support?"></topic>
-		<topic href="Mylyn/FAQ/WikiText.html#Why_doesn.27t_the_preview_tab_show_up_in_the_WikiText_editor.3F" label="Why doesn't the preview tab show up in the WikiText editor?"></topic>
+		<topic href="Mylyn/FAQ/WikiText.html#Why_doesn.27t_the_preview_tab_show_up_in_the_WikiText_editor.3F" label="Why doesn&apos;t the preview tab show up in the WikiText editor?"></topic>
 		<topic href="Mylyn/FAQ/WikiText.html#Where_can_I_find_out_more_about_WikiText.3F" label="Where can I find out more about WikiText?"></topic>
 	</topic>
 	<topic href="Mylyn/FAQ/Integration-with-other-tools.html" label="Integration with other tools">
