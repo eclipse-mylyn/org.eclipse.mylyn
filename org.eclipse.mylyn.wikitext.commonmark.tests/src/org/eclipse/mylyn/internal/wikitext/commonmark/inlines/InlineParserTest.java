@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.wikitext.commonmark.inlines;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.mylyn.internal.wikitext.commonmark.Line;
@@ -50,6 +51,14 @@ public class InlineParserTest {
 				new Characters(line, 4, 3, "two"));
 		assertParse("one\ntwo three", new Characters(line, 0, 3, "one"), new SoftLineBreak(line, 3, 1),
 				new Characters(line, 4, 9, "two three"));
+	}
+
+	@Test
+	public void toStringContent() {
+		InlineParser parser = new InlineParser(new CodeSpan(), new AllCharactersSpan());
+		String stringContent = parser.toStringContent(ProcessingContext.empty(),
+				new TextSegment(Collections.singletonList(new Line(1, 0, "one `two` three"))));
+		assertEquals("one two three", stringContent);
 	}
 
 	private void assertParse(String content, Inline... inlines) {

@@ -13,6 +13,8 @@ package org.eclipse.mylyn.internal.wikitext.commonmark;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import org.eclipse.mylyn.wikitext.core.parser.IdGenerator;
+
 import com.google.common.collect.ImmutableMap;
 
 public class ProcessingContext {
@@ -54,8 +56,11 @@ public class ProcessingContext {
 
 	private final ImmutableMap<String, NamedUriWithTitle> links;
 
-	ProcessingContext(ImmutableMap<String, NamedUriWithTitle> links) {
+	private final IdGenerator idGenerator;
+
+	ProcessingContext(ImmutableMap<String, NamedUriWithTitle> links, IdGenerator idGenerator) {
 		this.links = checkNotNull(links);
+		this.idGenerator = checkNotNull(idGenerator);
 	}
 
 	public boolean isEmpty() {
@@ -64,5 +69,9 @@ public class ProcessingContext {
 
 	public NamedUriWithTitle namedUriWithTitle(String name) {
 		return links.get(name.toLowerCase());
+	}
+
+	public String generateHeadingId(int headingLevel, String headingText) {
+		return idGenerator.newId("h" + headingLevel, headingText);
 	}
 }

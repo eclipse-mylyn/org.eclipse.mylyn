@@ -13,12 +13,14 @@ package org.eclipse.mylyn.wikitext.commonmark;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.eclipse.mylyn.internal.wikitext.commonmark.CommonMark;
+import org.eclipse.mylyn.internal.wikitext.commonmark.CommonMarkIdGenerationStrategy;
 import org.eclipse.mylyn.internal.wikitext.commonmark.LineSequence;
 import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContext;
 import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContextBuilder;
 import org.eclipse.mylyn.internal.wikitext.commonmark.SourceBlocks;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.markup.IdGenerationStrategy;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 
 public class CommonMarkLanguage extends MarkupLanguage {
@@ -48,8 +50,14 @@ public class CommonMarkLanguage extends MarkupLanguage {
 		}
 	}
 
+	@Override
+	public IdGenerationStrategy getIdGenerationStrategy() {
+		return new CommonMarkIdGenerationStrategy();
+	}
+
 	private ProcessingContext createContext(SourceBlocks sourceBlocks, String markupContent) {
-		ProcessingContextBuilder contextBuilder = ProcessingContext.builder();
+		ProcessingContextBuilder contextBuilder = ProcessingContext.builder()
+				.idGenerationStrategy(getIdGenerationStrategy());
 		sourceBlocks.createContext(contextBuilder, LineSequence.create(markupContent));
 		return contextBuilder.build();
 	}

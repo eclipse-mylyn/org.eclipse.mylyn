@@ -30,6 +30,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.mylyn.wikitext.commonmark.CommonMarkLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.markup.IdGenerationStrategy;
 import org.eclipse.mylyn.wikitext.core.util.LocationTrackingReader;
 import org.junit.Before;
 import org.junit.Test;
@@ -100,7 +102,14 @@ public class CommonMarkSpecTest {
 	@Test
 	public void test() {
 		try {
-			assertContent(expectation.expected, expectation.input);
+			CommonMarkLanguage language = new CommonMarkLanguage() {
+
+				@Override
+				public IdGenerationStrategy getIdGenerationStrategy() {
+					return null;
+				}
+			};
+			assertContent(language, expectation.expected, expectation.input);
 		} catch (AssertionError e) {
 			System.out.println(lineNumber + ", // " + heading);
 			System.out.flush();

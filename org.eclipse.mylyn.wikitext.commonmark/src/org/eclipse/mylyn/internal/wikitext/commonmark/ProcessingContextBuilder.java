@@ -16,6 +16,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContext.NamedUriWithTitle;
+import org.eclipse.mylyn.wikitext.core.parser.IdGenerator;
+import org.eclipse.mylyn.wikitext.core.parser.markup.IdGenerationStrategy;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
@@ -23,6 +25,8 @@ import com.google.common.collect.ImmutableMap;
 public class ProcessingContextBuilder {
 
 	private final Map<String, NamedUriWithTitle> linkByName = new HashMap<>();
+
+	private IdGenerationStrategy idGenerationStrategy = new CommonMarkIdGenerationStrategy();
 
 	public ProcessingContextBuilder referenceDefinition(String name, String href, String title) {
 		if (!Strings.isNullOrEmpty(name)) {
@@ -34,8 +38,28 @@ public class ProcessingContextBuilder {
 		return this;
 	}
 
+	public ProcessingContextBuilder idGenerationStrategy(IdGenerationStrategy idGenerationStrategy) {
+		this.idGenerationStrategy = idGenerationStrategy;
+		return this;
+	}
+
 	public ProcessingContext build() {
-		return new ProcessingContext(ImmutableMap.copyOf(linkByName));
+		return new ProcessingContext(ImmutableMap.copyOf(linkByName), idGenerator());
+	}
+
+	private IdGenerator idGenerator() {
+		if (idGenerationStrategy == null) {
+			return new IdGenerator() {
+
+				@Override
+				public String newId(String type, String text) {
+					return null;
+				}
+			};
+		}
+		IdGenerator generator = new IdGenerator();
+		generator.setGenerationStrategy(idGenerationStrategy);
+		return generator;
 	}
 
 	ProcessingContextBuilder() {

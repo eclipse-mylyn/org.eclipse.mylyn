@@ -24,6 +24,7 @@ import org.eclipse.mylyn.wikitext.core.parser.HtmlParser;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentHandler;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -33,7 +34,12 @@ import com.google.common.base.Throwables;
 public class CommonMarkAsserts {
 
 	public static void assertContent(String expectedHtml, String input) {
-		String html = parseToHtml(input);
+		String html = parseToHtml(new CommonMarkLanguage(), input);
+		assertHtmlEquals(expectedHtml, html);
+	}
+
+	public static void assertContent(MarkupLanguage language, String expectedHtml, String input) {
+		String html = parseToHtml(language, input);
 		assertHtmlEquals(expectedHtml, html);
 	}
 
@@ -58,10 +64,10 @@ public class CommonMarkAsserts {
 		}
 	}
 
-	private static String parseToHtml(String input) {
+	private static String parseToHtml(MarkupLanguage markupLanguage, String input) {
 		StringWriter out = new StringWriter();
 		DocumentBuilder builder = createDocumentBuilder(out);
-		MarkupParser parser = new MarkupParser(new CommonMarkLanguage(), builder);
+		MarkupParser parser = new MarkupParser(markupLanguage, builder);
 		try {
 			parser.parse(new StringReader(input));
 		} catch (IOException e) {

@@ -38,16 +38,30 @@ public class AtxHeaderBlock extends SourceBlock {
 		lineSequence.advance();
 
 		builder.setLocator(currentLine.toLocator());
-		builder.beginHeading(headingLevel(matcher), new HeadingAttributes());
 
 		int contentOffset = matcher.start(2);
 		int contentEnd = matcher.end(2);
+		int headingLevel = headingLevel(matcher);
 		if (contentEnd > contentOffset) {
 			Line headerContent = currentLine.segment(contentOffset, contentEnd - contentOffset);
-			new InlineContent().emit(context, builder, new TextSegment(Collections.singletonList(headerContent)));
+			TextSegment textSegment = new TextSegment(Collections.singletonList(headerContent));
+
+			HeadingAttributes attributes = new HeadingAttributes();
+
+			InlineContent inlineContent = new InlineContent();
+			String headingText = inlineContent.toStringContent(context, textSegment);
+			attributes.setId(context.generateHeadingId(headingLevel, headingText));
+
+			builder.beginHeading(headingLevel, attributes);
+
+			inlineContent.emit(context, builder, textSegment);
+
+			builder.endHeading();
+		} else {
+			builder.beginHeading(headingLevel, new HeadingAttributes());
+			builder.endHeading();
 		}
 
-		builder.endHeading();
 	}
 
 	private int headingLevel(Matcher matcher) {

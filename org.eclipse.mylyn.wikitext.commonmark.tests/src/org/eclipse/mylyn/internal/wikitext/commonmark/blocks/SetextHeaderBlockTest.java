@@ -38,9 +38,9 @@ public class SetextHeaderBlockTest {
 
 	@Test
 	public void process() {
-		assertContent("<h2>Heading Text</h2>", "Heading Text\n-------");
-		assertContent("<h1>Heading Text</h1>", "Heading Text\n=");
-		assertContent("<h1>Heading Text</h1>", "Heading Text\n====");
-		assertContent("<h1>Heading <em>Text</em></h1>", "Heading *Text*\n====");
+		assertContent("<h2 id=\"heading-text\">Heading Text</h2>", "Heading Text\n-------");
+		assertContent("<h1 id=\"heading-text\">Heading Text</h1>", "Heading Text\n=");
+		assertContent("<h1 id=\"heading-text\">Heading Text</h1>", "Heading Text\n====");
+		assertContent("<h1 id=\"heading-text\">Heading <em>Text</em></h1>", "Heading *Text*\n====");
 	}
 }

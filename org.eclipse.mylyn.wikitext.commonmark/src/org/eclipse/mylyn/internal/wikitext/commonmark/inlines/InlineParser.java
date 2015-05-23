@@ -41,6 +41,11 @@ public class InlineParser {
 		emit(builder, inlines);
 	}
 
+	public String toStringContent(ProcessingContext context, TextSegment textSegment) {
+		List<Inline> inlines = parse(context, textSegment);
+		return toStringContent(inlines);
+	}
+
 	public static void emit(DocumentBuilder builder, List<Inline> inlines) {
 		for (Inline inline : inlines) {
 			builder.setLocator(inline.getLocator());

@@ -64,4 +64,13 @@ public class ProcessingContextTest {
 		assertEquals("/uri", uriWithTitle.getUri());
 	}
 
+	@Test
+	public void generateHeadingId() {
+		ProcessingContext processingContext = ProcessingContext.empty();
+		assertEquals("a", processingContext.generateHeadingId(1, "a"));
+		assertEquals("a2", processingContext.generateHeadingId(1, "a"));
+		assertEquals("a3", processingContext.generateHeadingId(2, "a"));
+		assertEquals("h1-3", processingContext.generateHeadingId(1, null));
+		assertEquals("h1-4", processingContext.generateHeadingId(1, ""));
+	}
 }

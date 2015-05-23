@@ -41,16 +41,17 @@ public class AtxHeaderBlockTest {
 
 	@Test
 	public void basic() {
-		assertContent("<h2>One Two</h2>", "## One Two");
-		assertContent("<h2>One Two</h2>", "## One Two #####   ");
-		assertContent("<h2>One Two#</h2>", "## One Two#");
-		assertContent("<p>One</p><h1>two</h1><p>Three</p>", "One\n# two\nThree");
+		assertContent("<h2 id=\"one-two\">One Two</h2>", "## One Two");
+		assertContent("<h2 id=\"one-two\">One Two</h2>", "## One Two #####   ");
+		assertContent("<h2 id=\"one-two\">One Two#</h2>", "## One Two#");
+		assertContent("<p>One</p><h1 id=\"two\">two</h1><p>Three</p>", "One\n# two\nThree");
 		assertContent("<h2></h2>", "##");
 		assertContent("<h2></h2>", "## ##");
 	}
 
 	@Test
 	public void withNestedInlines() {
-		assertContent("<h2>One <em>Two</em> \\<strong>three</strong></h2>", "## One *Two* \\\\__three__ ##");
+		assertContent("<h2 id=\"one-two-three\">One <em>Two</em> \\<strong>three</strong></h2>",
+				"## One *Two* \\\\__three__ ##");
 	}
 }
