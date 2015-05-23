@@ -13,16 +13,17 @@ package org.eclipse.mylyn.internal.wikitext.commonmark;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
-import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 
 public class ProcessingContext {
 
-	private static final ProcessingContext EMPTY_CONTEXT = new ProcessingContext();
+	public static ProcessingContextBuilder builder() {
+		return new ProcessingContextBuilder();
+	}
+
+	public static ProcessingContext empty() {
+		return builder().build();
+	}
 
 	public static class NamedUriWithTitle {
 
@@ -53,45 +54,15 @@ public class ProcessingContext {
 
 	private final ImmutableMap<String, NamedUriWithTitle> links;
 
-	private ProcessingContext(ImmutableMap<String, NamedUriWithTitle> links) {
+	ProcessingContext(ImmutableMap<String, NamedUriWithTitle> links) {
 		this.links = checkNotNull(links);
-	}
-
-	public ProcessingContext() {
-		this(ImmutableMap.<String, NamedUriWithTitle> of());
-	}
-
-	public static ProcessingContext empty() {
-		return EMPTY_CONTEXT;
-	}
-
-	public static ProcessingContext withReferenceDefinition(String name, String href, String title) {
-		if (Strings.isNullOrEmpty(name)) {
-			return empty();
-		}
-		return new ProcessingContext(ImmutableMap.of(name.toLowerCase(Locale.ROOT), new NamedUriWithTitle(name, href,
-				title)));
 	}
 
 	public boolean isEmpty() {
 		return links.isEmpty();
 	}
 
-	public ProcessingContext merge(ProcessingContext other) {
-		checkNotNull(other);
-		if (other.isEmpty()) {
-			return this;
-		} else if (isEmpty()) {
-			return other;
-		}
-		Map<String, NamedUriWithTitle> mergedLinks = new HashMap<>();
-		mergedLinks.putAll(other.links);
-		mergedLinks.putAll(links);
-		return new ProcessingContext(ImmutableMap.copyOf(mergedLinks));
-	}
-
 	public NamedUriWithTitle namedUriWithTitle(String name) {
 		return links.get(name.toLowerCase());
 	}
-
 }

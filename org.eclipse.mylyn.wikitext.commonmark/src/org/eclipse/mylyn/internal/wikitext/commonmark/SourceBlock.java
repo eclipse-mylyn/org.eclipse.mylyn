@@ -19,9 +19,7 @@ public abstract class SourceBlock {
 
 	public abstract boolean canStart(LineSequence lineSequence);
 
-	public ProcessingContext createContext(LineSequence lineSequence) {
-		ProcessingContext context = ProcessingContext.empty();
-		process(context, new NoOpDocumentBuilder(), lineSequence);
-		return context;
+	public void createContext(ProcessingContextBuilder contextBuilder, LineSequence lineSequence) {
+		process(contextBuilder.build(), new NoOpDocumentBuilder(), lineSequence);
 	}
 }

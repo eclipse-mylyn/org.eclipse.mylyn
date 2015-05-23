@@ -14,27 +14,29 @@ package org.eclipse.mylyn.internal.wikitext.commonmark;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContext.NamedUriWithTitle;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class ProcessingContextTest {
+
+	@Rule
+	public final ExpectedException thrown = ExpectedException.none();
 
 	@Test
 	public void empty() {
 		ProcessingContext context = ProcessingContext.empty();
 		assertNotNull(context);
 		assertTrue(context.isEmpty());
-		assertSame(context, ProcessingContext.empty());
 	}
 
 	@Test
-	public void withReferenceDefinition() {
-		ProcessingContext context = ProcessingContext.withReferenceDefinition("onE", "/uri", "a title");
+	public void referenceDefinition() {
+		ProcessingContext context = ProcessingContext.builder().referenceDefinition("onE", "/uri", "a title").build();
 		assertNotNull(context);
 		assertFalse(context.isEmpty());
 		assertNotNull(context.namedUriWithTitle("one"));
@@ -44,30 +46,22 @@ public class ProcessingContextTest {
 		assertEquals("/uri", link.getUri());
 		assertEquals("a title", link.getTitle());
 		assertNull(context.namedUriWithTitle("Unknown"));
-		assertSame(ProcessingContext.empty(), ProcessingContext.withReferenceDefinition("", "one", "two"));
+
 	}
 
 	@Test
-	public void merge() {
-		ProcessingContext empty1 = ProcessingContext.empty();
-		ProcessingContext empty2 = ProcessingContext.empty();
-		assertSame(empty1, empty1.merge(empty2));
-		ProcessingContext other = ProcessingContext.withReferenceDefinition("one", "/uri", "a title");
-		assertSame(other, other.merge(empty1));
-		assertSame(other, empty1.merge(other));
-		ProcessingContext other2 = ProcessingContext.withReferenceDefinition("two", "/uri2", "a title");
-		ProcessingContext merged = other.merge(other2);
-		assertNotSame(other2, merged);
-		assertNotSame(other, merged);
-		assertNotNull(merged.namedUriWithTitle("two"));
-		assertNotNull(merged.namedUriWithTitle("one"));
+	public void referenceDefinitionEmptyName() {
+		assertTrue(ProcessingContext.builder().referenceDefinition("", "one", "two").build().isEmpty());
 	}
 
 	@Test
-	public void precedence() {
-		ProcessingContext one = ProcessingContext.withReferenceDefinition("one", "1", "a title");
-		ProcessingContext one2 = ProcessingContext.withReferenceDefinition("one", "2", "a title");
-		ProcessingContext merged = one.merge(one2);
-		assertEquals("1", merged.namedUriWithTitle("one").getUri());
+	public void referenceDefinitionDuplicate() {
+		ProcessingContext context = ProcessingContext.builder()
+				.referenceDefinition("a", "/uri", "a title")
+				.referenceDefinition("a", "/uri2", "a title2")
+				.build();
+		NamedUriWithTitle uriWithTitle = context.namedUriWithTitle("a");
+		assertEquals("/uri", uriWithTitle.getUri());
 	}
+
 }

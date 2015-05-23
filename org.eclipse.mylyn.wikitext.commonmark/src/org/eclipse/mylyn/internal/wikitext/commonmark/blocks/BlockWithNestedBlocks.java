@@ -12,11 +12,11 @@
 package org.eclipse.mylyn.internal.wikitext.commonmark.blocks;
 
 import org.eclipse.mylyn.internal.wikitext.commonmark.LineSequence;
-import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContext;
+import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContextBuilder;
 import org.eclipse.mylyn.internal.wikitext.commonmark.SourceBlock;
 
 abstract class BlockWithNestedBlocks extends SourceBlock {
 
 	@Override
-	public abstract ProcessingContext createContext(LineSequence lineSequence);
+	public abstract void createContext(ProcessingContextBuilder contextBuilder, LineSequence lineSequence);
 }

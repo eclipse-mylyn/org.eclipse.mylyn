@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContext;
+import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContextBuilder;
 import org.eclipse.mylyn.internal.wikitext.commonmark.TextSegment;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.NoOpDocumentBuilder;
@@ -47,12 +48,10 @@ public class InlineParser {
 		}
 	}
 
-	public ProcessingContext createContext(TextSegment textSegment) {
-		ProcessingContext context = ProcessingContext.empty();
-		for (Inline inline : parse(context, textSegment)) {
-			context = context.merge(inline.createContext());
+	public void createContext(ProcessingContextBuilder contextBuilder, TextSegment textSegment) {
+		for (Inline inline : parse(contextBuilder.build(), textSegment)) {
+			inline.createContext(contextBuilder);
 		}
-		return context;
 	}
 
 	public List<Inline> parse(ProcessingContext context, TextSegment segment) {

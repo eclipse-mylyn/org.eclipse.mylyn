@@ -22,6 +22,7 @@ import org.eclipse.mylyn.internal.wikitext.commonmark.CommonMark;
 import org.eclipse.mylyn.internal.wikitext.commonmark.Line;
 import org.eclipse.mylyn.internal.wikitext.commonmark.LineSequence;
 import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContext;
+import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContextBuilder;
 import org.eclipse.mylyn.internal.wikitext.commonmark.SourceBlock;
 import org.eclipse.mylyn.internal.wikitext.commonmark.SourceBlocks;
 import org.eclipse.mylyn.internal.wikitext.commonmark.SourceBlocks.BlockContext;
@@ -50,10 +51,10 @@ public class BlockQuoteBlock extends BlockWithNestedBlocks {
 	}
 
 	@Override
-	public ProcessingContext createContext(LineSequence lineSequence) {
+	public void createContext(ProcessingContextBuilder contextBuilder, LineSequence lineSequence) {
 		SourceBlocks sourceBlocks = CommonMark.sourceBlocks();
 		BlockQuoteState blockQuoteState = new BlockQuoteState();
-		return sourceBlocks.createContext(blockQuoteState.blockQuoteLineSequence(lineSequence),
+		sourceBlocks.createContext(contextBuilder, blockQuoteState.blockQuoteLineSequence(lineSequence),
 				blockQuoteState.contextPredicate());
 	}
 
@@ -107,7 +108,8 @@ public class BlockQuoteBlock extends BlockWithNestedBlocks {
 				}
 
 				private boolean isLazyContinuation(SourceBlock lineBlock) {
-					return lineBlock instanceof ParagraphBlock && (currentBlock instanceof BlockQuoteBlock || currentBlock instanceof ParagraphBlock);
+					return lineBlock instanceof ParagraphBlock
+							&& (currentBlock instanceof BlockQuoteBlock || currentBlock instanceof ParagraphBlock);
 				}
 
 				private LineSequence createLookAhead(LineSequence lineSequence, Line line) {

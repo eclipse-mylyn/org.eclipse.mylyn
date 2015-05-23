@@ -19,6 +19,7 @@ import java.util.Objects;
 
 import org.eclipse.mylyn.internal.wikitext.commonmark.Line;
 import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContext;
+import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContextBuilder;
 import org.eclipse.mylyn.internal.wikitext.commonmark.SimpleLocator;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.Locator;
@@ -69,8 +70,8 @@ public abstract class Inline {
 		return Optional.absent();
 	}
 
-	public ProcessingContext createContext() {
-		return ProcessingContext.empty();
+	public void createContext(ProcessingContextBuilder contextBuilder) {
+		// nothing to do
 	}
 
 	@Override

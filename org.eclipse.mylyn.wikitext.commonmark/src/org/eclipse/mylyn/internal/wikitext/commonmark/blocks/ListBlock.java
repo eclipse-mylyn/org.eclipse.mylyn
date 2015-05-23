@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.wikitext.commonmark.blocks;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,6 +21,7 @@ import org.eclipse.mylyn.internal.wikitext.commonmark.CommonMark;
 import org.eclipse.mylyn.internal.wikitext.commonmark.Line;
 import org.eclipse.mylyn.internal.wikitext.commonmark.LineSequence;
 import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContext;
+import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContextBuilder;
 import org.eclipse.mylyn.internal.wikitext.commonmark.SourceBlock;
 import org.eclipse.mylyn.internal.wikitext.commonmark.SourceBlocks;
 import org.eclipse.mylyn.internal.wikitext.commonmark.SourceBlocks.BlockContext;
@@ -37,7 +37,8 @@ import com.google.common.base.Predicate;
 
 public class ListBlock extends BlockWithNestedBlocks {
 
-	private final Pattern bulletPattern = Pattern.compile("\\s{0,3}(([*+-])|(([0-9]{0,5})[.)]))(?:(?:\\s(\\s*)(.*))|\\s*$)");
+	private final Pattern bulletPattern = Pattern
+			.compile("\\s{0,3}(([*+-])|(([0-9]{0,5})[.)]))(?:(?:\\s(\\s*)(.*))|\\s*$)");
 
 	private final HorizontalRuleBlock horizontalRuleBlock = new HorizontalRuleBlock();
 
@@ -64,19 +65,16 @@ public class ListBlock extends BlockWithNestedBlocks {
 	}
 
 	@Override
-	public ProcessingContext createContext(LineSequence lineSequence) {
-		final AtomicReference<ProcessingContext> context = new AtomicReference<>(ProcessingContext.empty());
-		process(ProcessingContext.empty(), new NoOpDocumentBuilder(), lineSequence, new ListItemHandler() {
+	public void createContext(final ProcessingContextBuilder contextBuilder, LineSequence lineSequence) {
+		process(ProcessingContext.builder().build(), new NoOpDocumentBuilder(), lineSequence,
+				new ListItemHandler() {
 
-			@Override
-			public void emitListItem(ProcessingContext dummyContext, DocumentBuilder builder, ListMode listMode,
-					LineSequence lineSequence) {
-				ProcessingContext itemContext = CommonMark.sourceBlocks().createContext(
-						listItemLineSequence(lineSequence));
-				context.set(context.get().merge(itemContext));
-			}
-		});
-		return context.get();
+					@Override
+					public void emitListItem(ProcessingContext dummyContext, DocumentBuilder builder, ListMode listMode,
+							LineSequence lineSequence) {
+						CommonMark.sourceBlocks().createContext(contextBuilder, listItemLineSequence(lineSequence));
+					}
+				});
 	}
 
 	private void process(ProcessingContext context, DocumentBuilder builder, LineSequence lineSequence,

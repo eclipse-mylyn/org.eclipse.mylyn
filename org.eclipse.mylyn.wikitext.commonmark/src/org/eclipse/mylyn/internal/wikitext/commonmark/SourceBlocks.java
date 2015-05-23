@@ -16,7 +16,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.NoOpDocumentBuilder;
@@ -69,22 +68,20 @@ public class SourceBlocks extends SourceBlock {
 		void run(LineSequence lineSequence, SourceBlock sourceBlock);
 	}
 
-	public ProcessingContext createContext(LineSequence lineSequence, Predicate<BlockContext> contextPredicate) {
-		final AtomicReference<ProcessingContext> context = new AtomicReference<ProcessingContext>(
-				ProcessingContext.empty());
+	public void createContext(final ProcessingContextBuilder contextBuilder, LineSequence lineSequence,
+			Predicate<BlockContext> contextPredicate) {
 		process(lineSequence, new SourceBlockRunnable() {
 
 			@Override
 			public void run(LineSequence lineSequence, SourceBlock sourceBlock) {
-				context.set(checkNotNull(context.get()).merge(sourceBlock.createContext(lineSequence)));
+				sourceBlock.createContext(contextBuilder, lineSequence);
 			}
 		}, contextPredicate);
-		return checkNotNull(context.get());
 	}
 
 	@Override
-	public ProcessingContext createContext(LineSequence lineSequence) {
-		return createContext(lineSequence, Predicates.<BlockContext> alwaysTrue());
+	public void createContext(ProcessingContextBuilder contextBuilder, LineSequence lineSequence) {
+		createContext(contextBuilder, lineSequence, Predicates.<BlockContext> alwaysTrue());
 	}
 
 	@Override

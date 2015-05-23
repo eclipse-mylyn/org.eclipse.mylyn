@@ -13,9 +13,11 @@ package org.eclipse.mylyn.internal.wikitext.commonmark.inlines;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import org.eclipse.mylyn.internal.wikitext.commonmark.Line;
 import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContext;
+import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContextBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.Locator;
 import org.junit.Test;
@@ -45,12 +47,14 @@ public class InlineTest {
 
 	@Test
 	public void createContext() {
-		ProcessingContext context = new Inline(new Line(1, 2, "text"), 0, 1) {
+		ProcessingContextBuilder builder = ProcessingContext.builder();
+		new Inline(new Line(1, 2, "text"), 0, 1) {
 
 			@Override
 			public void emit(DocumentBuilder builder) {
 			}
-		}.createContext();
-		assertSame(ProcessingContext.empty(), context);
+		}.createContext(builder);
+		ProcessingContext context = builder.build();
+		assertTrue(context.isEmpty());
 	}
 }

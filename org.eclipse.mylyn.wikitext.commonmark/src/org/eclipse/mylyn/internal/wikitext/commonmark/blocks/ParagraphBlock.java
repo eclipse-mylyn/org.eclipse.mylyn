@@ -22,6 +22,7 @@ import org.eclipse.mylyn.internal.wikitext.commonmark.Line;
 import org.eclipse.mylyn.internal.wikitext.commonmark.LinePredicates;
 import org.eclipse.mylyn.internal.wikitext.commonmark.LineSequence;
 import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContext;
+import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContextBuilder;
 import org.eclipse.mylyn.internal.wikitext.commonmark.SourceBlock;
 import org.eclipse.mylyn.internal.wikitext.commonmark.TextSegment;
 import org.eclipse.mylyn.internal.wikitext.commonmark.inlines.Inline;
@@ -39,9 +40,9 @@ public class ParagraphBlock extends SourceBlock {
 			SetextHeaderBlock.class);
 
 	@Override
-	public ProcessingContext createContext(LineSequence lineSequence) {
+	public void createContext(ProcessingContextBuilder contextBuilder, LineSequence lineSequence) {
 		TextSegment textSegment = extractTextSegment(lineSequence);
-		return new InlineContent().createContext(textSegment);
+		new InlineContent().createContext(contextBuilder, textSegment);
 	}
 
 	@Override
@@ -49,7 +50,8 @@ public class ParagraphBlock extends SourceBlock {
 		processInlines(context, builder, lineSequence, true);
 	}
 
-	void processInlines(ProcessingContext context, DocumentBuilder builder, LineSequence lineSequence, boolean asBlock) {
+	void processInlines(ProcessingContext context, DocumentBuilder builder, LineSequence lineSequence,
+			boolean asBlock) {
 		TextSegment textSegment = extractTextSegment(lineSequence);
 		List<Inline> inlines = new InlineContent().parse(context, textSegment);
 		if (!emptyParagraph(inlines)) {
@@ -75,7 +77,8 @@ public class ParagraphBlock extends SourceBlock {
 
 	private TextSegment extractTextSegment(LineSequence lineSequence) {
 		List<Line> lines = new ArrayList<Line>();
-		while (lineSequence.getCurrentLine() != null && notEmptyLine(lineSequence) && !anotherBlockStart(lineSequence)) {
+		while (lineSequence.getCurrentLine() != null && notEmptyLine(lineSequence)
+				&& !anotherBlockStart(lineSequence)) {
 			lines.add(lineSequence.getCurrentLine());
 			lineSequence.advance();
 		}

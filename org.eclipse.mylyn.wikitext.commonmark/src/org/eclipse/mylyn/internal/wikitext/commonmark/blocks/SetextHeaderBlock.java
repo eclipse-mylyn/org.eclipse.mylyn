@@ -41,7 +41,8 @@ public class SetextHeaderBlock extends SourceBlock {
 		lineSequence.advance();
 
 		builder.setLocator(currentLine.toLocator());
-		builder.beginHeading(headingLevel(matcher), new HeadingAttributes());
+		int headingLevel = headingLevel(matcher);
+		builder.beginHeading(headingLevel, new HeadingAttributes());
 
 		new InlineContent().emit(context, builder, new TextSegment(Collections.singletonList(currentLine)));
 

@@ -16,7 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.Objects;
 
 import org.eclipse.mylyn.internal.wikitext.commonmark.Line;
-import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContext;
+import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContextBuilder;
 import org.eclipse.mylyn.internal.wikitext.commonmark.ToStringHelper;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 
@@ -45,8 +45,8 @@ public class ReferenceDefinition extends Inline {
 	}
 
 	@Override
-	public ProcessingContext createContext() {
-		return ProcessingContext.withReferenceDefinition(name, href, title);
+	public void createContext(ProcessingContextBuilder contextBuilder) {
+		contextBuilder.referenceDefinition(name, href, title);
 	}
 
 	@Override
