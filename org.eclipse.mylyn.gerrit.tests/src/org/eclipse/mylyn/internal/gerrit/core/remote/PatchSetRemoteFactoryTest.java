@@ -47,6 +47,7 @@ import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
+import org.eclipse.mylyn.reviews.internal.core.model.FileVersion;
 import org.hamcrest.Matcher;
 import org.junit.Test;
 
@@ -247,20 +248,10 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testPatchSetComments() throws Exception {
-		CommitCommand command2 = reviewHarness.createCommitCommand();
-		reviewHarness.addFile("testComments.txt", "line1\nline2\nline3\nline4\nline5\nline6\nline7\n");
-		reviewHarness.commitAndPush(command2);
-		reviewHarness.retrieve();
-		PatchSetDetail detail = retrievePatchSetDetail("2");
-		assertThat(detail.getInfo().getKey().get(), is(2));
-
-		IReviewItemSet testPatchSet = getReview().getSets().get(1);
 		TestRemoteObserverConsumer<IReviewItemSet, List<IFileItem>, String, PatchSetContent, String, Long> patchSetObserver //
-		= retrievePatchSetContents(testPatchSet);
-
+		= setUpAddComments();
+		IReviewItemSet testPatchSet = getReview().getSets().get(1);
 		IFileItem commentFile = testPatchSet.getItems().get(1);
-		assertThat(commentFile.getName(), is("testComments.txt"));
-		assertThat(commentFile.getAllComments().size(), is(0));
 
 		String id = commentFile.getReference();
 		CommentInput commentInput = reviewHarness.getClient().saveDraft(Patch.Key.parse(id), "Line 2 Comment", 2,
@@ -322,6 +313,92 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(fileComment.isDraft(), is(false));
 		assertThat(fileComment.getAuthor().getDisplayName(), is("tests"));
 		assertThat(fileComment.getDescription(), is("Line 2 Comment modified"));
+	}
+
+	@Test
+	public void testBaseComment() throws Exception {
+		TestRemoteObserverConsumer<IReviewItemSet, List<IFileItem>, String, PatchSetContent, String, Long> patchSetObserver //
+		= setUpAddComments();
+		IFileItem commentFile = getReview().getSets().get(1).getItems().get(1);
+		String id = commentFile.getReference();
+
+		reviewHarness.getClient().saveDraft(Patch.Key.parse(id), "base comment", 1, (short) 0, null, null,
+				new NullProgressMonitor());
+		patchSetObserver.retrieve(false);
+		patchSetObserver.waitForResponse();
+
+		assertFileComments(commentFile, 1, true);
+
+		reviewHarness.getClient().publishComments(reviewHarness.getShortId(), 2, "Submit Comments",
+				Collections.<ApprovalCategoryValue.Id> emptySet(), new NullProgressMonitor());
+		patchSetObserver.retrieve(false);
+		patchSetObserver.waitForResponse();
+
+		assertFileComments(commentFile, 1, false);
+	}
+
+	@Test
+	public void testBaseAndPatchSetComments() throws Exception {
+		TestRemoteObserverConsumer<IReviewItemSet, List<IFileItem>, String, PatchSetContent, String, Long> patchSetObserver //
+		= setUpAddComments();
+		IFileItem commentFile = getReview().getSets().get(1).getItems().get(1);
+		String id = commentFile.getReference();
+
+		reviewHarness.getClient().saveDraft(Patch.Key.parse(id), "base comment", 1, (short) 0, null, null,
+				new NullProgressMonitor());
+		patchSetObserver.retrieve(false);
+		patchSetObserver.waitForResponse();
+
+		reviewHarness.getClient().saveDraft(Patch.Key.parse(id), "another comment", 1, (short) 1, null, null,
+				new NullProgressMonitor());
+		patchSetObserver.retrieve(false);
+		patchSetObserver.waitForResponse();
+
+		assertFileComments(commentFile, 2, true);
+
+		reviewHarness.getClient().publishComments(reviewHarness.getShortId(), 2, "Submit Comments",
+				Collections.<ApprovalCategoryValue.Id> emptySet(), new NullProgressMonitor());
+		patchSetObserver.retrieve(false);
+		patchSetObserver.waitForResponse();
+
+		assertFileComments(commentFile, 2, false);
+	}
+
+	private TestRemoteObserverConsumer<IReviewItemSet, List<IFileItem>, String, PatchSetContent, String, Long> setUpAddComments()
+			throws Exception {
+		CommitCommand command2 = reviewHarness.createCommitCommand();
+		reviewHarness.addFile("testComments.txt", "line1\nline2\nline3\nline4\nline5\nline6\nline7\n");
+		reviewHarness.commitAndPush(command2);
+		reviewHarness.retrieve();
+		PatchSetDetail detail = retrievePatchSetDetail("2");
+		assertThat(detail.getInfo().getKey().get(), is(2));
+
+		IReviewItemSet testPatchSet = getReview().getSets().get(1);
+		TestRemoteObserverConsumer<IReviewItemSet, List<IFileItem>, String, PatchSetContent, String, Long> patchSetObserver //
+		= retrievePatchSetContents(testPatchSet);
+
+		IFileItem commentFile = testPatchSet.getItems().get(1);
+		assertThat(commentFile.getName(), is("testComments.txt"));
+		assertThat(commentFile.getAllComments().size(), is(0));
+
+		return patchSetObserver;
+	}
+
+	private void assertFileComments(IFileItem commentFile, int size, boolean isDraft) {
+		List<IComment> allComments = commentFile.getAllComments();
+		assertEquals(size, allComments.size());
+		assertRevisionComment(allComments.get(0), "Base", isDraft, "base comment");
+		if (size > 1) {
+			assertRevisionComment(allComments.get(1), "Patch Set 2", isDraft, "another comment");
+		}
+	}
+
+	private void assertRevisionComment(IComment fileComment, String revision, boolean isDraft, String message) {
+		assertNotNull(fileComment);
+		assertEquals(isDraft, fileComment.isDraft());
+		assertEquals("tests", fileComment.getAuthor().getDisplayName());
+		assertEquals(message, fileComment.getDescription());
+		assertEquals(revision, ((FileVersion) fileComment.getItem()).getDescription());
 	}
 
 	@Test
