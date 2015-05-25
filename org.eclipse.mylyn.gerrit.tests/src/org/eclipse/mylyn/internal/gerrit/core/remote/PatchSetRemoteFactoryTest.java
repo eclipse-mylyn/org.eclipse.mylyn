@@ -354,6 +354,7 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		TestRemoteObserverConsumer<IReview, IReviewItemSet, String, PatchSetDetail, PatchSetDetail, String> itemSetObserver //
 		= retrieveForLocalKey(reviewHarness.getProvider().getReviewItemSetFactory(), getReview(), patchSetId, false);
 		PatchSetDetail detail = itemSetObserver.getRemoteObject();
+		assertNotNull("Failed to retrieve PatchSetDetail", detail);
 		return detail;
 	}
 
