@@ -4,7 +4,7 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.docs.epub.ant.core;singleton:=true
 Bundle-Version: 2.1.1.qualifier
 Bundle-Vendor: %Bundle-Vendor
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.eclipse.mylyn.docs.epub.ant;x-internal:=true,
  org.eclipse.mylyn.docs.epub.ant.core;uses:="org.eclipse.mylyn.docs.epub,org.apache.tools.ant.types,org.apache.tools.ant"
 Require-Bundle: org.apache.ant;bundle-version="1.7.0",
