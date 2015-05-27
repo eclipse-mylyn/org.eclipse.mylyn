@@ -47,7 +47,7 @@ tail -f $LOG | grep -E \(Extracting\|Finished\) &
 
 I=0
 while [ $I -lt 120 ] && [ ! -e $OUT/site.zip ]; do
-  echo Waiting for $OUT/site.zip... $1 / 120
+  echo Waiting for $OUT/site.zip... $I / 120
   sleep 30
   let I=I+1
 done
