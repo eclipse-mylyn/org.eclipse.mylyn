@@ -60,8 +60,9 @@ public class BuildConsole {
 
 	public MessageConsole show() {
 		if (console == null) {
-			console = new MessageConsole(NLS.bind("Output for Build {0}", build.getLabel()), CONSOLE_TYPE,
-					BuildImages.CONSOLE, true);
+			console = new MessageConsole(NLS.bind("Output for Build {0}#{1}", build.getPlan() == null
+					? "Unknown"
+					: build.getPlan().getLabel(), build.getLabel()), CONSOLE_TYPE, BuildImages.CONSOLE, true);
 			consoleManager.addConsoles(new IConsole[] { console });
 			console.setAttribute(ATTRIBUTE_BUILD, build);
 

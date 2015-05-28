@@ -32,7 +32,8 @@ import org.eclipse.osgi.util.NLS;
 class TestResultSession extends TestRunSession {
 
 	TestResultSession(IBuild build) {
-		super(NLS.bind("Test Results for Build {0}", build.getLabel()), null);
+		super(NLS.bind("Test Results for Build {0}#{1}", build.getPlan() == null ? "Unknown" : build.getPlan()
+				.getLabel(), build.getLabel()), null);
 	}
 
 	// Eclipse 3.5 and earlier

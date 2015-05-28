@@ -88,7 +88,9 @@ public class GetBuildOutputOperation extends AbstractElementOperation<IBuild> {
 
 	@Override
 	protected BuildJob doCreateJob(final IBuild build) {
-		return new BuildJob(NLS.bind("Retrieving Output for Build {0}", build.getLabel())) {
+		return new BuildJob(NLS.bind("Retrieving Output for Build {0}#{1}", build.getPlan() == null
+				? "Unknown"
+				: build.getPlan().getLabel(), build.getLabel())) {
 			@Override
 			protected IStatus doExecute(IOperationMonitor monitor) {
 				try {
