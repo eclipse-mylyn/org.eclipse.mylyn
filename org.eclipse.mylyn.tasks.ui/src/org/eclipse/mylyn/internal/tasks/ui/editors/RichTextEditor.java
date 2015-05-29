@@ -29,6 +29,7 @@ import org.eclipse.jface.text.source.AnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationAccess;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.mylyn.commons.ui.FillWidthLayout;
 import org.eclipse.mylyn.commons.ui.compatibility.CommonThemes;
 import org.eclipse.mylyn.commons.workbench.editors.CommonTextSupport;
@@ -339,10 +340,9 @@ public class RichTextEditor {
 	}
 
 	private void configureDefaultEditor(SourceViewer defaultEditor) {
-		RepositoryTextViewerConfiguration viewerConfig = new RepositoryTextViewerConfiguration(repository, task,
-				isSpellCheckingEnabled() && !isReadOnly());
-		viewerConfig.setMode(getMode());
-		defaultEditor.configure(viewerConfig);
+		SourceViewerConfiguration configuration = ViewerConfigurator.configure(repository, task,
+				isSpellCheckingEnabled() && !isReadOnly(), getMode());
+		defaultEditor.configure(configuration);
 	}
 
 	private BrowserPreviewViewer getBrowserViewer() {
