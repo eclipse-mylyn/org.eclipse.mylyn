@@ -37,7 +37,7 @@
       </page>
       -->      
       <page
-            category="org.eclipse.mylyn.preferencePages.Mylyn"
+            category="org.eclipse.ui.preferencePages.Workbench"
             class="org.eclipse.mylyn.internal.commons.notifications.ui.NotificationsPreferencesPage"
             id="org.eclipse.mylyn.commons.notifications.preferencePages.Notifications"
             name="%NotificationsPage.name">
