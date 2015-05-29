@@ -29,6 +29,10 @@ public class Messages extends NLS {
 
 	public static String MylynPreferencePage_Mylyn_Title;
 
+	public static String NotificationsLinkPreferencesPage_LinkText;
+
+	public static String NotificationsLinkPreferencesPage_Mylyn_Notifications;
+
 	public static String TasksUiPreferencePage_Advanced;
 
 	public static String TasksUiPreferencePage_Browse_;

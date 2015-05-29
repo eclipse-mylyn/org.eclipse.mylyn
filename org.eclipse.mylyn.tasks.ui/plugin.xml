@@ -595,6 +595,15 @@
             	id="org.eclipse.mylyn.tasks.ui.keywords"/>
       </page>
    </extension>
+    <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.eclipse.mylyn.preferencePages.Mylyn"
+            class="org.eclipse.mylyn.internal.tasks.ui.preferences.NotificationsLinkPreferencesPage"
+            id="org.eclipse.mylyn.commons.notifications.preferencePages.LinkNotifications"
+            name="%Notifications.name">
+      </page>
+   </extension>
  
   <extension point="org.eclipse.ui.bindings">
       <key
