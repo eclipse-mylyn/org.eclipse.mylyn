@@ -333,12 +333,16 @@ public class RichTextEditor {
 	private SourceViewer createDefaultEditor(Composite parent, int styles) {
 		SourceViewer defaultEditor = new SourceViewer(parent, null, styles | SWT.WRAP);
 
+		configureDefaultEditor(defaultEditor);
+
+		return defaultEditor;
+	}
+
+	private void configureDefaultEditor(SourceViewer defaultEditor) {
 		RepositoryTextViewerConfiguration viewerConfig = new RepositoryTextViewerConfiguration(repository, task,
 				isSpellCheckingEnabled() && !isReadOnly());
 		viewerConfig.setMode(getMode());
 		defaultEditor.configure(viewerConfig);
-
-		return defaultEditor;
 	}
 
 	private BrowserPreviewViewer getBrowserViewer() {
