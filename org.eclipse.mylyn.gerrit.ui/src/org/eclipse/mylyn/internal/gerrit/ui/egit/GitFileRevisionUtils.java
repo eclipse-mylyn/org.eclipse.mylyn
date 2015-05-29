@@ -12,7 +12,9 @@
 package org.eclipse.mylyn.internal.gerrit.ui.egit;
 
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 
+import org.apache.commons.lang.reflect.MethodUtils;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -24,6 +26,8 @@ import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectInserter;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.gerrit.ui.GerritUiPlugin;
 import org.eclipse.mylyn.internal.reviews.ui.compare.CompareUtil;
 import org.eclipse.mylyn.reviews.core.model.IFileVersion;
 import org.eclipse.team.core.history.IFileRevision;
@@ -45,7 +49,7 @@ public class GitFileRevisionUtils {
 			//Get SHA-1 for the file revision to look for the correct file revision in the Git repository
 			ObjectInserter inserter = repository.newObjectInserter();
 			String id = inserter.idFor(Constants.OBJ_BLOB, CompareUtil.getContent(reviewFileVersion)).getName();
-			inserter.release();
+			release(inserter);
 			if (id != null) {
 				final ObjectId objId = ObjectId.fromString(id);
 				if (objId != null) {
@@ -72,6 +76,19 @@ public class GitFileRevisionUtils {
 			}
 		}
 		return gitFileRevision;
+	}
+
+	private static void release(ObjectInserter inserter) {
+		try {
+			MethodUtils.invokeMethod(inserter, "release", null); //$NON-NLS-1$
+		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+			try {
+				MethodUtils.invokeMethod(inserter, "close", null); //$NON-NLS-1$
+			} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e1) {
+				StatusHandler.log(new Status(IStatus.ERROR, GerritUiPlugin.PLUGIN_ID,
+						"Failed to release inserter " + inserter, e1)); //$NON-NLS-1$
+			}
+		}
 	}
 
 	private static IStorage getFileRevisionStorage(final IProgressMonitor monitor, final Repository repository,
