@@ -42,7 +42,7 @@ public class ParagraphBlock extends SourceBlock {
 	@Override
 	public void createContext(ProcessingContextBuilder contextBuilder, LineSequence lineSequence) {
 		TextSegment textSegment = extractTextSegment(lineSequence);
-		new InlineContent().createContext(contextBuilder, textSegment);
+		contextBuilder.getInlineParser().createContext(contextBuilder, textSegment);
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class ParagraphBlock extends SourceBlock {
 	void processInlines(ProcessingContext context, DocumentBuilder builder, LineSequence lineSequence,
 			boolean asBlock) {
 		TextSegment textSegment = extractTextSegment(lineSequence);
-		List<Inline> inlines = new InlineContent().parse(context, textSegment);
+		List<Inline> inlines = context.getInlineParser().parse(context, textSegment);
 		if (!emptyParagraph(inlines)) {
 			builder.setLocator(textSegment.getLines().get(0).toLocator());
 			if (asBlock) {

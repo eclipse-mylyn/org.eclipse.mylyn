@@ -62,7 +62,7 @@ abstract class AbstractSourceSpanTest {
 		builder.beginDocument();
 
 		InlineParser parser = new InlineParser(span, new AllCharactersSpan());
-		List<Inline> inlines = parser.parse(ProcessingContext.empty(),
+		List<Inline> inlines = parser.parse(ProcessingContext.builder().build(),
 				new TextSegment(ImmutableList.of(new Line(1, 0, markup))));
 		for (Inline inline : inlines) {
 			inline.emit(builder);

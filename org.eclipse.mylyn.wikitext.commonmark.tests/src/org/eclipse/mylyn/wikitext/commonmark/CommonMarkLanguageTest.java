@@ -12,8 +12,12 @@
 package org.eclipse.mylyn.wikitext.commonmark;
 
 import static java.text.MessageFormat.format;
+import static org.eclipse.mylyn.internal.wikitext.commonmark.CommonMarkAsserts.assertContent;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
@@ -77,6 +81,34 @@ public class CommonMarkLanguageTest {
 		MarkupLanguage markupLanguage = OsgiServiceLocator.getApplicableInstance().getMarkupLanguage("CommonMark");
 		assertNotNull(markupLanguage);
 		assertEquals(CommonMarkLanguage.class, markupLanguage.getClass());
+	}
+
+	@Test
+	public void strictlyConforming() {
+		assertFalse(language.isStrictlyConforming());
+		assertFalse(language.clone().isStrictlyConforming());
+		assertNotNull(language.getIdGenerationStrategy());
+		assertContent(language, "<p>one (<a href=\"http://example.com/#hey\">http://example.com/#hey</a>) two</p>",
+				"one (http://example.com/#hey) two");
+		assertContent(language, "<h1 id=\"a-heading\">A Heading</h1>", "# A Heading");
+	}
+
+	@Test
+	public void strictlyConformingTrue() {
+		language.setStrictlyConforming(true);
+		assertTrue(language.isStrictlyConforming());
+		assertTrue(language.clone().isStrictlyConforming());
+		assertNull(language.getIdGenerationStrategy());
+		assertContent(language, "<p>one (http://example.com/#hey) two</p>", "one (http://example.com/#hey) two");
+		assertContent(language, "<h1>A Heading</h1>", "# A Heading");
+	}
+
+	@Test
+	public void cloneTest() {
+		CommonMarkLanguage language = new CommonMarkLanguage();
+		assertNotNull(language.clone());
+		assertEquals(language.getName(), language.clone().getName());
+		assertEquals(language.isStrictlyConforming(), language.clone().isStrictlyConforming());
 	}
 
 	private void assertEvents(String content, DocumentBuilderEvent... events) {

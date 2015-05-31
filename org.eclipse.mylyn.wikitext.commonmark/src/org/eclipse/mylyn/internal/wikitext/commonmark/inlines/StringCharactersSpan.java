@@ -18,7 +18,7 @@ import com.google.common.base.Optional;
 
 public class StringCharactersSpan extends SourceSpan {
 
-	private final Pattern pattern = Pattern.compile("((?: *[^\n `\\[\\]\\\\!<&*_]+)+).*", Pattern.DOTALL);
+	private final Pattern pattern = Pattern.compile("((?: *[^\n `\\[\\]\\\\!<&*_h]+)+).*", Pattern.DOTALL);
 
 	@Override
 	public Optional<? extends Inline> createInline(Cursor cursor) {

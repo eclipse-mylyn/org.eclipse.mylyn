@@ -28,7 +28,7 @@ public class EmptyBlockTest {
 	@Test
 	public void process() {
 		LineSequence lineSequence = LineSequence.create("\n2");
-		new EmptyBlock().process(ProcessingContext.empty(), null, lineSequence);
+		new EmptyBlock().process(ProcessingContext.builder().build(), null, lineSequence);
 		assertEquals("2", lineSequence.getCurrentLine().getText());
 	}
 

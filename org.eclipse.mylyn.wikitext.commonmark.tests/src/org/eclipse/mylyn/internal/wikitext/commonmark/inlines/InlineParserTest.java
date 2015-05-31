@@ -56,14 +56,14 @@ public class InlineParserTest {
 	@Test
 	public void toStringContent() {
 		InlineParser parser = new InlineParser(new CodeSpan(), new AllCharactersSpan());
-		String stringContent = parser.toStringContent(ProcessingContext.empty(),
+		String stringContent = parser.toStringContent(ProcessingContext.builder().build(),
 				new TextSegment(Collections.singletonList(new Line(1, 0, "one `two` three"))));
 		assertEquals("one two three", stringContent);
 	}
 
 	private void assertParse(String content, Inline... inlines) {
 		List<Inline> expected = Arrays.asList(inlines);
-		List<Inline> actual = createInlines().parse(ProcessingContext.empty(),
+		List<Inline> actual = createInlines().parse(ProcessingContext.builder().build(),
 				new TextSegment(LineSequence.create(content)));
 		for (int x = 0; x < expected.size() && x < actual.size(); ++x) {
 			assertEquivalent(x, expected.get(x), actual.get(x));
@@ -80,6 +80,6 @@ public class InlineParserTest {
 	}
 
 	private InlineParser createInlines() {
-		return new InlineParser(new LineBreakSpan(), new StringCharactersSpan());
+		return new InlineParser(new LineBreakSpan(), new StringCharactersSpan(), new AllCharactersSpan());
 	}
 }

@@ -28,11 +28,11 @@ public class InlineParser {
 
 	private final List<SourceSpan> spans;
 
-	public InlineParser(SourceSpan... spans) {
+	InlineParser(SourceSpan... spans) {
 		this(Arrays.asList(spans));
 	}
 
-	InlineParser(List<SourceSpan> spans) {
+	public InlineParser(List<SourceSpan> spans) {
 		this.spans = ImmutableList.copyOf(spans);
 	}
 

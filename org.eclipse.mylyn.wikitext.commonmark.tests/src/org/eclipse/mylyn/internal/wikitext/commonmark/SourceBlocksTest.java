@@ -64,17 +64,18 @@ public class SourceBlocksTest {
 	@Test
 	public void process() {
 		EventDocumentBuilder builder = new EventDocumentBuilder();
-		sourceBlocks.process(ProcessingContext.empty(), builder, LineSequence.create("one\nb2\nmore\n\nb1 and\n\n\nb2"));
+		sourceBlocks.process(ProcessingContext.builder().build(), builder,
+				LineSequence.create("one\nb2\nmore\n\nb1 and\n\n\nb2"));
 		ImmutableList<DocumentBuilderEvent> expectedEvents = ImmutableList.of(//
-				new BeginBlockEvent(BlockType.PARAGRAPH, new Attributes()),//
-				new CharactersEvent("b2"),//
-				new CharactersEvent("more"),//
-				new EndBlockEvent(),//
+				new BeginBlockEvent(BlockType.PARAGRAPH, new Attributes()), //
+				new CharactersEvent("b2"), //
+				new CharactersEvent("more"), //
+				new EndBlockEvent(), //
 				new BeginBlockEvent(BlockType.QUOTE, new Attributes()), //
-				new CharactersEvent("b1 and"),//
-				new EndBlockEvent(),//
-				new BeginBlockEvent(BlockType.PARAGRAPH, new Attributes()),//
-				new CharactersEvent("b2"),//
+				new CharactersEvent("b1 and"), //
+				new EndBlockEvent(), //
+				new BeginBlockEvent(BlockType.PARAGRAPH, new Attributes()), //
+				new CharactersEvent("b2"), //
 				new EndBlockEvent());
 		assertEquals(Joiner.on("\n").join(builder.getDocumentBuilderEvents().getEvents()), expectedEvents,
 				builder.getDocumentBuilderEvents().getEvents());

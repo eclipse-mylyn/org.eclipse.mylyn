@@ -14,6 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.eclipse.mylyn.internal.wikitext.commonmark.CommonMark;
 import org.eclipse.mylyn.internal.wikitext.commonmark.CommonMarkIdGenerationStrategy;
+import org.eclipse.mylyn.internal.wikitext.commonmark.InlineContent;
 import org.eclipse.mylyn.internal.wikitext.commonmark.LineSequence;
 import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContext;
 import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContextBuilder;
@@ -24,6 +25,8 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.IdGenerationStrategy;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 
 public class CommonMarkLanguage extends MarkupLanguage {
+
+	private boolean strictlyConforming = false;
 
 	public CommonMarkLanguage() {
 		setName("CommonMark");
@@ -52,13 +55,31 @@ public class CommonMarkLanguage extends MarkupLanguage {
 
 	@Override
 	public IdGenerationStrategy getIdGenerationStrategy() {
-		return new CommonMarkIdGenerationStrategy();
+		return isStrictlyConforming() ? null : new CommonMarkIdGenerationStrategy();
 	}
 
 	private ProcessingContext createContext(SourceBlocks sourceBlocks, String markupContent) {
 		ProcessingContextBuilder contextBuilder = ProcessingContext.builder()
 				.idGenerationStrategy(getIdGenerationStrategy());
+		if (!strictlyConforming) {
+			contextBuilder.inlineParser(InlineContent.markdown());
+		}
 		sourceBlocks.createContext(contextBuilder, LineSequence.create(markupContent));
 		return contextBuilder.build();
+	}
+
+	public void setStrictlyConforming(boolean strictlyConforming) {
+		this.strictlyConforming = strictlyConforming;
+	}
+
+	public boolean isStrictlyConforming() {
+		return strictlyConforming;
+	}
+
+	@Override
+	public CommonMarkLanguage clone() {
+		CommonMarkLanguage language = (CommonMarkLanguage) super.clone();
+		language.strictlyConforming = this.strictlyConforming;
+		return language;
 	}
 }

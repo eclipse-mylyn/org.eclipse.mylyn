@@ -22,6 +22,7 @@ import org.eclipse.mylyn.internal.wikitext.commonmark.LineSequence;
 import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContext;
 import org.eclipse.mylyn.internal.wikitext.commonmark.SourceBlock;
 import org.eclipse.mylyn.internal.wikitext.commonmark.TextSegment;
+import org.eclipse.mylyn.internal.wikitext.commonmark.inlines.InlineParser;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.HeadingAttributes;
 
@@ -48,13 +49,13 @@ public class AtxHeaderBlock extends SourceBlock {
 
 			HeadingAttributes attributes = new HeadingAttributes();
 
-			InlineContent inlineContent = new InlineContent();
-			String headingText = inlineContent.toStringContent(context, textSegment);
+			InlineParser inlineParser = context.getInlineParser();
+			String headingText = inlineParser.toStringContent(context, textSegment);
 			attributes.setId(context.generateHeadingId(headingLevel, headingText));
 
 			builder.beginHeading(headingLevel, attributes);
 
-			inlineContent.emit(context, builder, textSegment);
+			inlineParser.emit(context, builder, textSegment);
 
 			builder.endHeading();
 		} else {

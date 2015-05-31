@@ -16,6 +16,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContext.NamedUriWithTitle;
+import org.eclipse.mylyn.internal.wikitext.commonmark.inlines.InlineParser;
 import org.eclipse.mylyn.wikitext.core.parser.IdGenerator;
 import org.eclipse.mylyn.wikitext.core.parser.markup.IdGenerationStrategy;
 
@@ -27,6 +28,8 @@ public class ProcessingContextBuilder {
 	private final Map<String, NamedUriWithTitle> linkByName = new HashMap<>();
 
 	private IdGenerationStrategy idGenerationStrategy = new CommonMarkIdGenerationStrategy();
+
+	private InlineParser inlineParser;
 
 	public ProcessingContextBuilder referenceDefinition(String name, String href, String title) {
 		if (!Strings.isNullOrEmpty(name)) {
@@ -44,7 +47,16 @@ public class ProcessingContextBuilder {
 	}
 
 	public ProcessingContext build() {
-		return new ProcessingContext(ImmutableMap.copyOf(linkByName), idGenerator());
+		return new ProcessingContext(getInlineParser(), ImmutableMap.copyOf(linkByName), idGenerator());
+	}
+
+	public ProcessingContextBuilder inlineParser(InlineParser inlineParser) {
+		this.inlineParser = inlineParser;
+		return this;
+	}
+
+	public InlineParser getInlineParser() {
+		return inlineParser == null ? InlineContent.commonMarkStrict() : inlineParser;
 	}
 
 	private IdGenerator idGenerator() {
