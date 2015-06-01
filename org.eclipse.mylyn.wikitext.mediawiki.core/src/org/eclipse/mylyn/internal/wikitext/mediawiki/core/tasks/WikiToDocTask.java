@@ -22,6 +22,7 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.MessageFormat;
@@ -57,7 +58,7 @@ import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
 
 /**
  * An Ant task for generating Eclipse help content from one or more MediaWiki pages. Example usage:
- * 
+ *
  * <pre>
  * <code>
  * 	&lt;mediawiki-to-eclipse-help
@@ -74,15 +75,15 @@ import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
  *     		&lt;path name="Mylyn/FAQ" title="Mylyn FAQ" generateToc="true"/&gt;
  * 			&lt;stylesheet url="book.css"/&gt;
  *     		&lt;pageAppendum&gt;
- * 
+ *
  * = Updating This Document =
- * 
- * This document is maintained in a collaborative wiki.  If you wish to update or modify this document please visit 
+ *
+ * This document is maintained in a collaborative wiki.  If you wish to update or modify this document please visit
  * {url}&lt;/pageAppendum&gt;
  *     	&lt;/mediawiki-to-eclipse-help&gt;
  * </code>
  * </pre>
- * 
+ *
  * @author David Green
  */
 public class WikiToDocTask extends MarkupTask {
@@ -159,13 +160,13 @@ public class WikiToDocTask extends MarkupTask {
 			}
 			if (path.name != null) {
 				if (!pathNames.add(path.name)) {
-					throw new ConfigurationException(MessageFormat.format(
-							Messages.getString("WikiToDocTask_path_name_must_be_unique"), path.name)); //$NON-NLS-1$
+					throw new ConfigurationException(MessageFormat
+							.format(Messages.getString("WikiToDocTask_path_name_must_be_unique"), path.name)); //$NON-NLS-1$
 				}
 			}
 			if (!path.includeInUnifiedToc && path.getTocParentName() != null) {
-				throw new ConfigurationException(MessageFormat.format(
-						Messages.getString("WikiToDocTask_tocParentName_not_in_unified_toc"), path.name)); //$NON-NLS-1$
+				throw new ConfigurationException(MessageFormat
+						.format(Messages.getString("WikiToDocTask_tocParentName_not_in_unified_toc"), path.name)); //$NON-NLS-1$
 			}
 		}
 		if (generateUnifiedToc) {
@@ -194,24 +195,25 @@ public class WikiToDocTask extends MarkupTask {
 			}
 			if (stylesheet.file != null) {
 				if (!stylesheet.file.exists()) {
-					throw new BuildException(MessageFormat.format(
-							Messages.getString("WikiToDocTask_stylesheet_file_not_exist"), //$NON-NLS-1$
-							stylesheet.file));
+					throw new BuildException(
+							MessageFormat.format(Messages.getString("WikiToDocTask_stylesheet_file_not_exist"), //$NON-NLS-1$
+									stylesheet.file));
 				}
 				if (!stylesheet.file.isFile()) {
-					throw new BuildException(MessageFormat.format(
-							Messages.getString("WikiToDocTask_stylesheet_file_not_file"), //$NON-NLS-1$
-							stylesheet.file));
+					throw new BuildException(
+							MessageFormat.format(Messages.getString("WikiToDocTask_stylesheet_file_not_file"), //$NON-NLS-1$
+									stylesheet.file));
 				}
 				if (!stylesheet.file.canRead()) {
-					throw new BuildException(MessageFormat.format(
-							Messages.getString("WikiToDocTask_stylesheet_file_cannot_read"), stylesheet.file)); //$NON-NLS-1$
+					throw new BuildException(MessageFormat
+							.format(Messages.getString("WikiToDocTask_stylesheet_file_cannot_read"), stylesheet.file)); //$NON-NLS-1$
 				}
 			}
 		}
 		if (!dest.exists()) {
 			if (!dest.mkdirs()) {
-				throw new BuildException(MessageFormat.format("Cannot create dest folder: {0}", dest.getAbsolutePath())); //$NON-NLS-1$
+				throw new BuildException(
+						MessageFormat.format("Cannot create dest folder: {0}", dest.getAbsolutePath())); //$NON-NLS-1$
 			}
 		}
 
@@ -223,7 +225,8 @@ public class WikiToDocTask extends MarkupTask {
 		Map<String, SplitOutlineItem> pathNameToOutline = new HashMap<String, SplitOutlineItem>();
 		for (Path path : paths) {
 			getProject().log(
-					MessageFormat.format(Messages.getString("WikiToDocTask_fetching_content_for_page"), path.name), Project.MSG_VERBOSE); //$NON-NLS-1$
+					MessageFormat.format(Messages.getString("WikiToDocTask_fetching_content_for_page"), path.name), //$NON-NLS-1$
+					Project.MSG_VERBOSE);
 			URL pathUrl = computeRawUrl(path.name);
 			Reader input;
 			try {
@@ -248,8 +251,8 @@ public class WikiToDocTask extends MarkupTask {
 
 		}
 		for (Path path : paths) {
-			getProject().log(
-					MessageFormat.format(Messages.getString("WikiToDocTask_processing_page"), path.name), Project.MSG_DEBUG); //$NON-NLS-1$
+			getProject().log(MessageFormat.format(Messages.getString("WikiToDocTask_processing_page"), path.name), //$NON-NLS-1$
+					Project.MSG_DEBUG);
 
 			String markupContent = pathNameToContent.get(path.name);
 			if (isValidate()) {
@@ -296,9 +299,9 @@ public class WikiToDocTask extends MarkupTask {
 		}
 
 		if ((errorCount > 0 && isFailOnValidationError()) || (warningCount > 0 && isFailOnValidationWarning())) {
-			throw new BuildException(MessageFormat.format(
-					"Validation failed with {0} errors and {1} warnings: {0}", errorCount, //$NON-NLS-1$
-					warningCount, path.name));
+			throw new BuildException(
+					MessageFormat.format("Validation failed with {0} errors and {1} warnings: {0}", errorCount, //$NON-NLS-1$
+							warningCount, path.name));
 		}
 	}
 
@@ -375,10 +378,10 @@ public class WikiToDocTask extends MarkupTask {
 	}
 
 	private void createToc(List<Path> paths, final Map<String, SplitOutlineItem> pathNameToOutline) {
-		getProject().log(
-				MessageFormat.format(Messages.getString("WikiToDocTask_writing_toc"), tocFile), Project.MSG_VERBOSE); //$NON-NLS-1$
-		final OutlineItem rootItem = new OutlineItem(null, 0,
-				"<root>", 0, -1, title == null ? computeTitle(paths.get(0)) : title); //$NON-NLS-1$
+		getProject().log(MessageFormat.format(Messages.getString("WikiToDocTask_writing_toc"), tocFile), //$NON-NLS-1$
+				Project.MSG_VERBOSE);
+		final OutlineItem rootItem = new OutlineItem(null, 0, "<root>", 0, -1, //$NON-NLS-1$
+				title == null ? computeTitle(paths.get(0)) : title);
 		final Map<OutlineItem, Path> outlineItemToPath = new HashMap<OutlineItem, Path>();
 		final Map<String, OutlineItem> nameToItem = new HashMap<String, OutlineItem>();
 
@@ -442,7 +445,7 @@ public class WikiToDocTask extends MarkupTask {
 		}
 		if (titleParameter) {
 			// parameter encoding is handled in AbstractMediaWikiLanguage
-			internalLinkPattern += "index.php?title={0}"; //$NON-NLS-1$ 
+			internalLinkPattern += "index.php?title={0}"; //$NON-NLS-1$
 		} else {
 			internalLinkPattern += "{0}"; //$NON-NLS-1$
 		}
@@ -455,13 +458,13 @@ public class WikiToDocTask extends MarkupTask {
 			dest = new File(dest, prependImagePrefix);
 			if (!dest.exists()) {
 				if (!dest.mkdirs()) {
-					throw new BuildException(MessageFormat.format(
-							"Cannot create images folder: {0}", dest.getAbsolutePath())); //$NON-NLS-1$
+					throw new BuildException(
+							MessageFormat.format("Cannot create images folder: {0}", dest.getAbsolutePath())); //$NON-NLS-1$
 				}
 			}
 		}
-		getProject().log(
-				MessageFormat.format(Messages.getString("WikiToDocTask_fetching_images_for_page"), path.name), Project.MSG_VERBOSE); //$NON-NLS-1$
+		getProject().log(MessageFormat.format(Messages.getString("WikiToDocTask_fetching_images_for_page"), path.name), //$NON-NLS-1$
+				Project.MSG_VERBOSE);
 		MediaWikiApiImageFetchingStrategy imageFetchingStrategy = new MediaWikiApiImageFetchingStrategy();
 		imageFetchingStrategy.setTask(this);
 		imageFetchingStrategy.setDest(dest);
@@ -482,10 +485,9 @@ public class WikiToDocTask extends MarkupTask {
 			appendum = appendum.replace("{name}", path.name); //$NON-NLS-1$
 			appendum = appendum.replace("{title}", computeTitle(path)); //$NON-NLS-1$
 			content += appendum;
-			getProject().log(
-					MessageFormat.format(
-							Messages.getString("WikiToDocTask_appending_markup_to_page"), path.name, appendum), //$NON-NLS-1$
-					Project.MSG_VERBOSE);
+			getProject()
+					.log(MessageFormat.format(Messages.getString("WikiToDocTask_appending_markup_to_page"), path.name, //$NON-NLS-1$
+							appendum), Project.MSG_VERBOSE);
 		}
 		return content;
 	}
@@ -495,9 +497,9 @@ public class WikiToDocTask extends MarkupTask {
 		File pathDir = computeDestDir(path);
 		if (!pathDir.exists()) {
 			if (!pathDir.mkdirs()) {
-				throw new BuildException(MessageFormat.format(
-						Messages.getString("WikiToDocTask_cannot_create_dest_folder"), //$NON-NLS-1$
-						pathDir.getAbsolutePath()));
+				throw new BuildException(
+						MessageFormat.format(Messages.getString("WikiToDocTask_cannot_create_dest_folder"), //$NON-NLS-1$
+								pathDir.getAbsolutePath()));
 			}
 		}
 		String fileName = computeHtmlFilename(path.name);
@@ -506,34 +508,18 @@ public class WikiToDocTask extends MarkupTask {
 		try {
 			writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(htmlOutputFile)), "utf-8"); //$NON-NLS-1$
 		} catch (Exception e) {
-			throw new BuildException(MessageFormat.format(
-					Messages.getString("WikiToDocTask_cannot_create_output_file"), htmlOutputFile, //$NON-NLS-1$
-					e.getMessage()), e);
+			throw new BuildException(
+					MessageFormat.format(Messages.getString("WikiToDocTask_cannot_create_output_file"), htmlOutputFile, //$NON-NLS-1$
+							e.getMessage()),
+					e);
 		}
 
 		try {
 			HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer, formatOutput);
 			for (Stylesheet stylesheet : stylesheets) {
-				HtmlDocumentBuilder.Stylesheet builderStylesheet;
-
-				if (stylesheet.url != null) {
-					String relativePath = ""; //$NON-NLS-1$
-					File currentDest = pathDir;
-					while (!currentDest.equals(dest)) {
-						currentDest = currentDest.getParentFile();
-						relativePath += "../"; //$NON-NLS-1$
-					}
-					builderStylesheet = new HtmlDocumentBuilder.Stylesheet(relativePath + stylesheet.url);
-				} else {
-					builderStylesheet = new HtmlDocumentBuilder.Stylesheet(stylesheet.file);
-				}
+				HtmlDocumentBuilder.Stylesheet builderStylesheet = createBuilderStylesheet(pathDir, stylesheet);
 				builder.addCssStylesheet(builderStylesheet);
 
-				if (!stylesheet.attributes.isEmpty()) {
-					for (Map.Entry<String, String> attr : stylesheet.attributes.entrySet()) {
-						builderStylesheet.getAttributes().put(attr.getKey(), attr.getValue());
-					}
-				}
 			}
 
 			builder.setTitle(computeTitle(path));
@@ -581,6 +567,29 @@ public class WikiToDocTask extends MarkupTask {
 						e.getMessage()), e);
 			}
 		}
+	}
+
+	public HtmlDocumentBuilder.Stylesheet createBuilderStylesheet(File pathDir, Stylesheet stylesheet) {
+		HtmlDocumentBuilder.Stylesheet builderStylesheet;
+		if (stylesheet.url != null) {
+			URI uri = URI.create(stylesheet.url);
+			if (uri.isAbsolute()) {
+				builderStylesheet = new HtmlDocumentBuilder.Stylesheet(stylesheet.url);
+			} else {
+				String relativePath = ""; //$NON-NLS-1$
+				File currentDest = pathDir;
+				while (!currentDest.equals(dest)) {
+					currentDest = currentDest.getParentFile();
+					relativePath += "../"; //$NON-NLS-1$
+				}
+				builderStylesheet = new HtmlDocumentBuilder.Stylesheet(relativePath + stylesheet.url);
+			}
+		} else {
+			builderStylesheet = new HtmlDocumentBuilder.Stylesheet(stylesheet.file);
+		}
+		builderStylesheet.getAttributes().putAll(stylesheet.attributes);
+
+		return builderStylesheet;
 	}
 
 	protected String computeTitle(Path path) {
@@ -637,8 +646,9 @@ public class WikiToDocTask extends MarkupTask {
 			qualifiedUrl += "index.php?title=" + URLEncoder.encode(path, "UTF-8") + "&action=raw"; //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
 			return new URL(qualifiedUrl);
 		} catch (IOException e) {
-			throw new BuildException(MessageFormat.format(
-					Messages.getString("WikiToDocTask_cannot_compute_raw_url"), path, e.getMessage()), //$NON-NLS-1$
+			throw new BuildException(
+					MessageFormat.format(Messages.getString("WikiToDocTask_cannot_compute_raw_url"), path, //$NON-NLS-1$
+							e.getMessage()),
 					e);
 		}
 	}
@@ -652,8 +662,9 @@ public class WikiToDocTask extends MarkupTask {
 			try {
 				qualifiedUrl += "index.php?title=" + URLEncoder.encode(path, "UTF-8"); //$NON-NLS-1$ //$NON-NLS-2$
 			} catch (IOException e) {
-				throw new BuildException(MessageFormat.format(
-						Messages.getString("WikiToDocTask_cannot_compute_url"), path, e.getMessage()), //$NON-NLS-1$
+				throw new BuildException(
+						MessageFormat.format(Messages.getString("WikiToDocTask_cannot_compute_url"), path, //$NON-NLS-1$
+								e.getMessage()),
 						e);
 			}
 		} else {
@@ -856,10 +867,9 @@ public class WikiToDocTask extends MarkupTask {
 						SplitOutlineItem item = outline.getOutlineItemById(hashId);
 
 						if (item == null) {
-							getProject().log(
-									MessageFormat.format(
-											Messages.getString("WikiToDocTask_missing_id_in_page_reference"), hashId, //$NON-NLS-1$
-											name, currentPath.name), Project.MSG_WARN);
+							getProject().log(MessageFormat.format(
+									Messages.getString("WikiToDocTask_missing_id_in_page_reference"), hashId, //$NON-NLS-1$
+									name, currentPath.name), Project.MSG_WARN);
 						} else {
 							fileName = item.getSplitTarget();
 						}
@@ -1077,7 +1087,7 @@ public class WikiToDocTask extends MarkupTask {
 
 	/**
 	 * indicates if the title should be provided as an HTTP parameter, for example <code>index.php?title=Main</code>
-	 * 
+	 *
 	 * @return true if index.php and HTTP parameters should be used in the URL, otherwise false. Defaults to false.
 	 * @since 1.8
 	 */
@@ -1087,7 +1097,7 @@ public class WikiToDocTask extends MarkupTask {
 
 	/**
 	 * indicates if the title should be provided as an HTTP parameter, for example <code>index.php?title=Main</code>
-	 * 
+	 *
 	 * @param titleParameter
 	 *            true if index.php and HTTP parameters should be used in the URL, otherwise false.
 	 * @since 1.8
