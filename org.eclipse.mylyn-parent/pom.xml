@@ -471,7 +471,7 @@
       <id>sandbox.eclipse.org</id>
       <properties>
         <test.vmargs>-ea -Dorg.eclipse.mylyn.wikitext.tests.disableOutput=true -Dhttp.proxyHost=proxy.eclipse.org -Dhttp.proxyPort=9898 -Dhttps.proxyHost=proxy.eclipse.org -Dhttps.proxyPort=9898 -DhttpnonProxyHosts=*.eclipse.org ${test.uservmargs}</test.vmargs>
-        <dist.pack200>/shared/common/jdk1.7.0-latest/bin</dist.pack200>
+        <dist.pack200>/shared/common/jdk-1.5.0-22.x86_64/bin</dist.pack200>
         <maven.test.error.ignore>true</maven.test.error.ignore>
         <maven.test.failure.ignore>true</maven.test.failure.ignore>
       </properties>
@@ -490,7 +490,7 @@
         <!--
             <mylyn-test-append>@e${target-version}</mylyn-test-append>
         -->
-        <dist.pack200>/shared/common/jdk1.7.0-latest/bin</dist.pack200>
+        <dist.pack200>/shared/common/jdk-1.5.0-22.x86_64/bin</dist.pack200>
         <maven.test.error.ignore>true</maven.test.error.ignore>
         <maven.test.failure.ignore>true</maven.test.failure.ignore>
       </properties>
