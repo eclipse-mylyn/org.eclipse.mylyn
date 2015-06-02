@@ -159,6 +159,8 @@ public class DiscoveryViewer {
 
 		private final Label description;
 
+		private final Composite checkboxAndIconContainer;
+
 		private final Composite checkboxContainer;
 
 		private final Composite connectorContainer;
@@ -185,17 +187,21 @@ public class DiscoveryViewer {
 			layout.marginBottom = 2;
 			connectorContainer.setLayout(layout);
 
-			checkboxContainer = new Composite(connectorContainer, SWT.NULL);
+			checkboxAndIconContainer = new Composite(connectorContainer, SWT.NULL);
+			configureLook(checkboxAndIconContainer, background);
+			GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.BEGINNING).span(1, 2).applyTo(checkboxAndIconContainer);
+			GridLayoutFactory.fillDefaults().spacing(1, 1).numColumns(2).applyTo(checkboxAndIconContainer);
+
+			checkboxContainer = new Composite(checkboxAndIconContainer, SWT.NULL);
+			GridLayout checkboxLayout = new GridLayout(1, false);
+			checkboxLayout.marginRight = 7;
+			checkboxContainer.setLayout(checkboxLayout);
 			configureLook(checkboxContainer, background);
-			GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.BEGINNING).span(1, 2).applyTo(checkboxContainer);
-			GridLayoutFactory.fillDefaults().spacing(1, 1).numColumns(2).applyTo(checkboxContainer);
 
 			checkbox = new Button(checkboxContainer, SWT.CHECK);
-			checkbox.setText(" "); //$NON-NLS-1$
 			// help UI tests
 			checkbox.setData("connectorId", connector.getId()); //$NON-NLS-1$
 			checkbox.setVisible(connector.isInstallable());
-			configureLook(checkbox, background);
 			checkbox.setSelection(installableConnectors.contains(connector));
 			checkbox.addFocusListener(new FocusAdapter() {
 				@Override
@@ -206,7 +212,7 @@ public class DiscoveryViewer {
 
 			GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(checkbox);
 
-			iconLabel = new Label(checkboxContainer, SWT.NULL);
+			iconLabel = new Label(checkboxAndIconContainer, SWT.NULL);
 			configureLook(iconLabel, background);
 			GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(iconLabel);
 
@@ -303,6 +309,7 @@ public class DiscoveryViewer {
 					}
 				}
 			};
+			checkboxAndIconContainer.addMouseListener(connectorItemMouseListener);
 			checkboxContainer.addMouseListener(connectorItemMouseListener);
 			connectorContainer.addMouseListener(connectorItemMouseListener);
 			iconLabel.addMouseListener(connectorItemMouseListener);
