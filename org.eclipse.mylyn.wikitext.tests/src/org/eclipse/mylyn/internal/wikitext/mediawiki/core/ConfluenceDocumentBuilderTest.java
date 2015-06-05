@@ -13,8 +13,6 @@ package org.eclipse.mylyn.internal.wikitext.mediawiki.core;
 
 import java.io.StringWriter;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.wikitext.confluence.core.ConfluenceDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
@@ -23,6 +21,8 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
+
+import junit.framework.TestCase;
 
 /**
  * @author David Green
@@ -640,7 +640,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		assertEquals("first\n\\\\\\\\second\n\n", markup);
+		assertEquals("first\n\\\\ \\\\second\n\n", markup);
 	}
 
 	public void testListItemWithSingleNewline() {

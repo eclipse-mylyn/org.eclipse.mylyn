@@ -42,6 +42,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	private static final Pattern PATTERN_MULTIPLE_NEWLINES = Pattern.compile("(\r\n|\r|\n){2,}"); //$NON-NLS-1$
 
 	private final Map<String, String> entityToLiteral = new HashMap<String, String>();
+
 	{
 		entityToLiteral.put("nbsp", " "); //$NON-NLS-1$//$NON-NLS-2$
 		entityToLiteral.put("#160", " "); //$NON-NLS-1$//$NON-NLS-2$
@@ -113,6 +114,9 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 					|| (getBlockType() == BlockType.CODE || getBlockType() == BlockType.PREFORMATTED)) {
 				ConfluenceDocumentBuilder.this.emitContent('\n');
 			} else {
+				if (getLastChar() != '\n') {
+					ConfluenceDocumentBuilder.this.emitContent(" "); //$NON-NLS-1$
+				}
 				ConfluenceDocumentBuilder.this.emitContent("\\\\"); //$NON-NLS-1$
 			}
 		}
@@ -381,9 +385,11 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 					currentBlock.write(' ');
 					break;
 				case '\u00A9': // &copy;
-					currentBlock.write("(c)");break; //$NON-NLS-1$
+					currentBlock.write("(c)"); //$NON-NLS-1$
+					break;
 				case '\u00AE': // &reg;
-					currentBlock.write("(r)");break; //$NON-NLS-1$
+					currentBlock.write("(r)"); //$NON-NLS-1$
+					break;
 				default:
 					currentBlock.write(c);
 					break;
