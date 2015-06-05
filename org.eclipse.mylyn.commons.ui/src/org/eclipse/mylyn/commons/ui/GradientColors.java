@@ -12,8 +12,10 @@
 
 package org.eclipse.mylyn.commons.ui;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.DeviceResourceException;
 import org.eclipse.jface.resource.ResourceManager;
+import org.eclipse.mylyn.internal.commons.ui.E4ThemeColor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
@@ -72,7 +74,7 @@ public class GradientColors {
 
 	private void createBorderColor() {
 		RGB tbBorder = getSystemColor(SWT.COLOR_TITLE_BACKGROUND);
-		RGB bg = getImpliedBackground().getRGB();
+		RGB bg = getBackground();
 
 		// Group 1
 		// Rule: If at least 2 of the RGB values are equal to or between 180 and
@@ -92,8 +94,7 @@ public class GradientColors {
 
 	private void createGradientColors() {
 		RGB titleBg = getSystemColor(SWT.COLOR_TITLE_BACKGROUND);
-		Color bgColor = getImpliedBackground();
-		RGB bg = bgColor.getRGB();
+		RGB bg = getBackground();
 		RGB bottom, top;
 
 		// Group 1
@@ -184,4 +185,35 @@ public class GradientColors {
 		}
 	}
 
+	private RGB getBackground() {
+		RGB themeBg = getRGBFromTheme("background-color"); //$NON-NLS-1$
+		RGB impliedBg = getImpliedBackground().getRGB();
+		if (themeBg == null) {
+			return impliedBg;
+		}
+		// use the theme background only if it is significantly different than the implied
+		if (absoluteDifference(themeBg.red, impliedBg.red) < 40
+				&& absoluteDifference(themeBg.blue, impliedBg.blue) < 40
+				&& absoluteDifference(themeBg.green, impliedBg.green) < 40) {
+			return impliedBg;
+		}
+		return themeBg;
+	}
+
+	private int absoluteDifference(int a, int b) {
+		return Math.abs(a - b);
+	}
+
+	private RGB getRGBFromTheme(String value) {
+		if (Platform.getBundle("org.eclipse.e4.ui.css.swt.theme") != null) { //$NON-NLS-1$
+			String backgroundColor = E4ThemeColor.getCssValueFromTheme(display, value);
+			if (backgroundColor != null) {
+				RGB themeColor = E4ThemeColor.getRGBFromCssString(backgroundColor);
+				if (themeColor != null) {
+					return themeColor;
+				}
+			}
+		}
+		return null;
+	}
 }

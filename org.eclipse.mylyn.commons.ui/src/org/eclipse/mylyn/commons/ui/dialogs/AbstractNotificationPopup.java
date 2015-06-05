@@ -336,7 +336,7 @@ public abstract class AbstractNotificationPopup extends Window {
 		/* Outer Composite holding the controls */
 		final Composite outerCircle = new Composite(parent, SWT.NO_FOCUS);
 		outerCircle.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		outerCircle.setBackgroundMode(SWT.INHERIT_NONE);
+		outerCircle.setBackgroundMode(SWT.INHERIT_FORCE);
 
 		outerCircle.addControlListener(new ControlAdapter() {
 
