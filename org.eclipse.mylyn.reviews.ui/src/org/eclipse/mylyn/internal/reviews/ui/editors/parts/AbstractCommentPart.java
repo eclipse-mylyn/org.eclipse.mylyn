@@ -136,6 +136,7 @@ public abstract class AbstractCommentPart<V extends ExpandablePart<IComment, V>>
 	protected Composite createSectionContents(Section section, FormToolkit toolkit) {
 		// CHECKSTYLE:MAGIC:OFF
 		section.clientVerticalSpacing = 0;
+		section.setData(comment);
 
 		sectionClient = new SizeCachingComposite(section, SWT.NONE);
 		toolkit.adapt(sectionClient);

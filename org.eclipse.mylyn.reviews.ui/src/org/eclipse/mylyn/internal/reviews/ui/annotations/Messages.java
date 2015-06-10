@@ -20,9 +20,23 @@ public class Messages extends NLS {
 
 	public static String CommentAnnotationHover_Multiple_comments;
 
-	public static String CommentInputDialog_LineNumber;
+	public static String CommentPopupDialog_LineNumber;
 
-	public static String CommentPopupDialog_Edit_discard_or_reply;
+	public static String CommandServerOperation;
+
+	public static String CommentPopupDialog_ServerError;
+
+	public static String CommentPopupDialog_ReplyDone;
+
+	public static String CommentPopupDialog_Discard;
+
+	public static String CommentPopupDialog_Cancel;
+
+	public static String CommentPopupDialog_Save;
+
+	public static String CommentPopupDialog_Done;
+
+	public static String CommentPopupDialog_HelpText;
 
 	static {
 		// initialize resource bundle

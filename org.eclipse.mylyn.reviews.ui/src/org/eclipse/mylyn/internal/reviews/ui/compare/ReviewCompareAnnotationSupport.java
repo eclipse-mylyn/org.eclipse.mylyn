@@ -56,7 +56,7 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
 
 /**
  * Manages annotation models for compare viewers.
- *
+ * 
  * @author Thomas Ehrnhoefer
  * @author Steffen Pingel
  * @author Guy Perron
@@ -178,7 +178,7 @@ public class ReviewCompareAnnotationSupport {
 
 	/**
 	 * Jumps to the next annotation according to the given direction.
-	 *
+	 * 
 	 * @param direction
 	 *            the search direction
 	 * @return the selected annotation or <code>null</code> if none
@@ -326,19 +326,19 @@ public class ReviewCompareAnnotationSupport {
 		LineRange range = new LineRange(p.x + 1, p.y);
 
 		if (commentPopupDialog != null) {
-			commentPopupDialog.dispose();
+			commentPopupDialog.dispose(false);
 			commentPopupDialog = null;
 		}
-
 		commentPopupDialog = new CommentPopupDialog(ReviewsUiPlugin.getDefault()
 				.getWorkbench()
 				.getActiveWorkbenchWindow()
-				.getShell(), SWT.NO_FOCUS | SWT.ON_TOP, true, reviewitem, range);
+				.getShell(), SWT.NO_FOCUS | SWT.ON_TOP, reviewitem, range, true);
 		CommentAnnotationHoverInput input = new CommentAnnotationHoverInput(comments,
 				((ReviewAnnotationModel) srcViewer.getAnnotationModel()).getBehavior());
 		commentPopupDialog.create();
 		commentPopupDialog.setInput(input);
-		commentPopupDialog.setSize(50, 150);
+
+		commentPopupDialog.setHeightBasedOnMouse(Display.getCurrent().getCursorLocation().y);
 
 		Point location = sourceViewer.getSourceViewer().getControl().getLocation();
 		location = Display.getCurrent().getCursorLocation();
@@ -461,7 +461,7 @@ public class ReviewCompareAnnotationSupport {
 	/**
 	 * Returns the annotation closest to the given range respecting the given direction. If an annotation is found, the
 	 * annotations current position is copied into the provided annotation position.
-	 *
+	 * 
 	 * @param viewer
 	 *            the viewer
 	 * @param direction
@@ -510,7 +510,7 @@ public class ReviewCompareAnnotationSupport {
 					&& p.offset + p.getLength() == offset + length) {// || p.includes(offset)) {
 				if (containingAnnotation == null
 						|| (direction == Direction.FORWARDS && p.length >= containingAnnotationPosition.length || direction == Direction.BACKWARDS
-						&& p.length >= containingAnnotationPosition.length)) {
+								&& p.length >= containingAnnotationPosition.length)) {
 					containingAnnotation = a;
 					containingAnnotationPosition = p;
 					currentAnnotation = p.length == length;

@@ -51,7 +51,7 @@ public class CommentInformationControl extends DefaultInformationControl impleme
 	public CommentInformationControl(Shell parent, CommentInformationControlCreator crucibleInformationControlCreator) {
 		super(parent, new HTMLTextPresenter(true));
 		this.informationControlCreator = crucibleInformationControlCreator;
-		commentPopupDialog = new CommentPopupDialog(parent, SWT.NO_FOCUS | SWT.ON_TOP);
+		commentPopupDialog = new CommentPopupDialog(parent, SWT.NO_FOCUS | SWT.ON_TOP, null, null, false);
 		// Force create early so that listeners can be added at all times with API.
 		commentPopupDialog.create();
 		commentPopupDialog.setInformationControl(this);
@@ -117,7 +117,6 @@ public class CommentInformationControl extends DefaultInformationControl impleme
 	@Override
 	public void setVisible(boolean visible) {
 		cancelMarkCommentAsReadJob();
-
 		if (input instanceof String) {
 			setInformation((String) input);
 			super.setVisible(visible);
@@ -125,6 +124,8 @@ public class CommentInformationControl extends DefaultInformationControl impleme
 			if (visible) {
 				commentPopupDialog.open();
 				runMarkCommentAsReadJob((CommentAnnotationHoverInput) input);
+			} else if (commentPopupDialog.hasEdits()) {
+				return;
 			} else {
 				commentPopupDialog.getShell().setVisible(false);
 			}
@@ -135,10 +136,12 @@ public class CommentInformationControl extends DefaultInformationControl impleme
 
 	@Override
 	public void dispose() {
-		cancelMarkCommentAsReadJob();
+		if (!commentPopupDialog.hasEdits()) {
+			cancelMarkCommentAsReadJob();
 
-		commentPopupDialog.dispose();
-		commentPopupDialog = null;
+			commentPopupDialog.dispose(false);
+			commentPopupDialog = null;
+		}
 	}
 
 	@Override
@@ -220,7 +223,6 @@ public class CommentInformationControl extends DefaultInformationControl impleme
 
 	@Override
 	public void setFocus() {
-
 		if (input instanceof String) {
 			super.setFocus();
 		} else if (input instanceof CommentAnnotationHoverInput) {
