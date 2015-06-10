@@ -165,6 +165,32 @@ public class HtmlDocumentBuilderTest {
 		assertEntity("&tilde;", "tilde");
 	}
 
+	@Test
+	public void cssClassesAreApplied() {
+		Attributes attributes = new Attributes();
+		attributes.setCssClass("aclass");
+		builder.setEmitAsDocument(false);
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PREFORMATTED, attributes);
+		builder.characters("content");
+		builder.endBlock();
+		builder.endDocument();
+		assertEquals("<pre class=\"aclass\">content</pre>", out.toString());
+	}
+
+	@Test
+	public void cssClassesAreAppliedToNestedElements() {
+		Attributes attributes = new Attributes();
+		attributes.setCssClass("aclass");
+		builder.setEmitAsDocument(false);
+		builder.beginDocument();
+		builder.beginBlock(BlockType.CODE, attributes);
+		builder.characters("content");
+		builder.endBlock();
+		builder.endDocument();
+		assertEquals("<pre class=\"aclass\"><code class=\"aclass\">content</code></pre>", out.toString());
+	}
+
 	private void assertEntityFiltered(String expected, String entity) {
 		setup();
 		builder.setFilterEntityReferences(true);

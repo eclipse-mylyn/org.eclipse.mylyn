@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 David Green and others.
+ * Copyright (c) 2007, 2015 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,6 @@ package org.eclipse.mylyn.internal.wikitext.ui.editor.preferences;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.io.StringWriter;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -23,6 +22,8 @@ import org.eclipse.mylyn.internal.wikitext.core.util.css.CssParser;
 import org.eclipse.mylyn.internal.wikitext.core.util.css.Stylesheet;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.HtmlTextPresentationParser;
+
+import com.google.common.io.CharStreams;
 
 /**
  * @see WikiTextUiPlugin#getPreferences()
@@ -91,6 +92,7 @@ public class Preferences implements Cloneable {
 			BLOCK_H5, BLOCK_H6 };
 
 	private Map<String, String> cssByBlockModifierType = new LinkedHashMap<String, String>();
+
 	{
 		cssByBlockModifierType.put(BLOCK_H1, "font-size: 120%; font-weight: bold; color: #172f47;"); //$NON-NLS-1$
 		cssByBlockModifierType.put(BLOCK_H2, "font-size: 110%; font-weight: bold; color: #172f47;"); //$NON-NLS-1$
@@ -105,6 +107,7 @@ public class Preferences implements Cloneable {
 	}
 
 	private Map<String, String> cssByPhraseModifierType = new LinkedHashMap<String, String>();
+
 	{
 
 		cssByPhraseModifierType.put(PHRASE_EMPHASIS, "font-style: italic;"); //$NON-NLS-1$
@@ -186,7 +189,7 @@ public class Preferences implements Cloneable {
 
 	/**
 	 * indicate if this preferences is mutable
-	 * 
+	 *
 	 * @see #makeImmutable()
 	 */
 	public boolean isMutable() {
@@ -206,7 +209,7 @@ public class Preferences implements Cloneable {
 
 	/**
 	 * Save the settings to the given store
-	 * 
+	 *
 	 * @param store
 	 *            the store to which the settings should be saved
 	 * @param asDefault
@@ -271,24 +274,11 @@ public class Preferences implements Cloneable {
 	}
 
 	private String getDefaultMarkupViewerCss() {
-		try {
-			return readFully(HtmlTextPresentationParser.getDefaultStylesheetContent());
+		try (Reader reader = HtmlTextPresentationParser.getDefaultStylesheetContent()) {
+			return CharStreams.toString(reader);
 		} catch (IOException e) {
 			WikiTextUiPlugin.getDefault().log(e);
 			return ""; //$NON-NLS-1$
-		}
-	}
-
-	private String readFully(Reader reader) throws IOException {
-		try {
-			StringWriter writer = new StringWriter();
-			int c;
-			while ((c = reader.read()) != -1) {
-				writer.write(c);
-			}
-			return writer.toString();
-		} finally {
-			reader.close();
 		}
 	}
 

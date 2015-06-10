@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 David Green and others.
+ * Copyright (c) 2007, 2015 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -65,7 +66,7 @@ import org.xml.sax.XMLReader;
  * <li>Text as it should be presented in a text viewer</li>
  * <li>A {@link TextPresentation}</li>
  * </ol>
- * 
+ *
  * @author David Green
  */
 public class HtmlTextPresentationParser {
@@ -290,7 +291,7 @@ public class HtmlTextPresentationParser {
 	private char[] bulletChars = new char[] { '\u2022', // solid round bullet, see http://www.fileformat.info/info/unicode/char/2022/index.htm
 //		'\u26AA', // empty round bullet, see http://www.fileformat.info/info/unicode/char/26AA/index.htm
 //		'\u25A0', // square bullet, see http://www.fileformat.info/info/unicode/char/25A0/index.htm
-	};
+ };
 
 	private CssStyleManager cssStyleManager;
 
@@ -324,7 +325,8 @@ public class HtmlTextPresentationParser {
 	}
 
 	public static Reader getDefaultStylesheetContent() throws IOException {
-		return new InputStreamReader(HtmlTextPresentationParser.class.getResourceAsStream("default.css"), "utf-8"); //$NON-NLS-1$ //$NON-NLS-2$
+		return new InputStreamReader(HtmlTextPresentationParser.class.getResourceAsStream("default.css"), //$NON-NLS-1$
+				StandardCharsets.UTF_8);
 	}
 
 	public TextPresentation getPresentation() {
@@ -392,7 +394,7 @@ public class HtmlTextPresentationParser {
 
 	/**
 	 * Get the annotation model in which annotations are collected
-	 * 
+	 *
 	 * @return the annotation model, or null if there is none.
 	 */
 	public IAnnotationModel getAnnotationModel() {
@@ -402,7 +404,7 @@ public class HtmlTextPresentationParser {
 	/**
 	 * Set the annotation model if the parsing process should collect annotations for things like anchors and hover
 	 * info.
-	 * 
+	 *
 	 * @param annotationModel
 	 *            the annotation model, or null if annotations should not be collected.
 	 */
@@ -472,8 +474,8 @@ public class HtmlTextPresentationParser {
 			if (!state.isEmpty()) {
 				ElementState elementState = state.peek();
 				if (elementState.noWhitespaceTextContainer
-						|| (elementState.blockElement && elementState.skipWhitespace
-								&& elementState.textChildCount == 0 && elementState.childCount == 0)
+						|| (elementState.blockElement && elementState.skipWhitespace && elementState.textChildCount == 0
+								&& elementState.childCount == 0)
 						|| (elementState.lastChild != null && elementState.lastChild.collapsesAdjacentWhitespace)) {
 					// trim left here, since we must properly eliminate whitespace in ordered lists where we've already
 					// prepended a number to the list item text
@@ -593,8 +595,8 @@ public class HtmlTextPresentationParser {
 					char[] prefix = computePrefix(elementState);
 					if (prefix != null) {
 						int offset = out.length();
-						for (int i = 0; i < prefix.length; ++i) {
-							out.append(prefix[i]);
+						for (char element : prefix) {
+							out.append(element);
 						}
 						List<Annotation> prefixAnnotations = computePrefixAnnotations(elementState);
 						if (prefixAnnotations != null && annotationModel != null) {
@@ -642,8 +644,8 @@ public class HtmlTextPresentationParser {
 
 			if (elementState.annotations != null) {
 				for (Annotation annotation : elementState.annotations) {
-					annotationToPosition.put(annotation, new Position(elementState.textOffset, getOffset()
-							- elementState.textOffset));
+					annotationToPosition.put(annotation,
+							new Position(elementState.textOffset, getOffset() - elementState.textOffset));
 				}
 			}
 
@@ -680,8 +682,8 @@ public class HtmlTextPresentationParser {
 								if (lastChar != '\n' && lastChar != '\r') {
 									emitChar('\n');
 									Position position = annotationToPosition.get(imageAnnotation);
-									annotationToPosition.put(imageAnnotation, new Position(position.getOffset() + 1,
-											position.getLength()));
+									annotationToPosition.put(imageAnnotation,
+											new Position(position.getOffset() + 1, position.getLength()));
 								}
 							}
 							if (imageAnnotation.getImage() != null) {
@@ -747,8 +749,8 @@ public class HtmlTextPresentationParser {
 
 			++parentElementState.childCount;
 
-			final ElementState elementState = state.push(new ElementState(parentElementState, localName, state.peek(),
-					getOffset(), atts));
+			final ElementState elementState = state
+					.push(new ElementState(parentElementState, localName, state.peek(), getOffset(), atts));
 			if ("pre".equals(localName)) { //$NON-NLS-1$
 				elementState.skipWhitespace = false;
 			} else if ("ul".equals(localName) || "ol".equals(localName)) { //$NON-NLS-1$ //$NON-NLS-2$
@@ -990,6 +992,7 @@ public class HtmlTextPresentationParser {
 	}
 
 	private static Map<String, char[]> elementToCharacters = new HashMap<String, char[]>();
+
 	static {
 		elementToCharacters.put("p", "\n\n".toCharArray()); //$NON-NLS-1$ //$NON-NLS-2$
 		elementToCharacters.put("br", "\n".toCharArray()); //$NON-NLS-1$ //$NON-NLS-2$

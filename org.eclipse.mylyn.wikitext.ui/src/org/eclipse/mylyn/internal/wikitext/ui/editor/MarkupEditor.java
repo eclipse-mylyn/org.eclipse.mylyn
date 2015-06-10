@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 David Green and others.
+ * Copyright (c) 2007, 2015 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -129,16 +129,18 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 /**
  * A text editor for editing lightweight markup. Can be configured to accept any {@link MarkupLanguage}, with pluggable
  * content assist, validation, and cheat-sheet help content.
- * 
+ *
  * @author David Green
  * @author Nicolas Bros
  */
 public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSource, CommandManager {
+	private static final String CSS_CLASS_EDITOR_PREVIEW = "editorPreview"; //$NON-NLS-1$
+
 	private static final String RULER_CONTEXT_MENU_ID = "org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor.ruler"; //$NON-NLS-1$
 
 	/**
 	 * the name of the property that stores the markup language name for per-file preference
-	 * 
+	 *
 	 * @see IFile#setPersistentProperty(QualifiedName, String) property
 	 */
 	private static final String MARKUP_LANGUAGE = "markupLanguage"; //$NON-NLS-1$
@@ -153,9 +155,9 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	 */
 	public static final String ID = "org.eclipse.mylyn.wikitext.ui.editor.markupEditor"; //$NON-NLS-1$
 
-	private static final String[] SHOW_IN_TARGETS = { // 
-	"org.eclipse.ui.views.ResourceNavigator", //$NON-NLS-1$
-			"org.eclipse.jdt.ui.PackageExplorer",//$NON-NLS-1$
+	private static final String[] SHOW_IN_TARGETS = { //
+			"org.eclipse.ui.views.ResourceNavigator", //$NON-NLS-1$
+			"org.eclipse.jdt.ui.PackageExplorer", //$NON-NLS-1$
 			"org.eclipse.ui.navigator.ProjectExplorer", // 3.5 //$NON-NLS-1$
 			IPageLayout.ID_OUTLINE };
 
@@ -180,6 +182,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	private OutlineItem outlineModel;
 
 	private final OutlineParser outlineParser = new OutlineParser();
+
 	{
 		outlineParser.setLabelMaxLength(48);
 		outlineModel = outlineParser.createRootItem();
@@ -232,8 +235,8 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 			sourceTab = new CTabItem(tabFolder, SWT.NONE);
 			updateSourceTabLabel();
 
-			viewer = new MarkupProjectionViewer(tabFolder, ruler, getOverviewRuler(), isOverviewRulerVisible(), styles
-					| SWT.WRAP);
+			viewer = new MarkupProjectionViewer(tabFolder, ruler, getOverviewRuler(), isOverviewRulerVisible(),
+					styles | SWT.WRAP);
 
 			sourceTab.setControl(((Viewer) viewer).getControl());
 			tabFolder.setSelection(sourceTab);
@@ -268,7 +271,9 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 
 						event.doit = false;
 						try {
-							PlatformUI.getWorkbench().getBrowserSupport().createBrowser("org.eclipse.ui.browser") //$NON-NLS-1$
+							PlatformUI.getWorkbench()
+									.getBrowserSupport()
+									.createBrowser("org.eclipse.ui.browser") //$NON-NLS-1$
 									.openURL(new URL(event.location));
 						} catch (Exception e) {
 							new URLHyperlink(new Region(0, 1), event.location).open();
@@ -553,7 +558,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 
 	/**
 	 * updates the preview and optionally reveal the section that corresponds to the given outline item.
-	 * 
+	 *
 	 * @param outlineItem
 	 *            the outline item, or null
 	 */
@@ -576,12 +581,24 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 						@Override
 						protected void emitAnchorHref(String href) {
 							if (href.startsWith("#")) { //$NON-NLS-1$
-								writer.writeAttribute(
-										"onclick", String.format("javascript: window.location.hash = '%s'; return false;", href)); //$NON-NLS-1$ //$NON-NLS-2$
+								writer.writeAttribute("onclick", //$NON-NLS-1$
+										String.format("javascript: window.location.hash = '%s'; return false;", href)); //$NON-NLS-1$
 								writer.writeAttribute("href", "#"); //$NON-NLS-1$//$NON-NLS-2$
 							} else {
 								super.emitAnchorHref(href);
 							}
+						}
+
+						@Override
+						public void beginHeading(int level, Attributes attributes) {
+							attributes.appendCssClass(CSS_CLASS_EDITOR_PREVIEW);
+							super.beginHeading(level, attributes);
+						}
+
+						@Override
+						public void beginBlock(BlockType type, Attributes attributes) {
+							attributes.appendCssClass(CSS_CLASS_EDITOR_PREVIEW);
+							super.beginBlock(type, attributes);
 						}
 					};
 					builder.setTitle(title);
@@ -874,9 +891,8 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		ProjectionViewer viewer = (ProjectionViewer) getSourceViewer();
 		ProjectionAnnotationModel projectionAnnotationModel = viewer.getProjectionAnnotationModel();
 		if (projectionAnnotationModel != null) {
-			List<Annotation> newProjectionAnnotations = new ArrayList<Annotation>(projectionAnnotationById == null
-					? 10
-					: projectionAnnotationById.size() + 2);
+			List<Annotation> newProjectionAnnotations = new ArrayList<Annotation>(
+					projectionAnnotationById == null ? 10 : projectionAnnotationById.size() + 2);
 			Map<HeadingProjectionAnnotation, Position> annotationToPosition = new HashMap<HeadingProjectionAnnotation, Position>();
 
 			List<OutlineItem> children = outlineModel.getChildren();
@@ -947,7 +963,8 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	}
 
 	private void createProjectionAnnotations(List<Annotation> newProjectionAnnotations,
-			Map<HeadingProjectionAnnotation, Position> annotationToPosition, List<OutlineItem> children, int endOffset) {
+			Map<HeadingProjectionAnnotation, Position> annotationToPosition, List<OutlineItem> children,
+			int endOffset) {
 		final int size = children.size();
 		final int lastIndex = size - 1;
 		for (int x = 0; x < size; ++x) {
@@ -1088,8 +1105,8 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 					sourceTab.setToolTipText(Messages.MarkupEditor_markupSource_tooltip);
 				}
 			} else {
-				sourceTab.setText(NLS.bind(Messages.MarkupEditor_markupSource_named,
-						new Object[] { markupLanguage.getName() }));
+				sourceTab.setText(
+						NLS.bind(Messages.MarkupEditor_markupSource_named, new Object[] { markupLanguage.getName() }));
 				if (!isCarbon) {
 					sourceTab.setToolTipText(NLS.bind(Messages.MarkupEditor_markupSource_tooltip_named,
 							new Object[] { markupLanguage.getName() }));
@@ -1108,7 +1125,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 
 	/**
 	 * lookup the markup language preference of a file based on the persisted preference.
-	 * 
+	 *
 	 * @param file
 	 *            the file for which the preference should be looked up
 	 * @return the markup language preference, or null if it was not set or could not be loaded.
@@ -1123,7 +1140,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 
 	/**
 	 * lookup the markup language preference of a file based on the persisted preference.
-	 * 
+	 *
 	 * @param file
 	 *            the file for which the preference should be looked up
 	 * @return the markup language name, or null if no preference exists
@@ -1131,8 +1148,8 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	public static String getMarkupLanguagePreference(IFile file) {
 		String languageName;
 		try {
-			languageName = file.getPersistentProperty(new QualifiedName(WikiTextUiPlugin.getDefault().getPluginId(),
-					MarkupEditor.MARKUP_LANGUAGE));
+			languageName = file.getPersistentProperty(
+					new QualifiedName(WikiTextUiPlugin.getDefault().getPluginId(), MarkupEditor.MARKUP_LANGUAGE));
 		} catch (CoreException e) {
 			WikiTextUiPlugin.getDefault().log(IStatus.ERROR, Messages.MarkupEditor_markupPreferenceError, e);
 			return null;
@@ -1152,8 +1169,8 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 				preference = null;
 			}
 			try {
-				file.setPersistentProperty(new QualifiedName(WikiTextUiPlugin.getDefault().getPluginId(),
-						MARKUP_LANGUAGE), preference);
+				file.setPersistentProperty(
+						new QualifiedName(WikiTextUiPlugin.getDefault().getPluginId(), MARKUP_LANGUAGE), preference);
 			} catch (CoreException e) {
 				WikiTextUiPlugin.getDefault().log(IStatus.ERROR,
 						NLS.bind(Messages.MarkupEditor_markupPreferenceError2, new Object[] { preference }), e);
@@ -1189,7 +1206,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	@Override
 	public void setAction(String actionID, IAction action) {
 		if (action != null && action.getActionDefinitionId() != null && !isCommandAction(action)) {
-			// bug 336679: don't activate handlers for CommandAction.  
+			// bug 336679: don't activate handlers for CommandAction.
 			// We do this by class name so that we don't rely on internals
 			IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
 			handlerService.activateHandler(action.getActionDefinitionId(), new ActionHandler(action));
@@ -1198,7 +1215,8 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	}
 
 	private boolean isCommandAction(IAction action) {
-		for (Class<?> clazz = action.getClass(); clazz != Object.class && clazz != AbstractAction.class; clazz = clazz.getSuperclass()) {
+		for (Class<?> clazz = action.getClass(); clazz != Object.class
+				&& clazz != AbstractAction.class; clazz = clazz.getSuperclass()) {
 			if (clazz.getName().equals("org.eclipse.ui.internal.actions.CommandAction")) { //$NON-NLS-1$
 				return true;
 			}
@@ -1213,16 +1231,16 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		final MarkupLanguage markupLanguage = getMarkupLanguage();
 		MenuManager markupLanguageMenu = new MenuManager(Messages.MarkupEditor_markupLanguage);
 		for (String markupLanguageName : new TreeSet<String>(WikiText.getMarkupLanguageNames())) {
-			markupLanguageMenu.add(new SetMarkupLanguageAction(this, markupLanguageName, markupLanguage != null
-					&& markupLanguageName.equals(markupLanguage.getName())));
+			markupLanguageMenu.add(new SetMarkupLanguageAction(this, markupLanguageName,
+					markupLanguage != null && markupLanguageName.equals(markupLanguage.getName())));
 		}
 
 		menu.prependToGroup(ITextEditorActionConstants.GROUP_SETTINGS, markupLanguageMenu);
 
 		OutlineItem nearestOutlineItem = getNearestMatchingOutlineItem();
 		if (nearestOutlineItem != null && !nearestOutlineItem.isRootItem()) {
-			menu.appendToGroup(ITextEditorActionConstants.GROUP_OPEN, new PreviewOutlineItemAction(this,
-					nearestOutlineItem));
+			menu.appendToGroup(ITextEditorActionConstants.GROUP_OPEN,
+					new PreviewOutlineItemAction(this, nearestOutlineItem));
 		}
 	}
 
@@ -1231,7 +1249,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		return viewer.getProjectionAnnotationModel() != null;
 	}
 
-	/* prevent line number ruler from appearing since it doesn't work with line wrapping 
+	/* prevent line number ruler from appearing since it doesn't work with line wrapping
 	 */
 	@Override
 	protected boolean isLineNumberRulerVisible() {
@@ -1268,14 +1286,14 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	}
 
 	private void revealInBrowser(OutlineItem item) {
-		browser.execute(String.format(
-				"document.getElementById('%s').scrollIntoView(true);window.location.hash = '%s';", item.getId(), item.getId())); //$NON-NLS-1$
+		browser.execute(String.format("document.getElementById('%s').scrollIntoView(true);window.location.hash = '%s';", //$NON-NLS-1$
+				item.getId(), item.getId()));
 	}
 
 	public ShowInContext getShowInContext() {
 		OutlineItem item = getNearestMatchingOutlineItem();
-		return new ShowInContext(getEditorInput(), item == null ? new StructuredSelection() : new StructuredSelection(
-				item));
+		return new ShowInContext(getEditorInput(),
+				item == null ? new StructuredSelection() : new StructuredSelection(item));
 	}
 
 	@Override

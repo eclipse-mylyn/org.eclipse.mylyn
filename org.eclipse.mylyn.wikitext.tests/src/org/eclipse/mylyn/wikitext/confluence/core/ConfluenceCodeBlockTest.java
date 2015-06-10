@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 David Green and others.
+ * Copyright (c) 2007, 2015 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,7 +24,7 @@ public class ConfluenceCodeBlockTest extends AbstractMarkupGenerationTest<Conflu
 	@Test
 	public void block() {
 		assertMarkup(
-				"<h1 id=\"aheader\">a header</h1><p>Some text</p><pre><code class=\"Java code-Java\">\npublic class Foo {\n}\n\n</code></pre><p>More text...</p>",
+				"<h1 id=\"aheader\">a header</h1><p>Some text</p><pre class=\"Java code-Java\"><code class=\"Java code-Java\">\npublic class Foo {\n}\n\n</code></pre><p>More text...</p>",
 				"h1. a header\n" + //
 						"\n" + //
 						"Some text\n" + //
@@ -47,7 +47,8 @@ public class ConfluenceCodeBlockTest extends AbstractMarkupGenerationTest<Conflu
 
 	@Test
 	public void blockLanguageJava() {
-		assertMarkup("<pre><code class=\"java code-java\">some code\n</code></pre><p>more text</p>",
+		assertMarkup(
+				"<pre class=\"java code-java\"><code class=\"java code-java\">some code\n</code></pre><p>more text</p>",
 				"{code:Java}some code{code}more text");
 	}
 
