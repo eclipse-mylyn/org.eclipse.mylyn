@@ -336,6 +336,30 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	}
 
 	@Test
+	public void testDisabledRelativeParsingHyperlinkExternal() {
+		setupLanguageWithRelativeLinksDisabled();
+		assertMarkup("<p><a href=\"http://abc\">http://abc</a></p>", "[http://abc]");
+	}
+
+	@Test
+	public void testDisabledRelativeParsingLinksWithName() {
+		setupLanguageWithRelativeLinksDisabled();
+		assertMarkup("<p>[abc|Title]</p>", "[abc|Title]");
+	}
+
+	@Test
+	public void testDisabledRelativeParsingLinksWithoutName() {
+		setupLanguageWithRelativeLinksDisabled();
+		assertMarkup("<p>[abc]</p>", "[abc]");
+	}
+
+	@Test
+	public void testDisabledRelativeParsingLinksAnchor() {
+		setupLanguageWithRelativeLinksDisabled();
+		assertMarkup("<p><a href=\"#anchor\">anchor</a></p>", "[#anchor]");
+	}
+
+	@Test
 	public void testHyperlinkInternalWithNameAndTip() {
 		String oldPattern = getMarkupLanguage().getInternalLinkPattern();
 		getMarkupLanguage().setInternalLinkPattern("/display/{0}"); //$NON-NLS-1$
@@ -1046,5 +1070,26 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 		String html = parser.parseToHtml("* one\n\ntwo\n* three");
 		TestUtil.println(html);
 		assertTrue(html.contains("<body><ul><li>one</li></ul><p>two</p><ul><li>three</li></ul></body>"));
+	}
+
+	@Test
+	public void testClone() {
+		ConfluenceLanguage language = (ConfluenceLanguage) parser.getMarkupLanguage();
+		ConfluenceLanguage newLanguage = language.clone();
+		assertTrue(newLanguage.isParseRelativeLinks());
+	}
+
+	@Test
+	public void clonePreservesRelativeLinksFlag() {
+		setupLanguageWithRelativeLinksDisabled();
+		ConfluenceLanguage language = (ConfluenceLanguage) parser.getMarkupLanguage();
+		ConfluenceLanguage newLanguage = language.clone();
+		assertFalse(newLanguage.isParseRelativeLinks());
+	}
+
+	private void setupLanguageWithRelativeLinksDisabled() {
+		ConfluenceLanguage language = new ConfluenceLanguage();
+		language.setParseRelativeLinks(false);
+		parser.setMarkupLanguage(language);
 	}
 }

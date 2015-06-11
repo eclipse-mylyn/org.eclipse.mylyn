@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 David Green and others.
+ * Copyright (c) 2007, 2015 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Benjamin Muskalla - bug 469970
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.confluence.core;
 
@@ -61,6 +62,8 @@ public class ConfluenceLanguage extends AbstractMarkupLanguage {
 	 * @see ExtendedQuoteBlock
 	 */
 	private final List<Block> nestedBlocks = new ArrayList<Block>();
+
+	private boolean parseRelativeLinks = true;
 
 	public ConfluenceLanguage() {
 		setName("Confluence"); //$NON-NLS-1$
@@ -117,7 +120,7 @@ public class ConfluenceLanguage extends AbstractMarkupLanguage {
 	@Override
 	protected void addStandardPhraseModifiers(PatternBasedSyntax phraseModifierSyntax) {
 		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\[\\]])|^)(?:", 0); //$NON-NLS-1$
-		phraseModifierSyntax.add(new HyperlinkPhraseModifier());
+		phraseModifierSyntax.add(new HyperlinkPhraseModifier(parseRelativeLinks));
 		phraseModifierSyntax.add(new SimplePhraseModifier("*", SpanType.STRONG, true)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new EmphasisPhraseModifier());
 		phraseModifierSyntax.add(new SimplePhraseModifier("??", SpanType.CITATION, true)); //$NON-NLS-1$
@@ -162,4 +165,31 @@ public class ConfluenceLanguage extends AbstractMarkupLanguage {
 		return new ConfluenceDocumentBuilder(out);
 	}
 
+	/**
+	 * Indicates if relative links (e.g. Confluence pages) should be treated as links.
+	 *
+	 * @param parseRelativeLinks
+	 *            if relative links should be parsed
+	 * @since 2.6
+	 */
+	public void setParseRelativeLinks(boolean parseRelativeLinks) {
+		this.parseRelativeLinks = parseRelativeLinks;
+	}
+
+	/**
+	 * Indicates if relative links (e.g. Confluence pages) are treated as links.
+	 *
+	 * @return {@code true} if relative links should be parsed as links, otherwise {@code false}
+	 * @since 2.6
+	 */
+	public boolean isParseRelativeLinks() {
+		return parseRelativeLinks;
+	}
+
+	@Override
+	public ConfluenceLanguage clone() {
+		ConfluenceLanguage copy = (ConfluenceLanguage) super.clone();
+		copy.parseRelativeLinks = parseRelativeLinks;
+		return copy;
+	}
 }

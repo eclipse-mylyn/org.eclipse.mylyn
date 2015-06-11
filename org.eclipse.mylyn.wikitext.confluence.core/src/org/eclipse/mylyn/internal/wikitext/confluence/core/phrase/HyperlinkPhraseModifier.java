@@ -27,6 +27,12 @@ public class HyperlinkPhraseModifier extends PatternBasedElement {
 	private static final Pattern QUALIFIED_HREF_PATTERN = Pattern.compile(
 			"(#|([a-z]{2,6}:)).*", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
+	private final boolean parseRelativeLinks;
+
+	public HyperlinkPhraseModifier(boolean parseRelativeLinks) {
+		this.parseRelativeLinks = parseRelativeLinks;
+	}
+
 	@Override
 	protected String getPattern(int groupOffset) {
 		return "\\[(?:\\s*([^\\]\\|]+)\\|)?([^\\]]+)\\]"; //$NON-NLS-1$
@@ -39,10 +45,17 @@ public class HyperlinkPhraseModifier extends PatternBasedElement {
 
 	@Override
 	protected PatternBasedElementProcessor newProcessor() {
-		return new HyperlinkPhraseModifierProcessor();
+		return new HyperlinkPhraseModifierProcessor(parseRelativeLinks);
 	}
 
 	private static class HyperlinkPhraseModifierProcessor extends PatternBasedElementProcessor {
+
+		private final boolean parseRelativeLinks;
+
+		public HyperlinkPhraseModifierProcessor(boolean parseRelativeLinks) {
+			this.parseRelativeLinks = parseRelativeLinks;
+		}
+
 		@Override
 		public void emit() {
 			String text = group(1);
@@ -61,6 +74,10 @@ public class HyperlinkPhraseModifier extends PatternBasedElement {
 				String tip = parts.length > 1 ? parts[1] : null;
 				if (tip != null) {
 					tip = tip.trim();
+				}
+				if (!shouldEmitAsLink(text, href)) {
+					getBuilder().characters(group(0));
+					return;
 				}
 				if (text == null || text.length() == 0) {
 					text = href;
@@ -83,9 +100,13 @@ public class HyperlinkPhraseModifier extends PatternBasedElement {
 			}
 		}
 
+		private boolean shouldEmitAsLink(String text, String href) {
+			return parseRelativeLinks || isQualifiedLink(href);
+		}
+
 		private String toInternalHref(String href) {
 			//	Skip if internal anchor or qualified URL
-			if (QUALIFIED_HREF_PATTERN.matcher(href).matches()) {
+			if (isQualifiedLink(href)) {
 				return href;
 			}
 
@@ -95,6 +116,10 @@ public class HyperlinkPhraseModifier extends PatternBasedElement {
 				return MessageFormat.format(internalLinkPattern, href);
 			}
 			return href;
+		}
+
+		private boolean isQualifiedLink(String href) {
+			return QUALIFIED_HREF_PATTERN.matcher(href).matches();
 		}
 	}
 
