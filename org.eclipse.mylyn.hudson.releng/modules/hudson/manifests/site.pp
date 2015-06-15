@@ -12,6 +12,7 @@ define hudson::site(
 	$envdefault = false,
 	$userOwner = $hudson::userOwner,
 	$userGroup = $hudson::userGroup,
+	$folderPlugin = false,
 ) { 
 	$envbase = "$base/$envid"
 	$conf = "$base/conf.d"
@@ -75,6 +76,21 @@ define hudson::site(
     require => File["$envbase"],
   }
 
+  if $folderPlugin {
+  	exec { "install folder plugin for $envbase":
+	  command => "wget -P $envbase/plugins http://updates.jenkins-ci.org/download/plugins/cloudbees-folder/4.8/cloudbees-folder.hpi",
+ 	  cwd => "$envbase",
+	  user => "$userOwner",
+	}
+  } else {	
+	file { "$envbase/jobs/test-folder/":
+      ensure => absent,
+      recurse => true,
+      backup => false,
+	  force => true,
+	}	
+  }
+  
   exec { "start $envid":
     command => "$envbase/start.sh",
     cwd => "$envbase",
