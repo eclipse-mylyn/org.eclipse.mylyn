@@ -26,6 +26,7 @@ import org.junit.Test;
  *
  * @author Max Rydahl Andersen
  */
+@SuppressWarnings("restriction")
 public class AsciiDocTemplateResolverTest {
 
 	private Templates templates;

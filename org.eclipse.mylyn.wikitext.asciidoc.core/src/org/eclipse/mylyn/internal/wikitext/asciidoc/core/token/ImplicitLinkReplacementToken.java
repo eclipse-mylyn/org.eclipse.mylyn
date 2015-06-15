@@ -16,20 +16,20 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
- * Detects plain links: http://www.example.com 
- * 
+ * Detects plain links: http://www.example.com
+ *
  * @author Max Rydahl Andersen
  */
 public class ImplicitLinkReplacementToken extends PatternBasedElement {
 
 	//TODO: make this more generic instead of having special handling of protocols
-	public static final String URL_PROTOCOLS_PATTERN = "(?:https?|mailto|callto|irc|ftp|github-mac)";
-	
-	final static String URL_PATTERN = "(" + URL_PROTOCOLS_PATTERN + "://\\S+)(?:$| )";
-	
+	public static final String URL_PROTOCOLS_PATTERN = "(?:https?|mailto|callto|irc|ftp|github-mac)"; //$NON-NLS-1$
+
+	final static String URL_PATTERN = "(" + URL_PROTOCOLS_PATTERN + "://\\S+)(?:$| )"; //$NON-NLS-1$ //$NON-NLS-2$
+
 	@Override
 	protected String getPattern(int groupOffset) {
-		return URL_PATTERN; //$NON-NLS-1$
+		return URL_PATTERN;
 	}
 
 	@Override

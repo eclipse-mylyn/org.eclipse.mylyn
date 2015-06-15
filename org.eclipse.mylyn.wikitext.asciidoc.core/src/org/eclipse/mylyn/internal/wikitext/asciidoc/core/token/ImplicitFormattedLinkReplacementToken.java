@@ -17,12 +17,13 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
 
 /**
  * Detects plain links with formatting: http://www.example.com[Title]
- * 
+ *
  * @author Max Rydahl Andersen
  */
 public class ImplicitFormattedLinkReplacementToken extends PatternBasedElement {
 
-	final static String URL_PATTERN = "((" + ImplicitLinkReplacementToken.URL_PROTOCOLS_PATTERN + "://[^\\[\\s]+)\\[(.*?)\\])";
+	final static String URL_PATTERN = "((" + ImplicitLinkReplacementToken.URL_PROTOCOLS_PATTERN //$NON-NLS-1$
+			+ "://[^\\[\\s]+)\\[(.*?)\\])"; //$NON-NLS-1$
 
 	@Override
 	protected String getPattern(int groupOffset) {
