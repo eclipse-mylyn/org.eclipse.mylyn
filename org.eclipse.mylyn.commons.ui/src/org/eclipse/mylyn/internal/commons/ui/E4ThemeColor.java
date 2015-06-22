@@ -56,12 +56,10 @@ public class E4ThemeColor {
 				Object iThemeManager = MethodUtils.invokeMethod(context, "getService", reference); //$NON-NLS-1$
 				if (iThemeManager != null) {
 					Object themeEngine = MethodUtils.invokeMethod(iThemeManager, "getEngineForDisplay", display); //$NON-NLS-1$
-					Shell shell = display.getActiveShell();
-					if (themeEngine != null && shell != null) {
-						Object shellStyle = MethodUtils.invokeMethod(themeEngine, "getStyle", shell); //$NON-NLS-1$
-
-						if (shellStyle instanceof CSSStyleDeclaration) {
-							CSSValue cssValue = ((CSSStyleDeclaration) shellStyle).getPropertyCSSValue(value);
+					if (themeEngine != null) {
+						CSSStyleDeclaration shellStyle = getStyleDeclaration(themeEngine, display);
+						if (shellStyle != null) {
+							CSSValue cssValue = shellStyle.getPropertyCSSValue(value);
 							if (cssValue != null) {
 								return cssValue.getCssText();
 							}
@@ -74,6 +72,32 @@ public class E4ThemeColor {
 			return null;
 		}
 
+		return null;
+	}
+
+	private static CSSStyleDeclaration getStyleDeclaration(Object themeEngine, Display display)
+			throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+		Shell shell = display.getActiveShell();
+		CSSStyleDeclaration shellStyle = null;
+		if (shell != null) {
+			shellStyle = retrieveStyleFromShell(themeEngine, shell);
+		} else {
+			for (Shell input : display.getShells()) {
+				shellStyle = retrieveStyleFromShell(themeEngine, input);
+				if (shellStyle != null) {
+					break;
+				}
+			}
+		}
+		return shellStyle;
+	}
+
+	private static CSSStyleDeclaration retrieveStyleFromShell(Object themeEngine, Shell shell)
+			throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+		Object shellStyle = MethodUtils.invokeMethod(themeEngine, "getStyle", shell); //$NON-NLS-1$
+		if (shellStyle instanceof CSSStyleDeclaration) {
+			return (CSSStyleDeclaration) shellStyle;
+		}
 		return null;
 	}
 
