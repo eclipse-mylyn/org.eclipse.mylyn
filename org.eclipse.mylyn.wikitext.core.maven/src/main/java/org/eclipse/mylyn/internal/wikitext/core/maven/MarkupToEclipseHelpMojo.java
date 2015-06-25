@@ -18,6 +18,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +52,7 @@ import com.google.common.io.Files;
 public class MarkupToEclipseHelpMojo extends AbstractMojo {
 	/**
 	 * Output folder.
-	 * 
+	 *
 	 * @parameter expression="${project.build.directory}/generated-eclipse-help"
 	 * @required
 	 */
@@ -58,7 +60,7 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 
 	/**
 	 * Source folder.
-	 * 
+	 *
 	 * @parameter expression="${basedir}/src/main/docs"
 	 * @required
 	 */
@@ -67,7 +69,7 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 	/**
 	 * The filename format to use when generating output filenames for HTML files. Defaults to {@code $1.html} where
 	 * {@code $1} is the name of the source file without extension.
-	 * 
+	 *
 	 * @parameter
 	 */
 	protected String htmlFilenameFormat = "$1.html"; //$NON-NLS-1$
@@ -75,14 +77,14 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 	/**
 	 * The filename format to use when generating output filenames for Eclipse help table of contents XML files.
 	 * Defaults to {@code $1-toc.xml} where {@code $1} is the name of the source file without extension.
-	 * 
+	 *
 	 * @parameter
 	 */
 	protected String xmlFilenameFormat = "$1-toc.xml"; //$NON-NLS-1$
 
 	/**
 	 * Specify the title of the output document. If unspecified, the title is the filename (without extension).
-	 * 
+	 *
 	 * @parameter
 	 */
 	protected String title;
@@ -90,14 +92,14 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 	/**
 	 * The 'rel' value for HTML links. If specified the value is applied to all generated links. The default value is
 	 * null.
-	 * 
+	 *
 	 * @parameter
 	 */
 	protected String linkRel;
 
 	/**
 	 * Indicate if output should be generated to multiple output files (true/false). Default is false.
-	 * 
+	 *
 	 * @parameter
 	 */
 	protected boolean multipleOutputFiles = false;
@@ -109,7 +111,7 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 
 	/**
 	 * Indicate if the output should be formatted (true/false). Default is false.
-	 * 
+	 *
 	 * @parameter
 	 */
 	protected boolean formatOutput = false;
@@ -117,14 +119,14 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 	/**
 	 * Indicate if navigation links should be images (true/false). Only applicable for multi-file output. Default is
 	 * false.
-	 * 
+	 *
 	 * @parameter
 	 */
 	protected boolean navigationImages = false;
 
 	/**
 	 * If specified, the prefix is prepended to relative image urls.
-	 * 
+	 *
 	 * @parameter
 	 */
 	protected String prependImagePrefix = null;
@@ -143,21 +145,21 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 	 * Specify that hyperlinks to external resources (&lt;a href) should use a target attribute to cause them to be
 	 * opened in a seperate window or tab. The value specified becomes the value of the target attribute on anchors
 	 * where the href is an absolute URL.
-	 * 
+	 *
 	 * @parameter
 	 */
 	protected String defaultAbsoluteLinkTarget;
 
 	/**
 	 * Indicate if the builder should attempt to conform to strict XHTML rules. The default is false.
-	 * 
+	 *
 	 * @parameter
 	 */
 	protected boolean xhtmlStrict = false;
 
 	/**
 	 * Indicate if the builder should emit a DTD doctype declaration. The default is true.
-	 * 
+	 *
 	 * @parameter
 	 */
 	protected boolean emitDoctype = true;
@@ -166,21 +168,21 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 	 * The doctype to use. Defaults to
 	 * {@code &lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;}
 	 * .
-	 * 
+	 *
 	 * @parameter
 	 */
 	protected String htmlDoctype = null;
 
 	/**
 	 * The copyright notice to include in generated output files.
-	 * 
+	 *
 	 * @parameter
 	 */
 	protected String copyrightNotice = null;
 
 	/**
 	 * The list of CSS stylesheet URLs relative to the {@link #sourceFolder}.
-	 * 
+	 *
 	 * @parameter
 	 */
 	protected List<String> stylesheetUrls = new ArrayList<>();
@@ -188,7 +190,7 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 	/**
 	 * the prefix to URLs in the toc.xml, typically the relative path from the plugin to the help files. For example, if
 	 * the help file is in 'help/index.html' then the help prefix would be 'help'
-	 * 
+	 *
 	 * @parameter
 	 */
 	protected String helpPrefix;
@@ -200,7 +202,7 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 	 * <p>
 	 * The default level is 0 (the document root)
 	 * </p>
-	 * 
+	 *
 	 * @parameter
 	 */
 	protected int tocAnchorLevel = 0;
@@ -253,8 +255,8 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 		try {
 			Files.copy(sourceFile, targetFile);
 		} catch (IOException e) {
-			throw new BuildFailureException(format("Cannot copy {0} to {1}: {2}", sourceFile, targetFile,
-					e.getMessage()), e);
+			throw new BuildFailureException(
+					format("Cannot copy {0} to {1}: {2}", sourceFile, targetFile, e.getMessage()), e);
 		}
 	}
 
@@ -362,8 +364,8 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 		splittingBuilder.setOutline(item);
 		splittingBuilder.setRootFile(htmlOutputFile);
 		splittingBuilder.setNavigationImages(navigationImages);
-		splittingBuilder.setNavigationImagePath(computeResourcePath(splittingBuilder.getNavigationImagePath(),
-				relativePath));
+		splittingBuilder
+				.setNavigationImagePath(computeResourcePath(splittingBuilder.getNavigationImagePath(), relativePath));
 		splittingBuilder.setFormatting(formatOutput);
 		return splittingBuilder;
 	}
@@ -404,12 +406,15 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 
 	protected void configureStylesheets(HtmlDocumentBuilder builder, String relativePath) {
 		for (String cssStylesheetUrl : stylesheetUrls) {
-			builder.addCssStylesheet(new HtmlDocumentBuilder.Stylesheet(computeResourcePath(cssStylesheetUrl,
-					relativePath)));
+			builder.addCssStylesheet(
+					new HtmlDocumentBuilder.Stylesheet(computeResourcePath(cssStylesheetUrl, relativePath)));
 		}
 	}
 
 	protected String computeResourcePath(String resourcePath, String relativePath) {
+		if (resourcePath.startsWith("/") || isAbsoluteUri(resourcePath)) {
+			return resourcePath;
+		}
 		String path = resourcePath;
 		String prefix = relativePath.replaceAll("[^\\\\/]+", "..").replace('\\', '/');
 		if (prefix.length() > 0) {
@@ -419,6 +424,14 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 			path = prefix + resourcePath;
 		}
 		return path;
+	}
+
+	private boolean isAbsoluteUri(String resourcePath) {
+		try {
+			return new URI(resourcePath).getScheme() != null;
+		} catch (URISyntaxException e) {
+			throw new BuildFailureException(format("\"{0}\" is not a valid URI", resourcePath), e);
+		}
 	}
 
 	private Writer createWriter(File outputFile) {

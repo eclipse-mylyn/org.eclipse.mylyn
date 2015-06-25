@@ -227,12 +227,22 @@ public class MarkupToEclipseHelpMojoTest {
 		assertEquals("styles/main.css", markupToEclipseHelp.computeResourcePath("styles/main.css", ""));
 		assertEquals("../styles/main.css", markupToEclipseHelp.computeResourcePath("styles/main.css", "one"));
 		assertEquals("../../styles/main.css", markupToEclipseHelp.computeResourcePath("styles/main.css", "one/two"));
+		assertEquals("/styles/main.css", markupToEclipseHelp.computeResourcePath("/styles/main.css", "prefix"));
+		assertEquals("http://example.com/main.css",
+				markupToEclipseHelp.computeResourcePath("http://example.com/main.css", "prefix"));
 	}
 
 	@Test
 	public void createSplittingBuilderWithRelativePath() {
 		assertNavigationImagesPath("images", "");
 		assertNavigationImagesPath("../../images", "one/two");
+	}
+
+	@Test
+	public void computeResourcePathInvalidUri() {
+		thrown.expect(BuildFailureException.class);
+		thrown.expectMessage("\":not valid\" is not a valid URI");
+		markupToEclipseHelp.computeResourcePath(":not valid", "");
 	}
 
 	private void assertNavigationImagesPath(String expected, String relativePath) {
