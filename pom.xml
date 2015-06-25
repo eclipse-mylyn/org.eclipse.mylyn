@@ -5,12 +5,12 @@
   <parent>
     <groupId>org.eclipse.mylyn</groupId>
     <artifactId>org.eclipse.mylyn-parent</artifactId>
-    <version>3.16.0-SNAPSHOT</version>
+    <version>3.17.0-SNAPSHOT</version>
     <relativePath>../org.eclipse.mylyn/org.eclipse.mylyn-parent</relativePath>
   </parent>
   <groupId>org.eclipse.mylyn.context</groupId>
   <artifactId>org.eclipse.mylyn.context-parent</artifactId>
-  <version>3.16.0-SNAPSHOT</version>
+  <version>3.17.0-SNAPSHOT</version>
   <name>Mylyn Context</name>
   <packaging>pom</packaging>
   <properties>
@@ -84,7 +84,7 @@
                 <artifact>
                   <groupId>org.eclipse.mylyn.context</groupId>
                   <artifactId>org.eclipse.mylyn.context-target</artifactId>
-                  <version>3.16.0-SNAPSHOT</version>
+                  <version>3.17.0-SNAPSHOT</version>
                   <classifier>mylyn-context-e3.5</classifier>
                 </artifact>
               </target>
