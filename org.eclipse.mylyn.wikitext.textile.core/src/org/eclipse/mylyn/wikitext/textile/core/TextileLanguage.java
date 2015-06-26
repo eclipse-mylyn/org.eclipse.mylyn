@@ -25,6 +25,7 @@ import org.eclipse.mylyn.internal.wikitext.textile.core.block.FootnoteBlock;
 import org.eclipse.mylyn.internal.wikitext.textile.core.block.HeadingBlock;
 import org.eclipse.mylyn.internal.wikitext.textile.core.block.ListBlock;
 import org.eclipse.mylyn.internal.wikitext.textile.core.block.NotextileBlock;
+import org.eclipse.mylyn.internal.wikitext.textile.core.block.NotextileTagBlock;
 import org.eclipse.mylyn.internal.wikitext.textile.core.block.ParagraphBlock;
 import org.eclipse.mylyn.internal.wikitext.textile.core.block.PreformattedBlock;
 import org.eclipse.mylyn.internal.wikitext.textile.core.block.QuoteBlock;
@@ -36,6 +37,7 @@ import org.eclipse.mylyn.internal.wikitext.textile.core.phrase.HyperlinkPhraseMo
 import org.eclipse.mylyn.internal.wikitext.textile.core.phrase.ImageTextilePhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.textile.core.phrase.SimpleTextilePhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.textile.core.phrase.SimpleTextilePhraseModifier.Mode;
+import org.eclipse.mylyn.internal.wikitext.textile.core.phrase.TagEscapeTextilePhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.textile.core.token.EntityReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.textile.core.token.FootnoteReferenceReplacementToken;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
@@ -58,7 +60,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternEntityReferenc
  * Based on the spec available at <a href="http://textile.thresholdstate.com/">http://textile.thresholdstate.com/</a>,
  * supports all current Textile markup constructs. Additionally supported are <code>{toc}</code> and
  * <code>{glossary}</code>.
- * 
+ *
  * @author David Green
  * @since 1.0
  */
@@ -77,7 +79,7 @@ public class TextileLanguage extends AbstractMarkupLanguage {
 	 * subclasses may override this method to add blocks to the Textile language. Overriding classes should call
 	 * <code>super.addBlockExtensions(blocks,paragraphBreakingBlocks)</code> if the default language extensions are
 	 * desired (glossary and table of contents).
-	 * 
+	 *
 	 * @param blocks
 	 *            the list of blocks to which extensions may be added
 	 * @param paragraphBreakingBlocks
@@ -116,6 +118,8 @@ public class TextileLanguage extends AbstractMarkupLanguage {
 		blocks.add(new CodeBlock());
 		blocks.add(new FootnoteBlock());
 		blocks.add(new NotextileBlock());
+		blocks.add(new NotextileTagBlock());
+
 		TableBlock tableBlock = new TableBlock();
 		blocks.add(tableBlock);
 		paragraphBreakingBlocks.add(tableBlock);
@@ -126,6 +130,7 @@ public class TextileLanguage extends AbstractMarkupLanguage {
 	protected void addStandardPhraseModifiers(PatternBasedSyntax phraseModifierSyntax) {
 		boolean escapingHtml = configuration == null ? false : configuration.isEscapingHtmlAndXml();
 
+		phraseModifierSyntax.add(new TagEscapeTextilePhraseModifier());
 		phraseModifierSyntax.add(new HtmlEndTagPhraseModifier(escapingHtml));
 		phraseModifierSyntax.add(new HtmlStartTagPhraseModifier(escapingHtml));
 		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\{\\}\\[\\]])|^)(?:", 0); //$NON-NLS-1$
@@ -157,16 +162,15 @@ public class TextileLanguage extends AbstractMarkupLanguage {
 		tokenSyntax.add(new EntityReferenceReplacementToken("(R)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
 		tokenSyntax.add(new FootnoteReferenceReplacementToken());
 		if (configuration == null || !configuration.isOptimizeForRepositoryUsage()) {
-			ResourceBundle res = ResourceBundle.getBundle(
-					BUNDLE_NAME,
+			ResourceBundle res = ResourceBundle.getBundle(BUNDLE_NAME,
 					configuration == null || configuration.getLocale() == null
 							? Locale.ENGLISH
 							: configuration.getLocale());
 
-			tokenSyntax.add(new EntityWrappingReplacementToken(
-					"\"", res.getString("quote_left"), res.getString("quote_right"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			tokenSyntax.add(new EntityWrappingReplacementToken(
-					"'", res.getString("singlequote_left"), res.getString("singlequote_right"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			tokenSyntax.add(new EntityWrappingReplacementToken("\"", res.getString("quote_left"), //$NON-NLS-1$//$NON-NLS-2$
+					res.getString("quote_right"))); //$NON-NLS-1$
+			tokenSyntax.add(new EntityWrappingReplacementToken("'", res.getString("singlequote_left"), //$NON-NLS-1$//$NON-NLS-2$
+					res.getString("singlequote_right"))); //$NON-NLS-1$
 
 			tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w)(')(?=\\w))", "#8217")); // apostrophe //$NON-NLS-1$ //$NON-NLS-2$
 		}

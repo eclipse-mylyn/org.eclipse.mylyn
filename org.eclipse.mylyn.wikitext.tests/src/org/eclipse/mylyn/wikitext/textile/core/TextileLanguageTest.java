@@ -143,7 +143,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 	@Test
 	public void testPhraseModifiers() {
-		String html = parser.parseToHtml("_emphasis_ *strong text* __italic__ **bold** ??citation?? -deleted text- +inserted text+ ^superscript^ ~subscript~ %spanned text% @code text@");
+		String html = parser.parseToHtml(
+				"_emphasis_ *strong text* __italic__ **bold** ??citation?? -deleted text- +inserted text+ ^superscript^ ~subscript~ %spanned text% @code text@");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<em>emphasis</em>"));
 		assertTrue(html.contains("<strong>strong text</strong>"));
@@ -160,7 +161,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 	@Test
 	public void testPhraseModifiersWithNonWordCharacters() {
-		String html = parser.parseToHtml("_emphasis:_ *strong text:* __italic:__ **bold:** ??citation:?? -deleted text:- +inserted text:+ ^superscript:^ ~subscript:~ %spanned text:% @code text:@");
+		String html = parser.parseToHtml(
+				"_emphasis:_ *strong text:* __italic:__ **bold:** ??citation:?? -deleted text:- +inserted text:+ ^superscript:^ ~subscript:~ %spanned text:% @code text:@");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<em>emphasis:</em>"));
 		assertTrue(html.contains("<strong>strong text:</strong>"));
@@ -195,9 +197,7 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 		String html = parser.parseToHtml("_emphasis_ some text *strong text*");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(Pattern.compile(".*?<em>emphasis</em>\\s*some text\\s*<strong>strong text</strong>.*",
-				Pattern.MULTILINE | Pattern.DOTALL)
-				.matcher(html)
-				.matches());
+				Pattern.MULTILINE | Pattern.DOTALL).matcher(html).matches());
 	}
 
 	@Test
@@ -223,7 +223,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 	public void testPhraseModifierCodeWithNestedMarkup() {
 		String html = parser.parseToHtml("a @code 'test' or \"test\" or *b* or <b>bo</b> sample@ more");
 		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>a <code>code 'test' or \"test\" or *b* or &lt;b&gt;bo&lt;/b&gt; sample</code> more</p></body>"));
+		assertTrue(html.contains(
+				"<body><p>a <code>code 'test' or \"test\" or *b* or &lt;b&gt;bo&lt;/b&gt; sample</code> more</p></body>"));
 	}
 
 	@Test
@@ -235,7 +236,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 	@Test
 	public void testGlossaryValidHtml() {
-		String html = parser.parseToHtml("h1. Foo\n\none TWO(Two Ways Out) and MDD(Model-Driven Development)\n\nh1. Glossary\n\n{glossary}");
+		String html = parser.parseToHtml(
+				"h1. Foo\n\none TWO(Two Ways Out) and MDD(Model-Driven Development)\n\nh1. Glossary\n\n{glossary}");
 		TestUtil.println("HTML: \n" + html);
 		assertFalse(html.contains("<p><dl"));
 		assertTrue(html.contains("</h1><dl"));
@@ -301,10 +303,10 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 	public void testParagraphs() throws IOException {
 		String html = parser.parseToHtml("first para\nnew line\n\nsecond para\n\n\n\n");
 		TestUtil.println(html);
-		assertTrue(Pattern.compile("<body><p>first para<br/>\\s*new line</p><p>second para</p></body>",
-				Pattern.MULTILINE)
-				.matcher(html.toString())
-				.find());
+		assertTrue(
+				Pattern.compile("<body><p>first para<br/>\\s*new line</p><p>second para</p></body>", Pattern.MULTILINE)
+						.matcher(html.toString())
+						.find());
 	}
 
 	@Test
@@ -348,7 +350,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 		TestUtil.println(html);
 		// NOTE: textile dialect doesn't nest lists because that is invalid XHTML.  Instead
 		// the paragraph is terminated for the list.
-		assertTrue(html.contains("<body><p>first para</p><ol><li>numeric list</li></ol><p>first para second line</p></body>"));
+		assertTrue(html
+				.contains("<body><p>first para</p><ol><li>numeric list</li></ol><p>first para second line</p></body>"));
 	}
 
 	@Test
@@ -358,17 +361,15 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 		assertTrue(Pattern.compile(
 				"<body><pre>\\s*\\|_. a\\|_. table\\|_. header\\|\\s+\\|a\\|table\\|row\\|\\s+\\|a\\|table\\|row\\|\\s+</pre></body>",
-				Pattern.MULTILINE)
-				.matcher(html.toString())
-				.find());
+				Pattern.MULTILINE).matcher(html.toString()).find());
 	}
 
 	@Test
 	public void testHeading1() throws IOException {
 		String html = parser.parseToHtml("h1(#ab). heading1\n\nnew para\n\na para");
 		TestUtil.println(html);
-		assertTrue(Pattern.compile("<body><h1 id=\"ab\">heading1</h1><p>new para</p><p>a para</p></body>",
-				Pattern.MULTILINE)
+		assertTrue(Pattern
+				.compile("<body><h1 id=\"ab\">heading1</h1><p>new para</p><p>a para</p></body>", Pattern.MULTILINE)
 				.matcher(html.toString())
 				.find());
 	}
@@ -377,8 +378,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 	public void testHeadingMultiline() throws IOException {
 		String html = parser.parseToHtml("h1. heading1\nsecondline\n\na para");
 		TestUtil.println(html);
-		assertTrue(Pattern.compile("<body><h1 id=\"heading1\">heading1\\s+secondline</h1><p>a para</p></body>",
-				Pattern.MULTILINE)
+		assertTrue(Pattern
+				.compile("<body><h1 id=\"heading1\">heading1\\s+secondline</h1><p>a para</p></body>", Pattern.MULTILINE)
 				.matcher(html.toString())
 				.find());
 	}
@@ -406,8 +407,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 		String html = parser.parseToHtml("bq. one\ntwo\n\nthree");
 
 		TestUtil.println("HTML: \n" + html);
-		assertTrue(Pattern.compile("<blockquote>\\s*<p>one<br/>\\s*two</p>\\s*</blockquote>",
-				Pattern.MULTILINE | Pattern.DOTALL)
+		assertTrue(Pattern
+				.compile("<blockquote>\\s*<p>one<br/>\\s*two</p>\\s*</blockquote>", Pattern.MULTILINE | Pattern.DOTALL)
 				.matcher(html)
 				.find());
 	}
@@ -417,9 +418,7 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 		String html = parser.parseToHtml("bq.:http://www.example.com some text");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(Pattern.compile("<blockquote cite=\"http://www.example.com\">\\s*<p>some text</p>\\s*</blockquote>",
-				Pattern.MULTILINE | Pattern.DOTALL)
-				.matcher(html)
-				.find());
+				Pattern.MULTILINE | Pattern.DOTALL).matcher(html).find());
 	}
 
 	/**
@@ -475,9 +474,7 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(Pattern.compile(
 				"<body><pre><code>\\s*here is &lt;a href=\"#\"&gt;a working example&lt;/a&gt;\\s+</code></pre></body>",
-				Pattern.MULTILINE | Pattern.DOTALL)
-				.matcher(html)
-				.find());
+				Pattern.MULTILINE | Pattern.DOTALL).matcher(html).find());
 	}
 
 	@Test
@@ -495,10 +492,10 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 		String html = parser.parseToHtml("bc.. \n\none\ntwo\np. three");
 
 		TestUtil.println("HTML: \n" + html);
-		assertTrue(Pattern.compile("<pre><code>(\\r|\\n)+one\\s+two\\s+</code></pre>",
-				Pattern.MULTILINE | Pattern.DOTALL)
-				.matcher(html)
-				.find());
+		assertTrue(
+				Pattern.compile("<pre><code>(\\r|\\n)+one\\s+two\\s+</code></pre>", Pattern.MULTILINE | Pattern.DOTALL)
+						.matcher(html)
+						.find());
 	}
 
 	@Test
@@ -507,11 +504,11 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 		TestUtil.println("HTML: \n" + html);
 		// assert on footnote target
-		assertTrue(Pattern.compile("<p id=\"___fn[^\"]+\" class=\"footnote\"><sup>1</sup> Foo.</p>")
-				.matcher(html)
-				.find());
+		assertTrue(
+				Pattern.compile("<p id=\"___fn[^\"]+\" class=\"footnote\"><sup>1</sup> Foo.</p>").matcher(html).find());
 		// assert on footnote reference
-		assertTrue(Pattern.compile("<sup class=\"footnote\"><a href=\"#___fn[^\"]+\">1</a></sup>").matcher(html).find());
+		assertTrue(
+				Pattern.compile("<sup class=\"footnote\"><a href=\"#___fn[^\"]+\">1</a></sup>").matcher(html).find());
 	}
 
 	@Test
@@ -536,7 +533,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 	@Test
 	public void testListUnordered2() throws IOException {
-		String html = parser.parseToHtml("* a list\n** with several lines\n*** foo\n**  ??foo?? intentional two spaces leading content");
+		String html = parser.parseToHtml(
+				"* a list\n** with several lines\n*** foo\n**  ??foo?? intentional two spaces leading content");
 
 		TestUtil.println("HTML: \n" + html);
 	}
@@ -609,10 +607,12 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 	@Test
 	public void testTable2() throws IOException {
-		String html = parser.parseToHtml("foo bar\n|a|row with|three columns|\n|another|row|with three columns|\n\na para");
+		String html = parser
+				.parseToHtml("foo bar\n|a|row with|three columns|\n|another|row|with three columns|\n\na para");
 
 		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<table><tr><td>a</td><td>row with</td><td>three columns</td></tr><tr><td>another</td><td>row</td><td>with three columns</td></tr></table>"));
+		assertTrue(html.contains(
+				"<table><tr><td>a</td><td>row with</td><td>three columns</td></tr><tr><td>another</td><td>row</td><td>with three columns</td></tr></table>"));
 	}
 
 	@Test
@@ -628,7 +628,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 		String html = parser.parseToHtml("table.\n|^a|<row with|>four|<>columns|");
 
 		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<table><tr><td style=\"vertical-align: top;\">a</td><td style=\"text-align: left;\">row with</td><td style=\"text-align: right;\">four</td><td style=\"text-align: center;\">columns</td></tr></table>"));
+		assertTrue(html.contains(
+				"<table><tr><td style=\"vertical-align: top;\">a</td><td style=\"text-align: left;\">row with</td><td style=\"text-align: right;\">four</td><td style=\"text-align: center;\">columns</td></tr></table>"));
 	}
 
 	@Test
@@ -652,7 +653,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 		String html = parser.parseToHtml("table.\n|\\4/2a|\\5/3b|");
 
 		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<table><tr><td rowspan=\"2\" colspan=\"4\">a</td><td rowspan=\"3\" colspan=\"5\">b</td></tr></table>"));
+		assertTrue(html.contains(
+				"<table><tr><td rowspan=\"2\" colspan=\"4\">a</td><td rowspan=\"3\" colspan=\"5\">b</td></tr></table>"));
 	}
 
 	@Test
@@ -660,7 +662,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 		String html = parser.parseToHtml("table.\n|*a*|row _with_|stuff|");
 
 		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<table><tr><td><strong>a</strong></td><td>row <em>with</em></td><td>stuff</td></tr></table>"));
+		assertTrue(html.contains(
+				"<table><tr><td><strong>a</strong></td><td>row <em>with</em></td><td>stuff</td></tr></table>"));
 	}
 
 	@Test
@@ -668,7 +671,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 		String html = parser.parseToHtml("table.\n|{color: red;}a|(foo)row with|(#bar)three columns|");
 
 		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<table><tr><td style=\"color: red;\">a</td><td class=\"foo\">row with</td><td id=\"bar\">three columns</td></tr></table>"));
+		assertTrue(html.contains(
+				"<table><tr><td style=\"color: red;\">a</td><td class=\"foo\">row with</td><td id=\"bar\">three columns</td></tr></table>"));
 	}
 
 	@Test
@@ -676,7 +680,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 		String html = parser.parseToHtml("table{border:1px solid black;}.\n" + "|This|is|a|row|\n" + "|This|is|a|row|");
 
 		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<table style=\"border:1px solid black;\"><tr><td>This</td><td>is</td><td>a</td><td>row</td></tr><tr><td>This</td><td>is</td><td>a</td><td>row</td></tr></table>"));
+		assertTrue(html.contains(
+				"<table style=\"border:1px solid black;\"><tr><td>This</td><td>is</td><td>a</td><td>row</td></tr><tr><td>This</td><td>is</td><td>a</td><td>row</td></tr></table>"));
 	}
 
 	@Test
@@ -684,21 +689,24 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 		String html = parser.parseToHtml("|This|is|a|row|\n" + "{background:#ddd}. |This|is|grey|row|");
 
 		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<table><tr><td>This</td><td>is</td><td>a</td><td>row</td></tr><tr style=\"background:#ddd\"><td>This</td><td>is</td><td>grey</td><td>row</td></tr></table>"));
+		assertTrue(html.contains(
+				"<table><tr><td>This</td><td>is</td><td>a</td><td>row</td></tr><tr style=\"background:#ddd\"><td>This</td><td>is</td><td>grey</td><td>row</td></tr></table>"));
 	}
 
 	@Test
 	public void testTableWithStyles() {
 		String html = parser.parseToHtml("table{border: 1px solid black}.\n|a|table|row|");
 		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><table style=\"border: 1px solid black\"><tr><td>a</td><td>table</td><td>row</td></tr></table></body>"));
+		assertTrue(html.contains(
+				"<body><table style=\"border: 1px solid black\"><tr><td>a</td><td>table</td><td>row</td></tr></table></body>"));
 	}
 
 	@Test
 	public void testTableWithStylesAndTrailingWhitespace() {
 		String html = parser.parseToHtml("table{border: 1px solid black}. \n|a|table|row|");
 		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><table style=\"border: 1px solid black\"><tr><td>a</td><td>table</td><td>row</td></tr></table></body>"));
+		assertTrue(html.contains(
+				"<body><table style=\"border: 1px solid black\"><tr><td>a</td><td>table</td><td>row</td></tr></table></body>"));
 	}
 
 	@Test
@@ -728,29 +736,30 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 			TestUtil.println("HTML: \n" + html);
 			assertTrue(html.contains("<p>a paragraph with <" + pair[1] + ">content foo bar baz</" + pair[1] + "></p>"));
 
-			html = parser.parseToHtml(String.format("a %s2%s + b%s2%s = c%s2%s", pair[0], pair[0], pair[0], pair[0],
-					pair[0], pair[0]));
+			html = parser.parseToHtml(
+					String.format("a %s2%s + b%s2%s = c%s2%s", pair[0], pair[0], pair[0], pair[0], pair[0], pair[0]));
 			TestUtil.println("HTML: \n" + html);
-			assertTrue(html.contains(String.format("a <%s>2</%s> + b%s2%s = c%s2%s", pair[1], pair[1], pair[0],
-					pair[0], pair[0], pair[0])));
+			assertTrue(html.contains(String.format("a <%s>2</%s> + b%s2%s = c%s2%s", pair[1], pair[1], pair[0], pair[0],
+					pair[0], pair[0])));
 
-			html = parser.parseToHtml("a paragraph with (" + pair[0] + "content foo bar baz" + pair[0]
-					+ ") punctuation");
+			html = parser
+					.parseToHtml("a paragraph with (" + pair[0] + "content foo bar baz" + pair[0] + ") punctuation");
 			TestUtil.println("HTML: \n" + html);
-			assertTrue(html.contains("<p>a paragraph with (<" + pair[1] + ">content foo bar baz</" + pair[1]
-					+ ">) punctuation</p>"));
+			assertTrue(html.contains(
+					"<p>a paragraph with (<" + pair[1] + ">content foo bar baz</" + pair[1] + ">) punctuation</p>"));
 
-			html = parser.parseToHtml("a paragraph with " + pair[0] + "content foo bar baz" + pair[0] + ". punctuation");
+			html = parser
+					.parseToHtml("a paragraph with " + pair[0] + "content foo bar baz" + pair[0] + ". punctuation");
 			TestUtil.println("HTML: \n" + html);
-			assertTrue(html.contains("<p>a paragraph with <" + pair[1] + ">content foo bar baz</" + pair[1]
-					+ ">. punctuation</p>"));
+			assertTrue(html.contains(
+					"<p>a paragraph with <" + pair[1] + ">content foo bar baz</" + pair[1] + ">. punctuation</p>"));
 
 			initParser();
 			html = parser.parseToHtml("a paragraph with " + pair[0] + "(#abc)content foo bar baz" + pair[0]);
 
 			TestUtil.println("HTML: \n" + html);
-			assertTrue(html.contains("<p>a paragraph with <" + pair[1] + " id=\"abc\">content foo bar baz</" + pair[1]
-					+ "></p>"));
+			assertTrue(html.contains(
+					"<p>a paragraph with <" + pair[1] + " id=\"abc\">content foo bar baz</" + pair[1] + "></p>"));
 
 			// test for false-positive
 			html = parser.parseToHtml("a paragraph with" + pair[0] + "content foo bar baz" + pair[0]);
@@ -798,7 +807,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 	@Test
 	public void testPhraseModifierDeletedWithHyphens_bug321538() {
-		String html = parser.parseToHtml("as I said, -hello oh-so-cruel world- again.\n\nThis works: -hell world-\n\nThis doesn't: -hello oh-so-cruel world-");
+		String html = parser.parseToHtml(
+				"as I said, -hello oh-so-cruel world- again.\n\nThis works: -hell world-\n\nThis doesn't: -hello oh-so-cruel world-");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<p>as I said, <del>hello oh-so-cruel world</del> again.</p>"));
 		assertTrue(html.contains("<p>This works: <del>hell world</del></p>"));
@@ -868,7 +878,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 		String html = parser.parseToHtml("Here comes a !(foo-bar)hyperlink!:http://www.google.com to something");
 
 		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<a href=\"http://www.google.com\"><img class=\"foo-bar\" border=\"0\" src=\"hyperlink\"/></a>"));
+		assertTrue(html.contains(
+				"<a href=\"http://www.google.com\"><img class=\"foo-bar\" border=\"0\" src=\"hyperlink\"/></a>"));
 		assertFalse(html.contains("</a>:http://www.google.com"));
 		assertTrue(html.contains("</a> to something"));
 	}
@@ -933,15 +944,19 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 	@Test
 	public void testHtmlLiteralWithEmbeddedPhraseModifiers() throws IOException {
-		Pattern pattern = Pattern.compile("(<[a-zA-Z][a-zA-Z0-9_-]*(?:\\s*[a-zA-Z][a-zA-Z0-9_:-]*=\"[^\"]*\")*\\s*/?>)");
-		Matcher matcher = pattern.matcher("This document was authored using Textile markup: <a href=\"https://textile-j.dev.java.net/source/browse/*checkout*/textile-j/trunk/java/org.eclipse.mylyn.wikitext.ui.doc/help/Textile-J%20User%20Guide.textile\">original Textile markup for this document</a> ");
+		Pattern pattern = Pattern
+				.compile("(<[a-zA-Z][a-zA-Z0-9_-]*(?:\\s*[a-zA-Z][a-zA-Z0-9_:-]*=\"[^\"]*\")*\\s*/?>)");
+		Matcher matcher = pattern.matcher(
+				"This document was authored using Textile markup: <a href=\"https://textile-j.dev.java.net/source/browse/*checkout*/textile-j/trunk/java/org.eclipse.mylyn.wikitext.ui.doc/help/Textile-J%20User%20Guide.textile\">original Textile markup for this document</a> ");
 		while (matcher.find()) {
 			TestUtil.println(String.format("Found '%s'", matcher.group(1)));
 		}
-		String html = parser.parseToHtml("This document was authored using Textile markup: <a href=\"https://textile-j.dev.java.net/source/browse/*checkout*/textile-j/trunk/java/org.eclipse.mylyn.wikitext.ui.doc/help/Textile-J%20User%20Guide.textile\">original Textile markup for this document</a>");
+		String html = parser.parseToHtml(
+				"This document was authored using Textile markup: <a href=\"https://textile-j.dev.java.net/source/browse/*checkout*/textile-j/trunk/java/org.eclipse.mylyn.wikitext.ui.doc/help/Textile-J%20User%20Guide.textile\">original Textile markup for this document</a>");
 
 		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("markup: <a href=\"https://textile-j.dev.java.net/source/browse/*checkout*/textile-j/trunk/java/org.eclipse.mylyn.wikitext.ui.doc/help/Textile-J%20User%20Guide.textile\">original Textile markup for this document</a>"));
+		assertTrue(html.contains(
+				"markup: <a href=\"https://textile-j.dev.java.net/source/browse/*checkout*/textile-j/trunk/java/org.eclipse.mylyn.wikitext.ui.doc/help/Textile-J%20User%20Guide.textile\">original Textile markup for this document</a>"));
 	}
 
 	@Test
@@ -1019,11 +1034,13 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 	@Test
 	public void testEscaping4() throws IOException {
-		String html = parser.parseToHtml("=={toc}== Generates a table of contents.  Eg: =={toc}== or =={toc:style=disc|maxLevel=3}==");
+		String html = parser.parseToHtml(
+				"=={toc}== Generates a table of contents.  Eg: =={toc}== or =={toc:style=disc|maxLevel=3}==");
 
 		TestUtil.println(html);
 
-		assertTrue(html.contains("<body><p>{toc} Generates a table of contents.  Eg: {toc} or {toc:style=disc|maxLevel=3}</p></body>"));
+		assertTrue(html.contains(
+				"<body><p>{toc} Generates a table of contents.  Eg: {toc} or {toc:style=disc|maxLevel=3}</p></body>"));
 	}
 
 	@Test
@@ -1039,15 +1056,13 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 	@Test
 	public void testEscaping_NoTextile_Extended() throws IOException {
-		String html = parser.parseToHtml("notextile.. foo <b>bar</b>\n<i>baz</i>\n\nnotextile *here*\n\np. textile *here*");
+		String html = parser
+				.parseToHtml("notextile.. foo <b>bar</b>\n<i>baz</i>\n\nnotextile *here*\n\np. textile *here*");
 
 		TestUtil.println(html);
 
-		assertTrue(Pattern.compile(
-				"<body>foo <b>bar</b>\\s+<i>baz</i>" + "\\s*notextile \\*here\\*"
-						+ "\\s+<p>textile <strong>here</strong></p></body>")
-				.matcher(html)
-				.find());
+		assertTrue(Pattern.compile("<body>foo <b>bar</b>\\s+<i>baz</i>" + "\\s*notextile \\*here\\*"
+				+ "\\s+<p>textile <strong>here</strong></p></body>").matcher(html).find());
 	}
 
 	@Test
@@ -1056,9 +1071,7 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(Pattern.compile(".*?<p>some text with copyright&#169;, trademark&#8482; and registered&#174;</p>.*",
-				Pattern.MULTILINE | Pattern.DOTALL)
-				.matcher(html)
-				.matches());
+				Pattern.MULTILINE | Pattern.DOTALL).matcher(html).matches());
 	}
 
 	@Test
@@ -1298,8 +1311,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 	public void testHyperlinkTailNegative() throws IOException {
 		String[] tails = new String[] { ",", ".", ":", ";" };
 		for (String tail : tails) {
-			String html = parser.parseToHtml("Here comes a \"hyperlink\":http://www.google.com" + tail
-					+ " to something");
+			String html = parser
+					.parseToHtml("Here comes a \"hyperlink\":http://www.google.com" + tail + " to something");
 
 			TestUtil.println("HTML: \n" + html);
 			assertTrue(html.contains("<a href=\"http://www.google.com\">hyperlink</a>" + tail + " to"));
@@ -1310,8 +1323,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 	public void testHyperlinkTailPositive() throws IOException {
 		String[] tails = new String[] { ")" };
 		for (String tail : tails) {
-			String html = parser.parseToHtml("Here comes a \"hyperlink\":http://www.google.com" + tail
-					+ " to something");
+			String html = parser
+					.parseToHtml("Here comes a \"hyperlink\":http://www.google.com" + tail + " to something");
 
 			TestUtil.println("HTML: \n" + html);
 			assertTrue(html.contains("<a href=\"http://www.google.com" + tail + "\">hyperlink</a> to"));
@@ -1368,7 +1381,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 		String html = parser.parseToHtml(markup);
 
 		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<p>As a very minor improvement to Textile-J(as what I proposed here http://www.cs.ubc.ca/~jingweno/soc/SoC2008.pdf)</p>"));
+		assertTrue(html.contains(
+				"<p>As a very minor improvement to Textile-J(as what I proposed here http://www.cs.ubc.ca/~jingweno/soc/SoC2008.pdf)</p>"));
 	}
 
 	@Test
@@ -1391,7 +1405,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 	@Test
 	public void testTableOfContents() throws IOException {
-		String html = parser.parseToHtml("h1. Table Of Contents\n\n{toc}\n\nh1. Top Header\n\nsome text\n\nh2. Subhead\n\nh2. Subhead2\n\nh1. Top Header 2\n\nh2. Subhead 3\n\nh3. Subhead 4");
+		String html = parser.parseToHtml(
+				"h1. Table Of Contents\n\n{toc}\n\nh1. Top Header\n\nsome text\n\nh2. Subhead\n\nh2. Subhead2\n\nh1. Top Header 2\n\nh2. Subhead 3\n\nh3. Subhead 4");
 
 		TestUtil.println("HTML: \n" + html);
 
@@ -1403,7 +1418,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 	@Test
 	public void testTableOfContentsWithNoClass() throws IOException {
-		String html = parser.parseToHtml("h1. Table Of Contents\n\n{toc}\n\nh1. Top Header\n\nsome text\n\nh2. Subhead\n\nh2. Subhead2\n\nh1. Top Header 2\n\nh2. Subhead 3\n\nh3. Subhead 4");
+		String html = parser.parseToHtml(
+				"h1. Table Of Contents\n\n{toc}\n\nh1. Top Header\n\nsome text\n\nh2. Subhead\n\nh2. Subhead2\n\nh1. Top Header 2\n\nh2. Subhead 3\n\nh3. Subhead 4");
 
 		TestUtil.println("HTML: \n" + html);
 
@@ -1412,7 +1428,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 	@Test
 	public void testTableOfContentsWithClass() throws IOException {
-		String html = parser.parseToHtml("h1. Table Of Contents\n\n{toc:class=test}\n\nh1. Top Header\n\nsome text\n\nh2. Subhead\n\nh2. Subhead2\n\nh1. Top Header 2\n\nh2. Subhead 3\n\nh3. Subhead 4");
+		String html = parser.parseToHtml(
+				"h1. Table Of Contents\n\n{toc:class=test}\n\nh1. Top Header\n\nsome text\n\nh2. Subhead\n\nh2. Subhead2\n\nh1. Top Header 2\n\nh2. Subhead 3\n\nh3. Subhead 4");
 
 		TestUtil.println("HTML: \n" + html);
 
@@ -1421,7 +1438,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 	@Test
 	public void testTableOfContentsWithClassAtTopLevel_bug341019() throws IOException {
-		String html = parser.parseToHtml("h1. Table Of Contents\n\n{toc:class=test}\n\nh1. Top Header\n\nsome text\n\nh2. Subhead\n\nh2. Subhead2\n\nh1. Top Header 2\n\nh2. Subhead 3\n\nh3. Subhead 4");
+		String html = parser.parseToHtml(
+				"h1. Table Of Contents\n\n{toc:class=test}\n\nh1. Top Header\n\nsome text\n\nh2. Subhead\n\nh2. Subhead2\n\nh1. Top Header 2\n\nh2. Subhead 3\n\nh3. Subhead 4");
 
 		TestUtil.println("HTML: \n" + html);
 
@@ -1431,7 +1449,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 
 	@Test
 	public void testTableOfContentsWithMaxLevel() throws IOException {
-		String html = parser.parseToHtml("h1. Table Of Contents\n\n{toc:maxLevel=2}\n\nh1. Top Header\n\nsome text\n\nh2. Subhead\n\nh2. Subhead2\n\nh1. Top Header 2\n\nh2. Subhead 3\n\nh3. Subhead 4");
+		String html = parser.parseToHtml(
+				"h1. Table Of Contents\n\n{toc:maxLevel=2}\n\nh1. Top Header\n\nsome text\n\nh2. Subhead\n\nh2. Subhead2\n\nh1. Top Header 2\n\nh2. Subhead 3\n\nh3. Subhead 4");
 
 		TestUtil.println("HTML: \n" + html);
 
@@ -1446,9 +1465,7 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 		String html = parser.parseToHtml("bq.. one\ntwo\n\nthree\np. some para");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(Pattern.compile("<blockquote><p>one<br/>\\s*two</p>\\s*<p>three</p></blockquote><p>some para</p>",
-				Pattern.MULTILINE | Pattern.DOTALL)
-				.matcher(html)
-				.find());
+				Pattern.MULTILINE | Pattern.DOTALL).matcher(html).find());
 	}
 
 	@Test
@@ -1458,9 +1475,7 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 		assertTrue(Pattern.compile(
 				"<pre><code>one" + REGEX_NEWLINE + "two" + REGEX_NEWLINE + REGEX_NEWLINE + "three" + REGEX_NEWLINE
 						+ REGEX_NEWLINE + REGEX_NEWLINE + "blah" + REGEX_NEWLINE + "</code></pre>",
-				Pattern.MULTILINE | Pattern.DOTALL)
-				.matcher(html)
-				.find());
+				Pattern.MULTILINE | Pattern.DOTALL).matcher(html).find());
 	}
 
 	@Test
@@ -1470,9 +1485,7 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 		assertTrue(Pattern.compile(
 				"<pre><code>one" + REGEX_NEWLINE + "two" + REGEX_NEWLINE + REGEX_NEWLINE + "three" + REGEX_NEWLINE
 						+ REGEX_NEWLINE + REGEX_NEWLINE + "more" + REGEX_NEWLINE + "</code></pre><p>some para</p>",
-				Pattern.MULTILINE | Pattern.DOTALL)
-				.matcher(html)
-				.find());
+				Pattern.MULTILINE | Pattern.DOTALL).matcher(html).find());
 	}
 
 	@Test
@@ -1482,9 +1495,7 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 		assertTrue(Pattern.compile(
 				"<pre>one" + REGEX_NEWLINE + "two" + REGEX_NEWLINE + REGEX_NEWLINE + "three" + REGEX_NEWLINE
 						+ REGEX_NEWLINE + REGEX_NEWLINE + "blah" + REGEX_NEWLINE + "</pre><p>para</p>",
-				Pattern.MULTILINE | Pattern.DOTALL)
-				.matcher(html)
-				.find());
+				Pattern.MULTILINE | Pattern.DOTALL).matcher(html).find());
 	}
 
 	@Test
@@ -1502,8 +1513,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 		String html = parser.parseToHtml(markup);
 		TestUtil.println("MARKUP: \n" + markup);
 		TestUtil.println("HTML: \n" + html);
-		assertTrue(Pattern.compile("<body>para text\\s+para line 2<p>new para</p></body>",
-				Pattern.MULTILINE | Pattern.DOTALL)
+		assertTrue(Pattern
+				.compile("<body>para text\\s+para line 2<p>new para</p></body>", Pattern.MULTILINE | Pattern.DOTALL)
 				.matcher(html)
 				.find());
 	}
@@ -1533,14 +1544,16 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 		final HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer);
 		builder.setXhtmlStrict(true);
 		builder.setEmitDtd(true);
-		builder.setHtmlDtd("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">");
+		builder.setHtmlDtd(
+				"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">");
 		parser.setBuilder(builder);
 		parser.parse("!<image.png!:http://foo.bar");
 
 		String html = writer.toString();
 		TestUtil.println(html);
 
-		assertTrue(html.contains("<a href=\"http://foo.bar\"><img style=\"border-width: 0px;text-align: left;\" alt=\"\" src=\"image.png\"/></a>"));
+		assertTrue(html.contains(
+				"<a href=\"http://foo.bar\"><img style=\"border-width: 0px;text-align: left;\" alt=\"\" src=\"image.png\"/></a>"));
 	}
 
 	@Test
@@ -1557,7 +1570,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 		String html = writer.toString();
 		TestUtil.println(html);
 
-		assertTrue(html.contains("<a href=\"http://foo.bar\"><img align=\"left\" border=\"0\" src=\"image.png\"/></a>"));
+		assertTrue(
+				html.contains("<a href=\"http://foo.bar\"><img align=\"left\" border=\"0\" src=\"image.png\"/></a>"));
 	}
 
 	@Test
@@ -1567,7 +1581,8 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 		String html = parser.parseToHtml(markup);
 
 		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<p>I am crazy about <a href=\"https://textile-j.dev.java.net\">TextileJ</a><br/>and <a href=\"https://textile-j.dev.java.net\">it&#8217;s</a> <a href=\"https://textile-j.dev.java.net\">all</a> I ever<br/><a href=\"https://textile-j.dev.java.net\">link to</a>!</p><p>[textilej]https://textile-j.dev.java.net</p>"));
+		assertTrue(html.contains(
+				"<p>I am crazy about <a href=\"https://textile-j.dev.java.net\">TextileJ</a><br/>and <a href=\"https://textile-j.dev.java.net\">it&#8217;s</a> <a href=\"https://textile-j.dev.java.net\">all</a> I ever<br/><a href=\"https://textile-j.dev.java.net\">link to</a>!</p><p>[textilej]https://textile-j.dev.java.net</p>"));
 	}
 
 	@Test
@@ -1720,5 +1735,4 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 			assertTrue(html.contains("&amp; " + entity + ";"));
 		}
 	}
-
 }
