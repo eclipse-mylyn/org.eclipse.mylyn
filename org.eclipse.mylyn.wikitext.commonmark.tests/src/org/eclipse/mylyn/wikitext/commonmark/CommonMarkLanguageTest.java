@@ -111,6 +111,15 @@ public class CommonMarkLanguageTest {
 		assertEquals(language.isStrictlyConforming(), language.clone().isStrictlyConforming());
 	}
 
+	@Test
+	public void linksWithHash() {
+		assertContent("<p><a href=\"#FooBar\">text</a></p>", "[text](#FooBar)");
+		assertContent("<p><a href=\"A#FooBar\">text</a></p>", "[text](A#FooBar)");
+		assertContent("<p><a href=\"http://example.com/page.html#someId\">text</a></p>",
+				"[text](http://example.com/page.html#someId)");
+
+	}
+
 	private void assertEvents(String content, DocumentBuilderEvent... events) {
 		assertEvents(content, true, events);
 	}

@@ -35,7 +35,8 @@ import com.google.common.net.UrlEscapers;
 
 public class PotentialBracketEndDelimiter extends InlineWithText {
 
-	private static final Pattern HTML_ENTITY_PATTERN = Pattern.compile("(&([a-zA-Z][a-zA-Z0-9]{1,32}|#x[a-fA-F0-9]{1,8}|#[0-9]{1,8});)");
+	private static final Pattern HTML_ENTITY_PATTERN = Pattern
+			.compile("(&([a-zA-Z][a-zA-Z0-9]{1,32}|#x[a-fA-F0-9]{1,8}|#[0-9]{1,8});)");
 
 	private static final Pattern NUMERIC_ENTITY_PATTERN = Pattern.compile("&#([0-9]{1,8});");
 
@@ -67,8 +68,8 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 
 	final Pattern referenceLabelPattern = Pattern.compile("(\\s*\\[((?:[^\\]]|\\\\]){0,1000})]).*", Pattern.DOTALL);
 
-	final Pattern referenceDefinitionEndPattern = Pattern.compile(":\\s*" + URI_PART + "?(?:\\s+" + TITLE_PART
-			+ ")?\\s*(.*)", Pattern.DOTALL);
+	final Pattern referenceDefinitionEndPattern = Pattern
+			.compile(":\\s*" + URI_PART + "?(?:\\s+" + TITLE_PART + ")?\\s*(.*)", Pattern.DOTALL);
 
 	public PotentialBracketEndDelimiter(Line line, int offset) {
 		super(line, offset, 1, "]");
@@ -88,11 +89,12 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 
 			boolean referenceDefinition = cursor.hasNext() && cursor.getNext() == ':'
 					&& eligibleForReferenceDefinition(openingDelimiter, cursor);
-			Matcher matcher = cursor.hasNext() ? cursor.matcher(1, referenceDefinition
-					? referenceDefinitionEndPattern
-					: endPattern) : null;
+			Matcher matcher = cursor.hasNext()
+					? cursor.matcher(1, referenceDefinition ? referenceDefinitionEndPattern : endPattern)
+					: null;
 
-			List<Inline> contents = InlineParser.secondPass(inlines.subList(indexOfOpeningDelimiter + 1, inlines.size()));
+			List<Inline> contents = InlineParser
+					.secondPass(inlines.subList(indexOfOpeningDelimiter + 1, inlines.size()));
 			if (!openingDelimiter.isLinkDelimiter() || !containsLink(contents)) {
 
 				if (!cursor.hasNext() || !checkNotNull(matcher).matches()) {
@@ -130,7 +132,8 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 					String uri = linkUri(matcher);
 					String title = linkTitle(matcher);
 
-					if (!(referenceDefinition && (Strings.isNullOrEmpty(uri) || hasContentOnSameLine(matcher, cursor)))) {
+					if (!(referenceDefinition
+							&& (Strings.isNullOrEmpty(uri) || hasContentOnSameLine(matcher, cursor)))) {
 						String referenceName = null;
 						if (referenceDefinition) {
 							referenceName = toReferenceName(referenceName(cursor, contents));
@@ -146,8 +149,8 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 							inlines.add(new ReferenceDefinition(openingDelimiter.getLine(),
 									openingDelimiter.getOffset(), length, uri, title, referenceName));
 						} else if (openingDelimiter.isImageDelimiter()) {
-							inlines.add(new Image(openingDelimiter.getLine(), openingDelimiter.getOffset(), length,
-									uri, title, contents));
+							inlines.add(new Image(openingDelimiter.getLine(), openingDelimiter.getOffset(), length, uri,
+									title, contents));
 						} else {
 							inlines.add(new Link(openingDelimiter.getLine(), openingDelimiter.getOffset(), length, uri,
 									title, contents));
@@ -319,6 +322,14 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 					UrlEscapers.urlFormParameterEscaper());
 			String decoded = URLDecoder.decode(uriWithoutHtmlEntities, StandardCharsets.UTF_8.name());
 			Escaper escaper = UrlEscapers.urlFragmentEscaper();
+			int indexOfHash = decoded.indexOf('#');
+			if (indexOfHash != -1) {
+				String uri = escaper.escape(decoded.substring(0, indexOfHash)) + '#';
+				if ((indexOfHash + 1) < decoded.length()) {
+					uri += escaper.escape(decoded.substring(indexOfHash + 1));
+				}
+				return uri;
+			}
 			return escaper.escape(decoded);
 		} catch (Exception e) {
 			return uriWithoutBackslashEscapes;
