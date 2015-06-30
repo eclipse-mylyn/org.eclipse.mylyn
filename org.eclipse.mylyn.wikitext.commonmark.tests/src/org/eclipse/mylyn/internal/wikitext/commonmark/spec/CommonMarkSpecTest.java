@@ -63,7 +63,6 @@ public class CommonMarkSpecTest {
 			3248, // List items
 			4071, // Lists
 			4088, // Lists
-			4244, // Backslash escapes
 			4350, // Entities
 			4519, // Code spans
 			7068 // Raw HTML

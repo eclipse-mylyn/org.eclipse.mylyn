@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.wikitext.commonmark.blocks;
 
 import static com.google.common.base.Preconditions.checkState;
 
+import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,6 +22,8 @@ import org.eclipse.mylyn.internal.wikitext.commonmark.LinePredicates;
 import org.eclipse.mylyn.internal.wikitext.commonmark.LineSequence;
 import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContext;
 import org.eclipse.mylyn.internal.wikitext.commonmark.SourceBlock;
+import org.eclipse.mylyn.internal.wikitext.commonmark.TextSegment;
+import org.eclipse.mylyn.internal.wikitext.commonmark.inlines.InlineParser;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
@@ -40,7 +43,7 @@ public class FencedCodeBlock extends SourceBlock {
 		Pattern closingFencePattern = closingFencePattern(matcher);
 
 		Attributes codeAttributes = new Attributes();
-		addInfoTextCssClass(codeAttributes, matcher);
+		addInfoTextCssClass(context, codeAttributes, matcher);
 
 		builder.setLocator(lineSequence.getCurrentLine().toLocator());
 		builder.beginBlock(BlockType.CODE, codeAttributes);
@@ -84,10 +87,13 @@ public class FencedCodeBlock extends SourceBlock {
 		return Pattern.compile("\\s{0,3}" + fenceDelimiter + "{" + fence.length() + ",}\\s*");
 	}
 
-	private void addInfoTextCssClass(Attributes codeAttributes, Matcher matcher) {
+	private void addInfoTextCssClass(ProcessingContext processingContext, Attributes codeAttributes, Matcher matcher) {
 		String infoText = matcher.group(3);
-		if (infoText != null) {
-			codeAttributes.setCssClass("language-" + infoText);
+		if (infoText != null && !infoText.isEmpty()) {
+			InlineParser inlineParser = processingContext.getInlineParser();
+			String language = inlineParser.toStringContent(processingContext,
+					new TextSegment(Collections.singletonList(new Line(0, 0, infoText))));
+			codeAttributes.setCssClass("language-" + language);
 		}
 	}
 

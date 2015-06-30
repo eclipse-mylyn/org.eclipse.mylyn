@@ -56,8 +56,13 @@ public class FencedCodeBlockTest {
 
 	@Test
 	public void encodedCharacters() {
-		assertContent("<pre><code>&lt;\n &gt;\n</code></pre>",
-				"```\n<\n >\n```");
+		assertContent("<pre><code>&lt;\n &gt;\n</code></pre>", "```\n<\n >\n```");
+	}
+
+	@Test
+	public void infoString() {
+		assertContent("<pre class=\"language-info\"><code class=\"language-info\">code here\n</code></pre>",
+				"``` info\ncode here\n```");
 	}
 
 	private void assertCanStartFalse(String content) {
