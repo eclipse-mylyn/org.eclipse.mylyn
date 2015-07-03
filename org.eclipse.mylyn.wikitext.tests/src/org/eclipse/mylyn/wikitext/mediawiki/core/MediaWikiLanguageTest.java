@@ -11,10 +11,14 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.mediawiki.core;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -23,50 +27,51 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.wikitext.core.osgi.OsgiServiceLocator;
-import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.DocBookDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.RecordingDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
+import org.eclipse.mylyn.wikitext.tests.AbstractMarkupGenerationTest;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import com.google.common.io.Resources;
 
 /**
  * @author David Green
  */
-public class MediaWikiLanguageTest extends TestCase {
-
-	private MarkupParser parser;
-
-	private MediaWikiLanguage markupLanguage;
+public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWikiLanguage> {
 
 	private Locale locale;
 
 	@Override
+	protected MediaWikiLanguage createMarkupLanguage() {
+		return new MediaWikiLanguage();
+	}
+
+	@Before
 	public void setUp() {
 		locale = Locale.getDefault();
 		Locale.setDefault(Locale.ENGLISH);
-
-		markupLanguage = new MediaWikiLanguage();
-		parser = new MarkupParser(markupLanguage);
 	}
 
-	@Override
+	@After
 	public void tearDown() throws Exception {
-		super.tearDown();
-
 		Locale.setDefault(locale);
 	}
 
+	@Test
 	public void testDiscoverable() {
 		MarkupLanguage language = OsgiServiceLocator.getApplicableInstance().getMarkupLanguage("MediaWiki");
 		assertNotNull(language);
 		assertTrue(language instanceof MediaWikiLanguage);
 	}
 
+	@Test
 	public void testIsDetectingRawHyperlinks() {
 		assertTrue(getMarkupLanguage().isDetectingRawHyperlinks());
 	}
@@ -75,147 +80,101 @@ public class MediaWikiLanguageTest extends TestCase {
 		return markupLanguage;
 	}
 
+	@Test
 	public void testParagraph() {
-		String html = parser.parseToHtml("first para<br/>\nfirst para line2\n\nsecond para\n\nthird para");
-		TestUtil.println(html);
-		assertTrue(Pattern.compile(
-				"<body><p>first para<br/>\\s*first para line2</p><p>second para</p><p>third para</p></body>")
-				.matcher(html)
-				.find());
+		assertMarkup("<p>first para<br/>\nfirst para line2</p><p>second para</p><p>third para</p>",
+				"first para<br/>\nfirst para line2\n\nsecond para\n\nthird para");
 	}
 
+	@Test
 	public void testNowiki() {
-		String html = parser.parseToHtml("'''<nowiki>no <!-- markup here</nowiki>'''");
-		TestUtil.println(html);
-		assertTrue(Pattern.compile("<body><p><b>no &lt;!-- markup here</b></p></body>").matcher(html).find());
+		assertMarkup("<p><b>no &lt;!-- markup here</b></p>", "'''<nowiki>no <!-- markup here</nowiki>'''");
 	}
 
+	@Test
 	public void testNoWiki_325022() {
 		// bug 325022: nowiki is not correctly detected
-		String html = parser.parseToHtml("//<nowiki>[</nowiki>username<nowiki>[</nowiki>:password]@]host<nowiki>[</nowiki>:port]");
-		//[username[:password]@]host[:port]
-		TestUtil.println(html);
-		assertTrue(html.contains("<p>//[username[:password]@]host[:port]</p>"));
+		assertMarkup("<p>//[username[:password]@]host[:port]</p>",
+				"//<nowiki>[</nowiki>username<nowiki>[</nowiki>:password]@]host<nowiki>[</nowiki>:port]");
 	}
 
+	@Test
 	public void testBoldItalic() {
-		String html = parser.parseToHtml("normal '''''bold italic text''''' normal");
-		TestUtil.println(html);
-		assertTrue(Pattern.compile("<body><p>normal <b><i>bold italic text</i></b> normal</p></body>")
-				.matcher(html)
-				.find());
+		assertMarkup("<p>normal <b><i>bold italic text</i></b> normal</p>", "normal '''''bold italic text''''' normal");
 	}
 
+	@Test
 	public void testBold() {
-		String html = parser.parseToHtml("normal '''bold text''' normal");
-		TestUtil.println(html);
-		assertTrue(Pattern.compile("<body><p>normal <b>bold text</b> normal</p></body>").matcher(html).find());
+		assertMarkup("<p>normal <b>bold text</b> normal</p>", "normal '''bold text''' normal");
 	}
 
+	@Test
 	public void testBoldImmediatelyFollowingTag() {
-		String html = parser.parseToHtml("normal<br>'''bold text''' normal");
-		TestUtil.println(html);
-		assertTrue(Pattern.compile("<body><p>normal<br/><b>bold text</b> normal</p></body>").matcher(html).find());
+		assertMarkup("<p>normal<br/><b>bold text</b> normal</p>", "normal<br>'''bold text''' normal");
 	}
 
+	@Test
 	public void testBold_single_character_bug369921() {
-		String html = parser.parseToHtml("'''aa''' bb '''cc'''");
-		TestUtil.println(html);
-		assertTrue(Pattern.compile("<body><p><b>aa</b> bb <b>cc</b></p></body>").matcher(html).find());
-
-		html = parser.parseToHtml("'''a''' b '''c'''");
-		TestUtil.println(html);
-		assertTrue(Pattern.compile("<body><p><b>a</b> b <b>c</b></p></body>").matcher(html).find());
+		assertMarkup("<p><b>aa</b> bb <b>cc</b></p>", "'''aa''' bb '''cc'''");
+		assertMarkup("<p><b>a</b> b <b>c</b></p>", "'''a''' b '''c'''");
 	}
 
+	@Test
 	public void testBold_adjacentText_bug369921() {
-		String html = parser.parseToHtml("'''aa'''bb");
-		TestUtil.println(html);
-		assertTrue(Pattern.compile("<body><p><b>aa</b>bb</p></body>").matcher(html).find());
+		assertMarkup("<p><b>aa</b>bb</p>", "'''aa'''bb");
 	}
 
+	@Test
 	public void testBoldWithWhitespace() {
 		//Bug 391850
-		String html;
-
-		html = parser.parseToHtml("normal ''' bold text''' normal");
-		TestUtil.println(html);
-		assertTrue(html.contains("<body><p>normal <b> bold text</b> normal</p></body>"));
-
-		html = parser.parseToHtml("normal '''bold text ''' normal");
-		TestUtil.println(html);
-		assertTrue(html.contains("<body><p>normal <b>bold text </b> normal</p></body>"));
-
-		html = parser.parseToHtml("normal ''' bold text ''' normal");
-		TestUtil.println(html);
-		assertTrue(html.contains("<body><p>normal <b> bold text </b> normal</p></body>"));
+		assertMarkup("<p>normal <b> bold text</b> normal</p>", "normal ''' bold text''' normal");
+		assertMarkup("<p>normal <b>bold text </b> normal</p>", "normal '''bold text ''' normal");
+		assertMarkup("<p>normal <b> bold text </b> normal</p>", "normal ''' bold text ''' normal");
 	}
 
+	@Test
 	public void testItalic() {
-		String html = parser.parseToHtml("normal ''italic text'' normal");
-		TestUtil.println(html);
-		assertTrue(Pattern.compile("<body><p>normal <i>italic text</i> normal</p></body>").matcher(html).find());
+		assertMarkup("<p>normal <i>italic text</i> normal</p>", "normal ''italic text'' normal");
 	}
 
+	@Test
 	public void testItalicWithWhitespace() {
 		//Bug 391850
-		String html;
-
-		html = parser.parseToHtml("normal '' italic text'' normal");
-		TestUtil.println(html);
-		assertTrue(html.contains("<body><p>normal <i> italic text</i> normal</p></body>"));
-
-		html = parser.parseToHtml("normal ''italic text '' normal");
-		TestUtil.println(html);
-		assertTrue(html.contains("<body><p>normal <i>italic text </i> normal</p></body>"));
-
-		html = parser.parseToHtml("normal '' italic text '' normal");
-		TestUtil.println(html);
-		assertTrue(html.contains("<body><p>normal <i> italic text </i> normal</p></body>"));
+		assertMarkup("<p>normal <i> italic text</i> normal</p>", "normal '' italic text'' normal");
+		assertMarkup("<p>normal <i>italic text </i> normal</p>", "normal ''italic text '' normal");
+		assertMarkup("<p>normal <i> italic text </i> normal</p>", "normal '' italic text '' normal");
 	}
 
+	@Test
 	public void testHeadings() {
 		for (int x = 1; x <= 6; ++x) {
 			String delimiter = repeat(x, "=");
 			String[] headingMarkupSamples = new String[] { delimiter + "heading text" + delimiter,
 					delimiter + "heading text" + delimiter + "  ", delimiter + "heading text" + delimiter + " \t " };
 			for (String headingMarkup : headingMarkupSamples) {
-				String html = parser.parseToHtml(headingMarkup
-						+ "\nfirst para<br/>\nfirst para line2\n\nsecond para\n\nthird para");
+				String html = parser.parseToHtml(
+						headingMarkup + "\nfirst para<br/>\nfirst para line2\n\nsecond para\n\nthird para");
 				TestUtil.println(html);
 				assertTrue(Pattern.compile(
-						"<body><h"
-								+ x
-								+ " id=\"[^\"]+\">heading text</h"
-								+ x
+						"<body><h" + x + " id=\"[^\"]+\">heading text</h" + x
 								+ "><p>first para<br/>\\s*first para line2</p><p>second para</p><p>third para</p></body>",
-								Pattern.MULTILINE)
-								.matcher(html)
-								.find());
+						Pattern.MULTILINE).matcher(html).find());
 			}
 		}
 	}
 
+	@Test
 	public void testHeadingWithStyles_bug355713() {
-		String html = parser.parseToHtml("== '''bold''' ''italic'' <u>underlined</u> <s>strikethrough</s> ==");
-		TestUtil.println(html);
-		assertTrue(Pattern.compile("<h2.*?><b>bold</b> <i>italic</i> <u>underlined</u> <s>strikethrough</s></h2>")
-				.matcher(html)
-				.find());
+		assertMarkup(
+				"<h2 id=\".27.27.27bold.27.27.27_.27.27italic.27.27_underlined_strikethrough\"><b>bold</b> <i>italic</i> <u>underlined</u> <s>strikethrough</s></h2>",
+				"== '''bold''' ''italic'' <u>underlined</u> <s>strikethrough</s> ==");
 	}
 
+	@Test
 	public void testHeadingsWithPara() {
-		String html = parser.parseToHtml("\n== H1 ==\n\npa\n\n=== H3 ===\n\nabc");
-		TestUtil.println(html);
-		assertTrue(html.contains("<body><h2 id=\"H1\">H1</h2><p>pa</p><h3 id=\"H3\">H3</h3><p>abc</p></body>"));
+		assertMarkup("<h2 id=\"H1\">H1</h2><p>pa</p><h3 id=\"H3\">H3</h3><p>abc</p>",
+				"\n== H1 ==\n\npa\n\n=== H3 ===\n\nabc");
 	}
-
-	// FIXME: can paragraphs be interrupted by headings?
-	//	public void testHeadingsWithPara2() {
-	//		String html = parser.parseToHtml("== H1 ==\npa\n=== H3 ===\n\nabc");
-	//		TestUtil.println(html);
-	//		assertTrue(html.contains("<body><h2>H1</h2><p>pa</p><h3>H3</h3><p>abc</p></body>"));
-	//	}
 
 	private String repeat(int i, String string) {
 		StringBuilder buf = new StringBuilder(string.length() * i);
@@ -225,46 +184,36 @@ public class MediaWikiLanguageTest extends TestCase {
 		return buf.toString();
 	}
 
+	@Test
 	public void testHorizontalRule() {
-		String html = parser.parseToHtml("an hr ---- foo");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("hr <hr/> foo"));
+		assertMarkup("<p>an hr <hr/> foo</p>", "an hr ---- foo");
 	}
 
+	@Test
 	public void testHorizontalRule2() {
-		String html = parser.parseToHtml("Mediawiki should render:\n----\nAs a \"horizontal rule\".");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(Pattern.compile("render\\:\\s*<hr/>\\s*As a").matcher(html).find());
+		assertMarkup("<p>Mediawiki should render:\n<hr/>\nAs a \"horizontal rule\".</p>",
+				"Mediawiki should render:\n----\nAs a \"horizontal rule\".");
 	}
 
+	@Test
 	public void testListUnordered() throws IOException {
-		String html = parser.parseToHtml("* a list\n* with two lines");
-
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<ul>"));
-		assertTrue(html.contains("<li>a list</li>"));
-		assertTrue(html.contains("<li>with two lines</li>"));
-		assertTrue(html.contains("</ul>"));
+		assertMarkup("<ul><li>a list</li><li>with two lines</li></ul>", "* a list\n* with two lines");
 	}
 
+	@Test
 	public void testListOrdered() throws IOException {
-		String html = parser.parseToHtml("# a list\n# with two lines");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<ol>"));
-		assertTrue(html.contains("<li>a list</li>"));
-		assertTrue(html.contains("<li>with two lines</li>"));
-		assertTrue(html.contains("</ol>"));
+		assertMarkup("<ol><li>a list</li><li>with two lines</li></ol>", "# a list\n# with two lines");
 	}
 
+	@Test
 	public void testListOrderedWithContinuation() throws IOException {
-		String html = parser.parseToHtml("# a list\n" + "## a nested item\n" + "### another nested item\n"
-				+ "#: continued\n" + "# another item");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><ol><li>a list<ol><li>a nested item<ol><li>another nested item</li></ol>continued</li></ol></li><li>another item</li></ol></body>"));
-
-		// TODO: continuations on first level?
+		assertMarkup(
+				"<ol><li>a list<ol><li>a nested item<ol><li>another nested item</li></ol>continued</li></ol></li><li>another item</li></ol>",
+				"# a list\n" + "## a nested item\n" + "### another nested item\n" + "#: continued\n"
+						+ "# another item");
 	}
 
+	@Test
 	public void testListOrderedWithContinuationToDocBook() throws IOException {
 		StringWriter out = new StringWriter();
 		parser.setBuilder(new DocBookDocumentBuilder(out));
@@ -298,400 +247,376 @@ public class MediaWikiLanguageTest extends TestCase {
 		//			</listitem>
 		//		</orderedlist>
 
-		assertTrue(docbook.contains("<orderedlist><listitem><para>a list</para><orderedlist><listitem><para>a nested item</para><orderedlist><listitem><para>another nested item</para></listitem></orderedlist><para>continued</para></listitem></orderedlist></listitem><listitem><para>another item</para></listitem></orderedlist>"));
+		assertTrue(docbook.contains(
+				"<orderedlist><listitem><para>a list</para><orderedlist><listitem><para>a nested item</para><orderedlist><listitem><para>another nested item</para></listitem></orderedlist><para>continued</para></listitem></orderedlist></listitem><listitem><para>another item</para></listitem></orderedlist>"));
 
 	}
 
+	@Test
 	public void testListNested() throws IOException {
-		String html = parser.parseToHtml("# a list\n## nested\n## nested2\n# level1\n\npara");
-
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<ol>"));
-		assertTrue(html.contains("<li>a list"));
-		assertTrue(html.contains("<li>nested"));
-		assertTrue(html.contains("</ol>"));
+		assertMarkup("<ol><li>a list<ol><li>nested</li><li>nested2</li></ol></li><li>level1</li></ol><p>para</p>",
+				"# a list\n## nested\n## nested2\n# level1\n\npara");
 	}
 
+	@Test
 	public void testListMixed() throws IOException {
 		// test for bug# 47
-		String html = parser.parseToHtml("# first\n* second");
-
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<ol><li>first</li></ol><ul><li>second</li></ul>"));
+		assertMarkup("<ol><li>first</li></ol><ul><li>second</li></ul>", "# first\n* second");
 	}
 
+	@Test
 	public void testListNestedMixed() throws IOException {
-		String html = parser.parseToHtml("# a list\n#* nested\n#* nested2\n# level1\n\npara");
-
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<ol><li>a list<ul><li>nested</li><li>nested2</li></ul></li><li>level1</li></ol>"));
+		assertMarkup("<ol><li>a list<ul><li>nested</li><li>nested2</li></ul></li><li>level1</li></ol><p>para</p>",
+				"# a list\n#* nested\n#* nested2\n# level1\n\npara");
 	}
 
+	@Test
 	public void testDefinitionList() {
-		String html = parser.parseToHtml(";Definition\n:item1\n:item2\na para");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><dl><dt>Definition</dt><dd>item1</dd><dd>item2</dd></dl><p>a para</p></body>"));
+		assertMarkup("<dl><dt>Definition</dt><dd>item1</dd><dd>item2</dd></dl><p>a para</p>",
+				";Definition\n:item1\n:item2\na para");
 	}
 
+	@Test
 	public void testDefinitionList2() {
-		String html = parser.parseToHtml(";Definition : item1\n:item2\na para");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><dl><dt>Definition</dt><dd>item1</dd><dd>item2</dd></dl><p>a para</p></body>"));
+		assertMarkup("<dl><dt>Definition</dt><dd>item1</dd><dd>item2</dd></dl><p>a para</p>",
+				";Definition : item1\n:item2\na para");
 	}
 
+	@Test
 	public void testDefinitionList3() {
-		String html = parser.parseToHtml(";Definition [http://www.foobar.com Foo Bar] : Foo Bar test 123\n;Definition 2 [http://www.foobarbaz.com Foo Bar Baz] : another definition\na para");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("</head><body><dl><dt>Definition <a href=\"http://www.foobar.com\">Foo Bar</a></dt><dd>Foo Bar test 123</dd><dt>Definition 2 <a href=\"http://www.foobarbaz.com\">Foo Bar Baz</a></dt><dd>another definition</dd></dl><p>a para</p></body>"));
+		assertMarkup(
+				"<dl><dt>Definition <a href=\"http://www.foobar.com\">Foo Bar</a></dt><dd>Foo Bar test 123</dd><dt>Definition 2 <a href=\"http://www.foobarbaz.com\">Foo Bar Baz</a></dt><dd>another definition</dd></dl><p>a para</p>",
+				";Definition [http://www.foobar.com Foo Bar] : Foo Bar test 123\n;Definition 2 [http://www.foobarbaz.com Foo Bar Baz] : another definition\na para");
 	}
 
+	@Test
 	public void testIndented() {
-		String html = parser.parseToHtml("::Indented\na para");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><dl><dd><dl><dd>Indented</dd></dl></dd></dl><p>a para</p></body>"));
+		assertMarkup("<dl><dd><dl><dd>Indented</dd></dl></dd></dl><p>a para</p>", "::Indented\na para");
 	}
 
+	@Test
 	public void testPreformatted() {
-		String html = parser.parseToHtml("normal para\n preformatted\n more pre\nnormal para");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(Pattern.compile(
-				"<body><p>normal para</p><pre>preformatted\\s+more pre\\s+</pre><p>normal para</p></body>")
-				.matcher(html)
-				.find());
+		assertMarkup("<p>normal para</p><pre>preformatted\nmore pre\n</pre><p>normal para</p>",
+				"normal para\n preformatted\n more pre\nnormal para");
 	}
 
+	@Test
 	public void testPreformattedWithTag() {
-		String html = parser.parseToHtml("normal para\n<pre style=\"overflow:scroll\" class=\"TEST\">preformatted\n more pre\n</pre>normal para");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(Pattern.compile(
-				"<body><p>normal para</p><pre class=\"TEST\" style=\"overflow:scroll\">preformatted\\s+more pre\\s+</pre><p>normal para</p></body>")
-				.matcher(html)
-				.find());
+		assertMarkup(
+				"<p>normal para</p><pre class=\"TEST\" style=\"overflow:scroll\">preformatted\n more pre\n</pre><p>normal para</p>",
+				"normal para\n<pre style=\"overflow:scroll\" class=\"TEST\">preformatted\n more pre\n</pre>normal para");
 	}
 
+	@Test
 	public void testPreformattedWithTagStartEndOnSameLine() {
-		String html = parser.parseToHtml("normal para\n<pre>preformatted</pre>normal para");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(Pattern.compile("<body><p>normal para</p><pre>preformatted\\s+</pre><p>normal para</p></body>")
-				.matcher(html)
-				.find());
+		assertMarkup("<p>normal para</p><pre>preformatted\n</pre><p>normal para</p>",
+				"normal para\n<pre>preformatted</pre>normal para");
 	}
 
+	@Test
 	public void testPreformattedWithTagStartEndOnSameLine3() {
-		String html = parser.parseToHtml("normal para\n<pre>preformatted</pre>\nnormal para");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(Pattern.compile("<body><p>normal para</p><pre>preformatted\\s+</pre><p>normal para</p></body>")
-				.matcher(html)
-				.find());
+		assertMarkup("<p>normal para</p><pre>preformatted\n</pre><p>normal para</p>",
+				"normal para\n<pre>preformatted</pre>\nnormal para");
 	}
 
+	@Test
 	public void testPreformattedWithTagStartEndOnSameLine2() {
 		//see also BUG 381506 for the usage of tags:
-		String html = parser.parseToHtml("example:\n\n<pre><a href=\"show_bug.cgi\\?id\\=(.+?)\">.+?<span class=\"summary\">(.+?)</span></pre>\n\nIf");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(Pattern.compile(
-				"<body><p>example:</p><pre>"
-						+ Pattern.quote("&lt;a href=\"show_bug.cgi\\?id\\=(.+?)\"&gt;.+?&lt;span class=\"summary\"&gt;(.+?)&lt;/span&gt;")
-						+ "\\s+</pre><p>If</p></body>")
-						.matcher(html)
-						.find());
+		assertMarkup(
+				"<p>example:</p><pre>&lt;a href=\"show_bug.cgi\\?id\\=(.+?)\"&gt;.+?&lt;span class=\"summary\"&gt;(.+?)&lt;/span&gt;\n</pre><p>If</p>",
+				"example:\n\n<pre><a href=\"show_bug.cgi\\?id\\=(.+?)\">.+?<span class=\"summary\">(.+?)</span></pre>\n\nIf");
 	}
 
+	@Test
 	public void testPreformattedSource_bug349724() {
-		String html = parser.parseToHtml("normal para\n<source lang=\"javascript\">preformatted\n more pre\n</source>normal para");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(Pattern.compile(
-				"<p>normal para</p><pre class=\"source-javascript\">preformatted\\s+more pre\\s+</pre><p>normal para</p>")
-				.matcher(html)
-				.find());
+		assertMarkup(
+				"<p>normal para</p><pre class=\"source-javascript\">preformatted\n more pre\n\n</pre><p>normal para</p>",
+				"normal para\n<source lang=\"javascript\">preformatted\n more pre\n</source>normal para");
 	}
 
+	@Test
 	public void testPreformattedWithTagAndMarkup() {
 		//BUG 381506:
-		String html = parser.parseToHtml("example:\n\n<pre>a block\nWith '''Bold text''' or ''Italic text'' style\nIs not converted</pre>\n\nIf");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(Pattern.compile(
-				"<body><p>example:</p><pre>"
-						+ "a block\\s+With '''Bold text''' or ''Italic text'' style\\s+Is not converted"
-						+ "\\s+</pre><p>If</p></body>")
-						.matcher(html)
-						.find());
+		assertMarkup(
+				"<p>example:</p><pre>a block\nWith '''Bold text''' or ''Italic text'' style\nIs not converted\n</pre><p>If</p>",
+				"example:\n\n<pre>a block\nWith '''Bold text''' or ''Italic text'' style\nIs not converted</pre>\n\nIf");
 	}
 
+	@Test
 	public void testPreformattedWithMarkup() {
 		//BUG 381506:
-		String html = parser.parseToHtml("normal para\n preformatted\n with '''Bold text''' or ''Italic text'' style\n more pre\nnormal para");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(Pattern.compile(
-				"<body><p>normal para</p><pre>preformatted\\s+with <b>Bold text</b> or <i>Italic text</i> style\\s+more pre\\s+</pre><p>normal para</p></body>")
-				.matcher(html)
-				.find());
+		assertMarkup(
+				"<p>normal para</p><pre>preformatted\nwith <b>Bold text</b> or <i>Italic text</i> style\nmore pre\n</pre><p>normal para</p>",
+				"normal para\n preformatted\n with '''Bold text''' or ''Italic text'' style\n more pre\nnormal para");
 	}
 
+	@Test
 	public void testPreformattedWithFont() {
 		//BUG 381506:
-		String html = parser.parseToHtml("normal para\n preformatted\n with <font color=\"red\">some red color</font>\n more pre\nnormal para");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(Pattern.compile(
-				"<body><p>normal para</p><pre>preformatted\\s+with <font color=\"red\">some red color</font>\\s+more pre\\s+</pre><p>normal para</p></body>")
-				.matcher(html)
-				.find());
+		assertMarkup(
+				"<p>normal para</p><pre>preformatted\nwith <font color=\"red\">some red color</font>\nmore pre\n</pre><p>normal para</p>",
+				"normal para\n preformatted\n with <font color=\"red\">some red color</font>\n more pre\nnormal para");
 	}
 
+	@Test
 	public void testHtmlTags() {
-		String html = parser.parseToHtml("normal para <b id=\"foo\">test heading</b>");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<p>normal para <b id=\"foo\">test heading</b></p>"));
+		assertMarkup("<p>normal para <b id=\"foo\">test heading</b></p>", "normal para <b id=\"foo\">test heading</b>");
 	}
 
+	@Test
 	public void testHtmlComment() {
-		String html = parser.parseToHtml("normal para <!-- test comment --> normal *foo*");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>normal para  normal *foo*</p></body>"));
+		assertMarkup("<p>normal para  normal *foo*</p>", "normal para <!-- test comment --> normal *foo*");
 	}
 
+	@Test
 	public void testHtmlCommentEmpty() {
-		String html = parser.parseToHtml("normal para <!-- --> normal *foo*");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>normal para  normal *foo*</p></body>"));
+		assertMarkup("<p>normal para  normal *foo*</p>", "normal para <!-- --> normal *foo*");
 	}
 
+	@Test
 	public void testHtmlCommentOnSameLineAsAnotherCommentWhitespaceSeparator() {
-		String html = parser.parseToHtml("normal para <!-- --> <!-- --> normal");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>normal para   normal</p></body>"));
+		assertMarkup("<p>normal para   normal</p>", "normal para <!-- --> <!-- --> normal");
 	}
 
+	@Test
 	public void testHtmlCommentOnSameLineAsAnotherComment() {
-		String html = parser.parseToHtml("normal para <!-- -->b<!-- --> normal");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>normal para b normal</p></body>"));
+		assertMarkup("<p>normal para b normal</p>", "normal para <!-- -->b<!-- --> normal");
 	}
 
+	@Test
 	public void testHtmlCodeWithNestedFormatting() {
 		// bug 325023
-		String html = parser.parseToHtml("<code>NonItalic=''Italic''</code>");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<p><code>NonItalic=<i>Italic</i></code></p>"));
+		assertMarkup("<p><code>NonItalic=<i>Italic</i></code></p>", "<code>NonItalic=''Italic''</code>");
 	}
 
+	@Test
 	public void testLinkInternalPageReference() {
-		String html = parser.parseToHtml("a [[Main Page]] reference to the Main Page");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>a <a href=\"/wiki/Main_Page\" title=\"Main Page\">Main Page</a> reference to the Main Page</p></body>"));
+		assertMarkup(
+				"<p>a <a href=\"/wiki/Main_Page\" title=\"Main Page\">Main Page</a> reference to the Main Page</p>",
+				"a [[Main Page]] reference to the Main Page");
 	}
 
+	@Test
 	public void testLinkInternalPageAnchorReference() {
-		String html = parser.parseToHtml("a [[#Some link|alt text]] reference to an internal anchor");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>a <a href=\"#Some_link\">alt text</a> reference to an internal anchor</p></body>"));
+		assertMarkup("<p>a <a href=\"#Some_link\">alt text</a> reference to an internal anchor</p>",
+				"a [[#Some link|alt text]] reference to an internal anchor");
 	}
 
+	@Test
 	public void testLinkInternalPageReferenceWithAltText() {
-		String html = parser.parseToHtml("a [[Main Page|alternative text]] reference to the Main Page");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>a <a href=\"/wiki/Main_Page\" title=\"Main Page\">alternative text</a> reference to the Main Page</p></body>"));
+		assertMarkup(
+				"<p>a <a href=\"/wiki/Main_Page\" title=\"Main Page\">alternative text</a> reference to the Main Page</p>",
+				"a [[Main Page|alternative text]] reference to the Main Page");
 	}
 
+	@Test
 	public void testLinkInternalPageReferenceWithAltText2() {
-		String html = parser.parseToHtml("[[Orion/Server_API/Preference API| Preference API]]");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<p><a href=\"/wiki/Orion/Server_API/Preference_API\" title=\"Orion/Server_API/Preference API\">Preference API</a></p>"));
+		assertMarkup(
+				"<p><a href=\"/wiki/Orion/Server_API/Preference_API\" title=\"Orion/Server_API/Preference API\">Preference API</a></p>",
+				"[[Orion/Server_API/Preference API| Preference API]]");
 	}
 
+	@Test
 	public void testLinkInternalPageReferenceWithAltTextInTables() {
-		String html = parser.parseToHtml("{|\n" //
-				+ "| [[Orion/Server_API/Preference API| Preference API]]\n" //
-				+ "|}");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<td><a href=\"/wiki/Orion/Server_API/Preference_API\" title=\"Orion/Server_API/Preference API\">Preference API</a></td>"));
+		assertMarkup(
+				"<table><tr><td><a href=\"/wiki/Orion/Server_API/Preference_API\" title=\"Orion/Server_API/Preference API\">Preference API</a></td></tr></table>",
+				"{|\n" //
+						+ "| [[Orion/Server_API/Preference API| Preference API]]\n" //
+						+ "|}");
 	}
 
+	@Test
 	public void testLinkInternalCategoryReference() {
-		String html = parser.parseToHtml("a [[:Category:Help]] reference to the Main Page");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>a <a href=\"Category:Help\" title=\"Category:Help\">Category:Help</a> reference to the Main Page</p></body>"));
+		assertMarkup(
+				"<p>a <a href=\"Category:Help\" title=\"Category:Help\">Category:Help</a> reference to the Main Page</p>",
+				"a [[:Category:Help]] reference to the Main Page");
 	}
 
+	@Test
 	public void testHyperlinkImplied() {
-		String html = parser.parseToHtml("a http://example.com hyperlink");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>a <a href=\"http://example.com\">http://example.com</a> hyperlink</p></body>"));
+		assertMarkup("<p>a <a href=\"http://example.com\">http://example.com</a> hyperlink</p>",
+				"a http://example.com hyperlink");
 	}
 
+	@Test
 	public void testHyperlinkInternal() {
-		String html = parser.parseToHtml("Also see the [[Mylyn_FAQ#Installation_Troubleshooting | Installation FAQ]].");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<p>Also see the <a href=\"/wiki/Mylyn_FAQ#Installation_Troubleshooting\" title=\"Mylyn_FAQ#Installation_Troubleshooting\">Installation FAQ</a>.</p>"));
+		assertMarkup(
+				"<p>Also see the <a href=\"/wiki/Mylyn_FAQ#Installation_Troubleshooting\" title=\"Mylyn_FAQ#Installation_Troubleshooting\">Installation FAQ</a>.</p>",
+				"Also see the [[Mylyn_FAQ#Installation_Troubleshooting | Installation FAQ]].");
 	}
 
+	@Test
 	public void testHyperlinkQualifiedInternal() {
 		markupLanguage.setInternalLinkPattern("http://wiki.eclipse.org/Mylyn/{0}");
-		String html = parser.parseToHtml("Also see the [[Mylyn/FAQ#Installation_Troubleshooting | Installation FAQ]].");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<p>Also see the <a href=\"http://wiki.eclipse.org/Mylyn/FAQ#Installation_Troubleshooting\" title=\"Mylyn/FAQ#Installation_Troubleshooting\">Installation FAQ</a>.</p>"));
+		assertMarkup(
+				"<p>Also see the <a href=\"http://wiki.eclipse.org/Mylyn/FAQ#Installation_Troubleshooting\" title=\"Mylyn/FAQ#Installation_Troubleshooting\">Installation FAQ</a>.</p>",
+				"Also see the [[Mylyn/FAQ#Installation_Troubleshooting | Installation FAQ]].");
 	}
 
+	@Test
 	public void testHyperlinkInternalPiped() {
-		String html = parser.parseToHtml("[[MoDisco/QueryManager|create a query set]]");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<a href=\"/wiki/MoDisco/QueryManager\" title=\"MoDisco/QueryManager\">create a query set</a>"));
+		assertMarkup(
+				"<p><a href=\"/wiki/MoDisco/QueryManager\" title=\"MoDisco/QueryManager\">create a query set</a></p>",
+				"[[MoDisco/QueryManager|create a query set]]");
 	}
 
+	@Test
 	public void testHyperlinkInternalWithSpaces() {
 		markupLanguage.setInternalLinkPattern("http://wiki.eclipse.org/{0}");
-		String html = parser.parseToHtml("Also see the [[Mylyn/User Guide]].");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<p>Also see the <a href=\"http://wiki.eclipse.org/Mylyn/User_Guide\" title=\"Mylyn/User Guide\">Mylyn/User Guide</a>.</p>"));
+		assertMarkup(
+				"<p>Also see the <a href=\"http://wiki.eclipse.org/Mylyn/User_Guide\" title=\"Mylyn/User Guide\">Mylyn/User Guide</a>.</p>",
+				"Also see the [[Mylyn/User Guide]].");
 	}
 
+	@Test
 	public void testHyperlinkExternal() {
-		String html = parser.parseToHtml("a [http://example.com] hyperlink");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>a <a href=\"http://example.com\">http://example.com</a> hyperlink</p></body>"));
+		assertMarkup("<p>a <a href=\"http://example.com\">http://example.com</a> hyperlink</p>",
+				"a [http://example.com] hyperlink");
 	}
 
+	@Test
 	public void testHyperlinkExternalWithAltText() {
-		String html = parser.parseToHtml("a [http://example.com|Example] hyperlink");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>a <a href=\"http://example.com\">Example</a> hyperlink</p></body>"));
+		assertMarkup("<p>a <a href=\"http://example.com\">Example</a> hyperlink</p>",
+				"a [http://example.com|Example] hyperlink");
 	}
 
+	@Test
 	public void testHyperlinkExternalWithAltText2() {
-		String html = parser.parseToHtml("a [http://example.com Example Title] hyperlink");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>a <a href=\"http://example.com\">Example Title</a> hyperlink</p></body>"));
+		assertMarkup("<p>a <a href=\"http://example.com\">Example Title</a> hyperlink</p>",
+				"a [http://example.com Example Title] hyperlink");
 	}
 
+	@Test
 	public void testImage() {
-		String html = parser.parseToHtml("a [[Image:foo.png]] image");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>a <img border=\"0\" src=\"foo.png\"/> image</p></body>"));
+		assertMarkup("<p>a <img border=\"0\" src=\"foo.png\"/> image</p>", "a [[Image:foo.png]] image");
 	}
 
+	@Test
 	public void testImageWithAltText() {
-		String html = parser.parseToHtml("a [[Image:foo.png|Example]] image");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>a <img title=\"Example\" alt=\"Example\" border=\"0\" src=\"foo.png\"/> image</p></body>"));
+		assertMarkup("<p>a <img title=\"Example\" alt=\"Example\" border=\"0\" src=\"foo.png\"/> image</p>",
+				"a [[Image:foo.png|Example]] image");
 	}
 
+	@Test
 	public void testImageWithAltText2() {
-		String html = parser.parseToHtml("a [[Image:foo.png|Alt Text|Caption]] image");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<img alt=\"Alt Text\" title=\"Caption\" border=\"0\" src=\"foo.png\"/>"));
+		assertMarkup("<p>a <img alt=\"Alt Text\" title=\"Caption\" border=\"0\" src=\"foo.png\"/> image</p>",
+				"a [[Image:foo.png|Alt Text|Caption]] image");
 	}
 
+	@Test
 	public void testImageWithAltTextAndOptions() {
-		String html = parser.parseToHtml("a [[Image:foo.png|100px|center|Example]] image");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>a <img width=\"100\" align=\"middle\" title=\"Example\" alt=\"Example\" border=\"0\" src=\"foo.png\"/> image</p></body>"));
+		assertMarkup(
+				"<p>a <img width=\"100\" align=\"middle\" title=\"Example\" alt=\"Example\" border=\"0\" src=\"foo.png\"/> image</p>",
+				"a [[Image:foo.png|100px|center|Example]] image");
 	}
 
+	@Test
 	public void testImageWithAltTextAndHeightWidth() {
-		String html = parser.parseToHtml("a [[Image:foo.png|100x220px]] image");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>a <img height=\"220\" width=\"100\" border=\"0\" src=\"foo.png\"/> image</p></body>"));
+		assertMarkup("<p>a <img height=\"220\" width=\"100\" border=\"0\" src=\"foo.png\"/> image</p>",
+				"a [[Image:foo.png|100x220px]] image");
 	}
 
+	@Test
 	public void testImageWithAltTextAndWidth() {
-		String html = parser.parseToHtml("a [[Image:foo.png|100px]] image");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>a <img width=\"100\" border=\"0\" src=\"foo.png\"/> image</p></body>"));
+		assertMarkup("<p>a <img width=\"100\" border=\"0\" src=\"foo.png\"/> image</p>",
+				"a [[Image:foo.png|100px]] image");
 	}
 
+	@Test
 	public void testImageWithLinkInCaption() {
 		// example from http://en.wikipedia.org/wiki/International_Floorball_Federation
-		String html = parser.parseToHtml("[[Image:IFF Logo.JPG|left|the logo|Official logo of the [[International Floorball Federation]], floorball's governing body.]]");
-
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<img align=\"left\" alt=\"the logo\" title=\"Official logo of the [[International Floorball Federation]], floorball&apos;s governing body.\" border=\"0\" src=\"IFF_Logo.JPG\"/>"));
+		assertMarkup(
+				"<p><img align=\"left\" alt=\"the logo\" title=\"Official logo of the [[International Floorball Federation]], floorball&apos;s governing body.\" border=\"0\" src=\"IFF_Logo.JPG\"/></p>",
+				"[[Image:IFF Logo.JPG|left|the logo|Official logo of the [[International Floorball Federation]], floorball's governing body.]]");
 	}
 
+	@Test
 	public void testImageWithLinkInCaptionThumbnail() {
 		// example from http://en.wikipedia.org/wiki/International_Floorball_Federation
-		String html = parser.parseToHtml("[[Image:IFF Logo.JPG|thumb|left|the logo|Official logo of the [[International Floorball Federation]], floorball's governing body.]]");
-
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<div class=\"thumb left\"><div class=\"thumbinner\"><a href=\"IFF_Logo.JPG\" class=\"image\"><img class=\"thumbimage\" align=\"left\" alt=\"the logo\" border=\"0\" src=\"IFF_Logo.JPG\"/></a><div class=\"thumbcaption\">Official logo of the <a href=\"/wiki/International_Floorball_Federation\" title=\"International Floorball Federation\">International Floorball Federation</a>, floorball's governing body.</div></div></div>"));
+		assertMarkup(
+				"<p><div class=\"thumb left\"><div class=\"thumbinner\"><a href=\"IFF_Logo.JPG\" class=\"image\"><img class=\"thumbimage\" align=\"left\" alt=\"the logo\" border=\"0\" src=\"IFF_Logo.JPG\"/></a><div class=\"thumbcaption\">Official logo of the <a href=\"/wiki/International_Floorball_Federation\" title=\"International Floorball Federation\">International Floorball Federation</a>, floorball's governing body.</div></div></div></p>",
+				"[[Image:IFF Logo.JPG|thumb|left|the logo|Official logo of the [[International Floorball Federation]], floorball's governing body.]]");
 	}
 
+	@Test
 	public void testImageWithTitle() {
-		String html = parser.parseToHtml("text text text text text text\n[[Image:Westminstpalace.jpg|150px|alt=A large clock tower and other buildings line a great river.|The Palace of Westminster]]");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<img width=\"150\" alt=\"A large clock tower and other buildings line a great river.\" title=\"The Palace of Westminster\" border=\"0\" src=\"Westminstpalace.jpg\"/>"));
+		assertMarkup(
+				"<p>text text text text text text\n<img width=\"150\" alt=\"A large clock tower and other buildings line a great river.\" title=\"The Palace of Westminster\" border=\"0\" src=\"Westminstpalace.jpg\"/></p>",
+				"text text text text text text\n[[Image:Westminstpalace.jpg|150px|alt=A large clock tower and other buildings line a great river.|The Palace of Westminster]]");
 	}
 
+	@Test
 	public void testImageSimple() {
-		String html = parser.parseToHtml("[[Image:ImportFedoraGit.png]]");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<img border=\"0\" src=\"ImportFedoraGit.png\"/>"));
+		assertMarkup("<p><img border=\"0\" src=\"ImportFedoraGit.png\"/></p>", "[[Image:ImportFedoraGit.png]]");
 	}
 
+	@Test
 	public void testImageWithLeadingWhitespace() {
-		String html = parser.parseToHtml("[[Image: SomeImage.png]]");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<img border=\"0\" src=\"SomeImage.png\"/>"));
+		assertMarkup("<p><img border=\"0\" src=\"SomeImage.png\"/></p>", "[[Image: SomeImage.png]]");
 	}
 
+	@Test
 	public void testImageFile() {
-		String html = parser.parseToHtml("a [[File:foo.png]] image");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>a <img border=\"0\" src=\"foo.png\"/> image</p></body>"));
+		assertMarkup("<p>a <img border=\"0\" src=\"foo.png\"/> image</p>", "a [[File:foo.png]] image");
 	}
 
+	@Test
 	public void testImageFile_Negative() {
-		String html = parser.parseToHtml("a [[FilImage:foo.png]] image");
-		TestUtil.println("HTML: \n" + html);
-		assertFalse(html.contains("<img"));
+		assertMarkup(
+				"<p>a <a href=\"/wiki/FilImage:foo.png\" title=\"FilImage:foo.png\">FilImage:foo.png</a> image</p>",
+				"a [[FilImage:foo.png]] image");
 	}
 
+	@Test
 	public void testImage_Lower() {
-		String html = parser.parseToHtml("a [[image:foo.png]] image");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>a <img border=\"0\" src=\"foo.png\"/> image</p></body>"));
+		assertMarkup("<p>a <img border=\"0\" src=\"foo.png\"/> image</p>", "a [[image:foo.png]] image");
 	}
 
+	@Test
 	public void testImageFile_Lower() {
-		String html = parser.parseToHtml("a [[file:foo.png]] image");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>a <img border=\"0\" src=\"foo.png\"/> image</p></body>"));
+		assertMarkup("<p>a <img border=\"0\" src=\"foo.png\"/> image</p>", "a [[file:foo.png]] image");
 	}
 
+	@Test
 	public void testTable() {
-		String html = parser.parseToHtml("{|\n" + "|Orange\n" + "|Apple\n" + "|-\n" + "|Bread\n" + "|Pie\n" + "|-\n"
-				+ "|Butter\n" + "|Ice cream \n" + "|}");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><table><tr><td>Orange</td><td>Apple</td></tr><tr><td>Bread</td><td>Pie</td></tr><tr><td>Butter</td><td>Ice cream </td></tr></table></body>"));
+		assertMarkup(
+				"<table><tr><td>Orange</td><td>Apple</td></tr><tr><td>Bread</td><td>Pie</td></tr><tr><td>Butter</td><td>Ice cream </td></tr></table>",
+				"{|\n" + "|Orange\n" + "|Apple\n" + "|-\n" + "|Bread\n" + "|Pie\n" + "|-\n" + "|Butter\n"
+						+ "|Ice cream \n" + "|}");
 	}
 
+	@Test
 	public void testTable2() {
-		String html = parser.parseToHtml("{|\n" + "|  Orange    ||   Apple   ||   more\n" + "|-\n"
-				+ "|   Bread    ||   Pie     ||   more\n" + "|-\n" + "|   Butter   || Ice cream ||  and more\n"
-				+ "|}\n");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><table><tr><td>Orange</td><td>Apple</td><td>more</td></tr><tr><td>Bread</td><td>Pie</td><td>more</td></tr><tr><td>Butter</td><td>Ice cream</td><td>and more</td></tr></table></body>"));
+		assertMarkup(
+				"<table><tr><td>Orange</td><td>Apple</td><td>more</td></tr><tr><td>Bread</td><td>Pie</td><td>more</td></tr><tr><td>Butter</td><td>Ice cream</td><td>and more</td></tr></table>",
+				"{|\n" + "|  Orange    ||   Apple   ||   more\n" + "|-\n" + "|   Bread    ||   Pie     ||   more\n"
+						+ "|-\n" + "|   Butter   || Ice cream ||  and more\n" + "|}\n");
 	}
 
+	@Test
 	public void testTableWithBlankLine() {
-		String html = parser.parseToHtml("{|\n" + "|Orange\n" + "|Apple\n" + "|-\n" + "|Bread\n\nMore bread\n"
-				+ "|Pie\n" + "|-\n" + "|Butter\n" + "|Ice cream \n" + "|}");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><table><tr><td>Orange</td><td>Apple</td></tr><tr><td>Bread<p>More bread</p></td><td>Pie</td></tr><tr><td>Butter</td><td>Ice cream </td></tr></table></body>"));
+		assertMarkup(
+				"<table><tr><td>Orange</td><td>Apple</td></tr><tr><td>Bread<p>More bread</p></td><td>Pie</td></tr><tr><td>Butter</td><td>Ice cream </td></tr></table>",
+				"{|\n" + "|Orange\n" + "|Apple\n" + "|-\n" + "|Bread\n\nMore bread\n" + "|Pie\n" + "|-\n" + "|Butter\n"
+						+ "|Ice cream \n" + "|}");
 	}
 
+	@Test
 	public void testTableHeadings() {
-		String html = parser.parseToHtml("{|\n" + "!  Fruit    !!   Quantity   !!  Price\n" + "|-\n"
-				+ "|   Apple    ||   lb     ||   0.99\n" + "|}\n");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><table><tr><th>Fruit</th><th>Quantity</th><th>Price</th></tr><tr><td>Apple</td><td>lb</td><td>0.99</td></tr></table></body>"));
+		assertMarkup(
+				"<table><tr><th>Fruit</th><th>Quantity</th><th>Price</th></tr><tr><td>Apple</td><td>lb</td><td>0.99</td></tr></table>",
+				"{|\n" + "!  Fruit    !!   Quantity   !!  Price\n" + "|-\n" + "|   Apple    ||   lb     ||   0.99\n"
+						+ "|}\n");
 	}
 
+	@Test
 	public void testTableHeadingsMixed() {
-		String html = parser.parseToHtml("{|\n! headerCell || normalCell\n|-\n| normalCell2 !! headerCell2\n|}");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><table><tr><th>headerCell</th><td>normalCell</td></tr><tr><td>normalCell2</td><th>headerCell2</th></tr></table></body>"));
+		assertMarkup(
+				"<table><tr><th>headerCell</th><td>normalCell</td></tr><tr><td>normalCell2</td><th>headerCell2</th></tr></table>",
+				"{|\n! headerCell || normalCell\n|-\n| normalCell2 !! headerCell2\n|}");
 	}
 
+	@Test
 	public void testTableLexicalOffsets() {
 		final RecordingDocumentBuilder builder = new RecordingDocumentBuilder();
 		parser.setBuilder(builder);
@@ -714,6 +639,7 @@ public class MediaWikiLanguageTest extends TestCase {
 
 	}
 
+	@Test
 	public void testTableIncomplete() {
 		final RecordingDocumentBuilder builder = new RecordingDocumentBuilder();
 		parser.setBuilder(builder);
@@ -736,6 +662,7 @@ public class MediaWikiLanguageTest extends TestCase {
 
 	}
 
+	@Test
 	public void testTableIncomplete2() {
 		final RecordingDocumentBuilder builder = new RecordingDocumentBuilder();
 		parser.setBuilder(builder);
@@ -755,6 +682,7 @@ public class MediaWikiLanguageTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testTableWithSyntax() {
 		final RecordingDocumentBuilder builder = new RecordingDocumentBuilder();
 		parser.setBuilder(builder);
@@ -774,6 +702,7 @@ public class MediaWikiLanguageTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testTableOptions() {
 		String html = parser.parseToHtml("{| border=\"1\"\n" + "|- style=\"font-style:italic;color:green;\"\n"
 				+ "| colspan=\"2\" | Orange || valign=\"top\" | Apple\n" + "|}");
@@ -783,12 +712,12 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("<td valign=\"top\">Apple</td>"));
 	}
 
+	@Test
 	public void testTableOptions_CssClass() {
-		String html = parser.parseToHtml("{|class=\"foo\"\n|Some text\n|}");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<table class=\"foo\"><tr><td>Some text</td></tr></table>"));
+		assertMarkup("<table class=\"foo\"><tr><td>Some text</td></tr></table>", "{|class=\"foo\"\n|Some text\n|}");
 	}
 
+	@Test
 	public void testTableWithParagraphs() {
 		//BUG 381912:
 		StringBuilder sb = new StringBuilder();
@@ -803,10 +732,12 @@ public class MediaWikiLanguageTest extends TestCase {
 
 		String html = parser.parseToHtml(sb.toString());
 		TestUtil.println("HTML: \n" + html);
-		Pattern pattern = Pattern.compile("<table border=\"1\">\\s*<tr>\\s*<td>\\s*<p>\\s*A paragraph with \\s*<b>\\s*Bold text\\s*</b>\\s* in a cell.\\s*</p>\\s*</td>\\s*<td>\\s*<p>\\s*A cell \\s*<i>\\s*containing\\s*</i>\\s* more...\\s*</p>\\s*<p>\\s*Than one paragraph.\\s*</p>\\s*</td>\\s*</tr>\\s*</table>");
+		Pattern pattern = Pattern.compile(
+				"<table border=\"1\">\\s*<tr>\\s*<td>\\s*<p>\\s*A paragraph with \\s*<b>\\s*Bold text\\s*</b>\\s* in a cell.\\s*</p>\\s*</td>\\s*<td>\\s*<p>\\s*A cell \\s*<i>\\s*containing\\s*</i>\\s* more...\\s*</p>\\s*<p>\\s*Than one paragraph.\\s*</p>\\s*</td>\\s*</tr>\\s*</table>");
 		assertContainsPattern(html, pattern);
 	}
 
+	@Test
 	public void testTableWithLongerText() {
 		//BUG 381912:
 		//See: http://www.mediawiki.org/wiki/Help:Tables "longer text and more complex wiki syntax inside table cells".
@@ -830,10 +761,12 @@ public class MediaWikiLanguageTest extends TestCase {
 
 		String html = parser.parseToHtml(sb.toString());
 		TestUtil.println("HTML: \n" + html);
-		Pattern pattern = Pattern.compile("<table border=\"1\">\\s*<tr>\\s*<td>\\s*Sxto mesto kusoks ti sam,\\s*<p>\\s*Da skandalis studentis bezopasostif tut,\\s+dost takai vcxera na mne\\s+Mai na zxen problem zembulbas,\\s+dost vozduh dusxijm kai te.\\s*</p>\\s*<p>\\s*Oliv slozxju informacias bi bez\\s*om gde detes komnat,\\s*To divaj neskolk pridijt ili\\s*Ktor zapalka bezopasostif es tot.\\s*</p>\\s*</td>\\s*<td>\\s*<ul>\\s*<li>\\s*Sxto mesto kusoks ti sam\\s*</li>\\s*<li>\\s*Vi edat zaspatit zapomnitlubovijm sol\\s*</li>\\s*<li>\\s*dost takai vcxera na mne\\s*</li>\\s*</ul>\\s*</td>\\s*</tr>\\s*</table>");
+		Pattern pattern = Pattern.compile(
+				"<table border=\"1\">\\s*<tr>\\s*<td>\\s*Sxto mesto kusoks ti sam,\\s*<p>\\s*Da skandalis studentis bezopasostif tut,\\s+dost takai vcxera na mne\\s+Mai na zxen problem zembulbas,\\s+dost vozduh dusxijm kai te.\\s*</p>\\s*<p>\\s*Oliv slozxju informacias bi bez\\s*om gde detes komnat,\\s*To divaj neskolk pridijt ili\\s*Ktor zapalka bezopasostif es tot.\\s*</p>\\s*</td>\\s*<td>\\s*<ul>\\s*<li>\\s*Sxto mesto kusoks ti sam\\s*</li>\\s*<li>\\s*Vi edat zaspatit zapomnitlubovijm sol\\s*</li>\\s*<li>\\s*dost takai vcxera na mne\\s*</li>\\s*</ul>\\s*</td>\\s*</tr>\\s*</table>");
 		assertContainsPattern(html, pattern);
 	}
 
+	@Test
 	public void testTableWithCodeInCellAndOptions() {
 		//BUG 381912:
 		StringBuilder sb = new StringBuilder();
@@ -849,10 +782,12 @@ public class MediaWikiLanguageTest extends TestCase {
 
 		String html = parser.parseToHtml(sb.toString());
 		TestUtil.println("HTML: \n" + html);
-		Pattern pattern = Pattern.compile("<table border=\"1\">\\s*<tr>\\s*<td>\\s*<pre>\\s*some\n</pre>\\s*</td>\\s*<td>\\s*<pre>\\s*code\n multiline\n</pre>\\s*</td>\\s*<td style=\"background-color:#FFFF00;\">\\s*<pre>\\s*this is code in an highlighted cell\n</pre>\\s*</td>\\s*</tr>\\s*</table>");
+		Pattern pattern = Pattern.compile(
+				"<table border=\"1\">\\s*<tr>\\s*<td>\\s*<pre>\\s*some\n</pre>\\s*</td>\\s*<td>\\s*<pre>\\s*code\n multiline\n</pre>\\s*</td>\\s*<td style=\"background-color:#FFFF00;\">\\s*<pre>\\s*this is code in an highlighted cell\n</pre>\\s*</td>\\s*</tr>\\s*</table>");
 		assertContainsPattern(html, pattern);
 	}
 
+	@Test
 	public void testTableWithExplicitFirstRowAndRowSpan() {
 		//BUG 381912:
 		StringBuilder sb = new StringBuilder();
@@ -874,10 +809,12 @@ public class MediaWikiLanguageTest extends TestCase {
 
 		String html = parser.parseToHtml(sb.toString());
 		TestUtil.println("HTML: \n" + html);
-		Pattern pattern = Pattern.compile("<table border=\"1\">\\s*<tr>\\s*<th colspan=\"6\">\\s*XYZ uv\\s*</th>\\s*</tr>\\s*<tr>\\s*<td rowspan=\"2\">\\s*X1 &amp; X2\\s*</td>\\s*<td>\\s*y1\\s*</td>\\s*<td>\\s*y2\\s*</td>\\s*<td>\\s*y3\\s*</td>\\s*<td colspan=\"2\">\\s*Z9\\s*</td>\\s*</tr>\\s*<tr>\\s*<td>\\s*z8\\s*</td>\\s*<td colspan=\"2\">\\s*T6\\s*</td>\\s*<td>\\s*u4\\s*</td>\\s*<td>\\s*U6\\s*</td>\\s*</tr>\\s*</table>");
+		Pattern pattern = Pattern.compile(
+				"<table border=\"1\">\\s*<tr>\\s*<th colspan=\"6\">\\s*XYZ uv\\s*</th>\\s*</tr>\\s*<tr>\\s*<td rowspan=\"2\">\\s*X1 &amp; X2\\s*</td>\\s*<td>\\s*y1\\s*</td>\\s*<td>\\s*y2\\s*</td>\\s*<td>\\s*y3\\s*</td>\\s*<td colspan=\"2\">\\s*Z9\\s*</td>\\s*</tr>\\s*<tr>\\s*<td>\\s*z8\\s*</td>\\s*<td colspan=\"2\">\\s*T6\\s*</td>\\s*<td>\\s*u4\\s*</td>\\s*<td>\\s*U6\\s*</td>\\s*</tr>\\s*</table>");
 		assertContainsPattern(html, pattern);
 	}
 
+	@Test
 	public void testTableNested() {
 		//BUG 304495:
 		StringBuilder sb = new StringBuilder();
@@ -897,10 +834,12 @@ public class MediaWikiLanguageTest extends TestCase {
 
 		String html = parser.parseToHtml(sb.toString());
 		TestUtil.println("HTML: \n" + html);
-		Pattern pattern = Pattern.compile("<table>\\s*<tr>\\s*<td>\\s*f\\s*<table border=\"1\">\\s*<tr>\\s*<td>\\s*a\\s*</td>\\s*<td>\\s*b\\s*</td>\\s*</tr>\\s*</table>\\s*</td>\\s*<td>\\s*,\\s*</td>\\s*<td>\\s*<table border=\"1\">\\s*<tr>\\s*<td>\\s*c\\s*</td>\\s*<td>\\s*d\\s*</td>\\s*</tr>\\s*</table>\\s*</td>\\s*</tr>\\s*</table>");
+		Pattern pattern = Pattern.compile(
+				"<table>\\s*<tr>\\s*<td>\\s*f\\s*<table border=\"1\">\\s*<tr>\\s*<td>\\s*a\\s*</td>\\s*<td>\\s*b\\s*</td>\\s*</tr>\\s*</table>\\s*</td>\\s*<td>\\s*,\\s*</td>\\s*<td>\\s*<table border=\"1\">\\s*<tr>\\s*<td>\\s*c\\s*</td>\\s*<td>\\s*d\\s*</td>\\s*</tr>\\s*</table>\\s*</td>\\s*</tr>\\s*</table>");
 		assertContainsPattern(html, pattern);
 	}
 
+	@Test
 	public void testTableNestedMalformed() {
 		//BUG 304495:
 		StringBuilder sb = new StringBuilder();
@@ -918,6 +857,7 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertTrue(html.contains(expected));
 	}
 
+	@Test
 	public void testTableNestedMultiple() {
 		//BUG 304495:
 		StringBuilder sb;
@@ -978,6 +918,7 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertTrue(html.contains(expected));
 	}
 
+	@Test
 	public void testTableLeadingSpaces() {
 		//BUG 396545:
 		StringBuilder sb = new StringBuilder();
@@ -996,6 +937,7 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertTrue(html.contains(expected));
 	}
 
+	@Test
 	public void testTableLeadingSpacesInContext() {
 		//BUG 396545:
 		StringBuilder sb = new StringBuilder();
@@ -1018,6 +960,7 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertTrue(html.contains(expected));
 	}
 
+	@Test
 	public void testTableLeadingSpacesNestedMalformed() {
 		//BUG 396545:
 		StringBuilder sb = new StringBuilder();
@@ -1035,6 +978,7 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertTrue(html.contains(expected));
 	}
 
+	@Test
 	public void testEntityReference() {
 		String tests = "&Agrave; &Aacute; &Acirc; &Atilde; &Auml; &Aring; &AElig; &Ccedil; &Egrave; &Eacute; &Ecirc; &Euml; &Igrave; &Iacute; &Icirc; &Iuml; &Ntilde; &Ograve; &Oacute; &Ocirc; &Otilde; &Ouml; &Oslash; &Ugrave; &Uacute; &Ucirc; &Uuml; &szlig; &agrave; &aacute; &acirc; &atilde; &auml; &aring; &aelig; &ccedil; &egrave; &eacute; &ecirc; &euml; &igrave; &iacute; &icirc; &iuml; &ntilde; &ograve; &oacute; &ocirc; &oelig; &otilde; &ouml; &oslash; &ugrave; &uacute; &ucirc; &uuml; &yuml; &iquest; &iexcl; &sect; &para; &dagger; &Dagger; &bull; &ndash; &mdash; &lsaquo; &rsaquo; &laquo; &raquo; &lsquo; &rsquo; &ldquo; &rdquo; &trade; &copy; &reg; &cent; &euro; &yen; &pound; &curren; &#8304; &sup1; &sup2; &sup3; &#8308; &int; &sum; &prod; &radic; &minus; &plusmn; &infin; &asymp; &prop; &equiv; &ne; &le; &ge; &times; &middot; &divide; &part; &prime; &Prime; &nabla; &permil; &deg; &there4; &alefsym; &oslash; &isin; &notin; &cap; &cup; &sub; &sup; &sube; &supe; &not; &and; &or; &exist; &forall;  &rArr; &lArr; &dArr; &uArr; &hArr; &rarr; &darr; &uarr; &larr; &harr; &mdash; &ndash;";
 		final String[] allEntities = tests.split("\\s+");
@@ -1057,129 +1001,106 @@ public class MediaWikiLanguageTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testTemplateEnDash() {
 		// note: spacing is very specific
-		String html = parser.parseToHtml("A{{ndash}}B");
-		TestUtil.println(html);
-		assertTrue(html.contains("<body><p>A&nbsp;&ndash; B</p></body>"));
-		html = parser.parseToHtml("A{{endash}}B");
-		TestUtil.println(html);
-		assertTrue(html.contains("<body><p>A&nbsp;&ndash; B</p></body>"));
+		assertMarkup("<p>A&nbsp;&ndash; B</p>", "A{{ndash}}B");
+		assertMarkup("<p>A&nbsp;&ndash; B</p>", "A{{endash}}B");
 	}
 
+	@Test
 	public void testTemplateEmDash() {
 		// note: spacing is very specific
-		String html = parser.parseToHtml("A{{mdash}}B");
-		TestUtil.println(html);
-		assertTrue(html.contains("<body><p>A&nbsp;&mdash; B</p></body>"));
-		html = parser.parseToHtml("A{{emdash}}B");
-		TestUtil.println(html);
-		assertTrue(html.contains("<body><p>A&nbsp;&mdash; B</p></body>"));
+		assertMarkup("<p>A&nbsp;&mdash; B</p>", "A{{mdash}}B");
+		assertMarkup("<p>A&nbsp;&mdash; B</p>", "A{{emdash}}B");
 	}
 
+	@Test
 	public void testTemplateCurrentMonth() {
 		String html = parser.parseToHtml("{{CURRENTMONTH}}");
-		TestUtil.println(html);
 		assertContainsPattern(html, Pattern.compile("<p>[01]\\d</p>"));
 	}
 
+	@Test
 	public void testTemplateCurrentMonthName() {
 		String html = parser.parseToHtml("{{CURRENTMONTHNAME}}");
-		TestUtil.println(html);
-		assertContainsPattern(
-				html,
-				Pattern.compile("<p>(January|February|March|April|May|June|July|August|September|October|November|December)</p>"));
+		assertContainsPattern(html, Pattern.compile(
+				"<p>(January|February|March|April|May|June|July|August|September|October|November|December)</p>"));
 	}
 
+	@Test
 	public void testTemplateCurrentMonthNameAbbrev() {
 		String html = parser.parseToHtml("{{CURRENTMONTHABBREV}}");
-		TestUtil.println(html);
 		assertContainsPattern(html, Pattern.compile("<p>(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)</p>"));
 	}
 
+	@Test
 	public void testTemplateCurrentDay() {
 		String html = parser.parseToHtml("{{CURRENTDAY}}");
-		TestUtil.println(html);
 		assertContainsPattern(html, Pattern.compile("<p>[0123]\\d</p>"));
 	}
 
+	@Test
 	public void testTemplateCurrentDOW() {
 		String html = parser.parseToHtml("{{CURRENTDOW}}");
-		TestUtil.println(html);
 		assertContainsPattern(html, Pattern.compile("<p>\\d</p>"));
 	}
 
+	@Test
 	public void testTemplateCurrentDayName() {
 		String html = parser.parseToHtml("{{CURRENTDAYNAME}}");
-		TestUtil.println(html);
 		assertContainsPattern(html,
 				Pattern.compile("<p>(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)</p>"));
 	}
 
+	@Test
 	public void testTemplateCurrentTime() {
 		String html = parser.parseToHtml("{{CURRENTTIME}}");
-		TestUtil.println(html);
 		assertContainsPattern(html, Pattern.compile("<p>[012]\\d:[0-5]\\d</p>"));
 	}
 
+	@Test
 	public void testTemplateCurrentHour() {
 		String html = parser.parseToHtml("{{CURRENTHOUR}}");
-		TestUtil.println(html);
 		assertContainsPattern(html, Pattern.compile("<p>[012]\\d</p>"));
 	}
 
+	@Test
 	public void testTemplateCurrentWeek() {
 		String html = parser.parseToHtml("{{CURRENTWEEK}}");
-		TestUtil.println(html);
 		assertContainsPattern(html, Pattern.compile("<p>[0-5]\\d</p>"));
 	}
 
+	@Test
 	public void testTemplateUnmatched() {
-		String html = parser.parseToHtml("a{{ABogusTemplateName}}");
-		TestUtil.println(html);
-		assertContainsPattern(html, Pattern.compile("<p>a</p>"));
-
-		html = parser.parseToHtml("a{{#foo}}");
-		TestUtil.println(html);
-		assertContainsPattern(html, Pattern.compile("<p>a</p>"));
+		assertMarkup("<p>a</p>", "a{{ABogusTemplateName}}");
+		assertMarkup("<p>a</p>", "a{{#foo}}");
 	}
 
+	@Test
 	public void testTemplateCurrentTimestamp() {
 		String html = parser.parseToHtml("{{CURRENTTIMESTAMP}}");
-		TestUtil.println(html);
 		assertContainsPattern(html, Pattern.compile("<p>\\d{14}</p>"));
 	}
 
-	private void assertContainsPattern(String html, Pattern pattern) {
-		if (!pattern.matcher(html).find()) {
-			fail("Expected " + pattern + " but got " + html);
-		}
-	}
-
+	@Test
 	public void testDefinitionListIndenting() {
-		String markup = ": one\n: two\n\n: three\nfour\n:five";
-		String html = parser.parseToHtml(markup);
-		TestUtil.println(html);
-		assertTrue(html.contains("<body><dl><dd>one</dd><dd>two</dd></dl><dl><dd>three</dd></dl><p>four</p><dl><dd>five</dd></dl></body>"));
+		assertMarkup("<dl><dd>one</dd><dd>two</dd></dl><dl><dd>three</dd></dl><p>four</p><dl><dd>five</dd></dl>",
+				": one\n: two\n\n: three\nfour\n:five");
 	}
 
+	@Test
 	public void testParagraphBreaksOnPreformatted() {
-		String markup = "a normal para\n preformatted\n p\nnormal\n";
-		String html = parser.parseToHtml(markup);
-		TestUtil.println(html);
-		assertTrue(Pattern.compile("<body><p>a normal para</p><pre>preformatted\\s+p\\s+</pre><p>normal</p></body>",
-				Pattern.MULTILINE)
-				.matcher(html)
-				.find());
+		assertMarkup("<p>a normal para</p><pre>preformatted\np\n</pre><p>normal</p>",
+				"a normal para\n preformatted\n p\nnormal\n");
 	}
 
+	@Test
 	public void testParagraphBreaksOnHeading() {
-		String markup = "a normal para\n= h1 =\nnormal\n";
-		String html = parser.parseToHtml(markup);
-		TestUtil.println(html);
-		assertTrue(html.contains("<body><p>a normal para</p><h1 id=\"h1\">h1</h1><p>normal</p></body>"));
+		assertMarkup("<p>a normal para</p><h1 id=\"h1\">h1</h1><p>normal</p>", "a normal para\n= h1 =\nnormal\n");
 	}
 
+	@Test
 	public void testComputeOutline() throws IOException {
 		OutlineParser outlineParser = new OutlineParser();
 		outlineParser.setMarkupLanguage(new MediaWikiLanguage());
@@ -1198,177 +1119,141 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertTrue("Top-level labels: " + topLevelLabels, topLevelLabels.contains("Task-Focused UI"));
 	}
 
+	@Test
 	public void testCloneTemplateExcludes() {
 		markupLanguage.setTemplateExcludes("*foo");
 		MediaWikiLanguage copy = (MediaWikiLanguage) markupLanguage.clone();
 		assertEquals(markupLanguage.getTemplateExcludes(), copy.getTemplateExcludes());
 	}
 
+	@Test
 	public void testTemplateExcludes() {
 		// bug 367525
 		markupLanguage.setTemplateExcludes("one, two, four_five");
-		markupLanguage.setTemplates(Arrays.asList(new Template("one", "1"), new Template("two", "2"), new Template(
-				"three", "3"), new Template("four_five", "45")));
-		String html = parser.parseToHtml("a{{one}} and {{two}} and {{three}} and {{four_five}}");
-
-		TestUtil.println("HTML: \n" + html);
-
-		assertTrue(html.contains("<p>a and  and 3 and </p>"));
+		markupLanguage.setTemplates(Arrays.asList(new Template("one", "1"), new Template("two", "2"),
+				new Template("three", "3"), new Template("four_five", "45")));
+		assertMarkup("<p>a and  and 3 and </p>", "a{{one}} and {{two}} and {{three}} and {{four_five}}");
 	}
 
+	@Test
 	public void testTemplateExcludesComplexNames() {
 		//Bug 367525
 		markupLanguage.setTemplateExcludes("#eclipseproject:technology.linux-distros");
-		markupLanguage.setTemplates(Arrays.asList(new Template("#eclipseproject:technology.linux-distros",
-				"! Not excluded - !")));
-		String html = parser.parseToHtml("foo {{#eclipseproject:technology.linux-distros}} bar");
-
-		TestUtil.println("HTML: \n" + html);
-
-		assertTrue(html.contains("<p>foo  bar</p>"));
+		markupLanguage.setTemplates(
+				Arrays.asList(new Template("#eclipseproject:technology.linux-distros", "! Not excluded - !")));
+		assertMarkup("<p>foo  bar</p>", "foo {{#eclipseproject:technology.linux-distros}} bar");
 	}
 
+	@Test
 	public void testTemplateExcludesRegEx() {
 		//Bug 367525
 		markupLanguage.setTemplateExcludes("*eclipseproject*, Linux_Tools");
 		markupLanguage.setTemplates(Arrays.asList(new Template("Linux_Tools", "!Not excluded - Linux_Tools!"),
 				new Template("#eclipseproject:technology.linux-distros", "!Not excluded - eclipseproject!")));
-		String html = parser.parseToHtml("foo {{#eclipseproject:technology.linux-distros}} bar {{Linux_Tools}} baz");
-
-		TestUtil.println("HTML: \n" + html);
-
-		assertTrue(html.contains("<p>foo  bar  baz</p>"));
+		assertMarkup("<p>foo  bar  baz</p>",
+				"foo {{#eclipseproject:technology.linux-distros}} bar {{Linux_Tools}} baz");
 	}
 
+	@Test
 	public void testTableOfContents() throws IOException {
-		String html = parser.parseToHtml("= Table Of Contents =\n\n__TOC__\n\n= Top Header =\n\nsome text\n\n== Subhead ==\n\n== Subhead2 ==\n\n= Top Header 2 =\n\n== Subhead 3 ==\n\n=== Subhead 4 ===");
-
-		TestUtil.println("HTML: \n" + html);
-
-		assertTrue(html.contains("<a href=\"#Subhead2\">"));
-		assertTrue(html.contains("<h2 id=\"Subhead2\">"));
-		assertTrue(html.contains("href=\"#Subhead_4\""));
-		assertTrue(html.contains("<h3 id=\"Subhead_4\">"));
+		assertMarkup(
+				"<h1 id=\"Table_Of_Contents\">Table Of Contents</h1><ol style=\"list-style: none;\"><li><a href=\"#Table_Of_Contents\">Table Of Contents</a></li><li><a href=\"#Top_Header\">Top Header</a><ol style=\"list-style: none;\"><li><a href=\"#Subhead\">Subhead</a></li><li><a href=\"#Subhead2\">Subhead2</a></li></ol></li><li><a href=\"#Top_Header_2\">Top Header 2</a><ol style=\"list-style: none;\"><li><a href=\"#Subhead_3\">Subhead 3</a><ol style=\"list-style: none;\"><li><a href=\"#Subhead_4\">Subhead 4</a></li></ol></li></ol></li></ol><h1 id=\"Top_Header\">Top Header</h1><p>some text</p><h2 id=\"Subhead\">Subhead</h2><h2 id=\"Subhead2\">Subhead2</h2><h1 id=\"Top_Header_2\">Top Header 2</h1><h2 id=\"Subhead_3\">Subhead 3</h2><h3 id=\"Subhead_4\">Subhead 4</h3>",
+				"= Table Of Contents =\n\n__TOC__\n\n= Top Header =\n\nsome text\n\n== Subhead ==\n\n== Subhead2 ==\n\n= Top Header 2 =\n\n== Subhead 3 ==\n\n=== Subhead 4 ===");
 	}
 
+	@Test
 	public void testTableOfContents_WithTextFollowingTOC() throws IOException {
-		String html = parser.parseToHtml("= Table Of Contents =\n\nfoo\n__TOC__ bar\n\n= Top Header =\n\nsome text\n\n== Subhead ==\n\n== Subhead2 ==\n\n= Top Header 2 =\n\n== Subhead 3 ==\n\n=== Subhead 4 ===");
-
-		TestUtil.println("HTML: \n" + html);
-
-		assertTrue(html.contains("<a href=\"#Subhead2\">"));
-		assertTrue(html.contains("<h2 id=\"Subhead2\">"));
-		assertTrue(html.contains("href=\"#Subhead_4\""));
-		assertTrue(html.contains("<h3 id=\"Subhead_4\">"));
+		assertMarkup(
+				"<h1 id=\"Table_Of_Contents\">Table Of Contents</h1><p>foo</p><ol style=\"list-style: none;\"><li><a href=\"#Table_Of_Contents\">Table Of Contents</a></li><li><a href=\"#Top_Header\">Top Header</a><ol style=\"list-style: none;\"><li><a href=\"#Subhead\">Subhead</a></li><li><a href=\"#Subhead2\">Subhead2</a></li></ol></li><li><a href=\"#Top_Header_2\">Top Header 2</a><ol style=\"list-style: none;\"><li><a href=\"#Subhead_3\">Subhead 3</a><ol style=\"list-style: none;\"><li><a href=\"#Subhead_4\">Subhead 4</a></li></ol></li></ol></li></ol><p>bar</p><h1 id=\"Top_Header\">Top Header</h1><p>some text</p><h2 id=\"Subhead\">Subhead</h2><h2 id=\"Subhead2\">Subhead2</h2><h1 id=\"Top_Header_2\">Top Header 2</h1><h2 id=\"Subhead_3\">Subhead 3</h2><h3 id=\"Subhead_4\">Subhead 4</h3>",
+				"= Table Of Contents =\n\nfoo\n__TOC__ bar\n\n= Top Header =\n\nsome text\n\n== Subhead ==\n\n== Subhead2 ==\n\n= Top Header 2 =\n\n== Subhead 3 ==\n\n=== Subhead 4 ===");
 	}
 
+	@Test
 	public void testComment_SingleLine() throws IOException {
-		String html = parser.parseToHtml("<!-- comment -->");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body></body>"));
+		assertMarkup("", "<!-- comment -->");
 	}
 
+	@Test
 	public void testComment_SingleLine_TrailingText() throws IOException {
-		String html = parser.parseToHtml("<!-- comment --> not a comment");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p> not a comment</p></body>"));
+		assertMarkup("<p> not a comment</p>", "<!-- comment --> not a comment");
 	}
 
+	@Test
 	public void testComment_SingleLine_LeadingText() throws IOException {
-		String html = parser.parseToHtml("not a comment <!-- comment -->");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>not a comment </p></body>"));
+		assertMarkup("<p>not a comment </p>", "not a comment <!-- comment -->");
 	}
 
+	@Test
 	public void testComment_SingleLine_LeadingTrailingText() throws IOException {
-		String html = parser.parseToHtml("not a comment <!-- comment --> more text");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>not a comment  more text</p></body>"));
+		assertMarkup("<p>not a comment  more text</p>", "not a comment <!-- comment --> more text");
 	}
 
+	@Test
 	public void testComment_SingleLine_MultipleBlocks() throws IOException {
-		String input = "<!-- X -->Lorem<!-- Y -->Ipsum<!-- Z -->";
-		String html = parser.parseToHtml(input);
-		TestUtil.println(html);
-		assertTrue(html.contains("<p>LoremIpsum</p>"));
+		assertMarkup("<p>LoremIpsum</p>", "<!-- X -->Lorem<!-- Y -->Ipsum<!-- Z -->");
 	}
 
+	@Test
 	public void testComment_SingleLine_MultipleBlocks_OnMultipleLines() throws IOException {
-		String input = "<!-- X -->Lorem<!-- Y -->Ipsum\n<!-- Z -->";
-		String html = parser.parseToHtml(input);
-		TestUtil.println(html);
-		assertTrue(html.contains("<p>LoremIpsum</p>"));
+		assertMarkup("<p>LoremIpsum</p>", "<!-- X -->Lorem<!-- Y -->Ipsum\n<!-- Z -->");
 	}
 
+	@Test
 	public void testComment_MultiLine() throws IOException {
-		String html = parser.parseToHtml("<!-- comment\nwith\nMultiple lines of text -->\n");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body></body>"));
+		assertMarkup("", "<!-- comment\nwith\nMultiple lines of text -->\n");
 	}
 
+	@Test
 	public void testComment_MultiLine_Multiple() throws IOException {
-		String html = parser.parseToHtml("<!-- comment\nwith\nMultiple lines of text -->\n<!-- another comment -->");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body></body>"));
+		assertMarkup("", "<!-- comment\nwith\nMultiple lines of text -->\n<!-- another comment -->");
 	}
 
+	@Test
 	public void testComment_MultiLine_Multiple2() throws IOException {
-		String html = parser.parseToHtml("<!-- comment\nwith\nMultiple lines of text -->abc<!-- another\ncomment -->");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>abc</p></body>"));
+		assertMarkup("<p>abc</p>", "<!-- comment\nwith\nMultiple lines of text -->abc<!-- another\ncomment -->");
 	}
 
+	@Test
 	public void testComment_MultiLine_TrailingText() throws IOException {
-		String html = parser.parseToHtml("<!-- comment\nwith\nMultiple lines of text --> not a comment");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p> not a comment</p></body>"));
+		assertMarkup("<p> not a comment</p>", "<!-- comment\nwith\nMultiple lines of text --> not a comment");
 	}
 
+	@Test
 	public void testComment_MultiLine_LeadingText() throws IOException {
-		String html = parser.parseToHtml("not a comment <!-- comment\nwith\nMultiple lines of text -->");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>not a comment </p></body>"));
+		assertMarkup("<p>not a comment </p>", "not a comment <!-- comment\nwith\nMultiple lines of text -->");
 	}
 
+	@Test
 	public void testComment_MultiLine_LeadingTrailingText() throws IOException {
-		String html = parser.parseToHtml("not a comment <!-- comment\nwith\nMultiple lines of text --> more text");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(Pattern.compile("<body><p>not a comment\\s+more text</p></body>").matcher(html).find());
+		assertMarkup("<p>not a comment \n more text</p>",
+				"not a comment <!-- comment\nwith\nMultiple lines of text --> more text");
 	}
 
+	@Test
 	public void testImageFilenameCaseInsensitivity() {
-		String html = parser.parseToHtml("[[Image:foo.gif]]");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<img border=\"0\" src=\"foo.gif\"/>"));
+		assertMarkup("<p><img border=\"0\" src=\"foo.gif\"/></p>", "[[Image:foo.gif]]");
 
 		Set<String> imageNames = new HashSet<String>();
 		imageNames.add("Foo.gif");
 		markupLanguage.setImageNames(imageNames);
 
-		html = parser.parseToHtml("[[Image:foo.gif]]");
-		TestUtil.println("HTML: \n" + html);
-		assertTrue(html.contains("<img border=\"0\" src=\"Foo.gif\"/>"));
+		assertMarkup("<p><img border=\"0\" src=\"Foo.gif\"/></p>", "[[Image:foo.gif]]");
 	}
 
+	@Test
 	public void testHeadingWithHtmlTags() {
-		String html = parser.parseToHtml("= <span style=\"font-family:monospace\">Heading Text</span> =\n\n text");
-
-		TestUtil.println("HTML: \n" + html);
-
-		assertTrue(html.contains("<h1 id=\"Heading_Text\"><span style=\"font-family:monospace\">Heading Text</span></h1>"));
+		assertMarkup(
+				"<h1 id=\"Heading_Text\"><span style=\"font-family:monospace\">Heading Text</span></h1><pre>text\n</pre>",
+				"= <span style=\"font-family:monospace\">Heading Text</span> =\n\n text");
 	}
 
 	private String readFully(String resource) throws IOException {
-		Reader reader = new InputStreamReader(MediaWikiLanguageTest.class.getResourceAsStream(resource));
-		StringWriter writer = new StringWriter();
-		try {
-			int i;
-			while ((i = reader.read()) != -1) {
-				writer.write(i);
-			}
-		} finally {
-			reader.close();
+		return Resources.toString(MediaWikiLanguageTest.class.getResource(resource), StandardCharsets.UTF_8);
+	}
+
+	private void assertContainsPattern(String html, Pattern pattern) {
+		if (!pattern.matcher(html).find()) {
+			fail("Expected " + pattern + " but got " + html);
 		}
-		return writer.toString();
 	}
 }
