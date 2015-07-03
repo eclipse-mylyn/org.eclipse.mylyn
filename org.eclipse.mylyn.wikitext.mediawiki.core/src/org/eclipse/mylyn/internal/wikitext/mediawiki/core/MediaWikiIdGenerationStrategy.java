@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 David Green and others.
+ * Copyright (c) 2007, 2011, 2015 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,7 +36,7 @@ public class MediaWikiIdGenerationStrategy extends IdGenerationStrategy {
 		//   anchor = anchor + '_' + refCount(anchor) 
 		// }
 
-		String anchor = escape(headingText);
+		String anchor = headingTextToId(headingText);
 		Integer previousRefCount = anchorReferenceCount.put(anchor, 1);
 		if (previousRefCount != null) {
 			int refCount = previousRefCount + 1;
@@ -47,7 +47,14 @@ public class MediaWikiIdGenerationStrategy extends IdGenerationStrategy {
 		return anchor;
 	}
 
-	private String escape(String headingText) {
+	/**
+	 * encode a page name or anchor following MediaWiki encoding behaviour
+	 * 
+	 * @param headingText
+	 *            the heading text, page name or anchor text
+	 * @return an encoded id
+	 */
+	static String headingTextToId(String headingText) {
 		// implementation based on Sanitizer.php line 629
 		String escaped = headingText.replaceAll("\\s", "_"); //$NON-NLS-1$ //$NON-NLS-2$
 		// TODO: decode entity and char references

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2012 David Green and others.
+ * Copyright (c) 2010, 2012, 2015 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,8 +50,15 @@ public abstract class AbstractMediaWikiLanguage extends AbstractMarkupLanguage {
 				return mapping;
 			}
 		}
-		String pageId = pageName.replace(' ', '_');
-		// FIXME: other character encodings occur here, not just ' '
+
+		String pageId;
+		int anchorIndex = pageName.indexOf("#"); //$NON-NLS-1$
+		if (anchorIndex < 0) {
+			pageId = pageName;
+		} else {
+			String encodedAnchor = MediaWikiIdGenerationStrategy.headingTextToId(pageName.substring(anchorIndex + 1));
+			pageId = pageName.substring(0, anchorIndex) + "#" + encodedAnchor; //$NON-NLS-1$
+		}
 
 		if (pageId.startsWith(CATEGORY_PREFIX) && pageId.length() > CATEGORY_PREFIX.length()) { // category
 			return pageId.substring(CATEGORY_PREFIX.length());

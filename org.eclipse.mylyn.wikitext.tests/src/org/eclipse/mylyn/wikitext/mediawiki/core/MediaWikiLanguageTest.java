@@ -417,6 +417,22 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 	}
 
 	@Test
+	public void testLinkInternalPageReferenceWithAltTextAndAnchor() {
+		//Bug 388657
+		assertMarkup(
+				"<p>a <a href=\"/wiki/Main_Page#Anchor_Text.3F\" title=\"Main Page#Anchor Text?\">text of the link</a> reference to the Main Page</p>",
+				"a [[Main Page#Anchor Text?|text of the link]] reference to the Main Page");
+	}
+
+	@Test
+	public void testLinkInternalPageReferenceWithAltTextAndAnchor2() {
+		//Bug 388657
+		assertMarkup(
+				"<p>Go to <a href=\"/wiki/This!page#with_anchor.21\" title=\"This!page#with anchor!\">this page</a> to have an example</p>",
+				"Go to [[This!page#with anchor!|this page]] to have an example");
+	}
+
+	@Test
 	public void testLinkInternalPageReferenceWithAltTextInTables() {
 		assertMarkup(
 				"<table><tr><td><a href=\"/wiki/Orion/Server_API/Preference_API\" title=\"Orion/Server_API/Preference API\">Preference API</a></td></tr></table>",

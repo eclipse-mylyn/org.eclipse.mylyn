@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 David Green and others.
+ * Copyright (c) 2007, 2010, 2015 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,5 +32,12 @@ public class MediaWikiIdGenerationStrategyTest extends TestCase {
 
 	public void testWithDots() {
 		assertEquals("com.foo.Bar", generationStrategy.generateId("com.foo.Bar"));
+	}
+
+	public void testHeadingTextToId() {
+		//Bug 388657
+		assertEquals("Anchor_Text.3F", generationStrategy.generateId("Anchor Text?"));
+		assertEquals("This.2FSection", generationStrategy.generateId("This/Section"));
+		assertEquals("C.23_Implementation", generationStrategy.generateId("C# Implementation"));
 	}
 }
