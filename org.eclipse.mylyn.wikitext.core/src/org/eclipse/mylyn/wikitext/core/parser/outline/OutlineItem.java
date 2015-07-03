@@ -15,10 +15,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.base.Objects;
+
 /**
  * An item in a document outline. A document outline reflects the heading structure of the document. Generally there is
  * always a root item that represents the document itself. Every level-1 heading becomes a child item of the root.
- * 
+ *
  * @author David Green
  * @since 1.0
  */
@@ -71,7 +73,7 @@ public class OutlineItem {
 	/**
 	 * get the length of the outline item, which corresponds to the length of the heading text. The length does not
 	 * include content following the heading text itself.
-	 * 
+	 *
 	 * @see #getSectionLength()
 	 */
 	public int getLength() {
@@ -81,7 +83,7 @@ public class OutlineItem {
 	/**
 	 * get the length of the section, which is the length of the heading text plus the length of any following content
 	 * up to the next peer-leveled heading or the parent's following sibling.
-	 * 
+	 *
 	 * @see #getLength()
 	 */
 	public int getSectionLength() {
@@ -153,7 +155,7 @@ public class OutlineItem {
 	/**
 	 * Get the previous item. The order of the items is determined via document order traversal of all nodes in the
 	 * outline.
-	 * 
+	 *
 	 * @return the previous item or null if there is no previous (ie: the root item).
 	 */
 	public OutlineItem getPrevious() {
@@ -230,7 +232,7 @@ public class OutlineItem {
 			if (parent == null) {
 				positionKey = ""; //$NON-NLS-1$
 			} else {
-				positionKey = getParent().calculatePositionKey() + "/" + kind + childOffset; //$NON-NLS-1$
+				positionKey = getParent().calculatePositionKey() + "/" + kind + '_' + childOffset; //$NON-NLS-1$
 			}
 		}
 		return positionKey;
@@ -331,7 +333,7 @@ public class OutlineItem {
 
 	/**
 	 * the resource path to the resource of this outline item
-	 * 
+	 *
 	 * @return the resource path, or null if it's unknown.
 	 */
 	public String getResourcePath() {
@@ -343,7 +345,7 @@ public class OutlineItem {
 
 	/**
 	 * the resource path to the resource of this outline item
-	 * 
+	 *
 	 * @param resourcePath
 	 *            the resource path, or null if it's unknown.
 	 */
@@ -394,7 +396,7 @@ public class OutlineItem {
 	/**
 	 * Indicate if this outline item contains the given outline item. The computation uses outline item offsets (the
 	 * {@link #getOffset() offset} and {@link #getSectionLength() section length}.
-	 * 
+	 *
 	 * @return true if and only if the offsets of the provided item lie within the offsets of this outline item.
 	 */
 	public boolean contains(OutlineItem item) {
@@ -416,6 +418,9 @@ public class OutlineItem {
 	 */
 	@Override
 	public String toString() {
-		return "OutlineItem(" + calculatePositionKey() + "/" + getId() + "/" + System.identityHashCode(this) + ")"; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$
+		return Objects.toStringHelper(getClass())
+				.add("id", getId()) //$NON-NLS-1$
+				.add("positionKey", calculatePositionKey()) //$NON-NLS-1$
+				.toString();
 	}
 }

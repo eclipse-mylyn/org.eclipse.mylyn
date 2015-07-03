@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Tasktop Technologies and others.
+ * Copyright (c) 2013, 2015 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -207,6 +207,18 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 	 */
 	protected int tocAnchorLevel = 0;
 
+	/**
+	 * Indicates whether an embedded table of contents is generated. When true, a table of contents is generated in each
+	 * HTML page. Using CSS the table of contents can be positioned on the left hand side in a column, with portions of
+	 * the table of contents expanded or collapsed.
+	 * <p>
+	 * Defaults to false.
+	 * </p>
+	 *
+	 * @parameter
+	 */
+	protected boolean embeddedTableOfContents = false;
+
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		try {
 			ensureOutputFolderExists();
@@ -362,6 +374,7 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 		SplittingHtmlDocumentBuilder splittingBuilder = new SplittingHtmlDocumentBuilder();
 		splittingBuilder.setRootBuilder(builder);
 		splittingBuilder.setOutline(item);
+		splittingBuilder.setEmbeddedTableOfContents(embeddedTableOfContents);
 		splittingBuilder.setRootFile(htmlOutputFile);
 		splittingBuilder.setNavigationImages(navigationImages);
 		splittingBuilder

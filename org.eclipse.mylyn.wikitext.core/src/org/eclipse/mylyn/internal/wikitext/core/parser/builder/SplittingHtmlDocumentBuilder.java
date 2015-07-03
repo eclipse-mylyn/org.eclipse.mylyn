@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.core.parser.builder;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -26,6 +28,7 @@ import org.eclipse.mylyn.wikitext.core.parser.TableAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.TableCellAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder.Stylesheet;
+import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 
 /**
  * @author David Green
@@ -49,6 +52,8 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 	private boolean navigationImages;
 
 	private String navigationImagePath = "images"; //$NON-NLS-1$
+
+	private boolean embeddedTableOfContents;
 
 	public void setRootBuilder(HtmlDocumentBuilder rootBuilder) {
 		this.rootBuilder = rootBuilder;
@@ -120,11 +125,11 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 	}
 
 	private void documentFooter() {
+		emitEmbeddedTableOfContentsFooter();
 		emitNavigation(false);
 	}
 
 	private void emitNavigation(boolean header) {
-
 		String currentName = currentFile.getName();
 		List<SplitOutlineItem> pageOrder = outline.getPageOrder();
 		SplitOutlineItem previous = null;
@@ -150,7 +155,7 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 		}
 
 		if (!header) {
-			out.charactersUnescaped("<hr/>"); //$NON-NLS-1$
+			out.charactersUnescaped("<hr class=\"navigation-separator\"/>"); //$NON-NLS-1$
 		}
 
 		TableAttributes tableAttributes = new TableAttributes();
@@ -235,7 +240,8 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 				out.imageLink(linkAttributes, imageAttributes, next.getSplitTarget(),
 						computeNavImagePath(Messages.getString("SplittingHtmlDocumentBuilder.Next_Image"))); //$NON-NLS-1$
 			} else {
-				out.link(linkAttributes, next.getSplitTarget(), Messages.getString("SplittingHtmlDocumentBuilder.Next")); //$NON-NLS-1$
+				out.link(linkAttributes, next.getSplitTarget(),
+						Messages.getString("SplittingHtmlDocumentBuilder.Next")); //$NON-NLS-1$
 			}
 		}
 		out.endBlock();
@@ -277,7 +283,7 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 		out.endBlock(); // table
 
 		if (header) {
-			out.charactersUnescaped("<hr/>"); //$NON-NLS-1$
+			out.charactersUnescaped("<hr class=\"navigation-separator\"/>"); //$NON-NLS-1$
 		}
 	}
 
@@ -301,6 +307,7 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 
 	private void documentHeader() {
 		emitNavigation(true);
+		emitEmbeddedTableOfContentsHeader();
 	}
 
 	@Override
@@ -385,13 +392,25 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 
 	private String adjustHref(String href) {
 		if (href != null && href.startsWith("#")) { //$NON-NLS-1$
-			SplitOutlineItem target = outline.getOutlineItemById(href.substring(1));
-			if (target != null && target.getSplitTarget() != null
-					&& !currentFile.getName().equals(target.getSplitTarget())) {
-				href = target.getSplitTarget().replace(" ", "%20") + href; //$NON-NLS-1$ //$NON-NLS-2$
-			}
+			href = getHrefOfHeading(href.substring(1));
 		}
 		return href;
+	}
+
+	private String getHrefOfHeading(String headingId) {
+		SplitOutlineItem target = outline.getOutlineItemById(headingId);
+		if (target != null) {
+			SplitOutlineItem pageTarget = target;
+			while (pageTarget.getParent() != null
+					&& pageTarget.getSplitTarget().equals(pageTarget.getParent().getSplitTarget())) {
+				pageTarget = pageTarget.getParent();
+			}
+			if (!currentFile.getName().equals(pageTarget.getSplitTarget())) {
+				String pageHref = pageTarget.getSplitTarget().replace(" ", "%20"); //$NON-NLS-1$//$NON-NLS-2$
+				return pageHref + '#' + headingId;
+			}
+		}
+		return '#' + headingId;
 	}
 
 	@Override
@@ -443,5 +462,98 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 
 	public boolean isFormatting() {
 		return formatting;
+	}
+
+	public void setEmbeddedTableOfContents(boolean embeddedTableOfContents) {
+		this.embeddedTableOfContents = embeddedTableOfContents;
+	}
+
+	public boolean isEmbeddedTableOfContents() {
+		return embeddedTableOfContents;
+	}
+
+	private void emitEmbeddedTableOfContents() {
+		String currentName = currentFile.getName();
+		SplitOutlineItem pageItem = null;
+		List<SplitOutlineItem> pageOrder = outline.getPageOrder();
+		for (SplitOutlineItem item : pageOrder) {
+			if (item.getSplitTarget().equals(currentName)) {
+				pageItem = item;
+			}
+		}
+		checkState(pageItem != null);
+		emitToc(outline, 0);
+	}
+
+	private void emitToc(OutlineItem item, int level) {
+		if (item.getChildren().isEmpty()) {
+			return;
+		}
+		Attributes listAttributes = new Attributes();
+		listAttributes.appendCssClass("table-of-contents"); //$NON-NLS-1$
+		out.beginBlock(BlockType.NUMERIC_LIST, listAttributes);
+
+		for (OutlineItem child : item.getChildren()) {
+			Attributes itemAttributes = new Attributes();
+			if (isExpandedInTableOfContents(child)) {
+				itemAttributes.appendCssClass("expanded"); //$NON-NLS-1$
+			} else {
+				itemAttributes.appendCssClass("collapsed"); //$NON-NLS-1$
+			}
+			out.beginBlock(BlockType.LIST_ITEM, itemAttributes);
+			out.link(getHrefOfHeading(child.getId()), child.getLabel());
+			emitToc(child, level + 1);
+			out.endBlock();
+		}
+		out.endBlock();
+	}
+
+	private boolean isExpandedInTableOfContents(OutlineItem target) {
+		SplitOutlineItem pageTarget = (SplitOutlineItem) target;
+		while (pageTarget.getParent() != outline && pageTarget.getSplitTarget() == null) {
+			pageTarget = pageTarget.getParent();
+		}
+		if (pageTarget.getSplitTarget() != null && !currentFile.getName().equals(pageTarget.getSplitTarget())) {
+			return false;
+		}
+		return true;
+	}
+
+	private void emitEmbeddedTableOfContentsHeader() {
+		if (embeddedTableOfContents) {
+			beginDiv("container"); //$NON-NLS-1$
+			beginDiv("row"); //$NON-NLS-1$
+
+			beginDiv("table-of-contents", "span2"); //$NON-NLS-1$//$NON-NLS-2$
+
+			out.beginHeading(1, new Attributes());
+			out.characters(Messages.getString("SplittingHtmlDocumentBuilder.TableOfContentsHeading")); //$NON-NLS-1$
+			out.endHeading();
+			emitEmbeddedTableOfContents();
+
+			endDiv(); // table of contents
+
+			beginDiv("main-content", "span10"); //$NON-NLS-1$//$NON-NLS-2$
+		}
+	}
+
+	private void beginDiv(String... cssClasses) {
+		Attributes attributes = new Attributes();
+		for (String cssClass : cssClasses) {
+			attributes.appendCssClass(cssClass);
+		}
+		out.beginBlock(BlockType.DIV, attributes);
+	}
+
+	private void endDiv() {
+		out.endBlock();
+	}
+
+	private void emitEmbeddedTableOfContentsFooter() {
+		if (embeddedTableOfContents) {
+			endDiv(); // main content
+			endDiv(); // row
+			endDiv(); // container
+		}
 	}
 }

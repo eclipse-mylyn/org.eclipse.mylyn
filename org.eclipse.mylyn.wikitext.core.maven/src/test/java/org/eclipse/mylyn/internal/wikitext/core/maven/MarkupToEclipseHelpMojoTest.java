@@ -245,6 +245,19 @@ public class MarkupToEclipseHelpMojoTest {
 		markupToEclipseHelp.computeResourcePath(":not valid", "");
 	}
 
+	@Test
+	public void embeddedTableOfContents() {
+		HtmlDocumentBuilder builder = mock(HtmlDocumentBuilder.class);
+		SplitOutlineItem item = mock(SplitOutlineItem.class);
+		File htmlOutputFile = mock(File.class);
+		SplittingHtmlDocumentBuilder splittingBuilder = markupToEclipseHelp.createSplittingBuilder(builder, item,
+				htmlOutputFile, "");
+		assertFalse(splittingBuilder.isEmbeddedTableOfContents());
+		markupToEclipseHelp.embeddedTableOfContents = true;
+		splittingBuilder = markupToEclipseHelp.createSplittingBuilder(builder, item, htmlOutputFile, "");
+		assertTrue(splittingBuilder.isEmbeddedTableOfContents());
+	}
+
 	private void assertNavigationImagesPath(String expected, String relativePath) {
 		HtmlDocumentBuilder builder = mock(HtmlDocumentBuilder.class);
 		SplitOutlineItem item = mock(SplitOutlineItem.class);
