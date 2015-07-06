@@ -21,4 +21,4 @@ Export-Package: org.eclipse.mylyn.reviews.edit,
  org.eclipse.mylyn.reviews.spi.edit.remote.review;x-friends:="org.eclipse.mylyn.reviews.ui"
 Bundle-Activator: org.eclipse.mylyn.reviews.edit.ReviewsEditPluginActivator
 Import-Package: org.apache.commons.io,
- org.apache.commons.lang;version="2.4.0"
+ org.apache.commons.lang;version="[2.6.0,3.0.0)"
