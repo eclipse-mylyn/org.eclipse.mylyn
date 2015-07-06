@@ -27,5 +27,5 @@ rm -rf $TMP || true
 mkdir -p $TMP
 
 rm $OUT || true
-/usr/bin/find $SRC -path "*plugins*" -not -path "*e3.3*" -name "org.eclipse.mylyn*.jar" -not -name "*source*" | xargs -i cp {} $TMP
+/usr/bin/find $SRC -path "*plugins*" -not -path "*e3.3*" -name "org.eclipse.mylyn*.jar" -not -name "*source*"  -not -name "*.tests_*" | xargs -i cp {} $TMP
 zip $OUT -j $TMP/*
