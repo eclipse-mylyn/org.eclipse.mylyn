@@ -436,6 +436,9 @@ h3. MediaWiki To Eclipse Help
 Mylyn WikiText provides a means to generate Eclipse Help content from multiple MediaWiki pages, directly from the wiki.  This feature takes into account cross-page hyperlinks, template expansion and downloading images that appear in the page.  To use this feature use the @<mediawiki-to-eclipse-help>@ Ant task as follows:
 
 bc.. 
+    	<taskdef classpathref="wikitext.classpath" 
+    	    resource="org/eclipse/mylyn/wikitext/mediawiki/core/ant/tasks.properties"/>
+	 
     	<mediawiki-to-eclipse-help
     		wikiBaseUrl="http://wiki.eclipse.org"
 			validate="true"
@@ -457,12 +460,9 @@ This document is maintained in a collaborative wiki.  If you wish to update or m
 {url}</pageAppendum>
     	</mediawiki-to-eclipse-help>
     	
-p. To use this Ant task you'll need to add a @<taskdef>@ to your Ant script as follows:
+p. Note the different @<taskdef>@ for the @<mediawiki-to-eclipse-help>@ task.
 
 bc. 
-	<taskdef classpathref="wikitext.classpath" 
-		resource="org/eclipse/mylyn/wikitext/core/ant/tasks.properties"/>
-
 The following describes the Ant task and its configurable options:
 
 

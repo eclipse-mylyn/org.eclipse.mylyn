@@ -16,5 +16,6 @@ Export-Package: org.eclipse.mylyn.internal.wikitext.mediawiki.core;x-internal:=t
  org.eclipse.mylyn.internal.wikitext.mediawiki.core.token;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.mediawiki.core.validation;x-internal:=true,
  org.eclipse.mylyn.wikitext.mediawiki.core,
+ org.eclipse.mylyn.wikitext.mediawiki.core.ant,
  services
 Bundle-Localization: plugin
