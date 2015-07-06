@@ -13,27 +13,6 @@
   <packaging>eclipse-plugin</packaging>
   <build>
     <plugins>
-      <!--
-      <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-antrun-plugin</artifactId>
-	<version>1.6</version>
-	<executions>
-	  <execution>
-	    <phase>generate-sources</phase>
-	    <configuration>
-	      <target>
-                <property name="wikitext.tasks.classpath.path" refid="maven.compile.classpath"/>
-                <ant target="all" inheritRefs="true" antfile="build-helper.xml"/>
-	      </target>
-	    </configuration>
-	    <goals>
-	      <goal>run</goal>
-	    </goals>
-	  </execution>
-	</executions>
-      </plugin>
-      -->
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-source-plugin</artifactId>
