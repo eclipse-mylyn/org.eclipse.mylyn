@@ -48,6 +48,7 @@ import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.internal.core.model.FileVersion;
+import org.eclipse.osgi.util.NLS;
 import org.hamcrest.Matcher;
 import org.junit.Test;
 
@@ -431,7 +432,8 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		TestRemoteObserverConsumer<IReview, IReviewItemSet, String, PatchSetDetail, PatchSetDetail, String> itemSetObserver //
 		= retrieveForLocalKey(reviewHarness.getProvider().getReviewItemSetFactory(), getReview(), patchSetId, false);
 		PatchSetDetail detail = itemSetObserver.getRemoteObject();
-		assertNotNull("Failed to retrieve PatchSetDetail", detail);
+		assertNotNull(NLS.bind("Failed to retrieve PatchSetDetail {0} for {1}", patchSetId, getReview().getId()),
+				detail);
 		return detail;
 	}
 
