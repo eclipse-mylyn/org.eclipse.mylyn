@@ -134,9 +134,9 @@ public final class TaskAttribute {
 	 * <br>
 	 * Example: In Bugzilla we have COMPONENT, VERSION, TARGET_MILESTONE as depends on the PRODUCT. We can so update the
 	 * options of the attributes to match the definition of the PRODUCT.
-	 * 
+	 *
 	 * @see #BugzillaRestCreateTaskSchema
-	 * @since 3.16
+	 * @since 3.17
 	 */
 	public static final String META_DEPENDS_ON_ATTRIBUTE_ID = "task.meta.dependson.attribute"; //$NON-NLS-1$
 
