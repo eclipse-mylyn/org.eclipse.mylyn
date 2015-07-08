@@ -14,8 +14,6 @@ package org.eclipse.mylyn.hudson.tests.core;
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
@@ -24,6 +22,9 @@ import org.eclipse.mylyn.internal.hudson.core.client.HudsonConfigurationCache;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelHealthReport;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
+import org.junit.Assert;
+
+import junit.framework.TestCase;
 
 /**
  * @author Markus Knittig
@@ -31,17 +32,24 @@ import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
 public class HudsonServerBehaviourTest extends TestCase {
 
 	public void testParseJobHealthNoReport() throws Exception {
-		HudsonServerBehaviour behaviour = new HudsonServerBehaviour(new RepositoryLocation(),
-				new HudsonConfigurationCache());
+		RepositoryLocation repositoryLocation = new RepositoryLocation();
+		String baseUrl = "http://test.org/jenkins/";
+		repositoryLocation.setUrl(baseUrl);
+		HudsonServerBehaviour behaviour = new HudsonServerBehaviour(repositoryLocation, new HudsonConfigurationCache());
 		HudsonModelJob job = new HudsonModelJob();
+		job.setUrl(behaviour.getLocation().getUrl() + "/job/test-job");
+
 		job.setColor(HudsonModelBallColor.YELLOW);
 		assertEquals(-1, behaviour.parseJob(job).getHealth());
 	}
 
 	public void testParseJobHealth() throws Exception {
-		HudsonServerBehaviour behaviour = new HudsonServerBehaviour(new RepositoryLocation(),
-				new HudsonConfigurationCache());
+		RepositoryLocation repositoryLocation = new RepositoryLocation();
+		String baseUrl = "http://test.org/jenkins/";
+		repositoryLocation.setUrl(baseUrl);
+		HudsonServerBehaviour behaviour = new HudsonServerBehaviour(repositoryLocation, new HudsonConfigurationCache());
 		HudsonModelJob job = new HudsonModelJob();
+		job.setUrl(behaviour.getLocation().getUrl() + "/job/test-job");
 		job.setColor(HudsonModelBallColor.YELLOW);
 		HudsonModelHealthReport healthReport = new HudsonModelHealthReport();
 		healthReport.setScore(80);
@@ -50,9 +58,12 @@ public class HudsonServerBehaviourTest extends TestCase {
 	}
 
 	public void testParseJobNoColor() throws Exception {
-		HudsonServerBehaviour behaviour = new HudsonServerBehaviour(new RepositoryLocation(),
-				new HudsonConfigurationCache());
+		RepositoryLocation repositoryLocation = new RepositoryLocation();
+		String baseUrl = "http://test.org/jenkins/";
+		repositoryLocation.setUrl(baseUrl);
+		HudsonServerBehaviour behaviour = new HudsonServerBehaviour(repositoryLocation, new HudsonConfigurationCache());
 		HudsonModelJob job = new HudsonModelJob();
+		job.setUrl(behaviour.getLocation().getUrl() + "/job/test-job");
 
 		IBuildPlan buildPlan = behaviour.parseJob(job);
 
@@ -61,9 +72,12 @@ public class HudsonServerBehaviourTest extends TestCase {
 	}
 
 	public void testParseJobRunningColor() throws Exception {
-		HudsonServerBehaviour behaviour = new HudsonServerBehaviour(new RepositoryLocation(),
-				new HudsonConfigurationCache());
+		RepositoryLocation repositoryLocation = new RepositoryLocation();
+		String baseUrl = "http://test.org/jenkins/";
+		repositoryLocation.setUrl(baseUrl);
+		HudsonServerBehaviour behaviour = new HudsonServerBehaviour(repositoryLocation, new HudsonConfigurationCache());
 		HudsonModelJob job = new HudsonModelJob();
+		job.setUrl(behaviour.getLocation().getUrl() + "/job/test-job");
 
 		for (HudsonModelBallColor color : getRunningColors()) {
 			job.setColor(color);
@@ -74,9 +88,12 @@ public class HudsonServerBehaviourTest extends TestCase {
 	}
 
 	public void testParseJobStoppedColor() throws Exception {
-		HudsonServerBehaviour behaviour = new HudsonServerBehaviour(new RepositoryLocation(),
-				new HudsonConfigurationCache());
+		RepositoryLocation repositoryLocation = new RepositoryLocation();
+		String baseUrl = "http://test.org/jenkins/";
+		repositoryLocation.setUrl(baseUrl);
+		HudsonServerBehaviour behaviour = new HudsonServerBehaviour(repositoryLocation, new HudsonConfigurationCache());
 		HudsonModelJob job = new HudsonModelJob();
+		job.setUrl(behaviour.getLocation().getUrl() + "/job/test-job");
 
 		for (HudsonModelBallColor color : getStoppedColors()) {
 			job.setColor(color);
@@ -84,6 +101,34 @@ public class HudsonServerBehaviourTest extends TestCase {
 
 			assertEquals(BuildState.STOPPED, buildPlan.getState());
 		}
+	}
+
+	public void testParseJobNestedJob() throws Exception {
+		RepositoryLocation repositoryLocation = new RepositoryLocation();
+		String baseUrl = "http://test.org/jenkins/";
+		repositoryLocation.setUrl(baseUrl);
+		HudsonServerBehaviour behaviour = new HudsonServerBehaviour(repositoryLocation, new HudsonConfigurationCache());
+
+		HudsonModelJob nestedJob = new HudsonModelJob();
+		String nestedJobUrl = baseUrl + "/test-folder/job/test-nested-one/";
+		nestedJob.setName("test-nested-one");
+		nestedJob.setUrl(nestedJobUrl);
+		IBuildPlan buildPlan = behaviour.parseJob(nestedJob);
+		Assert.assertEquals(nestedJobUrl, buildPlan.getId());
+	}
+
+	public void testParseJobTopLevelJob() throws Exception {
+		RepositoryLocation repositoryLocation = new RepositoryLocation();
+		String baseUrl = "http://test.org/jenkins/";
+		repositoryLocation.setUrl(baseUrl);
+		HudsonServerBehaviour behaviour = new HudsonServerBehaviour(repositoryLocation, new HudsonConfigurationCache());
+
+		HudsonModelJob topLevelJob = new HudsonModelJob();
+		String jobName = "test-succeeding";
+		topLevelJob.setName(jobName);
+		topLevelJob.setUrl(baseUrl + "job/test-succeeding/");
+		IBuildPlan buildPlan = behaviour.parseJob(topLevelJob);
+		Assert.assertEquals(jobName, buildPlan.getId());
 	}
 
 	private Set<HudsonModelBallColor> getRunningColors() {

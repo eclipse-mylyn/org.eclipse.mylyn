@@ -38,6 +38,14 @@ public class HudsonHarness {
 
 	private static final String PLAN_GIT = "test-git";
 
+	private static final String PLAN_FOLDER = "test-folder";
+
+	private static final String PLAN_SUB_FOLDER = "test-sub-folder";
+
+	private static final String PLAN_NESTED_ONE = "test-nested-one";
+
+	private static final String PLAN_NESTED_TWO = "test-nested-two";
+
 	private RestfulHudsonClient client;
 
 	private final HudsonFixture fixture;
@@ -101,6 +109,22 @@ public class HudsonHarness {
 
 	public String getPlanGit() {
 		return PLAN_GIT;
+	}
+
+	public String getPlanFolder() {
+		return PLAN_FOLDER;
+	}
+
+	public String getPlanSubFolder() {
+		return PLAN_SUB_FOLDER;
+	}
+
+	public String getPlanNestedOne() {
+		return PLAN_NESTED_ONE;
+	}
+
+	public String getPlanNestedTwo() {
+		return PLAN_NESTED_TWO;
 	}
 
 	public HudsonModelJob ensureHasRun(final String plan) throws Exception {

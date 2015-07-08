@@ -68,6 +68,7 @@ import org.eclipse.mylyn.internal.hudson.core.client.HudsonException;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonResourceNotFoundException;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonServerInfo;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonTestReport;
+import org.eclipse.mylyn.internal.hudson.core.client.HudsonUrlUtil;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient.BuildId;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelAbstractBuild;
@@ -100,9 +101,12 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 
 	private final RepositoryLocation location;
 
+	private final HudsonUrlUtil hudsonUrlUtil;
+
 	public HudsonServerBehaviour(RepositoryLocation location, HudsonConfigurationCache cache) {
 		this.location = location;
 		this.client = new RestfulHudsonClient(location, cache);
+		this.hudsonUrlUtil = new HudsonUrlUtil(this.location);
 	}
 
 	public RepositoryLocation getLocation() {
@@ -513,8 +517,8 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 
 	private long parseDate(Element node) {
 		if (node != null) {
-			String[] patterns = { // 
-			"yyyy-MM-dd", // cvs //$NON-NLS-1$
+			String[] patterns = { //
+					"yyyy-MM-dd", // cvs //$NON-NLS-1$
 					"yyyy-MM-dd HH:mm:ss Z", // git		 //$NON-NLS-1$
 					//"1283761613.0-7200" // mercurial
 					"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'" // svn //$NON-NLS-1$
@@ -561,14 +565,16 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		return healthReport;
 	}
 
-	public IBuildPlan parseJob(HudsonModelJob job) {
+	public IBuildPlan parseJob(HudsonModelJob job) throws HudsonException {
 		IBuildPlan plan = createBuildPlan();
-		plan.setId(job.getName());
-		if (job.getDisplayName() != null && job.getDisplayName().length() > 0) {
-			plan.setName(job.getDisplayName());
+
+		String jobUrl = job.getUrl();
+		if (this.hudsonUrlUtil.isNestedJob(jobUrl)) {
+			plan.setId(jobUrl);
 		} else {
-			plan.setName(job.getName());
+			plan.setId(job.getName());
 		}
+		plan.setName(this.hudsonUrlUtil.getDisplayName(jobUrl));
 		plan.setDescription(job.getDescription());
 		plan.setUrl(job.getUrl());
 		updateStateAndStatus(job, plan);
@@ -598,7 +604,7 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 						IParameterDefinition parameterDefinition = parseParameter(child);
 						parameterDefinitions.add(parameterDefinition);
 					} catch (HudsonException e) {
-						// unknown parameter type, ignore 
+						// unknown parameter type, ignore
 					}
 				}
 			}
@@ -607,7 +613,8 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 
 	private IParameterDefinition parseParameter(Element element) throws HudsonException {
 		String tagName = element.getTagName();
-		if ("hudson.model.ChoiceParameterDefinition".equals(tagName) || "ChoiceParameterDefinition".equals(getElementContent(element, "type", false))) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		if ("hudson.model.ChoiceParameterDefinition".equals(tagName) //$NON-NLS-1$
+				|| "ChoiceParameterDefinition".equals(getElementContent(element, "type", false))) { //$NON-NLS-1$ //$NON-NLS-2$
 			IChoiceParameterDefinition definition = BuildFactory.eINSTANCE.createChoiceParameterDefinition();
 			definition.setName(getElementContent(element, "name", true)); //$NON-NLS-1$
 			definition.setDescription(getElementContent(element, "description", false)); //$NON-NLS-1$
@@ -627,7 +634,8 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 			return definition;
 		}
 
-		if ("hudson.model.BooleanParameterDefinition".equals(tagName) || "BooleanParameterDefinition".equals(getElementContent(element, "type", false))) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		if ("hudson.model.BooleanParameterDefinition".equals(tagName) //$NON-NLS-1$
+				|| "BooleanParameterDefinition".equals(getElementContent(element, "type", false))) { //$NON-NLS-1$ //$NON-NLS-2$
 			IBooleanParameterDefinition definition = IBuildFactory.INSTANCE.createBooleanParameterDefinition();
 			definition.setName(getElementContent(element, "name", true)); //$NON-NLS-1$
 			definition.setDescription(getElementContent(element, "description", false)); //$NON-NLS-1$
@@ -638,7 +646,8 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 			return definition;
 		}
 
-		if ("hudson.model.StringParameterDefinition".equals(tagName) || "StringParameterDefinition".equals(getElementContent(element, "type", false))) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		if ("hudson.model.StringParameterDefinition".equals(tagName) //$NON-NLS-1$
+				|| "StringParameterDefinition".equals(getElementContent(element, "type", false))) { //$NON-NLS-1$ //$NON-NLS-2$
 			IStringParameterDefinition definition = IBuildFactory.INSTANCE.createStringParameterDefinition();
 			definition.setName(getElementContent(element, "name", true)); //$NON-NLS-1$
 			definition.setDescription(getElementContent(element, "description", false)); //$NON-NLS-1$
@@ -646,7 +655,8 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 			return definition;
 		}
 
-		if ("hudson.model.PasswordParameterDefinition".equals(tagName) || "PasswordParameterDefinition".equals(getElementContent(element, "type", false))) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		if ("hudson.model.PasswordParameterDefinition".equals(tagName) //$NON-NLS-1$
+				|| "PasswordParameterDefinition".equals(getElementContent(element, "type", false))) { //$NON-NLS-1$ //$NON-NLS-2$
 			IPasswordParameterDefinition definition = IBuildFactory.INSTANCE.createPasswordParameterDefinition();
 			definition.setName(getElementContent(element, "name", true)); //$NON-NLS-1$
 			definition.setDescription(getElementContent(element, "description", false)); //$NON-NLS-1$
@@ -654,7 +664,8 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 			return definition;
 		}
 
-		if ("hudson.model.RunParameterDefinition".equals(tagName) || "RunParameterDefinition".equals(getElementContent(element, "type", false))) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		if ("hudson.model.RunParameterDefinition".equals(tagName) //$NON-NLS-1$
+				|| "RunParameterDefinition".equals(getElementContent(element, "type", false))) { //$NON-NLS-1$ //$NON-NLS-2$
 			IBuildParameterDefinition definition = IBuildFactory.INSTANCE.createBuildParameterDefinition();
 			definition.setName(getElementContent(element, "name", true)); //$NON-NLS-1$
 			definition.setDescription(getElementContent(element, "description", false)); //$NON-NLS-1$
@@ -662,7 +673,8 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 			return definition;
 		}
 
-		if ("hudson.model.FileParameterDefinition".equals(tagName) || "FileParameterDefinition".equals(getElementContent(element, "type", false))) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		if ("hudson.model.FileParameterDefinition".equals(tagName) //$NON-NLS-1$
+				|| "FileParameterDefinition".equals(getElementContent(element, "type", false))) { //$NON-NLS-1$ //$NON-NLS-2$
 			IFileParameterDefinition definition = IBuildFactory.INSTANCE.createFileParameterDefinition();
 			definition.setName(getElementContent(element, "name", true)); //$NON-NLS-1$
 			definition.setDescription(getElementContent(element, "description", false)); //$NON-NLS-1$
@@ -757,8 +769,8 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		ITestResult testResult = createTestResult();
 		testResult.setFailCount(hudsonTestReport.getFailCount());
 		testResult.setIgnoredCount(hudsonTestReport.getSkipCount());
-		testResult.setPassCount(hudsonTestReport.getTotalCount() - hudsonTestReport.getFailCount()
-				- hudsonTestReport.getSkipCount());
+		testResult.setPassCount(
+				hudsonTestReport.getTotalCount() - hudsonTestReport.getFailCount() - hudsonTestReport.getSkipCount());
 		for (HudsonTasksTestAggregatedTestResultActionChildReport child : hudsonTestReport.getChildReport()) {
 			ITestResult childResult = parseTestResult((HudsonTasksJunitTestResult) child.getResult());
 			testResult.getSuites().addAll(childResult.getSuites());
@@ -897,6 +909,14 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 				plan.setStatus(BuildStatus.ABORTED);
 				plan.setState(BuildState.RUNNING);
 				break;
+			case NOTBUILT:
+				plan.setStatus(BuildStatus.NOT_BUILT);
+				plan.setState(BuildState.STOPPED);
+				break;
+			case NOTBUILT_ANIME:
+				plan.setStatus(BuildStatus.NOT_BUILT);
+				plan.setState(BuildState.RUNNING);
+				break;
 			default:
 				plan.setStatus(null);
 				plan.setState(null);
@@ -920,8 +940,8 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 	public IStatus validate(IOperationMonitor monitor) throws CoreException {
 		try {
 			HudsonServerInfo info = client.validate(monitor);
-			HudsonStatus status = new HudsonStatus(IStatus.OK, HudsonCorePlugin.ID_PLUGIN, NLS.bind(
-					Messages.HudsonServerBehaviour_Validation_succesful, info.getVersion()));
+			HudsonStatus status = new HudsonStatus(IStatus.OK, HudsonCorePlugin.ID_PLUGIN,
+					NLS.bind(Messages.HudsonServerBehaviour_Validation_succesful, info.getVersion()));
 			status.setInfo(info);
 			return status;
 		} catch (HudsonException e) {

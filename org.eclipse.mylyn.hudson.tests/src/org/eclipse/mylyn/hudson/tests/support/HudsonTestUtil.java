@@ -40,6 +40,15 @@ public class HudsonTestUtil {
 		Assert.fail("Expected '" + name + "' in " + jobs);
 	}
 
+	public static void assertContainsNot(List<HudsonModelJob> jobs, String name) {
+		for (HudsonModelJob job : jobs) {
+			if (job.getName().equals(name)) {
+				Assert.fail("Not expected '" + name + "' in " + jobs);
+			}
+		}
+
+	}
+
 	public static void assertHealthReport(List<HudsonModelJob> jobs) {
 		for (HudsonModelJob job : jobs) {
 			if (!job.getHealthReport().isEmpty()) {

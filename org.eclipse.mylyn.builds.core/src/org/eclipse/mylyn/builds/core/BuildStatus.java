@@ -18,7 +18,7 @@ package org.eclipse.mylyn.builds.core;
 public enum BuildStatus {
 
 	// FIXME rename FAILED to FAILURE
-	FAILED, UNSTABLE, SUCCESS, DISABLED, ABORTED;
+	FAILED, UNSTABLE, SUCCESS, DISABLED, ABORTED, NOT_BUILT;
 
 	public String getLabel() {
 		switch (this) {
@@ -32,6 +32,8 @@ public enum BuildStatus {
 			return "Disabled";
 		case ABORTED:
 			return "Aborted";
+		case NOT_BUILT:
+			return "Not built";
 		default:
 			return "Unknown";
 		}

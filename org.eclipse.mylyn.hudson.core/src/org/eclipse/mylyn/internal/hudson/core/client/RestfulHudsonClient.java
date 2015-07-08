@@ -18,8 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -65,7 +63,7 @@ import org.xml.sax.SAXException;
 
 /**
  * Represents the Hudson repository that is accessed through REST.
- * 
+ *
  * @author Markus Knittig
  * @author Steffen Pingel
  * @author Eike Stepper
@@ -94,16 +92,20 @@ public class RestfulHudsonClient {
 
 	private final CommonHttpClient client;
 
+	private final HudsonUrlUtil hudsonUrlUtil;
+
 	private volatile HudsonServerInfo info;
 
 	public RestfulHudsonClient(RepositoryLocation location, HudsonConfigurationCache cache) {
 		// FIXME register listener to location to handle credential changes
 		client = new CommonHttpClient(location);
 		setCache(cache);
+		hudsonUrlUtil = new HudsonUrlUtil(location);
 	}
 
 	public List<HudsonModelRun> getBuilds(final HudsonModelJob job, final IOperationMonitor monitor)
 			throws HudsonException {
+
 		return new HudsonOperation<List<HudsonModelRun>>(client) {
 			@Override
 			public List<HudsonModelRun> execute() throws IOException, HudsonException, JAXBException {
@@ -149,6 +151,7 @@ public class RestfulHudsonClient {
 
 	public HudsonTestReport getTestReport(final HudsonModelJob job, final HudsonModelRun build,
 			final IOperationMonitor monitor) throws HudsonException {
+
 		return new HudsonOperation<HudsonTestReport>(client) {
 			@Override
 			public HudsonTestReport execute() throws IOException, HudsonException, JAXBException {
@@ -209,6 +212,7 @@ public class RestfulHudsonClient {
 
 	public Reader getConsole(final HudsonModelJob job, final HudsonModelBuild hudsonBuild,
 			final IOperationMonitor monitor) throws HudsonException {
+
 		return new HudsonOperation<Reader>(client) {
 			@Override
 			public Reader execute() throws IOException, HudsonException, JAXBException {
@@ -218,8 +222,8 @@ public class RestfulHudsonClient {
 			}
 
 			@Override
-			protected Reader doProcess(CommonHttpResponse response, IOperationMonitor monitor) throws IOException,
-					HudsonException {
+			protected Reader doProcess(CommonHttpResponse response, IOperationMonitor monitor)
+					throws IOException, HudsonException {
 				InputStream in = response.getResponseEntityAsStream();
 				String charSet = response.getResponseCharSet();
 				if (charSet == null) {
@@ -234,18 +238,62 @@ public class RestfulHudsonClient {
 		return DocumentBuilderFactory.newInstance().newDocumentBuilder();
 	}
 
-	public List<HudsonModelJob> getJobs(final List<String> ids, final IOperationMonitor monitor) throws HudsonException {
+	public List<HudsonModelJob> getJobs(final List<String> ids, final IOperationMonitor monitor)
+			throws HudsonException {
 		if (ids != null && ids.isEmpty()) {
 			return Collections.emptyList();
 		}
 
+		List<HudsonModelJob> jobs = new ArrayList<HudsonModelJob>();
+
+		if (ids != null) {
+			Map<String, List<String>> jobNamesByFolderUrl = hudsonUrlUtil.groupJobNamesByFolderUrl(ids);
+
+			for (String folderUrl : jobNamesByFolderUrl.keySet()) {
+				List<String> jobNames = jobNamesByFolderUrl.get(folderUrl);
+				jobs.addAll(this.getJobsFromFolder(folderUrl, jobNames, monitor));
+			}
+		} else {
+			jobs = this.getJobsFromFolder(hudsonUrlUtil.baseUrl(), ids, monitor);
+			this.updateConfiguration(jobs);
+		}
+
+		return jobs;
+	}
+
+	private void updateConfiguration(List<HudsonModelJob> jobs) throws HudsonException {
+
+		Map<String, String> jobNameById = new HashMap<String, String>();
+
+		for (HudsonModelJob job : jobs) {
+			String jobUrl = job.getUrl();
+			String displayName = hudsonUrlUtil.getDisplayName(jobUrl);
+			if (jobUrl != null && hudsonUrlUtil.isNestedJob(jobUrl)) {
+				jobNameById.put(jobUrl, displayName);
+			} else {
+				jobNameById.put(job.getName(), displayName);
+			}
+		}
+		HudsonConfiguration configuration = new HudsonConfiguration();
+		configuration.jobNameById = jobNameById;
+		setConfiguration(configuration);
+	}
+
+	private List<HudsonModelJob> getJobsFromFolder(final String folderUrl, final List<String> ids,
+			final IOperationMonitor monitor) throws HudsonException {
+
 		return new HudsonOperation<List<HudsonModelJob>>(client) {
+
 			@Override
-			public List<HudsonModelJob> execute() throws IOException, HudsonException, JAXBException {
-				String url = HudsonUrl.create(baseUrl()).depth(1).include("/hudson/job") //$NON-NLS-1$
+			protected List<HudsonModelJob> execute() throws IOException, HudsonException, JAXBException {
+
+				String url = HudsonUrl.create(folderUrl)
+						.depth(1)
+						.include("/*/job") //$NON-NLS-1$
 						.match("name", ids) //$NON-NLS-1$
-						.exclude("/hudson/job/build") //$NON-NLS-1$
+						.exclude("/*/job/build") //$NON-NLS-1$
 						.toUrl();
+
 				HttpRequestBase request = createGetRequest(url);
 				CommonHttpResponse response = execute(request, monitor);
 				return processAndRelease(response, monitor);
@@ -254,9 +302,8 @@ public class RestfulHudsonClient {
 			@Override
 			protected List<HudsonModelJob> doProcess(CommonHttpResponse response, IOperationMonitor monitor)
 					throws IOException, HudsonException, JAXBException {
-				InputStream in = response.getResponseEntityAsStream();
 
-				Map<String, String> jobNameById = new HashMap<String, String>();
+				InputStream in = response.getResponseEntityAsStream();
 
 				HudsonModelHudson hudson = unmarshal(parse(in, response.getRequestPath()), HudsonModelHudson.class);
 
@@ -265,38 +312,28 @@ public class RestfulHudsonClient {
 				for (Object jobNode : jobsNodes) {
 					Node node = (Node) jobNode;
 					HudsonModelJob job = unmarshal(node, HudsonModelJob.class);
-					if (job.getDisplayName() != null && job.getDisplayName().length() > 0) {
-						jobNameById.put(job.getName(), job.getDisplayName());
-					} else {
-						jobNameById.put(job.getName(), job.getName());
+					if (job.getColor() != null) { // job folders don't have a color
+						String jobUrl = hudsonUrlUtil.assembleJobUrl(job.getName(), folderUrl);
+						job.setUrl(jobUrl);
+						buildPlans.add(job);
+					} else if (ids == null) { // retrieve jobs from sub-folder only if we need to fetch all jobs
+						buildPlans.addAll(getJobsFromFolder(job.getUrl(), ids, monitor));
 					}
-					buildPlans.add(job);
 				}
-
-				if (ids == null) {
-					// update list of known jobs if all jobs were retrieved
-					HudsonConfiguration configuration = new HudsonConfiguration();
-					configuration.jobNameById = jobNameById;
-					setConfiguration(configuration);
-				}
-
 				return buildPlans;
 			}
+
 		}.run();
 	}
 
 	String getJobUrl(HudsonModelJob job) throws HudsonException {
-		String encodedJobname = ""; //$NON-NLS-1$
-		try {
-			encodedJobname = new URI(null, job.getName(), null).toASCIIString();
-		} catch (URISyntaxException e) {
-			throw new HudsonException(e);
+
+		String url = job.getUrl();
+		if (url != null) {
+			return url;
 		}
-		String url = client.getLocation().getUrl();
-		if (!url.endsWith("/")) { //$NON-NLS-1$
-			url += "/"; //$NON-NLS-1$
-		}
-		return url + "job/" + encodedJobname; //$NON-NLS-1$
+
+		return this.hudsonUrlUtil.getJobUrlFromJobId(job.getName());
 	}
 
 	Element parse(InputStream in, String url) throws HudsonException {
@@ -321,8 +358,8 @@ public class RestfulHudsonClient {
 			}
 
 			@Override
-			protected Document doProcess(CommonHttpResponse response, IOperationMonitor monitor) throws IOException,
-					HudsonException, JAXBException {
+			protected Document doProcess(CommonHttpResponse response, IOperationMonitor monitor)
+					throws IOException, HudsonException, JAXBException {
 				InputStream in = response.getResponseEntityAsStream();
 				try {
 					DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -336,8 +373,8 @@ public class RestfulHudsonClient {
 		}.run();
 	}
 
-	public void runBuild(final HudsonModelJob job, final Map<String, String> parameters, final IOperationMonitor monitor)
-			throws HudsonException {
+	public void runBuild(final HudsonModelJob job, final Map<String, String> parameters,
+			final IOperationMonitor monitor) throws HudsonException {
 		new HudsonOperation<Object>(client) {
 			@Override
 			public Object execute() throws IOException, HudsonException, JAXBException {
@@ -355,8 +392,8 @@ public class RestfulHudsonClient {
 			}
 
 			@Override
-			protected void doValidate(CommonHttpResponse response, IOperationMonitor monitor) throws IOException,
-					HudsonException {
+			protected void doValidate(CommonHttpResponse response, IOperationMonitor monitor)
+					throws IOException, HudsonException {
 
 				int statusCode = response.getStatusCode();
 				if (statusCode != HttpStatus.SC_CREATED && statusCode != HttpStatus.SC_MOVED_TEMPORARILY) {

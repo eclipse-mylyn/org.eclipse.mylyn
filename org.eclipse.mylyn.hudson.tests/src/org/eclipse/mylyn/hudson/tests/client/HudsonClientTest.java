@@ -16,8 +16,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.hudson.tests.support.HudsonFixture;
 import org.eclipse.mylyn.hudson.tests.support.HudsonHarness;
@@ -25,15 +23,18 @@ import org.eclipse.mylyn.hudson.tests.support.HudsonTestUtil;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonException;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonResourceNotFoundException;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonServerInfo;
+import org.eclipse.mylyn.internal.hudson.core.client.HudsonServerInfo.Type;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient.BuildId;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBuild;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
 
+import junit.framework.TestCase;
+
 /**
  * Test cases for {@link RestfulHudsonClient}.
- * 
+ *
  * @author Markus Knittig
  * @author Steffen Pingel
  */
@@ -78,7 +79,7 @@ public class HudsonClientTest extends TestCase {
 		client.validate(null);
 		// clear cookies
 		client.reset();
-		// TODO try an operation that requires authentication 
+		// TODO try an operation that requires authentication
 		HudsonServerInfo info = client.validate(null);
 		assertEquals(harness.getFixture().getType(), info.getType());
 	}
@@ -92,6 +93,20 @@ public class HudsonClientTest extends TestCase {
 		HudsonTestUtil.assertContains(jobs, harness.getPlanFailing());
 		HudsonTestUtil.assertContains(jobs, harness.getPlanSucceeding());
 		HudsonTestUtil.assertHealthReport(jobs);
+	}
+
+	public void testGetNestedJobs() throws Exception {
+		if (harness.getFixture().getType().equals(Type.HUDSON)) {
+			/* HUDSON does not support nested jobs */
+			return;
+		}
+
+		RestfulHudsonClient client = harness.connect(PrivilegeLevel.ANONYMOUS);
+		List<HudsonModelJob> jobs = client.getJobs(null, null);
+		HudsonTestUtil.assertContainsNot(jobs, harness.getPlanFolder());
+		HudsonTestUtil.assertContains(jobs, harness.getPlanNestedOne());
+		HudsonTestUtil.assertContainsNot(jobs, harness.getPlanSubFolder());
+		HudsonTestUtil.assertContains(jobs, harness.getPlanNestedTwo());
 	}
 
 	public void testGetJobsWithWhitespaces() throws Exception {
@@ -198,4 +213,22 @@ public class HudsonClientTest extends TestCase {
 		}
 	}
 
+	public void testRunNestedJob() throws Exception {
+		if (!HudsonFixture.current().canAuthenticate() || harness.getFixture().getType().equals(Type.HUDSON)) {
+			// ignore
+			return;
+		}
+
+		final String jobName = harness.getPlanNestedOne();
+		RestfulHudsonClient client = harness.connect();
+		ensureHasRunOnce(client, jobName, harness.getSuccessAnimeColor());
+
+		client.runBuild(harness.getJob(jobName), null, null);
+		HudsonTestUtil.poll(new Callable<Object>() {
+			public Object call() throws Exception {
+				assertEquals(harness.getSuccessAnimeColor(), harness.getJob(jobName).getColor());
+				return null;
+			}
+		});
+	}
 }
