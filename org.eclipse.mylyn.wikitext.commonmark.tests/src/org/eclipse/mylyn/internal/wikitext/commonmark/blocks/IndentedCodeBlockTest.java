@@ -42,9 +42,13 @@ public class IndentedCodeBlockTest {
 		assertContent("<pre><code>code\n</code></pre>", "    code");
 		assertContent("<pre><code>code\n</code></pre>", "\tcode");
 		assertContent("<pre><code> code\n</code></pre>", "\t code");
+		assertContent("<pre><code>code  \n</code></pre>", "\tcode  ");
 		assertContent("<pre><code>\tcode\n</code></pre>", "    \tcode");
 		assertContent("<pre><code>one\ntwo\n</code></pre><p>three</p>", "    one\n    two\n three");
 		assertContent("<pre><code>one\n\nthree\n</code></pre>", "    one\n\n    three");
 		assertContent("<pre><code>one\n  \nthree\n</code></pre>", "    one\n      \n    three");
+
+		// Bug 472395:
+		assertContent("<pre><code>\t\tcode\n</code></pre>", "\t\t\tcode");
 	}
 }

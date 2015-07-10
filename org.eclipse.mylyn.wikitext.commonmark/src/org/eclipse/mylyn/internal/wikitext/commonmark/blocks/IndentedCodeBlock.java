@@ -30,7 +30,7 @@ import com.google.common.base.Predicates;
 
 public class IndentedCodeBlock extends SourceBlock {
 
-	private final Pattern linePattern = Pattern.compile("(?:\\s{0,2}\t|(\\s{4}))(.*)");
+	private static final Pattern PATTERN = Pattern.compile("(?: {0,3}\t| {4})(.*)");
 
 	@Override
 	public void process(ProcessingContext context, DocumentBuilder builder, LineSequence lineSequence) {
@@ -38,18 +38,18 @@ public class IndentedCodeBlock extends SourceBlock {
 		builder.beginBlock(BlockType.CODE, new Attributes());
 
 		boolean blockHasContent = false;
-		Iterator<Line> iterator = lineSequence.with(
-				Predicates.or(LinePredicates.matches(linePattern), LinePredicates.empty())).iterator();
+		Iterator<Line> iterator = lineSequence
+				.with(Predicates.or(LinePredicates.matches(PATTERN), LinePredicates.empty())).iterator();
 		while (iterator.hasNext()) {
 			Line line = iterator.next();
-			Matcher matcher = linePattern.matcher(line.getText());
+			Matcher matcher = PATTERN.matcher(line.getText());
 			if (!matcher.matches()) {
 				checkState(line.isEmpty());
 				if (iterator.hasNext()) {
 					builder.characters("\n");
 				}
 			} else {
-				String content = matcher.group(2);
+				String content = matcher.group(1);
 				if (!content.isEmpty() || (blockHasContent && iterator.hasNext())) {
 					blockHasContent = true;
 					builder.characters(content);
@@ -63,6 +63,7 @@ public class IndentedCodeBlock extends SourceBlock {
 	@Override
 	public boolean canStart(LineSequence lineSequence) {
 		Line line = lineSequence.getCurrentLine();
-		return line != null && linePattern.matcher(line.getText()).matches();
+		return line != null && PATTERN.matcher(line.getText()).matches();
 	}
+
 }
