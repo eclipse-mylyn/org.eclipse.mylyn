@@ -37,6 +37,12 @@ public class AtxHeaderBlockTest {
 		assertTrue(block.canStart(LineSequence.create("###### Y")));
 		assertFalse(block.canStart(LineSequence.create("####### Y")));
 		assertTrue(block.canStart(LineSequence.create("# Y#")));
+		assertFalse(block.canStart(LineSequence.create("#Y")));
+
+		// Bug 472386:
+		assertTrue(block.canStart(LineSequence.create("# #Y")));
+		assertTrue(block.canStart(LineSequence.create("   # Y")));
+		assertFalse(block.canStart(LineSequence.create("\t# Y")));
 	}
 
 	@Test
@@ -44,6 +50,7 @@ public class AtxHeaderBlockTest {
 		assertContent("<h2 id=\"one-two\">One Two</h2>", "## One Two");
 		assertContent("<h2 id=\"one-two\">One Two</h2>", "## One Two #####   ");
 		assertContent("<h2 id=\"one-two\">One Two#</h2>", "## One Two#");
+		assertContent("<h2 id=\"one-two\">#One #Two</h2>", "## #One #Two");
 		assertContent("<p>One</p><h1 id=\"two\">two</h1><p>Three</p>", "One\n# two\nThree");
 		assertContent("<h2></h2>", "##");
 		assertContent("<h2></h2>", "## ##");
@@ -54,4 +61,5 @@ public class AtxHeaderBlockTest {
 		assertContent("<h2 id=\"one-two-three\">One <em>Two</em> \\<strong>three</strong></h2>",
 				"## One *Two* \\\\__three__ ##");
 	}
+
 }

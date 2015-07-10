@@ -28,12 +28,12 @@ import org.eclipse.mylyn.wikitext.core.parser.HeadingAttributes;
 
 public class AtxHeaderBlock extends SourceBlock {
 
-	private final Pattern pattern = Pattern.compile("\\s{0,3}(#{1,6})(?:\\s+([^#\\s].*?))?(\\s+#*)?\\s*");
+	private static final Pattern PATTERN = Pattern.compile(" {0,3}(#{1,6})(?:[ \t]+?(.+?))??(?:[ \t]+#+)?[ \t]*");
 
 	@Override
 	public void process(ProcessingContext context, DocumentBuilder builder, LineSequence lineSequence) {
 		Line currentLine = lineSequence.getCurrentLine();
-		Matcher matcher = pattern.matcher(currentLine.getText());
+		Matcher matcher = PATTERN.matcher(currentLine.getText());
 		checkState(matcher.matches());
 
 		lineSequence.advance();
@@ -72,7 +72,7 @@ public class AtxHeaderBlock extends SourceBlock {
 	@Override
 	public boolean canStart(LineSequence lineSequence) {
 		Line line = lineSequence.getCurrentLine();
-		return line != null && pattern.matcher(line.getText()).matches();
+		return line != null && PATTERN.matcher(line.getText()).matches();
 	}
 
 }
