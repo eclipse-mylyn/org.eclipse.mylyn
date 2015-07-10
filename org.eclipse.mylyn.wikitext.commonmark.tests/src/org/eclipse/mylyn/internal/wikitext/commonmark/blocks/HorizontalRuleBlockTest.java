@@ -21,6 +21,7 @@ import org.junit.Test;
 import com.google.common.base.Strings;
 
 public class HorizontalRuleBlockTest {
+
 	private final HorizontalRuleBlock block = new HorizontalRuleBlock();
 
 	@Test
@@ -35,11 +36,12 @@ public class HorizontalRuleBlockTest {
 			assertTrue(block.canStart(LineSequence.create(" " + hrIndicator)));
 			assertFalse(block.canStart(LineSequence.create("    " + hrIndicator)));
 			assertTrue(block.canStart(LineSequence.create(hrIndicator)));
-			assertTrue(block.canStart(LineSequence.create(Strings
-					.repeat("" + c, 4))));
-			assertTrue(block.canStart(LineSequence.create(Strings.repeat("" + c,
-					14))));
+			assertTrue(block.canStart(LineSequence.create(Strings.repeat("" + c, 4))));
+			assertTrue(block.canStart(LineSequence.create(Strings.repeat("" + c, 14))));
 		}
+
+		// Bug 472390:
+		assertFalse(block.canStart(LineSequence.create("\t***")));
 	}
 
 	@Test
@@ -49,4 +51,5 @@ public class HorizontalRuleBlockTest {
 		assertContent("<p>one</p><hr/>", "one\n\n-  - -\n");
 		assertContent("<p>one</p><hr/>", "one\n\n   ** *****\n");
 	}
+
 }
