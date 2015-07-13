@@ -33,6 +33,7 @@ import org.eclipse.mylyn.docs.epub.ncx.NavTarget;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.NavTargetImpl#getNavLabels <em>Nav Labels</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.NavTargetImpl#getContent <em>Content</em>}</li>
@@ -41,7 +42,6 @@ import org.eclipse.mylyn.docs.epub.ncx.NavTarget;
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.NavTargetImpl#getPlayOrder <em>Play Order</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.NavTargetImpl#getValue <em>Value</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

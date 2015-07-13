@@ -17,12 +17,12 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.Text#getMixed <em>Mixed</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.Text#getClass_ <em>Class</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.Text#getId <em>Id</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.mylyn.docs.epub.ncx.NCXPackage#getText()
  * @model extendedMetaData="kind='mixed'"

@@ -46,6 +46,7 @@ import org.eclipse.mylyn.docs.epub.opf.OPFPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.impl.MetadataImpl#getTitles <em>Titles</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.impl.MetadataImpl#getCreators <em>Creators</em>}</li>
@@ -64,7 +65,6 @@ import org.eclipse.mylyn.docs.epub.opf.OPFPackage;
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.impl.MetadataImpl#getRights <em>Rights</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.impl.MetadataImpl#getMetas <em>Metas</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

@@ -17,10 +17,10 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.Guide#getGuideItems <em>Guide Items</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.mylyn.docs.epub.opf.OPFPackage#getGuide()
  * @model

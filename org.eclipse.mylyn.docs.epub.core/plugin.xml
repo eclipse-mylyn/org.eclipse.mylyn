@@ -19,5 +19,27 @@
       </package>
    </extension>
 
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated opf -->
+      <parser
+            type="opf"
+            class="org.eclipse.mylyn.docs.epub.opf.util.OPFResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated opf -->
+      <package
+            uri="http://purl.org/dc/elements/1.1/"
+            class="org.eclipse.mylyn.docs.epub.dc.DCPackage"
+            genModel="model/opf.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated opf -->
+      <parser
+            type="dc"
+            class="org.eclipse.mylyn.docs.epub.dc.util.DCResourceFactoryImpl"/>
+   </extension>
+
 
 </plugin>

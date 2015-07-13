@@ -21,10 +21,10 @@ import org.eclipse.mylyn.docs.epub.dc.Language;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.dc.impl.LanguageImpl#getType <em>Type</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

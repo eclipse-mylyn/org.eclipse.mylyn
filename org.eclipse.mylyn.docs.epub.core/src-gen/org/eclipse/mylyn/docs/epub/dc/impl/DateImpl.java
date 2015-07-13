@@ -21,10 +21,10 @@ import org.eclipse.mylyn.docs.epub.dc.Date;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.dc.impl.DateImpl#getEvent <em>Event</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

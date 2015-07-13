@@ -13,27 +13,23 @@ package org.eclipse.mylyn.docs.epub.tests.api;
 
 import java.io.File;
 
-import junit.framework.TestCase;
-
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.emf.ecore.util.FeatureMapUtil.FeatureEList;
 import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
 import org.eclipse.mylyn.docs.epub.core.EPUB;
 import org.eclipse.mylyn.docs.epub.core.ILogger;
-import org.eclipse.mylyn.docs.epub.core.OPSPublication;
-import org.eclipse.mylyn.docs.epub.core.Publication;
 import org.eclipse.mylyn.docs.epub.dc.DCType;
 import org.eclipse.mylyn.docs.epub.dc.Identifier;
 import org.junit.After;
 import org.junit.Before;
 
+import junit.framework.TestCase;
+
 @SuppressWarnings("nls")
 public abstract class AbstractTest extends TestCase {
 
 	private static final boolean DEBUGGING = false;;
-
-	private boolean errorExpected;
 
 	private class StdOutLogger implements ILogger {
 
@@ -76,8 +72,6 @@ public abstract class AbstractTest extends TestCase {
 	protected final File epubFolder = new File("test" + File.separator + "epub");
 
 	protected final StdOutLogger logger = new StdOutLogger();
-
-	protected Publication oebps;
 
 	protected boolean deleteFolder(File folder) {
 		if (folder.isDirectory()) {
@@ -122,7 +116,6 @@ public abstract class AbstractTest extends TestCase {
 	@Override
 	@Before
 	public void setUp() throws Exception {
-		errorExpected = false;
 		if (epubFile.exists()) {
 			epubFile.delete();
 		}
@@ -131,14 +124,6 @@ public abstract class AbstractTest extends TestCase {
 		}
 		epubFolder.mkdirs();
 		epub = new EPUB(logger);
-		oebps = new OPSPublication(logger);
-	}
-
-	/**
-	 * Call this method in a test when an EPUB validation error is expected.
-	 */
-	protected void setErrorExpected() {
-		errorExpected = true;
 	}
 
 	@Override

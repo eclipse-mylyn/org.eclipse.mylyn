@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011-2014 Torkild U. Resheim.
+ * Copyright (c) 2011-2015 Torkild U. Resheim.
  *
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
@@ -11,16 +11,17 @@
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.tests;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.mylyn.docs.epub.tests.api.TestEPUB;
-import org.eclipse.mylyn.docs.epub.tests.api.TestOPS2Publication;
+import org.eclipse.mylyn.docs.epub.tests.api.TestEPUBPublication;
 import org.eclipse.mylyn.docs.epub.tests.api.TestOPSPublication;
+import org.eclipse.mylyn.docs.epub.tests.api.TestPublication;
 import org.eclipse.mylyn.docs.epub.tests.core.TestEPUBFileUtil;
 import org.eclipse.mylyn.docs.epub.tests.core.TestEclipseTocImporter;
 import org.eclipse.mylyn.docs.epub.tests.core.TestOPSValidator;
 import org.eclipse.mylyn.docs.epub.tests.core.TestTOCGenerator;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 @SuppressWarnings("nls")
 public class AllTests {
@@ -32,8 +33,9 @@ public class AllTests {
 		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.docs.epub");
 		// API tests
 		suite.addTestSuite(TestEPUB.class);
-		suite.addTestSuite(TestOPS2Publication.class);
 		suite.addTestSuite(TestOPSPublication.class);
+		suite.addTestSuite(TestEPUBPublication.class);
+		suite.addTestSuite(TestPublication.class);
 		// Core tests
 		suite.addTestSuite(TestEPUBFileUtil.class);
 		suite.addTestSuite(TestOPSValidator.class);

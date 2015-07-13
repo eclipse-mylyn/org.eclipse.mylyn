@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011-2014 Torkild U. Resheim.
+ * Copyright (c) 2011-2015 Torkild U. Resheim.
  *
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
@@ -94,8 +94,12 @@ public abstract class Publication {
 	// * Keep all data in the model, use "transient" for temporary properties
 	// * Do not actually do anything before the final assemble
 
-	/** Default identifier for the cover page */
-	private static final String COVER_ID = "cover"; //$NON-NLS-1$
+	/**
+	 * Default identifier for the cover page
+	 *
+	 * @since 3.0
+	 */
+	protected static final String COVER_ID = "cover"; //$NON-NLS-1$
 
 	/** Publication identifier for the cover image item */
 	public static final String COVER_IMAGE_ID = "cover-image"; //$NON-NLS-1$
@@ -122,6 +126,16 @@ public abstract class Publication {
 	 */
 	public static Publication getVersion2Instance() {
 		return new OPSPublication();
+	}
+
+	/**
+	 * Returns an <i>EPUB version 3.0</i> instance.
+	 *
+	 * @return an EPUB instance
+	 * @since 3.0
+	 */
+	public static Publication getVersion3Instance() {
+		return new EPUBPublication();
 	}
 
 	/** Indentation level used when logging */
@@ -219,7 +233,8 @@ public abstract class Publication {
 	 */
 	public Contributor addContributor(String id, Locale lang, String name, Role role, String fileAs) {
 		log(MessageFormat.format(Messages.getString("OPSPublication.2"), name, role, //$NON-NLS-1$
-				lang == null ? Messages.getString("OPSPublication.3") : lang.getDisplayName()), Severity.VERBOSE, indent); //$NON-NLS-1$
+				lang == null ? Messages.getString("OPSPublication.3") : lang.getDisplayName()), Severity.VERBOSE, //$NON-NLS-1$
+				indent);
 		Contributor dc = DCFactory.eINSTANCE.createContributor();
 		setDcLocalized(dc, id, lang, name);
 		if (role != null) {
@@ -291,9 +306,11 @@ public abstract class Publication {
 	 * @return the new creator
 	 */
 	public Creator addCreator(String id, Locale lang, String name, Role role, String fileAs) {
-		log(MessageFormat.format(Messages.getString("OPSPublication.4"), name, role, lang == null //$NON-NLS-1$
-				? Messages.getString("OPSPublication.3") //$NON-NLS-1$
-				: lang.getDisplayName()), Severity.VERBOSE, indent);
+		log(MessageFormat.format(Messages.getString("OPSPublication.4"), name, role, //$NON-NLS-1$
+				lang == null
+						? Messages.getString("OPSPublication.3") //$NON-NLS-1$
+						: lang.getDisplayName()),
+				Severity.VERBOSE, indent);
 		Creator dc = DCFactory.eINSTANCE.createCreator();
 		setDcLocalized(dc, id, lang, name);
 		if (role != null) {
@@ -320,10 +337,10 @@ public abstract class Publication {
 	}
 
 	/**
-	 * Date of publication, in the format defined by the W3C specification
-	 * "<a href="http://www.w3.org/TR/NOTE-datetime">Date and Time Formats</a>" and by ISO 8601. In particular, dates
-	 * without times must be represented in the form YYYY[-MM[-DD]]: a required 4-digit year, an optional 2-digit month,
-	 * and if the month is given, an optional 2-digit day of month.
+	 * Date of publication, in the format defined by the W3C specification "<a href="http://www.w3.org/TR/NOTE-datetime
+	 * ">Date and Time Formats</a>" and by ISO 8601. In particular, dates without times must be represented in the form
+	 * YYYY[-MM[-DD]]: a required 4-digit year, an optional 2-digit month, and if the month is given, an optional
+	 * 2-digit day of month.
 	 *
 	 * @param value
 	 *            the date string
@@ -360,11 +377,11 @@ public abstract class Publication {
 	}
 
 	/**
-	 * Date of publication, in the format defined by the W3C specification
-	 * "<a href="http://www.w3.org/TR/NOTE-datetime">Date and Time Formats</a>" and by ISO 8601. In particular, dates
-	 * without times must be represented in the form YYYY[-MM[-DD]]: a required 4-digit year, an optional 2-digit month,
-	 * and if the month is given, an optional 2-digit day of month. The event attribute is optional, possible values may
-	 * include: "creation", "publication", and "modification".
+	 * Date of publication, in the format defined by the W3C specification "<a href="http://www.w3.org/TR/NOTE-datetime
+	 * ">Date and Time Formats</a>" and by ISO 8601. In particular, dates without times must be represented in the form
+	 * YYYY[-MM[-DD]]: a required 4-digit year, an optional 2-digit month, and if the month is given, an optional
+	 * 2-digit day of month. The event attribute is optional, possible values may include: "creation", "publication",
+	 * and "modification".
 	 *
 	 * @param id
 	 *            optional identifier
@@ -413,8 +430,8 @@ public abstract class Publication {
 		if (value == null) {
 			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
 		}
-		log(MessageFormat.format(
-				Messages.getString("OPSPublication.6"), value, lang == null ? Messages.getString("OPSPublication.3") : lang), //$NON-NLS-1$ //$NON-NLS-2$
+		log(MessageFormat.format(Messages.getString("OPSPublication.6"), value, //$NON-NLS-1$
+				lang == null ? Messages.getString("OPSPublication.3") : lang), //$NON-NLS-1$
 				Severity.VERBOSE, indent);
 		Description dc = DCFactory.eINSTANCE.createDescription();
 		setDcLocalized(dc, id, lang, value);
@@ -601,29 +618,6 @@ public abstract class Publication {
 	}
 
 	/**
-	 * Adds a new meta item to the publication.
-	 *
-	 * @param name
-	 *            name of the item
-	 * @param value
-	 *            content of the item
-	 * @return the new meta
-	 */
-	public org.eclipse.mylyn.docs.epub.opf.Meta addMeta(String name, String value) {
-		if (value == null) {
-			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
-		}
-		if (name == null) {
-			throw new IllegalArgumentException("A name must be specified"); //$NON-NLS-1$
-		}
-		org.eclipse.mylyn.docs.epub.opf.Meta opf = OPFFactory.eINSTANCE.createMeta();
-		opf.setName(name);
-		opf.setContent(value);
-		opfPackage.getMetadata().getMetas().add(opf);
-		return opf;
-	}
-
-	/**
 	 * Adds a new publisher to the publication.
 	 *
 	 * @param value
@@ -650,7 +644,8 @@ public abstract class Publication {
 			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
 		}
 		log(MessageFormat.format(Messages.getString("OPSPublication.9"), value, //$NON-NLS-1$
-				lang == null ? Messages.getString("OPSPublication.3") : lang.getDisplayName()), Severity.VERBOSE, indent); //$NON-NLS-1$
+				lang == null ? Messages.getString("OPSPublication.3") : lang.getDisplayName()), Severity.VERBOSE, //$NON-NLS-1$
+				indent);
 		Publisher dc = DCFactory.eINSTANCE.createPublisher();
 		setDcLocalized(dc, id, lang, value);
 		opfPackage.getMetadata().getPublishers().add(dc);
@@ -715,7 +710,8 @@ public abstract class Publication {
 			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
 		}
 		log(MessageFormat.format(Messages.getString("OPSPublication.12"), value, //$NON-NLS-1$
-				lang == null ? Messages.getString("OPSPublication.3") : lang.getDisplayName()), Severity.VERBOSE, indent); //$NON-NLS-1$
+				lang == null ? Messages.getString("OPSPublication.3") : lang.getDisplayName()), Severity.VERBOSE, //$NON-NLS-1$
+				indent);
 		Relation dc = DCFactory.eINSTANCE.createRelation();
 		setDcLocalized(dc, id, lang, value);
 		opfPackage.getMetadata().getRelations().add(dc);
@@ -749,7 +745,8 @@ public abstract class Publication {
 			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
 		}
 		log(MessageFormat.format(Messages.getString("OPSPublication.14"), value, //$NON-NLS-1$
-				lang == null ? Messages.getString("OPSPublication.3") : lang.getDisplayName()), Severity.VERBOSE, indent); //$NON-NLS-1$
+				lang == null ? Messages.getString("OPSPublication.3") : lang.getDisplayName()), Severity.VERBOSE, //$NON-NLS-1$
+				indent);
 		Rights dc = DCFactory.eINSTANCE.createRights();
 		setDcLocalized(dc, id, lang, value);
 		opfPackage.getMetadata().getRights().add(dc);
@@ -783,7 +780,8 @@ public abstract class Publication {
 			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
 		}
 		log(MessageFormat.format(Messages.getString("OPSPublication.16"), value, //$NON-NLS-1$
-				lang == null ? Messages.getString("OPSPublication.3") : lang.getDisplayName()), Severity.VERBOSE, indent); //$NON-NLS-1$
+				lang == null ? Messages.getString("OPSPublication.3") : lang.getDisplayName()), Severity.VERBOSE, //$NON-NLS-1$
+				indent);
 		Source dc = DCFactory.eINSTANCE.createSource();
 		setDcLocalized(dc, id, lang, value);
 		opfPackage.getMetadata().getSources().add(dc);
@@ -815,7 +813,8 @@ public abstract class Publication {
 			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
 		}
 		log(MessageFormat.format(Messages.getString("OPSPublication.18"), value, //$NON-NLS-1$
-				lang == null ? Messages.getString("OPSPublication.3") : lang.getDisplayName()), Severity.VERBOSE, indent); //$NON-NLS-1$
+				lang == null ? Messages.getString("OPSPublication.3") : lang.getDisplayName()), Severity.VERBOSE, //$NON-NLS-1$
+				indent);
 		Subject dc = DCFactory.eINSTANCE.createSubject();
 		setDcLocalized(dc, id, lang, value);
 		opfPackage.getMetadata().getSubjects().add(dc);
@@ -849,7 +848,8 @@ public abstract class Publication {
 			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
 		}
 		log(MessageFormat.format(Messages.getString("OPSPublication.20"), value, //$NON-NLS-1$
-				lang == null ? Messages.getString("OPSPublication.3") : lang.getDisplayName()), Severity.VERBOSE, indent); //$NON-NLS-1$
+				lang == null ? Messages.getString("OPSPublication.3") : lang.getDisplayName()), Severity.VERBOSE, //$NON-NLS-1$
+				indent);
 		Title dc = DCFactory.eINSTANCE.createTitle();
 		setDcLocalized(dc, id, lang, value);
 		opfPackage.getMetadata().getTitles().add(dc);
@@ -1025,15 +1025,18 @@ public abstract class Publication {
 				File source = null;
 				if (item.getSourcePath() != null) {
 					source = new File(item.getSourcePath());
-					log(MessageFormat.format(Messages.getString("OPSPublication.24"), source), Severity.VERBOSE, indent); //$NON-NLS-1$
+					log(MessageFormat.format(Messages.getString("OPSPublication.24"), source), Severity.VERBOSE, //$NON-NLS-1$
+							indent);
 					references.put(source, ReferenceScanner.parse(item));
 				} else {
 					source = new File(item.getFile());
-					log(MessageFormat.format(Messages.getString("OPSPublication.25"), source), Severity.VERBOSE, indent); //$NON-NLS-1$
+					log(MessageFormat.format(Messages.getString("OPSPublication.25"), source), Severity.VERBOSE, //$NON-NLS-1$
+							indent);
 				}
 				references.put(source, ReferenceScanner.parse(item));
 			} else {
-				log(MessageFormat.format(Messages.getString("OPSPublication.26"), item.getFile()), Severity.DEBUG, indent); //$NON-NLS-1$
+				log(MessageFormat.format(Messages.getString("OPSPublication.26"), item.getFile()), Severity.DEBUG, //$NON-NLS-1$
+						indent);
 			}
 		}
 		indent--;
@@ -1060,8 +1063,9 @@ public abstract class Publication {
 					try {
 						addItem(null, null, file, relativePath.getParent(), null, false, false, false);
 					} catch (Exception e) {
-						throw new RuntimeException(String.format(
-								"Could not add file referenced from \"%1$s\", %2$s", root, e.getMessage()), //$NON-NLS-1$
+						throw new RuntimeException(
+								String.format("Could not add file referenced from \"%1$s\", %2$s", root, //$NON-NLS-1$
+										e.getMessage()),
 								e);
 					}
 				}
@@ -1238,15 +1242,7 @@ public abstract class Publication {
 	 * @param title
 	 *            title of the cover page
 	 */
-	public void setCover(File image, String title) {
-		// Add the cover image to the manifest
-		Item item = addItem(COVER_IMAGE_ID, null, image, null, null, false, false, true);
-		item.setTitle(title);
-		// Point to the cover using a meta tag
-		addMeta(COVER_ID, COVER_IMAGE_ID);
-		opfPackage.setGenerateCoverHTML(true);
-
-	}
+	public abstract void setCover(File image, String title);
 
 	/**
 	 * Sets common properties for <i>Dublin Core</i> elements.
@@ -1350,8 +1346,8 @@ public abstract class Publication {
 	 * @throws SAXException
 	 * @throws ParserConfigurationException
 	 */
-	protected abstract List<ValidationMessage> validateContents() throws FileNotFoundException, IOException,
-			SAXException, ParserConfigurationException;
+	protected abstract List<ValidationMessage> validateContents()
+			throws FileNotFoundException, IOException, SAXException, ParserConfigurationException;
 
 	/**
 	 * Validates the data model contents.
@@ -1403,7 +1399,8 @@ public abstract class Publication {
 						indent);
 				FileWriter fw = new FileWriter(coverFile);
 				fw.append("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>\n"); //$NON-NLS-1$
-				fw.append("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n"); //$NON-NLS-1$
+				fw.append(
+						"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n"); //$NON-NLS-1$
 				fw.append("<html xmlns=\"http://www.w3.org/1999/xhtml\">\n"); //$NON-NLS-1$
 				fw.append("  <head>\n"); //$NON-NLS-1$
 				fw.append("    <title>" + coverImage.getTitle() + "</title>\n"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -1477,6 +1474,6 @@ public abstract class Publication {
 	 *            the folder to write in
 	 * @throws Exception
 	 */
-	protected abstract void writeTableOfContents(File rootFolder) throws IOException, ParserConfigurationException,
-			SAXException;
+	protected abstract void writeTableOfContents(File rootFolder)
+			throws IOException, ParserConfigurationException, SAXException;
 }

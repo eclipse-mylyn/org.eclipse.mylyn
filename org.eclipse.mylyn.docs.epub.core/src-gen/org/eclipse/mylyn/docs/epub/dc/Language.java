@@ -14,10 +14,10 @@ package org.eclipse.mylyn.docs.epub.dc;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.dc.Language#getType <em>Type</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.mylyn.docs.epub.dc.DCPackage#getLanguage()
  * @model extendedMetaData="kind='mixed'"

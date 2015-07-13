@@ -286,34 +286,34 @@ public class OCFPackageImpl extends EPackageImpl implements OCFPackage {
 	 * @generated
 	 */
 	protected void createExtendedMetaDataAnnotations() {
-		String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData";		
+		String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData";	
 		addAnnotation
 		  (containerEClass, 
 		   source, 
 		   new String[] {
 			 "name", "container",
 			 "namespace", "urn:oasis:names:tc:opendocument:xmlns:container"
-		   });		
+		   });	
 		addAnnotation
 		  (getContainer_Rootfiles(), 
 		   source, 
 		   new String[] {
 			 "name", "rootfiles",
 			 "namespace", "urn:oasis:names:tc:opendocument:xmlns:container"
-		   });		
+		   });	
 		addAnnotation
 		  (getRootFiles_Rootfiles(), 
 		   source, 
 		   new String[] {
 			 "name", "rootfile",
 			 "namespace", "urn:oasis:names:tc:opendocument:xmlns:container"
-		   });		
+		   });	
 		addAnnotation
 		  (getRootFile_FullPath(), 
 		   source, 
 		   new String[] {
 			 "name", "full-path"
-		   });		
+		   });	
 		addAnnotation
 		  (getRootFile_MediaType(), 
 		   source, 

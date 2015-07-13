@@ -17,12 +17,12 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.dc.Identifier#getId <em>Id</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.dc.Identifier#getScheme <em>Scheme</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.dc.Identifier#getMixed <em>Mixed</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.mylyn.docs.epub.dc.DCPackage#getIdentifier()
  * @model extendedMetaData="kind='mixed'"

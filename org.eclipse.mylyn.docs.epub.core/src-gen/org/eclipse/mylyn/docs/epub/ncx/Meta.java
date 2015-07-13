@@ -15,12 +15,12 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.Meta#getContent <em>Content</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.Meta#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.Meta#getScheme <em>Scheme</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.mylyn.docs.epub.ncx.NCXPackage#getMeta()
  * @model

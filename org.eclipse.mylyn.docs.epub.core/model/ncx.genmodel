@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<genmodel:GenModel xmi:version="2.0"
-    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.mylyn.docs.epub.core/src-gen"
-    modelPluginID="org.eclipse.mylyn.docs.epub.core" modelName="NCX-2005-1" importerID="org.eclipse.emf.importer.ecore"
-    complianceLevel="5.0" copyrightFields="false" runtimeVersion="2.6">
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.mylyn.docs.epub.core/src-gen" modelPluginID="org.eclipse.mylyn.docs.epub.core"
+    modelName="NCX-2005-1" importerID="org.eclipse.emf.importer.ecore" complianceLevel="7.0"
+    copyrightFields="false" runtimeVersion="2.9">
   <foreignModel>ncx.ecore</foreignModel>
   <genPackages prefix="NCX" basePackage="org.eclipse.mylyn.docs.epub" resource="XML"
       disposableProviderFactory="true" ecorePackage="ncx.ecore#/">
@@ -69,9 +68,9 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//DocTitle/lang"/>
     </genClasses>
     <genClasses ecoreClass="ncx.ecore#//Head">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute ncx.ecore#//Head/group"/>
-      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ncx.ecore#//Head/smilCustomTest"/>
-      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ncx.ecore#//Head/meta"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute ncx.ecore#//Head/groups"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ncx.ecore#//Head/smilCustomTests"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ncx.ecore#//Head/metas"/>
     </genClasses>
     <genClasses ecoreClass="ncx.ecore#//Img">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//Img/class"/>
@@ -98,28 +97,28 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//NavLabel/lang"/>
     </genClasses>
     <genClasses ecoreClass="ncx.ecore#//NavList">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavList/navInfo"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavList/navLabel"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavList/navTarget"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavList/navInfos"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavList/navLabels"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavList/navTargets"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//NavList/class"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//NavList/id"/>
     </genClasses>
     <genClasses ecoreClass="ncx.ecore#//NavMap">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavMap/navInfo"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavMap/navLabel"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavMap/navPoint"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavMap/navInfos"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavMap/navLabels"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavMap/navPoints"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//NavMap/id"/>
     </genClasses>
     <genClasses ecoreClass="ncx.ecore#//NavPoint">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavPoint/navLabels"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavPoint/content"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavPoint/navPoint"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavPoint/navPoints"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//NavPoint/class"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//NavPoint/id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//NavPoint/playOrder"/>
     </genClasses>
     <genClasses ecoreClass="ncx.ecore#//NavTarget">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavTarget/navLabel"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavTarget/navLabels"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//NavTarget/content"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//NavTarget/class"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//NavTarget/id"/>
@@ -129,23 +128,23 @@
     <genClasses ecoreClass="ncx.ecore#//Ncx">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//Ncx/head"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//Ncx/docTitle"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//Ncx/docAuthor"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//Ncx/docAuthors"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//Ncx/navMap"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//Ncx/pageList"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//Ncx/navList"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//Ncx/navLists"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//Ncx/dir"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//Ncx/lang"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//Ncx/version"/>
     </genClasses>
     <genClasses ecoreClass="ncx.ecore#//PageList">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//PageList/navInfo"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//PageList/navLabel"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//PageList/pageTarget"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//PageList/navInfos"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//PageList/navLabels"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//PageList/pageTargets"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//PageList/class"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//PageList/id"/>
     </genClasses>
     <genClasses ecoreClass="ncx.ecore#//PageTarget">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//PageTarget/navLabel"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//PageTarget/navLabels"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ncx.ecore#//PageTarget/content"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//PageTarget/class"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ncx.ecore#//PageTarget/id"/>

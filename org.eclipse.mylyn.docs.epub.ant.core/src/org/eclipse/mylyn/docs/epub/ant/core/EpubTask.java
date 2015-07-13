@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2014 Torkild U. Resheim.
+ * Copyright (c) 2011, 2015 Torkild U. Resheim.
  *
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
@@ -20,7 +20,6 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.eclipse.mylyn.docs.epub.core.EPUB;
 import org.eclipse.mylyn.docs.epub.core.OPSPublication;
-import org.eclipse.mylyn.docs.epub.core.Publication;
 import org.eclipse.mylyn.docs.epub.opf.Role;
 import org.eclipse.mylyn.internal.docs.epub.core.EclipseTocImporter;
 
@@ -33,7 +32,8 @@ import org.eclipse.mylyn.internal.docs.epub.core.EclipseTocImporter;
 @SuppressWarnings("restriction")
 public class EpubTask extends Task {
 
-	private Publication oebps = null;
+	/** Ant task only supports EPUB 2.0 */
+	private OPSPublication oebps = null;
 
 	private ArrayList<FileSetType> filesets = null;
 

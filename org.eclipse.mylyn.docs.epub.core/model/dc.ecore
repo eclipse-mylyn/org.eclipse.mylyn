@@ -42,8 +42,7 @@
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="kind" value="mixed"/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="role" eType="ecore:EEnum opf.ecore#//Role"
-        defaultValueLiteral="" unsettable="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="role" eType="ecore:EEnum opf.ecore#//Role">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="namespace" value="http://www.idpf.org/2007/opf"/>
       </eAnnotations>

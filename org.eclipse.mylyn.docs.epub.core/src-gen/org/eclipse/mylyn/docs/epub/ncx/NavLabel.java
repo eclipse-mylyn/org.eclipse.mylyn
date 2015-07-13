@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.NavLabel#getText <em>Text</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.NavLabel#getAudio <em>Audio</em>}</li>
@@ -22,7 +23,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.NavLabel#getDir <em>Dir</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.NavLabel#getLang <em>Lang</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.mylyn.docs.epub.ncx.NCXPackage#getNavLabel()
  * @model

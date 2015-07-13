@@ -34,13 +34,13 @@ import org.eclipse.mylyn.docs.epub.ncx.NavPoint;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.NavMapImpl#getNavInfos <em>Nav Infos</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.NavMapImpl#getNavLabels <em>Nav Labels</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.NavMapImpl#getNavPoints <em>Nav Points</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.NavMapImpl#getId <em>Id</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

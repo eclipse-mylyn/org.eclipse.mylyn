@@ -8,6 +8,8 @@ p. Hence the primary goal of the EPUB support in Mylyn Docs is to create a mecha
 
 p. The EPUB support in Eclipse is built around an EMF data model describing the publication along with various mechanisms to manipulate this structure and assemble a EPUB file. The model is expressed in "Ecore":http://wiki.eclipse.org/Ecore, representing the "Open Packaging Format (OPF)":http://idpf.org/epub/20/spec/OPF_2.0.1_draft.htm, a subset of Dublin Core and the Navigation Control File (NCX). All required parts of a properly assembled EPUB file following the 2.0.1 revision of the standard.
 
+p. In addition support has been added for forward compatible EPUB 3 files to be read. These are EPUB 3 files that contains all the the artifacts and attributes required for an EPUB 2 reading system. Note that while EPUB 3 files can be read by these tools, corrently only EPUB 2 files can be produced.
+
 p. The mechanisms mentioned is an API for handling the EPUB and a Ant task that can be used during building. The following code shows the minimum Ant script required to generate a publication.
 
 bc.. 

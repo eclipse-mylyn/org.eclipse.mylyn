@@ -44,7 +44,7 @@ public class OPFFactoryImpl extends EFactoryImpl implements OPFFactory {
 	 */
 	public static OPFFactory init() {
 		try {
-			OPFFactory theOPFFactory = (OPFFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.idpf.org/2007/opf"); //$NON-NLS-1$ 
+			OPFFactory theOPFFactory = (OPFFactory)EPackage.Registry.INSTANCE.getEFactory(OPFPackage.eNS_URI);
 			if (theOPFFactory != null) {
 				return theOPFFactory;
 			}

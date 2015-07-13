@@ -15,12 +15,12 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ocf.RootFile#getFullPath <em>Full Path</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ocf.RootFile#getMediaType <em>Media Type</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ocf.RootFile#getPublication <em>Publication</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.mylyn.docs.epub.ocf.OCFPackage#getRootFile()
  * @model

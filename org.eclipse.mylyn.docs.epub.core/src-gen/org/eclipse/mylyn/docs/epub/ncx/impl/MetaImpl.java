@@ -22,12 +22,12 @@ import org.eclipse.mylyn.docs.epub.ncx.NCXPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.MetaImpl#getContent <em>Content</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.MetaImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.MetaImpl#getScheme <em>Scheme</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

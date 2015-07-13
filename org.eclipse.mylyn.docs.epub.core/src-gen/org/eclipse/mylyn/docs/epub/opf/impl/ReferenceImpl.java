@@ -22,12 +22,12 @@ import org.eclipse.mylyn.docs.epub.opf.Reference;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.impl.ReferenceImpl#getType <em>Type</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.impl.ReferenceImpl#getTitle <em>Title</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.impl.ReferenceImpl#getHref <em>Href</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

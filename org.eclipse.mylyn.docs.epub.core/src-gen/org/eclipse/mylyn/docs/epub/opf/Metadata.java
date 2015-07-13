@@ -33,6 +33,7 @@ import org.eclipse.mylyn.docs.epub.dc.Type;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.Metadata#getTitles <em>Titles</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.Metadata#getCreators <em>Creators</em>}</li>
@@ -51,7 +52,6 @@ import org.eclipse.mylyn.docs.epub.dc.Type;
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.Metadata#getRights <em>Rights</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.Metadata#getMetas <em>Metas</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.mylyn.docs.epub.opf.OPFPackage#getMetadata()
  * @model

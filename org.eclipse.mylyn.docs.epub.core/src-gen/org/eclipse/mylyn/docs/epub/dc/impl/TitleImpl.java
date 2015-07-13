@@ -15,8 +15,6 @@ import org.eclipse.mylyn.docs.epub.dc.Title;
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Title</b></em>'.
  * <!-- end-user-doc -->
- * <p>
- * </p>
  *
  * @generated
  */

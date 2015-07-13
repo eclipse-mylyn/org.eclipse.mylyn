@@ -15,11 +15,11 @@ import org.eclipse.mylyn.docs.epub.opf.Role;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.dc.Creator#getRole <em>Role</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.dc.Creator#getFileAs <em>File As</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.mylyn.docs.epub.dc.DCPackage#getCreator()
  * @model extendedMetaData="kind='mixed'"

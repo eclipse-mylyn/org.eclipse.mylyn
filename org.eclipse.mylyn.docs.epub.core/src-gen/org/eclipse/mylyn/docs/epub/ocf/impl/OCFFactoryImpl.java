@@ -31,7 +31,7 @@ public class OCFFactoryImpl extends EFactoryImpl implements OCFFactory {
 	 */
 	public static OCFFactory init() {
 		try {
-			OCFFactory theOCFFactory = (OCFFactory)EPackage.Registry.INSTANCE.getEFactory("urn:oasis:names:tc:opendocument:xmlns:container"); 
+			OCFFactory theOCFFactory = (OCFFactory)EPackage.Registry.INSTANCE.getEFactory(OCFPackage.eNS_URI);
 			if (theOCFFactory != null) {
 				return theOCFFactory;
 			}

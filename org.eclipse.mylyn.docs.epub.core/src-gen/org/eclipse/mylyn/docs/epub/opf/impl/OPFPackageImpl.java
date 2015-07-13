@@ -11,14 +11,10 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
-
 import org.eclipse.mylyn.docs.epub.dc.DCPackage;
-
 import org.eclipse.mylyn.docs.epub.dc.impl.DCPackageImpl;
-
 import org.eclipse.mylyn.docs.epub.opf.Guide;
 import org.eclipse.mylyn.docs.epub.opf.Item;
 import org.eclipse.mylyn.docs.epub.opf.Itemref;
@@ -35,106 +31,90 @@ import org.eclipse.mylyn.docs.epub.opf.Type;
 import org.eclipse.mylyn.docs.epub.opf.util.OPFValidator;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model <b>Package</b>.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->
  * @generated
  */
 public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass packageEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass metadataEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass manifestEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass itemEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass spineEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass guideEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass referenceEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass itemrefEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass toursEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass metaEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EEnum roleEEnum = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EEnum typeEEnum = null;
 
 	/**
-	 * Creates an instance of the model <b>Package</b>, registered with
-	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
-	 * package URI value.
-	 * <p>Note: the correct way to create the package is via the static
-	 * factory method {@link #init init()}, which also performs
-	 * initialization of the package, or returns the registered package,
-	 * if one already exists.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Creates an instance of the model <b>Package</b>, registered with {@link org.eclipse.emf.ecore.EPackage.Registry
+	 * EPackage.Registry} by the package package URI value.
+	 * <p>
+	 * Note: the correct way to create the package is via the static factory method {@link #init init()}, which also
+	 * performs initialization of the package, or returns the registered package, if one already exists. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 *
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
 	 * @see org.eclipse.mylyn.docs.epub.opf.OPFPackage#eNS_URI
 	 * @see #init()
@@ -145,8 +125,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private static boolean isInited = false;
@@ -201,8 +180,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getPackage() {
@@ -210,8 +188,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getPackage_Metadata() {
@@ -219,8 +196,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getPackage_Manifest() {
@@ -228,8 +204,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getPackage_Spine() {
@@ -237,8 +212,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getPackage_Guide() {
@@ -246,8 +220,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getPackage_Tours() {
@@ -255,8 +228,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getPackage_Version() {
@@ -264,8 +236,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getPackage_UniqueIdentifier() {
@@ -273,8 +244,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getPackage_GenerateCoverHTML() {
@@ -282,8 +252,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getPackage_GenerateTableOfContents() {
@@ -291,8 +260,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getPackage_IncludeReferencedResources() {
@@ -301,7 +269,46 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 
 	/**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 *
+	 * @since 3.0 <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getPackage_Prefix() {
+		return (EAttribute)packageEClass.getEStructuralFeatures().get(10);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 *
+	 * @since 3.0 <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getPackage_Lang() {
+		return (EAttribute)packageEClass.getEStructuralFeatures().get(11);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 *
+	 * @since 3.0 <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getPackage_Dir() {
+		return (EAttribute)packageEClass.getEStructuralFeatures().get(12);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 *
+	 * @since 3.0 <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getPackage_Id() {
+		return (EAttribute)packageEClass.getEStructuralFeatures().get(13);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getMetadata() {
@@ -309,8 +316,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getMetadata_Titles() {
@@ -318,8 +324,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getMetadata_Creators() {
@@ -327,8 +332,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getMetadata_Subjects() {
@@ -336,8 +340,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getMetadata_Descriptions() {
@@ -345,8 +348,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getMetadata_Publishers() {
@@ -354,8 +356,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getMetadata_Contributors() {
@@ -363,8 +364,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getMetadata_Dates() {
@@ -372,8 +372,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getMetadata_Types() {
@@ -381,8 +380,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getMetadata_Formats() {
@@ -390,8 +388,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getMetadata_Identifiers() {
@@ -399,8 +396,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getMetadata_Sources() {
@@ -408,8 +404,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getMetadata_Languages() {
@@ -417,8 +412,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getMetadata_Relations() {
@@ -426,8 +420,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getMetadata_Coverages() {
@@ -435,8 +428,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getMetadata_Rights() {
@@ -444,8 +436,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getMetadata_Metas() {
@@ -453,8 +444,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getManifest() {
@@ -462,8 +452,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getManifest_Items() {
@@ -471,8 +460,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getItem() {
@@ -480,8 +468,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getItem_Id() {
@@ -489,8 +476,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getItem_Href() {
@@ -498,8 +484,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getItem_Media_type() {
@@ -507,8 +492,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getItem_Fallback() {
@@ -516,8 +500,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getItem_Fallback_style() {
@@ -525,8 +508,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getItem_Required_namespace() {
@@ -534,8 +516,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getItem_Required_modules() {
@@ -543,8 +524,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getItem_File() {
@@ -552,8 +532,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getItem_NoToc() {
@@ -561,8 +540,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getItem_Title() {
@@ -570,8 +548,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getItem_Generated() {
@@ -579,8 +556,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getItem_SourcePath() {
@@ -589,7 +565,26 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 
 	/**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 *
+	 * @since 3.0 <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getItem_Properties() {
+		return (EAttribute)itemEClass.getEStructuralFeatures().get(12);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 *
+	 * @since 3.0 <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getItem_Media_overlay() {
+		return (EAttribute)itemEClass.getEStructuralFeatures().get(13);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getSpine() {
@@ -597,8 +592,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getSpine_SpineItems() {
@@ -606,8 +600,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getSpine_Toc() {
@@ -615,8 +608,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getGuide() {
@@ -624,8 +616,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EReference getGuide_GuideItems() {
@@ -633,8 +624,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getReference() {
@@ -642,8 +632,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getReference_Type() {
@@ -651,8 +640,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getReference_Title() {
@@ -660,8 +648,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getReference_Href() {
@@ -669,8 +656,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getItemref() {
@@ -678,8 +664,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getItemref_Idref() {
@@ -687,8 +672,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getItemref_Linear() {
@@ -696,8 +680,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getTours() {
@@ -705,8 +688,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getMeta() {
@@ -714,8 +696,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getMeta_Name() {
@@ -723,8 +704,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getMeta_Content() {
@@ -733,7 +713,56 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 
 	/**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 *
+	 * @since 3.0 <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getMeta_Id() {
+		return (EAttribute)metaEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 *
+	 * @since 3.0 <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getMeta_Property() {
+		return (EAttribute)metaEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 *
+	 * @since 3.0 <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getMeta_Refines() {
+		return (EAttribute)metaEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * 
+	 * @since 3.0 <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getMeta_Scheme() {
+		return (EAttribute)metaEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * 
+	 * @since 3.0 <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getMeta_Dir() {
+		return (EAttribute)metaEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EEnum getRole() {
@@ -741,8 +770,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EEnum getType() {
@@ -750,8 +778,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public OPFFactory getOPFFactory() {
@@ -759,8 +786,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private boolean isCreated = false;
@@ -768,8 +794,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	/**
 	 * Creates the meta-model objects for the package.  This method is
 	 * guarded to have no affect on any invocation but its first.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void createPackageContents() {
@@ -788,6 +813,10 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 		createEAttribute(packageEClass, PACKAGE__GENERATE_COVER_HTML);
 		createEAttribute(packageEClass, PACKAGE__GENERATE_TABLE_OF_CONTENTS);
 		createEAttribute(packageEClass, PACKAGE__INCLUDE_REFERENCED_RESOURCES);
+		createEAttribute(packageEClass, PACKAGE__PREFIX);
+		createEAttribute(packageEClass, PACKAGE__LANG);
+		createEAttribute(packageEClass, PACKAGE__DIR);
+		createEAttribute(packageEClass, PACKAGE__ID);
 
 		metadataEClass = createEClass(METADATA);
 		createEReference(metadataEClass, METADATA__TITLES);
@@ -823,6 +852,8 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 		createEAttribute(itemEClass, ITEM__TITLE);
 		createEAttribute(itemEClass, ITEM__GENERATED);
 		createEAttribute(itemEClass, ITEM__SOURCE_PATH);
+		createEAttribute(itemEClass, ITEM__PROPERTIES);
+		createEAttribute(itemEClass, ITEM__MEDIA_OVERLAY);
 
 		spineEClass = createEClass(SPINE);
 		createEReference(spineEClass, SPINE__SPINE_ITEMS);
@@ -845,6 +876,11 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 		metaEClass = createEClass(META);
 		createEAttribute(metaEClass, META__NAME);
 		createEAttribute(metaEClass, META__CONTENT);
+		createEAttribute(metaEClass, META__ID);
+		createEAttribute(metaEClass, META__PROPERTY);
+		createEAttribute(metaEClass, META__REFINES);
+		createEAttribute(metaEClass, META__SCHEME);
+		createEAttribute(metaEClass, META__DIR);
 
 		// Create enums
 		roleEEnum = createEEnum(ROLE);
@@ -852,8 +888,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private boolean isInitialized = false;
@@ -861,8 +896,7 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 	/**
 	 * Complete the initialization of the package and its meta-model.  This
 	 * method is guarded to have no affect on any invocation but its first.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void initializePackageContents() {
@@ -895,6 +929,10 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 		initEAttribute(getPackage_GenerateCoverHTML(), ecorePackage.getEBoolean(), "generateCoverHTML", null, 0, 1, org.eclipse.mylyn.docs.epub.opf.Package.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getPackage_GenerateTableOfContents(), ecorePackage.getEBoolean(), "generateTableOfContents", null, 0, 1, org.eclipse.mylyn.docs.epub.opf.Package.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getPackage_IncludeReferencedResources(), ecorePackage.getEBoolean(), "includeReferencedResources", null, 0, 1, org.eclipse.mylyn.docs.epub.opf.Package.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getPackage_Prefix(), ecorePackage.getEString(), "prefix", null, 0, 1, org.eclipse.mylyn.docs.epub.opf.Package.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getPackage_Lang(), ecorePackage.getEString(), "lang", null, 0, 1, org.eclipse.mylyn.docs.epub.opf.Package.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getPackage_Dir(), ecorePackage.getEString(), "dir", null, 0, 1, org.eclipse.mylyn.docs.epub.opf.Package.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getPackage_Id(), ecorePackage.getEString(), "id", null, 0, 1, org.eclipse.mylyn.docs.epub.opf.Package.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(metadataEClass, Metadata.class, "Metadata", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEReference(getMetadata_Titles(), theDCPackage.getTitle(), null, "titles", null, 1, -1, Metadata.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
@@ -930,6 +968,8 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 		initEAttribute(getItem_Title(), ecorePackage.getEString(), "title", null, 0, 1, Item.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getItem_Generated(), ecorePackage.getEBoolean(), "generated", null, 0, 1, Item.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getItem_SourcePath(), ecorePackage.getEString(), "sourcePath", null, 0, 1, Item.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getItem_Properties(), ecorePackage.getEString(), "properties", null, 0, 1, Item.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getItem_Media_overlay(), ecorePackage.getEString(), "media_overlay", null, 0, 1, Item.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(spineEClass, Spine.class, "Spine", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEReference(getSpine_SpineItems(), this.getItemref(), null, "spineItems", null, 0, -1, Spine.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
@@ -950,8 +990,13 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 		initEClass(toursEClass, Tours.class, "Tours", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		initEClass(metaEClass, Meta.class, "Meta", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(getMeta_Name(), ecorePackage.getEString(), "name", null, 1, 1, Meta.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getMeta_Content(), ecorePackage.getEString(), "content", null, 1, 1, Meta.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getMeta_Name(), ecorePackage.getEString(), "name", null, 0, 1, Meta.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getMeta_Content(), ecorePackage.getEString(), "content", null, 0, 1, Meta.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getMeta_Id(), ecorePackage.getEString(), "id", null, 0, 1, Meta.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getMeta_Property(), ecorePackage.getEString(), "property", "", 0, 1, Meta.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+		initEAttribute(getMeta_Refines(), ecorePackage.getEString(), "refines", null, 0, 1, Meta.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getMeta_Scheme(), ecorePackage.getEString(), "scheme", null, 0, 1, Meta.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getMeta_Dir(), ecorePackage.getEString(), "dir", null, 0, 1, Meta.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		// Initialize enums and add enum literals
 		initEEnum(roleEEnum, Role.class, "Role"); //$NON-NLS-1$
@@ -1210,212 +1255,219 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 
 	/**
 	 * Initializes the annotations for <b>http:///org/eclipse/emf/ecore/util/ExtendedMetaData</b>.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected void createExtendedMetaDataAnnotations() {
-		String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData"; //$NON-NLS-1$		
+		String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData"; //$NON-NLS-1$	
 		addAnnotation
 		  (packageEClass, 
 		   source, 
 		   new String[] {
 			 "name", "package", //$NON-NLS-1$ //$NON-NLS-2$
 			 "namespace", "http://www.idpf.org/2007/opf" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getPackage_Metadata(), 
 		   source, 
 		   new String[] {
 			 "namespace", "http://www.idpf.org/2007/opf" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getPackage_Manifest(), 
 		   source, 
 		   new String[] {
 			 "namespace", "http://www.idpf.org/2007/opf" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getPackage_Spine(), 
 		   source, 
 		   new String[] {
 			 "namespace", "http://www.idpf.org/2007/opf" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getPackage_Guide(), 
 		   source, 
 		   new String[] {
 			 "namespace", "http://www.idpf.org/2007/opf" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getPackage_Tours(), 
 		   source, 
 		   new String[] {
 			 "namespace", "http://www.idpf.org/2007/opf" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getPackage_UniqueIdentifier(), 
 		   source, 
 		   new String[] {
 			 "name", "unique-identifier" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getMetadata_Titles(), 
 		   source, 
 		   new String[] {
 			 "name", "title", //$NON-NLS-1$ //$NON-NLS-2$
 			 "namespace", "http://purl.org/dc/elements/1.1/" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getMetadata_Creators(), 
 		   source, 
 		   new String[] {
 			 "name", "creator", //$NON-NLS-1$ //$NON-NLS-2$
 			 "namespace", "http://purl.org/dc/elements/1.1/" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getMetadata_Subjects(), 
 		   source, 
 		   new String[] {
 			 "name", "subject", //$NON-NLS-1$ //$NON-NLS-2$
 			 "namespace", "http://purl.org/dc/elements/1.1/" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getMetadata_Descriptions(), 
 		   source, 
 		   new String[] {
 			 "name", "description", //$NON-NLS-1$ //$NON-NLS-2$
 			 "namespace", "http://purl.org/dc/elements/1.1/" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getMetadata_Publishers(), 
 		   source, 
 		   new String[] {
 			 "name", "publisher", //$NON-NLS-1$ //$NON-NLS-2$
 			 "namespace", "http://purl.org/dc/elements/1.1/" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getMetadata_Contributors(), 
 		   source, 
 		   new String[] {
 			 "name", "contributor", //$NON-NLS-1$ //$NON-NLS-2$
 			 "namespace", "http://purl.org/dc/elements/1.1/" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getMetadata_Dates(), 
 		   source, 
 		   new String[] {
 			 "name", "date", //$NON-NLS-1$ //$NON-NLS-2$
 			 "namespace", "http://purl.org/dc/elements/1.1/" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getMetadata_Types(), 
 		   source, 
 		   new String[] {
 			 "name", "type", //$NON-NLS-1$ //$NON-NLS-2$
 			 "namespace", "http://purl.org/dc/elements/1.1/" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getMetadata_Formats(), 
 		   source, 
 		   new String[] {
 			 "name", "format", //$NON-NLS-1$ //$NON-NLS-2$
 			 "namespace", "http://purl.org/dc/elements/1.1/" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getMetadata_Identifiers(), 
 		   source, 
 		   new String[] {
 			 "name", "identifier", //$NON-NLS-1$ //$NON-NLS-2$
 			 "namespace", "http://purl.org/dc/elements/1.1/" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getMetadata_Sources(), 
 		   source, 
 		   new String[] {
 			 "name", "source", //$NON-NLS-1$ //$NON-NLS-2$
 			 "namespace", "http://purl.org/dc/elements/1.1/" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getMetadata_Languages(), 
 		   source, 
 		   new String[] {
 			 "name", "language", //$NON-NLS-1$ //$NON-NLS-2$
 			 "namespace", "http://purl.org/dc/elements/1.1/" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getMetadata_Relations(), 
 		   source, 
 		   new String[] {
 			 "name", "relation", //$NON-NLS-1$ //$NON-NLS-2$
 			 "namespace", "http://purl.org/dc/elements/1.1/" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getMetadata_Coverages(), 
 		   source, 
 		   new String[] {
 			 "name", "coverage", //$NON-NLS-1$ //$NON-NLS-2$
 			 "namespace", "http://purl.org/dc/elements/1.1/" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getMetadata_Rights(), 
 		   source, 
 		   new String[] {
 			 "name", "rights", //$NON-NLS-1$ //$NON-NLS-2$
 			 "namespace", "http://purl.org/dc/elements/1.1/" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getMetadata_Metas(), 
 		   source, 
 		   new String[] {
 			 "name", "meta", //$NON-NLS-1$ //$NON-NLS-2$
 			 "namespace", "http://www.idpf.org/2007/opf" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getManifest_Items(), 
 		   source, 
 		   new String[] {
 			 "name", "item", //$NON-NLS-1$ //$NON-NLS-2$
 			 "namespace", "http://www.idpf.org/2007/opf" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getItem_Media_type(), 
 		   source, 
 		   new String[] {
 			 "name", "media-type" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getItem_Fallback_style(), 
 		   source, 
 		   new String[] {
 			 "name", "fallback-style" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getItem_Required_namespace(), 
 		   source, 
 		   new String[] {
 			 "name", "required-namespace" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getItem_Required_modules(), 
 		   source, 
 		   new String[] {
 			 "name", "required-modules" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
+		addAnnotation
+		  (getItem_Media_overlay(), 
+		   source, 
+		   new String[] {
+			 "name", "media-overlay", //$NON-NLS-1$ //$NON-NLS-2$
+			 "namespace", "http://www.idpf.org/2007/opf" //$NON-NLS-1$ //$NON-NLS-2$
+		   });	
 		addAnnotation
 		  (getSpine_SpineItems(), 
 		   source, 
 		   new String[] {
 			 "name", "itemref", //$NON-NLS-1$ //$NON-NLS-2$
 			 "namespace", "http://www.idpf.org/2007/opf" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getGuide_GuideItems(), 
 		   source, 
 		   new String[] {
 			 "name", "reference", //$NON-NLS-1$ //$NON-NLS-2$
 			 "namespace", "http://www.idpf.org/2007/opf" //$NON-NLS-1$ //$NON-NLS-2$
-		   });			
+		   });	
 		addAnnotation
 		  (roleEEnum, 
 		   source, 
@@ -1426,18 +1478,18 @@ public class OPFPackageImpl extends EPackageImpl implements OPFPackage {
 
 	/**
 	 * Initializes the annotations for <b>http://www.eclipse.org/emf/2002/Ecore</b>.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @generated
 	 */
 	protected void createEcoreAnnotations() {
-		String source = "http://www.eclipse.org/emf/2002/Ecore"; //$NON-NLS-1$																																
+		String source = "http://www.eclipse.org/emf/2002/Ecore"; //$NON-NLS-1$	
 		addAnnotation
 		  (referenceEClass, 
 		   source, 
 		   new String[] {
 			 "constraints", "validType" //$NON-NLS-1$ //$NON-NLS-2$
-		   });	
+		   });
 	}
 
 } //OPFPackageImpl

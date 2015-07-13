@@ -37,7 +37,7 @@ public class NCXFactoryImpl extends EFactoryImpl implements NCXFactory {
 	 */
 	public static NCXFactory init() {
 		try {
-			NCXFactory theNCXFactory = (NCXFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.daisy.org/z3986/2005/ncx/"); 
+			NCXFactory theNCXFactory = (NCXFactory)EPackage.Registry.INSTANCE.getEFactory(NCXPackage.eNS_URI);
 			if (theNCXFactory != null) {
 				return theNCXFactory;
 			}

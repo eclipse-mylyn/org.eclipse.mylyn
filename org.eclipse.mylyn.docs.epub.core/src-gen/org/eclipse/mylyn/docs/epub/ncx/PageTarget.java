@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.PageTarget#getNavLabels <em>Nav Labels</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.PageTarget#getContent <em>Content</em>}</li>
@@ -26,7 +27,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.PageTarget#getType <em>Type</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.PageTarget#getValue <em>Value</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.mylyn.docs.epub.ncx.NCXPackage#getPageTarget()
  * @model

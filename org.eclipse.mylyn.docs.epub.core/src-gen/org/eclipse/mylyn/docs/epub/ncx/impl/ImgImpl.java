@@ -22,12 +22,12 @@ import org.eclipse.mylyn.docs.epub.ncx.NCXPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.ImgImpl#getClass_ <em>Class</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.ImgImpl#getId <em>Id</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.ImgImpl#getSrc <em>Src</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

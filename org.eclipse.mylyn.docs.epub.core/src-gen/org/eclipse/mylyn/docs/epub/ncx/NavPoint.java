@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.NavPoint#getNavLabels <em>Nav Labels</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.NavPoint#getContent <em>Content</em>}</li>
@@ -25,7 +26,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.NavPoint#getId <em>Id</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.NavPoint#getPlayOrder <em>Play Order</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.mylyn.docs.epub.ncx.NCXPackage#getNavPoint()
  * @model

@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2014 Torkild U. Resheim.
- * 
+ *
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors: 
+ *
+ * Contributors:
  *   Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.tests.api;
@@ -41,7 +41,20 @@ public class TestEPUB extends AbstractTest {
 	public final void testEPUB() {
 		EPUB epub = new EPUB();
 		assertEquals(true, epub.getOPSPublications().isEmpty());
+	}
 
+	/**
+	 * Verify that we can open a basic EPUB file.
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public final void testEPUB3() throws Exception {
+		EPUB epub = new EPUB();
+		File epub_3 = new File("testdata/epub/basic_3.epub");
+		assertEquals(true, epub.isEPUB(epub_3));
+		epub.unpack(epub_3);
+		assertEquals(1, epub.getOPSPublications().size());
 	}
 
 	/**
@@ -51,7 +64,7 @@ public class TestEPUB extends AbstractTest {
 	 * <li>Rootfile path shall be correct</li>
 	 * <li>Rootfile object shall be correct.</li>
 	 * </ul>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -72,7 +85,7 @@ public class TestEPUB extends AbstractTest {
 	 * <ul>
 	 * <li>Shall throw exception when unknown publication type is added.</li>
 	 * </ul>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -92,15 +105,14 @@ public class TestEPUB extends AbstractTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.eclipse.mylyn.docs.epub.core.EPUB#add(org.eclipse.mylyn.docs.epub.core.Publication)} .
+	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.EPUB#add(org.eclipse.mylyn.docs.epub.core.Publication)} .
 	 * <ul>
 	 * <li>Container shall hold more than one OPS publication</li>
 	 * <li>OPS structures shall follow naming conventions.</li>
 	 * <li>OPS MIME-type shall be correct</li>
 	 * <li>Rootfile object shall be correct.</li>
 	 * </ul>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -126,7 +138,7 @@ public class TestEPUB extends AbstractTest {
 	 * <p>
 	 * One OPS-publication and one SVG drawing are added. Only the OPS-publication shall be returned.
 	 * </p>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -144,7 +156,7 @@ public class TestEPUB extends AbstractTest {
 	 * <ul>
 	 * <li>Temporary folder shall not exist when job is done.</li>
 	 * </ul>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -166,7 +178,7 @@ public class TestEPUB extends AbstractTest {
 	 * <li>Work folder shall contain EPUB artifacts.</li>
 	 * <li>Exception shall be thrown if working folder already exist.</li>
 	 * </ul>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -180,8 +192,8 @@ public class TestEPUB extends AbstractTest {
 		File metaFolder = new File(epubFolder.getAbsolutePath() + File.separator + "META-INF");
 		assertEquals(true, metaFolder.exists());
 		assertEquals(true, metaFolder.isDirectory());
-		File containerFile = new File(epubFolder.getAbsolutePath() + File.separator + "META-INF" + File.separator
-				+ "container.xml");
+		File containerFile = new File(
+				epubFolder.getAbsolutePath() + File.separator + "META-INF" + File.separator + "container.xml");
 		assertEquals(true, containerFile.exists());
 		assertEquals(false, containerFile.isDirectory());
 		File oebpsFolder = new File(epubFolder.getAbsolutePath() + File.separator + "OEBPS");
@@ -194,7 +206,7 @@ public class TestEPUB extends AbstractTest {
 	 * <ul>
 	 * <li>Exception shall be thrown if working folder already exist.</li>
 	 * </ul>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -215,7 +227,7 @@ public class TestEPUB extends AbstractTest {
 	 * <ul>
 	 * <li>Exception shall be thrown if the EPUB is empty.</li>
 	 * </ul>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -232,7 +244,7 @@ public class TestEPUB extends AbstractTest {
 	 * <ul>
 	 * <li>Unpacked EPUB shall have the same contents as the packed one.</li>
 	 * </ul>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -249,7 +261,7 @@ public class TestEPUB extends AbstractTest {
 
 	/**
 	 * Test method for {@link org.eclipse.mylyn.docs.epub.core.EPUB#unpack(java.io.File, java.io.File)} .
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -270,8 +282,8 @@ public class TestEPUB extends AbstractTest {
 		File metaFolder = new File(epubFolder.getAbsolutePath() + File.separator + "META-INF");
 		assertEquals(true, metaFolder.exists());
 		assertEquals(true, metaFolder.isDirectory());
-		File containerFile = new File(epubFolder.getAbsolutePath() + File.separator + "META-INF" + File.separator
-				+ "container.xml");
+		File containerFile = new File(
+				epubFolder.getAbsolutePath() + File.separator + "META-INF" + File.separator + "container.xml");
 		assertEquals(true, containerFile.exists());
 		assertEquals(false, containerFile.isDirectory());
 		File oebpsFolder = new File(epubFolder.getAbsolutePath() + File.separator + "OEBPS");
@@ -288,7 +300,7 @@ public class TestEPUB extends AbstractTest {
 	/**
 	 * See if the OCF file generated by this tooling can be read. As of bug 378800 elements are no longer prefixed with
 	 * "ocf", however both are allowed and tested for.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -306,7 +318,7 @@ public class TestEPUB extends AbstractTest {
 	 * This case was discovered when testing an EPUB file generated by DocBook Reading the OCF fails with a
 	 * java.net.SocketException: Unexpected end of file from server. On closer inspection we can see that the file is
 	 * declared as XHTML (which it of course is not). This is probably due to an issue in DocBook XSL 1.76.1
-	 * 
+	 *
 	 * @see http://sourceforge.net/tracker/index.php?func=detail&aid=3353537 &group_id=21935&atid=373747.
 	 * @throws Exception
 	 */
@@ -324,7 +336,7 @@ public class TestEPUB extends AbstractTest {
 	 * When attempting to open a file that is not an EPUB the tooling shall reply by throwing an
 	 * {@link IllegalArgumentException}.
 	 * </p>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -347,28 +359,9 @@ public class TestEPUB extends AbstractTest {
 	}
 
 	/**
-	 * Test method for <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=378214">bug 378214</a>: [epub] Problem
-	 * when opening an EPUB3 file
-	 * <p>
-	 * There must be no OPS publications in the EPUB as there are none that are supported when reading an EPUB 3 file.
-	 * Also there must be no exceptions thrown.
-	 * </p>
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public final void test_Bug378214() throws Exception {
-		EPUB epub = new EPUB();
-		File epub_3 = new File("testdata/epub/basic_3.epub");
-		assertEquals(true, epub.isEPUB(epub_3));
-		epub.unpack(epub_3);
-		assertEquals(0, epub.getOPSPublications().size());
-	}
-
-	/**
 	 * Test method for <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=378800">bug 378800</a>: [epub] Remove
 	 * "ocf" prefix from elements in container.xml
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

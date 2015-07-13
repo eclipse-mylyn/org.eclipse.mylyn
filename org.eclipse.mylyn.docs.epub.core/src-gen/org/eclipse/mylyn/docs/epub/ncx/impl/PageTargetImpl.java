@@ -34,6 +34,7 @@ import org.eclipse.mylyn.docs.epub.ncx.Type;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.PageTargetImpl#getNavLabels <em>Nav Labels</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.PageTargetImpl#getContent <em>Content</em>}</li>
@@ -43,7 +44,6 @@ import org.eclipse.mylyn.docs.epub.ncx.Type;
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.PageTargetImpl#getType <em>Type</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.PageTargetImpl#getValue <em>Value</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

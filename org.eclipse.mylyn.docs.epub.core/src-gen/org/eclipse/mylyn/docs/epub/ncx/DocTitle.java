@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.DocTitle#getText <em>Text</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.DocTitle#getAudio <em>Audio</em>}</li>
@@ -23,7 +24,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.DocTitle#getId <em>Id</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.DocTitle#getLang <em>Lang</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.mylyn.docs.epub.ncx.NCXPackage#getDocTitle()
  * @model

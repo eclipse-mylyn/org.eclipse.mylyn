@@ -25,13 +25,13 @@ import org.eclipse.mylyn.docs.epub.ncx.SmilCustomTest;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.SmilCustomTestImpl#getBookStruct <em>Book Struct</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.SmilCustomTestImpl#getDefaultState <em>Default State</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.SmilCustomTestImpl#getId <em>Id</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.SmilCustomTestImpl#getOverride <em>Override</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

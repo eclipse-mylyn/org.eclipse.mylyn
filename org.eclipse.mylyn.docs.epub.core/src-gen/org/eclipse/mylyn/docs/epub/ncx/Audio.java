@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.Audio#getClass_ <em>Class</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.Audio#getClipBegin <em>Clip Begin</em>}</li>
@@ -22,7 +23,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.Audio#getId <em>Id</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.Audio#getSrc <em>Src</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.mylyn.docs.epub.ncx.NCXPackage#getAudio()
  * @model

@@ -28,12 +28,12 @@ import org.eclipse.mylyn.docs.epub.dc.Identifier;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.dc.impl.IdentifierImpl#getId <em>Id</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.dc.impl.IdentifierImpl#getScheme <em>Scheme</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.dc.impl.IdentifierImpl#getMixed <em>Mixed</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

@@ -28,11 +28,11 @@ import org.eclipse.mylyn.docs.epub.dc.DCType;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.dc.impl.DCTypeImpl#getId <em>Id</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.dc.impl.DCTypeImpl#getMixed <em>Mixed</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

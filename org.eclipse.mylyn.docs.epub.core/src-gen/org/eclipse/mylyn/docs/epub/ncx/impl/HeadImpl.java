@@ -32,12 +32,12 @@ import org.eclipse.mylyn.docs.epub.ncx.SmilCustomTest;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.HeadImpl#getGroups <em>Groups</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.HeadImpl#getSmilCustomTests <em>Smil Custom Tests</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.HeadImpl#getMetas <em>Metas</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

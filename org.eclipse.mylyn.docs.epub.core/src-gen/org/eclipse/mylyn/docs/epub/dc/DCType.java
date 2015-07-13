@@ -17,11 +17,11 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.dc.DCType#getId <em>Id</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.dc.DCType#getMixed <em>Mixed</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.mylyn.docs.epub.dc.DCPackage#getDCType()
  * @model abstract="true"

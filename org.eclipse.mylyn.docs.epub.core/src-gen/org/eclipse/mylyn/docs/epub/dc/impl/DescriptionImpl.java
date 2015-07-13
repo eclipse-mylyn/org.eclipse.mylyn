@@ -15,8 +15,6 @@ import org.eclipse.mylyn.docs.epub.dc.Description;
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Description</b></em>'.
  * <!-- end-user-doc -->
- * <p>
- * </p>
  *
  * @generated
  */

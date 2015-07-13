@@ -17,8 +17,6 @@ import org.eclipse.mylyn.docs.epub.opf.Tours;
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Tours</b></em>'.
  * <!-- end-user-doc -->
- * <p>
- * </p>
  *
  * @generated
  */

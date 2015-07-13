@@ -15,8 +15,6 @@ import org.eclipse.mylyn.docs.epub.dc.DCPackage;
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Coverage</b></em>'.
  * <!-- end-user-doc -->
- * <p>
- * </p>
  *
  * @generated
  */

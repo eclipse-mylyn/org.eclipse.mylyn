@@ -32,11 +32,11 @@ import org.eclipse.mylyn.docs.epub.opf.Spine;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.impl.SpineImpl#getSpineItems <em>Spine Items</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.impl.SpineImpl#getToc <em>Toc</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

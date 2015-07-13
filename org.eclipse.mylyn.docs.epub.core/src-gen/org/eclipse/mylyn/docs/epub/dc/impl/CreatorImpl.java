@@ -23,11 +23,11 @@ import org.eclipse.mylyn.docs.epub.opf.Role;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.dc.impl.CreatorImpl#getRole <em>Role</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.dc.impl.CreatorImpl#getFileAs <em>File As</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

@@ -30,10 +30,10 @@ import org.eclipse.mylyn.docs.epub.ocf.RootFiles;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ocf.impl.RootFilesImpl#getRootfiles <em>Rootfiles</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

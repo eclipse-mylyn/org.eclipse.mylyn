@@ -15,8 +15,6 @@ import org.eclipse.mylyn.docs.epub.dc.Format;
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Format</b></em>'.
  * <!-- end-user-doc -->
- * <p>
- * </p>
  *
  * @generated
  */

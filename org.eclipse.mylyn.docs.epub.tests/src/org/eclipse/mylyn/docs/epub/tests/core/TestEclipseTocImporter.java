@@ -17,8 +17,10 @@ import java.net.URISyntaxException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.eclipse.mylyn.docs.epub.core.OPSPublication;
 import org.eclipse.mylyn.docs.epub.tests.api.AbstractTest;
 import org.eclipse.mylyn.internal.docs.epub.core.EclipseTocImporter;
+import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.DOMException;
 import org.xml.sax.SAXException;
@@ -29,9 +31,18 @@ import org.xml.sax.SAXException;
 @SuppressWarnings("restriction")
 public class TestEclipseTocImporter extends AbstractTest {
 
+	private OPSPublication oebps;
+
+	@Override
+	@Before
+	public void setUp() throws Exception {
+		super.setUp();
+		oebps = new OPSPublication(logger);
+	}
+
 	@Test
-	public void testEclipseTocImporter() throws DOMException, ParserConfigurationException, SAXException, IOException,
-	URISyntaxException {
+	public void testEclipseTocImporter()
+			throws DOMException, ParserConfigurationException, SAXException, IOException, URISyntaxException {
 		File rootFile = new File("testdata/import/eclipse-toc/root.xml"); //$NON-NLS-1$
 		EclipseTocImporter.importFile(oebps, rootFile);
 		// a.html, b.html and c.html

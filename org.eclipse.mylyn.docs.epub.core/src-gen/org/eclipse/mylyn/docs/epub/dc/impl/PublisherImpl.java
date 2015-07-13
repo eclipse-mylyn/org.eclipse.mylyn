@@ -15,8 +15,6 @@ import org.eclipse.mylyn.docs.epub.dc.Publisher;
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Publisher</b></em>'.
  * <!-- end-user-doc -->
- * <p>
- * </p>
  *
  * @generated
  */

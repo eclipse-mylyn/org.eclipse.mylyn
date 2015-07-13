@@ -22,6 +22,7 @@ import org.eclipse.mylyn.docs.epub.ncx.NCXPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.AudioImpl#getClass_ <em>Class</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.AudioImpl#getClipBegin <em>Clip Begin</em>}</li>
@@ -29,7 +30,6 @@ import org.eclipse.mylyn.docs.epub.ncx.NCXPackage;
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.AudioImpl#getId <em>Id</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.AudioImpl#getSrc <em>Src</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

@@ -15,12 +15,12 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.Reference#getType <em>Type</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.Reference#getTitle <em>Title</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.Reference#getHref <em>Href</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.mylyn.docs.epub.opf.OPFPackage#getReference()
  * @model annotation="http://www.eclipse.org/emf/2002/Ecore constraints='validType'"

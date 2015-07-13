@@ -22,12 +22,12 @@ import org.eclipse.mylyn.docs.epub.ocf.RootFile;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ocf.impl.RootFileImpl#getFullPath <em>Full Path</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ocf.impl.RootFileImpl#getMediaType <em>Media Type</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ocf.impl.RootFileImpl#getPublication <em>Publication</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

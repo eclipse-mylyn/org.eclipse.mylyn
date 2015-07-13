@@ -226,6 +226,8 @@ public enum BookStruct implements Enumerator {
 	 * Returns the '<em><b>Book Struct</b></em>' literal with the specified literal value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @param literal the literal.
+	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
 	public static BookStruct get(String literal) {
@@ -242,6 +244,8 @@ public enum BookStruct implements Enumerator {
 	 * Returns the '<em><b>Book Struct</b></em>' literal with the specified name.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @param name the name.
+	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
 	public static BookStruct getByName(String name) {
@@ -258,6 +262,8 @@ public enum BookStruct implements Enumerator {
 	 * Returns the '<em><b>Book Struct</b></em>' literal with the specified integer value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @param value the integer value.
+	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
 	public static BookStruct get(int value) {

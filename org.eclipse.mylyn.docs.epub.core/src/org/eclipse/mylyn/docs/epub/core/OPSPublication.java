@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011-2014 Torkild U. Resheim.
+ * Copyright (c) 2011-2015 Torkild U. Resheim.
  *
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
@@ -59,6 +59,7 @@ import org.xml.sax.SAXException;
  * This type represents one EPUB revision 2.0.1 formatted publication.
  *
  * @author Torkild U. Resheim
+ * @see http://www.idpf.org/doc_library/epub/OPS_2.0.1_draft.htm
  */
 public class OPSPublication extends Publication {
 
@@ -102,6 +103,29 @@ public class OPSPublication extends Publication {
 	}
 
 	/**
+	 * Adds a new EPUB 2 meta item to the publication.
+	 *
+	 * @param name
+	 *            name of the item
+	 * @param value
+	 *            content of the item
+	 * @return the new meta
+	 */
+	public org.eclipse.mylyn.docs.epub.opf.Meta addMeta(String name, String value) {
+		if (value == null) {
+			throw new IllegalArgumentException("A value must be specified"); //$NON-NLS-1$
+		}
+		if (name == null) {
+			throw new IllegalArgumentException("A name must be specified"); //$NON-NLS-1$
+		}
+		org.eclipse.mylyn.docs.epub.opf.Meta opf = OPFFactory.eINSTANCE.createMeta();
+		opf.setName(name);
+		opf.setContent(value);
+		opfPackage.getMetadata().getMetas().add(opf);
+		return opf;
+	}
+
+	/**
 	 * This mechanism will traverse the spine of the publication (which is representing the reading order) and parse
 	 * each file for information that can be used to assemble a table of contents. Only XHTML type of files will be
 	 * taken into consideration.
@@ -135,7 +159,8 @@ public class OPSPublication extends Publication {
 					&& referencedItem.getMedia_type().equals(MIMETYPE_XHTML)) {
 				File file = new File(referencedItem.getFile());
 				FileInputStream fis = new FileInputStream(file);
-				log(MessageFormat.format(Messages.getString("OPS2Publication.1"), referencedItem.getHref()), Severity.VERBOSE, indent); //$NON-NLS-1$
+				log(MessageFormat.format(Messages.getString("OPS2Publication.1"), referencedItem.getHref()), //$NON-NLS-1$
+						Severity.VERBOSE, indent);
 				playOrder = TOCGenerator.parse(new InputSource(fis), referencedItem.getHref(), ncxTOC, playOrder);
 			}
 		}
@@ -150,6 +175,16 @@ public class OPSPublication extends Publication {
 	@Override
 	protected String getVersion() {
 		return "2.0"; //$NON-NLS-1$
+	}
+
+	private boolean isLegalType(Item item) {
+		boolean legal = false;
+		for (String type : CORE_MEDIA_TYPES) {
+			if (item.getMedia_type().equals(type)) {
+				legal = true;
+			}
+		}
+		return legal;
 	}
 
 	@Override
@@ -204,6 +239,25 @@ public class OPSPublication extends Publication {
 					}
 
 				});
+	}
+
+	/**
+	 * Convenience method for adding a cover to the publication. This method will make sure the required actions are
+	 * taken to provide a cover page for all reading systems.
+	 *
+	 * @param image
+	 *            the cover image (jpeg, png, svg or gif)
+	 * @param title
+	 *            title of the cover page
+	 */
+	@Override
+	public void setCover(File image, String title) {
+		// Add the cover image to the manifest
+		Item item = addItem(COVER_IMAGE_ID, null, image, null, null, false, false, true);
+		item.setTitle(title);
+		// Point to the cover using a meta tag
+		addMeta(COVER_ID, COVER_IMAGE_ID);
+		opfPackage.setGenerateCoverHTML(true);
 	}
 
 	@Override
@@ -264,24 +318,25 @@ public class OPSPublication extends Publication {
 	 * @throws ParserConfigurationException
 	 */
 	@Override
-	protected List<ValidationMessage> validateContents() throws ParserConfigurationException, SAXException, IOException {
+	protected List<ValidationMessage> validateContents()
+			throws ParserConfigurationException, SAXException, IOException {
 		EList<Item> manifestItems = opfPackage.getManifest().getItems();
 		ArrayList<ValidationMessage> messages = new ArrayList<ValidationMessage>();
 		for (Item item : manifestItems) {
 			if (!isLegalType(item)) {
 				Item fallback = getItemById(item.getFallback());
 				if (fallback == null) {
-					messages.add(new ValidationMessage(ValidationMessage.Severity.WARNING, MessageFormat.format(
-							Messages.getString("OPS2Publication.13"), //$NON-NLS-1$
-							item.getHref())));
+					messages.add(new ValidationMessage(ValidationMessage.Severity.WARNING,
+							MessageFormat.format(Messages.getString("OPS2Publication.13"), //$NON-NLS-1$
+									item.getHref())));
 				} else if (!isLegalType(fallback)) {
-					messages.add(new ValidationMessage(ValidationMessage.Severity.WARNING, MessageFormat.format(
-							Messages.getString("OPS2Publication.14"), //$NON-NLS-1$
-							item.getHref())));
+					messages.add(new ValidationMessage(ValidationMessage.Severity.WARNING,
+							MessageFormat.format(Messages.getString("OPS2Publication.14"), //$NON-NLS-1$
+									item.getHref())));
 				} else {
-					messages.add(new ValidationMessage(ValidationMessage.Severity.WARNING, MessageFormat.format(
-							Messages.getString("OPS2Publication.15"), //$NON-NLS-1$
-							item.getHref())));
+					messages.add(new ValidationMessage(ValidationMessage.Severity.WARNING,
+							MessageFormat.format(Messages.getString("OPS2Publication.15"), //$NON-NLS-1$
+									item.getHref())));
 				}
 			}
 			// Validate the XHTML items to see if they contain illegal attributes and elements
@@ -292,16 +347,6 @@ public class OPSPublication extends Publication {
 			}
 		}
 		return messages;
-	}
-
-	private boolean isLegalType(Item item) {
-		boolean legal = false;
-		for (String type : CORE_MEDIA_TYPES) {
-			if (item.getMedia_type().equals(type)) {
-				legal = true;
-			}
-		}
-		return legal;
 	}
 
 	/**
@@ -318,8 +363,8 @@ public class OPSPublication extends Publication {
 	 * @see {@link #setTableOfContents(File)}
 	 */
 	@Override
-	protected void writeTableOfContents(File oepbsFolder) throws IOException, ParserConfigurationException,
-			SAXException {
+	protected void writeTableOfContents(File oepbsFolder)
+			throws IOException, ParserConfigurationException, SAXException {
 		// If a table of contents file has not been specified we must create
 		// one. If it has been specified it will be copied.
 		if (getItemById(opfPackage.getSpine().getToc()) == null) {

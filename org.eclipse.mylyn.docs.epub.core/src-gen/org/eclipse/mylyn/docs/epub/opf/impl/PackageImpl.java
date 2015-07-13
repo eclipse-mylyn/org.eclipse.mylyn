@@ -28,6 +28,7 @@ import org.eclipse.mylyn.docs.epub.opf.Tours;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.impl.PackageImpl#getMetadata <em>Metadata</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.impl.PackageImpl#getManifest <em>Manifest</em>}</li>
@@ -39,8 +40,11 @@ import org.eclipse.mylyn.docs.epub.opf.Tours;
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.impl.PackageImpl#isGenerateCoverHTML <em>Generate Cover HTML</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.impl.PackageImpl#isGenerateTableOfContents <em>Generate Table Of Contents</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.impl.PackageImpl#isIncludeReferencedResources <em>Include Referenced Resources</em>}</li>
+ *   <li>{@link org.eclipse.mylyn.docs.epub.opf.impl.PackageImpl#getPrefix <em>Prefix</em>}</li>
+ *   <li>{@link org.eclipse.mylyn.docs.epub.opf.impl.PackageImpl#getLang <em>Lang</em>}</li>
+ *   <li>{@link org.eclipse.mylyn.docs.epub.opf.impl.PackageImpl#getDir <em>Dir</em>}</li>
+ *   <li>{@link org.eclipse.mylyn.docs.epub.opf.impl.PackageImpl#getId <em>Id</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -203,6 +207,94 @@ public class PackageImpl extends EObjectImpl implements org.eclipse.mylyn.docs.e
 	 * @ordered
 	 */
 	protected boolean includeReferencedResources = INCLUDE_REFERENCED_RESOURCES_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getPrefix() <em>Prefix</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * @since 3.0 
+	 * <!-- end-user-doc -->
+	 * @see #getPrefix()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String PREFIX_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getPrefix() <em>Prefix</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * @since 3.0 
+	 * <!-- end-user-doc -->
+	 * @see #getPrefix()
+	 * @generated
+	 * @ordered
+	 */
+	protected String prefix = PREFIX_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getLang() <em>Lang</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * @since 3.0 
+	 * <!-- end-user-doc -->
+	 * @see #getLang()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String LANG_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getLang() <em>Lang</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * @since 3.0 
+	 * <!-- end-user-doc -->
+	 * @see #getLang()
+	 * @generated
+	 * @ordered
+	 */
+	protected String lang = LANG_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getDir() <em>Dir</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * @since 3.0 
+	 * <!-- end-user-doc -->
+	 * @see #getDir()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String DIR_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getDir() <em>Dir</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * @since 3.0 
+	 * <!-- end-user-doc -->
+	 * @see #getDir()
+	 * @generated
+	 * @ordered
+	 */
+	protected String dir = DIR_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * @since 3.0 
+	 * <!-- end-user-doc -->
+	 * @see #getId()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String ID_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
+	 * <!-- begin-user-doc --> 
+	 * @since 3.0 
+	 * <!-- end-user-doc -->
+	 * @see #getId()
+	 * @generated
+	 * @ordered
+	 */
+	protected String id = ID_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -565,6 +657,98 @@ public class PackageImpl extends EObjectImpl implements org.eclipse.mylyn.docs.e
 
 	/**
 	 * <!-- begin-user-doc -->
+	 * @since 3.0 
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getPrefix() {
+		return prefix;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * @since 3.0 
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setPrefix(String newPrefix) {
+		String oldPrefix = prefix;
+		prefix = newPrefix;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OPFPackage.PACKAGE__PREFIX, oldPrefix, prefix));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * @since 3.0 
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getLang() {
+		return lang;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * @since 3.0 
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setLang(String newLang) {
+		String oldLang = lang;
+		lang = newLang;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OPFPackage.PACKAGE__LANG, oldLang, lang));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * @since 3.0 
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getDir() {
+		return dir;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * @since 3.0 
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setDir(String newDir) {
+		String oldDir = dir;
+		dir = newDir;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OPFPackage.PACKAGE__DIR, oldDir, dir));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * @since 3.0 
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * @since 3.0 
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setId(String newId) {
+		String oldId = id;
+		id = newId;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OPFPackage.PACKAGE__ID, oldId, id));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -612,6 +796,14 @@ public class PackageImpl extends EObjectImpl implements org.eclipse.mylyn.docs.e
 				return isGenerateTableOfContents();
 			case OPFPackage.PACKAGE__INCLUDE_REFERENCED_RESOURCES:
 				return isIncludeReferencedResources();
+			case OPFPackage.PACKAGE__PREFIX:
+				return getPrefix();
+			case OPFPackage.PACKAGE__LANG:
+				return getLang();
+			case OPFPackage.PACKAGE__DIR:
+				return getDir();
+			case OPFPackage.PACKAGE__ID:
+				return getId();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -653,6 +845,18 @@ public class PackageImpl extends EObjectImpl implements org.eclipse.mylyn.docs.e
 				return;
 			case OPFPackage.PACKAGE__INCLUDE_REFERENCED_RESOURCES:
 				setIncludeReferencedResources((Boolean)newValue);
+				return;
+			case OPFPackage.PACKAGE__PREFIX:
+				setPrefix((String)newValue);
+				return;
+			case OPFPackage.PACKAGE__LANG:
+				setLang((String)newValue);
+				return;
+			case OPFPackage.PACKAGE__DIR:
+				setDir((String)newValue);
+				return;
+			case OPFPackage.PACKAGE__ID:
+				setId((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -696,6 +900,18 @@ public class PackageImpl extends EObjectImpl implements org.eclipse.mylyn.docs.e
 			case OPFPackage.PACKAGE__INCLUDE_REFERENCED_RESOURCES:
 				setIncludeReferencedResources(INCLUDE_REFERENCED_RESOURCES_EDEFAULT);
 				return;
+			case OPFPackage.PACKAGE__PREFIX:
+				setPrefix(PREFIX_EDEFAULT);
+				return;
+			case OPFPackage.PACKAGE__LANG:
+				setLang(LANG_EDEFAULT);
+				return;
+			case OPFPackage.PACKAGE__DIR:
+				setDir(DIR_EDEFAULT);
+				return;
+			case OPFPackage.PACKAGE__ID:
+				setId(ID_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -728,6 +944,14 @@ public class PackageImpl extends EObjectImpl implements org.eclipse.mylyn.docs.e
 				return generateTableOfContents != GENERATE_TABLE_OF_CONTENTS_EDEFAULT;
 			case OPFPackage.PACKAGE__INCLUDE_REFERENCED_RESOURCES:
 				return includeReferencedResources != INCLUDE_REFERENCED_RESOURCES_EDEFAULT;
+			case OPFPackage.PACKAGE__PREFIX:
+				return PREFIX_EDEFAULT == null ? prefix != null : !PREFIX_EDEFAULT.equals(prefix);
+			case OPFPackage.PACKAGE__LANG:
+				return LANG_EDEFAULT == null ? lang != null : !LANG_EDEFAULT.equals(lang);
+			case OPFPackage.PACKAGE__DIR:
+				return DIR_EDEFAULT == null ? dir != null : !DIR_EDEFAULT.equals(dir);
+			case OPFPackage.PACKAGE__ID:
+				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -752,6 +976,14 @@ public class PackageImpl extends EObjectImpl implements org.eclipse.mylyn.docs.e
 		result.append(generateTableOfContents);
 		result.append(", includeReferencedResources: "); //$NON-NLS-1$
 		result.append(includeReferencedResources);
+		result.append(", prefix: "); //$NON-NLS-1$
+		result.append(prefix);
+		result.append(", lang: "); //$NON-NLS-1$
+		result.append(lang);
+		result.append(", dir: "); //$NON-NLS-1$
+		result.append(dir);
+		result.append(", id: "); //$NON-NLS-1$
+		result.append(id);
 		result.append(')');
 		return result.toString();
 	}

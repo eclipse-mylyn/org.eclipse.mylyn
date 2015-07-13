@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.Ncx#getHead <em>Head</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.Ncx#getDocTitle <em>Doc Title</em>}</li>
@@ -28,7 +29,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.Ncx#getLang <em>Lang</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.Ncx#getVersion <em>Version</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.mylyn.docs.epub.ncx.NCXPackage#getNcx()
  * @model extendedMetaData="name='ncx'"

@@ -19,12 +19,12 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.Head#getGroups <em>Groups</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.Head#getSmilCustomTests <em>Smil Custom Tests</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.Head#getMetas <em>Metas</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.mylyn.docs.epub.ncx.NCXPackage#getHead()
  * @model

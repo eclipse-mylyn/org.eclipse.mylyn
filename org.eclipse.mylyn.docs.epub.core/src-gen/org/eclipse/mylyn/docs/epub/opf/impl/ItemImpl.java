@@ -7,21 +7,17 @@
 package org.eclipse.mylyn.docs.epub.opf.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.mylyn.docs.epub.opf.Item;
 import org.eclipse.mylyn.docs.epub.opf.OPFPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Item</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Item</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.impl.ItemImpl#getId <em>Id</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.impl.ItemImpl#getHref <em>Href</em>}</li>
@@ -35,16 +31,16 @@ import org.eclipse.mylyn.docs.epub.opf.OPFPackage;
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.impl.ItemImpl#getTitle <em>Title</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.impl.ItemImpl#isGenerated <em>Generated</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.impl.ItemImpl#getSourcePath <em>Source Path</em>}</li>
+ *   <li>{@link org.eclipse.mylyn.docs.epub.opf.impl.ItemImpl#getProperties <em>Properties</em>}</li>
+ *   <li>{@link org.eclipse.mylyn.docs.epub.opf.impl.ItemImpl#getMedia_overlay <em>Media overlay</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
 public class ItemImpl extends EObjectImpl implements Item {
 	/**
 	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -53,8 +49,7 @@ public class ItemImpl extends EObjectImpl implements Item {
 
 	/**
 	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -62,9 +57,9 @@ public class ItemImpl extends EObjectImpl implements Item {
 	protected String id = ID_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getHref() <em>Href</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getHref() <em>Href</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 *
 	 * @see #getHref()
 	 * @generated
 	 * @ordered
@@ -72,9 +67,9 @@ public class ItemImpl extends EObjectImpl implements Item {
 	protected static final String HREF_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getHref() <em>Href</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getHref() <em>Href</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 *
 	 * @see #getHref()
 	 * @generated
 	 * @ordered
@@ -83,8 +78,8 @@ public class ItemImpl extends EObjectImpl implements Item {
 
 	/**
 	 * The default value of the '{@link #getMedia_type() <em>Media type</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @see #getMedia_type()
 	 * @generated
 	 * @ordered
@@ -93,8 +88,8 @@ public class ItemImpl extends EObjectImpl implements Item {
 
 	/**
 	 * The cached value of the '{@link #getMedia_type() <em>Media type</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @see #getMedia_type()
 	 * @generated
 	 * @ordered
@@ -103,8 +98,8 @@ public class ItemImpl extends EObjectImpl implements Item {
 
 	/**
 	 * The default value of the '{@link #getFallback() <em>Fallback</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @see #getFallback()
 	 * @generated
 	 * @ordered
@@ -113,8 +108,8 @@ public class ItemImpl extends EObjectImpl implements Item {
 
 	/**
 	 * The cached value of the '{@link #getFallback() <em>Fallback</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @see #getFallback()
 	 * @generated
 	 * @ordered
@@ -123,8 +118,8 @@ public class ItemImpl extends EObjectImpl implements Item {
 
 	/**
 	 * The default value of the '{@link #getFallback_style() <em>Fallback style</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * @see #getFallback_style()
 	 * @generated
 	 * @ordered
@@ -142,9 +137,9 @@ public class ItemImpl extends EObjectImpl implements Item {
 	protected String fallback_style = FALLBACK_STYLE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getRequired_namespace() <em>Required namespace</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getRequired_namespace() <em>Required namespace</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 *
 	 * @see #getRequired_namespace()
 	 * @generated
 	 * @ordered
@@ -152,9 +147,9 @@ public class ItemImpl extends EObjectImpl implements Item {
 	protected static final String REQUIRED_NAMESPACE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getRequired_namespace() <em>Required namespace</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getRequired_namespace() <em>Required namespace</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 *
 	 * @see #getRequired_namespace()
 	 * @generated
 	 * @ordered
@@ -162,9 +157,9 @@ public class ItemImpl extends EObjectImpl implements Item {
 	protected String required_namespace = REQUIRED_NAMESPACE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getRequired_modules() <em>Required modules</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getRequired_modules() <em>Required modules</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 *
 	 * @see #getRequired_modules()
 	 * @generated
 	 * @ordered
@@ -173,8 +168,8 @@ public class ItemImpl extends EObjectImpl implements Item {
 
 	/**
 	 * The cached value of the '{@link #getRequired_modules() <em>Required modules</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * @see #getRequired_modules()
 	 * @generated
 	 * @ordered
@@ -182,9 +177,9 @@ public class ItemImpl extends EObjectImpl implements Item {
 	protected String required_modules = REQUIRED_MODULES_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getFile() <em>File</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getFile() <em>File</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 *
 	 * @see #getFile()
 	 * @generated
 	 * @ordered
@@ -192,9 +187,9 @@ public class ItemImpl extends EObjectImpl implements Item {
 	protected static final String FILE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getFile() <em>File</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getFile() <em>File</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 *
 	 * @see #getFile()
 	 * @generated
 	 * @ordered
@@ -203,8 +198,8 @@ public class ItemImpl extends EObjectImpl implements Item {
 
 	/**
 	 * The default value of the '{@link #isNoToc() <em>No Toc</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @see #isNoToc()
 	 * @generated
 	 * @ordered
@@ -212,9 +207,9 @@ public class ItemImpl extends EObjectImpl implements Item {
 	protected static final boolean NO_TOC_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isNoToc() <em>No Toc</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #isNoToc() <em>No Toc</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 *
 	 * @see #isNoToc()
 	 * @generated
 	 * @ordered
@@ -223,8 +218,8 @@ public class ItemImpl extends EObjectImpl implements Item {
 
 	/**
 	 * The default value of the '{@link #getTitle() <em>Title</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @see #getTitle()
 	 * @generated
 	 * @ordered
@@ -232,9 +227,9 @@ public class ItemImpl extends EObjectImpl implements Item {
 	protected static final String TITLE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getTitle() <em>Title</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getTitle() <em>Title</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 *
 	 * @see #getTitle()
 	 * @generated
 	 * @ordered
@@ -243,8 +238,8 @@ public class ItemImpl extends EObjectImpl implements Item {
 
 	/**
 	 * The default value of the '{@link #isGenerated() <em>Generated</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @see #isGenerated()
 	 * @generated
 	 * @ordered
@@ -253,8 +248,8 @@ public class ItemImpl extends EObjectImpl implements Item {
 
 	/**
 	 * The cached value of the '{@link #isGenerated() <em>Generated</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @see #isGenerated()
 	 * @generated
 	 * @ordered
@@ -263,8 +258,8 @@ public class ItemImpl extends EObjectImpl implements Item {
 
 	/**
 	 * The default value of the '{@link #getSourcePath() <em>Source Path</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @see #getSourcePath()
 	 * @generated
 	 * @ordered
@@ -273,8 +268,8 @@ public class ItemImpl extends EObjectImpl implements Item {
 
 	/**
 	 * The cached value of the '{@link #getSourcePath() <em>Source Path</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @see #getSourcePath()
 	 * @generated
 	 * @ordered
@@ -282,8 +277,51 @@ public class ItemImpl extends EObjectImpl implements Item {
 	protected String sourcePath = SOURCE_PATH_EDEFAULT;
 
 	/**
+	 * The default value of the '{@link #getProperties() <em>Properties</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 *
+	 * @since 3.0 <!-- end-user-doc -->
+	 * @see #getProperties()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String PROPERTIES_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getProperties() <em>Properties</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 *
+	 * @since 3.0 <!-- end-user-doc -->
+	 * @see #getProperties()
+	 * @generated
+	 * @ordered
+	 */
+	protected String properties = PROPERTIES_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getMedia_overlay() <em>Media overlay</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 *
+	 * @since 3.0 <!-- end-user-doc -->
+	 * @see #getMedia_overlay()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String MEDIA_OVERLAY_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getMedia_overlay() <em>Media overlay</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 *
+	 * @since 3.0 <!-- end-user-doc -->
+	 * @see #getMedia_overlay()
+	 * @generated
+	 * @ordered
+	 */
+	protected String media_overlay = MEDIA_OVERLAY_EDEFAULT;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public ItemImpl() {
@@ -291,8 +329,7 @@ public class ItemImpl extends EObjectImpl implements Item {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -301,8 +338,7 @@ public class ItemImpl extends EObjectImpl implements Item {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public String getId() {
@@ -310,8 +346,7 @@ public class ItemImpl extends EObjectImpl implements Item {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void setId(String newId) {
@@ -322,8 +357,7 @@ public class ItemImpl extends EObjectImpl implements Item {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public String getHref() {
@@ -331,8 +365,7 @@ public class ItemImpl extends EObjectImpl implements Item {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void setHref(String newHref) {
@@ -343,8 +376,7 @@ public class ItemImpl extends EObjectImpl implements Item {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public String getMedia_type() {
@@ -352,8 +384,7 @@ public class ItemImpl extends EObjectImpl implements Item {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void setMedia_type(String newMedia_type) {
@@ -364,8 +395,7 @@ public class ItemImpl extends EObjectImpl implements Item {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public String getFallback() {
@@ -373,8 +403,7 @@ public class ItemImpl extends EObjectImpl implements Item {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void setFallback(String newFallback) {
@@ -385,8 +414,7 @@ public class ItemImpl extends EObjectImpl implements Item {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public String getFallback_style() {
@@ -394,8 +422,7 @@ public class ItemImpl extends EObjectImpl implements Item {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void setFallback_style(String newFallback_style) {
@@ -406,8 +433,7 @@ public class ItemImpl extends EObjectImpl implements Item {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public String getRequired_namespace() {
@@ -415,8 +441,7 @@ public class ItemImpl extends EObjectImpl implements Item {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void setRequired_namespace(String newRequired_namespace) {
@@ -427,8 +452,7 @@ public class ItemImpl extends EObjectImpl implements Item {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public String getRequired_modules() {
@@ -436,8 +460,7 @@ public class ItemImpl extends EObjectImpl implements Item {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void setRequired_modules(String newRequired_modules) {
@@ -448,8 +471,7 @@ public class ItemImpl extends EObjectImpl implements Item {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public String getFile() {
@@ -457,8 +479,7 @@ public class ItemImpl extends EObjectImpl implements Item {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void setFile(String newFile) {
@@ -469,8 +490,7 @@ public class ItemImpl extends EObjectImpl implements Item {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public boolean isNoToc() {
@@ -478,8 +498,7 @@ public class ItemImpl extends EObjectImpl implements Item {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void setNoToc(boolean newNoToc) {
@@ -490,8 +509,7 @@ public class ItemImpl extends EObjectImpl implements Item {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public String getTitle() {
@@ -499,8 +517,7 @@ public class ItemImpl extends EObjectImpl implements Item {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void setTitle(String newTitle) {
@@ -511,8 +528,7 @@ public class ItemImpl extends EObjectImpl implements Item {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public boolean isGenerated() {
@@ -520,8 +536,7 @@ public class ItemImpl extends EObjectImpl implements Item {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void setGenerated(boolean newGenerated) {
@@ -532,8 +547,7 @@ public class ItemImpl extends EObjectImpl implements Item {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public String getSourcePath() {
@@ -541,8 +555,7 @@ public class ItemImpl extends EObjectImpl implements Item {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void setSourcePath(String newSourcePath) {
@@ -554,7 +567,52 @@ public class ItemImpl extends EObjectImpl implements Item {
 
 	/**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * 
+	 * @since 3.0 <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getProperties() {
+		return properties;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 *
+	 * @since 3.0 <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setProperties(String newProperties) {
+		String oldProperties = properties;
+		properties = newProperties;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OPFPackage.ITEM__PROPERTIES, oldProperties, properties));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 *
+	 * @since 3.0 <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getMedia_overlay() {
+		return media_overlay;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 *
+	 * @since 3.0 <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setMedia_overlay(String newMedia_overlay) {
+		String oldMedia_overlay = media_overlay;
+		media_overlay = newMedia_overlay;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OPFPackage.ITEM__MEDIA_OVERLAY, oldMedia_overlay, media_overlay));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -584,13 +642,16 @@ public class ItemImpl extends EObjectImpl implements Item {
 				return isGenerated();
 			case OPFPackage.ITEM__SOURCE_PATH:
 				return getSourcePath();
+			case OPFPackage.ITEM__PROPERTIES:
+				return getProperties();
+			case OPFPackage.ITEM__MEDIA_OVERLAY:
+				return getMedia_overlay();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -632,13 +693,18 @@ public class ItemImpl extends EObjectImpl implements Item {
 			case OPFPackage.ITEM__SOURCE_PATH:
 				setSourcePath((String)newValue);
 				return;
+			case OPFPackage.ITEM__PROPERTIES:
+				setProperties((String)newValue);
+				return;
+			case OPFPackage.ITEM__MEDIA_OVERLAY:
+				setMedia_overlay((String)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -680,13 +746,18 @@ public class ItemImpl extends EObjectImpl implements Item {
 			case OPFPackage.ITEM__SOURCE_PATH:
 				setSourcePath(SOURCE_PATH_EDEFAULT);
 				return;
+			case OPFPackage.ITEM__PROPERTIES:
+				setProperties(PROPERTIES_EDEFAULT);
+				return;
+			case OPFPackage.ITEM__MEDIA_OVERLAY:
+				setMedia_overlay(MEDIA_OVERLAY_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -716,13 +787,16 @@ public class ItemImpl extends EObjectImpl implements Item {
 				return generated != GENERATED_EDEFAULT;
 			case OPFPackage.ITEM__SOURCE_PATH:
 				return SOURCE_PATH_EDEFAULT == null ? sourcePath != null : !SOURCE_PATH_EDEFAULT.equals(sourcePath);
+			case OPFPackage.ITEM__PROPERTIES:
+				return PROPERTIES_EDEFAULT == null ? properties != null : !PROPERTIES_EDEFAULT.equals(properties);
+			case OPFPackage.ITEM__MEDIA_OVERLAY:
+				return MEDIA_OVERLAY_EDEFAULT == null ? media_overlay != null : !MEDIA_OVERLAY_EDEFAULT.equals(media_overlay);
 		}
 		return super.eIsSet(featureID);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -754,6 +828,10 @@ public class ItemImpl extends EObjectImpl implements Item {
 		result.append(generated);
 		result.append(", sourcePath: "); //$NON-NLS-1$
 		result.append(sourcePath);
+		result.append(", properties: "); //$NON-NLS-1$
+		result.append(properties);
+		result.append(", media_overlay: "); //$NON-NLS-1$
+		result.append(media_overlay);
 		result.append(')');
 		return result.toString();
 	}

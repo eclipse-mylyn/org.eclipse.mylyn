@@ -30,10 +30,10 @@ import org.eclipse.mylyn.docs.epub.opf.Reference;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.impl.GuideImpl#getGuideItems <em>Guide Items</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

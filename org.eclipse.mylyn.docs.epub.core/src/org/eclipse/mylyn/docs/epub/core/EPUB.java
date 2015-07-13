@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011-2014 Torkild U. Resheim.
+ * Copyright (c) 2011-2015 Torkild U. Resheim.
  *
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
@@ -47,17 +47,14 @@ import org.xml.sax.SAXException;
 import org.xml.sax.ext.DefaultHandler2;
 
 /**
- * Represents one EPUB file. Currently <b>only</b> version 2.0.1 of the EPUB specification is supported. One or more
- * publications can be added and will be a part of the distribution when packed. See the <a
- * href="http://idpf.org/epub/20/spec/OPS_2.0.1_draft.htm#Section1.2">OPS specification</a> for definitions of words and
- * terms.
+ * Represents one EPUB file. One or more publications can be added and will be a part of the distribution when packed.
  * <p>
  * The simplest usage of this API may look like the following:
  * </p>
  *
  * <pre>
  * EPUB epub = new EPUB();
- * OPSPublication oebps = new OPS2Publication();
+ * OPSPublication oebps = new OPSPublication();
  * oebps.addItem(new File(&quot;chapter.xhtml&quot;));
  * epub.add(oebps);
  * epub.pack(new File(&quot;book.epub&quot;));
@@ -69,8 +66,19 @@ import org.xml.sax.ext.DefaultHandler2;
  *
  * @author Torkild U. Resheim
  * @see http://www.idpf.org/doc_library/epub/OPS_2.0.1_draft.htm
+ * @see http://www.idpf.org/epub/301/spec/epub-publications.html
  */
 public class EPUB {
+
+	/**
+	 * @since 3.0
+	 */
+	public enum PublicationVersion {
+		/** Unsupported or undetected publication version. */
+		UNKNOWN, /** Open Publication Structure (OPS) 2.0.1 */
+		V2, /** EPUB Publications 3.0.1 */
+		V3
+	}
 
 	/**
 	 * SAX parser for detecting the version of an OEBPS contained within an EPUB.
@@ -80,7 +88,8 @@ public class EPUB {
 		private String versionString;
 
 		@Override
-		public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+		public void startElement(String uri, String localName, String qName, Attributes attributes)
+				throws SAXException {
 			if (qName.equals("opf:package") || qName.equals("package")) {//$NON-NLS-1$ //$NON-NLS-2$
 				versionString = attributes.getValue("version"); //$NON-NLS-1$
 			}
@@ -287,33 +296,31 @@ public class EPUB {
 	}
 
 	/**
-	 * Tests whether or not the OEBPS is in a version that is supported by this tooling.
+	 * Determines the publication version of the root file.
 	 *
 	 * @param rootFile
 	 *            the root file
-	 * @return <code>true</code> if the OEBPS can be read
+	 * @return the publication version
 	 */
-	private boolean isSupportedOEBPS(File rootFile) {
+	private PublicationVersion readPublicationVersion(File rootFile) {
 		try {
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			VersionDetector vd = new VersionDetector();
 			SAXParser parser = factory.newSAXParser();
 			parser.parse(rootFile, vd);
 			if (vd.versionString == null) {
-				return false;
+				return PublicationVersion.UNKNOWN;
 			}
 			String[] segments = vd.versionString.split("\\."); //$NON-NLS-1$
 			if (segments[0].equals("2") && segments[1].equals("0")) { //$NON-NLS-1$ //$NON-NLS-2$
-				return true;
+				return PublicationVersion.V2;
+			} else if (segments[0].equals("3") && segments[1].equals("0")) { //$NON-NLS-1$ //$NON-NLS-2$
+				return PublicationVersion.V3;
 			} else {
-				return false;
+				return PublicationVersion.UNKNOWN;
 			}
-		} catch (ParserConfigurationException e) {
-			return false;
-		} catch (SAXException e) {
-			return false;
-		} catch (IOException e) {
-			return false;
+		} catch (ParserConfigurationException | SAXException | IOException e) {
+			return PublicationVersion.UNKNOWN;
 		}
 	}
 
@@ -500,13 +507,21 @@ public class EPUB {
 		for (RootFile rootFile : rootFiles) {
 			if (rootFile.getMediaType().equals(MIMETYPE_OEBPS)) {
 				File root = new File(rootFolder.getAbsolutePath() + File.separator + rootFile.getFullPath());
-				if (isSupportedOEBPS(root)) {
-					Publication ops = Publication.getVersion2Instance();
-					ops.unpack(root);
-					rootFile.setPublication(ops);
-				} else {
+				switch (readPublicationVersion(root)) {
+				case V2:
+					Publication ops2 = Publication.getVersion2Instance();
+					ops2.unpack(root);
+					rootFile.setPublication(ops2);
+					break;
+				case V3:
+					Publication ops3 = Publication.getVersion3Instance();
+					ops3.unpack(root);
+					rootFile.setPublication(ops3);
+					break;
+				default:
 					log(MessageFormat.format("Unsupported OEBPS version in root file {0}", rootFile.getFullPath()), //$NON-NLS-1$
 							Severity.WARNING);
+					break;
 				}
 			}
 		}

@@ -28,6 +28,7 @@ import org.eclipse.mylyn.docs.epub.ncx.Text;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.DocTitleImpl#getText <em>Text</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.DocTitleImpl#getAudio <em>Audio</em>}</li>
@@ -36,7 +37,6 @@ import org.eclipse.mylyn.docs.epub.ncx.Text;
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.DocTitleImpl#getId <em>Id</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.DocTitleImpl#getLang <em>Lang</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

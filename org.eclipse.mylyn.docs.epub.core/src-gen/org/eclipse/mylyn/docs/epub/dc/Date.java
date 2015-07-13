@@ -14,10 +14,10 @@ package org.eclipse.mylyn.docs.epub.dc;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.dc.Date#getEvent <em>Event</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.mylyn.docs.epub.dc.DCPackage#getDate()
  * @model extendedMetaData="kind='mixed'"

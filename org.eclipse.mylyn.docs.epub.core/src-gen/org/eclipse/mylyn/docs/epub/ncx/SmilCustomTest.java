@@ -15,13 +15,13 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.SmilCustomTest#getBookStruct <em>Book Struct</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.SmilCustomTest#getDefaultState <em>Default State</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.SmilCustomTest#getId <em>Id</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.SmilCustomTest#getOverride <em>Override</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.mylyn.docs.epub.ncx.NCXPackage#getSmilCustomTest()
  * @model

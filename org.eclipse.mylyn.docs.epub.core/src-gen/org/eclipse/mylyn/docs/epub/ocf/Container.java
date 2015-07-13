@@ -15,11 +15,11 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ocf.Container#getRootfiles <em>Rootfiles</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ocf.Container#getVersion <em>Version</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.mylyn.docs.epub.ocf.OCFPackage#getContainer()
  * @model extendedMetaData="name='container' namespace='urn:oasis:names:tc:opendocument:xmlns:container'"

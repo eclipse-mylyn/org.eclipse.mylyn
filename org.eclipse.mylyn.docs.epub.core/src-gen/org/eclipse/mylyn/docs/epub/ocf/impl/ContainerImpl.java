@@ -25,11 +25,11 @@ import org.eclipse.mylyn.docs.epub.ocf.RootFiles;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ocf.impl.ContainerImpl#getRootfiles <em>Rootfiles</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ocf.impl.ContainerImpl#getVersion <em>Version</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

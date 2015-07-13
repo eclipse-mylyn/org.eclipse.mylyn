@@ -15,11 +15,11 @@ import org.eclipse.mylyn.docs.epub.opf.Role;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.dc.Contributor#getRole <em>Role</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.dc.Contributor#getFileAs <em>File As</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.mylyn.docs.epub.dc.DCPackage#getContributor()
  * @model extendedMetaData="kind='mixed'"
@@ -28,7 +28,6 @@ import org.eclipse.mylyn.docs.epub.opf.Role;
 public interface Contributor extends LocalizedDCType {
 	/**
 	 * Returns the value of the '<em><b>Role</b></em>' attribute.
-	 * The default value is <code>""</code>.
 	 * The literals are from the enumeration {@link org.eclipse.mylyn.docs.epub.opf.Role}.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -38,12 +37,9 @@ public interface Contributor extends LocalizedDCType {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Role</em>' attribute.
 	 * @see org.eclipse.mylyn.docs.epub.opf.Role
-	 * @see #isSetRole()
-	 * @see #unsetRole()
 	 * @see #setRole(Role)
 	 * @see org.eclipse.mylyn.docs.epub.dc.DCPackage#getContributor_Role()
-	 * @model default="" unsettable="true"
-	 *        extendedMetaData="namespace='http://www.idpf.org/2007/opf'"
+	 * @model extendedMetaData="namespace='http://www.idpf.org/2007/opf'"
 	 * @generated
 	 */
 	Role getRole();
@@ -54,35 +50,10 @@ public interface Contributor extends LocalizedDCType {
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Role</em>' attribute.
 	 * @see org.eclipse.mylyn.docs.epub.opf.Role
-	 * @see #isSetRole()
-	 * @see #unsetRole()
 	 * @see #getRole()
 	 * @generated
 	 */
 	void setRole(Role value);
-
-	/**
-	 * Unsets the value of the '{@link org.eclipse.mylyn.docs.epub.dc.Contributor#getRole <em>Role</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isSetRole()
-	 * @see #getRole()
-	 * @see #setRole(Role)
-	 * @generated
-	 */
-	void unsetRole();
-
-	/**
-	 * Returns whether the value of the '{@link org.eclipse.mylyn.docs.epub.dc.Contributor#getRole <em>Role</em>}' attribute is set.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return whether the value of the '<em>Role</em>' attribute is set.
-	 * @see #unsetRole()
-	 * @see #getRole()
-	 * @see #setRole(Role)
-	 * @generated
-	 */
-	boolean isSetRole();
 
 	/**
 	 * Returns the value of the '<em><b>File As</b></em>' attribute.

@@ -1772,76 +1772,76 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 	 * @generated
 	 */
 	protected void createExtendedMetaDataAnnotations() {
-		String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData";		
+		String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData";	
 		addAnnotation
 		  (getAudio_Class(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "class"
-		   });		
+		   });	
 		addAnnotation
 		  (getAudio_ClipBegin(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "clipBegin"
-		   });		
+		   });	
 		addAnnotation
 		  (getAudio_ClipEnd(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "clipEnd"
-		   });		
+		   });	
 		addAnnotation
 		  (getAudio_Id(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "id"
-		   });		
+		   });	
 		addAnnotation
 		  (getAudio_Src(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "src"
-		   });		
+		   });	
 		addAnnotation
 		  (bookStructEEnum, 
 		   source, 
 		   new String[] {
 			 "name", "bookStruct_._type"
-		   });		
+		   });	
 		addAnnotation
 		  (bookStructObjectEDataType, 
 		   source, 
 		   new String[] {
 			 "name", "bookStruct_._type:Object",
 			 "baseType", "bookStruct_._type"
-		   });		
+		   });	
 		addAnnotation
 		  (getContent_Id(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "id"
-		   });		
+		   });	
 		addAnnotation
 		  (getContent_Src(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "src"
-		   });		
+		   });	
 		addAnnotation
 		  (defaultStateObjectEDataType, 
 		   source, 
 		   new String[] {
 			 "name", "defaultState_._type:Object",
 			 "baseType", "defaultState_._type"
-		   });		
+		   });	
 		addAnnotation
 		  (getDocAuthor_Text(), 
 		   source, 
@@ -1849,7 +1849,7 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "text",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getDocAuthor_Audio(), 
 		   source, 
@@ -1857,7 +1857,7 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "audio",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getDocAuthor_Img(), 
 		   source, 
@@ -1865,21 +1865,21 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "img",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getDocAuthor_Dir(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "dir"
-		   });		
+		   });	
 		addAnnotation
 		  (getDocAuthor_Id(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "id"
-		   });		
+		   });	
 		addAnnotation
 		  (getDocAuthor_Lang(), 
 		   source, 
@@ -1887,7 +1887,7 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "attribute",
 			 "name", "lang",
 			 "namespace", "http://www.w3.org/XML/1998/namespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getDocTitle_Text(), 
 		   source, 
@@ -1895,7 +1895,7 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "text",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getDocTitle_Audio(), 
 		   source, 
@@ -1903,7 +1903,7 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "audio",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getDocTitle_Img(), 
 		   source, 
@@ -1911,21 +1911,21 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "img",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getDocTitle_Dir(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "dir"
-		   });		
+		   });	
 		addAnnotation
 		  (getDocTitle_Id(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "id"
-		   });		
+		   });	
 		addAnnotation
 		  (getDocTitle_Lang(), 
 		   source, 
@@ -1933,14 +1933,14 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "attribute",
 			 "name", "lang",
 			 "namespace", "http://www.w3.org/XML/1998/namespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getHead_Groups(), 
 		   source, 
 		   new String[] {
 			 "kind", "group",
 			 "name", "group:0"
-		   });		
+		   });	
 		addAnnotation
 		  (getHead_SmilCustomTests(), 
 		   source, 
@@ -1949,7 +1949,7 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "name", "smilCustomTest",
 			 "namespace", "##targetNamespace",
 			 "group", "#group:0"
-		   });		
+		   });	
 		addAnnotation
 		  (getHead_Metas(), 
 		   source, 
@@ -1958,49 +1958,49 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "name", "meta",
 			 "namespace", "##targetNamespace",
 			 "group", "#group:0"
-		   });		
+		   });	
 		addAnnotation
 		  (getImg_Class(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "class"
-		   });		
+		   });	
 		addAnnotation
 		  (getImg_Id(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "id"
-		   });		
+		   });	
 		addAnnotation
 		  (getImg_Src(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "src"
-		   });		
+		   });	
 		addAnnotation
 		  (getMeta_Content(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "content"
-		   });		
+		   });	
 		addAnnotation
 		  (getMeta_Name(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "name"
-		   });		
+		   });	
 		addAnnotation
 		  (getMeta_Scheme(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "scheme"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavInfo_Text(), 
 		   source, 
@@ -2008,7 +2008,7 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "text",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavInfo_Audio(), 
 		   source, 
@@ -2016,7 +2016,7 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "audio",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavInfo_Img(), 
 		   source, 
@@ -2024,14 +2024,14 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "img",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavInfo_Dir(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "dir"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavInfo_Lang(), 
 		   source, 
@@ -2039,7 +2039,7 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "attribute",
 			 "name", "lang",
 			 "namespace", "http://www.w3.org/XML/1998/namespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavLabel_Text(), 
 		   source, 
@@ -2047,7 +2047,7 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "text",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavLabel_Audio(), 
 		   source, 
@@ -2055,7 +2055,7 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "audio",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavLabel_Img(), 
 		   source, 
@@ -2063,14 +2063,14 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "img",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavLabel_Dir(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "dir"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavLabel_Lang(), 
 		   source, 
@@ -2078,7 +2078,7 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "attribute",
 			 "name", "lang",
 			 "namespace", "http://www.w3.org/XML/1998/namespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavList_NavInfos(), 
 		   source, 
@@ -2086,7 +2086,7 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "navInfo",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavList_NavLabels(), 
 		   source, 
@@ -2094,7 +2094,7 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "navLabel",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavList_NavTargets(), 
 		   source, 
@@ -2102,21 +2102,21 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "navTarget",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavList_Class(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "class"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavList_Id(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "id"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavMap_NavInfos(), 
 		   source, 
@@ -2124,7 +2124,7 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "navInfo",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavMap_NavLabels(), 
 		   source, 
@@ -2132,7 +2132,7 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "navLabel",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavMap_NavPoints(), 
 		   source, 
@@ -2140,21 +2140,21 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "navPoint",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavMap_Id(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "id"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavPoint_NavLabels(), 
 		   source, 
 		   new String[] {
 			 "name", "navLabel",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavPoint_Content(), 
 		   source, 
@@ -2162,7 +2162,7 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "content",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavPoint_NavPoints(), 
 		   source, 
@@ -2170,28 +2170,28 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "navPoint",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavPoint_Class(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "class"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavPoint_Id(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "id"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavPoint_PlayOrder(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "playOrder"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavTarget_NavLabels(), 
 		   source, 
@@ -2199,7 +2199,7 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "navLabel",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavTarget_Content(), 
 		   source, 
@@ -2207,41 +2207,41 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "content",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavTarget_Class(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "class"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavTarget_Id(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "id"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavTarget_PlayOrder(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "playOrder"
-		   });		
+		   });	
 		addAnnotation
 		  (getNavTarget_Value(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "value"
-		   });		
+		   });	
 		addAnnotation
 		  (ncxEClass, 
 		   source, 
 		   new String[] {
 			 "name", "ncx"
-		   });		
+		   });	
 		addAnnotation
 		  (getNcx_Head(), 
 		   source, 
@@ -2249,7 +2249,7 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "head",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getNcx_DocTitle(), 
 		   source, 
@@ -2257,7 +2257,7 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "docTitle",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getNcx_DocAuthors(), 
 		   source, 
@@ -2265,7 +2265,7 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "docAuthor",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getNcx_NavMap(), 
 		   source, 
@@ -2273,7 +2273,7 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "navMap",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getNcx_PageList(), 
 		   source, 
@@ -2281,7 +2281,7 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "pageList",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getNcx_NavLists(), 
 		   source, 
@@ -2289,14 +2289,14 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "navList",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getNcx_Dir(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "dir"
-		   });		
+		   });	
 		addAnnotation
 		  (getNcx_Lang(), 
 		   source, 
@@ -2304,14 +2304,14 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "attribute",
 			 "name", "lang",
 			 "namespace", "http://www.w3.org/XML/1998/namespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getNcx_Version(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "version"
-		   });		
+		   });	
 		addAnnotation
 		  (getPageList_NavInfos(), 
 		   source, 
@@ -2319,7 +2319,7 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "navInfo",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getPageList_NavLabels(), 
 		   source, 
@@ -2327,7 +2327,7 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "navLabel",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getPageList_PageTargets(), 
 		   source, 
@@ -2335,74 +2335,74 @@ public class NCXPackageImpl extends EPackageImpl implements NCXPackage {
 			 "kind", "element",
 			 "name", "pageTarget",
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getPageList_Class(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "class"
-		   });		
+		   });	
 		addAnnotation
 		  (getPageList_Id(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "id"
-		   });		
+		   });	
 		addAnnotation
 		  (getPageTarget_NavLabels(), 
 		   source, 
 		   new String[] {
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (getPageTarget_Content(), 
 		   source, 
 		   new String[] {
 			 "namespace", "##targetNamespace"
-		   });		
+		   });	
 		addAnnotation
 		  (smiLtimeValEDataType, 
 		   source, 
 		   new String[] {
 			 "name", "SMILtimeVal",
 			 "baseType", "http://www.eclipse.org/emf/2003/XMLType#string"
-		   });		
+		   });	
 		addAnnotation
 		  (textEClass, 
 		   source, 
 		   new String[] {
 			 "kind", "mixed"
-		   });		
+		   });	
 		addAnnotation
 		  (getText_Mixed(), 
 		   source, 
 		   new String[] {
 			 "kind", "elementWildcard",
 			 "name", ":mixed"
-		   });		
+		   });	
 		addAnnotation
 		  (getText_Class(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "class"
-		   });		
+		   });	
 		addAnnotation
 		  (getText_Id(), 
 		   source, 
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "id"
-		   });		
+		   });	
 		addAnnotation
 		  (uriEDataType, 
 		   source, 
 		   new String[] {
 			 "name", "URI",
 			 "baseType", "http://www.eclipse.org/emf/2003/XMLType#string"
-		   });		
+		   });	
 		addAnnotation
 		  (versionObjectEDataType, 
 		   source, 

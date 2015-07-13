@@ -9,12 +9,11 @@ package org.eclipse.mylyn.docs.epub.opf;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Package</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Package</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.Package#getMetadata <em>Metadata</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.Package#getManifest <em>Manifest</em>}</li>
@@ -26,8 +25,11 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.Package#isGenerateCoverHTML <em>Generate Cover HTML</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.Package#isGenerateTableOfContents <em>Generate Table Of Contents</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.opf.Package#isIncludeReferencedResources <em>Include Referenced Resources</em>}</li>
+ *   <li>{@link org.eclipse.mylyn.docs.epub.opf.Package#getPrefix <em>Prefix</em>}</li>
+ *   <li>{@link org.eclipse.mylyn.docs.epub.opf.Package#getLang <em>Lang</em>}</li>
+ *   <li>{@link org.eclipse.mylyn.docs.epub.opf.Package#getDir <em>Dir</em>}</li>
+ *   <li>{@link org.eclipse.mylyn.docs.epub.opf.Package#getId <em>Id</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.mylyn.docs.epub.opf.OPFPackage#getPackage()
  * @model extendedMetaData="name='package' namespace='http://www.idpf.org/2007/opf'"
@@ -38,8 +40,8 @@ public interface Package extends EObject {
 	 * Returns the value of the '<em><b>Metadata</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Metadata</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Metadata</em>' containment reference isn't clear, there really should be more of a
+	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Metadata</em>' containment reference.
@@ -53,8 +55,7 @@ public interface Package extends EObject {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.docs.epub.opf.Package#getMetadata <em>Metadata</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Metadata</em>' containment reference.
 	 * @see #getMetadata()
 	 * @generated
@@ -65,8 +66,8 @@ public interface Package extends EObject {
 	 * Returns the value of the '<em><b>Manifest</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Manifest</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Manifest</em>' containment reference isn't clear, there really should be more of a
+	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Manifest</em>' containment reference.
@@ -80,8 +81,7 @@ public interface Package extends EObject {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.docs.epub.opf.Package#getManifest <em>Manifest</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Manifest</em>' containment reference.
 	 * @see #getManifest()
 	 * @generated
@@ -92,8 +92,8 @@ public interface Package extends EObject {
 	 * Returns the value of the '<em><b>Spine</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Spine</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Spine</em>' containment reference isn't clear, there really should be more of a
+	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Spine</em>' containment reference.
@@ -107,8 +107,7 @@ public interface Package extends EObject {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.docs.epub.opf.Package#getSpine <em>Spine</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Spine</em>' containment reference.
 	 * @see #getSpine()
 	 * @generated
@@ -119,8 +118,8 @@ public interface Package extends EObject {
 	 * Returns the value of the '<em><b>Guide</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Guide</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Guide</em>' containment reference isn't clear, there really should be more of a
+	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Guide</em>' containment reference.
@@ -134,8 +133,7 @@ public interface Package extends EObject {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.docs.epub.opf.Package#getGuide <em>Guide</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Guide</em>' containment reference.
 	 * @see #getGuide()
 	 * @generated
@@ -146,8 +144,8 @@ public interface Package extends EObject {
 	 * Returns the value of the '<em><b>Tours</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Tours</em>' reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Tours</em>' reference isn't clear, there really should be more of a description
+	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Tours</em>' reference.
@@ -159,24 +157,25 @@ public interface Package extends EObject {
 	Tours getTours();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.mylyn.docs.epub.opf.Package#getTours <em>Tours</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Tours</em>' reference.
+	 * Sets the value of the '{@link org.eclipse.mylyn.docs.epub.opf.Package#getTours <em>Tours</em>}' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 *
+	 * @param value
+	 *            the new value of the '<em>Tours</em>' reference.
 	 * @see #getTours()
 	 * @generated
 	 */
 	void setTours(Tours value);
 
 	/**
-	 * Returns the value of the '<em><b>Version</b></em>' attribute.
-	 * The default value is <code>"2.0"</code>.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Version</b></em>' attribute. The default value is <code>"2.0"</code>. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Version</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Version</em>' attribute isn't clear, there really should be more of a description
+	 * here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 *
 	 * @return the value of the '<em>Version</em>' attribute.
 	 * @see #isSetVersion()
 	 * @see #unsetVersion()
@@ -189,8 +188,7 @@ public interface Package extends EObject {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.docs.epub.opf.Package#getVersion <em>Version</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Version</em>' attribute.
 	 * @see #isSetVersion()
 	 * @see #unsetVersion()
@@ -201,8 +199,7 @@ public interface Package extends EObject {
 
 	/**
 	 * Unsets the value of the '{@link org.eclipse.mylyn.docs.epub.opf.Package#getVersion <em>Version</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #isSetVersion()
 	 * @see #getVersion()
 	 * @see #setVersion(String)
@@ -212,8 +209,7 @@ public interface Package extends EObject {
 
 	/**
 	 * Returns whether the value of the '{@link org.eclipse.mylyn.docs.epub.opf.Package#getVersion <em>Version</em>}' attribute is set.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return whether the value of the '<em>Version</em>' attribute is set.
 	 * @see #unsetVersion()
 	 * @see #getVersion()
@@ -226,8 +222,8 @@ public interface Package extends EObject {
 	 * Returns the value of the '<em><b>Unique Identifier</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Unique Identifier</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Unique Identifier</em>' attribute isn't clear, there really should be more of a
+	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Unique Identifier</em>' attribute.
@@ -241,8 +237,7 @@ public interface Package extends EObject {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.docs.epub.opf.Package#getUniqueIdentifier <em>Unique Identifier</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Unique Identifier</em>' attribute.
 	 * @see #getUniqueIdentifier()
 	 * @generated
@@ -253,8 +248,8 @@ public interface Package extends EObject {
 	 * Returns the value of the '<em><b>Generate Cover HTML</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Generate Cover HTML</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Generate Cover HTML</em>' attribute isn't clear, there really should be more of a
+	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Generate Cover HTML</em>' attribute.
@@ -267,8 +262,7 @@ public interface Package extends EObject {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.docs.epub.opf.Package#isGenerateCoverHTML <em>Generate Cover HTML</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Generate Cover HTML</em>' attribute.
 	 * @see #isGenerateCoverHTML()
 	 * @generated
@@ -279,8 +273,8 @@ public interface Package extends EObject {
 	 * Returns the value of the '<em><b>Generate Table Of Contents</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Generate Table Of Contents</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Generate Table Of Contents</em>' attribute isn't clear, there really should be more of
+	 * a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Generate Table Of Contents</em>' attribute.
@@ -293,8 +287,7 @@ public interface Package extends EObject {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.docs.epub.opf.Package#isGenerateTableOfContents <em>Generate Table Of Contents</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Generate Table Of Contents</em>' attribute.
 	 * @see #isGenerateTableOfContents()
 	 * @generated
@@ -305,8 +298,8 @@ public interface Package extends EObject {
 	 * Returns the value of the '<em><b>Include Referenced Resources</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Include Referenced Resources</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Include Referenced Resources</em>' attribute isn't clear, there really should be more
+	 * of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Include Referenced Resources</em>' attribute.
@@ -319,12 +312,115 @@ public interface Package extends EObject {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.mylyn.docs.epub.opf.Package#isIncludeReferencedResources <em>Include Referenced Resources</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Include Referenced Resources</em>' attribute.
 	 * @see #isIncludeReferencedResources()
 	 * @generated
 	 */
 	void setIncludeReferencedResources(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Prefix</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc --> <!--
+	 * begin-model-doc --> EPUB 3 - http://www.idpf.org/epub/30/spec/epub30-publications.html#sec-package-elem <!--
+	 * end-model-doc -->
+	 *
+	 * @return the value of the '<em>Prefix</em>' attribute.
+	 * @see #setPrefix(String)
+	 * @see org.eclipse.mylyn.docs.epub.opf.OPFPackage#getPackage_Prefix()
+	 * @model
+	 * @generated
+	 * @since 3.0
+	 */
+	String getPrefix();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.docs.epub.opf.Package#getPrefix <em>Prefix</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 *
+	 * @param value
+	 *            the new value of the '<em>Prefix</em>' attribute.
+	 * @see #getPrefix()
+	 * @generated
+	 * @since 3.0
+	 */
+	void setPrefix(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Lang</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc --> <!--
+	 * begin-model-doc --> EPUB 3 - http://www.idpf.org/epub/30/spec/epub30-publications.html#sec-package-elem <!--
+	 * end-model-doc -->
+	 *
+	 * @return the value of the '<em>Lang</em>' attribute.
+	 * @see #setLang(String)
+	 * @see org.eclipse.mylyn.docs.epub.opf.OPFPackage#getPackage_Lang()
+	 * @model
+	 * @generated
+	 * @since 3.0
+	 */
+	String getLang();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.docs.epub.opf.Package#getLang <em>Lang</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 *
+	 * @param value
+	 *            the new value of the '<em>Lang</em>' attribute.
+	 * @see #getLang()
+	 * @generated
+	 * @since 3.0
+	 */
+	void setLang(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Dir</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc --> <!--
+	 * begin-model-doc --> EPUB 3 - http://www.idpf.org/epub/30/spec/epub30-publications.html#sec-package-elem <!--
+	 * end-model-doc -->
+	 *
+	 * @return the value of the '<em>Dir</em>' attribute.
+	 * @see #setDir(String)
+	 * @see org.eclipse.mylyn.docs.epub.opf.OPFPackage#getPackage_Dir()
+	 * @model
+	 * @generated
+	 * @since 3.0
+	 */
+	String getDir();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.docs.epub.opf.Package#getDir <em>Dir</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 *
+	 * @param value
+	 *            the new value of the '<em>Dir</em>' attribute.
+	 * @see #getDir()
+	 * @generated
+	 * @since 3.0
+	 */
+	void setDir(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Id</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc --> <!--
+	 * begin-model-doc --> EPUB 3 - http://www.idpf.org/epub/30/spec/epub30-publications.html#sec-package-elem <!--
+	 * end-model-doc -->
+	 *
+	 * @return the value of the '<em>Id</em>' attribute.
+	 * @see #setId(String)
+	 * @see org.eclipse.mylyn.docs.epub.opf.OPFPackage#getPackage_Id()
+	 * @model
+	 * @generated
+	 * @since 3.0
+	 */
+	String getId();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.mylyn.docs.epub.opf.Package#getId <em>Id</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 *
+	 * @param value
+	 *            the new value of the '<em>Id</em>' attribute.
+	 * @see #getId()
+	 * @generated
+	 * @since 3.0
+	 */
+	void setId(String value);
 
 } // Package

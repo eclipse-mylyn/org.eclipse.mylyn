@@ -23,11 +23,11 @@ import org.eclipse.mylyn.docs.epub.opf.Role;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.dc.impl.ContributorImpl#getRole <em>Role</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.dc.impl.ContributorImpl#getFileAs <em>File As</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -51,15 +51,6 @@ public class ContributorImpl extends LocalizedDCTypeImpl implements Contributor 
 	 * @ordered
 	 */
 	protected Role role = ROLE_EDEFAULT;
-
-	/**
-	 * This is true if the Role attribute has been set.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	protected boolean roleESet;
 
 	/**
 	 * The default value of the '{@link #getFileAs() <em>File As</em>}' attribute.
@@ -117,33 +108,8 @@ public class ContributorImpl extends LocalizedDCTypeImpl implements Contributor 
 	public void setRole(Role newRole) {
 		Role oldRole = role;
 		role = newRole == null ? ROLE_EDEFAULT : newRole;
-		boolean oldRoleESet = roleESet;
-		roleESet = true;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DCPackage.CONTRIBUTOR__ROLE, oldRole, role, !oldRoleESet));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void unsetRole() {
-		Role oldRole = role;
-		boolean oldRoleESet = roleESet;
-		role = ROLE_EDEFAULT;
-		roleESet = false;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.UNSET, DCPackage.CONTRIBUTOR__ROLE, oldRole, ROLE_EDEFAULT, oldRoleESet));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public boolean isSetRole() {
-		return roleESet;
+			eNotify(new ENotificationImpl(this, Notification.SET, DCPackage.CONTRIBUTOR__ROLE, oldRole, role));
 	}
 
 	/**
@@ -210,7 +176,7 @@ public class ContributorImpl extends LocalizedDCTypeImpl implements Contributor 
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case DCPackage.CONTRIBUTOR__ROLE:
-				unsetRole();
+				setRole(ROLE_EDEFAULT);
 				return;
 			case DCPackage.CONTRIBUTOR__FILE_AS:
 				setFileAs(FILE_AS_EDEFAULT);
@@ -228,7 +194,7 @@ public class ContributorImpl extends LocalizedDCTypeImpl implements Contributor 
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case DCPackage.CONTRIBUTOR__ROLE:
-				return isSetRole();
+				return role != ROLE_EDEFAULT;
 			case DCPackage.CONTRIBUTOR__FILE_AS:
 				return FILE_AS_EDEFAULT == null ? fileAs != null : !FILE_AS_EDEFAULT.equals(fileAs);
 		}
@@ -246,7 +212,7 @@ public class ContributorImpl extends LocalizedDCTypeImpl implements Contributor 
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (role: "); //$NON-NLS-1$
-		if (roleESet) result.append(role); else result.append("<unset>"); //$NON-NLS-1$
+		result.append(role);
 		result.append(", fileAs: "); //$NON-NLS-1$
 		result.append(fileAs);
 		result.append(')');

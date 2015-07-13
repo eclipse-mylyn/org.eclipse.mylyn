@@ -38,6 +38,7 @@ import org.eclipse.mylyn.docs.epub.ncx.PageList;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.NcxImpl#getHead <em>Head</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.NcxImpl#getDocTitle <em>Doc Title</em>}</li>
@@ -49,7 +50,6 @@ import org.eclipse.mylyn.docs.epub.ncx.PageList;
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.NcxImpl#getLang <em>Lang</em>}</li>
  *   <li>{@link org.eclipse.mylyn.docs.epub.ncx.impl.NcxImpl#getVersion <em>Version</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

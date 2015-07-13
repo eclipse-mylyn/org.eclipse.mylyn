@@ -21,10 +21,10 @@ import org.eclipse.mylyn.docs.epub.dc.LocalizedDCType;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.dc.impl.LocalizedDCTypeImpl#getLang <em>Lang</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

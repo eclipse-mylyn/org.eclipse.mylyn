@@ -625,7 +625,7 @@ public class DCPackageImpl extends EPackageImpl implements DCPackage {
 		initEClass(publisherEClass, Publisher.class, "Publisher", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		initEClass(contributorEClass, Contributor.class, "Contributor", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(getContributor_Role(), theOPFPackage.getRole(), "role", "", 0, 1, Contributor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+		initEAttribute(getContributor_Role(), theOPFPackage.getRole(), "role", null, 0, 1, Contributor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getContributor_FileAs(), ecorePackage.getEString(), "fileAs", null, 0, 1, Contributor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(dateEClass, Date.class, "Date", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -673,167 +673,167 @@ public class DCPackageImpl extends EPackageImpl implements DCPackage {
 	 * @generated
 	 */
 	protected void createExtendedMetaDataAnnotations() {
-		String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData"; //$NON-NLS-1$		
+		String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData"; //$NON-NLS-1$	
 		addAnnotation
 		  (titleEClass, 
 		   source, 
 		   new String[] {
 			 "kind", "mixed" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (creatorEClass, 
 		   source, 
 		   new String[] {
 			 "kind", "mixed" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getCreator_Role(), 
 		   source, 
 		   new String[] {
 			 "namespace", "http://www.idpf.org/2007/opf" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getCreator_FileAs(), 
 		   source, 
 		   new String[] {
 			 "name", "file-as", //$NON-NLS-1$ //$NON-NLS-2$
 			 "namespace", "http://www.idpf.org/2007/opf" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (subjectEClass, 
 		   source, 
 		   new String[] {
 			 "kind", "mixed" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (descriptionEClass, 
 		   source, 
 		   new String[] {
 			 "kind", "mixed" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (publisherEClass, 
 		   source, 
 		   new String[] {
 			 "kind", "mixed" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (contributorEClass, 
 		   source, 
 		   new String[] {
 			 "kind", "mixed" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getContributor_Role(), 
 		   source, 
 		   new String[] {
 			 "namespace", "http://www.idpf.org/2007/opf" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getContributor_FileAs(), 
 		   source, 
 		   new String[] {
 			 "name", "file-as", //$NON-NLS-1$ //$NON-NLS-2$
 			 "namespace", "http://www.idpf.org/2007/opf" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (dateEClass, 
 		   source, 
 		   new String[] {
 			 "kind", "mixed" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getDate_Event(), 
 		   source, 
 		   new String[] {
 			 "namespace", "http://www.idpf.org/2007/opf" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (typeEClass, 
 		   source, 
 		   new String[] {
 			 "kind", "mixed" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (formatEClass, 
 		   source, 
 		   new String[] {
 			 "kind", "mixed" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (identifierEClass, 
 		   source, 
 		   new String[] {
 			 "kind", "mixed" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (identifierEClass, 
 		   source, 
 		   new String[] {
 			 "kind", "mixed" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getIdentifier_Scheme(), 
 		   source, 
 		   new String[] {
 			 "namespace", "http://www.idpf.org/2007/opf" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getIdentifier_Mixed(), 
 		   source, 
 		   new String[] {
 			 "kind", "elementWildcard", //$NON-NLS-1$ //$NON-NLS-2$
 			 "name", ":mixed" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (sourceEClass, 
 		   source, 
 		   new String[] {
 			 "kind", "mixed" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (languageEClass, 
 		   source, 
 		   new String[] {
 			 "kind", "mixed" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getLanguage_Type(), 
 		   source, 
 		   new String[] {
 			 "namespace", "http://www.w3.org/2001/XMLSchema-instance" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (relationEClass, 
 		   source, 
 		   new String[] {
 			 "kind", "mixed" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (coverageEClass, 
 		   source, 
 		   new String[] {
 			 "kind", "mixed" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (rightsEClass, 
 		   source, 
 		   new String[] {
 			 "kind", "mixed" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (dcTypeEClass, 
 		   source, 
 		   new String[] {
 			 "kind", "mixed" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getDCType_Mixed(), 
 		   source, 
 		   new String[] {
 			 "kind", "elementWildcard", //$NON-NLS-1$ //$NON-NLS-2$
 			 "name", ":mixed" //$NON-NLS-1$ //$NON-NLS-2$
-		   });		
+		   });	
 		addAnnotation
 		  (getLocalizedDCType_Lang(), 
 		   source, 

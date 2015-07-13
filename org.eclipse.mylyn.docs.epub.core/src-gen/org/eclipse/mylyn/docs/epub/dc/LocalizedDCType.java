@@ -14,10 +14,10 @@ package org.eclipse.mylyn.docs.epub.dc;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.mylyn.docs.epub.dc.LocalizedDCType#getLang <em>Lang</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.mylyn.docs.epub.dc.DCPackage#getLocalizedDCType()
  * @model abstract="true"

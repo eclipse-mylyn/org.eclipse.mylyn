@@ -31,7 +31,7 @@ public class DCFactoryImpl extends EFactoryImpl implements DCFactory {
 	 */
 	public static DCFactory init() {
 		try {
-			DCFactory theDCFactory = (DCFactory)EPackage.Registry.INSTANCE.getEFactory("http://purl.org/dc/elements/1.1/"); //$NON-NLS-1$ 
+			DCFactory theDCFactory = (DCFactory)EPackage.Registry.INSTANCE.getEFactory(DCPackage.eNS_URI);
 			if (theDCFactory != null) {
 				return theDCFactory;
 			}
