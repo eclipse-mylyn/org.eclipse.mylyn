@@ -11,8 +11,10 @@
 
 package org.eclipse.mylyn.gerrit.tests.support;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 
@@ -34,6 +36,8 @@ import org.junit.Test;
  * @author Steffen Pingel
  */
 public class GerritProject {
+
+	private static final String PROP_ALTERNATE_PUSH = "org.eclipse.mylyn.gerrit.tests.alternate.push";
 
 	public static class GerritProjectTest {
 
@@ -142,23 +146,60 @@ public class GerritProject {
 
 	public CommitResult commitAndPush(CommitCommand command, String refSpec, PrivilegeLevel privilegeLevel)
 			throws Exception {
-		String email = registerAuthenticator(privilegeLevel);
+		AuthenticationCredentials credentials = registerAuthenticator(privilegeLevel);
+		String email = credentials.getUserName();
 		RevCommit call = command.setAuthor("Test", email) //$NON-NLS-1$
 				.setCommitter("Test", email)
 				.call();
-		Iterable<PushResult> result = git.push()
-				.setCredentialsProvider(getCredentialsProvider(privilegeLevel))
-				.setRefSpecs(new RefSpec(refSpec))
-				.call();
-		//Safe to assume one and only one result?
-		return new CommitResult(call, result.iterator().next());
+		if (Boolean.getBoolean(PROP_ALTERNATE_PUSH)) {
+			String username = StringUtils.substringBefore(email, "@");
+			String protocol = StringUtils.substringBefore(fixture.getRepositoryUrl(), "://");
+			String hostAndPath = StringUtils.substringAfter(fixture.getRepositoryUrl(), "://");
+			String project = "org.eclipse.mylyn.test/";
+			String url = protocol + "://" + username + ":" + credentials.getPassword() + "@" + hostAndPath + project;
+			File directory = command.getRepository().getDirectory().getParentFile();
+			final String responseMessage = execute(directory, "git", "push", url, refSpec);
+			System.out.println("Response message:");
+			System.out.println(responseMessage);
+			System.out.println("######");
+			PushResult result = new PushResult() {
+				@Override
+				public String getMessages() {
+					return responseMessage.toString();
+				}
+			};
+			return new CommitResult(call, result);
+		} else {
+			Iterable<PushResult> result = git.push()
+					.setCredentialsProvider(getCredentialsProvider(privilegeLevel))
+					.setRefSpecs(new RefSpec(refSpec))
+					.call();
+			//Safe to assume one and only one result?
+			return new CommitResult(call, result.iterator().next());
+		}
 	}
 
-	public String registerAuthenticator() throws Exception {
-		return registerAuthenticator(PrivilegeLevel.USER);
+	private String execute(File directory, String... command) throws IOException {
+//		System.out.println("# Executing " + StringUtils.join(command, " "));
+		Process process = Runtime.getRuntime().exec(command, null, directory);
+		BufferedReader r = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+		final StringBuilder responseMessage = new StringBuilder();
+		try {
+			String line;
+			while ((line = r.readLine()) != null) {
+				if (!line.startsWith("remote:")) {
+					line = line.replace('/', '\\');// don't break parsing of short id
+				}
+				responseMessage.append(line);
+				responseMessage.append('\n');
+			}
+		} finally {
+			r.close();
+		}
+		return responseMessage.toString();
 	}
 
-	public String registerAuthenticator(PrivilegeLevel privilegeLevel) throws Exception {
+	public AuthenticationCredentials registerAuthenticator(PrivilegeLevel privilegeLevel) throws Exception {
 		// register authenticator to avoid HTTP password prompt
 		AuthenticationCredentials credentials = fixture.location(privilegeLevel).getCredentials(
 				AuthenticationType.REPOSITORY);
@@ -170,7 +211,7 @@ public class GerritProject {
 				return authentication;
 			}
 		});
-		return credentials.getUserName();
+		return credentials;
 	}
 
 	public void dispose() {
