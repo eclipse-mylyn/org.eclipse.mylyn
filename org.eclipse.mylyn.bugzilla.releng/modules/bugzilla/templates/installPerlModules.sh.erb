@@ -1,4 +1,7 @@
 #!/bin/bash
+<% if  @envversion < "5.0" %>
+grep -v /mirror.hiwaay.net Bugzilla/Install/CPAN.pm >Bugzilla/Install/CPAN.tmp; mv -f Bugzilla/Install/CPAN.tmp Bugzilla/Install/CPAN.pm 
+<% end %>
 echo "start: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 /usr/bin/perl install-module.pl Text::Wrap
 <% if  @envversion > "4.5" %>
@@ -10,7 +13,7 @@ echo "start3: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 /usr/bin/perl install-module.pl Moo
 echo "ende3: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 <% end %>
-<% if  @envversion < "4.1" %>
+<% if  @envversion < "5.0" %>
 echo "start4: $(date +'%d/%m/%Y %H:%M:%S:%3N')"
 /usr/bin/perl install-module.pl DBI
 echo "ende4: $(date +'%d/%m/%Y %H:%M:%S:%3N')"

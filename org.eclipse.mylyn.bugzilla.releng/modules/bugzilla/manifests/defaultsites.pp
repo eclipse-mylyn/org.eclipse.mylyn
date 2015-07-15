@@ -26,50 +26,53 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
   bugzilla::site { "bugzilla-4.0.18":
     major   => "4",
     minor   => "0",
+    micro   => "18",
   }
 
   bugzilla::site { "bugzilla-4.2.14":
     major   => "4",
     minor   => "2",
+    micro   => "14",
   }
 
-  bugzilla::site { "bugzilla-4.2.14-bugaliases":
+  bugzilla::site { "bugzilla-4.4.9-bugaliases":
     major         => "4",
-    minor         => "2",
-    branchTag     => "bugzilla-4.2.14",
+    minor         => "4",
+    micro         => "9",
     usebugaliases => true,
   }
 
   bugzilla::site { "bugzilla-4.4.9":
     major      => "4",
     minor      => "4",
+    micro      => "9",
     envdefault => true,
   }
 
   bugzilla::site { "bugzilla-4.4.9-custom-wf":
     major       => "4",
     minor       => "4",
-    branchTag   => "bugzilla-4.4.9",
+    micro       => "9",
     custom_wf   => true,
   }
 
   bugzilla::site { "bugzilla-4.4.9-custom-wf-and-status":
     major                => "4",
     minor                => "4",
-    branchTag            => "bugzilla-4.4.9",
+    micro                => "9",
     custom_wf_and_status => true,
   }
 
-  bugzilla::site { "bugzilla-5.0rc3":
+  bugzilla::site { "bugzilla-5.0":
     major       => "5",
     minor       => "0",
-    branch      => "5.0",
-    envversion  => "5.0rc3",
+    micro       => "",
   }
  
   bugzilla::site { "bugzilla-master":
     major       => "5",
     minor       => "1",
+    micro       => "",
     branch      => "master",
     branchTag   => "HEAD",
     envversion  => "5.1",
@@ -83,12 +86,11 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
   bugzilla::site { "bugzilla-rest-5.0-head":
     major           => "5",
     minor           => "0",
+    micro           => "",
     branch          => "5.0",
-    branchTag       => "HEAD",
     envtype         => "bugzillaREST",
     rest_enabled    => true,
     envdefault_rest => true,
-    envversion      => "5.0rc3+",
     testdataVersion => "Version1",
   }
   
@@ -96,6 +98,7 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
   bugzilla::site { "bugzilla-rest-master":
     major           => "5",
     minor           => "1",
+    micro           => "",
     branch          => "master",
     branchTag       => "HEAD",
     envversion      => "5.1",

@@ -58,13 +58,13 @@ public class BugzillaClientTest extends AbstractBugzillaTest {
 		}
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
-		assertEquals(
-				0,
-				config.getInstallVersion().compareMajorMinorOnly(
-						new BugzillaVersion(BugzillaFixture.current().getVersion())));
+		assertEquals(0, config.getInstallVersion()
+				.compareMajorMinorOnly(new BugzillaVersion(BugzillaFixture.current().getVersion())));
 		if (BugzillaFixture.current().isCustomWorkflowAndStatus()) {
-			assertEquals(10, config.getOptionValues(BugzillaAttribute.BUG_STATUS).size());
-		} else if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
+			assertEquals(8, config.getOptionValues(BugzillaAttribute.BUG_STATUS).size());
+		} else if (BugzillaFixture.current()
+				.getBugzillaVersion()
+				.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
 			assertEquals(7, config.getOptionValues(BugzillaAttribute.BUG_STATUS).size());
 		} else {
 			assertEquals(5, config.getOptionValues(BugzillaAttribute.BUG_STATUS).size());
@@ -75,8 +75,8 @@ public class BugzillaClientTest extends AbstractBugzillaTest {
 			assertEquals(36, config.getOptionValues(BugzillaAttribute.OP_SYS).size());
 			assertEquals(5, config.getOptionValues(BugzillaAttribute.PRIORITY).size());
 		} else {
-			if (BugzillaVersion.BUGZILLA_4_0.compareMajorMinorOnly(new BugzillaVersion(BugzillaFixture.current()
-					.getVersion())) > 0) {
+			if (BugzillaVersion.BUGZILLA_4_0
+					.compareMajorMinorOnly(new BugzillaVersion(BugzillaFixture.current().getVersion())) > 0) {
 				assertEquals(6, config.getOptionValues(BugzillaAttribute.RESOLUTION).size());
 			} else {
 				assertEquals(5, config.getOptionValues(BugzillaAttribute.RESOLUTION).size());
@@ -88,9 +88,11 @@ public class BugzillaClientTest extends AbstractBugzillaTest {
 		assertEquals(7, config.getOptionValues(BugzillaAttribute.BUG_SEVERITY).size());
 		assertEquals(3, config.getOptionValues(BugzillaAttribute.PRODUCT).size());
 		if (BugzillaFixture.current().isCustomWorkflowAndStatus()) {
-			assertEquals(6, config.getOpenStatusValues().size());
-			assertEquals(1, config.getClosedStatusValues().size());
-		} else if (BugzillaFixture.current().getBugzillaVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
+			assertEquals(5, config.getOpenStatusValues().size());
+			assertEquals(3, config.getClosedStatusValues().size());
+		} else if (BugzillaFixture.current()
+				.getBugzillaVersion()
+				.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
 			assertEquals(4, config.getOpenStatusValues().size());
 			assertEquals(3, config.getClosedStatusValues().size());
 		} else {
@@ -106,7 +108,8 @@ public class BugzillaClientTest extends AbstractBugzillaTest {
 		assertEquals(1, config.getProductOptionValues(BugzillaAttribute.TARGET_MILESTONE, "TestProduct").size());
 		assertEquals(2, config.getProductOptionValues(BugzillaAttribute.COMPONENT, "Product with Spaces").size());
 		assertEquals(4, config.getProductOptionValues(BugzillaAttribute.VERSION, "Product with Spaces").size());
-		assertEquals(4, config.getProductOptionValues(BugzillaAttribute.TARGET_MILESTONE, "Product with Spaces").size());
+		assertEquals(4,
+				config.getProductOptionValues(BugzillaAttribute.TARGET_MILESTONE, "Product with Spaces").size());
 	}
 
 	public void testValidate() throws Exception {
@@ -144,7 +147,8 @@ public class BugzillaClientTest extends AbstractBugzillaTest {
 		TaskRepository repository = BugzillaFixture.current().repository();
 		AuthenticationCredentials anonymousCreds = new AuthenticationCredentials("", "");
 		repository.setCredentials(AuthenticationType.REPOSITORY, anonymousCreds, false);
-		repository.setCredentials(AuthenticationType.HTTP, new AuthenticationCredentials("YYYYYYYY", "XXXXXXXX"), false);
+		repository.setCredentials(AuthenticationType.HTTP, new AuthenticationCredentials("YYYYYYYY", "XXXXXXXX"),
+				false);
 		TaskRepositoryLocation location = new TaskRepositoryLocation(repository);
 
 		client = new BugzillaClient(location, repository, BugzillaFixture.current().connector());
@@ -166,7 +170,8 @@ public class BugzillaClientTest extends AbstractBugzillaTest {
 
 	public void testValidateUserPlusHTTP() throws Exception {
 		TaskRepository repository = BugzillaFixture.current().repository();
-		repository.setCredentials(AuthenticationType.HTTP, new AuthenticationCredentials("YYYYYYYY", "XXXXXXXX"), false);
+		repository.setCredentials(AuthenticationType.HTTP, new AuthenticationCredentials("YYYYYYYY", "XXXXXXXX"),
+				false);
 		TaskRepositoryLocation location = new TaskRepositoryLocation(repository);
 
 		client = new BugzillaClient(location, repository, BugzillaFixture.current().connector());
@@ -182,8 +187,8 @@ public class BugzillaClientTest extends AbstractBugzillaTest {
 	public void testCommentQuery() throws Exception {
 		BugzillaRepositoryConnector connector = BugzillaFixture.current().connector();
 		BugzillaAttributeMapper mapper = new BugzillaAttributeMapper(repository, connector);
-		TaskData newData = new TaskData(mapper, BugzillaFixture.current().getConnectorKind(), BugzillaFixture.current()
-				.getRepositoryUrl(), "");
+		TaskData newData = new TaskData(mapper, BugzillaFixture.current().getConnectorKind(),
+				BugzillaFixture.current().getRepositoryUrl(), "");
 
 		assertTrue(connector.getTaskDataHandler().initializeTaskData(repository, newData, null,
 				new NullProgressMonitor()));
@@ -231,8 +236,7 @@ public class BugzillaClientTest extends AbstractBugzillaTest {
 		IRepositoryQuery query = new RepositoryQuery(BugzillaFixture.current().getConnectorKind(), "query");
 		UrlBuilder urlBuilder = UrlBuilder.build(BugzillaFixture.current().repository()).append("/buglist.cgi");
 
-		urlBuilder.parameter(
-				"short_desc=test%20EnhanceSearch&columnlist",
+		urlBuilder.parameter("short_desc=test%20EnhanceSearch&columnlist",
 				"bug_severity,priority,assigned_to,bug_status,resolution,short_desc,changeddate,reporter,assigned_to_realname,reporter_realname,product,component");
 		query.setUrl(urlBuilder.toString());
 

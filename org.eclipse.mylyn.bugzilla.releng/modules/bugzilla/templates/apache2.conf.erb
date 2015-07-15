@@ -1,5 +1,5 @@
-Alias /<%= @www_url %> <%= @base %>/<%= @version %>
-<Directory <%= @base %>/<%= @version %>>
+Alias /<%= @www_url %> <%= @base %>/<%= @bugzillaDir %>
+<Directory <%= @base %>/<%= @bugzillaDir %>>
     AddHandler cgi-script .cgi
     Options +Indexes +ExecCGI
     DirectoryIndex index.cgi

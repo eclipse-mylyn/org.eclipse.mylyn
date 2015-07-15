@@ -375,7 +375,7 @@ public class BugzillaHarness {
 		TaskAttachmentMapper attachmentMapper = TaskAttachmentMapper.createFrom(attrAttachment);
 
 		String fileName = "test-attach-1.txt";
-		File attachFile = new File(fileName);
+		File attachFile = File.createTempFile("test-attach", null);
 		attachFile.createNewFile();
 		attachFile.deleteOnExit();
 		BufferedWriter write = new BufferedWriter(new FileWriter(attachFile));
