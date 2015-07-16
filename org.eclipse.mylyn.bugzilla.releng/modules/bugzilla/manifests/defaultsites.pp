@@ -83,7 +83,7 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
  * REST sites
  *******************************************************************************/
 
-  bugzilla::site { "bugzilla-rest-5.0-head":
+  bugzilla::site { "bugzilla-rest-5.0":
     major           => "5",
     minor           => "0",
     micro           => "",

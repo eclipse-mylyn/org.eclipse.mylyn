@@ -28,7 +28,7 @@ define bugzilla::site (
   $envid                = "$title",
   $userOwner            = $bugzilla::userOwner,
   $userGroup            = $bugzilla::userGroup,
-  $envversion           = "${major}.${minor}.${micro}",
+  $envversion           = "",
   $envdefault           = false,
   $envdefault_rest      = false,
   $desciptorfile        = " ",
@@ -49,6 +49,15 @@ define bugzilla::site (
       $branchTagInternal = "release-${major}.${minor}.${micro}"
     } else {
       $branchTagInternal = "release-${major}.${minor}"
+    }
+  }
+    if ($envversion !="") {
+    $envversionInternal = $envversion
+  } else {
+    if ($micro !="") {
+      $envversionInternal = "${major}.${minor}.${micro}"
+    } else {
+      $envversionInternal = "${major}.${minor}"
     }
   }
   if $custom_wf {

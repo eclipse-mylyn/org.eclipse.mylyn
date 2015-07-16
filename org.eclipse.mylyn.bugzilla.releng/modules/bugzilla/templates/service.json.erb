@@ -1,7 +1,7 @@
 {
   "type": "<%= @envtype %>",
   "url": "/<%= @envid %>",
-  "version": "<%= @envversion %>",
+  "version": "<%= @envversionInternal %>",
   "info": "<%= @envinfo_intern %>",
   "properties":{
 <% if @envdefault           %><% if @propertyanz.to_i > 0 %>   ,<% else %>    <% end %><% @propertyanz = @propertyanz.to_i -%><% @propertyanz += 1 -%>"default": "1"<% end %>
