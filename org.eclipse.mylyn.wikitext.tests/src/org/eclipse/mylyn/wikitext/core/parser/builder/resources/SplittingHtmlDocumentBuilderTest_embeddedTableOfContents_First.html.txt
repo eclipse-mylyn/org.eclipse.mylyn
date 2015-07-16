@@ -25,10 +25,10 @@
 			<div class="row">
 				<div class="table-of-contents span2">
 					<h1>Table of Contents</h1>
-					<ol class="table-of-contents">
+					<ol>
 						<li class="expanded">
 							<a href="#First">First</a>
-							<ol class="table-of-contents">
+							<ol>
 								<li class="expanded">
 									<a href="#First.1">First.1</a>
 								</li>
@@ -36,7 +36,7 @@
 						</li>
 						<li class="collapsed">
 							<a href="Second.html#Second">Second</a>
-							<ol class="table-of-contents">
+							<ol>
 								<li class="collapsed">
 									<a href="Second.html#Second.1">Second.1</a>
 								</li>

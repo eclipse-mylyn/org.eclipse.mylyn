@@ -489,9 +489,7 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 		if (item.getChildren().isEmpty()) {
 			return;
 		}
-		Attributes listAttributes = new Attributes();
-		listAttributes.appendCssClass("table-of-contents"); //$NON-NLS-1$
-		out.beginBlock(BlockType.NUMERIC_LIST, listAttributes);
+		out.beginBlock(BlockType.NUMERIC_LIST, new Attributes());
 
 		for (OutlineItem child : item.getChildren()) {
 			Attributes itemAttributes = new Attributes();
