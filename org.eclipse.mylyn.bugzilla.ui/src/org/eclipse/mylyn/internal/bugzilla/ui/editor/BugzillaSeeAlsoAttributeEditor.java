@@ -77,8 +77,8 @@ public class BugzillaSeeAlsoAttributeEditor extends AbstractAttributeEditor {
 		setControl(seeAlsoTable);
 	}
 
-	private final String[] seeAlsoColumns = {
-			"", Messages.BugzillaSeeAlsoAttributeEditor_Remove, Messages.BugzillaSeeAlsoAttributeEditor_URL }; //$NON-NLS-1$
+	private final String[] seeAlsoColumns = { "", Messages.BugzillaSeeAlsoAttributeEditor_Remove, //$NON-NLS-1$
+			Messages.BugzillaSeeAlsoAttributeEditor_URL };
 
 	private final int[] seeAlsoColumnWidths = { 25, 60, 100 };
 
@@ -123,7 +123,7 @@ public class BugzillaSeeAlsoAttributeEditor extends AbstractAttributeEditor {
 			public Image getColumnImage(Object element, int columnIndex) {
 				String value = (String) element;
 				if (columnIndex == 0) {
-					if (value.contains("/r/#/c/")) { //$NON-NLS-1$
+					if (value.contains("/r/#/c/") || value.contains("git.eclipse.org/r/")) { //$NON-NLS-1$ //$NON-NLS-2$
 						return CommonImages.getImage(BugzillaImages.GERRIT);
 					} else if (value.contains("/commit/?id=")) { //$NON-NLS-1$
 						return CommonImages.getImage(BugzillaImages.GIT);
