@@ -44,6 +44,12 @@ public class TaskRepositoriesExternalizer {
 
 	public static final String ATTRIBUTE_VERSION = "OutputVersion"; //$NON-NLS-1$
 
+	public static final String ELEMENT_PROPERTY = "Property"; //$NON-NLS-1$
+
+	public static final String PROPERTY_KEY = "key"; //$NON-NLS-1$
+
+	public static final String PROPERTY_VALUE = "value"; //$NON-NLS-1$
+
 	public void writeRepositoriesToXML(Collection<TaskRepository> repositories, File file) {
 		ZipOutputStream outputStream = null;
 		try {
@@ -117,8 +123,8 @@ public class TaskRepositoriesExternalizer {
 			return contentHandler.getRepositories();
 		} catch (Throwable e) {
 			file.renameTo(new File(file.getAbsolutePath() + "-save")); //$NON-NLS-1$
-			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-					"Error reading task repositories", e)); //$NON-NLS-1$
+			StatusHandler.log(
+					new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error reading task repositories", e)); //$NON-NLS-1$
 			return null;
 		} finally {
 			if (inputStream != null) {
