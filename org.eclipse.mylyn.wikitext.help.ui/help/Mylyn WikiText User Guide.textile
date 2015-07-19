@@ -196,7 +196,7 @@ h2. Content Generation from Wiki Markup using Maven
 
 A Maven plug-in is provided that can generate HTML and Eclipse Help content from wiki markup.  The plug-in scans a source folder and generates HTML and a corresponding Eclipse help table of contents file for each wiki markup source file.  Non-wiki source files (such as CSS and images) are copied as-is to the output folder.
 
-The Mylyn WikiText plug-in can be included by adding the following Maven repository as a plug-in repository to your Maven configuration: @https://repo.eclipse.org/content/repositories/mylyn-releases/@
+The Mylyn WikiText plug-in can be included by adding the following Maven repository as a plug-in repository to your Maven configuration: @https://repo.eclipse.org/content/repositories/mylyn-snapshots/@. Please note that only the SNAPSHOT versions are published to this repository. For the moment, RELEASE artifacts are not published.
 
 To add the Maven repository via your pom, use the following syntax:
 
@@ -204,7 +204,10 @@ bc.
 	<pluginRepositories>
 		<pluginRepository>
 			<id>eclipse.org-mylyn</id>
-			<url>https://repo.eclipse.org/content/repositories/mylyn-releases/</url>
+			<url>https://repo.eclipse.org/content/repositories/mylyn-snapshots/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
 		</pluginRepository>
 	</pluginRepositories>
 
