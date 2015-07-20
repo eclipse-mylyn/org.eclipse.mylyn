@@ -12,13 +12,12 @@ define hudson::defaultsites ($base = $hudson::base,) {
 
   /* Instances */
 
-
-  hudson::hudson { "3.1.2":
+  hudson::hudson { "3.2.2":
     type      => "hudson",
     qualifier => "eclipse",
   }
 
-  hudson::hudson { "3.2.2":
+  hudson::hudson { "3.3.0":
     type      => "hudson",
     qualifier => "eclipse",
   }
@@ -28,7 +27,7 @@ define hudson::defaultsites ($base = $hudson::base,) {
     qualifier => "stable",
   }
 
-  hudson::hudson { "1.596.2":
+  hudson::hudson { "1.609.1":
     type      => "jenkins",
     qualifier => "stable",
   }
@@ -36,19 +35,19 @@ define hudson::defaultsites ($base = $hudson::base,) {
   /* Sites */
 
 
-  hudson::site { "hudson-3.1.2":
-    envtype => "hudson",
-    version => "3.1.2",
-    port    => 9042,
-    require => Hudson["3.1.2"],
-  }
-
   hudson::site { "hudson-3.2.2":
     envtype => "hudson",
     version => "3.2.2",
     port    => 9322,
-    envdefault => true,
     require => Hudson["3.2.2"],
+  }
+
+  hudson::site { "hudson-3.3.0":
+    envtype => "hudson",
+    version => "3.3.0",
+    port    => 9330,
+    envdefault => true,
+    require => Hudson["3.3.0"],
   }
 
   hudson::site { "jenkins-1.565.3":
@@ -59,12 +58,12 @@ define hudson::defaultsites ($base = $hudson::base,) {
     folderPlugin => true,
   }
 
-  hudson::site { "jenkins-1.596.2":
+  hudson::site { "jenkins-1.609.1":
     envtype => "jenkins",
-    version => "1.596.2",
-    port    => 9596,
+    version => "1.609.1",
+    port    => 9609,
     envdefault => true,
-    require => Hudson["1.596.2"],
+    require => Hudson["1.609.1"],
     folderPlugin => true,
   }
 
