@@ -228,16 +228,13 @@ public class WikiToDocTask extends MarkupTask {
 					MessageFormat.format(Messages.getString("WikiToDocTask_fetching_content_for_page"), path.name), //$NON-NLS-1$
 					Project.MSG_VERBOSE);
 			URL pathUrl = computeRawUrl(path.name);
-			Reader input;
 			try {
-				input = new InputStreamReader(new BufferedInputStream(pathUrl.openStream()), "UTF-8"); //$NON-NLS-1$
+				Reader input = createInputReader(pathUrl);
 				try {
 					String content = readFully(input);
 					content = preprocessMarkup(path, content);
 					pathNameToContent.put(path.name, content);
-					File dest = computeDestDir(path);
-					String fileName = computeHtmlFilename(path.name);
-					final File targetFile = new File(dest, fileName);
+					final File targetFile = computeHtmlOutputFile(path);
 					SplitOutlineItem outline = computeOutline(path, markupLanguage, targetFile, content);
 					outline.setResourcePath(targetFile.getAbsolutePath());
 					pathNameToOutline.put(path.name, outline);
@@ -276,6 +273,10 @@ public class WikiToDocTask extends MarkupTask {
 		if (generateUnifiedToc) {
 			createToc(paths, pathNameToOutline);
 		}
+	}
+
+	protected Reader createInputReader(URL pathUrl) throws IOException {
+		return new InputStreamReader(new BufferedInputStream(pathUrl.openStream()), "UTF-8"); //$NON-NLS-1$
 	}
 
 	protected void performValidation(MarkupLanguage markupLanguage, Path path, String markupContent) {
@@ -452,7 +453,7 @@ public class WikiToDocTask extends MarkupTask {
 		return internalLinkPattern;
 	}
 
-	private Set<String> fetchImages(MarkupLanguage markupLanguage, Path path) {
+	protected Set<String> fetchImages(MarkupLanguage markupLanguage, Path path) {
 		File dest = computeDestDir(path);
 		if (prependImagePrefix != null) {
 			dest = new File(dest, prependImagePrefix);
@@ -494,7 +495,8 @@ public class WikiToDocTask extends MarkupTask {
 
 	private void markupToDoc(MarkupLanguage markupLanguage, Path path, String markupContent,
 			Map<String, SplitOutlineItem> pathNameToOutline, Set<String> imageFilenames) throws BuildException {
-		File pathDir = computeDestDir(path);
+		File htmlOutputFile = computeHtmlOutputFile(path);
+		File pathDir = htmlOutputFile.getParentFile();
 		if (!pathDir.exists()) {
 			if (!pathDir.mkdirs()) {
 				throw new BuildException(
@@ -502,8 +504,6 @@ public class WikiToDocTask extends MarkupTask {
 								pathDir.getAbsolutePath()));
 			}
 		}
-		String fileName = computeHtmlFilename(path.name);
-		File htmlOutputFile = new File(pathDir, fileName);
 		Writer writer;
 		try {
 			writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(htmlOutputFile)), "utf-8"); //$NON-NLS-1$
@@ -620,11 +620,17 @@ public class WikiToDocTask extends MarkupTask {
 		return item;
 	}
 
-	private File computeDestDir(Path path) {
+	protected File computeDestDir(Path path) {
 		String name = path.name;
 		name.replace(' ', '_');
 		File dest = new File(this.dest, name);
 		return dest;
+	}
+
+	public File computeHtmlOutputFile(Path path) {
+		File dest = computeDestDir(path);
+		String fileName = computeHtmlFilename(path.name);
+		return new File(dest, fileName);
 	}
 
 	private String readFully(Reader input) throws IOException {
@@ -835,7 +841,7 @@ public class WikiToDocTask extends MarkupTask {
 				String hashId = matcher.group(2);
 
 				if (currentPath.name.equals(name)) {
-					return hashId == null ? "#" : hashId; //$NON-NLS-1$
+					return "#" + (hashId == null ? "" : hashId); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				name = name.replace(' ', '_');
 				Path path = nameToPath.get(name);
