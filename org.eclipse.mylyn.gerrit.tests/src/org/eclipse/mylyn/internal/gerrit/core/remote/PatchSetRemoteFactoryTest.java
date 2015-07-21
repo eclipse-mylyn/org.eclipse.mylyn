@@ -35,9 +35,11 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritChange;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion;
 import org.eclipse.mylyn.internal.gerrit.core.client.PatchSetContent;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchScriptX;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.CommentInput;
@@ -196,10 +198,18 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 
 		// compare deleted image
 		patchScript = loadPatchSetContent(fileName, detail2, detail4);
-		assertThat(patchScript, nullValue());
+		if (GerritVersion.isVersion2112OrLater(GerritFixture.current().getGerritVersion())) {
+			assertPatchContent(patchScript, equalTo(fileContent2), nullValue(byte[].class));
+		} else {
+			assertThat(patchScript, nullValue());
+		}
 
 		patchScript = loadPatchSetContent(fileName, detail3, detail1);
-		assertThat(patchScript, nullValue());
+		if (GerritVersion.isVersion2112OrLater(GerritFixture.current().getGerritVersion())) {
+			assertPatchContent(patchScript, equalTo(fileContent3), nullValue(byte[].class));
+		} else {
+			assertThat(patchScript, nullValue());
+		}
 
 		// compare added image
 		patchScript = loadPatchSetContent(fileName, detail1, detail2);

@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.gerrit.tests.core.client;
 
-import static org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion.isVersion210OrLater;
+import static org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion.isVersion2112OrLater;
 import static org.eclipse.mylyn.internal.gerrit.core.client.GerritVersion.parseGerritVersion;
 import junit.framework.TestCase;
 
@@ -123,17 +123,28 @@ public class GerritVersionTest extends TestCase {
 	}
 
 	@Test
-	public void testIsVersion210OrLater() throws Exception {
-		assertFalse(isVersion210OrLater(parseGerritVersion("2.9.9")));
-		assertFalse(isVersion210OrLater(parseGerritVersion("2.9.9-q")));
-		assertTrue(isVersion210OrLater(parseGerritVersion("2.10")));
-		assertTrue(isVersion210OrLater(parseGerritVersion("2.10-q")));
-		assertTrue(isVersion210OrLater(parseGerritVersion("2.10.0")));
-		assertTrue(isVersion210OrLater(parseGerritVersion("2.10.0-q")));
-		assertTrue(isVersion210OrLater(parseGerritVersion("2.10.0-rc2")));
-		assertTrue(isVersion210OrLater(parseGerritVersion("2.10.1")));
-		assertTrue(isVersion210OrLater(parseGerritVersion("2.10.1-q")));
-		assertTrue(isVersion210OrLater(parseGerritVersion("2.10.1-rc2")));
+	public void testIsVersion2112OrLater() throws Exception {
+		assertFalse(isVersion2112OrLater(parseGerritVersion("2.9.9")));
+		assertFalse(isVersion2112OrLater(parseGerritVersion("2.9.9-q")));
+		assertFalse(isVersion2112OrLater(parseGerritVersion("2.10")));
+		assertFalse(isVersion2112OrLater(parseGerritVersion("2.10-q")));
+		assertFalse(isVersion2112OrLater(parseGerritVersion("2.10.0")));
+		assertFalse(isVersion2112OrLater(parseGerritVersion("2.10.0-q")));
+		assertFalse(isVersion2112OrLater(parseGerritVersion("2.10.0-rc2")));
+		assertFalse(isVersion2112OrLater(parseGerritVersion("2.10.1")));
+		assertFalse(isVersion2112OrLater(parseGerritVersion("2.10.1-q")));
+		assertFalse(isVersion2112OrLater(parseGerritVersion("2.10.1-rc2")));
+		assertFalse(isVersion2112OrLater(parseGerritVersion("2.11")));
+		assertFalse(isVersion2112OrLater(parseGerritVersion("2.11.0")));
+		assertFalse(isVersion2112OrLater(parseGerritVersion("2.11-rc2")));
+		assertTrue(isVersion2112OrLater(parseGerritVersion("2.11.2")));
+		assertTrue(isVersion2112OrLater(parseGerritVersion("2.11.2-q")));
+		assertTrue(isVersion2112OrLater(parseGerritVersion("2.11.2")));
+		assertTrue(isVersion2112OrLater(parseGerritVersion("2.11.2-q")));
+		assertTrue(isVersion2112OrLater(parseGerritVersion("2.11.2-rc2")));
+		assertTrue(isVersion2112OrLater(parseGerritVersion("2.11.3")));
+		assertTrue(isVersion2112OrLater(parseGerritVersion("2.11.3-q")));
+		assertTrue(isVersion2112OrLater(parseGerritVersion("2.11.3-rc2")));
 	}
 
 }

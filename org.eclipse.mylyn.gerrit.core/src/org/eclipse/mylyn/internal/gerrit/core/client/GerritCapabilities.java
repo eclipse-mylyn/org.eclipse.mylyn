@@ -20,7 +20,7 @@ public class GerritCapabilities {
 
 	public static final Version MINIMUM_SUPPORTED_VERSION = new Version(2, 9, 0);
 
-	public static final Version MAXIMUM_SUPPORTED_VERSION = new Version(2, 11, 0);
+	public static final Version MAXIMUM_SUPPORTED_VERSION = new Version(2, 11, 2);
 
 	private final Version version;
 
