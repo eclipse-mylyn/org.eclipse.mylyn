@@ -344,7 +344,13 @@ public class BugzillaRestConfiguration implements Serializable {
 	}
 
 	public boolean updateProductOptions(@NonNull TaskData taskData) {
+		if (taskData == null) {
+			return false;
+		}
 		TaskAttribute attributeProduct = taskData.getRoot().getMappedAttribute(SCHEMA.PRODUCT.getKey());
+		if (attributeProduct == null) {
+			return false;
+		}
 		if (!attributeProduct.getValue().isEmpty()) {
 			Product actualProduct = getProductWithName(attributeProduct.getValue());
 
@@ -362,6 +368,9 @@ public class BugzillaRestConfiguration implements Serializable {
 				setAttributeOptionsForProduct(attributeTargetMilestone, actualProduct);
 			}
 		} else {
+			for (Product product : getProducts().values()) {
+				attributeProduct.putOption(product.getName(), product.getName());
+			}
 			TaskAttribute attributeComponent = taskData.getRoot().getMappedAttribute(SCHEMA.COMPONENT.getKey());
 			if (attributeComponent != null) {
 				setAllAttributeOptions(attributeComponent, getFieldWithName("component")); //$NON-NLS-1$

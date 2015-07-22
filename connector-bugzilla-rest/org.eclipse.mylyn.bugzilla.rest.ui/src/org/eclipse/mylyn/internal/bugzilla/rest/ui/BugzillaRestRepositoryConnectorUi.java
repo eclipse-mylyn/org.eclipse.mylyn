@@ -12,14 +12,20 @@
 package org.eclipse.mylyn.internal.bugzilla.rest.ui;
 
 import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConnector;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestCore;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestTaskAttributeMapper;
+import org.eclipse.mylyn.internal.provisional.bugzilla.rest.ui.BugzillaRestQueryTypeWizardPage;
+import org.eclipse.mylyn.internal.provisional.bugzilla.rest.ui.BugzillaRestUiUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 import org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard;
+import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
 
 public class BugzillaRestRepositoryConnectorUi extends AbstractRepositoryConnectorUi {
 
@@ -42,8 +48,30 @@ public class BugzillaRestRepositoryConnectorUi extends AbstractRepositoryConnect
 
 	@Override
 	public IWizard getQueryWizard(TaskRepository repository, IRepositoryQuery query) {
-		// ignore
-		return null;
+		RepositoryQueryWizard wizard = new RepositoryQueryWizard(repository);
+		AbstractRepositoryConnector connector = getConnector();
+		BugzillaRestConnector connectorREST = (BugzillaRestConnector) connector;
+
+		TaskData taskData = new TaskData(new BugzillaRestTaskAttributeMapper(repository, connectorREST),
+				repository.getConnectorKind(), "Query", "Query");
+
+		if (query == null) {
+			wizard.addPage(new BugzillaRestQueryTypeWizardPage(repository, connector));
+		} else {
+			if (isCustomQuery(query)) {
+				wizard.addPage(BugzillaRestUiUtil.createBugzillaRestSearchPage(true, true, taskData, connectorREST,
+						repository, query));
+			} else {
+				wizard.addPage(BugzillaRestUiUtil.createBugzillaRestSearchPage(false, true, taskData, connectorREST,
+						repository, query));
+			}
+		}
+		return wizard;
+	}
+
+	private boolean isCustomQuery(IRepositoryQuery query2) {
+		String custom = query2.getAttribute("SimpleURLQueryPage");
+		return custom != null && custom.equals(Boolean.TRUE.toString());
 	}
 
 	@Override
@@ -53,8 +81,7 @@ public class BugzillaRestRepositoryConnectorUi extends AbstractRepositoryConnect
 
 	@Override
 	public boolean hasSearchPage() {
-		// ignore
-		return false;
+		return true;
 	}
 
 }

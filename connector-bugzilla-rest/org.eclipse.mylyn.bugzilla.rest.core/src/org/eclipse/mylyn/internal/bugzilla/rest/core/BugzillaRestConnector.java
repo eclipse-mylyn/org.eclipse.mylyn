@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 import org.eclipse.mylyn.commons.core.operations.OperationUtil;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
@@ -221,8 +222,21 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 	@Override
 	public IStatus performQuery(TaskRepository repository, IRepositoryQuery query, TaskDataCollector collector,
 			ISynchronizationSession session, IProgressMonitor monitor) {
-		// ignore
-		return null;
+		monitor = Policy.monitorFor(monitor);
+		try {
+			monitor.beginTask("performQuery", IProgressMonitor.UNKNOWN);
+			BugzillaRestClient client = getClient(repository);
+			IOperationMonitor progress = OperationUtil.convert(monitor, "performQuery", 3);
+			return client.performQuery(repository, query, collector, progress);
+		} catch (CoreException e) {
+			return new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, IStatus.INFO,
+					"CoreException from performQuery", e);
+		} catch (BugzillaRestException e) {
+			return new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, IStatus.INFO,
+					"BugzillaRestException from performQuery", e);
+		} finally {
+			monitor.done();
+		}
 	}
 
 	@Override

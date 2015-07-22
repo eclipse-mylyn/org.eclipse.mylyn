@@ -107,7 +107,6 @@ public class BugzillaRestPostNewTask extends BugzillaRestAuthenticatedPostReques
 			throw new UnsupportedOperationException(
 					"TaskAttributeTypeAdapter in BugzillaRestPostNewTask only supports write"); //$NON-NLS-1$
 		}
-
 	}
 
 	@Override

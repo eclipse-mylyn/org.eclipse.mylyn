@@ -43,18 +43,24 @@ public class BugzillaRestTaskAttributeMapper extends TaskAttributeMapper {
 			BugzillaRestConfiguration repositoryConfiguration;
 			try {
 				repositoryConfiguration = connector.getRepositoryConfiguration(this.getTaskRepository());
+				// TODO: change this when we have offline cache for the repository configuration so we build the options in an temp var
 				if (repositoryConfiguration != null) {
 					if (!productAttribute.getValue().equals("")) { //$NON-NLS-1$
-						Product actualProduct = repositoryConfiguration.getProductWithName(productAttribute.getValue());
-						if (attribute.getId()
-								.equals(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())) {
-							internalSetAttributeOptions(attribute, actualProduct.getMilestones());
-						} else
-							if (attribute.getId().equals(BugzillaRestCreateTaskSchema.getDefault().VERSION.getKey())) {
-							internalSetAttributeOptions(attribute, actualProduct.getVersions());
-						} else if (attribute.getId()
-								.equals(BugzillaRestCreateTaskSchema.getDefault().COMPONENT.getKey())) {
-							internalSetAttributeOptions(attribute, actualProduct.getComponents());
+						boolean found = false;
+						attribute.clearOptions();
+						for (String productName : productAttribute.getValues()) {
+							Product actualProduct = repositoryConfiguration.getProductWithName(productName);
+							if (attribute.getId()
+									.equals(BugzillaRestCreateTaskSchema.getDefault().COMPONENT.getKey())) {
+								internalSetAttributeOptions4Product(attribute, actualProduct.getComponents());
+
+							} else if (attribute.getId()
+									.equals(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())) {
+								internalSetAttributeOptions4Product(attribute, actualProduct.getMilestones());
+							} else if (attribute.getId()
+									.equals(BugzillaRestCreateTaskSchema.getDefault().VERSION.getKey())) {
+								internalSetAttributeOptions4Product(attribute, actualProduct.getVersions());
+							}
 						}
 					}
 				}
@@ -66,17 +72,15 @@ public class BugzillaRestTaskAttributeMapper extends TaskAttributeMapper {
 		return super.getOptions(attribute);
 	}
 
-	private void internalSetAttributeOptions(TaskAttribute taskAttribute, SortableActiveEntry[] actualProductEntry) {
+	private void internalSetAttributeOptions4Product(TaskAttribute taskAttribute,
+			SortableActiveEntry[] actualProductEntry) {
 		boolean found = false;
 		String actualValue = taskAttribute.getValue();
-		taskAttribute.clearOptions();
 		for (SortableActiveEntry SortableActiveEntry : actualProductEntry) {
 			if (SortableActiveEntry.isActive()) {
 				// TODO: remove when we have offline cache for the repository configuration
 				taskAttribute.putOption(SortableActiveEntry.getName(), SortableActiveEntry.getName());
-				if (!found) {
-					found = actualValue.equals(SortableActiveEntry.getName());
-				}
+				found |= actualValue.equals(SortableActiveEntry.getName());
 			}
 		}
 		if (!found) {

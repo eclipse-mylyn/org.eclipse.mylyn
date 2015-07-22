@@ -16,7 +16,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
@@ -32,12 +34,14 @@ import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.ProductRespon
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.PutUpdateResult;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.RestResponse;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.VersionResponse;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.eclipse.osgi.util.NLS;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
@@ -65,7 +69,7 @@ public class BugzillaRestClient {
 
 	public BugzillaRestVersion getVersion(IOperationMonitor monitor) throws BugzillaRestException {
 
-		VersionResponse versionResponse = new BugzillaRestUnauthenticatedGetRequest<VersionResponse>(client, "/version",
+		VersionResponse versionResponse = new BugzillaRestUnauthenticatedGetRequest<VersionResponse>(client, "/version", //$NON-NLS-1$
 				new TypeToken<VersionResponse>() {
 				}).run(monitor);
 		return new BugzillaRestVersion(versionResponse.getVersion());
@@ -178,6 +182,33 @@ public class BugzillaRestClient {
 			}
 		}
 
+	}
+
+	public IStatus performQuery(TaskRepository taskRepository, final IRepositoryQuery query,
+			final TaskDataCollector resultCollector, IOperationMonitor monitor) throws BugzillaRestException {
+		String urlIDList = query.getUrl();
+		urlIDList = urlIDList.substring(urlIDList.indexOf("?") + 1); //$NON-NLS-1$
+		List<TaskData> taskDataArray = new BugzillaRestGetTaskData(client, connector, urlIDList, taskRepository)
+				.run(monitor);
+		for (final TaskData taskData : taskDataArray) {
+			taskData.setPartial(true);
+			SafeRunner.run(new ISafeRunnable() {
+
+				@Override
+				public void run() throws Exception {
+					resultCollector.accept(taskData);
+				}
+
+				@Override
+				public void handleException(Throwable exception) {
+					StatusHandler.log(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN,
+							NLS.bind("Unexpected error during result collection. TaskID {0} in repository {1}", //$NON-NLS-1$
+									taskData.getTaskId(), taskData.getRepositoryUrl()),
+							exception));
+				}
+			});
+		}
+		return Status.OK_STATUS;
 	}
 
 }
