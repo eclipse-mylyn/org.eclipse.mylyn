@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
+ *     Jeremie Bresson - Bug 473109
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.mediawiki.core.token;
 
@@ -14,20 +15,20 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
- * match [[internal links]]
- * 
+ * Match external links [http://example.org/ example site].
+ *
  * @author David Green
  */
 public class HyperlinkExternalReplacementToken extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "(?:\\[([^\\[\\]\\|\\s]+)(?:(?:\\||\\s)([^\\]]*))?\\s*\\])"; //$NON-NLS-1$
+		return "(?:\\[((mailto\\:|[a-zA-Z]+\\://)[^\\[\\]\\|\\s]+)(?:(?:\\||\\s)([^\\]]*))?\\s*\\])"; //$NON-NLS-1$
 	}
 
 	@Override
 	protected int getPatternGroupCount() {
-		return 2;
+		return 3;
 	}
 
 	@Override
@@ -39,7 +40,7 @@ public class HyperlinkExternalReplacementToken extends PatternBasedElement {
 		@Override
 		public void emit() {
 			String href = group(1);
-			String altText = group(2);
+			String altText = group(3);
 
 			if (altText == null || altText.trim().length() == 0) {
 				altText = href;

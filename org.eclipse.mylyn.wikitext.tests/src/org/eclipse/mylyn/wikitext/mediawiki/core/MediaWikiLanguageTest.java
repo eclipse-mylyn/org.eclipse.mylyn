@@ -485,9 +485,31 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 	}
 
 	@Test
+	public void testNotHyperlinkExternal() {
+		//Bug 473109
+		assertMarkup("<p>this [x] is not a link</p>", "this [x] is not a link");
+		assertMarkup("<p>Use another style [Human]</p>", "Use another style [Human]");
+		assertMarkup("<p>[test1://eclipse.org/] is not a link</p>", "[test1://eclipse.org/] is not a link");
+		assertMarkup("<p>No link [test:me]</p>", "No link [test:me]");
+	}
+
+	@Test
 	public void testHyperlinkExternal() {
 		assertMarkup("<p>a <a href=\"http://example.com\">http://example.com</a> hyperlink</p>",
 				"a [http://example.com] hyperlink");
+		assertMarkup("<p>a <a href=\"https://example.com\">https://example.com</a> hyperlink</p>",
+				"a [https://example.com] hyperlink");
+		assertMarkup("<p>a <a href=\"mailto:noreply@eclipse.org\">mailto:noreply@eclipse.org</a> hyperlink</p>",
+				"a [mailto:noreply@eclipse.org] hyperlink");
+		assertMarkup("<p>a <a href=\"gopher://example.com\">gopher://example.com</a> hyperlink</p>",
+				"a [gopher://example.com] hyperlink");
+		assertMarkup("<p>a <a href=\"news://example.com\">news://example.com</a> hyperlink</p>",
+				"a [news://example.com] hyperlink");
+		assertMarkup("<p>a <a href=\"ftp://example.com\">ftp://example.com</a> hyperlink</p>",
+				"a [ftp://example.com] hyperlink");
+		assertMarkup("<p>a <a href=\"irc://example.com\">irc://example.com</a> hyperlink</p>",
+				"a [irc://example.com] hyperlink");
+		assertMarkup("<p><a href=\"shh://eclipse.org/\">shh://eclipse.org/</a></p>", "[shh://eclipse.org/]");
 	}
 
 	@Test
@@ -500,6 +522,21 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 	public void testHyperlinkExternalWithAltText2() {
 		assertMarkup("<p>a <a href=\"http://example.com\">Example Title</a> hyperlink</p>",
 				"a [http://example.com Example Title] hyperlink");
+		assertMarkup("<p>a <a href=\"https://example.com\">Example Title</a> hyperlink</p>",
+				"a [https://example.com Example Title] hyperlink");
+		assertMarkup("<p>a <a href=\"mailto:noreply@eclipse.org\">Email</a> hyperlink</p>",
+				"a [mailto:noreply@eclipse.org Email] hyperlink");
+		assertMarkup("<p>a <a href=\"gopher://example.com\">Example Title</a> hyperlink</p>",
+				"a [gopher://example.com Example Title] hyperlink");
+		assertMarkup("<p>a <a href=\"news://example.com\">Example Title</a> hyperlink</p>",
+				"a [news://example.com Example Title] hyperlink");
+		assertMarkup("<p>a <a href=\"ftp://example.com\">Example Title</a> hyperlink</p>",
+				"a [ftp://example.com Example Title] hyperlink");
+		assertMarkup("<p>a <a href=\"irc://example.com\">Example Title</a> hyperlink</p>",
+				"a [irc://example.com Example Title] hyperlink");
+		assertMarkup(
+				"<p>git clone on <a href=\"git://git.eclipse.org/gitroot/mylyn/org.eclipse.mylyn.docs.git\">repo</a></p>",
+				"git clone on [git://git.eclipse.org/gitroot/mylyn/org.eclipse.mylyn.docs.git repo]");
 	}
 
 	@Test
