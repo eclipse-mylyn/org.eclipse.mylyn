@@ -61,7 +61,7 @@ public class AsciiDocPreProcessor {
 					int offset = 0;
 					while (attributesRef.find()) {
 						String postfix = line.substring(offset, attributesRef.start());
-						if (postfix.endsWith("\\")) { // attribute ref was quoted
+						if (postfix.endsWith("\\")) { // attribute ref was quoted //$NON-NLS-1$
 							processedMarkup.append(postfix.substring(0, postfix.length() - 1));
 							offset = attributesRef.start();
 						} else {
@@ -79,7 +79,7 @@ public class AsciiDocPreProcessor {
 					if (offset < line.length()) {
 						processedMarkup.append(line.substring(offset));
 					}
-					processedMarkup.append("\n");
+					processedMarkup.append("\n"); //$NON-NLS-1$
 				}
 
 				line = reader.readLine();

@@ -57,6 +57,20 @@ public class InlineImageReplacementToken extends PatternBasedElement {
 
 	private static class InlineImageReplacementTokenProcessor extends PatternBasedElementProcessor {
 
+		private static final String LINK = "link"; //$NON-NLS-1$
+
+		private static final String CAPTION = "caption"; //$NON-NLS-1$
+
+		private static final String IMAGE = "image"; //$NON-NLS-1$
+
+		private static final String TITLE = "title"; //$NON-NLS-1$
+
+		private static final String HEIGHT = "height"; //$NON-NLS-1$
+
+		private static final String WIDTH = "width"; //$NON-NLS-1$
+
+		private static final String ALT = "alt"; //$NON-NLS-1$
+
 		Pattern keyValuePattern = Pattern.compile("(.*)=\"(.*)\""); //$NON-NLS-1$
 
 		@Override
@@ -65,30 +79,30 @@ public class InlineImageReplacementToken extends PatternBasedElement {
 			String formatting = group(2);
 
 			List<String> positional = new ArrayList<>();
-			positional.add("alt");
-			positional.add("width");
-			positional.add("height");
+			positional.add(ALT);
+			positional.add(WIDTH);
+			positional.add(HEIGHT);
 
 			Map<String, String> properties = getFormattingProperties(formatting, positional);
 
-			if (!properties.containsKey("alt") || properties.get("alt").isEmpty()) {
+			if (!properties.containsKey(ALT) || properties.get(ALT).isEmpty()) {
 				// if no alt provided make one up using base filename
 				// of source image name.
-				int end = src.lastIndexOf(".");
+				int end = src.lastIndexOf("."); //$NON-NLS-1$
 
 				if (end != -1) {
 					String firstSrc = src.substring(0, end);
-					int start = Math.max(firstSrc.lastIndexOf("/") + 1, 0);
-					properties.put("alt", firstSrc.substring(start));
+					int start = Math.max(firstSrc.lastIndexOf("/") + 1, 0); //$NON-NLS-1$
+					properties.put(ALT, firstSrc.substring(start));
 				} else {
-					properties.put("alt", src);
+					properties.put(ALT, src);
 				}
 
 			}
 
 			// TODO: honor imagedir attribute?
 
-			if (group(0).startsWith("image::")) { // imageblock
+			if (group(0).startsWith("image::")) { // imageblock //$NON-NLS-1$
 				Attributes imageSpanAttributes = new Attributes();
 				imageSpanAttributes.setCssClass("imageblock"); //$NON-NLS-1$
 
@@ -102,14 +116,14 @@ public class InlineImageReplacementToken extends PatternBasedElement {
 
 				builder.endBlock(); // content
 
-				if (properties.containsKey("title")) {
+				if (properties.containsKey(TITLE)) {
 					Attributes attr = new Attributes();
-					attr.setCssClass("title");
+					attr.setCssClass(TITLE);
 					builder.beginBlock(BlockType.DIV, attr);
-					if (properties.containsKey("caption")) { //$NON-NLS-1$
-						builder.characters(properties.get("caption")); //$NON-NLS-1$
+					if (properties.containsKey(CAPTION)) {
+						builder.characters(properties.get(CAPTION));
 					}
-					builder.characters(properties.get("title")); //$NON-NLS-1$
+					builder.characters(properties.get(TITLE));
 					builder.endBlock();
 				}
 
@@ -117,7 +131,7 @@ public class InlineImageReplacementToken extends PatternBasedElement {
 
 			} else { // inline image
 				Attributes imageBlockAttr = new Attributes();
-				imageBlockAttr.setCssClass("image"); //$NON-NLS-1$
+				imageBlockAttr.setCssClass(IMAGE);
 
 				builder.beginSpan(SpanType.SPAN, imageBlockAttr);
 				emitImage(builder, src, properties);
@@ -170,11 +184,11 @@ public class InlineImageReplacementToken extends PatternBasedElement {
 			ImageAttributes attributes = new ImageAttributes();
 			// TODO: find way to avoid unnecessary border=0 being added to
 			// output
-			attributes.setAlt(properties.get("alt")); //$NON-NLS-1$
+			attributes.setAlt(properties.get(ALT));
 
-			if (properties.containsKey("height")) { //$NON-NLS-1$
+			if (properties.containsKey(HEIGHT)) {
 				try {
-					int height = Integer.parseInt(properties.get("height")); //$NON-NLS-1$
+					int height = Integer.parseInt(properties.get(HEIGHT));
 					attributes.setHeight(height);
 				} catch (NumberFormatException nfe) {
 					// ignore
@@ -182,9 +196,9 @@ public class InlineImageReplacementToken extends PatternBasedElement {
 
 			}
 
-			if (properties.containsKey("width")) { //$NON-NLS-1$
+			if (properties.containsKey(WIDTH)) {
 				try {
-					int width = Integer.parseInt(properties.get("width")); //$NON-NLS-1$
+					int width = Integer.parseInt(properties.get(WIDTH));
 					attributes.setWidth(width);
 				} catch (NumberFormatException nfe) {
 					// ignore
@@ -192,10 +206,10 @@ public class InlineImageReplacementToken extends PatternBasedElement {
 
 			}
 
-			if (properties.containsKey("link")) { //$NON-NLS-1$
+			if (properties.containsKey(LINK)) {
 				Attributes linkAttributes = new Attributes();
-				linkAttributes.setCssClass("image"); //$NON-NLS-1$
-				builder.imageLink(linkAttributes, attributes, properties.get("link"), src); //$NON-NLS-1$
+				linkAttributes.setCssClass(IMAGE);
+				builder.imageLink(linkAttributes, attributes, properties.get(LINK), src);
 			} else {
 				builder.image(attributes, src);
 			}
