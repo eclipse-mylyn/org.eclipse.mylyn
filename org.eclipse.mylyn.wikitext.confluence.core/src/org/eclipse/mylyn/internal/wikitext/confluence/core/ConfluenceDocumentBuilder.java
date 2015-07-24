@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.wikitext.confluence.core;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -26,11 +28,12 @@ import org.eclipse.mylyn.wikitext.core.parser.HtmlParser;
 import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.builder.AbstractMarkupDocumentBuilder;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.base.Strings;
 
 /**
  * a document builder that emits Confluence markup
- *
+ * 
  * @see HtmlParser
  * @author David Green
  * @since 1.6
@@ -40,6 +43,8 @@ import com.google.common.base.Strings;
 public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	private static final Pattern PATTERN_MULTIPLE_NEWLINES = Pattern.compile("(\r\n|\r|\n){2,}"); //$NON-NLS-1$
+
+	private static final CharMatcher SPAN_MARKUP_CHARACTERS = CharMatcher.anyOf("*_+-^~{}[]?%@"); //$NON-NLS-1$
 
 	private final Map<String, String> entityToLiteral = new HashMap<String, String>();
 
@@ -128,22 +133,30 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			if (requireAdjacentSeparator) {
 				clearRequireAdjacentSeparator();
 			}
+
+			// Emit here so that nested blocks can detect parent block type
+			emitPrefix();
 		}
 
 		@Override
-		public void close() throws IOException {
+		public final void close() throws IOException {
 			Writer thisContent = popWriter();
+			String content = thisContent.toString();
+			boolean contentIsEmpty = content.equals(prefix);
 
-			final String content = thisContent.toString();
+			if (!contentIsEmpty || emitWhenEmpty) {
+				checkState(content.startsWith(prefix), "Expected content to start with prefix \"%s\"", content, prefix); //$NON-NLS-1$
+				content = content.substring(prefix.length());
 
-			if (content.length() > 0 || emitWhenEmpty) {
-				boolean extendedBlock = isExtended(content);
-
-				if (requireAdjacentSeparator) {
+				if (requireAdjacentSeparator && !isSpanSuffixAdjacentToSpanPrefix()) {
 					requireAdjacentSeparator();
+				} else {
+					clearRequireAdjacentSeparator();
 				}
 
-				emitContent(content, extendedBlock);
+				emitPrefix();
+				emitContent(content);
+				emitSuffix(content);
 
 				if (requireAdjacentSeparator) {
 					requireAdjacentSeparator();
@@ -154,11 +167,23 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			consecutiveLineBreakCount = 0;
 		}
 
-		protected void emitContent(final String content, final boolean extended) throws IOException {
-			final String prefix = extended ? this.prefix.replace(".", "..") : this.prefix; //$NON-NLS-1$//$NON-NLS-2$
-			final String suffix = extended ? this.suffix + "\n" : this.suffix; //$NON-NLS-1$
+		private boolean isSpanSuffixAdjacentToSpanPrefix() {
+			if (!Strings.isNullOrEmpty(prefix) && isSpanMarkup(getLastChar()) && isSpanMarkup(prefix.charAt(0))) {
+				return true;
+			}
+			return false;
+		}
+
+		protected void emitPrefix() throws IOException {
 			ConfluenceDocumentBuilder.this.emitContent(prefix);
+		}
+
+		protected void emitContent(String content) throws IOException {
 			ConfluenceDocumentBuilder.this.emitContent(content);
+		}
+
+		private void emitSuffix(String content) throws IOException {
+			final String suffix = isExtended(content) ? this.suffix + "\n" : this.suffix; //$NON-NLS-1$
 			ConfluenceDocumentBuilder.this.emitContent(suffix);
 		}
 
@@ -181,27 +206,27 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		private final LinkAttributes attributes;
 
 		private LinkBlock(LinkAttributes attributes) {
-			super(null, "", "", true, true, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
+			super(null, "[", "]", true, true, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			this.attributes = attributes;
 		}
 
 		@Override
-		protected void emitContent(String content, boolean extended) throws IOException {
+		protected void emitContent(String content) throws IOException {
 			//[Example|http://example.com|title]
 			// [Example|http://example.com]
-			ConfluenceDocumentBuilder.this.emitContent('[');
+			String linkContent = content;
 			if (!Strings.isNullOrEmpty(content)) {
-				ConfluenceDocumentBuilder.this.emitContent(content);
-				ConfluenceDocumentBuilder.this.emitContent(" | "); //$NON-NLS-1$
+				linkContent += " | "; //$NON-NLS-1$
 			}
 			if (attributes.getHref() != null) {
-				ConfluenceDocumentBuilder.this.emitContent(attributes.getHref());
+				linkContent += attributes.getHref();
 			}
 			if (!Strings.isNullOrEmpty(attributes.getTitle())) {
-				ConfluenceDocumentBuilder.this.emitContent(" | "); //$NON-NLS-1$
-				ConfluenceDocumentBuilder.this.emitContent(attributes.getTitle());
+				linkContent += " | "; //$NON-NLS-1$
+				linkContent += attributes.getTitle();
 			}
-			ConfluenceDocumentBuilder.this.emitContent(']');
+
+			super.emitContent(linkContent);
 		}
 	}
 
@@ -211,12 +236,12 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		}
 
 		@Override
-		protected void emitContent(String content, boolean extended) throws IOException {
-			if (content.length() == 0) {
+		protected void emitContent(String content) throws IOException {
+			if (Strings.isNullOrEmpty(content)) {
 				content = " "; //$NON-NLS-1$
 			}
 			content = content.replaceAll("(\\r|\\n)+", " "); //$NON-NLS-1$ //$NON-NLS-2$
-			super.emitContent(content, extended);
+			super.emitContent(content);
 		}
 	}
 
@@ -367,6 +392,15 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		String attributeMarkup = ""; //$NON-NLS-1$
 
 		return attributeMarkup;
+	}
+
+	@Override
+	protected boolean isSeparator(int i) {
+		return !isSpanMarkup((char) i) && super.isSeparator(i);
+	}
+
+	private boolean isSpanMarkup(char character) {
+		return SPAN_MARKUP_CHARACTERS.matches(character);
 	}
 
 	@Override
