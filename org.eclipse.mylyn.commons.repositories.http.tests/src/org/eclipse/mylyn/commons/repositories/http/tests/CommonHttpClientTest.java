@@ -43,6 +43,7 @@ import org.eclipse.mylyn.commons.repositories.http.core.HttpUtil;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.commons.repositories.http.core.PollingSslProtocolSocketFactory;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -58,6 +59,7 @@ public class CommonHttpClientTest {
 	}
 
 	@Test
+	@Ignore
 	public void testCertificateAuthenticationCertificate() throws Exception {
 		if (CommonTestUtil.isCertificateAuthBroken() || CommonTestUtil.isBehindProxy()) {
 			System.err.println("Skipped CommonHttpClientTest.testCertificateAuthenticationCertificate() due to incompatible JVM");
@@ -84,6 +86,7 @@ public class CommonHttpClientTest {
 	}
 
 	@Test(expected = SSLException.class)
+	@Ignore
 	public void testCertificateAuthenticationCertificateReset() throws Exception {
 		if (CommonTestUtil.isCertificateAuthBroken() || CommonTestUtil.isBehindProxy()) {
 			// bug 369805
