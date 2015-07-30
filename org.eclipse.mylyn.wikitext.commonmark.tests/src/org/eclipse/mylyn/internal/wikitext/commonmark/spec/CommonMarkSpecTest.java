@@ -49,23 +49,53 @@ import com.google.common.io.Resources;
 @RunWith(Parameterized.class)
 public class CommonMarkSpecTest {
 
+	private static final String SPEC_VERSION = "0.21";
+
 	private static final URI COMMONMARK_SPEC_URI = URI
-			.create("https://raw.githubusercontent.com/jgm/CommonMark/0.19/spec.txt");
+			.create(String.format("https://raw.githubusercontent.com/jgm/CommonMark/%s/spec.txt", SPEC_VERSION));
 
 	private static final Set<String> HEADING_EXCLUSIONS = ImmutableSet.of();
 
-	private static final Set<Integer> LINE_EXCLUSIONS = ImmutableSet.of(256, // Tab expansion
-			263, // Tab expansion
-			2010, // Link reference definitions
-			3197, // List items
-			3220, // List items
-			3232, // List items
-			3248, // List items
-			4071, // Lists
-			4088, // Lists
-			4350, // Entities
-			4519, // Code spans
-			7068 // Raw HTML
+	private static final Set<Integer> LINE_EXCLUSIONS = ImmutableSet.of(//
+			281, // Tabs
+			1831, // HTML blocks
+			1843, // HTML blocks
+			1853, // HTML blocks
+			1869, // HTML blocks
+			1883, // HTML blocks
+			1915, // HTML blocks
+			2008, // HTML blocks
+			2016, // HTML blocks
+			2054, // HTML blocks
+			2070, // HTML blocks
+			2078, // HTML blocks
+			2399, // Link reference definitions
+			2478, // Link reference definitions
+			2515, // Link reference definitions
+			3380, // List items
+			3404, // List items
+			3766, // List items
+			3789, // List items
+			3801, // List items
+			3817, // List items
+			4401, // Lists
+			4425, // Lists
+			4664, // Lists
+			4681, // Lists
+			4814, // Backslash escapes
+			4863, // Entities
+			4880, // Entities
+			4928, // Entities
+			4948, // Entities
+			5117, // Code spans
+			6505, // Links
+			6965, // Links
+			6974, // Links
+			7646, // Raw HTML
+			7703, // Raw HTML
+			7737, // Raw HTML
+			7772, // Raw HTML
+			7780 // Raw HTML
 	);
 
 	public static class Expectation {
@@ -180,7 +210,7 @@ public class CommonMarkSpecTest {
 			tmpFolder.mkdir();
 		}
 		assertTrue(tmpFolder.getAbsolutePath(), tmpFolder.exists());
-		File spec = new File(tmpFolder, "spec.txt");
+		File spec = new File(tmpFolder, String.format("spec%s.txt", SPEC_VERSION));
 		if (!spec.exists()) {
 			try (FileOutputStream out = new FileOutputStream(spec)) {
 				Resources.copy(COMMONMARK_SPEC_URI.toURL(), out);
