@@ -58,7 +58,7 @@ public class CommonMarkAsserts {
 			StringWriter out = new StringWriter();
 			DocumentBuilder builder = createDocumentBuilder(out);
 			HtmlParser.instance().parse(new InputSource(new StringReader(html)), builder);
-			return out.toString();
+			return out.toString().trim();
 		} catch (IOException | SAXException e) {
 			throw new RuntimeException(html, e);
 		}

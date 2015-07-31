@@ -37,7 +37,7 @@ import com.google.common.collect.ImmutableSet;
 public class ParagraphBlock extends SourceBlock {
 
 	private final Set<Class<? extends SourceBlock>> INTERRUPTION_EXCLUSIONS = ImmutableSet.of(IndentedCodeBlock.class,
-			SetextHeaderBlock.class);
+			SetextHeaderBlock.class, HtmlType7Block.class);
 
 	@Override
 	public void createContext(ProcessingContextBuilder contextBuilder, LineSequence lineSequence) {

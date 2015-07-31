@@ -33,7 +33,7 @@ public class HtmlTagSpan extends SourceSpan {
 
 	private static final String TAG = "<[a-zA-Z_][a-zA-Z_:0-9]*" + ATTRIBUTE + "*\\s*/?>";
 
-	private static final String CLOSE_TAG = "</[a-zA-Z_][a-zA-Z_:0-9]*\\s*>";
+	private static final String CLOSE_TAG = "</[a-zA-Z_][a-zA-Z_:0-9-]*\\s*>";
 
 	private static final String COMMENT = "<!--([^-]+|[-][^-]+)*-->";
 
