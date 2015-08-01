@@ -37,7 +37,6 @@ public abstract class BugzillaRestAuthenticatedPutRequest<T> extends BugzillaRes
 
 	public BugzillaRestAuthenticatedPutRequest(BugzillaRestHttpClient client) {
 		super(client);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -46,9 +45,8 @@ public abstract class BugzillaRestAuthenticatedPutRequest<T> extends BugzillaRes
 		if (credentials == null) {
 			throw new IllegalStateException("Authentication requested without valid credentials");
 		}
-		HttpRequestBase request = new HttpGet(baseUrl()
-				+ MessageFormat.format("/login?login={0}&password={1}", new Object[] { credentials.getUserName(),
-						credentials.getPassword() }));
+		HttpRequestBase request = new HttpGet(baseUrl() + MessageFormat.format("/login?login={0}&password={1}",
+				new Object[] { credentials.getUserName(), credentials.getPassword() }));
 		request.setHeader(CONTENT_TYPE, TEXT_XML_CHARSET_UTF_8);
 		request.setHeader(ACCEPT, APPLICATION_JSON);
 		HttpResponse response = getClient().execute(request, monitor);

@@ -92,7 +92,7 @@ public class BugzillaRestClient {
 	}
 
 	public <R extends RestResponse<E>, E extends Named> Map<String, E> retrieveItems(IOperationMonitor monitor,
-			String path, TypeToken typeToken) throws BugzillaRestException {
+			String path, TypeToken<?> typeToken) throws BugzillaRestException {
 		R response = new BugzillaRestAuthenticatedGetRequest<R>(client, path, typeToken).run(monitor);
 		E[] members = response.getArray();
 		return Maps.uniqueIndex(Lists.newArrayList(members), new Function<E, String>() {
@@ -103,7 +103,7 @@ public class BugzillaRestClient {
 	}
 
 	private Map<String, Field> getFields(IOperationMonitor monitor) throws BugzillaRestException {
-		return retrieveItems(monitor, "/field/bug?", new TypeToken<FieldResponse>() {
+		return retrieveItems(monitor, "/field/bug?", new TypeToken<FieldResponse>() { //$NON-NLS-1$
 		});
 	}
 
@@ -113,7 +113,7 @@ public class BugzillaRestClient {
 	}
 
 	public ParameterResponse getParameters(IOperationMonitor monitor) throws BugzillaRestException {
-		return new BugzillaRestAuthenticatedGetRequest<ParameterResponse>(client, "/parameters?",
+		return new BugzillaRestAuthenticatedGetRequest<ParameterResponse>(client, "/parameters?", //$NON-NLS-1$
 				new TypeToken<ParameterResponse>() {
 				}).run(monitor);
 	}

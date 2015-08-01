@@ -13,8 +13,6 @@ package org.eclipse.mylyn.internal.bugzilla.rest.core.response.data;
 
 public class Product implements Named {
 
-	private static final long serialVersionUID = -8710729175326843083L;
-
 	private int id;
 
 	private String name;

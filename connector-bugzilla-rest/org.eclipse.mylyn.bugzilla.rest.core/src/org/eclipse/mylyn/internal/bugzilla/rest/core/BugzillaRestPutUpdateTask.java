@@ -21,6 +21,9 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.LoginToken;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.PutUpdateResult;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -144,8 +147,8 @@ public class BugzillaRestPutUpdateTask extends BugzillaRestAuthenticatedPutReque
 
 		@Override
 		public OldAttributes read(JsonReader in) throws IOException {
-			// TODO Auto-generated method stub
-			return null;
+			throw new UnsupportedOperationException(
+					"TaskAttributeTypeAdapter in BugzillaRestPutUpdateTask only supports write"); //$NON-NLS-1$
 		}
 
 	}
@@ -179,8 +182,8 @@ public class BugzillaRestPutUpdateTask extends BugzillaRestAuthenticatedPutReque
 			StringEntity requestEntity = new StringEntity(gson.toJson(oldAttributes));
 			request.setEntity(requestEntity);
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			com.google.common.base.Throwables.propagate(new CoreException(
+					new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, "Can not build HttpRequest", e))); //$NON-NLS-1$
 		}
 		return request;
 	}

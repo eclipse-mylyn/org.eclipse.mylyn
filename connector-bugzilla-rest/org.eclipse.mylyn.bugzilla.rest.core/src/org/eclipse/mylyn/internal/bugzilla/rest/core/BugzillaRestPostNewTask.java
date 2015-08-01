@@ -104,8 +104,8 @@ public class BugzillaRestPostNewTask extends BugzillaRestAuthenticatedPostReques
 
 		@Override
 		public TaskData read(JsonReader in) throws IOException {
-			// TODO Auto-generated method stub
-			return null;
+			throw new UnsupportedOperationException(
+					"TaskAttributeTypeAdapter in BugzillaRestPostNewTask only supports write"); //$NON-NLS-1$
 		}
 
 	}
@@ -125,7 +125,7 @@ public class BugzillaRestPostNewTask extends BugzillaRestAuthenticatedPostReques
 			StringEntity requestEntity = new StringEntity(gson.toJson(taskData));
 			request.setEntity(requestEntity);
 		} catch (UnsupportedEncodingException e) {
-			throw new IOException("could not build REST String", e);
+			throw new IOException("could not build REST String", e); //$NON-NLS-1$
 		}
 		return request;
 	}
@@ -150,9 +150,9 @@ public class BugzillaRestPostNewTask extends BugzillaRestAuthenticatedPostReques
 		if (statusCode != HttpURLConnection.HTTP_BAD_REQUEST && statusCode != HttpURLConnection.HTTP_OK) {
 			if (statusCode == HttpStatus.SC_NOT_FOUND) {
 				throw new BugzillaRestResourceNotFoundException(
-						NLS.bind("Requested resource ''{0}'' does not exist", response.getRequestPath()));
+						NLS.bind("Requested resource ''{0}'' does not exist", response.getRequestPath())); //$NON-NLS-1$
 			}
-			throw new BugzillaRestException(NLS.bind("Unexpected response from Bugzilla REST server for ''{0}'': {1}",
+			throw new BugzillaRestException(NLS.bind("Unexpected response from Bugzilla REST server for ''{0}'': {1}", //$NON-NLS-1$
 					response.getRequestPath(), HttpUtil.getStatusText(statusCode)));
 		}
 
@@ -186,7 +186,7 @@ public class BugzillaRestPostNewTask extends BugzillaRestAuthenticatedPostReques
 		default:
 			BugzillaRestStatus status = parseErrorFromJson(in);
 			throw new BugzillaRestException(
-					NLS.bind("{2}  (status: {1} from {0})", new String[] { response.getRequestPath(),
+					NLS.bind("{2}  (status: {1} from {0})", new String[] { response.getRequestPath(), //$NON-NLS-1$
 							HttpUtil.getStatusText(response.getStatusCode()), status.getMessage() }));
 		}
 	}

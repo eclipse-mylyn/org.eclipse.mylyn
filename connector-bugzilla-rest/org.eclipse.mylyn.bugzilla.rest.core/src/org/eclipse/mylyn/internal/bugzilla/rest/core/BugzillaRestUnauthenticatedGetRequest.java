@@ -16,7 +16,7 @@ import com.google.gson.reflect.TypeToken;
 public class BugzillaRestUnauthenticatedGetRequest<T> extends BugzillaRestAuthenticatedGetRequest<T> {
 
 	public BugzillaRestUnauthenticatedGetRequest(BugzillaRestHttpClient client, String urlSuffix,
-			TypeToken responseType) {
+			TypeToken<?> responseType) {
 		super(client, urlSuffix, responseType);
 	}
 

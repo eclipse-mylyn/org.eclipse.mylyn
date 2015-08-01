@@ -36,10 +36,10 @@ public class BugzillaRestAuthenticatedGetRequest<T> extends BugzillaRestRequest<
 
 	private final String urlSuffix;
 
-	private final TypeToken responseType;
+	private final TypeToken<?> responseType;
 
 	public BugzillaRestAuthenticatedGetRequest(BugzillaRestHttpClient client, String urlSuffix,
-			TypeToken responseType) {
+			TypeToken<?> responseType) {
 		super(client);
 		this.urlSuffix = urlSuffix;
 		this.responseType = responseType;
@@ -49,9 +49,9 @@ public class BugzillaRestAuthenticatedGetRequest<T> extends BugzillaRestRequest<
 	protected void authenticate(IOperationMonitor monitor) throws IOException {
 		UserCredentials credentials = getClient().getLocation().getCredentials(AuthenticationType.REPOSITORY);
 		if (credentials == null) {
-			throw new IllegalStateException("Authentication requested without valid credentials");
+			throw new IllegalStateException("Authentication requested without valid credentials"); //$NON-NLS-1$
 		}
-		HttpRequestBase request = new HttpGet(baseUrl() + MessageFormat.format("/login?login={0}&password={1}",
+		HttpRequestBase request = new HttpGet(baseUrl() + MessageFormat.format("/login?login={0}&password={1}", //$NON-NLS-1$
 				new Object[] { credentials.getUserName(), credentials.getPassword() }));
 		request.setHeader(CONTENT_TYPE, TEXT_XML_CHARSET_UTF_8);
 		request.setHeader(ACCEPT, APPLICATION_JSON);
@@ -59,7 +59,7 @@ public class BugzillaRestAuthenticatedGetRequest<T> extends BugzillaRestRequest<
 		try {
 			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_UNAUTHORIZED) {
 				getClient().setAuthenticated(false);
-				throw new AuthenticationException("Authentication failed",
+				throw new AuthenticationException("Authentication failed", //$NON-NLS-1$
 						new AuthenticationRequest<AuthenticationType<UserCredentials>>(getClient().getLocation(),
 								AuthenticationType.REPOSITORY));
 			} else {
@@ -82,10 +82,10 @@ public class BugzillaRestAuthenticatedGetRequest<T> extends BugzillaRestRequest<
 		LoginToken token = ((BugzillaRestHttpClient) getClient()).getLoginToken();
 		if ((!(this instanceof BugzillaRestValidateRequest) && !(this instanceof BugzillaRestUnauthenticatedGetRequest))
 				&& token != null && bugUrl.length() > 0) {
-			if (!bugUrl.endsWith("?")) {
-				bugUrl += "&";
+			if (!bugUrl.endsWith("?")) { //$NON-NLS-1$
+				bugUrl += "&"; //$NON-NLS-1$
 			}
-			bugUrl += "token=" + token.getToken();
+			bugUrl += "token=" + token.getToken(); //$NON-NLS-1$
 		}
 		HttpRequestBase request = new HttpGet(baseUrl() + bugUrl);
 		request.setHeader(CONTENT_TYPE, TEXT_XML_CHARSET_UTF_8);

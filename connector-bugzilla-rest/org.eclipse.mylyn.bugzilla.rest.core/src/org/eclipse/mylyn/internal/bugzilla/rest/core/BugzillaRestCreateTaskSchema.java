@@ -25,18 +25,18 @@ public class BugzillaRestCreateTaskSchema extends AbstractTaskSchema {
 		return instance;
 	}
 
-	private static ImmutableMap<String, String> attribute2FieldMapper = new ImmutableMap.Builder()
-			.put(getDefault().SUMMARY.getKey(), "summary")
-			.put(getDefault().DESCRIPTION.getKey(), "description")
-			.put(getDefault().OPERATION.getKey(), "status")
-			.put(getDefault().PRODUCT.getKey(), "product")
-			.put(getDefault().COMPONENT.getKey(), "component")
-			.put(getDefault().CC.getKey(), "cc")
-			.put(getDefault().SEVERITY.getKey(), "severity")
-			.put(getDefault().PRIORITY.getKey(), "priority")
-			.put(getDefault().ASSIGNED_TO.getKey(), "assigned_to")
-			.put(getDefault().OS.getKey(), "op_sys")
-			.put(getDefault().VERSION.getKey(), "version")
+	private static ImmutableMap<String, String> attribute2FieldMapper = new ImmutableMap.Builder<String, String>()
+			.put(getDefault().SUMMARY.getKey(), "summary") //$NON-NLS-1$
+			.put(getDefault().DESCRIPTION.getKey(), "description") //$NON-NLS-1$
+			.put(getDefault().OPERATION.getKey(), "status") //$NON-NLS-1$
+			.put(getDefault().PRODUCT.getKey(), "product") //$NON-NLS-1$
+			.put(getDefault().COMPONENT.getKey(), "component") //$NON-NLS-1$
+			.put(getDefault().CC.getKey(), "cc") //$NON-NLS-1$
+			.put(getDefault().SEVERITY.getKey(), "severity") //$NON-NLS-1$
+			.put(getDefault().PRIORITY.getKey(), "priority") //$NON-NLS-1$
+			.put(getDefault().ASSIGNED_TO.getKey(), "assigned_to") //$NON-NLS-1$
+			.put(getDefault().OS.getKey(), "op_sys") //$NON-NLS-1$
+			.put(getDefault().VERSION.getKey(), "version") //$NON-NLS-1$
 			.build();
 
 	public static String getFieldNameFromAttributeName(String attributeName) {

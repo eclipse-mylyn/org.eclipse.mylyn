@@ -22,37 +22,37 @@ public class BugzillaRestTaskSchema extends AbstractTaskSchema {
 
 	private static final BugzillaRestTaskSchema instance = new BugzillaRestTaskSchema();
 
-	private static ImmutableMap<String, String> field2AttributeFieldMapper = new ImmutableMap.Builder()
-			.put("summary", getDefault().SUMMARY.getKey())
-			.put("description", getDefault().DESCRIPTION.getKey())
-			.put("status", getDefault().STATUS.getKey())
-			.put("product", getDefault().PRODUCT.getKey())
-			.put("component", getDefault().COMPONENT.getKey())
-			.put("CC", getDefault().CC.getKey())
-			.put("severity", getDefault().SEVERITY.getKey())
-			.put("priority", getDefault().PRIORITY.getKey())
-			.put("assigned_to", getDefault().ASSIGNED_TO.getKey())
-			.put("op_sys", getDefault().OS.getKey())
-			.put("resolution", getDefault().RESOLUTION.getKey())
-			.put("version", getDefault().VERSION.getKey())
-			.put("dup_id", getDefault().DUPE_OF.getKey())
+	private static ImmutableMap<String, String> field2AttributeFieldMapper = new ImmutableMap.Builder<String, String>()
+			.put("summary", getDefault().SUMMARY.getKey()) //$NON-NLS-1$
+			.put("description", getDefault().DESCRIPTION.getKey()) //$NON-NLS-1$
+			.put("status", getDefault().STATUS.getKey()) //$NON-NLS-1$
+			.put("product", getDefault().PRODUCT.getKey()) //$NON-NLS-1$
+			.put("component", getDefault().COMPONENT.getKey()) //$NON-NLS-1$
+			.put("CC", getDefault().CC.getKey()) //$NON-NLS-1$
+			.put("severity", getDefault().SEVERITY.getKey()) //$NON-NLS-1$
+			.put("priority", getDefault().PRIORITY.getKey()) //$NON-NLS-1$
+			.put("assigned_to", getDefault().ASSIGNED_TO.getKey()) //$NON-NLS-1$
+			.put("op_sys", getDefault().OS.getKey()) //$NON-NLS-1$
+			.put("resolution", getDefault().RESOLUTION.getKey()) //$NON-NLS-1$
+			.put("version", getDefault().VERSION.getKey()) //$NON-NLS-1$
+			.put("dup_id", getDefault().DUPE_OF.getKey()) //$NON-NLS-1$
 			.build();
 
-	private static ImmutableMap<String, String> attribute2FieldMapper = new ImmutableMap.Builder()
-			.put(getDefault().SUMMARY.getKey(), "summary")
-			.put(getDefault().DESCRIPTION.getKey(), "description")
-			.put(getDefault().OPERATION.getKey(), "status")
-			.put(getDefault().PRODUCT.getKey(), "product")
-			.put(getDefault().COMPONENT.getKey(), "component")
-			.put(getDefault().CC.getKey(), "cc")
-			.put(getDefault().SEVERITY.getKey(), "severity")
-			.put(getDefault().PRIORITY.getKey(), "priority")
-			.put(getDefault().ASSIGNED_TO.getKey(), "assigned_to")
-			.put(getDefault().OS.getKey(), "op_sys")
-			.put(getDefault().VERSION.getKey(), "version")
-			.put(getDefault().RESOLUTION.getKey(), "resolution")
-			.put(getDefault().getDefault().DUPE_OF.getKey(), "dup_id")
-			.put("resolutionInput", "resolution")
+	private static ImmutableMap<String, String> attribute2FieldMapper = new ImmutableMap.Builder<String, String>()
+			.put(getDefault().SUMMARY.getKey(), "summary") //$NON-NLS-1$
+			.put(getDefault().DESCRIPTION.getKey(), "description") //$NON-NLS-1$
+			.put(getDefault().OPERATION.getKey(), "status") //$NON-NLS-1$
+			.put(getDefault().PRODUCT.getKey(), "product") //$NON-NLS-1$
+			.put(getDefault().COMPONENT.getKey(), "component") //$NON-NLS-1$
+			.put(getDefault().CC.getKey(), "cc") //$NON-NLS-1$
+			.put(getDefault().SEVERITY.getKey(), "severity") //$NON-NLS-1$
+			.put(getDefault().PRIORITY.getKey(), "priority") //$NON-NLS-1$
+			.put(getDefault().ASSIGNED_TO.getKey(), "assigned_to") //$NON-NLS-1$
+			.put(getDefault().OS.getKey(), "op_sys") //$NON-NLS-1$
+			.put(getDefault().VERSION.getKey(), "version") //$NON-NLS-1$
+			.put(getDefault().RESOLUTION.getKey(), "resolution") //$NON-NLS-1$
+			.put(getDefault().DUPE_OF.getKey(), "dup_id") //$NON-NLS-1$
+			.put("resolutionInput", "resolution") //$NON-NLS-1$  //$NON-NLS-2$
 			.build();
 
 	public static String getAttributeNameFromFieldName(String fieldName) {
