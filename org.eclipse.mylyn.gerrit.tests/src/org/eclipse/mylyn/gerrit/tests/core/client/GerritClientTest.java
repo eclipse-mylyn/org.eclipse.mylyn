@@ -27,6 +27,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.EnumSet;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -350,19 +351,6 @@ public class GerritClientTest extends TestCase {
 
 	@Test
 	public void testFetchLeftBinaryContent() throws Exception {
-		Id ps2 = Id.fromRef("refs/changes/34/1234/2");
-		Id ps4 = Id.fromRef("refs/changes/34/1234/4");
-		Key key = new Key(ps4, "/mylyn/gerrit/File.jpg");
-		PatchScriptX script = mock(PatchScriptX.class);
-
-		for (ChangeType type : ChangeType.values()) {
-			TestGerritClient client = createSpy();
-			doReturn(null).when(client).fetchBinaryContent(any(String.class), any(IProgressMonitor.class));
-			when(script.getChangeType()).thenReturn(type);
-			client.fetchLeftBinaryContent(script, key, ps2, new NullProgressMonitor());
-			verify(client, type == ChangeType.ADDED ? never() : times(1)).fetchBinaryContent(any(String.class),
-					any(IProgressMonitor.class));
-		}
 		fetchBinaryContentForSide(false);
 	}
 
@@ -378,9 +366,9 @@ public class GerritClientTest extends TestCase {
 		PatchScriptX script = mock(PatchScriptX.class);
 
 		for (ChangeType type : ChangeType.values()) {
-			when(script.getChangeType()).thenReturn(type);
 			TestGerritClient client = createSpy();
 			doReturn(null).when(client).fetchBinaryContent(any(String.class), any(IProgressMonitor.class));
+			when(script.getChangeType()).thenReturn(type);
 			VerificationMode fetchBinaryContentExpected = times(1);
 			if (rightSide) {
 				client.fetchRightBinaryContent(script, key, ps2, new NullProgressMonitor());
@@ -389,7 +377,7 @@ public class GerritClientTest extends TestCase {
 				}
 			} else {
 				client.fetchLeftBinaryContent(script, key, ps2, new NullProgressMonitor());
-				if (type == ChangeType.ADDED) {
+				if (!EnumSet.of(ChangeType.DELETED, ChangeType.MODIFIED).contains(type)) {
 					fetchBinaryContentExpected = never();
 				}
 			}

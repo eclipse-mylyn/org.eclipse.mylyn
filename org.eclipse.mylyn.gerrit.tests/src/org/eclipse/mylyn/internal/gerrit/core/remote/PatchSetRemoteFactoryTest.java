@@ -219,6 +219,20 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		assertPatchContent(patchScript, empty(), equalTo(fileContent3));
 	}
 
+	@Test
+	public void testCompareRenamedImage() throws Exception {
+		String fileName = "test.png";
+		String newFileName = "renamed-" + fileName;
+		String path = "testdata/binary/gerrit.png";
+		byte[] fileContent = commitAndRenameFile(fileName, newFileName, path);
+
+		PatchSetDetail detail2 = retrievePatchSetDetail("2");
+		PatchSetDetail detail3 = retrievePatchSetDetail("3");
+
+		PatchScriptX patchScript = loadPatchSetContent(newFileName, detail2, detail3);
+		assertPatchContent(patchScript, empty(), equalTo(fileContent));
+	}
+
 	private PatchScriptX loadPatchSetContent(String fileName, PatchSetDetail base, PatchSetDetail target)
 			throws GerritException {
 		PatchSetContent content = new PatchSetContent(base.getPatchSet(), target.getPatchSet());
@@ -255,6 +269,17 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 		reviewHarness.removeFile(fileName);
 		reviewHarness.commitAndPush(command);
 		reviewHarness.retrieve();
+	}
+
+	private byte[] commitAndRenameFile(String fileName, String newFileName, String path) throws Exception, IOException {
+		byte[] fileContent = commitFile(fileName, path);
+		File file = CommonTestUtil.getFile(this, path);
+		CommitCommand command = reviewHarness.createCommitCommand();
+		reviewHarness.removeFile(fileName);
+		reviewHarness.addFile(newFileName, file);
+		reviewHarness.commitAndPush(command);
+		reviewHarness.retrieve();
+		return fileContent;
 	}
 
 	@Test

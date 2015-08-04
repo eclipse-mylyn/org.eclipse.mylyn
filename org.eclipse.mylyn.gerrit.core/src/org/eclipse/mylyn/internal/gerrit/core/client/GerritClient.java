@@ -29,6 +29,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -455,7 +456,7 @@ public abstract class GerritClient extends ReviewsClient {
 
 	protected void fetchLeftBinaryContent(final PatchScriptX patchScript, final Patch.Key key,
 			final PatchSet.Id leftId, final IProgressMonitor monitor) throws GerritException {
-		if (patchScript.getChangeType() != ChangeType.ADDED) {
+		if (EnumSet.of(ChangeType.DELETED, ChangeType.MODIFIED).contains(patchScript.getChangeType())) {
 			byte[] binaryContent = fetchBinaryContent(getUrlForPatchSetOrBase(key, leftId), monitor);
 			patchScript.setBinaryA(binaryContent);
 		}
