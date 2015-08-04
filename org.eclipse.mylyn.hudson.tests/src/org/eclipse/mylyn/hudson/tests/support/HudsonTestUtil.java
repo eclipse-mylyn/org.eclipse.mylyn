@@ -16,6 +16,10 @@ import java.util.concurrent.Callable;
 
 import junit.framework.Assert;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.hudson.core.client.HudsonException;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
 
 /**
@@ -48,11 +52,19 @@ public class HudsonTestUtil {
 	public static <T> T poll(Callable<T> callable) throws Exception {
 		AssertionError lastException = null;
 		long startTime = System.currentTimeMillis();
+		int badGatewayCounter = 3;
 		while (System.currentTimeMillis() - startTime < POLL_TIMEOUT) {
 			try {
 				return callable.call();
 			} catch (AssertionError e) {
 				lastException = e;
+			} catch (HudsonException e) {
+				if (e.getMessage().contains("Bad Gateway") && badGatewayCounter-- > 0) {// log and try again
+					StatusHandler.log(new Status(IStatus.ERROR, "org.eclipse.mylyn.hudson.tests", "Bad Gateway #"
+							+ badGatewayCounter, e));
+				} else {
+					throw e;
+				}
 			}
 			Thread.sleep(POLL_INTERVAL);
 		}
