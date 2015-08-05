@@ -481,10 +481,6 @@
       <activation>
         <property>
           <name>user.name</name>
-          <value>hudsonbuild</value>
-        </property>
-        <property>
-          <name>user.name</name>
           <value>genie.mylyn</value>
         </property>
       </activation>
