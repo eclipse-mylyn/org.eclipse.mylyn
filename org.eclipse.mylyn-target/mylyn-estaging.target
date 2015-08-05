@@ -75,8 +75,8 @@
 <repository location="http://download.eclipse.org/releases/staging"/>
 </location>
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.egit.feature.group" version="4.1.0.201508021731"/>
-<unit id="org.eclipse.jgit.feature.group" version="4.1.0.201507292222"/>
+<unit id="org.eclipse.egit.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.jgit.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/egit/updates-nightly/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
