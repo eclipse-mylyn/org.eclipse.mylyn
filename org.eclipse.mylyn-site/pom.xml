@@ -28,6 +28,10 @@
           <name>user.name</name>
           <value>hudsonbuild</value>
         </property>
+        <property>
+          <name>user.name</name>
+          <value>genie.mylyn</value>
+        </property>
       </activation>
       <properties>
         <dist.archive>/home/data/httpd/download.eclipse.org/mylyn/drops</dist.archive>

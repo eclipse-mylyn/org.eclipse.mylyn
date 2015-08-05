@@ -483,6 +483,10 @@
           <name>user.name</name>
           <value>hudsonbuild</value>
         </property>
+        <property>
+          <name>user.name</name>
+          <value>genie.mylyn</value>
+        </property>
       </activation>
       <properties>
         <mylyn-credentials>/shared/mylyn/.credentials.properties</mylyn-credentials>
