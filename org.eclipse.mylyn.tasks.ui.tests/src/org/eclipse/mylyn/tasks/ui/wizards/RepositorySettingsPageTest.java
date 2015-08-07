@@ -25,10 +25,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardContainer;
-import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
-import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
-import org.eclipse.mylyn.internal.tasks.ui.wizards.NewRepositoryWizard;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.swt.widgets.Composite;
@@ -116,34 +113,69 @@ public class RepositorySettingsPageTest {
 
 	@Test
 	public void applyToNewRepository() {
-		NewRepositoryWizard wizard = mock(NewRepositoryWizard.class);
-		when(wizard.getBrand()).thenReturn("org.mylyn");
-		AbstractRepositorySettingsPage page = createPage(wizard);
 		TaskRepository repository = createTaskRepository();
+		repository.removeProperty(ITasksCoreConstants.PROPERTY_BRAND_ID);
+		AbstractRepositorySettingsPage page = createPage(null);
 
+		assertNull(repository.getProperty(ITasksCoreConstants.PROPERTY_BRAND_ID));
+		page.applyTo(repository);
+		assertNull(repository.getProperty(ITasksCoreConstants.PROPERTY_BRAND_ID));
+
+		page.setBrand("org.mylyn");
 		page.applyTo(repository);
 		assertEquals("org.mylyn", repository.getProperty(ITasksCoreConstants.PROPERTY_BRAND_ID));
 	}
 
 	@Test
 	public void applyToExistingRepository() {
-		EditRepositoryWizard wizard = mock(EditRepositoryWizard.class);
-		AbstractRepositorySettingsPage page = createPage(wizard);
 		TaskRepository repository = createTaskRepository();
+		repository.setProperty(ITasksCoreConstants.PROPERTY_BRAND_ID, "existing.brand");
+		AbstractRepositorySettingsPage page = createPage(repository);
 
-		page.applyTo(repository);
-		assertNull(repository.getProperty(ITasksCoreConstants.PROPERTY_BRAND_ID));
-
-		repository.setProperty(ITasksCoreConstants.PROPERTY_BRAND_ID, "org.mylyn");
+		page.setBrand("org.mylyn");
 		page.applyTo(repository);
 		assertEquals("org.mylyn", repository.getProperty(ITasksCoreConstants.PROPERTY_BRAND_ID));
 	}
 
-	protected AbstractRepositorySettingsPage createPage(Wizard wizard) {
-		AbstractRepositorySettingsPage page = spy(new RepositorySettingsPageWithNoCredentials(null));
+	@Test
+	public void applyNullBrandToExistingRepository() {
+		TaskRepository repository = createTaskRepository();
+		repository.setProperty(ITasksCoreConstants.PROPERTY_BRAND_ID, "existing.brand");
+		AbstractRepositorySettingsPage page = createPage(repository);
+
+		page.setBrand(null);
+		page.applyTo(repository);
+		assertEquals("existing.brand", repository.getProperty(ITasksCoreConstants.PROPERTY_BRAND_ID));
+	}
+
+	@Test
+	public void setsTitleFromBrand() {
+		AbstractRepositorySettingsPage page = createPage(null);
+		assertEquals("Title", page.getTitle());
+		page.setBrand("org.mylyn");
+		assertEquals("Label for org.mylyn", page.getTitle());
+	}
+
+	@Test
+	public void setsTitleFromBrandedRepository() {
+		TaskRepository repository = createTaskRepository();
+		repository.setProperty(ITasksCoreConstants.PROPERTY_BRAND_ID, "org.mylyn");
+		AbstractRepositorySettingsPage page = createPage(repository);
+		assertEquals("Label for org.mylyn", page.getTitle());
+	}
+
+	@Test
+	public void setsTitleFromUnbrandedRepository() {
+		TaskRepository repository = createTaskRepository();
+		repository.removeProperty(ITasksCoreConstants.PROPERTY_BRAND_ID);
+		AbstractRepositorySettingsPage page = createPage(repository);
+		assertEquals("Title", page.getTitle());
+	}
+
+	private AbstractRepositorySettingsPage createPage(TaskRepository repository) {
+		AbstractRepositorySettingsPage page = spy(new RepositorySettingsPageWithNoCredentials(repository));
 		doReturn("label").when(page).getRepositoryLabel();
 		when(page.needsProxy()).thenReturn(false);
-		when(page.getWizard()).thenReturn(wizard);
 		return page;
 	}
 

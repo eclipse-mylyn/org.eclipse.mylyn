@@ -30,6 +30,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.INewWizard;
@@ -142,10 +143,14 @@ public class NewRepositoryWizard extends Wizard implements INewWizard {
 			settingsPage = connectorUi.getSettingsPage(null);
 			if (settingsPage == null) {
 				TasksUiInternal.displayFrameworkError(NLS.bind(
-						"The connector implementation is incomplete: AbstractRepositoryConnectorUi.getSettingsPage() for connector ''{0}'' returned null. Please contact the vendor of the connector to resolve the problem.", connector.getConnectorKind())); //$NON-NLS-1$
+						"The connector implementation is incomplete: AbstractRepositoryConnectorUi.getSettingsPage() for connector ''{0}'' returned null. Please contact the vendor of the connector to resolve the problem.", //$NON-NLS-1$
+						connector.getConnectorKind()));
 			}
 			settingsPage.setWizard(this);
 			lastConnectorKind = connector.getConnectorKind();
+		}
+		if (settingsPage instanceof AbstractRepositorySettingsPage && brand != null) {
+			((AbstractRepositorySettingsPage) settingsPage).setBrand(brand);
 		}
 	}
 
@@ -158,7 +163,8 @@ public class NewRepositoryWizard extends Wizard implements INewWizard {
 					Messages.AddRepositoryAction_Do_not_show_again, false, preferenceStore, PREF_ADD_QUERY);
 			preferenceStore.setValue(PREF_ADD_QUERY, messageDialog.getToggleState());
 			if (messageDialog.getReturnCode() == IDialogConstants.YES_ID) {
-				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
+				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin
+						.getConnectorUi(taskRepository.getConnectorKind());
 				final IWizard queryWizard = connectorUi.getQueryWizard(taskRepository, null);
 				if (queryWizard instanceof Wizard) {
 					((Wizard) queryWizard).setForcePreviousAndNextButtons(true);
@@ -185,6 +191,7 @@ public class NewRepositoryWizard extends Wizard implements INewWizard {
 		this.showNewQueryPromptOnFinish = showNewQueryPromptOnFinish;
 	}
 
+	@Deprecated
 	public String getBrand() {
 		return brand;
 	}
