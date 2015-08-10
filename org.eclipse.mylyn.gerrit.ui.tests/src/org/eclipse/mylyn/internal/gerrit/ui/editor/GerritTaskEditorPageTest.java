@@ -121,6 +121,7 @@ public class GerritTaskEditorPageTest extends TestCase {
 		AbstractTaskEditorPart part = descriptor.createPart();
 		part.initialize(page);
 		assertThat(part, instanceOf(GerritAttributePart.class));
+		assertEquals(AbstractTaskEditorPage.PATH_ATTRIBUTES, descriptor.getPath());
 		List<TaskAttribute> overlayAttributes = ((GerritAttributePart) part).getOverlayAttributes();
 		assertEquals(2, overlayAttributes.size());
 		assertEquals(GerritQueryResultSchema.getDefault().PROJECT.getKey(), overlayAttributes.get(0).getId());

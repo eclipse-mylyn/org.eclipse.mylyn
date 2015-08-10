@@ -146,7 +146,7 @@ public class GerritTaskEditorPage extends AbstractReviewTaskEditorPage {
 				public AbstractTaskEditorPart createPart() {
 					return new GerritAttributePart();
 				}
-			};
+			}.setPath(PATH_ATTRIBUTES);
 		}
 		return descriptor;
 	}
