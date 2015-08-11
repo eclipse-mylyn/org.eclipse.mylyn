@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 
 public class HtmlType1Block extends AbstractHtmlBlock {
 
-	private final Pattern startPattern = Pattern.compile("\\s{0,3}<(?:pre|script|style)(\\s|>|$).*",
+	private final Pattern startPattern = Pattern.compile("\\s{0,3}(<(?:pre|script|style))(\\s|>|$).*",
 			Pattern.CASE_INSENSITIVE);
 
 	private final Pattern closePattern = Pattern.compile("\\s{0,3}</(?:pre|script|style)\\s*>",

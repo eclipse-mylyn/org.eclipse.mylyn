@@ -77,9 +77,7 @@ public class CommonMarkSpecTest {
 			5117, // Code spans
 			6505, // Links
 			6965, // Links
-			6974, // Links
-			7646, // Raw HTML
-			7737 // Raw HTML
+			6974 // Links
 	);
 
 	public static class Expectation {

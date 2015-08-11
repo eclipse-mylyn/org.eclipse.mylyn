@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 
 public class HtmlDoctypeBlock extends AbstractHtmlBlock {
 
-	private final Pattern startPattern = Pattern.compile("\\s{0,3}<![A-Z].*");
+	private final Pattern startPattern = Pattern.compile("\\s{0,3}(<![A-Z]).*");
 
 	private final Pattern closePattern = Pattern.compile(">");
 

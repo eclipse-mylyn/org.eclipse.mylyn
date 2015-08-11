@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 
 public class HtmlCdataBlock extends AbstractHtmlBlock {
 
-	private final Pattern startPattern = Pattern.compile("\\s{0,3}<!\\[CDATA\\[.*");
+	private final Pattern startPattern = Pattern.compile("\\s{0,3}(<!\\[CDATA\\[).*");
 
 	private final Pattern closePattern = Pattern.compile("]]>");
 

@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 
 public class HtmlProcessingInstructionBlock extends AbstractHtmlBlock {
 
-	private final Pattern startPattern = Pattern.compile("\\s{0,3}<\\?.*");
+	private final Pattern startPattern = Pattern.compile("\\s{0,3}(<\\?).*");
 
 	private final Pattern closePattern = Pattern.compile("\\?>");
 

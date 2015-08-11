@@ -26,6 +26,10 @@ public class HtmlTagSpanTest extends AbstractSourceSpanTest {
 		assertNoInline(createCursor("<one"));
 		assertNoInline(createCursor("< one>"));
 		assertNoInline(createCursor("<0one>"));
+		assertNoInline(createCursor("<!-- -- -->"));
+		assertNoInline(createCursor("<!--->"));
+		assertNoInline(createCursor("<!--> -->"));
+		assertNoInline(createCursor("<!---> -->"));
 		assertInline(HtmlTag.class, 0, 5, createCursor("<one>"));
 		assertInline(HtmlTag.class, 0, 5, createCursor("<one> two"));
 		assertInline(HtmlTag.class, 0, 22, createCursor("<onetwo three=\"four\"/>"));
@@ -41,6 +45,7 @@ public class HtmlTagSpanTest extends AbstractSourceSpanTest {
 		assertInline(HtmlTag.class, 0, 20, createCursor("<a zoop:33=zoop:33/>"));
 		assertInline(HtmlTag.class, 0, 4, createCursor("</a>"));
 		assertInline(HtmlTag.class, 0, 11, createCursor("<!-- c> -->"));
+		assertInline(HtmlTag.class, 0, 10, createCursor("<!-- - -->"));
 		assertInline(HtmlTag.class, 0, 8, createCursor("<? pi ?>"));
 		assertInline(HtmlTag.class, 0, 16, createCursor("<!DECL one two >"));
 		assertInline(HtmlTag.class, 0, 12, createCursor("<![CDATA[]]>"));
