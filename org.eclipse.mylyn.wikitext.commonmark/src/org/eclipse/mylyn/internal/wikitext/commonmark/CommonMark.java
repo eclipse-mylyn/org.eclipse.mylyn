@@ -18,6 +18,10 @@ import org.eclipse.mylyn.internal.wikitext.commonmark.blocks.FencedCodeBlock;
 import org.eclipse.mylyn.internal.wikitext.commonmark.blocks.HorizontalRuleBlock;
 import org.eclipse.mylyn.internal.wikitext.commonmark.blocks.HtmlBlock;
 import org.eclipse.mylyn.internal.wikitext.commonmark.blocks.HtmlType1Block;
+import org.eclipse.mylyn.internal.wikitext.commonmark.blocks.HtmlCommentBlock;
+import org.eclipse.mylyn.internal.wikitext.commonmark.blocks.HtmlProcessingInstructionBlock;
+import org.eclipse.mylyn.internal.wikitext.commonmark.blocks.HtmlDoctypeBlock;
+import org.eclipse.mylyn.internal.wikitext.commonmark.blocks.HtmlCdataBlock;
 import org.eclipse.mylyn.internal.wikitext.commonmark.blocks.HtmlType7Block;
 import org.eclipse.mylyn.internal.wikitext.commonmark.blocks.IndentedCodeBlock;
 import org.eclipse.mylyn.internal.wikitext.commonmark.blocks.ListBlock;
@@ -28,7 +32,8 @@ public class CommonMark {
 
 	private static final SourceBlocks SOURCE_BLOCKS = new SourceBlocks(new BlockQuoteBlock(), new AtxHeaderBlock(),
 			new HorizontalRuleBlock(), new ListBlock(), new SetextHeaderBlock(), new FencedCodeBlock(),
-			new IndentedCodeBlock(), new HtmlType1Block(), new HtmlBlock(), new HtmlType7Block(), new ParagraphBlock(),
+			new IndentedCodeBlock(), new HtmlType1Block(), new HtmlCommentBlock(), new HtmlProcessingInstructionBlock(),
+			new HtmlDoctypeBlock(), new HtmlCdataBlock(), new HtmlBlock(), new HtmlType7Block(), new ParagraphBlock(),
 			new EmptyBlock());
 
 	public static SourceBlocks sourceBlocks() {

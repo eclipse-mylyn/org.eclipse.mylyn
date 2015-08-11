@@ -58,11 +58,6 @@ public class CommonMarkSpecTest {
 
 	private static final Set<Integer> LINE_EXCLUSIONS = ImmutableSet.of(//
 			281, // Tabs
-			1915, // HTML blocks
-			2016, // HTML blocks
-			2054, // HTML blocks
-			2070, // HTML blocks
-			2078, // HTML blocks
 			2399, // Link reference definitions
 			2478, // Link reference definitions
 			2515, // Link reference definitions

@@ -11,9 +11,6 @@
 
 package org.eclipse.mylyn.internal.wikitext.commonmark.blocks;
 
-import static org.eclipse.mylyn.internal.wikitext.commonmark.blocks.HtmlConstants.HTML_TAG_NAME;
-import static org.eclipse.mylyn.internal.wikitext.commonmark.blocks.HtmlConstants.REPEATING_ATTRIBUTE;
-
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.internal.wikitext.commonmark.Line;
@@ -23,6 +20,23 @@ import org.eclipse.mylyn.internal.wikitext.commonmark.SourceBlock;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 
 public class HtmlType7Block extends SourceBlock {
+
+	private static final String ATTRIBUTE_VALUE_QUOTED = "\"[^<\"]*\"";
+
+	private static final String ATTRIBUTE_VALUE_SINGLEQUOTED = "'[^<']*'";
+
+	private static final String ATTRIBUTE_VALUE_UNQUOTED = "[^\"'<>=]+";
+
+	private static final String ATTRIBUTE_VALUE = "(?:" + ATTRIBUTE_VALUE_QUOTED + "|" + ATTRIBUTE_VALUE_SINGLEQUOTED
+			+ "|" + ATTRIBUTE_VALUE_UNQUOTED + ")";
+
+	private static final String ATTRIBUTE_NAME = "[a-zA-Z_][a-zA-Z0-9_:.-]*";
+
+	private static final String ATTRIBUTE = "(?:" + ATTRIBUTE_NAME + "(?:\\s*=\\s*" + ATTRIBUTE_VALUE + ")?)";
+
+	private static final String REPEATING_ATTRIBUTE = "(?:\\s+" + ATTRIBUTE + ")*";
+
+	private static final String HTML_TAG_NAME = "([a-zA-Z_][a-zA-Z0-9_:-]*)";
 
 	private final Pattern startPattern = Pattern.compile(
 			"\\s{0,3}<" + HTML_TAG_NAME + REPEATING_ATTRIBUTE + "\\s*>?\\s*",
