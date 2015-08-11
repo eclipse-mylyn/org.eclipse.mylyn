@@ -718,8 +718,7 @@ public class BugzillaClient {
 						InputStream stream = getResponseStream(postMethod, monitor);
 						try {
 							RepositoryQueryResultsFactory queryFactory = getQueryResultsFactory(stream);
-							int count = queryFactory.performQuery(repositoryUrl.toString(), collector, mapper,
-									TaskDataCollector.MAX_HITS);
+							int count = queryFactory.performQuery(repositoryUrl.toString(), collector, mapper);
 							return count > 0;
 						} finally {
 							stream.close();

@@ -118,8 +118,6 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 
 	}
 
-	public static final String MAX_HITS_REACHED = Messages.SynchronizeQueriesJob_Max_allowed_number_of_hits_returned_exceeded;
-
 	private final AbstractRepositoryConnector connector;
 
 	private final Set<RepositoryQuery> queries;
@@ -248,10 +246,11 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 			} catch (OperationCanceledException e) {
 				return Status.CANCEL_STATUS;
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Synchronization failed", e)); //$NON-NLS-1$
+				StatusHandler
+						.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Synchronization failed", e)); //$NON-NLS-1$
 			} catch (LinkageError e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
-						"Synchronization for connector ''{0}'' failed", connector.getConnectorKind()), e)); //$NON-NLS-1$
+				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+						NLS.bind("Synchronization for connector ''{0}'' failed", connector.getConnectorKind()), e)); //$NON-NLS-1$
 			} finally {
 				monitor.done();
 			}
@@ -311,11 +310,6 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		}
 		IStatus result = connector.performQuery(repository, repositoryQuery, collector, event, monitor);
 		if (result == null || result.isOK()) {
-			if (collector.getResultCount() >= TaskDataCollector.MAX_HITS) {
-				StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, MAX_HITS_REACHED + "\n" //$NON-NLS-1$
-						+ repositoryQuery.getSummary()));
-			}
-
 			Set<ITask> removedChildren = collector.getRemovedChildren();
 			if (!removedChildren.isEmpty()) {
 				taskList.removeFromContainer(repositoryQuery, removedChildren);

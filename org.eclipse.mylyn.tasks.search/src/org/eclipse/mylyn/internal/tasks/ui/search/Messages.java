@@ -47,8 +47,6 @@ public class Messages extends NLS {
 
 	public static String RepositorySearchResultView_Refine_Search_;
 
-	public static String SearchHitCollector_Max_allowed_number_of_hits_returned_exceeded;
-
 	public static String SearchHitCollector_Querying_Repository_;
 
 	public static String SearchHitCollector_Repository_connector_could_not_be_found;
@@ -56,8 +54,6 @@ public class Messages extends NLS {
 	public static String SearchHitCollector_Search_failed;
 
 	public static String SearchHitCollector_Search_cancelled;
-
-	public static String SearchHitCollector_Search_returned_maximum_number_of_hits;
 
 	public static String SearchResultsLabelProvider_OF;
 

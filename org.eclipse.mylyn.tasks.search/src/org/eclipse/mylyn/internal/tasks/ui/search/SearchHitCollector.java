@@ -22,7 +22,6 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
@@ -35,7 +34,7 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * Used for returning results from Eclipse Search view. Collects results of a repository search.
- * 
+ *
  * @author Rob Elves
  * @author Steffen Pingel
  */
@@ -112,18 +111,6 @@ public class SearchHitCollector extends TaskDataCollector implements ISearchQuer
 						TasksUiInternal.displayStatus(Messages.SearchHitCollector_Search_failed, status);
 					}
 				});
-			} else {
-				if (searchResult.getMatchCount() >= TaskDataCollector.MAX_HITS) {
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							TasksUiInternal.displayStatus(
-									Messages.SearchHitCollector_Search_returned_maximum_number_of_hits,
-									RepositoryStatus.createStatus(repository.getRepositoryUrl(), IStatus.WARNING,
-											TasksUiPlugin.ID_PLUGIN,
-											Messages.SearchHitCollector_Max_allowed_number_of_hits_returned_exceeded));
-						}
-					});
-				}
 			}
 		} else {
 			return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, IStatus.OK,

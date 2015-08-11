@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.IStatus;
 
 /**
  * This class is used for collecting tasks, e.g. when performing queries on a repository.
- * 
+ *
  * @author Rob Elves
  * @since 3.0
  */
@@ -24,6 +24,7 @@ public abstract class TaskDataCollector {
 	/**
 	 * @since 3.0
 	 */
+	@Deprecated
 	public static final int MAX_HITS = 5000;
 
 	public abstract void accept(TaskData taskData);
