@@ -40,9 +40,9 @@ public abstract class GradientDrawer {
 
 	private final Listener CATEGORY_GRADIENT_DRAWER = new Listener() {
 		public void handleEvent(Event event) {
-			if (shouldApplyGradient(event)) {
+			GC gc = event.gc;
+			if (shouldApplyGradient(event) && gc != null) {
 				Scrollable scrollable = (Scrollable) event.widget;
-				GC gc = event.gc;
 
 				Rectangle area = scrollable.getClientArea();
 				Rectangle rect = event.getBounds();
