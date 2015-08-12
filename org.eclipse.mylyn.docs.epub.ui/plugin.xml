@@ -21,5 +21,22 @@
          </command>
       </menuContribution>
    </extension>
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.core.runtime.xml"
+            file-extensions="opf"
+            id="org.eclipse.mylyn.docs.epub.ui.contentType.OPF"
+            name="Open Publication Format manifest (OPF)"
+            priority="normal">
+      </content-type>
+      <content-type
+            base-type="org.eclipse.core.runtime.xml"
+            file-extensions="ncx"
+            id="org.eclipse.mylyn.docs.epub.ui.contentType.NCX"
+            name="Navigation Control file for XML (NCX)"
+            priority="normal">
+      </content-type>
+   </extension>
 
 </plugin>
