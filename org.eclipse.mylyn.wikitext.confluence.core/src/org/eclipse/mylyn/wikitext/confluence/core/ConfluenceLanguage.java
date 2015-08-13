@@ -49,7 +49,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLineBreakRepla
 
 /**
  * A confluence language for parsing Confluence markup.
- *
+ * 
  * @author David Green
  * @since 1.0
  * @see <a href="http://confluence.atlassian.com/display/DOC/Confluence+Notation+Guide+Overview">Confluence Notation
@@ -58,7 +58,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLineBreakRepla
 public class ConfluenceLanguage extends AbstractMarkupLanguage {
 	/**
 	 * blocks that may be nested in side a quote block
-	 *
+	 * 
 	 * @see ExtendedQuoteBlock
 	 */
 	private final List<Block> nestedBlocks = new ArrayList<Block>();
@@ -167,7 +167,7 @@ public class ConfluenceLanguage extends AbstractMarkupLanguage {
 
 	/**
 	 * Indicates if relative links (e.g. Confluence pages) should be treated as links.
-	 *
+	 * 
 	 * @param parseRelativeLinks
 	 *            if relative links should be parsed
 	 * @since 2.6
@@ -178,7 +178,7 @@ public class ConfluenceLanguage extends AbstractMarkupLanguage {
 
 	/**
 	 * Indicates if relative links (e.g. Confluence pages) are treated as links.
-	 *
+	 * 
 	 * @return {@code true} if relative links should be parsed as links, otherwise {@code false}
 	 * @since 2.6
 	 */
@@ -186,6 +186,9 @@ public class ConfluenceLanguage extends AbstractMarkupLanguage {
 		return parseRelativeLinks;
 	}
 
+	/**
+	 * @since 2.6
+	 */
 	@Override
 	public ConfluenceLanguage clone() {
 		ConfluenceLanguage copy = (ConfluenceLanguage) super.clone();
