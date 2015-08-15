@@ -58,7 +58,6 @@ public class CommonMarkSpecTest {
 
 	private static final Set<Integer> LINE_EXCLUSIONS = ImmutableSet.of(//
 			281, // Tabs
-			2399, // Link reference definitions
 			2478, // Link reference definitions
 			2515, // Link reference definitions
 			3380, // List items
@@ -70,10 +69,7 @@ public class CommonMarkSpecTest {
 			4401, // Lists
 			4425, // Lists
 			4664, // Lists
-			4681, // Lists
-			6505, // Links
-			6965, // Links
-			6974 // Links
+			4681 // Lists
 	);
 
 	public static class Expectation {

@@ -52,7 +52,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 
 	private static final String IN_PARENS = "\\((?:[^\\\\()]|" + ESCAPED_CHARS + ")*\\)";
 
-	static final String NOBRACKET_URI_PART = "((?:[^\\\\\\s()]|" + ESCAPED_CHARS + "|" + IN_PARENS + ")+)";
+	static final String NOBRACKET_URI_PART = "((?:[^\\\\\\s()]|" + ESCAPED_CHARS + "|" + IN_PARENS + "|\\\\)+)";
 
 	static final String URI_PART = "(?:" + BRACKET_URI_PART + "|" + NOBRACKET_URI_PART + ")";
 
@@ -134,24 +134,26 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 						if (referenceDefinition) {
 							referenceName = toReferenceName(referenceName(cursor, contents));
 						}
-						int closingLength = matcher.start(6) - matcher.start() + 1;
-						cursor.advance(closingLength);
-						int length = getOffset() - openingDelimiter.getOffset() + closingLength;
+						if ((referenceDefinition && referenceName != null) || !referenceDefinition) {
+							int closingLength = matcher.start(6) - matcher.start() + 1;
+							cursor.advance(closingLength);
+							int length = getOffset() - openingDelimiter.getOffset() + closingLength;
 
-						truncate(inlines, indexOfOpeningDelimiter);
+							truncate(inlines, indexOfOpeningDelimiter);
 
-						if (referenceDefinition) {
-							truncatePrecedingWhitespace(inlines, 3);
-							inlines.add(new ReferenceDefinition(openingDelimiter.getLine(),
-									openingDelimiter.getOffset(), length, uri, title, referenceName));
-						} else if (openingDelimiter.isImageDelimiter()) {
-							inlines.add(new Image(openingDelimiter.getLine(), openingDelimiter.getOffset(), length, uri,
-									title, contents));
-						} else {
-							inlines.add(new Link(openingDelimiter.getLine(), openingDelimiter.getOffset(), length, uri,
-									title, contents));
+							if (referenceDefinition) {
+								truncatePrecedingWhitespace(inlines, 3);
+								inlines.add(new ReferenceDefinition(openingDelimiter.getLine(),
+										openingDelimiter.getOffset(), length, uri, title, referenceName));
+							} else if (openingDelimiter.isImageDelimiter()) {
+								inlines.add(new Image(openingDelimiter.getLine(), openingDelimiter.getOffset(), length,
+										uri, title, contents));
+							} else {
+								inlines.add(new Link(openingDelimiter.getLine(), openingDelimiter.getOffset(), length,
+										uri, title, contents));
+							}
+							return;
 						}
-						return;
 					}
 				}
 			}
@@ -354,7 +356,11 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 	}
 
 	String toReferenceName(String stringWithBackslashEscapes) {
-		return stringWithBackslashEscapes.replaceAll("(?s)\\\\(\\[|\\])", "$1").replaceAll("\\s+", " ");
+		String referenceName = stringWithBackslashEscapes.replaceAll("(?s)\\\\(\\[|\\])", "$1").replaceAll("\\s+", " ");
+		if (CharMatcher.WHITESPACE.matchesAllOf(referenceName)) {
+			return null;
+		}
+		return referenceName;
 	}
 
 	String unescapeBackslashEscapes(String stringWithBackslashEscapes) {
