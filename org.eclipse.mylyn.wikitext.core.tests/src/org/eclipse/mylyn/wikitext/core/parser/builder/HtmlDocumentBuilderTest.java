@@ -191,6 +191,25 @@ public class HtmlDocumentBuilderTest {
 		assertEquals("<pre class=\"aclass\"><code class=\"aclass\">content</code></pre>", out.toString());
 	}
 
+	@Test
+	public void filterEntityReferences() {
+		assertEntityReferenceToNumericValue("&#160;", "nbsp");
+		assertEntityReferenceToNumericValue("&#8817;", "nge");
+		assertEntityReferenceToNumericValue("&#8807;&#824;", "ngE");
+		assertEntityReferenceToNumericValue("&amp;notarealthing;", "notarealthing");
+		assertEntityReferenceToNumericValue("&#160;", "#160");
+	}
+
+	private void assertEntityReferenceToNumericValue(String expected, String entityReference) {
+		StringWriter out = new StringWriter();
+		HtmlDocumentBuilder builder = new HtmlDocumentBuilder(out);
+		builder.setEmitAsDocument(false);
+		builder.setFilterEntityReferences(true);
+		builder.entityReference(entityReference);
+		builder.flush();
+		assertEquals(expected, out.toString());
+	}
+
 	private void assertEntityFiltered(String expected, String entity) {
 		setup();
 		builder.setFilterEntityReferences(true);

@@ -23,6 +23,7 @@ public class SimplifiedHtmlDocumentBuilder extends HtmlDocumentBuilder {
 
 	public SimplifiedHtmlDocumentBuilder(Writer out) {
 		super(out, false);
+		setFilterEntityReferences(true);
 	}
 
 	@Override
@@ -36,5 +37,11 @@ public class SimplifiedHtmlDocumentBuilder extends HtmlDocumentBuilder {
 				writer.writeAttribute(getHtmlNsUri(), "title", imageAttributes.getTitle());
 			}
 		}
+	}
+
+	@Override
+	public void entityReference(String entity) {
+		// TODO Auto-generated method stub
+		super.entityReference(entity);
 	}
 }

@@ -13,14 +13,12 @@ package org.eclipse.mylyn.wikitext.core.parser.builder;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Writer;
 import java.text.MessageFormat;
@@ -45,12 +43,6 @@ import org.eclipse.mylyn.wikitext.core.util.DefaultXmlStreamWriter;
 import org.eclipse.mylyn.wikitext.core.util.FormattingXMLStreamWriter;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 
-import com.google.common.base.CharMatcher;
-import com.google.common.base.Charsets;
-import com.google.common.base.Splitter;
-import com.google.common.base.Throwables;
-import com.google.common.collect.ImmutableMap;
-
 /**
  * A builder that produces XHTML output. The nature of the output is affected by various settings on the builder.
  *
@@ -62,31 +54,6 @@ import com.google.common.collect.ImmutableMap;
 public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private static final Pattern ABSOLUTE_URL_PATTERN = Pattern.compile("[a-zA-Z]{3,8}://?.*"); //$NON-NLS-1$
-
-	private static final Map<String, String> entityReferenceToNumericEquivalent = readHtmlEntities();
-
-	private static Map<String, String> readHtmlEntities() {
-		ImmutableMap.Builder<String, String> entityToNumericBuilder = ImmutableMap.builder();
-		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					HtmlDocumentBuilder.class.getResourceAsStream("html-entity-references.txt"), Charsets.UTF_8)); //$NON-NLS-1$
-			try {
-				Splitter splitter = Splitter.on(CharMatcher.WHITESPACE).trimResults().omitEmptyStrings();
-
-				String line;
-				while ((line = reader.readLine()) != null) {
-					List<String> lineItems = splitter.splitToList(line);
-					checkState(lineItems.size() == 2 && lineItems.get(1).startsWith("#")); //$NON-NLS-1$
-					entityToNumericBuilder.put(lineItems.get(0), lineItems.get(1));
-				}
-			} finally {
-				reader.close();
-			}
-		} catch (IOException e) {
-			throw Throwables.propagate(e);
-		}
-		return entityToNumericBuilder.build();
-	}
 
 	private static final Map<SpanType, String> spanTypeToElementName = new HashMap<SpanType, String>();
 
@@ -730,16 +697,20 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	@Override
 	public void entityReference(String entity) {
-		if (filterEntityReferences) {
-			String emitEntity = entity.length() > 0 && entity.charAt(0) == '#'
-					? entity
-					: entityReferenceToNumericEquivalent.get(entity);
-			if (emitEntity == null) {
-				writer.writeCharacters("&"); //$NON-NLS-1$
-				writer.writeCharacters(entity);
-				writer.writeCharacters(";"); //$NON-NLS-1$
+		if (filterEntityReferences && !entity.isEmpty()) {
+			if (entity.charAt(0) == '#') {
+				writer.writeEntityRef(entity);
 			} else {
-				writer.writeEntityRef(emitEntity);
+				List<String> emitEntity = HtmlEntities.instance().nameToEntityReferences(entity);
+				if (emitEntity.isEmpty()) {
+					writer.writeCharacters("&"); //$NON-NLS-1$
+					writer.writeCharacters(entity);
+					writer.writeCharacters(";"); //$NON-NLS-1$
+				} else {
+					for (String numericEntity : emitEntity) {
+						writer.writeEntityRef(numericEntity);
+					}
+				}
 			}
 		} else {
 			writer.writeEntityRef(entity);
