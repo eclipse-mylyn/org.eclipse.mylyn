@@ -71,7 +71,6 @@ public class CommonMarkSpecTest {
 			4425, // Lists
 			4664, // Lists
 			4681, // Lists
-			4948, // Entities
 			5117, // Code spans
 			6505, // Links
 			6965, // Links

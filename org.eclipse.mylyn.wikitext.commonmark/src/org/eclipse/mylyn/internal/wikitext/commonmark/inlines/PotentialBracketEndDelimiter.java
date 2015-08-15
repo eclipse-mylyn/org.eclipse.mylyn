@@ -13,7 +13,6 @@ package org.eclipse.mylyn.internal.wikitext.commonmark.inlines;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.io.StringWriter;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -24,7 +23,6 @@ import org.eclipse.mylyn.internal.wikitext.commonmark.Line;
 import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContext;
 import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContext.NamedUriWithTitle;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Objects;
@@ -37,8 +35,6 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 
 	private static final Pattern HTML_ENTITY_PATTERN = Pattern
 			.compile("(&([a-zA-Z][a-zA-Z0-9]{1,32}|#x[a-fA-F0-9]{1,8}|#[0-9]{1,8});)");
-
-	private static final Pattern NUMERIC_ENTITY_PATTERN = Pattern.compile("&#([0-9]{1,8});");
 
 	static final String ESCAPABLE_CHARACTER_GROUP = "[!\"\\\\#$%&'()*+,./:;<=>?@\\[\\]^_`{|}~-]";
 
@@ -345,40 +341,16 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 				replaced += text.substring(lastEnd, matcher.start(1));
 			}
 			String entity = matcher.group(2);
-			String numericEntity = entityToNumericEquivalent(entity);
-			String replacement = numericEntityReplacement(numericEntity, escaper);
-			replaced += replacement == null ? matcher.group(1) : replacement;
+			String entityTextEquivalent = HtmlEntityReferenceToStringConverter.toString(entity);
+			replaced += entityTextEquivalent.isEmpty()
+					? matcher.group(1)
+					: escaper == null ? entityTextEquivalent : escaper.escape(entityTextEquivalent);
 			lastEnd = matcher.end(1);
 		}
 		if (lastEnd < text.length()) {
 			replaced += text.substring(lastEnd, text.length());
 		}
 		return replaced;
-	}
-
-	private String numericEntityReplacement(String numericEntity, Escaper escaper) {
-		Matcher numericEntityMatcher = NUMERIC_ENTITY_PATTERN.matcher(numericEntity);
-		if (numericEntityMatcher.matches()) {
-			char c;
-			try {
-				c = (char) Integer.parseInt(numericEntityMatcher.group(1));
-			} catch (NumberFormatException e) {
-				return null;
-			}
-			String replacement = Character.toString(c);
-			return escaper == null ? replacement : escaper.escape(replacement);
-		}
-		return null;
-	}
-
-	String entityToNumericEquivalent(String entity) {
-		StringWriter out = new StringWriter();
-		HtmlDocumentBuilder builder = new HtmlDocumentBuilder(out);
-		builder.setEmitAsDocument(false);
-		builder.setFilterEntityReferences(true);
-		builder.entityReference(entity);
-		builder.flush();
-		return out.toString();
 	}
 
 	String toReferenceName(String stringWithBackslashEscapes) {

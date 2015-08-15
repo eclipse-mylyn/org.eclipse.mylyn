@@ -93,6 +93,11 @@ public class InlineParser {
 			public void characters(String text) {
 				stringBuilder.append(text);
 			}
+
+			@Override
+			public void entityReference(String entity) {
+				stringBuilder.append(HtmlEntityReferenceToStringConverter.toString(entity));
+			}
 		};
 		for (Inline inline : contents) {
 			inline.emit(altDocumentBuilder);
