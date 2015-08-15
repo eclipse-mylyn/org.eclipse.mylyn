@@ -31,6 +31,19 @@ public class HtmlEntitySpanTest extends AbstractSourceSpanTest {
 		assertEntity(6, "#160", "&#160;");
 		assertEntity(6, "nbsp", "&nbsp;");
 		assertEntity(6, "nbsp", "&nbsp; ab\ncd");
+		assertEntity(5, "#x9", "&#x9;");
+		assertEntity(5, "#X9", "&#X9;");
+		assertEntity(7, "#x912", "&#x912;");
+		assertCharacters(4, "\ufffd", "&#0;");
+		assertCharacters(5, "\ufffd", "&#00;");
+		assertCharacters(8, "\ufffd", "&#65536;");
+		assertCharacters(5, "\ufffd", "&#x0;");
+		assertCharacters(9, "\ufffd", "&#xfffff;");
+	}
+
+	private void assertCharacters(int length, String text, String content) {
+		Characters characters = assertInline(Characters.class, 0, length, createCursor(content));
+		assertEquals(text, characters.getText());
 	}
 
 	private void assertEntity(int length, String entity, String content) {

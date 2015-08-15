@@ -14,6 +14,8 @@ package org.eclipse.mylyn.internal.wikitext.commonmark.inlines;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.mylyn.internal.wikitext.commonmark.Line;
+
 import com.google.common.base.Optional;
 
 public class HtmlEntitySpan extends SourceSpan {
@@ -28,9 +30,35 @@ public class HtmlEntitySpan extends SourceSpan {
 			Matcher matcher = cursor.matcher(pattern);
 			if (matcher.matches()) {
 				String ent = matcher.group(1);
-				return Optional.of(new HtmlEntity(cursor.getLineAtOffset(), cursor.getOffset(), ent.length() + 2, ent));
+
+				int offset = cursor.getOffset();
+				int length = ent.length() + 2;
+				Line lineAtOffset = cursor.getLineAtOffset();
+
+				if (isInvalidUnicodeCodepoint(ent)) {
+					return Optional.of(new Characters(lineAtOffset, offset, length, "\ufffd"));
+				}
+				return Optional.of(new HtmlEntity(lineAtOffset, offset, length, ent));
 			}
 		}
 		return Optional.absent();
+	}
+
+	protected boolean isInvalidUnicodeCodepoint(String ent) {
+		if (ent.charAt(0) == '#') {
+			try {
+				int codePoint;
+				char firstCharFollowingHash = ent.charAt(1);
+				if (firstCharFollowingHash == 'x' || firstCharFollowingHash == 'X') {
+					codePoint = Integer.parseInt(ent.substring(2), 16);
+				} else {
+					codePoint = Integer.parseInt(ent.substring(1));
+				}
+				return codePoint <= 0 || codePoint > 0xffff;
+			} catch (NumberFormatException e) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
