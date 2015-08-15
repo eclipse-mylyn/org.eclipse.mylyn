@@ -27,10 +27,18 @@ public class CodeSpanTest extends AbstractSourceSpanTest {
 		assertNoInline(createCursor("``one`"));
 		assertNoInline(createCursor("two"));
 		assertNoInline(createCursor("``"));
+		assertNoInline(createCursor("`one``"));
 		assertCode(14, "this is code", "`this is code`");
 		assertCode(12, "one\ntwo\n", "``one\ntwo\n``");
 		assertCode(14, "one *two", "```one *two```");
 		assertCode(14, "one *two` ", "``one *two` ``");
+	}
+
+	@Test
+	public void createInlineBackticksMustMatch() {
+		Cursor cursor = createCursor("``one`");
+		cursor.advance();
+		assertNoInline(cursor, 1);
 	}
 
 	private void assertCode(int length, String codeText, String content) {

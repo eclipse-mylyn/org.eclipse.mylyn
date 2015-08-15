@@ -24,7 +24,7 @@ public class CodeSpan extends SourceSpan {
 	@Override
 	public Optional<? extends Inline> createInline(Cursor cursor) {
 		char c = cursor.getChar();
-		if (c == '`') {
+		if (c == '`' && (!cursor.hasPrevious() || cursor.getPrevious() != '`')) {
 			Matcher matcher = cursor.matcher(pattern);
 			if (matcher.matches()) {
 				String openingBackticks = matcher.group(1);
