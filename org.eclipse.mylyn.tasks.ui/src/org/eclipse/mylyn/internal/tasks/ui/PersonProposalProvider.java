@@ -39,6 +39,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.osgi.util.NLS;
 
+import com.google.common.base.Strings;
+
 /**
  * @author Shawn Minto
  * @author Eugene Kuleshov
@@ -270,7 +272,14 @@ public class PersonProposalProvider implements IContentProposalProvider {
 	}
 
 	private void addAddresses(ITask task, Set<String> addressSet) {
-		addAddress(addressSet, task.getOwner());
+		if (Strings.isNullOrEmpty(task.getOwnerId())) {
+			addAddress(addressSet, task.getOwner());
+		} else {
+			addAddress(addressSet, task.getOwnerId());
+			if (!Strings.isNullOrEmpty(task.getOwner())) {
+				proposals.put(task.getOwnerId(), task.getOwner());
+			}
+		}
 	}
 
 	private void addAddresses(TaskData data, Set<String> addressSet) {

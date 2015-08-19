@@ -336,4 +336,34 @@ public class PersonProposalProviderTest extends TestCase {
 		assertEquals("21", result[0].getContent());
 		assertEquals("22", result[1].getContent());
 	}
+
+	public void testGetProposalByOwnerId() throws Exception {
+		TaskTask task = TaskTestUtil.createMockTask("1");
+		task.setOwner("Joel User");
+		TasksUiPlugin.getTaskList().addTask(task);
+		TaskRepository repository = TaskTestUtil.createMockRepository();
+		TasksUi.getRepositoryManager().addRepository(repository);
+
+		PersonProposalProvider provider = new PersonProposalProvider(MockRepositoryConnector.REPOSITORY_URL,
+				MockRepositoryConnector.CONNECTOR_KIND);
+		IContentProposal[] result = provider.getProposals("joel", 1);
+		assertEquals(1, result.length);
+		assertEquals("Joel User", result[0].getLabel());
+		assertEquals("Joel User", result[0].getContent());
+
+		task.setOwnerId("joel.user@mylyn.org");
+		provider = new PersonProposalProvider(MockRepositoryConnector.REPOSITORY_URL,
+				MockRepositoryConnector.CONNECTOR_KIND);
+		result = provider.getProposals("joel", 1);
+		assertEquals(1, result.length);
+		assertEquals("Joel User <joel.user@mylyn.org>", result[0].getLabel());
+		assertEquals("joel.user@mylyn.org", result[0].getContent());
+
+		task.setOwnerId("");
+		task.setOwner("");
+		provider = new PersonProposalProvider(MockRepositoryConnector.REPOSITORY_URL,
+				MockRepositoryConnector.CONNECTOR_KIND);
+		result = provider.getProposals("joel", 1);
+		assertEquals(0, result.length);
+	}
 }
