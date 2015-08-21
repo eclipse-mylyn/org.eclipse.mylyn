@@ -21,6 +21,7 @@ import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.text.source.LineRange;
+import org.eclipse.mylyn.commons.ui.ShellDragSupport;
 import org.eclipse.mylyn.commons.workbench.forms.CommonFormUtil;
 import org.eclipse.mylyn.internal.reviews.ui.IReviewActionListener;
 import org.eclipse.mylyn.internal.reviews.ui.editors.parts.CommentPart;
@@ -55,7 +56,6 @@ import com.google.common.collect.FluentIterable;
  * @author Guy Perron
  */
 public class CommentPopupDialog extends PopupDialog implements IReviewActionListener {
-
 	private static final int MAX_WIDTH = 500;
 
 	private static final int MIN_HEIGHT = 70;
@@ -131,6 +131,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 		composite = toolkit.createComposite(scrolledComposite, SWT.NONE);
 		composite.setLayout(new GridLayout());
 		scrolledComposite.setContent(composite);
+		new ShellDragSupport(composite);
 
 		return scrolledComposite;
 	}
