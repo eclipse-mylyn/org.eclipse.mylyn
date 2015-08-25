@@ -27,7 +27,7 @@ public class ServiceMessage extends AbstractNotification {
 
 	private String eTag;
 
-	private String id;
+	private String id = "0"; //$NON-NLS-1$
 
 	private String image;
 
