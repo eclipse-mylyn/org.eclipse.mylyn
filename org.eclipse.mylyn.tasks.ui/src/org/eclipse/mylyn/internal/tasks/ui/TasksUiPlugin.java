@@ -434,7 +434,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 								return false;
 							}
 						};
-						message.setId("hide.nonmatching.subtasks"); //$NON-NLS-1$
 						message.setImage(Dialog.DLG_IMG_MESSAGE_INFO);
 						message.setTitle(Messages.TasksUiPlugin_Hide_Irrelevant_Subtasks);
 						message.setDescription(NLS.bind(Messages.TasksUiPlugin_Hide_Irrelevant_Subtasks_Message,

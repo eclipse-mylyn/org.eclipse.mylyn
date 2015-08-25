@@ -852,7 +852,6 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 			message.setDescription(Messages.TaskListView_Welcome_Message);
 			message.setTitle(Messages.TaskListView_Welcome_Message_Title);
 			message.setImage(Dialog.DLG_IMG_MESSAGE_INFO);
-			message.setId("0"); //$NON-NLS-1$
 			serviceMessageControl.setMessage(message);
 		}
 

@@ -51,6 +51,7 @@ import org.eclipse.ui.handlers.IHandlerService;
  * @author Steffen Pingel
  * @author Torkild U. Resheim
  */
+@SuppressWarnings("restriction")
 public class TaskListServiceMessageControl extends NotificationControl implements IServiceMessageListener {
 
 	private ServiceMessage currentMessage;
@@ -67,7 +68,7 @@ public class TaskListServiceMessageControl extends NotificationControl implement
 
 	@Override
 	protected void closeMessage() {
-		if (currentMessage != null) {
+		if (currentMessage != null && currentMessage.getId() != null && !currentMessage.getId().equals("0")) { //$NON-NLS-1$
 			TasksUiPlugin.getDefault()
 					.getPreferenceStore()
 					.setValue(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_ID, currentMessage.getId());
@@ -81,6 +82,10 @@ public class TaskListServiceMessageControl extends NotificationControl implement
 			IPreferenceStore preferenceStore = TasksUiPlugin.getDefault().getPreferenceStore();
 			preferenceStore.setValue(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_CHECKTIME, new Date().getTime());
 			String lastMessageId = preferenceStore.getString(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_ID);
+			if (lastMessageId != null && lastMessageId.startsWith("org.eclipse.mylyn.reset.")) { //$NON-NLS-1$
+				lastMessageId = ""; //$NON-NLS-1$
+				preferenceStore.setValue(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_ID, lastMessageId);
+			}
 
 			for (final ServiceMessage message : event.getMessages()) {
 				if (!message.isValid() || message.getId().equals("-1")) { //$NON-NLS-1$
