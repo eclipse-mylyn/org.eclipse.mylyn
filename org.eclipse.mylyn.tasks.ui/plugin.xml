@@ -2146,9 +2146,9 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            description="%command.description"
+            description="%commands.discovery.description"
             id="org.eclipse.mylyn.tasks.ui.discoveryWizardCommand"
-            name="%command.name">
+            name="%commands.discovery.name">
       </command>
    </extension>
    <extension
