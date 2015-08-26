@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
@@ -35,8 +36,8 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.progress.UIJob;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -138,13 +139,18 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 		this.activityContextManager = new ActivityContextManager(new ArrayList<AbstractUserActivityMonitor>(0));
 
-		// FIXME: use UIJob
 		// delay initialization until workbench is realized
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			public void run() {
+		UIJob job = new UIJob("Mylyn Monitor Startup") { //$NON-NLS-1$
+
+			@Override
+			public IStatus runInUIThread(IProgressMonitor monitor) {
 				init();
+				return Status.OK_STATUS;
 			}
-		});
+		};
+		job.setUser(false);
+		job.setSystem(true);
+		job.schedule();
 	}
 
 	@Override
