@@ -56,6 +56,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.verification.VerificationMode;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gerrit.reviewdb.Account;
 import com.google.gerrit.reviewdb.Patch.ChangeType;
 import com.google.gerrit.reviewdb.Patch.Key;
@@ -104,6 +105,8 @@ public class GerritClientTest extends TestCase {
 	}
 
 	private static final String GET_LABELS_OPTION = "LABELS"; //$NON-NLS-1$
+
+	private static final String GET_DETAILED_ACCOUNTS_OPTION = "DETAILED_ACCOUNTS"; //$NON-NLS-1$
 
 	private GerritHarness harness;
 
@@ -179,15 +182,11 @@ public class GerritClientTest extends TestCase {
 	}
 
 	private List<GerritQueryResult> executeQuery(String query) throws GerritException {
-		List<GerritQueryResult> results = null;
-		results = client.getRestClient().executeQuery(new NullProgressMonitor(), query);
-		return results;
+		return client.getRestClient().executeQuery(new NullProgressMonitor(), query);
 	}
 
-	private List<GerritQueryResult> executeQuery(String query, String option) throws GerritException {
-		List<GerritQueryResult> results = null;
-		results = client.getRestClient().executeQuery(new NullProgressMonitor(), query, option);
-		return results;
+	private List<GerritQueryResult> executeQuery(String query, List<String> options) throws GerritException {
+		return client.getRestClient().executeQuery(new NullProgressMonitor(), query, options);
 	}
 
 	@Test
@@ -200,24 +199,32 @@ public class GerritClientTest extends TestCase {
 	@Test
 	public void testExecuteQueryWithNullOption() throws Exception {
 		String query = "status:open";
-		String option = null;
-		List<GerritQueryResult> results = executeQuery(query, option);
+		List<String> options = null;
+		List<GerritQueryResult> results = executeQuery(query, options);
+		assertNotNull(results);
+	}
+
+	@Test
+	public void testExecuteQueryWithEmptyList() throws Exception {
+		String query = "status:open";
+		List<String> options = ImmutableList.of();
+		List<GerritQueryResult> results = executeQuery(query, options);
 		assertNotNull(results);
 	}
 
 	@Test
 	public void testExecuteQueryWithEmptyOption() throws Exception {
 		String query = "status:open";
-		String option = "";
-		List<GerritQueryResult> results = executeQuery(query, option);
+		List<String> options = ImmutableList.of("");
+		List<GerritQueryResult> results = executeQuery(query, options);
 		assertNotNull(results);
 	}
 
 	@Test
 	public void testExecuteQueryWithOption() throws Exception {
 		String query = "status:open";
-		String option = GET_LABELS_OPTION;
-		List<GerritQueryResult> results = executeQuery(query, option);
+		List<String> options = ImmutableList.of(GET_LABELS_OPTION);
+		List<GerritQueryResult> results = executeQuery(query, options);
 		assertNotNull(results);
 		for (int index = 0; index < results.size(); index++) {
 			assertNotNull(results.get(index));
@@ -225,68 +232,39 @@ public class GerritClientTest extends TestCase {
 		}
 	}
 
-	private List<GerritQueryResult> executeQueryRest(String query) throws GerritException {
-		return client.getRestClient().executeQuery(new NullProgressMonitor(), query);
-	}
-
-	private List<GerritQueryResult> executeQueryRest(String query, String option) throws GerritException {
-		return client.getRestClient().executeQuery(new NullProgressMonitor(), query, option);
-	}
-
 	@Test
-	public void testExecuteQueryRestWithoutOption() throws Exception {
+	public void testExecuteQueryWithMultipleOptions() throws Exception {
 		String query = "status:open";
-		List<GerritQueryResult> results = executeQueryRest(query);
-
+		List<String> options = ImmutableList.of(GET_LABELS_OPTION, GET_DETAILED_ACCOUNTS_OPTION);
+		List<GerritQueryResult> results = executeQuery(query, options);
 		assertNotNull(results);
-	}
-
-	@Test
-	public void testExecuteQueryRestWithNullOption() throws Exception {
-		String query = "status:open";
-		String option = null;
-		List<GerritQueryResult> results = executeQueryRest(query, option);
-		assertNotNull(results);
-	}
-
-	@Test
-	public void testExecuteQueryRestWithEmptyOption() throws Exception {
-		String query = "status:open";
-		String option = "";
-		List<GerritQueryResult> results = null;
-		results = executeQueryRest(query, option);
-		assertNotNull(results);
-	}
-
-	@Test
-	public void testExecuteQueryvWithOption() throws Exception {
-		String query = "status:open";
-		String option = GET_LABELS_OPTION;
-		List<GerritQueryResult> results = executeQuery(query, option);
-		assertNotNull(results);
+		for (int index = 0; index < results.size(); index++) {
+			assertNotNull(results.get(index));
+			assertNotNull(results.get(index).getReviewLabel());
+		}
 	}
 
 	@Test
 	public void testExecuteQueryAllMerged() throws GerritException {
 		String query = "status:merged";
-		String option = GET_LABELS_OPTION;
-		List<GerritQueryResult> results = executeQuery(query, option);
+		List<String> options = ImmutableList.of(GET_LABELS_OPTION);
+		List<GerritQueryResult> results = executeQuery(query, options);
 		assertNotNull(results);
 	}
 
 	@Test
 	public void testExecuteQueryAllAbandoned() throws GerritException {
 		String query = "status:abandoned";
-		String option = GET_LABELS_OPTION;
-		List<GerritQueryResult> results = executeQuery(query, option);
+		List<String> options = ImmutableList.of(GET_LABELS_OPTION);
+		List<GerritQueryResult> results = executeQuery(query, options);
 		assertNotNull(results);
 	}
 
 	@Test
 	public void testExecuteQueryisStarred() throws GerritException {
 		String query = "is:starred status:open";
-		String option = GET_LABELS_OPTION;
-		List<GerritQueryResult> results = executeQuery(query, option);
+		List<String> options = ImmutableList.of(GET_LABELS_OPTION);
+		List<GerritQueryResult> results = executeQuery(query, options);
 		assertNotNull(results);
 	}
 

@@ -86,7 +86,9 @@ public class GerritConnectorTest extends TestCase {
 			// 'expand' the abbreviated SHA-1 with 'a's
 			String objId = StringUtils.rightPad(value.substring(1), Constants.OBJECT_ID_STRING_LENGTH, 'a');
 			assertTrue(ObjectId.isId(objId));
+			TaskAttribute owner = result.getRoot().getAttribute(GerritTaskSchema.getDefault().OWNER.getKey());
+			assertNotNull(owner);
+			assertTrue(StringUtils.isNotBlank(owner.getValue()));
 		}
 	}
-
 }

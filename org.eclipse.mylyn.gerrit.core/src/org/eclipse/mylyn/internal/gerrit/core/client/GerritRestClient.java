@@ -22,6 +22,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient.ErrorHandl
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritService.GerritRequest;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gson.reflect.TypeToken;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -73,6 +74,8 @@ public class GerritRestClient {
 	}
 
 	protected static final String GET_LABELS_OPTION = "LABELS"; //$NON-NLS-1$
+
+	protected static final String GET_DETAILED_ACCOUNTS_OPTION = "DETAILED_ACCOUNTS"; //$NON-NLS-1$
 
 	private final GerritHttpClient client;
 
@@ -189,25 +192,7 @@ public class GerritRestClient {
 	 */
 	public List<GerritQueryResult> executeQuery(IProgressMonitor monitor, final String queryString)
 			throws GerritException {
-		return executeQuery(monitor, queryString, GET_LABELS_OPTION);
-	}
-
-	/**
-	 * Sends a query for the changes visible to the caller to the gerrit server with the possibility of adding options
-	 * to the query.
-	 * 
-	 * @param monitor
-	 *            A progress monitor
-	 * @param queryString
-	 *            The specific gerrit change query
-	 * @param optionString
-	 *            Query options ("&o=" parameter). Only applicable for the REST API, ignored otherwise. May be null.
-	 * @return a list of GerritQueryResults built from the parsed query result (ChangeInfo:s)
-	 * @throws GerritException
-	 */
-	public List<GerritQueryResult> executeQuery(IProgressMonitor monitor, final String queryString, String optionString)
-			throws GerritException {
-		return executeQueryInternal(monitor, queryString, optionString);
+		return executeQuery(monitor, queryString, ImmutableList.of(GET_LABELS_OPTION, GET_DETAILED_ACCOUNTS_OPTION));
 	}
 
 	/**
@@ -218,16 +203,21 @@ public class GerritRestClient {
 	 *            A progress monitor
 	 * @param queryString
 	 *            The specific gerrit change query
-	 * @param optionString
-	 *            Query options ("&o=" parameter). May be null or empty.
+	 * @param optionsList
+	 *            List of query options ("&o=" parameter). Only applicable for the REST API, ignored otherwise. May be
+	 *            null or empty.
 	 * @return a list of GerritQueryResults built from the parsed query result (ChangeInfo:s)
 	 * @throws GerritException
 	 */
-	protected List<GerritQueryResult> executeQueryInternal(IProgressMonitor monitor, final String queryString,
-			String optionString) throws GerritException {
+	public List<GerritQueryResult> executeQuery(IProgressMonitor monitor, final String queryString,
+			List<String> optionsList) throws GerritException {
 		String uri = "/changes/?q=" + GerritClient.encode(queryString); //$NON-NLS-1$
-		if (StringUtils.isNotBlank(optionString)) {
-			uri += "&o=" + GerritClient.encode(optionString); //$NON-NLS-1$
+		if (optionsList != null && !optionsList.isEmpty()) {
+			for (String option : optionsList) {
+				if (StringUtils.isNotBlank(option)) {
+					uri += "&o=" + GerritClient.encode(option); //$NON-NLS-1$
+				}
+			}
 		}
 		TypeToken<List<GerritQueryResult>> queryResultListType = new TypeToken<List<GerritQueryResult>>() {
 		};
@@ -254,7 +244,7 @@ public class GerritRestClient {
 	 * user. On Gerrit 2.4 and earlier closed reviews are not included.
 	 */
 	public List<GerritQueryResult> queryMyReviews(IProgressMonitor monitor) throws GerritException {
-		return executeQueryInternal(monitor, "owner:self OR reviewer:self", GET_LABELS_OPTION); //$NON-NLS-1$
+		return executeQuery(monitor, "owner:self OR reviewer:self"); //$NON-NLS-1$
 	}
 
 	/**
