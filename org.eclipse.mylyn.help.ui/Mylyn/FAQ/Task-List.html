@@ -28,7 +28,7 @@
 				<td style="width: 60%" align="center"></td>
 				<td style="width: 20%" align="right" valign="top">Task Editor</td>
 			</tr>
-		</table><hr/>
+		</table><hr class="navigation-separator"/>
 		<h1 id="Task_List">Task List</h1>
 		<h2 id="How_do_I_restore_my_tasks_from_backup.3F">How do I restore my tasks from backup?</h2>
 		<p>The task list can be restored from automated backup via the Task List view’s drop down view menu and selecting Restore Tasks from History…</p>
@@ -143,19 +143,17 @@
 			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=206399" target="mylyn_external">bug 206399</a>).
 		</p>
 		<p>See the 
-			<a href="Recommended_GTK_Setup_for_KDE" title="Mylyn/FAQ#Recommended_GTK_Setup_for_KDE">Recommended GTK Setup for KDE</a> if the style selection does not work.
+			<a href="Installation.html#Recommended_GTK_Setup_for_KDE" title="Mylyn/FAQ#Recommended_GTK_Setup_for_KDE">Recommended GTK Setup for KDE</a> if the style selection does not work.
 		</p>
 		<h2 id="Why_is_starring_tasks_not_supported.3F">Why is starring tasks not supported?</h2>
 		<p>The current mechanism for starring tasks is to schedule them for 
 			<i>Today</i>, which has a very similar effect to starring in other UIs.  If you schedule a task for today, the task will stand out as blue and always show (i.e., have guaranteed visibility when the Task List is focused).  If that’s too visible, you can schedule it for 
 			<i>This Week</i>, in which case the task will always show but not turn blue.  
 		</p>
-		<p>The alternative to mark a shared task as outgoing by adding text into it and (e.g. “
-			<a href="review">review</a>”).  The ougtoing change will also give the task guaranteed visibility.  This is currently the only work-around for ‘starring’ completed tasks.
-		</p>
+		<p>The alternative to mark a shared task as outgoing by adding text into it and (e.g. “[review]”).  The ougtoing change will also give the task guaranteed visibility.  This is currently the only work-around for ‘starring’ completed tasks.</p>
 		<p>The task-focused interface consider tasks orthogonal to resources (e.g., files and web pages).  Resources make sense to star/bookmark, since their primary residence is in some structural hierarchy (e.g. folders or a type hierarchy).  Starring provides a mechanism for locating the most relevant parts of a large hierarchy (at the cost of having our starred/bookmark lists bloat and become yet another thing to manage).  Tasks are inherently different than resources because their primary residence is in time (e.g. due dates, milestones, things completed in the past).  As such, the equivalent of starring for tasks is to schedule them to be viewed in the “current” time window (e.g. today or this week).  For a discussion on this refer to 
 			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=168363" target="mylyn_external">bug 168363</a>.
-		</p><hr/>
+		</p><hr class="navigation-separator"/>
 		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
 			<tr>
 				<td style="width: 20%" align="left">

@@ -28,7 +28,7 @@
 				<td style="width: 60%" align="center"></td>
 				<td style="width: 20%" align="right" valign="top">Task List</td>
 			</tr>
-		</table><hr/>
+		</table><hr class="navigation-separator"/>
 		<h1 id="Installation">Installation</h1>
 		<ul>
 			<li>
@@ -118,11 +118,11 @@
 </table></p>
 		<p>Mylyn also relies on a  web browser that works with the Standard Widget Toolkit; Windows and MacOS users are fine, but Linux users might have to download another browser. See 
 			<a href="http://www.eclipse.org/swt/faq.php#browserlinux" target="mylyn_external">the SWT Browser guide</a> for which browsers will work. See 
-			<a href="Installing_on_Linux" title="Mylyn/FAQ#Installing_on_Linux">installing on Linux</a> for instructions.
+			<a href="#Installing_on_Linux" title="Mylyn/FAQ#Installing_on_Linux">installing on Linux</a> for instructions.
 		</p>
 		<h2 id="Which_repositories_are_supported.3F">Which repositories are supported?</h2>
-		<p>See 
-			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=288567" target="mylyn_external">bug 288567</a> for announcement regarding supported repository versions.
+		<p>See the 
+			<a href="http://eclipse.org/mylyn/new/" target="mylyn_external">New &amp; Noteworthy</a> for the current supported repository versions.
 		</p>
 		<h4 id="Mylyn_3.8">Mylyn 3.8</h4>
 		<ul>
@@ -269,7 +269,7 @@ J2SE-1.3,J2SE-1.4,J2SE-1.5,JavaSE-1.6
 			<b>What does “Could not create Browser page: No more handles (<code>java.lang.UnsatisfiedLinkError: …</code>)” mean?</b>
 		</p>
 		<p>It probably means that you are running Linux and don’t have Eclipse and a Web browser configured to work together.  See 
-			<a href="Installing_on_Linux" title="Mylyn/FAQ#Installing_on_Linux">installing on Linux</a>.
+			<a href="#Installing_on_Linux" title="Mylyn/FAQ#Installing_on_Linux">installing on Linux</a>.
 		</p>
 		<p>
 			<b>What does “Could not create Bugzilla editor input” and “<code>java.io.IOException</code>: SAX2 driver class <code>org.apache.xerces.parsers.SAXParser</code> not found” mean?</b>
@@ -285,9 +285,9 @@ J2SE-1.3,J2SE-1.4,J2SE-1.5,JavaSE-1.6
 		</p>
 		<p>If you see startup errors or warnings such as <code>BundleException</code> or timeout messages restart Eclipse with the <code>-clean</code> flag either on the command line, in your shortcut link, or by temporarily it into the <code>eclipse/eclipse.ini</code> file.  These warnings do not cause any bad behavior, but this bug has been fixed in all Mylyn builds after 2.1.  The warnings have this form:</p>
 		<pre> !MESSAGE While loading class "org.eclipse.mylar.tasks.ui.TasksUiPlugin", thread "Thread
- <a href="main,6,main">main,6,main</a>" timed out waiting (5000ms) for thread "Thread<a href="Worker-3,5,main">Worker-3,5,main</a>" to finish
- starting bundle "update@plugins/org.eclipse.mylar.tasks.ui_2.0.0.v20070514-1800.jar <a href="809">809</a>". 
- To avoid deadlock, thread "Thread<a href="main,6,main">main,6,main</a>" is proceeding but 
+ [main,6,main]" timed out waiting (5000ms) for thread "Thread[Worker-3,5,main]" to finish
+ starting bundle "update@plugins/org.eclipse.mylar.tasks.ui_2.0.0.v20070514-1800.jar [809]". 
+ To avoid deadlock, thread "Thread[main,6,main]" is proceeding but 
  "org.eclipse.mylar.tasks.ui.TasksUiPlugin" may not be fully initialized.
 </pre>
 		<h2 id="Installation_Troubleshooting_on_Eclipse_3.4_and_later">Installation Troubleshooting on Eclipse 3.4 and later</h2>
@@ -339,7 +339,7 @@ J2SE-1.3,J2SE-1.4,J2SE-1.5,JavaSE-1.6
  Cannot find a solution where both Match[requiredCapability: org.eclipse.equinox.p2.iu/org.eclipse.mylyn.monitor.ui/[3.0.3.v20081015-1500 -e3x,3.0.3.v20081015-1500-e3x]] and Match[requiredCapability: org.eclipse.equinox.p2.iu/org.eclipse.mylyn.monitor.ui/[3.0.1.v20080721-2100-e3x,3.0.1.v20080721-2100-e3x]]can be satisfied.
  […]
 </pre>
-		<pre>Cannot find a solution satisfying the following requirements org.eclipse.ui <a href="3.4.2.M20090204-0800">3.4.2.M20090204-0800</a>.
+		<pre>Cannot find a solution satisfying the following requirements org.eclipse.ui [3.4.2.M20090204-0800].
 </pre>
 		<p>Also see steps under 
 			<a href="#Installation_Troubleshooting_on_Eclipse_3.4_and_later">Installation Troubleshooting on Eclipse 3.4 and later</a>.
@@ -534,14 +534,10 @@ The activator org.eclipse.mylar.java.MylarJavaPlugin for bundle org.eclipse.myla
 		<p>The appearance of GTK applications is controlled by the KDE System Settings / Control Center
 			in the section “Appearance”.</p>
 		<dl>
-			<dt>GTK Styles and Fonts: GTK Styles: Select “Use another style 
-				<a href="Human">Human</a>”
-			</dt>
+			<dt>GTK Styles and Fonts: GTK Styles: Select “Use another style [Human]”</dt>
 		</dl>
 		<dl>
-			<dt>Colors: At bottom: 
-				<a href="x">x</a> Apply colors to non-KDE applications
-			</dt>
+			<dt>Colors: At bottom: [x] Apply colors to non-KDE applications</dt>
 		</dl>
 		<p>These changes are applied to these two GTK configuration files, respectively:</p>
 		<ul>
@@ -679,7 +675,7 @@ The activator org.eclipse.mylar.java.MylarJavaPlugin for bundle org.eclipse.myla
 			<li>Move one workspace down</li>
 		</ul>
 		<p>See also: 
-			<a href="Linux_key_mappings_a_problem.3F" title="Mylyn/FAQ#Linux_key_mappings_a_problem.3F">keyboard mappings on Linux</a>.
+			<a href="#Linux_key_mappings_a_problem.3F" title="Mylyn/FAQ#Linux_key_mappings_a_problem.3F">keyboard mappings on Linux</a>.
 		</p>
 		<h3 id="Why_do_I_get_an_error_when_accessing_secured_web_sites.3F">Why do I get an error when accessing secured web sites?</h3>
 		<p>The internal browser may display an error if the web site certificate is not trusted and block access to the site:</p>
@@ -759,7 +755,7 @@ The activator org.eclipse.mylar.java.MylarJavaPlugin for bundle org.eclipse.myla
 		<p>
 			<b>If you are seeing content assist timeouts</b> that indicate the Mylyn proposal computer did not complete quickly enough, note that the problem is not with Mylyn, but with the standard content assist mechanism timing out due to an intensive computation (eg, a large number of matches).  In this scenario switching or 
 			<a href="http://wiki.eclipse.org/Mylyn_FAQ#Content_assist_troubleshooting" title="Mylyn_FAQ#Content_assist_troubleshooting" target="mylyn_external">disabling the Mylyn proposal computers</a> does not help improve performance, although it will get rid of those messages.
-		</p><hr/>
+		</p><hr class="navigation-separator"/>
 		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
 			<tr>
 				<td style="width: 20%" align="left">

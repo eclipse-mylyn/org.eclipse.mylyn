@@ -28,7 +28,7 @@
 				<td style="width: 60%" align="center"></td>
 				<td style="width: 20%" align="right" valign="top">JIRA Connector</td>
 			</tr>
-		</table><hr/>
+		</table><hr class="navigation-separator"/>
 		<h1 id="Bugzilla_Connector">Bugzilla Connector</h1>
 		<h2 id="What_versions_are_supported.3F">What versions are supported?</h2>
 		<ul>
@@ -157,8 +157,7 @@
 			<li>If 
 				<b>attachments are failing to submit</b> and you see that after processing the attachment, the bugzilla bug shows a size of “bytes” (no numbers), your database may be dropping the packet sending the file.  
 				<b>On MySQL</b>, check the 
-				<a href="http://dev.mysql.com/doc/refman/5.0/en/packet-too-large.html" target="mylyn_external">max_allowed_packet directive</a>.  You may see errors like: <code>DBD::mysql::st execute</code> failed: Got a packet bigger than 'max_allowed_packet' bytes 
-				<a href="for">Statement “INSERT INTO attach_data (id, thedata) VALUES (38, ?)”</a> at <code>/path/to/bugzilla/attachment.cgi</code> line 993.  Also, 
+				<a href="http://dev.mysql.com/doc/refman/5.0/en/packet-too-large.html" target="mylyn_external">max_allowed_packet directive</a>.  You may see errors like: <code>DBD::mysql::st execute</code> failed: Got a packet bigger than 'max_allowed_packet' bytes [for Statement “INSERT INTO attach_data (id, thedata) VALUES (38, ?)”] at <code>/path/to/bugzilla/attachment.cgi</code> line 993.  Also, 
 				<b>check the maximum attachment size</b> in 
 				<i>Bugzilla Parameters → Attachments</i>.
 			</li>
@@ -195,7 +194,7 @@
 			<li>The server setting "Timezone used to display dates and times" must be set to "Same as Server," otherwise you will get a security token error when performing any submit operation other than submitting a new bug. This may also manifest as a midair collision. (
 				<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=429523" target="mylyn_external">bug#429523</a>)
 			</li>
-		</ul><hr/>
+		</ul><hr class="navigation-separator"/>
 		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
 			<tr>
 				<td style="width: 20%" align="left">

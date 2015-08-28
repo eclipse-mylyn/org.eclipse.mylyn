@@ -28,7 +28,7 @@
 				<td style="width: 60%" align="center"></td>
 				<td style="width: 20%" align="right" valign="top">Updating This Document</td>
 			</tr>
-		</table><hr/>
+		</table><hr class="navigation-separator"/>
 		<h1 id="Misc">Misc</h1>
 		<h2 id="Performance">Performance</h2>
 		<h3 id="Retrieval_of_repository_configuration">Retrieval of repository configuration</h3>
@@ -52,7 +52,8 @@
 		</table>
 		<h2 id="System_Properties">System Properties</h2>
 		<p>The system properties below can used to change the behavior of Mylyn. To set a property pass it on the command line when starting Eclipse:
-<code>eclipse -vmargs -Dorg.eclipse.mylyn.property=value</code>.</p>
+<code>eclipse -vmargs -Dorg.eclipse.mylyn.property=value</code>. To pass a parameter to tests run by maven, pass it like this in the maven properies:
+<code>test.uservmargs=-Dorg.eclipse.mylyn.tests.all=true</code>.</p>
 		<table>
 			<tr>
 				<td>System Property</td>
@@ -220,7 +221,7 @@ org.eclipse.mylyn.trac.core/debug/xmlrpc=true
 			<a href="http://wiki.eclipse.org/Category:FAQ" title="Category:FAQ" target="mylyn_external">Category:FAQ</a>
 
 			<a href="http://wiki.eclipse.org/Category:Mylyn" title="Category:Mylyn" target="mylyn_external">Category:Mylyn</a>
-		</p><hr/>
+		</p><hr class="navigation-separator"/>
 		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
 			<tr>
 				<td style="width: 20%" align="left">
