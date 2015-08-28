@@ -20,8 +20,6 @@ public class Messages extends NLS {
 
 	public static String CommentAnnotationHover_Multiple_comments;
 
-	public static String CommentPopupDialog_LineNumber;
-
 	public static String CommandServerOperation;
 
 	public static String CommentPopupDialog_ServerError;
