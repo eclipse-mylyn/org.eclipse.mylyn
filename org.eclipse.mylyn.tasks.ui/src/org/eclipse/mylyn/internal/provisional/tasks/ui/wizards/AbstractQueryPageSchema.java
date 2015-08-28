@@ -26,6 +26,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
+@SuppressWarnings("nls")
 public class AbstractQueryPageSchema {
 
 	public static class Field {
@@ -139,7 +140,7 @@ public class AbstractQueryPageSchema {
 
 		/**
 		 * the key to use when indexing this field
-		 *
+		 * 
 		 * @return the index key, or null if this should not be indexed
 		 */
 		public String getIndexKey() {
@@ -234,21 +235,20 @@ public class AbstractQueryPageSchema {
 
 	public enum Flag {
 		ATTRIBUTE, OPERATION, PEOPLE, READ_ONLY, /**
-													 * A flag used to indicate that the field is related to a
-													 * description.
-													 *
-													 * @see TaskAttribute#KIND_DESCRIPTION
-													 */
+		 * A flag used to indicate that the field is related to a description.
+		 * 
+		 * @see TaskAttribute#KIND_DESCRIPTION
+		 */
 		DESCRIPTION, /**
-						 * A flag used to indicate that the field is required.
-						 *
-						 * @see TaskAttribute#META_REQUIRED
-						 */
+		 * A flag used to indicate that the field is required.
+		 * 
+		 * @see TaskAttribute#META_REQUIRED
+		 */
 		REQUIRED,
 
 		/**
 		 * A flag used to indicate that the field is required in the Query Page.
-		 *
+		 * 
 		 * @see TaskAttribute#META_QUERY_REQUIRED
 		 */
 		QUERY_REQUIRED
@@ -353,7 +353,7 @@ public class AbstractQueryPageSchema {
 	/**
 	 * Provides an iterator for all fields within the schema. Subsequent modifications to the returned collection are
 	 * not reflected to schema.
-	 *
+	 * 
 	 * @return all fields within the schema
 	 */
 	public Collection<Field> getFields() {

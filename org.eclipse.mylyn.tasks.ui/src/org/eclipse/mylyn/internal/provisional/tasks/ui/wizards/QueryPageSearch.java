@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 
+@SuppressWarnings("nls")
 public class QueryPageSearch {
 
 	/** Stores search criteria in the order entered by the user. */

@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
+@SuppressWarnings("nls")
 public class RepositoryQuerySchemaPage extends AbstractRepositoryQueryPage2 {
 	private static final String QUERYPAGE_FILTER_ID = "org.eclipse.mylyn.tasks.ui.wizards.QueryPageFilter";
 
@@ -244,8 +245,10 @@ public class RepositoryQuerySchemaPage extends AbstractRepositoryQueryPage2 {
 		setMessage("");
 		boolean oneFieldHasValue = false;
 		for (Field field : schema.getFields()) {
-			oneFieldHasValue |= (targetTaskData.getRoot().getAttribute(field.getKey()).hasValue()
-					&& !targetTaskData.getRoot().getAttribute(field.getKey()).getValue().equals(""));
+			oneFieldHasValue |= (targetTaskData.getRoot().getAttribute(field.getKey()).hasValue() && !targetTaskData.getRoot()
+					.getAttribute(field.getKey())
+					.getValue()
+					.equals(""));
 			if (field.isQueryRequired()) {
 				String text = targetTaskData.getRoot().getAttribute(field.getKey()).getValue();
 				if (text == null || text.length() == 0) {

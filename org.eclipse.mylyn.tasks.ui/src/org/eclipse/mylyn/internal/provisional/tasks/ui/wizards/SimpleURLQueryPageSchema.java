@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.provisional.tasks.ui.wizards;
 
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
+@SuppressWarnings("nls")
 public class SimpleURLQueryPageSchema extends AbstractQueryPageSchema {
 	private static final SimpleURLQueryPageSchema instance = new SimpleURLQueryPageSchema();
 
