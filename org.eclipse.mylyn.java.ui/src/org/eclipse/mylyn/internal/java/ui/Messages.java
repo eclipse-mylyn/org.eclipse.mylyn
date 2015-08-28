@@ -18,6 +18,8 @@ public class Messages extends NLS {
 
 	public static String JavaStackTraceContextComputationStrategy_Finding_Java_Context_Element_Progress_Label;
 
+	public static String LandmarkMarkerManager_Mylyn_Landmark;
+
 	public static String LandmarkMarkerManager_Updating_Landmark_Markers;
 	static {
 		// initialize resource bundle

@@ -136,7 +136,7 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 								if (marker != null && range != null) {
 									marker.setAttribute(IMarker.CHAR_START, range.getOffset());
 									marker.setAttribute(IMarker.CHAR_END, range.getOffset() + range.getLength());
-									marker.setAttribute(IMarker.MESSAGE, "Mylyn Landmark");
+									marker.setAttribute(IMarker.MESSAGE, Messages.LandmarkMarkerManager_Mylyn_Landmark);
 									marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
 									markerMap.put(node, marker.getId());
 								}
