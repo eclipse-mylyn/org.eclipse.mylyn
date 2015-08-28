@@ -43,8 +43,6 @@ public class Messages extends NLS {
 
 	public static String SubmitTaskJob_Submitting_task;
 
-	public static String SynchronizeQueriesJob_Max_allowed_number_of_hits_returned_exceeded;
-
 	public static String SynchronizeQueriesJob_Processing;
 
 	public static String SynchronizeQueriesJob_Querying_repository;
