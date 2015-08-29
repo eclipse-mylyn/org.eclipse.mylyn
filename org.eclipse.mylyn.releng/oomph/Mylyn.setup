@@ -99,21 +99,34 @@
           name="org.objenesis"
           versionRange="[1.0.0,2.0.0)"/>
       <repositoryList
-          name="Mars">
+          name="Neon">
         <repository
-            url="http://download.eclipse.org/modeling/emf/emf/updates/2.11milestones/core"/>
+            url="http://download.eclipse.org/modeling/emf/emf/updates/2.12milestones/core"/>
         <repository
             url="http://download.eclipse.org/egit/updates"/>
         <repository
             url="http://download.eclipse.org/rt/ecf/latest/site.p2"/>
         <repository
-            url="http://download.eclipse.org/tools/cdt/builds/mars/milestones"/>
+            url="http://download.eclipse.org/tools/cdt/builds/neon/milestones"/>
         <repository
             url="http://download.eclipse.org/cbi/updates/license"/>
         <repository
             url="http://download.eclipse.org/mylyn/snapshots/weekly"/>
         <repository
-            url="http://download.eclipse.org/modeling/emf/cdo/orbit/latest-S"/>
+            url="http://download.eclipse.org/eclipse/updates/3.8"/>
+      </repositoryList>
+      <repositoryList
+          name="Mars">
+        <repository
+            url="http://download.eclipse.org/releases/mars"/>
+        <repository
+            url="http://download.eclipse.org/cbi/updates/license"/>
+        <repository
+            url="http://download.eclipse.org/mylyn/snapshots/weekly"/>
+        <repository
+            url="http://download.eclipse.org/modeling/emf/cdo/orbit/latest-R"/>
+        <repository
+            url="http://download.eclipse.org/eclipse/updates/3.8"/>
       </repositoryList>
       <repositoryList
           name="Luna">
@@ -125,6 +138,8 @@
             url="http://download.eclipse.org/mylyn/snapshots/weekly"/>
         <repository
             url="http://download.eclipse.org/modeling/emf/cdo/orbit/latest-R"/>
+        <repository
+            url="http://download.eclipse.org/eclipse/updates/3.8"/>
       </repositoryList>
       <repositoryList
           name="Kepler">
@@ -136,6 +151,8 @@
             url="http://download.eclipse.org/mylyn/snapshots/weekly"/>
         <repository
             url="http://download.eclipse.org/modeling/emf/cdo/orbit/latest-R"/>
+        <repository
+            url="http://download.eclipse.org/eclipse/updates/3.8"/>
       </repositoryList>
       <repositoryList
           name="Juno">
@@ -147,6 +164,8 @@
             url="http://download.eclipse.org/mylyn/snapshots/weekly"/>
         <repository
             url="http://download.eclipse.org/modeling/emf/cdo/orbit/latest-R"/>
+        <repository
+            url="http://download.eclipse.org/eclipse/updates/3.8"/>
       </repositoryList>
       <repositoryList
           name="Indigo">
@@ -281,11 +300,13 @@
     </setupTask>
     <setupTask
         xsi:type="mylyn:MylynBuildsTask"
-        serverURL="https://hudson.eclipse.org/hudson"
+        id="https://hudson.eclipse.org/mylyn"
+        serverURL="https://hudson.eclipse.org/mylyn"
         userID="${bugzilla.id}"
         password="${eclipse.user.password}">
       <buildPlan
           name="mylyn-builds-nightly"/>
+      <description>Hudson Mylyn HIPP Instance</description>
     </setupTask>
     <stream
         name="master"
@@ -370,11 +391,13 @@
     </setupTask>
     <setupTask
         xsi:type="mylyn:MylynBuildsTask"
-        serverURL="https://hudson.eclipse.org/hudson"
+        id="https://hudson.eclipse.org/mylyn"
+        serverURL="https://hudson.eclipse.org/mylyn"
         userID="${bugzilla.id}"
         password="${eclipse.user.password}">
       <buildPlan
           name="mylyn-commons-nightly"/>
+      <description>Hudson Mylyn HIPP Instance</description>
     </setupTask>
     <stream
         name="master"
@@ -495,11 +518,13 @@
     </setupTask>
     <setupTask
         xsi:type="mylyn:MylynBuildsTask"
-        serverURL="https://hudson.eclipse.org/hudson"
+        id="https://hudson.eclipse.org/mylyn"
+        serverURL="https://hudson.eclipse.org/mylyn"
         userID="${bugzilla.id}"
         password="${eclipse.user.password}">
       <buildPlan
           name="mylyn-context-nightly"/>
+      <description>Hudson Mylyn HIPP Instance</description>
     </setupTask>
     <stream
         name="master"
@@ -582,11 +607,13 @@
     </setupTask>
     <setupTask
         xsi:type="mylyn:MylynBuildsTask"
-        serverURL="https://hudson.eclipse.org/hudson"
+        id="https://hudson.eclipse.org/mylyn"
+        serverURL="https://hudson.eclipse.org/mylyn"
         userID="${bugzilla.id}"
         password="${eclipse.user.password}">
       <buildPlan
           name="mylyn-docs-nightly"/>
+      <description>Hudson Mylyn HIPP Instance</description>
     </setupTask>
     <stream
         name="master"
@@ -669,11 +696,13 @@
     </setupTask>
     <setupTask
         xsi:type="mylyn:MylynBuildsTask"
-        serverURL="https://hudson.eclipse.org/hudson"
+        id="https://hudson.eclipse.org/mylyn"
+        serverURL="https://hudson.eclipse.org/mylyn"
         userID="${bugzilla.id}"
         password="${eclipse.user.password}">
       <buildPlan
           name="mylyn-incubator-nightly"/>
+      <description>Hudson Mylyn HIPP Instance</description>
     </setupTask>
     <stream
         name="master"
@@ -804,11 +833,13 @@
     </setupTask>
     <setupTask
         xsi:type="mylyn:MylynBuildsTask"
-        serverURL="https://hudson.eclipse.org/hudson"
+        id="https://hudson.eclipse.org/mylyn"
+        serverURL="https://hudson.eclipse.org/mylyn"
         userID="${bugzilla.id}"
         password="${eclipse.user.password}">
       <buildPlan
           name="mylyn-reviews-nightly"/>
+      <description>Hudson Mylyn HIPP Instance</description>
     </setupTask>
     <stream
         name="master"
@@ -909,11 +940,13 @@
     </setupTask>
     <setupTask
         xsi:type="mylyn:MylynBuildsTask"
-        serverURL="https://hudson.eclipse.org/hudson"
+        id="https://hudson.eclipse.org/mylyn"
+        serverURL="https://hudson.eclipse.org/mylyn"
         userID="${bugzilla.id}"
         password="${eclipse.user.password}">
       <buildPlan
           name="mylyn-tasks-nightly"/>
+      <description>Hudson Mylyn HIPP Instance</description>
     </setupTask>
     <project
         name="bugzilla"
@@ -992,6 +1025,11 @@
         <sourceLocator
             rootFolder="${git.clone.mylyn.versions.location}"/>
         <repositoryList
+            name="Neon">
+          <repository
+              url="http://subclipse.tigris.org/update_1.8.x"/>
+        </repositoryList>
+        <repositoryList
             name="Mars">
           <repository
               url="http://subclipse.tigris.org/update_1.8.x"/>
@@ -1057,11 +1095,13 @@
     </setupTask>
     <setupTask
         xsi:type="mylyn:MylynBuildsTask"
-        serverURL="https://hudson.eclipse.org/hudson"
+        id="https://hudson.eclipse.org/mylyn"
+        serverURL="https://hudson.eclipse.org/mylyn"
         userID="${bugzilla.id}"
         password="${eclipse.user.password}">
       <buildPlan
           name="mylyn-versions-nightly"/>
+      <description>Hudson Mylyn HIPP Instance</description>
     </setupTask>
     <stream
         name="master"
@@ -1070,5 +1110,5 @@
   </project>
   <logicalProjectContainer
       xsi:type="setup:ProjectCatalog"
-      href="index:/org.eclipse.projects.setup#/"/>
+      href="archive:http://www.eclipse.org/setups/setups.zip!/http/git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/org.eclipse.setup#//@projectCatalogs[name='org.eclipse']"/>
 </setup:Project>
