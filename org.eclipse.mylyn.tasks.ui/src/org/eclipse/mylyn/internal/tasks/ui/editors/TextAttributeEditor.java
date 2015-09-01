@@ -45,6 +45,10 @@ public class TextAttributeEditor extends AbstractAttributeEditor {
 
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
+		createControl(parent, toolkit, SWT.NONE);
+	}
+
+	protected void createControl(Composite parent, FormToolkit toolkit, int style) {
 		if (isReadOnly()) {
 			text = new Text(parent, SWT.FLAT | SWT.READ_ONLY);
 			text.setFont(EditorUtil.TEXT_FONT);
@@ -52,7 +56,7 @@ public class TextAttributeEditor extends AbstractAttributeEditor {
 			text.setToolTipText(getDescription());
 			text.setText(getValue());
 		} else {
-			text = toolkit.createText(parent, getValue(), SWT.FLAT);
+			text = toolkit.createText(parent, getValue(), SWT.FLAT | style);
 			text.setFont(EditorUtil.TEXT_FONT);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 			text.setToolTipText(getDescription());

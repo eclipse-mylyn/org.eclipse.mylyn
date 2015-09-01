@@ -28,9 +28,11 @@ import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.mylyn.commons.ui.compatibility.CommonThemes;
 import org.eclipse.mylyn.commons.workbench.editors.CommonTextSupport;
+import org.eclipse.mylyn.internal.tasks.ui.OptionsProposalProvider;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
+import org.eclipse.mylyn.internal.tasks.ui.editors.LabelsAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.editors.PersonAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewerConfiguration.Mode;
@@ -81,7 +83,16 @@ public class AttributeEditorToolkit {
 	}
 
 	public void adapt(AbstractAttributeEditor editor) {
-		if (editor.getControl() instanceof Text || editor.getControl() instanceof CCombo
+		if (editor instanceof LabelsAttributeEditor) {
+			Control control = editor.getControl();
+			IContentProposalProvider contentProposalProvider = createContentProposalProvider(editor);
+			if (contentProposalProvider != null) {
+				ContentAssistCommandAdapter adapter = createContentAssistCommandAdapter(control,
+						contentProposalProvider);
+				adapter.setAutoActivationCharacters(null);
+				adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
+			}
+		} else if (editor.getControl() instanceof Text || editor.getControl() instanceof CCombo
 				|| editor instanceof PersonAttributeEditor) {
 			Control control = (editor instanceof PersonAttributeEditor)
 					? ((PersonAttributeEditor) editor).getText()
@@ -91,12 +102,11 @@ public class AttributeEditorToolkit {
 				control = editor.getControl();
 			}
 			if (!editor.isReadOnly() && hasContentAssist(editor.getTaskAttribute())) {
-				IContentProposalProvider contentProposalProvider = createContentProposalProvider(editor.getTaskAttribute());
+				IContentProposalProvider contentProposalProvider = createContentProposalProvider(editor);
 				ILabelProvider labelPropsalProvider = createLabelProposalProvider(editor.getTaskAttribute());
 				if (contentProposalProvider != null && labelPropsalProvider != null) {
-					ContentAssistCommandAdapter adapter = new ContentAssistCommandAdapter(control,
-							getContentAdapter(control), contentProposalProvider,
-							ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS, new char[0], true);
+					ContentAssistCommandAdapter adapter = createContentAssistCommandAdapter(control,
+							contentProposalProvider);
 					adapter.setLabelProvider(labelPropsalProvider);
 					adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 					if (editor instanceof PersonAttributeEditor) {
@@ -125,6 +135,12 @@ public class AttributeEditorToolkit {
 		EditorUtil.setMarker(editor.getControl(), editor.getTaskAttribute().getId());
 
 		editor.decorate(getColorIncoming());
+	}
+
+	ContentAssistCommandAdapter createContentAssistCommandAdapter(Control control,
+			IContentProposalProvider proposalProvider) {
+		return new ContentAssistCommandAdapter(control, getContentAdapter(control), proposalProvider,
+				ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS, new char[0], true);
 	}
 
 	private IControlContentAdapter getContentAdapter(Control control) {
@@ -171,12 +187,17 @@ public class AttributeEditorToolkit {
 	/**
 	 * Creates an IContentProposalProvider to provide content assist proposals for the given attribute.
 	 * 
-	 * @param attribute
-	 *            attribute for which to provide content assist.
+	 * @param editor
+	 *            editor for which to provide content assist.
 	 * @return the IContentProposalProvider.
 	 */
-	private IContentProposalProvider createContentProposalProvider(TaskAttribute attribute) {
+	IContentProposalProvider createContentProposalProvider(AbstractAttributeEditor editor) {
+		TaskAttribute attribute = editor.getTaskAttribute();
 		Map<String, String> proposals = attribute.getTaskData().getAttributeMapper().getOptions(attribute);
+		if (editor instanceof LabelsAttributeEditor) {
+			return new OptionsProposalProvider(proposals,
+					TaskAttribute.TYPE_MULTI_SELECT.equals(attribute.getMetaData().getType()));
+		}
 		return new PersonProposalProvider(null, attribute.getTaskData(), proposals);
 	}
 
