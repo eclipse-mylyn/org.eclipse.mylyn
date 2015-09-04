@@ -283,6 +283,10 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 		return getShell().getBounds();
 	}
 
+	public Rectangle getMonitorArea() {
+		return getShell().getMonitor().getClientArea();
+	}
+
 	public Rectangle computeTrim() {
 		return getShell().computeTrim(0, 0, 0, 0);
 	}
@@ -299,7 +303,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 	 */
 	public void setLocation(Point location) {
 		Rectangle bounds = getShell().getBounds();
-		Rectangle monitorBounds = getShell().getMonitor().getClientArea();
+		Rectangle monitorBounds = getMonitorArea();
 		// ensure the popup fits on the shell's monitor
 		bounds.x = constrain(location.x, monitorBounds.x, monitorBounds.x + monitorBounds.width - bounds.width);
 		bounds.y = constrain(location.y, monitorBounds.y, monitorBounds.y + monitorBounds.height - bounds.height);
@@ -319,7 +323,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 		Point size = composite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 
 		scrolledComposite.setMinSize(size);
-		int height = constrain(size.y, MIN_HEIGHT, getShell().getMonitor().getClientArea().height);
+		int height = constrain(size.y, MIN_HEIGHT, getMonitorArea().height);
 		getShell().setSize(size.x, height);
 		scrolledComposite.setSize(size.x, height);
 		setLocation(new Point(bounds.x, bounds.y));
@@ -340,7 +344,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 	}
 
 	public void setHeightBasedOnMouse(int mouseY) {
-		int mouseYFromBottom = getShell().getMonitor().getClientArea().height - mouseY;
+		int mouseYFromBottom = getMonitorArea().height + getMonitorArea().y - mouseY; // Coordinates are based on the primary monitor
 		recomputeSize();
 		setSize(MAX_WIDTH, constrain(mouseYFromBottom - ICON_BUFFER, MIN_HEIGHT, getShell().getSize().y));
 	}

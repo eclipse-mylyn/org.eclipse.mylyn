@@ -49,6 +49,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -66,6 +67,8 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
 public class CommentPopupDialogTest extends TestCase {
+
+	private static final int MAX_WIDTH = 500;
 
 	private final static String USER_ID = "1";
 
@@ -431,6 +434,44 @@ public class CommentPopupDialogTest extends TestCase {
 		addCommentEditor(commentPopupDialog, retrieveCommentFromUI(1));
 		secondPopupDialog = createPopupWithXComments(1, true);
 		assertFalse(secondPopupDialog.getEditable());
+	}
+
+	/**
+	 * Tests that setting the height based on the y-coordinate of the mouse works for one or more monitors
+	 */
+	@Test
+	public void testSetHeightBasedOnMouse() {
+		commentPopupDialog = spy(createPopupWithXComments(100, true));
+
+		// Monitor is the primary display
+		Rectangle monitorArea = new Rectangle(0, 0, 1680, 1050);
+		doReturn(monitorArea).when(commentPopupDialog).getMonitorArea();
+		commentPopupDialog.setHeightBasedOnMouse(500);
+		assertEquals(534, commentPopupDialog.getShell().getSize().y);
+
+		// Monitor to the left and below the top of primary display
+		monitorArea = new Rectangle(-1920, 480, 1920, 1080);
+		doReturn(monitorArea).when(commentPopupDialog).getMonitorArea();
+		commentPopupDialog.setHeightBasedOnMouse(500);
+		assertEquals(1044, commentPopupDialog.getShell().getSize().y);
+
+		// Monitor to the right and below the top of primary display
+		monitorArea = new Rectangle(1680, 480, 1920, 1080);
+		doReturn(monitorArea).when(commentPopupDialog).getMonitorArea();
+		commentPopupDialog.setHeightBasedOnMouse(500);
+		assertEquals(1044, commentPopupDialog.getShell().getSize().y);
+
+		// Monitor to the left above the top of primary display
+		monitorArea = new Rectangle(-1920, -420, 1920, 1080);
+		doReturn(monitorArea).when(commentPopupDialog).getMonitorArea();
+		commentPopupDialog.setHeightBasedOnMouse(500);
+		assertEquals(144, commentPopupDialog.getShell().getSize().y);
+
+		// Monitor to the right above the top of primary display
+		monitorArea = new Rectangle(1680, -420, 1920, 1080);
+		doReturn(monitorArea).when(commentPopupDialog).getMonitorArea();
+		commentPopupDialog.setHeightBasedOnMouse(500);
+		assertEquals(144, commentPopupDialog.getShell().getSize().y);
 	}
 
 	/**
