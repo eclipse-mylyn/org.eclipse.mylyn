@@ -41,8 +41,7 @@ public class MockRepositoryConnectorUi extends AbstractRepositoryConnectorUi {
 
 	@Override
 	public ITaskRepositoryPage getSettingsPage(TaskRepository taskRepository) {
-		// ignore
-		return null;
+		return new MockRepositorySettingsPage(taskRepository);
 	}
 
 	@Override
@@ -68,7 +67,8 @@ public class MockRepositoryConnectorUi extends AbstractRepositoryConnectorUi {
 		List<IHyperlink> links = new ArrayList<IHyperlink>();
 		Matcher m = HYPERLINK_PATTERN.matcher(text);
 		while (m.find()) {
-			links.add(new TaskHyperlink(new Region(textOffset + m.start(), m.end() - m.start()), repository, m.group()));
+			links.add(
+					new TaskHyperlink(new Region(textOffset + m.start(), m.end() - m.start()), repository, m.group()));
 		}
 		return links.toArray(new IHyperlink[0]);
 	}

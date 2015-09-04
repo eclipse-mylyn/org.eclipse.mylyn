@@ -11,22 +11,18 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
-import junit.framework.TestCase;
-
-import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnectorUi;
-import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.mylyn.tasks.tests.connector.MockRepositorySettingsPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -265,68 +261,6 @@ public class RepositorySettingsPageTest extends TestCase {
 			assertNotNull(page.createTaskRepository());
 		} finally {
 			page.dispose();
-		}
-
-	}
-
-	private class MockRepositorySettingsPage extends AbstractRepositorySettingsPage {
-
-		public MockRepositorySettingsPage(TaskRepository taskRepository) {
-			super("title", "summary", taskRepository);
-		}
-
-		public MockRepositorySettingsPage(TaskRepository taskRepository, AbstractRepositoryConnector connector) {
-			super("title", "summary", taskRepository, connector);
-		}
-
-		@Override
-		protected void createAdditionalControls(Composite parent) {
-			// ignore
-		}
-
-		@Override
-		protected boolean isValidUrl(String url) {
-			return super.isValidUrl(url);
-		}
-
-		@Override
-		protected void validateSettings() {
-			// ignore
-		}
-
-		Button getAnonymousButton() {
-			return anonymousButton;
-		}
-
-		StringFieldEditor getUserNameEditor() {
-			return repositoryUserNameEditor;
-		}
-
-		StringFieldEditor getPasswordEditor() {
-			return repositoryPasswordEditor;
-		}
-
-		Composite getParent() {
-			return compositeContainer;
-		}
-
-		@Override
-		protected Validator getValidator(TaskRepository repository) {
-			// ignore
-			return null;
-		}
-
-		@Override
-		public String getConnectorKind() {
-			return MockRepositoryConnector.CONNECTOR_KIND;
-		}
-
-		public StringFieldEditor getRepositoryUserNameEditor() {
-			return repositoryUserNameEditor;
-		}
-
-		public StringFieldEditor getRepositoryPasswordEditor() {
-			return repositoryPasswordEditor;
 		}
 
 	}

@@ -36,6 +36,8 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
+import com.google.common.base.Strings;
+
 /**
  * @author Mik Kersten
  * @author Steffen Pingel
@@ -149,8 +151,8 @@ public class NewRepositoryWizard extends Wizard implements INewWizard {
 			settingsPage.setWizard(this);
 			lastConnectorKind = connector.getConnectorKind();
 		}
-		if (settingsPage instanceof AbstractRepositorySettingsPage && brand != null) {
-			((AbstractRepositorySettingsPage) settingsPage).setBrand(brand);
+		if (settingsPage instanceof AbstractRepositorySettingsPage) {
+			((AbstractRepositorySettingsPage) settingsPage).setBrand(Strings.nullToEmpty(brand));
 		}
 	}
 
