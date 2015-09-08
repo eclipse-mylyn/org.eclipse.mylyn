@@ -336,7 +336,7 @@ public class GerritHttpClient {
 			}
 			try {
 				// Execute the method.
-				WebUtil.execute(httpClient, hostConfiguration, method, monitor);
+				execute(method, monitor);
 			} catch (IOException e) {
 				WebUtil.releaseConnection(method, monitor);
 				throw e;
@@ -386,7 +386,7 @@ public class GerritHttpClient {
 		method.setFollowRedirects(false);
 		int code;
 		try {
-			code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
+			code = execute(method, monitor);
 			if (code == HttpStatus.SC_OK) {
 				InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
 				try {
@@ -412,7 +412,7 @@ public class GerritHttpClient {
 		GetMethod method = new GetMethod(getUrl() + serviceUri);
 		try {
 			// Execute the method.
-			WebUtil.execute(httpClient, hostConfiguration, method, monitor);
+			execute(method, monitor);
 			return method;
 		} catch (IOException e) {
 			WebUtil.releaseConnection(method, monitor);
@@ -497,7 +497,7 @@ public class GerritHttpClient {
 		JsonRequest jsonRequest = new JsonRequest(GerritConnector.GERRIT_RPC_URI + "OpenIdService", entity); //$NON-NLS-1$
 		PostMethod method = jsonRequest.createMethod();
 		try {
-			int code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
+			int code = execute(method, monitor);
 			if (needsReauthentication(code, monitor)) {
 				return -1;
 			}
@@ -540,7 +540,7 @@ public class GerritHttpClient {
 			GetMethod validateMethod = new GetMethod(openIdResponse.getResponseUrl());
 			try {
 				// Execute the method.
-				WebUtil.execute(httpClient, hostConfiguration, validateMethod, monitor);
+				execute(validateMethod, monitor);
 			} catch (IOException e) {
 				WebUtil.releaseConnection(method, monitor);
 				throw e;
@@ -574,7 +574,7 @@ public class GerritHttpClient {
 		JsonRequest jsonRequest = new JsonRequest(GerritConnector.GERRIT_RPC_URI + "UserPassAuthService", entity); //$NON-NLS-1$
 		PostMethod method = jsonRequest.createMethod();
 		try {
-			int code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
+			int code = execute(method, monitor);
 			if (needsReauthentication(code, monitor)) {
 				return -1;
 			}
@@ -618,7 +618,7 @@ public class GerritHttpClient {
 			GetMethod method = new GetMethod(requestPath);
 			method.setFollowRedirects(false);
 			try {
-				int code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
+				int code = execute(method, monitor);
 				if (needsReauthentication(code, monitor)) {
 					return -1;
 				}
@@ -641,7 +641,7 @@ public class GerritHttpClient {
 		return HttpStatus.SC_NOT_FOUND;
 	}
 
-	private int authenticateForm(AuthenticationCredentials credentials, IProgressMonitor monitor) throws IOException,
+	int authenticateForm(AuthenticationCredentials credentials, IProgressMonitor monitor) throws IOException,
 			GerritException {
 		// try standard basic/digest/ntlm authentication first
 		String repositoryUrl = getUrl();
@@ -654,8 +654,8 @@ public class GerritHttpClient {
 		for (HttpMethodBase method : methods) {
 			int code;
 			try {
-				code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
-				if (code == HttpStatus.SC_METHOD_NOT_ALLOWED) {
+				code = execute(method, monitor);
+				if (code == HttpStatus.SC_BAD_REQUEST || code == HttpStatus.SC_METHOD_NOT_ALLOWED) {
 					continue; // try next http method
 				} else if (needsReauthentication(code, monitor)) {
 					return -1;
@@ -679,6 +679,10 @@ public class GerritHttpClient {
 			}
 		}
 		return HttpStatus.SC_NOT_FOUND;
+	}
+
+	int execute(org.apache.commons.httpclient.HttpMethod method, IProgressMonitor monitor) throws IOException {
+		return WebUtil.execute(httpClient, hostConfiguration, method, monitor);
 	}
 
 	private HttpMethodBase[] getFormAuthMethods(String repositoryUrl, AuthenticationCredentials credentials) {

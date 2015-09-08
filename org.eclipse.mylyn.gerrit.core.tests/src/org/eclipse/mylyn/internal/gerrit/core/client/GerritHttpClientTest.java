@@ -13,20 +13,34 @@
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 
 import org.apache.commons.httpclient.HttpMethodBase;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
 import org.eclipse.core.runtime.AssertionFailedException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient.JsonEntity;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient.Request;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient.Request.HttpMethod;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -39,6 +53,30 @@ import com.google.gson.reflect.TypeToken;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class GerritHttpClientTest {
+	public class TestGerritHttpClient extends GerritHttpClient {
+		private final int code;
+
+		private TestGerritHttpClient(AbstractWebLocation location, int code) {
+			super(location);
+			this.code = code;
+		}
+
+		@Override
+		public int execute(org.apache.commons.httpclient.HttpMethod method, IProgressMonitor monitor)
+				throws IOException {
+			return code;
+		}
+
+		@Override
+		void requestCredentials(IProgressMonitor monitor, AuthenticationType authenticationType)
+				throws GerritLoginException {
+		}
+
+		@Override
+		String getUrl() {
+			return "http://mock";
+		}
+	}
 
 	@Mock
 	AbstractWebLocation abstractWebLocation;
@@ -97,4 +135,26 @@ public class GerritHttpClientTest {
 		assertArrayEquals(binary, result);
 	}
 
+	@Test
+	public void authenticateForm() throws IOException, GerritException {
+		GerritHttpClient client = spy(new TestGerritHttpClient(abstractWebLocation, HttpStatus.SC_BAD_REQUEST));
+		int result = client.authenticateForm(new AuthenticationCredentials("", ""), new NullProgressMonitor());
+		assertEquals(HttpStatus.SC_NOT_FOUND, result);
+		InOrder inOrder = inOrder(client);
+		inOrder.verify(client).execute(isA(PostMethod.class), any(IProgressMonitor.class));
+		inOrder.verify(client).execute(isA(GetMethod.class), any(IProgressMonitor.class));
+
+		client = spy(new TestGerritHttpClient(abstractWebLocation, HttpStatus.SC_METHOD_NOT_ALLOWED));
+		result = client.authenticateForm(new AuthenticationCredentials("", ""), new NullProgressMonitor());
+		assertEquals(HttpStatus.SC_NOT_FOUND, result);
+		inOrder = inOrder(client);
+		inOrder.verify(client).execute(isA(PostMethod.class), any(IProgressMonitor.class));
+		inOrder.verify(client).execute(isA(GetMethod.class), any(IProgressMonitor.class));
+
+		client = spy(new TestGerritHttpClient(abstractWebLocation, HttpStatus.SC_UNAUTHORIZED));
+		result = client.authenticateForm(new AuthenticationCredentials("", ""), new NullProgressMonitor());
+		assertEquals(-1, result);
+		verify(client).execute(isA(PostMethod.class), any(IProgressMonitor.class));
+		verify(client, never()).execute(isA(GetMethod.class), any(IProgressMonitor.class));
+	}
 }
