@@ -128,17 +128,17 @@ public class CustomTaskListDecorationDrawer implements Listener {
 		if (data instanceof ITaskContainer) {
 			switch (event.type) {
 			case SWT.EraseItem: {
-//				if ("gtk".equals(SWT.getPlatform())) { //$NON-NLS-1$
-//					// GTK requires drawing on erase event so that images don't disappear when selected.
-//					if (activationImage != null) {
-//						drawActivationImage(activationImageOffset, event, activationImage);
-//					}
-//					if (!this.synchronizationOverlaid) {
-//						if (data instanceof ITaskContainer) {
-//							drawSyncronizationImage((ITaskContainer) data, event);
-//						}
-//					}
-//				}
+				if ("gtk".equals(SWT.getPlatform())) { //$NON-NLS-1$
+					// GTK requires drawing on erase event so that images don't disappear when selected.
+					if (activationImage != null) {
+						drawActivationImage(activationImageOffset, event, activationImage);
+					}
+					if (!this.synchronizationOverlaid) {
+						if (data instanceof ITaskContainer) {
+							drawSyncronizationImage((ITaskContainer) data, event);
+						}
+					}
+				}
 
 				// TODO: would be nice not to do this on each item's painting
 //				String text = tree.getFilterControl().getText();
