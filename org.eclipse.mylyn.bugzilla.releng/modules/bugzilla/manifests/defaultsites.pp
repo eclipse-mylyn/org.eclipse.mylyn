@@ -29,44 +29,44 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
     micro   => "18",
   }
 
-  bugzilla::site { "bugzilla-4.2.14":
+  bugzilla::site { "bugzilla-4.2.15":
     major   => "4",
     minor   => "2",
-    micro   => "14",
+    micro   => "15",
   }
 
-  bugzilla::site { "bugzilla-4.4.9-bugaliases":
+  bugzilla::site { "bugzilla-4.4.10-bugaliases":
     major         => "4",
     minor         => "4",
-    micro         => "9",
+    micro         => "10",
     usebugaliases => true,
   }
 
-  bugzilla::site { "bugzilla-4.4.9":
+  bugzilla::site { "bugzilla-4.4.10":
     major      => "4",
     minor      => "4",
-    micro      => "9",
+    micro      => "10",
     envdefault => true,
   }
 
-  bugzilla::site { "bugzilla-4.4.9-custom-wf":
+  bugzilla::site { "bugzilla-4.4.10-custom-wf":
     major       => "4",
     minor       => "4",
-    micro       => "9",
+    micro       => "10",
     custom_wf   => true,
   }
 
-  bugzilla::site { "bugzilla-4.4.9-custom-wf-and-status":
+  bugzilla::site { "bugzilla-4.4.10-custom-wf-and-status":
     major                => "4",
     minor                => "4",
-    micro                => "9",
+    micro                => "10",
     custom_wf_and_status => true,
   }
 
-  bugzilla::site { "bugzilla-5.0":
+  bugzilla::site { "bugzilla-5.0.1":
     major       => "5",
     minor       => "0",
-    micro       => "",
+    micro       => "1",
   }
  
   bugzilla::site { "bugzilla-master":
@@ -83,11 +83,10 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
  * REST sites
  *******************************************************************************/
 
-  bugzilla::site { "bugzilla-rest-5.0":
+  bugzilla::site { "bugzilla-rest-5.0.1":
     major           => "5",
     minor           => "0",
-    micro           => "",
-    branch          => "5.0",
+    micro           => "1",
     envtype         => "bugzillaREST",
     rest_enabled    => true,
     envdefault_rest => true,

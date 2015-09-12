@@ -184,7 +184,6 @@ public class BugzillaRestClientTest {
 				IOUtils.toString(
 						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/configuration.json")),
 				new Gson().toJson(configuration).replaceAll(repository.getRepositoryUrl(), "http://dummy.url"));
-
 	}
 
 	private void assertConfigurationFieldNames(Collection<Field> fields) throws IOException {
