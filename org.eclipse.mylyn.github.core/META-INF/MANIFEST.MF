@@ -3,7 +3,7 @@ Bundle-Localization: plugin
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.mylyn.github.core;singleton:=true
-Bundle-Version: 4.0.2.qualifier
+Bundle-Version: 4.0.2.201509141540-r
 Bundle-Vendor: %providerName
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.eclipse.mylyn.internal.github.core;version="4.0.2";x-friends:="org.eclipse.mylyn.github.ui",
