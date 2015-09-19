@@ -151,6 +151,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 			if (!monitor.isCanceled()) {
 				updateTaskData(repository, taskData, gerritChange, !anonymous, id);
 			}
+
 			return taskData;
 		} catch (GerritException e) {
 			throw connector.toCoreException(repository, NLS.bind("Problem retrieving task data for task: {0}", taskId), //$NON-NLS-1$
@@ -162,11 +163,11 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 
 	private RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> updateModelData(
 			TaskRepository repository, TaskData taskData, ReviewObserver reviewObserver, IProgressMonitor monitor)
-			throws CoreException {
+					throws CoreException {
 		GerritClient client = connector.getClient(repository);
 		GerritRemoteFactoryProvider factoryProvider = (GerritRemoteFactoryProvider) client.getFactoryProvider();
-		RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> consumer = factoryProvider.getReviewFactory()
-				.getConsumerForLocalKey(factoryProvider.getRoot(), taskData.getTaskId());
+		RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> consumer = factoryProvider
+				.getReviewFactory().getConsumerForLocalKey(factoryProvider.getRoot(), taskData.getTaskId());
 
 		consumer.addObserver(reviewObserver);
 		if (!consumer.isRetrieving()) {
@@ -212,7 +213,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 
 	/**
 	 * Get account id for repository
-	 * 
+	 *
 	 * @param client
 	 * @param repository
 	 * @param monitor
