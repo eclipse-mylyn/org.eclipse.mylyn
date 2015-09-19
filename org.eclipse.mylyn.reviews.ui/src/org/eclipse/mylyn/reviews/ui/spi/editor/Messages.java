@@ -51,6 +51,9 @@ public class Messages extends NLS {
 	public static String ReviewSetContentSection_X_comma_Y_Comments;
 
 	public static String ReviewSetSection_Patch_Sets;
+
+	public static String ReviewSet_BuildHeader;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

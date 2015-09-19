@@ -12,20 +12,27 @@
 package org.eclipse.mylyn.internal.gerrit.core.client.compat;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.mylyn.internal.gerrit.core.HudsonCommentParser;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.SubmitRecord.Label;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.CommitInfo;
+import org.eclipse.mylyn.reviews.internal.core.BuildResult;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.gerrit.common.data.ApprovalType;
 import com.google.gerrit.common.data.ApprovalTypes;
 import com.google.gerrit.common.data.ChangeDetail;
 import com.google.gerrit.reviewdb.ApprovalCategory;
 import com.google.gerrit.reviewdb.ApprovalCategoryValue;
+import com.google.gerrit.reviewdb.ChangeMessage;
 
 /**
  * Provides additional fields used by Gerrit 2.2.
@@ -71,6 +78,8 @@ public class ChangeDetailX extends ChangeDetail {
 
 	private Map<Integer, CommitInfo[]> parents;
 
+	private LinkedHashMap<String, BuildResult> patchSetBuildStatuses;
+
 	public boolean canRevert() {
 		return canRevert;
 	}
@@ -111,6 +120,10 @@ public class ChangeDetailX extends ChangeDetail {
 		this.approvalTypes = approvalTypes;
 	}
 
+	public Iterable<BuildResult> getPatchSetBuildStatuses() {
+		return ImmutableSet.copyOf(this.patchSetBuildStatuses.values());
+	}
+
 	public void convertSubmitRecordsToApprovalTypes(ApprovalTypes knownApprovalTypes) {
 		if (approvalTypes != null) {
 			throw new IllegalStateException();
@@ -133,7 +146,29 @@ public class ChangeDetailX extends ChangeDetail {
 		}
 	}
 
+	@Override
+	public List<ChangeMessage> getMessages() {
+		HudsonCommentParser commentParser = new HudsonCommentParser();
+		List<ChangeMessage> allMessages = super.getMessages();
+		List<ChangeMessage> filteredMessages = new ArrayList<ChangeMessage>();
+		// Builds up a map of the results
+		LinkedHashMap<String, BuildResult> patchSetBuildResults = new LinkedHashMap<String, BuildResult>();
+		for (ChangeMessage message : allMessages) {
+			ImmutableList<BuildResult> results = commentParser.getBuildResult(message.getMessage());
+			if (results.size() == 0) {
+				filteredMessages.add(message);
+			} else {
+				for (BuildResult result : results) {
+					patchSetBuildResults.put(result.getBuildUrl(), result);
+				}
+			}
+		}
+		this.patchSetBuildStatuses = patchSetBuildResults;
+		return filteredMessages;
+	}
+
 	private ApprovalType findTypeByLabel(ApprovalTypes knownApprovalTypes, String label) {
+
 		if (knownApprovalTypes == null || knownApprovalTypes.getApprovalTypes() == null) {
 			return null;
 		}

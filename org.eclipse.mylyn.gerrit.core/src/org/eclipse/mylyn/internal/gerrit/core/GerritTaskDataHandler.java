@@ -14,8 +14,10 @@
  *********************************************************************/
 package org.eclipse.mylyn.internal.gerrit.core;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -33,6 +35,8 @@ import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfObserver;
+import org.eclipse.mylyn.reviews.internal.core.BuildResult;
+import org.eclipse.mylyn.reviews.internal.core.TaskBuildStatusMapper;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
@@ -45,6 +49,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.osgi.util.NLS;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
 import com.google.gerrit.common.data.AccountInfo;
 import com.google.gerrit.common.data.ApprovalDetail;
 import com.google.gerrit.common.data.ChangeDetail;
@@ -122,8 +128,8 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 			}
 			return taskData;
 		} catch (GerritException e) {
-			throw connector.toCoreException(repository,
-					NLS.bind("Problem retrieving task data for task: {0}", taskId), e); //$NON-NLS-1$
+			throw connector.toCoreException(repository, NLS.bind("Problem retrieving task data for task: {0}", taskId), //$NON-NLS-1$
+					e);
 		} finally {
 			reviewObserver.dispose();
 		}
@@ -263,6 +269,18 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 			i++;
 		}
 
+		ListMultimap<Integer, BuildResult> resultsByPatchNumber = ArrayListMultimap.create();
+		for (BuildResult buildResult : ((ChangeDetailX) changeDetail).getPatchSetBuildStatuses()) {
+			resultsByPatchNumber.put(buildResult.getPatchSetNumber(), buildResult);
+		}
+		for (Entry<Integer, Collection<BuildResult>> buildResult : resultsByPatchNumber.asMap().entrySet()) {
+			int patchNumber = buildResult.getKey();
+			TaskBuildStatusMapper mapper = new TaskBuildStatusMapper(buildResult.getValue());
+			TaskAttribute attribute = data.getRoot().createAttribute(
+					TaskBuildStatusMapper.ATTR_TYPE_PATCH_SET + patchNumber);
+			mapper.applyTo(attribute);
+		}
+
 		setAttributeValue(data, schema.CAN_PUBLISH, Boolean.toString(canPublish));
 
 		// Retrieve the 'starred' state
@@ -322,7 +340,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		if (owner != null) {
 			String fullName = getFullNameFromAccount(repository);
 			if (fullName != null && fullName.equals(owner.getName())) {
-				// populate ITask.ownerId so that My Tasks filter works 
+				// populate ITask.ownerId so that My Tasks filter works
 				String preferredEmail = getPreferredEmailFromAccount(repository);
 				TaskAttribute ownerAttribute = setAttributeValue(data, schema.OWNER, preferredEmail);
 				ownerAttribute.putOption(preferredEmail, fullName);

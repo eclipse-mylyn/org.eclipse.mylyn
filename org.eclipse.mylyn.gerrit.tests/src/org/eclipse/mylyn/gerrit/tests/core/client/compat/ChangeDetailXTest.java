@@ -18,8 +18,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
@@ -31,6 +29,9 @@ import org.junit.Test;
 
 import com.google.gerrit.common.data.ApprovalType;
 import com.google.gerrit.common.data.ApprovalTypes;
+import com.google.gerrit.reviewdb.ChangeMessage;
+
+import junit.framework.TestCase;
 
 public class ChangeDetailXTest extends TestCase {
 	@Test
@@ -95,6 +96,18 @@ public class ChangeDetailXTest extends TestCase {
 
 		changeDetailX.convertSubmitRecordsToApprovalTypes(getTestConfig().getApprovalTypes());
 		assertNull(changeDetailX.getApprovalTypes()); // nothing has changed
+	}
+
+	@Test
+	public void testContinousIntegrationCommentsAreRemoved() throws Exception {
+		ChangeDetailXAsResult result = parseFile("testdata/ChangeDetailX_hudson.json");
+		ChangeDetailX changeDetailX = result.result;
+
+		assertEquals(1, changeDetailX.getMessages().size());
+
+		// Make sure the message with the Hudson message was removed
+		ChangeMessage lastMessageLeft = changeDetailX.getMessages().get(0);
+		assertFalse(lastMessageLeft.getMessage().contains("hudson.eclipse.org"));
 	}
 
 	private void assertLabelEqual(String expectedLabel, Label label) {

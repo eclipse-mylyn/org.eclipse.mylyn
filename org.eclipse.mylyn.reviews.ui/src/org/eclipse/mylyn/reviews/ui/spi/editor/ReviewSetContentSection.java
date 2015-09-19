@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -30,8 +31,11 @@ import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.ToolTip;
+import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.commons.ui.compatibility.CommonColors;
+import org.eclipse.mylyn.commons.workbench.browser.BrowserUtil;
 import org.eclipse.mylyn.commons.workbench.forms.ScalingHyperlink;
+import org.eclipse.mylyn.internal.reviews.ui.ReviewsImages;
 import org.eclipse.mylyn.internal.reviews.ui.providers.ReviewsLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.reviews.core.model.ICommit;
@@ -41,8 +45,12 @@ import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfObserver;
+import org.eclipse.mylyn.reviews.internal.core.BuildResult.BuildStatus;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -109,15 +117,15 @@ public class ReviewSetContentSection {
 		section.setTitleBarForeground(parentSection.getToolkit().getColors().getColor(IFormColors.TITLE));
 
 		parentSection.addTextClient(parentSection.getToolkit(), section, "", false); //$NON-NLS-1$
-		final RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, String, ?, ?, Long> itemSetConsumer = getParentSection().getReviewEditorPage()
+		final RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, String, ?, ?, Long> itemSetConsumer = getParentSection()
+				.getReviewEditorPage()
 				.getFactoryProvider()
 				.getReviewItemSetContentFactory()
 				.getConsumerForLocalKey(set, set.getId());
 		itemListObserver.setConsumer(itemSetConsumer);
-		final RemoteEmfConsumer<IRepository, IReview, String, ?, ?, Date> reviewConsumer = getParentSection().getReviewEditorPage()
-				.getFactoryProvider()
-				.getReviewFactory()
-				.getConsumerForModel(set.getReview().getRepository(), set.getReview());
+		final RemoteEmfConsumer<IRepository, IReview, String, ?, ?, Date> reviewConsumer = getParentSection()
+				.getReviewEditorPage().getFactoryProvider().getReviewFactory().getConsumerForModel(
+						set.getReview().getRepository(), set.getReview());
 		reviewObserver = new RemoteEmfObserver<IRepository, IReview, String, Date>() {
 			@Override
 			public void updated(boolean modified) {
@@ -165,9 +173,8 @@ public class ReviewSetContentSection {
 				message += " " + Messages.Reviews_RetrievingContents; //$NON-NLS-1$
 			}
 		} else {
-			message = NLS.bind(Messages.Reviews_UpdateFailure_X, itemListObserver.getConsumer()
-					.getStatus()
-					.getMessage());
+			message = NLS.bind(Messages.Reviews_UpdateFailure_X,
+					itemListObserver.getConsumer().getStatus().getMessage());
 		}
 
 		AbstractReviewSection.appendMessage(getSection(), message);
@@ -187,7 +194,17 @@ public class ReviewSetContentSection {
 		createCommitterLabel(leftColumn, colors);
 		createCommitLink(rightColumn, colors);
 		createRefLabel(rightColumn, colors);
-		createParentsLinks(composite, colors);
+		createParentsLinks(leftColumn, colors);
+
+		Composite fullWidth = parentSection.getToolkit().createComposite(composite);
+		GridDataFactory.fillDefaults().span(4, 1).grab(true, true).applyTo(fullWidth);
+		GridLayoutFactory.fillDefaults().numColumns(2).applyTo(fullWidth);
+
+		// We should only show the build labels in the case where there are any for this patch set
+		if (getPatchSetBuildAttribute() != null) {
+			createTitleLabel(fullWidth, colors, Messages.ReviewSet_BuildHeader, SWT.NONE);
+			createBuildLabels(composite, colors);
+		}
 
 		tableContainer = new Composite(composite, SWT.NONE);
 		tableContainer.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GRAY));
@@ -202,10 +219,55 @@ public class ReviewSetContentSection {
 		parentSection.getTaskEditorPage().reflow();
 	}
 
+	private void createBuildLabels(Composite composite, FormColors colors) {
+		TaskAttribute buildAttribute = getPatchSetBuildAttribute();
+		if (buildAttribute == null) {
+			return;
+		}
+
+		int numberOfBuilds = buildAttribute.getAttributes().size();
+
+		for (Entry<String, TaskAttribute> buildEntry : buildAttribute.getAttributes().entrySet()) {
+
+			TaskAttribute currentBuildAttribute = buildEntry.getValue();
+
+			String statusValue = currentBuildAttribute.getAttribute("STATUS").getValue(); //$NON-NLS-1$
+			final String urlValue = currentBuildAttribute.getAttribute("URL").getValue(); //$NON-NLS-1$
+
+			if (statusValue == null | urlValue == null) {
+				continue;
+			}
+
+			ScalingHyperlink buildLink = new ScalingHyperlink(composite, SWT.READ_ONLY);
+			buildLink.setText(urlValue);
+			buildLink.setForeground(CommonColors.HYPERLINK_WIDGET);
+
+			buildLink.registerMouseTrackListener();
+			buildLink.addHyperlinkListener(new HyperlinkAdapter() {
+				@Override
+				public void linkActivated(HyperlinkEvent event) {
+					BrowserUtil.openUrl(urlValue);
+				}
+			});
+
+			CLabel buildText = new CLabel(composite, SWT.RIGHT_TO_LEFT);
+			buildText.setText(statusValue);
+			buildText.setImage(this.getImageForBuildStatus(statusValue));
+
+		}
+
+	}
+
+	private TaskAttribute getPatchSetBuildAttribute() {
+		String patchSetId = this.set.getId();
+		TaskAttribute buildAttribute = this.parentSection.getTaskData()
+				.getRoot()
+				.getAttribute("PATCH_SET-" + patchSetId); //$NON-NLS-1$
+		return buildAttribute;
+	}
+
 	private void createAuthorLabel(Composite composite, FormColors colors) {
-		Label authorLabel = new Label(composite, SWT.NONE);
-		authorLabel.setForeground(colors.getColor(IFormColors.TITLE));
-		authorLabel.setText(Messages.ReviewSetContentSection_Author);
+		createTitleLabel(composite, colors, Messages.ReviewSetContentSection_Author, SWT.NONE);
 
 		Text authorText = new Text(composite, SWT.READ_ONLY);
 		if (set.getAddedBy() != null) {
@@ -297,6 +359,13 @@ public class ReviewSetContentSection {
 		});
 	}
 
+	private Label createTitleLabel(Composite composite, FormColors colors, String text, int style) {
+		Label titleLabel = new Label(composite, style);
+		titleLabel.setForeground(colors.getColor(IFormColors.TITLE));
+		titleLabel.setText(text);
+		return titleLabel;
+	}
+
 	public void createItemSetTable() {
 		if (viewer == null && !set.getItems().isEmpty()) {
 
@@ -366,6 +435,16 @@ public class ReviewSetContentSection {
 		if (set.getItems().size() > 0 && viewer != null) {
 			viewer.setInput(set);
 		}
+	}
+
+	private Image getImageForBuildStatus(String status) {
+		if (status.equals(BuildStatus.SUCCESS.toString())) {
+			return CommonImages.getImage(ReviewsImages.APPROVED);
+		} else if (status.equals(BuildStatus.STARTED.toString())) {
+			return CommonImages.getImage(ReviewsImages.UNKNOWN);
+		}
+
+		return CommonImages.getImage(ReviewsImages.REJECTED);
 	}
 
 	public void createButtons() {
