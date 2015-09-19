@@ -78,7 +78,7 @@ public class TaskBuildStatusMapperTest {
 
 		assertEquals(2, root.getAttributes().size());
 
-		TaskAttribute firstBuildResultAttribute = root.getAttribute(TaskBuildStatusMapper.ATTR_TYPE_BUILD_RESULT + "0");
+		TaskAttribute firstBuildResultAttribute = root.getAttribute(TaskBuildStatusMapper.ATTR_ID_BUILD_RESULT + "0");
 		assertNotNull(firstBuildResultAttribute);
 
 		assertEquals("0",
@@ -91,7 +91,7 @@ public class TaskBuildStatusMapperTest {
 				firstBuildResultAttribute.getAttribute(TaskBuildStatusMapper.STATUS_ATTRIBUTE_KEY).getValue());
 
 		TaskAttribute secondBuildResultAttribute = root
-				.getAttribute(TaskBuildStatusMapper.ATTR_TYPE_BUILD_RESULT + "1");
+				.getAttribute(TaskBuildStatusMapper.ATTR_ID_BUILD_RESULT + "1");
 		assertNotNull(secondBuildResultAttribute);
 		assertEquals("1",
 				secondBuildResultAttribute.getAttribute(TaskBuildStatusMapper.BUILD_NUMBER_ATTRIBUTE_KEY).getValue());

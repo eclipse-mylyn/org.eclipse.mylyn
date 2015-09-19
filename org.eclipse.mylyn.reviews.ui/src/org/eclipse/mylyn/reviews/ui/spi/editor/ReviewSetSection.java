@@ -65,7 +65,7 @@ public abstract class ReviewSetSection extends AbstractReviewSection {
 		for (IReviewItem item : getReview().getSets()) {
 			if (item instanceof IReviewItemSet) {
 				IReviewItemSet set = (IReviewItemSet) item;
-				ReviewSetContentSection subSection = new ReviewSetContentSection(this, set);
+				ReviewSetContentSection subSection = new ReviewSetContentSection(this, set, getTaskEditorPage());
 				reviewSetSections.add(subSection);
 			}
 		}

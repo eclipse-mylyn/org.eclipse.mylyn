@@ -95,7 +95,32 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 
 	@Override
 	public TaskAttributeMapper getAttributeMapper(TaskRepository repository) {
-		return new TaskAttributeMapper(repository);
+		return new TaskAttributeMapper(repository) {
+			@SuppressWarnings("restriction")
+			@Override
+			public boolean equals(TaskAttribute newAttribute, TaskAttribute oldAttribute) {
+
+				if (oldAttribute == null) {
+					return false;
+				}
+
+				if (!TaskBuildStatusMapper.BUILD_RESULT_TYPE.equals(newAttribute.getMetaData().getType())) {
+					return super.equals(newAttribute, oldAttribute);
+				}
+
+				if (!super.equals(newAttribute, oldAttribute)) {
+					return false;
+				}
+
+				for (TaskAttribute newChild : newAttribute.getAttributes().values()) {
+					if (!equals(newChild, oldAttribute.getAttribute(newChild.getId()))) {
+						return false;
+					}
+				}
+
+				return true;
+			}
+		};
 	}
 
 	/**

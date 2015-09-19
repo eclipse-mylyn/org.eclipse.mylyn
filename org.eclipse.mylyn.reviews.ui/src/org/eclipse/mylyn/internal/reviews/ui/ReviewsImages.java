@@ -51,6 +51,8 @@ public class ReviewsImages {
 
 	public static final ImageDescriptor UNKNOWN = create("obj12/unknown.gif"); //$NON-NLS-1$
 
+	public static final ImageDescriptor UNSTABLE = create("obj12/unstable.png"); //$NON-NLS-1$
+
 	public static final ImageDescriptor BLANK = create("obj12/blank.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor NEXT_COMMENT = create("elcl16/nxtanmly_menu.png"); //$NON-NLS-1$

@@ -27,6 +27,8 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 
 public class TaskBuildStatusMapper {
+	public static final String BUILD_RESULT_TYPE = "BuildResult";
+
 	public static final String JOB_NAME_ATTRIBUTE_KEY = "JOB"; //$NON-NLS-1$
 
 	public static final String BUILD_NUMBER_ATTRIBUTE_KEY = "NUMBER"; //$NON-NLS-1$
@@ -35,7 +37,7 @@ public class TaskBuildStatusMapper {
 
 	public static final String URL_ATTRIBUTE_KEY = "URL"; //$NON-NLS-1$
 
-	public static final String ATTR_TYPE_BUILD_RESULT = "BUILD_RESULT-"; //$NON-NLS-1$
+	public static final String ATTR_ID_BUILD_RESULT = "BUILD_RESULT-"; //$NON-NLS-1$
 
 	public static final String ATTR_TYPE_PATCH_SET = "PATCH_SET-";
 
@@ -50,7 +52,7 @@ public class TaskBuildStatusMapper {
 
 		TaskData taskData = taskAttribute.getTaskData();
 		TaskAttributeMapper mapper = taskData.getAttributeMapper();
-		taskAttribute.getMetaData().defaults().setType("BuildResult"); //$NON-NLS-1$
+		taskAttribute.getMetaData().defaults().setType(BUILD_RESULT_TYPE);
 
 		Function<BuildResult, String> groupFunction = new Function<BuildResult, String>() {
 			@Override
@@ -72,24 +74,30 @@ public class TaskBuildStatusMapper {
 				}
 			});
 
-			TaskAttribute buildAttribute = taskAttribute.createAttribute(ATTR_TYPE_BUILD_RESULT + i);
+			TaskAttribute buildAttribute = taskAttribute.createAttribute(ATTR_ID_BUILD_RESULT + i);
+			buildAttribute.getMetaData().defaults().setType(BUILD_RESULT_TYPE);
+
 			if (result.getBuildUrl() != null) {
 				TaskAttribute child = buildAttribute.createAttribute(URL_ATTRIBUTE_KEY);
+				child.getMetaData().defaults().setType(BUILD_RESULT_TYPE);
 				mapper.setValue(child, result.getBuildUrl());
 			}
 
 			if (result.getBuildStatus() != null) {
 				TaskAttribute child = buildAttribute.createAttribute(STATUS_ATTRIBUTE_KEY);
+				child.getMetaData().defaults().setType(BUILD_RESULT_TYPE);
 				mapper.setValue(child, result.getBuildStatus().toString());
 			}
 
 			if (result.getBuildNumber() > -1) {
 				TaskAttribute child = buildAttribute.createAttribute(BUILD_NUMBER_ATTRIBUTE_KEY);
+				child.getMetaData().defaults().setType(BUILD_RESULT_TYPE);
 				mapper.setValue(child, String.valueOf(result.getBuildNumber()));
 			}
 
 			if (result.getJobName() != null) {
 				TaskAttribute child = buildAttribute.createAttribute(JOB_NAME_ATTRIBUTE_KEY);
+				child.getMetaData().defaults().setType(BUILD_RESULT_TYPE);
 				mapper.setValue(child, result.getJobName());
 			}
 

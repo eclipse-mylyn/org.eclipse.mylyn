@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  *  Contributors:
  *      Sony Ericsson/ST Ericsson - initial API and implementation
  *********************************************************************/
@@ -20,7 +20,9 @@ import org.eclipse.mylyn.internal.gerrit.core.GerritQueryResultSchema;
 import org.eclipse.mylyn.internal.gerrit.core.GerritTaskSchema;
 import org.eclipse.mylyn.internal.tasks.ui.editors.PersonAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorAttributePart;
+import org.eclipse.mylyn.reviews.internal.core.TaskBuildStatusMapper;
 import org.eclipse.mylyn.reviews.ui.spi.editor.AbstractReviewTaskEditorPage;
+import org.eclipse.mylyn.reviews.ui.spi.editor.BuildStatusAttributeEditor;
 import org.eclipse.mylyn.reviews.ui.spi.editor.ReviewDetailSection;
 import org.eclipse.mylyn.reviews.ui.spi.editor.ReviewSetSection;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -78,6 +80,8 @@ public class GerritTaskEditorPage extends AbstractReviewTaskEditorPage {
 					AbstractAttributeEditor editor = super.createEditor(type, taskAttribute);
 					editor.setLayoutHint(new LayoutHint(RowSpan.SINGLE, ColumnSpan.MULTIPLE));
 					return editor;
+				} else if (type.equals(TaskBuildStatusMapper.BUILD_RESULT_TYPE)) {
+					return new BuildStatusAttributeEditor(getModel(), taskAttribute);
 				} else if (TaskAttribute.TYPE_PERSON.equals(type)) {
 					return new PersonAttributeEditor(getModel(), taskAttribute) {
 						@Override
@@ -94,6 +98,7 @@ public class GerritTaskEditorPage extends AbstractReviewTaskEditorPage {
 				return super.createEditor(type, taskAttribute);
 			}
 		};
+
 	}
 
 	@Override
