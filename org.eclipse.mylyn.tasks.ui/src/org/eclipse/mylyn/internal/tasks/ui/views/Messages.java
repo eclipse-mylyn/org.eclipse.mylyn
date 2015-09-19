@@ -51,6 +51,8 @@ public class Messages extends NLS {
 
 	public static String TaskListFilteredTree_Select_Working_Set;
 
+	public static String TaskListFilteredTree_Show_Tasks_UI_Legend;
+
 	public static String TaskListFilteredTree_Workweek_Progress;
 
 	public static String TaskListSorter_Catagory_and_Query;

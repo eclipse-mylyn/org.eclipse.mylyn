@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -28,6 +29,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.commons.ui.SelectionProviderAdapter;
 import org.eclipse.mylyn.commons.workbench.AbstractFilteredTree;
+import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.commons.workbench.search.SearchHistoryPopupDialog;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
@@ -39,6 +41,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskDialogAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.RepositoryElementActionGroup;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskWorkingSetAction;
+import org.eclipse.mylyn.internal.tasks.ui.dialogs.UiLegendDialog;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.search.AbstractSearchHandler;
 import org.eclipse.mylyn.internal.tasks.ui.search.AbstractSearchHandler.IFilterChangeListener;
@@ -64,6 +67,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
@@ -144,8 +148,8 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 				}
 				if (taskProgressBarWorkingSetListener != null) {
 					PlatformUI.getWorkbench()
-					.getWorkingSetManager()
-					.removePropertyChangeListener(taskProgressBarWorkingSetListener);
+							.getWorkingSetManager()
+							.removePropertyChangeListener(taskProgressBarWorkingSetListener);
 				}
 				actionGroup.setSelectionProvider(null);
 				activeTaskMenuManager.dispose();
@@ -326,9 +330,9 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 							+ "\n" //$NON-NLS-1$
 							+ MessageFormat.format(Messages.TaskListFilteredTree_Estimated_hours, completeTime,
 									completeTime + incompleteTime)
-									+ "\n" //$NON-NLS-1$
-									+ MessageFormat.format(Messages.TaskListFilteredTree_Scheduled_tasks, completeTasks,
-											totalTasks));
+							+ "\n" //$NON-NLS-1$
+							+ MessageFormat.format(Messages.TaskListFilteredTree_Scheduled_tasks, completeTasks,
+									totalTasks));
 				}
 			}
 		});
@@ -602,6 +606,26 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	@Override
 	protected SearchHistoryPopupDialog getHistoryPopupDialog() {
 		return null;
+	}
+
+	@Override
+	protected Composite createAdditionalControls(Composite parent) {
+		Composite container = new Composite(parent, SWT.NULL);
+		GridLayoutFactory.fillDefaults().applyTo(container);
+
+		ImageHyperlink showUILegend = new ImageHyperlink(container, SWT.NONE);
+		showUILegend.setImage(CommonImages.QUESTION.createImage());
+		showUILegend.setToolTipText(Messages.TaskListFilteredTree_Show_Tasks_UI_Legend);
+		showUILegend.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
+				UiLegendDialog uiLegendDialog = new UiLegendDialog(WorkbenchUtil.getShell());
+				uiLegendDialog.open();
+
+			}
+		});
+
+		return container;
 	}
 
 }
