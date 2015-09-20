@@ -32,7 +32,7 @@ import org.eclipse.ui.progress.WorkbenchJob;
 
 /**
  * A filtered tree with additional controls below the filter text field.
- * 
+ *
  * @author Mik Kersten
  * @since 3.7
  */
@@ -61,7 +61,7 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 
 	/**
 	 * XXX: using reflection to gain access
-	 * 
+	 *
 	 * @param parent
 	 * @param treeStyle
 	 * @param filter
@@ -73,9 +73,8 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 			refreshPolicy = new AdaptiveRefreshPolicy(refreshJob);
 
 		} catch (Exception e) {
-			CommonsWorkbenchPlugin.getDefault()
-					.getLog()
-					.log(new Status(IStatus.ERROR, CommonsWorkbenchPlugin.ID_PLUGIN, "Could not get refresh job", e)); //$NON-NLS-1$
+			CommonsWorkbenchPlugin.getDefault().getLog().log(
+					new Status(IStatus.ERROR, CommonsWorkbenchPlugin.ID_PLUGIN, "Could not get refresh job", e)); //$NON-NLS-1$
 		}
 		setInitialText(LABEL_FIND);
 	}
@@ -186,6 +185,14 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 					.applyTo(activeTaskComposite);
 		}
 
+		Composite additionalComposite = createAdditionalControls(filterComposite);
+		if (additionalComposite != null) {
+			GridDataFactory.fillDefaults()
+					.align(SWT.BEGINNING, SWT.CENTER)
+					.grab(true, false)
+					.applyTo(additionalComposite);
+		}
+
 		gridLayout.numColumns = filterComposite.getChildren().length;
 		return parent;
 	}
@@ -200,11 +207,18 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 		return null;
 	}
 
+	/**
+	 * @since 3.18
+	 */
+	protected Composite createAdditionalControls(Composite container) {
+		return null;
+	}
+
 	@Override
 	protected void textChanged() {
 		// this call allows the filtered tree to preserve the selection when the clear button is used.
-		// It is necessary to correctly set the private narrowingDown flag in the super class. 
-		// Note that the scheduling of the refresh job that is done in the super class will be overridden 
+		// It is necessary to correctly set the private narrowingDown flag in the super class.
+		// Note that the scheduling of the refresh job that is done in the super class will be overridden
 		// by the call to refreshPolicy.textChanged().
 		String text = getFilterString();
 		if (text == null || text.equals(previousFilterText)) {
