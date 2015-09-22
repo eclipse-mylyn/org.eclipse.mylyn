@@ -358,6 +358,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		}
 		Point p = innerComposite.getContent().computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
 		innerComposite.setMinSize(p);
+		innerComposite.getShell().layout();
 		if (needsRepositoryCredentials()) {
 			swapUserNameWithAnonymousInTabList();
 		}
