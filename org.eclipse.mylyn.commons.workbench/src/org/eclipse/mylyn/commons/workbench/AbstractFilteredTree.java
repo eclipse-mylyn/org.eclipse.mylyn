@@ -187,10 +187,7 @@ public abstract class AbstractFilteredTree extends EnhancedFilteredTree {
 
 		Composite additionalComposite = createAdditionalControls(filterComposite);
 		if (additionalComposite != null) {
-			GridDataFactory.fillDefaults()
-					.align(SWT.BEGINNING, SWT.CENTER)
-					.grab(true, false)
-					.applyTo(additionalComposite);
+			GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).grab(true, false).applyTo(additionalComposite);
 		}
 
 		gridLayout.numColumns = filterComposite.getChildren().length;
