@@ -131,6 +131,11 @@ public class CommonImages {
 
 	public static final ImageDescriptor OVERLAY_SYNC_INCOMMING = create(T_EVIEW, "overlay-incoming.gif"); //$NON-NLS-1$
 
+	/**
+	 * @since 3.18
+	 */
+	public static final ImageDescriptor OVERLAY_SYNC_INCOMING_REVIEWS = create(T_EVIEW, "overlay-incoming-reviews.png"); //$NON-NLS-1$
+
 	public static final ImageDescriptor OVERLAY_SYNC_INCOMMING_NEW = create(T_EVIEW, "overlay-incoming-new.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor OVERLAY_SYNC_OUTGOING = create(T_EVIEW, "overlay-outgoing.gif"); //$NON-NLS-1$
@@ -325,7 +330,7 @@ public class CommonImages {
 
 	/**
 	 * Lazily initializes image map.
-	 * 
+	 *
 	 * @param imageDescriptor
 	 * @return Image
 	 */
@@ -362,7 +367,7 @@ public class CommonImages {
 
 	/**
 	 * Lazily initializes image map.
-	 * 
+	 *
 	 * @param icon
 	 *            cannot be null
 	 * @param overlayKind
