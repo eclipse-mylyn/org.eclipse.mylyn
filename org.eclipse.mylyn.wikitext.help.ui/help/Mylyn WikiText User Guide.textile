@@ -11,7 +11,7 @@ h2. Table of Contents
 
 h1. Getting Started
 
-The WikiText plug-in provides a lightweight markup editor for Eclipse.  The editor is registered against all files with the following file extensions: @*.textile@, @*.tracwiki@, @*.mediawiki@, @*.twiki@, @*.confluence@
+The WikiText plug-in provides a lightweight markup editor for Eclipse. The editor is registered against all files with the following file extensions: @*.textile@, @*.tracwiki@, @*.markdown@, @*.md@, @*.mdtext@, @*.mediawiki@, @*.twiki@, @*.confluence@
 
 It's also possible to register the editor with other file extensions by setting the Eclipse preferences under *General -> Other -> File Associations*.
 
@@ -296,7 +296,7 @@ The @markupLanguage@ attribute accepts any of the following values (depending on
 *common task options* 
 
 |_. Option |_. Usage |
-| @markupLanguage@ | The markup language to use, for example 'Textile', 'Confluence', 'MediaWiki', 'TracWiki', 'TWiki'. |
+| @markupLanguage@ | The markup language to use, for example 'Textile', 'Confluence', 'Markdown', 'MediaWiki', 'TracWiki', 'TWiki'. |
 | @validate@ | Indicate if the input file should be validated.  Default is @true@. |
 | @failOnValidationError@ | Indicate if validation errors should cause a build failure. @true@ or @false@, default is true.  |
 | @failOnValidationWarning@ | Indicate if validation warnings should cause a build failure. @true@ or @false@, default is false.  |
