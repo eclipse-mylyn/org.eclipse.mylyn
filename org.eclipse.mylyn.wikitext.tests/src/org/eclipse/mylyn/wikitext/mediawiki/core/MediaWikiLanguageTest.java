@@ -1300,6 +1300,34 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 				"= <span style=\"font-family:monospace\">Heading Text</span> =\n\n text");
 	}
 
+	@Test
+	public void testBehaviorSwitches() {
+		//Bug 468609
+		assertMarkup("", "__NOTOC__");
+		assertMarkup("", "__FORCETOC__");
+		assertMarkup("", "__NOEDITSECTION__");
+		assertMarkup("", "__NEWSECTIONLINK__");
+		assertMarkup("", "__NONEWSECTIONLINK__");
+		assertMarkup("", "__NOGALLERY__");
+		assertMarkup("", "__HIDDENCAT__");
+		assertMarkup("", "__NOCONTENTCONVERT__");
+		assertMarkup("", "__NOCC__");
+		assertMarkup("", "__NOTITLECONVERT__");
+		assertMarkup("", "__NOTC__");
+		assertMarkup("", "__START__");
+		assertMarkup("", "__END__");
+		assertMarkup("", "__INDEX__");
+		assertMarkup("", "__NOINDEX__");
+		assertMarkup("", "__STATICREDIRECT__");
+		assertMarkup("", "__DISAMBIG__");
+	}
+
+	@Test
+	public void testBehaviorSwitchesWithText() {
+		//Bug 468609
+		assertMarkup("<p>Lorem ipsum</p><p>Ipsum Lorem</p>", "Lorem ipsum\n\n__NOTOC__\n\nIpsum Lorem");
+	}
+
 	private String readFully(String resource) throws IOException {
 		return Resources.toString(MediaWikiLanguageTest.class.getResource(resource), StandardCharsets.UTF_8);
 	}

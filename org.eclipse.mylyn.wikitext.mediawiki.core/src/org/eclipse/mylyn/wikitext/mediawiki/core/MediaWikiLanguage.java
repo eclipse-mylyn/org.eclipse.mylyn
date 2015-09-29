@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.AbstractMediaWikiLanguage;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.BuiltInTemplateResolver;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.MediaWikiIdGenerationStrategy;
+import org.eclipse.mylyn.internal.wikitext.mediawiki.core.block.BehaviorSwitchBlock;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.block.CommentBlock;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.block.EscapeBlock;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.block.HeadingBlock;
@@ -44,10 +45,10 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.ImpliedHyperlinkRepla
 import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLiteralReplacementToken;
 
 /**
- * A markup language for <a href="http://www.mediawiki.org">MediaWiki</a> <a
- * href="http://en.wikipedia.org/wiki/Wikitext">Wikitext markup</a>, which is the wiki format used by <a
- * href="http://www.wikipedia.org>WikiPedia</a> and <a href="http://www.wikimedia.org/">several other major sites</a>.
- * 
+ * A markup language for <a href="http://www.mediawiki.org">MediaWiki</a>
+ * <a href="http://en.wikipedia.org/wiki/Wikitext">Wikitext markup</a>, which is the wiki format used by <a href=
+ * "http://www.wikipedia.org>WikiPedia</a> and <a href="http://www.wikimedia.org/">several other major sites</a>.
+ *
  * @author David Green
  * @since 1.0
  */
@@ -68,7 +69,7 @@ public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
 
 	/**
 	 * Convert a page name to an href to the page.
-	 * 
+	 *
 	 * @param pageName
 	 *            the name of the page to target
 	 * @return the href to access the page
@@ -101,6 +102,7 @@ public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
 		blocks.add(new TableOfContentsBlock());
 		blocks.add(new EscapeBlock());
 		blocks.add(new CommentBlock());
+		blocks.add(new BehaviorSwitchBlock());
 
 		for (Block block : blocks) {
 			if (block instanceof ParagraphBlock || block instanceof CommentBlock) {
@@ -130,10 +132,10 @@ public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
 		if (!escapingHtml) {
 			String[] allowedHtmlTags = new String[] { // HANDLED BY LineBreakToken "<br>",
 					// HANDLED BY LineBreakToken "<br/>",
-					"b", "big", "blockquote", "caption", "center", "cite", "code", "dd", "del", "div", "dl", "dt", "em", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$
-					"font", "h1", "h2", "h3", "h4", "h5", "h6", "hr", "i", "ins", "li", "ol", "p", "pre", "rb", "rp", "rt", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$ //$NON-NLS-14$ //$NON-NLS-15$ //$NON-NLS-16$ //$NON-NLS-17$
-					"ruby", "s", "small", "span", "strike", "strong", "sub", "sup", "table", "td", "th", "tr", "tt", "u", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$ //$NON-NLS-14$
-					"ul", "var" }; //$NON-NLS-1$ //$NON-NLS-2$
+					"b", "big", "blockquote", "caption", "center", "cite", "code", "dd", "del", "div", "dl", "dt", "em", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$//$NON-NLS-6$//$NON-NLS-7$//$NON-NLS-8$//$NON-NLS-9$//$NON-NLS-10$//$NON-NLS-11$//$NON-NLS-12$//$NON-NLS-13$
+					"font", "h1", "h2", "h3", "h4", "h5", "h6", "hr", "i", "ins", "li", "ol", "p", "pre", "rb", "rp", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$//$NON-NLS-6$//$NON-NLS-7$//$NON-NLS-8$//$NON-NLS-9$//$NON-NLS-10$//$NON-NLS-11$//$NON-NLS-12$//$NON-NLS-13$//$NON-NLS-14$//$NON-NLS-15$//$NON-NLS-16$
+					"rt", "ruby", "s", "small", "span", "strike", "strong", "sub", "sup", "table", "td", "th", "tr", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$//$NON-NLS-6$//$NON-NLS-7$//$NON-NLS-8$//$NON-NLS-9$//$NON-NLS-10$//$NON-NLS-11$//$NON-NLS-12$//$NON-NLS-13$
+					"tt", "u", "ul", "var" }; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
 			phraseModifierSyntax.add(new LimitedHtmlEndTagPhraseModifier(allowedHtmlTags));
 			phraseModifierSyntax.add(new LimitedHtmlStartTagPhraseModifier(allowedHtmlTags));
 			phraseModifierSyntax.add(new HtmlCommentPhraseModifier());
@@ -213,7 +215,7 @@ public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
 
 	/**
 	 * Indicate template names to exclude.
-	 * 
+	 *
 	 * @param templateExcludes
 	 *            a comma-delimited list of names, may include '*' wildcards
 	 * @since 1.3
@@ -224,7 +226,7 @@ public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
 
 	/**
 	 * Indicate template names to exclude.
-	 * 
+	 *
 	 * @return a comma-delimited list of names, may include '*' wildcards, or null if none are to be excluded
 	 * @since 1.3
 	 */
