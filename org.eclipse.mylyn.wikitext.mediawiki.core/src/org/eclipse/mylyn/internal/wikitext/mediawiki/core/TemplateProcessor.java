@@ -28,9 +28,11 @@ import org.eclipse.mylyn.wikitext.mediawiki.core.TemplateResolver;
 
 public class TemplateProcessor {
 
-	private static final Pattern templatePattern = Pattern.compile("(?:^|(?<!\\{))(\\{\\{(#?[a-zA-Z0-9_ :\\.\\-]+)\\s*(\\|[^\\}]*)?\\}\\})"); //$NON-NLS-1$
+	private static final Pattern templatePattern = Pattern
+			.compile("(?:^|(?<!\\{))(\\{\\{(#?[a-zA-Z0-9_ :/()\\.\\-]+)\\s*(\\|[^\\}]*)?\\}\\})"); //$NON-NLS-1$
 
-	private static final Pattern templateParameterPattern = Pattern.compile("\\{\\{\\{([a-zA-Z0-9]+)(?:\\|([^\\}]*))?\\}\\}\\}"); //$NON-NLS-1$
+	private static final Pattern templateParameterPattern = Pattern
+			.compile("\\{\\{\\{([a-zA-Z0-9]+)(?:\\|([^\\}]*))?\\}\\}\\}"); //$NON-NLS-1$
 
 	private static final Pattern parameterSpec = Pattern.compile("\\|\\s*([^\\|=]+)(?:\\s*=\\s*(([^|]*)))?"); //$NON-NLS-1$
 
@@ -82,8 +84,8 @@ public class TemplateProcessor {
 				if (usedTemplates.contains(templateName)) {
 					StringBuilder sb = new StringBuilder();
 					sb.append("<span class=\"error\">"); //$NON-NLS-1$
-					sb.append(MessageFormat.format(
-							Messages.getString("TemplateProcessor_loopDetected"), template.getName())); //$NON-NLS-1$
+					sb.append(MessageFormat.format(Messages.getString("TemplateProcessor_loopDetected"), //$NON-NLS-1$
+							template.getName()));
 					sb.append("</span>"); //$NON-NLS-1$
 					replacementText = sb.toString();
 				} else {

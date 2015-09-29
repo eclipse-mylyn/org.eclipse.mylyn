@@ -15,11 +15,11 @@ package org.eclipse.mylyn.internal.wikitext.mediawiki.core;
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
 import org.eclipse.mylyn.wikitext.mediawiki.core.Template;
 import org.eclipse.mylyn.wikitext.mediawiki.core.TemplateResolver;
+
+import junit.framework.TestCase;
 
 public class TemplateProcessorTest extends TestCase {
 
@@ -111,6 +111,32 @@ public class TemplateProcessorTest extends TestCase {
 		TemplateProcessor templateProcessor = new TemplateProcessor(markupLanguage);
 
 		String markup = templateProcessor.processTemplates("one {{Test:test}} two");
+		assertEquals("one _expanded_ two", markup);
+	}
+
+	public void testBasicTemplateWithSlashes() {
+		//Bug 468237
+		Template template = new Template();
+		template.setName("Temp/Main");
+		template.setTemplateMarkup("_expanded_");
+		markupLanguage.getTemplates().add(template);
+
+		TemplateProcessor templateProcessor = new TemplateProcessor(markupLanguage);
+
+		String markup = templateProcessor.processTemplates("one {{Temp/Main}} two");
+		assertEquals("one _expanded_ two", markup);
+	}
+
+	public void testBasicTemplateWithBrackets() {
+		//Bug 468237
+		Template template = new Template();
+		template.setName("Templ(a)te");
+		template.setTemplateMarkup("_expanded_");
+		markupLanguage.getTemplates().add(template);
+
+		TemplateProcessor templateProcessor = new TemplateProcessor(markupLanguage);
+
+		String markup = templateProcessor.processTemplates("one {{Templ(a)te}} two");
 		assertEquals("one _expanded_ two", markup);
 	}
 
