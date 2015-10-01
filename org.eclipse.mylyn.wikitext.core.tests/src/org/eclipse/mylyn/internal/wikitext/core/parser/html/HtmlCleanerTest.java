@@ -88,10 +88,27 @@ public class HtmlCleanerTest {
 	}
 
 	@Test
-	public void testRemoveExcessiveStyles_lots_of_styles() {
-		String result = clean("<p>foo <span style=\"font-style: italic;font-weight: bold; color: blue; bogus: bad; ignoreThis: too\"> bar</span></p>");
+	public void preserveSpanWithUnderlineTextDecoration() {
+		String result = clean("<p>foo <span style=\"text-decoration: underline;\">bar</span></p>");
 
-		assertTrue(result.contains("<p>foo <span style=\"font-style: italic;font-weight: bold;color: blue;\">bar</span></p>"));
+		assertTrue(result.contains("<p>foo <span style=\"text-decoration: underline;\">bar</span></p>"));
+	}
+
+	@Test
+	public void preserveSpanWithUnderlineTextDecorationRemoveOthers() {
+		String result = clean(
+				"<p>foo <span style=\"ignoreThis: too; text-decoration: underline; bogus: bad\">bar</span></p>");
+
+		assertTrue(result.contains("<p>foo <span style=\"text-decoration: underline;\">bar</span></p>"));
+	}
+
+	@Test
+	public void testRemoveExcessiveStyles_lots_of_styles() {
+		String result = clean(
+				"<p>foo <span style=\"font-style: italic;font-weight: bold; color: blue; bogus: bad; ignoreThis: too\"> bar</span></p>");
+
+		assertTrue(result
+				.contains("<p>foo <span style=\"font-style: italic;font-weight: bold;color: blue;\">bar</span></p>"));
 	}
 
 	@Test
@@ -161,7 +178,8 @@ public class HtmlCleanerTest {
 	public void testRepairSpanContainingValidCssColorStyleNonHexLotsOfStylesNotChanged() {
 		String result = clean("<p><span style=\"font-style: italic;font-weight: bold;color: red\">foo bar</span></p>");
 
-		assertTrue(result.contains("<p><span style=\"font-style: italic;font-weight: bold;color: red;\">foo bar</span></p>"));
+		assertTrue(result
+				.contains("<p><span style=\"font-style: italic;font-weight: bold;color: red;\">foo bar</span></p>"));
 	}
 
 	@Test
@@ -271,7 +289,8 @@ public class HtmlCleanerTest {
 
 	@Test
 	public void testWhitespacesBetweenTableCells() {
-		String result = cleanToBody("<body><table><tbody><tr><th>cell 0.0</th> <th>cell 0.1</th>\t\n  <th>cell 0.2</th></tr> <tr><td>cell 1.0</td> <td>cell 1.1</td> \t\r\n<td>cell 1.2</td></tr> <tr><td>cell 2.0</td> <td>cell 2.1</td> <td>cell 2.2</td></th></tbody></table></body>");
+		String result = cleanToBody(
+				"<body><table><tbody><tr><th>cell 0.0</th> <th>cell 0.1</th>\t\n  <th>cell 0.2</th></tr> <tr><td>cell 1.0</td> <td>cell 1.1</td> \t\r\n<td>cell 1.2</td></tr> <tr><td>cell 2.0</td> <td>cell 2.1</td> <td>cell 2.2</td></th></tbody></table></body>");
 
 		assertEquals(
 				"<body><table><tbody><tr><th>cell 0.0</th><th>cell 0.1</th><th>cell 0.2</th></tr><tr><td>cell 1.0</td><td>cell 1.1</td><td>cell 1.2</td></tr><tr><td>cell 2.0</td><td>cell 2.1</td><td>cell 2.2</td></tr></tbody></table></body>",

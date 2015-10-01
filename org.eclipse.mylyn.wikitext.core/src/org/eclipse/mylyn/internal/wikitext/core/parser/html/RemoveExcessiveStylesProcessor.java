@@ -24,7 +24,7 @@ import org.jsoup.select.Selector;
 
 /**
  * Removes excessive inline styles from HTML,
- * 
+ *
  * @author David Green
  */
 public class RemoveExcessiveStylesProcessor extends DocumentProcessor {
@@ -59,6 +59,8 @@ public class RemoveExcessiveStylesProcessor extends DocumentProcessor {
 						if (rule.value.equalsIgnoreCase("bold") || rule.value.equalsIgnoreCase("italic")) { //$NON-NLS-1$ //$NON-NLS-2$
 							continue;
 						}
+					} else if ("text-decoration".equals(rule.name) && rule.value.equalsIgnoreCase("underline")) { //$NON-NLS-1$ //$NON-NLS-2$
+						continue;
 					}
 					ruleIt.remove();
 				}
@@ -95,7 +97,8 @@ public class RemoveExcessiveStylesProcessor extends DocumentProcessor {
 			} else {
 				element.removeAttr("style"); //$NON-NLS-1$
 
-				if (("span".equalsIgnoreCase(element.nodeName()) && (element.attr("class").trim().isEmpty())) || "font".equalsIgnoreCase(element.nodeName())) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				if (("span".equalsIgnoreCase(element.nodeName()) && (element.attr("class").trim().isEmpty())) //$NON-NLS-1$//$NON-NLS-2$
+						|| "font".equalsIgnoreCase(element.nodeName())) { //$NON-NLS-1$
 					removeElementPreserveChildren(element);
 				}
 			}
