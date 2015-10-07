@@ -112,8 +112,10 @@ public class SpanStrategies extends ElementStrategies<SpanType, SpanStrategy, Sp
 					strategies.add(calculateAlternateSpanStrategy(SpanType.BOLD));
 				} else if (rule.name.equals("font-style") && rule.value.equals("italic")) { //$NON-NLS-1$ //$NON-NLS-2$
 					strategies.add(calculateAlternateSpanStrategy(SpanType.ITALIC));
-				} else if (rule.name.equals("text-decoration") && rule.value.equals("underline")) { //$NON-NLS-1$ //$NON-NLS-2$
+				} else if (rule.name.equals("text-decoration") && rule.value.equalsIgnoreCase("underline")) { //$NON-NLS-1$ //$NON-NLS-2$
 					strategies.add(calculateAlternateSpanStrategy(SpanType.UNDERLINED));
+				} else if (rule.name.equals("text-decoration") && rule.value.equalsIgnoreCase("line-through")) { //$NON-NLS-1$ //$NON-NLS-2$
+					strategies.add(calculateAlternateSpanStrategy(SpanType.DELETED));
 				} else if (rule.name.equals("font-family") && isFontFamilyMonospace(rule)) { //$NON-NLS-1$
 					strategies.add(new SubstitutionWithoutCssSpanStrategy(SpanType.MONOSPACE));
 				}

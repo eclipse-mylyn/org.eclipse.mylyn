@@ -70,8 +70,8 @@ public class SpanStrategiesTest {
 	public void spanWithFontWeightToBold() {
 		SpanStrategies strategies = new SpanStrategies(Sets.newHashSet(SpanType.BOLD),
 				Collections.<SpanHtmlElementStrategy> emptyList());
-		SpanStrategy strategy = strategies.getStrategy(SpanType.SPAN, new Attributes(null, null, "font-weight:  bold",
-				null));
+		SpanStrategy strategy = strategies.getStrategy(SpanType.SPAN,
+				new Attributes(null, null, "font-weight:  bold", null));
 		assertTrue(strategy instanceof SubstitutionWithoutCssSpanStrategy);
 		assertEquals(SpanType.BOLD, ((SubstitutionWithoutCssSpanStrategy) strategy).getType());
 	}
@@ -80,8 +80,8 @@ public class SpanStrategiesTest {
 	public void spanWithFontWeightToStrong() {
 		SpanStrategies strategies = new SpanStrategies(Sets.newHashSet(SpanType.STRONG),
 				Collections.<SpanHtmlElementStrategy> emptyList());
-		SpanStrategy strategy = strategies.getStrategy(SpanType.SPAN, new Attributes(null, null, "font-weight:  bold",
-				null));
+		SpanStrategy strategy = strategies.getStrategy(SpanType.SPAN,
+				new Attributes(null, null, "font-weight:  bold", null));
 		assertTrue(strategy instanceof SubstitutionWithoutCssSpanStrategy);
 		assertEquals(SpanType.STRONG, ((SubstitutionWithoutCssSpanStrategy) strategy).getType());
 	}
@@ -90,17 +90,28 @@ public class SpanStrategiesTest {
 	public void spanWithTextDecorationUnderlineToUnderlined() {
 		SpanStrategies strategies = new SpanStrategies(Sets.newHashSet(SpanType.UNDERLINED),
 				Collections.<SpanHtmlElementStrategy> emptyList());
-		SpanStrategy strategy = strategies.getStrategy(SpanType.SPAN, new Attributes(null, null,
-				"text-decoration:  underline;", null));
+		SpanStrategy strategy = strategies.getStrategy(SpanType.SPAN,
+				new Attributes(null, null, "text-decoration:  underline;", null));
 		assertTrue(strategy instanceof SubstitutionWithoutCssSpanStrategy);
 		assertEquals(SpanType.UNDERLINED, ((SubstitutionWithoutCssSpanStrategy) strategy).getType());
+	}
+
+	@Test
+	public void spanWithTextDecorationLinethroughToDeleted() {
+		SpanStrategies strategies = new SpanStrategies(Sets.newHashSet(SpanType.DELETED),
+				Collections.<SpanHtmlElementStrategy> emptyList());
+		SpanStrategy strategy = strategies.getStrategy(SpanType.SPAN,
+				new Attributes(null, null, "text-decoration:  line-through;", null));
+		assertTrue(strategy instanceof SubstitutionWithoutCssSpanStrategy);
+		assertEquals(SpanType.DELETED, ((SubstitutionWithoutCssSpanStrategy) strategy).getType());
 	}
 
 	@Test
 	public void spanWithUnrecognizedCssToUnsupported() {
 		SpanStrategies strategies = new SpanStrategies(Sets.newHashSet(SpanType.BOLD),
 				Collections.<SpanHtmlElementStrategy> emptyList());
-		assertTrue(strategies.getStrategy(SpanType.SPAN, new Attributes(null, null, "font-weight:unknown", null)) instanceof UnsupportedSpanStrategy);
+		assertTrue(strategies.getStrategy(SpanType.SPAN,
+				new Attributes(null, null, "font-weight:unknown", null)) instanceof UnsupportedSpanStrategy);
 	}
 
 	private void assertSupported(SpanStrategies strategies, SpanType spanType) {

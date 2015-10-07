@@ -103,6 +103,21 @@ public class HtmlCleanerTest {
 	}
 
 	@Test
+	public void preserveSpanWithLinethroughTextDecoration() {
+		String result = clean("<p>foo <span style=\"text-decoration: line-through;\">bar</span></p>");
+
+		assertTrue(result.contains("<p>foo <span style=\"text-decoration: line-through;\">bar</span></p>"));
+	}
+
+	@Test
+	public void preserveSpanWithLinethroughTextDecorationRemoveOthers() {
+		String result = clean(
+				"<p>foo <span style=\"text-decoration: line-through; bogus: bad; ignoreThis: too\">bar</span></p>");
+
+		assertTrue(result.contains("<p>foo <span style=\"text-decoration: line-through;\">bar</span></p>"));
+	}
+
+	@Test
 	public void testRemoveExcessiveStyles_lots_of_styles() {
 		String result = clean(
 				"<p>foo <span style=\"font-style: italic;font-weight: bold; color: blue; bogus: bad; ignoreThis: too\"> bar</span></p>");

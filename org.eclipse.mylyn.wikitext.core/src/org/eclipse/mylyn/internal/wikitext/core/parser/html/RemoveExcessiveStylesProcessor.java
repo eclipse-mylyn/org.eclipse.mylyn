@@ -59,8 +59,10 @@ public class RemoveExcessiveStylesProcessor extends DocumentProcessor {
 						if (rule.value.equalsIgnoreCase("bold") || rule.value.equalsIgnoreCase("italic")) { //$NON-NLS-1$ //$NON-NLS-2$
 							continue;
 						}
-					} else if ("text-decoration".equals(rule.name) && rule.value.equalsIgnoreCase("underline")) { //$NON-NLS-1$ //$NON-NLS-2$
-						continue;
+					} else if ("text-decoration".equals(rule.name)) { //$NON-NLS-1$
+						if (rule.value.equalsIgnoreCase("underline") || rule.value.equalsIgnoreCase("line-through")) { //$NON-NLS-1$ //$NON-NLS-2$
+							continue;
+						}
 					}
 					ruleIt.remove();
 				}
