@@ -199,9 +199,9 @@
         xsi:type="pde:APIBaselineTask"
         id="mylyn.baseline"
         name="Mylyn"
-        version="3.16"
+        version="3.17"
         location="${mylyn.baseline.location}"
-        remoteURI="http://download.eclipse.org/mylyn/drops/3.16.0/mylyn-3.16.0-api.zip"/>
+        remoteURI="http://download.eclipse.org/mylyn/drops/3.17.0/mylyn-3.17.0-api.zip"/>
   </setupTask>
   <project name="builds"
       label="Builds">
