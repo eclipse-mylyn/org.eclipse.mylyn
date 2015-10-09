@@ -2,15 +2,15 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.commonmark.tests
-Fragment-Host: org.eclipse.mylyn.wikitext.commonmark;bundle-version="2.6.0"
-Bundle-Version: 2.6.0.qualifier
+Fragment-Host: org.eclipse.mylyn.wikitext.commonmark;bundle-version="2.7.0"
+Bundle-Version: 2.7.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.junit;bundle-version="4.8",
  com.google.guava;bundle-version="15.0.0",
  org.mockito;bundle-version="[1.8.4,2.0.0)",
  org.objenesis;bundle-version="[1.0.0,2.0.0)",
  org.hamcrest;bundle-version="[1.0.0,2.0.0)",
- org.eclipse.mylyn.wikitext.core;bundle-version="2.6.0", 
+ org.eclipse.mylyn.wikitext.core;bundle-version="2.7.0", 
  org.eclipse.mylyn.wikitext.core.osgi;bundle-version="2.0.0",
  org.jsoup;bundle-version="1.7.2"
 Export-Package: org.eclipse.mylyn.internal.wikitext.commonmark;x-internal:=true,
