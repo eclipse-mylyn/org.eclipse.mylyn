@@ -162,6 +162,8 @@ public interface IGitHubConstants {
 	String SEGMENT_SHOW = "/show"; //$NON-NLS-1$
 	/** */
 	String SEGMENT_STAR = "/star"; //$NON-NLS-1$
+	/** @since 4.2 */
+	String SEGMENT_STARGAZERS = "/stargazers"; //$NON-NLS-1$
 	/** */
 	String SEGMENT_STARRED = "/starred"; //$NON-NLS-1$
 	/** */
