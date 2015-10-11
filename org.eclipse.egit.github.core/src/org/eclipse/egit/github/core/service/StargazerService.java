@@ -1,20 +1,20 @@
 /******************************************************************************
- *  Copyright (c) 2011 GitHub Inc.
+ *  Copyright (c) 2015 Jon Ander Peñalba
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
  *  http://www.eclipse.org/legal/epl-v10.html
  *
  *  Contributors:
- *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
+ *    Jon Ander Peñalba - initial API and implementation
  *****************************************************************************/
 package org.eclipse.egit.github.core.service;
 
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_STARGAZERS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_STARRED;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_USER;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_USERS;
-import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_WATCHED;
-import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_WATCHERS;
 import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_FIRST;
 import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_SIZE;
 
@@ -31,47 +31,45 @@ import org.eclipse.egit.github.core.client.PagedRequest;
 import com.google.gson.reflect.TypeToken;
 
 /**
- * Service class for dealing with users watching GitHub repositories.
+ * Service class for dealing with users starring GitHub repositories.
  *
- * @see <a href="http://developer.github.com/v3/repos/watching">GitHub watcher
+ * @see <a href="https://developer.github.com/v3/activity/starring/">GitHub stargazer
  *      API documentation</a>
- * @deprecated use {@link StargazerService} instead
+ * @since 4.2
  */
-@Deprecated
-public class WatcherService extends GitHubService {
+public class StargazerService extends GitHubService {
 
 	/**
-	 * Create watcher service
+	 * Create stargazer service
 	 */
-	public WatcherService() {
+	public StargazerService() {
 		super();
 	}
 
 	/**
-	 * Create watcher service
+	 * Create stargazer service
 	 *
 	 * @param client
 	 */
-	public WatcherService(GitHubClient client) {
+	public StargazerService(GitHubClient client) {
 		super(client);
 	}
 
 	/**
-	 * Create page watcher request
+	 * Create page stargazer request
 	 *
 	 * @param repository
 	 * @param start
 	 * @param size
 	 * @return request
-	 * @deprecated use {@link StargazerService#createStargazerRequest}
 	 */
-	protected PagedRequest<User> createWatcherRequest(
+	protected PagedRequest<User> createStargazerRequest(
 			IRepositoryIdProvider repository, int start, int size) {
 		String id = getId(repository);
 		PagedRequest<User> request = createPagedRequest(start, size);
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
-		uri.append(SEGMENT_WATCHERS);
+		uri.append(SEGMENT_STARGAZERS);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<User>>() {
 		}.getType());
@@ -79,70 +77,65 @@ public class WatcherService extends GitHubService {
 	}
 
 	/**
-	 * Get user watching given repository
+	 * Get users starring the given repository
 	 *
 	 * @param repository
 	 * @return non-null but possibly empty list of users
 	 * @throws IOException
-	 * @deprecated use {@link StargazerService#getStargazers} instead
 	 */
-	public List<User> getWatchers(IRepositoryIdProvider repository)
+	public List<User> getStargazers(IRepositoryIdProvider repository)
 			throws IOException {
-		PagedRequest<User> request = createWatcherRequest(repository,
+		PagedRequest<User> request = createStargazerRequest(repository,
 				PAGE_FIRST, PAGE_SIZE);
 		return getAll(request);
 	}
 
 	/**
-	 * Page watches of given repository
+	 * Page stargazers of given repository
 	 *
 	 * @param repository
 	 * @return page iterator
-	 * @deprecated use {@link StargazerService#pageStargazers}
 	 */
-	public PageIterator<User> pageWatchers(IRepositoryIdProvider repository) {
-		return pageWatchers(repository, PAGE_SIZE);
+	public PageIterator<User> pageStargazers(IRepositoryIdProvider repository) {
+		return pageStargazers(repository, PAGE_SIZE);
 	}
 
 	/**
-	 * Page watches of given repository
+	 * Page stargazers of given repository
 	 *
 	 * @param repository
 	 * @param size
 	 * @return page iterator
-	 * @deprecated use {@link StargazerService#pageStargazers}
 	 */
-	public PageIterator<User> pageWatchers(IRepositoryIdProvider repository,
+	public PageIterator<User> pageStargazers(IRepositoryIdProvider repository,
 			int size) {
-		return pageWatchers(repository, PAGE_FIRST, size);
+		return pageStargazers(repository, PAGE_FIRST, size);
 	}
 
 	/**
-	 * Page watches of given repository
+	 * Page stargazers of given repository
 	 *
 	 * @param repository
 	 * @param start
 	 * @param size
 	 * @return page iterator
-	 * @deprecated use {@link StargazerService#pageStargazers}
 	 */
-	public PageIterator<User> pageWatchers(IRepositoryIdProvider repository,
+	public PageIterator<User> pageStargazers(IRepositoryIdProvider repository,
 			int start, int size) {
-		PagedRequest<User> request = createWatcherRequest(repository, start,
+		PagedRequest<User> request = createStargazerRequest(repository, start,
 				size);
 		return createPageIterator(request);
 	}
 
 	/**
-	 * Create page watched request
+	 * Create page starred request
 	 *
 	 * @param user
 	 * @param start
 	 * @param size
 	 * @return request
-	 * @deprecated use {@link StargazerService#createStarredRequest}
 	 */
-	protected PagedRequest<Repository> createWatchedRequest(String user,
+	protected PagedRequest<Repository> createStarredRequest(String user,
 			int start, int size) {
 		if (user == null)
 			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
@@ -152,7 +145,7 @@ public class WatcherService extends GitHubService {
 		PagedRequest<Repository> request = createPagedRequest(start, size);
 		StringBuilder uri = new StringBuilder(SEGMENT_USERS);
 		uri.append('/').append(user);
-		uri.append(SEGMENT_WATCHED);
+		uri.append(SEGMENT_STARRED);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<Repository>>() {
 		}.getType());
@@ -160,172 +153,160 @@ public class WatcherService extends GitHubService {
 	}
 
 	/**
-	 * Create page watched request
+	 * Create page starred request
 	 *
 	 * @param start
 	 * @param size
 	 * @return request
-	 * @deprecated use {@link StargazerService#createStarredRequest}
 	 */
-	protected PagedRequest<Repository> createWatchedRequest(int start, int size) {
+	protected PagedRequest<Repository> createStarredRequest(int start, int size) {
 		PagedRequest<Repository> request = createPagedRequest(start, size);
-		request.setUri(SEGMENT_USER + SEGMENT_WATCHED);
+		request.setUri(SEGMENT_USER + SEGMENT_STARRED);
 		request.setType(new TypeToken<List<Repository>>() {
 		}.getType());
 		return request;
 	}
 
 	/**
-	 * Get repositories watched by the given user
+	 * Get repositories starred by the given user
 	 *
 	 * @param user
 	 * @return non-null but possibly empty list of repositories
 	 * @throws IOException
-	 * @deprecated use {@link StargazerService#getStarred}
 	 */
-	public List<Repository> getWatched(String user) throws IOException {
-		PagedRequest<Repository> request = createWatchedRequest(user,
+	public List<Repository> getStarred(String user) throws IOException {
+		PagedRequest<Repository> request = createStarredRequest(user,
 				PAGE_FIRST, PAGE_SIZE);
 		return getAll(request);
 	}
 
 	/**
-	 * Page repositories being watched by given user
+	 * Page repositories starred by given user
 	 *
 	 * @param user
 	 * @return page iterator
 	 * @throws IOException
-	 * @deprecated use {@link StargazerService#pageStarred}
 	 */
-	public PageIterator<Repository> pageWatched(String user) throws IOException {
-		return pageWatched(user, PAGE_SIZE);
+	public PageIterator<Repository> pageStarred(String user) throws IOException {
+		return pageStarred(user, PAGE_SIZE);
 	}
 
 	/**
-	 * Page repositories being watched by given user
+	 * Page repositories starred by given user
 	 *
 	 * @param user
 	 * @param size
 	 * @return page iterator
 	 * @throws IOException
-	 * @deprecated use {@link StargazerService#pageStarred}
 	 */
-	public PageIterator<Repository> pageWatched(String user, int size)
+	public PageIterator<Repository> pageStarred(String user, int size)
 			throws IOException {
-		return pageWatched(user, PAGE_FIRST, size);
+		return pageStarred(user, PAGE_FIRST, size);
 	}
 
 	/**
-	 * Page repositories being watched by given user
+	 * Page repositories starred by given user
 	 *
 	 * @param user
 	 * @param start
 	 * @param size
 	 * @return page iterator
 	 * @throws IOException
-	 * @deprecated use {@link StargazerService#pageStarred}
 	 */
-	public PageIterator<Repository> pageWatched(String user, int start, int size)
+	public PageIterator<Repository> pageStarred(String user, int start, int size)
 			throws IOException {
-		PagedRequest<Repository> request = createWatchedRequest(user, start,
+		PagedRequest<Repository> request = createStarredRequest(user, start,
 				size);
 		return createPageIterator(request);
 	}
 
 	/**
-	 * Get repositories watched by the currently authenticated user
+	 * Get repositories starred by the currently authenticated user
 	 *
 	 * @return non-null but possibly empty list of repositories
 	 * @throws IOException
-	 * @deprecated use {@link StargazerService#getStarred}
 	 */
-	public List<Repository> getWatched() throws IOException {
-		PagedRequest<Repository> request = createWatchedRequest(PAGE_FIRST,
+	public List<Repository> getStarred() throws IOException {
+		PagedRequest<Repository> request = createStarredRequest(PAGE_FIRST,
 				PAGE_SIZE);
 		return getAll(request);
 	}
 
 	/**
-	 * Page repositories being watched by the currently authenticated user
+	 * Page repositories starred by the currently authenticated user
 	 *
 	 * @return page iterator
 	 * @throws IOException
-	 * @deprecated use {@link StargazerService#pageStarred}
 	 */
-	public PageIterator<Repository> pageWatched() throws IOException {
-		return pageWatched(PAGE_SIZE);
+	public PageIterator<Repository> pageStarred() throws IOException {
+		return pageStarred(PAGE_SIZE);
 	}
 
 	/**
-	 * Page repositories being watched by the currently authenticated user
+	 * Page repositories starred by the currently authenticated user
 	 *
 	 * @param size
 	 * @return page iterator
 	 * @throws IOException
-	 * @deprecated use {@link StargazerService#pageStarred}
 	 */
-	public PageIterator<Repository> pageWatched(int size) throws IOException {
-		return pageWatched(PAGE_FIRST, size);
+	public PageIterator<Repository> pageStarred(int size) throws IOException {
+		return pageStarred(PAGE_FIRST, size);
 	}
 
 	/**
-	 * Page repositories being watched by the currently authenticated user
+	 * Page repositories starred by the currently authenticated user
 	 *
 	 * @param start
 	 * @param size
 	 * @return page iterator
 	 * @throws IOException
-	 * @deprecated use {@link StargazerService#pageStarred}
 	 */
-	public PageIterator<Repository> pageWatched(int start, int size)
+	public PageIterator<Repository> pageStarred(int start, int size)
 			throws IOException {
-		PagedRequest<Repository> request = createWatchedRequest(start, size);
+		PagedRequest<Repository> request = createStarredRequest(start, size);
 		return createPageIterator(request);
 	}
 
 	/**
-	 * Is currently authenticated user watching given repository?
+	 * Is currently authenticated user starring given repository?
 	 *
 	 * @param repository
-	 * @return true if watch, false otherwise
+	 * @return {@code true} if starred, {@code false} otherwise
 	 * @throws IOException
-	 * @deprecated use {@link StargazerService#isStarring}
 	 */
-	public boolean isWatching(IRepositoryIdProvider repository)
+	public boolean isStarring(IRepositoryIdProvider repository)
 			throws IOException {
 		String id = getId(repository);
 		StringBuilder uri = new StringBuilder(SEGMENT_USER);
-		uri.append(SEGMENT_WATCHED);
+		uri.append(SEGMENT_STARRED);
 		uri.append('/').append(id);
 		return check(uri.toString());
 	}
 
 	/**
-	 * Add currently authenticated user as a watcher of the given repository
+	 * Add currently authenticated user as a stargazer of the given repository
 	 *
 	 * @param repository
 	 * @throws IOException
-	 * @deprecated use {@link StargazerService#star}
 	 */
-	public void watch(IRepositoryIdProvider repository) throws IOException {
+	public void star(IRepositoryIdProvider repository) throws IOException {
 		String id = getId(repository);
 		StringBuilder uri = new StringBuilder(SEGMENT_USER);
-		uri.append(SEGMENT_WATCHED);
+		uri.append(SEGMENT_STARRED);
 		uri.append('/').append(id);
 		client.put(uri.toString());
 	}
 
 	/**
-	 * Remove currently authenticated user as a watcher of the given repository
+	 * Remove currently authenticated user as a stargazer of the given repository
 	 *
 	 * @param repository
 	 * @throws IOException
-	 * @deprecated use {@link StargazerService#unstar}
 	 */
-	public void unwatch(IRepositoryIdProvider repository) throws IOException {
+	public void unstar(IRepositoryIdProvider repository) throws IOException {
 		String id = getId(repository);
 		StringBuilder uri = new StringBuilder(SEGMENT_USER);
-		uri.append(SEGMENT_WATCHED);
+		uri.append(SEGMENT_STARRED);
 		uri.append('/').append(id);
 		client.delete(uri.toString());
 	}
