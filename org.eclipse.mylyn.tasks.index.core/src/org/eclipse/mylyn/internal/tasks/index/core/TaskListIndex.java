@@ -111,7 +111,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
  * intensive long-running operation. With about 20,000 tasks in my task list and an SSD, reindexing takes about 90
  * seconds.
  * </p>
- * 
+ *
  * @author David Green
  * @author Steffen Pingel
  */
@@ -145,9 +145,11 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	public static final org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field FIELD_PERSON = new AbstractTaskSchema.Field(
 			TASK_ATTRIBUTE_PERSON, Messages.TaskListIndex_field_person, TaskAttribute.TYPE_PERSON, "person"); //$NON-NLS-1$
 
-	public static final org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field FIELD_TASK_KEY = DefaultTaskSchema.getInstance().TASK_KEY;
+	public static final org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field FIELD_TASK_KEY = DefaultTaskSchema
+			.getInstance().TASK_KEY;
 
-	public static final org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field FIELD_SUMMARY = DefaultTaskSchema.getInstance().SUMMARY;
+	public static final org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field FIELD_SUMMARY = DefaultTaskSchema
+			.getInstance().SUMMARY;
 
 	public static final org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field FIELD_ATTACHMENT_NAME = new AbstractTaskSchema.Field(
 			TASK_ATTRIBUTE_ATTACHMENT_NAME, Messages.TaskListIndex_field_attachment, TaskAttribute.TYPE_SHORT_TEXT,
@@ -170,8 +172,8 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 			try {
 				maintainIndex(m);
 			} catch (CoreException e) {
-				MultiStatus logStatus = new MultiStatus(TasksIndexCore.ID_PLUGIN, 0,
-						"Failed to update task list index", e); //$NON-NLS-1$
+				MultiStatus logStatus = new MultiStatus(TasksIndexCore.ID_PLUGIN, 0, "Failed to update task list index", //$NON-NLS-1$
+						e);
 				logStatus.add(e.getStatus());
 				StatusHandler.log(logStatus);
 			}
@@ -193,6 +195,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	private final Set<AbstractTaskSchema.Field> specialFields = new HashSet<AbstractTaskSchema.Field>();
 
 	private final Set<AbstractTaskSchema.Field> indexedFields = new LinkedHashSet<AbstractTaskSchema.Field>();
+
 	{
 		specialFields.add(FIELD_IDENTIFIER);
 		specialFields.add(FIELD_REPOSITORY_URL);
@@ -316,7 +319,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 
 	/**
 	 * Create an index on the given task list. Must be matched by a corresponding call to {@link #close()}.
-	 * 
+	 *
 	 * @param taskList
 	 *            the task list that is to be indexed
 	 * @param dataManager
@@ -334,7 +337,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 
 	/**
 	 * Create an index on the given task list. Must be matched by a corresponding call to {@link #close()}.
-	 * 
+	 *
 	 * @param taskList
 	 *            the task list that is to be indexed
 	 * @param dataManager
@@ -358,7 +361,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 
 	/**
 	 * Create an index on the given task list. Must be matched by a corresponding call to {@link #close()}.
-	 * 
+	 *
 	 * @param taskList
 	 *            the task list that is to be indexed
 	 * @param dataManager
@@ -385,7 +388,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 
 	/**
 	 * the delay before reindexing occurs after a task has changed or after {@link #reindex()} is called.
-	 * 
+	 *
 	 * @param reindexDelay
 	 *            The delay in miliseconds. Specify 0 to indicate no delay.
 	 */
@@ -459,7 +462,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 
 	/**
 	 * the default field used to match tasks when unspecified in the query
-	 * 
+	 *
 	 * @param defaultField
 	 *            the default field to use in queries, must be one of the {@link #getIndexedFields() indexed fields}.
 	 */
@@ -536,8 +539,8 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 			try {
 				maintainIndex(new NullProgressMonitor());
 			} catch (CoreException e) {
-				MultiStatus logStatus = new MultiStatus(TasksIndexCore.ID_PLUGIN, 0,
-						"Failed to update task list index", e); //$NON-NLS-1$
+				MultiStatus logStatus = new MultiStatus(TasksIndexCore.ID_PLUGIN, 0, "Failed to update task list index", //$NON-NLS-1$
+						e);
 				logStatus.add(e.getStatus());
 				StatusHandler.log(logStatus);
 			}
@@ -552,7 +555,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	 * this method using the same pattern string do not require use of the backing index, making this method very
 	 * efficient for multiple calls with the same pattern string. Cached results for a given pattern string are
 	 * discarded if this method is called with a different pattern string.
-	 * 
+	 *
 	 * @param task
 	 *            the task to match
 	 * @param patternString
@@ -625,21 +628,21 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 
 	/**
 	 * call to wait until index maintenance has completed
-	 * 
+	 *
 	 * @throws InterruptedException
 	 */
 	public void waitUntilIdle() throws InterruptedException {
 		if (!Platform.isRunning() && reindexDelay != 0L) {
 			// job join() behaviour is not the same when platform is not running
-			Logger.getLogger(TaskListIndex.class.getName()).warning(
-					"Index job joining may not work properly when Eclipse platform is not running"); //$NON-NLS-1$
+			Logger.getLogger(TaskListIndex.class.getName())
+					.warning("Index job joining may not work properly when Eclipse platform is not running"); //$NON-NLS-1$
 		}
 		maintainIndexJob.join();
 	}
 
 	/**
 	 * finds tasks that match the given pattern string
-	 * 
+	 *
 	 * @param patternString
 	 *            the pattern string, used to match tasks
 	 * @param collector
@@ -754,11 +757,13 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 					indexReader = null;
 				}
 			}
-			try {
-				directory.close();
-			} catch (IOException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksIndexCore.ID_PLUGIN,
-						"Cannot close index: " + e.getMessage(), e)); //$NON-NLS-1$
+			if (directory != null) {
+				try {
+					directory.close();
+				} catch (IOException e) {
+					StatusHandler.log(new Status(IStatus.ERROR, TasksIndexCore.ID_PLUGIN,
+							"Cannot close index: " + e.getMessage(), e)); //$NON-NLS-1$
+				}
 			}
 		} finally {
 			writeLock.unlock();
@@ -816,7 +821,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	/**
 	 * advanced usage: cause the given task to be reindexed using {@link MaintainIndexType#REINDEX reindex scheduling
 	 * rule}.
-	 * 
+	 *
 	 * @param task
 	 *            the task
 	 * @param taskData
@@ -1016,7 +1021,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 
 	/**
 	 * Computes a query element for a field that must lie in a specified date range.
-	 * 
+	 *
 	 * @param field
 	 *            the field
 	 * @param lowerBoundInclusive
@@ -1027,8 +1032,8 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	 */
 	public String computeQueryFieldDateRange(AbstractTaskSchema.Field field, Date lowerBoundInclusive,
 			Date upperBoundInclusive) {
-		return field.getIndexKey()
-				+ ":[" + DateTools.dateToString(lowerBoundInclusive, Resolution.DAY) + " TO " + DateTools.dateToString(upperBoundInclusive, Resolution.DAY) + "]"; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+		return field.getIndexKey() + ":[" + DateTools.dateToString(lowerBoundInclusive, Resolution.DAY) + " TO " //$NON-NLS-1$//$NON-NLS-2$
+				+ DateTools.dateToString(upperBoundInclusive, Resolution.DAY) + "]"; //$NON-NLS-1$
 	}
 
 	/**
@@ -1037,7 +1042,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	 * the task data. In this way implementations can avoid loading task data if the decision to filter tasks can be
 	 * based on the ITask alone. Implementations that must read the task data in order to determine eligibility for
 	 * indexing should return true for tasks where the provided task data is null.
-	 * 
+	 *
 	 * @param task
 	 *            the task
 	 * @param taskData
@@ -1051,7 +1056,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	/**
 	 * Escapes special characters in the given literal value so that they are not interpreted as special characters in a
 	 * query.
-	 * 
+	 *
 	 * @param value
 	 *            the value to escape
 	 * @return a representation of the value with characters escaped
@@ -1118,8 +1123,8 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		}
 	}
 
-	private void indexQueuedTasks(SubMonitor monitor) throws CorruptIndexException, LockObtainFailedException,
-			IOException, CoreException {
+	private void indexQueuedTasks(SubMonitor monitor)
+			throws CorruptIndexException, LockObtainFailedException, IOException, CoreException {
 
 		synchronized (reindexQueue) {
 			if (reindexQueue.isEmpty()) {
@@ -1200,8 +1205,8 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 
 	}
 
-	private IStatus rebuildIndexCompletely(SubMonitor monitor) throws CorruptIndexException, LockObtainFailedException,
-			IOException, CoreException {
+	private IStatus rebuildIndexCompletely(SubMonitor monitor)
+			throws CorruptIndexException, LockObtainFailedException, IOException, CoreException {
 
 		MultiStatus multiStatus = new MultiStatus(TasksIndexCore.ID_PLUGIN, 0, null, null);
 
@@ -1262,8 +1267,8 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		}
 	}
 
-	protected IndexWriter createIndexWriter(boolean create) throws CorruptIndexException, LockObtainFailedException,
-			IOException {
+	protected IndexWriter createIndexWriter(boolean create)
+			throws CorruptIndexException, LockObtainFailedException, IOException {
 		return new IndexWriter(directory, TaskAnalyzer.instance(), create, IndexWriter.MaxFieldLength.UNLIMITED);
 	}
 
