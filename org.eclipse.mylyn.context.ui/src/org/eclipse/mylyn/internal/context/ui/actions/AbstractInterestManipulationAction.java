@@ -66,6 +66,9 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 
 	public void run(IAction action) {
 		IInteractionContext context = getContext();
+		if (context == null) {
+			return;
+		}
 
 		boolean increment = !isRemove();
 
@@ -132,10 +135,6 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 		// action is invoked from somewhere else, trying to use the active context
 		if (context == null && ContextCorePlugin.getContextManager().isContextActive()) {
 			context = ContextCorePlugin.getContextManager().getActiveContext();
-		}
-
-		if (context == null) {
-			throw new IllegalStateException("error determining action context"); //$NON-NLS-1$
 		}
 
 		return context;
