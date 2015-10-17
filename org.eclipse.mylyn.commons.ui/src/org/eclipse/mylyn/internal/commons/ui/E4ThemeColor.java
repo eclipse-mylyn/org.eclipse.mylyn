@@ -31,14 +31,32 @@ public class E4ThemeColor {
 
 	public static RGB getRGBFromCssString(String cssValue) {
 		try {
-			if (cssValue.startsWith("rgb(") && cssValue.endsWith(")")) { //$NON-NLS-1$ //$NON-NLS-2$
-				String[] rgbValues = cssValue.substring(4, cssValue.length() - 1).split(","); //$NON-NLS-1$
+			if (cssValue.startsWith("rgb(")) { //$NON-NLS-1$
+				String rest = cssValue.substring(4, cssValue.length());
+				int idx = rest.indexOf("rgb("); //$NON-NLS-1$
+				if (idx != -1) {
+					rest = rest.substring(idx + 4, rest.length());
+				}
+				idx = rest.indexOf(")"); //$NON-NLS-1$
+				if (idx != -1) {
+					rest = rest.substring(0, idx);
+				}
+				String[] rgbValues = rest.split(","); //$NON-NLS-1$
 				if (rgbValues.length == 3) {
 					return new RGB(Integer.parseInt(rgbValues[0].trim()), Integer.parseInt(rgbValues[1].trim()),
 							Integer.parseInt(rgbValues[2].trim()));
 				}
+			} else if (cssValue.startsWith("#")) { //$NON-NLS-1$
+				String rest = cssValue.substring(1, cssValue.length());
+				int idx = rest.indexOf("#"); //$NON-NLS-1$
+				if (idx != -1) {
+					rest = rest.substring(idx + 1, rest.length());
+				}
+				if (rest.length() > 5) {
+					return new RGB(Integer.parseInt(rest.substring(0, 2), 16),
+							Integer.parseInt(rest.substring(2, 4), 16), Integer.parseInt(rest.substring(4, 6), 16));
+				}
 			}
-
 			throw new E4CssParseException("RGB", cssValue); //$NON-NLS-1$
 		} catch (NumberFormatException | E4CssParseException e) {
 			logOnce(e);
