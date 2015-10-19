@@ -333,7 +333,7 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 		// We may or may not have a NotificationEvent supplied when this 
 		// preference dialog is opened. If we do have this data we want to 
 		// highlight the appropriate instance.
-		if (data instanceof String) {
+		if (data instanceof String && model != null) {
 			String selectedEventId = (String) data;
 			Collection<NotificationCategory> items = model.getCategories();
 			NotificationEvent selectedEvent = null;
