@@ -21,11 +21,15 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.WorkbenchException;
 
 /**
  * @author Steffen Pingel
@@ -91,6 +95,23 @@ public class TaskListViewTest extends TestCase {
 		view.getViewer().setSelection(new TreeSelection(new TreePath(new Object[] { category2, task1 })));
 		view.selectedAndFocusTask(task1);
 		assertEquals(selection, view.getViewer().getSelection());
+	}
+
+	public void testWelcomeMessage() throws WorkbenchException {
+		TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.setValue(ITasksUiPreferenceConstants.WELCOME_MESSAGE, Boolean.toString(false));
+		// Closing the task list view somehow causes a widget disposed error in testBooleanAttribute,
+		// so instead we need to open a new window to create a new task list view
+		IWorkbenchWindow window = PlatformUI.getWorkbench().openWorkbenchWindow(null);
+		try {
+			window.getActivePage().showView(ITasksUiConstants.ID_VIEW_TASKS);
+			assertTrue(TasksUiPlugin.getDefault()
+					.getPreferenceStore()
+					.getBoolean(ITasksUiPreferenceConstants.WELCOME_MESSAGE));
+		} finally {
+			window.close();
+		}
 	}
 
 	private String toString(TreeSelection s1) {

@@ -112,4 +112,6 @@ public interface ITasksUiPreferenceConstants {
 
 	public static final String LAST_SERVICE_MESSAGE_CHECKTIME = "org.eclipse.mylyn.tasks.ui.servicemessage.checktime"; //$NON-NLS-1$
 
+	public static final String WELCOME_MESSAGE = "org.eclipse.mylyn.tasks.ui.welcome.message"; //$NON-NLS-1$
+
 }

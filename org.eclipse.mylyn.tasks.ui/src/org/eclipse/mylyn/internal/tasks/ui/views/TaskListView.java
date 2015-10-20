@@ -843,16 +843,18 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 			}
 		}
 
-		String lastClosedId = TasksUiPlugin.getDefault()
+		boolean showedWelcomeMessage = TasksUiPlugin.getDefault()
 				.getPreferenceStore()
-				.getString(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_ID);
-
-		if (showMessage && lastClosedId.equals("")) { //$NON-NLS-1$
+				.getBoolean(ITasksUiPreferenceConstants.WELCOME_MESSAGE);
+		if (showMessage && !showedWelcomeMessage) {
 			ServiceMessage message = new ServiceMessage("welcome"); //$NON-NLS-1$
 			message.setDescription(Messages.TaskListView_Welcome_Message);
 			message.setTitle(Messages.TaskListView_Welcome_Message_Title);
 			message.setImage(Dialog.DLG_IMG_MESSAGE_INFO);
 			serviceMessageControl.setMessage(message);
+			TasksUiPlugin.getDefault()
+					.getPreferenceStore()
+					.setValue(ITasksUiPreferenceConstants.WELCOME_MESSAGE, Boolean.toString(true));
 		}
 
 		TasksUiPlugin.getDefault().getServiceMessageManager().addServiceMessageListener(serviceMessageControl);
