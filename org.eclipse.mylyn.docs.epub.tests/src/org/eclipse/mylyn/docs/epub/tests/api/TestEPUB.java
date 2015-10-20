@@ -385,4 +385,28 @@ public class TestEPUB extends AbstractTest {
 		br.close();
 		assertEquals(true, ok);
 	}
+
+	/**
+	 * Verifies that an EPUB can be unpacked, modified and repacked.
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public final void testRepack() throws Exception {
+		File folder = File.createTempFile("epub_", null);
+		folder.delete();
+		folder.mkdirs();
+		File epubFile = new File("testdata/epub/basic_2.epub");
+		File epubFile2 = new File("test/epub/repacked.epub");
+		epub.unpack(epubFile, folder);
+		Publication publication = epub.getOPSPublications().get(0);
+		// remove the existing table of contents from the spine
+		publication.removeItemById(publication.getSpine().getToc());
+		// make sure a new one is generated
+		publication.setGenerateToc(true);
+		// add a new item to the spine
+		publication.addItem(new File("testdata/plain-page_link.xhtml"));
+		epub.pack(epubFile2, folder);
+
+	}
 }

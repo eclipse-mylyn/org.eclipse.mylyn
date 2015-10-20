@@ -273,21 +273,7 @@ public class OPSPublication extends Publication {
 
 	private void setup() {
 		opfPackage.setVersion(getVersion());
-		ncxTOC = NCXFactory.eINSTANCE.createNcx();
-		// Set the required version attribute
-		ncxTOC.setVersion("2005-1"); //$NON-NLS-1$
-		// Create the required head element
-		Head head = NCXFactory.eINSTANCE.createHead();
-		ncxTOC.setHead(head);
-		// Create the required title element
-		DocTitle docTitle = NCXFactory.eINSTANCE.createDocTitle();
-		Text text = NCXFactory.eINSTANCE.createText();
-		FeatureMapUtil.addText(text.getMixed(), "Table of contents"); //$NON-NLS-1$
-		docTitle.setText(text);
-		ncxTOC.setDocTitle(docTitle);
-		// Create the required navigation map element
-		NavMap navMap = NCXFactory.eINSTANCE.createNavMap();
-		ncxTOC.setNavMap(navMap);
+		configureNCX();
 		// Create the required metadata element
 		Metadata opfMetadata = OPFFactory.eINSTANCE.createMetadata();
 		opfPackage.setMetadata(opfMetadata);
@@ -303,6 +289,27 @@ public class OPSPublication extends Publication {
 
 		registerNCXResourceFactory();
 		opfPackage.setGenerateTableOfContents(true);
+	}
+
+	/**
+	 * Creates and configures a table of contents.
+	 */
+	private void configureNCX() {
+		ncxTOC = NCXFactory.eINSTANCE.createNcx();
+		// Set the required version attribute
+		ncxTOC.setVersion("2005-1"); //$NON-NLS-1$
+		// Create the required head element
+		Head head = NCXFactory.eINSTANCE.createHead();
+		ncxTOC.setHead(head);
+		// Create the required title element
+		DocTitle docTitle = NCXFactory.eINSTANCE.createDocTitle();
+		Text text = NCXFactory.eINSTANCE.createText();
+		FeatureMapUtil.addText(text.getMixed(), "Table of contents"); //$NON-NLS-1$
+		docTitle.setText(text);
+		ncxTOC.setDocTitle(docTitle);
+		// Create the required navigation map element
+		NavMap navMap = NCXFactory.eINSTANCE.createNavMap();
+		ncxTOC.setNavMap(navMap);
 	}
 
 	/**
@@ -323,6 +330,20 @@ public class OPSPublication extends Publication {
 		EList<Item> manifestItems = opfPackage.getManifest().getItems();
 		ArrayList<ValidationMessage> messages = new ArrayList<ValidationMessage>();
 		for (Item item : manifestItems) {
+			// if the "file" attribute is not set we probably have an item
+			// that is in the model because we're repacking an EPUB. We'll try
+			// to make it easier on the user by figuring out the path to the
+			// file and fail only if the file does not exist.
+			if (item.getFile() == null) {
+				File rootFolder = getRootFolder();
+				String href = item.getHref();
+				File file = new File(rootFolder, href);
+				if (!file.exists()) {
+					messages.add(new ValidationMessage(ValidationMessage.Severity.ERROR,
+							MessageFormat.format(Messages.getString("OPSPublication.7"), item.getHref()))); //$NON-NLS-1$
+				}
+				item.setFile(file.toString());
+			}
 			if (!isLegalType(item)) {
 				Item fallback = getItemById(item.getFallback());
 				if (fallback == null) {
@@ -368,6 +389,7 @@ public class OPSPublication extends Publication {
 		// If a table of contents file has not been specified we must create
 		// one. If it has been specified it will be copied.
 		if (getItemById(opfPackage.getSpine().getToc()) == null) {
+			configureNCX();
 			File ncxFile = new File(oepbsFolder.getAbsolutePath() + File.separator + TOCFILE_NAME);
 			ResourceSet resourceSet = new ResourceSetImpl();
 			// Register the packages to make it available during loading.
