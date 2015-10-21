@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011-2014 Torkild U. Resheim.
+ * Copyright (c) 2011-2015 Torkild U. Resheim.
  *
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
@@ -43,15 +43,20 @@ public class EPUBFileUtil {
 	private static TikaConfig tika;
 
 	/**
-	 * Copies the contents of <i>source</i> to the new <i>destination</i> file.
+	 * Copies the contents of <i>source</i> to the new <i>destination</i> file. If the destination file already exists,
+	 * it will not be overwritten.
 	 *
 	 * @param source
 	 *            the source file
 	 * @param destination
 	 *            the destination file
+	 * @return <code>true</code> if the file was copied
 	 * @throws IOException
 	 */
-	public static void copy(File source, File destination) throws IOException {
+	public static boolean copy(File source, File destination) throws IOException {
+		if (destination.exists()) {
+			return false;
+		}
 		destination.getParentFile().mkdirs();
 		FileInputStream from = null;
 		FileOutputStream to = null;
@@ -78,6 +83,8 @@ public class EPUBFileUtil {
 				}
 			}
 		}
+		destination.setLastModified(source.lastModified());
+		return true;
 	}
 
 	/**
@@ -268,10 +275,11 @@ public class EPUBFileUtil {
 	 */
 	private static void zip(File root, File folder, ZipOutputStream out) throws IOException {
 		// Files first in order to make sure "metadata" is placed first in the
-		// zip file. We need that in order to support EPUB properly.
+		// zip file. We need that in order to support EPUB properly. Also do
+		// not add a mimetype file – it has already been added to the stream.
 		File[] files = folder.listFiles(new java.io.FileFilter() {
 			public boolean accept(File pathname) {
-				return !pathname.isDirectory();
+				return !pathname.isDirectory() && !pathname.getName().equals("mimetype"); //$NON-NLS-1$
 			}
 		});
 		byte[] tmpBuf = new byte[BUFFERSIZE];
@@ -279,6 +287,7 @@ public class EPUBFileUtil {
 		for (File file : files) {
 			FileInputStream in = new FileInputStream(file.getAbsolutePath());
 			ZipEntry zipEntry = new ZipEntry(getRelativePath(root, file));
+			zipEntry.setTime(file.lastModified());
 			out.putNextEntry(zipEntry);
 			int len;
 			while ((len = in.read(tmpBuf)) > 0) {
@@ -293,7 +302,9 @@ public class EPUBFileUtil {
 			}
 		});
 		for (File dir : dirs) {
-			out.putNextEntry(new ZipEntry(getRelativePath(root, dir)));
+			ZipEntry f = new ZipEntry(getRelativePath(root, dir));
+			f.setTime(dir.lastModified());
+			out.putNextEntry(f);
 			zip(root, dir, out);
 		}
 	}

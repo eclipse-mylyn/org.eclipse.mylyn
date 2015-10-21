@@ -129,6 +129,15 @@ public abstract class Publication {
 	}
 
 	/**
+	 * Returns an <i>EPUB version 2.0.1</i> instance.
+	 *
+	 * @return an EPUB instance
+	 */
+	public static Publication getVersion2Instance(ILogger logger) {
+		return new OPSPublication(logger);
+	}
+
+	/**
 	 * Returns an <i>EPUB version 3.0</i> instance.
 	 *
 	 * @return an EPUB instance
@@ -164,10 +173,8 @@ public abstract class Publication {
 	}
 
 	/**
-	 * Adds data to the publication that we always want to be present.
+	 * Adds required data to the publication.
 	 * <ul>
-	 * <li>The creation date.</li>
-	 * <li><i>Eclipse Mylyn Docs project</i> as contributor redactor role.</li>
 	 * <li>A unique identifier if none has been specified.</li>
 	 * <li>A empty description if none has been specified.</li>
 	 * <li>Language "English" if none has been specified.</li>
@@ -177,10 +184,7 @@ public abstract class Publication {
 	 */
 	private void addCompulsoryData() {
 		log(Messages.getString("OPSPublication.1"), Severity.VERBOSE, indent++); //$NON-NLS-1$
-		// Creation date is always when we build
-		addDate(null, new java.util.Date(System.currentTimeMillis()), CREATION_DATE_ID);
-		// Make it clear where the tooling comes from
-		addContributor(null, null, "Eclipse Mylyn Docs project", Role.REDACTOR, null); //$NON-NLS-1$
+		//addDefaultRedactor();
 		// Generate an unique identifier
 		if (getIdentifier() == null) {
 			addIdentifier(UUID_SCHEME, "uuid", "urn:uuid" + UUID.randomUUID().toString()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -203,6 +207,17 @@ public abstract class Publication {
 			addFormat(null, EPUB.MIMETYPE_EPUB);
 		}
 		indent--;
+	}
+
+	/**
+	 * <li>The creation date.</li>
+	 * <li><i>Eclipse Mylyn Docs project</i> as contributor redactor role.</li>
+	 */
+	protected void addDefaultRedactor() {
+		// Creation date is always when we build
+		addDate(null, new java.util.Date(System.currentTimeMillis()), CREATION_DATE_ID);
+		// Make it clear where the tooling comes from
+		addContributor(null, null, "Eclipse Mylyn Docs project", Role.REDACTOR, null); //$NON-NLS-1$
 	}
 
 	/**
@@ -927,6 +942,29 @@ public abstract class Publication {
 	}
 
 	/**
+	 * Removes the item with the given identifier from the manifest. If found and removed the item will be returned.
+	 * Otherwise <code>null</code> is returned.
+	 *
+	 * @param id
+	 *            identifier of item to remove
+	 * @return the item or <code>null</code>
+	 */
+	public Item removeItemById(String id) {
+		EList<Item> items = opfPackage.getManifest().getItems();
+		Item found = null;
+		for (Item item : items) {
+			if (item.getId().equals(id)) {
+				found = item;
+				break;
+			}
+		}
+		if (found != null) {
+			opfPackage.getManifest().getItems().remove(found);
+		}
+		return found;
+	}
+
+	/**
 	 * Returns a list of all manifest items that have the specified MIME type.
 	 *
 	 * @param mimetype
@@ -978,7 +1016,7 @@ public abstract class Publication {
 	 *
 	 * @return the spine
 	 */
-	protected Spine getSpine() {
+	public Spine getSpine() {
 		return opfPackage.getSpine();
 	}
 
@@ -1378,7 +1416,10 @@ public abstract class Publication {
 			if (!item.isGenerated()) {
 				File source = new File(item.getFile());
 				File destination = new File(rootFolder.getAbsolutePath() + File.separator + item.getHref());
-				EPUBFileUtil.copy(source, destination);
+				if (!EPUBFileUtil.copy(source, destination)) {
+					log(MessageFormat.format(Messages.getString("Publication.0"), //$NON-NLS-1$
+							item.getHref()), Severity.WARNING, indent + 1);
+				}
 			}
 		}
 	}
