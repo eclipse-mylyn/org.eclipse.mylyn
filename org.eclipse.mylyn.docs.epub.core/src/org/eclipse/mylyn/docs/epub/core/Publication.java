@@ -129,15 +129,6 @@ public abstract class Publication {
 	}
 
 	/**
-	 * Returns an <i>EPUB version 2.0.1</i> instance.
-	 *
-	 * @return an EPUB instance
-	 */
-	public static Publication getVersion2Instance(ILogger logger) {
-		return new OPSPublication(logger);
-	}
-
-	/**
 	 * Returns an <i>EPUB version 3.0</i> instance.
 	 *
 	 * @return an EPUB instance
@@ -936,29 +927,6 @@ public abstract class Publication {
 	}
 
 	/**
-	 * Removes the item with the given identifier from the manifest. If found and removed the item will be returned.
-	 * Otherwise <code>null</code> is returned.
-	 *
-	 * @param id
-	 *            identifier of item to remove
-	 * @return the item or <code>null</code>
-	 */
-	public Item removeItemById(String id) {
-		EList<Item> items = opfPackage.getManifest().getItems();
-		Item found = null;
-		for (Item item : items) {
-			if (item.getId().equals(id)) {
-				found = item;
-				break;
-			}
-		}
-		if (found != null) {
-			opfPackage.getManifest().getItems().remove(found);
-		}
-		return found;
-	}
-
-	/**
 	 * Returns a list of all manifest items that have the specified MIME type.
 	 *
 	 * @param mimetype
@@ -1010,7 +978,7 @@ public abstract class Publication {
 	 *
 	 * @return the spine
 	 */
-	public Spine getSpine() {
+	protected Spine getSpine() {
 		return opfPackage.getSpine();
 	}
 
@@ -1410,10 +1378,7 @@ public abstract class Publication {
 			if (!item.isGenerated()) {
 				File source = new File(item.getFile());
 				File destination = new File(rootFolder.getAbsolutePath() + File.separator + item.getHref());
-				if (!EPUBFileUtil.copy(source, destination)) {
-					log(MessageFormat.format(Messages.getString("Publication.0"), //$NON-NLS-1$
-							item.getHref()), Severity.WARNING, indent + 1);
-				}
+				EPUBFileUtil.copy(source, destination);
 			}
 		}
 	}

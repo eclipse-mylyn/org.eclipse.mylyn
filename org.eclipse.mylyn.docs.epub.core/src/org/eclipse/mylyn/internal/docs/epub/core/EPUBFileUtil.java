@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011-2015 Torkild U. Resheim.
+ * Copyright (c) 2011-2014 Torkild U. Resheim.
  *
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
@@ -43,8 +43,7 @@ public class EPUBFileUtil {
 	private static TikaConfig tika;
 
 	/**
-	 * Copies the contents of <i>source</i> to the new <i>destination</i> file. If the destination file already exists,
-	 * it will not be overwritten.
+	 * Copies the contents of <i>source</i> to the new <i>destination</i> file.
 	 *
 	 * @param source
 	 *            the source file
@@ -52,10 +51,7 @@ public class EPUBFileUtil {
 	 *            the destination file
 	 * @throws IOException
 	 */
-	public static boolean copy(File source, File destination) throws IOException {
-		if (destination.exists()) {
-			return false;
-		}
+	public static void copy(File source, File destination) throws IOException {
 		destination.getParentFile().mkdirs();
 		FileInputStream from = null;
 		FileOutputStream to = null;
@@ -82,7 +78,6 @@ public class EPUBFileUtil {
 				}
 			}
 		}
-		return true;
 	}
 
 	/**
@@ -273,11 +268,10 @@ public class EPUBFileUtil {
 	 */
 	private static void zip(File root, File folder, ZipOutputStream out) throws IOException {
 		// Files first in order to make sure "metadata" is placed first in the
-		// zip file. We need that in order to support EPUB properly. Also do
-		// not add a mimetype file – it has already been added to the stream.
+		// zip file. We need that in order to support EPUB properly.
 		File[] files = folder.listFiles(new java.io.FileFilter() {
 			public boolean accept(File pathname) {
-				return !pathname.isDirectory() && !pathname.getName().equals("mimetype"); //$NON-NLS-1$
+				return !pathname.isDirectory();
 			}
 		});
 		byte[] tmpBuf = new byte[BUFFERSIZE];

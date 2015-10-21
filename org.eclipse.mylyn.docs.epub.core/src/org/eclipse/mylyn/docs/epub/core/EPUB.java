@@ -75,10 +75,8 @@ public class EPUB {
 	 */
 	public enum PublicationVersion {
 		/** Unsupported or undetected publication version. */
-		UNKNOWN,
-		/** Open Publication Structure (OPS) 2.0.1 */
-		V2,
-		/** EPUB Publications 3.0.1 */
+		UNKNOWN, /** Open Publication Structure (OPS) 2.0.1 */
+		V2, /** EPUB Publications 3.0.1 */
 		V3
 	}
 
@@ -511,7 +509,7 @@ public class EPUB {
 				File root = new File(rootFolder.getAbsolutePath() + File.separator + rootFile.getFullPath());
 				switch (readPublicationVersion(root)) {
 				case V2:
-					Publication ops2 = Publication.getVersion2Instance(logger);
+					Publication ops2 = Publication.getVersion2Instance();
 					ops2.unpack(root);
 					rootFile.setPublication(ops2);
 					break;
