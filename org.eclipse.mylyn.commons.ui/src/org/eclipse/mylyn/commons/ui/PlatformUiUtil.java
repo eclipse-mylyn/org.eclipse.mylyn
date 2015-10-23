@@ -33,6 +33,7 @@ public class PlatformUiUtil {
 
 	private static class Eclipse36Checker {
 		public static final boolean result;
+
 		static {
 			boolean methodAvailable = false;
 			try {
@@ -62,7 +63,8 @@ public class PlatformUiUtil {
 	}
 
 	public static int getToolTipXShift() {
-		if ("gtk".equals(SWT.getPlatform()) || "carbon".equals(SWT.getPlatform()) || "cocoa".equals(SWT.getPlatform())) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		if ("gtk".equals(SWT.getPlatform()) || "carbon".equals(SWT.getPlatform()) //$NON-NLS-1$//$NON-NLS-2$
+				|| "cocoa".equals(SWT.getPlatform())) { //$NON-NLS-1$
 			return -26;
 		} else {
 			return -23;
@@ -127,7 +129,7 @@ public class PlatformUiUtil {
 	 * If a a section does not use a toolbar as its text client the spacing between the section header and client will
 	 * be different from other sections. This method returns the value to set as the vertical spacing on those sections
 	 * to align the vertical position of section clients.
-	 * 
+	 *
 	 * @return value for {@link org.eclipse.ui.forms.widgets.Section#clientVerticalSpacing}
 	 */
 	public static int getToolbarSectionClientVerticalSpacing() {
@@ -202,6 +204,26 @@ public class PlatformUiUtil {
 			}
 		}
 		return internalBrowserAvailable.booleanValue();
+	}
+
+	/**
+	 * @since 3.18
+	 */
+	public static boolean isNeonOrLater() {
+		Bundle bundle = Platform.getBundle("org.eclipse.platform"); //$NON-NLS-1$
+		if (bundle != null) {
+			String versionString = (String) bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
+			Version version = new Version(versionString);
+			return version.compareTo(new Version("4.6.0.v20151020-0800")) >= 0; //$NON-NLS-1$
+		}
+		bundle = Platform.getBundle("org.eclipse.swt"); //$NON-NLS-1$
+		if (bundle != null) {
+			String versionString = (String) bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
+			Version version = new Version(versionString);
+			return version.compareTo(new Version("3.105.0.v20151020-0634")) >= 0; //$NON-NLS-1$
+		}
+		return false;
+
 	}
 
 }

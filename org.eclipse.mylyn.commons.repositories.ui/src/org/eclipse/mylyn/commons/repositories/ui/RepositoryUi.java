@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.ui.dialogs.ValidatableWizardDialog;
 import org.eclipse.mylyn.internal.commons.repositories.ui.Messages;
 import org.eclipse.mylyn.internal.commons.repositories.ui.RepositoriesUiPlugin;
+import org.eclipse.mylyn.internal.commons.repositories.ui.RepositoryUiUtil;
 import org.eclipse.mylyn.internal.commons.repositories.ui.wizards.NewRepositoryWizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
@@ -25,7 +26,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.internal.LegacyResourceSupport;
-import org.eclipse.ui.internal.util.Util;
 
 /**
  * @author Steffen Pingel
@@ -64,7 +64,7 @@ public final class RepositoryUi {
 				IWorkbenchPart part = workbenchWindow.getPartService().getActivePart();
 				if (part instanceof IEditorPart) {
 					IEditorInput input = ((IEditorPart) part).getEditorInput();
-					Object resource = Util.getAdapter(input, resourceClass);
+					Object resource = RepositoryUiUtil.adapt(input, resourceClass);
 					if (resource != null) {
 						selectionToPass = new StructuredSelection(resource);
 					}
