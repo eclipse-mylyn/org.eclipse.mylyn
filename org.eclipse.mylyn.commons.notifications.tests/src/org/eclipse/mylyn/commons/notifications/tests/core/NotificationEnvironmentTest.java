@@ -86,8 +86,8 @@ public class NotificationEnvironmentTest extends TestCase {
 
 	public void testGetRuntimeVersion() {
 		Version runtimeVersion = environment.getRuntimeVersion();
-		assertTrue("Expected value between 1.5-1.8, got " + runtimeVersion,
-				new VersionRange("[1.5.0,1.8.0)").isIncluded(runtimeVersion));
+		assertTrue("Expected value between 1.5-1.9, got " + runtimeVersion,
+				new VersionRange("[1.5.0,1.9.0)").isIncluded(runtimeVersion));
 	}
 
 	public void testGetPlatformVersion() {
