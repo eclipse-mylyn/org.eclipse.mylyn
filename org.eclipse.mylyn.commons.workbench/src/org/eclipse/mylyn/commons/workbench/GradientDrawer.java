@@ -197,7 +197,7 @@ public abstract class GradientDrawer {
 				try {
 					categoryGradientEnd = new Color(Display.getDefault(), red, green, blue);
 				} catch (Exception e) {
-					categoryGradientStart = getViewer().getTree().getParent().getBackground();
+					categoryGradientEnd = getViewer().getTree().getParent().getBackground();
 //					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not set color: " + red //$NON-NLS-1$
 //							+ ", " + green + ", " + blue, e)); //$NON-NLS-1$ //$NON-NLS-2$
 				}
