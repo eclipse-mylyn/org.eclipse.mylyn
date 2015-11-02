@@ -374,11 +374,13 @@ public class NotificationsPreferencesPage extends PreferencePage implements IWor
 
 	@Override
 	public boolean performOk() {
-		getPreferenceStore().setValue(NotificationsPlugin.PREF_NOTICATIONS_ENABLED,
-				enableNotificationsButton.getSelection());
-		if (model.isDirty()) {
-			NotificationsPlugin.getDefault().saveWorkingCopy(model);
-			model.setDirty(false);
+		if (model != null) {
+			getPreferenceStore().setValue(NotificationsPlugin.PREF_NOTICATIONS_ENABLED,
+					enableNotificationsButton.getSelection());
+			if (model.isDirty()) {
+				NotificationsPlugin.getDefault().saveWorkingCopy(model);
+				model.setDirty(false);
+			}
 		}
 		return super.performOk();
 	}
