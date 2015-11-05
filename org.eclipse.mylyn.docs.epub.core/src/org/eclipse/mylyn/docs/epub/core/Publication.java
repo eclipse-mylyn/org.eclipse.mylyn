@@ -132,6 +132,7 @@ public abstract class Publication {
 	 * Returns an <i>EPUB version 2.0.1</i> instance.
 	 *
 	 * @return an EPUB instance
+	 * @since 3.1
 	 */
 	public static Publication getVersion2Instance(ILogger logger) {
 		return new OPSPublication(logger);
@@ -212,6 +213,8 @@ public abstract class Publication {
 	/**
 	 * <li>The creation date.</li>
 	 * <li><i>Eclipse Mylyn Docs project</i> as contributor redactor role.</li>
+	 *
+	 * @since 3.1
 	 */
 	protected void addDefaultRedactor() {
 		// Creation date is always when we build
@@ -948,6 +951,7 @@ public abstract class Publication {
 	 * @param id
 	 *            identifier of item to remove
 	 * @return the item or <code>null</code>
+	 * @since 3.1
 	 */
 	public Item removeItemById(String id) {
 		EList<Item> items = opfPackage.getManifest().getItems();
@@ -1015,6 +1019,7 @@ public abstract class Publication {
 	 * Returns the publication spine.
 	 *
 	 * @return the spine
+	 * @since 3.1
 	 */
 	public Spine getSpine() {
 		return opfPackage.getSpine();
