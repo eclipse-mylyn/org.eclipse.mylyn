@@ -44,7 +44,10 @@ public class TaskActivateAction extends BaseSelectionListenerAction implements I
 
 	@Override
 	public void run() {
-		run(TaskListView.getFromActivePerspective().getSelectedTask());
+		TaskListView taskListView = TaskListView.getFromActivePerspective();
+		if (taskListView != null) {
+			run(taskListView.getSelectedTask());
+		}
 	}
 
 	@Deprecated
