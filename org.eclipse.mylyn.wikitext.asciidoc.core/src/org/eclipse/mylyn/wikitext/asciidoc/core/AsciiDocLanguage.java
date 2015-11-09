@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Stefan Seelmann and others.
+ * Copyright (c) 2012, 2016 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Stefan Seelmann - initial API and implementation
+ *     Patrik Suzzi - Bug 481670 - [asciidoc] support for lists
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.asciidoc.core;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.AsciiDocPreProcessor;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.HeadingBlock;
+import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.ListBlock;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.ParagraphBlock;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.PreformattedBlock;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.UnderlinedHeadingBlock;
@@ -98,6 +100,10 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 
 	@Override
 	protected void addStandardBlocks(List<Block> blocks, List<Block> paragraphBreakingBlocks) {
+		ListBlock listBlock = new ListBlock();
+		blocks.add(listBlock);
+		paragraphBreakingBlocks.add(listBlock);
+
 		blocks.add(new PreformattedBlock());
 		blocks.add(new HeadingBlock());
 	}
