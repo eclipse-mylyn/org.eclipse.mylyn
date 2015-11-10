@@ -71,6 +71,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskArchiveFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskCompletionFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskPriorityFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskRepositoryUtil;
+import org.eclipse.mylyn.internal.tasks.ui.TaskReviewArtifactFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskWorkingSetFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CollapseAllAction;
@@ -281,6 +282,8 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 
 	private final TaskArchiveFilter filterArchive = new TaskArchiveFilter();
 
+	private final TaskReviewArtifactFilter filterArtifact = new TaskReviewArtifactFilter();
+
 	private final PresentationFilter filterPresentation = PresentationFilter.getInstance();
 
 	private final MyTasksFilter filterMyTasks = new MyTasksFilter();
@@ -386,9 +389,8 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 		public void propertyChange(PropertyChangeEvent event) {
 			if (event.getProperty().equals(IThemeManager.CHANGE_CURRENT_THEME)
 					|| CommonThemes.isCommonTheme(event.getProperty())) {
-				taskListTableLabelProvider.setCategoryBackgroundColor(themeManager.getCurrentTheme()
-						.getColorRegistry()
-						.get(CommonThemes.COLOR_CATEGORY));
+				taskListTableLabelProvider.setCategoryBackgroundColor(
+						themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_CATEGORY));
 				getViewer().refresh();
 			}
 		}
@@ -548,14 +550,19 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 		filteredTree.setWorkingSetFilter(filterWorkingSet);
 		addFilter(filterWorkingSet);
 		addFilter(filterPriority);
-		if (TasksUiPlugin.getDefault().getPreferenceStore().contains(ITasksUiPreferenceConstants.FILTER_COMPLETE_MODE)) {
+		if (TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.contains(ITasksUiPreferenceConstants.FILTER_COMPLETE_MODE)) {
 			addFilter(filterComplete);
 		}
-		if (TasksUiPlugin.getDefault().getPreferenceStore().contains(ITasksUiPreferenceConstants.FILTER_MY_TASKS_MODE)) {
+		if (TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.contains(ITasksUiPreferenceConstants.FILTER_MY_TASKS_MODE)) {
 			addFilter(filterMyTasks);
 		}
 		addFilter(filterPresentation);
 		addFilter(filterArchive);
+		addFilter(filterArtifact);
 
 		// Restore "link with editor" value; by default true
 		boolean linkValue = true;
@@ -643,8 +650,8 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 		layout.numColumns = 1;
 		body.setLayout(layout);
 
-		IWorkbenchSiteProgressService progress = (IWorkbenchSiteProgressService) getSite().getAdapter(
-				IWorkbenchSiteProgressService.class);
+		IWorkbenchSiteProgressService progress = (IWorkbenchSiteProgressService) getSite()
+				.getAdapter(IWorkbenchSiteProgressService.class);
 		if (progress != null) {
 			// show indicator for all running query synchronizations
 			progress.showBusyForFamily(ITasksCoreConstants.JOB_FAMILY_SYNCHRONIZATION);
@@ -658,8 +665,9 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 
 		searchHandler = SearchUtil.createSearchHandler();
 
-		filteredTree = new TaskListFilteredTree(body, SWT.MULTI | SWT.VERTICAL | /* SWT.H_SCROLL | */SWT.V_SCROLL
-				| SWT.NO_SCROLL | SWT.FULL_SELECTION, searchHandler, getViewSite().getWorkbenchWindow());
+		filteredTree = new TaskListFilteredTree(body,
+				SWT.MULTI | SWT.VERTICAL | /* SWT.H_SCROLL | */SWT.V_SCROLL | SWT.NO_SCROLL | SWT.FULL_SELECTION,
+				searchHandler, getViewSite().getWorkbenchWindow());
 
 		// need to do initialize tooltip early for native tooltip disablement to take effect
 		taskListToolTip = new TaskListToolTip(getViewer().getControl());
@@ -729,7 +737,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 		getViewer().getTree().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent event) {
-				// avoid activation in case the event was actually triggered as a side-effect of a tree expansion 
+				// avoid activation in case the event was actually triggered as a side-effect of a tree expansion
 				long currentTime = System.currentTimeMillis();
 				if (currentTime - lastExpansionTime < 150 && currentTime >= lastExpansionTime) {
 					return;
@@ -852,9 +860,8 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 			message.setTitle(Messages.TaskListView_Welcome_Message_Title);
 			message.setImage(Dialog.DLG_IMG_MESSAGE_INFO);
 			serviceMessageControl.setMessage(message);
-			TasksUiPlugin.getDefault()
-					.getPreferenceStore()
-					.setValue(ITasksUiPreferenceConstants.WELCOME_MESSAGE, Boolean.toString(true));
+			TasksUiPlugin.getDefault().getPreferenceStore().setValue(ITasksUiPreferenceConstants.WELCOME_MESSAGE,
+					Boolean.toString(true));
 		}
 
 		TasksUiPlugin.getDefault().getServiceMessageManager().addServiceMessageListener(serviceMessageControl);
@@ -1341,9 +1348,9 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 				itemNotFoundExceptionLogged = true;
 				// It's probably not worth displaying this to the user since the item
 				// is not there in this case, so consider removing.
-				StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-						"Could not link Task List with editor", //$NON-NLS-1$
-						e));
+				StatusHandler.log(
+						new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Could not link Task List with editor", //$NON-NLS-1$
+								e));
 			}
 		}
 	}
@@ -1611,8 +1618,8 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 						int preferredResult) {
 					if (width) {
 						if (getViewSite().getActionBars().getToolBarManager() instanceof ToolBarManager) {
-							Point size = ((ToolBarManager) getViewSite().getActionBars().getToolBarManager()).getControl()
-									.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+							Point size = ((ToolBarManager) getViewSite().getActionBars().getToolBarManager())
+									.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT);
 							// leave some room for the view menu drop-down
 							return size.x + PlatformUiUtil.getViewMenuWidth();
 						}

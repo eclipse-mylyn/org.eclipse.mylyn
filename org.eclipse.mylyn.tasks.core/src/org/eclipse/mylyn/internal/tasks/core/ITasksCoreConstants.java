@@ -65,6 +65,8 @@ public interface ITasksCoreConstants {
 
 	public static final String ATTRIBUTE_TASK_SUPPRESS_INCOMING = "task.common.suppress.incoming"; //$NON-NLS-1$
 
+	public static final String ATTRIBUTE_ARTIFACT = "org.eclipse.mylyn.is.artifact"; //$NON-NLS-1$
+
 	/**
 	 * @deprecated Since Mylyn 3.11, all TaskRepositories store their credentials in the secure store.
 	 */
@@ -94,7 +96,7 @@ public interface ITasksCoreConstants {
 
 	/**
 	 * The parent of all scheduling rules that modify task data.
-	 * 
+	 *
 	 * @see ITasksCoreConstants#ROOT_SCHEDULING_RULE
 	 */
 	public static class RootSchedulingRule implements ISchedulingRule {
