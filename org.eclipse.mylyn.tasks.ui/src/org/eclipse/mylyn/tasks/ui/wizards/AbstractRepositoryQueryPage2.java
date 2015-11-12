@@ -50,6 +50,9 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
+import com.google.common.base.Objects;
+import com.google.common.base.Strings;
+
 /**
  * @author Steffen Pingel
  * @author Frank Becker
@@ -80,6 +83,10 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 	private Button refreshButton;
 
 	private Text titleText;
+
+	private boolean titleWasSuggested;
+
+	private boolean editQueryTitleInProgress;
 
 	public AbstractRepositoryQueryPage2(String pageName, TaskRepository repository, IRepositoryQuery query) {
 		super(pageName, repository, query);
@@ -143,6 +150,33 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 		}
 		setMessage(Messages.AbstractRepositoryQueryPage2_Enter_a_title);
 		return false;
+	}
+
+	/**
+	 * Allows connectors to suggest a query title. As long as the title field does not contain edits made by the user,
+	 * the field will be updated with the suggestion whenever the button enablement is updated.
+	 * 
+	 * @return a query title suggested based on the query parameters, or the empty string
+	 * @since 3.18
+	 */
+	@NonNull
+	protected String suggestQueryTitle() {
+		return ""; //$NON-NLS-1$
+	}
+
+	/**
+	 * Called by the framework to update the title from the suggestion.
+	 */
+	void updateTitleFromSuggestion() {
+		if (editQueryTitleInProgress) {
+			titleWasSuggested = false;
+		} else if (titleWasSuggested
+				|| Strings.isNullOrEmpty(getQueryTitle())
+				|| (getQuery() != null && Objects.equal(getQuery().getSummary(), getQueryTitle()) && suggestQueryTitle().equals(
+						getQueryTitle()))) {
+			setQueryTitle(suggestQueryTitle());
+			titleWasSuggested = true;
+		}
 	}
 
 	public boolean needsClear() {
@@ -266,7 +300,12 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).applyTo(titleText);
 		titleText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				getContainer().updateButtons();
+				try {
+					editQueryTitleInProgress = true;
+					getContainer().updateButtons();
+				} finally {
+					editQueryTitleInProgress = false;
+				}
 			}
 		});
 	}

@@ -51,6 +51,9 @@ public class RepositoryQueryWizard extends Wizard {
 	@Override
 	public boolean canFinish() {
 		IWizardPage currentPage = getContainer().getCurrentPage();
+		if (currentPage instanceof AbstractRepositoryQueryPage2) {
+			((AbstractRepositoryQueryPage2) currentPage).updateTitleFromSuggestion();
+		}
 		if (currentPage instanceof AbstractRepositoryQueryPage) {
 			return currentPage.isPageComplete();
 		}
