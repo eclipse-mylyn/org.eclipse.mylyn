@@ -12,7 +12,9 @@
 package org.eclipse.mylyn.tasks.ui.wizards;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -28,6 +30,7 @@ import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.junit.Test;
@@ -62,6 +65,10 @@ public class RepositorySettingsPageTest {
 		@Override
 		protected void createAdditionalControls(Composite parent) {
 			// ignore
+		}
+
+		Combo getServerUrlCombo() {
+			return serverUrlCombo;
 		}
 	}
 
@@ -170,6 +177,42 @@ public class RepositorySettingsPageTest {
 		repository.removeProperty(ITasksCoreConstants.PROPERTY_BRAND_ID);
 		AbstractRepositorySettingsPage page = createPage(repository);
 		assertEquals("Title", page.getTitle());
+	}
+
+	@Test
+	public void setUrlReadOnlyNotCalled() throws Exception {
+		TestRepositorySettingsPage page = new TestRepositorySettingsPage(createTaskRepository());
+		page.createControl(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+		Combo serverUrlCombo = page.getServerUrlCombo();
+		assertTrue(serverUrlCombo.isEnabled());
+	}
+
+	@Test
+	public void setUrlReadOnlyTrue() throws Exception {
+		TestRepositorySettingsPage page = new TestRepositorySettingsPage(createTaskRepository());
+		page.setUrlReadOnly(true);
+		page.createControl(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+		Combo serverUrlCombo = page.getServerUrlCombo();
+		assertFalse(serverUrlCombo.isEnabled());
+	}
+
+	@Test
+	public void setUrlReadOnlyFalse() throws Exception {
+		TestRepositorySettingsPage page = new TestRepositorySettingsPage(createTaskRepository());
+		page.setUrlReadOnly(false);
+		page.createControl(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+		Combo serverUrlCombo = page.getServerUrlCombo();
+		assertTrue(serverUrlCombo.isEnabled());
+	}
+
+	@Test
+	public void isUrlReadOnly() throws Exception {
+		TestRepositorySettingsPage page = new TestRepositorySettingsPage(createTaskRepository());
+		assertFalse(page.isUrlReadOnly());
+		page.setUrlReadOnly(true);
+		assertTrue(page.isUrlReadOnly());
+		page.setUrlReadOnly(false);
+		assertFalse(page.isUrlReadOnly());
 	}
 
 	private AbstractRepositorySettingsPage createPage(TaskRepository repository) {

@@ -133,6 +133,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	protected Combo serverUrlCombo;
 
+	private boolean serverUrlReadOnly = false;
+
 	private String serverVersion = TaskRepository.NO_VERSION_SPECIFIED;
 
 	protected StringFieldEditor repositoryUserNameEditor;
@@ -420,28 +422,32 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		Label serverLabel = new Label(compositeContainer, SWT.NONE);
 		serverLabel.setText(LABEL_SERVER);
 		serverUrlCombo = new Combo(compositeContainer, SWT.DROP_DOWN);
-		serverUrlCombo.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				if (getWizard() != null) {
-					getWizard().getContainer().updateButtons();
+		if (serverUrlReadOnly) {
+			serverUrlCombo.setEnabled(false);
+		} else {
+			serverUrlCombo.addModifyListener(new ModifyListener() {
+				public void modifyText(ModifyEvent e) {
+					if (getWizard() != null) {
+						getWizard().getContainer().updateButtons();
+					}
 				}
-			}
-		});
-		serverUrlCombo.addFocusListener(new FocusAdapter() {
+			});
+			serverUrlCombo.addFocusListener(new FocusAdapter() {
 
-			@Override
-			public void focusLost(FocusEvent e) {
-				updateHyperlinks();
-			}
-		});
-		serverUrlCombo.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (getWizard() != null) {
-					getWizard().getContainer().updateButtons();
+				@Override
+				public void focusLost(FocusEvent e) {
+					updateHyperlinks();
 				}
-			}
-		});
+			});
+			serverUrlCombo.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if (getWizard() != null) {
+						getWizard().getContainer().updateButtons();
+					}
+				}
+			});
+		}
 
 		GridDataFactory.fillDefaults()
 				.hint(300, SWT.DEFAULT)
@@ -692,7 +698,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	}
 
 	private void updateUrl() {
-		serverUrlCombo.setText(repository.getRepositoryUrl());
+		setUrl(repository.getRepositoryUrl());
 	}
 
 	private void createAdvancedSection() {
@@ -1966,6 +1972,23 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	 */
 	public void setUrl(String url) {
 		serverUrlCombo.setText(url);
+	}
+
+	/**
+	 * Sets the URL control is read only, or can be edited.
+	 *
+	 * @since 3.18
+	 */
+	public void setUrlReadOnly(boolean value) {
+		serverUrlReadOnly = value;
+	}
+
+	/**
+	 * @return if the URL control is read-only.
+	 * @since 3.18
+	 */
+	public boolean isUrlReadOnly() {
+		return serverUrlReadOnly;
 	}
 
 	/**
