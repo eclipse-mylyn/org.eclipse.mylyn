@@ -21,16 +21,27 @@ import org.eclipse.mylyn.tasks.core.ITaskContainer;
 
 /**
  * Custom filters are used so that the "Find:" filter can 'see through' any filters that may have been applied.
- * 
+ *
  * @author Mik Kersten
  */
-// XXX duplicate implementation in hasDescendantIncoming/hasIncompleteDescendant: consider replacing this by a visitor 
+// XXX duplicate implementation in hasDescendantIncoming/hasIncompleteDescendant: consider replacing this by a visitor
 public abstract class AbstractTaskListFilter {
 
+	/**
+	 * Given an element in the task list to filter against, determines whether or not it should be filtered away or if
+	 * it should be kept within view.
+	 *
+	 * @param parent
+	 *            The parent element we are determining filtering rules for.
+	 * @param element
+	 *            The element we are determining filtering rules for. This is usually some sort of ITask
+	 * @return Returns true if the element should not be filtered, otherwise returns false if it should be filtered away
+	 *         from the task list.
+	 */
 	public abstract boolean select(Object parent, Object element);
 
 	/**
-	 * @return true if this filter should be applied even with filter text is present
+	 * @return True if this filter should be applied even with filter text present. Otherwise, returns false.
 	 */
 	public boolean applyToFilteredText() {
 		return false;
@@ -47,6 +58,17 @@ public abstract class AbstractTaskListFilter {
 		return hasIncompleteDescendant(container, ITasksCoreConstants.MAX_SUBTASK_DEPTH);
 	}
 
+	/**
+	 * Given a container and depth, determines if any of the descendants are incoming. This method will search only up
+	 * to the depth provided.
+	 *
+	 * @param container
+	 *            The container of tasks to check against
+	 * @param depth
+	 *            The maximum amount of the depth to search. For example, 0 is a shallow search, while a 1 would search
+	 *            at level one more level deeper.
+	 * @return
+	 */
 	private static boolean hasDescendantIncoming(ITaskContainer container, int depth) {
 		Collection<ITask> children = container.getChildren();
 		if (children == null || depth <= 0) {
@@ -82,7 +104,8 @@ public abstract class AbstractTaskListFilter {
 				ITask containedRepositoryTask = task;
 				if (!containedRepositoryTask.isCompleted()) {
 					return true;
-				} else if (task instanceof ITaskContainer && hasIncompleteDescendant((ITaskContainer) task, depth - 1)) {
+				} else
+					if (task instanceof ITaskContainer && hasIncompleteDescendant((ITaskContainer) task, depth - 1)) {
 					return true;
 				}
 			}
