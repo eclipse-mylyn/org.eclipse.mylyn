@@ -73,7 +73,7 @@ public class BreakpointsStateUtilTest {
 		assertTrue(pluginStateFile.exists());
 		FileInputStream stateFile = new FileInputStream(pluginStateFile);
 		InputStream expectedResult = new FileInputStream(new File("testdata/breakpointFile.xml")); //$NON-NLS-1$
-		assertTrue(IOUtils.contentEquals(expectedResult, stateFile));
+		assertEquals(IOUtils.readLines(expectedResult), IOUtils.readLines(stateFile));
 	}
 
 	@Test
