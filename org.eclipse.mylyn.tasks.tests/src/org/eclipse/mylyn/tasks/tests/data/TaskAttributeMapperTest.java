@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.tasks.tests.data;
 
+import java.util.Map;
+
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -18,6 +20,9 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * @author Steffen Pingel
@@ -94,6 +99,69 @@ public class TaskAttributeMapperTest extends TestCase {
 		idAttribute.setValue("3");
 		assertFalse("Expected not equals:\n" + attributeOld + "\n" + attributeNew,
 				mapper.equals(attributeNew, attributeOld));
+	}
+
+	public void testGetValueLabels() throws Exception {
+		TaskAttributeMapper mapper = mapperWith2Options();
+		TaskAttribute attribute = data.getRoot().createAttribute("id");
+
+		assertEquals(ImmutableList.of(), mapper.getValueLabels(attribute));
+
+		attribute.setValue("1");
+		assertEquals(ImmutableList.of("a"), mapper.getValueLabels(attribute));
+
+		attribute.setValue("2");
+		assertEquals(ImmutableList.of("b"), mapper.getValueLabels(attribute));
+
+		attribute = data.getRoot().createAttribute("id");
+		attribute.addValue("1");
+		attribute.addValue("2");
+		assertEquals(ImmutableList.of("a", "b"), mapper.getValueLabels(attribute));
+
+		attribute = data.getRoot().createAttribute("id");
+		attribute.addValue("2");
+		attribute.addValue("1");
+		assertEquals(ImmutableList.of("b", "a"), mapper.getValueLabels(attribute));
+	}
+
+	public void testGetValueLabelsUnmappedOption() throws Exception {
+		TaskAttributeMapper mapper = mapperWith2Options();
+		TaskAttribute attribute = attributeWithUnmappedOption();
+
+		assertEquals(ImmutableList.of(), mapper.getValueLabels(attribute));
+
+		attribute.setValue("1");
+		assertEquals(ImmutableList.of("a"), mapper.getValueLabels(attribute));
+
+		attribute.setValue("unMappedOption");
+		assertEquals(ImmutableList.of("unMappedOptionLabel"), mapper.getValueLabels(attribute));
+
+		attribute = attributeWithUnmappedOption();
+		attribute.addValue("unMappedOption");
+		attribute.addValue("2");
+		assertEquals(ImmutableList.of("unMappedOptionLabel", "b"), mapper.getValueLabels(attribute));
+
+		attribute = attributeWithUnmappedOption();
+		attribute.addValue("2");
+		attribute.addValue("unMappedOption");
+		assertEquals(ImmutableList.of("b", "unMappedOptionLabel"), mapper.getValueLabels(attribute));
+	}
+
+	private TaskAttributeMapper mapperWith2Options() {
+		TaskAttributeMapper mapper = new TaskAttributeMapper(taskRepository) {
+			@Override
+			public Map<String, String> getOptions(TaskAttribute attribute) {
+				return ImmutableMap.of("1", "a", "2", "b");
+			}
+		};
+		return mapper;
+	}
+
+	private TaskAttribute attributeWithUnmappedOption() {
+		TaskAttribute attribute;
+		attribute = data.getRoot().createAttribute("id");
+		attribute.putOption("unMappedOption", "unMappedOptionLabel");
+		return attribute;
 	}
 
 }

@@ -258,6 +258,8 @@ public class TaskAttributeMapper {
 			String option = options.get(value);
 			if (option != null) {
 				value = option;
+			} else if (taskAttribute.getOption(value) != null) {
+				value = taskAttribute.getOption(value);
 			}
 			result.add(value);
 		}
