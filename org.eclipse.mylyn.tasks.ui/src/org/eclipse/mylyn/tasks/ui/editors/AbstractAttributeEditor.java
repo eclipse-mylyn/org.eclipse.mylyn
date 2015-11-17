@@ -45,7 +45,7 @@ public abstract class AbstractAttributeEditor {
 	/**
 	 * The key used to associate the editor control with the corresponding task attribute. This enables lookup of the
 	 * model element from the widget hierarchy.
-	 *
+	 * 
 	 * @since 3.5
 	 * @see Control#getData(String)
 	 * @see #getControl()
@@ -136,6 +136,9 @@ public abstract class AbstractAttributeEditor {
 	protected void attributeChanged() {
 		if (!refreshInProgress) {
 			getModel().attributeChanged(getTaskAttribute());
+			if (!getTaskAttribute().getTaskData().getRoot().equals(getTaskAttribute().getParentAttribute())) {
+				getModel().attributeChanged(getTaskAttribute().getParentAttribute());
+			}
 		}
 	}
 
@@ -352,7 +355,7 @@ public abstract class AbstractAttributeEditor {
 	 * <code>UnsupportedOperationException</code>.
 	 * <p>
 	 * Subclasses should overwrite this method.
-	 *
+	 * 
 	 * @since 3.1
 	 * @throws UnsupportedOperationException
 	 *             if this method is not supported by the editor
@@ -364,7 +367,7 @@ public abstract class AbstractAttributeEditor {
 	/**
 	 * Subclasses that implement refresh should override this method to return true, so that they will be automatically
 	 * refreshed when the model changes.
-	 *
+	 * 
 	 * @return whether the editor should be automatically refreshed when the model changes
 	 * @since 3.6
 	 */
