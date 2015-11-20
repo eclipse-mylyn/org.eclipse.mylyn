@@ -55,11 +55,36 @@ public class OpenRepositoryTaskJob extends Job {
 
 	private final long timestamp;
 
+	private String taskKey;
+
+	private TaskRepository repository;
+
+	/**
+	 * Creates a job that searches for a task with the given task <i>key</i> and opens it if found.
+	 */
+	public OpenRepositoryTaskJob(TaskRepository repository, String taskKey, String taskUrl, IWorkbenchPage page) {
+		super(MessageFormat.format(Messages.OpenRepositoryTaskJob_Opening_repository_task_X, taskKey));
+		this.repositoryKind = repository.getConnectorKind();
+		this.taskId = null;
+		this.repositoryUrl = repository.getRepositoryUrl();
+		this.taskUrl = taskUrl;
+		this.timestamp = 0;
+		this.repository = repository;
+		this.taskKey = taskKey;
+	}
+
+	/**
+	 * Creates a job that fetches a task with the given task id and opens it.
+	 */
 	public OpenRepositoryTaskJob(String repositoryKind, String repositoryUrl, String taskId, String taskUrl,
 			IWorkbenchPage page) {
 		this(repositoryKind, repositoryUrl, taskId, taskUrl, 0, page);
 	}
 
+	/**
+	 * Creates a job that fetches a task with the given task id and opens it, expanding all comments made after the
+	 * given timestamp.
+	 */
 	public OpenRepositoryTaskJob(String repositoryKind, String repositoryUrl, String taskId, String taskUrl,
 			long timestamp, IWorkbenchPage page) {
 		super(MessageFormat.format(Messages.OpenRepositoryTaskJob_Opening_repository_task_X, taskId));
@@ -87,7 +112,9 @@ public class OpenRepositoryTaskJob extends Job {
 	@Override
 	public IStatus run(IProgressMonitor monitor) {
 		monitor.beginTask(Messages.OpenRepositoryTaskJob_Opening_Remote_Task, 10);
-		final TaskRepository repository = TasksUi.getRepositoryManager().getRepository(repositoryKind, repositoryUrl);
+		if (repository == null) {
+			repository = TasksUi.getRepositoryManager().getRepository(repositoryKind, repositoryUrl);
+		}
 		if (repository == null) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
@@ -109,7 +136,7 @@ public class OpenRepositoryTaskJob extends Job {
 
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(repositoryKind);
 		try {
-			final TaskData taskData = connector.getTaskData(repository, taskId, monitor);
+			final TaskData taskData = getTaskData(connector, monitor);
 			if (taskData != null) {
 				task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
 				TasksUiPlugin.getTaskDataManager().putUpdatedTaskData(task, taskData, true);
@@ -159,6 +186,20 @@ public class OpenRepositoryTaskJob extends Job {
 			monitor.done();
 		}
 		return Status.OK_STATUS;
+	}
+
+	TaskData getTaskData(AbstractRepositoryConnector connector, IProgressMonitor monitor) throws CoreException {
+		if (taskId != null) {
+			return connector.getTaskData(repository, taskId, monitor);
+		} else if (taskKey != null && connector.supportsSearchByTaskKey(repository)) {
+			TaskData searchTaskData = connector.searchByTaskKey(repository, taskKey, monitor);
+			if (searchTaskData.isPartial()) {
+				return connector.getTaskData(repository, searchTaskData.getTaskId(), monitor);
+			} else {
+				return searchTaskData;
+			}
+		}
+		return null;
 	}
 
 }

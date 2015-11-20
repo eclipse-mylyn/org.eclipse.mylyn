@@ -105,7 +105,7 @@ import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
  * <li>{@link #canSynchronizeTask(TaskRepository, ITask)} returns <code>false</code> so full task data is never
  * retrieved
  * </ul>
- *
+ * 
  * @author Mik Kersten
  * @author Rob Elves
  * @author Shawn Minto
@@ -118,7 +118,7 @@ public abstract class AbstractRepositoryConnector {
 
 	/**
 	 * Returns true, if the connector provides a wizard for creating new tasks.
-	 *
+	 * 
 	 * @since 2.0
 	 */
 	// TODO move this to ConnectorUi.hasNewTaskWizard()
@@ -126,14 +126,14 @@ public abstract class AbstractRepositoryConnector {
 
 	/**
 	 * Returns true, if the connector supports retrieval of tasks based on String keys.
-	 *
+	 * 
 	 * @since 2.0
 	 */
 	public abstract boolean canCreateTaskFromKey(@NonNull TaskRepository repository);
 
 	/**
 	 * Returns true, if the connector supports retrieval of task history for <code>task</code>.
-	 *
+	 * 
 	 * @see #getHistory(TaskRepository, ITask, IProgressMonitor)
 	 * @since 3.6
 	 */
@@ -143,7 +143,7 @@ public abstract class AbstractRepositoryConnector {
 
 	/**
 	 * Returns true, if the connector supports querying the repository.
-	 *
+	 * 
 	 * @since 3.0
 	 * @see #performQuery(TaskRepository, IRepositoryQuery, TaskDataCollector, ISynchronizationSession,
 	 *      IProgressMonitor)
@@ -154,7 +154,7 @@ public abstract class AbstractRepositoryConnector {
 
 	/**
 	 * Returns true, if the connectors support retrieving full task data for <code>task</code>.
-	 *
+	 * 
 	 * @since 3.0
 	 * @see #getTaskData(TaskRepository, String, IProgressMonitor)
 	 */
@@ -164,7 +164,7 @@ public abstract class AbstractRepositoryConnector {
 
 	/**
 	 * Returns true, if the connector supports deletion of <code>task</code> which is part of <code>repository</code>.
-	 *
+	 * 
 	 * @since 3.3
 	 */
 	public boolean canDeleteTask(@NonNull TaskRepository repository, @NonNull ITask task) {
@@ -174,7 +174,7 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * Return true, if the connector supports creation of task repositories. The default default implementation returns
 	 * true.
-	 *
+	 * 
 	 * @since 3.4
 	 */
 	public boolean canCreateRepository() {
@@ -183,7 +183,7 @@ public abstract class AbstractRepositoryConnector {
 
 	/**
 	 * Returns the unique kind of the repository, e.g. "bugzilla".
-	 *
+	 * 
 	 * @since 2.0
 	 */
 	@NonNull
@@ -191,7 +191,7 @@ public abstract class AbstractRepositoryConnector {
 
 	/**
 	 * The connector's summary i.e. "JIRA (supports 3.3.1 and later)"
-	 *
+	 * 
 	 * @since 2.0
 	 */
 	@NonNull
@@ -203,7 +203,7 @@ public abstract class AbstractRepositoryConnector {
 	 * Implementations typically match the task identifier based on repository specific patterns. For a Bugzilla task
 	 * URL for example the implementation would match on <code>bugs.cgi</code> and return the repository specific
 	 * portion of the URL: &quot;<i>http://bugs/</i><b>bugs.cgi?bugid=</b>123&quot;.
-	 *
+	 * 
 	 * @return a task identifier or <code>null</code>, if <code>taskUrl</code> is not recognized
 	 * @see #getTaskData(TaskRepository, String, IProgressMonitor)
 	 */
@@ -215,7 +215,7 @@ public abstract class AbstractRepositoryConnector {
 	 * <p>
 	 * The default implementations returns the substring of the text returned by {@link #getLabel()} up to the first
 	 * occurrence of <em>(</em> or a space.
-	 *
+	 * 
 	 * @since 2.3
 	 */
 	@Nullable
@@ -242,7 +242,7 @@ public abstract class AbstractRepositoryConnector {
 	 * Returns the attachment handler. The method is expected to always return the same instance.
 	 * <p>
 	 * The default implementation returns <code>null</code>.
-	 *
+	 * 
 	 * @return the attachment handler, or null, if attachments are not supported
 	 * @since 3.0
 	 */
@@ -253,7 +253,7 @@ public abstract class AbstractRepositoryConnector {
 
 	/**
 	 * Returns the full task data. The method is expected to always return the same instance.
-	 *
+	 * 
 	 * @param repository
 	 *            the task repository matching this connector
 	 * @param taskIdOrKey
@@ -270,10 +270,43 @@ public abstract class AbstractRepositoryConnector {
 			@NonNull IProgressMonitor monitor) throws CoreException;
 
 	/**
+	 * Specifies whether or not this connector supports
+	 * {@link #searchByTaskKey(TaskRepository, String, IProgressMonitor) searching} the given repository by task key.
+	 * 
+	 * @param repository
+	 * @throws CoreException
+	 *             if the repository is invalid
+	 * @since 3.19
+	 */
+	public boolean supportsSearchByTaskKey(@NonNull TaskRepository repository) throws CoreException {
+		return false;
+	}
+
+	/**
+	 * Searches the given repository for a task with the given task key. The returned <code>TaskData</code> may be
+	 * partial.
+	 * <p>
+	 * This is an optional operation that is useful for connectors that cannot map from the
+	 * {@link #getBrowserUrl(TaskRepository, IRepositoryElement) browser URL} to a task ID.
+	 * 
+	 * @return the matching <code>TaskData</code> or <code>null</code> if no matching task was found.
+	 * @throws CoreException
+	 *             if the search fails or the repository is invalid
+	 * @throws UnsupportedOperationException
+	 *             if searching by task key is not {@link #supportsSearchByTaskKey(TaskRepository) supported}
+	 * @since 3.19
+	 */
+	@Nullable
+	public TaskData searchByTaskKey(@NonNull TaskRepository repository, @NonNull String taskKey,
+			@NonNull IProgressMonitor monitor) throws CoreException {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * Returns the task data handler. The method is expected to always return the same instance.
 	 * <p>
 	 * The default implementation returns <code>null</code>.
-	 *
+	 * 
 	 * @return the task data handler, or null, task data submission is not supported
 	 * @since 3.0
 	 */
@@ -289,7 +322,7 @@ public abstract class AbstractRepositoryConnector {
 	 * <p>
 	 * Implementations typically match the task identifier based on repository specific patterns such as
 	 * &quot;http://bugs/<b>bugs.cgibugid=123</b>&quot;.
-	 *
+	 * 
 	 * @return a task identifier or <code>null</code>, if <code>taskUrl</code> is not recognized
 	 * @see #getTaskData(TaskRepository, String, IProgressMonitor)
 	 * @since 2.0
@@ -310,7 +343,7 @@ public abstract class AbstractRepositoryConnector {
 	 * tasks.
 	 * <p>
 	 * Implementations typically scan <code>comment</code> for repository specific patterns such as KEY-123 for JIRA.
-	 *
+	 * 
 	 * @return null, if the method is not supported; an array of task identifiers otherwise
 	 * @since 2.0
 	 */
@@ -322,7 +355,7 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * Returns a mapping for {@link TaskData}. The mapping maps the connector specific representation to the standard
 	 * schema defined in {@link ITaskMapping}.
-	 *
+	 * 
 	 * @since 3.0
 	 */
 	@NonNull
@@ -336,7 +369,7 @@ public abstract class AbstractRepositoryConnector {
 	 * For subtasks implementations are expected to return relations creates by {@link TaskRelation#subtask(String)}.
 	 * <p>
 	 * The default implementation returns <code>null</code>.
-	 *
+	 * 
 	 * @return a list of relations or null if <code>taskData</code> does not have relations or if task relations are not
 	 *         supported
 	 * @since 3.0
@@ -349,7 +382,7 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * Returns a task URL for the task referenced by <code>taskIdOrKey</code> in the repository referenced by
 	 * <code>repositoryUrl</code>.
-	 *
+	 * 
 	 * @return a task URL or null if the connector does not support task URLs
 	 * @see #getTaskIdFromTaskUrl(String)
 	 * @see #getRepositoryUrlFromTaskUrl(String)
@@ -362,7 +395,7 @@ public abstract class AbstractRepositoryConnector {
 	 * Returns a URL for <code>element</code> that contains authentication information such as a session ID.
 	 * <p>
 	 * Returns <code>null</code> by default. Clients may override.
-	 *
+	 * 
 	 * @param repository
 	 *            the repository for <code>element</code>
 	 * @param element
@@ -380,7 +413,7 @@ public abstract class AbstractRepositoryConnector {
 	 * Returns a browsable URL for <code>element</code>.
 	 * <p>
 	 * Returns <code>null</code> by default. Clients may override.
-	 *
+	 * 
 	 * @param repository
 	 *            the repository for <code>element</code>
 	 * @param element
@@ -398,7 +431,7 @@ public abstract class AbstractRepositoryConnector {
 	 * <code>task</code>.
 	 * <p>
 	 * See {@link AbstractRepositoryConnector} for more details how this method interacts with other methods.
-	 *
+	 * 
 	 * @since 3.0
 	 * @see #updateTaskFromTaskData(TaskRepository, ITask, TaskData)
 	 */
@@ -410,7 +443,7 @@ public abstract class AbstractRepositoryConnector {
 	 * repository which is the common case and default.
 	 * <p>
 	 * The default implementation returns <code>false</code>.
-	 *
+	 * 
 	 * @since 3.0
 	 */
 	public boolean hasLocalCompletionState(@NonNull TaskRepository repository, @NonNull ITask task) {
@@ -421,7 +454,7 @@ public abstract class AbstractRepositoryConnector {
 	 * Returns <code>true</code>, if <code>task</code> has a due date that is managed on the repository.
 	 * <p>
 	 * The default implementation returns <code>false</code>.
-	 *
+	 * 
 	 * @since 3.0
 	 */
 	public boolean hasRepositoryDueDate(@NonNull TaskRepository repository, @NonNull ITask task,
@@ -433,7 +466,7 @@ public abstract class AbstractRepositoryConnector {
 	 * Returns <code>true</code> to indication that the repository configuration is stale and requires update
 	 * <p>
 	 * The default implementation returns <code>true</code> every 24 hours.
-	 *
+	 * 
 	 * @return true to indicate that the repository configuration is stale and requires update
 	 * @since 3.0
 	 */
@@ -450,7 +483,7 @@ public abstract class AbstractRepositoryConnector {
 	 * Returns true, if users can manage create repositories for this connector.
 	 * <p>
 	 * The default implementation returns true.
-	 *
+	 * 
 	 * @since 2.0
 	 */
 	public boolean isUserManaged() {
@@ -464,7 +497,7 @@ public abstract class AbstractRepositoryConnector {
 	 * Implementors must complete executing <code>query</code> before returning from this method.
 	 * <p>
 	 * See {@link AbstractRepositoryConnector} for more details how this method interacts with other methods.
-	 *
+	 * 
 	 * @param repository
 	 *            task repository to run query against
 	 * @param query
@@ -487,20 +520,20 @@ public abstract class AbstractRepositoryConnector {
 
 	/**
 	 * Delete the task from the server
-	 *
+	 * 
 	 * @throws UnsupportedOperationException
 	 *             if this is not implemented by the connector
 	 * @since 3.3
 	 */
 	@NonNull
-	public IStatus deleteTask(@NonNull TaskRepository repository, @NonNull ITask task,
-			@NonNull IProgressMonitor monitor) throws CoreException {
+	public IStatus deleteTask(@NonNull TaskRepository repository, @NonNull ITask task, @NonNull IProgressMonitor monitor)
+			throws CoreException {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * Hook into the synchronization process.
-	 *
+	 * 
 	 * @since 3.0
 	 */
 	public void postSynchronization(@NonNull ISynchronizationSession event, @NonNull IProgressMonitor monitor)
@@ -516,7 +549,7 @@ public abstract class AbstractRepositoryConnector {
 	 * Hook into the synchronization process.
 	 * <p>
 	 * See {@link AbstractRepositoryConnector} for more details how this method interacts with other methods.
-	 *
+	 * 
 	 * @since 3.0
 	 */
 	public void preSynchronization(@NonNull ISynchronizationSession event, @NonNull IProgressMonitor monitor)
@@ -532,7 +565,7 @@ public abstract class AbstractRepositoryConnector {
 	 * Updates the local repository configuration cache (e.g. products and components). Connectors are encouraged to
 	 * implement {@link #updateRepositoryConfiguration(TaskRepository, ITask, IProgressMonitor)} in addition this
 	 * method.
-	 *
+	 * 
 	 * @param repository
 	 *            the repository to update configuration for
 	 * @since 3.0
@@ -544,7 +577,7 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * Updates the local repository configuration cache (e.g. products and components). The default implementation
 	 * invokes {@link #updateRepositoryConfiguration(TaskRepository, IProgressMonitor)}.
-	 *
+	 * 
 	 * @param repository
 	 *            the repository to update configuration for
 	 * @param task
@@ -562,7 +595,7 @@ public abstract class AbstractRepositoryConnector {
 	 * used to map common attributes.
 	 * <p>
 	 * See {@link AbstractRepositoryConnector} for more details how this method interacts with other methods.
-	 *
+	 * 
 	 * @see #hasTaskChanged(TaskRepository, ITask, TaskData)
 	 * @see TaskMapper#applyTo(ITask)
 	 * @since 3.0
@@ -574,7 +607,7 @@ public abstract class AbstractRepositoryConnector {
 	 * Called when a new task is created, before it is opened in a task editor. Connectors should override this method
 	 * if they need information from the {@link TaskData} to determine kind labels or other information that should be
 	 * displayed in a new task editor.
-	 *
+	 * 
 	 * @since 3.5
 	 */
 	public void updateNewTaskFromTaskData(@NonNull TaskRepository taskRepository, @NonNull ITask task,
@@ -586,7 +619,7 @@ public abstract class AbstractRepositoryConnector {
 	 * is submitted to the repository. Implementers may override to implement custom migration rules.
 	 * <p>
 	 * Does nothing by default.
-	 *
+	 * 
 	 * @param event
 	 *            provides additional details
 	 * @since 3.4
@@ -596,7 +629,7 @@ public abstract class AbstractRepositoryConnector {
 
 	/**
 	 * Returns if the user using the repository is the owner of the task. Subclasses may override.
-	 *
+	 * 
 	 * @param repository
 	 *            repository task is associated with
 	 * @param task
@@ -611,7 +644,7 @@ public abstract class AbstractRepositoryConnector {
 
 	/**
 	 * Retrieves the history for <code>task</code>. Throws {@link UnsupportedOperationException} by default.
-	 *
+	 * 
 	 * @param repository
 	 *            the repository
 	 * @param task
@@ -635,7 +668,7 @@ public abstract class AbstractRepositoryConnector {
 	 * requires connecting to the repository.
 	 * <p>
 	 * Throws {@link UnsupportedOperationException} if not implemented by clients.
-	 *
+	 * 
 	 * @param repository
 	 *            the repository
 	 * @param monitor
@@ -654,7 +687,7 @@ public abstract class AbstractRepositoryConnector {
 	 * Set the category of the {@code repository} to the default TaskRepository.CATEGORY_BUGS.
 	 * <p>
 	 * Subclasses may override.
-	 *
+	 * 
 	 * @param repository
 	 *            the repository
 	 * @since 3.11
