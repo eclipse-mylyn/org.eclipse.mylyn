@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -191,16 +190,7 @@ public class TaskFinder {
 				}
 			}
 			if (task == null && taskFullUrl != null) {
-				// search by fullUrl
-				for (AbstractTask currTask : TasksUiPlugin.getTaskList().getAllTasks()) {
-					if (currTask != null) {
-						String currUrl = currTask.getUrl();
-						if (taskFullUrl.equals(currUrl)) {
-							task = currTask;
-							break;
-						}
-					}
-				}
+				task = TasksUiInternal.getTaskByUrl(taskFullUrl);
 			}
 		}
 
