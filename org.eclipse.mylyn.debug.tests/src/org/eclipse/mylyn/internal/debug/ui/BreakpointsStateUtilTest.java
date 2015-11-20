@@ -18,10 +18,12 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
@@ -32,6 +34,8 @@ import org.eclipse.mylyn.context.sdk.java.WorkspaceSetupHelper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 /**
  * @author Sebastian Schmidt
@@ -71,9 +75,10 @@ public class BreakpointsStateUtilTest {
 		objectUnderTest.saveState();
 
 		assertTrue(pluginStateFile.exists());
-		FileInputStream stateFile = new FileInputStream(pluginStateFile);
-		InputStream expectedResult = new FileInputStream(new File("testdata/breakpointFile.xml")); //$NON-NLS-1$
-		assertEquals(IOUtils.readLines(expectedResult), IOUtils.readLines(stateFile));
+
+		Document pluginStateDocument = getDocument(pluginStateFile);
+		Document testDocument = getDocument(new File("testdata/breakpointFile.xml"));
+		assertTrue(pluginStateDocument.isEqualNode(testDocument));
 	}
 
 	@Test
@@ -99,4 +104,16 @@ public class BreakpointsStateUtilTest {
 		breakpointManager.removeBreakpoints(breakpoints, true);
 		assertEquals(0, breakpointManager.getBreakpoints().length);
 	}
+
+	private Document getDocument(File inputFile) throws IOException, ParserConfigurationException, SAXException {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		FileInputStream fileInputStream = new FileInputStream(inputFile);
+		try {
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			return builder.parse(fileInputStream);
+		} finally {
+			fileInputStream.close();
+		}
+	}
+
 }
