@@ -26,6 +26,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage2;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -121,6 +122,9 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage2 {
 				updateButtons();
 			}
 		};
+		myChangesButton.addSelectionListener(buttonSelectionListener);
+		watchedChangesButton.addSelectionListener(buttonSelectionListener);
+		allOpenChangesButton.addSelectionListener(buttonSelectionListener);
 		byProjectButton.addSelectionListener(buttonSelectionListener);
 		customQueryButton.addSelectionListener(buttonSelectionListener);
 	}
@@ -225,6 +229,22 @@ public class GerritCustomQueryPage extends AbstractRepositoryQueryPage2 {
 		}
 		updateButtons();
 		return true;
+	}
+
+	@Override
+	protected String suggestQueryTitle() {
+		if (myChangesButton.isDisposed()) {
+			return ""; //$NON-NLS-1$
+		} else if (myChangesButton.getSelection()) {
+			return Messages.GerritCustomQueryPage_My_changes;
+		} else if (watchedChangesButton.getSelection()) {
+			return Messages.GerritCustomQueryPage_My_watched_changes;
+		} else if (allOpenChangesButton.getSelection()) {
+			return Messages.GerritCustomQueryPage_All_open_changes;
+		} else if (byProjectButton.getSelection()) {
+			return NLS.bind(Messages.GerritCustomQueryPage_Open_Changes_in_X, projectText.getText());
+		}
+		return ""; //$NON-NLS-1$
 	}
 
 }

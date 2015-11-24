@@ -28,6 +28,8 @@ public class Messages extends NLS {
 
 	public static String GerritCustomQueryPage_Open_changes_by_project;
 
+	public static String GerritCustomQueryPage_Open_Changes_in_X;
+
 	public static String GerritCustomQueryPage_Query_type;
 
 	public static String ProjectNameContentProposalProvider_Repository_configuration_needs_to_be_refreshed;
