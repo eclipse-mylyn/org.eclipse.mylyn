@@ -265,7 +265,8 @@ public class RepositoryElementActionGroup {
 			for (final IDynamicSubMenuContributor contributor : dynamicMenuMap.get(menuPath)) {
 				SafeRunnable.run(new ISafeRunnable() {
 					public void handleException(Throwable e) {
-						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Menu contributor failed")); //$NON-NLS-1$
+						StatusHandler
+								.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Menu contributor failed")); //$NON-NLS-1$
 					}
 
 					public void run() throws Exception {
@@ -306,8 +307,8 @@ public class RepositoryElementActionGroup {
 					if (container instanceof TaskCategory) {
 						hasCategory = true;
 					}
-					if (container instanceof UncategorizedTaskContainer
-							&& !LocalRepositoryConnector.CONNECTOR_KIND.equals(((AbstractTask) element).getConnectorKind())) {
+					if (container instanceof UncategorizedTaskContainer && !LocalRepositoryConnector.CONNECTOR_KIND
+							.equals(((AbstractTask) element).getConnectorKind())) {
 						hasCategory = true;
 					}
 				}

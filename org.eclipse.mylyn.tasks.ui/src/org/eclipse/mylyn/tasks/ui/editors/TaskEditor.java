@@ -186,6 +186,10 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	OpenWithBrowserAction openWithBrowserAction;
 
+	private boolean needsScheduling = true;
+
+	private boolean needsContext = true;
+
 	private static boolean toolBarFailureLogged;
 
 	public TaskEditor() {
@@ -266,8 +270,8 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			}
 		} catch (Exception e) {
 			if (!toolBarFailureLogged) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Failed to obtain busy label toolbar", e)); //$NON-NLS-1$
+				StatusHandler.log(
+						new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to obtain busy label toolbar", e)); //$NON-NLS-1$
 			}
 			if (titleLabel != null) {
 				titleLabel.dispose();
@@ -337,8 +341,8 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			return busyLabel;
 		} catch (Exception e) {
 			if (!toolBarFailureLogged) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Failed to obtain busy label toolbar", e)); //$NON-NLS-1$
+				StatusHandler.log(
+						new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to obtain busy label toolbar", e)); //$NON-NLS-1$
 			}
 			busyLabel = null;
 		}
@@ -365,8 +369,8 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			// center align title text in title region
 			Point size = titleLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
 			int y = (titleLabel.getParent().getSize().y - size.y) / 2;
-			titleLabel.setBounds(busyLabel.getLocation().x + LEFT_TOOLBAR_HEADER_TOOLBAR_PADDING + leftToolBarSize.x,
-					y, size.x, size.y);
+			titleLabel.setBounds(busyLabel.getLocation().x + LEFT_TOOLBAR_HEADER_TOOLBAR_PADDING + leftToolBarSize.x, y,
+					size.x, size.y);
 		}
 	}
 
@@ -390,6 +394,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 				}
 			}
 		}
+
 		for (Iterator<AbstractTaskEditorPageFactory> it = pageFactories.iterator(); it.hasNext();) {
 			if (conflictingIds.contains(it.next().getId())) {
 				it.remove();
@@ -614,7 +619,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		this.taskEditorInput = (TaskEditorInput) input;
 		this.task = taskEditorInput.getTask();
 
-		// initialize selection 
+		// initialize selection
 		site.getSelectionProvider().setSelection(new StructuredSelection(task));
 
 		setPartName(input.getName());
@@ -674,7 +679,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	/**
 	 * Refresh editor pages with new contents.
-	 * 
+	 *
 	 * @since 3.0
 	 */
 	public void refreshPages() {
@@ -768,7 +773,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		size.x += titleSize.x + LEFT_TOOLBAR_HEADER_TOOLBAR_PADDING;
 		size.y = Math.max(titleSize.y, size.y);
 
-		// padding between toolbar and image, ensure image is at least one pixel wide to avoid SWT error 
+		// padding between toolbar and image, ensure image is at least one pixel wide to avoid SWT error
 		final int padding = (size.x > 0 && !noExtraPadding) ? 10 : 1;
 		final Rectangle imageBounds = (image != null) ? image.getBounds() : new Rectangle(0, 0, 0, 0);
 		int tempHeight = (image != null) ? Math.max(size.y + 1, imageBounds.height) : size.y + 1;
@@ -791,7 +796,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		};
 		Image newHeaderImage = descriptor.createImage();
 
-		// directly set on busyLabel since getHeaderForm().getForm().setImage() does not update 
+		// directly set on busyLabel since getHeaderForm().getForm().setImage() does not update
 		// the image if a message is currently displayed
 		busyLabel.setImage(newHeaderImage);
 
@@ -831,6 +836,41 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		});
 	}
 
+	/**
+	 * Sets whether or not this editor supports scheduling affordances.
+	 *
+	 * @since 3.18
+	 */
+	public void setNeedsScheduling(boolean needsScheduling) {
+		this.needsScheduling = needsScheduling;
+	}
+
+	/**
+	 * @since 3.18
+	 * @return Returns true if this editor supports scheduling affordances, otherwise returns false. If this returns
+	 *         false, then no scheduling is available to the UI.
+	 */
+	public boolean needsScheduling() {
+		return this.needsScheduling;
+	}
+
+	/**
+	 * Sets whether or not this editor supports context affordances.
+	 *
+	 * @since 3.18
+	 */
+	public void setNeedsContext(boolean needsContext) {
+		this.needsContext = needsContext;
+	}
+
+	/**
+	 * @since 3.18 Returns true if this editor supports displaying context information, otherwise returns false. If this
+	 *        returns false, no context information will be available to the UI.
+	 */
+	public boolean needsContext() {
+		return this.needsContext;
+	}
+
 	@Override
 	public void showBusy(boolean busy) {
 		if (editorBusyIndicator != null) {
@@ -846,7 +886,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		if (!isHeaderFormDisposed()) {
 			Form form = getHeaderForm().getForm().getForm();
 			if (form != null && !form.isDisposed()) {
-				// TODO consider only disabling certain actions 
+				// TODO consider only disabling certain actions
 				IToolBarManager toolBarManager = form.getToolBarManager();
 				if (toolBarManager instanceof ToolBarManager) {
 					ToolBar control = ((ToolBarManager) toolBarManager).getControl();
@@ -969,8 +1009,11 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 		toolBarManager.add(new Separator("planning")); //$NON-NLS-1$
 		disposeScheduleAction();
-		scheduleAction = new TaskEditorScheduleAction(task);
-		toolBarManager.add(scheduleAction);
+
+		if (needsScheduling()) {
+			scheduleAction = new TaskEditorScheduleAction(task);
+			toolBarManager.add(scheduleAction);
+		}
 
 		toolBarManager.add(new GroupMarker("page")); //$NON-NLS-1$
 		for (IFormPage page : getPages()) {
@@ -1046,7 +1089,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 //		initialLeftToolbarSize = leftToolBarManager.getSize();
 
-		leftToolBarManager.add(activateAction);
+		if (needsContext) {
+			leftToolBarManager.add(activateAction);
+		}
 
 //		for (IFormPage page : getPages()) {
 //			if (page instanceof AbstractTaskEditorPage) {
@@ -1115,7 +1160,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 //				noExtraPadding = true;
 //			}
 
-			// fix size of toolbar on Gtk with Eclipse 3.3 
+			// fix size of toolbar on Gtk with Eclipse 3.3
 			Point size = leftToolBar.getSize();
 			if (size.x == 0 && size.y == 0) {
 				size = leftToolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
@@ -1191,7 +1236,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	/**
 	 * Update the title of the editor.
-	 * 
+	 *
 	 * @deprecated use {@link #updateHeaderToolBar()} instead
 	 */
 	@Deprecated

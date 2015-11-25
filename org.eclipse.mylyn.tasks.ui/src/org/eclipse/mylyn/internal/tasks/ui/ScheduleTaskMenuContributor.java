@@ -26,6 +26,7 @@ import org.eclipse.mylyn.commons.workbench.forms.DatePicker;
 import org.eclipse.mylyn.commons.workbench.forms.DateSelectionDialog;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.WeekDateRange;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
@@ -52,6 +53,12 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			IRepositoryElement selectedElement = selectedElements.get(0);
 			if (selectedElement instanceof ITask) {
 				singleTaskSelection = (AbstractTask) selectedElement;
+
+				// Tasks artifacts are not able to be scheduled; we'll simply mark them as not supported here
+				String artifactFlag = singleTaskSelection.getAttribute(ITasksCoreConstants.ATTRIBUTE_ARTIFACT);
+				if (Boolean.valueOf(artifactFlag)) {
+					return null;
+				}
 			}
 		}
 
@@ -206,8 +213,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 	}
 
 	private boolean isThisWeek(AbstractTask task) {
-		return task != null && task.getScheduledForDate() != null
-				&& task.getScheduledForDate() instanceof WeekDateRange
+		return task != null && task.getScheduledForDate() != null && task.getScheduledForDate() instanceof WeekDateRange
 				&& task.getScheduledForDate().isBefore(TaskActivityUtil.getCurrentWeek());
 	}
 

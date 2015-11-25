@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.tasks.ui.util;
 
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ClearOutgoingAction;
 import org.eclipse.mylyn.tasks.core.ITask;
 
@@ -42,6 +43,8 @@ public class TaskPropertyTester extends PropertyTester {
 	private static final String PROPERTY_IS_LOCAL = "isLocal"; //$NON-NLS-1$
 
 	private static final String PROPERTY_LOCAL_COMPLETION_STATE = "hasLocalCompletionState"; //$NON-NLS-1$
+
+	private static final String PROPERTY_IS_ARTIFACT = "isArtifact"; //$NON-NLS-1$
 
 	private boolean equals(boolean value, Object expectedValue) {
 		return new Boolean(value).equals(expectedValue);
@@ -73,6 +76,9 @@ public class TaskPropertyTester extends PropertyTester {
 				return (task instanceof AbstractTask) && equals(((AbstractTask) task).isLocal(), expectedValue);
 			} else if (PROPERTY_LOCAL_COMPLETION_STATE.equals(property)) {
 				return equals(TasksUiInternal.hasLocalCompletionState(task), expectedValue);
+			} else if (PROPERTY_IS_ARTIFACT.equals(property)) {
+				String artifactFlag = task.getAttribute(ITasksCoreConstants.ATTRIBUTE_ARTIFACT);
+				return Boolean.valueOf(artifactFlag);
 			}
 		}
 		return false;
