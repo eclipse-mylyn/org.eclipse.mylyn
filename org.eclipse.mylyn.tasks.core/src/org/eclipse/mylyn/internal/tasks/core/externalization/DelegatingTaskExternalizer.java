@@ -157,6 +157,8 @@ public final class DelegatingTaskExternalizer {
 
 	static final String KEY_OWNER = "Owner"; //$NON-NLS-1$
 
+	static final String KEY_OWNER_ID = "OwnerId"; //$NON-NLS-1$
+
 	static final String KEY_MARK_READ_PENDING = "MarkReadPending"; //$NON-NLS-1$
 
 	static final String KEY_STALE = "Stale"; //$NON-NLS-1$
@@ -285,6 +287,9 @@ public final class DelegatingTaskExternalizer {
 		}
 		if (task.getOwner() != null) {
 			node.setAttribute(KEY_OWNER, task.getOwner());
+		}
+		if (task.getOwnerId() != null) {
+			node.setAttribute(KEY_OWNER_ID, task.getOwnerId());
 		}
 		createAttributes(task, doc, node);
 		for (ITask t : task.getChildren()) {
@@ -612,6 +617,9 @@ public final class DelegatingTaskExternalizer {
 		}
 		if (element.hasAttribute(KEY_OWNER)) {
 			task.setOwner(element.getAttribute(KEY_OWNER));
+		}
+		if (element.hasAttribute(KEY_OWNER_ID)) {
+			task.setOwnerId(element.getAttribute(KEY_OWNER_ID));
 		}
 		if (VAL_TRUE.equals(element.getAttribute(KEY_NOTIFIED_INCOMING))) {
 			task.setNotified(true);

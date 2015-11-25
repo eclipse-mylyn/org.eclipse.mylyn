@@ -415,6 +415,33 @@ public class TaskListExternalizationTest extends TestCase {
 		}
 	}
 
+	@SuppressWarnings("null")
+	public void testOwnerPersistance() throws Exception {
+		String bugNumber = "106939";
+		ITask task = TasksUi.getRepositoryModel().createTask(repository, bugNumber);
+		TaskTask task1 = null;
+		if (task instanceof TaskTask) {
+			task1 = (TaskTask) task;
+		}
+		assertNotNull(task1);
+
+		TasksUiPlugin.getTaskList().addTask(task1);
+
+		task1.setOwner("Joel User");
+		task1.setOwnerId("joel.user");
+		TaskTestUtil.saveAndReadTasklist();
+
+		TaskList taskList = TasksUiPlugin.getTaskList();
+		assertEquals(1, taskList.getAllTasks().size());
+		Set<ITask> tasksReturned = taskList.getTasks(MockRepositoryConnector.REPOSITORY_URL);
+		assertNotNull(tasksReturned);
+		assertEquals(1, tasksReturned.size());
+		for (ITask taskRet : tasksReturned) {
+			assertEquals("Joel User", taskRet.getOwner());
+			assertEquals("joel.user", taskRet.getOwnerId());
+		}
+	}
+
 	public void testRepositoryTaskExternalization() throws Exception {
 		TaskTask task = (TaskTask) TasksUi.getRepositoryModel().createTask(repository, "1");
 		task.setTaskKind("kind");
