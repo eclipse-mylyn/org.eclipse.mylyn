@@ -18,10 +18,17 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.CoreException;
@@ -78,7 +85,17 @@ public class BreakpointsStateUtilTest {
 
 		Document pluginStateDocument = getDocument(pluginStateFile);
 		Document testDocument = getDocument(new File("testdata/breakpointFile.xml"));
-		assertTrue(pluginStateDocument.isEqualNode(testDocument));
+		assertTrue("Documents not equal:\n" + documentToString(pluginStateDocument) + "\n===\n"
+				+ documentToString(testDocument), pluginStateDocument.isEqualNode(testDocument));
+	}
+
+	private String documentToString(Document docuemnt) throws TransformerException {
+		TransformerFactory tf = TransformerFactory.newInstance();
+		Transformer transformer = tf.newTransformer();
+		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+		StringWriter writer = new StringWriter();
+		transformer.transform(new DOMSource(docuemnt), new StreamResult(writer));
+		return writer.toString();
 	}
 
 	@Test
