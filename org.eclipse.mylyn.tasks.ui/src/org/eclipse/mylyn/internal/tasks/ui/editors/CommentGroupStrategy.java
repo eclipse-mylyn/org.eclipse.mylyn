@@ -154,7 +154,7 @@ public class CommentGroupStrategy {
 			// check if last comment was by current user
 			ITaskComment lastComment = current.get(current.size() - 1);
 			IRepositoryPerson lastPerson = lastComment.getAuthor();
-			if (lastPerson != null && lastPerson.getPersonId().equals(currentPersonId)) {
+			if (lastPerson != null && lastPerson.matchesUsername(currentPersonId)) {
 				// bug 238038 comment #58, if the latest comment is generated automatically, look back one comment
 				IRepositoryPerson person = comment.getAuthor();
 				if (person != null && person.getPersonId().equals(currentPersonId) && lastComment.getText() != null

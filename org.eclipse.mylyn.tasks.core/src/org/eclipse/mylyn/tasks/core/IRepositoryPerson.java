@@ -11,6 +11,10 @@
 
 package org.eclipse.mylyn.tasks.core;
 
+import java.util.Map;
+
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+
 /**
  * @author Steffen Pingel
  * @since 3.0
@@ -48,5 +52,28 @@ public interface IRepositoryPerson {
 	 * @since 3.0
 	 */
 	public abstract void setName(String name);
+
+	/**
+	 * Compares persons using the {@link TaskAttribute#PERSON_USERNAME} if defined, or the {@link #getPersonId() person
+	 * ID} otherwise.
+	 * 
+	 * @since 3.18
+	 */
+	public abstract boolean matchesUsername(String username);
+
+	/**
+	 * @since 3.18
+	 */
+	public abstract String getAttribute(String key);
+
+	/**
+	 * @since 3.18
+	 */
+	public abstract void setAttribute(String key, String value);
+
+	/**
+	 * @since 3.18
+	 */
+	public abstract Map<String, String> getAttributes();
 
 }

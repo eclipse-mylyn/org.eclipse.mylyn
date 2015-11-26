@@ -54,8 +54,7 @@ public class TaskEditorOutlineNodeLabelProvider extends LabelProvider {
 						taskRepository = TasksUi.getRepositoryManager().getRepository(connectorKind, repositoryUrl);
 					}
 				}
-				if (taskRepository != null && author != null
-						&& author.getPersonId().equals(taskRepository.getUserName())) {
+				if (taskRepository != null && author != null && author.matchesUsername(taskRepository.getUserName())) {
 					return CommonImages.getImage(CommonImages.PERSON_ME);
 				} else {
 					return CommonImages.getImage(CommonImages.PERSON);

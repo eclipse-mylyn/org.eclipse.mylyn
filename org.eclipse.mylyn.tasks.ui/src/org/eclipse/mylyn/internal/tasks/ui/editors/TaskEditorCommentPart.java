@@ -419,8 +419,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			formHyperlink.setBackground(null);
 			formHyperlink.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 			IRepositoryPerson author = taskComment.getAuthor();
-			if (author != null
-					&& author.getPersonId().equalsIgnoreCase(getTaskEditorPage().getTaskRepository().getUserName())) {
+			if (author != null && author.matchesUsername(getTaskEditorPage().getTaskRepository().getUserName())) {
 				formHyperlink.setImage(CommonImages.getImage(CommonImages.PERSON_ME_NARROW));
 			} else {
 				formHyperlink.setImage(CommonImages.getImage(CommonImages.PERSON_NARROW));
@@ -572,8 +571,8 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 	private boolean hasIncoming;
 
 	/**
-	 * We can't use the reflow flag in AbstractTaskEditorPage because it gets set at various points where we
-	 * might not want to reflow.
+	 * We can't use the reflow flag in AbstractTaskEditorPage because it gets set at various points where we might not
+	 * want to reflow.
 	 */
 	private boolean reflow = true;
 

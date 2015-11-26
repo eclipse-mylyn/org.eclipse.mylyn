@@ -77,7 +77,7 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 	 * @return author image
 	 */
 	protected Image getAuthorImage(IRepositoryPerson person, TaskRepository repository) {
-		if (repository != null && person != null && person.getPersonId().equals(repository.getUserName())) {
+		if (repository != null && person != null && person.matchesUsername(repository.getUserName())) {
 			return imageManager.getImage(CommonImages.PERSON_ME);
 		} else {
 			return imageManager.getImage(CommonImages.PERSON);

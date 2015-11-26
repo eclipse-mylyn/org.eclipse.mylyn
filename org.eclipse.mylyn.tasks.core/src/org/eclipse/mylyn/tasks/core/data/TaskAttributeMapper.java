@@ -39,8 +39,8 @@ public class TaskAttributeMapper {
 
 	@NonNull
 	public TaskAttribute createTaskAttachment(@NonNull TaskData taskData) {
-		TaskAttribute taskAttribute = taskData.getRoot()
-				.createAttribute(mapToRepositoryKey(taskData.getRoot(), TaskAttribute.NEW_ATTACHMENT));
+		TaskAttribute taskAttribute = taskData.getRoot().createAttribute(
+				mapToRepositoryKey(taskData.getRoot(), TaskAttribute.NEW_ATTACHMENT));
 //		TaskAttachmentMapper mapper = TaskAttachmentMapper.createFrom(taskAttribute);
 //		mapper.setContentType("");
 //		mapper.setFileName("");
