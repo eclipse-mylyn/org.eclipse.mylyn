@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jdt.annotation.NonNull;
@@ -117,6 +118,13 @@ public class TaskAttributeMapper {
 		return false;
 	}
 
+	/**
+	 * Connectors should ensure that this method returns dates at midnight in the local time zone when the
+	 * {@link TaskAttribute#META_ATTRIBUTE_PRECISION precision} is {@link TimeUnit#DAYS} or coarser. This is because
+	 * {@link Date Dates} are automatically displayed in the local time zone. This is not a concern when the precision
+	 * is finer than {@link TimeUnit#DAYS}, because in that case the value has a time component which can meaningfully
+	 * be converted to local time.
+	 */
 	@Nullable
 	public Date getDateValue(@NonNull TaskAttribute attribute) {
 		String dateString = attribute.getValue();
@@ -283,6 +291,10 @@ public class TaskAttributeMapper {
 		attribute.setValue(Boolean.toString(value));
 	}
 
+	/**
+	 * Connectors should ensure that this method accepts dates at midnight in the local time zone when the
+	 * {@link TaskAttribute#META_ATTRIBUTE_PRECISION precision} is {@link TimeUnit#DAYS} or coarser.
+	 */
 	public void setDateValue(@NonNull TaskAttribute attribute, @Nullable Date date) {
 		if (date != null) {
 			attribute.setValue(Long.toString(date.getTime()));

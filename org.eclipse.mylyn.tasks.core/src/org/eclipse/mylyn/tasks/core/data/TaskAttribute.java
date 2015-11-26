@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryPerson;
@@ -126,6 +127,24 @@ public final class TaskAttribute {
 	public static final String META_ATTRIBUTE_KIND = "task.meta.attributeKind"; //$NON-NLS-1$
 
 	public static final String META_ATTRIBUTE_TYPE = "task.meta.type"; //$NON-NLS-1$
+
+	/**
+	 * A key for {@link TaskAttributeMetaData} that is used to specify the precision of a date or time attribute, which
+	 * must be parseable by {@link TimeUnit#valueOf(String)}. This specifies the precision with which values are
+	 * represented <i>on the server</i>. This is separate from the attribute {@link #META_ATTRIBUTE_TYPE type}, which
+	 * may specify that an attribute should be <i>displayed</i> as a {@link #TYPE_DATE date} or a {@link #TYPE_DATETIME
+	 * date with time}.
+	 * <p>
+	 * Connectors should ensure that {@link TaskAttributeMapper#getDateValue(TaskAttribute)} and
+	 * {@link TaskAttributeMapper#setDateValue(TaskAttribute, java.util.Date) setDateValue(TaskAttribute, Date)}
+	 * respectively return and accept dates at midnight in the local time zone when the precision is
+	 * {@link TimeUnit#DAYS} or coarser.
+	 * 
+	 * @since 3.18
+	 * @see TaskAttributeMetaData#getPrecision()
+	 * @see TaskAttributeMetaData#setPrecision()
+	 */
+	public static final String META_ATTRIBUTE_PRECISION = "task.meta.precision"; //$NON-NLS-1$
 
 	/**
 	 * A key for {@link TaskAttributeMetaData} that is used for specifying the ID of the parent {@link TaskAttribute}
@@ -683,4 +702,5 @@ public final class TaskAttribute {
 		Assert.isNotNull(mappedAttributeId);
 		return new TaskAttribute(this, mappedAttributeId);
 	}
+
 }

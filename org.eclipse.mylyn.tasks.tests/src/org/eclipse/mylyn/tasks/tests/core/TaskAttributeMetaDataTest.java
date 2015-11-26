@@ -11,11 +11,16 @@
 
 package org.eclipse.mylyn.tasks.tests.core;
 
+import static java.util.concurrent.TimeUnit.HOURS;
+
+import java.util.concurrent.TimeUnit;
+
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 
@@ -45,6 +50,25 @@ public class TaskAttributeMetaDataTest extends TestCase {
 		assertTrue(attribute.getMetaData().isRequired());
 		attribute.getMetaData().setRequired(false);
 		assertFalse(attribute.getMetaData().isRequired());
+	}
+
+	public void testPrecision() throws Exception {
+		TaskAttribute attribute = new TaskAttribute(data.getRoot(), "attributeId");
+		TaskAttributeMetaData metaData = attribute.getMetaData();
+
+		for (TimeUnit unit : TimeUnit.values()) {
+			metaData.setPrecision(unit);
+			assertEquals(unit, metaData.getPrecision());
+		}
+
+		metaData.setPrecision(null);
+		assertNull(metaData.getPrecision());
+
+		metaData.putValue(TaskAttribute.META_ATTRIBUTE_PRECISION, "blah");
+		assertNull(metaData.getPrecision());
+
+		metaData.putValue(TaskAttribute.META_ATTRIBUTE_PRECISION, HOURS.name());
+		assertEquals(HOURS, metaData.getPrecision());
 	}
 
 }

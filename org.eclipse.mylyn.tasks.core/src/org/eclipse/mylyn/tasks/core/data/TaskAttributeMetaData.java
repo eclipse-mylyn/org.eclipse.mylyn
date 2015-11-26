@@ -12,6 +12,16 @@
 package org.eclipse.mylyn.tasks.core.data;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.annotation.Nullable;
+import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.osgi.util.NLS;
+
+import com.google.common.base.Strings;
 
 /**
  * @author Steffen Pingel
@@ -132,7 +142,7 @@ public class TaskAttributeMetaData {
 	 * The default option property is not used. Connectors are expected to set default values in
 	 * {@link AbstractTaskDataHandler#initializeTaskData(org.eclipse.mylyn.tasks.core.TaskRepository, TaskData, org.eclipse.mylyn.tasks.core.ITaskMapping, org.eclipse.core.runtime.IProgressMonitor)}
 	 * .
-	 *
+	 * 
 	 * @deprecated Not used, set default value in
 	 *             {@link AbstractTaskDataHandler#initializeTaskData(org.eclipse.mylyn.tasks.core.TaskRepository, TaskData, org.eclipse.mylyn.tasks.core.ITaskMapping, org.eclipse.core.runtime.IProgressMonitor)}
 	 *             instead.
@@ -230,6 +240,40 @@ public class TaskAttributeMetaData {
 	public TaskAttributeMetaData setDependsOn(String value) {
 		taskAttribute.putMetaDatum(TaskAttribute.META_DEPENDS_ON_ATTRIBUTE_ID, value);
 		return this;
+	}
+
+	/**
+	 * Get the precision of a date or time attribute. Returns <code>null</code> if there is no precision specified.
+	 * 
+	 * @since 3.18
+	 * @see TaskAttribute#META_ATTRIBUTE_PRECISION
+	 */
+	@Nullable
+	public TimeUnit getPrecision() {
+		String precision = taskAttribute.getMetaDatum(TaskAttribute.META_ATTRIBUTE_PRECISION);
+		if (!Strings.isNullOrEmpty(precision)) {
+			try {
+				return TimeUnit.valueOf(precision);
+			} catch (IllegalArgumentException e) {
+				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
+						"Could not parse precision '{0}'", precision), e)); //$NON-NLS-1$
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Set the precision of a date or time attribute.
+	 * 
+	 * @since 3.18
+	 * @see TaskAttribute#META_ATTRIBUTE_PRECISION
+	 */
+	public void setPrecision(TimeUnit precision) {
+		if (precision == null) {
+			taskAttribute.removeMetaDatum(TaskAttribute.META_ATTRIBUTE_PRECISION);
+		} else {
+			taskAttribute.putMetaDatum(TaskAttribute.META_ATTRIBUTE_PRECISION, precision.name());
+		}
 	}
 
 }
