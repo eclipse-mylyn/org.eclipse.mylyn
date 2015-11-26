@@ -12,8 +12,10 @@
 
 package org.eclipse.mylyn.internal.team.ui.actions;
 
+import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
@@ -21,7 +23,9 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
+import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.internal.tasks.ui.OpenRepositoryTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenRepositoryTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -35,6 +39,7 @@ import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.team.ui.AbstractTaskReference;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
@@ -264,11 +269,13 @@ public class TaskFinder {
 
 			final String taskFullUrl = reference.getTaskUrl();
 			if (taskFullUrl != null) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						TasksUiUtil.openUrl(taskFullUrl);
-					}
-				});
+				if (!openTaskByKey(taskFullUrl)) {
+					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							TasksUiUtil.openUrl(taskFullUrl);
+						}
+					});
+				}
 				return Status.OK_STATUS;
 			}
 		}
@@ -288,4 +295,72 @@ public class TaskFinder {
 		return Status.OK_STATUS;
 	}
 
+	private boolean openTaskByKey(final String taskFullUrl) {
+		String taskKey = null;
+		TaskRepository repository = guessRepository(taskFullUrl);
+		if (repository != null) {
+			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+					repository.getConnectorKind());
+			if (connector != null) {
+				taskKey = guessTaskKey(connector, repository, taskFullUrl);
+			}
+		}
+		if (taskKey != null) {
+			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+			if (window != null) {
+				IWorkbenchPage page = window.getActivePage();
+				new OpenRepositoryTaskJob(repository, taskKey, taskFullUrl, page).schedule();
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private TaskRepository guessRepository(String taskFullUrl) {
+		for (TaskRepository repository : TasksUi.getRepositoryManager().getAllRepositories()) {
+			if (taskFullUrl.startsWith(repository.getRepositoryUrl())) {
+				return repository;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Using a task for which we know the task key and browser URL, try to guess the task key from the given URL.
+	 */
+	private static String guessTaskKey(AbstractRepositoryConnector connector, TaskRepository repository,
+			String taskFullUrl) {
+		Set<ITask> tasks = ((TaskList) TasksUiInternal.getTaskList()).getTasks(repository.getRepositoryUrl());
+		if (!tasks.isEmpty()) {
+			ITask task = tasks.iterator().next();
+			URL browserUrl = connector.getBrowserUrl(repository, task);
+			if (browserUrl != null) {
+				return guessTaskKey(taskFullUrl, browserUrl.toExternalForm(), task.getTaskKey());
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * @noreference This method is not intended to be referenced by clients.
+	 */
+	public static String guessTaskKey(String taskFullUrl, String knownTaskUrl, String knownTaskKey) {
+		int index = knownTaskUrl.indexOf(knownTaskKey);
+		if (index != -1) {
+			String prefix = knownTaskUrl.substring(0, index);
+			String postfix = knownTaskUrl.substring(index + knownTaskKey.length());
+			return extractTaskId(taskFullUrl, prefix, postfix);
+		}
+		return null;
+	}
+
+	/**
+	 * @noreference This method is not intended to be referenced by clients.
+	 */
+	public static String extractTaskId(String taskFullUrl, String prefix, String postfix) {
+		if (!prefix.isEmpty() && taskFullUrl.startsWith(prefix) && taskFullUrl.endsWith(postfix)) {
+			return taskFullUrl.substring(prefix.length(), taskFullUrl.length() - postfix.length());
+		}
+		return null;
+	}
 }

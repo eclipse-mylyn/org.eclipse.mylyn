@@ -34,4 +34,28 @@ public class TaskFinderTest extends TestCase {
 		id = TaskFinder.getUrlFromComment(label);
 		assertEquals("http://foo.bar-1234", id);
 	}
+
+	public void testExtractTaskId() throws Exception {
+		assertNull(TaskFinder.extractTaskId("http://example.com/tasks/123", "", ""));
+		assertNull(TaskFinder.extractTaskId("http://example.com/tasks/123", "prefix", "postfix"));
+		assertNull(TaskFinder.extractTaskId("http://example.com/tasks/123", "http://example.com/tasks/", "postfix"));
+		assertEquals("123", TaskFinder.extractTaskId("http://example.com/tasks/123", "http://example.com/tasks/", ""));
+		assertEquals("123", TaskFinder.extractTaskId("http://example.com/tasks/123/viewtask.asp",
+				"http://example.com/tasks/", "/viewtask.asp"));
+		assertNull(TaskFinder.extractTaskId("http://example.com/tasks/123/viewtask.asp", "http://example.com/tasks/",
+				"/viewtask.cgi"));
+	}
+
+	public void testGuessTaskKey() throws Exception {
+		assertNull(TaskFinder.guessTaskKey("http://example.com/tasks/123", "", ""));
+		assertNull(TaskFinder.guessTaskKey("http://example.com/tasks/123", "http://example.com/tasks/45", "123"));
+		assertNull(TaskFinder.guessTaskKey("http://example.com/tasks/123", "http://example.com/tasks/45", "450"));
+		assertNull(TaskFinder.guessTaskKey("http://example.com/tasks/123", "http://example.com/tasks/45", "045"));
+		assertEquals("123",
+				TaskFinder.guessTaskKey("http://example.com/tasks/123", "http://example.com/tasks/45", "45"));
+		assertEquals("123", TaskFinder.guessTaskKey("http://example.com/tasks/123/viewtask.asp",
+				"http://example.com/tasks/45/viewtask.asp", "45"));
+		assertNull(TaskFinder.guessTaskKey("http://example.com/tasks/123/viewtask.asp", "http://example.com/tasks/45",
+				"/viewtask.cgi"));
+	}
 }
