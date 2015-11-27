@@ -3,17 +3,15 @@ package org.eclipse.mylyn.reviews.internal.core;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
-import java.util.Map.Entry;
 import java.util.Set;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
+import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta.Kind;
+import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
+import org.eclipse.mylyn.internal.tasks.core.util.TasksCoreUtil;
 import org.eclipse.mylyn.reviews.core.spi.ReviewsConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
@@ -21,6 +19,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimaps;
 import com.google.common.collect.SetMultimap;
@@ -30,68 +29,72 @@ import com.google.common.collect.SetMultimap;
  * TaskEditorReviewPart to give a table of the reviews pertaining to a task. The class is limited as it maps one task to
  * many reviews. It is however possible (albeit strange) to have multiple tasks for one review. This is a limitation by
  * design.
- *
+ * 
  * @author Blaine Lewis
  */
 
 @SuppressWarnings("restriction")
 public class TaskReviewsMappingsStore implements ITaskListChangeListener {
+	static final String ATTR_ASSOCIATED_TASK = "org.eclipse.mylyn.associated.task"; //$NON-NLS-1$
 
 	private final SetMultimap<String, String> taskReviewsMap;
 
 	private final TaskRepositoryManager repositoryManager;
 
-	private final TaskDataManager taskDataManager;
+	private final TaskList taskList;
 
-	public TaskReviewsMappingsStore(TaskDataManager taskDataManager, TaskRepositoryManager repositoryManager) {
-		//BUG: This class is actually really volatile at the moment we have no
-		//	   collision rules for if we serialize and deserialize at the same time.
+	private static TaskReviewsMappingsStore instance;
 
+	public TaskReviewsMappingsStore(TaskList taskList, TaskRepositoryManager repositoryManager) {
+		this.taskList = taskList;
 		this.repositoryManager = repositoryManager;
-		this.taskDataManager = taskDataManager;
 		taskReviewsMap = Multimaps.synchronizedSetMultimap(LinkedHashMultimap.<String, String> create());
 	}
 
-	/*
-	 * Updates or adds a mapping given a reviewUrl and a taskDescription. If no URL is found in the description we do nothing.
-	 */
-	private void updateMapping(String reviewUrl, String reviewDescription) {
-		String oldTaskUrl = getTaskUrl(reviewUrl);
-		String newTaskUrl = this.extractTaskUrl(reviewDescription);
-
-		if (newTaskUrl == null && oldTaskUrl != null) {
-			taskReviewsMap.remove(oldTaskUrl, reviewUrl);
-		} else if (newTaskUrl != null) {
-			if (oldTaskUrl != null && !oldTaskUrl.equals(newTaskUrl)) {
-				taskReviewsMap.remove(oldTaskUrl, reviewUrl);
-			}
-			if (newTaskUrl != null) {
-				taskReviewsMap.put(newTaskUrl, reviewUrl);
+	public void readFromTaskList() {
+		for (AbstractTask review : taskList.getAllTasks()) {
+			String task = getTaskUrl(review);
+			if (task != null) {
+				taskReviewsMap.put(review.getUrl(), task);
 			}
 		}
 	}
 
-	public Collection<String> getReviewUrls(String taskUrl) {
-		return taskReviewsMap.get(taskUrl);
+	private void updateMapping(ITask review, String newTaskUrl) {
+		String reviewUrl = review.getUrl();
+		String oldTaskUrl = getTaskUrl(review);
+
+		if (oldTaskUrl != null && !oldTaskUrl.equals(newTaskUrl)) {
+			taskReviewsMap.remove(oldTaskUrl, reviewUrl);
+		}
+		taskReviewsMap.put(newTaskUrl, reviewUrl);
+		review.setAttribute(ATTR_ASSOCIATED_TASK, newTaskUrl);
 	}
 
 	/*
 	 * This method of extracting URLs is deficient because if we have "(www.helloworld.com)" it will be
 	 * a valid URL. This is difficult to format though so we won't handle that case.
 	 */
-	private String extractTaskUrl(String description) {
+	public void addTaskAssocation(ITask review, TaskData taskData) {
+		TaskAttribute attr = taskData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION);
 
+		if (attr == null) {
+			return;
+		}
+
+		String oldTaskUrl = getTaskUrl(review);
+		String description = attr.getValue();
 		for (String token : description.split("\\s+")) { //$NON-NLS-1$
-			if (token.contains("://")) { //$NON-NLS-1$
-
+			if (token.equals(oldTaskUrl)) {
+				return;// don't do expensive getTaskByUrl lookup if nothing changed
+			} else if (token.contains("://")) { //$NON-NLS-1$
 				try {
-					@SuppressWarnings("unused")
-					URL url = new URL(token);
+					new URL(token);
+					ITask task = getTaskByUrl(token);
 
-					AbstractRepositoryConnector connector = repositoryManager.getConnectorForRepositoryTaskUrl(token);
-
-					if (connector != null) {
-						return token;
+					if (task != null) {
+						updateMapping(review, token);
+						return;
 					}
 				} catch (MalformedURLException e) {
 					//Do nothing, this is expected behavior when there is no URL
@@ -99,78 +102,58 @@ public class TaskReviewsMappingsStore implements ITaskListChangeListener {
 			}
 		}
 
-		return null;
+		deleteMappingsTo(review);
 	}
 
-	public String getTaskUrl(String reviewUrlToFind) {
-		for (Entry<String, String> mapping : taskReviewsMap.entries()) {
-			int index = mapping.getValue().indexOf(reviewUrlToFind);
+	public String getTaskUrl(ITask review) {
+		return review.getAttribute(ATTR_ASSOCIATED_TASK);
+	}
 
-			if (index != -1) {
-				return mapping.getKey();
-			}
+	public Collection<String> getReviewUrls(String taskUrl) {
+		synchronized (taskReviewsMap) {
+			return ImmutableSet.copyOf(taskReviewsMap.get(taskUrl));
 		}
+	}
 
-		return null;
+	ITask getTaskByUrl(String url) {
+		return TasksCoreUtil.getTaskByUrl(taskList, repositoryManager, url);
 	}
 
 	@Override
 	public void containersChanged(Set<TaskContainerDelta> containers) {
-
 		for (TaskContainerDelta delta : containers) {
-			IRepositoryElement reviewRepoElement = delta.getElement();
+			if (delta.getKind() == Kind.DELETED) {
+				IRepositoryElement reviewRepoElement = delta.getElement();
 
-			if (!(reviewRepoElement instanceof ITask)) {
-				return;
-			}
+				if (!(reviewRepoElement instanceof ITask)) {
+					continue;
+				}
 
-			ITask review = (ITask) reviewRepoElement;
+				ITask review = (ITask) reviewRepoElement;
 
-			AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(review.getConnectorKind());
+				//We need to check it in case the mapping was removed from the task
+				AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(review.getConnectorKind());
 
-			if (review != null && connector instanceof ReviewsConnector) {
-
-				try {
-					String reviewUrl = review.getUrl();
-
-					switch (delta.getKind()) {
-					case DELETED:
-						deleteMappingsTo(reviewUrl);
-						break;
-					case ADDED:
-					case CONTENT:
-						TaskData taskData = taskDataManager.getTaskData(review);
-
-						if (taskData == null) {
-							continue;
-						}
-
-						TaskAttribute attr = taskData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION);
-
-						if (attr == null) {
-							continue;
-						}
-						String reviewDescription = attr.getValue();
-
-						updateMapping(reviewUrl, reviewDescription);
-						break;
-					}
-				} catch (CoreException e) {
-					StatusHandler.log(
-							new Status(IStatus.ERROR, ReviewsCoreConstants.PLUGIN_ID, "Error getting taskData.", e)); //$NON-NLS-1$
-
+				if (review != null && connector instanceof ReviewsConnector) {
+					deleteMappingsTo(review);
 				}
 			}
 		}
 	}
 
-	private void deleteMappingsTo(String reviewUrl) {
-		String taskUrl = getTaskUrl(reviewUrl);
+	private void deleteMappingsTo(ITask review) {
+		String taskUrl = getTaskUrl(review);
 		if (taskUrl != null) {
-			Set<String> reviews = taskReviewsMap.get(taskUrl);
-			if (reviews != null) {
-				reviews.remove(reviewUrl);
-			}
+			taskReviewsMap.remove(taskUrl, review.getUrl());
+			review.setAttribute(ATTR_ASSOCIATED_TASK, null);
 		}
+	}
+
+	public static void setInstance(TaskReviewsMappingsStore instance) {
+		TaskReviewsMappingsStore.instance = instance;
+	}
+
+	public static TaskReviewsMappingsStore getInstance() {
+		return instance;
 	}
 }

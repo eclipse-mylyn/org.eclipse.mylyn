@@ -69,7 +69,7 @@ import com.google.gwtorm.server.StandardKeyEncoder;
 
 /**
  * The Gerrit connector core.
- *
+ * 
  * @author Mikael Kober
  * @author Thomas Westling
  * @author Sascha Scholz
@@ -333,6 +333,7 @@ public class GerritConnector extends ReviewsConnector {
 				taskData.getRoot().getAttribute(GerritTaskSchema.getDefault().REVIEW_STATE.getKey()).getValue());
 		task.setAttribute(ReviewsCoreConstants.VERIFIED,
 				taskData.getRoot().getAttribute(GerritTaskSchema.getDefault().VERIFY_STATE.getKey()).getValue());
+		super.updateTaskFromTaskData(taskRepository, task, taskData);
 	}
 
 	public GerritSystemInfo validate(TaskRepository repository, IProgressMonitor monitor) throws CoreException {

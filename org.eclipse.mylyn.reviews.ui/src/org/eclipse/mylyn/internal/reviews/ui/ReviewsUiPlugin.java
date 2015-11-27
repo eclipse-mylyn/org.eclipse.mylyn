@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.reviews.ui;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.reviews.internal.core.TaskReviewsMappingsStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -33,8 +34,6 @@ public class ReviewsUiPlugin extends AbstractUIPlugin {
 
 	private TaskReviewsMappingsStore taskReviewsMappingStore;
 
-	private final String INITIALIZE_TASK_REVIEW_MAPPING_STORE_JOB = "initialize task review mapping store job"; //$NON-NLS-1$
-
 	public ReviewsUiPlugin() {
 	}
 
@@ -45,13 +44,23 @@ public class ReviewsUiPlugin extends AbstractUIPlugin {
 		reviewManager = new ActiveReviewManager();
 
 		//We need to schedule initialization otherwise TasksUiPlugin hasn't finished initialization.
-		UIJob job = new UIJob(INITIALIZE_TASK_REVIEW_MAPPING_STORE_JOB) {
+		UIJob job = new UIJob(Messages.ReviewsUiPlugin_Updating_task_review_mapping) {
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
-				taskReviewsMappingStore = new TaskReviewsMappingsStore(TasksUiPlugin.getTaskDataManager(),
+				taskReviewsMappingStore = new TaskReviewsMappingsStore(TasksUiPlugin.getTaskList(),
 						TasksUiPlugin.getRepositoryManager());
-
+				TaskReviewsMappingsStore.setInstance(taskReviewsMappingStore);
 				TasksUiPlugin.getTaskList().addChangeListener(taskReviewsMappingStore);
+				Job job = new Job(Messages.ReviewsUiPlugin_Updating_task_review_mapping) {
+					@Override
+					protected IStatus run(IProgressMonitor monitor) {
+						taskReviewsMappingStore.readFromTaskList();
+						return Status.OK_STATUS;
+					}
+				};
+				job.setSystem(true);
+				job.setUser(false);
+				job.schedule();
 				return Status.OK_STATUS;
 			}
 		};

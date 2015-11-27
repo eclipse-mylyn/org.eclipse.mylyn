@@ -15,8 +15,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.mylyn.reviews.core.spi.remote.RemoteFactoryProviderConfigurer;
+import org.eclipse.mylyn.reviews.internal.core.TaskReviewsMappingsStore;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 public abstract class ReviewsConnector extends AbstractRepositoryConnector {
 
@@ -51,5 +54,15 @@ public abstract class ReviewsConnector extends AbstractRepositoryConnector {
 
 	public RemoteFactoryProviderConfigurer getFactoryProviderConfigurer() {
 		return factoryProviderConfigurer;
+	}
+
+	/**
+	 * Subclasses should call super to update the task review mapping.
+	 */
+	@Override
+	public void updateTaskFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData) {
+		if (TaskReviewsMappingsStore.getInstance() != null) {
+			TaskReviewsMappingsStore.getInstance().addTaskAssocation(task, taskData);
+		}
 	}
 }

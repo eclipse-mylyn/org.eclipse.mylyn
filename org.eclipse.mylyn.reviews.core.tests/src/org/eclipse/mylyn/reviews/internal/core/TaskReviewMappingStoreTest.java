@@ -9,8 +9,9 @@
  *     Blaine Lewis
  *******************************************************************************/
 
-package org.eclipse.mylyn.reviews.core.internal;
+package org.eclipse.mylyn.reviews.internal.core;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -21,10 +22,11 @@ import java.util.Collection;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta.Kind;
+import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.reviews.core.spi.ReviewsConnector;
-import org.eclipse.mylyn.reviews.internal.core.TaskReviewsMappingsStore;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -45,9 +47,9 @@ public class TaskReviewMappingStoreTest {
 
 	final String notATaskUrl = "www.hello.com";
 
-	final ITask task1 = mock(ITask.class);
+	ITask task1;
 
-	final ITask task2 = mock(ITask.class);
+	ITask task2;
 
 	final String reviewUrl1 = "https://git.eclipse.org/r/#/c/56269/";
 
@@ -71,28 +73,30 @@ public class TaskReviewMappingStoreTest {
 			+ " associated reviews Change-Id: I3a38d375688aad7be36bfd58c3311d692eb51ed " + notATaskUrl
 			+ " Signed-off-by: Blaine Lewis <Blaine1@ualberta.ca>";
 
-	final ITask review1 = mock(ITask.class);
+	ITask review1;
 
-	final ITask review2 = mock(ITask.class);
+	ITask review2;
 
-	final ITask reviewNoTask = mock(ITask.class);
+	ITask reviewNoTask;
 
 	private TaskDataManager taskDataManager;
 
 	@Before
 	public void setup() {
+		review1 = new TaskTask("reviewKind", reviewUrl1, "3");
+		review1.setUrl(reviewUrl1);
 
-		when(review1.getUrl()).thenReturn(reviewUrl1);
-		when(review2.getUrl()).thenReturn(reviewUrl2);
-		when(reviewNoTask.getUrl()).thenReturn(reviewUrlNoTask);
-		when(task1.getUrl()).thenReturn(taskUrl1);
-		when(task2.getUrl()).thenReturn(taskUrl2);
-		when(task1.getTaskId()).thenReturn("1");
-		when(task1.getTaskId()).thenReturn("2");
-		when(review1.getTaskId()).thenReturn("3");
-		when(review2.getTaskId()).thenReturn("4");
-		when(reviewNoTask.getTaskId()).thenReturn("5");
+		review2 = new TaskTask("reviewKind", reviewUrl2, "4");
+		review2.setUrl(reviewUrl2);
 
+		reviewNoTask = new TaskTask("reviewKind", reviewUrlNoTask, "5");
+		reviewNoTask.setUrl(reviewUrlNoTask);
+
+		task1 = new TaskTask("reviewKind", taskUrl1, "1");
+		task1.setUrl(taskUrl1);
+
+		task2 = new TaskTask("reviewKind", taskUrl2, "2");
+		task2.setUrl(taskUrl2);
 	}
 
 	public TaskReviewsMappingsStore getEmptyTaskReviewStore() {
@@ -104,135 +108,185 @@ public class TaskReviewMappingStoreTest {
 		when(repositoryManager.getConnectorForRepositoryTaskUrl(Matchers.anyString())).thenReturn(connector);
 		when(repositoryManager.getRepositoryConnector(Matchers.anyString())).thenReturn(connector);
 
-		TaskReviewsMappingsStore taskReviewsMappingStore = new TaskReviewsMappingsStore(taskDataManager,
+		TaskReviewsMappingsStore taskReviewsMappingStore = new MockTaskReviewsMappingsStore(mock(TaskList.class),
 				repositoryManager);
+
 		return taskReviewsMappingStore;
 	}
 
-	public void addReviewData(ITask review, String description) throws CoreException {
+	public TaskData addReviewData(ITask review, String description) throws CoreException {
 		TaskData reviewData = new TaskData(new TaskAttributeMapper(new TaskRepository("", "")), "", review.getUrl(),
 				review.getTaskId());
 
 		reviewData.getRoot().createMappedAttribute(TaskAttribute.DESCRIPTION).setValue(description);
 
 		when(taskDataManager.getTaskData(review)).thenReturn(reviewData);
+
+		return reviewData;
 	}
 
 	@Test
 	public void testAdd() throws CoreException {
 		TaskReviewsMappingsStore taskReviewsMappingStore = getEmptyTaskReviewStore();
-		addReviewData(review1, descriptionWithTaskUrl1);
+		TaskData reviewData1 = addReviewData(review1, descriptionWithTaskUrl1);
 
 		TaskContainerDelta delta = new TaskContainerDelta(review1, Kind.ADDED);
+		taskReviewsMappingStore.addTaskAssocation(review1, reviewData1);
 		taskReviewsMappingStore.containersChanged(ImmutableSet.of(delta));
 
 		assertTrue(taskReviewsMappingStore.getReviewUrls(taskUrl1).contains(reviewUrl1));
-		assertTrue(taskReviewsMappingStore.getTaskUrl(reviewUrl1).equals(taskUrl1));
+		assertTrue(taskReviewsMappingStore.getTaskUrl(review1).equals(taskUrl1));
 	}
 
 	@Test
 	public void testAddTwice() throws CoreException {
 		TaskReviewsMappingsStore taskReviewsMappingStore = getEmptyTaskReviewStore();
-		addReviewData(review1, descriptionWithTaskUrl1);
+		TaskData reviewData1 = addReviewData(review1, descriptionWithTaskUrl1);
 
 		TaskContainerDelta delta = new TaskContainerDelta(review1, Kind.ADDED);
+
+		taskReviewsMappingStore.addTaskAssocation(review1, reviewData1);
 		taskReviewsMappingStore.containersChanged(ImmutableSet.of(delta));
+
+		taskReviewsMappingStore.addTaskAssocation(review1, reviewData1);
 		taskReviewsMappingStore.containersChanged(ImmutableSet.of(delta));
 
 		Collection<String> reviewUrls = taskReviewsMappingStore.getReviewUrls(taskUrl1);
 
 		assertTrue(reviewUrls.contains(reviewUrl1));
 		assertTrue(reviewUrls.size() == 1);
-		assertTrue(taskReviewsMappingStore.getTaskUrl(reviewUrl1).equals(taskUrl1));
+		assertTrue(taskReviewsMappingStore.getTaskUrl(review1).equals(taskUrl1));
 	}
 
 	@Test
 	public void testAddMultiple() throws CoreException {
 		TaskReviewsMappingsStore taskReviewsMappingStore = getEmptyTaskReviewStore();
-		addReviewData(review1, descriptionWithTaskUrl1);
-		addReviewData(review2, descriptionWithTaskUrl2);
+		TaskData reviewData1 = addReviewData(review1, descriptionWithTaskUrl1);
+		TaskData reviewData2 = addReviewData(review2, descriptionWithTaskUrl2);
 
 		TaskContainerDelta delta1 = new TaskContainerDelta(review1, Kind.ADDED);
 		TaskContainerDelta delta2 = new TaskContainerDelta(review2, Kind.ADDED);
 
+		taskReviewsMappingStore.addTaskAssocation(review1, reviewData1);
+		taskReviewsMappingStore.addTaskAssocation(review2, reviewData2);
+
 		taskReviewsMappingStore.containersChanged(ImmutableSet.of(delta1, delta2));
 
 		assertTrue(taskReviewsMappingStore.getReviewUrls(taskUrl1).contains(reviewUrl1));
-		assertTrue(taskReviewsMappingStore.getTaskUrl(reviewUrl1).equals(taskUrl1));
+		assertTrue(taskReviewsMappingStore.getTaskUrl(review1).equals(taskUrl1));
 
 		assertTrue(taskReviewsMappingStore.getReviewUrls(taskUrl2).contains(reviewUrl2));
-		assertTrue(taskReviewsMappingStore.getTaskUrl(reviewUrl2).equals(taskUrl2));
+		assertTrue(taskReviewsMappingStore.getTaskUrl(review2).equals(taskUrl2));
 	}
 
 	@Test
 	public void testRemove() throws CoreException {
 
 		TaskReviewsMappingsStore taskReviewsMappingStore = getEmptyTaskReviewStore();
-		addReviewData(review1, descriptionWithTaskUrl1);
+		TaskData reviewData1 = addReviewData(review1, descriptionWithTaskUrl1);
 
 		TaskContainerDelta delta = new TaskContainerDelta(review1, Kind.ADDED);
+
+		taskReviewsMappingStore.addTaskAssocation(review1, reviewData1);
 		taskReviewsMappingStore.containersChanged(ImmutableSet.of(delta));
+
 		assertTrue(taskReviewsMappingStore.getReviewUrls(taskUrl1).contains(reviewUrl1));
 
 		delta = new TaskContainerDelta(review1, Kind.DELETED);
 
 		taskReviewsMappingStore.containersChanged(ImmutableSet.of(delta));
+
 		assertFalse(taskReviewsMappingStore.getReviewUrls(taskUrl1).contains(reviewUrl1));
-		assertTrue(taskReviewsMappingStore.getTaskUrl(reviewUrl1) == null);
+		assertTrue(taskReviewsMappingStore.getTaskUrl(review1) == null);
 	}
 
 	@Test
 	public void testUpdate() throws CoreException {
 		TaskReviewsMappingsStore taskReviewsMappingStore = getEmptyTaskReviewStore();
-		addReviewData(review1, descriptionWithTaskUrl1);
+		TaskData reviewData1 = addReviewData(review1, descriptionWithTaskUrl1);
 
 		TaskContainerDelta delta = new TaskContainerDelta(review1, Kind.ADDED);
+
+		taskReviewsMappingStore.addTaskAssocation(review1, reviewData1);
 		taskReviewsMappingStore.containersChanged(ImmutableSet.of(delta));
+
 		assertTrue(taskReviewsMappingStore.getReviewUrls(taskUrl1).contains(reviewUrl1));
 
-		addReviewData(review1, descriptionWithTaskUrl2);
+		reviewData1 = addReviewData(review1, descriptionWithTaskUrl2);
 
 		delta = new TaskContainerDelta(review1, Kind.CONTENT);
+
+		taskReviewsMappingStore.addTaskAssocation(review1, reviewData1);
 		taskReviewsMappingStore.containersChanged(ImmutableSet.of(delta));
+
 		assertFalse(taskReviewsMappingStore.getReviewUrls(taskUrl1).contains(reviewUrl1));
 		assertTrue(taskReviewsMappingStore.getReviewUrls(taskUrl2).contains(reviewUrl1));
-
+		assertEquals(taskUrl2, taskReviewsMappingStore.getTaskUrl(review1));
 	}
 
 	@Test
 	public void testUpdateNoTask() throws CoreException {
 		TaskReviewsMappingsStore taskReviewsMappingStore = getEmptyTaskReviewStore();
-		addReviewData(review1, descriptionWithTaskUrl1);
+		TaskData reviewData1 = addReviewData(review1, descriptionWithTaskUrl1);
 
 		TaskContainerDelta delta = new TaskContainerDelta(review1, Kind.ADDED);
+
+		taskReviewsMappingStore.addTaskAssocation(review1, reviewData1);
 		taskReviewsMappingStore.containersChanged(ImmutableSet.of(delta));
+
 		assertTrue(taskReviewsMappingStore.getReviewUrls(taskUrl1).contains(reviewUrl1));
 
-		addReviewData(review1, descriptionWithNoTaskUrl);
-
+		reviewData1 = addReviewData(review1, descriptionWithNoTaskUrl);
 		delta = new TaskContainerDelta(review1, Kind.CONTENT);
+
+		taskReviewsMappingStore.addTaskAssocation(review1, reviewData1);
 		taskReviewsMappingStore.containersChanged(ImmutableSet.of(delta));
+
 		assertFalse(taskReviewsMappingStore.getReviewUrls(taskUrl1).contains(reviewUrl1));
+		assertTrue(taskReviewsMappingStore.getTaskUrl(review1) == null);
 	}
 
 	@Test
 	public void testAddNoTask() throws CoreException {
 		TaskReviewsMappingsStore taskReviewsMappingStore = getEmptyTaskReviewStore();
-		addReviewData(review1, descriptionWithNoTaskUrl);
+		TaskData reviewData1 = addReviewData(review1, descriptionWithNoTaskUrl);
 
 		TaskContainerDelta delta = new TaskContainerDelta(review1, Kind.ADDED);
+
+		taskReviewsMappingStore.addTaskAssocation(review1, reviewData1);
 		taskReviewsMappingStore.containersChanged(ImmutableSet.of(delta));
-		assertTrue(taskReviewsMappingStore.getTaskUrl(reviewUrl1) == null);
+
+		assertTrue(taskReviewsMappingStore.getTaskUrl(review1) == null);
 	}
 
 	@Test
 	public void testAddANonTaskUrl() throws CoreException {
 		TaskReviewsMappingsStore taskReviewsMappingStore = getEmptyTaskReviewStore();
-		addReviewData(review1, descriptionWithNotATaskUrl);
+		TaskData reviewData1 = addReviewData(review1, descriptionWithNotATaskUrl);
 
 		TaskContainerDelta delta = new TaskContainerDelta(review1, Kind.ADDED);
+		taskReviewsMappingStore.addTaskAssocation(review1, reviewData1);
 		taskReviewsMappingStore.containersChanged(ImmutableSet.of(delta));
-		assertTrue(taskReviewsMappingStore.getTaskUrl(reviewUrl1) == null);
+		assertTrue(taskReviewsMappingStore.getTaskUrl(review1) == null);
+	}
+
+	class MockTaskReviewsMappingsStore extends TaskReviewsMappingsStore {
+
+		public MockTaskReviewsMappingsStore(TaskList taskList, TaskRepositoryManager repositoryManager) {
+			super(taskList, repositoryManager);
+		}
+
+		@Override
+		ITask getTaskByUrl(String url) {
+			switch (url) {
+			case taskUrl1:
+				return task1;
+			case taskUrl2:
+				return task2;
+			}
+			return null;
+		}
+
 	}
 
 }

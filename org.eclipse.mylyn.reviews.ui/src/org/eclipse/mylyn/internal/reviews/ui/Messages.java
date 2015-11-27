@@ -64,6 +64,8 @@ public class Messages extends NLS {
 
 	public static String ReviewsLabelProvider_X_Revision_Y;
 
+	public static String ReviewsUiPlugin_Updating_task_review_mapping;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
