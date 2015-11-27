@@ -18,7 +18,6 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -83,6 +82,7 @@ import org.eclipse.mylyn.internal.tasks.core.UnsubmittedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataState;
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizationScheduler;
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizationScheduler.Synchronizer;
+import org.eclipse.mylyn.internal.tasks.core.util.TasksCoreUtil;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.OpenRepositoryTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -145,9 +145,6 @@ import org.eclipse.ui.statushandlers.IStatusAdapterConstants;
 import org.eclipse.ui.statushandlers.StatusAdapter;
 import org.eclipse.ui.statushandlers.StatusManager;
 
-import com.google.common.base.Strings;
-import com.google.common.collect.Ordering;
-
 /**
  * @author Steffen Pingel
  */
@@ -173,7 +170,7 @@ public class TasksUiInternal {
 
 	/**
 	 * get the connector discovery wizard command. Calling code should check {@link Command#isEnabled()} on return.
-	 *
+	 * 
 	 * @return the command, or null if it is not available.
 	 */
 	public static Command getConfiguredDiscoveryWizardCommand() {
@@ -487,7 +484,7 @@ public class TasksUiInternal {
 	/**
 	 * Synchronize a single task. Note that if you have a collection of tasks to synchronize with this connector then
 	 * you should call synchronize(Set<Set<AbstractTask> repositoryTasks, ...)
-	 *
+	 * 
 	 * @param listener
 	 *            can be null
 	 */
@@ -636,7 +633,7 @@ public class TasksUiInternal {
 
 	/**
 	 * Creates a new local task and schedules for today
-	 *
+	 * 
 	 * @param summary
 	 *            if null DEFAULT_SUMMARY (New Task) used.
 	 */
@@ -823,7 +820,7 @@ public class TasksUiInternal {
 	 * return null.
 	 * <p>
 	 * <b>Note: Applied from patch on bug 99472.</b>
-	 *
+	 * 
 	 * @return Shell or <code>null</code>
 	 * @deprecated Use {@link WorkbenchUtil#getShell()} instead
 	 */
@@ -1008,7 +1005,7 @@ public class TasksUiInternal {
 	/**
 	 * Only override if task should be opened by a custom editor, default behavior is to open with a rich editor,
 	 * falling back to the web browser if not available.
-	 *
+	 * 
 	 * @return true if the task was successfully opened
 	 */
 	public static boolean openRepositoryTask(String connectorKind, String repositoryUrl, String id,
@@ -1019,7 +1016,7 @@ public class TasksUiInternal {
 	/**
 	 * Only override if task should be opened by a custom editor, default behavior is to open with a rich editor,
 	 * falling back to the web browser if not available.
-	 *
+	 * 
 	 * @return true if the task was successfully opened
 	 */
 	public static boolean openRepositoryTask(String connectorKind, String repositoryUrl, String id,
@@ -1083,7 +1080,7 @@ public class TasksUiInternal {
 
 	/**
 	 * Returns text masking the &amp;-character from decoration as an accelerator in SWT labels.
-	 *
+	 * 
 	 * @deprecated Use {@link CommonUiUtil#toLabel(String)} instead
 	 */
 	@Deprecated
@@ -1194,57 +1191,11 @@ public class TasksUiInternal {
 
 	/**
 	 * Searches for a task whose URL matches
-	 *
+	 * 
 	 * @return first task with a matching URL.
 	 */
 	public static AbstractTask getTaskByUrl(String taskUrl) {
-		if (!Strings.isNullOrEmpty(taskUrl)) {
-			Collection<AbstractTask> tasks = TasksUiPlugin.getTaskList().getAllTasks();
-			List<AbstractTask> sortedTasks = sortTasksByRepositoryUrl(tasks);
-
-			AbstractRepositoryConnector connector = null;
-			TaskRepository repository = null;
-
-			for (AbstractTask task : sortedTasks) {
-				if (taskUrl.equals(task.getUrl())) {
-					return task;
-				} else {
-					String repositoryUrl = task.getRepositoryUrl();
-					if (repositoryUrl != null) {
-						if (repository == null || !repositoryUrl.equals(repository.getUrl())) {
-							connector = TasksUi.getRepositoryManager().getRepositoryConnector(task.getConnectorKind());
-							repository = getRepository(task);
-						}
-
-						if (connector != null) {
-							URL url = connector.getBrowserUrl(repository, task);
-							if (url != null && taskUrl.equals(url.toString())) {
-								return task;
-							}
-						}
-					}
-				}
-			}
-		}
-		return null;
-	}
-
-	private static List<AbstractTask> sortTasksByRepositoryUrl(Collection<AbstractTask> tasks) {
-		List<AbstractTask> sortedTasks = new Ordering<AbstractTask>() {
-
-			@Override
-			public int compare(AbstractTask left, AbstractTask right) {
-				if (left.getRepositoryUrl() == null) {
-					return 1;
-				}
-				if (right.getRepositoryUrl() == null) {
-					return -1;
-				}
-				return left.getRepositoryUrl().compareTo(right.getRepositoryUrl());
-			}
-
-		}.nullsLast().sortedCopy(tasks);
-		return sortedTasks;
+		return TasksCoreUtil.getTaskByUrl(TasksUiPlugin.getTaskList(), TasksUi.getRepositoryManager(), taskUrl);
 	}
 
 	public static boolean isTaskUrl(String taskUrl) {
@@ -1260,7 +1211,7 @@ public class TasksUiInternal {
 
 	/**
 	 * Cleans text for use as the text of an action to ensure that it is displayed properly.
-	 *
+	 * 
 	 * @return the cleaned text
 	 * @deprecated use {@link CommonUiUtil#toMenuLabel(String)} instead
 	 */
