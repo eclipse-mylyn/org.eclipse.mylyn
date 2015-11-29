@@ -59,6 +59,14 @@ public class ReviewsImages {
 
 	public static final ImageDescriptor PREVIOUS_COMMENT = create("elcl16/prevanmly_menu.png"); //$NON-NLS-1$
 
+	public static final ImageDescriptor PLUS_ONE = create("view16/plusOne.png"); //$NON-NLS-1$
+
+	public static final ImageDescriptor MINUS_ONE = create("view16/minusOne.png"); //$NON-NLS-1$
+
+	public static final ImageDescriptor GREEN_CHECK = create("view16/greenCheck.png"); //$NON-NLS-1$
+
+	public static final ImageDescriptor RED_NOT = create("view16/redNot.png"); //$NON-NLS-1$
+
 	private static ImageDescriptor create(String path) {
 		try {
 			return ImageDescriptor.createFromURL(makeIconFileURL(path));

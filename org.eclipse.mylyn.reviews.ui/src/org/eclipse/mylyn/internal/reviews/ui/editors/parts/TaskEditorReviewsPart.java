@@ -1,0 +1,221 @@
+/*******************************************************************************
+ * Copyright (c) 2015, Landon Butterworth and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Blaine Lewis & Landon Butterworth - initial API and implementation
+ *******************************************************************************/
+
+package org.eclipse.mylyn.internal.reviews.ui.editors.parts;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
+import org.eclipse.jface.viewers.IOpenListener;
+import org.eclipse.jface.viewers.OpenEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.window.ToolTip;
+import org.eclipse.mylyn.commons.ui.SelectionProviderAdapter;
+import org.eclipse.mylyn.internal.reviews.ui.ReviewColumnLabelProvider;
+import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
+import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
+import org.eclipse.mylyn.reviews.internal.core.TaskReviewsMappingsStore;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Section;
+
+/**
+ * @author Blaine Lewis
+ * @author Landon Butterworth
+ */
+public class TaskEditorReviewsPart extends AbstractTaskEditorPart {
+
+	private static final String ID_TASK_EDITOR_REVIEWS_PART = "org.eclipse.mylyn.internal.reviews.ui.editor.parts.TaskEditorReviewsPart"; //$NON-NLS-1$
+
+	private Composite reviewsComposite;
+
+	protected Section section;
+
+	private Table reviewsTable;
+
+	private final String[] REVIEWS_COLUMNS = { Messages.TaskEditorReviewsPart_DescriptionString,
+			Messages.TaskEditorReviewsPart_CodeReviewString, Messages.TaskEditorReviewsPart_VerifiedString,
+			Messages.TaskEditorReviewsPart_IncomingChangesString };
+
+	private SelectionProviderAdapter selectionProvider;
+
+	private final int[] REVIEWS_COLUMNS_WIDTH = { 400, 50, 50, 300, 0 };
+
+	private TableViewer reviewsViewer;
+
+	private List<TaskReview> reviewContainers;
+
+	private Collection<ITask> reviews;
+
+	private final TaskReviewsMappingsStore taskReviewStore;
+
+	private final TaskList taskList = TasksUiPlugin.getTaskList();
+
+	public TaskEditorReviewsPart() {
+		taskReviewStore = ReviewsUiPlugin.getDefault().getTaskReviewsMappingStore();
+		setPartName(Messages.TaskEditorReviewsPart_ReviewsString);
+	}
+
+	@Override
+	public void createControl(Composite parent, final FormToolkit toolkit) {
+
+		if (taskReviewStore != null) {
+			Collection<String> reviewUrls = taskReviewStore.getReviewUrls(getTaskEditorPage().getTask().getUrl());
+			getReviewsFromUrls(reviewUrls);
+		}
+
+		if (reviews == null || reviews.size() == 0) {
+			//Don't build component because there are no reviews
+			return;
+		}
+
+		reviewContainers = new ArrayList<TaskReview>();
+		populateReviews(reviewContainers);
+
+		selectionProvider = new SelectionProviderAdapter();
+
+		section = createSection(parent, toolkit, true);
+		section.setText(section.getText());
+
+		createContents(toolkit, section);
+
+		setSection(toolkit, section);
+	}
+
+	private void getReviewsFromUrls(Collection<String> reviewUrls) {
+		reviews = new ArrayList<ITask>();
+
+		for (String reviewUrl : reviewUrls) {
+
+			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+					.getConnectorForRepositoryTaskUrl(reviewUrl);
+
+			if (connector == null) {
+				continue;
+			}
+
+			String repositoryUrl = connector.getRepositoryUrlFromTaskUrl(reviewUrl);
+
+			String reviewId = connector.getTaskIdFromTaskUrl(reviewUrl);
+
+			if (repositoryUrl == null || reviewId == null) {
+				continue;
+			}
+
+			ITask review = taskList.getTask(repositoryUrl, reviewId);
+
+			if (review != null) {
+				reviews.add(review);
+			}
+		}
+	}
+
+	private void createReviewsTable(FormToolkit toolkit, final Composite composite) {
+		reviewsTable = toolkit.createTable(reviewsComposite, SWT.MULTI | SWT.FULL_SELECTION);
+
+		reviewsTable.setLinesVisible(true);
+		reviewsTable.setHeaderVisible(true);
+		reviewsTable.setLayout(new GridLayout());
+
+		GridDataFactory.fillDefaults()
+				.align(SWT.FILL, SWT.FILL)
+				.grab(true, false)
+				.hint(500, SWT.DEFAULT)
+				.applyTo(reviewsTable);
+
+		reviewsTable.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
+
+		for (int i = 0; i < REVIEWS_COLUMNS.length; i++) {
+			TableColumn column = new TableColumn(reviewsTable, SWT.LEFT, i);
+			column.setText(REVIEWS_COLUMNS[i]);
+			column.setWidth(REVIEWS_COLUMNS_WIDTH[i]);
+			column.setMoveable(true);
+		}
+
+		reviewsViewer = new TableViewer(reviewsTable);
+		reviewsViewer.setUseHashlookup(true);
+		reviewsViewer.setColumnProperties(REVIEWS_COLUMNS);
+		ColumnViewerToolTipSupport.enableFor(reviewsViewer, ToolTip.NO_RECREATE);
+
+		reviewsViewer.setContentProvider(new ArrayContentProvider());
+		reviewsViewer.setLabelProvider(
+				new ReviewColumnLabelProvider(getModel(), getTaskEditorPage().getAttributeEditorToolkit()));
+
+		reviewsViewer.addOpenListener(new IOpenListener() {
+			public void open(OpenEvent event) {
+				openReview(event);
+			}
+		});
+
+		reviewsViewer.setInput(reviewContainers.toArray());
+
+		getTaskEditorPage().reflow();
+	}
+
+	private void populateReviews(List<TaskReview> reviewContainers) {
+		for (ITask review : reviews) {
+			reviewContainers.add(new TaskReview(review));
+		}
+	}
+
+	private void createContents(final FormToolkit toolkit, final Section section) {
+
+		reviewsComposite = toolkit.createComposite(section);
+		section.setClient(reviewsComposite);
+		reviewsComposite.setLayout(EditorUtil.createSectionClientLayout());
+
+		getTaskEditorPage().registerDefaultDropListener(section);
+
+		createReviewsTable(toolkit, reviewsComposite);
+
+		toolkit.paintBordersFor(reviewsComposite);
+	}
+
+	public boolean isReviewsSectionExpanded() {
+		return section != null && section.isExpanded();
+	}
+
+	protected void openReview(OpenEvent event) {
+		List<TaskReview> reviewsToOpen = new ArrayList<TaskReview>();
+
+		StructuredSelection selection = (StructuredSelection) event.getSelection();
+
+		List<?> items = selection.toList();
+		for (Object item : items) {
+			if (item instanceof TaskReview) {
+				reviewsToOpen.add((TaskReview) item);
+			}
+		}
+
+		if (reviewsToOpen.isEmpty()) {
+			return;
+		}
+
+		for (TaskReview openThis : reviewsToOpen) {
+			TasksUiUtil.openTask(openThis.getUrl());
+		}
+	}
+}

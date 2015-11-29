@@ -22,6 +22,20 @@ public class Messages extends NLS {
 
 	public static String AbstractCommentPart_Section_header;
 
+	public static String TaskEditorReviewsPart_ReviewsString;
+
+	public static String TaskEditorReviewsPart_IncomingChangesString;
+
+	public static String TaskEditorReviewsPart_VerifiedString;
+
+	public static String TaskEditorReviewsPart_CodeReviewString;
+
+	public static String TaskEditorReviewsPart_DescriptionString;
+
+	public static String TaskEditorReviewsPart_VerifiedAttribute;
+
+	public static String TaskEditorReviewsPart_CodeReviewAttribute;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

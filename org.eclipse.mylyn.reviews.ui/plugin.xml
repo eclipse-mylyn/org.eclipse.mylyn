@@ -147,6 +147,15 @@
           visibleInUI="true">
     </commonFilter>
  </extension>
+  <extension
+       point="org.eclipse.mylyn.tasks.ui.taskEditorPageContribution">
+    <repositoryPart
+          class="org.eclipse.mylyn.internal.reviews.ui.editors.parts.TaskEditorReviewsPart"
+          id="org.eclipse.mylyn.internal.reviews.ui.editors.parts.TaskEditorReviewsPart"
+          path="attributes">
+    </repositoryPart>
+ </extension>
+ 
 	<!--
 	<extension point="org.eclipse.ui.workbench.texteditor.rulerColumns">
 		<column id="org.eclipse.mylyn.reviews.ui.editor.AnnotationRuler" name="Review Comments"
