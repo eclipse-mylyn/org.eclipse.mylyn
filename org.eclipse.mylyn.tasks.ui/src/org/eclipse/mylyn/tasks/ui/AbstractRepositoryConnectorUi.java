@@ -102,6 +102,16 @@ public abstract class AbstractRepositoryConnectorUi {
 	public abstract IWizard getNewTaskWizard(@NonNull TaskRepository repository, @Nullable ITaskMapping selection);
 
 	/**
+	 * Connectors can implement this method if they need to open a wizard dialog before opening a new subtask editor.
+	 * 
+	 * @since 3.18
+	 */
+	@Nullable
+	public IWizard getNewSubTaskWizard(TaskRepository taskRepository, ITask parentTask) {
+		return null;
+	}
+
+	/**
 	 * Override to return a custom task editor ID. If overriding this method the connector becomes responsible for
 	 * showing the additional pages handled by the default task editor. As of Mylyn 2.0M2 these are the Planning and
 	 * Context pages.

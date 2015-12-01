@@ -22,9 +22,12 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.commons.core.ICoreRunnable;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.ui.CommonUiUtil;
+import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
@@ -38,6 +41,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -83,6 +87,13 @@ public class NewSubTaskAction extends BaseSelectionListenerAction implements IVi
 
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				selectedTask.getConnectorKind());
+		IWizard wizard = getNewSubTaskWizard();
+		if (wizard != null) {
+			WizardDialog dialog = new WizardDialog(WorkbenchUtil.getShell(), wizard);
+			dialog.setBlockOnOpen(true);
+			dialog.open();
+			return;
+		}
 		TaskData taskData = createTaskData(connector);
 		if (taskData != null) {
 			try {
@@ -94,6 +105,13 @@ public class NewSubTaskAction extends BaseSelectionListenerAction implements IVi
 						Messages.NewSubTaskAction_Failed_to_create_new_sub_task_ + e.getMessage()));
 			}
 		}
+	}
+
+	private IWizard getNewSubTaskWizard() {
+		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(selectedTask.getConnectorKind(),
+				selectedTask.getRepositoryUrl());
+		AbstractRepositoryConnectorUi connectorUi = TasksUi.getRepositoryConnectorUi(selectedTask.getConnectorKind());
+		return connectorUi.getNewSubTaskWizard(repository, selectedTask);
 	}
 
 	private TaskData createTaskData(AbstractRepositoryConnector connector) {
