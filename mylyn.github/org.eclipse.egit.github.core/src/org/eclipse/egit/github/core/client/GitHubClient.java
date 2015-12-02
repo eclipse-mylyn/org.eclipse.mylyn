@@ -234,7 +234,20 @@ public class GitHubClient {
 		else
 			headerAccept = ACCEPT_FULL;
 		return this;
-    }
+	}
+
+	/**
+	 * Returns the accept header currently used for all requests.
+	 *
+	 * @return header
+	 * @since 4.2
+	 */
+	public String getHeaderAccept() {
+		if (headerAccept != null && headerAccept.length() > 0)
+			return headerAccept;
+		else
+			return ACCEPT_FULL;
+	}
 
 	/**
 	 * Configure request with standard headers
@@ -246,7 +259,7 @@ public class GitHubClient {
 		if (credentials != null)
 			request.setRequestProperty(HEADER_AUTHORIZATION, credentials);
 		request.setRequestProperty(HEADER_USER_AGENT, userAgent);
-		request.setRequestProperty(HEADER_ACCEPT, headerAccept);
+		request.setRequestProperty(HEADER_ACCEPT, getHeaderAccept());
 		return request;
 	}
 
