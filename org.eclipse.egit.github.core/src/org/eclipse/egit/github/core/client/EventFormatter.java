@@ -27,6 +27,7 @@ import static org.eclipse.egit.github.core.event.Event.TYPE_PUBLIC;
 import static org.eclipse.egit.github.core.event.Event.TYPE_PULL_REQUEST;
 import static org.eclipse.egit.github.core.event.Event.TYPE_PULL_REQUEST_REVIEW_COMMENT;
 import static org.eclipse.egit.github.core.event.Event.TYPE_PUSH;
+import static org.eclipse.egit.github.core.event.Event.TYPE_RELEASE;
 import static org.eclipse.egit.github.core.event.Event.TYPE_TEAM_ADD;
 import static org.eclipse.egit.github.core.event.Event.TYPE_WATCH;
 
@@ -58,6 +59,7 @@ import org.eclipse.egit.github.core.event.PublicPayload;
 import org.eclipse.egit.github.core.event.PullRequestPayload;
 import org.eclipse.egit.github.core.event.PullRequestReviewCommentPayload;
 import org.eclipse.egit.github.core.event.PushPayload;
+import org.eclipse.egit.github.core.event.ReleasePayload;
 import org.eclipse.egit.github.core.event.TeamAddPayload;
 import org.eclipse.egit.github.core.event.WatchPayload;
 
@@ -116,6 +118,8 @@ public class EventFormatter implements JsonDeserializer<Event> {
 			payloadClass = PullRequestReviewCommentPayload.class;
 		else if (TYPE_PUSH.equals(type))
 			payloadClass = PushPayload.class;
+		else if (TYPE_RELEASE.equals(type))
+			payloadClass = ReleasePayload.class;
 		else if (TYPE_TEAM_ADD.equals(type))
 			payloadClass = TeamAddPayload.class;
 		else if (TYPE_WATCH.equals(type))
