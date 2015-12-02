@@ -52,6 +52,27 @@ public abstract class GitHubService {
 	public static final String ACCEPT_FULL = "application/vnd.github.v3.full+json"; //$NON-NLS-1$
 
 	/**
+	 * Accept header to use preview features of the 'ironman' release.
+	 * @see <a href="https://developer.github.com/changes">https://developer.github.com/changes</a>
+	 * @since 4.2
+	 */
+	public static final String ACCEPT_PREVIEW_IRONMAN = "application/vnd.github.ironman-preview+json"; //$NON-NLS-1$
+
+	/**
+	 * Accept header to use preview features of the 'loki' release.
+	 * @see <a href="https://developer.github.com/changes">https://developer.github.com/changes</a>
+	 * @since 4.2
+	 */
+	public static final String ACCEPT_PREVIEW_LOKI = "application/vnd.github.loki-preview+json"; //$NON-NLS-1$
+
+	/**
+	 * Accept header to use preview features of the 'drax' release.
+	 * @see <a href="https://developer.github.com/changes">https://developer.github.com/changes</a>
+	 * @since 4.2
+	 */
+	public static final String ACCEPT_PREVIEW_DRAX = "application/vnd.github.drax-preview+json"; //$NON-NLS-1$
+
+	/**
 	 * Client field
 	 */
 	protected final GitHubClient client;
