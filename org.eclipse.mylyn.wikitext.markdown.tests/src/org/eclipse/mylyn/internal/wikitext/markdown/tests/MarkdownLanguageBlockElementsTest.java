@@ -211,6 +211,83 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 		parseAndAssert(markup, expectedHtml);
 	}
 
+	public void testUnorderedListWithCodeBlockAfterwards() {
+		String markup = "*   Red\n\n\n    should be code\n";
+		String expectedHtml = "<ul><li>Red</li></ul><pre><code>should be code</code></pre>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testUnorderedListWithParagraphAfterwards() {
+		String markup = "*   first item\n\nThis is not a list anymore";
+		String expectedHtml = "<ul><li>first item</li></ul><p>This is not a list anymore</p>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	/*
+	 * Unordered lists, that are nested
+	 */
+	public void testUnorderedListWhichIsNested() {
+		String markup = "*   Item 1\n    *   Item 1.1";
+		String expectedHtml = "<ul><li>Item 1</li><ul><li>Item 1.1</li></ul></ul>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testUnorderedListWhichIsNestedUsingMixedMarkers() {
+		String markup = "*   Item 1\n    +   Item 1.1\n        -   Item 1.1.1\n    *   Item 1.2\n*   Item 2";
+		String expectedHtml = "<ul><li>Item 1</li><ul><li>Item 1.1</li><ul><li>Item 1.1.1</li></ul>"
+				+ "<li>Item 1.2</li></ul><li>Item 2</li></ul>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testOrderedNestedListUsingSequentialNumbers() {
+		String markup = "1.  Item 1\n    1. Item 1.1";
+		String expectedHtml = "<ol><li>Item 1</li><ol><li>Item 1.1</li></ol></ol>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testOrderedNestedListUsingSameNumbers() {
+		String markup = "1.  Item 1\n    1. Item 1.1\n        1. Item 1.1.1\n    1. Item 1.2\n1. Item 2";
+		String expectedHtml = "<ol><li>Item 1</li><ol><li>Item 1.1</li><ol><li>Item 1.1.1</li></ol>"
+				+ "<li>Item 1.2</li></ol><li>Item 2</li></ol>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testNestedListsMixingUnorderedAndOrdered() {
+		String markup = "*   Item 1\n    1. Item 1.1\n        * Item 1.1.1";
+		String expectedHtml = "<ul><li>Item 1</li><ol><li>Item 1.1</li><ul><li>Item 1.1.1</li></ul></ol></ul>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testUnorderedListUsingMultipleParagraphs() {
+		String markup = "*   This is a list item with two paragraphs.\n" + "\n"
+				+ "    This is the second paragraph in the list item. You're\n"
+				+ "only required to indent the first line. Lorem ipsum dolor\n"
+				+ "sit amet, consectetuer adipiscing elit.";
+		String expectedHtml = "<ul><li>This is a list item with two paragraphs.\n"
+				+ "<p>This is the second paragraph in the list item. You're\n"
+				+ "only required to indent the first line. Lorem ipsum dolor\n"
+				+ "sit amet, consectetuer adipiscing elit.</p></li></ul>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
+	public void testOrderListUsingMultipleParagraphs() {
+		String markup = "1.  This is a list item with two paragraphs. Lorem ipsum dolor\n"
+				+ "    sit amet, consectetuer adipiscing elit. Aliquam hendrerit\n"
+				+ "    mi posuere lectus.\n\n" // end of paragraph
+				+ "    Vestibulum enim wisi, viverra nec, fringilla in, laoreet\n"
+				+ "    vitae, risus. Donec sit amet nisl. Aliquam semper ipsum\n"
+				+ "    sit amet velit.\n\n" // end of paragraph and list item
+				+ "2.  Suspendisse id sem consectetuer libero luctus adipiscing.\n\n"
+				+ "3.  Third Item with an empty line separated.";
+		String expectedHtml = "<ol><li>This is a list item with two paragraphs. Lorem ipsum dolor\n"
+				+ "sit amet, consectetuer adipiscing elit. Aliquam hendrerit\n" + "mi posuere lectus.\n"
+				+ "<p>Vestibulum enim wisi, viverra nec, fringilla in, laoreet\n"
+				+ "vitae, risus. Donec sit amet nisl. Aliquam semper ipsum\n" + "sit amet velit.</p></li>"
+				+ "<li>Suspendisse id sem consectetuer libero luctus adipiscing.</li>"
+				+ "<li>Third Item with an empty line separated.</li></ol>";
+		parseAndAssert(markup, expectedHtml);
+	}
+
 	/*
 	 * Ordered lists use numbers followed by periods.
 	 */
@@ -271,7 +348,7 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 	 */
 	public void testListWithWrappedItemAndHangingIndents() {
 		String markup = "* Lorem ipsum\n  sit amet.\n* Donec sit\n  amet nisl.";
-		String expectedHtml = "<ul><li>Lorem ipsum\n  sit amet.</li><li>Donec sit\n  amet nisl.</li></ul>";
+		String expectedHtml = "<ul><li>Lorem ipsum\nsit amet.</li><li>Donec sit\namet nisl.</li></ul>";
 		parseAndAssert(markup, expectedHtml);
 	}
 
