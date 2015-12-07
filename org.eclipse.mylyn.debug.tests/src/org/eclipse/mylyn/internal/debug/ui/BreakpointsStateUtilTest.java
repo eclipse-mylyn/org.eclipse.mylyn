@@ -19,6 +19,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -42,6 +46,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
@@ -85,8 +91,41 @@ public class BreakpointsStateUtilTest {
 
 		Document pluginStateDocument = getDocument(pluginStateFile);
 		Document testDocument = getDocument(new File("testdata/breakpointFile.xml"));
+		sortNodes(pluginStateDocument);
+		sortNodes(testDocument);
 		assertTrue("Documents not equal:\n" + documentToString(pluginStateDocument) + "\n===\n"
 				+ documentToString(testDocument), pluginStateDocument.isEqualNode(testDocument));
+	}
+
+	private void sortNodes(Node node) {
+		NodeList children = node.getChildNodes();
+		List<Node> childNodes = new ArrayList<>();
+		for (int i = 0; i < children.getLength(); i++) {
+			Node child = children.item(i);
+			node.removeChild(child);
+			childNodes.add(child);
+			sortNodes(child);
+		}
+		Collections.sort(childNodes, new Comparator<Node>() {
+
+			@Override
+			public int compare(Node a, Node b) {
+				if (a.getAttributes() == null) {
+					if (b.getAttributes() == null) {
+						return 0;
+					}
+					return 1;
+				} else if (b.getAttributes() == null) {
+					return -1;
+				}
+				Node nameA = a.getAttributes().getNamedItem("name");
+				Node nameB = b.getAttributes().getNamedItem("name");
+				return nameA.getNodeValue().compareTo(nameB.getNodeValue());
+			}
+		});
+		for (Node child : childNodes) {
+			node.appendChild(child);
+		}
 	}
 
 	private String documentToString(Document docuemnt) throws TransformerException {
