@@ -53,7 +53,7 @@ public class ReviewColumnLabelProviderTest {
 
 		myTaskReview2 = new TaskReview(mockTask2);
 
-		myLabelProvider = new ReviewColumnLabelProvider(null, null);
+		myLabelProvider = new ReviewColumnLabelProvider();
 	}
 
 	@Test

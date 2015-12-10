@@ -16,8 +16,6 @@ import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.reviews.ui.editors.parts.TaskReview;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
-import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
-import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorToolkit;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -29,31 +27,23 @@ public class ReviewColumnLabelProvider extends ColumnLabelProvider {
 
 	private final int NOT_VERIFIED = -1;
 
-	private final TaskDataModel model;
+	private static final int DESCRIPTION_COLUMN = 0;
 
-	private final AttributeEditorToolkit attributeEditorToolkit;
+	private static final int CODE_REVIEW_COLUMN = 1;
 
-	private final int DESCRIPTION_COLUMN = 0;
+	private static final int VERIFIED_COLUMN = 2;
 
-	private final int CODE_REVIEW_COLUMN = 1;
+	private static final int STATUS_COLUMN = 3;
 
-	private final int VERIFIED_COLUMN = 2;
+	private static final int MINUS_TWO = -2;
 
-	private final int INCOMING_CHANGES_COLUMN = 3;
+	private static final int MINUS_ONE = -1;
 
-	private final int MINUS_TWO = -2;
+	private static final int PLUS_ONE = 1;
 
-	private final int MINUS_ONE = -1;
+	private static final int PLUS_TWO = 2;
 
-	private final int ZERO = 0;
-
-	private final int PLUS_ONE = 1;
-
-	private final int PLUS_TWO = 2;
-
-	public ReviewColumnLabelProvider(TaskDataModel model, AttributeEditorToolkit attributeEditorToolkit) {
-		this.model = model;
-		this.attributeEditorToolkit = attributeEditorToolkit;
+	public ReviewColumnLabelProvider() {
 	}
 
 	public Image getColumnImage(Object element, int columnIndex) {
@@ -66,8 +56,6 @@ public class ReviewColumnLabelProvider extends ColumnLabelProvider {
 			return getReviewStateImage(reviewContainer);
 		case VERIFIED_COLUMN:
 			return getVerifiedStateImage(reviewContainer);
-		case INCOMING_CHANGES_COLUMN:
-			return CommonImages.getImage(CommonImages.OVERLAY_CLEAR);
 		}
 
 		return null;
@@ -118,10 +106,10 @@ public class ReviewColumnLabelProvider extends ColumnLabelProvider {
 		switch (columnIndex) {
 		case DESCRIPTION_COLUMN:
 			return reviewContainer.getSummary();
-		case INCOMING_CHANGES_COLUMN:
-			return reviewContainer.getIncomingChanges();
+		case STATUS_COLUMN:
+			return reviewContainer.getStatus();
 		default:
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 

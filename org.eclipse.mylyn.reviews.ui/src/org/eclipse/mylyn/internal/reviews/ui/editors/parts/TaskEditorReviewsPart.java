@@ -57,12 +57,11 @@ public class TaskEditorReviewsPart extends AbstractTaskEditorPart {
 	private Table reviewsTable;
 
 	private final String[] REVIEWS_COLUMNS = { Messages.TaskEditorReviewsPart_DescriptionString,
-			Messages.TaskEditorReviewsPart_CodeReviewString, Messages.TaskEditorReviewsPart_VerifiedString,
-			Messages.TaskEditorReviewsPart_IncomingChangesString };
+			Messages.TaskEditorReviewsPart_CodeReviewString, Messages.TaskEditorReviewsPart_VerifiedString, "Status" };
 
 	private SelectionProviderAdapter selectionProvider;
 
-	private final int[] REVIEWS_COLUMNS_WIDTH = { 400, 50, 50, 300, 0 };
+	private final int[] REVIEWS_COLUMNS_WIDTH = { 600, 30, 30, 90, 0 };
 
 	private TableViewer reviewsViewer;
 
@@ -161,8 +160,7 @@ public class TaskEditorReviewsPart extends AbstractTaskEditorPart {
 		ColumnViewerToolTipSupport.enableFor(reviewsViewer, ToolTip.NO_RECREATE);
 
 		reviewsViewer.setContentProvider(new ArrayContentProvider());
-		reviewsViewer.setLabelProvider(
-				new ReviewColumnLabelProvider(getModel(), getTaskEditorPage().getAttributeEditorToolkit()));
+		reviewsViewer.setLabelProvider(new ReviewColumnLabelProvider());
 
 		reviewsViewer.addOpenListener(new IOpenListener() {
 			public void open(OpenEvent event) {

@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.reviews.ui.editors.parts;
 
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 public class TaskReview {
 
@@ -56,5 +57,9 @@ public class TaskReview {
 
 	public SynchronizationState getSyncState() {
 		return review.getSynchronizationState();
+	}
+
+	public String getStatus() {
+		return review.getAttribute(TaskAttribute.STATUS);
 	}
 }

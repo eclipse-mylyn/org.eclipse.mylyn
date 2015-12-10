@@ -55,7 +55,7 @@ public class TaskReviewsMappingsStore implements ITaskListChangeListener {
 		for (AbstractTask review : taskList.getAllTasks()) {
 			String task = getTaskUrl(review);
 			if (task != null) {
-				taskReviewsMap.put(review.getUrl(), task);
+				taskReviewsMap.put(task, review.getUrl());
 			}
 		}
 	}

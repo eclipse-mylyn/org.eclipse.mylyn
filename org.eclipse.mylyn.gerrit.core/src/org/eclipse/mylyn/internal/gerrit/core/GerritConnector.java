@@ -58,6 +58,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
@@ -302,8 +303,7 @@ public class GerritConnector extends ReviewsConnector {
 	}
 
 	@Override
-	public void updateRepositoryConfiguration(TaskRepository repository, IProgressMonitor monitor)
-			throws CoreException {
+	public void updateRepositoryConfiguration(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
 		try {
 			getClient(repository).refreshConfig(monitor);
 		} catch (GerritException e) {
@@ -329,11 +329,18 @@ public class GerritConnector extends ReviewsConnector {
 			task.setModificationDate(oldModificationDate);
 		}
 
-		task.setAttribute(ReviewsCoreConstants.CODE_REVIEW,
-				taskData.getRoot().getAttribute(GerritTaskSchema.getDefault().REVIEW_STATE.getKey()).getValue());
-		task.setAttribute(ReviewsCoreConstants.VERIFIED,
-				taskData.getRoot().getAttribute(GerritTaskSchema.getDefault().VERIFY_STATE.getKey()).getValue());
+		setAttribute(task, TaskAttribute.STATUS, taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS));
+		setAttribute(task, ReviewsCoreConstants.CODE_REVIEW,
+				taskData.getRoot().getAttribute(GerritTaskSchema.getDefault().REVIEW_STATE.getKey()));
+		setAttribute(task, ReviewsCoreConstants.VERIFIED,
+				taskData.getRoot().getAttribute(GerritTaskSchema.getDefault().VERIFY_STATE.getKey()));
 		super.updateTaskFromTaskData(taskRepository, task, taskData);
+	}
+
+	private void setAttribute(ITask task, String key, TaskAttribute attribute) {
+		if (attribute != null) {
+			task.setAttribute(key, attribute.getValue());
+		}
 	}
 
 	public GerritSystemInfo validate(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
@@ -446,8 +453,8 @@ public class GerritConnector extends ReviewsConnector {
 			JSonSupport support = new JSonSupport();
 			return support.toJson(config);
 		} catch (Exception e) {
-			StatusHandler
-					.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, "Failed to serialize configuration", e)); //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
+					"Failed to serialize configuration", e)); //$NON-NLS-1$
 			return null;
 		}
 	}
@@ -483,8 +490,7 @@ public class GerritConnector extends ReviewsConnector {
 				return toStatus(repository, qualifier, (Exception) cause);
 			}
 		} else if (e instanceof GerritException && e.getMessage() != null) {
-			return createErrorStatus(repository,
-					NLS.bind("{0}Gerrit connection issue: {1}", qualifier, e.getMessage())); //$NON-NLS-1$
+			return createErrorStatus(repository, NLS.bind("{0}Gerrit connection issue: {1}", qualifier, e.getMessage())); //$NON-NLS-1$
 		}
 		String message = NLS.bind("{0}Unexpected error while connecting to Gerrit: {1}", qualifier, e.getMessage()); //$NON-NLS-1$
 		if (repository != null) {
