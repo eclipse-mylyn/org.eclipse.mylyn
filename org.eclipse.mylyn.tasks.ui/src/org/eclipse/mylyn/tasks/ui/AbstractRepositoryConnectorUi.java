@@ -107,7 +107,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * @since 3.18
 	 */
 	@Nullable
-	public IWizard getNewSubTaskWizard(TaskRepository taskRepository, ITask parentTask) {
+	public IWizard getNewSubTaskWizard(@NonNull TaskRepository taskRepository, @NonNull ITask parentTask) {
 		return null;
 	}
 
