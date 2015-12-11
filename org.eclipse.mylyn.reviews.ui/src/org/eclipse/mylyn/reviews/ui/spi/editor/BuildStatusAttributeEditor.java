@@ -13,6 +13,7 @@
 package org.eclipse.mylyn.reviews.ui.spi.editor;
 
 import org.eclipse.jface.action.LegacyActionTools;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.LayoutConstants;
@@ -31,14 +32,21 @@ import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.menus.IMenuService;
+import org.eclipse.ui.services.IServiceLocator;
 
 public class BuildStatusAttributeEditor extends AbstractAttributeEditor {
 
-	public BuildStatusAttributeEditor(TaskDataModel dataModel, TaskAttribute taskAttribute) {
+	private final IServiceLocator locator;
+
+	public BuildStatusAttributeEditor(TaskDataModel dataModel, IServiceLocator locator, TaskAttribute taskAttribute) {
 		super(dataModel, taskAttribute);
+		this.locator = locator;
 	}
 
 	@Override
@@ -47,7 +55,7 @@ public class BuildStatusAttributeEditor extends AbstractAttributeEditor {
 		Composite layoutComposite = toolkit.createComposite(parent);
 		GridLayoutFactory.fillDefaults()
 				.spacing(LayoutConstants.getSpacing().x, 0)
-				.numColumns(2)
+				.numColumns(3)
 				.applyTo(layoutComposite);
 		GridDataFactory.fillDefaults().indent(28, 0).applyTo(layoutComposite);
 
@@ -87,6 +95,18 @@ public class BuildStatusAttributeEditor extends AbstractAttributeEditor {
 
 			buildText.setText(statusValue);
 			buildText.setImage(getImageForBuildStatus(statusValue));
+
+			final ToolBarManager toolBarManager = new ToolBarManager();
+			IMenuService menuService = (IMenuService) locator.getService(IMenuService.class);
+			if (menuService != null) {
+				menuService.populateContributionManager(toolBarManager, "toolbar:org.eclipse.mylyn.build.toolbar"); //$NON-NLS-1$
+				toolBarManager.createControl(layoutComposite);
+				for (ToolItem item : toolBarManager.getControl().getItems()) {
+					item.setData(urlValue);
+				}
+			} else {
+				new Label(layoutComposite, SWT.NONE);
+			}
 		}
 	}
 
@@ -104,8 +124,8 @@ public class BuildStatusAttributeEditor extends AbstractAttributeEditor {
 			Composite layoutComposite = (Composite) getControl();
 
 			if (this.getModel().hasIncomingChanges(currentBuildAttribute)) {
-				layoutComposite.getChildren()[2 * i].setBackground(color);
-				layoutComposite.getChildren()[2 * i + 1].setBackground(color);
+				layoutComposite.getChildren()[3 * i].setBackground(color);
+				layoutComposite.getChildren()[3 * i + 1].setBackground(color);
 			}
 		}
 	}

@@ -81,7 +81,7 @@ public class GerritTaskEditorPage extends AbstractReviewTaskEditorPage {
 					editor.setLayoutHint(new LayoutHint(RowSpan.SINGLE, ColumnSpan.MULTIPLE));
 					return editor;
 				} else if (type.equals(TaskBuildStatusMapper.BUILD_RESULT_TYPE)) {
-					return new BuildStatusAttributeEditor(getModel(), taskAttribute);
+					return new BuildStatusAttributeEditor(getModel(), getEditorSite(), taskAttribute);
 				} else if (TaskAttribute.TYPE_PERSON.equals(type)) {
 					return new PersonAttributeEditor(getModel(), taskAttribute) {
 						@Override
