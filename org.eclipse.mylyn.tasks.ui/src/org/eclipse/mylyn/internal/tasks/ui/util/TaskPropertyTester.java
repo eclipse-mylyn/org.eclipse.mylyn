@@ -78,7 +78,7 @@ public class TaskPropertyTester extends PropertyTester {
 				return equals(TasksUiInternal.hasLocalCompletionState(task), expectedValue);
 			} else if (PROPERTY_IS_ARTIFACT.equals(property)) {
 				String artifactFlag = task.getAttribute(ITasksCoreConstants.ATTRIBUTE_ARTIFACT);
-				return Boolean.valueOf(artifactFlag);
+				return equals(Boolean.valueOf(artifactFlag), expectedValue);
 			}
 		}
 		return false;
