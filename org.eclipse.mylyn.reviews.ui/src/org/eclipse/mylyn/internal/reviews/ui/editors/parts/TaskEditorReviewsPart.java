@@ -61,7 +61,7 @@ public class TaskEditorReviewsPart extends AbstractTaskEditorPart {
 
 	private SelectionProviderAdapter selectionProvider;
 
-	private final int[] REVIEWS_COLUMNS_WIDTH = { 600, 30, 30, 90, 0 };
+	private final int[] REVIEWS_COLUMNS_WIDTH = { 575, 30, 30, 90, 0 };
 
 	private TableViewer reviewsViewer;
 

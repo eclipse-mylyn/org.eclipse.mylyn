@@ -93,7 +93,7 @@ public class TaskReviewsMappingsStore implements ITaskListChangeListener {
 					ITask task = getTaskByUrl(token);
 
 					if (task != null) {
-						updateMapping(review, token);
+						updateMapping(review, task.getUrl() != null ? task.getUrl() : token);
 						return;
 					}
 				} catch (MalformedURLException e) {
