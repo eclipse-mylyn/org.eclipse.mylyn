@@ -159,6 +159,21 @@
           id="org.eclipse.mylyn.builds.ui.command.NewTaskFromTest"
           name="New Task From Test">
     </command>
+    <command
+          defaultHandler="org.eclipse.mylyn.internal.builds.ui.commands.BuildUrlCommandHandler$ShowTestResultsUrlHandler"
+          id="org.eclipse.mylyn.builds.ui.command.ShowTestResults.url"
+          name="Show Test Results">
+    </command>
+    <command
+          defaultHandler="org.eclipse.mylyn.internal.builds.ui.commands.BuildUrlCommandHandler$ShowBuildOutputUrlHandler"
+          id="org.eclipse.mylyn.builds.ui.command.ShowBuildOutput.url"
+          name="Show Build Output">
+    </command>
+    <command
+          defaultHandler="org.eclipse.mylyn.internal.builds.ui.commands.BuildUrlCommandHandler$OpenWithBrowserUrlHandler"
+          id="org.eclipse.mylyn.builds.ui.commands.OpenBuildElementWithBrowser.url"
+          name="Open Build with Browser">
+    </command>
  </extension>
  <extension
        point="org.eclipse.ui.commandImages">
@@ -167,7 +182,15 @@
           icon="icons/etool16/console.gif">
     </image>
     <image
+          commandId="org.eclipse.mylyn.builds.ui.command.ShowBuildOutput.url"
+          icon="icons/etool16/console.gif">
+    </image>
+    <image
           commandId="org.eclipse.mylyn.builds.ui.command.ShowTestResults"
+          icon="icons/eview16/junit.gif">
+    </image>
+    <image
+          commandId="org.eclipse.mylyn.builds.ui.command.ShowTestResults.url"
           icon="icons/eview16/junit.gif">
     </image>
     <image
@@ -833,5 +856,28 @@
           class="org.eclipse.mylyn.internal.builds.ui.util.BuildsUrlHandler"
           id="org.eclipse.mylyn.builds.ui.urlHandler.BuildsUrlHandler">
     </handler>
+ </extension>
+ <extension
+       point="org.eclipse.ui.menus">
+    <menuContribution
+          allPopups="false"
+          locationURI="toolbar:org.eclipse.mylyn.build.toolbar">
+       <command
+             commandId="org.eclipse.mylyn.builds.ui.command.ShowTestResults.url"
+             label="Show Test Results"
+             style="push">
+       </command>
+       <command
+             commandId="org.eclipse.mylyn.builds.ui.command.ShowBuildOutput.url"
+             label="Show Build Output"
+             style="push">
+       </command>
+       <command
+             commandId="org.eclipse.mylyn.builds.ui.commands.OpenBuildElementWithBrowser.url"
+             icon="icons/eview16/web.png"
+             label="Open Build with Browser"
+             style="push">
+       </command>
+    </menuContribution>
  </extension>
 </plugin>
