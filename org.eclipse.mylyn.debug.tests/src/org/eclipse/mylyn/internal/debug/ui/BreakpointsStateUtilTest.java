@@ -102,7 +102,6 @@ public class BreakpointsStateUtilTest {
 		List<Node> childNodes = new ArrayList<>();
 		for (int i = 0; i < children.getLength(); i++) {
 			Node child = children.item(i);
-			node.removeChild(child);
 			childNodes.add(child);
 			sortNodes(child);
 		}
@@ -120,9 +119,20 @@ public class BreakpointsStateUtilTest {
 				}
 				Node nameA = a.getAttributes().getNamedItem("name");
 				Node nameB = b.getAttributes().getNamedItem("name");
+				if (nameA == null) {
+					if (nameB == null) {
+						return 0;
+					}
+					return 1;
+				} else if (nameB == null) {
+					return -1;
+				}
 				return nameA.getNodeValue().compareTo(nameB.getNodeValue());
 			}
 		});
+		for (Node child : childNodes) {
+			node.removeChild(child);
+		}
 		for (Node child : childNodes) {
 			node.appendChild(child);
 		}
