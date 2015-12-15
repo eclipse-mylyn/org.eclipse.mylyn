@@ -196,10 +196,6 @@ public class ReviewSetContentSection {
 		createRefLabel(rightColumn, colors);
 		createParentsLinks(leftColumn, colors);
 
-		Composite fullWidth = parentSection.getToolkit().createComposite(composite);
-		GridDataFactory.fillDefaults().span(4, 1).grab(true, true).applyTo(fullWidth);
-		GridLayoutFactory.fillDefaults().numColumns(2).applyTo(fullWidth);
-
 		TaskAttribute buildAttribute = parentSection.getTaskData().getRoot().getAttribute("PATCH_SET-" + set.getId()); //$NON-NLS-1$
 		if (buildAttribute != null) {
 			Composite buildComposite = parentSection.getToolkit().createComposite(composite);
