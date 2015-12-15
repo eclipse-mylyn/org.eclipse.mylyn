@@ -194,7 +194,7 @@ public class ReviewSetContentSection {
 		createCommitterLabel(leftColumn, colors);
 		createCommitLink(rightColumn, colors);
 		createRefLabel(rightColumn, colors);
-		createParentsLinks(leftColumn, colors);
+		createParentsLinks(composite, colors);
 
 		TaskAttribute buildAttribute = parentSection.getTaskData().getRoot().getAttribute("PATCH_SET-" + set.getId()); //$NON-NLS-1$
 		if (buildAttribute != null) {
@@ -295,6 +295,7 @@ public class ReviewSetContentSection {
 		}
 
 		ScalingHyperlink parentOne = new ScalingHyperlink(parentsComposite, SWT.READ_ONLY);
+		GridDataFactory.fillDefaults().indent(13, 0).applyTo(parentOne);
 		if (parentCommitIds.size() > 0) {
 			addParentCommitHyperlink(parentOne, parentCommitIds.get(0));
 		}
