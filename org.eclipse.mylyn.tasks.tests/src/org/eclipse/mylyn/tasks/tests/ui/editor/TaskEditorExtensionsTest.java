@@ -92,4 +92,20 @@ public class TaskEditorExtensionsTest extends TestCase {
 		assertNull(extension);
 	}
 
+	public void testBaseMarkupAssociation() {
+		TaskEditorExtensions.setTaskEditorExtensionId(repository, ID_TEXTILE_EXTENSION);
+		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.DESCRIPTION);
+		attribute.getMetaData().setMediaType("text/plain; markup=SpecialMockWiki; base-markup=MockWiki");
+		AbstractTaskEditorExtension extension = TaskEditorExtensions.getTaskEditorExtension(repository, attribute);
+		assertTrue(extension instanceof MockWikiEditorExtension);
+	}
+
+	public void testBaseMarkupAssociationNoMarkup() {
+		TaskEditorExtensions.setTaskEditorExtensionId(repository, ID_TEXTILE_EXTENSION);
+		TaskAttribute attribute = taskData.getRoot().createMappedAttribute(TaskAttribute.DESCRIPTION);
+		attribute.getMetaData().setMediaType("text/plain; base-markup=MockWiki");
+		AbstractTaskEditorExtension extension = TaskEditorExtensions.getTaskEditorExtension(repository, attribute);
+		assertTrue(extension instanceof MockTextileEditorExtension);
+	}
+
 }

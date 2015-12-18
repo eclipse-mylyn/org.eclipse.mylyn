@@ -42,6 +42,8 @@ public class TaskEditorExtensions {
 
 	private static final String MARKUP_KEY = "markup"; //$NON-NLS-1$
 
+	private static final String BASE_MARKUP_KEY = "base-markup"; //$NON-NLS-1$
+
 	private static Map<String, RegisteredTaskEditorExtension> extensionsById = new HashMap<String, RegisteredTaskEditorExtension>();
 
 	private static Map<String, String> associationByConnectorKind = new HashMap<String, String>();
@@ -126,9 +128,12 @@ public class TaskEditorExtensions {
 				if (parameters.containsKey(MARKUP_KEY)) {
 					Iterator<String> iter = parameters.get(MARKUP_KEY).iterator();
 					String markup = iter.next();
+					Iterator<String> baseMarkupIterator = parameters.get(BASE_MARKUP_KEY).iterator();
+					String baseMarkup = (baseMarkupIterator.hasNext() ? baseMarkupIterator.next() : ""); //$NON-NLS-1$
+
 					SortedSet<RegisteredTaskEditorExtension> extensions = getTaskEditorExtensions();
 					for (RegisteredTaskEditorExtension extension : extensions) {
-						if (markup.equals(extension.getName())) {
+						if (markup.equals(extension.getName()) || baseMarkup.equals(extension.getName())) {
 							return extension.getExtension();
 						}
 					}
