@@ -56,7 +56,7 @@ import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 
 /**
  * Class to determine the annotations to show the hover for. This class delegates to a parent hover if it exists.
- * 
+ *
  * @author Shawn Minto
  */
 public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHoverExtension, IAnnotationHoverExtension2 {
@@ -83,7 +83,7 @@ public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHove
 		if (commentAnnotations.size() > 0) {
 
 			if (commentAnnotations.size() == 1) {
-				CommentAnnotation annotation = commentAnnotations.get(0);
+				Annotation annotation = commentAnnotations.get(0);
 				String message = annotation.getText();
 				if (message != null && message.trim().length() > 0) {
 					return formatSingleMessage(message);
@@ -92,7 +92,7 @@ public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHove
 			} else {
 
 				List<String> messages = new ArrayList<String>();
-				for (CommentAnnotation annotation : commentAnnotations) {
+				for (Annotation annotation : commentAnnotations) {
 					String message = annotation.getText();
 					if (message != null && message.trim().length() > 0) {
 						messages.add(message.trim());
@@ -145,26 +145,25 @@ public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHove
 			IDocument document = viewer.getDocument();
 			int lowestStart = Integer.MAX_VALUE;
 			int highestEnd = 0;
-			for (Annotation a : commentAnnotations) {
-				if (a instanceof CommentAnnotation) {
-					Position p = ((CommentAnnotation) a).getPosition();
-					try {
+			for (CommentAnnotation a : commentAnnotations) {
+				Position p = a.getPosition();
+				try {
 
-						int start = document.getLineOfOffset(p.offset);
-						int end = document.getLineOfOffset(p.offset + p.length);
+					int start = document.getLineOfOffset(p.offset);
+					int end = document.getLineOfOffset(p.offset + p.length);
 
-						if (start < lowestStart) {
-							lowestStart = start;
-						}
-
-						if (end > highestEnd) {
-							highestEnd = end;
-						}
-					} catch (BadLocationException e) {
-						// ignore
+					if (start < lowestStart) {
+						lowestStart = start;
 					}
+
+					if (end > highestEnd) {
+						highestEnd = end;
+					}
+				} catch (BadLocationException e) {
+					// ignore
 				}
 			}
+
 			if (lowestStart != Integer.MAX_VALUE) {
 				return new LineRange(lowestStart, highestEnd - lowestStart);
 			} else {
@@ -188,7 +187,8 @@ public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHove
 	protected String formatMultipleMessages(List<String> messages) {
 		StringBuffer buffer = new StringBuffer();
 		HTMLPrinter.addPageProlog(buffer);
-		HTMLPrinter.addParagraph(buffer, HTMLPrinter.convertToHTMLContent(Messages.CommentAnnotationHover_Multiple_comments));
+		HTMLPrinter.addParagraph(buffer,
+				HTMLPrinter.convertToHTMLContent(Messages.CommentAnnotationHover_Multiple_comments));
 
 		HTMLPrinter.startBulletList(buffer);
 		for (String message : messages) {
@@ -262,7 +262,8 @@ public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHove
 				continue;
 			}
 
-			if (includeAnnotation(annotation, position, commentAnnotations) && annotation instanceof CommentAnnotation) {
+			if (includeAnnotation(annotation, position, commentAnnotations)
+					&& annotation instanceof CommentAnnotation) {
 				commentAnnotations.add((CommentAnnotation) annotation);
 			}
 		}
@@ -272,7 +273,7 @@ public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHove
 
 	/**
 	 * Tries to make an annotation hover focusable (or "sticky").
-	 * 
+	 *
 	 * @return <code>true</code> if successful, <code>false</code> otherwise
 	 */
 	public static boolean makeAnnotationHoverFocusable() {
@@ -320,7 +321,8 @@ public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHove
 			// hover region: the beginning of the concerned line to place the control right over the line
 			IDocument document = currentSourceViewer.getDocument();
 			int offset = document.getLineOffset(line);
-			String partitioning = new TextSourceViewerConfiguration().getConfiguredDocumentPartitioning(currentSourceViewer);
+			String partitioning = new TextSourceViewerConfiguration()
+					.getConfiguredDocumentPartitioning(currentSourceViewer);
 			String contentType = TextUtilities.getContentType(document, partitioning, offset, true);
 
 			IInformationControlCreator controlCreator = null;
@@ -348,8 +350,8 @@ public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHove
 				fInformationPresenter.showInformation();
 
 				// remove our own handler as F2 focus handler
-				ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(
-						ICommandService.class);
+				ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
+						.getService(ICommandService.class);
 				Command showInfoCommand = commandService.getCommand(ITextEditorActionDefinitionIds.SHOW_INFORMATION);
 				showInfoCommand.setHandler(null);
 
@@ -364,11 +366,11 @@ public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHove
 
 	/**
 	 * Information provider used to present focusable information shells.
-	 * 
+	 *
 	 * @since 3.3
 	 */
-	private static final class InformationProvider implements IInformationProvider, IInformationProviderExtension,
-			IInformationProviderExtension2 {
+	private static final class InformationProvider
+			implements IInformationProvider, IInformationProviderExtension, IInformationProviderExtension2 {
 
 		private final IRegion fHoverRegion;
 

@@ -26,6 +26,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextInputListener;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.TextViewer;
+import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.AnnotationBarHoverManager;
 import org.eclipse.jface.text.source.CompositeRuler;
 import org.eclipse.jface.text.source.IAnnotationAccess;
@@ -90,23 +91,26 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 
 		public void lineGetBackground(LineBackgroundEvent event) {
 			int lineNr = styledText.getLineAtOffset(event.lineOffset) + 1;
-			Iterator<CommentAnnotation> it = annotationModel.getAnnotationIterator();
+			Iterator<Annotation> it = annotationModel.getAnnotationIterator();
 			while (it.hasNext()) {
-				CommentAnnotation annotation = it.next();
+				Annotation annotation = it.next();
 				int startLine;
 				int endLine;
-				IComment comment = annotation.getComment();
-				//TODO This code assumes that we have one comment per annotation. That won't work for r4E.
-				if (comment.getLocations().size() == 1) {
-					ILocation location = comment.getLocations().get(0);
-					if (location instanceof ILineLocation) {
-						ILineLocation lineLocation = (ILineLocation) location;
-						startLine = lineLocation.getRangeMin();
-						endLine = lineLocation.getRangeMax();
-						if (lineNr >= startLine && lineNr <= endLine) {
-							AnnotationPreference pref = new AnnotationPreferenceLookup().getAnnotationPreference(annotation);
-							if (pref.getHighlightPreferenceValue()) {
-								event.lineBackground = colorCommented;
+				if (annotation instanceof CommentAnnotation) {
+					IComment comment = ((CommentAnnotation) annotation).getComment();
+					//TODO This code assumes that we have one comment per annotation. That won't work for r4E.
+					if (comment.getLocations().size() == 1) {
+						ILocation location = comment.getLocations().get(0);
+						if (location instanceof ILineLocation) {
+							ILineLocation lineLocation = (ILineLocation) location;
+							startLine = lineLocation.getRangeMin();
+							endLine = lineLocation.getRangeMax();
+							if (lineNr >= startLine && lineNr <= endLine) {
+								AnnotationPreference pref = new AnnotationPreferenceLookup()
+										.getAnnotationPreference(annotation);
+								if (pref.getHighlightPreferenceValue()) {
+									event.lineBackground = colorCommented;
+								}
 							}
 						}
 					}
@@ -117,7 +121,7 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 		/**
 		 * Galileo hack to deal with slaveDocuments (when clicking on java structure elements). The styledText will not
 		 * contain the whole text anymore, so our line numbering is off
-		 * 
+		 *
 		 * @param event
 		 * @return
 		 */
@@ -170,7 +174,8 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 			}
 
 			AnnotationPreferenceLookup lookup = EditorsUI.getAnnotationPreferenceLookup();
-			final AnnotationPreference commentedPref = lookup.getAnnotationPreference(CommentAnnotation.COMMENT_ANNOTATION_ID);
+			final AnnotationPreference commentedPref = lookup
+					.getAnnotationPreference(CommentAnnotation.COMMENT_ANNOTATION_ID);
 
 			updateCommentedColor(commentedPref, store);
 
@@ -321,8 +326,8 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 				createOverviewRuler(newInput, sourceViewerClazz);
 				createHighlighting(sourceViewerClazz);
 			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
-						"Error attaching annotation model", t)); //$NON-NLS-1$
+				StatusHandler.log(
+						new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, "Error attaching annotation model", t)); //$NON-NLS-1$
 			}
 			//}
 		}
@@ -345,8 +350,8 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 //				mergeSourceViewer.addTextAction(addGeneralCommentAction);
 	}
 
-	private void createHighlighting(Class<SourceViewer> sourceViewerClazz) throws IllegalArgumentException,
-			IllegalAccessException, SecurityException, NoSuchFieldException {
+	private void createHighlighting(Class<SourceViewer> sourceViewerClazz)
+			throws IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchFieldException {
 		// TODO this could use some performance tweaks
 		final StyledText styledText = sourceViewer.getTextWidget();
 		styledText.addLineBackgroundListener(new ColoringLineBackgroundListener(styledText));
@@ -364,8 +369,8 @@ class ReviewCompareInputListener implements ITextInputListener, IReviewCompareSo
 
 		sourceViewer.setOverviewRulerAnnotationHover(new CommentAnnotationHover(null));
 
-		OverviewRuler ruler = new OverviewRuler(new DefaultMarkerAnnotationAccess(), 15, EditorsPlugin.getDefault()
-				.getSharedTextColors());
+		OverviewRuler ruler = new OverviewRuler(new DefaultMarkerAnnotationAccess(), 15,
+				EditorsPlugin.getDefault().getSharedTextColors());
 		Field compositeField = sourceViewerClazz.getDeclaredField("fComposite"); //$NON-NLS-1$
 		compositeField.setAccessible(true);
 

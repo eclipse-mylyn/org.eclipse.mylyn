@@ -59,8 +59,8 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 
-public class CommentAnnotationRulerHover implements IAnnotationHover, IAnnotationHoverExtension,
-		IAnnotationHoverExtension2 {
+public class CommentAnnotationRulerHover
+		implements IAnnotationHover, IAnnotationHoverExtension, IAnnotationHoverExtension2 {
 
 	private final IInformationControlCreator informationControlCreator = new CommentInformationControlCreator();
 
@@ -238,7 +238,8 @@ public class CommentAnnotationRulerHover implements IAnnotationHover, IAnnotatio
 				continue;
 			}
 
-			if (includeAnnotation(annotation, position, commentAnnotations) && annotation instanceof CommentAnnotation) {
+			if (includeAnnotation(annotation, position, commentAnnotations)
+					&& annotation instanceof CommentAnnotation) {
 				commentAnnotations.add((CommentAnnotation) annotation);
 			}
 		}
@@ -248,7 +249,7 @@ public class CommentAnnotationRulerHover implements IAnnotationHover, IAnnotatio
 
 	/**
 	 * Tries to make an annotation hover focusable (or "sticky").
-	 * 
+	 *
 	 * @return <code>true</code> if successful, <code>false</code> otherwise
 	 */
 	public static boolean makeAnnotationHoverFocusable() {
@@ -296,7 +297,8 @@ public class CommentAnnotationRulerHover implements IAnnotationHover, IAnnotatio
 			// hover region: the beginning of the concerned line to place the control right over the line
 			IDocument document = currentSourceViewer.getDocument();
 			int offset = document.getLineOffset(line);
-			String partitioning = new TextSourceViewerConfiguration().getConfiguredDocumentPartitioning(currentSourceViewer);
+			String partitioning = new TextSourceViewerConfiguration()
+					.getConfiguredDocumentPartitioning(currentSourceViewer);
 			String contentType = TextUtilities.getContentType(document, partitioning, offset, true);
 
 			IInformationControlCreator controlCreator = null;
@@ -324,8 +326,8 @@ public class CommentAnnotationRulerHover implements IAnnotationHover, IAnnotatio
 				fInformationPresenter.showInformation();
 
 				// remove our own handler as F2 focus handler
-				ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(
-						ICommandService.class);
+				ICommandService commandService = (ICommandService) PlatformUI.getWorkbench()
+						.getService(ICommandService.class);
 				Command showInfoCommand = commandService.getCommand(ITextEditorActionDefinitionIds.SHOW_INFORMATION);
 				showInfoCommand.setHandler(null);
 
@@ -340,11 +342,11 @@ public class CommentAnnotationRulerHover implements IAnnotationHover, IAnnotatio
 
 	/**
 	 * Information provider used to present focusable information shells.
-	 * 
+	 *
 	 * @since 3.3
 	 */
-	private static final class InformationProvider implements IInformationProvider, IInformationProviderExtension,
-			IInformationProviderExtension2 {
+	private static final class InformationProvider
+			implements IInformationProvider, IInformationProviderExtension, IInformationProviderExtension2 {
 
 		private final IRegion fHoverRegion;
 

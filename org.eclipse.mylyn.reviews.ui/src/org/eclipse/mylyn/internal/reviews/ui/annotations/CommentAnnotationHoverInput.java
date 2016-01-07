@@ -17,7 +17,7 @@ import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 
 /**
  * Data model to represent the annotations that we need to display in the hover.
- * 
+ *
  * @author Shawn Minto
  */
 public class CommentAnnotationHoverInput {

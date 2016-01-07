@@ -16,13 +16,11 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Iterator;
 
-import junit.framework.TestCase;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.NotificationImpl;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.mylyn.internal.reviews.ui.annotations.CommentAnnotation;
+import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.mylyn.internal.reviews.ui.annotations.ReviewAnnotationModel;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.ILineLocation;
@@ -32,6 +30,8 @@ import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewsFactory;
 import org.eclipse.mylyn.reviews.core.model.IUser;
 import org.eclipse.mylyn.reviews.tests.util.MockReviewBehavior;
+
+import junit.framework.TestCase;
 
 /**
  * @author Leo Dos Santos
@@ -66,7 +66,7 @@ public class ReviewAnnotationModelTest extends TestCase {
 	}
 
 	public void testConnect() {
-		Iterator<CommentAnnotation> iter = model.getAnnotationIterator();
+		Iterator<Annotation> iter = model.getAnnotationIterator();
 		assertEquals(1, getCount(iter));
 
 		model.disconnect(doc);
@@ -79,7 +79,7 @@ public class ReviewAnnotationModelTest extends TestCase {
 	}
 
 	public void testNotifyChanged() {
-		Iterator<CommentAnnotation> iter = model.getAnnotationIterator();
+		Iterator<Annotation> iter = model.getAnnotationIterator();
 		assertEquals(1, getCount(iter));
 
 		// Comments sometimes come in with Dates and sometimes with Timestamps,
@@ -106,7 +106,7 @@ public class ReviewAnnotationModelTest extends TestCase {
 
 	}
 
-	private int getCount(Iterator<CommentAnnotation> iter) {
+	private int getCount(Iterator<Annotation> iter) {
 		int count = 0;
 		while (iter.hasNext()) {
 			count++;

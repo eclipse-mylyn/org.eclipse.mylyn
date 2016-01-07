@@ -161,7 +161,8 @@ public class CommentAnnotationRulerColumn extends AbstractRulerColumn implements
 		}
 
 		AnnotationPreferenceLookup lookup = EditorsUI.getAnnotationPreferenceLookup();
-		final AnnotationPreference commentedPref = lookup.getAnnotationPreference(CommentAnnotation.COMMENT_ANNOTATION_ID);
+		final AnnotationPreference commentedPref = lookup
+				.getAnnotationPreference(CommentAnnotation.COMMENT_ANNOTATION_ID);
 
 		updateCommentedColor(commentedPref, store);
 

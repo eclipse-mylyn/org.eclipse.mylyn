@@ -43,9 +43,11 @@ import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 
+import com.google.common.collect.Iterables;
+
 /**
  * A model for review annotations.
- * 
+ *
  * @author Shawn Minto
  * @author Steffen Pingel
  * @author Guy Perron
@@ -54,7 +56,7 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 
 	private final Set<IAnnotationModelListener> annotationModelListeners = new HashSet<IAnnotationModelListener>(2);
 
-	private final Set<CommentAnnotation> annotations = new LinkedHashSet<CommentAnnotation>();
+	private final Set<Annotation> annotations = new LinkedHashSet<Annotation>();
 
 	private ReviewBehavior behavior;
 
@@ -122,9 +124,11 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 		this.document = document;
 		connectItem();
 
-		for (CommentAnnotation commentAnnotation : annotations) {
+		for (Annotation commentAnnotation : annotations) {
 			try {
-				document.addPosition(commentAnnotation.getPosition());
+				if (commentAnnotation instanceof CommentAnnotation) {
+					document.addPosition(((CommentAnnotation) commentAnnotation).getPosition());
+				}
 			} catch (BadLocationException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, e.getMessage(), e));
 			}
@@ -135,8 +139,10 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 	}
 
 	public void disconnect(IDocument document) {
-		for (CommentAnnotation commentAnnotation : annotations) {
-			document.removePosition(commentAnnotation.getPosition());
+		for (Annotation commentAnnotation : annotations) {
+			if (commentAnnotation instanceof CommentAnnotation) {
+				document.removePosition(((CommentAnnotation) commentAnnotation).getPosition());
+			}
 		}
 		document.removeDocumentListener(documentListener);
 
@@ -151,7 +157,7 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 		clear();
 	}
 
-	public Iterator<CommentAnnotation> getAnnotationIterator() {
+	public Iterator<Annotation> getAnnotationIterator() {
 		return annotations.iterator();
 	}
 
@@ -160,7 +166,7 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 	 */
 	public List<CommentAnnotation> getAnnotationsForOffset(int offset) {
 		List<CommentAnnotation> result = new ArrayList<CommentAnnotation>();
-		for (CommentAnnotation annotation : this.annotations) {
+		for (CommentAnnotation annotation : Iterables.filter(this.annotations, CommentAnnotation.class)) {
 			if (annotation.getPosition().offset <= offset
 					&& (annotation.getPosition().length + annotation.getPosition().offset) >= offset) {
 				result.add(annotation);
@@ -180,8 +186,8 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 	/**
 	 * Returns the first annotation that this knows about for the given offset in the document
 	 */
-	public CommentAnnotation getFirstAnnotationForOffset(int offset) {
-		for (CommentAnnotation annotation : annotations) {
+	public Annotation getFirstAnnotationForOffset(int offset) {
+		for (CommentAnnotation annotation : Iterables.filter(annotations, CommentAnnotation.class)) {
 			if (annotation.getPosition().offset <= offset
 					&& (annotation.getPosition().length + annotation.getPosition().offset) >= offset) {
 				return annotation;
@@ -253,8 +259,8 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 					event.annotationRemoved(ca);
 
 				} catch (BadLocationException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
-							"Unable to remove annotation.", e)); //$NON-NLS-1$
+					StatusHandler.log(
+							new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, "Unable to remove annotation.", e)); //$NON-NLS-1$
 				}
 			}
 		}
@@ -266,16 +272,16 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 			if (location instanceof ILineLocation) {
 				try {
 					CommentAnnotation oldCa = createCommentAnnotation(document, oldcomment, (ILineLocation) location);
-					CommentAnnotation ca = new CommentAnnotation(oldCa.getPosition().offset,
-							oldCa.getPosition().length, comment);
+					CommentAnnotation ca = new CommentAnnotation(oldCa.getPosition().offset, oldCa.getPosition().length,
+							comment);
 					annotations.remove(oldCa);
 					annotations.add(ca);
 					event.annotationRemoved(oldCa);
 					event.annotationChanged(ca);
 
 				} catch (BadLocationException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID,
-							"Unable to modify annotation.", e)); //$NON-NLS-1$
+					StatusHandler.log(
+							new Status(IStatus.ERROR, ReviewsUiPlugin.PLUGIN_ID, "Unable to modify annotation.", e)); //$NON-NLS-1$
 				}
 			}
 		}
@@ -304,8 +310,10 @@ public class ReviewAnnotationModel implements IAnnotationModel {
 	}
 
 	protected void clear(AnnotationModelEvent event) {
-		for (CommentAnnotation commentAnnotation : annotations) {
-			event.annotationRemoved(commentAnnotation, commentAnnotation.getPosition());
+		for (Annotation commentAnnotation : annotations) {
+			if (commentAnnotation instanceof CommentAnnotation) {
+				event.annotationRemoved(commentAnnotation, ((CommentAnnotation) commentAnnotation).getPosition());
+			}
 		}
 		annotations.clear();
 	}

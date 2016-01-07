@@ -56,7 +56,7 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
 
 /**
  * Manages annotation models for compare viewers.
- * 
+ *
  * @author Thomas Ehrnhoefer
  * @author Steffen Pingel
  * @author Guy Perron
@@ -72,7 +72,8 @@ public class ReviewCompareAnnotationSupport {
 	private CommentPopupDialog commentPopupDialog = null;
 
 	public static ReviewCompareAnnotationSupport getAnnotationSupport(Viewer contentViewer) {
-		ReviewCompareAnnotationSupport support = (ReviewCompareAnnotationSupport) contentViewer.getData(KEY_ANNOTAION_SUPPORT);
+		ReviewCompareAnnotationSupport support = (ReviewCompareAnnotationSupport) contentViewer
+				.getData(KEY_ANNOTAION_SUPPORT);
 		if (support == null) {
 			support = new ReviewCompareAnnotationSupport(contentViewer);
 			contentViewer.setData(KEY_ANNOTAION_SUPPORT, support);
@@ -178,7 +179,7 @@ public class ReviewCompareAnnotationSupport {
 
 	/**
 	 * Jumps to the next annotation according to the given direction.
-	 * 
+	 *
 	 * @param direction
 	 *            the search direction
 	 * @return the selected annotation or <code>null</code> if none
@@ -207,7 +208,8 @@ public class ReviewCompareAnnotationSupport {
 			nextRightPosition.length = 1;
 			currentLeftOffset = getLineOffset(leftAnnotationModel, currentLeftOffset);
 
-			if (calculateNextAnnotation(direction, nextLeftPosition, nextRightPosition, currentLeftOffset) == LEFT_SIDE) {
+			if (calculateNextAnnotation(direction, nextLeftPosition, nextRightPosition,
+					currentLeftOffset) == LEFT_SIDE) {
 				return leftAnnotation;
 			} else {
 				return rightAnnotation;
@@ -303,7 +305,8 @@ public class ReviewCompareAnnotationSupport {
 		return RIGHT_SIDE;
 	}
 
-	public void moveToAnnotation(MergeSourceViewer adjacentViewer, MergeSourceViewer annotationViewer, Position position) {
+	public void moveToAnnotation(MergeSourceViewer adjacentViewer, MergeSourceViewer annotationViewer,
+			Position position) {
 		adjacentViewer.getSourceViewer().revealRange(position.offset, position.length);
 		adjacentViewer.getSourceViewer().setSelectedRange(position.offset, position.length);
 		selectAndReveal(annotationViewer, position);
@@ -329,10 +332,9 @@ public class ReviewCompareAnnotationSupport {
 			commentPopupDialog.dispose(false);
 			commentPopupDialog = null;
 		}
-		commentPopupDialog = new CommentPopupDialog(ReviewsUiPlugin.getDefault()
-				.getWorkbench()
-				.getActiveWorkbenchWindow()
-				.getShell(), SWT.NO_FOCUS | SWT.ON_TOP, reviewitem, range, true);
+		commentPopupDialog = new CommentPopupDialog(
+				ReviewsUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell(),
+				SWT.NO_FOCUS | SWT.ON_TOP, reviewitem, range, true);
 		CommentAnnotationHoverInput input = new CommentAnnotationHoverInput(comments,
 				((ReviewAnnotationModel) srcViewer.getAnnotationModel()).getBehavior());
 		commentPopupDialog.create();
@@ -461,7 +463,7 @@ public class ReviewCompareAnnotationSupport {
 	/**
 	 * Returns the annotation closest to the given range respecting the given direction. If an annotation is found, the
 	 * annotations current position is copied into the provided annotation position.
-	 * 
+	 *
 	 * @param viewer
 	 *            the viewer
 	 * @param direction
@@ -497,20 +499,20 @@ public class ReviewCompareAnnotationSupport {
 		int endOfDocument = document.getLength();
 		int distance = Integer.MAX_VALUE;
 
-		Iterator<CommentAnnotation> e = annotationModel.getAnnotationIterator();
+		Iterator<Annotation> e = annotationModel.getAnnotationIterator();
 		while (e.hasNext()) {
-			CommentAnnotation a = e.next();
+			Annotation a = e.next();
 
-			Position p = a.getPosition();
+			Position p = a instanceof CommentAnnotation ? ((CommentAnnotation) a).getPosition() : null;
 			if (p == null) {
 				continue;
 			}
 
-			if (direction == Direction.FORWARDS && p.offset == offset || direction == Direction.BACKWARDS
-					&& p.offset + p.getLength() == offset + length) {// || p.includes(offset)) {
-				if (containingAnnotation == null
-						|| (direction == Direction.FORWARDS && p.length >= containingAnnotationPosition.length || direction == Direction.BACKWARDS
-								&& p.length >= containingAnnotationPosition.length)) {
+			if (direction == Direction.FORWARDS && p.offset == offset
+					|| direction == Direction.BACKWARDS && p.offset + p.getLength() == offset + length) {// || p.includes(offset)) {
+				if (containingAnnotation == null || (direction == Direction.FORWARDS
+						&& p.length >= containingAnnotationPosition.length
+						|| direction == Direction.BACKWARDS && p.length >= containingAnnotationPosition.length)) {
 					containingAnnotation = a;
 					containingAnnotationPosition = p;
 					currentAnnotation = p.length == length;
@@ -524,8 +526,8 @@ public class ReviewCompareAnnotationSupport {
 						currentDistance = endOfDocument + currentDistance;
 					}
 
-					if (currentDistance < distance || currentDistance == distance
-							&& p.length < nextAnnotationPosition.length) {
+					if (currentDistance < distance
+							|| currentDistance == distance && p.length < nextAnnotationPosition.length) {
 						distance = currentDistance;
 						nextAnnotation = a;
 						nextAnnotationPosition = p;
@@ -536,8 +538,8 @@ public class ReviewCompareAnnotationSupport {
 						currentDistance = endOfDocument + currentDistance;
 					}
 
-					if (currentDistance < distance || currentDistance == distance
-							&& p.length < nextAnnotationPosition.length) {
+					if (currentDistance < distance
+							|| currentDistance == distance && p.length < nextAnnotationPosition.length) {
 						distance = currentDistance;
 						nextAnnotation = a;
 						nextAnnotationPosition = p;

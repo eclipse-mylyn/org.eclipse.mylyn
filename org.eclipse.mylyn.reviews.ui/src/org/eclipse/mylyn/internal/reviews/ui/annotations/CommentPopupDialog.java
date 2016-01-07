@@ -51,7 +51,7 @@ import com.google.common.collect.FluentIterable;
 
 /**
  * Popup to show the information about the annotation in
- * 
+ *
  * @author Shawn Minto
  * @author Guy Perron
  */
@@ -92,7 +92,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 
 	/**
 	 * Creates a dialog that displays review comments associated to a line in a given file
-	 * 
+	 *
 	 * @param parent
 	 *            the parent shell of the dialog
 	 * @param shellStyle
@@ -146,7 +146,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 
 	/**
 	 * Closes the dialog
-	 * 
+	 *
 	 * @param force
 	 *            true if the dialog should close under all conditions, false if the dialog should check for edited text
 	 *            in the editor
@@ -164,7 +164,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 
 	/**
 	 * Disposes the dialog
-	 * 
+	 *
 	 * @param force
 	 *            true if the dialog should be disposed under all conditions, false if the dialog should check for
 	 *            edited text in the editor
@@ -180,7 +180,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 
 	/**
 	 * Checks if there are any changes in the comment editor text
-	 * 
+	 *
 	 * @return true if there is a change with the editor text, false otherwise
 	 */
 	public boolean hasEdits() {
@@ -206,7 +206,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 
 	/**
 	 * Computes the maximum width of the dialog
-	 * 
+	 *
 	 * @return a {@link Point} containing the max width of the dialog and its default height
 	 */
 	public Point computeSizeHint() {
@@ -236,7 +236,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 
 	/**
 	 * Checks to see if the active shell is the shell of this dialog
-	 * 
+	 *
 	 * @return true if the active shell is the dialog's shell, false otherwise
 	 */
 	public boolean isFocusControl() {
@@ -297,7 +297,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 
 	/**
 	 * Sets the dialog's shell to a position in the monitor (constrained by the size of the user's monitor)
-	 * 
+	 *
 	 * @param location
 	 *            the desired location to place the dialog
 	 */
@@ -351,7 +351,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 
 	/**
 	 * Sets the size of the dialog's shell and scrolled composite. The height must be at least minimum height.
-	 * 
+	 *
 	 * @param width
 	 *            the width in pixels
 	 * @param height
@@ -371,7 +371,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 	/**
 	 * Initializes the comment dialog with the comments (and review item/line range if it wasn't provided on
 	 * construction) from the {@link CommentAnnotationHoverInput} provided
-	 * 
+	 *
 	 * @param input
 	 *            the input of the comment dialog
 	 */
@@ -442,12 +442,13 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 			if (isCommentNavigator) {
 				InlineCommentEditor.addToEditMap(reviewItem.getId(), range.getStartLine());
 			}
+
 		}
 	}
 
 	/**
 	 * Helper method to return all of the {@link Section} in the dialog's scrolled composite
-	 * 
+	 *
 	 * @return the list of {@link Section} that are children of the dialog's scrolled composite
 	 */
 	protected List<Section> getScrolledCompositeSections() {
@@ -463,7 +464,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 
 	/**
 	 * Adds a mouse listener to the {@link Control} provided and its children
-	 * 
+	 *
 	 * @param c
 	 *            the {@link Control} and its {@link Control} children that you want to add mouse listeners to
 	 * @param listener
@@ -483,7 +484,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 
 	/**
 	 * Given a {@link Control}, it attempts to find parent {@link Section} recursively
-	 * 
+	 *
 	 * @param c
 	 *            the {@link Control} that you want to find the parent {@link Section} of
 	 * @return the parent {@link Section} or null if it can't be found
@@ -501,7 +502,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 	/**
 	 * Creates a mouse down {@link MouseAdapter} to add the comment editor to the dialog. It will attempt to get the
 	 * comment associated with the {@link Control} you clicked on.
-	 * 
+	 *
 	 * @return the {@link MouseAdapter} that can invoke the comment editor on mouse down events
 	 */
 	private MouseAdapter createAddCommentEditorListener() {
@@ -532,7 +533,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 
 	/**
 	 * Creates a mouse down {@link MouseAdapter} to remove the comment editor
-	 * 
+	 *
 	 * @return the {@link MouseAdapter} that can remove the comment editor on mouse down events
 	 */
 	private MouseAdapter createRemoveCommentEditorListener() {
@@ -548,7 +549,7 @@ public class CommentPopupDialog extends PopupDialog implements IReviewActionList
 
 	/**
 	 * Helper method to get the last comment draft in the dialog's comment list
-	 * 
+	 *
 	 * @return the last {@link IComment} in the comment list if there is at least one draft in the comment list or null
 	 *         otherwise
 	 */

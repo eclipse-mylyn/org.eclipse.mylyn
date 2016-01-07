@@ -31,10 +31,12 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Shell;
 
+import com.google.common.collect.Iterables;
+
 /**
  * A custom control to display on hover, or delegates to the default control to display if we aren't dealing with a
  * CrucibleCommentAnnotation.
- * 
+ *
  * @author sminto
  */
 public class CommentInformationControl extends DefaultInformationControl implements IInformationControlExtension2 {
@@ -85,7 +87,7 @@ public class CommentInformationControl extends DefaultInformationControl impleme
 		}
 
 		Set<IComment> comments = new HashSet<IComment>();
-		for (CommentAnnotation annotation : annotations) {
+		for (CommentAnnotation annotation : Iterables.filter(annotations, CommentAnnotation.class)) {
 			comments.addAll(getUnreadComments(annotation.getComment()));
 		}
 
