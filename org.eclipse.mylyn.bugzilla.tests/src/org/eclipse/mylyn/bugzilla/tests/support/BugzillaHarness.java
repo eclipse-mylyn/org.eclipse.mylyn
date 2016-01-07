@@ -13,7 +13,6 @@ package org.eclipse.mylyn.bugzilla.tests.support;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -200,12 +199,8 @@ public class BugzillaHarness {
 		attachment.setContentType("text/plain");
 		attachment.setDescription("Description");
 		attachment.setName("My Attachment 1");
-		try {
-			priviledgedClient().postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment,
-					attrAttachment, new NullProgressMonitor());
-		} catch (Exception e) {
-			fail("never reach this!");
-		}
+		priviledgedClient().postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment,
+				attrAttachment, new NullProgressMonitor());
 		taskData = fixture.getTask(taskData.getTaskId(), priviledgedClient());
 		assertNotNull(taskData);
 
@@ -386,12 +381,8 @@ public class BugzillaHarness {
 		attachment.setContentType("text/plain");
 		attachment.setDescription("My Attachment 1");
 		attachment.setName("My Attachment 1");
-		try {
-			priviledgedClient().postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment,
-					attrAttachment, new NullProgressMonitor());
-		} catch (Exception e) {
-			fail("never reach this!");
-		}
+		priviledgedClient().postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment,
+				attrAttachment, new NullProgressMonitor());
 		taskData = fixture.getTask(taskData.getTaskId(), priviledgedClient());
 		assertNotNull(taskData);
 
@@ -414,12 +405,8 @@ public class BugzillaHarness {
 		attachment.setContentType("text/plain");
 		attachment.setDescription("My Attachment 2");
 		attachment.setName("My Attachment 2");
-		try {
-			priviledgedClient().postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment,
-					attrAttachment, new NullProgressMonitor());
-		} catch (Exception e) {
-			fail("never reach this!");
-		}
+		priviledgedClient().postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment,
+				attrAttachment, new NullProgressMonitor());
 		taskData = fixture.getTask(taskData.getTaskId(), priviledgedClient());
 		assertNotNull(taskData);
 
@@ -446,12 +433,8 @@ public class BugzillaHarness {
 		if (child != null) {
 			child.setValue("1");
 		}
-		try {
-			priviledgedClient().postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment,
-					attrAttachment, new NullProgressMonitor());
-		} catch (Exception e) {
-			fail("never reach this!");
-		}
+		priviledgedClient().postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment,
+				attrAttachment, new NullProgressMonitor());
 		taskData = fixture.getTask(taskData.getTaskId(), priviledgedClient());
 		assertNotNull(taskData);
 
@@ -478,12 +461,8 @@ public class BugzillaHarness {
 		if (child != null) {
 			child.setValue("1");
 		}
-		try {
-			priviledgedClient().postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment,
-					attrAttachment, new NullProgressMonitor());
-		} catch (Exception e) {
-			fail("never reach this!");
-		}
+		priviledgedClient().postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment,
+				attrAttachment, new NullProgressMonitor());
 		taskData = fixture.getTask(taskData.getTaskId(), priviledgedClient());
 		assertNotNull(taskData);
 

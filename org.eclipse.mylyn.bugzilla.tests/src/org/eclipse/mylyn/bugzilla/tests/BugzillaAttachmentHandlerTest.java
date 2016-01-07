@@ -86,12 +86,8 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		attachment.setDescription("Description");
 		attachment.setName("My Attachment 1");
 
-		try {
-			client.postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment, attrAttachment,
-					new NullProgressMonitor());
-		} catch (Exception e) {
-			fail("never reach this!");
-		}
+		client.postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment, attrAttachment,
+				new NullProgressMonitor());
 		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
 		assertNotNull(taskData);
 		numAttached = taskData.getAttributeMapper().getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT).size();
@@ -297,12 +293,8 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		/* Test uploading a proper file */
 		write.write("test file");
 		write.close();
-		try {
-			client.postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment, attrAttachment,
-					new NullProgressMonitor());
-		} catch (Exception e) {
-			fail("never reach this!");
-		}
+		client.postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment, attrAttachment,
+				new NullProgressMonitor());
 
 		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
 		assertNotNull(taskData);
@@ -313,7 +305,8 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 	}
 
 	public void testAttachmentWithUnicode() throws Exception {
-		testAttachmentWithSpecialCharacters("\u00E7\u00F1\u00A5\u20AC\u00A3\u00BD\u00BC\u03B2\u03B8\u53F0\u5317\u3096\u3097\uFF73");
+		testAttachmentWithSpecialCharacters(
+				"\u00E7\u00F1\u00A5\u20AC\u00A3\u00BD\u00BC\u03B2\u03B8\u53F0\u5317\u3096\u3097\uFF73");
 	}
 
 	public void testAttachmentWithSpecialCharacters() throws Exception {
@@ -424,12 +417,8 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		} else {
 			obsolete.setValue("1"); //$NON-NLS-1$
 		}
-		try {
-			((BugzillaTaskDataHandler) connector.getTaskDataHandler()).postUpdateAttachment(repository, attachment,
-					"update", new NullProgressMonitor());
-		} catch (CoreException e) {
-			fail("CoreException expected reached");
-		}
+		((BugzillaTaskDataHandler) connector.getTaskDataHandler()).postUpdateAttachment(repository, attachment,
+				"update", new NullProgressMonitor());
 
 	}
 
@@ -458,13 +447,8 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		attachment.setDescription(AttachmentUtil.CONTEXT_DESCRIPTION);
 		attachment.setName("mylyn-context.zip");
 
-		try {
-			client.postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment, attrAttachment,
-					new NullProgressMonitor());
-		} catch (Exception e) {
-			fail("never reach this!");
-		}
-
+		client.postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment, attrAttachment,
+				new NullProgressMonitor());
 	}
 
 	public void testObsoleteAttachment() throws Exception {
@@ -543,7 +527,8 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		File sourceContextFile = TasksUiPlugin.getContextStore().getFileForContext(task);
 		sourceContextFile.createNewFile();
 		sourceContextFile.deleteOnExit();
-		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("wrong", "wrong"), false);
+		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("wrong", "wrong"),
+				false);
 		try {
 			FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(sourceContextFile);
 			attachment.setContentType(FileTaskAttachmentSource.APPLICATION_OCTET_STREAM);
@@ -603,12 +588,8 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		attachment.setDescription("Description");
 		attachment.setName("My Attachment 1");
 
-		try {
-			client.postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment, attrAttachment,
-					new NullProgressMonitor());
-		} catch (Exception e) {
-			fail("never reach this!");
-		}
+		client.postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment, attrAttachment,
+				new NullProgressMonitor());
 		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
 		assertNotNull(taskData);
 		numAttached = taskData.getAttributeMapper().getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT).size();
@@ -675,12 +656,8 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		attachment.setDescription("Description");
 		attachment.setName("My Attachment 1");
 
-		try {
-			client.postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment, attrAttachment,
-					new NullProgressMonitor());
-		} catch (Exception e) {
-			fail("never reach this!");
-		}
+		client.postAttachment(taskData.getTaskId(), attachmentMapper.getComment(), attachment, attrAttachment,
+				new NullProgressMonitor());
 		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
 		assertNotNull(taskData);
 		numAttached = taskData.getAttributeMapper().getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT).size();
@@ -702,8 +679,6 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		} catch (CoreException e) {
 			String message = e.getMessage();
 			assertTrue(message.startsWith("invalid attachment id: "));
-		} catch (Exception e) {
-			fail("CoreException expected");
 		} finally {
 			out.close();
 		}
