@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2014 Tasktop Technologies
+ * Copyright (c) 2011, 2016 Tasktop Technologies
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,8 +13,6 @@ package org.eclipse.mylyn.internal.wikitext.mediawiki.core;
 
 import java.io.StringWriter;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.wikitext.confluence.core.ConfluenceDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
@@ -23,6 +21,8 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
+
+import junit.framework.TestCase;
 
 /**
  * @author David Green
@@ -145,6 +145,44 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 		assertEquals("{code}text\n\nmore text{code}\n\n\n", markup);
 	}
 
+	public void testCodeBlockWithLineBreaks() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.CODE, new Attributes());
+		builder.characters("line 1");
+		builder.lineBreak();
+		builder.characters("line 2");
+		builder.lineBreak();
+		builder.lineBreak();
+		builder.characters("line 3");
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		assertEquals("{code}line 1\nline 2\n\nline 3{code}\n\n\n", markup);
+	}
+
+	public void testPreformattedBlockWithLineBreaks() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PREFORMATTED, new Attributes());
+		builder.characters("line 1");
+		builder.lineBreak();
+		builder.characters("line 2");
+		builder.lineBreak();
+		builder.lineBreak();
+		builder.characters("line 3");
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		assertEquals("{noformat}line 1\nline 2\n\nline 3{noformat}\n\n", markup);
+	}
+
 	public void testParagraphFollowingExtendedBlockCode() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.CODE, new Attributes());
@@ -180,6 +218,25 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 		TestUtil.println(markup);
 
 		assertEquals("h1. text  more text\n\ntext\n\n", markup);
+	}
+
+	public void testHeadingWithLineBreaks() {
+		builder.beginDocument();
+		builder.beginHeading(1, new Attributes());
+		builder.characters("line 1 of heading");
+		builder.lineBreak();
+		builder.characters("line 2 of heading");
+		builder.endHeading();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("text");
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		assertEquals("h1. line 1 of heading\\\\line 2 of heading\n\ntext\n\n", markup);
 	}
 
 	public void testHeading1_WithNestedMarkup() {
@@ -676,7 +733,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		assertEquals("* first\nsecond\n* another\n", markup);
+		assertEquals("* first\\\\second\n* another\n", markup);
 	}
 
 	public void testListItemWithMultipleNewlines() {
@@ -703,7 +760,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 		TestUtil.println(markup);
 
-		assertEquals("* first\n\\\\second\n* another\n", markup);
+		assertEquals("* first\\\\ \\\\second\n* another\n", markup);
 	}
 
 	public void testListWithMultipleItems() {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2015 Tasktop Technologies.
+ * Copyright (c) 2011, 2016 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,7 +33,7 @@ import com.google.common.base.Strings;
 
 /**
  * a document builder that emits Confluence markup
- * 
+ *
  * @see HtmlParser
  * @author David Green
  * @since 1.6
@@ -98,7 +98,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		@Override
 		public void write(int c) throws IOException {
 			consecutiveLineBreakCount = 0;
-			if (getBlockType() != BlockType.CODE && getBlockType() != BlockType.PREFORMATTED) {
+			if (!isBlockTypePreservingWhitespace()) {
 				c = normalizeWhitespace(c);
 			}
 			ConfluenceDocumentBuilder.this.emitContent(c);
@@ -107,7 +107,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		@Override
 		public void write(String s) throws IOException {
 			consecutiveLineBreakCount = 0;
-			if (getBlockType() != BlockType.CODE && getBlockType() != BlockType.PREFORMATTED) {
+			if (!isBlockTypePreservingWhitespace()) {
 				s = normalizeWhitespace(s);
 			}
 			ConfluenceDocumentBuilder.this.emitContent(s);
@@ -115,12 +115,15 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 		public void writeLineBreak() throws IOException {
 			++consecutiveLineBreakCount;
-			if (consecutiveLineBreakCount == 1
-					|| (getBlockType() == BlockType.CODE || getBlockType() == BlockType.PREFORMATTED)) {
-				ConfluenceDocumentBuilder.this.emitContent('\n');
+			if (consecutiveLineBreakCount == 1 || isBlockTypePreservingWhitespace()) {
+				if (isBlockTerminatedByNewlines()) {
+					ConfluenceDocumentBuilder.this.emitContent("\\\\"); //$NON-NLS-1$
+				} else {
+					ConfluenceDocumentBuilder.this.emitContent('\n');
+				}
 			} else {
 				if (getLastChar() != '\n') {
-					ConfluenceDocumentBuilder.this.emitContent(" "); //$NON-NLS-1$
+					ConfluenceDocumentBuilder.this.emitContent(' ');
 				}
 				ConfluenceDocumentBuilder.this.emitContent("\\\\"); //$NON-NLS-1$
 			}
@@ -199,6 +202,13 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			return false;
 		}
 
+		private boolean isBlockTerminatedByNewlines() {
+			return suffix.isEmpty() && !prefix.isEmpty();
+		}
+
+		private boolean isBlockTypePreservingWhitespace() {
+			return getBlockType() == BlockType.CODE || getBlockType() == BlockType.PREFORMATTED;
+		}
 	}
 
 	private class LinkBlock extends ContentBlock {
