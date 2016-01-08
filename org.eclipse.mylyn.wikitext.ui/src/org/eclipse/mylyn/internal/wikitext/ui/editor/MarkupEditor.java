@@ -1253,13 +1253,6 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		return viewer.getProjectionAnnotationModel() != null;
 	}
 
-	/* prevent line number ruler from appearing since it doesn't work with line wrapping
-	 */
-	@Override
-	protected boolean isLineNumberRulerVisible() {
-		return false;
-	}
-
 	public boolean show(ShowInContext context) {
 		ISelection selection = context.getSelection();
 		if (selection instanceof IStructuredSelection) {
@@ -1300,13 +1293,6 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 				item == null ? new StructuredSelection() : new StructuredSelection(item));
 	}
 
-	@Override
-	protected void rulerContextMenuAboutToShow(IMenuManager menu) {
-		super.rulerContextMenuAboutToShow(menu);
-		// prevent line number toggle action from appearing
-		menu.remove(ITextEditorActionConstants.LINENUMBERS_TOGGLE);
-	}
-
 	/**
 	 * Causes the editor to display the preview at the specified outline item.
 	 */
@@ -1329,5 +1315,9 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 
 	private boolean isShowingPreview() {
 		return previewTab != null && tabFolder.getSelection() == previewTab;
+	}
+
+	protected boolean getInitialWordWrapStatus() {
+		return true;
 	}
 }
