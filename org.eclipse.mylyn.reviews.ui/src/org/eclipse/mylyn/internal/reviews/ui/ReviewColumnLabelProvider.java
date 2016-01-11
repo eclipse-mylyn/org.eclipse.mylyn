@@ -113,6 +113,19 @@ public class ReviewColumnLabelProvider extends ColumnLabelProvider {
 		}
 	}
 
+	public String getSortString(Object element, int columnIndex) {
+		TaskReview reviewContainer = (TaskReview) element;
+
+		switch (columnIndex) {
+		case CODE_REVIEW_COLUMN:
+			return Integer.toString(reviewContainer.getCodeReviewScore());
+		case VERIFIED_COLUMN:
+			return Integer.toString(reviewContainer.getVerifiedScore());
+		default:
+			return getColumnText(element, columnIndex);
+		}
+	}
+
 	@Override
 	public String getToolTipText(Object element) {
 		TaskReview review = (TaskReview) element;

@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.commons.ui.SelectionProviderAdapter;
+import org.eclipse.mylyn.commons.ui.TableSorter;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewColumnLabelProvider;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
@@ -35,6 +36,8 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
@@ -47,6 +50,38 @@ import org.eclipse.ui.forms.widgets.Section;
  * @author Landon Butterworth
  */
 public class TaskEditorReviewsPart extends AbstractTaskEditorPart {
+
+	private static final class ReviewColumnSorter extends TableSorter {
+		private final ReviewColumnLabelProvider labelProvider;
+
+		public ReviewColumnSorter(ReviewColumnLabelProvider labelProvider) {
+			this.labelProvider = labelProvider;
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public int compare(TableViewer viewer, Object e1, Object e2, int columnIndex) {
+			int cat1 = category(e1);
+			int cat2 = category(e2);
+
+			if (cat1 != cat2) {
+				return cat1 - cat2;
+			}
+
+			String name1 = labelProvider.getSortString(e1, columnIndex);
+			String name2 = labelProvider.getSortString(e2, columnIndex);
+
+			if (name1 == null) {
+				name1 = "";//$NON-NLS-1$
+			}
+			if (name2 == null) {
+				name2 = "";//$NON-NLS-1$
+			}
+
+			// use the comparator to compare the strings
+			return getComparator().compare(name1, name2);
+		}
+	}
 
 	private static final String ID_TASK_EDITOR_REVIEWS_PART = "org.eclipse.mylyn.internal.reviews.ui.editor.parts.TaskEditorReviewsPart"; //$NON-NLS-1$
 
@@ -146,21 +181,42 @@ public class TaskEditorReviewsPart extends AbstractTaskEditorPart {
 				.applyTo(reviewsTable);
 
 		reviewsTable.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
+		reviewsViewer = new TableViewer(reviewsTable);
 
 		for (int i = 0; i < REVIEWS_COLUMNS.length; i++) {
-			TableColumn column = new TableColumn(reviewsTable, SWT.LEFT, i);
+			final TableColumn column = new TableColumn(reviewsTable, SWT.LEFT, i);
 			column.setText(REVIEWS_COLUMNS[i]);
 			column.setWidth(REVIEWS_COLUMNS_WIDTH[i]);
 			column.setMoveable(true);
+			column.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					int direction = reviewsTable.getSortDirection();
+					if (reviewsTable.getSortColumn() == column && direction != SWT.NONE) {
+						direction = (direction == SWT.DOWN) ? SWT.UP : SWT.NONE;
+					} else {
+						direction = SWT.DOWN;
+					}
+
+					reviewsTable.setSortDirection(direction);
+					if (direction == SWT.NONE) {
+						reviewsTable.setSortColumn(null);
+					} else {
+						reviewsTable.setSortColumn(column);
+					}
+					reviewsViewer.refresh();
+				}
+			});
 		}
 
-		reviewsViewer = new TableViewer(reviewsTable);
 		reviewsViewer.setUseHashlookup(true);
 		reviewsViewer.setColumnProperties(REVIEWS_COLUMNS);
 		ColumnViewerToolTipSupport.enableFor(reviewsViewer, ToolTip.NO_RECREATE);
 
 		reviewsViewer.setContentProvider(new ArrayContentProvider());
-		reviewsViewer.setLabelProvider(new ReviewColumnLabelProvider());
+		ReviewColumnLabelProvider labelProvider = new ReviewColumnLabelProvider();
+		reviewsViewer.setLabelProvider(labelProvider);
+		reviewsViewer.setComparator(new ReviewColumnSorter(labelProvider));
 
 		reviewsViewer.addOpenListener(new IOpenListener() {
 			public void open(OpenEvent event) {
