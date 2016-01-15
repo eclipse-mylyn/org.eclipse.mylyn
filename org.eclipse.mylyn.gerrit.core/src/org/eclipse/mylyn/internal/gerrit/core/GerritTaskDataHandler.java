@@ -163,11 +163,11 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 
 	private RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> updateModelData(
 			TaskRepository repository, TaskData taskData, ReviewObserver reviewObserver, IProgressMonitor monitor)
-					throws CoreException {
+			throws CoreException {
 		GerritClient client = connector.getClient(repository);
 		GerritRemoteFactoryProvider factoryProvider = (GerritRemoteFactoryProvider) client.getFactoryProvider();
-		RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> consumer = factoryProvider
-				.getReviewFactory().getConsumerForLocalKey(factoryProvider.getRoot(), taskData.getTaskId());
+		RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> consumer = factoryProvider.getReviewFactory()
+				.getConsumerForLocalKey(factoryProvider.getRoot(), taskData.getTaskId());
 
 		consumer.addObserver(reviewObserver);
 		if (!consumer.isRetrieving()) {
@@ -213,7 +213,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 
 	/**
 	 * Get account id for repository
-	 *
+	 * 
 	 * @param client
 	 * @param repository
 	 * @param monitor
@@ -318,11 +318,11 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		for (ApprovalDetail approvals : changeDetail.getApprovals()) {
 			Map<ApprovalCategory.Id, PatchSetApproval> map = approvals.getApprovalMap();
 			PatchSetApproval approval = map.get(new ApprovalCategory.Id("CRVW")); //$NON-NLS-1$
-			if (approval != null) {
+			if (approval != null && approval.getValue() != 0) {
 				reviewState = getStateValue(approval.getValue(), reviewState);
 			}
 			approval = map.get(new ApprovalCategory.Id("VRIF")); //$NON-NLS-1$
-			if (approval != null) {
+			if (approval != null && approval.getValue() != 0) {
 				verifyState = getStateValue(approval.getValue(), verifyState);
 			}
 		}
