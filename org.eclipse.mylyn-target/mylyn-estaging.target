@@ -73,6 +73,7 @@
 <unit id="org.eclipse.emf.edit.ui.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.egit.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.jgit.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.launchbar.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.sdk.ide" version="0.0.0"/>
 <repository location="http://download.eclipse.org/releases/staging"/>
 </location>
