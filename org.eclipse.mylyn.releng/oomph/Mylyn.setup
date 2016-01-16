@@ -125,6 +125,8 @@
             url="http://download.eclipse.org/mylyn/snapshots/weekly"/>
         <repository
             url="http://download.eclipse.org/eclipse/updates/3.8"/>
+        <repository
+            url="http://download.eclipse.org/tools/orbit/downloads/drops/S20151204220443/repository/"/>
       </repositoryList>
       <repositoryList
           name="Mars">
