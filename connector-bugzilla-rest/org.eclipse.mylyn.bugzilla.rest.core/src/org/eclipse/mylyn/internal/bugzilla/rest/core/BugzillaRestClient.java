@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,6 +21,8 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
@@ -133,7 +136,7 @@ public class BugzillaRestClient {
 		}
 	}
 
-	private final Function<String, String> function = new Function<String, String>() {
+	private final Function<String, String> removeLeadingZero = new Function<String, String>() {
 
 		@Override
 		public String apply(String input) {
@@ -153,7 +156,7 @@ public class BugzillaRestClient {
 			throw new BugzillaRestException(e1);
 		}
 
-		Iterable<String> taskIdsTemp = Iterables.transform(taskIds, function);
+		Iterable<String> taskIdsTemp = Iterables.transform(taskIds, removeLeadingZero);
 		Iterable<List<String>> partitions = Iterables.partition(taskIdsTemp, MAX_RETRIEVED_PER_QUERY);
 		for (List<String> list : partitions) {
 			Joiner joiner = Joiner.on(",id=").skipNulls(); //$NON-NLS-1$
@@ -164,12 +167,11 @@ public class BugzillaRestClient {
 						.run(monitor);
 				for (TaskData taskData : taskDataArray) {
 					new BugzillaRestGetTaskComments(getClient(), taskData).run(monitor);
+					new BugzillaRestGetTaskAttachments(getClient(), taskData).run(monitor);
 					config.updateProductOptions(taskData);
 					config.addValidOperations(taskData);
 					collector.accept(taskData);
 				}
-			} catch (BugzillaRestException e) {
-				throw e;
 			} catch (RuntimeException e) {
 				// if the Throwable was warped in a RuntimeException in
 				// BugzillaRestGetTaskData.JSonTaskDataDeserializer.deserialize()
@@ -209,6 +211,11 @@ public class BugzillaRestClient {
 			});
 		}
 		return Status.OK_STATUS;
+	}
+
+	public InputStream getAttachmentData(@NonNull TaskAttribute attachmentAttribute,
+			@Nullable IOperationMonitor monitor) throws BugzillaRestException {
+		return new BugzillaRestGetTaskAttachmentData(client, attachmentAttribute).run(monitor);
 	}
 
 }

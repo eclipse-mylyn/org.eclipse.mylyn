@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 import org.eclipse.mylyn.commons.core.operations.OperationUtil;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
@@ -36,6 +37,7 @@ import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryInfo;
 import org.eclipse.mylyn.tasks.core.RepositoryVersion;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -60,16 +62,18 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 
 	private static final ThreadLocal<IOperationMonitor> context = new ThreadLocal<IOperationMonitor>();
 
+	private BugzillaRestTaskAttachmentHandler attachmentHandler;
+
 	private boolean ignoredProperty(String propertyName) {
 		if (propertyName.equals(RepositoryLocation.PROPERTY_LABEL) || propertyName.equals(TaskRepository.OFFLINE)
 				|| propertyName.equals(IRepositoryConstants.PROPERTY_ENCODING)
 				|| propertyName.equals(TaskRepository.PROXY_HOSTNAME) || propertyName.equals(TaskRepository.PROXY_PORT)
-				|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.savePassword")
-				|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.proxy.usedefault")
-				|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.proxy.savePassword")
-				|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.proxy.username")
-				|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.proxy.password")
-				|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.proxy.enabled")) {
+				|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.savePassword") //$NON-NLS-1$
+				|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.proxy.usedefault") //$NON-NLS-1$
+				|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.proxy.savePassword") //$NON-NLS-1$
+				|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.proxy.username") //$NON-NLS-1$
+				|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.proxy.password") //$NON-NLS-1$
+				|| propertyName.equals("org.eclipse.mylyn.tasklist.repositories.proxy.enabled")) { //$NON-NLS-1$
 			return true;
 		}
 		return false;
@@ -92,7 +96,7 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 		@Override
 		public void propertyChange(PropertyChangeEvent evt) {
 			if (ignoredProperty(evt.getPropertyName())
-					|| evt.getPropertyName().equals("org.eclipse.mylyn.tasklist.repositories.password")) {
+					|| evt.getPropertyName().equals("org.eclipse.mylyn.tasklist.repositories.password")) { //$NON-NLS-1$
 				return;
 			}
 			TaskRepository taskRepository = (TaskRepository) evt.getSource();
@@ -120,6 +124,7 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 
 	public BugzillaRestConnector(Duration refreshAfterWriteDuration) {
 		super();
+		this.attachmentHandler = new BugzillaRestTaskAttachmentHandler(this);
 		configurationCache = createCacheBuilder(CONFIGURATION_CACHE_EXPIRE_DURATION, refreshAfterWriteDuration)
 				.build(new CacheLoader<RepositoryKey, Optional<BugzillaRestConfiguration>>() {
 
@@ -192,7 +197,7 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 		if (taskUrl == null) {
 			return null;
 		}
-		int index = taskUrl.indexOf("/rest.cgi/");
+		int index = taskUrl.indexOf("/rest.cgi/"); //$NON-NLS-1$
 		return index == -1 ? null : taskUrl.substring(0, index);
 	}
 
@@ -210,7 +215,7 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public String getTaskUrl(String repositoryUrl, String taskIdOrKey) {
-		return repositoryUrl + "/rest.cgi/bug/" + taskIdOrKey;
+		return repositoryUrl + "/rest.cgi/bug/" + taskIdOrKey; //$NON-NLS-1$
 	}
 
 	@Override
@@ -226,7 +231,7 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 		try {
 			monitor.beginTask("performQuery", IProgressMonitor.UNKNOWN);
 			BugzillaRestClient client = getClient(repository);
-			IOperationMonitor progress = OperationUtil.convert(monitor, "performQuery", 3);
+			IOperationMonitor progress = OperationUtil.convert(monitor, "performQuery", 3); //$NON-NLS-1$
 			return client.performQuery(repository, query, collector, progress);
 		} catch (CoreException e) {
 			return new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, IStatus.INFO,
@@ -249,7 +254,7 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public void updateTaskFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData) {
-		task.setUrl(taskData.getRepositoryUrl() + "/rest.cgi/bug/" + taskData.getTaskId());
+		task.setUrl(taskData.getRepositoryUrl() + "/rest.cgi/bug/" + taskData.getTaskId()); //$NON-NLS-1$
 	}
 
 	@Override
@@ -359,6 +364,12 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 				return taskData.getRepositoryUrl();
 			}
 		};
+	}
+
+	@Override
+	@Nullable
+	public AbstractTaskAttachmentHandler getTaskAttachmentHandler() {
+		return attachmentHandler;
 	}
 
 }
