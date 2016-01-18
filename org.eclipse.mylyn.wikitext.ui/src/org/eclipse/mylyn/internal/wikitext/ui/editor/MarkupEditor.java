@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2015 David Green and others.
+ * Copyright (c) 2007, 2016 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -291,6 +291,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		}
 
 		tabFolder.addSelectionListener(new SelectionListener() {
+
 			public void widgetDefaultSelected(SelectionEvent selectionevent) {
 				widgetSelected(selectionevent);
 			}
@@ -523,6 +524,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 				document.addDocumentListener(documentListener);
 				if (documentPartitioningListener == null) {
 					documentPartitioningListener = new IDocumentPartitioningListener() {
+
 						public void documentPartitioningChanged(IDocument document) {
 							// async update
 							scheduleOutlineUpdate();
@@ -658,6 +660,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 				}
 			}
 			browser.addProgressListener(new ProgressAdapter() {
+
 				@Override
 				public void completed(ProgressEvent event) {
 					browser.removeProgressListener(this);
@@ -667,6 +670,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 						browser.execute(String.format("window.scrollTo(0,%d);", verticalScrollbarPos)); //$NON-NLS-1$
 					}
 				}
+
 			});
 			browser.setText(xhtml);
 			previewDirty = false;
@@ -1146,15 +1150,15 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	 * @return the markup language name, or null if no preference exists
 	 */
 	public static String getMarkupLanguagePreference(IFile file) {
-		String languageName;
-		try {
-			languageName = file.getPersistentProperty(
-					new QualifiedName(WikiTextUiPlugin.getDefault().getPluginId(), MarkupEditor.MARKUP_LANGUAGE));
-		} catch (CoreException e) {
-			WikiTextUiPlugin.getDefault().log(IStatus.ERROR, Messages.MarkupEditor_markupPreferenceError, e);
-			return null;
+		if (file.exists()) {
+			try {
+				return file.getPersistentProperty(
+						new QualifiedName(WikiTextUiPlugin.getDefault().getPluginId(), MarkupEditor.MARKUP_LANGUAGE));
+			} catch (CoreException e) {
+				WikiTextUiPlugin.getDefault().log(IStatus.ERROR, Messages.MarkupEditor_markupPreferenceError, e);
+			}
 		}
-		return languageName;
+		return null;
 	}
 
 	private void storeMarkupLanguagePreference(MarkupLanguage markupLanguage) {
