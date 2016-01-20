@@ -16,8 +16,6 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.tasks.core.RepositoryModel;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
@@ -32,6 +30,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Test;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -110,7 +110,7 @@ public class TaskDataDiffTest extends TestCase {
 	@Test
 	public void testHasChanges() {
 		TaskDataDiff diff = new TaskDataDiff(model, newData, oldData);
-		assertTrue(diff.hasChanged());
+		assertFalse(diff.hasChanged());
 	}
 
 	@Test
@@ -118,7 +118,5 @@ public class TaskDataDiffTest extends TestCase {
 		newData.getRoot().createAttribute(TaskAttribute.SUMMARY).setValue("text");
 		TaskDataDiff diff = new TaskDataDiff(model, newData, oldData);
 		assertTrue(diff.hasChanged());
-		diff.setHasChanged(false);
-		assertFalse(diff.hasChanged());
 	}
 }

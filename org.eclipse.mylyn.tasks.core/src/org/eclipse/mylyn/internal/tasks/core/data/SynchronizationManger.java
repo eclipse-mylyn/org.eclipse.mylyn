@@ -68,7 +68,6 @@ public class SynchronizationManger {
 						it.remove();
 					}
 				}
-				diff.setHasChanged(diff.getChangedAttributes().size() > 0 || diff.getNewComments().size() > 0);
 			}
 		}
 
@@ -93,8 +92,8 @@ public class SynchronizationManger {
 		List<String> attributeIds = new ArrayList<String>();
 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IExtensionPoint connectorsExtensionPoint = registry.getExtensionPoint(ITasksCoreConstants.ID_PLUGIN
-				+ ".synchronizationParticipants"); //$NON-NLS-1$
+		IExtensionPoint connectorsExtensionPoint = registry
+				.getExtensionPoint(ITasksCoreConstants.ID_PLUGIN + ".synchronizationParticipants"); //$NON-NLS-1$
 		IExtension[] extensions = connectorsExtensionPoint.getExtensions();
 		for (IExtension extension : extensions) {
 			IConfigurationElement[] elements = extension.getConfigurationElements();
@@ -109,20 +108,15 @@ public class SynchronizationManger {
 								participant.setId(element.getAttribute("id")); //$NON-NLS-1$
 								participants.add(participant);
 							} else {
-								status.add(new Status(
-										IStatus.ERROR,
-										ITasksCoreConstants.ID_PLUGIN,
-										NLS.bind(
-												"Connector core ''{0}'' does not extend expected class for extension contributed by {1}", //$NON-NLS-1$
-												object.getClass().getCanonicalName(), element.getContributor()
-														.getName())));
+								status.add(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
+										"Connector core ''{0}'' does not extend expected class for extension contributed by {1}", //$NON-NLS-1$
+										object.getClass().getCanonicalName(), element.getContributor().getName())));
 							}
 						} catch (Throwable e) {
-							status.add(new Status(
-									IStatus.ERROR,
-									ITasksCoreConstants.ID_PLUGIN,
-									NLS.bind(
-											"Connector core failed to load for extension contributed by {0}", element.getContributor().getName()), e)); //$NON-NLS-1$
+							status.add(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+									NLS.bind("Connector core failed to load for extension contributed by {0}", //$NON-NLS-1$
+											element.getContributor().getName()),
+									e));
 						}
 					}
 				} else if ("suppressIncoming".equals(element.getName())) { //$NON-NLS-1$

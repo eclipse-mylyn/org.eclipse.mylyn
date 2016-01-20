@@ -38,11 +38,11 @@ public class TaskDataDiff implements ITaskDataDiff {
 
 	private final Set<ITaskComment> newComments = new LinkedHashSet<ITaskComment>();
 
+	private final Set<TaskAttribute> newAttachments = new LinkedHashSet<TaskAttribute>();
+
 	private final Set<ITaskAttributeDiff> changedAttributes = new LinkedHashSet<ITaskAttributeDiff>();
 
 	private final RepositoryModel repositoryModel;
-
-	public boolean hasChanged;
 
 	private final TaskRepository repository;
 
@@ -53,16 +53,16 @@ public class TaskDataDiff implements ITaskDataDiff {
 		this.repository = newTaskData.getAttributeMapper().getTaskRepository();
 		this.newTaskData = newTaskData;
 		this.oldTaskData = oldTaskData;
-		this.hasChanged = true;
 		parse();
 	}
 
 	public boolean hasChanged() {
-		return hasChanged;
+		return !changedAttributes.isEmpty() || !newComments.isEmpty() || !newAttachments.isEmpty();
 	}
 
+	@Deprecated
 	public void setHasChanged(boolean hasChanged) {
-		this.hasChanged = hasChanged;
+
 	}
 
 	public TaskRepository getRepository() {
@@ -79,6 +79,10 @@ public class TaskDataDiff implements ITaskDataDiff {
 
 	public Collection<ITaskComment> getNewComments() {
 		return newComments;
+	}
+
+	public Collection<TaskAttribute> getNewAttachments() {
+		return newAttachments;
 	}
 
 	public Collection<ITaskAttributeDiff> getChangedAttributes() {
@@ -127,6 +131,8 @@ public class TaskDataDiff implements ITaskDataDiff {
 		String type = attribute.getMetaData().getType();
 		if (TaskAttribute.TYPE_COMMENT.equals(type)) {
 			addChangedComment(oldAttribute, newAttribute);
+		} else if (TaskAttribute.TYPE_ATTACHMENT.equals(type)) {
+			newAttachments.add(attribute);
 		} else if (TaskAttribute.TYPE_OPERATION.equals(type)) {
 			// ignore
 		} else if (ignoreKind || attribute.getMetaData().getKind() != null) {
@@ -145,5 +151,4 @@ public class TaskDataDiff implements ITaskDataDiff {
 			}
 		}
 	}
-
 }
