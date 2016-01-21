@@ -104,6 +104,11 @@ public class Event implements Serializable {
 	public static final String TYPE_PUSH = "PushEvent";
 
 	/**
+	 * Event type denoting a {@link ReleasePayload}
+	 */
+	public static final String TYPE_RELEASE = "ReleaseEvent";
+
+	/**
 	 * Event type denoting a {@link TeamAddPayload}
 	 */
 	public static final String TYPE_TEAM_ADD = "TeamAddEvent";
