@@ -68,6 +68,9 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testPatchSetFiles() throws Exception {
+		if (!canMakeMultipleCommits()) {
+			return;
+		}
 		CommitCommand command2 = reviewHarness.createCommitCommand();
 		reviewHarness.addFile("testFile2.txt");
 		reviewHarness.addFile("testFile3.txt");
@@ -125,11 +128,17 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testFetchBinaryContent() throws Exception {
+		if (!canMakeMultipleCommits()) {
+			return;
+		}
 		fetchBinaryContent("test.png", "testdata/binary/gerrit.png");
 	}
 
 	@Test
 	public void testFetchZippedBinaryContent() throws Exception {
+		if (!canMakeMultipleCommits()) {
+			return;
+		}
 		// test servers are configured so that gif files are zipped (the mimetype is not marked safe)
 		fetchBinaryContent("test.gif", "testdata/binary/gerrit.gif");
 	}
@@ -179,6 +188,9 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testCompareBinaryContent() throws Exception {
+		if (!canMakeMultipleCommits()) {
+			return;
+		}
 		String fileName = "test.png";
 		byte[] fileContent2 = commitFile(fileName, "testdata/binary/gerrit.png");
 		byte[] fileContent3 = commitFile(fileName, "testdata/binary/gerrit2.png");
@@ -221,6 +233,9 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testCompareRenamedImage() throws Exception {
+		if (!canMakeMultipleCommits()) {
+			return;
+		}
 		String fileName = "test.png";
 		String newFileName = "renamed-" + fileName;
 		String path = "testdata/binary/gerrit.png";
@@ -284,6 +299,9 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testPatchSetComments() throws Exception {
+		if (!canMakeMultipleCommits()) {
+			return;
+		}
 		TestRemoteObserverConsumer<IReviewItemSet, List<IFileItem>, String, PatchSetContent, String, Long> patchSetObserver //
 		= setUpAddComments();
 		IReviewItemSet testPatchSet = getReview().getSets().get(1);
@@ -353,6 +371,9 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testBaseComment() throws Exception {
+		if (!canMakeMultipleCommits()) {
+			return;
+		}
 		TestRemoteObserverConsumer<IReviewItemSet, List<IFileItem>, String, PatchSetContent, String, Long> patchSetObserver //
 		= setUpAddComments();
 		IFileItem commentFile = getReview().getSets().get(1).getItems().get(1);
@@ -375,6 +396,9 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testBaseAndPatchSetComments() throws Exception {
+		if (!canMakeMultipleCommits()) {
+			return;
+		}
 		TestRemoteObserverConsumer<IReviewItemSet, List<IFileItem>, String, PatchSetContent, String, Long> patchSetObserver //
 		= setUpAddComments();
 		IFileItem commentFile = getReview().getSets().get(1).getItems().get(1);
@@ -440,8 +464,8 @@ public class PatchSetRemoteFactoryTest extends GerritRemoteTest {
 	@Test
 	public void testLoadPatchSet() throws Exception {
 		// given
-		GerritChange change = reviewHarness.getClient()
-				.getChange(reviewHarness.getShortId(), new NullProgressMonitor());
+		GerritChange change = reviewHarness.getClient().getChange(reviewHarness.getShortId(),
+				new NullProgressMonitor());
 		List<PatchSetDetail> details = change.getPatchSetDetails();
 		assertThat(details, notNullValue());
 		assertThat(details.size(), is(1));

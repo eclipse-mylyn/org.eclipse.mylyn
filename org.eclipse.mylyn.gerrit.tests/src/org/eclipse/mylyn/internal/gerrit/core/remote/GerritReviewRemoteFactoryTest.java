@@ -120,6 +120,9 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testNewChange() throws Exception {
+		if (!canMakeMultipleCommits()) {
+			return;
+		}
 		CommitCommand command2 = reviewHarness.createCommitCommand();
 		reviewHarness.addFile("testFile2.txt");
 		reviewHarness.commitAndPush(command2);
@@ -432,7 +435,8 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		assertThat(allowed.size(), is(1));
 		PermissionLabel crvwAllowed = allowed.get(0);
 		assertThat(crvwAllowed.matches(CRVW.getCategory()), is(true));
-		assertThat(crvwAllowed.getName(), is(PermissionLabel.toLabelName(toNameWithDash(CRVW.getCategory().getName()))));
+		assertThat(crvwAllowed.getName(),
+				is(PermissionLabel.toLabelName(toNameWithDash(CRVW.getCategory().getName()))));
 		assertThat(crvwAllowed.getMin(), is(-1));
 		assertThat(crvwAllowed.getMax(), is(1));
 	}
@@ -552,7 +556,8 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		TestRemoteObserver<IRepository, IReview, String, Date> newReviewListener = new TestRemoteObserver<IRepository, IReview, String, Date>(
 				reviewHarness.getProvider().getReviewFactory());
 
-		RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> newReviewConsumer = reviewHarness.getProvider()
+		RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> newReviewConsumer = reviewHarness
+				.getProvider()
 				.getReviewFactory()
 				.getConsumerForRemoteKey(reviewHarness.getRepository(), newReviewShortId);
 		newReviewConsumer.addObserver(newReviewListener);
@@ -581,8 +586,8 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 		//now approve, publish and submit Review 2 - this should create a comment authored by Gerrit
 		String approvalMessage = "approval, time: " + System.currentTimeMillis();
-		HashSet<Id> approvals = new HashSet<ApprovalCategoryValue.Id>(Collections.singleton(CRVW.getValue((short) 2)
-				.getId()));
+		HashSet<Id> approvals = new HashSet<ApprovalCategoryValue.Id>(
+				Collections.singleton(CRVW.getValue((short) 2).getId()));
 		reviewHarness.getAdminClient().publishComments(newReviewShortId, 1, approvalMessage, approvals,
 				new NullProgressMonitor());
 		reviewHarness.getAdminClient().submit(newReviewShortId, 1, new NullProgressMonitor());
@@ -632,7 +637,8 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		TestRemoteObserver<IRepository, IReview, String, Date> newReviewListener = new TestRemoteObserver<IRepository, IReview, String, Date>(
 				reviewHarness.getProvider().getReviewFactory());
 
-		RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> newReviewConsumer = reviewHarness.getProvider()
+		RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> newReviewConsumer = reviewHarness
+				.getProvider()
 				.getReviewFactory()
 				.getConsumerForRemoteKey(reviewHarness.getRepository(), newReviewShortId);
 		newReviewConsumer.addObserver(newReviewListener);
@@ -723,8 +729,8 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 	@Test
 	public void testNoLabels() throws Exception {
 		//create a commit w/ -2, resulting in no labels
-		HashSet<Id> approvals = new HashSet<ApprovalCategoryValue.Id>(Collections.singleton(CRVW.getValue((short) -2)
-				.getId()));
+		HashSet<Id> approvals = new HashSet<ApprovalCategoryValue.Id>(
+				Collections.singleton(CRVW.getValue((short) -2).getId()));
 		reviewHarness.getAdminClient().publishComments(reviewHarness.getShortId(), 1, "", approvals,
 				new NullProgressMonitor());
 		reviewHarness.retrieve();

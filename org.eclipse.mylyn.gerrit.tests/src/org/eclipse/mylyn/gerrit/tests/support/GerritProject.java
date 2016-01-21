@@ -37,7 +37,7 @@ import org.junit.Test;
  */
 public class GerritProject {
 
-	private static final String PROP_ALTERNATE_PUSH = "org.eclipse.mylyn.gerrit.tests.alternate.push";
+	public static final String PROP_ALTERNATE_PUSH = "org.eclipse.mylyn.gerrit.tests.alternate.push";
 
 	public static class GerritProjectTest {
 
@@ -73,8 +73,8 @@ public class GerritProject {
 	}
 
 	private CredentialsProvider getCredentialsProvider(PrivilegeLevel privilegeLevel) throws Exception {
-		AuthenticationCredentials credentials = fixture.location(privilegeLevel).getCredentials(
-				AuthenticationType.REPOSITORY);
+		AuthenticationCredentials credentials = fixture.location(privilegeLevel)
+				.getCredentials(AuthenticationType.REPOSITORY);
 		return new UsernamePasswordCredentialsProvider(getGitUsername(credentials), credentials.getPassword());
 	}
 
@@ -90,8 +90,8 @@ public class GerritProject {
 	public Git getGitProject(PrivilegeLevel privilegeLevel) throws Exception {
 		if (git == null) {
 			String url = fixture.getRepositoryUrl() + PROJECT;
-			AuthenticationCredentials credentials = fixture.location(privilegeLevel).getCredentials(
-					AuthenticationType.REPOSITORY);
+			AuthenticationCredentials credentials = fixture.location(privilegeLevel)
+					.getCredentials(AuthenticationType.REPOSITORY);
 			url = url.replace("://", "://" + getGitUsername(credentials) + ":" + credentials.getPassword() + "@"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			git = Git.cloneRepository().setDirectory(getFolder()).setURI(url).call();
 		}
@@ -201,8 +201,8 @@ public class GerritProject {
 
 	public AuthenticationCredentials registerAuthenticator(PrivilegeLevel privilegeLevel) throws Exception {
 		// register authenticator to avoid HTTP password prompt
-		AuthenticationCredentials credentials = fixture.location(privilegeLevel).getCredentials(
-				AuthenticationType.REPOSITORY);
+		AuthenticationCredentials credentials = fixture.location(privilegeLevel)
+				.getCredentials(AuthenticationType.REPOSITORY);
 		final PasswordAuthentication authentication = new PasswordAuthentication(credentials.getUserName(),
 				credentials.getPassword().toCharArray());
 		Authenticator.setDefault(new Authenticator() {

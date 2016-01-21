@@ -11,11 +11,14 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.remote;
 
-import junit.framework.TestCase;
-
+import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
+import org.eclipse.mylyn.gerrit.tests.support.GerritProject;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.junit.After;
 import org.junit.Before;
+import org.osgi.framework.Version;
+
+import junit.framework.TestCase;
 
 /**
  * @author Miles Parker
@@ -42,5 +45,15 @@ public class GerritRemoteTest extends TestCase {
 	@After
 	public void tearDown() throws Exception {
 		reviewHarness.dispose();
+	}
+
+	protected boolean canMakeMultipleCommits() {
+		// when using cgit we can't make multiple commits on fixtures other than 2.10
+		return !Boolean.getBoolean(GerritProject.PROP_ALTERNATE_PUSH) || isGerrit210();
+	}
+
+	private boolean isGerrit210() {
+		Version version = GerritFixture.current().getGerritVersion();
+		return version.getMajor() == 2 && version.getMinor() == 10;
 	}
 }
