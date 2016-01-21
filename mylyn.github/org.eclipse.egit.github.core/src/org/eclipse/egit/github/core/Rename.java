@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core;
 
-import java.io.ObjectStreamClass;
 import java.io.Serializable;
 
 /**
