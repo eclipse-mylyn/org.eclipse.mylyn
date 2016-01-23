@@ -110,23 +110,18 @@ public class BugzillaRestPostNewTask extends BugzillaRestAuthenticatedPostReques
 	}
 
 	@Override
-	protected HttpRequestBase createHttpRequestBase() throws IOException {
-		String bugUrl = getUrlSuffix();
+	protected void addHttpRequestEntities(HttpRequestBase request) throws BugzillaRestException {
+		super.addHttpRequestEntities(request);
 		LoginToken token = ((BugzillaRestHttpClient) getClient()).getLoginToken();
-
-		HttpPost request = new HttpPost(baseUrl() + bugUrl);
-		request.setHeader(CONTENT_TYPE, APPLICATION_JSON);
-		request.setHeader(ACCEPT, APPLICATION_JSON);
 		try {
 			// set form parameters
 			Gson gson = new GsonBuilder().registerTypeAdapter(TaskData.class, new TaskAttributeTypeAdapter(token))
 					.create();
 			StringEntity requestEntity = new StringEntity(gson.toJson(taskData));
-			request.setEntity(requestEntity);
+			((HttpPost) request).setEntity(requestEntity);
 		} catch (UnsupportedEncodingException e) {
-			throw new IOException("could not build REST String", e); //$NON-NLS-1$
+			throw new BugzillaRestException("could not build REST String", e); //$NON-NLS-1$
 		}
-		return request;
 	}
 
 	@Override

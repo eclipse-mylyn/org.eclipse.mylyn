@@ -41,6 +41,7 @@ import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
@@ -216,6 +217,12 @@ public class BugzillaRestClient {
 	public InputStream getAttachmentData(@NonNull TaskAttribute attachmentAttribute,
 			@Nullable IOperationMonitor monitor) throws BugzillaRestException {
 		return new BugzillaRestGetTaskAttachmentData(client, attachmentAttribute).run(monitor);
+	}
+
+	public void addAttachment(String bugReportID, String comment, AbstractTaskAttachmentSource source,
+			TaskAttribute attachmentAttribute, IOperationMonitor monitor) throws BugzillaRestException {
+		new BugzillaRestPostNewAttachment(client, bugReportID, comment, source, attachmentAttribute, monitor)
+				.run(monitor);
 	}
 
 }

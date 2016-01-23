@@ -77,19 +77,9 @@ public class BugzillaRestAuthenticatedGetRequest<T> extends BugzillaRestRequest<
 	}
 
 	@Override
-	protected HttpRequestBase createHttpRequestBase() {
-		String bugUrl = getUrlSuffix();
-		LoginToken token = ((BugzillaRestHttpClient) getClient()).getLoginToken();
-		if ((!(this instanceof BugzillaRestValidateRequest) && !(this instanceof BugzillaRestUnauthenticatedGetRequest))
-				&& token != null && bugUrl.length() > 0) {
-			if (!bugUrl.endsWith("?")) { //$NON-NLS-1$
-				bugUrl += "&"; //$NON-NLS-1$
-			}
-			bugUrl += "token=" + token.getToken(); //$NON-NLS-1$
-		}
-		HttpRequestBase request = new HttpGet(baseUrl() + bugUrl);
+	protected HttpRequestBase createHttpRequestBase(String url) {
+		HttpRequestBase request = new HttpGet(url);
 		request.setHeader(CONTENT_TYPE, TEXT_XML_CHARSET_UTF_8);
-		request.setHeader(ACCEPT, APPLICATION_JSON);
 		return request;
 	}
 
@@ -99,6 +89,7 @@ public class BugzillaRestAuthenticatedGetRequest<T> extends BugzillaRestRequest<
 			authenticate(monitor);
 		}
 		HttpRequestBase request = createHttpRequestBase();
+		addHttpRequestEntities(request);
 		CommonHttpResponse response = execute(request, monitor);
 		return processAndRelease(response, monitor);
 	}

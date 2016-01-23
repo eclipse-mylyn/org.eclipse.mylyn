@@ -76,25 +76,15 @@ public abstract class BugzillaRestAuthenticatedPutRequest<T> extends BugzillaRes
 			authenticate(monitor);
 		}
 		HttpRequestBase request = createHttpRequestBase();
+		addHttpRequestEntities(request);
 		CommonHttpResponse response = execute(request, monitor);
 		return processAndRelease(response, monitor);
 	}
 
 	@Override
-	protected HttpRequestBase createHttpRequestBase() {
-		String bugUrl = getUrlSuffix();
-		LoginToken token = ((BugzillaRestHttpClient) getClient()).getLoginToken();
-		if (token != null && bugUrl.length() > 0) {
-			if (bugUrl.endsWith("?")) { //$NON-NLS-1$
-				bugUrl += ("token=" + token.getToken()); //$NON-NLS-1$
-			} else {
-				bugUrl += ("&token=" + token.getToken()); //$NON-NLS-1$
-			}
-		}
-
-		HttpPut request = new HttpPut(baseUrl() + bugUrl);
+	protected HttpRequestBase createHttpRequestBase(String url) {
+		HttpPut request = new HttpPut(url);
 		request.setHeader(CONTENT_TYPE, APPLICATION_JSON);
-		request.setHeader(ACCEPT, APPLICATION_JSON);
 		return request;
 	}
 

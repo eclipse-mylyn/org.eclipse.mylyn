@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
-import org.eclipse.mylyn.commons.core.operations.IOperationMonitor.OperationFlag;
 import org.eclipse.mylyn.commons.core.operations.OperationUtil;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -43,7 +42,7 @@ public class BugzillaRestTaskAttachmentHandler extends AbstractTaskAttachmentHan
 
 	@Override
 	public boolean canPostContent(TaskRepository repository, ITask task) {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -56,7 +55,6 @@ public class BugzillaRestTaskAttachmentHandler extends AbstractTaskAttachmentHan
 			BugzillaRestClient client = connector.getClient(repository);
 			try {
 				IOperationMonitor progress = OperationUtil.convert(monitor, "get Attachment Data", 3); //$NON-NLS-1$
-				progress.addFlag(OperationFlag.BACKGROUND);
 				return client.getAttachmentData(attachmentAttribute, progress);
 			} catch (BugzillaRestException e) {
 				throw new CoreException(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, 2,
@@ -71,6 +69,20 @@ public class BugzillaRestTaskAttachmentHandler extends AbstractTaskAttachmentHan
 	public void postContent(@NonNull TaskRepository repository, @NonNull ITask task,
 			@NonNull AbstractTaskAttachmentSource source, @Nullable String comment,
 			@Nullable TaskAttribute attachmentAttribute, @Nullable IProgressMonitor monitor) throws CoreException {
+		try {
+			monitor = Policy.monitorFor(monitor);
+			monitor.beginTask("addAttachment Data", IProgressMonitor.UNKNOWN);
+			BugzillaRestClient client = connector.getClient(repository);
+			try {
+				IOperationMonitor progress = OperationUtil.convert(monitor, "get Attachment Data", 3);
+				client.addAttachment(task.getTaskId(), comment, source, attachmentAttribute, progress);
+			} catch (BugzillaRestException e) {
+				throw new CoreException(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, 2,
+						"Error add attachment data.\n\n" + e.getMessage(), e));
+			}
+		} finally {
+			monitor.done();
+		}
 	}
 
 }

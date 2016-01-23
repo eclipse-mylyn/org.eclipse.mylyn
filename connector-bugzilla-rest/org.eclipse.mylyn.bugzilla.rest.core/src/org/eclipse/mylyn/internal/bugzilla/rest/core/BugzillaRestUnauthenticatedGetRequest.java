@@ -25,4 +25,10 @@ public class BugzillaRestUnauthenticatedGetRequest<T> extends BugzillaRestAuthen
 		return false;
 	}
 
+	@Override
+	protected String createHttpRequestURL() {
+		String bugUrl = getUrlSuffix();
+		return baseUrl() + bugUrl;
+	}
+
 }

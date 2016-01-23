@@ -168,24 +168,24 @@ public class BugzillaRestPutUpdateTask extends BugzillaRestAuthenticatedPutReque
 	List<NameValuePair> requestParameters;
 
 	@Override
-	protected HttpRequestBase createHttpRequestBase() {
+	protected String createHttpRequestURL() {
 		String bugUrl = getUrlSuffix();
+		return baseUrl() + bugUrl;
+	}
+
+	@Override
+	protected void addHttpRequestEntities(HttpRequestBase request) throws BugzillaRestException {
+		super.addHttpRequestEntities(request);
 		LoginToken token = ((BugzillaRestHttpClient) getClient()).getLoginToken();
-
-		HttpPut request = new HttpPut(baseUrl() + bugUrl);
-		request.setHeader(CONTENT_TYPE, APPLICATION_JSON);
-		request.setHeader(ACCEPT, APPLICATION_JSON);
-
 		try {
 			Gson gson = new GsonBuilder().registerTypeAdapter(OldAttributes.class, new TaskAttributeTypeAdapter(token))
 					.create();
 			StringEntity requestEntity = new StringEntity(gson.toJson(oldAttributes));
-			request.setEntity(requestEntity);
+			((HttpPut) request).setEntity(requestEntity);
 		} catch (UnsupportedEncodingException e) {
 			com.google.common.base.Throwables.propagate(new CoreException(
 					new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, "Can not build HttpRequest", e))); //$NON-NLS-1$
 		}
-		return request;
 	}
 
 	public static String convert(String str) {

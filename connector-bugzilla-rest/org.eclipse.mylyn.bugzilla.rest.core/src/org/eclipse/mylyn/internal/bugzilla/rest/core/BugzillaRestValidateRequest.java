@@ -56,4 +56,10 @@ public class BugzillaRestValidateRequest extends BugzillaRestAuthenticatedGetReq
 		return new Gson().fromJson(jsonString, a.getType());
 	}
 
+	@Override
+	protected String createHttpRequestURL() {
+		String bugUrl = getUrlSuffix();
+		return baseUrl() + bugUrl;
+	}
+
 }

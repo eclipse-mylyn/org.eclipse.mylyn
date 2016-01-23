@@ -26,6 +26,7 @@ import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpOperation;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpResponse;
 import org.eclipse.mylyn.commons.repositories.http.core.HttpUtil;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.LoginToken;
 import org.eclipse.osgi.util.NLS;
 
 public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
@@ -45,7 +46,12 @@ public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
 
 	protected abstract T parseFromJson(InputStreamReader in) throws BugzillaRestException;
 
-	protected abstract HttpRequestBase createHttpRequestBase() throws IOException;
+	protected abstract HttpRequestBase createHttpRequestBase(String url);
+
+	protected HttpRequestBase createHttpRequestBase() {
+		HttpRequestBase request = createHttpRequestBase(createHttpRequestURL());
+		return request;
+	}
 
 	protected String baseUrl() {
 		String url = getClient().getLocation().getUrl();
@@ -57,6 +63,22 @@ public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
 
 	protected String getUrlSuffix() {
 		return ""; //$NON-NLS-1$
+	}
+
+	protected String createHttpRequestURL() {
+		String bugUrl = getUrlSuffix();
+		LoginToken token = ((BugzillaRestHttpClient) getClient()).getLoginToken();
+		if (token != null && bugUrl.length() > 0) {
+			if (!bugUrl.endsWith("?")) { //$NON-NLS-1$
+				bugUrl += "&"; //$NON-NLS-1$
+			}
+			bugUrl += "token=" + token.getToken(); //$NON-NLS-1$
+		}
+		return baseUrl() + bugUrl;
+	}
+
+	protected void addHttpRequestEntities(HttpRequestBase request) throws BugzillaRestException {
+		request.setHeader(ACCEPT, APPLICATION_JSON);
 	}
 
 	public T run(IOperationMonitor monitor) throws BugzillaRestException {

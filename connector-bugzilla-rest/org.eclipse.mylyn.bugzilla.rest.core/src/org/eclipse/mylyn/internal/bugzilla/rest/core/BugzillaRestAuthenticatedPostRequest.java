@@ -12,12 +12,12 @@
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpResponse;
-import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.LoginToken;
 
 public abstract class BugzillaRestAuthenticatedPostRequest<T> extends BugzillaRestRequest<T> {
 
@@ -26,21 +26,22 @@ public abstract class BugzillaRestAuthenticatedPostRequest<T> extends BugzillaRe
 	}
 
 	@Override
-	protected HttpRequestBase createHttpRequestBase() throws IOException {
-		String bugUrl = getUrlSuffix();
-		LoginToken token = ((BugzillaRestHttpClient) getClient()).getLoginToken();
-		if (token != null && bugUrl.length() > 0) {
-			if (bugUrl.endsWith("?")) { //$NON-NLS-1$
-				bugUrl += ("token=" + token.getToken()); //$NON-NLS-1$
-			} else {
-				bugUrl += ("&token=" + token.getToken()); //$NON-NLS-1$
-			}
-		}
-
-		HttpPost request = new HttpPost(baseUrl() + bugUrl);
+	protected HttpRequestBase createHttpRequestBase(String url) {
+		HttpPost request = new HttpPost(url);
 		request.setHeader(CONTENT_TYPE, APPLICATION_JSON);
-		request.setHeader(ACCEPT, APPLICATION_JSON);
 		return request;
+	}
+
+	@Override
+	protected T parseFromJson(InputStreamReader in) throws BugzillaRestException {
+		// ignore
+		return null;
+	}
+
+	@Override
+	protected String createHttpRequestURL() {
+		String bugUrl = getUrlSuffix();
+		return baseUrl() + bugUrl;
 	}
 
 	@Override
@@ -49,6 +50,7 @@ public abstract class BugzillaRestAuthenticatedPostRequest<T> extends BugzillaRe
 			authenticate(monitor);
 		}
 		HttpRequestBase request = createHttpRequestBase();
+		addHttpRequestEntities(request);
 		CommonHttpResponse response = execute(request, monitor);
 		return processAndRelease(response, monitor);
 	}

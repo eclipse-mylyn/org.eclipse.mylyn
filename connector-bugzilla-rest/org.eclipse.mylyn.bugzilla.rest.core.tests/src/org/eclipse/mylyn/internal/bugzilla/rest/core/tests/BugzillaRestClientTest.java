@@ -19,17 +19,24 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
@@ -41,6 +48,7 @@ import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConnector;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestCreateTaskSchema;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestException;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestTaskAttachmentHandler;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestTaskSchema;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestVersion;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Field;
@@ -51,16 +59,18 @@ import org.eclipse.mylyn.internal.bugzilla.rest.test.support.BugzillaRestHarness
 import org.eclipse.mylyn.internal.bugzilla.rest.test.support.BugzillaRestTestFixture;
 import org.eclipse.mylyn.internal.commons.core.operations.NullOperationMonitor;
 import org.eclipse.mylyn.internal.commons.repositories.core.InMemoryCredentialsStore;
-import org.eclipse.mylyn.tasks.core.RepositoryResponse;
+import org.eclipse.mylyn.internal.tasks.core.TaskTask;
+import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
-import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.junit.Before;
 import org.junit.Rule;
@@ -568,6 +578,199 @@ public class BugzillaRestClientTest {
 		commentAttribute = attribute.getMappedAttribute(TaskAttribute.COMMENT_ISPRIVATE);
 		assertNotNull(commentAttribute);
 		assertThat(commentAttribute.getValue(), is("false"));
+	}
+
+	@Test
+	public void testGifAttachment() throws Exception {
+		TaskRepository repository = actualFixture.repository();
+
+		final TaskMapping taskMappingInit = new TaskMapping() {
+			@Override
+			public String getSummary() {
+				return "Bug for Gif Attachment";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The bug is used to test that gif attachments can be put and get correctly!";
+			}
+
+			@Override
+			public String getProduct() {
+				return "ManualTest";
+			}
+
+			@Override
+			public String getComponent() {
+				return "ManualC1";
+			}
+
+			@Override
+			public String getVersion() {
+				return "R1";
+			}
+		};
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(actualFixture.repository());
+		TaskData taskData = new TaskData(mapper, actualFixture.repository().getConnectorKind(),
+				actualFixture.repository().getRepositoryUrl(), "");
+		taskDataHandler.initializeTaskData(actualFixture.repository(), taskData, taskMappingInit, null);
+		taskData.getRoot().getAttribute("cf_dropdown").setValue("one");
+		taskData.getRoot()
+				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())
+				.setValue("M2");
+		RepositoryResponse response = connector.getClient(actualFixture.repository()).postTaskData(taskData, null,
+				null);
+		assertEquals(ResponseKind.TASK_CREATED, response.getReposonseKind());
+
+		final String taskId = response.getTaskId();
+		TaskAttribute attachmentAttribute = null;
+		taskData = getTaskData(taskId);
+		assertNotNull(taskData);
+		for (Entry<String, TaskAttribute> entry : taskData.getRoot().getAttributes().entrySet()) {
+			if (TaskAttribute.TYPE_ATTACHMENT.equals(entry.getValue().getMetaData().getType())) {
+				attachmentAttribute = entry.getValue();
+			}
+		}
+		assertNull(attachmentAttribute);
+		BugzillaRestTaskAttachmentHandler attachmentHandler = new BugzillaRestTaskAttachmentHandler(connector);
+		ITask task = new TaskTask(actualFixture.repository().getConnectorKind(),
+				actualFixture.repository().getRepositoryUrl(), taskId);
+
+		InputStream in = CommonTestUtil.getResource(this, "testdata/icons/bugzilla-logo.gif");
+		File file = File.createTempFile("attachment", null);
+		file.deleteOnExit();
+		OutputStream out = new FileOutputStream(file);
+		try {
+			IOUtils.copy(in, out);
+		} finally {
+			in.close();
+			out.close();
+		}
+
+		FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(file);
+		attachment.setContentType("image/gif");
+		attachment.setDescription("My Attachment 2");
+		attachment.setName("Attachment 2.gif");
+		attachmentHandler.postContent(repository, task, attachment, "comment", null, null);
+		taskData = getTaskData(taskId);
+		assertNotNull(taskData);
+		for (Entry<String, TaskAttribute> entry : taskData.getRoot().getAttributes().entrySet()) {
+			if (TaskAttribute.TYPE_ATTACHMENT.equals(entry.getValue().getMetaData().getType())) {
+				attachmentAttribute = entry.getValue();
+			}
+		}
+		assertNotNull(attachmentAttribute);
+		InputStream instream = attachmentHandler.getContent(actualFixture.repository(), task, attachmentAttribute,
+				null);
+		InputStream instream2 = CommonTestUtil.getResource(this, "testdata/icons/bugzilla-logo.gif");
+		assertTrue(IOUtils.contentEquals(instream, instream2));
+	}
+
+	@Test
+	public void testTextAttachment() throws Exception {
+		TaskRepository repository = actualFixture.repository();
+
+		final TaskMapping taskMappingInit = new TaskMapping() {
+			@Override
+			public String getSummary() {
+				return "Bug for Text Attachment";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The bug is used to test that text attachments can be put and get correctly!";
+			}
+
+			@Override
+			public String getProduct() {
+				return "ManualTest";
+			}
+
+			@Override
+			public String getComponent() {
+				return "ManualC1";
+			}
+
+			@Override
+			public String getVersion() {
+				return "R1";
+			}
+		};
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(actualFixture.repository());
+		TaskData taskData = new TaskData(mapper, actualFixture.repository().getConnectorKind(),
+				actualFixture.repository().getRepositoryUrl(), "");
+		taskDataHandler.initializeTaskData(actualFixture.repository(), taskData, taskMappingInit, null);
+		taskData.getRoot().getAttribute("cf_dropdown").setValue("one");
+		taskData.getRoot()
+				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())
+				.setValue("M2");
+		RepositoryResponse response = connector.getClient(actualFixture.repository()).postTaskData(taskData, null,
+				null);
+		assertEquals(ResponseKind.TASK_CREATED, response.getReposonseKind());
+
+		final String taskId = response.getTaskId();
+		TaskAttribute attachmentAttribute = null;
+		taskData = getTaskData(taskId);
+		assertNotNull(taskData);
+		for (Entry<String, TaskAttribute> entry : taskData.getRoot().getAttributes().entrySet()) {
+			if (TaskAttribute.TYPE_ATTACHMENT.equals(entry.getValue().getMetaData().getType())) {
+				attachmentAttribute = entry.getValue();
+			}
+		}
+		assertNull(attachmentAttribute);
+		BugzillaRestTaskAttachmentHandler attachmentHandler = new BugzillaRestTaskAttachmentHandler(connector);
+		ITask task = new TaskTask(actualFixture.repository().getConnectorKind(),
+				actualFixture.repository().getRepositoryUrl(), taskId);
+
+		InputStream in = CommonTestUtil.getResource(this, "testdata/AttachmentTest.txt");
+		File file = File.createTempFile("attachment", null);
+		file.deleteOnExit();
+		OutputStream out = new FileOutputStream(file);
+		try {
+			IOUtils.copy(in, out);
+		} finally {
+			in.close();
+			out.close();
+		}
+
+		FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(file);
+		attachment.setContentType("text/plain");
+		attachment.setDescription("My Attachment 2");
+		attachment.setName("Attachment 2.txt");
+		attachmentHandler.postContent(repository, task, attachment, "comment", null, null);
+		taskData = getTaskData(taskId);
+		assertNotNull(taskData);
+		for (Entry<String, TaskAttribute> entry : taskData.getRoot().getAttributes().entrySet()) {
+			if (TaskAttribute.TYPE_ATTACHMENT.equals(entry.getValue().getMetaData().getType())) {
+				attachmentAttribute = entry.getValue();
+			}
+		}
+		assertNotNull(attachmentAttribute);
+		InputStream instream = attachmentHandler.getContent(actualFixture.repository(), task, attachmentAttribute,
+				null);
+		InputStream instream2 = CommonTestUtil.getResource(this, "testdata/AttachmentTest.txt");
+		assertTrue(IOUtils.contentEquals(instream, instream2));
+	}
+
+	private TaskData getTaskData(final String taskId) throws CoreException, BugzillaRestException {
+		BugzillaRestClient client = connector.getClient(actualFixture.repository());
+		final Map<String, TaskData> results = new HashMap<String, TaskData>();
+		client.getTaskData(new HashSet<String>() {
+			private static final long serialVersionUID = 1L;
+
+			{
+				add(taskId);
+			}
+		}, actualFixture.repository(), new TaskDataCollector() {
+
+			@Override
+			public void accept(TaskData taskData) {
+				results.put(taskData.getTaskId(), taskData);
+			}
+		}, null);
+		return results.get(taskId);
 	}
 
 }
