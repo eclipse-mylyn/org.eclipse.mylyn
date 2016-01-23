@@ -34,6 +34,16 @@
          id="org.eclipse.mylyn.builds.sdk"
          version="0.0.0"/>
 
+   <requires>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.jdt.debug.ui"/>
+      <import plugin="org.eclipse.jdt.junit"/>
+      <import plugin="org.eclipse.jdt.ui"/>
+      <import plugin="org.eclipse.ecf.discovery"/>
+      <import plugin="org.eclipse.ecf.provider.discovery"/>
+      <import plugin="org.eclipse.ecf.provider.jmdns"/>
+   </requires>
+
    <plugin
          id="org.eclipse.mylyn.builds.tests"
          download-size="0"
