@@ -283,43 +283,64 @@
             project="org.eclipse.mylyn.builds.core"/>
       </workingSet>
     </setupTask>
-    <setupTask
-        xsi:type="mylyn:MylynQueriesTask"
-        repositoryURL="https://bugs.eclipse.org/bugs"
-        userID="${bugzilla.id}"
-        password="${eclipse.user.password}">
-      <query
-          summary="Mylyn Builds Bugs"
-          url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Builds&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial"/>
-      <query
-          summary="Mylyn Builds Features"
-          url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Builds&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=enhancement"/>
-    </setupTask>
-    <setupTask
-        xsi:type="mylyn:MylynQueriesTask"
-        connectorKind="org.eclipse.mylyn.gerrit"
-        repositoryURL="https://git.eclipse.org/r"
-        userID="${bugzilla.id}"
-        password="${eclipse.user.password}">
-      <query
-          summary="Mylyn Builds Reviews in ${git.clone.mylyn.builds.checkoutBranch}">
-        <attribute
-            key="gerrit query type"
-            value="custom"/>
-        <attribute
-            key="gerrit query string"
-            value="project:mylyn/org.eclipse.mylyn.builds status:open branch:${git.clone.mylyn.builds.checkoutBranch}"/>
-      </query>
-    </setupTask>
-    <setupTask
-        xsi:type="mylyn:MylynBuildsTask"
-        serverURL="https://hudson.eclipse.org/mylyn"
-        userID="${bugzilla.id}"
-        password="${eclipse.user.password}">
-      <buildPlan
-          name="mylyn-builds-nightly"/>
-      <description>Hudson Mylyn HIPP Instance</description>
-    </setupTask>
+    <project
+        name="builds-bugs"
+        label="Bugzilla Bugs for Mylyn Builds">
+      <setupTask
+          xsi:type="mylyn:MylynQueriesTask"
+          repositoryURL="https://bugs.eclipse.org/bugs"
+          userID="${bugzilla.id}"
+          password="${eclipse.user.password}">
+        <query
+            summary="Mylyn Builds Bugs"
+            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Builds&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial"/>
+        <query
+            summary="Mylyn Builds Features"
+            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Builds&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=enhancement"/>
+      </setupTask>
+      <stream
+          name="master"
+          label="Master"/>
+    </project>
+    <project
+        name="builds-reviews"
+        label="Gerrit Reviews for Mylyn Builds">
+      <setupTask
+          xsi:type="mylyn:MylynQueriesTask"
+          connectorKind="org.eclipse.mylyn.gerrit"
+          repositoryURL="https://git.eclipse.org/r"
+          userID="${bugzilla.id}"
+          password="${eclipse.user.password}">
+        <query
+            summary="Mylyn Builds Reviews in ${git.clone.mylyn.builds.checkoutBranch}">
+          <attribute
+              key="gerrit query type"
+              value="custom"/>
+          <attribute
+              key="gerrit query string"
+              value="project:mylyn/org.eclipse.mylyn.builds status:open branch:${git.clone.mylyn.builds.checkoutBranch}"/>
+        </query>
+      </setupTask>
+      <stream
+          name="master"
+          label="Master"/>
+    </project>
+    <project
+        name="builds-builds"
+        label="Hudson Builds for Mylyn Builds">
+      <setupTask
+          xsi:type="mylyn:MylynBuildsTask"
+          serverURL="https://hudson.eclipse.org/mylyn"
+          userID="${bugzilla.id}"
+          password="${eclipse.user.password}">
+        <buildPlan
+            name="mylyn-builds-nightly"/>
+        <description>Hudson Mylyn HIPP Instance</description>
+      </setupTask>
+      <stream
+          name="master"
+          label="Master"/>
+    </project>
     <stream
         name="master"
         label="Master"/>
@@ -373,43 +394,64 @@
             project="org.eclipse.mylyn.commons.core"/>
       </workingSet>
     </setupTask>
-    <setupTask
-        xsi:type="mylyn:MylynQueriesTask"
-        repositoryURL="https://bugs.eclipse.org/bugs"
-        userID="${bugzilla.id}"
-        password="${eclipse.user.password}">
-      <query
-          summary="Mylyn Commons Bugs"
-          url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Commons&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial"/>
-      <query
-          summary="Mylyn Commons Features"
-          url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Commons&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=enhancement"/>
-    </setupTask>
-    <setupTask
-        xsi:type="mylyn:MylynQueriesTask"
-        connectorKind="org.eclipse.mylyn.gerrit"
-        repositoryURL="https://git.eclipse.org/r"
-        userID="${bugzilla.id}"
-        password="${eclipse.user.password}">
-      <query
-          summary="Mylyn Commons Reviews in ${git.clone.mylyn.commons.checkoutBranch}">
-        <attribute
-            key="gerrit query type"
-            value="custom"/>
-        <attribute
-            key="gerrit query string"
-            value="project:mylyn/org.eclipse.mylyn.commons status:open branch:${git.clone.mylyn.commons.checkoutBranch}"/>
-      </query>
-    </setupTask>
-    <setupTask
-        xsi:type="mylyn:MylynBuildsTask"
-        serverURL="https://hudson.eclipse.org/mylyn"
-        userID="${bugzilla.id}"
-        password="${eclipse.user.password}">
-      <buildPlan
-          name="mylyn-commons-nightly"/>
-      <description>Hudson Mylyn HIPP Instance</description>
-    </setupTask>
+    <project
+        name="commons-bugs"
+        label="Bugzilla Bugs for Mylyn Commons">
+      <setupTask
+          xsi:type="mylyn:MylynQueriesTask"
+          repositoryURL="https://bugs.eclipse.org/bugs"
+          userID="${bugzilla.id}"
+          password="${eclipse.user.password}">
+        <query
+            summary="Mylyn Commons Bugs"
+            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Commons&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial"/>
+        <query
+            summary="Mylyn Commons Features"
+            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Commons&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=enhancement"/>
+      </setupTask>
+      <stream
+          name="master"
+          label="Master"/>
+    </project>
+    <project
+        name="commons-reviews"
+        label="Gerrit Reviews for Mylyn Commons">
+      <setupTask
+          xsi:type="mylyn:MylynQueriesTask"
+          connectorKind="org.eclipse.mylyn.gerrit"
+          repositoryURL="https://git.eclipse.org/r"
+          userID="${bugzilla.id}"
+          password="${eclipse.user.password}">
+        <query
+            summary="Mylyn Commons Reviews in ${git.clone.mylyn.commons.checkoutBranch}">
+          <attribute
+              key="gerrit query type"
+              value="custom"/>
+          <attribute
+              key="gerrit query string"
+              value="project:mylyn/org.eclipse.mylyn.commons status:open branch:${git.clone.mylyn.commons.checkoutBranch}"/>
+        </query>
+      </setupTask>
+      <stream
+          name="master"
+          label="Master"/>
+    </project>
+    <project
+        name="commons-builds"
+        label="Hudson Builds for Mylyn Commons">
+      <setupTask
+          xsi:type="mylyn:MylynBuildsTask"
+          serverURL="https://hudson.eclipse.org/mylyn"
+          userID="${bugzilla.id}"
+          password="${eclipse.user.password}">
+        <buildPlan
+            name="mylyn-commons-nightly"/>
+        <description>Hudson Mylyn HIPP Instance</description>
+      </setupTask>
+      <stream
+          name="master"
+          label="Master"/>
+    </project>
     <stream
         name="master"
         label="Master"/>
@@ -499,43 +541,64 @@
             project="org.eclipse.mylyn.context.core"/>
       </workingSet>
     </setupTask>
-    <setupTask
-        xsi:type="mylyn:MylynQueriesTask"
-        repositoryURL="https://bugs.eclipse.org/bugs"
-        userID="${bugzilla.id}"
-        password="${eclipse.user.password}">
-      <query
-          summary="Mylyn Context Bugs"
-          url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Context&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial"/>
-      <query
-          summary="Mylyn Context Features"
-          url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Context&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=enhancement"/>
-    </setupTask>
-    <setupTask
-        xsi:type="mylyn:MylynQueriesTask"
-        connectorKind="org.eclipse.mylyn.gerrit"
-        repositoryURL="https://git.eclipse.org/r"
-        userID="${bugzilla.id}"
-        password="${eclipse.user.password}">
-      <query
-          summary="Mylyn Context Reviews in ${git.clone.mylyn.context.checkoutBranch}">
-        <attribute
-            key="gerrit query type"
-            value="custom"/>
-        <attribute
-            key="gerrit query string"
-            value="project:mylyn/org.eclipse.mylyn.context status:open branch:${git.clone.mylyn.context.checkoutBranch}"/>
-      </query>
-    </setupTask>
-    <setupTask
-        xsi:type="mylyn:MylynBuildsTask"
-        serverURL="https://hudson.eclipse.org/mylyn"
-        userID="${bugzilla.id}"
-        password="${eclipse.user.password}">
-      <buildPlan
-          name="mylyn-context-nightly"/>
-      <description>Hudson Mylyn HIPP Instance</description>
-    </setupTask>
+    <project
+        name="context-bugs"
+        label="Bugzilla Bugs for Mylyn Context">
+      <setupTask
+          xsi:type="mylyn:MylynQueriesTask"
+          repositoryURL="https://bugs.eclipse.org/bugs"
+          userID="${bugzilla.id}"
+          password="${eclipse.user.password}">
+        <query
+            summary="Mylyn Context Bugs"
+            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Context&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial"/>
+        <query
+            summary="Mylyn Context Features"
+            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Context&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=enhancement"/>
+      </setupTask>
+      <stream
+          name="master"
+          label="Master"/>
+    </project>
+    <project
+        name="context-reviews"
+        label="Gerrit Reviews for Mylyn Context">
+      <setupTask
+          xsi:type="mylyn:MylynQueriesTask"
+          connectorKind="org.eclipse.mylyn.gerrit"
+          repositoryURL="https://git.eclipse.org/r"
+          userID="${bugzilla.id}"
+          password="${eclipse.user.password}">
+        <query
+            summary="Mylyn Context Reviews in ${git.clone.mylyn.context.checkoutBranch}">
+          <attribute
+              key="gerrit query type"
+              value="custom"/>
+          <attribute
+              key="gerrit query string"
+              value="project:mylyn/org.eclipse.mylyn.context status:open branch:${git.clone.mylyn.context.checkoutBranch}"/>
+        </query>
+      </setupTask>
+      <stream
+          name="master"
+          label="Master"/>
+    </project>
+    <project
+        name="context-builds"
+        label="Hudson Builds for Mylyn Context">
+      <setupTask
+          xsi:type="mylyn:MylynBuildsTask"
+          serverURL="https://hudson.eclipse.org/mylyn"
+          userID="${bugzilla.id}"
+          password="${eclipse.user.password}">
+        <buildPlan
+            name="mylyn-context-nightly"/>
+        <description>Hudson Mylyn HIPP Instance</description>
+      </setupTask>
+      <stream
+          name="master"
+          label="Master"/>
+    </project>
     <stream
         name="master"
         label="Master"/>
@@ -605,43 +668,64 @@
         encoding="UTF-8">
       <description>Create a placeholder file &quot;WikiText Developer Guide-toc.xml&quot;</description>
     </setupTask>
-    <setupTask
-        xsi:type="mylyn:MylynQueriesTask"
-        repositoryURL="https://bugs.eclipse.org/bugs"
-        userID="${bugzilla.id}"
-        password="${eclipse.user.password}">
-      <query
-          summary="Mylyn Docs Bugs"
-          url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Docs&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial"/>
-      <query
-          summary="Mylyn Docs Features"
-          url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Docs&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=enhancement"/>
-    </setupTask>
-    <setupTask
-        xsi:type="mylyn:MylynQueriesTask"
-        connectorKind="org.eclipse.mylyn.gerrit"
-        repositoryURL="https://git.eclipse.org/r"
-        userID="${bugzilla.id}"
-        password="${eclipse.user.password}">
-      <query
-          summary="Mylyn Docs Reviews in ${git.clone.mylyn.docs.checkoutBranch}">
-        <attribute
-            key="gerrit query type"
-            value="custom"/>
-        <attribute
-            key="gerrit query string"
-            value="project:mylyn/org.eclipse.mylyn.docs status:open branch:${git.clone.mylyn.docs.checkoutBranch}"/>
-      </query>
-    </setupTask>
-    <setupTask
-        xsi:type="mylyn:MylynBuildsTask"
-        serverURL="https://hudson.eclipse.org/mylyn"
-        userID="${bugzilla.id}"
-        password="${eclipse.user.password}">
-      <buildPlan
-          name="mylyn-docs-nightly"/>
-      <description>Hudson Mylyn HIPP Instance</description>
-    </setupTask>
+    <project
+        name="docs-bugs"
+        label="Bugzilla Bugs for Mylyn Docs">
+      <setupTask
+          xsi:type="mylyn:MylynQueriesTask"
+          repositoryURL="https://bugs.eclipse.org/bugs"
+          userID="${bugzilla.id}"
+          password="${eclipse.user.password}">
+        <query
+            summary="Mylyn Docs Bugs"
+            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Docs&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial"/>
+        <query
+            summary="Mylyn Docs Features"
+            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Docs&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=enhancement"/>
+      </setupTask>
+      <stream
+          name="master"
+          label="Master"/>
+    </project>
+    <project
+        name="docs-reviews"
+        label="Gerrit Reviews for Mylyn Docs">
+      <setupTask
+          xsi:type="mylyn:MylynQueriesTask"
+          connectorKind="org.eclipse.mylyn.gerrit"
+          repositoryURL="https://git.eclipse.org/r"
+          userID="${bugzilla.id}"
+          password="${eclipse.user.password}">
+        <query
+            summary="Mylyn Docs Reviews in ${git.clone.mylyn.docs.checkoutBranch}">
+          <attribute
+              key="gerrit query type"
+              value="custom"/>
+          <attribute
+              key="gerrit query string"
+              value="project:mylyn/org.eclipse.mylyn.docs status:open branch:${git.clone.mylyn.docs.checkoutBranch}"/>
+        </query>
+      </setupTask>
+      <stream
+          name="master"
+          label="Master"/>
+    </project>
+    <project
+        name="docs-builds"
+        label="Hudson Builds for Mylyn Docs">
+      <setupTask
+          xsi:type="mylyn:MylynBuildsTask"
+          serverURL="https://hudson.eclipse.org/mylyn"
+          userID="${bugzilla.id}"
+          password="${eclipse.user.password}">
+        <buildPlan
+            name="mylyn-docs-nightly"/>
+        <description>Hudson Mylyn HIPP Instance</description>
+      </setupTask>
+      <stream
+          name="master"
+          label="Master"/>
+    </project>
     <stream
         name="master"
         label="Master"/>
@@ -693,43 +777,65 @@
             project="org.eclipse.mylyn.sandbox.ui"/>
       </workingSet>
     </setupTask>
-    <setupTask
-        xsi:type="mylyn:MylynQueriesTask"
-        repositoryURL="https://bugs.eclipse.org/bugs"
-        userID="${bugzilla.id}"
-        password="${eclipse.user.password}">
-      <query
-          summary="Mylyn Incubator Bugs"
-          url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Incubator&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial"/>
-      <query
-          summary="Mylyn Incubator Features"
-          url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Incubator&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=enhancement"/>
-    </setupTask>
-    <setupTask
-        xsi:type="mylyn:MylynQueriesTask"
-        connectorKind="org.eclipse.mylyn.gerrit"
-        repositoryURL="https://git.eclipse.org/r"
-        userID="${bugzilla.id}"
-        password="${eclipse.user.password}">
-      <query
-          summary="Mylyn Incubator Reviews in ${git.clone.mylyn.incubator.checkoutBranch}">
-        <attribute
-            key="gerrit query type"
-            value="custom"/>
-        <attribute
-            key="gerrit query string"
-            value="project:mylyn/org.eclipse.mylyn.incubator status:open branch:${git.clone.mylyn.incubator.checkoutBranch}"/>
-      </query>
-    </setupTask>
-    <setupTask
-        xsi:type="mylyn:MylynBuildsTask"
-        serverURL="https://hudson.eclipse.org/mylyn"
-        userID="${bugzilla.id}"
-        password="${eclipse.user.password}">
-      <buildPlan
-          name="mylyn-incubator-nightly"/>
-      <description>Hudson Mylyn HIPP Instance</description>
-    </setupTask>
+    <project
+        name="incubator-bugs"
+        label="Bugzilla Bugs for Mylyn Incubator">
+      <setupTask
+          xsi:type="mylyn:MylynQueriesTask"
+          repositoryURL="https://bugs.eclipse.org/bugs"
+          userID="${bugzilla.id}"
+          password="${eclipse.user.password}">
+        <query
+            summary="Mylyn Incubator Bugs"
+            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Incubator&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial"/>
+        <query
+            summary="Mylyn Incubator Features"
+            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Incubator&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=enhancement"/>
+      </setupTask>
+      <stream
+          name="master"
+          label="Master"/>
+    </project>
+    <project
+        name="incubator-reviews"
+        label="Gerrit Reviews for Mylyn Incubator">
+      <setupTask
+          xsi:type="mylyn:MylynQueriesTask"
+          connectorKind="org.eclipse.mylyn.gerrit"
+          repositoryURL="https://git.eclipse.org/r"
+          userID="${bugzilla.id}"
+          password="${eclipse.user.password}">
+        <query
+            summary="Mylyn Incubator Reviews in ${git.clone.mylyn.incubator.checkoutBranch}">
+          <attribute
+              key="gerrit query type"
+              value="custom"/>
+          <attribute
+              key="gerrit query string"
+              value="project:mylyn/org.eclipse.mylyn.incubator status:open branch:${git.clone.mylyn.incubator.checkoutBranch}"/>
+        </query>
+      </setupTask>
+      <stream
+          name="master"
+          label="Master"/>
+    </project>
+    <project
+        name="incubator-builds"
+        label="Hudson Builds for Mylyn Incubator">
+      <setupTask
+          xsi:type="mylyn:MylynBuildsTask"
+          serverURL="https://hudson.eclipse.org/mylyn"
+          userID="${bugzilla.id}"
+          password="${eclipse.user.password}">
+        <buildPlan
+            name="mylyn-incubator-nightly"/>
+        <description>Hudson Mylyn HIPP Instance</description>
+      </setupTask>
+      <stream
+          name="master"
+          label="Master"/>
+      <description></description>
+    </project>
     <stream
         name="master"
         label="Master"/>
@@ -841,31 +947,64 @@
             project="org.eclipse.mylyn.reviews.core"/>
       </workingSet>
     </setupTask>
-    <setupTask
-        xsi:type="mylyn:MylynQueriesTask"
-        connectorKind="org.eclipse.mylyn.gerrit"
-        repositoryURL="https://git.eclipse.org/r"
-        userID="${bugzilla.id}"
-        password="${eclipse.user.password}">
-      <query
-          summary="Mylyn Reviews Reviews in ${git.clone.mylyn.reviews.checkoutBranch}">
-        <attribute
-            key="gerrit query type"
-            value="custom"/>
-        <attribute
-            key="gerrit query string"
-            value="project:mylyn/org.eclipse.mylyn.reviews status:open branch:${git.clone.mylyn.reviews.checkoutBranch}"/>
-      </query>
-    </setupTask>
-    <setupTask
-        xsi:type="mylyn:MylynBuildsTask"
-        serverURL="https://hudson.eclipse.org/mylyn"
-        userID="${bugzilla.id}"
-        password="${eclipse.user.password}">
-      <buildPlan
-          name="mylyn-reviews-nightly"/>
-      <description>Hudson Mylyn HIPP Instance</description>
-    </setupTask>
+    <project
+        name="reviews-bugs"
+        label="Bugzilla Bugs for Mylyn Reviews">
+      <setupTask
+          xsi:type="mylyn:MylynQueriesTask"
+          repositoryURL="https://bugs.eclipse.org/bugs"
+          userID="${bugzilla.id}"
+          password="${eclipse.user.password}">
+        <query
+            summary="Mylyn Reviews Bugs"
+            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Reviews&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial"/>
+        <query
+            summary="Mylyn Reviews Features"
+            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Reviews&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=enhancement"/>
+      </setupTask>
+      <stream
+          name="master"
+          label="Master"/>
+    </project>
+    <project
+        name="reviews-reviews"
+        label="Gerrit Reviews for Mylyn Reviews">
+      <setupTask
+          xsi:type="mylyn:MylynQueriesTask"
+          connectorKind="org.eclipse.mylyn.gerrit"
+          repositoryURL="https://git.eclipse.org/r"
+          userID="${bugzilla.id}"
+          password="${eclipse.user.password}">
+        <query
+            summary="Mylyn Reviews Reviews in ${git.clone.mylyn.reviews.checkoutBranch}">
+          <attribute
+              key="gerrit query type"
+              value="custom"/>
+          <attribute
+              key="gerrit query string"
+              value="project:mylyn/org.eclipse.mylyn.reviews status:open branch:${git.clone.mylyn.reviews.checkoutBranch}"/>
+        </query>
+      </setupTask>
+      <stream
+          name="master"
+          label="Master"/>
+    </project>
+    <project
+        name="reviews-builds"
+        label="Hudson Builds for Mylyn Reviews">
+      <setupTask
+          xsi:type="mylyn:MylynBuildsTask"
+          serverURL="https://hudson.eclipse.org/mylyn"
+          userID="${bugzilla.id}"
+          password="${eclipse.user.password}">
+        <buildPlan
+            name="mylyn-reviews-nightly"/>
+        <description>Hudson Mylyn HIPP Instance</description>
+      </setupTask>
+      <stream
+          name="master"
+          label="Master"/>
+    </project>
     <stream
         name="master"
         label="Master"/>
@@ -935,43 +1074,6 @@
         </predicate>
       </workingSet>
     </setupTask>
-    <setupTask
-        xsi:type="mylyn:MylynQueriesTask"
-        repositoryURL="https://bugs.eclipse.org/bugs"
-        userID="${bugzilla.id}"
-        password="${eclipse.user.password}">
-      <query
-          summary="Mylyn Tasks Bugs"
-          url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Tasks&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial"/>
-      <query
-          summary="Mylyn Tasks Features"
-          url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Tasks&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=enhancement"/>
-    </setupTask>
-    <setupTask
-        xsi:type="mylyn:MylynQueriesTask"
-        connectorKind="org.eclipse.mylyn.gerrit"
-        repositoryURL="https://git.eclipse.org/r"
-        userID="${bugzilla.id}"
-        password="${eclipse.user.password}">
-      <query
-          summary="Mylyn Tasks Reviews in ${git.clone.mylyn.tasks.checkoutBranch}">
-        <attribute
-            key="gerrit query type"
-            value="custom"/>
-        <attribute
-            key="gerrit query string"
-            value="project:mylyn/org.eclipse.mylyn.tasks status:open branch:${git.clone.mylyn.tasks.checkoutBranch}"/>
-      </query>
-    </setupTask>
-    <setupTask
-        xsi:type="mylyn:MylynBuildsTask"
-        serverURL="https://hudson.eclipse.org/mylyn"
-        userID="${bugzilla.id}"
-        password="${eclipse.user.password}">
-      <buildPlan
-          name="mylyn-tasks-nightly"/>
-      <description>Hudson Mylyn HIPP Instance</description>
-    </setupTask>
     <project
         name="bugzilla"
         label="Bugzilla Connector (REST)">
@@ -1003,6 +1105,64 @@
                 pattern="org\.eclipse\.mylyn\.bugzilla\.rest.*"/>
           </predicate>
         </workingSet>
+      </setupTask>
+      <stream
+          name="master"
+          label="Master"/>
+    </project>
+    <project
+        name="tasks-bugs"
+        label="Bugzilla Bugs for Mylyn Tasks">
+      <setupTask
+          xsi:type="mylyn:MylynQueriesTask"
+          repositoryURL="https://bugs.eclipse.org/bugs"
+          userID="${bugzilla.id}"
+          password="${eclipse.user.password}">
+        <query
+            summary="Mylyn Tasks Bugs"
+            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Tasks&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial"/>
+        <query
+            summary="Mylyn Tasks Features"
+            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Tasks&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=enhancement"/>
+      </setupTask>
+      <stream
+          name="master"
+          label="Master"/>
+    </project>
+    <project
+        name="tasks-reviews"
+        label="Gerrit Reviews for Mylyn Tasks">
+      <setupTask
+          xsi:type="mylyn:MylynQueriesTask"
+          connectorKind="org.eclipse.mylyn.gerrit"
+          repositoryURL="https://git.eclipse.org/r"
+          userID="${bugzilla.id}"
+          password="${eclipse.user.password}">
+        <query
+            summary="Mylyn Tasks Reviews in ${git.clone.mylyn.tasks.checkoutBranch}">
+          <attribute
+              key="gerrit query type"
+              value="custom"/>
+          <attribute
+              key="gerrit query string"
+              value="project:mylyn/org.eclipse.mylyn.tasks status:open branch:${git.clone.mylyn.tasks.checkoutBranch}"/>
+        </query>
+      </setupTask>
+      <stream
+          name="master"
+          label="Master"/>
+    </project>
+    <project
+        name="tasks-builds"
+        label="Hudson Builds for Mylyn Tasks">
+      <setupTask
+          xsi:type="mylyn:MylynBuildsTask"
+          serverURL="https://hudson.eclipse.org/mylyn"
+          userID="${bugzilla.id}"
+          password="${eclipse.user.password}">
+        <buildPlan
+            name="mylyn-tasks-nightly"/>
+        <description>Hudson Mylyn HIPP Instance</description>
       </setupTask>
       <stream
           name="master"
@@ -1089,43 +1249,64 @@
             project="org.eclipse.mylyn.versions.core"/>
       </workingSet>
     </setupTask>
-    <setupTask
-        xsi:type="mylyn:MylynQueriesTask"
-        repositoryURL="https://bugs.eclipse.org/bugs"
-        userID="${bugzilla.id}"
-        password="${eclipse.user.password}">
-      <query
-          summary="Mylyn Versions Bugs"
-          url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Versions&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial"/>
-      <query
-          summary="Mylyn Versions Features"
-          url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Versions&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=enhancement"/>
-    </setupTask>
-    <setupTask
-        xsi:type="mylyn:MylynQueriesTask"
-        connectorKind="org.eclipse.mylyn.gerrit"
-        repositoryURL="https://git.eclipse.org/r"
-        userID="${bugzilla.id}"
-        password="${eclipse.user.password}">
-      <query
-          summary="Mylyn Versions Reviews in ${git.clone.mylyn.versions.checkoutBranch}">
-        <attribute
-            key="gerrit query type"
-            value="custom"/>
-        <attribute
-            key="gerrit query string"
-            value="project:mylyn/org.eclipse.mylyn.versions status:open branch:${git.clone.mylyn.versions.checkoutBranch}"/>
-      </query>
-    </setupTask>
-    <setupTask
-        xsi:type="mylyn:MylynBuildsTask"
-        serverURL="https://hudson.eclipse.org/mylyn"
-        userID="${bugzilla.id}"
-        password="${eclipse.user.password}">
-      <buildPlan
-          name="mylyn-versions-nightly"/>
-      <description>Hudson Mylyn HIPP Instance</description>
-    </setupTask>
+    <project
+        name="versions-bugs"
+        label="Bugzilla Bugs for Mylyn Versions">
+      <setupTask
+          xsi:type="mylyn:MylynQueriesTask"
+          repositoryURL="https://bugs.eclipse.org/bugs"
+          userID="${bugzilla.id}"
+          password="${eclipse.user.password}">
+        <query
+            summary="Mylyn Versions Bugs"
+            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Versions&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial"/>
+        <query
+            summary="Mylyn Versions Features"
+            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Versions&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=enhancement"/>
+      </setupTask>
+      <stream
+          name="master"
+          label="Master"/>
+    </project>
+    <project
+        name="versions-reviews"
+        label="Gerrit Reviews for Mylyn Versions">
+      <setupTask
+          xsi:type="mylyn:MylynQueriesTask"
+          connectorKind="org.eclipse.mylyn.gerrit"
+          repositoryURL="https://git.eclipse.org/r"
+          userID="${bugzilla.id}"
+          password="${eclipse.user.password}">
+        <query
+            summary="Mylyn Versions Reviews in ${git.clone.mylyn.versions.checkoutBranch}">
+          <attribute
+              key="gerrit query type"
+              value="custom"/>
+          <attribute
+              key="gerrit query string"
+              value="project:mylyn/org.eclipse.mylyn.versions status:open branch:${git.clone.mylyn.versions.checkoutBranch}"/>
+        </query>
+      </setupTask>
+      <stream
+          name="master"
+          label="Master"/>
+    </project>
+    <project
+        name="versions-builds"
+        label="Hudson Builds for Mylyn Versions">
+      <setupTask
+          xsi:type="mylyn:MylynBuildsTask"
+          serverURL="https://hudson.eclipse.org/mylyn"
+          userID="${bugzilla.id}"
+          password="${eclipse.user.password}">
+        <buildPlan
+            name="mylyn-versions-nightly"/>
+        <description>Hudson Mylyn HIPP Instance</description>
+      </setupTask>
+      <stream
+          name="master"
+          label="Master"/>
+    </project>
     <stream
         name="master"
         label="Master"/>
