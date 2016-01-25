@@ -256,7 +256,7 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * @param repository
 	 *            the task repository matching this connector
-	 * @param taskIdOrKey
+	 * @param taskId
 	 *            a task identifier
 	 * @param monitor
 	 *            the progress monitor
@@ -266,7 +266,7 @@ public abstract class AbstractRepositoryConnector {
 	 * @since 3.0
 	 */
 	@NonNull
-	public abstract TaskData getTaskData(@NonNull TaskRepository repository, @NonNull String taskIdOrKey,
+	public abstract TaskData getTaskData(@NonNull TaskRepository repository, @NonNull String taskId,
 			@NonNull IProgressMonitor monitor) throws CoreException;
 
 	/**
