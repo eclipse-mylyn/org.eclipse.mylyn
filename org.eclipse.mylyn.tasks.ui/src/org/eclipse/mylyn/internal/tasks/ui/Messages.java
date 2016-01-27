@@ -101,6 +101,10 @@ public class Messages extends NLS {
 
 	public static String TaskSearchPage_ERROR_Unable_to_present_query_page;
 
+	public static String TaskSearchPage_no_available_repositories;
+
+	public static String TaskSearchPage_no_searchable_repositories;
+
 	public static String TaskSearchPage_No_task_found_matching_key_;
 
 	public static String TaskSearchPage_Repository_Search;

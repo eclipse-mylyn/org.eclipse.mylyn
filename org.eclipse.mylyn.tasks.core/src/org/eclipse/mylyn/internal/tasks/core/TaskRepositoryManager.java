@@ -66,8 +66,6 @@ public class TaskRepositoryManager implements IRepositoryManager {
 
 	private final Set<TaskRepository> orphanedRepositories = new HashSet<TaskRepository>();
 
-	public static final String MESSAGE_NO_REPOSITORY = Messages.TaskRepositoryManager_No_repository_available;
-
 	public static final String PREFIX_LOCAL = "local-"; //$NON-NLS-1$
 
 	private static final Map<String, Category> repositoryCategories = new HashMap<String, Category>();
@@ -421,7 +419,8 @@ public class TaskRepositoryManager implements IRepositoryManager {
 			File repositoriesFile = new File(destinationPath);
 			externalizer.writeRepositoriesToXML(repositoriesToWrite, repositoriesFile);
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not save repositories", t)); //$NON-NLS-1$
+			StatusHandler
+					.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not save repositories", t)); //$NON-NLS-1$
 			return false;
 		}
 		return true;

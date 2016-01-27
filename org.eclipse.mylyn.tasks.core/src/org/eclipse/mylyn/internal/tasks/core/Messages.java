@@ -35,8 +35,6 @@ public class Messages extends NLS {
 
 	public static String RepositoryExternalizationParticipant_Task_Repositories;
 
-	public static String TaskRepositoryManager_No_repository_available;
-
 	public static String UncategorizedTaskContainer_Uncategorized;
 
 	public static String UnmatchedTaskContainer_Unmatched;

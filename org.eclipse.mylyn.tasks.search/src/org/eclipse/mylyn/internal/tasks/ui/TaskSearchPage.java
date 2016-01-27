@@ -27,7 +27,6 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -103,6 +102,8 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 	private ISearchPageContainer pageContainer;
 
 	private ITaskSearchPageContainer taskSearchPageContainer;
+
+	private ImageHyperlink clearKey;
 
 	public boolean performAction() {
 		saveDialogSettings();
@@ -198,7 +199,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			}
 		});
 
-		ImageHyperlink clearKey = new ImageHyperlink(group, SWT.NONE);
+		clearKey = new ImageHyperlink(group, SWT.NONE);
 		clearKey.setImage(CommonImages.getImage(CommonImages.REMOVE));
 		clearKey.addHyperlinkListener(new HyperlinkAdapter() {
 
@@ -215,7 +216,8 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			//setControlsEnabled(queryPages[currentPageIndex], false);
 			if (queryPages != null && queryPages[currentPageIndex] != null
 					&& queryPages[currentPageIndex].getData(PAGE_KEY) instanceof AbstractRepositoryQueryPage) {
-				((AbstractRepositoryQueryPage) queryPages[currentPageIndex].getData(PAGE_KEY)).setControlsEnabled(false);
+				((AbstractRepositoryQueryPage) queryPages[currentPageIndex].getData(PAGE_KEY))
+						.setControlsEnabled(false);
 			}
 			if (repositoryCombo.getSelectionIndex() > -1) {
 				pageContainer.setPerformActionEnabled(true);
@@ -228,6 +230,12 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			}
 			//setControlsEnabled(queryPages[currentPageIndex], true);
 			//pageContainer.setPerformActionEnabled(false);
+		}
+		if (keyText != null && repositoryCombo != null && clearKey != null) {
+			boolean hasRepos = repositoryCombo.getItemCount() > 0;
+			keyText.setEnabled(hasRepos);
+			repositoryCombo.setEnabled(hasRepos);
+			clearKey.setEnabled(hasRepos);
 		}
 	}
 
@@ -253,8 +261,8 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		}
 
 		// XXX: work around for initial search page size issue bug#198493
-		IDialogSettings searchDialogSettings = SearchPlugin.getDefault().getDialogSettingsSection(
-				"DialogBounds_SearchDialog"); //$NON-NLS-1$
+		IDialogSettings searchDialogSettings = SearchPlugin.getDefault()
+				.getDialogSettingsSection("DialogBounds_SearchDialog"); //$NON-NLS-1$
 		if (searchDialogSettings.get("DIALOG_WIDTH") == null) { //$NON-NLS-1$
 			fParentComposite.getParent().getShell().pack();
 		}
@@ -266,7 +274,8 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		ITaskSearchPage searchPage;
 		Status status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 				"Error occurred while constructing search page for " + repository.getRepositoryUrl() + " [" //$NON-NLS-1$ //$NON-NLS-2$
-						+ repository.getConnectorKind() + "]", e);//$NON-NLS-1$
+						+ repository.getConnectorKind() + "]", //$NON-NLS-1$
+				e);
 		StatusHandler.log(status);
 
 		searchPage = new DeadSearchPage(repository, status);
@@ -296,7 +305,8 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 
 		if (queryPages[pageIndex] == null) {
 			if (repository != null) {
-				final AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
+				final AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin
+						.getConnectorUi(repository.getConnectorKind());
 				if (connectorUi != null) {
 					SafeRunner.run(new ISafeRunnable() {
 						public void run() throws Exception {
@@ -324,8 +334,8 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 
 		// update enablement of the task id field
 		if (repository != null) {
-			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-					repository.getConnectorKind());
+			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+					.getRepositoryConnector(repository.getConnectorKind());
 			if (connector.canCreateTaskFromKey(repository)) {
 				keyText.setEnabled(true);
 			} else {
@@ -365,11 +375,11 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			getControl().setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
 
 			List<TaskRepository> repositories = TasksUi.getRepositoryManager().getAllRepositories();
-			List<TaskRepository> searchableRepositories = new ArrayList<TaskRepository>();
+			List<TaskRepository> searchableRepositories = new ArrayList<TaskRepository>(repositories.size());
 			for (TaskRepository repository : repositories) {
 				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
-				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-						repository.getConnectorKind());
+				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+						.getRepositoryConnector(repository.getConnectorKind());
 				if ((connectorUi != null && connectorUi.hasSearchPage() && !repository.isOffline())
 						|| connector.canCreateTaskFromKey(repository)) {
 					searchableRepositories.add(repository);
@@ -396,9 +406,16 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 					repositoryCombo.setData(searchableRepositories.get(x).getRepositoryLabel(),
 							searchableRepositories.get(x));
 				}
-				if (repositoryUrls.length == 0) {
-					MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
-							Messages.TaskSearchPage_Repository_Search, TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
+				if (searchableRepositories.isEmpty()) {
+					if (repositories.isEmpty()) {
+						MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
+								Messages.TaskSearchPage_Repository_Search,
+								Messages.TaskSearchPage_no_available_repositories);
+					} else {
+						MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
+								Messages.TaskSearchPage_Repository_Search,
+								Messages.TaskSearchPage_no_searchable_repositories);
+					}
 				} else {
 					String selectRepo = settings.get(STORE_REPO_ID);
 					if (selectRepo != null && repositoryCombo.indexOf(selectRepo) > -1) {
@@ -587,7 +604,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 
 		@Override
 		public void applyTo(IRepositoryQuery query) {
-			// ignore			
+			// ignore
 		}
 
 	}
