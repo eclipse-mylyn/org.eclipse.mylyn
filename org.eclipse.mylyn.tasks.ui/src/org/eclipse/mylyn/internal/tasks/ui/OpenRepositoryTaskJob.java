@@ -32,6 +32,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
@@ -97,8 +98,17 @@ public class OpenRepositoryTaskJob extends Job {
 	}
 
 	/**
-	 * Returns the task if it was created when openeing
-	 * 
+	 * Creates a job that fetches a task with the given task id or key and opens it.
+	 */
+	public OpenRepositoryTaskJob(IWorkbenchPage page, String repositoryKind, String repositoryUrl, String taskIdOrKey,
+			String taskUrl) {
+		this(repositoryKind, repositoryUrl, taskIdOrKey, taskUrl, page);
+		taskKey = taskIdOrKey;
+	}
+
+	/**
+	 * Returns the task if it was created when opening
+	 *
 	 * @return
 	 */
 	public ITask getTask() {
@@ -118,15 +128,12 @@ public class OpenRepositoryTaskJob extends Job {
 		if (repository == null) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					MessageDialog.openError(
-							null,
-							Messages.OpenRepositoryTaskJob_Repository_Not_Found,
+					MessageDialog.openError(null, Messages.OpenRepositoryTaskJob_Repository_Not_Found,
 							MessageFormat.format(
 									Messages.OpenRepositoryTaskJob_Could_not_find_repository_configuration_for_X,
-									repositoryUrl)
-									+ "\n" + //$NON-NLS-1$
-									MessageFormat.format(Messages.OpenRepositoryTaskJob_Please_set_up_repository_via_X,
-											Messages.TasksUiPlugin_Task_Repositories));
+									repositoryUrl) + "\n" + //$NON-NLS-1$
+							MessageFormat.format(Messages.OpenRepositoryTaskJob_Please_set_up_repository_via_X,
+									Messages.TasksUiPlugin_Task_Repositories));
 					TasksUiUtil.openUrl(taskUrl);
 				}
 
@@ -141,23 +148,26 @@ public class OpenRepositoryTaskJob extends Job {
 				task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
 				TasksUiPlugin.getTaskDataManager().putUpdatedTaskData(task, taskData, true);
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+
 					public void run() {
 						TaskOpenEvent event = TasksUiInternal.openTask(task, taskId);
 						if (listener != null && event != null) {
 							listener.taskOpened(event);
 						}
 						if (timestamp != 0 && event != null) {
-							List<TaskAttribute> commentAttributes = taskData.getAttributeMapper().getAttributesByType(
-									taskData, TaskAttribute.TYPE_COMMENT);
+							List<TaskAttribute> commentAttributes = taskData.getAttributeMapper()
+									.getAttributesByType(taskData, TaskAttribute.TYPE_COMMENT);
 							if (commentAttributes.size() > 0) {
 								for (TaskAttribute commentAttribute : commentAttributes) {
-									TaskAttribute commentCreateDate = commentAttribute.getMappedAttribute(TaskAttribute.COMMENT_DATE);
+									TaskAttribute commentCreateDate = commentAttribute
+											.getMappedAttribute(TaskAttribute.COMMENT_DATE);
 									if (commentCreateDate != null) {
 										Date dateValue = taskData.getAttributeMapper().getDateValue(commentCreateDate);
 										if (dateValue.getTime() < timestamp) {
 											continue;
 										}
-										TaskAttribute dn = commentAttribute.getMappedAttribute(TaskAttribute.COMMENT_NUMBER);
+										TaskAttribute dn = commentAttribute
+												.getMappedAttribute(TaskAttribute.COMMENT_NUMBER);
 										TaskEditor editor = (TaskEditor) event.getEditor();
 										if (dn != null) {
 											editor.selectReveal(TaskAttribute.PREFIX_COMMENT + dn.getValue());
@@ -189,17 +199,36 @@ public class OpenRepositoryTaskJob extends Job {
 	}
 
 	TaskData getTaskData(AbstractRepositoryConnector connector, IProgressMonitor monitor) throws CoreException {
-		if (taskId != null) {
+		if (taskId != null && taskKey != null && connector.supportsSearchByTaskKey(repository)) {
+			try {
+				TaskData data = getTaskDataByKey(connector, monitor);
+				if (data != null) {
+					return data;
+				}
+			} catch (CoreException | RuntimeException e) {
+			}
+			try {
+				return connector.getTaskData(repository, taskId, monitor);
+			} catch (CoreException | RuntimeException e) {
+				// do not display connector's message because it may be about using a task key as an ID which is not the real error
+				throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						NLS.bind("Could not find task with ID \"{0}\" on repository {1}.", taskId, repository), e)); //$NON-NLS-1$
+			}
+		} else if (taskId != null) {
 			return connector.getTaskData(repository, taskId, monitor);
 		} else if (taskKey != null && connector.supportsSearchByTaskKey(repository)) {
-			TaskData searchTaskData = connector.searchByTaskKey(repository, taskKey, monitor);
-			if (searchTaskData.isPartial()) {
-				return connector.getTaskData(repository, searchTaskData.getTaskId(), monitor);
-			} else {
-				return searchTaskData;
-			}
+			return getTaskDataByKey(connector, monitor);
 		}
 		return null;
+	}
+
+	private TaskData getTaskDataByKey(AbstractRepositoryConnector connector, IProgressMonitor monitor)
+			throws CoreException {
+		TaskData searchTaskData = connector.searchByTaskKey(repository, taskKey, monitor);
+		if (searchTaskData != null && searchTaskData.isPartial()) {
+			return connector.getTaskData(repository, searchTaskData.getTaskId(), monitor);
+		}
+		return searchTaskData;
 	}
 
 }

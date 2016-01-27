@@ -28,6 +28,7 @@ import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -110,7 +111,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		String key = keyText.getText();
 		if (key != null && key.trim().length() > 0) {
 			key = key.trim();
-			boolean openSuccessful = TasksUiUtil.openTask(repository, key);
+			boolean openSuccessful = TasksUiInternal.openTaskByIdOrKey(repository, key, null);
 			if (!openSuccessful) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 						Messages.TaskSearchPage_Task_Search, Messages.TaskSearchPage_No_task_found_matching_key_ + key);

@@ -880,27 +880,17 @@ public class TasksUiInternal {
 	}
 
 	public static boolean openTask(TaskRepository repository, String taskId, TaskOpenListener listener) {
-		Assert.isNotNull(repository);
-		Assert.isNotNull(taskId);
-
-		AbstractTask task = (AbstractTask) TasksUiInternal.getTaskList().getTask(repository.getRepositoryUrl(), taskId);
-		if (task == null) {
-			task = TasksUiPlugin.getTaskList().getTaskByKey(repository.getRepositoryUrl(), taskId);
-		}
+		AbstractTask task = getTaskFromTaskList(repository, taskId);
 		if (task != null) {
 			// task is known, open in task editor
-			TaskOpenEvent event = TasksUiInternal.openTask(task, taskId);
-			if (listener != null && event != null) {
-				listener.taskOpened(event);
-			}
-			return event != null;
+			return openKnownTaskInEditor(task, taskId, listener);
 		} else {
 			// search for task
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
 			if (connectorUi != null) {
 				try {
-					return TasksUiInternal.openRepositoryTask(connectorUi.getConnectorKind(),
-							repository.getRepositoryUrl(), taskId, listener);
+					return openRepositoryTask(connectorUi.getConnectorKind(), repository.getRepositoryUrl(), taskId,
+							listener);
 				} catch (Exception e) {
 					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 							"Internal error while opening repository task", e)); //$NON-NLS-1$
@@ -908,6 +898,47 @@ public class TasksUiInternal {
 			}
 		}
 		return false;
+	}
+
+	public static boolean openTaskByIdOrKey(TaskRepository repository, String taskIdOrKey, TaskOpenListener listener) {
+		AbstractTask task = getTaskFromTaskList(repository, taskIdOrKey);
+		if (task != null) {
+			// task is known, open in task editor
+			return openKnownTaskInEditor(task, taskIdOrKey, listener);
+		} else {
+			// search for task
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
+			if (connectorUi != null) {
+				try {
+					return openRepositoryTaskByIdOrKey(connectorUi.getConnectorKind(), repository.getRepositoryUrl(),
+							taskIdOrKey, listener);
+				} catch (Exception e) {
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							"Internal error while opening repository task", e)); //$NON-NLS-1$
+				}
+			}
+		}
+		return false;
+	}
+
+	private static boolean openKnownTaskInEditor(AbstractTask task, String taskIdOrKey, TaskOpenListener listener) {
+		TaskOpenEvent event = TasksUiInternal.openTask(task, taskIdOrKey);
+		if (listener != null && event != null) {
+			listener.taskOpened(event);
+		}
+		return event != null;
+	}
+
+	private static AbstractTask getTaskFromTaskList(TaskRepository repository, String taskIdOrKey) {
+		Assert.isNotNull(repository);
+		Assert.isNotNull(taskIdOrKey);
+
+		AbstractTask task = (AbstractTask) TasksUiInternal.getTaskList().getTask(repository.getRepositoryUrl(),
+				taskIdOrKey);
+		if (task == null) {
+			task = TasksUiPlugin.getTaskList().getTaskByKey(repository.getRepositoryUrl(), taskIdOrKey);
+		}
+		return task;
 	}
 
 	public static TaskOpenEvent openTask(ITask task, String taskId) {
@@ -1024,20 +1055,12 @@ public class TasksUiInternal {
 	 */
 	public static boolean openRepositoryTask(String connectorKind, String repositoryUrl, String id,
 			TaskOpenListener listener, long timestamp) {
-		IRepositoryManager repositoryManager = TasksUi.getRepositoryManager();
-		AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(connectorKind);
-		String taskUrl = connector.getTaskUrl(repositoryUrl, id);
+		String taskUrl = getTaskUrl(connectorKind, repositoryUrl, id);
 		if (taskUrl == null) {
 			return false;
 		}
 
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		if (window == null) {
-			IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
-			if (windows != null && windows.length > 0) {
-				window = windows[0];
-			}
-		}
+		IWorkbenchWindow window = getWorkbenchWindow();
 		if (window == null) {
 			return false;
 		}
@@ -1049,6 +1072,48 @@ public class TasksUiInternal {
 		job.schedule();
 
 		return true;
+	}
+
+	/**
+	 * Opens a task with a given search string that can be a task id or task key.
+	 *
+	 * @return true if the task was successfully opened
+	 */
+	public static boolean openRepositoryTaskByIdOrKey(String connectorKind, String repositoryUrl, String idOrKey,
+			TaskOpenListener listener) {
+		String taskUrl = getTaskUrl(connectorKind, repositoryUrl, idOrKey);
+		if (taskUrl == null) {
+			return false;
+		}
+
+		IWorkbenchWindow window = getWorkbenchWindow();
+		if (window == null) {
+			return false;
+		}
+		IWorkbenchPage page = window.getActivePage();
+
+		OpenRepositoryTaskJob job = new OpenRepositoryTaskJob(page, connectorKind, repositoryUrl, idOrKey, taskUrl);
+		job.setListener(listener);
+		job.schedule();
+
+		return true;
+	}
+
+	private static IWorkbenchWindow getWorkbenchWindow() {
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (window == null) {
+			IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
+			if (windows != null && windows.length > 0) {
+				window = windows[0];
+			}
+		}
+		return window;
+	}
+
+	private static String getTaskUrl(String connectorKind, String repositoryUrl, String idOrKey) {
+		IRepositoryManager repositoryManager = TasksUi.getRepositoryManager();
+		AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(connectorKind);
+		return connector.getTaskUrl(repositoryUrl, idOrKey);
 	}
 
 	/**
@@ -1255,14 +1320,18 @@ public class TasksUiInternal {
 							NLS.bind("The command with the id ''{0}'' does not exist.", commandId))); //$NON-NLS-1$
 				}
 			} else {
-				TasksUiInternal.displayStatus(title, new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						NLS.bind("Command service is not available to execute command with the id ''{0}''.", commandId), //$NON-NLS-1$
-						new Exception()));
+				TasksUiInternal
+						.displayStatus(title,
+								new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
+										"Command service is not available to execute command with the id ''{0}''.", //$NON-NLS-1$
+										commandId), new Exception()));
 			}
 		} else {
-			TasksUiInternal.displayStatus(title, new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					NLS.bind("Handler service is not available to execute command with the id ''{0}''.", commandId), //$NON-NLS-1$
-					new Exception()));
+			TasksUiInternal.displayStatus(title,
+					new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							NLS.bind("Handler service is not available to execute command with the id ''{0}''.", //$NON-NLS-1$
+									commandId),
+							new Exception()));
 		}
 	}
 
