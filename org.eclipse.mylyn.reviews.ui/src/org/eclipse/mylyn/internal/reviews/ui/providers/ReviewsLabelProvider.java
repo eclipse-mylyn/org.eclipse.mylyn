@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * Base support for reviews labels.
- * 
+ *
  * @author Miles Parker
  * @author Steffen Pingel
  * @author Kevin Sawicki
@@ -114,7 +114,6 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 			}
 			if (element instanceof IReviewItemSet) {
 				return CommonImages.getImage(ReviewsImages.CHANGE_LOG);
-
 			}
 			if (element instanceof IReviewItem) {
 				IReviewItem item = (IReviewItem) element;
@@ -155,6 +154,9 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 			}
 			if (element instanceof GlobalCommentsNode) {
 				return CommonImages.getImage(TasksUiImages.TASK);
+			}
+			if (element instanceof ILocation) {
+				return CommonImages.getImage(ReviewsImages.REVIEW_QUOTE);
 			}
 			return null;
 		};
@@ -272,10 +274,11 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 					return NLS.bind(Messages.ReviewsLabelProvider_X_Revision_Y, target.getPath(),
 							target.getDescription());
 				} else if (target.getPath() == null && base.getPath() != null) {
-					return NLS.bind(Messages.ReviewsLabelProvider_X_Revision_Y, base.getPath(), target.getDescription());
+					return NLS.bind(Messages.ReviewsLabelProvider_X_Revision_Y, base.getPath(),
+							target.getDescription());
 				} else if (!target.getPath().equals(base.getPath())) {
-					return NLS.bind(Messages.ReviewsLabelProvider_X_renamed_from_Y_Z, new Object[] { target.getPath(),
-							base.getPath(), target.getDescription() });
+					return NLS.bind(Messages.ReviewsLabelProvider_X_renamed_from_Y_Z,
+							new Object[] { target.getPath(), base.getPath(), target.getDescription() });
 				} else {
 					return NLS.bind(Messages.ReviewsLabelProvider_X_Revision_Y, target.getPath(),
 							target.getDescription());
@@ -401,8 +404,8 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 		};
 	};
 
-	public static final TableColumnProvider SINGLE_COLUMN = new TableColumnProvider(
-			Messages.ReviewsLabelProvider_Items, 10, 120, false) {
+	public static final TableColumnProvider SINGLE_COLUMN = new TableColumnProvider(Messages.ReviewsLabelProvider_Items,
+			10, 120, false) {
 
 		@Override
 		public Image getImage(Object element) {
@@ -498,6 +501,8 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 		}
 	};
 
+	private final boolean includeAuthors;
+
 	public static class Flat extends ReviewsLabelProvider {
 		TableColumnProvider[] columns = new TableColumnProvider[] { ARTIFACT_COLUMN, COMMENTS_COLUMN, AUTHORS_COLUMN,
 				DATE_COLUMN };
@@ -510,6 +515,14 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 
 	public static class Tree extends ReviewsLabelProvider {
 		TableColumnProvider[] columns = new TableColumnProvider[] { ITEMS_COLUMN, AUTHORS_COLUMN, DATE_COLUMN };
+
+		public Tree() {
+			this(false);
+		}
+
+		public Tree(boolean includeAuthors) {
+			super(includeAuthors);
+		}
 
 		@Override
 		public TableColumnProvider[] getColumnProviders() {
@@ -563,6 +576,14 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 		}
 	}
 
+	public ReviewsLabelProvider() {
+		this(false);
+	}
+
+	public ReviewsLabelProvider(boolean includeAuthors) {
+		this.includeAuthors = includeAuthors;
+	}
+
 	@Override
 	public String getText(Object element) {
 		return ITEMS_COLUMN.getText(element);
@@ -577,7 +598,11 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 		if (element instanceof IComment) {
 			styler = COMMENT_STYLE;
 		}
-		StyledString styledString = new StyledString(getText(element), styler);
+		StyledString styledString = new StyledString();
+		if (includeAuthors) {
+			addAuthorStyle(element, styledString);
+		}
+		styledString.append(getText(element), styler);
 		if (element instanceof GlobalCommentsNode) {
 			element = ((GlobalCommentsNode) element).getReview();
 		}
@@ -592,6 +617,15 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 	@Override
 	public Image getImage(Object element) {
 		return ITEMS_COLUMN.getImage(element);
+	}
+
+	public static void addAuthorStyle(Object element, StyledString styledString) {
+		if (element instanceof IComment) {
+			IComment comment = (IComment) element;
+			String name = comment.getAuthor().getDisplayName();
+			String firstName = StringUtils.substringBefore(name, " "); //$NON-NLS-1$
+			styledString.append(firstName + ": ", AUTHOR_STYLE); //$NON-NLS-1$
+		}
 	}
 
 	public static void addCommentLineNumberStyle(Object element, StyledString styledString) {

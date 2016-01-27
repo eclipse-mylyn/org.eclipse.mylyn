@@ -36,6 +36,7 @@ import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfObserver;
 import org.eclipse.mylyn.reviews.internal.core.BuildResult;
+import org.eclipse.mylyn.reviews.internal.core.ReviewFileCommentsMapper;
 import org.eclipse.mylyn.reviews.internal.core.TaskBuildStatusMapper;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
@@ -96,7 +97,6 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 	@Override
 	public TaskAttributeMapper getAttributeMapper(TaskRepository repository) {
 		return new TaskAttributeMapper(repository) {
-			@SuppressWarnings("restriction")
 			@Override
 			public boolean equals(TaskAttribute newAttribute, TaskAttribute oldAttribute) {
 
@@ -149,7 +149,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 			Project.NameKey project = gerritChange.getChangeDetail().getChange().getProject();
 			client.refreshConfigOnce(project, monitor);
 			if (!monitor.isCanceled()) {
-				updateTaskData(repository, taskData, gerritChange, !anonymous, id);
+				updateTaskData(repository, taskData, gerritChange, consumer.getModelObject(), !anonymous, id);
 			}
 
 			return taskData;
@@ -163,11 +163,11 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 
 	private RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> updateModelData(
 			TaskRepository repository, TaskData taskData, ReviewObserver reviewObserver, IProgressMonitor monitor)
-			throws CoreException {
+					throws CoreException {
 		GerritClient client = connector.getClient(repository);
 		GerritRemoteFactoryProvider factoryProvider = (GerritRemoteFactoryProvider) client.getFactoryProvider();
-		RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> consumer = factoryProvider.getReviewFactory()
-				.getConsumerForLocalKey(factoryProvider.getRoot(), taskData.getTaskId());
+		RemoteEmfConsumer<IRepository, IReview, String, GerritChange, String, Date> consumer = factoryProvider
+				.getReviewFactory().getConsumerForLocalKey(factoryProvider.getRoot(), taskData.getTaskId());
 
 		consumer.addObserver(reviewObserver);
 		if (!consumer.isRetrieving()) {
@@ -213,7 +213,7 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 
 	/**
 	 * Get account id for repository
-	 * 
+	 *
 	 * @param client
 	 * @param repository
 	 * @param monitor
@@ -246,8 +246,8 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		throw new UnsupportedOperationException();
 	}
 
-	public void updateTaskData(TaskRepository repository, TaskData data, GerritChange gerritReview, boolean canPublish,
-			String accountId) {
+	public void updateTaskData(TaskRepository repository, TaskData data, GerritChange gerritReview, IReview modelReview,
+			boolean canPublish, String accountId) {
 		GerritTaskSchema schema = GerritTaskSchema.getDefault();
 
 		ChangeDetail changeDetail = gerritReview.getChangeDetail();
@@ -302,8 +302,8 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		for (Entry<Integer, Collection<BuildResult>> buildResult : resultsByPatchNumber.asMap().entrySet()) {
 			int patchNumber = buildResult.getKey();
 			TaskBuildStatusMapper mapper = new TaskBuildStatusMapper(buildResult.getValue());
-			TaskAttribute attribute = data.getRoot().createAttribute(
-					TaskBuildStatusMapper.ATTR_TYPE_PATCH_SET + patchNumber);
+			TaskAttribute attribute = data.getRoot()
+					.createAttribute(TaskBuildStatusMapper.ATTR_TYPE_PATCH_SET + patchNumber);
 			mapper.applyTo(attribute);
 		}
 
@@ -328,6 +328,8 @@ public class GerritTaskDataHandler extends AbstractTaskDataHandler {
 		}
 		setAttributeValue(data, schema.REVIEW_STATE, reviewState.toString());
 		setAttributeValue(data, schema.VERIFY_STATE, verifyState.toString());
+
+		new ReviewFileCommentsMapper(modelReview).applyTo(data);
 	}
 
 	private Short getStateValue(Short value, Short oldState) {

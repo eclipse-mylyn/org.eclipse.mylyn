@@ -14,9 +14,10 @@ package org.eclipse.mylyn.reviews.ui.spi.editor;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -24,16 +25,18 @@ import org.eclipse.jface.layout.LayoutConstants;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.IOpenListener;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITreeSelection;
+import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.OpenEvent;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.TreeExpansionEvent;
+import org.eclipse.jface.viewers.TreePath;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.commons.ui.compatibility.CommonColors;
 import org.eclipse.mylyn.commons.workbench.forms.ScalingHyperlink;
 import org.eclipse.mylyn.internal.reviews.ui.providers.ReviewsLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
+import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.ICommit;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IRepository;
@@ -41,6 +44,7 @@ import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfObserver;
+import org.eclipse.mylyn.reviews.internal.core.ReviewFileCommentsMapper;
 import org.eclipse.mylyn.reviews.internal.core.TaskBuildStatusMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
@@ -52,6 +56,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
@@ -66,6 +71,7 @@ import org.eclipse.ui.forms.widgets.Section;
  * @author Miles Parker
  * @author Sam Davis
  */
+@SuppressWarnings("restriction")
 public class ReviewSetContentSection {
 
 	private static final int MAXIMUM_ITEMS_SHOWN = 30;
@@ -76,16 +82,14 @@ public class ReviewSetContentSection {
 
 	private final Section section;
 
-	private TableViewer viewer;
+	private TreeViewer viewer;
 
 	private final RemoteEmfObserver<IReviewItemSet, List<IFileItem>, String, Long> itemListObserver = new RemoteEmfObserver<IReviewItemSet, List<IFileItem>, String, Long>() {
 
 		@Override
 		public void updated(boolean modified) {
 			createItemSetTable();
-			if (modified) {
-				updateItemSetTable();
-			}
+			updateItemSetTable();
 			updateMessage();
 			createButtons();
 		}
@@ -96,7 +100,9 @@ public class ReviewSetContentSection {
 		}
 	};
 
-	private Composite tableContainer;
+	private final RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, String, ?, ?, Long> itemSetConsumer;
+
+	private Composite treeContainer;
 
 	private Composite actionContainer;
 
@@ -104,7 +110,8 @@ public class ReviewSetContentSection {
 
 	private final AbstractTaskEditorPage page;
 
-	public ReviewSetContentSection(ReviewSetSection parentSection, final IReviewItemSet set, AbstractTaskEditorPage page) {
+	public ReviewSetContentSection(ReviewSetSection parentSection, final IReviewItemSet set,
+			AbstractTaskEditorPage page) {
 		this.parentSection = parentSection;
 		this.set = set;
 		this.page = page;
@@ -116,15 +123,14 @@ public class ReviewSetContentSection {
 		section.setTitleBarForeground(parentSection.getToolkit().getColors().getColor(IFormColors.TITLE));
 
 		parentSection.addTextClient(parentSection.getToolkit(), section, "", false); //$NON-NLS-1$
-		final RemoteEmfConsumer<IReviewItemSet, List<IFileItem>, String, ?, ?, Long> itemSetConsumer = getParentSection().getReviewEditorPage()
+		itemSetConsumer = getParentSection().getReviewEditorPage()
 				.getFactoryProvider()
 				.getReviewItemSetContentFactory()
 				.getConsumerForLocalKey(set, set.getId());
 		itemListObserver.setConsumer(itemSetConsumer);
-		final RemoteEmfConsumer<IRepository, IReview, String, ?, ?, Date> reviewConsumer = getParentSection().getReviewEditorPage()
-				.getFactoryProvider()
-				.getReviewFactory()
-				.getConsumerForModel(set.getReview().getRepository(), set.getReview());
+		final RemoteEmfConsumer<IRepository, IReview, String, ?, ?, Date> reviewConsumer = getParentSection()
+				.getReviewEditorPage().getFactoryProvider().getReviewFactory().getConsumerForModel(
+						set.getReview().getRepository(), set.getReview());
 		reviewObserver = new RemoteEmfObserver<IRepository, IReview, String, Date>() {
 			@Override
 			public void updated(boolean modified) {
@@ -149,8 +155,10 @@ public class ReviewSetContentSection {
 				}
 			}
 		});
+
 		createMainSection();
 		createItemSetTable();
+		updateItemSetTable();
 		updateMessage();
 	}
 
@@ -172,9 +180,8 @@ public class ReviewSetContentSection {
 				message += " " + Messages.Reviews_RetrievingContents; //$NON-NLS-1$
 			}
 		} else {
-			message = NLS.bind(Messages.Reviews_UpdateFailure_X, itemListObserver.getConsumer()
-					.getStatus()
-					.getMessage());
+			message = NLS.bind(Messages.Reviews_UpdateFailure_X,
+					itemListObserver.getConsumer().getStatus().getMessage());
 		}
 
 		AbstractReviewSection.appendMessage(getSection(), message);
@@ -209,17 +216,17 @@ public class ReviewSetContentSection {
 			getTaskEditorPage().getAttributeEditorToolkit().adapt(editor);
 		}
 
-		tableContainer = new Composite(composite, SWT.NONE);
-		tableContainer.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GRAY));
-		GridDataFactory.fillDefaults().span(4, 1).grab(true, true).applyTo(tableContainer);
-		GridLayoutFactory.fillDefaults().numColumns(2).applyTo(tableContainer);
+		treeContainer = new Composite(composite, SWT.NONE);
+		treeContainer.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GRAY));
+		GridDataFactory.fillDefaults().span(4, 1).grab(true, true).applyTo(treeContainer);
+		GridLayoutFactory.fillDefaults().numColumns(2).applyTo(treeContainer);
 
 		actionContainer = new Composite(composite, SWT.NONE);
 		GridDataFactory.fillDefaults().span(4, 1).grab(true, true).applyTo(actionContainer);
 		GridLayoutFactory.fillDefaults().numColumns(4).applyTo(actionContainer);
 		createButtons();
 
-		parentSection.getTaskEditorPage().reflow();
+		reflow();
 	}
 
 	private AbstractTaskEditorPage getTaskEditorPage() {
@@ -338,36 +345,19 @@ public class ReviewSetContentSection {
 			} else {
 				style |= SWT.NO_SCROLL;
 			}
-			viewer = new TableViewer(tableContainer, style);
+			viewer = new TreeViewer(treeContainer, style);
 			GridDataFactory.fillDefaults()
 					.span(2, 1)
 					.grab(true, true)
 					.hint(500, heightHint)
 					.applyTo(viewer.getControl());
-			viewer.setContentProvider(new IStructuredContentProvider() {
 
-				public void dispose() {
-					// ignore
-				}
+			viewer.setContentProvider(new ReviewSetContentProvider());
 
-				public Object[] getElements(Object inputElement) {
-					return getReviewItems(inputElement).toArray();
-				}
-
-				private List<IFileItem> getReviewItems(Object inputElement) {
-					if (inputElement instanceof IReviewItemSet) {
-						return ((IReviewItemSet) inputElement).getItems();
-					}
-					return Collections.emptyList();
-				}
-
-				public void inputChanged(final Viewer viewer, Object oldInput, Object newInput) {
-				}
-			});
 			ColumnViewerToolTipSupport.enableFor(viewer, ToolTip.NO_RECREATE);
 
 			final DelegatingStyledCellLabelProvider styledLabelProvider = new DelegatingStyledCellLabelProvider(
-					new ReviewsLabelProvider.Simple()) {
+					new ReviewsLabelProvider.Tree(true)) {
 				@Override
 				public String getToolTipText(Object element) {
 					//For some reason tooltips are not delegated..
@@ -377,24 +367,80 @@ public class ReviewSetContentSection {
 			viewer.setLabelProvider(styledLabelProvider);
 			viewer.addOpenListener(new IOpenListener() {
 				public void open(OpenEvent event) {
-					IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-					IFileItem item = (IFileItem) selection.getFirstElement();
-					if (item != null) {
-						getParentSection().getUiFactoryProvider()
-								.getOpenFileFactory(ReviewSetContentSection.this.getParentSection(), set, item)
-								.execute();
+					// TODO: open to line of selected comment or thread
+					ITreeSelection selection = (ITreeSelection) event.getSelection();
+					TreePath[] paths = selection.getPaths();
+					for (TreePath path : paths) {
+						for (int i = 0; i < path.getSegmentCount(); i++) {
+							Object o = path.getSegment(i);
+							if (o instanceof IFileItem) {
+								IFileItem item = (IFileItem) o;
+								getParentSection().getUiFactoryProvider()
+										.getOpenFileFactory(ReviewSetContentSection.this.getParentSection(), set, item)
+										.execute();
+							}
+						}
 					}
 				}
 			});
-			EditorUtil.addScrollListener(viewer.getTable());
+			EditorUtil.addScrollListener(viewer.getTree());
 			viewer.setInput(set);
-			getParentSection().getTaskEditorPage().reflow();
+			viewer.addTreeListener(new ITreeViewerListener() {
+
+				@Override
+				public void treeExpanded(TreeExpansionEvent event) {
+					reflowAsync();
+				}
+
+				@Override
+				public void treeCollapsed(TreeExpansionEvent event) {
+					reflowAsync();
+				}
+			});
 		}
 	}
 
-	public void updateItemSetTable() {
-		if (set.getItems().size() > 0 && viewer != null) {
+	private void updateItemSetTable() {
+		if (set.getItems().size() > 0 && hasViewer()) {
 			viewer.setInput(set);
+			TaskAttribute fileComments = ReviewSetContentSection.this.page.getModel()
+					.getTaskData()
+					.getRoot()
+					.getAttribute(ReviewFileCommentsMapper.FILE_ITEM_COMMENTS);
+
+			final Set<IComment> toHighlight = new HashSet<IComment>();
+			if (fileComments != null) {
+				List<IFileItem> files = itemSetConsumer.getModelObject();
+				for (IFileItem file : files) {
+					for (IComment comment : file.getAllComments()) {
+						if (fileComments.getAttribute(comment.getId()) == null) {
+							toHighlight.add(comment);
+						}
+					}
+				}
+			}
+
+			Display.getDefault().asyncExec(new Runnable() {
+
+				@Override
+				public void run() {
+					if (hasViewer()) {
+						viewer.refresh();
+						viewer.expandAll();
+						decorateItems(viewer.getTree().getItems(), toHighlight);
+						reflow();
+					}
+				}
+			});
+		}
+	}
+
+	private void decorateItems(TreeItem[] items, Set<IComment> toHighlight) {
+		for (TreeItem item : items) {
+			if (toHighlight.contains(item.getData())) {
+				item.setBackground(getTaskEditorPage().getAttributeEditorToolkit().getColorIncoming());
+			}
+			decorateItems(item.getItems(), toHighlight);
 		}
 	}
 
@@ -406,7 +452,7 @@ public class ReviewSetContentSection {
 			getParentSection().getUiFactoryProvider().createControls(getParentSection(), actionContainer,
 					getParentSection().getToolkit(), set);
 			actionContainer.layout();
-			getParentSection().getTaskEditorPage().reflow();
+			reflow();
 		}
 	}
 
@@ -416,6 +462,24 @@ public class ReviewSetContentSection {
 
 	public ReviewSetSection getParentSection() {
 		return parentSection;
+	}
+
+	private void reflowAsync() {
+		Display.getDefault().asyncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				reflow();
+			}
+		});
+	}
+
+	private void reflow() {
+		getParentSection().getTaskEditorPage().reflow();
+	}
+
+	private boolean hasViewer() {
+		return viewer != null && !viewer.getControl().isDisposed();
 	}
 
 	public void dispose() {

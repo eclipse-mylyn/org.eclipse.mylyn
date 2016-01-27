@@ -12,9 +12,11 @@
 package org.eclipse.mylyn.internal.gerrit.core;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -26,12 +28,15 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.GerritConfigX;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritPerson;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
+import org.eclipse.mylyn.reviews.core.model.IReview;
+import org.eclipse.mylyn.reviews.internal.core.ReviewFileCommentsMapper;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gerrit.common.data.AccountInfo;
 import com.google.gerrit.reviewdb.Account;
 import com.google.gerrit.reviewdb.Account.Id;
@@ -43,6 +48,7 @@ import com.google.gerrit.reviewdb.Project;
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings("restriction")
 public class GerritTaskDataHandlerTest {
 
 	@Test
@@ -60,8 +66,8 @@ public class GerritTaskDataHandlerTest {
 		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://repository"); //$NON-NLS-1$
 		TaskData data = handler.createTaskData(repository, "1", null); //$NON-NLS-1$
 		TaskData data2 = handler.createTaskData(repository, "2", null); //$NON-NLS-1$
-		assertEquals(GerritTaskSchema.getDefault().UPLOADED.createAttribute(data2.getRoot()), data.getRoot()
-				.getAttribute(GerritTaskSchema.getDefault().UPLOADED.getKey()));
+		assertEquals(GerritTaskSchema.getDefault().UPLOADED.createAttribute(data2.getRoot()),
+				data.getRoot().getAttribute(GerritTaskSchema.getDefault().UPLOADED.getKey()));
 	}
 
 	@Test
@@ -87,8 +93,9 @@ public class GerritTaskDataHandlerTest {
 		GerritTaskDataHandler handler = new GerritTaskDataHandler(new GerritConnector());
 		TaskRepository repository = new TaskRepository(GerritConnector.CONNECTOR_KIND, "http://repository"); //$NON-NLS-1$
 		TaskData data = handler.createTaskData(repository, "1", null); //$NON-NLS-1$
-		handler.updateTaskData(repository, data, createMockGerritChange(), false, null);
+		handler.updateTaskData(repository, data, createMockGerritChange(), createMockReview(), false, null);
 		assertAssignee(data, "joel.user@mylyn.org", "Joel K. User");
+		assertNotNull(data.getRoot().getAttribute(ReviewFileCommentsMapper.FILE_ITEM_COMMENTS));
 	}
 
 	private void assertAssignee(TaskData data, String id, String name) {
@@ -130,9 +137,15 @@ public class GerritTaskDataHandlerTest {
 		return change;
 	}
 
+	private IReview createMockReview() {
+		IReview review = mock(IReview.class);
+		doReturn(ImmutableList.of()).when(review).getSets();
+		return review;
+	}
+
 	private Change mockChange() {
-		return new Change(new Key("1"), new Change.Id(1), new Id(1), new NameKey(new Project.NameKey("parent"),
-				"branch"));
+		return new Change(new Key("1"), new Change.Id(1), new Id(1),
+				new NameKey(new Project.NameKey("parent"), "branch"));
 	}
 
 }
