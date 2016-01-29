@@ -184,8 +184,8 @@ public class TaskListSorter extends ViewerSorter {
 		if (object instanceof ITaskRepositoryElement) {
 			ITaskRepositoryElement repositoryElement = (ITaskRepositoryElement) object;
 			String repositoryUrl = repositoryElement.getRepositoryUrl();
-			TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(
-					repositoryElement.getConnectorKind(), repositoryUrl);
+			TaskRepository taskRepository = TasksUi.getRepositoryManager()
+					.getRepository(repositoryElement.getConnectorKind(), repositoryUrl);
 			return taskRepository != null ? taskRepository.getRepositoryLabel() : null;
 		}
 //		if (object instanceof UnsubmittedTaskContainer) {
@@ -202,8 +202,7 @@ public class TaskListSorter extends ViewerSorter {
 		return taskComparator.compare(element1, element2);
 	}
 
-	@Override
-	public TaskComparator getComparator() {
+	public TaskComparator getTaskComparator() {
 		return taskComparator;
 	}
 
@@ -219,7 +218,7 @@ public class TaskListSorter extends ViewerSorter {
 	public void restoreState(IMemento memento) {
 		IMemento child = memento.getChild(MEMENTO_KEY_SORTER);
 		if (child != null) {
-			getComparator().restoreState(child);
+			taskComparator.restoreState(child);
 		}
 		setGroupBy(getGroupBy(memento, MEMENTO_KEY_GROUP_BY, DEFAULT_GROUP_BY));
 	}
@@ -227,7 +226,7 @@ public class TaskListSorter extends ViewerSorter {
 	public void saveState(IMemento memento) {
 		IMemento child = memento.createChild(MEMENTO_KEY_SORTER);
 		if (child != null) {
-			getComparator().saveState(child);
+			taskComparator.saveState(child);
 		}
 		memento.putString(MEMENTO_KEY_GROUP_BY, getGroupBy().name());
 	}

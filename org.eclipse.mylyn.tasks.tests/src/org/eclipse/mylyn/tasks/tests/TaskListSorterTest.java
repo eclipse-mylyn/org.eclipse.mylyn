@@ -17,8 +17,6 @@ package org.eclipse.mylyn.tasks.tests;
 import java.util.Calendar;
 import java.util.Date;
 
-import junit.framework.TestCase;
-
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -44,6 +42,8 @@ import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.XMLMemento;
+
+import junit.framework.TestCase;
 
 /**
  * @author Mik Kersten
@@ -72,10 +72,10 @@ public class TaskListSorterTest extends TestCase {
 		child.putInteger(MEMENTO_KEY_SORT_INDEX, 1);
 		child.putInteger(MEMENTO_KEY_SORT_DIRECTION, -1);
 		view.migrateSorterState(sorter, memento);
-		assertEquals(SortCriterion.SortKey.PRIORITY, sorter.getComparator().getSortCriterion(0).getKey());
-		assertEquals(1, sorter.getComparator().getSortCriterion(0).getDirection());
-		assertEquals(SortCriterion.SortKey.SUMMARY, sorter.getComparator().getSortCriterion(1).getKey());
-		assertEquals(-1, sorter.getComparator().getSortCriterion(1).getDirection());
+		assertEquals(SortCriterion.SortKey.PRIORITY, sorter.getTaskComparator().getSortCriterion(0).getKey());
+		assertEquals(1, sorter.getTaskComparator().getSortCriterion(0).getDirection());
+		assertEquals(SortCriterion.SortKey.SUMMARY, sorter.getTaskComparator().getSortCriterion(1).getKey());
+		assertEquals(-1, sorter.getTaskComparator().getSortCriterion(1).getDirection());
 
 		memento = XMLMemento.createWriteRoot(MEMENTO_KEY_SORT_INDEX);
 		child = memento.createChild(MEMENTO_KEY_SORTER);
@@ -85,10 +85,10 @@ public class TaskListSorterTest extends TestCase {
 		child.putInteger(MEMENTO_KEY_SORT_INDEX, 2);
 		child.putInteger(MEMENTO_KEY_SORT_DIRECTION, -1);
 		view.migrateSorterState(sorter, memento);
-		assertEquals(SortCriterion.SortKey.TASK_ID, sorter.getComparator().getSortCriterion(0).getKey());
-		assertEquals(-1, sorter.getComparator().getSortCriterion(0).getDirection());
-		assertEquals(SortCriterion.SortKey.DATE_CREATED, sorter.getComparator().getSortCriterion(1).getKey());
-		assertEquals(-1, sorter.getComparator().getSortCriterion(1).getDirection());
+		assertEquals(SortCriterion.SortKey.TASK_ID, sorter.getTaskComparator().getSortCriterion(0).getKey());
+		assertEquals(-1, sorter.getTaskComparator().getSortCriterion(0).getDirection());
+		assertEquals(SortCriterion.SortKey.DATE_CREATED, sorter.getTaskComparator().getSortCriterion(1).getKey());
+		assertEquals(-1, sorter.getTaskComparator().getSortCriterion(1).getDirection());
 	}
 
 	public void testSortWithError() {
@@ -102,23 +102,23 @@ public class TaskListSorterTest extends TestCase {
 		task1.setPriority("P5");
 		task2.setPriority("P1");
 
-		sorter.getComparator().getSortCriterion(0).setKey(SortCriterion.SortKey.TASK_ID);
+		sorter.getTaskComparator().getSortCriterion(0).setKey(SortCriterion.SortKey.TASK_ID);
 		sorter.sort(new EmptyViewer(), tasks);
 		assertEquals(task1, tasks[1]);
 		assertEquals(task2, tasks[0]);
 
-		sorter.getComparator().getSortCriterion(0).setKey(SortCriterion.SortKey.DATE_CREATED);
+		sorter.getTaskComparator().getSortCriterion(0).setKey(SortCriterion.SortKey.DATE_CREATED);
 		sorter.sort(new EmptyViewer(), tasks);
 		assertEquals(task1, tasks[0]);
 		assertEquals(task2, tasks[1]);
 
-		sorter.getComparator().getSortCriterion(0).setKey(SortCriterion.SortKey.PRIORITY);
+		sorter.getTaskComparator().getSortCriterion(0).setKey(SortCriterion.SortKey.PRIORITY);
 		sorter.sort(new EmptyViewer(), tasks);
 		assertEquals(task1, tasks[1]);
 		assertEquals(task2, tasks[0]);
 
-		sorter.getComparator().getSortCriterion(0).setKey(SortCriterion.SortKey.SUMMARY);
-		sorter.getComparator().getSortCriterion(0).setDirection((-1));
+		sorter.getTaskComparator().getSortCriterion(0).setKey(SortCriterion.SortKey.SUMMARY);
+		sorter.getTaskComparator().getSortCriterion(0).setDirection((-1));
 		sorter.sort(new EmptyViewer(), tasks);
 		assertEquals(task1, tasks[0]);
 		assertEquals(task2, tasks[1]);
@@ -127,7 +127,7 @@ public class TaskListSorterTest extends TestCase {
 
 	public void testRootTaskSorting() {
 		TaskListSorter sorter = new TaskListSorter();
-		sorter.getComparator().getSortCriterion(0).setKey(SortCriterion.SortKey.SUMMARY);
+		sorter.getTaskComparator().getSortCriterion(0).setKey(SortCriterion.SortKey.SUMMARY);
 
 		AbstractTask task = new LocalTask("1", "");
 		UncategorizedTaskContainer uncategorizedTaskContainer = new UncategorizedTaskContainer();
@@ -243,8 +243,8 @@ public class TaskListSorterTest extends TestCase {
 		tasks[0].setCreationDate(new Date(start.getTime() - 5));
 
 		TaskListSorter sorter = new TaskListSorter();
-		sorter.getComparator().getSortCriterion(0).setKey(SortCriterion.SortKey.SUMMARY);
-		sorter.getComparator().getSortCriterion(1).setKey(SortCriterion.SortKey.DATE_CREATED);
+		sorter.getTaskComparator().getSortCriterion(0).setKey(SortCriterion.SortKey.SUMMARY);
+		sorter.getTaskComparator().getSortCriterion(1).setKey(SortCriterion.SortKey.DATE_CREATED);
 		sorter.sort(new EmptyViewer(), tasks);
 
 		assertEquals("11", tasks[0].getTaskKey());
@@ -281,8 +281,8 @@ public class TaskListSorterTest extends TestCase {
 		tasks[5].setAttribute(TaskAttribute.RANK, "6");
 
 		TaskListSorter sorter = new TaskListSorter();
-		sorter.getComparator().getSortCriterion(0).setKey(SortCriterion.SortKey.RANK);
-		sorter.getComparator().getSortCriterion(1).setKey(SortCriterion.SortKey.DATE_CREATED);
+		sorter.getTaskComparator().getSortCriterion(0).setKey(SortCriterion.SortKey.RANK);
+		sorter.getTaskComparator().getSortCriterion(1).setKey(SortCriterion.SortKey.DATE_CREATED);
 		sorter.sort(new EmptyViewer(), tasks);
 
 		assertEquals("4", tasks[0].getTaskKey());
@@ -320,8 +320,8 @@ public class TaskListSorterTest extends TestCase {
 		tasks[5].setAttribute(TaskAttribute.RANK, null);
 
 		TaskListSorter sorter = new TaskListSorter();
-		sorter.getComparator().getSortCriterion(0).setKey(SortCriterion.SortKey.RANK);
-		sorter.getComparator().getSortCriterion(1).setKey(SortCriterion.SortKey.DATE_CREATED);
+		sorter.getTaskComparator().getSortCriterion(0).setKey(SortCriterion.SortKey.RANK);
+		sorter.getTaskComparator().getSortCriterion(1).setKey(SortCriterion.SortKey.DATE_CREATED);
 		sorter.sort(new EmptyViewer(), tasks);
 
 		assertEquals("2", tasks[0].getTaskKey());
@@ -347,8 +347,8 @@ public class TaskListSorterTest extends TestCase {
 		tasks[0].setCreationDate(new Date(start.getTime() - 4));
 
 		TaskListSorter sorter = new TaskListSorter();
-		sorter.getComparator().getSortCriterion(0).setKey(SortCriterion.SortKey.SUMMARY);
-		sorter.getComparator().getSortCriterion(1).setKey(SortCriterion.SortKey.DATE_CREATED);
+		sorter.getTaskComparator().getSortCriterion(0).setKey(SortCriterion.SortKey.SUMMARY);
+		sorter.getTaskComparator().getSortCriterion(1).setKey(SortCriterion.SortKey.DATE_CREATED);
 		sorter.sort(new EmptyViewer(), tasks);
 
 		assertEquals("MYLN:11", tasks[0].getTaskKey());
@@ -370,9 +370,9 @@ public class TaskListSorterTest extends TestCase {
 		task1.setCreationDate(start);
 		task2.setCreationDate(new Date(start.getTime() - 1));
 		task3.setCreationDate(new Date(start.getTime() - 2));
-		sorter.getComparator().getSortCriterion(0).setKey(SortCriterion.SortKey.DATE_CREATED);
+		sorter.getTaskComparator().getSortCriterion(0).setKey(SortCriterion.SortKey.DATE_CREATED);
 		sorter.sort(new EmptyViewer(), tasks);
-		sorter.getComparator().getSortCriterion(0).setDirection((-1));
+		sorter.getTaskComparator().getSortCriterion(0).setDirection((-1));
 		sorter.sort(new EmptyViewer(), tasks);
 	}
 

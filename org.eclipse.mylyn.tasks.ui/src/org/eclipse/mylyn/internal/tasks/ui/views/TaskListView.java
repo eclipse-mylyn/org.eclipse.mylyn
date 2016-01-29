@@ -594,19 +594,19 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 				Integer sortDirInt = m.getInteger(MEMENTO_KEY_SORT_DIRECTION);
 				if (sortDirInt != null) {
 					sortDirection = sortDirInt.intValue();
-					tableSorter.getComparator().getSortCriterion(0).setDirection(sortDirection);
+					tableSorter.getTaskComparator().getSortCriterion(0).setDirection(sortDirection);
 					switch (restoredSortIndex) {
 					case 1:
-						tableSorter.getComparator().getSortCriterion(0).setKey(SortKey.SUMMARY);
+						tableSorter.getTaskComparator().getSortCriterion(0).setKey(SortKey.SUMMARY);
 						break;
 					case 2:
-						tableSorter.getComparator().getSortCriterion(0).setKey(SortKey.DATE_CREATED);
+						tableSorter.getTaskComparator().getSortCriterion(0).setKey(SortKey.DATE_CREATED);
 						break;
 					case 3:
-						tableSorter.getComparator().getSortCriterion(0).setKey(SortKey.TASK_ID);
+						tableSorter.getTaskComparator().getSortCriterion(0).setKey(SortKey.TASK_ID);
 						break;
 					default:
-						tableSorter.getComparator().getSortCriterion(0).setKey(SortKey.PRIORITY);
+						tableSorter.getTaskComparator().getSortCriterion(0).setKey(SortKey.PRIORITY);
 					}
 				}
 			}
@@ -620,19 +620,19 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 				Integer sortDirInt = m2.getInteger(MEMENTO_KEY_SORT_DIRECTION);
 				if (sortDirInt != null) {
 					sortDirection = sortDirInt.intValue();
-					tableSorter.getComparator().getSortCriterion(1).setDirection(sortDirection);
+					tableSorter.getTaskComparator().getSortCriterion(1).setDirection(sortDirection);
 					switch (restoredSortIndex) {
 					case 1:
-						tableSorter.getComparator().getSortCriterion(1).setKey(SortKey.SUMMARY);
+						tableSorter.getTaskComparator().getSortCriterion(1).setKey(SortKey.SUMMARY);
 						break;
 					case 2:
-						tableSorter.getComparator().getSortCriterion(1).setKey(SortKey.DATE_CREATED);
+						tableSorter.getTaskComparator().getSortCriterion(1).setKey(SortKey.DATE_CREATED);
 						break;
 					case 3:
-						tableSorter.getComparator().getSortCriterion(1).setKey(SortKey.TASK_ID);
+						tableSorter.getTaskComparator().getSortCriterion(1).setKey(SortKey.TASK_ID);
 						break;
 					default:
-						tableSorter.getComparator().getSortCriterion(1).setKey(SortKey.PRIORITY);
+						tableSorter.getTaskComparator().getSortCriterion(1).setKey(SortKey.PRIORITY);
 					}
 				}
 			}
@@ -953,7 +953,7 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					SortCriterion criterion = tableSorter.getComparator().getSortCriterion(0);
+					SortCriterion criterion = tableSorter.getTaskComparator().getSortCriterion(0);
 					criterion.setDirection(criterion.getDirection() * -1);
 					getViewer().refresh(false);
 				}
