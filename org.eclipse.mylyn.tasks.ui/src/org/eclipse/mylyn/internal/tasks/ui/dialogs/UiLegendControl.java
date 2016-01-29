@@ -288,16 +288,14 @@ public class UiLegendControl extends Composite {
 		Label imageLabel = toolkit.createLabel(activityClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(TasksUiImages.TASK));
 		Label labelToday = toolkit.createLabel(activityClient, Messages.UiLegendControl_Scheduled_for_today);
-		labelToday.setForeground(themeManager.getCurrentTheme()
-				.getColorRegistry()
-				.get(CommonThemes.COLOR_SCHEDULED_TODAY));
+		labelToday.setForeground(
+				themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_SCHEDULED_TODAY));
 
 		imageLabel = toolkit.createLabel(activityClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(TasksUiImages.TASK));
 		Label labelOverdue = toolkit.createLabel(activityClient, Messages.UiLegendControl_Past_scheduled_date);
-		labelOverdue.setForeground(themeManager.getCurrentTheme()
-				.getColorRegistry()
-				.get(CommonThemes.COLOR_SCHEDULED_PAST));
+		labelOverdue.setForeground(
+				themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_SCHEDULED_PAST));
 
 // imageLabel = toolkit.createLabel(activityClient, "");
 // imageLabel.setImage(TasksUiImages.getImage(TasksUiImages.TASK));
@@ -311,17 +309,15 @@ public class UiLegendControl extends Composite {
 		Label labelCompleted = toolkit.createLabel(activityClient, Messages.UiLegendControl_Completed);
 		labelCompleted.setFont(CommonFonts.STRIKETHROUGH);
 // labelCompleted.setForeground(TaskListColorsAndFonts.COLOR_TASK_COMPLETED);
-		labelCompleted.setForeground(themeManager.getCurrentTheme()
-				.getColorRegistry()
-				.get(CommonThemes.COLOR_COMPLETED));
+		labelCompleted
+				.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_COMPLETED));
 
 		imageLabel = toolkit.createLabel(activityClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(TasksUiImages.TASK));
 		Label labelCompletedToday = toolkit.createLabel(activityClient, Messages.UiLegendControl_Completed_today);
 		labelCompletedToday.setFont(CommonFonts.STRIKETHROUGH);
-		labelCompletedToday.setForeground(themeManager.getCurrentTheme()
-				.getColorRegistry()
-				.get(CommonThemes.COLOR_COMPLETED_TODAY));
+		labelCompletedToday.setForeground(
+				themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_COMPLETED_TODAY));
 
 		imageLabel = toolkit.createLabel(activityClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(CommonImages.OVERLAY_DATE_DUE));
@@ -342,9 +338,9 @@ public class UiLegendControl extends Composite {
 				SWT.WRAP);
 		adjust.addHyperlinkListener(new IHyperlinkListener() {
 			public void linkActivated(HyperlinkEvent e) {
-				PreferenceDialog dlg = PreferencesUtil.createPreferenceDialogOn(PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow()
-						.getShell(), ITasksUiConstants.ID_PREFERENCES_COLORS_AND_FONTS,
+				PreferenceDialog dlg = PreferencesUtil.createPreferenceDialogOn(
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+						ITasksUiConstants.ID_PREFERENCES_COLORS_AND_FONTS,
 						new String[] { ITasksUiConstants.ID_PREFERENCES_COLORS_AND_FONTS }, null);
 				dlg.open();
 			}
@@ -464,6 +460,9 @@ public class UiLegendControl extends Composite {
 			}
 		});
 		for (AbstractRepositoryConnector connector : connectors) {
+			if (TasksUi.getRepositoryManager().getRepositories(connector.getConnectorKind()).isEmpty()) {
+				continue;
+			}
 			AbstractRepositoryConnectorUi connectorUi = TasksUi.getRepositoryConnectorUi(connector.getConnectorKind());
 			if (connectorUi != null) {
 				List<LegendElement> elements = connectorUi.getLegendElements();
@@ -524,7 +523,8 @@ public class UiLegendControl extends Composite {
 		}
 	}
 
-	private void addLegacyLegendItems(Composite composite, AbstractRepositoryConnector connector, List<ITask> elements) {
+	private void addLegacyLegendItems(Composite composite, AbstractRepositoryConnector connector,
+			List<ITask> elements) {
 		Section connectorSection = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR);
 		connectorSection.setLayout(new TableWrapLayout());
 		connectorSection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
