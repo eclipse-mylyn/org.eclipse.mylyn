@@ -293,10 +293,7 @@
           password="${eclipse.user.password}">
         <query
             summary="Mylyn Builds Bugs"
-            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Builds&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial"/>
-        <query
-            summary="Mylyn Builds Features"
-            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Builds&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=enhancement"/>
+            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Builds&amp;emailassigned_to1=1&amp;emailcc1=1&amp;emaillongdesc1=1&amp;emailreporter1=1&amp;emailtype1=exact&amp;email1=${bugzilla.id}"/>
       </setupTask>
       <stream
           name="master"
@@ -318,7 +315,7 @@
               value="custom"/>
           <attribute
               key="gerrit query string"
-              value="project:mylyn/org.eclipse.mylyn.builds status:open branch:${git.clone.mylyn.builds.checkoutBranch}"/>
+              value="project:mylyn/org.eclipse.mylyn.builds (owner:self OR reviewer:self)"/>
         </query>
       </setupTask>
       <stream
@@ -404,10 +401,7 @@
           password="${eclipse.user.password}">
         <query
             summary="Mylyn Commons Bugs"
-            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Commons&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial"/>
-        <query
-            summary="Mylyn Commons Features"
-            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Commons&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=enhancement"/>
+            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Commons&amp;emailassigned_to1=1&amp;emailcc1=1&amp;emaillongdesc1=1&amp;emailreporter1=1&amp;emailtype1=exact&amp;email1=${bugzilla.id}"/>
       </setupTask>
       <stream
           name="master"
@@ -429,7 +423,7 @@
               value="custom"/>
           <attribute
               key="gerrit query string"
-              value="project:mylyn/org.eclipse.mylyn.commons status:open branch:${git.clone.mylyn.commons.checkoutBranch}"/>
+              value="project:mylyn/org.eclipse.mylyn.commons (owner:self OR reviewer:self)"/>
         </query>
       </setupTask>
       <stream
@@ -551,10 +545,7 @@
           password="${eclipse.user.password}">
         <query
             summary="Mylyn Context Bugs"
-            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Context&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial"/>
-        <query
-            summary="Mylyn Context Features"
-            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Context&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=enhancement"/>
+            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Context&amp;emailassigned_to1=1&amp;emailcc1=1&amp;emaillongdesc1=1&amp;emailreporter1=1&amp;emailtype1=exact&amp;email1=${bugzilla.id}"/>
       </setupTask>
       <stream
           name="master"
@@ -576,7 +567,7 @@
               value="custom"/>
           <attribute
               key="gerrit query string"
-              value="project:mylyn/org.eclipse.mylyn.context status:open branch:${git.clone.mylyn.context.checkoutBranch}"/>
+              value="project:mylyn/org.eclipse.mylyn.context (owner:self OR reviewer:self)"/>
         </query>
       </setupTask>
       <stream
@@ -678,10 +669,7 @@
           password="${eclipse.user.password}">
         <query
             summary="Mylyn Docs Bugs"
-            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Docs&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial"/>
-        <query
-            summary="Mylyn Docs Features"
-            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Docs&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=enhancement"/>
+            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Docs&amp;emailassigned_to1=1&amp;emailcc1=1&amp;emaillongdesc1=1&amp;emailreporter1=1&amp;emailtype1=exact&amp;email1=${bugzilla.id}"/>
       </setupTask>
       <stream
           name="master"
@@ -703,7 +691,7 @@
               value="custom"/>
           <attribute
               key="gerrit query string"
-              value="project:mylyn/org.eclipse.mylyn.docs status:open branch:${git.clone.mylyn.docs.checkoutBranch}"/>
+              value="project:mylyn/org.eclipse.mylyn.docs (owner:self OR reviewer:self)"/>
         </query>
       </setupTask>
       <stream
@@ -787,10 +775,7 @@
           password="${eclipse.user.password}">
         <query
             summary="Mylyn Incubator Bugs"
-            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Incubator&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial"/>
-        <query
-            summary="Mylyn Incubator Features"
-            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Incubator&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=enhancement"/>
+            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Incubator&amp;emailassigned_to1=1&amp;emailcc1=1&amp;emaillongdesc1=1&amp;emailreporter1=1&amp;emailtype1=exact&amp;email1=${bugzilla.id}"/>
       </setupTask>
       <stream
           name="master"
@@ -812,7 +797,7 @@
               value="custom"/>
           <attribute
               key="gerrit query string"
-              value="project:mylyn/org.eclipse.mylyn.incubator status:open branch:${git.clone.mylyn.incubator.checkoutBranch}"/>
+              value="project:mylyn/org.eclipse.mylyn.incubator (owner:self OR reviewer:self)"/>
         </query>
       </setupTask>
       <stream
@@ -957,10 +942,7 @@
           password="${eclipse.user.password}">
         <query
             summary="Mylyn Reviews Bugs"
-            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Reviews&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial"/>
-        <query
-            summary="Mylyn Reviews Features"
-            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Reviews&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=enhancement"/>
+            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Reviews&amp;emailassigned_to1=1&amp;emailcc1=1&amp;emaillongdesc1=1&amp;emailreporter1=1&amp;emailtype1=exact&amp;email1=${bugzilla.id}"/>
       </setupTask>
       <stream
           name="master"
@@ -982,7 +964,7 @@
               value="custom"/>
           <attribute
               key="gerrit query string"
-              value="project:mylyn/org.eclipse.mylyn.reviews status:open branch:${git.clone.mylyn.reviews.checkoutBranch}"/>
+              value="project:mylyn/org.eclipse.mylyn.reviews (owner:self OR reviewer:self)"/>
         </query>
       </setupTask>
       <stream
@@ -1120,10 +1102,7 @@
           password="${eclipse.user.password}">
         <query
             summary="Mylyn Tasks Bugs"
-            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Tasks&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial"/>
-        <query
-            summary="Mylyn Tasks Features"
-            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Tasks&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=enhancement"/>
+            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Tasks&amp;emailassigned_to1=1&amp;emailcc1=1&amp;emaillongdesc1=1&amp;emailreporter1=1&amp;emailtype1=exact&amp;email1=${bugzilla.id}"/>
       </setupTask>
       <stream
           name="master"
@@ -1145,7 +1124,7 @@
               value="custom"/>
           <attribute
               key="gerrit query string"
-              value="project:mylyn/org.eclipse.mylyn.tasks status:open branch:${git.clone.mylyn.tasks.checkoutBranch}"/>
+              value="project:mylyn/org.eclipse.mylyn.tasks (owner:self OR reviewer:self)"/>
         </query>
       </setupTask>
       <stream
@@ -1259,10 +1238,7 @@
           password="${eclipse.user.password}">
         <query
             summary="Mylyn Versions Bugs"
-            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Versions&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial"/>
-        <query
-            summary="Mylyn Versions Features"
-            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Versions&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_severity=enhancement"/>
+            url="https://bugs.eclipse.org/bugs/buglist.cgi?product=Mylyn%20Versions&amp;emailassigned_to1=1&amp;emailcc1=1&amp;emaillongdesc1=1&amp;emailreporter1=1&amp;emailtype1=exact&amp;email1=${bugzilla.id}"/>
       </setupTask>
       <stream
           name="master"
@@ -1284,7 +1260,7 @@
               value="custom"/>
           <attribute
               key="gerrit query string"
-              value="project:mylyn/org.eclipse.mylyn.versions status:open branch:${git.clone.mylyn.versions.checkoutBranch}"/>
+              value="project:mylyn/org.eclipse.mylyn.versions (owner:self OR reviewer:self)"/>
         </query>
       </setupTask>
       <stream
