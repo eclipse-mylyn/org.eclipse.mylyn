@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Jeremie Bresson and others.
+ * Copyright (c) 2016 Jeremie Bresson and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,7 @@
  *     Jeremie Bresson - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.mediawiki.core.tasks;
+package org.eclipse.mylyn.internal.wikitext.mediawiki.core.ant.tasks;
 
 import java.io.IOException;
 import java.io.Reader;

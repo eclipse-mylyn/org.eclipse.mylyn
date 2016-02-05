@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 David Green and others.
+ * Copyright (c) 2007, 2016 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,7 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.mediawiki.core.tasks;
+package org.eclipse.mylyn.internal.wikitext.mediawiki.core.ant.tasks;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -19,8 +19,8 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 
-import org.eclipse.mylyn.internal.wikitext.mediawiki.core.tasks.WikiToDocTask.Path;
-import org.eclipse.mylyn.internal.wikitext.mediawiki.core.tasks.WikiToDocTask.Stylesheet;
+import org.eclipse.mylyn.internal.wikitext.mediawiki.core.ant.tasks.WikiToDocTask.Path;
+import org.eclipse.mylyn.internal.wikitext.mediawiki.core.ant.tasks.WikiToDocTask.Stylesheet;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

@@ -85,6 +85,13 @@
          unpack="false"/>
 
    <plugin
+         id="org.eclipse.mylyn.wikitext.mediawiki.core.ant"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.eclipse.mylyn.wikitext.confluence.core"
          download-size="0"
          install-size="0"

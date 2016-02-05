@@ -103,6 +103,7 @@
     <module>org.eclipse.mylyn.wikitext.asciidoc.core</module>
     <module>org.eclipse.mylyn.wikitext.asciidoc.ui</module>
     <module>org.eclipse.mylyn.wikitext.mediawiki.core</module>
+    <module>org.eclipse.mylyn.wikitext.mediawiki.core.ant</module>
     <module>org.eclipse.mylyn.wikitext.mediawiki.ui</module>
     <module>org.eclipse.mylyn.wikitext.sdk-feature</module>
     <module>org.eclipse.mylyn.wikitext.tasks.ui</module>

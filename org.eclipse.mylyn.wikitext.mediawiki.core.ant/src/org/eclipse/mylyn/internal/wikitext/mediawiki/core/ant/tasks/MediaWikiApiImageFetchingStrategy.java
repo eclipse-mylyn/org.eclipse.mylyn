@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 David Green and others.
+ * Copyright (c) 2007, 2016 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,7 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.mediawiki.core.tasks;
+package org.eclipse.mylyn.internal.wikitext.mediawiki.core.ant.tasks;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -82,7 +82,8 @@ class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 			try {
 				String queryString = String.format(
 						"action=query&titles=%s&generator=images&prop=imageinfo&iiprop=url&format=xml%s", //$NON-NLS-1$
-						URLEncoder.encode(pageName, "UTF-8"), (gimcontinue == null ? "" : "&gimcontinue=" + URLEncoder.encode(gimcontinue, "UTF-8"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+						URLEncoder.encode(pageName, "UTF-8"), //$NON-NLS-1$
+						(gimcontinue == null ? "" : "&gimcontinue=" + URLEncoder.encode(gimcontinue, "UTF-8"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				apiUrl = new URL(base + "api.php?" + queryString); //$NON-NLS-1$
 			} catch (Exception e) {
 				throw new BuildException("Cannot compose API URL", e); //$NON-NLS-1$

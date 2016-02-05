@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2011 David Green and others.
+ * Copyright (c) 2004, 2016 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.internal.wikitext.mediawiki.core.tasks;
+package org.eclipse.mylyn.internal.wikitext.mediawiki.core.ant.tasks;
 
 import java.io.File;
 import java.net.URL;
@@ -19,11 +19,11 @@ import org.apache.tools.ant.Task;
 
 /**
  * Fetch images from a MediaWiki-generated HTML page source. Usage:
- * 
+ *
  * <pre>
  * &lt;mediawiki-fetch-images dest="tmp" url="http://wiki.eclipse.org/" pageName="Mylyn/User_Guide"/&gt;
  * </pre>
- * 
+ *
  * @author David Green
  */
 public class MediaWikiImageFetcher extends Task {
@@ -115,7 +115,7 @@ public class MediaWikiImageFetcher extends Task {
 
 	/**
 	 * The URL of the wiki, for example: http://wiki.eclipse.org
-	 * 
+	 *
 	 * @see #getPageName()
 	 */
 	public URL getUrl() {
@@ -124,7 +124,7 @@ public class MediaWikiImageFetcher extends Task {
 
 	/**
 	 * The URL of the wiki, for example: http://wiki.eclipse.org
-	 * 
+	 *
 	 * @see #getPageName()
 	 */
 	public void setUrl(URL url) {

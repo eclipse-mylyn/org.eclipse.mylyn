@@ -798,6 +798,27 @@ CSS styles are also used to modify the appearance of rendered markup, both in th
 
 See "Editor Preferences":#EditorPreferences for a list of supported styles.
 
+h1. Upgrading From Mylyn WikiText 2.7 to 2.8
+
+With version 2.8 of Mylyn WikiText, the dependency to @org.apache.ant@ was removed from @org.eclipse.mylyn.wikitext.mediawiki.core@.
+
+The two tasks @mediawiki-fetch-images@ and @mediawiki-to-eclipse-help@ were moved to @org.eclipse.mylyn.wikitext.mediawiki.core.ant@. If you use those tasks you should update your classpath.
+
+h2. Ant Usage in 2.8
+
+The following jar files will be needed for running Ant tasks:
+* @org.eclipse.mylyn.wikitext.core.jar@
+* @org.eclipse.mylyn.wikitext.core.ant.jar@
+* @org.eclipse.mylyn.wikitext.textile.core.jar@ (only required for Textile)
+* @org.eclipse.mylyn.wikitext.confluence.core.jar@ (only required for Confluence)
+* @org.eclipse.mylyn.wikitext.markdown.core.jar@ (only required for Markdown)
+* @org.eclipse.mylyn.wikitext.creole.core.jar@ (only required for Creole)
+* @org.eclipse.mylyn.wikitext.mediawiki.core.jar@ (only required for MediaWiki)
+* @org.eclipse.mylyn.wikitext.mediawiki.core.ant.jar@ (only required for the MediaWiki Ant tasks)
+* @org.eclipse.mylyn.wikitext.tracwiki.core.jar@ (only required for TracWiki)
+* @org.eclipse.mylyn.wikitext.twiki.core.jar@ (only required for TWiki)
+* @guava-12.0.jar@ 
+
 h1. Upgrading From Mylyn WikiText 1.x to 2.x
 
 For 2.0 Mylyn WikiText has been reorganized into several new jar files (OSGi bundles) to better manage dependencies.
