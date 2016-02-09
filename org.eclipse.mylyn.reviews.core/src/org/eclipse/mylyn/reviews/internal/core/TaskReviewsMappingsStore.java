@@ -29,7 +29,7 @@ import com.google.common.collect.SetMultimap;
  * TaskEditorReviewPart to give a table of the reviews pertaining to a task. The class is limited as it maps one task to
  * many reviews. It is however possible (albeit strange) to have multiple tasks for one review. This is a limitation by
  * design.
- * 
+ *
  * @author Blaine Lewis
  */
 
@@ -93,8 +93,12 @@ public class TaskReviewsMappingsStore implements ITaskListChangeListener {
 					ITask task = getTaskByUrl(token);
 
 					if (task != null) {
-						updateMapping(review, task.getUrl() != null ? task.getUrl() : token);
-						return;
+						AbstractRepositoryConnector connector = repositoryManager
+								.getRepositoryConnector(task.getConnectorKind());
+						if (!(connector instanceof ReviewsConnector)) {
+							updateMapping(review, task.getUrl() != null ? task.getUrl() : token);
+							return;
+						}
 					}
 				} catch (MalformedURLException e) {
 					//Do nothing, this is expected behavior when there is no URL
@@ -132,9 +136,10 @@ public class TaskReviewsMappingsStore implements ITaskListChangeListener {
 				ITask review = (ITask) reviewRepoElement;
 
 				//We need to check it in case the mapping was removed from the task
-				AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(review.getConnectorKind());
+				AbstractRepositoryConnector connector = repositoryManager
+						.getRepositoryConnector(review.getConnectorKind());
 
-				if (review != null && connector instanceof ReviewsConnector) {
+				if (connector instanceof ReviewsConnector) {
 					deleteMappingsTo(review);
 				}
 			}

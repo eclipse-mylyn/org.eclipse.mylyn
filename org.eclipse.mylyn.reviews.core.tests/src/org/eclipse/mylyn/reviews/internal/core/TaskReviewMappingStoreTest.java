@@ -27,6 +27,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.reviews.core.spi.ReviewsConnector;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -65,6 +66,10 @@ public class TaskReviewMappingStoreTest {
 			+ " associated reviews Change-Id: I3a38d375688aad7be36bfd58c3311d692eb51ed Task-Url: " + taskUrl2
 			+ " Signed-off-by: Blaine Lewis <Blaine1@ualberta.ca>";
 
+	final String descriptionWithReviewAndTaskUrl = "477635: [UCOSP] contribute reviews section to task editor showing"
+			+ " associated reviews " + reviewUrl2 + " Change-Id: I3a38d375688aad7be36bfd58c3311d692eb51ed Task-Url: "
+			+ taskUrl1 + " Signed-off-by: Blaine Lewis <Blaine1@ualberta.ca>";
+
 	final String descriptionWithNoTaskUrl = "477635: [UCOSP] contribute reviews section to task editor showing"
 			+ " associated reviews Change-Id: I3a38d375688aad7be36bfd58c3311d692eb51ed "
 			+ " Signed-off-by: Blaine Lewis <Blaine1@ualberta.ca>";
@@ -92,21 +97,23 @@ public class TaskReviewMappingStoreTest {
 		reviewNoTask = new TaskTask("reviewKind", reviewUrlNoTask, "5");
 		reviewNoTask.setUrl(reviewUrlNoTask);
 
-		task1 = new TaskTask("reviewKind", taskUrl1, "1");
+		task1 = new TaskTask("taskKind", taskUrl1, "1");
 		task1.setUrl(taskUrl1);
 
-		task2 = new TaskTask("reviewKind", taskUrl2, "2");
+		task2 = new TaskTask("taskKind", taskUrl2, "2");
 		task2.setUrl(taskUrl2);
 	}
 
 	public TaskReviewsMappingsStore getEmptyTaskReviewStore() {
 		TaskRepositoryManager repositoryManager = mock(TaskRepositoryManager.class);
-		ReviewsConnector connector = mock(ReviewsConnector.class);
+		ReviewsConnector reviewConnector = mock(ReviewsConnector.class);
+		AbstractRepositoryConnector taskConnector = mock(AbstractRepositoryConnector.class);
 
 		taskDataManager = mock(TaskDataManager.class);
 
-		when(repositoryManager.getConnectorForRepositoryTaskUrl(Matchers.anyString())).thenReturn(connector);
-		when(repositoryManager.getRepositoryConnector(Matchers.anyString())).thenReturn(connector);
+		when(repositoryManager.getConnectorForRepositoryTaskUrl(Matchers.anyString())).thenReturn(reviewConnector);
+		when(repositoryManager.getRepositoryConnector("reviewKind")).thenReturn(reviewConnector);
+		when(repositoryManager.getRepositoryConnector("taskKind")).thenReturn(taskConnector);
 
 		TaskReviewsMappingsStore taskReviewsMappingStore = new MockTaskReviewsMappingsStore(mock(TaskList.class),
 				repositoryManager);
@@ -177,6 +184,20 @@ public class TaskReviewMappingStoreTest {
 
 		assertTrue(taskReviewsMappingStore.getReviewUrls(taskUrl2).contains(reviewUrl2));
 		assertTrue(taskReviewsMappingStore.getTaskUrl(review2).equals(taskUrl2));
+	}
+
+	@Test
+	public void testReviewNotLinkedToReview() throws CoreException {
+		TaskReviewsMappingsStore taskReviewsMappingStore = getEmptyTaskReviewStore();
+		TaskData reviewData1 = addReviewData(review1, descriptionWithReviewAndTaskUrl);
+
+		TaskContainerDelta delta = new TaskContainerDelta(review1, Kind.ADDED);
+		taskReviewsMappingStore.addTaskAssocation(review1, reviewData1);
+		taskReviewsMappingStore.containersChanged(ImmutableSet.of(delta));
+
+		assertFalse(taskReviewsMappingStore.getReviewUrls(reviewUrl2).contains(reviewUrl1));
+		assertTrue(taskReviewsMappingStore.getReviewUrls(taskUrl1).contains(reviewUrl1));
+		assertTrue(taskReviewsMappingStore.getTaskUrl(review1).equals(taskUrl1));
 	}
 
 	@Test
@@ -283,6 +304,10 @@ public class TaskReviewMappingStoreTest {
 				return task1;
 			case taskUrl2:
 				return task2;
+			case reviewUrl1:
+				return review1;
+			case reviewUrl2:
+				return review2;
 			}
 			return null;
 		}
