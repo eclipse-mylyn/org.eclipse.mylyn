@@ -152,20 +152,20 @@ class ReviewHarness {
 	}
 
 	String parseShortId(String commitMessage) {
-		String shortId = StringUtils.trimToEmpty(StringUtils.substringAfterLast(commitMessage, "/"));
-		shortId = StringUtils.substringBefore(shortId, " ");
+		String tail = StringUtils.trimToEmpty(StringUtils.substringAfterLast(commitMessage, "/"));
+		String shortId = StringUtils.substringBefore(tail, " ");
 		try {
 			Integer.parseInt(shortId);
 		} catch (NumberFormatException e) {
-			fail("ShortId could not be parsed: " + e.getMessage());
+			fail("ShortId could not be parsed from \"" + tail + "\". Commit message was: " + commitMessage);
 		}
 		return shortId;
 	}
 
 	void assertIsRecent(Date date) {
 		long timeDelta = System.currentTimeMillis() - date.getTime();
-		assertThat("Creation delta out of range : " + timeDelta + " ms", timeDelta > -CREATION_TIME_DELTA
-				&& timeDelta < CREATION_TIME_DELTA, is(true));
+		assertThat("Creation delta out of range : " + timeDelta + " ms",
+				timeDelta > -CREATION_TIME_DELTA && timeDelta < CREATION_TIME_DELTA, is(true));
 	}
 
 	public void dispose() throws GerritException {
@@ -241,8 +241,8 @@ class ReviewHarness {
 						}
 					});
 
-			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-					GerritFixture.current().getRepositoryUrl());
+			TaskRepository repository = TasksUiPlugin.getRepositoryManager()
+					.getRepository(GerritFixture.current().getRepositoryUrl());
 			adminClient = GerritClient.create(repository, location);
 		}
 		return adminClient;
