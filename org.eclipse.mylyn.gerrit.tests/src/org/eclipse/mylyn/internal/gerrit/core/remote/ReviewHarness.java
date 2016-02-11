@@ -24,6 +24,8 @@ import java.net.Proxy;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jgit.api.CommitCommand;
@@ -51,6 +53,8 @@ import org.eclipse.mylyn.reviews.core.spi.remote.emf.RemoteEmfConsumer;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 class ReviewHarness {
+
+	private static final Pattern SHORT_ID_PATTERN = Pattern.compile("(\\d+).*", Pattern.DOTALL);
 
 	//The maximum difference between two dates to account for clock skew between test machines
 	private static final long CREATION_TIME_DELTA = 30 * 60 * 1000; //30 Minutes
@@ -151,15 +155,14 @@ class ReviewHarness {
 		assertThat("Bad Push: " + result.push.getMessages(), getShortId().length(), greaterThan(0));
 	}
 
-	String parseShortId(String commitMessage) {
-		String tail = StringUtils.trimToEmpty(StringUtils.substringAfterLast(commitMessage, "/"));
-		String shortId = StringUtils.substringBefore(tail, " ");
-		try {
-			Integer.parseInt(shortId);
-		} catch (NumberFormatException e) {
-			fail("ShortId could not be parsed from \"" + tail + "\". Commit message was: " + commitMessage);
+	static String parseShortId(String messages) {
+		String tail = StringUtils.trimToEmpty(StringUtils.substringAfterLast(messages, "/"));
+		Matcher m = SHORT_ID_PATTERN.matcher(tail);
+		if (m.matches()) {
+			return m.group(1);
 		}
-		return shortId;
+		fail("ShortId could not be parsed from \"" + tail + "\". Messages was: " + messages);
+		return null;
 	}
 
 	void assertIsRecent(Date date) {

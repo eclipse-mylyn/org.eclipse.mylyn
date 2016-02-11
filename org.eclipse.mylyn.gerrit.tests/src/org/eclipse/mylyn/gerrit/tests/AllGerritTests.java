@@ -13,9 +13,6 @@ package org.eclipse.mylyn.gerrit.tests;
 
 import java.util.List;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.gerrit.tests.core.GerritConnectorTest;
@@ -44,6 +41,10 @@ import org.eclipse.mylyn.internal.gerrit.core.remote.GerritDataLocatorTest;
 import org.eclipse.mylyn.internal.gerrit.core.remote.GerritReviewRemoteFactoryTest;
 import org.eclipse.mylyn.internal.gerrit.core.remote.PatchSetDetailRemoteFactoryTest;
 import org.eclipse.mylyn.internal.gerrit.core.remote.PatchSetRemoteFactoryTest;
+import org.eclipse.mylyn.internal.gerrit.core.remote.ReviewHarnessTest;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
  * @author Steffen Pingel
@@ -63,6 +64,7 @@ public class AllGerritTests {
 	}
 
 	private static void addTests(TestSuite suite, TestConfiguration configuration) {
+		suite.addTestSuite(ReviewHarnessTest.class);
 		suite.addTestSuite(GerritVersionTest.class);
 		suite.addTestSuite(AbandonInputTest.class);
 		suite.addTestSuite(AccountInfoTest.class);
