@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylyn Gerrit Connector
+Bundle-Name: Mylyn Gerrit Connector Core Tests
 Bundle-SymbolicName: org.eclipse.mylyn.gerrit.core.tests;singleton:=true
 Bundle-Version: 2.16.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
