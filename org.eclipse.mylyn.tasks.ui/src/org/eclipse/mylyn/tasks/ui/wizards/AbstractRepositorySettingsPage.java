@@ -1244,22 +1244,29 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		}
 
 		anonymousButton.setSelection(selected);
+		updateCredentialsEditors();
 
-		if (selected) {
-			oldUsername = repositoryUserNameEditor.getStringValue();
-			oldPassword = (repositoryPasswordEditor).getStringValue();
-			repositoryUserNameEditor.setStringValue(""); //$NON-NLS-1$
-			repositoryPasswordEditor.setStringValue(""); //$NON-NLS-1$
-		} else {
-			repositoryUserNameEditor.setStringValue(oldUsername);
-			repositoryPasswordEditor.setStringValue(oldPassword);
-		}
-
-		repositoryUserNameEditor.setEnabled(!selected, compositeContainer);
-		repositoryPasswordEditor.setEnabled(!selected, compositeContainer);
-		savePasswordButton.setEnabled(!selected);
 		if (getWizard() != null) {
 			getWizard().getContainer().updateButtons();
+		}
+	}
+
+	private void updateCredentialsEditors() {
+		if (repositoryUserNameEditor != null && repositoryPasswordEditor != null) {
+			boolean shouldEnable = needsRepositoryCredentials() && !isAnonymousAccess();
+			if (shouldEnable) {
+				repositoryUserNameEditor.setStringValue(oldUsername);
+				repositoryPasswordEditor.setStringValue(oldPassword);
+			} else {
+				oldUsername = repositoryUserNameEditor.getStringValue();
+				oldPassword = (repositoryPasswordEditor).getStringValue();
+				repositoryUserNameEditor.setStringValue(""); //$NON-NLS-1$
+				repositoryPasswordEditor.setStringValue(""); //$NON-NLS-1$
+			}
+
+			repositoryUserNameEditor.setEnabled(shouldEnable, compositeContainer);
+			repositoryPasswordEditor.setEnabled(shouldEnable, compositeContainer);
+			savePasswordButton.setEnabled(shouldEnable);
 		}
 	}
 
@@ -1937,6 +1944,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 	 */
 	public void setNeedsRepositoryCredentials(boolean needsRepositoryCredentials) {
 		this.needsRepositoryCredentials = needsRepositoryCredentials;
+		updateCredentialsEditors();
 	}
 
 	public void setNeedsValidation(boolean needsValidation) {

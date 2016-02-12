@@ -70,6 +70,7 @@ public class RepositorySettingsPageTest {
 		Combo getServerUrlCombo() {
 			return serverUrlCombo;
 		}
+
 	}
 
 	public static class RepositorySettingsPageWithNoCredentials extends TestRepositorySettingsPage {
@@ -206,6 +207,72 @@ public class RepositorySettingsPageTest {
 	}
 
 	@Test
+	public void setNeedsRepositoryCredentialsInitializeFalse() throws Exception {
+		TestRepositorySettingsPage page = new TestRepositorySettingsPage(createTaskRepository());
+		page.setNeedsRepositoryCredentials(false);
+		page.createControl(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+
+		assertFalse(page.needsRepositoryCredentials());
+		assertNull(page.repositoryUserNameEditor);
+		assertNull(page.repositoryPasswordEditor);
+	}
+
+	@Test
+	public void setNeedsRepositoryCredentialsInitializeTrue() throws Exception {
+		TestRepositorySettingsPage page = new TestRepositorySettingsPage(createTaskRepository());
+		page.setNeedsRepositoryCredentials(true);
+		page.createControl(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+
+		assertTrue(page.needsRepositoryCredentials());
+		assertCredentialsEnabled(page);
+	}
+
+	@Test
+	public void setNeedsRepositoryCredentialsFalse() throws Exception {
+		TestRepositorySettingsPage page = new TestRepositorySettingsPage(createTaskRepository());
+		page.setNeedsRepositoryCredentials(true);
+		page.createControl(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+		assertCredentialsEnabled(page);
+
+		page.setNeedsRepositoryCredentials(false);
+
+		assertCredentialsDisabled(page);
+	}
+
+	@Test
+	public void setNeedsRepositoryCredentialsTrue() throws Exception {
+		TestRepositorySettingsPage page = new TestRepositorySettingsPage(createTaskRepository());
+		page.setNeedsRepositoryCredentials(true);
+		page.createControl(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+		page.setNeedsRepositoryCredentials(false);
+		assertCredentialsDisabled(page);
+
+		page.setNeedsRepositoryCredentials(true);
+		assertCredentialsEnabled(page);
+	}
+
+	@Test
+	public void repositoryCredentialsEnabledOnlyIfNeededAndNotAnonymous() throws Exception {
+		TestRepositorySettingsPage page = new TestRepositorySettingsPage(createTaskRepository());
+		page.setNeedsRepositoryCredentials(true);
+		page.setNeedsAnonymousLogin(true);
+		page.createControl(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+
+		assertTrue(page.needsRepositoryCredentials());
+		assertTrue(page.isAnonymousAccess());
+		assertCredentialsDisabled(page);
+
+		page.setAnonymous(false);
+		page.setNeedsRepositoryCredentials(false);
+
+		assertCredentialsDisabled(page);
+
+		page.setNeedsRepositoryCredentials(true);
+
+		assertCredentialsEnabled(page);
+	}
+
+	@Test
 	public void isUrlReadOnly() throws Exception {
 		TestRepositorySettingsPage page = new TestRepositorySettingsPage(createTaskRepository());
 		assertFalse(page.isUrlReadOnly());
@@ -234,5 +301,15 @@ public class RepositorySettingsPageTest {
 		TaskRepository repository = new TaskRepository("mock", "url");
 		repository.setRepositoryLabel("label");
 		return repository;
+	}
+
+	private void assertCredentialsEnabled(TestRepositorySettingsPage page) {
+		assertTrue(page.repositoryUserNameEditor.getTextControl(page.compositeContainer).isEnabled());
+		assertTrue(page.repositoryPasswordEditor.getTextControl(page.compositeContainer).isEnabled());
+	}
+
+	private void assertCredentialsDisabled(TestRepositorySettingsPage page) {
+		assertFalse(page.repositoryUserNameEditor.getTextControl(page.compositeContainer).isEnabled());
+		assertFalse(page.repositoryPasswordEditor.getTextControl(page.compositeContainer).isEnabled());
 	}
 }
