@@ -170,15 +170,15 @@ public class TasksUiInternal {
 
 	/**
 	 * get the connector discovery wizard command. Calling code should check {@link Command#isEnabled()} on return.
-	 * 
+	 *
 	 * @return the command, or null if it is not available.
 	 */
 	public static Command getConfiguredDiscoveryWizardCommand() {
 		ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 		final Command discoveryWizardCommand = service.getCommand("org.eclipse.mylyn.tasks.ui.discoveryWizardCommand"); //$NON-NLS-1$
 		if (discoveryWizardCommand != null) {
-			IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(
-					IHandlerService.class);
+			IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+					.getService(IHandlerService.class);
 			EvaluationContext evaluationContext = createDiscoveryWizardEvaluationContext(handlerService);
 			if (!discoveryWizardCommand.isEnabled()) {
 				// update enabled state in case something has changed (ProxyHandler caches state)
@@ -297,8 +297,8 @@ public class TasksUiInternal {
 				TasksUiUtil.openTask(task);
 			} else {
 				String repositoryKind = task.getConnectorKind();
-				final AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-						repositoryKind);
+				final AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+						.getRepositoryConnector(repositoryKind);
 
 				TaskRepository repository = TasksUi.getRepositoryManager().getRepository(repositoryKind,
 						task.getRepositoryUrl());
@@ -347,8 +347,8 @@ public class TasksUiInternal {
 			taskRepository.setUpdating(true);
 		}
 
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				taskRepository.getConnectorKind());
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+				.getRepositoryConnector(taskRepository.getConnectorKind());
 		final TaskJob job = TasksUiInternal.getJobFactory().createUpdateRepositoryConfigurationJob(connector,
 				taskRepository, null);
 		job.addJobChangeListener(new JobChangeAdapter() {
@@ -455,8 +455,8 @@ public class TasksUiInternal {
 	}
 
 	private static SynchronizationJob synchronizeRepositoryInternal(TaskRepository repository, boolean force) {
-		SynchronizationJob job = TasksUiInternal.getJobFactory().createSynchronizeRepositoriesJob(
-				Collections.singleton(repository));
+		SynchronizationJob job = TasksUiInternal.getJobFactory()
+				.createSynchronizeRepositoriesJob(Collections.singleton(repository));
 		// do not show in progress view by default
 		job.setSystem(true);
 		job.setUser(force);
@@ -484,7 +484,7 @@ public class TasksUiInternal {
 	/**
 	 * Synchronize a single task. Note that if you have a collection of tasks to synchronize with this connector then
 	 * you should call synchronize(Set<Set<AbstractTask> repositoryTasks, ...)
-	 * 
+	 *
 	 * @param listener
 	 *            can be null
 	 */
@@ -536,7 +536,8 @@ public class TasksUiInternal {
 	}
 
 	public static NewAttachmentWizardDialog openNewAttachmentWizard(Shell shell, TaskRepository taskRepository,
-			ITask task, TaskAttribute taskAttribute, TaskAttachmentWizard.Mode mode, AbstractTaskAttachmentSource source) {
+			ITask task, TaskAttribute taskAttribute, TaskAttachmentWizard.Mode mode,
+			AbstractTaskAttachmentSource source) {
 		TaskAttachmentWizard attachmentWizard = new TaskAttachmentWizard(taskRepository, task, taskAttribute);
 		attachmentWizard.setSource(source);
 		attachmentWizard.setMode(mode);
@@ -551,7 +552,8 @@ public class TasksUiInternal {
 		return new MessageDialog(shell, title, null, message, type, new String[] { IDialogConstants.OK_LABEL }, 0);
 	}
 
-	private static void displayStatus(Shell shell, final String title, final IStatus status, boolean showLinkToErrorLog) {
+	private static void displayStatus(Shell shell, final String title, final IStatus status,
+			boolean showLinkToErrorLog) {
 		// avoid blocking ui when in test mode
 		if (CoreUtil.TEST_MODE) {
 			StatusHandler.log(status);
@@ -633,7 +635,7 @@ public class TasksUiInternal {
 
 	/**
 	 * Creates a new local task and schedules for today
-	 * 
+	 *
 	 * @param summary
 	 *            if null DEFAULT_SUMMARY (New Task) used.
 	 */
@@ -809,8 +811,8 @@ public class TasksUiInternal {
 	public static boolean hasLocalCompletionState(ITask task) {
 		TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
 				task.getRepositoryUrl());
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				task.getConnectorKind());
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+				.getRepositoryConnector(task.getConnectorKind());
 		return connector.hasLocalCompletionState(taskRepository, task);
 	}
 
@@ -820,7 +822,7 @@ public class TasksUiInternal {
 	 * return null.
 	 * <p>
 	 * <b>Note: Applied from patch on bug 99472.</b>
-	 * 
+	 *
 	 * @return Shell or <code>null</code>
 	 * @deprecated Use {@link WorkbenchUtil#getShell()} instead
 	 */
@@ -831,8 +833,8 @@ public class TasksUiInternal {
 
 	public static TaskData createTaskData(TaskRepository taskRepository, ITaskMapping initializationData,
 			ITaskMapping selectionData, IProgressMonitor monitor) throws CoreException {
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				taskRepository.getConnectorKind());
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+				.getRepositoryConnector(taskRepository.getConnectorKind());
 		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(taskRepository);
 		TaskData taskData = new TaskData(mapper, taskRepository.getConnectorKind(), taskRepository.getRepositoryUrl(),
@@ -850,8 +852,8 @@ public class TasksUiInternal {
 
 	public static void createAndOpenNewTask(TaskData taskData) throws CoreException {
 		ITask task = TasksUiUtil.createOutgoingNewTask(taskData.getConnectorKind(), taskData.getRepositoryUrl());
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				taskData.getConnectorKind());
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+				.getRepositoryConnector(taskData.getConnectorKind());
 		ITaskMapping mapping = connector.getTaskMapping(taskData);
 		String summary = mapping.getSummary();
 		if (summary != null && summary.length() > 0) {
@@ -861,8 +863,8 @@ public class TasksUiInternal {
 		if (taskKind != null && taskKind.length() > 0) {
 			task.setTaskKind(taskKind);
 		}
-		UnsubmittedTaskContainer unsubmitted = TasksUiPlugin.getTaskList().getUnsubmittedContainer(
-				taskData.getRepositoryUrl());
+		UnsubmittedTaskContainer unsubmitted = TasksUiPlugin.getTaskList()
+				.getUnsubmittedContainer(taskData.getRepositoryUrl());
 		if (unsubmitted != null) {
 			TasksUiPlugin.getTaskList().addTask(task, unsubmitted);
 		}
@@ -958,7 +960,8 @@ public class TasksUiInternal {
 		String taskEditorId = TaskEditor.ID_EDITOR;
 		if (task != null) {
 			ITask repositoryTask = task;
-			AbstractRepositoryConnectorUi repositoryUi = TasksUiPlugin.getConnectorUi(repositoryTask.getConnectorKind());
+			AbstractRepositoryConnectorUi repositoryUi = TasksUiPlugin
+					.getConnectorUi(repositoryTask.getConnectorKind());
 			String customTaskEditorId = repositoryUi.getTaskEditorId(repositoryTask);
 			if (customTaskEditorId != null) {
 				taskEditorId = customTaskEditorId;
@@ -991,8 +994,8 @@ public class TasksUiInternal {
 			return;
 		}
 
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				task.getConnectorKind());
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+				.getRepositoryConnector(task.getConnectorKind());
 		if (connector.canSynchronizeTask(taskRepository, task)) {
 			TasksUiInternal.synchronizeTaskInBackground(connector, task);
 		}
@@ -1005,7 +1008,7 @@ public class TasksUiInternal {
 	/**
 	 * Only override if task should be opened by a custom editor, default behavior is to open with a rich editor,
 	 * falling back to the web browser if not available.
-	 * 
+	 *
 	 * @return true if the task was successfully opened
 	 */
 	public static boolean openRepositoryTask(String connectorKind, String repositoryUrl, String id,
@@ -1016,7 +1019,7 @@ public class TasksUiInternal {
 	/**
 	 * Only override if task should be opened by a custom editor, default behavior is to open with a rich editor,
 	 * falling back to the web browser if not available.
-	 * 
+	 *
 	 * @return true if the task was successfully opened
 	 */
 	public static boolean openRepositoryTask(String connectorKind, String repositoryUrl, String id,
@@ -1080,7 +1083,7 @@ public class TasksUiInternal {
 
 	/**
 	 * Returns text masking the &amp;-character from decoration as an accelerator in SWT labels.
-	 * 
+	 *
 	 * @deprecated Use {@link CommonUiUtil#toLabel(String)} instead
 	 */
 	@Deprecated
@@ -1191,7 +1194,7 @@ public class TasksUiInternal {
 
 	/**
 	 * Searches for a task whose URL matches
-	 * 
+	 *
 	 * @return first task with a matching URL.
 	 */
 	public static AbstractTask getTaskByUrl(String taskUrl) {
@@ -1211,7 +1214,7 @@ public class TasksUiInternal {
 
 	/**
 	 * Cleans text for use as the text of an action to ensure that it is displayed properly.
-	 * 
+	 *
 	 * @return the cleaned text
 	 * @deprecated use {@link CommonUiUtil#toMenuLabel(String)} instead
 	 */
@@ -1231,59 +1234,46 @@ public class TasksUiInternal {
 					try {
 						if (object != null) {
 							IEvaluationContext context = service.createContextSnapshot(false);
-							context.addVariable(ISources.ACTIVE_CURRENT_SELECTION_NAME, new StructuredSelection(object));
+							context.addVariable(ISources.ACTIVE_CURRENT_SELECTION_NAME,
+									new StructuredSelection(object));
 							service.executeCommandInContext(new ParameterizedCommand(command, null), event, context);
 						} else {
 							service.executeCommand(commandId, event);
 						}
 					} catch (ExecutionException e) {
-						TasksUiInternal.displayStatus(title, new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-								"Command execution failed", e)); //$NON-NLS-1$
+						TasksUiInternal.displayStatus(title,
+								new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Command execution failed", e)); //$NON-NLS-1$
 					} catch (NotDefinedException e) {
-						TasksUiInternal.displayStatus(
-								title,
-								new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
-										"The command with the id ''{0}'' is not defined.", commandId), e)); //$NON-NLS-1$
+						TasksUiInternal.displayStatus(title, new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								NLS.bind("The command with the id ''{0}'' is not defined.", commandId), e)); //$NON-NLS-1$
 					} catch (NotHandledException e) {
-						TasksUiInternal.displayStatus(
-								title,
-								new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
-										"The command with the id ''{0}'' is not bound.", commandId), e)); //$NON-NLS-1$
+						TasksUiInternal.displayStatus(title, new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								NLS.bind("The command with the id ''{0}'' is not bound.", commandId), e)); //$NON-NLS-1$
 					}
 				} else {
-					TasksUiInternal.displayStatus(
-							title,
-							new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
-									"The command with the id ''{0}'' does not exist.", commandId))); //$NON-NLS-1$
+					TasksUiInternal.displayStatus(title, new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							NLS.bind("The command with the id ''{0}'' does not exist.", commandId))); //$NON-NLS-1$
 				}
 			} else {
-				TasksUiInternal.displayStatus(
-						title,
-						new Status(
-								IStatus.ERROR,
-								TasksUiPlugin.ID_PLUGIN,
-								NLS.bind(
-										"Command service is not available to execute command with the id ''{0}''.", commandId), new Exception())); //$NON-NLS-1$
+				TasksUiInternal.displayStatus(title, new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						NLS.bind("Command service is not available to execute command with the id ''{0}''.", commandId), //$NON-NLS-1$
+						new Exception()));
 			}
 		} else {
-			TasksUiInternal.displayStatus(
-					title,
-					new Status(
-							IStatus.ERROR,
-							TasksUiPlugin.ID_PLUGIN,
-							NLS.bind(
-									"Handler service is not available to execute command with the id ''{0}''.", commandId), new Exception())); //$NON-NLS-1$
+			TasksUiInternal.displayStatus(title, new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					NLS.bind("Handler service is not available to execute command with the id ''{0}''.", commandId), //$NON-NLS-1$
+					new Exception()));
 		}
 	}
 
 	public static void activateTaskThroughCommand(ITask task) {
 		try {
-			TasksUiInternal.executeCommand(
-					PlatformUI.getWorkbench(),
-					"org.eclipse.mylyn.tasks.ui.command.activateSelectedTask", Messages.TasksUiInternal_Activate_Task, task, null); //$NON-NLS-1$
+			TasksUiInternal.executeCommand(PlatformUI.getWorkbench(),
+					"org.eclipse.mylyn.tasks.ui.command.activateSelectedTask", Messages.TasksUiInternal_Activate_Task, //$NON-NLS-1$
+					task, null);
 		} catch (NotEnabledException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
-					"Failed to activate task ''{0}''.", task.getSummary()), e)); //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					NLS.bind("Failed to activate task ''{0}''.", task.getSummary()), e)); //$NON-NLS-1$
 		}
 	}
 
@@ -1307,8 +1297,8 @@ public class TasksUiInternal {
 	public static void displayFrameworkError(String message) {
 		RuntimeException exception = new RuntimeException(message);
 		if (!CoreUtil.TEST_MODE) {
-			StatusAdapter status = new StatusAdapter(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, message,
-					exception));
+			StatusAdapter status = new StatusAdapter(
+					new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, message, exception));
 			status.setProperty(IStatusAdapterConstants.TITLE_PROPERTY, "Framework Error"); //$NON-NLS-1$
 			StatusManager.getManager().handle(status, StatusManager.SHOW | StatusManager.LOG | StatusManager.BLOCK);
 		}
@@ -1376,7 +1366,8 @@ public class TasksUiInternal {
 
 	public static boolean shouldShowIncoming(ITask task) {
 		SynchronizationState state = task.getSynchronizationState();
-		if ((state == SynchronizationState.INCOMING && !Boolean.valueOf(task.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING)))
+		if ((state == SynchronizationState.INCOMING
+				&& !Boolean.valueOf(task.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING)))
 				|| state == SynchronizationState.INCOMING_NEW || state == SynchronizationState.CONFLICT) {
 			return true;
 		}
@@ -1405,9 +1396,8 @@ public class TasksUiInternal {
 
 		if (lastRevision != null && lastRevision.getDate() != null) {
 			// remove attachments and comments that are newer than lastRevision
-			List<TaskAttribute> attributes = new ArrayList<TaskAttribute>(newTaskData.getRoot()
-					.getAttributes()
-					.values());
+			List<TaskAttribute> attributes = new ArrayList<TaskAttribute>(
+					newTaskData.getRoot().getAttributes().values());
 			for (TaskAttribute attribute : attributes) {
 				if (TaskAttribute.TYPE_COMMENT.equals(attribute.getMetaData().getType())) {
 					TaskCommentMapper mapper = TaskCommentMapper.createFrom(attribute);
@@ -1429,8 +1419,8 @@ public class TasksUiInternal {
 	public static boolean canGetTaskHistory(ITask task) {
 		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
 				task.getRepositoryUrl());
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				repository.getConnectorKind());
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+				.getRepositoryConnector(repository.getConnectorKind());
 		return connector.canGetTaskHistory(repository, task);
 	}
 
@@ -1460,7 +1450,8 @@ public class TasksUiInternal {
 		boolean showError = false;
 		Throwable exception = query.getStatus().getException();
 		showError = (query.getLastSynchronizedTimeStamp().equals("<never>") //$NON-NLS-1$
-		&& ((RepositoryStatus.ERROR_IO == query.getStatus().getCode() && exception != null && exception instanceof SocketTimeoutException) || //
+				&& ((RepositoryStatus.ERROR_IO == query.getStatus().getCode() && exception != null
+						&& exception instanceof SocketTimeoutException) || //
 		// only when we change SocketTimeout or Eclipse.org change there timeout for long running Queries
 		(RepositoryStatus.ERROR_NETWORK) == query.getStatus().getCode()
 				&& query.getStatus().getMessage().equals("Http error: Internal Server Error"))); //$NON-NLS-1$
