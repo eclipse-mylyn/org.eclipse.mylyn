@@ -46,7 +46,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
  * Encapsulates synchronization policy.
- * 
+ *
  * @author Mik Kersten
  * @author Rob Elves
  * @author Steffen Pingel
@@ -175,7 +175,8 @@ public class TaskDataManager implements ITaskDataManager {
 		}
 	}
 
-	public void putUpdatedTaskData(final ITask itask, final TaskData taskData, final boolean user) throws CoreException {
+	public void putUpdatedTaskData(final ITask itask, final TaskData taskData, final boolean user)
+			throws CoreException {
 		putUpdatedTaskData(itask, taskData, user, null);
 	}
 
@@ -217,16 +218,14 @@ public class TaskDataManager implements ITaskDataManager {
 
 					if (taskDataChanged) {
 						String suppressIncoming = null;
-						if (synchronizationManger.hasParticipants(task.getConnectorKind())) {
-							// determine whether to show an incoming
-							if (state == null) {
-								File file = getMigratedFile(task, task.getConnectorKind());
-								state = taskDataStore.getTaskDataState(ensurePathExists(file));
-							}
-							TaskData lastReadData = (state != null) ? state.getLastReadData() : null;
-							TaskDataDiff diff = synchronizationManger.createDiff(taskData, lastReadData, monitor);
-							suppressIncoming = Boolean.toString(!diff.hasChanged());
+						// determine whether to show an incoming
+						if (state == null) {
+							File file = getMigratedFile(task, task.getConnectorKind());
+							state = taskDataStore.getTaskDataState(ensurePathExists(file));
 						}
+						TaskData lastReadData = (state != null) ? state.getLastReadData() : null;
+						TaskDataDiff diff = synchronizationManger.createDiff(taskData, lastReadData, monitor);
+						suppressIncoming = Boolean.toString(!diff.hasChanged());
 
 						switch (task.getSynchronizationState()) {
 						case OUTGOING:
@@ -274,7 +273,7 @@ public class TaskDataManager implements ITaskDataManager {
 		task.setChanged(false);
 		Date oldDueDate = task.getDueDate();
 		connector.updateTaskFromTaskData(repository, task, taskData);
-		// XXX move this to AbstractTask or use model listener to notify task activity 
+		// XXX move this to AbstractTask or use model listener to notify task activity
 		// manager of due date changes
 		Date newDueDate = task.getDueDate();
 		if (oldDueDate != null && !oldDueDate.equals(newDueDate) || newDueDate != oldDueDate) {
@@ -356,8 +355,8 @@ public class TaskDataManager implements ITaskDataManager {
 //			String fileName = kind + "-" + URLEncoder.encode(task.getTaskId(), ENCODING_UTF_8) + EXTENSION;
 		String repositoryPath = task.getConnectorKind() + "-" + CoreUtil.asFileName(repositoryUrl); //$NON-NLS-1$
 		String fileName = CoreUtil.asFileName(task.getTaskId()) + EXTENSION;
-		File path = new File(dataPath + File.separator + FOLDER_TASKS + File.separator + repositoryPath
-				+ File.separator + FOLDER_DATA);
+		File path = new File(dataPath + File.separator + FOLDER_TASKS + File.separator + repositoryPath + File.separator
+				+ FOLDER_DATA);
 		return new File(path, fileName);
 	}
 
@@ -393,8 +392,9 @@ public class TaskDataManager implements ITaskDataManager {
 	public TaskData getTaskData(TaskRepository taskRepository, String taskId) throws CoreException {
 		Assert.isNotNull(taskRepository);
 		Assert.isNotNull(taskId);
-		TaskDataState state = taskDataStore.getTaskDataState(findFile(new TaskTask(taskRepository.getConnectorKind(),
-				taskRepository.getRepositoryUrl(), taskId), taskRepository.getConnectorKind()));
+		TaskDataState state = taskDataStore.getTaskDataState(
+				findFile(new TaskTask(taskRepository.getConnectorKind(), taskRepository.getRepositoryUrl(), taskId),
+						taskRepository.getConnectorKind()));
 		if (state == null) {
 			return null;
 		}
@@ -487,7 +487,8 @@ public class TaskDataManager implements ITaskDataManager {
 						}
 					} else {
 						// if an incoming was previously suppressed it need to show now
-						task.setAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING, Boolean.toString(false));
+						task.setAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING,
+								Boolean.toString(false));
 						switch (task.getSynchronizationState()) {
 						case SYNCHRONIZED:
 							task.setSynchronizationState(SynchronizationState.INCOMING);
