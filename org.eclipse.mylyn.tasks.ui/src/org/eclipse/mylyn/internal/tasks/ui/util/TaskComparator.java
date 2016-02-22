@@ -43,7 +43,7 @@ public class TaskComparator implements Comparator<ITask> {
 
 	/**
 	 * Return a array of values to pass to taskKeyComparator.compare() for sorting
-	 * 
+	 *
 	 * @param element
 	 *            the element to sort
 	 * @return String array[component, taskId, summary]
@@ -199,7 +199,7 @@ public class TaskComparator implements Comparator<ITask> {
 							: Double.valueOf(rankString2);
 					return compare(rank1, rank2, sortDirection);
 				} catch (NumberFormatException e) {
-					// ignore, means that there is no rank on one of the elements
+					return compare(rankString1, rankString2, sortDirection);
 				}
 			}
 		}
