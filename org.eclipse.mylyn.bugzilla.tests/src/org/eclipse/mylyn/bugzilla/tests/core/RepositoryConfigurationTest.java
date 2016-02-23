@@ -11,9 +11,17 @@
 
 package org.eclipse.mylyn.bugzilla.tests.core;
 
-import junit.framework.TestCase;
+import java.util.List;
 
+import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeMapper;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
+
+import junit.framework.TestCase;
 
 public class RepositoryConfigurationTest extends TestCase {
 
@@ -48,5 +56,21 @@ public class RepositoryConfigurationTest extends TestCase {
 
 	public void testGetUnconfirmedAllowed_noProduct() throws Exception {
 		assertFalse(cfg.getUnconfirmedAllowed("no-product"));
+	}
+
+	public void testGetAttributeOptions() throws Exception {
+		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, "http://repository");
+		BugzillaAttributeMapper mapper = new BugzillaAttributeMapper(repository, BugzillaFixture.current().connector());
+		TaskData taskData = new TaskData(mapper, repository.getConnectorKind(), repository.getRepositoryUrl(), "");
+
+		cfg.addItem(BugzillaAttribute.REP_PLATFORM, "3");
+		cfg.addItem(BugzillaAttribute.REP_PLATFORM, "2");
+		cfg.addItem(BugzillaAttribute.REP_PLATFORM, "1");
+		List<String> options = cfg.getAttributeOptions(PRODUCT,
+				taskData.getRoot().createAttribute(BugzillaAttribute.REP_PLATFORM.getKey()));
+		assertEquals(3, options.size());
+		assertEquals("1", options.get(0));
+		assertEquals("2", options.get(1));
+		assertEquals("3", options.get(2));
 	}
 }

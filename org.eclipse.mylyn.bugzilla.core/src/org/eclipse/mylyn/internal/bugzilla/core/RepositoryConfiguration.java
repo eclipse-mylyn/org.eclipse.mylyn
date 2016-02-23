@@ -361,7 +361,8 @@ public class RepositoryConfiguration implements Serializable {
 	public void setValidTransitions(IProgressMonitor monitor, String fileName, BugzillaXmlRpcClient xmlClient)
 			throws CoreException {
 		//Custom transitions only possible for newer versions of Bugzilla
-		if (getInstallVersion() != null && getInstallVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_2) < 0) {
+		if (getInstallVersion() != null
+				&& getInstallVersion().compareMajorMinorOnly(BugzillaVersion.BUGZILLA_3_2) < 0) {
 			return;
 		}
 		try {
@@ -560,8 +561,8 @@ public class RepositoryConfiguration implements Serializable {
 			mapper.setFlagId(bugzillaFlag.getName());
 			mapper.setNumber(0);
 			mapper.setDescription(bugzillaFlag.getDescription());
-			TaskAttribute attribute = taskData.getRoot().createAttribute(
-					BugzillaAttribute.KIND_FLAG_TYPE + bugzillaFlag.getFlagId());
+			TaskAttribute attribute = taskData.getRoot()
+					.createAttribute(BugzillaAttribute.KIND_FLAG_TYPE + bugzillaFlag.getFlagId());
 			mapper.applyTo(attribute);
 		}
 		setFlagsRequestee(taskData);
@@ -623,7 +624,7 @@ public class RepositoryConfiguration implements Serializable {
 		if (attribute.getId().startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
 			for (BugzillaCustomField bugzillaCustomField : customFields) {
 				if (bugzillaCustomField.getName().equals(attribute.getId())) {
-					options = bugzillaCustomField.getOptions();
+					options.addAll(bugzillaCustomField.getOptions());
 					break;
 				}
 			}
@@ -669,11 +670,11 @@ public class RepositoryConfiguration implements Serializable {
 					}
 					throw e;
 				}
-				if ((element == BugzillaAttribute.TARGET_MILESTONE || element == BugzillaAttribute.VERSION || element == BugzillaAttribute.COMPONENT)
-						&& (product != null && !product.equals(""))) { //$NON-NLS-1$
-					options = getProductOptionValues(element, product);
+				if ((element == BugzillaAttribute.TARGET_MILESTONE || element == BugzillaAttribute.VERSION
+						|| element == BugzillaAttribute.COMPONENT) && (product != null && !product.equals(""))) { //$NON-NLS-1$
+					options.addAll(getProductOptionValues(element, product));
 				} else {
-					options = getOptionValues(element);
+					options.addAll(getOptionValues(element));
 				}
 				if (element != BugzillaAttribute.RESOLUTION && element != BugzillaAttribute.OP_SYS
 						&& element != BugzillaAttribute.BUG_SEVERITY && element != BugzillaAttribute.PRIORITY
@@ -694,10 +695,10 @@ public class RepositoryConfiguration implements Serializable {
 		if (bugzillaVersion.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0) {
 			addValidOperationsBefore4(bugReport);
 		} else {
-			if (getOptionValues(BugzillaAttribute.BUG_STATUS).contains(
-					BUGZILLA_REPORT_STATUS_4_0.IN_PROGRESS.toString())
-					|| getOptionValues(BugzillaAttribute.BUG_STATUS).contains(
-							BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString())) {
+			if (getOptionValues(BugzillaAttribute.BUG_STATUS)
+					.contains(BUGZILLA_REPORT_STATUS_4_0.IN_PROGRESS.toString())
+					|| getOptionValues(BugzillaAttribute.BUG_STATUS)
+							.contains(BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString())) {
 				addValidOperationsAfter4(bugReport);
 			} else {
 				addValidOperationsBefore4(bugReport);
@@ -749,8 +750,8 @@ public class RepositoryConfiguration implements Serializable {
 			case START:
 				addOperation(bugReport, BugzillaOperation.new_default);
 				addOperation(bugReport, BugzillaOperation.unconfirmed);
-				TaskAttribute unconfirmedAttribute = bugReport.getRoot().getAttribute(
-						TaskAttribute.PREFIX_OPERATION + BugzillaOperation.unconfirmed.toString());
+				TaskAttribute unconfirmedAttribute = bugReport.getRoot()
+						.getAttribute(TaskAttribute.PREFIX_OPERATION + BugzillaOperation.unconfirmed.toString());
 				if (unconfirmedAttribute != null) {
 					unconfirmedAttribute.getMetaData().setDisabled(!unconfirmedAllowed);
 				}
@@ -806,11 +807,11 @@ public class RepositoryConfiguration implements Serializable {
 		if (operationAttribute == null) {
 			operationAttribute = bugReport.getRoot().createAttribute(key.getKey());
 			operationAttribute.getMetaData()
-			.defaults()
-			.setReadOnly(key.isReadOnly())
-			.setKind(key.getKind())
-			.setLabel(key.toString())
-			.setType(key.getType());
+					.defaults()
+					.setReadOnly(key.isReadOnly())
+					.setKind(key.getKind())
+					.setLabel(key.toString())
+					.setType(key.getType());
 			operationAttribute.setValue("0"); //$NON-NLS-1$
 		}
 		operationAttribute = bugReport.getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED);
@@ -948,11 +949,11 @@ public class RepositoryConfiguration implements Serializable {
 			if (operationAttribute == null) {
 				operationAttribute = bugReport.getRoot().createAttribute(key.getKey());
 				operationAttribute.getMetaData()
-				.defaults()
-				.setReadOnly(key.isReadOnly())
-				.setKind(key.getKind())
-				.setLabel(key.toString())
-				.setType(key.getType());
+						.defaults()
+						.setReadOnly(key.isReadOnly())
+						.setKind(key.getKind())
+						.setLabel(key.toString())
+						.setType(key.getType());
 				operationAttribute.setValue("0"); //$NON-NLS-1$
 			}
 			operationAttribute = bugReport.getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED);
@@ -997,7 +998,8 @@ public class RepositoryConfiguration implements Serializable {
 			if (getOptionValues(BugzillaAttribute.RESOLUTION).size() > 0) {
 				attrResolvedInput.setValue(getOptionValues(BugzillaAttribute.RESOLUTION).get(0));
 			}
-		} else if (op.toString().equals(BugzillaOperation.verify_with_resolution.toString()) && op.getInputId() != null) {
+		} else if (op.toString().equals(BugzillaOperation.verify_with_resolution.toString())
+				&& op.getInputId() != null) {
 			TaskAttribute attributeResolution = bugReport.getRoot().getMappedAttribute(TaskAttribute.RESOLUTION);
 			String oldResolutionValue = attributeResolution.getValue();
 			attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + op.toString());
@@ -1014,7 +1016,8 @@ public class RepositoryConfiguration implements Serializable {
 			if (getOptionValues(BugzillaAttribute.RESOLUTION).size() > 0) {
 				attrResolvedInput.setValue(oldResolutionValue);
 			}
-		} else if (op.toString().equals(BugzillaOperation.close_with_resolution.toString()) && op.getInputId() != null) {
+		} else if (op.toString().equals(BugzillaOperation.close_with_resolution.toString())
+				&& op.getInputId() != null) {
 			attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + op.toString());
 			TaskOperation.applyTo(attribute, op.toString(), op.getLabel());
 			TaskAttribute attrResolvedInput = attribute.getTaskData().getRoot().createAttribute(op.getInputId());
@@ -1190,8 +1193,8 @@ public class RepositoryConfiguration implements Serializable {
 				}
 			}
 			TaskAttribute productAttribute = taskData.getRoot().getMappedAttribute(BugzillaAttribute.PRODUCT.getKey());
-			TaskAttribute componentAttribute = taskData.getRoot().getMappedAttribute(
-					BugzillaAttribute.COMPONENT.getKey());
+			TaskAttribute componentAttribute = taskData.getRoot()
+					.getMappedAttribute(BugzillaAttribute.COMPONENT.getKey());
 			for (BugzillaFlag bugzillaFlag : flags) {
 				if (!bugzillaFlag.getType().equals("attachment")) { //$NON-NLS-1$
 					continue;
@@ -1209,8 +1212,8 @@ public class RepositoryConfiguration implements Serializable {
 				mapper.setFlagId(bugzillaFlag.getName());
 				mapper.setNumber(0);
 				mapper.setDescription(bugzillaFlag.getDescription());
-				TaskAttribute newattribute = attribute.createAttribute(BugzillaAttribute.KIND_FLAG_TYPE
-						+ bugzillaFlag.getFlagId());
+				TaskAttribute newattribute = attribute
+						.createAttribute(BugzillaAttribute.KIND_FLAG_TYPE + bugzillaFlag.getFlagId());
 				mapper.applyTo(newattribute);
 			}
 		}
@@ -1227,17 +1230,18 @@ public class RepositoryConfiguration implements Serializable {
 	public String getDuplicateStatus() {
 		return validTransitions == null
 				? IBugzillaConstants.BUGZILLA_REPORT_STATUS.RESOLVED.toString()
-						: validTransitions.getDuplicateStatus();
+				: validTransitions.getDuplicateStatus();
 	}
 
 	public String getStartStatus() {
 		if (validTransitions == null) {
 			return version.compareMajorMinorOnly(BugzillaVersion.BUGZILLA_4_0) < 0
-					|| !(getOptionValues(BugzillaAttribute.BUG_STATUS).contains(
-							BUGZILLA_REPORT_STATUS_4_0.IN_PROGRESS.toString()) || getOptionValues(
-									BugzillaAttribute.BUG_STATUS).contains(BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString()))
+					|| !(getOptionValues(BugzillaAttribute.BUG_STATUS)
+							.contains(BUGZILLA_REPORT_STATUS_4_0.IN_PROGRESS.toString())
+					|| getOptionValues(BugzillaAttribute.BUG_STATUS)
+							.contains(BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString()))
 									? IBugzillaConstants.BUGZILLA_REPORT_STATUS.NEW.toString()
-											: IBugzillaConstants.BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString();
+									: IBugzillaConstants.BUGZILLA_REPORT_STATUS_4_0.CONFIRMED.toString();
 		} else {
 			return validTransitions.getStartStatus();
 		}
