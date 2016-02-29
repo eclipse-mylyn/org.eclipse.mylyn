@@ -256,20 +256,6 @@
           activeRepositoryList="${eclipse.target.platform}">
         <requirement
             name="org.eclipse.mylyn.builds.development.feature.group"/>
-        <requirement
-            name="org.eclipse.jdt.core"/>
-        <requirement
-            name="org.eclipse.jdt.debug.ui"/>
-        <requirement
-            name="org.eclipse.jdt.junit"/>
-        <requirement
-            name="org.eclipse.jdt.ui"/>
-        <requirement
-            name="org.eclipse.ecf.discovery"/>
-        <requirement
-            name="org.eclipse.ecf.provider.discovery"/>
-        <requirement
-            name="org.eclipse.ecf.provider.jmdns"/>
         <sourceLocator
             rootFolder="${git.clone.mylyn.builds.location}"/>
       </targlet>
@@ -1062,15 +1048,14 @@
       <setupTask
           xsi:type="setup.targlets:TargletTask">
         <targlet
-            name="Mylyn Tasks Bugzilla">
+            name="Mylyn Tasks Bugzilla"
+            activeRepositoryList="${eclipse.target.platform}">
           <requirement
               name="org.eclipse.mylyn.bugzilla.rest.feature.group"/>
           <requirement
-              name="org.eclipse.mylyn.bugzilla.rest.core.tests"/>
-          <requirement
-              name="org.eclipse.mylyn.bugzilla.rest.tests"/>
-          <requirement
-              name="org.eclipse.mylyn.bugzilla.rest.ui.tests"/>
+              name="org.eclipse.mylyn.bugzilla.rest.development.feature.feature.group"/>
+          <sourceLocator
+              rootFolder="${git.clone.mylyn.tasks.location}"/>
         </targlet>
       </setupTask>
       <setupTask
