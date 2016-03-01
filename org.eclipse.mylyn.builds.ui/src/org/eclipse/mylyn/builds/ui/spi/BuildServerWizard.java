@@ -13,11 +13,14 @@
 
 package org.eclipse.mylyn.builds.ui.spi;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.builds.core.IBuildModel;
@@ -28,6 +31,7 @@ import org.eclipse.mylyn.builds.internal.core.BuildPlan;
 import org.eclipse.mylyn.builds.internal.core.BuildServer;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
+import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildsView;
 import org.eclipse.mylyn.internal.commons.repositories.core.InMemoryCredentialsStore;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
@@ -35,6 +39,7 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
 import org.eclipse.ui.internal.WorkbenchImages;
+import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
  * @author Steffen Pingel
@@ -51,7 +56,8 @@ public class BuildServerWizard extends Wizard implements INewWizard {
 		setNeedsProgressMonitor(true);
 		if (isNew()) {
 			setWindowTitle("New Build Server");
-			setDefaultPageImageDescriptor(WorkbenchImages.getImageDescriptor(IWorkbenchGraphicConstants.IMG_WIZBAN_NEW_WIZ));
+			setDefaultPageImageDescriptor(
+					WorkbenchImages.getImageDescriptor(IWorkbenchGraphicConstants.IMG_WIZBAN_NEW_WIZ));
 		} else {
 			setWindowTitle("Build Server Properties");
 			setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY_SETTINGS);
@@ -61,7 +67,7 @@ public class BuildServerWizard extends Wizard implements INewWizard {
 	/**
 	 * We use this method when the wizard instance has been created by means of the extension point mechanism and need
 	 * to set initial build server data.
-	 * 
+	 *
 	 * @param server
 	 *            the build server
 	 */
@@ -79,7 +85,7 @@ public class BuildServerWizard extends Wizard implements INewWizard {
 	}
 
 	protected void initPage(BuildServerWizardPage page) {
-		// ignore		
+		// ignore
 	}
 
 	private List<IBuildPlan> getSelectedPlans() {
@@ -113,6 +119,12 @@ public class BuildServerWizard extends Wizard implements INewWizard {
 		BuildsView.openInActivePerspective();
 
 		BuildsUiInternal.getFactory().getRefreshOperation(original).execute();
+		try {
+			BuildsUiInternal.save();
+		} catch (IOException e) {
+			StatusManager.getManager().handle(
+					new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Unexpected error while saving builds", e));
+		}
 
 		return true;
 	}
