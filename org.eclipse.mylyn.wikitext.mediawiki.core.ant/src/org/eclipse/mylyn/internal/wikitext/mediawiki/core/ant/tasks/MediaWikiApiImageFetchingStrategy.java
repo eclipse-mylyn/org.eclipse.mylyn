@@ -205,7 +205,7 @@ class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 		public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
 			if ("page".equals(localName)) { //$NON-NLS-1$
 				currentPage = atts.getValue("title"); //$NON-NLS-1$
-			} else if ("images".equals(localName)) { //$NON-NLS-1$
+			} else if ("images".equals(localName) || "continue".equals(localName)) { //$NON-NLS-1$ //$NON-NLS-2$
 				gimcontinue = atts.getValue("gimcontinue"); //$NON-NLS-1$
 			} else if ("imageinfo".equals(localName)) { //$NON-NLS-1$
 				inImageInfo = true;
