@@ -97,7 +97,7 @@ public class PersonAttributeEditor extends TextAttributeEditor {
 				@Override
 				public void mouseExit(MouseEvent e) {
 					final int lastVersion = version;
-					Display.getDefault().asyncExec(new Runnable() {
+					Display.getDefault().timerExec(100, new Runnable() {
 						public void run() {
 							if (version != lastVersion || selfLink.isDisposed()) {
 								return;
