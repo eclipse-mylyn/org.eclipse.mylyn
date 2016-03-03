@@ -469,13 +469,18 @@ public class BugzillaRestClientTest {
 		taskDataGet.getRoot().removeAttribute("task.common.user.assigned");
 		taskData.getRoot().removeAttribute("task.common.operation");
 		taskDataGet.getRoot().removeAttribute("task.common.operation");
-
-		// attributes only in new tasks
-		taskData.getRoot().removeAttribute("description_is_private");
+		// CC attribute has diverences in the meta data between create and update
+		taskData.getRoot().removeAttribute("task.common.user.cc");
+		taskDataGet.getRoot().removeAttribute("task.common.user.cc");
 
 		// attributes only in old tasks
+		taskData.getRoot().removeAttribute("description_is_private");
+
+		// attributes only in new tasks
 		taskDataGet.getRoot().removeAttribute("bug_id");
 		taskDataGet.getRoot().removeAttribute("task.common.comment.new");
+		taskDataGet.getRoot().removeAttribute("addCC");
+		taskDataGet.getRoot().removeAttribute("removeCC");
 
 		// attributes for operations
 		taskDataGet.getRoot().removeAttribute("task.common.operation-CONFIRMED");
@@ -773,4 +778,102 @@ public class BugzillaRestClientTest {
 		return results.get(taskId);
 	}
 
+	@Test
+	public void testCreateCCAttribute() throws Exception {
+		final TaskMapping taskMappingInit = new TaskMapping() {
+			@Override
+			public String getSummary() {
+				return "The Summary";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The Description";
+			}
+
+			@Override
+			public String getProduct() {
+				return "ManualTest";
+			}
+
+			@Override
+			public String getComponent() {
+				return "ManualC1";
+			}
+
+			@Override
+			public String getVersion() {
+				return "R1";
+			}
+		};
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(actualFixture.repository());
+		TaskData taskData = new TaskData(mapper, actualFixture.repository().getConnectorKind(),
+				actualFixture.repository().getRepositoryUrl(), "");
+		taskDataHandler.initializeTaskData(actualFixture.repository(), taskData, taskMappingInit, null);
+		taskData.getRoot().getAttribute("cf_dropdown").setValue("one");
+		taskData.getRoot()
+				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())
+				.setValue("M2");
+		taskData.getRoot().getAttribute(BugzillaRestCreateTaskSchema.getDefault().CC.getKey()).setValue(
+				"admin@mylyn.eclipse.org, tests@mylyn.eclipse.org");
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskData, null,
+				null);
+		assertNotNull(reposonse);
+		assertNotNull(reposonse.getReposonseKind());
+		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_CREATED));
+		TaskData taskDataUpdate = harness.getTaskFromServer(reposonse.getTaskId());
+		TaskAttribute ccAttrib = taskDataUpdate.getRoot()
+				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().CC.getKey());
+		assertEquals(2, ccAttrib.getValues().size());
+		assertEquals("admin@mylyn.eclipse.org", ccAttrib.getValues().get(0));
+		assertEquals("tests@mylyn.eclipse.org", ccAttrib.getValues().get(1));
+	}
+
+	@Test
+	public void testCCAttribute() throws Exception {
+		String taskId = harness.getTaksId4TestProduct();
+		TaskData taskDataGet = harness.getTaskFromServer(taskId);
+
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+
+		TaskAttribute attribute = taskDataGet.getRoot()
+				.getAttribute(BugzillaRestTaskSchema.getDefault().ADD_CC.getKey());
+		attribute.setValue("tests@mylyn.eclipse.org");
+		changed.add(attribute);
+
+		//Act
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskDataGet,
+				changed, null);
+		assertNotNull(reposonse);
+		assertNotNull(reposonse.getReposonseKind());
+		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_UPDATED));
+		//Assert
+		TaskData taskDataUpdate = harness.getTaskFromServer(taskId);
+		TaskAttribute ccAttrib = taskDataUpdate.getRoot()
+				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().CC.getKey());
+		assertEquals(1, ccAttrib.getValues().size());
+		assertEquals("tests@mylyn.eclipse.org", ccAttrib.getValues().get(0));
+
+		TaskAttribute ccAddAttrib = taskDataUpdate.getRoot()
+				.getAttribute(BugzillaRestTaskSchema.getDefault().ADD_CC.getKey());
+		ccAddAttrib.setValue("admin@mylyn.eclipse.org");
+		changed.add(ccAddAttrib);
+
+		TaskAttribute ccRemoveAttrib = taskDataUpdate.getRoot()
+				.getAttribute(BugzillaRestTaskSchema.getDefault().REMOVE_CC.getKey());
+		ccRemoveAttrib.setValue("tests@mylyn.eclipse.org");
+		changed.add(ccRemoveAttrib);
+
+		//Act
+		reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskDataUpdate, changed, null);
+		assertNotNull(reposonse);
+		assertNotNull(reposonse.getReposonseKind());
+		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_UPDATED));
+		//Assert
+		taskDataUpdate = harness.getTaskFromServer(taskId);
+		ccAttrib = taskDataUpdate.getRoot().getAttribute(BugzillaRestCreateTaskSchema.getDefault().CC.getKey());
+		assertEquals(1, ccAttrib.getValues().size());
+		assertEquals("admin@mylyn.eclipse.org", ccAttrib.getValues().get(0));
+	}
 }

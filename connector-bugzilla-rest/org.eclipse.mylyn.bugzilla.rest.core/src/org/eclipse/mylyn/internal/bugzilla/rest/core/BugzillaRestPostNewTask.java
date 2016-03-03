@@ -16,6 +16,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import org.apache.http.HttpStatus;
@@ -78,6 +80,14 @@ public class BugzillaRestPostNewTask extends BugzillaRestAuthenticatedPostReques
 							continue;
 						}
 					}
+
+					if (id.equals("cc")) { //$NON-NLS-1$
+						HashSet<String> setNew = new HashSet<String>(
+								Arrays.asList(taskAttribute.getValue().split("\\s*,\\s*"))); //$NON-NLS-1$
+						BugzillaRestGsonUtil.buildArrayFromHash(out, id, setNew);
+						continue;
+					}
+
 					if (taskAttribute.getMetaData().getType() != null
 							&& taskAttribute.getMetaData().getType().equals(TaskAttribute.TYPE_MULTI_SELECT)) {
 						List<String> values = taskAttribute.getValues();
@@ -167,6 +177,7 @@ public class BugzillaRestPostNewTask extends BugzillaRestAuthenticatedPostReques
 			.add(BugzillaRestCreateTaskSchema.getDefault().QA_CONTACT.getKey())
 			.add(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())
 			.add(TaskAttribute.OPERATION)
+			.add(BugzillaRestCreateTaskSchema.getDefault().CC.getKey())
 			.build();
 
 	@Override

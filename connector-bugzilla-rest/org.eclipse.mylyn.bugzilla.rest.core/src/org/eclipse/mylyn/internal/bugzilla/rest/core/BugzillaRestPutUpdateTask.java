@@ -14,6 +14,8 @@ package org.eclipse.mylyn.internal.bugzilla.rest.core;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -141,6 +143,14 @@ public class BugzillaRestPutUpdateTask extends BugzillaRestAuthenticatedPutReque
 						out.name("comment_is_private").value(Boolean.toString(descriptionprivalue)); //$NON-NLS-1$
 					}
 				}
+			}
+			TaskAttribute addCC = taskData.getRoot().getAttribute(BugzillaRestTaskSchema.getDefault().ADD_CC.getKey());
+			TaskAttribute removeCC = taskData.getRoot()
+					.getAttribute(BugzillaRestTaskSchema.getDefault().REMOVE_CC.getKey());
+			if (addCC.getValues().size() > 0 || removeCC.getValues().size() > 0) {
+				Set<String> setOld = new HashSet<String>(removeCC.getValues());
+				HashSet<String> setNew = new HashSet<String>(Arrays.asList(addCC.getValue().split("\\s*,\\s*"))); //$NON-NLS-1$
+				BugzillaRestGsonUtil.getDefault().buildAddRemoveHash(out, "cc", setOld, setNew); //$NON-NLS-1$
 			}
 			out.endObject();
 		}

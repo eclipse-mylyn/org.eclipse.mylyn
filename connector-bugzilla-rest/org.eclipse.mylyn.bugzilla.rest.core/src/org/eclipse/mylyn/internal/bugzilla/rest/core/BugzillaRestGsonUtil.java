@@ -11,7 +11,44 @@
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
 
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+
+import com.google.common.collect.Sets;
+import com.google.gson.Gson;
+import com.google.gson.stream.JsonWriter;
+
 public class BugzillaRestGsonUtil {
+
+	private class RemoveAddStringHelper {
+		Set<String> add;
+
+		Set<String> remove;
+
+		public RemoveAddStringHelper(Set<String> removeSet, Set<String> addSet) {
+			add = new HashSet<String>(addSet);
+			remove = new HashSet<String>(removeSet);
+			if (remove.contains("")) { //$NON-NLS-1$
+				remove.remove(""); //$NON-NLS-1$
+			}
+			if (add.contains("")) { //$NON-NLS-1$
+				add.remove(""); //$NON-NLS-1$
+			}
+			Set<String> intersection = Sets.intersection(addSet, removeSet);
+			remove.removeAll(intersection);
+			add.removeAll(intersection);
+			if (remove.isEmpty()) {
+				remove = null;
+			}
+			if (add.isEmpty()) {
+				add = null;
+			}
+		}
+	}
+
+	private static Gson gson = new Gson();
+
 	public static String convertString2GSonString(String str) {
 		str = str.replace("\"", "\\\"").replace("\n", "\\\n"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$//$NON-NLS-4$
 		StringBuffer ostr = new StringBuffer();
@@ -31,4 +68,29 @@ public class BugzillaRestGsonUtil {
 		return (new String(ostr));
 	}
 
+	private static BugzillaRestGsonUtil instance;
+
+	public static BugzillaRestGsonUtil getDefault() {
+		if (instance == null) {
+			instance = new BugzillaRestGsonUtil();
+		}
+		return instance;
+	}
+
+	public static void buildArrayFromHash(JsonWriter out, String id, Set<String> setNew) throws IOException {
+		if (!setNew.isEmpty()) {
+			out.name(id).beginArray();
+			for (String string : setNew) {
+				out.value(string);
+			}
+			out.endArray();
+		}
+	}
+
+	public void buildAddRemoveHash(JsonWriter out, String id, Set<String> setOld, Set<String> setNew)
+			throws IOException {
+		RemoveAddStringHelper test = new RemoveAddStringHelper(setOld, setNew);
+		out.name(id);
+		gson.toJson(test, RemoveAddStringHelper.class, out);
+	}
 }

@@ -127,6 +127,9 @@ public class BugzillaRestConfiguration implements Serializable {
 			TaskAttribute attribute = data.getRoot().getAttribute(key);
 			if (!key.equals(SCHEMA.PRODUCT.getKey())) {
 				String configName = mapTaskAttributeKey2ConfigurationFields(key);
+				if ("addCC".equals(configName) || "removeCC".equals(configName)) {
+					continue;
+				}
 				Field configField = getFieldWithName(configName);
 				if (configField == null) {
 					continue;

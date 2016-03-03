@@ -28,7 +28,7 @@ public class BugzillaRestTaskSchema extends AbstractTaskSchema {
 			.put("status", getDefault().STATUS.getKey()) //$NON-NLS-1$
 			.put("product", getDefault().PRODUCT.getKey()) //$NON-NLS-1$
 			.put("component", getDefault().COMPONENT.getKey()) //$NON-NLS-1$
-			.put("CC", getDefault().CC.getKey()) //$NON-NLS-1$
+			.put("cc", getDefault().CC.getKey()) //$NON-NLS-1$
 			.put("severity", getDefault().SEVERITY.getKey()) //$NON-NLS-1$
 			.put("priority", getDefault().PRIORITY.getKey()) //$NON-NLS-1$
 			.put("assigned_to", getDefault().ASSIGNED_TO.getKey()) //$NON-NLS-1$
@@ -108,7 +108,13 @@ public class BugzillaRestTaskSchema extends AbstractTaskSchema {
 			.dependsOn(COMPONENT.getKey())
 			.create();
 
-	public final Field CC = createField(TaskAttribute.USER_CC, "CC", TaskAttribute.TYPE_PERSON, Flag.PEOPLE);
+	public final Field ADD_CC = createField("addCC", "Add CC", TaskAttribute.TYPE_PERSON, Flag.PEOPLE);
+
+	public final Field CC = createField(TaskAttribute.USER_CC, "Remove CC\n(Selet to remove)",
+			IBugzillaRestConstants.EDITOR_TYPE_CC, Flag.PEOPLE);
+
+	public final Field REMOVE_CC = createField("removeCC", "CC selected for remove",
+			IBugzillaRestConstants.EDITOR_TYPE_CC);
 
 	public final Field ADD_SELF_CC = inheritFrom(parent.ADD_SELF_CC).addFlags(Flag.PEOPLE).create();
 
