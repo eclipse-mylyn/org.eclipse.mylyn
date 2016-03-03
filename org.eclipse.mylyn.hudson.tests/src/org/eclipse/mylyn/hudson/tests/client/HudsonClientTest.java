@@ -161,7 +161,7 @@ public class HudsonClientTest extends TestCase {
 		RestfulHudsonClient client = harness.connect();
 		ensureHasRunOnce(client, jobName, HudsonModelBallColor.RED);
 
-		client.runBuild(harness.getJob(jobName), null, null);
+		runBuild(client, jobName);
 		HudsonTestUtil.poll(new Callable<Object>() {
 			public Object call() throws Exception {
 				assertEquals(HudsonModelBallColor.RED_ANIME, harness.getJob(jobName).getColor());
@@ -193,13 +193,23 @@ public class HudsonClientTest extends TestCase {
 		RestfulHudsonClient client = harness.connect();
 		ensureHasRunOnce(client, jobName, harness.getSuccessAnimeColor());
 
-		client.runBuild(harness.getJob(jobName), null, null);
+		runBuild(client, jobName);
 		HudsonTestUtil.poll(new Callable<Object>() {
 			public Object call() throws Exception {
 				assertEquals(harness.getSuccessAnimeColor(), harness.getJob(jobName).getColor());
 				return null;
 			}
 		});
+	}
+
+	private void runBuild(RestfulHudsonClient client, final String jobName) throws HudsonException {
+		try {
+			client.runBuild(harness.getJob(jobName), null, null);
+		} catch (HudsonException e) {
+			if (e.getMessage().contains("Bad Gateway")) {
+				client.runBuild(harness.getJob(jobName), null, null);
+			}
+		}
 	}
 
 	public void testRunBuildGuest() throws Exception {
