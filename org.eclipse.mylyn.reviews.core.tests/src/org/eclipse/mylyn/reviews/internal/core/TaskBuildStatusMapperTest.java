@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.reviews.internal.core;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
@@ -25,6 +26,25 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.junit.Test;
 
 public class TaskBuildStatusMapperTest {
+
+	@Test
+	public void attributeValueDependsOnChildren() {
+		TaskAttribute attribute1 = createBuildAttribute(
+				"https://hudson.eclipse.org/mylyn/job/gerrit-mylyn-tasks/1066/");
+		TaskAttribute attribute2 = createBuildAttribute(
+				"https://hudson.eclipse.org/mylyn/job/gerrit-mylyn-tasks/1067/");
+		assertFalse(attribute1.getValue().equals(attribute2.getValue()));
+	}
+
+	private TaskAttribute createBuildAttribute(String url) {
+		List<BuildResult> results = new ArrayList<BuildResult>();
+		final String JOB_NAME = "SameJob";
+		results.add(new BuildResult(0, url, BuildStatus.STARTED, 1, JOB_NAME));
+		TaskBuildStatusMapper mapper = new TaskBuildStatusMapper(results);
+		TaskAttribute root = createRootAttribute();
+		mapper.applyTo(root);
+		return root;
+	}
 
 	@Test
 	public void emptyCollectionReturnsRootWithNoChildren() {
@@ -90,8 +110,7 @@ public class TaskBuildStatusMapperTest {
 		assertEquals(BuildStatus.STARTED.toString(),
 				firstBuildResultAttribute.getAttribute(TaskBuildStatusMapper.STATUS_ATTRIBUTE_KEY).getValue());
 
-		TaskAttribute secondBuildResultAttribute = root
-				.getAttribute(TaskBuildStatusMapper.ATTR_ID_BUILD_RESULT + "1");
+		TaskAttribute secondBuildResultAttribute = root.getAttribute(TaskBuildStatusMapper.ATTR_ID_BUILD_RESULT + "1");
 		assertNotNull(secondBuildResultAttribute);
 		assertEquals("1",
 				secondBuildResultAttribute.getAttribute(TaskBuildStatusMapper.BUILD_NUMBER_ATTRIBUTE_KEY).getValue());
