@@ -124,6 +124,8 @@ public class IssueEvent implements Serializable {
 
     private User assignee;
 
+    private User assigner;
+
     private Milestone milestone;
 
     private Rename rename;
@@ -243,7 +245,7 @@ public class IssueEvent implements Serializable {
     }
 
     /**
-     * @return actor
+     * @return assignee
      */
     public User getAssignee() {
         return assignee;
@@ -255,6 +257,22 @@ public class IssueEvent implements Serializable {
      */
     public IssueEvent setAssignee(User assignee) {
         this.assignee = assignee;
+        return this;
+    }
+
+    /**
+     * @return assigner
+     */
+    public User getAssigner() {
+        return assigner;
+    }
+
+    /**
+     * @param assigner
+     * @return this issue event
+     */
+    public IssueEvent setAssigner(User assigner) {
+        this.assigner = assigner;
         return this;
     }
 
