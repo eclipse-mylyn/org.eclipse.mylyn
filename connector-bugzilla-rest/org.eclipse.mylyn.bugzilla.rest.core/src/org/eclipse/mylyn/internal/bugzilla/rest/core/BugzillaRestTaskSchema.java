@@ -136,6 +136,11 @@ public class BugzillaRestTaskSchema extends AbstractTaskSchema {
 
 	public final Field DUPE_OF = createField("dupe_of", "Dup", TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID);
 
+	public final Field DEPENDS_ON = createField("depends_on", "Depends on:", TaskAttribute.TYPE_TASK_DEPENDENCY,
+			Flag.ATTRIBUTE);
+
+	public final Field BLOCKS = createField("blocks", "Blocks:", TaskAttribute.TYPE_TASK_DEPENDENCY, Flag.ATTRIBUTE);
+
 	@Override
 	public void initialize(TaskData taskData) {
 		for (Field field : getFields()) {

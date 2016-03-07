@@ -160,7 +160,10 @@ public class BugzillaRestConfiguration implements Serializable {
 				}
 			}
 			if (attribute.getValue().isEmpty()) {
-				attribute.setValue(getValueFromParameter(key));
+				String newValue = getValueFromParameter(key);
+				if (newValue != null) {
+					attribute.setValue(getValueFromParameter(key));
+				}
 			}
 
 		}
@@ -261,7 +264,12 @@ public class BugzillaRestConfiguration implements Serializable {
 			resultString = "bug_severity";
 		} else if (taskAttributeKey.equals("comment")) {
 			resultString = "longdesc";
+		} else if (taskAttributeKey.equals("blocks")) {
+			resultString = "blocked";
+		} else if (taskAttributeKey.equals("depends_on")) {
+			resultString = "dependson";
 		} else {
+
 			resultString = taskAttributeKey;
 		}
 		return resultString;

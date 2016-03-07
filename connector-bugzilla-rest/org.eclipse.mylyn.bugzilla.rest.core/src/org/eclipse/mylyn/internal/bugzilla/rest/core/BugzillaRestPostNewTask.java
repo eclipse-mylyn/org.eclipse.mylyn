@@ -84,7 +84,19 @@ public class BugzillaRestPostNewTask extends BugzillaRestAuthenticatedPostReques
 					if (id.equals("cc")) { //$NON-NLS-1$
 						HashSet<String> setNew = new HashSet<String>(
 								Arrays.asList(taskAttribute.getValue().split("\\s*,\\s*"))); //$NON-NLS-1$
-						BugzillaRestGsonUtil.buildArrayFromHash(out, id, setNew);
+						BugzillaRestGsonUtil.buildArrayFromHash(out, id, setNew, false);
+						continue;
+					}
+					if (id.equals(BugzillaRestCreateTaskSchema.getDefault().BLOCKS.getKey())
+							|| id.equals(BugzillaRestCreateTaskSchema.getDefault().DEPENDS_ON.getKey())) {
+						if (taskAttribute.getValues().size() > 1) {
+							HashSet<String> setNew = new HashSet<String>(taskAttribute.getValues());
+							BugzillaRestGsonUtil.buildArrayFromHash(out, id, setNew, true);
+						} else {
+							HashSet<String> setNew = new HashSet<String>(
+									Arrays.asList(taskAttribute.getValue().split("\\s*,\\s*"))); //$NON-NLS-1$
+							BugzillaRestGsonUtil.buildArrayFromHash(out, id, setNew, true);
+						}
 						continue;
 					}
 
@@ -178,6 +190,8 @@ public class BugzillaRestPostNewTask extends BugzillaRestAuthenticatedPostReques
 			.add(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())
 			.add(TaskAttribute.OPERATION)
 			.add(BugzillaRestCreateTaskSchema.getDefault().CC.getKey())
+			.add(BugzillaRestCreateTaskSchema.getDefault().BLOCKS.getKey())
+			.add(BugzillaRestCreateTaskSchema.getDefault().DEPENDS_ON.getKey())
 			.build();
 
 	@Override

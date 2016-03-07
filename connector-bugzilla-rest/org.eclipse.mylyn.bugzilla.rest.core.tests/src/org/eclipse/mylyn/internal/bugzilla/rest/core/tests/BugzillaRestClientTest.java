@@ -495,7 +495,7 @@ public class BugzillaRestClientTest {
 
 	@Test
 	public void testUpdateTaskData() throws Exception {
-		String taskId = harness.getTaksId4TestProduct();
+		String taskId = harness.getNewTaksId4TestProduct();
 		TaskData taskDataGet = harness.getTaskFromServer(taskId);
 
 		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
@@ -553,7 +553,7 @@ public class BugzillaRestClientTest {
 
 	@Test
 	public void testAddComment() throws Exception {
-		String taskId = harness.getTaksId4TestProduct();
+		String taskId = harness.getNewTaksId4TestProduct();
 		TaskData taskDataGet = harness.getTaskFromServer(taskId);
 
 		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
@@ -783,7 +783,7 @@ public class BugzillaRestClientTest {
 		final TaskMapping taskMappingInit = new TaskMapping() {
 			@Override
 			public String getSummary() {
-				return "The Summary";
+				return "Test CC Attribute";
 			}
 
 			@Override
@@ -831,8 +831,114 @@ public class BugzillaRestClientTest {
 	}
 
 	@Test
+	public void testCreateBlocksAttribute() throws Exception {
+		final TaskMapping taskMappingInit = new TaskMapping() {
+			@Override
+			public String getSummary() {
+				return "Test blocks Attribute";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The Description";
+			}
+
+			@Override
+			public String getProduct() {
+				return "ManualTest";
+			}
+
+			@Override
+			public String getComponent() {
+				return "ManualC1";
+			}
+
+			@Override
+			public String getVersion() {
+				return "R1";
+			}
+		};
+		String[] taskIdRel = harness.getRelationTasks();
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(actualFixture.repository());
+		TaskData taskData = new TaskData(mapper, actualFixture.repository().getConnectorKind(),
+				actualFixture.repository().getRepositoryUrl(), "");
+		taskDataHandler.initializeTaskData(actualFixture.repository(), taskData, taskMappingInit, null);
+		taskData.getRoot().getAttribute("cf_dropdown").setValue("one");
+		taskData.getRoot()
+				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())
+				.setValue("M2");
+		taskData.getRoot().getAttribute(BugzillaRestCreateTaskSchema.getDefault().BLOCKS.getKey()).setValue(
+				taskIdRel[0] + ", " + taskIdRel[1]);
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskData, null,
+				null);
+		assertNotNull(reposonse);
+		assertNotNull(reposonse.getReposonseKind());
+		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_CREATED));
+		TaskData taskDataUpdate = harness.getTaskFromServer(reposonse.getTaskId());
+		TaskAttribute blocksAttrib = taskDataUpdate.getRoot()
+				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().BLOCKS.getKey());
+		assertEquals(2, blocksAttrib.getValues().size());
+		assertEquals(taskIdRel[0], blocksAttrib.getValues().get(0));
+		assertEquals(taskIdRel[1], blocksAttrib.getValues().get(1));
+	}
+
+	@Test
+	public void testCreateDependsOnAttribute() throws Exception {
+		final TaskMapping taskMappingInit = new TaskMapping() {
+			@Override
+			public String getSummary() {
+				return "Test depends_on Attribute";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The Description";
+			}
+
+			@Override
+			public String getProduct() {
+				return "ManualTest";
+			}
+
+			@Override
+			public String getComponent() {
+				return "ManualC1";
+			}
+
+			@Override
+			public String getVersion() {
+				return "R1";
+			}
+		};
+		String[] taskIdRel = harness.getRelationTasks();
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(actualFixture.repository());
+		TaskData taskData = new TaskData(mapper, actualFixture.repository().getConnectorKind(),
+				actualFixture.repository().getRepositoryUrl(), "");
+		taskDataHandler.initializeTaskData(actualFixture.repository(), taskData, taskMappingInit, null);
+		taskData.getRoot().getAttribute("cf_dropdown").setValue("one");
+		taskData.getRoot()
+				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())
+				.setValue("M2");
+		taskData.getRoot().getAttribute(BugzillaRestCreateTaskSchema.getDefault().DEPENDS_ON.getKey()).setValue(
+				taskIdRel[0] + ", " + taskIdRel[1]);
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskData, null,
+				null);
+		assertNotNull(reposonse);
+		assertNotNull(reposonse.getReposonseKind());
+		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_CREATED));
+		TaskData taskDataUpdate = harness.getTaskFromServer(reposonse.getTaskId());
+		TaskAttribute dependsOnAttrib = taskDataUpdate.getRoot()
+				.getAttribute(BugzillaRestTaskSchema.getDefault().DEPENDS_ON.getKey());
+		assertEquals(2, dependsOnAttrib.getValues().size());
+		assertEquals(taskIdRel[0], dependsOnAttrib.getValues().get(0));
+		assertEquals(taskIdRel[1], dependsOnAttrib.getValues().get(1));
+	}
+
+	@Test
 	public void testCCAttribute() throws Exception {
-		String taskId = harness.getTaksId4TestProduct();
+		String taskId = harness.getNewTaksId4TestProduct();
 		TaskData taskDataGet = harness.getTaskFromServer(taskId);
 
 		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
@@ -875,5 +981,217 @@ public class BugzillaRestClientTest {
 		ccAttrib = taskDataUpdate.getRoot().getAttribute(BugzillaRestCreateTaskSchema.getDefault().CC.getKey());
 		assertEquals(1, ccAttrib.getValues().size());
 		assertEquals("admin@mylyn.eclipse.org", ccAttrib.getValues().get(0));
+	}
+
+	@Test
+	public void testBlocksAttributeV1() throws Exception {
+		String taskId = harness.getNewTaksId4TestProduct();
+		String[] taskIdRel = harness.getRelationTasks();
+
+		TaskData taskDataGet = harness.getTaskFromServer(taskId);
+
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(actualFixture.repository());
+		TaskData taskDataOld = new TaskData(mapper, actualFixture.repository().getConnectorKind(),
+				actualFixture.repository().getRepositoryUrl(), "");
+		taskDataHandler.initializeTaskData(actualFixture.repository(), taskDataOld, null, null);
+
+		TaskAttribute attribute = taskDataGet.getRoot()
+				.getAttribute(BugzillaRestTaskSchema.getDefault().BLOCKS.getKey());
+		attribute.setValue(taskIdRel[0] + ", " + taskIdRel[1]);
+		changed.add(taskDataOld.getRoot().getAttribute(BugzillaRestTaskSchema.getDefault().BLOCKS.getKey()));
+
+		//Act
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskDataGet,
+				changed, null);
+		assertNotNull(reposonse);
+		assertNotNull(reposonse.getReposonseKind());
+		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_UPDATED));
+		//Assert
+		TaskData taskDataUpdate = harness.getTaskFromServer(taskId);
+		TaskAttribute blocksAttrib = taskDataUpdate.getRoot()
+				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().BLOCKS.getKey());
+		assertEquals(2, blocksAttrib.getValues().size());
+		assertEquals(taskIdRel[0], blocksAttrib.getValues().get(0));
+		assertEquals(taskIdRel[1], blocksAttrib.getValues().get(1));
+		changed.clear();
+		changed.add(taskDataGet.getRoot().getAttribute(BugzillaRestTaskSchema.getDefault().BLOCKS.getKey()));
+
+		blocksAttrib.setValue(taskIdRel[0] + ", " + taskIdRel[1] + ", " + taskIdRel[2]);
+
+		//Act
+		reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskDataUpdate, changed, null);
+		assertNotNull(reposonse);
+		assertNotNull(reposonse.getReposonseKind());
+		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_UPDATED));
+		//Assert
+		taskDataUpdate = harness.getTaskFromServer(taskId);
+		blocksAttrib = taskDataUpdate.getRoot().getAttribute(BugzillaRestCreateTaskSchema.getDefault().BLOCKS.getKey());
+		assertEquals(3, blocksAttrib.getValues().size());
+		assertEquals(taskIdRel[0], blocksAttrib.getValues().get(0));
+		assertEquals(taskIdRel[1], blocksAttrib.getValues().get(1));
+		assertEquals(taskIdRel[2], blocksAttrib.getValues().get(2));
+	}
+
+	@Test
+	public void testBlocksAttributeV2() throws Exception {
+		String taskId = harness.getNewTaksId4TestProduct();
+		String[] taskIdRel = harness.getRelationTasks();
+
+		TaskData taskDataGet = harness.getTaskFromServer(taskId);
+
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(actualFixture.repository());
+		TaskData taskDataOld = new TaskData(mapper, actualFixture.repository().getConnectorKind(),
+				actualFixture.repository().getRepositoryUrl(), "");
+		taskDataHandler.initializeTaskData(actualFixture.repository(), taskDataOld, null, null);
+
+		TaskAttribute attribute = taskDataGet.getRoot()
+				.getAttribute(BugzillaRestTaskSchema.getDefault().BLOCKS.getKey());
+		attribute.setValue(taskIdRel[0]);
+		attribute.addValue(taskIdRel[1]);
+		changed.add(taskDataOld.getRoot().getAttribute(BugzillaRestTaskSchema.getDefault().BLOCKS.getKey()));
+
+		//Act
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskDataGet,
+				changed, null);
+		assertNotNull(reposonse);
+		assertNotNull(reposonse.getReposonseKind());
+		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_UPDATED));
+		//Assert
+		TaskData taskDataUpdate = harness.getTaskFromServer(taskId);
+		TaskAttribute blocksAttrib = taskDataUpdate.getRoot()
+				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().BLOCKS.getKey());
+		assertEquals(2, blocksAttrib.getValues().size());
+		assertEquals(taskIdRel[0], blocksAttrib.getValues().get(0));
+		assertEquals(taskIdRel[1], blocksAttrib.getValues().get(1));
+		changed.clear();
+		changed.add(taskDataGet.getRoot().getAttribute(BugzillaRestTaskSchema.getDefault().BLOCKS.getKey()));
+
+		blocksAttrib.setValue(taskIdRel[0]);
+		blocksAttrib.addValue(taskIdRel[1]);
+		blocksAttrib.addValue(taskIdRel[2]);
+
+		//Act
+		reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskDataUpdate, changed, null);
+		assertNotNull(reposonse);
+		assertNotNull(reposonse.getReposonseKind());
+		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_UPDATED));
+		//Assert
+		taskDataUpdate = harness.getTaskFromServer(taskId);
+		blocksAttrib = taskDataUpdate.getRoot().getAttribute(BugzillaRestCreateTaskSchema.getDefault().BLOCKS.getKey());
+		assertEquals(3, blocksAttrib.getValues().size());
+		assertEquals(taskIdRel[0], blocksAttrib.getValues().get(0));
+		assertEquals(taskIdRel[1], blocksAttrib.getValues().get(1));
+		assertEquals(taskIdRel[2], blocksAttrib.getValues().get(2));
+	}
+
+	@Test
+	public void testDependsOnAttributeV1() throws Exception {
+		String taskId = harness.getNewTaksId4TestProduct();
+		String[] taskIdRel = harness.getRelationTasks();
+
+		TaskData taskDataGet = harness.getTaskFromServer(taskId);
+
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(actualFixture.repository());
+		TaskData taskDataOld = new TaskData(mapper, actualFixture.repository().getConnectorKind(),
+				actualFixture.repository().getRepositoryUrl(), "");
+		taskDataHandler.initializeTaskData(actualFixture.repository(), taskDataOld, null, null);
+
+		TaskAttribute attribute = taskDataGet.getRoot()
+				.getAttribute(BugzillaRestTaskSchema.getDefault().DEPENDS_ON.getKey());
+		attribute.setValue(taskIdRel[0] + ", " + taskIdRel[1]);
+		changed.add(taskDataOld.getRoot().getAttribute(BugzillaRestTaskSchema.getDefault().DEPENDS_ON.getKey()));
+
+		//Act
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskDataGet,
+				changed, null);
+		assertNotNull(reposonse);
+		assertNotNull(reposonse.getReposonseKind());
+		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_UPDATED));
+		//Assert
+		TaskData taskDataUpdate = harness.getTaskFromServer(taskId);
+		TaskAttribute dependsOnAttrib = taskDataUpdate.getRoot()
+				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().DEPENDS_ON.getKey());
+		assertEquals(2, dependsOnAttrib.getValues().size());
+		assertEquals(taskIdRel[0], dependsOnAttrib.getValues().get(0));
+		assertEquals(taskIdRel[1], dependsOnAttrib.getValues().get(1));
+		changed.clear();
+		changed.add(taskDataGet.getRoot().getAttribute(BugzillaRestTaskSchema.getDefault().DEPENDS_ON.getKey()));
+
+		dependsOnAttrib.setValue(taskIdRel[0] + ", " + taskIdRel[1] + ", " + taskIdRel[2]);
+
+		//Act
+		reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskDataUpdate, changed, null);
+		assertNotNull(reposonse);
+		assertNotNull(reposonse.getReposonseKind());
+		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_UPDATED));
+		//Assert
+		taskDataUpdate = harness.getTaskFromServer(taskId);
+		dependsOnAttrib = taskDataUpdate.getRoot()
+				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().DEPENDS_ON.getKey());
+		assertEquals(3, dependsOnAttrib.getValues().size());
+		assertEquals(taskIdRel[0], dependsOnAttrib.getValues().get(0));
+		assertEquals(taskIdRel[1], dependsOnAttrib.getValues().get(1));
+		assertEquals(taskIdRel[2], dependsOnAttrib.getValues().get(2));
+	}
+
+	@Test
+	public void testDependsOnAttributeV2() throws Exception {
+		String taskId = harness.getNewTaksId4TestProduct();
+		String[] taskIdRel = harness.getRelationTasks();
+
+		TaskData taskDataGet = harness.getTaskFromServer(taskId);
+
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(actualFixture.repository());
+		TaskData taskDataOld = new TaskData(mapper, actualFixture.repository().getConnectorKind(),
+				actualFixture.repository().getRepositoryUrl(), "");
+		taskDataHandler.initializeTaskData(actualFixture.repository(), taskDataOld, null, null);
+
+		TaskAttribute attribute = taskDataGet.getRoot()
+				.getAttribute(BugzillaRestTaskSchema.getDefault().DEPENDS_ON.getKey());
+		attribute.setValue(taskIdRel[0]);
+		attribute.addValue(taskIdRel[1]);
+		changed.add(taskDataOld.getRoot().getAttribute(BugzillaRestTaskSchema.getDefault().DEPENDS_ON.getKey()));
+
+		//Act
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskDataGet,
+				changed, null);
+		assertNotNull(reposonse);
+		assertNotNull(reposonse.getReposonseKind());
+		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_UPDATED));
+		//Assert
+		TaskData taskDataUpdate = harness.getTaskFromServer(taskId);
+		TaskAttribute dependsOnAttrib = taskDataUpdate.getRoot()
+				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().DEPENDS_ON.getKey());
+		assertEquals(2, dependsOnAttrib.getValues().size());
+		assertEquals(taskIdRel[0], dependsOnAttrib.getValues().get(0));
+		assertEquals(taskIdRel[1], dependsOnAttrib.getValues().get(1));
+		changed.clear();
+		changed.add(taskDataGet.getRoot().getAttribute(BugzillaRestTaskSchema.getDefault().DEPENDS_ON.getKey()));
+
+		dependsOnAttrib.setValue(taskIdRel[0]);
+		dependsOnAttrib.addValue(taskIdRel[1]);
+		dependsOnAttrib.addValue(taskIdRel[2]);
+
+		//Act
+		reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskDataUpdate, changed, null);
+		assertNotNull(reposonse);
+		assertNotNull(reposonse.getReposonseKind());
+		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_UPDATED));
+		//Assert
+		taskDataUpdate = harness.getTaskFromServer(taskId);
+		dependsOnAttrib = taskDataUpdate.getRoot()
+				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().DEPENDS_ON.getKey());
+		assertEquals(3, dependsOnAttrib.getValues().size());
+		assertEquals(taskIdRel[0], dependsOnAttrib.getValues().get(0));
+		assertEquals(taskIdRel[1], dependsOnAttrib.getValues().get(1));
+		assertEquals(taskIdRel[2], dependsOnAttrib.getValues().get(2));
 	}
 }

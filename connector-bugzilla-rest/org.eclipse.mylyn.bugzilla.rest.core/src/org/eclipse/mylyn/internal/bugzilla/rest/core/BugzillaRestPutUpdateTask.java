@@ -76,6 +76,8 @@ public class BugzillaRestPutUpdateTask extends BugzillaRestAuthenticatedPutReque
 			.add("resolutionInput") //$NON-NLS-1$
 			.add(BugzillaRestTaskSchema.getDefault().RESOLUTION.getKey())
 			.add(BugzillaRestTaskSchema.getDefault().DUPE_OF.getKey())
+			.add(BugzillaRestTaskSchema.getDefault().BLOCKS.getKey())
+			.add(BugzillaRestTaskSchema.getDefault().DEPENDS_ON.getKey())
 			.build();
 
 	class TaskAttributeTypeAdapter extends TypeAdapter<OldAttributes> {
@@ -133,6 +135,24 @@ public class BugzillaRestPutUpdateTask extends BugzillaRestAuthenticatedPutReque
 						out.endObject();
 						continue;
 					}
+					if (id.equals(BugzillaRestTaskSchema.getDefault().BLOCKS.getKey())
+							|| id.equals(BugzillaRestTaskSchema.getDefault().DEPENDS_ON.getKey())) {
+						Set<String> setOld;
+						if (element.getValues().size() > 1) {
+							setOld = new HashSet<String>(element.getValues());
+						} else {
+							setOld = new HashSet<String>(Arrays.asList(element.getValue().split("\\s*,\\s*")));
+						}
+						Set<String> setNew;
+						if (taskAttribute.getValues().size() > 1) {
+							setNew = new HashSet<String>(taskAttribute.getValues());
+						} else {
+							setNew = new HashSet<String>(Arrays.asList(taskAttribute.getValue().split("\\s*,\\s*")));
+						}
+						BugzillaRestGsonUtil.getDefault().buildAddRemoveIntegerHash(out, id, setOld, setNew);
+						continue;
+					}
+
 					out.name(id).value(value);
 					if (id.equals("description")) { //$NON-NLS-1$
 						TaskAttribute descriptionpri = taskAttribute

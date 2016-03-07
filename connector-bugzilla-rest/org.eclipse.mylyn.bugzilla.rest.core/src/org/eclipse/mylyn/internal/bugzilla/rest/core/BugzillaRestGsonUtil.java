@@ -11,10 +11,14 @@
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
 
+import static com.google.common.collect.Sets.newHashSet;
+
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonWriter;
@@ -36,6 +40,32 @@ public class BugzillaRestGsonUtil {
 				add.remove(""); //$NON-NLS-1$
 			}
 			Set<String> intersection = Sets.intersection(addSet, removeSet);
+			remove.removeAll(intersection);
+			add.removeAll(intersection);
+			if (remove.isEmpty()) {
+				remove = null;
+			}
+			if (add.isEmpty()) {
+				add = null;
+			}
+		}
+	}
+
+	private class RemoveAddIntegerHelper {
+		Set<Integer> add;
+
+		Set<Integer> remove;
+
+		public RemoveAddIntegerHelper(Set<Integer> removeSet, Set<Integer> addSet) {
+			add = new HashSet<Integer>(addSet);
+			remove = new HashSet<Integer>(removeSet);
+			if (remove.contains(null)) {
+				remove.remove(null);
+			}
+			if (add.contains(null)) {
+				add.remove(null);
+			}
+			Set<Integer> intersection = Sets.intersection(addSet, removeSet);
 			remove.removeAll(intersection);
 			add.removeAll(intersection);
 			if (remove.isEmpty()) {
@@ -77,11 +107,18 @@ public class BugzillaRestGsonUtil {
 		return instance;
 	}
 
-	public static void buildArrayFromHash(JsonWriter out, String id, Set<String> setNew) throws IOException {
+	public static void buildArrayFromHash(JsonWriter out, String id, Set<String> setNew, boolean asInteger)
+			throws IOException {
 		if (!setNew.isEmpty()) {
 			out.name(id).beginArray();
 			for (String string : setNew) {
-				out.value(string);
+				if (!"".equals(string)) {
+					if (asInteger) {
+						out.value(Integer.parseInt(string));
+					} else {
+						out.value(string);
+					}
+				}
 			}
 			out.endArray();
 		}
@@ -93,4 +130,25 @@ public class BugzillaRestGsonUtil {
 		out.name(id);
 		gson.toJson(test, RemoveAddStringHelper.class, out);
 	}
+
+	private final Function<String, Integer> convert2Integer = new Function<String, Integer>() {
+
+		@Override
+		public Integer apply(String input) {
+			if ("".equals(input)) {
+				return null;
+			}
+			return Integer.parseInt(input);
+		}
+	};
+
+	public void buildAddRemoveIntegerHash(JsonWriter out, String id, Set<String> setOld, Set<String> setNew)
+			throws IOException {
+		RemoveAddIntegerHelper test = new RemoveAddIntegerHelper(
+				newHashSet(Iterables.transform(setOld, convert2Integer)),
+				newHashSet(Iterables.transform(setNew, convert2Integer)));
+		out.name(id);
+		gson.toJson(test, RemoveAddIntegerHelper.class, out);
+	}
+
 }

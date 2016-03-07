@@ -94,4 +94,9 @@ public class BugzillaRestCreateTaskSchema extends AbstractTaskSchema {
 	public final Field RESOLUTION = inheritFrom(parent.RESOLUTION).create();
 
 	public final Field OPERATION = createField(TaskAttribute.OPERATION, "Operation", TaskAttribute.TYPE_OPERATION);
+
+	public final Field DEPENDS_ON = createField("depends_on", "Depends on:", TaskAttribute.TYPE_TASK_DEPENDENCY,
+			Flag.ATTRIBUTE);
+
+	public final Field BLOCKS = createField("blocks", "Blocks:", TaskAttribute.TYPE_TASK_DEPENDENCY, Flag.ATTRIBUTE);
 }
