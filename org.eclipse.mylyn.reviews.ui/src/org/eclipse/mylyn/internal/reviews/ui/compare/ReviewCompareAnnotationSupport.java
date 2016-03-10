@@ -47,12 +47,17 @@ import org.eclipse.mylyn.internal.reviews.ui.annotations.CommentPopupDialog;
 import org.eclipse.mylyn.internal.reviews.ui.annotations.ReviewAnnotationModel;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
+import org.eclipse.mylyn.reviews.internal.core.model.Comment;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
+
+import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterators;
 
 /**
  * Manages annotation models for compare viewers.
@@ -218,6 +223,32 @@ public class ReviewCompareAnnotationSupport {
 		return null;
 	}
 
+	public void gotoAnnotationWithComment(final Comment comment) {
+		CommentAnnotation rightAnnotation = findComment(rightAnnotationModel, comment);
+		if (rightAnnotation != null) {
+			selectAndReveal(rightSourceViewer, rightAnnotation.getPosition());
+		} else {
+			CommentAnnotation leftAnnotation = findComment(leftAnnotationModel, comment);
+			if (leftAnnotation != null) {
+				selectAndReveal(leftSourceViewer, leftAnnotation.getPosition());
+			}
+		}
+	}
+
+	private CommentAnnotation findComment(ReviewAnnotationModel annotationModel, final Comment comment) {
+		Optional<Annotation> annotation = Iterators.tryFind(annotationModel.getAnnotationIterator(),
+				new Predicate<Annotation>() {
+					public boolean apply(Annotation annotation) {
+						return annotation instanceof CommentAnnotation
+								&& ((CommentAnnotation) annotation).getComment().getId().equals(comment.getId());
+					}
+				});
+		if (annotation.isPresent()) {
+			return (CommentAnnotation) annotation.get();
+		}
+		return null;
+	}
+
 	private int getLineOffset(ReviewAnnotationModel annotationModel, int offset) {
 		try {
 			int line = annotationModel.getDocument().getLineOfOffset(offset);
@@ -340,11 +371,10 @@ public class ReviewCompareAnnotationSupport {
 		commentPopupDialog.create();
 		commentPopupDialog.setInput(input);
 
-		commentPopupDialog.setHeightBasedOnMouse(Display.getCurrent().getCursorLocation().y);
+		commentPopupDialog.setHeightBasedOnMouse(sourceViewer.getSourceViewer().getControl().toDisplay(0, 0).y);
 
-		Point location = sourceViewer.getSourceViewer().getControl().getLocation();
-		location = Display.getCurrent().getCursorLocation();
-		location.y = location.y + (sourceViewer.getViewportHeight() / 2);
+		Point location = sourceViewer.getSourceViewer().getControl().toDisplay(
+				sourceViewer.getSourceViewer().getControl().getSize().x, sourceViewer.getViewportHeight() / 3);
 		commentPopupDialog.setLocation(location);
 		commentPopupDialog.open();
 		commentPopupDialog.setFocus();

@@ -32,6 +32,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.reviews.ui.Messages;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsImages;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
+import org.eclipse.mylyn.reviews.internal.core.model.Comment;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
@@ -52,6 +53,8 @@ public abstract class ReviewItemCompareEditorInput extends CompareEditorInput {
 	private static final String ID_PREVIOUS_COMMENT = ReviewsUiPlugin.PLUGIN_ID + "navigate.comment.previous"; //$NON-NLS-1$
 
 	final ReviewBehavior behavior;
+
+	private ReviewCompareAnnotationSupport currentSupport;
 
 	public ReviewItemCompareEditorInput(CompareConfiguration configuration, ReviewBehavior behavior) {
 		super(configuration);
@@ -97,14 +100,20 @@ public abstract class ReviewItemCompareEditorInput extends CompareEditorInput {
 	public Viewer findContentViewer(Viewer oldViewer, ICompareInput input, Composite parent) {
 		Viewer contentViewer = super.findContentViewer(oldViewer, input, parent);
 		if (input instanceof FileItemNode && ((FileItemNode) input).getFileItem() != null) {
-			ReviewCompareAnnotationSupport support = ReviewCompareAnnotationSupport.getAnnotationSupport(contentViewer);
-			support.setReviewItem(((FileItemNode) input).getFileItem(), behavior);
-			initializeGotoCommentHandlers(parent, support);
+			currentSupport = ReviewCompareAnnotationSupport.getAnnotationSupport(contentViewer);
+			currentSupport.setReviewItem(((FileItemNode) input).getFileItem(), behavior);
+			initializeGotoCommentHandlers(parent);
 		}
 		return contentViewer;
 	}
 
-	private void initializeGotoCommentHandlers(Composite parent, final ReviewCompareAnnotationSupport support) {
+	public void gotoComment(Comment comment) {
+		if (currentSupport != null) {
+			currentSupport.gotoAnnotationWithComment(comment);
+		}
+	}
+
+	private void initializeGotoCommentHandlers(Composite parent) {
 		ToolBarManager tbm = CompareViewerPane.getToolBarManager(parent);
 		if (tbm != null) {
 			if (tbm.find(NAVIGATION_GROUP) != null) {
@@ -112,7 +121,9 @@ public abstract class ReviewItemCompareEditorInput extends CompareEditorInput {
 					Action goToNextAction = new Action(Messages.Reviews_NextComment, ReviewsImages.NEXT_COMMENT) {
 						@Override
 						public void run() {
-							support.gotoAnnotation(Direction.FORWARDS);
+							if (currentSupport != null) {
+								currentSupport.gotoAnnotation(Direction.FORWARDS);
+							}
 						}
 					};
 					goToNextAction.setId(ID_NEXT_COMMENT);
@@ -125,7 +136,9 @@ public abstract class ReviewItemCompareEditorInput extends CompareEditorInput {
 							ReviewsImages.PREVIOUS_COMMENT) {
 						@Override
 						public void run() {
-							support.gotoAnnotation(Direction.BACKWARDS);
+							if (currentSupport != null) {
+								currentSupport.gotoAnnotation(Direction.BACKWARDS);
+							}
 						}
 					};
 					goToPreviousAction.setId(ID_PREVIOUS_COMMENT);

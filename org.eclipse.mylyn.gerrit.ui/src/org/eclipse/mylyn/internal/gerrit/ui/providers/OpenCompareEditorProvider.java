@@ -61,7 +61,8 @@ public class OpenCompareEditorProvider extends CommonActionProvider {
 									TaskEditorInput input = (TaskEditorInput) part.getEditorInput();
 									GerritReviewBehavior behavior = new GerritReviewBehavior(input.getTask());
 									CompareConfiguration configuration = new CompareConfiguration();
-									GerritCompareUi.openFileComparisonEditor(configuration, fileItem, behavior);
+									GerritCompareUi.openFileComparisonEditor(configuration, fileItem, behavior,
+											selection);
 								}
 							}
 						}
