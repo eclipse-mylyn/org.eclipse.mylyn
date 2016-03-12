@@ -141,6 +141,9 @@ public class BugzillaRestTaskSchema extends AbstractTaskSchema {
 
 	public final Field BLOCKS = createField("blocks", "Blocks:", TaskAttribute.TYPE_TASK_DEPENDENCY, Flag.ATTRIBUTE);
 
+	public final Field KEYWORDS = createField("keywords", "Keywords", IBugzillaRestConstants.EDITOR_TYPE_KEYWORD,
+			Flag.ATTRIBUTE);
+
 	@Override
 	public void initialize(TaskData taskData) {
 		for (Field field : getFields()) {

@@ -78,6 +78,7 @@ public class BugzillaRestPutUpdateTask extends BugzillaRestAuthenticatedPutReque
 			.add(BugzillaRestTaskSchema.getDefault().DUPE_OF.getKey())
 			.add(BugzillaRestTaskSchema.getDefault().BLOCKS.getKey())
 			.add(BugzillaRestTaskSchema.getDefault().DEPENDS_ON.getKey())
+			.add(BugzillaRestTaskSchema.getDefault().KEYWORDS.getKey())
 			.build();
 
 	class TaskAttributeTypeAdapter extends TypeAdapter<OldAttributes> {
@@ -133,9 +134,7 @@ public class BugzillaRestPutUpdateTask extends BugzillaRestAuthenticatedPutReque
 						out.name("comment").beginObject(); //$NON-NLS-1$
 						out.name("body").value(value); //$NON-NLS-1$
 						out.endObject();
-						continue;
-					}
-					if (id.equals(BugzillaRestTaskSchema.getDefault().BLOCKS.getKey())
+					} else if (id.equals(BugzillaRestTaskSchema.getDefault().BLOCKS.getKey())
 							|| id.equals(BugzillaRestTaskSchema.getDefault().DEPENDS_ON.getKey())) {
 						Set<String> setOld;
 						if (element.getValues().size() > 1) {
@@ -150,17 +149,20 @@ public class BugzillaRestPutUpdateTask extends BugzillaRestAuthenticatedPutReque
 							setNew = new HashSet<String>(Arrays.asList(taskAttribute.getValue().split("\\s*,\\s*")));
 						}
 						BugzillaRestGsonUtil.getDefault().buildAddRemoveIntegerHash(out, id, setOld, setNew);
-						continue;
-					}
-
-					out.name(id).value(value);
-					if (id.equals("description")) { //$NON-NLS-1$
-						TaskAttribute descriptionpri = taskAttribute
-								.getAttribute(BugzillaRestTaskSchema.getDefault().COMMENT_ISPRIVATE.getKey());
-						Boolean descriptionprivalue = (descriptionpri != null)
-								? (descriptionpri.getValue().equals("1")) //$NON-NLS-1$
-								: false;
-						out.name("comment_is_private").value(Boolean.toString(descriptionprivalue)); //$NON-NLS-1$
+					} else if (id.equals(BugzillaRestTaskSchema.getDefault().KEYWORDS.getKey())) {
+						Set<String> setOld = new HashSet<String>(element.getValues());
+						Set<String> setNew = new HashSet<String>(taskAttribute.getValues());
+						BugzillaRestGsonUtil.getDefault().buildAddRemoveHash(out, id, setOld, setNew);
+					} else {
+						out.name(id).value(value);
+						if (id.equals("description")) { //$NON-NLS-1$
+							TaskAttribute descriptionpri = taskAttribute
+									.getAttribute(BugzillaRestTaskSchema.getDefault().COMMENT_ISPRIVATE.getKey());
+							Boolean descriptionprivalue = (descriptionpri != null)
+									? (descriptionpri.getValue().equals("1")) //$NON-NLS-1$
+									: false;
+							out.name("comment_is_private").value(Boolean.toString(descriptionprivalue)); //$NON-NLS-1$
+						}
 					}
 				}
 			}

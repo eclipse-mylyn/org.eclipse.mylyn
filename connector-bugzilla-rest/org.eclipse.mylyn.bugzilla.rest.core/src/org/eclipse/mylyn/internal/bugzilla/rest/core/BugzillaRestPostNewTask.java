@@ -75,19 +75,14 @@ public class BugzillaRestPostNewTask extends BugzillaRestAuthenticatedPostReques
 				String value1 = BugzillaRestGsonUtil.convertString2GSonString(taskAttribute.getValue());
 				if (legalCreateAttributes.contains(id) || id.startsWith("cf_")) { //$NON-NLS-1$
 					id = BugzillaRestCreateTaskSchema.getFieldNameFromAttributeName(id);
-					if (id.equals("status")) { //$NON-NLS-1$
-						if (value != null && value.equals(TaskAttribute.PREFIX_OPERATION + "default")) { //$NON-NLS-1$
-							continue;
-						}
-					}
-
-					if (id.equals("cc")) { //$NON-NLS-1$
+					if (id.equals("status") //$NON-NLS-1$
+							&& (value != null && value.equals(TaskAttribute.PREFIX_OPERATION + "default"))) {
+						continue;
+					} else if (id.equals("cc")) { //$NON-NLS-1$
 						HashSet<String> setNew = new HashSet<String>(
 								Arrays.asList(taskAttribute.getValue().split("\\s*,\\s*"))); //$NON-NLS-1$
 						BugzillaRestGsonUtil.buildArrayFromHash(out, id, setNew, false);
-						continue;
-					}
-					if (id.equals(BugzillaRestCreateTaskSchema.getDefault().BLOCKS.getKey())
+					} else if (id.equals(BugzillaRestCreateTaskSchema.getDefault().BLOCKS.getKey())
 							|| id.equals(BugzillaRestCreateTaskSchema.getDefault().DEPENDS_ON.getKey())) {
 						if (taskAttribute.getValues().size() > 1) {
 							HashSet<String> setNew = new HashSet<String>(taskAttribute.getValues());
@@ -97,27 +92,32 @@ public class BugzillaRestPostNewTask extends BugzillaRestAuthenticatedPostReques
 									Arrays.asList(taskAttribute.getValue().split("\\s*,\\s*"))); //$NON-NLS-1$
 							BugzillaRestGsonUtil.buildArrayFromHash(out, id, setNew, true);
 						}
-						continue;
-					}
+					} else {
 
-					if (taskAttribute.getMetaData().getType() != null
-							&& taskAttribute.getMetaData().getType().equals(TaskAttribute.TYPE_MULTI_SELECT)) {
-						List<String> values = taskAttribute.getValues();
-						int ii = 0;
-						value1 = ""; //$NON-NLS-1$
-						for (String string : values) {
-							string = BugzillaRestGsonUtil.convertString2GSonString(string);
-							value1 += ((ii++ == 0 ? "" : ",") + string); //$NON-NLS-1$ //$NON-NLS-2$
+						if (id.equals(BugzillaRestCreateTaskSchema.getDefault().KEYWORDS.getKey())) {
+							value1 = taskAttribute.getValues().toString();
+							value1 = value1.substring(1, value1.length() - 1);
 						}
-					}
-					out.name(id).value(value1);
-					if (id.equals("description")) { //$NON-NLS-1$
-						TaskAttribute descriptionpri = taskAttribute.getAttribute(
-								BugzillaRestCreateTaskSchema.getDefault().DESCRIPTION_IS_PRIVATE.getKey());
-						Boolean descriptionprivalue = (descriptionpri != null)
-								? (descriptionpri.getValue().equals("1")) //$NON-NLS-1$
-								: false;
-						out.name("comment_is_private").value(Boolean.toString(descriptionprivalue)); //$NON-NLS-1$
+
+						if (taskAttribute.getMetaData().getType() != null
+								&& taskAttribute.getMetaData().getType().equals(TaskAttribute.TYPE_MULTI_SELECT)) {
+							List<String> values = taskAttribute.getValues();
+							int ii = 0;
+							value1 = ""; //$NON-NLS-1$
+							for (String string : values) {
+								string = BugzillaRestGsonUtil.convertString2GSonString(string);
+								value1 += ((ii++ == 0 ? "" : ",") + string); //$NON-NLS-1$ //$NON-NLS-2$
+							}
+						}
+						out.name(id).value(value1);
+						if (id.equals("description")) { //$NON-NLS-1$
+							TaskAttribute descriptionpri = taskAttribute.getAttribute(
+									BugzillaRestCreateTaskSchema.getDefault().DESCRIPTION_IS_PRIVATE.getKey());
+							Boolean descriptionprivalue = (descriptionpri != null)
+									? (descriptionpri.getValue().equals("1")) //$NON-NLS-1$
+									: false;
+							out.name("comment_is_private").value(Boolean.toString(descriptionprivalue)); //$NON-NLS-1$
+						}
 					}
 				}
 			}
@@ -192,6 +192,7 @@ public class BugzillaRestPostNewTask extends BugzillaRestAuthenticatedPostReques
 			.add(BugzillaRestCreateTaskSchema.getDefault().CC.getKey())
 			.add(BugzillaRestCreateTaskSchema.getDefault().BLOCKS.getKey())
 			.add(BugzillaRestCreateTaskSchema.getDefault().DEPENDS_ON.getKey())
+			.add(BugzillaRestCreateTaskSchema.getDefault().KEYWORDS.getKey())
 			.build();
 
 	@Override

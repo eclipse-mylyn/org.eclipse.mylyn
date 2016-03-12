@@ -40,6 +40,8 @@ public class BugzillaRestTaskEditorPage extends AbstractTaskEditorPage {
 				AbstractAttributeEditor editor;
 				if (IBugzillaRestConstants.EDITOR_TYPE_CC.equals(type)) {
 					editor = new BugzillaCcAttributeEditor(getModel(), taskAttribute);
+				} else if (IBugzillaRestConstants.EDITOR_TYPE_KEYWORD.equals(type)) {
+					editor = new BugzillaKeywordAttributeEditor(getModel(), taskAttribute);
 				} else {
 					editor = super.createEditor(type, taskAttribute);
 				}

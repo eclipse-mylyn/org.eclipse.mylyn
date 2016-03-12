@@ -13,4 +13,6 @@ package org.eclipse.mylyn.internal.bugzilla.rest.core;
 
 public interface IBugzillaRestConstants {
 	public static final String EDITOR_TYPE_CC = "bugzilla.editor.cc"; //$NON-NLS-1$
+
+	public static final String EDITOR_TYPE_KEYWORD = "bugzilla.editor.keyword"; //$NON-NLS-1$
 }
