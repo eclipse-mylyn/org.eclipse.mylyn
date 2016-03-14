@@ -24,8 +24,6 @@ public class Messages extends NLS {
 
 	public static String TaskEditorReviewsPart_ReviewsString;
 
-	public static String TaskEditorReviewsPart_IncomingChangesString;
-
 	public static String TaskEditorReviewsPart_VerifiedString;
 
 	public static String TaskEditorReviewsPart_CodeReviewString;
