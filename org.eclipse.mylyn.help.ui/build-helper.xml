@@ -21,13 +21,10 @@
 	<property name="imageFolder" value="images"/>
 	
 	<path id="wikitext.tasks.classpath">
-		<pathelement location="../../org.eclipse.mylyn.docs/org.eclipse.mylyn.wikitext.core/@dot"/>
 		<pathelement location="../../org.eclipse.mylyn.docs/org.eclipse.mylyn.wikitext.core/bin"/>
-		<pathelement location="../../org.eclipse.mylyn.docs/org.eclipse.mylyn.wikitext.core/bin_ant"/>
 		<pathelement location="../../org.eclipse.mylyn.docs/org.eclipse.mylyn.wikitext.core.ant/bin"/>
-		<pathelement location="../../org.eclipse.mylyn.docs/org.eclipse.mylyn.wikitext.mediawiki.core/@dot"/>
 		<pathelement location="../../org.eclipse.mylyn.docs/org.eclipse.mylyn.wikitext.mediawiki.core/bin"/>
-		<pathelement location="../../org.eclipse.mylyn.docs/org.eclipse.mylyn.wikitext.mediawiki.core/bin_ant"/>
+		<pathelement location="../../org.eclipse.mylyn.docs/org.eclipse.mylyn.wikitext.mediawiki.core.ant/bin"/>
 	</path>
 
 	<taskdef classpathref="wikitext.tasks.classpath" resource="org/eclipse/mylyn/wikitext/mediawiki/core/ant/tasks.properties"/>
