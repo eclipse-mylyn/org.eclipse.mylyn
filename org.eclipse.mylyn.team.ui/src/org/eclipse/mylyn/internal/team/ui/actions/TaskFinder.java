@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.mylyn.commons.workbench.EditorHandle;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
@@ -45,7 +46,7 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * Action used to open linked task. TODO: this class has evolved into a complete mess and has to be fixed.
- * 
+ *
  * @author Mik Kersten
  * @author Eugene Kuleshov
  */
@@ -228,8 +229,8 @@ public class TaskFinder {
 			info = (AbstractTaskReference) ((IAdaptable) element).getAdapter(AbstractTaskReference.class);
 		}
 		if (info == null) {
-			info = (AbstractTaskReference) Platform.getAdapterManager()
-					.getAdapter(element, AbstractTaskReference.class);
+			info = (AbstractTaskReference) Platform.getAdapterManager().getAdapter(element,
+					AbstractTaskReference.class);
 		}
 
 		if (info != null) {
@@ -240,6 +241,16 @@ public class TaskFinder {
 			}
 		}
 		return info;
+	}
+
+	public EditorHandle openTaskByKey(IWorkbenchPage page) {
+		if (reference != null) {
+			String taskUrl = reference.getTaskUrl();
+			if (taskUrl != null && openTaskByKey(page, taskUrl)) {
+				return new EditorHandle(Status.OK_STATUS);
+			}
+		}
+		return null;
 	}
 
 	public IStatus open() {
@@ -254,11 +265,12 @@ public class TaskFinder {
 			}
 
 			if (reference.getRepositoryUrl() != null && reference.getTaskId() != null) {
-				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-						reference.getRepositoryUrl());
+				TaskRepository repository = TasksUiPlugin.getRepositoryManager()
+						.getRepository(reference.getRepositoryUrl());
 				String taskId = reference.getTaskId();
 				if (repository != null && taskId != null) {
-					AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
+					AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin
+							.getConnectorUi(repository.getConnectorKind());
 					if (connectorUi != null) {
 						TasksUiInternal.openRepositoryTask(connectorUi.getConnectorKind(),
 								repository.getRepositoryUrl(), taskId, null, timestamp);
@@ -269,7 +281,7 @@ public class TaskFinder {
 
 			final String taskFullUrl = reference.getTaskUrl();
 			if (taskFullUrl != null) {
-				if (!openTaskByKey(taskFullUrl)) {
+				if (!openTaskByKey(getActivePage(), taskFullUrl)) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
 							TasksUiUtil.openUrl(taskFullUrl);
@@ -295,25 +307,29 @@ public class TaskFinder {
 		return Status.OK_STATUS;
 	}
 
-	private boolean openTaskByKey(final String taskFullUrl) {
+	private boolean openTaskByKey(IWorkbenchPage page, final String taskFullUrl) {
 		String taskKey = null;
 		TaskRepository repository = guessRepository(taskFullUrl);
 		if (repository != null) {
-			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-					repository.getConnectorKind());
+			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+					.getRepositoryConnector(repository.getConnectorKind());
 			if (connector != null) {
 				taskKey = guessTaskKey(connector, repository, taskFullUrl);
 			}
 		}
-		if (taskKey != null) {
-			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-			if (window != null) {
-				IWorkbenchPage page = window.getActivePage();
-				new OpenRepositoryTaskJob(repository, taskKey, taskFullUrl, page).schedule();
-				return true;
-			}
+		if (taskKey != null && page != null) {
+			new OpenRepositoryTaskJob(repository, taskKey, taskFullUrl, page).schedule();
+			return true;
 		}
 		return false;
+	}
+
+	private IWorkbenchPage getActivePage() {
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (window != null) {
+			return window.getActivePage();
+		}
+		return null;
 	}
 
 	private TaskRepository guessRepository(String taskFullUrl) {

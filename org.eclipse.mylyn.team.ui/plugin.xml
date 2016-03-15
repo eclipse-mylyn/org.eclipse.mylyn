@@ -320,5 +320,12 @@
        </adapter>
     </factory>
  </extension>
+   <extension
+         point="org.eclipse.mylyn.commons.workbench.urlHandlers">
+      <handler
+            class="org.eclipse.mylyn.internal.team.ui.actions.TaskFinderUrlHandler"
+            id="org.eclipse.mylyn.team.ui.TaskFinderUrlHandler">
+      </handler>
+   </extension>
 	
 </plugin>
