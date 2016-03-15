@@ -224,7 +224,7 @@ public class TextSearchControl extends Composite {
 						style |= ICON_SEARCH;
 					}
 					testText = new Text(parent, style);
-					useNativeSearchField = new Boolean((testText.getStyle() & ICON_CANCEL) != 0
+					useNativeSearchField = Boolean.valueOf((testText.getStyle() & ICON_CANCEL) != 0
 							&& (!automaticFind || (testText.getStyle() & ICON_SEARCH) != 0));
 				} finally {
 					if (testText != null) {

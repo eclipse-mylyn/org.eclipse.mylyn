@@ -352,8 +352,8 @@ public class CommonImages {
 		if (overlay != null) {
 			key += overlay.hashCode();
 		}
-		key += new Boolean(top).hashCode();
-		key += new Boolean(left).hashCode();
+		key += Boolean.valueOf(top).hashCode();
+		key += Boolean.valueOf(left).hashCode();
 
 		Image image = getImageRegistry().get(key);
 

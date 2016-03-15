@@ -93,7 +93,7 @@ public class DataOverviewCollector implements IUsageCollector {
 		long elapsed = event.getDate().getTime() - lastUserEvent.getDate().getTime();
 		if (elapsed < FIVEMININMS) {
 			if (!interactionHistoryActiveDuration.containsKey(userId)) {
-				interactionHistoryActiveDuration.put(userId, new Long(0));
+				interactionHistoryActiveDuration.put(userId, Long.valueOf(0));
 			}
 			interactionHistoryActiveDuration.put(userId, interactionHistoryActiveDuration.get(userId) + elapsed);
 		}

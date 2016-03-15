@@ -32,7 +32,7 @@ public class DiscoveryCategoryComparator implements Comparator<DiscoveryCategory
 			// don't have to worry about format, since they were already validated
 			// note that higher relevance appears first, thus the reverse order of
 			// the comparison.
-			i = new Integer(r2).compareTo(new Integer(r1));
+			i = Integer.valueOf(r2).compareTo(Integer.valueOf(r1));
 		} else if (r1 == null) {
 			return 1;
 		} else {
