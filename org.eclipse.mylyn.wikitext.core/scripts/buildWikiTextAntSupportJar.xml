@@ -50,11 +50,11 @@
 					<include name="plugins/org.eclipse.mylyn.wikitext.core*.jar"/>
 				</fileset>
 			</classpath>
-			<src path="src_ant/"/>
+			<src path="../org.eclipse.mylyn.wikitext.core.ant/src"/>
 		</javac>
 		<!-- copy the *.class files to the jar location -->
 		<copy todir="${destdir}" failonerror="true" overwrite="false">
-			<fileset dir="src_ant/">
+			<fileset dir="../org.eclipse.mylyn.wikitext.core.ant/src">
 				<exclude name="**/*.java"/>
 				<exclude name="**/package.htm*"/>
 			</fileset>
