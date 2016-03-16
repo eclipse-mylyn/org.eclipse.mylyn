@@ -39,42 +39,42 @@
 <unit id="org.apache.xml.serializer" version="2.7.1.v201005080400"/>
 <unit id="org.apache.xerces" version="2.9.0.v201101211617"/>
 <unit id="javax.servlet" version="3.0.0.v201112011016"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20150821153341/repository/"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20160221192158/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.junit" version="4.8.2.v4_8_2_v20130308-0413"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.cdt.platform.feature.group" version="8.7.0.201506070905"/>
-<unit id="org.eclipse.ecf.core.feature.feature.group" version="1.1.0.v20150512-1727"/>
-<unit id="org.eclipse.ecf.core.source.feature.feature.group" version="1.1.0.v20150512-1727"/>
-<unit id="org.eclipse.ecf.core.ssl.feature.feature.group" version="1.0.0.v20150512-1727"/>
-<unit id="org.eclipse.ecf.core.ssl.source.feature.feature.group" version="1.0.0.v20150512-1727"/>
-<unit id="org.eclipse.ecf.discovery.feature.feature.group" version="1.0.0.v20150512-1727"/>
-<unit id="org.eclipse.ecf.discovery.jmdns.feature.feature.group" version="1.0.0.v20150512-1727"/>
-<unit id="org.eclipse.ecf.filetransfer.feature.feature.group" version="3.10.0.v20150512-1727"/>
-<unit id="org.eclipse.ecf.filetransfer.source.feature.feature.group" version="3.10.0.v20150512-1727"/>
-<unit id="org.eclipse.ecf.filetransfer.httpclient4.feature.feature.group" version="3.10.0.v20150512-1727"/>
-<unit id="org.eclipse.ecf.filetransfer.httpclient4.source.feature.feature.group" version="3.10.0.v20150512-1727"/>
-<unit id="org.eclipse.ecf.filetransfer.httpclient4.ssl.feature.feature.group" version="1.0.0.v20150512-1727"/>
-<unit id="org.eclipse.ecf.filetransfer.httpclient4.ssl.source.feature.feature.group" version="1.0.0.v20150512-1727"/>
-<unit id="org.eclipse.ecf.filetransfer.ssl.feature.feature.group" version="1.0.0.v20150512-1727"/>
-<unit id="org.eclipse.ecf.filetransfer.ssl.source.feature.feature.group" version="1.0.0.v20150512-1727"/>
+<unit id="org.eclipse.cdt.platform.feature.group" version="8.8.1.201602051005"/>
+<unit id="org.eclipse.ecf.core.feature.feature.group" version="1.2.0.v20151130-0157"/>
+<unit id="org.eclipse.ecf.core.source.feature.feature.group" version="1.2.0.v20151130-0157"/>
+<unit id="org.eclipse.ecf.core.ssl.feature.feature.group" version="1.1.0.v20151130-0157"/>
+<unit id="org.eclipse.ecf.core.ssl.source.feature.feature.group" version="1.1.0.v20151130-0157"/>
+<unit id="org.eclipse.ecf.discovery.feature.feature.group" version="1.0.0.v20151130-0157"/>
+<unit id="org.eclipse.ecf.discovery.jmdns.feature.feature.group" version="1.0.0.v20151130-0157"/>
+<unit id="org.eclipse.ecf.filetransfer.feature.feature.group" version="3.12.0.v20151130-0157"/>
+<unit id="org.eclipse.ecf.filetransfer.source.feature.feature.group" version="3.12.0.v20151130-0157"/>
+<unit id="org.eclipse.ecf.filetransfer.httpclient4.feature.feature.group" version="3.12.0.v20151130-0157"/>
+<unit id="org.eclipse.ecf.filetransfer.httpclient4.source.feature.feature.group" version="3.12.0.v20151130-0157"/>
+<unit id="org.eclipse.ecf.filetransfer.httpclient4.ssl.feature.feature.group" version="1.1.0.v20151130-0157"/>
+<unit id="org.eclipse.ecf.filetransfer.httpclient4.ssl.source.feature.feature.group" version="1.1.0.v20151130-0157"/>
+<unit id="org.eclipse.ecf.filetransfer.ssl.feature.feature.group" version="1.1.0.v20151130-0157"/>
+<unit id="org.eclipse.ecf.filetransfer.ssl.source.feature.feature.group" version="1.1.0.v20151130-0157"/>
 <unit id="org.eclipse.equinox.concurrent" version="1.1.0.v20130327-1442"/>
-<unit id="org.eclipse.emf.ecore.feature.group" version="2.11.0.v20150512-0501"/>
-<unit id="org.eclipse.emf.ecore.source.feature.group" version="2.11.0.v20150512-0501"/>
-<unit id="org.eclipse.emf.common.feature.group" version="2.11.0.v20150512-0501"/>
-<unit id="org.eclipse.emf.common.source.feature.group" version="2.11.0.v20150512-0501"/>
-<unit id="org.eclipse.emf.common.ui.feature.group" version="2.10.0.v20150601-0402"/>
-<unit id="org.eclipse.emf.databinding.feature.group" version="1.4.0.v20150601-0402"/>
-<unit id="org.eclipse.emf.edit.feature.group" version="2.11.0.v20150601-0402"/>
-<unit id="org.eclipse.emf.edit.ui.feature.group" version="2.11.0.v20150601-0402"/>
-<unit id="org.eclipse.egit.feature.group" version="4.0.0.201506090130-r"/>
-<unit id="org.eclipse.jgit.feature.group" version="4.0.0.201506090130-r"/>
-<unit id="org.eclipse.osgi" version="3.10.100.v20150529-1857"/>
+<unit id="org.eclipse.emf.ecore.feature.group" version="2.11.2.v20160208-0816"/>
+<unit id="org.eclipse.emf.ecore.source.feature.group" version="2.11.2.v20160208-0816"/>
+<unit id="org.eclipse.emf.common.feature.group" version="2.11.1.v20160208-0816"/>
+<unit id="org.eclipse.emf.common.source.feature.group" version="2.11.1.v20160208-0816"/>
+<unit id="org.eclipse.emf.common.ui.feature.group" version="2.10.1.v20160208-0841"/>
+<unit id="org.eclipse.emf.databinding.feature.group" version="1.4.0.v20160208-0841"/>
+<unit id="org.eclipse.emf.edit.feature.group" version="2.11.1.v20160208-0841"/>
+<unit id="org.eclipse.emf.edit.ui.feature.group" version="2.11.1.v20160208-0841"/>
+<unit id="org.eclipse.egit.feature.group" version="4.1.1.201511131810-r"/>
+<unit id="org.eclipse.jgit.feature.group" version="4.1.1.201511131810-r"/>
+<unit id="org.eclipse.osgi" version="3.10.102.v20160118-1700"/>
 <unit id="org.eclipse.jdt.annotation" version="1.1.100.v20140704-0625"/>
-<unit id="org.eclipse.sdk.ide" version="4.5.0.I20150603-2000"/>
+<unit id="org.eclipse.sdk.ide" version="4.5.2.M20160212-1500"/>
 <repository location="http://download.eclipse.org/releases/mars"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
