@@ -39,6 +39,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.ICommit;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
+import org.eclipse.mylyn.reviews.core.model.ILocation;
 import org.eclipse.mylyn.reviews.core.model.IRepository;
 import org.eclipse.mylyn.reviews.core.model.IReview;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
@@ -352,7 +353,8 @@ public class ReviewSetContentSection {
 					.hint(500, heightHint)
 					.applyTo(viewer.getControl());
 
-			viewer.setContentProvider(new ReviewSetContentProvider());
+			final ReviewSetContentProvider contentProvider = new ReviewSetContentProvider();
+			viewer.setContentProvider(contentProvider);
 
 			ColumnViewerToolTipSupport.enableFor(viewer, ToolTip.NO_RECREATE);
 
@@ -367,18 +369,33 @@ public class ReviewSetContentSection {
 			viewer.setLabelProvider(styledLabelProvider);
 			viewer.addOpenListener(new IOpenListener() {
 				public void open(OpenEvent event) {
-					// TODO: open to line of selected comment or thread
 					ITreeSelection selection = (ITreeSelection) event.getSelection();
 					TreePath[] paths = selection.getPaths();
 					for (TreePath path : paths) {
+						IFileItem file = null;
+						IComment comment = null;
 						for (int i = 0; i < path.getSegmentCount(); i++) {
 							Object o = path.getSegment(i);
 							if (o instanceof IFileItem) {
-								IFileItem item = (IFileItem) o;
-								getParentSection().getUiFactoryProvider()
-										.getOpenFileFactory(ReviewSetContentSection.this.getParentSection(), set, item)
-										.execute();
+								file = (IFileItem) o;
+							} else if (o instanceof ILocation) {
+								Object[] children = contentProvider.getChildren(o);
+								if (children.length > 0 && children[0] instanceof IComment) {
+									comment = (IComment) children[0];
+								}
+							} else if (o instanceof IComment) {
+								comment = (IComment) o;
 							}
+						}
+						if (file != null && comment != null) {
+							getParentSection().getUiFactoryProvider()
+									.getOpenFileToCommentFactory(ReviewSetContentSection.this.getParentSection(), set,
+											file, comment)
+									.execute();
+						} else if (file != null) {
+							getParentSection().getUiFactoryProvider()
+									.getOpenFileFactory(ReviewSetContentSection.this.getParentSection(), set, file)
+									.execute();
 						}
 					}
 				}
