@@ -47,17 +47,25 @@ public class GerritCompareUi {
 
 	public static void openFileComparisonEditor(CompareConfiguration configuration, IFileItem item,
 			ReviewBehavior behavior) {
-		openFileComparisonEditor(configuration, item, behavior, null);
+		openFileComparisonEditor(configuration, item, behavior, (IComment) null);
 	}
 
 	public static void openFileComparisonEditor(CompareConfiguration configuration, IFileItem item,
 			ReviewBehavior behavior, IStructuredSelection selection) {
+		IComment comment = null;
+		if (selection != null && selection.getFirstElement() instanceof IComment) {
+			comment = (IComment) selection.getFirstElement();
+		}
+		openFileComparisonEditor(configuration, item, behavior, comment);
+	}
+
+	public static void openFileComparisonEditor(CompareConfiguration configuration, IFileItem item,
+			ReviewBehavior behavior, IComment comment) {
 		CompareEditorInput editorInput = new FileItemCompareEditorInput(configuration, item, behavior);
 		CompareEditorInput newInput = getComparisonEditor(editorInput, getFileComparePredicate(item));
 		openCompareEditor(newInput);
-		if (selection != null && selection.getFirstElement() instanceof IComment
-				&& newInput instanceof ReviewItemCompareEditorInput) {
-			((ReviewItemCompareEditorInput) newInput).gotoComment((IComment) selection.getFirstElement());
+		if (comment != null && newInput instanceof ReviewItemCompareEditorInput) {
+			((ReviewItemCompareEditorInput) newInput).gotoComment(comment);
 		}
 	}
 

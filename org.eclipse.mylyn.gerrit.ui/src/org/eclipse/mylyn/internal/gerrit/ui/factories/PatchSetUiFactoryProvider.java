@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.gerrit.ui.factories;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.ui.spi.factories.AbstractReviewItemSetUiFactoryProvider;
@@ -51,7 +52,14 @@ public class PatchSetUiFactoryProvider extends AbstractReviewItemSetUiFactoryPro
 	}
 
 	@Override
-	public AbstractUiFactory<IReviewItemSet> getOpenFileFactory(IUiContext context, IReviewItemSet set, IFileItem item) {
+	public AbstractUiFactory<IReviewItemSet> getOpenFileFactory(IUiContext context, IReviewItemSet set,
+			IFileItem item) {
 		return new OpenFileUiFactory(context, set, item);
+	}
+
+	@Override
+	public AbstractUiFactory<IReviewItemSet> getOpenFileToCommentFactory(IUiContext context, IReviewItemSet set,
+			IFileItem item, IComment comment) {
+		return new OpenFileUiFactory(context, set, item, comment);
 	}
 }

@@ -16,6 +16,7 @@ import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritCompareUi;
 import org.eclipse.mylyn.internal.gerrit.ui.GerritReviewBehavior;
+import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
 import org.eclipse.mylyn.reviews.ui.spi.factories.IUiContext;
@@ -29,9 +30,16 @@ public class OpenFileUiFactory extends AbstractPatchSetUiFactory {
 
 	private final IFileItem item;
 
+	private final IComment comment;
+
 	public OpenFileUiFactory(IUiContext context, IReviewItemSet set, IFileItem item) {
+		this(context, set, item, null);
+	}
+
+	public OpenFileUiFactory(IUiContext context, IReviewItemSet set, IFileItem item, IComment comment) {
 		super(Messages.OpenFileUiFactory_Open_File, context, set);
 		this.item = item;
+		this.comment = comment;
 	}
 
 	@Override
@@ -49,7 +57,7 @@ public class OpenFileUiFactory extends AbstractPatchSetUiFactory {
 
 		GerritReviewBehavior behavior = new GerritReviewBehavior(getTask(), resolveGitRepository());
 		CompareConfiguration configuration = new CompareConfiguration();
-		GerritCompareUi.openFileComparisonEditor(configuration, item, behavior);
+		GerritCompareUi.openFileComparisonEditor(configuration, item, behavior, comment);
 	}
 
 	@Override
