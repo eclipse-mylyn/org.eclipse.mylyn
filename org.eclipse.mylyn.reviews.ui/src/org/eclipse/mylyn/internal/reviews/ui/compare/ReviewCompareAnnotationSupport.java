@@ -45,9 +45,9 @@ import org.eclipse.mylyn.internal.reviews.ui.annotations.CommentAnnotation;
 import org.eclipse.mylyn.internal.reviews.ui.annotations.CommentAnnotationHoverInput;
 import org.eclipse.mylyn.internal.reviews.ui.annotations.CommentPopupDialog;
 import org.eclipse.mylyn.internal.reviews.ui.annotations.ReviewAnnotationModel;
+import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItem;
-import org.eclipse.mylyn.reviews.internal.core.model.Comment;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -223,7 +223,7 @@ public class ReviewCompareAnnotationSupport {
 		return null;
 	}
 
-	public void gotoAnnotationWithComment(final Comment comment) {
+	public void gotoAnnotationWithComment(IComment comment) {
 		CommentAnnotation rightAnnotation = findComment(rightAnnotationModel, comment);
 		if (rightAnnotation != null) {
 			selectAndReveal(rightSourceViewer, rightAnnotation.getPosition());
@@ -235,7 +235,7 @@ public class ReviewCompareAnnotationSupport {
 		}
 	}
 
-	private CommentAnnotation findComment(ReviewAnnotationModel annotationModel, final Comment comment) {
+	private CommentAnnotation findComment(ReviewAnnotationModel annotationModel, final IComment comment) {
 		Optional<Annotation> annotation = Iterators.tryFind(annotationModel.getAnnotationIterator(),
 				new Predicate<Annotation>() {
 					public boolean apply(Annotation annotation) {

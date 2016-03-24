@@ -32,7 +32,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.reviews.ui.Messages;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsImages;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
-import org.eclipse.mylyn.reviews.internal.core.model.Comment;
+import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
@@ -107,7 +107,7 @@ public abstract class ReviewItemCompareEditorInput extends CompareEditorInput {
 		return contentViewer;
 	}
 
-	public void gotoComment(Comment comment) {
+	public void gotoComment(IComment comment) {
 		if (currentSupport != null) {
 			currentSupport.gotoAnnotationWithComment(comment);
 		}

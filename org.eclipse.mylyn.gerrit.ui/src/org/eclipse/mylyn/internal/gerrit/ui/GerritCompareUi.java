@@ -21,9 +21,9 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.reviews.ui.compare.FileItemCompareEditorInput;
 import org.eclipse.mylyn.internal.reviews.ui.compare.ReviewItemCompareEditorInput;
 import org.eclipse.mylyn.internal.reviews.ui.compare.ReviewItemSetCompareEditorInput;
+import org.eclipse.mylyn.reviews.core.model.IComment;
 import org.eclipse.mylyn.reviews.core.model.IFileItem;
 import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
-import org.eclipse.mylyn.reviews.internal.core.model.Comment;
 import org.eclipse.mylyn.reviews.ui.ReviewBehavior;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PartInitException;
@@ -55,9 +55,9 @@ public class GerritCompareUi {
 		CompareEditorInput editorInput = new FileItemCompareEditorInput(configuration, item, behavior);
 		CompareEditorInput newInput = getComparisonEditor(editorInput, getFileComparePredicate(item));
 		openCompareEditor(newInput);
-		if (selection != null && selection.getFirstElement() instanceof Comment
+		if (selection != null && selection.getFirstElement() instanceof IComment
 				&& newInput instanceof ReviewItemCompareEditorInput) {
-			((ReviewItemCompareEditorInput) newInput).gotoComment((Comment) selection.getFirstElement());
+			((ReviewItemCompareEditorInput) newInput).gotoComment((IComment) selection.getFirstElement());
 		}
 	}
 
