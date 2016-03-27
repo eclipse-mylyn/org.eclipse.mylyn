@@ -15,12 +15,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map.Entry;
+import java.util.TimeZone;
 
 import org.apache.http.HttpStatus;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpResponse;
 import org.eclipse.mylyn.commons.repositories.http.core.HttpUtil;
@@ -124,7 +131,26 @@ public class BugzillaRestGetTaskData extends BugzillaRestAuthenticatedGetRequest
 							attribute.setValue(value.getAsString());
 						}
 						continue;
+					} else if (entry.getKey().equals("last_change_time")) {
+						TaskAttribute attribute = taskData.getRoot()
+								.getAttribute(taskSchema.DATE_MODIFICATION.getKey());
+						JsonElement value = entry.getValue(); //.get("real_name");
+						if (attribute != null) {
+							try {
+								SimpleDateFormat iso8601Format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", //$NON-NLS-1$
+										Locale.US);
+								iso8601Format.setTimeZone(TimeZone.getTimeZone("UTC")); //$NON-NLS-1$
+								Date tempDate = iso8601Format.parse(value.getAsString());
+								attribute.setValue(Long.toString(tempDate.getTime()));
+								continue;
+							} catch (ParseException e) {
+								com.google.common.base.Throwables.propagate(
+										new CoreException(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN,
+												"Can not parse Date (" + value.getAsString() + ")"))); //$NON-NLS-1$ //$NON-NLS-2$
+							}
+						}
 					}
+
 					TaskAttribute attribute = taskData.getRoot().getAttribute(attributeId);
 					if (attribute != null) {
 						JsonElement value = entry.getValue();

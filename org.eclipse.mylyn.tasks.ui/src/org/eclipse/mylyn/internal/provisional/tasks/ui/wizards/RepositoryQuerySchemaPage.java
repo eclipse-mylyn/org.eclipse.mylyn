@@ -74,7 +74,7 @@ public class RepositoryQuerySchemaPage extends AbstractRepositoryQueryPage2 {
 
 	private SectionComposite scrolledComposite;
 
-	protected TaskData targetTaskData;
+	private TaskData targetTaskData;
 
 	protected final Map<String, AbstractAttributeEditor> editorMap = new HashMap<String, AbstractAttributeEditor>();
 
@@ -245,10 +245,8 @@ public class RepositoryQuerySchemaPage extends AbstractRepositoryQueryPage2 {
 		setMessage("");
 		boolean oneFieldHasValue = false;
 		for (Field field : schema.getFields()) {
-			oneFieldHasValue |= (targetTaskData.getRoot().getAttribute(field.getKey()).hasValue() && !targetTaskData.getRoot()
-					.getAttribute(field.getKey())
-					.getValue()
-					.equals(""));
+			oneFieldHasValue |= (targetTaskData.getRoot().getAttribute(field.getKey()).hasValue()
+					&& !targetTaskData.getRoot().getAttribute(field.getKey()).getValue().equals(""));
 			if (field.isQueryRequired()) {
 				String text = targetTaskData.getRoot().getAttribute(field.getKey()).getValue();
 				if (text == null || text.length() == 0) {
@@ -315,4 +313,9 @@ public class RepositoryQuerySchemaPage extends AbstractRepositoryQueryPage2 {
 		// ignore
 		return false;
 	}
+
+	protected TaskData getTargetTaskData() {
+		return targetTaskData;
+	}
+
 }

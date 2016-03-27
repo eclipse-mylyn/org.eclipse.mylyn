@@ -24,12 +24,12 @@ public class BugzillaRestRepositorySettingsPage extends AbstractRepositorySettin
 	private static final String LABEL_VERSION_NUMBER = "5.0"; //$NON-NLS-1$
 
 	private static final String DESCRIPTION = MessageFormat.format(
-			"Supports Bugzilla {0} Example: https://bugs.eclipse.org/bugs/ (do not include rest.cgi)",
+			Messages.BugzillaRestRepositorySettingsPage_SupportsVersionMessage,
 			LABEL_VERSION_NUMBER);
 
 	public BugzillaRestRepositorySettingsPage(TaskRepository taskRepository, AbstractRepositoryConnector connector,
 			AbstractRepositoryConnectorUi connectorUi) {
-		super("Bugzilla REST Repository Settings", DESCRIPTION, taskRepository, connector, connectorUi);
+		super(Messages.BugzillaRestRepositorySettingsPage_RestRepositorySetting, DESCRIPTION, taskRepository, connector, connectorUi);
 		setNeedsAnonymousLogin(true);
 		setNeedsEncoding(false);
 		setNeedsAdvanced(false);

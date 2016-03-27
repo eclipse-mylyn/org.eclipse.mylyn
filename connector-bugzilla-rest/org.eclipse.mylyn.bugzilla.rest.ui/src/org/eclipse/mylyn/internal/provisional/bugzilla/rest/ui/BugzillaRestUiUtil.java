@@ -31,10 +31,11 @@ public class BugzillaRestUiUtil {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return new BugzillaRestSearchQueryPage("Create query from URL", repository, null,
+		return new BugzillaRestSearchQueryPage(Messages.BugzillaRestUiUtil_CreateQueryFromURL, repository, null,
 				SimpleURLQueryPageSchema.getInstance(), taskData,
-				new QueryPageDetails(true, "buglist.cgi?", "Enter query parameters", "Please anter a title and an URL",
-						"([a-zA-Z][a-zA-Z+.-]{0,10}://[a-zA-Z0-9%._~!$&?#'()*+,;:@/=-]+)", "SimpleURLQueryPage"));
+				new QueryPageDetails(true, "buglist.cgi?", Messages.BugzillaRestUiUtil_EnterQueryParameter, //$NON-NLS-1$
+						Messages.BugzillaRestUiUtil_EnterTitleAndURL,
+						"([a-zA-Z][a-zA-Z+.-]{0,10}://[a-zA-Z0-9%._~!$&?#'()*+,;:@/=-]+)", "SimpleURLQueryPage")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	protected static BugzillaRestSearchQueryPage createBugzillaRestSearchQueryPage(TaskData taskData,
@@ -46,10 +47,11 @@ public class BugzillaRestUiUtil {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return new BugzillaRestSearchQueryPage("Create query from a form", repository, null,
+		return new BugzillaRestSearchQueryPage(Messages.BugzillaRestUiUtil_CreateQueryFromForm, repository, null,
 				BugzillaRestSearchQueryPageSchema.getInstance(), taskData,
-				new QueryPageDetails(true, "buglist.cgi?", "fill the form", "Please enter a title and fill the form",
-						"([a-zA-Z][a-zA-Z+.-]{0,10}://[a-zA-Z0-9%._~!$&?#'()*+,;:@/=-]+)", null));
+				new QueryPageDetails(true, "buglist.cgi?", Messages.BugzillaRestUiUtil_FillForm, //$NON-NLS-1$
+						Messages.BugzillaRestUiUtil_enterTitleAndFillForm,
+						"([a-zA-Z][a-zA-Z+.-]{0,10}://[a-zA-Z0-9%._~!$&?#'()*+,;:@/=-]+)", null)); //$NON-NLS-1$
 	}
 
 	public static BugzillaRestSearchQueryPage createBugzillaRestSearchPage(boolean simplePage, boolean updateMode,
@@ -80,10 +82,11 @@ public class BugzillaRestUiUtil {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return new BugzillaRestSearchQueryPage("Create query from URL", repository, query,
+		return new BugzillaRestSearchQueryPage(Messages.BugzillaRestUiUtil_CreateQueryFromURL, repository, query,
 				SimpleURLQueryPageSchema.getInstance(), taskData,
-				new QueryPageDetails(true, "buglist.cgi?", "Enter query parameters", "Please anter a title and an URL",
-						"([a-zA-Z][a-zA-Z+.-]{0,10}://[a-zA-Z0-9%._~!$&?#'()*+,;:@/=-]+)", "SimpleURLQueryPage"));
+				new QueryPageDetails(true, "buglist.cgi?", Messages.BugzillaRestUiUtil_EnterQueryParameters, //$NON-NLS-1$
+						Messages.BugzillaRestUiUtil_EnterTitleAndURL1,
+						"([a-zA-Z][a-zA-Z+.-]{0,10}://[a-zA-Z0-9%._~!$&?#'()*+,;:@/=-]+)", "SimpleURLQueryPage")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	protected static BugzillaRestSearchQueryPage updateBugzillaRestSearchQueryPage(TaskData taskData,
@@ -97,10 +100,11 @@ public class BugzillaRestUiUtil {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return new BugzillaRestSearchQueryPage("Create query from a form", repository, query,
+		return new BugzillaRestSearchQueryPage(Messages.BugzillaRestUiUtil_CreateQueryFromForm, repository, query,
 				BugzillaRestSearchQueryPageSchema.getInstance(), taskData,
-				new QueryPageDetails(true, "buglist.cgi?", "fill the form", "Please enter a title and fill the form",
-						"([a-zA-Z][a-zA-Z+.-]{0,10}://[a-zA-Z0-9%._~!$&?#'()*+,;:@/=-]+)", null));
+				new QueryPageDetails(true, "buglist.cgi?", Messages.BugzillaRestUiUtil_fillForm, //$NON-NLS-1$
+						Messages.BugzillaRestUiUtil_EnterTitleAndFillForm,
+						"([a-zA-Z][a-zA-Z+.-]{0,10}://[a-zA-Z0-9%._~!$&?#'()*+,;:@/=-]+)", null)); //$NON-NLS-1$
 	}
 
 }

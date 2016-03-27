@@ -53,7 +53,7 @@ public class BugzillaRestRepositoryConnectorUi extends AbstractRepositoryConnect
 		BugzillaRestConnector connectorREST = (BugzillaRestConnector) connector;
 
 		TaskData taskData = new TaskData(new BugzillaRestTaskAttributeMapper(repository, connectorREST),
-				repository.getConnectorKind(), "Query", "Query");
+				repository.getConnectorKind(), "Query", "Query"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		if (query == null) {
 			wizard.addPage(new BugzillaRestQueryTypeWizardPage(repository, connector));
@@ -70,7 +70,7 @@ public class BugzillaRestRepositoryConnectorUi extends AbstractRepositoryConnect
 	}
 
 	private boolean isCustomQuery(IRepositoryQuery query2) {
-		String custom = query2.getAttribute("SimpleURLQueryPage");
+		String custom = query2.getAttribute("SimpleURLQueryPage"); //$NON-NLS-1$
 		return custom != null && custom.equals(Boolean.TRUE.toString());
 	}
 

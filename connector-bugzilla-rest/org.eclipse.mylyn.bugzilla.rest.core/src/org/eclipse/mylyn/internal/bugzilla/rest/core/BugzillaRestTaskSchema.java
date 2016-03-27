@@ -36,6 +36,7 @@ public class BugzillaRestTaskSchema extends AbstractTaskSchema {
 			.put("resolution", getDefault().RESOLUTION.getKey()) //$NON-NLS-1$
 			.put("version", getDefault().VERSION.getKey()) //$NON-NLS-1$
 			.put("dup_id", getDefault().DUPE_OF.getKey()) //$NON-NLS-1$
+			.put("last_change_time", getDefault().DATE_MODIFICATION.getKey()) //$NON-NLS-1$
 			.build();
 
 	private static ImmutableMap<String, String> attribute2FieldMapper = new ImmutableMap.Builder<String, String>()
@@ -53,6 +54,7 @@ public class BugzillaRestTaskSchema extends AbstractTaskSchema {
 			.put(getDefault().RESOLUTION.getKey(), "resolution") //$NON-NLS-1$
 			.put(getDefault().DUPE_OF.getKey(), "dup_id") //$NON-NLS-1$
 			.put("resolutionInput", "resolution") //$NON-NLS-1$  //$NON-NLS-2$
+			.put(getDefault().DATE_MODIFICATION.getKey(), "last_change_time") //$NON-NLS-1$
 			.build();
 
 	public static String getAttributeNameFromFieldName(String fieldName) {
@@ -143,6 +145,8 @@ public class BugzillaRestTaskSchema extends AbstractTaskSchema {
 
 	public final Field KEYWORDS = createField("keywords", "Keywords", IBugzillaRestConstants.EDITOR_TYPE_KEYWORD,
 			Flag.ATTRIBUTE);
+
+	public final Field DATE_MODIFICATION = inheritFrom(parent.DATE_MODIFICATION).create();
 
 	@Override
 	public void initialize(TaskData taskData) {

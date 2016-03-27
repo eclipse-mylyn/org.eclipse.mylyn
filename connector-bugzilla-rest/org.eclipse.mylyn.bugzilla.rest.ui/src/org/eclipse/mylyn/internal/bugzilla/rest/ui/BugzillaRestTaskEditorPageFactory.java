@@ -49,7 +49,7 @@ public class BugzillaRestTaskEditorPageFactory extends AbstractTaskEditorPageFac
 
 	@Override
 	public String getPageText() {
-		return "Bugzilla";
+		return Messages.BugzillaRestTaskEditorPageFactory_Bugzilla;
 	}
 
 	@Override

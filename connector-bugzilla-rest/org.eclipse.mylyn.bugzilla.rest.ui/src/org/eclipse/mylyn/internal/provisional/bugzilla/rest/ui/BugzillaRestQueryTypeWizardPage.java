@@ -40,15 +40,17 @@ public class BugzillaRestQueryTypeWizardPage extends WizardPage {
 	private Composite composite;
 
 	public BugzillaRestQueryTypeWizardPage(TaskRepository repository, AbstractRepositoryConnector connector) {
-		super("Choose query type");
-		setTitle("Choose query type");
-		setDescription("Select from the available query types.");
+		super(Messages.BugzillaRestQueryTypeWizardPage_ChooseQueryType);
+		setTitle(Messages.BugzillaRestQueryTypeWizardPage_ChooseQueryType);
+		setDescription(Messages.BugzillaRestQueryTypeWizardPage_SelectAvailableQueryTypes);
 		setImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 		BugzillaRestConnector connectorREST = (BugzillaRestConnector) connector;
 		TaskData taskDataSimpleURL = new TaskData(new BugzillaRestTaskAttributeMapper(repository, connectorREST),
-				repository.getConnectorKind(), "Query", "Query");
+				repository.getConnectorKind(), Messages.BugzillaRestQueryTypeWizardPage_Query,
+				Messages.BugzillaRestQueryTypeWizardPage_Query);
 		TaskData taskDataSearch = new TaskData(new BugzillaRestTaskAttributeMapper(repository, connectorREST),
-				repository.getConnectorKind(), "Query", "Query");
+				repository.getConnectorKind(), Messages.BugzillaRestQueryTypeWizardPage_Query,
+				Messages.BugzillaRestQueryTypeWizardPage_Query);
 		customPage = BugzillaRestUiUtil.createBugzillaRestSearchPage(true, false, taskDataSimpleURL, connectorREST,
 				repository, null);
 		searchPage = BugzillaRestUiUtil.createBugzillaRestSearchPage(false, false, taskDataSearch, connectorREST,
@@ -64,11 +66,11 @@ public class BugzillaRestQueryTypeWizardPage extends WizardPage {
 		composite.setLayout(new GridLayout(1, false));
 
 		buttonForm = new Button(composite, SWT.RADIO);
-		buttonForm.setText("Cre&ate query using a form");
+		buttonForm.setText(Messages.BugzillaRestQueryTypeWizardPage_CreateQueryUsingForm);
 		buttonForm.setSelection(true);
 
 		buttonCustom = new Button(composite, SWT.RADIO);
-		buttonCustom.setText("&Create query from existing URL");
+		buttonCustom.setText(Messages.BugzillaRestQueryTypeWizardPage_CreateQueryFromExistingURL);
 
 		setPageComplete(true);
 		setControl(composite);

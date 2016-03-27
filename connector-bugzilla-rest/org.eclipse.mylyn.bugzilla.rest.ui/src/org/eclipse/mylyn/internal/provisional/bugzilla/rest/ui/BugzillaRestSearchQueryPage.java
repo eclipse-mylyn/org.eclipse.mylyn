@@ -11,7 +11,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConnector;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestTaskSchema;
 import org.eclipse.mylyn.internal.bugzilla.rest.ui.BugzillaRestUiPlugin;
+import org.eclipse.mylyn.internal.bugzilla.rest.ui.Messages;
 import org.eclipse.mylyn.internal.provisional.tasks.ui.wizards.AbstractQueryPageSchema;
 import org.eclipse.mylyn.internal.provisional.tasks.ui.wizards.QueryPageDetails;
 import org.eclipse.mylyn.internal.provisional.tasks.ui.wizards.RepositoryQuerySchemaPage;
@@ -20,19 +22,25 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
+import org.eclipse.osgi.util.NLS;
 
 public class BugzillaRestSearchQueryPage extends RepositoryQuerySchemaPage {
 
 	public BugzillaRestSearchQueryPage(String pageName, TaskRepository repository, IRepositoryQuery query,
 			AbstractQueryPageSchema schema, TaskData data, QueryPageDetails pageDetails) {
 		super(pageName, repository, query, schema, data, pageDetails);
+		if (query != null) {
+			setTitle(NLS.bind(Messages.BugzillaRestSearchQueryPage_PropertiesForQuery, query.getSummary()));
+		} else {
+			setTitle(Messages.BugzillaRestSearchQueryPage_PropertiesForNewQuery);
+		}
 	}
 
 	@Override
 	protected void doRefreshControls() {
 		try {
 			BugzillaRestConnector connectorREST = (BugzillaRestConnector) getConnector();
-			connectorREST.getRepositoryConfiguration(getTaskRepository()).updateProductOptions(targetTaskData);
+			connectorREST.getRepositoryConfiguration(getTaskRepository()).updateProductOptions(getTargetTaskData());
 
 			for (Entry<String, AbstractAttributeEditor> entry : editorMap.entrySet()) {
 				entry.getValue().refresh();
@@ -72,6 +80,7 @@ public class BugzillaRestSearchQueryPage extends RepositoryQuerySchemaPage {
 		return false;
 	}
 
+	@SuppressWarnings("restriction")
 	private void restoreStateFromUrl(String queryUrl) throws UnsupportedEncodingException {
 		queryUrl = queryUrl.substring(queryUrl.indexOf("?") + 1); //$NON-NLS-1$
 		String[] options = queryUrl.split("&"); //$NON-NLS-1$
@@ -83,18 +92,18 @@ public class BugzillaRestSearchQueryPage extends RepositoryQuerySchemaPage {
 			} else {
 				key = option.substring(0, option.indexOf("=")); //$NON-NLS-1$
 			}
-			if (key == null || key.equals("order")) {
+			if (key == null || key.equals("order")) { //$NON-NLS-1$
 				continue;
 			}
 			String value = URLDecoder.decode(option.substring(option.indexOf("=") + 1), //$NON-NLS-1$
 					getTaskRepository().getCharacterEncoding());
 			key = mapAttributeKey(key);
-			TaskAttribute attr = targetTaskData.getRoot().getAttribute(key);
+			TaskAttribute attr = getTargetTaskData().getRoot().getAttribute(key);
 			if (attr != null) {
-				if (targetTaskData.getRoot().getAttribute(key).getValue().equals("")) {
-					targetTaskData.getRoot().getAttribute(key).setValue(value);
+				if (getTargetTaskData().getRoot().getAttribute(key).getValue().equals("")) { //$NON-NLS-1$
+					getTargetTaskData().getRoot().getAttribute(key).setValue(value);
 				} else {
-					targetTaskData.getRoot().getAttribute(key).addValue(value);
+					getTargetTaskData().getRoot().getAttribute(key).addValue(value);
 				}
 			}
 		}
@@ -108,13 +117,13 @@ public class BugzillaRestSearchQueryPage extends RepositoryQuerySchemaPage {
 	private StringBuilder getQueryParameters() {
 		StringBuilder sb = new StringBuilder();
 		for (Entry<String, AbstractAttributeEditor> entry : editorMap.entrySet()) {
-			TaskAttribute attrib = targetTaskData.getRoot().getAttribute(entry.getKey());
+			TaskAttribute attrib = getTargetTaskData().getRoot().getAttribute(entry.getKey());
 			for (String string : attrib.getValues()) {
-				if (string != null && !string.equals("")) {
+				if (string != null && !string.equals("")) { //$NON-NLS-1$
 					try {
-						appendToBuffer(sb, mapUrlKey(entry.getKey()) + "=", URLEncoder
-								.encode(string.replaceAll(" ", "%20"), getTaskRepository().getCharacterEncoding())
-								.replaceAll("%2520", "%20"));
+						appendToBuffer(sb, mapUrlKey(entry.getKey()) + "=", //$NON-NLS-1$
+								URLEncoder.encode(string.replaceAll(" ", "%20"), //$NON-NLS-1$//$NON-NLS-2$
+										getTaskRepository().getCharacterEncoding()).replaceAll("%2520", "%20")); //$NON-NLS-1$ //$NON-NLS-2$
 					} catch (UnsupportedEncodingException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -139,7 +148,7 @@ public class BugzillaRestSearchQueryPage extends RepositoryQuerySchemaPage {
 	 * Creates the bugzilla query URL start. Example: https://bugs.eclipse.org/bugs/buglist.cgi?
 	 */
 	private String getQueryURLStart(String repsitoryUrl) {
-		return repsitoryUrl + (repsitoryUrl.endsWith("/") ? "" : "/") + "rest.cgi/bug?";
+		return repsitoryUrl + (repsitoryUrl.endsWith("/") ? "" : "/") + "rest.cgi/bug?"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$//$NON-NLS-4$
 	}
 
 	private void appendToBuffer(StringBuilder sb, String key, String value) {
@@ -152,14 +161,9 @@ public class BugzillaRestSearchQueryPage extends RepositoryQuerySchemaPage {
 
 	protected String mapUrlKey(String attributeKey) {
 		String key;
-		if (TaskAttribute.SUMMARY.equals(attributeKey)) {
-			key = "summary";
-		} else if (TaskAttribute.PRODUCT.equals(attributeKey)) {
-			key = "product";
-		} else if (TaskAttribute.COMPONENT.equals(attributeKey)) {
-			key = "component";
-		} else if (TaskAttribute.VERSION.equals(attributeKey)) {
-			key = "version";
+		if (TaskAttribute.SUMMARY.equals(attributeKey) || TaskAttribute.PRODUCT.equals(attributeKey)
+				|| TaskAttribute.COMPONENT.equals(attributeKey) || TaskAttribute.VERSION.equals(attributeKey)) {
+			key = BugzillaRestTaskSchema.getFieldNameFromAttributeName(attributeKey);
 		} else {
 			key = attributeKey;
 		}
@@ -168,13 +172,20 @@ public class BugzillaRestSearchQueryPage extends RepositoryQuerySchemaPage {
 
 	protected String mapAttributeKey(String attributeKey) {
 		String key;
-		if ("summary".equals(attributeKey)) {
+		if (BugzillaRestTaskSchema.getFieldNameFromAttributeName(BugzillaRestTaskSchema.getDefault().SUMMARY.getKey())
+				.equals(attributeKey)) {
 			key = TaskAttribute.SUMMARY;
-		} else if ("product".equals(attributeKey)) {
+		} else if (BugzillaRestTaskSchema
+				.getFieldNameFromAttributeName(BugzillaRestTaskSchema.getDefault().PRODUCT.getKey())
+				.equals(attributeKey)) {
 			key = TaskAttribute.PRODUCT;
-		} else if ("component".equals(attributeKey)) {
+		} else if (BugzillaRestTaskSchema
+				.getFieldNameFromAttributeName(BugzillaRestTaskSchema.getDefault().COMPONENT.getKey())
+				.equals(attributeKey)) {
 			key = TaskAttribute.COMPONENT;
-		} else if ("version".equals(attributeKey)) {
+		} else if (BugzillaRestTaskSchema
+				.getFieldNameFromAttributeName(BugzillaRestTaskSchema.getDefault().VERSION.getKey())
+				.equals(attributeKey)) {
 			key = TaskAttribute.VERSION;
 		} else {
 			key = attributeKey;

@@ -13,6 +13,8 @@ package org.eclipse.mylyn.internal.bugzilla.rest.core;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -21,6 +23,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.annotation.Nullable;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 import org.eclipse.mylyn.commons.core.operations.OperationUtil;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
@@ -28,12 +31,13 @@ import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Field;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.FieldValues;
 import org.eclipse.mylyn.internal.commons.core.operations.NullOperationMonitor;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryInfo;
 import org.eclipse.mylyn.tasks.core.RepositoryVersion;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -254,7 +258,89 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public void updateTaskFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData) {
+		TaskMapper scheme = getTaskMapping(taskData);
+		scheme.applyTo(task);
 		task.setUrl(taskData.getRepositoryUrl() + "/rest.cgi/bug/" + taskData.getTaskId()); //$NON-NLS-1$
+
+		boolean isComplete = false;
+		TaskAttribute attributeStatus = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
+		if (attributeStatus != null) {
+			try {
+				BugzillaRestConfiguration configuration;
+				configuration = getRepositoryConfiguration(taskRepository);
+				if (configuration != null) {
+					Field stat = configuration.getFieldWithName(IBugzillaRestConstants.BUG_STATUS);
+					for (FieldValues fieldValue : stat.getValues()) {
+						if (attributeStatus.getValue().equals(fieldValue.getName())) {
+							isComplete = !fieldValue.isOpen();
+						}
+					}
+				}
+			} catch (CoreException e) {
+				StatusHandler.log(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN,
+						"Error during get BugzillaRestConfiguration", e));
+			}
+		}
+		if (taskData.isPartial()) {
+			if (isComplete) {
+				if (task.getCompletionDate() == null) {
+					task.setCompletionDate(new Date(0));
+				}
+			} else {
+				task.setCompletionDate(null);
+			}
+		} else {
+			inferCompletionDate(task, taskData, scheme, isComplete);
+		}
+
+	}
+
+	private void inferCompletionDate(ITask task, TaskData taskData, TaskMapper scheme, boolean isComplete) {
+		if (isComplete) {
+			Date completionDate = null;
+			List<TaskAttribute> taskComments = taskData.getAttributeMapper().getAttributesByType(taskData,
+					TaskAttribute.TYPE_COMMENT);
+			if (taskComments != null && taskComments.size() > 0) {
+				TaskAttribute lastComment = taskComments.get(taskComments.size() - 1);
+				if (lastComment != null) {
+					TaskAttribute attributeCommentDate = lastComment.getMappedAttribute(TaskAttribute.COMMENT_DATE);
+					if (attributeCommentDate != null) {
+						completionDate = new Date(Long.parseLong(attributeCommentDate.getValue()));
+					}
+				}
+			}
+			if (completionDate == null) {
+				// Use last modified date
+				TaskAttribute attributeLastModified = taskData.getRoot()
+						.getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
+				if (attributeLastModified != null && attributeLastModified.getValue().length() > 0) {
+					completionDate = taskData.getAttributeMapper().getDateValue(attributeLastModified);
+				}
+			}
+			task.setCompletionDate(completionDate);
+		} else {
+			task.setCompletionDate(null);
+		}
+		// Bugzilla Specific Attributes
+
+		// Product
+		if (scheme.getProduct() != null) {
+			task.setAttribute(BugzillaRestTaskSchema.getDefault().PRODUCT.getKey(), scheme.getProduct());
+		}
+
+		// Severity
+		TaskAttribute attrSeverity = taskData.getRoot()
+				.getMappedAttribute(BugzillaRestTaskSchema.getDefault().SEVERITY.getKey());
+		if (attrSeverity != null && !attrSeverity.getValue().equals("")) { //$NON-NLS-1$
+			task.setAttribute(BugzillaRestTaskSchema.getDefault().SEVERITY.getKey(), attrSeverity.getValue());
+		}
+
+		// Severity
+		TaskAttribute attrDelta = taskData.getRoot()
+				.getAttribute(BugzillaRestTaskSchema.getDefault().DATE_MODIFICATION.getKey());
+		if (attrDelta != null && !attrDelta.getValue().equals("")) { //$NON-NLS-1$
+			task.setAttribute(BugzillaRestTaskSchema.getDefault().DATE_MODIFICATION.getKey(), attrDelta.getValue());
+		}
 	}
 
 	@Override
@@ -341,7 +427,7 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public ITaskMapping getTaskMapping(final TaskData taskData) {
+	public TaskMapper getTaskMapping(final TaskData taskData) {
 
 		return new TaskMapper(taskData) {
 			@Override

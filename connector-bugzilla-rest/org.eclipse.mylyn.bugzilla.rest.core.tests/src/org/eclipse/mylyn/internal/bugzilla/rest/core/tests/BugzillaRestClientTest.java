@@ -452,9 +452,13 @@ public class BugzillaRestClientTest {
 		String taskId = harness.submitNewTask(taskData);
 		TaskData taskDataGet = harness.getTaskFromServer(taskId);
 
-		// actual we read no comments and so we also can not get the description
-		taskData.getRoot().removeAttribute("task.common.description");
-		taskDataGet.getRoot().removeAttribute("task.common.description");
+		// description is only for old tasks readonly and has the two sub attributes
+		// COMMENT_NUMBER and COMMENT_ISPRIVATE
+		TaskAttribute getDesc = taskDataGet.getRoot()
+				.getAttribute(BugzillaRestTaskSchema.getDefault().DESCRIPTION.getKey());
+		getDesc.getMetaData().setReadOnly(false);
+		getDesc.removeAttribute(TaskAttribute.COMMENT_ISPRIVATE);
+		getDesc.removeAttribute(TaskAttribute.COMMENT_NUMBER);
 
 		// resolution is only for new tasks readonly
 		taskData.getRoot()
@@ -463,22 +467,24 @@ public class BugzillaRestClientTest {
 				.setReadOnly(false);
 
 		// attributes we know that they can not be equal
-		taskData.getRoot().removeAttribute("task.common.status");
-		taskDataGet.getRoot().removeAttribute("task.common.status");
-		taskData.getRoot().removeAttribute("task.common.user.assigned");
-		taskDataGet.getRoot().removeAttribute("task.common.user.assigned");
-		taskData.getRoot().removeAttribute("task.common.operation");
-		taskDataGet.getRoot().removeAttribute("task.common.operation");
+		taskData.getRoot().removeAttribute(BugzillaRestTaskSchema.getDefault().STATUS.getKey());
+		taskDataGet.getRoot().removeAttribute(BugzillaRestTaskSchema.getDefault().STATUS.getKey());
+		taskData.getRoot().removeAttribute(BugzillaRestTaskSchema.getDefault().ASSIGNED_TO.getKey());
+		taskDataGet.getRoot().removeAttribute(BugzillaRestTaskSchema.getDefault().ASSIGNED_TO.getKey());
+		taskData.getRoot().removeAttribute(TaskAttribute.OPERATION);
+		taskDataGet.getRoot().removeAttribute(TaskAttribute.OPERATION);
+		taskDataGet.getRoot().removeAttribute(BugzillaRestTaskSchema.getDefault().DATE_MODIFICATION.getKey());
+		taskData.getRoot().removeAttribute(BugzillaRestTaskSchema.getDefault().DATE_MODIFICATION.getKey());
 		// CC attribute has diverences in the meta data between create and update
-		taskData.getRoot().removeAttribute("task.common.user.cc");
-		taskDataGet.getRoot().removeAttribute("task.common.user.cc");
+		taskData.getRoot().removeAttribute(TaskAttribute.USER_CC);
+		taskDataGet.getRoot().removeAttribute(TaskAttribute.USER_CC);
 
 		// attributes only in old tasks
 		taskData.getRoot().removeAttribute("description_is_private");
 
 		// attributes only in new tasks
 		taskDataGet.getRoot().removeAttribute("bug_id");
-		taskDataGet.getRoot().removeAttribute("task.common.comment.new");
+		taskDataGet.getRoot().removeAttribute(TaskAttribute.COMMENT_NEW);
 		taskDataGet.getRoot().removeAttribute("addCC");
 		taskDataGet.getRoot().removeAttribute("removeCC");
 
@@ -488,7 +494,7 @@ public class BugzillaRestClientTest {
 		taskDataGet.getRoot().removeAttribute("task.common.operation-RESOLVED");
 		taskDataGet.getRoot().removeAttribute("resolutionInput");
 		taskDataGet.getRoot().removeAttribute("task.common.operation-duplicate");
-		taskDataGet.getRoot().removeAttribute("dupe_of");
+		taskDataGet.getRoot().removeAttribute(BugzillaRestTaskSchema.getDefault().DUPE_OF.getKey());
 
 		assertEquals(taskData.getRoot().toString(), taskDataGet.getRoot().toString());
 	}
