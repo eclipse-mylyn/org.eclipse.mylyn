@@ -487,6 +487,7 @@ public class BugzillaRestClientTest {
 		taskDataGet.getRoot().removeAttribute(TaskAttribute.COMMENT_NEW);
 		taskDataGet.getRoot().removeAttribute("addCC");
 		taskDataGet.getRoot().removeAttribute("removeCC");
+		taskDataGet.getRoot().removeAttribute(BugzillaRestTaskSchema.getDefault().RESET_QA_CONTACT.getKey());
 
 		// attributes for operations
 		taskDataGet.getRoot().removeAttribute("task.common.operation-CONFIRMED");

@@ -79,6 +79,7 @@ public class BugzillaRestPutUpdateTask extends BugzillaRestAuthenticatedPutReque
 			.add(BugzillaRestTaskSchema.getDefault().BLOCKS.getKey())
 			.add(BugzillaRestTaskSchema.getDefault().DEPENDS_ON.getKey())
 			.add(BugzillaRestTaskSchema.getDefault().KEYWORDS.getKey())
+			.add(BugzillaRestTaskSchema.getDefault().RESET_QA_CONTACT.getKey())
 			.build();
 
 	class TaskAttributeTypeAdapter extends TypeAdapter<OldAttributes> {
