@@ -16,7 +16,7 @@ Require-Bundle: org.junit;bundle-version="4.8.2",
  org.eclipse.mylyn.commons.sdk.util,
  org.eclipse.mylyn.hudson.core,
  org.eclipse.mylyn.hudson.ui
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: Eclipse Mylyn
 Export-Package: org.eclipse.mylyn.hudson.tests;x-internal:=true,
  org.eclipse.mylyn.hudson.tests.client;x-internal:=true,
