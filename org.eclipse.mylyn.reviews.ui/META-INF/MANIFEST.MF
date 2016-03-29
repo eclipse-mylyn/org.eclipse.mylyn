@@ -29,7 +29,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.team.core,
  com.google.guava
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: Eclipse Mylyn
 Export-Package: org.eclipse.mylyn.internal.reviews.ui;x-internal:=true,
  org.eclipse.mylyn.internal.reviews.ui.actions;x-internal:=true,

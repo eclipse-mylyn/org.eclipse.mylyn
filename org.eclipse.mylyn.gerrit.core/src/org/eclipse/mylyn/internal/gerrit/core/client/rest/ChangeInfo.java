@@ -35,8 +35,8 @@ import com.google.gerrit.reviewdb.PatchSet;
 import com.google.gerrit.reviewdb.PatchSetApproval;
 
 /**
- * Data model object for <a
- * href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#change-info">ChangeInfo</a>.
+ * Data model object for
+ * <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#change-info">ChangeInfo</a>.
  */
 public class ChangeInfo {
 	// e.g. "gerritcodereview#change"
@@ -183,8 +183,9 @@ public class ChangeInfo {
 				for (ApprovalInfo approvalInfo : all) {
 					Account.Id accountId = new Account.Id(approvalInfo.getId());
 					ApprovalDetail approvalDetail = new ApprovalDetail(accountId);
-					approvalDetail.add(new PatchSetApproval(new PatchSetApproval.Key(getCurrentPatchSetId(), accountId,
-							approvalCategoryId), approvalInfo.getValue()));
+					approvalDetail.add(new PatchSetApproval(
+							new PatchSetApproval.Key(getCurrentPatchSetId(), accountId, approvalCategoryId),
+							approvalInfo.getValue()));
 					result.add(approvalDetail);
 				}
 			}
@@ -229,8 +230,8 @@ public class ChangeInfo {
 			}
 			PermissionLabel label = new PermissionLabel();
 			label.setName(PermissionLabel.toLabelName(entry.getKey()));
-			label.setMin(Collections.min(values));
-			label.setMax(Collections.max(values));
+			label.setMin(Collections.min(values).intValue());
+			label.setMax(Collections.max(values).intValue());
 			result.add(label);
 		}
 		return result;
@@ -238,7 +239,7 @@ public class ChangeInfo {
 
 	/**
 	 * Converts labels into a map of approvals given by the provided user.
-	 * 
+	 *
 	 * @param id
 	 *            id of the current patch set
 	 * @param account
