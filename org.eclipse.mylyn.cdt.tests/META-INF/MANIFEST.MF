@@ -26,4 +26,4 @@ Require-Bundle: org.junit;bundle-version="4.8.2",
  org.eclipse.cdt.managedbuilder.ui
 Export-Package: org.eclipse.mylyn.cdt.tests;x-internal:=true,
  org.eclipse.mylyn.cdt.tests.support;x-internal:=true
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

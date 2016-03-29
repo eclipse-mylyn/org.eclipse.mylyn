@@ -20,7 +20,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jface.text,
  org.eclipse.ui.editors;bundle-version="3.4.0"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Localization: plugin
 Bundle-Activator: org.eclipse.mylyn.internal.cdt.ui.CDTUIBridgePlugin
 Import-Package: com.ibm.icu.text
