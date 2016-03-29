@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project
+<project 
    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
    xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
@@ -26,21 +26,6 @@
             </goals>
             <configuration>
               <artifacts>
-                <artifact>
-                  <file>mylyn-e3.6.target</file>
-                  <type>target</type>
-                  <classifier>mylyn-e3.6</classifier>
-                </artifact>
-                <artifact>
-                  <file>mylyn-e3.7.target</file>
-                  <type>target</type>
-                  <classifier>mylyn-e3.7</classifier>
-                </artifact>
-                <artifact>
-                  <file>mylyn-e3.8.target</file>
-                  <type>target</type>
-                  <classifier>mylyn-e3.8</classifier>
-                </artifact>
                 <artifact>
                   <file>mylyn-e4.2.target</file>
                   <type>target</type>
