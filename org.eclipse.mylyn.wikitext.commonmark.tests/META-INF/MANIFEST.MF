@@ -4,7 +4,7 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.commonmark.tests
 Fragment-Host: org.eclipse.mylyn.wikitext.commonmark;bundle-version="2.9.0"
 Bundle-Version: 2.9.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.junit;bundle-version="4.8",
  com.google.guava;bundle-version="15.0.0",
  org.mockito;bundle-version="[1.8.4,2.0.0)",

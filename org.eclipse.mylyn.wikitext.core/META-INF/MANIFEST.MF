@@ -25,5 +25,5 @@ Require-Bundle: org.jsoup;bundle-version="1.7.2";resolution:=optional;x-installa
 Import-Package: javax.xml.stream,
  javax.xml.parsers,
  javax.xml.namespace
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Localization: plugin
