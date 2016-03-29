@@ -10,7 +10,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.commons.screenshots;bundle-version="1.0.0",
  org.apache.commons.lang;bundle-version="[2.6.0,3.0.0)"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Activator: org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin
 Export-Package: org.eclipse.mylyn.commons.ui,
  org.eclipse.mylyn.commons.ui.actions,

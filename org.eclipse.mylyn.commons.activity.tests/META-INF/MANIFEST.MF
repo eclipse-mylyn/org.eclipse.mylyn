@@ -8,4 +8,4 @@ Require-Bundle: org.junit;bundle-version="4.8.2",
  org.eclipse.core.runtime,
  org.eclipse.mylyn.commons.activity.ui
 Export-Package: org.eclipse.mylyn.commons.activity.tests;x-internal:=true
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
