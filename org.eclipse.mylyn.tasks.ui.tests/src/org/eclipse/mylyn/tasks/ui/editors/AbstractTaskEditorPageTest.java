@@ -40,8 +40,8 @@ public class AbstractTaskEditorPageTest {
 
 		@Override
 		protected TaskDataModel createModel(final TaskEditorInput input) throws CoreException {
-			TaskDataModel model = spy(new TaskDataModel(input.getTaskRepository(), input.getTask(),
-					mock(ITaskDataWorkingCopy.class)));
+			TaskDataModel model = spy(
+					new TaskDataModel(input.getTaskRepository(), input.getTask(), mock(ITaskDataWorkingCopy.class)));
 			when(model.getTaskData()).thenReturn(taskData);
 			return model;
 		}
@@ -75,7 +75,7 @@ public class AbstractTaskEditorPageTest {
 	private IEditorSite createSite() {
 		IEditorSite site = mock(IEditorSite.class);
 		IHandlerService service = mock(IHandlerService.class);
-		when(site.getService(any(Class.class))).thenReturn(service);
+		when(site.getService(any())).thenReturn(service);
 		return site;
 	}
 

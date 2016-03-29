@@ -4,7 +4,7 @@ Bundle-Name: Tasks Index Tests
 Bundle-SymbolicName: org.eclipse.mylyn.tasks.index.tests
 Bundle-Version: 3.20.0.qualifier
 Bundle-Vendor: Eclipse.org
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.junit;bundle-version="4.8.2",
  org.eclipse.core.runtime,
  org.eclipse.mylyn.commons.core,

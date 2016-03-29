@@ -28,7 +28,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
  * data into {@link AbstractTaskDataHandler#initializeTaskData()}. It provides common accessors and mutators for a set
  * of fields used during task data initialization. Only attributes of type {@link String} are supported, other accessors
  * throw {@link UnsupportedOperationException} as documented for each method.
- * 
+ *
  * @author Benjamin Muskalla
  * @since 3.10
  * @noextend This class is not intended to be subclassed by clients.
@@ -111,7 +111,7 @@ public class TaskInitializationData implements ITaskMapping {
 
 	/**
 	 * Returns <code>null</code>.
-	 * 
+	 *
 	 * @since 3.15
 	 */
 	@Nullable
@@ -202,7 +202,6 @@ public class TaskInitializationData implements ITaskMapping {
 	/**
 	 * Throws {@link UnsupportedOperationException}.
 	 */
-	@Nullable
 	public void merge(ITaskMapping source) {
 		throw new UnsupportedOperationException();
 	}
