@@ -25,6 +25,7 @@ import static org.mockito.Mockito.when;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
@@ -225,6 +226,7 @@ public class RepositorySettingsPageTest {
 
 		assertTrue(page.needsRepositoryCredentials());
 		assertCredentialsEnabled(page);
+		assertPasswordIsSecret(page);
 	}
 
 	@Test
@@ -233,10 +235,12 @@ public class RepositorySettingsPageTest {
 		page.setNeedsRepositoryCredentials(true);
 		page.createControl(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
 		assertCredentialsEnabled(page);
+		assertPasswordIsSecret(page);
 
 		page.setNeedsRepositoryCredentials(false);
 
 		assertCredentialsDisabled(page);
+		assertPasswordIsSecret(page);
 	}
 
 	@Test
@@ -246,9 +250,11 @@ public class RepositorySettingsPageTest {
 		page.createControl(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
 		page.setNeedsRepositoryCredentials(false);
 		assertCredentialsDisabled(page);
+		assertPasswordIsSecret(page);
 
 		page.setNeedsRepositoryCredentials(true);
 		assertCredentialsEnabled(page);
+		assertPasswordIsSecret(page);
 	}
 
 	@Test
@@ -261,15 +267,18 @@ public class RepositorySettingsPageTest {
 		assertTrue(page.needsRepositoryCredentials());
 		assertTrue(page.isAnonymousAccess());
 		assertCredentialsDisabled(page);
+		assertPasswordIsSecret(page);
 
 		page.setAnonymous(false);
 		page.setNeedsRepositoryCredentials(false);
 
 		assertCredentialsDisabled(page);
+		assertPasswordIsSecret(page);
 
 		page.setNeedsRepositoryCredentials(true);
 
 		assertCredentialsEnabled(page);
+		assertPasswordIsSecret(page);
 	}
 
 	@Test
@@ -311,5 +320,10 @@ public class RepositorySettingsPageTest {
 	private void assertCredentialsDisabled(TestRepositorySettingsPage page) {
 		assertFalse(page.repositoryUserNameEditor.getTextControl(page.compositeContainer).isEnabled());
 		assertFalse(page.repositoryPasswordEditor.getTextControl(page.compositeContainer).isEnabled());
+	}
+
+	private void assertPasswordIsSecret(TestRepositorySettingsPage page) {
+		StringFieldEditor passwordEditor = page.repositoryPasswordEditor;
+		assertEquals('*', passwordEditor.getTextControl(page.compositeContainer).getEchoChar());
 	}
 }

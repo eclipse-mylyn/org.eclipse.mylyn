@@ -560,10 +560,12 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			}
 		});
 
-		if (needsRepositoryCredentials()) {
+		if (repositoryPasswordEditor != null) {
 			// bug 131656: must set echo char after setting value on Mac
 			((RepositoryStringFieldEditor) repositoryPasswordEditor).getTextControl().setEchoChar('*');
+		}
 
+		if (needsRepositoryCredentials()) {
 			if (needsAnonymousLogin()) {
 				// do this after username and password widgets have been intialized
 				if (repository != null) {
