@@ -16,7 +16,7 @@
    <parent>
        <groupId>org.eclipse.mylyn.github</groupId>
        <artifactId>github-parent</artifactId>
-       <version>4.3.0.201604071045-r</version>
+       <version>4.3.0.201604071810-r</version>
   </parent>
 
   <artifactId>org.eclipse.egit.github.core.tests</artifactId>
