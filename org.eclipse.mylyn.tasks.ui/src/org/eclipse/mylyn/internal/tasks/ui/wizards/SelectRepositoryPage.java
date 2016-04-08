@@ -38,6 +38,7 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardNode;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardSelectionPage;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.commons.workbench.GradientDrawer;
 import org.eclipse.mylyn.internal.tasks.core.Category;
@@ -184,14 +185,15 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 			discoveryButton.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent event) {
-					IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(
-							IHandlerService.class);
+					IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+							.getService(IHandlerService.class);
 					try {
 						handlerService.executeCommand(discoveryWizardCommand.getId(), null);
 					} catch (Exception e) {
-						IStatus status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
-								Messages.SelectRepositoryConnectorPage_discoveryProblemMessage,
-								new Object[] { e.getMessage() }), e);
+						IStatus status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								NLS.bind(Messages.SelectRepositoryConnectorPage_discoveryProblemMessage,
+										new Object[] { e.getMessage() }),
+								e);
 						TasksUiInternal.logAndDisplayStatus(
 								Messages.SelectRepositoryConnectorPage_discoveryProblemTitle, status);
 					}
@@ -229,12 +231,13 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 
 		TaskRepository selectedRepository = TasksUiUtil.getSelectedRepository(null);
 		if (selectedRepository != null) {
-			Category category = ((TaskRepositoryManager) TasksUi.getRepositoryManager()).getCategory(selectedRepository);
+			Category category = ((TaskRepositoryManager) TasksUi.getRepositoryManager())
+					.getCategory(selectedRepository);
 			Object[] path = { category, selectedRepository };
 			viewer.setSelection(new TreeSelection(new TreePath(path)));
 		} else {
-			TaskRepository localRepository = TasksUi.getRepositoryManager().getRepository(
-					LocalRepositoryConnector.CONNECTOR_KIND, LocalRepositoryConnector.REPOSITORY_URL);
+			TaskRepository localRepository = TasksUi.getRepositoryManager()
+					.getRepository(LocalRepositoryConnector.CONNECTOR_KIND, LocalRepositoryConnector.REPOSITORY_URL);
 			viewer.setSelection(new StructuredSelection(localRepository));
 		}
 
@@ -251,7 +254,12 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 
 			public void open(OpenEvent event) {
 				if (canFlipToNextPage()) {
-					getContainer().showPage(getNextPage());
+					try {
+						getContainer().showPage(getNextPage());
+					} catch (RuntimeException e) {
+						StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+								"Exception while opening the next wizard page", e));
+					}
 				} else if (canFinish()) {
 					if (getWizard().performFinish()) {
 						((WizardDialog) getContainer()).close();
