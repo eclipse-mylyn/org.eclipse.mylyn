@@ -559,6 +559,14 @@
       </properties>
     </profile>
     <profile>
+      <id>test-build</id>
+      <properties>
+        <sign.skip>true</sign.skip>
+        <dist.site>/home/data/httpd/download.eclipse.org/mylyn/snapshots</dist.site>
+        <dist.qualifier>'x'yyyyMMdd-HHmm</dist.qualifier>
+      </properties>
+    </profile>
+    <profile>
       <id>publish</id>
       <activation>
         <property>
