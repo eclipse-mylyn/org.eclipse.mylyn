@@ -22,6 +22,7 @@ import java.net.URL;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 import org.junit.Before;
 import org.junit.Rule;
@@ -38,7 +39,7 @@ public class HtmlDocumentBuilderTest {
 	private HtmlDocumentBuilder builder;
 
 	@Rule
-	public ExpectedException thrown = ExpectedException.none();
+	public final ExpectedException thrown = ExpectedException.none();
 
 	@Before
 	public void setup() {
@@ -198,6 +199,50 @@ public class HtmlDocumentBuilderTest {
 		assertEntityReferenceToNumericValue("&#8807;&#824;", "ngE");
 		assertEntityReferenceToNumericValue("&amp;notarealthing;", "notarealthing");
 		assertEntityReferenceToNumericValue("&#160;", "#160");
+	}
+
+	@Test
+	public void setElementNameOfSpanType() {
+		builder.setElementNameOfSpanType(SpanType.BOLD, "new-bold");
+		builder.setElementNameOfSpanType(SpanType.LINK, "new-a");
+
+		assertElementNameOfSpanType(out, builder);
+
+		StringWriter out2 = new StringWriter();
+		HtmlDocumentBuilder builder2 = new HtmlDocumentBuilder(out2);
+		builder.copyConfiguration(builder2);
+
+		assertElementNameOfSpanType(out2, builder2);
+	}
+
+	@Test
+	public void setElementNameOfSpanTypeRequiresSpanType() {
+		thrown.expect(NullPointerException.class);
+		thrown.expectMessage("Must provide spanType");
+		builder.setElementNameOfSpanType(null, "some-name");
+	}
+
+	@Test
+	public void setElementNameOfSpanTypeRequiresElementName() {
+		thrown.expect(NullPointerException.class);
+		thrown.expectMessage("Must provide elementName");
+		builder.setElementNameOfSpanType(SpanType.BOLD, null);
+	}
+
+	private void assertElementNameOfSpanType(StringWriter out, HtmlDocumentBuilder builder) {
+		builder.setEmitAsDocument(false);
+		builder.beginDocument();
+
+		builder.beginSpan(SpanType.BOLD, new Attributes());
+		builder.characters("bold text");
+		builder.endSpan();
+
+		builder.link("http://example.com", "example.com");
+
+		builder.endDocument();
+
+		assertEquals("<new-bold>bold text</new-bold><new-a href=\"http://example.com\">example.com</new-a>",
+				out.toString());
 	}
 
 	private void assertEntityReferenceToNumericValue(String expected, String entityReference) {

@@ -43,6 +43,8 @@ import org.eclipse.mylyn.wikitext.core.util.DefaultXmlStreamWriter;
 import org.eclipse.mylyn.wikitext.core.util.FormattingXMLStreamWriter;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 
+import com.google.common.collect.ImmutableMap;
+
 /**
  * A builder that produces XHTML output. The nature of the output is affected by various settings on the builder.
  *
@@ -55,57 +57,62 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private static final Pattern ABSOLUTE_URL_PATTERN = Pattern.compile("[a-zA-Z]{3,8}://?.*"); //$NON-NLS-1$
 
-	private static final Map<SpanType, String> spanTypeToElementName = new HashMap<SpanType, String>();
+	private static final Map<SpanType, String> defaultSpanTypeToElementName;
 
 	static {
-		spanTypeToElementName.put(SpanType.LINK, "a"); //$NON-NLS-1$
-		spanTypeToElementName.put(SpanType.BOLD, "b"); //$NON-NLS-1$
-		spanTypeToElementName.put(SpanType.CITATION, "cite"); //$NON-NLS-1$
-		spanTypeToElementName.put(SpanType.ITALIC, "i"); //$NON-NLS-1$
-		spanTypeToElementName.put(SpanType.EMPHASIS, "em"); //$NON-NLS-1$
-		spanTypeToElementName.put(SpanType.STRONG, "strong"); //$NON-NLS-1$
-		spanTypeToElementName.put(SpanType.DELETED, "del"); //$NON-NLS-1$
-		spanTypeToElementName.put(SpanType.INSERTED, "ins"); //$NON-NLS-1$
-		spanTypeToElementName.put(SpanType.QUOTE, "q"); //$NON-NLS-1$
-		spanTypeToElementName.put(SpanType.UNDERLINED, "u"); //$NON-NLS-1$
-		spanTypeToElementName.put(SpanType.SUPERSCRIPT, "sup"); //$NON-NLS-1$
-		spanTypeToElementName.put(SpanType.SUBSCRIPT, "sub"); //$NON-NLS-1$
-		spanTypeToElementName.put(SpanType.SPAN, "span"); //$NON-NLS-1$
-		spanTypeToElementName.put(SpanType.CODE, "code"); //$NON-NLS-1$
-		spanTypeToElementName.put(SpanType.MONOSPACE, "tt"); //$NON-NLS-1$
+		ImmutableMap.Builder<SpanType, String> spanTypeToElementNameBuilder = ImmutableMap.builder();
+		spanTypeToElementNameBuilder.put(SpanType.LINK, "a"); //$NON-NLS-1$
+		spanTypeToElementNameBuilder.put(SpanType.BOLD, "b"); //$NON-NLS-1$
+		spanTypeToElementNameBuilder.put(SpanType.CITATION, "cite"); //$NON-NLS-1$
+		spanTypeToElementNameBuilder.put(SpanType.ITALIC, "i"); //$NON-NLS-1$
+		spanTypeToElementNameBuilder.put(SpanType.EMPHASIS, "em"); //$NON-NLS-1$
+		spanTypeToElementNameBuilder.put(SpanType.STRONG, "strong"); //$NON-NLS-1$
+		spanTypeToElementNameBuilder.put(SpanType.DELETED, "del"); //$NON-NLS-1$
+		spanTypeToElementNameBuilder.put(SpanType.INSERTED, "ins"); //$NON-NLS-1$
+		spanTypeToElementNameBuilder.put(SpanType.QUOTE, "q"); //$NON-NLS-1$
+		spanTypeToElementNameBuilder.put(SpanType.UNDERLINED, "u"); //$NON-NLS-1$
+		spanTypeToElementNameBuilder.put(SpanType.SUPERSCRIPT, "sup"); //$NON-NLS-1$
+		spanTypeToElementNameBuilder.put(SpanType.SUBSCRIPT, "sub"); //$NON-NLS-1$
+		spanTypeToElementNameBuilder.put(SpanType.SPAN, "span"); //$NON-NLS-1$
+		spanTypeToElementNameBuilder.put(SpanType.CODE, "code"); //$NON-NLS-1$
+		spanTypeToElementNameBuilder.put(SpanType.MONOSPACE, "tt"); //$NON-NLS-1$
+		defaultSpanTypeToElementName = spanTypeToElementNameBuilder.build();
 	}
 
-	private static final Map<BlockType, ElementInfo> blockTypeToElementInfo = new HashMap<BlockType, ElementInfo>();
+	private static final Map<BlockType, ElementInfo> blockTypeToElementInfo;
 
 	static {
-		blockTypeToElementInfo.put(BlockType.BULLETED_LIST, new ElementInfo("ul")); //$NON-NLS-1$
-		blockTypeToElementInfo.put(BlockType.CODE, new ElementInfo("pre", null, null, new ElementInfo("code"))); //$NON-NLS-1$ //$NON-NLS-2$
-		blockTypeToElementInfo.put(BlockType.DIV, new ElementInfo("div")); //$NON-NLS-1$
-		blockTypeToElementInfo.put(BlockType.FOOTNOTE, new ElementInfo("footnote")); //$NON-NLS-1$
-		blockTypeToElementInfo.put(BlockType.LIST_ITEM, new ElementInfo("li")); //$NON-NLS-1$
-		blockTypeToElementInfo.put(BlockType.NUMERIC_LIST, new ElementInfo("ol")); //$NON-NLS-1$
-		blockTypeToElementInfo.put(BlockType.DEFINITION_LIST, new ElementInfo("dl")); //$NON-NLS-1$
-		blockTypeToElementInfo.put(BlockType.DEFINITION_TERM, new ElementInfo("dt")); //$NON-NLS-1$
-		blockTypeToElementInfo.put(BlockType.DEFINITION_ITEM, new ElementInfo("dd")); //$NON-NLS-1$
-		blockTypeToElementInfo.put(BlockType.PARAGRAPH, new ElementInfo("p")); //$NON-NLS-1$
-		blockTypeToElementInfo.put(BlockType.PREFORMATTED, new ElementInfo("pre")); //$NON-NLS-1$
-		blockTypeToElementInfo.put(BlockType.QUOTE, new ElementInfo("blockquote")); //$NON-NLS-1$
-		blockTypeToElementInfo.put(BlockType.TABLE, new ElementInfo("table")); //$NON-NLS-1$
-		blockTypeToElementInfo.put(BlockType.TABLE_CELL_HEADER, new ElementInfo("th")); //$NON-NLS-1$
-		blockTypeToElementInfo.put(BlockType.TABLE_CELL_NORMAL, new ElementInfo("td")); //$NON-NLS-1$
-		blockTypeToElementInfo.put(BlockType.TABLE_ROW, new ElementInfo("tr")); //$NON-NLS-1$
-		blockTypeToElementInfo.put(BlockType.TIP, new ElementInfo("div", "tip", //$NON-NLS-1$ //$NON-NLS-2$
+		ImmutableMap.Builder<BlockType, ElementInfo> blockTypeToElementInfoBuilder = ImmutableMap.builder();
+		blockTypeToElementInfoBuilder.put(BlockType.BULLETED_LIST, new ElementInfo("ul")); //$NON-NLS-1$
+		blockTypeToElementInfoBuilder.put(BlockType.CODE, new ElementInfo("pre", null, null, new ElementInfo("code"))); //$NON-NLS-1$ //$NON-NLS-2$
+		blockTypeToElementInfoBuilder.put(BlockType.DIV, new ElementInfo("div")); //$NON-NLS-1$
+		blockTypeToElementInfoBuilder.put(BlockType.FOOTNOTE, new ElementInfo("footnote")); //$NON-NLS-1$
+		blockTypeToElementInfoBuilder.put(BlockType.LIST_ITEM, new ElementInfo("li")); //$NON-NLS-1$
+		blockTypeToElementInfoBuilder.put(BlockType.NUMERIC_LIST, new ElementInfo("ol")); //$NON-NLS-1$
+		blockTypeToElementInfoBuilder.put(BlockType.DEFINITION_LIST, new ElementInfo("dl")); //$NON-NLS-1$
+		blockTypeToElementInfoBuilder.put(BlockType.DEFINITION_TERM, new ElementInfo("dt")); //$NON-NLS-1$
+		blockTypeToElementInfoBuilder.put(BlockType.DEFINITION_ITEM, new ElementInfo("dd")); //$NON-NLS-1$
+		blockTypeToElementInfoBuilder.put(BlockType.PARAGRAPH, new ElementInfo("p")); //$NON-NLS-1$
+		blockTypeToElementInfoBuilder.put(BlockType.PREFORMATTED, new ElementInfo("pre")); //$NON-NLS-1$
+		blockTypeToElementInfoBuilder.put(BlockType.QUOTE, new ElementInfo("blockquote")); //$NON-NLS-1$
+		blockTypeToElementInfoBuilder.put(BlockType.TABLE, new ElementInfo("table")); //$NON-NLS-1$
+		blockTypeToElementInfoBuilder.put(BlockType.TABLE_CELL_HEADER, new ElementInfo("th")); //$NON-NLS-1$
+		blockTypeToElementInfoBuilder.put(BlockType.TABLE_CELL_NORMAL, new ElementInfo("td")); //$NON-NLS-1$
+		blockTypeToElementInfoBuilder.put(BlockType.TABLE_ROW, new ElementInfo("tr")); //$NON-NLS-1$
+		blockTypeToElementInfoBuilder.put(BlockType.TIP, new ElementInfo("div", "tip", //$NON-NLS-1$ //$NON-NLS-2$
 				"border: 1px solid #090;background-color: #dfd;margin: 20px;padding: 0px 6px 0px 6px;")); //$NON-NLS-1$
-		blockTypeToElementInfo.put(BlockType.WARNING, new ElementInfo("div", "warning", //$NON-NLS-1$ //$NON-NLS-2$
+		blockTypeToElementInfoBuilder.put(BlockType.WARNING, new ElementInfo("div", "warning", //$NON-NLS-1$ //$NON-NLS-2$
 				"border: 1px solid #c00;background-color: #fcc;margin: 20px;padding: 0px 6px 0px 6px;")); //$NON-NLS-1$
-		blockTypeToElementInfo.put(BlockType.INFORMATION, new ElementInfo("div", "info", //$NON-NLS-1$ //$NON-NLS-2$
+		blockTypeToElementInfoBuilder.put(BlockType.INFORMATION, new ElementInfo("div", "info", //$NON-NLS-1$ //$NON-NLS-2$
 				"border: 1px solid #3c78b5;background-color: #D8E4F1;margin: 20px;padding: 0px 6px 0px 6px;")); //$NON-NLS-1$
-		blockTypeToElementInfo.put(BlockType.NOTE, new ElementInfo("div", "note", //$NON-NLS-1$ //$NON-NLS-2$
+		blockTypeToElementInfoBuilder.put(BlockType.NOTE, new ElementInfo("div", "note", //$NON-NLS-1$ //$NON-NLS-2$
 				"border: 1px solid #F0C000;background-color: #FFFFCE;margin: 20px;padding: 0px 6px 0px 6px;")); //$NON-NLS-1$
-		blockTypeToElementInfo.put(BlockType.PANEL, new ElementInfo("div", "panel", //$NON-NLS-1$ //$NON-NLS-2$
+		blockTypeToElementInfoBuilder.put(BlockType.PANEL, new ElementInfo("div", "panel", //$NON-NLS-1$ //$NON-NLS-2$
 				"border: 1px solid #ccc;background-color: #FFFFCE;margin: 10px;padding: 0px 6px 0px 6px;")); //$NON-NLS-1$
-
+		blockTypeToElementInfo = blockTypeToElementInfoBuilder.build();
 	}
+
+	private Map<SpanType, String> spanTypeToElementName = ImmutableMap.copyOf(defaultSpanTypeToElementName);
 
 	private String htmlNsUri = "http://www.w3.org/1999/xhtml"; //$NON-NLS-1$
 
@@ -199,6 +206,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		other.setPrependImagePrefix(prependImagePrefix);
 		other.setCopyrightNotice(getCopyrightNotice());
 		other.setHtmlFilenameFormat(htmlFilenameFormat);
+		other.spanTypeToElementName = spanTypeToElementName;
 		if (stylesheets != null) {
 			other.stylesheets = new ArrayList<Stylesheet>();
 			other.stylesheets.addAll(stylesheets);
@@ -212,6 +220,32 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 				return elementName.equals("pre") || elementName.equals("code"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		};
+	}
+
+	/**
+	 * Provides an element name for the given {@code spanType} replacing the previous mapping. The new
+	 * {@code elementName} is used when the corresponding {@link SpanType} is {@link #beginSpan(SpanType, Attributes)
+	 * started}.
+	 *
+	 * @param spanType
+	 *            the span type
+	 * @param elementName
+	 *            the element name to use in the generated HTML when emitting spans of the given type
+	 * @since 2.8
+	 */
+	public void setElementNameOfSpanType(SpanType spanType, String elementName) {
+		checkNotNull(spanType, "Must provide spanType"); //$NON-NLS-1$
+		checkNotNull(elementName, "Must provide elementName"); //$NON-NLS-1$
+
+		ImmutableMap.Builder<SpanType, String> builder = ImmutableMap.builder();
+		for (Entry<SpanType, String> entry : spanTypeToElementName.entrySet()) {
+			if (!entry.getKey().equals(spanType)) {
+				builder.put(entry);
+			}
+		}
+		builder.put(spanType, elementName);
+
+		spanTypeToElementName = builder.build();
 	}
 
 	/**
@@ -727,11 +761,11 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	@Override
 	public void link(Attributes attributes, String hrefOrHashName, String text) {
-		writer.writeStartElement(htmlNsUri, "a"); //$NON-NLS-1$
+		writer.writeStartElement(htmlNsUri, spanTypeToElementName.get(SpanType.LINK));
 		emitAnchorHref(hrefOrHashName);
 		applyLinkAttributes(attributes, hrefOrHashName);
 		characters(text);
-		writer.writeEndElement(); // a
+		writer.writeEndElement();
 	}
 
 	@Override
