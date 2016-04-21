@@ -8,7 +8,7 @@ echo "<meta http-equiv="Expires" content="0" /></head>" >> index.html
 
 echo "<body><h1>Mylyn Snapshot Builds</h1>" >> index.html
 echo "<p>Weekly builds are production quality, but subject to UI changes.</p><p>" >> index.html
-for f in `find -name *3.1*.zip -not -name *-api.zip | sort`; do 
+for f in `find -name *3.[1-4]*.zip -not -name *-api.zip | sort`; do 
 	echo "<a href=\"https://www.eclipse.org/downloads/download.php?file=/mylyn/drops${f#\.}\">${f##.*/}</a><br/>" >> index.html
 done
 echo "</p></body><html>" >> index.html
