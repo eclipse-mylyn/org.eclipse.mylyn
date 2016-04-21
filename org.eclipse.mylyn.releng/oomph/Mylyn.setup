@@ -1310,6 +1310,7 @@
           <buildPlan name="mylyn-tasks-nightly"/>
           <buildPlan name="mylyn-versions-nightly"/>
           <buildPlan name="mylyn-3.19.x-release"/>
+          <buildPlan name="mylyn-3.20.x-release"/>
           <buildPlan name="mylyn-integration"/>
           <buildPlan name="mylyn-integration-connectors"/>
       </setupTask>
@@ -1319,6 +1320,7 @@
           userID="${mylyn.org.id}"
           password="${mylyn.org.password}">
           <buildPlan name="mylyn-3.19.x"/>
+          <buildPlan name="mylyn-3.20.x"/>
           <buildPlan name="mylyn-all-snapshot"/>
           <buildPlan name="mylyn-builds-snapshot"/>
           <buildPlan name="mylyn-commons-snapshot"/>
