@@ -231,7 +231,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 *            the span type
 	 * @param elementName
 	 *            the element name to use in the generated HTML when emitting spans of the given type
-	 * @since 2.8
+	 * @since 2.9
 	 */
 	public void setElementNameOfSpanType(SpanType spanType, String elementName) {
 		checkNotNull(spanType, "Must provide spanType"); //$NON-NLS-1$
