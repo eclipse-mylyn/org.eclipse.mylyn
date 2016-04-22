@@ -93,6 +93,8 @@ public class HtmlLanguageBuilderTest {
 		HtmlLanguage language = builder.add(BlockType.PARAGRAPH)
 				.add(BlockType.CODE)
 				.add(SpanType.SUPERSCRIPT)
+				.add(SpanType.BOLD)
+				.addSubstitution(SpanType.BOLD, "bold")
 				.name("Test")
 				.create();
 		assertNotNull(language);
@@ -101,7 +103,7 @@ public class HtmlLanguageBuilderTest {
 
 		HtmlSubsetLanguage subsetLanguage = (HtmlSubsetLanguage) language;
 		assertEquals(ImmutableSet.of(BlockType.PARAGRAPH, BlockType.CODE), subsetLanguage.getSupportedBlockTypes());
-		assertEquals(ImmutableSet.of(SpanType.SUPERSCRIPT), subsetLanguage.getSupportedSpanTypes());
+		assertEquals(ImmutableSet.of(SpanType.SUPERSCRIPT, SpanType.BOLD), subsetLanguage.getSupportedSpanTypes());
 		assertEquals(0, subsetLanguage.getSupportedHeadingLevel());
 	}
 
@@ -143,6 +145,26 @@ public class HtmlLanguageBuilderTest {
 	public void addSpanType() {
 		assertNotNull(builder.add(SpanType.BOLD));
 		assertSame(builder, builder.add(SpanType.BOLD));
+	}
+
+	@Test
+	public void addSpanSubstitutionNullAlternative() {
+		thrown.expect(NullPointerException.class);
+		thrown.expectMessage("Must provide an alternativeTagName");
+		builder.addSubstitution(SpanType.BOLD, (String) null);
+	}
+
+	@Test
+	public void addSpanSubstitutionNullSpanType() {
+		thrown.expect(NullPointerException.class);
+		thrown.expectMessage("Must provide a spanType");
+		builder.addSubstitution((SpanType) null, "bold");
+	}
+
+	@Test
+	public void addSpanSubstitution() {
+		assertNotNull(builder.addSubstitution(SpanType.BOLD, "bold"));
+		assertSame(builder, builder.addSubstitution(SpanType.BOLD, "bold"));
 	}
 
 	@Test
@@ -239,6 +261,25 @@ public class HtmlLanguageBuilderTest {
 		builder.endDocument();
 
 		assertEquals("<span>test</span> <font color=\"purple\">inside font</font>", writer.toString());
+	}
+
+	@Test
+	public void spanSubstitution() {
+		StringWriter writer = new StringWriter();
+		HtmlLanguage language = builder.addSpanFont()
+				.add(SpanType.DELETED)
+				.addSubstitution(SpanType.DELETED, "strike")
+				.document("", "")
+				.name("Test")
+				.create();
+
+		DocumentBuilder builder = language.createDocumentBuilder(writer);
+		builder.beginDocument();
+		builder.beginSpan(SpanType.DELETED, new Attributes());
+		builder.characters("test");
+		builder.endSpan();
+
+		assertEquals("<strike>test</strike>", writer.toString());
 	}
 
 	@Test

@@ -49,7 +49,8 @@ public class HtmlSubsetDocumentBuilderTest {
 		delegate.setEmitAsDocument(false);
 		builder = new HtmlSubsetDocumentBuilder(delegate);
 		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
-		builder.setSupportedSpanTypes(Sets.newHashSet(SpanType.BOLD), Collections.<SpanHtmlElementStrategy> emptyList());
+		builder.setSupportedSpanTypes(Sets.newHashSet(SpanType.BOLD),
+				Collections.<SpanHtmlElementStrategy> emptyList());
 		builder.setSupportedHeadingLevel(3);
 		builder.beginDocument();
 	}
@@ -316,14 +317,16 @@ public class HtmlSubsetDocumentBuilderTest {
 	public void testTableSupported() {
 		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.TABLE));
 		buildTable();
-		assertContent("<table><tr><td>test 0/0</td><td>test 1/0</td><td>test 2/0</td></tr><tr><td>test 0/1</td><td>test 1/1</td><td>test 2/1</td></tr></table>");
+		assertContent(
+				"<table><tr><td>test 0/0</td><td>test 1/0</td><td>test 2/0</td></tr><tr><td>test 0/1</td><td>test 1/1</td><td>test 2/1</td></tr></table>");
 	}
 
 	@Test
 	public void testTableUnsupported() {
 		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH));
 		buildTable();
-		assertContent("<p>test 0/0</p><p>test 1/0</p><p>test 2/0</p><br/><br/><p>test 0/1</p><p>test 1/1</p><p>test 2/1</p>");
+		assertContent(
+				"<p>test 0/0</p><p>test 1/0</p><p>test 2/0</p><br/><br/><p>test 0/1</p><p>test 1/1</p><p>test 2/1</p>");
 	}
 
 	@Test
@@ -436,13 +439,15 @@ public class HtmlSubsetDocumentBuilderTest {
 
 	@Test
 	public void supportedSpanTypes() {
-		builder.setSupportedSpanTypes(Sets.newHashSet(SpanType.BOLD), Collections.<SpanHtmlElementStrategy> emptyList());
+		builder.setSupportedSpanTypes(Sets.newHashSet(SpanType.BOLD),
+				Collections.<SpanHtmlElementStrategy> emptyList());
 		assertSame(SupportedSpanStrategy.instance, builder.pushSpanStrategy(SpanType.BOLD, new Attributes()));
 	}
 
 	@Test
 	public void unsupportedSpanTypes() {
-		builder.setSupportedSpanTypes(Sets.newHashSet(SpanType.BOLD), Collections.<SpanHtmlElementStrategy> emptyList());
+		builder.setSupportedSpanTypes(Sets.newHashSet(SpanType.BOLD),
+				Collections.<SpanHtmlElementStrategy> emptyList());
 		assertNotNull(builder.pushSpanStrategy(SpanType.EMPHASIS, new Attributes()));
 	}
 
@@ -631,8 +636,6 @@ public class HtmlSubsetDocumentBuilderTest {
 		builder.setSupportedSpanTypes(Sets.newHashSet(SpanType.BOLD),
 				Lists.<SpanHtmlElementStrategy> newArrayList(new FontElementStrategy()));
 
-		Attributes spanAttributes = new Attributes();
-		spanAttributes.setCssStyle("color: blue;");
 		builder.beginSpan(SpanType.SPAN, new Attributes(null, null, "color: blue", null));
 		builder.characters("test");
 		builder.endSpan();
@@ -645,7 +648,19 @@ public class HtmlSubsetDocumentBuilderTest {
 		builder.characters("test2");
 		builder.endSpan();
 
-		assertContent("<font color=\"blue\">test</font> <font size=\"15pt\">test2</font> <font color=\"red\" size=\"16em\">test2</font>");
+		assertContent(
+				"<font color=\"blue\">test</font> <font size=\"15pt\">test2</font> <font color=\"red\" size=\"16em\">test2</font>");
+	}
+
+	@Test
+	public void spanSubstitution() {
+		builder.setElementNameOfSpanType(SpanType.BOLD, "new-bold");
+
+		builder.beginSpan(SpanType.BOLD, new Attributes());
+		builder.characters("text");
+		builder.endSpan();
+
+		assertContent("<new-bold>text</new-bold>");
 	}
 
 	@Test

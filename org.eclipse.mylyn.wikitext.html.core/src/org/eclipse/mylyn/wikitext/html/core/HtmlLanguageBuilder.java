@@ -17,18 +17,23 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.wikitext.html.core.FontElementStrategy;
 import org.eclipse.mylyn.internal.wikitext.html.core.HtmlSubsetLanguage;
 import org.eclipse.mylyn.internal.wikitext.html.core.LiteralHtmlDocumentHandler;
 import org.eclipse.mylyn.internal.wikitext.html.core.SpanHtmlElementStrategy;
+import org.eclipse.mylyn.wikitext.core.parser.Attributes;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentHandler;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 /**
@@ -44,6 +49,8 @@ public class HtmlLanguageBuilder {
 	private final Set<BlockType> blockTypes = Sets.newHashSet();
 
 	private final Set<SpanType> spanTypes = Sets.newHashSet();
+
+	private final Map<SpanType, String> spanTypeToElementNameSubstitution = Maps.newHashMap();
 
 	private final List<SpanHtmlElementStrategy> spanElementStrategies = new ArrayList<>();
 
@@ -100,6 +107,25 @@ public class HtmlLanguageBuilder {
 	 */
 	public HtmlLanguageBuilder add(SpanType spanType) {
 		spanTypes.add(checkNotNull(spanType, "Must provide a spanType")); //$NON-NLS-1$
+		return this;
+	}
+
+	/**
+	 * Adds to the syntax of the language created by this builder an {@code alternativeTagName} to be used when the
+	 * given {@link SpanType} is {@link DocumentBuilder#beginSpan(SpanType, Attributes) started}.
+	 *
+	 * @param spanType
+	 *            the span type
+	 * @param alternativeTagName
+	 *            the tag name to be used
+	 * @return this builder
+	 * @see HtmlDocumentBuilder#setElementNameOfSpanType(SpanType, String)
+	 * @since 2.8
+	 */
+	public HtmlLanguageBuilder addSubstitution(SpanType spanType, String alternativeTagName) {
+		checkNotNull(spanType, "Must provide a spanType"); //$NON-NLS-1$
+		checkNotNull(alternativeTagName, "Must provide an alternativeTagName"); //$NON-NLS-1$
+		spanTypeToElementNameSubstitution.put(spanType, alternativeTagName);
 		return this;
 	}
 
@@ -165,6 +191,6 @@ public class HtmlLanguageBuilder {
 		checkState(name != null, "Name must be provided to create an HtmlLanguage"); //$NON-NLS-1$
 
 		return new HtmlSubsetLanguage(name, documentHandler, headingLevel, blockTypes, spanTypes,
-				spanElementStrategies, xhtmlStrict);
+				spanTypeToElementNameSubstitution, spanElementStrategies, xhtmlStrict);
 	}
 }

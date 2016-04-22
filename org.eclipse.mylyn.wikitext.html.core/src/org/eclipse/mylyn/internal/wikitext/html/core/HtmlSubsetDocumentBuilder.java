@@ -62,6 +62,10 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 		spanStrategies = new SpanStrategies(spanTypes, spanElementStrategies);
 	}
 
+	public void setElementNameOfSpanType(SpanType spanType, String elementName) {
+		delegate.setElementNameOfSpanType(spanType, elementName);
+	}
+
 	void setSupportedHeadingLevel(int headingLevel) {
 		this.supportedHeadingLevel = headingLevel;
 	}
