@@ -8,6 +8,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     Torkild U. Resheim - Handle links when transforming, bug 325006
+ *     Jeremie Bresson - Bug 492302
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.parser.builder;
 
@@ -28,6 +29,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder.Stylesheet;
@@ -150,6 +152,23 @@ public class HtmlDocumentBuilderTest extends TestCase {
 		builder.setHtmlFilenameFormat("$1.html");
 		parser.parse("\"An URL\":http://example.com/one/two");
 		assertContainsPattern("<a href=\"http://example.com/one/two\">An URL</a>");
+	}
+
+	public void testHtmlLinkWithNullHref() {
+		//Bug 492302
+		LinkAttributes attributes = new LinkAttributes();
+		attributes.setId("lorem");
+		builder.link(attributes, null, "");
+		assertContainsPattern("<a id=\"lorem\"></a>");
+	}
+
+	public void testHtmlBeginSpanWithId() {
+		//Bug 492302
+		LinkAttributes attributes = new LinkAttributes();
+		attributes.setId("lorem");
+		builder.beginSpan(SpanType.LINK, attributes);
+		builder.endSpan();
+		assertContainsPattern("<a id=\"lorem\"></a>");
 	}
 
 	public void testSetHtmlFilenameFormat() {

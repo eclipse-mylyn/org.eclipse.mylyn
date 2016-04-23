@@ -8,6 +8,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *     Torkild U. Resheim - Handle links when transforming, bug 325006
+ *     Jeremie Bresson - Bug 492302
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.parser.builder;
 
@@ -1129,7 +1130,9 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * @see #getHtmlFilenameFormat()
 	 */
 	protected void emitAnchorHref(String href) {
-		writer.writeAttribute("href", makeUrlAbsolute(applyHtmlFilenameFormat(href))); //$NON-NLS-1$
+		if (href != null) {
+			writer.writeAttribute("href", makeUrlAbsolute(applyHtmlFilenameFormat(href))); //$NON-NLS-1$
+		}
 	}
 
 	/**
