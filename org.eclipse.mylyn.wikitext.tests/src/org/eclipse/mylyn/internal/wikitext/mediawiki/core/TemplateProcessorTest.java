@@ -42,6 +42,32 @@ public class TemplateProcessorTest extends TestCase {
 		assertEquals("one _expanded_ two", markup);
 	}
 
+	public void testBasicTemplateNoNamespace() {
+		//Bug 468237
+		Template template = new Template();
+		template.setName(":Test");
+		template.setTemplateMarkup("_expanded_");
+		markupLanguage.getTemplates().add(template);
+
+		TemplateProcessor templateProcessor = new TemplateProcessor(markupLanguage);
+
+		String markup = templateProcessor.processTemplates("one {{:Test}} two");
+		assertEquals("one _expanded_ two", markup);
+	}
+
+	public void testBasicTemplateOtherNamespace() {
+		//Bug 468237
+		Template template = new Template();
+		template.setName("Other:Test");
+		template.setTemplateMarkup("_expanded_");
+		markupLanguage.getTemplates().add(template);
+
+		TemplateProcessor templateProcessor = new TemplateProcessor(markupLanguage);
+
+		String markup = templateProcessor.processTemplates("one {{Other:Test}} two");
+		assertEquals("one _expanded_ two", markup);
+	}
+
 	public void testBasicTemplateNamedParameter() {
 		Template template = new Template();
 		template.setName("test");
