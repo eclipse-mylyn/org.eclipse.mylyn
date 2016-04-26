@@ -131,13 +131,7 @@
       <repositoryList
           name="Neon">
         <repository
-            url="http://download.eclipse.org/modeling/emf/emf/updates/2.12milestones/core"/>
-        <repository
-            url="http://download.eclipse.org/egit/updates"/>
-        <repository
-            url="http://download.eclipse.org/rt/ecf/latest/site.p2"/>
-        <repository
-            url="http://download.eclipse.org/tools/cdt/builds/neon/milestones"/>
+            url="http://download.eclipse.org/releases/staging"/>
         <repository
             url="http://download.eclipse.org/cbi/updates/license"/>
         <repository
@@ -145,7 +139,7 @@
         <repository
             url="http://download.eclipse.org/eclipse/updates/3.8"/>
         <repository
-            url="http://download.eclipse.org/tools/orbit/downloads/drops/S20151204220443/repository/"/>
+            url="http://download.eclipse.org/modeling/emf/cdo/orbit/latest-S/"/>
       </repositoryList>
       <repositoryList
           name="Mars">
