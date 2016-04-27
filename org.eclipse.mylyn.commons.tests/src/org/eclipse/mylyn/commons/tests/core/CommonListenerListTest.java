@@ -13,10 +13,10 @@ package org.eclipse.mylyn.commons.tests.core;
 
 import java.util.Iterator;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.commons.core.CommonListenerList;
 import org.eclipse.mylyn.commons.core.CommonListenerList.Notifier;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -93,7 +93,7 @@ public class CommonListenerListTest extends TestCase {
 			@Override
 			public void run(Listener listener) throws Exception {
 				// should cause listener to get removed
-				throw new LinkageError();
+				throw new LinkageError("Deliberately thrown by testNotifyException to check handling of LinkageError.");
 			}
 		});
 		assertFalse(list.iterator().hasNext());
