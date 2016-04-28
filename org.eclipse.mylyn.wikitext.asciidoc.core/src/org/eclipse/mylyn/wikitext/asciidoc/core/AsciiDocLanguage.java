@@ -20,6 +20,7 @@ import org.eclipse.mylyn.internal.wikitext.asciidoc.core.AsciiDocPreProcessor;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.CodeBlock;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.CommentBlock;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.HeadingBlock;
+import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.HorizontalRuleBlock;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.ListBlock;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.ParagraphBlock;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.PreformattedBlock;
@@ -123,6 +124,7 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 		CommentBlock commentBlock = new CommentBlock();
 		HeadingBlock headingBlock = new HeadingBlock();
 		CodeBlock codeBlock = new CodeBlock();
+		HorizontalRuleBlock hrBlock = new HorizontalRuleBlock();
 
 		blocks.add(titleLineBlock);
 		blocks.add(propertiesLineBlock);
@@ -131,6 +133,7 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 		blocks.add(headingBlock);
 		blocks.add(codeBlock);
 		blocks.add(commentBlock);
+		blocks.add(hrBlock);
 
 		paragraphBreakingBlocks.add(codeBlock);
 		paragraphBreakingBlocks.add(commentBlock);
