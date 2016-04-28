@@ -20,8 +20,9 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 /**
  * AsciiDoc atx style headings.
  *
- * @author Stefan Seelmann 
+ * @author Stefan Seelmann
  * @author Max Rydahl Andersen
+ * @author Jeremie Bresson
  */
 public class HeadingBlock extends Block {
 
@@ -49,7 +50,7 @@ public class HeadingBlock extends Block {
 		String closingGroup = matcher.group(4);
 
 		builder.beginHeading(level, new Attributes());
-		builder.characters(text);
+		getMarkupLanguage().emitMarkupLine(getParser(), state, matcher.start(2), text, 0);
 		if (closingGroup.length() > 0 && closingGroup.length() != level) {
 			builder.characters(matcher.group(3));
 			builder.characters(closingGroup);
