@@ -53,6 +53,7 @@
 <unit id="org.eclipse.ecf.filetransfer.httpclient4.ssl.source.feature.feature.group" version="1.1.0.v20151130-0157"/>
 <unit id="org.eclipse.ecf.filetransfer.ssl.feature.feature.group" version="1.1.0.v20151130-0157"/>
 <unit id="org.eclipse.ecf.filetransfer.ssl.source.feature.feature.group" version="1.1.0.v20151130-0157"/>
+<unit id="org.eclipse.equinox.concurrent" version="1.1.0.v20130327-1442"/>
 <unit id="org.eclipse.emf.ecore.feature.group" version="2.11.2.v20160208-0816"/>
 <unit id="org.eclipse.emf.ecore.source.feature.group" version="2.11.2.v20160208-0816"/>
 <unit id="org.eclipse.emf.common.feature.group" version="2.11.1.v20160208-0816"/>
