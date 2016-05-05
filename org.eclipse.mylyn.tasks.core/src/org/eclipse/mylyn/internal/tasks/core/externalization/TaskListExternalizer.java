@@ -19,10 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -48,12 +45,16 @@ import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.ITransferList;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryModel;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.XmlReaderUtil;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
 /**
  * @author Mik Kersten
@@ -76,28 +77,18 @@ public class TaskListExternalizer {
 	// Mylyn 3.0
 	private static final String VALUE_VERSION = "2.0"; //$NON-NLS-1$
 
-	// Mylyn 2.3.2
-	//private static final String VALUE_VERSION_1_0_1 = "1.0.1";
-
-	private static final String VALUE_VERSION_1_0_0 = "1.0.0"; //$NON-NLS-1$
-
 	private final DelegatingTaskExternalizer delegatingExternalizer;
 
-	private final List<Node> orphanedNodes = new ArrayList<Node>();
+	private final RepositoryModel repositoryModel;
 
-	private Document orphanedDocument;
+	private final IRepositoryManager repositoryManager;
 
-	private String readVersion = ""; //$NON-NLS-1$
+	private Document orphanDocument;
 
 	public TaskListExternalizer(RepositoryModel repositoryModel, IRepositoryManager repositoryManager) {
+		this.repositoryModel = repositoryModel;
+		this.repositoryManager = repositoryManager;
 		this.delegatingExternalizer = new DelegatingTaskExternalizer(repositoryModel, repositoryManager);
-		try {
-			this.orphanedDocument = createDocument();
-		} catch (CoreException e) {
-			this.orphanedDocument = null;
-			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-					"Failed to create document for orphaned nodes", e)); //$NON-NLS-1$
-		}
 	}
 
 	public void initialize(List<AbstractTaskListMigrator> migrators) {
@@ -155,10 +146,14 @@ public class TaskListExternalizer {
 		}
 
 		// Persist orphaned tasks...
-		for (Node node : orphanedNodes) {
-			Node tempNode = doc.importNode(node, true);
-			if (tempNode != null) {
-				root.appendChild(tempNode);
+		if (orphanDocument != null) {
+			NodeList orphans = orphanDocument.getDocumentElement().getChildNodes();
+			for (int i = 0; i < orphans.getLength(); i++) {
+				Node node = orphans.item(i);
+				Node tempNode = doc.importNode(node, true);
+				if (tempNode != null) {
+					root.appendChild(tempNode);
+				}
 			}
 		}
 
@@ -189,8 +184,8 @@ public class TaskListExternalizer {
 			db = dbf.newDocumentBuilder();
 			return db.newDocument();
 		} catch (ParserConfigurationException e) {
-			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-					"Failed to create document", e)); //$NON-NLS-1$
+			throw new CoreException(
+					new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Failed to create document", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -204,106 +199,23 @@ public class TaskListExternalizer {
 					"Task list file contains no data \"" + inFile.getAbsolutePath() + "\"")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
-		delegatingExternalizer.reset();
-		orphanedNodes.clear();
-		try {
-			this.orphanedDocument = createDocument();
-		} catch (CoreException e) {
-			this.orphanedDocument = null;
-			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-					"Failed to create document for orphaned nodes", e)); //$NON-NLS-1$
-		}
-
-		Document doc = openTaskList(inFile);
-		Element root = doc.getDocumentElement();
-		readVersion = root.getAttribute(ATTRIBUTE_VERSION);
-		if (readVersion.equals(VALUE_VERSION_1_0_0)) {
-			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Task list version \"" //$NON-NLS-1$
-					+ readVersion + "\" not supported")); //$NON-NLS-1$
-		}
-
-		NodeList list = root.getChildNodes();
-
-		// read tasks
-		Map<AbstractTask, NodeList> tasksWithSubtasks = new HashMap<AbstractTask, NodeList>();
-		for (int i = 0; i < list.getLength(); i++) {
-			Node child = list.item(i);
-			if (!child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_CATEGORY)
-					&& !child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_QUERY)) {
-				AbstractTask task = delegatingExternalizer.readTask(child, null, null);
-				if (task != null) {
-					taskList.addTask(task);
-					if (child.getChildNodes() != null && child.getChildNodes().getLength() > 0) {
-						tasksWithSubtasks.put(task, child.getChildNodes());
-					}
-				} else {
-					addOrphan(child);
-				}
-			}
-		}
-		// create subtask hierarchy
-		for (AbstractTask task : tasksWithSubtasks.keySet()) {
-			NodeList nodes = tasksWithSubtasks.get(task);
-			delegatingExternalizer.readTaskReferences(task, nodes, taskList);
-		}
-
-		// read queries
-		for (int i = 0; i < list.getLength(); i++) {
-			Node child = list.item(i);
-			if (child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_QUERY)) {
-				RepositoryQuery query = delegatingExternalizer.readQuery(child);
-				if (query != null) {
-					taskList.addQuery(query);
-					if (child.getChildNodes() != null && child.getChildNodes().getLength() > 0) {
-						delegatingExternalizer.readTaskReferences(query, child.getChildNodes(), taskList);
-					}
-				} else {
-					addOrphan(child);
-				}
-			}
-		}
-
-		// Read Categories
-		for (int i = 0; i < list.getLength(); i++) {
-			Node child = list.item(i);
-			if (child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_CATEGORY)) {
-				delegatingExternalizer.readCategory(child, taskList);
-			}
-		}
-
-		// Legacy migration for task nodes that have the old Category handle on the element
-		Map<AbstractTask, String> legacyParentCategoryMap = delegatingExternalizer.getLegacyParentCategoryMap();
-		if (legacyParentCategoryMap.size() > 0) {
-			for (AbstractTask task : legacyParentCategoryMap.keySet()) {
-				AbstractTaskCategory category = taskList.getContainerForHandle(legacyParentCategoryMap.get(task));
-				if (category != null) {
-					taskList.addTask(task, category);
-				}
-			}
-		}
-
-//		if (delegatingExternalizer.getErrorStatus() != null) {
-//			StatusHandler.log(delegatingExternalizer.getErrorStatus());
-//		}
-	}
-
-	private void addOrphan(Node child) {
-		// copy node to separate document to avoid retaining entire dom
-		if (orphanedDocument != null) {
-			orphanedNodes.add(orphanedDocument.importNode(child, true));
-		} else {
-			orphanedNodes.add(child);
+		try (InputStream taskListFile = openTaskList(inFile)) {
+			XMLReader reader = XmlReaderUtil.createXmlReader();
+			SaxTaskListHandler handler = new SaxTaskListHandler(taskList, repositoryModel, repositoryManager);
+			reader.setContentHandler(handler);
+			reader.parse(new InputSource(taskListFile));
+			this.orphanDocument = handler.getOrphans();
+		} catch (SAXException | IOException e) {
+			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, e.getMessage(), e));
 		}
 	}
 
 	/**
-	 * Opens the specified XML file and parses it into a DOM Document. Filename - the name of the file to open Return -
-	 * the Document built from the XML file Throws - XMLException if the file cannot be parsed as XML - IOException if
-	 * the file cannot be opened
-	 * 
+	 * Opens the specified XML file
+	 *
 	 * @throws CoreException
 	 */
-	private Document openTaskList(File inputFile) throws CoreException {
+	private InputStream openTaskList(File inputFile) throws CoreException {
 		InputStream in = null;
 		try {
 			if (inputFile.getName().endsWith(ITasksCoreConstants.FILE_EXTENSION)) {
@@ -323,20 +235,9 @@ public class TaskListExternalizer {
 				in = new FileInputStream(inputFile);
 			}
 
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			return builder.parse(in);
+			return in;
 		} catch (Exception e) {
 			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, ERROR_TASKLIST_READ, e));
-		} finally {
-			if (in != null) {
-				try {
-					in.close();
-				} catch (IOException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-							"Failed to close task list", e)); //$NON-NLS-1$
-				}
-			}
 		}
 	}
 
