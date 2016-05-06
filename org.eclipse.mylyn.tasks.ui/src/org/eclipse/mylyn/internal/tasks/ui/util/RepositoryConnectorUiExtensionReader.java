@@ -111,8 +111,8 @@ public class RepositoryConnectorUiExtensionReader {
 				InputStream brandingImageData = branding.getBrandingImageData();
 				if (brandingImageData != null) {
 					try {
-						((BrandManager) TasksUiPlugin.getDefault().getBrandManager()).addDefaultBrandingIcon(
-								connector.getConnectorKind(), getImage(brandingImageData));
+						((BrandManager) TasksUiPlugin.getDefault().getBrandManager())
+								.addDefaultBrandingIcon(connector.getConnectorKind(), getImage(brandingImageData));
 					} finally {
 						closeQuietly(brandingImageData);
 					}
@@ -130,8 +130,8 @@ public class RepositoryConnectorUiExtensionReader {
 
 			@Override
 			public void handleException(Throwable e) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
-						"Loading of connector ui for kind ''{0}'' failed.", connector.getConnectorKind()), e)); //$NON-NLS-1$
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						NLS.bind("Loading of connector ui for kind ''{0}'' failed.", connector.getConnectorKind()), e)); //$NON-NLS-1$
 			}
 		});
 	}
@@ -166,8 +166,8 @@ public class RepositoryConnectorUiExtensionReader {
 					}
 				}
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
-						"Loading of brand '{0}' for kind '{1}' failed.", brand, connectorKind), e)); //$NON-NLS-1$
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						NLS.bind("Loading of brand ''{0}'' for kind ''{1}'' failed.", brand, connectorKind), e)); //$NON-NLS-1$
 			}
 		}
 	}
@@ -226,8 +226,8 @@ public class RepositoryConnectorUiExtensionReader {
 
 					String iconPath = element.getAttribute(ATTR_BRANDING_ICON);
 					if (iconPath != null) {
-						ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(
-								element.getContributor().getName(), iconPath);
+						ImageDescriptor descriptor = AbstractUIPlugin
+								.imageDescriptorFromPlugin(element.getContributor().getName(), iconPath);
 						if (descriptor != null) {
 							((BrandManager) TasksUiPlugin.getDefault().getBrandManager()).addDefaultBrandingIcon(
 									connectorUi.getConnectorKind(), CommonImages.getImage(descriptor));
@@ -235,11 +235,11 @@ public class RepositoryConnectorUiExtensionReader {
 					}
 					String overlayIconPath = element.getAttribute(ATTR_OVERLAY_ICON);
 					if (overlayIconPath != null) {
-						ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(
-								element.getContributor().getName(), overlayIconPath);
+						ImageDescriptor descriptor = AbstractUIPlugin
+								.imageDescriptorFromPlugin(element.getContributor().getName(), overlayIconPath);
 						if (descriptor != null) {
-							((BrandManager) TasksUiPlugin.getDefault().getBrandManager()).addDefaultOverlayIcon(
-									connectorUi.getConnectorKind(), descriptor);
+							((BrandManager) TasksUiPlugin.getDefault().getBrandManager())
+									.addDefaultOverlayIcon(connectorUi.getConnectorKind(), descriptor);
 						}
 					}
 
@@ -248,11 +248,9 @@ public class RepositoryConnectorUiExtensionReader {
 						addBranding(connector.getConnectorKind(), branding);
 					}
 				} else {
-					StatusHandler.log(new Status(
-							IStatus.ERROR,
-							TasksUiPlugin.ID_PLUGIN,
-							NLS.bind(
-									"Ignoring connector ui for kind ''{0}'' without corresponding core contributed by ''{1}''.", connectorUi.getConnectorKind(), element.getContributor().getName()))); //$NON-NLS-1$
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
+							"Ignoring connector ui for kind ''{0}'' without corresponding core contributed by ''{1}''.", //$NON-NLS-1$
+							connectorUi.getConnectorKind(), element.getContributor().getName())));
 				}
 			} else {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load connector ui " //$NON-NLS-1$
