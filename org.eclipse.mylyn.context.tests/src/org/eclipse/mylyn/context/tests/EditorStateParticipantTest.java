@@ -21,8 +21,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.util.Arrays;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -34,6 +32,8 @@ import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 import org.eclipse.mylyn.internal.context.ui.state.ContextState;
 import org.eclipse.mylyn.internal.context.ui.state.EditorStateParticipant;
+import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
@@ -43,6 +43,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.XMLMemento;
 import org.eclipse.ui.internal.WorkbenchPage;
 import org.eclipse.ui.part.FileEditorInput;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -135,8 +137,8 @@ public class EditorStateParticipantTest extends TestCase {
 	public void testRestoreState_3_7() throws Exception {
 		createFiles();
 
-		XMLMemento memento = XMLMemento.createReadRoot(new InputStreamReader(CommonTestUtil.getResource(this,
-				"testdata/EditorStateParticipantTest/state-3.7.xml")));
+		XMLMemento memento = XMLMemento.createReadRoot(new InputStreamReader(
+				CommonTestUtil.getResource(this, "testdata/EditorStateParticipantTest/state-3.7.xml")));
 		IInteractionContext context = new InteractionContext("id", new InteractionContextScaling());
 		ContextState state = new ContextState(context, context.getHandleIdentifier(), memento);
 		participant.restoreState(state);
@@ -150,8 +152,8 @@ public class EditorStateParticipantTest extends TestCase {
 	public void testRestoreState_4_1() throws Exception {
 		createFiles();
 
-		XMLMemento memento = XMLMemento.createReadRoot(new InputStreamReader(CommonTestUtil.getResource(this,
-				"testdata/EditorStateParticipantTest/state-4.1.xml")));
+		XMLMemento memento = XMLMemento.createReadRoot(new InputStreamReader(
+				CommonTestUtil.getResource(this, "testdata/EditorStateParticipantTest/state-4.1.xml")));
 		IInteractionContext context = new InteractionContext("id", new InteractionContextScaling());
 		ContextState state = new ContextState(context, context.getHandleIdentifier(), memento);
 		participant.restoreState(state);
@@ -169,13 +171,15 @@ public class EditorStateParticipantTest extends TestCase {
 	}
 
 	public void testRestoreStateRetainState() throws Exception {
+		waitForMylynMonitorToStart();
 		createFiles();
 
 		exceptionOnSave = new RuntimeException("Injected error to cause editor save to fail");
 
 		XMLMemento memento = XMLMemento.createReadRoot(
-				new InputStreamReader(CommonTestUtil.getResource(this,
-						"testdata/EditorStateParticipantTest/state-3.7.xml")), "UTF-8");
+				new InputStreamReader(
+						CommonTestUtil.getResource(this, "testdata/EditorStateParticipantTest/state-3.7.xml")),
+				"UTF-8");
 		IInteractionContext context = new InteractionContext("id", new InteractionContextScaling());
 		ContextState state = new ContextState(context, context.getHandleIdentifier(), memento);
 		participant.restoreState(state);
@@ -183,6 +187,12 @@ public class EditorStateParticipantTest extends TestCase {
 		ContextState state2 = new ContextState(context, context.getHandleIdentifier(), memento2);
 		participant.saveState(state2, true);
 		assertEquals(toString(memento), toString(memento2));
+	}
+
+	private void waitForMylynMonitorToStart() {
+		MonitorUiPlugin.getDefault();
+		while (Display.getCurrent().readAndDispatch()) {
+		}
 	}
 
 	public void testNoEditorsState() throws Exception {
@@ -193,8 +203,8 @@ public class EditorStateParticipantTest extends TestCase {
 			IsEmptyOutputStream os = new IsEmptyOutputStream();
 			System.setErr(new PrintStream(os));
 
-			XMLMemento memento = XMLMemento.createReadRoot(new InputStreamReader(CommonTestUtil.getResource(this,
-					"testdata/EditorStateParticipantTest/state-noEditors.xml")));
+			XMLMemento memento = XMLMemento.createReadRoot(new InputStreamReader(
+					CommonTestUtil.getResource(this, "testdata/EditorStateParticipantTest/state-noEditors.xml")));
 			IInteractionContext context = new InteractionContext("id", new InteractionContextScaling());
 			ContextState state = new ContextState(context, context.getHandleIdentifier(), memento);
 			participant.restoreState(state);
@@ -230,7 +240,7 @@ public class EditorStateParticipantTest extends TestCase {
 
 		IEditorInput[] inputs;
 		if (CommonTestUtil.isEclipse4()) {
-			// on 3.x openEditors() opens editors starting from the first index			
+			// on 3.x openEditors() opens editors starting from the first index
 			inputs = new IEditorInput[] { new FileEditorInput(fileB), new FileEditorInput(fileA) };
 		} else {
 			// on 3.x openEditors() opens editors starting from the last index

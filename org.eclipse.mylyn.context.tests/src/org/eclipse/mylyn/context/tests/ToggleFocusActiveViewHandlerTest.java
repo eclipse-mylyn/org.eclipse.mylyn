@@ -27,7 +27,7 @@ public class ToggleFocusActiveViewHandlerTest extends AbstractResourceContextTes
 
 		assertTrue(!action.isChecked());
 
-		IHandlerService hs = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
+		IHandlerService hs = PlatformUI.getWorkbench().getService(IHandlerService.class);
 		assertNotNull(hs);
 
 		hs.executeCommand("org.eclipse.mylyn.context.ui.commands.toggle.focus.active.view", null);
