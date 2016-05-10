@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
- *     Guy Perron - add Windows support  
+ *     Guy Perron - add Windows support
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.sdk.util;
@@ -23,13 +23,13 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
-import junit.framework.AssertionFailedError;
-
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.osgi.util.NLS;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import junit.framework.AssertionFailedError;
 
 /**
  * @author Steffen Pingel
@@ -114,11 +114,12 @@ public class TestConfiguration {
 
 	public <T> List<T> discover(Class<T> clazz, String fixtureType, boolean defaultOnly) {
 		List<T> fixtures = Collections.emptyList();
+		Exception[] exception = new Exception[1];
 
 		if (!CommonTestUtil.ignoreLocalTestServices()) {
 			try {
 				File file = CommonTestUtil.getFile(clazz, "local.json");
-				fixtures = discover(file.toURI().toASCIIString(), "", clazz, fixtureType, defaultOnly);
+				fixtures = discover(file.toURI().toASCIIString(), "", clazz, fixtureType, defaultOnly, exception);
 			} catch (AssertionFailedError e) {
 				// ignore
 			} catch (IOException e) {
@@ -127,27 +128,29 @@ public class TestConfiguration {
 
 			if (fixtures.isEmpty()) {
 				fixtures = discover(URL_SERVICES_LOCALHOST + "/cgi-bin/services", URL_SERVICES_LOCALHOST, clazz,
-						fixtureType, defaultOnly);
+						fixtureType, defaultOnly, exception);
 			}
 		}
 		if (fixtures.isEmpty()) {
 			fixtures = discover(URL_SERVICES_DEFAULT + "/cgi-bin/services", URL_SERVICES_DEFAULT, clazz, fixtureType,
-					defaultOnly);
+					defaultOnly, exception);
 		}
 
 		if (fixtures.isEmpty()) {
-			throw new RuntimeException(NLS.bind(
-					"Failed to discover any fixtures for kind {0} with defaultOnly={1} ({2} and {3})", new Object[] {
-							fixtureType, Boolean.toString(defaultOnly), URL_SERVICES_LOCALHOST, URL_SERVICES_DEFAULT }));
+			throw new RuntimeException(
+					NLS.bind("Failed to discover any fixtures for kind {0} with defaultOnly={1} ({2} and {3})",
+							new Object[] { fixtureType, Boolean.toString(defaultOnly), URL_SERVICES_LOCALHOST,
+									URL_SERVICES_DEFAULT }),
+					exception[0]);
 		}
 
 		return fixtures;
 	}
 
 	private static <T> List<T> discover(String location, String baseUrl, Class<T> clazz, String fixtureType,
-			boolean defaultOnly) {
+			boolean defaultOnly, Exception[] result) {
 		Assert.isNotNull(fixtureType);
-		List<FixtureConfiguration> configurations = getConfigurations(location);
+		List<FixtureConfiguration> configurations = getConfigurations(location, result);
 		if (configurations != null) {
 			for (FixtureConfiguration configuration : configurations) {
 				if (configuration != null) {
@@ -164,9 +167,9 @@ public class TestConfiguration {
 		List<T> result = new ArrayList<T>();
 		String defaultOverwriteUrl = System.getProperty("mylyn.tests.configuration.url", "");
 		for (FixtureConfiguration configuration : configurations) {
-			if (configuration != null
-					&& fixtureType.equals(configuration.getType())
-					&& (!defaultOnly || (defaultOverwriteUrl.equals("") && configuration.isDefault()) || (configuration.url.equals(defaultOverwriteUrl)))) {
+			if (configuration != null && fixtureType.equals(configuration.getType())
+					&& (!defaultOnly || (defaultOverwriteUrl.equals("") && configuration.isDefault())
+							|| (configuration.url.equals(defaultOverwriteUrl)))) {
 				try {
 					Constructor<T> constructor = clazz.getConstructor(FixtureConfiguration.class);
 					result.add(constructor.newInstance(configuration));
@@ -178,7 +181,7 @@ public class TestConfiguration {
 		return result;
 	}
 
-	private static List<FixtureConfiguration> getConfigurations(String url) {
+	private static List<FixtureConfiguration> getConfigurations(String url, Exception[] result) {
 		try {
 			URLConnection connection = new URL(url).openConnection();
 			InputStreamReader in = new InputStreamReader(connection.getInputStream());
@@ -190,6 +193,7 @@ public class TestConfiguration {
 				in.close();
 			}
 		} catch (IOException e) {
+			result[0] = e;
 			return null;
 		}
 	}
