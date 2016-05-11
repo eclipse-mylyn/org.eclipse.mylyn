@@ -1286,50 +1286,80 @@
         label="Master"/>
     <description></description>
   </project>
-  <project
-        label="Builds for All Mylyn Projects">
-      <setupTask
-          xsi:type="mylyn:MylynBuildsTask"
-          serverURL="https://hudson.eclipse.org/mylyn"
-          userID="${bugzilla.id}"
-          password="${eclipse.user.password}">
-          <buildPlan name="connectivity-mylyn.org"/>
-          <buildPlan name="mylyn-builds-nightly"/>
-          <buildPlan name="mylyn-commons-nightly"/>
-          <buildPlan name="mylyn-context-nightly"/>
-          <buildPlan name="mylyn-docs-nightly"/>
-          <buildPlan name="mylyn-incubator-nightly"/>
-          <buildPlan name="mylyn-reviews-nightly"/>
-          <buildPlan name="mylyn-snapshot-publish"/>
-          <buildPlan name="mylyn-tasks-nightly"/>
-          <buildPlan name="mylyn-versions-nightly"/>
-          <buildPlan name="mylyn-3.19.x-release"/>
-          <buildPlan name="mylyn-3.20.x-release"/>
-          <buildPlan name="mylyn-integration"/>
-          <buildPlan name="mylyn-integration-connectors"/>
-      </setupTask>
-      <setupTask
-          xsi:type="mylyn:MylynBuildsTask"
-          serverURL="http://ci.mylyn.org"
-          userID="${mylyn.org.id}"
-          password="${mylyn.org.password}">
-          <buildPlan name="mylyn-3.19.x"/>
-          <buildPlan name="mylyn-3.20.x"/>
-          <buildPlan name="mylyn-all-snapshot"/>
-          <buildPlan name="mylyn-builds-snapshot"/>
-          <buildPlan name="mylyn-commons-snapshot"/>
-          <buildPlan name="mylyn-context-snapshot"/>
-          <buildPlan name="mylyn-docs-snapshot"/>
-          <buildPlan name="mylyn-incubator-snapshot"/>
-          <buildPlan name="mylyn-reviews-snapshot"/>
-          <buildPlan name="mylyn-tasks-snapshot"/>
-          <buildPlan name="mylyn-versions-snapshot"/>
-          <buildPlan name="update-simrel-contribution"/>
-          <buildPlan name="mylyn-puppet"/>
-          <buildPlan name="mylyn-puppet-bugzilla"/>
-          <buildPlan name="mylyn-puppet-gerrit"/>
-          <buildPlan name="mylyn-puppet-hudson"/>
-      </setupTask>
+  <project name="all.builds"
+      label="Builds for All Mylyn Projects">
+    <setupTask
+        xsi:type="mylyn:MylynBuildsTask"
+        serverURL="https://hudson.eclipse.org/mylyn"
+        userID="${bugzilla.id}"
+        password="${eclipse.user.password}">
+      <buildPlan
+          name="connectivity-mylyn.org"/>
+      <buildPlan
+          name="mylyn-builds-nightly"/>
+      <buildPlan
+          name="mylyn-commons-nightly"/>
+      <buildPlan
+          name="mylyn-context-nightly"/>
+      <buildPlan
+          name="mylyn-docs-nightly"/>
+      <buildPlan
+          name="mylyn-incubator-nightly"/>
+      <buildPlan
+          name="mylyn-reviews-nightly"/>
+      <buildPlan
+          name="mylyn-snapshot-publish"/>
+      <buildPlan
+          name="mylyn-tasks-nightly"/>
+      <buildPlan
+          name="mylyn-versions-nightly"/>
+      <buildPlan
+          name="mylyn-3.19.x-release"/>
+      <buildPlan
+          name="mylyn-3.20.x-release"/>
+      <buildPlan
+          name="mylyn-integration"/>
+      <buildPlan
+          name="mylyn-integration-connectors"/>
+    </setupTask>
+    <setupTask
+        xsi:type="mylyn:MylynBuildsTask"
+        serverURL="http://ci.mylyn.org"
+        userID="${mylyn.org.id}"
+        password="${mylyn.org.password}">
+      <buildPlan
+          name="mylyn-3.19.x"/>
+      <buildPlan
+          name="mylyn-3.20.x"/>
+      <buildPlan
+          name="mylyn-all-snapshot"/>
+      <buildPlan
+          name="mylyn-builds-snapshot"/>
+      <buildPlan
+          name="mylyn-commons-snapshot"/>
+      <buildPlan
+          name="mylyn-context-snapshot"/>
+      <buildPlan
+          name="mylyn-docs-snapshot"/>
+      <buildPlan
+          name="mylyn-incubator-snapshot"/>
+      <buildPlan
+          name="mylyn-reviews-snapshot"/>
+      <buildPlan
+          name="mylyn-tasks-snapshot"/>
+      <buildPlan
+          name="mylyn-versions-snapshot"/>
+      <buildPlan
+          name="update-simrel-contribution"/>
+      <buildPlan
+          name="mylyn-puppet"/>
+      <buildPlan
+          name="mylyn-puppet-bugzilla"/>
+      <buildPlan
+          name="mylyn-puppet-gerrit"/>
+      <buildPlan
+          name="mylyn-puppet-hudson"/>
+    </setupTask>
     <stream
         name="master"
         label="Master"/>
