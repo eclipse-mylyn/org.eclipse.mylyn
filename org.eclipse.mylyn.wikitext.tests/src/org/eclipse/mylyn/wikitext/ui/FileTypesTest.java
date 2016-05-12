@@ -13,11 +13,14 @@ package org.eclipse.mylyn.wikitext.ui;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Optional;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor;
 import org.eclipse.mylyn.internal.wikitext.ui.registry.WikiTextExtensionPointReader;
 import org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage;
@@ -27,15 +30,17 @@ import org.eclipse.mylyn.wikitext.tests.HeadRequired;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 import org.eclipse.mylyn.wikitext.tracwiki.core.TracWikiLanguage;
 import org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage;
+import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.part.FileEditorInput;
 
 /**
  * A test that runs in the Eclipse UI that verifies that registered file types make sense.
- * 
+ *
  * @author David Green
  */
 @HeadRequired
@@ -62,7 +67,7 @@ public class FileTypesTest extends AbstractTestInWorkspace {
 
 		// open the editor
 		IWorkbenchPage workbenchPage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		IEditorPart editor = IDE.openEditor(workbenchPage, file);
+		IEditorPart editor = openEditor(workbenchPage, file);
 		assertInstanceOf(MarkupEditor.class, editor);
 		MarkupEditor markupEditor = (MarkupEditor) editor;
 		assertInstanceOf(TextileLanguage.class, markupEditor.getMarkupLanguage());
@@ -75,7 +80,7 @@ public class FileTypesTest extends AbstractTestInWorkspace {
 		workbenchPage.closeEditor(editor, false);
 
 		// open the editor
-		editor = IDE.openEditor(workbenchPage, file);
+		editor = openEditor(workbenchPage, file);
 		markupEditor = (MarkupEditor) editor;
 
 		// verify the language setting is the same
@@ -111,10 +116,31 @@ public class FileTypesTest extends AbstractTestInWorkspace {
 	}
 
 	private void editorAsserts(IFile file, Class<?> markupLanguageClass) throws PartInitException {
-		IEditorPart editor = IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), file);
-		assertInstanceOf(MarkupEditor.class, editor);
+		IEditorPart editor = openEditor(file);
 		MarkupEditor markupEditor = (MarkupEditor) editor;
 		assertInstanceOf(markupLanguageClass, markupEditor.getMarkupLanguage());
+	}
+
+	private IEditorPart openEditor(IFile file) throws PartInitException {
+		IWorkbenchPage workbenchPage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+
+		return openEditor(workbenchPage, file);
+	}
+
+	private IEditorPart openEditor(IWorkbenchPage workbenchPage, IFile file) throws PartInitException {
+		IContentType contentType = IDE.getContentType(file);
+		IEditorDescriptor[] editorDescriptors = PlatformUI.getWorkbench().getEditorRegistry().getEditors(file.getName(),
+				contentType);
+		Optional<IEditorDescriptor> editorDescriptor = Arrays.asList(editorDescriptors)
+				.stream()
+				.filter(descriptor -> descriptor.getId().equals("org.eclipse.mylyn.wikitext.ui.editor.markupEditor"))
+				.findFirst();
+		assertTrue(format("Expected wikitext editor to be registered for file {0} of content type {1}", file.getName(),
+				contentType), editorDescriptor.isPresent());
+
+		IEditorPart editor = workbenchPage.openEditor(new FileEditorInput(file), editorDescriptor.get().getId());
+		assertInstanceOf(MarkupEditor.class, editor);
+		return editor;
 	}
 
 	private void assertInstanceOf(Class<?> clazz, Object o) {
