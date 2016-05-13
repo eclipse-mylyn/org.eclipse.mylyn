@@ -48,6 +48,8 @@
          <template name="'" description="%template.single-quote" content="`${text}'" />
          <template name="''" description="%template.double-quote" content="``${text}''" />
          <template name="sourceinclude" description="%template.sourceinclude"  content="[source, ${language}]\n----\ninclude::${file}[]\n----\n" block="true"/>
+         <template name="button" description="%template.button" content="btn:[${OK}]"     block="true"/>
+         <template name="menu" description="%template.menu" content="menu:${File}[${New}]" block="true"/>
 
       </templates>
    </extension>
