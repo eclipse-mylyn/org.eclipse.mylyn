@@ -34,14 +34,11 @@ import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryMigrator;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
 import org.eclipse.mylyn.tasks.core.spi.RepositoryConnectorContributor;
 import org.eclipse.mylyn.tasks.core.spi.RepositoryConnectorDescriptor;
 import org.eclipse.osgi.util.NLS;
 
 public class RepositoryConnectorExtensionReader {
-
-	public static final String ELMNT_MIGRATOR = "taskListMigrator"; //$NON-NLS-1$
 
 	public static final String ELMNT_REPOSITORY_MIGRATOR = "repositoryMigrator"; //$NON-NLS-1$
 
@@ -59,8 +56,6 @@ public class RepositoryConnectorExtensionReader {
 	private static class ConnectorFactory {
 
 		private AbstractRepositoryConnector connector;
-
-		private AbstractTaskListMigrator taskListMigrator;
 
 		private AbstractRepositoryMigrator repositoryMigrator;
 
@@ -87,10 +82,6 @@ public class RepositoryConnectorExtensionReader {
 			return pluginId;
 		}
 
-		public AbstractTaskListMigrator getTaskListMigrator() {
-			return taskListMigrator;
-		}
-
 		public AbstractRepositoryMigrator getRepositoryMigrator() {
 			return repositoryMigrator;
 		}
@@ -102,26 +93,12 @@ public class RepositoryConnectorExtensionReader {
 				if (connector != null) {
 					return Status.OK_STATUS;
 				} else {
-					return new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
-							"Could not load connector core contributed by ''{0}''", getPluginId())); //$NON-NLS-1$
+					return new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+							NLS.bind("Could not load connector core contributed by ''{0}''", getPluginId())); //$NON-NLS-1$
 				}
 			} catch (Throwable e) {
-				return new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
-						"Could not load connector core contributed by ''{0}''", getPluginId()), e); //$NON-NLS-1$
-			}
-		}
-
-		public IStatus createTaskListMigrator() {
-			try {
-				taskListMigrator = descriptor.createTaskListMigrator();
-				if (taskListMigrator != null) {
-					return Status.OK_STATUS;
-				} else {
-					return Status.CANCEL_STATUS;
-				}
-			} catch (Throwable e) {
-				return new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
-						"Could not load task list migrator extension contributed by ''{0}''", getPluginId()), e); //$NON-NLS-1$
+				return new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+						NLS.bind("Could not load connector core contributed by ''{0}''", getPluginId()), e); //$NON-NLS-1$
 			}
 		}
 
@@ -135,8 +112,9 @@ public class RepositoryConnectorExtensionReader {
 					return Status.CANCEL_STATUS;
 				}
 			} catch (Throwable e) {
-				return new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
-						"Could not load repository migrator extension contributed by ''{0}''", getPluginId()), e); //$NON-NLS-1$
+				return new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+						NLS.bind("Could not load repository migrator extension contributed by ''{0}''", getPluginId()), //$NON-NLS-1$
+						e);
 			}
 		}
 
@@ -145,8 +123,6 @@ public class RepositoryConnectorExtensionReader {
 	private static class ExtensionPointBasedConnectorDescriptor extends RepositoryConnectorDescriptor {
 
 		IConfigurationElement element;
-
-		IConfigurationElement taskListMigratorElement;
 
 		IConfigurationElement repositoryMigratorElement;
 
@@ -158,18 +134,6 @@ public class RepositoryConnectorExtensionReader {
 		public AbstractRepositoryConnector createRepositoryConnector() {
 			try {
 				return (AbstractRepositoryConnector) element.createExecutableExtension(ATTR_CLASS);
-			} catch (CoreException e) {
-				throw new RuntimeException(e);
-			}
-		}
-
-		@Override
-		public AbstractTaskListMigrator createTaskListMigrator() {
-			if (taskListMigratorElement == null) {
-				return null;
-			}
-			try {
-				return (AbstractTaskListMigrator) taskListMigratorElement.createExecutableExtension(ATTR_CLASS);
 			} catch (CoreException e) {
 				throw new RuntimeException(e);
 			}
@@ -199,8 +163,6 @@ public class RepositoryConnectorExtensionReader {
 
 	private final ContributorBlackList blackList = new ContributorBlackList();
 
-	private final TaskListExternalizer taskListExternalizer;
-
 	private final TaskRepositoryManager repositoryManager;
 
 	private final List<ConnectorFactory> factories = new ArrayList<ConnectorFactory>();
@@ -211,13 +173,13 @@ public class RepositoryConnectorExtensionReader {
 
 	public RepositoryConnectorExtensionReader(TaskListExternalizer taskListExternalizer,
 			TaskRepositoryManager repositoryManager) {
-		this.taskListExternalizer = taskListExternalizer;
 		this.repositoryManager = repositoryManager;
 		this.result = new MultiStatus(ITasksCoreConstants.ID_PLUGIN, 0, "Repository connectors failed to load.", null); //$NON-NLS-1$
 	}
 
 	public void loadConnectors(IExtensionPoint repositoriesExtensionPoint) {
-		Map<String, List<ConnectorFactory>> factoryById = readFromRepositoriesExtensionPoint(repositoriesExtensionPoint);
+		Map<String, List<ConnectorFactory>> factoryById = readFromRepositoriesExtensionPoint(
+				repositoriesExtensionPoint);
 		checkForConflicts(factoryById);
 	}
 
@@ -241,8 +203,8 @@ public class RepositoryConnectorExtensionReader {
 	}
 
 	private void readFromContributorsExtensionPoint() {
-		IExtensionPoint repositoriesExtensionPoint = Platform.getExtensionRegistry().getExtensionPoint(
-				EXTENSION_CONTRIBUTORS);
+		IExtensionPoint repositoriesExtensionPoint = Platform.getExtensionRegistry()
+				.getExtensionPoint(EXTENSION_CONTRIBUTORS);
 		IExtension[] extensions = repositoriesExtensionPoint.getExtensions();
 		for (IExtension extension : extensions) {
 			IConfigurationElement[] elements = extension.getConfigurationElements();
@@ -257,7 +219,8 @@ public class RepositoryConnectorExtensionReader {
 
 			@Override
 			public void run() throws Exception {
-				RepositoryConnectorContributor contributor = (RepositoryConnectorContributor) element.createExecutableExtension(ATTR_CLASS);
+				RepositoryConnectorContributor contributor = (RepositoryConnectorContributor) element
+						.createExecutableExtension(ATTR_CLASS);
 				Collection<RepositoryConnectorDescriptor> descriptors = contributor.getDescriptors();
 				if (descriptors == null) {
 					result.add(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
@@ -294,23 +257,13 @@ public class RepositoryConnectorExtensionReader {
 	}
 
 	private void registerConnectorInstances() {
-		List<AbstractTaskListMigrator> taskListmigrators = new ArrayList<AbstractTaskListMigrator>();
 		List<AbstractRepositoryMigrator> repositoryMigrators = new ArrayList<AbstractRepositoryMigrator>();
 
 		for (ConnectorFactory descriptor : factories) {
 			if (descriptor.getConnector() != null) {
 				repositoryManager.addRepositoryConnector(descriptor.getConnector());
 
-				IStatus status = descriptor.createTaskListMigrator();
-				if (status.isOK() && descriptor.getTaskListMigrator() != null) {
-					taskListmigrators.add(descriptor.getTaskListMigrator());
-				} else if (status.getSeverity() == IStatus.CANCEL) {
-					// ignore
-				} else {
-					result.add(status);
-				}
-
-				status = descriptor.createRepositoryMigrator();
+				IStatus status = descriptor.createRepositoryMigrator();
 				if (status.isOK() && descriptor.getRepositoryMigrator() != null) {
 					repositoryMigrators.add(descriptor.getRepositoryMigrator());
 				} else if (status.getSeverity() == IStatus.CANCEL) {
@@ -322,7 +275,6 @@ public class RepositoryConnectorExtensionReader {
 		}
 
 		repositoryManager.initialize(repositoryMigrators);
-		taskListExternalizer.initialize(taskListmigrators);
 	}
 
 	private Map<String, List<ConnectorFactory>> readFromRepositoriesExtensionPoint(
@@ -334,19 +286,15 @@ public class RepositoryConnectorExtensionReader {
 		for (IExtension repositoryExtension : repositoryExtensions) {
 			IConfigurationElement[] elements = repositoryExtension.getConfigurationElements();
 			ExtensionPointBasedConnectorDescriptor descriptor = null;
-			IConfigurationElement tasklistMigratorElement = null;
 			IConfigurationElement repositoryMigratorElement = null;
 			for (IConfigurationElement element : elements) {
 				if (element.getName().equals(ELMNT_REPOSITORY_CONNECTOR)) {
 					descriptor = new ExtensionPointBasedConnectorDescriptor(element);
-				} else if (element.getName().equals(ELMNT_MIGRATOR)) {
-					tasklistMigratorElement = element;
 				} else if (element.getName().equals(ELMNT_REPOSITORY_MIGRATOR)) {
 					repositoryMigratorElement = element;
 				}
 			}
 			if (descriptor != null) {
-				descriptor.taskListMigratorElement = tasklistMigratorElement;
 				descriptor.repositoryMigratorElement = repositoryMigratorElement;
 				ConnectorFactory factory = new ConnectorFactory(descriptor, descriptor.getPluginId());
 				factories.add(factory);
@@ -361,8 +309,8 @@ public class RepositoryConnectorExtensionReader {
 	private void checkForConflicts(Map<String, List<ConnectorFactory>> descriptorById) {
 		for (Map.Entry<String, List<ConnectorFactory>> entry : descriptorById.entrySet()) {
 			if (entry.getValue().size() > 1) {
-				MultiStatus status = new MultiStatus(ITasksCoreConstants.ID_PLUGIN, 0, NLS.bind(
-						"Connector ''{0}'' registered by multiple extensions.", entry.getKey()), null); //$NON-NLS-1$
+				MultiStatus status = new MultiStatus(ITasksCoreConstants.ID_PLUGIN, 0,
+						NLS.bind("Connector ''{0}'' registered by multiple extensions.", entry.getKey()), null); //$NON-NLS-1$
 				for (ConnectorFactory factory : entry.getValue()) {
 					status.add(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
 							"All extensions contributed by ''{0}'' have been disabled.", factory.getPluginId()), null)); //$NON-NLS-1$

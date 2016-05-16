@@ -21,7 +21,7 @@
       </annotation>
       <complexType>
          <sequence>
-            <element ref="connectorCore" minOccurs="1" maxOccurs="1"/>
+            <element ref="connectorCore"/>
             <element ref="taskListMigrator" minOccurs="0" maxOccurs="1"/>
             <element ref="repositoryMigrator" minOccurs="0" maxOccurs="1"/>
          </sequence>
@@ -55,7 +55,7 @@
    <element name="taskListMigrator">
       <annotation>
          <appInfo>
-            <meta.element labelAttribute="name"/>
+            <meta.element labelAttribute="name" deprecated="true"/>
          </appInfo>
          <documentation>
             (no description available)

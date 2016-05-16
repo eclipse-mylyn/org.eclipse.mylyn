@@ -18,7 +18,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -30,7 +29,6 @@ import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.ITransferList;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryModel;
 import org.eclipse.mylyn.internal.tasks.core.XmlReaderUtil;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -54,10 +52,6 @@ public class TaskListExternalizer {
 	public TaskListExternalizer(RepositoryModel repositoryModel, IRepositoryManager repositoryManager) {
 		this.repositoryModel = repositoryModel;
 		this.repositoryManager = repositoryManager;
-	}
-
-	public void initialize(List<AbstractTaskListMigrator> migrators) {
-		// TODO: Deprecate migration
 	}
 
 	public void writeTaskList(ITransferList taskList, File outFile) throws CoreException {

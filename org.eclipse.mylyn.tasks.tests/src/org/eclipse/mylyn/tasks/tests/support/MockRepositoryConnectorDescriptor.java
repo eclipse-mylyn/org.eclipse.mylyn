@@ -13,7 +13,6 @@ package org.eclipse.mylyn.tasks.tests.support;
 
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryMigrator;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
 import org.eclipse.mylyn.tasks.core.spi.RepositoryConnectorDescriptor;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 
@@ -40,11 +39,6 @@ public class MockRepositoryConnectorDescriptor extends RepositoryConnectorDescri
 	@Override
 	public AbstractRepositoryConnector createRepositoryConnector() {
 		return new DynamicMockRepositoryConnector();
-	}
-
-	@Override
-	public AbstractTaskListMigrator createTaskListMigrator() {
-		return null;
 	}
 
 	@Override

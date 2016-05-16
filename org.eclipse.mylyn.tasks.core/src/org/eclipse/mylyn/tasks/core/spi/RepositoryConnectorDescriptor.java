@@ -19,7 +19,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
 
 /**
  * A descriptor for an {@link AbstractRepositoryConnector} instance.
- * 
+ *
  * @since 3.10
  * @see RepositoryConnectorBranding
  */
@@ -27,7 +27,7 @@ public abstract class RepositoryConnectorDescriptor {
 
 	/**
 	 * Creates and returns a connector instance. Only invoked once.
-	 * 
+	 *
 	 * @return a connector instance
 	 */
 	@NonNull
@@ -35,15 +35,18 @@ public abstract class RepositoryConnectorDescriptor {
 
 	/**
 	 * Creates and returns a task list migrator instance. Only invoked once.
-	 * 
+	 *
 	 * @return a migrator or null if no migrator is provided
 	 */
 	@Nullable
-	public abstract AbstractTaskListMigrator createTaskListMigrator();
+	@Deprecated
+	public AbstractTaskListMigrator createTaskListMigrator() {
+		return null;
+	}
 
 	/**
 	 * Creates and returns a repository migrator instance. Only invoked once.
-	 * 
+	 *
 	 * @return a migrator or null if no migrator is provided
 	 */
 	@Nullable

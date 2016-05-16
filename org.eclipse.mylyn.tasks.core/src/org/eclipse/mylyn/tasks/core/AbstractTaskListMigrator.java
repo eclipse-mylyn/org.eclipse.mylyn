@@ -19,6 +19,7 @@ import org.w3c.dom.Element;
  * @author Steffen Pingel
  * @since 3.0
  */
+@Deprecated
 public abstract class AbstractTaskListMigrator {
 
 	public static final String KEY_QUERY = "Query"; //$NON-NLS-1$
