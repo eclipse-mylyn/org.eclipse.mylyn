@@ -122,7 +122,8 @@ public class BugzillaRestConfiguration implements Serializable {
 					|| key.equals(BugzillaRestTaskSchema.getDefault().NEW_COMMENT.getKey())
 					|| key.equals(BugzillaRestTaskSchema.getDefault().DUPE_OF.getKey())
 					|| key.equals(TaskAttribute.OPERATION)
-					|| key.equals(BugzillaRestTaskSchema.getDefault().DATE_MODIFICATION.getKey())) {
+					|| key.equals(BugzillaRestTaskSchema.getDefault().DATE_MODIFICATION.getKey())
+					|| key.equals(BugzillaRestTaskSchema.getDefault().RESET_ASSIGNED_TO.getKey())) {
 				continue;
 			}
 			TaskAttribute attribute = data.getRoot().getAttribute(key);

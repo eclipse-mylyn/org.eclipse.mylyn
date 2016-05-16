@@ -11,13 +11,17 @@
 
 package org.eclipse.mylyn.internal.bugzilla.rest.ui;
 
+import java.util.Set;
+
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestCore;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.IBugzillaRestConstants;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorFactory;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
 
 public class BugzillaRestTaskEditorPage extends AbstractTaskEditorPage {
 
@@ -49,6 +53,27 @@ public class BugzillaRestTaskEditorPage extends AbstractTaskEditorPage {
 			}
 		};
 		return factory;
+	}
+
+	@Override
+	protected Set<TaskEditorPartDescriptor> createPartDescriptors() {
+		Set<TaskEditorPartDescriptor> descriptors = super.createPartDescriptors();
+		// remove unnecessary default editor parts
+		for (TaskEditorPartDescriptor taskEditorPartDescriptor : descriptors) {
+			if (taskEditorPartDescriptor.getId().equals(ID_PART_PEOPLE)) {
+				descriptors.remove(taskEditorPartDescriptor);
+				break;
+			}
+		}
+		// Add the updated Bugzilla people part
+		descriptors.add(new TaskEditorPartDescriptor(ID_PART_PEOPLE) {
+			@Override
+			public AbstractTaskEditorPart createPart() {
+				return new BugzillaRestTaskEditorPeoplePart();
+			}
+		}.setPath(PATH_PEOPLE));
+
+		return descriptors;
 	}
 
 }

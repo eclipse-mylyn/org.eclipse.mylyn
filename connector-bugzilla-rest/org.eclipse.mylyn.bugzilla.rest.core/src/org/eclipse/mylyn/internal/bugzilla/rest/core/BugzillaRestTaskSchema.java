@@ -151,6 +151,9 @@ public class BugzillaRestTaskSchema extends AbstractTaskSchema {
 	public final Field RESET_QA_CONTACT = createField("reset_qa_contact", "Reset QA Contact to default",
 			TaskAttribute.TYPE_BOOLEAN, Flag.PEOPLE);
 
+	public final Field RESET_ASSIGNED_TO = createField("reset_assigned_to", "Reassign to default assignee",
+			TaskAttribute.TYPE_BOOLEAN, Flag.PEOPLE);
+
 	@Override
 	public void initialize(TaskData taskData) {
 		for (Field field : getFields()) {
