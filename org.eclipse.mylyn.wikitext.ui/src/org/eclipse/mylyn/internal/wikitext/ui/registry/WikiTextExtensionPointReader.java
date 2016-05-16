@@ -227,7 +227,7 @@ public class WikiTextExtensionPointReader {
 		initializeMarkupLanguages();
 		synchronized (this) {
 			if (validationRulesByLanguageName == null) {
-				Map<String, ValidationRules> validationRulesByLanguageName = new HashMap<String, ValidationRules>();
+				Map<String, ValidationRules> validationRulesByLanguageName = new HashMap<>();
 
 				IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(
 						getExtensionPointNamespace(), EXTENSION_VALIDATION_RULES);
@@ -300,10 +300,10 @@ public class WikiTextExtensionPointReader {
 	private void initializeMarkupLanguages() {
 		synchronized (this) {
 			if (this.languageByName == null) {
-				SortedMap<String, Class<? extends MarkupLanguage>> markupLanguageByName = new TreeMap<String, Class<? extends MarkupLanguage>>();
-				Map<String, Class<? extends MarkupLanguage>> languageByFileExtension = new HashMap<String, Class<? extends MarkupLanguage>>();
-				Map<String, String> languageExtensionByLanguage = new HashMap<String, String>();
-				Map<Class<? extends MarkupLanguage>, String> languageNameByLanguage = new HashMap<Class<? extends MarkupLanguage>, String>();
+				SortedMap<String, Class<? extends MarkupLanguage>> markupLanguageByName = new TreeMap<>();
+				Map<String, Class<? extends MarkupLanguage>> languageByFileExtension = new HashMap<>();
+				Map<String, String> languageExtensionByLanguage = new HashMap<>();
+				Map<Class<? extends MarkupLanguage>, String> languageNameByLanguage = new HashMap<>();
 
 				IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(
 						getExtensionPointNamespace(), EXTENSION_MARKUP_LANGUAGE);

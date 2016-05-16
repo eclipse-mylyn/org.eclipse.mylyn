@@ -136,7 +136,7 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 
 	@Override
 	protected List<IHyperlinkDetector> createCustomHyperlinkDetectors(ISourceViewer sourceViewer) {
-		List<IHyperlinkDetector> detectors = new ArrayList<IHyperlinkDetector>();
+		List<IHyperlinkDetector> detectors = new ArrayList<>();
 		if (markupHyperlinkDetector == null) {
 			markupHyperlinkDetector = new MarkupHyperlinkDetector();
 			markupHyperlinkDetector.setMarkupLanguage(markupLanguage);
@@ -413,7 +413,7 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 
 	@Override
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
-		List<String> contentTypes = new ArrayList<String>(3);
+		List<String> contentTypes = new ArrayList<>(3);
 		contentTypes.addAll(Arrays.asList(FastMarkupPartitioner.ALL_CONTENT_TYPES));
 		contentTypes.add(IDocument.DEFAULT_CONTENT_TYPE);
 		return contentTypes.toArray(new String[contentTypes.size()]);

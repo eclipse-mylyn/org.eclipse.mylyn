@@ -121,7 +121,7 @@ public class ValidationProjectBuilder extends IncrementalProjectBuilder {
 	 */
 	private List<ValidationInfo> collect(IResourceDelta resourceDelta, final IProgressMonitor monitor)
 			throws CoreException {
-		final List<ValidationInfo> files = new ArrayList<ValidationInfo>();
+		final List<ValidationInfo> files = new ArrayList<>();
 
 		resourceDelta.accept(new IResourceDeltaVisitor() {
 
@@ -151,7 +151,7 @@ public class ValidationProjectBuilder extends IncrementalProjectBuilder {
 	}
 
 	private List<ValidationInfo> collect(IProject project, final IProgressMonitor monitor) throws CoreException {
-		final List<ValidationInfo> files = new ArrayList<ValidationInfo>();
+		final List<ValidationInfo> files = new ArrayList<>();
 		project.accept(new IResourceVisitor() {
 
 			public boolean visit(IResource resource) throws CoreException {

@@ -22,7 +22,7 @@ public class Segments<T extends Segment<?>> {
 
 	public void add(T t) {
 		if (list == null) {
-			list = new ArrayList<T>();
+			list = new ArrayList<>();
 		} else if (list.size() > 0) {
 			Segment<?> previousSegment = list.get(list.size() - 1);
 			final int tOffset = t.getOffset();

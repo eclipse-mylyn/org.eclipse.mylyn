@@ -72,7 +72,7 @@ public abstract class AbstractTextSourceViewerConfiguration extends TextSourceVi
 		HyperlinkDetectorDescriptor[] descriptors = registry.getHyperlinkDetectorDescriptors();
 		Map<String, IAdaptable> targets = getHyperlinkDetectorTargets(sourceViewer);
 
-		List<IHyperlinkDetector> detectors = new ArrayList<IHyperlinkDetector>(8);
+		List<IHyperlinkDetector> detectors = new ArrayList<>(8);
 		if (markupHyperlinksFirst) {
 			detectors.addAll(customDetectors);
 		}
@@ -126,14 +126,14 @@ public abstract class AbstractTextSourceViewerConfiguration extends TextSourceVi
 
 	public void addHyperlinkDetectorDescriptorFilter(HyperlinkDetectorDescriptorFilter filter) {
 		if (hyperlinkDetectorDescriptorFilters == null) {
-			hyperlinkDetectorDescriptorFilters = new ArrayList<HyperlinkDetectorDescriptorFilter>();
+			hyperlinkDetectorDescriptorFilters = new ArrayList<>();
 		}
 		hyperlinkDetectorDescriptorFilters.add(filter);
 	}
 
 	public void addHyperlinkDetector(IHyperlinkDetector detector) {
 		if (hyperlinkDetectors == null) {
-			hyperlinkDetectors = new ArrayList<IHyperlinkDetector>();
+			hyperlinkDetectors = new ArrayList<>();
 		}
 		hyperlinkDetectors.add(detector);
 	}

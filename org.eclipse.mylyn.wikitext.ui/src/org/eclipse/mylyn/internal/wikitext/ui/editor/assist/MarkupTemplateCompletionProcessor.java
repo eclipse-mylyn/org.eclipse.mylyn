@@ -93,11 +93,11 @@ public class MarkupTemplateCompletionProcessor extends TemplateCompletionProcess
 					if (computedTemplates == null) {
 						computedTemplates = customTemplates;
 					} else {
-						List<Template> allTempaltes = new ArrayList<Template>(computedTemplates.length
-								+ customTemplates.length);
-						allTempaltes.addAll(Arrays.asList(computedTemplates));
-						allTempaltes.addAll(Arrays.asList(customTemplates));
-						computedTemplates = allTempaltes.toArray(new Template[allTempaltes.size()]);
+						List<Template> allTemplates = new ArrayList<>(
+								computedTemplates.length + customTemplates.length);
+						allTemplates.addAll(Arrays.asList(computedTemplates));
+						allTemplates.addAll(Arrays.asList(customTemplates));
+						computedTemplates = allTemplates.toArray(new Template[allTemplates.size()]);
 					}
 				}
 			}
@@ -146,7 +146,7 @@ public class MarkupTemplateCompletionProcessor extends TemplateCompletionProcess
 
 		Template[] templates = getTemplates(context.getContextType().getId());
 
-		List<ICompletionProposal> matches = new ArrayList<ICompletionProposal>(templates.length);
+		List<ICompletionProposal> matches = new ArrayList<>(templates.length);
 		for (Template template : templates) {
 			try {
 				context.getContextType().validate(template.getPattern());
@@ -186,7 +186,7 @@ public class MarkupTemplateCompletionProcessor extends TemplateCompletionProcess
 
 	private boolean isSelectionBasedMatch(Template template, TemplateContext context) {
 		String pattern = template.getPattern();
-		Set<String> vars = new HashSet<String>();
+		Set<String> vars = new HashSet<>();
 		Matcher matcher = VARIABLE_PATTERN.matcher(pattern);
 		while (matcher.find()) {
 			String variableName = matcher.group(1);
@@ -201,9 +201,9 @@ public class MarkupTemplateCompletionProcessor extends TemplateCompletionProcess
 	}
 
 	public void setMarkupLanguage(MarkupLanguage markupLanguage) {
-		templates = markupLanguage == null ? null : WikiTextUiPlugin.getDefault()
-				.getTemplates()
-				.get(markupLanguage.getName());
+		templates = markupLanguage == null
+				? null
+				: WikiTextUiPlugin.getDefault().getTemplates().get(markupLanguage.getName());
 	}
 
 }

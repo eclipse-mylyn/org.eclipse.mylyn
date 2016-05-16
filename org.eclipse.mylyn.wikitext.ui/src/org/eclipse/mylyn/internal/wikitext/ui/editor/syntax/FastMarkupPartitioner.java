@@ -76,7 +76,7 @@ public class FastMarkupPartitioner extends FastPartitioner {
 	}
 
 	static class PartitionTokenScanner implements IPartitionTokenScanner {
-		private final Map<Integer, PartitioningResult> cachedPartitioning = new HashMap<Integer, PartitioningResult>();
+		private final Map<Integer, PartitioningResult> cachedPartitioning = new HashMap<>();
 
 		private MarkupLanguage markupLanguage;
 
@@ -172,7 +172,7 @@ public class FastMarkupPartitioner extends FastPartitioner {
 			markupParser.parse(markupContent);
 
 			ITypedRegion[] latestPartitions = partitionBuilder.partitions.toArray(new ITypedRegion[partitionBuilder.partitions.size()]);
-			List<ITypedRegion> partitioning = new ArrayList<ITypedRegion>(latestPartitions.length);
+			List<ITypedRegion> partitioning = new ArrayList<>(latestPartitions.length);
 
 			ITypedRegion previous = null;
 			for (ITypedRegion region : latestPartitions) {
@@ -258,7 +258,7 @@ public class FastMarkupPartitioner extends FastPartitioner {
 		public List<Span> getSpans() {
 			if (spans == null) {
 
-				List<Span> spans = new ArrayList<Span>();
+				List<Span> spans = new ArrayList<>();
 				getSpans(block, spans);
 				this.spans = spans;
 			}
@@ -368,7 +368,7 @@ public class FastMarkupPartitioner extends FastPartitioner {
 			Locator locator = getLocator();
 			outerBlock.setLength((locator == null ? 0 : locator.getDocumentOffset()) + offset);
 
-			partitions = new ArrayList<MarkupPartition>();
+			partitions = new ArrayList<>();
 
 			// here we flatten our hierarchy of blocks into partitions
 			for (Segment<?> child : outerBlock.getChildren().asList()) {

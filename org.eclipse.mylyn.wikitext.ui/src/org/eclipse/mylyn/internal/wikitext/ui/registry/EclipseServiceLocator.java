@@ -43,7 +43,7 @@ public class EclipseServiceLocator extends ServiceLocator {
 				// specified language not found.
 				// create a useful error message
 				StringBuilder buf = new StringBuilder();
-				for (String name : new TreeSet<String>(WikiTextExtensionPointReader.instance().getMarkupLanguageNames())) {
+				for (String name : new TreeSet<>(WikiTextExtensionPointReader.instance().getMarkupLanguageNames())) {
 					if (buf.length() != 0) {
 						buf.append(", "); //$NON-NLS-1$
 					}
@@ -61,7 +61,7 @@ public class EclipseServiceLocator extends ServiceLocator {
 
 	@Override
 	public Set<MarkupLanguage> getAllMarkupLanguages() {
-		Set<MarkupLanguage> markupLanguages = new HashSet<MarkupLanguage>();
+		Set<MarkupLanguage> markupLanguages = new HashSet<>();
 
 		for (String languageName : WikiTextExtensionPointReader.instance().getMarkupLanguageNames()) {
 			MarkupLanguage markupLanguage = getMarkupLanguage(languageName);

@@ -59,7 +59,7 @@ public class FindAndReplaceTarget implements IFindReplaceTarget, IFindReplaceTar
 
 	private boolean searching;
 
-	private final Stack<Result> state = new Stack<Result>();
+	private final Stack<Result> state = new Stack<>();
 
 	private String findString = ""; //$NON-NLS-1$
 

@@ -58,14 +58,14 @@ public class AnnotationMarkupValidator extends DocumentRegionValidator {
 					int offset = position.getOffset();
 					if (overlaps(region, offset, position.getLength()) || offset >= document.getLength()) {
 						if (toRemove == null) {
-							toRemove = new ArrayList<Annotation>();
+							toRemove = new ArrayList<>();
 						}
 						toRemove.add(annotation);
 					}
 				}
 			}
 
-			Map<Annotation, Position> annotationsToAdd = new HashMap<Annotation, Position>();
+			Map<Annotation, Position> annotationsToAdd = new HashMap<>();
 			for (ValidationProblem problem : problems) {
 				annotationsToAdd.put(new ValidationProblemAnnotation(problem), new Position(problem.getOffset(),
 						problem.getLength()));

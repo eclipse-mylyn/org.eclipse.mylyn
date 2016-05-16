@@ -54,7 +54,7 @@ public class CssStyleManager {
 
 	private static final int MAX_FONT_SIZE = 50;
 
-	private static final Map<String, Integer> colorToRgb = new HashMap<String, Integer>();
+	private static final Map<String, Integer> colorToRgb = new HashMap<>();
 	static {
 		colorToRgb.put("AliceBlue".toLowerCase(), 0xF0F8FF); //$NON-NLS-1$
 		colorToRgb.put("AntiqueWhite".toLowerCase(), 0xFAEBD7); //$NON-NLS-1$
@@ -211,7 +211,7 @@ public class CssStyleManager {
 
 	private final Font defaultMonospaceFont;
 
-	private final Map<String, RuleHandler> ruleNameToHandler = new HashMap<String, RuleHandler>();
+	private final Map<String, RuleHandler> ruleNameToHandler = new HashMap<>();
 
 	private final int defaultFontHeight;
 
@@ -434,7 +434,7 @@ public class CssStyleManager {
 	}
 
 	public SortedSet<String> getRecognizedRuleNames() {
-		return new TreeSet<String>(ruleNameToHandler.keySet());
+		return new TreeSet<>(ruleNameToHandler.keySet());
 	}
 
 	public boolean isKnownRule(CssRule rule) {

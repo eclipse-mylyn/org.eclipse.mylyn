@@ -52,7 +52,7 @@ public class AnnotationHyperlinkDetector implements IHyperlinkDetector {
 						if (position.getOffset() <= interestingOffset
 								&& position.getOffset() + position.getLength() >= interestingOffset) {
 							if (hrefs == null) {
-								hrefs = new ArrayList<AnchorHrefAnnotation>();
+								hrefs = new ArrayList<>();
 							}
 							hrefs.add(href);
 						}

@@ -116,7 +116,7 @@ public class HelpContent {
 
 	private URL getResource() throws Exception {
 		int idx = resourcePath.lastIndexOf('.');
-		List<String> paths = new ArrayList<String>();
+		List<String> paths = new ArrayList<>();
 		if (idx != -1) {
 
 			// construct a search path based on the users locale

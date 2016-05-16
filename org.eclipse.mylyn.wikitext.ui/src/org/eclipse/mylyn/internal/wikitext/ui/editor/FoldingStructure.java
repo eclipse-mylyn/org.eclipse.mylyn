@@ -48,7 +48,7 @@ class FoldingStructure implements IFoldingStructure {
 			if (items == null || items.isEmpty()) {
 				return Collections.emptySet();
 			}
-			Set<String> ids = new HashSet<String>();
+			Set<String> ids = new HashSet<>();
 			for (OutlineItem item : items) {
 				ids.add(item.getId());
 			}
@@ -195,7 +195,7 @@ class FoldingStructure implements IFoldingStructure {
 				HeadingProjectionAnnotation projectionAnnotation = (HeadingProjectionAnnotation) annotation;
 				if (operation.operate(projectionAnnotation)) {
 					if (modifications == null) {
-						modifications = new ArrayList<Annotation>();
+						modifications = new ArrayList<>();
 					}
 					modifications.add(projectionAnnotation);
 					Position position = annotationModel.getPosition(projectionAnnotation);

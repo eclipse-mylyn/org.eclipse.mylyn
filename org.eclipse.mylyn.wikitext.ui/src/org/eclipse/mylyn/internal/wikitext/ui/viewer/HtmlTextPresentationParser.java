@@ -73,17 +73,17 @@ public class HtmlTextPresentationParser {
 	/**
 	 * Element names for spanning elements
 	 */
-	private static Set<String> spanElements = new HashSet<String>();
+	private static Set<String> spanElements = new HashSet<>();
 
 	/**
 	 * element names for block elements
 	 */
-	private static Set<String> blockElements = new HashSet<String>();
+	private static Set<String> blockElements = new HashSet<>();
 
 	/**
 	 * element names for elements that cause adjacent whitespace to be collapsed
 	 */
-	private static Set<String> whitespaceCollapsingElements = new HashSet<String>();
+	private static Set<String> whitespaceCollapsingElements = new HashSet<>();
 
 	private static Stylesheet defaultStylesheet;
 
@@ -245,14 +245,14 @@ public class HtmlTextPresentationParser {
 
 		public void addAnnotation(Annotation annotation) {
 			if (annotations == null) {
-				annotations = new ArrayList<Annotation>(2);
+				annotations = new ArrayList<>(2);
 			}
 			annotations.add(annotation);
 		}
 
 		public void addPrefixAnnotation(Annotation annotation) {
 			if (prefixAnnotations == null) {
-				prefixAnnotations = new ArrayList<Annotation>(1);
+				prefixAnnotations = new ArrayList<>(1);
 			}
 			prefixAnnotations.add(annotation);
 		}
@@ -458,15 +458,15 @@ public class HtmlTextPresentationParser {
 
 	private class HtmlContentHandler implements ContentHandler {
 
-		private final Stack<ElementState> state = new Stack<ElementState>();
+		private final Stack<ElementState> state = new Stack<>();
 
 		private int lastNewlineOffset = 0;
 
 		private final StringBuilder out = new StringBuilder(2048);
 
-		private final List<StyleRange> styleRanges = new ArrayList<StyleRange>();
+		private final List<StyleRange> styleRanges = new ArrayList<>();
 
-		private final Map<Annotation, Position> annotationToPosition = new IdentityHashMap<Annotation, Position>();
+		private final Map<Annotation, Position> annotationToPosition = new IdentityHashMap<>();
 
 		private final StringBuilder elementText = new StringBuilder();
 
@@ -991,7 +991,7 @@ public class HtmlTextPresentationParser {
 
 	}
 
-	private static Map<String, char[]> elementToCharacters = new HashMap<String, char[]>();
+	private static Map<String, char[]> elementToCharacters = new HashMap<>();
 
 	static {
 		elementToCharacters.put("p", "\n\n".toCharArray()); //$NON-NLS-1$ //$NON-NLS-2$

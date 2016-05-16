@@ -128,7 +128,7 @@ public class AnchorCompletionProcessor implements IContentAssistProcessor {
 		if (prefix == null) {
 			return null;
 		}
-		final List<CompletionProposal> suggestions = new ArrayList<CompletionProposal>(20);
+		final List<CompletionProposal> suggestions = new ArrayList<>(20);
 		final int prefixOffset = offset - prefix.length();
 		outline.accept(new Visitor() {
 			public boolean visit(OutlineItem item) {

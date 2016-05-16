@@ -91,7 +91,7 @@ public class Preferences implements Cloneable {
 	public static final String[] HEADING_PREFERENCES = new String[] { null, BLOCK_H1, BLOCK_H2, BLOCK_H3, BLOCK_H4,
 			BLOCK_H5, BLOCK_H6 };
 
-	private Map<String, String> cssByBlockModifierType = new LinkedHashMap<String, String>();
+	private Map<String, String> cssByBlockModifierType = new LinkedHashMap<>();
 
 	{
 		cssByBlockModifierType.put(BLOCK_H1, "font-size: 120%; font-weight: bold; color: #172f47;"); //$NON-NLS-1$
@@ -106,7 +106,7 @@ public class Preferences implements Cloneable {
 		cssByBlockModifierType.put(BLOCK_DT, "font-weight: bold;"); //$NON-NLS-1$
 	}
 
-	private Map<String, String> cssByPhraseModifierType = new LinkedHashMap<String, String>();
+	private Map<String, String> cssByPhraseModifierType = new LinkedHashMap<>();
 
 	{
 

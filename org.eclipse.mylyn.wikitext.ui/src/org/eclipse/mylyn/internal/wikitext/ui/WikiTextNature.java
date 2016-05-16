@@ -59,7 +59,7 @@ public class WikiTextNature implements IProjectNature {
 	public static void uninstall(IProject project, IProgressMonitor monitor) throws CoreException {
 		IProjectDescription description = project.getDescription();
 		String[] natures = description.getNatureIds();
-		List<String> newNatures = new ArrayList<String>(natures.length);
+		List<String> newNatures = new ArrayList<>(natures.length);
 		for (String n : natures) {
 			if (!n.equals(ID)) {
 				newNatures.add(n);
@@ -112,7 +112,7 @@ public class WikiTextNature implements IProjectNature {
 		IProjectDescription desc = project.getDescription();
 		ICommand[] commands = desc.getBuildSpec();
 
-		List<ICommand> newCommands = new ArrayList<ICommand>(commands.length);
+		List<ICommand> newCommands = new ArrayList<>(commands.length);
 		for (ICommand command : commands) {
 			if (!command.getBuilderName().equals(ValidationProjectBuilder.ID)) {
 				newCommands.add(command);

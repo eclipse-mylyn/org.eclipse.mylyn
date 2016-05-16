@@ -55,9 +55,9 @@ public class ResourceMarkerMarkupValidator extends DocumentRegionValidator {
 				+ zeroProblemsStep);
 
 		// find and remove any existing validation errors in the given region.
-		List<IMarker> markersInRegion = new ArrayList<IMarker>(5);
+		List<IMarker> markersInRegion = new ArrayList<>(5);
 		// we also track markers by offset, however we don't track multiple markers at the same offset
-		Map<Integer, IMarker> markerByOffset = new HashMap<Integer, IMarker>();
+		Map<Integer, IMarker> markerByOffset = new HashMap<>();
 		{
 			IMarker[] findMarkers = resource.findMarkers("org.eclipse.mylyn.wikitext.core.validation.problem", true, //$NON-NLS-1$
 					IResource.DEPTH_ZERO);

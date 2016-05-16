@@ -95,7 +95,7 @@ public class MarkupHyperlinkDetector implements IHyperlinkDetector {
 			return null;
 		}
 		MarkupParser markupParser = new MarkupParser(markupLanguage);
-		final List<HyperlinkDescriptor> links = new ArrayList<HyperlinkDescriptor>();
+		final List<HyperlinkDescriptor> links = new ArrayList<>();
 		markupParser.setBuilder(new NoOpDocumentBuilder() {
 			@Override
 			public void link(Attributes attributes, String hrefOrHashName, String text) {
@@ -127,7 +127,7 @@ public class MarkupHyperlinkDetector implements IHyperlinkDetector {
 		markupParser.parse(content);
 
 		if (!links.isEmpty()) {
-			List<IHyperlink> hyperlinks = new ArrayList<IHyperlink>(links.size());
+			List<IHyperlink> hyperlinks = new ArrayList<>(links.size());
 			for (HyperlinkDescriptor descriptor : links) {
 				if (descriptor.href.indexOf(':') == -1 && descriptor.href.length() > 1
 						&& descriptor.href.charAt(0) != '/') {

@@ -25,9 +25,9 @@ public class Templates {
 
 	private String markupLanguageName;
 
-	private final List<Template> template = new ArrayList<Template>();
+	private final List<Template> template = new ArrayList<>();
 
-	private final Set<Template> blockTemplates = new HashSet<Template>();
+	private final Set<Template> blockTemplates = new HashSet<>();
 
 	private Templates parent;
 
@@ -42,7 +42,7 @@ public class Templates {
 	public List<Template> getTemplate() {
 		if (parent != null) {
 			List<Template> parentTemplate = parent.getTemplate();
-			List<Template> list = new ArrayList<Template>(template.size() + parentTemplate.size());
+			List<Template> list = new ArrayList<>(template.size() + parentTemplate.size());
 			list.addAll(parentTemplate);
 			list.addAll(template);
 			return Collections.unmodifiableList(list);

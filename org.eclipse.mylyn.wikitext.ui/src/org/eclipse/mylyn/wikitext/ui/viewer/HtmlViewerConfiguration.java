@@ -120,7 +120,7 @@ public class HtmlViewerConfiguration extends AbstractTextSourceViewerConfigurati
 
 	@Override
 	protected List<IHyperlinkDetector> createCustomHyperlinkDetectors(ISourceViewer sourceViewer) {
-		List<IHyperlinkDetector> detectors = new ArrayList<IHyperlinkDetector>(1);
+		List<IHyperlinkDetector> detectors = new ArrayList<>(1);
 		AnnotationHyperlinkDetector annotationHyperlinkDetector = createAnnotationHyperlinkDetector();
 		sourceViewer.getTextWidget().setData(AnnotationHyperlinkDetector.class.getName(), annotationHyperlinkDetector);
 		detectors.add(annotationHyperlinkDetector);
@@ -159,7 +159,7 @@ public class HtmlViewerConfiguration extends AbstractTextSourceViewerConfigurati
 			presentation.setDefaultStyleRange((StyleRange) (defaultStyleRange == null
 					? null
 					: defaultStyleRange.clone()));
-			List<StyleRange> ranges = new ArrayList<StyleRange>();
+			List<StyleRange> ranges = new ArrayList<>();
 
 			Iterator<?> allStyleRangeIterator = viewerPresentation.getAllStyleRangeIterator();
 			while (allStyleRangeIterator.hasNext()) {

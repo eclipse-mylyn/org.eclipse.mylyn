@@ -63,7 +63,7 @@ public class ProjectPropertyPage extends PropertyPage implements IWorkbenchPrope
 		wikiTextNatureButton.setText(Messages.ProjectPropertyPage_enableValidation);
 
 		StringBuilder buf = new StringBuilder();
-		SortedSet<String> extensions = new TreeSet<String>(WikiText.getMarkupFileExtensions());
+		SortedSet<String> extensions = new TreeSet<>(WikiText.getMarkupFileExtensions());
 		for (String extension : extensions) {
 			if (buf.length() > 0) {
 				buf.append(Messages.ProjectPropertyPage_3);

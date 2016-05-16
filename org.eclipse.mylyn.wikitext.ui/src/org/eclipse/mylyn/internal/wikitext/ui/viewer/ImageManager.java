@@ -111,7 +111,7 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 
 	private final ImageCache imageCache;
 
-	private final Set<ImageAnnotation> annotations = new HashSet<ImageAnnotation>();
+	private final Set<ImageAnnotation> annotations = new HashSet<>();
 
 	private ImageResolver imageResolver;
 
@@ -293,7 +293,7 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 				.createImage();
 		imageCache.putImage(imgSrc, image);
 
-		Set<ImageAnnotation> modifiedAnnotations = new HashSet<ImageAnnotation>();
+		Set<ImageAnnotation> modifiedAnnotations = new HashSet<>();
 
 		AnnotationModel annotationModel = (AnnotationModel) viewer.getAnnotationModel();
 		Object annotationLockObject = annotationModel.getLockObject();
@@ -318,7 +318,7 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 			computingChanges = true;
 			try {
 				boolean rangesAdjusted = false;
-				List<StyleRange> ranges = new ArrayList<StyleRange>();
+				List<StyleRange> ranges = new ArrayList<>();
 
 				Iterator<?> allStyleRangeIterator = viewer.getTextPresentation().getAllStyleRangeIterator();
 				while (allStyleRangeIterator.hasNext()) {
@@ -439,7 +439,7 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 		@Override
 		public void run() {
 			try {
-				final Map<String, ImageData> urlToImageData = new HashMap<String, ImageData>();
+				final Map<String, ImageData> urlToImageData = new HashMap<>();
 				for (ImageAnnotation annotation : annotations) {
 					final String imgSrc = annotation.getUrl();
 					if (imgSrc != null && !urlToImageData.containsKey(imgSrc)) {

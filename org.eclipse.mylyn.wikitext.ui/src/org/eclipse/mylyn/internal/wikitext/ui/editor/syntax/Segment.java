@@ -26,7 +26,7 @@ public class Segment<ChildType extends Segment<?>> {
 
 	private Attributes attributes;
 
-	private Segments<ChildType> children = new Segments<ChildType>();
+	private Segments<ChildType> children = new Segments<>();
 
 	private Segment<?> parent;
 

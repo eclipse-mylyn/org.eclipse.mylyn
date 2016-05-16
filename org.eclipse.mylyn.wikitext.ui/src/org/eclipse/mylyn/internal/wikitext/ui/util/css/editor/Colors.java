@@ -45,7 +45,7 @@ class Colors {
 	public static final String KEY_PROPERTY_VALUE = "css.property.value"; //$NON-NLS-1$
 
 	static {
-		Map<String, RGB> tempKeyToRgb = new HashMap<String, RGB>();
+		Map<String, RGB> tempKeyToRgb = new HashMap<>();
 		tempKeyToRgb.put(KEY_DEFAULT, RGB_DEFAULT);
 		tempKeyToRgb.put(KEY_COMMENT, RGB_COMMENT);
 		tempKeyToRgb.put(KEY_SELECTOR, RGB_SELECTOR);

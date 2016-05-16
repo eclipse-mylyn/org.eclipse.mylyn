@@ -28,7 +28,7 @@ import org.eclipse.swt.graphics.Image;
  */
 public class ImageCache {
 
-	private final Map<String, Image> imageByUrl = new HashMap<String, Image>();
+	private final Map<String, Image> imageByUrl = new HashMap<>();
 
 	private URL base;
 

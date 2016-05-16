@@ -100,7 +100,7 @@ public class MultiplexingContentAssistProcessor implements IContentAssistProcess
 			IContextInformationValidator validator = delegate.getContextInformationValidator();
 			if (validator != null) {
 				if (validators == null) {
-					validators = new ArrayList<IContextInformationValidator>();
+					validators = new ArrayList<>();
 				}
 			}
 		}

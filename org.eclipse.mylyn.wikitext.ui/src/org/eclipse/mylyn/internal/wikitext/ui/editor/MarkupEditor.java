@@ -895,9 +895,9 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		ProjectionViewer viewer = (ProjectionViewer) getSourceViewer();
 		ProjectionAnnotationModel projectionAnnotationModel = viewer.getProjectionAnnotationModel();
 		if (projectionAnnotationModel != null) {
-			List<Annotation> newProjectionAnnotations = new ArrayList<Annotation>(
+			List<Annotation> newProjectionAnnotations = new ArrayList<>(
 					projectionAnnotationById == null ? 10 : projectionAnnotationById.size() + 2);
-			Map<HeadingProjectionAnnotation, Position> annotationToPosition = new HashMap<HeadingProjectionAnnotation, Position>();
+			Map<HeadingProjectionAnnotation, Position> annotationToPosition = new HashMap<>();
 
 			List<OutlineItem> children = outlineModel.getChildren();
 			if (!children.isEmpty()) {
@@ -909,10 +909,10 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 				return;
 			}
 
-			Map<String, HeadingProjectionAnnotation> newProjectionAnnotationById = new HashMap<String, HeadingProjectionAnnotation>();
+			Map<String, HeadingProjectionAnnotation> newProjectionAnnotationById = new HashMap<>();
 
 			if (projectionAnnotationById != null) {
-				Set<HeadingProjectionAnnotation> toDelete = new HashSet<HeadingProjectionAnnotation>(
+				Set<HeadingProjectionAnnotation> toDelete = new HashSet<>(
 						projectionAnnotationById.size());
 				Iterator<Entry<HeadingProjectionAnnotation, Position>> newPositionIt = annotationToPosition.entrySet()
 						.iterator();
@@ -1234,7 +1234,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 
 		final MarkupLanguage markupLanguage = getMarkupLanguage();
 		MenuManager markupLanguageMenu = new MenuManager(Messages.MarkupEditor_markupLanguage);
-		for (String markupLanguageName : new TreeSet<String>(WikiText.getMarkupLanguageNames())) {
+		for (String markupLanguageName : new TreeSet<>(WikiText.getMarkupLanguageNames())) {
 			markupLanguageMenu.add(new SetMarkupLanguageAction(this, markupLanguageName,
 					markupLanguage != null && markupLanguageName.equals(markupLanguage.getName())));
 		}

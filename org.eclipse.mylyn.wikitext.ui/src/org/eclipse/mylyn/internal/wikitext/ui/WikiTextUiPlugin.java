@@ -151,7 +151,7 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 
 	public SortedMap<String, HelpContent> getCheatSheets() {
 		if (cheatSheets == null) {
-			SortedMap<String, HelpContent> cheatSheets = new TreeMap<String, HelpContent>();
+			SortedMap<String, HelpContent> cheatSheets = new TreeMap<>();
 
 			IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(getPluginId(),
 					EXTENSION_POINT_CHEAT_SHEET);
@@ -203,7 +203,7 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 	 */
 	public Map<String, Templates> getTemplates() {
 		if (templates == null) {
-			Map<String, Templates> templates = new HashMap<String, Templates>();
+			Map<String, Templates> templates = new HashMap<>();
 
 			IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(getPluginId(),
 					EXTENSION_POINT_CONTENT_ASSIST);

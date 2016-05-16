@@ -106,7 +106,7 @@ public class MarkupTokenScanner implements ITokenScanner {
 			FastMarkupPartitioner fastMarkupPartitioner = (FastMarkupPartitioner) partitioner;
 			ITypedRegion[] partitioning = partitioner.computePartitioning(offset, length);
 			if (partitioning != null) {
-				tokens = new ArrayList<Token>();
+				tokens = new ArrayList<>();
 
 				ITypedRegion[] partitions = ((FastMarkupPartitioner) partitioner).getScanner().computePartitions(
 						document, offset, length);
@@ -239,7 +239,7 @@ public class MarkupTokenScanner implements ITokenScanner {
 	 * @return an array of tokens that contiguously cover the region represented by the original span.
 	 */
 	private Token[] splitSpan(Token spanToken, Span span, Token defaultToken) {
-		List<Token> tokens = new ArrayList<Token>(span.getChildren().size() + 1);
+		List<Token> tokens = new ArrayList<>(span.getChildren().size() + 1);
 		int previousEnd = spanToken.offset;
 		for (Span child : span.getChildren().asList()) {
 			if (child.getOffset() > previousEnd) {

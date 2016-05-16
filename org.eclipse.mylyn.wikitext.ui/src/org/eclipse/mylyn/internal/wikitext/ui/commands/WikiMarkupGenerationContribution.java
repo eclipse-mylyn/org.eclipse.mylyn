@@ -36,7 +36,7 @@ public class WikiMarkupGenerationContribution extends CompoundContributionItem i
 
 	@Override
 	protected IContributionItem[] getContributionItems() {
-		Map<String, IContributionItem> items = new TreeMap<String, IContributionItem>();
+		Map<String, IContributionItem> items = new TreeMap<>();
 
 		for (MarkupLanguage markupLanguage : ServiceLocator.getInstance().getAllMarkupLanguages()) {
 			try {
@@ -48,7 +48,7 @@ public class WikiMarkupGenerationContribution extends CompoundContributionItem i
 			}
 			String commandId = ConvertMarkupToMarkup.COMMAND_ID;
 			String id = commandId + '.' + markupLanguage.getName().replaceAll("\\W", "_"); //$NON-NLS-1$ //$NON-NLS-2$ 
-			HashMap<String, String> args = new HashMap<String, String>();
+			HashMap<String, String> args = new HashMap<>();
 			args.put(ConvertMarkupToMarkup.PARAM_MARKUP_LANGUAGE, markupLanguage.getName());
 
 			CommandContributionItemParameter parameters = new CommandContributionItemParameter(serviceLocator, id,

@@ -25,7 +25,7 @@ import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
  */
 public class MultiReconcilingStrategy implements IReconcilingStrategy, IReconcilingStrategyExtension {
 
-	private final List<IReconcilingStrategy> strategies = new CopyOnWriteArrayList<IReconcilingStrategy>();
+	private final List<IReconcilingStrategy> strategies = new CopyOnWriteArrayList<>();
 
 	public void add(IReconcilingStrategy strategy) {
 		if (strategy == null) {

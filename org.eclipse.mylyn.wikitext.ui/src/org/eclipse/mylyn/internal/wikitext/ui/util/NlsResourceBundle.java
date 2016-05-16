@@ -36,7 +36,7 @@ public class NlsResourceBundle extends ResourceBundle {
 
 	@Override
 	public Enumeration<String> getKeys() {
-		Set<String> keys = new HashSet<String>();
+		Set<String> keys = new HashSet<>();
 		for (Field field : nlsClass.getFields()) {
 			if (field.getType() == String.class) {
 				if (Modifier.isStatic(field.getModifiers())) {
