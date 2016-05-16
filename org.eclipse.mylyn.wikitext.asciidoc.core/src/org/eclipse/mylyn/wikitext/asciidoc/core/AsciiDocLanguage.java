@@ -9,6 +9,7 @@
  *     Stefan Seelmann - initial API and implementation
  *     Max Rydahl Andersen - Bug 474084
  *     Patrik Suzzi <psuzzi@gmail.com> - Bug 481670, 474084
+ *     Jeremie Bresson - Bug 488246
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.asciidoc.core;
@@ -29,6 +30,8 @@ import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.TitleLineBlock;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.UnderlinedHeadingBlock;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.phrase.BackslashEscapePhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.phrase.SimplePhraseModifier;
+import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.AnchorLinkMacroReplacementToken;
+import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.AnchorLinkReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.EmailLinkReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.ExplicitLinkReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.ImplicitFormattedLinkReplacementToken;
@@ -36,6 +39,8 @@ import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.ImplicitLinkRepla
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.InlineCommentReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.InlineImageReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.PreserverHtmlEntityToken;
+import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.XrefMacroReplacementToken;
+import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.XrefReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.util.ReadAheadDispatcher;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
@@ -95,6 +100,10 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 		phraseModifierSyntax.add(new ExplicitLinkReplacementToken());
 		phraseModifierSyntax.add(new ImplicitFormattedLinkReplacementToken());
 		phraseModifierSyntax.add(new ImplicitLinkReplacementToken());
+		phraseModifierSyntax.add(new AnchorLinkReplacementToken());
+		phraseModifierSyntax.add(new AnchorLinkMacroReplacementToken());
+		phraseModifierSyntax.add(new XrefReplacementToken());
+		phraseModifierSyntax.add(new XrefMacroReplacementToken());
 
 		// backslash escaped span elements
 		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("+")); //$NON-NLS-1$
