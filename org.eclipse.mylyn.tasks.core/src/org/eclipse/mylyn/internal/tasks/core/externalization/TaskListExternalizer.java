@@ -18,40 +18,21 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.ITransferList;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryModel;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.XmlReaderUtil;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -63,19 +44,6 @@ import org.xml.sax.XMLReader;
 public class TaskListExternalizer {
 
 	private static final String ERROR_TASKLIST_READ = "Failed to load Task List"; //$NON-NLS-1$
-
-	private static final String TRANSFORM_PROPERTY_VERSION = "version"; //$NON-NLS-1$
-
-	// May 2007: There was a bug when reading in 1.1
-	// Result was an infinite loop within the parser
-	private static final String XML_VERSION = "1.0"; //$NON-NLS-1$
-
-	public static final String ATTRIBUTE_VERSION = "Version"; //$NON-NLS-1$
-
-	public static final String ELEMENT_TASK_LIST = "TaskList"; //$NON-NLS-1$
-
-	// Mylyn 3.0
-	private static final String VALUE_VERSION = "2.0"; //$NON-NLS-1$
 
 	private final DelegatingTaskExternalizer delegatingExternalizer;
 
@@ -96,96 +64,23 @@ public class TaskListExternalizer {
 	}
 
 	public void writeTaskList(ITransferList taskList, File outFile) throws CoreException {
-		try {
-			FileOutputStream outStream = new FileOutputStream(outFile);
-			try {
-				Document doc = createTaskListDocument(taskList);
-
-				ZipOutputStream zipOutStream = new ZipOutputStream(outStream);
-
+		try (FileOutputStream outStream = new FileOutputStream(outFile)) {
+			try (ZipOutputStream zipOutStream = new ZipOutputStream(outStream)) {
 				ZipEntry zipEntry = new ZipEntry(ITasksCoreConstants.OLD_TASK_LIST_FILE);
 				zipOutStream.putNextEntry(zipEntry);
 				zipOutStream.setMethod(ZipOutputStream.DEFLATED);
 
-				writeDocument(doc, zipOutStream);
+				SaxTaskListWriter writer = new SaxTaskListWriter();
+				writer.setOutputStream(zipOutStream);
+				writer.writeTaskListToStream(taskList, orphanDocument);
 
 				zipOutStream.flush();
 				zipOutStream.closeEntry();
 				zipOutStream.finish();
-			} finally {
-				outStream.close();
 			}
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Saving Task List failed", //$NON-NLS-1$
 					e));
-		}
-	}
-
-	private Document createTaskListDocument(ITransferList taskList) throws CoreException {
-		Document doc = createDocument();
-
-		delegatingExternalizer.clearErrorStatus();
-
-		Element root = doc.createElement(ELEMENT_TASK_LIST);
-		root.setAttribute(ATTRIBUTE_VERSION, VALUE_VERSION);
-		doc.appendChild(root);
-
-		// create task nodes...
-		for (AbstractTask task : taskList.getAllTasks()) {
-			delegatingExternalizer.createTaskElement(task, doc, root);
-		}
-
-		// create the category nodes...
-		for (AbstractTaskCategory category : taskList.getCategories()) {
-			delegatingExternalizer.createCategoryElement(category, doc, root);
-		}
-
-		// create query nodes...
-		for (RepositoryQuery query : taskList.getQueries()) {
-			delegatingExternalizer.createQueryElement(query, doc, root);
-		}
-
-		// Persist orphaned tasks...
-		if (orphanDocument != null) {
-			NodeList orphans = orphanDocument.getDocumentElement().getChildNodes();
-			for (int i = 0; i < orphans.getLength(); i++) {
-				Node node = orphans.item(i);
-				Node tempNode = doc.importNode(node, true);
-				if (tempNode != null) {
-					root.appendChild(tempNode);
-				}
-			}
-		}
-
-		if (delegatingExternalizer.getErrorStatus() != null) {
-			StatusHandler.log(delegatingExternalizer.getErrorStatus());
-		}
-
-		return doc;
-	}
-
-	private void writeDocument(Document doc, OutputStream outputStream) throws CoreException {
-		Source source = new DOMSource(doc);
-		Result result = new StreamResult(outputStream);
-		try {
-			Transformer xformer = TransformerFactory.newInstance().newTransformer();
-			xformer.setOutputProperty(TRANSFORM_PROPERTY_VERSION, XML_VERSION);
-			xformer.transform(source, result);
-		} catch (TransformerException e) {
-			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Failed write task list", //$NON-NLS-1$
-					e));
-		}
-	}
-
-	private Document createDocument() throws CoreException {
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db;
-		try {
-			db = dbf.newDocumentBuilder();
-			return db.newDocument();
-		} catch (ParserConfigurationException e) {
-			throw new CoreException(
-					new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Failed to create document", e)); //$NON-NLS-1$
 		}
 	}
 
