@@ -31,8 +31,10 @@ public class AsciiDocLanguageCodeBlockElementsTest extends AsciiDocLanguageTestB
 		assertEquals("<div class=\"listingblock\">" //
 				+ "<div class=\"content\">" //
 				+ "<pre class=\"nowrap\">" //
+				+ "<code class=\"nowrap\">" //
 				+ "10 PRINT \"Hello World!\"<br/>" //
 				+ "20 GOTO 10<br/>" //
+				+ "</code>" //
 				+ "</pre>" //
 				+ "</div></div>", html);
 	}
@@ -48,8 +50,10 @@ public class AsciiDocLanguageCodeBlockElementsTest extends AsciiDocLanguageTestB
 				+ "<div class=\"title\">Helloworld.bas</div>" //
 				+ "<div class=\"content\">" //
 				+ "<pre class=\"nowrap\">" //
+				+ "<code class=\"nowrap\">" //
 				+ "10 PRINT \"Hello World!\"<br/>" //
 				+ "20 GOTO 10<br/>" //
+				+ "</code>" //
 				+ "</pre>" //
 				+ "</div></div>", html);
 	}
@@ -66,8 +70,10 @@ public class AsciiDocLanguageCodeBlockElementsTest extends AsciiDocLanguageTestB
 				+ "<div class=\"title\">Helloworld.bas</div>" //
 				+ "<div class=\"content\">" //
 				+ "<pre class=\"nowrap source-basic\">" //
+				+ "<code class=\"nowrap source-basic\">" //
 				+ "10 PRINT \"Hello World!\"<br/>" //
 				+ "20 GOTO 10<br/>" //
+				+ "</code>" //
 				+ "</pre>" //
 				+ "</div></div>", html);
 	}
@@ -83,9 +89,12 @@ public class AsciiDocLanguageCodeBlockElementsTest extends AsciiDocLanguageTestB
 		assertEquals("<div class=\"listingblock\">" //
 				+ "<div class=\"content\">" //
 				+ "<pre class=\"nowrap\">" //
+				+ "<code class=\"nowrap\">" //
 				+ "10 PRINT \"Hello World!\"<br/>" //
 				+ "20 GOTO 10<br/>" //
-				+ "---<br/>" + "</pre>" //
+				+ "---<br/>" //
+				+ "</code>" //
+				+ "</pre>" //
 				+ "</div></div>", html);
 
 	}

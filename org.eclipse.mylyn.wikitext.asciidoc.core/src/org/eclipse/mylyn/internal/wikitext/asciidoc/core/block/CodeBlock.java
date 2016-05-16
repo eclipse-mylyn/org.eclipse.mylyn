@@ -67,7 +67,7 @@ public class CodeBlock extends AsciiDocBlock {
 			attributes.appendCssClass("source-" + properties.get("language")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
-		builder.beginBlock(BlockType.PREFORMATTED, attributes);
+		builder.beginBlock(BlockType.CODE, attributes);
 	}
 
 	@Override

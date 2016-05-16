@@ -52,6 +52,7 @@ public class PreformattedBlock extends AsciiDocBlock {
 	@Override
 	protected void processBlockStart() {
 		builder.beginBlock(BlockType.PREFORMATTED, new Attributes());
+		processBlockContent(startDelimiter);
 	}
 
 	@Override
@@ -60,6 +61,7 @@ public class PreformattedBlock extends AsciiDocBlock {
 		Matcher matcher = startPattern.matcher(line);
 		if (!matcher.matches()) {
 			setClosed(true);
+			return;
 		}
 		String indent = matcher.group(1);
 		String content = matcher.group(2);
@@ -69,7 +71,7 @@ public class PreformattedBlock extends AsciiDocBlock {
 			builder.characters(indent);
 		}
 		builder.characters(content);
-
+		builder.lineBreak();
 	}
 
 	@Override
