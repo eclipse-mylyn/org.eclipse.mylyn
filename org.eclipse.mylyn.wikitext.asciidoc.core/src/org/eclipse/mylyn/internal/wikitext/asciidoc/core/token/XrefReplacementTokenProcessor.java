@@ -26,40 +26,52 @@ class XrefReplacementTokenProcessor extends PatternBasedElementProcessor {
 
 	@Override
 	public void emit() {
-		final String linkTarget = group(1);
-		final String linkText = group(2);
+		builder.link(linkTarget(), linkText());
+	}
 
-		//Href or Hash Name:
-		String hrefOrHashName = linkTarget;
-		if (!hrefOrHashName.contains("#")) { //$NON-NLS-1$
-			hrefOrHashName = "#" + hrefOrHashName; //$NON-NLS-1$
-		} else if (hrefOrHashName.charAt(hrefOrHashName.length() - 1) == '#') {
-			hrefOrHashName = hrefOrHashName.substring(0, hrefOrHashName.length() - 1);
+	private String linkTarget() {
+		String target = linkTargetCaptureGroup();
+		if (!target.contains("#")) { //$NON-NLS-1$
+			target = "#" + target; //$NON-NLS-1$
+		} else if (target.charAt(target.length() - 1) == '#') {
+			target = target.substring(0, target.length() - 1);
 		}
+		return target;
+	}
 
-		//Text:
-		StringBuilder sb = new StringBuilder();
+	private String linkText() {
+		String linkText = linkTextCaptureGroup();
+
+		StringBuilder buffer = new StringBuilder();
 		if (linkText != null && linkText.length() > linkTextOffset) {
-			sb.append(linkText.substring(linkTextOffset).trim());
+			buffer.append(linkText.substring(linkTextOffset).trim());
 		} else {
-			sb.append("["); //$NON-NLS-1$
-			String text = linkTarget;
-			int hashPosition = text.indexOf("#"); //$NON-NLS-1$
+			buffer.append("["); //$NON-NLS-1$
+			String target = linkTargetCaptureGroup();
+			int hashPosition = target.indexOf("#"); //$NON-NLS-1$
 			if (hashPosition > 0) {
-				int extStart = text.substring(0, hashPosition).lastIndexOf("."); //$NON-NLS-1$
+				int extStart = target.substring(0, hashPosition).lastIndexOf("."); //$NON-NLS-1$
 				if (extStart > 0) {
-					sb.append(text.substring(0, extStart));
+					buffer.append(target.substring(0, extStart));
 				} else {
-					sb.append(text.substring(0, hashPosition));
+					buffer.append(target.substring(0, hashPosition));
 				}
-				if (hashPosition != text.length() - 1) {
-					sb.append(text.substring(hashPosition));
+				if (hashPosition != target.length() - 1) {
+					buffer.append(target.substring(hashPosition));
 				}
 			} else {
-				sb.append(text);
+				buffer.append(target);
 			}
-			sb.append("]"); //$NON-NLS-1$
+			buffer.append("]"); //$NON-NLS-1$
 		}
-		builder.link(hrefOrHashName, sb.toString());
+		return buffer.toString();
+	}
+
+	private String linkTargetCaptureGroup() {
+		return group(1);
+	}
+
+	private String linkTextCaptureGroup() {
+		return group(2);
 	}
 }
