@@ -45,8 +45,6 @@ public class TaskListExternalizer {
 
 	private static final String ERROR_TASKLIST_READ = "Failed to load Task List"; //$NON-NLS-1$
 
-	private final DelegatingTaskExternalizer delegatingExternalizer;
-
 	private final RepositoryModel repositoryModel;
 
 	private final IRepositoryManager repositoryManager;
@@ -56,11 +54,10 @@ public class TaskListExternalizer {
 	public TaskListExternalizer(RepositoryModel repositoryModel, IRepositoryManager repositoryManager) {
 		this.repositoryModel = repositoryModel;
 		this.repositoryManager = repositoryManager;
-		this.delegatingExternalizer = new DelegatingTaskExternalizer(repositoryModel, repositoryManager);
 	}
 
 	public void initialize(List<AbstractTaskListMigrator> migrators) {
-		this.delegatingExternalizer.initialize(migrators);
+		// TODO: Deprecate migration
 	}
 
 	public void writeTaskList(ITransferList taskList, File outFile) throws CoreException {
