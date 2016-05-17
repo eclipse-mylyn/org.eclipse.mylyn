@@ -37,7 +37,7 @@ import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 
 /**
  * Stores and manages task list elements and their containment hierarchy.
- * 
+ *
  * @author Mik Kersten
  * @author Rob Elves
  * @since 3.0
@@ -188,9 +188,11 @@ public class TaskList implements ITaskList, ITransferList {
 				}
 			}
 
-			removeFromUnmatched(task, delta);
+			if (!(container instanceof UnmatchedTaskContainer)) {
+				removeFromUnmatched(task, delta);
+			}
 
-			(task).addParentContainer(container);
+			task.addParentContainer(container);
 			container.internalAddChild(task);
 			delta.add(new TaskContainerDelta(task, container, TaskContainerDelta.Kind.ADDED));
 		} finally {
@@ -286,7 +288,7 @@ public class TaskList implements ITaskList, ITransferList {
 
 	/**
 	 * Exposed for unit testing
-	 * 
+	 *
 	 * @return unmodifiable collection of ITaskActivityListeners
 	 */
 	public Set<ITaskListChangeListener> getChangeListeners() {
@@ -376,7 +378,7 @@ public class TaskList implements ITaskList, ITransferList {
 
 	/**
 	 * TODO: consider removing, if everything becomes a repository task
-	 * 
+	 *
 	 * @return null if no such task.
 	 */
 	public AbstractTask getTask(String handleIdentifier) {
@@ -451,7 +453,7 @@ public class TaskList implements ITaskList, ITransferList {
 
 	/**
 	 * Task added if does not exist already. Ensures the element exists in the task list
-	 * 
+	 *
 	 * @throws IllegalAgumentException
 	 *             if null argument passed or element does not exist in task list
 	 * @return element as passed in or instance from task list with same handle if exists
@@ -505,7 +507,7 @@ public class TaskList implements ITaskList, ITransferList {
 		fireDelta(taskChangeDeltas);
 	}
 
-	// TODO rename: this indicates a change of the synchronizing/status flag, not of the synchronization state  
+	// TODO rename: this indicates a change of the synchronizing/status flag, not of the synchronization state
 	public void notifySynchronizationStateChanged(IRepositoryElement element) {
 		notifySynchronizationStateChanged(Collections.singleton(element));
 	}
@@ -530,7 +532,8 @@ public class TaskList implements ITaskList, ITransferList {
 						task.setUrl(newRepositoryUrl + taskUrl.substring(oldRepositoryUrl.length()));
 					}
 				}
-				if (oldRepositoryUrl.equals(task.getAttribute(ITasksCoreConstants.ATTRIBUTE_OUTGOING_NEW_REPOSITORY_URL))) {
+				if (oldRepositoryUrl
+						.equals(task.getAttribute(ITasksCoreConstants.ATTRIBUTE_OUTGOING_NEW_REPOSITORY_URL))) {
 					task.setAttribute(ITasksCoreConstants.ATTRIBUTE_OUTGOING_NEW_REPOSITORY_URL, newRepositoryUrl);
 				}
 			}
@@ -593,7 +596,8 @@ public class TaskList implements ITaskList, ITransferList {
 	/**
 	 * Note: does not add <code>task</code> to the unmatched container.
 	 */
-	private void removeFromContainerInternal(AbstractTaskContainer container, ITask task, Set<TaskContainerDelta> delta) {
+	private void removeFromContainerInternal(AbstractTaskContainer container, ITask task,
+			Set<TaskContainerDelta> delta) {
 		assert container.getChildren().contains(task);
 
 		container.internalRemoveChild(task);
@@ -603,18 +607,20 @@ public class TaskList implements ITaskList, ITransferList {
 	}
 
 	private void removeFromUnmatched(AbstractTask task, Set<TaskContainerDelta> delta) {
-		AbstractTaskContainer orphans = getUnmatchedContainer(task.getRepositoryUrl());
-		if (orphans != null) {
-			if (orphans.internalRemoveChild(task)) {
-				delta.add(new TaskContainerDelta(task, orphans, TaskContainerDelta.Kind.REMOVED));
-				task.removeParentContainer(orphans);
+		AbstractTaskContainer unmatched = getUnmatchedContainer(task.getRepositoryUrl());
+		if (unmatched != null) {
+			// first check that the task has the unmatched container as a parent
+			// this provides considerable performance improvements when loading large task lists
+			if (task.getParentContainers().contains(unmatched) && unmatched.internalRemoveChild(task)) {
+				delta.add(new TaskContainerDelta(task, unmatched, TaskContainerDelta.Kind.REMOVED));
+				task.removeParentContainer(unmatched);
 			}
 		}
 	}
 
 	/**
 	 * TODO separate category/query handle from name
-	 * 
+	 *
 	 * @deprecated
 	 */
 	@Deprecated
@@ -696,7 +702,7 @@ public class TaskList implements ITaskList, ITransferList {
 				}
 			} catch (InterruptedException e) {
 				if (ignoreInterrupts) {
-					// clear interrupted status to retry lock.aquire() 
+					// clear interrupted status to retry lock.aquire()
 					Thread.interrupted();
 				} else {
 					break;
@@ -730,8 +736,8 @@ public class TaskList implements ITaskList, ITransferList {
 			while (nextHandle < Integer.MAX_VALUE) {
 				String handle = DEFAULT_HANDLE_PREFIX + nextHandle;
 				nextHandle++;
-				if (!categories.containsKey(handle) && !queries.containsKey(handle)
-						&& !unmatchedMap.containsKey(handle) && !tasks.containsKey(handle)) {
+				if (!categories.containsKey(handle) && !queries.containsKey(handle) && !unmatchedMap.containsKey(handle)
+						&& !tasks.containsKey(handle)) {
 					return handle;
 				}
 			}
