@@ -13,6 +13,7 @@
 
 package org.eclipse.mylyn.internal.tasks.core.externalization;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -105,7 +106,7 @@ public class TaskListExternalizer {
 		InputStream in = null;
 		try {
 			if (inputFile.getName().endsWith(ITasksCoreConstants.FILE_EXTENSION)) {
-				in = new ZipInputStream(new FileInputStream(inputFile));
+				in = new ZipInputStream(new BufferedInputStream(new FileInputStream(inputFile)));
 				ZipEntry entry = ((ZipInputStream) in).getNextEntry();
 				while (entry != null) {
 					if (ITasksCoreConstants.OLD_TASK_LIST_FILE.equals(entry.getName())) {
