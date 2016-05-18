@@ -36,6 +36,14 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 
 	private String shortSummary;
 
+	public ScheduledTaskContainer(TaskActivityManager activityManager, DateRange range, String summary,
+			String shortSummary) {
+		this(activityManager, range, summary);
+		if (shortSummary != null) {
+			this.shortSummary = shortSummary;
+		}
+	}
+
 	public ScheduledTaskContainer(TaskActivityManager activityManager, DateRange range, String summary) {
 		super(summary == null ? range.toString(false) : summary);
 		this.activityManager = activityManager;
@@ -44,9 +52,6 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 			if (range instanceof DayDateRange && TaskActivityUtil.getNextWeek().includes(range)) {
 				DayDateRange dayRange = (DayDateRange) range;
 				String day = NLS.bind(Messages.ScheduledTaskContainer_Next_Day, dayRange.getDayOfWeek());
-//				String shortDate = DateFormat.getDateInstance(DateFormat.SHORT).format(
-//						dayRange.getStartDate().getTime());
-//				this.summary = NLS.bind(Messages.ScheduledTaskContainer_Dash_Pattern, day, shortDate);
 				this.summary = day;
 				this.shortSummary = day;
 			} else {
@@ -69,70 +74,6 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 	public boolean isPresent() {
 		return range.getStartDate().before(Calendar.getInstance()) && range.getEndDate().after(Calendar.getInstance());
 	}
-
-//	public boolean isWeekDay() {
-//		return TaskActivityUtil.getCurrentWeek().isCurrentWeekDay(range);
-//	}
-
-//	public boolean isToday() {
-//		if (range instanceof DayDateRange) {
-//			return ((DayDateRange) range).isToday();
-//		}
-//		return false;
-//	}
-
-//	public Collection<ITask> getChildren() {
-//		Set<ITask> children = new HashSet<ITask>();
-//		Calendar beginning = TaskActivityUtil.getCalendar();
-//		beginning.setTimeInMillis(0);
-//		if (isFloating() && !isFuture()) {
-//			for (ITask task : activityManager.getScheduledTasks(rangebeginning, getEndDate())) {
-//				if (task.internalIsFloatingScheduledDate()) {
-//					children.add(task);
-//				}
-//			}
-//		} else if (isPresent()) {
-//			// add all due/overdue
-//			Calendar end = TaskActivityUtil.getCalendar();
-//			end.set(5000, 12, 1);
-//			for (ITask task : activityManager.getDueTasks(beginning, getEndDate())) {
-//				if (activityManager.isOwnedByUser(task)) {
-//					children.add(task);
-//				}
-//			}
-//
-//			// add all scheduled/overscheduled
-//			for (ITask task : activityManager.getScheduledTasks(beginning, getEndDate())) {
-//				if (!task.internalIsFloatingScheduledDate() && !task.isCompleted()) {
-//					children.add(task);
-//				}
-//			}
-//
-//			// if not scheduled or due in future, and is active, place in today bin
-//			ITask activeTask = activityManager.getActiveTask();
-//			if (activeTask != null && !children.contains(activeTask)) {
-//				Set<ITask> futureScheduled = activityManager.getScheduledTasks(getStartDate(), end);
-//				for (ITask task : activityManager.getDueTasks(getStartDate(), end)) {
-//					if (activityManager.isOwnedByUser(task)) {
-//						futureScheduled.add(task);
-//					}
-//				}
-//				if (!futureScheduled.contains(activeTask)) {
-//					children.add(activeTask);
-//				}
-//			}
-//		} else if (isFuture()) {
-//			children.addAll(activityManager.getScheduledTasks(getStartDate(), getEndDate()));
-//			for (ITask task : activityManager.getDueTasks(getStartDate(), getEndDate())) {
-//				if (activityManager.isOwnedByUser(task)) {
-//					children.add(task);
-//				}
-//			}
-//		} else {
-//			children.addAll(activityManager.getActiveTasks(range.getStartDate(), range.getEndDate()));
-//		}
-//		return children;
-//	}
 
 	@Override
 	public Collection<ITask> getChildren() {
@@ -158,15 +99,15 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 		// All tasks scheduled for this date range
 		Set<ITask> tasks = activityManager.getScheduledTasks(start, end);
 		if (range instanceof WeekDateRange) {
-			// remove tasks not scheduled for the week container itself, except for 2 weeks, in which case only remove 
+			// remove tasks not scheduled for the week container itself, except for 2 weeks, in which case only remove
 			// if they will show under future
 			for (Iterator<ITask> iterator = tasks.iterator(); iterator.hasNext();) {
 				ITask task = iterator.next();
 				if (task instanceof AbstractTask) {
 					DateRange scheduledDate = ((AbstractTask) task).getScheduledForDate();
 					if (!(scheduledDate instanceof WeekDateRange)
-							&& (TaskActivityUtil.getNextWeek().next().compareTo(range) != 0 || scheduledDate.getEndDate()
-									.after(end))) {
+							&& (TaskActivityUtil.getNextWeek().next().compareTo(range) != 0
+									|| scheduledDate.getEndDate().after(end))) {
 						iterator.remove();
 					}
 				}
@@ -199,7 +140,7 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 
 		// Add due tasks if not the This Week container, and not scheduled for earlier date
 		if (!TaskActivityUtil.getCurrentWeek().equals(range) && !TaskActivityUtil.getNextWeek().equals(range)) {
-			// tasks are due at the start of a day, so only search in the range of times that correspond to 
+			// tasks are due at the start of a day, so only search in the range of times that correspond to
 			// the start of the day in some time zone
 			Calendar endDueSearch = Calendar.getInstance();
 			endDueSearch.setTimeInMillis(range.getStartDate().getTimeInMillis());
@@ -256,7 +197,6 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 	}
 
 	private boolean isThisWeekBin() {
-
 		return range instanceof WeekDateRange && ((WeekDateRange) range).isThisWeek();
 	}
 
@@ -283,10 +223,6 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 	}
 
 	private void addChild(Set<ITask> collection, ITask task) {
-//		if (task.getSynchronizationState().isOutgoing()) {
-//			return;
-//		}
-
 		collection.add(task);
 	}
 

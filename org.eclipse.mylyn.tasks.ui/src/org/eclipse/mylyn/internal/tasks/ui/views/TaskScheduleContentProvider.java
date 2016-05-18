@@ -138,7 +138,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 			DateRange future = new DateRange(startDate, endDate);
 
 			ScheduledTaskContainer futureContainer = new ScheduledTaskContainer(taskActivityManager, future,
-					Messages.TaskScheduleContentProvider_Future);
+					Messages.TaskScheduleContentProvider_Future, Messages.TaskScheduleContentProvider_Future);
 			containers.add(futureContainer);
 
 			// Outgoing
@@ -271,7 +271,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 		Calendar temp = TaskActivityUtil.getCalendar();
 
 		public StateTaskContainer(DateRange range, String summary) {
-			super(taskActivityManager, range, summary);
+			super(taskActivityManager, range, summary, summary);
 		}
 
 		@Override
