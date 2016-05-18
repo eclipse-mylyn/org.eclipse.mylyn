@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2015 Ericsson
- * 
+ *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *   Jacques Bouthillier - Initial Implementation of the plug-in
  *   Francois Chouinard - Handle gerrit queries and open reviews in editor
@@ -35,6 +35,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -102,7 +103,7 @@ import com.google.common.base.Strings;
  * connected to the model using a content provider.
  * <p>
  * The view uses a label provider to define how model objects should be presented in the view.
- * 
+ *
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
  */
@@ -126,9 +127,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 	 */
 	public static final String VIEW_ID = "org.eclipse.mylyn.gerrit.dashboard.ui.views.GerritTableView"; //$NON-NLS-1$
 
-	private static final int SEARCH_WIDTH = 350;
-
-	private static final int REPO_WIDTH = 350;
+	private static final int REPO_WIDTH = 170;
 
 	private static final int VERSION_WIDTH = 35;
 
@@ -297,7 +296,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 
 	/**
 	 * Create a group to show the search command and a search text
-	 * 
+	 *
 	 * @param Composite
 	 *            aParent
 	 */
@@ -321,9 +320,6 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 		//Create a form to maintain the search data
 		Composite leftSearchForm = UIUtils.createsGeneralComposite(formGroup, SWT.NONE);
 
-		GridData gridDataViewer = new GridData(GridData.FILL_HORIZONTAL);
-		leftSearchForm.setLayoutData(gridDataViewer);
-
 		GridLayout leftLayoutForm = new GridLayout();
 		leftLayoutForm.numColumns = 3;
 		leftLayoutForm.marginHeight = 0;
@@ -344,19 +340,18 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 		fReviewsTotalResultLabel.setLayoutData(new GridData(VERSION_WIDTH, SWT.DEFAULT));
 
 		//Right side of the Group
-		Composite rightSsearchForm = UIUtils.createsGeneralComposite(formGroup, SWT.NONE);
-		GridData gridDataViewer2 = new GridData(GridData.FILL_HORIZONTAL | GridData.HORIZONTAL_ALIGN_END);
-		rightSsearchForm.setLayoutData(gridDataViewer2);
+		Composite rightSearchForm = UIUtils.createsGeneralComposite(formGroup, SWT.NONE);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(rightSearchForm);
+
 		GridLayout rightLayoutForm = new GridLayout();
 		rightLayoutForm.numColumns = 2;
 		rightLayoutForm.marginHeight = 0;
 		rightLayoutForm.makeColumnsEqualWidth = false;
-
-		rightSsearchForm.setLayout(rightLayoutForm);
+		rightSearchForm.setLayout(rightLayoutForm);
 
 		//Create a SEARCH text data entry
-		fSearchRequestText = new Combo(rightSsearchForm, SWT.NONE);
-		fSearchRequestText.setLayoutData(new GridData(SEARCH_WIDTH, SWT.DEFAULT));
+		fSearchRequestText = new Combo(rightSearchForm, SWT.NONE);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(fSearchRequestText);
 		fSearchRequestText.setToolTipText(Messages.GerritTableView_tooltipSearch);
 		//Get the last saved commands
 		fRequestList = fServerUtil.getListLastCommands();
@@ -373,8 +368,8 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 			}
 		});
 
-		//Create a SEARCH button 
-		fSearchRequestBtn = new Button(rightSsearchForm, SWT.NONE);
+		//Create a SEARCH button
+		fSearchRequestBtn = new Button(rightSearchForm, SWT.NONE);
 		fSearchRequestBtn.setText(Messages.GerritTableView_search);
 		fSearchRequestBtn.addListener(SWT.Selection, new Listener() {
 
@@ -457,7 +452,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 
 	/**
 	 * Create a list for commands to add to the table review list menu
-	 * 
+	 *
 	 * @return CommandContributionItem[]
 	 */
 	private CommandContributionItem[] buildContributions() {
@@ -536,7 +531,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 
 	/**
 	 * Process the commands based on the Gerrit string
-	 * 
+	 *
 	 * @param String
 	 *            aQuery
 	 */
@@ -587,7 +582,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 
 	/**
 	 * Process the command to set the Starred flag on the Gerrit server String taskId boolean starred
-	 * 
+	 *
 	 * @param progressMonitor
 	 * @return void
 	 * @throws CoreException
@@ -603,7 +598,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 
 	/**
 	 * Find the last Gerrit server being used , otherwise consider the Eclipse.org gerrit server version as a default
-	 * 
+	 *
 	 * @return Version
 	 */
 	public Version getlastGerritServerVersion() {
@@ -643,7 +638,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 
 	/**
 	 * Verify if the Gerrit version is before 2.5
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public boolean isGerritVersionBefore_2_5() {
@@ -701,16 +696,16 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 									gerritClient = fConnector.getClient(aTaskRepo);
 								}
 								if (gerritClient != null) {
-									setRepositoryVersionLabel(aTaskRepo.getRepositoryLabel(), gerritClient.getVersion()
-											.toString());
+									setRepositoryVersionLabel(aTaskRepo.getRepositoryLabel(),
+											gerritClient.getVersion().toString());
 								}
 							}
 						});
 					}
 				} catch (GerritQueryException e) {
 					status = e.getStatus();
-					StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, e.getStatus().getMessage(),
-							e));
+					StatusHandler
+							.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, e.getStatus().getMessage(), e));
 				}
 
 				aMonitor.done();
@@ -769,7 +764,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 	/**
 	 * Take the list of last save queries and reverse the order to have the latest selection to be the first one on the
 	 * pull-down menu
-	 * 
+	 *
 	 * @param aList
 	 *            String[]
 	 * @return String[] reverse order
@@ -814,7 +809,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 
 	/**
 	 * Perform the requested query and convert the resulting tasks in GerritTask:s
-	 * 
+	 *
 	 * @param repository
 	 *            the tasks repository
 	 * @param queryType
@@ -876,7 +871,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 
 	/**
 	 * We need to use the define in GerritQuery.java for the missing one
-	 * 
+	 *
 	 * @param queryType
 	 * @return queryString
 	 */
@@ -901,8 +896,8 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 		if (ok) {
 			status = fConnector.performQuery(repository, aQuery, resultCollector, null, new NullProgressMonitor());
 		} else {
-			status = new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, NLS.bind(
-					Messages.GerritTableView_missingGitConnector, aQuery.getAttribute(GerritQuery.PROJECT)));
+			status = new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
+					NLS.bind(Messages.GerritTableView_missingGitConnector, aQuery.getAttribute(GerritQuery.PROJECT)));
 		}
 
 		if (!status.isOK()) {
@@ -983,7 +978,7 @@ public class GerritTableView extends ViewPart implements ITaskListChangeListener
 
 	private void setRepositoryVersionLabel(String aRepo, String aVersion) {
 		if (!fRepositoryVersionResulLabel.isDisposed()) {
-			// e.g. "Eclipse.org Reviews - Gerrit 2.6.1" 
+			// e.g. "Eclipse.org Reviews - Gerrit 2.6.1"
 			fRepositoryVersionResulLabel.setText(NLS.bind(Messages.GerritTableView_gerritLabel, aRepo, aVersion));
 		}
 	}
