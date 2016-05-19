@@ -618,4 +618,25 @@ public class TaskDataManager implements ITaskDataManager {
 			}
 		});
 	}
+
+	public void refactorTaskId(final AbstractTask task, final ITask newTask) throws CoreException {
+		final String kind = task.getConnectorKind();
+		taskList.run(new ITaskListRunnable() {
+			public void execute(IProgressMonitor monitor) throws CoreException {
+				File file = getMigratedFile(task, kind);
+				if (file.exists()) {
+					TaskDataState oldState = taskDataStore.getTaskDataState(file);
+					if (oldState != null) {
+						File newFile = getFile(task.getRepositoryUrl(), newTask, kind);
+						TaskDataState newState = new TaskDataState(oldState.getConnectorKind(), task.getRepositoryUrl(),
+								newTask.getTaskId());
+						newState.merge(oldState);
+						taskDataStore.putTaskData(ensurePathExists(newFile), newState);
+						taskDataStore.deleteTaskData(file);
+					}
+				}
+			}
+
+		});
+	}
 }

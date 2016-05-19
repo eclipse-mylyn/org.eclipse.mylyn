@@ -13,9 +13,8 @@
 package org.eclipse.mylyn.tasks.tests;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
-
-import junit.framework.TestCase;
 
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -31,6 +30,8 @@ import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
+
+import junit.framework.TestCase;
 
 /**
  * @author Shawn Minto
@@ -172,6 +173,7 @@ public class TaskActivityManagerTest extends TestCase {
 	protected void setUp() throws Exception {
 		taskActivityManager = TasksUiPlugin.getTaskActivityManager();
 		taskActivityManager.deactivateActiveTask();
+		taskActivityManager.clear();
 		taskList = TasksUiPlugin.getTaskList();
 
 		TaskTestUtil.resetTaskListAndRepositories();
@@ -391,6 +393,25 @@ public class TaskActivityManagerTest extends TestCase {
 		initializeTasks();
 		taskActivityManager.deactivateTask(task1);
 		assertNull(taskActivityManager.getActiveTask());
+	}
+
+	public void testMoveActivity() {
+		initializeTasks();
+		Calendar end = TaskActivityUtil.getNextWeek().getEndDate();
+		Calendar start = TaskActivityUtil.getCalendar();
+		start.setTimeInMillis(end.getTimeInMillis());
+		TaskActivityUtil.snapStartOfDay(start);
+		taskActivityManager.setScheduledFor(task1, new DateRange(start, end));
+		taskActivityManager.setDueDate(task1, new Date(start.getTimeInMillis() + 1));
+		assertEquals(Collections.singleton(task1), taskActivityManager.getScheduledTasks(start, end));
+		assertEquals(Collections.singleton(task1), taskActivityManager.getDueTasks(start, end));
+		taskActivityManager.activateTask(task1);
+
+		taskActivityManager.moveActivity(task1, task2);
+		assertEquals(Collections.singleton(task2), taskActivityManager.getScheduledTasks(start, end));
+		assertEquals(Collections.singleton(task2), taskActivityManager.getDueTasks(start, end));
+		assertTrue(task2.isActive());
+		assertEquals(task2, taskActivityManager.getActiveTask());
 	}
 
 	private void initializeTasks() {

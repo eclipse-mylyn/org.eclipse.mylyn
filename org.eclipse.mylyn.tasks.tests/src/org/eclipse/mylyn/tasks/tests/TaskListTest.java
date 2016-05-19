@@ -13,8 +13,6 @@ package org.eclipse.mylyn.tasks.tests;
 
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
@@ -22,11 +20,14 @@ import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
+
+import junit.framework.TestCase;
 
 /**
  * @author Mik Kersten
@@ -456,6 +457,100 @@ public class TaskListTest extends TestCase {
 		taskList.deleteTask(task);
 		assertEquals(0, taskList.getAllTasks().size());
 		assertEquals(0, taskList.getDefaultCategory().getChildren().size());
+	}
+
+	public void testRefactorSingleTask() {
+		AbstractTask task = new LocalTask("1", "label");
+		taskList.addTask(task);
+		taskList.refactorTaskId(task, "2");
+		assertEquals(1, taskList.getAllTasks().size());
+		assertEquals(1, taskList.getDefaultCategory().getChildren().size());
+		assertEquals(new LocalTask("2", "label"), taskList.getAllTasks().iterator().next());
+	}
+
+	public void testRefactorSingleTaskInUnmatched() {
+		String repositoryUrl = "http://somewhere.com";
+		MockTask task = new MockTask(repositoryUrl, "1");
+		UnmatchedTaskContainer unmatched = new UnmatchedTaskContainer(task.getConnectorKind(), repositoryUrl);
+		taskList.addUnmatchedContainer(unmatched);
+		taskList.addTask(task);
+		taskList.refactorTaskId(task, "2");
+		assertEquals(1, taskList.getAllTasks().size());
+		assertEquals(1, unmatched.getChildren().size());
+		assertEquals(new MockTask(repositoryUrl, "2"), taskList.getAllTasks().iterator().next());
+		assertEquals(new MockTask(repositoryUrl, "2"), unmatched.getChildren().iterator().next());
+	}
+
+	public void testRefactorSingleTaskKeepsProperties() {
+		AbstractTask task = new LocalTask("1", "label");
+		taskList.addTask(task);
+		taskList.refactorTaskId(task, "2");
+		assertEquals(1, taskList.getAllTasks().size());
+		AbstractTask refactoredTask = taskList.getAllTasks().iterator().next();
+		assertEquals(new LocalTask("2", "label"), refactoredTask);
+		assertEquals(task.getRepositoryUrl(), refactoredTask.getRepositoryUrl());
+		assertEquals(task.getConnectorKind(), refactoredTask.getConnectorKind());
+		assertEquals(task.getAttributes(), refactoredTask.getAttributes());
+		assertEquals(task.getSummary(), refactoredTask.getSummary());
+		assertEquals(task.getPriority(), refactoredTask.getPriority());
+	}
+
+	public void testRefactorTaskInQuery() {
+		MockRepositoryQuery query = new MockRepositoryQuery("query");
+		taskList.addQuery(query);
+		MockTask task = new MockTask("1");
+		taskList.addTask(task, query);
+		taskList.refactorTaskId(task, "2");
+		assertEquals(1, taskList.getAllTasks().size());
+		assertEquals(0, taskList.getDefaultCategory().getChildren().size());
+		assertEquals(1, query.getChildren().size());
+		assertEquals(new MockTask("2"), query.getChildren().iterator().next());
+		assertEquals(new MockTask("2"), taskList.getAllTasks().iterator().next());
+	}
+
+	public void testRefactorTaskInCategory() {
+		TaskCategory category = new TaskCategory("category");
+		taskList.addCategory(category);
+		MockTask task = new MockTask("1");
+		taskList.addTask(task, category);
+		taskList.refactorTaskId(task, "2");
+		assertEquals(1, taskList.getAllTasks().size());
+		assertEquals(0, taskList.getDefaultCategory().getChildren().size());
+		assertEquals(1, category.getChildren().size());
+		assertEquals(new MockTask("2"), category.getChildren().iterator().next());
+		assertEquals(new MockTask("2"), taskList.getAllTasks().iterator().next());
+	}
+
+	public void testRefactorTaskWithSubtask() {
+		AbstractTask task = new LocalTask("1", "label");
+		AbstractTask subtask = new LocalTask("2", "subtask");
+		taskList.addTask(task);
+		taskList.addTask(subtask, task);
+		taskList.refactorTaskId(task, "3");
+		assertEquals(2, taskList.getAllTasks().size());
+		assertEquals(1, taskList.getDefaultCategory().getChildren().size());
+		assertEquals(1, subtask.getParentContainers().size());
+		AbstractTaskContainer refactoredTask = subtask.getParentContainers().iterator().next();
+		assertEquals(new LocalTask("3", "label"), refactoredTask);
+		assertTrue(taskList.getAllTasks().contains(refactoredTask));
+		assertEquals(1, refactoredTask.getChildren().size());
+		assertEquals(subtask, refactoredTask.getChildren().iterator().next());
+	}
+
+	public void testRefactorTaskWithParent() {
+		AbstractTask task = new LocalTask("1", "label");
+		AbstractTask parent = new LocalTask("2", "parent");
+		taskList.addTask(parent);
+		taskList.addTask(task, parent);
+		taskList.refactorTaskId(task, "3");
+		assertEquals(2, taskList.getAllTasks().size());
+		assertEquals(1, taskList.getDefaultCategory().getChildren().size());
+		assertEquals(1, parent.getChildren().size());
+		AbstractTask refactoredTask = (AbstractTask) parent.getChildren().iterator().next();
+		assertEquals(new LocalTask("3", "label"), refactoredTask);
+		assertTrue(taskList.getAllTasks().contains(refactoredTask));
+		assertEquals(1, refactoredTask.getParentContainers().size());
+		assertEquals(parent, refactoredTask.getParentContainers().iterator().next());
 	}
 
 	public void testgetQueriesAndHitsForHandle() {

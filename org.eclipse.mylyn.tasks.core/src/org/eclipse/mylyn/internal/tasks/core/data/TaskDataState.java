@@ -197,9 +197,9 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 	}
 
 	public void merge(TaskDataState oldState) {
-		setEditsData(createCopy(oldState.getEditsData()));
-		setLocalTaskData(createCopy(oldState.getLocalData()));
-		setRepositoryData(createCopy(oldState.getRepositoryData()));
+		setEditsData(createCopy(oldState.getEditsData(), getTaskId()));
+		setLocalTaskData(createCopy(oldState.getLocalData(), getTaskId()));
+		setRepositoryData(createCopy(oldState.getRepositoryData(), getTaskId()));
 	}
 
 	public void changeAttributeValues(ListMultimap<TaskAttribute, String> newValues) {
@@ -221,11 +221,15 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 	}
 
 	public static TaskData createCopy(TaskData oldData) {
+		return createCopy(oldData, oldData.getTaskId());
+	}
+
+	private static TaskData createCopy(TaskData oldData, String newTaskId) {
 		if (oldData == null) {
 			return null;
 		}
 		TaskData newData = new TaskData(oldData.getAttributeMapper(), oldData.getConnectorKind(),
-				oldData.getRepositoryUrl(), oldData.getTaskId());
+				oldData.getRepositoryUrl(), newTaskId);
 		newData.setVersion(oldData.getVersion());
 		for (TaskAttribute child : oldData.getRoot().getAttributes().values()) {
 			newData.getRoot().deepAddCopy(child);

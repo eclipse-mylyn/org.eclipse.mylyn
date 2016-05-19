@@ -62,12 +62,15 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 
 	private final Set<ITask> allDueTasks = new HashSet<ITask>();
 
-	private final SortedMap<DateRange, Set<ITask>> scheduledTasks = Collections.synchronizedSortedMap(new TreeMap<DateRange, Set<ITask>>());
+	private final SortedMap<DateRange, Set<ITask>> scheduledTasks = Collections
+			.synchronizedSortedMap(new TreeMap<DateRange, Set<ITask>>());
 
-	private final SortedMap<Calendar, Set<ITask>> dueTasks = Collections.synchronizedSortedMap(new TreeMap<Calendar, Set<ITask>>());
+	private final SortedMap<Calendar, Set<ITask>> dueTasks = Collections
+			.synchronizedSortedMap(new TreeMap<Calendar, Set<ITask>>());
 
 	// Map of Calendar (hour) to Tasks active during that hour
-	private final SortedMap<Calendar, Set<AbstractTask>> activeTasks = Collections.synchronizedSortedMap(new TreeMap<Calendar, Set<AbstractTask>>());
+	private final SortedMap<Calendar, Set<AbstractTask>> activeTasks = Collections
+			.synchronizedSortedMap(new TreeMap<Calendar, Set<AbstractTask>>());
 
 	// For a given task maps Calendar Hour to duration of time spent (milliseconds) with task active
 	private final Map<AbstractTask, SortedMap<Calendar, Long>> taskElapsedTimeMap = new ConcurrentHashMap<AbstractTask, SortedMap<Calendar, Long>>();
@@ -118,7 +121,8 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 			listenersInitialized = true;
 
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
-			IExtensionPoint listenerExtensionPoint = registry.getExtensionPoint(TaskActivityManager.ID_EXTENSION_TASK_ACTIVATION_LISTENERS);
+			IExtensionPoint listenerExtensionPoint = registry
+					.getExtensionPoint(TaskActivityManager.ID_EXTENSION_TASK_ACTIVATION_LISTENERS);
 			IExtension[] listenerExtensions = listenerExtensionPoint.getExtensions();
 			for (IExtension extension : listenerExtensions) {
 				IConfigurationElement[] elements = extension.getConfigurationElements();
@@ -129,18 +133,15 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 							if (object instanceof ITaskActivationListener) {
 								addActivationListener((ITaskActivationListener) object);
 							} else {
-								StatusHandler.log(new Status(
-										IStatus.ERROR,
-										ITasksCoreConstants.ID_PLUGIN,
-										NLS.bind(
-												"Unexpected error registering listener contributed by {0}: ''{1}'' does not extend expected class", //$NON-NLS-1$
-												element.getContributor().getName(), object.getClass()
-														.getCanonicalName())));
+								StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
+										"Unexpected error registering listener contributed by {0}: ''{1}'' does not extend expected class", //$NON-NLS-1$
+										element.getContributor().getName(), object.getClass().getCanonicalName())));
 							}
 						} catch (Throwable e) {
-							StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, NLS.bind(
-									"Unexpected error registering listener contributed by {0}", //$NON-NLS-1$
-									element.getContributor().getName()), e));
+							StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+									NLS.bind("Unexpected error registering listener contributed by {0}", //$NON-NLS-1$
+											element.getContributor().getName()),
+									e));
 						}
 					}
 				}
@@ -687,6 +688,18 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 			addDueTask(task);
 		}
 		taskList.notifyElementChanged(task);
+	}
+
+	public void moveActivity(ITask oldTask, AbstractTask newTask) {
+		setDueDate(newTask, oldTask.getDueDate());
+		if (oldTask instanceof AbstractTask) {
+			setScheduledFor(newTask, ((AbstractTask) oldTask).getScheduledForDate());
+		}
+		if (oldTask.isActive()) {
+			activateTask(newTask);
+		}
+		removeDueTask(oldTask);
+		removeScheduledTask(oldTask);
 	}
 
 	/**

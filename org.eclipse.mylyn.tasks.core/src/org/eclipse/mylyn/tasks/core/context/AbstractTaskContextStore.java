@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.tasks.core.context;
 
 import java.io.File;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -19,7 +20,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * A store for persisting task contexts.
- * 
+ *
  * @author Steffen Pingel
  * @since 3.7
  */
@@ -27,7 +28,7 @@ public abstract class AbstractTaskContextStore {
 
 	/**
 	 * Clears the context of <code>task</code>.
-	 * 
+	 *
 	 * @since 3.7
 	 */
 	public abstract void clearContext(ITask task);
@@ -35,7 +36,7 @@ public abstract class AbstractTaskContextStore {
 	/**
 	 * Copies the context from <code>sourceTask</code> to <code>destinationTask</code>. Creates a new context if a
 	 * <code>sourceTask</code> does not have a context.
-	 * 
+	 *
 	 * @return result of the copy operation
 	 * @since 3.7
 	 */
@@ -43,14 +44,14 @@ public abstract class AbstractTaskContextStore {
 
 	/**
 	 * Deletes the context of <code>task</code>.
-	 * 
+	 *
 	 * @since 3.7
 	 */
 	public abstract void deleteContext(ITask task);
 
 	/**
 	 * Return the location of the context for <code>task</code>.
-	 * 
+	 *
 	 * @return null, if context for <code>task</code> does not exist
 	 * @since 3.7
 	 */
@@ -69,7 +70,7 @@ public abstract class AbstractTaskContextStore {
 	/**
 	 * Moves the context from <code>sourceTask</code> to <code>destinationTask</code>. Creates a new context if a
 	 * <code>sourceTask</code> does not have a context.
-	 * 
+	 *
 	 * @return result of the move operation
 	 * @since 3.7
 	 */
@@ -94,9 +95,17 @@ public abstract class AbstractTaskContextStore {
 
 	/**
 	 * Sets the location of task file.
-	 * 
+	 *
 	 * @since 3.7
 	 */
 	public abstract void setDirectory(File directory);
+
+	/**
+	 * Moves the context from tasks in the keyset of <code>tasks</code> to their corresponding values.
+	 *
+	 * @since 3.20
+	 */
+	public void moveContext(Map<ITask, ITask> tasks) {
+	}
 
 }

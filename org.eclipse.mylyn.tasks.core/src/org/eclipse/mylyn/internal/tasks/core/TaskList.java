@@ -568,6 +568,55 @@ public class TaskList implements ITaskList, ITransferList {
 		}
 	}
 
+	public AbstractTask refactorTaskId(ITask oldTask, String newTaskId) {
+		TaskTask newTask = new TaskTask(oldTask.getConnectorKind(), oldTask.getRepositoryUrl(), newTaskId);
+
+		newTask.setSummary(oldTask.getSummary());
+		newTask.setPriority(oldTask.getPriority());
+		newTask.setSynchronizationState(oldTask.getSynchronizationState());
+		newTask.setCompletionDate(oldTask.getCompletionDate());
+		newTask.setCreationDate(oldTask.getCreationDate());
+		newTask.setModificationDate(oldTask.getModificationDate());
+		newTask.setTaskKind(oldTask.getTaskKind());
+		newTask.setOwnerId(oldTask.getOwnerId());
+		newTask.setOwner(oldTask.getOwner());
+		newTask.setTaskKey(oldTask.getTaskKey());
+		if (oldTask instanceof AbstractTask) {
+			AbstractTask task = (AbstractTask) oldTask;
+			newTask.setSynchronizing(task.isSynchronizing());
+			newTask.setMarkReadPending(task.isMarkReadPending());
+			newTask.setNotified(task.isNotified());
+			newTask.setChanged(task.isChanged());
+			newTask.setReminded(task.isReminded());
+			newTask.setStatus(task.getStatus());
+			newTask.setNotes(task.getNotes());
+			newTask.setEstimatedTimeHours(task.getEstimatedTimeHours());
+			addTaskContainers(task, newTask);
+		}
+		Map<String, String> attributeMap = oldTask.getAttributes();
+		for (String key : attributeMap.keySet()) {
+			newTask.setAttribute(key, attributeMap.get(key));
+		}
+
+		deleteTask(oldTask);
+		return newTask;
+	}
+
+	private void addTaskContainers(AbstractTask oldTask, AbstractTask newTask) {
+		Set<AbstractTaskContainer> containers = oldTask.getParentContainers();
+		if (containers.isEmpty()
+				|| (containers.size() == 1 && containers.iterator().next() instanceof UnmatchedTaskContainer)) {
+			addTask(newTask);
+		} else {
+			for (AbstractTaskContainer container : containers) {
+				addTask(newTask, container);
+			}
+		}
+		for (ITask subtask : oldTask.getChildren()) {
+			addTask(subtask, newTask);
+		}
+	}
+
 	public void removeChangeListener(ITaskListChangeListener listener) {
 		changeListeners.remove(listener);
 	}
