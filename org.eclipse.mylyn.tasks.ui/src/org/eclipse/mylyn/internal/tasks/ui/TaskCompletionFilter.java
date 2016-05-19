@@ -14,6 +14,7 @@ import java.util.Collection;
 
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.views.PresentationFilter;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider.Completed;
 import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
@@ -33,9 +34,13 @@ public class TaskCompletionFilter extends AbstractTaskListFilter {
 						return true;
 					}
 				}
-				// hide completed task 
+				// hide completed task
 				return false;
 			}
+		}
+		// hide the completed category when not showing completed tasks
+		if (element instanceof Completed) {
+			return false;
 		}
 		return true;
 	}
