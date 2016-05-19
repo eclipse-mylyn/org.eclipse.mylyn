@@ -353,7 +353,8 @@ public class TaskListToolTip extends GradientToolTip {
 				for (ITask task : tasks) {
 					if (task.getSynchronizationState().isIncoming()) {
 						incoming++;
-					} else if (task.getSynchronizationState().isOutgoing()) {
+					}
+					if (task.getSynchronizationState().isOutgoing()) {
 						outgoing++;
 					}
 				}
