@@ -30,7 +30,7 @@ public class TaskCompletionFilter extends AbstractTaskListFilter {
 			if (task.isCompleted()) {
 				Collection<ITask> children = task.getChildren();
 				for (ITask child : children) {
-					if (PresentationFilter.getInstance().select(element) && select(element, child)) {
+					if (PresentationFilter.getInstance().select(element, child) && select(element, child)) {
 						return true;
 					}
 				}

@@ -15,11 +15,11 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.IAttributeContainer;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 
@@ -38,7 +38,10 @@ public class PresentationFilter extends AbstractTaskListFilter {
 
 	private boolean filterNonMatching;
 
-	private PresentationFilter() {
+	/**
+	 * @noreference This method is not intended to be referenced by clients.
+	 */
+	PresentationFilter() {
 		updateSettings();
 	}
 
@@ -50,37 +53,39 @@ public class PresentationFilter extends AbstractTaskListFilter {
 		return filterNonMatching;
 	}
 
-	public boolean select(Object element) {
-		// filter hidden queries
+	@Override
+	public boolean select(Object parent, Object element) {
 		if (element instanceof IRepositoryQuery) {
-			if (!filterHiddenQueries) {
-				return true;
-			}
-			return isQueryVisible(element);
+			return selectQuery((IRepositoryQuery) element);
 		}
-		// filter repository sub-tasks not connected to queries or categories
+		// only filter repository tasks
 		if (element instanceof TaskTask) {
-			if (!filterNonMatching) {
-				return true;
-			}
-			for (AbstractTaskContainer container : ((AbstractTask) element).getParentContainers()) {
-				// categories and local subtasks are always visible
-				if (container instanceof AbstractTaskCategory) {
-					return true;
-				}
-				// show task if is contained in a query
-				if (container instanceof IRepositoryQuery && (!filterHiddenQueries || isQueryVisible(container))) {
-					return true;
-				}
-			}
-			return false;
+			return selectTask(parent, (TaskTask) element);
 		}
 		return true;
 	}
 
-	@Override
-	public boolean select(Object parent, Object element) {
-		return select(element);
+	private boolean selectQuery(IRepositoryQuery query) {
+		if (!filterHiddenQueries) {
+			return true;
+		}
+		return !Boolean.parseBoolean(query.getAttribute(ITasksCoreConstants.ATTRIBUTE_HIDDEN));
+	}
+
+	private boolean selectTask(Object parent, TaskTask task) {
+		if (!filterNonMatching) {
+			return true;
+		}
+		// tasks matching a query or category should be included
+		if (isInVisibleQuery(task)) {
+			return true;
+		}
+		// explicitly scheduled subtasks should be shown in those containers
+		if (parent != null && parent.getClass().equals(ScheduledTaskContainer.class)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	public void setFilterHiddenQueries(boolean enabled) {
@@ -92,16 +97,11 @@ public class PresentationFilter extends AbstractTaskListFilter {
 	}
 
 	public void updateSettings() {
-		setFilterHiddenQueries(TasksUiPlugin.getDefault()
-				.getPreferenceStore()
-				.getBoolean(ITasksUiPreferenceConstants.FILTER_HIDDEN));
+		setFilterHiddenQueries(
+				TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.FILTER_HIDDEN));
 		setFilterNonMatching(TasksUiPlugin.getDefault()
 				.getPreferenceStore()
 				.getBoolean(ITasksUiPreferenceConstants.FILTER_NON_MATCHING));
-	}
-
-	private boolean isQueryVisible(Object element) {
-		return !Boolean.parseBoolean(((IAttributeContainer) element).getAttribute(ITasksCoreConstants.ATTRIBUTE_HIDDEN));
 	}
 
 	public boolean isInVisibleQuery(ITask task) {
@@ -111,11 +111,10 @@ public class PresentationFilter extends AbstractTaskListFilter {
 				return true;
 			}
 			// show task if is contained in a query
-			if (container instanceof IRepositoryQuery && (!filterHiddenQueries || isQueryVisible(container))) {
+			if (container instanceof IRepositoryQuery && selectQuery((IRepositoryQuery) container)) {
 				return true;
 			}
 		}
 		return false;
 	}
-
 }
