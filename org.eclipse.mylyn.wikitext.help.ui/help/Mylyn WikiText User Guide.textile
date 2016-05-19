@@ -620,7 +620,7 @@ h4. Image Scaling
 DocBook supports image scaling with the @scale@ attribute.  For example:
 
 bc. 
-<imagedata fileref="images/foo.png" scale=80"/>
+<imagedata fileref="images/foo.png" scale="80"/>
 
 To achieve this effect with Textile markup use syntax as follows:
 
@@ -639,7 +639,7 @@ bc.
 This is achieved with Textile markup as follows:
 
 bc. 
-!{width=32px;height=64px}images/foo.png!
+!{width:32px;height:64px}images/foo.png!
 
 h3. Extended Blocks
 

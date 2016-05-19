@@ -12,8 +12,6 @@ package org.eclipse.mylyn.wikitext.core.parser.builder;
 
 import java.io.StringWriter;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
@@ -23,6 +21,8 @@ import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.TableAttributes;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
+
+import junit.framework.TestCase;
 
 /**
  * @author David Green
@@ -49,7 +49,8 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		parser.parse("some text !(inline)images/foo.png! some text");
 		String docbook = out.toString();
 		TestUtil.println("DocBook: \n" + docbook);
-		assertTrue(docbook.contains("<inlinemediaobject role=\"inline\"><imageobject><imagedata fileref=\"images/foo.png\"/></imageobject></inlinemediaobject>"));
+		assertTrue(docbook.contains(
+				"<inlinemediaobject role=\"inline\"><imageobject><imagedata fileref=\"images/foo.png\"/></imageobject></inlinemediaobject>"));
 	}
 
 	public void testInlineQuote() {
@@ -64,14 +65,23 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		parser.parse("some text !images/foo.png! some text");
 		String docbook = out.toString();
 		TestUtil.println("DocBook: \n" + docbook);
-		assertTrue(docbook.contains("<mediaobject><imageobject><imagedata fileref=\"images/foo.png\"/></imageobject></mediaobject>"));
+		assertTrue(docbook.contains(
+				"<mediaobject><imageobject><imagedata fileref=\"images/foo.png\"/></imageobject></mediaobject>"));
 	}
 
 	public void testImageWithScaling() {
 		parser.parse("some text !{width:80%}images/foo.png! some text");
 		String docbook = out.toString();
 		TestUtil.println("DocBook: \n" + docbook);
-		assertTrue(docbook.contains("<mediaobject><imageobject><imagedata fileref=\"images/foo.png\" scale=\"80\"/></imageobject></mediaobject>"));
+		assertTrue(docbook.contains(
+				"<mediaobject><imageobject><imagedata fileref=\"images/foo.png\" scale=\"80\"/></imageobject></mediaobject>"));
+	}
+
+	public void testImageWithWidthAndHeight() {
+		parser.parse("!{width:32px;height:64px}images/foo.png!");
+		String docbook = out.toString();
+		assertTrue(docbook, docbook.contains(
+				"<mediaobject><imageobject><imagedata fileref=\"images/foo.png\" width=\"32px\" depth=\"64px\"/></imageobject></mediaobject>"));
 	}
 
 	public void testDefinitionList() {
@@ -100,7 +110,8 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		String docbook = out.toString();
 		TestUtil.println("DocBook: \n" + docbook);
 
-		assertTrue(docbook.contains("<variablelist><varlistentry><term>foo</term><listitem><para>Foo definition</para></listitem></varlistentry><varlistentry><term>bar</term><listitem><para>Bar definition</para></listitem></varlistentry></variablelist>"));
+		assertTrue(docbook.contains(
+				"<variablelist><varlistentry><term>foo</term><listitem><para>Foo definition</para></listitem></varlistentry><varlistentry><term>bar</term><listitem><para>Bar definition</para></listitem></varlistentry></variablelist>"));
 	}
 
 	public void testGlossaryUsesDefinitionList() {
@@ -110,7 +121,8 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		String docbook = out.toString();
 		TestUtil.println("DocBook: \n" + docbook);
 
-		assertTrue(docbook.contains("<variablelist><varlistentry><term>ABW</term><listitem><para>A Better Way</para></listitem></varlistentry><varlistentry><term>NIMBY</term><listitem><para>Not In My Back Yard</para></listitem></varlistentry></variablelist>"));
+		assertTrue(docbook.contains(
+				"<variablelist><varlistentry><term>ABW</term><listitem><para>A Better Way</para></listitem></varlistentry><varlistentry><term>NIMBY</term><listitem><para>Not In My Back Yard</para></listitem></varlistentry></variablelist>"));
 	}
 
 	public void testAutomaticGlossaryOnByDefault() {
@@ -162,7 +174,8 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		//			</listitem>
 		//		</itemizedlist>
 
-		assertTrue(docbook.contains("<itemizedlist><listitem><para>foo</para><itemizedlist><listitem><para>bar</para></listitem></itemizedlist><para>foo2</para></listitem><listitem><para>baz</para></listitem></itemizedlist>"));
+		assertTrue(docbook.contains(
+				"<itemizedlist><listitem><para>foo</para><itemizedlist><listitem><para>bar</para></listitem></itemizedlist><para>foo2</para></listitem><listitem><para>baz</para></listitem></itemizedlist>"));
 	}
 
 	public void testDiv() {
@@ -183,7 +196,8 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		String docbook = out.toString();
 		TestUtil.println("DocBook: \n" + docbook);
 
-		assertTrue(docbook.contains("<book><title></title><chapter><title></title><para>foo</para><para>bar</para></chapter></book>"));
+		assertTrue(docbook.contains(
+				"<book><title></title><chapter><title></title><para>foo</para><para>bar</para></chapter></book>"));
 	}
 
 	public void testSpanLink() {
@@ -206,7 +220,8 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		String docbook = out.toString();
 		TestUtil.println("DocBook: \n" + docbook);
 
-		assertTrue(docbook.contains("<book><title></title><chapter><title></title><para><link linkend=\"test1234\"><emphasis>link text</emphasis></link></para></chapter></book>"));
+		assertTrue(docbook.contains(
+				"<book><title></title><chapter><title></title><para><link linkend=\"test1234\"><emphasis>link text</emphasis></link></para></chapter></book>"));
 	}
 
 	public void testTableClass() {

@@ -1340,6 +1340,12 @@ public class TextileLanguageTest extends AbstractMarkupGenerationTest<TextileLan
 	}
 
 	@Test
+	public void testHyperlinkWithWidthAndHeight() {
+		assertMarkup("<p><img style=\"width:32px;height:64px\" border=\"0\" src=\"images/foo.png\"/></p>",
+				"!{width:32px;height:64px}images/foo.png!");
+	}
+
+	@Test
 	public void testAcronym() throws IOException {
 		String html = parser.parseToHtml("ABC(A Better Comb)");
 
