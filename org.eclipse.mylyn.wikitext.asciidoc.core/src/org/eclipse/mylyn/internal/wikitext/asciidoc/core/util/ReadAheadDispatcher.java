@@ -102,7 +102,7 @@ public class ReadAheadDispatcher extends Block {
 	}
 
 	private List<Block> cloneBlocks(List<Block> blocks) {
-		List<Block> clonedBlocks = new ArrayList<Block>();
+		List<Block> clonedBlocks = new ArrayList<>();
 		for (Block block : blocks) {
 			clonedBlocks.add(block.clone());
 		}

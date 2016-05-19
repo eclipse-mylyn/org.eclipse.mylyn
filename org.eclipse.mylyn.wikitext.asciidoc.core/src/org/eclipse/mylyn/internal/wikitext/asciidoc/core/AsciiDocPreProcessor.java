@@ -33,7 +33,7 @@ public class AsciiDocPreProcessor {
 	static final private Pattern ATTRIBUTE_TOKEN_PATTERN = Pattern.compile("(?:\\{(.*?)\\})"); //$NON-NLS-1$
 
 	public String process(String markupContent) {
-		Map<String, String> attributes = new HashMap<String, String>();
+		Map<String, String> attributes = new HashMap<>();
 
 		StringBuilder processedMarkup = new StringBuilder(markupContent.length());
 
