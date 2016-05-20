@@ -163,14 +163,23 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 		}
 	}
 
+	/**
+	 * @see #getEditsData()
+	 */
 	public void setEditsData(TaskData editsTaskData) {
 		this.editsTaskData = editsTaskData;
 	}
 
+	/**
+	 * @see #getLastReadData()
+	 */
 	public void setLastReadData(TaskData oldTaskData) {
 		this.lastReadTaskData = oldTaskData;
 	}
 
+	/**
+	 * @see #getLocalData()
+	 */
 	public void setLocalTaskData(TaskData localTaskData) {
 		this.localTaskData = localTaskData;
 	}
@@ -179,6 +188,9 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 		this.saved = saved;
 	}
 
+	/**
+	 * @see #getRepositoryData()
+	 */
 	public void setRepositoryData(TaskData newTaskData) {
 		this.repositoryTaskData = newTaskData;
 	}

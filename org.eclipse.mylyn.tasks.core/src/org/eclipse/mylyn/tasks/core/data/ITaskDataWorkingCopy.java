@@ -15,6 +15,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 
 /**
  * @author Steffen Pingel
@@ -25,21 +26,44 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public interface ITaskDataWorkingCopy {
 
 	/**
+	 * Get the unsubmitted edits made locally by the user.
+	 *
+	 * @return TaskData containing only those attributes that have been edited.
 	 * @since 3.0
 	 */
 	public abstract TaskData getEditsData();
 
 	/**
+	 * Get the "old" data that was retrieved from the repository some time in the past. When the
+	 * {@link #getRepositoryData() repository data} contains unread incoming changes, the last read data is the data
+	 * that the user last (marked) read. If the task has never been read, this will be the same as the
+	 * {@link #getRepositoryData() repository data}.
+	 * <p>
+	 * When new TaskData is retrieved, if the previous incoming changes in the repository data have been
+	 * {@link AbstractTask#isMarkReadPending() marked read}, the last read data is replaced with the repository data,
+	 * and the repository data is replaced with the newly retrieved data. If the data has not been marked read, the
+	 * repository data is replaced with the newly retrieved data and the last read data is unchanged.
+	 *
+	 * @return TaskData that has been read by the user, or the latest data retrieved from the repository if the task has
+	 *         never been read
 	 * @since 3.0
 	 */
 	public abstract TaskData getLastReadData();
 
 	/**
+	 * Get the TaskData that results from applying the user's {@link #getEditsData() edits} to the new
+	 * {@link #getRepositoryData() repository data}. This is the only TaskData used to populate the task editor.
+	 *
+	 * @return TaskData used to populate the task editor
 	 * @since 3.0
 	 */
 	public abstract TaskData getLocalData();
 
 	/**
+	 * Get the "new" data that was recently retrieved from the repository and may have changed since the
+	 * {@link #getLastReadData() last read} data was read.
+	 *
+	 * @return TaskData that may contain incoming changes; the most current copy of the repository's data
 	 * @since 3.0
 	 */
 	public abstract TaskData getRepositoryData();
