@@ -17,7 +17,6 @@
     <qualifier>${project.unqualifiedVersion}</qualifier>
     <sign-dir>tools/mylyn/signing/mylyn/${project.version}</sign-dir>
     <mirrors-url>http://www.eclipse.org/downloads/download.php?file=/mylyn/drops/${unqualifiedVersion}/${buildQualifier}/site.xml&amp;amp;protocol=http&amp;amp;format=xml</mirrors-url>
-    <target-platform>mylyn-e4.5</target-platform>
   </properties>
   <profiles>
     <profile>
