@@ -54,6 +54,7 @@ Stand-alone usage of WikiText is also possible.  To use WikiText outside of an E
 
 Add the @org.eclipse.mylyn.wikitext.core*.jar@ to your classpath, and at least one the following language-specific jars:
 
+* @org.eclipse.mylyn.wikitext.asciidoc.core*.jar@
 * @org.eclipse.mylyn.wikitext.confluence.core*.jar@
 * @org.eclipse.mylyn.wikitext.markdown.core*.jar@
 * @org.eclipse.mylyn.wikitext.mediawiki.core*.jar@
@@ -90,6 +91,7 @@ ServiceLocator.getInstance().getMarkupLanguage("Textile")
 
 Other markup languages can be obtained by changing @"Textile"@ to another markup language name.  Valid markup language names include:
 
+* AsciiDoc
 * Confluence
 * Markdown
 * MediaWiki

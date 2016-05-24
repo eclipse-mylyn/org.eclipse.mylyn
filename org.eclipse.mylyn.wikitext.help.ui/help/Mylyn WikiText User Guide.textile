@@ -11,7 +11,7 @@ h2. Table of Contents
 
 h1. Getting Started
 
-The WikiText plug-in provides a lightweight markup editor for Eclipse. The editor is registered against all files with the following file extensions: @*.textile@, @*.tracwiki@, @*.markdown@, @*.md@, @*.mdtext@, @*.mediawiki@, @*.twiki@, @*.confluence@
+The WikiText plug-in provides a lightweight markup editor for Eclipse. The editor is registered against all files with the following file extensions: @*.ad@, @*.adoc@, @*.asciidoc@, @*.textile@, @*.tracwiki@, @*.markdown@, @*.md@, @*.mdtext@, @*.mediawiki@, @*.twiki@, @*.confluence@
 
 It's also possible to register the editor with other file extensions by setting the Eclipse preferences under *General -> Other -> File Associations*.
 
