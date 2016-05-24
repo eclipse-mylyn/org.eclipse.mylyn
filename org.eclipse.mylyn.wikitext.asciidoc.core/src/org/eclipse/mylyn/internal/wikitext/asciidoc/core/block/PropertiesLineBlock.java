@@ -29,7 +29,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.ContentState;
  */
 public class PropertiesLineBlock extends Block {
 
-	private static final Pattern pattern = Pattern.compile("^\\[(.*)\\]"); //$NON-NLS-1$
+	private static final Pattern pattern = Pattern.compile("^\\[(.*)\\]\\s*"); //$NON-NLS-1$
 
 	private Matcher matcher;
 

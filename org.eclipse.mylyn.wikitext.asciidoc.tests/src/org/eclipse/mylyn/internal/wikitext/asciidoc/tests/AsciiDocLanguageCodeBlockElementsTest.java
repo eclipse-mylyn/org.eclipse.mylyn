@@ -59,6 +59,38 @@ public class AsciiDocLanguageCodeBlockElementsTest extends AsciiDocLanguageTestB
 	}
 
 	@Test
+	public void sourceCodeBlock() {
+		String html = parseToHtml("[source, java]\n" //
+				+ "----\n" //
+				+ "System.out.println(\"Hello World!\");\n" //
+				+ "----");
+		assertEquals("<div class=\"listingblock\">" //
+				+ "<div class=\"content\">" //
+				+ "<pre class=\"nowrap source-java\">" //
+				+ "<code class=\"nowrap source-java\">" //
+				+ "System.out.println(\"Hello World!\");<br/>" //
+				+ "</code>" //
+				+ "</pre>" //
+				+ "</div></div>", html);
+	}
+
+	@Test
+	public void sourceCodeBlockWithTrailingWhitespaces() {
+		String html = parseToHtml("[source, java]  \n" //
+				+ "----\n" //
+				+ "System.out.println(\"Hello World!\");\n" //
+				+ "----");
+		assertEquals("<div class=\"listingblock\">" //
+				+ "<div class=\"content\">" //
+				+ "<pre class=\"nowrap source-java\">" //
+				+ "<code class=\"nowrap source-java\">" //
+				+ "System.out.println(\"Hello World!\");<br/>" //
+				+ "</code>" //
+				+ "</pre>" //
+				+ "</div></div>", html);
+	}
+
+	@Test
 	public void titledCodeWithSourceBlock() {
 		String html = parseToHtml(".Helloworld.bas\n" //
 				+ "[source,basic]\n" //
