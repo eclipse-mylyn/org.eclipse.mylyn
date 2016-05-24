@@ -21,9 +21,11 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -309,13 +311,17 @@ public class RestfulHudsonClient {
 
 				List<HudsonModelJob> buildPlans = new ArrayList<HudsonModelJob>();
 				List<Object> jobsNodes = hudson.getJob();
+				Set<String> urls = new HashSet<>();
 				for (Object jobNode : jobsNodes) {
 					Node node = (Node) jobNode;
 					HudsonModelJob job = unmarshal(node, HudsonModelJob.class);
 					if (job.getColor() != null) { // job folders don't have a color
 						String jobUrl = hudsonUrlUtil.assembleJobUrl(job.getName(), folderUrl);
-						job.setUrl(jobUrl);
-						buildPlans.add(job);
+						if (!urls.contains(jobUrl)) {
+							job.setUrl(jobUrl);
+							buildPlans.add(job);
+							urls.add(jobUrl);
+						}
 					} else if (ids == null) { // retrieve jobs from sub-folder only if we need to fetch all jobs
 						buildPlans.addAll(getJobsFromFolder(job.getUrl(), ids, monitor));
 					}
