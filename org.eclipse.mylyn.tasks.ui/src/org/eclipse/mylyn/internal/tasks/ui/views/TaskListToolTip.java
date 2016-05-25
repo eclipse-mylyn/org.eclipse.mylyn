@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.commons.ui.GradientToolTip;
@@ -38,12 +39,10 @@ import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.data.TaskDataDiff;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TaskScalingHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskDiffUtil;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotifier;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider.StateTaskContainer;
@@ -81,6 +80,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.forms.IFormColors;
 
+import com.google.common.base.Strings;
 import com.ibm.icu.text.DateFormat;
 import com.ibm.icu.text.SimpleDateFormat;
 
@@ -92,7 +92,11 @@ import com.ibm.icu.text.SimpleDateFormat;
  */
 public class TaskListToolTip extends GradientToolTip {
 
-	private final static int MAX_TEXT_WIDTH = 300;
+	public static interface TaskListToolTipListener {
+
+		void toolTipHidden(Event event);
+
+	}
 
 	private final static int MAX_WIDTH = 600;
 
@@ -287,7 +291,7 @@ public class TaskListToolTip extends GradientToolTip {
 	}
 
 	private String getActivityText(IRepositoryElement element) {
-		if (element instanceof ITask) {
+		if (element instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) element;
 
 			StringBuilder sb = new StringBuilder();
@@ -295,8 +299,7 @@ public class TaskListToolTip extends GradientToolTip {
 			Date dueDate = task.getDueDate();
 			if (dueDate != null) {
 				sb.append(NLS.bind(Messages.TaskListToolTip_Due,
-						new Object[] {
-								new SimpleDateFormat("E").format(dueDate), //$NON-NLS-1$
+						new Object[] { new SimpleDateFormat("E").format(dueDate), //$NON-NLS-1$
 								DateFormat.getDateInstance(DateFormat.LONG).format(dueDate),
 								DateFormat.getTimeInstance(DateFormat.SHORT).format(dueDate) }));
 				sb.append("\n"); //$NON-NLS-1$
@@ -308,29 +311,37 @@ public class TaskListToolTip extends GradientToolTip {
 				sb.append("\n"); //$NON-NLS-1$
 			}
 			long elapsed = TasksUiPlugin.getTaskActivityManager().getElapsedTime(task);
-			appendEstimateAndActive(sb, (task).getEstimatedTimeHours(), elapsed);
+			appendEstimateAndActive(sb, task.getEstimatedTimeHours(), elapsed);
 			return sb.toString();
 		}
 		return null;
 	}
 
-	private String getIncommingText(IRepositoryElement element) {
+	private String getIncomingText(IRepositoryElement element) {
+		String text = null;
 		if (element instanceof ITask) {
 			ITask task = (ITask) element;
 			if (task.getSynchronizationState().isIncoming()) {
-				String text = null;
-				TaskListNotifier notifier = new TaskListNotifier(TasksUiPlugin.getTaskDataManager(),
-						TasksUiPlugin.getDefault().getSynchronizationManger());
-				TaskDataDiff diff = notifier.getDiff(task);
-				if (diff != null && diff.hasChanged()) {
-					text = TaskDiffUtil.toString(diff, MAX_TEXT_WIDTH, true);
-				}
-				if (text != null && text.length() > 0) {
-					return text;
+				task.getAttribute(TaskListNotifier.KEY_INCOMING_NOTIFICATION_TEXT);
+				if (Strings.isNullOrEmpty(text)) {
+					TaskListNotifier notifier = new TaskListNotifier(TasksUiPlugin.getTaskDataManager(),
+							TasksUiPlugin.getDefault().getSynchronizationManger());
+					text = notifier.computeNotificationText(task);
 				}
 			}
 		}
-		return null;
+		return text;
+	}
+
+	private ImageDescriptor getIncomingImage() {
+		ImageDescriptor incomingImage = CommonImages.OVERLAY_SYNC_INCOMMING;
+		if (currentTipElement instanceof ITask) {
+			ITask task = (ITask) currentTipElement;
+			if (task.getSynchronizationState() == SynchronizationState.INCOMING_NEW) {
+				incomingImage = CommonImages.OVERLAY_SYNC_INCOMMING_NEW;
+			}
+		}
+		return incomingImage;
 	}
 
 	private String getSynchronizationStateText(IRepositoryElement element) {
@@ -390,7 +401,7 @@ public class TaskListToolTip extends GradientToolTip {
 				return control.toDisplay(bounds.x + X_SHIFT, bounds.y + bounds.height + Y_SHIFT);
 			}
 		}
-		return super.getLocation(tipSize, event);//control.toDisplay(event.x + xShift, event.y + yShift);
+		return super.getLocation(tipSize, event);
 	}
 
 	private ProgressData getProgressData(IRepositoryElement element) {
@@ -540,18 +551,10 @@ public class TaskListToolTip extends GradientToolTip {
 			addIconAndLabel(composite, CommonImages.getImage(CommonImages.CALENDAR), activityText);
 		}
 
-		String incommingText = getIncommingText(currentTipElement);
-		if (incommingText != null) {
-			Image image = CommonImages.getImage(CommonImages.OVERLAY_SYNC_INCOMMING);
-			if (currentTipElement instanceof ITask) {
-				ITask task = (ITask) currentTipElement;
-				if (task.getSynchronizationState() == SynchronizationState.INCOMING_NEW) {
-					image = CommonImages.getImage(CommonImages.OVERLAY_SYNC_INCOMMING_NEW);
-				} else if (task.getSynchronizationState() == SynchronizationState.OUTGOING_NEW) {
-					image = CommonImages.getImage(CommonImages.OVERLAY_SYNC_OUTGOING_NEW);
-				}
-			}
-			addIconAndLabel(composite, image, incommingText);
+		String incomingText = getIncomingText(currentTipElement);
+		if (incomingText != null) {
+			ImageDescriptor incomingImage = getIncomingImage();
+			addIconAndLabel(composite, CommonImages.getImage(incomingImage), incomingText);
 		}
 
 		String synchronizationStateText = getSynchronizationStateText(currentTipElement);
@@ -563,7 +566,7 @@ public class TaskListToolTip extends GradientToolTip {
 		if (progress != null) {
 			addIconAndLabel(composite, null, progress.text);
 
-			// label height need to be set to 0 to remove gap below the progress bar 
+			// label height need to be set to 0 to remove gap below the progress bar
 			Label label = new Label(composite, SWT.NONE);
 			GridData labelGridData = new GridData(SWT.FILL, SWT.TOP, true, false);
 			labelGridData.heightHint = 0;
@@ -613,11 +616,11 @@ public class TaskListToolTip extends GradientToolTip {
 				TaskListView taskListView = TaskListView.getFromActivePerspective();
 				if (taskListView != null) {
 
-					if (!taskListView.isFocusedMode()
-							&& TasksUiPlugin.getDefault()
-									.getPreferenceStore()
-									.getBoolean(ITasksUiPreferenceConstants.FILTER_COMPLETE_MODE)) {
-						Object[] children = ((TaskListContentProvider) taskListView.getViewer().getContentProvider()).getChildren(element);
+					if (!taskListView.isFocusedMode() && TasksUiPlugin.getDefault()
+							.getPreferenceStore()
+							.getBoolean(ITasksUiPreferenceConstants.FILTER_COMPLETE_MODE)) {
+						Object[] children = ((TaskListContentProvider) taskListView.getViewer().getContentProvider())
+								.getChildren(element);
 						boolean hasIncoming = false;
 						for (Object child : children) {
 							if (child instanceof ITask) {
@@ -708,12 +711,6 @@ public class TaskListToolTip extends GradientToolTip {
 			this.total = total;
 			this.text = text;
 		}
-
-	}
-
-	public static interface TaskListToolTipListener {
-
-		void toolTipHidden(Event event);
 
 	}
 

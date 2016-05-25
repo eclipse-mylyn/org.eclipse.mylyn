@@ -33,16 +33,15 @@ public class TaskDiffUtil {
 	private static final int MAX_CHANGED_ATTRIBUTES = 2;
 
 	// could use the ellipsis glyph on some platforms "\u2026"
-	private static final String ELLIPSIS = "..."; //$NON-NLS-1$ 
+	private static final String ELLIPSIS = "..."; //$NON-NLS-1$
 
 	private static int DRAW_FLAGS = SWT.DRAW_MNEMONIC | SWT.DRAW_TAB | SWT.DRAW_TRANSPARENT | SWT.DRAW_DELIMITER;
 
 	public static String toString(TaskDataDiff diff) {
-		return toString(diff, 60, true);
+		return toString(diff, true);
 	}
 
-	// TODO implement trim based on text width
-	public static String toString(TaskDataDiff diff, int maxWidth, boolean includeNewest) {
+	public static String toString(TaskDataDiff diff, boolean includeNewest) {
 		StringBuilder sb = new StringBuilder();
 		String sep = ""; //$NON-NLS-1$
 		// append first comment
@@ -62,7 +61,7 @@ public class TaskDiffUtil {
 			}
 			sep = "\n"; //$NON-NLS-1$
 		}
-		// append changed attributes		
+		// append changed attributes
 		int n = 0;
 		for (ITaskAttributeDiff changedAttribute : diff.getChangedAttributes()) {
 			TaskAttributeDiff attributeDiff = (TaskAttributeDiff) changedAttribute;
@@ -168,7 +167,7 @@ public class TaskDiffUtil {
 	 * Note: Copied from CLabel. Shorten the given text <code>t</code> so that its length doesn't exceed the given
 	 * width. The default implementation replaces characters in the center of the original string with an ellipsis
 	 * ("..."). Override if you need a different strategy.
-	 * 
+	 *
 	 * @param gc
 	 *            the gc to use for text measurement
 	 * @param t

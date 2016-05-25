@@ -37,10 +37,14 @@ import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
+import com.google.common.base.Strings;
+
 /**
  * @author Steffen Pingel
  */
 public class TaskListNotifier implements ITaskDataManagerListener, ITaskListNotificationProvider {
+
+	public final static String KEY_INCOMING_NOTIFICATION_TEXT = "org.eclipse.mylyn.tasks.ui.TaskNotificationText"; //$NON-NLS-1$
 
 	private final TaskDataManager taskDataManager;
 
@@ -60,15 +64,16 @@ public class TaskListNotifier implements ITaskDataManagerListener, ITaskListNoti
 			TaskListNotification notification = new TaskListNotification(task, token);
 			notification.setDescription(Messages.TaskListNotifier_New_unread_task);
 			return notification;
-		} else if (task.getSynchronizationState() == SynchronizationState.INCOMING) {
-			TaskDataDiff diff = getDiff(task);
-			if (diff != null && diff.hasChanged()) {
+		} else if (task.getSynchronizationState().isIncoming()) {
+			String notificationText = task.getAttribute(KEY_INCOMING_NOTIFICATION_TEXT);
+			if (!Strings.isNullOrEmpty(notificationText)) {
 				TaskListNotification notification = new TaskListNotification(task, token);
-				notification.setDescription(TaskDiffUtil.toString(diff, 60, true));
+				notification.setDescription(notificationText);
 				return notification;
 			}
 		}
 		return null;
+
 	}
 
 	public TaskDataDiff getDiff(ITask task) {
@@ -86,29 +91,47 @@ public class TaskListNotifier implements ITaskDataManagerListener, ITaskListNoti
 		return null;
 	}
 
+	@Override
 	public void taskDataUpdated(TaskDataManagerEvent event) {
-		synchronized (notificationQueue) {
-			if (!enabled) {
-				// skip expensive processing
-				return;
-			}
-		}
 		if (event.getToken() != null && event.getTaskDataChanged()) {
-			if (PresentationFilter.getInstance().isInVisibleQuery(event.getTask())) {
-				AbstractRepositoryConnectorUi connectorUi = TasksUi.getRepositoryConnectorUi(event.getTaskData()
-						.getConnectorKind());
-				if (!connectorUi.hasCustomNotifications()) {
-					TaskListNotification notification = getNotification(event.getTask(), event.getToken());
-					if (notification != null) {
-						synchronized (notificationQueue) {
-							if (enabled) {
-								notificationQueue.add(notification);
+			// always compute the incoming message as it may be used outside of the notification
+			recordNotificationText(event);
+
+			if (isEnabled()) {
+				if (PresentationFilter.getInstance().isInVisibleQuery(event.getTask())) {
+					AbstractRepositoryConnectorUi connectorUi = TasksUi
+							.getRepositoryConnectorUi(event.getTaskData().getConnectorKind());
+					if (!connectorUi.hasCustomNotifications()) {
+						TaskListNotification notification = getNotification(event.getTask(), event.getToken());
+						if (notification != null) {
+							synchronized (notificationQueue) {
+								if (enabled) {
+									notificationQueue.add(notification);
+								}
 							}
 						}
 					}
 				}
 			}
 		}
+	}
+
+	private void recordNotificationText(TaskDataManagerEvent event) {
+		ITask task = event.getTask();
+		SynchronizationState state = task.getSynchronizationState();
+		String notificationText = null;
+		if (state.isIncoming()) {
+			notificationText = computeNotificationText(task);
+		}
+		task.setAttribute(KEY_INCOMING_NOTIFICATION_TEXT, notificationText);
+	}
+
+	public String computeNotificationText(ITask task) {
+		TaskDataDiff diff = getDiff(task);
+		if (diff != null && diff.hasChanged()) {
+			return TaskDiffUtil.toString(diff, true);
+		}
+		return null;
 	}
 
 	public Set<AbstractUiNotification> getNotifications() {
@@ -122,8 +145,9 @@ public class TaskListNotifier implements ITaskDataManagerListener, ITaskListNoti
 		}
 	}
 
+	@Override
 	public void editsDiscarded(TaskDataManagerEvent event) {
-		// ignore		
+		// ignore
 	}
 
 	public void setEnabled(boolean enabled) {
