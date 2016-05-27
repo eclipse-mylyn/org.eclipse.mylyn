@@ -18,8 +18,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.AssertionFailedError;
-
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -48,6 +46,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tests.util.TestFixture;
+
+import junit.framework.AssertionFailedError;
 
 /**
  * @author Steffen Pingel
@@ -130,8 +130,8 @@ public class BugzillaFixture extends TestFixture {
 		return client(getRepositoryUrl(), credentials.getUserName(), credentials.getPassword(), "", "", "UTF-8");
 	}
 
-	public BugzillaClient client(String hostUrl, String username, String password, String htAuthUser,
-			String htAuthPass, String encoding) throws CoreException, IOException {
+	public BugzillaClient client(String hostUrl, String username, String password, String htAuthUser, String htAuthPass,
+			String encoding) throws CoreException, IOException {
 		WebLocation location = new WebLocation(hostUrl);
 		location.setCredentials(AuthenticationType.REPOSITORY, username, password);
 		location.setCredentials(AuthenticationType.HTTP, htAuthUser, htAuthPass);
@@ -187,7 +187,7 @@ public class BugzillaFixture extends TestFixture {
 
 	/**
 	 * Create and returns a minimal task.
-	 * 
+	 *
 	 * @param summary
 	 *            may be <code>null</code>
 	 * @param description
@@ -243,7 +243,7 @@ public class BugzillaFixture extends TestFixture {
 
 	/**
 	 * Retrieve task data for given task id
-	 * 
+	 *
 	 * @param id
 	 * @param client
 	 * @return The taskData retrieved
@@ -304,5 +304,9 @@ public class BugzillaFixture extends TestFixture {
 
 	public BugzillaHarness createHarness() {
 		return new BugzillaHarness(this);
+	}
+
+	public boolean isBugzilla51OrGreater() {
+		return bugzillaVersion.compareTo(BugzillaVersion.BUGZILLA_5_1) < 0;
 	}
 }

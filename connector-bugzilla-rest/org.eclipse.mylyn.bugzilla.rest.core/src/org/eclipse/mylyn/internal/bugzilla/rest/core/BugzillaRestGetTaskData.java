@@ -126,12 +126,19 @@ public class BugzillaRestGetTaskData extends BugzillaRestAuthenticatedGetRequest
 					String attributeId = BugzillaRestTaskSchema.getAttributeNameFromFieldName(entry.getKey());
 					if (entry.getKey().equals("assigned_to_detail")) { //$NON-NLS-1$
 						TaskAttribute attribute = taskData.getRoot().getAttribute(taskSchema.ASSIGNED_TO.getKey());
-						JsonElement value = entry.getValue().getAsJsonObject().get("email"); //$NON-NLS-1$//.get("real_name");
 						if (attribute != null) {
-							attribute.setValue(value.getAsString());
+							JsonElement value = entry.getValue().getAsJsonObject().get("email"); //$NON-NLS-1$
+							if (value != null) {
+								attribute.setValue(value.getAsString());
+							} else {
+								value = entry.getValue().getAsJsonObject().get("name"); //$NON-NLS-1$
+								if (value != null) {
+									attribute.setValue(value.getAsString());
+								}
+							}
 						}
 						continue;
-					} else if (entry.getKey().equals("last_change_time")) {
+					} else if (entry.getKey().equals("last_change_time")) { //$NON-NLS-1$
 						TaskAttribute attribute = taskData.getRoot()
 								.getAttribute(taskSchema.DATE_MODIFICATION.getKey());
 						JsonElement value = entry.getValue(); //.get("real_name");

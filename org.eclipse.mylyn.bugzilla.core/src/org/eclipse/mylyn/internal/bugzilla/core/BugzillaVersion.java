@@ -46,9 +46,13 @@ public class BugzillaVersion implements Comparable<BugzillaVersion>, Serializabl
 
 	public final static BugzillaVersion BUGZILLA_4_5_2 = new BugzillaVersion("4.5.2"); //$NON-NLS-1$
 
-	public final static BugzillaVersion BUGZILLA_HEAD = new BugzillaVersion("4.5"); //$NON-NLS-1$
+	public final static BugzillaVersion BUGZILLA_5_0 = new BugzillaVersion("5.0"); //$NON-NLS-1$
 
-	public final static BugzillaVersion MAX_VERSION = BUGZILLA_4_0;
+	public final static BugzillaVersion BUGZILLA_5_1 = new BugzillaVersion("5.1"); //$NON-NLS-1$
+
+	public final static BugzillaVersion BUGZILLA_HEAD = new BugzillaVersion("5.1"); //$NON-NLS-1$
+
+	public final static BugzillaVersion MAX_VERSION = BUGZILLA_5_0;
 
 	private final int major;
 

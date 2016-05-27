@@ -112,7 +112,14 @@ public class BugzillaUserMatchResponse {
 						if (optionValue == -1) {
 							int startText = divString.indexOf("&lt;", endBold + 4) + 1; //$NON-NLS-1$
 							int endText = divString.indexOf("&gt;", startText + 1); //$NON-NLS-1$
-							String temp = divString.substring(startText + 3, endText);
+							String temp = null;
+							if (startText == 0) {
+								startText = divString.indexOf("(", endBold + 4) + 1; //$NON-NLS-1$
+								endText = divString.indexOf(")", startText + 1); //$NON-NLS-1$
+								temp = divString.substring(startText, endText);
+							} else {
+								temp = divString.substring(startText + 3, endText);
+							}
 							value = temp.replace("&#64;", "@"); //$NON-NLS-1$ //$NON-NLS-2$
 							if (lastDTValue.equals("newcc")) { //$NON-NLS-1$
 								List<String> proposalList = newCCProposals.get(name);

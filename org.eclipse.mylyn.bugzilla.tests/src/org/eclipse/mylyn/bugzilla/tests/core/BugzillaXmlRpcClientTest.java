@@ -302,10 +302,8 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 		} else {
 			IProgressMonitor monitor = new NullProgressMonitor();
 			String version = bugzillaClient.getVersion(monitor);
-			assertEquals(
-					0,
-					new BugzillaVersion(BugzillaFixture.current().getVersion()).compareMajorMinorOnly(new BugzillaVersion(
-							version)));
+			assertEquals(0, new BugzillaVersion(BugzillaFixture.current().getVersion())
+					.compareMajorMinorOnly(new BugzillaVersion(version)));
 		}
 	}
 
@@ -315,6 +313,7 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 			return;
 		} else {
 			IProgressMonitor monitor = new NullProgressMonitor();
+			BugzillaVersion version = BugzillaFixture.current().getBugzillaVersion();
 			bugzillaClient.logout(monitor);
 			int uID = bugzillaClient.login(monitor);
 			assertEquals(2, uID);
@@ -322,13 +321,17 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 			assertNotNull(userList0);
 			assertEquals(2, userList0.length);
 			assertEquals(((Integer) 1), ((HashMap<String, Integer>) userList0[0]).get("id"));
-			assertEquals("admin@mylyn.eclipse.org", ((HashMap<String, String>) userList0[0]).get("email"));
+			if (BugzillaFixture.current().isBugzilla51OrGreater()) {
+				assertEquals("admin@mylyn.eclipse.org", ((HashMap<String, String>) userList0[0]).get("email"));
+			}
 			assertEquals("admin@mylyn.eclipse.org", ((HashMap<String, String>) userList0[0]).get("name"));
 			assertEquals("Mylyn Admin", ((HashMap<String, String>) userList0[0]).get("real_name"));
 			assertEquals(((Boolean) true), ((HashMap<String, Boolean>) userList0[0]).get("can_login"));
 
 			assertEquals(((Integer) 2), ((HashMap<String, Integer>) userList0[1]).get("id"));
-			assertEquals("tests@mylyn.eclipse.org", ((HashMap<String, String>) userList0[1]).get("email"));
+			if (BugzillaFixture.current().isBugzilla51OrGreater()) {
+				assertEquals("tests@mylyn.eclipse.org", ((HashMap<String, String>) userList0[1]).get("email"));
+			}
 			assertEquals("tests@mylyn.eclipse.org", ((HashMap<String, String>) userList0[1]).get("name"));
 			assertEquals("Mylyn Test", ((HashMap<String, String>) userList0[1]).get("real_name"));
 			assertEquals(((Boolean) true), ((HashMap<String, Boolean>) userList0[1]).get("can_login"));
@@ -338,7 +341,9 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 			assertNotNull(userList1);
 			assertEquals(1, userList1.length);
 			assertEquals(((Integer) 2), ((HashMap<String, Integer>) userList1[0]).get("id"));
-			assertEquals("tests@mylyn.eclipse.org", ((HashMap<String, String>) userList1[0]).get("email"));
+			if (version.compareTo(BugzillaVersion.BUGZILLA_5_1) < 0) {
+				assertEquals("tests@mylyn.eclipse.org", ((HashMap<String, String>) userList1[0]).get("email"));
+			}
 			assertEquals("tests@mylyn.eclipse.org", ((HashMap<String, String>) userList1[0]).get("name"));
 			assertEquals("Mylyn Test", ((HashMap<String, String>) userList1[0]).get("real_name"));
 			assertEquals(((Boolean) true), ((HashMap<String, Boolean>) userList1[0]).get("can_login"));
@@ -383,7 +388,6 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	public void testXmlRpcInstalled() throws Exception {
 		int uID = -1;
 		IProgressMonitor monitor = new NullProgressMonitor();
@@ -496,8 +500,8 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 				public void accept(TaskData taskData) {
 					try {
 						AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
-						taskDataHandler.initializeTaskData(repository, taskData, null, new SubProgressMonitor(monitor2,
-								1));
+						taskDataHandler.initializeTaskData(repository, taskData, null,
+								new SubProgressMonitor(monitor2, 1));
 					} catch (CoreException e) {
 						// this info CoreException is only used internal
 						if (e.getStatus().getCode() == IStatus.INFO && e.getMessage().contains("Update Config")) { //$NON-NLS-1$
@@ -620,7 +624,8 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 		if (!BugzillaFixture.current().isXmlRpcEnabled()) {
 			return;
 		}
-		RepositoryConfiguration repositoryConfiguration = connector.getRepositoryConfiguration(repository.getRepositoryUrl());
+		RepositoryConfiguration repositoryConfiguration = connector
+				.getRepositoryConfiguration(repository.getRepositoryUrl());
 
 		for (String product : repositoryConfiguration.getOptionValues(BugzillaAttribute.PRODUCT)) {
 			repositoryConfiguration.setDefaultMilestone(product, null);
@@ -628,7 +633,8 @@ public class BugzillaXmlRpcClientTest extends AbstractBugzillaTest {
 
 		bugzillaClient.updateProductInfo(new NullProgressMonitor(), repositoryConfiguration);
 		for (String product : repositoryConfiguration.getOptionValues(BugzillaAttribute.PRODUCT)) {
-			if (product.equals("ManualTest") || product.equals("Product with Spaces") || product.equals("TestProduct")) {
+			if (product.equals("ManualTest") || product.equals("Product with Spaces")
+					|| product.equals("TestProduct")) {
 				assertEquals("---", repositoryConfiguration.getDefaultMilestones(product));
 			} else {
 				fail("never reach this");

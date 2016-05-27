@@ -261,7 +261,7 @@ define bugzilla::site (
   }
 
   exec { "init bugzilla_checksetup $bugzillaDir":
-    command => "$base/$bugzillaDir/callchecksetup.pl",
+    command => "$base/$bugzillaDir/checksetup.pl $base/$bugzillaDir/answers || exit 0",
     cwd     => "$base/$bugzillaDir",
     creates => "$base/$bugzillaDir/localconfig",
     user => "$userOwner",
@@ -273,11 +273,11 @@ define bugzilla::site (
       File["$base/$bugzillaDir/extensions/Mylyn/Extension.pm"]]
   }
 
+
   exec { "update bugzilla_checksetup $bugzillaDir":
-    command   => "$base/$bugzillaDir/callchecksetup.pl",
+    command => "$base/$bugzillaDir/checksetup.pl $base/$bugzillaDir/answers || exit 0",
     cwd       => "$base/$bugzillaDir",
     logoutput => true,
-    user => "$userOwner",
     require   => [
       Exec["mysql-createdb-$bugzillaDir"],
       Exec["init bugzilla_checksetup $bugzillaDir"],

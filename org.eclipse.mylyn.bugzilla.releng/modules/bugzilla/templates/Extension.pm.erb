@@ -62,6 +62,10 @@ sub install_before_final_checks {
 		# create tests@mylyn.eclipse.org
 		# add this user to group bz_canusewhineatothers
 		my $testu = Bugzilla::User->create({ login_name    => 'tests@mylyn.eclipse.org', 
+<% if  @envversionInternal >= "5.1" %>
+
+											 email         => 'tests@mylyn.eclipse.org',
+<% end %>
 											 realname      => 'Mylyn Test',
 											 cryptpassword => 'mylyntest' });
 		my $private_group = new Bugzilla::Group({name => 'bz_canusewhineatothers'});		
@@ -72,6 +76,9 @@ sub install_before_final_checks {
 
 		# create guest@mylyn.eclipse.org		
 		Bugzilla::User->create({ login_name    => 'guest@mylyn.eclipse.org', 
+<% if  @envversionInternal >= "5.1" %>
+		email         => 'guest@mylyn.eclipse.org',
+<% end %>
 		realname      => 'Mylyn guest',
 		cryptpassword => 'mylyntest' });
 	}

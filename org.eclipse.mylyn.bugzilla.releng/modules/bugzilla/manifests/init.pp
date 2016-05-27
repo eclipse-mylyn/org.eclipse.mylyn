@@ -77,6 +77,7 @@ class bugzilla {
     "php5",
     "phpmyadmin",
     "puppet",
+    "cpanminus"
     ]
     
 
@@ -195,7 +196,7 @@ class bugzilla {
   }
 
   exec { "prepare bugzilla":
-    command => "echo Bugzilla pre-requisites are installed",
+    command => "cpanm CGI; cpanm DBI; cpanm DateTime::TimeZone; cpanm Email::Sender;echo Bugzilla pre-requisites are installed",
     require => [Exec["mysql create user ${dbuser}"],Exec["create  $confDir"]],
   }
 
