@@ -5,11 +5,11 @@
     are made available under the terms of the Eclipse Public License v1.0
     which accompanies this distribution, and is available at
     http://www.eclipse.org/legal/epl-v10.html
-   
+
     Contributors:
          Tasktop Technologies - initial API and implementation
  -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
@@ -98,7 +98,7 @@
     <url>https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced;classification=Mylyn</url>
     <system>Bugzilla</system>
   </issueManagement>
-  
+
   <distributionManagement>
     <repository>
       <id>repo.eclipse.org</id>
@@ -415,7 +415,7 @@
         <alt-platform-repository-url>http://download.eclipse.org/releases/staging/</alt-platform-repository-url>
       </properties>
     </profile>
-    
+
     <!-- OS and machine specific profiles -->
     <profile>
       <id>coverage-initializer</id>
@@ -756,14 +756,21 @@
             <product>org.eclipse.sdk.ide</product>
             <application>org.eclipse.ui.ide.workbench</application>
             <argLine>${tycho.testArgLine} -Xmx512m -XX:MaxPermSize=256m -Djava.io.tmpdir=${project.build.directory} ${test.vmargs}</argLine>
-            <appArgLine>${test.args}</appArgLine>         
-            <!-- 
+            <appArgLine>${test.args}</appArgLine>
+            <!--
                 <environmentVariables>
                 <http_proxy>${http_proxy}</http_proxy>
                 <https_proxy>${https_proxy}</https_proxy>
                 </environmentVariables>
             -->
             <application>org.eclipse.ui.ide.workbench</application>
+            <dependencies>
+              <dependency>
+                <type>p2-installable-unit</type>
+                <artifactId>org.eclipse.sdk.feature.group</artifactId>
+                <version>${platform-version}</version>
+              </dependency>
+            </dependencies>
             <dependency-resolution>
               <extraRequirements>
                 <requirement>
