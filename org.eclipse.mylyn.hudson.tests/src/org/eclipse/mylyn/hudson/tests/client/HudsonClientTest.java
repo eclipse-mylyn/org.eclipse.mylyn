@@ -95,6 +95,16 @@ public class HudsonClientTest extends TestCase {
 		HudsonTestUtil.assertHealthReport(jobs);
 	}
 
+	public void testGetManyJobs() throws Exception {
+		RestfulHudsonClient client = harness.connect(PrivilegeLevel.ANONYMOUS);
+		harness.ensureHasRun(harness.getPlanSucceeding());
+
+		List<String> jobIDs = Collections.nCopies(1000, harness.getPlanSucceeding());
+		List<HudsonModelJob> jobs = client.getJobs(jobIDs, null);
+		HudsonTestUtil.assertContains(jobs, harness.getPlanSucceeding());
+		HudsonTestUtil.assertHealthReport(jobs);
+	}
+
 	public void testGetNestedJobs() throws Exception {
 		if (harness.getFixture().getType().equals(Type.HUDSON)) {
 			/* HUDSON does not support nested jobs */
