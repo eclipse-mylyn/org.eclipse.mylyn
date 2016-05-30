@@ -193,7 +193,7 @@ public class TestConfiguration {
 				in.close();
 			}
 		} catch (IOException e) {
-			result[0] = e;
+			result[0] = new IOException("IOException accessing " + url, e);
 			return null;
 		}
 	}
