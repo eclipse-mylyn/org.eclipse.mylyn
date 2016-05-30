@@ -90,6 +90,8 @@ public class RestfulHudsonClient {
 
 	private static final String URL_API = "/api/xml"; //$NON-NLS-1$
 
+	private static final int JOB_RETRIEVE_BATCH_SIZE = 50;
+
 	private AbstractConfigurationCache<HudsonConfiguration> cache;
 
 	private final CommonHttpClient client;
@@ -253,7 +255,12 @@ public class RestfulHudsonClient {
 
 			for (String folderUrl : jobNamesByFolderUrl.keySet()) {
 				List<String> jobNames = jobNamesByFolderUrl.get(folderUrl);
-				jobs.addAll(this.getJobsFromFolder(folderUrl, jobNames, monitor));
+				for (int batchStartIndex = 0; batchStartIndex < jobNames
+						.size(); batchStartIndex += JOB_RETRIEVE_BATCH_SIZE) {
+					List<String> jobNamesBatch = jobNames.subList(batchStartIndex,
+							Math.min(batchStartIndex + JOB_RETRIEVE_BATCH_SIZE, jobNames.size()));
+					jobs.addAll(this.getJobsFromFolder(folderUrl, jobNamesBatch, monitor));
+				}
 			}
 		} else {
 			jobs = this.getJobsFromFolder(hudsonUrlUtil.baseUrl(), ids, monitor);
