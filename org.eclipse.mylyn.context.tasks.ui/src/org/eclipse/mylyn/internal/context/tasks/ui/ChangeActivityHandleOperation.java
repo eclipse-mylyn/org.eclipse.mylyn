@@ -12,6 +12,9 @@
 package org.eclipse.mylyn.internal.context.tasks.ui;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -23,30 +26,27 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**
- * Changes handle from oldHandle to newHandle in Activity Meta Context
- * 
+ * Changes a set of old handles to a set of new handles in the Activity Meta Context.
+ *
  * @author Rob Elves
  */
 public class ChangeActivityHandleOperation extends TaskListModifyOperation {
 
-	private final String oldHandle;
-
-	private final String newHandle;
+	private final Map<String, String> handles;
 
 	public ChangeActivityHandleOperation(String oldHandle, String newHandle) {
-		this.oldHandle = oldHandle;
-		this.newHandle = newHandle;
+		this(Collections.singletonMap(oldHandle, newHandle));
+	}
+
+	public ChangeActivityHandleOperation(Map<String, String> handles) {
+		this.handles = handles;
 	}
 
 	@Override
-	protected void operations(IProgressMonitor monitor) throws CoreException, InvocationTargetException,
-			InterruptedException {
-		if (oldHandle == null || newHandle == null || oldHandle.equals(newHandle)) {
-			return;
-		}
+	protected void operations(IProgressMonitor monitor)
+			throws CoreException, InvocationTargetException, InterruptedException {
 		try {
-			monitor.beginTask(Messages.ChangeActivityHandleOperation_Activity_migration, IProgressMonitor.UNKNOWN);
-			refactorMetaContextHandles(oldHandle, newHandle);
+			refactorMetaContextHandles(handles, monitor);
 			TasksUiPlugin.getTaskActivityMonitor().reloadActivityTime();
 		} finally {
 			monitor.done();
@@ -54,20 +54,24 @@ public class ChangeActivityHandleOperation extends TaskListModifyOperation {
 	}
 
 	@SuppressWarnings("restriction")
-	private void refactorMetaContextHandles(String oldHandle, String newHandle) {
+	private void refactorMetaContextHandles(Map<String, String> oldToNewHandles, IProgressMonitor monitor) {
 		ContextCorePlugin.getContextManager().saveActivityMetaContext();
 		InteractionContext metaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 		ContextCorePlugin.getContextManager().resetActivityMetaContext();
 		InteractionContext newMetaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
-		for (InteractionEvent event : metaContext.getInteractionHistory()) {
+		List<InteractionEvent> interactionHistory = metaContext.getInteractionHistory();
+		monitor.beginTask(Messages.ChangeActivityHandleOperation_Activity_migration, interactionHistory.size());
+		for (InteractionEvent event : interactionHistory) {
 			if (event.getStructureHandle() != null) {
-				if (event.getStructureHandle().equals(oldHandle)) {
+				String newHandle = oldToNewHandles.get(event.getStructureHandle());
+				if (newHandle != null) {
 					event = new InteractionEvent(event.getKind(), event.getStructureKind(), newHandle,
 							event.getOriginId(), event.getNavigation(), event.getDelta(),
 							event.getInterestContribution(), event.getDate(), event.getEndDate());
 				}
 			}
 			newMetaContext.parseEvent(event);
+			monitor.worked(1);
 		}
 		ContextCorePlugin.getContextManager().saveActivityMetaContext();
 	}

@@ -14,6 +14,8 @@ package org.eclipse.mylyn.internal.context.tasks.ui;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -43,6 +45,8 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.context.AbstractTaskContextStore;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.osgi.util.NLS;
+
+import com.google.common.collect.ImmutableMap;
 
 /**
  * @author Steffen Pingel
@@ -158,17 +162,41 @@ public class TaskContextStore extends AbstractTaskContextStore {
 		final IInteractionContext result = copyContextInternal(sourceTask, targetTask);
 
 		// move task activity
-		ChangeActivityHandleOperation operation = new ChangeActivityHandleOperation(sourceTask.getHandleIdentifier(),
-				targetTask.getHandleIdentifier());
+		moveTaskActivity(ImmutableMap.of(sourceTask.getHandleIdentifier(), targetTask.getHandleIdentifier()));
+
+		moveContextInStore(sourceTask, targetTask);
+
+		return asAdaptable(result);
+	}
+
+	@Override
+	public void refactorContext(Map<ITask, ITask> tasks) {
+		Map<String, String> handles = new HashMap<>();
+		for (ITask sourceTask : tasks.keySet()) {
+			handles.put(sourceTask.getHandleIdentifier(), tasks.get(sourceTask).getHandleIdentifier());
+			copyContextInternal(sourceTask, tasks.get(sourceTask));
+		}
+
+		moveTaskActivity(handles);
+
+		for (ITask sourceTask : tasks.keySet()) {
+			moveContextInStore(sourceTask, tasks.get(sourceTask));
+		}
+	}
+
+	private void moveTaskActivity(Map<String, String> handles) {
+		ChangeActivityHandleOperation operation = new ChangeActivityHandleOperation(handles);
 		try {
 			operation.run(new NullProgressMonitor());
 		} catch (InvocationTargetException e) {
-			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-					"Failed to migrate activity to new task", e)); //$NON-NLS-1$
+			StatusHandler.log(
+					new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Failed to migrate activity to new task", e)); //$NON-NLS-1$
 		} catch (InterruptedException e) {
 			// ignore
 		}
+	}
 
+	private void moveContextInStore(ITask sourceTask, ITask targetTask) {
 		try {
 			getTaskStore().move(getPath(sourceTask), getPath(targetTask));
 		} catch (CoreException e) {
@@ -183,8 +211,6 @@ public class TaskContextStore extends AbstractTaskContextStore {
 				listener.taskContextChanged(event);
 			}
 		});
-
-		return asAdaptable(result);
 	}
 
 	@Override
@@ -322,14 +348,17 @@ public class TaskContextStore extends AbstractTaskContextStore {
 		}
 	}
 
-	private void refactorRepositoryLocation(TaskRepository repository, String oldRepositoryUrl, String newRepositoryUrl) {
-		IPath oldPath = new Path(repository.getConnectorKind() + "-" + CoreUtil.asFileName(oldRepositoryUrl)).append(FOLDER_DATA); //$NON-NLS-1$
-		IPath newPath = new Path(repository.getConnectorKind() + "-" + CoreUtil.asFileName(newRepositoryUrl)).append(FOLDER_DATA); //$NON-NLS-1$
+	private void refactorRepositoryLocation(TaskRepository repository, String oldRepositoryUrl,
+			String newRepositoryUrl) {
+		IPath oldPath = new Path(repository.getConnectorKind() + "-" + CoreUtil.asFileName(oldRepositoryUrl)) //$NON-NLS-1$
+				.append(FOLDER_DATA);
+		IPath newPath = new Path(repository.getConnectorKind() + "-" + CoreUtil.asFileName(newRepositoryUrl)) //$NON-NLS-1$
+				.append(FOLDER_DATA);
 		try {
 			getTaskStore().move(oldPath, newPath);
 		} catch (CoreException e) {
-			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, NLS.bind(
-					"Failed to migrate data store for repository {0}", newRepositoryUrl), e)); //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+					NLS.bind("Failed to migrate data store for repository {0}", newRepositoryUrl), e)); //$NON-NLS-1$
 		}
 	}
 
