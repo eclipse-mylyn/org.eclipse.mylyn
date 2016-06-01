@@ -21,6 +21,8 @@ import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
+import com.google.common.collect.ListMultimap;
+
 /**
  * @author Rob Elves
  * @author Steffen Pingel
@@ -136,9 +138,8 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 		if (editsTaskData != null) {
 			deepCopyChildren(editsTaskData.getRoot(), localTaskData.getRoot());
 		} else {
-			editsTaskData = new TaskData(repositoryTaskData.getAttributeMapper(),
-					repositoryTaskData.getConnectorKind(), repositoryTaskData.getRepositoryUrl(),
-					repositoryTaskData.getTaskId());
+			editsTaskData = new TaskData(repositoryTaskData.getAttributeMapper(), repositoryTaskData.getConnectorKind(),
+					repositoryTaskData.getRepositoryUrl(), repositoryTaskData.getTaskId());
 			editsTaskData.setVersion(repositoryTaskData.getVersion());
 		}
 	}
@@ -199,6 +200,24 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 		setEditsData(createCopy(oldState.getEditsData()));
 		setLocalTaskData(createCopy(oldState.getLocalData()));
 		setRepositoryData(createCopy(oldState.getRepositoryData()));
+	}
+
+	public void changeAttributeValues(ListMultimap<TaskAttribute, String> newValues) {
+		changeAttributeValues(localTaskData, newValues);
+		changeAttributeValues(repositoryTaskData, newValues);
+		changeAttributeValues(editsTaskData, newValues);
+		changeAttributeValues(lastReadTaskData, newValues);
+	}
+
+	private void changeAttributeValues(TaskData taskData, ListMultimap<TaskAttribute, String> newValues) {
+		if (taskData != null) {
+			for (TaskAttribute key : newValues.keySet()) {
+				TaskAttribute attribute = taskData.getRoot().getMappedAttribute(key.getPath());
+				if (attribute != null) {
+					attribute.setValues(newValues.get(key));
+				}
+			}
+		}
 	}
 
 	public static TaskData createCopy(TaskData oldData) {

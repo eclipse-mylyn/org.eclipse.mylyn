@@ -42,7 +42,10 @@ import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+
+import com.google.common.collect.ListMultimap;
 
 /**
  * Encapsulates synchronization policy.
@@ -591,6 +594,25 @@ public class TaskDataManager implements ITaskDataManager {
 								oldState.getTaskId());
 						newState.merge(oldState);
 						taskDataStore.putTaskData(ensurePathExists(newFile), newState);
+					}
+				}
+			}
+		});
+	}
+
+	public void refactorAttributeValue(final ITask itask, final ListMultimap<TaskAttribute, String> newValues)
+			throws CoreException {
+		Assert.isTrue(itask instanceof AbstractTask);
+		final AbstractTask task = (AbstractTask) itask;
+		final String kind = task.getConnectorKind();
+		taskList.run(new ITaskListRunnable() {
+			public void execute(IProgressMonitor monitor) throws CoreException {
+				File file = getMigratedFile(task, kind);
+				if (file.exists()) {
+					TaskDataState state = taskDataStore.getTaskDataState(file);
+					if (state != null) {
+						state.changeAttributeValues(newValues);
+						taskDataStore.putTaskData(file, state);
 					}
 				}
 			}
