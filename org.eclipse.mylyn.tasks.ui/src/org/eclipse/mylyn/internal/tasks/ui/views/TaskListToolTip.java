@@ -322,7 +322,7 @@ public class TaskListToolTip extends GradientToolTip {
 		if (element instanceof ITask) {
 			ITask task = (ITask) element;
 			if (task.getSynchronizationState().isIncoming()) {
-				task.getAttribute(TaskListNotifier.KEY_INCOMING_NOTIFICATION_TEXT);
+				text = task.getAttribute(TaskListNotifier.KEY_INCOMING_NOTIFICATION_TEXT);
 				if (Strings.isNullOrEmpty(text)) {
 					TaskListNotifier notifier = new TaskListNotifier(TasksUiPlugin.getTaskDataManager(),
 							TasksUiPlugin.getDefault().getSynchronizationManger());

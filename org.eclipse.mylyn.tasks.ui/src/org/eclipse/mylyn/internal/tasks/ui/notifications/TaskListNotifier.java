@@ -28,6 +28,7 @@ import org.eclipse.mylyn.internal.tasks.core.data.SynchronizationManger;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataDiff;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManagerEvent;
+import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizeTasksJob;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskListNotificationProvider;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.PresentationFilter;
@@ -93,25 +94,16 @@ public class TaskListNotifier implements ITaskDataManagerListener, ITaskListNoti
 
 	@Override
 	public void taskDataUpdated(TaskDataManagerEvent event) {
-		if (event.getToken() != null && event.getTaskDataChanged()) {
-			// always compute the incoming message as it may be used outside of the notification
+		// Events from SynchronizeQueryJobs end up with incorrect diffs
+		// Only notify for the subsequent SynchronizeTasksJobs
+		if (event.getTaskChanged() && event.getData() instanceof SynchronizeTasksJob) {
+
+			// Always record the notification text, it may be read outside of the notification
+			// The text does not need a token to be recorded, and manually synchronized tasks will not have an associated token
 			recordNotificationText(event);
 
-			if (isEnabled()) {
-				if (PresentationFilter.getInstance().isInVisibleQuery(event.getTask())) {
-					AbstractRepositoryConnectorUi connectorUi = TasksUi
-							.getRepositoryConnectorUi(event.getTaskData().getConnectorKind());
-					if (!connectorUi.hasCustomNotifications()) {
-						TaskListNotification notification = getNotification(event.getTask(), event.getToken());
-						if (notification != null) {
-							synchronized (notificationQueue) {
-								if (enabled) {
-									notificationQueue.add(notification);
-								}
-							}
-						}
-					}
-				}
+			if (shouldDisplayNotification(event)) {
+				queueNotification(event);
 			}
 		}
 	}
@@ -132,6 +124,27 @@ public class TaskListNotifier implements ITaskDataManagerListener, ITaskListNoti
 			return TaskDiffUtil.toString(diff, true);
 		}
 		return null;
+	}
+
+	private boolean shouldDisplayNotification(TaskDataManagerEvent event) {
+		return event.getToken() != null && isEnabled()
+				&& PresentationFilter.getInstance().isInVisibleQuery(event.getTask());
+	}
+
+	private void queueNotification(TaskDataManagerEvent event) {
+		AbstractRepositoryConnectorUi connectorUi = TasksUi
+				.getRepositoryConnectorUi(event.getTaskData().getConnectorKind());
+
+		if (!connectorUi.hasCustomNotifications()) {
+			TaskListNotification notification = getNotification(event.getTask(), event.getToken());
+			if (notification != null) {
+				synchronized (notificationQueue) {
+					if (enabled) {
+						notificationQueue.add(notification);
+					}
+				}
+			}
+		}
 	}
 
 	public Set<AbstractUiNotification> getNotifications() {
