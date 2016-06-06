@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
@@ -70,6 +71,12 @@ public class TaskMapper implements ITaskMapping {
 		}
 		if (hasChanges(task.getPriority(), getPriorityLevelString(), TaskAttribute.PRIORITY)) {
 			task.setPriority(getPriorityLevelString());
+			changed = true;
+		}
+		String priorityLabel = getPriority();
+		if (hasChanges(task.getAttribute(ITasksCoreConstants.ATTRIBUTE_PRIORITY_LABEL), priorityLabel,
+				TaskAttribute.PRIORITY)) {
+			task.setAttribute(ITasksCoreConstants.ATTRIBUTE_PRIORITY_LABEL, priorityLabel);
 			changed = true;
 		}
 		if (hasChanges(task.getSummary(), getSummary(), TaskAttribute.SUMMARY)) {
@@ -139,7 +146,7 @@ public class TaskMapper implements ITaskMapping {
 	 * <li>description
 	 * </ul>
 	 * Other attribute values are only set if they exist on <code>sourceTaskData</code> and <code>targetTaskData</code>.
-	 * 
+	 *
 	 * @param sourceTaskData
 	 *            the source task data values are copied from, the connector kind of repository of
 	 *            <code>sourceTaskData</code> can be different from <code>targetTaskData</code>
@@ -282,10 +289,21 @@ public class TaskMapper implements ITaskMapping {
 		return getValue(TaskAttribute.PRIORITY);
 	}
 
+	/**
+	 * Connectors should override {@link TaskAttributeMapper#getPriorityLevel(TaskAttribute, String)} to customize how
+	 * priority options are mapped to {@link PriorityLevel}
+	 */
 	@Nullable
 	public PriorityLevel getPriorityLevel() {
-		String value = getPriority();
-		return (value != null) ? PriorityLevel.fromString(value) : null;
+		String valueLabel = getPriority();
+		if (valueLabel != null && PriorityLevel.isValidPriority(valueLabel)) {
+			return PriorityLevel.fromString(valueLabel);
+		}
+		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.PRIORITY);
+		if (attribute != null) {
+			return getTaskData().getAttributeMapper().getPriorityLevel(attribute, attribute.getValue());
+		}
+		return null;
 	}
 
 	@Nullable
@@ -400,6 +418,8 @@ public class TaskMapper implements ITaskMapping {
 		changed |= hasChanges(task.getTaskKey(), getTaskKey(), TaskAttribute.TASK_KEY);
 		changed |= hasChanges(task.getTaskKind(), getTaskKind(), TaskAttribute.TASK_KIND);
 		changed |= hasChanges(task.getUrl(), getTaskUrl(), TaskAttribute.TASK_URL);
+		changed |= hasChanges(task.getAttribute(ITasksCoreConstants.ATTRIBUTE_PRIORITY_LABEL), getPriority(),
+				TaskAttribute.PRIORITY);
 		return changed;
 	}
 

@@ -39,10 +39,10 @@ public class PriorityAttributeEditor extends AbstractAttributeEditor {
 
 	@Override
 	public void createControl(final Composite parent, FormToolkit toolkit) {
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(getModel().getTaskRepository()
-				.getConnectorKind());
+		AbstractRepositoryConnector connector = TasksUi
+				.getRepositoryConnector(getModel().getTaskRepository().getConnectorKind());
 		mapping = connector.getTaskMapping(getModel().getTaskData());
-		editor = new PriorityEditor() {
+		editor = new PriorityEditor(getTaskAttribute()) {
 			@Override
 			protected void valueChanged(String value) {
 				setValue(value);

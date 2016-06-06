@@ -67,6 +67,8 @@ public interface ITasksCoreConstants {
 
 	public static final String ATTRIBUTE_ARTIFACT = "org.eclipse.mylyn.is.artifact"; //$NON-NLS-1$
 
+	public static final String ATTRIBUTE_PRIORITY_LABEL = "task.common.priority.label"; //$NON-NLS-1$
+
 	/**
 	 * @deprecated Since Mylyn 3.11, all TaskRepositories store their credentials in the secure store.
 	 */

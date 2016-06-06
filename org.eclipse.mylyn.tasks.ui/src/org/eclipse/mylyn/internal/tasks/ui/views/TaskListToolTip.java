@@ -225,7 +225,11 @@ public class TaskListToolTip extends GradientToolTip {
 				sb.append(") "); //$NON-NLS-1$
 			}
 			sb.append(", "); //$NON-NLS-1$
-			sb.append(task.getPriority());
+			String priorityLabel = task.getAttribute(ITasksCoreConstants.ATTRIBUTE_PRIORITY_LABEL);
+			if (Strings.isNullOrEmpty(priorityLabel)) {
+				priorityLabel = task.getPriority();
+			}
+			sb.append(priorityLabel);
 			sb.append("  ["); //$NON-NLS-1$
 			sb.append(getRepositoryLabel(task.getConnectorKind(), task.getRepositoryUrl()));
 			sb.append("]"); //$NON-NLS-1$

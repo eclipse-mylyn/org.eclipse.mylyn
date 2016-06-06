@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
+import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -40,8 +41,8 @@ public class TaskAttributeMapper {
 
 	@NonNull
 	public TaskAttribute createTaskAttachment(@NonNull TaskData taskData) {
-		TaskAttribute taskAttribute = taskData.getRoot().createAttribute(
-				mapToRepositoryKey(taskData.getRoot(), TaskAttribute.NEW_ATTACHMENT));
+		TaskAttribute taskAttribute = taskData.getRoot()
+				.createAttribute(mapToRepositoryKey(taskData.getRoot(), TaskAttribute.NEW_ATTACHMENT));
 //		TaskAttachmentMapper mapper = TaskAttachmentMapper.createFrom(taskAttribute);
 //		mapper.setContentType("");
 //		mapper.setFileName("");
@@ -358,6 +359,17 @@ public class TaskAttributeMapper {
 
 	public void updateTaskComment(@NonNull ITaskComment taskComment, @NonNull TaskAttribute taskAttribute) {
 		TaskCommentMapper.createFrom(taskAttribute).applyTo(taskComment);
+	}
+
+	/**
+	 * Connectors may override this method to specify the mapping from the repository's priority options to
+	 * {@link PriorityLevel}
+	 *
+	 * @return the {@link PriorityLevel} corresponding to the given option for the given priority attribute
+	 * @since 3.20
+	 */
+	public PriorityLevel getPriorityLevel(TaskAttribute priorityAttribute, String priorityOption) {
+		return PriorityLevel.fromString(priorityOption);
 	}
 
 }

@@ -75,7 +75,7 @@ public interface ITask extends IRepositoryElement, IAttributeContainer {
 
 	/**
 	 * Defines an interface for priorities that have an associated integer value.
-	 * 
+	 *
 	 * @author Steffen Pingel
 	 * @since 3.7
 	 * @see PriorityLevel#fromValue(IPriorityValue[], IPriorityValue)
@@ -205,11 +205,23 @@ public interface ITask extends IRepositoryElement, IAttributeContainer {
 		}
 
 		/**
+		 * @since 3.20
+		 */
+		public static boolean isValidPriority(String string) {
+			try {
+				PriorityLevel.valueOf(string);
+				return true;
+			} catch (IllegalArgumentException e) {
+				return false;
+			}
+		}
+
+		/**
 		 * Maps a priority value to a {@link PriorityLevel}. The value needs to be present in <code>priorities</code>,
 		 * otherwise {@link PriorityLevel#getDefault()} is returned.
 		 * <p>
 		 * NOTE: <code>priorities</code> needs to be sorted in ascending order.
-		 * 
+		 *
 		 * @param priorities
 		 *            a sorted array of priority levels
 		 * @param value
@@ -242,28 +254,28 @@ public interface ITask extends IRepositoryElement, IAttributeContainer {
 
 	/**
 	 * Returns the date that the task was completed.
-	 * 
+	 *
 	 * @since 3.0
 	 */
 	public abstract Date getCompletionDate();
 
 	/**
 	 * Returns the identifier that uniquely distinguishes the repository connector associated with this task.
-	 * 
+	 *
 	 * @since 3.0
 	 */
 	public abstract String getConnectorKind();
 
 	/**
 	 * Returns the date that this task was created.
-	 * 
+	 *
 	 * @since 3.0
 	 */
 	public abstract Date getCreationDate();
 
 	/**
 	 * Returns the date after which this task will become overdue.
-	 * 
+	 *
 	 * @since 3.0
 	 */
 	public abstract Date getDueDate();
@@ -275,7 +287,7 @@ public interface ITask extends IRepositoryElement, IAttributeContainer {
 
 	/**
 	 * Returns the date that the repository contents of this task were last modified.
-	 * 
+	 *
 	 * @since 3.0
 	 */
 	public abstract Date getModificationDate();
@@ -284,7 +296,7 @@ public interface ITask extends IRepositoryElement, IAttributeContainer {
 	 * Returns the label of the owner, that is, the <i>option label</i> corresponding to the value of the
 	 * {@link TaskAttribute#USER_ASSIGNED} attribute in the TaskData. If the connector does not provide option labels
 	 * for this attribute, the {@link #getOwnerId() ID} is returned instead.
-	 * 
+	 *
 	 * @since 3.0
 	 */
 	public abstract String getOwner();
@@ -292,7 +304,7 @@ public interface ITask extends IRepositoryElement, IAttributeContainer {
 	/**
 	 * Returns the ID of the owner, that is, the <i>value</i> of the {@link TaskAttribute#USER_ASSIGNED} attribute in
 	 * the TaskData.
-	 * 
+	 *
 	 * @since 3.15
 	 */
 	public abstract String getOwnerId();
@@ -325,7 +337,7 @@ public interface ITask extends IRepositoryElement, IAttributeContainer {
 	/**
 	 * User identifiable key for the task to be used in UI facilities such as label displays and hyperlinked references.
 	 * Can return the same as the ID (e.g. in the case of Bugzilla). Can return null if no such label exists.
-	 * 
+	 *
 	 * @since 3.0
 	 */
 	public abstract String getTaskKey();

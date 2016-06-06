@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2011 Tasktop Technologies and others. 
+ * Copyright (c) 2009, 2011 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import java.util.Map;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -60,7 +61,14 @@ public class PriorityEditor {
 
 	private String value;
 
+	private final TaskAttribute attribute;
+
 	public PriorityEditor() {
+		this(null);
+	}
+
+	public PriorityEditor(TaskAttribute attribute) {
+		this.attribute = attribute;
 	}
 
 	public void createControl(final Composite parent, FormToolkit toolkit) {
@@ -154,11 +162,18 @@ public class PriorityEditor {
 	}
 
 	private ImageDescriptor getSmallImageDescriptor(String value) {
-		PriorityLevel priorityLevel = PriorityLevel.fromString(value);
+		PriorityLevel priorityLevel = getPriorityLevel(value);
 		if (priorityLevel != null) {
 			return TasksUiImages.getImageDescriptorForPriority(priorityLevel);
 		}
 		return null;
+	}
+
+	private PriorityLevel getPriorityLevel(String value) {
+		if (attribute != null) {
+			return attribute.getTaskData().getAttributeMapper().getPriorityLevel(attribute, value);
+		}
+		return PriorityLevel.fromString(value);
 	}
 
 	public String getToolTipText() {
