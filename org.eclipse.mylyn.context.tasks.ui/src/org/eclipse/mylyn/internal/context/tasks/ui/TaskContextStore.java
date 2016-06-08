@@ -170,7 +170,7 @@ public class TaskContextStore extends AbstractTaskContextStore {
 	}
 
 	@Override
-	public void refactorContext(Map<ITask, ITask> tasks) {
+	public void moveContext(Map<ITask, ITask> tasks) {
 		Map<String, String> handles = new HashMap<>();
 		for (ITask sourceTask : tasks.keySet()) {
 			handles.put(sourceTask.getHandleIdentifier(), tasks.get(sourceTask).getHandleIdentifier());
