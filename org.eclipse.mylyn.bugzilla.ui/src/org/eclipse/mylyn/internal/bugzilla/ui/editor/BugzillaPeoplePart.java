@@ -53,7 +53,9 @@ public class BugzillaPeoplePart extends TaskEditorPeoplePart {
 			attributes.add(getTaskData().getRoot().getMappedAttribute(BugzillaAttribute.QA_CONTACT.getKey()));
 		}
 		attributes.add(getTaskData().getRoot().getMappedAttribute(BugzillaAttribute.NEWCC.getKey()));
-		addSelfToCC(attributes);
+		if (!getTaskData().isNew()) {
+			addSelfToCC(attributes);
+		}
 		attributes.add(getTaskData().getRoot().getMappedAttribute(BugzillaAttribute.CC.getKey()));
 
 		for (TaskAttribute attribute : allAttributes.values()) {
