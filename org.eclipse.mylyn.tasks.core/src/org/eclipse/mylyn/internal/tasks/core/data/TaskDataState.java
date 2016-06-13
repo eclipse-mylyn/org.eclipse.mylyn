@@ -221,6 +221,9 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 	}
 
 	public static TaskData createCopy(TaskData oldData) {
+		if (oldData == null) {
+			return null;
+		}
 		return createCopy(oldData, oldData.getTaskId());
 	}
 
