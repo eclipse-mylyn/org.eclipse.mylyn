@@ -79,6 +79,10 @@ public class TaskCompareDialog extends SelectionDialog {
 		prioritiesArea.setLayout(new GridLayout(3, false));
 		prioritiesArea.setText(Messages.TaskCompareDialog_Tasks);
 
+		Label label = new Label(prioritiesArea, SWT.WRAP);
+		label.setText(Messages.TaskCompareDialog_Presentation_warning);
+		label.setLayoutData(GridDataFactory.swtDefaults().span(3, 1).create());
+
 		ascendingButtons = new Button[SortCriterion.kindCount];
 		descendingButtons = new Button[SortCriterion.kindCount];
 		priorityCombos = new Combo[SortCriterion.kindCount];
@@ -153,7 +157,8 @@ public class TaskCompareDialog extends SelectionDialog {
 									for (int j = 0; j < availablePriorities.size(); j++) {
 										priorityCombos[k].add(availablePriorities.get(j));
 									}
-									priorityCombos[k].select(priorityCombos[k].indexOf(propertyText[SortKey.NONE.ordinal()]));
+									priorityCombos[k]
+											.select(priorityCombos[k].indexOf(propertyText[SortKey.NONE.ordinal()]));
 								}
 							}
 						} else if (newSelection.equals(propertyText[SortKey.NONE.ordinal()])) {
@@ -168,7 +173,8 @@ public class TaskCompareDialog extends SelectionDialog {
 									for (int j = 0; j < availablePriorities.size(); j++) {
 										priorityCombos[k].add(availablePriorities.get(j));
 									}
-									priorityCombos[k].select(priorityCombos[k].indexOf(propertyText[SortKey.NONE.ordinal()]));
+									priorityCombos[k]
+											.select(priorityCombos[k].indexOf(propertyText[SortKey.NONE.ordinal()]));
 									priorityCombos[k].setEnabled(false);
 									ascendingButtons[k].setEnabled(false);
 									descendingButtons[k].setEnabled(false);
@@ -180,16 +186,15 @@ public class TaskCompareDialog extends SelectionDialog {
 								//this combo's current selection is equal to newSelection
 								if (priorityCombos[j].getSelectionIndex() == newSelectionIndex) {
 									priorityCombos[j].remove(newSelection);
-									int insertionPoint = -1
-											- Arrays.binarySearch(priorityCombos[j].getItems(), oldSelection,
-													columnComparator);
+									int insertionPoint = -1 - Arrays.binarySearch(priorityCombos[j].getItems(),
+											oldSelection, columnComparator);
 									if (insertionPoint >= 0 && insertionPoint <= priorityCombos[j].getItemCount()) {
 										priorityCombos[j].add(oldSelection, insertionPoint);
 									} else {
 										priorityCombos[j].add(oldSelection);
 									}
 									priorityCombos[j].select(priorityCombos[j].indexOf(oldSelection));
-// remove the comment if you want to move the current ascending/descending 								
+// remove the comment if you want to move the current ascending/descending
 //									ascendingButtons[index].setSelection(ascendingButtons[j].getSelection());
 //									descendingButtons[index].setSelection(descendingButtons[j].getSelection());
 //									ascendingButtons[j].setSelection(oldSelectionDirection == 1);
@@ -199,9 +204,8 @@ public class TaskCompareDialog extends SelectionDialog {
 								else if (newSelectionIndex >= 0) {
 									String currentText = priorityCombos[j].getText();
 									priorityCombos[j].remove(newSelection);
-									int insertionPoint = -1
-											- Arrays.binarySearch(priorityCombos[j].getItems(), oldSelection,
-													columnComparator);
+									int insertionPoint = -1 - Arrays.binarySearch(priorityCombos[j].getItems(),
+											oldSelection, columnComparator);
 									if (insertionPoint >= 0 && insertionPoint <= priorityCombos[j].getItemCount()) {
 										priorityCombos[j].add(oldSelection, insertionPoint);
 										priorityCombos[j].select(priorityCombos[j].indexOf(currentText));

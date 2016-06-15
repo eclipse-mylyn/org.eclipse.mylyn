@@ -22,7 +22,7 @@ import org.eclipse.ui.IMemento;
 public class SortCriterion {
 
 	public enum SortKey {
-		NONE, DATE_CREATED, PRIORITY, RANK, SUMMARY, TASK_ID, TASK_TYPE, DUE_DATE, MODIFICATION_DATE;
+		NONE, DATE_CREATED, PRIORITY, RANK, SUMMARY, TASK_ID, TASK_TYPE, DUE_DATE, MODIFICATION_DATE, SCHEDULED_DATE;
 
 		public static SortKey valueOfLabel(String label) {
 			for (SortKey value : values()) {
@@ -53,6 +53,8 @@ public class SortCriterion {
 				return Messages.SortKindEntry_Due_Date;
 			case MODIFICATION_DATE:
 				return Messages.SortCriterion_Modification_Date;
+			case SCHEDULED_DATE:
+				return Messages.SortCriterion_Scheduled_Date;
 			default:
 				return null;
 			}
@@ -60,19 +62,23 @@ public class SortCriterion {
 
 	}
 
-	private SortKey key;
-
-	private int direction;
-
 	private static final String MEMENTO_KEY_SORT_KEY = "sortKey"; //$NON-NLS-1$
 
 	private static final String MEMENTO_KEY_SORT_DIRECTION = "sortDirection"; //$NON-NLS-1$
 
 	private static final SortKey DEFAULT_SORT_KIND = SortKey.NONE;
 
-	private static final int DEFAULT_SORT_DIRECTION = 1;
+	public static final int ASCENDING = 1;
+
+	public static final int DESCENDING = -1;
+
+	private static final int DEFAULT_SORT_DIRECTION = ASCENDING;
 
 	public static final int kindCount = SortKey.values().length - 1;
+
+	private SortKey key;
+
+	private int direction;
 
 	public SortCriterion() {
 		key = DEFAULT_SORT_KIND;

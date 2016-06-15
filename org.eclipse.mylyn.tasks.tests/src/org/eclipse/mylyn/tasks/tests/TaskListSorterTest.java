@@ -35,13 +35,10 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.SortCriterion;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListInterestSorter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListSorter;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.IMemento;
-import org.eclipse.ui.XMLMemento;
 
 import junit.framework.TestCase;
 
@@ -52,44 +49,6 @@ import junit.framework.TestCase;
  * @author Julio Gesser
  */
 public class TaskListSorterTest extends TestCase {
-
-	private static final String MEMENTO_KEY_SORT_DIRECTION = "sortDirection"; //$NON-NLS-1$
-
-	private static final String MEMENTO_KEY_SORT_INDEX = "sortIndex"; //$NON-NLS-1$
-
-	private static final String MEMENTO_KEY_SORTER = "sorter"; //$NON-NLS-1$
-
-	private static final String MEMENTO_KEY_SORTER2 = "sorter2"; //$NON-NLS-1$
-
-	public void testPreferenceMigration() throws Exception {
-		final TaskListSorter sorter = new TaskListSorter();
-		TaskListView view = new TaskListView();
-		XMLMemento memento = XMLMemento.createWriteRoot(MEMENTO_KEY_SORT_INDEX);
-		IMemento child = memento.createChild(MEMENTO_KEY_SORTER);
-		child.putInteger(MEMENTO_KEY_SORT_INDEX, 0);
-		child.putInteger(MEMENTO_KEY_SORT_DIRECTION, 1);
-		child = memento.createChild(MEMENTO_KEY_SORTER2);
-		child.putInteger(MEMENTO_KEY_SORT_INDEX, 1);
-		child.putInteger(MEMENTO_KEY_SORT_DIRECTION, -1);
-		view.migrateSorterState(sorter, memento);
-		assertEquals(SortCriterion.SortKey.PRIORITY, sorter.getTaskComparator().getSortCriterion(0).getKey());
-		assertEquals(1, sorter.getTaskComparator().getSortCriterion(0).getDirection());
-		assertEquals(SortCriterion.SortKey.SUMMARY, sorter.getTaskComparator().getSortCriterion(1).getKey());
-		assertEquals(-1, sorter.getTaskComparator().getSortCriterion(1).getDirection());
-
-		memento = XMLMemento.createWriteRoot(MEMENTO_KEY_SORT_INDEX);
-		child = memento.createChild(MEMENTO_KEY_SORTER);
-		child.putInteger(MEMENTO_KEY_SORT_INDEX, 3);
-		child.putInteger(MEMENTO_KEY_SORT_DIRECTION, -1);
-		child = memento.createChild(MEMENTO_KEY_SORTER2);
-		child.putInteger(MEMENTO_KEY_SORT_INDEX, 2);
-		child.putInteger(MEMENTO_KEY_SORT_DIRECTION, -1);
-		view.migrateSorterState(sorter, memento);
-		assertEquals(SortCriterion.SortKey.TASK_ID, sorter.getTaskComparator().getSortCriterion(0).getKey());
-		assertEquals(-1, sorter.getTaskComparator().getSortCriterion(0).getDirection());
-		assertEquals(SortCriterion.SortKey.DATE_CREATED, sorter.getTaskComparator().getSortCriterion(1).getKey());
-		assertEquals(-1, sorter.getTaskComparator().getSortCriterion(1).getDirection());
-	}
 
 	public void testSortWithError() {
 		final TaskListSorter sorter = new TaskListSorter();

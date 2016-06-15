@@ -15,13 +15,24 @@ package org.eclipse.mylyn.internal.tasks.ui.util;
 
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.DateRange;
+import org.eclipse.mylyn.internal.tasks.core.DayDateRange;
+import org.eclipse.mylyn.internal.tasks.ui.CategorizedPresentation;
+import org.eclipse.mylyn.internal.tasks.ui.ScheduledPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.util.SortCriterion.SortKey;
+import org.eclipse.mylyn.internal.tasks.ui.views.AbstractTaskListPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskKeyComparator;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.ui.IMemento;
+
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
 
 /**
  * @author Mik Kersten
@@ -29,17 +40,11 @@ import org.eclipse.ui.IMemento;
  */
 public class TaskComparator implements Comparator<ITask> {
 
-	private final SortCriterion[] sortCriteria;
-
-	public static final int DEFAULT_SORT_DIRECTION = 1;
-
-	private static final SortKey DEFAULT_SORT_INDEX = SortKey.PRIORITY;
-
-	private static final SortKey DEFAULT_SORT_INDEX2 = SortKey.RANK;
-
-	private static final SortKey DEFAULT_SORT_INDEX3 = SortKey.DATE_CREATED;
-
 	private static final String MEMENTO_KEY_SORT = "sort"; //$NON-NLS-1$
+
+	private final ListMultimap<String, SortCriterion> sortCriteria;
+
+	private String currentPresentation;
 
 	/**
 	 * Return a array of values to pass to taskKeyComparator.compare() for sorting
@@ -64,21 +69,43 @@ public class TaskComparator implements Comparator<ITask> {
 	public static final int CRITERIA_COUNT = SortKey.values().length - 1;
 
 	public TaskComparator() {
-		sortCriteria = new SortCriterion[CRITERIA_COUNT];
-		for (int index = 0; index < CRITERIA_COUNT; index++) {
-			sortCriteria[index] = new SortCriterion();
+		sortCriteria = ArrayListMultimap.create();
+
+		for (AbstractTaskListPresentation presentation : TaskListView.getPresentations()) {
+			String presentationId = presentation.getId();
+			for (int i = 0; i < CRITERIA_COUNT; i++) {
+				sortCriteria.put(presentationId, new SortCriterion());
+			}
 		}
-		sortCriteria[0].setKey(DEFAULT_SORT_INDEX);
-		sortCriteria[1].setKey(DEFAULT_SORT_INDEX2);
-		sortCriteria[2].setKey(DEFAULT_SORT_INDEX3);
+
+		for (String id : sortCriteria.keySet()) {
+			List<SortCriterion> presentationCriteria = sortCriteria.get(id);
+			if (id.equals(ScheduledPresentation.ID)) {
+				// scheduled presentation has specific defaults
+				presentationCriteria.get(0).setKey(SortKey.DUE_DATE);
+				presentationCriteria.get(0).setDirection(SortCriterion.ASCENDING);
+				presentationCriteria.get(1).setKey(SortKey.SCHEDULED_DATE);
+				presentationCriteria.get(1).setDirection(SortCriterion.ASCENDING);
+				presentationCriteria.get(2).setKey(SortKey.PRIORITY);
+				presentationCriteria.get(3).setKey(SortKey.RANK);
+				presentationCriteria.get(4).setKey(SortKey.DATE_CREATED);
+			} else {
+				// standard defaults
+				presentationCriteria.get(0).setKey(SortKey.PRIORITY);
+				presentationCriteria.get(1).setKey(SortKey.RANK);
+				presentationCriteria.get(2).setKey(SortKey.DATE_CREATED);
+			}
+		}
+
+		currentPresentation = CategorizedPresentation.ID;
 	}
 
 	public int compare(ITask element1, ITask element2) {
-		for (SortCriterion key : sortCriteria) {
+		for (SortCriterion key : getCurrentCriteria()) {
 			int result;
 			switch (key.getKey()) {
 			case DATE_CREATED:
-				result = sortByDate(element1, element2, key.getDirection());
+				result = sortByCreationDate(element1, element2, key.getDirection());
 				break;
 			case RANK:
 				result = sortByRank(element1, element2, key.getDirection());
@@ -101,6 +128,9 @@ public class TaskComparator implements Comparator<ITask> {
 			case MODIFICATION_DATE:
 				result = sortByModificationDate(element1, element2, key.getDirection());
 				break;
+			case SCHEDULED_DATE:
+				result = sortByScheduledDate(element1, element2, key.getDirection());
+				break;
 			default: // NONE
 				return 0;
 			}
@@ -113,15 +143,24 @@ public class TaskComparator implements Comparator<ITask> {
 	}
 
 	public SortCriterion getSortCriterion(int index) {
-		return sortCriteria[index];
+		return getCurrentCriteria().get(index);
 	}
 
 	public void restoreState(IMemento memento) {
 		if (memento != null) {
-			for (int index = 0; index < CRITERIA_COUNT; index++) {
-				IMemento child = memento.getChild(MEMENTO_KEY_SORT + index);
-				if (child != null && sortCriteria[index] != null) {
-					sortCriteria[index].restoreState(child);
+			for (String presentationId : sortCriteria.keySet()) {
+				List<SortCriterion> criteria = sortCriteria.get(presentationId);
+				for (int i = 0; i < criteria.size(); i++) {
+					IMemento child = memento.getChild(MEMENTO_KEY_SORT + presentationId + i);
+					if (child != null) {
+						criteria.get(i).restoreState(child);
+					} else if (CategorizedPresentation.ID.equals(presentationId)) {
+						// attempt to read memento as it would have recorded before sort criteria were stored by presentation
+						child = memento.getChild(MEMENTO_KEY_SORT + i);
+						if (child != null) {
+							criteria.get(i).restoreState(child);
+						}
+					}
 				}
 			}
 		}
@@ -129,36 +168,64 @@ public class TaskComparator implements Comparator<ITask> {
 
 	public void saveState(IMemento memento) {
 		if (memento != null) {
-			for (int index = 0; index < CRITERIA_COUNT; index++) {
-				IMemento child = memento.createChild(MEMENTO_KEY_SORT + index);
-				if (child != null && sortCriteria[index] != null) {
-					sortCriteria[index].saveState(child);
+			for (String presentationId : sortCriteria.keySet()) {
+				List<SortCriterion> criteria = sortCriteria.get(presentationId);
+				for (int i = 0; i < criteria.size(); i++) {
+					IMemento child = memento.createChild(MEMENTO_KEY_SORT + presentationId + i);
+					if (child != null) {
+						criteria.get(i).saveState(child);
+					}
 				}
 			}
 		}
 	}
 
-	private int sortByDate(ITask element1, ITask element2, int sortDirection) {
-		Date date1 = element1.getCreationDate();
-		Date date2 = element2.getCreationDate();
-		if (date1 == null) {
-			return (date2 != null) ? sortDirection : 0;
-		} else if (date2 == null) {
-			return -sortDirection;
+	public void presentationChanged(AbstractTaskListPresentation presentation) {
+		currentPresentation = presentation.getId();
+	}
+
+	private List<SortCriterion> getCurrentCriteria() {
+		return sortCriteria.get(currentPresentation);
+	}
+
+	private int sortByCreationDate(ITask task1, ITask task2, int sortDirection) {
+		Date date1 = task1.getCreationDate();
+		Date date2 = task2.getCreationDate();
+		return compare(date1, date2, sortDirection);
+	}
+
+	private int sortByDueDate(ITask task1, ITask task2, int sortDirection) {
+		Date date1 = task1.getDueDate();
+		Date date2 = task2.getDueDate();
+		return compare(date1, date2, sortDirection);
+	}
+
+	private int sortByModificationDate(ITask task1, ITask task2, int sortDirection) {
+		Date date1 = task1.getModificationDate();
+		Date date2 = task2.getModificationDate();
+		return compare(date1, date2, sortDirection);
+	}
+
+	private int sortByScheduledDate(ITask task1, ITask task2, int sortDirection) {
+		if (task1 instanceof AbstractTask && task2 instanceof AbstractTask) {
+			DateRange date1 = ((AbstractTask) task1).getScheduledForDate();
+			DateRange date2 = ((AbstractTask) task2).getScheduledForDate();
+			return compare(date1, date2, sortDirection);
 		}
-		return sortDirection * date1.compareTo(date2);
+		return 0;
 	}
 
-	private int sortByDueDate(ITask element1, ITask element2, int sortDirection) {
-		Date date1 = element1.getDueDate();
-		Date date2 = element2.getDueDate();
-		return compare(date1, date2, sortDirection);
-	}
-
-	private int sortByModificationDate(ITask element1, ITask element2, int sortDirection) {
-		Date date1 = element1.getModificationDate();
-		Date date2 = element2.getModificationDate();
-		return compare(date1, date2, sortDirection);
+	private int compare(DateRange date1, DateRange date2, int sortDirection) {
+		if (date1 == null) {
+			return date2 == null ? 0 : 1;
+		} else if (date2 == null) {
+			return -1;
+		} else if (date1 instanceof DayDateRange && !(date2 instanceof DayDateRange)) {
+			return -1;
+		} else if (date2 instanceof DayDateRange && !(date1 instanceof DayDateRange)) {
+			return 1;
+		}
+		return compare(date1.getEndDate(), date2.getEndDate(), sortDirection);
 	}
 
 	private <T> int compare(Comparable<T> key1, T key2, int sortDirection) {
@@ -170,9 +237,9 @@ public class TaskComparator implements Comparator<ITask> {
 		return sortDirection * key1.compareTo(key2);
 	}
 
-	private int sortByID(ITask element1, ITask element2, int sortDirection) {
-		String key1 = element1.getTaskKey();
-		String key2 = element2.getTaskKey();
+	private int sortByID(ITask task1, ITask task2, int sortDirection) {
+		String key1 = task1.getTaskKey();
+		String key2 = task2.getTaskKey();
 		if (key1 == null) {
 			return (key2 != null) ? sortDirection : 0;
 		} else if (key2 == null) {
@@ -181,15 +248,15 @@ public class TaskComparator implements Comparator<ITask> {
 		return sortDirection * taskKeyComparator.compare2(key1, key2);
 	}
 
-	private int sortByRank(ITask element1, ITask element2, int sortDirection) {
-		if (element1.getConnectorKind() != null && element2.getConnectorKind() != null
-				&& element1.getConnectorKind().equals(element2.getConnectorKind())) {
+	private int sortByRank(ITask task1, ITask task2, int sortDirection) {
+		if (task1.getConnectorKind() != null && task2.getConnectorKind() != null
+				&& task1.getConnectorKind().equals(task2.getConnectorKind())) {
 			// only compare rank of elements from the same connector
-			if (element1.getRepositoryUrl() != null && element2.getRepositoryUrl() != null
-					&& element1.getRepositoryUrl().equals(element2.getRepositoryUrl())) {
+			if (task1.getRepositoryUrl() != null && task2.getRepositoryUrl() != null
+					&& task1.getRepositoryUrl().equals(task2.getRepositoryUrl())) {
 				// only compare the rank of elements in the same repository
-				String rankString1 = element1.getAttribute(TaskAttribute.RANK);
-				String rankString2 = element2.getAttribute(TaskAttribute.RANK);
+				String rankString1 = task1.getAttribute(TaskAttribute.RANK);
+				String rankString2 = task2.getAttribute(TaskAttribute.RANK);
 				try {
 					Double rank1 = rankString1 == null || rankString1.length() == 0
 							? Double.valueOf(0)
@@ -206,13 +273,13 @@ public class TaskComparator implements Comparator<ITask> {
 		return 0;
 	}
 
-	private int sortByPriority(ITask element1, ITask element2, int sortDirection) {
-		return sortDirection * element1.getPriority().compareToIgnoreCase(element2.getPriority());
+	private int sortByPriority(ITask task1, ITask task2, int sortDirection) {
+		return sortDirection * task1.getPriority().compareToIgnoreCase(task2.getPriority());
 	}
 
-	private int sortBySummary(ITask element1, ITask element2, int sortDirection) {
-		String key1 = element1.getSummary();
-		String key2 = element2.getSummary();
+	private int sortBySummary(ITask task1, ITask task2, int sortDirection) {
+		String key1 = task1.getSummary();
+		String key2 = task2.getSummary();
 		if (key1 == null) {
 			return (key2 != null) ? sortDirection : 0;
 		} else if (key2 == null) {

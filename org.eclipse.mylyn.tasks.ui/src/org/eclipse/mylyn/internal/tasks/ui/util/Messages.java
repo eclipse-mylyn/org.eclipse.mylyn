@@ -43,6 +43,8 @@ public class Messages extends NLS {
 
 	public static String SortCriterion_Modification_Date;
 
+	public static String SortCriterion_Scheduled_Date;
+
 	public static String SortCriterion_Type;
 
 	public static String SortKindEntry_Date_Created;

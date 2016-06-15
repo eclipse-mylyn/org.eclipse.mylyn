@@ -29,6 +29,8 @@ public class Messages extends NLS {
 
 	public static String TaskCompareDialog_Descending;
 
+	public static String TaskCompareDialog_Presentation_warning;
+
 	public static String TaskCompareDialog_Sort_by;
 
 	public static String TaskCompareDialog_Sorting;

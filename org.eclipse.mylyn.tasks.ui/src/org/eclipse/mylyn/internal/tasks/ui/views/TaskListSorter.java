@@ -99,10 +99,10 @@ public class TaskListSorter extends ViewerSorter {
 	@Override
 	public int compare(Viewer compareViewer, Object o1, Object o2) {
 		if (o1 instanceof AbstractTask && o2 instanceof AbstractTask) {
-			// sort of the tasks within the container using the setting from the Sortdialog
+			// sort of the tasks within the container using the setting from the Sort Dialog
 			ITask element1 = (ITask) o1;
 			ITask element2 = (ITask) o2;
-			return compareElements(element1, element2);
+			return taskComparator.compare(element1, element2);
 		} else if (o1 instanceof ScheduledTaskContainer && o2 instanceof ScheduledTaskContainer) {
 			// scheduled Mode compare
 			ScheduledTaskContainer dateRangeTaskContainer1 = (ScheduledTaskContainer) o1;
@@ -170,7 +170,7 @@ public class TaskListSorter extends ViewerSorter {
 				weight = 2;
 			} else {
 				key.values[0] = getRepositoryUrl(object);
-				key.values[1] = weight + ""; //$NON-NLS-1$
+				key.values[1] = Integer.toString(weight);
 				key.values[2] = ((AbstractTaskContainer) object).getSummary();
 				weight = 3;
 			}
@@ -188,18 +188,7 @@ public class TaskListSorter extends ViewerSorter {
 					.getRepository(repositoryElement.getConnectorKind(), repositoryUrl);
 			return taskRepository != null ? taskRepository.getRepositoryLabel() : null;
 		}
-//		if (object instanceof UnsubmittedTaskContainer) {
-//			return ((UnsubmittedTaskContainer) object).getRepositoryUrl();
-//		} else if (object instanceof RepositoryQuery) {
-//			return ((RepositoryQuery) object).getRepositoryUrl();
-//		} else if (object instanceof UnmatchedTaskContainer) {
-//			return ((UnmatchedTaskContainer) object).getRepositoryUrl();
-//		}
 		return null;
-	}
-
-	private int compareElements(ITask element1, ITask element2) {
-		return taskComparator.compare(element1, element2);
 	}
 
 	public TaskComparator getTaskComparator() {
