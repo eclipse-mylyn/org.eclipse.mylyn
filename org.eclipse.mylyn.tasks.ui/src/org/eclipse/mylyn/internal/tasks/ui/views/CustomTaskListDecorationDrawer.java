@@ -19,13 +19,12 @@ import org.eclipse.mylyn.commons.ui.compatibility.CommonFonts;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
-import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider.StateTaskContainer;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
@@ -213,7 +212,7 @@ public class CustomTaskListDecorationDrawer implements Listener {
 	}
 
 	private boolean hideDecorationOnContainer(ITaskContainer element, TreeItem treeItem) {
-		if (element instanceof ScheduledTaskContainer) {
+		if (element instanceof StateTaskContainer) {
 			return true;
 		} else if (element instanceof UnmatchedTaskContainer) {
 			if (!focusedMode) {
@@ -230,7 +229,7 @@ public class CustomTaskListDecorationDrawer implements Listener {
 
 		if (focusedMode) {
 			return false;
-		} else if (element instanceof IRepositoryQuery || element instanceof TaskCategory) {
+		} else if (!(element instanceof ITask)) {
 			return treeItem.getExpanded();
 		} else {
 			return false;
@@ -268,7 +267,8 @@ public class CustomTaskListDecorationDrawer implements Listener {
 					imageDescriptor = CommonImages.OVERLAY_SYNC_OUTGOING;
 				}
 			} else if (repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING) {
-				if (!Boolean.parseBoolean(repositoryTask.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING))) {
+				if (!Boolean.parseBoolean(
+						repositoryTask.getAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_SUPPRESS_INCOMING))) {
 					if (synchViewStyle) {
 						imageDescriptor = CommonImages.OVERLAY_SYNC_OLD_INCOMMING;
 					} else {
