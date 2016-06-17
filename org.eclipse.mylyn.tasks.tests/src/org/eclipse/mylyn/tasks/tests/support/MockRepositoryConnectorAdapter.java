@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.spi.RepositoryConnectorBranding;
+import org.eclipse.mylyn.tasks.tests.TestException;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -27,7 +28,6 @@ import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import com.google.common.collect.ImmutableList;
 
 public class MockRepositoryConnectorAdapter implements IAdapterFactory {
-
 	public final static class DynamicMockRepositoryConnectorUi extends MockRepositoryConnectorUi {
 
 		private final AbstractRepositoryConnector connector;
@@ -65,8 +65,8 @@ public class MockRepositoryConnectorAdapter implements IAdapterFactory {
 
 					@Override
 					public List<String> getBrands() {
-						ArrayList<String> brands = new ArrayList<String>(ImmutableList.of("org.mylyn", "org.eclipse",
-								"exceptional"));
+						ArrayList<String> brands = new ArrayList<String>(
+								ImmutableList.of("org.mylyn", "org.eclipse", "exceptional"));
 						brands.add(1, null);
 						return brands;
 					}
@@ -74,7 +74,7 @@ public class MockRepositoryConnectorAdapter implements IAdapterFactory {
 					@Override
 					public String getConnectorLabel(String brand) {
 						if ("exceptional".equals(brand)) {
-							throw new NullPointerException();
+							throw new TestException();
 						} else if (getBrands().contains(brand)) {
 							return "Label for " + brand;
 						}
