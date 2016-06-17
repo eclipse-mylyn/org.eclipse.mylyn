@@ -11,6 +11,9 @@
 
 package org.eclipse.mylyn.tasks.ui.editors;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.action.ToolBarManager;
@@ -23,6 +26,8 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextAttributeEditor;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModelEvent;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModelListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
@@ -40,7 +45,7 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 
-	// the default font of some controls, e.g. radio buttons, is too big; set this font explicitly on the control 
+	// the default font of some controls, e.g. radio buttons, is too big; set this font explicitly on the control
 	protected static final Font TEXT_FONT = JFaceResources.getDefaultFont();
 
 	private Control control;
@@ -54,6 +59,8 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 	private boolean expandVertically;
 
 	private MaximizePartAction maximizePartAction;
+
+	private final Set<String> attributeIds = new HashSet<>();
 
 	public AbstractTaskEditorPart() {
 	}
@@ -71,6 +78,7 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 				boolean spellChecking = getTaskEditorPage().getAttributeEditorToolkit().hasSpellChecking(attribute);
 				((RichTextAttributeEditor) editor).setSpellCheckingEnabled(spellChecking);
 			}
+			attributeIds.add(attribute.getId());
 			return editor;
 		}
 		return null;
@@ -121,6 +129,15 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 
 	public void initialize(AbstractTaskEditorPage taskEditorPage) {
 		this.taskEditorPage = taskEditorPage;
+		getModel().addModelListener(new TaskDataModelListener() {
+
+			@Override
+			public void attributeChanged(TaskDataModelEvent event) {
+				if (attributeIds.contains(event.getTaskAttribute().getId())) {
+					markDirty();
+				}
+			}
+		});
 	}
 
 	public void setControl(Control control) {
@@ -176,7 +193,7 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 
 	/**
 	 * Returns an action for maximizing the part.
-	 * 
+	 *
 	 * @since 3.5
 	 */
 	protected Action getMaximizePartAction() {
@@ -188,7 +205,7 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 
 	/**
 	 * Returns the control that determines the size of the part.
-	 * 
+	 *
 	 * @see #getMaximizePartAction()
 	 * @since 3.5
 	 */
