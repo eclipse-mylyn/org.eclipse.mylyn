@@ -118,7 +118,7 @@ public class BugzillaRestTaskSchema extends AbstractTaskSchema {
 	public final Field REMOVE_CC = createField("removeCC", "CC selected for remove",
 			IBugzillaRestConstants.EDITOR_TYPE_CC);
 
-	public final Field ADD_SELF_CC = inheritFrom(parent.ADD_SELF_CC).addFlags(Flag.PEOPLE).create();
+	public final Field ADD_SELF_CC = inheritFrom(parent.ADD_SELF_CC).create();
 
 	public final Field COMMENT_ISPRIVATE = inheritFrom(parent.COMMENT_ISPRIVATE).addFlags(Flag.ATTRIBUTE).create();
 

@@ -18,6 +18,7 @@ import java.util.Map;
 
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestTaskSchema;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorPeoplePart;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 
@@ -31,7 +32,7 @@ public class BugzillaRestTaskEditorPeoplePart extends TaskEditorPeoplePart {
 		attributes.add(getTaskData().getRoot()
 				.getMappedAttribute(BugzillaRestTaskSchema.getDefault().RESET_ASSIGNED_TO.getKey()));
 		attributes.add(getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_REPORTER));
-		attributes.add(getTaskData().getRoot().getMappedAttribute(TaskAttribute.ADD_SELF_CC));
+		addSelfToCC(attributes);
 		attributes.add(getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_CC));
 		for (TaskAttribute attribute : allAttributes.values()) {
 			TaskAttributeMetaData properties = attribute.getMetaData();
@@ -42,6 +43,39 @@ public class BugzillaRestTaskEditorPeoplePart extends TaskEditorPeoplePart {
 			}
 		}
 		return attributes;
+	}
+	private void addSelfToCC(List<TaskAttribute> attributes) {
+		if (getTaskData().isNew()) {
+			return;
+		}
+		TaskRepository repository = this.getTaskEditorPage().getTaskRepository();
+
+		if (repository.getUserName() == null) {
+			return;
+		}
+
+		TaskAttribute root = getTaskData().getRoot();
+		TaskAttribute owner = root.getMappedAttribute(TaskAttribute.USER_ASSIGNED);
+		if (owner != null && owner.getValue().indexOf(repository.getUserName()) != -1) {
+			return;
+		}
+
+		TaskAttribute reporter = root.getMappedAttribute(TaskAttribute.USER_REPORTER);
+		if (reporter != null && reporter.getValue().indexOf(repository.getUserName()) != -1) {
+			return;
+		}
+
+		TaskAttribute ccAttribute = root.getMappedAttribute(TaskAttribute.USER_CC);
+		if (ccAttribute != null && ccAttribute.getValues().contains(repository.getUserName())) {
+			return;
+		}
+
+		TaskAttribute attrAddToCC = getTaskData().getRoot().getMappedAttribute(TaskAttribute.ADD_SELF_CC);
+		if (attrAddToCC == null) {
+			attrAddToCC = getTaskData().getRoot().createMappedAttribute(TaskAttribute.ADD_SELF_CC);
+		}
+		attributes.add(attrAddToCC);
+
 	}
 
 }

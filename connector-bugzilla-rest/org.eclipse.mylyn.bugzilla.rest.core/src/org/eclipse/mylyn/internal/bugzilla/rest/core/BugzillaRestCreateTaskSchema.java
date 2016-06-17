@@ -80,8 +80,6 @@ public class BugzillaRestCreateTaskSchema extends AbstractTaskSchema {
 
 	public final Field CC = createField(TaskAttribute.USER_CC, "CC", TaskAttribute.TYPE_PERSON, Flag.PEOPLE);
 
-	public final Field ADD_SELF_CC = inheritFrom(parent.ADD_SELF_CC).addFlags(Flag.PEOPLE).create();
-
 	public final Field DESCRIPTION_IS_PRIVATE = createField("description_is_private", "Description is private",
 			TaskAttribute.TYPE_BOOLEAN, Flag.ATTRIBUTE);
 

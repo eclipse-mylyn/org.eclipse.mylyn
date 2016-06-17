@@ -189,7 +189,7 @@ public class BugzillaRestClientTest {
 		assertEquals(
 				IOUtils.toString(
 						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/parameters.json")),
-				new Gson().toJson(parameter));
+				new Gson().toJson(parameter).replaceAll(repository.getRepositoryUrl(), "http://dummy.url"));
 		assertEquals(
 				IOUtils.toString(
 						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/configuration.json")),
@@ -489,6 +489,7 @@ public class BugzillaRestClientTest {
 		taskDataGet.getRoot().removeAttribute("removeCC");
 		taskDataGet.getRoot().removeAttribute(BugzillaRestTaskSchema.getDefault().RESET_QA_CONTACT.getKey());
 		taskDataGet.getRoot().removeAttribute(BugzillaRestTaskSchema.getDefault().RESET_ASSIGNED_TO.getKey());
+		taskDataGet.getRoot().removeAttribute(BugzillaRestTaskSchema.getDefault().ADD_SELF_CC.getKey());
 
 		// attributes for operations
 		taskDataGet.getRoot().removeAttribute("task.common.operation-CONFIRMED");

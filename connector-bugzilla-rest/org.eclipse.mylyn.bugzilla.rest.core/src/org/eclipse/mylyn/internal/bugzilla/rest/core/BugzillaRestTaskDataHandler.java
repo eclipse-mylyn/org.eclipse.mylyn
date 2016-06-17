@@ -77,6 +77,11 @@ public class BugzillaRestTaskDataHandler extends AbstractTaskDataHandler {
 		if (config != null) {
 			config.updateInitialTaskData(data);
 		}
+		TaskAttribute addSelfCC = data.getRoot().getAttribute(BugzillaRestTaskSchema.getDefault().ADD_SELF_CC.getKey());
+		if (addSelfCC != null) {
+			addSelfCC.getMetaData().putValue("UserName", repository.getUserName()); //$NON-NLS-1$
+		}
+
 		return true;
 	}
 

@@ -142,13 +142,13 @@ public class BugzillaRestPutUpdateTask extends BugzillaRestAuthenticatedPutReque
 						if (element.getValues().size() > 1) {
 							setOld = new HashSet<String>(element.getValues());
 						} else {
-							setOld = new HashSet<String>(Arrays.asList(element.getValue().split("\\s*,\\s*")));
+							setOld = new HashSet<String>(Arrays.asList(element.getValue().split("\\s*,\\s*"))); //$NON-NLS-1$
 						}
 						Set<String> setNew;
 						if (taskAttribute.getValues().size() > 1) {
 							setNew = new HashSet<String>(taskAttribute.getValues());
 						} else {
-							setNew = new HashSet<String>(Arrays.asList(taskAttribute.getValue().split("\\s*,\\s*")));
+							setNew = new HashSet<String>(Arrays.asList(taskAttribute.getValue().split("\\s*,\\s*"))); //$NON-NLS-1$
 						}
 						BugzillaRestGsonUtil.getDefault().buildAddRemoveIntegerHash(out, id, setOld, setNew);
 					} else if (id.equals(BugzillaRestTaskSchema.getDefault().KEYWORDS.getKey())) {
@@ -168,9 +168,26 @@ public class BugzillaRestPutUpdateTask extends BugzillaRestAuthenticatedPutReque
 					}
 				}
 			}
+			TaskAttribute cc = taskData.getRoot().getAttribute(BugzillaRestTaskSchema.getDefault().CC.getKey());
 			TaskAttribute addCC = taskData.getRoot().getAttribute(BugzillaRestTaskSchema.getDefault().ADD_CC.getKey());
 			TaskAttribute removeCC = taskData.getRoot()
 					.getAttribute(BugzillaRestTaskSchema.getDefault().REMOVE_CC.getKey());
+			TaskAttribute addSelfCC = taskData.getRoot()
+					.getAttribute(BugzillaRestTaskSchema.getDefault().ADD_SELF_CC.getKey());
+			if (Boolean.valueOf(addSelfCC.getValue())) {
+				String userName = addSelfCC.getMetaData().getValue("UserName"); //$NON-NLS-1$
+				if (userName != null) {
+					if (removeCC.getValues().contains(userName)) {
+						removeCC.removeValue(userName);
+					} else if (!cc.getValues().contains(userName)) {
+						List<String> addCCList = Arrays.asList(addCC.getValue().split("\\s*,\\s*")); //$NON-NLS-1$
+						if (!addCCList.contains(userName)) {
+							addCC.setValue(userName + (addCCList.size() > 0 && !addCCList.get(0).equals("") ? ", " : "") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+									+ addCC.getValue());
+						}
+					}
+				}
+			}
 			if (addCC.getValues().size() > 0 || removeCC.getValues().size() > 0) {
 				Set<String> setOld = new HashSet<String>(removeCC.getValues());
 				HashSet<String> setNew = new HashSet<String>(Arrays.asList(addCC.getValue().split("\\s*,\\s*"))); //$NON-NLS-1$
