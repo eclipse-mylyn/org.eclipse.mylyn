@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 David Green.
+ * Copyright (c) 2015, 2016 David Green.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ import org.eclipse.mylyn.internal.wikitext.commonmark.Line;
 import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContext;
 import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContext.NamedUriWithTitle;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.builder.EntityReferences;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Objects;
@@ -343,8 +344,8 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 				replaced += text.substring(lastEnd, matcher.start(1));
 			}
 			String entity = matcher.group(2);
-			String entityTextEquivalent = HtmlEntityReferenceToStringConverter.toString(entity);
-			replaced += entityTextEquivalent.isEmpty()
+			String entityTextEquivalent = EntityReferences.instance().equivalentString(entity);
+			replaced += entityTextEquivalent == null
 					? matcher.group(1)
 					: escaper == null ? entityTextEquivalent : escaper.escape(entityTextEquivalent);
 			lastEnd = matcher.end(1);
