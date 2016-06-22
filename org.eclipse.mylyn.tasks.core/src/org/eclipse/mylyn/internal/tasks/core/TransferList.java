@@ -22,7 +22,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * Used to externalize queries.
- * 
+ *
  * @author Steffen
  */
 public class TransferList implements ITransferList {
@@ -58,7 +58,10 @@ public class TransferList implements ITransferList {
 	}
 
 	public boolean addTask(ITask task, AbstractTaskContainer parentContainer) {
-		tasks.add((AbstractTask) task);
+		if (!tasks.contains(task)) {
+			tasks.add((AbstractTask) task);
+		}
+		parentContainer.internalAddChild((AbstractTask) task);
 		return true;
 	}
 

@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
@@ -35,9 +34,10 @@ import org.eclipse.swt.widgets.FileDialog;
 public class ImportExportUtil {
 
 	public static void configureFilter(FileDialog dialog) {
-		dialog.setFilterExtensions(PlatformUiUtil.getFilterExtensions(new String[] { "*" + ITasksCoreConstants.FILE_EXTENSION })); //$NON-NLS-1$
-		dialog.setFilterNames(new String[] { NLS.bind(Messages.ImportExportUtil_Tasks_and_queries_Filter0,
-				ITasksCoreConstants.FILE_EXTENSION) });
+		dialog.setFilterExtensions(
+				PlatformUiUtil.getFilterExtensions(new String[] { "*" + ITasksCoreConstants.FILE_EXTENSION })); //$NON-NLS-1$
+		dialog.setFilterNames(new String[] {
+				NLS.bind(Messages.ImportExportUtil_Tasks_and_queries_Filter0, ITasksCoreConstants.FILE_EXTENSION) });
 	}
 
 	public static void export(File file, IStructuredSelection selection) throws CoreException {
@@ -45,7 +45,7 @@ public class ImportExportUtil {
 		TransferList list = new TransferList();
 		for (Iterator<?> it = selection.iterator(); it.hasNext();) {
 			Object element = it.next();
-			if (element instanceof AbstractTaskCategory) {
+			if (element instanceof TaskCategory) {
 				list.addCategory((TaskCategory) element);
 			} else if (element instanceof RepositoryQuery) {
 				list.addQuery((RepositoryQuery) element);
