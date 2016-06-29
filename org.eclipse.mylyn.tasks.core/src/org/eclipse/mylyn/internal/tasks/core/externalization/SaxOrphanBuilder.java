@@ -33,8 +33,11 @@ public class SaxOrphanBuilder {
 
 	private StringBuilder currentStringContent;
 
+	private final Element orphansElement;
+
 	public SaxOrphanBuilder() throws CoreException {
 		this.document = createDocument();
+		this.orphansElement = document.getDocumentElement();
 	}
 
 	private Document createDocument() throws CoreException {
@@ -79,11 +82,13 @@ public class SaxOrphanBuilder {
 		if (currentElement != null) {
 			appendTextNode();
 			Node parentNode = currentElement.getParentNode();
-			if (parentNode instanceof Element) {
+			// do not set the current element to be the orphans element or all tasks will end up as orphans
+			if (parentNode instanceof Element && parentNode != orphansElement) {
 				currentElement = (Element) parentNode;
 				currentStringContent = new StringBuilder();
 			} else {
 				currentElement = null;
+				currentStringContent = null;
 			}
 		}
 	}
