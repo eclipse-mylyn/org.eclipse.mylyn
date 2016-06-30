@@ -12,7 +12,7 @@
 <feature
       id="org.eclipse.mylyn.discovery"
       label="%featureName"
-      version="3.20.0.qualifier"
+      version="3.21.0.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.mylyn.commons.core"
       license-feature="org.eclipse.license"
