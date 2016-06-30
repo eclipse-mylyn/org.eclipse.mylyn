@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn WikiText HTML Tests
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.html.tests
 Fragment-Host: org.eclipse.mylyn.wikitext.html.core;bundle-version="2.0.0"
-Bundle-Version: 2.9.0.qualifier
+Bundle-Version: 2.10.0.qualifier
 Bundle-Vendor: Eclipse.org
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.mylyn.wikitext.core;bundle-version="2.0.0", 

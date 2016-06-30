@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 /**
  * Provides a way to get a string corresponding to an entity reference.
  *
- * @since 2.9
+ * @since 2.10
  */
 public class EntityReferences {
 	private static final Pattern NUMERIC_ENTITY_PATTERN = Pattern.compile("#(?:(?:x([0-9A-Fa-f]+))|([0-9]+))"); //$NON-NLS-1$
