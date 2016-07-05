@@ -79,6 +79,8 @@ public class Messages extends NLS {
 	public static String DefaultTaskSchema_Summary_Label;
 
 	public static String DefaultTaskSchema_URL_Label;
+
+	public static String TaskDataState_RefactorRoot;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

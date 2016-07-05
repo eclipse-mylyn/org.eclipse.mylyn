@@ -11,11 +11,15 @@
 
 package org.eclipse.mylyn.internal.tasks.core.data;
 
+import java.util.Arrays;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -240,4 +244,26 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 		return newData;
 	}
 
+	public void refactorAttribute(TaskAttribute attribute) throws CoreException {
+		refactorAttribute(localTaskData, attribute);
+		refactorAttribute(repositoryTaskData, attribute);
+		refactorAttribute(editsTaskData, attribute);
+		refactorAttribute(lastReadTaskData, attribute);
+	}
+
+	private void refactorAttribute(TaskData taskData, TaskAttribute attribute) throws CoreException {
+		if (taskData != null) {
+			String[] path = attribute.getPath();
+			if (path.length == 0) {
+				throw new CoreException(
+						new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, Messages.TaskDataState_RefactorRoot));
+			}
+			String[] shortenedPath = Arrays.copyOfRange(path, 0, path.length - 1);
+			TaskAttribute parent = taskData.getRoot().getMappedAttribute(shortenedPath);
+			if (parent != null) {
+				parent.removeAttribute(attribute.getId());
+				parent.deepAddCopy(attribute);
+			}
+		}
+	}
 }

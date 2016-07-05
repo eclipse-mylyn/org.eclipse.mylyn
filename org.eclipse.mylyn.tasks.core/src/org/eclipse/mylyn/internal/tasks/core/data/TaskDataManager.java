@@ -639,4 +639,23 @@ public class TaskDataManager implements ITaskDataManager {
 
 		});
 	}
+
+	public void refactorAttribute(ITask itask, TaskAttribute attribute) throws CoreException {
+		Assert.isTrue(itask instanceof AbstractTask);
+		final AbstractTask task = (AbstractTask) itask;
+		final String kind = task.getConnectorKind();
+		taskList.run(new ITaskListRunnable() {
+			public void execute(IProgressMonitor monitor) throws CoreException {
+				File file = getMigratedFile(task, kind);
+				if (file.exists()) {
+					TaskDataState state = taskDataStore.getTaskDataState(file);
+					if (state != null) {
+						state.refactorAttribute(attribute);
+						taskDataStore.putTaskData(file, state);
+					}
+				}
+			}
+		});
+
+	}
 }
