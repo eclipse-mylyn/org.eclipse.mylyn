@@ -591,6 +591,7 @@ public class TaskList implements ITaskList, ITransferList {
 			newTask.setStatus(task.getStatus());
 			newTask.setNotes(task.getNotes());
 			newTask.setEstimatedTimeHours(task.getEstimatedTimeHours());
+			newTask.setUrl(task.getUrl());
 			addTaskContainers(task, newTask);
 		}
 		Map<String, String> attributeMap = oldTask.getAttributes();
