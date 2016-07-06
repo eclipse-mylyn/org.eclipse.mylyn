@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.LegacyActionTools;
@@ -557,7 +558,7 @@ public class TaskListToolTip extends GradientToolTip {
 		}
 
 		String incomingText = getIncomingText(currentTipElement);
-		if (incomingText != null) {
+		if (!StringUtils.isEmpty(incomingText)) {
 			ImageDescriptor incomingImage = getIncomingImage();
 			addIconAndLabel(composite, CommonImages.getImage(incomingImage), incomingText);
 		}
