@@ -11,8 +11,6 @@
 
 package org.eclipse.mylyn.tasks.tests.ui.editor;
 
-import junit.framework.TestCase;
-
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
@@ -23,6 +21,8 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.tests.ui.MockTextViewer;
 import org.eclipse.swt.graphics.Point;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -164,6 +164,7 @@ public class RepositoryCompletionProcessorTest extends TestCase {
 
 	private TaskTask addTask(String taskId, String summary) {
 		TaskTask task = TaskTestUtil.createMockTask(taskId);
+		task.setTaskKey(taskId);
 		task.setSummary(summary);
 		TasksUiPlugin.getTaskList().addTask(task);
 		return task;

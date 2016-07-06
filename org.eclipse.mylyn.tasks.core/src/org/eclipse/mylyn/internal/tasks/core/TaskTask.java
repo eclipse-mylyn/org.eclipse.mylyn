@@ -21,7 +21,6 @@ public class TaskTask extends AbstractTask {
 	public TaskTask(String connectorKind, String repositoryUrl, String taskId) {
 		super(repositoryUrl, taskId, ""); //$NON-NLS-1$
 		this.connectorKind = connectorKind;
-		this.taskKey = taskId;
 	}
 
 	@Override
