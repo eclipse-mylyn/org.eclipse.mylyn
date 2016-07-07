@@ -140,6 +140,13 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 		});
 	}
 
+	@Override
+	public void markDirty() {
+		if (!isDirty()) {
+			super.markDirty();
+		}
+	}
+
 	public void setControl(Control control) {
 		this.control = control;
 	}
