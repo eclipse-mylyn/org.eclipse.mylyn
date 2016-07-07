@@ -50,6 +50,7 @@
          <template name="sourceinclude" description="%template.sourceinclude"  content="[source, ${language}]\n----\ninclude::${file}[]\n----\n" block="true"/>
          <template name="button" description="%template.button" content="btn:[${OK}]"     block="true"/>
          <template name="menu" description="%template.menu" content="menu:${File}[${New}]" block="true"/>
+         <template name="table" description="%template.table" content=".Table ${Title}\n|===\n|${Column1Name} |${Colume2Name}\n\n|${CellColumn1Row1}\n|${CellColumn2Row1}\n\n|${CellColumn1Row2}\n|${CellColumn2Row2}\n\n|===\n" block="true"/>
 
       </templates>
    </extension>
