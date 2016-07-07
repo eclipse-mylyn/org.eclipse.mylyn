@@ -46,7 +46,7 @@ public class CoreUtil {
 		}
 	}
 
-	private static final String FRAMEWORK_VERSION = "3.20.0"; //$NON-NLS-1$
+	private static final String FRAMEWORK_VERSION = "3.21.0"; //$NON-NLS-1$
 
 	private static final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 	static {
@@ -56,7 +56,7 @@ public class CoreUtil {
 	/**
 	 * Returns a string representation of <code>object</code>. If object is a map or array the returned string will
 	 * contains a comma separated list of contained elements.
-	 * 
+	 *
 	 * @since 3.4
 	 */
 	public static String toString(Object object) {
@@ -98,7 +98,7 @@ public class CoreUtil {
 
 	/**
 	 * Returns the version of the bundle.
-	 * 
+	 *
 	 * @since 3.7
 	 * @deprecated use {@link Bundle#getVersion()} instead
 	 */
@@ -110,7 +110,7 @@ public class CoreUtil {
 	/**
 	 * Returns true, if <code>o1</code> is equal to <code>o2</code> or <code>o1</code> and <code>o2</code> are
 	 * <code>null</code>.
-	 * 
+	 *
 	 * @see Object#equals(Object)
 	 * @since 3.7
 	 */
@@ -124,7 +124,7 @@ public class CoreUtil {
 
 	/**
 	 * Compares <code>o1</code> and <code>o2</code>.
-	 * 
+	 *
 	 * @since 3.7
 	 * @return a negative integer, 0, or a positive, if o1 is less than o2, o1 equals o2 or o1 is more than o2; null is
 	 *         considered less than any value
@@ -140,7 +140,7 @@ public class CoreUtil {
 
 	/**
 	 * Compares a boolean value.
-	 * 
+	 *
 	 * @since 3.7
 	 * @see Boolean#equals(Object)
 	 */
@@ -151,7 +151,7 @@ public class CoreUtil {
 	/**
 	 * Disables logging through the Apache commons logging system by default. This can be overridden by specifying the
 	 * <code>org.apache.commons.logging.Log</code> system property.
-	 * 
+	 *
 	 * @since 3.7
 	 */
 	public static void initializeLoggingSettings() {
@@ -169,7 +169,7 @@ public class CoreUtil {
 
 	/**
 	 * Returns the version of the Java runtime.
-	 * 
+	 *
 	 * @since 3.7
 	 * @return {@link Version#emptyVersion} if the version can not be determined
 	 */
@@ -197,8 +197,8 @@ public class CoreUtil {
 						}
 						return new Version(versionString);
 					}
-					return new Version(versionString.substring(0,
-							findLastNumberIndex(versionString, firstSeparator) + 1));
+					return new Version(
+							versionString.substring(0, findLastNumberIndex(versionString, firstSeparator) + 1));
 				} catch (IllegalArgumentException e) {
 					// ignore
 				}
@@ -224,7 +224,7 @@ public class CoreUtil {
 
 	/**
 	 * Returns the running Mylyn version without the qualifier.
-	 * 
+	 *
 	 * @since 3.7
 	 */
 	public static Version getFrameworkVersion() {
@@ -233,7 +233,7 @@ public class CoreUtil {
 
 	/**
 	 * Returns a representation of <code>name</code> that is a valid file name.
-	 * 
+	 *
 	 * @since 3.7
 	 */
 	public static String asFileName(String name) {
@@ -251,7 +251,7 @@ public class CoreUtil {
 
 	/**
 	 * Returns the decoded form of <code>text</code>.
-	 * 
+	 *
 	 * @since 3.8
 	 * @see #encode(String)
 	 * @throws IllegalArgumentException
@@ -294,7 +294,7 @@ public class CoreUtil {
 
 	/**
 	 * An encoded form of <code>text</code> that is suitable as a filename.
-	 * 
+	 *
 	 * @param text
 	 *            the string to encode
 	 * @see #decode(String)
@@ -317,7 +317,7 @@ public class CoreUtil {
 
 	/**
 	 * Returns a new {@link XMLReader} instance using default factories.
-	 * 
+	 *
 	 * @since 3.9
 	 */
 	public static SAXParser newSaxParser() throws SAXException {
@@ -330,7 +330,7 @@ public class CoreUtil {
 
 	/**
 	 * Returns a new {@link XMLReader} instance using default factories.
-	 * 
+	 *
 	 * @since 3.9
 	 */
 	public static XMLReader newXmlReader() throws SAXException {
