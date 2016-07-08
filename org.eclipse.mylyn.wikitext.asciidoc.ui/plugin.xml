@@ -54,4 +54,10 @@
 
       </templates>
    </extension>
+   <extension point="org.eclipse.mylyn.wikitext.ui.relativeFilePathHyperlinkDetector">
+      <relativeFilePathHyperlinkDetector markupLanguage="AsciiDoc">
+         <regularExpression regularExpression="include::(.+)\[\]" />
+         <regularExpression regularExpression="image::(.+)\[\]" />
+      </relativeFilePathHyperlinkDetector>
+   </extension>
 </plugin>

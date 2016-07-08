@@ -1,0 +1,110 @@
+/*******************************************************************************
+ * Copyright (c) 2016 Simon Scholz and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Simon Scholz - initial API and implementation
+ *******************************************************************************/
+
+package org.eclipse.mylyn.wikitext.ui;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.io.ByteArrayInputStream;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FileRefHyperlinkDetector;
+import org.eclipse.mylyn.wikitext.tests.AbstractTestInWorkspace;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.PlatformUI;
+
+import com.google.common.collect.ImmutableList;
+
+public class FileRefHyperlinkDetectorTest extends AbstractTestInWorkspace {
+
+	private IProject project;
+
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		project = createSimpleProject();
+	}
+
+	public void testNoHyperlinkInDocument() throws CoreException {
+		ImmutableList<String> fileRefPatterns = ImmutableList.of("include::(.+)\\[\\]", "image::(.+)\\[\\]");
+		FileRefHyperlinkDetector fileRefHyperlinkDetector = new FileRefHyperlinkDetector(project, fileRefPatterns);
+
+		ITextViewer mockTextViewer = mock(ITextViewer.class);
+		when(mockTextViewer.getDocument()).thenReturn(new Document("Some contents without hyperlink in it."));
+
+		IHyperlink[] detectHyperlinks = fileRefHyperlinkDetector.detectHyperlinks(mockTextViewer, new Region(7, 15),
+				false);
+
+		assertThat(detectHyperlinks, is(nullValue()));
+	}
+
+	public void testFileDoesNotExist() throws CoreException {
+		ImmutableList<String> fileRefPatterns = ImmutableList.of("include::(.+)\\[\\]", "image::(.+)\\[\\]");
+		FileRefHyperlinkDetector fileRefHyperlinkDetector = new FileRefHyperlinkDetector(project, fileRefPatterns);
+
+		ITextViewer mockTextViewer = mock(ITextViewer.class);
+		when(mockTextViewer.getDocument()).thenReturn(new Document("image::file-that-does-not-exist.png[]"));
+
+		IHyperlink[] detectHyperlinks = fileRefHyperlinkDetector.detectHyperlinks(mockTextViewer, new Region(7, 15),
+				false);
+
+		assertThat(detectHyperlinks, is(nullValue()));
+	}
+
+	public void testFindFileRefAndOpenHyperlink() throws CoreException {
+		String asciidocFileName = "simon-scholz.adoc";
+		IFile file = project.getFile(asciidocFileName);
+		file.create(new ByteArrayInputStream("== Writing tests is kinda documentation".getBytes()), true,
+				new NullProgressMonitor());
+
+		ImmutableList<String> fileRefPatterns = ImmutableList.of("include::(.+)\\[\\]", "image::(.+)\\[\\]");
+		FileRefHyperlinkDetector fileRefHyperlinkDetector = new FileRefHyperlinkDetector(project, fileRefPatterns);
+
+		ITextViewer mockTextViewer = mock(ITextViewer.class);
+		when(mockTextViewer.getDocument()).thenReturn(new Document("include::" + asciidocFileName + "[]"));
+
+		IHyperlink[] detectHyperlinks = fileRefHyperlinkDetector.detectHyperlinks(mockTextViewer, new Region(9, 17),
+				false);
+
+		assertThat(detectHyperlinks.length, is(1));
+
+		IHyperlink hyperlink = detectHyperlinks[0];
+
+		hyperlink.open();
+
+		IEditorPart activeEditor = PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow()
+				.getActivePage()
+				.getActiveEditor();
+
+		IEditorInput editorInput = activeEditor.getEditorInput();
+		if (editorInput instanceof IFileEditorInput) {
+			IFile editorFile = ((IFileEditorInput) editorInput).getFile();
+
+			assertThat(file, equalTo(editorFile));
+		}
+	}
+
+}

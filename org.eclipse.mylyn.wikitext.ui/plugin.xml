@@ -15,6 +15,8 @@
 		schema="schema/cheatSheet.exsd" />
 	<extension-point id="contentAssist" name="%extension-point.name.0"
 		schema="schema/contentAssist.exsd" />
+ 	<extension-point id="relativeFilePathHyperlinkDetector" name="%relativeFilePathHyperlinkDetector-extension-point.name"
+ 		schema="schema/relativeFilePathHyperlinkDetector.exsd"/>
 		
 	<extension point="org.eclipse.ui.editors.annotationTypes">
 		<type name="org.eclipse.mylyn.wikitext.ui.annotation.id">

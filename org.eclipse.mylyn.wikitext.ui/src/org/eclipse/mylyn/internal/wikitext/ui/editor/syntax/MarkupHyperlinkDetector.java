@@ -19,7 +19,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -27,18 +26,11 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
-import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.NoOpDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
-import org.eclipse.osgi.util.NLS;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.ide.IDE;
 
 /**
  * A hyperlink detector that can detect hyperlinks in markup source.
@@ -200,39 +192,4 @@ public class MarkupHyperlinkDetector implements IHyperlinkDetector {
 
 	}
 
-	private static class EditFileHyperlink implements IHyperlink {
-
-		private final IFile file;
-
-		private final IRegion region;
-
-		protected EditFileHyperlink(IFile file, IRegion region) {
-			this.file = file;
-			this.region = region;
-		}
-
-		public IRegion getHyperlinkRegion() {
-			return region;
-		}
-
-		public String getTypeLabel() {
-			return null;
-		}
-
-		public String getHyperlinkText() {
-			return NLS.bind(Messages.MarkupHyperlinkDetector_openFileInEditor, file.getName());
-		}
-
-		public void open() {
-			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-			IWorkbenchPage activePage = window.getActivePage();
-			try {
-				IDE.openEditor(activePage, file);
-			} catch (PartInitException e) {
-				WikiTextUiPlugin.getDefault().log(e);
-				MessageDialog.openError(window.getShell(), Messages.MarkupHyperlinkDetector_unexpectedError,
-						NLS.bind(Messages.MarkupHyperlinkDetector_openException, file.getName(), e.getMessage()));
-			}
-		}
-	}
 }
