@@ -45,7 +45,7 @@ public abstract class AbstractAttributeEditor {
 	/**
 	 * The key used to associate the editor control with the corresponding task attribute. This enables lookup of the
 	 * model element from the widget hierarchy.
-	 * 
+	 *
 	 * @since 3.5
 	 * @see Control#getData(String)
 	 * @see #getControl()
@@ -315,7 +315,10 @@ public abstract class AbstractAttributeEditor {
 	protected boolean needsValue() {
 		boolean isRequired = getTaskAttribute().getMetaData().isRequired();
 		boolean hasValue = !StringUtils.isEmpty(getAttributeMapper().getValue(getTaskAttribute()));
-		return isRequired && !hasValue;
+		boolean isReadOnly = getTaskAttribute().getMetaData().isReadOnly();
+		// for an empty required read only attribute we do not show the error decorator
+		// because the user can not change the value (see bug#492500 ).
+		return isRequired && !hasValue && !isReadOnly;
 	}
 
 	/**
@@ -355,7 +358,7 @@ public abstract class AbstractAttributeEditor {
 	 * <code>UnsupportedOperationException</code>.
 	 * <p>
 	 * Subclasses should overwrite this method.
-	 * 
+	 *
 	 * @since 3.1
 	 * @throws UnsupportedOperationException
 	 *             if this method is not supported by the editor
@@ -367,7 +370,7 @@ public abstract class AbstractAttributeEditor {
 	/**
 	 * Subclasses that implement refresh should override this method to return true, so that they will be automatically
 	 * refreshed when the model changes.
-	 * 
+	 *
 	 * @return whether the editor should be automatically refreshed when the model changes
 	 * @since 3.6
 	 */
