@@ -23,7 +23,7 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryPerson;
 
 /**
  * Encapsulates attributes for task data.
- * 
+ *
  * @author Rob Elves
  * @author Steffen Pingel
  * @author Miles Parker
@@ -113,7 +113,7 @@ public final class TaskAttribute {
 
 	/**
 	 * A {@link TaskAttributeMetaData#getKind() kind} used to indicate that the field is related to a description.
-	 * 
+	 *
 	 * @since 3.11
 	 */
 	public static final String KIND_DESCRIPTION = "task.common.kind.description"; //$NON-NLS-1$
@@ -139,7 +139,7 @@ public final class TaskAttribute {
 	 * {@link TaskAttributeMapper#setDateValue(TaskAttribute, java.util.Date) setDateValue(TaskAttribute, Date)}
 	 * respectively return and accept dates at midnight in the local time zone when the precision is
 	 * {@link TimeUnit#DAYS} or coarser.
-	 * 
+	 *
 	 * @since 3.18
 	 * @see TaskAttributeMetaData#getPrecision()
 	 * @see TaskAttributeMetaData#setPrecision()
@@ -154,7 +154,7 @@ public final class TaskAttribute {
 	 * <br>
 	 * Example: In Bugzilla we have COMPONENT, VERSION, TARGET_MILESTONE as depends on the PRODUCT. We can so update the
 	 * options of the attributes to match the definition of the PRODUCT.
-	 * 
+	 *
 	 * @see #BugzillaRestCreateTaskSchema
 	 * @since 3.17
 	 */
@@ -162,11 +162,11 @@ public final class TaskAttribute {
 
 	/**
 	 * A key for {@link TaskAttributeMetaData} that is used for specifying the media type of a
-	 * {@link #TYPE_LONG_RICH_TEXT} or {@link #TYPE_SHORT_RICH_TEXT}. The media type if specified must be a valid <a
-	 * href="http://en.wikipedia.org/wiki/Internet_media_type">Internet Media Type</a> (also known as Content-Type,
-	 * mime-type) according to <a href="http://www.ietf.org/rfc/rfc2045.txt">RFC 2045</a> and <a
-	 * href="http://www.ietf.org/rfc/rfc2046.txt">RFC 2046</a>.
-	 * 
+	 * {@link #TYPE_LONG_RICH_TEXT} or {@link #TYPE_SHORT_RICH_TEXT}. The media type if specified must be a valid
+	 * <a href="http://en.wikipedia.org/wiki/Internet_media_type">Internet Media Type</a> (also known as Content-Type,
+	 * mime-type) according to <a href="http://www.ietf.org/rfc/rfc2045.txt">RFC 2045</a> and
+	 * <a href="http://www.ietf.org/rfc/rfc2046.txt">RFC 2046</a>.
+	 *
 	 * @see #TYPE_LONG_RICH_TEXT
 	 * @see #TYPE_SHORT_RICH_TEXT
 	 * @see #META_ATTRIBUTE_TYPE
@@ -186,7 +186,7 @@ public final class TaskAttribute {
 	 * Key for {@link TaskAttributeMetaData} used to specify that a field requires a value before it can be submitted to
 	 * the server. This meta-data is used by the framework as a UI hint and does not guarantee that a connector will
 	 * enforce compliance before attempting to post task data.
-	 * 
+	 *
 	 * @since 3.11
 	 */
 	public static final String META_REQUIRED = "task.meta.required"; //$NON-NLS-1$
@@ -199,7 +199,7 @@ public final class TaskAttribute {
 	/**
 	 * Key for the meta datum that determines if an attribute is disabled. This is used to indicate that an attribute
 	 * should not be modified, e.g. due to work-flow state but it may still be generally writeable.
-	 * 
+	 *
 	 * @since 3.5
 	 * @see TaskAttributeMetaData#isDisabled()
 	 */
@@ -207,7 +207,7 @@ public final class TaskAttribute {
 
 	/**
 	 * Key for the meta datum that provides a description of an attribute, e.g. for display in a tooltip.
-	 * 
+	 *
 	 * @since 3.5
 	 * @see TaskAttributeMetaData
 	 */
@@ -218,7 +218,7 @@ public final class TaskAttribute {
 	 * content. Provides a way for connectors to specify non-standard attributes as plain-text indexable. By default,
 	 * {@link #SUMMARY summary} and {@link #DESCRIPTION description} are indexed. Note that setting this meta-data is
 	 * advisory only and will not guarantee that content is indexed.
-	 * 
+	 *
 	 * @since 3.7
 	 */
 	public static final String META_INDEXED_AS_CONTENT = "task.meta.index.content"; //$NON-NLS-1$
@@ -235,7 +235,7 @@ public final class TaskAttribute {
 	/**
 	 * Key for {@link RepositoryPerson} used to store the human-readable username used to log into the repository, if it
 	 * is different than the ID used to identify the person in {@link TaskData}.
-	 * 
+	 *
 	 * @since 3.18
 	 */
 	public static final String PERSON_USERNAME = "task.common.person.username"; //$NON-NLS-1$
@@ -363,6 +363,16 @@ public final class TaskAttribute {
 	 * @since 3.5
 	 */
 	public static final String TYPE_DOUBLE = "double"; //$NON-NLS-1$
+
+	/**
+	 * @since 3.21
+	 */
+	public static final String TYPE_LABEL = "label"; //$NON-NLS-1$
+
+	/**
+	 * @since 3.21
+	 */
+	public static final String TYPE_MULTI_LABEL = "multiLabel"; //$NON-NLS-1$
 
 	public static final String USER_ASSIGNED = "task.common.user.assigned"; //$NON-NLS-1$
 
@@ -513,8 +523,9 @@ public final class TaskAttribute {
 
 	public TaskAttribute getMappedAttribute(String attributeId) {
 		Assert.isNotNull(attributeId);
-		return (attributeById != null) ? attributeById.get(getTaskData().getAttributeMapper().mapToRepositoryKey(this,
-				attributeId)) : null;
+		return (attributeById != null)
+				? attributeById.get(getTaskData().getAttributeMapper().mapToRepositoryKey(this, attributeId))
+				: null;
 	}
 
 	public TaskAttribute getMappedAttribute(String[] path) {
@@ -597,7 +608,7 @@ public final class TaskAttribute {
 	 * testing whether or not {@link #getValue()} returns an empty string, as it is possible that an empty string value
 	 * has been explicitly set for the attribute. Call {@link #clearValues()} to return the attribute to the unset
 	 * state.
-	 * 
+	 *
 	 * @return true if any value is set (may be an empty string), false if no value is set.
 	 * @since 3.9
 	 */
@@ -624,7 +635,7 @@ public final class TaskAttribute {
 
 	/**
 	 * Adds an attribute option value
-	 * 
+	 *
 	 * @param key
 	 *            The option value used when sending the form to the server
 	 * @param value

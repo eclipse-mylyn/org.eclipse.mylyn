@@ -115,7 +115,7 @@ public enum BugzillaAttribute {
 
 	LONGDESCLENGTH(Messages.BugzillaAttribute_Number_of_comments, "longdesclength", TaskAttribute.TYPE_SHORT_TEXT), //$NON-NLS-1$
 
-	NEWCC(Messages.BugzillaAttribute_Add_CC, "newcc", TaskAttribute.TYPE_PERSON, Flag.PEOPLE), //$NON-NLS-1$
+	NEWCC(Messages.BugzillaAttribute_Add_CC, "newcc", TaskAttribute.TYPE_MULTI_LABEL, Flag.PEOPLE), //$NON-NLS-1$
 
 	OP_SYS(Messages.BugzillaAttribute_OS, "op_sys", TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE), //$NON-NLS-1$
 

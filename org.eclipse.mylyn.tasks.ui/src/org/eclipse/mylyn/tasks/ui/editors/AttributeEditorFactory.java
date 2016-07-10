@@ -18,6 +18,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.BooleanAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.DateAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.DoubleAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.IntegerAttributeEditor;
+import org.eclipse.mylyn.internal.tasks.ui.editors.LabelsAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.LastCommentedAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.LongAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.LongTextAttributeEditor;
@@ -159,6 +160,8 @@ public class AttributeEditorFactory {
 			return new IntegerAttributeEditor(model, taskAttribute);
 		} else if (TaskAttribute.TYPE_LONG.equals(type)) {
 			return new LongAttributeEditor(model, taskAttribute);
+		} else if (TaskAttribute.TYPE_LABEL.equals(type) || TaskAttribute.TYPE_MULTI_LABEL.equals(type)) {
+			return new LabelsAttributeEditor(model, taskAttribute);
 		}
 
 		throw new IllegalArgumentException("Unsupported editor type: \"" + type + "\""); //$NON-NLS-1$ //$NON-NLS-2$

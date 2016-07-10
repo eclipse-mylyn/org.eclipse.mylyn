@@ -110,7 +110,7 @@ public class BugzillaRestTaskSchema extends AbstractTaskSchema {
 			.dependsOn(COMPONENT.getKey())
 			.create();
 
-	public final Field ADD_CC = createField("addCC", "Add CC", TaskAttribute.TYPE_PERSON, Flag.PEOPLE);
+	public final Field ADD_CC = createField("addCC", "Add CC", TaskAttribute.TYPE_MULTI_LABEL, Flag.PEOPLE);
 
 	public final Field CC = createField(TaskAttribute.USER_CC, "Remove CC\n(Selet to remove)",
 			IBugzillaRestConstants.EDITOR_TYPE_CC, Flag.PEOPLE);

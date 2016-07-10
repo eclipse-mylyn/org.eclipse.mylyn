@@ -24,6 +24,8 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorPeoplePart;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
+import org.eclipse.mylyn.tasks.ui.editors.LayoutHint;
+import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.RowSpan;
 import org.eclipse.swt.SWT;
 
 /**
@@ -108,10 +110,14 @@ public class BugzillaPeoplePart extends TaskEditorPeoplePart {
 
 	@Override
 	protected GridDataFactory createLayoutData(AbstractAttributeEditor editor) {
-		GridDataFactory dataFactory = super.createLayoutData(editor);
-		if (editor.getTaskAttribute().getId().equals(BugzillaAttribute.CC.getKey())) {
-			dataFactory.grab(true, true).align(SWT.FILL, SWT.FILL).hint(130, 95);
+		LayoutHint layoutHint = editor.getLayoutHint();
+		GridDataFactory gridDataFactory = GridDataFactory.fillDefaults().indent(3, 0);// prevent clipping of decorators on Mac
+		if (layoutHint != null && layoutHint.rowSpan == RowSpan.MULTIPLE) {
+			gridDataFactory.grab(true, true).align(SWT.FILL, SWT.FILL).hint(130, 95);
+		} else {
+			gridDataFactory.grab(true, false).align(SWT.FILL, SWT.TOP);
+
 		}
-		return dataFactory;
+		return gridDataFactory;
 	}
 }

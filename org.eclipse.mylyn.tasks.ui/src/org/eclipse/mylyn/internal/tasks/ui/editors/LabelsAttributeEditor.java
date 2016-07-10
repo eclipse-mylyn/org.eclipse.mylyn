@@ -37,7 +37,8 @@ public class LabelsAttributeEditor extends TextAttributeEditor {
 
 	public LabelsAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
-		this.isMultiSelect = TaskAttribute.TYPE_MULTI_SELECT.equals(taskAttribute.getMetaData().getType());
+		this.isMultiSelect = TaskAttribute.TYPE_MULTI_SELECT.equals(taskAttribute.getMetaData().getType())
+				|| TaskAttribute.TYPE_MULTI_LABEL.equals(taskAttribute.getMetaData().getType());
 		if (!isReadOnly() && isMultiSelect) {
 			setLayoutHint(new LayoutHint(RowSpan.MULTIPLE, ColumnSpan.SINGLE));
 		}
