@@ -14,15 +14,16 @@ package org.eclipse.mylyn.tasks.tests.core;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.UnsupportedRequestException;
+import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.internal.commons.net.AuthenticatedProxy;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -51,15 +52,17 @@ public class TaskRepositoryLocationTest extends TestCase {
 	}
 
 	public void testGetProxyForHost() {
+		Proxy defaultProxy = WebUtil.getProxy("localhost", IProxyData.HTTP_PROXY_TYPE);
+
 		TaskRepository taskRepository = new TaskRepository("kind", "http://url");
 		TaskRepositoryLocation location = new TaskRepositoryLocation(taskRepository);
 
 		assertTrue(taskRepository.isDefaultProxyEnabled());
-		assertEquals(null, location.getProxyForHost("localhost", IProxyData.HTTP_PROXY_TYPE));
+		assertEquals(defaultProxy, location.getProxyForHost("localhost", IProxyData.HTTP_PROXY_TYPE));
 
-		taskRepository.setProperty(TaskRepository.PROXY_USEDEFAULT, "false");
+		taskRepository.setDefaultProxyEnabled(false);
 		assertFalse(taskRepository.isDefaultProxyEnabled());
-		assertEquals(null, location.getProxyForHost("localhost", IProxyData.HTTP_PROXY_TYPE));
+		assertEquals(defaultProxy, location.getProxyForHost("localhost", IProxyData.HTTP_PROXY_TYPE));
 
 		taskRepository.setProperty(TaskRepository.PROXY_HOSTNAME, "host");
 		taskRepository.setProperty(TaskRepository.PROXY_PORT, "1234");
@@ -78,19 +81,19 @@ public class TaskRepositoryLocationTest extends TestCase {
 	}
 
 	public void testGetProxyForHostEmptyProxy() {
+		Proxy defaultProxy = WebUtil.getProxy("localhost", IProxyData.HTTP_PROXY_TYPE);
+
 		TaskRepository taskRepository = new TaskRepository("kind", "http://url");
 		TaskRepositoryLocation location = new TaskRepositoryLocation(taskRepository);
 
 		taskRepository.setDefaultProxyEnabled(false);
-		assertEquals(null, location.getProxyForHost("localhost", IProxyData.HTTP_PROXY_TYPE));
-
 		taskRepository.setProperty(TaskRepository.PROXY_HOSTNAME, "");
 		taskRepository.setProperty(TaskRepository.PROXY_PORT, "");
-		assertEquals(null, location.getProxyForHost("localhost", IProxyData.HTTP_PROXY_TYPE));
+		assertEquals(defaultProxy, location.getProxyForHost("localhost", IProxyData.HTTP_PROXY_TYPE));
 
 		taskRepository.setProperty(TaskRepository.PROXY_HOSTNAME, "");
 		taskRepository.setProperty(TaskRepository.PROXY_PORT, "abc");
-		assertEquals(null, location.getProxyForHost("localhost", IProxyData.HTTP_PROXY_TYPE));
+		assertEquals(defaultProxy, location.getProxyForHost("localhost", IProxyData.HTTP_PROXY_TYPE));
 	}
 
 	public void testRequestCredentials() {
