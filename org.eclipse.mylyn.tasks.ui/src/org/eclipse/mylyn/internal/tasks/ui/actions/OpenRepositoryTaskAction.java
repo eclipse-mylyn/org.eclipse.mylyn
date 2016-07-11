@@ -80,7 +80,8 @@ public class OpenRepositoryTaskAction extends Action implements IWorkbenchWindow
 			AbstractTaskCategory category = dlg.getSelectedCategory();
 			TaskListView taskListView = TaskListView.getFromActivePerspective();
 			if (category == null) {
-				Object selectedObject = ((IStructuredSelection) taskListView.getViewer().getSelection()).getFirstElement();
+				Object selectedObject = ((IStructuredSelection) taskListView.getViewer().getSelection())
+						.getFirstElement();
 				if (selectedObject instanceof TaskCategory) {
 					category = (TaskCategory) selectedObject;
 				}
@@ -93,14 +94,15 @@ public class OpenRepositoryTaskAction extends Action implements IWorkbenchWindow
 		String[] selectedIds = dlg.getSelectedIds();
 		boolean openSuccessful = false;
 		for (String id : selectedIds) {
-			boolean opened = TasksUiInternal.openTask(dlg.getSelectedTaskRepository(), id, new TaskOpenListener() {
-				@Override
-				public void taskOpened(TaskOpenEvent event) {
-					if (finalCategory != null && event.getTask() != null) {
-						TasksUiInternal.getTaskList().addTask(event.getTask(), finalCategory);
-					}
-				}
-			});
+			boolean opened = TasksUiInternal.openTaskByIdOrKey(dlg.getSelectedTaskRepository(), id,
+					new TaskOpenListener() {
+						@Override
+						public void taskOpened(TaskOpenEvent event) {
+							if (finalCategory != null && event.getTask() != null) {
+								TasksUiInternal.getTaskList().addTask(event.getTask(), finalCategory);
+							}
+						}
+					});
 			if (opened) {
 				openSuccessful = true;
 			}
