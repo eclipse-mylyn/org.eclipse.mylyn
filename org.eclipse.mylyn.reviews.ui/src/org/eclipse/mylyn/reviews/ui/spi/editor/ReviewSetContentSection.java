@@ -340,7 +340,7 @@ public class ReviewSetContentSection {
 
 			boolean fixedViewerSize = set.getItems().size() > MAXIMUM_ITEMS_SHOWN;
 			int heightHint = fixedViewerSize ? 300 : SWT.DEFAULT;
-			int style = SWT.SINGLE | SWT.BORDER | SWT.VIRTUAL;
+			int style = SWT.SINGLE | SWT.BORDER | SWT.VIRTUAL | SWT.H_SCROLL;
 			if (fixedViewerSize) {
 				style |= SWT.V_SCROLL;
 			} else {
