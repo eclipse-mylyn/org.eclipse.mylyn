@@ -257,7 +257,7 @@
             <excludes>
               <exclude>**/Test*java</exclude>
             </excludes>
-            <argLine>${tycho.testArgLine} -Xmx512m -XX:MaxPermSize=256m -Djava.io.tmpdir=${project.build.directory} ${test.vmargs}</argLine>
+            <argLine>${tycho.testArgLine} -Xmx512m -Djava.io.tmpdir=${project.build.directory} ${test.vmargs}</argLine>
             <appArgLine>${test.args}</appArgLine>
             <application>org.eclipse.ui.ide.workbench</application>
             <!-- <product>org.eclipse.sdk.ide</product> -->

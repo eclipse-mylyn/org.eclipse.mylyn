@@ -755,7 +755,7 @@
             <forkedProcessTimeoutInSeconds>10800</forkedProcessTimeoutInSeconds>
             <product>org.eclipse.sdk.ide</product>
             <application>org.eclipse.ui.ide.workbench</application>
-            <argLine>${tycho.testArgLine} -Xmx512m -XX:MaxPermSize=256m -Djava.io.tmpdir=${project.build.directory} ${test.vmargs}</argLine>
+            <argLine>${tycho.testArgLine} -Xmx512m -Djava.io.tmpdir=${project.build.directory} ${test.vmargs}</argLine>
             <appArgLine>${test.args}</appArgLine>
             <!--
                 <environmentVariables>
