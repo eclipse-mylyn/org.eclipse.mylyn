@@ -1,4 +1,4 @@
-package org.eclipse.mylyn.internal.bugzilla.rest.core.tests;
+package org.eclipse.mylyn.bugzilla.rest.core.tests;
 
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.equalTo;
@@ -10,6 +10,7 @@ import static org.junit.Assert.assertThat;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.mylyn.bugzilla.rest.test.support.BugzillaRestTestFixture;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
@@ -21,7 +22,6 @@ import org.eclipse.mylyn.commons.sdk.util.Junit4TestFixtureRunner.FixtureDefinit
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConnector;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.Duration;
-import org.eclipse.mylyn.internal.bugzilla.rest.test.support.BugzillaRestTestFixture;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.tasks.core.ITask;

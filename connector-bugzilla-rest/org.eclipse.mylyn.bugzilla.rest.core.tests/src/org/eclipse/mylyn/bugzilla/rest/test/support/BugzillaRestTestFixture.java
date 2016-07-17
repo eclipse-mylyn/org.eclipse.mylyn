@@ -9,7 +9,7 @@
  *     Frank Becker - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.bugzilla.rest.test.support;
+package org.eclipse.mylyn.bugzilla.rest.test.support;
 
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;

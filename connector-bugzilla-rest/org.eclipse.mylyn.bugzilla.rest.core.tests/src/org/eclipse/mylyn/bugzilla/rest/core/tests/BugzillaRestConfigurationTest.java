@@ -9,7 +9,7 @@
  *     Frank Becker - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.bugzilla.rest.core.tests;
+package org.eclipse.mylyn.bugzilla.rest.core.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -20,13 +20,13 @@ import java.io.IOException;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.mylyn.bugzilla.rest.test.support.BugzillaRestTestFixture;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.Junit4TestFixtureRunner;
 import org.eclipse.mylyn.commons.sdk.util.Junit4TestFixtureRunner.FixtureDefinition;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConnector;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.RepositoryKey;
-import org.eclipse.mylyn.internal.bugzilla.rest.test.support.BugzillaRestTestFixture;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.junit.After;

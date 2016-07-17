@@ -9,7 +9,7 @@
  *     Frank Becker - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.bugzilla.rest.test.support;
+package org.eclipse.mylyn.bugzilla.rest.test.support;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;

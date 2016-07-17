@@ -9,7 +9,7 @@
  *     Frank Becker - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.bugzilla.rest.core.tests;
+package org.eclipse.mylyn.bugzilla.rest.core.tests;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
@@ -37,6 +37,8 @@ import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.mylyn.bugzilla.rest.test.support.BugzillaRestHarness;
+import org.eclipse.mylyn.bugzilla.rest.test.support.BugzillaRestTestFixture;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
@@ -55,8 +57,6 @@ import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Field;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.LoginToken;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Parameters;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Product;
-import org.eclipse.mylyn.internal.bugzilla.rest.test.support.BugzillaRestHarness;
-import org.eclipse.mylyn.internal.bugzilla.rest.test.support.BugzillaRestTestFixture;
 import org.eclipse.mylyn.internal.commons.core.operations.NullOperationMonitor;
 import org.eclipse.mylyn.internal.commons.repositories.core.InMemoryCredentialsStore;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;

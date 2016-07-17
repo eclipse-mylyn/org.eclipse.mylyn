@@ -4,14 +4,22 @@ Bundle-Name: Mylyn Bugzilla Rest Connector
 Bundle-SymbolicName: org.eclipse.mylyn.bugzilla.rest.core.tests;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
-Fragment-Host: org.eclipse.mylyn.bugzilla.rest.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.junit;bundle-version="4.8.2",
  org.hamcrest;bundle-version="[1.0.0,1.2.0)",
  org.hamcrest.library;bundle-version="[1.0.0,1.2.0)",
- org.eclipse.mylyn.commons.sdk.util,
  com.google.guava;bundle-version="15.0.0",
- org.apache.commons.io
-Export-Package: org.eclipse.mylyn.internal.bugzilla.rest.core;x-internal:=true,
- org.eclipse.mylyn.internal.bugzilla.rest.core.tests;x-internal:=true,
- org.eclipse.mylyn.internal.bugzilla.rest.test.support;x-internal:=true
+ com.google.gson;bundle-version="2.2.4",
+ org.eclipse.core.runtime,
+ org.apache.commons.io,
+ org.eclipse.mylyn.commons.sdk.util,
+ org.eclipse.mylyn.bugzilla.rest.core,
+ org.eclipse.mylyn.commons.core,
+ org.eclipse.mylyn.commons.repositories.core;bundle-version="1.0.0",
+ org.eclipse.mylyn.commons.repositories.http.core;bundle-version="1.0.0",
+ org.eclipse.mylyn.commons.repositories.core,
+ org.eclipse.mylyn.commons.repositories.http.core,
+ org.eclipse.mylyn.tasks.core,
+ org.eclipse.mylyn.commons.net
+Export-Package: org.eclipse.mylyn.bugzilla.rest.core.tests;x-internal:=true,
+ org.eclipse.mylyn.bugzilla.rest.test.support;x-internal:=true
