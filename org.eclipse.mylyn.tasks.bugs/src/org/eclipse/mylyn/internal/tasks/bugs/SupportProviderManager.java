@@ -57,6 +57,8 @@ public class SupportProviderManager {
 
 	private static final String ATTRIBUTE_PLUGIN_ID = "pluginId"; //$NON-NLS-1$
 
+	private static final String ATTRIBUTE_VERSION_PLUGIN_ID = "versionPluginId"; //$NON-NLS-1$
+
 	private static final String ATTRIBUTE_PRODUCT_ID = "productId"; //$NON-NLS-1$
 
 	private static final String ATTRIBUTE_PROVIDER_ID = "providerId"; //$NON-NLS-1$
@@ -210,6 +212,16 @@ public class SupportProviderManager {
 					((SupportProduct) item).setBundleGroup(bundleGroup);
 				}
 			}
+		}
+		String versionPluginId = element.getAttribute(ATTRIBUTE_VERSION_PLUGIN_ID);
+		if (versionPluginId != null) {
+			IBundleGroup bundleVersionPlugin = getBundleGroup(versionPluginId);
+			if (bundleVersionPlugin != null) {
+				if (item instanceof SupportProduct) {
+					((SupportProduct) item).setVersioningBundleGroup(bundleVersionPlugin);
+				}
+			}
+
 		}
 
 		if (item.getName() == null) {

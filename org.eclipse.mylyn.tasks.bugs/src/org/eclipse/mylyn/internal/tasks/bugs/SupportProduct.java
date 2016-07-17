@@ -34,6 +34,8 @@ public class SupportProduct extends AbstractSupportElement implements IProduct {
 
 	private IProvider provider;
 
+	private IBundleGroup versioningBundleGroup;
+
 	public SupportProduct() {
 		mappingByNamespace = new TreeMap<String, ProductRepositoryMapping>();
 	}
@@ -98,6 +100,10 @@ public class SupportProduct extends AbstractSupportElement implements IProduct {
 		return !mappingByNamespace.isEmpty();
 	}
 
+	public IBundleGroup getVersioningBundleGroup() {
+		return versioningBundleGroup;
+	}
+
 	/**
 	 * @deprecated Use {@link #isInstalled()} instead
 	 */
@@ -112,6 +118,10 @@ public class SupportProduct extends AbstractSupportElement implements IProduct {
 
 	public void setBundleGroup(IBundleGroup bundleGroup) {
 		this.bundleGroup = bundleGroup;
+	}
+
+	public void setVersioningBundleGroup(IBundleGroup versioningBundleGroup) {
+		this.versioningBundleGroup = versioningBundleGroup;
 	}
 
 	/**

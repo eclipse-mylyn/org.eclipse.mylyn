@@ -187,6 +187,13 @@
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="versionPluginId" type="string">
+            <annotation>
+               <documentation>
+                  The id of a bundle that specifies the version information for the product.
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 

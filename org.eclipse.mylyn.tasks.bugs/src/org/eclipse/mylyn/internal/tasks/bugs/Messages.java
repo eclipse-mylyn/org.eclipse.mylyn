@@ -45,6 +45,8 @@ public class Messages extends NLS {
 
 	public static String DefaultSupportHandler_Step_3;
 
+	public static String DefaultSupportHandler_VersioningPlugin;
+
 	public static String DefaultSupportHandler_What_steps_message;
 
 	public static String DefaultTaskContributor_Error;

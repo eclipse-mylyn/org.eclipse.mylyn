@@ -80,13 +80,17 @@ public class DefaultSupportHandler extends AbstractSupportHandler {
 			}
 		}
 		if (response.getProduct() != null) {
-			IBundleGroup bundleGroup = ((SupportProduct) response.getProduct()).getBundleGroup();
+			IBundleGroup bundleGroup = ((SupportProduct) response.getProduct()).getVersioningBundleGroup();
+			if (bundleGroup == null) {
+				bundleGroup = ((SupportProduct) response.getProduct()).getBundleGroup();
+			}
 			if (bundleGroup != null) {
 				TaskAttribute attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.VERSION);
 				if (attribute != null) {
 					final String version = getBestMatch(bundleGroup.getVersion(), attribute.getOptions());
 					if (version.length() > 0) {
-						AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(taskData.getConnectorKind());
+						AbstractRepositoryConnector connector = TasksUi
+								.getRepositoryConnector(taskData.getConnectorKind());
 						ITaskMapping mapping = connector.getTaskMapping(taskData);
 						mapping.merge(new TaskMapping() {
 							@Override
@@ -182,6 +186,15 @@ public class DefaultSupportHandler extends AbstractSupportHandler {
 //						}
 //					}
 				}
+				sb.append(Messages.DefaultSupportHandler_VersioningPlugin);
+				sb.append("\n"); //$NON-NLS-1$
+				IBundleGroup bundleGroup = product.getVersioningBundleGroup();
+				sb.append(" "); //$NON-NLS-1$
+				sb.append(bundleGroup.getIdentifier());
+				sb.append(" "); //$NON-NLS-1$
+				sb.append(bundleGroup.getVersion());
+				sb.append("\n"); //$NON-NLS-1$
+
 				return sb.toString();
 			}
 		} else if (status instanceof ErrorLogStatus) {
