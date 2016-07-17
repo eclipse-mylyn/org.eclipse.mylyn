@@ -168,6 +168,7 @@
 		</mapping>
 		<!-- JDT -->
 		<product featureId="org.eclipse.jdt" id="org.eclipse.jdt"
+			versionPluginId="org.eclipse.platform"
 			providerId="org.eclipse" />
 		<mapping namespace="org.eclipse.jdt" productId="org.eclipse.jdt">
 			<property name="product" value="JDT">
