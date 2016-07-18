@@ -22,6 +22,8 @@ public class Messages extends NLS {
 
 	public static String AbstractCommentPart_Section_header;
 
+	public static String TaskEditorReviewsPart_Branch;
+
 	public static String TaskEditorReviewsPart_ReviewsString;
 
 	public static String TaskEditorReviewsPart_VerifiedString;
@@ -33,6 +35,8 @@ public class Messages extends NLS {
 	public static String TaskEditorReviewsPart_VerifiedAttribute;
 
 	public static String TaskEditorReviewsPart_CodeReviewAttribute;
+
+	public static String TaskEditorReviewsPart_Status;
 
 	static {
 		// initialize resource bundle

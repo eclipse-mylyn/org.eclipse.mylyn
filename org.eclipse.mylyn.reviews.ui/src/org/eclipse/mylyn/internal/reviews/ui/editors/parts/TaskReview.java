@@ -11,11 +11,13 @@
 
 package org.eclipse.mylyn.internal.reviews.ui.editors.parts;
 
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.mylyn.reviews.internal.core.ReviewsCoreConstants;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
-public class TaskReview {
+public class TaskReview implements IAdaptable {
 
 	private final ITask review;
 
@@ -62,4 +64,18 @@ public class TaskReview {
 	public String getStatus() {
 		return review.getAttribute(TaskAttribute.STATUS);
 	}
+
+	public String getBranch() {
+		return review.getAttribute(ReviewsCoreConstants.BRANCH);
+	}
+
+	@SuppressWarnings({ "unchecked" })
+	@Override
+	public <T> T getAdapter(Class<T> adapter) {
+		if (adapter.isAssignableFrom(review.getClass())) {
+			return (T) review;
+		}
+		return null;
+	}
+
 }

@@ -18,4 +18,6 @@ public interface ReviewsCoreConstants {
 	public static final String CODE_REVIEW = "CODE_REVIEW"; //$NON-NLS-1$
 
 	public static final String VERIFIED = "VERIFIED"; //$NON-NLS-1$
+
+	public static final String BRANCH = "BRANCH"; //$NON-NLS-1$
 }

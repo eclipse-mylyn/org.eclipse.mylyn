@@ -29,11 +29,13 @@ public class ReviewColumnLabelProvider extends ColumnLabelProvider {
 
 	private static final int DESCRIPTION_COLUMN = 0;
 
-	private static final int CODE_REVIEW_COLUMN = 1;
+	private static final int BRANCH_COLUMN = 1;
 
-	private static final int VERIFIED_COLUMN = 2;
+	private static final int CODE_REVIEW_COLUMN = 2;
 
-	private static final int STATUS_COLUMN = 3;
+	private static final int VERIFIED_COLUMN = 3;
+
+	private static final int STATUS_COLUMN = 4;
 
 	private static final int MINUS_TWO = -2;
 
@@ -106,6 +108,8 @@ public class ReviewColumnLabelProvider extends ColumnLabelProvider {
 		switch (columnIndex) {
 		case DESCRIPTION_COLUMN:
 			return reviewContainer.getSummary();
+		case BRANCH_COLUMN:
+			return reviewContainer.getBranch();
 		case STATUS_COLUMN:
 			return reviewContainer.getStatus();
 		default:
@@ -124,29 +128,6 @@ public class ReviewColumnLabelProvider extends ColumnLabelProvider {
 		default:
 			return getColumnText(element, columnIndex);
 		}
-	}
-
-	@Override
-	public String getToolTipText(Object element) {
-		TaskReview review = (TaskReview) element;
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("Description: ");
-		sb.append(review.getSummary());
-
-		sb.append(System.getProperty("line.separator"));
-		sb.append("Verified: ");
-		if (review.getVerifiedScore() >= 1) {
-			sb.append("YES");
-		} else {
-			sb.append("NO");
-		}
-
-		sb.append(System.getProperty("line.separator"));
-		sb.append("Code Review: ");
-		sb.append(review.getCodeReviewScore());
-
-		return sb.toString();
 	}
 
 	@Override

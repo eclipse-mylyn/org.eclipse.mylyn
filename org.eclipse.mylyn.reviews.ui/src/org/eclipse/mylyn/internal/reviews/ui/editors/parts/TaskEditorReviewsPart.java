@@ -23,13 +23,13 @@ import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.window.ToolTip;
-import org.eclipse.mylyn.commons.ui.SelectionProviderAdapter;
 import org.eclipse.mylyn.commons.ui.TableSorter;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewColumnLabelProvider;
 import org.eclipse.mylyn.internal.reviews.ui.ReviewsUiPlugin;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListToolTip;
 import org.eclipse.mylyn.reviews.internal.core.TaskReviewsMappingsStore;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -49,6 +49,7 @@ import org.eclipse.ui.forms.widgets.Section;
  * @author Blaine Lewis
  * @author Landon Butterworth
  */
+@SuppressWarnings("restriction")
 public class TaskEditorReviewsPart extends AbstractTaskEditorPart {
 
 	private static final class ReviewColumnSorter extends TableSorter {
@@ -83,20 +84,17 @@ public class TaskEditorReviewsPart extends AbstractTaskEditorPart {
 		}
 	}
 
-	private static final String ID_TASK_EDITOR_REVIEWS_PART = "org.eclipse.mylyn.internal.reviews.ui.editor.parts.TaskEditorReviewsPart"; //$NON-NLS-1$
-
 	private Composite reviewsComposite;
 
 	protected Section section;
 
 	private Table reviewsTable;
 
-	private final String[] REVIEWS_COLUMNS = { Messages.TaskEditorReviewsPart_DescriptionString,
-			Messages.TaskEditorReviewsPart_CodeReviewString, Messages.TaskEditorReviewsPart_VerifiedString, "Status" };
+	private static final String[] REVIEWS_COLUMNS = { Messages.TaskEditorReviewsPart_DescriptionString,
+			Messages.TaskEditorReviewsPart_Branch, Messages.TaskEditorReviewsPart_CodeReviewString,
+			Messages.TaskEditorReviewsPart_VerifiedString, Messages.TaskEditorReviewsPart_Status };
 
-	private SelectionProviderAdapter selectionProvider;
-
-	private final int[] REVIEWS_COLUMNS_WIDTH = { 575, 30, 30, 90, 0 };
+	private static final int[] REVIEWS_COLUMNS_WIDTH = { 550, 90, 30, 30, 90, 0 };
 
 	private TableViewer reviewsViewer;
 
@@ -107,6 +105,8 @@ public class TaskEditorReviewsPart extends AbstractTaskEditorPart {
 	private final TaskReviewsMappingsStore taskReviewStore;
 
 	private final TaskList taskList = TasksUiPlugin.getTaskList();
+
+	private TaskListToolTip toolTip;
 
 	public TaskEditorReviewsPart() {
 		taskReviewStore = ReviewsUiPlugin.getDefault().getTaskReviewsMappingStore();
@@ -128,8 +128,6 @@ public class TaskEditorReviewsPart extends AbstractTaskEditorPart {
 
 		reviewContainers = new ArrayList<TaskReview>();
 		populateReviews(reviewContainers);
-
-		selectionProvider = new SelectionProviderAdapter();
 
 		section = createSection(parent, toolkit, true);
 		section.setText(section.getText());
@@ -219,12 +217,16 @@ public class TaskEditorReviewsPart extends AbstractTaskEditorPart {
 		reviewsViewer.setComparator(new ReviewColumnSorter(labelProvider));
 
 		reviewsViewer.addOpenListener(new IOpenListener() {
+
 			public void open(OpenEvent event) {
 				openReview(event);
 			}
+
 		});
 
 		reviewsViewer.setInput(reviewContainers.toArray());
+
+		toolTip = new TaskListToolTip(reviewsTable);
 
 		getTaskEditorPage().reflow();
 	}
@@ -270,6 +272,14 @@ public class TaskEditorReviewsPart extends AbstractTaskEditorPart {
 
 		for (TaskReview openThis : reviewsToOpen) {
 			TasksUiUtil.openTask(openThis.getUrl());
+		}
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		if (toolTip != null) {
+			toolTip.dispose();
 		}
 	}
 }

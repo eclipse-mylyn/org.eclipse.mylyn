@@ -70,7 +70,7 @@ import com.google.gwtorm.server.StandardKeyEncoder;
 
 /**
  * The Gerrit connector core.
- * 
+ *
  * @author Mikael Kober
  * @author Thomas Westling
  * @author Sascha Scholz
@@ -303,7 +303,8 @@ public class GerritConnector extends ReviewsConnector {
 	}
 
 	@Override
-	public void updateRepositoryConfiguration(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
+	public void updateRepositoryConfiguration(TaskRepository repository, IProgressMonitor monitor)
+			throws CoreException {
 		try {
 			getClient(repository).refreshConfig(monitor);
 		} catch (GerritException e) {
@@ -334,6 +335,8 @@ public class GerritConnector extends ReviewsConnector {
 				taskData.getRoot().getAttribute(GerritTaskSchema.getDefault().REVIEW_STATE.getKey()));
 		setAttribute(task, ReviewsCoreConstants.VERIFIED,
 				taskData.getRoot().getAttribute(GerritTaskSchema.getDefault().VERIFY_STATE.getKey()));
+		setAttribute(task, ReviewsCoreConstants.BRANCH,
+				taskData.getRoot().getAttribute(GerritTaskSchema.getDefault().BRANCH.getKey()));
 		super.updateTaskFromTaskData(taskRepository, task, taskData);
 	}
 
@@ -453,8 +456,8 @@ public class GerritConnector extends ReviewsConnector {
 			JSonSupport support = new JSonSupport();
 			return support.toJson(config);
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,
-					"Failed to serialize configuration", e)); //$NON-NLS-1$
+			StatusHandler
+					.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, "Failed to serialize configuration", e)); //$NON-NLS-1$
 			return null;
 		}
 	}
@@ -490,7 +493,8 @@ public class GerritConnector extends ReviewsConnector {
 				return toStatus(repository, qualifier, (Exception) cause);
 			}
 		} else if (e instanceof GerritException && e.getMessage() != null) {
-			return createErrorStatus(repository, NLS.bind("{0}Gerrit connection issue: {1}", qualifier, e.getMessage())); //$NON-NLS-1$
+			return createErrorStatus(repository,
+					NLS.bind("{0}Gerrit connection issue: {1}", qualifier, e.getMessage())); //$NON-NLS-1$
 		}
 		String message = NLS.bind("{0}Unexpected error while connecting to Gerrit: {1}", qualifier, e.getMessage()); //$NON-NLS-1$
 		if (repository != null) {
