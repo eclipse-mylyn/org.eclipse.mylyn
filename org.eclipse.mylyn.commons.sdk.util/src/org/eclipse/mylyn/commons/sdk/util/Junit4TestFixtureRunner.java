@@ -40,7 +40,7 @@ public class Junit4TestFixtureRunner extends Suite {
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.TYPE)
 	public static @interface FixtureDefinition {
-		Class<?>fixtureClass();
+		Class<?> fixtureClass();
 
 		String fixtureType();
 	}
@@ -95,6 +95,10 @@ public class Junit4TestFixtureRunner extends Suite {
 	 */
 	public Junit4TestFixtureRunner(Class<?> klass) throws Throwable {
 		super(klass, Collections.<Runner> emptyList());
+
+		if (CommonTestUtil.fixProxyConfiguration()) {
+			CommonTestUtil.dumpSystemInfo(System.err);
+		}
 
 		String restrictProperty = null;
 		String restrictValue = null;
