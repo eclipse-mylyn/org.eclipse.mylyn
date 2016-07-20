@@ -458,7 +458,7 @@
     <profile>
       <id>sandbox.eclipse.org</id>
       <properties>
-        <test.vmargs>-ea -Dorg.eclipse.mylyn.wikitext.tests.disableOutput=true -Dhttp.proxyHost=proxy.eclipse.org -Dhttp.proxyPort=9898 -Dhttps.proxyHost=proxy.eclipse.org -Dhttps.proxyPort=9898 -DhttpnonProxyHosts=*.eclipse.org ${test.uservmargs}</test.vmargs>
+        <test.vmargs>-ea -Dorg.eclipse.mylyn.wikitext.tests.disableOutput=true -Dhttp.proxyHost=proxy.eclipse.org -Dhttp.proxyPort=9898 -Dhttps.proxyHost=proxy.eclipse.org -Dhttps.proxyPort=9898 -Dhttp.nonProxyHosts=*.eclipse.org ${test.uservmargs}</test.vmargs>
         <dist.pack200>/shared/common/jdk-1.5.0-22.x86_64/bin</dist.pack200>
         <maven.test.error.ignore>true</maven.test.error.ignore>
         <maven.test.failure.ignore>true</maven.test.failure.ignore>
@@ -474,7 +474,7 @@
       </activation>
       <properties>
         <mylyn-credentials>/shared/mylyn/.credentials.properties</mylyn-credentials>
-        <test.vmargs>-ea -Dmylyn.credentials=${mylyn-credentials} -Dorg.eclipse.mylyn.wikitext.tests.disableOutput=true -Dhttp.proxyHost=proxy.eclipse.org -Dhttp.proxyPort=9898 -Dhttps.proxyHost=proxy.eclipse.org -Dhttps.proxyPort=9898 -DhttpnonProxyHosts=*.eclipse.org ${test.uservmargs}</test.vmargs>
+        <test.vmargs>-ea -Dmylyn.credentials=${mylyn-credentials} -Dorg.eclipse.mylyn.wikitext.tests.disableOutput=true -Dhttp.proxyHost=proxy.eclipse.org -Dhttp.proxyPort=9898 -Dhttps.proxyHost=proxy.eclipse.org -Dhttps.proxyPort=9898 -Dhttp.nonProxyHosts=*.eclipse.org ${test.uservmargs}</test.vmargs>
         <!--
             <mylyn-test-append>@e${target-version}</mylyn-test-append>
         -->
