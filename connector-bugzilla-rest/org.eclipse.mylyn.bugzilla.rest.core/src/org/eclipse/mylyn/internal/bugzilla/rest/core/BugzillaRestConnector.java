@@ -15,8 +15,10 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -349,7 +351,7 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 	}
 
 	private BugzillaRestClient createClient(TaskRepository repository) {
-		RepositoryLocation location = new RepositoryLocation(repository.getProperties());
+		RepositoryLocation location = new RepositoryLocation(convertProperties(repository));
 		AuthenticationCredentials credentials1 = repository
 				.getCredentials(org.eclipse.mylyn.commons.net.AuthenticationType.REPOSITORY);
 		UserCredentials credentials = new UserCredentials(credentials1.getUserName(), credentials1.getPassword(), null,
@@ -358,6 +360,25 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 		BugzillaRestClient client = new BugzillaRestClient(location, this);
 
 		return client;
+	}
+
+	private Map<String, String> convertProperties(TaskRepository repository) {
+		return repository.getProperties()
+				.entrySet()
+				.stream()
+				.collect(Collectors.toMap(e -> convertProperty(e.getKey()), Map.Entry::getValue));
+	}
+
+	@SuppressWarnings("restriction")
+	private String convertProperty(String key) {
+		if (TaskRepository.PROXY_USEDEFAULT.equals(key)) {
+			return RepositoryLocation.PROPERTY_PROXY_USEDEFAULT;
+		} else if (TaskRepository.PROXY_HOSTNAME.equals(key)) {
+			return RepositoryLocation.PROPERTY_PROXY_HOST;
+		} else if (TaskRepository.PROXY_PORT.equals(key)) {
+			return RepositoryLocation.PROPERTY_PROXY_PORT;
+		}
+		return key;
 	}
 
 	/**
