@@ -643,7 +643,12 @@ public class WebUtilTest extends TestCase {
 				+ "<html><title>\u00C3\u00BC</title></html>";
 		server.addResponse(message);
 		String url = "http://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/";
-		assertEquals("\u00FC", WebUtil.getTitleFromUrl(new WebLocation(url), null));
+		assertEquals("\u00FC", WebUtil.getTitleFromUrl(new WebLocation(url) {
+			@Override
+			public Proxy getProxyForHost(String host, String proxyType) {
+				return null;// ensure that we do not try to connect to localhost through a proxy server
+			}
+		}, null));
 	}
 
 	// FIXME

@@ -13,6 +13,8 @@ package org.eclipse.mylyn.commons.repositories.http.tests;
 
 import static org.junit.Assert.assertEquals;
 
+import java.net.Proxy;
+
 import org.apache.http.HttpStatus;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationException;
@@ -49,7 +51,7 @@ public class CommonHttpClientPreemptiveAuthTest {
 
 	@Test
 	public void testExecuteGetNoPreemptiveAuth() throws Exception {
-		RepositoryLocation location = new RepositoryLocation(server.getUrl());
+		RepositoryLocation location = createLocation();
 		location.setCredentials(AuthenticationType.HTTP, new UserCredentials("user", "pass"));
 		CommonHttpClient client = new CommonHttpClient(location);
 
@@ -61,7 +63,7 @@ public class CommonHttpClientPreemptiveAuthTest {
 
 	@Test(expected = AuthenticationException.class)
 	public void testExecuteGetAuthChallengeNoCredentials() throws Exception {
-		RepositoryLocation location = new RepositoryLocation(server.getUrl());
+		RepositoryLocation location = createLocation();
 		CommonHttpClient client = new CommonHttpClient(location);
 
 		server.addResponse(MockServer.UNAUTHORIZED);
@@ -70,7 +72,7 @@ public class CommonHttpClientPreemptiveAuthTest {
 
 	@Test
 	public void testExecuteGetAuthChallenge() throws Exception {
-		RepositoryLocation location = new RepositoryLocation(server.getUrl());
+		RepositoryLocation location = createLocation();
 		location.setCredentials(AuthenticationType.HTTP, new UserCredentials("user", "pass"));
 		CommonHttpClient client = new CommonHttpClient(location);
 
@@ -85,7 +87,7 @@ public class CommonHttpClientPreemptiveAuthTest {
 
 	@Test
 	public void testExecuteGetPreemptiveAuth() throws Exception {
-		RepositoryLocation location = new RepositoryLocation(server.getUrl());
+		RepositoryLocation location = createLocation();
 		location.setCredentials(AuthenticationType.HTTP, new UserCredentials("user", "pass"));
 		CommonHttpClient client = new CommonHttpClient(location);
 
@@ -103,4 +105,12 @@ public class CommonHttpClientPreemptiveAuthTest {
 		assertEquals(HttpStatus.SC_OK, response.getStatusCode());
 	}
 
+	private RepositoryLocation createLocation() {
+		return new RepositoryLocation(server.getUrl()) {
+			@Override
+			public Proxy getProxyForHost(String host, String proxyType) {
+				return null;// ensure that we do not try to connect to localhost through a proxy server
+			}
+		};
+	}
 }
