@@ -14,9 +14,6 @@ package org.eclipse.mylyn.hudson.tests;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -32,12 +29,19 @@ import org.eclipse.mylyn.hudson.tests.integration.HudsonIntegrationTest;
 import org.eclipse.mylyn.hudson.tests.support.HudsonFixture;
 import org.eclipse.mylyn.internal.hudson.core.HudsonCorePlugin;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
 /**
  * @author Steffen Pingel
  */
 public class AllHudsonTests {
 
 	public static Test suite() {
+		if (CommonTestUtil.fixProxyConfiguration()) {
+			CommonTestUtil.dumpSystemInfo(System.err);
+		}
+
 		TestSuite suite = new ManagedTestSuite(AllHudsonTests.class.getName());
 		addTests(suite, TestConfiguration.getDefault());
 		return suite;
