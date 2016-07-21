@@ -15,33 +15,33 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
-import org.eclipse.mylyn.commons.tests.support.TestProxy;
+import org.eclipse.mylyn.commons.sdk.util.MockServer;
 import org.eclipse.mylyn.internal.commons.net.PollingSslProtocolSocketFactory;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
  */
 public class SslProtocolSocketFactoryTest extends TestCase {
 
-	private TestProxy testProxy;
+	private MockServer server;
 
 	private InetSocketAddress proxyAddress;
 
 	@Override
 	protected void setUp() throws Exception {
-		testProxy = new TestProxy();
-		int proxyPort = testProxy.startAndWait();
+		server = new MockServer();
+		int proxyPort = server.startAndWait();
 		assert proxyPort > 0;
 		proxyAddress = new InetSocketAddress("localhost", proxyPort);
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
-		testProxy.stop();
+		server.stop();
 	}
 
 	public void testTrustAllSslProtocolSocketFactory() throws Exception {

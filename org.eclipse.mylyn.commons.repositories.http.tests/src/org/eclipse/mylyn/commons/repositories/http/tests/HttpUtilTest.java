@@ -27,8 +27,8 @@ import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.commons.repositories.http.core.HttpUtil;
-import org.eclipse.mylyn.commons.sdk.util.TestProxy;
-import org.eclipse.mylyn.commons.sdk.util.TestProxy.Message;
+import org.eclipse.mylyn.commons.sdk.util.MockServer;
+import org.eclipse.mylyn.commons.sdk.util.MockServer.Message;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +42,7 @@ public class HttpUtilTest {
 
 	private static final int /*NetUtil.*/MAX_HTTP_TOTAL_CONNECTIONS_DEFAULT = 1000;
 
-	private TestProxy testProxy;
+	private MockServer server;
 
 	private DefaultHttpClient client;
 
@@ -53,8 +53,8 @@ public class HttpUtilTest {
 
 	@Before
 	public void setUp() throws Exception {
-		testProxy = new TestProxy();
-		testProxy.startAndWait();
+		server = new MockServer();
+		server.startAndWait();
 		connectionManager = new ThreadSafeClientConnManager();
 		client = new DefaultHttpClient() {
 			@Override
@@ -66,13 +66,13 @@ public class HttpUtilTest {
 
 	@After
 	public void tearDown() throws Exception {
-		testProxy.stop();
+		server.stop();
 	}
 
 	@Test
 	public void testGetRequestPoolConnections() throws Exception {
-		testProxy.addResponse(TestProxy.SERVICE_UNVAILABLE);
-		HttpRequestBase request = new HttpGet(testProxy.getUrl());
+		server.addResponse(MockServer.SERVICE_UNVAILABLE);
+		HttpRequestBase request = new HttpGet(server.getUrl());
 
 		HttpUtil.configureClient(client, null);
 		assertEquals(0, connectionManager.getConnectionsInPool());
@@ -131,8 +131,8 @@ public class HttpUtilTest {
 		message.headers.add("Content-Encoding: gzip");
 		message.headers.add("Connection: close");
 
-		testProxy.addResponse(message);
-		HttpRequestBase request = new HttpGet(testProxy.getUrl());
+		server.addResponse(message);
+		HttpRequestBase request = new HttpGet(server.getUrl());
 
 		HttpUtil.configureClient(client, null);
 		HttpResponse response = HttpUtil.execute(client, null, request, null);

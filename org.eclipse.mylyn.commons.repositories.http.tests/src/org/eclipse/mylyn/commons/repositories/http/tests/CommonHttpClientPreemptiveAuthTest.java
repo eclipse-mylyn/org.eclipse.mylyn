@@ -21,7 +21,7 @@ import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpResponse;
 import org.eclipse.mylyn.commons.repositories.http.core.HttpRequestProcessor;
-import org.eclipse.mylyn.commons.sdk.util.TestProxy;
+import org.eclipse.mylyn.commons.sdk.util.MockServer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,77 +29,77 @@ import org.junit.Test;
 /**
  * @author Steffen Pingel
  */
-public class CommonHttpClientProxyTest {
+public class CommonHttpClientPreemptiveAuthTest {
 
-	private TestProxy testProxy;
+	private MockServer server;
 
-	public CommonHttpClientProxyTest() {
+	public CommonHttpClientPreemptiveAuthTest() {
 	}
 
 	@Before
 	public void setUp() throws Exception {
-		testProxy = new TestProxy();
-		testProxy.startAndWait();
+		server = new MockServer();
+		server.startAndWait();
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		testProxy.stop();
+		server.stop();
 	}
 
 	@Test
 	public void testExecuteGetNoPreemptiveAuth() throws Exception {
-		RepositoryLocation location = new RepositoryLocation(testProxy.getUrl());
+		RepositoryLocation location = new RepositoryLocation(server.getUrl());
 		location.setCredentials(AuthenticationType.HTTP, new UserCredentials("user", "pass"));
 		CommonHttpClient client = new CommonHttpClient(location);
 
-		testProxy.addResponse(TestProxy.OK);
+		server.addResponse(MockServer.OK);
 		CommonHttpResponse response = client.executeGet("/", null, HttpRequestProcessor.DEFAULT);
 		assertEquals(HttpStatus.SC_OK, response.getStatusCode());
-		assertEquals(null, testProxy.getRequest().getHeader("Authorization"));
+		assertEquals(null, server.getRequest().getHeader("Authorization"));
 	}
 
 	@Test(expected = AuthenticationException.class)
 	public void testExecuteGetAuthChallengeNoCredentials() throws Exception {
-		RepositoryLocation location = new RepositoryLocation(testProxy.getUrl());
+		RepositoryLocation location = new RepositoryLocation(server.getUrl());
 		CommonHttpClient client = new CommonHttpClient(location);
 
-		testProxy.addResponse(TestProxy.UNAUTHORIZED);
+		server.addResponse(MockServer.UNAUTHORIZED);
 		client.executeGet("/", null, HttpRequestProcessor.DEFAULT);
 	}
 
 	@Test
 	public void testExecuteGetAuthChallenge() throws Exception {
-		RepositoryLocation location = new RepositoryLocation(testProxy.getUrl());
+		RepositoryLocation location = new RepositoryLocation(server.getUrl());
 		location.setCredentials(AuthenticationType.HTTP, new UserCredentials("user", "pass"));
 		CommonHttpClient client = new CommonHttpClient(location);
 
-		testProxy.addResponse(TestProxy.UNAUTHORIZED);
-		testProxy.addResponse(TestProxy.OK);
+		server.addResponse(MockServer.UNAUTHORIZED);
+		server.addResponse(MockServer.OK);
 		CommonHttpResponse response = client.executeGet("/", null, HttpRequestProcessor.DEFAULT);
 		assertEquals(HttpStatus.SC_OK, response.getStatusCode());
-		assertEquals("Did not expect preemptive credentails", null, testProxy.getRequest().getHeader("Authorization"));
-		assertEquals("Expect credentails on challenge", "Authorization: Basic dXNlcjpwYXNz", testProxy.getRequest()
-				.getHeader("Authorization"));
+		assertEquals("Did not expect preemptive credentails", null, server.getRequest().getHeader("Authorization"));
+		assertEquals("Expect credentails on challenge", "Authorization: Basic dXNlcjpwYXNz",
+				server.getRequest().getHeader("Authorization"));
 	}
 
 	@Test
 	public void testExecuteGetPreemptiveAuth() throws Exception {
-		RepositoryLocation location = new RepositoryLocation(testProxy.getUrl());
+		RepositoryLocation location = new RepositoryLocation(server.getUrl());
 		location.setCredentials(AuthenticationType.HTTP, new UserCredentials("user", "pass"));
 		CommonHttpClient client = new CommonHttpClient(location);
 
 		client.setPreemptiveAuthenticationEnabled(true);
-		testProxy.addResponse(TestProxy.OK);
+		server.addResponse(MockServer.OK);
 		CommonHttpResponse response = client.executeGet("/", null, HttpRequestProcessor.DEFAULT);
-		assertEquals("Authorization: Basic dXNlcjpwYXNz", testProxy.getRequest().getHeader("Authorization"));
+		assertEquals("Authorization: Basic dXNlcjpwYXNz", server.getRequest().getHeader("Authorization"));
 		assertEquals(HttpStatus.SC_OK, response.getStatusCode());
 
 		// subsequent requests will have cached credentials
 		client.setPreemptiveAuthenticationEnabled(false);
-		testProxy.addResponse(TestProxy.OK);
+		server.addResponse(MockServer.OK);
 		response = client.executeGet("/", null, HttpRequestProcessor.DEFAULT);
-		assertEquals("Authorization: Basic dXNlcjpwYXNz", testProxy.getRequest().getHeader("Authorization"));
+		assertEquals("Authorization: Basic dXNlcjpwYXNz", server.getRequest().getHeader("Authorization"));
 		assertEquals(HttpStatus.SC_OK, response.getStatusCode());
 	}
 

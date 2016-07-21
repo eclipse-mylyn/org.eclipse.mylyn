@@ -26,8 +26,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.net.ssl.SSLHandshakeException;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
@@ -47,14 +45,16 @@ import org.eclipse.mylyn.commons.net.IProxyProvider;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.MockServer;
+import org.eclipse.mylyn.commons.sdk.util.MockServer.Message;
 import org.eclipse.mylyn.commons.sdk.util.TestUrl;
-import org.eclipse.mylyn.commons.tests.support.TestProxy;
-import org.eclipse.mylyn.commons.tests.support.TestProxy.Message;
 import org.eclipse.mylyn.internal.commons.net.AuthenticatedProxy;
 import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
 import org.eclipse.mylyn.internal.commons.net.PollingInputStream;
 import org.eclipse.mylyn.internal.commons.net.PollingSslProtocolSocketFactory;
 import org.eclipse.mylyn.internal.commons.net.TimeoutInputStream;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -93,7 +93,7 @@ public class WebUtilTest extends TestCase {
 
 	}
 
-	private TestProxy testProxy;
+	private MockServer server;
 
 	private HttpClient client;
 
@@ -105,8 +105,8 @@ public class WebUtilTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		testProxy = new TestProxy();
-		int proxyPort = testProxy.startAndWait();
+		server = new MockServer();
+		int proxyPort = server.startAndWait();
 		assert proxyPort > 0;
 		proxyAddress = new InetSocketAddress("localhost", proxyPort);
 
@@ -117,7 +117,7 @@ public class WebUtilTest extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 
-		testProxy.stop();
+		server.stop();
 	}
 
 	public void testConnectCancelStalledConnect() throws Exception {
@@ -236,15 +236,15 @@ public class WebUtilTest extends TestCase {
 	public void testCreateHostConfigurationProxy() throws Exception {
 		StubProgressMonitor monitor = new StubProgressMonitor();
 		HttpClient client = new HttpClient();
-		WebUtil.createHostConfiguration(client, new WebLocation(TestUrl.DEFAULT.getHttpOk().toString(), null, null,
-				new IProxyProvider() {
+		WebUtil.createHostConfiguration(client,
+				new WebLocation(TestUrl.DEFAULT.getHttpOk().toString(), null, null, new IProxyProvider() {
 					public Proxy getProxyForHost(String host, String proxyType) {
 						assertEquals(IProxyData.HTTP_PROXY_TYPE, proxyType);
 						return null;
 					}
 				}), monitor);
-		WebUtil.createHostConfiguration(client, new WebLocation(TestUrl.DEFAULT.getHttpsOk().toString(), null, null,
-				new IProxyProvider() {
+		WebUtil.createHostConfiguration(client,
+				new WebLocation(TestUrl.DEFAULT.getHttpsOk().toString(), null, null, new IProxyProvider() {
 					public Proxy getProxyForHost(String host, String proxyType) {
 						assertEquals(IProxyData.HTTPS_PROXY_TYPE, proxyType);
 						return null;
@@ -266,15 +266,15 @@ public class WebUtilTest extends TestCase {
 		AbstractWebLocation location = new WebLocation(url, null, null, null);
 		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, null);
 
-		testProxy.addResponse(TestProxy.TIMEOUT);
+		server.addResponse(MockServer.TIMEOUT);
 
 		GetMethod method = new GetMethod("/");
 		method.getParams().setSoTimeout(100);
 		int statusCode = client.executeMethod(hostConfiguration, method);
 		assertEquals(200, statusCode);
 
-		PollingInputStream in = new PollingInputStream(new TimeoutInputStream(method.getResponseBodyAsStream(), 8192,
-				500L, -1), 1, new NullProgressMonitor());
+		PollingInputStream in = new PollingInputStream(
+				new TimeoutInputStream(method.getResponseBodyAsStream(), 8192, 500L, -1), 1, new NullProgressMonitor());
 		try {
 			in.read();
 			fail("expected InterruptedIOException");
@@ -292,13 +292,13 @@ public class WebUtilTest extends TestCase {
 		AbstractWebLocation location = new WebLocation(url, null, null, null);
 		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, null);
 
-		testProxy.addResponse(TestProxy.OK);
+		server.addResponse(MockServer.OK);
 
 		GetMethod method = new GetMethod("/");
 		int statusCode = client.executeMethod(hostConfiguration, method);
 		assertEquals(200, statusCode);
 
-		Message request = testProxy.getRequest();
+		Message request = server.getRequest();
 		assertEquals("GET / HTTP/1.1", request.request);
 	}
 
@@ -307,7 +307,7 @@ public class WebUtilTest extends TestCase {
 		AbstractWebLocation location = new WebLocation(url, null, null, null);
 		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, null);
 
-		testProxy.setCloseOnConnect(true);
+		server.setCloseOnConnect(true);
 
 		GetMethod method = new GetMethod("/");
 		try {
@@ -318,7 +318,7 @@ public class WebUtilTest extends TestCase {
 			assertEquals("Connection reset", e.getMessage());
 		}
 
-		assertFalse(testProxy.hasRequest());
+		assertFalse(server.hasRequest());
 	}
 
 	public void testLocationConnectProxy() throws Exception {
@@ -331,13 +331,13 @@ public class WebUtilTest extends TestCase {
 		});
 		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, null);
 
-		testProxy.addResponse(TestProxy.OK);
+		server.addResponse(MockServer.OK);
 
 		GetMethod method = new GetMethod(WebUtil.getRequestPath(url));
 		int statusCode = client.executeMethod(hostConfiguration, method);
 		assertEquals(200, statusCode);
 
-		Message request = testProxy.getRequest();
+		Message request = server.getRequest();
 		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
 	}
 
@@ -355,14 +355,14 @@ public class WebUtilTest extends TestCase {
 
 		Message response = new Message("HTTP/1.1 401 Authentication required");
 		response.headers.add("WWW-Authenticate: Basic realm=\"Foo\"");
-		testProxy.addResponse(response);
-		testProxy.addResponse(TestProxy.OK);
+		server.addResponse(response);
+		server.addResponse(MockServer.OK);
 
 		GetMethod method = new GetMethod(url);
 		int statusCode = client.executeMethod(hostConfiguration, method);
 		assertEquals(401, statusCode);
 
-		Message request = testProxy.getRequest();
+		Message request = server.getRequest();
 		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
 		assertEquals("Basic dXNlcjpwYXNz", request.getHeaderValue("Authorization"));
 	}
@@ -379,17 +379,17 @@ public class WebUtilTest extends TestCase {
 
 		Message response = new Message("HTTP/1.1 407 Proxy authentication required");
 		response.headers.add("Proxy-Authenticate: Basic realm=\"Foo\"");
-		testProxy.addResponse(response);
-		testProxy.addResponse(TestProxy.OK);
+		server.addResponse(response);
+		server.addResponse(MockServer.OK);
 
 		GetMethod method = new GetMethod(url);
 		int statusCode = client.executeMethod(hostConfiguration, method);
 		assertEquals(407, statusCode);
 
-		Message request = testProxy.getRequest();
+		Message request = server.getRequest();
 		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
 
-		assertFalse("Expected HttpClient to close connection", testProxy.hasRequest());
+		assertFalse("Expected HttpClient to close connection", server.hasRequest());
 	}
 
 	public void testLocationConnectProxyProxyCredentials() throws Exception {
@@ -405,14 +405,14 @@ public class WebUtilTest extends TestCase {
 
 		Message response = new Message("HTTP/1.1 407 Proxy authentication required");
 		response.headers.add("Proxy-Authenticate: Basic realm=\"Foo\"");
-		testProxy.addResponse(response);
-		testProxy.addResponse(TestProxy.OK);
+		server.addResponse(response);
+		server.addResponse(MockServer.OK);
 
 		GetMethod method = new GetMethod(url);
 		int statusCode = client.executeMethod(hostConfiguration, method);
 		assertEquals(407, statusCode);
 
-		Message request = testProxy.getRequest();
+		Message request = server.getRequest();
 		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
 		assertEquals("Basic cHJveHlVc2VyOnByb3h5UGFzcw==", request.getHeaderValue("Proxy-Authorization"));
 	}
@@ -430,13 +430,13 @@ public class WebUtilTest extends TestCase {
 		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, null);
 		client.getParams().setAuthenticationPreemptive(true);
 
-		testProxy.addResponse(TestProxy.OK);
+		server.addResponse(MockServer.OK);
 
 		GetMethod method = new GetMethod(url);
 		int statusCode = client.executeMethod(hostConfiguration, method);
 		assertEquals(200, statusCode);
 
-		Message request = testProxy.getRequest();
+		Message request = server.getRequest();
 		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
 		assertEquals("Basic cHJveHlVc2VyOnByb3h5UGFzcw==", request.getHeaderValue("Proxy-Authorization"));
 		assertEquals("Basic dXNlcjpwYXNz", request.getHeaderValue("Authorization"));
@@ -453,13 +453,13 @@ public class WebUtilTest extends TestCase {
 		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, null);
 		;
 
-		testProxy.addResponse(TestProxy.SERVICE_UNVAILABLE);
+		server.addResponse(MockServer.SERVICE_UNVAILABLE);
 
 		GetMethod method = new GetMethod("/");
 		int statusCode = client.executeMethod(hostConfiguration, method);
 		assertEquals(503, statusCode);
 
-		Message request = testProxy.getRequest();
+		Message request = server.getRequest();
 		assertEquals("CONNECT foo:443 HTTP/1.1", request.request);
 	}
 
@@ -475,13 +475,13 @@ public class WebUtilTest extends TestCase {
 		;
 		client.getParams().setAuthenticationPreemptive(true);
 
-		testProxy.addResponse(TestProxy.SERVICE_UNVAILABLE);
+		server.addResponse(MockServer.SERVICE_UNVAILABLE);
 
 		GetMethod method = new GetMethod("/");
 		int statusCode = client.executeMethod(hostConfiguration, method);
 		assertEquals(503, statusCode);
 
-		Message request = testProxy.getRequest();
+		Message request = server.getRequest();
 		assertEquals("CONNECT foo:443 HTTP/1.1", request.request);
 		assertEquals("Basic cHJveHlVc2VyOnByb3h5UGFzcw==", request.getHeaderValue("Proxy-Authorization"));
 	}
@@ -499,17 +499,17 @@ public class WebUtilTest extends TestCase {
 
 		Message response = new Message("HTTP/1.1 407 Proxy authentication required");
 		response.headers.add("Proxy-Authenticate: Basic realm=\"Foo\"");
-		testProxy.addResponse(response);
-		testProxy.addResponse(TestProxy.SERVICE_UNVAILABLE);
+		server.addResponse(response);
+		server.addResponse(MockServer.SERVICE_UNVAILABLE);
 
 		GetMethod method = new GetMethod("/");
 		int statusCode = client.executeMethod(hostConfiguration, method);
 		assertEquals(407, statusCode);
 
-		Message request = testProxy.getRequest();
+		Message request = server.getRequest();
 		assertEquals("CONNECT foo:443 HTTP/1.1", request.request);
 
-		assertFalse("Expected HttpClient to close connection", testProxy.hasRequest());
+		assertFalse("Expected HttpClient to close connection", server.hasRequest());
 	}
 
 	public void testLocationSslConnectProxyTimeout() throws Exception {
@@ -522,7 +522,7 @@ public class WebUtilTest extends TestCase {
 		});
 		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, null);
 
-		testProxy.addResponse(TestProxy.OK);
+		server.addResponse(MockServer.OK);
 
 		GetMethod method = new GetMethod("/");
 		// avoid second attempt to connect to proxy to get exception right away
@@ -539,7 +539,7 @@ public class WebUtilTest extends TestCase {
 			// connection reset, happens in some environments instead of SSLHandshakeExecption depending on how much data has been written before the socket is closed
 		}
 
-		Message request = testProxy.getRequest();
+		Message request = server.getRequest();
 		assertEquals("CONNECT foo:443 HTTP/1.1", request.request);
 	}
 
@@ -629,7 +629,7 @@ public class WebUtilTest extends TestCase {
 //		} catch (UnknownHostException e) {
 //		}
 		String url = "http://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/";
-		testProxy.addResponse(TestProxy.OK);
+		server.addResponse(MockServer.OK);
 		assertNull(WebUtil.getTitleFromUrl(new WebLocation(url), null));
 	}
 
@@ -641,7 +641,7 @@ public class WebUtilTest extends TestCase {
 		String message = "HTTP/1.1 200 OK\n" + "Date: Sat, 03 Jan 2009 14:40:23 GMT\n" + "Connection: close\n"
 				+ "Content-Type: text/html; charset=UTF-8\n" + "Content-Length: 30\n" + "\n"
 				+ "<html><title>\u00C3\u00BC</title></html>";
-		testProxy.addResponse(message);
+		server.addResponse(message);
 		String url = "http://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/";
 		assertEquals("\u00FC", WebUtil.getTitleFromUrl(new WebLocation(url), null));
 	}
