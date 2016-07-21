@@ -12,10 +12,7 @@
 
 package org.eclipse.mylyn.bugzilla.tests.core;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.io.IOUtils;
-import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeMapper;
@@ -25,13 +22,15 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
+import junit.framework.TestCase;
+
 /**
  * @author Steffen Pingel
  */
 public class BugzillaAttributeTest extends TestCase {
 
 	public void testTaskDataSchema() throws Exception {
-		BugzillaRepositoryConnector connector = BugzillaFixture.current().connector();
+		BugzillaRepositoryConnector connector = new BugzillaRepositoryConnector();
 		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, "http://repository");
 		BugzillaAttributeMapper mapper = new BugzillaAttributeMapper(repository, connector);
 		TaskData taskData = new TaskData(mapper, repository.getConnectorKind(), repository.getRepositoryUrl(), "");

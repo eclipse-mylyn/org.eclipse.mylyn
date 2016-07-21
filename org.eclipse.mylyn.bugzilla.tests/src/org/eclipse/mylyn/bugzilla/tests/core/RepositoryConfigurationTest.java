@@ -13,10 +13,10 @@ package org.eclipse.mylyn.bugzilla.tests.core;
 
 import java.util.List;
 
-import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeMapper;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -60,7 +60,7 @@ public class RepositoryConfigurationTest extends TestCase {
 
 	public void testGetAttributeOptions() throws Exception {
 		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, "http://repository");
-		BugzillaAttributeMapper mapper = new BugzillaAttributeMapper(repository, BugzillaFixture.current().connector());
+		BugzillaAttributeMapper mapper = new BugzillaAttributeMapper(repository, new BugzillaRepositoryConnector());
 		TaskData taskData = new TaskData(mapper, repository.getConnectorKind(), repository.getRepositoryUrl(), "");
 
 		cfg.addItem(BugzillaAttribute.REP_PLATFORM, "3");
