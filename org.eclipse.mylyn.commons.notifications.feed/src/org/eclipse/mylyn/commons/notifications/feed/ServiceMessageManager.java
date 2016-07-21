@@ -15,6 +15,8 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,6 +33,7 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.core.net.NetUtil;
 import org.eclipse.mylyn.commons.notifications.core.NotificationEnvironment;
 import org.eclipse.mylyn.internal.commons.notifications.feed.FeedReader;
 import org.eclipse.mylyn.internal.commons.notifications.feed.INotificationsFeed;
@@ -180,7 +183,7 @@ public class ServiceMessageManager {
 		int status = -1;
 		List<? extends ServiceMessage> messages = null;
 		try {
-			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+			HttpURLConnection connection = openConnection(url);
 			if (lastModified != null && lastModified.length() > 0) {
 				try {
 					connection.setIfModifiedSince(Long.parseLong(lastModified));
@@ -226,6 +229,14 @@ public class ServiceMessageManager {
 			notifyListeners(messages);
 		}
 		return status;
+	}
+
+	private HttpURLConnection openConnection(String url) throws IOException, MalformedURLException {
+		Proxy proxy = NetUtil.getProxyForUrl(url);
+		if (proxy != null) {
+			return (HttpURLConnection) new URL(url).openConnection(proxy);
+		}
+		return (HttpURLConnection) new URL(url).openConnection();
 	}
 
 	private void logStatus(IStatus status) {

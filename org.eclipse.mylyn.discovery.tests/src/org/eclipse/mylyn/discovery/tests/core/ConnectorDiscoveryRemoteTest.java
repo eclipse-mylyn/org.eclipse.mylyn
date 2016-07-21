@@ -11,28 +11,32 @@
 
 package org.eclipse.mylyn.discovery.tests.core;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.discovery.core.DiscoveryCore;
 import org.eclipse.mylyn.internal.discovery.core.model.ConnectorDiscovery;
 import org.eclipse.mylyn.internal.discovery.core.model.DiscoveryConnector;
 import org.eclipse.mylyn.internal.discovery.core.model.RemoteBundleDiscoveryStrategy;
 
+import junit.framework.TestCase;
+
 /**
  * A test that uses the real discovery directory and verifies that it works, and that all referenced update sites appear
  * to be available.
- * 
+ *
  * @author David Green
  */
 public class ConnectorDiscoveryRemoteTest extends TestCase {
 
 	private ConnectorDiscovery connectorDiscovery;
 
+	@SuppressWarnings("restriction")
 	@Override
 	protected void setUp() throws Exception {
-		super.setUp();
+		if (CommonTestUtil.fixProxyConfiguration()) {
+			CommonTestUtil.dumpSystemInfo(System.err);
+		}
 		connectorDiscovery = new ConnectorDiscovery();
 		connectorDiscovery.setVerifyUpdateSiteAvailability(false);
 

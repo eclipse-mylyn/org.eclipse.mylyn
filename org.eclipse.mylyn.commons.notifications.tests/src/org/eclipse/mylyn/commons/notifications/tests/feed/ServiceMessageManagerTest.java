@@ -13,11 +13,13 @@ package org.eclipse.mylyn.commons.notifications.tests.feed;
 
 import java.net.HttpURLConnection;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.notifications.feed.ServiceMessageManager;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.internal.commons.notifications.feed.ServiceMessage;
+import org.junit.Before;
+
+import junit.framework.TestCase;
 
 /**
  * @author Robert Elves
@@ -25,6 +27,14 @@ import org.eclipse.mylyn.internal.commons.notifications.feed.ServiceMessage;
 public class ServiceMessageManagerTest extends TestCase {
 
 	private static final String MESSAGE_XML_URL = "http://mylyn.org/message.xml";
+
+	@Override
+	@Before
+	public void setUp() {
+		if (CommonTestUtil.fixProxyConfiguration()) {
+			CommonTestUtil.dumpSystemInfo(System.err);
+		}
+	}
 
 	public void testRetrievingMessage() throws Exception {
 		ServiceMessageManager manager = new ServiceMessageManager(MESSAGE_XML_URL, "", "", 0l);
