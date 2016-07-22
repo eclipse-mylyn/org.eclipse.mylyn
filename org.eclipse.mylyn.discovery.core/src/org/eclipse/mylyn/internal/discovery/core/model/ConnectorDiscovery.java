@@ -4,13 +4,15 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.internal.discovery.core.model;
 
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -53,7 +55,7 @@ import org.osgi.framework.Version;
 
 /**
  * A means of discovering connectors.
- * 
+ *
  * @author David Green
  */
 public class ConnectorDiscovery {
@@ -87,7 +89,7 @@ public class ConnectorDiscovery {
 	/**
 	 * Initialize this by performing discovery. Discovery may take a long time as it involves network access.
 	 * PRECONDITION: must add at least one {@link #getDiscoveryStrategies() discovery strategy} prior to calling.
-	 * 
+	 *
 	 * @return
 	 */
 	public IStatus performDiscovery(IProgressMonitor monitor) {
@@ -111,12 +113,13 @@ public class ConnectorDiscovery {
 				discoveryStrategy.setConnectors(connectors);
 				discoveryStrategy.setCertifications(certifications);
 				try {
-					discoveryStrategy.performDiscovery(new SubProgressMonitor(monitor, discoveryTicks
-							/ discoveryStrategies.size()));
+					discoveryStrategy.performDiscovery(
+							new SubProgressMonitor(monitor, discoveryTicks / discoveryStrategies.size()));
 				} catch (CoreException e) {
-					status.add(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
-							Messages.ConnectorDiscovery_Strategy_failed_Error, discoveryStrategy.getClass()
-									.getSimpleName()), e));
+					status.add(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN,
+							NLS.bind(Messages.ConnectorDiscovery_Strategy_failed_Error,
+									discoveryStrategy.getClass().getSimpleName()),
+							e));
 				}
 			}
 
@@ -134,7 +137,7 @@ public class ConnectorDiscovery {
 
 	/**
 	 * get the top-level categories
-	 * 
+	 *
 	 * @return the categories, or an empty list if there are none.
 	 */
 	public List<DiscoveryCategory> getCategories() {
@@ -143,7 +146,7 @@ public class ConnectorDiscovery {
 
 	/**
 	 * get the connectors that were discovered and not filtered
-	 * 
+	 *
 	 * @return the connectors, or an empty list if there are none.
 	 */
 	public List<DiscoveryConnector> getConnectors() {
@@ -152,7 +155,7 @@ public class ConnectorDiscovery {
 
 	/**
 	 * get the connectors that were discovered but filtered
-	 * 
+	 *
 	 * @return the filtered connectors, or an empty list if there were none.
 	 */
 	public List<DiscoveryConnector> getFilteredConnectors() {
@@ -180,7 +183,7 @@ public class ConnectorDiscovery {
 
 	/**
 	 * indicate if update site availability should be verified. The default is false.
-	 * 
+	 *
 	 * @see DiscoveryConnector#getAvailable()
 	 * @see #verifySiteAvailability(IProgressMonitor)
 	 */
@@ -190,7 +193,7 @@ public class ConnectorDiscovery {
 
 	/**
 	 * indicate if update site availability should be verified. The default is false.
-	 * 
+	 *
 	 * @see DiscoveryConnector#getAvailable()
 	 * @see #verifySiteAvailability(IProgressMonitor)
 	 */
@@ -219,10 +222,10 @@ public class ConnectorDiscovery {
 		for (DiscoveryCertification certification : certifications) {
 			DiscoveryCertification previous = idToCertification.put(certification.getId(), certification);
 			if (previous != null) {
-				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
-						"Duplicate certification id ''{0}'': declaring sources: {1}, {2}", //$NON-NLS-1$
-						new Object[] { certification.getId(), certification.getSource().getId(),
-								previous.getSource().getId() })));
+				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN,
+						NLS.bind("Duplicate certification id ''{0}'': declaring sources: {1}, {2}", //$NON-NLS-1$
+								new Object[] { certification.getId(), certification.getSource().getId(),
+										previous.getSource().getId() })));
 			}
 		}
 
@@ -232,9 +235,10 @@ public class ConnectorDiscovery {
 				if (certification != null) {
 					connector.setCertification(certification);
 				} else {
-					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
-							"Unknown category ''{0}'' referenced by connector ''{1}'' declared in {2}", new Object[] { //$NON-NLS-1$
-							connector.getCertificationId(), connector.getId(), connector.getSource().getId() })));
+					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN,
+							NLS.bind("Unknown category ''{0}'' referenced by connector ''{1}'' declared in {2}", //$NON-NLS-1$
+									new Object[] { connector.getCertificationId(), connector.getId(),
+											connector.getSource().getId() })));
 				}
 			}
 		}
@@ -245,8 +249,8 @@ public class ConnectorDiscovery {
 		for (DiscoveryCategory category : categories) {
 			DiscoveryCategory previous = idToCategory.put(category.getId(), category);
 			if (previous != null) {
-				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
-						Messages.ConnectorDiscovery_duplicate_category_id, new Object[] { category.getId(),
+				StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN,
+						NLS.bind(Messages.ConnectorDiscovery_duplicate_category_id, new Object[] { category.getId(),
 								category.getSource().getId(), previous.getSource().getId() })));
 			}
 		}
@@ -276,10 +280,10 @@ public class ConnectorDiscovery {
 					Filter filter = FrameworkUtil.createFilter(connector.getPlatformFilter());
 					match = filter.match((Dictionary) environment);
 				} catch (InvalidSyntaxException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, NLS.bind(
-							Messages.ConnectorDiscovery_illegal_filter_syntax,
-							new Object[] { connector.getPlatformFilter(), connector.getId(),
-									connector.getSource().getId() })));
+					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN,
+							NLS.bind(Messages.ConnectorDiscovery_illegal_filter_syntax,
+									new Object[] { connector.getPlatformFilter(), connector.getId(),
+											connector.getSource().getId() })));
 				}
 				if (!match) {
 					connectors.remove(connector);
@@ -379,13 +383,8 @@ public class ConnectorDiscovery {
 								monitor.setCanceled(true);
 								return;
 							}
-							IStatus status;
-							if (e.getCause() instanceof CoreException) {
-								status = ((CoreException) e.getCause()).getStatus();
-							} else {
-								status = new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN,
-										Messages.ConnectorDiscovery_unexpected_exception, e.getCause());
-							}
+							IStatus status = new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN,
+									Messages.ConnectorDiscovery_unexpected_exception, e.getCause());
 							StatusHandler.log(status);
 						}
 						monitor.worked(1);
@@ -409,11 +408,11 @@ public class ConnectorDiscovery {
 			this.url = url;
 		}
 
-		public VerifyUpdateSiteJob call() throws Exception {
+		public VerifyUpdateSiteJob call() throws MalformedURLException, URISyntaxException {
 			URL baseUrl = new URL(url);
 			List<URI> locations = new ArrayList<URI>();
-			for (String location : new String[] {
-					"content.jar", "content.xml", "compositeContent.jar", "compositeContent.xml", "site.xml" }) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+			for (String location : new String[] { "content.jar", "content.xml", "compositeContent.jar", //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+					"compositeContent.xml", "site.xml" }) { //$NON-NLS-1$ //$NON-NLS-2$
 				locations.add(new URL(baseUrl, location).toURI());
 			}
 			ok = WebUtil.verifyAvailability(locations, true, new NullProgressMonitor());
@@ -432,7 +431,8 @@ public class ConnectorDiscovery {
 
 				public void handleException(Throwable exception) {
 					StatusHandler.log(new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN,
-							Messages.ConnectorDiscovery_exception_disposing + strategy.getClass().getName(), exception));
+							Messages.ConnectorDiscovery_exception_disposing + strategy.getClass().getName(),
+							exception));
 				}
 			});
 		}

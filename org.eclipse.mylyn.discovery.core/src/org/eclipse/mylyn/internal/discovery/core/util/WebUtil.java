@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
@@ -13,7 +13,6 @@ package org.eclipse.mylyn.internal.discovery.core.util;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,18 +25,22 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.internal.discovery.core.DiscoveryCore;
 
 /**
  * A utility for accessing web resources
- * 
+ *
  * @author David Green
  */
 public class WebUtil {
 	/**
 	 * implementors are capable of processing character content
-	 * 
+	 *
 	 * @see WebUtil#readResource(AbstractWebLocation, TextContentProcessor, IProgressMonitor)
 	 */
 	public interface TextContentProcessor {
@@ -48,7 +51,7 @@ public class WebUtil {
 
 	/**
 	 * Download an HTTP-based resource
-	 * 
+	 *
 	 * @param target
 	 *            the target file to which the content is saved
 	 * @param location
@@ -79,7 +82,7 @@ public class WebUtil {
 
 	/**
 	 * Read a web-based resource at the specified location using the given processor.
-	 * 
+	 *
 	 * @param location
 	 *            the web location of the content
 	 * @param processor
@@ -104,7 +107,7 @@ public class WebUtil {
 
 	/**
 	 * Verify availability of resources at the given web locations. Normally this would be done using an HTTP HEAD.
-	 * 
+	 *
 	 * @param locations
 	 *            the locations of the resource to verify
 	 * @param one
@@ -114,27 +117,43 @@ public class WebUtil {
 	 * @return true if the resource exists
 	 * @throws CoreException
 	 */
-	public static boolean verifyAvailability(List<? extends URI> locations, boolean one, IProgressMonitor monitor)
-			throws IOException, CoreException {
+	public static boolean verifyAvailability(List<? extends URI> locations, boolean one, IProgressMonitor monitor) {
 		if (locations.isEmpty() || locations.size() > 5) {
 			throw new IllegalArgumentException();
 		}
 		int countFound = 0;
-		for (URI location : locations) {
-			try {
-				getLastModified(location, monitor);
-				if (one) {
-					return true;
+		MultiStatus status = new MultiStatus(DiscoveryCore.ID_PLUGIN, 0, "Verifying resource availability failed", //$NON-NLS-1$
+				new Exception());
+		try {
+			for (URI location : locations) {
+				try {
+					getLastModified(location, monitor);
+					if (one) {
+						return true;
+					}
+					++countFound;
+				} catch (IOException | CoreException e) {
+					status.add(getStatus(e));
+					if (!one) {
+						return false;
+					}
+					continue;
 				}
-				++countFound;
-			} catch (FileNotFoundException e) {
-				if (!one) {
-					return false;
-				}
-				continue;
 			}
+		} finally {
+			if (!status.isOK()) {
+				StatusHandler.log(status);
+			}
+
 		}
 		return countFound == locations.size();
+	}
+
+	private static IStatus getStatus(Exception e) {
+		if (e instanceof CoreException) {
+			return ((CoreException) e).getStatus();
+		}
+		return new Status(IStatus.ERROR, DiscoveryCore.ID_PLUGIN, e.getMessage(), e);
 	}
 
 	public static synchronized ITransportService getTransport() {
