@@ -11,12 +11,41 @@
 
 package org.eclipse.mylyn.bugzilla.rest.core.tests;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
+import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 
-@RunWith(Suite.class)
-@SuiteClasses({ BugzillaRestClientTest.class, BugzillaRestConfigurationTest.class, BugzillaRestConnectorTest.class })
+import junit.framework.JUnit4TestAdapter;
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
 public class AllBugzillaRestCoreTests {
+	public static Test suite() {
+		if (CommonTestUtil.fixProxyConfiguration()) {
+			CommonTestUtil.dumpSystemInfo(System.err);
+		}
+
+		TestSuite suite = new ManagedTestSuite(AllBugzillaRestCoreTests.class.getName());
+		addTests(suite, TestConfiguration.getDefault());
+		return suite;
+	}
+
+	public static Test suite(TestConfiguration configuration) {
+		TestSuite suite = new TestSuite(AllBugzillaRestCoreTests.class.getName());
+		addTests(suite, configuration);
+		return suite;
+	}
+
+	public static void addTests(TestSuite suite, TestConfiguration configuration) {
+		// Tests that only need to run once (i.e. no network io so doesn't matter which repository)
+		suite.addTest(new JUnit4TestAdapter(RepositoryKeyTest.class));
+
+		// network tests
+		if (!configuration.isLocalOnly()) {
+			suite.addTest(new JUnit4TestAdapter(BugzillaRestClientTest.class));
+			suite.addTest(new JUnit4TestAdapter(BugzillaRestConfigurationTest.class));
+			suite.addTest(new JUnit4TestAdapter(BugzillaRestConnectorTest.class));
+		}
+	}
 
 }

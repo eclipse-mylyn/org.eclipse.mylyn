@@ -13,16 +13,16 @@ package org.eclipse.mylyn.bugzilla.rest.test.support;
 
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
-import org.eclipse.mylyn.commons.sdk.util.AbstractTestFixture;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.commons.sdk.util.FixtureConfiguration;
+import org.eclipse.mylyn.commons.sdk.util.RepositoryTestFixture;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConnector;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestCore;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
-public class BugzillaRestTestFixture extends AbstractTestFixture {
+public class BugzillaRestTestFixture extends RepositoryTestFixture {
 
 	public final String version;
 
@@ -30,15 +30,37 @@ public class BugzillaRestTestFixture extends AbstractTestFixture {
 
 	private final BugzillaRestConnector connector = new BugzillaRestConnector();
 
-	@Override
-	protected AbstractTestFixture getDefault() {
+	public static final BugzillaRestTestFixture DEFAULT = discoverDefault();
+
+	private static BugzillaRestTestFixture discoverDefault() {
 		return TestConfiguration.getDefault().discoverDefault(BugzillaRestTestFixture.class, "bugzillaREST");
 	}
 
-	public BugzillaRestTestFixture(FixtureConfiguration config) {
-		super(BugzillaRestCore.CONNECTOR_KIND, config);
-		version = config.getVersion();
-		setInfo("Bugzilla", config.getVersion(), config.getInfo());
+	private static BugzillaRestTestFixture current;
+
+	public static BugzillaRestTestFixture current() {
+		if (current == null) {
+			DEFAULT.activate();
+		}
+		return current;
+	}
+
+	@Override
+	protected BugzillaRestTestFixture activate() {
+		current = this;
+		return this;
+	}
+
+	@Override
+	protected BugzillaRestTestFixture getDefault() {
+		return DEFAULT;
+	}
+
+	public BugzillaRestTestFixture(FixtureConfiguration configuration) {
+		super(BugzillaRestCore.CONNECTOR_KIND, configuration.getUrl());
+		version = configuration.getVersion();
+		setInfo("Bugzilla", configuration.getVersion(), configuration.getInfo());
+		setDefaultproperties(configuration.getProperties());
 	}
 
 	public String getVersion() {

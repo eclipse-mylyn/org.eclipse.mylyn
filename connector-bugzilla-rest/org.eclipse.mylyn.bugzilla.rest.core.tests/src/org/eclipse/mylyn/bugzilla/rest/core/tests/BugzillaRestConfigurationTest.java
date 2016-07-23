@@ -12,9 +12,7 @@
 package org.eclipse.mylyn.bugzilla.rest.core.tests;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
@@ -26,9 +24,7 @@ import org.eclipse.mylyn.commons.sdk.util.Junit4TestFixtureRunner;
 import org.eclipse.mylyn.commons.sdk.util.Junit4TestFixtureRunner.FixtureDefinition;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConnector;
-import org.eclipse.mylyn.internal.bugzilla.rest.core.RepositoryKey;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -66,16 +62,6 @@ public class BugzillaRestConfigurationTest {
 	@After
 	public void tearDown() throws Exception {
 		manager.clearRepositories();
-	}
-
-	@Test
-	public void testRepositoryKey() throws CoreException {
-		RepositoryKey rep1 = new RepositoryKey(new TaskRepository("xx", "url"));
-		RepositoryKey rep2 = new RepositoryKey(new TaskRepository("xx1", "url1"));
-		RepositoryKey rep3 = new RepositoryKey(new TaskRepository("xx", "url"));
-		assertTrue(rep1.equals(rep1));
-		assertTrue(rep1.equals(rep3));
-		assertFalse(rep1.equals(rep2));
 	}
 
 	@Test
