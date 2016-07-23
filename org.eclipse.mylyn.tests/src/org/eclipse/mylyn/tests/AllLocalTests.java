@@ -11,9 +11,7 @@
 
 package org.eclipse.mylyn.tests;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
+import org.eclipse.mylyn.bugzilla.rest.core.tests.AllBugzillaRestCoreTests;
 import org.eclipse.mylyn.bugzilla.tests.AllBugzillaTests;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
@@ -21,6 +19,9 @@ import org.eclipse.mylyn.commons.sdk.util.TestConfiguration.TestKind;
 import org.eclipse.mylyn.gerrit.tests.AllGerritTests;
 import org.eclipse.mylyn.hudson.tests.AllHudsonTests;
 import org.eclipse.mylyn.trac.tests.AllTracTests;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
  * @author Steffen Pingel
@@ -42,6 +43,7 @@ public class AllLocalTests {
 		suite.addTest(AllTracTests.suite(configuration));
 		suite.addTest(AllHudsonTests.suite(configuration));
 		suite.addTest(AllGerritTests.suite(configuration));
+		suite.addTest(AllBugzillaRestCoreTests.suite(configuration));
 	}
 
 }

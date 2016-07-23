@@ -11,12 +11,8 @@
 
 package org.eclipse.mylyn.tests;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.mylyn.builds.tests.AllBuildsTests;
 import org.eclipse.mylyn.cdt.tests.AllCdtTests;
-import org.eclipse.mylyn.commons.activity.tests.AllActivityTests;
 import org.eclipse.mylyn.commons.notifications.tests.AllNotificationsTests;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
@@ -34,6 +30,9 @@ import org.eclipse.mylyn.team.tests.AllTeamTests;
 import org.eclipse.mylyn.tests.integration.AllIntegrationTests;
 import org.eclipse.mylyn.tests.misc.AllMiscTests;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
 /**
  * @author Shawn Minto
  * @author Steffen Pingel
@@ -50,7 +49,6 @@ public class AllNonConnectorTests {
 		suite.addTest(AllIntegrationTests.suite());
 		suite.addTest(AllCommonsTests.suite(configuration));
 		suite.addTest(AllNotificationsTests.suite());
-		suite.addTest(AllActivityTests.suite());
 		suite.addTest(AllContextTests.suite());
 		suite.addTest(AllContextTasksTests.suite());
 		suite.addTest(AllDiscoveryTests.suite(configuration));
