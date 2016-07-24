@@ -26,6 +26,7 @@ import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.commons.workbench.editors.CommonTextSupport;
 import org.eclipse.mylyn.internal.tasks.ui.OptionsProposalProvider;
+import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
 import org.eclipse.mylyn.internal.tasks.ui.editors.LabelsAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.MultiSelectionAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.SingleSelectionAttributeEditor;
@@ -109,23 +110,30 @@ public class AttributeEditorToolkitTest {
 
 	@Test
 	public void testAdaptLabelsAttributeEditor() {
-		assertOptionsProposalProvider(true);
-		assertOptionsProposalProvider(false);
+		assertOptionsProposalProvider(true, false);
+		assertOptionsProposalProvider(false, false);
+		assertOptionsProposalProvider(true, true);
 	}
 
-	private void assertOptionsProposalProvider(boolean isMultiSelect) {
-		taskAttribute.getMetaData().setType(
-				isMultiSelect ? TaskAttribute.TYPE_MULTI_SELECT : TaskAttribute.TYPE_SINGLE_SELECT);
+	private void assertOptionsProposalProvider(boolean isMultiSelect, boolean isPerson) {
+		taskAttribute.getMetaData().setKind(isPerson ? TaskAttribute.KIND_PEOPLE : TaskAttribute.KIND_DEFAULT);
+		taskAttribute.getMetaData()
+				.setType(isMultiSelect ? TaskAttribute.TYPE_MULTI_SELECT : TaskAttribute.TYPE_SINGLE_SELECT);
 		LabelsAttributeEditor editor = new LabelsAttributeEditor(taskDataModel, taskAttribute);
 		editor.createControl(WorkbenchUtil.getShell(), formToolkit);
 		toolkit.adapt(editor);
 
 		verify(toolkit).createContentProposalProvider(editor);
-		ArgumentCaptor<IContentProposalProvider> providerCaptor = ArgumentCaptor.forClass(IContentProposalProvider.class);
+		ArgumentCaptor<IContentProposalProvider> providerCaptor = ArgumentCaptor
+				.forClass(IContentProposalProvider.class);
 		verify(toolkit).createContentAssistCommandAdapter(eq(editor.getControl()), providerCaptor.capture());
 		IContentProposalProvider proposalProvider = providerCaptor.getValue();
-		assertTrue(proposalProvider instanceof OptionsProposalProvider);
-		assertEquals(isMultiSelect, ((OptionsProposalProvider) proposalProvider).isMultiSelect());
+		if (isPerson) {
+			assertTrue(proposalProvider instanceof PersonProposalProvider);
+		} else {
+			assertTrue(proposalProvider instanceof OptionsProposalProvider);
+			assertEquals(isMultiSelect, ((OptionsProposalProvider) proposalProvider).isMultiSelect());
+		}
 		assertNull(toolkit.commandAdapter.getAutoActivationCharacters());
 	}
 

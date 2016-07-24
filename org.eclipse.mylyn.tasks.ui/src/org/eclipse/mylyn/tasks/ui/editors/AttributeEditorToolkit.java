@@ -165,7 +165,7 @@ public class AttributeEditorToolkit {
 
 	/**
 	 * Adds content assist to the given text field.
-	 * 
+	 *
 	 * @param text
 	 *            text field to decorate.
 	 * @param proposalProvider
@@ -175,8 +175,8 @@ public class AttributeEditorToolkit {
 	private ControlDecoration installContentAssistControlDecoration(Control control) {
 		ControlDecoration controlDecoration = new ControlDecoration(control, (SWT.TOP | SWT.LEFT));
 		controlDecoration.setShowOnlyOnFocus(true);
-		FieldDecoration contentProposalImage = FieldDecorationRegistry.getDefault().getFieldDecoration(
-				FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);
+		FieldDecoration contentProposalImage = FieldDecorationRegistry.getDefault()
+				.getFieldDecoration(FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);
 		controlDecoration.setImage(contentProposalImage.getImage());
 		IBindingService bindingService = (IBindingService) PlatformUI.getWorkbench().getService(IBindingService.class);
 		controlDecoration.setDescriptionText(NLS.bind(Messages.AttributeEditorToolkit_Content_Assist_Available__X_,
@@ -186,7 +186,7 @@ public class AttributeEditorToolkit {
 
 	/**
 	 * Creates an IContentProposalProvider to provide content assist proposals for the given attribute.
-	 * 
+	 *
 	 * @param editor
 	 *            editor for which to provide content assist.
 	 * @return the IContentProposalProvider.
@@ -194,7 +194,8 @@ public class AttributeEditorToolkit {
 	IContentProposalProvider createContentProposalProvider(AbstractAttributeEditor editor) {
 		TaskAttribute attribute = editor.getTaskAttribute();
 		Map<String, String> proposals = attribute.getTaskData().getAttributeMapper().getOptions(attribute);
-		if (editor instanceof LabelsAttributeEditor) {
+		if (editor instanceof LabelsAttributeEditor
+				&& !attribute.getMetaData().getKind().equals(TaskAttribute.KIND_PEOPLE)) {
 			return new OptionsProposalProvider(proposals,
 					TaskAttribute.TYPE_MULTI_SELECT.equals(attribute.getMetaData().getType()));
 		}
@@ -220,7 +221,7 @@ public class AttributeEditorToolkit {
 	/**
 	 * Subclasses that support HTML preview of ticket description and comments override this method to return an
 	 * instance of AbstractRenderingEngine
-	 * 
+	 *
 	 * @return <code>null</code> if HTML preview is not supported for the repository (default)
 	 * @since 2.1
 	 */
@@ -230,7 +231,7 @@ public class AttributeEditorToolkit {
 
 	/**
 	 * Called to check if there's content assist available for the given attribute.
-	 * 
+	 *
 	 * @param attribute
 	 *            the attribute
 	 * @return true if content assist is available for the specified attribute.
@@ -263,7 +264,7 @@ public class AttributeEditorToolkit {
 
 	/**
 	 * Adds input validation to an attribute editor and a controlDecoration if invalid
-	 * 
+	 *
 	 * @since 3.5
 	 */
 	public static void createValidator(final AbstractAttributeEditor attributeEditor, Control control,
@@ -273,8 +274,8 @@ public class AttributeEditorToolkit {
 		Assert.isNotNull(attributeEditor);
 		final ControlDecoration decoration = new ControlDecoration(control, SWT.BOTTOM | SWT.LEFT);
 		decoration.setMarginWidth(2);
-		FieldDecoration errorDecoration = FieldDecorationRegistry.getDefault().getFieldDecoration(
-				FieldDecorationRegistry.DEC_ERROR);
+		FieldDecoration errorDecoration = FieldDecorationRegistry.getDefault()
+				.getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
 		decoration.setImage(errorDecoration.getImage());
 		decoration.hide();
 		final TaskDataModelListener validationListener = new TaskDataModelListener() {
