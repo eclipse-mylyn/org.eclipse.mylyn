@@ -103,14 +103,13 @@ public class BuildHistoryPage extends HistoryPage {
 
 	@Override
 	public boolean inputSet() {
-		cancelRefresh();
 
 		if (viewer == null) {
 			return false;
 		}
 
 		final IBuildPlan plan = getPlan();
-		if (plan != null) {
+		if (plan != null && refreshOperation == null) {
 			GetBuildsRequest request = new GetBuildsRequest(plan, Kind.ALL, Scope.HISTORY);
 			refreshOperation = new GetBuildsOperation(BuildsUiInternal.getFactory().getService(), request) {
 				protected void schedule(List<BuildJob> jobs) {
@@ -122,27 +121,24 @@ public class BuildHistoryPage extends HistoryPage {
 			refreshOperation.addOperationChangeListener(new OperationChangeListener() {
 				@Override
 				public void done(OperationChangeEvent event) {
-					if (!event.getStatus().isOK()) {
-						return;
-					}
-					if (Display.getDefault().isDisposed()) {
-						return;
-					}
-					final GetBuildsOperation operation = (GetBuildsOperation) event.getOperation();
-					Display.getDefault().asyncExec(new Runnable() {
-						public void run() {
-							if (viewer.getControl() != null && !viewer.getControl().isDisposed()) {
-								List<IBuild> builds = operation.getBuilds();
-								if (builds != null) {
-									for (IBuild build : builds) {
-										build.setPlan(plan);
-										build.setServer(plan.getServer());
+					if (event.getStatus().isOK() && !Display.getDefault().isDisposed()) {
+						final GetBuildsOperation operation = (GetBuildsOperation) event.getOperation();
+						Display.getDefault().asyncExec(new Runnable() {
+							public void run() {
+								if (viewer.getControl() != null && !viewer.getControl().isDisposed()) {
+									List<IBuild> builds = operation.getBuilds();
+									if (builds != null) {
+										for (IBuild build : builds) {
+											build.setPlan(plan);
+											build.setServer(plan.getServer());
+										}
+										viewer.setInput(builds);
 									}
-									viewer.setInput(builds);
 								}
 							}
-						}
-					});
+						});
+					}
+					refreshOperation = null;
 				}
 			});
 			refreshOperation.execute();
@@ -166,7 +162,7 @@ public class BuildHistoryPage extends HistoryPage {
 	private void schedule(final Job job) {
 		final IWorkbenchPartSite site = getWorkbenchSite();
 		if (site != null) {
-			IWorkbenchSiteProgressService progress = (IWorkbenchSiteProgressService) site.getAdapter(IWorkbenchSiteProgressService.class);
+			IWorkbenchSiteProgressService progress = site.getAdapter(IWorkbenchSiteProgressService.class);
 			if (progress != null) {
 				progress.schedule(job, 0, true);
 				return;
@@ -183,8 +179,8 @@ public class BuildHistoryPage extends HistoryPage {
 		tree.setHeaderVisible(true);
 
 		TreeViewerColumn buildViewerColumn = new TreeViewerColumn(viewer, SWT.LEFT);
-		buildViewerColumn.setLabelProvider(new DecoratingStyledCellLabelProvider(new BuildLabelProvider(true), null,
-				null));
+		buildViewerColumn
+				.setLabelProvider(new DecoratingStyledCellLabelProvider(new BuildLabelProvider(true), null, null));
 		TreeColumn buildColumn = buildViewerColumn.getColumn();
 		buildColumn.setText("ID");
 		buildColumn.setWidth(70);
