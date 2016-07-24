@@ -855,6 +855,12 @@
         xsi:type="projects:ProjectsImportTask">
       <sourceLocator
           rootFolder="${git.clone.mylyn.releng.location}/org.eclipse.mylyn.releng/"/>
+      <sourceLocator
+          rootFolder="${git.clone.mylyn.releng.location}/org.eclipse.mylyn-parent/"/>
+      <sourceLocator
+          rootFolder="${git.clone.mylyn.releng.location}/org.eclipse.mylyn.maven-parent/"/>
+      <sourceLocator
+          rootFolder="${git.clone.mylyn.releng.location}/org.eclipse.mylyn.tests/"/>
     </setupTask>
     <setupTask
         xsi:type="setup.workingsets:WorkingSetTask">
