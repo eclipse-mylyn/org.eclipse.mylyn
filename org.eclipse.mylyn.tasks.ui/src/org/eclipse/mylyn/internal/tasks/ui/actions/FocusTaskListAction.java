@@ -112,9 +112,9 @@ public class FocusTaskListAction implements IFilteredTreeListener, IViewActionDe
 						taskListView.addFilter(taskListInterestFilter);
 					}
 					// Setting sorter causes root refresh
+					taskListInterestSorter.setconfiguredSorter(previousSorter);
 					taskListView.getViewer().setSorter(taskListInterestSorter);
 					taskListView.getViewer().expandAll();
-//				taskListView.selectedAndFocusTask(TasksUiPlugin.getTaskList().getActiveTask());
 
 					showProgressBar(true);
 				} finally {
@@ -163,14 +163,12 @@ public class FocusTaskListAction implements IFilteredTreeListener, IViewActionDe
 		}
 
 		if (!taskListView.isFocusedMode()) {
-			TasksUiPlugin.getDefault()
-					.getPreferenceStore()
-					.setValue(ITasksUiPreferenceConstants.TASK_LIST_FOCUSED, true);
+			TasksUiPlugin.getDefault().getPreferenceStore().setValue(ITasksUiPreferenceConstants.TASK_LIST_FOCUSED,
+					true);
 			installInterestFilter();
 		} else {
-			TasksUiPlugin.getDefault()
-					.getPreferenceStore()
-					.setValue(ITasksUiPreferenceConstants.TASK_LIST_FOCUSED, false);
+			TasksUiPlugin.getDefault().getPreferenceStore().setValue(ITasksUiPreferenceConstants.TASK_LIST_FOCUSED,
+					false);
 			uninstallInterestFilter();
 		}
 	}
@@ -184,7 +182,7 @@ public class FocusTaskListAction implements IFilteredTreeListener, IViewActionDe
 	}
 
 	public void dispose() {
-		// ignore		
+		// ignore
 	}
 
 }

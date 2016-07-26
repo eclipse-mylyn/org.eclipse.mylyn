@@ -31,9 +31,14 @@ public class TaskListInterestSorter extends ViewerSorter {
 
 	private final TaskKeyComparator taskKeyComparator = new TaskKeyComparator();
 
+	private ViewerSorter configuredSorter;
+
+	public void setconfiguredSorter(ViewerSorter configuredSorter) {
+		this.configuredSorter = configuredSorter;
+	}
+
 	@Override
 	public int compare(Viewer compareViewer, Object o1, Object o2) {
-
 		if (o1 instanceof ITaskContainer && o2 instanceof UnmatchedTaskContainer) {
 			return -1;
 		} else if (o2 instanceof ITaskContainer && o1 instanceof UnmatchedTaskContainer) {
@@ -61,8 +66,8 @@ public class TaskListInterestSorter extends ViewerSorter {
 
 		if (!(o1 instanceof ITask)) {//o1 instanceof AbstractTaskContainer || o1 instanceof AbstractRepositoryQuery) {
 			if (!(o2 instanceof ITask)) {//o2 instanceof AbstractTaskContainer || o2 instanceof AbstractRepositoryQuery) {
-				return ((IRepositoryElement) o1).getSummary().compareToIgnoreCase(
-						((IRepositoryElement) o2).getSummary());
+				return ((IRepositoryElement) o1).getSummary()
+						.compareToIgnoreCase(((IRepositoryElement) o2).getSummary());
 			} else {
 				return -1;
 			}
@@ -93,21 +98,24 @@ public class TaskListInterestSorter extends ViewerSorter {
 				int complete = compareCompleted(task1, task2);
 				if (complete != 0) {
 					return complete;
-				} else {
-					int due = compareDueDates(task1, task2);
-					if (due != 0) {
-						return due;
-					} else {
-						int today = compareScheduledDate(task1, task2);
-						if (today == 0) {
-							return comparePrioritiesAndKeys(element1, element2);
-						} else {
-							return today;
-						}
-					}
+				}
+
+				int due = compareDueDates(task1, task2);
+				if (due != 0) {
+					return due;
+				}
+
+				int today = compareScheduledDate(task1, task2);
+				if (today != 0) {
+					return today;
 				}
 			}
 		}
+
+		if (configuredSorter != null) {
+			return configuredSorter.compare(compareViewer, o1, o2);
+		}
+
 		return 0;
 	}
 
@@ -153,9 +161,9 @@ public class TaskListInterestSorter extends ViewerSorter {
 			return priority;
 		}
 
-		int description = compareKeys(element1, element2);
-		if (description != 0) {
-			return description;
+		int key = compareKeys(element1, element2);
+		if (key != 0) {
+			return key;
 		}
 		return 0;
 	}
@@ -167,11 +175,11 @@ public class TaskListInterestSorter extends ViewerSorter {
 
 	private int comparePriorities(IRepositoryElement element1, IRepositoryElement element2) {
 		if (element1 instanceof AbstractTaskContainer && element2 instanceof AbstractTaskContainer) {
-			return ((AbstractTaskContainer) element1).getPriority().compareTo(
-					((AbstractTaskContainer) element2).getPriority());
+			return ((AbstractTaskContainer) element1).getPriority()
+					.compareTo(((AbstractTaskContainer) element2).getPriority());
 		} else {
 			// TODO: consider implementing
-			return -1;
+			return 0;
 		}
 	}
 
