@@ -7,6 +7,9 @@
  *
  * Contributors:
  *     Stefan Seelmann - initial API and implementation
+ *     Alexander Nyßen - tests for fenced code blocks
+ *                       tests for inline links
+ *
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.markdown.tests;
@@ -63,6 +66,8 @@ public class MarkdownLanguageTest extends MarkdownLanguageTestBase {
 		text.append("  Continued\n");
 		text.append("```\n");
 		text.append("\n");
+		text.append("**Some formatted text with an embedded anchor to [Header2](#Header-2 \"Header2 Title\")**.");
+		text.append("\n");
 		text.append("* List item 1\n");
 		text.append("* List item 2\n");
 		text.append("\n");
@@ -85,6 +90,7 @@ public class MarkdownLanguageTest extends MarkdownLanguageTestBase {
 		assertTrue(html.contains("<pre><code>Code block"));
 		assertTrue(html.contains("<pre><code>  Fenced Code block (Tildes)"));
 		assertTrue(html.contains("<pre><code>  Fenced Code block (Backticks)"));
+		assertTrue(html.contains("<strong>Some formatted text with an embedded anchor to <a href=\"#Header-2\" title=\"Header2 Title\">Header2</a></strong>"));
 		assertTrue(html.contains("<ul>"));
 		assertTrue(html.contains("<li>List item 1</li>"));
 		assertTrue(html.contains("<li>List item 2</li>"));

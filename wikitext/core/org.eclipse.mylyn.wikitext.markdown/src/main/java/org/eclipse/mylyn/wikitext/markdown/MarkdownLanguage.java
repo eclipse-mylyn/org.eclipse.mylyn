@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Stefan Seelmann - initial API and implementation
+ *     Alexander Nyßen - support for inline links in phrases
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.markdown;
@@ -49,6 +50,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.token.PatternLineBreakReplacemen
  * A markup language implementing Markdown syntax. http://daringfireball.net/projects/markdown/syntax
  *
  * @author Stefan Seelmann
+ * @author Alexander Nyßen
  * @since 1.8
  */
 public class MarkdownLanguage extends AbstractMarkupLanguage {
@@ -61,6 +63,9 @@ public class MarkdownLanguage extends AbstractMarkupLanguage {
 	protected void addStandardTokens(PatternBasedSyntax tokenSyntax) {
 		// HTML entities are preserved
 		tokenSyntax.add(new PreserverHtmlEntityToken());
+		// inline links have to be handled as tokens, as they can be embedded in phrases
+		tokenSyntax.add(new InlineLinkReplacementToken());
+		tokenSyntax.add(new InlineImageReplacementToken());
 		// two or more spaces at end of line force a line break
 		tokenSyntax.add(new PatternLineBreakReplacementToken("( {2,})$")); //$NON-NLS-1$
 	}
@@ -78,23 +83,23 @@ public class MarkdownLanguage extends AbstractMarkupLanguage {
 		phraseModifierSyntax.add(new ReferenceStyleLinkReplacementToken());
 		phraseModifierSyntax.add(new AutomaticLinkReplacementToken());
 		// backslash escaped span elements
-		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("**")); //$NON-NLS-1$ 
-		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("__")); //$NON-NLS-1$ 
-		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("*")); //$NON-NLS-1$ 
-		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("_")); //$NON-NLS-1$ 
-		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("\\")); //$NON-NLS-1$ 
-		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("`")); //$NON-NLS-1$ 
-		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("{")); //$NON-NLS-1$ 
-		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("}")); //$NON-NLS-1$ 
-		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("[")); //$NON-NLS-1$ 
-		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("]")); //$NON-NLS-1$ 
-		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("(")); //$NON-NLS-1$ 
-		phraseModifierSyntax.add(new BackslashEscapePhraseModifier(")")); //$NON-NLS-1$ 
-		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("#")); //$NON-NLS-1$ 
-		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("+")); //$NON-NLS-1$ 
-		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("-")); //$NON-NLS-1$ 
-		phraseModifierSyntax.add(new BackslashEscapePhraseModifier(".")); //$NON-NLS-1$ 
-		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("!")); //$NON-NLS-1$ 
+		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("**")); //$NON-NLS-1$
+		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("__")); //$NON-NLS-1$
+		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("*")); //$NON-NLS-1$
+		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("_")); //$NON-NLS-1$
+		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("\\")); //$NON-NLS-1$
+		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("`")); //$NON-NLS-1$
+		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("{")); //$NON-NLS-1$
+		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("}")); //$NON-NLS-1$
+		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("[")); //$NON-NLS-1$
+		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("]")); //$NON-NLS-1$
+		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("(")); //$NON-NLS-1$
+		phraseModifierSyntax.add(new BackslashEscapePhraseModifier(")")); //$NON-NLS-1$
+		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("#")); //$NON-NLS-1$
+		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("+")); //$NON-NLS-1$
+		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("-")); //$NON-NLS-1$
+		phraseModifierSyntax.add(new BackslashEscapePhraseModifier(".")); //$NON-NLS-1$
+		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("!")); //$NON-NLS-1$
 		// emphasis span elements
 		phraseModifierSyntax.add(new SimplePhraseModifier("``", SpanType.CODE)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new SimplePhraseModifier("`", SpanType.CODE)); //$NON-NLS-1$
