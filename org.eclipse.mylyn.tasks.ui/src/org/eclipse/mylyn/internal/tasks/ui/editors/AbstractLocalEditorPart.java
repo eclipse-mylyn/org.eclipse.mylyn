@@ -23,7 +23,7 @@ import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * Abstract part that can be used on the local task editor
- * 
+ *
  * @author Shawn Minto
  */
 public abstract class AbstractLocalEditorPart extends AbstractFormPart {
@@ -126,6 +126,13 @@ public abstract class AbstractLocalEditorPart extends AbstractFormPart {
 	protected void markDirty(Control control) {
 		control.setData(FLAG_DIRTY, Boolean.TRUE);
 		markDirty();
+	}
+
+	@Override
+	public void markDirty() {
+		if (!isDirty()) {
+			super.markDirty();
+		}
 	}
 
 	protected boolean shouldRefresh(Control control, boolean discardChanges) {
