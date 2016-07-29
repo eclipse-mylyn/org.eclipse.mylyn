@@ -15,6 +15,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -45,8 +47,15 @@ public class ChangeActivityHandleOperation extends TaskListModifyOperation {
 	@Override
 	protected void operations(IProgressMonitor monitor)
 			throws CoreException, InvocationTargetException, InterruptedException {
+		Map<String, String> changedHandles = handles.entrySet()
+				.stream()
+				.filter(e -> !e.getKey().equals(e.getValue()))
+				.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+		if (changedHandles.isEmpty()) {
+			return;
+		}
 		try {
-			refactorMetaContextHandles(handles, monitor);
+			refactorMetaContextHandles(changedHandles, monitor);
 			TasksUiPlugin.getTaskActivityMonitor().reloadActivityTime();
 		} finally {
 			monitor.done();
