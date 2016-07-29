@@ -49,6 +49,9 @@ public class P2TransportService implements ITransportService {
 				clazz = Class.forName("org.eclipse.equinox.internal.p2.repository.Transport"); //$NON-NLS-1$
 				transport = getTransportEclipse37();
 			}
+			if (transport == null) {
+				throw new ClassNotFoundException("Failed to load P2 transport"); //$NON-NLS-1$
+			}
 			downloadMethod = clazz.getDeclaredMethod("download", URI.class, OutputStream.class, IProgressMonitor.class); //$NON-NLS-1$
 			streamMethod = clazz.getDeclaredMethod("stream", URI.class, IProgressMonitor.class); //$NON-NLS-1$
 			getLastModifiedMethod = clazz.getDeclaredMethod("getLastModified", URI.class, IProgressMonitor.class); //$NON-NLS-1$
@@ -61,7 +64,8 @@ public class P2TransportService implements ITransportService {
 
 	private Object getTransportEclipse37() throws Exception {
 		BundleContext bundleContext = Platform.getBundle(Platform.PI_RUNTIME).getBundleContext();
-		ServiceReference serviceReference = bundleContext.getServiceReference("org.eclipse.equinox.p2.core.IProvisioningAgent"); //$NON-NLS-1$
+		ServiceReference<?> serviceReference = bundleContext
+				.getServiceReference("org.eclipse.equinox.p2.core.IProvisioningAgent"); //$NON-NLS-1$
 		if (serviceReference != null) {
 			try {
 				Object agent = bundleContext.getService(serviceReference);
