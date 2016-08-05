@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.ui.editor;
 
+import static java.text.MessageFormat.format;
+
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -288,6 +290,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 				previewTab.dispose();
 				previewTab = null;
 			}
+			logPreviewTabUnavailable(e);
 		}
 
 		tabFolder.addSelectionListener(new SelectionListener() {
@@ -371,6 +374,11 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		}
 
 		return viewer;
+	}
+
+	private void logPreviewTabUnavailable(SWTError e) {
+		WikiTextUiPlugin.getDefault().getLog().log(WikiTextUiPlugin.getDefault()
+				.createStatus(format(Messages.MarkupEditor_previewUnavailable, e.getMessage()), IStatus.ERROR, e));
 	}
 
 	@Override
@@ -912,8 +920,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 			Map<String, HeadingProjectionAnnotation> newProjectionAnnotationById = new HashMap<>();
 
 			if (projectionAnnotationById != null) {
-				Set<HeadingProjectionAnnotation> toDelete = new HashSet<>(
-						projectionAnnotationById.size());
+				Set<HeadingProjectionAnnotation> toDelete = new HashSet<>(projectionAnnotationById.size());
 				Iterator<Entry<HeadingProjectionAnnotation, Position>> newPositionIt = annotationToPosition.entrySet()
 						.iterator();
 				while (newPositionIt.hasNext()) {
