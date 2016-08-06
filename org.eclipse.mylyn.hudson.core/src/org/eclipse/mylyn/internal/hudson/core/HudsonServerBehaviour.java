@@ -306,7 +306,10 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 			build.getArtifacts().add(artifact);
 		}
 		if (hudsonBuild instanceof HudsonModelAbstractBuild) {
-			build.setChangeSet(parseChangeSet(((HudsonModelAbstractBuild) hudsonBuild).getChangeSet()));
+			HudsonScmChangeLogSet changeSet = ((HudsonModelAbstractBuild) hudsonBuild).getChangeSet();
+			if (changeSet != null) {
+				build.setChangeSet(parseChangeSet(changeSet));
+			}
 		}
 		return build;
 	}
