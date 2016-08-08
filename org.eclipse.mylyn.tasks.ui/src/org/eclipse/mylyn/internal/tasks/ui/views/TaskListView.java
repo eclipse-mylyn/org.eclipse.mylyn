@@ -522,9 +522,10 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 		}
 
 		memento.putString(MEMENTO_LINK_WITH_EDITOR, Boolean.toString(linkWithEditor));
-		memento.putString(MEMENTO_PRESENTATION, currentPresentation.getId());
+		memento.putString(MEMENTO_PRESENTATION,
+				currentPresentation != null ? currentPresentation.getId() : CategorizedPresentation.ID);
 
-		if (filteredTree.getTextSearchControl() != null) {
+		if (filteredTree != null && filteredTree.getTextSearchControl() != null) {
 			filteredTree.getTextSearchControl().saveState(memento);
 		}
 	}
