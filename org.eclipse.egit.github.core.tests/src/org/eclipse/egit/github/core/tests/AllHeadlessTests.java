@@ -38,7 +38,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		CreatePayloadTest.class, //
 		DataServiceTest.class, //
 		DateFormatterTest.class, //
-		DateUtilTests.class, //
+		DateUtilTest.class, //
 		DeletePayloadTest.class, //
 		DeployKeyServiceTest.class, //
 		DownloadPayloadTest.class, //
