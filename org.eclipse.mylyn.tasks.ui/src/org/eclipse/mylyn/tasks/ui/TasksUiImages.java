@@ -70,6 +70,11 @@ public class TasksUiImages {
 	public static final ImageDescriptor TASK_ATTACHMENT_PATCH = create(OBJ, "attachment-patch.gif"); //$NON-NLS-1$
 
 	/**
+	 * @since 3.21
+	 */
+	public static final ImageDescriptor TASK_OWNED = create(TOOL, "task-owned.gif"); //$NON-NLS-1$
+
+	/**
 	 * @since 3.7
 	 */
 	public static final ImageDescriptor FILTER_OBSOLETE_SMALL = create(TOOL_SMALL, "file-delete-line-12x12.png"); //$NON-NLS-1$

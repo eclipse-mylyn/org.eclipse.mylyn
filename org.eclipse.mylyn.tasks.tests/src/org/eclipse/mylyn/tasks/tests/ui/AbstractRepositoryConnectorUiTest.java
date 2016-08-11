@@ -11,10 +11,13 @@
 
 package org.eclipse.mylyn.tasks.tests.ui;
 
-import junit.framework.TestCase;
-
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.tasks.core.TaskComment;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -25,6 +28,9 @@ import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
+
+import junit.framework.TestCase;
 
 /**
  * @author Benjamin Muskalla
@@ -41,7 +47,8 @@ public class AbstractRepositoryConnectorUiTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		connectorUi = new MockRepositoryConnectorUi();
+		AbstractRepositoryConnector connector = new MockRepositoryConnector();
+		connectorUi = new MockRepositoryConnectorUi(connector);
 		repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, MockRepositoryConnector.REPOSITORY_URL);
 		task = new MockTask("1");
 		TaskAttributeMapper mapper = new TaskAttributeMapper(repository);
@@ -76,5 +83,48 @@ public class AbstractRepositoryConnectorUiTest extends TestCase {
 		};
 		String replyText = connectorUi.getReplyText(null, task, taskComment, true);
 		assertEquals("(In reply to 1 comment #13)", replyText);
+	}
+
+	public void testGetImageDescriptor() {
+		ITask task = new TaskTask(MockRepositoryConnector.CONNECTOR_KIND, "http://connector.url", "1");
+		task.setOwner("TaskOwner");
+
+		ImageDescriptor desc = connectorUi.getImageDescriptor(task);
+		assertNotNull(desc);
+		assertEquals(TasksUiImages.TASK, desc);
+	}
+
+	public void testGetImageDescriptorOwnedByMe() {
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, "http://connector.url");
+		repository.setCredentials(AuthenticationType.REPOSITORY,
+				new AuthenticationCredentials("RepoUser", "SecretPassword"), false);
+		try {
+			TasksUiPlugin.getRepositoryManager().addRepository(repository);
+			ITask task = new TaskTask(MockRepositoryConnector.CONNECTOR_KIND, "http://connector.url", "1");
+			task.setOwner("RepoUser");
+
+			ImageDescriptor desc = connectorUi.getImageDescriptor(task);
+			assertNotNull(desc);
+			assertEquals(TasksUiImages.TASK_OWNED, desc);
+		} finally {
+			TasksUiPlugin.getRepositoryManager().removeRepository(repository);
+		}
+	}
+
+	public void testGetImageDescriptorOwnedNotByMe() {
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.CONNECTOR_KIND, "http://connector.url");
+		repository.setCredentials(AuthenticationType.REPOSITORY,
+				new AuthenticationCredentials("RepoUser", "SecretPassword"), false);
+		try {
+			TasksUiPlugin.getRepositoryManager().addRepository(repository);
+			ITask task = new TaskTask(MockRepositoryConnector.CONNECTOR_KIND, "http://connector.url", "1");
+			task.setOwner("AnotherRepoUser");
+
+			ImageDescriptor desc = connectorUi.getImageDescriptor(task);
+			assertNotNull(desc);
+			assertEquals(TasksUiImages.TASK, desc);
+		} finally {
+			TasksUiPlugin.getRepositoryManager().removeRepository(repository);
+		}
 	}
 }

@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -33,6 +34,14 @@ import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 public class MockRepositoryConnectorUi extends AbstractRepositoryConnectorUi {
 
 	private static Pattern HYPERLINK_PATTERN = Pattern.compile("(\\d+)");
+
+	public MockRepositoryConnectorUi() {
+		super();
+	}
+
+	public MockRepositoryConnectorUi(AbstractRepositoryConnector connector) {
+		super(connector);
+	}
 
 	@Override
 	public String getConnectorKind() {
