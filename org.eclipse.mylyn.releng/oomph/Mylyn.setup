@@ -80,7 +80,7 @@
   <setupTask
       xsi:type="setup:VariableTask"
       name="eclipse.target.platform"
-      defaultValue="Mars"
+      defaultValue="Neon"
       storageURI="scope://Workspace"/>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -120,9 +120,6 @@
       <requirement
           name="org.eclipse.platform.feature.group"/>
       <requirement
-          name="org.eclipse.jdt.annotation"
-          versionRange="[1.0.1,2.0.0)"/>
-      <requirement
           name="org.mockito"
           versionRange="[1.8.4,2.0.0)"/>
       <requirement
@@ -139,7 +136,7 @@
         <repository
             url="http://download.eclipse.org/eclipse/updates/3.8"/>
         <repository
-            url="http://download.eclipse.org/modeling/emf/cdo/orbit/latest-S/"/>
+            url="http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository/"/>
       </repositoryList>
       <repositoryList
           name="Mars">
@@ -150,9 +147,9 @@
         <repository
             url="http://download.eclipse.org/mylyn/snapshots/weekly"/>
         <repository
-            url="http://download.eclipse.org/modeling/emf/cdo/orbit/latest-R"/>
-        <repository
             url="http://download.eclipse.org/eclipse/updates/3.8"/>
+        <repository
+            url="http://download.eclipse.org/tools/orbit/downloads/drops/R20160221192158/repository/"/>
       </repositoryList>
       <repositoryList
           name="Luna">
@@ -163,9 +160,9 @@
         <repository
             url="http://download.eclipse.org/mylyn/snapshots/weekly"/>
         <repository
-            url="http://download.eclipse.org/modeling/emf/cdo/orbit/latest-R"/>
-        <repository
             url="http://download.eclipse.org/eclipse/updates/3.8"/>
+        <repository
+            url="http://download.eclipse.org/tools/orbit/downloads/drops/R20150124073747/repository/"/>
       </repositoryList>
       <repositoryList
           name="Kepler">
@@ -176,9 +173,9 @@
         <repository
             url="http://download.eclipse.org/mylyn/snapshots/weekly"/>
         <repository
-            url="http://download.eclipse.org/modeling/emf/cdo/orbit/latest-R"/>
-        <repository
             url="http://download.eclipse.org/eclipse/updates/3.8"/>
+        <repository
+            url="http://download.eclipse.org/tools/orbit/downloads/drops/R20140114142710/repository/"/>
       </repositoryList>
       <repositoryList
           name="Juno">
@@ -189,22 +186,9 @@
         <repository
             url="http://download.eclipse.org/mylyn/snapshots/weekly"/>
         <repository
-            url="http://download.eclipse.org/modeling/emf/cdo/orbit/latest-R"/>
-        <repository
             url="http://download.eclipse.org/eclipse/updates/3.8"/>
-      </repositoryList>
-      <repositoryList
-          name="Indigo">
         <repository
-            url="http://download.eclipse.org/releases/indigo"/>
-        <repository
-            url="http://download.eclipse.org/cbi/updates/license"/>
-        <repository
-            url="http://download.eclipse.org/mylyn/snapshots/weekly"/>
-        <repository
-            url="http://download.eclipse.org/modeling/emf/cdo/orbit/latest-R"/>
-        <repository
-            url="http://download.eclipse.org/mylyn/snapshots/jdt-annotation"/>
+            url="http://download.eclipse.org/tools/orbit/downloads/drops/R20130118183705/repository/"/>
       </repositoryList>
     </targlet>
   </setupTask>
@@ -880,14 +864,13 @@
             rootFolder="${git.clone.mylyn.releng.location}"/>
       </targlet>
     </setupTask>
-    <stream
-        name="master"
-        label="Master"/>
     <setupTask
         xsi:type="setup:EclipseIniTask"
         option="-Doomph.redirection.mylyn"
         value="=http://git.eclipse.org/c/mylyn/org.eclipse.mylyn.git/plain/org.eclipse.mylyn.releng/oomph/Mylyn.setup->${git.clone.mylyn.releng.location|uri}/org.eclipse.mylyn.releng/oomph/Mylyn.setup"/>
-
+    <stream
+        name="master"
+        label="Master"/>
   </project>
   <project name="reviews"
       label="Reviews">
