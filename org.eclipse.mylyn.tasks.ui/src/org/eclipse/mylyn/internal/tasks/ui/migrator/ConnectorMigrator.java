@@ -36,6 +36,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -129,6 +130,10 @@ public class ConnectorMigrator {
 		}
 	});
 
+	private boolean anyQueriesMigrated;
+
+	private boolean allQueriesMigrated = true;
+
 	public ConnectorMigrator(Map<String, String> connectorKinds, String explanatoryText, TasksState tasksState,
 			ConnectorMigrationUi migrationUi) {
 		checkArgument(!connectorKinds.isEmpty());
@@ -185,6 +190,7 @@ public class ConnectorMigrator {
 			for (ITask task : tasksToMigrate) {
 				oldTasksStates.put(newRepository, task.getTaskKey(), new OldTaskState(task));
 			}
+			migrateQueries(repository, newRepository, monitor);
 			disconnect(repository);
 			monitor.worked(1);
 		}
@@ -211,6 +217,46 @@ public class ConnectorMigrator {
 		if (!failedValidation.isEmpty()) {
 			getMigrationUi().warnOfValidationFailure(failedValidation);
 		}
+	}
+
+	protected void migrateQueries(TaskRepository repository, TaskRepository newRepository, IProgressMonitor monitor) {
+		Set<RepositoryQuery> queriesForUrl = getTaskList().getRepositoryQueries(repository.getRepositoryUrl());
+		Set<RepositoryQuery> queries = Sets.filter(queriesForUrl, isQueryForConnector(repository.getConnectorKind()));
+		SubMonitor subMonitor = SubMonitor.convert(monitor, Messages.ConnectorMigrator_Migrating_Queries,
+				queries.size());
+		for (RepositoryQuery query : queries) {
+			RepositoryQuery migratedQuery = migrateQuery(query, repository, newRepository, subMonitor);
+			if (migratedQuery != null) {
+				getTaskList().addQuery(migratedQuery);
+				anyQueriesMigrated = true;
+			} else {
+				allQueriesMigrated = false;
+			}
+			subMonitor.worked(1);
+		}
+	}
+
+	/**
+	 * Connectors can override to attempt to automatically migrate queries if possible.
+	 */
+	protected RepositoryQuery migrateQuery(RepositoryQuery query, TaskRepository repository,
+			TaskRepository newRepository, IProgressMonitor monitor) {
+		return null;
+	}
+
+	/**
+	 * @return whether any queries have been migrated for any repository
+	 */
+	protected boolean anyQueriesMigrated() {
+		return anyQueriesMigrated;
+	}
+
+	/**
+	 * @return whether all queries have been migrated for all migrated repositories; returns <code>true</code> if no
+	 *         repositories have yet been migrated
+	 */
+	protected boolean allQueriesMigrated() {
+		return allQueriesMigrated;
 	}
 
 	protected void disconnect(TaskRepository repository) {
@@ -382,10 +428,18 @@ public class ConnectorMigrator {
 	}
 
 	/**
-	 * Connectors may override this method to support migrating tasks that are not contained in any migrated query.
+	 * This method is used to support migrating tasks that are not contained in any migrated query.
 	 */
 	protected TaskData getTaskData(String taskKey, AbstractRepositoryConnector newConnector,
 			TaskRepository newRepository, IProgressMonitor monitor) {
+		try {
+			if (newConnector.supportsSearchByTaskKey(newRepository)) {
+				return newConnector.searchByTaskKey(newRepository, taskKey, monitor);
+			}
+		} catch (CoreException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to migrate task " //$NON-NLS-1$
+					+ taskKey + " for repository " + newRepository.getRepositoryLabel(), e)); //$NON-NLS-1$
+		}
 		return null;
 	}
 

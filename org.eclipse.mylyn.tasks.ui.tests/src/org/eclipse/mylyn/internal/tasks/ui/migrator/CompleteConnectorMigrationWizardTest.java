@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.tasks.ui.migrator;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -60,15 +61,23 @@ public class CompleteConnectorMigrationWizardTest {
 
 	private ConnectorMigrationUi migrationUi;
 
+	private DefaultTasksState tasksState;
+
 	@SuppressWarnings("unchecked")
 	@Before
 	public void setUp() {
-		DefaultTasksState tasksState = new DefaultTasksState();
+		tasksState = new DefaultTasksState();
 		migrationUi = spy(new ConnectorMigrationUi(TaskListView.getFromActivePerspective(),
 				TasksUiPlugin.getBackupManager(), tasksState));
-		doNothing().when(migrationUi).warnOfValidationFailure((List<TaskRepository>) any(List.class));
+		doNothing().when(migrationUi).warnOfValidationFailure(any(List.class));
 		doNothing().when(migrationUi).notifyMigrationComplete();
-		migrator = spy(new ConnectorMigrator(ImmutableMap.of("mock", "mock.new"), "", tasksState, migrationUi));
+		migrator = createMigrator(ImmutableMap.of("mock", "mock.new"));
+	}
+
+	private ConnectorMigrator createMigrator(ImmutableMap<String, String> kinds) {
+		ConnectorMigrator migrator = spy(new ConnectorMigrator(kinds, "", tasksState, migrationUi));
+		when(migrator.allQueriesMigrated()).thenReturn(false);
+		return migrator;
 	}
 
 	@After
@@ -100,11 +109,39 @@ public class CompleteConnectorMigrationWizardTest {
 		assertTrue(control.getChildren()[3] instanceof Tree);
 	}
 
+	@Test
+	public void firstPageSomeQueriesMigrated() {
+		when(migrator.anyQueriesMigrated()).thenReturn(true);
+		IWizardContainer container = createWizard(new CompleteConnectorMigrationWizard(migrator));
+		IWizardPage firstPage = container.getCurrentPage();
+		assertEquals("Have You Recreated Your Queries?", firstPage.getTitle());
+		assertEquals(
+				"Migration will remove your old queries. Some queries could not be automatically migrated. "
+						+ "Please review your old and new queries and edit or create new ones as needed. "
+						+ "Your old and new queries are shown below and you can edit them by double-clicking.",
+				firstPage.getMessage());
+		assertTrue(firstPage.getControl() instanceof Composite);
+		Composite control = (Composite) firstPage.getControl();
+		assertEquals(4, control.getChildren().length);
+		assertTrue(control.getChildren()[0] instanceof Label);
+		assertTrue(control.getChildren()[1] instanceof Label);
+		assertTrue(control.getChildren()[2] instanceof Tree);
+		assertTrue(control.getChildren()[3] instanceof Tree);
+	}
+
+	@Test
+	public void firstPageAllQueriesMigrated() {
+		when(migrator.allQueriesMigrated()).thenReturn(true);
+		IWizardContainer container = createWizard(new CompleteConnectorMigrationWizard(migrator));
+		IWizardPage firstPage = container.getCurrentPage();
+		assertEquals("Complete Migration", firstPage.getTitle());
+		assertNull(firstPage.getNextPage());
+	}
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Test
 	public void queryTreeShowsOnlySelectedConnectors() {
-		migrator = new ConnectorMigrator(ImmutableMap.of("mock", "mock.new", "kind", "kind.new"), "",
-				new DefaultTasksState(), migrationUi);
+		migrator = createMigrator(ImmutableMap.of("mock", "mock.new", "kind", "kind.new"));
 		migrator.setConnectorsToMigrate(ImmutableList.of("kind"));
 		createWizard(new CompleteConnectorMigrationWizard(migrator));
 		ArgumentCaptor<Collection> captor = ArgumentCaptor.forClass(Collection.class);
@@ -112,8 +149,7 @@ public class CompleteConnectorMigrationWizardTest {
 		assertEquals(ImmutableSet.of("kind"), ImmutableSet.copyOf(captor.getAllValues().get(0)));
 		assertEquals(ImmutableSet.of("kind.new"), ImmutableSet.copyOf(captor.getAllValues().get(1)));
 
-		migrator = new ConnectorMigrator(ImmutableMap.of("mock", "mock.new", "kind", "kind.new"), "",
-				new DefaultTasksState(), migrationUi);
+		migrator = createMigrator(ImmutableMap.of("mock", "mock.new", "kind", "kind.new"));
 		migrator.setConnectorsToMigrate(ImmutableList.of("mock", "kind"));
 		createWizard(new CompleteConnectorMigrationWizard(migrator));
 		captor = ArgumentCaptor.forClass(Collection.class);
@@ -137,10 +173,11 @@ public class CompleteConnectorMigrationWizardTest {
 		String text = ((Text) control.getChildren()[0]).getText();
 		assertTrue(text.contains("When you click finish, your context, scheduled dates, private notes and other data "
 				+ "will be migrated to the new connectors. Any tasks in your task list that are not included in the new "
-				+ "queries you created will be downloaded using the new connectors. The old tasks, "
+				+ "queries will be downloaded using the new connectors. The old tasks, "
 				+ "queries, and repositories will be deleted."));
-		assertTrue(text.contains("This may take a while. You should not use the task list or task editor while this is happening. "
-				+ "You will be prompted when migration is complete."));
+		assertTrue(text.contains(
+				"This may take a while. You should not use the task list or task editor while this is happening. "
+						+ "You will be prompted when migration is complete."));
 		assertTrue(text.contains("You will be able to "
 				+ "undo the migration by selecting \"Restore Tasks from History\" in the Task List view menu and choosing the "
 				+ "connector-migration-*.zip file stored in <workspace>/.metadata/.mylyn/backup. This will restore your task "
@@ -196,7 +233,7 @@ public class CompleteConnectorMigrationWizardTest {
 		RepositoryQuery query4 = createQuery(repository2);
 
 		Map<TaskRepository, Set<RepositoryQuery>> map = //
-		new CompleteConnectorMigrationWizard(migrator).createRepositoryQueryMap(ImmutableList.of("mock"));
+				new CompleteConnectorMigrationWizard(migrator).createRepositoryQueryMap(ImmutableList.of("mock"));
 		assertEquals(repositories, map.keySet());
 		assertEquals(ImmutableSet.of(query1, query2), map.get(repository1));
 		assertEquals(ImmutableSet.of(query3, query4), map.get(repository2));
@@ -209,7 +246,7 @@ public class CompleteConnectorMigrationWizardTest {
 		RepositoryQuery query = createQuery(repository);
 
 		Map<TaskRepository, Set<RepositoryQuery>> map = //
-		new CompleteConnectorMigrationWizard(migrator).createRepositoryQueryMap(ImmutableList.of("mock"));
+				new CompleteConnectorMigrationWizard(migrator).createRepositoryQueryMap(ImmutableList.of("mock"));
 		assertEquals(ImmutableSet.of(repository), map.keySet());
 		assertEquals(ImmutableSet.of(query), map.get(repository));
 	}
@@ -222,7 +259,7 @@ public class CompleteConnectorMigrationWizardTest {
 		RepositoryQuery migratedQuery = createQuery(migratedRepository);
 
 		Map<TaskRepository, Set<RepositoryQuery>> map = //
-		new CompleteConnectorMigrationWizard(migrator).createRepositoryQueryMap(ImmutableList.of("mock"));
+				new CompleteConnectorMigrationWizard(migrator).createRepositoryQueryMap(ImmutableList.of("mock"));
 		assertEquals(ImmutableSet.of(repository), map.keySet());
 		assertEquals(ImmutableSet.of(query), map.get(repository));
 
@@ -238,8 +275,8 @@ public class CompleteConnectorMigrationWizardTest {
 	}
 
 	protected RepositoryQuery createQuery(TaskRepository repository) {
-		RepositoryQuery query = new RepositoryQuery(repository.getConnectorKind(), repository.getConnectorKind()
-				+ repository.getRepositoryUrl() + Math.random());
+		RepositoryQuery query = new RepositoryQuery(repository.getConnectorKind(),
+				repository.getConnectorKind() + repository.getRepositoryUrl() + Math.random());
 		query.setRepositoryUrl(repository.getRepositoryUrl());
 		TasksUiPlugin.getTaskList().addQuery(query);
 		return query;

@@ -36,6 +36,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
@@ -46,6 +47,7 @@ import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TaskElementLabelProvider;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
@@ -110,26 +112,33 @@ public class CompleteConnectorMigrationWizard extends Wizard {
 	@Override
 	public void addPages() {
 		setWindowTitle(Messages.CompleteConnectorMigrationWizard_Complete_Connector_Migration);
-		addPage(new WizardPage(Messages.CompleteConnectorMigrationWizard_Migrate_Queries) {
+		if (!migrator.allQueriesMigrated()) {
+			addPage(new WizardPage(Messages.CompleteConnectorMigrationWizard_Migrate_Queries) {
 
-			@Override
-			public void createControl(Composite parent) {
-				setTitle(Messages.CompleteConnectorMigrationWizard_Have_You_Recreated_Your_Queries);
-				setMessage(Messages.CompleteConnectorMigrationWizard_first_page_message, IMessageProvider.INFORMATION);
-				Composite c = new Composite(parent, SWT.NONE);
-				GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(true).applyTo(c);
-				Label oldQueriesLabel = new Label(c, SWT.NONE);
-				oldQueriesLabel.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT));
-				oldQueriesLabel.setText(Messages.CompleteConnectorMigrationWizard_Queries_Using_Old_Connectors);
-				Label newQueriesLabel = new Label(c, SWT.NONE);
-				newQueriesLabel.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT));
-				newQueriesLabel.setText(Messages.CompleteConnectorMigrationWizard_Queries_Using_New_Connectors);
-				createQueryTree(c, createRepositoryQueryMap(migrator.getSelectedConnectors().keySet()));
-				createQueryTree(c, createRepositoryQueryMap(migrator.getSelectedConnectors().values()));
-				setControl(c);
-			}
+				@Override
+				public void createControl(Composite parent) {
+					setTitle(Messages.CompleteConnectorMigrationWizard_Have_You_Recreated_Your_Queries);
+					String message = Messages.CompleteConnectorMigrationWizard_ensure_created_queries;
+					if (migrator.anyQueriesMigrated()) {
+						message = Messages.CompleteConnectorMigrationWizard_Queries_not_migrated;
+					}
+					setMessage(NLS.bind(Messages.CompleteConnectorMigrationWizard_first_page_message, message),
+							IMessageProvider.INFORMATION);
+					Composite c = new Composite(parent, SWT.NONE);
+					GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(true).applyTo(c);
+					Label oldQueriesLabel = new Label(c, SWT.NONE);
+					oldQueriesLabel.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT));
+					oldQueriesLabel.setText(Messages.CompleteConnectorMigrationWizard_Queries_Using_Old_Connectors);
+					Label newQueriesLabel = new Label(c, SWT.NONE);
+					newQueriesLabel.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT));
+					newQueriesLabel.setText(Messages.CompleteConnectorMigrationWizard_Queries_Using_New_Connectors);
+					createQueryTree(c, createRepositoryQueryMap(migrator.getSelectedConnectors().keySet()));
+					createQueryTree(c, createRepositoryQueryMap(migrator.getSelectedConnectors().values()));
+					setControl(c);
+				}
 
-		});
+			});
+		}
 		addPage(new WizardPage(Messages.CompleteConnectorMigrationWizard_Complete_Migration) {
 
 			@Override
@@ -161,6 +170,7 @@ public class CompleteConnectorMigrationWizard extends Wizard {
 		GridDataFactory.fillDefaults().grab(false, true).hint(500, SWT.DEFAULT).applyTo(viewer.getControl());
 		viewer.setContentProvider(new MapContentProvider(queries));
 		viewer.setInput(queries);
+		viewer.setSorter(new ViewerSorter());
 		viewer.setLabelProvider(new TaskElementLabelProvider() {
 			private final TaskRepositoryLabelProvider repositoryLabelProvider = new TaskRepositoryLabelProvider();
 
@@ -206,11 +216,12 @@ public class CompleteConnectorMigrationWizard extends Wizard {
 
 	@Override
 	public boolean performFinish() {
-		Job job = new Job("Migrating Tasks and Private Data") {
+		Job job = new Job(Messages.CompleteConnectorMigrationWizard_Migrating_Tasks_and_Private_Data) {
 
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask("Completing connector migration", IProgressMonitor.UNKNOWN);
+				monitor.beginTask(Messages.CompleteConnectorMigrationWizard_Completing_connector_migration,
+						IProgressMonitor.UNKNOWN);
 				Collection<String> newConnectors = migrator.getSelectedConnectors().values();
 				waitForQueriesToSynchronize(newConnectors, monitor);
 				migrator.migrateTasks(monitor);
@@ -225,7 +236,7 @@ public class CompleteConnectorMigrationWizard extends Wizard {
 	}
 
 	protected void waitForQueriesToSynchronize(Collection<String> newConnectors, IProgressMonitor monitor) {
-		monitor.subTask("Waiting for queries to complete synchronization");
+		monitor.subTask(Messages.CompleteConnectorMigrationWizard_Waiting_for_queries_to_synchronize);
 		Iterable<RepositoryQuery> queries = Iterables.concat(createRepositoryQueryMap(newConnectors).values());
 		long start = System.currentTimeMillis();
 		while (any(queries, isSynchronizing())

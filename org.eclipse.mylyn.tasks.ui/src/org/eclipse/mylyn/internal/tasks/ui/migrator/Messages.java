@@ -20,11 +20,19 @@ public class Messages extends NLS {
 
 	public static String CompleteConnectorMigrationWizard_Complete_Migration;
 
+	public static String CompleteConnectorMigrationWizard_Completing_connector_migration;
+
+	public static String CompleteConnectorMigrationWizard_ensure_created_queries;
+
 	public static String CompleteConnectorMigrationWizard_first_page_message;
 
 	public static String CompleteConnectorMigrationWizard_Have_You_Recreated_Your_Queries;
 
 	public static String CompleteConnectorMigrationWizard_Migrate_Queries;
+
+	public static String CompleteConnectorMigrationWizard_Migrating_Tasks_and_Private_Data;
+
+	public static String CompleteConnectorMigrationWizard_Queries_not_migrated;
 
 	public static String CompleteConnectorMigrationWizard_Queries_Using_New_Connectors;
 
@@ -33,6 +41,8 @@ public class Messages extends NLS {
 	public static String CompleteConnectorMigrationWizard_second_page_message;
 
 	public static String CompleteConnectorMigrationWizard_second_page_text;
+
+	public static String CompleteConnectorMigrationWizard_Waiting_for_queries_to_synchronize;
 
 	public static String ConnectorMigrationWizard_Connector_Migration;
 
@@ -51,6 +61,8 @@ public class Messages extends NLS {
 	public static String ConnectorMigrator_complete_migration_prompt_message;
 
 	public static String ConnectorMigrator_complete_migration_prompt_title;
+
+	public static String ConnectorMigrator_Migrating_Queries;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -22,6 +22,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -167,7 +168,7 @@ public class ConnectorMigratorTest {
 	@SuppressWarnings("unchecked")
 	@Before
 	public void setUp() {
-		doNothing().when(migrationUi).warnOfValidationFailure((List<TaskRepository>) any(List.class));
+		doNothing().when(migrationUi).warnOfValidationFailure(any(List.class));
 		doNothing().when(migrationUi).notifyMigrationComplete();
 	}
 
@@ -393,8 +394,8 @@ public class ConnectorMigratorTest {
 		ConnectorMigrator migrator = spy(createMigrator(true, true, kinds, ImmutableSet.of(repository), false));
 		TaskData taskData2 = new TaskData(mock(TaskAttributeMapper.class), "mock.new", repository.getRepositoryUrl(),
 				"2.migrated");
-		when(migrator.getTaskData(eq("key2"), eq(newConnector), any(TaskRepository.class), any(IProgressMonitor.class)))
-				.thenReturn(taskData2);
+		doReturn(taskData2).when(migrator).getTaskData(eq("key2"), eq(newConnector), any(TaskRepository.class),
+				any(IProgressMonitor.class));
 		ITask task1 = new TaskTask("mock", "http://mock", "1");
 		task1.setTaskKey("key1");
 		((AbstractTask) task1).setSynchronizationState(SynchronizationState.INCOMING_NEW);
@@ -450,12 +451,12 @@ public class ConnectorMigratorTest {
 		ConnectorMigrator migrator = spy(createMigrator(true, true, kinds, ImmutableSet.of(repository), false));
 		TaskData taskData1 = new TaskData(mock(TaskAttributeMapper.class), "mock.new", repository.getRepositoryUrl(),
 				"1");
-		when(migrator.getTaskData(eq("key1"), eq(newConnector), any(TaskRepository.class), any(IProgressMonitor.class)))
-				.thenReturn(taskData1);
+		doReturn(taskData1).when(migrator).getTaskData(eq("key1"), eq(newConnector), any(TaskRepository.class),
+				any(IProgressMonitor.class));
 		TaskData taskData2 = new TaskData(mock(TaskAttributeMapper.class), "mock.new", repository.getRepositoryUrl(),
 				"2");
-		when(migrator.getTaskData(eq("key2"), eq(newConnector), any(TaskRepository.class), any(IProgressMonitor.class)))
-				.thenReturn(taskData2);
+		doReturn(taskData2).when(migrator).getTaskData(eq("key2"), eq(newConnector), any(TaskRepository.class),
+				any(IProgressMonitor.class));
 		ITask task1 = new TaskTask("mock", "http://mock", "1");
 		task1.setTaskKey("key1");
 		((AbstractTask) task1).setSynchronizationState(SynchronizationState.INCOMING_NEW);
@@ -567,6 +568,87 @@ public class ConnectorMigratorTest {
 
 		tasksState.getTaskList().addTask(new TaskTask("mock.new", "http://mock", "3"), category1);
 		assertEquals(expected, migrator.getCategories());
+	}
+
+	@Test
+	public void migrateNoQueries() {
+		ConnectorMigrator migrator = spy(createMigrator(true, true, kinds, ImmutableSet.of(repository), false));
+		RepositoryQuery q1 = createQuery("q1", repository, migrator, false);
+		RepositoryQuery q2 = createQuery("q2", repository, migrator, false);
+
+		migrator.migrateQueries(repository, migratedRepository, new NullProgressMonitor());
+		assertFalse(migrator.anyQueriesMigrated());
+		assertFalse(migrator.allQueriesMigrated());
+	}
+
+	@Test
+	public void migrateSomeQueries() {
+		ConnectorMigrator migrator = spy(createMigrator(true, true, kinds, ImmutableSet.of(repository), false));
+		RepositoryQuery q1 = createQuery("q1", repository, migrator, true);
+		RepositoryQuery q2 = createQuery("q2", repository, migrator, false);
+
+		assertFalse(migrator.anyQueriesMigrated());
+		assertTrue(migrator.allQueriesMigrated());
+
+		migrator.migrateQueries(repository, migratedRepository, new NullProgressMonitor());
+		assertTrue(migrator.anyQueriesMigrated());
+		assertFalse(migrator.allQueriesMigrated());
+	}
+
+	@Test
+	public void migrateAllQueries() {
+		ConnectorMigrator migrator = spy(createMigrator(true, true, kinds, ImmutableSet.of(repository), false));
+		RepositoryQuery q1 = createQuery("q1", repository, migrator, true);
+		RepositoryQuery q2 = createQuery("q2", repository, migrator, true);
+
+		migrator.migrateQueries(repository, migratedRepository, new NullProgressMonitor());
+		assertTrue(migrator.anyQueriesMigrated());
+		assertTrue(migrator.allQueriesMigrated());
+	}
+
+	@Test
+	public void migrateSomeQueriesMultipleRepositories() {
+		TaskRepository otherRepository = new TaskRepository("mock", "http://other-mock");
+		ConnectorMigrator migrator = spy(
+				createMigrator(true, true, kinds, ImmutableSet.of(repository, otherRepository), false));
+		RepositoryQuery q1 = createQuery("q1", repository, migrator, true);
+		RepositoryQuery q2 = createQuery("q2", repository, migrator, true);
+		RepositoryQuery q3 = createQuery("q3", otherRepository, migrator, false);
+		RepositoryQuery q4 = createQuery("q4", otherRepository, migrator, false);
+
+		migrator.migrateQueries(repository, migratedRepository, new NullProgressMonitor());
+		migrator.migrateQueries(otherRepository, migratedRepository, new NullProgressMonitor());
+		assertTrue(migrator.anyQueriesMigrated());
+		assertFalse(migrator.allQueriesMigrated());
+	}
+
+	@Test
+	public void migrateAllQueriesMultipleRepositories() {
+		TaskRepository otherRepository = new TaskRepository("mock", "http://other-mock");
+		ConnectorMigrator migrator = spy(createMigrator(true, true, kinds, ImmutableSet.of(repository), false));
+		RepositoryQuery q1 = createQuery("q1", repository, migrator, true);
+		RepositoryQuery q2 = createQuery("q2", repository, migrator, true);
+		RepositoryQuery q3 = createQuery("q3", otherRepository, migrator, true);
+		RepositoryQuery q4 = createQuery("q4", otherRepository, migrator, true);
+
+		migrator.migrateQueries(repository, migratedRepository, new NullProgressMonitor());
+		migrator.migrateQueries(otherRepository, migratedRepository, new NullProgressMonitor());
+		assertTrue(migrator.anyQueriesMigrated());
+		assertTrue(migrator.allQueriesMigrated());
+	}
+
+	private RepositoryQuery createQuery(String handle, TaskRepository repository, ConnectorMigrator migrator,
+			boolean shouldMigrate) {
+		RepositoryQuery query = new RepositoryQuery(repository.getConnectorKind(), handle);
+		query.setRepositoryUrl(repository.getRepositoryUrl());
+		tasksState.getTaskList().addQuery(query);
+		if (shouldMigrate) {
+			RepositoryQuery migratedQuery = new RepositoryQuery(repository.getConnectorKind(), handle + ".migrated");
+			migratedQuery.setRepositoryUrl(repository.getRepositoryUrl() + "/migrated");
+			when(migrator.migrateQuery(eq(query), any(TaskRepository.class), any(TaskRepository.class),
+					any(IProgressMonitor.class))).thenReturn(migratedQuery);
+		}
+		return query;
 	}
 
 	private AbstractTaskCategory getCategory(AbstractTask newTask) {
