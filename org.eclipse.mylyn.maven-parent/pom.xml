@@ -24,7 +24,7 @@
   </prerequisites>
 
   <properties>
-    <tycho-version>0.15.0</tycho-version>
+    <tycho-version>0.21.0</tycho-version>
 
     <analysis.skip>true</analysis.skip>
 
