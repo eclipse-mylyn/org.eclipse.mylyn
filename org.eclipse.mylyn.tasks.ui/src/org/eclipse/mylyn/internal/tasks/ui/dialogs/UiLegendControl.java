@@ -22,8 +22,6 @@ import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.commons.ui.compatibility.CommonFonts;
 import org.eclipse.mylyn.commons.ui.compatibility.CommonThemes;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.IRepositoryElement;
-import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
@@ -194,6 +192,10 @@ public class UiLegendControl extends Composite {
 		imageLabel = toolkit.createLabel(tasksClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(TasksUiImages.TASK));
 		toolkit.createLabel(tasksClient, Messages.UiLegendControl_Task);
+
+		imageLabel = toolkit.createLabel(tasksClient, ""); //$NON-NLS-1$
+		imageLabel.setImage(CommonImages.getImage(TasksUiImages.TASK_OWNED));
+		toolkit.createLabel(tasksClient, Messages.UiLegendControl_Task_Owned);
 
 		imageLabel = toolkit.createLabel(tasksClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(TasksUiImages.CATEGORY));
@@ -469,11 +471,6 @@ public class UiLegendControl extends Composite {
 				if (elements != null && elements.size() > 0) {
 					legendElements.addAll(elements);
 					addLegendElements(composite.getBody(), connector, elements);
-				} else {
-					List<ITask> items = connectorUi.getLegendItems();
-					if (items != null && !items.isEmpty()) {
-						addLegacyLegendItems(composite, connector, items);
-					}
 				}
 			}
 		}
@@ -515,44 +512,6 @@ public class UiLegendControl extends Composite {
 			imageLabel = toolkit.createLabel(connectorClient, ""); //$NON-NLS-1$
 			imageLabel.setImage(element.getImage());
 			toolkit.createLabel(connectorClient, element.getLabel());
-		}
-
-		if (elements.size() < 4) {
-			imageLabel = toolkit.createLabel(connectorClient, ""); //$NON-NLS-1$
-			toolkit.createLabel(connectorClient, ""); //$NON-NLS-1$
-		}
-	}
-
-	private void addLegacyLegendItems(Composite composite, AbstractRepositoryConnector connector,
-			List<ITask> elements) {
-		Section connectorSection = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR);
-		connectorSection.setLayout(new TableWrapLayout());
-		connectorSection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-
-		String label = connector.getLabel();
-		int parenIndex = label.indexOf('(');
-		if (parenIndex != -1) {
-			label = label.substring(0, parenIndex);
-		}
-		connectorSection.setText(label);
-
-		TableWrapLayout clientLayout = new TableWrapLayout();
-		clientLayout.numColumns = 2;
-		clientLayout.makeColumnsEqualWidth = false;
-		clientLayout.verticalSpacing = 1;
-		clientLayout.topMargin = 1;
-		clientLayout.bottomMargin = 1;
-
-		Composite connectorClient = toolkit.createComposite(connectorSection);
-		connectorClient.setLayout(clientLayout);
-		connectorClient.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-		connectorSection.setClient(connectorClient);
-
-		Label imageLabel;
-		for (IRepositoryElement taskListElement : elements) {
-			imageLabel = toolkit.createLabel(connectorClient, ""); //$NON-NLS-1$
-			imageLabel.setImage(labelProvider.getImage(taskListElement));
-			toolkit.createLabel(connectorClient, taskListElement.getSummary());
 		}
 
 		if (elements.size() < 4) {

@@ -123,6 +123,8 @@ public class Messages extends NLS {
 
 	public static String UiLegendControl_Task;
 
+	public static String UiLegendControl_Task_Owned;
+
 	public static String UiLegendControl_Task_Activity;
 
 	public static String UiLegendControl_Task_Context;
