@@ -42,6 +42,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -196,11 +197,10 @@ public class ConnectorMigratorTest {
 		verify(migrationUi, never()).warnOfValidationFailure((List<TaskRepository>) any());
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void migrateConnectorsValidationFailure() throws Exception {
-		when(newConnector.validateRepository(any(TaskRepository.class), any(IProgressMonitor.class)))
-				.thenThrow(CoreException.class);
+		when(newConnector.validateRepository(any(TaskRepository.class), any(IProgressMonitor.class))).thenThrow(
+				new CoreException(new Status(0, "org.eclipse.mylyn.tasks.ui.tests", 0, "Error", new Exception())));
 		assertMigrateConnectors();
 		verify(migrationUi).warnOfValidationFailure(ImmutableList.of(migratedRepository));
 	}
