@@ -52,9 +52,9 @@ import org.eclipse.mylyn.reviews.core.model.IReviewItemSet;
  */
 public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	/**
-	 * The default value of the '{@link #getCreationDate() <em>Creation Date</em>}' attribute. <!-- begin-user-doc -->
+	 * The default value of the '{@link #getCreationDate() <em>Creation Date</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getCreationDate()
 	 * @generated
 	 * @ordered
@@ -62,9 +62,9 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	protected static final Date CREATION_DATE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getCreationDate() <em>Creation Date</em>}' attribute. <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getCreationDate() <em>Creation Date</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getCreationDate()
 	 * @generated
 	 * @ordered
@@ -92,9 +92,9 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	protected Date modificationDate = MODIFICATION_DATE_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getItems() <em>Items</em>}' containment reference list. <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getItems() <em>Items</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getItems()
 	 * @generated
 	 * @ordered
@@ -102,9 +102,9 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	protected EList<IFileItem> items;
 
 	/**
-	 * The default value of the '{@link #getRevision() <em>Revision</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The default value of the '{@link #getRevision() <em>Revision</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getRevision()
 	 * @generated
 	 * @ordered
@@ -112,9 +112,9 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	protected static final String REVISION_EDEFAULT = ""; //$NON-NLS-1$
 
 	/**
-	 * The cached value of the '{@link #getRevision() <em>Revision</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getRevision() <em>Revision</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getRevision()
 	 * @generated
 	 * @ordered
@@ -132,8 +132,27 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	protected EList<ICommit> parentCommits;
 
 	/**
+	 * The default value of the '{@link #isInNeedOfRetrieval() <em>In Need Of Retrieval</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isInNeedOfRetrieval()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean IN_NEED_OF_RETRIEVAL_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isInNeedOfRetrieval() <em>In Need Of Retrieval</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isInNeedOfRetrieval()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean inNeedOfRetrieval = IN_NEED_OF_RETRIEVAL_EDEFAULT;
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected ReviewItemSet() {
@@ -142,7 +161,6 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -152,7 +170,6 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Date getCreationDate() {
@@ -176,7 +193,6 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Date getModificationDate() {
@@ -200,7 +216,6 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public List<IFileItem> getItems() {
@@ -239,7 +254,6 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getRevision() {
@@ -248,45 +262,38 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setRevision(String newRevision) {
 		String oldRevision = revision;
 		revision = newRevision;
-		if (eNotificationRequired()) {
-			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM_SET__REVISION,
-					oldRevision, revision));
-		}
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM_SET__REVISION, oldRevision,
+					revision));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public IReview getParentReview() {
-		if (eContainerFeatureID() != ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW) {
+		if (eContainerFeatureID() != ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW)
 			return null;
-		}
 		return (IReview) eContainer();
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public IReview basicGetParentReview() {
-		if (eContainerFeatureID() != ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW) {
+		if (eContainerFeatureID() != ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW)
 			return null;
-		}
 		return (IReview) eInternalContainer();
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public NotificationChain basicSetParentReview(IReview newParentReview, NotificationChain msgs) {
@@ -297,36 +304,30 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setParentReview(IReview newParentReview) {
 		if (newParentReview != eInternalContainer()
-				|| (eContainerFeatureID() != ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW && newParentReview != null)) {
-			if (EcoreUtil.isAncestor(this, newParentReview)) {
+				|| (eContainerFeatureID() != ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW
+						&& newParentReview != null)) {
+			if (EcoreUtil.isAncestor(this, newParentReview))
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
-			}
 			NotificationChain msgs = null;
-			if (eInternalContainer() != null) {
+			if (eInternalContainer() != null)
 				msgs = eBasicRemoveFromContainer(msgs);
-			}
-			if (newParentReview != null) {
-				msgs = ((InternalEObject) newParentReview).eInverseAdd(this, ReviewsPackage.REVIEW__SETS,
-						IReview.class, msgs);
-			}
+			if (newParentReview != null)
+				msgs = ((InternalEObject) newParentReview).eInverseAdd(this, ReviewsPackage.REVIEW__SETS, IReview.class,
+						msgs);
 			msgs = basicSetParentReview(newParentReview, msgs);
-			if (msgs != null) {
+			if (msgs != null)
 				msgs.dispatch();
-			}
-		} else if (eNotificationRequired()) {
+		} else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW,
 					newParentReview, newParentReview));
-		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public List<ICommit> getParentCommits() {
@@ -338,8 +339,29 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 	}
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean isInNeedOfRetrieval() {
+		return inNeedOfRetrieval;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setInNeedOfRetrieval(boolean newInNeedOfRetrieval) {
+		boolean oldInNeedOfRetrieval = inNeedOfRetrieval;
+		inNeedOfRetrieval = newInNeedOfRetrieval;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReviewsPackage.REVIEW_ITEM_SET__IN_NEED_OF_RETRIEVAL,
+					oldInNeedOfRetrieval, inNeedOfRetrieval));
+	}
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -349,9 +371,8 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 		case ReviewsPackage.REVIEW_ITEM_SET__ITEMS:
 			return ((InternalEList<InternalEObject>) (InternalEList<?>) getItems()).basicAdd(otherEnd, msgs);
 		case ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW:
-			if (eInternalContainer() != null) {
+			if (eInternalContainer() != null)
 				msgs = eBasicRemoveFromContainer(msgs);
-			}
 			return basicSetParentReview((IReview) otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
@@ -359,7 +380,6 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -377,7 +397,6 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -391,7 +410,6 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -406,19 +424,19 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 		case ReviewsPackage.REVIEW_ITEM_SET__REVISION:
 			return getRevision();
 		case ReviewsPackage.REVIEW_ITEM_SET__PARENT_REVIEW:
-			if (resolve) {
+			if (resolve)
 				return getParentReview();
-			}
 			return basicGetParentReview();
 		case ReviewsPackage.REVIEW_ITEM_SET__PARENT_COMMITS:
 			return getParentCommits();
+		case ReviewsPackage.REVIEW_ITEM_SET__IN_NEED_OF_RETRIEVAL:
+			return isInNeedOfRetrieval();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -445,13 +463,15 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 			getParentCommits().clear();
 			getParentCommits().addAll((Collection<? extends ICommit>) newValue);
 			return;
+		case ReviewsPackage.REVIEW_ITEM_SET__IN_NEED_OF_RETRIEVAL:
+			setInNeedOfRetrieval((Boolean) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -475,13 +495,15 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 		case ReviewsPackage.REVIEW_ITEM_SET__PARENT_COMMITS:
 			getParentCommits().clear();
 			return;
+		case ReviewsPackage.REVIEW_ITEM_SET__IN_NEED_OF_RETRIEVAL:
+			setInNeedOfRetrieval(IN_NEED_OF_RETRIEVAL_EDEFAULT);
+			return;
 		}
 		super.eUnset(featureID);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -491,8 +513,8 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 			return CREATION_DATE_EDEFAULT == null ? creationDate != null : !CREATION_DATE_EDEFAULT.equals(creationDate);
 		case ReviewsPackage.REVIEW_ITEM_SET__MODIFICATION_DATE:
 			return MODIFICATION_DATE_EDEFAULT == null
-			? modificationDate != null
-			: !MODIFICATION_DATE_EDEFAULT.equals(modificationDate);
+					? modificationDate != null
+					: !MODIFICATION_DATE_EDEFAULT.equals(modificationDate);
 		case ReviewsPackage.REVIEW_ITEM_SET__ITEMS:
 			return items != null && !items.isEmpty();
 		case ReviewsPackage.REVIEW_ITEM_SET__REVISION:
@@ -501,13 +523,14 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 			return basicGetParentReview() != null;
 		case ReviewsPackage.REVIEW_ITEM_SET__PARENT_COMMITS:
 			return parentCommits != null && !parentCommits.isEmpty();
+		case ReviewsPackage.REVIEW_ITEM_SET__IN_NEED_OF_RETRIEVAL:
+			return inNeedOfRetrieval != IN_NEED_OF_RETRIEVAL_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -527,7 +550,6 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -547,14 +569,12 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) {
+		if (eIsProxy())
 			return super.toString();
-		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (creationDate: "); //$NON-NLS-1$
@@ -563,6 +583,8 @@ public class ReviewItemSet extends ReviewItem implements IReviewItemSet {
 		result.append(modificationDate);
 		result.append(", revision: "); //$NON-NLS-1$
 		result.append(revision);
+		result.append(", inNeedOfRetrieval: "); //$NON-NLS-1$
+		result.append(inNeedOfRetrieval);
 		result.append(')');
 		return result.toString();
 	}

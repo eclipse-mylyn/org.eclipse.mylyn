@@ -135,10 +135,13 @@ public class ReviewSetContentSection {
 		reviewObserver = new RemoteEmfObserver<IRepository, IReview, String, Date>() {
 			@Override
 			public void updated(boolean modified) {
-				if (reviewConsumer.getRemoteObject() != null && section.isExpanded() && modified) {
-					itemSetConsumer.retrieve(false);
-					updateMessage();
-					createButtons();
+				if (reviewConsumer.getRemoteObject() != null && modified) {
+					if (section.isExpanded()) {
+						itemSetConsumer.retrieve(false);
+						updateMessage();
+						createButtons();
+					}
+					set.setInNeedOfRetrieval(!section.isExpanded());
 				}
 			}
 		};
@@ -148,8 +151,9 @@ public class ReviewSetContentSection {
 			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
 				if (e.getState()) {
-					if (set.getItems().isEmpty()) {
+					if (set.getItems().isEmpty() || set.isInNeedOfRetrieval()) {
 						itemSetConsumer.retrieve(false);
+						set.setInNeedOfRetrieval(false);
 					}
 					updateMessage();
 					createButtons();

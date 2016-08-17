@@ -32,7 +32,7 @@ import org.eclipse.osgi.util.NLS;
  * methods, call {@link RemoteEmfConsumer#retrieve(boolean)} to request an update. Any registered
  * {@link RemoteEmfObserver}s will then receive an {@link RemoteEmfObserver#updated(boolean)} event regardless of
  * whether or not the actual state changed.
- * 
+ *
  * @author Miles Parker
  */
 public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, LocalKeyType, RemoteType, RemoteKeyType, ObjectCurrentType>
@@ -106,7 +106,7 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 	 * Pulls the results from the factory, populating the remote object with the latest state from the remote API.
 	 * Blocks until the remote API call completes. Does nothing if a retrieval is already occurring.
 	 * <em>This method must not be called from the UI thread.</em>
-	 * 
+	 *
 	 * @param force
 	 *            pull from remote even when API doesn't require
 	 * @param monitor
@@ -152,7 +152,7 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 	/**
 	 * Apply the remote object to the local model object.
 	 * <em>This method must be called from the EMF managed (e.g.) UI thread.</em>
-	 * 
+	 *
 	 * @param force
 	 *            apply the changes even when API doesn't require
 	 * @throws CoreException
@@ -168,7 +168,8 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 				modelObject = factory.createModel(parentObject, remoteObject);
 				if (reference.isMany()) {
 					if (modelObject instanceof Collection) {
-						((EList<EObjectType>) parentObject.eGet(reference)).addAll((Collection<EObjectType>) modelObject);
+						((EList<EObjectType>) parentObject.eGet(reference))
+								.addAll((Collection<EObjectType>) modelObject);
 					} else {
 						((EList<EObjectType>) parentObject.eGet(reference)).add(modelObject);
 					}
@@ -199,7 +200,8 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 	/**
 	 * Performs a complete remote request, result application and listener notification against the factory. This is the
 	 * method primary factory consumers will be interested in. The method will asynchronously (as defined by remote
-	 * service implementation):<li>
+	 * service implementation):
+	 * <li>
 	 * <ol>
 	 * Notify any registered {@link RemoteEmfObserver}s that the object is {@link RemoteEmfObserver#updating()}.
 	 * </ol>
@@ -217,7 +219,7 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 	 * object state does not change.)
 	 * </ol>
 	 * </li>
-	 * 
+	 *
 	 * @param force
 	 *            Forces pull and update, even if factory methods
 	 *            {@link AbstractRemoteEmfFactory#isPullNeeded(EObject, Object, Object)} and/or
@@ -237,6 +239,7 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 	@Override
 	public void notifyDone(IStatus status) {
 		retrieving = false;
+		release();
 	}
 
 	/**
@@ -256,11 +259,12 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 
 	/**
 	 * Adds an observer to this consumer. Updates the consumer field for {@link RemoteEmfObserver}s.
-	 * 
+	 *
 	 * @param observer
 	 *            The observer to add
 	 */
-	public void addObserver(RemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType> observer) {
+	public void addObserver(
+			RemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType> observer) {
 		if (observer != null) {
 			RemoteEmfObserver<EParentObjectType, EObjectType, LocalKeyType, ObjectCurrentType> remoteEmfObserver = observer;
 			if (remoteEmfObserver.getConsumer() != null && remoteEmfObserver.getConsumer() != this) {
@@ -273,7 +277,7 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 
 	/**
 	 * Adds an observer to this consumer. Updates the consumer field for {@link RemoteEmfObserver}s.
-	 * 
+	 *
 	 * @param observer
 	 *            The observer to remove
 	 */
@@ -290,7 +294,7 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 	}
 
 	public void release() {
-		if (remoteEmfObservers.size() == 0) {
+		if (remoteEmfObservers.size() == 0 && !retrieving) {
 			dispose();
 		}
 	}
@@ -357,7 +361,7 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 	/**
 	 * Returns the remote object that maps to this consumer's model object, local key or remote key, if one has been
 	 * supplied or obtained using the remote key.
-	 * 
+	 *
 	 * @return
 	 */
 	public RemoteType getRemoteObject() {
@@ -366,7 +370,7 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 
 	/**
 	 * Should only be called by RemoteEmfFactory.
-	 * 
+	 *
 	 * @param remoteObject
 	 */
 	void setRemoteObject(RemoteType remoteObject) {
@@ -379,7 +383,7 @@ public class RemoteEmfConsumer<EParentObjectType extends EObject, EObjectType, L
 
 	/**
 	 * Should only be called by RemoteEmfFactory.
-	 * 
+	 *
 	 * @param remoteObject
 	 */
 	void setRemoteKey(RemoteKeyType remoteKey) {

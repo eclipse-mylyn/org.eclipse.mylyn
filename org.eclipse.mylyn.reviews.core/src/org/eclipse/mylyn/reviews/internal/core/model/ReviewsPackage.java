@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  */
@@ -101,7 +101,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * The feature id for the '<em><b>All Comments</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -145,7 +145,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.core.model.IDated <em>Dated</em>}' class. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.reviews.core.model.IDated
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getDated()
 	 * @generated
@@ -163,7 +163,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * The feature id for the '<em><b>Modification Date</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -198,7 +198,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * The feature id for the '<em><b>Modification Date</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -247,7 +247,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * The feature id for the '<em><b>State</b></em>' containment reference. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -274,7 +274,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * The feature id for the '<em><b>All Comments</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -317,7 +317,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * The feature id for the '<em><b>Modification Date</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -366,7 +366,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * The feature id for the '<em><b>State</b></em>' containment reference. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -435,7 +435,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.core.model.IIndexed <em>Indexed</em>}' class. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.reviews.core.model.IIndexed
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getIndexed()
 	 * @generated
@@ -487,7 +487,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * The feature id for the '<em><b>Modification Date</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -595,7 +595,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * The feature id for the '<em><b>All Comments</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -678,7 +678,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * The number of structural features of the '<em>Review Item</em>' class. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -713,7 +713,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.User <em>User</em>}' class. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.User
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#getUser()
 	 * @generated
@@ -774,7 +774,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * The feature id for the '<em><b>Task Repository Url</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -783,7 +783,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * The feature id for the '<em><b>Task Connector Kind</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -834,7 +834,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * The number of structural features of the '<em>Repository</em>' class. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -853,7 +853,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * The feature id for the '<em><b>All Comments</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -936,7 +936,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * The feature id for the '<em><b>Base</b></em>' containment reference. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -945,7 +945,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * The feature id for the '<em><b>Target</b></em>' containment reference. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -962,7 +962,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * The number of structural features of the '<em>File Item</em>' class. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -981,7 +981,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * The feature id for the '<em><b>All Comments</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1072,7 +1072,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * The feature id for the '<em><b>Modification Date</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1114,13 +1114,22 @@ public class ReviewsPackage extends EPackageImpl {
 	public static final int REVIEW_ITEM_SET__PARENT_COMMITS = REVIEW_ITEM_FEATURE_COUNT + 5;
 
 	/**
+	 * The feature id for the '<em><b>In Need Of Retrieval</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REVIEW_ITEM_SET__IN_NEED_OF_RETRIEVAL = REVIEW_ITEM_FEATURE_COUNT + 6;
+
+	/**
 	 * The number of structural features of the '<em>Review Item Set</em>' class. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	public static final int REVIEW_ITEM_SET_FEATURE_COUNT = REVIEW_ITEM_FEATURE_COUNT + 6;
+	public static final int REVIEW_ITEM_SET_FEATURE_COUNT = REVIEW_ITEM_FEATURE_COUNT + 7;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.mylyn.reviews.internal.core.model.LineLocation
@@ -1203,7 +1212,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * The number of structural features of the '<em>Line Range</em>' class. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1222,7 +1231,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * The feature id for the '<em><b>All Comments</b></em>' reference list. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1353,7 +1362,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * The number of structural features of the '<em>File Version</em>' class. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1415,7 +1424,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' containment reference. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1548,7 +1557,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' containment reference. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
-	 * 
+	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -1824,7 +1833,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * Note: the correct way to create the package is via the static factory method {@link #init init()}, which also
 	 * performs initialization of the package, or returns the registered package, if one already exists. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
 	 * @see org.eclipse.mylyn.reviews.internal.core.model.ReviewsPackage#eNS_URI
 	 * @see #init()
@@ -1859,8 +1868,9 @@ public class ReviewsPackage extends EPackageImpl {
 		}
 
 		// Obtain or create and register package
-		ReviewsPackage theReviewsPackage = (ReviewsPackage) (EPackage.Registry.INSTANCE.get(eNS_URI) instanceof ReviewsPackage
-				? EPackage.Registry.INSTANCE.get(eNS_URI)
+		ReviewsPackage theReviewsPackage = (ReviewsPackage) (EPackage.Registry.INSTANCE
+				.get(eNS_URI) instanceof ReviewsPackage
+						? EPackage.Registry.INSTANCE.get(eNS_URI)
 						: new ReviewsPackage());
 
 		isInited = true;
@@ -1895,7 +1905,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * Returns the meta object for the reference list '
 	 * {@link org.eclipse.mylyn.reviews.core.model.ICommentContainer#getAllComments <em>All Comments</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the reference list '<em>All Comments</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.ICommentContainer#getAllComments()
 	 * @see #getCommentContainer()
@@ -1909,7 +1919,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * Returns the meta object for the containment reference list '
 	 * {@link org.eclipse.mylyn.reviews.core.model.ICommentContainer#getComments <em>Comments</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the containment reference list '<em>Comments</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.ICommentContainer#getComments()
 	 * @see #getCommentContainer()
@@ -1923,7 +1933,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * Returns the meta object for the reference list '
 	 * {@link org.eclipse.mylyn.reviews.core.model.ICommentContainer#getAllDrafts <em>All Drafts</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the reference list '<em>All Drafts</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.ICommentContainer#getAllDrafts()
 	 * @see #getCommentContainer()
@@ -1950,7 +1960,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.IChange <em>Change</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Change</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.IChange
 	 * @generated
@@ -2040,7 +2050,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.IReview <em>Review</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Review</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.IReview
 	 * @generated
@@ -2134,7 +2144,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.IComment <em>Comment</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Comment</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.IComment
 	 * @generated
@@ -2170,8 +2180,8 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.reviews.core.model.IComment#getId
-	 * <em>Id</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.reviews.core.model.IComment#getId <em>Id</em>
+	 * }'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for the attribute '<em>Id</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.IComment#getId()
@@ -2249,9 +2259,8 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the container reference '
-	 * {@link org.eclipse.mylyn.reviews.core.model.IComment#getItem <em>Item</em>}'. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * Returns the meta object for the container reference '{@link org.eclipse.mylyn.reviews.core.model.IComment#getItem
+	 * <em>Item</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for the container reference '<em>Item</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.IComment#getItem()
@@ -2304,7 +2313,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * Returns the meta object for the reference '
 	 * {@link org.eclipse.mylyn.reviews.core.model.IReviewItem#getCommittedBy <em>Committed By</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the reference '<em>Committed By</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.IReviewItem#getCommittedBy()
 	 * @see #getReviewItem()
@@ -2381,7 +2390,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.IUser <em>User</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>User</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.IUser
 	 * @generated
@@ -2445,7 +2454,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * Returns the meta object for the containment reference list '
 	 * {@link org.eclipse.mylyn.reviews.core.model.IRepository#getApprovalTypes <em>Approval Types</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the containment reference list '<em>Approval Types</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.IRepository#getApprovalTypes()
 	 * @see #getRepository()
@@ -2459,7 +2468,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * Returns the meta object for the attribute '
 	 * {@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskRepositoryUrl <em>Task Repository Url</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Task Repository Url</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.IRepository#getTaskRepositoryUrl()
 	 * @see #getRepository()
@@ -2473,7 +2482,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * Returns the meta object for the attribute '
 	 * {@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskConnectorKind <em>Task Connector Kind</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Task Connector Kind</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.IRepository#getTaskConnectorKind()
 	 * @see #getRepository()
@@ -2487,7 +2496,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * Returns the meta object for the attribute '
 	 * {@link org.eclipse.mylyn.reviews.core.model.IRepository#getTaskRepository <em>Task Repository</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Task Repository</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.IRepository#getTaskRepository()
 	 * @see #getRepository()
@@ -2542,7 +2551,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * Returns the meta object for the attribute '
 	 * {@link org.eclipse.mylyn.reviews.core.model.IRepository#getDescription <em>Description</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Description</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.IRepository#getDescription()
 	 * @see #getRepository()
@@ -2593,9 +2602,8 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the container reference '
-	 * {@link org.eclipse.mylyn.reviews.core.model.IFileItem#getSet <em>Set</em>}'. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * Returns the meta object for the container reference '{@link org.eclipse.mylyn.reviews.core.model.IFileItem#getSet
+	 * <em>Set</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for the container reference '<em>Set</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.IFileItem#getSet()
@@ -2633,9 +2641,8 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for the attribute '
-	 * {@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getRevision <em>Revision</em>}'. <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
+	 * Returns the meta object for the attribute '{@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getRevision
+	 * <em>Revision</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for the attribute '<em>Revision</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getRevision()
@@ -2650,7 +2657,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * Returns the meta object for the container reference '
 	 * {@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getParentReview <em>Parent Review</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the container reference '<em>Parent Review</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getParentReview()
 	 * @see #getReviewItemSet()
@@ -2664,7 +2671,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * Returns the meta object for the containment reference list '
 	 * {@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getParentCommits <em>Parent Commits</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the containment reference list '<em>Parent Commits</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.IReviewItemSet#getParentCommits()
 	 * @see #getReviewItemSet()
@@ -2672,6 +2679,20 @@ public class ReviewsPackage extends EPackageImpl {
 	 */
 	public EReference getReviewItemSet_ParentCommits() {
 		return (EReference) reviewItemSetEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link org.eclipse.mylyn.reviews.core.model.IReviewItemSet#isInNeedOfRetrieval <em>In Need Of Retrieval</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>In Need Of Retrieval</em>'.
+	 * @see org.eclipse.mylyn.reviews.core.model.IReviewItemSet#isInNeedOfRetrieval()
+	 * @see #getReviewItemSet()
+	 * @generated
+	 */
+	public EAttribute getReviewItemSet_InNeedOfRetrieval() {
+		return (EAttribute) reviewItemSetEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -2765,8 +2786,8 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.IFileVersion
-	 * <em>File Version</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.IFileVersion <em>File Version</em>
+	 * }'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for class '<em>File Version</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.IFileVersion
@@ -2793,7 +2814,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * Returns the meta object for the attribute '
 	 * {@link org.eclipse.mylyn.reviews.core.model.IFileVersion#getDescription <em>Description</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Description</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.IFileVersion#getDescription()
 	 * @see #getFileVersion()
@@ -2833,7 +2854,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * Returns the meta object for the attribute '
 	 * {@link org.eclipse.mylyn.reviews.core.model.IFileVersion#getFileRevision <em>File Revision</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>File Revision</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.IFileVersion#getFileRevision()
 	 * @see #getFileVersion()
@@ -2847,7 +2868,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * Returns the meta object for the attribute '
 	 * {@link org.eclipse.mylyn.reviews.core.model.IFileVersion#getBinaryContent <em>Binary Content</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Binary Content</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.IFileVersion#getBinaryContent()
 	 * @see #getFileVersion()
@@ -2860,7 +2881,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.IIndexed <em>Indexed</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Indexed</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.IIndexed
 	 * @generated
@@ -2885,7 +2906,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.IDated <em>Dated</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Dated</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.IDated
 	 * @generated
@@ -2911,7 +2932,7 @@ public class ReviewsPackage extends EPackageImpl {
 	 * Returns the meta object for the attribute '
 	 * {@link org.eclipse.mylyn.reviews.core.model.IDated#getModificationDate <em>Modification Date</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the attribute '<em>Modification Date</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.IDated#getModificationDate()
 	 * @see #getDated()
@@ -2987,7 +3008,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the containment reference '{@link java.util.Map.Entry <em>Value</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the containment reference '<em>Value</em>'.
 	 * @see java.util.Map.Entry
 	 * @see #getUserApprovalsMap()
@@ -3102,7 +3123,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link java.util.Map.Entry <em>Review Requirements Map</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Review Requirements Map</em>'.
 	 * @see java.util.Map.Entry
 	 * @generated
@@ -3127,7 +3148,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for the containment reference '{@link java.util.Map.Entry <em>Value</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for the containment reference '<em>Value</em>'.
 	 * @see java.util.Map.Entry
 	 * @see #getReviewRequirementsMap()
@@ -3140,7 +3161,7 @@ public class ReviewsPackage extends EPackageImpl {
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.mylyn.reviews.core.model.ICommit <em>Commit</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @return the meta object for class '<em>Commit</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.ICommit
 	 * @generated
@@ -3188,8 +3209,8 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for enum '{@link org.eclipse.mylyn.reviews.core.model.ReviewStatus
-	 * <em>Review Status</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Returns the meta object for enum '{@link org.eclipse.mylyn.reviews.core.model.ReviewStatus <em>Review Status</em>
+	 * }'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for enum '<em>Review Status</em>'.
 	 * @see org.eclipse.mylyn.reviews.core.model.ReviewStatus
@@ -3200,8 +3221,8 @@ public class ReviewsPackage extends EPackageImpl {
 	}
 
 	/**
-	 * Returns the meta object for data type '{@link org.eclipse.team.core.history.IFileRevision
-	 * <em>IFile Revision</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Returns the meta object for data type '{@link org.eclipse.team.core.history.IFileRevision <em>IFile Revision</em>
+	 * }'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for data type '<em>IFile Revision</em>'.
 	 * @see org.eclipse.team.core.history.IFileRevision
@@ -3322,6 +3343,7 @@ public class ReviewsPackage extends EPackageImpl {
 		createEAttribute(reviewItemSetEClass, REVIEW_ITEM_SET__REVISION);
 		createEReference(reviewItemSetEClass, REVIEW_ITEM_SET__PARENT_REVIEW);
 		createEReference(reviewItemSetEClass, REVIEW_ITEM_SET__PARENT_COMMITS);
+		createEAttribute(reviewItemSetEClass, REVIEW_ITEM_SET__IN_NEED_OF_RETRIEVAL);
 
 		lineLocationEClass = createEClass(LINE_LOCATION);
 		createEReference(lineLocationEClass, LINE_LOCATION__RANGES);
@@ -3426,417 +3448,278 @@ public class ReviewsPackage extends EPackageImpl {
 		fileVersionEClass.getESuperTypes().add(this.getReviewItem());
 
 		// Initialize classes and features; add operations and parameters
-		initEClass(commentContainerEClass, ICommentContainer.class,
-				"CommentContainer", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(
-				getCommentContainer_AllComments(),
-				this.getComment(),
-				null,
-				"allComments", null, 0, -1, ICommentContainer.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getCommentContainer_Comments(),
-				this.getComment(),
-				this.getComment_Item(),
-				"comments", null, 0, -1, ICommentContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getCommentContainer_AllDrafts(),
-				this.getComment(),
-				null,
-				"allDrafts", null, 0, -1, ICommentContainer.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getCommentContainer_Drafts(),
-				this.getComment(),
-				null,
-				"drafts", null, 0, -1, ICommentContainer.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(commentContainerEClass, ICommentContainer.class, "CommentContainer", IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getCommentContainer_AllComments(), this.getComment(), null, "allComments", null, 0, -1, //$NON-NLS-1$
+				ICommentContainer.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEReference(getCommentContainer_Comments(), this.getComment(), this.getComment_Item(), "comments", null, 0, //$NON-NLS-1$
+				-1, ICommentContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
+				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCommentContainer_AllDrafts(), this.getComment(), null, "allDrafts", null, 0, -1, //$NON-NLS-1$
+				ICommentContainer.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEReference(getCommentContainer_Drafts(), this.getComment(), null, "drafts", null, 0, -1, //$NON-NLS-1$
+				ICommentContainer.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 
-		EOperation op = addEOperation(commentContainerEClass, this.getComment(),
-				"createComment", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+		EOperation op = addEOperation(commentContainerEClass, this.getComment(), "createComment", 0, 1, IS_UNIQUE, //$NON-NLS-1$
+				IS_ORDERED);
 		addEParameter(op, this.getLocation(), "initalLocation", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 		addEParameter(op, ecorePackage.getEString(), "commentText", 1, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(changeEClass, IChange.class, "Change", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getChange_Id(),
-				ecorePackage.getEString(),
-				"id", null, 0, 1, IChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getChange_Key(),
-				ecorePackage.getEString(),
-				"key", null, 0, 1, IChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getChange_Subject(),
-				ecorePackage.getEString(),
-				"subject", null, 0, 1, IChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getChange_Message(),
-				ecorePackage.getEString(),
-				"message", null, 0, 1, IChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getChange_Owner(),
-				this.getUser(),
-				null,
-				"owner", null, 0, 1, IChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getChange_State(),
-				this.getReviewStatus(),
-				"state", null, 0, 1, IChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getChange_Id(), ecorePackage.getEString(), "id", null, 0, 1, IChange.class, !IS_TRANSIENT, //$NON-NLS-1$
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getChange_Key(), ecorePackage.getEString(), "key", null, 0, 1, IChange.class, !IS_TRANSIENT, //$NON-NLS-1$
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getChange_Subject(), ecorePackage.getEString(), "subject", null, 0, 1, IChange.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getChange_Message(), ecorePackage.getEString(), "message", null, 0, 1, IChange.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getChange_Owner(), this.getUser(), null, "owner", null, 0, 1, IChange.class, !IS_TRANSIENT, //$NON-NLS-1$
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
+		initEAttribute(getChange_State(), this.getReviewStatus(), "state", null, 0, 1, IChange.class, !IS_TRANSIENT, //$NON-NLS-1$
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(reviewEClass, IReview.class, "Review", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(
-				getReview_Sets(),
-				this.getReviewItemSet(),
-				this.getReviewItemSet_ParentReview(),
-				"sets", null, 0, -1, IReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getReview_Repository(),
-				this.getRepository(),
-				this.getRepository_Reviews(),
-				"repository", null, 1, 1, IReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getReview_Parents(),
-				this.getChange(),
-				null,
-				"parents", null, 0, -1, IReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getReview_Children(),
-				this.getChange(),
-				null,
-				"children", null, 0, -1, IReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getReview_ReviewerApprovals(),
-				this.getUserApprovalsMap(),
-				null,
-				"reviewerApprovals", null, 0, -1, IReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getReview_Requirements(),
-				this.getReviewRequirementsMap(),
-				null,
-				"requirements", null, 0, -1, IReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getReview_Sets(), this.getReviewItemSet(), this.getReviewItemSet_ParentReview(), "sets", null, 0, //$NON-NLS-1$
+				-1, IReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getReview_Repository(), this.getRepository(), this.getRepository_Reviews(), "repository", null, //$NON-NLS-1$
+				1, 1, IReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getReview_Parents(), this.getChange(), null, "parents", null, 0, -1, IReview.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEReference(getReview_Children(), this.getChange(), null, "children", null, 0, -1, IReview.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEReference(getReview_ReviewerApprovals(), this.getUserApprovalsMap(), null, "reviewerApprovals", null, 0, //$NON-NLS-1$
+				-1, IReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getReview_Requirements(), this.getReviewRequirementsMap(), null, "requirements", null, 0, -1, //$NON-NLS-1$
+				IReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(commentEClass, IComment.class, "Comment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(
-				getComment_Author(),
-				this.getUser(),
-				null,
-				"author", null, 1, 1, IComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getComment_Description(),
-				ecorePackage.getEString(),
-				"description", null, 0, 1, IComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getComment_Id(),
-				ecorePackage.getEString(),
-				"id", null, 0, 1, IComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getComment_Replies(),
-				this.getComment(),
-				null,
-				"replies", null, 0, -1, IComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getComment_Draft(),
-				ecorePackage.getEBoolean(),
-				"draft", null, 0, 1, IComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getComment_Locations(),
-				this.getLocation(),
-				null,
-				"locations", null, 0, -1, IComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getComment_Review(),
-				this.getReview(),
-				null,
-				"review", null, 1, 1, IComment.class, IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getComment_Title(),
-				ecorePackage.getEString(),
-				"title", null, 0, 1, IComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getComment_Item(),
-				this.getCommentContainer(),
-				this.getCommentContainer_Comments(),
-				"item", null, 0, 1, IComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getComment_Mine(),
-				ecorePackage.getEBoolean(),
-				"mine", null, 1, 1, IComment.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getComment_Author(), this.getUser(), null, "author", null, 1, 1, IComment.class, !IS_TRANSIENT, //$NON-NLS-1$
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
+		initEAttribute(getComment_Description(), ecorePackage.getEString(), "description", null, 0, 1, IComment.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getComment_Id(), ecorePackage.getEString(), "id", null, 0, 1, IComment.class, !IS_TRANSIENT, //$NON-NLS-1$
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getComment_Replies(), this.getComment(), null, "replies", null, 0, -1, IComment.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getComment_Draft(), ecorePackage.getEBoolean(), "draft", null, 0, 1, IComment.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getComment_Locations(), this.getLocation(), null, "locations", null, 0, -1, IComment.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEReference(getComment_Review(), this.getReview(), null, "review", null, 1, 1, IComment.class, IS_TRANSIENT, //$NON-NLS-1$
+				!IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED,
+				IS_ORDERED);
+		initEAttribute(getComment_Title(), ecorePackage.getEString(), "title", null, 0, 1, IComment.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getComment_Item(), this.getCommentContainer(), this.getCommentContainer_Comments(), "item", null, //$NON-NLS-1$
+				0, 1, IComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getComment_Mine(), ecorePackage.getEBoolean(), "mine", null, 1, 1, IComment.class, IS_TRANSIENT, //$NON-NLS-1$
+				IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 
-		initEClass(reviewItemEClass, IReviewItem.class,
-				"ReviewItem", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(
-				getReviewItem_AddedBy(),
-				this.getUser(),
-				null,
-				"addedBy", null, 1, 1, IReviewItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getReviewItem_CommittedBy(),
-				this.getUser(),
-				null,
-				"committedBy", null, 1, 1, IReviewItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getReviewItem_Review(),
-				this.getReview(),
-				null,
-				"review", null, 1, 1, IReviewItem.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getReviewItem_Name(),
-				ecorePackage.getEString(),
-				"name", null, 0, 1, IReviewItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getReviewItem_Id(),
-				ecorePackage.getEString(),
-				"id", null, 0, 1, IReviewItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getReviewItem_Reference(),
-				ecorePackage.getEString(),
-				"reference", null, 0, 1, IReviewItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(reviewItemEClass, IReviewItem.class, "ReviewItem", IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getReviewItem_AddedBy(), this.getUser(), null, "addedBy", null, 1, 1, IReviewItem.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getReviewItem_CommittedBy(), this.getUser(), null, "committedBy", null, 1, 1, IReviewItem.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getReviewItem_Review(), this.getReview(), null, "review", null, 1, 1, IReviewItem.class, //$NON-NLS-1$
+				IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEAttribute(getReviewItem_Name(), ecorePackage.getEString(), "name", null, 0, 1, IReviewItem.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getReviewItem_Id(), ecorePackage.getEString(), "id", null, 0, 1, IReviewItem.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getReviewItem_Reference(), ecorePackage.getEString(), "reference", null, 0, 1, IReviewItem.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(locationEClass, ILocation.class, "Location", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEClass(locationEClass, ILocation.class, "Location", IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(userEClass, IUser.class, "User", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getUser_Id(),
-				ecorePackage.getEString(),
-				"id", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getUser_Email(),
-				ecorePackage.getEString(),
-				"email", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getUser_DisplayName(),
-				ecorePackage.getEString(),
-				"displayName", null, 0, 1, IUser.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getUser_Id(), ecorePackage.getEString(), "id", null, 0, 1, IUser.class, !IS_TRANSIENT, //$NON-NLS-1$
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getUser_Email(), ecorePackage.getEString(), "email", null, 0, 1, IUser.class, !IS_TRANSIENT, //$NON-NLS-1$
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getUser_DisplayName(), ecorePackage.getEString(), "displayName", null, 0, 1, IUser.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(repositoryEClass, IRepository.class,
-				"Repository", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(
-				getRepository_ApprovalTypes(),
-				this.getApprovalType(),
-				null,
-				"approvalTypes", null, 0, -1, IRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(repositoryEClass, IRepository.class, "Repository", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getRepository_ApprovalTypes(), this.getApprovalType(), null, "approvalTypes", null, 0, -1, //$NON-NLS-1$
+				IRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		getRepository_ApprovalTypes().getEKeys().add(this.getApprovalType_Key());
-		initEAttribute(
-				getRepository_TaskRepositoryUrl(),
-				ecorePackage.getEString(),
-				"taskRepositoryUrl", null, 0, 1, IRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getRepository_TaskConnectorKind(),
-				ecorePackage.getEString(),
-				"taskConnectorKind", null, 0, 1, IRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getRepository_TaskRepository(),
-				this.getTaskRepository(),
-				"taskRepository", null, 0, 1, IRepository.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getRepository_Account(),
-				this.getUser(),
-				null,
-				"account", null, 1, 1, IRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getRepository_Reviews(),
-				this.getReview(),
-				this.getReview_Repository(),
-				"reviews", null, 0, -1, IRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getRepository_TaskRepositoryUrl(), ecorePackage.getEString(), "taskRepositoryUrl", null, 0, 1, //$NON-NLS-1$
+				IRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getRepository_TaskConnectorKind(), ecorePackage.getEString(), "taskConnectorKind", null, 0, 1, //$NON-NLS-1$
+				IRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getRepository_TaskRepository(), this.getTaskRepository(), "taskRepository", null, 0, 1, //$NON-NLS-1$
+				IRepository.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEReference(getRepository_Account(), this.getUser(), null, "account", null, 1, 1, IRepository.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getRepository_Reviews(), this.getReview(), this.getReview_Repository(), "reviews", null, 0, -1, //$NON-NLS-1$
+				IRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		getRepository_Reviews().getEKeys().add(this.getChange_Key());
-		initEReference(
-				getRepository_Users(),
-				this.getUser(),
-				null,
-				"users", null, 0, -1, IRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getRepository_Users(), this.getUser(), null, "users", null, 0, -1, IRepository.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 		getRepository_Users().getEKeys().add(this.getUser_Id());
-		initEAttribute(
-				getRepository_Description(),
-				ecorePackage.getEString(),
-				"description", null, 0, 1, IRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getRepository_Description(), ecorePackage.getEString(), "description", null, 0, 1, //$NON-NLS-1$
+				IRepository.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 
-		initEClass(fileItemEClass, IFileItem.class,
-				"FileItem", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(
-				getFileItem_Base(),
-				this.getFileVersion(),
-				null,
-				"base", null, 0, 1, IFileItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getFileItem_Target(),
-				this.getFileVersion(),
-				null,
-				"target", null, 0, 1, IFileItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getFileItem_Set(),
-				this.getReviewItemSet(),
-				this.getReviewItemSet_Items(),
-				"set", null, 0, 1, IFileItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(fileItemEClass, IFileItem.class, "FileItem", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getFileItem_Base(), this.getFileVersion(), null, "base", null, 0, 1, IFileItem.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEReference(getFileItem_Target(), this.getFileVersion(), null, "target", null, 0, 1, IFileItem.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEReference(getFileItem_Set(), this.getReviewItemSet(), this.getReviewItemSet_Items(), "set", null, 0, 1, //$NON-NLS-1$
+				IFileItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(reviewItemSetEClass, IReviewItemSet.class,
-				"ReviewItemSet", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(
-				getReviewItemSet_Items(),
-				this.getFileItem(),
-				this.getFileItem_Set(),
-				"items", null, 0, -1, IReviewItemSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getReviewItemSet_Revision(),
-				ecorePackage.getEString(),
-				"revision", "", 0, 1, IReviewItemSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-		initEReference(
-				getReviewItemSet_ParentReview(),
-				this.getReview(),
-				this.getReview_Sets(),
-				"parentReview", null, 1, 1, IReviewItemSet.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getReviewItemSet_ParentCommits(),
-				this.getCommit(),
-				null,
-				"parentCommits", null, 0, -1, IReviewItemSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(reviewItemSetEClass, IReviewItemSet.class, "ReviewItemSet", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getReviewItemSet_Items(), this.getFileItem(), this.getFileItem_Set(), "items", null, 0, -1, //$NON-NLS-1$
+				IReviewItemSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getReviewItemSet_Revision(), ecorePackage.getEString(), "revision", "", 0, 1, //$NON-NLS-1$//$NON-NLS-2$
+				IReviewItemSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEReference(getReviewItemSet_ParentReview(), this.getReview(), this.getReview_Sets(), "parentReview", null, //$NON-NLS-1$
+				1, 1, IReviewItemSet.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
+				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getReviewItemSet_ParentCommits(), this.getCommit(), null, "parentCommits", null, 0, -1, //$NON-NLS-1$
+				IReviewItemSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getReviewItemSet_InNeedOfRetrieval(), ecorePackage.getEBoolean(), "inNeedOfRetrieval", "false", //$NON-NLS-1$//$NON-NLS-2$
+				0, 1, IReviewItemSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(lineLocationEClass, ILineLocation.class,
-				"LineLocation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(
-				getLineLocation_Ranges(),
-				this.getLineRange(),
-				null,
-				"ranges", null, 0, -1, ILineLocation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getLineLocation_RangeMin(),
-				ecorePackage.getEInt(),
-				"rangeMin", null, 1, 1, ILineLocation.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getLineLocation_RangeMax(),
-				ecorePackage.getEInt(),
-				"rangeMax", null, 1, 1, ILineLocation.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(lineLocationEClass, ILineLocation.class, "LineLocation", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getLineLocation_Ranges(), this.getLineRange(), null, "ranges", null, 0, -1, ILineLocation.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getLineLocation_RangeMin(), ecorePackage.getEInt(), "rangeMin", null, 1, 1, ILineLocation.class, //$NON-NLS-1$
+				IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEAttribute(getLineLocation_RangeMax(), ecorePackage.getEInt(), "rangeMax", null, 1, 1, ILineLocation.class, //$NON-NLS-1$
+				IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 
-		initEClass(lineRangeEClass, ILineRange.class,
-				"LineRange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getLineRange_Start(),
-				ecorePackage.getEInt(),
-				"start", null, 0, 1, ILineRange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getLineRange_End(),
-				ecorePackage.getEInt(),
-				"end", null, 0, 1, ILineRange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(lineRangeEClass, ILineRange.class, "LineRange", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getLineRange_Start(), ecorePackage.getEInt(), "start", null, 0, 1, ILineRange.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getLineRange_End(), ecorePackage.getEInt(), "end", null, 0, 1, ILineRange.class, !IS_TRANSIENT, //$NON-NLS-1$
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(fileVersionEClass, IFileVersion.class,
-				"FileVersion", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getFileVersion_Path(),
-				ecorePackage.getEString(),
-				"path", null, 0, 1, IFileVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getFileVersion_Description(),
-				ecorePackage.getEString(),
-				"description", null, 0, 1, IFileVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getFileVersion_Content(),
-				ecorePackage.getEString(),
-				"content", null, 0, 1, IFileVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getFileVersion_File(),
-				this.getFileItem(),
-				null,
-				"file", null, 0, 1, IFileVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getFileVersion_FileRevision(),
-				this.getIFileRevision(),
-				"fileRevision", null, 0, 1, IFileVersion.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getFileVersion_BinaryContent(),
-				ecorePackage.getEByteArray(),
-				"binaryContent", null, 0, 1, IFileVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(fileVersionEClass, IFileVersion.class, "FileVersion", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getFileVersion_Path(), ecorePackage.getEString(), "path", null, 0, 1, IFileVersion.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getFileVersion_Description(), ecorePackage.getEString(), "description", null, 0, 1, //$NON-NLS-1$
+				IFileVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getFileVersion_Content(), ecorePackage.getEString(), "content", null, 0, 1, IFileVersion.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getFileVersion_File(), this.getFileItem(), null, "file", null, 0, 1, IFileVersion.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getFileVersion_FileRevision(), this.getIFileRevision(), "fileRevision", null, 0, 1, //$NON-NLS-1$
+				IFileVersion.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				IS_DERIVED, IS_ORDERED);
+		initEAttribute(getFileVersion_BinaryContent(), ecorePackage.getEByteArray(), "binaryContent", null, 0, 1, //$NON-NLS-1$
+				IFileVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 
 		initEClass(indexedEClass, IIndexed.class, "Indexed", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getIndexed_Index(),
-				ecorePackage.getELong(),
-				"index", null, 1, 1, IIndexed.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getIndexed_Index(), ecorePackage.getELong(), "index", null, 1, 1, IIndexed.class, IS_TRANSIENT, //$NON-NLS-1$
+				IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 
 		initEClass(datedEClass, IDated.class, "Dated", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getDated_CreationDate(),
-				ecorePackage.getEDate(),
-				"creationDate", null, 0, 1, IDated.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getDated_ModificationDate(),
-				ecorePackage.getEDate(),
-				"modificationDate", null, 0, 1, IDated.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getDated_CreationDate(), ecorePackage.getEDate(), "creationDate", null, 0, 1, IDated.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDated_ModificationDate(), ecorePackage.getEDate(), "modificationDate", null, 0, 1, //$NON-NLS-1$
+				IDated.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 
-		initEClass(approvalTypeEClass, IApprovalType.class,
-				"ApprovalType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getApprovalType_Key(),
-				ecorePackage.getEString(),
-				"key", null, 1, 1, IApprovalType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getApprovalType_Name(),
-				ecorePackage.getEString(),
-				"name", null, 1, 1, IApprovalType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(approvalTypeEClass, IApprovalType.class, "ApprovalType", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getApprovalType_Key(), ecorePackage.getEString(), "key", null, 1, 1, IApprovalType.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getApprovalType_Name(), ecorePackage.getEString(), "name", null, 1, 1, IApprovalType.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(userApprovalsMapEClass, Map.Entry.class,
-				"UserApprovalsMap", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(
-				getUserApprovalsMap_Key(),
-				this.getUser(),
-				null,
-				"key", null, 1, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getUserApprovalsMap_Value(),
-				this.getReviewerEntry(),
-				null,
-				"value", null, 1, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(userApprovalsMapEClass, Map.Entry.class, "UserApprovalsMap", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				!IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getUserApprovalsMap_Key(), this.getUser(), null, "key", null, 1, 1, Map.Entry.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getUserApprovalsMap_Value(), this.getReviewerEntry(), null, "value", null, 1, 1, Map.Entry.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 
-		initEClass(reviewerEntryEClass, IReviewerEntry.class,
-				"ReviewerEntry", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(
-				getReviewerEntry_Approvals(),
-				this.getApprovalValueMap(),
-				null,
-				"approvals", null, 0, -1, IReviewerEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(reviewerEntryEClass, IReviewerEntry.class, "ReviewerEntry", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getReviewerEntry_Approvals(), this.getApprovalValueMap(), null, "approvals", null, 0, -1, //$NON-NLS-1$
+				IReviewerEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(approvalValueMapEClass, Map.Entry.class,
-				"ApprovalValueMap", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(
-				getApprovalValueMap_Key(),
-				this.getApprovalType(),
-				null,
-				"key", null, 1, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getApprovalValueMap_Value(),
-				ecorePackage.getEIntegerObject(),
-				"value", "0", 1, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+		initEClass(approvalValueMapEClass, Map.Entry.class, "ApprovalValueMap", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				!IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getApprovalValueMap_Key(), this.getApprovalType(), null, "key", null, 1, 1, Map.Entry.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getApprovalValueMap_Value(), ecorePackage.getEIntegerObject(), "value", "0", 1, 1, //$NON-NLS-1$//$NON-NLS-2$
+				Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 
-		initEClass(requirementEntryEClass, IRequirementEntry.class,
-				"RequirementEntry", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getRequirementEntry_Status(),
-				this.getRequirementStatus(),
-				"status", null, 1, 1, IRequirementEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getRequirementEntry_By(),
-				this.getUser(),
-				null,
-				"by", null, 0, 1, IRequirementEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(requirementEntryEClass, IRequirementEntry.class, "RequirementEntry", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getRequirementEntry_Status(), this.getRequirementStatus(), "status", null, 1, 1, //$NON-NLS-1$
+				IRequirementEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEReference(getRequirementEntry_By(), this.getUser(), null, "by", null, 0, 1, IRequirementEntry.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(reviewRequirementsMapEClass, Map.Entry.class,
-				"ReviewRequirementsMap", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(
-				getReviewRequirementsMap_Key(),
-				this.getApprovalType(),
-				null,
-				"key", null, 1, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getReviewRequirementsMap_Value(),
-				this.getRequirementEntry(),
-				null,
-				"value", null, 1, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(reviewRequirementsMapEClass, Map.Entry.class, "ReviewRequirementsMap", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
+				!IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getReviewRequirementsMap_Key(), this.getApprovalType(), null, "key", null, 1, 1, Map.Entry.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getReviewRequirementsMap_Value(), this.getRequirementEntry(), null, "value", null, 1, 1, //$NON-NLS-1$
+				Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(commitEClass, ICommit.class, "Commit", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(
-				getCommit_Id(),
-				ecorePackage.getEString(),
-				"id", null, 1, 1, ICommit.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(
-				getCommit_Subject(),
-				ecorePackage.getEString(),
-				"subject", null, 0, 1, ICommit.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getCommit_Id(), ecorePackage.getEString(), "id", null, 1, 1, ICommit.class, !IS_TRANSIENT, //$NON-NLS-1$
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getCommit_Subject(), ecorePackage.getEString(), "subject", null, 0, 1, ICommit.class, //$NON-NLS-1$
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(requirementStatusEEnum, RequirementStatus.class, "RequirementStatus"); //$NON-NLS-1$
@@ -3856,10 +3739,10 @@ public class ReviewsPackage extends EPackageImpl {
 		addEEnumLiteral(reviewStatusEEnum, ReviewStatus.DRAFT);
 
 		// Initialize data types
-		initEDataType(iFileRevisionEDataType, IFileRevision.class,
-				"IFileRevision", !IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEDataType(taskRepositoryEDataType, TaskRepository.class,
-				"TaskRepository", !IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEDataType(iFileRevisionEDataType, IFileRevision.class, "IFileRevision", !IS_SERIALIZABLE, //$NON-NLS-1$
+				!IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(taskRepositoryEDataType, TaskRepository.class, "TaskRepository", !IS_SERIALIZABLE, //$NON-NLS-1$
+				!IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);
@@ -3899,7 +3782,7 @@ public class ReviewsPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Comments</b></em>' containment reference list feature. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		public static final EReference COMMENT_CONTAINER__COMMENTS = eINSTANCE.getCommentContainer_Comments();
@@ -3915,7 +3798,7 @@ public class ReviewsPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Drafts</b></em>' containment reference list feature. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		public static final EReference COMMENT_CONTAINER__DRAFTS = eINSTANCE.getCommentContainer_Drafts();
@@ -3991,7 +3874,7 @@ public class ReviewsPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Sets</b></em>' containment reference list feature. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		public static final EReference REVIEW__SETS = eINSTANCE.getReview_Sets();
@@ -4007,7 +3890,7 @@ public class ReviewsPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Parents</b></em>' containment reference list feature. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		public static final EReference REVIEW__PARENTS = eINSTANCE.getReview_Parents();
@@ -4015,7 +3898,7 @@ public class ReviewsPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Children</b></em>' containment reference list feature. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		public static final EReference REVIEW__CHILDREN = eINSTANCE.getReview_Children();
@@ -4073,7 +3956,7 @@ public class ReviewsPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Replies</b></em>' containment reference list feature. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		public static final EReference COMMENT__REPLIES = eINSTANCE.getComment_Replies();
@@ -4089,7 +3972,7 @@ public class ReviewsPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Locations</b></em>' containment reference list feature. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		public static final EReference COMMENT__LOCATIONS = eINSTANCE.getComment_Locations();
@@ -4241,7 +4124,7 @@ public class ReviewsPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Approval Types</b></em>' containment reference list feature. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		public static final EReference REPOSITORY__APPROVAL_TYPES = eINSTANCE.getRepository_ApprovalTypes();
@@ -4281,7 +4164,7 @@ public class ReviewsPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Reviews</b></em>' containment reference list feature. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		public static final EReference REPOSITORY__REVIEWS = eINSTANCE.getRepository_Reviews();
@@ -4289,7 +4172,7 @@ public class ReviewsPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Users</b></em>' containment reference list feature. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		public static final EReference REPOSITORY__USERS = eINSTANCE.getRepository_Users();
@@ -4349,7 +4232,7 @@ public class ReviewsPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Items</b></em>' containment reference list feature. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		public static final EReference REVIEW_ITEM_SET__ITEMS = eINSTANCE.getReviewItemSet_Items();
@@ -4365,7 +4248,7 @@ public class ReviewsPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Parent Review</b></em>' container reference feature. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		public static final EReference REVIEW_ITEM_SET__PARENT_REVIEW = eINSTANCE.getReviewItemSet_ParentReview();
@@ -4373,10 +4256,19 @@ public class ReviewsPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Parent Commits</b></em>' containment reference list feature. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		public static final EReference REVIEW_ITEM_SET__PARENT_COMMITS = eINSTANCE.getReviewItemSet_ParentCommits();
+
+		/**
+		 * The meta object literal for the '<em><b>In Need Of Retrieval</b></em>' attribute feature. <!-- begin-user-doc
+		 * --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		public static final EAttribute REVIEW_ITEM_SET__IN_NEED_OF_RETRIEVAL = eINSTANCE
+				.getReviewItemSet_InNeedOfRetrieval();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.mylyn.reviews.internal.core.model.LineLocation
@@ -4391,7 +4283,7 @@ public class ReviewsPackage extends EPackageImpl {
 		/**
 		 * The meta object literal for the '<em><b>Ranges</b></em>' containment reference list feature. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 *
 		 * @generated
 		 */
 		public static final EReference LINE_LOCATION__RANGES = eINSTANCE.getLineLocation_Ranges();
