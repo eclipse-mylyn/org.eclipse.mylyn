@@ -110,7 +110,7 @@ define bugzilla::site (
         notify => Exec["end extract bugzilla $bugzillaDir"],
       }
       exec { "master master git clone $bugzillaDir":
-        command => "git clone http://git.mozilla.org/bugzilla/bugzilla $base/$bugzillaDir",
+        command => "git clone https://github.com/bugzilla/bugzilla $base/$bugzillaDir",
         cwd     => "$base",
         user => "$userOwner",
         timeout => 300,
@@ -120,7 +120,7 @@ define bugzilla::site (
       }
     } else {
       exec { "master $branchTagInternal git clone $bugzillaDir":
-        command => "git clone -b $branch http://git.mozilla.org/bugzilla/bugzilla $base/$bugzillaDir",
+        command => "git clone -b $branch https://github.com/bugzilla/bugzilla $base/$bugzillaDir",
         cwd     => "$base",
         user => "$userOwner",
         timeout => 300,
@@ -150,7 +150,7 @@ define bugzilla::site (
     }
 
     exec { "$branch $branchTagInternal git clone $bugzillaDir":
-      command => "git clone -b $branch http://git.mozilla.org/bugzilla/bugzilla $base/$bugzillaDir",
+      command => "git clone -b $branch https://github.com/bugzilla/bugzilla $base/$bugzillaDir",
       cwd     => "$base",
       user => "$userOwner",
       timeout => 300,
