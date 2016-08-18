@@ -60,6 +60,10 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import com.google.common.collect.ImmutableMap;
+
 /**
  * @author Mik Kersten
  * @author Rob Elves
@@ -74,6 +78,12 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	private static final String BACKSLASH_MULTI = "\\\\"; //$NON-NLS-1$
 
 	private static final int MS_MINUTES = 60 * 1000;
+
+	private static BiMap<String, Integer> SCHEDULE_TIME_MAP = HashBiMap
+			.create(ImmutableMap.of(ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR_THIS_WEEK, 0,
+					ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR_TOMORROW, 1,
+					ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR_TODAY, 2,
+					ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR_NOT_SCHEDULED, 3));
 
 	private Button useRichEditor;
 
@@ -100,6 +110,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	private ExpandableComposite advancedComposite;
 
 	private Combo weekStartCombo;
+
+	private Combo scheduleNewTasksCombo;
 
 	private Button activityTrackingEnabledButton;
 
@@ -177,8 +189,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	}
 
 	private Composite createAdvancedSection(Composite container) {
-		advancedComposite = toolkit.createExpandableComposite(container, ExpandableComposite.COMPACT
-				| ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
+		advancedComposite = toolkit.createExpandableComposite(container,
+				ExpandableComposite.COMPACT | ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
 		advancedComposite.setFont(container.getFont());
 		advancedComposite.setBackground(container.getBackground());
 		advancedComposite.setText(Messages.TasksUiPreferencePage_Advanced);
@@ -205,7 +217,6 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	public boolean performOk() {
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED,
 				notificationEnabledButton.getSelection());
-		//getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_SCHEDULE, backupScheduleTimeText.getText());
 
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH, useRichEditor.getSelection());
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.EDITOR_CURRENT_LINE_HIGHLIGHT,
@@ -223,18 +234,15 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.SHOW_TRIM, showTaskTrimButton.getSelection());
 
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.WEEK_START_DAY, getWeekStartValue());
-		//getPreferenceStore().setValue(TasksUiPreferenceConstants.PLANNING_STARTHOUR, hourDayStart.getSelection());
-//		getPreferenceStore().setValue(TasksUiPreferenceConstants.PLANNING_ENDHOUR, hourDayEnd.getSelection());
-		MonitorUiPlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED, timeoutEnabledButton.getSelection());
-		MonitorUiPlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(ActivityContextManager.ACTIVITY_TIMEOUT, timeoutMinutes.getSelection() * (60 * 1000));
+		getPreferenceStore().setValue(ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR, getScheduleNewTasksValue());
 
-		MonitorUiPlugin.getDefault()
-				.getPreferenceStore()
-				.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED, activityTrackingEnabledButton.getSelection());
+		MonitorUiPlugin.getDefault().getPreferenceStore().setValue(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED,
+				timeoutEnabledButton.getSelection());
+		MonitorUiPlugin.getDefault().getPreferenceStore().setValue(ActivityContextManager.ACTIVITY_TIMEOUT,
+				timeoutMinutes.getSelection() * (60 * 1000));
+
+		MonitorUiPlugin.getDefault().getPreferenceStore().setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED,
+				activityTrackingEnabledButton.getSelection());
 
 		String taskDirectory = taskDirectoryText.getText();
 		taskDirectory = taskDirectory.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
@@ -272,34 +280,35 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		return weekStartCombo.getSelectionIndex() + 1;
 	}
 
+	private String getScheduleNewTasksValue() {
+		int index = scheduleNewTasksCombo.getSelectionIndex();
+		return SCHEDULE_TIME_MAP.inverse().get(index);
+	}
+
 	@Override
 	public boolean performCancel() {
 		taskDirectoryText.setText(TasksUiPlugin.getDefault().getDefaultDataDirectory());
-		notificationEnabledButton.setSelection(getPreferenceStore().getBoolean(
-				ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED));
-		//backupScheduleTimeText.setText(getPreferenceStore().getString(TasksUiPreferenceConstants.BACKUP_SCHEDULE));
-		//backupFolderText.setText(TasksUiPlugin.getDefault().getBackupFolderPath());
+		notificationEnabledButton
+				.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED));
 
 		useRichEditor.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH));
-		editorHighlightsCurrentLine.setSelection(getPreferenceStore().getBoolean(
-				ITasksUiPreferenceConstants.EDITOR_CURRENT_LINE_HIGHLIGHT));
+		editorHighlightsCurrentLine.setSelection(
+				getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.EDITOR_CURRENT_LINE_HIGHLIGHT));
 
-		// synchQueries.setSelection(getPreferenceStore().getBoolean(
-		// TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
-		enableBackgroundSynch.setSelection(getPreferenceStore().getBoolean(
-				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
+		enableBackgroundSynch.setSelection(
+				getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
 		synchScheduleTime.setText(getMinutesString());
 
-		taskListTooltipEnabledButton.setSelection(getPreferenceStore().getBoolean(
-				ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED));
-		taskListServiceMessageEnabledButton.setSelection(getPreferenceStore().getBoolean(
-				ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED));
+		taskListTooltipEnabledButton
+				.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED));
+		taskListServiceMessageEnabledButton
+				.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED));
 		showTaskTrimButton.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.SHOW_TRIM));
 
 		weekStartCombo.select(getPreferenceStore().getInt(ITasksUiPreferenceConstants.WEEK_START_DAY) - 1);
-		//hourDayStart.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_STARTHOUR));
-//		hourDayEnd.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
-//backupNow.setEnabled(true);
+		String scheduleFor = getPreferenceStore().getString(ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR);
+		scheduleNewTasksCombo.select(SCHEDULE_TIME_MAP.getOrDefault(scheduleFor, 0));
+
 		int minutes = MonitorUiPlugin.getDefault().getPreferenceStore().getInt(ActivityContextManager.ACTIVITY_TIMEOUT)
 				/ MS_MINUTES;
 		timeoutMinutes.setSelection(minutes);
@@ -318,39 +327,36 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	public void performDefaults() {
 		super.performDefaults();
 		taskDirectoryText.setText(TasksUiPlugin.getDefault().getDefaultDataDirectory());
-//			backupFolderText.setText(taskDirectory + FORWARDSLASH + ITasksCoreConstants.DEFAULT_BACKUP_FOLDER_NAME);
-//			backupNow.setEnabled(true);
 
-		notificationEnabledButton.setSelection(getPreferenceStore().getDefaultBoolean(
-				ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED));
-		//backupScheduleTimeText.setText(getPreferenceStore().getDefaultString(TasksUiPreferenceConstants.BACKUP_SCHEDULE));
+		notificationEnabledButton.setSelection(
+				getPreferenceStore().getDefaultBoolean(ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED));
 
-		useRichEditor.setSelection(getPreferenceStore().getDefaultBoolean(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH));
-		editorHighlightsCurrentLine.setSelection(getPreferenceStore().getDefaultBoolean(
-				ITasksUiPreferenceConstants.EDITOR_CURRENT_LINE_HIGHLIGHT));
+		useRichEditor
+				.setSelection(getPreferenceStore().getDefaultBoolean(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH));
+		editorHighlightsCurrentLine.setSelection(
+				getPreferenceStore().getDefaultBoolean(ITasksUiPreferenceConstants.EDITOR_CURRENT_LINE_HIGHLIGHT));
 
-		taskListTooltipEnabledButton.setSelection(getPreferenceStore().getDefaultBoolean(
-				ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED));
-		taskListServiceMessageEnabledButton.setSelection(getPreferenceStore().getDefaultBoolean(
-				ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED));
+		taskListTooltipEnabledButton.setSelection(
+				getPreferenceStore().getDefaultBoolean(ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED));
+		taskListServiceMessageEnabledButton.setSelection(
+				getPreferenceStore().getDefaultBoolean(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED));
 		showTaskTrimButton.setSelection(getPreferenceStore().getDefaultBoolean(ITasksUiPreferenceConstants.SHOW_TRIM));
 
-		// synchQueries.setSelection(getPreferenceStore().getDefaultBoolean(
-		// TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
-		enableBackgroundSynch.setSelection(getPreferenceStore().getDefaultBoolean(
-				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
-		// userRefreshOnly.setSelection(!enableBackgroundSynch.getSelection());
-		long miliseconds = getPreferenceStore().getDefaultLong(
-				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
+		enableBackgroundSynch.setSelection(
+				getPreferenceStore().getDefaultBoolean(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
+		long miliseconds = getPreferenceStore()
+				.getDefaultLong(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
 		long minutes = miliseconds / 60000;
 		synchScheduleTime.setText("" + minutes); //$NON-NLS-1$
+
 		weekStartCombo.select(getPreferenceStore().getDefaultInt(ITasksUiPreferenceConstants.WEEK_START_DAY) - 1);
-		//	hourDayStart.setSelection(getPreferenceStore().getDefaultInt(TasksUiPreferenceConstants.PLANNING_STARTHOUR));
-//		hourDayEnd.setSelection(getPreferenceStore().getDefaultInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
+		String defaultScheduleFor = getPreferenceStore()
+				.getDefaultString(ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR);
+		scheduleNewTasksCombo.select(SCHEDULE_TIME_MAP.getOrDefault(defaultScheduleFor, 0));
+
 		int activityTimeoutMinutes = MonitorUiPlugin.getDefault()
 				.getPreferenceStore()
-				.getDefaultInt(ActivityContextManager.ACTIVITY_TIMEOUT)
-				/ MS_MINUTES;
+				.getDefaultInt(ActivityContextManager.ACTIVITY_TIMEOUT) / MS_MINUTES;
 		timeoutMinutes.setSelection(activityTimeoutMinutes);
 		timeoutEnabledButton.setSelection(MonitorUiPlugin.getDefault()
 				.getPreferenceStore()
@@ -377,8 +383,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		enableSynch.setLayout(gridLayout);
 		enableBackgroundSynch = new Button(enableSynch, SWT.CHECK);
 		enableBackgroundSynch.setText(Messages.TasksUiPreferencePage_Synchronize_with_repositories_every);
-		enableBackgroundSynch.setSelection(getPreferenceStore().getBoolean(
-				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
+		enableBackgroundSynch.setSelection(
+				getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
 		enableBackgroundSynch.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				updateRefreshGroupEnablements();
@@ -401,9 +407,10 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		label.setText(Messages.TasksUiPreferencePage_minutes);
 
 		notificationEnabledButton = new Button(group, SWT.CHECK);
-		notificationEnabledButton.setText(Messages.TasksUiPreferencePage_Display_notifications_for_overdue_tasks_and_incoming_changes);
-		notificationEnabledButton.setSelection(getPreferenceStore().getBoolean(
-				ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED));
+		notificationEnabledButton
+				.setText(Messages.TasksUiPreferencePage_Display_notifications_for_overdue_tasks_and_incoming_changes);
+		notificationEnabledButton
+				.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED));
 
 	}
 
@@ -422,8 +429,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 		editorHighlightsCurrentLine = new Button(container, SWT.CHECK);
 		editorHighlightsCurrentLine.setText(Messages.TasksUiPreferencePage_highlight_current_line);
-		editorHighlightsCurrentLine.setSelection(getPreferenceStore().getBoolean(
-				ITasksUiPreferenceConstants.EDITOR_CURRENT_LINE_HIGHLIGHT));
+		editorHighlightsCurrentLine.setSelection(
+				getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.EDITOR_CURRENT_LINE_HIGHLIGHT));
 	}
 
 	private void createTaskDataControl(Composite parent) {
@@ -477,16 +484,12 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	private void createSchedulingGroup(Composite container) {
 		Group group = new Group(container, SWT.SHADOW_ETCHED_IN);
 		group.setText(Messages.TasksUiPreferencePage_Scheduling);
-		group.setLayout(new GridLayout(5, false));
+		group.setLayout(new GridLayout(2, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		Label weekStartLabel = new Label(group, SWT.NONE);
 		weekStartLabel.setText(Messages.TasksUiPreferencePage_Week_Start);
 		weekStartCombo = new Combo(group, SWT.READ_ONLY);
-		// Note: Calendar.SUNDAY = 1
-//		weekStartCombo.add(LABEL_SUNDAY);
-//		weekStartCombo.add(LABEL_MONDAY);
-//		weekStartCombo.add(LABEL_SATURDAY);
 		weekStartCombo.add(CommonMessages.Sunday);
 		weekStartCombo.add(CommonMessages.Monday);
 		weekStartCombo.add(CommonMessages.Tuesday);
@@ -496,6 +499,15 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		weekStartCombo.add(CommonMessages.Saturday);
 		weekStartCombo.select(getPreferenceStore().getInt(ITasksUiPreferenceConstants.WEEK_START_DAY) - 1);
 
+		Label scheduleNewTasksLabel = new Label(group, SWT.NONE);
+		scheduleNewTasksLabel.setText(Messages.TasksUiPreferencePage_ScheduleNewTasks);
+		scheduleNewTasksCombo = new Combo(group, SWT.READ_ONLY);
+		scheduleNewTasksCombo.add(Messages.TasksUiPreferencePage_ThisWeek);
+		scheduleNewTasksCombo.add(Messages.TasksUiPreferencePage_Tomorrow);
+		scheduleNewTasksCombo.add(Messages.TasksUiPreferencePage_Today);
+		scheduleNewTasksCombo.add(Messages.TasksUiPreferencePage_Unscheduled);
+		String scheduleFor = getPreferenceStore().getString(ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR);
+		scheduleNewTasksCombo.select(SCHEDULE_TIME_MAP.getOrDefault(scheduleFor, 0));
 	}
 
 	private void createTaskNavigationGroup(Composite parent) {
@@ -518,13 +530,14 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 		taskListTooltipEnabledButton = new Button(group, SWT.CHECK);
 		taskListTooltipEnabledButton.setText(Messages.TasksUiPreferencePage_Show_tooltip_on_hover_Label);
-		taskListTooltipEnabledButton.setSelection(getPreferenceStore().getBoolean(
-				ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED));
+		taskListTooltipEnabledButton
+				.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED));
 
 		taskListServiceMessageEnabledButton = new Button(group, SWT.CHECK);
-		taskListServiceMessageEnabledButton.setText(Messages.TasksUiPreferencePage_Notification_for_new_connectors_available_Label);
-		taskListServiceMessageEnabledButton.setSelection(getPreferenceStore().getBoolean(
-				ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED));
+		taskListServiceMessageEnabledButton
+				.setText(Messages.TasksUiPreferencePage_Notification_for_new_connectors_available_Label);
+		taskListServiceMessageEnabledButton
+				.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED));
 	}
 
 	private Group createTaskActivityGroup(Composite container) {
@@ -574,8 +587,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		timeoutMinutes.setMinimum(1);
 		long minutes = MonitorUiPlugin.getDefault()
 				.getPreferenceStore()
-				.getLong(ActivityContextManager.ACTIVITY_TIMEOUT)
-				/ MS_MINUTES;
+				.getLong(ActivityContextManager.ACTIVITY_TIMEOUT) / MS_MINUTES;
 		timeoutMinutes.setSelection((int) minutes);
 		timeoutMinutes.addSelectionListener(new SelectionAdapter() {
 
@@ -626,8 +638,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	}
 
 	private String getMinutesString() {
-		long miliseconds = getPreferenceStore().getLong(
-				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
+		long miliseconds = getPreferenceStore()
+				.getLong(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
 		long minutes = miliseconds / 60000;
 		return "" + minutes; //$NON-NLS-1$
 	}
@@ -640,10 +652,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 			return false;
 		}
 
-		MessageDialog dialogConfirm = new MessageDialog(
-				null,
-				Messages.TasksUiPreferencePage_Confirm_Task_List_data_directory_change,
-				null,
+		MessageDialog dialogConfirm = new MessageDialog(null,
+				Messages.TasksUiPreferencePage_Confirm_Task_List_data_directory_change, null,
 				Messages.TasksUiPreferencePage_A_new_empty_Task_List_will_be_created_in_the_chosen_directory_if_one_does_not_already_exists,
 				MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL },
 				IDialogConstants.CANCEL_ID);

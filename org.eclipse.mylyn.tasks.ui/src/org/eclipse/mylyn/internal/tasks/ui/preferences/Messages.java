@@ -69,6 +69,8 @@ public class Messages extends NLS {
 
 	public static String TasksUiPreferencePage_Rich_Editor__Recommended_;
 
+	public static String TasksUiPreferencePage_ScheduleNewTasks;
+
 	public static String TasksUiPreferencePage_Scheduling;
 
 	public static String TasksUiPreferencePage_See_X_for_configuring_Task_List_colors;
@@ -101,7 +103,15 @@ public class Messages extends NLS {
 
 	public static String TasksUiPreferencePage_Task_Timing;
 
+	public static String TasksUiPreferencePage_ThisWeek;
+
+	public static String TasksUiPreferencePage_Today;
+
+	public static String TasksUiPreferencePage_Tomorrow;
+
 	public static String TasksUiPreferencePage_Track_Time_Spent;
+
+	public static String TasksUiPreferencePage_Unscheduled;
 
 	public static String TasksUiPreferencePage_Use_the_Restore_dialog_to_recover_missing_tasks;
 

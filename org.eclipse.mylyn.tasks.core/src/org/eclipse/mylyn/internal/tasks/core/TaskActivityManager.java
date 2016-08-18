@@ -867,10 +867,9 @@ public class TaskActivityManager implements ITaskActivityManager2 {
 		return false;
 	}
 
-	public void scheduleNewTask(AbstractTask newTask) {
+	public void scheduleNewTask(AbstractTask newTask, DateRange scheduleFor) {
 		newTask.setCreationDate(new Date());
-		// TODO: set based on preference? see bug#158461
-		setScheduledFor(newTask, TaskActivityUtil.getCurrentWeek());
+		setScheduledFor(newTask, scheduleFor);
 	}
 
 	public boolean isDueThisWeek(ITask task) {

@@ -11,12 +11,11 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
-import junit.framework.TestCase;
-
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
@@ -29,6 +28,8 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+
+import junit.framework.TestCase;
 
 /**
  * @author Mik Kersten
@@ -44,7 +45,7 @@ public class NewTaskWizardRepositorySelectionTest extends TestCase {
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		TaskListView view = (TaskListView) TasksUiUtil.openTasksViewInActivePerspective();
 		MockTask mockTask = new MockTask("mock.task");
-		TasksUiPlugin.getTaskActivityManager().scheduleNewTask(mockTask);
+		TasksUiPlugin.getTaskActivityManager().scheduleNewTask(mockTask, TaskActivityUtil.getCurrentWeek());
 		TasksUiPlugin.getTaskList().addTask(mockTask);
 
 		view.setFocusedMode(true);

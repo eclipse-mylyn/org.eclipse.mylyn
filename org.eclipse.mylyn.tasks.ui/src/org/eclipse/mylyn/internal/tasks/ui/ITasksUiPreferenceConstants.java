@@ -64,6 +64,16 @@ public interface ITasksUiPreferenceConstants {
 
 	public static final String WEEK_START_DAY = "org.eclipse.mylyn.tasks.ui.planning.week.start.day"; //$NON-NLS-1$
 
+	public static final String SCHEDULE_NEW_TASKS_FOR = "org.eclipse.mylyn.tasks.ui.planning.schedule.new.tasks.for"; //$NON-NLS-1$
+
+	public static final String SCHEDULE_NEW_TASKS_FOR_THIS_WEEK = "org.eclipse.mylyn.tasks.ui.planning.schedule.new.tasks.for.this.week"; //$NON-NLS-1$
+
+	public static final String SCHEDULE_NEW_TASKS_FOR_TOMORROW = "org.eclipse.mylyn.tasks.ui.planning.schedule.new.tasks.for.tomorrow"; //$NON-NLS-1$
+
+	public static final String SCHEDULE_NEW_TASKS_FOR_TODAY = "org.eclipse.mylyn.tasks.ui.planning.schedule.new.tasks.for.today"; //$NON-NLS-1$
+
+	public static final String SCHEDULE_NEW_TASKS_FOR_NOT_SCHEDULED = "org.eclipse.mylyn.tasks.ui.planning.schedule.new.tasks.for.unscheduled"; //$NON-NLS-1$
+
 	public static final String PLANNING_ENDHOUR = "org.eclipse.mylyn.tasks.ui.planning.end.hour"; //$NON-NLS-1$
 
 	public static final String EDITOR_TASKS_RICH = "org.eclipse.mylyn.tasks.ui.reporting.open.editor"; //$NON-NLS-1$
@@ -86,7 +96,7 @@ public interface ITasksUiPreferenceConstants {
 
 	/**
 	 * Local subtasks are now enabled by default.
-	 * 
+	 *
 	 * @deprecated not used anymore
 	 */
 	// TODO 4.0 remove

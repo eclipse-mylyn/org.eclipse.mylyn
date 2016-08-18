@@ -69,12 +69,14 @@ import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.ITaskJobFactory;
 import org.eclipse.mylyn.internal.tasks.core.ITaskList;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
@@ -647,7 +649,7 @@ public class TasksUiInternal {
 		LocalTask newTask = new LocalTask("" + taskList.getNextLocalTaskId(), summary); //$NON-NLS-1$
 		newTask.setPriority(PriorityLevel.P3.toString());
 		TasksUiInternal.getTaskList().addTask(newTask);
-		TasksUiPlugin.getTaskActivityManager().scheduleNewTask(newTask);
+		scheduleNewTask(newTask);
 
 		TaskListView view = TaskListView.getFromActivePerspective();
 		AbstractTaskCategory category = getSelectedCategory(view);
@@ -658,6 +660,33 @@ public class TasksUiInternal {
 		}
 		taskList.addTask(newTask, category);
 		return newTask;
+	}
+
+	/**
+	 * Schedules the new task according to the Tasks UI preferences
+	 *
+	 * @param newTask
+	 *            the task to schedule
+	 */
+	public static void scheduleNewTask(LocalTask newTask) {
+		IPreferenceStore preferenceStore = TasksUiPlugin.getDefault().getPreferenceStore();
+		String preference = preferenceStore.getString(ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR);
+		DateRange dateRange = getNewTaskScheduleDateRange(preference);
+		TasksUiPlugin.getTaskActivityManager().scheduleNewTask(newTask, dateRange);
+	}
+
+	private static DateRange getNewTaskScheduleDateRange(String preference) {
+		switch (preference) {
+		case ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR_NOT_SCHEDULED:
+			return null;
+		case ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR_TODAY:
+			return TaskActivityUtil.getCurrentWeek().getToday();
+		case ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR_TOMORROW:
+			return TaskActivityUtil.getCurrentWeek().getToday().next();
+		case ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR_THIS_WEEK:
+			return TaskActivityUtil.getCurrentWeek();
+		}
+		return TaskActivityUtil.getCurrentWeek();
 	}
 
 	public static AbstractTaskCategory getSelectedCategory(TaskListView view) {
@@ -1521,9 +1550,9 @@ public class TasksUiInternal {
 		showError = (query.getLastSynchronizedTimeStamp().equals("<never>") //$NON-NLS-1$
 				&& ((RepositoryStatus.ERROR_IO == query.getStatus().getCode() && exception != null
 						&& exception instanceof SocketTimeoutException) || //
-		// only when we change SocketTimeout or Eclipse.org change there timeout for long running Queries
-		(RepositoryStatus.ERROR_NETWORK) == query.getStatus().getCode()
-				&& query.getStatus().getMessage().equals("Http error: Internal Server Error"))); //$NON-NLS-1$
+				// only when we change SocketTimeout or Eclipse.org change there timeout for long running Queries
+						(RepositoryStatus.ERROR_NETWORK) == query.getStatus().getCode()
+								&& query.getStatus().getMessage().equals("Http error: Internal Server Error"))); //$NON-NLS-1$
 		if (showError) {
 			image = CommonImages.OVERLAY_SYNC_ERROR;
 		} else {

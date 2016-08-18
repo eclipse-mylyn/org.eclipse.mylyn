@@ -79,14 +79,14 @@ public class NewSubTaskAction extends BaseSelectionListenerAction implements IVi
 			LocalTask newTask = new LocalTask("" + taskList.getNextLocalTaskId(), //$NON-NLS-1$
 					LocalRepositoryConnector.DEFAULT_SUMMARY);
 			newTask.setPriority(PriorityLevel.P3.toString());
-			TasksUiPlugin.getTaskActivityManager().scheduleNewTask(newTask);
+			TasksUiInternal.scheduleNewTask(newTask);
 			taskList.addTask(newTask, selectedTask);
 			TasksUiUtil.openTask(newTask);
 			return;
 		}
 
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				selectedTask.getConnectorKind());
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+				.getRepositoryConnector(selectedTask.getConnectorKind());
 		IWizard wizard = getNewSubTaskWizard();
 		if (wizard != null) {
 			WizardDialog dialog = new WizardDialog(WorkbenchUtil.getShell(), wizard);
@@ -100,9 +100,9 @@ public class NewSubTaskAction extends BaseSelectionListenerAction implements IVi
 				TasksUiInternal.createAndOpenNewTask(taskData);
 			} catch (CoreException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to open new sub task", e)); //$NON-NLS-1$
-				TasksUiInternal.displayStatus(Messages.NewSubTaskAction_Unable_to_create_subtask, new Status(
-						IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						Messages.NewSubTaskAction_Failed_to_create_new_sub_task_ + e.getMessage()));
+				TasksUiInternal.displayStatus(Messages.NewSubTaskAction_Unable_to_create_subtask,
+						new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								Messages.NewSubTaskAction_Failed_to_create_new_sub_task_ + e.getMessage()));
 			}
 		}
 	}
@@ -129,9 +129,9 @@ public class NewSubTaskAction extends BaseSelectionListenerAction implements IVi
 					"Could not retrieve task data for task:" + selectedTask.getUrl(), e)); //$NON-NLS-1$
 		}
 		if (parentTaskData == null) {
-			TasksUiInternal.displayStatus(Messages.NewSubTaskAction_Unable_to_create_subtask, new Status(
-					IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-					Messages.NewSubTaskAction_Could_not_retrieve_task_data_for_task_ + selectedTask.getUrl()));
+			TasksUiInternal.displayStatus(Messages.NewSubTaskAction_Unable_to_create_subtask,
+					new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+							Messages.NewSubTaskAction_Could_not_retrieve_task_data_for_task_ + selectedTask.getUrl()));
 			return null;
 		}
 
@@ -165,9 +165,9 @@ public class NewSubTaskAction extends BaseSelectionListenerAction implements IVi
 			// open editor
 			return taskData;
 		} else {
-			TasksUiInternal.displayStatus(Messages.NewSubTaskAction_Unable_to_create_subtask, new Status(IStatus.INFO,
-					TasksUiPlugin.ID_PLUGIN,
-					Messages.NewSubTaskAction_The_connector_does_not_support_creating_subtasks_for_this_task));
+			TasksUiInternal.displayStatus(Messages.NewSubTaskAction_Unable_to_create_subtask,
+					new Status(IStatus.INFO, TasksUiPlugin.ID_PLUGIN,
+							Messages.NewSubTaskAction_The_connector_does_not_support_creating_subtasks_for_this_task));
 		}
 		return null;
 	}
@@ -188,12 +188,12 @@ public class NewSubTaskAction extends BaseSelectionListenerAction implements IVi
 				selectedTask = (AbstractTask) selectedObject;
 			} else if (selectedObject instanceof ITask) {
 				selectedTask = (AbstractTask) selectedObject;
-				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-						selectedTask.getConnectorKind());
+				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+						.getRepositoryConnector(selectedTask.getConnectorKind());
 				AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 
-				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-						selectedTask.getRepositoryUrl());
+				TaskRepository repository = TasksUiPlugin.getRepositoryManager()
+						.getRepository(selectedTask.getRepositoryUrl());
 				if (taskDataHandler == null || !taskDataHandler.canInitializeSubTaskData(repository, selectedTask)) {
 					selectedTask = null;
 				}

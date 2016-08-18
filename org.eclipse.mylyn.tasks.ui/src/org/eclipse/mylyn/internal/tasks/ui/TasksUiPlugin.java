@@ -128,7 +128,7 @@ import org.osgi.util.tracker.ServiceTracker;
 
 /**
  * Main entry point for the Tasks UI.
- * 
+ *
  * @author Mik Kersten
  * @since 3.0
  */
@@ -198,7 +198,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private final List<AbstractSearchHandler> searchHandlers = new ArrayList<AbstractSearchHandler>();
 
-	private static final boolean DEBUG_HTTPCLIENT = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.mylyn.tasks.ui/debug/httpclient")); //$NON-NLS-1$ //$NON-NLS-2$
+	private static final boolean DEBUG_HTTPCLIENT = "true" //$NON-NLS-1$
+			.equalsIgnoreCase(Platform.getDebugOption("org.eclipse.mylyn.tasks.ui/debug/httpclient")); //$NON-NLS-1$
 
 	// XXX reconsider if this is necessary
 	public static class TasksUiStartup implements IStartup {
@@ -383,8 +384,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 				//taskActivityMonitor.reloadActivityTime();
 			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Could not initialize task activity", t)); //$NON-NLS-1$
+				StatusHandler.log(
+						new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not initialize task activity", t)); //$NON-NLS-1$
 			}
 			monitor.worked(1);
 
@@ -427,7 +428,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 							@Override
 							public boolean openLink(String link) {
 								if (HIDE_SUBTASKS.equals(link)) {
-									getPreferenceStore().setValue(ITasksUiPreferenceConstants.FILTER_NON_MATCHING, true);
+									getPreferenceStore().setValue(ITasksUiPreferenceConstants.FILTER_NON_MATCHING,
+											true);
 									savePluginPreferences();
 									return true;
 								}
@@ -436,8 +438,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 						};
 						message.setImage(Dialog.DLG_IMG_MESSAGE_INFO);
 						message.setTitle(Messages.TasksUiPlugin_Hide_Irrelevant_Subtasks);
-						message.setDescription(NLS.bind(Messages.TasksUiPlugin_Hide_Irrelevant_Subtasks_Message,
-								HIDE_SUBTASKS));
+						message.setDescription(
+								NLS.bind(Messages.TasksUiPlugin_Hide_Irrelevant_Subtasks_Message, HIDE_SUBTASKS));
 						view.getServiceMessageControl().setMessage(message);
 					}
 				}
@@ -624,8 +626,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			// make this available early for clients that are not initialized through tasks ui but need access
 			taskListNotificationManager = new TaskListNotificationManager();
 
-			String lastMod = getPreferenceStore().getString(
-					ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_LAST_MODIFIED);
+			String lastMod = getPreferenceStore()
+					.getString(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_LAST_MODIFIED);
 			String etag = getPreferenceStore().getString(ITasksUiPreferenceConstants.LAST_SERVICE_MESSAGE_ETAG);
 			String serviceMessageUrl = getPreferenceStore().getString(ITasksUiPreferenceConstants.SERVICE_MESSAGE_URL);
 
@@ -665,8 +667,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		final boolean force = Boolean.parseBoolean(System.getProperty(PROP_FORCE_CREDENTIALS_MIGRATION));
 		final boolean migrateFromSecureStore = force
 				|| !getPluginPreferences().getBoolean(PREF_MIGRATED_TASK_REPOSITORIES_FROM_SECURE_STORE);
-		final boolean migrateFromKeyring = (force || !getPluginPreferences().getBoolean(
-				PREF_MIGRATED_TASK_REPOSITORIES_FROM_KEYRING))
+		final boolean migrateFromKeyring = (force
+				|| !getPluginPreferences().getBoolean(PREF_MIGRATED_TASK_REPOSITORIES_FROM_KEYRING))
 				&& isKeyringInstalled();
 		if (!migrateFromSecureStore && !migrateFromKeyring) {
 			return;
@@ -742,7 +744,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		// Add the automatically created templates
 		for (AbstractRepositoryConnector connector : repositoryManager.getRepositoryConnectors()) {
 			for (RepositoryTemplate template : repositoryTemplateManager.getTemplates(connector.getConnectorKind())) {
-				if (template.addAutomatically && !TaskRepositoryUtil.isAddAutomaticallyDisabled(template.repositoryUrl)) {
+				if (template.addAutomatically
+						&& !TaskRepositoryUtil.isAddAutomaticallyDisabled(template.repositoryUrl)) {
 					try {
 						String repositoryUrl = TaskRepositoryManager.stripSlashes(template.repositoryUrl);
 						TaskRepository taskRepository = repositoryManager.getRepository(connector.getConnectorKind(),
@@ -753,8 +756,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 							taskRepository.setRepositoryLabel(template.label);
 							taskRepository.setCharacterEncoding(template.characterEncoding);
 							if (template.anonymous) {
-								taskRepository.setProperty(
-										"org.eclipse.mylyn.tasklist.repositories.enabled", String.valueOf(false)); //$NON-NLS-1$
+								taskRepository.setProperty("org.eclipse.mylyn.tasklist.repositories.enabled", //$NON-NLS-1$
+										String.valueOf(false));
 								// bug 332747: avoid reseting password in shared keystore
 								//taskRepository.setCredentials(AuthenticationType.REPOSITORY, null, true);
 							}
@@ -774,7 +777,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	/**
 	 * Returns the local task repository. If the repository does not exist it is created and added to the task
 	 * repository manager.
-	 * 
+	 *
 	 * @return the local task repository; never <code>null</code>
 	 * @since 3.0
 	 */
@@ -844,8 +847,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				INSTANCE = null;
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Task list stop terminated abnormally", e)); //$NON-NLS-1$
+			StatusHandler
+					.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task list stop terminated abnormally", e)); //$NON-NLS-1$
 		} finally {
 			super.stop(context);
 		}
@@ -864,7 +867,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	 * Persist <code>path</code> as data directory and loads data from <code>path</code>. This method may block if other
 	 * jobs are running that modify tasks data. This method will only execute after all conflicting jobs have been
 	 * completed.
-	 * 
+	 *
 	 * @throws CoreException
 	 *             in case setting of the data directory did not complete normally
 	 * @throws OperationCanceledException
@@ -950,9 +953,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				.getBoolean(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED + ".checked")) { //$NON-NLS-1$
 			if (!taskActivityMonitor.getActivationHistory().isEmpty()) {
 				// tasks have been active before so fore preference enabled
-				MonitorUiPlugin.getDefault()
-						.getPreferenceStore()
-						.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED, true);
+				MonitorUiPlugin.getDefault().getPreferenceStore().setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED,
+						true);
 			}
 			MonitorUiPlugin.getDefault()
 					.getPreferenceStore()
@@ -994,7 +996,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		store.setDefault(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, true);
 		store.setDefault(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, "" + (20 * 60 * 1000)); //$NON-NLS-1$
 
-		//store.setDefault(TasksUiPreferenceConstants.BACKUP_SCHEDULE, 1);
 		store.setDefault(ITasksUiPreferenceConstants.BACKUP_MAXFILES, 20);
 		store.setDefault(ITasksUiPreferenceConstants.BACKUP_LAST, 0f);
 
@@ -1004,7 +1005,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		store.setValue(ITasksUiPreferenceConstants.ACTIVATE_MULTIPLE, false);
 
 		store.setDefault(ITasksUiPreferenceConstants.WEEK_START_DAY, Calendar.getInstance().getFirstDayOfWeek());
-		//store.setDefault(TasksUiPreferenceConstants.PLANNING_STARTHOUR, 9);
+		store.setDefault(ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR,
+				ITasksUiPreferenceConstants.SCHEDULE_NEW_TASKS_FOR_THIS_WEEK);
 		store.setDefault(ITasksUiPreferenceConstants.PLANNING_ENDHOUR, 18);
 
 		store.setDefault(ITasksUiPreferenceConstants.AUTO_EXPAND_TASK_LIST, true);
@@ -1034,7 +1036,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				.getBoolean(ITasksUiPreferenceConstants.GROUP_SUBTASKS);
 
 		if (element instanceof ITask) {
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(((ITask) element).getConnectorKind());
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin
+					.getConnectorUi(((ITask) element).getConnectorKind());
 			if (connectorUi != null) {
 				if (connectorUi.hasStrictSubtaskHierarchy()) {
 					groupSubtasks = true;
@@ -1043,7 +1046,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		}
 
 		if (element instanceof IRepositoryQuery) {
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(((IRepositoryQuery) element).getConnectorKind());
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin
+					.getConnectorUi(((IRepositoryQuery) element).getConnectorKind());
 			if (connectorUi != null) {
 				if (connectorUi.hasStrictSubtaskHierarchy()) {
 					groupSubtasks = true;
@@ -1278,7 +1282,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Associate a Task Repository with a workbench project
-	 * 
+	 *
 	 * @param resource
 	 *            project or resource belonging to a project
 	 * @param repository
@@ -1435,8 +1439,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			taskListNotificationManager.startNotification(NOTIFICATION_DELAY);
 			getPreferenceStore().addPropertyChangeListener(taskListNotificationManager);
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not initialize notifications", t)); //$NON-NLS-1$
+			StatusHandler
+					.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not initialize notifications", t)); //$NON-NLS-1$
 		}
 
 		try {
