@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
@@ -272,11 +273,9 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 
 	public void testOrderListUsingMultipleParagraphs() {
 		String markup = "1.  This is a list item with two paragraphs. Lorem ipsum dolor\n"
-				+ "    sit amet, consectetuer adipiscing elit. Aliquam hendrerit\n"
-				+ "    mi posuere lectus.\n\n" // end of paragraph
+				+ "    sit amet, consectetuer adipiscing elit. Aliquam hendrerit\n" + "    mi posuere lectus.\n\n" // end of paragraph
 				+ "    Vestibulum enim wisi, viverra nec, fringilla in, laoreet\n"
-				+ "    vitae, risus. Donec sit amet nisl. Aliquam semper ipsum\n"
-				+ "    sit amet velit.\n\n" // end of paragraph and list item
+				+ "    vitae, risus. Donec sit amet nisl. Aliquam semper ipsum\n" + "    sit amet velit.\n\n" // end of paragraph and list item
 				+ "2.  Suspendisse id sem consectetuer libero luctus adipiscing.\n\n"
 				+ "3.  Third Item with an empty line separated.";
 		String expectedHtml = "<ol><li>This is a list item with two paragraphs. Lorem ipsum dolor\n"
@@ -369,6 +368,12 @@ public class MarkdownLanguageBlockElementsTest extends MarkdownLanguageTestBase 
 		assertEquals(1, spanEvent.locator.getLineNumber());
 		assertEquals(16, spanEvent.locator.getLineCharacterOffset());
 		assertEquals(21, spanEvent.locator.getLineSegmentEndOffset());
+	}
+
+	public void testListIndentationWithMultipleLines() throws IOException {
+		String input = "1. one\n\n2. two\na";
+		String expectedHtml = "<ol><li>one</li><li>two\na</li></ol>";
+		parseAndAssert(input, expectedHtml);
 	}
 
 	/*

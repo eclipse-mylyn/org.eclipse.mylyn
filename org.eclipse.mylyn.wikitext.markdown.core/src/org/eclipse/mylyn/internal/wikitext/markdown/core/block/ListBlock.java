@@ -39,7 +39,7 @@ public class ListBlock extends NestableBlock {
 
 	private int thisIndentation = 0;
 
-	private boolean startNewParagraph = false;
+	private boolean nextLineStartsNewParagraph = false;
 
 	@Override
 	public boolean canStart(String line, int lineOffset) {
@@ -49,13 +49,14 @@ public class ListBlock extends NestableBlock {
 
 	@Override
 	protected int processLineContent(String line, int offset) {
-
 		String text = line.substring(offset);
 
 		// check start of block/item
 		Matcher itemStartMatcher = itemStartPattern.matcher(text);
 		Matcher nestedItemStartMatcher = nestedItemStartPattern.matcher(text);
 
+		boolean thisLineStartsNewParagraph = nextLineStartsNewParagraph;
+		nextLineStartsNewParagraph = false;
 		if (itemStartMatcher.matches()) {
 			handleItem(text, itemStartMatcher);
 		} else if (nestedItemStartMatcher.matches()) {
@@ -63,9 +64,9 @@ public class ListBlock extends NestableBlock {
 		} else if (getMarkupLanguage().isEmptyLine(text) && canContinueWithNextLine()) {
 			closeNestedParagraph();
 			// next line will start a new paragraph
-			startNewParagraph = true;
+			nextLineStartsNewParagraph = true;
 		} else if (!getMarkupLanguage().isEmptyLine(text)) {
-			handleText(text);
+			handleText(text, thisLineStartsNewParagraph);
 		} else {
 			setClosed(true);
 			return offset;
@@ -127,15 +128,15 @@ public class ListBlock extends NestableBlock {
 				|| nextItem.matches() || nestedItem.matches()); // or (nested) list continues
 	}
 
-	private void handleText(String text) {
+	private void handleText(String text, boolean startsNewParagraph) {
 		if (nestedParagraph == null) {
 			builder.characters("\n"); //$NON-NLS-1$
-			if (startNewParagraph) {
+			if (startsNewParagraph) {
 				nestedParagraph = new ParagraphBlock();
 				nestedParagraph.setParser(getParser());
 				nestedParagraph.setState(getState());
 				nestedParagraph.processLine(text, thisIndentation);
-				startNewParagraph = false;
+				startsNewParagraph = false;
 			} else {
 				Matcher matcher = indentedParagraphPattern.matcher(text);
 				if (matcher.matches() && matcher.end(1) == thisIndentation) {
