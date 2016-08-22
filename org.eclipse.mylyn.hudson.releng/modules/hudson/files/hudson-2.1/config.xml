@@ -4,14 +4,8 @@
   <numExecutors>2</numExecutors>
   <mode>NORMAL</mode>
   <useSecurity>true</useSecurity>
-  <authorizationStrategy class="hudson.security.GlobalMatrixAuthorizationStrategy">
-    <permission>hudson.model.Hudson.Administer:admin@mylyn.eclipse.org</permission>
-    <permission>hudson.model.Hudson.Read:anonymous</permission>
-    <permission>hudson.model.Hudson.Read:tests@mylyn.eclipse.org</permission>
-    <permission>hudson.model.Item.Build:tests@mylyn.eclipse.org</permission>
-    <permission>hudson.model.Item.Read:anonymous</permission>
-    <permission>hudson.model.Item.Read:tests@mylyn.eclipse.org</permission>
-    <permission>hudson.model.Item.Workspace:tests@mylyn.eclipse.org</permission>
+  <authorizationStrategy class="hudson.security.FullControlOnceLoggedInAuthorizationStrategy">
+    <denyAnonymousReadAccess>false</denyAnonymousReadAccess>
   </authorizationStrategy>
   <securityRealm class="hudson.security.HudsonPrivateSecurityRealm">
     <disableSignup>true</disableSignup>
