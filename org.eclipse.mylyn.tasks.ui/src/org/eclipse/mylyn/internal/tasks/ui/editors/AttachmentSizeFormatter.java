@@ -12,10 +12,9 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Locale;
-
-import com.ibm.icu.text.DecimalFormat;
-import com.ibm.icu.text.NumberFormat;
 
 /**
  * Format attachment size values originally in bytes to nice messages.
@@ -35,7 +34,7 @@ import com.ibm.icu.text.NumberFormat;
  * <p>
  * The size is provided as a String, because it will probably come from a attachment attribute. If the value cannot be
  * decoded, for any reason, it returns {@link #UNKNOWN_SIZE}
- * 
+ *
  * @author Willian Mitsuda
  * @author Frank Becker
  * @author Steffen Pingel
