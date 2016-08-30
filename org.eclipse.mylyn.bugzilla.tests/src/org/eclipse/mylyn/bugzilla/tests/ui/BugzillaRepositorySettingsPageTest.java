@@ -13,8 +13,6 @@ package org.eclipse.mylyn.bugzilla.tests.ui;
 
 import java.net.MalformedURLException;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
@@ -37,6 +35,8 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tests.util.TasksUiTestUtil;
 import org.eclipse.ui.PlatformUI;
 
+import junit.framework.TestCase;
+
 /**
  * @author Rob Elves
  */
@@ -53,7 +53,8 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 		super.setUp();
 		manager = TasksUiPlugin.getRepositoryManager();
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, BugzillaFixture.current().getRepositoryUrl());
+		repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND,
+				BugzillaFixture.current().getRepositoryUrl());
 		UserCredentials credentials = CommonTestUtil.getCredentials(PrivilegeLevel.USER);
 		repository.setCredentials(AuthenticationType.REPOSITORY,
 				new AuthenticationCredentials(credentials.getUserName(), credentials.getPassword()), false);
@@ -74,7 +75,8 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 		taskRepository.setCredentials(AuthenticationType.HTTP, webCredentials, false);
 		taskRepository.setCharacterEncoding(encoding);
 
-		BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi.getRepositoryConnector(repository.getConnectorKind());
+		BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi
+				.getRepositoryConnector(repository.getConnectorKind());
 		return BugzillaClientFactory.createClient(taskRepository, connector);
 	}
 
@@ -164,23 +166,4 @@ public class BugzillaRepositorySettingsPageTest extends TestCase {
 		assertEquals(tempUid, repositoryTest.getUserName());
 		assertEquals(tempPass, repositoryTest.getPassword());
 	}
-
-	public void testValidateOnFinishInvalidUserId() throws Exception {
-		assertEquals(1, manager.getAllRepositories().size());
-		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), wizard);
-		dialog.create();
-		BugzillaRepositorySettingsPage page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
-		BugzillaClient client = createClient(page.getRepositoryUrl(), page.getUserName(), page.getPassword(),
-				page.getHttpAuthUserId(), page.getHttpAuthPassword(), page.getCharacterEncoding());
-		client.validate(null);
-		String oldUserId = page.getUserName();
-		page.setUserId("bogus");
-		boolean finished = wizard.performFinish();
-		assertFalse(finished);
-		assertEquals(1, manager.getAllRepositories().size());
-		TaskRepository repositoryTest = manager.getRepository(BugzillaCorePlugin.CONNECTOR_KIND,
-				BugzillaFixture.current().getRepositoryUrl());
-		assertEquals(oldUserId, repositoryTest.getCredentials(AuthenticationType.REPOSITORY).getUserName());
-	}
-
 }

@@ -15,6 +15,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -22,9 +25,14 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardContainer;
@@ -35,15 +43,32 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
+import com.google.common.base.Throwables;
 
 @SuppressWarnings("restriction")
-public class RepositorySettingsPageTest {
+public class AbstractRepositorySettingsPageTest {
 
 	public static class TestRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
-		public TestRepositorySettingsPage(TaskRepository taskRepository) {
+		private final boolean shouldValidateOnFinish;
+
+		private final IStatus validationStatus;
+
+		private boolean ranValidator;
+
+		public TestRepositorySettingsPage(TaskRepository taskRepository, boolean shouldValidateOnFinish,
+				IStatus validationStatus) {
 			super("Title", "Description", taskRepository, MockRepositoryConnector.getDefault());
 			setNeedsProxy(true);
+			this.shouldValidateOnFinish = shouldValidateOnFinish;
+			this.validationStatus = validationStatus;
+		}
+
+		public TestRepositorySettingsPage(TaskRepository taskRepository) {
+			this(taskRepository, false, Status.OK_STATUS);
 		}
 
 		@Override
@@ -52,9 +77,10 @@ public class RepositorySettingsPageTest {
 
 				@Override
 				public void run(IProgressMonitor monitor) throws CoreException {
+					ranValidator = true;
 				}
 			};
-			validator.setStatus(Status.OK_STATUS);
+			validator.setStatus(validationStatus);
 			return validator;
 		}
 
@@ -72,6 +98,14 @@ public class RepositorySettingsPageTest {
 			return serverUrlCombo;
 		}
 
+		@Override
+		public boolean shouldValidateOnFinish() {
+			return shouldValidateOnFinish;
+		}
+
+		public boolean ranValidator() {
+			return ranValidator;
+		}
 	}
 
 	public static class RepositorySettingsPageWithNoCredentials extends TestRepositorySettingsPage {
@@ -124,7 +158,7 @@ public class RepositorySettingsPageTest {
 	public void applyToNewRepository() {
 		TaskRepository repository = createTaskRepository();
 		repository.removeProperty(ITasksCoreConstants.PROPERTY_BRAND_ID);
-		AbstractRepositorySettingsPage page = createPage(null);
+		AbstractRepositorySettingsPage page = createPageWithNoCredentials(null);
 
 		assertNull(repository.getProperty(ITasksCoreConstants.PROPERTY_BRAND_ID));
 		page.applyTo(repository);
@@ -139,7 +173,7 @@ public class RepositorySettingsPageTest {
 	public void applyToExistingRepository() {
 		TaskRepository repository = createTaskRepository();
 		repository.setProperty(ITasksCoreConstants.PROPERTY_BRAND_ID, "existing.brand");
-		AbstractRepositorySettingsPage page = createPage(repository);
+		AbstractRepositorySettingsPage page = createPageWithNoCredentials(repository);
 
 		page.setBrand("org.mylyn");
 		page.applyTo(repository);
@@ -150,7 +184,7 @@ public class RepositorySettingsPageTest {
 	public void applyNullBrandToExistingRepository() {
 		TaskRepository repository = createTaskRepository();
 		repository.setProperty(ITasksCoreConstants.PROPERTY_BRAND_ID, "existing.brand");
-		AbstractRepositorySettingsPage page = createPage(repository);
+		AbstractRepositorySettingsPage page = createPageWithNoCredentials(repository);
 
 		page.setBrand(null);
 		page.applyTo(repository);
@@ -159,7 +193,7 @@ public class RepositorySettingsPageTest {
 
 	@Test
 	public void setsTitleFromBrand() {
-		AbstractRepositorySettingsPage page = createPage(null);
+		AbstractRepositorySettingsPage page = createPageWithNoCredentials(null);
 		assertEquals("Title", page.getTitle());
 		page.setBrand("org.mylyn");
 		assertEquals("Label for org.mylyn", page.getTitle());
@@ -169,7 +203,7 @@ public class RepositorySettingsPageTest {
 	public void setsTitleFromBrandedRepository() {
 		TaskRepository repository = createTaskRepository();
 		repository.setProperty(ITasksCoreConstants.PROPERTY_BRAND_ID, "org.mylyn");
-		AbstractRepositorySettingsPage page = createPage(repository);
+		AbstractRepositorySettingsPage page = createPageWithNoCredentials(repository);
 		assertEquals("Label for org.mylyn", page.getTitle());
 	}
 
@@ -177,7 +211,7 @@ public class RepositorySettingsPageTest {
 	public void setsTitleFromUnbrandedRepository() {
 		TaskRepository repository = createTaskRepository();
 		repository.removeProperty(ITasksCoreConstants.PROPERTY_BRAND_ID);
-		AbstractRepositorySettingsPage page = createPage(repository);
+		AbstractRepositorySettingsPage page = createPageWithNoCredentials(repository);
 		assertEquals("Title", page.getTitle());
 	}
 
@@ -291,7 +325,60 @@ public class RepositorySettingsPageTest {
 		assertFalse(page.isUrlReadOnly());
 	}
 
-	private AbstractRepositorySettingsPage createPage(TaskRepository repository) {
+	@Test
+	public void preFinish() {
+		TaskRepository repository = createTaskRepository();
+		TestRepositorySettingsPage page = createPage(repository, false, Status.OK_STATUS);
+		assertTrue(page.preFinish(repository));
+		assertFalse(page.ranValidator());
+
+		page = createPage(repository, false, Status.CANCEL_STATUS);
+		assertTrue(page.preFinish(repository));
+		assertFalse(page.ranValidator());
+	}
+
+	@Test
+	public void preFinishValidateOnFinish() {
+		TaskRepository repository = createTaskRepository();
+		TestRepositorySettingsPage page = createPage(repository, true, Status.OK_STATUS);
+		assertTrue(page.preFinish(repository));
+		assertTrue(page.ranValidator());
+
+		page = createPage(repository, true, Status.CANCEL_STATUS);
+		assertFalse(page.preFinish(repository));
+		assertTrue(page.ranValidator());
+	}
+
+	private TestRepositorySettingsPage createPage(TaskRepository repository, boolean shouldValidateOnFinish,
+			IStatus validationStatus) {
+		TestRepositorySettingsPage page = spy(
+				new TestRepositorySettingsPage(repository, shouldValidateOnFinish, validationStatus));
+		IWizard wizard = mock(IWizard.class);
+		IWizardContainer container = mock(IWizardContainer.class);
+		try {
+			doAnswer(new Answer<Void>() {
+
+				@Override
+				public Void answer(InvocationOnMock invocation) throws Throwable {
+					IRunnableWithProgress runnable = (IRunnableWithProgress) invocation.getArguments()[2];
+					runnable.run(new NullProgressMonitor());
+					return null;
+				}
+			}).when(container).run(anyBoolean(), anyBoolean(), any());
+		} catch (InvocationTargetException | InterruptedException e) {
+			Throwables.propagate(e);
+		}
+		when(wizard.getContainer()).thenReturn(container);
+		page.setWizard(wizard);
+		doReturn("http://mock/").when(page).getRepositoryUrl();
+		doReturn("label").when(page).getRepositoryLabel();
+		doReturn(false).when(page).needsAdvanced();
+		doReturn(false).when(page).needsProxy();
+		doReturn(false).when(page).needsRepositoryCredentials();
+		return page;
+	}
+
+	private AbstractRepositorySettingsPage createPageWithNoCredentials(TaskRepository repository) {
 		AbstractRepositorySettingsPage page = spy(new RepositorySettingsPageWithNoCredentials(repository));
 		doReturn("label").when(page).getRepositoryLabel();
 		when(page.needsProxy()).thenReturn(false);

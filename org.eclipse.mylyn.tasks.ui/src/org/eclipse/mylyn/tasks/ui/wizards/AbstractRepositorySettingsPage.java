@@ -2237,7 +2237,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	@Override
 	public boolean preFinish(TaskRepository repository) {
-		if (validateOnFinishButton != null && validateOnFinishButton.getSelection() && !propertiesUnchanged()) {
+		if (shouldValidateOnFinish() && !propertiesUnchanged()) {
 			isValid = false;
 			validateSettings();
 		} else {
@@ -2247,6 +2247,10 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			isValid = super.preFinish(repository);
 		}
 		return isValid;
+	}
+
+	boolean shouldValidateOnFinish() {
+		return validateOnFinishButton != null && validateOnFinishButton.getSelection();
 	}
 
 	@Override
