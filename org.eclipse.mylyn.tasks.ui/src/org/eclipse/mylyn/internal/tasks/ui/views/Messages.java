@@ -85,6 +85,8 @@ public class Messages extends NLS {
 
 	public static String TaskListToolTip_Incoming_Outgoing;
 
+	public static String TaskListToolTip_Unassigned;
+
 	public static String TaskListView_Mylyn_context_capture_paused;
 
 	public static String TaskListView__paused_;

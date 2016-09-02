@@ -35,6 +35,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
@@ -262,23 +263,26 @@ public class TaskListToolTip extends GradientToolTip {
 	}
 
 	private String getOwnerText(IRepositoryElement element) {
-		if (element instanceof ITask) {
+		if (element instanceof ITask && !(element instanceof LocalTask)) {
 			String owner = ((ITask) element).getOwner();
-			if (owner != null) {
+			if (!Strings.isNullOrEmpty(owner)) {
 				return NLS.bind(Messages.TaskListToolTip_Assigned_to_X, owner);
 			}
+			return NLS.bind(Messages.TaskListToolTip_Assigned_to_X, Messages.TaskListToolTip_Unassigned);
 		}
 		return null;
 	}
 
 	private Image getOwnerImage(IRepositoryElement element) {
-		if (element instanceof ITask) {
+		if (element instanceof ITask && !(element instanceof LocalTask)) {
 			ITask task = (ITask) element;
 			AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(task.getConnectorKind());
 			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
 					task.getRepositoryUrl());
 			if (connector.isOwnedByUser(repository, task)) {
 				return CommonImages.getImage(CommonImages.PERSON_ME);
+			} else {
+				return CommonImages.getImage(CommonImages.PERSON);
 			}
 		}
 		return null;
