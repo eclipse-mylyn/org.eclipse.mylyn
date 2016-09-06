@@ -21,8 +21,6 @@ import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
@@ -64,6 +62,8 @@ import org.junit.Test;
 import com.google.gerrit.reviewdb.ApprovalCategoryValue;
 import com.google.gerrit.reviewdb.Project;
 
+import junit.framework.TestCase;
+
 /**
  * @author Steffen Pingel
  */
@@ -100,7 +100,8 @@ public class GerritSynchronizationTest extends TestCase {
 				.getConnector()
 				.setFactoryProviderConfigurer(new RemoteUiFactoryProviderConfigurer());
 		client = GerritCorePlugin.getDefault().getConnector().getClient(repository);
-		AbstractRemoteEditFactoryProvider abstractRemoteEditFactoryProvider = (AbstractRemoteEditFactoryProvider) client.getFactoryProvider();
+		AbstractRemoteEditFactoryProvider abstractRemoteEditFactoryProvider = (AbstractRemoteEditFactoryProvider) client
+				.getFactoryProvider();
 		GerritCorePlugin.getDefault()
 				.getConnector()
 				.getFactoryProviderConfigurer()
@@ -125,7 +126,8 @@ public class GerritSynchronizationTest extends TestCase {
 	public void testSynchronizeBackgroundQueryTaskUpdated() throws Exception {
 		ITask task = createAndSynchronizeQuery(false);
 		String message = addComment(task);
-		synchronizeRepository(false);
+		RepositoryQuery query = taskList.getQueries().iterator().next();
+		synchronizeQuery(query, false);
 		assertHasNewComment(task, message);
 	}
 
@@ -146,7 +148,8 @@ public class GerritSynchronizationTest extends TestCase {
 	public void testSynchronizeQueryTaskUpdated() throws Exception {
 		ITask task = createAndSynchronizeQuery(true);
 		String message = addComment(task);
-		synchronizeRepository(true);
+		RepositoryQuery query = taskList.getQueries().iterator().next();
+		synchronizeQuery(query, true);
 		assertHasNewComment(task, message);
 	}
 
@@ -163,10 +166,8 @@ public class GerritSynchronizationTest extends TestCase {
 		ITask task = createAndSynchronizeQuery(true);
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(repository.getConnectorKind());
 		GerritClient client = ((GerritConnector) connector).getClient(repository);
-		Project.NameKey project = new Project.NameKey(taskDataManager.getTaskData(task)
-				.getRoot()
-				.getMappedAttribute(TaskAttribute.PRODUCT)
-				.getValue());
+		Project.NameKey project = new Project.NameKey(
+				taskDataManager.getTaskData(task).getRoot().getMappedAttribute(TaskAttribute.PRODUCT).getValue());
 		client.clearCachedBranches(project);
 		assertNull(client.getCachedBranches(project));
 
@@ -174,8 +175,8 @@ public class GerritSynchronizationTest extends TestCase {
 		assertEquals(task.getTaskId(), taskData.getTaskId());
 		assertNotNull(client.getCachedBranches(project));
 
-		TaskAttribute changeIdAttribute = taskData.getRoot().getAttribute(
-				GerritTaskSchema.getDefault().CHANGE_ID.getKey());
+		TaskAttribute changeIdAttribute = taskData.getRoot()
+				.getAttribute(GerritTaskSchema.getDefault().CHANGE_ID.getKey());
 		assertNotNull(changeIdAttribute);
 		assertThat(task.getTaskId(), not(equalTo(changeIdAttribute.getValue())));
 		TaskData taskDataFromChangeId = connector.getTaskData(repository, changeIdAttribute.getValue(),
@@ -200,8 +201,8 @@ public class GerritSynchronizationTest extends TestCase {
 		List<TaskAttribute> comments = taskData.getAttributeMapper().getAttributesByType(taskData,
 				TaskAttribute.TYPE_COMMENT);
 		TaskCommentMapper lastComment = TaskCommentMapper.createFrom(comments.get(comments.size() - 1));
-		assertEquals(
-				"Failure on " + GerritFixture.current().getRepositoryUrl() + "/" + task.getTaskId(), "Patch Set 1:\n\n" + message, lastComment.getText()); //$NON-NLS-1$
+		assertEquals("Failure on " + GerritFixture.current().getRepositoryUrl() + "/" + task.getTaskId(), //$NON-NLS-1$
+				"Patch Set 1:\n\n" + message, lastComment.getText());
 	}
 
 	private ITask assertTaskListHasOneTask() throws CoreException {
@@ -218,7 +219,7 @@ public class GerritSynchronizationTest extends TestCase {
 		query.setAttribute(GerritQuery.QUERY_STRING, harness.defaultQuery());
 		taskList.addQuery((RepositoryQuery) query);
 
-		synchronizeRepository(user);
+		synchronizeQuery((RepositoryQuery) query, user);
 
 		ITask task = assertTaskListHasOneTask();
 		assertEquals(SynchronizationState.INCOMING_NEW, task.getSynchronizationState());
@@ -232,9 +233,11 @@ public class GerritSynchronizationTest extends TestCase {
 		return task;
 	}
 
-	private void synchronizeRepository(boolean user) throws InterruptedException {
-		SynchronizationJob job = TasksUiPlugin.getTaskJobFactory().createSynchronizeRepositoriesJob(
-				Collections.singleton(repository));
+	private void synchronizeQuery(RepositoryQuery query, boolean user) throws InterruptedException {
+		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+				.getRepositoryConnector(repository.getConnectorKind());
+		SynchronizationJob job = TasksUiPlugin.getTaskJobFactory().createSynchronizeQueriesJob(connector, repository,
+				Collections.singleton(query));
 		job.setUser(user);
 		job.schedule();
 		job.join();
