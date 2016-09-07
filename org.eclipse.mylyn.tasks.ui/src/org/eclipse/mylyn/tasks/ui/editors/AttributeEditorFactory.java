@@ -108,8 +108,8 @@ public class AttributeEditorFactory {
 			if (serviceLocator != null) {
 				IContextService contextService = (IContextService) serviceLocator.getService(IContextService.class);
 				if (contextService != null) {
-					AbstractTaskEditorExtension extension = TaskEditorExtensions.getTaskEditorExtension(
-							model.getTaskRepository(), taskAttribute);
+					AbstractTaskEditorExtension extension = TaskEditorExtensions
+							.getTaskEditorExtension(model.getTaskRepository(), taskAttribute);
 					if (extension != null) {
 						editor = new RichTextAttributeEditor(model, taskRepository, taskAttribute, SWT.MULTI,
 								contextService, extension);

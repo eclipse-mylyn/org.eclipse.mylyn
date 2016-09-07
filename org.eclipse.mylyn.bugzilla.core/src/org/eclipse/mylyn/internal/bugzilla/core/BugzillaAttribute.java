@@ -21,8 +21,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
  * @author Rob Elves
  */
 public enum BugzillaAttribute {
-	STATUS_WHITEBOARD(Messages.BugzillaAttribute_Status_Whiteboard,
-			"status_whiteboard", TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE), //$NON-NLS-1$
+	STATUS_WHITEBOARD(Messages.BugzillaAttribute_Status_Whiteboard, "status_whiteboard", TaskAttribute.TYPE_SHORT_TEXT, //$NON-NLS-1$
+			Flag.ATTRIBUTE),
 
 	ACTUAL_TIME(Messages.BugzillaAttribute_Worked, "actual_time", TaskAttribute.TYPE_SHORT_TEXT, Flag.READ_ONLY), //$NON-NLS-1$
 
@@ -30,11 +30,11 @@ public enum BugzillaAttribute {
 
 	ALIAS(Messages.BugzillaAttribute_Alias, "alias", TaskAttribute.TYPE_SHORT_TEXT), //$NON-NLS-1$
 
-	ASSIGNED_TO(Messages.BugzillaAttribute_Assigned_to,
-			"assigned_to", TaskAttribute.TYPE_PERSON, Flag.PEOPLE, Flag.READ_ONLY), //$NON-NLS-1$
+	ASSIGNED_TO(Messages.BugzillaAttribute_Assigned_to, "assigned_to", TaskAttribute.TYPE_PERSON, Flag.PEOPLE, //$NON-NLS-1$
+			Flag.READ_ONLY),
 
-	ASSIGNED_TO_NAME(Messages.BugzillaAttribute_Assigned_to_NAME,
-			"assigned_to_name", TaskAttribute.TYPE_PERSON, Flag.READ_ONLY), //$NON-NLS-1$
+	ASSIGNED_TO_NAME(Messages.BugzillaAttribute_Assigned_to_NAME, "assigned_to_name", TaskAttribute.TYPE_PERSON, //$NON-NLS-1$
+			Flag.READ_ONLY),
 
 	ATTACHID(Messages.BugzillaAttribute_ATTACH_ID, "attachid", TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE), //$NON-NLS-1$
 
@@ -84,8 +84,8 @@ public enum BugzillaAttribute {
 
 	DELTA_TS(Messages.BugzillaAttribute_Modified, "delta_ts", TaskAttribute.TYPE_DATE), //$NON-NLS-1$
 
-	DEPENDSON(Messages.BugzillaAttribute_Depends_on__Subtasks_,
-			"dependson", TaskAttribute.TYPE_TASK_DEPENDENCY, Flag.ATTRIBUTE), //$NON-NLS-1$
+	DEPENDSON(Messages.BugzillaAttribute_Depends_on__Subtasks_, "dependson", TaskAttribute.TYPE_TASK_DEPENDENCY, //$NON-NLS-1$
+			Flag.ATTRIBUTE),
 
 	DESC(Messages.BugzillaAttribute_desc, "desc", TaskAttribute.TYPE_LONG_TEXT, Flag.READ_ONLY), //$NON-NLS-1$
 
@@ -129,10 +129,11 @@ public enum BugzillaAttribute {
 
 	REPORTER_NAME(Messages.BugzillaAttribute_REPORT_NAME, "reporter_name", TaskAttribute.TYPE_PERSON, Flag.READ_ONLY), //$NON-NLS-1$
 
-	REPORTER_ACCESSIBLE(Messages.BugzillaAttribute_REPORT_ACCESSIBLE, "reporter_accessible", TaskAttribute.TYPE_BOOLEAN), //$NON-NLS-1$
+	REPORTER_ACCESSIBLE(Messages.BugzillaAttribute_REPORT_ACCESSIBLE, "reporter_accessible", //$NON-NLS-1$
+			TaskAttribute.TYPE_BOOLEAN),
 
-	RESOLUTION(Messages.BugzillaAttribute_Resolution,
-			"resolution", TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE, Flag.READ_ONLY), //$NON-NLS-1$
+	RESOLUTION(Messages.BugzillaAttribute_Resolution, "resolution", TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE, //$NON-NLS-1$
+			Flag.READ_ONLY),
 
 	REMAINING_TIME(Messages.BugzillaAttribute_Remaining, "remaining_time", TaskAttribute.TYPE_SHORT_TEXT), //$NON-NLS-1$
 
@@ -140,21 +141,21 @@ public enum BugzillaAttribute {
 
 	SEE_ALSO(Messages.BugzillaAttribute_AddSeeAlso, "see_also", TaskAttribute.TYPE_URL, Flag.ATTRIBUTE), //$NON-NLS-1$
 
-	SEE_ALSO_READ(Messages.BugzillaAttribute_See_Also,
-			"read_see_also", IBugzillaConstants.EDITOR_TYPE_SEEALSO, Flag.ATTRIBUTE), //$NON-NLS-1$
+	SEE_ALSO_READ(Messages.BugzillaAttribute_See_Also, "read_see_also", IBugzillaConstants.EDITOR_TYPE_SEEALSO, //$NON-NLS-1$
+			Flag.ATTRIBUTE),
 
-	SET_DEFAULT_ASSIGNEE(Messages.BugzillaAttribute_Reassign_to_default_assignee,
-			"set_default_assignee", TaskAttribute.TYPE_BOOLEAN), //$NON-NLS-1$
+	SET_DEFAULT_ASSIGNEE(Messages.BugzillaAttribute_Reassign_to_default_assignee, "set_default_assignee", //$NON-NLS-1$
+			TaskAttribute.TYPE_BOOLEAN),
 
 	SHORT_DESC(Messages.BugzillaAttribute_Summary, "short_desc", TaskAttribute.TYPE_SHORT_RICH_TEXT), //$NON-NLS-1$
 
 	SIZE(Messages.BugzillaAttribute_Size, "size", TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE), //$NON-NLS-1$
 
-	TARGET_MILESTONE(Messages.BugzillaAttribute_Target_milestone,
-			"target_milestone", TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE), //$NON-NLS-1$
+	TARGET_MILESTONE(Messages.BugzillaAttribute_Target_milestone, "target_milestone", TaskAttribute.TYPE_SINGLE_SELECT, //$NON-NLS-1$
+			Flag.ATTRIBUTE),
 
-	THETEXT(Messages.BugzillaAttribute_thetext,
-			"thetext", TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE, Flag.READ_ONLY), //$NON-NLS-1$
+	THETEXT(Messages.BugzillaAttribute_thetext, "thetext", TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE, //$NON-NLS-1$
+			Flag.READ_ONLY),
 
 	TYPE(Messages.BugzillaAttribute_type, "type", TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE), //$NON-NLS-1$
 
@@ -164,8 +165,8 @@ public enum BugzillaAttribute {
 
 	INSTALL_VERSION(Messages.BugzillaAttribute_version_of_bugzilla_installed, "install_version", null), //$NON-NLS-1$
 
-	VOTES(Messages.BugzillaAttribute_Votes,
-			"votes", IBugzillaConstants.EDITOR_TYPE_VOTES, Flag.ATTRIBUTE, Flag.READ_ONLY), //$NON-NLS-1$
+	VOTES(Messages.BugzillaAttribute_Votes, "votes", IBugzillaConstants.EDITOR_TYPE_VOTES, Flag.ATTRIBUTE, //$NON-NLS-1$
+			Flag.READ_ONLY),
 
 	WORK_TIME(Messages.BugzillaAttribute_Add, "work_time", TaskAttribute.TYPE_SHORT_TEXT), //$NON-NLS-1$
 
@@ -175,8 +176,8 @@ public enum BugzillaAttribute {
 
 	QA_CONTACT(Messages.BugzillaAttribute_QA_Contact, "qa_contact", TaskAttribute.TYPE_PERSON, Flag.PEOPLE), //$NON-NLS-1$
 
-	QA_CONTACT_NAME(Messages.BugzillaAttribute_QA_Contact_NAME,
-			"qa_contact_name", TaskAttribute.TYPE_SHORT_TEXT, Flag.READ_ONLY), //$NON-NLS-1$
+	QA_CONTACT_NAME(Messages.BugzillaAttribute_QA_Contact_NAME, "qa_contact_name", TaskAttribute.TYPE_SHORT_TEXT, //$NON-NLS-1$
+			Flag.READ_ONLY),
 
 	ADDSELFCC(Messages.BugzillaAttribute_Add_self_to_CC, "addselfcc", TaskAttribute.TYPE_BOOLEAN), //$NON-NLS-1$
 

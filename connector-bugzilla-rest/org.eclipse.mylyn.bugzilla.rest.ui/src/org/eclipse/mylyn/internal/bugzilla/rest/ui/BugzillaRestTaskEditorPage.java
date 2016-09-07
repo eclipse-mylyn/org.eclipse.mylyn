@@ -14,12 +14,16 @@ package org.eclipse.mylyn.internal.bugzilla.rest.ui;
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestCore;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestTaskSchema;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.IBugzillaRestConstants;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorFactory;
+import org.eclipse.mylyn.tasks.ui.editors.LayoutHint;
+import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.ColumnSpan;
+import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.RowSpan;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
 
@@ -48,6 +52,10 @@ public class BugzillaRestTaskEditorPage extends AbstractTaskEditorPage {
 					editor = new BugzillaKeywordAttributeEditor(getModel(), taskAttribute);
 				} else {
 					editor = super.createEditor(type, taskAttribute);
+				}
+				if (editor != null
+						&& BugzillaRestTaskSchema.getDefault().ADD_CC.getKey().equals(taskAttribute.getId())) {
+					editor.setLayoutHint(new LayoutHint(RowSpan.SINGLE, ColumnSpan.SINGLE));
 				}
 				return editor;
 			}

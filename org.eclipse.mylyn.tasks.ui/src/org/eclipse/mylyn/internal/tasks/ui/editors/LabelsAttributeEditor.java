@@ -46,7 +46,8 @@ public class LabelsAttributeEditor extends TextAttributeEditor {
 
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
-		super.createControl(parent, toolkit, (isMultiSelect ? SWT.WRAP : SWT.NONE));
+		super.createControl(parent, toolkit,
+				(getLayoutHint() != null && getLayoutHint().rowSpan == RowSpan.MULTIPLE ? SWT.WRAP : SWT.NONE));
 		if (!isReadOnly() && isMultiSelect) {
 			getText().setToolTipText("Separate multiple values with a comma"); //$NON-NLS-1$
 		}
