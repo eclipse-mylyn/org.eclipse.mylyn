@@ -126,9 +126,22 @@
           name="org.objenesis"
           versionRange="[1.0.0,2.0.0)"/>
       <repositoryList
+          name="Oxygen">
+        <repository
+            url="http://download.eclipse.org/staging/oxygen"/>
+        <repository
+            url="http://download.eclipse.org/cbi/updates/license"/>
+        <repository
+            url="http://download.eclipse.org/mylyn/snapshots/weekly"/>
+        <repository
+            url="http://download.eclipse.org/eclipse/updates/3.8"/>
+        <repository
+            url="http://download.eclipse.org/tools/orbit/downloads/drops/S201607281920/repository/"/>
+      </repositoryList>
+      <repositoryList
           name="Neon">
         <repository
-            url="http://download.eclipse.org/staging/neon"/>
+            url="http://download.eclipse.org/releases/neon"/>
         <repository
             url="http://download.eclipse.org/cbi/updates/license"/>
         <repository
