@@ -13,6 +13,8 @@ package org.eclipse.mylyn.internal.bugzilla.rest.core;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
@@ -38,6 +41,7 @@ import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.FieldValues;
 import org.eclipse.mylyn.internal.commons.core.operations.NullOperationMonitor;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryInfo;
@@ -477,6 +481,22 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 	@Nullable
 	public AbstractTaskAttachmentHandler getTaskAttachmentHandler() {
 		return attachmentHandler;
+	}
+
+	@Override
+	@Nullable
+	public URL getAuthenticatedUrl(@NonNull TaskRepository repository, @NonNull IRepositoryElement element) {
+		if (element instanceof ITask) {
+			try {
+				String url = element.getUrl();
+				String urlString = url.replace("/rest.cgi/bug/", "/show_bug.cgi?id="); //$NON-NLS-1$ //$NON-NLS-2$
+				return new URL(urlString);
+			} catch (MalformedURLException e) {
+				StatusHandler.log(
+						new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, "could not create url from string", e)); //$NON-NLS-1$
+			}
+		}
+		return super.getAuthenticatedUrl(repository, element);
 	}
 
 }
