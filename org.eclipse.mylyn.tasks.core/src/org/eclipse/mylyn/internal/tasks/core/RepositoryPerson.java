@@ -84,8 +84,13 @@ public class RepositoryPerson implements IRepositoryPerson {
 
 	@Override
 	public String toString() {
+
 		if (getName() == null) {
 			return getPersonId();
+		} else if (getPersonId() == null) {
+			return getName();
+		} else if (getName().equals(getPersonId())) {
+			return getName();
 		} else {
 			return getName() + " <" + getPersonId() + ">"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
