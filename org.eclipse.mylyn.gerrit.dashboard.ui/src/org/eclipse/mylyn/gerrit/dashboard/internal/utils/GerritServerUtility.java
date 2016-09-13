@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2014 Ericsson
- * 
+ *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *   Jacques Bouthillier - Initial Implementation of the server selection
  ******************************************************************************/
@@ -35,7 +35,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * This class implements some utility for the Gerrit servers.
- * 
+ *
  * @author Jacques Bouthillier
  * @version $Revision: 1.0 $
  */
@@ -49,7 +49,7 @@ public class GerritServerUtility {
 	/**
 	 * Field LAST_GERRIT_FILE. (value is ""lastGerrit.txt"")
 	 */
-	private static final String LAST_GERRIT_FILE = "lastGerrit.txt";
+	private static final String LAST_GERRIT_FILE = "lastGerrit.txt"; //$NON-NLS-1$
 
 	// ------------------------------------------------------------------------
 	// Variables
@@ -73,7 +73,7 @@ public class GerritServerUtility {
 
 	/**
 	 * Map the configured Gerrit server found in the TaskList
-	 * 
+	 *
 	 * @return Map<TaskRepository, String>
 	 */
 	private Map<TaskRepository, String> mapConfiguredGerritServer() {
@@ -83,24 +83,24 @@ public class GerritServerUtility {
 		TaskRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
 
 		//Only get the TaskRepository related to Gerrit review connnector
-		GerritPlugin.Ftracer.traceInfo("--------Review repo ---------------");
+		GerritPlugin.Ftracer.traceInfo("--------Review repo ---------------"); //$NON-NLS-1$
 		Set<TaskRepository> reviewRepo = repositoryManager.getRepositories(GerritConnector.CONNECTOR_KIND);
 		for (TaskRepository taskRepo : reviewRepo) {
-			GerritPlugin.Ftracer.traceInfo("Add Gerrit Review repo: " + taskRepo.getRepositoryLabel() + "\t url: "
+			GerritPlugin.Ftracer.traceInfo("Add Gerrit Review repo: " + taskRepo.getRepositoryLabel() + "\t url: " //$NON-NLS-1$ //$NON-NLS-2$
 					+ taskRepo.getRepositoryUrl());
 			fResultTask.put(taskRepo, taskRepo.getRepositoryUrl());
 			if (null != taskRepo.getRepositoryUrl()) {
 				adjustTemplatemanager(taskRepo);
 			}
 		}
-		//Print a the end the info for all Gerrit 
+		//Print a the end the info for all Gerrit
 		printRepositoryTemplate();
 		return fResultTask;
 	}
 
 	/**
 	 * Build a list of Gerrit server to display in the combo box in the dialogue window
-	 * 
+	 *
 	 * @param aTaskRepo
 	 */
 	private void adjustTemplatemanager(TaskRepository aTaskRepo) {
@@ -109,8 +109,8 @@ public class GerritServerUtility {
 		Boolean found = false;
 		for (RepositoryTemplate template : templateManager.getTemplates(GerritConnector.CONNECTOR_KIND)) {
 			String convertedRemoteURL = aTaskRepo.getRepositoryUrl();
-			GerritPlugin.Ftracer.traceInfo("\t template.label: " + template.label + "\t repo label: "
-					+ aTaskRepo.getRepositoryLabel() + " repo getname: " + convertedRemoteURL);
+			GerritPlugin.Ftracer.traceInfo("\t template.label: " + template.label + "\t repo label: " //$NON-NLS-1$ //$NON-NLS-2$
+					+ aTaskRepo.getRepositoryLabel() + " repo getname: " + convertedRemoteURL); //$NON-NLS-1$
 			//Test the name and the remoteURL to reduce duplications
 			if (template.label.equals(aTaskRepo.getRepositoryLabel())
 					|| template.repositoryUrl.equals(convertedRemoteURL)) {
@@ -126,10 +126,10 @@ public class GerritServerUtility {
 
 			//Create a repository template
 			RepositoryTemplate templateTest = new RepositoryTemplate(aTaskRepo.getRepositoryLabel(),
-					aTaskRepo.getRepositoryUrl(), aTaskRepo.getCharacterEncoding(), aTaskRepo.getVersion(), "", "", "",
+					aTaskRepo.getRepositoryUrl(), aTaskRepo.getCharacterEncoding(), aTaskRepo.getVersion(), "", "", "", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					aTaskRepo.getUserName(), anonymous, true);
 
-			//Set the attributes 
+			//Set the attributes
 			Map<String, String> attributes = aTaskRepo.getProperties();
 
 			Set<Entry<String, String>> value = attributes.entrySet();
@@ -144,10 +144,10 @@ public class GerritServerUtility {
 	private void printRepositoryTemplate() {
 		RepositoryTemplateManager templateManager = TasksUiPlugin.getRepositoryTemplateManager();
 		for (RepositoryTemplate template : templateManager.getTemplates(GerritConnector.CONNECTOR_KIND)) {
-			GerritPlugin.Ftracer.traceInfo("------------======================------------------");
+			GerritPlugin.Ftracer.traceInfo("------------======================------------------"); //$NON-NLS-1$
 			Set<Entry<String, String>> value = template.getAttributes().entrySet();
 			for (Map.Entry<String, String> entry : value) {
-				GerritPlugin.Ftracer.traceInfo("key: " + entry.getKey() + "\tvalue: " + entry.getValue());
+				GerritPlugin.Ftracer.traceInfo("key: " + entry.getKey() + "\tvalue: " + entry.getValue()); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}
@@ -171,7 +171,7 @@ public class GerritServerUtility {
 
 	/**
 	 * Return the mapping of the available Gerrit server used in the user workspace
-	 * 
+	 *
 	 * @return Map<Repository, String>
 	 */
 	public static Map<TaskRepository, String> getGerritMapping() {
@@ -180,7 +180,7 @@ public class GerritServerUtility {
 
 	/**
 	 * Save the selected Gerrit server URL
-	 * 
+	 *
 	 * @param aURL
 	 * @return Boolean
 	 */
@@ -202,7 +202,7 @@ public class GerritServerUtility {
 
 	/**
 	 * Return the last selected Gerrit server used
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getLastSavedGerritServer() {
@@ -215,7 +215,7 @@ public class GerritServerUtility {
 				lastGerritURL = in.readLine();
 				in.close();
 			} catch (IOException e1) {
-				//When there is no file, 
+				//When there is no file,
 				//e1.printStackTrace();
 			}
 		}
@@ -224,7 +224,7 @@ public class GerritServerUtility {
 
 	/**
 	 * Get the Gerrit URL based on the provided string
-	 * 
+	 *
 	 * @param Menu
 	 *            string aSt
 	 * @return URL as a string
@@ -233,12 +233,12 @@ public class GerritServerUtility {
 		String urlStr = null;
 		if (!fResultTask.isEmpty()) {
 			Set<TaskRepository> mapSet = fResultTask.keySet();
-			GerritPlugin.Ftracer.traceInfo("-------------------");
+			GerritPlugin.Ftracer.traceInfo("-------------------"); //$NON-NLS-1$
 			for (TaskRepository key : mapSet) {
 				if (key.getRepositoryLabel().equals(aSt)) {
 					urlStr = fResultTask.get(key);
 
-					GerritPlugin.Ftracer.traceInfo("Map Key: " + key.getRepositoryLabel() + "\t URL: "
+					GerritPlugin.Ftracer.traceInfo("Map Key: " + key.getRepositoryLabel() + "\t URL: " //$NON-NLS-1$ //$NON-NLS-2$
 							+ fResultTask.get(key));
 					return urlStr;
 				}
@@ -250,7 +250,7 @@ public class GerritServerUtility {
 
 	/**
 	 * Get the Gerrit task Repository
-	 * 
+	 *
 	 * @param string
 	 *            aSt
 	 * @return TaskRepository
@@ -259,11 +259,11 @@ public class GerritServerUtility {
 
 		if (aStURL != null && !fResultTask.isEmpty()) {
 			Set<TaskRepository> mapSet = fResultTask.keySet();
-			GerritPlugin.Ftracer.traceInfo("-------------------");
+			GerritPlugin.Ftracer.traceInfo("-------------------"); //$NON-NLS-1$
 			for (TaskRepository key : mapSet) {
 				if (key.getRepositoryUrl().equals(aStURL)) {
 
-					GerritPlugin.Ftracer.traceInfo("Key label : " + key.getRepositoryLabel() + "\t URL: "
+					GerritPlugin.Ftracer.traceInfo("Key label : " + key.getRepositoryLabel() + "\t URL: " //$NON-NLS-1$ //$NON-NLS-2$
 							+ fResultTask.get(key));
 					return key;
 				}

@@ -49,10 +49,6 @@ public class TaskReview implements IAdaptable {
 		}
 	}
 
-	public String getIncomingChanges() {
-		return review.getAttribute("INCOMING_REVIEW");
-	}
-
 	public String getUrl() {
 		return review.getUrl();
 	}

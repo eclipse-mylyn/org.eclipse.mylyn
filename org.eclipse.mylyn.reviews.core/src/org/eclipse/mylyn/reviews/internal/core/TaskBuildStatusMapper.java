@@ -29,7 +29,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 
 public class TaskBuildStatusMapper {
-	public static final String BUILD_RESULT_TYPE = "BuildResult";
+	public static final String BUILD_RESULT_TYPE = "BuildResult"; //$NON-NLS-1$
 
 	public static final String JOB_NAME_ATTRIBUTE_KEY = "JOB"; //$NON-NLS-1$
 
