@@ -279,7 +279,9 @@ public class TaskListToolTip extends GradientToolTip {
 			AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(task.getConnectorKind());
 			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
 					task.getRepositoryUrl());
-			if (connector.isOwnedByUser(repository, task)) {
+			if (Strings.isNullOrEmpty(task.getOwner())) {
+				return null;
+			} else if (connector.isOwnedByUser(repository, task)) {
 				return CommonImages.getImage(CommonImages.PERSON_ME);
 			} else {
 				return CommonImages.getImage(CommonImages.PERSON);
