@@ -97,7 +97,7 @@ public class ConnectorMigrationUi {
 					@Override
 					public void run() {
 						if (taskListView != null && taskListView.getServiceMessageControl() != null) {
-							ServiceMessage message = new ServiceMessage("") {
+							ServiceMessage message = new ServiceMessage("") { //$NON-NLS-1$
 
 								@Override
 								public boolean openLink(String link) {
@@ -110,7 +110,7 @@ public class ConnectorMigrationUi {
 									return false;
 								}
 							};
-							message.setTitle("Connector Migration");
+							message.setTitle(Messages.ConnectorMigrationUi_Connector_Migration);
 							message.setDescription(NLS.bind(Messages.ConnectorMigrator_complete_migration_prompt_title,
 									COMLETE_MIGRATION));
 							message.setImage(Dialog.DLG_IMG_MESSAGE_WARNING);
@@ -133,7 +133,7 @@ public class ConnectorMigrationUi {
 			@Override
 			public void run() {
 				if (taskListView != null && taskListView.getServiceMessageControl() != null) {
-					ServiceMessage message = new ServiceMessage("") {
+					ServiceMessage message = new ServiceMessage("") { //$NON-NLS-1$
 						@Override
 						public boolean openLink(String link) {
 							if (link.equals(MIGRATE)) {
@@ -146,7 +146,7 @@ public class ConnectorMigrationUi {
 						}
 
 					};
-					message.setTitle("End of Connector Support");
+					message.setTitle(Messages.ConnectorMigrationUi_End_of_Connector_Support);
 					message.setDescription(
 							NLS.bind(Messages.ConnectorMigrator_complete_migration_prompt_message, MIGRATE));
 					message.setImage(Dialog.DLG_IMG_MESSAGE_INFO);
@@ -157,7 +157,7 @@ public class ConnectorMigrationUi {
 	}
 
 	protected Job createPromptToCompleteMigrationJob(ConnectorMigrator migrator) {
-		Job job = new CompleteMigrationJob("Complete Connector Migration Prompt", migrator);
+		Job job = new CompleteMigrationJob(Messages.ConnectorMigrationUi_Complete_Connector_Migration_Prompt, migrator);
 		job.setUser(false);
 		job.setSystem(true);
 		return job;
@@ -191,7 +191,7 @@ public class ConnectorMigrationUi {
 			public void run() {
 				String repositoryList = Joiner.on("\n") //$NON-NLS-1$
 						.join(Iterables.transform(failedValidation, repositoryToLabel()));
-				MessageDialog.openWarning(WorkbenchUtil.getShell(), "Validation Failed",
+				MessageDialog.openWarning(WorkbenchUtil.getShell(), Messages.ConnectorMigrationUi_Validation_Failed,
 						NLS.bind(Messages.ConnectorMigrationWizard_validation_failed, repositoryList));
 			}
 		});
@@ -208,7 +208,7 @@ public class ConnectorMigrationUi {
 
 	protected void backupTaskList(final IProgressMonitor monitor) throws IOException {
 		try {
-			monitor.subTask("Backing up task list");
+			monitor.subTask(Messages.ConnectorMigrationUi_Backing_up_task_list);
 			String backupFolder = TasksUiPlugin.getDefault().getBackupFolderPath();
 			new File(backupFolder).mkdirs();
 			String fileName = getBackupFileName(new Date());
@@ -245,7 +245,7 @@ public class ConnectorMigrationUi {
 		final UnsubmittedTaskContainer unsubmitted = tasksState.getTaskList()
 				.getUnsubmittedContainer(repository.getRepositoryUrl());
 		try {
-			monitor.subTask("Deleting old repository, tasks, and queries");
+			monitor.subTask(Messages.ConnectorMigrationUi_Deleting_old_repository_tasks_and_queries);
 			try {
 				DeleteAction.prepareDeletion(tasks);
 				if (unsubmitted != null) {
@@ -283,7 +283,7 @@ public class ConnectorMigrationUi {
 			}, monitor);
 			tasksState.getRepositoryModel().clear();
 		} catch (CoreException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error deleting task", e));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, Messages.ConnectorMigrationUi_Error_deleting_task, e));
 		}
 	}
 
@@ -303,8 +303,8 @@ public class ConnectorMigrationUi {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				MessageDialog.openInformation(WorkbenchUtil.getShell(), "Connector Migration Complete",
-						"Connector migration completed successfully. You may resume using the task list.");
+				MessageDialog.openInformation(WorkbenchUtil.getShell(), Messages.ConnectorMigrationUi_Connector_Migration_Complete,
+						Messages.ConnectorMigrationUi_Connector_migration_completed_successfully_You_may_resume_using_the_task_list);
 			}
 		});
 	}

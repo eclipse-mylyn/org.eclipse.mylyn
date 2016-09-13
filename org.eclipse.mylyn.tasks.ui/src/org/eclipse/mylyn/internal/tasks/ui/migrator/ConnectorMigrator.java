@@ -54,6 +54,7 @@ import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
+import org.eclipse.osgi.util.NLS;
 
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
@@ -172,14 +173,14 @@ public class ConnectorMigrator {
 	protected void migrateConnectors(IProgressMonitor monitor) throws IOException {
 		final List<TaskRepository> failedValidation = new ArrayList<>();
 		List<TaskRepository> oldRepositories = gatherRepositoriesToMigrate(connectorsToMigrate);
-		monitor.beginTask("Migrating repositories", oldRepositories.size() + 1);
+		monitor.beginTask(Messages.ConnectorMigrator_Migrating_repositories, oldRepositories.size() + 1);
 		getMigrationUi().backupTaskList(monitor);
 
 		for (TaskRepository repository : oldRepositories) {
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException();
 			}
-			monitor.subTask("Migrating " + repository.getRepositoryLabel());
+			monitor.subTask(NLS.bind(Messages.ConnectorMigrator_Migrating_X, repository.getRepositoryLabel()));
 			String kind = repository.getConnectorKind();
 			String newKind = getConnectorKinds().get(kind);
 			TaskRepository newRepository = getMigratedRepository(newKind, repository);
@@ -196,12 +197,13 @@ public class ConnectorMigrator {
 		}
 
 		Set<TaskRepository> newRepositories = ImmutableSet.copyOf(repositories.values());
-		monitor.beginTask("Validating repository connections", newRepositories.size());
+		monitor.beginTask(Messages.ConnectorMigrator_Validating_repository_connections, newRepositories.size());
 		for (TaskRepository newRepository : newRepositories) {
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException();
 			}
-			monitor.subTask("Validating connection to " + newRepository.getRepositoryLabel());
+			monitor.subTask(NLS.bind(Messages.ConnectorMigrator_Validating_connection_to_X,
+					newRepository.getRepositoryLabel()));
 			AbstractRepositoryConnector newConnector = getRepositoryManager()
 					.getRepositoryConnector(newRepository.getConnectorKind());
 			try {
@@ -262,7 +264,8 @@ public class ConnectorMigrator {
 	protected void disconnect(TaskRepository repository) {
 		repository.setOffline(true);
 		// we need to change the label so that the new repo doesn't have the same label, so that it can be edited
-		repository.setRepositoryLabel(repository.getRepositoryLabel() + " (Unsupported, do not delete)");
+		repository.setRepositoryLabel(
+				NLS.bind(Messages.ConnectorMigrator_X_Unsupported_do_not_delete, repository.getRepositoryLabel()));
 		Set<RepositoryQuery> queriesForUrl = getTaskList().getRepositoryQueries(repository.getRepositoryUrl());
 		for (RepositoryQuery query : Sets.filter(queriesForUrl, isQueryForConnector(repository.getConnectorKind()))) {
 			query.setAutoUpdate(false);// prevent error logged when Mylyn asks new connector to sync query for old connector
@@ -312,14 +315,14 @@ public class ConnectorMigrator {
 		for (Entry<TaskRepository, TaskRepository> entry : repositories.entrySet()) {
 			TaskRepository oldRepository = entry.getKey();
 			TaskRepository newRepository = entry.getValue();
-			monitor.subTask("Migrating tasks for " + newRepository);
+			monitor.subTask(NLS.bind(Messages.ConnectorMigrator_Migrating_tasks_for_X, newRepository));
 			AbstractRepositoryConnector newConnector = getRepositoryManager()
 					.getRepositoryConnector(newRepository.getConnectorKind());
 			Set<ITask> tasksToMigrate = Sets.filter(getTaskList().getTasks(oldRepository.getRepositoryUrl()),
 					isTaskForConnector(oldRepository.getConnectorKind()));
 			migrateTasks(tasksToMigrate, oldRepository, newRepository, newConnector, monitor);
 		}
-		monitor.subTask("Waiting for tasks to synchronize");
+		monitor.subTask(Messages.ConnectorMigrator_Waiting_for_tasks_to_synchronize);
 		getSyncTaskJobListener().start();
 		while (!getSyncTaskJobListener().isComplete()) {
 			try {

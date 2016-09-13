@@ -44,6 +44,24 @@ public class Messages extends NLS {
 
 	public static String CompleteConnectorMigrationWizard_Waiting_for_queries_to_synchronize;
 
+	public static String ConnectorMigrationUi_Backing_up_task_list;
+
+	public static String ConnectorMigrationUi_Complete_Connector_Migration_Prompt;
+
+	public static String ConnectorMigrationUi_Connector_Migration;
+
+	public static String ConnectorMigrationUi_Connector_Migration_Complete;
+
+	public static String ConnectorMigrationUi_Connector_migration_completed_successfully_You_may_resume_using_the_task_list;
+
+	public static String ConnectorMigrationUi_Deleting_old_repository_tasks_and_queries;
+
+	public static String ConnectorMigrationUi_End_of_Connector_Support;
+
+	public static String ConnectorMigrationUi_Error_deleting_task;
+
+	public static String ConnectorMigrationUi_Validation_Failed;
+
 	public static String ConnectorMigrationWizard_Connector_Migration;
 
 	public static String ConnectorMigrationWizard_End_of_Connector_Support;
@@ -56,6 +74,8 @@ public class Messages extends NLS {
 
 	public static String ConnectorMigrationWizard_Select_the_connectors_to_migrate;
 
+	public static String ConnectorMigrationWizard_used_by_X_repositories;
+
 	public static String ConnectorMigrationWizard_validation_failed;
 
 	public static String ConnectorMigrator_complete_migration_prompt_message;
@@ -63,6 +83,20 @@ public class Messages extends NLS {
 	public static String ConnectorMigrator_complete_migration_prompt_title;
 
 	public static String ConnectorMigrator_Migrating_Queries;
+
+	public static String ConnectorMigrator_Migrating_repositories;
+
+	public static String ConnectorMigrator_Migrating_tasks_for_X;
+
+	public static String ConnectorMigrator_Migrating_X;
+
+	public static String ConnectorMigrator_Validating_connection_to_X;
+
+	public static String ConnectorMigrator_Validating_repository_connections;
+
+	public static String ConnectorMigrator_Waiting_for_tasks_to_synchronize;
+
+	public static String ConnectorMigrator_X_Unsupported_do_not_delete;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

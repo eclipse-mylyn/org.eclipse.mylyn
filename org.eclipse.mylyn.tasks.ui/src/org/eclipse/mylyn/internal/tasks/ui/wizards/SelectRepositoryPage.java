@@ -258,7 +258,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 						getContainer().showPage(getNextPage());
 					} catch (RuntimeException e) {
 						StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-								"Exception while opening the next wizard page", e));
+								"Exception while opening the next wizard page", e)); //$NON-NLS-1$
 					}
 				} else if (canFinish()) {
 					if (getWizard().performFinish()) {
