@@ -11,27 +11,15 @@
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
 
-import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.LoginToken;
 
-public class BugzillaRestHttpClient extends CommonHttpClient {
-	private LoginToken loginToken = null;
+import com.google.gson.reflect.TypeToken;
 
-	public BugzillaRestHttpClient(RepositoryLocation location) {
-		super(location);
-	}
+public class BugzillaRestLoginRequest extends BugzillaRestGetRequest<LoginToken> {
 
-	public LoginToken getLoginToken() {
-		return loginToken;
-	}
-
-	public void setLoginToken(LoginToken loginToken) {
-		this.loginToken = loginToken;
-	}
-
-	@Override
-	public boolean needsAuthentication() {
-		return ((loginToken == null) || super.needsAuthentication());
+	public BugzillaRestLoginRequest(CommonHttpClient client) {
+		super(client, "/login?", new TypeToken<LoginToken>() { //$NON-NLS-1$
+		});
 	}
 }

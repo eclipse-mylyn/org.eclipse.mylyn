@@ -26,10 +26,11 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
+import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
+import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpResponse;
 import org.eclipse.mylyn.commons.repositories.http.core.HttpUtil;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.BugzillaRestIdResult;
-import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.LoginToken;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.osgi.util.NLS;
@@ -42,33 +43,28 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
-public class BugzillaRestPostNewTask extends BugzillaRestAuthenticatedPostRequest<BugzillaRestIdResult> {
+public class BugzillaRestPostNewTask extends BugzillaRestPostRequest<BugzillaRestIdResult> {
 	TaskData taskData;
 
-	public BugzillaRestPostNewTask(BugzillaRestHttpClient client, TaskData taskData) {
-		super(client);
+	public BugzillaRestPostNewTask(CommonHttpClient client, TaskData taskData) {
+		super(client, "/bug"); //$NON-NLS-1$
 		this.taskData = taskData;
-	}
-
-	@Override
-	protected String getUrlSuffix() {
-		return "/bug"; //$NON-NLS-1$
 	}
 
 	List<NameValuePair> requestParameters;
 
 	class TaskAttributeTypeAdapter extends TypeAdapter<TaskData> {
-		LoginToken token;
+		RepositoryLocation location;
 
-		public TaskAttributeTypeAdapter(LoginToken token) {
+		public TaskAttributeTypeAdapter(RepositoryLocation location) {
 			super();
-			this.token = token;
+			this.location = location;
 		}
 
 		@Override
 		public void write(JsonWriter out, TaskData value) throws IOException {
 			out.beginObject();
-			out.name("Bugzilla_token").value(token.getToken()); //$NON-NLS-1$
+			addAuthenticationToGson(out, location);
 			for (Object element : taskData.getRoot().getAttributes().values()) {
 				TaskAttribute taskAttribute = (TaskAttribute) element;
 				String id = taskAttribute.getId();
@@ -76,7 +72,7 @@ public class BugzillaRestPostNewTask extends BugzillaRestAuthenticatedPostReques
 				if (legalCreateAttributes.contains(id) || id.startsWith("cf_")) { //$NON-NLS-1$
 					id = BugzillaRestCreateTaskSchema.getFieldNameFromAttributeName(id);
 					if (id.equals("status") //$NON-NLS-1$
-							&& (value != null && value.equals(TaskAttribute.PREFIX_OPERATION + "default"))) {
+							&& (value != null && value.equals(TaskAttribute.PREFIX_OPERATION + "default"))) { //$NON-NLS-1$
 						continue;
 					} else if (id.equals("cc")) { //$NON-NLS-1$
 						HashSet<String> setNew = new HashSet<String>(
@@ -134,10 +130,11 @@ public class BugzillaRestPostNewTask extends BugzillaRestAuthenticatedPostReques
 	@Override
 	protected void addHttpRequestEntities(HttpRequestBase request) throws BugzillaRestException {
 		super.addHttpRequestEntities(request);
-		LoginToken token = ((BugzillaRestHttpClient) getClient()).getLoginToken();
+
 		try {
 			// set form parameters
-			Gson gson = new GsonBuilder().registerTypeAdapter(TaskData.class, new TaskAttributeTypeAdapter(token))
+			Gson gson = new GsonBuilder()
+					.registerTypeAdapter(TaskData.class, new TaskAttributeTypeAdapter(getClient().getLocation()))
 					.create();
 			StringEntity requestEntity = new StringEntity(gson.toJson(taskData));
 			((HttpPost) request).setEntity(requestEntity);

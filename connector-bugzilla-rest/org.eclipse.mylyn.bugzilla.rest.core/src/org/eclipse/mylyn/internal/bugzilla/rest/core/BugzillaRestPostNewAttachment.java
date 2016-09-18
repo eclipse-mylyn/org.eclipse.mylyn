@@ -15,7 +15,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.util.List;
 
@@ -31,10 +31,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
+import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpResponse;
 import org.eclipse.mylyn.commons.repositories.http.core.HttpUtil;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.BugzillaRestIdsResult;
-import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.LoginToken;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -42,8 +42,9 @@ import org.eclipse.osgi.util.NLS;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonWriter;
 
-public class BugzillaRestPostNewAttachment extends BugzillaRestAuthenticatedPostRequest<BugzillaRestIdsResult> {
+public class BugzillaRestPostNewAttachment extends BugzillaRestPostRequest<BugzillaRestIdsResult> {
 	private final String bugReportID;
 
 	private final String comment;
@@ -52,18 +53,13 @@ public class BugzillaRestPostNewAttachment extends BugzillaRestAuthenticatedPost
 
 	private final TaskAttribute attachmentAttribute;
 
-	public BugzillaRestPostNewAttachment(BugzillaRestHttpClient client, String bugReportID, String comment,
+	public BugzillaRestPostNewAttachment(CommonHttpClient client, String bugReportID, String comment,
 			AbstractTaskAttachmentSource source, TaskAttribute attachmentAttribute, IOperationMonitor monitor) {
-		super(client);
+		super(client, "/bug/" + bugReportID + "/attachment"); //$NON-NLS-1$ //$NON-NLS-2$
 		this.bugReportID = bugReportID;
 		this.comment = comment;
 		this.source = source;
 		this.attachmentAttribute = attachmentAttribute;
-	}
-
-	@Override
-	protected String getUrlSuffix() {
-		return "/bug/" + bugReportID + "/attachment"; //$NON-NLS-1$
 	}
 
 	List<NameValuePair> requestParameters;
@@ -72,7 +68,6 @@ public class BugzillaRestPostNewAttachment extends BugzillaRestAuthenticatedPost
 	protected void addHttpRequestEntities(HttpRequestBase request) throws BugzillaRestException {
 		super.addHttpRequestEntities(request);
 
-		LoginToken token = ((BugzillaRestHttpClient) getClient()).getLoginToken();
 		String description = source.getDescription();
 		String contentType = source.getContentType();
 		String filename = source.getName();
@@ -128,15 +123,25 @@ public class BugzillaRestPostNewAttachment extends BugzillaRestAuthenticatedPost
 		Base64 base64 = new Base64();
 		String dataBase64 = base64.encodeAsString(outb.toByteArray());
 		try {
-			String gsonString = "{\"Bugzilla_token\":\"" + token.getToken() + "\", \"ids\" : [ " + bugReportID + " ]," //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					+ " \"is_patch\" : " + Boolean.toString(isPatch) + "," + " \"summary\" : \"" + description + "\"," //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$//$NON-NLS-4$
-					+ " \"content_type\" : \"" + contentType + "\"," + " \"data\" : \"" + dataBase64 + "\"," //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$//$NON-NLS-4$
-					+ " \"file_name\" : \"" + filename + "\"," + " \"is_private\" : false}"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			StringEntity requestEntity = new StringEntity(gsonString);
+			StringWriter stringWriter = new StringWriter();
+			JsonWriter out = new JsonWriter(stringWriter);
+			out.setLenient(true);
+			out.beginObject();
+			addAuthenticationToGson(out, getClient().getLocation());
+			out.name("ids").beginArray().value(Integer.parseInt(bugReportID)).endArray(); //$NON-NLS-1$
+			out.name("is_patch").value(isPatch); //$NON-NLS-1$
+			out.name("summary").value(description); //$NON-NLS-1$
+			out.name("content_type").value(contentType); //$NON-NLS-1$
+			out.name("data").value(dataBase64); //$NON-NLS-1$
+			out.name("file_name").value(filename); //$NON-NLS-1$
+			out.name("is_private").value(false); //$NON-NLS-1$
+			out.endObject();
+			out.close();
+			StringEntity requestEntity = new StringEntity(stringWriter.toString());
 			((HttpPost) request).setEntity(requestEntity);
-		} catch (UnsupportedEncodingException e) {
+		} catch (IOException e) {
 			throw new BugzillaRestException(
-					"BugzillaRestPostNewAttachment.createHttpRequestBase could not create StringEntity", e);
+					"BugzillaRestPostNewAttachment.createHttpRequestBase could not create RequestEntity", e);
 		}
 	}
 

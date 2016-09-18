@@ -11,23 +11,29 @@
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.MessageFormat;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
+import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationException;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationRequest;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
+import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpOperation;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpResponse;
 import org.eclipse.mylyn.commons.repositories.http.core.HttpUtil;
-import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.LoginToken;
 import org.eclipse.osgi.util.NLS;
+
+import com.google.gson.stream.JsonWriter;
 
 public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
 	protected static final String ACCEPT = "Accept"; //$NON-NLS-1$
@@ -38,11 +44,22 @@ public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
 
 	protected static final String TEXT_XML_CHARSET_UTF_8 = "text/xml; charset=UTF-8"; //$NON-NLS-1$
 
-	public BugzillaRestRequest(BugzillaRestHttpClient client) {
+	private final boolean authenticationRequired;
+
+	private final String urlSuffix;
+
+	public BugzillaRestRequest(CommonHttpClient client, String urlSuffix, boolean authenticationRequired) {
 		super(client);
+		this.authenticationRequired = authenticationRequired;
+		this.urlSuffix = urlSuffix;
 	}
 
-	protected abstract T execute(IOperationMonitor monitor) throws IOException, BugzillaRestException;
+	protected T execute(IOperationMonitor monitor) throws IOException, BugzillaRestException {
+		HttpRequestBase request = createHttpRequestBase();
+		addHttpRequestEntities(request);
+		CommonHttpResponse response = execute(request, monitor);
+		return processAndRelease(response, monitor);
+	}
 
 	protected abstract T parseFromJson(InputStreamReader in) throws BugzillaRestException;
 
@@ -62,19 +79,20 @@ public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
 	}
 
 	protected String getUrlSuffix() {
-		return ""; //$NON-NLS-1$
+		return urlSuffix;
 	}
 
 	protected String createHttpRequestURL() {
-		String bugUrl = getUrlSuffix();
-		LoginToken token = ((BugzillaRestHttpClient) getClient()).getLoginToken();
-		if (token != null && bugUrl.length() > 0) {
-			if (!bugUrl.endsWith("?")) { //$NON-NLS-1$
-				bugUrl += "&"; //$NON-NLS-1$
+		String urlSuffix = getUrlSuffix();
+		if (urlSuffix.length() > 0 && authenticationRequired) {
+			if (!urlSuffix.endsWith("?")) { //$NON-NLS-1$
+				urlSuffix += "&"; //$NON-NLS-1$
 			}
-			bugUrl += "token=" + token.getToken(); //$NON-NLS-1$
+			UserCredentials credentials = getCredentials();
+			urlSuffix += MessageFormat.format("Bugzilla_login={0}&Bugzilla_password={1}", //$NON-NLS-1$
+					new Object[] { credentials.getUserName(), credentials.getPassword() });
 		}
-		return baseUrl() + bugUrl;
+		return baseUrl() + urlSuffix;
 	}
 
 	protected void addHttpRequestEntities(HttpRequestBase request) throws BugzillaRestException {
@@ -136,4 +154,25 @@ public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
 		}
 	}
 
+	@Override
+	protected boolean needsAuthentication() {
+		return false;
+	}
+
+	protected void addAuthenticationToGson(JsonWriter out, RepositoryLocation location) {
+		UserCredentials credentials = getCredentials();
+
+		try {
+			out.name("Bugzilla_login").value(credentials.getUserName()); //$NON-NLS-1$
+			out.name("Bugzilla_password").value(credentials.getPassword()); //$NON-NLS-1$
+		} catch (IOException e) {
+			throw new BugzillaRestRuntimeException("Authentication requested with IOException", e); //$NON-NLS-1$
+		}
+	}
+
+	protected UserCredentials getCredentials() {
+		UserCredentials credentials = getClient().getLocation().getCredentials(AuthenticationType.REPOSITORY);
+		checkState(credentials != null, "Authentication requested without valid credentials");
+		return credentials;
+	}
 }

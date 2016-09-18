@@ -20,6 +20,7 @@ import org.apache.commons.codec.binary.Base64InputStream;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 import com.google.gson.GsonBuilder;
@@ -31,10 +32,10 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.reflect.TypeToken;
 
-public class BugzillaRestGetTaskAttachmentData extends BugzillaRestAuthenticatedGetRequest<InputStream> {
+public class BugzillaRestGetTaskAttachmentData extends BugzillaRestGetRequest<InputStream> {
 	private final TaskAttribute taskAttribute;
 
-	public BugzillaRestGetTaskAttachmentData(BugzillaRestHttpClient client, TaskAttribute taskAttribute) {
+	public BugzillaRestGetTaskAttachmentData(CommonHttpClient client, TaskAttribute taskAttribute) {
 		super(client, "/bug/attachment/" + taskAttribute.getValue() + "?include_fields=data", null); //$NON-NLS-1$ //$NON-NLS-2$
 		this.taskAttribute = taskAttribute;
 	}

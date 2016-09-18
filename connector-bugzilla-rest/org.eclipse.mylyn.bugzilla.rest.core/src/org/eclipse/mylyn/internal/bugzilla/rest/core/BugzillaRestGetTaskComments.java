@@ -24,6 +24,7 @@ import java.util.TimeZone;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
@@ -37,10 +38,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
-public class BugzillaRestGetTaskComments extends BugzillaRestAuthenticatedGetRequest<ArrayList<TaskAttribute>> {
+public class BugzillaRestGetTaskComments extends BugzillaRestGetRequest<ArrayList<TaskAttribute>> {
 	private final TaskData taskData;
 
-	public BugzillaRestGetTaskComments(BugzillaRestHttpClient client, TaskData taskData) {
+	public BugzillaRestGetTaskComments(CommonHttpClient client, TaskData taskData) {
 		super(client, "/bug/" + taskData.getTaskId() + "/comment?", null); //$NON-NLS-1$ //$NON-NLS-2$
 		this.taskData = taskData;
 	}

@@ -29,6 +29,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
+import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpResponse;
 import org.eclipse.mylyn.commons.repositories.http.core.HttpUtil;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -46,24 +47,17 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
-public class BugzillaRestGetTaskData extends BugzillaRestAuthenticatedGetRequest<List<TaskData>> {
-	private final String urlSuffix;
+public class BugzillaRestGetTaskData extends BugzillaRestGetRequest<List<TaskData>> {
 
 	private final TaskRepository taskRepository;
 
 	private final BugzillaRestConnector connector;
 
-	public BugzillaRestGetTaskData(BugzillaRestHttpClient client, BugzillaRestConnector connector, String urlSuffix,
+	public BugzillaRestGetTaskData(CommonHttpClient client, BugzillaRestConnector connector, String urlSuffix,
 			TaskRepository taskRepository) {
-		super(client, "", null); //$NON-NLS-1$
-		this.urlSuffix = urlSuffix;
+		super(client, "/bug?" + urlSuffix, null); //$NON-NLS-1$
 		this.taskRepository = taskRepository;
 		this.connector = connector;
-	}
-
-	@Override
-	protected String getUrlSuffix() {
-		return "/bug?" + urlSuffix; //$NON-NLS-1$
 	}
 
 	@Override

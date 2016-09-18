@@ -24,6 +24,7 @@ import java.util.TimeZone;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -36,10 +37,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
-public class BugzillaRestGetTaskAttachments extends BugzillaRestAuthenticatedGetRequest<ArrayList<TaskAttribute>> {
+public class BugzillaRestGetTaskAttachments extends BugzillaRestGetRequest<ArrayList<TaskAttribute>> {
 	private final TaskData taskData;
 
-	public BugzillaRestGetTaskAttachments(BugzillaRestHttpClient client, TaskData taskData) {
+	public BugzillaRestGetTaskAttachments(CommonHttpClient client, TaskData taskData) {
 		super(client, "/bug/" + taskData.getTaskId() + "/attachment?exclude_fields=data", null); //$NON-NLS-1$ //$NON-NLS-2$
 		this.taskData = taskData;
 	}

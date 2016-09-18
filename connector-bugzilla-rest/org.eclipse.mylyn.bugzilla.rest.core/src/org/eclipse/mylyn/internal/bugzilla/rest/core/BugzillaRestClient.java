@@ -26,10 +26,11 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
+import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.BugzillaRestIdResult;
-import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.ErrorResponse;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Field;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.FieldResponse;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.LoginToken;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Named;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.ParameterResponse;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Product;
@@ -49,6 +50,7 @@ import org.eclipse.osgi.util.NLS;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -56,18 +58,18 @@ import com.google.gson.reflect.TypeToken;
 
 public class BugzillaRestClient {
 
-	private final BugzillaRestHttpClient client;
+	private final CommonHttpClient client;
 
 	private final BugzillaRestConnector connector;
 
 	public static final int MAX_RETRIEVED_PER_QUERY = 50;
 
 	public BugzillaRestClient(RepositoryLocation location, BugzillaRestConnector connector) {
-		client = new BugzillaRestHttpClient(location);
+		client = new CommonHttpClient(location);
 		this.connector = connector;
 	}
 
-	public BugzillaRestHttpClient getClient() {
+	public CommonHttpClient getClient() {
 		return client;
 	}
 
@@ -80,8 +82,11 @@ public class BugzillaRestClient {
 	}
 
 	public boolean validate(IOperationMonitor monitor) throws BugzillaRestException {
-		ErrorResponse validateResponse = new BugzillaRestValidateRequest(client).run(monitor);
-		return validateResponse.isError() && validateResponse.getCode() == 32614;
+		LoginToken validateResponse = new BugzillaRestLoginRequest(client).run(monitor);
+		if (validateResponse != null && !Strings.isNullOrEmpty(validateResponse.getId())) {
+				return true;
+		}
+		return false;
 	}
 
 	public BugzillaRestConfiguration getConfiguration(TaskRepository repository, IOperationMonitor monitor) {
@@ -101,7 +106,7 @@ public class BugzillaRestClient {
 
 	public <R extends RestResponse<E>, E extends Named> Map<String, E> retrieveItems(IOperationMonitor monitor,
 			String path, TypeToken<?> typeToken) throws BugzillaRestException {
-		R response = new BugzillaRestAuthenticatedGetRequest<R>(client, path, typeToken).run(monitor);
+		R response = new BugzillaRestGetRequest<R>(client, path, typeToken).run(monitor);
 		E[] members = response.getArray();
 		return Maps.uniqueIndex(Lists.newArrayList(members), new Function<E, String>() {
 			public String apply(E input) {
@@ -121,7 +126,7 @@ public class BugzillaRestClient {
 	}
 
 	public ParameterResponse getParameters(IOperationMonitor monitor) throws BugzillaRestException {
-		return new BugzillaRestAuthenticatedGetRequest<ParameterResponse>(client, "/parameters?", //$NON-NLS-1$
+		return new BugzillaRestGetRequest<ParameterResponse>(client, "/parameters?", //$NON-NLS-1$
 				new TypeToken<ParameterResponse>() {
 				}).run(monitor);
 	}

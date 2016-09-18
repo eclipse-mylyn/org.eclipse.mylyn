@@ -54,7 +54,6 @@ import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestTaskAttachmentH
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestTaskSchema;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestVersion;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Field;
-import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.LoginToken;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Parameters;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Product;
 import org.eclipse.mylyn.internal.commons.core.operations.NullOperationMonitor;
@@ -117,7 +116,6 @@ public class BugzillaRestClientTest {
 	public void testGetVersion() throws Exception {
 		BugzillaRestClient client = new BugzillaRestClient(actualFixture.location(), connector);
 		assertNotNull(client.getClient());
-		assertNull(client.getClient().getLoginToken());
 		BugzillaRestVersion version = client.getVersion(new NullOperationMonitor());
 		assertEquals("expeccted: " + actualFixture.getVersion() + " actual: " + version.toString(),
 				actualFixture.getVersion(), version.toString());
@@ -127,14 +125,7 @@ public class BugzillaRestClientTest {
 	public void testValidate() throws Exception {
 		BugzillaRestClient client = new BugzillaRestClient(actualFixture.location(), connector);
 		assertNotNull(client.getClient());
-		assertNull(client.getClient().getLoginToken());
 		assertTrue(client.validate(new NullOperationMonitor()));
-		assertNotNull(client.getClient());
-		LoginToken token = client.getClient().getLoginToken();
-		assertNotNull(token);
-		assertEquals("2", token.getId());
-		assertNotNull(token.getToken());
-		assertTrue(token.getToken().length() > 0);
 	}
 
 	@Test
@@ -145,11 +136,14 @@ public class BugzillaRestClientTest {
 		location.setCredentialsStore(new InMemoryCredentialsStore());
 		location.setCredentials(AuthenticationType.REPOSITORY, new UserCredentials("wrong", "wrong"));
 		thrown.expect(BugzillaRestException.class);
-		thrown.expectMessage("Authentication failed");
+//		if (actualFixture.getVersion().compareTo("5.1") < 0) {
+		thrown.expectMessage("Unauthorized");
+//		} else {
+//			thrown.expectMessage("Unexpected response from Bugzilla REST server");
+//		}
 		BugzillaRestClient client;
 		client = new BugzillaRestClient(location, connector);
 		assertNotNull(client.getClient());
-		assertNull(client.getClient().getLoginToken());
 		client.validate(new NullOperationMonitor());
 	}
 
@@ -164,8 +158,6 @@ public class BugzillaRestClientTest {
 		thrown.expectMessage("Authentication requested without valid credentials");
 		BugzillaRestClient client;
 		client = new BugzillaRestClient(location, connector);
-		assertNotNull(client.getClient());
-		assertNull(client.getClient().getLoginToken());
 		client.validate(new NullOperationMonitor());
 	}
 

@@ -37,7 +37,7 @@ public class ValidationTest extends AbstractTckTest {
 	@Test
 	public void testInvalidateCredentials() throws CoreException {
 		thrown.expect(CoreException.class);
-		thrown.expectMessage("Authentication failed");
+		thrown.expectMessage("Unauthorized");
 		TaskRepository repository = fixture().createRepository();
 		org.eclipse.mylyn.commons.net.AuthenticationCredentials invalideCreds = new org.eclipse.mylyn.commons.net.AuthenticationCredentials(
 				"invalidateCredentials", "invalidateCredentials");

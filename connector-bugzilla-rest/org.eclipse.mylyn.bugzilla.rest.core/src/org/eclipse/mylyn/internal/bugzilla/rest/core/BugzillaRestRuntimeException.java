@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Frank Becker and others.
+ * Copyright (c) 2016 Frank Becker and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,14 +11,22 @@
 
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
 
-import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
+public class BugzillaRestRuntimeException extends RuntimeException {
 
-import com.google.gson.reflect.TypeToken;
+	private static final long serialVersionUID = 5028038807086982720L;
 
-public class BugzillaRestUnauthenticatedGetRequest<T> extends BugzillaRestGetRequest<T> {
-
-	public BugzillaRestUnauthenticatedGetRequest(CommonHttpClient client, String urlSuffix, TypeToken<?> responseType) {
-		super(client, urlSuffix, responseType, false);
+	public BugzillaRestRuntimeException() {
 	}
 
+	public BugzillaRestRuntimeException(String message) {
+		super(message);
+	}
+
+	public BugzillaRestRuntimeException(Throwable cause) {
+		super(cause.getMessage(), cause);
+	}
+
+	public BugzillaRestRuntimeException(String message, Throwable cause) {
+		super(message, cause);
+	}
 }

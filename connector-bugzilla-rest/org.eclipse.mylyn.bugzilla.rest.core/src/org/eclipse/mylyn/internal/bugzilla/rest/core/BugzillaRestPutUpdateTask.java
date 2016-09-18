@@ -26,13 +26,15 @@ import org.apache.http.entity.StringEntity;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.LoginToken;
+import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
+import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.PutUpdateResult;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.gson.Gson;
@@ -42,7 +44,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
-public class BugzillaRestPutUpdateTask extends BugzillaRestAuthenticatedPutRequest<PutUpdateResult> {
+public class BugzillaRestPutUpdateTask extends BugzillaRestPutRequest<PutUpdateResult> {
 	private final TaskData taskData;
 
 	class OldAttributes {
@@ -84,11 +86,11 @@ public class BugzillaRestPutUpdateTask extends BugzillaRestAuthenticatedPutReque
 			.build();
 
 	class TaskAttributeTypeAdapter extends TypeAdapter<OldAttributes> {
-		LoginToken token;
+		RepositoryLocation location;
 
-		public TaskAttributeTypeAdapter(LoginToken token) {
+		public TaskAttributeTypeAdapter(RepositoryLocation location) {
 			super();
-			this.token = token;
+			this.location = location;
 		}
 
 		private final Function<String, String> function = new Function<String, String>() {
@@ -102,7 +104,7 @@ public class BugzillaRestPutUpdateTask extends BugzillaRestAuthenticatedPutReque
 		@Override
 		public void write(JsonWriter out, OldAttributes oldValues) throws IOException {
 			out.beginObject();
-			out.name("Bugzilla_token").value(token.getToken()); //$NON-NLS-1$
+			addAuthenticationToGson(out, location);
 			for (TaskAttribute element : oldValues.oldAttributes) {
 				TaskAttribute taskAttribute = taskData.getRoot().getAttribute(element.getId());
 				String id = taskAttribute.getId();
@@ -204,37 +206,25 @@ public class BugzillaRestPutUpdateTask extends BugzillaRestAuthenticatedPutReque
 
 	}
 
-	public BugzillaRestPutUpdateTask(BugzillaRestHttpClient client, TaskData taskData,
-			Set<TaskAttribute> oldAttributes) {
-		super(client);
+	public BugzillaRestPutUpdateTask(CommonHttpClient client, TaskData taskData, Set<TaskAttribute> oldAttributes) {
+		super(client, "/bug/" + taskData.getTaskId(), false); //$NON-NLS-1$
 		this.taskData = taskData;
 		this.oldAttributes = new OldAttributes(oldAttributes);
-	}
-
-	@Override
-	protected String getUrlSuffix() {
-		return "/bug/" + taskData.getTaskId(); //$NON-NLS-1$
 	}
 
 	List<NameValuePair> requestParameters;
 
 	@Override
-	protected String createHttpRequestURL() {
-		String bugUrl = getUrlSuffix();
-		return baseUrl() + bugUrl;
-	}
-
-	@Override
 	protected void addHttpRequestEntities(HttpRequestBase request) throws BugzillaRestException {
 		super.addHttpRequestEntities(request);
-		LoginToken token = ((BugzillaRestHttpClient) getClient()).getLoginToken();
 		try {
-			Gson gson = new GsonBuilder().registerTypeAdapter(OldAttributes.class, new TaskAttributeTypeAdapter(token))
+			Gson gson = new GsonBuilder()
+					.registerTypeAdapter(OldAttributes.class, new TaskAttributeTypeAdapter(getClient().getLocation()))
 					.create();
 			StringEntity requestEntity = new StringEntity(gson.toJson(oldAttributes));
 			((HttpPut) request).setEntity(requestEntity);
 		} catch (UnsupportedEncodingException e) {
-			com.google.common.base.Throwables.propagate(new CoreException(
+			Throwables.propagate(new CoreException(
 					new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, "Can not build HttpRequest", e))); //$NON-NLS-1$
 		}
 	}
