@@ -4,7 +4,7 @@ Bundle-Name: EGit GitHub API Core
 Bundle-SymbolicName: org.eclipse.egit.github.core
 Bundle-Version: 4.6.0.qualifier
 Bundle-Vendor: Eclipse EGit
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: com.google.gson;version="[1.6.0,3.0.0)",
  com.google.gson.annotations;version="[1.6.0,3.0.0)",
  com.google.gson.reflect;version="[1.6.0,3.0.0)",
