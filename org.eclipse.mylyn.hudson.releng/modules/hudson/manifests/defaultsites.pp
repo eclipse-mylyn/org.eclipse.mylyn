@@ -27,7 +27,7 @@ define hudson::defaultsites ($base = $hudson::base,) {
     qualifier => "stable",
   }
 
-  hudson::hudson { "2.7.2":
+  hudson::hudson { "2.7.3":
     type      => "jenkins",
     qualifier => "stable",
   }
@@ -58,12 +58,12 @@ define hudson::defaultsites ($base = $hudson::base,) {
     folderPlugin => true,
   }
 
-  hudson::site { "jenkins-2.7.2":
+  hudson::site { "jenkins-2.7.3":
     envtype => "jenkins",
-    version => "2.7.2",
+    version => "2.7.3",
     port    => 9273,
     envdefault => true,
-    require => Hudson["2.7.2"],
+    require => Hudson["2.7.3"],
     folderPlugin => true,
   }
 
