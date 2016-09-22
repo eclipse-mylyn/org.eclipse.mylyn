@@ -76,7 +76,9 @@ public class RepositoryElementActionGroup {
 
 	private final CopyTaskDetailsAction copyKeyAction;
 
-	private final CopyTaskDetailsAction copyDetailsAction;
+	private final CopyTaskDetailsAction copyKeySummaryAction;
+
+	private final CopyTaskDetailsAction copyKeySummaryURLAction;
 
 	private final OpenTaskListElementAction openAction;
 
@@ -118,9 +120,10 @@ public class RepositoryElementActionGroup {
 
 		copyKeyAction = add(new CopyTaskDetailsAction(Mode.KEY));
 		copyUrlAction = add(new CopyTaskDetailsAction(Mode.URL));
-		copyDetailsAction = add(new CopyTaskDetailsAction(Mode.SUMMARY_URL));
+		copyKeySummaryAction = add(new CopyTaskDetailsAction(Mode.ID_SUMMARY));
+		copyKeySummaryURLAction = add(new CopyTaskDetailsAction(Mode.ID_SUMMARY_URL));
 		if (!isInEditor()) {
-			copyDetailsAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.COPY);
+			copyKeySummaryURLAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.COPY);
 		}
 
 		removeFromCategoryAction = add(new RemoveFromCategoryAction());
@@ -224,7 +227,8 @@ public class RepositoryElementActionGroup {
 					Messages.RepositoryElementActionGroup_Copy_Detail_Menu_Label, CopyTaskDetailsAction.ID);
 			copyDetailsSubMenu.add(copyKeyAction);
 			copyDetailsSubMenu.add(copyUrlAction);
-			copyDetailsSubMenu.add(copyDetailsAction);
+			copyDetailsSubMenu.add(copyKeySummaryAction);
+			copyDetailsSubMenu.add(copyKeySummaryURLAction);
 			manager.appendToGroup(ID_SEPARATOR_EDIT, copyDetailsSubMenu);
 		}
 		if (isInTaskList() && !selection.isEmpty()) {
@@ -395,7 +399,7 @@ public class RepositoryElementActionGroup {
 	}
 
 	public CopyTaskDetailsAction getCopyDetailsAction() {
-		return copyDetailsAction;
+		return copyKeySummaryURLAction;
 	}
 
 }

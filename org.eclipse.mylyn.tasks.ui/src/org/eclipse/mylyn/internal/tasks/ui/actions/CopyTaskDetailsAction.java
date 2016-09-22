@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import java.net.URL;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.commons.ui.ClipboardCopier;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
@@ -35,7 +36,16 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.copy"; //$NON-NLS-1$
 
 	public enum Mode {
-		KEY, URL, SUMMARY, SUMMARY_URL
+		KEY(Messages.CopyTaskDetailsAction_ID_Menu_Label), URL(
+				Messages.CopyTaskDetailsAction_Url_Menu_Label), ID_SUMMARY(
+						Messages.CopyTaskDetailsAction_ID_Summary_Menu_Label), ID_SUMMARY_URL(
+								Messages.CopyTaskDetailsAction_ID_Summary_and_Url_Menu_Label);
+
+		private String message;
+
+		private Mode(String message) {
+			this.message = message;
+		}
 	}
 
 	private Mode mode;
@@ -52,20 +62,7 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 	public void setMode(Mode mode) {
 		Assert.isNotNull(mode);
 		this.mode = mode;
-		switch (mode) {
-		case KEY:
-			setText(Messages.CopyTaskDetailsAction_ID_Menu_Label);
-			break;
-		case URL:
-			setText(Messages.CopyTaskDetailsAction_Url_Menu_Label);
-			break;
-		case SUMMARY:
-			setText(Messages.CopyTaskDetailsAction_Summary_Menu_Label);
-			break;
-		case SUMMARY_URL:
-			setText(Messages.CopyTaskDetailsAction_Summary_and_Url_Menu_Label);
-			break;
-		}
+		setText(mode.message);
 	}
 
 	@Override
@@ -78,7 +75,7 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 	}
 
 	public static String getTextForTask(Object object) {
-		return getTextForTask(object, Mode.SUMMARY_URL);
+		return getTextForTask(object, Mode.ID_SUMMARY_URL);
 	}
 
 	// TODO move to TasksUiUtil / into core
@@ -101,11 +98,11 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 				}
 			}
 			break;
-		case SUMMARY:
+		case ID_SUMMARY:
 			if (object instanceof ITask) {
 				ITask task = (ITask) object;
 				if (task.getTaskKey() != null) {
-					sb.append(TasksUiInternal.getTaskPrefix(task.getConnectorKind()));
+					sb.append(StringUtils.capitalize(TasksUiInternal.getTaskPrefix(task.getConnectorKind())));
 					sb.append(task.getTaskKey());
 					sb.append(": "); //$NON-NLS-1$
 				}
@@ -115,11 +112,10 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 				sb.append(element.getSummary());
 			}
 			break;
-		case SUMMARY_URL:
+		case ID_SUMMARY_URL:
 			if (object instanceof ITask) {
 				ITask task = (ITask) object;
 				if (task.getTaskKey() != null) {
-					//sb.append(TasksUiInternal.getTaskPrefix(task.getConnectorKind()));
 					sb.append(task.getTaskKey());
 					sb.append(": "); //$NON-NLS-1$
 				}

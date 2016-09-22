@@ -14,8 +14,6 @@ package org.eclipse.mylyn.tasks.tests;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.commons.ui.ClipboardCopier;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
@@ -26,6 +24,8 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -81,12 +81,12 @@ public class CopyDetailsActionTest extends TestCase {
 				return "http://321.com";
 			}
 		};
-		AbstractRepositoryConnector oldConnector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				MockRepositoryConnector.CONNECTOR_KIND);
+		AbstractRepositoryConnector oldConnector = TasksUi.getRepositoryManager()
+				.getRepositoryConnector(MockRepositoryConnector.CONNECTOR_KIND);
 		try {
 			((TaskRepositoryManager) TasksUi.getRepositoryManager()).addRepositoryConnector(connector);
 			assertEquals("321: s321" + ClipboardCopier.LINE_SEPARATOR + "http://321.com",
-					CopyTaskDetailsAction.getTextForTask(task, Mode.SUMMARY_URL));
+					CopyTaskDetailsAction.getTextForTask(task, Mode.ID_SUMMARY_URL));
 		} finally {
 			if (oldConnector != null) {
 				((TaskRepositoryManager) TasksUi.getRepositoryManager()).addRepositoryConnector(oldConnector);
@@ -115,13 +115,13 @@ public class CopyDetailsActionTest extends TestCase {
 
 		};
 
-		AbstractRepositoryConnector oldConnector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				MockRepositoryConnector.CONNECTOR_KIND);
+		AbstractRepositoryConnector oldConnector = TasksUi.getRepositoryManager()
+				.getRepositoryConnector(MockRepositoryConnector.CONNECTOR_KIND);
 		try {
 			((TaskRepositoryManager) TasksUi.getRepositoryManager()).addRepositoryConnector(connector);
-			assertEquals("123: Ticket 123" + ClipboardCopier.LINE_SEPARATOR
-					+ "http://mock-repo-evolved.com/tickets/123",
-					CopyTaskDetailsAction.getTextForTask(task, Mode.SUMMARY_URL));
+			assertEquals(
+					"123: Ticket 123" + ClipboardCopier.LINE_SEPARATOR + "http://mock-repo-evolved.com/tickets/123",
+					CopyTaskDetailsAction.getTextForTask(task, Mode.ID_SUMMARY_URL));
 			assertEquals("http://mock-repo-evolved.com/tickets/123",
 					CopyTaskDetailsAction.getTextForTask(task, Mode.URL));
 		} finally {
