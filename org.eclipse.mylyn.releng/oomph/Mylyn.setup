@@ -136,7 +136,7 @@
         <repository
             url="http://download.eclipse.org/eclipse/updates/3.8"/>
         <repository
-            url="http://download.eclipse.org/tools/orbit/downloads/drops/S201607281920/repository/"/>
+            url="http://download.eclipse.org/tools/orbit/downloads/drops/S20160916162009/repository/"/>
       </repositoryList>
       <repositoryList
           name="Neon">
@@ -1252,6 +1252,11 @@
             name="org.eclipse.mylyn.versions.development.feature.group"/>
         <sourceLocator
             rootFolder="${git.clone.mylyn.versions.location}"/>
+        <repositoryList
+            name="Oxygen">
+          <repository
+              url="http://subclipse.tigris.org/update_1.8.x"/>
+        </repositoryList>
         <repositoryList
             name="Neon">
           <repository
