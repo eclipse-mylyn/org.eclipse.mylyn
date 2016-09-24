@@ -69,6 +69,8 @@ public class Messages extends NLS {
 
 	public static String ScheduleTaskMenuContributor_Schedule_for;
 
+	public static String SynchronizeRelevantTasksJob_SynchronizingRelevantTasks;
+
 	public static String TaskAttachmentEditorViewer_Do_not_warn_me_again;
 
 	public static String TaskAttachmentEditorViewer_Open_Attachment;
