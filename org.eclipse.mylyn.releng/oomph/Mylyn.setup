@@ -164,45 +164,6 @@
         <repository
             url="http://download.eclipse.org/tools/orbit/downloads/drops/R20160221192158/repository/"/>
       </repositoryList>
-      <repositoryList
-          name="Luna">
-        <repository
-            url="http://download.eclipse.org/releases/luna"/>
-        <repository
-            url="http://download.eclipse.org/cbi/updates/license"/>
-        <repository
-            url="http://download.eclipse.org/mylyn/snapshots/weekly"/>
-        <repository
-            url="http://download.eclipse.org/eclipse/updates/3.8"/>
-        <repository
-            url="http://download.eclipse.org/tools/orbit/downloads/drops/R20150124073747/repository/"/>
-      </repositoryList>
-      <repositoryList
-          name="Kepler">
-        <repository
-            url="http://download.eclipse.org/releases/kepler"/>
-        <repository
-            url="http://download.eclipse.org/cbi/updates/license"/>
-        <repository
-            url="http://download.eclipse.org/mylyn/snapshots/weekly"/>
-        <repository
-            url="http://download.eclipse.org/eclipse/updates/3.8"/>
-        <repository
-            url="http://download.eclipse.org/tools/orbit/downloads/drops/R20140114142710/repository/"/>
-      </repositoryList>
-      <repositoryList
-          name="Juno">
-        <repository
-            url="http://download.eclipse.org/releases/juno"/>
-        <repository
-            url="http://download.eclipse.org/cbi/updates/license"/>
-        <repository
-            url="http://download.eclipse.org/mylyn/snapshots/weekly"/>
-        <repository
-            url="http://download.eclipse.org/eclipse/updates/3.8"/>
-        <repository
-            url="http://download.eclipse.org/tools/orbit/downloads/drops/R20130118183705/repository/"/>
-      </repositoryList>
     </targlet>
   </setupTask>
   <setupTask
@@ -1264,26 +1225,6 @@
         </repositoryList>
         <repositoryList
             name="Mars">
-          <repository
-              url="http://subclipse.tigris.org/update_1.8.x"/>
-        </repositoryList>
-        <repositoryList
-            name="Luna">
-          <repository
-              url="http://subclipse.tigris.org/update_1.8.x"/>
-        </repositoryList>
-        <repositoryList
-            name="Kepler">
-          <repository
-              url="http://subclipse.tigris.org/update_1.8.x"/>
-        </repositoryList>
-        <repositoryList
-            name="Juno">
-          <repository
-              url="http://subclipse.tigris.org/update_1.8.x"/>
-        </repositoryList>
-        <repositoryList
-            name="Indigo">
           <repository
               url="http://subclipse.tigris.org/update_1.8.x"/>
         </repositoryList>
