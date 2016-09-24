@@ -107,6 +107,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.activity.AbstractTaskActivityMonitor;
 import org.eclipse.mylyn.tasks.core.context.AbstractTaskContextStore;
+import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -1447,7 +1448,10 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			// trigger backup scheduler
 			getBackupManager();
 
-			synchronizationScheduler = new TaskListSynchronizationScheduler(taskJobFactory);
+			SynchronizationJob refreshJob = taskJobFactory.createSynchronizeRepositoriesJob(null);
+			refreshJob.setFullSynchronization(true);
+
+			synchronizationScheduler = new TaskListSynchronizationScheduler(refreshJob);
 			MonitorUiPlugin.getDefault().getActivityContextManager().addListener(synchronizationScheduler);
 			updateSynchronizationScheduler(true);
 		} catch (Throwable t) {

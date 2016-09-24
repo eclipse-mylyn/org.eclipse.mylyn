@@ -14,9 +14,6 @@ package org.eclipse.mylyn.tasks.tests.ui;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import junit.framework.AssertionFailedError;
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
@@ -27,6 +24,9 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
+
+import junit.framework.AssertionFailedError;
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -89,7 +89,7 @@ public class TaskListSynchronizationSchedulerTest extends TestCase {
 
 	public void testSynchronization() throws Exception {
 		TaskListSynchronizationScheduler scheduler = new TaskListSynchronizationScheduler(
-				TasksUiPlugin.getTaskJobFactory());
+				TasksUiPlugin.getTaskJobFactory().createSynchronizeRepositoriesJob(null));
 		try {
 			scheduler.setInterval(1);
 			assertTrue(connector.latch.await(10, TimeUnit.SECONDS));
