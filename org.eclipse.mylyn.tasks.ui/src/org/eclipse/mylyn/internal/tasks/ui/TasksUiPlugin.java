@@ -163,7 +163,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private static TaskRepositoryManager repositoryManager;
 
-	private static TaskListSynchronizationScheduler synchronizationScheduler;
+	private static TaskListSynchronizationScheduler taskScheduler;
+
+	private static TaskListSynchronizationScheduler relevantTaskScheduler;
 
 	private static TaskDataManager taskDataManager;
 
@@ -292,7 +294,16 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			if (event.getProperty().equals(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED)
 					|| event.getProperty().equals(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS)) {
-				updateSynchronizationScheduler(false);
+				updateSynchronizationScheduler(taskScheduler, false,
+						ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
+						ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
+			}
+
+			if (event.getProperty().equals(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED)
+					|| event.getProperty().equals(ITasksUiPreferenceConstants.RELEVANT_TASKS_SCHEDULE_MILISECONDS)) {
+				updateSynchronizationScheduler(relevantTaskScheduler, false,
+						ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
+						ITasksUiPreferenceConstants.RELEVANT_TASKS_SCHEDULE_MILISECONDS);
 			}
 
 			if (event.getProperty().equals(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED)) {
@@ -481,25 +492,35 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		}
 	}
 
-	private void updateSynchronizationScheduler(boolean initial) {
-		if (synchronizationScheduler == null) {
+	/**
+	 * Updates the scheduler with the latest user-set preferences.
+	 *
+	 * @param scheduler
+	 *            The scheduler to schedule refreshes.
+	 * @param initial
+	 *            <b>true</b> for the initial invocation; <b>false</b> for later invocations. When <b>true</b>, the
+	 *            scheduler interval is set to a fixed startup delay (typically 20 seconds).
+	 * @param enabledKey
+	 *            The string key in the preferences which is used to retrieve the latest user-set value (on/off).
+	 * @param intervalKey
+	 *            The string key in the preferences which is used to retrieve the latest schedule interval time.
+	 */
+	private void updateSynchronizationScheduler(TaskListSynchronizationScheduler scheduler, boolean initial,
+			String enabledKey, String intervalKey) {
+		if (scheduler == null) {
 			return;
 		}
 
-		boolean enabled = TasksUiPlugin.getDefault()
-				.getPreferenceStore()
-				.getBoolean(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED);
+		boolean enabled = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(enabledKey);
 		if (enabled) {
-			long interval = TasksUiPlugin.getDefault()
-					.getPreferenceStore()
-					.getLong(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
+			long interval = TasksUiPlugin.getDefault().getPreferenceStore().getLong(intervalKey);
 			if (initial) {
-				synchronizationScheduler.setInterval(DELAY_QUERY_REFRESH_ON_STARTUP, interval);
+				scheduler.setInterval(DELAY_QUERY_REFRESH_ON_STARTUP, interval);
 			} else {
-				synchronizationScheduler.setInterval(interval);
+				scheduler.setInterval(interval);
 			}
 		} else {
-			synchronizationScheduler.setInterval(0);
+			scheduler.setInterval(0);
 		}
 	}
 
@@ -1193,11 +1214,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		return repositoryConnectorUiMap.get(kind);
 	}
 
-	@Deprecated
-	public static TaskListSynchronizationScheduler getSynchronizationScheduler() {
-		return synchronizationScheduler;
-	}
-
 	/**
 	 * @since 3.0
 	 */
@@ -1452,9 +1468,19 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			SynchronizationJob refreshJob = taskJobFactory.createSynchronizeRepositoriesJob(null);
 			refreshJob.setFullSynchronization(true);
 
-			synchronizationScheduler = new TaskListSynchronizationScheduler(refreshJob);
-			MonitorUiPlugin.getDefault().getActivityContextManager().addListener(synchronizationScheduler);
-			updateSynchronizationScheduler(true);
+			taskScheduler = new TaskListSynchronizationScheduler(refreshJob);
+			MonitorUiPlugin.getDefault().getActivityContextManager().addListener(taskScheduler);
+			updateSynchronizationScheduler(taskScheduler, true,
+					ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
+					ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
+
+			Job relevantJob = new SynchronizeRelevantTasksJob(taskActivityManager, repositoryManager, taskJobFactory);
+			relevantTaskScheduler = new TaskListSynchronizationScheduler(relevantJob);
+			MonitorUiPlugin.getDefault().getActivityContextManager().addListener(relevantTaskScheduler);
+			updateSynchronizationScheduler(relevantTaskScheduler, true,
+					ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
+					ITasksUiPreferenceConstants.RELEVANT_TASKS_SCHEDULE_MILISECONDS);
+
 		} catch (Throwable t) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 					"Could not initialize task list backup and synchronization", t)); //$NON-NLS-1$
