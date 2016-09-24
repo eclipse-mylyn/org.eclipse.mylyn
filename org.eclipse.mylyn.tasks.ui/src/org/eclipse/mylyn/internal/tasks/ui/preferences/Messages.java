@@ -83,11 +83,15 @@ public class Messages extends NLS {
 
 	public static String TasksUiPreferencePage_Stop_time_accumulation_after;
 
+	public static String TasksUiPreferencePage_Synchronize_Fully;
+
+	public static String TasksUiPreferencePage_Synchronize_Relevant_Tasks;
+
 	public static String TasksUiPreferencePage_Synchronize_schedule_time_must_be_GT_0;
 
 	public static String TasksUiPreferencePage_Synchronize_schedule_time_must_be_valid_integer;
 
-	public static String TasksUiPreferencePage_Synchronize_with_repositories_every;
+	public static String TasksUiPreferencePage_Synchronize_Task_List;
 
 	public static String TasksUiPreferencePage_Synchronization;
 

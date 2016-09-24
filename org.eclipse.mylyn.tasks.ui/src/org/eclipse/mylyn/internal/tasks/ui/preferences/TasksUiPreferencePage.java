@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.mylyn.commons.core.CommonMessages;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -91,7 +92,9 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 	private Button useWebBrowser;
 
-	private Text synchScheduleTime = null;
+	private Text fullSyncScheduleTime = null;
+
+	private Text relevantTasksSyncScheduleTime = null;
 
 	private Button enableBackgroundSynch;
 
@@ -221,11 +224,14 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH, useRichEditor.getSelection());
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.EDITOR_CURRENT_LINE_HIGHLIGHT,
 				editorHighlightsCurrentLine.getSelection());
+
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
 				enableBackgroundSynch.getSelection());
-		long miliseconds = 60000 * Long.parseLong(synchScheduleTime.getText());
-		getPreferenceStore().setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS,
-				"" + miliseconds); //$NON-NLS-1$
+
+		String miliseconds = toMillisecondsString(fullSyncScheduleTime.getText());
+		getPreferenceStore().setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, miliseconds);
+		miliseconds = toMillisecondsString(relevantTasksSyncScheduleTime.getText());
+		getPreferenceStore().setValue(ITasksUiPreferenceConstants.RELEVANT_TASKS_SCHEDULE_MILISECONDS, miliseconds);
 
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED,
 				taskListTooltipEnabledButton.getSelection());
@@ -276,6 +282,10 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		return true;
 	}
 
+	private String toMillisecondsString(String minutesString) {
+		return Long.toString(60 * 1000 * Long.parseLong(minutesString));
+	}
+
 	private int getWeekStartValue() {
 		return weekStartCombo.getSelectionIndex() + 1;
 	}
@@ -295,9 +305,15 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		editorHighlightsCurrentLine.setSelection(
 				getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.EDITOR_CURRENT_LINE_HIGHLIGHT));
 
-		enableBackgroundSynch.setSelection(
-				getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
-		synchScheduleTime.setText(getMinutesString());
+		String repositorySyncMinutes = toMinutesString(
+				getPreferenceStore().getLong(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS));
+		String relevantSyncMinutes = toMinutesString(
+				getPreferenceStore().getLong(ITasksUiPreferenceConstants.RELEVANT_TASKS_SCHEDULE_MILISECONDS));
+		boolean shouldSyncAutomatically = getPreferenceStore()
+				.getBoolean(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED);
+		enableBackgroundSynch.setSelection(shouldSyncAutomatically);
+		fullSyncScheduleTime.setText(repositorySyncMinutes);
+		relevantTasksSyncScheduleTime.setText(relevantSyncMinutes);
 
 		taskListTooltipEnabledButton
 				.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.TASK_LIST_TOOL_TIPS_ENABLED));
@@ -344,10 +360,10 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 		enableBackgroundSynch.setSelection(
 				getPreferenceStore().getDefaultBoolean(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
-		long miliseconds = getPreferenceStore()
-				.getDefaultLong(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
-		long minutes = miliseconds / 60000;
-		synchScheduleTime.setText("" + minutes); //$NON-NLS-1$
+		fullSyncScheduleTime.setText(toMinutesString(getPreferenceStore()
+				.getDefaultLong(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS)));
+		relevantTasksSyncScheduleTime.setText(toMinutesString(
+				getPreferenceStore().getDefaultLong(ITasksUiPreferenceConstants.RELEVANT_TASKS_SCHEDULE_MILISECONDS)));
 
 		weekStartCombo.select(getPreferenceStore().getDefaultInt(ITasksUiPreferenceConstants.WEEK_START_DAY) - 1);
 		String defaultScheduleFor = getPreferenceStore()
@@ -372,17 +388,16 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	private void createTaskRefreshScheduleGroup(Composite parent) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
 		group.setText(Messages.TasksUiPreferencePage_Synchronization);
-		GridLayout gridLayout = new GridLayout(1, false);
-		group.setLayout(gridLayout);
+
+		group.setLayout(new GridLayout(1, false));
 
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		Composite enableSynch = new Composite(group, SWT.NULL);
-		gridLayout = new GridLayout(4, false);
-		gridLayout.marginWidth = 0;
-		gridLayout.marginHeight = 0;
-		enableSynch.setLayout(gridLayout);
-		enableBackgroundSynch = new Button(enableSynch, SWT.CHECK);
-		enableBackgroundSynch.setText(Messages.TasksUiPreferencePage_Synchronize_with_repositories_every);
+		Composite backgroundSync = new Composite(group, SWT.NULL);
+		GridLayoutFactory.swtDefaults().numColumns(3).equalWidth(false).margins(0, 0).applyTo(backgroundSync);
+
+		//Enabled background synchronization
+		enableBackgroundSynch = new Button(backgroundSync, SWT.CHECK);
+		enableBackgroundSynch.setText(Messages.TasksUiPreferencePage_Synchronize_Task_List);
 		enableBackgroundSynch.setSelection(
 				getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
 		enableBackgroundSynch.addSelectionListener(new SelectionListener() {
@@ -393,25 +408,42 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
-		synchScheduleTime = new Text(enableSynch, SWT.BORDER | SWT.RIGHT);
-		GridData gridData = new GridData();
-		gridData.widthHint = 25;
-		synchScheduleTime.setLayoutData(gridData);
-		synchScheduleTime.setText(getMinutesString());
-		synchScheduleTime.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				updateRefreshGroupEnablements();
-			}
-		});
-		Label label = new Label(enableSynch, SWT.NONE);
-		label.setText(Messages.TasksUiPreferencePage_minutes);
+		GridDataFactory.defaultsFor(enableBackgroundSynch).span(3, 1).applyTo(enableBackgroundSynch);
 
+		//Synchronize Task List Fully
+		new Label(backgroundSync, SWT.NONE).setText(Messages.TasksUiPreferencePage_Synchronize_Fully);
+		fullSyncScheduleTime = createSynchronizationScheduleTextBox(backgroundSync,
+				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
+		new Label(backgroundSync, SWT.NONE).setText(Messages.TasksUiPreferencePage_minutes);
+
+		//Synchronize Relevant Tasks
+		new Label(backgroundSync, SWT.NONE).setText(Messages.TasksUiPreferencePage_Synchronize_Relevant_Tasks);
+		relevantTasksSyncScheduleTime = createSynchronizationScheduleTextBox(backgroundSync,
+				ITasksUiPreferenceConstants.RELEVANT_TASKS_SCHEDULE_MILISECONDS);
+		new Label(backgroundSync, SWT.NONE).setText(Messages.TasksUiPreferencePage_minutes);
+
+		//notification
 		notificationEnabledButton = new Button(group, SWT.CHECK);
 		notificationEnabledButton
 				.setText(Messages.TasksUiPreferencePage_Display_notifications_for_overdue_tasks_and_incoming_changes);
 		notificationEnabledButton
 				.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED));
 
+	}
+
+	private Text createSynchronizationScheduleTextBox(Composite backgroundSync, String preferenceKey) {
+		Text text = new Text(backgroundSync, SWT.BORDER | SWT.RIGHT);
+		GridData gridDataRepo = new GridData();
+		gridDataRepo.widthHint = 25;
+		text.setLayoutData(gridDataRepo);
+		long querySyncMilliseconds = getPreferenceStore().getLong(preferenceKey);
+		text.setText(toMinutesString(querySyncMilliseconds));
+		text.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				updateRefreshGroupEnablements();
+			}
+		});
+		return text;
 	}
 
 	private void createTaskEditorGroup(Composite parent) {
@@ -608,13 +640,9 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		String errorMessage = null;
 
 		if (enableBackgroundSynch.getSelection()) {
-			try {
-				long number = Long.parseLong(synchScheduleTime.getText());
-				if (number <= 0) {
-					errorMessage = Messages.TasksUiPreferencePage_Synchronize_schedule_time_must_be_GT_0;
-				}
-			} catch (NumberFormatException e) {
-				errorMessage = Messages.TasksUiPreferencePage_Synchronize_schedule_time_must_be_valid_integer;
+			errorMessage = validateSynchronizeSchedule(fullSyncScheduleTime);
+			if (errorMessage == null) {
+				errorMessage = validateSynchronizeSchedule(relevantTasksSyncScheduleTime);
 			}
 		}
 
@@ -633,15 +661,26 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 			timeoutLabel2.setEnabled(false);
 		}
 
-		synchScheduleTime.setEnabled(enableBackgroundSynch.getSelection());
-
+		fullSyncScheduleTime.setEnabled(enableBackgroundSynch.getSelection());
+		relevantTasksSyncScheduleTime.setEnabled(enableBackgroundSynch.getSelection());
 	}
 
-	private String getMinutesString() {
-		long miliseconds = getPreferenceStore()
-				.getLong(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
+	private String validateSynchronizeSchedule(Text synchronizeText) {
+		String errorMessage = null;
+		try {
+			long number = Long.parseLong(synchronizeText.getText());
+			if (number <= 0) {
+				errorMessage = Messages.TasksUiPreferencePage_Synchronize_schedule_time_must_be_GT_0;
+			}
+		} catch (NumberFormatException e) {
+			errorMessage = Messages.TasksUiPreferencePage_Synchronize_schedule_time_must_be_valid_integer;
+		}
+		return errorMessage;
+	}
+
+	private String toMinutesString(long miliseconds) {
 		long minutes = miliseconds / 60000;
-		return "" + minutes; //$NON-NLS-1$
+		return Long.toString(minutes);
 	}
 
 	private boolean checkForExistingTasklist(String dir) {

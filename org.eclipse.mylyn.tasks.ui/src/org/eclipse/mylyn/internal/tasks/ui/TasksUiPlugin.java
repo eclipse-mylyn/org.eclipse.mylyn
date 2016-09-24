@@ -996,6 +996,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 		store.setDefault(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, true);
 		store.setDefault(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, "" + (20 * 60 * 1000)); //$NON-NLS-1$
+		store.setDefault(ITasksUiPreferenceConstants.RELEVANT_TASKS_SCHEDULE_MILISECONDS, "" + (5 * 60 * 1000)); //$NON-NLS-1$
 
 		store.setDefault(ITasksUiPreferenceConstants.BACKUP_MAXFILES, 20);
 		store.setDefault(ITasksUiPreferenceConstants.BACKUP_LAST, 0f);
