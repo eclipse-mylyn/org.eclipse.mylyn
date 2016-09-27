@@ -80,10 +80,8 @@ public class DefaultSupportHandler extends AbstractSupportHandler {
 			}
 		}
 		if (response.getProduct() != null) {
-			IBundleGroup bundleGroup = ((SupportProduct) response.getProduct()).getVersioningBundleGroup();
-			if (bundleGroup == null) {
-				bundleGroup = ((SupportProduct) response.getProduct()).getBundleGroup();
-			}
+			SupportProduct supportProduct = (SupportProduct) response.getProduct();
+			IBundleGroup bundleGroup = getBundleGroup(supportProduct);
 			if (bundleGroup != null) {
 				TaskAttribute attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.VERSION);
 				if (attribute != null) {
@@ -102,6 +100,14 @@ public class DefaultSupportHandler extends AbstractSupportHandler {
 				}
 			}
 		}
+	}
+
+	private IBundleGroup getBundleGroup(SupportProduct supportProduct) {
+		IBundleGroup bundleGroup = supportProduct.getVersioningBundleGroup();
+		if (bundleGroup == null) {
+			bundleGroup = supportProduct.getBundleGroup();
+		}
+		return bundleGroup;
 	}
 
 	private String getBestMatch(String version, Map<String, String> options) {
@@ -156,45 +162,19 @@ public class DefaultSupportHandler extends AbstractSupportHandler {
 	public String getDescription(IStatus status) {
 		if (status instanceof ProductStatus) {
 			SupportProduct product = (SupportProduct) ((ProductStatus) status).getProduct();
-			if (product.getBundleGroup() != null) {
+			IBundleGroup bundleGroup = product.getBundleGroup();
+			if (bundleGroup != null) {
 				StringBuilder sb = new StringBuilder();
 				sb.append("\n\n\n"); //$NON-NLS-1$
 				sb.append(Messages.DefaultSupportHandler_Configuration_Details);
 				appendProductInformation(sb);
-				sb.append("\n"); //$NON-NLS-1$
 				sb.append(Messages.DefaultSupportHandler_Installed_Features);
-				sb.append("\n"); //$NON-NLS-1$
-				for (IBundleGroup bundleGroup : new IBundleGroup[] { product.getBundleGroup() }) {
-					sb.append(" "); //$NON-NLS-1$
-					sb.append(bundleGroup.getIdentifier());
-					sb.append(" "); //$NON-NLS-1$
-					sb.append(bundleGroup.getVersion());
-					sb.append("\n"); //$NON-NLS-1$
-
-//					Bundle[] bundles = bundleGroup.getBundles();
-//					if (bundles != null) {
-//						for (Bundle bundle : bundles) {
-//							sb.append("  "); //$NON-NLS-1$
-//							sb.append(bundle.getSymbolicName());
-//							String version = (String) bundle.getHeaders().get(
-//									Messages.DefaultTaskContributor_Bundle_Version);
-//							if (version != null) {
-//								sb.append(" "); //$NON-NLS-1$
-//								sb.append(version);
-//							}
-//							sb.append("\n"); //$NON-NLS-1$
-//						}
-//					}
+				appendBundleGroup(bundleGroup, sb);
+				IBundleGroup versioningBundleGroup = product.getVersioningBundleGroup();
+				if (versioningBundleGroup != null) {
+					sb.append(Messages.DefaultSupportHandler_VersioningPlugin);
+					appendBundleGroup(versioningBundleGroup, sb);
 				}
-				sb.append(Messages.DefaultSupportHandler_VersioningPlugin);
-				sb.append("\n"); //$NON-NLS-1$
-				IBundleGroup bundleGroup = product.getVersioningBundleGroup();
-				sb.append(" "); //$NON-NLS-1$
-				sb.append(bundleGroup.getIdentifier());
-				sb.append(" "); //$NON-NLS-1$
-				sb.append(bundleGroup.getVersion());
-				sb.append("\n"); //$NON-NLS-1$
-
 				return sb.toString();
 			}
 		} else if (status instanceof ErrorLogStatus) {
@@ -220,6 +200,15 @@ public class DefaultSupportHandler extends AbstractSupportHandler {
 			return sb.toString();
 		}
 		return null;
+	}
+
+	private void appendBundleGroup(IBundleGroup bundleGroup, StringBuilder sb) {
+		sb.append("\n"); //$NON-NLS-1$
+		sb.append(" "); //$NON-NLS-1$
+		sb.append(bundleGroup.getIdentifier());
+		sb.append(" "); //$NON-NLS-1$
+		sb.append(bundleGroup.getVersion());
+		sb.append("\n"); //$NON-NLS-1$
 	}
 
 	private void appendStatus(IStatus status, StringBuilder sb, boolean includeSessionData) {
