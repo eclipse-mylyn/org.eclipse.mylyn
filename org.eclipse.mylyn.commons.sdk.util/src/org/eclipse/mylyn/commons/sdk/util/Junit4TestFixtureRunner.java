@@ -20,6 +20,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.osgi.util.NLS;
+import org.junit.internal.AssumptionViolatedException;
+import org.junit.internal.runners.model.EachTestNotifier;
+import org.junit.internal.runners.model.ReflectiveCallable;
+import org.junit.rules.TestRule;
+import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
@@ -86,6 +95,64 @@ public class Junit4TestFixtureRunner extends Suite {
 		protected Statement classBlock(RunNotifier notifier) {
 			return childrenInvoker(notifier);
 		}
+
+		@Override
+		protected void runChild(final FrameworkMethod method, RunNotifier notifier) {
+			Description description = describeChild(method);
+			if (isIgnored(method)) {
+				notifier.fireTestIgnored(description);
+			} else {
+				Object test = null;
+				try {
+					test = new ReflectiveCallable() {
+						@Override
+						protected Object runReflectiveCall() throws Throwable {
+							return createTest();
+						}
+					}.run();
+				} catch (Throwable e) {
+					StatusHandler.log(new Status(IStatus.ERROR, "org.eclipse.mylyn.commons.sdk.util", //$NON-NLS-1$
+							NLS.bind("TestClassRunnerForFixture: Testclass {0} has no public constructor", //$NON-NLS-1$
+									getTestClass().getName()),
+							e));
+					return;
+				}
+				boolean skipped = false;
+				if (test != null) {
+					List<TestRule> testRules = getTestRules(test);
+					for (TestRule testRule : testRules) {
+						if (testRule instanceof ConditionalIgnoreRule) {
+							Statement statement = testRule.apply(null, description);
+							if (statement instanceof IgnoreStatement) {
+								skipped = true;
+								break;
+							}
+						}
+					}
+					if (skipped) {
+						notifier.fireTestIgnored(description);
+					} else {
+						runTest(methodBlock(method), description, notifier);
+					}
+				}
+			}
+		}
+
+		protected final void runTest(Statement statement, Description description, RunNotifier notifier) {
+			EachTestNotifier eachNotifier = new EachTestNotifier(notifier, description);
+			eachNotifier.fireTestStarted();
+			try {
+				statement.evaluate();
+			} catch (AssumptionViolatedException e) {
+				eachNotifier.addFailedAssumption(e);
+			} catch (IgnoreRuleRuntimeException e) {
+				eachNotifier.fireTestIgnored();
+			} catch (Throwable e) {
+				eachNotifier.addFailure(e);
+			} finally {
+				eachNotifier.fireTestFinished();
+			}
+		}
 	}
 
 	private final ArrayList<Runner> runners = new ArrayList<Runner>();
@@ -106,22 +173,21 @@ public class Junit4TestFixtureRunner extends Suite {
 
 		String fixtureType = null;
 		for (Annotation annotation : getTestClass().getAnnotations()) {
-			if ("org.eclipse.mylyn.commons.sdk.util.Junit4TestFixtureRunner.OnlyRunWithProperty"
-					.equals(annotation.annotationType().getCanonicalName())) {
+			if (annotation.annotationType() == RunOnlyWhenProperty.class) {
 				RunOnlyWhenProperty onlyWhenProperty = (RunOnlyWhenProperty) annotation;
 				restrictProperty = onlyWhenProperty.property();
 				restrictValue = onlyWhenProperty.value();
 			}
-			if ("org.eclipse.mylyn.commons.sdk.util.Junit4TestFixtureRunner.FixtureDefinition"
-					.equals(annotation.annotationType().getCanonicalName())) {
+			if (annotation.annotationType() == FixtureDefinition.class) {
 				FixtureDefinition fixtueDef = (FixtureDefinition) annotation;
 				fixtureClass = fixtueDef.fixtureClass();
 				fixtureType = fixtueDef.fixtureType();
 			}
 		}
 		if (fixtureType != null) {
-			List<AbstractTestFixture> parametersList = (List<AbstractTestFixture>) TestConfiguration.getDefault()
-					.discover(fixtureClass, fixtureType);
+			TestConfiguration defFixture = TestConfiguration.getDefault();
+			List<AbstractTestFixture> parametersList = (List<AbstractTestFixture>) defFixture.discover(fixtureClass,
+					fixtureType);
 			List<AbstractTestFixture> fixturesToExecute = new ArrayList<AbstractTestFixture>();
 			if (restrictProperty != null) {
 				for (AbstractTestFixture abstractFixture : parametersList) {
