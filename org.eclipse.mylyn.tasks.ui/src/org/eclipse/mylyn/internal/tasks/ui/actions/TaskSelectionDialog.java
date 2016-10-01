@@ -84,6 +84,8 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 
+import com.google.common.base.Strings;
+
 /**
  * @author Willian Mitsuda
  * @author Mik Kersten
@@ -283,7 +285,8 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 			elements = new HashSet<AbstractTaskContainer>();
 			if (selectedWorkingSet != null) {
 				for (IAdaptable adaptable : selectedWorkingSet.getElements()) {
-					AbstractTaskContainer container = (AbstractTaskContainer) adaptable.getAdapter(AbstractTaskContainer.class);
+					AbstractTaskContainer container = (AbstractTaskContainer) adaptable
+							.getAdapter(AbstractTaskContainer.class);
 					if (container != null) {
 						elements.add(container);
 					}
@@ -444,9 +447,6 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		setSelectionHistory(new TaskSelectionHistory());
 		setListLabelProvider(labelProvider);
 
-//		setListLabelProvider(new DecoratingLabelProvider(labelProvider, PlatformUI.getWorkbench()
-//				.getDecoratorManager()
-//				.getLabelDecorator()));
 		setDetailsLabelProvider(new TaskDetailLabelProvider());
 		setSeparatorLabel(TaskListView.LABEL_VIEW + Messages.TaskSelectionDialog__matches);
 
@@ -456,6 +456,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		if (selection instanceof ITextSelection) {
 			// Get only get first line
 			String text = ((ITextSelection) selection).getText();
+			text = Strings.nullToEmpty(text);
 			int n = text.indexOf('\n');
 			if (n > -1) {
 				text = text.substring(0, n);
@@ -482,7 +483,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 	protected Control createButtonBar(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
-		layout.numColumns = 0; // create 
+		layout.numColumns = 0; // create
 		layout.marginHeight = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
 		layout.marginWidth = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
 		layout.verticalSpacing = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_SPACING);
@@ -515,14 +516,14 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		Label filler = new Label(composite, SWT.NONE);
 		filler.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
 		layout.numColumns++;
-		super.createButtonsForButtonBar(composite); // cancel button		
+		super.createButtonsForButtonBar(composite); // cancel button
 
 		return composite;
 	}
 
 	/**
 	 * Allows to add new buttons at the bottom of this dialog next to New Task button
-	 * 
+	 *
 	 * @param parent
 	 *            the parent composite to contain the button bar
 	 */
