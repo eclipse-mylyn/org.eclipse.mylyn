@@ -86,7 +86,8 @@ public class DeleteAction extends BaseSelectionListenerAction {
 		for (Object object : toDelete) {
 			if (object instanceof ITask) {
 				ITask task = (ITask) object;
-				AbstractRepositoryConnector repositoryConnector = TasksUi.getRepositoryConnector(task.getConnectorKind());
+				AbstractRepositoryConnector repositoryConnector = TasksUi
+						.getRepositoryConnector(task.getConnectorKind());
 				TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
 						task.getRepositoryUrl());
 				if (repository != null && repositoryConnector != null) {
@@ -113,9 +114,9 @@ public class DeleteAction extends BaseSelectionListenerAction {
 			final boolean allTasksDeletable = allSupportRepositoryDeletion;
 
 			if (allLocalTasks || !allElementsAreTasks) {
-				deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow()
-						.getShell(), Messages.DeleteAction_Delete_Tasks, message);
+				deleteConfirmed = MessageDialog.openQuestion(
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+						Messages.DeleteAction_Delete_Tasks, message);
 			} else {
 				String toggleMessage = Messages.DeleteAction_Also_delete_from_repository_X;
 				if (allTasksDeletable) {
@@ -124,8 +125,9 @@ public class DeleteAction extends BaseSelectionListenerAction {
 					toggleMessage = NLS.bind(toggleMessage, Messages.DeleteAction_Not_supported);
 				}
 				final MessageDialogWithToggle dialog = new MessageDialogWithToggle(WorkbenchUtil.getShell(),
-						Messages.DeleteAction_Delete_Tasks, null, message, MessageDialog.QUESTION, new String[] {
-								IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL }, 0, toggleMessage, false) {
+						Messages.DeleteAction_Delete_Tasks, null, message, MessageDialog.QUESTION,
+						new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL }, 0, toggleMessage,
+						false) {
 					@Override
 					protected Control createContents(Composite parent) {
 						Control createdControl = super.createContents(parent);
@@ -167,8 +169,8 @@ public class DeleteAction extends BaseSelectionListenerAction {
 		try {
 			WorkbenchUtil.runInUi(op, null);
 		} catch (CoreException e) {
-			Status status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, NLS.bind(
-					"Problems encountered deleting task list elements: {0}", e.getMessage()), e); //$NON-NLS-1$
+			Status status = new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					NLS.bind("Problems encountered deleting task list elements: {0}", e.getMessage()), e); //$NON-NLS-1$
 			TasksUiInternal.logAndDisplayStatus(Messages.DeleteTaskRepositoryAction_Delete_Task_Repository_Failed,
 					status);
 		} catch (OperationCanceledException e) {
@@ -251,14 +253,7 @@ public class DeleteAction extends BaseSelectionListenerAction {
 		for (Object selectedObject : toDelete) {
 			if (selectedObject instanceof AbstractTask) {
 				AbstractTask task = (AbstractTask) selectedObject;
-				TasksUiInternal.getTaskList().deleteTask(task);
-				try {
-					TasksUiPlugin.getTaskDataManager().deleteTaskData(task);
-				} catch (CoreException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to delete task data", //$NON-NLS-1$
-							e));
-				}
-				TasksUiPlugin.getContextStore().deleteContext(task);
+				TasksUiInternal.deleteTask(task);
 			} else if (selectedObject instanceof IRepositoryQuery) {
 				TasksUiInternal.getTaskList().deleteQuery((RepositoryQuery) selectedObject);
 			} else if (selectedObject instanceof TaskCategory) {

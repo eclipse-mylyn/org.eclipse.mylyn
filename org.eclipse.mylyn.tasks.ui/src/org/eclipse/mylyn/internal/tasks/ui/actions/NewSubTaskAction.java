@@ -29,14 +29,12 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.ui.CommonUiUtil;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
@@ -74,12 +72,8 @@ public class NewSubTaskAction extends BaseSelectionListenerAction implements IVi
 		}
 
 		if (selectedTask instanceof LocalTask) {
-			// XXX code copied from NewLocalTaskWizard.performFinish() and TaskListManager.createNewLocalTask()
 			TaskList taskList = TasksUiPlugin.getTaskList();
-			LocalTask newTask = new LocalTask("" + taskList.getNextLocalTaskId(), //$NON-NLS-1$
-					LocalRepositoryConnector.DEFAULT_SUMMARY);
-			newTask.setPriority(PriorityLevel.P3.toString());
-			TasksUiInternal.scheduleNewTask(newTask);
+			LocalTask newTask = TasksUiInternal.createNewLocalTask(null);
 			taskList.addTask(newTask, selectedTask);
 			TasksUiUtil.openTask(newTask);
 			return;

@@ -13,7 +13,6 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.util.Date;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
@@ -83,7 +82,7 @@ public class TaskMigrator {
 	 * <li>Reactivate new task
 	 * <li>Open new task
 	 * </ul>
-	 * 
+	 *
 	 * @param newTask
 	 *            the task to migrate properties to
 	 */
@@ -96,8 +95,8 @@ public class TaskMigrator {
 			final TaskMigrationEvent event = new TaskMigrationEvent(oldTask, newTask);
 			SafeRunner.run(new ISafeRunnable() {
 				public void handleException(Throwable e) {
-					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-							"Unexpected error in task migrator: " //$NON-NLS-1$
+					StatusHandler.log(
+							new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unexpected error in task migrator: " //$NON-NLS-1$
 									+ connector.getClass(), e));
 				}
 
@@ -164,13 +163,7 @@ public class TaskMigrator {
 	private void deleteOldTask() {
 		// delete old task details
 		if (delete()) {
-			TasksUiInternal.getTaskList().deleteTask(oldTask);
-			TasksUiPlugin.getContextStore().deleteContext(oldTask);
-			try {
-				TasksUiPlugin.getTaskDataManager().deleteTaskData(oldTask);
-			} catch (CoreException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to delete task data", e)); //$NON-NLS-1$
-			}
+			TasksUiInternal.deleteTask(oldTask);
 		}
 	}
 

@@ -259,44 +259,6 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 
 	}
 
-//	private class TaskListChangeListener extends TaskListChangeAdapter {
-//		@Override
-//		public void containersChanged(Set<TaskContainerDelta> containers) {
-//			if (refreshDisabled) {
-//				return;
-//			}
-//			ITask taskToRefresh = null;
-//			for (TaskContainerDelta taskContainerDelta : containers) {
-//				if (task.equals(taskContainerDelta.getElement())) {
-//					if (taskContainerDelta.getKind().equals(TaskContainerDelta.Kind.CONTENT)
-//							&& !taskContainerDelta.isTransient()) {
-//						taskToRefresh = (ITask) taskContainerDelta.getElement();
-//						break;
-//					}
-//				}
-//			}
-//			if (taskToRefresh != null) {
-//				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//					public void run() {
-//						if (!isDirty() && task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED) {
-//							// automatically refresh if the user has not made any changes and there is no chance of missing incomings
-//							refreshFormContent();
-//						} else {
-//							getTaskEditor().setMessage("Task has incoming changes", IMessageProvider.WARNING,
-//									new HyperlinkAdapter() {
-//										@Override
-//										public void linkActivated(HyperlinkEvent e) {
-//											refreshFormContent();
-//										}
-//									});
-//							setSubmitEnabled(false);
-//						}
-//					}
-//				});
-//			}
-//		}
-//	}
-
 	private final ITaskDataManagerListener TASK_DATA_LISTENER = new ITaskDataManagerListener() {
 
 		public void taskDataUpdated(final TaskDataManagerEvent event) {
@@ -319,11 +281,11 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 					} else {
 						getTaskEditor().setMessage(Messages.AbstractTaskEditorPage_Task_has_incoming_changes,
 								IMessageProvider.WARNING, new HyperlinkAdapter() {
-							@Override
-							public void linkActivated(HyperlinkEvent e) {
-								AbstractTaskEditorPage.this.refresh();
-							}
-						});
+									@Override
+									public void linkActivated(HyperlinkEvent e) {
+										AbstractTaskEditorPage.this.refresh();
+									}
+								});
 						setSubmitEnabled(false);
 					}
 				}
@@ -446,8 +408,6 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 
 	public static final String PATH_PLANNING = "planning"; //$NON-NLS-1$
 
-//	private static final String ID_POPUP_MENU = "org.eclipse.mylyn.tasks.ui.editor.menu.page";
-
 	private AttributeEditorFactory attributeEditorFactory;
 
 	private AttributeEditorToolkit attributeEditorToolkit;
@@ -481,8 +441,6 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 	private ITask task;
 
 	private TaskData taskData;
-
-//	private ITaskListChangeListener taskListChangeListener;
 
 	private FormToolkit toolkit;
 
@@ -648,13 +606,6 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 			GridLayout editorLayout = new GridLayout();
 			editorLayout.verticalSpacing = 0;
 			editorComposite.setLayout(editorLayout);
-
-			//form.setData("focusScrolling", Boolean.FALSE);
-
-//			menuManager = new MenuManager();
-//			menuManager.setRemoveAllWhenShown(true);
-//			getEditorSite().registerContextMenu(ID_POPUP_MENU, menuManager, this, true);
-//			editorComposite.setMenu(menuManager.createContextMenu(editorComposite));
 			editorComposite.setMenu(getTaskEditor().getMenu());
 
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(getConnectorKind());
@@ -664,11 +615,11 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 						getTaskEditor().setMessage(
 								Messages.AbstractTaskEditorPage_Synchronize_to_update_editor_contents,
 								IMessageProvider.INFORMATION, new HyperlinkAdapter() {
-							@Override
-							public void linkActivated(HyperlinkEvent e) {
-								AbstractTaskEditorPage.this.refresh();
-							}
-						});
+									@Override
+									public void linkActivated(HyperlinkEvent e) {
+										AbstractTaskEditorPage.this.refresh();
+									}
+								});
 					}
 				});
 			}
@@ -733,10 +684,6 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 
 		focusTracker = new FocusTracker();
 		focusTracker.track(editorComposite);
-//		AbstractTaskEditorPart summaryPart = getPart(ID_PART_SUMMARY);
-//		if (summaryPart != null) {
-//			lastFocusControl = summaryPart.getControl();
-//		}
 	}
 
 	protected TaskDataModel createModel(TaskEditorInput input) throws CoreException {
@@ -948,7 +895,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 		}
 		// update the summary of unsubmitted repository tasks
 		if (getTask().getSynchronizationState() == SynchronizationState.OUTGOING_NEW) {
-			final String summary = connector.getTaskMapping(model.getTaskData()).getSummary();
+			String summary = connector.getTaskMapping(model.getTaskData()).getSummary();
 			try {
 				TasksUiPlugin.getTaskList().run(new ITaskListRunnable() {
 					public void execute(IProgressMonitor monitor) throws CoreException {
@@ -1112,7 +1059,7 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 		}
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Object getAdapter(Class adapter) {
 		if (adapter == IContentOutlinePage.class) {
@@ -1369,7 +1316,17 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 
 	@Override
 	public boolean isDirty() {
-		return (getModel() != null && getModel().isDirty()) || (getManagedForm() != null && getManagedForm().isDirty());
+		return isModelDirty() || isFormDirty();
+	}
+
+	private boolean isFormDirty() {
+		IManagedForm form = getManagedForm();
+		return form != null && form.isDirty();
+	}
+
+	private boolean isModelDirty() {
+		TaskDataModel model = getModel();
+		return model != null && model.isDirty();
 	}
 
 	@Override
@@ -1671,18 +1628,6 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 
 	private void createFooterContent(Composite parent) {
 		parent.setLayout(new GridLayout());
-
-//		submitButton = toolkit.createButton(parent, Messages.TaskEditorActionPart_Submit, SWT.NONE);
-//		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-//		submitButtonData.widthHint = 100;
-//		submitButton.setBackground(null);
-//		submitButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
-//		submitButton.setLayoutData(submitButtonData);
-//		submitButton.addListener(SWT.Selection, new Listener() {
-//			public void handleEvent(Event e) {
-//				doSubmit();
-//			}
-//		});
 	}
 
 	/**
@@ -1745,41 +1690,6 @@ public abstract class AbstractTaskEditorPage extends TaskFormPage
 	public void setNeedsPrivateSection(boolean needsPrivateSection) {
 		this.needsPrivateSection = needsPrivateSection;
 	}
-
-//	private void fillLeftHeaderToolBar(IToolBarManager toolBarManager) {
-//		if (needsSubmit()) {
-//			ControlContribution submitButtonContribution = new ControlContribution(
-//					"org.eclipse.mylyn.tasks.toolbars.submit") { //$NON-NLS-1$
-//				@Override
-//				protected int computeWidth(Control control) {
-//					return super.computeWidth(control) + 5;
-//				}
-//
-//				@Override
-//				protected Control createControl(Composite parent) {
-//					Composite composite = new Composite(parent, SWT.NONE);
-//					composite.setBackground(null);
-//					GridLayout layout = new GridLayout();
-//					layout.marginWidth = 0;
-//					layout.marginHeight = 0;
-//					layout.marginLeft = 10;
-//					composite.setLayout(layout);
-//
-//					submitButton = toolkit.createButton(composite, Messages.TaskEditorActionPart_Submit + " ", SWT.NONE); //$NON-NLS-1$
-//					submitButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
-//					submitButton.setBackground(null);
-//					submitButton.addListener(SWT.Selection, new Listener() {
-//						public void handleEvent(Event e) {
-//							doSubmit();
-//						}
-//					});
-//					GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.BOTTOM).applyTo(submitButton);
-//					return composite;
-//				}
-//			};
-//			toolBarManager.add(submitButtonContribution);
-//		}
-//	}
 
 	@Override
 	public boolean selectReveal(Object object) {

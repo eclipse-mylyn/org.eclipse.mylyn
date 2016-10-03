@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.tasks.core;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * @author Rob Elves
@@ -160,5 +161,10 @@ public interface ITasksCoreConstants {
 	public static final String ATTRIBUTE_AUTO_UPDATE = "org.eclipse.mylyn.tasks.core.synchronization.auto"; //$NON-NLS-1$
 
 	public static final Object JOB_FAMILY_SYNCHRONIZATION = new Object();
+
+	/**
+	 * A property to mark an {@link ITask} as having been newly created and not yet saved or submitted.
+	 */
+	public static final String PROPERTY_NEW_UNSAVED_TASK = "org.eclipse.mylyn.tasks.ui.new.unsaved.task"; //$NON-NLS-1$
 
 }

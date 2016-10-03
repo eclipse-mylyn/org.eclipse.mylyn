@@ -19,8 +19,6 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TimeZone;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
@@ -41,6 +39,8 @@ import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+
+import junit.framework.TestCase;
 
 /**
  * @author Robert Elves
@@ -75,29 +75,31 @@ public class TaskListExternalizationTest extends TestCase {
 
 	public void testTaskAttributes() throws Exception {
 		AbstractTask task1 = TasksUiInternal.createNewLocalTask("task 1");
+		int initialAttributeCount = task1.getAttributes().size();
 		task1.setAttribute("key", "value");
-		assertEquals(1, task1.getAttributes().size());
+		assertEquals(initialAttributeCount + 1, task1.getAttributes().size());
 
 		TaskTestUtil.saveAndReadTasklist();
 
 		task1 = taskList.getTask(task1.getHandleIdentifier());
 		assertNotNull(task1);
-		assertEquals(1, task1.getAttributes().size());
+		assertEquals(initialAttributeCount + 1, task1.getAttributes().size());
 		assertEquals("value", task1.getAttribute("key"));
 	}
 
 	public void testTaskAttributeDelete() throws Exception {
 		AbstractTask task1 = TasksUiInternal.createNewLocalTask("task 1");
+		int initialAttributeCount = task1.getAttributes().size();
 		task1.setAttribute("key", "value");
 		task1.setAttribute("key", null);
-		assertEquals(0, task1.getAttributes().size());
+		assertEquals(initialAttributeCount, task1.getAttributes().size());
 		assertEquals(null, task1.getAttribute("key"));
 
 		TaskTestUtil.saveAndReadTasklist();
 
 		task1 = taskList.getTask(task1.getHandleIdentifier());
 		assertNotNull(task1);
-		assertEquals(0, task1.getAttributes().size());
+		assertEquals(initialAttributeCount, task1.getAttributes().size());
 		assertEquals(null, task1.getAttribute("key"));
 	}
 
@@ -354,7 +356,7 @@ public class TaskListExternalizationTest extends TestCase {
 
 	/**
 	 * If a task exists in a category and is a query hit it should not be removed from the category
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public void testQueryRemovedTaskInCategory() throws Exception {
@@ -648,8 +650,8 @@ public class TaskListExternalizationTest extends TestCase {
 		assertEquals(1, TasksUiPlugin.getTaskList().getAllTasks().size());
 
 		// removed/disable externalizers
-		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().removeRepositoryConnector(
-				MockRepositoryConnector.CONNECTOR_KIND);
+		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+				.removeRepositoryConnector(MockRepositoryConnector.CONNECTOR_KIND);
 
 		// reload tasklist ensure task didn't load
 		TaskTestUtil.saveAndReadTasklist();
@@ -682,8 +684,8 @@ public class TaskListExternalizationTest extends TestCase {
 		assertEquals(1, TasksUiPlugin.getTaskList().getQueries().size());
 
 		// removed/disable externalizers
-		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().removeRepositoryConnector(
-				MockRepositoryConnector.CONNECTOR_KIND);
+		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+				.removeRepositoryConnector(MockRepositoryConnector.CONNECTOR_KIND);
 
 		// reload tasklist ensure query didn't load
 		TaskTestUtil.saveAndReadTasklist();

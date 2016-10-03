@@ -142,10 +142,13 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.progress.IProgressConstants2;
 import org.eclipse.ui.services.IServiceLocator;
 import org.eclipse.ui.statushandlers.IStatusAdapterConstants;
 import org.eclipse.ui.statushandlers.StatusAdapter;
 import org.eclipse.ui.statushandlers.StatusManager;
+
+import com.google.common.base.Strings;
 
 /**
  * @author Steffen Pingel
@@ -395,7 +398,7 @@ public class TasksUiInternal {
 		job.setUser(force);
 		if (force) {
 			// show the progress in the system task bar if this is a user job (i.e. forced)
-			job.setProperty(WorkbenchUtil.SHOW_IN_TASKBAR_ICON_PROPERTY, Boolean.TRUE);
+			job.setProperty(IProgressConstants2.SHOW_IN_TASKBAR_ICON_PROPERTY, Boolean.TRUE);
 		}
 		if (listener != null) {
 			job.addJobChangeListener(listener);
@@ -433,7 +436,7 @@ public class TasksUiInternal {
 		job.setUser(force);
 		if (force) {
 			// show the progress in the system task bar if this is a user job (i.e. forced)
-			job.setProperty(WorkbenchUtil.SHOW_IN_TASKBAR_ICON_PROPERTY, Boolean.TRUE);
+			job.setProperty(IProgressConstants2.SHOW_IN_TASKBAR_ICON_PROPERTY, Boolean.TRUE);
 		}
 		job.schedule();
 		joinIfInTestMode(job);
@@ -464,7 +467,7 @@ public class TasksUiInternal {
 		job.setUser(force);
 		if (force) {
 			// show the progress in the system task bar if this is a user job (i.e. forced)
-			job.setProperty(WorkbenchUtil.SHOW_IN_TASKBAR_ICON_PROPERTY, Boolean.TRUE);
+			job.setProperty(IProgressConstants2.SHOW_IN_TASKBAR_ICON_PROPERTY, Boolean.TRUE);
 		}
 		job.setFullSynchronization(false);
 		return job;
@@ -658,6 +661,7 @@ public class TasksUiInternal {
 					MessageFormat.format(Messages.TasksUiInternal_The_new_task_will_be_added_to_the_X_container,
 							UncategorizedTaskContainer.LABEL));
 		}
+		newTask.setAttribute(ITasksCoreConstants.PROPERTY_NEW_UNSAVED_TASK, Boolean.TRUE.toString());
 		taskList.addTask(newTask, category);
 		return newTask;
 	}
@@ -885,11 +889,11 @@ public class TasksUiInternal {
 				.getRepositoryConnector(taskData.getConnectorKind());
 		ITaskMapping mapping = connector.getTaskMapping(taskData);
 		String summary = mapping.getSummary();
-		if (summary != null && summary.length() > 0) {
+		if (!Strings.isNullOrEmpty(summary)) {
 			task.setSummary(summary);
 		}
 		String taskKind = mapping.getTaskKind();
-		if (taskKind != null && taskKind.length() > 0) {
+		if (!Strings.isNullOrEmpty(taskKind)) {
 			task.setTaskKind(taskKind);
 		}
 		UnsubmittedTaskContainer unsubmitted = TasksUiPlugin.getTaskList()
@@ -1566,6 +1570,22 @@ public class TasksUiInternal {
 			undoContext = new ObjectUndoContext(new Object(), "Tasks Context"); //$NON-NLS-1$
 		}
 		return undoContext;
+	}
+
+	/**
+	 * Deletes the given task from the Task List, the Task Context Store, and the Task Data Manager.
+	 *
+	 * @param task
+	 *            the task to delete
+	 */
+	public static void deleteTask(ITask task) {
+		TasksUiInternal.getTaskList().deleteTask(task);
+		TasksUiPlugin.getContextStore().deleteContext(task);
+		try {
+			TasksUiPlugin.getTaskDataManager().deleteTaskData(task);
+		} catch (CoreException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to delete task data", e)); //$NON-NLS-1$
+		}
 	}
 
 }

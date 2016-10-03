@@ -275,7 +275,17 @@ public class Messages extends NLS {
 
 	public static String SummaryPart_Section_Title;
 
+	public static String TaskEditor_Delete;
+
 	public static String TaskEditor_Edit_Task_Repository_ToolTip;
+
+	public static String TaskEditor_Save;
+
+	public static String TaskEditor_SaveNewLocalTaskDescription;
+
+	public static String TaskEditor_SaveNewTask;
+
+	public static String TaskEditor_SaveNewRemoteTaskDescription;
 
 	public static String TaskEditor_Task;
 

@@ -14,11 +14,11 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 import java.util.Iterator;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AbstractTaskRepositoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.sync.TaskJob;
+import org.eclipse.ui.progress.IProgressConstants2;
 
 /**
  * @author Mik Kersten
@@ -42,7 +42,7 @@ public class UpdateRepositoryConfigurationAction extends AbstractTaskRepositoryA
 			if (repository != null) {
 				TaskJob job = TasksUiInternal.updateRepositoryConfiguration(repository);
 				// show the progress in the system task bar if this is a user job (i.e. forced)
-				job.setProperty(WorkbenchUtil.SHOW_IN_TASKBAR_ICON_PROPERTY, Boolean.TRUE);
+				job.setProperty(IProgressConstants2.SHOW_IN_TASKBAR_ICON_PROPERTY, Boolean.TRUE);
 			}
 		}
 	}

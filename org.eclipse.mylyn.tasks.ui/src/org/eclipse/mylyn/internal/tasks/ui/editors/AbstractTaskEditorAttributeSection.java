@@ -25,7 +25,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.commons.workbench.forms.CommonFormUtil;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskDiffUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -48,10 +47,11 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.progress.IProgressConstants2;
 
 /**
  * Editor part that shows {@link TaskAttribute}s in a two column layout.
- * 
+ *
  * @author Steffen Pingel
  * @author Kevin Sawicki
  */
@@ -207,7 +207,7 @@ public abstract class AbstractTaskEditorAttributeSection extends AbstractTaskEdi
 	/**
 	 * Create a comparator by which attribute editors will be sorted. By default attribute editors are sorted by layout
 	 * hint priority. Subclasses may override this method to sort attribute editors in a custom way.
-	 * 
+	 *
 	 * @return comparator for {@link AbstractAttributeEditor} objects
 	 */
 	protected Comparator<AbstractAttributeEditor> createAttributeEditorSorter() {
@@ -264,10 +264,9 @@ public abstract class AbstractTaskEditorAttributeSection extends AbstractTaskEdi
 							public void run() {
 								getTaskEditorPage().showEditorBusy(false);
 								if (job.getStatus() != null) {
-									getTaskEditorPage().getTaskEditor()
-											.setStatus(
-													Messages.TaskEditorAttributePart_Updating_of_repository_configuration_failed,
-													Messages.TaskEditorAttributePart_Update_Failed, job.getStatus());
+									getTaskEditorPage().getTaskEditor().setStatus(
+											Messages.TaskEditorAttributePart_Updating_of_repository_configuration_failed,
+											Messages.TaskEditorAttributePart_Update_Failed, job.getStatus());
 								} else {
 									getTaskEditorPage().refresh();
 								}
@@ -277,34 +276,10 @@ public abstract class AbstractTaskEditorAttributeSection extends AbstractTaskEdi
 				});
 				job.setUser(true);
 				// show the progress in the system task bar if this is a user job (i.e. forced)
-				job.setProperty(WorkbenchUtil.SHOW_IN_TASKBAR_ICON_PROPERTY, Boolean.TRUE);
+				job.setProperty(IProgressConstants2.SHOW_IN_TASKBAR_ICON_PROPERTY, Boolean.TRUE);
 				job.setPriority(Job.INTERACTIVE);
 				job.schedule();
 			};
-
-//			@Override
-//			public void performUpdate(TaskRepository repository, AbstractRepositoryConnector connector,
-//					IProgressMonitor monitor) {
-//				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//					public void run() {
-//						getTaskEditorPage().showEditorBusy(true);
-//					}
-//				});
-//				try {
-//					super.performUpdate(repository, connector, monitor);
-//					AbstractTask task = getTaskEditorPage().getTask();
-//					Job job = TasksUi.synchronizeTask(connector, task, true, null);
-//					job.join();
-//				} catch (InterruptedException e) {
-//					// ignore
-//				} finally {
-//					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//						public void run() {
-//							getTaskEditorPage().refreshFormContent();
-//						}
-//					});
-//				}
-//			}
 		};
 		repositoryConfigRefresh.setImageDescriptor(TasksUiImages.REPOSITORY_SYNCHRONIZE_SMALL);
 		repositoryConfigRefresh.selectionChanged(new StructuredSelection(getTaskEditorPage().getTaskRepository()));
@@ -343,7 +318,7 @@ public abstract class AbstractTaskEditorAttributeSection extends AbstractTaskEdi
 
 	/**
 	 * Returns the attributes that are shown in the overlay text.
-	 * 
+	 *
 	 * @see #getInfoOverlayText()
 	 */
 	protected abstract List<TaskAttribute> getOverlayAttributes();

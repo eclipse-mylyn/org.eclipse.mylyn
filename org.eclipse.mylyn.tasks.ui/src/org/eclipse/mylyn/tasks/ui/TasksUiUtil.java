@@ -242,13 +242,7 @@ public class TasksUiUtil {
 	 * @since 3.0
 	 */
 	public static boolean openNewTaskEditor(Shell shell, ITaskMapping taskSelection, TaskRepository taskRepository) {
-		final IWizard wizard;
-//		List<TaskRepository> repositories = TasksUi.getRepositoryManager().getAllRepositories();
-//		if (taskRepository == null && repositories.size() == 1) {
-//			// only the Local repository connector is available
-//			taskRepository = repositories.get(0);
-//		}
-
+		IWizard wizard;
 		if (taskRepository != null) {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
 			wizard = connectorUi.getNewTaskWizard(taskRepository, taskSelection);
