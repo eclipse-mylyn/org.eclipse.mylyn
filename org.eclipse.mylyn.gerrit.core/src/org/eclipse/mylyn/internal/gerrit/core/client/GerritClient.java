@@ -126,7 +126,7 @@ import com.google.gwtjsonrpc.client.VoidResult;
 
 /**
  * Facade to the Gerrit RPC API.
- * 
+ *
  * @author Mikael Kober
  * @author Thomas Westling
  * @author Steffen Pingel
@@ -343,13 +343,13 @@ public abstract class GerritClient extends ReviewsClient {
 			throws GerritException {
 		List<Project> result = new ArrayList<Project>();
 		try {
-			List<ProjectDetailX> projectDetails = restClient.execute(monitor, new Operation<List<ProjectDetailX>>(
-					client) {
-				@Override
-				public void execute(IProgressMonitor monitor) throws GerritException {
-					getProjectAdminService(monitor).visibleProjectDetails(this);
-				}
-			});
+			List<ProjectDetailX> projectDetails = restClient.execute(monitor,
+					new Operation<List<ProjectDetailX>>(client) {
+						@Override
+						public void execute(IProgressMonitor monitor) throws GerritException {
+							getProjectAdminService(monitor).visibleProjectDetails(this);
+						}
+					});
 			for (ProjectDetailX projectDetail : projectDetails) {
 				if (!GerritUtil.isPermissionOnlyProject(projectDetail, gerritConfig)) {
 					result.add(projectDetail.project);
@@ -454,8 +454,8 @@ public abstract class GerritClient extends ReviewsClient {
 		return patchScript;
 	}
 
-	protected void fetchLeftBinaryContent(final PatchScriptX patchScript, final Patch.Key key,
-			final PatchSet.Id leftId, final IProgressMonitor monitor) throws GerritException {
+	protected void fetchLeftBinaryContent(final PatchScriptX patchScript, final Patch.Key key, final PatchSet.Id leftId,
+			final IProgressMonitor monitor) throws GerritException {
 		if (EnumSet.of(ChangeType.DELETED, ChangeType.MODIFIED).contains(patchScript.getChangeType())) {
 			byte[] binaryContent = fetchBinaryContent(getUrlForPatchSetOrBase(key, leftId), monitor);
 			patchScript.setBinaryA(binaryContent);
@@ -499,7 +499,7 @@ public abstract class GerritClient extends ReviewsClient {
 
 	/**
 	 * Checks for the 4 byte header that identifies a ZIP file
-	 * 
+	 *
 	 * @noreference This method is not intended to be referenced by clients.
 	 */
 	public static boolean isZippedContent(byte[] bin) {
@@ -580,8 +580,8 @@ public abstract class GerritClient extends ReviewsClient {
 		ReviewerResult reviewerResult = new ReviewerResult();
 		for (final String reviewerId : reviewers) {
 			try {
-				AddReviewerResult addReviewerResult = restClient.executePostRestRequest(uri, new ReviewerInput(
-						reviewerId), AddReviewerResult.class, null, monitor);
+				AddReviewerResult addReviewerResult = restClient.executePostRestRequest(uri,
+						new ReviewerInput(reviewerId), AddReviewerResult.class, null, monitor);
 				reviewerInfos.addAll(addReviewerResult.getReviewers());
 			} catch (GerritHttpException e) {
 				if (e.getResponseCode() == HttpStatus.SC_UNPROCESSABLE_ENTITY) {
@@ -595,6 +595,39 @@ public abstract class GerritClient extends ReviewsClient {
 		List<ApprovalDetail> approvalDetails = new ArrayList<ApprovalDetail>(reviewerInfos.size());
 		for (ReviewerInfo reviewerInfo : reviewerInfos) {
 			approvalDetails.add(reviewerInfo.toApprovalDetail(changeDetail.getCurrentPatchSet()));
+		}
+		changeDetail.setApprovals(approvalDetails);
+		reviewerResult.setChange(changeDetail);
+		return reviewerResult;
+	}
+
+	public ReviewerResult removeReviewer(String reviewId, String reviewerId, IProgressMonitor monitor)
+			throws GerritException {
+		Change.Id id = new Change.Id(id(reviewId));
+
+		String uri = "/a/changes/" + id.get() + "/reviewers/" + reviewerId; //$NON-NLS-1$ //$NON-NLS-2$
+		ReviewerResult reviewerResult = new ReviewerResult();
+
+		//Try to remove the reviewer from the change
+		try {
+			//Currently using a string to return as the only response from the gerrit api will be an http status
+			String result = restClient.executeDeleteRestRequest(uri, new ReviewerInput(reviewerId), String.class, null,
+					monitor);
+		} catch (GerritHttpException e) {
+			if (e.getResponseCode() == HttpStatus.SC_NOT_FOUND) {
+				reviewerResult.addError(new ReviewerResult.Error(null, reviewerId));
+			}
+
+		}
+
+		//Now that the reviewer has been removed, remove that reviewers approvals on the change
+		ChangeDetail changeDetail = getChangeDetail(id.get(), monitor);
+		List<ApprovalDetail> approvalDetails = new ArrayList<>();
+		for (ApprovalDetail approval : changeDetail.getApprovals()) {
+			//If this approval is not made by the user we are removing, add it to the list of approvals
+			if (!approval.getAccount().equals(reviewerId)) {
+				approvalDetails.add(approval);
+			}
 		}
 		changeDetail.setApprovals(approvalDetails);
 		reviewerResult.setChange(changeDetail);

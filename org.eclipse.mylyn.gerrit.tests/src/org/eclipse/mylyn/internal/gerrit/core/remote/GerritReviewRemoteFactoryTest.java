@@ -178,7 +178,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		CommitCommand commandDep1 = reviewHarness.createCommitCommand(changeIdDep1);
 		reviewHarness.addFile("testFile1.txt", "test 2");
 		CommitResult resultDep1 = reviewHarness.commitAndPush(commandDep1);
-		String resultIdDep1 = reviewHarness.parseShortId(resultDep1.push.getMessages());
+		String resultIdDep1 = ReviewHarness.parseShortId(resultDep1.push.getMessages());
 		assertThat("Bad Push: " + resultDep1.push.getMessages(), resultIdDep1.length(), greaterThan(0));
 
 		TestRemoteObserverConsumer<IRepository, IReview, String, GerritChange, String, Date> consumerDep1 = retrieveForRemoteKey(
@@ -303,11 +303,10 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 	@Test
 	public void testAddSomeInvalidReviewers() throws Exception {
-		List<String> reviewers = Arrays.asList(new String[] { "tests", "foo" });
-		int userid = 1000001; //user id for tests
+
 		//use "admin " since this is a valid user in 2.9
-		reviewers = Arrays.asList(new String[] { "admin", "foo" });
-		userid = 1000000; //user id for admin
+		List<String> reviewers = Arrays.asList(new String[] { "admin", "foo" });
+		List<Integer> userid = Arrays.asList(new Integer[] { 1000000 }); //user id for tests
 
 		ReviewerResult reviewerResult = reviewHarness.getClient().addReviewers(reviewHarness.getShortId(), reviewers,
 				new NullProgressMonitor());
@@ -318,25 +317,90 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 	@Test
 	public void testAddReviewers() throws Exception {
 		assertThat(getReview().getReviewerApprovals().isEmpty(), is(true));
-		List<String> reviewers = Arrays.asList(new String[] { "tests" });
-		int userid = 1000001; //user id for tests
-		//Need a user and not the review owner
-		reviewers = Arrays.asList(new String[] { "admin" });
-		userid = 1000000; //user id for admin
 
-		ReviewerResult reviewerResult = reviewHarness.getClient().addReviewers(reviewHarness.getShortId(), reviewers,
+		addAdminToReviewAndVerify();
+	}
+
+	@Test
+	public void testAddReviewerThenRemoveReviewer() throws Exception {
+		assertThat(getReview().getReviewerApprovals().isEmpty(), is(true)); //Make sure theres no reviewers
+
+		addAdminToReviewAndVerify();
+
+		String reviewer = "admin";
+		ReviewerResult removeReviewerResult = reviewHarness.getClient().removeReviewer(reviewHarness.getShortId(),
+				reviewer, new NullProgressMonitor());
+		reviewHarness.retrieve();
+
+		//I went through the checks after we add a reviewer and reversed them to look for empty rather than for a new reviewer
+		assertThat(getReview().getReviewerApprovals().isEmpty(), is(true));
+		assertThat(removeReviewerResult, notNullValue());
+		assertTrue(removeReviewerResult.getErrors().isEmpty());
+
+		List<ApprovalDetail> approvals = removeReviewerResult.getChange().getApprovals();
+		assertThat(approvals.isEmpty(), is(true));
+		assertThat(approvals.size(), is(0));
+
+	}
+
+	@Test
+	public void testAddReviewerAndRemoveInvalidReviewer() throws Exception {
+		addAdminToReviewAndVerify();
+
+		//Foo isnt a valid user
+		String reviewer = "foo";
+
+		ReviewerResult removeReviewerResult = reviewHarness.getClient().removeReviewer(reviewHarness.getShortId(),
+				reviewer, new NullProgressMonitor());
+
+		reviewHarness.retrieve();
+
+		assertThat(removeReviewerResult, notNullValue());
+		assertThat(removeReviewerResult.getErrors().size(), is(1));
+		assertThat(removeReviewerResult.getErrors().get(0).getType(), nullValue());
+		assertThat(removeReviewerResult.getErrors().get(0).getName(), is(reviewer));
+
+		List<ApprovalDetail> approvals = removeReviewerResult.getChange().getApprovals();
+		assertThat(approvals.isEmpty(), is(false));
+		assertThat(approvals.size(), is(1));
+
+	}
+
+	@Test
+	public void testAddReviewerAndRemoveValidReviewerNotOnReview() throws Exception {
+		addAdminToReviewAndVerify();
+
+		String reviewer = "tests";
+
+		ReviewerResult removeReviewerResult = reviewHarness.getClient().removeReviewer(reviewHarness.getShortId(),
+				reviewer, new NullProgressMonitor());
+
+		reviewHarness.retrieve();
+
+		assertThat(removeReviewerResult, notNullValue());
+		assertThat(removeReviewerResult.getErrors().size(), is(1));
+		assertThat(removeReviewerResult.getErrors().get(0).getType(), nullValue());
+		assertThat(removeReviewerResult.getErrors().get(0).getName(), is(reviewer));
+
+		List<ApprovalDetail> approvals = removeReviewerResult.getChange().getApprovals();
+		assertThat(approvals.isEmpty(), is(false));
+		assertThat(approvals.size(), is(1));
+
+	}
+
+	private void addAdminToReviewAndVerify() throws Exception {
+		List<String> reviewers = Arrays.asList(new String[] { "admin" });
+		List<Integer> userid = Arrays.asList(new Integer[] { 1000000 });
+		ReviewerResult addReviewerResult = reviewHarness.getClient().addReviewers(reviewHarness.getShortId(), reviewers,
 				new NullProgressMonitor());
 		reviewHarness.retrieve();
-		assertReviewerResult(reviewerResult, null, userid);
+		assertReviewerResult(addReviewerResult, null, userid);
 	}
 
 	@Test
 	public void testAddReviewersByEmail() throws Exception {
-		List<String> reviewers = Arrays.asList(new String[] { "tests@mylyn.eclipse.org" });
-		int userid = 1000001; //user id for tests
-		//Need a user and not the review owner
-		reviewers = Arrays.asList(new String[] { "admin@mylyn.eclipse.org" });
-		userid = 1000000; //user id for admin
+		List<String> reviewers = Arrays.asList(new String[] { "admin@mylyn.eclipse.org" });
+		List<Integer> userid = Arrays.asList(new Integer[] { 1000000 }); //user id for tests
 
 		ReviewerResult reviewerResult = reviewHarness.getClient().addReviewers(reviewHarness.getShortId(), reviewers,
 				new NullProgressMonitor());
@@ -344,8 +408,10 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		assertReviewerResult(reviewerResult, null, userid);
 	}
 
-	private void assertReviewerResult(ReviewerResult reviewerResult, String nameInErrors, int userId) {
+	private void assertReviewerResult(ReviewerResult reviewerResult, String nameInErrors, List<Integer> userIds) {
 		assertThat(reviewerResult, notNullValue());
+
+		int numReviewers = userIds.size();
 
 		assertThat(reviewerResult.getErrors().isEmpty(), is(nameInErrors == null));
 		if (nameInErrors != null) {
@@ -356,26 +422,31 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 
 		List<ApprovalDetail> approvals = reviewerResult.getChange().getApprovals();
 		assertThat(approvals.isEmpty(), is(false));
-		assertThat(approvals.size(), is(1));
-		assertThat(approvals.get(0).getAccount().get(), is(userId));
+		assertThat(approvals.size(), is(numReviewers));
 
-		Map<ApprovalCategory.Id, PatchSetApproval> approvalMap = approvals.get(0).getApprovalMap();
-		assertThat(approvalMap, notNullValue());
-		assertThat(approvalMap.isEmpty(), is(false));
-		assertThat(approvalMap.size(), is(1));
+		for (int i = 0; i < numReviewers; i++) {
+			assertThat(approvals.get(i).getAccount().get(), is(userIds.get(i)));
 
-		PatchSetApproval crvw = approvalMap.get(CRVW.getCategory().getId());
-		assertThat(crvw, notNullValue());
-		assertThat(crvw.getAccountId().get(), is(userId));
-		assertThat(crvw.getValue(), is((short) 0));
-		assertThat(crvw.getGranted(), notNullValue());
-		assertThat(crvw.getPatchSetId(), notNullValue());
-		assertThat(crvw.getPatchSetId().get(), is(1));
-		assertThat(crvw.getPatchSetId().getParentKey().get(), is(Integer.parseInt(getReview().getId())));
+			Map<ApprovalCategory.Id, PatchSetApproval> approvalMap = approvals.get(i).getApprovalMap();
+			assertThat(approvalMap, notNullValue());
+			assertThat(approvalMap.isEmpty(), is(false));
+			assertThat(approvalMap.size(), is(1));
+
+			PatchSetApproval crvw = approvalMap.get(CRVW.getCategory().getId());
+			assertThat(crvw, notNullValue());
+			assertThat(crvw.getAccountId().get(), is(userIds.get(i)));
+			assertThat(crvw.getValue(), is((short) 0));
+			assertThat(crvw.getGranted(), notNullValue());
+			assertThat(crvw.getPatchSetId(), notNullValue());
+			assertThat(crvw.getPatchSetId().get(), is(1));
+			assertThat(crvw.getPatchSetId().getParentKey().get(), is(Integer.parseInt(getReview().getId())));
+
+			assertThat(getReview().getReviewerApprovals().get(i), nullValue());
+		}
 
 		assertThat(getReview().getReviewerApprovals().isEmpty(), is(false));
-		assertThat(getReview().getReviewerApprovals().size(), is(1));
-		assertThat(getReview().getReviewerApprovals().get(0), nullValue());
+		assertThat(getReview().getReviewerApprovals().size(), is(numReviewers));
+
 	}
 
 	@Test
@@ -551,7 +622,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		CommitCommand commandNewChange = reviewHarness.createCommitCommand(changeIdNewChange);
 		reviewHarness.addFile("testFileNewChange.txt");
 		CommitResult result = reviewHarness.commitAndPush(commandNewChange);
-		String newReviewShortId = reviewHarness.parseShortId(result.push.getMessages());
+		String newReviewShortId = ReviewHarness.parseShortId(result.push.getMessages());
 
 		TestRemoteObserver<IRepository, IReview, String, Date> newReviewListener = new TestRemoteObserver<IRepository, IReview, String, Date>(
 				reviewHarness.getProvider().getReviewFactory());
@@ -632,7 +703,7 @@ public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
 		CommitCommand commandNewChange = reviewHarness.createCommitCommand(changeIdNewChange);
 		reviewHarness.addFile("testFileNewChange.txt");
 		CommitResult result = reviewHarness.commitAndPush(commandNewChange);
-		String newReviewShortId = reviewHarness.parseShortId(result.push.getMessages());
+		String newReviewShortId = ReviewHarness.parseShortId(result.push.getMessages());
 
 		TestRemoteObserver<IRepository, IReview, String, Date> newReviewListener = new TestRemoteObserver<IRepository, IReview, String, Date>(
 				reviewHarness.getProvider().getReviewFactory());
