@@ -2,12 +2,12 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.asciidoc.tests;singleton:=true
-Bundle-Version: 2.10.0.qualifier
+Bundle-Version: 2.11.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.junit;bundle-version="3.8.2",
- org.eclipse.mylyn.wikitext.asciidoc.core;bundle-version="2.10.0",
- org.eclipse.mylyn.wikitext.asciidoc.ui;bundle-version="2.10.0",
+ org.eclipse.mylyn.wikitext.asciidoc.core;bundle-version="2.11.0",
+ org.eclipse.mylyn.wikitext.asciidoc.ui;bundle-version="2.11.0",
  org.eclipse.jface.text,
  org.eclipse.mylyn.wikitext.tests
 Export-Package: 
