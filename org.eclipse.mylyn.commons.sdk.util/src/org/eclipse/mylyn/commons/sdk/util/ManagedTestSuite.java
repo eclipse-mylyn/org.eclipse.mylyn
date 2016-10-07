@@ -13,9 +13,7 @@ package org.eclipse.mylyn.commons.sdk.util;
 
 import java.text.MessageFormat;
 import java.util.Enumeration;
-import java.util.Map;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
 import junit.framework.AssertionFailedError;
@@ -28,51 +26,17 @@ import junit.framework.TestSuite;
 /**
  * Prints the name of each test to System.err when it started and dumps a stack trace of all thread to System.err if a
  * test takes longer than 10 minutes.
- * 
+ *
  * @author Steffen Pingel
  */
 public class ManagedTestSuite extends TestSuite {
-
-	private class DumpThreadTask extends TimerTask {
-
-		private final Test test;
-
-		private final Thread testThread;
-
-		public DumpThreadTask(Test test) {
-			this.test = test;
-			this.testThread = Thread.currentThread();
-		}
-
-		@Override
-		public void run() {
-			StringBuffer sb = new StringBuffer();
-			sb.append(MessageFormat.format("Test {0} is taking too long:\n", test.toString()));
-			Map<Thread, StackTraceElement[]> traces = Thread.getAllStackTraces();
-			for (Map.Entry<Thread, StackTraceElement[]> entry : traces.entrySet()) {
-				sb.append(entry.getKey().toString());
-				sb.append("\n");
-				for (StackTraceElement element : entry.getValue()) {
-					sb.append("  ");
-					sb.append(element.toString());
-					sb.append("\n");
-				}
-				sb.append("\n");
-			}
-			System.err.println(sb.toString());
-
-			System.err.println("Sending interrupt to thread: " + testThread.toString());
-			testThread.interrupt();
-		}
-
-	}
 
 	private class Listener implements TestListener {
 
 		/**
 		 * Tests may execute in parallel and hence multiple dump threads maybe scheduled concurrently.
 		 */
-		private final ConcurrentHashMap<Test, DumpThreadTask> taskByTest = new ConcurrentHashMap<Test, ManagedTestSuite.DumpThreadTask>();
+		private final ConcurrentHashMap<Test, DumpThreadTask> taskByTest = new ConcurrentHashMap<Test, DumpThreadTask>();
 
 		private final Timer timer = new Timer(true);
 
@@ -114,7 +78,7 @@ public class ManagedTestSuite extends TestSuite {
 			if (task != null) {
 				task.cancel();
 			}
-			// clear flag in case timeout occurred 
+			// clear flag in case timeout occurred
 			Thread.interrupted();
 		}
 
@@ -126,7 +90,7 @@ public class ManagedTestSuite extends TestSuite {
 			if (!silent) {
 				System.err.println("Running " + test.toString());
 			}
-			DumpThreadTask task = new DumpThreadTask(test);
+			DumpThreadTask task = new DumpThreadTask(test.toString());
 			taskByTest.put(test, task);
 			timer.schedule(task, DELAY);
 		}
@@ -146,27 +110,31 @@ public class ManagedTestSuite extends TestSuite {
 
 	@Override
 	public void run(TestResult result) {
-		result.addListener(listener);
+		if (JUnitExecutionListener.getDefault() == null) {
+			result.addListener(listener);
+		}
 		CommonTestUtil.fixProxyConfiguration();
 		CommonTestUtil.dumpSystemInfo(System.err);
 		super.run(result);
-		listener.dumpResults(result);
+		if (JUnitExecutionListener.getDefault() == null) {
+			listener.dumpResults(result);
 
-		// add dummy test to dump threads in case shutdown hangs
-		listener.startTest(new Test() {
-			public int countTestCases() {
-				return 1;
-			}
+			// add dummy test to dump threads in case shutdown hangs
+			listener.startTest(new Test() {
+				public int countTestCases() {
+					return 1;
+				}
 
-			public void run(TestResult result) {
-				// do nothing
-			}
+				public void run(TestResult result) {
+					// do nothing
+				}
 
-			@Override
-			public String toString() {
-				return "ShutdownWatchdog";
-			}
-		}, true);
+				@Override
+				public String toString() {
+					return "ShutdownWatchdog";
+				}
+			}, true);
+		}
 	}
 
 }
