@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.MenuItem;
 
 /**
  * Provides an abstract implementation for persisting the column and sorting state of a {@link ColumnViewer}.
- * 
+ *
  * @author Shawn Minto
  * @author Steffen Pingel
  * @since 3.7
@@ -316,6 +316,7 @@ public abstract class AbstractColumnViewerSupport<T extends Item> {
 						headerMenu.getItem(i).setSelection(getWidth(column) > 0);
 						Integer orderInteger = children[i].getInteger("order"); //$NON-NLS-1$
 						order[i] = (orderInteger != null) ? orderInteger.intValue() : 0;
+						restoreAdditionalChildInfo(children[i], column);
 					}
 					try {
 						setColumnOrder(order);
@@ -383,6 +384,7 @@ public abstract class AbstractColumnViewerSupport<T extends Item> {
 			XmlMemento child = memento.createChild("Column"); //$NON-NLS-1$
 			child.putInteger("width", getWidth(column)); //$NON-NLS-1$
 			child.putInteger("order", order[i]); //$NON-NLS-1$
+			saveAdditionalChildInfo(child, column);
 		}
 
 		T sortColumn = getSortColumn();
@@ -429,6 +431,25 @@ public abstract class AbstractColumnViewerSupport<T extends Item> {
 			setColumnWidth(column, width);
 		}
 		setColumnResizable(column, width > 0);
+	}
+
+	/**
+	 * @since 3.22
+	 */
+	protected void saveAdditionalChildInfo(XmlMemento child, T column) {
+	}
+
+	/**
+	 * @since 3.22
+	 */
+	protected void restoreAdditionalChildInfo(XmlMemento xmlMemento, T column) {
+	}
+
+	/**
+	 * @since 3.22
+	 */
+	protected Menu getHeaderMenu() {
+		return headerMenu;
 	}
 
 }
