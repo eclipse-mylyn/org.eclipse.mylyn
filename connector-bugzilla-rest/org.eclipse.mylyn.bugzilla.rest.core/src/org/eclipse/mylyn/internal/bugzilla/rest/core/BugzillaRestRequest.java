@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.bugzilla.rest.core;
 
 import static com.google.common.base.Preconditions.checkState;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -31,8 +32,11 @@ import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpOperation;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpResponse;
 import org.eclipse.mylyn.commons.repositories.http.core.HttpUtil;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.ErrorResponse;
 import org.eclipse.osgi.util.NLS;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonWriter;
 
 public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
@@ -88,9 +92,15 @@ public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
 			if (!urlSuffix.endsWith("?")) { //$NON-NLS-1$
 				urlSuffix += "&"; //$NON-NLS-1$
 			}
-			UserCredentials credentials = getCredentials();
-			urlSuffix += MessageFormat.format("Bugzilla_login={0}&Bugzilla_password={1}", //$NON-NLS-1$
-					new Object[] { credentials.getUserName(), credentials.getPassword() });
+			RepositoryLocation location = getClient().getLocation();
+			if (location.getBooleanPropery(IBugzillaRestConstants.REPOSITORY_USE_API_KEY)) {
+				urlSuffix += MessageFormat.format("Bugzilla_api_key={0}", //$NON-NLS-1$
+						location.getProperty(IBugzillaRestConstants.REPOSITORY_API_KEY));
+			} else {
+				UserCredentials credentials = getCredentials();
+				urlSuffix += MessageFormat.format("Bugzilla_login={0}&Bugzilla_password={1}", //$NON-NLS-1$
+						credentials.getUserName(), credentials.getPassword());
+			}
 		}
 		return baseUrl() + urlSuffix;
 	}
@@ -109,9 +119,11 @@ public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
 
 	protected T doProcess(CommonHttpResponse response, IOperationMonitor monitor)
 			throws IOException, BugzillaRestException {
-		InputStream is = response.getResponseEntityAsStream();
-		InputStreamReader in = new InputStreamReader(is);
-		return parseFromJson(in);
+		try (BufferedInputStream is = new BufferedInputStream(response.getResponseEntityAsStream())) {
+			InputStreamReader in = new InputStreamReader(is);
+			throwExeptionIfRestError(is, in);
+			return parseFromJson(in);
+		}
 	}
 
 	protected void doValidate(CommonHttpResponse response, IOperationMonitor monitor)
@@ -122,7 +134,7 @@ public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
 	protected void validate(CommonHttpResponse response, int expected, IOperationMonitor monitor)
 			throws BugzillaRestException {
 		int statusCode = response.getStatusCode();
-		if (statusCode != expected) {
+		if (statusCode != expected && statusCode != HttpStatus.SC_BAD_REQUEST) {
 			if (statusCode == HttpStatus.SC_NOT_FOUND) {
 				throw new BugzillaRestResourceNotFoundException(
 						NLS.bind("Requested resource ''{0}'' does not exist", response.getRequestPath()));
@@ -160,11 +172,15 @@ public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
 	}
 
 	protected void addAuthenticationToGson(JsonWriter out, RepositoryLocation location) {
-		UserCredentials credentials = getCredentials();
-
 		try {
-			out.name("Bugzilla_login").value(credentials.getUserName()); //$NON-NLS-1$
-			out.name("Bugzilla_password").value(credentials.getPassword()); //$NON-NLS-1$
+			if (location.getBooleanPropery(IBugzillaRestConstants.REPOSITORY_USE_API_KEY)) {
+				out.name("Bugzilla_api_key").value(location.getProperty(IBugzillaRestConstants.REPOSITORY_API_KEY));
+			} else {
+				UserCredentials credentials = getCredentials();
+
+				out.name("Bugzilla_login").value(credentials.getUserName()); //$NON-NLS-1$
+				out.name("Bugzilla_password").value(credentials.getPassword()); //$NON-NLS-1$
+			}
 		} catch (IOException e) {
 			throw new BugzillaRestRuntimeException("Authentication requested with IOException", e); //$NON-NLS-1$
 		}
@@ -174,5 +190,31 @@ public abstract class BugzillaRestRequest<T> extends CommonHttpOperation<T> {
 		UserCredentials credentials = getClient().getLocation().getCredentials(AuthenticationType.REPOSITORY);
 		checkState(credentials != null, "Authentication requested without valid credentials");
 		return credentials;
+	}
+
+	protected ErrorResponse parseErrorResponseFromJson(InputStreamReader in) throws BugzillaRestException {
+
+		TypeToken<ErrorResponse> a = new TypeToken<ErrorResponse>() {
+		};
+		return new Gson().fromJson(in, a.getType());
+	}
+
+	protected void throwExeptionIfRestError(InputStream is, InputStreamReader in)
+			throws IOException, BugzillaRestException {
+		try {
+			is.mark(18);
+			byte[] b = new byte[17];
+			is.read(b);
+			String str = new String(b);
+			if (str.startsWith("{\"code\":") || str.startsWith("{\"message\":") || str.startsWith("{\"error\":") //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+					|| str.startsWith("{\"documentation\":")) { //$NON-NLS-1$
+				is.reset();
+				ErrorResponse resp = parseErrorResponseFromJson(in);
+				throw new BugzillaRestResourceNotFoundException(
+						NLS.bind("Error {1}: {0}", new Object[] { resp.getMessage(), resp.getCode() })); //$NON-NLS-1$
+			}
+		} finally {
+			is.reset();
+		}
 	}
 }

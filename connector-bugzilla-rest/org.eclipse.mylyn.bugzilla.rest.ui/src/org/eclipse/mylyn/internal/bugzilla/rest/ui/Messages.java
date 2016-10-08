@@ -16,9 +16,17 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.bugzilla.rest.ui.messages"; //$NON-NLS-1$
 
+	public static String BugzillaRestRepositorySettingsPage_api_key;
+
+	public static String BugzillaRestRepositorySettingsPage_Please_create_or_copy_the_API_Key_from;
+
 	public static String BugzillaRestRepositorySettingsPage_RestRepositorySetting;
 
 	public static String BugzillaRestRepositorySettingsPage_SupportsVersionMessage;
+
+	public static String BugzillaRestRepositorySettingsPage_use_api_key;
+
+	public static String BugzillaRestRepositorySettingsPage_View_your_apikey_settings;
 
 	public static String BugzillaRestSearchQueryPage_PropertiesForNewQuery;
 

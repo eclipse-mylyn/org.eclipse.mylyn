@@ -42,7 +42,10 @@ import org.eclipse.mylyn.bugzilla.rest.test.support.BugzillaRestTestFixture;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
 import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
 import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
+import org.eclipse.mylyn.commons.sdk.util.AbstractTestFixture;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.ConditionalIgnoreRule;
+import org.eclipse.mylyn.commons.sdk.util.IFixtureJUnitClass;
 import org.eclipse.mylyn.commons.sdk.util.Junit4TestFixtureRunner;
 import org.eclipse.mylyn.commons.sdk.util.Junit4TestFixtureRunner.FixtureDefinition;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestClient;
@@ -53,6 +56,7 @@ import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestException;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestTaskAttachmentHandler;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestTaskSchema;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestVersion;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.IBugzillaRestConstants;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Field;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Parameters;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Product;
@@ -87,8 +91,11 @@ import com.google.gson.Gson;
 // the value in the fixture.
 // Note: When there is no fixture with this property no tests get executed
 //@RunOnlyWhenProperty(property = "default", value = "1")
-public class BugzillaRestClientTest {
+public class BugzillaRestClientTest implements IFixtureJUnitClass {
 	private final BugzillaRestTestFixture actualFixture;
+
+	@Rule
+	public ConditionalIgnoreRule rule = new ConditionalIgnoreRule(this);
 
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();
@@ -105,6 +112,10 @@ public class BugzillaRestClientTest {
 	public void setUp() {
 		connector = actualFixture.connector();
 		harness = actualFixture.createHarness();
+	}
+
+	public AbstractTestFixture getActualFixture() {
+		return actualFixture;
 	}
 
 	@Test
@@ -130,21 +141,17 @@ public class BugzillaRestClientTest {
 	}
 
 	@Test
-	public void testInvalideUserValidate() throws BugzillaRestException {
+	public void testInvalidUserValidate() throws BugzillaRestException {
 		RepositoryLocation location = new RepositoryLocation();
 		location.setUrl(actualFixture.getRepositoryUrl());
 		location.setProxy(null);
 		location.setCredentialsStore(new InMemoryCredentialsStore());
 		location.setCredentials(AuthenticationType.REPOSITORY, new UserCredentials("wrong", "wrong"));
-		thrown.expect(BugzillaRestException.class);
-//		if (actualFixture.getVersion().compareTo("5.1") < 0) {
-		thrown.expectMessage("Unauthorized");
-//		} else {
-//			thrown.expectMessage("Unexpected response from Bugzilla REST server");
-//		}
 		BugzillaRestClient client;
 		client = new BugzillaRestClient(location, connector);
 		assertNotNull(client.getClient());
+		thrown.expect(BugzillaRestException.class);
+		thrown.expectMessage("Unauthorized");
 		client.validate(new NullOperationMonitor());
 	}
 
@@ -155,10 +162,59 @@ public class BugzillaRestClientTest {
 		location.setProxy(null);
 		location.setCredentialsStore(new InMemoryCredentialsStore());
 		location.setCredentials(AuthenticationType.REPOSITORY, null);
-		thrown.expect(IllegalStateException.class);
-		thrown.expectMessage("Authentication requested without valid credentials");
 		BugzillaRestClient client;
 		client = new BugzillaRestClient(location, connector);
+		thrown.expect(IllegalStateException.class);
+		thrown.expectMessage("Authentication requested without valid credentials");
+		client.validate(new NullOperationMonitor());
+	}
+
+	@Test
+	public void testInvalidPasswordValidate() throws BugzillaRestException {
+		RepositoryLocation location = new RepositoryLocation();
+		location.setUrl(actualFixture.getRepositoryUrl());
+		location.setProxy(null);
+		location.setCredentialsStore(new InMemoryCredentialsStore());
+		location.setCredentials(AuthenticationType.REPOSITORY, new UserCredentials("tests@mylyn.eclipse.org", "wrong"));
+		BugzillaRestClient client;
+		client = new BugzillaRestClient(location, connector);
+		assertNotNull(client.getClient());
+		thrown.expect(BugzillaRestException.class);
+		thrown.expectMessage("Unauthorized");
+		client.validate(new NullOperationMonitor());
+	}
+
+	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnApikeyRule.class)
+	public void testApikeyValidate() throws BugzillaRestException {
+		RepositoryLocation location = new RepositoryLocation();
+		location.setUrl(actualFixture.getRepositoryUrl());
+		location.setProxy(null);
+		location.setCredentialsStore(new InMemoryCredentialsStore());
+		location.setCredentials(AuthenticationType.REPOSITORY, new UserCredentials("tests@mylyn.eclipse.org", ""));
+		location.setProperty(IBugzillaRestConstants.REPOSITORY_USE_API_KEY, Boolean.toString(true));
+		location.setProperty(IBugzillaRestConstants.REPOSITORY_API_KEY, "wvkz2SoBMBQEKv6ishp1j7NY1R9l711g5w2afXc6");
+		BugzillaRestClient client;
+		client = new BugzillaRestClient(location, connector);
+		assertNotNull(client.getClient());
+		assertTrue(client.validate(new NullOperationMonitor()));
+	}
+
+	@Test
+	@ConditionalIgnoreRule.ConditionalIgnore(condition = MustRunOnApikeyRule.class)
+	public void testInvalidApikeyValidate() throws BugzillaRestException {
+		RepositoryLocation location = new RepositoryLocation();
+		location.setUrl(actualFixture.getRepositoryUrl());
+		location.setProxy(null);
+		location.setCredentialsStore(new InMemoryCredentialsStore());
+		location.setCredentials(AuthenticationType.REPOSITORY, new UserCredentials("tests@mylyn.eclipse.org", ""));
+		location.setProperty(IBugzillaRestConstants.REPOSITORY_USE_API_KEY, Boolean.toString(true));
+		location.setProperty(IBugzillaRestConstants.REPOSITORY_API_KEY, "wvkz2SoBMBQEKv6ishp1j7NY1R9l711g5w2afXc8");
+		BugzillaRestClient client;
+		client = new BugzillaRestClient(location, connector);
+		assertNotNull(client.getClient());
+		thrown.expect(BugzillaRestException.class);
+		thrown.expectMessage("The API key you specified is invalid");
 		client.validate(new NullOperationMonitor());
 	}
 

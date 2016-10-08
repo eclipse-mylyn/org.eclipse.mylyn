@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
 
 import java.io.InputStream;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,7 +27,10 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
 import org.eclipse.mylyn.commons.repositories.core.RepositoryLocation;
+import org.eclipse.mylyn.commons.repositories.core.auth.AuthenticationType;
+import org.eclipse.mylyn.commons.repositories.core.auth.UserCredentials;
 import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpClient;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.BooleanResult;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.BugzillaRestIdResult;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Field;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.FieldResponse;
@@ -50,6 +54,7 @@ import org.eclipse.osgi.util.NLS;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -82,9 +87,27 @@ public class BugzillaRestClient {
 	}
 
 	public boolean validate(IOperationMonitor monitor) throws BugzillaRestException {
-		LoginToken validateResponse = new BugzillaRestLoginRequest(client).run(monitor);
-		if (validateResponse != null && !Strings.isNullOrEmpty(validateResponse.getId())) {
+		RepositoryLocation location = getClient().getLocation();
+		if (location.getBooleanPropery(IBugzillaRestConstants.REPOSITORY_USE_API_KEY)) {
+			UserCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
+			Preconditions.checkState(credentials != null, "Authentication requested without valid credentials");
+			String url = MessageFormat.format("/valid_login?login={0}&api_key={1}", //$NON-NLS-1$
+					credentials.getUserName(), location.getProperty(IBugzillaRestConstants.REPOSITORY_API_KEY));
+
+			BooleanResult response = new BugzillaRestUnauthenticatedGetRequest<BooleanResult>(client, url,
+					new TypeToken<BooleanResult>() {
+					}).run(monitor);
+			return response.getResult();
+		} else {
+			LoginToken validateResponse = new BugzillaRestLoginRequest(client).run(monitor);
+			if (validateResponse != null && !Strings.isNullOrEmpty(validateResponse.getId())) {
+				// invalide the token
+				String url = MessageFormat.format("/logout?token={0}", //$NON-NLS-1$
+						validateResponse.getToken());
+				new BugzillaRestUnauthenticatedGetRequest<BooleanResult>(client, url, new TypeToken<BooleanResult>() {
+				}).run(monitor);
 				return true;
+			}
 		}
 		return false;
 	}

@@ -92,7 +92,6 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
     envdefault_rest => true,
     testdataVersion => "Version1",
   }
-  
 
   bugzilla::site { "bugzilla-rest-master":
     major           => "5",
@@ -105,6 +104,30 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
     envtype         => "bugzillaREST",
     rest_enabled    => true,
     testdataVersion => "Version2",
+  }
+
+  bugzilla::site { "bugzilla-rest-apikey-5.0.3":
+    major           => "5",
+    minor           => "0",
+    micro           => "3",
+    envtype         => "bugzillaREST",
+    rest_enabled    => true,
+    testdataVersion => "Version1",
+    api_key_enabled => true,
+  }
+
+  bugzilla::site { "bugzilla-rest-apikey-master":
+    major           => "5",
+    minor           => "1",
+    micro           => "1",
+    branch          => "master",
+    branchTag       => "HEAD",
+    envversion      => "5.1.1+",
+    envinfo         => "Master, APIKEY enabled",
+    envtype         => "bugzillaREST",
+    rest_enabled    => true,
+    testdataVersion => "Version2",
+    api_key_enabled => true,
   }
 
 }

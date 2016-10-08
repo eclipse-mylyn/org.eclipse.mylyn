@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.provisional.bugzilla.rest.ui;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConnector;
 import org.eclipse.mylyn.internal.provisional.tasks.ui.wizards.QueryPageDetails;
 import org.eclipse.mylyn.internal.provisional.tasks.ui.wizards.SimpleURLQueryPageSchema;
@@ -26,7 +27,10 @@ public class BugzillaRestUiUtil {
 			BugzillaRestConnector connectorREST, TaskRepository repository) {
 		try {
 			SimpleURLQueryPageSchema.getInstance().initialize(taskData);
-			connectorREST.getRepositoryConfiguration(repository).updateProductOptions(taskData);
+			BugzillaRestConfiguration config = connectorREST.getRepositoryConfiguration(repository);
+			if (config != null) {
+				config.updateProductOptions(taskData);
+			}
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -42,7 +46,10 @@ public class BugzillaRestUiUtil {
 			BugzillaRestConnector connectorREST, TaskRepository repository) {
 		try {
 			BugzillaRestSearchQueryPageSchema.getInstance().initialize(taskData);
-			connectorREST.getRepositoryConfiguration(repository).updateProductOptions(taskData);
+			BugzillaRestConfiguration config = connectorREST.getRepositoryConfiguration(repository);
+			if (config != null) {
+				config.updateProductOptions(taskData);
+			}
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

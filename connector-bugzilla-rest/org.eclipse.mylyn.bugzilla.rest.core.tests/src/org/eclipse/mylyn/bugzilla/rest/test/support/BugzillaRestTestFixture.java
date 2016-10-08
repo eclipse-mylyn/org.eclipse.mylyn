@@ -20,9 +20,14 @@ import org.eclipse.mylyn.commons.sdk.util.RepositoryTestFixture;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConnector;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestCore;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.IBugzillaRestConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
+import com.google.common.collect.ImmutableMap;
+
 public class BugzillaRestTestFixture extends RepositoryTestFixture {
+
+	private static final String API_KEY_ENABLED_PROPERTY = "api_key_enabled";
 
 	public final String version;
 
@@ -31,6 +36,11 @@ public class BugzillaRestTestFixture extends RepositoryTestFixture {
 	private final BugzillaRestConnector connector = new BugzillaRestConnector();
 
 	public static final BugzillaRestTestFixture DEFAULT = discoverDefault();
+
+	private static final ImmutableMap<String, String> userAPIKeyMap = new ImmutableMap.Builder<String, String>()
+			.put("admin@mylyn.eclipse.org", "XkjcuGGfDcoNx0U6uyMM8ZaNuBlEdjrmXd8In3no") //$NON-NLS-1$
+			.put("tests@mylyn.eclipse.org", "wvkz2SoBMBQEKv6ishp1j7NY1R9l711g5w2afXc6") //$NON-NLS-1$
+			.build();
 
 	private static BugzillaRestTestFixture discoverDefault() {
 		return TestConfiguration.getDefault().discoverDefault(BugzillaRestTestFixture.class, "bugzillaREST");
@@ -73,9 +83,21 @@ public class BugzillaRestTestFixture extends RepositoryTestFixture {
 		}
 		repository = new TaskRepository(getConnectorKind(), getRepositoryUrl());
 		UserCredentials credentials = CommonTestUtil.getCredentials(PrivilegeLevel.USER);
-		repository.setCredentials(org.eclipse.mylyn.commons.net.AuthenticationType.REPOSITORY,
-				new AuthenticationCredentials(credentials.getUserName(), credentials.getPassword()), true);
+		if (isApiKeyEnabled()) {
+			repository.setProperty(IBugzillaRestConstants.REPOSITORY_USE_API_KEY, Boolean.toString(true));
+			repository.setProperty(IBugzillaRestConstants.REPOSITORY_API_KEY,
+					userAPIKeyMap.getOrDefault(credentials.getUserName(), ""));
+			repository.setCredentials(org.eclipse.mylyn.commons.net.AuthenticationType.REPOSITORY,
+					new AuthenticationCredentials(credentials.getUserName(), ""), false);
+		} else {
+			repository.setCredentials(org.eclipse.mylyn.commons.net.AuthenticationType.REPOSITORY,
+					new AuthenticationCredentials(credentials.getUserName(), credentials.getPassword()), true);
+		}
 		return repository;
+	}
+
+	public boolean isApiKeyEnabled() {
+		return Boolean.parseBoolean(getProperty(API_KEY_ENABLED_PROPERTY));
 	}
 
 	public BugzillaRestConnector connector() {

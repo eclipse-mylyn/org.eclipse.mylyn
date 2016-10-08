@@ -35,6 +35,7 @@ define bugzilla::site (
   $usebugaliases        = false,
   $clearMode            = $bugzilla::clearMode,
   $rest_enabled         = false,
+  $api_key_enabled      = false,
   $envinfo              = "",
   $testdataVersion      = "",
   ) {
@@ -82,10 +83,26 @@ define bugzilla::site (
        $envinfo2 = ""
     }
   }
+
+  if $envinfo2 != "" {
+    if $api_key_enabled {
+      $envinfo3 = "$envinfo2, APIKEY enabled"
+    } else {
+       $envinfo3 = "$envinfo2"
+    }
+  } else {
+    if $api_key_enabled {
+      $envinfo3 = "APIKEY enabled"
+    } else {
+       $envinfo3 = ""
+    }
+  }
+
+  
   if $envinfo != "" {
       $envinfo_intern = $envinfo
   } else {
-      $envinfo_intern = $envinfo2
+      $envinfo_intern = $envinfo3
   }
   if $major == "3" {
     if $minor == "6" {
@@ -107,7 +124,6 @@ define bugzilla::site (
         timeout => 300,
         logoutput => true,
         require   => Exec["prepare bugzilla"],
-        notify => Exec["end extract bugzilla $bugzillaDir"],
       }
       exec { "master master git clone $bugzillaDir":
         command => "git clone https://github.com/bugzilla/bugzilla $base/$bugzillaDir",
@@ -155,7 +171,7 @@ define bugzilla::site (
       user => "$userOwner",
       timeout => 300,
       creates => "$base/$bugzillaDir",
-      require   => Exec["prepare bugzilla"],
+      require   => Exec["$branch $branchTagInternal git fetch $bugzillaDir"],
     }
     if $branchTagInternal == "HEAD" {
       exec { "$branch $branchTagInternal dummy git checkout $bugzillaDir":

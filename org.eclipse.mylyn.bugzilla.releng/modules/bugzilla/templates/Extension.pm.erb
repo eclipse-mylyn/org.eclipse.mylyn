@@ -83,6 +83,21 @@ sub install_before_final_checks {
 		cryptpassword => 'mylyntest' });
 	}
 
+<% if  @api_key_enabled %>
+		my ($testuser_id_admin)  = $dbh->selectrow_array(
+			'SELECT userid FROM profiles WHERE login_name = ? ' ,
+			undef, 'admin@mylyn.eclipse.org');
+		my ($testuser_id_test)  = $dbh->selectrow_array(
+			'SELECT userid FROM profiles WHERE login_name = ? ' ,
+			undef, 'tests@mylyn.eclipse.org');
+		my $sth = $dbh->prepare( "INSERT INTO user_api_keys
+								 (user_id, api_key, description)
+								 VALUES (?, ?, ?)");
+		$sth->execute($testuser_id_admin, 'XkjcuGGfDcoNx0U6uyMM8ZaNuBlEdjrmXd8In3no', 'Mylyn REST Connector Admin');
+		$sth->execute($testuser_id_test, 'wvkz2SoBMBQEKv6ishp1j7NY1R9l711g5w2afXc6', 'Mylyn REST Connector Test');
+<% end %>
+
+
 	# create two new products
 	if (!$dbh->selectrow_array('SELECT 1 FROM products where id > 1')) {
 		print "create additional products...\n" unless $args->{silent};
