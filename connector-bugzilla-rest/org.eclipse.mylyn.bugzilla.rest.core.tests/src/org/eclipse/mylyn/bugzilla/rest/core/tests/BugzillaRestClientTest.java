@@ -60,6 +60,7 @@ import org.eclipse.mylyn.internal.commons.core.operations.NullOperationMonitor;
 import org.eclipse.mylyn.internal.commons.repositories.core.InMemoryCredentialsStore;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataState;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
@@ -588,6 +589,7 @@ public class BugzillaRestClientTest {
 
 	@Test
 	public void testGifAttachment() throws Exception {
+		TaskAttribute attachmentAttribute = null;
 		TaskRepository repository = actualFixture.repository();
 
 		final TaskMapping taskMappingInit = new TaskMapping() {
@@ -616,22 +618,8 @@ public class BugzillaRestClientTest {
 				return "R1";
 			}
 		};
-		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
-		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(actualFixture.repository());
-		TaskData taskData = new TaskData(mapper, actualFixture.repository().getConnectorKind(),
-				actualFixture.repository().getRepositoryUrl(), "");
-		taskDataHandler.initializeTaskData(actualFixture.repository(), taskData, taskMappingInit, null);
-		taskData.getRoot().getAttribute("cf_dropdown").setValue("one");
-		taskData.getRoot()
-				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())
-				.setValue("M2");
-		RepositoryResponse response = connector.getClient(actualFixture.repository()).postTaskData(taskData, null,
-				null);
-		assertEquals(ResponseKind.TASK_CREATED, response.getReposonseKind());
-
-		final String taskId = response.getTaskId();
-		TaskAttribute attachmentAttribute = null;
-		taskData = getTaskData(taskId);
+		String taskId = harness.getNewTaksIdFromInitMapping(taskMappingInit, harness.taskInitializationData);
+		TaskData taskData = harness.getTaskFromServer(taskId);
 		assertNotNull(taskData);
 		for (Entry<String, TaskAttribute> entry : taskData.getRoot().getAttributes().entrySet()) {
 			if (TaskAttribute.TYPE_ATTACHMENT.equals(entry.getValue().getMetaData().getType())) {
@@ -675,6 +663,7 @@ public class BugzillaRestClientTest {
 
 	@Test
 	public void testTextAttachment() throws Exception {
+		TaskAttribute attachmentAttribute = null;
 		TaskRepository repository = actualFixture.repository();
 
 		final TaskMapping taskMappingInit = new TaskMapping() {
@@ -703,22 +692,8 @@ public class BugzillaRestClientTest {
 				return "R1";
 			}
 		};
-		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
-		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(actualFixture.repository());
-		TaskData taskData = new TaskData(mapper, actualFixture.repository().getConnectorKind(),
-				actualFixture.repository().getRepositoryUrl(), "");
-		taskDataHandler.initializeTaskData(actualFixture.repository(), taskData, taskMappingInit, null);
-		taskData.getRoot().getAttribute("cf_dropdown").setValue("one");
-		taskData.getRoot()
-				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())
-				.setValue("M2");
-		RepositoryResponse response = connector.getClient(actualFixture.repository()).postTaskData(taskData, null,
-				null);
-		assertEquals(ResponseKind.TASK_CREATED, response.getReposonseKind());
-
-		final String taskId = response.getTaskId();
-		TaskAttribute attachmentAttribute = null;
-		taskData = getTaskData(taskId);
+		String taskId = harness.getNewTaksIdFromInitMapping(taskMappingInit, harness.taskInitializationData);
+		TaskData taskData = harness.getTaskFromServer(taskId);
 		assertNotNull(taskData);
 		for (Entry<String, TaskAttribute> entry : taskData.getRoot().getAttributes().entrySet()) {
 			if (TaskAttribute.TYPE_ATTACHMENT.equals(entry.getValue().getMetaData().getType())) {
@@ -992,11 +967,7 @@ public class BugzillaRestClientTest {
 		TaskData taskDataGet = harness.getTaskFromServer(taskId);
 
 		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
-		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
-		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(actualFixture.repository());
-		TaskData taskDataOld = new TaskData(mapper, actualFixture.repository().getConnectorKind(),
-				actualFixture.repository().getRepositoryUrl(), "");
-		taskDataHandler.initializeTaskData(actualFixture.repository(), taskDataOld, null, null);
+		TaskData taskDataOld = TaskDataState.createCopy(taskDataGet);
 
 		TaskAttribute attribute = taskDataGet.getRoot()
 				.getAttribute(BugzillaRestTaskSchema.getDefault().BLOCKS.getKey());
@@ -1043,11 +1014,7 @@ public class BugzillaRestClientTest {
 		TaskData taskDataGet = harness.getTaskFromServer(taskId);
 
 		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
-		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
-		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(actualFixture.repository());
-		TaskData taskDataOld = new TaskData(mapper, actualFixture.repository().getConnectorKind(),
-				actualFixture.repository().getRepositoryUrl(), "");
-		taskDataHandler.initializeTaskData(actualFixture.repository(), taskDataOld, null, null);
+		TaskData taskDataOld = TaskDataState.createCopy(taskDataGet);
 
 		TaskAttribute attribute = taskDataGet.getRoot()
 				.getAttribute(BugzillaRestTaskSchema.getDefault().BLOCKS.getKey());
@@ -1097,11 +1064,7 @@ public class BugzillaRestClientTest {
 		TaskData taskDataGet = harness.getTaskFromServer(taskId);
 
 		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
-		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
-		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(actualFixture.repository());
-		TaskData taskDataOld = new TaskData(mapper, actualFixture.repository().getConnectorKind(),
-				actualFixture.repository().getRepositoryUrl(), "");
-		taskDataHandler.initializeTaskData(actualFixture.repository(), taskDataOld, null, null);
+		TaskData taskDataOld = TaskDataState.createCopy(taskDataGet);
 
 		TaskAttribute attribute = taskDataGet.getRoot()
 				.getAttribute(BugzillaRestTaskSchema.getDefault().DEPENDS_ON.getKey());
@@ -1149,11 +1112,7 @@ public class BugzillaRestClientTest {
 		TaskData taskDataGet = harness.getTaskFromServer(taskId);
 
 		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
-		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
-		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(actualFixture.repository());
-		TaskData taskDataOld = new TaskData(mapper, actualFixture.repository().getConnectorKind(),
-				actualFixture.repository().getRepositoryUrl(), "");
-		taskDataHandler.initializeTaskData(actualFixture.repository(), taskDataOld, null, null);
+		TaskData taskDataOld = TaskDataState.createCopy(taskDataGet);
 
 		TaskAttribute attribute = taskDataGet.getRoot()
 				.getAttribute(BugzillaRestTaskSchema.getDefault().DEPENDS_ON.getKey());

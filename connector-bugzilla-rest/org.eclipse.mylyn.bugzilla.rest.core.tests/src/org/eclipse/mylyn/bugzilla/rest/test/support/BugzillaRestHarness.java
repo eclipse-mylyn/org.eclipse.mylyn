@@ -38,6 +38,7 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
+import org.eclipse.mylyn.tasks.core.TaskInitializationData;
 import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
@@ -47,6 +48,51 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
 public class BugzillaRestHarness {
 	private final BugzillaRestTestFixture fixture;
+
+	public final TaskMapping taskMappingInitTestProduct = new TaskMapping() {
+		@Override
+		public String getSummary() {
+			return "The Summary";
+		}
+
+		@Override
+		public String getDescription() {
+			return "The Description";
+		}
+
+		@Override
+		public String getProduct() {
+			return "ManualTest";
+		}
+
+		@Override
+		public String getComponent() {
+			return "ManualC1";
+		}
+
+		@Override
+		public String getVersion() {
+			return "R1";
+		}
+	};
+
+	public final TaskInitializationData taskInitializationData = new TaskInitializationData() {
+		private TaskData result;
+
+		@Override
+		public TaskData getTaskData() {
+			if (result == null) {
+				AbstractTaskDataHandler taskDataHandler = connector().getTaskDataHandler();
+				TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(repository());
+				result = new TaskData(mapper, repository().getConnectorKind(), repository().getRepositoryUrl(), ""); //$NON-NLS-1$
+				result.getRoot().createAttribute("cf_dropdown").setValue("one");
+				result.getRoot()
+						.createAttribute(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())
+						.setValue("M1");
+			}
+			return result;
+		}
+	};
 
 	public BugzillaRestHarness(BugzillaRestTestFixture fixture) {
 		this.fixture = fixture;
@@ -94,73 +140,14 @@ public class BugzillaRestHarness {
 	}
 
 	public String getNewTaksId4TestProduct() throws BugzillaRestException, CoreException {
-		final TaskMapping taskMappingInit = new TaskMapping() {
-			@Override
-			public String getSummary() {
-				return "The Summary";
-			}
 
-			@Override
-			public String getDescription() {
-				return "The Description";
-			}
-
-			@Override
-			public String getProduct() {
-				return "ManualTest";
-			}
-
-			@Override
-			public String getComponent() {
-				return "ManualC1";
-			}
-
-			@Override
-			public String getVersion() {
-				return "R1";
-			}
-		};
-		TaskData taskData = createTaskData(taskMappingInit, null, null);
-		taskData.getRoot().getAttribute("cf_dropdown").setValue("one");
-		taskData.getRoot()
-				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())
-				.setValue("M1");
-		String taskId = submitNewTask(taskData);
-		return taskId;
+		return getNewTaksIdFromInitMapping(taskMappingInitTestProduct, taskInitializationData);
 	}
 
-	public String createTaskWithSummary(final String summary) throws BugzillaRestException, CoreException {
-		final TaskMapping taskMappingInit = new TaskMapping() {
-			@Override
-			public String getSummary() {
-				return summary;
-			}
+	public String getNewTaksIdFromInitMapping(final ITaskMapping taskMappingInit,
+			final ITaskMapping taskMappingSelection) throws CoreException, BugzillaRestException {
 
-			@Override
-			public String getDescription() {
-				return "The Description";
-			}
-
-			@Override
-			public String getProduct() {
-				return "ManualTest";
-			}
-
-			@Override
-			public String getComponent() {
-				return "ManualC1";
-			}
-
-			@Override
-			public String getVersion() {
-				return "R1";
-			}
-		};
-		TaskData taskData = createTaskData(taskMappingInit, null, null);
-		taskData.getRoot().getAttribute("cf_dropdown").setValue("one");
-		taskData.getRoot()
-				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())
-				.setValue("M1");
+		TaskData taskData = createTaskData(taskMappingInit, taskMappingSelection, null);
 		String taskId = submitNewTask(taskData);
 		return taskId;
 	}
@@ -195,7 +182,33 @@ public class BugzillaRestHarness {
 			SortedSet<Integer> sks = new TreeSet<Integer>(ks);
 			taskID = sks.last().toString();
 		} else {
-			taskID = createTaskWithSummary(summary);
+			final TaskMapping taskMappingInit = new TaskMapping() {
+				@Override
+				public String getSummary() {
+					return summary;
+				}
+
+				@Override
+				public String getDescription() {
+					return "The Description";
+				}
+
+				@Override
+				public String getProduct() {
+					return "ManualTest";
+				}
+
+				@Override
+				public String getComponent() {
+					return "ManualC1";
+				}
+
+				@Override
+				public String getVersion() {
+					return "R1";
+				}
+			};
+			taskID = getNewTaksIdFromInitMapping(taskMappingInit, taskInitializationData);
 		}
 		return taskID;
 
