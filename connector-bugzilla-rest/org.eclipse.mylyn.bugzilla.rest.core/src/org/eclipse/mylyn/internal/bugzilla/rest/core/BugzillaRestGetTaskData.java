@@ -38,6 +38,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.osgi.util.NLS;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -148,6 +149,17 @@ public class BugzillaRestGetTaskData extends BugzillaRestGetRequest<List<TaskDat
 								com.google.common.base.Throwables.propagate(
 										new CoreException(new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN,
 												"Can not parse Date (" + value.getAsString() + ")"))); //$NON-NLS-1$ //$NON-NLS-2$
+							}
+						}
+					} else if (entry.getKey().equals("flags")) { //$NON-NLS-1$
+						JsonArray array = entry.getValue().getAsJsonArray();
+						if (!array.isJsonNull()) {
+							for (JsonElement jsonElement : array) {
+								BugzillaRestFlagMapper flagMapper = new Gson().fromJson(jsonElement,
+										BugzillaRestFlagMapper.class);
+								TaskAttribute attribute = taskData.getRoot()
+										.createAttribute(IBugzillaRestConstants.KIND_FLAG + flagMapper.getNumber());
+								flagMapper.applyTo(attribute);
 							}
 						}
 					}

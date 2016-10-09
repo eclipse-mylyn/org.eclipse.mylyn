@@ -164,4 +164,11 @@ public class BugzillaRestAttachmentMapper extends TaskAttachmentMapper {
 		this.deltaDate = deltaDate;
 	}
 
+	public void addMissingFlags(TaskAttribute taskAttribute) {
+		Assert.isNotNull(taskAttribute);
+		TaskData taskData = taskAttribute.getTaskData();
+		BugzillaRestTaskAttributeMapper mapper = (BugzillaRestTaskAttributeMapper) taskData.getAttributeMapper();
+		mapper.updateNewAttachmentAttribute(taskAttribute);
+	}
+
 }

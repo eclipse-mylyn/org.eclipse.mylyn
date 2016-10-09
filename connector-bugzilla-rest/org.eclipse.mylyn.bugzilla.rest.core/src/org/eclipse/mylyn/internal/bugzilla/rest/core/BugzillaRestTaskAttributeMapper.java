@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Product;
@@ -86,6 +87,27 @@ public class BugzillaRestTaskAttributeMapper extends TaskAttributeMapper {
 		if (!found) {
 			taskAttribute.setValue(""); //$NON-NLS-1$
 		}
+	}
+
+	@Override
+	public String mapToRepositoryKey(@NonNull TaskAttribute parent, @NonNull String key) {
+		if (key.equals(TaskAttribute.TASK_KEY)) {
+			return BugzillaRestTaskSchema.getDefault().BUG_ID.getKey();
+		} else {
+			return super.mapToRepositoryKey(parent, key);
+		}
+	}
+
+	public void updateNewAttachmentAttribute(TaskAttribute attachmentAttribute) {
+		BugzillaRestConfiguration repositoryConfiguration;
+		try {
+			repositoryConfiguration = connector.getRepositoryConfiguration(this.getTaskRepository());
+			repositoryConfiguration.updateAttachmentFlags(attachmentAttribute);
+		} catch (CoreException e) {
+			StatusHandler.log(
+					new Status(IStatus.ERROR, BugzillaRestCore.ID_PLUGIN, "Eerror in updateNewAttachmentAttribute", e)); //$NON-NLS-1$
+		}
+
 	}
 
 }

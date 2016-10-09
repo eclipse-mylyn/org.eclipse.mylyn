@@ -73,4 +73,13 @@ public class Product implements Named {
 		return milestones;
 	}
 
+	public Component getComponentWithName(String name) {
+		for (Component componentEntry : getComponents()) {
+			if (componentEntry.getName().equals(name)) {
+				return componentEntry;
+			}
+		}
+		return null;
+	}
+
 }

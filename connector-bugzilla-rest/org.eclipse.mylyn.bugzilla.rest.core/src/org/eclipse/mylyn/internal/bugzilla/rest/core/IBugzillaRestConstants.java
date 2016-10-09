@@ -22,4 +22,9 @@ public interface IBugzillaRestConstants {
 
 	public static final String REPOSITORY_API_KEY = "bugzilla.rest.apikey"; //$NON-NLS-1$
 
+	public static final String KIND_FLAG = "task.common.kind.flag"; //$NON-NLS-1$
+
+	public static final String KIND_FLAG_TYPE = "task.common.kind.flag_type"; //$NON-NLS-1$
+
+	public static final String EDITOR_TYPE_FLAG = "bugzilla.editor.flag"; //$NON-NLS-1$
 }

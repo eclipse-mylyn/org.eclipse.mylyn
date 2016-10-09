@@ -1,0 +1,8 @@
+TaskAttribute[id=task.common.kind.flag_type11,values=[],options=null,metaData={task.meta.readOnly=false, task.meta.type=bugzilla.editor.flag, task.meta.required=false, task.meta.label=Description of FlagType 1, task.meta.attributeKind=task.common.kind.flag, task.meta.associated.attribute=state}]
+ TaskAttribute[id=number,values=[11],options=null,metaData={task.meta.readOnly=true, task.meta.type=integer, task.meta.required=false}]
+ TaskAttribute[id=requestee,values=[admin@mylyn.eclipse.org],options=null,metaData={task.meta.readOnly=true, task.meta.type=shortText, task.meta.required=false}]
+ TaskAttribute[id=setter,values=[tests@mylyn.eclipse.org],options=null,metaData={task.meta.readOnly=true, task.meta.type=shortText, task.meta.required=false}]
+ TaskAttribute[id=state,values=[?],options=null,metaData={task.meta.readOnly=false, task.meta.type=singleSelect, task.meta.required=false, task.meta.label=BugFlag1}]
+ TaskAttribute[id=typeId,values=[1],options=null,metaData={task.meta.readOnly=true, task.meta.type=integer, task.meta.required=false}]
+ TaskAttribute[id=creationDate,values=[2016-10-22T14:19:13Z],options=null,metaData={task.meta.readOnly=true, task.meta.type=shortText, task.meta.required=false}]
+ TaskAttribute[id=modificationDate,values=[2016-10-22T14:19:33Z],options=null,metaData={task.meta.readOnly=true, task.meta.type=shortText, task.meta.required=false}]

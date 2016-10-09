@@ -195,6 +195,7 @@ public class BugzillaRestPutUpdateTask extends BugzillaRestPutRequest<PutUpdateR
 				HashSet<String> setNew = new HashSet<String>(Arrays.asList(addCC.getValue().split("\\s*,\\s*"))); //$NON-NLS-1$
 				BugzillaRestGsonUtil.getDefault().buildAddRemoveHash(out, "cc", setOld, setNew); //$NON-NLS-1$
 			}
+			BugzillaRestGsonUtil.buildFlags(out, oldValues.oldAttributes, taskData.getRoot());
 			out.endObject();
 		}
 

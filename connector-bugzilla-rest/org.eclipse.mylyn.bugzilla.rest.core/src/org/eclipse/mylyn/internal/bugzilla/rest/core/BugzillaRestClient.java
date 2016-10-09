@@ -199,6 +199,7 @@ public class BugzillaRestClient {
 					new BugzillaRestGetTaskAttachments(getClient(), taskData).run(monitor);
 					config.updateProductOptions(taskData);
 					config.addValidOperations(taskData);
+					config.updateFlags(taskData);
 					collector.accept(taskData);
 				}
 			} catch (RuntimeException e) {

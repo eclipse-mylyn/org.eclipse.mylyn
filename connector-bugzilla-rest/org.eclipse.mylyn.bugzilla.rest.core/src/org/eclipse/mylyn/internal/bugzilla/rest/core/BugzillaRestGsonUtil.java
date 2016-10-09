@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
@@ -149,6 +151,27 @@ public class BugzillaRestGsonUtil {
 				newHashSet(Iterables.transform(setNew, convert2Integer)));
 		out.name(id);
 		gson.toJson(test, RemoveAddIntegerHelper.class, out);
+	}
+
+	public static void buildFlags(JsonWriter out, Set<TaskAttribute> oldAttributes, TaskAttribute rootTaskData)
+			throws IOException {
+		boolean flagFound = false;
+		for (TaskAttribute element : oldAttributes) {
+			TaskAttribute taskAttribute = rootTaskData.getAttribute(element.getId());
+			String id = taskAttribute.getId();
+			if (id.startsWith(IBugzillaRestConstants.KIND_FLAG)
+					|| id.startsWith(IBugzillaRestConstants.KIND_FLAG_TYPE)) {
+				if (!flagFound) {
+					out.name("flags").beginArray(); //$NON-NLS-1$
+				}
+				BugzillaRestFlagMapper flagMapper = BugzillaRestFlagMapper.createFrom(taskAttribute);
+				flagMapper.applyTo(out);
+				flagFound = true;
+			}
+		}
+		if (flagFound) {
+			out.endArray();
+		}
 	}
 
 }

@@ -29,7 +29,9 @@ import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -100,6 +102,17 @@ public class BugzillaRestGetTaskAttachments extends BugzillaRestGetRequest<Array
 					attachmentMapper
 							.setPatch(attachmentObject.get("is_patch").getAsString().equals(Integer.valueOf(1))); //$NON-NLS-1$
 					attachmentMapper.applyTo(attachmentAttribute);
+					JsonArray flags = attachmentObject.get("flags").getAsJsonArray(); //$NON-NLS-1$
+					if (flags.size() > 0) {
+						for (JsonElement flagTmp : flags) {
+							BugzillaRestFlagMapper flagMapper = new Gson().fromJson(flagTmp,
+									BugzillaRestFlagMapper.class);
+							TaskAttribute attribute = attachmentAttribute
+									.createAttribute(IBugzillaRestConstants.KIND_FLAG + flagMapper.getNumber());
+							flagMapper.applyTo(attribute);
+						}
+					}
+					attachmentMapper.addMissingFlags(attachmentAttribute);
 				}
 			}
 			return response;

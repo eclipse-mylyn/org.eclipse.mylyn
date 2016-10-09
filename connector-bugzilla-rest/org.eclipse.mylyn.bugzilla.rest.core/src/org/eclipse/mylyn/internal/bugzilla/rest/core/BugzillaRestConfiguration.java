@@ -12,6 +12,8 @@
 package org.eclipse.mylyn.internal.bugzilla.rest.core;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -24,6 +26,8 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Component;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Field;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.FieldValues;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.FlagType;
+import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.FlagTypes;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Parameters;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.Product;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.SortableActiveEntry;
@@ -105,13 +109,8 @@ public class BugzillaRestConfiguration implements Serializable {
 		return parameters;
 	}
 
-	private Component getProductComponentWithName(Product product, String name) {
-		for (Component componentEntry : product.getComponents()) {
-			if (componentEntry.getName().equals(name)) {
-				return componentEntry;
-			}
-		}
-		return null;
+	private Component getProductComponentWithName(@NonNull Product product, String name) {
+		return product.getComponentWithName(name);
 	}
 
 	public void updateInitialTaskData(TaskData data) throws CoreException {
@@ -305,38 +304,11 @@ public class BugzillaRestConfiguration implements Serializable {
 		}
 	}
 
-	public boolean updateAfterComponentChange(TaskAttribute taskAttribute) {
-		if (taskAttribute != null) {
-			if (taskAttribute.getId().equals(SCHEMA.COMPONENT.getKey())) {
-				TaskAttribute rootAttribute = taskAttribute.getTaskData().getRoot();
-				TaskAttribute productAttribute = taskAttribute.getTaskData()
-						.getRoot()
-						.getMappedAttribute(SCHEMA.PRODUCT.getKey());
-				Product actualProduct = getProductWithName(productAttribute.getValue());
-				Component actualComponent = getProductComponentWithName(actualProduct, taskAttribute.getValue());
-				if (actualComponent != null) {
-					taskAttribute.getMetaData().putValue(TaskAttribute.META_DESCRIPTION,
-							actualComponent.getDescription());
-					TaskAttribute attributeQaContact = rootAttribute.getMappedAttribute(SCHEMA.QA_CONTACT.getKey());
-					if (attributeQaContact != null) {
-						attributeQaContact.setValue(actualComponent.getDefaultQaContact());
-					}
-					TaskAttribute attributeAssignedTo = rootAttribute.getMappedAttribute(SCHEMA.ASSIGNED_TO.getKey());
-					if (attributeAssignedTo != null) {
-						attributeAssignedTo.setValue(actualComponent.getDefaultAssignedTo());
-					}
-				}
-			}
-			return true;
-		}
-		return false;
-	}
-
 	public boolean setProductOptions(@NonNull TaskData taskData) {
 		TaskAttribute attributeProduct = taskData.getRoot().getMappedAttribute(SCHEMA.PRODUCT.getKey());
 		if (attributeProduct != null) {
 			SortedSet<String> products = new TreeSet<String>();
-			Field configFieldComponent = getFieldWithName("component");
+			Field configFieldComponent = getFieldWithName("component"); //$NON-NLS-1$
 			FieldValues[] val = configFieldComponent.getValues();
 			if (val != null && val.length > 0) {
 				for (FieldValues fieldValues : val) {
@@ -465,4 +437,118 @@ public class BugzillaRestConfiguration implements Serializable {
 		attrResolvedInput.getMetaData().setType(TaskAttribute.TYPE_TASK_DEPENDENCY);
 		attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, attrResolvedInput.getId());
 	}
+
+	public boolean updateFlags(@NonNull TaskData taskData) {
+		List<String> existingFlags = new ArrayList<String>();
+		TaskAttribute attributeProduct = taskData.getRoot().getMappedAttribute(SCHEMA.PRODUCT.getKey());
+		TaskAttribute attributeComponent = taskData.getRoot().getMappedAttribute(SCHEMA.COMPONENT.getKey());
+		Product actualProduct = getProductWithName(attributeProduct.getValue());
+		Component actualComponent = getProductComponentWithName(actualProduct, attributeComponent.getValue());
+		FlagTypes flagTypes = actualComponent.getFlagTypes();
+
+		for (TaskAttribute attribute : taskData.getRoot().getAttributes().values()) {
+			if (attribute.getId().startsWith(TaskAttribute.PREFIX_ATTACHMENT)
+					|| attribute.getId().equals(TaskAttribute.NEW_ATTACHMENT)) {
+				List<String> existingAttachmentFlags = new ArrayList<String>();
+				for (TaskAttribute attachmentAttribute : attribute.getAttributes().values()) {
+					updateFlag(flagTypes.getAttachment(), existingAttachmentFlags, attachmentAttribute);
+				}
+				addMissingFlagsInternal(attribute, flagTypes.getAttachment(), existingAttachmentFlags);
+			} else {
+				updateFlag(flagTypes.getBug(), existingFlags, attribute);
+			}
+		}
+		addMissingFlagsInternal(taskData.getRoot(), flagTypes.getBug(), existingFlags);
+
+		return false;
+	}
+
+	private void updateFlag(FlagType[] flagTypes, List<String> existingAttachmentFlags, TaskAttribute flagAttribute) {
+		if (flagAttribute.getId().startsWith(IBugzillaRestConstants.KIND_FLAG)) {
+			TaskAttribute stateAttribute = flagAttribute.getAttribute("state"); //$NON-NLS-1$))
+			stateAttribute.putOption("", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			String flagName = stateAttribute.getMetaData().getLabel();
+			if (!existingAttachmentFlags.contains(flagName)) {
+				existingAttachmentFlags.add(flagName);
+			}
+			for (FlagType flagType : flagTypes) {
+				if (flagType.getName().equals(flagName)) {
+					if (flagType.isRequestable()) {
+						stateAttribute.putOption("?", "?"); //$NON-NLS-1$ //$NON-NLS-2$
+					}
+					updateRequestee(flagAttribute, flagType);
+					break;
+				}
+			}
+			stateAttribute.putOption("-", "-"); //$NON-NLS-1$ //$NON-NLS-2$
+			stateAttribute.putOption("+", "+"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+
+	public void addMissingFlags(TaskData taskData) {
+		List<String> existingFlags = new ArrayList<String>();
+		TaskAttribute attributeProduct = taskData.getRoot().getMappedAttribute(SCHEMA.PRODUCT.getKey());
+		TaskAttribute attributeComponent = taskData.getRoot().getMappedAttribute(SCHEMA.COMPONENT.getKey());
+		if (attributeProduct.getValue().equals("") || attributeComponent.getValue().equals("")) { //$NON-NLS-1$ //$NON-NLS-2$
+			return;
+		}
+		Product actualProduct = getProductWithName(attributeProduct.getValue());
+		Component actualComponent = getProductComponentWithName(actualProduct, attributeComponent.getValue());
+		FlagTypes flagTypes = actualComponent.getFlagTypes();
+		addMissingFlagsInternal(taskData.getRoot(), flagTypes.getBug(), existingFlags);
+	}
+
+	private void addMissingFlagsInternal(TaskAttribute rootTaskAttribute, FlagType[] flagTypes,
+			List<String> existingFlags) {
+		for (FlagType flagType : flagTypes) {
+			if (existingFlags.contains(flagType.getName()) && !flagType.isMultiplicable()) {
+				continue;
+			}
+			BugzillaRestFlagMapper mapper = new BugzillaRestFlagMapper();
+			mapper.setRequestee(""); //$NON-NLS-1$
+			mapper.setSetter(""); //$NON-NLS-1$
+			mapper.setState(" "); //$NON-NLS-1$
+			mapper.setName(flagType.getName());
+			mapper.setNumber(0);
+			mapper.setDescription(flagType.getDescription());
+			mapper.setTypeId(flagType.getId());
+			TaskAttribute attribute = rootTaskAttribute
+					.createAttribute(IBugzillaRestConstants.KIND_FLAG_TYPE + flagType.getId());
+			mapper.applyTo(attribute);
+			TaskAttribute stateAttribute = attribute.getAttribute("state"); //$NON-NLS-1$))
+			stateAttribute.putOption("", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			if (flagType.isRequestable()) {
+				stateAttribute.putOption("?", "?"); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			updateRequestee(attribute, flagType);
+			attribute.getMetaData().putValue(TaskAttribute.META_DESCRIPTION, flagType.getDescription());
+			stateAttribute.putOption("-", "-"); //$NON-NLS-1$ //$NON-NLS-2$
+			stateAttribute.putOption("+", "+"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+
+	public void updateRequestee(TaskAttribute attribute, FlagType flagType) {
+		TaskAttribute requestee = attribute.getAttribute("requestee"); //$NON-NLS-1$
+		if (requestee == null) {
+			requestee = attribute.createMappedAttribute("requestee"); //$NON-NLS-1$
+			requestee.getMetaData().defaults().setType(TaskAttribute.TYPE_PERSON);
+			requestee.setValue(""); //$NON-NLS-1$
+		}
+		requestee.getMetaData().setReadOnly(!flagType.isRequesteeble());
+	}
+
+	public void updateAttachmentFlags(@NonNull TaskAttribute attribute) {
+		TaskAttribute attributeProduct = attribute.getParentAttribute().getMappedAttribute(SCHEMA.PRODUCT.getKey());
+		TaskAttribute attributeComponent = attribute.getParentAttribute().getMappedAttribute(SCHEMA.COMPONENT.getKey());
+		Product actualProduct = getProductWithName(attributeProduct.getValue());
+		Component actualComponent = getProductComponentWithName(actualProduct, attributeComponent.getValue());
+		FlagTypes flagTypes = actualComponent.getFlagTypes();
+
+		List<String> existingAttachmentFlags = new ArrayList<String>();
+		for (TaskAttribute attachmentAttribute : attribute.getAttributes().values()) {
+			updateFlag(flagTypes.getAttachment(), existingAttachmentFlags, attachmentAttribute);
+		}
+		addMissingFlagsInternal(attribute, flagTypes.getAttachment(), existingAttachmentFlags);
+	}
+
 }

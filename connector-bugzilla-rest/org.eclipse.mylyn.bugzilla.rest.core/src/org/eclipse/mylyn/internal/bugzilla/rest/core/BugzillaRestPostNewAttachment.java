@@ -17,7 +17,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
@@ -135,6 +137,15 @@ public class BugzillaRestPostNewAttachment extends BugzillaRestPostRequest<Bugzi
 			out.name("data").value(dataBase64); //$NON-NLS-1$
 			out.name("file_name").value(filename); //$NON-NLS-1$
 			out.name("is_private").value(false); //$NON-NLS-1$
+			if (attachmentAttribute != null) {
+				attachmentAttribute.getAttributes().values();
+				Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+				for (TaskAttribute taskAttribute : attachmentAttribute.getAttributes().values()) {
+					changed.add(taskAttribute);
+				}
+
+				BugzillaRestGsonUtil.buildFlags(out, changed, attachmentAttribute);
+			}
 			out.endObject();
 			out.close();
 			StringEntity requestEntity = new StringEntity(stringWriter.toString());
