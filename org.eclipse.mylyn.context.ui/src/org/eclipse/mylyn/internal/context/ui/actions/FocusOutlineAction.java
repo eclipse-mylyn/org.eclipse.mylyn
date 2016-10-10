@@ -68,7 +68,8 @@ public class FocusOutlineAction extends AbstractFocusViewAction {
 	 */
 	private void configureDecorator(TreeViewer viewer) {
 		if (viewer != null) {
-			if (!(viewer.getLabelProvider() instanceof DecoratingLabelProvider)) {
+			if ((viewer.getLabelProvider() instanceof ILabelProvider)
+					&& !(viewer.getLabelProvider() instanceof DecoratingLabelProvider)) {
 				viewer.setLabelProvider(new DecoratingLabelProvider((ILabelProvider) viewer.getLabelProvider(),
 						PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
 			}
