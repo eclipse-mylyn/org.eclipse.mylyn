@@ -16,7 +16,7 @@
   <properties>
     <tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/mylyn/org.eclipse.mylyn.docs.git</tycho.scmUrl>
     <sonar.skippedModules>org.eclipse.mylyn.docs.development,org.eclipse.mylyn.docs.sdk,org.eclipse.mylyn.docs-site,org.eclipse.mylyn.wikitext.help.sdk,org.eclipse.mylyn.wikitext.help.ui,org.eclipse.mylyn.htmltext,org.eclipse.mylyn.htmltext.ui,org.eclipse.mylyn.wikitext.extras,org.eclipse.mylyn.wikitext,org.eclipse.mylyn.wikitext.sdk,org.eclipse.mylyn.wikitext.confluence.ui,org.eclipse.mylyn.wikitext.creole.ui,org.eclipse.mylyn.wikitext.mediawiki.ui,org.eclipse.mylyn.wikitext.textile.ui,org.eclipse.mylyn.wikitext.tracwiki.ui,org.eclipse.mylyn.wikitext.twiki.ui</sonar.skippedModules>
-  </properties>	  
+  </properties>
   <mailingLists>
     <mailingList>
       <name>Mylyn Docs Mailing List</name>
@@ -80,10 +80,10 @@
   <modules>
     <module>org.eclipse.mylyn.docs.development-feature</module>
     <module>org.eclipse.mylyn.docs.sdk-feature</module>
-   
+
     <module>org.eclipse.mylyn.htmltext-feature</module>
     <module>org.eclipse.mylyn.htmltext.ui</module>
-    
+
     <module>org.eclipse.mylyn.wikitext-feature</module>
     <module>org.eclipse.mylyn.wikitext.confluence.core</module>
     <module>org.eclipse.mylyn.wikitext.confluence.ui</module>
@@ -95,6 +95,7 @@
     <module>org.eclipse.mylyn.wikitext.core.ant</module>
     <module>org.eclipse.mylyn.wikitext.creole.core</module>
     <module>org.eclipse.mylyn.wikitext.creole.ui</module>
+    <module>org.eclipse.mylyn.wikitext.editors-feature</module>
     <module>org.eclipse.mylyn.wikitext.extras-feature</module>
     <module>org.eclipse.mylyn.wikitext.help.sdk</module>
     <module>org.eclipse.mylyn.wikitext.help.ui</module>
@@ -124,7 +125,7 @@
     <module>org.eclipse.mylyn.wikitext.commonmark</module>
     <module>org.eclipse.mylyn.wikitext.commonmark.tests</module>
     <module>org.eclipse.mylyn.wikitext.commonmark.ui</module>
-    
+
     <module>org.eclipse.mylyn.wikitext-standalone</module>
 
     <module>org.eclipse.mylyn.docs.epub.core</module>
