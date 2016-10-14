@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.ManagedSuite;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.hudson.tests.client.HudsonClientTest;
@@ -41,9 +42,9 @@ public class AllHudsonTests {
 		if (CommonTestUtil.fixProxyConfiguration()) {
 			CommonTestUtil.dumpSystemInfo(System.err);
 		}
-
+		TestConfiguration testConfiguration = ManagedSuite.getTestConfigurationOrCreateDefault();
 		TestSuite suite = new ManagedTestSuite(AllHudsonTests.class.getName());
-		addTests(suite, TestConfiguration.getDefault());
+		addTests(suite, testConfiguration);
 		return suite;
 	}
 
