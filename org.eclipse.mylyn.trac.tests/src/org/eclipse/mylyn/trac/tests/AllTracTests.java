@@ -11,27 +11,13 @@
 
 package org.eclipse.mylyn.trac.tests;
 
-import java.util.List;
+import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.ManagedSuite;
+import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
+import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-
-import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
-import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
-import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
-import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
-import org.eclipse.mylyn.commons.sdk.util.TestConfiguration.TestKind;
-import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
-import org.eclipse.mylyn.trac.tests.core.TracAttachmentHandlerTest;
-import org.eclipse.mylyn.trac.tests.core.TracRepositoryConnectorTest;
-import org.eclipse.mylyn.trac.tests.core.TracRepositoryConnectorWebTest;
-import org.eclipse.mylyn.trac.tests.core.TracRepositoryQueryTest;
-import org.eclipse.mylyn.trac.tests.core.TracTaskDataHandlerXmlRpcTest;
-import org.eclipse.mylyn.trac.tests.core.TracUtilTest;
-import org.eclipse.mylyn.trac.tests.support.TracFixture;
-import org.eclipse.mylyn.trac.tests.support.TracTestCleanupUtil;
-import org.eclipse.mylyn.trac.tests.ui.TracHyperlinkUtilTest;
-import org.eclipse.mylyn.trac.tests.ui.TracRepositorySettingsPageTest;
 
 /**
  * @author Mik Kersten
@@ -43,10 +29,10 @@ public class AllTracTests {
 		if (CommonTestUtil.fixProxyConfiguration()) {
 			CommonTestUtil.dumpSystemInfo(System.err);
 		}
-
+		TestConfiguration testConfiguration = ManagedSuite.getTestConfigurationOrCreateDefault();
 		TestSuite suite = new ManagedTestSuite(AllTracTests.class.getName());
-//		addTests(suite, TestConfiguration.getDefault());
-		addEmptyTest(suite, TestConfiguration.getDefault());
+//		addTests(suite, testConfiguration);
+		addEmptyTest(suite, testConfiguration);
 		return suite;
 	}
 
@@ -61,38 +47,38 @@ public class AllTracTests {
 		suite.addTestSuite(EmptyTest.class);
 	}
 
-	public static void addTests(TestSuite suite, TestConfiguration configuration) {
-		suite.addTest(AllTracHeadlessStandaloneTests.suite(configuration));
-		suite.addTestSuite(TracUtilTest.class);
-		suite.addTestSuite(TracHyperlinkUtilTest.class);
-
-		if (!configuration.isLocalOnly()) {
-			suite.addTestSuite(TracRepositoryQueryTest.class);
-			suite.addTestSuite(TracRepositorySettingsPageTest.class);
-			// network tests
-			List<TracFixture> fixtures = configuration.discover(TracFixture.class, "trac");
-			for (TracFixture fixture : fixtures) {
-				if (!fixture.hasTag(TracFixture.TAG_MISC)) {
-					addTests(suite, configuration, fixture);
-				}
-			}
-		}
-	}
-
-	protected static void addTests(TestSuite suite, TestConfiguration configuration, TracFixture fixture) {
-		fixture.createSuite(suite);
-		if (configuration.hasKind(TestKind.INTEGRATION) && !configuration.isLocalOnly()
-				&& CommonTestUtil.hasCredentials(PrivilegeLevel.ADMIN)) {
-			fixture.add(TracTestCleanupUtil.class);
-		}
-		fixture.add(TracRepositoryConnectorTest.class);
-		if (fixture.getAccessMode() == Version.XML_RPC) {
-			fixture.add(TracTaskDataHandlerXmlRpcTest.class);
-			fixture.add(TracAttachmentHandlerTest.class);
-		} else {
-			fixture.add(TracRepositoryConnectorWebTest.class);
-		}
-		fixture.done();
-	}
+//	public static void addTests(TestSuite suite, TestConfiguration configuration) {
+//		suite.addTest(AllTracHeadlessStandaloneTests.suite(configuration));
+//		suite.addTestSuite(TracUtilTest.class);
+//		suite.addTestSuite(TracHyperlinkUtilTest.class);
+//
+//		if (!configuration.isLocalOnly()) {
+//			suite.addTestSuite(TracRepositoryQueryTest.class);
+//			suite.addTestSuite(TracRepositorySettingsPageTest.class);
+//			// network tests
+//			List<TracFixture> fixtures = configuration.discover(TracFixture.class, "trac");
+//			for (TracFixture fixture : fixtures) {
+//				if (!fixture.hasTag(TracFixture.TAG_MISC)) {
+//					addTests(suite, configuration, fixture);
+//				}
+//			}
+//		}
+//	}
+//
+//	protected static void addTests(TestSuite suite, TestConfiguration configuration, TracFixture fixture) {
+//		fixture.createSuite(suite);
+//		if (configuration.hasKind(TestKind.INTEGRATION) && !configuration.isLocalOnly()
+//				&& CommonTestUtil.hasCredentials(PrivilegeLevel.ADMIN)) {
+//			fixture.add(TracTestCleanupUtil.class);
+//		}
+//		fixture.add(TracRepositoryConnectorTest.class);
+//		if (fixture.getAccessMode() == Version.XML_RPC) {
+//			fixture.add(TracTaskDataHandlerXmlRpcTest.class);
+//			fixture.add(TracAttachmentHandlerTest.class);
+//		} else {
+//			fixture.add(TracRepositoryConnectorWebTest.class);
+//		}
+//		fixture.done();
+//	}
 
 }

@@ -11,41 +11,32 @@
 
 package org.eclipse.mylyn.bugzilla.rest.core.tests;
 
+import java.util.List;
+
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
-import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
+import org.eclipse.mylyn.commons.sdk.util.ManagedSuite;
+import org.eclipse.mylyn.commons.sdk.util.ManagedSuite.SuiteClassProvider;
+import org.eclipse.mylyn.commons.sdk.util.ManagedSuite.TestConfigurationProperty;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
-import junit.framework.JUnit4TestAdapter;
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
+@RunWith(ManagedSuite.class)
+@Suite.SuiteClasses({ RepositoryKeyTest.class })
+@TestConfigurationProperty()
 public class AllBugzillaRestCoreTests {
-	public static Test suite() {
+	static {
 		if (CommonTestUtil.fixProxyConfiguration()) {
 			CommonTestUtil.dumpSystemInfo(System.err);
 		}
-
-		TestSuite suite = new ManagedTestSuite(AllBugzillaRestCoreTests.class.getName());
-		addTests(suite, TestConfiguration.getDefault());
-		return suite;
 	}
 
-	public static Test suite(TestConfiguration configuration) {
-		TestSuite suite = new TestSuite(AllBugzillaRestCoreTests.class.getName());
-		addTests(suite, configuration);
-		return suite;
-	}
-
-	public static void addTests(TestSuite suite, TestConfiguration configuration) {
-		// Tests that only need to run once (i.e. no network io so doesn't matter which repository)
-		suite.addTest(new JUnit4TestAdapter(RepositoryKeyTest.class));
-
-		// network tests
-		if (!configuration.isLocalOnly()) {
-			suite.addTest(new JUnit4TestAdapter(BugzillaRestClientTest.class));
-			suite.addTest(new JUnit4TestAdapter(BugzillaRestConfigurationTest.class));
-			suite.addTest(new JUnit4TestAdapter(BugzillaRestConnectorTest.class));
+	@SuiteClassProvider
+	public static void add2SuiteClasses(List<Class<?>> suiteClassList, TestConfiguration testConfiguration) {
+		if (!testConfiguration.isLocalOnly()) {
+			suiteClassList.add(BugzillaRestClientTest.class);
+			suiteClassList.add(BugzillaRestConfigurationTest.class);
+			suiteClassList.add(BugzillaRestConnectorTest.class);
 		}
 	}
-
 }

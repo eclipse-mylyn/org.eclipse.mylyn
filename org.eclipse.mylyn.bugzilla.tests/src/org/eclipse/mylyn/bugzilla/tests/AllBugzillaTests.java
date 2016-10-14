@@ -14,9 +14,6 @@ package org.eclipse.mylyn.bugzilla.tests;
 
 import java.util.List;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.mylyn.bugzilla.tests.core.BugzillaXmlRpcClientTest;
 import org.eclipse.mylyn.bugzilla.tests.support.BugzillaFixture;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaHyperlinkDetectorTest;
@@ -25,8 +22,12 @@ import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaSearchPageTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaTaskEditorTest;
 import org.eclipse.mylyn.bugzilla.tests.ui.BugzillaTaskHyperlinkDetectorTest;
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.ManagedSuite;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
  * @author Mik Kersten
@@ -41,7 +42,8 @@ public class AllBugzillaTests {
 		}
 
 		TestSuite suite = new ManagedTestSuite(AllBugzillaTests.class.getName());
-		addTests(suite, TestConfiguration.getDefault());
+		TestConfiguration testConfiguration = ManagedSuite.getTestConfigurationOrCreateDefault();
+		addTests(suite, testConfiguration);
 		return suite;
 	}
 
