@@ -92,6 +92,10 @@ public class MockBuildServerBehaviour extends BuildServerBehaviour {
 	public void runBuild(RunBuildRequest request, IOperationMonitor monitor) throws CoreException {
 	}
 
+	@Override
+	public void abortBuild(IBuild build, IOperationMonitor monitor) throws CoreException {
+	}
+
 	public void setBuilds(List<IBuild> builds) {
 		this.builds = builds;
 	}

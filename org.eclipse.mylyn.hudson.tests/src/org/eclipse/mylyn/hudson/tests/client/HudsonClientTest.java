@@ -29,6 +29,7 @@ import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient.BuildId
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBuild;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
+import org.eclipse.mylyn.internal.hudson.model.HudsonModelRun;
 
 import junit.framework.TestCase;
 
@@ -201,7 +202,7 @@ public class HudsonClientTest extends TestCase {
 
 		final String jobName = harness.getPlanSucceeding();
 		RestfulHudsonClient client = harness.connect();
-		ensureHasRunOnce(client, jobName, harness.getSuccessAnimeColor());
+		ensureHasRunOnce(client, jobName, harness.getSuccessColor());
 
 		runBuild(client, jobName);
 		HudsonTestUtil.poll(new Callable<Object>() {
@@ -218,6 +219,46 @@ public class HudsonClientTest extends TestCase {
 		} catch (HudsonException e) {
 			if (e.getMessage().contains("Bad Gateway")) {
 				client.runBuild(harness.getJob(jobName), null, null);
+			}
+		}
+	}
+
+	public void testAbortBuild() throws Exception {
+		if (!HudsonFixture.current().canAuthenticate()) {
+			// ignore
+			return;
+		}
+
+		final String jobName = harness.getPlanSucceeding();
+		RestfulHudsonClient client = harness.connect();
+
+		runBuild(client, jobName);
+		HudsonTestUtil.poll(new Callable<Object>() {
+			public Object call() throws Exception {
+				HudsonModelRun run = harness.getJob(jobName).getLastBuild();
+				HudsonModelBuild build = harness.getBuild(jobName, run.getNumber());
+				assertTrue(build.isBuilding());
+				return null;
+			}
+		});
+		abortBuild(client, jobName);
+		HudsonTestUtil.poll(new Callable<Object>() {
+			public Object call() throws Exception {
+				assertEquals(harness.getAbortedColor(), harness.getJob(jobName).getColor());
+				return null;
+			}
+		});
+	}
+
+	private void abortBuild(RestfulHudsonClient client, final String jobName) throws HudsonException {
+		HudsonModelJob job = harness.getJob(jobName);
+		HudsonModelBuild build = new HudsonModelBuild();
+		build.setNumber(job.getLastBuild().getNumber());
+		try {
+			client.abortBuild(job, build, null);
+		} catch (HudsonException e) {
+			if (e.getMessage().contains("Bad Gateway")) {
+				client.abortBuild(job, build, null);
 			}
 		}
 	}

@@ -14,9 +14,11 @@ package org.eclipse.mylyn.internal.builds.ui;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.mylyn.builds.core.IBuild;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.spi.GetBuildsRequest;
 import org.eclipse.mylyn.builds.core.spi.RunBuildRequest;
+import org.eclipse.mylyn.builds.internal.core.operations.AbortBuildOperation;
 import org.eclipse.mylyn.builds.internal.core.operations.GetBuildsOperation;
 import org.eclipse.mylyn.builds.internal.core.operations.IOperationService;
 import org.eclipse.mylyn.builds.internal.core.operations.RefreshOperation;
@@ -47,6 +49,10 @@ public class OperationFactory {
 
 	public RunBuildOperation getRunBuildOperation(RunBuildRequest request) {
 		return new RunBuildOperation(service, request);
+	}
+
+	public AbortBuildOperation getAbortBuildOperation(IBuild build) {
+		return new AbortBuildOperation(service, build);
 	}
 
 	public GetBuildsOperation getGetBuildsOperation(GetBuildsRequest request) {

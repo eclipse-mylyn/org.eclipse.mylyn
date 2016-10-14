@@ -809,6 +809,17 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 		}
 	}
 
+	@Override
+	public void abortBuild(IBuild build, IOperationMonitor monitor) throws CoreException {
+		try {
+			HudsonModelJob job = createJobParameter(build.getPlan());
+			HudsonModelBuild modelBuild = createBuildParameter(build);
+			client.abortBuild(job, modelBuild, monitor);
+		} catch (HudsonException e) {
+			throw HudsonCorePlugin.toCoreException(e);
+		}
+	}
+
 	protected void updateHealth(HudsonModelJob job, IBuildPlan plan) {
 		String testResult = null;
 		String buildResult = null;
@@ -951,5 +962,4 @@ public class HudsonServerBehaviour extends BuildServerBehaviour {
 			throw HudsonCorePlugin.toCoreException(e);
 		}
 	}
-
 }

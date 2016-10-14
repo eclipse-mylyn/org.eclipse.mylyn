@@ -16,6 +16,7 @@ import java.net.URL;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Steffen Pingel
@@ -85,6 +86,14 @@ public class BuildImages {
 	public static final ImageDescriptor RUN = create(T_ETOOL, "run_exc.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor RUN_DISABLED = create(T_DTOOL, "run_exc.gif"); //$NON-NLS-1$
+
+	public static final ImageDescriptor ABORT = PlatformUI.getWorkbench()
+			.getSharedImages()
+			.getImageDescriptor(org.eclipse.ui.ISharedImages.IMG_ELCL_STOP);
+
+	public static final ImageDescriptor ABORT_DISABLED = PlatformUI.getWorkbench()
+			.getSharedImages()
+			.getImageDescriptor(org.eclipse.ui.ISharedImages.IMG_ELCL_STOP_DISABLED);
 
 	public static final ImageDescriptor CONSOLE = create(T_ETOOL, "console.gif"); //$NON-NLS-1$
 

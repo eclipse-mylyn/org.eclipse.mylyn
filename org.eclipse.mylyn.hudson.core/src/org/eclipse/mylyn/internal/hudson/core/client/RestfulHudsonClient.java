@@ -417,6 +417,30 @@ public class RestfulHudsonClient {
 		}.run();
 	}
 
+	public void abortBuild(final HudsonModelJob job, final HudsonModelBuild build, final IOperationMonitor monitor)
+			throws HudsonException {
+		new HudsonOperation<Object>(client) {
+			@Override
+			public Object execute() throws IOException, HudsonException, JAXBException {
+				HttpPost request = createPostRequest(getJobUrl(job) + build.getNumber() + "/stop"); //$NON-NLS-1$
+
+				CommonHttpResponse response = execute(request, monitor);
+				return processAndRelease(response, monitor);
+			}
+
+			@Override
+			protected void doValidate(CommonHttpResponse response, IOperationMonitor monitor)
+					throws IOException, HudsonException {
+
+				int statusCode = response.getStatusCode();
+				if (statusCode != HttpStatus.SC_OK && statusCode != HttpStatus.SC_MOVED_TEMPORARILY) {
+					throw new HudsonException(NLS.bind("Unexpected response from Hudson server for ''{0}'': {1}", //$NON-NLS-1$
+							response.getRequestPath(), HttpUtil.getStatusText(statusCode)));
+				}
+			};
+		}.run();
+	}
+
 	public void setCache(AbstractConfigurationCache<HudsonConfiguration> cache) {
 		Assert.isNotNull(cache);
 		this.cache = cache;

@@ -19,6 +19,7 @@ import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.hudson.core.client.HudsonException;
 import org.eclipse.mylyn.internal.hudson.core.client.RestfulHudsonClient;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelBallColor;
+import org.eclipse.mylyn.internal.hudson.model.HudsonModelBuild;
 import org.eclipse.mylyn.internal.hudson.model.HudsonModelJob;
 
 /**
@@ -85,6 +86,21 @@ public class HudsonHarness {
 			}
 		}
 		return null;
+	}
+
+	public HudsonModelBuild getBuild(String jobName, int buildNumber) throws HudsonException {
+		HudsonModelJob job = getJob(client, jobName);
+		if (job == null) {
+			return null;
+		}
+		HudsonModelBuild build = new HudsonModelBuild();
+		build.setNumber(buildNumber);
+		return getBuild(client, job, build);
+	}
+
+	private HudsonModelBuild getBuild(RestfulHudsonClient client, HudsonModelJob job, HudsonModelBuild build)
+			throws HudsonException {
+		return client.getBuild(job, build, null);
 	}
 
 	public String getPlanDisabled() {
@@ -157,6 +173,10 @@ public class HudsonHarness {
 		} else {
 			return HudsonModelBallColor.BLUE_ANIME;
 		}
+	}
+
+	public HudsonModelBallColor getAbortedColor() {
+		return HudsonModelBallColor.ABORTED;
 	}
 
 }

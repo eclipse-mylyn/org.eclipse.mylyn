@@ -61,6 +61,7 @@ import org.eclipse.mylyn.internal.builds.ui.BuildImages;
 import org.eclipse.mylyn.internal.builds.ui.BuildToolTip;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
+import org.eclipse.mylyn.internal.builds.ui.actions.AbortBuildAction;
 import org.eclipse.mylyn.internal.builds.ui.actions.RunBuildAction;
 import org.eclipse.mylyn.internal.builds.ui.actions.ShowBuildOutputAction;
 import org.eclipse.mylyn.internal.builds.ui.actions.ShowTestResultsAction;
@@ -130,8 +131,8 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 
 		@Override
 		public String toString() {
-			return NLS.bind("{0} Succeeded, {1} Unstable, {2} Failed", new Object[] { numSuccess, numUnstable,
-					numFailed });
+			return NLS.bind("{0} Succeeded, {1} Unstable, {2} Failed",
+					new Object[] { numSuccess, numUnstable, numFailed });
 		}
 	}
 
@@ -213,7 +214,8 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 
 	private final IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
-			if (org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED.equals(event.getProperty())) {
+			if (org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal.PREF_AUTO_REFRESH_ENABLED
+					.equals(event.getProperty())) {
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
 						if (refreshAutomaticallyAction != null) {
@@ -300,8 +302,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		// bug#160897: set to empty string to disable native tooltips (windows only?)
 		viewer.getTree().setToolTipText(""); //$NON-NLS-1$
 
-		IWorkbenchSiteProgressService progress = (IWorkbenchSiteProgressService) getSite().getAdapter(
-				IWorkbenchSiteProgressService.class);
+		IWorkbenchSiteProgressService progress = getSite().getAdapter(IWorkbenchSiteProgressService.class);
 		if (progress != null) {
 			// show indicator for all running refreshes
 			progress.showBusyForFamily(BuildsConstants.JOB_FAMILY);
@@ -345,7 +346,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	/**
 	 * Initializes automatic resize of the tree control columns. The size of these will be adjusted when a node is
 	 * expanded or collapsed and when the tree changes size.
-	 * 
+	 *
 	 * @param tree
 	 *            the tree to resize
 	 */
@@ -486,6 +487,11 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		runBuildAction.selectionChanged(StructuredSelection.EMPTY);
 		viewer.addSelectionChangedListener(runBuildAction);
 		manager.add(runBuildAction);
+
+		AbortBuildAction abortBuildAction = new AbortBuildAction();
+		abortBuildAction.selectionChanged(StructuredSelection.EMPTY);
+		viewer.addSelectionChangedListener(abortBuildAction);
+		manager.add(abortBuildAction);
 
 		manager.add(new Separator(BuildsUiConstants.GROUP_FILE));
 
@@ -676,8 +682,8 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 				statusMessage = NLS.bind("Last update: {0}", DateFormat.getDateTimeInstance().format(lastRefresh));
 			}
 		} else {
-			setTitleImage(CommonImages.getImageWithOverlay(BuildImages.VIEW_BUILDS, CommonImages.OVERLAY_WARNING,
-					false, false));
+			setTitleImage(CommonImages.getImageWithOverlay(BuildImages.VIEW_BUILDS, CommonImages.OVERLAY_WARNING, false,
+					false));
 			statusMessage = "Last update failed";
 		}
 
@@ -714,7 +720,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	/**
 	 * Packs all columns so that they are able to display all content. If there is any space left, the second column
 	 * (summary) will be resized so that the entire width of the control is used.
-	 * 
+	 *
 	 * @param tree
 	 *            the tree to resize
 	 */
@@ -729,7 +735,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 			}
 		}
 
-		// Adjust the width of the "Summary" column unless it's not resizeable 
+		// Adjust the width of the "Summary" column unless it's not resizeable
 		// which case we adjust the width of the "Build" column instead.
 		TreeColumn column = (tree.getColumn(1).getResizable()) ? tree.getColumn(1) : tree.getColumn(0);
 		int nw = column.getWidth() + tree.getClientArea().width - totalColumnWidth;
