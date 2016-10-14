@@ -14,6 +14,7 @@ package org.eclipse.mylyn.gerrit.tests;
 import java.util.List;
 
 import org.eclipse.mylyn.commons.sdk.util.CommonTestUtil;
+import org.eclipse.mylyn.commons.sdk.util.ManagedSuite;
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
 import org.eclipse.mylyn.gerrit.tests.core.GerritConnectorTest;
@@ -56,9 +57,9 @@ public class AllGerritTests {
 		if (CommonTestUtil.fixProxyConfiguration()) {
 			CommonTestUtil.dumpSystemInfo(System.err);
 		}
-
+		TestConfiguration testConfiguration = ManagedSuite.getTestConfigurationOrCreateDefault();
 		TestSuite suite = new ManagedTestSuite(AllGerritTests.class.getName());
-		addTests(suite, TestConfiguration.getDefault());
+		addTests(suite, testConfiguration);
 		return suite;
 	}
 
