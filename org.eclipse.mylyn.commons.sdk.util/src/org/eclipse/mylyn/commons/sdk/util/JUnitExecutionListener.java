@@ -58,7 +58,7 @@ public class JUnitExecutionListener extends RunListener {
 
 	@Override
 	public void testStarted(Description description) throws Exception {
-		System.err.println("Running " + description.getMethodName());
+		System.err.println("Running " + description.toString());
 		DumpThreadTask task = new DumpThreadTask(description.toString());
 		taskByTest.put(description, task);
 		timer.schedule(task, DELAY);

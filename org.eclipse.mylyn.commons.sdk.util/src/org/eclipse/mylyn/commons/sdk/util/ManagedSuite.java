@@ -18,6 +18,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +31,6 @@ public class ManagedSuite extends Suite {
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.TYPE)
 	public static @interface TestConfigurationProperty {
-		TestConfiguration.TestKind kind() default TestConfiguration.TestKind.UNIT;
 
 		boolean localOnly() default false;
 
@@ -38,9 +39,22 @@ public class ManagedSuite extends Suite {
 		boolean headless() default false;
 	}
 
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.METHOD)
+	public static @interface SuiteClassProvider {
+
+	}
+
 	public static TestConfiguration testConfiguration;
 
 	public static TestConfiguration getTestConfiguration() {
+		return testConfiguration;
+	}
+
+	public static TestConfiguration getTestConfigurationOrCreateDefault() {
+		if (testConfiguration == null) {
+			testConfiguration = TestConfiguration.getDefault();
+		}
 		return testConfiguration;
 	}
 
@@ -58,7 +72,7 @@ public class ManagedSuite extends Suite {
 			if (annotation.annotationType() == TestConfigurationProperty.class) {
 				if (getTestConfiguration() == null) {
 					TestConfigurationProperty configurationProperty = (TestConfigurationProperty) annotation;
-					TestConfiguration testConfiguration = new TestConfiguration(configurationProperty.kind());
+					TestConfiguration testConfiguration = new TestConfiguration();
 					testConfiguration.setLocalOnly(configurationProperty.localOnly());
 					testConfiguration.setDefaultOnly(configurationProperty.defaultOnly());
 					testConfiguration.setHeadless(configurationProperty.headless());
@@ -74,16 +88,26 @@ public class ManagedSuite extends Suite {
 		if (getTestConfiguration() == null) {
 			setTestConfiguration(TestConfiguration.getDefault());
 		}
-		try {
-			Method method = klass.getMethod("add2SuiteClasses", java.util.List.class,
-					org.eclipse.mylyn.commons.sdk.util.TestConfiguration.class);
-			if (method != null) {
-				TestConfiguration conf = getTestConfiguration();
-				method.invoke(null, suiteClassList, conf);
+		for (Method method : klass.getDeclaredMethods()) {
+			if (method.isAnnotationPresent(SuiteClassProvider.class)) {
+				try {
+					TestConfiguration conf = getTestConfiguration();
+					Parameter[] parameters = method.getParameters();
+					if (parameters.length == 2) {
+						if (parameters[0].getType() == List.class
+								&& parameters[1].getType() == TestConfiguration.class) {
+							if (Modifier.isStatic(method.getModifiers())) {
+								if (!Modifier.isPublic(method.getModifiers())) {
+									method.setAccessible(true);
+								}
+								method.invoke(null, suiteClassList, conf);
+							}
+						}
+					}
+				} catch (InvocationTargetException | IllegalAccessException | IllegalArgumentException e) {
+					// Ignore
+				}
 			}
-		} catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException
-				| IllegalArgumentException e) {
-			// Ignore
 		}
 		return suiteClassList.toArray(new Class<?>[suiteClassList.size()]);
 	}

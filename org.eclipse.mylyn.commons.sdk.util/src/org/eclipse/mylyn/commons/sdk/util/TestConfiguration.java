@@ -20,7 +20,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
@@ -41,15 +40,11 @@ public class TestConfiguration {
 
 	private static final String URL_SERVICES_DEFAULT = System.getProperty("mylyn.test.server", "http://mylyn.org");
 
-	public enum TestKind {
-		UNIT, COMPONENT, INTEGRATION, SYSTEM
-	};
-
 	public static TestConfiguration defaultConfiguration;
 
 	public static TestConfiguration getDefault() {
 		if (defaultConfiguration == null) {
-			defaultConfiguration = new TestConfiguration(TestKind.UNIT);
+			defaultConfiguration = new TestConfiguration();
 			defaultConfiguration.setDefaultOnly(CommonTestUtil.runHeartbeatTestsOnly());
 		}
 		return defaultConfiguration;
@@ -59,22 +54,11 @@ public class TestConfiguration {
 		TestConfiguration.defaultConfiguration = defaultConfiguration;
 	}
 
-	private final EnumSet<TestKind> kinds;
-
 	private boolean localOnly;
 
 	private boolean defaultOnly;
 
 	private boolean headless;
-
-	public TestConfiguration(TestKind firstKind, TestKind... moreKinds) {
-		Assert.isNotNull(firstKind);
-		this.kinds = EnumSet.of(firstKind, moreKinds);
-	}
-
-	public boolean hasKind(TestKind kind) {
-		return kinds.contains(kind);
-	}
 
 	public boolean isDefaultOnly() {
 		return defaultOnly;
