@@ -59,7 +59,7 @@ public class BuildContentProvider implements ITreeContentProvider {
 		}
 
 		protected boolean observing(Notifier notifier) {
-			// reduce the number of refreshes by limiting the number of monitored objects: refresh jobs trigger notifications 
+			// reduce the number of refreshes by limiting the number of monitored objects: refresh jobs trigger notifications
 			// on the server and model objects which is sufficient to monitor plan updates
 			return notifier instanceof IBuildServer || notifier instanceof IBuildModel;
 		}

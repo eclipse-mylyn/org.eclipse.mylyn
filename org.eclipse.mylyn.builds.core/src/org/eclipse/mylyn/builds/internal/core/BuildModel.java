@@ -34,14 +34,14 @@ import org.eclipse.mylyn.commons.core.operations.IOperationMonitor;
  * <li>{@link org.eclipse.mylyn.builds.internal.core.BuildModel#getBuilds <em>Builds</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class BuildModel extends EObjectImpl implements IBuildModel {
 	/**
 	 * The cached value of the '{@link #getServers() <em>Servers</em>}' containment reference list. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getServers()
 	 * @generated
 	 * @ordered
@@ -51,7 +51,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	/**
 	 * The cached value of the '{@link #getPlans() <em>Plans</em>}' containment reference list. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getPlans()
 	 * @generated
 	 * @ordered
@@ -61,7 +61,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	/**
 	 * The cached value of the '{@link #getBuilds() <em>Builds</em>}' containment reference list. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @see #getBuilds()
 	 * @generated
 	 * @ordered
@@ -72,7 +72,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	protected BuildModel() {
@@ -81,7 +81,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -96,7 +96,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public List<IBuildServer> getServers() {
@@ -114,7 +114,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public List<IBuildPlan> getPlans() {
@@ -131,7 +131,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	public List<IBuild> getBuilds() {
@@ -143,7 +143,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -161,7 +161,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -179,7 +179,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -204,7 +204,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -225,7 +225,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 *
 	 * @generated
 	 */
 	@Override
@@ -242,7 +242,7 @@ public class BuildModel extends EObjectImpl implements IBuildModel {
 	}
 
 	public void refresh(IOperationMonitor monitor) {
-		// FIXME implement	
+		// FIXME implement
 		//new RefreshPlansOperation(Collections.singletonList((IBuildServer) this)).run(monitor);
 	}
 
