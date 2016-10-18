@@ -23,6 +23,7 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.mylyn.commons.core.CommonMessages;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.commons.ui.compatibility.CommonColors;
 import org.eclipse.mylyn.internal.monitor.ui.ActivityContextManager;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
@@ -92,17 +93,19 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 	private Button useWebBrowser;
 
-	private Text fullSyncScheduleTime = null;
+	private Text fullSyncScheduleTime;
 
-	private Text relevantTasksSyncScheduleTime = null;
+	private Text relevantTasksSyncScheduleTime;
 
-	private Button enableBackgroundSynch;
+	private Button enableFullTaskListSynch;
 
-	private Text taskDirectoryText = null;
+	private Button enableRelevantTasksSynch;
 
-	private Button browse = null;
+	private Text taskDirectoryText;
 
-	private Button notificationEnabledButton = null;
+	private Button browse;
+
+	private Button notificationEnabledButton;
 
 	private final FormToolkit toolkit;
 
@@ -226,7 +229,9 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 				editorHighlightsCurrentLine.getSelection());
 
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
-				enableBackgroundSynch.getSelection());
+				enableFullTaskListSynch.getSelection());
+		getPreferenceStore().setValue(ITasksUiPreferenceConstants.RELEVANT_SYNCH_SCHEDULE_ENABLED,
+				enableRelevantTasksSynch.getSelection());
 
 		String miliseconds = toMillisecondsString(fullSyncScheduleTime.getText());
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, miliseconds);
@@ -309,9 +314,13 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 				getPreferenceStore().getLong(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS));
 		String relevantSyncMinutes = toMinutesString(
 				getPreferenceStore().getLong(ITasksUiPreferenceConstants.RELEVANT_TASKS_SCHEDULE_MILISECONDS));
-		boolean shouldSyncAutomatically = getPreferenceStore()
+		boolean shouldSyncTaskList = getPreferenceStore()
 				.getBoolean(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED);
-		enableBackgroundSynch.setSelection(shouldSyncAutomatically);
+		boolean shouldSyncRelevantTasks = getPreferenceStore()
+				.getBoolean(ITasksUiPreferenceConstants.RELEVANT_SYNCH_SCHEDULE_ENABLED);
+
+		enableFullTaskListSynch.setSelection(shouldSyncTaskList);
+		enableRelevantTasksSynch.setSelection(shouldSyncRelevantTasks);
 		fullSyncScheduleTime.setText(repositorySyncMinutes);
 		relevantTasksSyncScheduleTime.setText(relevantSyncMinutes);
 
@@ -358,8 +367,10 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 				getPreferenceStore().getDefaultBoolean(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED));
 		showTaskTrimButton.setSelection(getPreferenceStore().getDefaultBoolean(ITasksUiPreferenceConstants.SHOW_TRIM));
 
-		enableBackgroundSynch.setSelection(
+		enableFullTaskListSynch.setSelection(
 				getPreferenceStore().getDefaultBoolean(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
+		enableRelevantTasksSynch.setSelection(
+				getPreferenceStore().getDefaultBoolean(ITasksUiPreferenceConstants.RELEVANT_SYNCH_SCHEDULE_ENABLED));
 		fullSyncScheduleTime.setText(toMinutesString(getPreferenceStore()
 				.getDefaultLong(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS)));
 		relevantTasksSyncScheduleTime.setText(toMinutesString(
@@ -393,14 +404,14 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		Composite backgroundSync = new Composite(group, SWT.NULL);
-		GridLayoutFactory.swtDefaults().numColumns(3).equalWidth(false).margins(0, 0).applyTo(backgroundSync);
+		GridLayoutFactory.swtDefaults().numColumns(4).equalWidth(false).margins(0, 0).applyTo(backgroundSync);
 
 		//Enabled background synchronization
-		enableBackgroundSynch = new Button(backgroundSync, SWT.CHECK);
-		enableBackgroundSynch.setText(Messages.TasksUiPreferencePage_Synchronize_Task_List);
-		enableBackgroundSynch.setSelection(
+		enableFullTaskListSynch = new Button(backgroundSync, SWT.CHECK);
+		enableFullTaskListSynch.setText(Messages.TasksUiPreferencePage_Synchronize_Task_List);
+		enableFullTaskListSynch.setSelection(
 				getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
-		enableBackgroundSynch.addSelectionListener(new SelectionListener() {
+		enableFullTaskListSynch.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				updateRefreshGroupEnablements();
 			}
@@ -408,19 +419,35 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
-		GridDataFactory.defaultsFor(enableBackgroundSynch).span(3, 1).applyTo(enableBackgroundSynch);
+		GridDataFactory.defaultsFor(enableFullTaskListSynch).span(4, 1).applyTo(enableFullTaskListSynch);
 
 		//Synchronize Task List Fully
-		new Label(backgroundSync, SWT.NONE).setText(Messages.TasksUiPreferencePage_Synchronize_Fully);
+		new Label(backgroundSync, SWT.NONE).setText(Messages.TasksUiPreferencePage_Synchronize_Queries);
 		fullSyncScheduleTime = createSynchronizationScheduleTextBox(backgroundSync,
 				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
 		new Label(backgroundSync, SWT.NONE).setText(Messages.TasksUiPreferencePage_minutes);
+		new Label(backgroundSync, SWT.NONE);
 
 		//Synchronize Relevant Tasks
-		new Label(backgroundSync, SWT.NONE).setText(Messages.TasksUiPreferencePage_Synchronize_Relevant_Tasks);
+		enableRelevantTasksSynch = new Button(backgroundSync, SWT.CHECK);
+		enableRelevantTasksSynch.setText(Messages.TasksUiPreferencePage_Synchronize_Relevant_Tasks);
+		enableRelevantTasksSynch.setSelection(
+				getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.RELEVANT_SYNCH_SCHEDULE_ENABLED));
+		enableRelevantTasksSynch.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				updateRefreshGroupEnablements();
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+
 		relevantTasksSyncScheduleTime = createSynchronizationScheduleTextBox(backgroundSync,
 				ITasksUiPreferenceConstants.RELEVANT_TASKS_SCHEDULE_MILISECONDS);
 		new Label(backgroundSync, SWT.NONE).setText(Messages.TasksUiPreferencePage_minutes);
+		Label help = new Label(backgroundSync, SWT.NONE);
+		help.setImage(CommonImages.getImage(CommonImages.QUESTION));
+		help.setToolTipText(Messages.TasksUiPreferencePage_RelevantTasksHelp);
 
 		//notification
 		notificationEnabledButton = new Button(group, SWT.CHECK);
@@ -428,6 +455,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 				.setText(Messages.TasksUiPreferencePage_Display_notifications_for_overdue_tasks_and_incoming_changes);
 		notificationEnabledButton
 				.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED));
+		GridDataFactory.defaultsFor(notificationEnabledButton).span(4, 1).applyTo(notificationEnabledButton);
 
 	}
 
@@ -639,7 +667,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	public void updateRefreshGroupEnablements() {
 		String errorMessage = null;
 
-		if (enableBackgroundSynch.getSelection()) {
+		boolean synchronizeTaskList = enableFullTaskListSynch.getSelection();
+		if (synchronizeTaskList) {
 			errorMessage = validateSynchronizeSchedule(fullSyncScheduleTime);
 			if (errorMessage == null) {
 				errorMessage = validateSynchronizeSchedule(relevantTasksSyncScheduleTime);
@@ -661,8 +690,10 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 			timeoutLabel2.setEnabled(false);
 		}
 
-		fullSyncScheduleTime.setEnabled(enableBackgroundSynch.getSelection());
-		relevantTasksSyncScheduleTime.setEnabled(enableBackgroundSynch.getSelection());
+		boolean synchronizeRelevantTasks = synchronizeTaskList && enableRelevantTasksSynch.getSelection();
+		enableRelevantTasksSynch.setEnabled(synchronizeTaskList);
+		fullSyncScheduleTime.setEnabled(synchronizeTaskList);
+		relevantTasksSyncScheduleTime.setEnabled(synchronizeRelevantTasks);
 	}
 
 	private String validateSynchronizeSchedule(Text synchronizeText) {

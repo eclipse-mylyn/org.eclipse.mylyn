@@ -67,6 +67,8 @@ public class Messages extends NLS {
 
 	public static String TasksUiPreferencePage_highlight_current_line;
 
+	public static String TasksUiPreferencePage_RelevantTasksHelp;
+
 	public static String TasksUiPreferencePage_Rich_Editor__Recommended_;
 
 	public static String TasksUiPreferencePage_ScheduleNewTasks;
@@ -83,7 +85,7 @@ public class Messages extends NLS {
 
 	public static String TasksUiPreferencePage_Stop_time_accumulation_after;
 
-	public static String TasksUiPreferencePage_Synchronize_Fully;
+	public static String TasksUiPreferencePage_Synchronize_Queries;
 
 	public static String TasksUiPreferencePage_Synchronize_Relevant_Tasks;
 

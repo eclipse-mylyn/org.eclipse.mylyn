@@ -86,6 +86,8 @@ public interface ITasksUiPreferenceConstants {
 
 	public static final String REPOSITORY_SYNCH_SCHEDULE_MILISECONDS = "org.eclipse.mylyn.tasks.ui.repositories.synch.schedule.miliseconds"; //$NON-NLS-1$
 
+	public static final String RELEVANT_SYNCH_SCHEDULE_ENABLED = "org.eclipse.mylyn.tasks.ui.relevant.tasks.synch.schedule"; //$NON-NLS-1$
+
 	public static final String RELEVANT_TASKS_SCHEDULE_MILISECONDS = "org.eclipse.mylyn.tasks.ui.relevant.tasks.synch.schedule.miliseconds"; //$NON-NLS-1$
 
 	public static final String TEMPLATES_DELETED = "org.eclipse.mylyn.tasks.ui.templates.deleted"; //$NON-NLS-1$

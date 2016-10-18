@@ -107,7 +107,6 @@ import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.activity.AbstractTaskActivityMonitor;
 import org.eclipse.mylyn.tasks.core.context.AbstractTaskContextStore;
-import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -135,8 +134,6 @@ import org.osgi.util.tracker.ServiceTracker;
  */
 public class TasksUiPlugin extends AbstractUIPlugin {
 
-	private static final int DELAY_QUERY_REFRESH_ON_STARTUP = 20 * 1000;
-
 	private static final int DEFAULT_LINK_PROVIDER_TIMEOUT = 5 * 1000;
 
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.tasks.ui"; //$NON-NLS-1$
@@ -155,6 +152,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private static final String PROP_FORCE_CREDENTIALS_MIGRATION = "org.eclipse.mylyn.tasks.force.credentials.migration"; //$NON-NLS-1$
 
+	private static final boolean DEBUG_HTTPCLIENT = "true" //$NON-NLS-1$
+			.equalsIgnoreCase(Platform.getDebugOption("org.eclipse.mylyn.tasks.ui/debug/httpclient")); //$NON-NLS-1$
+
 	private static TasksUiPlugin INSTANCE;
 
 	private static ExternalizationManager externalizationManager;
@@ -163,13 +163,11 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private static TaskRepositoryManager repositoryManager;
 
-	private static TaskListSynchronizationScheduler taskScheduler;
-
-	private static TaskListSynchronizationScheduler relevantTaskScheduler;
-
 	private static TaskDataManager taskDataManager;
 
 	private static Map<String, AbstractRepositoryConnectorUi> repositoryConnectorUiMap = new HashMap<String, AbstractRepositoryConnectorUi>();
+
+	private static AbstractTaskContextStore contextStore;
 
 	private TaskListNotificationManager taskListNotificationManager;
 
@@ -197,12 +195,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	// shared colors for all forms
 	private FormColors formColors;
 
-	private static AbstractTaskContextStore contextStore;
-
 	private final List<AbstractSearchHandler> searchHandlers = new ArrayList<AbstractSearchHandler>();
-
-	private static final boolean DEBUG_HTTPCLIENT = "true" //$NON-NLS-1$
-			.equalsIgnoreCase(Platform.getDebugOption("org.eclipse.mylyn.tasks.ui/debug/httpclient")); //$NON-NLS-1$
 
 	// XXX reconsider if this is necessary
 	public static class TasksUiStartup implements IStartup {
@@ -292,20 +285,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				updateTaskActivityManager();
 			}
 
-			if (event.getProperty().equals(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED)
-					|| event.getProperty().equals(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS)) {
-				updateSynchronizationScheduler(taskScheduler, false,
-						ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
-						ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
-			}
-
-			if (event.getProperty().equals(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED)
-					|| event.getProperty().equals(ITasksUiPreferenceConstants.RELEVANT_TASKS_SCHEDULE_MILISECONDS)) {
-				updateSynchronizationScheduler(relevantTaskScheduler, false,
-						ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
-						ITasksUiPreferenceConstants.RELEVANT_TASKS_SCHEDULE_MILISECONDS);
-			}
-
 			if (event.getProperty().equals(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED)) {
 				if (getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.SERVICE_MESSAGES_ENABLED)) {
 					serviceMessageManager.start();
@@ -313,6 +292,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 					serviceMessageManager.stop();
 				}
 			}
+
+			synchronizationManager.processPreferenceChange(event);
 		}
 	};
 
@@ -343,6 +324,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	private SynchronizationManger synchronizationManger;
 
 	private RepositoryConnectorLoader connectorLoader;
+
+	private TaskListScheduledSynchronizationManager synchronizationManager;
 
 	private class TasksUiInitializationJob extends UIJob {
 
@@ -489,38 +472,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			activateTaskAction.setText(Messages.TasksUiPlugin_Activate_Task);
 			taskBarMenuManager.add(activateTaskAction);
 			taskBarMenuManager.update(true);
-		}
-	}
-
-	/**
-	 * Updates the scheduler with the latest user-set preferences.
-	 *
-	 * @param scheduler
-	 *            The scheduler to schedule refreshes.
-	 * @param initial
-	 *            <b>true</b> for the initial invocation; <b>false</b> for later invocations. When <b>true</b>, the
-	 *            scheduler interval is set to a fixed startup delay (typically 20 seconds).
-	 * @param enabledKey
-	 *            The string key in the preferences which is used to retrieve the latest user-set value (on/off).
-	 * @param intervalKey
-	 *            The string key in the preferences which is used to retrieve the latest schedule interval time.
-	 */
-	private void updateSynchronizationScheduler(TaskListSynchronizationScheduler scheduler, boolean initial,
-			String enabledKey, String intervalKey) {
-		if (scheduler == null) {
-			return;
-		}
-
-		boolean enabled = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(enabledKey);
-		if (enabled) {
-			long interval = TasksUiPlugin.getDefault().getPreferenceStore().getLong(intervalKey);
-			if (initial) {
-				scheduler.setInterval(DELAY_QUERY_REFRESH_ON_STARTUP, interval);
-			} else {
-				scheduler.setInterval(interval);
-			}
-		} else {
-			scheduler.setInterval(0);
 		}
 	}
 
@@ -1016,6 +967,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		store.setDefault(ITasksUiPreferenceConstants.USE_STRIKETHROUGH_FOR_COMPLETED, true);
 
 		store.setDefault(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, true);
+		store.setDefault(ITasksUiPreferenceConstants.RELEVANT_SYNCH_SCHEDULE_ENABLED, true);
 		store.setDefault(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, "" + (20 * 60 * 1000)); //$NON-NLS-1$
 		store.setDefault(ITasksUiPreferenceConstants.RELEVANT_TASKS_SCHEDULE_MILISECONDS, "" + (5 * 60 * 1000)); //$NON-NLS-1$
 
@@ -1280,6 +1232,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		// find a provider that can set new repository
 		for (final AbstractTaskRepositoryLinkProvider linkProvider : repositoryLinkProviders) {
 			SafeRunner.run(new ISafeRunnable() {
+
 				public void handleException(Throwable e) {
 					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 							"Task repository link provider failed: \"" + linkProvider.getId() + "\"", e)); //$NON-NLS-1$ //$NON-NLS-2$
@@ -1290,6 +1243,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 						result[0] = true;
 					}
 				}
+
 			});
 			if (result[0]) {
 				return true;
@@ -1465,22 +1419,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			// trigger backup scheduler
 			getBackupManager();
 
-			SynchronizationJob refreshJob = taskJobFactory.createSynchronizeRepositoriesJob(null);
-			refreshJob.setFullSynchronization(true);
-
-			taskScheduler = new TaskListSynchronizationScheduler(refreshJob);
-			MonitorUiPlugin.getDefault().getActivityContextManager().addListener(taskScheduler);
-			updateSynchronizationScheduler(taskScheduler, true,
-					ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
-					ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
-
-			Job relevantJob = new SynchronizeRelevantTasksJob(taskActivityManager, repositoryManager, taskJobFactory);
-			relevantTaskScheduler = new TaskListSynchronizationScheduler(relevantJob);
-			MonitorUiPlugin.getDefault().getActivityContextManager().addListener(relevantTaskScheduler);
-			updateSynchronizationScheduler(relevantTaskScheduler, true,
-					ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
-					ITasksUiPreferenceConstants.RELEVANT_TASKS_SCHEDULE_MILISECONDS);
-
+			synchronizationManager = new TaskListScheduledSynchronizationManager(taskJobFactory, taskActivityManager,
+					repositoryManager);
 		} catch (Throwable t) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 					"Could not initialize task list backup and synchronization", t)); //$NON-NLS-1$
