@@ -13,44 +13,78 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.StyledCellLabelProvider;
+import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.mylyn.commons.ui.CommonImages;
-import org.eclipse.mylyn.commons.ui.compatibility.CommonThemes;
+import org.eclipse.mylyn.commons.ui.TableColumnDescriptor;
 import org.eclipse.mylyn.commons.workbench.CommonImageManger;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorToolkit;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.themes.IThemeManager;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.TableColumn;
 
 /**
  * @author Mik Kersten
  * @author Steffen Pingel
  * @author Kevin Sawicki
  */
-public class AttachmentTableLabelProvider extends ColumnLabelProvider {
+public class AttachmentTableLabelProvider extends StyledCellLabelProvider {
 
 	private final AttachmentSizeFormatter sizeFormatter = AttachmentSizeFormatter.getInstance();
 
-	private final TaskDataModel model;
+	private final CommonImageManger imageManager = new CommonImageManger();
 
-	private final AttributeEditorToolkit attributeEditorToolkit;
+	@Override
+	public void update(ViewerCell cell) {
+		cell.setImage(getColumnImage((ITaskAttachment) cell.getElement(), cell.getColumnIndex()));
+		StyledString str = buildTextFromEventIndex(cell.getColumnIndex(), (ITaskAttachment) cell.getElement());
+		cell.setText(str.getString());
+		cell.setStyleRanges(str.getStyleRanges());
+		super.update(cell);
+	}
 
-	private final CommonImageManger imageManager;
+	@Override
+	protected void measure(Event event, Object element) {
+		super.measure(event, element);
+		measure4MulitlineColumn(event, element);
+	}
 
-	public AttachmentTableLabelProvider(TaskDataModel model, AttributeEditorToolkit attributeEditorToolkit) {
-		this.model = model;
-		this.attributeEditorToolkit = attributeEditorToolkit;
-		this.imageManager = new CommonImageManger();
+	protected void measure4MulitlineColumn(Event event, Object element) {
+		ColumnViewer viewer = getViewer();
+		if (viewer instanceof TableViewer) {
+			TableColumn col = ((TableViewer) viewer).getTable().getColumn(event.index);
+			TableColumnDescriptor colDes = (TableColumnDescriptor) col
+					.getData(TableColumnDescriptor.TABLE_COLUMN_DESCRIPTOR_KEY);
+			if (colDes != null && !colDes.isAutoSize()) {
+				return;
+			}
+			event.width = ((TableViewer) viewer).getTable().getColumn(event.index).getWidth();
+			if (event.width == 0) {
+				return;
+			}
+
+			ITaskAttachment attachment = (ITaskAttachment) element;
+			Point size = event.gc.textExtent(buildTextFromEventIndex(event.index, attachment).getString());
+			event.height = size.y;
+			if (event.index == 0 || event.index == 3) {
+				size.x = size.x + 22;
+
+			} else {
+				size.x = size.x + 3;
+			}
+			if (size.x > event.width) {
+				event.width = size.x;
+				((TableViewer) viewer).getTable().getColumn(event.index).setWidth(size.x);
+			}
+		}
 	}
 
 	public Image getColumnImage(Object element, int columnIndex) {
@@ -71,7 +105,7 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 
 	/**
 	 * Get author image for a specified repository person and task repository
-	 * 
+	 *
 	 * @param person
 	 * @param repository
 	 * @return author image
@@ -84,39 +118,53 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 		}
 	}
 
-	public String getColumnText(Object element, int columnIndex) {
-		ITaskAttachment attachment = (ITaskAttachment) element;
-		switch (columnIndex) {
+	public StyledString buildTextFromEventIndex(int index, ITaskAttachment attachment) {
+		StyledString text = new StyledString();
+		switch (index) {
 		case 0:
 			if (AttachmentUtil.isContext(attachment)) {
-				return Messages.AttachmentTableLabelProvider_Task_Context;
+				text.append(Messages.AttachmentTableLabelProvider_Task_Context);
 			} else if (attachment.isPatch()) {
-				return Messages.AttachmentTableLabelProvider_Patch;
+				text.append(Messages.AttachmentTableLabelProvider_Patch);
 			} else {
-				return " " + attachment.getFileName(); //$NON-NLS-1$
+				text.append(" " + attachment.getFileName()); //$NON-NLS-1$
 			}
+			break;
 		case 1:
-			return attachment.getDescription();
+			text.append(attachment.getDescription());
+			break;
 		case 2:
 			Long length = attachment.getLength();
 			if (length < 0) {
-				return "-"; //$NON-NLS-1$
+				text.append("-"); //$NON-NLS-1$
 			}
-			return sizeFormatter.format(length);
+			text.append(sizeFormatter.format(length));
+			break;
 		case 3:
-			return (attachment.getAuthor() != null) ? attachment.getAuthor().toString() : ""; //$NON-NLS-1$
+			String autherText = (attachment.getAuthor() != null) ? attachment.getAuthor().toString() : ""; //$NON-NLS-1$
+			String[] autherPart = autherText.split(" <"); //$NON-NLS-1$
+			text.append(autherPart[0] + " ", StyledString.COUNTER_STYLER); //$NON-NLS-1$
+			if (autherPart.length > 1) {
+				text.append("<" + autherPart[1], StyledString.COUNTER_STYLER); //$NON-NLS-1$
+			}
+			break;
 		case 4:
-			return (attachment.getCreationDate() != null)
+			text.append((attachment.getCreationDate() != null)
 					? EditorUtil.formatDateTime(attachment.getCreationDate())
-					: ""; //$NON-NLS-1$
+					: ""); //$NON-NLS-1$
+			break;
 		case 5:
 			// FIXME add id to ITaskAttachment
-			return getAttachmentId(attachment);
+			text.append(getAttachmentId(attachment));
+			break;
+		default:
+			text.append("unrecognized column");
+			break;
 		}
-		return "unrecognized column"; //$NON-NLS-1$
+		return text;
 	}
 
-	static String getAttachmentId(ITaskAttachment attachment) {
+	public static String getAttachmentId(ITaskAttachment attachment) {
 		String a = attachment.getUrl();
 		if (a != null) {
 			int i = a.indexOf("?id="); //$NON-NLS-1$
@@ -125,95 +173,6 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 			}
 		}
 		return ""; //$NON-NLS-1$
-	}
-
-	@Override
-	public void addListener(ILabelProviderListener listener) {
-		// ignore
-	}
-
-	@Override
-	public void dispose() {
-		imageManager.dispose();
-	}
-
-	@Override
-	public boolean isLabelProperty(Object element, String property) {
-		// ignore
-		return false;
-	}
-
-	@Override
-	public void removeListener(ILabelProviderListener listener) {
-		// ignore
-	}
-
-	@Override
-	public Color getForeground(Object element) {
-		ITaskAttachment att = (ITaskAttachment) element;
-		if (att.isDeprecated()) {
-			IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
-			return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_COMPLETED);
-		}
-		return super.getForeground(element);
-	}
-
-	@Override
-	public String getToolTipText(Object element) {
-		ITaskAttachment attachment = (ITaskAttachment) element;
-		StringBuilder sb = new StringBuilder();
-		sb.append(Messages.AttachmentTableLabelProvider_File_);
-		sb.append(attachment.getFileName());
-		if (attachment.getContentType() != null) {
-			sb.append("\n"); //$NON-NLS-1$
-			sb.append(Messages.AttachmentTableLabelProvider_Type_);
-			sb.append(attachment.getContentType());
-		}
-		return sb.toString();
-		/*"\nFilename\t\t"  + attachment.getAttributeValue("filename")
-			  +"ID\t\t\t"        + attachment.getAttributeValue("attachid")
-		      + "\nDate\t\t\t"    + attachment.getAttributeValue("date")
-		      + "\nDescription\t" + attachment.getAttributeValue("desc")
-		      + "\nCreator\t\t"   + attachment.getCreator()
-		      + "\nType\t\t\t"    + attachment.getAttributeValue("type")
-		      + "\nURL\t\t\t"     + attachment.getAttributeValue("task.common.attachment.url");*/
-	}
-
-	@Override
-	public Point getToolTipShift(Object object) {
-		return new Point(5, 5);
-	}
-
-	@Override
-	public int getToolTipDisplayDelayTime(Object object) {
-		return 200;
-	}
-
-	@Override
-	public int getToolTipTimeDisplayed(Object object) {
-		return 5000;
-	}
-
-	@Override
-	public void update(ViewerCell cell) {
-		Object element = cell.getElement();
-		cell.setText(getColumnText(element, cell.getColumnIndex()));
-		Image image = getColumnImage(element, cell.getColumnIndex());
-		cell.setImage(image);
-		cell.setBackground(getBackground(element));
-		cell.setForeground(getForeground(element));
-		cell.setFont(getFont(element));
-	}
-
-	@Override
-	public Color getBackground(Object element) {
-		if (model != null && attributeEditorToolkit != null) {
-			ITaskAttachment attachment = (ITaskAttachment) element;
-			if (model.hasIncomingChanges(attachment.getTaskAttribute())) {
-				return attributeEditorToolkit.getColorIncoming();
-			}
-		}
-		return null;
 	}
 
 }

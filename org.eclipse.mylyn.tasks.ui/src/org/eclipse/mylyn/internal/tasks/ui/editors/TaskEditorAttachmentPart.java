@@ -35,12 +35,13 @@ import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.ui.CommonImages;
-import org.eclipse.mylyn.commons.ui.TableSorter;
-import org.eclipse.mylyn.commons.ui.TableViewerSupport;
+import org.eclipse.mylyn.commons.ui.ConfigurableColumnTableViewerSupport;
+import org.eclipse.mylyn.commons.ui.TableColumnDescriptor;
 import org.eclipse.mylyn.commons.workbench.forms.CommonFormUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -80,35 +81,41 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
-	private class AttachmentTableSorter extends TableSorter {
+	private class AttachmentTableViewerComparator extends ViewerComparator {
 
-		TaskKeyComparator keyComparator = new TaskKeyComparator();
+		private int propertyIndex;
+
+		private static final int DESCENDING = 1;
+
+		private int direction = DESCENDING;
+
+		public AttachmentTableViewerComparator() {
+			this.propertyIndex = 0;
+			direction = DESCENDING;
+		}
+
+		public void setColumn(int column) {
+			if (column == this.propertyIndex) {
+				// Same column as last sort; toggle the direction
+				direction = 1 - direction;
+			} else {
+				// New column; do an ascending sort
+				this.propertyIndex = column;
+				direction = DESCENDING;
+			}
+		}
 
 		@Override
-		public int compare(TableViewer viewer, Object e1, Object e2, int columnIndex) {
+		public int compare(Viewer viewer, Object e1, Object e2) {
 			ITaskAttachment attachment1 = (ITaskAttachment) e1;
 			ITaskAttachment attachment2 = (ITaskAttachment) e2;
-			switch (columnIndex) {
-			case 0:
-				return CoreUtil.compare(attachment1.getFileName(), attachment2.getFileName());
-			case 1:
-				String description1 = attachment1.getDescription();
-				String description2 = attachment2.getDescription();
-				return CoreUtil.compare(description1, description2);
-			case 2:
-				return CoreUtil.compare(attachment1.getLength(), attachment2.getLength());
-			case 3:
-				String author1 = attachment1.getAuthor() != null ? attachment1.getAuthor().toString() : null;
-				String author2 = attachment2.getAuthor() != null ? attachment2.getAuthor().toString() : null;
-				return CoreUtil.compare(author1, author2);
-			case 4:
-				return CoreUtil.compare(attachment1.getCreationDate(), attachment2.getCreationDate());
-			case 5:
-				String key1 = AttachmentTableLabelProvider.getAttachmentId(attachment1);
-				String key2 = AttachmentTableLabelProvider.getAttachmentId(attachment2);
-				return keyComparator.compare2(key1, key2);
+			int rc;
+			rc = compareColumn(attachment1, attachment2, propertyIndex);
+			// If descending order, flip the direction
+			if (direction == DESCENDING) {
+				rc = -rc;
 			}
-			return super.compare(viewer, e1, e2, columnIndex);
+			return rc;
 		}
 
 	}
@@ -141,13 +148,6 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 	private static final String ID_POPUP_MENU = "org.eclipse.mylyn.tasks.ui.editor.menu.attachments"; //$NON-NLS-1$
 
-	private final String[] attachmentsColumns = { Messages.TaskEditorAttachmentPart_Name,
-			Messages.TaskEditorAttachmentPart_Description, /*"Type", */Messages.TaskEditorAttachmentPart_Size,
-			Messages.TaskEditorAttachmentPart_Creator, Messages.TaskEditorAttachmentPart_Created,
-			Messages.TaskEditorAttachmentPart_ID };
-
-	private final int[] attachmentsColumnWidths = { 130, 150, /*100,*/70, 100, 100, 0 };
-
 	private List<TaskAttribute> attachmentAttributes;
 
 	private boolean hasIncoming;
@@ -170,8 +170,30 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 	private Action filterDeprecatedAttachmentsAction;
 
+	TaskKeyComparator keyComparator = new TaskKeyComparator();
+
+	private AttachmentTableViewerComparator comparator;
+
 	public TaskEditorAttachmentPart() {
 		setPartName(Messages.TaskEditorAttachmentPart_Attachments);
+	}
+
+	protected TableColumnDescriptor[] createColumnDescriptors() {
+		TableColumnDescriptor[] descriptors = new TableColumnDescriptor[6];
+		descriptors[0] = new TableColumnDescriptor(130, Messages.TaskEditorAttachmentPart_Name, SWT.LEFT, false,
+				SWT.None, false);
+		descriptors[1] = new TableColumnDescriptor(150, Messages.TaskEditorAttachmentPart_Description, SWT.LEFT, false,
+				SWT.None, false);
+		descriptors[2] = new TableColumnDescriptor(70, Messages.TaskEditorAttachmentPart_Size, SWT.RIGHT, false,
+				SWT.None, false);
+		descriptors[3] = new TableColumnDescriptor(100, Messages.TaskEditorAttachmentPart_Creator, SWT.LEFT, false,
+				SWT.None, true);
+		descriptors[4] = new TableColumnDescriptor(100, Messages.TaskEditorAttachmentPart_Created, SWT.LEFT, true,
+				SWT.DOWN, false);
+		descriptors[5] = new TableColumnDescriptor(0, Messages.TaskEditorAttachmentPart_ID, SWT.LEFT, false, SWT.None,
+				false);
+
+		return descriptors;
 	}
 
 	private void createAttachmentTable(FormToolkit toolkit, final Composite attachmentsComposite) {
@@ -179,36 +201,44 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		attachmentsTable.setLinesVisible(true);
 		attachmentsTable.setHeaderVisible(true);
 		attachmentsTable.setLayout(new GridLayout());
-		GridDataFactory.fillDefaults()
-		.align(SWT.FILL, SWT.FILL)
-		.grab(true, false)
-		.hint(500, SWT.DEFAULT)
-		.applyTo(attachmentsTable);
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).hint(500, SWT.DEFAULT).applyTo(
+				attachmentsTable);
 		attachmentsTable.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
 
-		for (int i = 0; i < attachmentsColumns.length; i++) {
-			TableColumn column = new TableColumn(attachmentsTable, SWT.LEFT, i);
-			column.setText(attachmentsColumns[i]);
-			column.setWidth(attachmentsColumnWidths[i]);
+		TableColumnDescriptor[] columnDescriptorArray = createColumnDescriptors();
+		String[] localAttachmentsColumns = new String[columnDescriptorArray.length];
+		for (int i = 0; i < columnDescriptorArray.length; i++) {
+			int index = i;
+			localAttachmentsColumns[i] = columnDescriptorArray[i].getName();
+
+			TableColumn column = new TableColumn(attachmentsTable, columnDescriptorArray[i].getAlignment(), index);
+			column.setText(columnDescriptorArray[i].getName());
+			column.setWidth(columnDescriptorArray[i].getWidth());
 			column.setMoveable(true);
-			if (i == 4) {
+			column.setData(TableColumnDescriptor.TABLE_COLUMN_DESCRIPTOR_KEY, columnDescriptorArray[i]);
+			if (columnDescriptorArray[i].isDefaultSortColumn()) {
 				attachmentsTable.setSortColumn(column);
-				attachmentsTable.setSortDirection(SWT.DOWN);
+				attachmentsTable.setSortDirection(columnDescriptorArray[i].getSortDirection());
 			}
+			column.addSelectionListener(new SelectionAdapter() {
+
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					comparator.setColumn(index);
+				}
+			});
 		}
-		// size column
-		attachmentsTable.getColumn(2).setAlignment(SWT.RIGHT);
 
 		attachmentsViewer = new TableViewer(attachmentsTable);
 		attachmentsViewer.setUseHashlookup(true);
-		attachmentsViewer.setColumnProperties(attachmentsColumns);
+		attachmentsViewer.setColumnProperties(localAttachmentsColumns);
 		ColumnViewerToolTipSupport.enableFor(attachmentsViewer, ToolTip.NO_RECREATE);
 
-		attachmentsViewer.setSorter(new AttachmentTableSorter());
+		comparator = createComparator();
+		attachmentsViewer.setComparator(comparator);
 
 		attachmentsViewer.setContentProvider(new ArrayContentProvider());
-		attachmentsViewer.setLabelProvider(new AttachmentTableLabelProvider(getModel(),
-				getTaskEditorPage().getAttributeEditorToolkit()));
+		attachmentsViewer.setLabelProvider(createTableProvider());
 		attachmentsViewer.addOpenListener(new IOpenListener() {
 			public void open(OpenEvent event) {
 				openAttachments(event);
@@ -230,7 +260,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 		attachmentsViewer.addFilter(tableFilter);
 
-		new TableViewerSupport(attachmentsViewer, getStateFile());
+		new ConfigurableColumnTableViewerSupport(attachmentsViewer, columnDescriptorArray, getStateFile());
 	}
 
 	private File getStateFile() {
@@ -378,8 +408,9 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 	private void updateSectionTitle() {
 		if (tableFilter.isFilterDeprecatedEnabled()) {
-			section.setText(NLS.bind(Messages.TaskEditorAttachmentPart_Attachment_Section_Title_X_of_Y, new Object[] {
-					LegacyActionTools.escapeMnemonics(getPartName()), nonDeprecatedCount, attachmentAttributes.size() }));
+			section.setText(NLS.bind(Messages.TaskEditorAttachmentPart_Attachment_Section_Title_X_of_Y,
+					new Object[] { LegacyActionTools.escapeMnemonics(getPartName()), nonDeprecatedCount,
+							attachmentAttributes.size() }));
 		} else {
 			section.setText(NLS.bind(Messages.TaskEditorAttachmentPart_Attachment_Section_Title_X,
 					LegacyActionTools.escapeMnemonics(getPartName()), attachmentAttributes.size()));
@@ -454,6 +485,48 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 			getTaskEditorPage().reflow();
 		}
 		updateSectionTitle();
+	}
+
+	protected int compareColumn(ITaskAttachment attachment1, ITaskAttachment attachment2, int propertyIndex) {
+		int rc;
+		switch (propertyIndex) {
+		case 0:
+			rc = CoreUtil.compare(attachment1.getFileName(), attachment2.getFileName());
+			break;
+		case 1:
+			String description1 = attachment1.getDescription();
+			String description2 = attachment2.getDescription();
+			rc = CoreUtil.compare(description1, description2);
+			break;
+		case 2:
+			rc = CoreUtil.compare(attachment1.getLength(), attachment2.getLength());
+			break;
+		case 3:
+			String author1 = attachment1.getAuthor() != null ? attachment1.getAuthor().toString() : null;
+			String author2 = attachment2.getAuthor() != null ? attachment2.getAuthor().toString() : null;
+			rc = CoreUtil.compare(author1, author2);
+			break;
+		case 4:
+			rc = CoreUtil.compare(attachment1.getCreationDate(), attachment2.getCreationDate());
+			break;
+		case 5:
+			String key1 = AttachmentTableLabelProvider.getAttachmentId(attachment1);
+			String key2 = AttachmentTableLabelProvider.getAttachmentId(attachment2);
+			rc = keyComparator.compare2(key1, key2);
+			break;
+		default:
+			rc = 0;
+			break;
+		}
+		return rc;
+	}
+
+	protected AttachmentTableViewerComparator createComparator() {
+		return new AttachmentTableViewerComparator();
+	}
+
+	protected AttachmentTableLabelProvider createTableProvider() {
+		return new AttachmentTableLabelProvider();
 	}
 
 }
