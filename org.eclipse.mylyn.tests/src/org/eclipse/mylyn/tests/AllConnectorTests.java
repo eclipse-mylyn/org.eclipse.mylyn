@@ -13,39 +13,26 @@ package org.eclipse.mylyn.tests;
 
 import org.eclipse.mylyn.bugzilla.rest.core.tests.AllBugzillaRestCoreTests;
 import org.eclipse.mylyn.bugzilla.tests.AllBugzillaTests;
-import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
-import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
-import org.eclipse.mylyn.commons.sdk.util.TestConfiguration.TestKind;
+import org.eclipse.mylyn.commons.sdk.util.ManagedSuite;
+import org.eclipse.mylyn.commons.sdk.util.ManagedSuite.TestConfigurationProperty;
 import org.eclipse.mylyn.gerrit.tests.AllGerritTests;
 import org.eclipse.mylyn.hudson.tests.AllHudsonTests;
 import org.eclipse.mylyn.tests.util.TestFixture;
 import org.eclipse.mylyn.trac.tests.AllTracTests;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
 /**
  * @author Shawn Minto
  * @author Steffen Pingel
+ * @author Frank Becker
  */
+@RunWith(ManagedSuite.class)
+@Suite.SuiteClasses({ AllBugzillaRestCoreTests.class, AllBugzillaTests.class, AllHudsonTests.class,
+		AllGerritTests.class, AllTracTests.class })
+@TestConfigurationProperty()
 public class AllConnectorTests {
-
-	public static Test suite() {
+	static {
 		TestFixture.initializeTasksSettings();
-
-		TestConfiguration configuration = new TestConfiguration(TestKind.INTEGRATION);
-
-		TestSuite suite = new ManagedTestSuite(AllConnectorTests.class.getName());
-		addTests(suite, configuration);
-		return suite;
 	}
-
-	static void addTests(TestSuite suite, TestConfiguration configuration) {
-		suite.addTest(AllBugzillaTests.suite(configuration));
-		suite.addTest(AllTracTests.suite(configuration));
-		suite.addTest(AllHudsonTests.suite(configuration));
-		suite.addTest(AllGerritTests.suite(configuration));
-		suite.addTest(AllBugzillaRestCoreTests.suite(configuration));
-	}
-
 }

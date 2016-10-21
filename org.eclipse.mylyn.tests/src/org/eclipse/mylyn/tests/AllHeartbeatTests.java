@@ -11,12 +11,11 @@
 
 package org.eclipse.mylyn.tests;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.mylyn.commons.sdk.util.ManagedTestSuite;
 import org.eclipse.mylyn.commons.sdk.util.TestConfiguration;
-import org.eclipse.mylyn.commons.sdk.util.TestConfiguration.TestKind;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
  * @author Steffen Pingel
@@ -24,7 +23,7 @@ import org.eclipse.mylyn.commons.sdk.util.TestConfiguration.TestKind;
 public class AllHeartbeatTests {
 
 	public static Test suite() {
-		TestConfiguration configuration = new TestConfiguration(TestKind.INTEGRATION);
+		TestConfiguration configuration = new TestConfiguration();
 		configuration.setLocalOnly(true);
 
 		TestSuite suite = new ManagedTestSuite(AllHeartbeatTests.class.getName());
