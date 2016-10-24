@@ -1,9 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2015 Tasktop Technologies.
+ * Copyright (c) 2015 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Tasktop EULA
+ * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
- * http://tasktop.com/legal
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.internal.context.ui;
 
@@ -342,7 +345,7 @@ public class FilteredChildrenDecorationDrawer implements Listener {
 			imageStartX = currentTreeBounds - moreImage.getBounds().width;
 		}
 
-		float tolerance = 0;//moreImage.getBounds().width - (((float) moreImage.getBounds().width) / 3 * 2); // draw over item if more than 33% of the image is hidden 
+		float tolerance = 0;//moreImage.getBounds().width - (((float) moreImage.getBounds().width) / 3 * 2); // draw over item if more than 33% of the image is hidden
 		if (imageEndX > currentTreeBounds && imageEndX - currentTreeBounds > tolerance) {
 			imageStartX = currentTreeBounds - moreImage.getBounds().width;
 		}
