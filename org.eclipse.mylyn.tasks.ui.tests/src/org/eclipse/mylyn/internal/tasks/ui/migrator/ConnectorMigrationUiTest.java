@@ -1,9 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2015 Tasktop Technologies.
+ * Copyright (c) 2015 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Tasktop EULA
+ * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
- * http://tasktop.com/legal
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.migrator;
@@ -70,7 +73,7 @@ public class ConnectorMigrationUiTest {
 	@SuppressWarnings("unchecked")
 	@Before
 	public void setUp() {
-		doNothing().when(migrationUi).warnOfValidationFailure((List<TaskRepository>) any(List.class));
+		doNothing().when(migrationUi).warnOfValidationFailure(any(List.class));
 		doNothing().when(migrationUi).notifyMigrationComplete();
 	}
 
