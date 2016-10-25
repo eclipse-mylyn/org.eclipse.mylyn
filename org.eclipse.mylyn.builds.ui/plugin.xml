@@ -138,6 +138,12 @@
     </command>
     <command
           categoryId="org.eclipse.mylyn.builds.ui.category.Commands"
+          defaultHandler="org.eclipse.mylyn.internal.builds.ui.commands.AbortBuildHandler"
+          id="org.eclipse.mylyn.builds.ui.command.AbortBuild"
+          name="Abort Build">
+    </command>
+    <command
+          categoryId="org.eclipse.mylyn.builds.ui.category.Commands"
           defaultHandler="org.eclipse.mylyn.internal.builds.ui.commands.ShowBuildOutputHandler"
           id="org.eclipse.mylyn.builds.ui.command.ShowBuildOutput"
           name="Show Build Output">
@@ -197,6 +203,11 @@
           commandId="org.eclipse.mylyn.builds.ui.command.RunBuild"
           disabledIcon="icons/dtool16/run_exc.gif"
           icon="icons/etool16/run_exc.gif">
+    </image>
+    <image
+          commandId="org.eclipse.mylyn.builds.ui.command.AbortBuild"
+          disabledIcon="platform:/plugin/org.eclipse.ui/icons/full/dlcl16/stop.png"
+          icon="platform:/plugin/org.eclipse.ui/icons/full/elcl16/stop.png">
     </image>
     <image
           commandId="org.eclipse.mylyn.builds.ui.command.NewTaskFromBuild"
@@ -532,6 +543,26 @@
           </visibleWhen>
        </command>
        <command
+             commandId="org.eclipse.mylyn.builds.ui.command.AbortBuild"
+             label="Abort Build"
+             style="push">
+          <visibleWhen
+                checkEnabled="false">
+             <iterate
+                ifEmpty="false"
+                   operator="and">
+                <instanceof
+                      value="org.eclipse.mylyn.builds.core.IBuildPlan">
+                </instanceof>
+                <adapt type="org.eclipse.mylyn.builds.core.IBuildPlan">
+                   <test
+                         property="org.eclipse.mylyn.builds.ui.test.plan.isLastBuildRunning">
+                   </test>
+                </adapt>
+             </iterate>
+          </visibleWhen>
+       </command>
+       <command
              commandId="org.eclipse.ui.navigate.showIn"
              label="History"
              style="push">
@@ -805,7 +836,7 @@
           class="org.eclipse.mylyn.internal.builds.ui.BuildPlanPropertyTester"
           id="org.eclipse.mylyn.builds.ui.propertyTester.BuildPlan"
           namespace="org.eclipse.mylyn.builds.ui.test.plan"
-          properties="hasBuild"
+          properties="hasBuild,isLastBuildRunning"
           type="org.eclipse.mylyn.builds.core.IBuildPlan">
     </propertyTester>
     <propertyTester

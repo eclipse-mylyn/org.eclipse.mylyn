@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.builds.ui;
 
 import org.eclipse.core.expressions.PropertyTester;
+import org.eclipse.mylyn.builds.core.BuildState;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 
@@ -29,6 +30,9 @@ public class BuildPlanPropertyTester extends PropertyTester {
 			IBuildPlan plan = (IBuildPlan) receiver;
 			if ("hasBuild".equals(property)) {
 				return CoreUtil.propertyEquals(plan.getLastBuild() != null, expectedValue);
+			}
+			if ("isLastBuildRunning".equals(property)) {
+				return CoreUtil.propertyEquals(plan.getLastBuild().getState() == BuildState.RUNNING, expectedValue);
 			}
 		}
 		return false;
