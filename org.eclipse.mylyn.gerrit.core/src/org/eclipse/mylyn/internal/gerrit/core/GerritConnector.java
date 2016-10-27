@@ -48,6 +48,7 @@ import org.eclipse.mylyn.internal.gerrit.core.client.GerritRestClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritSystemInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.JSonSupport;
 import org.eclipse.mylyn.internal.gerrit.core.client.data.GerritQueryResult;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.reviews.core.model.ReviewStatus;
 import org.eclipse.mylyn.reviews.core.spi.ReviewsConnector;
 import org.eclipse.mylyn.reviews.internal.core.ReviewsCoreConstants;
@@ -65,6 +66,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 import org.eclipse.osgi.util.NLS;
 
+import com.google.common.base.Joiner;
 import com.google.gwtorm.client.KeyUtil;
 import com.google.gwtorm.server.StandardKeyEncoder;
 
@@ -329,14 +331,56 @@ public class GerritConnector extends ReviewsConnector {
 			task.setModificationDate(oldModificationDate);
 		}
 
-		setAttribute(task, TaskAttribute.STATUS, taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS));
-		setAttribute(task, ReviewsCoreConstants.CODE_REVIEW,
-				taskData.getRoot().getAttribute(GerritTaskSchema.getDefault().REVIEW_STATE.getKey()));
-		setAttribute(task, ReviewsCoreConstants.VERIFIED,
-				taskData.getRoot().getAttribute(GerritTaskSchema.getDefault().VERIFY_STATE.getKey()));
-		setAttribute(task, ReviewsCoreConstants.BRANCH,
-				taskData.getRoot().getAttribute(GerritTaskSchema.getDefault().BRANCH.getKey()));
+		TaskAttribute status = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
+		TaskAttribute codeReview = taskData.getRoot().getAttribute(GerritTaskSchema.getDefault().REVIEW_STATE.getKey());
+		TaskAttribute verified = taskData.getRoot().getAttribute(GerritTaskSchema.getDefault().VERIFY_STATE.getKey());
+		TaskAttribute branch = taskData.getRoot().getAttribute(GerritTaskSchema.getDefault().BRANCH.getKey());
+
+		setAttribute(task, TaskAttribute.STATUS, status);
+		setAttribute(task, ReviewsCoreConstants.CODE_REVIEW, codeReview);
+		setAttribute(task, ReviewsCoreConstants.VERIFIED, verified);
+		setAttribute(task, ReviewsCoreConstants.BRANCH, branch);
+
+		addExtendedTooltip(task);
+
 		super.updateTaskFromTaskData(taskRepository, task, taskData);
+	}
+
+	@SuppressWarnings("restriction")
+	private void addExtendedTooltip(ITask task) {
+		String codeReviewValue = task.getAttribute(ReviewsCoreConstants.CODE_REVIEW);
+		String verifiedValue = task.getAttribute(ReviewsCoreConstants.VERIFIED);
+
+		String reviewTooltip = createTooltipText(Messages.GerritConnector_CodeReviewTooltip, codeReviewValue);
+		String verifiedTooltip = createTooltipText(Messages.GerritConnector_VerifiedTooltip, verifiedValue);
+
+		String tooltip = Joiner.on("\n").skipNulls().join(reviewTooltip, verifiedTooltip); //$NON-NLS-1$
+		if (!tooltip.isEmpty()) {
+			task.setAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_EXTENDED_TOOLTIP, tooltip);
+		}
+	}
+
+	private String createTooltipText(String label, String integerString) {
+		int value = tryParseInt(integerString);
+		if (value != 0) {
+			StringBuilder builder = new StringBuilder();
+			builder.append(label);
+			if (value > 0) {
+				builder.append("+"); //$NON-NLS-1$
+			}
+			builder.append(value);
+			return builder.toString();
+		}
+		return null;
+	}
+
+	private int tryParseInt(String integerString) {
+		try {
+			return Integer.parseInt(integerString);
+		} catch (NumberFormatException e) {
+			// ignore
+		}
+		return 0;
 	}
 
 	private void setAttribute(ITask task, String key, TaskAttribute attribute) {
