@@ -27,6 +27,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -41,6 +42,7 @@ import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.builds.core.BuildStatus;
 import org.eclipse.mylyn.builds.core.IBuildElement;
 import org.eclipse.mylyn.builds.core.IBuildPlan;
@@ -57,6 +59,7 @@ import org.eclipse.mylyn.commons.ui.TreeSorter;
 import org.eclipse.mylyn.commons.ui.TreeViewerSupport;
 import org.eclipse.mylyn.commons.ui.actions.CollapseAllAction;
 import org.eclipse.mylyn.commons.ui.actions.ExpandAllAction;
+import org.eclipse.mylyn.commons.workbench.SubstringPatternFilter;
 import org.eclipse.mylyn.internal.builds.ui.BuildImages;
 import org.eclipse.mylyn.internal.builds.ui.BuildToolTip;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
@@ -93,6 +96,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.FilteredTree;
+import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.part.IShowInSource;
 import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.part.IShowInTargetList;
@@ -106,7 +111,8 @@ import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
  * @author Lucas Panjer
  */
 public class BuildsView extends ViewPart implements IShowInTarget {
-	public class BuildsSummary {
+
+	public static class BuildsSummary {
 		int numSuccess;
 
 		int numUnstable;
@@ -131,12 +137,43 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 
 		@Override
 		public String toString() {
-			return NLS.bind("{0} Succeeded, {1} Unstable, {2} Failed",
+			return NLS.bind(Messages.BuildsView_BuildStatusSummary,
 					new Object[] { numSuccess, numUnstable, numFailed });
 		}
 	}
 
-	private class BuildTreeSorter extends TreeSorter {
+	private static class ToggleableFilterTree extends FilteredTree {
+		private ToggleableFilterTree(Composite parent, int treeStyle, PatternFilter filter, boolean useNewLook) {
+			super(parent, treeStyle, filter, useNewLook);
+		}
+
+		public void setFilterVisible(boolean visible) {
+			clearText();
+			((GridData) filterComposite.getLayoutData()).exclude = !visible;
+			filterComposite.setVisible(visible);
+			if (visible) {
+				filterText.forceFocus();
+			}
+			this.layout();
+		}
+	}
+
+	private class ToggleFilterAction extends Action {
+
+		public ToggleFilterAction() {
+			super(Messages.BuildsView_ShowTextFilter, IAction.AS_CHECK_BOX);
+			setImageDescriptor(CommonImages.FIND);
+		}
+
+		@Override
+		public void run() {
+			if (filteredTree != null) {
+				filteredTree.setFilterVisible(isChecked());
+			}
+		}
+	}
+
+	private static class BuildTreeSorter extends TreeSorter {
 
 		@Override
 		public int compare(TreeViewer viewer, Object e1, Object e2, int columnIndex) {
@@ -175,6 +212,22 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 
 	}
 
+	private static class BuildElementSubstringPatternFilter extends SubstringPatternFilter {
+
+		@Override
+		protected boolean isLeafMatch(Viewer viewer, Object element) {
+			String labelText = null;
+			if (element instanceof IBuildElement) {
+				labelText = ((IBuildElement) element).getLabel();
+			}
+
+			if (labelText == null) {
+				return false;
+			}
+			return wordMatches(labelText);
+		}
+	}
+
 	public static BuildsView openInActivePerspective() {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window != null) {
@@ -201,6 +254,8 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	private FilterByStatusAction filterDisabledAction;
 
 	private FilterByStatusAction filterSucceedingAction;
+
+	private ToggleFilterAction toggleFilterAction;
 
 	private Date lastRefresh;
 
@@ -233,6 +288,8 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 
 	private IMemento stateMemento;
 
+	private ToggleableFilterTree filteredTree;
+
 	private TreeViewer viewer;
 
 	private PresentationMenuAction presentationsMenuAction;
@@ -257,16 +314,15 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		layout.marginHeight = 5;
 		layout.marginWidth = 5;
 		messageComposite.setLayout(layout);
-		//GridLayoutFactory.swtDefaults().applyTo(messageComposite);
 		messageComposite.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 
 		Link link = new Link(messageComposite, SWT.WRAP);
 		link.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
-		link.setText("No build servers available. Create a <a href=\"create\">build server</a>...");
+		link.setText(Messages.BuildsView_NoServersAvailable);
 		link.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
-				if ("create".equals(event.text)) {
+				if ("create".equals(event.text)) { //$NON-NLS-1$
 					new NewBuildServerAction().run();
 				}
 			}
@@ -386,11 +442,11 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	protected void createPopupMenu(Composite parent) {
 		MenuManager menuManager = new MenuManager();
 
-		menuManager.add(new GroupMarker("group.open"));
-		menuManager.add(new Separator("group.edit"));
-		menuManager.add(new Separator("group.file"));
-		menuManager.add(new Separator("group.run"));
-		menuManager.add(new Separator("group.refresh"));
+		menuManager.add(new GroupMarker("group.open")); //$NON-NLS-1$
+		menuManager.add(new Separator("group.edit")); //$NON-NLS-1$
+		menuManager.add(new Separator("group.file")); //$NON-NLS-1$
+		menuManager.add(new Separator("group.run")); //$NON-NLS-1$
+		menuManager.add(new Separator("group.refresh")); //$NON-NLS-1$
 		menuManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		menuManager.add(new Separator(BuildsUiConstants.GROUP_PROPERTIES));
 
@@ -400,11 +456,11 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	}
 
 	protected void createViewer(Composite parent) {
-//		Composite composite = new Composite(parent, SWT.NONE);
-//		TreeColumnLayout treeColumnLayout = new TreeColumnLayout();
-//		composite.setLayout(treeColumnLayout);
+		BuildElementSubstringPatternFilter patternFilter = new BuildElementSubstringPatternFilter();
+		filteredTree = new ToggleableFilterTree(parent, SWT.FULL_SELECTION, patternFilter, true);
+		filteredTree.setFilterVisible(false);
+		viewer = filteredTree.getViewer();
 
-		viewer = new TreeViewer(parent, SWT.FULL_SELECTION);
 		Tree tree = viewer.getTree();
 		tree.setHeaderVisible(true);
 
@@ -412,24 +468,21 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		buildViewerColumn.setLabelProvider(new DecoratingStyledCellLabelProvider(new BuildLabelProvider(true),
 				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(), null));
 		TreeColumn buildColumn = buildViewerColumn.getColumn();
-		buildColumn.setText("Build");
+		buildColumn.setText(Messages.BuildsView_Build);
 		buildColumn.setWidth(220);
 		buildColumn.setData(AbstractColumnViewerSupport.KEY_COLUMN_CAN_HIDE, false);
-		//treeColumnLayout.setColumnData(buildColumn, new ColumnWeightData(20, 50));
 
 		TreeViewerColumn summaryViewerColumn = new TreeViewerColumn(viewer, SWT.LEFT);
 		summaryViewerColumn.setLabelProvider(new BuildSummaryLabelProvider());
 		TreeColumn summaryColumn = summaryViewerColumn.getColumn();
-		summaryColumn.setText("Summary");
+		summaryColumn.setText(Messages.BuildsView_Summary);
 		summaryColumn.setWidth(220);
-		//treeColumnLayout.setColumnData(summaryColumn, new ColumnWeightData(60, 200));
 
 		TreeViewerColumn lastBuiltViewerColumn = new TreeViewerColumn(viewer, SWT.RIGHT);
 		lastBuiltViewerColumn.setLabelProvider(new RelativeBuildTimeLabelProvider());
 		TreeColumn lastBuiltColumn = lastBuiltViewerColumn.getColumn();
-		lastBuiltColumn.setText("Last Built");
+		lastBuiltColumn.setText(Messages.BuildsView_LastBuilt);
 		lastBuiltColumn.setWidth(50);
-		//treeColumnLayout.setColumnData(lastBuiltColumn, new ColumnWeightData(20, 50));
 
 		contentProvider = new BuildContentProvider();
 		contentProvider.setSelectedOnly(true);
@@ -476,6 +529,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		RefreshAction refresh = new RefreshAction();
 		manager.add(refresh);
 		manager.add(filterSucceedingAction);
+		manager.add(toggleFilterAction);
 		manager.add(new Separator(BuildsUiConstants.GROUP_OPEN));
 
 		OpenWithBrowserAction openInBrowserAction = new OpenWithBrowserAction();
@@ -561,13 +615,14 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		refreshAutomaticallyAction = new RefreshAutomaticallyAction();
 		filterDisabledAction = new FilterByStatusAction(this, BuildStatus.DISABLED);
 		filterSucceedingAction = new FilterByStatusAction(this, BuildStatus.SUCCESS);
-		filterSucceedingAction.setText("Hide Succeeding Plans");
+		filterSucceedingAction.setText(Messages.BuildsView_HideSucceedingPlans);
 		filterSucceedingAction.setImageDescriptor(BuildImages.FILTER_SUCCEEDING);
+		toggleFilterAction = new ToggleFilterAction();
 		presentationsMenuAction = new PresentationMenuAction(this);
 	}
 
 	private void restoreState(IMemento memento) {
-		IMemento child = memento.getChild("statusFilter");
+		IMemento child = memento.getChild("statusFilter"); //$NON-NLS-1$
 		if (child != null) {
 			boolean changed = false;
 			for (BuildStatus status : BuildStatus.values()) {
@@ -582,9 +637,9 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 				filterSucceedingAction.update();
 			}
 		}
-		child = memento.getChild("presentation");
+		child = memento.getChild("presentation"); //$NON-NLS-1$
 		if (child != null) {
-			String id = child.getString("id");
+			String id = child.getString("id"); //$NON-NLS-1$
 			if (id != null) {
 				try {
 					getContentProvider().setPresentation(Presentation.valueOf(id));
@@ -602,14 +657,14 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		if (buildStatusFilter != null) {
 			Set<BuildStatus> statuses = buildStatusFilter.getFiltered();
 			if (statuses.size() > 0) {
-				IMemento child = memento.createChild("statusFilter");
+				IMemento child = memento.createChild("statusFilter"); //$NON-NLS-1$
 				for (BuildStatus status : statuses) {
 					child.putBoolean(status.name(), true);
 				}
 			}
 		}
-		IMemento child = memento.createChild("presentation");
-		child.putString("id", getContentProvider().getPresentation().name());
+		IMemento child = memento.createChild("presentation"); //$NON-NLS-1$
+		child.putString("id", getContentProvider().getPresentation().name()); //$NON-NLS-1$
 	}
 
 	@Override
@@ -638,7 +693,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	}
 
 	private void updateContents(IStatus status) {
-		boolean isShowingViewer = (stackLayout.topControl == viewer.getControl());
+		boolean isShowingViewer = (stackLayout.topControl == filteredTree);
 		boolean hasContents = false;
 		if (contentProvider != null) {
 			if (getModel().getPlans().size() > 0 || getModel().getServers().size() > 0) {
@@ -646,7 +701,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 			}
 		}
 		if (hasContents) {
-			setTopControl(viewer.getControl());
+			setTopControl(filteredTree);
 			if (!isShowingViewer) {
 				// initial flip
 				packColumnsAsync(viewer.getTree());
@@ -658,7 +713,7 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 	}
 
 	public void updateDecoration(IStatus status) {
-		String statusMessage = "";
+		String statusMessage = ""; //$NON-NLS-1$
 		if (status.isOK()) {
 			BuildsSummary buildsSummary = getBuildsSummary();
 			if (buildsSummary.isSuccess()) {
@@ -679,12 +734,13 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 				setContentDescription(""); //$NON-NLS-1$
 			}
 			if (lastRefresh != null) {
-				statusMessage = NLS.bind("Last update: {0}", DateFormat.getDateTimeInstance().format(lastRefresh));
+				statusMessage = NLS.bind(Messages.BuildsView_LastUpdate,
+						DateFormat.getDateTimeInstance().format(lastRefresh));
 			}
 		} else {
 			setTitleImage(CommonImages.getImageWithOverlay(BuildImages.VIEW_BUILDS, CommonImages.OVERLAY_WARNING, false,
 					false));
-			statusMessage = "Last update failed";
+			statusMessage = Messages.BuildsView_LastUpdateFailed;
 		}
 
 		if (statusMessage != null) {
