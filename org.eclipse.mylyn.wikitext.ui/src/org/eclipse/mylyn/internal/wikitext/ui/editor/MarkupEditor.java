@@ -343,7 +343,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 			}
 		});
 
-		IFocusService focusService = (IFocusService) PlatformUI.getWorkbench().getService(IFocusService.class);
+		IFocusService focusService = PlatformUI.getWorkbench().getService(IFocusService.class);
 		if (focusService != null) {
 			focusService.addFocusTracker(viewer.getTextWidget(), MarkupEditor.EDITOR_SOURCE_VIEWER);
 		}
@@ -590,7 +590,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 					HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer) {
 						@Override
 						protected void emitAnchorHref(String href) {
-							if (href.startsWith("#")) { //$NON-NLS-1$
+							if (href != null && href.startsWith("#")) { //$NON-NLS-1$
 								writer.writeAttribute("onclick", //$NON-NLS-1$
 										String.format("javascript: window.location.hash = '%s'; return false;", href)); //$NON-NLS-1$
 								writer.writeAttribute("href", "#"); //$NON-NLS-1$//$NON-NLS-2$
@@ -1044,7 +1044,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		super.init(site, input);
 
-		IContextService contextService = (IContextService) site.getService(IContextService.class);
+		IContextService contextService = site.getService(IContextService.class);
 		contextService.activateContext(CONTEXT);
 
 	}
@@ -1219,7 +1219,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		if (action != null && action.getActionDefinitionId() != null && !isCommandAction(action)) {
 			// bug 336679: don't activate handlers for CommandAction.
 			// We do this by class name so that we don't rely on internals
-			IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
+			IHandlerService handlerService = getSite().getService(IHandlerService.class);
 			handlerService.activateHandler(action.getActionDefinitionId(), new ActionHandler(action));
 		}
 		super.setAction(actionID, action);

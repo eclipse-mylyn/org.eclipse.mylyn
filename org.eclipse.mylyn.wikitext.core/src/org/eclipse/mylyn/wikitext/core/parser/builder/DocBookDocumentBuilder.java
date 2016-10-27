@@ -32,7 +32,7 @@ import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 
 /**
  * A builder that can emit <a href="http://www.docbook.org/">Docbook</a>
- * 
+ *
  * @author David Green
  * @author Peter Friese bug 273355 Support image scaling for Textile -> DocBook
  * @see MarkupToDocbook
@@ -47,6 +47,7 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 	private static final Pattern CSS_CLASS_INLINE = Pattern.compile("(^|\\s+)inline(\\s+|$)"); //$NON-NLS-1$
 
 	private static Set<Integer> entityReferenceToUnicode = new HashSet<Integer>();
+
 	static {
 		entityReferenceToUnicode.add(215);
 		entityReferenceToUnicode.add(8211);
@@ -126,7 +127,14 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private void link(Attributes attributes, String href, ContentEmitter emitter) {
 		ensureBlockElementsOpen();
-		if (href.startsWith("#")) { //$NON-NLS-1$
+		if (href == null) {
+			writer.writeStartElement("anchor"); //$NON-NLS-1$
+			if (attributes.getId() != null) {
+				writer.writeAttribute("id", attributes.getId()); //$NON-NLS-1$
+			}
+			emitter.emit();
+			writer.writeEndElement(); // anchor
+		} else if (href.startsWith("#")) { //$NON-NLS-1$
 			if (href.length() > 1) {
 				writer.writeStartElement("link"); //$NON-NLS-1$
 				writer.writeAttribute("linkend", href.substring(1)); //$NON-NLS-1$
@@ -392,7 +400,9 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 		case LINK: {
 			LinkAttributes linkAttributes = (LinkAttributes) attributes;
 			String href = linkAttributes.getHref();
-			if (href.startsWith("#")) { //$NON-NLS-1$
+			if (href == null) {
+				writer.writeStartElement("anchor"); //$NON-NLS-1$
+			} else if (href.startsWith("#")) { //$NON-NLS-1$
 				writer.writeStartElement("link"); //$NON-NLS-1$
 				if (href.length() > 1) {
 					writer.writeAttribute("linkend", href.substring(1)); //$NON-NLS-1$
@@ -606,7 +616,8 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		final boolean closeElementsOnBlockStart;
 
-		public BlockDescription(BlockType type, int size, String[] nestedElementNames, boolean closeElementsOnBlockStart) {
+		public BlockDescription(BlockType type, int size, String[] nestedElementNames,
+				boolean closeElementsOnBlockStart) {
 			this.size = size;
 			this.entrySize = nestedElementNames == null ? 0 : nestedElementNames.length;
 			this.type = type;

@@ -45,6 +45,67 @@ public class DocBookDocumentBuilderTest extends TestCase {
 
 	}
 
+	public void testLink() {
+		builder.beginDocument();
+
+		builder.characters("a ");
+		builder.link(new LinkAttributes(), "#foo", "link to foo");
+		builder.characters(" test");
+
+		builder.endDocument();
+
+		String docbook = out.toString();
+		TestUtil.println("DocBook: \n" + docbook);
+		assertTrue(docbook.contains("a <link linkend=\"foo\">link to foo</link> test"));
+	}
+
+	public void testExternalLink() {
+		builder.beginDocument();
+
+		builder.characters("an ");
+		builder.link(new LinkAttributes(), "http://example.com", "external link");
+		builder.characters(" test");
+
+		builder.endDocument();
+
+		String docbook = out.toString();
+		TestUtil.println("DocBook: \n" + docbook);
+		assertTrue(docbook.contains("an <ulink url=\"http://example.com\">external link</ulink> test"));
+	}
+
+	public void testLinkWithNullHref() {
+		builder.beginDocument();
+
+		builder.characters("a ");
+		LinkAttributes attributes = new LinkAttributes();
+		attributes.setId("some.id");
+		builder.link(attributes, null, null);
+		builder.characters(" test");
+
+		builder.endDocument();
+
+		String docbook = out.toString();
+		TestUtil.println("DocBook: \n" + docbook);
+		assertTrue(docbook.contains("a <anchor id=\"some.id\"></anchor> test"));
+	}
+
+	public void testSpanLinkWithNullHref() {
+		builder.beginDocument();
+
+		builder.characters("a ");
+		LinkAttributes attributes = new LinkAttributes();
+		attributes.setId("some.id");
+		builder.beginSpan(SpanType.LINK, attributes);
+		builder.endSpan();
+		builder.characters(" test");
+
+		builder.endDocument();
+
+		String docbook = out.toString();
+		TestUtil.println("DocBook: \n" + docbook);
+		assertTrue(docbook.contains("a <anchor id=\"some.id\"></anchor> test"));
+	}
+
 	public void testInlineImage() {
 		parser.parse("some text !(inline)images/foo.png! some text");
 		String docbook = out.toString();

@@ -39,6 +39,7 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	private static final Pattern PATTERN_MULTIPLE_NEWLINES = Pattern.compile("(\r\n|\r|\n){2,}"); //$NON-NLS-1$
 
 	private final Map<String, String> entityToLiteral = new HashMap<String, String>();
+
 	{
 		entityToLiteral.put("nbsp", " "); //$NON-NLS-1$//$NON-NLS-2$
 		entityToLiteral.put("#160", " "); //$NON-NLS-1$//$NON-NLS-2$
@@ -326,8 +327,8 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			return new ContentBlock(type, "- ", "", false, true, true, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 		case LIST_ITEM:
 			char prefixChar = computeCurrentListType() == BlockType.NUMERIC_LIST ? '#' : '*';
-			return new ContentBlock(type,
-					computePrefix(prefixChar, computeListLevel()) + " ", "", false, true, true, 1, 1); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock(type, computePrefix(prefixChar, computeListLevel()) + " ", "", false, true, true, 1, //$NON-NLS-1$//$NON-NLS-2$
+					1);
 		case DIV:
 			if (currentBlock == null) {
 				return new ParagraphBlock(type, "", false, false, true, 2, 2); //$NON-NLS-1$
@@ -345,9 +346,11 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		case PARAGRAPH:
 			String attributesMarkup = computeAttributes(attributes);
 
-			return new ParagraphBlock(type, attributesMarkup.length() > 0 || previousWasExtended
-					? "p" + attributesMarkup + ". " //$NON-NLS-1$ //$NON-NLS-2$
-					: attributesMarkup, false, false, true, 2, 2);
+			return new ParagraphBlock(type,
+					attributesMarkup.length() > 0 || previousWasExtended
+							? "p" + attributesMarkup + ". " //$NON-NLS-1$ //$NON-NLS-2$
+							: attributesMarkup,
+					false, false, true, 2, 2);
 		case PREFORMATTED:
 			return new ContentBlock(type, "pre" + computeAttributes(attributes) + ". ", "", false, false, false, 2, 2); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		case QUOTE:
@@ -475,9 +478,11 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 					currentBlock.write(' ');
 					break;
 				case '\u00A9': // &copy;
-					currentBlock.write("(c)");break; //$NON-NLS-1$
+					currentBlock.write("(c)"); //$NON-NLS-1$
+					break;
 				case '\u00AE': // &reg;
-					currentBlock.write("(r)");break; //$NON-NLS-1$
+					currentBlock.write("(r)"); //$NON-NLS-1$
+					break;
 				default:
 					currentBlock.write(c);
 					break;
@@ -526,7 +531,9 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			currentBlock.write(text);
 			currentBlock.write('"');
 			currentBlock.write(':');
-			currentBlock.write(hrefOrHashName);
+			if (hrefOrHashName != null) {
+				currentBlock.write(hrefOrHashName);
+			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

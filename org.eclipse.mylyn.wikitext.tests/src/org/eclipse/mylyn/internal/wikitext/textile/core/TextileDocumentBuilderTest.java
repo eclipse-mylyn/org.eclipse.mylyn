@@ -13,8 +13,6 @@ package org.eclipse.mylyn.internal.wikitext.textile.core;
 
 import java.io.StringWriter;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
@@ -22,16 +20,18 @@ import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
+import junit.framework.TestCase;
+
 /**
  * @author David Green
  * @see TextileDocumentBuilder
  */
 public class TextileDocumentBuilderTest extends TestCase {
 
-	private static final String[] PLATFORM_NEWLINES = new String[] {//
-		"\r\n", // Windows
-		"\r", // Mac
-		"\n", // Unix, Linux
+	private static final String[] PLATFORM_NEWLINES = new String[] { //
+			"\r\n", // Windows
+			"\r", // Mac
+			"\n", // Unix, Linux
 	};
 
 	private TextileDocumentBuilder builder;
@@ -883,7 +883,39 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("a \"link to foo\":#foo test\n\n", markup);
 	}
 
+	public void testExternalLink() {
+		builder.beginDocument();
+
+		builder.characters("an ");
+		builder.link(new LinkAttributes(), "http://example.com/", "external link");
+		builder.characters(" test");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		assertEquals("an \"external link\":http://example.com/ test\n\n", markup);
+	}
+
 	public void testLinkWithNullHref() {
+		builder.beginDocument();
+
+		builder.characters("a ");
+		builder.link(new LinkAttributes(), null, "link text");
+		builder.characters(" test");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		TestUtil.println(markup);
+
+		assertEquals("a \"link text\": test\n\n", markup);
+	}
+
+	public void testSpanLinkWithNullHref() {
 		builder.beginDocument();
 
 		builder.characters("a ");
