@@ -47,6 +47,7 @@ import org.eclipse.mylyn.commons.core.ICoreRunnable;
 import org.eclipse.mylyn.commons.workbench.WorkbenchUtil;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.xml.sax.SAXException;
 
@@ -91,16 +92,16 @@ public class TestResultManager {
 					// Eclipse 3.6 or later
 					Class<?> clazz;
 					try {
-						clazz = Class.forName("org.eclipse.jdt.internal.junit.JUnitCorePlugin");
+						clazz = Class.forName("org.eclipse.jdt.internal.junit.JUnitCorePlugin"); //$NON-NLS-1$
 					} catch (ClassNotFoundException e) {
 						// Eclipse 3.5 and earlier
-						clazz = Class.forName("org.eclipse.jdt.internal.junit.ui.JUnitPlugin");
+						clazz = Class.forName("org.eclipse.jdt.internal.junit.ui.JUnitPlugin"); //$NON-NLS-1$
 					}
 
-					Method method = clazz.getDeclaredMethod("getModel");
+					Method method = clazz.getDeclaredMethod("getModel"); //$NON-NLS-1$
 					junitModel = (JUnitModel) method.invoke(null);
 				} catch (Exception e) {
-					NoClassDefFoundError error = new NoClassDefFoundError("Unable to locate container for JUnitModel");
+					NoClassDefFoundError error = new NoClassDefFoundError("Unable to locate container for JUnitModel"); //$NON-NLS-1$
 					error.initCause(e);
 					throw error;
 				}
@@ -127,18 +128,20 @@ public class TestResultManager {
 					}
 				});
 				if (result.get() == null) {
-					StatusManager.getManager().handle(
-							new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Failed to locate test in workspace."),
-							StatusManager.SHOW | StatusManager.BLOCK);
+					StatusManager.getManager()
+							.handle(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
+									"Failed to locate test in workspace."), //$NON-NLS-1$
+									StatusManager.SHOW | StatusManager.BLOCK);
 					return;
 				}
 				JavaUI.openInEditor(result.get(), true, true);
 			} catch (OperationCanceledException e) {
 				return;
 			} catch (Exception e) {
-				StatusManager.getManager().handle(
-						new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Failed to locate test in workspace.", e),
-						StatusManager.SHOW | StatusManager.BLOCK | StatusManager.LOG);
+				StatusManager.getManager()
+						.handle(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
+								"Failed to locate test in workspace.", e), //$NON-NLS-1$
+								StatusManager.SHOW | StatusManager.BLOCK | StatusManager.LOG);
 				return;
 			}
 		}
@@ -155,23 +158,38 @@ public class TestResultManager {
 							generator.write(handler);
 						} catch (SAXException e) {
 							throw new CoreException(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
-									"Unexpected parsing error while preparing test results", e));
+									"Unexpected parsing error while preparing test results", e)); //$NON-NLS-1$
 						}
 					}
 				});
 			} catch (OperationCanceledException e) {
 				return;
 			} catch (CoreException e) {
-				StatusManager.getManager().handle(
-						new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
-								"Unexpected error while processing test results", e),
-						StatusManager.SHOW | StatusManager.LOG);
+				StatusManager.getManager()
+						.handle(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
+								"Unexpected error while processing test results", e), //$NON-NLS-1$
+								StatusManager.SHOW | StatusManager.LOG);
 				return;
 			}
 
 			// show results in view
-			WorkbenchUtil.showViewInActiveWindow(TestRunnerViewPart.NAME);
+			IViewPart part = WorkbenchUtil.showViewInActiveWindow(TestRunnerViewPart.NAME);
+			showFailuresOnly(part);
 			getJUnitModel().addTestRunSession(testRunSession);
+		}
+
+		static void showFailuresOnly(IViewPart part) {
+			try {
+				boolean showFailuresOnly = BuildsUiPlugin.getDefault()
+						.getPreferenceStore()
+						.getBoolean(BuildsUiInternal.PREF_SHOW_TEST_FAILURES_ONLY);
+
+				Method method = TestRunnerViewPart.class.getDeclaredMethod("setShowFailuresOnly", boolean.class); //$NON-NLS-1$
+				method.setAccessible(true);
+				method.invoke(part, showFailuresOnly);
+			} catch (Throwable t) {
+				// ignore
+			}
 		}
 	}
 
@@ -205,15 +223,16 @@ public class TestResultManager {
 
 		if (!isJUnitAvailable()) {
 			StatusManager.getManager().handle(
-					new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "JUnit is not installed."),
+					new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "JUnit is not installed."), //$NON-NLS-1$
 					StatusManager.SHOW | StatusManager.BLOCK);
 			return;
 		}
 
 		if (build.getTestResult() == null) {
-			StatusManager.getManager().handle(
-					new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "The build did not produce test results."),
-					StatusManager.SHOW | StatusManager.BLOCK);
+			StatusManager.getManager()
+					.handle(new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
+							"The build did not produce test results."), //$NON-NLS-1$
+							StatusManager.SHOW | StatusManager.BLOCK);
 			return;
 		}
 
