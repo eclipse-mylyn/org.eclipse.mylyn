@@ -67,6 +67,7 @@ import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 import org.eclipse.osgi.util.NLS;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
 import com.google.gwtorm.client.KeyUtil;
 import com.google.gwtorm.server.StandardKeyEncoder;
 
@@ -348,28 +349,33 @@ public class GerritConnector extends ReviewsConnector {
 
 	@SuppressWarnings("restriction")
 	private void addExtendedTooltip(ITask task) {
+		String branchValue = task.getAttribute(ReviewsCoreConstants.BRANCH);
 		String codeReviewValue = task.getAttribute(ReviewsCoreConstants.CODE_REVIEW);
 		String verifiedValue = task.getAttribute(ReviewsCoreConstants.VERIFIED);
 
-		String reviewTooltip = createTooltipText(Messages.GerritConnector_CodeReviewTooltip, codeReviewValue);
-		String verifiedTooltip = createTooltipText(Messages.GerritConnector_VerifiedTooltip, verifiedValue);
+		String branchTooltip = null;
+		if (!Strings.isNullOrEmpty(branchValue)) {
+			branchTooltip = NLS.bind(Messages.GerritConnector_BranchTooltip, branchValue);
+		}
+		String reviewTooltip = createVoteTooltipText(Messages.GerritConnector_CodeReviewTooltip, codeReviewValue);
+		String verifiedTooltip = createVoteTooltipText(Messages.GerritConnector_VerifiedTooltip, verifiedValue);
 
-		String tooltip = Joiner.on("\n").skipNulls().join(reviewTooltip, verifiedTooltip); //$NON-NLS-1$
+		String tooltip = Joiner.on("\n").skipNulls().join(branchTooltip, reviewTooltip, verifiedTooltip); //$NON-NLS-1$
 		if (!tooltip.isEmpty()) {
 			task.setAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_EXTENDED_TOOLTIP, tooltip);
 		}
 	}
 
-	private String createTooltipText(String label, String integerString) {
+	private String createVoteTooltipText(String format, String integerString) {
 		int value = tryParseInt(integerString);
 		if (value != 0) {
-			StringBuilder builder = new StringBuilder();
-			builder.append(label);
+			String sign;
 			if (value > 0) {
-				builder.append("+"); //$NON-NLS-1$
+				sign = "+"; //$NON-NLS-1$
+			} else {
+				sign = ""; //$NON-NLS-1$
 			}
-			builder.append(value);
-			return builder.toString();
+			return NLS.bind(format, sign, value);
 		}
 		return null;
 	}

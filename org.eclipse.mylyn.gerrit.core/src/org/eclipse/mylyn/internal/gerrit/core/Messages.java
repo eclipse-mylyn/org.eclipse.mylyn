@@ -17,6 +17,8 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.gerrit.core.messages"; //$NON-NLS-1$
 
+	public static String GerritConnector_BranchTooltip;
+
 	public static String GerritConnector_CodeReviewTooltip;
 
 	public static String GerritConnector_Executing_query;
