@@ -11,10 +11,10 @@
 
 package org.eclipse.mylyn.team.tests;
 
+import org.eclipse.mylyn.context.sdk.util.ContextTestUtil;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
-
-import org.eclipse.mylyn.context.sdk.util.ContextTestUtil;
 
 /**
  * @author Mik Kersten
@@ -31,6 +31,7 @@ public class AllTeamTests {
 		suite.addTestSuite(TeamPropertiesLinkProviderTest.class);
 		suite.addTestSuite(TaskFinderTest.class);
 		suite.addTestSuite(CommitTemplateVariablesTest.class);
+		suite.addTestSuite(CopyCommitMessageHandlerTest.class);
 		return suite;
 	}
 
