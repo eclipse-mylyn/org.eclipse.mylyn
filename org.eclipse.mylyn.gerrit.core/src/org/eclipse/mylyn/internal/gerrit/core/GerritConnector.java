@@ -332,27 +332,34 @@ public class GerritConnector extends ReviewsConnector {
 			task.setModificationDate(oldModificationDate);
 		}
 
+		GerritTaskSchema schema = GerritTaskSchema.getDefault();
 		TaskAttribute status = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
-		TaskAttribute codeReview = taskData.getRoot().getAttribute(GerritTaskSchema.getDefault().REVIEW_STATE.getKey());
-		TaskAttribute verified = taskData.getRoot().getAttribute(GerritTaskSchema.getDefault().VERIFY_STATE.getKey());
-		TaskAttribute branch = taskData.getRoot().getAttribute(GerritTaskSchema.getDefault().BRANCH.getKey());
+		TaskAttribute codeReview = taskData.getRoot().getAttribute(schema.REVIEW_STATE.getKey());
+		TaskAttribute verified = taskData.getRoot().getAttribute(schema.VERIFY_STATE.getKey());
+		TaskAttribute project = taskData.getRoot().getAttribute(schema.PROJECT.getKey());
+		TaskAttribute branch = taskData.getRoot().getAttribute(schema.BRANCH.getKey());
 
 		setAttribute(task, TaskAttribute.STATUS, status);
 		setAttribute(task, ReviewsCoreConstants.CODE_REVIEW, codeReview);
 		setAttribute(task, ReviewsCoreConstants.VERIFIED, verified);
 		setAttribute(task, ReviewsCoreConstants.BRANCH, branch);
 
-		addExtendedTooltip(task);
+		addExtendedTooltip(task, project);
 
 		super.updateTaskFromTaskData(taskRepository, task, taskData);
 	}
 
 	@SuppressWarnings("restriction")
-	private void addExtendedTooltip(ITask task) {
+	private void addExtendedTooltip(ITask task, TaskAttribute projectAttribute) {
+		String projectValue = projectAttribute == null ? null : projectAttribute.getValue();
 		String branchValue = task.getAttribute(ReviewsCoreConstants.BRANCH);
 		String codeReviewValue = task.getAttribute(ReviewsCoreConstants.CODE_REVIEW);
 		String verifiedValue = task.getAttribute(ReviewsCoreConstants.VERIFIED);
 
+		String projectTooltip = null;
+		if (!Strings.isNullOrEmpty(projectValue)) {
+			projectTooltip = NLS.bind(Messages.GerritConnector_ProjectTooltip, projectValue);
+		}
 		String branchTooltip = null;
 		if (!Strings.isNullOrEmpty(branchValue)) {
 			branchTooltip = NLS.bind(Messages.GerritConnector_BranchTooltip, branchValue);
@@ -360,7 +367,8 @@ public class GerritConnector extends ReviewsConnector {
 		String reviewTooltip = createVoteTooltipText(Messages.GerritConnector_CodeReviewTooltip, codeReviewValue);
 		String verifiedTooltip = createVoteTooltipText(Messages.GerritConnector_VerifiedTooltip, verifiedValue);
 
-		String tooltip = Joiner.on("\n").skipNulls().join(branchTooltip, reviewTooltip, verifiedTooltip); //$NON-NLS-1$
+		String tooltip = Joiner.on("\n").skipNulls().join(projectTooltip, branchTooltip, reviewTooltip, //$NON-NLS-1$
+				verifiedTooltip);
 		if (!tooltip.isEmpty()) {
 			task.setAttribute(ITasksCoreConstants.ATTRIBUTE_TASK_EXTENDED_TOOLTIP, tooltip);
 		}

@@ -25,6 +25,8 @@ public class Messages extends NLS {
 
 	public static String GerritConnector_Label;
 
+	public static String GerritConnector_ProjectTooltip;
+
 	public static String GerritConnector_VerifiedTooltip;
 
 	public static String GerritQueryResultSchema_Branch;
