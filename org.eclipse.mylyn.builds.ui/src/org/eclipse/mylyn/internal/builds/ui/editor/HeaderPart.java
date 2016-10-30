@@ -38,27 +38,23 @@ public class HeaderPart extends AbstractBuildEditorPart {
 		Composite composite = toolkit.createComposite(parent);
 		composite.setLayout(new GridLayout());
 
-		Label label = createLabel(composite, toolkit, "Plan:");
+		Label label = createLabel(composite, toolkit, Messages.HeaderPart_Plan);
 		GridDataFactory.defaultsFor(label).indent(0, 0).applyTo(label);
-		Text text = createTextReadOnly(composite, toolkit, "");
+		Text text = createTextReadOnly(composite, toolkit, ""); //$NON-NLS-1$
 		bind(text, IBuildPlan.class, BuildPackage.Literals.BUILD_ELEMENT__NAME);
 
-		label = createLabel(composite, toolkit, "Build:");
+		label = createLabel(composite, toolkit, Messages.HeaderPart_Build);
 		GridDataFactory.defaultsFor(label).indent(12, 0).applyTo(label);
-		text = createTextReadOnly(composite, toolkit, "");
+		text = createTextReadOnly(composite, toolkit, ""); //$NON-NLS-1$
 		bind(text, IBuild.class, BuildPackage.Literals.BUILD__BUILD_NUMBER);
 
-		label = createLabel(composite, toolkit, "Status: ");
+		label = createLabel(composite, toolkit, Messages.HeaderPart_Status);
 		GridDataFactory.defaultsFor(label).indent(12, 0).applyTo(label);
-		text = createTextReadOnly(composite, toolkit, "");
-		//bind(text, IBuild.class, BuildPackage.Literals.BUILD__STATUS);
+		text = createTextReadOnly(composite, toolkit, ""); //$NON-NLS-1$
 		IBuild build = getInput(IBuild.class);
 		text.setText(getStatusLabel(build));
 
-		label = createLabel(composite, toolkit, "Duration: ");
-		GridDataFactory.defaultsFor(label).indent(12, 0).applyTo(label);
-		text = createTextReadOnly(composite, toolkit, "");
-		text.setText(DateUtil.getFormattedDurationShort(build.getDuration(), true));
+		createDuration(toolkit, composite, build);
 
 		((GridLayout) composite.getLayout()).numColumns = composite.getChildren().length;
 		toolkit.paintBordersFor(composite);
@@ -66,11 +62,27 @@ public class HeaderPart extends AbstractBuildEditorPart {
 		return composite;
 	}
 
+	private void createDuration(FormToolkit toolkit, Composite composite, IBuild build) {
+		String durationLabel;
+		long duration;
+		if (build.getState() == BuildState.RUNNING) {
+			durationLabel = Messages.HeaderPart_ExecutingFor;
+			duration = System.currentTimeMillis() - build.getTimestamp();
+		} else {
+			durationLabel = Messages.HeaderPart_Duration;
+			duration = build.getDuration();
+		}
+		Label label = createLabel(composite, toolkit, durationLabel);
+		GridDataFactory.defaultsFor(label).indent(12, 0).applyTo(label);
+		Text text = createTextReadOnly(composite, toolkit, ""); //$NON-NLS-1$
+		text.setText(DateUtil.getFormattedDurationShort(duration, true));
+	}
+
 	private String getStatusLabel(IBuild build) {
 		if (build.getStatus() != null) {
 			return build.getStatus().getLabel();
 		}
-		return (build.getState() == BuildState.RUNNING) ? "Running" : "Unknown";
+		return (build.getState() == BuildState.RUNNING) ? Messages.HeaderPart_Running : Messages.HeaderPart_Unknown;
 	}
 
 	@Override
