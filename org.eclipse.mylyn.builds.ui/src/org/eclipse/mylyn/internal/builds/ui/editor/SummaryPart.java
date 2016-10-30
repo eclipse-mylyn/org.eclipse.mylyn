@@ -34,13 +34,13 @@ public class SummaryPart extends AbstractBuildEditorPart {
 
 	public SummaryPart() {
 		super(ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
-		setPartName("Summary");
+		setPartName(Messages.SummaryPart_Summary);
 	}
 
 	private void append(StringBuilder sb, String text) {
 		if (text != null) {
 			if (sb.length() > 0) {
-				sb.append(". ");
+				sb.append(". "); //$NON-NLS-1$
 			}
 			sb.append(text);
 		}
@@ -55,10 +55,8 @@ public class SummaryPart extends AbstractBuildEditorPart {
 
 		Text text;
 
-		createLabel(composite, toolkit, "Completed on: ");
-//		GridDataFactory.defaultsFor(label).indent(0, 0).applyTo(label);
-		text = createTextReadOnly(composite, toolkit, "");
-//		GridDataFactory.fillDefaults().span(5, 1).applyTo(text);
+		createLabel(composite, toolkit, Messages.SummaryPart_StartedOn);
+		text = createTextReadOnly(composite, toolkit, ""); //$NON-NLS-1$
 		bind(text, IBuild.class, BuildPackage.Literals.BUILD__TIMESTAMP);
 
 		IBuild build = getInput(IBuild.class);
@@ -75,13 +73,11 @@ public class SummaryPart extends AbstractBuildEditorPart {
 				append(sb, string);
 			}
 			if (sb.length() > 0) {
-				sb.append(".");
+				sb.append("."); //$NON-NLS-1$
 			}
 
-			createLabel(composite, toolkit, "Cause: ");
-//			GridDataFactory.defaultsFor(label).indent(0, 0).applyTo(label);
-			text = createTextReadOnly(composite, toolkit, "", SWT.WRAP);
-//			GridDataFactory.fillDefaults().indent(0, 0).span(5, 1).align(SWT.BEGINNING, SWT.TOP).applyTo(text);
+			createLabel(composite, toolkit, Messages.SummaryPart_Cause);
+			text = createTextReadOnly(composite, toolkit, "", SWT.WRAP); //$NON-NLS-1$
 			text.setText(sb.toString());
 		}
 
