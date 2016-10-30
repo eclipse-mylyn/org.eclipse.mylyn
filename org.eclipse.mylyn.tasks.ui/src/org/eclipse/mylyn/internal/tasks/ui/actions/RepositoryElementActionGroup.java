@@ -47,6 +47,8 @@ import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.menus.IMenuService;
 import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 
 /**
@@ -229,6 +231,9 @@ public class RepositoryElementActionGroup {
 			copyDetailsSubMenu.add(copyUrlAction);
 			copyDetailsSubMenu.add(copyKeySummaryAction);
 			copyDetailsSubMenu.add(copyKeySummaryURLAction);
+			copyDetailsSubMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+			IMenuService menuService = PlatformUI.getWorkbench().getService(IMenuService.class);
+			menuService.populateContributionManager(copyDetailsSubMenu, "menu:" + CopyTaskDetailsAction.ID); //$NON-NLS-1$
 			manager.appendToGroup(ID_SEPARATOR_EDIT, copyDetailsSubMenu);
 		}
 		if (isInTaskList() && !selection.isEmpty()) {
