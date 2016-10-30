@@ -30,16 +30,16 @@ import junit.framework.TestSuite;
 public class AllLocalTests {
 
 	public static Test suite() {
-		TestConfiguration testConfiguration = ManagedSuite.getTestConfiguration();
-		if (testConfiguration == null) {
-			TestConfiguration configuration = new TestConfiguration();
+		TestConfiguration configuration = ManagedSuite.getTestConfiguration();
+		if (configuration == null) {
+			configuration = new TestConfiguration();
 			configuration.setLocalOnly(true);
 			ManagedSuite.setTestConfiguration(configuration);
 		}
 
 		TestSuite suite = new ManagedTestSuite(AllLocalTests.class.getName());
-		AllNonConnectorTests.addTests(suite, testConfiguration);
-		addTests(suite, testConfiguration);
+		AllNonConnectorTests.addTests(suite, configuration);
+		addTests(suite, configuration);
 		return suite;
 	}
 
