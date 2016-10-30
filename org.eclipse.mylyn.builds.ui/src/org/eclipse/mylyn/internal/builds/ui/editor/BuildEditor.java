@@ -30,6 +30,7 @@ import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.commons.workbench.browser.BrowserUtil;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
 import org.eclipse.mylyn.internal.builds.ui.actions.NewTaskFromBuildAction;
+import org.eclipse.mylyn.internal.builds.ui.actions.RefreshBuildEditorAction;
 import org.eclipse.mylyn.internal.builds.ui.actions.RunBuildAction;
 import org.eclipse.mylyn.internal.builds.ui.actions.ShowHistoryAction;
 import org.eclipse.mylyn.internal.builds.ui.view.BuildLabelProvider;
@@ -62,6 +63,8 @@ public class BuildEditor extends SharedHeaderFormEditor {
 	private ShowHistoryAction historyAction;
 
 	private NewTaskFromBuildAction newTaskFromBuildAction;
+
+	private RefreshBuildEditorAction refreshAction;
 
 	@Override
 	protected void addPages() {
@@ -152,6 +155,9 @@ public class BuildEditor extends SharedHeaderFormEditor {
 
 		toolBarManager.add(new GroupMarker(BuildsUiConstants.GROUP_FILE));
 
+		refreshAction = new RefreshBuildEditorAction(this);
+		toolBarManager.add(refreshAction);
+
 		runBuildAction = new RunBuildAction();
 		toolBarManager.add(runBuildAction);
 
@@ -190,6 +196,7 @@ public class BuildEditor extends SharedHeaderFormEditor {
 		if (newTaskFromBuildAction != null) {
 			newTaskFromBuildAction.selectionChanged(new StructuredSelection(getEditorInput().getBuild()));
 		}
+		refreshAction.updateEnablement();
 	}
 
 	public void refresh() {

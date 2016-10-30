@@ -26,23 +26,17 @@ import org.eclipse.mylyn.builds.core.IBuildPlan;
 import org.eclipse.mylyn.builds.core.spi.GetBuildsRequest;
 import org.eclipse.mylyn.builds.core.spi.GetBuildsRequest.Scope;
 import org.eclipse.mylyn.builds.internal.core.operations.GetBuildsOperation;
-import org.eclipse.mylyn.builds.internal.core.operations.OperationChangeEvent;
-import org.eclipse.mylyn.builds.internal.core.operations.OperationChangeListener;
 import org.eclipse.mylyn.builds.ui.BuildsUiConstants;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.workbench.EditorHandle;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiInternal;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
-import org.eclipse.mylyn.internal.builds.ui.editor.BuildEditor;
 import org.eclipse.mylyn.internal.builds.ui.editor.BuildEditorInput;
-import org.eclipse.mylyn.internal.builds.ui.editor.BuildEditorInput.BuildInfo;
-import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.mylyn.internal.builds.ui.editor.RefreshBuildEditorOperationListener;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
@@ -50,65 +44,27 @@ import org.eclipse.ui.handlers.HandlerUtil;
  */
 public class OpenHandler extends AbstractHandler {
 
-	public static EditorHandle fetchAndOpen(final IWorkbenchPage page, final IBuild build) {
-		final EditorHandle handle = new EditorHandle();
+	public static EditorHandle fetchAndOpen(IWorkbenchPage page, IBuild build) {
+		EditorHandle handle = new EditorHandle();
 
 		openEditor(page, handle, build, true);
-		final IBuildPlan plan = build.getPlan();
-		final String label = build.getLabel();
+		String label = build.getLabel();
 		GetBuildsRequest request = new GetBuildsRequest(build.getPlan(), Collections.singletonList(label), Scope.FULL);
 		GetBuildsOperation operation = BuildsUiInternal.getFactory().getGetBuildsOperation(request);
-		operation.addOperationChangeListener(new OperationChangeListener() {
-			@Override
-			public void done(OperationChangeEvent event) {
-				if (event.getStatus().isOK() && !Display.getDefault().isDisposed()) {
-					final GetBuildsOperation operation = (GetBuildsOperation) event.getOperation();
-					List<IBuild> builds = operation.getBuilds();
-					if (builds != null && builds.size() > 0) {
-						final IBuild updatedBuild = builds.get(0);
-						updatedBuild.setPlan(plan);
-						updatedBuild.setServer(plan.getServer());
-						updateBuildInfo(updatedBuild, BuildInfo.COMPLETE);
-					} else {
-						IStatus status = new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind(
-								"The requested build ''{0}'' was not found", label)); //$NON-NLS-1$
-						handle.setStatus(status);
-						updateBuildInfo(build, BuildInfo.ERROR);
-					}
-				} else {
-					handle.setStatus(event.getStatus());
-					updateBuildInfo(build, BuildInfo.ERROR);
-				}
-			}
-
-			protected void updateBuildInfo(final IBuild updatedBuild, final BuildInfo buildInfo) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if (handle.getPart() instanceof BuildEditor) {
-							BuildEditor buildEditor = (BuildEditor) handle.getPart();
-							if (!buildEditor.isDisposed() && !page.getWorkbenchWindow().getShell().isDisposed()) {
-								buildEditor.getEditorInput().updateBuildInfo(updatedBuild, buildInfo);
-								buildEditor.refresh();
-							}
-						}
-					}
-				});
-			}
-		});
+		operation.addOperationChangeListener(new RefreshBuildEditorOperationListener(build, handle));
 		operation.execute();
 		return handle;
 	}
 
-	protected static void openEditor(final IWorkbenchPage page, final EditorHandle handle, final IBuild build,
-			final boolean partial) {
+	protected static void openEditor(IWorkbenchPage page, EditorHandle handle, IBuild build, boolean partial) {
 		BuildEditorInput input = new BuildEditorInput(build, partial);
 		try {
 			IEditorPart part = page.openEditor(input, BuildsUiConstants.ID_EDITOR_BUILDS);
 			handle.setPart(part);
 			handle.setStatus(Status.OK_STATUS);
 		} catch (PartInitException e) {
-			IStatus status = new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
-					"Unexpected error while opening build", e); //$NON-NLS-1$
+			IStatus status = new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "Unexpected error while opening build", //$NON-NLS-1$
+					e);
 			StatusHandler.log(status);
 			handle.setStatus(status);
 		}
@@ -154,14 +110,14 @@ public class OpenHandler extends AbstractHandler {
 				return handle;
 			} catch (PartInitException e) {
 				Status status = new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
-						"Unexpected error while opening build", e);
+						"Unexpected error while opening build", e); //$NON-NLS-1$
 				StatusHandler.log(status);
 				EditorHandle handle = new EditorHandle(status);
 				return handle;
 			}
 		}
 
-		Status status = new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "No editor available to open " + item);
+		Status status = new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, "No editor available to open " + item); //$NON-NLS-1$
 		return new EditorHandle(status);
 	}
 

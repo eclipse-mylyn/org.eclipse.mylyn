@@ -87,7 +87,7 @@ public class BuildEditorInput implements IEditorInput {
 
 	public String getName() {
 		if (build != null) {
-			return NLS.bind("{0}#{1}", plan.getLabel(), build.getLabel());
+			return NLS.bind("{0}#{1}", plan.getLabel(), build.getLabel()); //$NON-NLS-1$
 		} else {
 			return plan.getLabel();
 		}
@@ -98,7 +98,7 @@ public class BuildEditorInput implements IEditorInput {
 	}
 
 	public String getToolTipText() {
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	protected BuildInfo getBuildInfo() {
@@ -106,7 +106,6 @@ public class BuildEditorInput implements IEditorInput {
 	}
 
 	public void updateBuildInfo(IBuild build, BuildInfo buildInfo) {
-		Assert.isTrue(getBuildInfo() != BuildInfo.COMPLETE);
 		this.build = build;
 		this.plan = build.getPlan();
 		this.buildInfo = buildInfo;

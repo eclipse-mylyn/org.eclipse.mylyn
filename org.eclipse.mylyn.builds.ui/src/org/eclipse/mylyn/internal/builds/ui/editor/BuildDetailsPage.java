@@ -45,6 +45,10 @@ public class BuildDetailsPage extends BuildEditorPage {
 
 	private FormToolkit toolkit;
 
+	private Composite bodyTop;
+
+	private Composite bodyBottom;
+
 	public BuildDetailsPage(FormEditor editor, String title) {
 		super(editor, BUILD_EDITOR_PAGE_ID, title);
 	}
@@ -66,20 +70,22 @@ public class BuildDetailsPage extends BuildEditorPage {
 			body.setLayout(GridLayoutFactory.fillDefaults().create());
 			body.setBackgroundMode(SWT.INHERIT_FORCE);
 
-			// last part grabs excess vertical space 
+			// last part grabs excess vertical space
 			boolean fillBottomPart = parts.size() > 0 && parts.get(parts.size() - 1).span == 2
 					&& parts.get(parts.size() - 1).expandVertically;
 
 			if (parts.size() > 1) {
 				// the top composite uses a TableWrapLayout for performance and proper support for wrapping text
-				Composite bodyTop = new Composite(body, SWT.NONE);
+				bodyTop = new Composite(body, SWT.NONE);
 				GridDataFactory.fillDefaults().grab(true, false).applyTo(bodyTop);
 
 				TableWrapLayout layout = new TableWrapLayout();
 				layout.numColumns = 2;
 				bodyTop.setLayout(layout);
 
-				for (AbstractBuildEditorPart part : parts.subList(0, (fillBottomPart) ? parts.size() - 1 : parts.size())) {
+				int numberTopParts = (fillBottomPart) ? parts.size() - 1 : parts.size();
+				List<AbstractBuildEditorPart> topParts = parts.subList(0, numberTopParts);
+				for (AbstractBuildEditorPart part : topParts) {
 					createPart(bodyTop, part);
 					TableWrapData data = new TableWrapData();
 					data.colspan = part.getSpan();
@@ -93,7 +99,7 @@ public class BuildDetailsPage extends BuildEditorPage {
 
 			if (fillBottomPart) {
 				// the bottom composite contains the last part only and grabs the remaining vertical space
-				Composite bodyBottom = new Composite(body, SWT.NONE);
+				bodyBottom = new Composite(body, SWT.NONE);
 				GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(bodyBottom);
 				FillLayout fillLayout = new FillLayout();
 				fillLayout.marginHeight = 5;
@@ -116,6 +122,12 @@ public class BuildDetailsPage extends BuildEditorPage {
 				}
 				part.dispose();
 			}
+		}
+		if (bodyTop != null) {
+			bodyTop.dispose();
+		}
+		if (bodyBottom != null) {
+			bodyBottom.dispose();
 		}
 		createParts();
 		createContents();
@@ -144,7 +156,6 @@ public class BuildDetailsPage extends BuildEditorPage {
 			parts.add(new TestResultPart());
 			parts.add(new ArtifactsPart());
 			parts.add(new ChangesPart());
-			//parts.add(new BuildOutputPart());
 		}
 	}
 
