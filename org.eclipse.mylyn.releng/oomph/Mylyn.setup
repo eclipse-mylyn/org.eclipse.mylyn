@@ -136,7 +136,7 @@
         <repository
             url="http://download.eclipse.org/eclipse/updates/3.8"/>
         <repository
-            url="http://download.eclipse.org/tools/orbit/downloads/drops/S20160916162009/repository/"/>
+            url="http://download.eclipse.org/tools/orbit/downloads/drops/S20161021172207/repository/"/>
       </repositoryList>
       <repositoryList
           name="Neon">
@@ -197,12 +197,6 @@
         xsi:type="git:GitCloneTask"
         id="git.clone.mylyn.builds"
         remoteURI="mylyn/org.eclipse.mylyn.builds">
-    <configSections
-        name="core">
-      <properties
-          key="autocrlf"
-          value="false"/>
-    </configSections>
       <annotation
           source="http://www.eclipse.org/oomph/setup/InducedChoices">
         <detail
@@ -218,6 +212,12 @@
           <value>remoteURI</value>
         </detail>
       </annotation>
+      <configSections
+          name="core">
+        <properties
+            key="autocrlf"
+            value="false"/>
+      </configSections>
       <description>Mylyn Builds</description>
     </setupTask>
     <setupTask
@@ -317,12 +317,6 @@
         id="git.clone.mylyn.commons"
         remoteURI="mylyn/org.eclipse.mylyn.commons"
         userID="">
-    <configSections
-        name="core">
-      <properties
-          key="autocrlf"
-          value="false"/>
-    </configSections>
       <annotation
           source="http://www.eclipse.org/oomph/setup/InducedChoices">
         <detail
@@ -338,6 +332,12 @@
           <value>remoteURI</value>
         </detail>
       </annotation>
+      <configSections
+          name="core">
+        <properties
+            key="autocrlf"
+            value="false"/>
+      </configSections>
       <description>Mylyn Commons</description>
     </setupTask>
     <setupTask
@@ -427,12 +427,6 @@
         remoteURI="jdt/eclipse.jdt.core"
         pushURI=""
         checkoutBranch="master">
-    <configSections
-        name="core">
-      <properties
-          key="autocrlf"
-          value="false"/>
-    </configSections>
       <annotation
           source="http://www.eclipse.org/oomph/setup/InducedChoices">
         <detail
@@ -448,6 +442,12 @@
           <value>remoteURI</value>
         </detail>
       </annotation>
+      <configSections
+          name="core">
+        <properties
+            key="autocrlf"
+            value="false"/>
+      </configSections>
       <description>JDT Core</description>
     </setupTask>
     <setupTask
@@ -473,12 +473,6 @@
         id="git.clone.mylyn.context"
         remoteURI="mylyn/org.eclipse.mylyn.context"
         checkoutBranch="master">
-    <configSections
-        name="core">
-      <properties
-          key="autocrlf"
-          value="false"/>
-    </configSections>
       <annotation
           source="http://www.eclipse.org/oomph/setup/InducedChoices">
         <detail
@@ -494,6 +488,12 @@
           <value>remoteURI</value>
         </detail>
       </annotation>
+      <configSections
+          name="core">
+        <properties
+            key="autocrlf"
+            value="false"/>
+      </configSections>
       <description>Mylyn Context</description>
     </setupTask>
     <setupTask
@@ -585,12 +585,6 @@
         xsi:type="git:GitCloneTask"
         id="git.clone.mylyn.docs"
         remoteURI="mylyn/org.eclipse.mylyn.docs">
-    <configSections
-        name="core">
-      <properties
-          key="autocrlf"
-          value="false"/>
-    </configSections>
       <annotation
           source="http://www.eclipse.org/oomph/setup/InducedChoices">
         <detail
@@ -606,6 +600,12 @@
           <value>remoteURI</value>
         </detail>
       </annotation>
+      <configSections
+          name="core">
+        <properties
+            key="autocrlf"
+            value="false"/>
+      </configSections>
       <description>Mylyn Docs</description>
     </setupTask>
     <setupTask
@@ -715,12 +715,6 @@
         xsi:type="git:GitCloneTask"
         id="git.clone.mylyn.incubator"
         remoteURI="mylyn/org.eclipse.mylyn.incubator">
-    <configSections
-        name="core">
-      <properties
-          key="autocrlf"
-          value="false"/>
-    </configSections>
       <annotation
           source="http://www.eclipse.org/oomph/setup/InducedChoices">
         <detail
@@ -736,6 +730,12 @@
           <value>remoteURI</value>
         </detail>
       </annotation>
+      <configSections
+          name="core">
+        <properties
+            key="autocrlf"
+            value="false"/>
+      </configSections>
       <description>Mylyn Incubator</description>
     </setupTask>
     <setupTask
@@ -828,12 +828,6 @@
         xsi:type="git:GitCloneTask"
         id="git.clone.mylyn.releng"
         remoteURI="mylyn/org.eclipse.mylyn">
-    <configSections
-        name="core">
-      <properties
-          key="autocrlf"
-          value="false"/>
-    </configSections>
       <annotation
           source="http://www.eclipse.org/oomph/setup/InducedChoices">
         <detail
@@ -849,6 +843,12 @@
           <value>remoteURI</value>
         </detail>
       </annotation>
+      <configSections
+          name="core">
+        <properties
+            key="autocrlf"
+            value="false"/>
+      </configSections>
       <description>Mylyn Releng</description>
     </setupTask>
     <setupTask
@@ -898,12 +898,6 @@
         xsi:type="git:GitCloneTask"
         id="git.clone.mylyn.reviews"
         remoteURI="mylyn/org.eclipse.mylyn.reviews">
-    <configSections
-        name="core">
-      <properties
-          key="autocrlf"
-          value="false"/>
-    </configSections>
       <annotation
           source="http://www.eclipse.org/oomph/setup/InducedChoices">
         <detail
@@ -919,6 +913,12 @@
           <value>remoteURI</value>
         </detail>
       </annotation>
+      <configSections
+          name="core">
+        <properties
+            key="autocrlf"
+            value="false"/>
+      </configSections>
       <description>Mylyn Reviews</description>
     </setupTask>
     <setupTask
@@ -1017,12 +1017,6 @@
         id="git.clone.mylyn.tasks"
         remoteURI="mylyn/org.eclipse.mylyn.tasks"
         checkoutBranch="master">
-    <configSections
-        name="core">
-      <properties
-          key="autocrlf"
-          value="false"/>
-    </configSections>
       <annotation
           source="http://www.eclipse.org/oomph/setup/InducedChoices">
         <detail
@@ -1038,6 +1032,12 @@
           <value>remoteURI</value>
         </detail>
       </annotation>
+      <configSections
+          name="core">
+        <properties
+            key="autocrlf"
+            value="false"/>
+      </configSections>
       <description>Mylyn Tasks</description>
     </setupTask>
     <setupTask
@@ -1181,12 +1181,6 @@
         xsi:type="git:GitCloneTask"
         id="git.clone.mylyn.versions"
         remoteURI="mylyn/org.eclipse.mylyn.versions">
-    <configSections
-        name="core">
-      <properties
-          key="autocrlf"
-          value="false"/>
-    </configSections>
       <annotation
           source="http://www.eclipse.org/oomph/setup/InducedChoices">
         <detail
@@ -1202,6 +1196,12 @@
           <value>remoteURI</value>
         </detail>
       </annotation>
+      <configSections
+          name="core">
+        <properties
+            key="autocrlf"
+            value="false"/>
+      </configSections>
       <description>Mylyn Versions</description>
     </setupTask>
     <setupTask
