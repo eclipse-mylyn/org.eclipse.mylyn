@@ -29,6 +29,8 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.commons.workbench.browser.BrowserUtil;
 import org.eclipse.mylyn.internal.builds.ui.BuildsUiPlugin;
+import org.eclipse.mylyn.internal.builds.ui.actions.AbortBuildAction;
+import org.eclipse.mylyn.internal.builds.ui.actions.AbortBuildFromEditorAction;
 import org.eclipse.mylyn.internal.builds.ui.actions.NewTaskFromBuildAction;
 import org.eclipse.mylyn.internal.builds.ui.actions.RefreshBuildEditorAction;
 import org.eclipse.mylyn.internal.builds.ui.actions.RunBuildAction;
@@ -59,6 +61,8 @@ public class BuildEditor extends SharedHeaderFormEditor {
 	private boolean isDisposed;
 
 	private RunBuildAction runBuildAction;
+
+	private AbortBuildAction abortBuildAction;
 
 	private ShowHistoryAction historyAction;
 
@@ -161,6 +165,9 @@ public class BuildEditor extends SharedHeaderFormEditor {
 		runBuildAction = new RunBuildAction();
 		toolBarManager.add(runBuildAction);
 
+		abortBuildAction = new AbortBuildFromEditorAction(this);
+		toolBarManager.add(abortBuildAction);
+
 		historyAction = new ShowHistoryAction();
 		toolBarManager.add(historyAction);
 
@@ -192,6 +199,7 @@ public class BuildEditor extends SharedHeaderFormEditor {
 
 	protected void updateToolBarActions() {
 		runBuildAction.selectionChanged(new StructuredSelection(getEditorInput().getPlan()));
+		abortBuildAction.selectionChanged(new StructuredSelection(getEditorInput().getBuild()));
 		historyAction.selectionChanged(new StructuredSelection(getEditorInput().getPlan()));
 		if (newTaskFromBuildAction != null) {
 			newTaskFromBuildAction.selectionChanged(new StructuredSelection(getEditorInput().getBuild()));
