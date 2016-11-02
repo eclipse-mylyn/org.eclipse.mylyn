@@ -293,7 +293,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				}
 			}
 
-			synchronizationManager.processPreferenceChange(event);
+			if (synchronizationManager != null) {
+				synchronizationManager.processPreferenceChange(event);
+			}
 		}
 	};
 
