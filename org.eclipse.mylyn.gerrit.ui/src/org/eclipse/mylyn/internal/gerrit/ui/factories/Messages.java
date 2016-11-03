@@ -60,6 +60,10 @@ public class Messages extends NLS {
 
 	public static String RebaseUiFactory_Rebase;
 
+	public static String RemoveReviewerUiFactory_Remove_Reviewer;
+
+	public static String RemoveReviewerUiFactory_Remove_Reviewer_Name;
+
 	public static String RestoreUiFactory_Restore;
 
 	public static String SubmitUiFactory_Submit;

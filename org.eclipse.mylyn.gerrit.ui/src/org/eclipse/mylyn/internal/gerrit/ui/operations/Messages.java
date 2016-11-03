@@ -44,6 +44,10 @@ public class Messages extends NLS {
 
 	public static String RebaseDialog_Rebase_patch_set_X;
 
+	public static String RemoveReviewerDialog_Are_You_Sure_You_Want_To_Remove;
+
+	public static String RemoveReviewerDialog_Remove_Reviewer;
+
 	public static String RestoreDialog_Enter_message;
 
 	public static String RestoreDialog_Restore_Change;

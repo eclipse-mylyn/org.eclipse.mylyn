@@ -48,7 +48,7 @@ import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * Displays basic information about a given review corresponding to top sections of Gerrit web interface.
- * 
+ *
  * @author Steffen Pingel
  * @author Miles Parker
  */
@@ -62,8 +62,10 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 	protected Control createContent(FormToolkit toolkit, Composite parent) {
 		Control content = super.createContent(toolkit, parent);
 		createReviewersSubSection(composite);
-		createDependenciesSubSection(toolkit, composite, Messages.ReviewDetailSection_Depends_On, getReview().getParents());
-		createDependenciesSubSection(toolkit, composite, Messages.ReviewDetailSection_Needed_By, getReview().getChildren());
+		createDependenciesSubSection(toolkit, composite, Messages.ReviewDetailSection_Depends_On,
+				getReview().getParents());
+		createDependenciesSubSection(toolkit, composite, Messages.ReviewDetailSection_Needed_By,
+				getReview().getChildren());
 		return content;
 	}
 
@@ -142,11 +144,12 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 				}
 			}
 
-			for (Entry<IUser, IReviewerEntry> entry : getReview().getReviewerApprovals().entrySet()) {
+			AbstractUiFactoryProvider<IUser> reviewerUiFactoryProvider = getReviewerUiFactoryProvider();
 
-				Label reviewerRowLabel = new Label(composite, SWT.NONE);
-				reviewerRowLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-				reviewerRowLabel.setText(entry.getKey().getDisplayName());
+			for (Entry<IUser, IReviewerEntry> entry : getReview().getReviewerApprovals().entrySet()) {
+				IUser currentUser = entry.getKey();
+
+				createReviewerLabelAndControls(composite, reviewerUiFactoryProvider, currentUser);
 
 				for (IApprovalType approvalType : approvalTypesWithLabel) {
 					Integer value = entry.getValue().getApprovals().get(approvalType);
@@ -168,7 +171,7 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 				if (names.length() > 0) {
 					names.append(", "); //$NON-NLS-1$
 				}
-				names.append(entry.getKey().getDisplayName());
+				names.append(currentUser.getDisplayName());
 			}
 
 			String headerText = names.toString();
@@ -184,6 +187,31 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 					getReview());
 			GridDataFactory.fillDefaults().span(2, 1).applyTo(actionComposite);
 		}
+
+	}
+
+	private void createReviewerLabelAndControls(Composite parent,
+			AbstractUiFactoryProvider<IUser> reviewerUiFactoryProvider, IUser user) {
+		Composite reviewerComp = toolkit.createComposite(parent, SWT.NONE);
+		GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).applyTo(reviewerComp);
+
+		if (reviewerUiFactoryProvider != null) {
+			createReviewerControls(reviewerComp, user, reviewerUiFactoryProvider);
+		}
+		createReviewerLabel(reviewerComp, user);
+	}
+
+	private void createReviewerLabel(Composite reviewerComposite, IUser user) {
+		Label reviewerRowLabel = new Label(reviewerComposite, SWT.NONE);
+		reviewerRowLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+		reviewerRowLabel.setText(user.getDisplayName());
+	}
+
+	private void createReviewerControls(Composite reviewerComposite, IUser user,
+			AbstractUiFactoryProvider<IUser> reviewerUiFactoryProvider) {
+		Composite controlComposite = reviewerUiFactoryProvider.createControls(this, reviewerComposite, getToolkit(),
+				user);
+		GridDataFactory.fillDefaults().applyTo(controlComposite);
 	}
 
 	protected boolean canAddReviewers() {
@@ -209,11 +237,13 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 
 		for (final IChange change : changes) {
 			Link link = new Link(composite, SWT.NONE);
-			String changeStatus = change.getState() != null ? NLS.bind(Messages.ReviewDetailSection_Bracket_X_bracket,
-					String.valueOf(change.getState().getName())) : " "; //$NON-NLS-1$
+			String changeStatus = change.getState() != null
+					? NLS.bind(Messages.ReviewDetailSection_Bracket_X_bracket,
+							String.valueOf(change.getState().getName()))
+					: " "; //$NON-NLS-1$
 			String ownerName = change.getOwner().getDisplayName();
-			link.setText(NLS.bind(Messages.ReviewDetailSection_Link_W_X_Y_by_Z, new String[] { StringUtils.left(change.getKey(), 9),
-					change.getSubject(), ownerName, changeStatus }));
+			link.setText(NLS.bind(Messages.ReviewDetailSection_Link_W_X_Y_by_Z, new String[] {
+					StringUtils.left(change.getKey(), 9), change.getSubject(), ownerName, changeStatus }));
 			link.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -224,6 +254,10 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 	}
 
 	protected abstract AbstractUiFactoryProvider<IReview> getUiFactoryProvider();
+
+	protected AbstractUiFactoryProvider<IUser> getReviewerUiFactoryProvider() {
+		return null;
+	};
 
 	@Override
 	protected boolean shouldExpandOnCreate() {

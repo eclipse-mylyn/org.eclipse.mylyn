@@ -38,6 +38,8 @@ public class Messages extends NLS {
 
 	public static String GerritOperation_Discarding_Draft;
 
+	public static String RemoveReviewerRequest_Remove_Reviewer;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
