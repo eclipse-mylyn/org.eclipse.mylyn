@@ -17,8 +17,8 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.BadLocationException;
@@ -36,17 +36,19 @@ public class FileRefHyperlinkDetector implements IHyperlinkDetector {
 
 	private final List<Pattern> hyperlinkPattern;
 
-	private final IProject project;
+	private final IContainer container;
 
 	/**
 	 * Create a {@link FileRefHyperlinkDetector}.
 	 *
+	 * @param container
+	 *            {@link IContainer} of the file being edited
 	 * @param hyperlinkPattern
 	 *            regular expression patterns with at least one group, which is supposed to contain the path to a
 	 *            resource in the workspace.
 	 */
-	public FileRefHyperlinkDetector(IProject project, List<String> hyperlinkPattern) {
-		this.project = project;
+	public FileRefHyperlinkDetector(IContainer container, List<String> hyperlinkPattern) {
+		this.container = container;
 		this.hyperlinkPattern = createHyperlinkPattern(hyperlinkPattern);
 	}
 
@@ -85,7 +87,7 @@ public class FileRefHyperlinkDetector implements IHyperlinkDetector {
 					matcher.end(1) - matcher.start(1));
 
 			IPath path = new Path(matcher.group(1));
-			IFile file = project.getFile(path);
+			IFile file = container.getFile(path);
 			if (file != null && file.exists()) {
 				hyperlinks.add(new EditFileHyperlink(file, regionToMatch));
 			}

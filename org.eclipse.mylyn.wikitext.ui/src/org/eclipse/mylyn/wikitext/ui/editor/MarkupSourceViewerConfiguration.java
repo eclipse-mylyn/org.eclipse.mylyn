@@ -153,7 +153,7 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 					.getHyperlinkDectectorFileRefRegexes();
 			List<String> fileRefHyperlinkRegexes = hyperlinkDectectorFileRefRegexes
 					.getOrDefault(markupLanguage.getName(), ImmutableList.of());
-			fileRefHyperlinkDetector = new FileRefHyperlinkDetector(file.getProject(), fileRefHyperlinkRegexes);
+			fileRefHyperlinkDetector = new FileRefHyperlinkDetector(file.getParent(), fileRefHyperlinkRegexes);
 		}
 		detectors.add(markupHyperlinkDetector);
 		detectors.add(fileRefHyperlinkDetector);

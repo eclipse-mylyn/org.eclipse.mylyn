@@ -21,7 +21,9 @@ import static org.mockito.Mockito.when;
 import java.io.ByteArrayInputStream;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.Document;
@@ -80,7 +82,8 @@ public class FileRefHyperlinkDetectorTest extends AbstractTestInWorkspace {
 				new NullProgressMonitor());
 
 		ImmutableList<String> fileRefPatterns = ImmutableList.of("include::(.+)\\[\\]", "image::(.+)\\[\\]");
-		FileRefHyperlinkDetector fileRefHyperlinkDetector = new FileRefHyperlinkDetector(project, fileRefPatterns);
+		FileRefHyperlinkDetector fileRefHyperlinkDetector = new FileRefHyperlinkDetector(file.getParent(),
+				fileRefPatterns);
 
 		ITextViewer mockTextViewer = mock(ITextViewer.class);
 		when(mockTextViewer.getDocument()).thenReturn(new Document("include::" + asciidocFileName + "[]"));
@@ -104,6 +107,55 @@ public class FileRefHyperlinkDetectorTest extends AbstractTestInWorkspace {
 			IFile editorFile = ((IFileEditorInput) editorInput).getFile();
 
 			assertThat(file, equalTo(editorFile));
+		}
+	}
+
+	public void testDeeperNestedFolderStructure() throws CoreException {
+		IFolder folder = project.getFolder("AsciiDoctor Tutorial");
+		if (!folder.exists()) {
+			folder.create(IResource.NONE, true, new NullProgressMonitor());
+		}
+		IFolder nestedResourcesFolder = folder.getFolder("resources");
+		if (!nestedResourcesFolder.exists()) {
+			nestedResourcesFolder.create(IResource.NONE, true, new NullProgressMonitor());
+		}
+		IFile fileInNestedFolder = nestedResourcesFolder.getFile("nested-document.adoc");
+		if (!fileInNestedFolder.exists()) {
+			fileInNestedFolder.create(new ByteArrayInputStream("include::../../article.adoc[]".getBytes()), true,
+					new NullProgressMonitor());
+		}
+
+		IFile articleFile = project.getFile("article.adoc");
+		if (!articleFile.exists()) {
+			articleFile.create(new ByteArrayInputStream("== Overview".getBytes()), true, new NullProgressMonitor());
+		}
+
+		ImmutableList<String> fileRefPatterns = ImmutableList.of("include::(.+)\\[\\]", "image::(.+)\\[\\]");
+		FileRefHyperlinkDetector fileRefHyperlinkDetector = new FileRefHyperlinkDetector(fileInNestedFolder.getParent(),
+				fileRefPatterns);
+
+		ITextViewer mockTextViewer = mock(ITextViewer.class);
+		when(mockTextViewer.getDocument()).thenReturn(new Document("include::../../article.adoc[]"));
+
+		IHyperlink[] detectHyperlinks = fileRefHyperlinkDetector.detectHyperlinks(mockTextViewer, new Region(9, 17),
+				false);
+
+		assertThat(detectHyperlinks.length, is(1));
+
+		IHyperlink hyperlink = detectHyperlinks[0];
+
+		hyperlink.open();
+
+		IEditorPart activeEditor = PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow()
+				.getActivePage()
+				.getActiveEditor();
+
+		IEditorInput editorInput = activeEditor.getEditorInput();
+		if (editorInput instanceof IFileEditorInput) {
+			IFile editorFile = ((IFileEditorInput) editorInput).getFile();
+
+			assertThat(articleFile, equalTo(editorFile));
 		}
 	}
 
