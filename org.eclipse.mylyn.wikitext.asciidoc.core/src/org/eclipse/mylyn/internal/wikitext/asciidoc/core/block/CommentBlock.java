@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 public class CommentBlock extends AsciiDocBlock {
 
 	public CommentBlock() {
-		super(Pattern.compile("^/////*")); //$NON-NLS-1$
+		super(Pattern.compile("^/////*\\s*")); //$NON-NLS-1$
 	}
 
 	@Override

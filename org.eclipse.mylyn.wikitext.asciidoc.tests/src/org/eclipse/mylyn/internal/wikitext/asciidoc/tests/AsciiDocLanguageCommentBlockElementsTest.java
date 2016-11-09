@@ -32,6 +32,15 @@ public class AsciiDocLanguageCommentBlockElementsTest extends AsciiDocLanguageTe
 	}
 
 	@Test
+	public void blockCommentWithWhiteSpace() {
+		String html = parseToHtml("//// \n" //
+				+ "ignore this\n" //
+				+ "ignore that\n" //
+				+ "////");
+		assertEquals("", html);
+	}
+
+	@Test
 	public void blockCommentWithContent() {
 		String html = parseToHtml("This is\n" //
 				+ "////\n" //
