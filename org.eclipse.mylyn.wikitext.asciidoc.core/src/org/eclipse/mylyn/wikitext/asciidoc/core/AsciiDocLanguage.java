@@ -14,10 +14,12 @@
 
 package org.eclipse.mylyn.wikitext.asciidoc.core;
 
+import java.io.Writer;
 import java.util.List;
 
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.AsciiDocContentState;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.AsciiDocPreProcessor;
+import org.eclipse.mylyn.internal.wikitext.asciidoc.core.AsciiDocDocumentBuilder;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.CodeBlock;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.CommentBlock;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.HeadingBlock;
@@ -42,6 +44,7 @@ import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.PreserverHtmlEnti
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.XrefMacroReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.XrefReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.util.ReadAheadDispatcher;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
@@ -156,6 +159,11 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 		UnderlinedHeadingBlock headingBlock = new UnderlinedHeadingBlock();
 		ReadAheadDispatcher readAheadBlock = new ReadAheadDispatcher(headingBlock, paragraphBlock);
 		return readAheadBlock;
+	}
+
+	@Override
+	public DocumentBuilder createDocumentBuilder(Writer out, boolean formatting) {
+		return new AsciiDocDocumentBuilder(out);
 	}
 
 }

@@ -174,7 +174,7 @@ Lightweight markup (wikitext) is designed to be readily converted to HTML.  Wiki
 * "OASIS DITA":http://dita.xml.org
 * Eclipse help format (HTML and @toc.xml@)
 * "XSL-FO":http://en.wikipedia.org/wiki/XSL_Formatting_Objects
-* Other markup languages (e.g. Textile, Confluence)
+* Other markup languages (e.g. Textile, Confluence, Markdown, AsciiDoc)
 
 h2. Generation In Eclipse
 
@@ -188,7 +188,7 @@ More control over the conversion process can be achieved by using Ant build scri
 
 h3. Content Generation from Wiki Markup
 
-Mylyn WikiText can convert from one wiki markup language to another.  Currently supported output formats are Textile and Confluence.  Examples of conversions include MediaWiki to Textile, Confluence to Textile, MediaWiki to Confluence, etc.
+Mylyn WikiText can convert from one wiki markup language to another.  Currently supported output formats are Textile, Confluence, Markdown, AsciiDoc.  Examples of conversions include MediaWiki to Textile, Confluence to Textile, MediaWiki to Confluence, etc.
 
 Wiki markup conversion is performed in Eclipse, see "Conversion In Eclipse":#GenerationInEclipse for more details.
 
