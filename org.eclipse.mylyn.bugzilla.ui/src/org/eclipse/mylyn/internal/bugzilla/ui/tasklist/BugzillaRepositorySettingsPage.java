@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
-import java.text.MessageFormat;
 import java.util.List;
 
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -78,13 +77,9 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	private static final String LABEL_SHORT_LOGINS = Messages.BugzillaRepositorySettingsPage_local_users_enabled;
 
-	private static final String LABEL_VERSION_NUMBER = "3.0 - 4.0"; //$NON-NLS-1$
-
 	private static final String TITLE = Messages.BugzillaRepositorySettingsPage_bugzilla_repository_settings;
 
-	private static final String DESCRIPTION = MessageFormat.format(
-			Messages.BugzillaRepositorySettingsPage_supports_bugzilla_X, LABEL_VERSION_NUMBER)
-			+ Messages.BugzillaRepositorySettingsPage_example_do_not_include;
+	private static final String DESCRIPTION = Messages.BugzillaRepositorySettingsPage_example_do_not_include;
 
 	protected Button autodetectPlatformOS;
 
@@ -163,12 +158,14 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		shortLoginLabel.setText(LABEL_SHORT_LOGINS);
 		cleanQAContact = new Button(parent, SWT.CHECK | SWT.LEFT);
 		if (repository != null) {
-			boolean shortLogin = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN));
+			boolean shortLogin = Boolean
+					.parseBoolean(repository.getProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN));
 			cleanQAContact.setSelection(shortLogin);
 		}
 
 		if (null != repository) {
-			BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi.getRepositoryConnector(repository.getConnectorKind());
+			BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi
+					.getRepositoryConnector(repository.getConnectorKind());
 			repositoryConfiguration = connector.getRepositoryConfiguration(repository.getRepositoryUrl());
 			platform = repository.getProperty(IBugzillaConstants.BUGZILLA_DEF_PLATFORM);
 			os = repository.getProperty(IBugzillaConstants.BUGZILLA_DEF_OS);
@@ -198,13 +195,14 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 					try {
 						getWizard().getContainer().run(true, false, new IRunnableWithProgress() {
 
-							public void run(IProgressMonitor monitor) throws InvocationTargetException,
-									InterruptedException {
+							public void run(IProgressMonitor monitor)
+									throws InvocationTargetException, InterruptedException {
 								try {
 									monitor.beginTask(
 											Messages.BugzillaRepositorySettingsPage_Retrieving_repository_configuration,
 											IProgressMonitor.UNKNOWN);
-									BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi.getRepositoryConnector(repository.getConnectorKind());
+									BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi
+											.getRepositoryConnector(repository.getConnectorKind());
 									repositoryConfiguration = connector.getRepositoryConfiguration(repository, false,
 											monitor);
 									if (repositoryConfiguration != null) {
@@ -324,8 +322,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				final String[] fileName = new String[1];
 				try {
 					getWizard().getContainer().run(true, true, new IRunnableWithProgress() {
-						public void run(IProgressMonitor monitor) throws InvocationTargetException,
-						InterruptedException {
+						public void run(IProgressMonitor monitor)
+								throws InvocationTargetException, InterruptedException {
 							if (monitor == null) {
 								monitor = new NullProgressMonitor();
 							}
@@ -334,7 +332,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 							try {
 								BugzillaClient client = null;
 
-								BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi.getRepositoryConnector(repository.getConnectorKind());
+								BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi
+										.getRepositoryConnector(repository.getConnectorKind());
 								client = BugzillaClientFactory.createClient(repository, connector);
 								client.downloadXMLTransFile(transFile, monitor);
 								fileName[0] = transFile;
@@ -464,13 +463,16 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				}
 			} else {
 				// we use the repository values
-				boolean value = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USECLASSIFICATION));
+				boolean value = Boolean
+						.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USECLASSIFICATION));
 				useclassification.setSelection(!value);
-				value = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USETARGETMILESTONE));
+				value = Boolean
+						.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USETARGETMILESTONE));
 				usetargetmilestone.setSelection(!value);
 				value = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USEQACONTACT));
 				useqacontact.setSelection(!value);
-				value = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USESTATUSWHITEBOARD));
+				value = Boolean
+						.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USESTATUSWHITEBOARD));
 				usestatuswhiteboard.setSelection(!value);
 				value = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_PARAM_USEBUGALIASES));
 				usebugaliases.setSelection(!value);
@@ -538,11 +540,11 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			changed = changed || repositoryAuth.getUserName().compareTo(getUserName()) != 0;
 			changed = changed || repositoryAuth.getPassword().compareTo(getPassword()) != 0;
 		}
-		changed = changed
-				|| Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC)) != useXMLRPCstatusTransitions.getSelection();
-		changed = changed
-				|| !equals(repository.getProperty(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE),
-						descriptorFile.getText());
+		changed = changed || Boolean.parseBoolean(
+				repository.getProperty(IBugzillaConstants.BUGZILLA_USE_XMLRPC)) != useXMLRPCstatusTransitions
+						.getSelection();
+		changed = changed || !equals(repository.getProperty(IBugzillaConstants.BUGZILLA_DESCRIPTOR_FILE),
+				descriptorFile.getText());
 		if (httpAuth != null) {
 			changed = changed || httpAuth.getUserName().compareTo(getHttpAuthUserId()) != 0
 					|| httpAuth.getPassword().compareTo(getHttpAuthPassword()) != 0
@@ -625,7 +627,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 						IProgressMonitor.UNKNOWN);
 				BugzillaClient client = null;
 
-				BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi.getRepositoryConnector(repository.getConnectorKind());
+				BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi
+						.getRepositoryConnector(repository.getConnectorKind());
 				client = BugzillaClientFactory.createClient(repository, connector);
 				client.validate(monitor);
 			} finally {
@@ -691,7 +694,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				Boolean.toString(!usebugaliases.getSelection()));
 		repository.setProperty(IBugzillaConstants.BUGZILLA_PARAM_USE_SEE_ALSO,
 				Boolean.toString(!use_see_also.getSelection()));
-		repository.setProperty(IBugzillaConstants.BUGZILLA_INSIDER_GROUP, Boolean.toString(insidergroup.getSelection()));
+		repository.setProperty(IBugzillaConstants.BUGZILLA_INSIDER_GROUP,
+				Boolean.toString(insidergroup.getSelection()));
 	}
 
 	@Override

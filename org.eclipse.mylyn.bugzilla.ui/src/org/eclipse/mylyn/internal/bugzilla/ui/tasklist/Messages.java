@@ -95,8 +95,6 @@ public class Messages extends NLS {
 
 	public static String BugzillaRepositorySettingsPage_Server_URL_is_invalid;
 
-	public static String BugzillaRepositorySettingsPage_supports_bugzilla_X;
-
 	public static String BugzillaRepositorySettingsPage_suppressToolTip;
 
 	public static String BugzillaRepositorySettingsPage_use_see_also;
