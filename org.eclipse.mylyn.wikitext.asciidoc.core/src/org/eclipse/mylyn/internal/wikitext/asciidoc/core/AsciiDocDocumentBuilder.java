@@ -244,6 +244,13 @@ public class AsciiDocDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			return new ListItemBlock("* "); //$NON-NLS-1$
 		case CODE:
 			return new ContentBlock(type, "[listing]\n----\n", "\n----", 1, 2); //$NON-NLS-1$ //$NON-NLS-2$
+		case TABLE:
+			return new ContentBlock(type, "|===\n", "|===", 1, 1);//$NON-NLS-1$ //$NON-NLS-2$
+		case TABLE_ROW:
+			return new ContentBlock(type, "", "", 2, 1); //$NON-NLS-1$ //$NON-NLS-2$
+		case TABLE_CELL_HEADER:
+		case TABLE_CELL_NORMAL:
+			return new ContentBlock(type, "|", " ", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
 		default:
 			Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
 			return new ContentBlock(type, "", "", 2, 2); //$NON-NLS-1$ //$NON-NLS-2$

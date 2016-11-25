@@ -707,6 +707,38 @@ public class AsciiDocDocumentBuilderTest extends TestCase {
 		assertMarkup("text\n\n*bold* text\n\n");
 	}
 
+	public void testTable() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.TABLE, new Attributes());
+		builder.beginBlock(BlockType.TABLE_ROW, new Attributes());
+		builder.beginBlock(BlockType.TABLE_CELL_NORMAL, new Attributes());
+		builder.characters("cell 1");
+		builder.endBlock();
+		builder.beginBlock(BlockType.TABLE_CELL_NORMAL, new Attributes());
+		builder.characters("cell 2");
+		builder.endBlock();
+		builder.endBlock();
+		builder.beginBlock(BlockType.TABLE_ROW, new Attributes());
+		builder.beginBlock(BlockType.TABLE_CELL_NORMAL, new Attributes());
+		builder.characters("cell a");
+		builder.endBlock();
+		builder.beginBlock(BlockType.TABLE_CELL_NORMAL, new Attributes());
+		builder.characters("cell b");
+		builder.endBlock();
+		builder.endBlock();
+		builder.beginBlock(BlockType.TABLE_ROW, new Attributes());
+		builder.beginBlock(BlockType.TABLE_CELL_NORMAL, new Attributes());
+		builder.characters("cell A");
+		builder.endBlock();
+		builder.beginBlock(BlockType.TABLE_CELL_NORMAL, new Attributes());
+		builder.characters("cell B");
+		builder.endBlock();
+		builder.endBlock();
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("|===\n|cell 1 |cell 2 \n\n|cell a |cell b \n\n|cell A |cell B \n|===\n");
+	}
+
 	public void testEntityReference() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
