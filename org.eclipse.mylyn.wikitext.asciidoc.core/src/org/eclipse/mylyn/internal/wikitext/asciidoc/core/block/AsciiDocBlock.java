@@ -50,7 +50,7 @@ public abstract class AsciiDocBlock extends Block {
 			startDelimiter = line;
 			processBlockStart();
 			++blockLineCount;
-		} else if (line.equals(startDelimiter)) {
+		} else if (isClosingLine(line, offset)) {
 			setClosed(true);
 			return -1;
 		} else {
@@ -71,6 +71,19 @@ public abstract class AsciiDocBlock extends Block {
 
 	protected Pattern getStartPattern() {
 		return startPattern;
+	}
+
+	/**
+	 * Determines if the current line implicates that the current block should be closed.
+	 *
+	 * @param line
+	 *            the markup line to process
+	 * @param offset
+	 *            the offset at which to start processing
+	 * @return <code>true</code> if the block should be closed or <code>false</code> if the line belongs to the block.
+	 */
+	protected boolean isClosingLine(String line, int offset) {
+		return line.startsWith(startDelimiter.trim());
 	}
 
 	@Override

@@ -39,4 +39,20 @@ public class AsciiDocLanguagePreformattedBlockTest extends AsciiDocLanguageTestB
 				+ "20 GOTO 10<br/>" //
 				+ "</pre>", html);
 	}
+
+	@Test
+	public void testMultiLinePreformattedBlockAndContent() {
+		String html = parseToHtml("" //
+				+ "\tpublic static void main(String[] args) {\n" //
+				+ "\t\tSystem.out.println(\"Hello World!\");\n" //
+				+ "\t}\n" //
+				+ "\n" //
+				+ "Some Text");
+		assertEquals("<pre>" //
+				+ "public static void main(String[] args) {<br/>" //
+				+ "\tSystem.out.println(\"Hello World!\");<br/>" //
+				+ "}<br/>" //
+				+ "</pre>" //
+				+ "<p>Some Text</p>\n", html);
+	}
 }

@@ -28,7 +28,7 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 public class CodeBlock extends AsciiDocBlock {
 
 	public CodeBlock() {
-		super(Pattern.compile("^----.*")); //$NON-NLS-1$
+		super(Pattern.compile("^----.*\\s*")); //$NON-NLS-1$
 	}
 
 	String title;

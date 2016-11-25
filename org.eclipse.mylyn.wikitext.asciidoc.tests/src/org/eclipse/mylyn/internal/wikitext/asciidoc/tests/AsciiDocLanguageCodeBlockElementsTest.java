@@ -40,6 +40,40 @@ public class AsciiDocLanguageCodeBlockElementsTest extends AsciiDocLanguageTestB
 	}
 
 	@Test
+	public void basicCodeBlockWithSpaceAtBegin() {
+		String html = parseToHtml("---- \n" //
+				+ "10 PRINT \"Hello World!\"\n" //
+				+ "20 GOTO 10\n" //
+				+ "----");
+		assertEquals("<div class=\"listingblock\">" //
+				+ "<div class=\"content\">" //
+				+ "<pre class=\"nowrap\">" //
+				+ "<code class=\"nowrap\">" //
+				+ "10 PRINT \"Hello World!\"<br/>" //
+				+ "20 GOTO 10<br/>" //
+				+ "</code>" //
+				+ "</pre>" //
+				+ "</div></div>", html);
+	}
+
+	@Test
+	public void basicCodeBlockWithSpacesAtEnd() {
+		String html = parseToHtml("----\n" //
+				+ "10 PRINT \"Hello World!\"\n" //
+				+ "20 GOTO 10\n" //
+				+ "----    ");
+		assertEquals("<div class=\"listingblock\">" //
+				+ "<div class=\"content\">" //
+				+ "<pre class=\"nowrap\">" //
+				+ "<code class=\"nowrap\">" //
+				+ "10 PRINT \"Hello World!\"<br/>" //
+				+ "20 GOTO 10<br/>" //
+				+ "</code>" //
+				+ "</pre>" //
+				+ "</div></div>", html);
+	}
+
+	@Test
 	public void titledCodeBlock() {
 		String html = parseToHtml(".Helloworld.bas\n" //
 				+ "----\n" //
