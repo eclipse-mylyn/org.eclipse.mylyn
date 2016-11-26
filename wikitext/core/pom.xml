@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+      <groupId>org.eclipse.mylyn.docs</groupId>
+      <artifactId>wikitext</artifactId>
+      <version>3.0.0-SNAPSHOT</version>
+      <relativePath>..</relativePath>
+    </parent>
+
+    <artifactId>wikitext.core</artifactId>
+    <name>Mylyn Docs: WikiText: Core</name>
+    <version>3.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>org.eclipse.mylyn.wikitext.core</module>
+        <module>org.eclipse.mylyn.wikitext.textile.core</module>
+        <module>org.eclipse.mylyn.wikitext.html.core</module>
+        <module>org.eclipse.mylyn.wikitext.core.ant</module>
+        <module>org.eclipse.mylyn.wikitext.core.maven</module>
+        <module>repository</module>
+    </modules>
+</project>
