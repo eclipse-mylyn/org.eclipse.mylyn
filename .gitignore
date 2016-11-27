@@ -1,5 +1,4 @@
-/org.eclipse*/bin
-/org.eclipse*/target
+bin
 target
 .DS_Store
 *.rej
