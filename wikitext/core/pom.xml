@@ -11,15 +11,26 @@
 
     <artifactId>wikitext.core</artifactId>
     <name>Mylyn Docs: WikiText: Core</name>
-    <version>3.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
         <module>org.eclipse.mylyn.wikitext.core</module>
+        <module>org.eclipse.mylyn.wikitext.core.toolkit</module>
         <module>org.eclipse.mylyn.wikitext.textile.core</module>
         <module>org.eclipse.mylyn.wikitext.html.core</module>
         <module>org.eclipse.mylyn.wikitext.core.ant</module>
         <module>org.eclipse.mylyn.wikitext.core.maven</module>
+
+        <module>org.eclipse.mylyn.wikitext.asciidoc.core</module>
+        <module>org.eclipse.mylyn.wikitext.commonmark</module>
+        <module>org.eclipse.mylyn.wikitext.confluence.core</module>
+        <module>org.eclipse.mylyn.wikitext.creole.core</module>
+        <module>org.eclipse.mylyn.wikitext.markdown.core</module>
+        <module>org.eclipse.mylyn.wikitext.mediawiki.core</module>
+        <module>org.eclipse.mylyn.wikitext.mediawiki.core.ant</module>
+        <module>org.eclipse.mylyn.wikitext.tracwiki.core</module>
+        <module>org.eclipse.mylyn.wikitext.twiki.core</module>
+
         <module>repository</module>
     </modules>
 </project>
