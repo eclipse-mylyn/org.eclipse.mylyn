@@ -33,7 +33,6 @@ import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 import org.eclipse.mylyn.wikitext.tests.NoDiscovery;
-import org.eclipse.mylyn.wikitext.tests.TestUtil;
 import org.osgi.framework.Bundle;
 
 import junit.framework.Test;
@@ -42,7 +41,7 @@ import junit.framework.TestSuite;
 
 /**
  * a test suite that discovers tests on the filesystem. See /org.eclipse.mylyn.wikitext.tests/markupLanguageTests
- * 
+ *
  * @author David Green
  */
 public class MarkupFilesTest extends TestSuite {
@@ -69,8 +68,8 @@ public class MarkupFilesTest extends TestSuite {
 		private void discoverLanguageTests(MarkupLanguage markupLanguage, Bundle bundle, String bundlePath) {
 			final String markupFileExtension = '.' + markupLanguage.getName().toLowerCase();
 
-			Logger.getLogger(MarkupFilesTest.class.getName()).info(
-					String.format("Looking for %s tests in bundle %s using path %s", markupLanguage.getName(),
+			Logger.getLogger(MarkupFilesTest.class.getName())
+					.info(String.format("Looking for %s tests in bundle %s using path %s", markupLanguage.getName(),
 							bundle.getSymbolicName(), bundlePath));
 
 			Enumeration<URL> entries = bundle.findEntries(bundlePath, null, false);
@@ -91,8 +90,8 @@ public class MarkupFilesTest extends TestSuite {
 
 					URL expectedOutcome = bundle.getEntry(expectedOutcomePath);
 					if (expectedOutcome == null) {
-						Logger.getLogger(MarkupFilesTest.class.getName()).severe(
-								"Cannot find file: " + name + " for test input: " + testElement);
+						Logger.getLogger(MarkupFilesTest.class.getName())
+								.severe("Cannot find file: " + name + " for test input: " + testElement);
 					} else {
 						addTest(new PlatformMarkupFileCase(markupLanguage, name, testElement, expectedOutcome));
 					}
@@ -101,8 +100,8 @@ public class MarkupFilesTest extends TestSuite {
 				}
 			}
 
-			Logger.getLogger(MarkupFilesTest.class.getName()).info(
-					String.format("Found %s %s tests", countTestCases(), markupLanguage.getName()));
+			Logger.getLogger(MarkupFilesTest.class.getName())
+					.info(String.format("Found %s %s tests", countTestCases(), markupLanguage.getName()));
 		}
 
 		private void discoverLanguageTests(MarkupLanguage markupLanguage, File languageDir) {
@@ -141,10 +140,6 @@ public class MarkupFilesTest extends TestSuite {
 			MarkupParser parser = new MarkupParser(markupLanguage);
 
 			String html = parser.parseToHtml(markupContent);
-
-			TestUtil.println("**************\nTesting - " + getName());
-			TestUtil.println("Generated:\n" + html);
-			TestUtil.println("Expecting:\n" + expectedContent);
 
 			assertTrue(html.contains(expectedContent));
 		}
@@ -213,7 +208,8 @@ public class MarkupFilesTest extends TestSuite {
 
 		private final URL expectedOutcome;
 
-		public PlatformMarkupFileCase(MarkupLanguage markupLanguage, String name, URL testElement, URL expectedOutcome) {
+		public PlatformMarkupFileCase(MarkupLanguage markupLanguage, String name, URL testElement,
+				URL expectedOutcome) {
 			super(markupLanguage);
 			this.testElement = testElement;
 			this.expectedOutcome = expectedOutcome;

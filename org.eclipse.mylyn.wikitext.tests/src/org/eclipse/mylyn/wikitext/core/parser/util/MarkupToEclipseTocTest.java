@@ -41,7 +41,7 @@ public class MarkupToEclipseTocTest extends TestCase {
 		markupToEclipseToc.setHtmlFile("Test.html");
 		String toc = markupToEclipseToc.parse("h1. title1\n\nContent para 1\n\nh1. title2\n\nMore content\n\nh2. Nested title\n\nnested content");
 
-		TestUtil.println("Eclipse TOC: " + toc);
+		
 
 		assertEqualsResource("basic.xml", toc);
 	}
@@ -50,7 +50,7 @@ public class MarkupToEclipseTocTest extends TestCase {
 		markupToEclipseToc.setCopyrightNotice("Copyright (c) 2012 David Green");
 		String toc = markupToEclipseToc.parse("h1. title");
 
-		TestUtil.println("TOC: " + toc);
+		
 
 		assertTrue("content: " + toc, toc.contains("<!-- Copyright (c) 2012 David Green -->"));
 	}
@@ -65,7 +65,7 @@ public class MarkupToEclipseTocTest extends TestCase {
 		markupToEclipseToc.setAnchorLevel(0);
 		String toc = markupToEclipseToc.parse("h1. Top");
 
-		TestUtil.println("TOC: " + toc);
+		
 
 		assertEqualsResource("testEmitAnchorsLevel0.xml", toc);
 	}
@@ -76,7 +76,7 @@ public class MarkupToEclipseTocTest extends TestCase {
 		markupToEclipseToc.setAnchorLevel(1);
 		String toc = markupToEclipseToc.parse("h1. First\n\nh2. Second\n\nh1. Third");
 
-		TestUtil.println("TOC: " + toc);
+		
 
 		assertEqualsResource("testEmitAnchorsLevel1.xml", toc);
 	}

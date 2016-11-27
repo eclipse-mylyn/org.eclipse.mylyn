@@ -31,6 +31,10 @@
                                     <transitive>false</transitive>
                                 </artifact>
                                 <artifact>
+                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.core.toolkit:3.0.0-SNAPSHOT</id>
+                                    <transitive>false</transitive>
+                                </artifact>
+                                <artifact>
                                     <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.html.core:3.0.0-SNAPSHOT</id>
                                     <transitive>false</transitive>
                                 </artifact>

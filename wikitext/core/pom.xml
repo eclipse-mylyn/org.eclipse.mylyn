@@ -16,6 +16,7 @@
     <modules>
         <module>org.eclipse.mylyn.wikitext.core</module>
         <module>org.eclipse.mylyn.wikitext.core.toolkit</module>
+        <module>org.eclipse.mylyn.wikitext.core.tests</module>
         <module>org.eclipse.mylyn.wikitext.textile.core</module>
         <module>org.eclipse.mylyn.wikitext.html.core</module>
         <module>org.eclipse.mylyn.wikitext.core.ant</module>

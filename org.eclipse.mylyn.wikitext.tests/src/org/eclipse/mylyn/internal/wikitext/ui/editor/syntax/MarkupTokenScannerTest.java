@@ -54,7 +54,7 @@ public class MarkupTokenScannerTest extends AbstractDocumentTest {
 
 		List<MarkupTokenScanner.Token> tokens = new ArrayList<MarkupTokenScanner.Token>();
 		for (IToken token = tokenScanner.nextToken(); token != Token.EOF; token = tokenScanner.nextToken()) {
-			TestUtil.println(token);
+			
 			tokens.add((MarkupTokenScanner.Token) token);
 		}
 

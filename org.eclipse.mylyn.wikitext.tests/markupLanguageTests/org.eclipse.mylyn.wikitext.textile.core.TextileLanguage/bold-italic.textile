@@ -1,1 +1,0 @@
-some *bold __italic__ more bold* nothing

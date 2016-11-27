@@ -12,22 +12,22 @@
 package org.eclipse.mylyn.wikitext.textile.core;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 
 import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.Util;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.tests.EclipseRuntimeRequired;
-import org.eclipse.mylyn.wikitext.tests.TestUtil;
+
+import com.google.common.io.Resources;
 
 import junit.framework.TestCase;
 
 /**
  * tests for Textile that involve the tasks plug-in and dependencies on the Eclipse runtime.
- * 
+ *
  * @author David Green
  */
 @EclipseRuntimeRequired
@@ -58,20 +58,9 @@ public class TextileLanguageTasksTest extends TestCase {
 		StringWriter out = new StringWriter();
 		parser.setBuilder(new HtmlDocumentBuilder(out));
 
-		Reader reader = new InputStreamReader(
-				TextileLanguageTest.class.getResourceAsStream("resources/subversive-bug-report.txt"), "utf-8");
-		try {
-			long time = System.currentTimeMillis();
-			parser.parse(reader);
-			long endTime = System.currentTimeMillis();
-			TestUtil.println(String.format("Took %s millis", endTime - time));
-		} catch (Throwable t) {
-			t.printStackTrace();
-		} finally {
-			reader.close();
-		}
-//		String html = out.toString();
-
-//		TestUtil.println(html);
+		String content = Resources.toString(
+				TextileLanguageTasksTest.class.getResource("resources/subversive-bug-report.txt"),
+				StandardCharsets.UTF_8);
+		parser.parse(content);
 	}
 }

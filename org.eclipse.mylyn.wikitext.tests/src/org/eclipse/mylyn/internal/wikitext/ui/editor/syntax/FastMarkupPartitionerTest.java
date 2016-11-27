@@ -38,8 +38,8 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 		long nanosEnd = System.nanoTime();
 		long millisEnd = System.currentTimeMillis();
 
-		TestUtil.println("Elapsed Time in Nanos: " + (nanosEnd - nanos));
-		TestUtil.println("Elapsed Time in Millis: " + (millisEnd - millis));
+		
+		
 
 //		assertTrue((nanosEnd - nanos) < 800000000L); removed assert due to bug 261236
 	}
@@ -160,7 +160,7 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 
 		ITypedRegion[] partitioning = partitioner.computePartitioning(0, document.getLength(), false);
 		for (ITypedRegion region : partitioning) {
-			TestUtil.println(region);
+			
 		}
 	}
 
