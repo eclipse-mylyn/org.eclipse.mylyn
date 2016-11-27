@@ -3,12 +3,12 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>org.eclipse.mylyn.docs-parent</artifactId>
+    <artifactId>wikitext.ui</artifactId>
     <groupId>org.eclipse.mylyn.docs</groupId>
-    <version>2.11.0-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
   </parent>
   <artifactId>org.eclipse.mylyn.wikitext.help.ui</artifactId>
-  <version>2.11.0-SNAPSHOT</version>
+  <version>3.0.0-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
   <build>
     <plugins>
@@ -24,7 +24,13 @@
               
                 <!-- Generate help docs -->
 
-                <taskdef resource="org/eclipse/mylyn/wikitext/core/ant/tasks.properties" />
+                <taskdef resource="org/eclipse/mylyn/wikitext/core/ant/tasks.properties">
+					<classpath id="wikitext-core-classpath">
+						<fileset dir="../../core/org.eclipse.mylyn.wikitext.core.ant/target"><include name="*.jar"/></fileset>
+						<fileset dir="../../core/org.eclipse.mylyn.wikitext.core/target"><include name="*.jar"/></fileset>
+						<fileset dir="../../core/org.eclipse.mylyn.wikitext.textile.core/target"><include name="*.jar"/></fileset>
+					</classpath>
+                </taskdef>
 
                 <wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.textile.core.TextileLanguage" 
                                           multipleOutputFiles="true"
@@ -78,26 +84,11 @@
         </execution>
       </executions>
       <dependencies>
-        <dependency>
-          <groupId>org.eclipse.mylyn.docs</groupId>
-          <artifactId>org.eclipse.mylyn.wikitext.core</artifactId>
-          <version>2.11.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-          <groupId>org.eclipse.mylyn.docs</groupId>
-          <artifactId>org.eclipse.mylyn.wikitext.core.ant</artifactId>
-          <version>2.11.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-          <groupId>org.eclipse.mylyn.docs</groupId>
-          <artifactId>org.eclipse.mylyn.wikitext.textile.core</artifactId>
-          <version>2.11.0-SNAPSHOT</version>
-        </dependency>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>15.0</version>
-		</dependency>
+	    <dependency>
+	        <groupId>com.google.guava</groupId>
+	        <artifactId>guava</artifactId>
+	        <version>15.0</version>
+	    </dependency>
       </dependencies>
     </plugin>
     <plugin>

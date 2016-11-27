@@ -8,7 +8,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.internal.wikitext.core.parser.builder;
+package org.eclipse.mylyn.wikitext.core.splitter;
 
 import static com.google.common.base.Preconditions.checkState;
 

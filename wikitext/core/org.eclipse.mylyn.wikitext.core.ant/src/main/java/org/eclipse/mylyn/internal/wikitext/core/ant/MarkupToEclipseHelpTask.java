@@ -17,9 +17,9 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 
 import org.apache.tools.ant.BuildException;
-import org.eclipse.mylyn.internal.wikitext.core.parser.builder.SplitOutlineItem;
-import org.eclipse.mylyn.internal.wikitext.core.parser.builder.SplittingMarkupToEclipseToc;
 import org.eclipse.mylyn.wikitext.core.parser.util.MarkupToEclipseToc;
+import org.eclipse.mylyn.wikitext.core.splitter.SplitOutlineItem;
+import org.eclipse.mylyn.wikitext.core.splitter.SplittingMarkupToEclipseToc;
 
 /**
  * An Ant task for converting lightweight markup such as Textile to eclipse help format.

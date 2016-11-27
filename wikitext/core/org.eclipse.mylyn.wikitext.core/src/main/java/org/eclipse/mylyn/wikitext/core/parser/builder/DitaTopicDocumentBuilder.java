@@ -9,7 +9,7 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.core.parser.builder;
+package org.eclipse.mylyn.wikitext.core.parser.builder;
 
 import java.io.Writer;
 import java.util.HashSet;
@@ -20,9 +20,6 @@ import java.util.logging.Logger;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
-import org.eclipse.mylyn.wikitext.core.parser.builder.AbstractXmlDocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.builder.DitaBookMapDocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.builder.DocBookDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.core.util.FormattingXMLStreamWriter;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;

@@ -8,7 +8,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.internal.wikitext.core.parser.builder;
+package org.eclipse.mylyn.wikitext.core.splitter;
 
 /**
  * a splitting strategy that causes no splits.

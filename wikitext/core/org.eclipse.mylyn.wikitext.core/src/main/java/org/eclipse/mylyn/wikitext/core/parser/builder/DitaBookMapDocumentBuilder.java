@@ -20,7 +20,6 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Stack;
 
-import org.eclipse.mylyn.internal.wikitext.core.parser.builder.DitaTopicDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.core.util.DefaultXmlStreamWriter;

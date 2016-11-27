@@ -241,12 +241,16 @@ public class ServiceLocator {
 						}
 					}
 				} catch (Exception e) {
-					// very unusual, but inform the user in a stand-alone way
-					Logger.getLogger(ServiceLocator.class.getName()).log(Level.WARNING,
-							MessageFormat.format(Messages.getString("ServiceLocator.0"), className), e); //$NON-NLS-1$
+					logFailure(className, e);
 				}
 			}
 		}
+	}
+
+	void logFailure(String className, Exception e) {
+		// very unusual, but inform the user in a stand-alone way
+		Logger.getLogger(ServiceLocator.class.getName()).log(Level.WARNING,
+				MessageFormat.format(Messages.getString("ServiceLocator.0"), className), e); //$NON-NLS-1$
 	}
 
 	/**

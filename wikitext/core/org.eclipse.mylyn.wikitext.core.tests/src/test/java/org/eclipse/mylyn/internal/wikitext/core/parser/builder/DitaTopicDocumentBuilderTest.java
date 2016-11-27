@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.builder.DitaTopicDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.util.DefaultXmlStreamWriter;

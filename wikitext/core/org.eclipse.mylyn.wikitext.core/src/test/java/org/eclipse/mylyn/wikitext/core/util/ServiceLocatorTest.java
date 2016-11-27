@@ -116,6 +116,10 @@ public class ServiceLocatorTest {
 			protected List<String> readServiceClassNames(URL url) {
 				return Collections.singletonList("test.TestLanguage");
 			}
+
+			@Override
+			void logFailure(String className, Exception e) {
+			}
 		};
 		Set<MarkupLanguage> languages = locator.getAllMarkupLanguages();
 		assertTrue(wasThrown.get());
@@ -132,21 +136,22 @@ public class ServiceLocatorTest {
 	protected void setupServiceLocatorWithMockMarkupLanguage(boolean metaInf) {
 		try {
 			ClassLoader classLoader = mock(ClassLoader.class);
-			Collection<URL> resources = Collections.singletonList(new URL("file:" + MockMarkupLanguage.class.getName()));
+			Collection<URL> resources = Collections
+					.singletonList(new URL("file:" + MockMarkupLanguage.class.getName()));
 
 			Enumeration<Object> empty = Collections.enumeration(Collections.emptyList());
 			doReturn(empty).when(classLoader).getResources(any(String.class));
-			doReturn(metaInf ? Collections.enumeration(resources) : empty).when(classLoader).getResources(
-					eq("META-INF/services/" + MarkupLanguage.class.getName()));
-			doReturn(!metaInf ? Collections.enumeration(resources) : empty).when(classLoader).getResources(
-					eq("services/" + MarkupLanguage.class.getName()));
+			doReturn(metaInf ? Collections.enumeration(resources) : empty).when(classLoader)
+					.getResources(eq("META-INF/services/" + MarkupLanguage.class.getName()));
+			doReturn(!metaInf ? Collections.enumeration(resources) : empty).when(classLoader)
+					.getResources(eq("services/" + MarkupLanguage.class.getName()));
 			doReturn(MockMarkupLanguage.class).when(classLoader).loadClass(MockMarkupLanguage.class.getName());
 
 			locator = new ServiceLocator(classLoader) {
 				@Override
 				protected List<String> readServiceClassNames(URL url) {
-					return super.readServiceClassNames(new ByteArrayInputStream(MockMarkupLanguage.class.getName()
-							.getBytes(Charsets.UTF_8)));
+					return super.readServiceClassNames(
+							new ByteArrayInputStream(MockMarkupLanguage.class.getName().getBytes(Charsets.UTF_8)));
 				}
 			};
 		} catch (Exception e) {
@@ -157,17 +162,17 @@ public class ServiceLocatorTest {
 	protected void setupServiceLocatorWithMockMarkupLanguageProvider(boolean metaInf) {
 		try {
 			ClassLoader classLoader = mock(ClassLoader.class);
-			Collection<URL> resources = Collections.singletonList(new URL("file:"
-					+ MockMarkupLanguageProvider.class.getName()));
+			Collection<URL> resources = Collections
+					.singletonList(new URL("file:" + MockMarkupLanguageProvider.class.getName()));
 
 			Enumeration<Object> empty = Collections.enumeration(Collections.emptyList());
 			doReturn(empty).when(classLoader).getResources(any(String.class));
-			doReturn(metaInf ? Collections.enumeration(resources) : empty).when(classLoader).getResources(
-					eq("META-INF/services/" + MarkupLanguageProvider.class.getName()));
-			doReturn(!metaInf ? Collections.enumeration(resources) : empty).when(classLoader).getResources(
-					eq("services/" + MarkupLanguageProvider.class.getName()));
-			doReturn(MockMarkupLanguageProvider.class).when(classLoader).loadClass(
-					MockMarkupLanguageProvider.class.getName());
+			doReturn(metaInf ? Collections.enumeration(resources) : empty).when(classLoader)
+					.getResources(eq("META-INF/services/" + MarkupLanguageProvider.class.getName()));
+			doReturn(!metaInf ? Collections.enumeration(resources) : empty).when(classLoader)
+					.getResources(eq("services/" + MarkupLanguageProvider.class.getName()));
+			doReturn(MockMarkupLanguageProvider.class).when(classLoader)
+					.loadClass(MockMarkupLanguageProvider.class.getName());
 			locator = new ServiceLocator(classLoader) {
 				@Override
 				protected List<String> readServiceClassNames(URL url) {
@@ -205,7 +210,8 @@ public class ServiceLocatorTest {
 	public void getMarkupLanguageUnknown() {
 		setupServiceLocatorWithMockMarkupLanguage(true);
 		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("Cannot load markup language 'UnknownLanguage'. Known markup languages are 'MockMarkupLanguage'");
+		thrown.expectMessage(
+				"Cannot load markup language 'UnknownLanguage'. Known markup languages are 'MockMarkupLanguage'");
 		locator.getMarkupLanguage("UnknownLanguage");
 	}
 
@@ -225,8 +231,8 @@ public class ServiceLocatorTest {
 
 	@Test
 	public void readServicesFile() {
-		List<String> names = locator.readServiceClassNames(createInput(Object.class.getName() + "\n"
-				+ String.class.getName() + " # trailing comment"));
+		List<String> names = locator.readServiceClassNames(
+				createInput(Object.class.getName() + "\n" + String.class.getName() + " # trailing comment"));
 		assertNotNull(names);
 		assertEquals(2, names.size());
 		assertEquals(Object.class.getName(), names.get(0));

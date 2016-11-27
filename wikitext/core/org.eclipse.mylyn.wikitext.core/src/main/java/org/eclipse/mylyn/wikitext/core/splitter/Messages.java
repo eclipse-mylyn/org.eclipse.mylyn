@@ -9,13 +9,13 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.core.parser.builder;
+package org.eclipse.mylyn.wikitext.core.splitter;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 class Messages {
-	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.wikitext.core.parser.builder.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.mylyn.wikitext.core.splitter.messages"; //$NON-NLS-1$
 
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 

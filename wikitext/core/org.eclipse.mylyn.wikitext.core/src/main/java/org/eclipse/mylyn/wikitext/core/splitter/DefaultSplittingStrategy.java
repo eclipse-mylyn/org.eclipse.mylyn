@@ -8,7 +8,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.internal.wikitext.core.parser.builder;
+package org.eclipse.mylyn.wikitext.core.splitter;
 
 import java.text.Normalizer;
 import java.util.HashSet;

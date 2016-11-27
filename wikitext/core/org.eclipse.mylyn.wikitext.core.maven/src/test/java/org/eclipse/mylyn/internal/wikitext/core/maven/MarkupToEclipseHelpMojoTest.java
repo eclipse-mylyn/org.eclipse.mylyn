@@ -33,11 +33,11 @@ import java.util.UUID;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.eclipse.mylyn.internal.wikitext.core.parser.builder.SplitOutlineItem;
-import org.eclipse.mylyn.internal.wikitext.core.parser.builder.SplittingHtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder.Stylesheet;
 import org.eclipse.mylyn.wikitext.core.parser.util.MarkupToEclipseToc;
+import org.eclipse.mylyn.wikitext.core.splitter.SplitOutlineItem;
+import org.eclipse.mylyn.wikitext.core.splitter.SplittingHtmlDocumentBuilder;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

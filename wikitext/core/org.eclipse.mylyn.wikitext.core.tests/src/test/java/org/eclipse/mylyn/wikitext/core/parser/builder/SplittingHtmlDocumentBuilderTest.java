@@ -22,11 +22,11 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 
-import org.eclipse.mylyn.internal.wikitext.core.parser.builder.DefaultSplittingStrategy;
-import org.eclipse.mylyn.internal.wikitext.core.parser.builder.SplitOutlineItem;
-import org.eclipse.mylyn.internal.wikitext.core.parser.builder.SplittingHtmlDocumentBuilder;
-import org.eclipse.mylyn.internal.wikitext.core.parser.builder.SplittingOutlineParser;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.splitter.DefaultSplittingStrategy;
+import org.eclipse.mylyn.wikitext.core.splitter.SplitOutlineItem;
+import org.eclipse.mylyn.wikitext.core.splitter.SplittingHtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.splitter.SplittingOutlineParser;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 import org.junit.Before;
 import org.junit.Rule;

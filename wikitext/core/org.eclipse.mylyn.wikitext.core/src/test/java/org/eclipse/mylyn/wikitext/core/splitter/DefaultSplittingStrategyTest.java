@@ -9,10 +9,11 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.core.parser.builder;
+package org.eclipse.mylyn.wikitext.core.splitter;
 
 import static org.junit.Assert.assertEquals;
 
+import org.eclipse.mylyn.wikitext.core.splitter.DefaultSplittingStrategy;
 import org.junit.Test;
 
 public class DefaultSplittingStrategyTest {
