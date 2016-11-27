@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 David Green and others.
+ * Copyright (c) 2009, 2011 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,14 +9,27 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.core.util.css;
+package org.eclipse.mylyn.wikitext.core.parser.css;
 
 /**
- * An abstraction for a CSS selector.
+ * a selector that selects elements based on their having a CSS class
  * 
  * @author David Green
+ * @see ElementInfo#hasCssClass(String)
  */
-public abstract class Selector {
+public class CssClassSelector extends Selector {
+	private final String cssClass;
 
-	public abstract boolean select(ElementInfo info);
+	public CssClassSelector(String cssClass) {
+		this.cssClass = cssClass;
+	}
+
+	@Override
+	public boolean select(ElementInfo info) {
+		return info.hasCssClass(cssClass);
+	}
+
+	public String getCssClass() {
+		return cssClass;
+	}
 }

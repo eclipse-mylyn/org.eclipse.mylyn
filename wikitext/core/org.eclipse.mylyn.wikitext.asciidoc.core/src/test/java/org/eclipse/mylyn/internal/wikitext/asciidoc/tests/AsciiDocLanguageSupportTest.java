@@ -25,7 +25,6 @@ import org.junit.Test;
 /**
  * Unit Tests for {@link LanguageSupport}
  */
-@SuppressWarnings("restriction")
 public class AsciiDocLanguageSupportTest extends AsciiDocLanguageTestBase {
 
 	@Test

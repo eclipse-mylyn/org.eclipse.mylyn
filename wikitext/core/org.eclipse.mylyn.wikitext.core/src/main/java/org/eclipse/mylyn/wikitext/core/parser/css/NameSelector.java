@@ -9,28 +9,26 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.core.util.css;
+package org.eclipse.mylyn.wikitext.core.parser.css;
 
 /**
- * A selector that selects elements having an id equal to a specific value.
+ * a selector that selects elements based on their {@link ElementInfo#getLocalName() name}
  * 
  * @author David Green
  */
-public class IdSelector extends Selector {
+public class NameSelector extends Selector {
+	private final String name;
 
-	private final String id;
-
-	public IdSelector(String id) {
-		this.id = id;
+	public NameSelector(String name) {
+		this.name = name;
 	}
 
 	@Override
 	public boolean select(ElementInfo info) {
-		return info.hasId(id);
+		return name.equalsIgnoreCase(info.getLocalName());
 	}
 
-	public String getId() {
-		return id;
+	public String getName() {
+		return name;
 	}
-
 }

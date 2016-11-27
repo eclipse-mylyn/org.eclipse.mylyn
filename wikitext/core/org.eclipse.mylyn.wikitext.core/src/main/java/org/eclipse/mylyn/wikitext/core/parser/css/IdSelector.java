@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2011 David Green and others.
+ * Copyright (c) 2009 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,34 +9,28 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.core.util.css;
+package org.eclipse.mylyn.wikitext.core.parser.css;
 
 /**
+ * A selector that selects elements having an id equal to a specific value.
+ * 
  * @author David Green
  */
-public class DescendantSelector extends Selector {
+public class IdSelector extends Selector {
 
-	private final Selector ancestorSelector;
+	private final String id;
 
-	public DescendantSelector(Selector ancestorSelector) {
-		super();
-		this.ancestorSelector = ancestorSelector;
+	public IdSelector(String id) {
+		this.id = id;
 	}
 
 	@Override
 	public boolean select(ElementInfo info) {
-		ElementInfo ancestor = info.getParent();
-		while (ancestor != null) {
-			if (ancestorSelector.select(ancestor)) {
-				return true;
-			}
-			ancestor = ancestor.getParent();
-		}
-		return false;
+		return info.hasId(id);
 	}
 
-	public Selector getAncestorSelector() {
-		return ancestorSelector;
+	public String getId() {
+		return id;
 	}
 
 }

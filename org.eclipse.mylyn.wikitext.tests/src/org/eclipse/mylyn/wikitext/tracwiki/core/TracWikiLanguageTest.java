@@ -15,13 +15,13 @@ package org.eclipse.mylyn.wikitext.tracwiki.core;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.wikitext.core.osgi.OsgiServiceLocator;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
+
+import junit.framework.TestCase;
 
 /**
  * @author David Green

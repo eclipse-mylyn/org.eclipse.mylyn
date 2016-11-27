@@ -27,10 +27,6 @@ import java.net.URLDecoder;
 import java.util.Enumeration;
 import java.util.logging.Logger;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
@@ -39,6 +35,10 @@ import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 import org.eclipse.mylyn.wikitext.tests.NoDiscovery;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 import org.osgi.framework.Bundle;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 /**
  * a test suite that discovers tests on the filesystem. See /org.eclipse.mylyn.wikitext.tests/markupLanguageTests

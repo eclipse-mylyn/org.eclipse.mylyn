@@ -11,10 +11,10 @@
 
 package org.eclipse.mylyn.internal.wikitext.ui.util;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.tests.EclipseRuntimeRequired;
+
+import junit.framework.TestCase;
 
 /**
  * @author David Green

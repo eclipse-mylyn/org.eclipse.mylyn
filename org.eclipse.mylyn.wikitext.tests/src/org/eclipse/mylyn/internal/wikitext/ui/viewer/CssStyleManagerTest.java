@@ -12,12 +12,12 @@ package org.eclipse.mylyn.internal.wikitext.ui.viewer;
 
 import java.util.Iterator;
 
-import junit.framework.TestCase;
-
-import org.eclipse.mylyn.internal.wikitext.core.util.css.CssParser;
-import org.eclipse.mylyn.internal.wikitext.core.util.css.CssRule;
+import org.eclipse.mylyn.wikitext.core.parser.css.CssParser;
+import org.eclipse.mylyn.wikitext.core.parser.css.CssRule;
 import org.eclipse.mylyn.wikitext.tests.HeadRequired;
 import org.eclipse.swt.graphics.RGB;
+
+import junit.framework.TestCase;
 
 /**
  * @author David Green

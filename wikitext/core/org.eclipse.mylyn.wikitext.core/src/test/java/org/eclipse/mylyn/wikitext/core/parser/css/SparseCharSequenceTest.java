@@ -9,9 +9,11 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.core.util.css;
+package org.eclipse.mylyn.wikitext.core.parser.css;
 
 import java.util.regex.Pattern;
+
+import org.eclipse.mylyn.wikitext.core.parser.css.SparseCharSequence;
 
 import junit.framework.TestCase;
 

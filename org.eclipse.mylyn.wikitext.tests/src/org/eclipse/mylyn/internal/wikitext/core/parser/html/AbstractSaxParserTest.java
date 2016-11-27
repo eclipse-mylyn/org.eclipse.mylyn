@@ -15,8 +15,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.wikitext.textile.core.TextileDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
@@ -26,6 +24,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.google.common.base.Throwables;
+
+import junit.framework.TestCase;
 
 /**
  * @author David Green

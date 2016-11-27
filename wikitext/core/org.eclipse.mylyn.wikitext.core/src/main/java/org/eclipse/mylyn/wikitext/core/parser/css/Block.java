@@ -9,33 +9,36 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.core.util.css;
+package org.eclipse.mylyn.wikitext.core.parser.css;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * An interface to XML element information
+ * An abstraction for a block of CSS rules
  * 
  * @author David Green
  */
-public interface ElementInfo {
-	/**
-	 * get the local name of the element
-	 */
-	public String getLocalName();
+public class Block {
 
-	/**
-	 * get the parent of this element
-	 * 
-	 * @return the parent or null if this is the root element
-	 */
-	public ElementInfo getParent();
+	private final Selector selector;
 
-	/**
-	 * indicate if the elemet has the given CSS class
-	 */
-	public boolean hasCssClass(String cssClass);
+	private final List<CssRule> rules;
 
-	/**
-	 * indicate if the element has the given id
-	 */
-	public boolean hasId(String id);
+	Block(Selector selector) {
+		this(selector, new ArrayList<CssRule>());
+	}
+
+	Block(Selector selector, List<CssRule> rules) {
+		this.selector = selector;
+		this.rules = rules;
+	}
+
+	public Selector getSelector() {
+		return selector;
+	}
+
+	public List<CssRule> getRules() {
+		return rules;
+	}
 }

@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.parser.outline;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
+
+import junit.framework.TestCase;
 
 /**
  * @author David Green

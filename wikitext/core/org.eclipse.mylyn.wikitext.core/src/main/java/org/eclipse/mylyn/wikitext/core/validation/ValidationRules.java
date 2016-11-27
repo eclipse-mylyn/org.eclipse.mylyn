@@ -8,13 +8,11 @@
  * Contributors:
  *     David Green - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.internal.wikitext.core.validation;
+package org.eclipse.mylyn.wikitext.core.validation;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.eclipse.mylyn.wikitext.core.validation.ValidationRule;
 
 /**
  * A collection of validation rules, which involves a hierarchy so that language inheritance behaviour can be supported.

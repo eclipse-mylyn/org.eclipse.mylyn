@@ -11,12 +11,12 @@
 
 package org.eclipse.mylyn.internal.wikitext.ui.util;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.tests.EclipseRuntimeRequired;
 import org.eclipse.ui.model.IWorkbenchAdapter;
+
+import junit.framework.TestCase;
 
 /**
  * @author David Green

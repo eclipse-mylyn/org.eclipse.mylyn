@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.ui.annotation;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.wikitext.tests.HeadRequired;
+
+import junit.framework.TestCase;
 
 /**
  * @author David Green

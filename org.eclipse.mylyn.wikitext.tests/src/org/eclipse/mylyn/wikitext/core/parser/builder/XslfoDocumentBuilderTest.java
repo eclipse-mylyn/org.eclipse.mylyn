@@ -18,8 +18,6 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
@@ -29,6 +27,8 @@ import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 import com.google.common.base.Throwables;
 import com.google.common.io.Resources;
+
+import junit.framework.TestCase;
 
 /**
  * @author David Green

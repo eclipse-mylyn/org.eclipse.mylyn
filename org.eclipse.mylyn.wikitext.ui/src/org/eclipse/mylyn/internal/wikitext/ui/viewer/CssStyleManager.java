@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.mylyn.internal.wikitext.core.util.css.CssRule;
+import org.eclipse.mylyn.wikitext.core.parser.css.CssRule;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
@@ -29,7 +29,7 @@ import org.eclipse.swt.graphics.RGB;
 
 /**
  * Interprets CSS styles and applies them to a default font and a {@link FontState}, creating a {@link StyleRange}.
- * 
+ *
  * @author David Green
  */
 public class CssStyleManager {
@@ -320,8 +320,9 @@ public class CssStyleManager {
 			}
 		} else {
 			String symbolicName = computeSymbolicName(fontState, "default", defaultFont); //$NON-NLS-1$
-			Font font = JFaceResources.getFontRegistry().hasValueFor(symbolicName) ? JFaceResources.getFontRegistry()
-					.get(symbolicName) : null;
+			Font font = JFaceResources.getFontRegistry().hasValueFor(symbolicName)
+					? JFaceResources.getFontRegistry().get(symbolicName)
+					: null;
 			if (font == null) {
 				FontData[] fontData = createFontData(fontState, defaultFont);
 				JFaceResources.getFontRegistry().put(symbolicName, fontData);
@@ -515,7 +516,8 @@ public class CssStyleManager {
 			String cssFontSizeValue = rule.value;
 			if (cssFontSizeValue.endsWith("%")) { //$NON-NLS-1$
 				try {
-					float percentage = Float.parseFloat(cssFontSizeValue.substring(0, cssFontSizeValue.length() - 1)) / 100f;
+					float percentage = Float.parseFloat(cssFontSizeValue.substring(0, cssFontSizeValue.length() - 1))
+							/ 100f;
 					if (percentage > 0) {
 						fontState.sizeFactor = percentage;
 					}
@@ -568,7 +570,7 @@ public class CssStyleManager {
 				if (part.length() > 1 && part.startsWith("'") && part.endsWith("'")) { //$NON-NLS-1$ //$NON-NLS-2$
 					part = part.substring(1, part.length() - 1);
 				}
-				if ("monospace".equals(part) || "courier".equalsIgnoreCase(part) //$NON-NLS-1$ //$NON-NLS-2$ 
+				if ("monospace".equals(part) || "courier".equalsIgnoreCase(part) //$NON-NLS-1$ //$NON-NLS-2$
 						|| "courier new".equalsIgnoreCase(part)) { //$NON-NLS-1$
 					fontState.setFixedWidth(true);
 				} else {
@@ -618,7 +620,7 @@ public class CssStyleManager {
 
 	/**
 	 * get the RGB value for a color name or any other valid CSS expression of a color value.
-	 * 
+	 *
 	 * @param cssColor
 	 *            the css color
 	 * @return the RGB value or null if it cannot be determined.

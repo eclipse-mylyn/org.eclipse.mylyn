@@ -14,12 +14,12 @@ package org.eclipse.mylyn.wikitext.tests;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.mylyn.wikitext.tests.ClassTraversal.Visitor;
+
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
 import junit.framework.TestSuite;
-
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylyn.wikitext.tests.ClassTraversal.Visitor;
 
 /**
  * a test suite that discovers tests by traversing the classpath looking for test classes that match specific criteria.

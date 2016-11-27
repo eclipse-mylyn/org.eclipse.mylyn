@@ -34,14 +34,14 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
-import org.eclipse.mylyn.internal.wikitext.core.util.css.CssParser;
-import org.eclipse.mylyn.internal.wikitext.core.util.css.CssRule;
-import org.eclipse.mylyn.internal.wikitext.core.util.css.ElementInfo;
-import org.eclipse.mylyn.internal.wikitext.core.util.css.Stylesheet;
 import org.eclipse.mylyn.internal.wikitext.ui.util.ImageCache;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.BulletAnnotation;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.HorizontalRuleAnnotation;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.ImageAnnotation;
+import org.eclipse.mylyn.wikitext.core.parser.css.CssParser;
+import org.eclipse.mylyn.wikitext.core.parser.css.CssRule;
+import org.eclipse.mylyn.wikitext.core.parser.css.ElementInfo;
+import org.eclipse.mylyn.wikitext.core.parser.css.Stylesheet;
 import org.eclipse.mylyn.wikitext.core.util.IgnoreDtdEntityResolver;
 import org.eclipse.mylyn.wikitext.ui.annotation.AnchorHrefAnnotation;
 import org.eclipse.mylyn.wikitext.ui.annotation.AnchorNameAnnotation;
@@ -291,7 +291,7 @@ public class HtmlTextPresentationParser {
 	private char[] bulletChars = new char[] { '\u2022', // solid round bullet, see http://www.fileformat.info/info/unicode/char/2022/index.htm
 //		'\u26AA', // empty round bullet, see http://www.fileformat.info/info/unicode/char/26AA/index.htm
 //		'\u25A0', // square bullet, see http://www.fileformat.info/info/unicode/char/25A0/index.htm
- };
+	};
 
 	private CssStyleManager cssStyleManager;
 

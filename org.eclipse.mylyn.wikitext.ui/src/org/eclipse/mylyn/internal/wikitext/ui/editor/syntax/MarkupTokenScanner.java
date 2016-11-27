@@ -20,20 +20,20 @@ import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.ITokenScanner;
-import org.eclipse.mylyn.internal.wikitext.core.util.css.CssParser;
-import org.eclipse.mylyn.internal.wikitext.core.util.css.CssRule;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.preferences.Preferences;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitioner.MarkupPartition;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.CssStyleManager;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.FontState;
+import org.eclipse.mylyn.wikitext.core.parser.css.CssParser;
+import org.eclipse.mylyn.wikitext.core.parser.css.CssRule;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Font;
 
 /**
  * A token scanner that uses the results of the {@link FastMarkupPartitioner} to identify tokens.
- * 
+ *
  * @author David Green
  */
 public class MarkupTokenScanner implements ITokenScanner {
@@ -57,7 +57,7 @@ public class MarkupTokenScanner implements ITokenScanner {
 
 	/**
 	 * Reset the fonts used by this token scanner.
-	 * 
+	 *
 	 * @param defaultFont
 	 *            the default font, must not be null.
 	 * @param defaultMonospaceFont
@@ -108,8 +108,8 @@ public class MarkupTokenScanner implements ITokenScanner {
 			if (partitioning != null) {
 				tokens = new ArrayList<>();
 
-				ITypedRegion[] partitions = ((FastMarkupPartitioner) partitioner).getScanner().computePartitions(
-						document, offset, length);
+				ITypedRegion[] partitions = ((FastMarkupPartitioner) partitioner).getScanner()
+						.computePartitions(document, offset, length);
 				int lastEnd = offset;
 
 				Token defaultToken;
@@ -184,8 +184,8 @@ public class MarkupTokenScanner implements ITokenScanner {
 								if (diff > 0) {
 									int blockTokenStartOffset = realLastEnd;
 									int blockTokenLength = diff;
-									final Token blockBridgeToken = new Token(blockToken.fontState,
-											blockToken.getData(), blockTokenStartOffset, blockTokenLength);
+									final Token blockBridgeToken = new Token(blockToken.fontState, blockToken.getData(),
+											blockTokenStartOffset, blockTokenLength);
 									addToken(tokens, blockBridgeToken);
 									lastEnd = blockTokenStartOffset + blockTokenLength;
 									if (lastEnd > partition.getOffset() + partition.getLength()) {
@@ -197,8 +197,8 @@ public class MarkupTokenScanner implements ITokenScanner {
 					}
 				}
 				if (lastEnd < (offset + length)) {
-					addToken(tokens, new Token(defaultToken.fontState, defaultToken.getData(), lastEnd, length
-							- (lastEnd - offset)));
+					addToken(tokens, new Token(defaultToken.fontState, defaultToken.getData(), lastEnd,
+							length - (lastEnd - offset)));
 				}
 			}
 		}
@@ -235,7 +235,7 @@ public class MarkupTokenScanner implements ITokenScanner {
 	/**
 	 * handle nested spans: given a token for a specific span, split it into one or more tokens based on analyzing its
 	 * children
-	 * 
+	 *
 	 * @return an array of tokens that contiguously cover the region represented by the original span.
 	 */
 	private Token[] splitSpan(Token spanToken, Span span, Token defaultToken) {
@@ -243,8 +243,8 @@ public class MarkupTokenScanner implements ITokenScanner {
 		int previousEnd = spanToken.offset;
 		for (Span child : span.getChildren().asList()) {
 			if (child.getOffset() > previousEnd) {
-				tokens.add(new Token(spanToken.fontState, spanToken.getData(), previousEnd, child.getOffset()
-						- previousEnd));
+				tokens.add(new Token(spanToken.fontState, spanToken.getData(), previousEnd,
+						child.getOffset() - previousEnd));
 			}
 			Token childToken = createToken(spanToken.fontState, child);
 			if (childToken == null) {
@@ -263,8 +263,8 @@ public class MarkupTokenScanner implements ITokenScanner {
 			previousEnd = child.getEndOffset();
 		}
 		if (previousEnd < span.getEndOffset()) {
-			tokens.add(new Token(spanToken.fontState, spanToken.getData(), previousEnd, span.getEndOffset()
-					- previousEnd));
+			tokens.add(new Token(spanToken.fontState, spanToken.getData(), previousEnd,
+					span.getEndOffset() - previousEnd));
 		}
 		return tokens.toArray(new Token[tokens.size()]);
 	}
@@ -276,12 +276,12 @@ public class MarkupTokenScanner implements ITokenScanner {
 
 	private void checkAddToken(List<Token> tokens, Token newToken) {
 		if (newToken.getLength() <= 0) {
-			throw new IllegalStateException(NLS.bind(Messages.MarkupTokenScanner_badTokenLength,
-					new Object[] { newToken.getLength() }));
+			throw new IllegalStateException(
+					NLS.bind(Messages.MarkupTokenScanner_badTokenLength, new Object[] { newToken.getLength() }));
 		}
 		if (newToken.getOffset() < 0) {
-			throw new IllegalStateException(NLS.bind(Messages.MarkupTokenScanner_badTokenOffset,
-					new Object[] { newToken.getOffset() }));
+			throw new IllegalStateException(
+					NLS.bind(Messages.MarkupTokenScanner_badTokenOffset, new Object[] { newToken.getOffset() }));
 		}
 		if (!tokens.isEmpty()) {
 			Token previous = tokens.get(tokens.size() - 1);
@@ -396,8 +396,8 @@ public class MarkupTokenScanner implements ITokenScanner {
 	private String computeCssStyles(Block block, MarkupPartition partition) {
 		String cssStyles = null;
 		if (block.getHeadingLevel() > 0) {
-			cssStyles = preferences.getCssByBlockModifierType().get(
-					Preferences.HEADING_PREFERENCES[block.getHeadingLevel()]);
+			cssStyles = preferences.getCssByBlockModifierType()
+					.get(Preferences.HEADING_PREFERENCES[block.getHeadingLevel()]);
 		} else if (block.getType() != null) {
 			String key = null;
 			switch (block.getType()) {
@@ -469,7 +469,7 @@ public class MarkupTokenScanner implements ITokenScanner {
 
 		@Override
 		public String toString() {
-			return "Token [offset=" + offset + ", length=" + length + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+			return "Token [offset=" + offset + ", length=" + length + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 
 	}

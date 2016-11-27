@@ -13,11 +13,11 @@ package org.eclipse.mylyn.wikitext.core.parser.markup;
 
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.wikitext.core.parser.markup.block.EclipseErrorDetailsBlock;
 import org.eclipse.mylyn.wikitext.core.parser.markup.block.JavaStackTraceBlock;
 import org.junit.Assert;
+
+import junit.framework.TestCase;
 
 /**
  * test for {@link ConfigurationBuilder}

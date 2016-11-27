@@ -11,9 +11,9 @@
 
 package org.eclipse.mylyn.internal.wikitext.mediawiki.core.validation;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
+
+import junit.framework.TestCase;
 
 /**
  * @author David Green

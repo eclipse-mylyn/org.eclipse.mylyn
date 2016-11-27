@@ -14,8 +14,6 @@ package org.eclipse.mylyn.internal.wikitext.core.parser.builder;
 import java.io.StringWriter;
 import java.util.regex.Pattern;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
@@ -25,6 +23,8 @@ import org.eclipse.mylyn.wikitext.core.util.DefaultXmlStreamWriter;
 import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
+
+import junit.framework.TestCase;
 
 public class DitaTopicDocumentBuilderTest extends TestCase {
 

@@ -22,8 +22,6 @@ import java.util.Stack;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 
-import org.eclipse.mylyn.internal.wikitext.core.util.css.CssParser;
-import org.eclipse.mylyn.internal.wikitext.core.util.css.CssRule;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
@@ -31,6 +29,8 @@ import org.eclipse.mylyn.wikitext.core.parser.ListAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.TableAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.TableCellAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.TableRowAttributes;
+import org.eclipse.mylyn.wikitext.core.parser.css.CssParser;
+import org.eclipse.mylyn.wikitext.core.parser.css.CssRule;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 

@@ -13,10 +13,10 @@ package org.eclipse.mylyn.wikitext.core.parser.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
+
+import junit.framework.TestCase;
 
 /**
  * @author David Green

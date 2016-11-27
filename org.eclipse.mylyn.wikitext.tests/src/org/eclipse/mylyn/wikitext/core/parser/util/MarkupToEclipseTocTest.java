@@ -13,8 +13,6 @@ package org.eclipse.mylyn.wikitext.core.parser.util;
 import java.io.IOException;
 import java.net.URL;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
@@ -22,6 +20,8 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 import com.google.common.io.Resources;
+
+import junit.framework.TestCase;
 
 /**
  * @author David Green

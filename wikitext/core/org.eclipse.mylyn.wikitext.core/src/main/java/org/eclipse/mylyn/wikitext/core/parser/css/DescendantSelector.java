@@ -9,27 +9,34 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.core.util.css;
+package org.eclipse.mylyn.wikitext.core.parser.css;
 
 /**
- * a selector that selects elements based on their having a CSS class
- * 
  * @author David Green
- * @see ElementInfo#hasCssClass(String)
  */
-public class CssClassSelector extends Selector {
-	private final String cssClass;
+public class DescendantSelector extends Selector {
 
-	public CssClassSelector(String cssClass) {
-		this.cssClass = cssClass;
+	private final Selector ancestorSelector;
+
+	public DescendantSelector(Selector ancestorSelector) {
+		super();
+		this.ancestorSelector = ancestorSelector;
 	}
 
 	@Override
 	public boolean select(ElementInfo info) {
-		return info.hasCssClass(cssClass);
+		ElementInfo ancestor = info.getParent();
+		while (ancestor != null) {
+			if (ancestorSelector.select(ancestor)) {
+				return true;
+			}
+			ancestor = ancestor.getParent();
+		}
+		return false;
 	}
 
-	public String getCssClass() {
-		return cssClass;
+	public Selector getAncestorSelector() {
+		return ancestorSelector;
 	}
+
 }

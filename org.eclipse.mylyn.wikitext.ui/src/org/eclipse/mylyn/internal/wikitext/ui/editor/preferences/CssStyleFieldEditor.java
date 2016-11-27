@@ -14,15 +14,15 @@ package org.eclipse.mylyn.internal.wikitext.ui.editor.preferences;
 import java.util.Iterator;
 
 import org.eclipse.jface.preference.StringFieldEditor;
-import org.eclipse.mylyn.internal.wikitext.core.util.css.CssParser;
-import org.eclipse.mylyn.internal.wikitext.core.util.css.CssRule;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.CssStyleManager;
+import org.eclipse.mylyn.wikitext.core.parser.css.CssParser;
+import org.eclipse.mylyn.wikitext.core.parser.css.CssRule;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Composite;
 
 /**
  * A field editor for CSS styles. Adds validation to CSS rule input.
- * 
+ *
  * @author David Green
  */
 public class CssStyleFieldEditor extends StringFieldEditor {
@@ -67,15 +67,16 @@ public class CssStyleFieldEditor extends StringFieldEditor {
 						}
 						recognizedNames.append(recognizedName);
 					}
-					setErrorMessage(NLS.bind(Messages.CssStyleFieldEditor_unsupportedRule, new Object[] { rule.name,
-							recognizedNames }));
+					setErrorMessage(NLS.bind(Messages.CssStyleFieldEditor_unsupportedRule,
+							new Object[] { rule.name, recognizedNames }));
 					return false;
 				}
 				if (CssStyleManager.RULE_COLOR.equals(rule.name)
 						|| CssStyleManager.RULE_BACKGROUND_COLOR.equals(rule.name)) {
 					Integer rgb = CssStyleManager.cssColorRgb(rule.value);
 					if (rgb == null) {
-						setErrorMessage(NLS.bind(Messages.CssStyleFieldEditor_invalidColor, new Object[] { rule.value }));
+						setErrorMessage(
+								NLS.bind(Messages.CssStyleFieldEditor_invalidColor, new Object[] { rule.value }));
 						return false;
 					}
 				}
@@ -84,8 +85,8 @@ public class CssStyleFieldEditor extends StringFieldEditor {
 			if (offset < value.length() - 1) {
 				String gap = value.substring(offset, value.length());
 				if (gap.trim().length() != 0) {
-					setErrorMessage(NLS.bind(Messages.CssStyleFieldEditor_unexpectedToken, new Object[] { gap.trim(),
-							offset }));
+					setErrorMessage(NLS.bind(Messages.CssStyleFieldEditor_unexpectedToken,
+							new Object[] { gap.trim(), offset }));
 					return false;
 				}
 			}

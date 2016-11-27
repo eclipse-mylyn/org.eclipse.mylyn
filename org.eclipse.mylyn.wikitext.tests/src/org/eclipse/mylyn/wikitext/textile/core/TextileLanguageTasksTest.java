@@ -16,14 +16,14 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.Util;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.tests.EclipseRuntimeRequired;
 import org.eclipse.mylyn.wikitext.tests.TestUtil;
+
+import junit.framework.TestCase;
 
 /**
  * tests for Textile that involve the tasks plug-in and dependencies on the Eclipse runtime.

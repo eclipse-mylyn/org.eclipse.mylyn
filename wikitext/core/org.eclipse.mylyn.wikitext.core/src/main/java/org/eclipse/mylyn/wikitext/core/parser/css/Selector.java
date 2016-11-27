@@ -9,18 +9,14 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.core.util.css;
+package org.eclipse.mylyn.wikitext.core.parser.css;
 
 /**
- * A CSS selector that selects any element
+ * An abstraction for a CSS selector.
  * 
  * @author David Green
  */
-public class AnySelector extends Selector {
+public abstract class Selector {
 
-	@Override
-	public boolean select(ElementInfo info) {
-		return true;
-	}
-
+	public abstract boolean select(ElementInfo info);
 }

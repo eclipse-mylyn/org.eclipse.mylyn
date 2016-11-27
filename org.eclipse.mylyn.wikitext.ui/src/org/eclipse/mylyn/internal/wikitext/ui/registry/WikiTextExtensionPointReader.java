@@ -27,11 +27,11 @@ import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.internal.wikitext.core.validation.ValidationRules;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.validation.MarkupValidator;
 import org.eclipse.mylyn.wikitext.core.validation.ValidationRule;
+import org.eclipse.mylyn.wikitext.core.validation.ValidationRules;
 
 import com.google.common.collect.Sets;
 
@@ -72,7 +72,7 @@ public class WikiTextExtensionPointReader {
 
 	/**
 	 * Get a markup language by name.
-	 * 
+	 *
 	 * @param name
 	 *            the name of the markup language to retrieve
 	 * @return the markup language or null if there is no markup language known by the given name
@@ -84,7 +84,7 @@ public class WikiTextExtensionPointReader {
 		}
 		Class<? extends MarkupLanguage> languageClass = languageByName.get(name);
 		if (languageClass == null) {
-			// if not found by name, attempt to lookup by class name. 
+			// if not found by name, attempt to lookup by class name.
 			for (Entry<String, Class<? extends MarkupLanguage>> entry : languageByName.entrySet()) {
 				Class<? extends MarkupLanguage> clazz = entry.getValue();
 				if (clazz.getName().equals(name)) {
@@ -129,7 +129,7 @@ public class WikiTextExtensionPointReader {
 	/**
 	 * Get a markup language name for a file. A markup language is selected based on the registered languages and their
 	 * expected file extensions.
-	 * 
+	 *
 	 * @param name
 	 *            the name of the file for which a markup language is desired
 	 * @return the markup language name, or null if no markup language is registered for the specified file name
@@ -163,7 +163,7 @@ public class WikiTextExtensionPointReader {
 	/**
 	 * Get a markup language for a file. A markup language is selected based on the registered languages and their
 	 * expected file extensions.
-	 * 
+	 *
 	 * @param name
 	 *            the name of the file for which a markup language is desired
 	 * @return the markup language, or null if no markup language is registered for the specified file name
@@ -191,7 +191,7 @@ public class WikiTextExtensionPointReader {
 
 	/**
 	 * Get the names of all known markup languages
-	 * 
+	 *
 	 * @see #getMarkupLanguage(String)
 	 */
 	public Set<String> getMarkupLanguageNames() {
@@ -203,7 +203,7 @@ public class WikiTextExtensionPointReader {
 
 	/**
 	 * Get a markup validator by language name.
-	 * 
+	 *
 	 * @param name
 	 *            the name of the markup language for which a validator is desired
 	 * @return the markup validator
@@ -229,8 +229,8 @@ public class WikiTextExtensionPointReader {
 			if (validationRulesByLanguageName == null) {
 				Map<String, ValidationRules> validationRulesByLanguageName = new HashMap<>();
 
-				IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(
-						getExtensionPointNamespace(), EXTENSION_VALIDATION_RULES);
+				IExtensionPoint extensionPoint = Platform.getExtensionRegistry()
+						.getExtensionPoint(getExtensionPointNamespace(), EXTENSION_VALIDATION_RULES);
 				if (extensionPoint != null) {
 					IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
 					for (IConfigurationElement element : configurationElements) {
@@ -240,8 +240,8 @@ public class WikiTextExtensionPointReader {
 								throw new Exception(Messages.getString("WikiTextExtensionPointReader.4")); //$NON-NLS-1$
 							}
 							if (!languageByName.containsKey(markupLanguage)) {
-								throw new Exception(MessageFormat.format(
-										Messages.getString("WikiTextExtensionPointReader.5"), languageByName)); //$NON-NLS-1$
+								throw new Exception(MessageFormat
+										.format(Messages.getString("WikiTextExtensionPointReader.5"), languageByName)); //$NON-NLS-1$
 							}
 							Object extension;
 							try {
@@ -262,10 +262,11 @@ public class WikiTextExtensionPointReader {
 							}
 							rules.addValidationRule((ValidationRule) extension);
 						} catch (Exception e) {
-							log(IStatus.ERROR, MessageFormat.format(
-									Messages.getString("WikiTextExtensionPointReader.8"), //$NON-NLS-1$
-									element.getDeclaringExtension().getContributor().getName(),
-									EXTENSION_VALIDATION_RULES, e.getMessage()), e);
+							log(IStatus.ERROR,
+									MessageFormat.format(Messages.getString("WikiTextExtensionPointReader.8"), //$NON-NLS-1$
+											element.getDeclaringExtension().getContributor().getName(),
+											EXTENSION_VALIDATION_RULES, e.getMessage()),
+									e);
 						}
 					}
 				}
@@ -286,7 +287,8 @@ public class WikiTextExtensionPointReader {
 					MarkupLanguage markupLanguage = getMarkupLanguage(languageName);
 					if (markupLanguage != null && markupLanguage.getExtendsLanguage() != null) {
 						ValidationRules languageRules = validationRulesByLanguageName.get(languageName);
-						ValidationRules parentLanguageRules = validationRulesByLanguageName.get(markupLanguage.getExtendsLanguage());
+						ValidationRules parentLanguageRules = validationRulesByLanguageName
+								.get(markupLanguage.getExtendsLanguage());
 
 						languageRules.setParent(parentLanguageRules);
 					}
@@ -305,8 +307,8 @@ public class WikiTextExtensionPointReader {
 				Map<String, String> languageExtensionByLanguage = new HashMap<>();
 				Map<Class<? extends MarkupLanguage>, String> languageNameByLanguage = new HashMap<>();
 
-				IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(
-						getExtensionPointNamespace(), EXTENSION_MARKUP_LANGUAGE);
+				IExtensionPoint extensionPoint = Platform.getExtensionRegistry()
+						.getExtensionPoint(getExtensionPointNamespace(), EXTENSION_MARKUP_LANGUAGE);
 				if (extensionPoint != null) {
 					IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
 					for (IConfigurationElement element : configurationElements) {
@@ -315,7 +317,8 @@ public class WikiTextExtensionPointReader {
 							log(IStatus.ERROR,
 									MessageFormat.format(
 											EXTENSION_MARKUP_LANGUAGE
-													+ Messages.getString("WikiTextExtensionPointReader.10"), element.getDeclaringExtension() //$NON-NLS-1$
+													+ Messages.getString("WikiTextExtensionPointReader.10"), //$NON-NLS-1$
+											element.getDeclaringExtension()
 													.getContributor()
 													.getName()));
 							continue;
@@ -329,20 +332,20 @@ public class WikiTextExtensionPointReader {
 							continue;
 						}
 						if (!(markupLanguage instanceof MarkupLanguage)) {
-							log(IStatus.ERROR, MessageFormat.format(
-									Messages.getString("WikiTextExtensionPointReader.13"), markupLanguage.getClass() //$NON-NLS-1$
-											.getName()));
+							log(IStatus.ERROR,
+									MessageFormat.format(Messages.getString("WikiTextExtensionPointReader.13"), //$NON-NLS-1$
+											markupLanguage.getClass()
+													.getName()));
 							continue;
 						}
 						MarkupLanguage d = (MarkupLanguage) markupLanguage;
 						{
 							Class<? extends MarkupLanguage> previous = markupLanguageByName.put(name, d.getClass());
 							if (previous != null) {
-								log(IStatus.ERROR,
-										MessageFormat.format(
-												EXTENSION_MARKUP_LANGUAGE
-														+ Messages.getString("WikiTextExtensionPointReader.14"), //$NON-NLS-1$
-												name, element.getDeclaringExtension().getContributor().getName(), name));
+								log(IStatus.ERROR, MessageFormat.format(
+										EXTENSION_MARKUP_LANGUAGE
+												+ Messages.getString("WikiTextExtensionPointReader.14"), //$NON-NLS-1$
+										name, element.getDeclaringExtension().getContributor().getName(), name));
 								markupLanguageByName.put(name, previous);
 								continue;
 							} else {
@@ -361,13 +364,11 @@ public class WikiTextExtensionPointReader {
 									Class<? extends MarkupLanguage> previous = languageByFileExtension.put(part,
 											d.getClass());
 									if (previous != null) {
-										log(IStatus.ERROR,
-												MessageFormat.format(
-														EXTENSION_MARKUP_LANGUAGE
-																+ Messages.getString("WikiTextExtensionPointReader.17"), //$NON-NLS-1$
-														part, element.getDeclaringExtension()
-																.getContributor()
-																.getName(), part));
+										log(IStatus.ERROR, MessageFormat.format(
+												EXTENSION_MARKUP_LANGUAGE
+														+ Messages.getString("WikiTextExtensionPointReader.17"), //$NON-NLS-1$
+												part, element.getDeclaringExtension().getContributor().getName(),
+												part));
 										languageByFileExtension.put(part, previous);
 										continue;
 									}

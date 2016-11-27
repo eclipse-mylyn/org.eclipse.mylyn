@@ -18,10 +18,10 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.mylyn.internal.wikitext.core.util.css.CssParser;
-import org.eclipse.mylyn.internal.wikitext.core.util.css.Stylesheet;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.HtmlTextPresentationParser;
+import org.eclipse.mylyn.wikitext.core.parser.css.CssParser;
+import org.eclipse.mylyn.wikitext.core.parser.css.Stylesheet;
 
 import com.google.common.io.CharStreams;
 

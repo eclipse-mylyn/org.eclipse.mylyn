@@ -27,13 +27,13 @@ import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.VerticalRuler;
-import org.eclipse.mylyn.internal.wikitext.core.util.css.CssParser;
 import org.eclipse.mylyn.internal.wikitext.tasks.ui.WikiTextTasksUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.preferences.Preferences;
 import org.eclipse.mylyn.internal.wikitext.ui.util.css.editor.CssConfiguration;
 import org.eclipse.mylyn.internal.wikitext.ui.util.css.editor.CssPartitioner;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.HtmlTextPresentationParser;
+import org.eclipse.mylyn.wikitext.core.parser.css.CssParser;
 import org.eclipse.mylyn.wikitext.ui.viewer.HtmlViewer;
 import org.eclipse.mylyn.wikitext.ui.viewer.HtmlViewerConfiguration;
 import org.eclipse.swt.SWT;
@@ -50,7 +50,7 @@ import org.xml.sax.SAXException;
 
 /**
  * A preference page that allows for changing the {@link Preferences#getMarkupViewerCss()}
- * 
+ *
  * @author David Green
  * @author Hiroyuki Inaba fix for bug 265079: Dialog font not apply WikiText preference pages
  */
@@ -127,8 +127,8 @@ public class MarkupViewerPreferencePage extends PreferencePage implements IWorkb
 						JFaceResources.getFontRegistry().get(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_DEFAULT_FONT));
 			}
 			if (JFaceResources.getFontRegistry().hasValueFor(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_MONOSPACE_FONT)) {
-				previewViewer.setDefaultMonospaceFont(JFaceResources.getFontRegistry().get(
-						WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_MONOSPACE_FONT));
+				previewViewer.setDefaultMonospaceFont(
+						JFaceResources.getFontRegistry().get(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_MONOSPACE_FONT));
 			}
 
 			previewViewer.setHtml(createPreviewHtml());

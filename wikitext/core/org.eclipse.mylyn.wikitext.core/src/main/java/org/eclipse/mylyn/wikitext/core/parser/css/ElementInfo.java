@@ -9,26 +9,33 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.core.util.css;
+package org.eclipse.mylyn.wikitext.core.parser.css;
 
 /**
- * a selector that selects elements based on their {@link ElementInfo#getLocalName() name}
+ * An interface to XML element information
  * 
  * @author David Green
  */
-public class NameSelector extends Selector {
-	private final String name;
+public interface ElementInfo {
+	/**
+	 * get the local name of the element
+	 */
+	public String getLocalName();
 
-	public NameSelector(String name) {
-		this.name = name;
-	}
+	/**
+	 * get the parent of this element
+	 * 
+	 * @return the parent or null if this is the root element
+	 */
+	public ElementInfo getParent();
 
-	@Override
-	public boolean select(ElementInfo info) {
-		return name.equalsIgnoreCase(info.getLocalName());
-	}
+	/**
+	 * indicate if the elemet has the given CSS class
+	 */
+	public boolean hasCssClass(String cssClass);
 
-	public String getName() {
-		return name;
-	}
+	/**
+	 * indicate if the element has the given id
+	 */
+	public boolean hasId(String id);
 }

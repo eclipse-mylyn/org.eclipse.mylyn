@@ -9,36 +9,18 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.core.util.css;
-
-import java.util.ArrayList;
-import java.util.List;
+package org.eclipse.mylyn.wikitext.core.parser.css;
 
 /**
- * An abstraction for a block of CSS rules
+ * A CSS selector that selects any element
  * 
  * @author David Green
  */
-public class Block {
+public class AnySelector extends Selector {
 
-	private final Selector selector;
-
-	private final List<CssRule> rules;
-
-	Block(Selector selector) {
-		this(selector, new ArrayList<CssRule>());
+	@Override
+	public boolean select(ElementInfo info) {
+		return true;
 	}
 
-	Block(Selector selector, List<CssRule> rules) {
-		this.selector = selector;
-		this.rules = rules;
-	}
-
-	public Selector getSelector() {
-		return selector;
-	}
-
-	public List<CssRule> getRules() {
-		return rules;
-	}
 }

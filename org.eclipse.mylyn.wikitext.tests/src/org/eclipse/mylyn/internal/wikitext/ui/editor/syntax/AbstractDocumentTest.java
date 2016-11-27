@@ -15,10 +15,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-import junit.framework.TestCase;
-
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
+
+import junit.framework.TestCase;
 
 /**
  * @author David Green

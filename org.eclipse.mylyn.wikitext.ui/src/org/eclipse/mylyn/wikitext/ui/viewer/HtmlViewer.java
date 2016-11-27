@@ -26,7 +26,6 @@ import org.eclipse.jface.text.source.IOverviewRuler;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
-import org.eclipse.mylyn.internal.wikitext.core.util.css.Stylesheet;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.FindAndReplaceTarget;
 import org.eclipse.mylyn.internal.wikitext.ui.util.ImageCache;
 import org.eclipse.mylyn.internal.wikitext.ui.util.WikiTextUiResources;
@@ -38,6 +37,7 @@ import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.HorizontalRuleAn
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.HorizontalRuleDrawingStrategy;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.ImageAnnotation;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.ImageDrawingStrategy;
+import org.eclipse.mylyn.wikitext.core.parser.css.Stylesheet;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Font;
@@ -48,7 +48,7 @@ import org.xml.sax.SAXException;
 /**
  * A source viewer for viewing HTML as it is intended to be displayed in a read-only fashion. Useful when markup should
  * be displayed without using a Browser widget.
- * 
+ *
  * @see HtmlViewerConfiguration
  * @author David Green
  * @since 1.0
@@ -271,7 +271,7 @@ public class HtmlViewer extends SourceViewer {
 
 	/**
 	 * <em>not API</em>
-	 * 
+	 *
 	 * @since 1.1
 	 * @noreference This method is not intended to be referenced by clients.
 	 */
@@ -281,7 +281,7 @@ public class HtmlViewer extends SourceViewer {
 
 	/**
 	 * <em>not API</em>
-	 * 
+	 *
 	 * @since 1.1
 	 * @noreference This method is not intended to be referenced by clients.
 	 */
