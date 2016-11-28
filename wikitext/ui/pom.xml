@@ -40,6 +40,11 @@
             <url>${project.baseUri}../../core/repository/target/repository/</url>
             <layout>p2</layout>
         </repository>
+        <repository>
+            <id>eclipse-cbi</id>
+            <url>http://download.eclipse.org/cbi/updates/license</url>
+            <layout>p2</layout>
+        </repository>
     </repositories>
 
     <profiles>
@@ -59,6 +64,7 @@
 
     <modules>
         <module>org.eclipse.mylyn.wikitext.help.ui</module>
+        <module>org.eclipse.mylyn.wikitext.help.sdk</module>
         <module>org.eclipse.mylyn.wikitext.asciidoc.tests</module>
         <module>org.eclipse.mylyn.wikitext.asciidoc.ui</module>
         <module>org.eclipse.mylyn.wikitext.commonmark.ui</module>
@@ -75,6 +81,10 @@
         <module>org.eclipse.mylyn.wikitext.tracwiki.ui</module>
         <module>org.eclipse.mylyn.wikitext.twiki.ui</module>
         <module>org.eclipse.mylyn.wikitext.ui</module>
+
+        <module>org.eclipse.mylyn.wikitext.editors-feature</module>
+        <module>org.eclipse.mylyn.wikitext-feature</module>
+        <module>org.eclipse.mylyn.wikitext.extras-feature</module>
     </modules>
 
     <build>
