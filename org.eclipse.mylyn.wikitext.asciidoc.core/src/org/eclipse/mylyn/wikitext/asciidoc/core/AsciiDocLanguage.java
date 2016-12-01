@@ -18,8 +18,8 @@ import java.io.Writer;
 import java.util.List;
 
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.AsciiDocContentState;
-import org.eclipse.mylyn.internal.wikitext.asciidoc.core.AsciiDocPreProcessor;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.AsciiDocDocumentBuilder;
+import org.eclipse.mylyn.internal.wikitext.asciidoc.core.AsciiDocPreProcessor;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.CodeBlock;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.CommentBlock;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.HeadingBlock;
@@ -75,7 +75,7 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 		// HTML entities are preserved
 		tokenSyntax.add(new PreserverHtmlEntityToken());
 		// line ending with a + will cause a line Break
-		tokenSyntax.add(new PatternLineBreakReplacementToken("(\\s\\+)\\s*")); //$NON-NLS-1$
+		tokenSyntax.add(new PatternLineBreakReplacementToken("(\\s\\+)\\s*$")); //$NON-NLS-1$
 	}
 
 	@Override
@@ -109,6 +109,9 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 		phraseModifierSyntax.add(new XrefMacroReplacementToken());
 
 		// backslash escaped span elements
+		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("++")); //$NON-NLS-1$
+		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("**")); //$NON-NLS-1$
+		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("__")); //$NON-NLS-1$
 		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("+")); //$NON-NLS-1$
 		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("*")); //$NON-NLS-1$
 		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("_")); //$NON-NLS-1$
@@ -116,10 +119,16 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 		phraseModifierSyntax.add(new InlineImageReplacementToken());
 
 		// emphasis span elements
-		phraseModifierSyntax.add(new SimplePhraseModifier("`", SpanType.CODE)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("+", SpanType.CODE)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("*", SpanType.STRONG)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("_", SpanType.EMPHASIS)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("``", SpanType.CODE)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("++", SpanType.CODE)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("**", SpanType.STRONG)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("__", SpanType.EMPHASIS)); //$NON-NLS-1$
+
+		// emphasis span elements on word boundaries
+		phraseModifierSyntax.add(new SimplePhraseModifier("`", SpanType.CODE, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("+", SpanType.CODE, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("*", SpanType.STRONG, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("_", SpanType.EMPHASIS, true)); //$NON-NLS-1$
 
 	}
 

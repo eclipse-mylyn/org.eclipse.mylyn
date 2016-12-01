@@ -20,9 +20,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
- * 
  * @author Stefan Seelmann
- *
  */
 public class SimplePhraseModifier extends PatternBasedElement {
 
@@ -30,20 +28,31 @@ public class SimplePhraseModifier extends PatternBasedElement {
 
 	private final SpanType spanType;
 
+	private final boolean wordBoundary;
+
 	public SimplePhraseModifier(String delimiter, SpanType spanType) {
+		this(delimiter, spanType, false);
+	}
+
+	public SimplePhraseModifier(String delimiter, SpanType spanType, boolean wordBoundary) {
 		this.delimiter = delimiter;
 		this.spanType = spanType;
+		this.wordBoundary = wordBoundary;
 	}
 
 	@Override
 	protected String getPattern(int groupOffset) {
 		String quotedDelimiter = Pattern.quote(delimiter);
-		return quotedDelimiter + " *" + "(.+?)" + " *" + quotedDelimiter; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		String pattern = quotedDelimiter + " *" + "(.+?)" + " *" + quotedDelimiter; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		if (wordBoundary) {
+			pattern = "(^|\\s)" + pattern + "($|\\s)"; //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		return pattern;
 	}
 
 	@Override
 	protected int getPatternGroupCount() {
-		return 1;
+		return wordBoundary ? 3 : 1;
 	}
 
 	@Override
@@ -54,8 +63,30 @@ public class SimplePhraseModifier extends PatternBasedElement {
 	private class CodePhraseModifierProcessor extends PatternBasedElementProcessor {
 
 		@Override
+		public int getLineStartOffset() {
+			if (wordBoundary) {
+				final int value = end(1);
+				if (value >= 0) {
+					return value;
+				}
+			}
+			return super.getLineStartOffset();
+		}
+
+		@Override
+		public int getLineEndOffset() {
+			if (wordBoundary) {
+				final int value = start(3);
+				if (value >= 0) {
+					return value;
+				}
+			}
+			return super.getLineEndOffset();
+		}
+
+		@Override
 		public void emit() {
-			String content = group(1);
+			String content = group(wordBoundary ? 2 : 1);
 			getBuilder().beginSpan(spanType, new Attributes());
 			getMarkupLanguage().emitMarkupText(parser, state, content);
 			getBuilder().endSpan();

@@ -17,14 +17,20 @@ import java.util.regex.Pattern;
 import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLiteralReplacementToken;
 
 /**
- * 
- * 
  * @author Stefan Seelmann
  */
 public class BackslashEscapePhraseModifier extends PatternLiteralReplacementToken {
 
 	public BackslashEscapePhraseModifier(String token) {
-		super("(" + Pattern.quote("\\" + token) + ")", token); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		super(buildPattern(token), token);
+	}
+
+	private static String buildPattern(String token) {
+		if ("**".equals(token) || "__".equals(token) || "++".equals(token)) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			// these require a double escape
+			return "(" + Pattern.quote("\\\\" + token) + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		}
+		return "(" + Pattern.quote("\\" + token) + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 }
