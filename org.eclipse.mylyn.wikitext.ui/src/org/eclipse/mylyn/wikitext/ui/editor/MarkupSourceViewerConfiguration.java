@@ -148,7 +148,7 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 			markupHyperlinkDetector.setMarkupLanguage(markupLanguage);
 			markupHyperlinkDetector.setFile(file);
 		}
-		if (fileRefHyperlinkDetector == null) {
+		if (fileRefHyperlinkDetector == null && file != null) {
 			Map<String, List<String>> hyperlinkDectectorFileRefRegexes = WikiTextUiPlugin.getDefault()
 					.getHyperlinkDectectorFileRefRegexes();
 			List<String> fileRefHyperlinkRegexes = hyperlinkDectectorFileRefRegexes
