@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.bugzilla.rest.ui;
 
 import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestConnector;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestCore;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.BugzillaRestTaskAttributeMapper;
@@ -21,6 +22,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
@@ -82,6 +84,11 @@ public class BugzillaRestRepositoryConnectorUi extends AbstractRepositoryConnect
 	@Override
 	public boolean hasSearchPage() {
 		return true;
+	}
+
+	@Override
+	public IWizardPage getTaskAttachmentPage(TaskAttachmentModel model) {
+		return new BugzillaRestTaskAttachmentPage(model);
 	}
 
 }

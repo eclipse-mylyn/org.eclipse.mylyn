@@ -28,6 +28,9 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
 
 public class BugzillaRestTaskEditorPage extends AbstractTaskEditorPage {
+	public static final String ID_PART_BUGZILLA_FLAGS = "org.eclipse.mylyn.bugzilla.rest.ui.editors.part.flags"; //$NON-NLS-1$
+
+	public static final String PATH_FLAGS = "flags"; //$NON-NLS-1$
 
 	public BugzillaRestTaskEditorPage(TaskEditor editor) {
 		this(editor, BugzillaRestCore.CONNECTOR_KIND);
@@ -50,6 +53,8 @@ public class BugzillaRestTaskEditorPage extends AbstractTaskEditorPage {
 					editor = new BugzillaCcAttributeEditor(getModel(), taskAttribute);
 				} else if (IBugzillaRestConstants.EDITOR_TYPE_KEYWORD.equals(type)) {
 					editor = new BugzillaKeywordAttributeEditor(getModel(), taskAttribute);
+				} else if (IBugzillaRestConstants.EDITOR_TYPE_FLAG.equals(type)) {
+					editor = new BugzillaRestFlagAttributeEditor(getModel(), taskAttribute);
 				} else {
 					editor = super.createEditor(type, taskAttribute);
 				}
@@ -80,6 +85,12 @@ public class BugzillaRestTaskEditorPage extends AbstractTaskEditorPage {
 				return new BugzillaRestTaskEditorPeoplePart();
 			}
 		}.setPath(PATH_PEOPLE));
+		descriptors.add(new TaskEditorPartDescriptor(ID_PART_BUGZILLA_FLAGS) {
+			@Override
+			public AbstractTaskEditorPart createPart() {
+				return new BugzillaRestFlagPart();
+			}
+		}.setPath(ID_PART_ATTRIBUTES + "/" + PATH_FLAGS)); //$NON-NLS-1$
 
 		return descriptors;
 	}

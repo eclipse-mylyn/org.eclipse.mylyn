@@ -302,7 +302,7 @@ sub install_before_final_checks {
 		# set the inclusion to __Any__:__Any__
 		my $sth = $dbh->prepare("INSERT INTO flaginclusions
 				(type_id, product_id, component_id) VALUES (?, ?, ?)");
-		$sth->execute(bless($flagtype,, 'Bugzilla::FlagType' )->id, undef, undef);
+		$sth->execute(bless($flagtype, 'Bugzilla::FlagType' )->id, undef, undef);
 
 		$flagtype = Bugzilla::FlagType->insert_create_data({
 			name        => 'BugFlag2',
@@ -318,7 +318,7 @@ sub install_before_final_checks {
 		# set the inclusion to __Any__:__Any__
 		$sth = $dbh->prepare("INSERT INTO flaginclusions
 				(type_id, product_id, component_id) VALUES (?, ?, ?)");
-		$sth->execute(bless($flagtype,, 'Bugzilla::FlagType' )->id, undef, undef);
+		$sth->execute(bless($flagtype, 'Bugzilla::FlagType' )->id, undef, undef);
 
 		$flagtype = Bugzilla::FlagType->insert_create_data({
 			name        => 'AttachmentFlag1',
@@ -334,7 +334,7 @@ sub install_before_final_checks {
 		# set the inclusion to __Any__:__Any__
 		$sth = $dbh->prepare("INSERT INTO flaginclusions
 				(type_id, product_id, component_id) VALUES (?, ?, ?)");
-		$sth->execute(bless($flagtype,, 'Bugzilla::FlagType' )->id, undef, undef);
+		$sth->execute(bless($flagtype, 'Bugzilla::FlagType' )->id, undef, undef);
 
 		$flagtype = Bugzilla::FlagType->insert_create_data({
 			name        => 'AttachmentFlag2',
@@ -350,7 +350,7 @@ sub install_before_final_checks {
 		# set the inclusion to __Any__:__Any__
 		$sth = $dbh->prepare("INSERT INTO flaginclusions
 				(type_id, product_id, component_id) VALUES (?, ?, ?)");
-		$sth->execute(bless($flagtype,, 'Bugzilla::FlagType' )->id, undef, undef);
+		$sth->execute(bless($flagtype, 'Bugzilla::FlagType' )->id, undef, undef);
 
 		$flagtype = Bugzilla::FlagType->insert_create_data({
 			name        => 'BugFlag3',
@@ -366,7 +366,7 @@ sub install_before_final_checks {
 		# set the inclusion to __Any__:__Any__
 		$sth = $dbh->prepare("INSERT INTO flaginclusions
 				(type_id, product_id, component_id) VALUES (?, ?, ?)");
-		$sth->execute(bless($flagtype,, 'Bugzilla::FlagType' )->id, undef, undef);
+		$sth->execute(bless($flagtype, 'Bugzilla::FlagType' )->id, undef, undef);
 
 		$flagtype = Bugzilla::FlagType->insert_create_data({
 			name        => 'BugFlag4',
@@ -382,7 +382,7 @@ sub install_before_final_checks {
 		# set the inclusion to __Any__:__Any__
 		$sth = $dbh->prepare("INSERT INTO flaginclusions
 				(type_id, product_id, component_id) VALUES (?, ?, ?)");
-		$sth->execute(bless($flagtype,, 'Bugzilla::FlagType' )->id, undef, undef);
+		$sth->execute(bless($flagtype, 'Bugzilla::FlagType' )->id, undef, undef);
 	}
 
 	if (!$dbh->selectrow_array('SELECT 1 FROM keyworddefs')) {
