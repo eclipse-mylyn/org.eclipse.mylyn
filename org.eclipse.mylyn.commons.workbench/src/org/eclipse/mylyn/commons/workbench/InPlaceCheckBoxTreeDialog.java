@@ -21,8 +21,11 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.commons.ui.dialogs.AbstractInPlaceDialog;
@@ -31,7 +34,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.progress.WorkbenchJob;
@@ -49,6 +54,10 @@ public class InPlaceCheckBoxTreeDialog extends AbstractInPlaceDialog {
 	private final Set<String> selectedValues;
 
 	private final String dialogLabel;
+
+	private final Map<String, String> validDescriptions;
+
+	private Text description;
 
 	private class CheckboxFilteredTree extends FilteredTree {
 
@@ -82,8 +91,11 @@ public class InPlaceCheckBoxTreeDialog extends AbstractInPlaceDialog {
 
 	}
 
+	/**
+	 * @since 3.22
+	 */
 	public InPlaceCheckBoxTreeDialog(Shell shell, Control openControl, List<String> values,
-			Map<String, String> validValues, String dialogLabel) {
+			Map<String, String> validValues, String dialogLabel, Map<String, String> validDescriptions) {
 		super(shell, SWT.RIGHT, openControl);
 		Assert.isNotNull(values);
 		Assert.isNotNull(validValues);
@@ -91,7 +103,13 @@ public class InPlaceCheckBoxTreeDialog extends AbstractInPlaceDialog {
 		this.selectedValues = new HashSet<String>(values);
 		this.validValues = validValues;
 		this.dialogLabel = dialogLabel;
+		this.validDescriptions = validDescriptions;
 		setShellStyle(getShellStyle());
+	}
+
+	public InPlaceCheckBoxTreeDialog(Shell shell, Control openControl, List<String> values,
+			Map<String, String> validValues, String dialogLabel) {
+		this(shell, openControl, values, validValues, dialogLabel, null);
 	}
 
 	@Override
@@ -108,13 +126,25 @@ public class InPlaceCheckBoxTreeDialog extends AbstractInPlaceDialog {
 		GridData gd = new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH);
 		composite.setLayoutData(gd);
 
-		valueTree = new CheckboxFilteredTree(composite, SWT.CHECK | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL
-				| SWT.BORDER, new SubstringPatternFilter());
+		valueTree = new CheckboxFilteredTree(composite,
+				SWT.CHECK | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER, new SubstringPatternFilter());
 		gd = new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH);
 		gd.heightHint = 175;
 		gd.widthHint = 160;
 		CheckboxTreeViewer viewer = valueTree.getViewer();
 		viewer.getControl().setLayoutData(gd);
+		if (validDescriptions != null) {
+			Label label = new Label(composite, SWT.NONE);
+			label.setText("Description:"); //$NON-NLS-1$
+			gd = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
+			gd.widthHint = 160;
+			label.setLayoutData(gd);
+			description = new Text(composite, SWT.WRAP);
+			gd = new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH);
+			gd.heightHint = 25;
+			gd.widthHint = 160;
+			description.setLayoutData(gd);
+		}
 
 		if (validValues != null) {
 
@@ -192,6 +222,20 @@ public class InPlaceCheckBoxTreeDialog extends AbstractInPlaceDialog {
 			}
 
 		});
+		if (validDescriptions != null) {
+			viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+				public void selectionChanged(SelectionChangedEvent event) {
+					TreeSelection treeSelection = (TreeSelection) event.getSelection();
+					Object firstSelectedElement = treeSelection.getFirstElement();
+					if (validDescriptions.containsKey(firstSelectedElement)) {
+						description.setText(validDescriptions.get(firstSelectedElement));
+					} else {
+						description.setText(""); //$NON-NLS-1$
+					}
+				}
+			});
+		}
 
 		return valueTree;
 	}
