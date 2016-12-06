@@ -56,6 +56,7 @@ define hudson::defaultsites ($base = $hudson::base,) {
     port    => 9651,
     require => Hudson["1.651.1"],
     folderPlugin => true,
+    matrixPlugin => true,
   }
 
   hudson::site { "jenkins-2.7.3":
@@ -65,6 +66,7 @@ define hudson::defaultsites ($base = $hudson::base,) {
     envdefault => true,
     require => Hudson["2.7.3"],
     folderPlugin => true,
+    matrixPlugin => true,
   }
 
 }

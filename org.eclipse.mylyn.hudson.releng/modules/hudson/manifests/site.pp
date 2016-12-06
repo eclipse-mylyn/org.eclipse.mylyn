@@ -13,6 +13,7 @@ define hudson::site(
 	$userOwner = $hudson::userOwner,
 	$userGroup = $hudson::userGroup,
 	$folderPlugin = false,
+	$matrixPlugin = false,
 ) { 
 	$envbase = "$base/$envid"
 	$conf = "$base/conf.d"
@@ -88,7 +89,29 @@ define hudson::site(
       recurse => true,
       backup => false,
 	  force => true,
-	}	
+	}
+  }
+  
+  if $matrixPlugin {
+  	exec { "install matrix plugin for $envbase":
+	  command => "wget -P $envbase/plugins http://updates.jenkins-ci.org/download/plugins/matrix-project/1.7.1/matrix-project.hpi",
+ 	  cwd => "$envbase",
+	  user => "$userOwner",
+	}
+  } else {	
+	file { "$envbase/jobs/test-single-axis/":
+      ensure => absent,
+      recurse => true,
+      backup => false,
+	  force => true,
+	}
+	
+	file { "$envbase/jobs/test-multi-axis/":
+      ensure => absent,
+      recurse => true,
+      backup => false,
+	  force => true,
+	}
   }
   
   exec { "start $envid":
