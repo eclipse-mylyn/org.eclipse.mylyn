@@ -69,7 +69,7 @@ public class TasksUiUtil {
 	/**
 	 * Flag that is passed along to the workbench browser support when a task is opened in a browser because no rich
 	 * editor was available.
-	 * 
+	 *
 	 * @see #openTask(String)
 	 * @deprecated use {@link BrowserUtil#NO_RICH_EDITOR} instead
 	 */
@@ -181,23 +181,23 @@ public class TasksUiUtil {
 		try {
 			return page.openEditor(input, editorId);
 		} catch (PartInitException e) {
-			StatusManager.getManager().handle(
-					new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Open for editor failed: " + input //$NON-NLS-1$
+			StatusManager.getManager()
+					.handle(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Open for editor failed: " + input //$NON-NLS-1$
 							+ ", taskId: " + editorId, e), StatusManager.SHOW | StatusManager.LOG); //$NON-NLS-1$
 		}
 		return null;
 	}
 
 	public static int openEditRepositoryWizard(TaskRepository repository) {
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				repository.getConnectorKind());
-		if (connector == null
-				|| (!connector.isUserManaged() && !connector.getConnectorKind().equals(
-						LocalRepositoryConnector.CONNECTOR_KIND))) {
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+				.getRepositoryConnector(repository.getConnectorKind());
+		if (connector == null || (!connector.isUserManaged()
+				&& !connector.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND))) {
 			return Window.CANCEL;
 		}
 
-		EditRepositoryWizard wizard = new EditRepositoryWizard(repository, TasksUiPlugin.getConnectorUi(repository.getConnectorKind()));
+		EditRepositoryWizard wizard = new EditRepositoryWizard(repository,
+				TasksUiPlugin.getConnectorUi(repository.getConnectorKind()));
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		if (shell != null && !shell.isDisposed()) {
 			WizardDialog dialog = new TaskRepositoryWizardDialog(shell, wizard);
@@ -224,6 +224,7 @@ public class TasksUiUtil {
 
 	private static boolean openNewTaskEditor(Shell shell, IWizard wizard, ITaskMapping taskSelection) {
 		WizardDialog dialog = new WizardDialog(shell, wizard);
+		dialog.setHelpAvailable(false);
 		dialog.setBlockOnOpen(true);
 
 		// make sure the wizard has created its pages
@@ -260,7 +261,7 @@ public class TasksUiUtil {
 
 	/**
 	 * Either pass in a repository and taskId, or fullUrl, or all of them
-	 * 
+	 *
 	 * @deprecated Use {@link #openTask(String,String,String)} instead
 	 */
 	@Deprecated
@@ -285,7 +286,7 @@ public class TasksUiUtil {
 
 	/**
 	 * Resolves a rich editor for the task if available.
-	 * 
+	 *
 	 * @since 3.0
 	 */
 	public static void openTask(String url) {
@@ -302,8 +303,8 @@ public class TasksUiUtil {
 					if (repositoryUrl != null) {
 						String id = connector.getTaskIdFromTaskUrl(url);
 						if (id != null) {
-							TaskRepository repository = TasksUi.getRepositoryManager().getRepository(
-									connector.getConnectorKind(), repositoryUrl);
+							TaskRepository repository = TasksUi.getRepositoryManager()
+									.getRepository(connector.getConnectorKind(), repositoryUrl);
 							if (repository != null) {
 								opened = openTask(repository, id);
 							}
@@ -319,7 +320,7 @@ public class TasksUiUtil {
 
 	/**
 	 * Either pass in a repository and taskId, or fullUrl, or all of them
-	 * 
+	 *
 	 * @since 3.0
 	 */
 	public static boolean openTask(String repositoryUrl, String taskId, String fullUrl) {
@@ -329,7 +330,7 @@ public class TasksUiUtil {
 	/**
 	 * Either pass in a repository and taskId, or fullUrl, or all of them the time stamp is used for selecting the
 	 * correct comment
-	 * 
+	 *
 	 * @since 3.4
 	 */
 	public static boolean openTask(String repositoryUrl, String taskId, String fullUrl, long timestamp) {
@@ -341,8 +342,8 @@ public class TasksUiUtil {
 
 		boolean opened = false;
 
-		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getConnectorForRepositoryTaskUrl(
-				fullUrl);
+		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+				.getConnectorForRepositoryTaskUrl(fullUrl);
 		if (connector != null) {
 			if (repositoryUrl != null && taskId != null) {
 				opened = TasksUiInternal.openRepositoryTask(connector.getConnectorKind(), repositoryUrl, taskId, null,
@@ -400,7 +401,7 @@ public class TasksUiUtil {
 
 	/**
 	 * Opens <code>element</code> in a browser using an authenticated URL if available.
-	 * 
+	 *
 	 * @since 3.4
 	 */
 	public static boolean openWithBrowser(IRepositoryElement element) {
@@ -410,7 +411,7 @@ public class TasksUiUtil {
 
 	/**
 	 * Opens <code>element</code> in a browser using an authenticated URL if available.
-	 * 
+	 *
 	 * @since 3.4
 	 */
 	public static boolean openWithBrowser(TaskRepository repository, IRepositoryElement element) {
@@ -439,7 +440,7 @@ public class TasksUiUtil {
 
 	/**
 	 * Returns if the current line in the task editor should be highlighted.
-	 * 
+	 *
 	 * @return true, if line highlighting is enabled
 	 * @since 3.4
 	 */

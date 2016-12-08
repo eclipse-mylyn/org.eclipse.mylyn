@@ -89,6 +89,7 @@ public class NewQueryAction extends Action implements IViewActionDelegate, IExec
 		}
 
 		WizardDialog dialog = new WizardDialog(WorkbenchUtil.getShell(), wizard);
+		dialog.setHelpAvailable(false);
 		dialog.create();
 		dialog.setBlockOnOpen(true);
 		dialog.open();

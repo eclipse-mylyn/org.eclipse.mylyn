@@ -8,7 +8,7 @@
  * Contributors:
  *     Willian Mitsuda - initial API and implementation
  *     Abner Ballardo - fixes for bug 349003
- *     Tasktop Technologies - improvements 
+ *     Tasktop Technologies - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
@@ -42,6 +42,7 @@ public class OpenTaskAction extends ActionDelegate implements IWorkbenchWindowAc
 		dlg.setTitle(Messages.OpenTaskAction_Open_Task);
 		dlg.setMessage(Messages.OpenTaskAction_Select_a_task_to_open__);
 		dlg.setShowExtendedOpeningOptions(true);
+		dlg.setHelpAvailable(false);
 
 		if (dlg.open() != Window.OK) {
 			return;
