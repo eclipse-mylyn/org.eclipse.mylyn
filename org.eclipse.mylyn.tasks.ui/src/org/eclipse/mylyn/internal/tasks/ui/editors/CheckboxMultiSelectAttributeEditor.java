@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Tasktop Technologies and others. 
+ * Copyright (c) 2011 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,6 +35,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
@@ -97,51 +98,68 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 
 			button = toolkit.createButton(composite, "", SWT.ARROW | SWT.DOWN); //$NON-NLS-1$
 			GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.TOP).applyTo(button);
-			button.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					final List<String> values = getValues();
-					Map<String, String> validValues = getAttributeMapper().getOptions(getTaskAttribute());
-
-					final InPlaceCheckBoxTreeDialog selectionDialog = new InPlaceCheckBoxTreeDialog(
-							WorkbenchUtil.getShell(), button, values, validValues, NLS.bind(
-									Messages.CheckboxMultiSelectAttributeEditor_Select_X, getLabel()));
-
-					selectionDialog.addEventListener(new IInPlaceDialogListener() {
-
-						public void buttonPressed(InPlaceDialogEvent event) {
-							suppressRefresh = true;
-							try {
-								if (event.getReturnCode() == Window.OK) {
-									Set<String> newValues = selectionDialog.getSelectedValues();
-									if (!new HashSet<String>(values).equals(newValues)) {
-										setValues(new ArrayList<String>(newValues));
-										refresh();
-									}
-								} else if (event.getReturnCode() == AbstractInPlaceDialog.ID_CLEAR) {
-									Set<String> newValues = new HashSet<String>();
-									if (!new HashSet<String>(values).equals(newValues)) {
-										setValues(new ArrayList<String>(newValues));
-										refresh();
-									}
-								}
-							} finally {
-								suppressRefresh = false;
-							}
-						}
-					});
-					selectionDialog.open();
-				}
-			});
+			button.addSelectionListener(createSelectionListener());
 			toolkit.adapt(valueText, false, false);
 			refresh();
 			setControl(composite);
 		}
 	}
 
+	protected SelectionListener createSelectionListener() {
+		return new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				final List<String> values = getValueList();
+				final InPlaceCheckBoxTreeDialog selectionDialog = createInPlaceCheckBoxTreeDialog(values);
+				addEventListener(values, selectionDialog);
+				selectionDialog.open();
+			}
+
+		};
+	}
+
+	protected List<String> getValueList() {
+		final List<String> values = getValues();
+		return values;
+	}
+
+	protected InPlaceCheckBoxTreeDialog createInPlaceCheckBoxTreeDialog(List<String> values) {
+		Map<String, String> validValues = getAttributeMapper().getOptions(getTaskAttribute());
+		final InPlaceCheckBoxTreeDialog selectionDialog = new InPlaceCheckBoxTreeDialog(WorkbenchUtil.getShell(),
+				button, values, validValues,
+				NLS.bind(Messages.CheckboxMultiSelectAttributeEditor_Select_X, getLabel()));
+		return selectionDialog;
+	}
+
+	private void addEventListener(final List<String> values, final InPlaceCheckBoxTreeDialog selectionDialog) {
+		selectionDialog.addEventListener(new IInPlaceDialogListener() {
+
+			public void buttonPressed(InPlaceDialogEvent event) {
+				suppressRefresh = true;
+				try {
+					if (event.getReturnCode() == Window.OK) {
+						Set<String> newValues = selectionDialog.getSelectedValues();
+						if (!new HashSet<String>(values).equals(newValues)) {
+							setValues(new ArrayList<String>(newValues));
+							refresh();
+						}
+					} else if (event.getReturnCode() == AbstractInPlaceDialog.ID_CLEAR) {
+						Set<String> newValues = new HashSet<String>();
+						if (!new HashSet<String>(values).equals(newValues)) {
+							setValues(new ArrayList<String>(newValues));
+							refresh();
+						}
+					}
+				} finally {
+					suppressRefresh = false;
+				}
+			}
+		});
+	}
+
 	/**
 	 * Update scroll bars of the enclosing form.
-	 * 
+	 *
 	 * @see Section#reflow()
 	 */
 	private void reflow() {
@@ -212,7 +230,8 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 			}
 		}
 		valueText.setText(valueString.toString());
-		if (valueText != null && parent != null && parent.getParent() != null && parent.getParent().getParent() != null) {
+		if (valueText != null && parent != null && parent.getParent() != null
+				&& parent.getParent().getParent() != null) {
 			Point size = valueText.getSize();
 			// subtract 1 from size for border
 			Point newSize = valueText.computeSize(size.x - 1, SWT.DEFAULT);
@@ -226,4 +245,9 @@ public class CheckboxMultiSelectAttributeEditor extends AbstractAttributeEditor 
 	public boolean shouldAutoRefresh() {
 		return !suppressRefresh;
 	}
+
+	protected Button getButton() {
+		return button;
+	}
+
 }

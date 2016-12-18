@@ -200,6 +200,7 @@ public class BugzillaRestClient {
 					config.updateProductOptions(taskData);
 					config.addValidOperations(taskData);
 					config.updateFlags(taskData);
+					config.updateKeyword(taskData);
 					collector.accept(taskData);
 				}
 			} catch (RuntimeException e) {
