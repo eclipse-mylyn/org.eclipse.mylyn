@@ -15,7 +15,7 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 /**
  * Attributes that may used when creating blocks of type {@link BlockType#TABLE_CELL_HEADER} or
  * {@link BlockType#TABLE_CELL_NORMAL}.
- * 
+ *
  * @author David Green
  * @since 1.0
  */
@@ -38,18 +38,42 @@ public class TableCellAttributes extends Attributes {
 		this.bgcolor = bgcolor;
 	}
 
+	/**
+	 * Horizontal alignment attribute.
+	 *
+	 * @param valign
+	 *            typical value is "left", "right", "center"
+	 */
 	public String getAlign() {
 		return align;
 	}
 
+	/**
+	 * Horizontal alignment attribute.
+	 *
+	 * @param valign
+	 *            typical value is "left", "right", "center"
+	 */
 	public void setAlign(String align) {
 		this.align = align;
 	}
 
+	/**
+	 * Vertical alignment attribute.
+	 *
+	 * @param valign
+	 *            typical value is "top", "middle", "bottom"
+	 */
 	public String getValign() {
 		return valign;
 	}
 
+	/**
+	 * Vertical alignment attribute.
+	 *
+	 * @param valign
+	 *            typical value is "top", "middle", "bottom"
+	 */
 	public void setValign(String valign) {
 		this.valign = valign;
 	}

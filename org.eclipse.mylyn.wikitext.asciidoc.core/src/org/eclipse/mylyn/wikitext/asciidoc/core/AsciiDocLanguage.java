@@ -28,6 +28,7 @@ import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.ListBlock;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.ParagraphBlock;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.PreformattedBlock;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.PropertiesLineBlock;
+import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.TableBlock;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.TitleLineBlock;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.block.UnderlinedHeadingBlock;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.phrase.BackslashEscapePhraseModifier;
@@ -141,6 +142,8 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 		TitleLineBlock titleLineBlock = new TitleLineBlock();
 		PropertiesLineBlock propertiesLineBlock = new PropertiesLineBlock();
 
+		TableBlock tableBlock = new TableBlock();
+
 		PreformattedBlock preformattedBlock = new PreformattedBlock();
 		CommentBlock commentBlock = new CommentBlock();
 		HeadingBlock headingBlock = new HeadingBlock();
@@ -149,6 +152,8 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 
 		blocks.add(titleLineBlock);
 		blocks.add(propertiesLineBlock);
+
+		blocks.add(tableBlock);
 
 		blocks.add(preformattedBlock);
 		blocks.add(headingBlock);
@@ -174,5 +179,4 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 	public DocumentBuilder createDocumentBuilder(Writer out, boolean formatting) {
 		return new AsciiDocDocumentBuilder(out);
 	}
-
 }

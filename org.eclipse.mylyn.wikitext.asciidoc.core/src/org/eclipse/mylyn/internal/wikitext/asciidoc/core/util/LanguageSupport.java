@@ -13,16 +13,25 @@
 
 package org.eclipse.mylyn.internal.wikitext.asciidoc.core.util;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.mylyn.wikitext.core.parser.TableCellAttributes;
+
+import com.google.common.base.Splitter;
+
 /**
  * Internal class to provide package internal support to the language
  */
 public class LanguageSupport {
+	private static final Pattern COLUMN_FORMATTING_SPLITTER = Pattern.compile("([0-9]+)\\*(.*)"); //$NON-NLS-1$
+
+	private static final Pattern ALIGN_PATTERN = Pattern.compile("((?:\\.)?)([<^>])"); //$NON-NLS-1$
 
 	private static Pattern keyValuePattern = Pattern.compile("(.*)=\"(.*)\""); //$NON-NLS-1$
 
@@ -52,7 +61,7 @@ public class LanguageSupport {
 
 		// TODO: handle escaped strings and default sequence of parameters
 		// i.e. sunset,100,200,title="test"
-		String[] valpairs = rawFormat.split(","); //$NON-NLS-1$
+		Iterable<String> valpairs = Splitter.on(Pattern.compile(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)")).split(rawFormat); //$NON-NLS-1$
 		for (String pair : valpairs) {
 			Matcher matcher = keyValuePattern.matcher(pair.trim());
 
@@ -73,6 +82,64 @@ public class LanguageSupport {
 		}
 
 		return properties;
+	}
+
+	public static List<TableCellAttributes> computeColumnsAttributeList(String cols) {
+		if (cols != null) {
+			List<TableCellAttributes> result = new ArrayList<>();
+			for (String c : cols.split(",")) { //$NON-NLS-1$
+				Matcher matcher = COLUMN_FORMATTING_SPLITTER.matcher(c);
+				if (matcher.matches()) {
+					int repeat = Integer.parseInt(matcher.group(1));
+					for (int i = 0; i < repeat; i++) {
+						result.add(convertToTableCellAttributes(matcher.group(2)));
+					}
+				} else {
+					result.add(convertToTableCellAttributes(c));
+				}
+			}
+			return result;
+		} else {
+			return Collections.emptyList();
+		}
+	}
+
+	private static TableCellAttributes convertToTableCellAttributes(String columnFormat) {
+		TableCellAttributes result = new TableCellAttributes();
+
+		Matcher alignMatcher = ALIGN_PATTERN.matcher(columnFormat);
+		int start = 0;
+		while (alignMatcher.find(start)) {
+			String align = alignMatcher.group(2);
+			if (".".equals(alignMatcher.group(1))) { //$NON-NLS-1$
+				if ("<".equals(align)) { //$NON-NLS-1$
+					result.setValign("top"); //$NON-NLS-1$
+				} else if ("^".equals(align)) { //$NON-NLS-1$
+					result.setValign("middle"); //$NON-NLS-1$
+				} else if (">".equals(align)) { //$NON-NLS-1$
+					result.setValign("bottom"); //$NON-NLS-1$
+				}
+			} else {
+				if ("<".equals(align)) { //$NON-NLS-1$
+					result.setAlign("left"); //$NON-NLS-1$
+				} else if ("^".equals(align)) { //$NON-NLS-1$
+					result.setAlign("center"); //$NON-NLS-1$
+				} else if (">".equals(align)) { //$NON-NLS-1$
+					result.setAlign("right"); //$NON-NLS-1$
+				}
+			}
+			start = alignMatcher.end();
+		}
+
+		return result;
+	}
+
+	public static List<TableCellAttributes> createDefaultColumnsAttributeList(int size) {
+		List<TableCellAttributes> result = new ArrayList<>();
+		for (int i = 0; i < size; i++) {
+			result.add(new TableCellAttributes());
+		}
+		return result;
 	}
 
 }
