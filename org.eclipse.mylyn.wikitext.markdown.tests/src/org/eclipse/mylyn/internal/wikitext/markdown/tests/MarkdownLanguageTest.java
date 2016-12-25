@@ -25,7 +25,7 @@ import org.eclipse.mylyn.wikitext.tests.TestUtil;
 
 /**
  * http://daringfireball.net/projects/markdown/syntax
- * 
+ *
  * @author Stefan Seelmann
  */
 public class MarkdownLanguageTest extends MarkdownLanguageTestBase {
@@ -52,6 +52,17 @@ public class MarkdownLanguageTest extends MarkdownLanguageTestBase {
 		text.append("> Blockquote\n");
 		text.append("\n");
 		text.append("    Code block\n");
+		text.append("    Continued\n");
+		text.append("\n");
+		text.append("~~~\n");
+		text.append("  Fenced Code block (Tildes)\n");
+		text.append("  Continued\n");
+		text.append("~~~\n");
+		text.append("\n");
+		text.append("```\n");
+		text.append("  Fenced Code block (Backticks)\n");
+		text.append("  Continued\n");
+		text.append("```\n");
 		text.append("\n");
 		text.append("* List item 1\n");
 		text.append("* List item 2\n");
@@ -73,6 +84,8 @@ public class MarkdownLanguageTest extends MarkdownLanguageTestBase {
 		assertTrue(html.contains("<h2 id=\"header-2\">Header 2<"));
 		assertTrue(html.contains("<blockquote><p>Blockquote"));
 		assertTrue(html.contains("<pre><code>Code block"));
+		assertTrue(html.contains("<pre><code>  Fenced Code block (Tildes)"));
+		assertTrue(html.contains("<pre><code>  Fenced Code block (Backticks)"));
 		assertTrue(html.contains("<ul>"));
 		assertTrue(html.contains("<li>List item 1</li>"));
 		assertTrue(html.contains("<li>List item 2</li>"));
