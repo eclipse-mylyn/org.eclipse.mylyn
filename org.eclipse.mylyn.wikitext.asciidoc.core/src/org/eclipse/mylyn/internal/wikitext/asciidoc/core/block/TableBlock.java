@@ -28,7 +28,16 @@ import com.google.common.base.Splitter;
  * Text block containing a table
  */
 public class TableBlock extends AsciiDocBlock {
-	private static final Splitter ROW_CELL_SPLITTER = Splitter.on(Pattern.compile("(?<!\\\\)\\|")); //$NON-NLS-1$
+
+	private TableFormat format;
+
+	private String separator;
+
+	private enum TableFormat {
+		PREFIX_SEPARATED_VALUES, //PSV
+		DELIMITER_SEPARATED_VALUES, //DSV
+		COMMA_SEPARATED_VALUES //CSV
+	}
 
 	private int cellsCount = 0;
 
@@ -37,13 +46,45 @@ public class TableBlock extends AsciiDocBlock {
 	private boolean hasHeader = false;
 
 	public TableBlock() {
-		super(Pattern.compile("^\\|===\\s*")); //$NON-NLS-1$
+		super(Pattern.compile("^(\\||,|:)===\\s*")); //$NON-NLS-1$
 	}
 
 	@Override
 	protected void processBlockStart() {
+
+		if (startDelimiter.startsWith(",")) { //$NON-NLS-1$
+			// ",===" is the shorthand notation for [format="csv", options="header"]
+			format = TableFormat.COMMA_SEPARATED_VALUES;
+			hasHeader = true;
+		} else if (startDelimiter.startsWith(":")) { //$NON-NLS-1$
+			// ":===" is the shorthand notation for [format="dsv", options="header"]
+			format = TableFormat.DELIMITER_SEPARATED_VALUES;
+			hasHeader = true;
+		} else {
+			// default table format is PSV with separator "|"
+			format = TableFormat.PREFIX_SEPARATED_VALUES;
+			separator = "|"; //$NON-NLS-1$
+		}
+
 		Map<String, String> lastProperties = getAsciiDocState().getLastProperties(Collections.emptyList());
 		colsAttribute = LanguageSupport.computeColumnsAttributeList(lastProperties.get("cols")); //$NON-NLS-1$
+
+		String formatProperty = lastProperties.get("format"); //$NON-NLS-1$
+		if (formatProperty != null) {
+			switch (formatProperty) {
+			case "dsv": //$NON-NLS-1$
+				format = TableFormat.DELIMITER_SEPARATED_VALUES;
+				break;
+			case "csv": //$NON-NLS-1$
+				format = TableFormat.COMMA_SEPARATED_VALUES;
+				break;
+			}
+		}
+
+		String separator = lastProperties.get("separator"); //$NON-NLS-1$
+		if (separator != null) {
+			this.separator = separator;
+		}
 
 		String options = lastProperties.get("options"); //$NON-NLS-1$
 		if (options != null) {
@@ -65,7 +106,7 @@ public class TableBlock extends AsciiDocBlock {
 			}
 
 			boolean firstCellInLine = true;
-			for (String cell : ROW_CELL_SPLITTER.split(line)) {
+			for (String cell : createRowCellSplitter(line)) {
 				String cellContent = cell.trim();
 				if (!cellContent.isEmpty() || !firstCellInLine) {
 					//Open row if necessary:
@@ -74,8 +115,14 @@ public class TableBlock extends AsciiDocBlock {
 						builder.beginBlock(BlockType.TABLE_ROW, tableRowAttributes);
 					}
 
-					//Replace escaped pipe:
-					String blockContent = cellContent.replaceAll("\\\\\\|", "|"); //$NON-NLS-1$ //$NON-NLS-2$
+					String blockContent;
+					if (format != TableFormat.COMMA_SEPARATED_VALUES) {
+						//Replace escaped delimiter:
+						String delimiter = getCellSeparator();
+						blockContent = cellContent.replaceAll("\\\\" + Pattern.quote(delimiter), delimiter);//$NON-NLS-1$
+					} else {
+						blockContent = cellContent;
+					}
 
 					//Prepare table cell attributes:
 					TableCellAttributes attributes;
@@ -110,6 +157,26 @@ public class TableBlock extends AsciiDocBlock {
 				// end of the first row, it defines the number of cells in the next rows when cols is missing:
 				colsAttribute = LanguageSupport.createDefaultColumnsAttributeList(cellsCount);
 			}
+		}
+	}
+
+	private Iterable<String> createRowCellSplitter(String line) {
+		if (format == TableFormat.COMMA_SEPARATED_VALUES) {
+			return Splitter.on(",").split(line); //$NON-NLS-1$
+		}
+		String delimiter = getCellSeparator();
+		return Splitter.on(Pattern.compile("(?<!\\\\)" + Pattern.quote(delimiter))).split(line); //$NON-NLS-1$
+	}
+
+	private String getCellSeparator() {
+		switch (format) {
+		case COMMA_SEPARATED_VALUES:
+			return ","; //$NON-NLS-1$
+		case DELIMITER_SEPARATED_VALUES:
+			return ":"; //$NON-NLS-1$
+		case PREFIX_SEPARATED_VALUES:
+		default:
+			return separator;
 		}
 	}
 

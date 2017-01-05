@@ -354,4 +354,143 @@ public class AsciiDocLanguageTableTest extends AsciiDocLanguageTestBase {
 				+ "<tr><td>three</td><td>four</td></tr>" //
 				+ "</table>", html);
 	}
+
+	@Test
+	public void testTableCSV() {
+		String html = parseToHtml("" //
+				+ "[format=\"csv\", options=\"header\"]\n" //
+				+ "|===\n" //
+				+ "first,second,third\n" //
+				+ "lorem,ipsum,dolor\n" //
+				+ "|===\n" //
+				+ "Some Text");
+		assertEquals("<table>" //
+				+ "<tr>" //
+				+ "<th>first</th>" //
+				+ "<th>second</th>" //
+				+ "<th>third</th>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>lorem</td>" //
+				+ "<td>ipsum</td>" //
+				+ "<td>dolor</td>" //
+				+ "</tr>" //
+				+ "</table>" //
+				+ "<p>Some Text</p>\n", html);
+	}
+
+	@Test
+	public void testTableCSVShorthandNotation() {
+		String html = parseToHtml("" //
+				+ ",===\n" //
+				+ "first,second\n" //
+				+ "lorem,ipsum\n" //
+				+ ",===\n" //
+				+ "Some Text");
+		assertEquals("<table>" //
+				+ "<tr>" //
+				+ "<th>first</th>" //
+				+ "<th>second</th>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>lorem</td>" //
+				+ "<td>ipsum</td>" //
+				+ "</tr>" //
+				+ "</table>" //
+				+ "<p>Some Text</p>\n", html);
+	}
+
+	@Test
+	public void testTableCSVEscaped() {
+		String html = parseToHtml("" //
+				+ "[cols=\"2*\", format=\"csv\"]\n" //
+				+ "|===\n" //
+				+ "lo \\| rem\\,ips | um\n" //
+				+ "alice\n" //
+				+ "bob\n" //
+				+ "first,second\n" //
+				+ "|===\n");
+		assertEquals("<table>" //
+				+ "<tr>" //
+				+ "<td>lo \\| rem\\</td>" //
+				+ "<td>ips | um</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>alice</td>" //
+				+ "<td>bob</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>first</td>" //
+				+ "<td>second</td>" //
+				+ "</tr>" //
+				+ "</table>", html);
+	}
+
+	@Test
+	public void testTableDSV() {
+		String html = parseToHtml("" //
+				+ "[format=\"dsv\", options=\"header\"]\n" //
+				+ "|===\n" //
+				+ "first:second:third\n" //
+				+ "\n" //
+				+ "lorem:ipsum:dolor\n" //
+				+ "|===\n" //
+				+ "Some Text");
+		assertEquals("<table>" //
+				+ "<tr>" //
+				+ "<th>first</th>" //
+				+ "<th>second</th>" //
+				+ "<th>third</th>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>lorem</td>" //
+				+ "<td>ipsum</td>" //
+				+ "<td>dolor</td>" //
+				+ "</tr>" //
+				+ "</table>" //
+				+ "<p>Some Text</p>\n", html);
+	}
+
+	@Test
+	public void testTableDSVShorthandNotation() {
+		String html = parseToHtml("" //
+				+ ":===\n" //
+				+ "first:second\n" //
+				+ "lorem:ipsum\n" //
+				+ ":===\n" //
+				+ "Some Text");
+		assertEquals("<table>" //
+				+ "<tr>" //
+				+ "<th>first</th>" //
+				+ "<th>second</th>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>lorem</td>" //
+				+ "<td>ipsum</td>" //
+				+ "</tr>" //
+				+ "</table>" //
+				+ "<p>Some Text</p>\n", html);
+	}
+
+	@Test
+	public void testTableDSVEscaped() {
+		String html = parseToHtml("" //
+				+ "[cols=\"2*\", format=\"dsv\"]\n" //
+				+ "|===\n" //
+				+ "lo \\| rem\\:ips | um\n" //
+				+ "dolor\n" //
+				+ "\n" //
+				+ "first:second\n" //
+				+ "|===\n");
+		assertEquals("<table>" //
+				+ "<tr>" //
+				+ "<td>lo \\| rem:ips | um</td>" //
+				+ "<td>dolor</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>first</td>" //
+				+ "<td>second</td>" //
+				+ "</tr>" //
+				+ "</table>", html);
+	}
 }
