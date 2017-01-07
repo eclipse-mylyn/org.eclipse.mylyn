@@ -153,9 +153,9 @@ public class AsciiDocLanguageXrefTest extends AsciiDocLanguageTestBase {
 		String html = parseToHtml(text);
 
 		String expected = "<ul>" //
-				+ "<li> <a href=\"#xxx\">[xxx]</a></li>"//
-				+ "<li> <a href=\"file.adoc#yyy\">[file#yyy]</a></li>"//
-				+ "<li> <a href=\"#yyy\">My link</a></li>"//
+				+ "<li><a href=\"#xxx\">[xxx]</a></li>"//
+				+ "<li><a href=\"file.adoc#yyy\">[file#yyy]</a></li>"//
+				+ "<li><a href=\"#yyy\">My link</a></li>"//
 				+ "</ul>";
 		assertEquals(expected, html);
 	}
