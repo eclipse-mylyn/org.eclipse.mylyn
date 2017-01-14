@@ -217,24 +217,6 @@ public class BugzillaRestConnectorTest {
 	}
 
 	@Test
-	public void testGetRepositoryUrlFromTaskUrl() throws Exception {
-		assertNull(
-				connector.getRepositoryUrlFromTaskUrl(actualFixture.repository().getRepositoryUrl() + "/rest/bug/1"));
-		assertThat(
-				connector
-						.getRepositoryUrlFromTaskUrl(actualFixture.repository().getRepositoryUrl() + "/rest.cgi/bug/1"),
-				equalTo(actualFixture.repository().getRepositoryUrl()));
-	}
-
-	@Test
-	public void testGetTaskUrl() throws Exception {
-		assertThat(connector.getTaskUrl(actualFixture.repository().getRepositoryUrl(), "123"),
-				equalTo(actualFixture.repository().getRepositoryUrl() + "/rest.cgi/bug/123"));
-		assertThat(connector.getTaskUrl(actualFixture.repository().getRepositoryUrl(), "Test"),
-				equalTo(actualFixture.repository().getRepositoryUrl() + "/rest.cgi/bug/Test"));
-	}
-
-	@Test
 	public void testUpdateTaskFromTaskData() throws Exception {
 		TaskData taskData = new TaskData(new TaskAttributeMapper(actualFixture.repository()),
 				connector.getConnectorKind(), actualFixture.repository().getRepositoryUrl(), "123");

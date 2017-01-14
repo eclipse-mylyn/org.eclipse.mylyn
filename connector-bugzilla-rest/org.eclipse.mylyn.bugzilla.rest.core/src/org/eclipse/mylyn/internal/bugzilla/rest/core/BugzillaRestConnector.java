@@ -55,6 +55,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -230,8 +231,11 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public boolean hasTaskChanged(TaskRepository taskRepository, ITask task, TaskData taskData) {
-		// ignore
-		return false;
+		String lastKnownLocalModValue = task
+				.getAttribute(BugzillaRestTaskSchema.getDefault().DATE_MODIFICATION.getKey());
+		TaskAttribute latestRemoteModAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
+		String latestRemoteModValue = latestRemoteModAttribute != null ? latestRemoteModAttribute.getValue() : null;
+		return !Objects.equal(latestRemoteModValue, lastKnownLocalModValue);
 	}
 
 	@Override
@@ -367,10 +371,8 @@ public class BugzillaRestConnector extends AbstractRepositoryConnector {
 	}
 
 	private Map<String, String> convertProperties(TaskRepository repository) {
-		return repository.getProperties()
-				.entrySet()
-				.stream()
-				.collect(Collectors.toMap(e -> convertProperty(e.getKey()), Map.Entry::getValue));
+		return repository.getProperties().entrySet().stream().collect(
+				Collectors.toMap(e -> convertProperty(e.getKey()), Map.Entry::getValue));
 	}
 
 	@SuppressWarnings("restriction")
