@@ -26,21 +26,35 @@ import org.eclipse.ui.PlatformUI;
 public class ClearContextHandler extends AbstractTaskHandler {
 
 	@Override
-	protected void execute(ExecutionEvent event, ITask task) throws ExecutionException {
-		run(task);
+	protected void execute(ExecutionEvent event, ITask[] tasks) throws ExecutionException {
+		run(tasks);
 	}
 
 	public static void run(ITask task) {
-		boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow()
-				.getShell(), Messages.ClearContextHandler_Confirm_clear_context,
-				Messages.ClearContextHandler_CLEAR_THE_CONTEXT_THE_FOR_SELECTED_TASK);
+		run(new ITask[] { task });
+	}
+
+	public static void run(ITask[] tasks) {
+		boolean deleteConfirmed = false;
+		if (tasks.length == 1) {
+			deleteConfirmed = MessageDialog.openQuestion(
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					Messages.ClearContextHandler_Confirm_clear_context,
+					Messages.ClearContextHandler_CLEAR_THE_CONTEXT_THE_FOR_SELECTED_TASK);
+		} else if (tasks.length > 1) {
+			deleteConfirmed = MessageDialog.openQuestion(
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					Messages.ClearContextHandler_Confirm_clear_context,
+					Messages.ClearContextHandler_CLEAR_THE_CONTEXT_THE_FOR_SELECTED_TASKS);
+		}
 		if (!deleteConfirmed) {
 			return;
 		}
+		for (ITask task : tasks) {
+			TasksUiPlugin.getContextStore().clearContext(task);
+			TasksUiInternal.getTaskList().notifyElementChanged(task);
 
-		TasksUiPlugin.getContextStore().clearContext(task);
-		TasksUiInternal.getTaskList().notifyElementChanged(task);
+		}
 	}
 
 }

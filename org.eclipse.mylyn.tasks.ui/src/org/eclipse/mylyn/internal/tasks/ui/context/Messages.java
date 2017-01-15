@@ -49,6 +49,8 @@ public class Messages extends NLS {
 
 	public static String ContextRetrieveWizardPage_SELECT_A_CONTEXT_TO_RETTRIEVE_FROM_TABLE_BELOW;
 
+	public static String ClearContextHandler_CLEAR_THE_CONTEXT_THE_FOR_SELECTED_TASKS;
+
 	public static String ContextRetrieveWizardPage_Task;
 
 	public static String RetrieveLatestContextDialog_Dialog_Title;
