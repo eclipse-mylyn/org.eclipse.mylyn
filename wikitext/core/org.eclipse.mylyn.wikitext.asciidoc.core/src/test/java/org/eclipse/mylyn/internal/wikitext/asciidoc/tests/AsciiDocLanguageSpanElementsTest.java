@@ -59,6 +59,24 @@ public class AsciiDocLanguageSpanElementsTest extends AsciiDocLanguageTestBase {
 	}
 
 	@Test
+	public void strongSpecialCharAfter() {
+		String html = parseToHtml("This *lorem*! And *ipsum*.");
+		assertEquals("<p>This <strong>lorem</strong>! And <strong>ipsum</strong>.</p>\n", html);
+	}
+
+	@Test
+	public void strongSpecialCharBefore() {
+		String html = parseToHtml("This %*foo bar* and -*bar foo*");
+		assertEquals("<p>This %<strong>foo bar</strong> and -<strong>bar foo</strong></p>\n", html);
+	}
+
+	@Test
+	public void notStrongUnderscoreBefore() {
+		String html = parseToHtml("before _*foo* after");
+		assertEquals("<p>before _*foo* after</p>\n", html);
+	}
+
+	@Test
 	public void escapedStrong() {
 		String html = parseToHtml("\\*foo bar*");
 		assertEquals("<p>*foo bar*</p>\n", html);
@@ -104,6 +122,18 @@ public class AsciiDocLanguageSpanElementsTest extends AsciiDocLanguageTestBase {
 	public void emphasisNoWordBoundaryNoSpaceSurrounded() {
 		String html = parseToHtml("before__foo bar__after");
 		assertEquals("<p>before<em>foo bar</em>after</p>\n", html);
+	}
+
+	@Test
+	public void emphasisSpecialCharAfter() {
+		String html = parseToHtml("Try _lorem_{} and _ipsum_[]");
+		assertEquals("<p>Try <em>lorem</em>{} and <em>ipsum</em>[]</p>\n", html);
+	}
+
+	@Test
+	public void emphasisSpecialCharBefore() {
+		String html = parseToHtml("Try ()_lorem_ and <>_ipsum_");
+		assertEquals("<p>Try ()<em>lorem</em> and &lt;&gt;<em>ipsum</em></p>\n", html);
 	}
 
 	@Test
@@ -200,6 +230,12 @@ public class AsciiDocLanguageSpanElementsTest extends AsciiDocLanguageTestBase {
 	public void codeBacktickNoWordBoundaryNoSpaceSurrounded() {
 		String html = parseToHtml("before``foo bar``after");
 		assertEquals("<p>before<code>foo bar</code>after</p>\n", html);
+	}
+
+	@Test
+	public void codeBacktickSpecialCharAfter() {
+		String html = parseToHtml("For `waitUntil` and `waitWhile`.");
+		assertEquals("<p>For <code>waitUntil</code> and <code>waitWhile</code>.</p>\n", html);
 	}
 
 	@Test

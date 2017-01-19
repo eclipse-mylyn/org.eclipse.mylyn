@@ -45,7 +45,7 @@ public class SimplePhraseModifier extends PatternBasedElement {
 		String quotedDelimiter = Pattern.quote(delimiter);
 		String pattern = quotedDelimiter + " *" + "(.+?)" + " *" + quotedDelimiter; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		if (wordBoundary) {
-			pattern = "(^|\\s)" + pattern + "($|\\s)"; //$NON-NLS-1$ //$NON-NLS-2$
+			pattern = "(^|\\W)" + pattern + "($|\\W)"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return pattern;
 	}
