@@ -47,7 +47,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public class UserAttributeEditor extends AbstractAttributeEditor {
 
-	private static final int IMAGE_SIZE = 48;
+	private int imageSize = 48;
 
 	private Label label;
 
@@ -77,6 +77,11 @@ public class UserAttributeEditor extends AbstractAttributeEditor {
 		setLayoutHint(new LayoutHint(RowSpan.SINGLE, ColumnSpan.SINGLE));
 	}
 
+	public UserAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute, int imageSize) {
+		this(manager, taskAttribute);
+		this.imageSize = imageSize;
+	}
+
 	protected Image updateImage(IProfileImage profileImage) {
 		if (image != null) {
 			image.dispose();
@@ -84,12 +89,14 @@ public class UserAttributeEditor extends AbstractAttributeEditor {
 		ImageData data;
 		if (profileImage != null) {
 			data = new ImageData(new ByteArrayInputStream(profileImage.getData()));
-			if (data.width != IMAGE_SIZE || data.height != IMAGE_SIZE) {
-				data = data.scaledTo(IMAGE_SIZE, IMAGE_SIZE);
-			}
 		} else {
 			data = CommonImages.PERSON_LARGE.getImageData();
 		}
+
+		if (data.width != imageSize || data.height != imageSize) {
+			data = data.scaledTo(imageSize, imageSize);
+		}
+
 		image = new Image(label.getDisplay(), data);
 		label.setImage(image);
 		return image;
@@ -145,7 +152,7 @@ public class UserAttributeEditor extends AbstractAttributeEditor {
 		if (identityService != null) {
 			identity = identityService.getIdentity(account);
 			identity.addPropertyChangeListener(imageListener);
-			Future<IProfileImage> result = identity.requestImage(IMAGE_SIZE, IMAGE_SIZE);
+			Future<IProfileImage> result = identity.requestImage(imageSize, imageSize);
 			if (result.isDone()) {
 				try {
 					updateImage(result.get(0, TimeUnit.SECONDS));

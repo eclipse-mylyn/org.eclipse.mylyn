@@ -285,7 +285,11 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 		private final TaskComment taskComment;
 
-		private AbstractAttributeEditor editor;
+		private Composite commentViewer;
+
+		private Composite userImageComposite;
+
+		private AbstractAttributeEditor commentTextEditor;
 
 		private boolean suppressSelectionChanged;
 
@@ -310,21 +314,22 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 			buttonComposite = createTitle(commentComposite, toolkit);
 
-			Composite commentTextComposite = toolkit.createComposite(commentComposite);
-			commentComposite.setClient(commentTextComposite);
-			commentTextComposite
+			Composite commentViewerComposite = toolkit.createComposite(commentComposite);
+			commentComposite.setClient(commentViewerComposite);
+			commentViewerComposite
 					.setLayout(new FillWidthLayout(EditorUtil.getLayoutAdvisor(getTaskEditorPage()), 15, 0, 0, 3));
+
 			commentComposite.addExpansionListener(new ExpansionAdapter() {
 				@Override
 				public void expansionStateChanged(ExpansionEvent event) {
-					expandComment(toolkit, commentTextComposite, event.getState());
+					expandComment(toolkit, commentViewerComposite, event.getState());
 				}
 			});
 			if (hasIncomingChanges) {
 				commentComposite.setBackground(getTaskEditorPage().getAttributeEditorToolkit().getColorIncoming());
 			}
 			if (commentComposite.isExpanded()) {
-				expandComment(toolkit, commentTextComposite, true);
+				expandComment(toolkit, commentViewerComposite, true);
 			}
 
 			// for outline
@@ -341,7 +346,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			rowLayout.marginLeft = 0;
 			rowLayout.marginBottom = 0;
 			rowLayout.marginTop = 0;
-			EditorUtil.center(rowLayout);
+			rowLayout.center = true;
 			titleComposite.setLayout(rowLayout);
 			titleComposite.setBackground(null);
 
@@ -413,29 +418,65 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		private void expandComment(FormToolkit toolkit, Composite composite, boolean expanded) {
 			buttonComposite.setVisible(expanded);
 			if (expanded && composite.getData(KEY_EDITOR) == null) {
-				// create viewer
+				commentViewer = toolkit.createComposite(composite);
+				commentViewer.setLayout(new GridLayout(2, false));
+				commentViewer.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
+
+				//Create user image viewer
+				boolean showAvatar = Boolean.parseBoolean(getModel().getTaskRepository()
+						.getProperty(TaskEditorExtensions.REPOSITORY_PROPERTY_AVATAR_SUPPORT));
+				if (showAvatar) {
+					String commentAuthor = getTaskData().getAttributeMapper().mapToRepositoryKey(commentAttribute,
+							TaskAttribute.COMMENT_AUTHOR);
+					TaskAttribute userImageAttribute = commentAttribute.getAttribute(commentAuthor);
+
+					if (userImageAttribute != null) {
+						userImageComposite = toolkit.createComposite(commentViewer);
+						userImageComposite.setLayout(new GridLayout(1, false));
+						GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.BEGINNING).applyTo(userImageComposite);
+						toolkit.paintBordersFor(userImageComposite);
+
+						UserAttributeEditor userImage = new UserAttributeEditor(getModel(), userImageAttribute, 30);
+						userImage.createControl(userImageComposite, toolkit);
+
+						userImage.refresh();
+					}
+				}
+
+				//Create comment text viewer
 				TaskAttribute textAttribute = getTaskData().getAttributeMapper()
 						.getAssoctiatedAttribute(taskComment.getTaskAttribute());
-				editor = createAttributeEditor(textAttribute);
-				if (editor != null) {
-					editor.setDecorationEnabled(false);
-					editor.createControl(composite, toolkit);
-					editor.getControl().addMouseListener(new MouseAdapter() {
+				commentTextEditor = createAttributeEditor(textAttribute);
+				if (commentTextEditor != null) {
+					commentTextEditor.setDecorationEnabled(false);
+					commentTextEditor.createControl(commentViewer, toolkit);
+					GridData commentGridData = new GridData(GridData.FILL_HORIZONTAL);
+					commentGridData.verticalAlignment = GridData.BEGINNING;
+					commentTextEditor.getControl().setLayoutData(commentGridData);
+
+					commentTextEditor.getControl().addMouseListener(new MouseAdapter() {
 						@Override
 						public void mouseDown(MouseEvent e) {
 							getTaskEditorPage().selectionChanged(taskComment);
 						}
 					});
-					composite.setData(KEY_EDITOR, editor);
+					composite.setData(KEY_EDITOR, commentTextEditor);
 
-					getTaskEditorPage().getAttributeEditorToolkit().adapt(editor);
+					getTaskEditorPage().getAttributeEditorToolkit().adapt(commentTextEditor);
 					reflow();
 				}
 			} else if (!expanded && composite.getData(KEY_EDITOR) != null) {
 				// dispose viewer
-				AbstractAttributeEditor editor = (AbstractAttributeEditor) composite.getData(KEY_EDITOR);
-				editor.getControl().setMenu(null);
-				editor.getControl().dispose();
+				commentTextEditor.getControl().setMenu(null);
+				commentTextEditor.getControl().dispose();
+				if (userImageComposite != null) {
+					userImageComposite.setMenu(null);
+					userImageComposite.dispose();
+				}
+				if (commentViewer != null) {
+					commentViewer.setMenu(null);
+					commentViewer.dispose();
+				}
 				composite.setData(KEY_EDITOR, null);
 				reflow();
 			}
@@ -460,7 +501,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		 * @return null, if the viewer has not been constructed
 		 */
 		public AbstractAttributeEditor getEditor() {
-			return editor;
+			return commentTextEditor;
 		}
 
 		public TaskAttribute getTaskAttribute() {
@@ -481,8 +522,8 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 		public String getReplyToText() {
 			String replyText = taskComment.getText();
-			if (editor != null && editor.getControl() != null && !editor.getControl().isDisposed()) {
-				Control textControl = getEditor().getControl();
+			if (hasTextControl()) {
+				Control textControl = commentTextEditor.getControl();
 				if (textControl instanceof StyledText) {
 					String selectedText = ((StyledText) textControl).getSelectionText();
 					if (!Strings.isNullOrEmpty(selectedText)) {
@@ -491,6 +532,11 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				}
 			}
 			return replyText;
+		}
+
+		private boolean hasTextControl() {
+			return commentTextEditor != null && commentTextEditor.getControl() != null
+					&& !commentTextEditor.getControl().isDisposed();
 		}
 
 	}
