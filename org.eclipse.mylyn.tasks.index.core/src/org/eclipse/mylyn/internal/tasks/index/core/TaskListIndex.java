@@ -131,6 +131,8 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 
 	private static final String TASK_ATTRIBUTE_ATTACHMENT_NAME = INDEX_TASK_ATTRIBUTE_PREFIX + "attachment"; //$NON-NLS-1$
 
+	private static final String TASK_ATTRIBUTE_NOTES = INDEX_TASK_ATTRIBUTE_PREFIX + "notes"; //$NON-NLS-1$
+
 	public static final org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field FIELD_IDENTIFIER = new AbstractTaskSchema.Field(
 			TASK_ATTRIBUTE_IDENTIFIER, Messages.TaskListIndex_field_identifier, TaskAttribute.TYPE_SHORT_TEXT,
 			"identifier"); //$NON-NLS-1$
@@ -154,6 +156,9 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	public static final org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field FIELD_ATTACHMENT_NAME = new AbstractTaskSchema.Field(
 			TASK_ATTRIBUTE_ATTACHMENT_NAME, Messages.TaskListIndex_field_attachment, TaskAttribute.TYPE_SHORT_TEXT,
 			"attachment"); //$NON-NLS-1$
+
+	public static final org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field FIELD_NOTES = new AbstractTaskSchema.Field(
+			TASK_ATTRIBUTE_NOTES, Messages.TaskListIndex_field_notes, TaskAttribute.TYPE_LONG_TEXT, "notes"); //$NON-NLS-1$
 
 	private class MaintainIndexJob extends Job {
 
@@ -203,6 +208,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		specialFields.add(FIELD_PERSON);
 		specialFields.add(FIELD_TASK_KEY);
 		specialFields.add(FIELD_ATTACHMENT_NAME);
+		specialFields.add(FIELD_NOTES);
 
 		addIndexedField(FIELD_IDENTIFIER);
 		addIndexedField(FIELD_TASK_KEY);
@@ -224,6 +230,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		addIndexedField(DefaultTaskSchema.getInstance().RESOLUTION);
 		addIndexedField(DefaultTaskSchema.getInstance().SEVERITY);
 		addIndexedField(DefaultTaskSchema.getInstance().STATUS);
+		addIndexedField(FIELD_NOTES);
 	}
 
 	private static enum MaintainIndexType {
@@ -845,6 +852,8 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		addIndexedAttribute(document, FIELD_TASK_KEY, task.getTaskKey());
 		addIndexedAttribute(document, FIELD_REPOSITORY_URL, task.getRepositoryUrl());
 		addIndexedAttribute(document, FIELD_SUMMARY, root.getMappedAttribute(TaskAttribute.SUMMARY));
+		addIndexedAttribute(document, FIELD_CONTENT, ((AbstractTask) task).getNotes());
+		addIndexedAttribute(document, FIELD_NOTES, ((AbstractTask) task).getNotes());
 
 		for (TaskAttribute contentAttribute : computeContentAttributes(root)) {
 			addIndexedAttribute(document, FIELD_CONTENT, contentAttribute);
@@ -936,6 +945,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		addIndexedAttribute(document, FIELD_SUMMARY, task.getSummary());
 		addIndexedAttribute(document, FIELD_CONTENT, task.getSummary());
 		addIndexedAttribute(document, FIELD_CONTENT, ((AbstractTask) task).getNotes());
+		addIndexedAttribute(document, FIELD_NOTES, ((AbstractTask) task).getNotes());
 		addIndexedDateAttributes(document, task);
 	}
 

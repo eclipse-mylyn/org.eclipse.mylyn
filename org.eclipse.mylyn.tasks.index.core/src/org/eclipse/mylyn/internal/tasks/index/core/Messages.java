@@ -18,6 +18,8 @@ import org.eclipse.osgi.util.NLS;
 class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.tasks.index.core.messages"; //$NON-NLS-1$
 
+	public static String TaskListIndex_field_notes;
+
 	public static String TaskListIndex_field_attachment;
 
 	public static String TaskListIndex_field_content;

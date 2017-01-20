@@ -11,9 +11,9 @@
 
 package org.eclipse.mylyn.internal.tasks.index.tests;
 
-import static junit.framework.Assert.assertEquals;
 import static org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.createTempFolder;
 import static org.eclipse.mylyn.commons.sdk.util.CommonTestUtil.deleteFolderRecursively;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -34,8 +34,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import junit.framework.Assert;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.commons.core.DelegatingProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -55,9 +53,11 @@ import org.junit.Test;
  */
 public class TaskListIndexTest extends AbstractTaskListIndexTest {
 
-	private static final org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field FIELD_SUMMARY = DefaultTaskSchema.getInstance().SUMMARY;
+	private static final org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field FIELD_SUMMARY = DefaultTaskSchema
+			.getInstance().SUMMARY;
 
-	private static final org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field FIELD_DATE_CREATION = DefaultTaskSchema.getInstance().DATE_CREATION;
+	private static final org.eclipse.mylyn.tasks.core.data.AbstractTaskSchema.Field FIELD_DATE_CREATION = DefaultTaskSchema
+			.getInstance().DATE_CREATION;
 
 	private static class TestTaskCollector extends TaskCollector {
 
@@ -252,13 +252,12 @@ public class TaskListIndexTest extends AbstractTaskListIndexTest {
 				+ index.escapeFieldValue(taskData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY).getValue())
 				+ "\"";
 
-		assertTrue(index.matches(repositoryTask, TaskListIndex.FIELD_TASK_KEY.getIndexKey() + ":" + taskKey
-				+ querySuffix));
+		assertTrue(index.matches(repositoryTask,
+				TaskListIndex.FIELD_TASK_KEY.getIndexKey() + ":" + taskKey + querySuffix));
 
 		// does not match on task key prefix
-		assertTrue(index.matches(repositoryTask,
-				TaskListIndex.FIELD_TASK_KEY.getIndexKey() + ":" + taskKey.substring(0, taskKey.length() - 1)
-						+ querySuffix));
+		assertTrue(index.matches(repositoryTask, TaskListIndex.FIELD_TASK_KEY.getIndexKey() + ":"
+				+ taskKey.substring(0, taskKey.length() - 1) + querySuffix));
 	}
 
 	@Test
@@ -280,6 +279,154 @@ public class TaskListIndexTest extends AbstractTaskListIndexTest {
 		assertTrue(index.matches(task, "three"));
 		assertTrue(index.matches(task, "thr"));
 		assertFalse(index.matches(task, "one three"));
+
+		// wildcard search should not match multiple terms separated by whitespace
+		assertFalse(index.matches(task, "one*three"));
+
+		// wildcard search should match multiple characters in a single term
+		assertTrue(index.matches(task, "t*ee"));
+
+		// logical operator makes it work with multiple terms
+		assertTrue(index.matches(task, "one AND three"));
+		assertTrue(index.matches(task, "one OR three"));
+		assertTrue(index.matches(task, "one AND thr"));
+
+		// logical operator requiring a non-existant term should not match
+		assertFalse(index.matches(task, "one AND four"));
+	}
+
+	@Test
+	public void testMatchesNotesWithExpectedQueryBehaviourWithRepositoryTask()
+			throws InterruptedException, CoreException {
+		setupIndex();
+
+		ITask task = context.createRepositoryTask();
+		((AbstractTask) task).setNotes("one two three");
+
+		index.reindex();
+		index.waitUntilIdle();
+
+		index.setDefaultField(TaskListIndex.FIELD_NOTES);
+
+		// default search (without logical operators)
+		assertFalse(index.matches(task, "asdf"));
+		assertTrue(index.matches(task, "one"));
+		assertTrue(index.matches(task, "two"));
+		assertTrue(index.matches(task, "three"));
+		assertTrue(index.matches(task, "thr"));
+		assertTrue(index.matches(task, "one two"));
+		assertTrue(index.matches(task, "one three"));
+
+		// wildcard search should not match multiple terms separated by whitespace
+		assertFalse(index.matches(task, "one*three"));
+
+		// wildcard search should match multiple characters in a single term
+		assertTrue(index.matches(task, "t*ee"));
+
+		// logical operator makes it work with multiple terms
+		assertTrue(index.matches(task, "one AND three"));
+		assertTrue(index.matches(task, "one OR three"));
+		assertTrue(index.matches(task, "one AND thr"));
+
+		// logical operator requiring a non-existant term should not match
+		assertFalse(index.matches(task, "one AND four"));
+	}
+
+	@Test
+	public void testMatchesNotesWithExpectedQueryBehaviourWithLocalTask() throws InterruptedException, CoreException {
+		setupIndex();
+
+		ITask task = context.createLocalTask();
+		((AbstractTask) task).setNotes("one two three");
+
+		context.getTaskList().notifyElementsChanged(Collections.singleton(task));
+
+		index.waitUntilIdle();
+
+		index.setDefaultField(TaskListIndex.FIELD_NOTES);
+
+		// default search (without logical operators)
+		assertFalse(index.matches(task, "asdf"));
+		assertTrue(index.matches(task, "one"));
+		assertTrue(index.matches(task, "two"));
+		assertTrue(index.matches(task, "three"));
+		assertTrue(index.matches(task, "thr"));
+		assertTrue(index.matches(task, "one two"));
+		assertTrue(index.matches(task, "one three"));
+
+		// wildcard search should not match multiple terms separated by whitespace
+		assertFalse(index.matches(task, "one*three"));
+
+		// wildcard search should match multiple characters in a single term
+		assertTrue(index.matches(task, "t*ee"));
+
+		// logical operator makes it work with multiple terms
+		assertTrue(index.matches(task, "one AND three"));
+		assertTrue(index.matches(task, "one OR three"));
+		assertTrue(index.matches(task, "one AND thr"));
+
+		// logical operator requiring a non-existant term should not match
+		assertFalse(index.matches(task, "one AND four"));
+	}
+
+	@Test
+	public void testMatchesContentWithExpectedQueryBehaviourWithRepositoryTask()
+			throws InterruptedException, CoreException {
+		setupIndex();
+
+		ITask task = context.createRepositoryTask();
+		((AbstractTask) task).setNotes("one two three");
+
+		index.reindex();
+		index.waitUntilIdle();
+
+		index.setDefaultField(TaskListIndex.FIELD_CONTENT);
+
+		// default search (without logical operators)
+		assertFalse(index.matches(task, "asdf"));
+		assertTrue(index.matches(task, "one"));
+		assertTrue(index.matches(task, "two"));
+		assertTrue(index.matches(task, "three"));
+		assertTrue(index.matches(task, "thr"));
+		assertTrue(index.matches(task, "one two"));
+		assertTrue(index.matches(task, "one three"));
+
+		// wildcard search should not match multiple terms separated by whitespace
+		assertFalse(index.matches(task, "one*three"));
+
+		// wildcard search should match multiple characters in a single term
+		assertTrue(index.matches(task, "t*ee"));
+
+		// logical operator makes it work with multiple terms
+		assertTrue(index.matches(task, "one AND three"));
+		assertTrue(index.matches(task, "one OR three"));
+		assertTrue(index.matches(task, "one AND thr"));
+
+		// logical operator requiring a non-existant term should not match
+		assertFalse(index.matches(task, "one AND four"));
+	}
+
+	@Test
+	public void testMatchesContentWithExpectedQueryBehaviourWithLocalTask() throws InterruptedException, CoreException {
+		setupIndex();
+
+		ITask task = context.createLocalTask();
+		((AbstractTask) task).setNotes("one two three");
+
+		context.getTaskList().notifyElementsChanged(Collections.singleton(task));
+
+		index.waitUntilIdle();
+
+		index.setDefaultField(TaskListIndex.FIELD_CONTENT);
+
+		// default search (without logical operators)
+		assertFalse(index.matches(task, "asdf"));
+		assertTrue(index.matches(task, "one"));
+		assertTrue(index.matches(task, "two"));
+		assertTrue(index.matches(task, "three"));
+		assertTrue(index.matches(task, "thr"));
+		assertTrue(index.matches(task, "one two"));
+		assertTrue(index.matches(task, "one three"));
 
 		// wildcard search should not match multiple terms separated by whitespace
 		assertFalse(index.matches(task, "one*three"));
@@ -390,7 +537,7 @@ public class TaskListIndexTest extends AbstractTaskListIndexTest {
 			for (Future<Object> future : futures) {
 				assertEquals(Boolean.TRUE, future.get());
 			}
-			Assert.assertEquals(nThreads, concurrencyLevel[0]);
+			assertEquals(nThreads, concurrencyLevel[0]);
 		} finally {
 			executorService.shutdownNow();
 		}
@@ -409,14 +556,12 @@ public class TaskListIndexTest extends AbstractTaskListIndexTest {
 
 		context.refactorMockRepositoryUrl(newUrl);
 
-		Assert.assertFalse(originalHandle.equals(repositoryTask.getHandleIdentifier()));
+		assertFalse(originalHandle.equals(repositoryTask.getHandleIdentifier()));
 
 		index.waitUntilIdle();
 
-		Assert.assertTrue(index.matches(
-				repositoryTask,
-				TaskListIndex.FIELD_IDENTIFIER.getIndexKey() + ":"
-						+ index.escapeFieldValue(repositoryTask.getHandleIdentifier())));
+		assertTrue(index.matches(repositoryTask, TaskListIndex.FIELD_IDENTIFIER.getIndexKey() + ":"
+				+ index.escapeFieldValue(repositoryTask.getHandleIdentifier())));
 	}
 
 	@Test
@@ -473,12 +618,12 @@ public class TaskListIndexTest extends AbstractTaskListIndexTest {
 		index.waitUntilIdle();
 
 		assertTrue(index.matches(repositoryTask, "\"" + attachmentMapper.getDescription() + "\""));
-		assertTrue(index.matches(repositoryTask, TaskListIndex.FIELD_ATTACHMENT_NAME.getIndexKey() + ":\""
-				+ attachmentMapper.getFileName() + "\""));
+		assertTrue(index.matches(repositoryTask,
+				TaskListIndex.FIELD_ATTACHMENT_NAME.getIndexKey() + ":\"" + attachmentMapper.getFileName() + "\""));
 		assertFalse(index.matches(repositoryTask,
 				TaskListIndex.FIELD_CONTENT.getIndexKey() + ":\"" + attachmentMapper.getFileName() + "\""));
-		assertFalse(index.matches(repositoryTask, TaskListIndex.FIELD_ATTACHMENT_NAME.getIndexKey() + ":\""
-				+ attachmentMapper.getDescription() + "\""));
+		assertFalse(index.matches(repositoryTask,
+				TaskListIndex.FIELD_ATTACHMENT_NAME.getIndexKey() + ":\"" + attachmentMapper.getDescription() + "\""));
 	}
 
 	private void assertCanFindTask(ITask task) {
