@@ -43,6 +43,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.PaintEvent;
@@ -65,6 +66,8 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
+
+import com.google.common.base.Strings;
 
 /**
  * @author Robert Elves
@@ -105,13 +108,13 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			return composite;
 		}
 
-		private Control createControl(final Composite parent, final FormToolkit toolkit) {
+		private Control createControl(Composite parent, FormToolkit toolkit) {
 			if (renderedInSubSection) {
 				return createSection(parent, toolkit);
 			} else {
 				if (TaskEditorCommentPart.this.commentAttributes.size() >= CommentGroupStrategy.MAX_CURRENT) {
 					// show a separator before current comments
-					final Canvas separator = new Canvas(parent, SWT.NONE) {
+					Canvas separator = new Canvas(parent, SWT.NONE) {
 						@Override
 						public Point computeSize(int wHint, int hHint, boolean changed) {
 							return new Point((wHint == SWT.DEFAULT) ? 1 : wHint, 1);
@@ -130,12 +133,9 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			}
 		}
 
-		private Section createSection(final Composite parent, final FormToolkit toolkit) {
+		private Section createSection(Composite parent, FormToolkit toolkit) {
 			int style = ExpandableComposite.TWISTIE | ExpandableComposite.SHORT_TITLE_BAR
 					| ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT;
-//			if (/*commentGroup.hasIncoming() || */expandAllInProgress) {
-//				style |= ExpandableComposite.EXPANDED;
-//			}
 
 			groupSection = toolkit.createSection(parent, style);
 			groupSection.clientVerticalSpacing = 0;
@@ -157,10 +157,10 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 							if (e.getState()) {
 								groupSection.setBackground(null);
 							} else {
-								// only decorate background with incoming color when collapsed, otherwise 
+								// only decorate background with incoming color when collapsed, otherwise
 								// there is too much decoration in the editor
-								groupSection.setBackground(getTaskEditorPage().getAttributeEditorToolkit()
-										.getColorIncoming());
+								groupSection.setBackground(
+										getTaskEditorPage().getAttributeEditorToolkit().getColorIncoming());
 							}
 						}
 						if (groupSection.getClient() == null) {
@@ -186,7 +186,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			}
 
 			commentViewers = new ArrayList<CommentViewer>(commentGroup.getCommentAttributes().size());
-			for (final TaskAttribute commentAttribute : commentGroup.getCommentAttributes()) {
+			for (TaskAttribute commentAttribute : commentGroup.getCommentAttributes()) {
 				CommentViewer commentViewer = new CommentViewer(commentAttribute);
 				commentViewers.add(commentViewer);
 			}
@@ -273,46 +273,6 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			}
 		}
 
-		//		private void createToolBar(final FormToolkit toolkit) {
-//		if (section == null) {
-//			return;
-//		}
-//
-//		ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT);
-//
-//		Action collapseAllAction = new Action("") {
-//			@Override
-//			public void run() {
-//				toggleSection(section, false);
-//			}
-//		};
-//		collapseAllAction.setImageDescriptor(CommonImages.COLLAPSE_ALL_SMALL);
-//		collapseAllAction.setToolTipText("Collapse All Current Comments");
-//		toolBarManager.add(collapseAllAction);
-//
-//		Action expandAllAction = new Action("") {
-//			@Override
-//			public void run() {
-//				toggleSection(section, true);
-//			}
-//		};
-//		expandAllAction.setImageDescriptor(CommonImages.EXPAND_ALL_SMALL);
-//		expandAllAction.setToolTipText("Expand All Current Comments");
-//		toolBarManager.add(expandAllAction);
-//
-//		Composite toolbarComposite = toolkit.createComposite(section);
-//		toolbarComposite.setBackground(null);
-//		RowLayout rowLayout = new RowLayout();
-//		rowLayout.marginTop = 0;
-//		rowLayout.marginBottom = 0;
-//		rowLayout.marginLeft = 0;
-//		rowLayout.marginRight = 0;
-//		toolbarComposite.setLayout(rowLayout);
-//
-//		toolBarManager.createControl(toolbarComposite);
-//		section.setTextClient(toolbarComposite);
-//	}
-
 	}
 
 	public class CommentViewer {
@@ -334,7 +294,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			this.taskComment = new TaskComment(getModel().getTaskRepository(), getModel().getTask(), commentAttribute);
 		}
 
-		public Control createControl(Composite composite, final FormToolkit toolkit) {
+		public Control createControl(Composite composite, FormToolkit toolkit) {
 			boolean hasIncomingChanges = getModel().hasIncomingChanges(commentAttribute);
 			getTaskData().getAttributeMapper().updateTaskComment(taskComment, commentAttribute);
 			int style = ExpandableComposite.TREE_NODE | ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT
@@ -350,10 +310,10 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 			buttonComposite = createTitle(commentComposite, toolkit);
 
-			final Composite commentTextComposite = toolkit.createComposite(commentComposite);
+			Composite commentTextComposite = toolkit.createComposite(commentComposite);
 			commentComposite.setClient(commentTextComposite);
-			commentTextComposite.setLayout(new FillWidthLayout(EditorUtil.getLayoutAdvisor(getTaskEditorPage()), 15, 0,
-					0, 3));
+			commentTextComposite
+					.setLayout(new FillWidthLayout(EditorUtil.getLayoutAdvisor(getTaskEditorPage()), 15, 0, 0, 3));
 			commentComposite.addExpansionListener(new ExpansionAdapter() {
 				@Override
 				public void expansionStateChanged(ExpansionEvent event) {
@@ -372,7 +332,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			return commentComposite;
 		}
 
-		private Composite createTitle(final ExpandableComposite commentComposite, final FormToolkit toolkit) {
+		private Composite createTitle(ExpandableComposite commentComposite, FormToolkit toolkit) {
 			// always visible
 			Composite titleComposite = toolkit.createComposite(commentComposite);
 			commentComposite.setTextClient(titleComposite);
@@ -398,7 +358,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			toolBarManagerTitle.createControl(titleComposite);
 
 			// only visible when section is expanded
-			final Composite buttonComposite = toolkit.createComposite(titleComposite);
+			Composite buttonComposite = toolkit.createComposite(titleComposite);
 			RowLayout buttonCompLayout = new RowLayout();
 			buttonCompLayout.marginBottom = 0;
 			buttonCompLayout.marginTop = 0;
@@ -413,8 +373,8 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			return buttonComposite;
 		}
 
-		private ImageHyperlink createTitleHyperLink(final FormToolkit toolkit, final Composite toolbarComp,
-				final ITaskComment taskComment) {
+		private ImageHyperlink createTitleHyperLink(FormToolkit toolkit, Composite toolbarComp,
+				ITaskComment taskComment) {
 			ImageHyperlink formHyperlink = toolkit.createImageHyperlink(toolbarComp, SWT.NONE);
 			formHyperlink.setBackground(null);
 			formHyperlink.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
@@ -454,8 +414,8 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			buttonComposite.setVisible(expanded);
 			if (expanded && composite.getData(KEY_EDITOR) == null) {
 				// create viewer
-				TaskAttribute textAttribute = getTaskData().getAttributeMapper().getAssoctiatedAttribute(
-						taskComment.getTaskAttribute());
+				TaskAttribute textAttribute = getTaskData().getAttributeMapper()
+						.getAssoctiatedAttribute(taskComment.getTaskAttribute());
 				editor = createAttributeEditor(textAttribute);
 				if (editor != null) {
 					editor.setDecorationEnabled(false);
@@ -496,7 +456,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 		/**
 		 * Returns the comment viewer.
-		 * 
+		 *
 		 * @return null, if the viewer has not been constructed
 		 */
 		public AbstractAttributeEditor getEditor() {
@@ -519,37 +479,60 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			this.suppressSelectionChanged = value;
 		}
 
+		public String getReplyToText() {
+			String replyText = taskComment.getText();
+			if (editor != null && editor.getControl() != null && !editor.getControl().isDisposed()) {
+				Control textControl = getEditor().getControl();
+				if (textControl instanceof StyledText) {
+					String selectedText = ((StyledText) textControl).getSelectionText();
+					if (!Strings.isNullOrEmpty(selectedText)) {
+						replyText = selectedText;
+					}
+				}
+			}
+			return replyText;
+		}
+
 	}
 
-	private class ReplyToCommentAction extends AbstractReplyToCommentAction implements IMenuCreator {
-
-		private final ITaskComment taskComment;
+	private class ReplyToCommentAction extends AbstractReplyToCommentAction {
 
 		private final CommentViewer commentViewer;
 
-		public ReplyToCommentAction(CommentViewer commentViewer, ITaskComment taskComment) {
-			super(TaskEditorCommentPart.this.getTaskEditorPage(), taskComment);
+		public ReplyToCommentAction(CommentViewer commentViewer) {
+			super(TaskEditorCommentPart.this.getTaskEditorPage(), commentViewer.getTaskComment());
 			this.commentViewer = commentViewer;
-			this.taskComment = taskComment;
-			setMenuCreator(this);
 		}
 
 		@Override
 		protected String getReplyText() {
-			return taskComment.getText();
+			return commentViewer.getReplyToText();
 		}
 
-		public Menu getMenu(Control parent) {
-			currentViewer = commentViewer;
-			selectionProvider.setSelection(new StructuredSelection(taskComment));
-			return commentMenu;
+		protected CommentViewer getCommentViewer() {
+			return commentViewer;
 		}
 
 		public void dispose() {
 		}
 
+	}
+
+	private class ReplyToCommentActionWithMenu extends ReplyToCommentAction implements IMenuCreator {
+
+		public ReplyToCommentActionWithMenu(CommentViewer commentViewer) {
+			super(commentViewer);
+			setMenuCreator(this);
+		}
+
+		public Menu getMenu(Control parent) {
+			currentViewer = getCommentViewer();
+			selectionProvider.setSelection(new StructuredSelection(currentViewer.getTaskComment()));
+			return commentMenu;
+		}
+
 		public Menu getMenu(Menu parent) {
-			selectionProvider.setSelection(new StructuredSelection(taskComment));
+			selectionProvider.setSelection(new StructuredSelection(getCommentViewer().getTaskComment()));
 			return commentMenu;
 		}
 
@@ -599,14 +582,14 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		setPartName(Messages.TaskEditorCommentPart_Comments);
 	}
 
-	protected void addActionsToToolbarButton(ToolBarManager toolBarManager, final TaskComment taskComment,
+	protected void addActionsToToolbarButton(ToolBarManager toolBarManager, TaskComment taskComment,
 			CommentViewer commentViewer) {
-		ReplyToCommentAction replyAction = new ReplyToCommentAction(commentViewer, taskComment);
+		ReplyToCommentAction replyAction = new ReplyToCommentActionWithMenu(commentViewer);
 		replyAction.setImageDescriptor(TasksUiImages.COMMENT_REPLY_SMALL);
 		toolBarManager.add(replyAction);
 	}
 
-	protected void addActionsToToolbarTitle(ToolBarManager toolBarManager, final TaskComment taskComment,
+	protected void addActionsToToolbarTitle(ToolBarManager toolBarManager, TaskComment taskComment,
 			CommentViewer commentViewer) {
 	}
 
@@ -626,10 +609,6 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				}
 			}
 
-			// keep section expanded
-//			if (!collapsed && section != null) {
-//				CommonFormUtil.setExpanded(section, false);
-//			}
 		} finally {
 			getTaskEditorPage().setReflow(true);
 		}
@@ -644,7 +623,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 	}
 
 	@Override
-	public void createControl(Composite parent, final FormToolkit toolkit) {
+	public void createControl(Composite parent, FormToolkit toolkit) {
 		initialize();
 
 		selectionProvider = new SelectionProviderAdapter();
@@ -657,18 +636,8 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				// get comment and add reply action as first item in the menu
 				ISelection selection = selectionProvider.getSelection();
 				if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
-					Object element = ((IStructuredSelection) selection).getFirstElement();
-					if (element instanceof ITaskComment) {
-						final ITaskComment comment = (ITaskComment) element;
-						AbstractReplyToCommentAction replyAction = new AbstractReplyToCommentAction(
-								getTaskEditorPage(), comment) {
-							@Override
-							protected String getReplyText() {
-								return comment.getText();
-							}
-						};
-						manager.add(replyAction);
-					}
+					ReplyToCommentAction replyAction = new ReplyToCommentAction(currentViewer);
+					manager.add(replyAction);
 				}
 				actionGroup.setContext(new ActionContext(selectionProvider.getSelection()));
 				actionGroup.fillContextMenu(manager);
@@ -731,9 +700,8 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			getTaskEditorPage().setReflow(false);
 
 			if (section != null) {
-				// the expandAllInProgress flag will ensure that comments in top-level groups have been 
+				// the expandAllInProgress flag will ensure that comments in top-level groups have been
 				// expanded, no need to expand groups explicitly
-				//boolean expandGroups = section.getClient() != null;
 
 				CommonFormUtil.setExpanded(section, true);
 
@@ -754,7 +722,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		reflow();
 	}
 
-	private void expandSection(final FormToolkit toolkit, final Section section) {
+	private void expandSection(FormToolkit toolkit, Section section) {
 		Composite composite = toolkit.createComposite(section);
 		section.setClient(composite);
 		composite.setLayout(EditorUtil.createSectionClientLayout());
@@ -872,7 +840,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 					// expand section
 					groupViewer.setExpanded(true);
 
-					// EditorUtil is consistent with behavior of outline 
+					// EditorUtil is consistent with behavior of outline
 					EditorUtil.reveal(getTaskEditorPage().getManagedForm().getForm(), commentAttribute.getId());
 					return viewer;
 				}
