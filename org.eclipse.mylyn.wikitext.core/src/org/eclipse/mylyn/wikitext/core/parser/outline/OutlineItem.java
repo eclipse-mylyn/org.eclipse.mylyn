@@ -10,12 +10,12 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.parser.outline;
 
+import static java.text.MessageFormat.format;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.base.Objects;
 
 /**
  * An item in a document outline. A document outline reflects the heading structure of the document. Generally there is
@@ -418,9 +418,6 @@ public class OutlineItem {
 	 */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(getClass())
-				.add("id", getId()) //$NON-NLS-1$
-				.add("positionKey", calculatePositionKey()) //$NON-NLS-1$
-				.toString();
+		return format("{0} [id={1}, positionKey={2}]", getClass().getSimpleName(), getId(), calculatePositionKey()); //$NON-NLS-1$
 	}
 }

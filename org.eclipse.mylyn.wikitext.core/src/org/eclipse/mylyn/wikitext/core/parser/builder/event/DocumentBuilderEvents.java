@@ -12,18 +12,18 @@
 package org.eclipse.mylyn.wikitext.core.parser.builder.event;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.text.MessageFormat.format;
 
 import java.util.List;
 
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.builder.EventDocumentBuilder;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 
 /**
  * Captures the result of a {@link EventDocumentBuilder} as a series of {@link DocumentBuilderEvent events}.
- * 
+ *
  * @author david.green
  * @since 2.0
  * @see EventDocumentBuilder
@@ -42,7 +42,7 @@ public class DocumentBuilderEvents {
 
 	/**
 	 * Invokes the {@link #getEvents() events} on the given {@code builder}.
-	 * 
+	 *
 	 * @param builder
 	 *            the builder
 	 */
@@ -55,6 +55,6 @@ public class DocumentBuilderEvents {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("events", events).toString(); //$NON-NLS-1$
+		return format("{0} [events={1}]", events); //$NON-NLS-1$
 	}
 }

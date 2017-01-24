@@ -20,7 +20,7 @@ import javax.xml.namespace.NamespaceContext;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import com.google.common.collect.Iterators;
+import com.google.common.collect.ImmutableSet;
 
 class XmlStreamWriterAdapter implements XMLStreamWriter {
 	private final XmlStreamWriter delegate;
@@ -182,7 +182,7 @@ class XmlStreamWriterAdapter implements XMLStreamWriter {
 			public Iterator<String> getPrefixes(String namespaceUri) {
 				String prefix = getPrefix(namespaceUri);
 				if (prefix == null) {
-					return Iterators.emptyIterator();
+					return ImmutableSet.<String> of().iterator();
 				}
 				return Collections.singletonList(prefix).iterator();
 			}

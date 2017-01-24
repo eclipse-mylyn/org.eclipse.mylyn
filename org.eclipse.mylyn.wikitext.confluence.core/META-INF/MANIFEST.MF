@@ -5,8 +5,7 @@ Bundle-SymbolicName: org.eclipse.mylyn.wikitext.confluence.core;singleton:=true
 Bundle-Version: 2.11.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Require-Bundle: org.eclipse.mylyn.wikitext.core;bundle-version="2.0.0",
- com.google.guava;bundle-version="15.0.0"
+Require-Bundle: org.eclipse.mylyn.wikitext.core;bundle-version="2.0.0"
 Export-Package: org.eclipse.mylyn.internal.wikitext.confluence.core;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.confluence.core.block;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.confluence.core.phrase;x-internal:=true,
@@ -15,4 +14,5 @@ Export-Package: org.eclipse.mylyn.internal.wikitext.confluence.core;x-internal:=
  org.eclipse.mylyn.internal.wikitext.confluence.validation;x-internal:=true,
  org.eclipse.mylyn.wikitext.confluence.core,
  services
+Import-Package: com.google.common.base;version="[15.0.0,22.0.0)"
 Bundle-Localization: plugin

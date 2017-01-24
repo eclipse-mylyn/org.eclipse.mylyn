@@ -28,7 +28,6 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 
 import com.google.common.base.CharMatcher;
-import com.google.common.base.Objects;
 import com.google.common.base.Splitter;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
@@ -96,7 +95,10 @@ public class SpanStrategies extends ElementStrategies<SpanType, SpanStrategy, Sp
 	public SpanStrategy getStrategy(SpanType elementType, Attributes attributes) {
 		SpanStrategy strategy = super.getStrategy(elementType, attributes);
 		if (elementType == SpanType.SPAN && strategy instanceof UnsupportedSpanStrategy) {
-			strategy = Objects.firstNonNull(calculateAlternateSpanStrategy(attributes), strategy);
+			SpanStrategy alternateStrategy = calculateAlternateSpanStrategy(attributes);
+			if (alternateStrategy != null) {
+				strategy = alternateStrategy;
+			}
 		}
 		return strategy;
 	}

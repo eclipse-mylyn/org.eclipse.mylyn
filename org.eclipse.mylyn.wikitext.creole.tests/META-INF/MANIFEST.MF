@@ -12,4 +12,5 @@ Require-Bundle: org.junit;bundle-version="3.8.2",
  org.eclipse.mylyn.wikitext.tests;bundle-version="2.0.0"
 Export-Package: 
  org.eclipse.mylyn.internal.wikitext.creole.tests;x-internal:=true
+Import-Package: com.google.common.base;version="[15.0.0,22.0.0)"
 Bundle-Localization: plugin

@@ -36,9 +36,11 @@ Require-Bundle: org.junit;bundle-version="4.8",
  org.eclipse.help,
  org.apache.ant;bundle-version="1.7.0",
  org.jsoup;bundle-version="1.7.2",
- com.google.guava;bundle-version="15.0.0",
  org.mockito;bundle-version="[1.8.4,2.0.0)",
  org.hamcrest;bundle-version="[1.0.0,2.0.0)"
+Import-Package: com.google.common.base;version="[15.0.0,22.0.0)",
+ com.google.common.collect;version="[15.0.0,22.0.0)", 
+ com.google.common.io;version="[15.0.0,22.0.0)"
 Export-Package: 
  org.eclipse.mylyn.internal.wikitext.core.ant;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.core.parser.builder;x-internal:=true,

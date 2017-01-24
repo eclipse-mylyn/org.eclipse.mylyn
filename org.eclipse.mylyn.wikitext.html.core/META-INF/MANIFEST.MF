@@ -6,9 +6,10 @@ Bundle-Version: 2.11.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.mylyn.wikitext.core;bundle-version="2.0.0",
- com.google.guava;bundle-version="15.0.0",
  org.jsoup;bundle-version="1.7.2"
 Bundle-Localization: META-INF/l10n/bundle
+Import-Package: com.google.common.base;version="[15.0.0,22.0.0)",
+ com.google.common.collect;version="[15.0.0,22.0.0)"
 Export-Package: org.eclipse.mylyn.internal.wikitext.html.core;x-internal:=true,
  org.eclipse.mylyn.wikitext.html.core,
  services

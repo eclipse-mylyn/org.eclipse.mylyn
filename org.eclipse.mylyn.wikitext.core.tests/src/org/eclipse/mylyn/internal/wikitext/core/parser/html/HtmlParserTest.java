@@ -30,7 +30,6 @@ import org.junit.Test;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.google.common.base.Objects;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 
@@ -45,7 +44,7 @@ public class HtmlParserTest {
 
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(EndEvent.class).add("name", name).toString();
+			return name;
 		}
 	}
 
