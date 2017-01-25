@@ -2,6 +2,22 @@
 <?eclipse version="3.0"?>
 <plugin>
 
+   <extension point="org.eclipse.mylyn.wikitext.ui.markupLanguage">
+      <language class="org.eclipse.mylyn.wikitext.asciidoc.core.AsciiDocLanguage"
+            name="AsciiDoc" fileExtensions="asciidoc,ad,adoc">
+      </language>
+   </extension>
+
+   <extension point="org.eclipse.core.contenttype.contentTypes">
+      <content-type id="org.eclipse.mylyn.wikitext.asciidoc" base-type="org.eclipse.mylyn.wikitext"
+            file-extensions="asciidoc,ad,adoc" name="%content-type.name" priority="normal">
+      </content-type>
+   </extension>
+
+   <extension point="org.eclipse.team.core.fileTypes">
+      <fileTypes extension="asciidoc" type="text"/>
+   </extension>
+   
    <extension point="org.eclipse.mylyn.wikitext.ui.contentAssist">
       <templates markupLanguage="AsciiDoc">
 

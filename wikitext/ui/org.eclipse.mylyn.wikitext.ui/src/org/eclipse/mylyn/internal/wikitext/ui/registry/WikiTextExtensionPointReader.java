@@ -37,7 +37,7 @@ import com.google.common.collect.Sets;
 
 public class WikiTextExtensionPointReader {
 
-	private static final String EXTENSION_POINT_NAMESPACE = "org.eclipse.mylyn.wikitext.core"; //$NON-NLS-1$
+	private static final String EXTENSION_POINT_NAMESPACE = "org.eclipse.mylyn.wikitext.ui"; //$NON-NLS-1$
 
 	private static final String EXTENSION_MARKUP_LANGUAGE = "markupLanguage"; //$NON-NLS-1$
 
@@ -318,9 +318,7 @@ public class WikiTextExtensionPointReader {
 									MessageFormat.format(
 											EXTENSION_MARKUP_LANGUAGE
 													+ Messages.getString("WikiTextExtensionPointReader.10"), //$NON-NLS-1$
-											element.getDeclaringExtension()
-													.getContributor()
-													.getName()));
+											element.getDeclaringExtension().getContributor().getName()));
 							continue;
 						}
 						String extendsLanguage = element.getAttribute("extends"); //$NON-NLS-1$
@@ -334,8 +332,7 @@ public class WikiTextExtensionPointReader {
 						if (!(markupLanguage instanceof MarkupLanguage)) {
 							log(IStatus.ERROR,
 									MessageFormat.format(Messages.getString("WikiTextExtensionPointReader.13"), //$NON-NLS-1$
-											markupLanguage.getClass()
-													.getName()));
+											markupLanguage.getClass().getName()));
 							continue;
 						}
 						MarkupLanguage d = (MarkupLanguage) markupLanguage;

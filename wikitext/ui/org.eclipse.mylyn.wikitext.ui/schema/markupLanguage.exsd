@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.mylyn.wikitext.core" xmlns="http://www.w3.org/2001/XMLSchema">
+<schema targetNamespace="org.eclipse.mylyn.wikitext.ui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.mylyn.wikitext.core" id="markupLanguage" name="Markup Language"/>
+         <meta.schema plugin="org.eclipse.mylyn.wikitext.ui" id="markupLanguage" name="Markup Language"/>
       </appInfo>
       <documentation>
          A means of adding support for parsing lightweight markup languages.  A MarkupLanguage defines the rules and semantics used when parsing lightweight markup (wikitext).  This extension point should be used to add new markup parsers to the WikiText framework.
@@ -109,7 +109,7 @@ Plugins should also use the org.eclipse.core.contenttype.contentTypes extension 
       </appInfo>
       <documentation>
          &lt;pre&gt;
-&lt;extension point=&quot;org.eclipse.mylyn.wikitext.core.markupLanguage&quot;&gt;
+&lt;extension point=&quot;org.eclipse.mylyn.wikitext.ui.markupLanguage&quot;&gt;
     &lt;language class=&quot;org.eclipse.mylyn.wikitext.textile.core.TextileLanguage&quot;
         name=&quot;Textile&quot; fileExtensions=&quot;textile&quot;&gt;
     &lt;/language&gt;

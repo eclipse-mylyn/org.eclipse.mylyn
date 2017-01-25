@@ -169,7 +169,7 @@ h2. Extending an Existing Markup Language
 
 You may wish to augment an existing markup language syntax with your own extensions.  With WikiText this is possible by subclassing an existing markup language.
 
-MarkupLanguages that extend others may declare this hierarchy in the @org.eclipse.mylyn.wikitext.core.markupLanguage@ extension point by using the @extends@ attribute.  Declaring the hierarchy is optional, and allows for the markup language to inherit code completion, validation and help content from the markup language being extended.
+MarkupLanguages that extend others may declare this hierarchy in the @org.eclipse.mylyn.wikitext.ui.markupLanguage@ extension point by using the @extends@ attribute.  Declaring the hierarchy is optional, and allows for the markup language to inherit code completion, validation and help content from the markup language being extended.
 
 h2. New Markup Languages
 
@@ -178,7 +178,7 @@ WikiText is designed to be extended to support new markup languages.  To add a m
 # Extend @org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage@ using one of the existing subclasses as an example
 # Add to your markup language class the blocks, phrases and replacement tokens that are to be part of your language (see "Markup Language Concepts":#MarkupLanguageConcepts below)
 # Add to your jar a Java service @META-INF/services/org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage@
-# If it's to be used in Eclipse, register your markup language using the @org.eclipse.mylyn.wikitext.core.markupLanguage@ extension point. Other extension points that may be of interest to you:
+# If it's to be used in Eclipse, register your markup language using the @org.eclipse.mylyn.wikitext.ui.markupLanguage@ extension point. Other extension points that may be of interest to you:
 ** @org.eclipse.core.contenttype.contentTypes@ declare your markup language content type
 ** @org.eclipse.team.core.fileTypes@ ensure that team providers know that your file type is text
 ** @org.eclipse.mylyn.wikitext.core.markupValidationRule@ provide markup validation to detect common problems in markup

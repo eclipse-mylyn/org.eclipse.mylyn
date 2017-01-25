@@ -16,8 +16,8 @@
 			</xsl:for-each>
 		</topic>
 		<topic label="Extension Points Reference">
-			<topic href="reference/extension-points/org_eclipse_mylyn_wikitext_core_markupLanguage.html" label="org.eclipse.mylyn.wikitext.core.markupLanguage"/>
-			<topic href="reference/extension-points/org_eclipse_mylyn_wikitext_core_markupValidationRule.html" label="org.eclipse.mylyn.wikitext.core.markupValidationRule"/>
+			<topic href="reference/extension-points/org_eclipse_mylyn_wikitext_core_markupLanguage.html" label="org.eclipse.mylyn.wikitext.ui.markupLanguage"/>
+			<topic href="reference/extension-points/org_eclipse_mylyn_wikitext_core_markupValidationRule.html" label="org.eclipse.mylyn.wikitext.ui.markupValidationRule"/>
 			<topic href="reference/extension-points/org_eclipse_mylyn_wikitext_ui_cheatSheet.html" label="org.eclipse.mylyn.wikitext.ui.cheatSheet"/>
 			<topic href="reference/extension-points/org_eclipse_mylyn_wikitext_ui_contentAssist.html" label="org.eclipse.mylyn.wikitext.ui.contentAssist"/>
 		</topic>

@@ -27,7 +27,6 @@
 
         <tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/mylyn/org.eclipse.mylyn.docs.git</tycho.scmUrl>
         <tycho.testArgLine></tycho.testArgLine>
-
     </properties>
 
     <repositories>
@@ -43,7 +42,7 @@
         </repository>
         <repository>
             <id>wikitext-local</id>
-            <url>${project.baseUri}../../core/repository/target/repository/</url>
+            <url>${project.baseUri}../../repository/target/repository/</url>
             <layout>p2</layout>
         </repository>
         <repository>
@@ -170,6 +169,7 @@
                             <generate>true</generate>
                         </sourceReferences>
                         <timestampProvider>jgit</timestampProvider>
+                        <jgit.dirtyWorkingTree>warning</jgit.dirtyWorkingTree>
                     </configuration>
                 </plugin>
                 <plugin>

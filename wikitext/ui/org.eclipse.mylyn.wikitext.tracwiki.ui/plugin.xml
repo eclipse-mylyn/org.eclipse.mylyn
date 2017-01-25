@@ -11,6 +11,40 @@
         David Green - initial API and implementation
  -->
 <plugin>
+   <extension
+         point="org.eclipse.mylyn.wikitext.ui.markupLanguage">
+      <language
+            class="org.eclipse.mylyn.wikitext.tracwiki.core.TracWikiLanguage"
+            name="TracWiki"
+            fileExtensions="tracwiki">
+      </language>
+   </extension>
+   
+   
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.mylyn.wikitext"
+            file-extensions="tracwiki"
+            id="org.eclipse.mylyn.wikitext.tracwiki"
+            name="%content-type.name.0"
+            priority="normal">
+      </content-type>
+   </extension>
+
+	<extension
+	   point="org.eclipse.team.core.fileTypes">
+		<fileTypes
+		      extension="tracwiki"
+		      type="text">
+		</fileTypes>
+	</extension>
+	<extension
+	      point="org.eclipse.mylyn.wikitext.ui.markupValidationRule">
+	    <rule
+	          class="org.eclipse.mylyn.internal.wikitext.tracwiki.core.validation.TracWikiReferenceValidationRule"
+	          markupLanguage="TracWiki"/>
+	</extension>
    
    <extension
          point="org.eclipse.mylyn.wikitext.ui.contentAssist">

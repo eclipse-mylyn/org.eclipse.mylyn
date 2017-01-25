@@ -3,10 +3,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-      <groupId>org.eclipse.mylyn.docs</groupId>
-      <artifactId>wikitext</artifactId>
-      <version>3.0.0-SNAPSHOT</version>
-      <relativePath>..</relativePath>
+        <groupId>org.eclipse.mylyn.docs</groupId>
+        <artifactId>wikitext</artifactId>
+        <version>3.0.0-SNAPSHOT</version>
+        <relativePath>..</relativePath>
     </parent>
 
     <artifactId>wikitext.core</artifactId>
@@ -36,10 +36,7 @@
         <module>org.eclipse.mylyn.wikitext.mediawiki.core.ant</module>
         <module>org.eclipse.mylyn.wikitext.tracwiki.core</module>
         <module>org.eclipse.mylyn.wikitext.twiki.core</module>
-
-        <module>repository</module>
     </modules>
-
 
     <build>
         <plugins>
@@ -64,11 +61,25 @@
                 <extensions>true</extensions>
                 <configuration>
                   <instructions>
-                    <Bundle-SymbolicName>${project.artifactId};singleton:=true</Bundle-SymbolicName>
+                    <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                     <Bundle-RequiredExecutionEnvironment>JavaSE-1.8</Bundle-RequiredExecutionEnvironment>
                     <Import-Package>com.google.common*; version="[${guava.version},${guava.version.upper})", *</Import-Package>
                   </instructions>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
         <resources>
@@ -90,7 +101,6 @@
                     <include>about.*</include>
                     <include>feature.gif</include>
                     <include>plugin.properties</include>
-                    <include>plugin.xml</include>
                 </includes>
             </resource>
         </resources>

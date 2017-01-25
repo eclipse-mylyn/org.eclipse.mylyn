@@ -51,7 +51,7 @@
    </extension>
    
    <extension
-         point="org.eclipse.mylyn.wikitext.core.markupLanguage">
+         point="org.eclipse.mylyn.wikitext.ui.markupLanguage">
       <language
             class="org.eclipse.mylyn.wikitext.commonmark.CommonMarkLanguage"
             fileExtensions="cm, md, markdown"

@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.mylyn.wikitext.core" xmlns="http://www.w3.org/2001/XMLSchema">
+<schema targetNamespace="org.eclipse.mylyn.wikitext.ui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.mylyn.wikitext.core" id="markupValidationRule" name="Markup Validation Rule"/>
+         <meta.schema plugin="org.eclipse.mylyn.wikitext.ui" id="markupValidationRule" name="Markup Validation Rule"/>
       </appInfo>
       <documentation>
          Register a validation rule for a specific markup language.  Validation rules can produce errors or warnings about markup content, informing the user of potential problems with markup.
@@ -84,7 +84,7 @@
       </appInfo>
       <documentation>
          &lt;pre&gt;
-&lt;extension point=&quot;org.eclipse.mylyn.wikitext.core.markupValidationRule&quot;&gt;
+&lt;extension point=&quot;org.eclipse.mylyn.wikitext.ui.markupValidationRule&quot;&gt;
     &lt;rule markupLanguage=&quot;Textile&quot;
         class=&quot;org.eclipse.mylyn.internal.wikitext.textile.core.validation.BlockWhitespaceRule&quot; /&gt;
     &lt;rule markupLanguage=&quot;Textile&quot;

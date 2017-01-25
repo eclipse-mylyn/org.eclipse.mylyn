@@ -11,6 +11,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <modules>
+        <module>core</module>
+        <module>repository</module>
+        <module>ui-pom.xml</module>
+    </modules>
+
     <licenses>
         <license>
             <name>Eclipse Public License Version 1.0</name>

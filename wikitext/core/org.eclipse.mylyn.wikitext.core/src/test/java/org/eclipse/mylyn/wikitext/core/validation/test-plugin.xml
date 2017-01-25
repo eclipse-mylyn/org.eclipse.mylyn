@@ -14,7 +14,7 @@ A plugin.xml used for testing with org.eclipse.mylyn.internal.wikitext.core.vali
 -->
 <plugin>
  <extension
-       point="org.eclipse.mylyn.wikitext.core.markupValidationRule">
+       point="org.eclipse.mylyn.wikitext.ui.markupValidationRule">
     <rule
           class="org.eclipse.mylyn.wikitext.core.validation.TestMarkupValidationRule"
           markupLanguage="TestMarkupLanguage">

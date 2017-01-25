@@ -172,7 +172,7 @@ public class StandaloneMarkupValidator {
 			if (child.getNodeType() == Node.ELEMENT_NODE && child.getLocalName().equals("extension")) { //$NON-NLS-1$
 				Element element = (Element) child;
 				String point = element.getAttribute("point"); //$NON-NLS-1$
-				if ("org.eclipse.mylyn.wikitext.core.markupValidationRule".equals(point)) { //$NON-NLS-1$
+				if ("org.eclipse.mylyn.wikitext.ui.markupValidationRule".equals(point)) { //$NON-NLS-1$
 					for (Node vrNode = child.getFirstChild(); vrNode != null; vrNode = vrNode.getNextSibling()) {
 						if (vrNode.getNodeType() == Node.ELEMENT_NODE && vrNode.getLocalName().equals("rule")) { //$NON-NLS-1$
 							Element rule = (Element) vrNode;

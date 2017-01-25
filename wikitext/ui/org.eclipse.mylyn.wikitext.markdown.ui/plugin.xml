@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
+   <extension point="org.eclipse.mylyn.wikitext.ui.markupLanguage">
+      <language class="org.eclipse.mylyn.wikitext.markdown.core.MarkdownLanguage"
+            name="Markdown" fileExtensions="markdown,md,mdtext">
+      </language>
+   </extension>
+
+   <extension point="org.eclipse.core.contenttype.contentTypes">
+      <content-type id="org.eclipse.mylyn.wikitext.markdown" base-type="org.eclipse.mylyn.wikitext"
+            file-extensions="markdown,md,mdtext" name="%content-type.name" priority="normal">
+      </content-type>
+   </extension>
+
+   <extension point="org.eclipse.team.core.fileTypes">
+      <fileTypes extension="markdown" type="text"/>
+   </extension>
+
+   <extension point="org.eclipse.mylyn.wikitext.ui.markupValidationRule">
+      <rule markupLanguage="Markdown"
+            class="org.eclipse.mylyn.internal.wikitext.markdown.core.validation.MarkdownReferenceValidationRule">
+      </rule>
+      <rule markupLanguage="Markdown"
+            class="org.eclipse.mylyn.internal.wikitext.markdown.core.validation.LinkDefinitionValidationRule">
+      </rule>
+   </extension>
    <extension point="org.eclipse.mylyn.wikitext.ui.contentAssist">
       <templates markupLanguage="Markdown">
 

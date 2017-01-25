@@ -12,6 +12,39 @@
  -->
 <plugin>
    <extension
+         point="org.eclipse.mylyn.wikitext.ui.markupLanguage">
+      <language
+            class="org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage"
+            name="Confluence" fileExtensions="confluence">
+      </language>
+   </extension>
+
+
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.mylyn.wikitext"
+            file-extensions="confluence"
+            id="org.eclipse.mylyn.wikitext.confluence"
+            name="%content-type.name.0"
+            priority="normal">
+      </content-type>
+   </extension>
+
+	<extension
+	   point="org.eclipse.team.core.fileTypes">
+		<fileTypes
+		      extension="confluence"
+		      type="text">
+		</fileTypes>
+	</extension>
+	<extension
+	   point="org.eclipse.mylyn.wikitext.ui.markupValidationRule">
+		<rule
+	      class="org.eclipse.mylyn.internal.wikitext.confluence.validation.ConfluenceReferenceValidationRule"
+	      markupLanguage="Confluence"/>
+	</extension>
+   <extension
          point="org.eclipse.mylyn.wikitext.ui.contentAssist">
       
       <templates

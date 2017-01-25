@@ -11,6 +11,40 @@
         David Green - initial API and implementation
  -->
 <plugin>
+	<extension point="org.eclipse.mylyn.wikitext.ui.markupLanguage">
+		<language class="org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage"
+			name="MediaWiki" fileExtensions="mediawiki">
+		</language>
+	</extension>
+	
+	
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.mylyn.wikitext"
+            file-extensions="mediawiki"
+            id="org.eclipse.mylyn.wikitext.mediawiki"
+            name="%content-type.name.0"
+            priority="normal">
+      </content-type>
+   </extension>
+   
+	<extension
+	   point="org.eclipse.team.core.fileTypes">
+		<fileTypes
+		      extension="mediawiki"
+		      type="text">
+		</fileTypes>
+	</extension>
+	 <extension
+	   point="org.eclipse.mylyn.wikitext.ui.markupValidationRule">
+		<rule
+		      class="org.eclipse.mylyn.internal.wikitext.mediawiki.core.validation.CommentValidationRule"
+		      markupLanguage="MediaWiki"/>
+		<rule
+		      class="org.eclipse.mylyn.internal.wikitext.mediawiki.core.validation.MediaWikiReferenceValidationRule"
+		      markupLanguage="MediaWiki"/>
+	 </extension>
 	<extension
          point="org.eclipse.mylyn.wikitext.ui.cheatSheet">
       <content
