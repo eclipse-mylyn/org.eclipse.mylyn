@@ -14,7 +14,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <wikitext.goals>clean,verify</wikitext.goals>
+        <wikitext.goal>verify</wikitext.goal>
     </properties>
 
     <build>
@@ -30,7 +30,10 @@
                 <configuration>
                     <pom>ui/pom.xml</pom>
                     <streamLogs>true</streamLogs>
-                    <goals>${wikitext.goals}</goals>
+                    <goals>
+                      <goal>clean</goal>
+                      <goal>${wikitext.goal}</goal>
+                    </goals>
                 </configuration>
                 <executions>
                     <execution>
