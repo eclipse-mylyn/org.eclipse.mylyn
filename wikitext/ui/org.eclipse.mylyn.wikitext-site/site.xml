@@ -9,9 +9,9 @@
   <feature url="features/org.eclipse.mylyn.wikitext.editors_feature_0.0.0.jar" id="org.eclipse.mylyn.wikitext.editors_feature" version="0.0.0">
     <category name="Features"/>
   </feature>
-  <!-- feature url="features/org.eclipse.mylyn.wikitext.sdk_0.0.0.jar" id="org.eclipse.mylyn.wikitext.sdk" version="0.0.0">
+  <feature url="features/org.eclipse.mylyn.wikitext.sdk_0.0.0.jar" id="org.eclipse.mylyn.wikitext.sdk" version="0.0.0">
     <category name="SDK"/>
-  </feature -->
+  </feature>
   <feature url="features/org.eclipse.mylyn.wikitext.extras_feature_0.0.0.jar" id="org.eclipse.mylyn.wikitext.extras_feature" version="0.0.0">
     <category name="Features"/>
   </feature>

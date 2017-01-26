@@ -78,6 +78,11 @@
     </profile>
   </profiles>
   <modules>
+    <!--
+    temporary for epub.help dependency on wikitext build
+    -->
+    <module>wikitext/core</module>
+
     <module>org.eclipse.mylyn.docs.development-feature</module>
     <module>org.eclipse.mylyn.docs.sdk-feature</module>
 

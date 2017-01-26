@@ -5,7 +5,7 @@
     are made available under the terms of the Eclipse Public License v1.0
     which accompanies this distribution, and is available at
     http://www.eclipse.org/legal/epl-v10.html
-    
+
     Contributors:
         David Green - initial API and implementation
         Torkild U. Resheim - Adapted for building the EPUB user guide
@@ -14,17 +14,6 @@
 <!-- Will only work when called from Maven — see pom.xml -->
 <project name="org.eclipse.mylyn.docs.epub.ui.docs" default="build">
 
-	<property name="wikitext.help" location="../org.eclipse.mylyn.wikitext.help.ui" />
-
-	<property name="wikitext.ui.textile.bin" value="../org.eclipse.mylyn.wikitext.textile.core/.tmp.bin"/>
-
-	<path id="wikitext.ant.classpath">
-		<pathelement location="../org.eclipse.mylyn.wikitext.core/@dot"/>
-		<pathelement location="../org.eclipse.mylyn.wikitext.core/bin"/>
-		<pathelement location="../org.eclipse.mylyn.wikitext.core/bin_ant"/>
-		<pathelement location="${wikitext.ui.textile.bin}"/>
-	</path>
-
 	<target name="clean">
 		<delete failonerror="false">
 			<fileset dir="help">
@@ -32,16 +21,15 @@
 				<exclude name="title-page.html"/>
 			</fileset>
 		</delete>
-		<delete dir="${wikitext.ui.textile.bin}" failonerror="false"/>
 	</target>
 
 	<target name="build" description="generate plugin help documentation">
-		<taskdef resource="org/eclipse/mylyn/wikitext/core/ant/tasks.properties" classpathref="wikitext.ant.classpath"/>
+		<taskdef resource="org/eclipse/mylyn/wikitext/core/ant/tasks.properties"/>
 
 		<mkdir dir="${basedir}/help"/>
 
 		<wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.textile.core.TextileLanguage"
-			overwrite="true" 
+			overwrite="true"
 			multipleOutputFiles="true"
 			navigationImages="true"
 			helpPrefix="help">
@@ -49,7 +37,6 @@
 				<include name="*.textile"/>
 			</fileset>
 			<stylesheet url="../book.css"/>
-			<stylesheet file="${wikitext.help}/help/styles/main.css"/>
 			<stylesheet file="${basedir}/docs/style.css"/>
 		</wikitext-to-eclipse-help>
 

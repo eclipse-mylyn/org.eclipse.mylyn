@@ -89,6 +89,7 @@
 
         <module>org.eclipse.mylyn.wikitext.editors-feature</module>
         <module>org.eclipse.mylyn.wikitext-feature</module>
+        <module>org.eclipse.mylyn.wikitext.sdk-feature</module>
         <module>org.eclipse.mylyn.wikitext.extras-feature</module>
         <module>org.eclipse.mylyn.wikitext-site</module>
     </modules>
