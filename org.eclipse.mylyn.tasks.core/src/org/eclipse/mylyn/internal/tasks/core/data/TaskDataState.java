@@ -11,7 +11,10 @@
 
 package org.eclipse.mylyn.internal.tasks.core.data;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
@@ -24,8 +27,6 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-
-import com.google.common.collect.ListMultimap;
 
 /**
  * @author Rob Elves
@@ -206,19 +207,19 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 		setRepositoryData(createCopy(oldState.getRepositoryData(), getTaskId()));
 	}
 
-	public void changeAttributeValues(ListMultimap<TaskAttribute, String> newValues) {
+	public void changeAttributeValues(Map<TaskAttribute, Collection<String>> newValues) {
 		changeAttributeValues(localTaskData, newValues);
 		changeAttributeValues(repositoryTaskData, newValues);
 		changeAttributeValues(editsTaskData, newValues);
 		changeAttributeValues(lastReadTaskData, newValues);
 	}
 
-	private void changeAttributeValues(TaskData taskData, ListMultimap<TaskAttribute, String> newValues) {
+	private void changeAttributeValues(TaskData taskData, Map<TaskAttribute, Collection<String>> newValues) {
 		if (taskData != null) {
 			for (TaskAttribute key : newValues.keySet()) {
 				TaskAttribute attribute = taskData.getRoot().getMappedAttribute(key.getPath());
 				if (attribute != null) {
-					attribute.setValues(newValues.get(key));
+					attribute.setValues(new ArrayList<>(newValues.get(key)));
 				}
 			}
 		}

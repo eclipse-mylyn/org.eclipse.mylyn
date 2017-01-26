@@ -14,8 +14,10 @@ package org.eclipse.mylyn.internal.tasks.core.data;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.core.runtime.Assert;
@@ -44,8 +46,6 @@ import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-
-import com.google.common.collect.ListMultimap;
 
 /**
  * Encapsulates synchronization policy.
@@ -600,7 +600,7 @@ public class TaskDataManager implements ITaskDataManager {
 		});
 	}
 
-	public void refactorAttributeValue(final ITask itask, final ListMultimap<TaskAttribute, String> newValues)
+	public void refactorAttributeValue(final ITask itask, final Map<TaskAttribute, Collection<String>> newValues)
 			throws CoreException {
 		Assert.isTrue(itask instanceof AbstractTask);
 		final AbstractTask task = (AbstractTask) itask;
