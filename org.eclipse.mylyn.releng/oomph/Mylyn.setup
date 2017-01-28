@@ -157,7 +157,7 @@
         <repository
             url="http://download.eclipse.org/eclipse/updates/3.8"/>
         <repository
-            url="http://download.eclipse.org/tools/orbit/downloads/drops/S20161021172207/repository/"/>
+            url="http://download.eclipse.org/tools/orbit/downloads/drops/S20170120205402/repository/"/>
       </repositoryList>
       <repositoryList
           name="Neon">
