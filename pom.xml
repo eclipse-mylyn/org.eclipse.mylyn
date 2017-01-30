@@ -110,5 +110,6 @@
 	<module>org.eclipse.mylyn.reviews.edit</module>
 	<module>org.eclipse.mylyn.reviews.ui</module>
 	<module>org.eclipse.mylyn.reviews.ui.tests</module>
+	<module>org.eclipse.mylyn.reviews.site</module>
   </modules>
 </project>
