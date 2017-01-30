@@ -84,10 +84,6 @@
           <url>http://download.eclipse.org/cbi/updates/license/</url>
         </repository>
 	  </repositories>
-	  <modules>
-		<module>tbr</module>
-		<module>org.eclipse.mylyn.reviews.site</module>
-	  </modules>
 	</profile>
   </profiles>
   <modules>
