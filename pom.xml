@@ -2,101 +2,15 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.eclipse.mylyn</groupId>
-    <artifactId>org.eclipse.mylyn-parent</artifactId>
-    <version>3.22.0-SNAPSHOT</version>
-    <relativePath>../org.eclipse.mylyn/org.eclipse.mylyn-parent</relativePath>
-  </parent>
+
   <groupId>org.eclipse.mylyn.docs</groupId>
-  <artifactId>org.eclipse.mylyn.docs-parent</artifactId>
+  <artifactId>docs.main</artifactId>
   <name>Mylyn Docs</name>
-  <version>2.11.0-SNAPSHOT</version>
+  <version>3.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <properties>
-    <tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/mylyn/org.eclipse.mylyn.docs.git</tycho.scmUrl>
-    <sonar.skippedModules>org.eclipse.mylyn.docs.development,org.eclipse.mylyn.docs.sdk,org.eclipse.mylyn.docs-site,org.eclipse.mylyn.wikitext.help.sdk,org.eclipse.mylyn.wikitext.help.ui,org.eclipse.mylyn.htmltext,org.eclipse.mylyn.htmltext.ui,org.eclipse.mylyn.wikitext.extras,org.eclipse.mylyn.wikitext,org.eclipse.mylyn.wikitext.sdk,org.eclipse.mylyn.wikitext.confluence.ui,org.eclipse.mylyn.wikitext.creole.ui,org.eclipse.mylyn.wikitext.mediawiki.ui,org.eclipse.mylyn.wikitext.textile.ui,org.eclipse.mylyn.wikitext.tracwiki.ui,org.eclipse.mylyn.wikitext.twiki.ui</sonar.skippedModules>
-  </properties>
-  <mailingLists>
-    <mailingList>
-      <name>Mylyn Docs Mailing List</name>
-      <post>mylyn-docs-dev@eclipse.org</post>
-      <subscribe>https://dev.eclipse.org/mailman/listinfo/mylyn-docs-dev</subscribe>
-      <unsubscribe>https://dev.eclipse.org/mailman/listinfo/mylyn-docs-dev</unsubscribe>
-      <archive>http://dev.eclipse.org/mhonarc/lists/mylyn-docs-dev</archive>
-    </mailingList>
-  </mailingLists>
-  <issueManagement>
-    <url>https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced;classification=Mylyn;product=Mylyn%20Docs</url>
-    <system>Bugzilla</system>
-  </issueManagement>
-  <repositories>
-    <repository>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <id>mylyn-snapshots</id>
-      <url>https://repo.eclipse.org/content/repositories/mylyn-snapshots/</url>
-      <layout>default</layout>
-    </repository>
-    <repository>
-      <id>mylyn-releases</id>
-      <url>https://repo.eclipse.org/content/repositories/mylyn-releases/</url>
-      <layout>default</layout>
-    </repository>
-  </repositories>
-  <profiles>
-    <profile>
-      <id>implicit-target</id>
-      <activation>
-        <property>
-          <name>!explicit-target</name>
-        </property>
-      </activation>
-      <repositories>
-        <repository>
-          <id>eclipse-mylyn-commons</id>
-          <layout>p2</layout>
-          <url>${mylyn-commons-repository-url}</url>
-        </repository>
-        <repository>
-          <id>eclipse-mylyn-tasks</id>
-          <layout>p2</layout>
-          <url>${mylyn-tasks-repository-url}</url>
-        </repository>
-        <repository>
-          <id>eclipse-mylyn-context</id>
-          <layout>p2</layout>
-          <url>${mylyn-context-repository-url}</url>
-        </repository>
-        <repository>
-          <id>cbi-license</id>
-          <layout>p2</layout>
-          <url>http://download.eclipse.org/cbi/updates/license/</url>
-        </repository>
-      </repositories>
-    </profile>
-  </profiles>
+
   <modules>
-    <!--
-    temporary for epub.help dependency on wikitext build
-    -->
-    <module>wikitext/core</module>
-
-    <module>org.eclipse.mylyn.docs.development-feature</module>
-    <module>org.eclipse.mylyn.docs.sdk-feature</module>
-
-    <module>org.eclipse.mylyn.htmltext-feature</module>
-    <module>org.eclipse.mylyn.htmltext.ui</module>
-
-    <module>org.eclipse.mylyn.docs.epub.core</module>
-    <module>org.eclipse.mylyn.docs.epub.ant.core</module>
-    <module>org.eclipse.mylyn.docs.epub.ui</module>
-    <module>org.eclipse.mylyn.docs.epub.help</module>
-    <module>org.eclipse.mylyn.docs.epub.sdk-feature</module>
-    <module>org.eclipse.mylyn.docs.epub.tests</module>
-    <module>org.eclipse.mylyn.docs.epub-feature</module>
-
-    <module>org.eclipse.mylyn.docs-site</module>
+    <module>wikitext</module>
+    <module>docs-pom.xml</module>
   </modules>
 </project>
