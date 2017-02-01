@@ -29,6 +29,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
+import org.eclipse.mylyn.wikitext.core.ant.MarkupTask;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.HtmlParser;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;

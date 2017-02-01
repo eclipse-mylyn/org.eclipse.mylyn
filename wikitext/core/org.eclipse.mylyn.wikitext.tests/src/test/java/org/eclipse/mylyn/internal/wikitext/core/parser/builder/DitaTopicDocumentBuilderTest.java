@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.wikitext.core.parser.builder;
 import java.io.StringWriter;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
+import org.eclipse.mylyn.wikitext.mediawiki.MediaWikiLanguage;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;

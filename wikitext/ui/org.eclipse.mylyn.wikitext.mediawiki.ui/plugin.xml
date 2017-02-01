@@ -12,7 +12,7 @@
  -->
 <plugin>
 	<extension point="org.eclipse.mylyn.wikitext.ui.markupLanguage">
-		<language class="org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage"
+		<language class="org.eclipse.mylyn.wikitext.mediawiki.MediaWikiLanguage"
 			name="MediaWiki" fileExtensions="mediawiki">
 		</language>
 	</extension>
@@ -39,10 +39,10 @@
 	 <extension
 	   point="org.eclipse.mylyn.wikitext.ui.markupValidationRule">
 		<rule
-		      class="org.eclipse.mylyn.internal.wikitext.mediawiki.core.validation.CommentValidationRule"
+		      class="org.eclipse.mylyn.internal.wikitext.mediawiki.validation.CommentValidationRule"
 		      markupLanguage="MediaWiki"/>
 		<rule
-		      class="org.eclipse.mylyn.internal.wikitext.mediawiki.core.validation.MediaWikiReferenceValidationRule"
+		      class="org.eclipse.mylyn.internal.wikitext.mediawiki.validation.MediaWikiReferenceValidationRule"
 		      markupLanguage="MediaWiki"/>
 	 </extension>
 	<extension

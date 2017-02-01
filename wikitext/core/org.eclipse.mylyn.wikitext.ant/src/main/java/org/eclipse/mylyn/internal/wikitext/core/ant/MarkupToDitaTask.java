@@ -24,6 +24,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
+import org.eclipse.mylyn.wikitext.core.ant.MarkupTask;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.DitaBookMapDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.DitaTopicDocumentBuilder;

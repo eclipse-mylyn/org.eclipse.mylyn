@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.tasks.ui.editor;
 
-import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
+import org.eclipse.mylyn.wikitext.mediawiki.MediaWikiLanguage;
 import org.eclipse.mylyn.wikitext.tasks.ui.editor.MarkupTaskEditorExtension;
 
 public class MediaWikiMarkupTaskEditorExtension extends MarkupTaskEditorExtension<MediaWikiLanguage> {
