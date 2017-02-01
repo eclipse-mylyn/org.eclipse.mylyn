@@ -5,6 +5,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:git="http://www.eclipse.org/oomph/setup/git/1.0"
     xmlns:jdt="http://www.eclipse.org/oomph/setup/jdt/1.0"
+    xmlns:maven="http://www.eclipse.org/oomph/setup/maven/1.0"
     xmlns:mylyn="http://www.eclipse.org/oomph/setup/mylyn/1.0"
     xmlns:pde="http://www.eclipse.org/oomph/setup/pde/1.0"
     xmlns:predicates="http://www.eclipse.org/oomph/predicates/1.0"
@@ -13,7 +14,7 @@
     xmlns:setup.p2="http://www.eclipse.org/oomph/setup/p2/1.0"
     xmlns:setup.targlets="http://www.eclipse.org/oomph/setup/targlets/1.0"
     xmlns:setup.workingsets="http://www.eclipse.org/oomph/setup/workingsets/1.0"
-    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/jdt/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/JDT.ecore http://www.eclipse.org/oomph/setup/mylyn/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Mylyn.ecore http://www.eclipse.org/oomph/setup/pde/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/PDE.ecore http://www.eclipse.org/oomph/predicates/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupWorkingSets.ecore"
+    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/jdt/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/JDT.ecore http://www.eclipse.org/oomph/setup/maven/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Maven.ecore http://www.eclipse.org/oomph/setup/mylyn/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Mylyn.ecore http://www.eclipse.org/oomph/setup/pde/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/PDE.ecore http://www.eclipse.org/oomph/predicates/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupWorkingSets.ecore"
     name="mylyn"
     label="Mylyn">
   <annotation
@@ -586,6 +587,13 @@
           name="git.clone.mylyn.docs"
           value="${git.clone.mylyn.docs.location}"/>
       <setupTask
+          xsi:type="setup.p2:P2Task">
+        <requirement
+            name="com.ifedorenko.m2e.mavendev.feature.feature.group"/>
+        <repository
+            url="http://ifedorenko.github.io/m2e-extras/"/>
+      </setupTask>
+      <setupTask
           xsi:type="git:GitCloneTask"
           id="git.clone.mylyn.docs"
           remoteURI="mylyn/org.eclipse.mylyn.docs">
@@ -620,8 +628,15 @@
           <requirement
               name="org.eclipse.mylyn.docs.development.feature.group"/>
           <sourceLocator
-              rootFolder="${git.clone.mylyn.docs.location}"/>
+              rootFolder="${git.clone.mylyn.docs.location}"
+              locateNestedProjects="true"/>
         </targlet>
+      </setupTask>
+      <setupTask
+          xsi:type="maven:MavenImportTask">
+        <sourceLocator
+            rootFolder="${git.clone.mylyn.docs.location}/wikitext/core"
+            locateNestedProjects="true"/>
       </setupTask>
       <setupTask
           xsi:type="setup.workingsets:WorkingSetTask">
@@ -637,7 +652,7 @@
           excludedTriggers="BOOTSTRAP"
           predecessor="git.clone.mylyn.docs"
           content="&lt;!-- Placeholder file. Real toc file will be generated during the build -->"
-          targetURL="platform:/resource/org.eclipse.mylyn.wikitext.help.ui/help/Mylyn WikiText User Guide-toc.xml"
+          targetURL="${git.clone.mylyn.docs.location|uri}/wikitext/ui/org.eclipse.mylyn.wikitext.help.ui/help/Mylyn-WikiText-User-Guide-toc.xml"
           encoding="UTF-8">
         <description>Create a placeholder file &quot;Mylyn WikiText User Guide-toc.xml&quot;</description>
       </setupTask>
@@ -646,7 +661,7 @@
           excludedTriggers="BOOTSTRAP"
           predecessor="git.clone.mylyn.docs"
           content="&lt;!-- Placeholder file. Real toc file will be generated during the build -->"
-          targetURL="platform:/resource/org.eclipse.mylyn.wikitext.help.ui/help/devguide/WikiText Developer Guide-toc.xml"
+          targetURL="${git.clone.mylyn.docs.location|uri}/wikitext/ui/org.eclipse.mylyn.wikitext.help.ui/help/devguide/WikiText-Developer-Guide-toc.xml"
           encoding="UTF-8">
         <description>Create a placeholder file &quot;WikiText Developer Guide-toc.xml&quot;</description>
       </setupTask>
@@ -1546,6 +1561,13 @@
           name="git.clone.mylyn.docs"
           value="${git.clone.mylyn.docs.location}"/>
       <setupTask
+          xsi:type="setup.p2:P2Task">
+        <requirement
+            name="com.ifedorenko.m2e.mavendev.feature.feature.group"/>
+        <repository
+            url="http://ifedorenko.github.io/m2e-extras/"/>
+      </setupTask>
+      <setupTask
           xsi:type="git:GitCloneTask"
           id="git.clone.mylyn.docs"
           remoteURI="mylyn/org.eclipse.mylyn.docs">
@@ -1580,8 +1602,15 @@
           <requirement
               name="org.eclipse.mylyn.docs.development.feature.group"/>
           <sourceLocator
-              rootFolder="${git.clone.mylyn.docs.location}"/>
+              rootFolder="${git.clone.mylyn.docs.location}"
+              locateNestedProjects="true"/>
         </targlet>
+      </setupTask>
+      <setupTask
+          xsi:type="maven:MavenImportTask">
+        <sourceLocator
+            rootFolder="${git.clone.mylyn.docs.location}/wikitext/core"
+            locateNestedProjects="true"/>
       </setupTask>
       <setupTask
           xsi:type="setup.workingsets:WorkingSetTask">
@@ -1597,7 +1626,7 @@
           excludedTriggers="BOOTSTRAP"
           predecessor="git.clone.mylyn.docs"
           content="&lt;!-- Placeholder file. Real toc file will be generated during the build -->"
-          targetURL="platform:/resource/org.eclipse.mylyn.wikitext.help.ui/help/Mylyn WikiText User Guide-toc.xml"
+          targetURL="${git.clone.mylyn.docs.location|uri}/wikitext/ui/org.eclipse.mylyn.wikitext.help.ui/help/Mylyn-WikiText-User-Guide-toc.xml"
           encoding="UTF-8">
         <description>Create a placeholder file &quot;Mylyn WikiText User Guide-toc.xml&quot;</description>
       </setupTask>
@@ -1606,7 +1635,7 @@
           excludedTriggers="BOOTSTRAP"
           predecessor="git.clone.mylyn.docs"
           content="&lt;!-- Placeholder file. Real toc file will be generated during the build -->"
-          targetURL="platform:/resource/org.eclipse.mylyn.wikitext.help.ui/help/devguide/WikiText Developer Guide-toc.xml"
+          targetURL="${git.clone.mylyn.docs.location|uri}/wikitext/ui/org.eclipse.mylyn.wikitext.help.ui/help/devguide/WikiText-Developer-Guide-toc.xml"
           encoding="UTF-8">
         <description>Create a placeholder file &quot;WikiText Developer Guide-toc.xml&quot;</description>
       </setupTask>
