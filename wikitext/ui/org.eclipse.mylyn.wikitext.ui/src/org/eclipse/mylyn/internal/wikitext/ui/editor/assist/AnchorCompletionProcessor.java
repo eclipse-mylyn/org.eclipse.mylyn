@@ -24,8 +24,8 @@ import org.eclipse.jface.text.contentassist.ICompletionProposalExtension4;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
-import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
-import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem.Visitor;
+import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
+import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem.Visitor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 

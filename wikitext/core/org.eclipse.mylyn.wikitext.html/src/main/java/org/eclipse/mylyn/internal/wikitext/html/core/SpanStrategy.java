@@ -11,9 +11,9 @@
 
 package org.eclipse.mylyn.internal.wikitext.html.core;
 
-import org.eclipse.mylyn.wikitext.core.parser.Attributes;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.parser.Attributes;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 
 interface SpanStrategy {
 	void beginSpan(DocumentBuilder builder, SpanType type, Attributes attributes);

@@ -40,20 +40,20 @@ import org.eclipse.mylyn.internal.wikitext.textile.core.phrase.SimpleTextilePhra
 import org.eclipse.mylyn.internal.wikitext.textile.core.phrase.TagEscapeTextilePhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.textile.core.token.EntityReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.textile.core.token.FootnoteReferenceReplacementToken;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
-import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.core.parser.builder.NoOpDocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
-import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
-import org.eclipse.mylyn.wikitext.core.parser.markup.ContentState;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
-import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.HtmlEndTagPhraseModifier;
-import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.HtmlStartTagPhraseModifier;
-import org.eclipse.mylyn.wikitext.core.parser.markup.token.AcronymReplacementToken;
-import org.eclipse.mylyn.wikitext.core.parser.markup.token.EntityReferenceReplacementToken;
-import org.eclipse.mylyn.wikitext.core.parser.markup.token.EntityWrappingReplacementToken;
-import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternEntityReferenceReplacementToken;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.parser.builder.NoOpDocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.markup.AbstractMarkupLanguage;
+import org.eclipse.mylyn.wikitext.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.parser.markup.ContentState;
+import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageConfiguration;
+import org.eclipse.mylyn.wikitext.parser.markup.phrase.HtmlEndTagPhraseModifier;
+import org.eclipse.mylyn.wikitext.parser.markup.phrase.HtmlStartTagPhraseModifier;
+import org.eclipse.mylyn.wikitext.parser.markup.token.AcronymReplacementToken;
+import org.eclipse.mylyn.wikitext.parser.markup.token.EntityReferenceReplacementToken;
+import org.eclipse.mylyn.wikitext.parser.markup.token.EntityWrappingReplacementToken;
+import org.eclipse.mylyn.wikitext.parser.markup.token.PatternEntityReferenceReplacementToken;
 
 /**
  * A textile dialect that parses <a href="http://en.wikipedia.org/wiki/Textile_(markup_language)">Textile markup</a>.

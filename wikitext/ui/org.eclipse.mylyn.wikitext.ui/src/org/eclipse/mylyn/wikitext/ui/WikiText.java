@@ -14,9 +14,9 @@ package org.eclipse.mylyn.wikitext.ui;
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.wikitext.ui.registry.WikiTextExtensionPointReader;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
-import org.eclipse.mylyn.wikitext.core.validation.MarkupValidator;
+import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.util.ServiceLocator;
+import org.eclipse.mylyn.wikitext.validation.MarkupValidator;
 
 /**
  * A utility class for accessing markup languages and validation. Use only in an Eclipse runtime environment. Programs

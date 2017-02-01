@@ -17,8 +17,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.eclipse.jface.action.IContributionItem;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
+import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.actions.CompoundContributionItem;
 import org.eclipse.ui.menus.CommandContributionItem;

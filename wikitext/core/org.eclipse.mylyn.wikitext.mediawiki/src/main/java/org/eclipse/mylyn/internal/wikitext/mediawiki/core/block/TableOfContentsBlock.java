@@ -13,9 +13,9 @@ package org.eclipse.mylyn.internal.wikitext.mediawiki.core.block;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
-import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
 import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
+import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
+import org.eclipse.mylyn.wikitext.parser.outline.OutlineParser;
 
 /**
  * @author David Green

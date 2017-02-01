@@ -15,11 +15,11 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
-import org.eclipse.mylyn.wikitext.core.parser.Attributes;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
-import org.eclipse.mylyn.wikitext.core.parser.builder.EventDocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.builder.event.BeginSpanEvent;
-import org.eclipse.mylyn.wikitext.core.parser.builder.event.DocumentBuilderEvent;
+import org.eclipse.mylyn.wikitext.parser.Attributes;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.parser.builder.EventDocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.builder.event.BeginSpanEvent;
+import org.eclipse.mylyn.wikitext.parser.builder.event.DocumentBuilderEvent;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

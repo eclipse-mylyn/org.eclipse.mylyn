@@ -22,8 +22,8 @@ import java.util.regex.Pattern;
 import org.eclipse.mylyn.internal.wikitext.commonmark.Line;
 import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContext;
 import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContext.NamedUriWithTitle;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.builder.EntityReferences;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.builder.EntityReferences;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Objects;

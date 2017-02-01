@@ -33,7 +33,7 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.preferences.Preferences;
 import org.eclipse.mylyn.internal.wikitext.ui.util.css.editor.CssConfiguration;
 import org.eclipse.mylyn.internal.wikitext.ui.util.css.editor.CssPartitioner;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.HtmlTextPresentationParser;
-import org.eclipse.mylyn.wikitext.core.parser.css.CssParser;
+import org.eclipse.mylyn.wikitext.parser.css.CssParser;
 import org.eclipse.mylyn.wikitext.ui.viewer.HtmlViewer;
 import org.eclipse.mylyn.wikitext.ui.viewer.HtmlViewerConfiguration;
 import org.eclipse.swt.SWT;

@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.wikitext.markdown.core.util;
 
-import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.parser.markup.Block;
 
 /**
  * Markup blocks that require additional context in order to decide if they can start with a markup line.

@@ -15,8 +15,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.core.parser.Attributes;
-import org.eclipse.mylyn.wikitext.core.parser.util.MatcherAdaper;
+import org.eclipse.mylyn.wikitext.parser.Attributes;
+import org.eclipse.mylyn.wikitext.parser.util.MatcherAdaper;
 
 /**
  * @author David Green
@@ -71,7 +71,7 @@ public class Textile {
 		}
 	}
 
-	public static Attributes configureAttributes(org.eclipse.mylyn.wikitext.core.parser.util.Matcher matcher,
+	public static Attributes configureAttributes(org.eclipse.mylyn.wikitext.parser.util.Matcher matcher,
 			Attributes attributes, int offset, boolean block) {
 		if (offset < 1) {
 			throw new IllegalArgumentException();

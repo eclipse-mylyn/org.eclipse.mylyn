@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.wikitext.commonmark;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.eclipse.mylyn.internal.wikitext.commonmark.inlines.InlineParser;
-import org.eclipse.mylyn.wikitext.core.parser.IdGenerator;
+import org.eclipse.mylyn.wikitext.parser.IdGenerator;
 
 import com.google.common.collect.ImmutableMap;
 

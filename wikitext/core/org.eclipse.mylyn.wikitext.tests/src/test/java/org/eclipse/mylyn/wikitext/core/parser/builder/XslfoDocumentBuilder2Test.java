@@ -18,12 +18,13 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
-import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
-import org.eclipse.mylyn.wikitext.core.util.DefaultXmlStreamWriter;
 import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
+import org.eclipse.mylyn.wikitext.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.parser.builder.XslfoDocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
+import org.eclipse.mylyn.wikitext.parser.outline.OutlineParser;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
+import org.eclipse.mylyn.wikitext.util.DefaultXmlStreamWriter;
 
 import com.google.common.base.Throwables;
 import com.google.common.io.Resources;

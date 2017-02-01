@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Document;

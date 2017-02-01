@@ -14,6 +14,7 @@ package org.eclipse.mylyn.wikitext.core.util;
 import static org.junit.Assert.assertNotNull;
 
 import org.eclipse.mylyn.wikitext.core.osgi.OsgiServiceLocator;
+import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 import org.junit.Test;
 
 public class ServiceLocatorIntegrationTest {

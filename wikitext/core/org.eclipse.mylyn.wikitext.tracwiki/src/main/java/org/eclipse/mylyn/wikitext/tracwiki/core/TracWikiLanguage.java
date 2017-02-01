@@ -36,11 +36,11 @@ import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.TicketAttachmentL
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.TicketLinkReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.WikiLinkReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.WikiWordReplacementToken;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
-import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
-import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.core.parser.markup.token.ImpliedHyperlinkReplacementToken;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.parser.markup.AbstractMarkupLanguage;
+import org.eclipse.mylyn.wikitext.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.parser.markup.token.ImpliedHyperlinkReplacementToken;
 
 /**
  * An implementation of the <a href="http://trac.edgewall.org/wiki/TracWiki">TracWiki</a> markup language.

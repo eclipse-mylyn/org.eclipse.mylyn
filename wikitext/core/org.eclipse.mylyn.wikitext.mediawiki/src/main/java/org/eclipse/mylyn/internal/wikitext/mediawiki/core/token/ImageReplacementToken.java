@@ -13,14 +13,14 @@ package org.eclipse.mylyn.internal.wikitext.mediawiki.core.token;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.core.parser.Attributes;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
-import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
-import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes.Align;
-import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
-import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
-import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
+import org.eclipse.mylyn.wikitext.parser.Attributes;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
+import org.eclipse.mylyn.wikitext.parser.ImageAttributes.Align;
+import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
+import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElement;
+import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
 
 /**
  * match [[Image:someImage.png]] or [[File:someImage.png]]

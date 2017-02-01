@@ -26,7 +26,7 @@ import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.validation.AnnotationMarkupValidator;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.validation.DocumentRegionValidator;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.validation.ResourceMarkerMarkupValidator;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 
 /**
  * @author David Green

@@ -14,9 +14,9 @@ package org.eclipse.mylyn.internal.wikitext.commonmark.inlines;
 import java.util.List;
 
 import org.eclipse.mylyn.internal.wikitext.commonmark.Line;
-import org.eclipse.mylyn.wikitext.core.parser.Attributes;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.parser.Attributes;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 
 public class Strong extends InlineWithNestedContents {
 

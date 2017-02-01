@@ -31,7 +31,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.commonmark.CommonMarkLanguage;
-import org.eclipse.mylyn.wikitext.core.util.LocationTrackingReader;
+import org.eclipse.mylyn.wikitext.util.LocationTrackingReader;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

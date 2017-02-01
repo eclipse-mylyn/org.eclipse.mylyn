@@ -24,7 +24,7 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
-import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
+import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
 import org.eclipse.swt.graphics.Point;
 
 /**

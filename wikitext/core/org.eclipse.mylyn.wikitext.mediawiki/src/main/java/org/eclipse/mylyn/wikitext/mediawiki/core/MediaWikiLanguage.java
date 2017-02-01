@@ -33,16 +33,16 @@ import org.eclipse.mylyn.internal.wikitext.mediawiki.core.token.HyperlinkExterna
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.token.HyperlinkInternalReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.token.ImageReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.token.LineBreakToken;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
-import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
-import org.eclipse.mylyn.wikitext.core.parser.markup.IdGenerationStrategy;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.HtmlCommentPhraseModifier;
-import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.LimitedHtmlEndTagPhraseModifier;
-import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.LimitedHtmlStartTagPhraseModifier;
-import org.eclipse.mylyn.wikitext.core.parser.markup.token.EntityReferenceReplacementToken;
-import org.eclipse.mylyn.wikitext.core.parser.markup.token.ImpliedHyperlinkReplacementToken;
-import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLiteralReplacementToken;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.parser.markup.IdGenerationStrategy;
+import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.parser.markup.phrase.HtmlCommentPhraseModifier;
+import org.eclipse.mylyn.wikitext.parser.markup.phrase.LimitedHtmlEndTagPhraseModifier;
+import org.eclipse.mylyn.wikitext.parser.markup.phrase.LimitedHtmlStartTagPhraseModifier;
+import org.eclipse.mylyn.wikitext.parser.markup.token.EntityReferenceReplacementToken;
+import org.eclipse.mylyn.wikitext.parser.markup.token.ImpliedHyperlinkReplacementToken;
+import org.eclipse.mylyn.wikitext.parser.markup.token.PatternLiteralReplacementToken;
 
 /**
  * A markup language for <a href="http://www.mediawiki.org">MediaWiki</a>

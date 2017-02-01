@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.core.util.LocationTrackingReader;
+import org.eclipse.mylyn.wikitext.util.LocationTrackingReader;
 
 /**
  * Preprocessor for Asciidoc. Picks up :val: attribute definitions and replace them when {val} occurs.

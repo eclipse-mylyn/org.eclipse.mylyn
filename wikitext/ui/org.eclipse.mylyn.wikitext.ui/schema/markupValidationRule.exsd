@@ -59,10 +59,10 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  the Java class that implements the validation rule. must extend &lt;code&gt;org.eclipse.mylyn.wikitext.core.validation.ValidationRule&lt;/code&gt;
+                  the Java class that implements the validation rule. must extend &lt;code&gt;org.eclipse.mylyn.wikitext.validation.ValidationRule&lt;/code&gt;
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.wikitext.core.validation.ValidationRule:"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.wikitext.validation.ValidationRule:"/>
                </appInfo>
             </annotation>
          </attribute>

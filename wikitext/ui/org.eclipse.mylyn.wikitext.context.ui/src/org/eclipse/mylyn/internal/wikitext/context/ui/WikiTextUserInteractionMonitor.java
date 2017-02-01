@@ -15,7 +15,7 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.monitor.ui.AbstractUserInteractionMonitor;
-import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
+import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**

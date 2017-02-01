@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.wikitext.markdown.core;
 
-import org.eclipse.mylyn.wikitext.core.parser.markup.ContentState;
+import org.eclipse.mylyn.wikitext.parser.markup.ContentState;
 
 /**
  * Extended version of ContentState that preprocesses Markdown for reference-style link support.

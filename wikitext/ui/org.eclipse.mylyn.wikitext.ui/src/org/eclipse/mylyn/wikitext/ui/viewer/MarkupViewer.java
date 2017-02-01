@@ -20,9 +20,9 @@ import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.IOverviewRuler;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
-import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.swt.widgets.Composite;
 
 /**

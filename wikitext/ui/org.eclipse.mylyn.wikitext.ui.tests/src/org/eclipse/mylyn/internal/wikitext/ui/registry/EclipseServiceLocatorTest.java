@@ -19,10 +19,10 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
+import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.tests.EclipseRuntimeRequired;
 import org.eclipse.mylyn.wikitext.ui.WikiText;
+import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 import org.junit.Before;
 import org.junit.Test;
 

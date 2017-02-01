@@ -23,7 +23,7 @@ import org.eclipse.mylyn.internal.wikitext.commonmark.Line;
 import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContext;
 import org.eclipse.mylyn.internal.wikitext.commonmark.TextSegment;
 import org.eclipse.mylyn.internal.wikitext.commonmark.spec.SimplifiedHtmlDocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;

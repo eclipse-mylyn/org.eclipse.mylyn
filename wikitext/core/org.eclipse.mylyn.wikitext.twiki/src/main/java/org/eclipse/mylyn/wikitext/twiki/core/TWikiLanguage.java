@@ -27,13 +27,13 @@ import org.eclipse.mylyn.internal.wikitext.twiki.core.token.IconReplacementToken
 import org.eclipse.mylyn.internal.wikitext.twiki.core.token.ImpliedEmailLinkReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.twiki.core.token.LinkReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.twiki.core.token.WikiWordReplacementToken;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
-import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
-import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
-import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.HtmlEndTagPhraseModifier;
-import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.HtmlStartTagPhraseModifier;
-import org.eclipse.mylyn.wikitext.core.parser.markup.token.EntityReferenceReplacementToken;
-import org.eclipse.mylyn.wikitext.core.parser.markup.token.ImpliedHyperlinkReplacementToken;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.parser.markup.AbstractMarkupLanguage;
+import org.eclipse.mylyn.wikitext.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.parser.markup.phrase.HtmlEndTagPhraseModifier;
+import org.eclipse.mylyn.wikitext.parser.markup.phrase.HtmlStartTagPhraseModifier;
+import org.eclipse.mylyn.wikitext.parser.markup.token.EntityReferenceReplacementToken;
+import org.eclipse.mylyn.wikitext.parser.markup.token.ImpliedHyperlinkReplacementToken;
 
 // TODO: table
 // TODO: empty line to empty para

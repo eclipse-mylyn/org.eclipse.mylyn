@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.confluence.core.block;
 
-import org.eclipse.mylyn.wikitext.core.parser.Attributes;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.parser.Attributes;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 
 /**
  * quoted text block, matches blocks that start with <code>{noformat}</code>. Creates an extended block type of

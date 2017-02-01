@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylyn.internal.wikitext.commonmark.LineSequence.ForwardLineSequence;
-import org.eclipse.mylyn.wikitext.core.util.LocationTrackingReader;
+import org.eclipse.mylyn.wikitext.util.LocationTrackingReader;
 
 import com.google.common.base.Throwables;
 

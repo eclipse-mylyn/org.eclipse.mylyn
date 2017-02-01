@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.wikitext.core.parser.outline;
 
+import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
+import org.eclipse.mylyn.wikitext.parser.outline.OutlineParser;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 import junit.framework.TestCase;

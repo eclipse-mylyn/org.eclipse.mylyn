@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.internal.wikitext.ui.util.IOUtil;
-import org.eclipse.mylyn.wikitext.core.parser.util.MarkupToEclipseToc;
+import org.eclipse.mylyn.wikitext.parser.util.MarkupToEclipseToc;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 

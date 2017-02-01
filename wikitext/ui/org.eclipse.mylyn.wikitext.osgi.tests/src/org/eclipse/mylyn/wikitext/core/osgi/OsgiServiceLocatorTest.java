@@ -25,8 +25,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
+import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

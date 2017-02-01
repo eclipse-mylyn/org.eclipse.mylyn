@@ -11,9 +11,9 @@
 
 package org.eclipse.mylyn.internal.wikitext.asciidoc.core.token;
 
-import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
-import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
-import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
+import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
+import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElement;
+import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
 
 /**
  * Detects plain links with formatting: http://www.example.com[Title]

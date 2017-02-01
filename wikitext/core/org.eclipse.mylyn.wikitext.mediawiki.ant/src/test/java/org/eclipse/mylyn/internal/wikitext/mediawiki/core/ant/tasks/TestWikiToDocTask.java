@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.tools.ant.Project;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 
 /**
  * Extension of the {@link WikiToDocTask} for test purposes.

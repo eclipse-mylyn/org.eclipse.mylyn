@@ -17,8 +17,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.AsciiDocContentState;
-import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
-import org.eclipse.mylyn.wikitext.core.parser.markup.ContentState;
+import org.eclipse.mylyn.wikitext.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.parser.markup.ContentState;
 
 /**
  * "Block" which detects the optional titles for blocks. i.e. {@code .This is a title}. The title is stored in

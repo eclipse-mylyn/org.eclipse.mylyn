@@ -12,11 +12,11 @@ package org.eclipse.mylyn.internal.wikitext.textile.core.phrase;
 
 import org.eclipse.mylyn.internal.wikitext.textile.core.Textile;
 import org.eclipse.mylyn.internal.wikitext.textile.core.TextileContentState;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
-import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
-import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
-import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
-import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
+import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
+import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElement;
+import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
 
 /**
  * @author David Green

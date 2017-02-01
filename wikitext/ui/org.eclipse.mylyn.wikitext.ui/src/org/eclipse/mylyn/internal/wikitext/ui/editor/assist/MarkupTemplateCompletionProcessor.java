@@ -35,7 +35,7 @@ import org.eclipse.jface.text.templates.TemplateException;
 import org.eclipse.jface.text.templates.TemplateProposal;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.swt.graphics.Image;
 
 /**

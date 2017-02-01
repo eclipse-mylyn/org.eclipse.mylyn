@@ -11,8 +11,8 @@
 
 package org.eclipse.mylyn.internal.wikitext.asciidoc.core.token;
 
-import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
-import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
+import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
+import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
 
 /**
  * Element processor for {@link AnchorLinkReplacementToken} and {@link AnchorLinkMacroReplacementToken}

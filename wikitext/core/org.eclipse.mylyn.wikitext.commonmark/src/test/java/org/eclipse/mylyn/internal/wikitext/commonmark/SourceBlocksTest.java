@@ -18,14 +18,14 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.eclipse.mylyn.wikitext.core.parser.Attributes;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
-import org.eclipse.mylyn.wikitext.core.parser.builder.EventDocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.builder.event.BeginBlockEvent;
-import org.eclipse.mylyn.wikitext.core.parser.builder.event.CharactersEvent;
-import org.eclipse.mylyn.wikitext.core.parser.builder.event.DocumentBuilderEvent;
-import org.eclipse.mylyn.wikitext.core.parser.builder.event.EndBlockEvent;
+import org.eclipse.mylyn.wikitext.parser.Attributes;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.parser.builder.EventDocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.builder.event.BeginBlockEvent;
+import org.eclipse.mylyn.wikitext.parser.builder.event.CharactersEvent;
+import org.eclipse.mylyn.wikitext.parser.builder.event.DocumentBuilderEvent;
+import org.eclipse.mylyn.wikitext.parser.builder.event.EndBlockEvent;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

@@ -13,6 +13,8 @@ package org.eclipse.mylyn.wikitext.core.parser.markup;
 
 import java.util.Locale;
 
+import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageConfiguration;
+
 import junit.framework.TestCase;
 
 public class MarkupLanguageConfigurationTest extends TestCase {

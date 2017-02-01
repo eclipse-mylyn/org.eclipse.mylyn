@@ -12,7 +12,7 @@
 package org.eclipse.mylyn.internal.wikitext.commonmark.inlines;
 
 import org.eclipse.mylyn.internal.wikitext.commonmark.Line;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 
 public class SoftLineBreak extends Inline {
 

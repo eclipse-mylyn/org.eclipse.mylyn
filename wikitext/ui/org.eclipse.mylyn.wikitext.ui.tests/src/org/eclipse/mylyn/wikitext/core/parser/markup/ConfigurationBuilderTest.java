@@ -13,8 +13,11 @@ package org.eclipse.mylyn.wikitext.core.parser.markup;
 
 import java.util.List;
 
-import org.eclipse.mylyn.wikitext.core.parser.markup.block.EclipseErrorDetailsBlock;
-import org.eclipse.mylyn.wikitext.core.parser.markup.block.JavaStackTraceBlock;
+import org.eclipse.mylyn.wikitext.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.parser.markup.ConfigurationBuilder;
+import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageConfiguration;
+import org.eclipse.mylyn.wikitext.parser.markup.block.EclipseErrorDetailsBlock;
+import org.eclipse.mylyn.wikitext.parser.markup.block.JavaStackTraceBlock;
 import org.junit.Assert;
 
 import junit.framework.TestCase;

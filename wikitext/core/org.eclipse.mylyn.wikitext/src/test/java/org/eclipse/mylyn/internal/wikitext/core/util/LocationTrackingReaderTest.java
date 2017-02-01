@@ -14,9 +14,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 
-import junit.framework.TestCase;
+import org.eclipse.mylyn.wikitext.util.LocationTrackingReader;
 
-import org.eclipse.mylyn.wikitext.core.util.LocationTrackingReader;
+import junit.framework.TestCase;
 
 /**
  * @author David Green

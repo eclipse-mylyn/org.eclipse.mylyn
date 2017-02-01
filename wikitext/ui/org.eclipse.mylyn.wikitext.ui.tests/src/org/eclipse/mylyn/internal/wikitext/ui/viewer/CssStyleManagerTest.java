@@ -12,8 +12,8 @@ package org.eclipse.mylyn.internal.wikitext.ui.viewer;
 
 import java.util.Iterator;
 
-import org.eclipse.mylyn.wikitext.core.parser.css.CssParser;
-import org.eclipse.mylyn.wikitext.core.parser.css.CssRule;
+import org.eclipse.mylyn.wikitext.parser.css.CssParser;
+import org.eclipse.mylyn.wikitext.parser.css.CssRule;
 import org.eclipse.mylyn.wikitext.tests.HeadRequired;
 import org.eclipse.swt.graphics.RGB;
 

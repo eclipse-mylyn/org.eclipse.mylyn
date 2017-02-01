@@ -31,7 +31,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.dnd.DndConfigurationStrategy;
-import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
+import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;

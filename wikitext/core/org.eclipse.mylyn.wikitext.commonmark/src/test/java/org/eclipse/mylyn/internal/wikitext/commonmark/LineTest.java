@@ -16,7 +16,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.eclipse.mylyn.wikitext.core.parser.Locator;
+import org.eclipse.mylyn.wikitext.parser.Locator;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

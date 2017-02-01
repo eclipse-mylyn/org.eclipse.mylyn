@@ -15,8 +15,8 @@ package org.eclipse.mylyn.internal.wikitext.asciidoc.core.util;
 import java.io.IOException;
 import java.io.StringReader;
 
-import org.eclipse.mylyn.wikitext.core.parser.markup.ContentState;
-import org.eclipse.mylyn.wikitext.core.util.LocationTrackingReader;
+import org.eclipse.mylyn.wikitext.parser.markup.ContentState;
+import org.eclipse.mylyn.wikitext.util.LocationTrackingReader;
 
 public class LookAheadReader {
 

@@ -17,9 +17,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.util.LanguageSupport;
-import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
-import org.eclipse.mylyn.wikitext.core.parser.markup.ContentState;
-import org.eclipse.mylyn.wikitext.core.parser.markup.Processor;
+import org.eclipse.mylyn.wikitext.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.parser.markup.ContentState;
+import org.eclipse.mylyn.wikitext.parser.markup.Processor;
 
 /**
  * Extended {@link ContentState content state} to provide additional AsciiDoc information to {@link Block blocks} and

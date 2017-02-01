@@ -16,11 +16,11 @@ import static org.junit.Assert.assertEquals;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
-import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.html.core.HtmlLanguage;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.junit.Test;
 
 public class ConfluenceLanguageIntegrationTest {

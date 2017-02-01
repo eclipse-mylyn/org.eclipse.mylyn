@@ -37,15 +37,15 @@ import org.eclipse.mylyn.internal.wikitext.confluence.core.phrase.SimpleWrappedP
 import org.eclipse.mylyn.internal.wikitext.confluence.core.token.AnchorReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.confluence.core.token.EscapedCharacterReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.confluence.core.token.HorizontalRuleToken;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
-import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
-import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
-import org.eclipse.mylyn.wikitext.core.parser.markup.token.EntityReferenceReplacementToken;
-import org.eclipse.mylyn.wikitext.core.parser.markup.token.ImpliedHyperlinkReplacementToken;
-import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternEntityReferenceReplacementToken;
-import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLineBreakReplacementToken;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.parser.markup.AbstractMarkupLanguage;
+import org.eclipse.mylyn.wikitext.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.parser.markup.token.EntityReferenceReplacementToken;
+import org.eclipse.mylyn.wikitext.parser.markup.token.ImpliedHyperlinkReplacementToken;
+import org.eclipse.mylyn.wikitext.parser.markup.token.PatternEntityReferenceReplacementToken;
+import org.eclipse.mylyn.wikitext.parser.markup.token.PatternLineBreakReplacementToken;
 
 /**
  * A confluence language for parsing Confluence markup.
