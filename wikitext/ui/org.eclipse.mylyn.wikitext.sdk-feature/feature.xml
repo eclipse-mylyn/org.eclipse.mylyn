@@ -14,7 +14,7 @@
       label="%featureName"
       version="3.0.0.qualifier"
       provider-name="%providerName"
-      plugin="org.eclipse.mylyn.wikitext.core"
+      plugin="org.eclipse.mylyn.wikitext"
       license-feature="org.eclipse.license"
       license-feature-version="1.0.1">
 
@@ -49,7 +49,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext.confluence.core.source"
+         id="org.eclipse.mylyn.wikitext.confluence.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -70,35 +70,35 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext.core.source"
+         id="org.eclipse.mylyn.wikitext.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext.core.ant.source"
+         id="org.eclipse.mylyn.wikitext.ant.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext.core.osgi.source"
+         id="org.eclipse.mylyn.wikitext.osgi.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext.html.core.source"
+         id="org.eclipse.mylyn.wikitext.html.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext.markdown.core.source"
+         id="org.eclipse.mylyn.wikitext.markdown.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -112,7 +112,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext.mediawiki.core.source"
+         id="org.eclipse.mylyn.wikitext.mediawiki.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -133,7 +133,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext.textile.core.source"
+         id="org.eclipse.mylyn.wikitext.textile.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -147,7 +147,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext.tracwiki.core.source"
+         id="org.eclipse.mylyn.wikitext.tracwiki.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -161,7 +161,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext.twiki.core.source"
+         id="org.eclipse.mylyn.wikitext.twiki.source"
          download-size="0"
          install-size="0"
          version="0.0.0"

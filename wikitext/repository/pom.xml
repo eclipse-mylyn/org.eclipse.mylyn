@@ -29,32 +29,32 @@
                         <configuration>
                             <artifacts>
                                 <artifact>
-                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.core:3.0.0-SNAPSHOT</id>
+                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext:3.0.0-SNAPSHOT</id>
                                     <transitive>false</transitive>
                                     <source>true</source>
                                 </artifact>
                                 <artifact>
-                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.core.toolkit:3.0.0-SNAPSHOT</id>
+                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.toolkit:3.0.0-SNAPSHOT</id>
                                     <transitive>false</transitive>
                                     <source>true</source>
                                 </artifact>
                                 <artifact>
-                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.html.core:3.0.0-SNAPSHOT</id>
+                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.html:3.0.0-SNAPSHOT</id>
                                     <transitive>false</transitive>
                                     <source>true</source>
                                 </artifact>
                                 <artifact>
-                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.textile.core:3.0.0-SNAPSHOT</id>
+                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.textile:3.0.0-SNAPSHOT</id>
                                     <transitive>false</transitive>
                                     <source>true</source>
                                 </artifact>
                                 <artifact>
-                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.core.ant:3.0.0-SNAPSHOT</id>
+                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.ant:3.0.0-SNAPSHOT</id>
                                     <transitive>false</transitive>
                                     <source>true</source>
                                 </artifact>
                                 <artifact>
-                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.asciidoc.core:3.0.0-SNAPSHOT</id>
+                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.asciidoc:3.0.0-SNAPSHOT</id>
                                     <transitive>false</transitive>
                                     <source>true</source>
                                 </artifact>
@@ -64,32 +64,32 @@
                                     <source>true</source>
                                 </artifact>
                                 <artifact>
-                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.confluence.core:3.0.0-SNAPSHOT</id>
+                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.confluence:3.0.0-SNAPSHOT</id>
                                     <transitive>false</transitive>
                                     <source>true</source>
                                 </artifact>
                                 <artifact>
-                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.creole.core:3.0.0-SNAPSHOT</id>
+                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.creole:3.0.0-SNAPSHOT</id>
                                     <transitive>false</transitive>
                                     <source>true</source>
                                 </artifact>
                                 <artifact>
-                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.markdown.core:3.0.0-SNAPSHOT</id>
+                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.markdown:3.0.0-SNAPSHOT</id>
                                     <transitive>false</transitive>
                                     <source>true</source>
                                 </artifact>
                                 <artifact>
-                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.mediawiki.core:3.0.0-SNAPSHOT</id>
+                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.mediawiki:3.0.0-SNAPSHOT</id>
                                     <transitive>false</transitive>
                                     <source>true</source>
                                 </artifact>
                                 <artifact>
-                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.tracwiki.core:3.0.0-SNAPSHOT</id>
+                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.tracwiki:3.0.0-SNAPSHOT</id>
                                     <transitive>false</transitive>
                                     <source>true</source>
                                 </artifact>
                                 <artifact>
-                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.twiki.core:3.0.0-SNAPSHOT</id>
+                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.twiki:3.0.0-SNAPSHOT</id>
                                     <transitive>false</transitive>
                                     <source>true</source>
                                 </artifact>

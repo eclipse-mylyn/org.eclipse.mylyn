@@ -2,32 +2,32 @@
 <?pde version="3.8"?><target name="wikitext" sequenceNumber="11">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.mylyn.wikitext.core.source" version="0.0.0"/>
-<unit id="org.eclipse.mylyn.wikitext.tracwiki.core.source" version="0.0.0"/>
-<unit id="org.eclipse.mylyn.wikitext.twiki.core.source" version="0.0.0"/>
-<unit id="org.eclipse.mylyn.wikitext.confluence.core" version="0.0.0"/>
-<unit id="org.eclipse.mylyn.wikitext.tracwiki.core" version="0.0.0"/>
-<unit id="org.eclipse.mylyn.wikitext.core" version="0.0.0"/>
-<unit id="org.eclipse.mylyn.wikitext.core.ant.source" version="0.0.0"/>
-<unit id="org.eclipse.mylyn.wikitext.asciidoc.core.source" version="0.0.0"/>
-<unit id="org.eclipse.mylyn.wikitext.html.core" version="0.0.0"/>
-<unit id="org.eclipse.mylyn.wikitext.creole.core" version="0.0.0"/>
-<unit id="org.eclipse.mylyn.wikitext.asciidoc.core" version="0.0.0"/>
-<unit id="org.eclipse.mylyn.wikitext.twiki.core" version="0.0.0"/>
-<unit id="org.eclipse.mylyn.wikitext.textile.core" version="0.0.0"/>
-<unit id="org.eclipse.mylyn.wikitext.confluence.core.source" version="0.0.0"/>
-<unit id="org.eclipse.mylyn.wikitext.core.toolkit" version="0.0.0"/>
-<unit id="org.eclipse.mylyn.wikitext.markdown.core.source" version="0.0.0"/>
-<unit id="org.eclipse.mylyn.wikitext.core.toolkit.source" version="0.0.0"/>
-<unit id="org.eclipse.mylyn.wikitext.mediawiki.core.source" version="0.0.0"/>
-<unit id="org.eclipse.mylyn.wikitext.markdown.core" version="0.0.0"/>
-<unit id="org.eclipse.mylyn.wikitext.core.ant" version="0.0.0"/>
-<unit id="org.eclipse.mylyn.wikitext.html.core.source" version="0.0.0"/>
-<unit id="org.eclipse.mylyn.wikitext.textile.core.source" version="0.0.0"/>
-<unit id="org.eclipse.mylyn.wikitext.commonmark" version="0.0.0"/>
-<unit id="org.eclipse.mylyn.wikitext.mediawiki.core" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.wikitext.ant.source" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.wikitext.ant" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.wikitext.asciidoc.source" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.wikitext.asciidoc" version="0.0.0"/>
 <unit id="org.eclipse.mylyn.wikitext.commonmark.source" version="0.0.0"/>
-<unit id="org.eclipse.mylyn.wikitext.creole.core.source" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.wikitext.commonmark" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.wikitext.confluence.source" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.wikitext.confluence" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.wikitext.creole.source" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.wikitext.creole" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.wikitext.html.source" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.wikitext.html" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.wikitext.markdown.source" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.wikitext.markdown" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.wikitext.mediawiki.source" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.wikitext.mediawiki" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.wikitext.source" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.wikitext.textile.source" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.wikitext.textile" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.wikitext.toolkit.source" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.wikitext.toolkit" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.wikitext.tracwiki.source" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.wikitext.tracwiki" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.wikitext.twiki.source" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.wikitext.twiki" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.wikitext" version="0.0.0"/>
 <repository location="file:WIKITEXT_ROOT/repository/target/repository"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">

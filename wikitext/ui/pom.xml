@@ -53,13 +53,13 @@
         <module>org.eclipse.mylyn.wikitext.commonmark.ui</module>
         <module>org.eclipse.mylyn.wikitext.confluence.ui</module>
         <module>org.eclipse.mylyn.wikitext.context.ui</module>
-        <module>org.eclipse.mylyn.wikitext.core.osgi</module>
-        <module>org.eclipse.mylyn.wikitext.core.osgi.tests</module>
+        <module>org.eclipse.mylyn.wikitext.osgi</module>
+        <module>org.eclipse.mylyn.wikitext.osgi.tests</module>
         <module>org.eclipse.mylyn.wikitext.creole.ui</module>
         <module>org.eclipse.mylyn.wikitext.markdown.ui</module>
         <module>org.eclipse.mylyn.wikitext.mediawiki.ui</module>
         <module>org.eclipse.mylyn.wikitext.tasks.ui</module>
-        <module>org.eclipse.mylyn.wikitext.tests</module>
+        <module>org.eclipse.mylyn.wikitext.ui.tests</module>
         <module>org.eclipse.mylyn.wikitext.textile.ui</module>
         <module>org.eclipse.mylyn.wikitext.tracwiki.ui</module>
         <module>org.eclipse.mylyn.wikitext.twiki.ui</module>
