@@ -11,8 +11,7 @@
 
 package org.eclipse.mylyn.wikitext.confluence;
 
-import org.eclipse.mylyn.wikitext.confluence.ConfluenceLanguage;
-import org.eclipse.mylyn.wikitext.core.toolkit.AbstractMarkupGenerationTest;
+import org.eclipse.mylyn.wikitext.toolkit.AbstractMarkupGenerationTest;
 import org.junit.Test;
 
 public class ConfluenceLineBreakTest extends AbstractMarkupGenerationTest<ConfluenceLanguage> {

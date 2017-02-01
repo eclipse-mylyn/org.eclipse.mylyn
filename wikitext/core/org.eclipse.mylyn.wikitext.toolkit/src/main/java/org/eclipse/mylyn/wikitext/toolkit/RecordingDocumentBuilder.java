@@ -8,7 +8,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.wikitext.core.toolkit;
+package org.eclipse.mylyn.wikitext.toolkit;
 
 import java.util.ArrayList;
 

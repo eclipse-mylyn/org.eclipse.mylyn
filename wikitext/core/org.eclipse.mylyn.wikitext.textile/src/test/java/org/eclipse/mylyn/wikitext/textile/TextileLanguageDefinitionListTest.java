@@ -18,12 +18,11 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
 
-import org.eclipse.mylyn.wikitext.core.toolkit.RecordingDocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.toolkit.RecordingDocumentBuilder.Event;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
-import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
+import org.eclipse.mylyn.wikitext.toolkit.RecordingDocumentBuilder;
+import org.eclipse.mylyn.wikitext.toolkit.RecordingDocumentBuilder.Event;
 import org.junit.Before;
 import org.junit.Test;
 

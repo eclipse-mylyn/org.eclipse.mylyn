@@ -11,8 +11,7 @@
 
 package org.eclipse.mylyn.wikitext.textile;
 
-import org.eclipse.mylyn.wikitext.core.toolkit.AbstractMarkupGenerationTest;
-import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
+import org.eclipse.mylyn.wikitext.toolkit.AbstractMarkupGenerationTest;
 import org.junit.Test;
 
 public class TextileNoTextileTest extends AbstractMarkupGenerationTest<TextileLanguage> {

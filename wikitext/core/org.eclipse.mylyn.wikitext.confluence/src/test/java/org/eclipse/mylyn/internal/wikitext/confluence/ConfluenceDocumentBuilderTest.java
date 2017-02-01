@@ -13,7 +13,6 @@ package org.eclipse.mylyn.internal.wikitext.confluence;
 
 import java.io.StringWriter;
 
-import org.eclipse.mylyn.internal.wikitext.confluence.ConfluenceDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;

@@ -13,7 +13,6 @@ package org.eclipse.mylyn.internal.wikitext.textile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.internal.wikitext.textile.Textile;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 
 import junit.framework.TestCase;

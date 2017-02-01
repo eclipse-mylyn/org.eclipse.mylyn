@@ -1,4 +1,4 @@
-package org.eclipse.mylyn.wikitext.core.toolkit;
+package org.eclipse.mylyn.wikitext.toolkit;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

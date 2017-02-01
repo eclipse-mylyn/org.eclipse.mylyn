@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.textile.phrase;
 
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.internal.wikitext.textile.Textile;
 import org.eclipse.mylyn.internal.wikitext.textile.TextileContentState;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElement;

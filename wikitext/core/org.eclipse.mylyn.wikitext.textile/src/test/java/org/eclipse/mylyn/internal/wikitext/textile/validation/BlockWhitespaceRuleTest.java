@@ -12,7 +12,6 @@ package org.eclipse.mylyn.internal.wikitext.textile.validation;
 
 import java.util.List;
 
-import org.eclipse.mylyn.internal.wikitext.textile.validation.BlockWhitespaceRule;
 import org.eclipse.mylyn.wikitext.validation.MarkupValidator;
 import org.eclipse.mylyn.wikitext.validation.ValidationProblem;
 

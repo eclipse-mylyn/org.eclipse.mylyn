@@ -14,8 +14,8 @@ package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 import java.io.IOException;
 import java.util.List;
 
-import org.eclipse.mylyn.wikitext.core.toolkit.RecordingDocumentBuilder.Event;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.toolkit.RecordingDocumentBuilder.Event;
 
 /**
  * Tests for Markdown block elements. Follows specification at

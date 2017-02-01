@@ -13,8 +13,8 @@ package org.eclipse.mylyn.internal.wikitext.textile.block;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.internal.wikitext.textile.Textile;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.TableAttributes;
 import org.eclipse.mylyn.wikitext.parser.TableCellAttributes;
 import org.eclipse.mylyn.wikitext.parser.TableRowAttributes;
