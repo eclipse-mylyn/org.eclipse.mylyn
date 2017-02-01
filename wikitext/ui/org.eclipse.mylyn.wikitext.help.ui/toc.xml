@@ -9,9 +9,9 @@
     Contributors:
         David Green - initial API and implementation
  -->
-<toc label="Mylyn WikiText Documentation" link_to="../org.eclipse.mylyn.help.ui/primary-toc.xml#additions" topic="help/devguide/WikiText-Developer-Guide.html">
-   <topic href="help/Mylyn-WikiText-User-Guide.html" label="WikiText User Guide">
-      <link toc="help/Mylyn-WikiText-User-Guide-toc.xml"/>
+<toc label="Mylyn WikiText Documentation" link_to="../org.eclipse.mylyn.help.ui/primary-toc.xml#additions" topic="help/devguide/WikiText Developer Guide.html">
+   <topic href="help/Mylyn WikiText User Guide.html" label="WikiText User Guide">
+      <link toc="help/Mylyn WikiText User Guide-toc.xml"/>
    </topic>
    <anchor id="additions"/>
 </toc>
