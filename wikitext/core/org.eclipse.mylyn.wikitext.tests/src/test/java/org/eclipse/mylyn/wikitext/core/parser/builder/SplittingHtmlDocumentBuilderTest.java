@@ -28,7 +28,7 @@ import org.eclipse.mylyn.wikitext.splitter.DefaultSplittingStrategy;
 import org.eclipse.mylyn.wikitext.splitter.SplitOutlineItem;
 import org.eclipse.mylyn.wikitext.splitter.SplittingHtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.splitter.SplittingOutlineParser;
-import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
+import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

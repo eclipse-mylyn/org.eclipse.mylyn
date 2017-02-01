@@ -34,7 +34,7 @@
 
 		<mkdir dir="${basedir}/help"/>
 
-		<wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.textile.core.TextileLanguage"
+		<wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.textile.TextileLanguage"
 			overwrite="true"
 			multipleOutputFiles="true"
 			navigationImages="true"

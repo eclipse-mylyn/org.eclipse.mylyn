@@ -15,7 +15,7 @@ import java.io.StringWriter;
 import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.XslfoDocumentBuilder;
-import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
+import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
 
 import junit.framework.TestCase;
 
