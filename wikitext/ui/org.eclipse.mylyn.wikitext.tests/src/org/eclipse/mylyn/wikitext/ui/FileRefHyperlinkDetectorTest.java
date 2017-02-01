@@ -36,6 +36,8 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PlatformUI;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
 
@@ -43,12 +45,12 @@ public class FileRefHyperlinkDetectorTest extends AbstractTestInWorkspace {
 
 	private IProject project;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void before() throws Exception {
 		project = createSimpleProject();
 	}
 
+	@Test
 	public void testNoHyperlinkInDocument() throws CoreException {
 		ImmutableList<String> fileRefPatterns = ImmutableList.of("include::(.+)\\[\\]", "image::(.+)\\[\\]");
 		FileRefHyperlinkDetector fileRefHyperlinkDetector = new FileRefHyperlinkDetector(project, fileRefPatterns);
@@ -62,6 +64,7 @@ public class FileRefHyperlinkDetectorTest extends AbstractTestInWorkspace {
 		assertThat(detectHyperlinks, is(nullValue()));
 	}
 
+	@Test
 	public void testFileDoesNotExist() throws CoreException {
 		ImmutableList<String> fileRefPatterns = ImmutableList.of("include::(.+)\\[\\]", "image::(.+)\\[\\]");
 		FileRefHyperlinkDetector fileRefHyperlinkDetector = new FileRefHyperlinkDetector(project, fileRefPatterns);
@@ -75,6 +78,7 @@ public class FileRefHyperlinkDetectorTest extends AbstractTestInWorkspace {
 		assertThat(detectHyperlinks, is(nullValue()));
 	}
 
+	@Test
 	public void testFindFileRefAndOpenHyperlink() throws CoreException {
 		String asciidocFileName = "simon-scholz.adoc";
 		IFile file = project.getFile(asciidocFileName);
@@ -110,6 +114,7 @@ public class FileRefHyperlinkDetectorTest extends AbstractTestInWorkspace {
 		}
 	}
 
+	@Test
 	public void testDeeperNestedFolderStructure() throws CoreException {
 		IFolder folder = project.getFolder("AsciiDoctor Tutorial");
 		if (!folder.exists()) {

@@ -11,6 +11,10 @@
 
 package org.eclipse.mylyn.wikitext.ui;
 
+import static java.text.MessageFormat.format;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -37,6 +41,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.FileEditorInput;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * A test that runs in the Eclipse UI that verifies that registered file types make sense.
@@ -48,12 +54,12 @@ public class FileTypesTest extends AbstractTestInWorkspace {
 
 	private IProject project;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void before() throws Exception {
 		project = createSimpleProject();
 	}
 
+	@Test
 	public void testTextileFileType() throws CoreException {
 		IFile file = project.getFile("test.textile"); //$NON-NLS-1$
 		file.create(createSimpleTextileContent(), false, new NullProgressMonitor());
@@ -61,6 +67,7 @@ public class FileTypesTest extends AbstractTestInWorkspace {
 		editorAsserts(file, TextileLanguage.class);
 	}
 
+	@Test
 	public void testTextileFileTypeChangeIsSticky() throws CoreException {
 		IFile file = project.getFile("test.textile"); //$NON-NLS-1$
 		file.create(createSimpleTextileContent(), false, new NullProgressMonitor());
@@ -87,6 +94,7 @@ public class FileTypesTest extends AbstractTestInWorkspace {
 		assertInstanceOf(MediaWikiLanguage.class, markupEditor.getMarkupLanguage());
 	}
 
+	@Test
 	public void testMediaWikiFileType() throws CoreException {
 		IFile file = project.getFile("test.mediawiki"); //$NON-NLS-1$
 		file.create(createSimpleMediaWikiContent(), false, new NullProgressMonitor());
@@ -94,6 +102,7 @@ public class FileTypesTest extends AbstractTestInWorkspace {
 		editorAsserts(file, MediaWikiLanguage.class);
 	}
 
+	@Test
 	public void testTracWikiFileType() throws CoreException {
 		IFile file = project.getFile("test.tracwiki"); //$NON-NLS-1$
 		file.create(createSimpleMediaWikiContent(), false, new NullProgressMonitor());
@@ -101,6 +110,7 @@ public class FileTypesTest extends AbstractTestInWorkspace {
 		editorAsserts(file, TracWikiLanguage.class);
 	}
 
+	@Test
 	public void testTWikiFileType() throws CoreException {
 		IFile file = project.getFile("test.twiki"); //$NON-NLS-1$
 		file.create(createSimpleMediaWikiContent(), false, new NullProgressMonitor());
@@ -108,6 +118,7 @@ public class FileTypesTest extends AbstractTestInWorkspace {
 		editorAsserts(file, TWikiLanguage.class);
 	}
 
+	@Test
 	public void testConfluenceFileType() throws CoreException {
 		IFile file = project.getFile("test.confluence"); //$NON-NLS-1$
 		file.create(createSimpleMediaWikiContent(), false, new NullProgressMonitor());

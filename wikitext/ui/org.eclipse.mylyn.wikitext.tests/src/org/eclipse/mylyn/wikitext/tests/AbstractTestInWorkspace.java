@@ -24,11 +24,15 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
-
-import junit.framework.TestCase;
+import org.eclipse.mylyn.wikitext.core.toolkit.StackDumpOnTimeoutRule;
+import org.junit.After;
+import org.junit.Rule;
 
 @HeadRequired
-public abstract class AbstractTestInWorkspace extends TestCase {
+public abstract class AbstractTestInWorkspace {
+
+	@Rule
+	public final StackDumpOnTimeoutRule stackDumpOnTimeoutRule = new StackDumpOnTimeoutRule();
 
 	private static boolean init = false;
 
@@ -37,9 +41,8 @@ public abstract class AbstractTestInWorkspace extends TestCase {
 	public AbstractTestInWorkspace() {
 		if (!init) {
 			try {
-				ResourcesPlugin.getWorkspace()
-						.getRoot()
-						.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+				ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE,
+						new NullProgressMonitor());
 			} catch (CoreException e) {
 				throw new IllegalStateException(e);
 			}
@@ -48,19 +51,10 @@ public abstract class AbstractTestInWorkspace extends TestCase {
 	}
 
 	/**
-	 * Overriding classes should call super.setUp()
-	 */
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	/**
 	 * Overriding classes should call super.tearDown()
 	 */
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
 		if (!temporaryProjects.isEmpty()) {
 			NullProgressMonitor monitor = new NullProgressMonitor();
 			monitor.beginTask("Removing " + temporaryProjects.size() + " temporary projects",
