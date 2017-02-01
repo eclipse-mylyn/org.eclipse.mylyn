@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import org.eclipse.mylyn.wikitext.html.core.HtmlLanguage;
+import org.eclipse.mylyn.wikitext.html.HtmlLanguage;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
