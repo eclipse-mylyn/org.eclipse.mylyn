@@ -14,10 +14,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.internal.wikitext.textile.core.Textile;
-import org.eclipse.mylyn.wikitext.parser.Attributes;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
-import org.eclipse.mylyn.wikitext.parser.QuoteAttributes;
-import org.eclipse.mylyn.wikitext.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.core.parser.Attributes;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.core.parser.QuoteAttributes;
+import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
  * quoted text block, matches blocks that start with <code>bc. </code>. Creates an extended block type of

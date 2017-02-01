@@ -20,7 +20,7 @@ import org.eclipse.mylyn.internal.wikitext.commonmark.Line;
 import org.eclipse.mylyn.internal.wikitext.commonmark.LineSequence;
 import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContext;
 import org.eclipse.mylyn.internal.wikitext.commonmark.SourceBlock;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 
 abstract class AbstractHtmlBlock extends SourceBlock {
 

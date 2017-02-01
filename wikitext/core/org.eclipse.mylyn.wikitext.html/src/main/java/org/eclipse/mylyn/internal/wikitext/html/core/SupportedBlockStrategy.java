@@ -11,9 +11,9 @@
 
 package org.eclipse.mylyn.internal.wikitext.html.core;
 
-import org.eclipse.mylyn.wikitext.parser.Attributes;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.core.parser.Attributes;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 
 class SupportedBlockStrategy implements BlockStrategy {
 	static final SupportedBlockStrategy instance = new SupportedBlockStrategy();

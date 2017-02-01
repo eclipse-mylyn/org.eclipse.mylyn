@@ -60,10 +60,10 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  The fully qualified name of the class that implements the markup language.  Must extend org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage
+                  The fully qualified name of the class that implements the markup language.  Must extend org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage:"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage:"/>
                </appInfo>
             </annotation>
          </attribute>

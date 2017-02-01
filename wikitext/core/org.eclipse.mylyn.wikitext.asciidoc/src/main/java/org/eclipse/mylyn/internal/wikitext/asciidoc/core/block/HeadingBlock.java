@@ -14,8 +14,8 @@ package org.eclipse.mylyn.internal.wikitext.asciidoc.core.block;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.parser.Attributes;
-import org.eclipse.mylyn.wikitext.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.core.parser.Attributes;
+import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
  * AsciiDoc atx style headings.

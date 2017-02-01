@@ -12,9 +12,9 @@ package org.eclipse.mylyn.internal.wikitext.creole.core.token;
 
 import java.util.regex.Pattern;
 
+import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
+import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 import org.eclipse.mylyn.wikitext.creole.core.CreoleLanguage;
-import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElement;
-import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
 
 /**
  * Tokens that represent links, as follows: <code>[[link]]</code>

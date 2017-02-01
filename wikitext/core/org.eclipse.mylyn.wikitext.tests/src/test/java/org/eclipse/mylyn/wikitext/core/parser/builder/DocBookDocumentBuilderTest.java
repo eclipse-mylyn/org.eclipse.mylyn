@@ -13,13 +13,12 @@ package org.eclipse.mylyn.wikitext.core.parser.builder;
 import java.io.StringWriter;
 
 import org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage;
-import org.eclipse.mylyn.wikitext.parser.Attributes;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
-import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
-import org.eclipse.mylyn.wikitext.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.parser.TableAttributes;
-import org.eclipse.mylyn.wikitext.parser.builder.DocBookDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.Attributes;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.TableAttributes;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 import junit.framework.TestCase;

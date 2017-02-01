@@ -11,7 +11,7 @@
 package org.eclipse.mylyn.internal.wikitext.ui.editor.validation;
 
 import org.eclipse.jface.text.source.Annotation;
-import org.eclipse.mylyn.wikitext.validation.ValidationProblem;
+import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
 
 /**
  * @author David Green

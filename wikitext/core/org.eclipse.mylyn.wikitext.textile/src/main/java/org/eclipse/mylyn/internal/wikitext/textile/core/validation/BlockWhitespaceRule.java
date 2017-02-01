@@ -14,8 +14,8 @@ import java.text.MessageFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.validation.ValidationProblem;
-import org.eclipse.mylyn.wikitext.validation.ValidationRule;
+import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
+import org.eclipse.mylyn.wikitext.core.validation.ValidationRule;
 
 /**
  * @author David Green

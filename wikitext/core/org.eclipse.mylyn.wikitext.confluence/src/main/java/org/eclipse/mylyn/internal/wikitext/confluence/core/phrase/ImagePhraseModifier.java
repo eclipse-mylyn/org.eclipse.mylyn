@@ -12,12 +12,12 @@ package org.eclipse.mylyn.internal.wikitext.confluence.core.phrase;
 
 import org.eclipse.mylyn.internal.wikitext.confluence.core.util.Options;
 import org.eclipse.mylyn.internal.wikitext.confluence.core.util.Options.Handler;
-import org.eclipse.mylyn.wikitext.parser.Attributes;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
-import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
-import org.eclipse.mylyn.wikitext.parser.ImageAttributes.Align;
-import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElement;
-import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
+import org.eclipse.mylyn.wikitext.core.parser.Attributes;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
+import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes.Align;
+import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
+import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
  * @author David Green

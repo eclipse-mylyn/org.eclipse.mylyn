@@ -13,8 +13,8 @@ package org.eclipse.mylyn.internal.wikitext;
 
 import java.util.Set;
 
-import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageProvider;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageProvider;
 
 import com.google.common.collect.ImmutableSet;
 

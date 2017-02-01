@@ -11,9 +11,9 @@
 
 package org.eclipse.mylyn.internal.wikitext.textile.core.validation;
 
-import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.validation.DocumentLocalReferenceValidationRule;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
-import org.eclipse.mylyn.wikitext.validation.DocumentLocalReferenceValidationRule;
 
 public class TextileReferenceValidationRule extends DocumentLocalReferenceValidationRule {
 

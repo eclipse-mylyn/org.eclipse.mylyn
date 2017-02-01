@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.wikitext.twiki.core.block;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
  * @author David Green

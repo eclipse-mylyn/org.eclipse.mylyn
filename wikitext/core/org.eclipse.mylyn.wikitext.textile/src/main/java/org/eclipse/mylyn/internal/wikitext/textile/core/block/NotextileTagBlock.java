@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.wikitext.textile.core.block;
 
-import org.eclipse.mylyn.wikitext.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 public class NotextileTagBlock extends Block {
 

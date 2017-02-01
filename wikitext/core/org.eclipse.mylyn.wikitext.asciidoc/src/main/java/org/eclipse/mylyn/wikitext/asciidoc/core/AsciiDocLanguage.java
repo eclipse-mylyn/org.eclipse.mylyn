@@ -45,13 +45,13 @@ import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.PreserverHtmlEnti
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.XrefMacroReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.token.XrefReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.util.ReadAheadDispatcher;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
-import org.eclipse.mylyn.wikitext.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.parser.markup.AbstractMarkupLanguage;
-import org.eclipse.mylyn.wikitext.parser.markup.Block;
-import org.eclipse.mylyn.wikitext.parser.markup.ContentState;
-import org.eclipse.mylyn.wikitext.parser.markup.token.PatternLineBreakReplacementToken;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.core.parser.markup.ContentState;
+import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLineBreakReplacementToken;
 
 /**
  * A markup language implementing Asciidoc syntax.

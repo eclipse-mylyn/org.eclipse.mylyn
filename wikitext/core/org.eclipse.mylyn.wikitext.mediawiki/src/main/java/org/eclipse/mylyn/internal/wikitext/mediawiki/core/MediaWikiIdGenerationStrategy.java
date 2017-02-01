@@ -16,7 +16,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.mylyn.wikitext.parser.markup.IdGenerationStrategy;
+import org.eclipse.mylyn.wikitext.core.parser.markup.IdGenerationStrategy;
 
 /**
  * @author David Green

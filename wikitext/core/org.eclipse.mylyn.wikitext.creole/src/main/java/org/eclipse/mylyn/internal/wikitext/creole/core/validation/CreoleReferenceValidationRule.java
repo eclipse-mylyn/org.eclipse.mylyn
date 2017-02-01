@@ -11,9 +11,9 @@
 
 package org.eclipse.mylyn.internal.wikitext.creole.core.validation;
 
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.validation.DocumentLocalReferenceValidationRule;
 import org.eclipse.mylyn.wikitext.creole.core.CreoleLanguage;
-import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.validation.DocumentLocalReferenceValidationRule;
 
 public class CreoleReferenceValidationRule extends DocumentLocalReferenceValidationRule {
 

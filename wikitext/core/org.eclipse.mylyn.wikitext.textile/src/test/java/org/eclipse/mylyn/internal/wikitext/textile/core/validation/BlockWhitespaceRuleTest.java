@@ -12,8 +12,8 @@ package org.eclipse.mylyn.internal.wikitext.textile.core.validation;
 
 import java.util.List;
 
-import org.eclipse.mylyn.wikitext.validation.MarkupValidator;
-import org.eclipse.mylyn.wikitext.validation.ValidationProblem;
+import org.eclipse.mylyn.wikitext.core.validation.MarkupValidator;
+import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
 
 import junit.framework.TestCase;
 

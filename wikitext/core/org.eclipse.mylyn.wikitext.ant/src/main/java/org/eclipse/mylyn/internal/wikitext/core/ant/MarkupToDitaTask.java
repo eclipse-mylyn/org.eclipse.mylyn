@@ -24,14 +24,14 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
-import org.eclipse.mylyn.wikitext.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.parser.builder.DitaBookMapDocumentBuilder;
-import org.eclipse.mylyn.wikitext.parser.builder.DitaTopicDocumentBuilder;
-import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
-import org.eclipse.mylyn.wikitext.parser.outline.OutlineParser;
-import org.eclipse.mylyn.wikitext.util.DefaultXmlStreamWriter;
-import org.eclipse.mylyn.wikitext.util.FormattingXMLStreamWriter;
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.builder.DitaBookMapDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.builder.DitaTopicDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
+import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
+import org.eclipse.mylyn.wikitext.core.util.DefaultXmlStreamWriter;
+import org.eclipse.mylyn.wikitext.core.util.FormattingXMLStreamWriter;
 
 /**
  * An Ant task for converting markup to OASIS DITA format.

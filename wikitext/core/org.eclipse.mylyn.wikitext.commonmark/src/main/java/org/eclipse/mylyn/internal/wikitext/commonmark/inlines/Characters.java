@@ -15,7 +15,7 @@ import java.util.List;
 
 import org.eclipse.mylyn.internal.wikitext.commonmark.Line;
 import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContext;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 
 public class Characters extends InlineWithText {
 

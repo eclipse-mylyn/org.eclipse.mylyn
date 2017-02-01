@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.wikitext.ui.editor.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor;
-import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
+import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.osgi.util.NLS;
 
 /**

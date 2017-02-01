@@ -15,10 +15,10 @@ package org.eclipse.mylyn.wikitext.tracwiki.core;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageConfiguration;
-import org.eclipse.mylyn.wikitext.util.ServiceLocator;
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
+import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 
 import junit.framework.TestCase;
 

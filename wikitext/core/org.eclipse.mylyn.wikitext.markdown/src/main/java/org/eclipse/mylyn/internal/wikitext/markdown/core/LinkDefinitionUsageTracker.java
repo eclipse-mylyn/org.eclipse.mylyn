@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.eclipse.mylyn.wikitext.parser.Locator;
+import org.eclipse.mylyn.wikitext.core.parser.Locator;
 
 /**
  * This class tracks which link definitions are used, unused, and missing.

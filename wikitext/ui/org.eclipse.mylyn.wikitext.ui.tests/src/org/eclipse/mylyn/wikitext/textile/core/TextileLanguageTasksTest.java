@@ -16,9 +16,9 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 
 import org.eclipse.mylyn.internal.wikitext.tasks.ui.util.Util;
-import org.eclipse.mylyn.wikitext.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
-import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageConfiguration;
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
 import org.eclipse.mylyn.wikitext.tests.EclipseRuntimeRequired;
 
 import com.google.common.io.Resources;

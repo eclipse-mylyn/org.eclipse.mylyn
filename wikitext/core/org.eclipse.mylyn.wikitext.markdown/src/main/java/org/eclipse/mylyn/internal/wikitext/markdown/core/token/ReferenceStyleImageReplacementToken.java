@@ -13,9 +13,9 @@ package org.eclipse.mylyn.internal.wikitext.markdown.core.token;
 
 import org.eclipse.mylyn.internal.wikitext.markdown.core.LinkDefinition;
 import org.eclipse.mylyn.internal.wikitext.markdown.core.MarkdownContentState;
-import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
-import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElement;
-import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
+import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
+import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
+import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
  * Detects reference-style images: ![Alt text][Reference ID].

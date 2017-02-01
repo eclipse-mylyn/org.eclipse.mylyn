@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.wikitext.markdown.core.phrase;
 
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.parser.markup.token.PatternLiteralReplacementToken;
+import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLiteralReplacementToken;
 
 public class BackslashEscapePhraseModifier extends PatternLiteralReplacementToken {
 

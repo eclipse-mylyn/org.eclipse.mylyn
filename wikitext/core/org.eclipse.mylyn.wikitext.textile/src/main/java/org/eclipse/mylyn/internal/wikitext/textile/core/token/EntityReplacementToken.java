@@ -11,8 +11,8 @@
 
 package org.eclipse.mylyn.internal.wikitext.textile.core.token;
 
-import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElement;
-import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
+import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
+import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
  * detects HTML entities, such as <code>&amp;amp;</code>

@@ -15,9 +15,9 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.StringWriter;
 
-import org.eclipse.mylyn.wikitext.parser.Attributes;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
-import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.Attributes;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.junit.Before;
 import org.junit.Test;
 

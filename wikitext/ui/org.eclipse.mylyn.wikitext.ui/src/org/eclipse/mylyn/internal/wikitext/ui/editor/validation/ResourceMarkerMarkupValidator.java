@@ -24,13 +24,13 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.source.IAnnotationModel;
-import org.eclipse.mylyn.wikitext.validation.ValidationProblem;
-import org.eclipse.mylyn.wikitext.validation.ValidationProblem.Severity;
-import org.eclipse.mylyn.wikitext.validation.ValidationRule;
+import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
+import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem.Severity;
+import org.eclipse.mylyn.wikitext.core.validation.ValidationRule;
 
 /**
  * Markup validators are capable of validating a region of a document. Any validation problems or errors are created as
- * markers on the given resource, extending type <code>org.eclipse.mylyn.wikitext.validation.problem</code>. NOTE:
+ * markers on the given resource, extending type <code>org.eclipse.mylyn.wikitext.core.validation.problem</code>. NOTE:
  * this implementation may change in the future to use an {@link IAnnotationModel} instead of resource markers
  * 
  * @author David Green
@@ -59,7 +59,7 @@ public class ResourceMarkerMarkupValidator extends DocumentRegionValidator {
 		// we also track markers by offset, however we don't track multiple markers at the same offset
 		Map<Integer, IMarker> markerByOffset = new HashMap<>();
 		{
-			IMarker[] findMarkers = resource.findMarkers("org.eclipse.mylyn.wikitext.validation.problem", true, //$NON-NLS-1$
+			IMarker[] findMarkers = resource.findMarkers("org.eclipse.mylyn.wikitext.core.validation.problem", true, //$NON-NLS-1$
 					IResource.DEPTH_ZERO);
 			for (IMarker marker : findMarkers) {
 				int offset = marker.getAttribute(IMarker.CHAR_START, 0);

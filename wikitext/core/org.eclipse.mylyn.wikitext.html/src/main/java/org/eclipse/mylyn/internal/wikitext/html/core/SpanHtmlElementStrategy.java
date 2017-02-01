@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.wikitext.html.core;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 
 public class SpanHtmlElementStrategy extends HtmlElementStrategy<SpanType> {
 

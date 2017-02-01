@@ -41,7 +41,7 @@
 		</taskdef -->
 		
 	        <!-- record name="${basedir}/doc.cnv.txt" action="start" / -->
-	        <pde.convertSchemaToHTML manifest="../org.eclipse.mylyn.wikitext/plugin.xml" destination="${dest}" />
+	        <pde.convertSchemaToHTML manifest="../org.eclipse.mylyn.wikitext.core/plugin.xml" destination="${dest}" />
 	        <pde.convertSchemaToHTML manifest="../org.eclipse.mylyn.wikitext.ui/plugin.xml" destination="${dest}" />
 	        <!-- record name="${basedir}/doc.cnv.txt" action="stop" / -->
 		<replaceregexp match="(../)*([^./]+\.css)" replace="../../styles/\2"
@@ -68,8 +68,8 @@
 				<dirset dir=".." defaultexcludes="yes">
 					<include name="org.eclipse.mylyn.tasks.core/bin"/>
 					<include name="org.eclipse.mylyn.tasks.ui/bin"/>
-					<include name="org.eclipse.mylyn.wikitext/bin"/>
-					<include name="org.eclipse.mylyn.wikitext/bin_ant"/>
+					<include name="org.eclipse.mylyn.wikitext.core/bin"/>
+					<include name="org.eclipse.mylyn.wikitext.core/bin_ant"/>
 					<include name="org.eclipse.mylyn.wikitext.confluence.core/bin"/>
 					<include name="org.eclipse.mylyn.wikitext.mediawiki.core/bin"/>
 					<include name="org.eclipse.mylyn.wikitext.textile.core/bin"/>

@@ -18,11 +18,11 @@ import static org.junit.Assert.assertNull;
 import java.io.StringWriter;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.eclipse.mylyn.wikitext.parser.Attributes;
-import org.eclipse.mylyn.wikitext.parser.Locator;
-import org.eclipse.mylyn.wikitext.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
-import org.eclipse.mylyn.wikitext.util.LocatorImpl;
+import org.eclipse.mylyn.wikitext.core.parser.Attributes;
+import org.eclipse.mylyn.wikitext.core.parser.Locator;
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.util.LocatorImpl;
 import org.junit.Test;
 
 public class CommonMarkLanguageDocumentOffsetsTest {

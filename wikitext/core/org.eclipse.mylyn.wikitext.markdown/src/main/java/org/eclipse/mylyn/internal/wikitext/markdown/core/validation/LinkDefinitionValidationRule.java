@@ -18,13 +18,13 @@ import java.util.List;
 import org.eclipse.mylyn.internal.wikitext.markdown.core.LinkDefinitionUsageTracker;
 import org.eclipse.mylyn.internal.wikitext.markdown.core.LinkDefinitionUsageTracker.Position;
 import org.eclipse.mylyn.internal.wikitext.markdown.core.MarkdownContentState;
+import org.eclipse.mylyn.wikitext.core.parser.Locator;
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.builder.NoOpDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
+import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem.Severity;
+import org.eclipse.mylyn.wikitext.core.validation.ValidationRule;
 import org.eclipse.mylyn.wikitext.markdown.core.MarkdownLanguage;
-import org.eclipse.mylyn.wikitext.parser.Locator;
-import org.eclipse.mylyn.wikitext.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.parser.builder.NoOpDocumentBuilder;
-import org.eclipse.mylyn.wikitext.validation.ValidationProblem;
-import org.eclipse.mylyn.wikitext.validation.ValidationProblem.Severity;
-import org.eclipse.mylyn.wikitext.validation.ValidationRule;
 
 /**
  * {@link ValidationRule} that finds missing and unused link definitions.

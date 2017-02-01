@@ -27,7 +27,7 @@ import org.eclipse.mylyn.docs.epub.core.Publication;
 import org.eclipse.mylyn.docs.epub.core.PublicationProxy;
 import org.eclipse.mylyn.docs.epub.core.ValidationMessage;
 import org.eclipse.mylyn.docs.epub.core.wikitext.MarkupToOPS;
-import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 public class ConvertFromMarkupWizard extends Wizard {
@@ -119,8 +119,7 @@ public class ConvertFromMarkupWizard extends Wizard {
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
-						ms.add(new Status(IStatus.ERROR, EPUBUIPlugin.PLUGIN_ID, Messages.ConvertFromMarkupWizard_3,
-								e));
+						ms.add(new Status(IStatus.ERROR, EPUBUIPlugin.PLUGIN_ID, Messages.ConvertFromMarkupWizard_3, e));
 					} finally {
 						deleteFolder(epubFolder);
 						deleteFolder(markupFolder);

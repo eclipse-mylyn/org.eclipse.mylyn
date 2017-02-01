@@ -13,9 +13,9 @@ package org.eclipse.mylyn.internal.wikitext.tracwiki.core.token;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
-import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElement;
-import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
+import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
+import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
+import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
  * Detects macro tags of the format: <code>[[MacroName]]</code> or <code>[[MacroName(arg1,arg2,...)]]</code>

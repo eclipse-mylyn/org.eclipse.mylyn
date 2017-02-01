@@ -14,11 +14,11 @@ package org.eclipse.mylyn.internal.wikitext.mediawiki.core.block;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
-import org.eclipse.mylyn.wikitext.parser.TableAttributes;
-import org.eclipse.mylyn.wikitext.parser.TableCellAttributes;
-import org.eclipse.mylyn.wikitext.parser.TableRowAttributes;
-import org.eclipse.mylyn.wikitext.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.core.parser.TableAttributes;
+import org.eclipse.mylyn.wikitext.core.parser.TableCellAttributes;
+import org.eclipse.mylyn.wikitext.core.parser.TableRowAttributes;
+import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
  * an implementation of MediaWiki tables, see <a

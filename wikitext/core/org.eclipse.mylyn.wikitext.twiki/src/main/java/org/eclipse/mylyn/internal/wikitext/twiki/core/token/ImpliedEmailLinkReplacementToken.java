@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.twiki.core.token;
 
-import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
-import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElement;
-import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
+import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
+import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
+import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 public class ImpliedEmailLinkReplacementToken extends PatternBasedElement {
 

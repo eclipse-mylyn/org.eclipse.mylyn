@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.wikitext.html.core;
 
-import org.eclipse.mylyn.wikitext.parser.Attributes;
+import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 
 public interface ElementMatcher<ElementType extends Enum<ElementType>> {
 

@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.wikitext.commonmark;
 
 import static org.junit.Assert.assertEquals;
 
-import org.eclipse.mylyn.wikitext.parser.Locator;
+import org.eclipse.mylyn.wikitext.core.parser.Locator;
 import org.junit.Test;
 
 public class SimpleLocatorTest {

@@ -19,11 +19,11 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
-import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
-import org.eclipse.mylyn.wikitext.parser.ListAttributes;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
+import org.eclipse.mylyn.wikitext.core.parser.ListAttributes;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
@@ -424,7 +424,7 @@ public abstract class AbstractSaxHtmlParser {
 
 			@Override
 			public void start(Attributes atts) {
-				org.eclipse.mylyn.wikitext.parser.Attributes attributes = computeAttributes(spanType, atts);
+				org.eclipse.mylyn.wikitext.core.parser.Attributes attributes = computeAttributes(spanType, atts);
 				if (spanType == SpanType.SPAN && attributes.getCssClass() == null && attributes.getCssStyle() == null
 						&& attributes.getId() == null) {
 					noop = true;
@@ -454,7 +454,7 @@ public abstract class AbstractSaxHtmlParser {
 
 			@Override
 			public void start(Attributes atts) {
-				org.eclipse.mylyn.wikitext.parser.Attributes attributes = computeFontAttributes(atts);
+				org.eclipse.mylyn.wikitext.core.parser.Attributes attributes = computeFontAttributes(atts);
 				if (spanType == SpanType.SPAN && attributes.getCssClass() == null && attributes.getCssStyle() == null
 						&& attributes.getId() == null) {
 					noop = true;
@@ -470,8 +470,8 @@ public abstract class AbstractSaxHtmlParser {
 				}
 			}
 
-			private org.eclipse.mylyn.wikitext.parser.Attributes computeFontAttributes(Attributes atts) {
-				org.eclipse.mylyn.wikitext.parser.Attributes attributes = computeAttributes(spanType, atts);
+			private org.eclipse.mylyn.wikitext.core.parser.Attributes computeFontAttributes(Attributes atts) {
+				org.eclipse.mylyn.wikitext.core.parser.Attributes attributes = computeAttributes(spanType, atts);
 				for (int x = 0; x < atts.getLength(); ++x) {
 					String localName = atts.getLocalName(x);
 					if (localName.equals("face")) { //$NON-NLS-1$
@@ -521,7 +521,7 @@ public abstract class AbstractSaxHtmlParser {
 
 			@Override
 			public void start(Attributes atts) {
-				org.eclipse.mylyn.wikitext.parser.Attributes attributes = computeAttributes(SpanType.SPAN, atts);
+				org.eclipse.mylyn.wikitext.core.parser.Attributes attributes = computeAttributes(SpanType.SPAN, atts);
 				builder.image(attributes, getValue("src", atts)); //$NON-NLS-1$
 			}
 
@@ -629,10 +629,10 @@ public abstract class AbstractSaxHtmlParser {
 
 	}
 
-	private org.eclipse.mylyn.wikitext.parser.Attributes computeAttributes(SpanType spanType, Attributes atts) {
-		org.eclipse.mylyn.wikitext.parser.Attributes attributes = spanType == SpanType.LINK
+	private org.eclipse.mylyn.wikitext.core.parser.Attributes computeAttributes(SpanType spanType, Attributes atts) {
+		org.eclipse.mylyn.wikitext.core.parser.Attributes attributes = spanType == SpanType.LINK
 				? new LinkAttributes()
-				: new org.eclipse.mylyn.wikitext.parser.Attributes();
+				: new org.eclipse.mylyn.wikitext.core.parser.Attributes();
 		populateCommonAttributes(attributes, atts);
 		if (spanType == SpanType.LINK) {
 			String href = getValue("href", atts); //$NON-NLS-1$
@@ -653,8 +653,8 @@ public abstract class AbstractSaxHtmlParser {
 		return null;
 	}
 
-	private org.eclipse.mylyn.wikitext.parser.Attributes computeAttributes(Attributes atts) {
-		org.eclipse.mylyn.wikitext.parser.Attributes attributes = new org.eclipse.mylyn.wikitext.parser.Attributes();
+	private org.eclipse.mylyn.wikitext.core.parser.Attributes computeAttributes(Attributes atts) {
+		org.eclipse.mylyn.wikitext.core.parser.Attributes attributes = new org.eclipse.mylyn.wikitext.core.parser.Attributes();
 		populateCommonAttributes(attributes, atts);
 		return attributes;
 	}
@@ -669,7 +669,7 @@ public abstract class AbstractSaxHtmlParser {
 		return null;
 	}
 
-	private void populateCommonAttributes(org.eclipse.mylyn.wikitext.parser.Attributes attributes, Attributes atts) {
+	private void populateCommonAttributes(org.eclipse.mylyn.wikitext.core.parser.Attributes attributes, Attributes atts) {
 		for (int x = 0; x < atts.getLength(); ++x) {
 			String localName = atts.getLocalName(x);
 			if (localName.equals("id") || localName.equals("name")) { //$NON-NLS-1$ //$NON-NLS-2$

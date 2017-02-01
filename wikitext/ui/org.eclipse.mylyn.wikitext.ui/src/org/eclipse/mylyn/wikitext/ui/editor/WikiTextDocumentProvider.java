@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.ui.editor;
 
-import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 
 /**
  * Document providers used with {@link WikiTextSourceEditor} <em>should</em> implement this interface. Implementors

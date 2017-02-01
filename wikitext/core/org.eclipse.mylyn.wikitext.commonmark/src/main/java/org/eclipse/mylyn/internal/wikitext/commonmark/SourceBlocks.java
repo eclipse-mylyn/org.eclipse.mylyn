@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
-import org.eclipse.mylyn.wikitext.parser.builder.NoOpDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.builder.NoOpDocumentBuilder;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;

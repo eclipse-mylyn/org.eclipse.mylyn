@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.wikitext.commonmark;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.eclipse.mylyn.wikitext.parser.Locator;
+import org.eclipse.mylyn.wikitext.core.parser.Locator;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Objects;

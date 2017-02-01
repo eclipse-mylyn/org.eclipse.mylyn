@@ -23,12 +23,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.regex.Pattern;
 
+import org.eclipse.mylyn.wikitext.core.parser.builder.DocBookDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.toolkit.AbstractMarkupGenerationTest;
 import org.eclipse.mylyn.wikitext.core.toolkit.RecordingDocumentBuilder;
-import org.eclipse.mylyn.wikitext.parser.builder.DocBookDocumentBuilder;
-import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
-import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.util.ServiceLocator;
+import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 import org.junit.Test;
 
 import com.google.common.base.Charsets;

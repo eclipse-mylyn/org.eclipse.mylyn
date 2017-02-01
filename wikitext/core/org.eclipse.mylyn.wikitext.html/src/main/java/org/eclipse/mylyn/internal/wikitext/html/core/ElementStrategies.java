@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.mylyn.wikitext.parser.Attributes;
+import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

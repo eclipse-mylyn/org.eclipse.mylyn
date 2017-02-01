@@ -12,7 +12,7 @@ package org.eclipse.mylyn.internal.wikitext.asciidoc.core.block;
 
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 public class HorizontalRuleBlock extends Block {
 

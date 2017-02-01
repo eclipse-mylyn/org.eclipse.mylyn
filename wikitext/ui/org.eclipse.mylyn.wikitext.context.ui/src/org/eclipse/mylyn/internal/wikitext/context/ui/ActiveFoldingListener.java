@@ -23,8 +23,8 @@ import org.eclipse.mylyn.context.core.ContextChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.IFoldingStructure;
-import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
-import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem.Visitor;
+import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
+import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem.Visitor;
 import org.eclipse.ui.IEditorPart;
 
 /**

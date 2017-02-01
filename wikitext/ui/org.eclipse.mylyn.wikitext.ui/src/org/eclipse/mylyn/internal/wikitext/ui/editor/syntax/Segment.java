@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.wikitext.ui.editor.syntax;
 
 import java.util.Iterator;
 
-import org.eclipse.mylyn.wikitext.parser.Attributes;
+import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 
 /**
  * @author David Green

@@ -16,8 +16,8 @@ import java.io.StringReader;
 import java.io.StringWriter;
 
 import org.eclipse.mylyn.internal.wikitext.textile.core.TextileDocumentBuilder;
-import org.eclipse.mylyn.wikitext.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;

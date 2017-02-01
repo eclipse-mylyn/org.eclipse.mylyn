@@ -12,7 +12,7 @@
 package org.eclipse.mylyn.internal.wikitext.ui.util;
 
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
+import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 
 /**

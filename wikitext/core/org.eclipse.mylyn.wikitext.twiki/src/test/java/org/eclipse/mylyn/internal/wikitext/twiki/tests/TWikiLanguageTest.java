@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.twiki.tests;
 
-import org.eclipse.mylyn.wikitext.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 import org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage;
-import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 
 import junit.framework.TestCase;
 

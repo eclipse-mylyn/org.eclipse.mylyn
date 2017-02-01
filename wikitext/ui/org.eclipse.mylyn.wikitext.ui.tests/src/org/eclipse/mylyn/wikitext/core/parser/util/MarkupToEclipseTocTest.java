@@ -13,7 +13,7 @@ package org.eclipse.mylyn.wikitext.core.parser.util;
 import java.io.IOException;
 import java.net.URL;
 
-import org.eclipse.mylyn.wikitext.parser.util.MarkupToEclipseToc;
+import org.eclipse.mylyn.wikitext.tests.TestUtil;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 import com.google.common.base.Charsets;

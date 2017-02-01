@@ -12,8 +12,8 @@
 package org.eclipse.mylyn.internal.wikitext.confluence.validation;
 
 import org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage;
-import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.validation.DocumentLocalReferenceValidationRule;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.validation.DocumentLocalReferenceValidationRule;
 
 public class ConfluenceReferenceValidationRule extends DocumentLocalReferenceValidationRule {
 

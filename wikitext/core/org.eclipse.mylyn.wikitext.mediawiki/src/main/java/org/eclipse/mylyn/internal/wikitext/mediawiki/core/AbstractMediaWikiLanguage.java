@@ -23,11 +23,11 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.mediawiki.core.Template;
 import org.eclipse.mylyn.wikitext.mediawiki.core.TemplateResolver;
-import org.eclipse.mylyn.wikitext.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.parser.markup.AbstractMarkupLanguage;
-import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 
 /**
  * @author David Green

@@ -18,8 +18,8 @@ import static org.junit.Assert.assertTrue;
 import org.eclipse.mylyn.internal.wikitext.commonmark.Line;
 import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContext;
 import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContextBuilder;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
-import org.eclipse.mylyn.wikitext.parser.Locator;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.Locator;
 import org.junit.Test;
 
 public class InlineTest {

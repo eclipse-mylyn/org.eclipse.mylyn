@@ -11,7 +11,7 @@
 package org.eclipse.mylyn.internal.wikitext.confluence.core.block;
 
 import org.eclipse.mylyn.internal.wikitext.confluence.core.util.Options;
-import org.eclipse.mylyn.wikitext.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
  * @author David Green

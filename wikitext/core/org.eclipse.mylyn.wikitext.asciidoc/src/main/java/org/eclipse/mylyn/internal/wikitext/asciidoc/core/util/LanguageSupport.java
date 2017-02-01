@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.parser.TableCellAttributes;
+import org.eclipse.mylyn.wikitext.core.parser.TableCellAttributes;
 
 import com.google.common.base.Splitter;
 

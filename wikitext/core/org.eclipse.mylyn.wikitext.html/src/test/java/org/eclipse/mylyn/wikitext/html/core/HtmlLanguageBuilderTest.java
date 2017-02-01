@@ -20,10 +20,10 @@ import static org.junit.Assert.assertTrue;
 import java.io.StringWriter;
 
 import org.eclipse.mylyn.internal.wikitext.html.core.HtmlSubsetLanguage;
-import org.eclipse.mylyn.wikitext.parser.Attributes;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.Attributes;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 
 import java.io.File;
 
-import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

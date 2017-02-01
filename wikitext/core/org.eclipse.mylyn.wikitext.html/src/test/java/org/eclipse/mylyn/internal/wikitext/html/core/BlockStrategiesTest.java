@@ -18,8 +18,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.eclipse.mylyn.wikitext.parser.Attributes;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.core.parser.Attributes;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

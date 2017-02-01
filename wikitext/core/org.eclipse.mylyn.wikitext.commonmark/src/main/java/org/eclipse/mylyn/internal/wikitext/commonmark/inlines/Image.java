@@ -18,8 +18,8 @@ import java.util.Objects;
 
 import org.eclipse.mylyn.internal.wikitext.commonmark.Line;
 import org.eclipse.mylyn.internal.wikitext.commonmark.ToStringHelper;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
-import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
 
 public class Image extends InlineWithNestedContents {
 

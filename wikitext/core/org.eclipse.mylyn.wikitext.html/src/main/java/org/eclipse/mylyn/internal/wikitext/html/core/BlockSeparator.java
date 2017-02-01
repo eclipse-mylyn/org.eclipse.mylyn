@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.wikitext.html.core;
 
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 
 public interface BlockSeparator {
 

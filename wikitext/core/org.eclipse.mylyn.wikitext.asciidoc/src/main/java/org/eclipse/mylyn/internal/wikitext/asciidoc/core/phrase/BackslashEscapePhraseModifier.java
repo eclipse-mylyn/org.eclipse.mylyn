@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.wikitext.asciidoc.core.phrase;
 
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.parser.markup.token.PatternLiteralReplacementToken;
+import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLiteralReplacementToken;
 
 /**
  * @author Stefan Seelmann

@@ -22,10 +22,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.mylyn.wikitext.parser.Attributes;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
-import org.eclipse.mylyn.wikitext.parser.css.CssParser;
-import org.eclipse.mylyn.wikitext.parser.css.CssRule;
+import org.eclipse.mylyn.wikitext.core.parser.Attributes;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.css.CssParser;
+import org.eclipse.mylyn.wikitext.core.parser.css.CssRule;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;

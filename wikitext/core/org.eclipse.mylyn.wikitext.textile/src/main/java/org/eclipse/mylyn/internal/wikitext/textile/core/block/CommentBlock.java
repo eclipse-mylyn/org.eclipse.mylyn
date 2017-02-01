@@ -15,7 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.internal.wikitext.textile.core.Textile;
-import org.eclipse.mylyn.wikitext.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
  * An implementation of a Textile 2.2 comment block.

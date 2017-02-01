@@ -12,9 +12,8 @@ package org.eclipse.mylyn.wikitext.core.parser.builder;
 
 import java.io.StringWriter;
 
-import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
-import org.eclipse.mylyn.wikitext.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.parser.builder.XslfoDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 import junit.framework.TestCase;

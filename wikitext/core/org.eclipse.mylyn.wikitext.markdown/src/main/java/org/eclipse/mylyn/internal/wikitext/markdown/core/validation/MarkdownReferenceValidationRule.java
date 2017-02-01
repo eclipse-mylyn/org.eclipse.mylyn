@@ -11,9 +11,9 @@
 
 package org.eclipse.mylyn.internal.wikitext.markdown.core.validation;
 
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.validation.DocumentLocalReferenceValidationRule;
 import org.eclipse.mylyn.wikitext.markdown.core.MarkdownLanguage;
-import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.validation.DocumentLocalReferenceValidationRule;
 
 public class MarkdownReferenceValidationRule extends DocumentLocalReferenceValidationRule {
 

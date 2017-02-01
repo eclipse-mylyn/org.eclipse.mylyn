@@ -14,15 +14,15 @@ package org.eclipse.mylyn.internal.wikitext.core.parser.builder;
 import java.io.StringWriter;
 import java.util.regex.Pattern;
 
+import org.eclipse.mylyn.wikitext.core.parser.Attributes;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.builder.DitaTopicDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.util.DefaultXmlStreamWriter;
 import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
-import org.eclipse.mylyn.wikitext.parser.Attributes;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
-import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
-import org.eclipse.mylyn.wikitext.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.parser.builder.DitaTopicDocumentBuilder;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
-import org.eclipse.mylyn.wikitext.util.DefaultXmlStreamWriter;
 
 import junit.framework.TestCase;
 

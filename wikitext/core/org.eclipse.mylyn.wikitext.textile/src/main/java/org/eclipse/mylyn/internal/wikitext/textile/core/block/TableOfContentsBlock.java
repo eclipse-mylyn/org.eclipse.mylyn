@@ -13,8 +13,8 @@ package org.eclipse.mylyn.internal.wikitext.textile.core.block;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
-import org.eclipse.mylyn.wikitext.parser.outline.OutlineParser;
+import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
+import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**

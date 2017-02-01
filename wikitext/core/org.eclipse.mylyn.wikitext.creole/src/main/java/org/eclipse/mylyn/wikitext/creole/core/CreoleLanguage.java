@@ -23,11 +23,11 @@ import org.eclipse.mylyn.internal.wikitext.creole.core.phrase.EscapePhraseModifi
 import org.eclipse.mylyn.internal.wikitext.creole.core.phrase.NowikiPhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.creole.core.phrase.SimplePhraseModifier;
 import org.eclipse.mylyn.internal.wikitext.creole.core.token.LinkReplacementToken;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
-import org.eclipse.mylyn.wikitext.parser.markup.AbstractMarkupLanguage;
-import org.eclipse.mylyn.wikitext.parser.markup.Block;
-import org.eclipse.mylyn.wikitext.parser.markup.token.ImpliedHyperlinkReplacementToken;
-import org.eclipse.mylyn.wikitext.parser.markup.token.PatternLineBreakReplacementToken;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.core.parser.markup.token.ImpliedHyperlinkReplacementToken;
+import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLineBreakReplacementToken;
 
 // TODO: support for multiline styling (phrases can only be on single line)
 // TODO: table

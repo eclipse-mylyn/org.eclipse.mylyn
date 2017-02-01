@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.wikitext.ui.util;
 
-import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
+import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.tests.EclipseRuntimeRequired;
 
 import junit.framework.TestCase;

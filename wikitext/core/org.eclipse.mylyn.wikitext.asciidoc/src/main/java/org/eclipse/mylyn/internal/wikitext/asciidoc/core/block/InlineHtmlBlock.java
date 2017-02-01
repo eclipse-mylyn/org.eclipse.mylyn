@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.wikitext.asciidoc.core.block;
 
-import org.eclipse.mylyn.wikitext.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
  * Asciidoc inline HTML.

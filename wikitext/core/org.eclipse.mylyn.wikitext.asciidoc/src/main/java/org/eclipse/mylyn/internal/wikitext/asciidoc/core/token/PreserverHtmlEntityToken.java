@@ -12,9 +12,9 @@
 
 package org.eclipse.mylyn.internal.wikitext.asciidoc.core.token;
 
-import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElement;
-import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
-import org.eclipse.mylyn.wikitext.parser.markup.phrase.LiteralPhraseModifierProcessor;
+import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
+import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
+import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.LiteralPhraseModifierProcessor;
 
 /**
  * A phrase modifier that detects HTML and XML entities in the source.

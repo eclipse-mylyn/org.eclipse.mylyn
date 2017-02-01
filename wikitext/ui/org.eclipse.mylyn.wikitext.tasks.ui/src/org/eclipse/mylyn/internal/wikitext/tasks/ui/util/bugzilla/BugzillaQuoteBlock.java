@@ -14,9 +14,9 @@ package org.eclipse.mylyn.internal.wikitext.tasks.ui.util.bugzilla;
  * A quote block that detects lines that start with '>' (email-style quoting)
  * 
  * @author David Green
- * @deprecated instead use {@link org.eclipse.mylyn.wikitext.parser.markup.block.BugzillaQuoteBlock}
+ * @deprecated instead use {@link org.eclipse.mylyn.wikitext.core.parser.markup.block.BugzillaQuoteBlock}
  */
 @Deprecated
-public class BugzillaQuoteBlock extends org.eclipse.mylyn.wikitext.parser.markup.block.BugzillaQuoteBlock {
+public class BugzillaQuoteBlock extends org.eclipse.mylyn.wikitext.core.parser.markup.block.BugzillaQuoteBlock {
 
 }

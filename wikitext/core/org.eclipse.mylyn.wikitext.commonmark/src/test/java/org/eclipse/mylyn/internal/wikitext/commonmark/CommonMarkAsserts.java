@@ -19,13 +19,13 @@ import java.io.StringWriter;
 
 import org.eclipse.mylyn.internal.wikitext.commonmark.spec.SimplifiedHtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.commonmark.CommonMarkLanguage;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
-import org.eclipse.mylyn.wikitext.parser.HtmlParser;
-import org.eclipse.mylyn.wikitext.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
-import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentHandler;
-import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.HtmlParser;
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentHandler;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 

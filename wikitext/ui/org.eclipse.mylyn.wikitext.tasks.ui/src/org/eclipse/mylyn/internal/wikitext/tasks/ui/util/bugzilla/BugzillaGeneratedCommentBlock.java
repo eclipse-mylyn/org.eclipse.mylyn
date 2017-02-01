@@ -14,10 +14,10 @@ package org.eclipse.mylyn.internal.wikitext.tasks.ui.util.bugzilla;
  * A block for detecting bugzilla-generated text such as: *** This bug has been marked as a duplicate of bug 1234 ***
  * 
  * @author David Green
- * @deprecated instead use {@link org.eclipse.mylyn.wikitext.parser.markup.block.BugzillaGeneratedCommentBlock}
+ * @deprecated instead use {@link org.eclipse.mylyn.wikitext.core.parser.markup.block.BugzillaGeneratedCommentBlock}
  */
 @Deprecated
 public class BugzillaGeneratedCommentBlock extends
-		org.eclipse.mylyn.wikitext.parser.markup.block.BugzillaGeneratedCommentBlock {
+		org.eclipse.mylyn.wikitext.core.parser.markup.block.BugzillaGeneratedCommentBlock {
 
 }

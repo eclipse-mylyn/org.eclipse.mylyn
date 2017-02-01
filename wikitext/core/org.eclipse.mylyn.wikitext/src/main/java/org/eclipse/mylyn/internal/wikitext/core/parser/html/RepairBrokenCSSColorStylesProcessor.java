@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.parser.css.CssParser;
-import org.eclipse.mylyn.wikitext.parser.css.CssRule;
+import org.eclipse.mylyn.wikitext.core.parser.css.CssParser;
+import org.eclipse.mylyn.wikitext.core.parser.css.CssRule;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Selector;

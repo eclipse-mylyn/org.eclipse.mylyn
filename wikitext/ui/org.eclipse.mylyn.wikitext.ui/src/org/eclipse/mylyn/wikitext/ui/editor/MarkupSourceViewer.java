@@ -21,7 +21,7 @@ import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.FindAndReplaceTarget;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.commands.ShowQuickOutlineCommand;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitioner;
-import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.swt.widgets.Composite;
 
 /**

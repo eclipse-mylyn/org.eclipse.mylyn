@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.ServiceLoader;
 import java.util.Set;
 
-import org.eclipse.mylyn.wikitext.util.ServiceLocator;
+import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
@@ -35,7 +35,7 @@ import com.google.common.collect.Sets;
 /**
  * A {@link ServiceLocator} for use in an OSGi runtime environment. Uses OSGI {@link Bundle bundles} to load markup
  * languages using the {@link ServiceLoader Java service} defined by bundle resources defined by service files at the
- * path: {@code "META-INF/services/org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage"} .
+ * path: {@code "META-INF/services/org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage"} .
  * 
  * @author david.green
  * @since 2.0

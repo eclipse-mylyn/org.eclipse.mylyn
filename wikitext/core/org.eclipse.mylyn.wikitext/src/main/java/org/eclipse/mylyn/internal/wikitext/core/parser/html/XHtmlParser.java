@@ -18,7 +18,7 @@ import java.io.Reader;
 import java.io.StringReader;
 
 import org.eclipse.mylyn.internal.wikitext.core.util.ConcatenatingReader;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;

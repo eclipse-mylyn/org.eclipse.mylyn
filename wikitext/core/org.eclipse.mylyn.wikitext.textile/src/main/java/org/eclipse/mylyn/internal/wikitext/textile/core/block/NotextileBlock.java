@@ -14,7 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.internal.wikitext.textile.core.Textile;
-import org.eclipse.mylyn.wikitext.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
  * No Textile block for allowing HTML in the markup, matches blocks that start with <code>notextile. </code>

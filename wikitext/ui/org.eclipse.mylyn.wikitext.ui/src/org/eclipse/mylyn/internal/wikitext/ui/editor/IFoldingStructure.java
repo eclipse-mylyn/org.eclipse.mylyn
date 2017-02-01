@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.wikitext.ui.editor;
 
 import java.util.Collection;
 
-import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
+import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 
 /**
  * a means of controlling the folding structure Obtain an instance of this interface as follows: <code>

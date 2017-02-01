@@ -61,7 +61,7 @@
      <objectContribution
      	   adaptable="false"
            id="org.eclipse.mylyn.wikitext.context.ui.interest.increase.contribution"
-           objectClass="org.eclipse.mylyn.wikitext.parser.outline.OutlineItem">
+           objectClass="org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem">
 	    <action
            class="org.eclipse.mylyn.internal.context.ui.actions.InterestIncrementAction"
            definitionId="org.eclipse.mylyn.context.ui.commands.interest.increment"
@@ -82,7 +82,7 @@
      <objectContribution
            adaptable="false"
            id="org.eclipse.mylyn.java.ui.interest.remove.contribution.elements"
-           objectClass="org.eclipse.mylyn.wikitext.parser.outline.OutlineItem">
+           objectClass="org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem">
      	<action
             class="org.eclipse.mylyn.internal.context.ui.actions.InterestDecrementAction"
             definitionId="org.eclipse.mylyn.context.ui.commands.interest.decrement"

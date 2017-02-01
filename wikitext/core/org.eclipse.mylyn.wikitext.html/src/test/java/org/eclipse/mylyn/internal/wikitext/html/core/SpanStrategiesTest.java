@@ -17,8 +17,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Collections;
 
-import org.eclipse.mylyn.wikitext.parser.Attributes;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.core.parser.Attributes;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

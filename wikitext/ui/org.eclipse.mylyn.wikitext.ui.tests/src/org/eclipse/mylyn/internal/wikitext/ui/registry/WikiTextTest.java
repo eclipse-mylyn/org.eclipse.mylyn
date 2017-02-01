@@ -17,7 +17,7 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.tests.EclipseRuntimeRequired;
 import org.eclipse.mylyn.wikitext.ui.WikiText;
 import org.junit.Test;

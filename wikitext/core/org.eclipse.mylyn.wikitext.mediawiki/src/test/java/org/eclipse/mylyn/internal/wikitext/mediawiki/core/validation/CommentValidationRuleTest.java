@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.wikitext.mediawiki.core.validation;
 
-import org.eclipse.mylyn.wikitext.validation.ValidationProblem;
+import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
 
 import junit.framework.TestCase;
 

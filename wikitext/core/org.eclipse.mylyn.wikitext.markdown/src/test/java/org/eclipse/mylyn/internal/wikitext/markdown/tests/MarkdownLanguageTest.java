@@ -15,12 +15,12 @@ import java.io.StringWriter;
 
 import org.eclipse.mylyn.internal.wikitext.markdown.core.GfmIdGenerationStrategy;
 import org.eclipse.mylyn.internal.wikitext.markdown.core.MarkdownDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.markup.IdGenerationStrategy;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 import org.eclipse.mylyn.wikitext.markdown.core.MarkdownLanguage;
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
-import org.eclipse.mylyn.wikitext.parser.markup.AbstractMarkupLanguage;
-import org.eclipse.mylyn.wikitext.parser.markup.IdGenerationStrategy;
-import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 
 /**
  * http://daringfireball.net/projects/markdown/syntax

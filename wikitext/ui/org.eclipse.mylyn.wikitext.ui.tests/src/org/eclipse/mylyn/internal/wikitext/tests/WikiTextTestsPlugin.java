@@ -1,6 +1,6 @@
 package org.eclipse.mylyn.internal.wikitext.tests;
 import org.eclipse.mylyn.wikitext.core.osgi.OsgiServiceLocator;
-import org.eclipse.mylyn.wikitext.util.ServiceLocator;
+import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /*******************************************************************************

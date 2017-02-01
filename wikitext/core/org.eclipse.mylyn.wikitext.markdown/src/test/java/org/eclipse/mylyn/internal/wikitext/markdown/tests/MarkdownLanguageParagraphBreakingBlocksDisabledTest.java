@@ -14,10 +14,10 @@ package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 import java.io.StringWriter;
 import java.util.List;
 
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 import org.eclipse.mylyn.wikitext.markdown.core.MarkdownLanguage;
-import org.eclipse.mylyn.wikitext.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
-import org.eclipse.mylyn.wikitext.parser.markup.Block;
 
 import junit.framework.TestCase;
 

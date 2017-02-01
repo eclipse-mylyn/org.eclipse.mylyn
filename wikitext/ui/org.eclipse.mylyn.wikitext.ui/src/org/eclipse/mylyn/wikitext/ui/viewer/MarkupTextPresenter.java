@@ -11,8 +11,8 @@
 package org.eclipse.mylyn.wikitext.ui.viewer;
 
 import org.eclipse.jface.text.TextPresentation;
-import org.eclipse.mylyn.wikitext.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.swt.graphics.Drawable;
 
 /**

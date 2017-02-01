@@ -29,15 +29,15 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
-import org.eclipse.mylyn.wikitext.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
-import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.splitter.DefaultSplittingStrategy;
-import org.eclipse.mylyn.wikitext.splitter.NoSplittingStrategy;
-import org.eclipse.mylyn.wikitext.splitter.SplitOutlineItem;
-import org.eclipse.mylyn.wikitext.splitter.SplittingHtmlDocumentBuilder;
-import org.eclipse.mylyn.wikitext.splitter.SplittingOutlineParser;
-import org.eclipse.mylyn.wikitext.splitter.SplittingStrategy;
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.splitter.DefaultSplittingStrategy;
+import org.eclipse.mylyn.wikitext.core.splitter.NoSplittingStrategy;
+import org.eclipse.mylyn.wikitext.core.splitter.SplitOutlineItem;
+import org.eclipse.mylyn.wikitext.core.splitter.SplittingHtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.splitter.SplittingOutlineParser;
+import org.eclipse.mylyn.wikitext.core.splitter.SplittingStrategy;
 
 /**
  * An Ant task for converting lightweight markup to HTML format.
