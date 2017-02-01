@@ -12,7 +12,7 @@ package org.eclipse.mylyn.wikitext.core.parser.builder;
 
 import java.io.StringWriter;
 
-import org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage;
+import org.eclipse.mylyn.wikitext.confluence.ConfluenceLanguage;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;

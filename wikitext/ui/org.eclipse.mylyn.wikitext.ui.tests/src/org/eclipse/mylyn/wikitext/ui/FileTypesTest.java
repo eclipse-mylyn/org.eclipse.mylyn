@@ -27,7 +27,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor;
 import org.eclipse.mylyn.internal.wikitext.ui.registry.WikiTextExtensionPointReader;
-import org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage;
+import org.eclipse.mylyn.wikitext.confluence.ConfluenceLanguage;
 import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
 import org.eclipse.mylyn.wikitext.tests.AbstractTestInWorkspace;
 import org.eclipse.mylyn.wikitext.tests.HeadRequired;

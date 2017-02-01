@@ -15,7 +15,7 @@ import java.io.IOException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITypedRegion;
-import org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage;
+import org.eclipse.mylyn.wikitext.confluence.ConfluenceLanguage;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
 
 /**
