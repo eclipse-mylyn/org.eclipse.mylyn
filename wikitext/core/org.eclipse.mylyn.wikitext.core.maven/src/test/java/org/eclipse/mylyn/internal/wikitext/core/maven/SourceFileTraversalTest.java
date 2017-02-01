@@ -53,7 +53,7 @@ public class SourceFileTraversalTest {
 				mockFolder("depth1", mockFolder("depth2", file))));
 		Visitor visitor = mock(Visitor.class);
 		traversal.traverse(visitor);
-		verify(visitor).accept(eq("depth1/depth2"), same(file));
+		verify(visitor).accept(eq("depth1" + File.separator + "depth2"), same(file));
 		verifyNoMoreInteractions(visitor);
 	}
 
