@@ -216,7 +216,7 @@ To include the plug-in as a build step, add the following syntax:
 bc. 
 		<plugin>
 			<groupId>org.eclipse.mylyn.docs</groupId>
-			<artifactId>org.eclipse.mylyn.wikitext.core.maven</artifactId>
+			<artifactId>org.eclipse.mylyn.wikitext.maven</artifactId>
 			<configuration>
 				<sourceFolder>src</sourceFolder>
 				<copyrightNotice>${help.copyrightNotice}</copyrightNotice>
@@ -290,7 +290,7 @@ The @markupLanguage@ attribute accepts any of the following values (depending on
 * @TracWiki@
 * @TWiki@
 * @Confluence@
-* A fully-qualified class name of a class that extends @org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage@
+* A fully-qualified class name of a class that extends @org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage@
 
 
 *common task options*
@@ -535,7 +535,7 @@ To customize a markup language you may either extend a markup language using sub
 Following is an example of providing a @MarkupLanguageConfiguration@ configuration:
 
 pre.. 
-<wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.textile.core.TextileLanguage" ...>
+<wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.textile.TextileLanguage" ...>
 	<markupLanguageConfiguration escapingHtmlAndXml="true"/>
 </wikitext-to-eclipse-help>
 
@@ -550,7 +550,7 @@ pre..
 	classpathref="wikitext.classpath"
 	loaderref="wikitext.classpath.loader"/>
 
-<wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.textile.core.TextileLanguage" ...>
+<wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.textile.TextileLanguage" ...>
 	<languageConfiguration escapingHtmlAndXml="true"/>
 </wikitext-to-eclipse-help>
 
@@ -799,23 +799,23 @@ See "Editor Preferences":#EditorPreferences for a list of supported styles.
 
 h1. Upgrading From Mylyn WikiText 2.7 to 2.8
 
-With version 2.8 of Mylyn WikiText, the dependency to @org.apache.ant@ was removed from @org.eclipse.mylyn.wikitext.mediawiki.core@.
+With version 2.8 of Mylyn WikiText, the dependency to @org.apache.ant@ was removed from @org.eclipse.mylyn.wikitext.mediawiki@.
 
-The two tasks @mediawiki-fetch-images@ and @mediawiki-to-eclipse-help@ were moved to @org.eclipse.mylyn.wikitext.mediawiki.core.ant@. If you use those tasks you should update your classpath.
+The two tasks @mediawiki-fetch-images@ and @mediawiki-to-eclipse-help@ were moved to @org.eclipse.mylyn.wikitext.mediawiki.ant@. If you use those tasks you should update your classpath.
 
 h2. Ant Usage in 2.8
 
 The following jar files will be needed for running Ant tasks:
-* @org.eclipse.mylyn.wikitext.core.jar@
-* @org.eclipse.mylyn.wikitext.core.ant.jar@
-* @org.eclipse.mylyn.wikitext.textile.core.jar@ (only required for Textile)
-* @org.eclipse.mylyn.wikitext.confluence.core.jar@ (only required for Confluence)
-* @org.eclipse.mylyn.wikitext.markdown.core.jar@ (only required for Markdown)
-* @org.eclipse.mylyn.wikitext.creole.core.jar@ (only required for Creole)
-* @org.eclipse.mylyn.wikitext.mediawiki.core.jar@ (only required for MediaWiki)
-* @org.eclipse.mylyn.wikitext.mediawiki.core.ant.jar@ (only required for the MediaWiki Ant tasks)
-* @org.eclipse.mylyn.wikitext.tracwiki.core.jar@ (only required for TracWiki)
-* @org.eclipse.mylyn.wikitext.twiki.core.jar@ (only required for TWiki)
+* @org.eclipse.mylyn.wikitext.jar@
+* @org.eclipse.mylyn.wikitext.ant.jar@
+* @org.eclipse.mylyn.wikitext.textile.jar@ (only required for Textile)
+* @org.eclipse.mylyn.wikitext.confluence.jar@ (only required for Confluence)
+* @org.eclipse.mylyn.wikitext.markdown.jar@ (only required for Markdown)
+* @org.eclipse.mylyn.wikitext.creole.jar@ (only required for Creole)
+* @org.eclipse.mylyn.wikitext.mediawiki.jar@ (only required for MediaWiki)
+* @org.eclipse.mylyn.wikitext.mediawiki.ant.jar@ (only required for the MediaWiki Ant tasks)
+* @org.eclipse.mylyn.wikitext.tracwiki.jar@ (only required for TracWiki)
+* @org.eclipse.mylyn.wikitext.twiki.jar@ (only required for TWiki)
 * @guava-12.0.jar@
 
 h1. Upgrading From Mylyn WikiText 1.x to 2.x
@@ -827,15 +827,15 @@ Notable changes when upgrading from 1.x to 2.0:
 h2. Ant Usage in 2.0
 
 # The Ant classpath has changed.  The Ant classpath definition should include all jars provided with the standalone distribution of Mylyn WikiText.  The classpath should be defined with @<include name="*.jar"/>@ (see the "examples":#ContentGenerationfromWikiMarkupusingAnt ).  The following jar files will be needed for running Ant tasks:
-** @org.eclipse.mylyn.wikitext.core.jar@
-** @org.eclipse.mylyn.wikitext.core.ant.jar@ (new for 2.0)
-** @org.eclipse.mylyn.wikitext.textile.core.jar@ (only required for Textile)
-** @org.eclipse.mylyn.wikitext.confluence.core.jar@ (only required for Confluence)
-** @org.eclipse.mylyn.wikitext.markdown.core.jar@ (only required for Markdown)
-** @org.eclipse.mylyn.wikitext.creole.core.jar@ (only required for Creole)
-** @org.eclipse.mylyn.wikitext.mediawiki.core.jar@ (only required for MediaWiki)
-** @org.eclipse.mylyn.wikitext.tracwiki.core.jar@ (only required for TracWiki)
-** @org.eclipse.mylyn.wikitext.twiki.core.jar@ (only required for TWiki)
+** @org.eclipse.mylyn.wikitext.jar@
+** @org.eclipse.mylyn.wikitext.ant.jar@ (new for 2.0)
+** @org.eclipse.mylyn.wikitext.textile.jar@ (only required for Textile)
+** @org.eclipse.mylyn.wikitext.confluence.jar@ (only required for Confluence)
+** @org.eclipse.mylyn.wikitext.markdown.jar@ (only required for Markdown)
+** @org.eclipse.mylyn.wikitext.creole.jar@ (only required for Creole)
+** @org.eclipse.mylyn.wikitext.mediawiki.jar@ (only required for MediaWiki)
+** @org.eclipse.mylyn.wikitext.tracwiki.jar@ (only required for TracWiki)
+** @org.eclipse.mylyn.wikitext.twiki.jar@ (only required for TWiki)
 ** @guava-12.0.jar@ Guava is now required (new for 2.0)
 # Ant taskdefs must reference a new properties file @<taskdef resource="org/eclipse/mylyn/wikitext/core/ant/tasks.properties"@ see "Ant Examples":#AntExamples for more details
 
@@ -843,10 +843,10 @@ h2. API Changes in 2.0
 
 Many API-breaking changes have been made to Mylyn WikiText 2.0.  In most cases client code upgrading to 2.0 will simply need to be recompiled, however in a few cases client code will have to change.  All changes have been annodated with the javadoc tag <tt>@since 2.0</tt>.
 
-* Many methods in @org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage@ have been moved to @org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage@.
-* @org.eclipse.mylyn.wikitext.core.validation.MarkupValidator@ no longer accepts an @IProgressMonitor@
-* @org.eclipse.mylyn.wikitext.core.WikiText@ has been moved to @org.eclipse.mylyn.wikitext.ui.WikiText@
-* Applications running in OSGi should use @org.eclipse.mylyn.wikitext.core.osgi.OsgiServiceLocator@ instead of @org.eclipse.mylyn.wikitext.core.util.ServiceLocator@.
+* Many methods in @org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage@ have been moved to @org.eclipse.mylyn.wikitext.parser.markup.AbstractMarkupLanguage@.
+* @org.eclipse.mylyn.wikitext.validation.MarkupValidator@ no longer accepts an @IProgressMonitor@
+* @org.eclipse.mylyn.wikitext.WikiText@ has been moved to @org.eclipse.mylyn.wikitext.ui.WikiText@
+* Applications running in OSGi should use @org.eclipse.mylyn.wikitext.osgi.OsgiServiceLocator@ instead of @org.eclipse.mylyn.wikitext.util.ServiceLocator@.
 
 h1. More Information
 

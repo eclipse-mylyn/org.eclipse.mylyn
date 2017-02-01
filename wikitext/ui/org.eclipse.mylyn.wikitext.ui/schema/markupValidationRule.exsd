@@ -86,9 +86,9 @@
          &lt;pre&gt;
 &lt;extension point=&quot;org.eclipse.mylyn.wikitext.ui.markupValidationRule&quot;&gt;
     &lt;rule markupLanguage=&quot;Textile&quot;
-        class=&quot;org.eclipse.mylyn.internal.wikitext.textile.core.validation.BlockWhitespaceRule&quot; /&gt;
+        class=&quot;org.eclipse.mylyn.internal.wikitext.textile.validation.BlockWhitespaceRule&quot; /&gt;
     &lt;rule markupLanguage=&quot;Textile&quot;
-        class=&quot;org.eclipse.mylyn.internal.wikitext.textile.core.validation.TextileReferenceValidationRule&quot; /&gt;
+        class=&quot;org.eclipse.mylyn.internal.wikitext.textile.validation.TextileReferenceValidationRule&quot; /&gt;
 &lt;/extension&gt;
 &lt;/pre&gt;
       </documentation>

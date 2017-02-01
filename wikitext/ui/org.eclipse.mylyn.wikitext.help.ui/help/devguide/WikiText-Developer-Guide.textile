@@ -52,15 +52,15 @@ h3. Stand-Alone
 
 Stand-alone usage of WikiText is also possible.  To use WikiText outside of an Eclipse runtime, simply add the WikiText jar files to your classpath.  Note that stand-alone usage of WikiText is limited to the use of the markup parser framework and Ant tasks.
 
-Add the @org.eclipse.mylyn.wikitext.core*.jar@ to your classpath, and at least one the following language-specific jars:
+Add the @org.eclipse.mylyn.wikitext*.jar@ to your classpath, and at least one the following language-specific jars:
 
-* @org.eclipse.mylyn.wikitext.asciidoc.core*.jar@
-* @org.eclipse.mylyn.wikitext.confluence.core*.jar@
-* @org.eclipse.mylyn.wikitext.markdown.core*.jar@
-* @org.eclipse.mylyn.wikitext.mediawiki.core*.jar@
-* @org.eclipse.mylyn.wikitext.textile.core*.jar@
-* @org.eclipse.mylyn.wikitext.tracwiki.core*.jar@
-* @org.eclipse.mylyn.wikitext.twiki.core*.jar@
+* @org.eclipse.mylyn.wikitext.asciidoc*.jar@
+* @org.eclipse.mylyn.wikitext.confluence*.jar@
+* @org.eclipse.mylyn.wikitext.markdown*.jar@
+* @org.eclipse.mylyn.wikitext.mediawiki*.jar@
+* @org.eclipse.mylyn.wikitext.textile*.jar@
+* @org.eclipse.mylyn.wikitext.tracwiki*.jar@
+* @org.eclipse.mylyn.wikitext.twiki*.jar@
 
 h1. Using The WikiText Parser
 
@@ -163,7 +163,7 @@ browser.setText(htmlContent);
 
 h1. Markup Languages
 
-Markup languages are the core concept that WikiText uses to define a parser for specific wiki markup.  WikiText provides facilities for adding new markup languages or extending an existing one.  All markup languages in WikiText extend the @org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage@ class.
+Markup languages are the core concept that WikiText uses to define a parser for specific wiki markup.  WikiText provides facilities for adding new markup languages or extending an existing one.  All markup languages in WikiText extend the @org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage@ class.
 
 h2. Extending an Existing Markup Language
 
@@ -175,15 +175,15 @@ h2. New Markup Languages
 
 WikiText is designed to be extended to support new markup languages.  To add a markup language take the following steps:
 
-# Extend @org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage@ using one of the existing subclasses as an example
+# Extend @org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage@ using one of the existing subclasses as an example
 # Add to your markup language class the blocks, phrases and replacement tokens that are to be part of your language (see "Markup Language Concepts":#MarkupLanguageConcepts below)
-# Add to your jar a Java service @META-INF/services/org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage@
+# Add to your jar a Java service @META-INF/services/org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage@
 # If it's to be used in Eclipse, register your markup language using the @org.eclipse.mylyn.wikitext.ui.markupLanguage@ extension point. Other extension points that may be of interest to you:
 ** @org.eclipse.core.contenttype.contentTypes@ declare your markup language content type
 ** @org.eclipse.team.core.fileTypes@ ensure that team providers know that your file type is text
-** @org.eclipse.mylyn.wikitext.core.markupValidationRule@ provide markup validation to detect common problems in markup
+** @org.eclipse.mylyn.wikitext.ui.markupValidationRule@ provide markup validation to detect common problems in markup
 
-You're most likely to be successful if you use one of the existing WikiText markup language plug-ins as an example.  A good starting point is the @org.eclipse.mylyn.wikitext.textile.core@ plug-in.
+You're most likely to be successful if you use one of the existing WikiText markup language plug-ins as an example.  A good starting point is the @org.eclipse.mylyn.wikitext.textile@ plug-in.
 
 If you plan to implement a markup language then you should be familiar with "Markup Language Concepts":#MarkupLanguageConcepts.
 
