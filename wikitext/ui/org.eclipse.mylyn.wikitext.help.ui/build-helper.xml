@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!--
+    Copyright (c) 2007, 2009 David Green and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+    
+    Contributors:
+        David Green - initial API and implementation
+ -->
+<project name="org.eclipse.mylyn.wikitext.ui" default="all">
+
+	<property name="wikitext.ui.textile.bin" value="../org.eclipse.mylyn.wikitext.textile.core/.tmp.bin"/>
+
+	<path id="wikitext.ant.classpath">
+		<pathelement location="../org.eclipse.mylyn.wikitext.core/@dot"/>
+		<pathelement location="../org.eclipse.mylyn.wikitext.core/bin"/>
+		<pathelement location="../org.eclipse.mylyn.wikitext.core.ant/bin"/>
+		<pathelement location="${wikitext.ui.textile.bin}"/>
+	</path>
+			
+	<target name="clean">
+		<delete failonerror="false">
+			<fileset dir="help">
+				<include name="**/*.html"/>
+				<include name="**/*-toc.xml"/>
+			</fileset>
+		</delete>
+		<delete failonerror="false">
+			<fileset dir="docs/new">
+				<include name="**/*.html"/>
+				<exclude name="**/*"/>
+			</fileset>
+		</delete>
+		<delete dir="${wikitext.ui.textile.bin}" failonerror="false"/>
+	</target>
+	
+	<target name="all" depends="plugin-docs">
+	</target>
+	
+	
+	<target name="plugin-docs" depends="compile-tasks" description="generate plugin help documentation">
+		<taskdef resource="org/eclipse/mylyn/wikitext/core/ant/tasks.properties" classpathref="wikitext.ant.classpath"/>
+		
+		<wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.textile.core.TextileLanguage" 
+			multipleOutputFiles="true"
+			navigationImages="true"
+			helpPrefix="help">
+			<fileset dir="help" includes="**/*.textile"/>
+			<stylesheet url="book.css"/>
+			<stylesheet file="${basedir}/help/styles/main.css"/>
+		</wikitext-to-eclipse-help>
+		
+		<antcall target="test"/>
+	</target>
+
+	<target name="compile-tasks">
+		<!--
+		bug 269970 we can't rely on Textile being built first, so we compile here instead.
+		-->
+		<mkdir dir="${wikitext.ui.textile.bin}"/>
+		<javac destdir="${wikitext.ui.textile.bin}" srcdir="../org.eclipse.mylyn.wikitext.textile.core/src">
+			<classpath>
+				<pathelement location="../org.eclipse.mylyn.wikitext.core/@dot"/>
+				<pathelement location="../org.eclipse.mylyn.wikitext.core/bin"/>
+			</classpath>
+		</javac>
+		<copy todir="${wikitext.ui.textile.bin}" failonerror="true" overwrite="false">
+			<fileset dir="../org.eclipse.mylyn.wikitext.textile.core/src">
+				<exclude name="**/*.java"/>
+				<exclude name="**/package.htm*"/>
+			</fileset>
+		</copy>
+	</target>
+	
+
+	<target name="test" description="verify that all of the HTML files are well-formed XML">
+		<echo level="info">
+Validating help content XML and HTML files: The Eclipse help system expects well-formed XML
+			
+If validation fails it is because either:
+			
+* the userguide source code is poorly formed, or
+* the WikiText MediaWiki parser has a bug
+			
+Problems with userguide source are usually caused by improper use of HTML markup in the MediaWiki source,
+or inadvertently starting a line with a space character (in MediaWiki this starts a preformatted block)
+		</echo>
+
+		<!-- 
+		Don't bother with DTD validation: we only care if the files are well-formed.
+		We therefore provide an empty DTD 
+		-->
+		<mkdir dir="__tmp"/>
+		<echo file="__tmp/__empty.dtd" message=""/>
+		<xmlvalidate lenient="true">
+			<fileset dir="help">
+				<include name="**/*.xml"/>
+			</fileset>
+			<fileset dir="help">
+				<include name="**/*.html"/>
+			</fileset>
+			<dtd publicid="-//W3C//DTD XHTML 1.0 Transitional//EN" location="${basedir}/__tmp/__empty.dtd"/>
+		</xmlvalidate>
+		<delete dir="__tmp"/>
+	</target>
+	
+	<target name="new-and-noteworthy">
+		<xslt style="docs/new/new.xsl" destdir="docs/new" basedir="docs/new" includes="new*.xml"/>
+	</target>
+</project>

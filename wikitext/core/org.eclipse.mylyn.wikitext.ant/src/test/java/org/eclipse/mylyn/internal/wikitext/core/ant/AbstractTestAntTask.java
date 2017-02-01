@@ -20,7 +20,7 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.util.ResourceBundle;
 
-import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
+import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 import junit.framework.TestCase;
 

@@ -12,7 +12,7 @@
 package org.eclipse.mylyn.internal.wikitext.tasks.ui.editor;
 
 import org.eclipse.mylyn.wikitext.tasks.ui.editor.MarkupTaskEditorExtension;
-import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
+import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
  * @author David Green

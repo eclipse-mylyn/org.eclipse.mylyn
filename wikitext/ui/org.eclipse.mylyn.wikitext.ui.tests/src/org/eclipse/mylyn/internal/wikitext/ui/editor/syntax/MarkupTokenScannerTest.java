@@ -19,7 +19,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.mylyn.wikitext.tests.HeadRequired;
-import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
+import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 

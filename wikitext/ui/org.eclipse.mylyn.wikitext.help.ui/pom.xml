@@ -32,7 +32,7 @@
 					</classpath>
                 </taskdef>
 
-                <wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.textile.TextileLanguage" 
+                <wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.textile.core.TextileLanguage" 
                                           multipleOutputFiles="true"
                                           navigationImages="true"
                                           helpPrefix="help">
@@ -71,6 +71,10 @@
                   <dtd publicid="-//W3C//DTD XHTML 1.0 Transitional//EN" location="${basedir}/__tmp/__empty.dtd"/>
                 </xmlvalidate>
                 <delete dir="__tmp"/>
+
+                <!-- Generate New & Noteworthy -->
+
+                <xslt style="docs/new/new.xsl" destdir="docs/new" basedir="docs/new" includes="new*.xml"/>
                 
             </target>
           </configuration>

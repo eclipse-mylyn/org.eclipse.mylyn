@@ -27,7 +27,7 @@ import org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage;
 import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
 import org.eclipse.mylyn.wikitext.tests.AbstractTestInWorkspace;
 import org.eclipse.mylyn.wikitext.tests.HeadRequired;
-import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
+import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 import org.eclipse.mylyn.wikitext.tracwiki.core.TracWikiLanguage;
 import org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage;
 import org.eclipse.ui.IEditorDescriptor;

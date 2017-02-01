@@ -12,7 +12,7 @@
  -->
 <plugin>
 	<extension point="org.eclipse.mylyn.wikitext.ui.markupLanguage">
-		<language class="org.eclipse.mylyn.wikitext.textile.TextileLanguage"
+		<language class="org.eclipse.mylyn.wikitext.textile.core.TextileLanguage"
 			name="Textile" fileExtensions="textile">
 		</language>
 	</extension>
@@ -38,9 +38,9 @@
 	
 	<extension point="org.eclipse.mylyn.wikitext.ui.markupValidationRule">
 		<rule markupLanguage="Textile"
-			class="org.eclipse.mylyn.internal.wikitext.textile.validation.BlockWhitespaceRule" />
+			class="org.eclipse.mylyn.internal.wikitext.textile.core.validation.BlockWhitespaceRule" />
 		<rule markupLanguage="Textile"
-			class="org.eclipse.mylyn.internal.wikitext.textile.validation.TextileReferenceValidationRule" />
+			class="org.eclipse.mylyn.internal.wikitext.textile.core.validation.TextileReferenceValidationRule" />
 	</extension>
 	
    <extension

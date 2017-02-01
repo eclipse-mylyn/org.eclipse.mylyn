@@ -20,7 +20,7 @@ import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.TableAttributes;
 import org.eclipse.mylyn.wikitext.parser.builder.DocBookDocumentBuilder;
-import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
+import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 import junit.framework.TestCase;
 

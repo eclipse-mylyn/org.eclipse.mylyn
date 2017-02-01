@@ -27,7 +27,7 @@ import org.eclipse.mylyn.wikitext.parser.css.ElementInfo;
 import org.eclipse.mylyn.wikitext.parser.css.Stylesheet;
 import org.eclipse.mylyn.wikitext.parser.css.Stylesheet.Receiver;
 import org.eclipse.mylyn.wikitext.tests.HeadRequired;
-import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
+import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.junit.Before;

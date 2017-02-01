@@ -60,21 +60,23 @@
 	           windowtitle="Mylyn WikiText API Reference">
 		    <fileset dir=".." defaultexcludes="yes">
 		    	<include name="org.eclipse.mylyn.wikitext*/src/org/eclipse/mylyn/**/*.java"/>
+		    	<include name="org.eclipse.mylyn.wikitext*/src_ant/org/eclipse/mylyn/**/*.java"/>
 				<exclude name="org.eclipse.mylyn.wikitext*.tests/**"/>
 				<exclude name="**/internal/**"/>
 		    </fileset>
 			<classpath>
 				<dirset dir=".." defaultexcludes="yes">
-					<include name="org.eclipse.mylyn.tasks.core/target/classes"/>
-					<include name="org.eclipse.mylyn.tasks.ui/target/classes"/>
-					<include name="org.eclipse.mylyn.wikitext/target/classes"/>
-					<include name="org.eclipse.mylyn.wikitext.confluence/target/classes"/>
-					<include name="org.eclipse.mylyn.wikitext.mediawiki/target/classes"/>
-					<include name="org.eclipse.mylyn.wikitext.textile/target/classes"/>
-					<include name="org.eclipse.mylyn.wikitext.tracwiki/target/classes"/>
-					<include name="org.eclipse.mylyn.wikitext.twiki/target/classes"/>
-					<include name="org.eclipse.mylyn.wikitext.ui/target/classes"/>
-					<include name="org.eclipse.mylyn.wikitext.tasks.ui/target/classes"/>
+					<include name="org.eclipse.mylyn.tasks.core/bin"/>
+					<include name="org.eclipse.mylyn.tasks.ui/bin"/>
+					<include name="org.eclipse.mylyn.wikitext/bin"/>
+					<include name="org.eclipse.mylyn.wikitext/bin_ant"/>
+					<include name="org.eclipse.mylyn.wikitext.confluence.core/bin"/>
+					<include name="org.eclipse.mylyn.wikitext.mediawiki.core/bin"/>
+					<include name="org.eclipse.mylyn.wikitext.textile.core/bin"/>
+					<include name="org.eclipse.mylyn.wikitext.tracwiki.core/bin"/>
+					<include name="org.eclipse.mylyn.wikitext.twiki.core/bin"/>
+					<include name="org.eclipse.mylyn.wikitext.ui/bin"/>
+					<include name="org.eclipse.mylyn.wikitext.tasks.ui/bin"/>
 				</dirset>
 				<fileset dir="${target.platform.path}">
 					<include name="plugins/org.eclipse.osgi*.jar"/>

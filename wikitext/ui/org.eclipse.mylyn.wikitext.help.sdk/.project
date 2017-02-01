@@ -5,13 +5,13 @@
 	<projects>
 		<project>org.eclipse.mylyn.tasks.core</project>
 		<project>org.eclipse.mylyn.tasks.ui</project>
-		<project>org.eclipse.mylyn.wikitext.confluence</project>
+		<project>org.eclipse.mylyn.wikitext.confluence.core</project>
 		<project>org.eclipse.mylyn.wikitext</project>
-		<project>org.eclipse.mylyn.wikitext.mediawiki</project>
+		<project>org.eclipse.mylyn.wikitext.mediawiki.core</project>
 		<project>org.eclipse.mylyn.wikitext.tasks.ui</project>
-		<project>org.eclipse.mylyn.wikitext.textile</project>
-		<project>org.eclipse.mylyn.wikitext.tracwiki</project>
-		<project>org.eclipse.mylyn.wikitext.twiki</project>
+		<project>org.eclipse.mylyn.wikitext.textile.core</project>
+		<project>org.eclipse.mylyn.wikitext.tracwiki.core</project>
+		<project>org.eclipse.mylyn.wikitext.twiki.core</project>
 		<project>org.eclipse.mylyn.wikitext.ui</project>
 	</projects>
 	<buildSpec>

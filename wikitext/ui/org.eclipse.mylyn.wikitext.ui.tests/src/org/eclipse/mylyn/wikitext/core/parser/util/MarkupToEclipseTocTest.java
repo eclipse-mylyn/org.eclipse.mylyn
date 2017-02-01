@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.eclipse.mylyn.wikitext.parser.util.MarkupToEclipseToc;
-import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
+import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;

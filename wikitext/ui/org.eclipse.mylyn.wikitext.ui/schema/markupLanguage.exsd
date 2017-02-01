@@ -110,7 +110,7 @@ Plugins should also use the org.eclipse.core.contenttype.contentTypes extension 
       <documentation>
          &lt;pre&gt;
 &lt;extension point=&quot;org.eclipse.mylyn.wikitext.ui.markupLanguage&quot;&gt;
-    &lt;language class=&quot;org.eclipse.mylyn.wikitext.textile.TextileLanguage&quot;
+    &lt;language class=&quot;org.eclipse.mylyn.wikitext.textile.core.TextileLanguage&quot;
         name=&quot;Textile&quot; fileExtensions=&quot;textile&quot;&gt;
     &lt;/language&gt;
 &lt;/extension&gt;

@@ -23,7 +23,7 @@ import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.XslfoDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.parser.outline.OutlineParser;
-import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
+import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 import org.eclipse.mylyn.wikitext.util.DefaultXmlStreamWriter;
 
 import com.google.common.base.Throwables;
