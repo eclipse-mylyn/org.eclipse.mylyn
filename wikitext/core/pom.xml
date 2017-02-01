@@ -19,23 +19,23 @@
     </properties>
 
     <modules>
-        <module>org.eclipse.mylyn.wikitext.core</module>
-        <module>org.eclipse.mylyn.wikitext.core.toolkit</module>
-        <module>org.eclipse.mylyn.wikitext.core.tests</module>
-        <module>org.eclipse.mylyn.wikitext.textile.core</module>
-        <module>org.eclipse.mylyn.wikitext.html.core</module>
-        <module>org.eclipse.mylyn.wikitext.core.ant</module>
-        <module>org.eclipse.mylyn.wikitext.core.maven</module>
+        <module>org.eclipse.mylyn.wikitext</module>
+        <module>org.eclipse.mylyn.wikitext.toolkit</module>
+        <module>org.eclipse.mylyn.wikitext.tests</module>
+        <module>org.eclipse.mylyn.wikitext.textile</module>
+        <module>org.eclipse.mylyn.wikitext.html</module>
+        <module>org.eclipse.mylyn.wikitext.ant</module>
+        <module>org.eclipse.mylyn.wikitext.maven</module>
 
-        <module>org.eclipse.mylyn.wikitext.asciidoc.core</module>
+        <module>org.eclipse.mylyn.wikitext.asciidoc</module>
         <module>org.eclipse.mylyn.wikitext.commonmark</module>
-        <module>org.eclipse.mylyn.wikitext.confluence.core</module>
-        <module>org.eclipse.mylyn.wikitext.creole.core</module>
-        <module>org.eclipse.mylyn.wikitext.markdown.core</module>
-        <module>org.eclipse.mylyn.wikitext.mediawiki.core</module>
-        <module>org.eclipse.mylyn.wikitext.mediawiki.core.ant</module>
-        <module>org.eclipse.mylyn.wikitext.tracwiki.core</module>
-        <module>org.eclipse.mylyn.wikitext.twiki.core</module>
+        <module>org.eclipse.mylyn.wikitext.confluence</module>
+        <module>org.eclipse.mylyn.wikitext.creole</module>
+        <module>org.eclipse.mylyn.wikitext.markdown</module>
+        <module>org.eclipse.mylyn.wikitext.mediawiki</module>
+        <module>org.eclipse.mylyn.wikitext.mediawiki.ant</module>
+        <module>org.eclipse.mylyn.wikitext.tracwiki</module>
+        <module>org.eclipse.mylyn.wikitext.twiki</module>
     </modules>
 
     <build>
