@@ -4,7 +4,7 @@
       label="%featureName"
       version="3.0.0.qualifier"
       provider-name="%providerName"
-      plugin="org.eclipse.mylyn.wikitext"
+      plugin="org.eclipse.mylyn.wikitext.core"
       license-feature="org.eclipse.license"
       license-feature-version="1.0.1">
 
@@ -21,84 +21,77 @@
    </license>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext"
+         id="org.eclipse.mylyn.wikitext.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext.ant"
+         id="org.eclipse.mylyn.wikitext.core.ant"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext.osgi"
+         id="org.eclipse.mylyn.wikitext.core.osgi"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext.asciidoc"
+         id="org.eclipse.mylyn.wikitext.textile.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext.textile"
+         id="org.eclipse.mylyn.wikitext.html.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext.html"
+         id="org.eclipse.mylyn.wikitext.markdown.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext.markdown"
+         id="org.eclipse.mylyn.wikitext.mediawiki.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext.mediawiki"
+         id="org.eclipse.mylyn.wikitext.mediawiki.core.ant"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext.mediawiki.ant"
+         id="org.eclipse.mylyn.wikitext.confluence.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext.confluence"
+         id="org.eclipse.mylyn.wikitext.tracwiki.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext.tracwiki"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.wikitext.twiki"
+         id="org.eclipse.mylyn.wikitext.twiki.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -118,13 +111,6 @@
          version="0.0.0"
          unpack="false"/>
 
-   <plugin
-         id="org.eclipse.mylyn.wikitext.asciidoc.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-         
    <plugin
          id="org.eclipse.mylyn.wikitext.textile.ui"
          download-size="0"

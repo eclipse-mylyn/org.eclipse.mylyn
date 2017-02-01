@@ -26,9 +26,9 @@
 
                 <taskdef resource="org/eclipse/mylyn/wikitext/core/ant/tasks.properties">
 					<classpath id="wikitext-core-classpath">
-						<fileset dir="../../core/org.eclipse.mylyn.wikitext.ant/target"><include name="*.jar"/></fileset>
-						<fileset dir="../../core/org.eclipse.mylyn.wikitext/target"><include name="*.jar"/></fileset>
-						<fileset dir="../../core/org.eclipse.mylyn.wikitext.textile/target"><include name="*.jar"/></fileset>
+						<fileset dir="../../core/org.eclipse.mylyn.wikitext.core.ant/target"><include name="*.jar"/></fileset>
+						<fileset dir="../../core/org.eclipse.mylyn.wikitext.core/target"><include name="*.jar"/></fileset>
+						<fileset dir="../../core/org.eclipse.mylyn.wikitext.textile.core/target"><include name="*.jar"/></fileset>
 					</classpath>
                 </taskdef>
 
