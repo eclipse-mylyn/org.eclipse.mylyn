@@ -13,8 +13,8 @@ package org.eclipse.mylyn.wikitext.core.osgi;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 
 import com.google.common.base.Strings;
 

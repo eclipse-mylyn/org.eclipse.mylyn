@@ -17,8 +17,8 @@ import java.util.Map;
 
 import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContext.NamedUriWithTitle;
 import org.eclipse.mylyn.internal.wikitext.commonmark.inlines.InlineParser;
-import org.eclipse.mylyn.wikitext.core.parser.IdGenerator;
-import org.eclipse.mylyn.wikitext.core.parser.markup.IdGenerationStrategy;
+import org.eclipse.mylyn.wikitext.parser.IdGenerator;
+import org.eclipse.mylyn.wikitext.parser.markup.IdGenerationStrategy;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;

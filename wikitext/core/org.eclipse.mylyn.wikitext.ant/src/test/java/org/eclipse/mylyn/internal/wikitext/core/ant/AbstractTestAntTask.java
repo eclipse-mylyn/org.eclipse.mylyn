@@ -84,7 +84,7 @@ public abstract class AbstractTestAntTask extends TestCase {
 
 	private void listFiles(String prefix, File dir) {
 		for (File file : dir.listFiles()) {
-			
+
 			if (file.isDirectory()) {
 				listFiles(prefix + file.getName() + "/", file);
 			}

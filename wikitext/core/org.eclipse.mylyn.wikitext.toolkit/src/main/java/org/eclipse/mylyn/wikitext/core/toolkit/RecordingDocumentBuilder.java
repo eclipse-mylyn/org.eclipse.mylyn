@@ -12,9 +12,9 @@ package org.eclipse.mylyn.wikitext.core.toolkit;
 
 import java.util.ArrayList;
 
-import org.eclipse.mylyn.wikitext.core.parser.Attributes;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.util.LocatorImpl;
+import org.eclipse.mylyn.wikitext.parser.Attributes;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.util.LocatorImpl;
 
 /**
  * @author David Green

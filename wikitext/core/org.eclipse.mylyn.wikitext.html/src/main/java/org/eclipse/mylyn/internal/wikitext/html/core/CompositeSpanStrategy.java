@@ -13,9 +13,9 @@ package org.eclipse.mylyn.internal.wikitext.html.core;
 
 import java.util.List;
 
-import org.eclipse.mylyn.wikitext.core.parser.Attributes;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.parser.Attributes;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;

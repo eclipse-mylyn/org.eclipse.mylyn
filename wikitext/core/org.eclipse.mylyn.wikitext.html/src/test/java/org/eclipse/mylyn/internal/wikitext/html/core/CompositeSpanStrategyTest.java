@@ -13,12 +13,12 @@ package org.eclipse.mylyn.internal.wikitext.html.core;
 
 import static org.junit.Assert.assertEquals;
 
-import org.eclipse.mylyn.wikitext.core.parser.Attributes;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
-import org.eclipse.mylyn.wikitext.core.parser.builder.EventDocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.builder.event.BeginSpanEvent;
-import org.eclipse.mylyn.wikitext.core.parser.builder.event.DocumentBuilderEvents;
-import org.eclipse.mylyn.wikitext.core.parser.builder.event.EndSpanEvent;
+import org.eclipse.mylyn.wikitext.parser.Attributes;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.parser.builder.EventDocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.builder.event.BeginSpanEvent;
+import org.eclipse.mylyn.wikitext.parser.builder.event.DocumentBuilderEvents;
+import org.eclipse.mylyn.wikitext.parser.builder.event.EndSpanEvent;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

@@ -14,12 +14,12 @@ package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 import java.io.StringWriter;
 
 import org.eclipse.mylyn.internal.wikitext.markdown.core.MarkdownDocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.Attributes;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
-import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
-import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
+import org.eclipse.mylyn.wikitext.parser.Attributes;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
+import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
 
 import junit.framework.TestCase;
 

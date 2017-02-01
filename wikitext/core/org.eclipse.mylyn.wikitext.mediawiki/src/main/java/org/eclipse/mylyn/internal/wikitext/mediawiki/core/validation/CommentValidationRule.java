@@ -14,9 +14,9 @@ package org.eclipse.mylyn.internal.wikitext.mediawiki.core.validation;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
-import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem.Severity;
-import org.eclipse.mylyn.wikitext.core.validation.ValidationRule;
+import org.eclipse.mylyn.wikitext.validation.ValidationProblem;
+import org.eclipse.mylyn.wikitext.validation.ValidationProblem.Severity;
+import org.eclipse.mylyn.wikitext.validation.ValidationRule;
 
 /**
  * a validation rule that tests for malformed comment delimiters.

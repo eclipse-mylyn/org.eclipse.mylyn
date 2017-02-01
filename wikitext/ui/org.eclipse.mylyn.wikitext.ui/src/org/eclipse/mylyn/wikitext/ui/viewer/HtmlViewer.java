@@ -37,7 +37,7 @@ import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.HorizontalRuleAn
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.HorizontalRuleDrawingStrategy;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.ImageAnnotation;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.ImageDrawingStrategy;
-import org.eclipse.mylyn.wikitext.core.parser.css.Stylesheet;
+import org.eclipse.mylyn.wikitext.parser.css.Stylesheet;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Font;

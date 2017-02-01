@@ -11,10 +11,10 @@
 
 package org.eclipse.mylyn.internal.wikitext.tasks.ui.util;
 
-import org.eclipse.mylyn.wikitext.core.parser.markup.ConfigurationBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
-import org.eclipse.mylyn.wikitext.core.parser.markup.block.BugzillaGeneratedCommentBlock;
-import org.eclipse.mylyn.wikitext.core.parser.markup.block.BugzillaQuoteBlock;
+import org.eclipse.mylyn.wikitext.parser.markup.ConfigurationBuilder;
+import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageConfiguration;
+import org.eclipse.mylyn.wikitext.parser.markup.block.BugzillaGeneratedCommentBlock;
+import org.eclipse.mylyn.wikitext.parser.markup.block.BugzillaQuoteBlock;
 
 /**
  * @author David Green

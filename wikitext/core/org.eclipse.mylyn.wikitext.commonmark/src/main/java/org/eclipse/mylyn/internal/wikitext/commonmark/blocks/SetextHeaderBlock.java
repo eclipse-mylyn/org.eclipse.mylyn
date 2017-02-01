@@ -23,8 +23,8 @@ import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContext;
 import org.eclipse.mylyn.internal.wikitext.commonmark.SourceBlock;
 import org.eclipse.mylyn.internal.wikitext.commonmark.TextSegment;
 import org.eclipse.mylyn.internal.wikitext.commonmark.inlines.InlineParser;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.HeadingAttributes;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.HeadingAttributes;
 
 public class SetextHeaderBlock extends SourceBlock {
 

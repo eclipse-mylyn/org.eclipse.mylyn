@@ -16,9 +16,9 @@ import static org.junit.Assert.assertEquals;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.junit.Before;
 
 /**

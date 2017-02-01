@@ -25,7 +25,7 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.operations.AbstractDocument
 import org.eclipse.mylyn.internal.wikitext.ui.editor.operations.CommandManager;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.operations.InsertLocation;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.operations.MoveSectionsCommand;
-import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
+import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;

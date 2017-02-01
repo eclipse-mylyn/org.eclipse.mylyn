@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.wikitext.markdown.core.block;
 
-import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.parser.markup.Block;
 
 /**
  * Block that can be nested within a {@link QuoteBlock}.

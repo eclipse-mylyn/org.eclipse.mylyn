@@ -21,11 +21,11 @@ import java.util.List;
 
 import org.eclipse.mylyn.docs.epub.core.Publication;
 import org.eclipse.mylyn.docs.epub.opf.Item;
-import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder.Stylesheet;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
+import org.eclipse.mylyn.wikitext.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder.Stylesheet;
+import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
 
 /**
  * This type can be used to populate an EPUB Publication with content directly from WikiText markup. The markup file
@@ -73,7 +73,8 @@ public class MarkupToOPS {
 			}
 			// Make sure we get the correct XHTML header
 			builder.setEmitDtd(true);
-			builder.setHtmlDtd("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">"); //$NON-NLS-1$
+			builder.setHtmlDtd(
+					"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">"); //$NON-NLS-1$
 			builder.setXhtmlStrict(true);
 
 			MarkupParser markupParser = new MarkupParser();

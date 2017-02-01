@@ -28,10 +28,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.core.validation.MarkupValidator;
-import org.eclipse.mylyn.wikitext.core.validation.ValidationRule;
-import org.eclipse.mylyn.wikitext.core.validation.ValidationRules;
+import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.validation.MarkupValidator;
+import org.eclipse.mylyn.wikitext.validation.ValidationRule;
+import org.eclipse.mylyn.wikitext.validation.ValidationRules;
 
 import com.google.common.collect.Sets;
 

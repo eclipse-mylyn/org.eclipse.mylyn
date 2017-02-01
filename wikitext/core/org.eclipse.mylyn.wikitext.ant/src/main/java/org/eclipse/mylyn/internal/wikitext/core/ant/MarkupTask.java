@@ -23,13 +23,13 @@ import java.util.List;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.eclipse.mylyn.wikitext.core.parser.markup.AbstractMarkupLanguage;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguageConfiguration;
-import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
-import org.eclipse.mylyn.wikitext.core.validation.StandaloneMarkupValidator;
-import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
-import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem.Severity;
+import org.eclipse.mylyn.wikitext.parser.markup.AbstractMarkupLanguage;
+import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageConfiguration;
+import org.eclipse.mylyn.wikitext.util.ServiceLocator;
+import org.eclipse.mylyn.wikitext.validation.StandaloneMarkupValidator;
+import org.eclipse.mylyn.wikitext.validation.ValidationProblem;
+import org.eclipse.mylyn.wikitext.validation.ValidationProblem.Severity;
 
 /**
  * An abstract class for Ant tasks that use a configurable {@link MarkupLanguage}.

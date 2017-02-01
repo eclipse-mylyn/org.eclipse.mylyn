@@ -16,8 +16,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.mylyn.internal.wikitext.markdown.core.block.NestableBlock;
-import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.core.parser.markup.ContentState;
+import org.eclipse.mylyn.wikitext.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.parser.markup.ContentState;
 
 /**
  * Adapter {@link NestableBlock} for {@link ReadAheadBlock}s.

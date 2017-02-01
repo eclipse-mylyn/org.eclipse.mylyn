@@ -18,7 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.internal.wikitext.textile.core.block.FootnoteBlock;
-import org.eclipse.mylyn.wikitext.core.parser.markup.ContentState;
+import org.eclipse.mylyn.wikitext.parser.markup.ContentState;
 
 /**
  * Override the default content state so that we can support named links.

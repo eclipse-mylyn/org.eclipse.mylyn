@@ -14,6 +14,8 @@ package org.eclipse.mylyn.wikitext.core.parser.markup.token;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.mylyn.wikitext.parser.markup.token.ImpliedHyperlinkReplacementToken;
+
 import junit.framework.TestCase;
 
 /**

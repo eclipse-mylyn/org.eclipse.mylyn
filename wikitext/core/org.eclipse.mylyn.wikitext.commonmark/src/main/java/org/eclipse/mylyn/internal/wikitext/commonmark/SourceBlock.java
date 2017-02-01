@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.commonmark;
 
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.builder.NoOpDocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.builder.NoOpDocumentBuilder;
 
 public abstract class SourceBlock {
 

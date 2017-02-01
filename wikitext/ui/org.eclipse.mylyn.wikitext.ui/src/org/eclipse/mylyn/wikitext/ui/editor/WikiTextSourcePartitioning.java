@@ -12,7 +12,7 @@ package org.eclipse.mylyn.wikitext.ui.editor;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitioner;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 
 /**
  * A utility for configuring partitioning on a document.

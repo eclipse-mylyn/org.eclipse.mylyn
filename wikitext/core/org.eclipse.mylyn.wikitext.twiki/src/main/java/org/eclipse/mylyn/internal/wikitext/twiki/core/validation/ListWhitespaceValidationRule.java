@@ -13,9 +13,9 @@ package org.eclipse.mylyn.internal.wikitext.twiki.core.validation;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
-import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem.Severity;
-import org.eclipse.mylyn.wikitext.core.validation.ValidationRule;
+import org.eclipse.mylyn.wikitext.validation.ValidationProblem;
+import org.eclipse.mylyn.wikitext.validation.ValidationProblem.Severity;
+import org.eclipse.mylyn.wikitext.validation.ValidationRule;
 
 /**
  * TWiki lists markup must have spaces in multiples of 3 preceding the markup (*,i,I,1,a,A)

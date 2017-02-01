@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.wikitext.markdown.core.block;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.core.parser.Attributes;
+import org.eclipse.mylyn.wikitext.parser.Attributes;
 
 /**
  * Markdown headings.

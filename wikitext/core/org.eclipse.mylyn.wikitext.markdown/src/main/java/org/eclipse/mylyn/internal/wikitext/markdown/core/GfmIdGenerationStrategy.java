@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.wikitext.markdown.core;
 
 import java.util.Locale;
 
-import org.eclipse.mylyn.wikitext.core.parser.markup.IdGenerationStrategy;
+import org.eclipse.mylyn.wikitext.parser.markup.IdGenerationStrategy;
 
 import com.google.common.base.CharMatcher;
 

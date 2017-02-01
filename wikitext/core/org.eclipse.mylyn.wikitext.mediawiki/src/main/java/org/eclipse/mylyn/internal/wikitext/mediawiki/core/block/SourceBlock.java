@@ -11,9 +11,9 @@
 
 package org.eclipse.mylyn.internal.wikitext.mediawiki.core.block;
 
-import org.eclipse.mylyn.wikitext.core.parser.Attributes;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
-import org.eclipse.mylyn.wikitext.core.parser.markup.block.AbstractHtmlBlock;
+import org.eclipse.mylyn.wikitext.parser.Attributes;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.parser.markup.block.AbstractHtmlBlock;
 
 /**
  * A block that implements the syntax highlighting extension

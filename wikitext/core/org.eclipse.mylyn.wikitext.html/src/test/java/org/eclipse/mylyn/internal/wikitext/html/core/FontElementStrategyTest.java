@@ -20,16 +20,16 @@ import static org.junit.Assert.assertTrue;
 import java.io.StringWriter;
 import java.util.Arrays;
 
-import org.eclipse.mylyn.wikitext.core.parser.Attributes;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
-import org.eclipse.mylyn.wikitext.core.parser.builder.EventDocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.builder.event.BeginSpanEvent;
-import org.eclipse.mylyn.wikitext.core.parser.builder.event.CharactersEvent;
-import org.eclipse.mylyn.wikitext.core.parser.builder.event.EndSpanEvent;
 import org.eclipse.mylyn.wikitext.html.core.HtmlLanguage;
+import org.eclipse.mylyn.wikitext.parser.Attributes;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.parser.builder.EventDocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.builder.event.BeginSpanEvent;
+import org.eclipse.mylyn.wikitext.parser.builder.event.CharactersEvent;
+import org.eclipse.mylyn.wikitext.parser.builder.event.EndSpanEvent;
 import org.junit.Test;
 
 public class FontElementStrategyTest {

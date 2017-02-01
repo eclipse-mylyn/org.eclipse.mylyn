@@ -40,21 +40,21 @@ import org.apache.tools.ant.Project;
 import org.eclipse.mylyn.internal.wikitext.core.ant.MarkupTask;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.PageMapping;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.WikiTemplateResolver;
-import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
-import org.eclipse.mylyn.wikitext.core.splitter.DefaultSplittingStrategy;
-import org.eclipse.mylyn.wikitext.core.splitter.NoSplittingStrategy;
-import org.eclipse.mylyn.wikitext.core.splitter.SplitOutlineItem;
-import org.eclipse.mylyn.wikitext.core.splitter.SplittingHtmlDocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.splitter.SplittingMarkupToEclipseToc;
-import org.eclipse.mylyn.wikitext.core.splitter.SplittingOutlineParser;
-import org.eclipse.mylyn.wikitext.core.splitter.SplittingStrategy;
-import org.eclipse.mylyn.wikitext.core.validation.StandaloneMarkupValidator;
-import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
-import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem.Severity;
 import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
+import org.eclipse.mylyn.wikitext.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
+import org.eclipse.mylyn.wikitext.splitter.DefaultSplittingStrategy;
+import org.eclipse.mylyn.wikitext.splitter.NoSplittingStrategy;
+import org.eclipse.mylyn.wikitext.splitter.SplitOutlineItem;
+import org.eclipse.mylyn.wikitext.splitter.SplittingHtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.splitter.SplittingMarkupToEclipseToc;
+import org.eclipse.mylyn.wikitext.splitter.SplittingOutlineParser;
+import org.eclipse.mylyn.wikitext.splitter.SplittingStrategy;
+import org.eclipse.mylyn.wikitext.validation.StandaloneMarkupValidator;
+import org.eclipse.mylyn.wikitext.validation.ValidationProblem;
+import org.eclipse.mylyn.wikitext.validation.ValidationProblem.Severity;
 
 /**
  * An Ant task for generating Eclipse help content from one or more MediaWiki pages. Example usage:

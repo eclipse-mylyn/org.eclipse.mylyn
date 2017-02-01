@@ -17,10 +17,10 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.util.LanguageSupport;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
-import org.eclipse.mylyn.wikitext.core.parser.TableAttributes;
-import org.eclipse.mylyn.wikitext.core.parser.TableCellAttributes;
-import org.eclipse.mylyn.wikitext.core.parser.TableRowAttributes;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.parser.TableAttributes;
+import org.eclipse.mylyn.wikitext.parser.TableCellAttributes;
+import org.eclipse.mylyn.wikitext.parser.TableRowAttributes;
 
 import com.google.common.base.Splitter;
 

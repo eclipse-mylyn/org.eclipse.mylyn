@@ -14,10 +14,10 @@ import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.internal.wikitext.textile.core.Textile;
 import org.eclipse.mylyn.internal.wikitext.textile.core.TextileContentState;
-import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
-import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes.Align;
-import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
-import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
+import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
+import org.eclipse.mylyn.wikitext.parser.ImageAttributes.Align;
+import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElement;
+import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
 
 /**
  * @author David Green

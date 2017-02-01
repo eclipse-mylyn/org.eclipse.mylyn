@@ -13,8 +13,8 @@ package org.eclipse.mylyn.internal.wikitext;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 
 public class MockMarkupLanguage extends MarkupLanguage {
 

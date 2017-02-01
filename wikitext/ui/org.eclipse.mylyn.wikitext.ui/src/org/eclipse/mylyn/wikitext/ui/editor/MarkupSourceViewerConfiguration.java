@@ -58,9 +58,9 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupDamagerRepaire
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupHyperlinkDetector;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupTokenScanner;
 import org.eclipse.mylyn.internal.wikitext.ui.util.WikiTextUiResources;
-import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
-import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
+import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
+import org.eclipse.mylyn.wikitext.parser.outline.OutlineParser;
 import org.eclipse.mylyn.wikitext.ui.viewer.AbstractTextSourceViewerConfiguration;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Shell;

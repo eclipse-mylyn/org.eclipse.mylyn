@@ -17,8 +17,8 @@ import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.util.LookAheadReader;
 import org.eclipse.mylyn.internal.wikitext.asciidoc.core.util.ReadAheadBlock;
-import org.eclipse.mylyn.wikitext.core.parser.Attributes;
-import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.parser.Attributes;
+import org.eclipse.mylyn.wikitext.parser.markup.Block;
 
 /**
  * AsciiDoc setext underlined headings.

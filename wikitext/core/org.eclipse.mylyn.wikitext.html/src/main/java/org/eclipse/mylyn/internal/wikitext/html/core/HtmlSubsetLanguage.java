@@ -21,10 +21,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
-import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentHandler;
 import org.eclipse.mylyn.wikitext.html.core.HtmlLanguage;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentHandler;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

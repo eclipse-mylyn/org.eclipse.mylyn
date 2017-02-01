@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.wikitext.commonmark.inlines;
 import java.util.Objects;
 
 import org.eclipse.mylyn.internal.wikitext.commonmark.Line;
-import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 
 public class EscapedCharacter extends Inline {
 

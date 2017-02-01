@@ -34,7 +34,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Get;
-import org.eclipse.mylyn.wikitext.core.util.IgnoreDtdEntityResolver;
+import org.eclipse.mylyn.wikitext.util.IgnoreDtdEntityResolver;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;

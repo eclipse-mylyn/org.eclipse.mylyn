@@ -13,9 +13,9 @@ package org.eclipse.mylyn.internal.wikitext.html.core;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
-import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentHandler;
-import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
+import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentHandler;
+import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
 
 public class LiteralHtmlDocumentHandler implements HtmlDocumentHandler {
 

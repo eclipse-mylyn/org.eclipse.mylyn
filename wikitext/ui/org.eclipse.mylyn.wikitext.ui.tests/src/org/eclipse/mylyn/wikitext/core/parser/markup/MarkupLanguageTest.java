@@ -16,7 +16,8 @@ import static org.junit.Assert.assertEquals;
 import java.io.StringWriter;
 import java.util.Collections;
 
-import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

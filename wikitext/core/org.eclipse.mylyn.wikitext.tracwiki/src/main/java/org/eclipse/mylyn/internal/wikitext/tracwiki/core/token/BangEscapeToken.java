@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.tracwiki.core.token;
 
-import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
-import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
-import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.LiteralPhraseModifierProcessor;
+import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElement;
+import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
+import org.eclipse.mylyn.wikitext.parser.markup.phrase.LiteralPhraseModifierProcessor;
 
 /**
  * A token replacement that replaces any two characters that start with a '!' and are followed by a trac markup

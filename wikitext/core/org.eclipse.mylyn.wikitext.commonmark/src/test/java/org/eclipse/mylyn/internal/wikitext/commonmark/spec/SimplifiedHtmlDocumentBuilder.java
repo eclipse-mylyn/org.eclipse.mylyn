@@ -13,9 +13,9 @@ package org.eclipse.mylyn.internal.wikitext.commonmark.spec;
 
 import java.io.Writer;
 
-import org.eclipse.mylyn.wikitext.core.parser.Attributes;
-import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
-import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.Attributes;
+import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
+import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 
 import com.google.common.base.Objects;
 

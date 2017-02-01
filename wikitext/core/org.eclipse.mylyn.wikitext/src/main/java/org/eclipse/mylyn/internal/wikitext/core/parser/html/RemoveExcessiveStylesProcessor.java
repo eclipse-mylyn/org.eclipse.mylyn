@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.mylyn.wikitext.core.parser.css.CssParser;
-import org.eclipse.mylyn.wikitext.core.parser.css.CssRule;
+import org.eclipse.mylyn.wikitext.parser.css.CssParser;
+import org.eclipse.mylyn.wikitext.parser.css.CssRule;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
