@@ -42,10 +42,16 @@ public class SimplePhraseModifier extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		String quotedDelimiter = Pattern.quote(delimiter);
-		String pattern = quotedDelimiter + " *" + "(.+?)" + " *" + quotedDelimiter; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		final String quotedDelimiter = Pattern.quote(delimiter);
+		String pattern;
 		if (wordBoundary) {
+			// word boundary implicitly assumes single occurrence
+			// of the pattern (e.g. * and not **)
+			pattern = quotedDelimiter + "(?!" + quotedDelimiter + ")" + " *" + "(.+?)" + " *" + quotedDelimiter + "(?!" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$ //$NON-NLS-6$
+					+ quotedDelimiter + ")"; //$NON-NLS-1$
 			pattern = "(^|\\W)" + pattern + "($|\\W)"; //$NON-NLS-1$ //$NON-NLS-2$
+		} else {
+			pattern = quotedDelimiter + " *" + "(.+?)" + " *" + quotedDelimiter; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 		return pattern;
 	}

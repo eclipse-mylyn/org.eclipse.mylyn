@@ -53,6 +53,24 @@ public class AsciiDocLanguageSpanElementsTest extends AsciiDocLanguageTestBase {
 	}
 
 	@Test
+	public void strongNoWordBoundarySpaceSurrounded() {
+		String html = parseToHtml("before **foo bar** after");
+		assertEquals("<p>before <strong>foo bar</strong> after</p>\n", html);
+	}
+
+	@Test
+	public void strongNoWordBoundarySpaceSurroundedBegin() {
+		String html = parseToHtml("**foo bar** after");
+		assertEquals("<p><strong>foo bar</strong> after</p>\n", html);
+	}
+
+	@Test
+	public void strongNoWordBoundarySpaceSurroundedEnd() {
+		String html = parseToHtml("before **foo bar**");
+		assertEquals("<p>before <strong>foo bar</strong></p>\n", html);
+	}
+
+	@Test
 	public void strongNoWordBoundaryNoSpaceSurrounded() {
 		String html = parseToHtml("before**foo bar**after");
 		assertEquals("<p>before<strong>foo bar</strong>after</p>\n", html);
@@ -119,6 +137,24 @@ public class AsciiDocLanguageSpanElementsTest extends AsciiDocLanguageTestBase {
 	}
 
 	@Test
+	public void emphasisNoWordBoundarySpaceSurrounded() {
+		String html = parseToHtml("before __foo bar__ after");
+		assertEquals("<p>before <em>foo bar</em> after</p>\n", html);
+	}
+
+	@Test
+	public void emphasisNoWordBoundarySpaceSurroundedBegin() {
+		String html = parseToHtml("__foo bar__ after");
+		assertEquals("<p><em>foo bar</em> after</p>\n", html);
+	}
+
+	@Test
+	public void emphasisNoWordBoundarySpaceSurroundedEnd() {
+		String html = parseToHtml("before __foo bar__");
+		assertEquals("<p>before <em>foo bar</em></p>\n", html);
+	}
+
+	@Test
 	public void emphasisNoWordBoundaryNoSpaceSurrounded() {
 		String html = parseToHtml("before__foo bar__after");
 		assertEquals("<p>before<em>foo bar</em>after</p>\n", html);
@@ -179,6 +215,24 @@ public class AsciiDocLanguageSpanElementsTest extends AsciiDocLanguageTestBase {
 	}
 
 	@Test
+	public void codeNoWordBoundarySpaceSurrounded() {
+		String html = parseToHtml("before ++foo bar++ after");
+		assertEquals("<p>before <code>foo bar</code> after</p>\n", html);
+	}
+
+	@Test
+	public void codeNoWordBoundarySpaceSurroundedBegin() {
+		String html = parseToHtml("++foo bar++ after");
+		assertEquals("<p><code>foo bar</code> after</p>\n", html);
+	}
+
+	@Test
+	public void codeNoWordBoundarySpaceSurroundedEnd() {
+		String html = parseToHtml("before ++foo bar++");
+		assertEquals("<p>before <code>foo bar</code></p>\n", html);
+	}
+
+	@Test
 	public void codeNoWordBoundaryNoSpaceSurrounded() {
 		String html = parseToHtml("before++foo bar++after");
 		assertEquals("<p>before<code>foo bar</code>after</p>\n", html);
@@ -224,6 +278,24 @@ public class AsciiDocLanguageSpanElementsTest extends AsciiDocLanguageTestBase {
 	public void codeBacktickTwiceInLineNoSpaceSurrounded() {
 		String html = parseToHtml("before `foo bar`after a `second time`");
 		assertEquals("<p>before <code>foo bar`after a `second time</code></p>\n", html);
+	}
+
+	@Test
+	public void codeBacktickNoWordBoundarySpaceSurrounded() {
+		String html = parseToHtml("before ``foo bar`` after");
+		assertEquals("<p>before <code>foo bar</code> after</p>\n", html);
+	}
+
+	@Test
+	public void codeBacktickNoWordBoundarySpaceSurroundedBegin() {
+		String html = parseToHtml("``foo bar`` after");
+		assertEquals("<p><code>foo bar</code> after</p>\n", html);
+	}
+
+	@Test
+	public void codeBacktickNoWordBoundarySpaceSurroundedEnd() {
+		String html = parseToHtml("before ``foo bar``");
+		assertEquals("<p>before <code>foo bar</code></p>\n", html);
 	}
 
 	@Test
