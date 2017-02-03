@@ -27,7 +27,7 @@
 	<property name="content.source.language" value="Textile"/>
 	<property name="content.source.includes" value="**/*.textile"/>
 
-	<taskdef resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties">
+	<taskdef resource="org/eclipse/mylyn/wikitext/util/anttask/tasks.properties">
 		<classpath>
 			<fileset dir="${wikitext.standalone.dir}">
 				<include name="*.jar"/>

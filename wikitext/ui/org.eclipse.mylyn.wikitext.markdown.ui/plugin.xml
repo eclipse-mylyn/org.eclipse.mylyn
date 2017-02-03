@@ -2,7 +2,7 @@
 <?eclipse version="3.0"?>
 <plugin>
    <extension point="org.eclipse.mylyn.wikitext.ui.markupLanguage">
-      <language class="org.eclipse.mylyn.wikitext.markdown.core.MarkdownLanguage"
+      <language class="org.eclipse.mylyn.wikitext.markdown.MarkdownLanguage"
             name="Markdown" fileExtensions="markdown,md,mdtext">
       </language>
    </extension>
@@ -19,10 +19,10 @@
 
    <extension point="org.eclipse.mylyn.wikitext.ui.markupValidationRule">
       <rule markupLanguage="Markdown"
-            class="org.eclipse.mylyn.internal.wikitext.markdown.core.validation.MarkdownReferenceValidationRule">
+            class="org.eclipse.mylyn.internal.wikitext.markdown.validation.MarkdownReferenceValidationRule">
       </rule>
       <rule markupLanguage="Markdown"
-            class="org.eclipse.mylyn.internal.wikitext.markdown.core.validation.LinkDefinitionValidationRule">
+            class="org.eclipse.mylyn.internal.wikitext.markdown.validation.LinkDefinitionValidationRule">
       </rule>
    </extension>
    <extension point="org.eclipse.mylyn.wikitext.ui.contentAssist">

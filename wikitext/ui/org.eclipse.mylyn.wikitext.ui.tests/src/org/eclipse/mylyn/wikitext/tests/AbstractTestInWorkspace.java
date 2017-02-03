@@ -24,7 +24,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.mylyn.wikitext.core.toolkit.StackDumpOnTimeoutRule;
+import org.eclipse.mylyn.wikitext.toolkit.StackDumpOnTimeoutRule;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;

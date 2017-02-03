@@ -13,9 +13,9 @@ package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 
 import java.io.StringWriter;
 
-import org.eclipse.mylyn.internal.wikitext.markdown.core.GfmIdGenerationStrategy;
-import org.eclipse.mylyn.internal.wikitext.markdown.core.MarkdownDocumentBuilder;
-import org.eclipse.mylyn.wikitext.markdown.core.MarkdownLanguage;
+import org.eclipse.mylyn.internal.wikitext.markdown.GfmIdGenerationStrategy;
+import org.eclipse.mylyn.internal.wikitext.markdown.MarkdownDocumentBuilder;
+import org.eclipse.mylyn.wikitext.markdown.MarkdownLanguage;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.parser.markup.IdGenerationStrategy;

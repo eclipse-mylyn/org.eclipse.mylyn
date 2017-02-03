@@ -14,9 +14,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.IOException;
 
-import org.eclipse.mylyn.internal.wikitext.core.parser.html.AbstractSaxHtmlParser;
-import org.eclipse.mylyn.internal.wikitext.core.parser.html.HtmlCleaner;
-import org.eclipse.mylyn.internal.wikitext.core.parser.html.XHtmlParser;
+import org.eclipse.mylyn.internal.wikitext.parser.html.AbstractSaxHtmlParser;
+import org.eclipse.mylyn.internal.wikitext.parser.html.HtmlCleaner;
+import org.eclipse.mylyn.internal.wikitext.parser.html.XHtmlParser;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -41,7 +41,7 @@ public class HtmlParser {
 	public HtmlParser() {
 		AbstractSaxHtmlParser parser;
 		if (isJsoupAvailable()) {
-			parser = new org.eclipse.mylyn.internal.wikitext.core.parser.html.HtmlParser();
+			parser = new org.eclipse.mylyn.internal.wikitext.parser.html.HtmlParser();
 		} else {
 			parser = new XHtmlParser();
 		}
@@ -54,7 +54,7 @@ public class HtmlParser {
 	 * @since 2.0
 	 */
 	public static HtmlParser instanceWithHtmlCleanupRules() {
-		org.eclipse.mylyn.internal.wikitext.core.parser.html.HtmlParser parser = new org.eclipse.mylyn.internal.wikitext.core.parser.html.HtmlParser();
+		org.eclipse.mylyn.internal.wikitext.parser.html.HtmlParser parser = new org.eclipse.mylyn.internal.wikitext.parser.html.HtmlParser();
 		HtmlCleaner htmlCleaner = new HtmlCleaner();
 		htmlCleaner.configure(parser);
 		return new HtmlParser(parser);

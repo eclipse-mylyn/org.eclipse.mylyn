@@ -37,7 +37,7 @@ import java.util.regex.Pattern;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.eclipse.mylyn.wikitext.core.ant.MarkupTask;
+import org.eclipse.mylyn.wikitext.ant.MarkupTask;
 import org.eclipse.mylyn.wikitext.mediawiki.MediaWikiLanguage;
 import org.eclipse.mylyn.wikitext.mediawiki.PageMapping;
 import org.eclipse.mylyn.wikitext.mediawiki.WikiTemplateResolver;

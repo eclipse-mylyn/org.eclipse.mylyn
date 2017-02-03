@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.tasks.ui.editor;
 
-import org.eclipse.mylyn.wikitext.markdown.core.MarkdownLanguage;
+import org.eclipse.mylyn.wikitext.markdown.MarkdownLanguage;
 import org.eclipse.mylyn.wikitext.tasks.ui.editor.MarkupTaskEditorExtension;
 
 public class MarkdownMarkupTaskEditorExtension extends MarkupTaskEditorExtension<MarkdownLanguage> {

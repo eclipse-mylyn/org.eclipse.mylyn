@@ -2,7 +2,7 @@
 <?eclipse version="3.0"?>
 <plugin>
    <extension point="org.eclipse.mylyn.wikitext.ui.markupLanguage">
-      <language class="org.eclipse.mylyn.wikitext.creole.core.CreoleLanguage"
+      <language class="org.eclipse.mylyn.wikitext.creole.CreoleLanguage"
             name="Creole" fileExtensions="creole">
       </language>
    </extension>
@@ -18,7 +18,7 @@
    </extension>
 
    <extension point="org.eclipse.mylyn.wikitext.ui.markupValidationRule">
-      <rule class="org.eclipse.mylyn.internal.wikitext.creole.core.validation.CreoleReferenceValidationRule"
+      <rule class="org.eclipse.mylyn.internal.wikitext.creole.validation.CreoleReferenceValidationRule"
             markupLanguage="Creole"/>
  </extension>
    <extension point="org.eclipse.mylyn.wikitext.ui.contentAssist">

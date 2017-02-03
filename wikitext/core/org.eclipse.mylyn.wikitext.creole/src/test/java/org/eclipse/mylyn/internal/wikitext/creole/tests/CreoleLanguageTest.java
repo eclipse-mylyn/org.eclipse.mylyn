@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.wikitext.creole.tests;
 
-import org.eclipse.mylyn.wikitext.creole.core.CreoleLanguage;
+import org.eclipse.mylyn.wikitext.creole.CreoleLanguage;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;

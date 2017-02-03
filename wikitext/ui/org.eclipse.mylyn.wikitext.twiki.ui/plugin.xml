@@ -14,7 +14,7 @@
    <extension
          point="org.eclipse.mylyn.wikitext.ui.markupLanguage">
       <language
-            class="org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage"
+            class="org.eclipse.mylyn.wikitext.twiki.TWikiLanguage"
             name="TWiki" 
             fileExtensions="twiki">
       </language>
@@ -41,10 +41,10 @@
  <extension
        point="org.eclipse.mylyn.wikitext.ui.markupValidationRule">
     <rule
-          class="org.eclipse.mylyn.internal.wikitext.twiki.core.validation.ListWhitespaceValidationRule"
+          class="org.eclipse.mylyn.internal.wikitext.twiki.validation.ListWhitespaceValidationRule"
           markupLanguage="TWiki"/>
     <rule
-          class="org.eclipse.mylyn.internal.wikitext.twiki.core.validation.TWikiReferenceValidationRule"
+          class="org.eclipse.mylyn.internal.wikitext.twiki.validation.TWikiReferenceValidationRule"
           markupLanguage="TWiki"/>
  </extension>
    <extension

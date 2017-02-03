@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.wikitext.parser.builder.event;
 
-import static org.eclipse.mylyn.internal.wikitext.core.test.EqualityAsserts.assertEquality;
+import static org.eclipse.mylyn.internal.wikitext.test.EqualityAsserts.assertEquality;
 import static org.junit.Assert.assertEquals;
 
 import org.eclipse.mylyn.wikitext.parser.builder.event.BeginDocumentEvent;

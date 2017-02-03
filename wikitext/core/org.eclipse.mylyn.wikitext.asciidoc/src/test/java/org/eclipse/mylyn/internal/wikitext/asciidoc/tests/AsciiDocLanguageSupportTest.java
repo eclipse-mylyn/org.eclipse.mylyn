@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.mylyn.internal.wikitext.asciidoc.core.util.LanguageSupport;
+import org.eclipse.mylyn.internal.wikitext.asciidoc.util.LanguageSupport;
 import org.eclipse.mylyn.wikitext.parser.TableCellAttributes;
 import org.junit.Test;
 

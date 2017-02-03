@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 
 import java.util.List;
 
-import org.eclipse.mylyn.internal.wikitext.markdown.core.validation.LinkDefinitionValidationRule;
+import org.eclipse.mylyn.internal.wikitext.markdown.validation.LinkDefinitionValidationRule;
 import org.eclipse.mylyn.wikitext.validation.MarkupValidator;
 import org.eclipse.mylyn.wikitext.validation.ValidationProblem;
 import org.eclipse.mylyn.wikitext.validation.ValidationProblem.Severity;

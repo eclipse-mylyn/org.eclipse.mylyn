@@ -252,7 +252,7 @@ bc..
 		</fileset>
 	</path>
 
-	<taskdef classpathref="wikitext.classpath" resource="org/eclipse/mylyn/wikitext/core/ant/tasks.properties" />
+	<taskdef classpathref="wikitext.classpath" resource="org/eclipse/mylyn/wikitext/ant/tasks.properties" />
 
 	<target name="generate-help" depends="init" description="Generate Eclipse help from textile source">
 		<wikitext-to-eclipse-help markupLanguage="Textile"
@@ -440,7 +440,7 @@ Mylyn WikiText provides a means to generate Eclipse Help content from multiple M
 
 bc.. 
     	<taskdef classpathref="wikitext.classpath"
-    	    resource="org/eclipse/mylyn/wikitext/mediawiki/core/ant/tasks.properties"/>
+    	    resource="org/eclipse/mylyn/wikitext/mediawiki/ant/tasks.properties"/>
 
     	<mediawiki-to-eclipse-help
     		wikiBaseUrl="http://wiki.eclipse.org"
@@ -542,7 +542,7 @@ pre..
 p. You may decide to customize your markup language by subclassing @MarkupLanguageConfiguration@.  In this case your Ant script may look more like this:
 
 pre.. 
-<taskdef resource="org/eclipse/mylyn/wikitext/core/ant/tasks.properties"
+<taskdef resource="org/eclipse/mylyn/wikitext/ant/tasks.properties"
 	classpathref="wikitext.classpath"
 	loaderref="wikitext.classpath.loader"/>
 <typedef name="languageConfiguration"
@@ -817,6 +817,17 @@ The following jar files will be needed for running Ant tasks:
 * @org.eclipse.mylyn.wikitext.tracwiki.jar@ (only required for TracWiki)
 * @org.eclipse.mylyn.wikitext.twiki.jar@ (only required for TWiki)
 * @guava-12.0.jar@
+
+h1. Upgrading From Mylyn WikiText 2.x to 3.x
+
+Some API changes and changes affecting Ant usage have been introduced in Mylyn WikiText 3.0.  Notably:
+
+* Java package naming conventions: @core@ has been removed from Java package names, for example the @org.eclipse.mylyn.wikitext.core@ Java package has been renamed to @org.eclipse.mylyn.wikitext@
+* Ant taskdef resource paths no longer have @/core/@, for example Ant build scripts that had @<taskdef resource="org/eclipse/mylyn/wikitext/core/ant/tasks.properties"@ should now use @<taskdef resource="org/eclipse/mylyn/wikitext/ant/tasks.properties"@
+* OSGi bundles:
+** Symbolic Names: Symbolic names of some OSGi bundles has changed, removing the ".core" suffix.  For example, @org.eclipse.mylyn.wikitext.core@ has become @org.eclipse.mylyn.wikitext@
+** Exports: internal packages are no longer exported by Mylyn WikiText OSGi bundles
+** Dependencies: dependencies have been changed from @Require-Bundle@ to @Import-Package@
 
 h1. Upgrading From Mylyn WikiText 1.x to 2.x
 

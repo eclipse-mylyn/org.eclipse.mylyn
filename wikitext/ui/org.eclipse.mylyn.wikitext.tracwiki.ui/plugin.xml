@@ -14,7 +14,7 @@
    <extension
          point="org.eclipse.mylyn.wikitext.ui.markupLanguage">
       <language
-            class="org.eclipse.mylyn.wikitext.tracwiki.core.TracWikiLanguage"
+            class="org.eclipse.mylyn.wikitext.tracwiki.TracWikiLanguage"
             name="TracWiki"
             fileExtensions="tracwiki">
       </language>
@@ -42,7 +42,7 @@
 	<extension
 	      point="org.eclipse.mylyn.wikitext.ui.markupValidationRule">
 	    <rule
-	          class="org.eclipse.mylyn.internal.wikitext.tracwiki.core.validation.TracWikiReferenceValidationRule"
+	          class="org.eclipse.mylyn.internal.wikitext.tracwiki.validation.TracWikiReferenceValidationRule"
 	          markupLanguage="TracWiki"/>
 	</extension>
    

@@ -17,7 +17,7 @@ import static org.junit.Assert.assertTrue;
 import org.eclipse.jface.text.templates.Template;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.assist.Templates;
-import org.eclipse.mylyn.wikitext.asciidoc.core.AsciiDocLanguage;
+import org.eclipse.mylyn.wikitext.asciidoc.AsciiDocLanguage;
 import org.junit.Before;
 import org.junit.Test;
 

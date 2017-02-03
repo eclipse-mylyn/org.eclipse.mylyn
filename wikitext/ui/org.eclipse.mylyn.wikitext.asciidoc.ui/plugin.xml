@@ -3,7 +3,7 @@
 <plugin>
 
    <extension point="org.eclipse.mylyn.wikitext.ui.markupLanguage">
-      <language class="org.eclipse.mylyn.wikitext.asciidoc.core.AsciiDocLanguage"
+      <language class="org.eclipse.mylyn.wikitext.asciidoc.AsciiDocLanguage"
             name="AsciiDoc" fileExtensions="asciidoc,ad,adoc">
       </language>
    </extension>

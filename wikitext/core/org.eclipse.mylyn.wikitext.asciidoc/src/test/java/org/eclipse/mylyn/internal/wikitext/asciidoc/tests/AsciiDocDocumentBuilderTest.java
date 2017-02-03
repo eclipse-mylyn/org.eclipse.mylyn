@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.wikitext.asciidoc.tests;
 
 import java.io.StringWriter;
 
-import org.eclipse.mylyn.internal.wikitext.asciidoc.core.AsciiDocDocumentBuilder;
+import org.eclipse.mylyn.internal.wikitext.asciidoc.AsciiDocDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;

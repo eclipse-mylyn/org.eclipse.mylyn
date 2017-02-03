@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 
-import org.eclipse.mylyn.wikitext.markdown.core.MarkdownLanguage;
+import org.eclipse.mylyn.wikitext.markdown.MarkdownLanguage;
 import org.eclipse.mylyn.wikitext.toolkit.AbstractMarkupGenerationTest;
 import org.junit.Test;
 

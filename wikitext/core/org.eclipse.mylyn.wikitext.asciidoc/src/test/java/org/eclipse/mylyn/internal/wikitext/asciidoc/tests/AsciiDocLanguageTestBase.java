@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.wikitext.asciidoc.tests;
 
 import java.io.StringWriter;
 
-import org.eclipse.mylyn.wikitext.asciidoc.core.AsciiDocLanguage;
+import org.eclipse.mylyn.wikitext.asciidoc.AsciiDocLanguage;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.junit.Before;
