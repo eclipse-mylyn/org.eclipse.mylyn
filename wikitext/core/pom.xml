@@ -60,6 +60,7 @@
                 <version>3.2.0</version>
                 <extensions>true</extensions>
                 <configuration>
+                  <manifestLocation>META-INF</manifestLocation>
                   <instructions>
                     <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                     <Bundle-RequiredExecutionEnvironment>JavaSE-1.8</Bundle-RequiredExecutionEnvironment>
@@ -116,7 +117,7 @@
             </testResource>
         </testResources>
     </build>
-    
+
     <distributionManagement>
         <repository>
             <id>repo.eclipse.org</id>
