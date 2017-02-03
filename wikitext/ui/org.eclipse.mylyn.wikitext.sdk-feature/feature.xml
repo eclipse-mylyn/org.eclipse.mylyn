@@ -5,7 +5,7 @@
     are made available under the terms of the Eclipse Public License v1.0
     which accompanies this distribution, and is available at
     http://www.eclipse.org/legal/epl-v10.html
-   
+
     Contributors:
          Tasktop Technologies - initial API and implementation
  -->
@@ -49,13 +49,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext.tests"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.mylyn.wikitext.confluence.core.source"
          download-size="0"
          install-size="0"
@@ -82,34 +75,28 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-         
+
    <plugin
          id="org.eclipse.mylyn.wikitext.core.ant.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-         
+
    <plugin
          id="org.eclipse.mylyn.wikitext.core.osgi.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-         
+
    <plugin
          id="org.eclipse.mylyn.wikitext.html.core.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-   <plugin
-         id="org.eclipse.mylyn.wikitext.html.tests.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-         
+
    <plugin
          id="org.eclipse.mylyn.wikitext.markdown.core.source"
          download-size="0"
@@ -123,7 +110,7 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-         
+
    <plugin
          id="org.eclipse.mylyn.wikitext.mediawiki.core.source"
          download-size="0"
@@ -140,27 +127,6 @@
 
    <plugin
          id="org.eclipse.mylyn.wikitext.tasks.ui.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.mylyn.wikitext.core.tests.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-         
-   <plugin
-         id="org.eclipse.mylyn.wikitext.core.osgi.tests.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-         
-   <plugin
-         id="org.eclipse.mylyn.wikitext.tests.source"
          download-size="0"
          install-size="0"
          version="0.0.0"

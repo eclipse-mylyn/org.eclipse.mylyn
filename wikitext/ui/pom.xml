@@ -3,10 +3,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-      <groupId>org.eclipse.mylyn.docs</groupId>
-      <artifactId>wikitext</artifactId>
-      <version>3.0.0-SNAPSHOT</version>
-      <relativePath>..</relativePath>
+        <groupId>org.eclipse.mylyn.docs</groupId>
+        <artifactId>wikitext</artifactId>
+        <version>3.0.0-SNAPSHOT</version>
+        <relativePath>..</relativePath>
     </parent>
 
     <artifactId>wikitext.ui</artifactId>
@@ -29,29 +29,6 @@
         <tycho.testArgLine></tycho.testArgLine>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>eclipse-platform</id>
-            <url>http://download.eclipse.org/releases/neon/</url>
-            <layout>p2</layout>
-        </repository>
-        <repository>
-            <id>eclipse-orbit</id>
-            <url>http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository/</url>
-            <layout>p2</layout>
-        </repository>
-        <repository>
-            <id>wikitext-local</id>
-            <url>${project.baseUri}../../repository/target/repository/</url>
-            <layout>p2</layout>
-        </repository>
-        <repository>
-            <id>eclipse-cbi</id>
-            <url>http://download.eclipse.org/cbi/updates/license</url>
-            <layout>p2</layout>
-        </repository>
-    </repositories>
-
     <profiles>
         <profile>
             <id>osx</id>
@@ -68,6 +45,7 @@
     </profiles>
 
     <modules>
+        <module>targets</module>
         <module>org.eclipse.mylyn.wikitext.help.ui</module>
         <module>org.eclipse.mylyn.wikitext.help.sdk</module>
         <module>org.eclipse.mylyn.wikitext.asciidoc.tests</module>
@@ -102,6 +80,21 @@
                 <version>${tycho-version}</version>
                 <extensions>true</extensions>
             </plugin>
+              <plugin>
+                  <groupId>org.eclipse.tycho</groupId>
+                  <artifactId>target-platform-configuration</artifactId>
+                  <version>${tycho-version}</version>
+                  <configuration>
+                      <target>
+                          <artifact>
+                              <groupId>org.eclipse.mylyn.docs</groupId>
+                              <artifactId>wikitext.ui.target</artifactId>
+                              <classifier>wikitext</classifier>
+                              <version>3.0.0-SNAPSHOT</version>
+                          </artifact>
+                      </target>
+                  </configuration>
+              </plugin>
         </plugins>
         <pluginManagement>
             <plugins>
