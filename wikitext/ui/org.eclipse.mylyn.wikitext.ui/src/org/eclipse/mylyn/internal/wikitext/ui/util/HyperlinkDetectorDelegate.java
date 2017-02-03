@@ -25,15 +25,15 @@ import org.eclipse.ui.texteditor.HyperlinkDetectorDescriptor;
 
 /**
  * A means to delay activation of plug-ins by delaying creation of a hyperlink detector from a descriptor.
- * 
+ *
  * @author David Green
  */
-public class HyperlinkDetectorDelegate implements IHyperlinkDetector, IHyperlinkDetectorExtension,
-		IHyperlinkDetectorExtension2 {
+public class HyperlinkDetectorDelegate
+		implements IHyperlinkDetector, IHyperlinkDetectorExtension, IHyperlinkDetectorExtension2 {
 
 	private HyperlinkDetectorDescriptor descriptor;
 
-	private AbstractHyperlinkDetector delegate;
+	private IHyperlinkDetector delegate;
 
 	private boolean createFailed;
 
@@ -58,12 +58,12 @@ public class HyperlinkDetectorDelegate implements IHyperlinkDetector, IHyperlink
 
 		if (!createFailed && delegate == null) {
 			try {
-				delegate = descriptor.createHyperlinkDetector();
+				delegate = descriptor.createHyperlinkDetectorImplementation();
 			} catch (CoreException ex) {
 				createFailed = true;
 			}
-			if (delegate != null && context != null) {
-				delegate.setContext(context);
+			if (context != null && delegate instanceof AbstractHyperlinkDetector) {
+				((AbstractHyperlinkDetector) delegate).setContext(context);
 			}
 		}
 		if (delegate != null) {
@@ -83,7 +83,9 @@ public class HyperlinkDetectorDelegate implements IHyperlinkDetector, IHyperlink
 
 	public void dispose() {
 		if (delegate != null) {
-			delegate.dispose();
+			if (delegate instanceof IHyperlinkDetectorExtension) {
+				((IHyperlinkDetectorExtension) delegate).dispose();
+			}
 			delegate = null;
 		}
 		descriptor = null;

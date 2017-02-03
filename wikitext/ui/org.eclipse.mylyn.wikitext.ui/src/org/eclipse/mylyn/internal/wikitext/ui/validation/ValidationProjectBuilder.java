@@ -33,7 +33,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Region;
@@ -46,7 +46,7 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * A project builder that invokes validation on wikitext files
- * 
+ *
  * @author David Green
  */
 public class ValidationProjectBuilder extends IncrementalProjectBuilder {
@@ -177,7 +177,6 @@ public class ValidationProjectBuilder extends IncrementalProjectBuilder {
 	}
 
 	private boolean filtered(IContainer container) {
-		// TODO: filter output folders
 		return false;
 	}
 
@@ -216,7 +215,7 @@ public class ValidationProjectBuilder extends IncrementalProjectBuilder {
 			if (isInterrupted()) {
 				break;
 			}
-			validate(file, new SubProgressMonitor(monitor, factor));
+			validate(file, SubMonitor.convert(monitor, factor));
 		}
 		monitor.done();
 	}
@@ -237,9 +236,9 @@ public class ValidationProjectBuilder extends IncrementalProjectBuilder {
 			StringWriter writer = new StringWriter();
 			String charset = file.file.getCharset();
 			try {
-				Reader reader = charset == null ? new InputStreamReader(
-						new BufferedInputStream(file.file.getContents())) : new InputStreamReader(
-						new BufferedInputStream(file.file.getContents()), charset);
+				Reader reader = charset == null
+						? new InputStreamReader(new BufferedInputStream(file.file.getContents()))
+						: new InputStreamReader(new BufferedInputStream(file.file.getContents()), charset);
 				try {
 					int c;
 					while ((c = reader.read()) != -1) {
@@ -253,7 +252,7 @@ public class ValidationProjectBuilder extends IncrementalProjectBuilder {
 			}
 			monitor.worked(totalWork / 2);
 			IDocument document = new Document(writer.toString());
-			validator.validate(new SubProgressMonitor(monitor, totalWork / 2), document,
+			validator.validate(SubMonitor.convert(monitor, totalWork / 2), document,
 					new Region(0, document.getLength()));
 		}
 		monitor.done();

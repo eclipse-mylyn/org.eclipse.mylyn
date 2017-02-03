@@ -29,7 +29,7 @@ import org.eclipse.ui.texteditor.HyperlinkDetectorRegistry;
 /**
  * Extends the default text source viewer configuration to provide greater configurability and extensibility. Makes it
  * easy to filter and customize hyperlink detectors.
- * 
+ *
  * @author David Green
  * @since 1.0
  */
@@ -60,7 +60,6 @@ public abstract class AbstractTextSourceViewerConfiguration extends TextSourceVi
 		super(preferenceStore);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
 		List<IHyperlinkDetector> customDetectors = createCustomHyperlinkDetectors(sourceViewer);
@@ -109,7 +108,7 @@ public abstract class AbstractTextSourceViewerConfiguration extends TextSourceVi
 
 	/**
 	 * Indicate if the given hyperlink detector descriptor should be filtered. Filtered descriptors are not included.
-	 * 
+	 *
 	 * @see #getHyperlinkDetectors(ISourceViewer)
 	 */
 	private boolean filterHyperlinkDescriptor(HyperlinkDetectorDescriptor descriptor) {

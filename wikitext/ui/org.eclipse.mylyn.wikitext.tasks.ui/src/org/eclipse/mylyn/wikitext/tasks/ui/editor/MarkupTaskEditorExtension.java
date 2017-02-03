@@ -70,7 +70,7 @@ import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 /**
  * A task editor extension that uses a markup language to parse content. Provides a markup-aware source editor, and a
  * source viewer that displays markup in its intended formatted form.
- * 
+ *
  * @author David Green
  * @since 1.0
  */
@@ -86,8 +86,8 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 	 * To enable this feature, set the system property <tt>MarkupTaskEditorExtension.wikiWordDisabled</tt> to
 	 * <tt>true</tt>. eg, <tt>-DMarkupTaskEditorExtension.wikiWordDisabled=true</tt>
 	 */
-	private static final boolean DISABLE_WIKI_WORD = Boolean.getBoolean(MarkupTaskEditorExtension.class.getSimpleName()
-			+ ".wikiWordDisabled"); //$NON-NLS-1$
+	private static final boolean DISABLE_WIKI_WORD = Boolean
+			.getBoolean(MarkupTaskEditorExtension.class.getSimpleName() + ".wikiWordDisabled"); //$NON-NLS-1$
 
 	private static final String ID_CONTEXT_EDITOR_TASK = "org.eclipse.mylyn.tasks.ui.TaskEditor"; //$NON-NLS-1$
 
@@ -145,13 +145,13 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 					JFaceResources.getFontRegistry().get(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_DEFAULT_FONT));
 		}
 		if (JFaceResources.getFontRegistry().hasValueFor(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_MONOSPACE_FONT)) {
-			markupViewer.setDefaultMonospaceFont(JFaceResources.getFontRegistry().get(
-					WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_MONOSPACE_FONT));
+			markupViewer.setDefaultMonospaceFont(
+					JFaceResources.getFontRegistry().get(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_MONOSPACE_FONT));
 		}
 
 		markupViewer.setStylesheet(WikiTextUiPlugin.getDefault().getPreferences().getStylesheet());
 
-		IFocusService focusService = (IFocusService) PlatformUI.getWorkbench().getService(IFocusService.class);
+		IFocusService focusService = PlatformUI.getWorkbench().getService(IFocusService.class);
 		if (focusService != null) {
 			focusService.addFocusTracker(markupViewer.getTextWidget(), MARKUP_VIEWER);
 		}
@@ -212,7 +212,6 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		return createEditor(taskRepository, parent, style, null);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public SourceViewer createEditor(TaskRepository taskRepository, Composite parent, int style, IAdaptable context) {
 		final MarkupLanguageType markupLanguageCopy = createRepositoryMarkupLanguage(taskRepository);
@@ -221,7 +220,8 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		SourceViewer viewer = new MarkupSourceViewer(parent, null, style | SWT.WRAP, markupLanguageCopy);
 
 		// configure the viewer
-		MarkupSourceViewerConfiguration configuration = createSourceViewerConfiguration(taskRepository, viewer, context);
+		MarkupSourceViewerConfiguration configuration = createSourceViewerConfiguration(taskRepository, viewer,
+				context);
 
 		configuration.setEnableSelfContainedIncrementalFind(true);
 		configuration.setMarkupLanguage(markupLanguageCopy);
@@ -257,7 +257,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 			}
 		});
 
-		IFocusService focusService = (IFocusService) PlatformUI.getWorkbench().getService(IFocusService.class);
+		IFocusService focusService = PlatformUI.getWorkbench().getService(IFocusService.class);
 		if (focusService != null) {
 			focusService.addFocusTracker(viewer.getTextWidget(), MarkupEditor.EDITOR_SOURCE_VIEWER);
 		}
@@ -271,7 +271,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 	/**
 	 * Configures the markup language with settings from the task repository. Subclasses may override this method, but
 	 * should call <code>super.configureMarkupLanguage(taskRepository,markupLanguage)</code>.
-	 * 
+	 *
 	 * @param taskRepository
 	 *            the repository from which settings should be used
 	 * @param markupLanguage
@@ -291,13 +291,14 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 	 * Overriding methods should set the {@link MarkupLanguage#getInternalLinkPattern() internal hyperlink pattern} of
 	 * the given markup language based on some default rules applied to the task repository URL. The default
 	 * implementation does nothing.
-	 * 
+	 *
 	 * @param taskRepository
 	 *            the task repository from which settings may be obtained
 	 * @param markupLanguage
 	 *            the markup language to configure
 	 */
-	protected void configureDefaultInternalLinkPattern(TaskRepository taskRepository, MarkupLanguageType markupLanguage) {
+	protected void configureDefaultInternalLinkPattern(TaskRepository taskRepository,
+			MarkupLanguageType markupLanguage) {
 		// nothing to do
 	}
 
@@ -346,10 +347,9 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 			};
 		}
 
-		@SuppressWarnings("rawtypes")
 		@Override
-		protected Map getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
-			Map hyperlinkDetectorTargets = super.getHyperlinkDetectorTargets(sourceViewer);
+		protected Map<String, IAdaptable> getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
+			Map<String, IAdaptable> hyperlinkDetectorTargets = super.getHyperlinkDetectorTargets(sourceViewer);
 			addRepositoryHyperlinkDetectorTargets(context, hyperlinkDetectorTargets);
 			return hyperlinkDetectorTargets;
 		}
@@ -398,10 +398,9 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 			markupHyperlinksFirst = false;
 		}
 
-		@SuppressWarnings("rawtypes")
 		@Override
-		protected Map getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
-			Map hyperlinkDetectorTargets = super.getHyperlinkDetectorTargets(sourceViewer);
+		protected Map<String, IAdaptable> getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
+			Map<String, IAdaptable> hyperlinkDetectorTargets = super.getHyperlinkDetectorTargets(sourceViewer);
 			addRepositoryHyperlinkDetectorTargets(context, hyperlinkDetectorTargets);
 			return hyperlinkDetectorTargets;
 		}
@@ -430,12 +429,12 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes" })
 	private static IAdaptable createDefaultHyperlinkDetectorContext(final TaskRepository repository) {
 		return new IAdaptable() {
-			public Object getAdapter(Class adapter) {
+			@SuppressWarnings("unchecked")
+			public <T> T getAdapter(Class<T> adapter) {
 				if (adapter == TaskRepository.class) {
-					return repository;
+					return (T) repository;
 				}
 				return null;
 			}
@@ -451,7 +450,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 	/**
 	 * bug 251657: wrap preferences so that we can alter the current line highlight based on the focus state of the
 	 * provided control. bug 273528: override workspace preferences to eliminate print margin in the task editor
-	 * 
+	 *
 	 * @author David Green
 	 */
 	private static class EditorExtensionPreferenceStore extends PreferenceStoreFacade {
@@ -506,10 +505,10 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 	/**
 	 * @since 1.6
 	 */
-	@SuppressWarnings("rawtypes")
-	public Object getAdapter(Class adapter) {
+	@SuppressWarnings("unchecked")
+	public <T> T getAdapter(Class<T> adapter) {
 		if (MarkupLanguage.class == adapter) {
-			return getMarkupLanguage();
+			return (T) getMarkupLanguage();
 		}
 		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}

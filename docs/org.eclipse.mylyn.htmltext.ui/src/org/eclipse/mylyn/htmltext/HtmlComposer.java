@@ -258,7 +258,7 @@ public class HtmlComposer {
 		try {
 			baseUrl = FileLocator.resolve(FileLocator.find(HtmlTextActivator
 					.getDefault().getBundle(), new Path(
-					"/eclipsebridge/base.html"), Collections.EMPTY_MAP));
+					"/eclipsebridge/base.html"), Collections.emptyMap()));
 			browser.setUrl(baseUrl.toString() + (config != null ? "?" + config.toQuery() : ""));
 			browser.addProgressListener(new ProgressAdapter() {
 				@Override

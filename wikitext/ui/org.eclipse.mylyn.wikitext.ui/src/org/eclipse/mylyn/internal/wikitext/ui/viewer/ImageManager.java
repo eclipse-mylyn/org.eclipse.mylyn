@@ -69,7 +69,7 @@ import org.eclipse.swt.widgets.Event;
  * an {@link HtmlViewer}, and creates appropriate space for their display. Downloads image data in a background thread,
  * instantiates the corresopnding images, and ensures that enough vertical space exists in the viewer to display the
  * images.
- * 
+ *
  * @see ImageAnnotation
  * @see ImageDrawingStrategy
  * @see ImageCache
@@ -182,7 +182,7 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 
 	/**
 	 * get the widget-relative region of the given annotation
-	 * 
+	 *
 	 * @return the region, or null if it is unknown
 	 */
 	private Rectangle getRegion(ImageAnnotation annotation) {
@@ -238,7 +238,6 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 		inspect();
 	}
 
-	@SuppressWarnings("unchecked")
 	private void inspect() {
 		synchronized (this) {
 			annotations.clear();
@@ -284,13 +283,13 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 		stop();
 	}
 
-	@SuppressWarnings("unchecked")
 	private void updateImage(String imgSrc, ImageData imageData) {
 		if (display.isDisposed() || viewer.getTextWidget().isDisposed()) {
 			return;
 		}
-		Image image = imageData == null ? imageCache.getMissingImage() : ImageDescriptor.createFromImageData(imageData)
-				.createImage();
+		Image image = imageData == null
+				? imageCache.getMissingImage()
+				: ImageDescriptor.createFromImageData(imageData).createImage();
 		imageCache.putImage(imgSrc, image);
 
 		Set<ImageAnnotation> modifiedAnnotations = new HashSet<>();
@@ -391,8 +390,8 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 								//              so that it gets repainted when some portion of the image is exposed
 								//              as a result of scrolling
 								if (position.getLength() != originalNewlines) {
-									annotationModel.modifyAnnotationPosition(annotation, new Position(position.offset,
-											originalNewlines));
+									annotationModel.modifyAnnotationPosition(annotation,
+											new Position(position.offset, originalNewlines));
 								}
 							} catch (BadLocationException e) {
 								// ignore
@@ -444,8 +443,9 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 					final String imgSrc = annotation.getUrl();
 					if (imgSrc != null && !urlToImageData.containsKey(imgSrc)) {
 						try {
-							URL location = imageCache.getBase() == null ? new URL(imgSrc) : new URL(
-									imageCache.getBase(), imgSrc);
+							URL location = imageCache.getBase() == null
+									? new URL(imgSrc)
+									: new URL(imageCache.getBase(), imgSrc);
 
 							try {
 								InputStream in = new BufferedInputStream(location.openStream());

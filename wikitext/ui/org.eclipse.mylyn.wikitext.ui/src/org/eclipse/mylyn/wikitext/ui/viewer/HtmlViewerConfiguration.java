@@ -43,7 +43,7 @@ import org.eclipse.ui.editors.text.TextEditor;
 
 /**
  * A configuration for use with a {@link HtmlViewer}.
- * 
+ *
  * @author David Green
  * @since 1.0
  */
@@ -61,7 +61,7 @@ public class HtmlViewerConfiguration extends AbstractTextSourceViewerConfigurati
 		super(getDefaultPreferenceStore());
 		this.viewer = viewer;
 //		  filters the platform URL hyperlink detector since the URL hyperlink detection
-//		  strategy is defined by the HTML markup. 
+//		  strategy is defined by the HTML markup.
 		addHyperlinkDetectorDescriptorFilter(new DefaultHyperlinkDetectorDescriptorFilter(
 				"org.eclipse.ui.internal.editors.text.URLHyperlinkDetector")); //$NON-NLS-1$
 	}
@@ -90,7 +90,7 @@ public class HtmlViewerConfiguration extends AbstractTextSourceViewerConfigurati
 
 	/**
 	 * returns null, since spell check is not needed
-	 * 
+	 *
 	 * @since 1.1
 	 */
 	@Override
@@ -139,7 +139,8 @@ public class HtmlViewerConfiguration extends AbstractTextSourceViewerConfigurati
 
 		private IDocument document;
 
-		public IRegion getDamageRegion(ITypedRegion partition, DocumentEvent event, boolean documentPartitioningChanged) {
+		public IRegion getDamageRegion(ITypedRegion partition, DocumentEvent event,
+				boolean documentPartitioningChanged) {
 			return new Region(0, document.getLength());
 		}
 
@@ -156,9 +157,8 @@ public class HtmlViewerConfiguration extends AbstractTextSourceViewerConfigurati
 				return;
 			}
 			StyleRange defaultStyleRange = viewerPresentation.getDefaultStyleRange();
-			presentation.setDefaultStyleRange((StyleRange) (defaultStyleRange == null
-					? null
-					: defaultStyleRange.clone()));
+			presentation
+					.setDefaultStyleRange((StyleRange) (defaultStyleRange == null ? null : defaultStyleRange.clone()));
 			List<StyleRange> ranges = new ArrayList<>();
 
 			Iterator<?> allStyleRangeIterator = viewerPresentation.getAllStyleRangeIterator();
@@ -198,7 +198,6 @@ public class HtmlViewerConfiguration extends AbstractTextSourceViewerConfigurati
 
 	}
 
-	@SuppressWarnings("unchecked")
 	public void setTextPresentation(TextPresentation textPresentation) {
 		if (textPresentation != null) {
 			TextPresentation textPresentationCopy = new TextPresentation();
@@ -226,7 +225,7 @@ public class HtmlViewerConfiguration extends AbstractTextSourceViewerConfigurati
 	/**
 	 * Indicate if hyperlink modifiers are disabled. When disabled (the default) no keyboard modifiers are required to
 	 * activate hyperlinks when clicking.
-	 * 
+	 *
 	 * @see #getHyperlinkStateMask(ISourceViewer)
 	 */
 	public boolean isDisableHyperlinkModifiers() {
@@ -236,7 +235,7 @@ public class HtmlViewerConfiguration extends AbstractTextSourceViewerConfigurati
 	/**
 	 * Indicate if hyperlink modifiers are disabled. When disabled (the default) no keyboard modifiers are required to
 	 * activate hyperlinks when clicking.
-	 * 
+	 *
 	 * @see #getHyperlinkStateMask(ISourceViewer)
 	 */
 	public void setDisableHyperlinkModifiers(boolean disableHyperlinkModifiers) {
@@ -246,7 +245,7 @@ public class HtmlViewerConfiguration extends AbstractTextSourceViewerConfigurati
 	/**
 	 * Indicate if incremental find should be supported in a self-contained manner. For use when SourceViewer is not
 	 * used in a {@link TextEditor}. Defaults to false.
-	 * 
+	 *
 	 * @since 1.6
 	 */
 	public boolean isEnableSelfContainedIncrementalFind() {
@@ -256,7 +255,7 @@ public class HtmlViewerConfiguration extends AbstractTextSourceViewerConfigurati
 	/**
 	 * Indicate if incremental find should be supported in a self-contained manner. For use when SourceViewer is not
 	 * used in a {@link TextEditor}.
-	 * 
+	 *
 	 * @since 1.6
 	 */
 	public void setEnableSelfContainedIncrementalFind(boolean enableSelfContainedIncrementalFind) {

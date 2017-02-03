@@ -38,7 +38,6 @@ public class AnnotationMarkupValidator extends DocumentRegionValidator {
 		monitor.done();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void createProblems(IProgressMonitor monitor, IDocument document, IRegion region,
 			List<ValidationProblem> problems) throws CoreException {
@@ -67,8 +66,8 @@ public class AnnotationMarkupValidator extends DocumentRegionValidator {
 
 			Map<Annotation, Position> annotationsToAdd = new HashMap<>();
 			for (ValidationProblem problem : problems) {
-				annotationsToAdd.put(new ValidationProblemAnnotation(problem), new Position(problem.getOffset(),
-						problem.getLength()));
+				annotationsToAdd.put(new ValidationProblemAnnotation(problem),
+						new Position(problem.getOffset(), problem.getLength()));
 			}
 
 			if (toRemove != null && annotationModel instanceof IAnnotationModelExtension) {

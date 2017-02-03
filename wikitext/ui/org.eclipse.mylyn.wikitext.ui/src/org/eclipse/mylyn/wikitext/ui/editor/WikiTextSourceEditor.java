@@ -61,7 +61,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 /**
  * A WikiText source editor. Users must {@link #setDocumentProvider(IDocumentProvider) set the document provider}.
- * 
+ *
  * @author David Green
  * @see AbstractWikiTextDocumentProvider
  * @since 1.3
@@ -121,7 +121,7 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 
 	/**
 	 * Users must set the document provider.
-	 * 
+	 *
 	 * @see AbstractWikiTextDocumentProvider
 	 * @see WikiTextDocumentProvider
 	 */
@@ -135,7 +135,7 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 
 	/**
 	 * Set the source viewer configuration. This method should be called in the constructor of subclasses.
-	 * 
+	 *
 	 * @throws ClassCastException
 	 *             if the configuration does not subclass {@link MarkupSourceViewerConfiguration}
 	 */
@@ -152,7 +152,7 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 		}
 		viewer = createMarkupSourceViewer(parent, ruler, styles);
 
-		IFocusService focusService = (IFocusService) PlatformUI.getWorkbench().getService(IFocusService.class);
+		IFocusService focusService = PlatformUI.getWorkbench().getService(IFocusService.class);
 		if (focusService != null) {
 			focusService.addFocusTracker(viewer.getTextWidget(), EDITOR_SOURCE_VIEWER);
 		}
@@ -204,7 +204,7 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 
 	/**
 	 * Create a markup source viewer. Subclasses may override.
-	 * 
+	 *
 	 * @param parent
 	 *            the parent of the source viewer
 	 * @param ruler
@@ -220,7 +220,7 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 
 	/**
 	 * The markup language. If unspecified, it's assumed to be Textile.
-	 * 
+	 *
 	 * @return the current markup language, or null if it's unspecified.
 	 */
 	public MarkupLanguage getMarkupLanguage() {
@@ -268,27 +268,26 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		super.init(site, input);
 
-		IContextService contextService = (IContextService) site.getService(IContextService.class);
+		IContextService contextService = site.getService(IContextService.class);
 		contextService.activateContext(CONTEXT);
 	}
 
-	@SuppressWarnings({ "rawtypes" })
+	@SuppressWarnings("unchecked")
 	@Override
-	public Object getAdapter(Class adapter) {
+	public <T> T getAdapter(Class<T> adapter) {
 		if (adapter == IContentOutlinePage.class) {
 			if (outlinePage == null || outlinePage.getControl() == null || outlinePage.getControl().isDisposed()) {
 				outlinePage = createContentOutline();
 				outlinePage.setEditor(this);
-				return outlinePage;
 			}
-			return outlinePage;
+			return (T) outlinePage;
 		}
 		if (adapter == OutlineItem.class) {
-			return getOutlineModel();
+			return (T) getOutlineModel();
 		} else if (adapter == IShowInSource.class) {
-			return this;
+			return (T) this;
 		} else if (adapter == IShowInTarget.class) {
-			return this;
+			return (T) this;
 		}
 		return super.getAdapter(adapter);
 	}
@@ -518,7 +517,7 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 		outlineModel.clear();
 		outlineModel.moveChildren(rootItem);
 
-		IFile file = (IFile) getAdapter(IFile.class);
+		IFile file = getAdapter(IFile.class);
 		outlineModel.setResourcePath(file == null ? null : file.getFullPath().toString());
 
 		firePropertyChange(PROP_OUTLINE);
@@ -534,8 +533,8 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 
 	public ShowInContext getShowInContext() {
 		OutlineItem item = getNearestMatchingOutlineItem();
-		return new ShowInContext(getEditorInput(), item == null ? new StructuredSelection() : new StructuredSelection(
-				item));
+		return new ShowInContext(getEditorInput(),
+				item == null ? new StructuredSelection() : new StructuredSelection(item));
 	}
 
 	/**
@@ -549,7 +548,7 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 		return null;
 	}
 
-	/* prevent line number ruler from appearing since it doesn't work with line wrapping 
+	/* prevent line number ruler from appearing since it doesn't work with line wrapping
 	 */
 	@Override
 	protected boolean isLineNumberRulerVisible() {
@@ -580,7 +579,7 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 
 	/**
 	 * Select and reveal the given outline item, based on its offset and length.
-	 * 
+	 *
 	 * @param item
 	 *            the item, must not be null
 	 */

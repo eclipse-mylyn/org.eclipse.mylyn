@@ -19,12 +19,12 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 /**
  * A preference store that wraps a delegate, typically used to alter preferences based on some external influences (such
  * as control focus).
- * 
+ *
  * @author David Green
  */
 public abstract class PreferenceStoreFacade implements IPreferenceStore {
 
-	private final ListenerList listeners = new ListenerList(ListenerList.IDENTITY);
+	private final ListenerList<IPropertyChangeListener> listeners = new ListenerList<>(ListenerList.IDENTITY);
 
 	private IPropertyChangeListener forwardingListener;
 

@@ -76,7 +76,7 @@ class FoldingStructure implements IFoldingStructure {
 
 	public FoldingStructure(MarkupEditor editor) {
 		viewer = (ProjectionViewer) editor.getViewer();
-		textOperationTarget = (ITextOperationTarget) editor.getAdapter(ITextOperationTarget.class);
+		textOperationTarget = editor.getAdapter(ITextOperationTarget.class);
 	}
 
 	public void collapseAll(boolean collapseRegionContainingCaret) {
@@ -178,7 +178,6 @@ class FoldingStructure implements IFoldingStructure {
 		}, collapseRegionContainingCaret);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void operateOnAnnotations(AnnotationOperation operation, boolean collapseRegionIncludingCaret) {
 		if (!isFoldingEnabled()) {
 			return;

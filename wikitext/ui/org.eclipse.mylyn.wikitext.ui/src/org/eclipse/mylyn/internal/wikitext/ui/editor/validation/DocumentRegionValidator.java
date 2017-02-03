@@ -16,7 +16,7 @@ import java.util.List;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.source.IAnnotationModel;
@@ -28,7 +28,7 @@ import org.eclipse.mylyn.wikitext.validation.ValidationProblem;
 /**
  * A validator that can be used to validate regions of a document in an editor. Delegates validation to a
  * {@link MarkupValidator} and coordinates the translation of errors and warnings to the editor framework.
- * 
+ *
  * @author David Green
  * @see MarkupValidator
  */
@@ -44,7 +44,7 @@ public abstract class DocumentRegionValidator {
 	/**
 	 * Validate a region of a document. Validation results may be created as annotations on the annotation model, or as
 	 * markers on the resource.
-	 * 
+	 *
 	 * @param monitor
 	 *            the progress monitor
 	 * @param document
@@ -60,8 +60,8 @@ public abstract class DocumentRegionValidator {
 		final int totalWork = region.getLength() * 2;
 		monitor.beginTask(Messages.DocumentRegionValidator_validation, totalWork);
 		try {
-			clearProblems(new SubProgressMonitor(monitor, totalWork / 2), document, region);
-			computeProblems(new SubProgressMonitor(monitor, totalWork / 2), document, region);
+			clearProblems(SubMonitor.convert(monitor, totalWork / 2), document, region);
+			computeProblems(SubMonitor.convert(monitor, totalWork / 2), document, region);
 		} finally {
 			monitor.done();
 		}
@@ -92,7 +92,7 @@ public abstract class DocumentRegionValidator {
 			}
 
 			// always createProblems even if there are no problems
-			createProblems(new SubProgressMonitor(monitor, totalWork / 2), document, region, problems);
+			createProblems(SubMonitor.convert(monitor, totalWork / 2), document, region, problems);
 
 		} finally {
 			monitor.done();
@@ -101,7 +101,7 @@ public abstract class DocumentRegionValidator {
 
 	/**
 	 * create problems
-	 * 
+	 *
 	 * @param monitor
 	 * @param document
 	 * @param region
@@ -112,7 +112,7 @@ public abstract class DocumentRegionValidator {
 
 	/**
 	 * Remove any problems in the given region of the document.
-	 * 
+	 *
 	 * @param monitor
 	 * @param document
 	 * @param region
@@ -126,9 +126,8 @@ public abstract class DocumentRegionValidator {
 	}
 
 	public void setMarkupLanguage(MarkupLanguage markupLanguage) {
-		if (markupLanguage == this.markupLanguage
-				|| (markupLanguage != null && this.markupLanguage != null && markupLanguage.getName().equals(
-						this.markupLanguage.getName()))) {
+		if (markupLanguage == this.markupLanguage || (markupLanguage != null && this.markupLanguage != null
+				&& markupLanguage.getName().equals(this.markupLanguage.getName()))) {
 			return;
 		}
 		this.markupLanguage = markupLanguage;
@@ -153,7 +152,7 @@ public abstract class DocumentRegionValidator {
 
 	/**
 	 * indicate if the given offset and length overlap with the given region
-	 * 
+	 *
 	 * @param region
 	 * @param offset
 	 * @param length

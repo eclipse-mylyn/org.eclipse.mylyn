@@ -343,7 +343,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 			}
 		});
 
-		IFocusService focusService = (IFocusService) PlatformUI.getWorkbench().getService(IFocusService.class);
+		IFocusService focusService = PlatformUI.getWorkbench().getService(IFocusService.class);
 		if (focusService != null) {
 			focusService.addFocusTracker(viewer.getTextWidget(), MarkupEditor.EDITOR_SOURCE_VIEWER);
 		}
@@ -696,17 +696,17 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		return null;
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings("unchecked")
 	@Override
-	public Object getAdapter(Class adapter) {
+	public <T> T getAdapter(Class<T> adapter) {
 		if (IContentOutlinePage.class == adapter) {
 			if (!isOutlinePageValid()) {
 				outlinePage = new MarkupEditorOutline(this);
 			}
-			return outlinePage;
+			return (T) outlinePage;
 		}
 		if (adapter == OutlineItem.class) {
-			return getOutlineModel();
+			return (T) getOutlineModel();
 		}
 		if (adapter == IFoldingStructure.class) {
 			if (!isFoldingEnabled()) {
@@ -715,10 +715,10 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 			if (foldingStructure == null) {
 				foldingStructure = new FoldingStructure(this);
 			}
-			return foldingStructure;
+			return (T) foldingStructure;
 		}
 		if (adapter == IShowInTargetList.class) {
-			return SHOW_IN_TARGET_LIST;
+			return (T) SHOW_IN_TARGET_LIST;
 		}
 		return super.getAdapter(adapter);
 	}
@@ -898,7 +898,6 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 				&& !getSourceViewer().getTextWidget().isDisposed();
 	}
 
-	@SuppressWarnings("unchecked")
 	private void updateProjectionAnnotations() {
 		ProjectionViewer viewer = (ProjectionViewer) getSourceViewer();
 		ProjectionAnnotationModel projectionAnnotationModel = viewer.getProjectionAnnotationModel();
@@ -1044,7 +1043,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		super.init(site, input);
 
-		IContextService contextService = (IContextService) site.getService(IContextService.class);
+		IContextService contextService = site.getService(IContextService.class);
 		contextService.activateContext(CONTEXT);
 
 	}
@@ -1219,7 +1218,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		if (action != null && action.getActionDefinitionId() != null && !isCommandAction(action)) {
 			// bug 336679: don't activate handlers for CommandAction.
 			// We do this by class name so that we don't rely on internals
-			IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
+			IHandlerService handlerService = getSite().getService(IHandlerService.class);
 			handlerService.activateHandler(action.getActionDefinitionId(), new ActionHandler(action));
 		}
 		super.setAction(actionID, action);
@@ -1324,6 +1323,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		return previewTab != null && tabFolder.getSelection() == previewTab;
 	}
 
+	@Override
 	protected boolean getInitialWordWrapStatus() {
 		return true;
 	}

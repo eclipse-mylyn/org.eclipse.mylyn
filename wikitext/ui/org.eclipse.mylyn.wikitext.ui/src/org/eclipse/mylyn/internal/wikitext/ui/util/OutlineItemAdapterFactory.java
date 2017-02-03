@@ -17,17 +17,18 @@ import org.eclipse.ui.model.IWorkbenchAdapter;
 
 /**
  * An adapter factory for {@link OutlineItem} that can adapt it to {@link IWorkbenchAdapter}.
- * 
+ *
  * @author dgreen
  */
 public class OutlineItemAdapterFactory implements IAdapterFactory {
 
 	private static final Class<?>[] ADAPTER_LIST = { IWorkbenchAdapter.class };
 
-	@SuppressWarnings("rawtypes")
-	public Object getAdapter(Object adaptableObject, Class adapterType) {
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getAdapter(Object adaptableObject, Class<T> adapterType) {
 		if (adapterType == IWorkbenchAdapter.class && adaptableObject instanceof OutlineItem) {
-			return OutlineItemWorkbenchAdapter.instance();
+			return (T) OutlineItemWorkbenchAdapter.instance();
 		}
 		return null;
 	}
