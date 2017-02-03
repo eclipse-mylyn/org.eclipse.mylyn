@@ -23,16 +23,20 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.mylyn.wikitext.core.toolkit.StackDumpOnTimeoutRule;
 import org.junit.After;
 import org.junit.Rule;
+import org.junit.rules.TemporaryFolder;
 
 @HeadRequired
 public abstract class AbstractTestInWorkspace {
 
 	@Rule
 	public final StackDumpOnTimeoutRule stackDumpOnTimeoutRule = new StackDumpOnTimeoutRule();
+
+	@Rule
+	public final TemporaryFolder temporaryFolder = new TemporaryFolder();
 
 	private static boolean init = false;
 
@@ -61,7 +65,7 @@ public abstract class AbstractTestInWorkspace {
 					100 * temporaryProjects.size());
 			try {
 				for (IProject project : temporaryProjects) {
-					project.delete(true, true, new SubProgressMonitor(monitor, 100));
+					project.delete(true, true, SubMonitor.convert(monitor, 100));
 				}
 			} finally {
 				monitor.done();
@@ -75,9 +79,9 @@ public abstract class AbstractTestInWorkspace {
 
 		String projectName = "test" + seed;
 
-		String tmpDir = System.getProperty("java.io.tmpdir");
+		File folderParent = temporaryFolder.getRoot();
 
-		URI location = (new File(tmpDir, projectName)).toURI();
+		URI location = (new File(folderParent, projectName)).toURI();
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		final IProjectDescription description = workspace.newProjectDescription(projectName);
 		description.setLocationURI(location);
