@@ -73,6 +73,27 @@ public class AsciiDocLanguageMiscellaneousTest extends AsciiDocLanguageTestBase 
 	}
 
 	@Test
+	public void backslashOpeningAndClosingCurlyBrace() {
+		// this is not an escaped opening curly brace
+		String html = parseToHtml("\\{}");
+		assertEquals("<p>\\{}</p>\n", html);
+	}
+
+	@Test
+	public void backslashAttribute() {
+		// this is an escaped opening curly brace, because it is an attribute
+		String html = parseToHtml("\\{xxx}");
+		assertEquals("<p>{xxx}</p>\n", html);
+	}
+
+	@Test
+	public void backslashAttributeUnderscore() {
+		// this is an escaped opening curly brace, because it is an attribute
+		String html = parseToHtml("\\{_}");
+		assertEquals("<p>{_}</p>\n", html);
+	}
+
+	@Test
 	public void backslashClosingCurlyBrace() {
 		// this is not an escaped closing curly brace
 		String html = parseToHtml("\\}");

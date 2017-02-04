@@ -19,7 +19,7 @@ import java.util.List;
 
 import org.eclipse.mylyn.wikitext.asciidoc.internal.AsciiDocContentState;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.AsciiDocDocumentBuilder;
-import org.eclipse.mylyn.wikitext.asciidoc.internal.AsciiDocPreProcessor;
+import org.eclipse.mylyn.wikitext.asciidoc.internal.block.AttributeDefinitionBlock;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.block.CodeBlock;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.block.CommentBlock;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.block.HeadingBlock;
@@ -39,7 +39,9 @@ import org.eclipse.mylyn.wikitext.asciidoc.internal.token.EmailLinkReplacementTo
 import org.eclipse.mylyn.wikitext.asciidoc.internal.token.ExplicitLinkReplacementToken;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.token.ImplicitFormattedLinkReplacementToken;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.token.ImplicitLinkReplacementToken;
+import org.eclipse.mylyn.wikitext.asciidoc.internal.token.InlineAttributeReplacementToken;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.token.InlineCommentReplacementToken;
+import org.eclipse.mylyn.wikitext.asciidoc.internal.token.InlineEscapedAttributeReplacementToken;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.token.InlineImageReplacementToken;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.token.PreserverHtmlEntityToken;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.token.XrefMacroReplacementToken;
@@ -47,7 +49,6 @@ import org.eclipse.mylyn.wikitext.asciidoc.internal.token.XrefReplacementToken;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.util.ReadAheadDispatcher;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
-import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.parser.markup.Block;
 import org.eclipse.mylyn.wikitext.parser.markup.ContentState;
@@ -68,7 +69,12 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 
 	@Override
 	protected ContentState createState() {
-		return new AsciiDocContentState();
+		AsciiDocContentState state = new AsciiDocContentState();
+		//set the initial attribute values:
+		state.putAttribute(AsciiDocContentState.ATTRIBUTE_IDPREFIX, "_"); //$NON-NLS-1$
+		state.putAttribute(AsciiDocContentState.ATTRIBUTE_IDSEPARATOR, "_"); //$NON-NLS-1$
+		state.putAttribute(AsciiDocContentState.ATTRIBUTE_IMAGESDIR, ""); //$NON-NLS-1$
+		return state;
 	}
 
 	@Override
@@ -80,22 +86,11 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 	}
 
 	@Override
-	public void processContent(MarkupParser parser, String markupContent, boolean asDocument) {
-		if (isEnableMacros()) {
-			markupContent = preprocessContent(markupContent);
-		}
-		super.processContent(parser, markupContent, asDocument);
-	}
-
-	/**
-	 * preprocess content, which involves attribute substitution.
-	 */
-	protected String preprocessContent(String markupContent) {
-		return new AsciiDocPreProcessor().process(markupContent);
-	}
-
-	@Override
 	protected void addStandardPhraseModifiers(PatternBasedSyntax phraseModifierSyntax) {
+		// attribute
+		phraseModifierSyntax.add(new InlineAttributeReplacementToken());
+		phraseModifierSyntax.add(new InlineEscapedAttributeReplacementToken());
+
 		// comments
 		phraseModifierSyntax.add(new InlineCommentReplacementToken());
 
@@ -139,6 +134,8 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 		blocks.add(listBlock);
 		paragraphBreakingBlocks.add(listBlock);
 
+		AttributeDefinitionBlock attributeDefinition = new AttributeDefinitionBlock();
+
 		TitleLineBlock titleLineBlock = new TitleLineBlock();
 		PropertiesLineBlock propertiesLineBlock = new PropertiesLineBlock();
 
@@ -149,6 +146,8 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 		HeadingBlock headingBlock = new HeadingBlock();
 		CodeBlock codeBlock = new CodeBlock();
 		HorizontalRuleBlock hrBlock = new HorizontalRuleBlock();
+
+		blocks.add(attributeDefinition);
 
 		blocks.add(titleLineBlock);
 		blocks.add(propertiesLineBlock);

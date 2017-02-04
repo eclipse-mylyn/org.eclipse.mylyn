@@ -13,6 +13,7 @@
 
 package org.eclipse.mylyn.wikitext.asciidoc.internal;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,10 +28,18 @@ import org.eclipse.mylyn.wikitext.parser.markup.Processor;
  */
 public class AsciiDocContentState extends ContentState {
 
+	public static final String ATTRIBUTE_IDPREFIX = "idprefix"; //$NON-NLS-1$
+
+	public static final String ATTRIBUTE_IDSEPARATOR = "idseparator"; //$NON-NLS-1$
+
+	public static final String ATTRIBUTE_IMAGESDIR = "imagesdir"; //$NON-NLS-1$
+
 	// latest title provided via .<optional title> syntax
 	private String lastTitle;
 
 	private String lastPropertiesText;
+
+	private final Map<String, String> attributes = new HashMap<>();
 
 	public void setLastTitle(String text) {
 		this.lastTitle = text;
@@ -51,4 +60,19 @@ public class AsciiDocContentState extends ContentState {
 		return LanguageSupport.parseFormattingProperties(lastPropertiesText, positionalParameters);
 	}
 
+	public boolean isAttributeDefined(String attrName) {
+		return attributes.containsKey(attrName);
+	}
+
+	public String getAttribute(String attrName) {
+		return attributes.get(attrName);
+	}
+
+	public void putAttribute(String attrName, String value) {
+		attributes.put(attrName, value);
+	}
+
+	public void removeAttribute(String attrName) {
+		attributes.remove(attrName);
+	}
 }
