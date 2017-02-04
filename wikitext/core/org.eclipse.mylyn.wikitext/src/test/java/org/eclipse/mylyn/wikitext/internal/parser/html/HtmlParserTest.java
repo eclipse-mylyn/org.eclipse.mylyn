@@ -87,6 +87,21 @@ public class HtmlParserTest {
 	}
 
 	@Test
+	public void blockDeletedDel() {
+		assertParseEventOrder("<body><del>lorem</del></body>", SpanType.DELETED, "lorem", END_SPAN);
+	}
+
+	@Test
+	public void blockDeletedStrike() {
+		assertParseEventOrder("<body><strike>lorem</strike></body>", SpanType.DELETED, "lorem", END_SPAN);
+	}
+
+	@Test
+	public void blockDeletedS() {
+		assertParseEventOrder("<body><s>lorem</s></body>", SpanType.DELETED, "lorem", END_SPAN);
+	}
+
+	@Test
 	public void combinedEventOrder() {
 		assertParseEventOrder(
 				"<body><p>text <code>some code</code> more <i>italic <b>bold italic</b></i></p><pre><code>block code</code></pre></body>",
