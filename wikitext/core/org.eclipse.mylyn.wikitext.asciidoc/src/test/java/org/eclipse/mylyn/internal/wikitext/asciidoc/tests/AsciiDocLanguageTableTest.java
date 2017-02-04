@@ -328,6 +328,73 @@ public class AsciiDocLanguageTableTest extends AsciiDocLanguageTestBase {
 	}
 
 	@Test
+	public void testMultilineCell() {
+		String html = parseToHtml("" //
+				+ "[cols=\"2*\"]\n" //
+				+ "|===\n" //
+				+ "|aaa\n" //
+				+ "bbb\n" //
+				+ "|xxx\n" //
+				+ "| first | second\n" //
+				+ "|===\n");
+		assertEquals("<table>" //
+				+ "<tr>" //
+				+ "<td>aaa bbb</td>" //
+				+ "<td>xxx</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>first</td>" //
+				+ "<td>second</td>" //
+				+ "</tr>" //
+				+ "</table>", html);
+	}
+
+	@Test
+	public void testMultilineCellOneCol() {
+		String html = parseToHtml("" //
+				+ "|===\n" //
+				+ "| aaa\n" //
+				+ "bbb\n" //
+				+ "ccc\n" //
+				+ "| xxx\n" //
+				+ "yyy\n" //
+				+ "| 000\n" //
+				+ "|===\n");
+		assertEquals("<table>" //
+				+ "<tr>" //
+				+ "<td>aaa bbb ccc</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>xxx yyy</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>000</td>" //
+				+ "</tr>" //
+				+ "</table>", html);
+	}
+
+	@Test
+	public void testMultilineCellTwoCols() {
+		String html = parseToHtml("" //
+				+ "|===\n" //
+				+ "| aaa\n" //
+				+ "bbb | xxx\n" //
+				+ "| 000\n" //
+				+ "| 111\n" //
+				+ "|===\n");
+		assertEquals("<table>" //
+				+ "<tr>" //
+				+ "<td>aaa bbb</td>" //
+				+ "<td>xxx</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>000</td>" //
+				+ "<td>111</td>" //
+				+ "</tr>" //
+				+ "</table>", html);
+	}
+
+	@Test
 	public void testBasicTableAttributes() {
 		String html = parseToHtml("[width=\"80%\",options=\"header\"]\n" //
 				+ "|===\n" //

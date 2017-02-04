@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.util.LanguageSupport;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.TableAttributes;
 import org.eclipse.mylyn.wikitext.parser.TableCellAttributes;
 import org.eclipse.mylyn.wikitext.parser.TableRowAttributes;
@@ -44,6 +44,8 @@ public class TableBlock extends AsciiDocBlock {
 	private List<TableCellAttributes> colsAttribute;
 
 	private boolean hasHeader = false;
+
+	private boolean cellBlockIsOpen = false;
 
 	public TableBlock() {
 		super(Pattern.compile("^(\\||,|:)===\\s*")); //$NON-NLS-1$
@@ -99,8 +101,7 @@ public class TableBlock extends AsciiDocBlock {
 	@Override
 	protected void processBlockContent(String line) {
 		if (!line.trim().isEmpty()) {
-			//If the cols attribute is not set (processing of the first line), the row need to be opened:
-			if (colsAttribute.isEmpty()) {
+			if (colsAttribute.isEmpty() && !cellBlockIsOpen) {
 				TableRowAttributes tableRowAttributes = new TableRowAttributes();
 				builder.beginBlock(BlockType.TABLE_ROW, tableRowAttributes);
 			}
@@ -108,54 +109,21 @@ public class TableBlock extends AsciiDocBlock {
 			boolean firstCellInLine = true;
 			for (String cell : createRowCellSplitter(line)) {
 				String cellContent = cell.trim();
-				if (!cellContent.isEmpty() || !firstCellInLine) {
-					//Open row if necessary:
-					if (!colsAttribute.isEmpty() && cellsCount % colsAttribute.size() == 0) {
-						TableRowAttributes tableRowAttributes = new TableRowAttributes();
-						builder.beginBlock(BlockType.TABLE_ROW, tableRowAttributes);
+				if (format == TableFormat.PREFIX_SEPARATED_VALUES && cellBlockIsOpen && !cellContent.isEmpty()
+						&& firstCellInLine) {
+					markupLanguage.emitMarkupLine(parser, state, " " + cellContent, 0); //$NON-NLS-1$
+				} else {
+					if (colsAttribute.isEmpty() && cellBlockIsOpen && firstCellInLine) {
+						closeCellBlockIfNeeded();
+						builder.endBlock(); // close table row
+						colsAttribute = LanguageSupport.createDefaultColumnsAttributeList(cellsCount);
 					}
 
-					String blockContent;
-					if (format != TableFormat.COMMA_SEPARATED_VALUES) {
-						//Replace escaped delimiter:
-						String delimiter = getCellSeparator();
-						blockContent = cellContent.replaceAll("\\\\" + Pattern.quote(delimiter), delimiter);//$NON-NLS-1$
-					} else {
-						blockContent = cellContent;
-					}
-
-					//Prepare table cell attributes:
-					TableCellAttributes attributes;
-					if (colsAttribute.isEmpty()) {
-						attributes = new TableCellAttributes();
-					} else {
-						attributes = colsAttribute.get(cellsCount % colsAttribute.size());
-					}
-
-					//Build the cell block:
-					if (hasHeader && (colsAttribute.isEmpty() || cellsCount < colsAttribute.size())) {
-						builder.beginBlock(BlockType.TABLE_CELL_HEADER, attributes);
-					} else {
-						builder.beginBlock(BlockType.TABLE_CELL_NORMAL, attributes);
-					}
-					markupLanguage.emitMarkupLine(parser, state, blockContent, 0);
-					builder.endBlock();
-
-					//Increment the cell counter:
-					cellsCount = cellsCount + 1;
-
-					//Close row if necessary:
-					if (!colsAttribute.isEmpty() && cellsCount % colsAttribute.size() == 0) {
-						builder.endBlock(); // table row
+					if (!cellContent.isEmpty() || !firstCellInLine) {
+						handleCellContent(cellContent);
 					}
 				}
 				firstCellInLine = false;
-			}
-			//If the cols attribute is not set (processing of the first line), the row need to be closed and colsAttribute can be determined:
-			if (colsAttribute.isEmpty()) {
-				builder.endBlock(); // table row
-				// end of the first row, it defines the number of cells in the next rows when cols is missing:
-				colsAttribute = LanguageSupport.createDefaultColumnsAttributeList(cellsCount);
 			}
 		}
 	}
@@ -180,12 +148,58 @@ public class TableBlock extends AsciiDocBlock {
 		}
 	}
 
-	@Override
-	protected void processBlockEnd() {
-		if (!colsAttribute.isEmpty() && cellsCount % colsAttribute.size() != 0) {
-			builder.endBlock(); // table row
+	private void handleCellContent(String cellContent) {
+		closeCellBlockIfNeeded();
+
+		String blockContent;
+		if (format != TableFormat.COMMA_SEPARATED_VALUES) {
+			String delimiter = getCellSeparator();
+			blockContent = cellContent.replaceAll("\\\\" + Pattern.quote(delimiter), delimiter);//$NON-NLS-1$
+		} else {
+			blockContent = cellContent;
 		}
-		builder.endBlock(); // table
+
+		if (!colsAttribute.isEmpty() && cellsCount % colsAttribute.size() == 0) {
+			TableRowAttributes tableRowAttributes = new TableRowAttributes();
+			builder.beginBlock(BlockType.TABLE_ROW, tableRowAttributes);
+		}
+
+		TableCellAttributes attributes;
+		if (colsAttribute.isEmpty()) {
+			attributes = new TableCellAttributes();
+		} else {
+			attributes = colsAttribute.get(cellsCount % colsAttribute.size());
+		}
+
+		if (hasHeader && (colsAttribute.isEmpty() || cellsCount < colsAttribute.size())) {
+			builder.beginBlock(BlockType.TABLE_CELL_HEADER, attributes);
+		} else {
+			builder.beginBlock(BlockType.TABLE_CELL_NORMAL, attributes);
+		}
+		cellBlockIsOpen = true;
+
+		markupLanguage.emitMarkupLine(parser, state, blockContent, 0);
 	}
 
+	@Override
+	protected void processBlockEnd() {
+		closeCellBlockIfNeeded();
+		if (colsAttribute.isEmpty() || (!colsAttribute.isEmpty() && cellsCount % colsAttribute.size() != 0)) {
+			builder.endBlock(); // close table row
+		}
+		builder.endBlock(); // close table
+	}
+
+	private void closeCellBlockIfNeeded() {
+		if (cellBlockIsOpen) {
+			builder.endBlock(); // close table cell
+			cellBlockIsOpen = false;
+
+			cellsCount = cellsCount + 1;
+
+			if (!colsAttribute.isEmpty() && cellsCount % colsAttribute.size() == 0) {
+				builder.endBlock(); // close table row
+			}
+		}
+	}
 }
