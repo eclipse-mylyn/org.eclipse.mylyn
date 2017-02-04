@@ -14,25 +14,25 @@ package org.eclipse.mylyn.wikitext.mediawiki;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.mylyn.internal.wikitext.mediawiki.AbstractMediaWikiLanguage;
-import org.eclipse.mylyn.internal.wikitext.mediawiki.BuiltInTemplateResolver;
-import org.eclipse.mylyn.internal.wikitext.mediawiki.MediaWikiIdGenerationStrategy;
-import org.eclipse.mylyn.internal.wikitext.mediawiki.block.BehaviorSwitchBlock;
-import org.eclipse.mylyn.internal.wikitext.mediawiki.block.CommentBlock;
-import org.eclipse.mylyn.internal.wikitext.mediawiki.block.EscapeBlock;
-import org.eclipse.mylyn.internal.wikitext.mediawiki.block.HeadingBlock;
-import org.eclipse.mylyn.internal.wikitext.mediawiki.block.ListBlock;
-import org.eclipse.mylyn.internal.wikitext.mediawiki.block.ParagraphBlock;
-import org.eclipse.mylyn.internal.wikitext.mediawiki.block.PreformattedBlock;
-import org.eclipse.mylyn.internal.wikitext.mediawiki.block.SourceBlock;
-import org.eclipse.mylyn.internal.wikitext.mediawiki.block.TableBlock;
-import org.eclipse.mylyn.internal.wikitext.mediawiki.block.TableOfContentsBlock;
-import org.eclipse.mylyn.internal.wikitext.mediawiki.phrase.EscapePhraseModifier;
-import org.eclipse.mylyn.internal.wikitext.mediawiki.phrase.SimplePhraseModifier;
-import org.eclipse.mylyn.internal.wikitext.mediawiki.token.HyperlinkExternalReplacementToken;
-import org.eclipse.mylyn.internal.wikitext.mediawiki.token.HyperlinkInternalReplacementToken;
-import org.eclipse.mylyn.internal.wikitext.mediawiki.token.ImageReplacementToken;
-import org.eclipse.mylyn.internal.wikitext.mediawiki.token.LineBreakToken;
+import org.eclipse.mylyn.wikitext.mediawiki.internal.AbstractMediaWikiLanguage;
+import org.eclipse.mylyn.wikitext.mediawiki.internal.BuiltInTemplateResolver;
+import org.eclipse.mylyn.wikitext.mediawiki.internal.MediaWikiIdGenerationStrategy;
+import org.eclipse.mylyn.wikitext.mediawiki.internal.block.BehaviorSwitchBlock;
+import org.eclipse.mylyn.wikitext.mediawiki.internal.block.CommentBlock;
+import org.eclipse.mylyn.wikitext.mediawiki.internal.block.EscapeBlock;
+import org.eclipse.mylyn.wikitext.mediawiki.internal.block.HeadingBlock;
+import org.eclipse.mylyn.wikitext.mediawiki.internal.block.ListBlock;
+import org.eclipse.mylyn.wikitext.mediawiki.internal.block.ParagraphBlock;
+import org.eclipse.mylyn.wikitext.mediawiki.internal.block.PreformattedBlock;
+import org.eclipse.mylyn.wikitext.mediawiki.internal.block.SourceBlock;
+import org.eclipse.mylyn.wikitext.mediawiki.internal.block.TableBlock;
+import org.eclipse.mylyn.wikitext.mediawiki.internal.block.TableOfContentsBlock;
+import org.eclipse.mylyn.wikitext.mediawiki.internal.phrase.EscapePhraseModifier;
+import org.eclipse.mylyn.wikitext.mediawiki.internal.phrase.SimplePhraseModifier;
+import org.eclipse.mylyn.wikitext.mediawiki.internal.token.HyperlinkExternalReplacementToken;
+import org.eclipse.mylyn.wikitext.mediawiki.internal.token.HyperlinkInternalReplacementToken;
+import org.eclipse.mylyn.wikitext.mediawiki.internal.token.ImageReplacementToken;
+import org.eclipse.mylyn.wikitext.mediawiki.internal.token.LineBreakToken;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.markup.Block;
 import org.eclipse.mylyn.wikitext.parser.markup.IdGenerationStrategy;
@@ -156,7 +156,7 @@ public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
 		tokenSyntax.add(new HyperlinkExternalReplacementToken());
 		tokenSyntax.add(new ImpliedHyperlinkReplacementToken());
 		tokenSyntax.add(new PatternLiteralReplacementToken("(?:(?<=^|\\w\\s)(----)(?=$|\\s\\w))", "<hr/>")); // horizontal rule //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new org.eclipse.mylyn.internal.wikitext.mediawiki.token.EntityReferenceReplacementToken());
+		tokenSyntax.add(new org.eclipse.mylyn.wikitext.mediawiki.internal.token.EntityReferenceReplacementToken());
 	}
 
 	@Override

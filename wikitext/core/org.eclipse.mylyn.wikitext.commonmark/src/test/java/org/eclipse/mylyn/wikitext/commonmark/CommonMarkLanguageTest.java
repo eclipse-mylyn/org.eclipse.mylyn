@@ -12,7 +12,7 @@
 package org.eclipse.mylyn.wikitext.commonmark;
 
 import static java.text.MessageFormat.format;
-import static org.eclipse.mylyn.internal.wikitext.commonmark.CommonMarkAsserts.assertContent;
+import static org.eclipse.mylyn.wikitext.commonmark.internal.CommonMarkAsserts.assertContent;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;

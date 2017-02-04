@@ -18,7 +18,7 @@
    </extension>
 
    <extension point="org.eclipse.mylyn.wikitext.ui.markupValidationRule">
-      <rule class="org.eclipse.mylyn.internal.wikitext.creole.validation.CreoleReferenceValidationRule"
+      <rule class="org.eclipse.mylyn.wikitext.creole.internal.validation.CreoleReferenceValidationRule"
             markupLanguage="Creole"/>
  </extension>
    <extension point="org.eclipse.mylyn.wikitext.ui.contentAssist">

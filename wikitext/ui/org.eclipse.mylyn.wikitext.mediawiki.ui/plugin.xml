@@ -39,10 +39,10 @@
 	 <extension
 	   point="org.eclipse.mylyn.wikitext.ui.markupValidationRule">
 		<rule
-		      class="org.eclipse.mylyn.internal.wikitext.mediawiki.validation.CommentValidationRule"
+		      class="org.eclipse.mylyn.wikitext.mediawiki.internal.validation.CommentValidationRule"
 		      markupLanguage="MediaWiki"/>
 		<rule
-		      class="org.eclipse.mylyn.internal.wikitext.mediawiki.validation.MediaWikiReferenceValidationRule"
+		      class="org.eclipse.mylyn.wikitext.mediawiki.internal.validation.MediaWikiReferenceValidationRule"
 		      markupLanguage="MediaWiki"/>
 	 </extension>
 	<extension

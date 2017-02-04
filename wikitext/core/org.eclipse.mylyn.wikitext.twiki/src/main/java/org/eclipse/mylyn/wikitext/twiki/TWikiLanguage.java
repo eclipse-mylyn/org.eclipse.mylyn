@@ -13,20 +13,6 @@ package org.eclipse.mylyn.wikitext.twiki;
 import java.text.MessageFormat;
 import java.util.List;
 
-import org.eclipse.mylyn.internal.wikitext.twiki.block.DefinitionListBlock;
-import org.eclipse.mylyn.internal.wikitext.twiki.block.HeadingBlock;
-import org.eclipse.mylyn.internal.wikitext.twiki.block.HorizontalRuleBlock;
-import org.eclipse.mylyn.internal.wikitext.twiki.block.ListBlock;
-import org.eclipse.mylyn.internal.wikitext.twiki.block.LiteralBlock;
-import org.eclipse.mylyn.internal.wikitext.twiki.block.ParagraphBlock;
-import org.eclipse.mylyn.internal.wikitext.twiki.block.TableOfContentsBlock;
-import org.eclipse.mylyn.internal.wikitext.twiki.block.VerbatimBlock;
-import org.eclipse.mylyn.internal.wikitext.twiki.phrase.AutoLinkSwitchPhraseModifier;
-import org.eclipse.mylyn.internal.wikitext.twiki.phrase.SimplePhraseModifier;
-import org.eclipse.mylyn.internal.wikitext.twiki.token.IconReplacementToken;
-import org.eclipse.mylyn.internal.wikitext.twiki.token.ImpliedEmailLinkReplacementToken;
-import org.eclipse.mylyn.internal.wikitext.twiki.token.LinkReplacementToken;
-import org.eclipse.mylyn.internal.wikitext.twiki.token.WikiWordReplacementToken;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.parser.markup.Block;
@@ -34,6 +20,20 @@ import org.eclipse.mylyn.wikitext.parser.markup.phrase.HtmlEndTagPhraseModifier;
 import org.eclipse.mylyn.wikitext.parser.markup.phrase.HtmlStartTagPhraseModifier;
 import org.eclipse.mylyn.wikitext.parser.markup.token.EntityReferenceReplacementToken;
 import org.eclipse.mylyn.wikitext.parser.markup.token.ImpliedHyperlinkReplacementToken;
+import org.eclipse.mylyn.wikitext.twiki.internal.block.DefinitionListBlock;
+import org.eclipse.mylyn.wikitext.twiki.internal.block.HeadingBlock;
+import org.eclipse.mylyn.wikitext.twiki.internal.block.HorizontalRuleBlock;
+import org.eclipse.mylyn.wikitext.twiki.internal.block.ListBlock;
+import org.eclipse.mylyn.wikitext.twiki.internal.block.LiteralBlock;
+import org.eclipse.mylyn.wikitext.twiki.internal.block.ParagraphBlock;
+import org.eclipse.mylyn.wikitext.twiki.internal.block.TableOfContentsBlock;
+import org.eclipse.mylyn.wikitext.twiki.internal.block.VerbatimBlock;
+import org.eclipse.mylyn.wikitext.twiki.internal.phrase.AutoLinkSwitchPhraseModifier;
+import org.eclipse.mylyn.wikitext.twiki.internal.phrase.SimplePhraseModifier;
+import org.eclipse.mylyn.wikitext.twiki.internal.token.IconReplacementToken;
+import org.eclipse.mylyn.wikitext.twiki.internal.token.ImpliedEmailLinkReplacementToken;
+import org.eclipse.mylyn.wikitext.twiki.internal.token.LinkReplacementToken;
+import org.eclipse.mylyn.wikitext.twiki.internal.token.WikiWordReplacementToken;
 
 // TODO: table
 // TODO: empty line to empty para

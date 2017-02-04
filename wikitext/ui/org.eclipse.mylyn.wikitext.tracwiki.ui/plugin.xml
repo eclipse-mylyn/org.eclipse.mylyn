@@ -42,7 +42,7 @@
 	<extension
 	      point="org.eclipse.mylyn.wikitext.ui.markupValidationRule">
 	    <rule
-	          class="org.eclipse.mylyn.internal.wikitext.tracwiki.validation.TracWikiReferenceValidationRule"
+	          class="org.eclipse.mylyn.wikitext.tracwiki.internal.validation.TracWikiReferenceValidationRule"
 	          markupLanguage="TracWiki"/>
 	</extension>
    

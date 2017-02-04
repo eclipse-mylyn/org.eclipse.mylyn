@@ -20,10 +20,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.mylyn.internal.wikitext.html.FontElementStrategy;
-import org.eclipse.mylyn.internal.wikitext.html.HtmlSubsetLanguage;
-import org.eclipse.mylyn.internal.wikitext.html.LiteralHtmlDocumentHandler;
-import org.eclipse.mylyn.internal.wikitext.html.SpanHtmlElementStrategy;
+import org.eclipse.mylyn.wikitext.html.internal.FontElementStrategy;
+import org.eclipse.mylyn.wikitext.html.internal.HtmlSubsetLanguage;
+import org.eclipse.mylyn.wikitext.html.internal.LiteralHtmlDocumentHandler;
+import org.eclipse.mylyn.wikitext.html.internal.SpanHtmlElementStrategy;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;

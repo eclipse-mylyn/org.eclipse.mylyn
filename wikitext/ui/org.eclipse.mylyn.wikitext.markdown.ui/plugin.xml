@@ -19,10 +19,10 @@
 
    <extension point="org.eclipse.mylyn.wikitext.ui.markupValidationRule">
       <rule markupLanguage="Markdown"
-            class="org.eclipse.mylyn.internal.wikitext.markdown.validation.MarkdownReferenceValidationRule">
+            class="org.eclipse.mylyn.wikitext.markdown.internal.validation.MarkdownReferenceValidationRule">
       </rule>
       <rule markupLanguage="Markdown"
-            class="org.eclipse.mylyn.internal.wikitext.markdown.validation.LinkDefinitionValidationRule">
+            class="org.eclipse.mylyn.wikitext.markdown.internal.validation.LinkDefinitionValidationRule">
       </rule>
    </extension>
    <extension point="org.eclipse.mylyn.wikitext.ui.contentAssist">

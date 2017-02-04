@@ -19,9 +19,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.StringWriter;
 
-import org.eclipse.mylyn.internal.wikitext.html.HtmlSubsetLanguage;
 import org.eclipse.mylyn.wikitext.html.HtmlLanguage;
 import org.eclipse.mylyn.wikitext.html.HtmlLanguageBuilder;
+import org.eclipse.mylyn.wikitext.html.internal.HtmlSubsetLanguage;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;

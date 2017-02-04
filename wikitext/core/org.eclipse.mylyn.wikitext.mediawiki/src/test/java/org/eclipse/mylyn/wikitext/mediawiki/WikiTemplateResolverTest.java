@@ -14,10 +14,10 @@ package org.eclipse.mylyn.wikitext.mediawiki;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.mylyn.internal.wikitext.mediawiki.TemplateProcessor;
 import org.eclipse.mylyn.wikitext.mediawiki.MediaWikiLanguage;
 import org.eclipse.mylyn.wikitext.mediawiki.Template;
 import org.eclipse.mylyn.wikitext.mediawiki.WikiTemplateResolver;
+import org.eclipse.mylyn.wikitext.mediawiki.internal.TemplateProcessor;
 
 import junit.framework.TestCase;
 

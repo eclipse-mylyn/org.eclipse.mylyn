@@ -41,10 +41,10 @@
  <extension
        point="org.eclipse.mylyn.wikitext.ui.markupValidationRule">
     <rule
-          class="org.eclipse.mylyn.internal.wikitext.twiki.validation.ListWhitespaceValidationRule"
+          class="org.eclipse.mylyn.wikitext.twiki.internal.validation.ListWhitespaceValidationRule"
           markupLanguage="TWiki"/>
     <rule
-          class="org.eclipse.mylyn.internal.wikitext.twiki.validation.TWikiReferenceValidationRule"
+          class="org.eclipse.mylyn.wikitext.twiki.internal.validation.TWikiReferenceValidationRule"
           markupLanguage="TWiki"/>
  </extension>
    <extension

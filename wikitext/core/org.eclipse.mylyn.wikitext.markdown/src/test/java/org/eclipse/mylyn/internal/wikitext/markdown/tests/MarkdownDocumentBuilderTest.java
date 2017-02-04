@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 
 import java.io.StringWriter;
 
-import org.eclipse.mylyn.internal.wikitext.markdown.MarkdownDocumentBuilder;
+import org.eclipse.mylyn.wikitext.markdown.internal.MarkdownDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;

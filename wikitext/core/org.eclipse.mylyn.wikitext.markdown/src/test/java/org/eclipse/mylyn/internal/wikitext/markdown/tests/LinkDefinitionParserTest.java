@@ -11,8 +11,8 @@
 
 package org.eclipse.mylyn.internal.wikitext.markdown.tests;
 
-import org.eclipse.mylyn.internal.wikitext.markdown.LinkDefinition;
-import org.eclipse.mylyn.internal.wikitext.markdown.LinkDefinitionParser;
+import org.eclipse.mylyn.wikitext.markdown.internal.LinkDefinition;
+import org.eclipse.mylyn.wikitext.markdown.internal.LinkDefinitionParser;
 
 import junit.framework.TestCase;
 

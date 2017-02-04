@@ -14,7 +14,7 @@ package org.eclipse.mylyn.wikitext.tracwiki;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.internal.wikitext.tracwiki.token.WikiWordReplacementToken;
+import org.eclipse.mylyn.wikitext.tracwiki.internal.token.WikiWordReplacementToken;
 
 import junit.framework.TestCase;
 

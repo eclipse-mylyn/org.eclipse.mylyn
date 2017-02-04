@@ -12,13 +12,13 @@ package org.eclipse.mylyn.wikitext.commonmark;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.eclipse.mylyn.internal.wikitext.commonmark.CommonMark;
-import org.eclipse.mylyn.internal.wikitext.commonmark.CommonMarkIdGenerationStrategy;
-import org.eclipse.mylyn.internal.wikitext.commonmark.InlineContent;
-import org.eclipse.mylyn.internal.wikitext.commonmark.LineSequence;
-import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContext;
-import org.eclipse.mylyn.internal.wikitext.commonmark.ProcessingContextBuilder;
-import org.eclipse.mylyn.internal.wikitext.commonmark.SourceBlocks;
+import org.eclipse.mylyn.wikitext.commonmark.internal.CommonMark;
+import org.eclipse.mylyn.wikitext.commonmark.internal.CommonMarkIdGenerationStrategy;
+import org.eclipse.mylyn.wikitext.commonmark.internal.InlineContent;
+import org.eclipse.mylyn.wikitext.commonmark.internal.LineSequence;
+import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContext;
+import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContextBuilder;
+import org.eclipse.mylyn.wikitext.commonmark.internal.SourceBlocks;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.markup.IdGenerationStrategy;

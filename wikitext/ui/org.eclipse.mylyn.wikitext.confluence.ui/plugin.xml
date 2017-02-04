@@ -41,7 +41,7 @@
 	<extension
 	   point="org.eclipse.mylyn.wikitext.ui.markupValidationRule">
 		<rule
-	      class="org.eclipse.mylyn.internal.wikitext.confluence.validation.ConfluenceReferenceValidationRule"
+	      class="org.eclipse.mylyn.wikitext.confluence.internal.validation.ConfluenceReferenceValidationRule"
 	      markupLanguage="Confluence"/>
 	</extension>
    <extension
