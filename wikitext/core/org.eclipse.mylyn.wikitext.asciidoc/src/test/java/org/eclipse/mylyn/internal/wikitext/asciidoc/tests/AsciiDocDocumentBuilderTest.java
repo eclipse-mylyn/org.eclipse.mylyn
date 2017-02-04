@@ -134,6 +134,15 @@ public class AsciiDocDocumentBuilderTest extends TestCase {
 		assertMarkup("line\nbreak\n\n");
 	}
 
+	public void testDiv() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.DIV, new Attributes());
+		builder.characters("A div.");
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("A div.");
+	}
+
 	public void testHeadings() {
 		builder.beginDocument();
 		builder.beginHeading(1, new Attributes());
@@ -147,6 +156,35 @@ public class AsciiDocDocumentBuilderTest extends TestCase {
 		builder.endHeading();
 		builder.endDocument();
 		assertMarkup("= This is an H1\n\n== This is an H2\n\n====== This is an H6\n\n");
+	}
+
+	public void testHeadingsAfterParagraph() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("Some paragraph.");
+		builder.endBlock();
+		builder.beginHeading(2, new Attributes());
+		builder.characters("Title");
+		builder.endHeading();
+		builder.endDocument();
+		assertMarkup("Some paragraph.\n\n== Title\n\n");
+	}
+
+	public void testHeadingsAfterList() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("lorem");
+		builder.endBlock();
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("ipsum");
+		builder.endBlock();
+		builder.endBlock();
+		builder.beginHeading(2, new Attributes());
+		builder.characters("Title");
+		builder.endHeading();
+		builder.endDocument();
+		assertMarkup("* lorem\n* ipsum\n\n== Title\n\n");
 	}
 
 	public void testBlockQuote() {
@@ -427,6 +465,18 @@ public class AsciiDocDocumentBuilderTest extends TestCase {
 		builder.endBlock();
 		builder.endDocument();
 		assertMarkup("[listing]\n----\n<body>\n    UNIX was created at AT&T.\n</body>\n----\n\n");
+	}
+
+	public void testPreformattedBlock() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("Paragraph:");
+		builder.endBlock();
+		builder.beginBlock(BlockType.PREFORMATTED, new Attributes());
+		builder.characters("Code block.");
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("Paragraph:\n\n[listing]\n----\nCode block.\n----\n\n");
 	}
 
 	public void testUnsupportedSpan() {
