@@ -58,8 +58,8 @@ public class HtmlParserTest {
 		HtmlParser instance = HtmlParser.instanceWithHtmlCleanupRules();
 		assertNotNull(instance);
 		assertNotNull(instance.getDelegate());
-		assertTrue(instance.getDelegate() instanceof org.eclipse.mylyn.internal.wikitext.parser.html.HtmlParser);
-		org.eclipse.mylyn.internal.wikitext.parser.html.HtmlParser delegate = (org.eclipse.mylyn.internal.wikitext.parser.html.HtmlParser) instance.getDelegate();
+		assertTrue(instance.getDelegate() instanceof org.eclipse.mylyn.wikitext.internal.parser.html.HtmlParser);
+		org.eclipse.mylyn.wikitext.internal.parser.html.HtmlParser delegate = (org.eclipse.mylyn.wikitext.internal.parser.html.HtmlParser) instance.getDelegate();
 		assertFalse(delegate.getProcessors().isEmpty());
 	}
 

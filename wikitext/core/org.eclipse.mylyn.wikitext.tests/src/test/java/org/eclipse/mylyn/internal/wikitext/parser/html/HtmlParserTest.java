@@ -13,9 +13,9 @@ package org.eclipse.mylyn.internal.wikitext.parser.html;
 
 import java.io.IOException;
 
-import org.eclipse.mylyn.internal.wikitext.parser.html.AbstractSaxHtmlParser;
-import org.eclipse.mylyn.internal.wikitext.parser.html.HtmlCleaner;
-import org.eclipse.mylyn.internal.wikitext.parser.html.HtmlParser;
+import org.eclipse.mylyn.wikitext.internal.parser.html.AbstractSaxHtmlParser;
+import org.eclipse.mylyn.wikitext.internal.parser.html.HtmlCleaner;
+import org.eclipse.mylyn.wikitext.internal.parser.html.HtmlParser;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 

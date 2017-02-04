@@ -15,11 +15,11 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 
-import org.eclipse.mylyn.internal.wikitext.parser.html.AbstractSaxHtmlParser;
-import org.eclipse.mylyn.internal.wikitext.textile.TextileDocumentBuilder;
+import org.eclipse.mylyn.wikitext.internal.parser.html.AbstractSaxHtmlParser;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
+import org.eclipse.mylyn.wikitext.textile.internal.TextileDocumentBuilder;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 

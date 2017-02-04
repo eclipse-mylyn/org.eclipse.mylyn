@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 Tasktop Technologies
+ * Copyright (c) 2007, 2013 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,20 +9,14 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.parser.html;
+package org.eclipse.mylyn.wikitext.internal.parser.html;
 
 import org.eclipse.mylyn.wikitext.internal.parser.html.AbstractSaxHtmlParser;
 import org.eclipse.mylyn.wikitext.internal.parser.html.XHtmlParser;
 
-/**
- * @author David Green
- * @see XHtmlParser
- */
-public class XHtmlParserTest extends AbstractSaxParserTest {
-
+public class XHtmlParserTest extends HtmlParserTest {
 	@Override
 	protected AbstractSaxHtmlParser createParser() {
 		return new XHtmlParser();
 	}
-
 }
