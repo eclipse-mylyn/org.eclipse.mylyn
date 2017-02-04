@@ -49,6 +49,23 @@
                             <goal>run</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>remove-wikitext-from-p2-index</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <target>
+                                <property name="p2-index-file" value="${basedir}/.local-repo/.meta/p2-artifacts.properties"/>
+                                <touch file="${p2-index-file}" mkdirs="true"/>
+                                <replaceregexp file="${p2-index-file}" flags="gm">
+                                    <regexp pattern="^p2\.osgi\.bundle\:org\.eclipse\.mylyn\.wikitext\..*$"/>
+                                    <substitution expression=""/>
+                                </replaceregexp>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -62,6 +79,7 @@
                 <configuration>
                     <pom>ui/pom.xml</pom>
                     <streamLogs>true</streamLogs>
+                    <localRepositoryPath>.local-repo</localRepositoryPath>
                     <goals>
                         <goal>clean</goal>
                         <goal>${wikitext.goal}</goal>
@@ -71,6 +89,7 @@
                     <execution>
                         <id>two-part-build</id>
                         <goals>
+                            <goal>install</goal><!-- install to avoid stale p2 cache with locally built artifacts -->
                             <goal>run</goal>
                             <goal>verify</goal>
                         </goals>

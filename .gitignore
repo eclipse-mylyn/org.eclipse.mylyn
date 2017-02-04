@@ -4,3 +4,4 @@ target
 *.rej
 *~
 build.log
+.local-repo
