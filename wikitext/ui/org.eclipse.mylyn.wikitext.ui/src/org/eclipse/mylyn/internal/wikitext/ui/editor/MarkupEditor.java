@@ -696,17 +696,18 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes" })
 	@Override
-	public <T> T getAdapter(Class<T> adapter) {
+	public Object getAdapter(Class adapter) {
+
 		if (IContentOutlinePage.class == adapter) {
 			if (!isOutlinePageValid()) {
 				outlinePage = new MarkupEditorOutline(this);
 			}
-			return (T) outlinePage;
+			return outlinePage;
 		}
 		if (adapter == OutlineItem.class) {
-			return (T) getOutlineModel();
+			return getOutlineModel();
 		}
 		if (adapter == IFoldingStructure.class) {
 			if (!isFoldingEnabled()) {
@@ -715,10 +716,10 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 			if (foldingStructure == null) {
 				foldingStructure = new FoldingStructure(this);
 			}
-			return (T) foldingStructure;
+			return foldingStructure;
 		}
 		if (adapter == IShowInTargetList.class) {
-			return (T) SHOW_IN_TARGET_LIST;
+			return SHOW_IN_TARGET_LIST;
 		}
 		return super.getAdapter(adapter);
 	}
@@ -946,6 +947,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 						newProjectionAnnotationById.put(newAnnotation.getHeadingId(), newAnnotation);
 					}
 				}
+				@SuppressWarnings("unchecked")
 				Iterator<Annotation> annotationIt = projectionAnnotationModel.getAnnotationIterator();
 				while (annotationIt.hasNext()) {
 					Annotation annotation = annotationIt.next();
@@ -1323,7 +1325,6 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		return previewTab != null && tabFolder.getSelection() == previewTab;
 	}
 
-	@Override
 	protected boolean getInitialWordWrapStatus() {
 		return true;
 	}

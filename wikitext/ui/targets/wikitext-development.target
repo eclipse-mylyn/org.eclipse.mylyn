@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="wikitext" sequenceNumber="12">
+<?pde version="3.8"?><target name="wikitext" sequenceNumber="13">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.mylyn.context_feature.feature.group" version="0.0.0"/>
@@ -63,7 +63,7 @@
 <unit id="org.eclipse.ecf.core.ssl.source.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.ecf.discovery.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.ecf.discovery.jmdns.feature.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/releases/oxygen"/>
+<repository location="http://download.eclipse.org/releases/mars"/>
 </location>
 </locations>
 </target>

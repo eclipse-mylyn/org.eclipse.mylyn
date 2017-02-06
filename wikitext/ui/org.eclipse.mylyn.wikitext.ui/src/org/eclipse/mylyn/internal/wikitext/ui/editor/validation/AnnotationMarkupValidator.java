@@ -38,6 +38,7 @@ public class AnnotationMarkupValidator extends DocumentRegionValidator {
 		monitor.done();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void createProblems(IProgressMonitor monitor, IDocument document, IRegion region,
 			List<ValidationProblem> problems) throws CoreException {

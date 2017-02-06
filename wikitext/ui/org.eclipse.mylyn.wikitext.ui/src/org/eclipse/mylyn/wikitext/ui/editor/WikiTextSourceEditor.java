@@ -272,22 +272,22 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 		contextService.activateContext(CONTEXT);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes" })
 	@Override
-	public <T> T getAdapter(Class<T> adapter) {
+	public Object getAdapter(Class adapter) {
 		if (adapter == IContentOutlinePage.class) {
 			if (outlinePage == null || outlinePage.getControl() == null || outlinePage.getControl().isDisposed()) {
 				outlinePage = createContentOutline();
 				outlinePage.setEditor(this);
 			}
-			return (T) outlinePage;
+			return outlinePage;
 		}
 		if (adapter == OutlineItem.class) {
-			return (T) getOutlineModel();
+			return getOutlineModel();
 		} else if (adapter == IShowInSource.class) {
-			return (T) this;
+			return this;
 		} else if (adapter == IShowInTarget.class) {
-			return (T) this;
+			return this;
 		}
 		return super.getAdapter(adapter);
 	}
@@ -517,7 +517,7 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 		outlineModel.clear();
 		outlineModel.moveChildren(rootItem);
 
-		IFile file = getAdapter(IFile.class);
+		IFile file = (IFile) getAdapter(IFile.class);
 		outlineModel.setResourcePath(file == null ? null : file.getFullPath().toString());
 
 		firePropertyChange(PROP_OUTLINE);

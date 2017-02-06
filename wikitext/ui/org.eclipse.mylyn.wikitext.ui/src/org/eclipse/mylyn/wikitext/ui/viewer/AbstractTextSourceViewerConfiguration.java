@@ -60,6 +60,7 @@ public abstract class AbstractTextSourceViewerConfiguration extends TextSourceVi
 		super(preferenceStore);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
 		List<IHyperlinkDetector> customDetectors = createCustomHyperlinkDetectors(sourceViewer);

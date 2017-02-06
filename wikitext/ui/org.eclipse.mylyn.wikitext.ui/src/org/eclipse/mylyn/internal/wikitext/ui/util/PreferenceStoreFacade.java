@@ -24,7 +24,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
  */
 public abstract class PreferenceStoreFacade implements IPreferenceStore {
 
-	private final ListenerList<IPropertyChangeListener> listeners = new ListenerList<>(ListenerList.IDENTITY);
+	private final ListenerList listeners = new ListenerList(ListenerList.IDENTITY);
 
 	private IPropertyChangeListener forwardingListener;
 

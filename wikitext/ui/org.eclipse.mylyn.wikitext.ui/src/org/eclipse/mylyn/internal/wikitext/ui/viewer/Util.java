@@ -19,6 +19,7 @@ import org.eclipse.jface.text.source.IAnnotationModel;
 
 class Util {
 
+	@SuppressWarnings("unchecked")
 	static boolean annotationsIncludeOffset(IAnnotationModel annotationModel, int offset) {
 		if (annotationModel == null) {
 			return false;
@@ -27,8 +28,7 @@ class Util {
 			// eclipse 3.4
 			Iterator<?> annotationIterator = (Iterator<?>) annotationModel.getClass()
 					.getMethod("getAnnotationIterator", int.class, int.class, boolean.class, boolean.class) //$NON-NLS-1$
-					.invoke(
-							annotationModel, offset, 1, true, true);
+					.invoke(annotationModel, offset, 1, true, true);
 			return annotationIterator.hasNext();
 		} catch (Exception e) {
 			// eclipse 3.3
