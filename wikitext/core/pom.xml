@@ -2,20 +2,50 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.eclipse.mylyn.docs</groupId>
-        <artifactId>wikitext</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
-        <relativePath>..</relativePath>
-    </parent>
-
+    <groupId>org.eclipse.mylyn.docs</groupId>
     <artifactId>wikitext.core</artifactId>
     <name>Mylyn Docs: WikiText: Core</name>
+    <version>3.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
+
+    <profiles>
+        <profile>
+            <id>ossrh</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <distributionManagement>
+                <repository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+                <snapshotRepository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+    </profiles>
 
     <properties>
         <guava.version>15.0</guava.version>
         <guava.version.upper>22.0</guava.version.upper>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <modules>
@@ -126,16 +156,4 @@
         </testResources>
     </build>
 
-    <distributionManagement>
-        <repository>
-            <id>repo.eclipse.org</id>
-            <name>Mylyn Repository - Releases</name>
-            <url>https://repo.eclipse.org/content/repositories/mylyn-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>repo.eclipse.org</id>
-            <name>Mylyn Repository - Snapshots</name>
-            <url>https://repo.eclipse.org/content/repositories/mylyn-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
 </project>
