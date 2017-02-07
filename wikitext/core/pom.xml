@@ -4,8 +4,8 @@
 
     <groupId>org.eclipse.mylyn.docs</groupId>
     <artifactId>wikitext.core</artifactId>
-    <name>Mylyn Docs: WikiText: Core</name>
     <version>3.0.0-SNAPSHOT</version>
+    <name>Mylyn Docs: WikiText: Core</name>
     <packaging>pom</packaging>
 
     <profiles>
@@ -156,4 +156,30 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
+
+    <licenses>
+        <license>
+            <name>Eclipse Public License Version 1.0</name>
+            <url>http://www.eclipse.org/legal/epl-v10.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <organization>
+        <name>Eclipse Mylyn</name>
+        <url>http://eclipse.org/mylyn</url>
+    </organization>
+    <issueManagement>
+        <system>Bugzilla</system>
+        <url>https://bugs.eclipse.org/</url>
+    </issueManagement>
+    <scm>
+        <connection>scm:git:git://git.eclipse.org/gitroot/mylyn/org.eclipse.mylyn.docs.git</connection>
+        <url>https://git.eclipse.org/c/mylyn/org.eclipse.mylyn.docs.git</url>
+    </scm>
+    <developers>
+        <developer>
+            <url>https://projects.eclipse.org/projects/mylyn.docs/who</url>
+        </developer>
+    </developers>
+
 </project>
