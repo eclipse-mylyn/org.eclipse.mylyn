@@ -62,8 +62,6 @@ public class AllNonConnectorTests {
 		suite.addTest(AllResourcesTests.suite());
 		suite.addTest(AllTeamTests.suite());
 		suite.addTest(AllMiscTests.suite());
-		suite.addTest(org.eclipse.mylyn.wikitext.tests.HeadlessTests.suite());
-		suite.addTest(org.eclipse.mylyn.wikitext.tests.UITests.suite());
 	}
 
 }
