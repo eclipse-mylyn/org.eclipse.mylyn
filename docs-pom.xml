@@ -15,6 +15,7 @@
 
     <properties>
         <docs.goal>verify</docs.goal>
+        <p2.repo.local>${basedir}/.local-repo</p2.repo.local>
     </properties>
 
     <build>
@@ -54,12 +55,23 @@
                         <phase>generate-sources</phase>
                         <configuration>
                             <target>
-                                <property name="p2-index-file" value="${basedir}/.local-repo/.meta/p2-artifacts.properties"/>
+                                <property name="p2-index-file" value="${p2.repo.local}/.meta/p2-artifacts.properties"/>
                                 <touch file="${p2-index-file}" mkdirs="true"/>
                                 <replaceregexp file="${p2-index-file}" flags="gm">
                                     <regexp pattern="^p2\.osgi\.bundle\:org\.eclipse\.mylyn\.wikitext\..*$"/>
                                     <substitution expression=""/>
                                 </replaceregexp>
+                                <delete includeemptydirs="true">
+                                    <fileset dir="${p2.repo.local}" defaultexcludes="false">
+                                       <include name="org/eclipse/mylyn/docs/**" />
+                                    </fileset>
+                                    <fileset dir="${p2.repo.local}" defaultexcludes="false">
+                                       <include name="p2/org/eclipse/update/feature/org.eclipse.mylyn.wikitext*/**" />
+                                    </fileset>
+                                    <fileset dir="${p2.repo.local}" defaultexcludes="false">
+                                       <include name="p2/osgi/bundle/org.eclipse.mylyn.wikitext*/**" />
+                                    </fileset>
+                                </delete>
                             </target>
                         </configuration>
                         <goals>
