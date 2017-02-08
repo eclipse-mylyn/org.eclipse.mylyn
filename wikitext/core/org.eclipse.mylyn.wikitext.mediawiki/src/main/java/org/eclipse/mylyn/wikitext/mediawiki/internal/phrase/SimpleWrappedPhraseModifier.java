@@ -43,7 +43,7 @@ public class SimpleWrappedPhraseModifier extends PatternBasedElement {
 			} else {
 				getMarkupLanguage().emitMarkupText(parser, state, getContent(this));
 			}
-			for (int x = 0; x < spanType.length; ++x) {
+			for (SpanType element : spanType) {
 				getBuilder().endSpan();
 			}
 		}
@@ -61,7 +61,8 @@ public class SimpleWrappedPhraseModifier extends PatternBasedElement {
 		this(startDelimiter, endDelimiter, spanType, false);
 	}
 
-	public SimpleWrappedPhraseModifier(String startDelimiter, String endDelimiter, SpanType[] spanType, boolean nesting) {
+	public SimpleWrappedPhraseModifier(String startDelimiter, String endDelimiter, SpanType[] spanType,
+			boolean nesting) {
 		this.startDelimiter = startDelimiter;
 		this.endDelimiter = endDelimiter;
 		this.spanType = spanType;
@@ -71,13 +72,10 @@ public class SimpleWrappedPhraseModifier extends PatternBasedElement {
 	@Override
 	protected String getPattern(int groupOffset) {
 		String quotedStartDelimiter = quoteLite(startDelimiter);
-		String quotedStartDelimiterLastChar = quoteLite(startDelimiter.substring(startDelimiter.length() - 1,
-				startDelimiter.length()));
 		String quotedEndDelimiter = quoteLite(endDelimiter);
 
 		return quotedStartDelimiter + //
-				"(?!" + quotedStartDelimiterLastChar + ")" + //  //$NON-NLS-1$//$NON-NLS-2$
-				"([^" + quotedEndDelimiter + "]+|\\S(?:.*?\\S)?)" + // content //$NON-NLS-1$ //$NON-NLS-2$
+				"((?:(?!" + quotedEndDelimiter + ").)+)" + // content //$NON-NLS-1$ //$NON-NLS-2$
 				quotedEndDelimiter;
 	}
 

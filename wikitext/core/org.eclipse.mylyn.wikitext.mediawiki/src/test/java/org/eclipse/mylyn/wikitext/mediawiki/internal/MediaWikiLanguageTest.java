@@ -101,12 +101,68 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 
 	@Test
 	public void testBoldItalic() {
+		assertMarkup("<p><b><i>foo bar</i></b></p>", "'''''foo bar'''''");
 		assertMarkup("<p>normal <b><i>bold italic text</i></b> normal</p>", "normal '''''bold italic text''''' normal");
+
+		assertMarkup("<p><b><i>bold italic text</i></b> normal</p>", "'''''bold italic text''''' normal");
+		assertMarkup("<p>normal <b><i>bold italic text</i></b></p>", "normal '''''bold italic text'''''");
+
+		assertMarkup("<p>before <b><i>foo bar</i></b> after a <b><i>second time</i></b> normal</p>",
+				"before '''''foo bar''''' after a '''''second time''''' normal");
+	}
+
+	@Test
+	public void testBoldItalicImmediatelyFollowingTag() {
+		assertMarkup("<p>normal<br/><b><i>bold italic text</i></b> normal</p>",
+				"normal<br>'''''bold italic text''''' normal");
+	}
+
+	@Test
+	public void testBoldItalic_single_character_bug369921() {
+		assertMarkup("<p><b><i>aa</i></b> bb <b><i>cc</i></b></p>", "'''''aa''''' bb '''''cc'''''");
+		assertMarkup("<p><b><i>a</i></b> b <b><i>c</i></b></p>", "'''''a''''' b '''''c'''''");
+	}
+
+	@Test
+	public void testBoldItalic_adjacentText_bug369921() {
+		assertMarkup("<p><b><i>aa</i></b>bb</p>", "'''''aa'''''bb");
+	}
+
+	@Test
+	public void testBoldItalicWithWhitespace() {
+		//Bug 391850
+		assertMarkup("<p>normal <b><i> bi text</i></b> normal</p>", "normal ''''' bi text''''' normal");
+		assertMarkup("<p>normal <b><i>bi text </i></b> normal</p>", "normal '''''bi text ''''' normal");
+		assertMarkup("<p>normal <b><i> bi text </i></b> normal</p>", "normal ''''' bi text ''''' normal");
+
+		assertMarkup("<p><b><i> bi text</i></b> normal</p>", "''''' bi text''''' normal");
+		assertMarkup("<p><b><i>bi text </i></b> normal</p>", "'''''bi text ''''' normal");
+		assertMarkup("<p><b><i> bi text </i></b> normal</p>", "''''' bi text ''''' normal");
+
+		assertMarkup("<p>normal <b><i> bi text</i></b></p>", "normal ''''' bi text'''''");
+		assertMarkup("<p>normal <b><i>bi text </i></b></p>", "normal '''''bi text '''''");
+		assertMarkup("<p>normal <b><i> bi text </i></b></p>", "normal ''''' bi text '''''");
+	}
+
+	@Test
+	public void testBoldItalicWithSingleQuote() {
+		//Bug 509775
+		assertMarkup("<p>n <b><i>bi 'a' and 'e' text</i></b> n</p>", "n '''''bi 'a' and 'e' text''''' n");
+		assertMarkup("<p><b><i>bi 'a' and 'e' text</i></b> n</p>", "'''''bi 'a' and 'e' text''''' n");
+		assertMarkup("<p>n <b><i>bi 'a' and 'e' text</i></b></p>", "n '''''bi 'a' and 'e' text'''''");
+
 	}
 
 	@Test
 	public void testBold() {
+		assertMarkup("<p><b>foo bar</b></p>", "'''foo bar'''");
 		assertMarkup("<p>normal <b>bold text</b> normal</p>", "normal '''bold text''' normal");
+
+		assertMarkup("<p><b>bold text</b> normal</p>", "'''bold text''' normal");
+		assertMarkup("<p>normal <b>bold text</b></p>", "normal '''bold text'''");
+
+		assertMarkup("<p>before <b>foo bar</b> after a <b>second time</b> normal</p>",
+				"before '''foo bar''' after a '''second time''' normal");
 	}
 
 	@Test
@@ -131,11 +187,45 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 		assertMarkup("<p>normal <b> bold text</b> normal</p>", "normal ''' bold text''' normal");
 		assertMarkup("<p>normal <b>bold text </b> normal</p>", "normal '''bold text ''' normal");
 		assertMarkup("<p>normal <b> bold text </b> normal</p>", "normal ''' bold text ''' normal");
+
+		assertMarkup("<p><b> bold text</b> normal</p>", "''' bold text''' normal");
+		assertMarkup("<p><b>bold text </b> normal</p>", "'''bold text ''' normal");
+		assertMarkup("<p><b> bold text </b> normal</p>", "''' bold text ''' normal");
+
+		assertMarkup("<p>normal <b> bold text</b></p>", "normal ''' bold text'''");
+		assertMarkup("<p>normal <b>bold text </b></p>", "normal '''bold text '''");
+		assertMarkup("<p>normal <b> bold text </b></p>", "normal ''' bold text '''");
+	}
+
+	@Test
+	public void testBoldWithSingleQuote() {
+		//Bug 509775
+		assertMarkup("<p>normal <b>bold 'a' and 'e' text</b> normal</p>", "normal '''bold 'a' and 'e' text''' normal");
+		assertMarkup("<p>normal <b> a' bold</b> normal</p>", "normal ''' a' bold''' normal");
+		assertMarkup("<p>normal <b>bold 'a bold </b> normal</p>", "normal '''bold 'a bold ''' normal");
 	}
 
 	@Test
 	public void testItalic() {
+		assertMarkup("<p><i>foo bar</i></p>", "''foo bar''");
 		assertMarkup("<p>normal <i>italic text</i> normal</p>", "normal ''italic text'' normal");
+
+		assertMarkup("<p><i>italic text</i> normal</p>", "''italic text'' normal");
+		assertMarkup("<p>normal <i>italic text</i></p>", "normal ''italic text''");
+
+		assertMarkup("<p>before <i>foo bar</i> after a <i>second time</i> normal</p>",
+				"before ''foo bar'' after a ''second time'' normal");
+	}
+
+	@Test
+	public void testItalic_single_character_bug369921() {
+		assertMarkup("<p><i>aa</i> bb <i>cc</i></p>", "''aa'' bb ''cc''");
+		assertMarkup("<p><i>a</i> b <i>c</i></p>", "''a'' b ''c''");
+	}
+
+	@Test
+	public void testItalic_adjacentText_bug369921() {
+		assertMarkup("<p><i>aa</i>bb</p>", "''aa''bb");
 	}
 
 	@Test
@@ -144,6 +234,22 @@ public class MediaWikiLanguageTest extends AbstractMarkupGenerationTest<MediaWik
 		assertMarkup("<p>normal <i> italic text</i> normal</p>", "normal '' italic text'' normal");
 		assertMarkup("<p>normal <i>italic text </i> normal</p>", "normal ''italic text '' normal");
 		assertMarkup("<p>normal <i> italic text </i> normal</p>", "normal '' italic text '' normal");
+
+		assertMarkup("<p><i> italic text</i> normal</p>", "'' italic text'' normal");
+		assertMarkup("<p><i>italic text </i> normal</p>", "''italic text '' normal");
+		assertMarkup("<p><i> italic text </i> normal</p>", "'' italic text '' normal");
+
+		assertMarkup("<p>normal <i> italic text</i></p>", "normal '' italic text''");
+		assertMarkup("<p>normal <i>italic text </i></p>", "normal ''italic text ''");
+		assertMarkup("<p>normal <i> italic text </i></p>", "normal '' italic text ''");
+	}
+
+	@Test
+	public void testItalicWithSingleQuote() {
+		//Bug 509775
+		assertMarkup("<p>norm <i>italic 'a' and 'e' text</i> norm</p>", "norm ''italic 'a' and 'e' text'' norm");
+		assertMarkup("<p>normal <i>italic 'a text </i> normal</p>", "normal ''italic 'a text '' normal");
+		assertMarkup("<p>normal <i> some a' italic</i> normal</p>", "normal '' some a' italic'' normal");
 	}
 
 	@Test
