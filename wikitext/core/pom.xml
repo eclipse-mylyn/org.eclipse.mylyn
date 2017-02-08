@@ -50,6 +50,7 @@
         <guava.version>15.0</guava.version>
         <guava.version.upper>22.0</guava.version.upper>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
     </properties>
 
     <modules>
@@ -124,6 +125,11 @@
                     <uniqueVersion>false</uniqueVersion>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+            </plugin>
         </plugins>
         <resources>
             <resource>
@@ -187,7 +193,8 @@
         <url>https://bugs.eclipse.org/</url>
     </issueManagement>
     <scm>
-        <connection>scm:git:git://git.eclipse.org/gitroot/mylyn/org.eclipse.mylyn.docs.git</connection>
+        <developerConnection>scm:git://git.eclipse.org/gitroot/mylyn/org.eclipse.mylyn.docs.git</developerConnection>
+        <connection>scm:git://git.eclipse.org/gitroot/mylyn/org.eclipse.mylyn.docs.git</connection>
         <url>https://git.eclipse.org/c/mylyn/org.eclipse.mylyn.docs.git</url>
     </scm>
     <developers>
