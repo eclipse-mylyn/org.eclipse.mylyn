@@ -87,4 +87,23 @@ public class AsciiDocLanguageImageTest extends AsciiDocLanguageTestBase {
 						+ "</div>" + "<div class=\"title\">Figure 1: A mountain sunset</div>" + "</div>" + "</p>\n",
 				html);
 	}
+
+	@Test
+	public void imageWithImageDir() {
+		String markup = "" + //
+				":imagesdir: img_chap1/\n" + //
+				"\n" + //
+				"image::cover.png[]\n" + //
+				"\n" + //
+				":imagesdir: img_chap2\n" + //
+				"\n" + //
+				"image::cover.png[]\n";
+		String html = parseToHtml(markup);
+
+		String expected = "" //
+				+ "<p><div class=\"imageblock\"><div class=\"content\"><img alt=\"cover\" border=\"0\" src=\"img_chap1/cover.png\"/></div></div></p>\n"
+				+ "<p><div class=\"imageblock\"><div class=\"content\"><img alt=\"cover\" border=\"0\" src=\"img_chap2/cover.png\"/></div></div></p>\n";
+
+		assertEquals(expected, html);
+	}
 }

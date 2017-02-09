@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.mylyn.wikitext.asciidoc.internal.AsciiDocContentState;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.util.LanguageSupport;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
@@ -97,7 +98,14 @@ public class InlineImageReplacementToken extends PatternBasedElement {
 
 			}
 
-			// TODO: honor imagedir attribute?
+			String imagesDir = getAsciiDocState().getAttribute(AsciiDocContentState.ATTRIBUTE_IMAGESDIR);
+			if (imagesDir != null && !imagesDir.isEmpty()) {
+				if (imagesDir.endsWith("/")) { //$NON-NLS-1$
+					src = imagesDir + src;
+				} else {
+					src = imagesDir + "/" + src; //$NON-NLS-1$
+				}
+			}
 
 			if (group(0).startsWith("image::")) { // imageblock //$NON-NLS-1$
 				Attributes imageSpanAttributes = new Attributes();
@@ -172,6 +180,9 @@ public class InlineImageReplacementToken extends PatternBasedElement {
 				builder.image(attributes, src);
 			}
 		}
-	}
 
+		protected AsciiDocContentState getAsciiDocState() {
+			return (AsciiDocContentState) state;
+		}
+	}
 }
