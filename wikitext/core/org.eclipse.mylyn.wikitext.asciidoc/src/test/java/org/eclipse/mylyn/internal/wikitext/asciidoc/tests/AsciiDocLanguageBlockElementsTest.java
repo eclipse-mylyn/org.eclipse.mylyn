@@ -374,73 +374,82 @@ public class AsciiDocLanguageBlockElementsTest extends AsciiDocLanguageTestBase 
 		assertTrue(Pattern.compile("<h5[^>]*>Title test underlined H5</h5>").matcher(html).find());
 	}
 
+	@Test
 	public void testPreBlockIndentedByFourSpaces() {
 		String html = parseToHtml("    This is a pre block.");
 
-		assertEquals(html, "<pre>This is a pre block.</pre>");
+		assertEquals("<pre>This is a pre block.</pre>", html);
 	}
 
+	@Test
 	public void testPreBlockIndentedByOneTab() {
 		String html = parseToHtml("\tThis is a pre block.");
 
-		assertEquals(html, "<pre>This is a pre block.</pre>");
+		assertEquals("<pre>This is a pre block.</pre>", html);
 	}
 
 	/*
 	 * One level of indentation - 4 spaces or 1 tab - is removed from each line of the pre block.
 	 */
+	@Test
 	public void testPreBlockMultiLineIndentedByFourSpaces() {
 		String html = parseToHtml("    aaa\n        bbb\n            ccc");
 
 		String expectedHtml = "<pre>aaa\n    bbb\n        ccc</pre>";
-		assertEquals(html, expectedHtml);
+		assertEquals(expectedHtml, html);
 	}
 
+	@Test
 	public void testPreBlockMultiLineIndentedByOneTab() {
 		String html = parseToHtml("\taaa\n\t\tbbb\n\t\t\tccc");
 
 		String expectedHtml = "<pre>aaa\n\tbbb\n\t\tccc</pre>";
-		assertEquals(html, expectedHtml);
+		assertEquals(expectedHtml, html);
 	}
 
+	@Test
 	public void testPreBlockMultiLineIndentedByFourSpacesNoContinueAfterEmptyLine() {
 		String html = parseToHtml("    aaa\n    bbb\n    ccc\n        \n    after empty line");
 
-		assertEquals(html, "<pre>aaa\nbbb\nccc</pre>");
-		assertEquals(html, "<pre>after empty line</pre>");
+		String expected = "<pre>aaa\nbbb\nccc</pre><pre>after empty line</pre>";
+		assertEquals(expected, html);
 	}
 
+	@Test
 	public void testPreBlockMultiLineIndentedByFourSpacesNoContinueAfterTabLine() {
 		String html = parseToHtml("    aaa\n    bbb\n    ccc\n    \t\t\n    after empty line");
 
-		assertEquals(html, "<pre>aaa\nbbb\nccc</pre>");
-		assertEquals(html, "<pre>after empty line</pre>");
+		String expected = "<pre>aaa\nbbb\nccc</pre><pre>after empty line</pre>";
+		assertEquals(expected, html);
 	}
 
+	@Test
 	public void testPreBlockMultiLineIndentedByOneTabNoContinueAfterEmptyLine() {
 		String html = parseToHtml("\taaa\n\tbbb\n\tccc\n\t\n\tafter empty line");
 
-		assertEquals(html, "<pre>aaa\nbbb\nccc</pre>");
-		assertEquals(html, "<pre>after empty line</pre>");
+		String expected = "<pre>aaa\nbbb\nccc</pre><pre>after empty line</pre>";
+		assertEquals(expected, html);
 	}
 
 	/**
 	 * Within a pre block, ampersands (&) and angle brackets (< and >) are automatically converted into HTML entities.
 	 */
+	@Test
 	public void testSpecialCharactersAreConvertedInCodeBlock() {
 		String html = parseToHtml("    <div class=\"footer\">\n    &copy; 2004 Foo Bar\n    </div>");
 
 		String expectedHtml = "<pre>&lt;div class=\"footer\"&gt;\n&amp;copy; 2004 Foo Bar\n&lt;/div&gt;</pre>";
-		assertEquals(html, expectedHtml);
+		assertEquals(expectedHtml, html);
 	}
 
 	/**
 	 * Regular asciidoc syntax is not processed within code blocks.
 	 */
+	@Test
 	public void testNoProcessingInCodeBlock() {
 		String html = parseToHtml("    === Header 3\n    Lorem *ipsum*");
 
 		String expectedHtml = "<pre>=== Header 3\nLorem *ipsum*</pre>";
-		assertEquals(html, expectedHtml);
+		assertEquals(expectedHtml, html);
 	}
 }

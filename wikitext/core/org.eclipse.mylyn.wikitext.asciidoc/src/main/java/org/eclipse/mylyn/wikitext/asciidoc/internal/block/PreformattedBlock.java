@@ -31,6 +31,8 @@ public class PreformattedBlock extends AsciiDocBlock {
 
 	private Matcher matcher;
 
+	private boolean hasContent;
+
 	public PreformattedBlock() {
 		super(startPattern);
 	}
@@ -57,12 +59,13 @@ public class PreformattedBlock extends AsciiDocBlock {
 		builder.beginBlock(BlockType.PREFORMATTED, new Attributes());
 		String line = startDelimiter;
 		setStartDelimiter(matcher.group(1));
+		hasContent = false;
 		processBlockContent(line);
 	}
 
 	@Override
 	protected boolean isClosingLine(String line, int offset) {
-		return !line.startsWith(getStartDelimiter());
+		return !line.startsWith(getStartDelimiter()) || line.trim().isEmpty();
 	}
 
 	@Override
@@ -73,12 +76,16 @@ public class PreformattedBlock extends AsciiDocBlock {
 			String indent = matcher.group(2);
 			String content = matcher.group(3);
 
+			if (hasContent) {
+				builder.characters("\n");
+			}
+
 			// emit, handle intention, encode ampersands (&) and angle brackets (< and >)
 			if (indent != null) {
 				builder.characters(indent);
 			}
 			builder.characters(content);
-			builder.lineBreak();
+			hasContent = true;
 		}
 	}
 

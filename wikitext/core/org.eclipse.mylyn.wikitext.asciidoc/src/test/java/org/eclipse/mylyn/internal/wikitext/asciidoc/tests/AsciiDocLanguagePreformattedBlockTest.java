@@ -24,8 +24,7 @@ public class AsciiDocLanguagePreformattedBlockTest extends AsciiDocLanguageTestB
 				+ "\n" //
 				+ "Some Text");
 		assertEquals("<pre>" //
-				+ "10 PRINT \"Hello World!\"<br/>" //
-				+ "</pre>" //
+				+ "10 PRINT \"Hello World!\"</pre>" //
 				+ "<p>Some Text</p>\n", html);
 	}
 
@@ -35,9 +34,8 @@ public class AsciiDocLanguagePreformattedBlockTest extends AsciiDocLanguageTestB
 				+ "    10 PRINT \"Hello World!\"\n" //
 				+ "    20 GOTO 10\n");
 		assertEquals("<pre>" //
-				+ "10 PRINT \"Hello World!\"<br/>" //
-				+ "20 GOTO 10<br/>" //
-				+ "</pre>", html);
+				+ "10 PRINT \"Hello World!\"\n" //
+				+ "20 GOTO 10</pre>", html);
 	}
 
 	@Test
@@ -49,10 +47,9 @@ public class AsciiDocLanguagePreformattedBlockTest extends AsciiDocLanguageTestB
 				+ "\n" //
 				+ "Some Text");
 		assertEquals("<pre>" //
-				+ "public static void main(String[] args) {<br/>" //
-				+ "\tSystem.out.println(\"Hello World!\");<br/>" //
-				+ "}<br/>" //
-				+ "</pre>" //
+				+ "public static void main(String[] args) {\n" //
+				+ "\tSystem.out.println(\"Hello World!\");\n" //
+				+ "}</pre>" //
 				+ "<p>Some Text</p>\n", html);
 	}
 }
