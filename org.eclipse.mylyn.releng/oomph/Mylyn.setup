@@ -147,6 +147,9 @@
       <requirement
           name="org.objenesis"
           versionRange="[1.0.0,2.0.0)"/>
+      <requirement
+          name="com.google.guava"
+          versionRange="[21.0.0,22.0.0)"/>
       <repositoryList
           name="Oxygen">
         <repository
@@ -158,7 +161,7 @@
         <repository
             url="http://download.eclipse.org/eclipse/updates/3.8"/>
         <repository
-            url="http://download.eclipse.org/tools/orbit/downloads/drops/S20170120205402/repository/"/>
+            url="http://download.eclipse.org/tools/orbit/downloads/drops/I20170209194730/repository"/>
       </repositoryList>
       <repositoryList
           name="Neon">
@@ -171,7 +174,7 @@
         <repository
             url="http://download.eclipse.org/eclipse/updates/3.8"/>
         <repository
-            url="http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository/"/>
+            url="http://download.eclipse.org/tools/orbit/downloads/drops/I20170209194730/repository"/>
       </repositoryList>
       <repositoryList
           name="Mars">
@@ -184,7 +187,7 @@
         <repository
             url="http://download.eclipse.org/eclipse/updates/3.8"/>
         <repository
-            url="http://download.eclipse.org/tools/orbit/downloads/drops/R20160221192158/repository/"/>
+            url="http://download.eclipse.org/tools/orbit/downloads/drops/I20170209194730/repository"/>
       </repositoryList>
     </targlet>
   </setupTask>
