@@ -428,6 +428,35 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 		if (attributes.getCssClass() != null) {
 			writer.writeAttribute("role", attributes.getCssClass()); //$NON-NLS-1$
 		}
+		if (attributes.getCssStyle() != null) {
+			String cssStyle = attributes.getCssStyle();
+			if (cssStyle != null) {
+				Matcher typeMatcher = Pattern.compile("list-style-type:\\s+([\\w-]+);").matcher(cssStyle);
+				if (typeMatcher.find()) {
+					String type = typeMatcher.group(1);
+					switch (type) {
+					case "decimal":
+						type = "arabic";
+						break;
+					case "lower-alpha":
+						type = "loweralpha";
+						break;
+					case "upper-alpha":
+						type = "upperalpha";
+						break;
+					case "upper-roman":
+						type = "upperroman";
+						break;
+					case "lower-roman":
+						type = "lowerroman";
+						break;
+					default:
+						break;
+					}
+					writer.writeAttribute("numeration", type);
+				}
+			}
+		}
 	}
 
 	@Override

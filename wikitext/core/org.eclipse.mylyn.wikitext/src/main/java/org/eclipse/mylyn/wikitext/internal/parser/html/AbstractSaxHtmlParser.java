@@ -37,7 +37,6 @@ import com.google.common.collect.ImmutableSet;
  * A parser for (X)HTML that is based on SAX. Subclasses determine the source of SAX events.
  *
  * @author David Green
- * 
  */
 public abstract class AbstractSaxHtmlParser {
 
@@ -276,7 +275,8 @@ public abstract class AbstractSaxHtmlParser {
 
 		public void characters(char[] ch, int start, int length) throws SAXException {
 			if (processingContent) {
-				if ((elementState.noWhitespaceTextContainer && (elementState.lastChild == null || elementState.lastChild.blockElement))
+				if ((elementState.noWhitespaceTextContainer
+						&& (elementState.lastChild == null || elementState.lastChild.blockElement))
 						|| (elementState.blockElement && !elementState.preserveWhitespace
 								&& elementState.textChildCount == 0 && elementState.childCount == 0)
 						|| (elementState.lastChild != null && elementState.lastChild.collapsesAdjacentWhitespace)) {
@@ -409,6 +409,33 @@ public abstract class AbstractSaxHtmlParser {
 				ListAttributes listAttributes = new ListAttributes();
 				populateCommonAttributes(listAttributes, atts);
 				listAttributes.setStart(getAttribute(atts, "start")); //$NON-NLS-1$
+				if (listAttributes.getCssStyle() == null
+						|| !listAttributes.getCssStyle().contains("list-style-type:")) {
+					String typeAttribute = getAttribute(atts, "type");
+					if (typeAttribute != null) {
+						String listCssType = null;
+						switch (typeAttribute) {
+						case "1":
+							listCssType = "decimal";
+							break;
+						case "a":
+							listCssType = "lower-alpha";
+							break;
+						case "i":
+							listCssType = "lower-roman";
+							break;
+						case "A":
+							listCssType = "upper-alpha";
+							break;
+						case "I":
+							listCssType = "upper-roman";
+							break;
+						}
+						if (typeAttribute != null) {
+							listAttributes.appendCssStyle("list-style-type: " + listCssType + ";");
+						}
+					}
+				}
 				builder.beginBlock(BlockType.NUMERIC_LIST, listAttributes);
 			}
 		}
@@ -724,7 +751,7 @@ public abstract class AbstractSaxHtmlParser {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	protected ContentHandler createContentHandler(DocumentBuilder builder, boolean asDocument) {
 		return new DocumentBuilderAdapter(builder, asDocument);

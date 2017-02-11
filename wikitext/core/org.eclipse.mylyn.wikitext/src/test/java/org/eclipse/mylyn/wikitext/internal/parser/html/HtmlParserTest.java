@@ -19,8 +19,6 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.mylyn.wikitext.internal.parser.html.AbstractSaxHtmlParser;
-import org.eclipse.mylyn.wikitext.internal.parser.html.HtmlParser;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
@@ -68,6 +66,71 @@ public class HtmlParserTest {
 	@Test
 	public void empty() {
 		assertParse("", "<html/>");
+	}
+
+	@Test
+	public void blockOrderedList() {
+		assertParse("<ol><li>item</li><li>item</li></ol>", "<body><ol><li>item</li><li>item</li></ol></body>");
+	}
+
+	@Test
+	public void blockOrderedListArabic() {
+		assertParse("<ol style=\"list-style-type: decimal;\"><li>item</li><li>item</li></ol>",
+				"<body><ol type=\"1\"><li>item</li><li>item</li></ol></body>");
+	}
+
+	@Test
+	public void blockOrderedListLoweralpha() {
+		assertParse("<ol style=\"list-style-type: lower-alpha;\"><li>item</li><li>item</li></ol>",
+				"<body><ol type=\"a\"><li>item</li><li>item</li></ol></body>");
+	}
+
+	@Test
+	public void blockOrderedListUpperalpha() {
+		assertParse("<ol style=\"list-style-type: upper-alpha;\"><li>item</li><li>item</li></ol>",
+				"<body><ol type=\"A\"><li>item</li><li>item</li></ol></body>");
+	}
+
+	@Test
+	public void blockOrderedListLowerroman() {
+		assertParse("<ol style=\"list-style-type: lower-roman;\"><li>item</li><li>item</li></ol>",
+				"<body><ol type=\"i\"><li>item</li><li>item</li></ol></body>");
+	}
+
+	@Test
+	public void blockOrderedListUpperroman() {
+		assertParse("<ol style=\"list-style-type: upper-roman;\"><li>item</li><li>item</li></ol>",
+				"<body><ol type=\"I\"><li>item</li><li>item</li></ol></body>");
+	}
+
+	@Test
+	public void blockOrderedListArabicCss() {
+		assertParse("<ol style=\"list-style-type: decimal;\"><li>item</li><li>item</li></ol>",
+				"<body><ol style=\"list-style-type: decimal;\"><li>item</li><li>item</li></ol></body>");
+	}
+
+	@Test
+	public void blockOrderedListLoweralphaCss() {
+		assertParse("<ol style=\"list-style-type: lower-alpha;\"><li>item</li><li>item</li></ol>",
+				"<body><ol style=\"list-style-type: lower-alpha;\"><li>item</li><li>item</li></ol></body>");
+	}
+
+	@Test
+	public void blockOrderedListUpperalphaCss() {
+		assertParse("<ol style=\"list-style-type: upper-alpha;\"><li>item</li><li>item</li></ol>",
+				"<body><ol style=\"list-style-type: upper-alpha;\"><li>item</li><li>item</li></ol></body>");
+	}
+
+	@Test
+	public void blockOrderedListLowerromanCss() {
+		assertParse("<ol style=\"list-style-type: lower-roman;\"><li>item</li><li>item</li></ol>",
+				"<body><ol style=\"list-style-type: lower-roman;\"><li>item</li><li>item</li></ol></body>");
+	}
+
+	@Test
+	public void blockOrderedListUpperromanCss() {
+		assertParse("<ol style=\"list-style-type: upper-roman;\"><li>item</li><li>item</li></ol>",
+				"<body><ol style=\"list-style-type: upper-roman;\"><li>item</li><li>item</li></ol></body>");
 	}
 
 	@Test

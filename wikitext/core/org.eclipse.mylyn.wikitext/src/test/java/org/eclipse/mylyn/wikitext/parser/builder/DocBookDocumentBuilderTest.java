@@ -16,6 +16,7 @@ import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
+import org.eclipse.mylyn.wikitext.parser.ListAttributes;
 import org.eclipse.mylyn.wikitext.parser.TableAttributes;
 
 import junit.framework.TestCase;
@@ -191,6 +192,96 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		assertEquals(DOCBOOK_BEGIN_CHAPTER + expectedContent + DOCBOOK_END_CHAPTER, docbook);
 	}
 
+	public void testOrderedListArabicType() {
+		builder.beginDocument();
+		ListAttributes listAttributes = new ListAttributes();
+		listAttributes.setCssStyle("list-style-type: decimal;");
+		builder.beginBlock(BlockType.NUMERIC_LIST, listAttributes);
+
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("item");
+		builder.endBlock(); // LI
+		builder.endBlock(); // OL
+		builder.endDocument();
+
+		String docbook = out.toString();
+
+		String expectedContent = "<orderedlist numeration=\"arabic\"><listitem><para>item</para></listitem></orderedlist>";
+		assertEquals(DOCBOOK_BEGIN_CHAPTER + expectedContent + DOCBOOK_END_CHAPTER, docbook);
+	}
+
+	public void testOrderedListLoweralphaType() {
+		builder.beginDocument();
+		ListAttributes listAttributes = new ListAttributes();
+		listAttributes.setCssStyle("list-style-type: lower-alpha;");
+		builder.beginBlock(BlockType.NUMERIC_LIST, listAttributes);
+
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("item");
+		builder.endBlock(); // LI
+		builder.endBlock(); // OL
+		builder.endDocument();
+
+		String docbook = out.toString();
+
+		String expectedContent = "<orderedlist numeration=\"loweralpha\"><listitem><para>item</para></listitem></orderedlist>";
+		assertEquals(DOCBOOK_BEGIN_CHAPTER + expectedContent + DOCBOOK_END_CHAPTER, docbook);
+	}
+
+	public void testOrderedListUpperalphaType() {
+		builder.beginDocument();
+		ListAttributes listAttributes = new ListAttributes();
+		listAttributes.setCssStyle("list-style-type: upper-alpha;");
+		builder.beginBlock(BlockType.NUMERIC_LIST, listAttributes);
+
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("item");
+		builder.endBlock(); // LI
+		builder.endBlock(); // OL
+		builder.endDocument();
+
+		String docbook = out.toString();
+
+		String expectedContent = "<orderedlist numeration=\"upperalpha\"><listitem><para>item</para></listitem></orderedlist>";
+		assertEquals(DOCBOOK_BEGIN_CHAPTER + expectedContent + DOCBOOK_END_CHAPTER, docbook);
+	}
+
+	public void testOrderedListLowerromanType() {
+		builder.beginDocument();
+		ListAttributes listAttributes = new ListAttributes();
+		listAttributes.setCssStyle("list-style-type: lower-roman;");
+		builder.beginBlock(BlockType.NUMERIC_LIST, listAttributes);
+
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("item");
+		builder.endBlock(); // LI
+		builder.endBlock(); // OL
+		builder.endDocument();
+
+		String docbook = out.toString();
+
+		String expectedContent = "<orderedlist numeration=\"lowerroman\"><listitem><para>item</para></listitem></orderedlist>";
+		assertEquals(DOCBOOK_BEGIN_CHAPTER + expectedContent + DOCBOOK_END_CHAPTER, docbook);
+	}
+
+	public void testOrderedListUpperromanType() {
+		builder.beginDocument();
+		ListAttributes listAttributes = new ListAttributes();
+		listAttributes.setCssStyle("list-style-type: upper-roman;");
+		builder.beginBlock(BlockType.NUMERIC_LIST, listAttributes);
+
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("item");
+		builder.endBlock(); // LI
+		builder.endBlock(); // OL
+		builder.endDocument();
+
+		String docbook = out.toString();
+
+		String expectedContent = "<orderedlist numeration=\"upperroman\"><listitem><para>item</para></listitem></orderedlist>";
+		assertEquals(DOCBOOK_BEGIN_CHAPTER + expectedContent + DOCBOOK_END_CHAPTER, docbook);
+	}
+
 	public void testDiv() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.DIV, new Attributes());
@@ -257,4 +348,5 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		String expectedContent = "<informaltable role=\"foo\"><tr><td>text</td></tr></informaltable>";
 		assertEquals(DOCBOOK_BEGIN_CHAPTER + expectedContent + DOCBOOK_END_CHAPTER, docbook);
 	}
+
 }

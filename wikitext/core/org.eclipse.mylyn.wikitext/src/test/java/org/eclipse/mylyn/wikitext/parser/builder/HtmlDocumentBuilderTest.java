@@ -23,8 +23,7 @@ import java.net.URL;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
-import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
-import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentHandler;
+import org.eclipse.mylyn.wikitext.parser.ListAttributes;
 import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
 import org.junit.Before;
 import org.junit.Rule;
@@ -195,6 +194,15 @@ public class HtmlDocumentBuilderTest {
 	}
 
 	@Test
+	public void listStyles() {
+		assertListStyle("decimal");
+		assertListStyle("upper-alpha");
+		assertListStyle("lower-alpha");
+		assertListStyle("lower-roman");
+		assertListStyle("upper-roman");
+	}
+
+	@Test
 	public void filterEntityReferences() {
 		assertEntityReferenceToNumericValue("&#160;", "nbsp");
 		assertEntityReferenceToNumericValue("&#8817;", "nge");
@@ -229,6 +237,25 @@ public class HtmlDocumentBuilderTest {
 		thrown.expect(NullPointerException.class);
 		thrown.expectMessage("Must provide elementName");
 		builder.setElementNameOfSpanType(SpanType.BOLD, null);
+	}
+
+	private void assertListStyle(String listStyleType) {
+		setup();
+		ListAttributes attributes = new ListAttributes();
+		attributes.setCssStyle(String.format("list-style-type: %s;", listStyleType));
+		builder.setEmitAsDocument(false);
+		builder.beginDocument();
+		builder.beginBlock(BlockType.NUMERIC_LIST, attributes);
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("first");
+		builder.endBlock();
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("second");
+		builder.endBlock();
+		builder.endBlock();
+		builder.endDocument();
+		assertEquals("<ol style=\"list-style-type: " + listStyleType + ";\"><li>first</li><li>second</li></ol>",
+				out.toString());
 	}
 
 	private void assertElementNameOfSpanType(StringWriter out, HtmlDocumentBuilder builder) {
