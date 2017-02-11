@@ -11,13 +11,20 @@
 
 package org.eclipse.mylyn.wikitext.asciidoc.internal.block;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.mylyn.wikitext.asciidoc.internal.AsciiDocContentState;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.parser.ListAttributes;
 import org.eclipse.mylyn.wikitext.parser.markup.Block;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * List block, matches blocks that start with <code>*</code> or, <code>#</code>
@@ -28,8 +35,17 @@ public class ListBlock extends Block {
 
 	private static final String ANY_CHAR = "\\s+(.*+)"; //$NON-NLS-1$
 
+	private static final List<String> TYPE_ORDER = ImmutableList.of("arabic", "loweralpha", "lowerroman", "upperalpha",
+			"upperroman");
+
+	private static final List<String> TYPE_LISTSPEC = ImmutableList.of("1.", "a.", "i)", "A.", "I)");
+
+	private static final List<String> TYPE_CSS_STYLE = ImmutableList.of("decimal", "lower-alpha", "lower-roman",
+			"upper-alpha", "upper-roman");
+
 	/** List item start */
-	private static final Pattern startPattern = Pattern.compile("\\s*((?:(?:\\*)|(?:\\.)){1,5}+|-)" + ANY_CHAR); //$NON-NLS-1$
+	private static final Pattern startPattern = Pattern
+			.compile("\\s*((?:(?:\\*)|(?:\\.)){1,5}+|-|[a-zA-Z0-9]+\\.|[IVXLCDM]+\\)|[ivxlcdm]+\\))" + ANY_CHAR); //$NON-NLS-1$
 
 	private static final Pattern leadingBlankPattern = Pattern.compile("^\\s+"); //$NON-NLS-1$
 
@@ -68,10 +84,21 @@ public class ListBlock extends Block {
 		// first line processed in current block
 		if (blockLineCount == 0) {
 			listState = new Stack<>();
-			Attributes attributes = new Attributes();
-			String listSpec = matcher.group(1);
+			ListAttributes attributes = new ListAttributes();
+			String listSpec = normalizeListSpec(matcher.group(1));
 			BlockType type = calculateType(listSpec);
 
+			if (type == BlockType.NUMERIC_LIST) {
+				Map<String, String> lastProperties = getAsciiDocState().getLastProperties(Collections.emptyList());
+				getAsciiDocState().setLastPropertiesText("");
+
+				String startProperty = lastProperties.get("start"); //$NON-NLS-1$
+				if (startProperty != null) {
+					attributes.setStart(startProperty);
+				}
+				String styleProperty = lastProperties.get("style"); //$NON-NLS-1$
+				updateStyleAttribute(attributes, listSpec, styleProperty);
+			}
 			// first line of the block could be "** " or more
 			offset = matcher.start(2);
 
@@ -105,7 +132,7 @@ public class ListBlock extends Block {
 				}
 				markupLanguage.emitMarkupText(getParser(), state, " "); //$NON-NLS-1$
 			} else {
-				String listSpec = matcher.group(1);
+				String listSpec = normalizeListSpec(matcher.group(1));
 				BlockType type = calculateType(listSpec);
 
 				offset = matcher.start(2);
@@ -131,6 +158,43 @@ public class ListBlock extends Block {
 		return -1;
 	}
 
+	private void updateStyleAttribute(ListAttributes attributes, String listSpec, String styleProperty) {
+		int listTypeIndex = TYPE_ORDER.indexOf(styleProperty);
+		if (listTypeIndex < 0) {
+			listTypeIndex = TYPE_LISTSPEC.indexOf(listSpec);
+		}
+		if (listTypeIndex < 0) {
+			int level = 0;
+			for (ListState ls : listState) {
+				if (ls.type == BlockType.NUMERIC_LIST) {
+					level++;
+				}
+			}
+			listTypeIndex = level % TYPE_ORDER.size();
+		}
+		attributes.appendCssStyle("list-style-type:" + TYPE_CSS_STYLE.get(listTypeIndex) + ";");
+	}
+
+	private String normalizeListSpec(String group) {
+		if (group.matches("[a-z]+\\.")) {
+			group = "a.";
+		} else if (group.matches("[A-Z]+\\.")) {
+			group = "A.";
+		} else if (group.matches("[IVXLCDM]+\\)")) {
+			group = "I)";
+		} else if (group.matches("[ivxlcdm]+\\)")) {
+			group = "i)";
+		} else if (group.matches("[0-9]+\\.")) {
+			group = "1.";
+		}
+
+		return group;
+	}
+
+	private AsciiDocContentState getAsciiDocState() {
+		return (AsciiDocContentState) getState();
+	}
+
 	private boolean isListContinuation(String line) {
 		return "+".equals(line); //$NON-NLS-1$
 	}
@@ -138,6 +202,7 @@ public class ListBlock extends Block {
 	private BlockType calculateType(String listSpec) {
 		switch (listSpec.charAt(listSpec.length() - 1)) {
 		case '.':
+		case ')':
 			return BlockType.NUMERIC_LIST;
 		default:
 			return BlockType.BULLETED_LIST;
@@ -163,18 +228,19 @@ public class ListBlock extends Block {
 					prevState.openItem = true;
 				}
 
-				Attributes blockAttributes = new Attributes();
+				ListAttributes attributes = new ListAttributes();
 
+				if (type == BlockType.NUMERIC_LIST) {
+					updateStyleAttribute(attributes, tag, null);
+				}
 				listState.push(new ListState(tag, prevState.level + 1, type));
-				builder.beginBlock(type, blockAttributes);
+				builder.beginBlock(type, attributes);
 			} else {
 				closeOne();
 				if (listState.isEmpty()) {
-					Attributes blockAttributes = new Attributes();
-					// TODO add attribute conf support if nedeed
-
+					ListAttributes attributes = new ListAttributes();
 					listState.push(new ListState(tag, 1, type));
-					builder.beginBlock(type, blockAttributes);
+					builder.beginBlock(type, attributes);
 				}
 			}
 

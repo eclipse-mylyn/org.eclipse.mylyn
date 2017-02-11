@@ -34,21 +34,19 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "**** level 4" + BR //
 				+ "***** level 5" + BR //
 				+ "* level 1" + BR);
-		assertEquals("Unordered List parsing",
-				"" //
-						+ "<ul>" //
-						+ "<li>level 1<ul>" //
-						+ "<li>level 2<ul>" //
-						+ "<li>level 3<ul>" //
-						+ "<li>level 4<ul>" //
-						+ "<li>level 5</li>" //
-						+ "</ul></li>" //
-						+ "</ul></li>" //
-						+ "</ul></li>" //
-						+ "</ul></li>" //
-						+ "<li>level 1</li>" //
-						+ "</ul>".trim(),
-				html.trim());
+		assertEquals("Unordered List parsing", "" //
+				+ "<ul>" //
+				+ "<li>level 1<ul>" //
+				+ "<li>level 2<ul>" //
+				+ "<li>level 3<ul>" //
+				+ "<li>level 4<ul>" //
+				+ "<li>level 5</li>" //
+				+ "</ul></li>" //
+				+ "</ul></li>" //
+				+ "</ul></li>" //
+				+ "</ul></li>" //
+				+ "<li>level 1</li>" //
+				+ "</ul>".trim(), html.trim());
 	}
 
 	@Test
@@ -57,14 +55,12 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "- item 1" + BR //
 				+ "-  item 2" + BR //
 				+ "- _item_ 3" + BR);
-		assertEquals("Unordered List with whitespaces and formatting",
-				"" //
-						+ "<ul>" //
-						+ "<li>item 1</li>" //
-						+ "<li>item 2</li>" //
-						+ "<li><em>item</em> 3</li>" //
-						+ "</ul>".trim(),
-				html.trim());
+		assertEquals("Unordered List with whitespaces and formatting", "" //
+				+ "<ul>" //
+				+ "<li>item 1</li>" //
+				+ "<li>item 2</li>" //
+				+ "<li><em>item</em> 3</li>" //
+				+ "</ul>".trim(), html.trim());
 	}
 
 	@Test
@@ -78,15 +74,13 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "* *item3*" + BR //
 				+ "" + BR //
 				+ "other text" + BR);
-		assertEquals("Unordered List with blank lines",
-				"" //
-						+ "<ul>" //
-						+ "<li>item 1</li>" //
-						+ "<li>item 2</li>" //
-						+ "<li><strong>item3</strong></li>" //
-						+ "</ul>" //
-						+ "<p>other text</p>".trim(),
-				html.trim());
+		assertEquals("Unordered List with blank lines", "" //
+				+ "<ul>" //
+				+ "<li>item 1</li>" //
+				+ "<li>item 2</li>" //
+				+ "<li><strong>item3</strong></li>" //
+				+ "</ul>" //
+				+ "<p>other text</p>".trim(), html.trim());
 	}
 
 	@Test
@@ -98,21 +92,19 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ ".... level 4" + BR //
 				+ "..... level 5" + BR //
 				+ ". level 1" + BR);
-		assertEquals("Ordered List parsing",
-				"" //
-						+ "<ol>" //
-						+ "<li>level 1<ol>" //
-						+ "<li>level 2<ol>" //
-						+ "<li>level 3<ol>" //
-						+ "<li>level 4<ol>" //
-						+ "<li>level 5</li>" //
-						+ "</ol></li>" //
-						+ "</ol></li>" //
-						+ "</ol></li>" //
-						+ "</ol></li>" //
-						+ "<li>level 1</li>" //
-						+ "</ol>".trim(),
-				html.trim());
+		assertEquals("Ordered List parsing", "" //
+				+ "<ol style=\"list-style-type:decimal;\">" //
+				+ "<li>level 1<ol style=\"list-style-type:lower-alpha;\">" //
+				+ "<li>level 2<ol style=\"list-style-type:lower-roman;\">" //
+				+ "<li>level 3<ol style=\"list-style-type:upper-alpha;\">" //
+				+ "<li>level 4<ol style=\"list-style-type:upper-roman;\">" //
+				+ "<li>level 5</li>" //
+				+ "</ol></li>" //
+				+ "</ol></li>" //
+				+ "</ol></li>" //
+				+ "</ol></li>" //
+				+ "<li>level 1</li>" //
+				+ "</ol>".trim(), html.trim());
 	}
 
 	@Test
@@ -124,20 +116,18 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "**** level 4" + BR //
 				+ "..... level 5" + BR //
 				+ ". level 1" + BR);
-		assertEquals("Mixed List parsing",
-				"" //
-						+ "<ol>" //
-						+ "<li>level 1<ul>" //
-						+ "<li>level 2<ol>" //
-						+ "<li>level 3<ul>" //
-						+ "<li>level 4<ol>" //
-						+ "<li>level 5</li>" //
-						+ "</ol></li>" //
-						+ "</ul></li>" //
-						+ "</ol></li>" //
-						+ "</ul></li>" //
-						+ "<li>level 1</li></ol>".trim(),
-				html.trim());
+		assertEquals("Mixed List parsing", "" //
+				+ "<ol style=\"list-style-type:decimal;\">" //
+				+ "<li>level 1<ul>" //
+				+ "<li>level 2<ol style=\"list-style-type:lower-alpha;\">" //
+				+ "<li>level 3<ul>" //
+				+ "<li>level 4<ol style=\"list-style-type:lower-roman;\">" //
+				+ "<li>level 5</li>" //
+				+ "</ol></li>" //
+				+ "</ul></li>" //
+				+ "</ol></li>" //
+				+ "</ul></li>" //
+				+ "<li>level 1</li></ol>".trim(), html.trim());
 	}
 
 	@Test
@@ -148,17 +138,15 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "*** level 3" + BR //
 				+ ".... level 4, 1st" + BR //
 				+ ".... level 4, 2nd" + BR);
-		assertEquals("Mixed List 2 parsing",
-				"" //
-						+ "<ul>" //
-						+ "<li>level2 (non-zero start)<ul>" //
-						+ "<li>level 3<ol>" //
-						+ "<li>level 4, 1st</li>" //
-						+ "<li>level 4, 2nd</li>" //
-						+ "</ol></li>" //
-						+ "</ul></li>" //
-						+ "</ul>".trim(),
-				html.trim());
+		assertEquals("Mixed List 2 parsing", "" //
+				+ "<ul>" //
+				+ "<li>level2 (non-zero start)<ul>" //
+				+ "<li>level 3<ol style=\"list-style-type:decimal;\">" //
+				+ "<li>level 4, 1st</li>" //
+				+ "<li>level 4, 2nd</li>" //
+				+ "</ol></li>" //
+				+ "</ul></li>" //
+				+ "</ul>".trim(), html.trim());
 	}
 
 	@Test
@@ -168,17 +156,15 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "** second item level 2" + BR //
 				+ "* item level 3" + BR //
 				+ "- item level 1" + BR);
-		assertEquals("testMixedLevels",
-				"" //
-						+ "<ul>"//
-						+ "<li>item level 1<ul>" //
-						+ "<li>first item level 2</li>" //
-						+ "<li>second item level 2<ul>" //
-						+ "<li>item level 3</li>" //
-						+ "</ul></li></ul></li>" //
-						+ "<li>item level 1</li>" //
-						+ "</ul>",
-				html);
+		assertEquals("testMixedLevels", "" //
+				+ "<ul>"//
+				+ "<li>item level 1<ul>" //
+				+ "<li>first item level 2</li>" //
+				+ "<li>second item level 2<ul>" //
+				+ "<li>item level 3</li>" //
+				+ "</ul></li></ul></li>" //
+				+ "<li>item level 1</li>" //
+				+ "</ul>", html);
 	}
 
 	@Test
@@ -247,12 +233,11 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "ipsum" + BR //
 				+ "dolor" + BR //
 				+ "* other" + BR); //
-		assertEquals(
-				"" //
-						+ "<ul>" //
-						+ "<li>lorem ipsum dolor</li>" //
-						+ "<li>other</li>" //
-						+ "</ul>" //
+		assertEquals("" //
+				+ "<ul>" //
+				+ "<li>lorem ipsum dolor</li>" //
+				+ "<li>other</li>" //
+				+ "</ul>" //
 				, html);
 	}
 
@@ -261,12 +246,11 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 		String html = parseToHtml("* lorem" + BR //
 				+ "  ipsum" + BR //
 				+ "* other" + BR); //
-		assertEquals(
-				"" //
-						+ "<ul>" //
-						+ "<li>lorem ipsum</li>" //
-						+ "<li>other</li>" //
-						+ "</ul>" //
+		assertEquals("" //
+				+ "<ul>" //
+				+ "<li>lorem ipsum</li>" //
+				+ "<li>other</li>" //
+				+ "</ul>" //
 				, html);
 	}
 
@@ -275,12 +259,11 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 		String html = parseToHtml("- lorem" + BR //
 				+ "-- ipsum" + BR //this is not a valid list item
 				+ "- other" + BR); //
-		assertEquals(
-				"" //
-						+ "<ul>" //
-						+ "<li>lorem -- ipsum</li>" //
-						+ "<li>other</li>" //
-						+ "</ul>" //
+		assertEquals("" //
+				+ "<ul>" //
+				+ "<li>lorem -- ipsum</li>" //
+				+ "<li>other</li>" //
+				+ "</ul>" //
 				, html);
 	}
 
@@ -297,12 +280,11 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 		String html = parseToHtml(".. lorem" + BR //
 				+ "...... ipsum" + BR //this is not a valid list item
 				+ ".. other" + BR); //
-		assertEquals("testListBreak",
-				"" //
-						+ "<ol>" //
-						+ "<li>lorem ...... ipsum</li>" //
-						+ "<li>other</li>" //
-						+ "</ol>" //
+		assertEquals("testListBreak", "" //
+				+ "<ol style=\"list-style-type:decimal;\">" //
+				+ "<li>lorem ...... ipsum</li>" //
+				+ "<li>other</li>" //
+				+ "</ol>" //
 				, html);
 	}
 
@@ -312,13 +294,12 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "+" + BR //
 				+ "ipsum" + BR //
 				+ "* other" + BR); //
-		assertEquals("testListBreak",
-				"" //
-						+ "<ul>" //
-						+ "<li>lorem<p>ipsum</p>\n" //
-						+ "</li>" //
-						+ "<li>other</li>" //
-						+ "</ul>" //
+		assertEquals("testListBreak", "" //
+				+ "<ul>" //
+				+ "<li>lorem<p>ipsum</p>\n" //
+				+ "</li>" //
+				+ "<li>other</li>" //
+				+ "</ul>" //
 				, html);
 	}
 
@@ -329,13 +310,12 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "ipsum" + BR //
 				+ "+" + BR //
 				+ "* other" + BR); //
-		assertEquals("testListBreak",
-				"" //
-						+ "<ul>" //
-						+ "<li>lorem<p>ipsum</p>\n" //
-						+ "</li>" //
-						+ "<li>other</li>" //
-						+ "</ul>" //
+		assertEquals("testListBreak", "" //
+				+ "<ul>" //
+				+ "<li>lorem<p>ipsum</p>\n" //
+				+ "</li>" //
+				+ "<li>other</li>" //
+				+ "</ul>" //
 				, html);
 	}
 
@@ -346,13 +326,12 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "ipsum" + BR //
 				+ "" + BR //
 				+ "* other" + BR); //
-		assertEquals("testListBreak",
-				"" //
-						+ "<ul>" //
-						+ "<li>lorem<p>ipsum</p>\n" //
-						+ "</li>" //
-						+ "<li>other</li>" //
-						+ "</ul>" //
+		assertEquals("testListBreak", "" //
+				+ "<ul>" //
+				+ "<li>lorem<p>ipsum</p>\n" //
+				+ "</li>" //
+				+ "<li>other</li>" //
+				+ "</ul>" //
 				, html);
 	}
 
@@ -375,4 +354,113 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "</ul>" //
 				, html);
 	}
+
+	@Test
+	public void testListWithStart() {
+		String html = parseToHtml("[start=\"5\"]\n" //
+				+ ". item 5\n" //
+				+ "\n" //
+				+ "another\n" //
+				+ ". item");
+		assertEquals("<ol style=\"list-style-type:decimal;\" start=\"5\">" //
+				+ "<li>item 5</li>" //
+				+ "</ol><p>another</p>\n" //
+				+ "<ol style=\"list-style-type:decimal;\">" //
+				+ "<li>item</li></ol>", //
+				html);
+	}
+
+	@Test
+	public void testListWithStyleLoweralpha() {
+		String html = parseToHtml("[style=\"loweralpha\"]\n" //
+				+ ". item\n" //
+				+ ".. item\n" //
+				+ "\n" //
+				+ "another\n" //
+				+ ". item");
+		assertEquals("<ol style=\"list-style-type:lower-alpha;\">" //
+				+ "<li>item<ol style=\"list-style-type:lower-alpha;\">" //
+				+ "<li>item</li>" //
+				+ "</ol></li></ol><p>another</p>\n" //
+				+ "<ol style=\"list-style-type:decimal;\">" //
+				+ "<li>item</li></ol>", //
+				html);
+	}
+
+	@Test
+	public void testListWithStyleUpperalpha() {
+		String html = parseToHtml("[style=\"upperalpha\"]\n" //
+				+ ". item\n" //
+				+ ".. item\n" //
+				+ "\n" //
+				+ "another\n" //
+				+ ". item");
+		assertEquals("<ol style=\"list-style-type:upper-alpha;\">" //
+				+ "<li>item<ol style=\"list-style-type:lower-alpha;\">" //
+				+ "<li>item</li>" //
+				+ "</ol></li></ol><p>another</p>\n" //
+				+ "<ol style=\"list-style-type:decimal;\">" //
+				+ "<li>item</li></ol>", //
+				html);
+	}
+
+	@Test
+	public void testListWithStyleLowerroman() {
+		String html = parseToHtml("[style=\"lowerroman\"]\n" //
+				+ ". item\n" //
+				+ ".. item\n" //
+				+ "\n" //
+				+ "another\n" //
+				+ ". item");
+		assertEquals("<ol style=\"list-style-type:lower-roman;\">" //
+				+ "<li>item<ol style=\"list-style-type:lower-alpha;\">" //
+				+ "<li>item</li>" //
+				+ "</ol></li></ol><p>another</p>\n" //
+				+ "<ol style=\"list-style-type:decimal;\">" //
+				+ "<li>item</li></ol>", //
+				html);
+	}
+
+	@Test
+	public void testListWithStyleUpperroman() {
+		String html = parseToHtml("[style=\"upperroman\"]\n" //
+				+ ". item\n" //
+				+ ".. item\n" //
+				+ "\n" //
+				+ "another\n" //
+				+ ". item");
+		assertEquals("<ol style=\"list-style-type:upper-roman;\">" //
+				+ "<li>item<ol style=\"list-style-type:lower-alpha;\">" //
+				+ "<li>item</li>" //
+				+ "</ol></li></ol><p>another</p>\n" //
+				+ "<ol style=\"list-style-type:decimal;\">" //
+				+ "<li>item</li></ol>", //
+				html);
+	}
+
+	@Test
+	public void testListWithExplicitNumbering() {
+		String html = parseToHtml("\n" //
+				+ "MDCLXIV) level 1\n" //
+				+ "AZ. level 2\n" //
+				+ "13. level 3\n" //
+				+ "iv) level 4\n" //
+				+ "ab. level 5\n" //
+				+ "I) level 1\n" //
+		);
+		assertEquals("" //
+				+ "<ol style=\"list-style-type:upper-roman;\">" //
+				+ "<li>level 1<ol style=\"list-style-type:upper-alpha;\">" //
+				+ "<li>level 2<ol style=\"list-style-type:decimal;\">" //
+				+ "<li>level 3<ol style=\"list-style-type:lower-roman;\">" //
+				+ "<li>level 4<ol style=\"list-style-type:lower-alpha;\">" //
+				+ "<li>level 5</li>" //
+				+ "</ol></li>" //
+				+ "</ol></li>" //
+				+ "</ol></li>" //
+				+ "</ol></li>" //
+				+ "<li>level 1</li>" //
+				+ "</ol>", html);
+	}
+
 }
