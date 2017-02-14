@@ -18,7 +18,7 @@
 <unit id="com.google.gerrit.common" version="2.1.5.v201112241444"/>
 <unit id="com.google.gerrit.prettify" version="2.1.5.v201112241444"/>
 <unit id="com.google.gerrit.reviewdb" version="2.1.5.v201112241444"/>
-<unit id="com.google.gson" version="2.2.4.v201311231704"/>
+<unit id="com.google.gson" version="2.7.0.v20170129-0911"/>
 <unit id="com.google.guava" version="21.0.0.v20170206-1425"/>
 <unit id="com.google.gwt.servlet" version="2.1.0.v201111291940"/>
 <unit id="com.google.gwtjsonrpc" version="1.2.5.v201112241444"/>
