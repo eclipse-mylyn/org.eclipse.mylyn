@@ -20,6 +20,7 @@ import java.util.Map;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.util.LanguageSupport;
 import org.eclipse.mylyn.wikitext.parser.markup.Block;
 import org.eclipse.mylyn.wikitext.parser.markup.ContentState;
+import org.eclipse.mylyn.wikitext.parser.markup.IdGenerationStrategy;
 import org.eclipse.mylyn.wikitext.parser.markup.Processor;
 
 /**
@@ -30,7 +31,11 @@ public class AsciiDocContentState extends ContentState {
 
 	public static final String ATTRIBUTE_IDPREFIX = "idprefix"; //$NON-NLS-1$
 
+	public static final String IDPREFIX_DEFAULT_VALUE = "_"; //$NON-NLS-1$
+
 	public static final String ATTRIBUTE_IDSEPARATOR = "idseparator"; //$NON-NLS-1$
+
+	public static final String IDSEPARATOR_DEFAULT_VALUE = "_";//$NON-NLS-1$
 
 	public static final String ATTRIBUTE_IMAGESDIR = "imagesdir"; //$NON-NLS-1$
 
@@ -68,11 +73,37 @@ public class AsciiDocContentState extends ContentState {
 		return attributes.get(attrName);
 	}
 
+	public String getAttributeOrValue(String attrName, String valueIfNull) {
+		String value = getAttribute(attrName);
+		if (value != null) {
+			return value;
+		}
+		return valueIfNull;
+	}
+
 	public void putAttribute(String attrName, String value) {
 		attributes.put(attrName, value);
+		IdGenerationStrategy generationStrategy = getIdGenerator().getGenerationStrategy();
+		if (generationStrategy instanceof AsciiDocIdGenerationStrategy) {
+			if (ATTRIBUTE_IDPREFIX.equals(attrName)) {
+				((AsciiDocIdGenerationStrategy) generationStrategy).setIdPrefix(value);
+			} else if (ATTRIBUTE_IDSEPARATOR.equals(attrName)) {
+				((AsciiDocIdGenerationStrategy) generationStrategy).setIdSeparator(value);
+			}
+		}
 	}
 
 	public void removeAttribute(String attrName) {
 		attributes.remove(attrName);
+		IdGenerationStrategy generationStrategy = getIdGenerator().getGenerationStrategy();
+		if (generationStrategy instanceof AsciiDocIdGenerationStrategy) {
+			if (ATTRIBUTE_IDPREFIX.equals(attrName)) {
+				((AsciiDocIdGenerationStrategy) generationStrategy)
+						.setIdPrefix(AsciiDocContentState.IDPREFIX_DEFAULT_VALUE);
+			} else if (ATTRIBUTE_IDSEPARATOR.equals(attrName)) {
+				((AsciiDocIdGenerationStrategy) generationStrategy)
+						.setIdSeparator(AsciiDocContentState.IDSEPARATOR_DEFAULT_VALUE);
+			}
+		}
 	}
 }

@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.eclipse.mylyn.wikitext.asciidoc.internal.AsciiDocContentState;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.AsciiDocDocumentBuilder;
+import org.eclipse.mylyn.wikitext.asciidoc.internal.AsciiDocIdGenerationStrategy;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.block.AttributeDefinitionBlock;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.block.CodeBlock;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.block.CommentBlock;
@@ -52,6 +53,7 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.parser.markup.Block;
 import org.eclipse.mylyn.wikitext.parser.markup.ContentState;
+import org.eclipse.mylyn.wikitext.parser.markup.IdGenerationStrategy;
 import org.eclipse.mylyn.wikitext.parser.markup.token.PatternLineBreakReplacementToken;
 
 /**
@@ -71,10 +73,15 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 	protected ContentState createState() {
 		AsciiDocContentState state = new AsciiDocContentState();
 		//set the initial attribute values:
-		state.putAttribute(AsciiDocContentState.ATTRIBUTE_IDPREFIX, "_"); //$NON-NLS-1$
-		state.putAttribute(AsciiDocContentState.ATTRIBUTE_IDSEPARATOR, "_"); //$NON-NLS-1$
+		state.putAttribute(AsciiDocContentState.ATTRIBUTE_IDPREFIX, AsciiDocContentState.IDPREFIX_DEFAULT_VALUE);
+		state.putAttribute(AsciiDocContentState.ATTRIBUTE_IDSEPARATOR, AsciiDocContentState.IDSEPARATOR_DEFAULT_VALUE);
 		state.putAttribute(AsciiDocContentState.ATTRIBUTE_IMAGESDIR, ""); //$NON-NLS-1$
 		return state;
+	}
+
+	@Override
+	public IdGenerationStrategy getIdGenerationStrategy() {
+		return new AsciiDocIdGenerationStrategy();
 	}
 
 	@Override
@@ -178,4 +185,5 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 	public DocumentBuilder createDocumentBuilder(Writer out, boolean formatting) {
 		return new AsciiDocDocumentBuilder(out);
 	}
+
 }

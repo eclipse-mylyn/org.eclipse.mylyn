@@ -77,7 +77,7 @@ public class AsciiDocLanguageAnchorTest extends AsciiDocLanguageTestBase {
 
 		String html = parseToHtml(text);
 
-		assertEquals("<h3>Lorem <a id=\"xxx\"></a> ipsum</h3>", html);
+		assertEquals("<h3 id=\"_lorem_a_id_xxx_a_ipsum\">Lorem <a id=\"xxx\"></a> ipsum</h3>", html);
 	}
 
 	@Test
@@ -86,7 +86,7 @@ public class AsciiDocLanguageAnchorTest extends AsciiDocLanguageTestBase {
 
 		String html = parseToHtml(text);
 
-		assertEquals("<h3><a id=\"xxx\"></a> Lorem ipsum</h3>", html);
+		assertEquals("<h3 id=\"_a_id_xxx_a_lorem_ipsum\"><a id=\"xxx\"></a> Lorem ipsum</h3>", html);
 	}
 
 	@Test
@@ -95,6 +95,6 @@ public class AsciiDocLanguageAnchorTest extends AsciiDocLanguageTestBase {
 
 		String html = parseToHtml(text);
 
-		assertEquals("<h3>Lorem ipsum <a id=\"xxx\"></a></h3>", html);
+		assertEquals("<h3 id=\"_lorem_ipsum_a_id_xxx_a\">Lorem ipsum <a id=\"xxx\"></a></h3>", html);
 	}
 }

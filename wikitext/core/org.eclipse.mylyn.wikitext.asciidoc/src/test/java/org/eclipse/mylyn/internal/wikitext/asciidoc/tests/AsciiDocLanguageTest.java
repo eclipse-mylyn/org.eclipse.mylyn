@@ -37,7 +37,7 @@ public class AsciiDocLanguageTest extends AsciiDocLanguageTestBase {
 
 		String html = parseToHtml(text.toString());
 
-		assertEquals("<h2>Header 2</h2><p>Lorem ipsum <strong>dolor</strong> sit amet, </p>\n"
-				+ "<h3>Header 3</h3><p>consetetur <em>adipisici</em> two elit.</p>\n", html);
+		assertEquals("<h2 id=\"_header_2\">Header 2</h2><p>Lorem ipsum <strong>dolor</strong> sit amet, </p>\n"
+				+ "<h3 id=\"_header_3\">Header 3</h3><p>consetetur <em>adipisici</em> two elit.</p>\n", html);
 	}
 }

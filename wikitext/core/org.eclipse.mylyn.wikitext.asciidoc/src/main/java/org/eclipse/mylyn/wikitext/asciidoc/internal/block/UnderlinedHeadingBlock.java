@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.asciidoc.internal.util.LookAheadReader;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.util.ReadAheadBlock;
-import org.eclipse.mylyn.wikitext.parser.Attributes;
+import org.eclipse.mylyn.wikitext.parser.HeadingAttributes;
 import org.eclipse.mylyn.wikitext.parser.markup.Block;
 
 /**
@@ -68,7 +68,7 @@ public class UnderlinedHeadingBlock extends Block implements ReadAheadBlock {
 	/**
 	 * The next line should be a sequence of same chars. The nextLine length (nextineLength) should: nextlineLength - 1
 	 * <= titleLength <= nextlineLength + 1
-	 * 
+	 *
 	 * @param length
 	 *            length of the current line (title)
 	 * @param nextLine
@@ -100,7 +100,10 @@ public class UnderlinedHeadingBlock extends Block implements ReadAheadBlock {
 	@Override
 	public int processLineContent(String line, int offset) {
 		if (blockLineCount == 0) {
-			builder.beginHeading(level, new Attributes());
+			HeadingAttributes attributes = new HeadingAttributes();
+			attributes.setId(state.getIdGenerator().newId(null, line));
+
+			builder.beginHeading(level, attributes);
 			builder.characters(line.trim());
 		} else {
 			builder.endHeading();

@@ -16,7 +16,6 @@ package org.eclipse.mylyn.internal.wikitext.asciidoc.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import java.util.regex.Pattern;
 
@@ -88,28 +87,28 @@ public class AsciiDocLanguageBlockElementsTest extends AsciiDocLanguageTestBase 
 	public void testEqStyleHeaderLevel1() {
 		String html = parseToHtml("== This is an H2");
 
-		assertTrue(Pattern.compile("<h2[^>]*>This is an H2</h2>").matcher(html).find());
+		assertEquals("<h2 id=\"_this_is_an_h2\">This is an H2</h2>", html);
 	}
 
 	@Test
 	public void testEqStyleHeaderLevel2() {
 		String html = parseToHtml("=== This is an H3");
 
-		assertTrue(Pattern.compile("<h3[^>]*>This is an H3</h3>").matcher(html).find());
+		assertEquals("<h3 id=\"_this_is_an_h3\">This is an H3</h3>", html);
 	}
 
 	@Test
 	public void testEqStyleHeaderLevel3() {
 		String html = parseToHtml("==== This is an H4");
 
-		assertTrue(Pattern.compile("<h4[^>]*>This is an H4</h4>").matcher(html).find());
+		assertEquals("<h4 id=\"_this_is_an_h4\">This is an H4</h4>", html);
 	}
 
 	@Test
 	public void testEqStyleHeaderLevel4() {
 		String html = parseToHtml("===== This is an H5");
 
-		assertTrue(Pattern.compile("<h5[^>]*>This is an H5</h5>").matcher(html).find());
+		assertEquals("<h5 id=\"_this_is_an_h5\">This is an H5</h5>", html);
 	}
 
 	@Test
@@ -140,7 +139,7 @@ public class AsciiDocLanguageBlockElementsTest extends AsciiDocLanguageTestBase 
 
 		String html = parseToHtml(text.toString());
 
-		assertEquals("<h3>This <em>is</em> true!</h3>", html);
+		assertEquals("<h3 id=\"_this_em_is_em_true\">This <em>is</em> true!</h3>", html);
 	}
 
 	@Test
@@ -150,7 +149,56 @@ public class AsciiDocLanguageBlockElementsTest extends AsciiDocLanguageTestBase 
 
 		String html = parseToHtml(text.toString());
 
-		assertEquals("<h4>The <code>HelloWorld</code> class</h4>", html);
+		assertEquals("<h4 id=\"_the_code_helloworld_code_class\">The <code>HelloWorld</code> class</h4>", html);
+	}
+
+	@Test
+	public void testIdWithAlternativeFormat() {
+		String text = ":idprefix: \n" + //
+				":idseparator: -\n" + //
+				"\n" + //
+				"== This is an H2\n";
+
+		String html = parseToHtml(text.toString());
+
+		assertEquals("<h2 id=\"this-is-an-h2\">This is an H2</h2>", html);
+	}
+
+	@Test
+	public void testIdWithChangesInAlternativeFormat() {
+		String text = "" + //
+				":idprefix: .\n" + //
+				":idseparator: -\n" + //
+				"\n" + //
+				"== h2 title\n" + //
+				"\n" + //
+				":idprefix: -\n" + //
+				":idseparator: =\n" + //
+				"\n" + //
+				"=== SOME    H3\n";
+
+		String html = parseToHtml(text.toString());
+
+		assertEquals("<h2 id=\".h2-title\">h2 title</h2><h3 id=\"-some=h3\">SOME    H3</h3>", html);
+	}
+
+	@Test
+	public void testMultipleTitleIds() {
+		String text = "" + //
+				"== Lorem Ipsum\n\n" + //
+				"== Lorem Ipsum\n\n" + //
+				"== Lorem Ipsum 2\n\n" + //
+				"== Lorem Ipsum 3\n\n" + //
+				"== Lorem Ipsum\n\n";
+		String html = parseToHtml(text.toString());
+
+		String expected = "<h2 id=\"_lorem_ipsum\">Lorem Ipsum</h2>" + //
+				"<h2 id=\"_lorem_ipsum_2\">Lorem Ipsum</h2>" + //
+				"<h2 id=\"_lorem_ipsum_2_2\">Lorem Ipsum 2</h2>" + //
+				"<h2 id=\"_lorem_ipsum_3\">Lorem Ipsum 3</h2>" + //
+				"<h2 id=\"_lorem_ipsum_4\">Lorem Ipsum</h2>";
+
+		assertEquals(expected, html);
 	}
 
 	/*
@@ -160,35 +208,35 @@ public class AsciiDocLanguageBlockElementsTest extends AsciiDocLanguageTestBase 
 	public void testClosedEqStyleHeaderLevel1() {
 		String html = parseToHtml("== This is also H2 ==");
 
-		assertTrue(Pattern.compile("<h2[^>]*>This is also H2</h2>").matcher(html).find());
+		assertEquals("<h2 id=\"_this_is_also_h2\">This is also H2</h2>", html);
 	}
 
 	@Test
 	public void testClosedEqStyleHeaderLevel2() {
 		String html = parseToHtml("=== This is also H3 ===");
 
-		assertTrue(Pattern.compile("<h3[^>]*>This is also H3</h3>").matcher(html).find());
+		assertEquals("<h3 id=\"_this_is_also_h3\">This is also H3</h3>", html);
 	}
 
 	@Test
 	public void testClosedEqStyleHeaderLevel3() {
 		String html = parseToHtml("==== This is also H4 ====");
 
-		assertTrue(Pattern.compile("<h4[^>]*>This is also H4</h4>").matcher(html).find());
+		assertEquals("<h4 id=\"_this_is_also_h4\">This is also H4</h4>", html);
 	}
 
 	@Test
 	public void testClosedEqStyleHeaderLevel4() {
 		String html = parseToHtml("===== This is also H5 =====");
 
-		assertTrue(Pattern.compile("<h5[^>]*>This is also H5</h5>").matcher(html).find());
+		assertEquals("<h5 id=\"_this_is_also_h5\">This is also H5</h5>", html);
 	}
 
 	@Test
 	public void testClosedEqStyleHeaderLevel4WithSpaces() {
 		String html = parseToHtml("===== This is H5 with spaces    =====");
 
-		assertTrue(Pattern.compile("<h5[^>]*>This is H5 with spaces</h5>").matcher(html).find());
+		assertEquals("<h5 id=\"_this_is_h5_with_spaces\">This is H5 with spaces</h5>", html);
 	}
 
 	@Test
@@ -216,21 +264,21 @@ public class AsciiDocLanguageBlockElementsTest extends AsciiDocLanguageTestBase 
 	public void testClosedEqStyleHeaderWithMoreClosingEq() {
 		String html = parseToHtml("== This is an H2 again ==================");
 
-		assertTrue(Pattern.compile("<h2[^>]*>This is an H2 again ==================</h2>").matcher(html).find());
+		assertEquals("<h2 id=\"_this_is_an_h2_again\">This is an H2 again ==================</h2>", html);
 	}
 
 	@Test
 	public void testClosedEqStyleHeaderWithMoreClosingEqAndSpaces() {
 		String html = parseToHtml("== This is an H2 with spaces     ====");
 
-		assertTrue(Pattern.compile("<h2[^>]*>This is an H2 with spaces     ====</h2>").matcher(html).find());
+		assertEquals("<h2 id=\"_this_is_an_h2_with_spaces\">This is an H2 with spaces     ====</h2>", html);
 	}
 
 	@Test
 	public void testClosedAtxStyleHeaderWithLessCosingEq() {
 		String html = parseToHtml("===== This is an H5 again ==");
 
-		assertTrue(Pattern.compile("<h5[^>]*>This is an H5 again ==</h5>").matcher(html).find());
+		assertEquals("<h5 id=\"_this_is_an_h5_again\">This is an H5 again ==</h5>", html);
 	}
 
 	/*
@@ -240,175 +288,175 @@ public class AsciiDocLanguageBlockElementsTest extends AsciiDocLanguageTestBase 
 	public void testUnderlinedLevel1() {
 		String html = parseToHtml("This is an underlined H2\n------------------------");
 
-		assertTrue(Pattern.compile("<h2[^>]*>This is an underlined H2</h2>").matcher(html).find());
+		assertEquals("<h2 id=\"_this_is_an_underlined_h2\">This is an underlined H2</h2>", html);
 	}
 
 	@Test
 	public void testUnderlinedLevel2() {
 		String html = parseToHtml("This is an underlined H3\n~~~~~~~~~~~~~~~~~~~~~~~~");
 
-		assertTrue(Pattern.compile("<h3[^>]*>This is an underlined H3</h3>").matcher(html).find());
+		assertEquals("<h3 id=\"_this_is_an_underlined_h3\">This is an underlined H3</h3>", html);
 	}
 
 	@Test
 	public void testUnderlinedLevel3() {
 		String html = parseToHtml("This is an underlined H4\n^^^^^^^^^^^^^^^^^^^^^^^^");
 
-		assertTrue(Pattern.compile("<h4[^>]*>This is an underlined H4</h4>").matcher(html).find());
+		assertEquals("<h4 id=\"_this_is_an_underlined_h4\">This is an underlined H4</h4>", html);
 	}
 
 	@Test
 	public void testUnderlinedLevel4() {
 		String html = parseToHtml("This is an underlined H5\n++++++++++++++++++++++++");
 
-		assertTrue(Pattern.compile("<h5[^>]*>This is an underlined H5</h5>").matcher(html).find());
+		assertEquals("<h5 id=\"_this_is_an_underlined_h5\">This is an underlined H5</h5>", html);
 	}
 
 	@Test
 	public void testUnderlinedLevel1LineMinusOneChar() {
 		String html = parseToHtml("Lorem Ipsum\n----------"); //title 11 chars, line 10 chars
 
-		assertTrue(Pattern.compile("<h2[^>]*>Lorem Ipsum</h2>").matcher(html).find());
+		assertEquals("<h2 id=\"_lorem_ipsum\">Lorem Ipsum</h2>", html);
 	}
 
 	@Test
 	public void testUnderlinedLevel2LineMinusOneChar() {
 		String html = parseToHtml("Lorem Ipsum Dolor\n~~~~~~~~~~~~~~~~"); //title 17 chars, line 16 chars
 
-		assertTrue(Pattern.compile("<h3[^>]*>Lorem Ipsum Dolor</h3>").matcher(html).find());
+		assertEquals("<h3 id=\"_lorem_ipsum_dolor\">Lorem Ipsum Dolor</h3>", html);
 	}
 
 	@Test
 	public void testUnderlinedLevel3LineMinusOneChar() {
 		String html = parseToHtml("LoremIpsumDolor\n^^^^^^^^^^^^^^"); //title 15 chars, line 14 chars
 
-		assertTrue(Pattern.compile("<h4[^>]*>LoremIpsumDolor</h4>").matcher(html).find());
+		assertEquals("<h4 id=\"_loremipsumdolor\">LoremIpsumDolor</h4>", html);
 	}
 
 	@Test
 	public void testUnderlinedLevel4LineMinusOneChar() {
 		String html = parseToHtml("Lorem-Ipsum\n++++++++++"); //title 11 chars, line 10 chars
 
-		assertTrue(Pattern.compile("<h5[^>]*>Lorem-Ipsum</h5>").matcher(html).find());
+		assertEquals("<h5 id=\"_lorem_ipsum\">Lorem-Ipsum</h5>", html);
 	}
 
 	@Test
 	public void testUnderlinedLevel1LinePlusOneChar() {
 		String html = parseToHtml("Lorem Ipsum\n------------"); //title 11 chars, line 12 chars
 
-		assertTrue(Pattern.compile("<h2[^>]*>Lorem Ipsum</h2>").matcher(html).find());
+		assertEquals("<h2 id=\"_lorem_ipsum\">Lorem Ipsum</h2>", html);
 	}
 
 	@Test
 	public void testNotUnderlinedLevel1LineMinusTwoChars() {
 		String html = parseToHtml("Lorem Ipsum\n---------"); //title 11 chars, line 9 chars
 
-		assertFalse(Pattern.compile("<h2[^>]*>Lorem Ipsum</h2>").matcher(html).find());
+		assertFalse(Pattern.compile("<h2 id=\"_lorem_ipsum\">Lorem Ipsum</h2>").matcher(html).find());
 	}
 
 	@Test
 	public void testNotUnderlinedLevel2LineMinusTwoChars() {
 		String html = parseToHtml("Lorem Ipsum Dolor\n~~~~~~~~~~~~~~~"); //title 17 chars, line 15 chars
 
-		assertFalse(Pattern.compile("<h3[^>]*>Lorem Ipsum Dolor</h3>").matcher(html).find());
+		assertFalse(Pattern.compile("<h3 id=\"_lorem_ipsum_dolor\">Lorem Ipsum Dolor</h3>").matcher(html).find());
 	}
 
 	@Test
 	public void testNotUnderlinedLevel3LineMinusTwoChars() {
 		String html = parseToHtml("LoremIpsumDolor\n^^^^^^^^^^^^^"); //title 15 chars, line 13 chars
 
-		assertFalse(Pattern.compile("<h4[^>]*>LoremIpsumDolor</h4>").matcher(html).find());
+		assertFalse(Pattern.compile("<h4 id=\"_loremipsumdolor\">LoremIpsumDolor</h4>").matcher(html).find());
 	}
 
 	@Test
 	public void testNotUnderlinedLevel4LineMinusTwoChars() {
 		String html = parseToHtml("Lorem-Ipsum\n+++++++++"); //title 11 chars, line 9 chars
 
-		assertFalse(Pattern.compile("<h5[^>]*>Lorem-Ipsum</h5>").matcher(html).find());
+		assertFalse(Pattern.compile("<h5 id=\"_lorem-ipsum\">Lorem-Ipsum</h5>").matcher(html).find());
 	}
 
 	@Test
 	public void testNotUnderlinedLevel1LinePlusTwoChars() {
 		String html = parseToHtml("Lorem Ipsum\n-------------"); //title 11 chars, line 13 chars
 
-		assertFalse(Pattern.compile("<h2[^>]*>Lorem Ipsum</h2>").matcher(html).find());
+		assertFalse(Pattern.compile("<h2 id=\"_lorem_ipsum\">Lorem Ipsum</h2>").matcher(html).find());
 	}
 
 	@Test
 	public void testNotUnderlinedLevel2LinePlusTwoChars() {
 		String html = parseToHtml("Lorem Ipsum Dolor\n~~~~~~~~~~~~~~~~~~~"); //title 17 chars, line 18 chars
 
-		assertFalse(Pattern.compile("<h3[^>]*>Lorem Ipsum Dolor</h3>").matcher(html).find());
+		assertFalse(Pattern.compile("<h3 id=\"_lorem_ipsum_dolor\">Lorem Ipsum Dolor</h3>").matcher(html).find());
 	}
 
 	@Test
 	public void testNotUnderlinedLevel3LinePlusTwoChars() {
 		String html = parseToHtml("LoremIpsumDolor\n^^^^^^^^^^^^^^^^^"); //title 15 chars, line 16 chars
 
-		assertFalse(Pattern.compile("<h4[^>]*>LoremIpsumDolor</h4>").matcher(html).find());
+		assertFalse(Pattern.compile("<h4 id=\"_loremipsumdolor\">LoremIpsumDolor</h4>").matcher(html).find());
 	}
 
 	@Test
 	public void testNotUnderlinedLevel4LinePlusTwoChars() {
 		String html = parseToHtml("Lorem-Ipsum\n+++++++++++++"); //title 11 chars, line 12 chars
 
-		assertFalse(Pattern.compile("<h5[^>]*>Lorem-Ipsum</h5>").matcher(html).find());
+		assertFalse(Pattern.compile("<h5 id=\"_lorem-ipsum\">Lorem-Ipsum</h5>").matcher(html).find());
 	}
 
 	@Test
 	public void testUnderlinedLevel1TitleTrailingSpaces() {
 		String html = parseToHtml("Title test underlined H2     \n------------------------");
 
-		assertTrue(Pattern.compile("<h2[^>]*>Title test underlined H2</h2>").matcher(html).find());
+		assertEquals("<h2 id=\"_title_test_underlined_h2\">Title test underlined H2</h2>", html);
 	}
 
 	@Test
 	public void testUnderlinedLevel2TitleTrailingSpaces() {
 		String html = parseToHtml("Title test underlined H3\t\n~~~~~~~~~~~~~~~~~~~~~~~~");
 
-		assertTrue(Pattern.compile("<h3[^>]*>Title test underlined H3</h3>").matcher(html).find());
+		assertEquals("<h3 id=\"_title_test_underlined_h3\">Title test underlined H3</h3>", html);
 	}
 
 	@Test
 	public void testUnderlinedLevel3TitleTrailingSpaces() {
 		String html = parseToHtml("Title test underlined H4   \t\n^^^^^^^^^^^^^^^^^^^^^^^^");
 
-		assertTrue(Pattern.compile("<h4[^>]*>Title test underlined H4</h4>").matcher(html).find());
+		assertEquals("<h4 id=\"_title_test_underlined_h4\">Title test underlined H4</h4>", html);
 	}
 
 	@Test
 	public void testUnderlinedLevel4TitleTrailingSpaces() {
 		String html = parseToHtml("Title test underlined H5\t  \n++++++++++++++++++++++++");
 
-		assertTrue(Pattern.compile("<h5[^>]*>Title test underlined H5</h5>").matcher(html).find());
+		assertEquals("<h5 id=\"_title_test_underlined_h5\">Title test underlined H5</h5>", html);
 	}
 
 	@Test
 	public void testUnderlinedLevel1LineWithTrailingSpaces() {
 		String html = parseToHtml("Title test underlined H2\n------------------------     ");
 
-		assertTrue(Pattern.compile("<h2[^>]*>Title test underlined H2</h2>").matcher(html).find());
+		assertEquals("<h2 id=\"_title_test_underlined_h2\">Title test underlined H2</h2>", html);
 	}
 
 	@Test
 	public void testUnderlinedLevel2LineWithTrailingSpaces() {
 		String html = parseToHtml("Title test underlined H3\n~~~~~~~~~~~~~~~~~~~~~~~~\t");
 
-		assertTrue(Pattern.compile("<h3[^>]*>Title test underlined H3</h3>").matcher(html).find());
+		assertEquals("<h3 id=\"_title_test_underlined_h3\">Title test underlined H3</h3>", html);
 	}
 
 	@Test
 	public void testUnderlinedLevel3LineWithTrailingSpaces() {
 		String html = parseToHtml("Title test underlined H4\n^^^^^^^^^^^^^^^^^^^^^^^^\t\t");
 
-		assertTrue(Pattern.compile("<h4[^>]*>Title test underlined H4</h4>").matcher(html).find());
+		assertEquals("<h4 id=\"_title_test_underlined_h4\">Title test underlined H4</h4>", html);
 	}
 
 	@Test
 	public void testUnderlinedLevel4LineWithTrailingSpaces() {
 		String html = parseToHtml("Title test underlined H5\n++++++++++++++++++++++++\t  ");
 
-		assertTrue(Pattern.compile("<h5[^>]*>Title test underlined H5</h5>").matcher(html).find());
+		assertEquals("<h5 id=\"_title_test_underlined_h5\">Title test underlined H5</h5>", html);
 	}
 
 	@Test

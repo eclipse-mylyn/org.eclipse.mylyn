@@ -14,7 +14,7 @@ package org.eclipse.mylyn.wikitext.asciidoc.internal.block;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.parser.Attributes;
+import org.eclipse.mylyn.wikitext.parser.HeadingAttributes;
 import org.eclipse.mylyn.wikitext.parser.markup.Block;
 
 /**
@@ -49,7 +49,10 @@ public class HeadingBlock extends Block {
 		String text = matcher.group(2);
 		String closingGroup = matcher.group(4);
 
-		builder.beginHeading(level, new Attributes());
+		HeadingAttributes attributes = new HeadingAttributes();
+		attributes.setId(state.getIdGenerator().newId(null, text));
+
+		builder.beginHeading(level, attributes);
 		getMarkupLanguage().emitMarkupLine(getParser(), state, matcher.start(2), text, 0);
 		if (closingGroup.length() > 0 && closingGroup.length() != level) {
 			builder.characters(matcher.group(3));
@@ -60,5 +63,4 @@ public class HeadingBlock extends Block {
 		setClosed(true);
 		return -1;
 	}
-
 }
