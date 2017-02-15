@@ -40,7 +40,7 @@
   </licenses>
 
   <properties>
-    <tycho-version>0.26.0</tycho-version>
+    <tycho-version>1.0.0</tycho-version>
     <tycho-extras-version>${tycho-version}</tycho-extras-version>
     <egit-site>file:/${basedir}/../../egit/org.eclipse.egit.repository/target/repository</egit-site>
     <platform-version-name>mars</platform-version-name>
