@@ -15,7 +15,9 @@ package org.eclipse.mylyn.reviews.ui.spi.editor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -146,13 +148,17 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 
 			AbstractUiFactoryProvider<IUser> reviewerUiFactoryProvider = getReviewerUiFactoryProvider();
 
-			for (Entry<IUser, IReviewerEntry> entry : getReview().getReviewerApprovals().entrySet()) {
-				IUser currentUser = entry.getKey();
+			Map<IUser, IReviewerEntry> sortedReviewerApprovals = new TreeMap<>(
+					(u1, u2) -> u1.getDisplayName().compareTo(u2.getDisplayName()));
+			sortedReviewerApprovals.putAll(getReview().getReviewerApprovals());
+
+			for (Entry<IUser, IReviewerEntry> approval : sortedReviewerApprovals.entrySet()) {
+				IUser currentUser = approval.getKey();
 
 				createReviewerLabelAndControls(composite, reviewerUiFactoryProvider, currentUser);
 
 				for (IApprovalType approvalType : approvalTypesWithLabel) {
-					Integer value = entry.getValue().getApprovals().get(approvalType);
+					Integer value = approval.getValue().getApprovals().get(approvalType);
 					Label approvalValueLabel = new Label(composite, SWT.NONE);
 					GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.FILL).applyTo(approvalValueLabel);
 					String rankingText = " "; //$NON-NLS-1$
