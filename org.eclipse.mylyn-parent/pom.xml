@@ -219,7 +219,7 @@
         <repository>
           <id>wikitext</id>
           <layout>p2</layout>
-          <url>file:${rootDirectory}/org.eclipse.mylyn.docs/wikitext/ui/org.eclipse.mylyn.wikitext-site/target/site/</url>
+          <url>file:${rootDirectory}/org.eclipse.mylyn.docs/docs/org.eclipse.mylyn.docs-site/target/site/</url>
         </repository>
       </repositories>
     </profile>
