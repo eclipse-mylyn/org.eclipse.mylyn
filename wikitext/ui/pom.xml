@@ -19,6 +19,7 @@
         <tycho-extras-version>${tycho-version}</tycho-extras-version>
 
         <test.skip>${maven.test.skip}</test.skip>
+        <test.ui.skip>${test.skip}</test.ui.skip>
         <test.vmargs>-ea ${test.osvmargs} ${test.uservmargs}</test.vmargs>
         <test.uservmargs></test.uservmargs>
         <test.osvmargs></test.osvmargs>
@@ -172,8 +173,7 @@
                     <version>${tycho-version}</version>
                     <configuration>
                         <skip>${test.skip}</skip>
-                        <useUIThread>${test.useUIThread}</useUIThread>
-                        <useUIHarness>true</useUIHarness>
+                        <useUIHarness>false</useUIHarness>
                         <failIfNoTests>true</failIfNoTests>
                         <forkedProcessTimeoutInSeconds>10800</forkedProcessTimeoutInSeconds>
                         <product>org.eclipse.sdk.ide</product>
@@ -187,7 +187,6 @@
                                 <requirement>
                                     <type>p2-installable-unit</type>
                                     <id>org.eclipse.sdk.feature.group</id>
-                                    <versionRange>${platform-version}</versionRange>
                                 </requirement>
                             </extraRequirements>
                         </dependency-resolution>
