@@ -28,7 +28,7 @@
 <unit id="org.apache.ant" version="1.8.4.v201303080030"/>
 <unit id="org.apache.ant.source" version="1.8.4.v201303080030"/>
 <unit id="org.apache.axis" version="1.4.0.v201005080400"/>
-<unit id="org.apache.commons.codec" version="1.6.0.v201305230611"/>
+<unit id="org.apache.commons.codec" version="1.9.0.v20170208-1614"/>
 <unit id="org.apache.commons.discovery" version="0.2.0.v201004190315"/>
 <unit id="org.apache.commons.httpclient" version="3.1.0.v201012070820"/>
 <unit id="org.apache.commons.io" version="2.0.1.v201105210651"/>
