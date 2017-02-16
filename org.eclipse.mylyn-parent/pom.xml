@@ -215,13 +215,6 @@
           </plugin>
         </plugins>
       </build>
-      <repositories>
-        <repository>
-          <id>wikitext</id>
-          <layout>p2</layout>
-          <url>file:${rootDirectory}/org.eclipse.mylyn.docs/docs/org.eclipse.mylyn.docs-site/target/site/</url>
-        </repository>
-      </repositories>
     </profile>
     <profile>
       <id>implicit-target</id>
