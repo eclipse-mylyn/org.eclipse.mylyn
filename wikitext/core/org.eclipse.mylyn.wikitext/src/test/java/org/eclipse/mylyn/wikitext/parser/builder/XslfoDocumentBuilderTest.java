@@ -13,9 +13,6 @@ package org.eclipse.mylyn.wikitext.parser.builder;
 import java.io.StringWriter;
 
 import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
-import org.eclipse.mylyn.wikitext.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.parser.builder.XslfoDocumentBuilder;
-import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
 
 import junit.framework.TestCase;
 
@@ -24,19 +21,14 @@ import junit.framework.TestCase;
  */
 public class XslfoDocumentBuilderTest extends TestCase {
 
-	private MarkupParser parser;
-
 	private StringWriter out;
 
 	private XslfoDocumentBuilder builder;
 
 	@Override
 	public void setUp() {
-		parser = new MarkupParser();
-		parser.setMarkupLanguage(new TextileLanguage());
 		out = new StringWriter();
 		builder = new XslfoDocumentBuilder(out);
-		parser.setBuilder(builder);
 	}
 
 	public void testImageWithWidthInPx() {

@@ -24,7 +24,7 @@ import junit.framework.TestCase;
 /**
  * @author David Green
  */
-public class HtmlDocumentBuilderTest extends TestCase {
+public class HtmlDocumentBuilderIntegrationTest extends TestCase {
 
 	private MarkupParser parser;
 

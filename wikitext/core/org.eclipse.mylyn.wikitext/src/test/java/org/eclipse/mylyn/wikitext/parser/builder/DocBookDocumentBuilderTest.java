@@ -12,15 +12,11 @@ package org.eclipse.mylyn.wikitext.parser.builder;
 
 import java.io.StringWriter;
 
-import org.eclipse.mylyn.wikitext.confluence.ConfluenceLanguage;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
-import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.TableAttributes;
-import org.eclipse.mylyn.wikitext.parser.builder.DocBookDocumentBuilder;
-import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
 
 import junit.framework.TestCase;
 
@@ -29,7 +25,13 @@ import junit.framework.TestCase;
  */
 public class DocBookDocumentBuilderTest extends TestCase {
 
-	private MarkupParser parser;
+	private final static String DOCBOOK_BEGIN = "<?xml version='1.0' ?><!DOCTYPE book PUBLIC \"-//OASIS//DTD DocBook XML V4.5//EN\" \"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd\"><book><title></title>";
+
+	private final static String DOCBOOK_END = "</book>";
+
+	private final static String DOCBOOK_BEGIN_CHAPTER = DOCBOOK_BEGIN + "<chapter><title></title>";
+
+	private final static String DOCBOOK_END_CHAPTER = "</chapter>" + DOCBOOK_END;
 
 	private StringWriter out;
 
@@ -37,11 +39,8 @@ public class DocBookDocumentBuilderTest extends TestCase {
 
 	@Override
 	public void setUp() {
-		parser = new MarkupParser();
-		parser.setMarkupLanguage(new TextileLanguage());
 		out = new StringWriter();
 		builder = new DocBookDocumentBuilder(out);
-		parser.setBuilder(builder);
 
 	}
 
@@ -55,8 +54,9 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String docbook = out.toString();
-		
-		assertTrue(docbook.contains("a <link linkend=\"foo\">link to foo</link> test"));
+
+		String expectedContent = "a <link linkend=\"foo\">link to foo</link> test";
+		assertEquals(DOCBOOK_BEGIN + expectedContent + DOCBOOK_END, docbook);
 	}
 
 	public void testExternalLink() {
@@ -69,8 +69,9 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String docbook = out.toString();
-		
-		assertTrue(docbook.contains("an <ulink url=\"http://example.com\">external link</ulink> test"));
+
+		String expectedContent = "an <ulink url=\"http://example.com\">external link</ulink> test";
+		assertEquals(DOCBOOK_BEGIN + expectedContent + DOCBOOK_END, docbook);
 	}
 
 	public void testLinkWithNullHref() {
@@ -85,8 +86,10 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String docbook = out.toString();
-		
-		assertTrue(docbook.contains("a <anchor id=\"some.id\"></anchor> test"));
+
+		String expectedContent = "a <anchor id=\"some.id\"></anchor> test";
+		assertEquals(DOCBOOK_BEGIN + expectedContent + DOCBOOK_END, docbook);
+
 	}
 
 	public void testSpanLinkWithNullHref() {
@@ -102,47 +105,9 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String docbook = out.toString();
-		
-		assertTrue(docbook.contains("a <anchor id=\"some.id\"></anchor> test"));
-	}
 
-	public void testInlineImage() {
-		parser.parse("some text !(inline)images/foo.png! some text");
-		String docbook = out.toString();
-		
-		assertTrue(docbook.contains(
-				"<inlinemediaobject role=\"inline\"><imageobject><imagedata fileref=\"images/foo.png\"/></imageobject></inlinemediaobject>"));
-	}
-
-	public void testInlineQuote() {
-		parser.setMarkupLanguage(new ConfluenceLanguage());
-		parser.parse("some text {quote}quoted text{quote} some text");
-		String docbook = out.toString();
-		
-		assertTrue(docbook.contains("<para>some text <quote>quoted text</quote> some text</para>"));
-	}
-
-	public void testImage() {
-		parser.parse("some text !images/foo.png! some text");
-		String docbook = out.toString();
-		
-		assertTrue(docbook.contains(
-				"<mediaobject><imageobject><imagedata fileref=\"images/foo.png\"/></imageobject></mediaobject>"));
-	}
-
-	public void testImageWithScaling() {
-		parser.parse("some text !{width:80%}images/foo.png! some text");
-		String docbook = out.toString();
-		
-		assertTrue(docbook.contains(
-				"<mediaobject><imageobject><imagedata fileref=\"images/foo.png\" scale=\"80\"/></imageobject></mediaobject>"));
-	}
-
-	public void testImageWithWidthAndHeight() {
-		parser.parse("!{width:32px;height:64px}images/foo.png!");
-		String docbook = out.toString();
-		assertTrue(docbook, docbook.contains(
-				"<mediaobject><imageobject><imagedata fileref=\"images/foo.png\" width=\"32px\" depth=\"64px\"/></imageobject></mediaobject>"));
+		String expectedContent = "a <anchor id=\"some.id\"></anchor> test";
+		assertEquals(DOCBOOK_BEGIN + expectedContent + DOCBOOK_END, docbook);
 	}
 
 	public void testDefinitionList() {
@@ -169,21 +134,9 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String docbook = out.toString();
-		
 
-		assertTrue(docbook.contains(
-				"<variablelist><varlistentry><term>foo</term><listitem><para>Foo definition</para></listitem></varlistentry><varlistentry><term>bar</term><listitem><para>Bar definition</para></listitem></varlistentry></variablelist>"));
-	}
-
-	public void testGlossaryUsesDefinitionList() {
-		builder.setAutomaticGlossary(false);
-		parser.parse("ABW(A Better Way) is not NIMBY(Not In My Back Yard)\n\n{glossary}");
-
-		String docbook = out.toString();
-		
-
-		assertTrue(docbook.contains(
-				"<variablelist><varlistentry><term>ABW</term><listitem><para>A Better Way</para></listitem></varlistentry><varlistentry><term>NIMBY</term><listitem><para>Not In My Back Yard</para></listitem></varlistentry></variablelist>"));
+		String expectedContent = "<variablelist><varlistentry><term>foo</term><listitem><para>Foo definition</para></listitem></varlistentry><varlistentry><term>bar</term><listitem><para>Bar definition</para></listitem></varlistentry></variablelist>";
+		assertEquals(DOCBOOK_BEGIN_CHAPTER + expectedContent + DOCBOOK_END_CHAPTER, docbook);
 	}
 
 	public void testAutomaticGlossaryOnByDefault() {
@@ -216,27 +169,26 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String docbook = out.toString();
-		
 
 		// should look something like this:
 
-		//		<itemizedlist>
-		//			<listitem>
-		//				<para>foo</para>
-		//				<itemizedlist>
-		//					<listitem>
-		//						<para>bar</para>
-		//					</listitem>
-		//				</itemizedlist>
-		//				<para>foo2</para>
-		//			</listitem>
-		//			<listitem>
-		//				<para>baz</para>
-		//			</listitem>
-		//		</itemizedlist>
+		// <itemizedlist>
+		// <listitem>
+		// <para>foo</para>
+		// <itemizedlist>
+		// <listitem>
+		// <para>bar</para>
+		// </listitem>
+		// </itemizedlist>
+		// <para>foo2</para>
+		// </listitem>
+		// <listitem>
+		// <para>baz</para>
+		// </listitem>
+		// </itemizedlist>
 
-		assertTrue(docbook.contains(
-				"<itemizedlist><listitem><para>foo</para><itemizedlist><listitem><para>bar</para></listitem></itemizedlist><para>foo2</para></listitem><listitem><para>baz</para></listitem></itemizedlist>"));
+		String expectedContent = "<itemizedlist><listitem><para>foo</para><itemizedlist><listitem><para>bar</para></listitem></itemizedlist><para>foo2</para></listitem><listitem><para>baz</para></listitem></itemizedlist>";
+		assertEquals(DOCBOOK_BEGIN_CHAPTER + expectedContent + DOCBOOK_END_CHAPTER, docbook);
 	}
 
 	public void testDiv() {
@@ -255,10 +207,9 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String docbook = out.toString();
-		
 
-		assertTrue(docbook.contains(
-				"<book><title></title><chapter><title></title><para>foo</para><para>bar</para></chapter></book>"));
+		String expectedContent = "<para>foo</para><para>bar</para>";
+		assertEquals(DOCBOOK_BEGIN_CHAPTER + expectedContent + DOCBOOK_END_CHAPTER, docbook);
 	}
 
 	public void testSpanLink() {
@@ -279,10 +230,9 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String docbook = out.toString();
-		
 
-		assertTrue(docbook.contains(
-				"<book><title></title><chapter><title></title><para><link linkend=\"test1234\"><emphasis>link text</emphasis></link></para></chapter></book>"));
+		String expectedContent = "<para><link linkend=\"test1234\"><emphasis>link text</emphasis></link></para>";
+		assertEquals(DOCBOOK_BEGIN_CHAPTER + expectedContent + DOCBOOK_END_CHAPTER, docbook);
 	}
 
 	public void testTableClass() {
@@ -303,9 +253,8 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String docbook = out.toString();
-		
 
-		assertTrue(docbook.contains("<informaltable role=\"foo\"><tr><td>text</td></tr></informaltable>"));
-
+		String expectedContent = "<informaltable role=\"foo\"><tr><td>text</td></tr></informaltable>";
+		assertEquals(DOCBOOK_BEGIN_CHAPTER + expectedContent + DOCBOOK_END_CHAPTER, docbook);
 	}
 }

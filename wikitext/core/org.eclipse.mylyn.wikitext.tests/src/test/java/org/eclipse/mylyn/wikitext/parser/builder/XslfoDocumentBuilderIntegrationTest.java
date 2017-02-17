@@ -35,7 +35,7 @@ import junit.framework.TestCase;
  * @author David Green
  * @author Torkild U. Resheim
  */
-public class XslfoDocumentBuilder2Test extends TestCase {
+public class XslfoDocumentBuilderIntegrationTest extends TestCase {
 
 	private StringWriter out;
 
@@ -237,8 +237,8 @@ public class XslfoDocumentBuilder2Test extends TestCase {
 	}
 
 	private String resource(String resourceName) {
-		URL resource = XslfoDocumentBuilder2Test.class.getResource("resources/"
-				+ XslfoDocumentBuilder2Test.class.getSimpleName() + "_" + resourceName);
+		URL resource = XslfoDocumentBuilderIntegrationTest.class.getResource("resources/"
+				+ XslfoDocumentBuilderIntegrationTest.class.getSimpleName() + "_" + resourceName);
 		try {
 			return Resources.toString(resource, StandardCharsets.UTF_8);
 		} catch (IOException e) {
