@@ -22,15 +22,19 @@ import org.junit.Test;
  */
 public class AsciiDocLanguageAttributeTest extends AsciiDocLanguageTestBase {
 
+	static final String MARKUP_FOR_DEFAULT = "Some default values\n\n" + //
+			" - idprefix: {idprefix}\n" + //
+			" - idseparator: {idseparator}\n" + //
+			" - imagesdir: {imagesdir}\n" + //
+			"";
+
 	@Test
 	public void testDefault() {
-		String markup = "Some default values\n\n" + //
-				" - idprefix: {idprefix}\n" + //
-				" - idseparator: {idseparator}\n" + //
-				" - imagesdir: {imagesdir}\n" + //
-				"";
-		String html = parseToHtml(markup);
+		String html = parseToHtml(MARKUP_FOR_DEFAULT);
+		ensureDefaultValues(html);
+	}
 
+	static void ensureDefaultValues(String html) {
 		String expected = "<p>Some default values</p>\n" + //
 				"<ul>" + //
 				"<li>idprefix: _</li>" + //

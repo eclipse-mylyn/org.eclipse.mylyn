@@ -16,6 +16,7 @@ package org.eclipse.mylyn.wikitext.asciidoc;
 
 import java.io.Writer;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.mylyn.wikitext.asciidoc.internal.AsciiDocContentState;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.AsciiDocDocumentBuilder;
@@ -72,11 +73,23 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 	@Override
 	protected ContentState createState() {
 		AsciiDocContentState state = new AsciiDocContentState();
-		//set the initial attribute values:
+		putInitialAttributes(state);
+		if (configuration instanceof AsciiDocMarkupLanguageConfiguration) {
+			Map<String, String> initialAttributes = ((AsciiDocMarkupLanguageConfiguration) configuration)
+					.getInitialAttributes();
+			if (initialAttributes != null) {
+				for (Map.Entry<String, String> e : initialAttributes.entrySet()) {
+					state.putAttribute(e.getKey(), e.getValue());
+				}
+			}
+		}
+		return state;
+	}
+
+	private void putInitialAttributes(AsciiDocContentState state) {
 		state.putAttribute(AsciiDocContentState.ATTRIBUTE_IDPREFIX, AsciiDocContentState.IDPREFIX_DEFAULT_VALUE);
 		state.putAttribute(AsciiDocContentState.ATTRIBUTE_IDSEPARATOR, AsciiDocContentState.IDSEPARATOR_DEFAULT_VALUE);
 		state.putAttribute(AsciiDocContentState.ATTRIBUTE_IMAGESDIR, ""); //$NON-NLS-1$
-		return state;
 	}
 
 	@Override

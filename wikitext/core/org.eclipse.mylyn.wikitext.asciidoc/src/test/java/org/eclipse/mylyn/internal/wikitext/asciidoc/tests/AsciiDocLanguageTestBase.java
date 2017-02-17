@@ -16,6 +16,8 @@ import java.io.StringWriter;
 import org.eclipse.mylyn.wikitext.asciidoc.AsciiDocLanguage;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageConfiguration;
 import org.junit.Before;
 
 /**
@@ -29,11 +31,22 @@ public abstract class AsciiDocLanguageTestBase {
 
 	@Before
 	public void setUp() throws Exception {
-
-		parser = new MarkupParser(new AsciiDocLanguage());
+		parser = createParserWithConfiguration(null);
 	}
 
 	public String parseToHtml(String markup) {
+		return parseAsciiDocToHtml(markup, parser);
+	}
+
+	protected static MarkupParser createParserWithConfiguration(MarkupLanguageConfiguration configuration) {
+		MarkupLanguage markupLanguage = new AsciiDocLanguage();
+		if (configuration != null) {
+			markupLanguage.configure(configuration);
+		}
+		return new MarkupParser(markupLanguage);
+	}
+
+	protected static String parseAsciiDocToHtml(String markup, MarkupParser parser) {
 		StringWriter out = new StringWriter();
 		HtmlDocumentBuilder builder = new HtmlDocumentBuilder(out);
 		builder.setEmitAsDocument(false);
