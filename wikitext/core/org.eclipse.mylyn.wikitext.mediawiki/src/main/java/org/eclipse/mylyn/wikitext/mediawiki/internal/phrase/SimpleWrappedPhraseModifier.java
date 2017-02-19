@@ -11,10 +11,14 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.mediawiki.internal.phrase;
 
+import java.util.List;
+
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * @author David Green
@@ -24,12 +28,12 @@ public class SimpleWrappedPhraseModifier extends PatternBasedElement {
 	protected static final int CONTENT_GROUP = 1;
 
 	private static class SimplePhraseModifierProcessor extends PatternBasedElementProcessor {
-		private final SpanType[] spanType;
+		private final List<SpanType> spanType;
 
 		private final boolean nesting;
 
 		public SimplePhraseModifierProcessor(SpanType[] spanType, boolean nesting) {
-			this.spanType = spanType;
+			this.spanType = ImmutableList.copyOf(spanType);
 			this.nesting = nesting;
 		}
 
@@ -43,9 +47,7 @@ public class SimpleWrappedPhraseModifier extends PatternBasedElement {
 			} else {
 				getMarkupLanguage().emitMarkupText(parser, state, getContent(this));
 			}
-			for (SpanType element : spanType) {
-				getBuilder().endSpan();
-			}
+			spanType.forEach(type -> getBuilder().endSpan());
 		}
 	}
 
