@@ -41,7 +41,7 @@ import com.google.common.collect.Sets;
  *
  * @author david.green
  * @see HtmlLanguage#builder()
- * @since 2.0
+ * @since 3.0
  */
 public class HtmlLanguageBuilder {
 	private String name;
@@ -120,7 +120,6 @@ public class HtmlLanguageBuilder {
 	 *            the tag name to be used
 	 * @return this builder
 	 * @see HtmlDocumentBuilder#setElementNameOfSpanType(SpanType, String)
-	 * @since 2.8
 	 */
 	public HtmlLanguageBuilder addSubstitution(SpanType spanType, String alternativeTagName) {
 		checkNotNull(spanType, "Must provide a spanType"); //$NON-NLS-1$
@@ -160,7 +159,6 @@ public class HtmlLanguageBuilder {
 	 * @param xhtmlStrict
 	 *            true if the language should attempt to conform to XHTML strict rules, otherwise false
 	 * @return this builder
-	 * @since 2.2
 	 */
 	public HtmlLanguageBuilder setXhtmlStrict(boolean xhtmlStrict) {
 		this.xhtmlStrict = xhtmlStrict;

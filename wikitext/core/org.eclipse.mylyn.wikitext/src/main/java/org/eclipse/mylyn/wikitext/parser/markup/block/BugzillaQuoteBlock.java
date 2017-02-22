@@ -21,9 +21,9 @@ import org.eclipse.mylyn.wikitext.parser.markup.Block;
 
 /**
  * A quote block that detects lines that start with '>' (email-style quoting)
- * 
+ *
  * @author David Green
- * @since 1.6
+ * @since 3.0
  */
 public class BugzillaQuoteBlock extends Block {
 	private static Pattern pattern = Pattern.compile("((\\s*>)|\\(In reply to comment #\\d{1,}\\)).*"); //$NON-NLS-1$

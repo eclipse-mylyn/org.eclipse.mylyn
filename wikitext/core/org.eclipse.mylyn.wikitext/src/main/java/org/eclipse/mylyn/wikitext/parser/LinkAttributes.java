@@ -15,10 +15,10 @@ import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 
 /**
  * Attributes for links (hyperlinks)
- * 
+ *
  * @author David Green
  * @author draft
- * @since 1.0
+ * @since 3.0
  */
 public class LinkAttributes extends Attributes {
 	private String target;
@@ -29,7 +29,7 @@ public class LinkAttributes extends Attributes {
 
 	/**
 	 * The target of a link, as defined by the HTML spec.
-	 * 
+	 *
 	 * @param target
 	 *            the target or null if there should be none
 	 */
@@ -39,7 +39,7 @@ public class LinkAttributes extends Attributes {
 
 	/**
 	 * The target of a link, as defined by the HTML spec.
-	 * 
+	 *
 	 * @return the target or null if there should be none
 	 */
 	public String getTarget() {
@@ -48,7 +48,7 @@ public class LinkAttributes extends Attributes {
 
 	/**
 	 * The 'rel' of a link, as defined by the HTML spec.
-	 * 
+	 *
 	 * @return the ref or null if there should be none
 	 * @see HtmlDocumentBuilder#getLinkRel()
 	 */
@@ -58,7 +58,7 @@ public class LinkAttributes extends Attributes {
 
 	/**
 	 * The 'rel' of a link, as defined by the HTML spec.
-	 * 
+	 *
 	 * @param rel
 	 *            the rel or null if there should be none
 	 * @see HtmlDocumentBuilder#setLinkRel(String)
@@ -69,8 +69,6 @@ public class LinkAttributes extends Attributes {
 
 	/**
 	 * The target of the link. To be used with {@link SpanType#LINK}.
-	 * 
-	 * @since 1.2
 	 */
 	public String getHref() {
 		return href;
@@ -78,8 +76,6 @@ public class LinkAttributes extends Attributes {
 
 	/**
 	 * The target of the link. To be used with {@link SpanType#LINK}.
-	 * 
-	 * @since 1.2
 	 */
 	public void setHref(String href) {
 		this.href = href;

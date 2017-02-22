@@ -15,7 +15,7 @@ import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 
 /**
  * @author David Green
- * @since 2.0
+ * @since 3.0
  */
 public class Processor implements Cloneable {
 	protected AbstractMarkupLanguage markupLanguage;
@@ -62,7 +62,7 @@ public class Processor implements Cloneable {
 	}
 
 	/**
-	 * @since 2.0
+	 *
 	 */
 	public AbstractMarkupLanguage getMarkupLanguage() {
 		return markupLanguage;

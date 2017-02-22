@@ -17,7 +17,7 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
  * {@link BlockType#TABLE_CELL_NORMAL}.
  *
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class TableCellAttributes extends Attributes {
 	private String bgcolor;

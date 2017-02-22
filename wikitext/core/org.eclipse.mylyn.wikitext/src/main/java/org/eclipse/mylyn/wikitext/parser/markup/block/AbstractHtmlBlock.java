@@ -18,9 +18,9 @@ import org.eclipse.mylyn.wikitext.parser.markup.Block;
 
 /**
  * An abstract block that is delimited by HTML-style open and close tags.
- * 
+ *
  * @author dgreen
- * @since 1.2
+ * @since 3.0
  */
 public abstract class AbstractHtmlBlock extends Block {
 
@@ -81,7 +81,7 @@ public abstract class AbstractHtmlBlock extends Block {
 	/**
 	 * handle attributes of the opening tag. The default implementation processes XML-style attributes however
 	 * subclasses may override this method to provide special attribute processing.
-	 * 
+	 *
 	 * @param attributes
 	 *            the attributes, or null if there are none
 	 * @see #handleAttribute(String, String)
@@ -100,13 +100,12 @@ public abstract class AbstractHtmlBlock extends Block {
 
 	/**
 	 * Handle a named attribute. The default implementation does nothing
-	 * 
+	 *
 	 * @param attrName
 	 *            the attribute name
 	 * @param attrValue
 	 *            the attribute value
 	 * @see #setAttributes(String)
-	 * @since 1.6
 	 */
 	protected void handleAttribute(String attrName, String attrValue) {
 		// nothing to do

@@ -30,7 +30,7 @@ import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
  *
  * @see HtmlParser
  * @author David Green
- * @since 1.6
+ * 
  * @see TextileLanguage
  * @see TextileLanguage#createDocumentBuilder(Writer)
  */

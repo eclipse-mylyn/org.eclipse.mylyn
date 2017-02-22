@@ -45,7 +45,7 @@ import org.eclipse.mylyn.wikitext.splitter.SplittingStrategy;
  * 
  * @author David Green
  * @author Torkild U. Resheim
- * @since 1.0
+ * 
  */
 public class MarkupToHtmlTask extends MarkupTask {
 	private final List<FileSet> filesets = new ArrayList<FileSet>();
@@ -508,7 +508,7 @@ public class MarkupToHtmlTask extends MarkupTask {
 	 * Setting this value will cause all HTML anchors to have their target attribute set if it's not explicitly
 	 * specified.
 	 * 
-	 * @since 1.1
+	 * 
 	 */
 	public String getDefaultAbsoluteLinkTarget() {
 		return defaultAbsoluteLinkTarget;
@@ -519,7 +519,7 @@ public class MarkupToHtmlTask extends MarkupTask {
 	 * Setting this value will cause all HTML anchors to have their target attribute set if it's not explicitly
 	 * specified.
 	 * 
-	 * @since 1.1
+	 * 
 	 */
 	public void setDefaultAbsoluteLinkTarget(String defaultAbsoluteLinkTarget) {
 		this.defaultAbsoluteLinkTarget = defaultAbsoluteLinkTarget;
@@ -529,7 +529,7 @@ public class MarkupToHtmlTask extends MarkupTask {
 	 * Indicate if the builder should attempt to conform to strict XHTML rules. The default is false.
 	 * 
 	 * @see HtmlDocumentBuilder#isXhtmlStrict()
-	 * @since 1.3
+	 * 
 	 */
 	public boolean isXhtmlStrict() {
 		return xhtmlStrict;
@@ -539,7 +539,7 @@ public class MarkupToHtmlTask extends MarkupTask {
 	 * Indicate if the builder should attempt to conform to strict XHTML rules. The default is false.
 	 * 
 	 * @see HtmlDocumentBuilder#isXhtmlStrict()
-	 * @since 1.3
+	 * 
 	 */
 	public void setXhtmlStrict(boolean xhtmlStrict) {
 		this.xhtmlStrict = xhtmlStrict;
@@ -549,7 +549,7 @@ public class MarkupToHtmlTask extends MarkupTask {
 	 * Indicate if the builder should emit DOCTYPE declaration. Default is true.
 	 * 
 	 * @see HtmlDocumentBuilder#isEmitDtd()
-	 * @since 1.3
+	 * 
 	 */
 	public boolean getEmitDoctype() {
 		return emitDoctype;
@@ -559,7 +559,7 @@ public class MarkupToHtmlTask extends MarkupTask {
 	 * Indicate if the builder should emit DOCTYPE declaration. Default is true.
 	 * 
 	 * @see HtmlDocumentBuilder#isEmitDtd()
-	 * @since 1.3
+	 * 
 	 */
 	public void setEmitDoctype(boolean emitDtd) {
 		this.emitDoctype = emitDtd;
@@ -570,7 +570,7 @@ public class MarkupToHtmlTask extends MarkupTask {
 	 * 
 	 * @see HtmlDocumentBuilder#isEmitDtd()
 	 * @return the DTD to use, or null if the default DTD should be used
-	 * @since 1.3
+	 * 
 	 */
 	public String getHtmlDoctype() {
 		return htmlDoctype;
@@ -582,7 +582,7 @@ public class MarkupToHtmlTask extends MarkupTask {
 	 * 
 	 * @param htmlDoctype
 	 *            the DTD to use, or null if the default DTD should be used
-	 * @since 1.3
+	 * 
 	 */
 	public void setHtmlDoctype(String htmlDoctype) {
 		this.htmlDoctype = htmlDoctype;
@@ -591,7 +591,7 @@ public class MarkupToHtmlTask extends MarkupTask {
 	/**
 	 * the copyright notice that should appear in the generated output
 	 * 
-	 * @since 1.8
+	 * 
 	 */
 	public String getCopyrightNotice() {
 		return copyrightNotice;
@@ -602,7 +602,7 @@ public class MarkupToHtmlTask extends MarkupTask {
 	 * 
 	 * @param copyrightNotice
 	 *            the notice, or null if there should be none
-	 * @since 1.8
+	 * 
 	 */
 	public void setCopyrightNotice(String copyrightNotice) {
 		this.copyrightNotice = copyrightNotice;

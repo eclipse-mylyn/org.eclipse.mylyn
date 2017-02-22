@@ -95,10 +95,16 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 
 	private MarkupLanguageType markupLanguage;
 
+	/**
+	 * @since 3.0
+	 */
 	public MarkupLanguageType getMarkupLanguage() {
 		return markupLanguage;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public void setMarkupLanguage(MarkupLanguageType markupLanguage) {
 		this.markupLanguage = markupLanguage;
 	}
@@ -169,7 +175,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 	}
 
 	/**
-	 * @since 1.3
+	 * @since 3.0
 	 */
 	protected MarkupLanguageConfiguration createMarkupLanguageConfiguration(TaskRepository taskRepository) {
 		MarkupLanguageConfiguration configuration = Util.create(taskRepository.getConnectorKind());
@@ -277,6 +283,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 	 * @param markupLanguage
 	 *            the markup language to configure
 	 * @see #configureDefaultInternalLinkPattern(TaskRepository, MarkupLanguage)
+	 * @since 3.0
 	 */
 	protected void configureMarkupLanguage(TaskRepository taskRepository, MarkupLanguageType markupLanguage) {
 		String internalLinkPattern = taskRepository.getProperty(AbstractTaskEditorExtension.INTERNAL_WIKI_LINK_PATTERN);
@@ -296,6 +303,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 	 *            the task repository from which settings may be obtained
 	 * @param markupLanguage
 	 *            the markup language to configure
+	 * @since 3.0
 	 */
 	protected void configureDefaultInternalLinkPattern(TaskRepository taskRepository,
 			MarkupLanguageType markupLanguage) {

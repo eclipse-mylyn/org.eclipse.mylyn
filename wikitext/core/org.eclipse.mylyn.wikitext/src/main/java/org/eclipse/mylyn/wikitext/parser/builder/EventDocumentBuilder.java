@@ -40,7 +40,7 @@ import org.eclipse.mylyn.wikitext.parser.builder.event.LinkEvent;
  * A {@link DocumentBuilder} that produces {@link DocumentBuilderEvents} as its output.
  *
  * @author david.green
- * @since 2.0
+ * @since 3.0
  */
 public class EventDocumentBuilder extends DocumentBuilder {
 	private final List<DocumentBuilderEvent> events = new ArrayList<>();

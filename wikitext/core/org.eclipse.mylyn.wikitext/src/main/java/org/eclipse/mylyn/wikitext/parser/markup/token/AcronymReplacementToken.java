@@ -16,9 +16,9 @@ import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
 /**
  * A token for acronyms, which are defined as 3 or more upper-case letters followed immediately by parentheses with one
  * or more words. For example: ABW(A Better Way)
- * 
+ *
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class AcronymReplacementToken extends PatternBasedElement {
 

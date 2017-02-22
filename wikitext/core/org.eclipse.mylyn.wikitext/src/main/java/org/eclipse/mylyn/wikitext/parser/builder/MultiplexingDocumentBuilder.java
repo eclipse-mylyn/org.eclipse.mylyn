@@ -22,7 +22,7 @@ import org.eclipse.mylyn.wikitext.parser.Locator;
  * A document builder that dispatches events to one or more delegates.
  *
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class MultiplexingDocumentBuilder extends DocumentBuilder {
 

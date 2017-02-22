@@ -1094,7 +1094,7 @@ public class WikiToDocTask extends MarkupTask {
 	 * indicates if the title should be provided as an HTTP parameter, for example <code>index.php?title=Main</code>
 	 *
 	 * @return true if index.php and HTTP parameters should be used in the URL, otherwise false. Defaults to false.
-	 * @since 1.8
+	 * 
 	 */
 	public boolean isTitleParameter() {
 		return titleParameter;
@@ -1105,7 +1105,7 @@ public class WikiToDocTask extends MarkupTask {
 	 *
 	 * @param titleParameter
 	 *            true if index.php and HTTP parameters should be used in the URL, otherwise false.
-	 * @since 1.8
+	 * 
 	 */
 	public void setTitleParameter(boolean titleParameter) {
 		this.titleParameter = titleParameter;

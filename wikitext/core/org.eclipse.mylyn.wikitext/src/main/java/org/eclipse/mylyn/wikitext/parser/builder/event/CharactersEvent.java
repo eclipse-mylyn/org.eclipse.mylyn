@@ -19,9 +19,9 @@ import com.google.common.base.Objects;
 
 /**
  * An {@link DocumentBuilderEvent} corresponding to {@link DocumentBuilder#characters(String)}.
- * 
+ *
  * @author david.green
- * @since 2.0
+ * @since 3.0
  */
 public class CharactersEvent extends DocumentBuilderEvent {
 
@@ -38,7 +38,7 @@ public class CharactersEvent extends DocumentBuilderEvent {
 
 	/**
 	 * Provides the text of this event.
-	 * 
+	 *
 	 * @return the text
 	 */
 	public String getText() {

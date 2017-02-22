@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 
 /**
  * @author David Green
+ * @since 3.0
  */
 public class SparseCharSequence implements CharSequence {
 
@@ -99,7 +100,8 @@ public class SparseCharSequence implements CharSequence {
 
 	public CharSequence subSequence(int start, int end) {
 		if (start < 0 || start >= length || end > length) {
-			throw new IndexOutOfBoundsException(String.format("[%s,%s) is not within range [0,%s)", start, end, length)); //$NON-NLS-1$
+			throw new IndexOutOfBoundsException(
+					String.format("[%s,%s) is not within range [0,%s)", start, end, length)); //$NON-NLS-1$
 		}
 		int rangeLength = end - start;
 		if (rangeLength == 0) {

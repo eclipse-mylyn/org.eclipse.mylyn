@@ -13,8 +13,9 @@ package org.eclipse.mylyn.wikitext.parser.css;
 
 /**
  * An abstraction for a CSS selector.
- * 
+ *
  * @author David Green
+ * @since 3.0
  */
 public abstract class Selector {
 

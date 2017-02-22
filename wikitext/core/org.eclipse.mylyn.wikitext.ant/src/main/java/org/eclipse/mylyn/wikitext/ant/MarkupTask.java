@@ -34,8 +34,9 @@ import org.eclipse.mylyn.wikitext.validation.ValidationProblem.Severity;
 
 /**
  * An abstract class for Ant tasks that use a configurable {@link MarkupLanguage}.
- * 
+ *
  * @author David Green
+ * @since 3.0
  */
 public abstract class MarkupTask extends Task {
 
@@ -68,14 +69,14 @@ public abstract class MarkupTask extends Task {
 	}
 
 	/**
-	 * @since 1.3
+	 *
 	 */
 	public MarkupLanguageConfiguration getMarkupLanguageConfiguration() {
 		return markupLanguageConfiguration;
 	}
 
 	/**
-	 * @since 1.3
+	 *
 	 */
 	public void setMarkupLanguageConfiguration(MarkupLanguageConfiguration markupLanguageConfiguration) {
 		this.markupLanguageConfiguration = markupLanguageConfiguration;
@@ -84,7 +85,7 @@ public abstract class MarkupTask extends Task {
 	/**
 	 * Create a {@link MarkupLanguage markup language parser} for the {@link #getMarkupLanguage() specified markup
 	 * language}.
-	 * 
+	 *
 	 * @return the markup language
 	 * @throws BuildException
 	 *             if the markup language is not specified or if it is unknown.
@@ -94,8 +95,8 @@ public abstract class MarkupTask extends Task {
 			throw new BuildException(Messages.getString("MarkupTask.0")); //$NON-NLS-1$
 		}
 		try {
-			MarkupLanguage language = ServiceLocator.getInstance(getClass().getClassLoader()).getMarkupLanguage(
-					markupLanguage);
+			MarkupLanguage language = ServiceLocator.getInstance(getClass().getClassLoader())
+					.getMarkupLanguage(markupLanguage);
 			if (internalLinkPattern != null) {
 				checkAbstractMarkupLanguage(language, "internalLinkPattern"); //$NON-NLS-1$
 				((AbstractMarkupLanguage) language).setInternalLinkPattern(internalLinkPattern);
@@ -174,10 +175,9 @@ public abstract class MarkupTask extends Task {
 
 	/**
 	 * The source encoding.
-	 * 
+	 *
 	 * @return the source encoding, or null if the default encoding is to be used.
 	 * @see java.nio.charset.Charset
-	 * @since 1.1
 	 */
 	public String getSourceEncoding() {
 		return sourceEncoding;
@@ -185,11 +185,10 @@ public abstract class MarkupTask extends Task {
 
 	/**
 	 * The source encoding. The is the character encoding to be used when reading source files.
-	 * 
+	 *
 	 * @param sourceEncoding
 	 *            the source encoding, or null if the default encoding is to be used.
 	 * @see java.nio.charset.Charset
-	 * @since 1.1
 	 */
 	public void setSourceEncoding(String sourceEncoding) {
 		this.sourceEncoding = sourceEncoding;
@@ -229,8 +228,6 @@ public abstract class MarkupTask extends Task {
 
 	/**
 	 * Support a nested markup language configuration.
-	 * 
-	 * @since 1.1
 	 */
 	public void addConfiguredMarkupLanguageConfiguration(MarkupLanguageConfiguration markupLanguageConfiguration) {
 		if (this.markupLanguageConfiguration != null) {
@@ -241,8 +238,6 @@ public abstract class MarkupTask extends Task {
 
 	/**
 	 * Support a nested markup language configuration.
-	 * 
-	 * @since 1.7
 	 */
 	public void addConfigured(MarkupLanguageConfiguration markupLanguageConfiguration) {
 		// bug 367633 - this method is required for Ant to enable subclassing of MarkupLanguageConfiguration
@@ -250,15 +245,16 @@ public abstract class MarkupTask extends Task {
 	}
 
 	/**
-	 * @since 1.1
+	 *
 	 */
 	protected String readFully(File inputFile) {
 		StringBuilder w = new StringBuilder((int) inputFile.length());
 		try {
 			InputStream input = new BufferedInputStream(new FileInputStream(inputFile));
 			try {
-				Reader r = sourceEncoding == null ? new InputStreamReader(input) : new InputStreamReader(input,
-						sourceEncoding);
+				Reader r = sourceEncoding == null
+						? new InputStreamReader(input)
+						: new InputStreamReader(input, sourceEncoding);
 				try {
 					int i;
 					while ((i = r.read()) != -1) {
@@ -271,8 +267,9 @@ public abstract class MarkupTask extends Task {
 				input.close();
 			}
 		} catch (IOException e) {
-			throw new BuildException(MessageFormat.format(
-					Messages.getString("MarkupTask.cannotReadSource"), inputFile, e.getMessage()), e); //$NON-NLS-1$
+			throw new BuildException(
+					MessageFormat.format(Messages.getString("MarkupTask.cannotReadSource"), inputFile, e.getMessage()), //$NON-NLS-1$
+					e);
 		}
 		return w.toString();
 	}

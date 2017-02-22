@@ -20,10 +20,10 @@ import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
 
 /**
  * A utility for creating a Docbook document from markup.
- * 
+ *
  * @see DocBookDocumentBuilder
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class MarkupToDocbook {
 

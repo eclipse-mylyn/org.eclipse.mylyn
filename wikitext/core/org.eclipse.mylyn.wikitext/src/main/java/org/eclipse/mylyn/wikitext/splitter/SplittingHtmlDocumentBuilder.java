@@ -32,6 +32,7 @@ import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
 
 /**
  * @author David Green
+ * @since 3.0
  */
 public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 

@@ -19,9 +19,9 @@ import com.google.common.base.Objects;
 
 /**
  * An {@link DocumentBuilderEvent} corresponding to {@link DocumentBuilder#acronym(String, String)}.
- * 
+ *
  * @author david.green
- * @since 2.0
+ * @since 3.0
  */
 public class AcronymEvent extends DocumentBuilderEvent {
 

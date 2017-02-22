@@ -19,6 +19,7 @@ package org.eclipse.mylyn.wikitext.parser;
  * </p>
  *
  * @author David Green
+ * @since 3.0
  */
 public abstract class DocumentBuilder {
 
@@ -48,8 +49,6 @@ public abstract class DocumentBuilder {
 		PANEL,
 		/**
 		 * a content delimiter with no meaning
-		 *
-		 * @since 1.1
 		 */
 		DIV, FOOTNOTE, QUOTE, CODE, PREFORMATTED, NUMERIC_LIST, BULLETED_LIST, LIST_ITEM, TABLE, TABLE_ROW, TABLE_CELL_HEADER, TABLE_CELL_NORMAL, DEFINITION_LIST, DEFINITION_TERM, DEFINITION_ITEM;
 
@@ -59,15 +58,11 @@ public abstract class DocumentBuilder {
 		EMPHASIS, STRONG, ITALIC, BOLD, CITATION, DELETED, INSERTED, SUPERSCRIPT, SUBSCRIPT, SPAN, CODE, MONOSPACE, UNDERLINED,
 		/**
 		 * a short inline quotation
-		 *
-		 * @since 1.1
 		 */
 		QUOTE,
 
 		/**
 		 * a hyperlink
-		 *
-		 * @since 1.2
 		 */
 		LINK
 	}
@@ -86,8 +81,6 @@ public abstract class DocumentBuilder {
 	 * <p>
 	 * Subclasses should override to provide behaviour; the default implementation does nothing.
 	 * </p>
-	 *
-	 * @since 2.4
 	 */
 	public void flush() {
 	}
@@ -266,8 +259,6 @@ public abstract class DocumentBuilder {
 	/**
 	 * Create a horizontal rule (eg: hr in html). Not all builders need support horizontal rule. The default
 	 * implementation does nothing.
-	 *
-	 * @since 2.4
 	 */
 	public void horizontalRule() {
 		// nothing to do

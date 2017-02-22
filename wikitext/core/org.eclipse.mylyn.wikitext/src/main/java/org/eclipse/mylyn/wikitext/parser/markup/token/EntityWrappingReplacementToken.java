@@ -17,9 +17,9 @@ import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
  * A replacement token for segments of text that are delimited by specified text. Useful for replacing delimiting
  * characters, for example text wrapped by double quotes could be replaced with the same text delimited by single
  * quotes.
- * 
+ *
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class EntityWrappingReplacementToken extends PatternBasedElement {
 

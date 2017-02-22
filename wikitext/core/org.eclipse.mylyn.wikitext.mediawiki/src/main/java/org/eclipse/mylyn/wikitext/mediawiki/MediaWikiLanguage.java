@@ -50,7 +50,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.token.PatternLiteralReplacementT
  * "http://www.wikipedia.org>WikiPedia</a> and <a href="http://www.wikimedia.org/">several other major sites</a>.
  *
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
 
@@ -169,7 +169,7 @@ public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
 	}
 
 	/**
-	 * @since 1.3
+	 *
 	 */
 	@Override
 	public List<Template> getTemplates() {
@@ -177,7 +177,7 @@ public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
 	}
 
 	/**
-	 * @since 1.3
+	 *
 	 */
 	public void setTemplates(List<Template> templates) {
 		if (templates == null) {
@@ -187,7 +187,7 @@ public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
 	}
 
 	/**
-	 * @since 1.3
+	 *
 	 */
 	@Override
 	public List<TemplateResolver> getTemplateProviders() {
@@ -195,7 +195,7 @@ public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
 	}
 
 	/**
-	 * @since 1.3
+	 *
 	 */
 	public void setTemplateProviders(List<TemplateResolver> templateProviders) {
 		if (templateProviders == null) {
@@ -218,7 +218,6 @@ public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
 	 *
 	 * @param templateExcludes
 	 *            a comma-delimited list of names, may include '*' wildcards
-	 * @since 1.3
 	 */
 	public void setTemplateExcludes(String templateExcludes) {
 		this.templateExcludes = templateExcludes;
@@ -228,7 +227,6 @@ public class MediaWikiLanguage extends AbstractMediaWikiLanguage {
 	 * Indicate template names to exclude.
 	 *
 	 * @return a comma-delimited list of names, may include '*' wildcards, or null if none are to be excluded
-	 * @since 1.3
 	 */
 	@Override
 	public String getTemplateExcludes() {

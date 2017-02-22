@@ -25,7 +25,7 @@ import org.eclipse.mylyn.wikitext.splitter.SplittingMarkupToEclipseToc;
  * An Ant task for converting lightweight markup such as Textile to eclipse help format.
  * 
  * @author David Green
- * @since 1.0
+ * 
  */
 public class MarkupToEclipseHelpTask extends MarkupToHtmlTask {
 

@@ -12,9 +12,9 @@ package org.eclipse.mylyn.wikitext.parser.util;
 
 /**
  * Adapt a regex matcher to a {@link Matcher}.
- * 
+ *
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class MatcherAdaper implements Matcher {
 

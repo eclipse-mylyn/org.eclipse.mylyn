@@ -28,7 +28,6 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 
 import com.google.common.base.Predicate;
-import com.google.common.base.Throwables;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Sets;
 
@@ -36,9 +35,9 @@ import com.google.common.collect.Sets;
  * A {@link ServiceLocator} for use in an OSGi runtime environment. Uses OSGI {@link Bundle bundles} to load markup
  * languages using the {@link ServiceLoader Java service} defined by bundle resources defined by service files at the
  * path: {@code "META-INF/services/org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage"} .
- * 
+ *
  * @author david.green
- * @since 2.0
+ * @since 3.0
  */
 public class OsgiServiceLocator extends ServiceLocator {
 
@@ -72,7 +71,7 @@ public class OsgiServiceLocator extends ServiceLocator {
 	/**
 	 * Provides the {@link #isApplicable() applicable} service locator instance. Selects an {@link OsgiServiceLocator}
 	 * if {{@link #isApplicable()} returns {@code true}, otherwise delegates to {@link ServiceLocator#getInstance()}.
-	 * 
+	 *
 	 * @return the service locator.
 	 */
 	public static ServiceLocator getApplicableInstance() {
@@ -144,8 +143,10 @@ public class OsgiServiceLocator extends ServiceLocator {
 	protected void ensureContext(Bundle bundle) {
 		try {
 			bundle.start();
+		} catch (RuntimeException e) {
+			throw e;
 		} catch (Exception e) {
-			throw Throwables.propagate(e);
+			throw new RuntimeException(e);
 		}
 	}
 

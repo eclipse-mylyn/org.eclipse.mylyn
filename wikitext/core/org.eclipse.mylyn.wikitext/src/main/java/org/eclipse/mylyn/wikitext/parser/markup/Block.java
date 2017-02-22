@@ -15,8 +15,9 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 
 /**
  * A markup block that may span multiple lines. Implements {@link Cloneable} for the template design pattern.
- * 
+ *
  * @author David Green
+ * @since 3.0
  */
 public abstract class Block extends Processor implements Cloneable {
 	private boolean closed;
@@ -26,7 +27,7 @@ public abstract class Block extends Processor implements Cloneable {
 
 	/**
 	 * Process the given line of markup starting at the provided offset.
-	 * 
+	 *
 	 * @param line
 	 *            the markup line to process
 	 * @param offset
@@ -41,7 +42,7 @@ public abstract class Block extends Processor implements Cloneable {
 
 	/**
 	 * Process the given line of markup starting at the provided offset.
-	 * 
+	 *
 	 * @param line
 	 *            the markup line to process
 	 * @param offset
@@ -57,7 +58,7 @@ public abstract class Block extends Processor implements Cloneable {
 	 * {@link #processLine(String, int, int)}. Calling this method must cause any previous state to be reset. Note that
 	 * it is valid for block implementations to refuse to start at non-zero offsets. Implementations must be able to
 	 * handle this method without having the {@link Processor processor state} initialized.
-	 * 
+	 *
 	 * @param line
 	 *            the line of markup to test
 	 * @param lineOffset
@@ -68,11 +69,10 @@ public abstract class Block extends Processor implements Cloneable {
 
 	/**
 	 * Indicate if block nesting should begin. Called after {@link #processLineContent(String, int)}.
-	 * 
+	 *
 	 * @return true if nesting should start, otherwise false.
 	 * @see #findCloseOffset(String, int)
 	 * @see #canResume(String, int)
-	 * @since 1.1
 	 */
 	public boolean beginNesting() {
 		return false;
@@ -81,7 +81,7 @@ public abstract class Block extends Processor implements Cloneable {
 	/**
 	 * Indicate if the block can close on the given line at the given offset. blocks that implement a nesting protocol
 	 * must implement this method.
-	 * 
+	 *
 	 * @param line
 	 *            the line of content
 	 * @param lineOffset
@@ -89,7 +89,6 @@ public abstract class Block extends Processor implements Cloneable {
 	 * @return the 0-based offset where the close will occur, or -1 if the block should not close on this line.
 	 * @see #beginNesting()
 	 * @see #canResume(String, int)
-	 * @since 1.1
 	 */
 	public int findCloseOffset(String line, int lineOffset) {
 		return -1;
@@ -98,7 +97,7 @@ public abstract class Block extends Processor implements Cloneable {
 	/**
 	 * Indicates if the block can resume with the given markup line at the provided offset. Resuming a block, means that
 	 * the nested children blocks are closed. Blocks that implement a nesting protocol should implement this method.
-	 * 
+	 *
 	 * @param line
 	 *            the line of content
 	 * @param lineOffset
@@ -107,7 +106,6 @@ public abstract class Block extends Processor implements Cloneable {
 	 *         further.
 	 * @see #beginNesting()
 	 * @see #findCloseOffset(String, int)
-	 * @since 1.6
 	 */
 	public boolean canResume(String line, int lineOffset) {
 		return false;
@@ -123,7 +121,7 @@ public abstract class Block extends Processor implements Cloneable {
 	/**
 	 * Cause the block to be closed. If the block is going from the open to the closed state, then the block must cause
 	 * the closed state to be propagated to the {@link DocumentBuilder builder} if necessary.
-	 * 
+	 *
 	 * @param closed
 	 */
 	public void setClosed(boolean closed) {

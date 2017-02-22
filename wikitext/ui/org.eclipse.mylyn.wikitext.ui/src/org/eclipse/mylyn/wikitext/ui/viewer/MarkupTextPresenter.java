@@ -18,7 +18,7 @@ import org.eclipse.swt.graphics.Drawable;
 /**
  * An information presenter that supports markup. Uses the {@link MarkupParser} to parse the markup to HTML, and passes
  * the HTML to the superclass.
- * 
+ *
  * @author David Green
  * @since 1.0
  */
@@ -28,6 +28,8 @@ public class MarkupTextPresenter extends HtmlTextPresenter {
 
 	/**
 	 * the markup language used by this presenter
+	 * 
+	 * @since 3.0
 	 */
 	public MarkupLanguage getMarkupLanguage() {
 		return markupLanguage;
@@ -35,6 +37,8 @@ public class MarkupTextPresenter extends HtmlTextPresenter {
 
 	/**
 	 * the markup language used by this presenter
+	 * 
+	 * @since 3.0
 	 */
 	public void setMarkupLanguage(MarkupLanguage markupLanguage) {
 		this.markupLanguage = markupLanguage;

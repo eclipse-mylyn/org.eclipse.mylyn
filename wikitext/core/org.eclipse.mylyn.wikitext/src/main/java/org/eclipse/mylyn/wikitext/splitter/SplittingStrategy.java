@@ -12,8 +12,9 @@ package org.eclipse.mylyn.wikitext.splitter;
 
 /**
  * A strategy for deciding when to split content into multiple files based on headings.
- * 
+ *
  * @author David Green
+ * @since 3.0
  */
 public abstract class SplittingStrategy {
 

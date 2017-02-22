@@ -62,7 +62,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.token.PatternLineBreakReplacemen
  *
  * @author Stefan Seelmann
  * @author Max Rydahl Andersen
- * @since 1.0
+ * @since 3.0
  */
 public class AsciiDocLanguage extends AbstractMarkupLanguage {
 

@@ -13,13 +13,14 @@ package org.eclipse.mylyn.wikitext.parser.markup;
 
 /**
  * A strategy for generating IDs from text, follows the Strategy design pattern.
- * 
+ *
  * @author David Green
+ * @since 3.0
  */
 public abstract class IdGenerationStrategy {
 	/**
 	 * produce an id for use in an HTML anchor from heading text.
-	 * 
+	 *
 	 * @param headingText
 	 *            the text of the heading
 	 * @return an Id, or null if no Id could be computed from the given text

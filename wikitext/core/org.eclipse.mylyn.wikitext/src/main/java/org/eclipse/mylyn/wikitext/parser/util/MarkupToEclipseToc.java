@@ -27,9 +27,9 @@ import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
  * A conversion utility targeting the <a href=
  * "http://help.eclipse.org/help33/index.jsp?topic=/org.eclipse.platform.doc.isv/reference/extension-points/org_eclipse_help_toc.html"
  * >Eclipse help table of contents format</a>.
- * 
+ *
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class MarkupToEclipseToc {
 
@@ -108,7 +108,7 @@ public class MarkupToEclipseToc {
 				}
 			}
 
-			writer.writeAttribute("href", file + suffix); //$NON-NLS-1$ 
+			writer.writeAttribute("href", file + suffix); //$NON-NLS-1$
 			writer.writeAttribute("label", item.getLabel()); //$NON-NLS-1$
 
 			if (!item.getChildren().isEmpty()) {
@@ -170,8 +170,7 @@ public class MarkupToEclipseToc {
 	 * <p>
 	 * The default is -1.
 	 * </p>
-	 * 
-	 * @since 2.0
+	 *
 	 * @see #setAnchorLevel(int)
 	 */
 	public int getAnchorLevel() {
@@ -180,11 +179,10 @@ public class MarkupToEclipseToc {
 
 	/**
 	 * Provides the heading level at which anchors should be emitted.
-	 * 
+	 *
 	 * @see #getAnchorLevel()
 	 * @param anchorLevel
 	 *            a number >= 0 and <= 6
-	 * @since 2.0
 	 */
 	public void setAnchorLevel(int anchorLevel) {
 		checkArgument(anchorLevel >= 0 && anchorLevel <= 6, "The anchor level must be >= 0 and <= 6"); //$NON-NLS-1$
@@ -206,8 +204,6 @@ public class MarkupToEclipseToc {
 
 	/**
 	 * the copyright notice that should appear in the generated output
-	 * 
-	 * @since 1.8
 	 */
 	public String getCopyrightNotice() {
 		return copyrightNotice;
@@ -215,10 +211,9 @@ public class MarkupToEclipseToc {
 
 	/**
 	 * the copyright notice that should appear in the generated output
-	 * 
+	 *
 	 * @param copyrightNotice
 	 *            the notice, or null if there should be none
-	 * @since 1.8
 	 */
 	public void setCopyrightNotice(String copyrightNotice) {
 		this.copyrightNotice = copyrightNotice;

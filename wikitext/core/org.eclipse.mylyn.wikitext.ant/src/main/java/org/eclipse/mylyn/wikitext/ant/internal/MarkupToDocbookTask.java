@@ -33,7 +33,7 @@ import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
  * An Ant task for converting markup to docbook format.
  * 
  * @author David Green
- * @since 1.0
+ * 
  */
 public class MarkupToDocbookTask extends MarkupTask {
 	private final List<FileSet> filesets = new ArrayList<FileSet>();

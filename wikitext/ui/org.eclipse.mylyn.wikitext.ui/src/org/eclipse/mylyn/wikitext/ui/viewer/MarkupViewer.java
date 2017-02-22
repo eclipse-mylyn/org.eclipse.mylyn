@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * A viewer that can show wikitext markup (lightweight markup languages) by converting the markup to HTML. Designed for
  * read-only display of markup.
- * 
+ *
  * @see MarkupViewerConfiguration
  * @author David Green
  * @since 1.0
@@ -65,18 +65,30 @@ public class MarkupViewer extends HtmlViewer {
 		}
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public MarkupParser getParser() {
 		return parser;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public void setParser(MarkupParser parser) {
 		this.parser = parser;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public MarkupLanguage getMarkupLanguage() {
 		return parser.getMarkupLanguage();
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public void setMarkupLanguage(MarkupLanguage markupLanguage) {
 		parser.setMarkupLanguage(markupLanguage);
 	}

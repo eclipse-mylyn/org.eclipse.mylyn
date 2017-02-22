@@ -25,6 +25,7 @@ import com.google.common.io.Resources;
  * compute the contents of a template based on
  *
  * @author dgreen
+ * @since 3.0
  */
 public class WikiTemplateResolver extends TemplateResolver {
 

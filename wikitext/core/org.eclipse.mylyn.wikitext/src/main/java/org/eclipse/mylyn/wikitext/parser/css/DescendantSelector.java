@@ -13,6 +13,7 @@ package org.eclipse.mylyn.wikitext.parser.css;
 
 /**
  * @author David Green
+ * @since 3.0
  */
 public class DescendantSelector extends Selector {
 

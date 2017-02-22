@@ -9,8 +9,7 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 /**
- * reusable {@link org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElement} components for implementing 
- * replacement tokens of a markup language parser  
+ * reusable {@link org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElement} components for implementing replacement
+ * tokens of a markup language parser
  */
 package org.eclipse.mylyn.wikitext.parser.markup.token;
-

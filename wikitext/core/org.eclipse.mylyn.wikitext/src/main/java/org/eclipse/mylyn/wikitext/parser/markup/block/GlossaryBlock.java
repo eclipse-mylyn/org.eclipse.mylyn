@@ -23,8 +23,9 @@ import org.eclipse.mylyn.wikitext.parser.markup.ContentState;
  * An abstract implementation of a glossary. Emits a definition list containing all terms
  * {@link ContentState#getGlossaryTerms() defined} in the document. Subclasses need only define {Block
  * {@link #canStart(String, int)}.
- * 
+ *
  * @author David Green
+ * @since 3.0
  */
 public abstract class GlossaryBlock extends Block {
 
@@ -41,9 +42,8 @@ public abstract class GlossaryBlock extends Block {
 		if (!getMarkupLanguage().isFilterGenerativeContents()) {
 			SortedMap<String, String> glossary = new TreeMap<String, String>(state.getGlossaryTerms());
 
-			builder.beginBlock(BlockType.DEFINITION_LIST, new Attributes(null, null, style == null
-					? null
-					: "list-style: " + style, null)); //$NON-NLS-1$
+			builder.beginBlock(BlockType.DEFINITION_LIST,
+					new Attributes(null, null, style == null ? null : "list-style: " + style, null)); //$NON-NLS-1$
 			Attributes nullAttributes = new Attributes();
 			for (Map.Entry<String, String> ent : glossary.entrySet()) {
 				builder.beginBlock(BlockType.DEFINITION_TERM, nullAttributes);
@@ -62,7 +62,7 @@ public abstract class GlossaryBlock extends Block {
 
 	/**
 	 * the CSS style of the glossary block
-	 * 
+	 *
 	 * @return the style, or null if the style is not defined
 	 */
 	public String getStyle() {
@@ -71,7 +71,7 @@ public abstract class GlossaryBlock extends Block {
 
 	/**
 	 * the CSS style of the glossary block
-	 * 
+	 *
 	 * @param style
 	 *            the style, or null if the style is not defined
 	 */

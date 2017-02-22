@@ -16,7 +16,7 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import com.google.common.base.Objects;
 
 /**
- * @since 2.4
+ * @since 3.0
  */
 public class HorizontalRuleEvent extends DocumentBuilderEvent {
 

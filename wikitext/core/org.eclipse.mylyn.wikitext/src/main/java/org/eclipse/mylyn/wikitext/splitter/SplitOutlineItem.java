@@ -21,6 +21,7 @@ import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
 
 /**
  * @author David Green
+ * @since 3.0
  */
 public class SplitOutlineItem extends OutlineItem {
 
@@ -72,7 +73,7 @@ public class SplitOutlineItem extends OutlineItem {
 
 	/**
 	 * get the outline item for a given id
-	 * 
+	 *
 	 * @param id
 	 *            the id for which the outline item should be returned
 	 * @return the outline item, or null if the given id is unknown

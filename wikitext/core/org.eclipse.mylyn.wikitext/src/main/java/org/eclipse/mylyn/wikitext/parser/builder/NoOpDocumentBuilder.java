@@ -17,8 +17,9 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 /**
  * A document builder that does nothing. Generally used when parsing should have other side-effects but the output is
  * not of interest.
- * 
+ *
  * @author David Green
+ * @since 3.0
  */
 public class NoOpDocumentBuilder extends DocumentBuilder {
 

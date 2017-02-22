@@ -16,7 +16,7 @@ package org.eclipse.mylyn.wikitext.validation;
  * increasing offset.
  *
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class ValidationProblem implements Comparable<ValidationProblem> {
 	/**

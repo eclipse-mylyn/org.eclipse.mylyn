@@ -13,14 +13,14 @@ package org.eclipse.mylyn.wikitext.mediawiki;
 
 /**
  * Dynamically resolve templates by name.
- * 
- * @since 1.3
+ *
+ * @since 3.0
  */
 public abstract class TemplateResolver {
 
 	/**
 	 * Resolve a template by its name.
-	 * 
+	 *
 	 * @param templateName
 	 *            the name of the template
 	 * @return the template, or null if the template name is unknown.

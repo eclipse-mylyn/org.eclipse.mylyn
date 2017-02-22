@@ -20,6 +20,7 @@ import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
 
 /**
  * @author David Green
+ * @since 3.0
  */
 public abstract class AbstractXmlDocumentBuilder extends DocumentBuilder {
 	private static final Pattern ABSOLUTE_URL_PATTERN = Pattern.compile("(([a-zA-Z]{3,8}://?.*)|(mailto:.*))"); //$NON-NLS-1$
@@ -46,7 +47,6 @@ public abstract class AbstractXmlDocumentBuilder extends DocumentBuilder {
 	/**
 	 * Provides access to the underlying writer.
 	 *
-	 * @since 2.0
 	 * @noreference This method is not intended to be referenced by clients.
 	 */
 	public XmlStreamWriter getWriter() {

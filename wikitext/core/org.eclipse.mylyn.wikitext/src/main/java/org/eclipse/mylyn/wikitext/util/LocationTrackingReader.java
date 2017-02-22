@@ -16,9 +16,9 @@ import java.io.Reader;
 /**
  * A reader class that tracks the character offset based on the number of characters read. Also provides a means for
  * reading lines of text, tracking the offset of the last line read.
- * 
+ *
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class LocationTrackingReader extends Reader {
 	private final Reader delegate;
@@ -92,7 +92,7 @@ public class LocationTrackingReader extends Reader {
 
 	/**
 	 * Read a line of text, omitting the line delimiters.
-	 * 
+	 *
 	 * @return the text or null if the end of input has been reached
 	 * @see #getLineOffset()
 	 */
@@ -178,7 +178,7 @@ public class LocationTrackingReader extends Reader {
 	/**
 	 * Get the character offset of the first character of the last line read. The result of calling this method is only
 	 * meaningful immediately after having called {@link #readLine()}.
-	 * 
+	 *
 	 * @see #readLine()
 	 */
 	public int getLineOffset() {
@@ -188,7 +188,7 @@ public class LocationTrackingReader extends Reader {
 	/**
 	 * get the 0-based line number of the last line read. The result of calling this method is only meaningful
 	 * immediately after having called {@link #readLine()}.
-	 * 
+	 *
 	 * @see #readLine()
 	 */
 	public int getLineNumber() {

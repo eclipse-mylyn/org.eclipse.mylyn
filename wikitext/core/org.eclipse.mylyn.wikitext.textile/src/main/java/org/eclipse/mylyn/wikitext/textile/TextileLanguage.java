@@ -50,8 +50,8 @@ import org.eclipse.mylyn.wikitext.textile.internal.phrase.EscapeTextilePhraseMod
 import org.eclipse.mylyn.wikitext.textile.internal.phrase.HyperlinkPhraseModifier;
 import org.eclipse.mylyn.wikitext.textile.internal.phrase.ImageTextilePhraseModifier;
 import org.eclipse.mylyn.wikitext.textile.internal.phrase.SimpleTextilePhraseModifier;
-import org.eclipse.mylyn.wikitext.textile.internal.phrase.TagEscapeTextilePhraseModifier;
 import org.eclipse.mylyn.wikitext.textile.internal.phrase.SimpleTextilePhraseModifier.Mode;
+import org.eclipse.mylyn.wikitext.textile.internal.phrase.TagEscapeTextilePhraseModifier;
 import org.eclipse.mylyn.wikitext.textile.internal.token.EntityReplacementToken;
 import org.eclipse.mylyn.wikitext.textile.internal.token.FootnoteReferenceReplacementToken;
 
@@ -62,7 +62,7 @@ import org.eclipse.mylyn.wikitext.textile.internal.token.FootnoteReferenceReplac
  * <code>{glossary}</code>.
  *
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class TextileLanguage extends AbstractMarkupLanguage {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.wikitext.textile.language"; //$NON-NLS-1$
@@ -253,7 +253,7 @@ public class TextileLanguage extends AbstractMarkupLanguage {
 	}
 
 	/**
-	 * @since 2.0
+	 *
 	 */
 	@Override
 	public DocumentBuilder createDocumentBuilder(Writer out, boolean formatting) {

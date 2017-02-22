@@ -12,8 +12,9 @@ package org.eclipse.mylyn.wikitext.splitter;
 
 /**
  * a splitting strategy that causes no splits.
- * 
+ *
  * @author David Green
+ * @since 3.0
  */
 public class NoSplittingStrategy extends SplittingStrategy {
 

@@ -14,8 +14,8 @@ package org.eclipse.mylyn.wikitext.mediawiki;
 /**
  * A representation of <a href="http://www.mediawiki.org/wiki/Help:Templates">MediaWiki Templates</a>, which provide a
  * means to expand commonly-used content with token-replacement.
- * 
- * @since 1.3
+ *
+ * @since 3.0
  */
 public class Template {
 	private String name;
@@ -30,7 +30,6 @@ public class Template {
 	 *            the name of the template
 	 * @param templateMarkup
 	 *            the substitution content of the template
-	 * @since 1.6
 	 */
 	public Template(String name, String templateMarkup) {
 		super();
@@ -55,8 +54,6 @@ public class Template {
 	/**
 	 * The content of the template as it should be included in the document. The default implementation simply returns
 	 * {@link #getTemplateMarkup()}. Templates that produce dynamically generated content should override this method.
-	 * 
-	 * @since 1.6
 	 */
 	public String getTemplateContent() {
 		return getTemplateMarkup();

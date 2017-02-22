@@ -18,9 +18,9 @@ import org.eclipse.mylyn.wikitext.parser.markup.block.JavaStackTraceBlock;
 
 /**
  * A builder for creating {@link MarkupLanguageConfiguration}
- * 
+ *
  * @author David Green
- * @since 1.6
+ * @since 3.0
  */
 public class ConfigurationBuilder {
 
@@ -35,7 +35,7 @@ public class ConfigurationBuilder {
 
 	/**
 	 * causes builder to have repository-optimal settings
-	 * 
+	 *
 	 * @see #disableUnwrappedParagraphs()
 	 * @see #escapingHtmlAndXml()
 	 * @see #newlinesMustCauseLineBreak()

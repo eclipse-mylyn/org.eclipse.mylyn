@@ -43,7 +43,7 @@ import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
  * @see <a href="http://www.w3schools.com/xslfo/default.asp">XSL-FO Tutorial</a>
  * @author David Green
  * @author Torkild U. Resheim
- * @since 1.1
+ * @since 3.0
  */
 public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 
@@ -122,7 +122,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * @since 1.6
+	 *
 	 */
 	public OutlineItem getOutline() {
 		return outline;
@@ -134,7 +134,6 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 *
 	 * @param outline
 	 *            the root outline item.
-	 * @since 1.6
 	 */
 	public void setOutline(OutlineItem outline) {
 		this.outline = outline;
@@ -1028,7 +1027,6 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * This type represents a XSL:FO page region.
 	 *
 	 * @author Torkild U. Resheim, MARINTEK
-	 * @since 1.6
 	 */
 	public static class Region implements Cloneable {
 
@@ -1123,7 +1121,6 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * This type represents a XSL:FO page or body margin.
 	 *
 	 * @author Torkild U. Resheim, MARINTEK
-	 * @since 1.6
 	 */
 	public static class Margins implements Cloneable {
 
@@ -1558,7 +1555,6 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		 *
 		 * @param referenceOrientation
 		 *            the master page orientation in degrees.
-		 * @since 1.6
 		 */
 		public void setReferenceOrientation(float referenceOrientation) {
 			this.referenceOrientation = referenceOrientation;
@@ -1568,7 +1564,6 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		 * The <b>reference-orientation</b> property of the master page in degrees. Defaults to 90 degrees.
 		 *
 		 * @return the master page orientation in degrees.
-		 * @since 1.6
 		 */
 		public float getReferenceOrientation() {
 			return referenceOrientation;
@@ -1578,7 +1573,6 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		 * Returns the margins of the master page.
 		 *
 		 * @return master page margins
-		 * @since 1.6
 		 */
 		public Margins getPageMargins() {
 			return pageMargins;
@@ -1588,7 +1582,6 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		 * Returns the body margins.
 		 *
 		 * @return body margins
-		 * @since 1.6
 		 */
 		public Margins getBodyMargins() {
 			return bodyMargins;
@@ -1600,7 +1593,6 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		 * @param pageMargins
 		 *            the page margins.
 		 * @see #setPageMargin(float)
-		 * @since 1.6
 		 */
 		public void setPageMargins(Margins pageMargins) {
 			this.pageMargins = pageMargins;
@@ -1611,14 +1603,13 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		 *
 		 * @param boduMargins
 		 *            the page margins.
-		 * @since 1.6
 		 */
 		public void setBodyMargins(Margins bodyMargins) {
 			this.bodyMargins = bodyMargins;
 		}
 
 		/**
-		 * @since 1.6
+		 *
 		 */
 		public void setBodyBeforeRegion(Region region) {
 			region.setName("before"); //$NON-NLS-1$
@@ -1626,14 +1617,14 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		}
 
 		/**
-		 * @since 1.6
+		 *
 		 */
 		public Region getBodyBeforeRegion() {
 			return bodyBeforeRegion;
 		}
 
 		/**
-		 * @since 1.6
+		 *
 		 */
 		public void setBodyAfterRegion(Region region) {
 			region.setName("after"); //$NON-NLS-1$
@@ -1641,14 +1632,14 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		}
 
 		/**
-		 * @since 1.6
+		 *
 		 */
 		public Region getBodyAfterRegion() {
 			return bodyAfterRegion;
 		}
 
 		/**
-		 * @since 1.6
+		 *
 		 */
 		public void setBodyStartRegion(Region region) {
 			region.setName("start"); //$NON-NLS-1$
@@ -1656,14 +1647,14 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		}
 
 		/**
-		 * @since 1.6
+		 *
 		 */
 		public Region getBodyStartRegion() {
 			return bodyStartRegion;
 		}
 
 		/**
-		 * @since 1.6
+		 *
 		 */
 		public void setBodyEndRegion(Region region) {
 			region.setName("end"); //$NON-NLS-1$
@@ -1671,7 +1662,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 		}
 
 		/**
-		 * @since 1.6
+		 *
 		 */
 		public Region getBodyEndRegion() {
 			return bodyEndRegion;

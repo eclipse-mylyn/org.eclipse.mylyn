@@ -12,7 +12,7 @@ package org.eclipse.mylyn.wikitext.parser;
 
 /**
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class ListAttributes extends Attributes {
 

@@ -21,7 +21,7 @@ import javax.xml.stream.XMLStreamWriter;
  * </ul>
  *
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public abstract class XmlStreamWriter {
 
@@ -32,7 +32,7 @@ public abstract class XmlStreamWriter {
 	public abstract String getPrefix(String uri);
 
 	/**
-	 * @since 2.4
+	 *
 	 */
 	public String getNamespaceURI(String prefix) {
 		return null;
@@ -98,8 +98,6 @@ public abstract class XmlStreamWriter {
 
 	/**
 	 * Creates an {@link XMLStreamWriter} for this {@link XmlStreamWriter}.
-	 *
-	 * @since 2.4
 	 */
 	public XMLStreamWriter toXMLStreamWriter() {
 		return new XmlStreamWriterAdapter(this);

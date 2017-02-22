@@ -25,21 +25,22 @@ import java.util.regex.Pattern;
 /**
  * A rudimentary CSS stylesheet parser. Recognizes commonly-used CSS syntax. The result of parsing is a CSS-specific
  * object model.
- * 
+ *
  * @author David Green
  * @see Stylesheet
  * @see CssRule
+ * @since 3.0
  */
 public class CssParser {
 
-	private static final Pattern CSS_COMMENT_PATTERN = Pattern.compile(
-			"/\\*.*?(\\*/|\\z)", Pattern.MULTILINE | Pattern.DOTALL); //$NON-NLS-1$
+	private static final Pattern CSS_COMMENT_PATTERN = Pattern.compile("/\\*.*?(\\*/|\\z)", //$NON-NLS-1$
+			Pattern.MULTILINE | Pattern.DOTALL);
 
-	private static Pattern CSS_BLOCK_PATTERN = Pattern.compile(
-			"(?:$|^)([^{]+)\\{([^\\}]*)\\}", Pattern.MULTILINE | Pattern.DOTALL); //$NON-NLS-1$
+	private static Pattern CSS_BLOCK_PATTERN = Pattern.compile("(?:$|^)([^{]+)\\{([^\\}]*)\\}", //$NON-NLS-1$
+			Pattern.MULTILINE | Pattern.DOTALL);
 
-	static final Pattern CSS_RULE_PATTERN = Pattern.compile(
-			"(?:^|\\s?)([\\w-]+)\\s*:\\s*([^;]+)(;|$)", Pattern.MULTILINE //$NON-NLS-1$
+	static final Pattern CSS_RULE_PATTERN = Pattern.compile("(?:^|\\s?)([\\w-]+)\\s*:\\s*([^;]+)(;|$)", //$NON-NLS-1$
+			Pattern.MULTILINE
 					| Pattern.DOTALL);
 
 	private static final String elemNamePatternPart = "(\\*|[a-zA-Z][a-zA-Z0-9]*)"; // capture 1 '*' or name //$NON-NLS-1$
@@ -48,7 +49,8 @@ public class CssParser {
 
 	private static final String elemPseudoClassPatternPart = "(?:\\:([a-zA-Z]+))"; // capture 1 pseudoClass without ':' prefix //$NON-NLS-1$
 
-	private static final String fullElementPatternPart = "(?:(?:" + elemNamePatternPart + "|" + elemQualifierPatternPart + "|" + elemPseudoClassPatternPart + "){1,3})"; // 4 capturing groups //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	private static final String fullElementPatternPart = "(?:(?:" + elemNamePatternPart + "|" + elemQualifierPatternPart //$NON-NLS-1$//$NON-NLS-2$
+			+ "|" + elemPseudoClassPatternPart + "){1,3})"; // 4 capturing groups   //$NON-NLS-1$ //$NON-NLS-2$
 
 	private static Pattern CSS_SELECTOR_PATTERN = Pattern.compile(fullElementPatternPart + // first element name selector
 			"(?:\\s*?" + // optional join part //$NON-NLS-1$
@@ -86,8 +88,8 @@ public class CssParser {
 			String ruleValue = matcher.group(2).trim();
 			int valueOffset = matcher.start(2);
 			hasNext = matcher.find();
-			return new CssRule(ruleName, ruleValue, offset + blockOffset, length, nameOffset + blockOffset, valueOffset
-					+ blockOffset);
+			return new CssRule(ruleName, ruleValue, offset + blockOffset, length, nameOffset + blockOffset,
+					valueOffset + blockOffset);
 		}
 
 		public void remove() {
@@ -97,7 +99,7 @@ public class CssParser {
 
 	/**
 	 * parse the contents of a CSS block
-	 * 
+	 *
 	 * @param content
 	 *            the content of the block
 	 * @return a list of rules, or an empty list if there are none
@@ -108,7 +110,7 @@ public class CssParser {
 
 	/**
 	 * parse the contents of a CSS block and return the result as an iterator of rules
-	 * 
+	 *
 	 * @param content
 	 * @return
 	 */

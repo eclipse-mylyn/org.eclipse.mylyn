@@ -16,8 +16,9 @@ import java.util.List;
 
 /**
  * A collection of validation rules, which involves a hierarchy so that language inheritance behaviour can be supported.
- * 
+ *
  * @author David Green
+ * @since 3.0
  */
 public class ValidationRules {
 	private ValidationRules parent;

@@ -15,9 +15,9 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 
 /**
  * A block that is delimited by <code>&lt;pre&gt;</code> and <code>&lt;/pre&gt;</code>
- * 
+ *
  * @author David Green
- * @since 1.2
+ * @since 3.0
  */
 public class HtmlPreformattedBlock extends AbstractHtmlBlock {
 

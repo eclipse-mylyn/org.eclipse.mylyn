@@ -28,6 +28,7 @@ import org.junit.runners.model.Statement;
 
 /**
  * A {@link TestRule} that dumps a stack trace to {@code System.out}.
+ * @since 3.0
  */
 public class StackDumpOnTimeoutRule implements TestRule {
 

@@ -13,8 +13,9 @@ package org.eclipse.mylyn.wikitext.parser.css;
 
 /**
  * A CSS selector that selects any element
- * 
+ *
  * @author David Green
+ * @since 3.0
  */
 public class AnySelector extends Selector {
 

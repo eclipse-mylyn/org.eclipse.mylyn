@@ -15,11 +15,11 @@ import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
 
 /**
  * A processor that emits the first group as characters, optionally unescaped.
- * 
+ *
  * @see DocumentBuilder#characters(String)
  * @see DocumentBuilder#charactersUnescaped(String)
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class LiteralPhraseModifierProcessor extends PatternBasedElementProcessor {
 
@@ -29,7 +29,7 @@ public class LiteralPhraseModifierProcessor extends PatternBasedElementProcessor
 
 	/**
 	 * Construct this with a group of 1.
-	 * 
+	 *
 	 * @param escaping
 	 *            indicate if the processor should escape characters
 	 */

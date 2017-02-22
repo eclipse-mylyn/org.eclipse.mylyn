@@ -26,9 +26,10 @@ import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
 
 /**
  * A document builder that creates an OASIS DITA topic
- * 
+ *
  * @author David Green
  * @see DitaBookMapDocumentBuilder
+ * @since 3.0
  */
 public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 
@@ -68,7 +69,7 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 	/**
 	 * Create a DitaTopicDocumentBuilder that writes formatted output to the given writer. Output without formatting can
 	 * be created using {@link #DitaTopicDocumentBuilder(XmlStreamWriter, boolean)}.
-	 * 
+	 *
 	 * @param out
 	 *            the writer to which formatted XML content output
 	 */
@@ -78,7 +79,7 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	/**
 	 * Equivalent to <code>new DitaTopicDocumentBuilder(writer,true)</code>
-	 * 
+	 *
 	 * @see #DitaTopicDocumentBuilder(XmlStreamWriter, boolean)
 	 */
 	public DitaTopicDocumentBuilder(XmlStreamWriter writer) {
@@ -153,7 +154,8 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		final boolean closeElementsOnBlockStart;
 
-		public BlockDescription(BlockType type, int size, String[] nestedElementNames, boolean closeElementsOnBlockStart) {
+		public BlockDescription(BlockType type, int size, String[] nestedElementNames,
+				boolean closeElementsOnBlockStart) {
 			this.size = size;
 			this.entrySize = nestedElementNames == null ? 0 : nestedElementNames.length;
 			this.type = type;
@@ -384,7 +386,8 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 		case DELETED:
 			// no equivalent?
 			writer.writeStartElement("ph"); //$NON-NLS-1$
-			attributes.setCssClass(attributes.getCssClass() == null ? "deleted" : attributes.getCssClass() + " deleted"); //$NON-NLS-1$ //$NON-NLS-2$
+			attributes
+					.setCssClass(attributes.getCssClass() == null ? "deleted" : attributes.getCssClass() + " deleted"); //$NON-NLS-1$ //$NON-NLS-2$
 			break;
 		case EMPHASIS:
 			writer.writeStartElement("i"); //$NON-NLS-1$
@@ -611,7 +614,7 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 	/**
 	 * According to the DITA documentation, DITA content URLs use special syntax. this method translates internal URLs
 	 * correctly according to the DITA rules.
-	 * 
+	 *
 	 * @return the href adjusted, or the original href if the given URL appears to be to non-document content
 	 */
 	private String computeDitaXref(String href) {

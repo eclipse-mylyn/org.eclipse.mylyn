@@ -16,8 +16,9 @@ import java.util.List;
 
 /**
  * An abstraction for a block of CSS rules
- * 
+ *
  * @author David Green
+ * @since 3.0
  */
 public class Block {
 

@@ -13,20 +13,21 @@ package org.eclipse.mylyn.wikitext.parser;
 /**
  * An interface that provides information about the location of the current parser activity. Note that parsers may make
  * a best-effort attempt at determining the location.
- * 
+ *
  * @author David Green
+ * @since 3.0
  */
 public interface Locator {
 	/**
 	 * get the 1-based number of the current line.
-	 * 
+	 *
 	 * @return the line number or -1 if unknown
 	 */
 	public int getLineNumber();
 
 	/**
 	 * get the 0-based character offset of the current line from the start of the document
-	 * 
+	 *
 	 * @return the offset or -1 if unknown
 	 */
 	public int getLineDocumentOffset();

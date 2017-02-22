@@ -15,10 +15,10 @@ import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
 
 /**
  * Replaces text matching a pattern with an unescaped literal.
- * 
+ *
  * @see LiteralReplacementTokenProcessor
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class PatternLiteralReplacementToken extends PatternBasedElement {
 

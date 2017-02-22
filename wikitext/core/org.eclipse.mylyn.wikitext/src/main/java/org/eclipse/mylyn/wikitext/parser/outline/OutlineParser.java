@@ -21,10 +21,10 @@ import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 /**
  * A parser for creating an outline of a document based on the headings in the document. Uses {@link MarkupLanguage a
  * markup language} to determine where headings start and end.
- * 
+ *
  * @see OutlineItem
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class OutlineParser {
 

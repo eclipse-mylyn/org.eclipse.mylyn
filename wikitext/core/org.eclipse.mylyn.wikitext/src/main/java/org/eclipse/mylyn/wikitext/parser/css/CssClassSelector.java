@@ -13,9 +13,10 @@ package org.eclipse.mylyn.wikitext.parser.css;
 
 /**
  * a selector that selects elements based on their having a CSS class
- * 
+ *
  * @author David Green
  * @see ElementInfo#hasCssClass(String)
+ * @since 3.0
  */
 public class CssClassSelector extends Selector {
 	private final String cssClass;

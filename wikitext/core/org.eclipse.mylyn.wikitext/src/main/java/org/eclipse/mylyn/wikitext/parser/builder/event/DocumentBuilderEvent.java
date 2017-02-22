@@ -17,18 +17,18 @@ import org.eclipse.mylyn.wikitext.parser.builder.EventDocumentBuilder;
 /**
  * Represents an invocation of a {@link DocumentBuilder} captured as an event which can be
  * {@link #invoke(DocumentBuilder) applied}.
- * 
+ *
  * @author david.green
- * @since 2.0
  * @see EventDocumentBuilder
  * @see DocumentBuilderEvents
  * @noextend This class is not intended to be subclassed by clients.
+ * @since 3.0
  */
 public abstract class DocumentBuilderEvent {
 
 	/**
 	 * Invokes the event on the given {@code builder}.
-	 * 
+	 *
 	 * @param builder
 	 *            the builder
 	 */

@@ -29,7 +29,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
  * An abstract base class for handlers that use the workbench selection to operate on resources
- * 
+ *
  * @author David Green
  */
 public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
@@ -57,7 +57,7 @@ public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 				Object o = it.next();
 				IFile file = null;
 				if (o instanceof IAdaptable) {
-					file = (IFile) ((IAdaptable) o).getAdapter(IFile.class);
+					file = ((IAdaptable) o).getAdapter(IFile.class);
 				}
 				if (file != null) {
 					String name = file.getName();
@@ -74,10 +74,9 @@ public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 								markupLanguage = WikiText.getMarkupLanguageForFilename(file.getName());
 							}
 							if (markupLanguage == null) {
-								MessageDialog.openError(
-										PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-										Messages.AbstractMarkupResourceHandler_unexpectedError, NLS.bind(
-												Messages.AbstractMarkupResourceHandler_markupLanguageMappingFailed,
+								MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+										Messages.AbstractMarkupResourceHandler_unexpectedError,
+										NLS.bind(Messages.AbstractMarkupResourceHandler_markupLanguageMappingFailed,
 												new Object[] { file.getName() }));
 								return null;
 							}
@@ -97,7 +96,7 @@ public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 	/**
 	 * Classes that need access to the {@code event} should override this method. The default implementation simply
 	 * calls {@link #handleFile(IFile, String)}
-	 * 
+	 *
 	 * @since 1.9
 	 * @see #handleFile(IFile, String)
 	 */
@@ -125,7 +124,7 @@ public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 
 	/**
 	 * Perform the command's function on the given file.
-	 * 
+	 *
 	 * @param file
 	 *            the input file to process
 	 * @param name
@@ -134,10 +133,16 @@ public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 	 */
 	protected abstract void handleFile(IFile file, String name) throws ExecutionException;
 
+	/**
+	 * @since 3.0
+	 */
 	public MarkupLanguage getMarkupLanguage() {
 		return markupLanguage;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public void setMarkupLanguage(MarkupLanguage markupLanguage) {
 		this.markupLanguage = markupLanguage;
 	}

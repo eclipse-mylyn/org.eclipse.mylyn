@@ -20,20 +20,20 @@ import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
  * <p>
  * Example implementation:
  * </p>
- * 
+ *
  * <pre>
  * <code>
  * class MyHtmlDocumentHandler implements HtmlDocumentHandler {
- * 
- * 	@Override
+ *
+ * 	&#64;Override
  * 	public void beginDocument(HtmlDocumentBuilder builder, XmlStreamWriter writer) {
  * 		writer.writeStartDocument("utf-8", "1.0");
  * 		writer.writeStartElement(builder.getHtmlNsUri(), "html");
  * 		writer.writeDefaultNamespace(builder.getHtmlNsUri());
  * 		writer.writeStartElement(builder.getHtmlNsUri(), "body");
  * 	}
- * 
- * 	@Override
+ *
+ * 	&#64;Override
  * 	public void endDocument(HtmlDocumentBuilder builder, XmlStreamWriter writer) {
  * 		writer.writeEndElement();
  * 		writer.writeEndElement();
@@ -42,14 +42,14 @@ import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
  * }
  * </code>
  * </pre>
- * 
+ *
  * @author David Green
- * @since 2.0
+ * @since 3.0
  */
 public interface HtmlDocumentHandler {
 	/**
 	 * Writes the content that occurs at the start of the document up to and including the {@code <body>} tag (if any).
-	 * 
+	 *
 	 * @param builder
 	 *            the builder the builder for which the handler is being invoked
 	 * @param writer
@@ -59,7 +59,7 @@ public interface HtmlDocumentHandler {
 
 	/**
 	 * Writes the content that occurs at the end of the document startign with the {@code </body>} closing tag (if any).
-	 * 
+	 *
 	 * @param builder
 	 *            the builder the builder for which the handler is being invoked
 	 * @param writer

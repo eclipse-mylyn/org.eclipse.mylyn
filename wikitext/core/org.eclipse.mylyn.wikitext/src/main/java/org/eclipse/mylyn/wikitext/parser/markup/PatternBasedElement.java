@@ -14,15 +14,16 @@ package org.eclipse.mylyn.wikitext.parser.markup;
  * An element of markup that is detected using a regular expression pattern. Serves as a means of detecting markup
  * elements and providing a factory for processors that can process the markup element. Implementations of this class
  * must be thread-safe (generally stateless).
- * 
+ *
  * @author David Green
+ * @since 3.0
  */
 public abstract class PatternBasedElement implements Cloneable {
 
 	/**
 	 * Get the regular expression pattern that matches this element. Generally the pattern may be assembled into a
 	 * single larger regular expression.
-	 * 
+	 *
 	 * @param groupOffset
 	 *            the offset of the groups in the pattern, 0 indicating no offset
 	 * @return the regular expression pattern

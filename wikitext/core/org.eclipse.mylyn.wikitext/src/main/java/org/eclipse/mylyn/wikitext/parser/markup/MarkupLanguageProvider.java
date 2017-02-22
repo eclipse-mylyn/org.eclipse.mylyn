@@ -23,20 +23,20 @@ import com.google.common.collect.Sets;
 
 /**
  * A provider of {@link MarkupLanguage}.
- * 
- * @since 2.0
+ *
  * @see ServiceLocator
+ * @since 3.0
  */
 public abstract class MarkupLanguageProvider {
 
 	/**
 	 * Provides all {@link MarkupLanguage markup languages} supported by this provider.
-	 * 
+	 *
 	 * @return the markup languages, or an empty set if there are none
 	 */
 	public final Set<MarkupLanguage> getMarkupLanguages() {
-		Set<MarkupLanguage> languages = ImmutableSet.copyOf(checkNotNull(loadMarkupLanguages(),
-				"loadMarkupLanguages() must not return null")); //$NON-NLS-1$
+		Set<MarkupLanguage> languages = ImmutableSet
+				.copyOf(checkNotNull(loadMarkupLanguages(), "loadMarkupLanguages() must not return null")); //$NON-NLS-1$
 		assertLanguageNames(languages);
 		return languages;
 	}
@@ -45,8 +45,8 @@ public abstract class MarkupLanguageProvider {
 		Set<String> names = Sets.newHashSet();
 		for (MarkupLanguage language : languages) {
 			checkNotNull(language.getName(), "Provided languages must have a name"); //$NON-NLS-1$
-			checkState(names.add(language.getName()),
-					"Language name '%s' must not be provided more than once", language.getName()); //$NON-NLS-1$
+			checkState(names.add(language.getName()), "Language name '%s' must not be provided more than once", //$NON-NLS-1$
+					language.getName());
 		}
 	}
 

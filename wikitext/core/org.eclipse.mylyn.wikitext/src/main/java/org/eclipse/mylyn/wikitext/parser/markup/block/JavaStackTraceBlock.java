@@ -20,9 +20,9 @@ import org.eclipse.mylyn.wikitext.parser.markup.Block;
 /**
  * A block for Java stack traces. Matches any text that looks like a stack trace, even if it is only a portion (it's
  * common for stack traces to be clipped to eliminate unrelated text).
- * 
+ *
  * @author David Green
- * @since 1.1
+ * @since 3.0
  */
 public class JavaStackTraceBlock extends Block {
 
@@ -35,11 +35,12 @@ public class JavaStackTraceBlock extends Block {
 
 	private static final String CLASS_PART = "[A-Za-z$][a-zA-Z0-9_$]*"; //$NON-NLS-1$
 
-	private static final String FQN_PART = "((" + PACKAGE_PART + "(\\." + PACKAGE_PART + ")*\\." + CLASS_PART + ")|(\\$Proxy\\d+))"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	private static final String FQN_PART = "((" + PACKAGE_PART + "(\\." + PACKAGE_PART + ")*\\." + CLASS_PART //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+			+ ")|(\\$Proxy\\d+))"; //$NON-NLS-1$
 
 	private static final Pattern STACK_TRACE_PATTERN = Pattern.compile("\\s*((" + "((Caused by:\\s+)|(at\\s+))?" //$NON-NLS-1$//$NON-NLS-2$
 			+ FQN_PART + "((:\\s+\\w.*)|(\\.((\\<(?:cl)?init\\>)|([a-zA-Z0-9_$]+))\\(.*?\\)))?" //$NON-NLS-1$
-			+ ")|(\\.\\.\\.\\s\\d+\\smore))"); //$NON-NLS-1$ 
+			+ ")|(\\.\\.\\.\\s\\d+\\smore))"); //$NON-NLS-1$
 
 	private int blockLineCount = 0;
 

@@ -38,7 +38,7 @@ import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
  * @see MarkupToDocbook
  * @see MarkupToDocbookTask
  * @see DitaBookMapDocumentBuilder
- * @since 1.0
+ * @since 3.0
  */
 public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 

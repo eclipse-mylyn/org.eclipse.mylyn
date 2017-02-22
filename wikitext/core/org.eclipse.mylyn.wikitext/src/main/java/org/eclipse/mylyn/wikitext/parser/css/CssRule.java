@@ -13,8 +13,9 @@ package org.eclipse.mylyn.wikitext.parser.css;
 
 /**
  * A rule (name and value) as defined by CSS
- * 
+ *
  * @author David Green
+ * @since 3.0
  */
 public class CssRule {
 	/**

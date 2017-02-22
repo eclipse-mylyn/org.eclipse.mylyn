@@ -30,7 +30,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
  * 
  * @see DocumentBuilder
  * @author David Green
- * @since 1.6
+ * 
  */
 public class XHtmlParser extends AbstractSaxHtmlParser {
 

@@ -22,9 +22,9 @@ import org.eclipse.mylyn.wikitext.parser.markup.AbstractMarkupLanguage.PatternBa
  * A configuration for a markup language, which enables client code to modify the syntax of the markup language by
  * adding blocks, phrase modifiers, and tokens. Also provides a mechanism for disabling some common markup language
  * features.
- * 
+ *
  * @author David Green
- * @since 2.0
+ * @since 3.0
  */
 public class MarkupLanguageConfiguration implements Cloneable {
 
@@ -61,7 +61,7 @@ public class MarkupLanguageConfiguration implements Cloneable {
 	/**
 	 * Indicate if the given block should break paragraph content even if there is no blank line preceding it. The
 	 * default implementation returns true.
-	 * 
+	 *
 	 * @param block
 	 *            the block
 	 * @return true if the block should break paragraph content
@@ -120,9 +120,8 @@ public class MarkupLanguageConfiguration implements Cloneable {
 
 	/**
 	 * Adds {@link #getPhraseModifiers() phrase modifiers} to the given syntax.
-	 * 
+	 *
 	 * @param phraseModifierSyntax
-	 * @since 2.0
 	 */
 	public void addPhraseModifierExtensions(PatternBasedSyntax phraseModifierSyntax) {
 		for (PatternBasedElement element : getPhraseModifiers()) {
@@ -149,8 +148,6 @@ public class MarkupLanguageConfiguration implements Cloneable {
 	/**
 	 * indicate if WikiWord linking should be enabled if the markup language supports it. If null then the default
 	 * markup language behaviour should be observed.
-	 * 
-	 * @since 1.1
 	 */
 	public Boolean isWikiWordLinking() {
 		return wikiWordLinking;
@@ -159,8 +156,6 @@ public class MarkupLanguageConfiguration implements Cloneable {
 	/**
 	 * indicate if WikiWord linking should be enabled if the markup language supports it. If null then the default
 	 * markup language behaviour should be observed.
-	 * 
-	 * @since 1.1
 	 */
 	public void setWikiWordLinking(Boolean wikiWordLinking) {
 		this.wikiWordLinking = wikiWordLinking;
@@ -168,9 +163,8 @@ public class MarkupLanguageConfiguration implements Cloneable {
 
 	/**
 	 * The locale to use for output, which may affect literals emitted into the output.
-	 * 
+	 *
 	 * @return configured locale or null if the default locale should be used
-	 * @since 1.2
 	 */
 	public Locale getLocale() {
 		return locale;
@@ -178,10 +172,9 @@ public class MarkupLanguageConfiguration implements Cloneable {
 
 	/**
 	 * The locale to use for output, which may affect literals emitted into the output.
-	 * 
+	 *
 	 * @param locale
 	 *            the locale or null if the default locale should be used
-	 * @since 1.2
 	 */
 	public void setLocale(Locale locale) {
 		this.locale = locale;
@@ -202,10 +195,9 @@ public class MarkupLanguageConfiguration implements Cloneable {
 
 	/**
 	 * Adds {@link #getTokens() tokens} to the given syntax
-	 * 
+	 *
 	 * @param tokenSyntax
 	 *            the syntax to which tokens should be added
-	 * @since 2.0
 	 */
 	public void addTokenExtensions(PatternBasedSyntax tokenSyntax) {
 		for (PatternBasedElement element : getTokens()) {

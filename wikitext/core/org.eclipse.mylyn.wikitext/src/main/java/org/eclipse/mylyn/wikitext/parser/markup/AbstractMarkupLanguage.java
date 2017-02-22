@@ -32,7 +32,7 @@ import org.eclipse.mylyn.wikitext.util.LocationTrackingReader;
  * functionality.
  *
  * @author David Green
- * @since 2.0
+ * @since 3.0
  */
 public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 
@@ -48,7 +48,7 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	private boolean syntaxInitialized = false;
 
 	/**
-	 * @since 2.0
+	 *
 	 */
 	protected MarkupLanguageConfiguration configuration;
 
@@ -57,14 +57,14 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	private boolean filterGenerativeBlocks;
 
 	/**
-	 * @since 2.0
+	 *
 	 */
 	protected String internalLinkPattern = "{0}"; //$NON-NLS-1$
 
 	private boolean enableMacros = true;
 
 	/**
-	 * @since 2.0
+	 *
 	 */
 	public static final class PatternBasedSyntax {
 		protected List<PatternBasedElement> elements = new ArrayList<PatternBasedElement>();
@@ -309,9 +309,9 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 						}
 						if (lineOffset < line.length() && lineOffset >= 0) {
 							if (currentBlock != null) {
-								throw new IllegalStateException(
-										String.format(
-												"if a block does not fully process a line then it must be closed, at or near line %s lineOffset %s, block %s", reader.getLineNumber(), lineOffset, currentBlock.getClass().getName())); //$NON-NLS-1$
+								throw new IllegalStateException(String.format(
+										"if a block does not fully process a line then it must be closed, at or near line %s lineOffset %s, block %s", //$NON-NLS-1$
+										reader.getLineNumber(), lineOffset, currentBlock.getClass().getName()));
 							}
 						} else {
 							break;
@@ -576,12 +576,12 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	}
 
 	/**
-	 * @since 2.0
+	 *
 	 */
 	protected abstract void addStandardTokens(PatternBasedSyntax tokenSyntax);
 
 	/**
-	 * @since 2.0
+	 *
 	 */
 	protected abstract void addStandardPhraseModifiers(PatternBasedSyntax phraseModifierSyntax);
 
@@ -609,7 +609,6 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	 *
 	 * @param tokenSyntax
 	 *            the token syntax
-	 * @since 2.0
 	 */
 	protected void addTokenExtensions(PatternBasedSyntax tokenSyntax) {
 		// no token extensions
@@ -622,7 +621,6 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	 *
 	 * @param phraseModifierSyntax
 	 *            the phrase modifier syntax
-	 * @since 2.0
 	 */
 	protected void addPhraseModifierExtensions(PatternBasedSyntax phraseModifierSyntax) {
 		// no phrase extensions
@@ -649,14 +647,14 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 	}
 
 	/**
-	 * @since 2.0
+	 *
 	 */
 	protected PatternBasedSyntax getPhraseModifierSyntax() {
 		return phraseModifierSyntax;
 	}
 
 	/**
-	 * @since 2.0
+	 *
 	 */
 	protected PatternBasedSyntax getReplacementTokenSyntax() {
 		return tokenSyntax;

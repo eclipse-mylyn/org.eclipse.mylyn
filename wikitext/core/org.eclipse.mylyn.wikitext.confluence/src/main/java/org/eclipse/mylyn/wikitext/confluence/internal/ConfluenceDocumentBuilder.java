@@ -36,7 +36,7 @@ import com.google.common.base.Strings;
  *
  * @see HtmlParser
  * @author David Green
- * @since 1.6
+ * 
  * @see ConfluenceLanguage
  * @see ConfluenceLanguage#createDocumentBuilder(Writer)
  */

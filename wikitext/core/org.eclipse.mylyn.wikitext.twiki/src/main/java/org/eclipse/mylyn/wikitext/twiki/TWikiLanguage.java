@@ -35,19 +35,12 @@ import org.eclipse.mylyn.wikitext.twiki.internal.token.ImpliedEmailLinkReplaceme
 import org.eclipse.mylyn.wikitext.twiki.internal.token.LinkReplacementToken;
 import org.eclipse.mylyn.wikitext.twiki.internal.token.WikiWordReplacementToken;
 
-// TODO: table
-// TODO: empty line to empty para
-// TODO: images?  is it supported by TWiki?
-// TODO: variables, see http://twiki.org/cgi-bin/view/TWiki04x02/TWikiVariables
-// TODO: implement <sticky>
-// TODO: named anchors eg: #Target  from the docs: To define an anchor write #AnchorName at the beginning of a line. The anchor name must be a WikiWord of no more than 32 characters.
-
 /**
- * a markup language implementing TWiki syntax. See <a
- * href="http://wikix.ilog.fr/wiki/bin/view/TWiki/TextFormattingRules">TWiki Formatting Rules</a> for details.
- * 
+ * a markup language implementing TWiki syntax. See
+ * <a href="http://wikix.ilog.fr/wiki/bin/view/TWiki/TextFormattingRules">TWiki Formatting Rules</a> for details.
+ *
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class TWikiLanguage extends AbstractMarkupLanguage {
 
@@ -90,7 +83,7 @@ public class TWikiLanguage extends AbstractMarkupLanguage {
 
 	/**
 	 * for the purpose of converting wiki words into links, determine if the wiki word exists.
-	 * 
+	 *
 	 * @see WikiWordReplacementToken
 	 */
 	public boolean computeInternalLinkExists(String link) {
@@ -99,7 +92,7 @@ public class TWikiLanguage extends AbstractMarkupLanguage {
 
 	/**
 	 * Convert a page name to an href to the page.
-	 * 
+	 *
 	 * @param pageName
 	 *            the name of the page to target, usually a WikiWord with whitespace removed
 	 * @return the href to access the page
@@ -119,7 +112,7 @@ public class TWikiLanguage extends AbstractMarkupLanguage {
 
 	/**
 	 * indicate if we're currently processing a literal block
-	 * 
+	 *
 	 * @see LiteralBlock
 	 */
 	public boolean isLiteralMode() {
@@ -128,7 +121,7 @@ public class TWikiLanguage extends AbstractMarkupLanguage {
 
 	/**
 	 * indicate if we're currently processing a literal block
-	 * 
+	 *
 	 * @see LiteralBlock
 	 */
 	public void setLiteralMode(boolean literalMode) {

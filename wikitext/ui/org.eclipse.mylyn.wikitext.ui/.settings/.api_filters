@@ -8,22 +8,6 @@
             </message_arguments>
         </filter>
     </resource>
-    <resource path="src/org/eclipse/mylyn/wikitext/ui/viewer/HtmlViewer.java" type="org.eclipse.mylyn.wikitext.ui.viewer.HtmlViewer">
-        <filter id="643842064">
-            <message_arguments>
-                <message_argument value="Stylesheet"/>
-                <message_argument value="HtmlViewer"/>
-                <message_argument value="getStylesheet()"/>
-            </message_arguments>
-        </filter>
-        <filter id="643846161">
-            <message_arguments>
-                <message_argument value="Stylesheet"/>
-                <message_argument value="HtmlViewer"/>
-                <message_argument value="setStylesheet(Stylesheet)"/>
-            </message_arguments>
-        </filter>
-    </resource>
     <resource path="src/org/eclipse/mylyn/wikitext/ui/viewer/HtmlViewerConfiguration.java" type="org.eclipse.mylyn.wikitext.ui.viewer.HtmlViewerConfiguration">
         <filter id="643842064">
             <message_arguments>

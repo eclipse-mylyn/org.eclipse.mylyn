@@ -32,7 +32,7 @@ import org.eclipse.mylyn.wikitext.parser.outline.OutlineParser;
 
 /**
  * @author David Green
- * @since 1.1
+ * 
  */
 public class MarkupToXslfoTask extends MarkupTask {
 
@@ -353,14 +353,14 @@ public class MarkupToXslfoTask extends MarkupTask {
 	}
 
 	/**
-	 * @since 1.6
+	 * 
 	 */
 	public boolean isGenerateBookmarks() {
 		return generateBookmarks;
 	}
 
 	/**
-	 * @since 1.6
+	 * 
 	 */
 	public void setGenerateBookmarks(boolean generateBookmarks) {
 		this.generateBookmarks = generateBookmarks;

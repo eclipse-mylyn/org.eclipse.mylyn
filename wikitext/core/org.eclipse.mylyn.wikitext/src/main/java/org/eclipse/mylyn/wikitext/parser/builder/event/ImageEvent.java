@@ -20,9 +20,9 @@ import com.google.common.base.Objects;
 
 /**
  * An {@link DocumentBuilderEvent} corresponding to {@link DocumentBuilder#image(Attributes, String)}.
- * 
+ *
  * @author david.green
- * @since 2.0
+ * @since 3.0
  */
 public class ImageEvent extends DocumentBuilderEvent {
 

@@ -12,4 +12,3 @@
  * A framework for validating documents according to markup-specific validation rules.
  */
 package org.eclipse.mylyn.wikitext.validation;
-

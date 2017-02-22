@@ -37,7 +37,7 @@ import com.google.common.collect.ImmutableSet;
  * A parser for (X)HTML that is based on SAX. Subclasses determine the source of SAX events.
  *
  * @author David Green
- * @since 2.0
+ * 
  */
 public abstract class AbstractSaxHtmlParser {
 
@@ -724,7 +724,7 @@ public abstract class AbstractSaxHtmlParser {
 	}
 
 	/**
-	 * @since 2.0
+	 * 
 	 */
 	protected ContentHandler createContentHandler(DocumentBuilder builder, boolean asDocument) {
 		return new DocumentBuilderAdapter(builder, asDocument);

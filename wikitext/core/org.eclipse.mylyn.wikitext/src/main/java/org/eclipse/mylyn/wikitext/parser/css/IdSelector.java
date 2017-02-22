@@ -13,8 +13,9 @@ package org.eclipse.mylyn.wikitext.parser.css;
 
 /**
  * A selector that selects elements having an id equal to a specific value.
- * 
+ *
  * @author David Green
+ * @since 3.0
  */
 public class IdSelector extends Selector {
 

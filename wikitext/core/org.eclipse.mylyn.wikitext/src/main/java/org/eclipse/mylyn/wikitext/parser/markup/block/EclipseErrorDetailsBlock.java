@@ -22,9 +22,9 @@ import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
  * A block that starts a preformatted section that begins with <tt>-- Error Details --</tt>, which is the prefix for
  * error information inserted into a bug description by Mylyn when creating bugs from the Eclipse Error Log view. The
  * block terminates with the first {@link MarkupLanguage#isEmptyLine(String) empty line}.
- * 
+ *
  * @author David Green
- * @since 1.1
+ * @since 3.0
  */
 public class EclipseErrorDetailsBlock extends Block {
 

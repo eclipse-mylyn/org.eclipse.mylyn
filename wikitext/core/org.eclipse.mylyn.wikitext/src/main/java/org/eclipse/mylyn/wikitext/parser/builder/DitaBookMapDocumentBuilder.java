@@ -30,11 +30,11 @@ import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
  * a document builder that can produce OASIS DITA output in the form of a book map and multiple topic output files, one
  * for each level-1 heading. This document builder differs from others in that it implements {@link Closeable} and
  * therefore must be closed after use. Also this document builder produces multiple output files.
- * 
+ *
  * @author David Green
  * @see DocBookDocumentBuilder
  * @see MarkupToDitaTask
- * @since 1.0
+ * @since 3.0
  */
 public class DitaBookMapDocumentBuilder extends AbstractXmlDocumentBuilder implements Closeable {
 
@@ -100,7 +100,7 @@ public class DitaBookMapDocumentBuilder extends AbstractXmlDocumentBuilder imple
 
 	/**
 	 * the doctype to be used for topics, or null if the default is to be used
-	 * 
+	 *
 	 * @see #getDoctype()
 	 */
 	public String getTopicDoctype() {
@@ -109,7 +109,7 @@ public class DitaBookMapDocumentBuilder extends AbstractXmlDocumentBuilder imple
 
 	/**
 	 * the doctype to be used for topics, or null if the default is to be used
-	 * 
+	 *
 	 * @see #setDoctype(String)
 	 */
 	public void setTopicDoctype(String topicDoctype) {
@@ -180,8 +180,8 @@ public class DitaBookMapDocumentBuilder extends AbstractXmlDocumentBuilder imple
 		if (currentTopic == null) {
 			try {
 				currentTopicFile = computeFile(latestHeadingId);
-				currentTopicOut = new OutputStreamWriter(new BufferedOutputStream(
-						new FileOutputStream(currentTopicFile)), "utf-8"); //$NON-NLS-1$
+				currentTopicOut = new OutputStreamWriter(
+						new BufferedOutputStream(new FileOutputStream(currentTopicFile)), "utf-8"); //$NON-NLS-1$
 			} catch (IOException e1) {
 				throw new IllegalStateException(e1);
 			}
@@ -389,8 +389,6 @@ public class DitaBookMapDocumentBuilder extends AbstractXmlDocumentBuilder imple
 
 	/**
 	 * Indicate if dependencies should be formatted
-	 * 
-	 * @since 1.2
 	 */
 	public boolean isFormattingDependencies() {
 		return formattingDependencies;
@@ -398,8 +396,6 @@ public class DitaBookMapDocumentBuilder extends AbstractXmlDocumentBuilder imple
 
 	/**
 	 * Indicate if dependencies should be formatted
-	 * 
-	 * @since 1.2
 	 */
 	public void setFormattingDependencies(boolean formattingDependencies) {
 		this.formattingDependencies = formattingDependencies;

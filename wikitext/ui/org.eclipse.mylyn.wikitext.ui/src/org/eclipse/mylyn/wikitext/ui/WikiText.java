@@ -22,7 +22,7 @@ import org.eclipse.mylyn.wikitext.validation.MarkupValidator;
  * A utility class for accessing markup languages and validation. Use only in an Eclipse runtime environment. Programs
  * should use the {@link ServiceLocator} instead of this class if possible. Stand-alone programs (that is, those
  * programs that do not run in an Eclipse runtime) must not use this class.
- * 
+ *
  * @see ServiceLocator
  * @noextend This class is not intended to be subclassed by clients.
  * @noinstantiate This class is not intended to be instantiated by clients.
@@ -48,11 +48,12 @@ public class WikiText {
 
 	/**
 	 * Get a markup language by name.
-	 * 
+	 *
 	 * @param name
 	 *            the name of the markup language to retrieve
 	 * @return the markup language or null if there is no markup language known by the given name
 	 * @see #getMarkupLanguageNames()
+	 * @since 3.0
 	 */
 	public static MarkupLanguage getMarkupLanguage(String name) {
 		return WikiTextExtensionPointReader.instance().getMarkupLanguage(name);
@@ -61,11 +62,12 @@ public class WikiText {
 	/**
 	 * Get a markup language for a file. A markup language is selected based on the registered languages and their
 	 * expected file extensions.
-	 * 
+	 *
 	 * @param name
 	 *            the name of the file for which a markup language is desired
 	 * @return the markup language, or null if no markup language is registered for the specified file name
 	 * @see #getMarkupLanguageForFilename(String)
+	 * @since 3.0
 	 */
 	public static MarkupLanguage getMarkupLanguageForFilename(String name) {
 		return WikiTextExtensionPointReader.instance().getMarkupLanguageForFilename(name);
@@ -74,7 +76,7 @@ public class WikiText {
 	/**
 	 * Get a markup language name for a file. A markup language is selected based on the registered languages and their
 	 * expected file extensions.
-	 * 
+	 *
 	 * @param name
 	 *            the name of the file for which a markup language is desired
 	 * @return the markup language name, or null if no markup language is registered for the specified file name
@@ -86,7 +88,7 @@ public class WikiText {
 
 	/**
 	 * Get the names of all known markup languages
-	 * 
+	 *
 	 * @see #getMarkupLanguage(String)
 	 */
 	public static Set<String> getMarkupLanguageNames() {
@@ -95,11 +97,12 @@ public class WikiText {
 
 	/**
 	 * Get a markup validator by language name.
-	 * 
+	 *
 	 * @param name
 	 *            the name of the markup language for which a validator is desired
 	 * @return the markup validator
 	 * @see #getMarkupLanguageNames()
+	 * @since 3.0
 	 */
 	public static MarkupValidator getMarkupValidator(String name) {
 		return WikiTextExtensionPointReader.instance().getMarkupValidator(name);

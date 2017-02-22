@@ -24,6 +24,9 @@ import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.markup.IdGenerationStrategy;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 
+/**
+ * @since 3.0
+ */
 public class CommonMarkLanguage extends MarkupLanguage {
 
 	private boolean strictlyConforming = false;

@@ -222,6 +222,7 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 	 * The markup language. If unspecified, it's assumed to be Textile.
 	 *
 	 * @return the current markup language, or null if it's unspecified.
+	 * @since 3.0
 	 */
 	public MarkupLanguage getMarkupLanguage() {
 		return markupLanguage;
@@ -229,6 +230,8 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 
 	/**
 	 * set the markup language. If unspecified, it's assumed to be Textile.
+	 *
+	 * @since 3.0
 	 */
 	public void setMarkupLanguage(MarkupLanguage markupLanguage) {
 		this.markupLanguage = markupLanguage;
@@ -357,6 +360,8 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 	 * Get the outline model for the document being edited. The returned outline model is guaranteed to be up to date
 	 * with respect to the current document. Note that the model will change if the document changes, however all
 	 * changes occur on the UI thread.
+	 *
+	 * @since 3.0
 	 */
 	public final OutlineItem getOutlineModel() {
 		synchronized (WikiTextSourceEditor.this) {
@@ -582,6 +587,7 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 	 *
 	 * @param item
 	 *            the item, must not be null
+	 * @since 3.0
 	 */
 	public void selectAndReveal(OutlineItem item) {
 		selectAndReveal(item.getOffset(), item.getLength());

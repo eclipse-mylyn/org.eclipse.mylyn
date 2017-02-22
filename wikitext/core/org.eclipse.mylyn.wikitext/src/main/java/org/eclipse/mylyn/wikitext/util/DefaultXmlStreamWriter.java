@@ -26,7 +26,7 @@ import com.google.common.xml.XmlEscapers;
  * A default implementation of {@link XmlStreamWriter} that creates XML character output.
  *
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class DefaultXmlStreamWriter extends XmlStreamWriter {
 
@@ -337,14 +337,14 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 	}
 
 	/**
-	 * @since 2.4
+	 *
 	 */
 	public char getXmlHeaderQuoteChar() {
 		return xmlHeaderQuoteChar;
 	}
 
 	/**
-	 * @since 2.4
+	 *
 	 */
 	public void setXmlHeaderQuoteChar(char xmlHederQuoteChar) {
 		this.xmlHeaderQuoteChar = xmlHederQuoteChar;
@@ -399,11 +399,11 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 		case '&':
 			return "amp"; //$NON-NLS-1$
 
-			// WARN: there is no need to encode apostrophe, and doing so has an
-			// adverse
-			// effect on XHTML documents containing javascript with some browsers.
-			// case '\'':
-			// return "apos";
+		// WARN: there is no need to encode apostrophe, and doing so has an
+		// adverse
+		// effect on XHTML documents containing javascript with some browsers.
+		// case '\'':
+		// return "apos";
 		}
 		return null;
 	}

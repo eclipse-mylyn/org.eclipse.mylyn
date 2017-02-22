@@ -13,8 +13,9 @@ package org.eclipse.mylyn.wikitext.parser.css;
 
 /**
  * a selector that selects elements based on their {@link ElementInfo#getLocalName() name}
- * 
+ *
  * @author David Green
+ * @since 3.0
  */
 public class NameSelector extends Selector {
 	private final String name;

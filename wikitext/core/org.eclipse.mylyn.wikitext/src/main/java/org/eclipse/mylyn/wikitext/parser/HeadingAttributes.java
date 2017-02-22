@@ -12,9 +12,9 @@ package org.eclipse.mylyn.wikitext.parser;
 
 /**
  * Attributes specific to {@link DocumentBuilder#beginHeading(int, Attributes)}
- * 
+ *
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class HeadingAttributes extends Attributes {
 	private boolean omitFromTableOfContents;

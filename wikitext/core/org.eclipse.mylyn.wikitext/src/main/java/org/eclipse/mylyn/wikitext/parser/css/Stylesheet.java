@@ -17,8 +17,9 @@ import java.util.List;
 
 /**
  * An abstraction for a CSS stylesheet.
- * 
+ *
  * @author David Green
+ * @since 3.0
  */
 public class Stylesheet {
 	private final List<Block> blocks = new ArrayList<Block>();

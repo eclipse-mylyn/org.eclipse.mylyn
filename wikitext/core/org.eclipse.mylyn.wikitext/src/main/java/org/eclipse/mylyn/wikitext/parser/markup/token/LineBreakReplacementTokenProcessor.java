@@ -15,10 +15,10 @@ import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
 
 /**
  * A processor that emits a line break.
- * 
+ *
  * @see DocumentBuilder#lineBreak()
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class LineBreakReplacementTokenProcessor extends PatternBasedElementProcessor {
 

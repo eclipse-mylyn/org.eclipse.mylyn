@@ -16,6 +16,7 @@ import java.util.Set;
 
 /**
  * @author David Green
+ * @since 3.0
  */
 public class DefaultSplittingStrategy extends SplittingStrategy {
 

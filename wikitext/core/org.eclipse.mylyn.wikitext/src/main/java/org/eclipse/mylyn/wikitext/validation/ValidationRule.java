@@ -16,14 +16,15 @@ import java.util.List;
 
 /**
  * A validation rule. Validation rules must not be stateful, as they may be used concurrently on different threads.
- * 
+ *
  * @author David Green
+ * @since 3.0
  */
 public abstract class ValidationRule {
 
 	/**
 	 * Starting at the given offset find the next validation problem.
-	 * 
+	 *
 	 * @param markup
 	 *            the markup content in which a validation problem should be found
 	 * @param offset
@@ -36,7 +37,7 @@ public abstract class ValidationRule {
 
 	/**
 	 * Find all validation problems that exist starting at the given offset
-	 * 
+	 *
 	 * @param markup
 	 *            the markup content in which a validation problem should be found
 	 * @param offset

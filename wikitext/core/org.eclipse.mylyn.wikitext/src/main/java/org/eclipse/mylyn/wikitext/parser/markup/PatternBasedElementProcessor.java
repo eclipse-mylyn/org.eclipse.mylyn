@@ -16,11 +16,12 @@ import java.util.regex.Matcher;
 
 /**
  * A processor that is capable of processing a specific type of markup element
- * 
+ *
  * @author David Green
+ * @since 3.0
  */
-public abstract class PatternBasedElementProcessor extends Processor implements
-		org.eclipse.mylyn.wikitext.parser.util.Matcher {
+public abstract class PatternBasedElementProcessor extends Processor
+		implements org.eclipse.mylyn.wikitext.parser.util.Matcher {
 
 	protected int lineStartOffset;
 
@@ -44,7 +45,7 @@ public abstract class PatternBasedElementProcessor extends Processor implements
 
 	/**
 	 * Set the captured text for the given group.
-	 * 
+	 *
 	 * @param group
 	 *            the 1-based group
 	 * @param capturedText
@@ -60,7 +61,7 @@ public abstract class PatternBasedElementProcessor extends Processor implements
 
 	/**
 	 * Get the offset within the line at which this element was started
-	 * 
+	 *
 	 * @see Matcher#start()
 	 */
 	public int getLineStartOffset() {
@@ -73,7 +74,7 @@ public abstract class PatternBasedElementProcessor extends Processor implements
 
 	/**
 	 * Get the offset within the line at which this element ended
-	 * 
+	 *
 	 * @see Matcher#end()
 	 */
 	public int getLineEndOffset() {
@@ -86,7 +87,7 @@ public abstract class PatternBasedElementProcessor extends Processor implements
 
 	/**
 	 * Get the capturing group text, or null if the group did not match any text.
-	 * 
+	 *
 	 * @param groupNumber
 	 *            the 1-based group
 	 * @return the text, or null if the group did not match any text
@@ -102,7 +103,7 @@ public abstract class PatternBasedElementProcessor extends Processor implements
 
 	/**
 	 * Get the start offset of a capturing group, or -1 if the group did not match any text.
-	 * 
+	 *
 	 * @param groupNumber
 	 *            the 1-based group
 	 * @return the start offset, or -1 if the group did not match any text
@@ -118,7 +119,7 @@ public abstract class PatternBasedElementProcessor extends Processor implements
 
 	/**
 	 * Get the end offset of a capturing group, or -1 if the group did not match any text.
-	 * 
+	 *
 	 * @param groupNumber
 	 *            the 1-based group
 	 * @return the end offset, or -1 if the group did not match any text

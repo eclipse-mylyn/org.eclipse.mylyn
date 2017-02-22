@@ -16,10 +16,10 @@ import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
 /**
  * A phrase modifier that detects HTML and XML tags in the source, passing them through to the builder as either escaped
  * or unescaped text.
- * 
+ *
  * @see HtmlEndTagPhraseModifier
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class HtmlStartTagPhraseModifier extends PatternBasedElement {
 

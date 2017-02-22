@@ -38,7 +38,7 @@ import org.eclipse.mylyn.wikitext.util.FormattingXMLStreamWriter;
  * An Ant task for converting markup to OASIS DITA format.
  * 
  * @author David Green
- * @since 1.0
+ * 
  */
 public class MarkupToDitaTask extends MarkupTask {
 	public enum BreakStrategy {
@@ -358,7 +358,7 @@ public class MarkupToDitaTask extends MarkupTask {
 	/**
 	 * Indicate if the dita output should be formatted
 	 * 
-	 * @since 1.2
+	 * 
 	 */
 	public boolean isFormatting() {
 		return formatting;
@@ -367,7 +367,7 @@ public class MarkupToDitaTask extends MarkupTask {
 	/**
 	 * Indicate if the dita output should be formatted
 	 * 
-	 * @since 1.2
+	 * 
 	 */
 	public void setFormatting(boolean formatting) {
 		this.formatting = formatting;

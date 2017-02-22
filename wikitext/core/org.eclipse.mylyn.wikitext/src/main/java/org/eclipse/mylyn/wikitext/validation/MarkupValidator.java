@@ -16,10 +16,10 @@ import java.util.List;
 
 /**
  * Validates markup given a set of rules
- * 
+ *
  * @author David Green
  * @see StandaloneMarkupValidator
- * @since 1.0
+ * @since 3.0
  */
 public class MarkupValidator {
 
@@ -29,7 +29,6 @@ public class MarkupValidator {
 	 * @param markup
 	 *            the content to validate
 	 * @return the list of validation problems, or an empty list if there are none
-	 * @since 2.0
 	 */
 	public List<ValidationProblem> validate(String markup) {
 		return validate(markup, 0, markup.length());
@@ -43,7 +42,6 @@ public class MarkupValidator {
 	 * @param markup
 	 *            the content to validate
 	 * @return the list of validation problems, or an empty list if there are none
-	 * @since 2.0
 	 */
 	public List<ValidationProblem> validate(String markup, int offset, int length) {
 		if (length == 0 || rules.isEmpty()) {

@@ -13,8 +13,9 @@ package org.eclipse.mylyn.wikitext.parser.css;
 
 /**
  * An interface to XML element information
- * 
+ *
  * @author David Green
+ * @since 3.0
  */
 public interface ElementInfo {
 	/**
@@ -24,7 +25,7 @@ public interface ElementInfo {
 
 	/**
 	 * get the parent of this element
-	 * 
+	 *
 	 * @return the parent or null if this is the root element
 	 */
 	public ElementInfo getParent();

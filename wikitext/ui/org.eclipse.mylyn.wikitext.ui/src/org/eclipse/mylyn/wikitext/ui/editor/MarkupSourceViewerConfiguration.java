@@ -314,6 +314,7 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 	 *
 	 * @param markupLanguage
 	 *            the markup language
+	 * @since 3.0
 	 */
 	public void setMarkupLanguage(MarkupLanguage markupLanguage) {
 		this.markupLanguage = markupLanguage;
@@ -451,6 +452,7 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 	 * quick outline.
 	 *
 	 * @param outlineModel
+	 * @since 3.0
 	 */
 	public void setOutline(OutlineItem outlineModel) {
 		this.outline = outlineModel;

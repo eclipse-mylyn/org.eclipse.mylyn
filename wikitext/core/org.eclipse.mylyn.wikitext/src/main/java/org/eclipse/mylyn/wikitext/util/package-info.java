@@ -12,4 +12,3 @@
  * Utility classes that are useful when using the parser framework
  */
 package org.eclipse.mylyn.wikitext.util;
-

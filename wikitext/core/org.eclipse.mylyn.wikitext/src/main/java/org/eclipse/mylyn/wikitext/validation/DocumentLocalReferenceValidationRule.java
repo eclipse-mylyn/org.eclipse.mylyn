@@ -29,8 +29,9 @@ import org.eclipse.mylyn.wikitext.validation.ValidationProblem.Severity;
 
 /**
  * A validation rule that verifies that internal document links resolve to a document id.
- * 
+ *
  * @author David Green
+ * @since 3.0
  */
 public abstract class DocumentLocalReferenceValidationRule extends ValidationRule {
 
@@ -142,11 +143,10 @@ public abstract class DocumentLocalReferenceValidationRule extends ValidationRul
 					if (problems == null) {
 						problems = new ArrayList<ValidationProblem>();
 					}
-					problems.add(new ValidationProblem(
-							Severity.ERROR,
-							MessageFormat.format(
-									Messages.getString("DocumentLocalReferenceValidationRule.0"), reference.name), reference.offset, //$NON-NLS-1$
-							reference.length));
+					problems.add(new ValidationProblem(Severity.ERROR,
+							MessageFormat.format(Messages.getString("DocumentLocalReferenceValidationRule.0"), //$NON-NLS-1$
+									reference.name),
+							reference.offset, reference.length));
 				}
 			}
 		}

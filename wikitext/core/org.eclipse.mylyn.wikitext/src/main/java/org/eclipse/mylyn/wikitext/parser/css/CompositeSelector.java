@@ -15,8 +15,9 @@ import java.util.List;
 
 /**
  * A selector that can select based on a set of delegates.
- * 
+ *
  * @author David Green
+ * @since 3.0
  */
 public class CompositeSelector extends Selector {
 

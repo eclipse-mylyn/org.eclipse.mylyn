@@ -14,9 +14,9 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 
 /**
  * Attributes that may used when creating blocks of type {@link BlockType#TABLE}.
- * 
+ *
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class TableAttributes extends Attributes {
 

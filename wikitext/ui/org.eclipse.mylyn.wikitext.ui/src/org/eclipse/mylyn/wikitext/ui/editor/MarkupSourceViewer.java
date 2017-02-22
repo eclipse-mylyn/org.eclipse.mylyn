@@ -26,20 +26,20 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * A source viewer for editors using lightweight markup. Typically configured as follows:
- * 
+ *
  * <pre>
  * SourceViewer viewer = new MarkupSourceViewer(parent, null, style | SWT.WRAP, markupLanguage);
  * // configure the viewer
  * MarkupSourceViewerConfiguration configuration = createSourceViewerConfiguration(taskRepository, viewer);
- * 
+ *
  * configuration.setMarkupLanguage(markupLanguage);
  * configuration.setShowInTarget(new ShowInTargetBridge(viewer));
  * viewer.configure(configuration);
- * 
+ *
  * // we want the viewer to show annotations
  * viewer.showAnnotations(true);
  * </pre>
- * 
+ *
  * @author David Green
  * @since 1.1
  */
@@ -55,6 +55,9 @@ public class MarkupSourceViewer extends SourceViewer {
 
 	private IFindReplaceTarget findReplaceTarget;
 
+	/**
+	 * @since 3.0
+	 */
 	public MarkupSourceViewer(Composite parent, IVerticalRuler ruler, int styles, MarkupLanguage markupLanguage) {
 		super(parent, ruler, styles);
 		this.markupLanguage = markupLanguage;

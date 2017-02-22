@@ -24,7 +24,7 @@ import com.google.common.base.Throwables;
  * Provides default functionality for document builders that emit lightweight wiki markup.
  *
  * @author David Green
- * @since 1.6
+ * @since 3.0
  */
 public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 
@@ -64,7 +64,7 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 		}
 
 		/**
-		 * @since 1.8
+		 *
 		 */
 		protected boolean isImplicitBlock() {
 			return false;
@@ -91,8 +91,6 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 
 	/**
 	 * A block that is delimited by newlines.
-	 *
-	 * @since 2.4
 	 */
 	protected class NewlineDelimitedBlock extends Block {
 
@@ -161,14 +159,14 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 		}
 
 		/**
-		 * @since 1.8
+		 *
 		 */
 		protected int normalizeWhitespace(int c) {
 			return AbstractMarkupDocumentBuilder.this.normalizeWhitespace(c);
 		}
 
 		/**
-		 * @since 1.8
+		 *
 		 */
 		protected String normalizeWhitespace(String s) {
 			return AbstractMarkupDocumentBuilder.this.normalizeWhitespace(s);
@@ -285,7 +283,7 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 
 	/**
 	 * Emits the given string
-	 * 
+	 *
 	 * @param str
 	 *            the string to emit, or null
 	 * @throws IOException
@@ -402,8 +400,6 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 
 	/**
 	 * Provides the number of trailing newlines that were emitted, or 0 if no trailing newlines were written.
-	 *
-	 * @since 2.4
 	 */
 	protected int getTrailingNewlineCount() {
 		int count = writer.getTrailingNewlineCount();
@@ -558,8 +554,6 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 	/**
 	 * Creates paragraph blocks in cases where content is emitted but no block is currently open. Subclasses may
 	 * override to alter the default paragraph block implementation.
-	 *
-	 * @since 1.8
 	 */
 	protected Block createImplicitParagraphBlock() {
 		return new ImplicitParagraphBlock();

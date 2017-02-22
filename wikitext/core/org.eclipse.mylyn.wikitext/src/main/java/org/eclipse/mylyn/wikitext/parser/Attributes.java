@@ -16,10 +16,10 @@ import com.google.common.base.Throwables;
 /**
  * Attributes for a markup element. Note that though there are many specialized subclasses of this class, they are
  * optional.
- * 
+ *
  * @see DocumentBuilder
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class Attributes implements Cloneable {
 
@@ -53,8 +53,7 @@ public class Attributes implements Cloneable {
 
 	/**
 	 * Append a css class to the {@link #getCssClass() existing value}
-	 * 
-	 * @since 1.3
+	 *
 	 * @see #setCssClass(String)
 	 */
 	public void appendCssClass(String cssClass) {
@@ -84,8 +83,7 @@ public class Attributes implements Cloneable {
 
 	/**
 	 * Append a css style to the {@link #getCssStyle() existing value}
-	 * 
-	 * @since 1.3
+	 *
 	 * @see #setCssStyle(String)
 	 */
 	public void appendCssStyle(String cssStyle) {
@@ -114,7 +112,7 @@ public class Attributes implements Cloneable {
 	}
 
 	/**
-	 * @since 2.0
+	 *
 	 */
 	@Override
 	public Attributes clone() {

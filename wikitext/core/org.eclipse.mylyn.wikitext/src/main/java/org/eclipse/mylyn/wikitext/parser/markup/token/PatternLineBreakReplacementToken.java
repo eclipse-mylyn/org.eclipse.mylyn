@@ -15,10 +15,10 @@ import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
 
 /**
  * Replaces text that matches a pattern with a line break.
- * 
+ *
  * @see LineBreakReplacementTokenProcessor
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class PatternLineBreakReplacementToken extends PatternBasedElement {
 

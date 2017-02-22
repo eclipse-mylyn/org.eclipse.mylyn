@@ -15,10 +15,10 @@ import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
 
 /**
  * Replaces strings matching a pattern with a specified entity reference.
- * 
+ *
  * @see EntityReplacementTokenProcessor
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class PatternEntityReferenceReplacementToken extends PatternBasedElement {
 

@@ -52,7 +52,7 @@ import com.google.common.collect.ImmutableMap;
  * @author David Green
  * @author Matthias Kempka extensibility improvements, see bug 259089
  * @author Torkild U. Resheim
- * @since 1.0
+ * @since 3.0
  */
 public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
@@ -232,7 +232,6 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 *            the span type
 	 * @param elementName
 	 *            the element name to use in the generated HTML when emitting spans of the given type
-	 * @since 2.9
 	 */
 	public void setElementNameOfSpanType(SpanType spanType, String elementName) {
 		checkNotNull(spanType, "Must provide spanType"); //$NON-NLS-1$
@@ -532,7 +531,6 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 *
 	 * @param documentHandler
 	 *            the document handler
-	 * @since 2.0
 	 * @see HtmlDocumentHandler
 	 */
 	public void setDocumentHandler(HtmlDocumentHandler documentHandler) {
@@ -590,7 +588,6 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	/**
 	 * Emit the HTML head, including the head tag itself.
 	 *
-	 * @since 1.8
 	 * @see #emitHeadContents()
 	 */
 	protected void emitHead() {
@@ -1184,7 +1181,6 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 *
 	 * @see #setHtmlFilenameFormat(String)
 	 * @return the HTML filename format or {@code null}
-	 * @since 2.0
 	 */
 	public String getHtmlFilenameFormat() {
 		return htmlFilenameFormat;
@@ -1198,7 +1194,6 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 *
 	 * @param htmlFilenameFormat
 	 *            the HTML filename format or <code>null</code>
-	 * @since 2.0
 	 * @see #getHtmlFilenameFormat()
 	 */
 	public void setHtmlFilenameFormat(String htmlFilenameFormat) {
@@ -1228,7 +1223,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * @since 2.4
+	 *
 	 */
 	@Override
 	public void horizontalRule() {
@@ -1428,7 +1423,6 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * filtered, known HTML entity references are converted to their numeric counterpart, and unknown entity references
 	 * are emitted as plain text.
 	 *
-	 * @since 1.6
 	 * @see <a href="http://www.w3schools.com/tags/ref_entities.asp">HTML Entity Reference</a>
 	 */
 	public boolean isFilterEntityReferences() {
@@ -1440,7 +1434,6 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * filtered, known HTML entity references are converted to their numeric counterpart, and unknown entity references
 	 * are emitted as plain text.
 	 *
-	 * @since 1.6
 	 * @see <a href="http://www.w3schools.com/tags/ref_entities.asp">HTML Entity Reference</a>
 	 */
 	public void setFilterEntityReferences(boolean filterEntityReferences) {
@@ -1449,8 +1442,6 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	/**
 	 * the copyright notice that should appear in the generated output
-	 *
-	 * @since 1.8
 	 */
 	public String getCopyrightNotice() {
 		return copyrightNotice;
@@ -1461,7 +1452,6 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 *
 	 * @param copyrightNotice
 	 *            the notice, or null if there should be none
-	 * @since 1.8
 	 */
 	public void setCopyrightNotice(String copyrightNotice) {
 		this.copyrightNotice = copyrightNotice;

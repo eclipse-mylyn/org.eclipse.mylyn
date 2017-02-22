@@ -23,7 +23,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.IdGenerationStrategy;
 
 /**
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class IdGenerator {
 
@@ -104,7 +104,6 @@ public class IdGenerator {
 	 * Indicates whether there are any {@link #getAnchorNames() anchor names}.
 	 *
 	 * @return true if there are anchor names, otherwise false
-	 * @since 2.5
 	 */
 	public boolean hasAnchorNames() {
 		return !anchorNames.isEmpty();

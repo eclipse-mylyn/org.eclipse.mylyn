@@ -39,7 +39,7 @@ import org.xml.sax.InputSource;
  * An Ant task to generate wiki markup from HTML sources. For best results ensure that jsoup is on the classpath.
  * 
  * @author David Green
- * @since 1.6
+ * 
  */
 public class HtmlToMarkupTask extends MarkupTask {
 

@@ -51,7 +51,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.token.PatternLineBreakReplacemen
  *
  * @author Stefan Seelmann
  * @author Alexander Nyßen
- * @since 1.8
+ * @since 3.0
  */
 public class MarkdownLanguage extends AbstractMarkupLanguage {
 

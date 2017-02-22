@@ -55,9 +55,9 @@ import com.google.common.collect.Multimap;
  * </p>
  *
  * @author David Green
- * @since 1.0
  * @see MarkupLanguage
  * @see MarkupLanguageProvider
+ * @since 3.0
  */
 public class ServiceLocator {
 
@@ -186,8 +186,6 @@ public class ServiceLocator {
 
 	/**
 	 * Get all known markup languages
-	 *
-	 * @since 1.6
 	 */
 	public Set<MarkupLanguage> getAllMarkupLanguages() {
 		final Set<MarkupLanguage> markupLanguages = new HashSet<MarkupLanguage>();
@@ -255,7 +253,7 @@ public class ServiceLocator {
 	}
 
 	/**
-	 * @since 2.0
+	 *
 	 */
 	protected static class ResourceDescriptor {
 		private final URL url;
@@ -279,7 +277,6 @@ public class ServiceLocator {
 	 * @return the class
 	 * @throws ClassNotFoundException
 	 *             if the class could not be loaded
-	 * @since 2.0
 	 */
 	protected Class<?> loadClass(ResourceDescriptor resource, String className) throws ClassNotFoundException {
 		return Class.forName(className, true, classLoader);
@@ -287,7 +284,6 @@ public class ServiceLocator {
 
 	/**
 	 * @return the service resources
-	 * @since 2.0
 	 * @see #getClasspathServiceResourceNames()
 	 */
 	protected List<ResourceDescriptor> discoverServiceResources() {
@@ -309,7 +305,6 @@ public class ServiceLocator {
 	 * Provides the list of service resource names from which Java services should be loaded.
 	 *
 	 * @return the list of service resource names
-	 * @since 2.0
 	 */
 	protected List<String> getClasspathServiceResourceNames() {
 		List<String> paths = new ArrayList<>();
@@ -326,7 +321,6 @@ public class ServiceLocator {
 	 * Reads the services provided in the file with the given URL. The URL must provide a file in the format expected by
 	 * {@link ServiceLoader}.
 	 *
-	 * @since 2.0
 	 * @see ServiceLoader
 	 */
 	protected List<String> readServiceClassNames(URL url) {

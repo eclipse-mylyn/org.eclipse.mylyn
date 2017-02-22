@@ -15,10 +15,10 @@ import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
 
 /**
  * A token processor that emits a specified XML entity reference.
- * 
+ *
  * @see DocumentBuilder#entityReference(String)
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class EntityReplacementTokenProcessor extends PatternBasedElementProcessor {
 

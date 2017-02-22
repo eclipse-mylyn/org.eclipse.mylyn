@@ -25,9 +25,9 @@ import com.google.common.collect.ImmutableList;
  * Captures the result of a {@link EventDocumentBuilder} as a series of {@link DocumentBuilderEvent events}.
  *
  * @author david.green
- * @since 2.0
  * @see EventDocumentBuilder
  * @noextend This class is not intended to be subclassed by clients.
+ * @since 3.0
  */
 public class DocumentBuilderEvents {
 	private final List<DocumentBuilderEvent> events;

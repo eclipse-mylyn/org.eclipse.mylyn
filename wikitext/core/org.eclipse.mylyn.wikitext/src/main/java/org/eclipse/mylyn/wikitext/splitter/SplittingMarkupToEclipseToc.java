@@ -15,6 +15,7 @@ import org.eclipse.mylyn.wikitext.parser.util.MarkupToEclipseToc;
 
 /**
  * @author David Green
+ * @since 3.0
  */
 public class SplittingMarkupToEclipseToc extends MarkupToEclipseToc {
 	@Override

@@ -14,7 +14,7 @@ import org.eclipse.mylyn.wikitext.parser.Locator;
 
 /**
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class LocatorImpl implements Locator {
 

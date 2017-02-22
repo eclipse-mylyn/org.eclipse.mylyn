@@ -19,9 +19,9 @@ import org.eclipse.mylyn.wikitext.parser.Locator;
 /**
  * State related to parsing content, propagated to {@link Block blocks} and other {@link Processor processors} during
  * the parse phase.
- * 
+ *
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class ContentState implements Locator {
 	private final Map<String, String> footnoteIdToHtmlId = new HashMap<String, String>();
@@ -58,7 +58,7 @@ public class ContentState implements Locator {
 	public String getFootnoteId(String footnote) {
 		String id = footnoteIdToHtmlId.get(footnote);
 		if (id == null) {
-			// Create a stable id.  This has a greater chance of collisions, however 
+			// Create a stable id.  This has a greater chance of collisions, however
 			// it's an acceptable risk to gain stable ids.  Unfortunately there's no way to
 			// know if the id is already in use without doing a two-pass parse, which we don't
 			// want to do.  Instead, we choose a prefix of '___' since the '_' is not used by
@@ -72,7 +72,7 @@ public class ContentState implements Locator {
 	/**
 	 * Add a glossary term (typically an acronym) with its definition. Has no effect if the term is already present in
 	 * the glossary and the given definition is shorter or equal in length to the existing definition.
-	 * 
+	 *
 	 * @param term
 	 *            the term to add
 	 * @param definition
@@ -98,7 +98,7 @@ public class ContentState implements Locator {
 
 	/**
 	 * Get the 1-based line number of the current line.
-	 * 
+	 *
 	 * @return the line number or -1 if it is unknown.
 	 */
 	public int getLineNumber() {
@@ -114,7 +114,7 @@ public class ContentState implements Locator {
 
 	/**
 	 * the 0-based character offset of the current line.
-	 * 
+	 *
 	 * @return the offset or -1 if it is unknown.
 	 */
 	public int getLineOffset() {

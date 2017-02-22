@@ -12,9 +12,10 @@ package org.eclipse.mylyn.wikitext.parser.util;
 
 /**
  * An interface that defines a matcher, much the same as a {@link java.util.regex.Matcher}.
- * 
+ *
  * @see MatcherAdaper
  * @author David Green
+ * @since 3.0
  */
 public interface Matcher {
 	public String group(int group);

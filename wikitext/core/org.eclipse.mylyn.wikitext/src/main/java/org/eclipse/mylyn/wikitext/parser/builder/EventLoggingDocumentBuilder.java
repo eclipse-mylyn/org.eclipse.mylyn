@@ -17,7 +17,7 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 
 /**
  * @author David Green
- * @since 1.0
+ * @since 3.0
  */
 public class EventLoggingDocumentBuilder extends DocumentBuilder {
 

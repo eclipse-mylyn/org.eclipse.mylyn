@@ -18,6 +18,7 @@ import org.eclipse.mylyn.wikitext.util.LocatorImpl;
 
 /**
  * @author David Green
+ * @since 3.0
  */
 public class RecordingDocumentBuilder extends DocumentBuilder {
 

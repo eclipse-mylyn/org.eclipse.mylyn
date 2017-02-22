@@ -21,9 +21,9 @@ import com.google.common.base.Objects;
 
 /**
  * An {@link DocumentBuilderEvent} corresponding to {@link DocumentBuilder#beginBlock(BlockType, Attributes)}.
- * 
+ *
  * @author david.green
- * @since 2.0
+ * @since 3.0
  */
 public class BeginBlockEvent extends DocumentBuilderEvent {
 

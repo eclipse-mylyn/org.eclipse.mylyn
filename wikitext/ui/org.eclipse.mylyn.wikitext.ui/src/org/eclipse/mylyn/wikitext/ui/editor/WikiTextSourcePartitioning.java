@@ -16,18 +16,19 @@ import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 
 /**
  * A utility for configuring partitioning on a document.
- * 
+ *
  * @author David Green
  * @since 1.3
  */
 public class WikiTextSourcePartitioning {
 	/**
 	 * Configure partitioning on a document using the specified markup language.
-	 * 
+	 *
 	 * @param document
 	 *            the document that should have its partitioning configured
 	 * @param markupLanguage
 	 *            the markup language to use, or null
+	 * @since 3.0
 	 */
 	public static void configurePartitioning(IDocument document, MarkupLanguage markupLanguage) {
 		FastMarkupPartitioner partitioner = new FastMarkupPartitioner();

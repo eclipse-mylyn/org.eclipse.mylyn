@@ -23,11 +23,11 @@ import org.xml.sax.SAXException;
 /**
  * A parser for HTML, driving {@link DocumentBuilder}. Depending on parsers available at runtime, input may need to be
  * well-formed XHTML.
- * 
+ *
  * @see DocumentBuilder
  * @author David Green
- * @since 1.6
  * @see #instanceWithHtmlCleanupRules()
+ * @since 3.0
  */
 public class HtmlParser {
 
@@ -50,8 +50,6 @@ public class HtmlParser {
 
 	/**
 	 * Provides a parser instance with cleanup rules that make the result more suitable for generating wiki markup.
-	 * 
-	 * @since 2.0
 	 */
 	public static HtmlParser instanceWithHtmlCleanupRules() {
 		org.eclipse.mylyn.wikitext.internal.parser.html.HtmlParser parser = new org.eclipse.mylyn.wikitext.internal.parser.html.HtmlParser();
@@ -62,8 +60,6 @@ public class HtmlParser {
 
 	/**
 	 * Creates a new parser instance.
-	 * 
-	 * @since 2.0
 	 */
 	public static HtmlParser instance() {
 		return new HtmlParser();
@@ -76,7 +72,7 @@ public class HtmlParser {
 	/**
 	 * Parses well-formed XHTML from the given input, and emit an approximation of the source document to the given
 	 * document builder. Equivalent to {@code parse(input,builder,true)}
-	 * 
+	 *
 	 * @param input
 	 *            the source input
 	 * @param builder
@@ -91,14 +87,13 @@ public class HtmlParser {
 	/**
 	 * Parses well-formed XHTML or HTML from the given input, and emit an approximation of the source document to the
 	 * given document builder.
-	 * 
+	 *
 	 * @param input
 	 *            the source input
 	 * @param builder
 	 *            the builder to which output is provided
 	 * @param asDocument
 	 *            indicates if the builder should be driven as a {@link DocumentBuilder#beginDocument() document}.
-	 * @since 2.0
 	 */
 	public void parse(InputSource input, DocumentBuilder builder, boolean asDocument) throws IOException, SAXException {
 		checkNotNull(input);

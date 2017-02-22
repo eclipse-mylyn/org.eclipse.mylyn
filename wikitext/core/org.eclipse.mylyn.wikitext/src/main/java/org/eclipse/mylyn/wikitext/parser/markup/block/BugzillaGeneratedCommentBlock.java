@@ -18,12 +18,13 @@ import org.eclipse.mylyn.wikitext.parser.markup.Block;
 
 /**
  * A block for detecting bugzilla-generated text such as: *** This bug has been marked as a duplicate of bug 1234 ***
- * 
+ *
  * @author David Green
- * @since 1.6
+ * @since 3.0
  */
 public class BugzillaGeneratedCommentBlock extends Block {
-	private static Pattern pattern = Pattern.compile("\\s*\\*\\*\\*\\s+((This bug has been)|(Bug \\d+ has been)).*?\\*\\*\\*\\s*"); //$NON-NLS-1$
+	private static Pattern pattern = Pattern
+			.compile("\\s*\\*\\*\\*\\s+((This bug has been)|(Bug \\d+ has been)).*?\\*\\*\\*\\s*"); //$NON-NLS-1$
 
 	@Override
 	public boolean canStart(String line, int lineOffset) {

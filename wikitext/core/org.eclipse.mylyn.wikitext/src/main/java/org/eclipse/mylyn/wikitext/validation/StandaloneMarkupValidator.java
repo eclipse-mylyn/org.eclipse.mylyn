@@ -33,8 +33,9 @@ import org.xml.sax.SAXException;
 
 /**
  * Validate markup given a set of rules (stand-alone, outside of an Eclipse environment)
- * 
+ *
  * @author David Green
+ * @since 3.0
  */
 public class StandaloneMarkupValidator {
 
@@ -49,7 +50,7 @@ public class StandaloneMarkupValidator {
 	/**
 	 * Get the default validator for the specified markup language. Validators that are returned by this method are
 	 * immutable and thread-safe
-	 * 
+	 *
 	 * @param markupLanguage
 	 *            the markup language for which a validator is desired
 	 * @return the validator
@@ -60,7 +61,8 @@ public class StandaloneMarkupValidator {
 		// Also we use a weak hash map so that class loaders can be GC'd
 		ClassLoader classLoader = computeClassLoader();
 		synchronized (StandaloneMarkupValidator.class) {
-			Map<String, StandaloneMarkupValidator> validatorByMarkupLanguage = validatorCacheByClassLoader.get(classLoader);
+			Map<String, StandaloneMarkupValidator> validatorByMarkupLanguage = validatorCacheByClassLoader
+					.get(classLoader);
 			if (validatorByMarkupLanguage == null) {
 				validatorByMarkupLanguage = new HashMap<String, StandaloneMarkupValidator>();
 				validatorCacheByClassLoader.put(classLoader, validatorByMarkupLanguage);
@@ -117,7 +119,7 @@ public class StandaloneMarkupValidator {
 
 	/**
 	 * Compute rules for a markup language based on looking them up in the available plugin.xml files
-	 * 
+	 *
 	 * @param markupLanguage
 	 */
 	public void computeRules(String markupLanguage) {
@@ -135,7 +137,7 @@ public class StandaloneMarkupValidator {
 
 	/**
 	 * compute rules for the specified markup language given an URL to a plugin.xml
-	 * 
+	 *
 	 * @param markupLanguage
 	 *            the markup language for which rules should be loaded
 	 * @param url
@@ -168,7 +170,8 @@ public class StandaloneMarkupValidator {
 	}
 
 	void computeRules(String markupLanguage, Document pluginXml) {
-		for (Node child = pluginXml.getDocumentElement().getFirstChild(); child != null; child = child.getNextSibling()) {
+		for (Node child = pluginXml.getDocumentElement().getFirstChild(); child != null; child = child
+				.getNextSibling()) {
 			if (child.getNodeType() == Node.ELEMENT_NODE && child.getLocalName().equals("extension")) { //$NON-NLS-1$
 				Element element = (Element) child;
 				String point = element.getAttribute("point"); //$NON-NLS-1$

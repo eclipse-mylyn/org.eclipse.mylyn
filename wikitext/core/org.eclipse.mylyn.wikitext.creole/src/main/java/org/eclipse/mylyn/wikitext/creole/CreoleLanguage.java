@@ -29,16 +29,12 @@ import org.eclipse.mylyn.wikitext.parser.markup.Block;
 import org.eclipse.mylyn.wikitext.parser.markup.token.ImpliedHyperlinkReplacementToken;
 import org.eclipse.mylyn.wikitext.parser.markup.token.PatternLineBreakReplacementToken;
 
-// TODO: support for multiline styling (phrases can only be on single line)
-// TODO: table
-// TODO: images
-
 /**
  * A markup language implementing Creole syntax. See <a href="http://www.wikicreole.org/wiki/Creole1.0">Creole
  * Formatting Rules</a> and <a href="http://www.wikicreole.org/wiki/CreoleAdditions">Creole Additions</a> for details.
- * 
+ *
  * @author Igor Malinin
- * @since 1.6
+ * @since 3.0
  */
 public class CreoleLanguage extends AbstractMarkupLanguage {
 
@@ -53,7 +49,7 @@ public class CreoleLanguage extends AbstractMarkupLanguage {
 
 	/**
 	 * for the purpose of converting wiki words into links, determine if the wiki word exists.
-	 * 
+	 *
 	 * @see WikiWordReplacementToken
 	 */
 	public boolean computeInternalLinkExists(String link) {
@@ -62,7 +58,7 @@ public class CreoleLanguage extends AbstractMarkupLanguage {
 
 	/**
 	 * Convert a page name to an href to the page.
-	 * 
+	 *
 	 * @param pageName
 	 *            the name of the page to target, usually a WikiWord with whitespace removed
 	 * @return the href to access the page
