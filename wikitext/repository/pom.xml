@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.eclipse.mylyn.docs</groupId>
         <artifactId>wikitext</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>3.0.1-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
 
@@ -29,67 +29,67 @@
                         <configuration>
                             <artifacts>
                                 <artifact>
-                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext:3.0.0-SNAPSHOT</id>
+                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext:3.0.1-SNAPSHOT</id>
                                     <transitive>false</transitive>
                                     <source>true</source>
                                 </artifact>
                                 <artifact>
-                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.toolkit:3.0.0-SNAPSHOT</id>
+                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.toolkit:3.0.1-SNAPSHOT</id>
                                     <transitive>false</transitive>
                                     <source>true</source>
                                 </artifact>
                                 <artifact>
-                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.html:3.0.0-SNAPSHOT</id>
+                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.html:3.0.1-SNAPSHOT</id>
                                     <transitive>false</transitive>
                                     <source>true</source>
                                 </artifact>
                                 <artifact>
-                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.textile:3.0.0-SNAPSHOT</id>
+                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.textile:3.0.1-SNAPSHOT</id>
                                     <transitive>false</transitive>
                                     <source>true</source>
                                 </artifact>
                                 <artifact>
-                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.ant:3.0.0-SNAPSHOT</id>
+                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.ant:3.0.1-SNAPSHOT</id>
                                     <transitive>false</transitive>
                                     <source>true</source>
                                 </artifact>
                                 <artifact>
-                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.asciidoc:3.0.0-SNAPSHOT</id>
+                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.asciidoc:3.0.1-SNAPSHOT</id>
                                     <transitive>false</transitive>
                                     <source>true</source>
                                 </artifact>
                                 <artifact>
-                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.commonmark:3.0.0-SNAPSHOT</id>
+                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.commonmark:3.0.1-SNAPSHOT</id>
                                     <transitive>false</transitive>
                                     <source>true</source>
                                 </artifact>
                                 <artifact>
-                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.confluence:3.0.0-SNAPSHOT</id>
+                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.confluence:3.0.1-SNAPSHOT</id>
                                     <transitive>false</transitive>
                                     <source>true</source>
                                 </artifact>
                                 <artifact>
-                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.creole:3.0.0-SNAPSHOT</id>
+                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.creole:3.0.1-SNAPSHOT</id>
                                     <transitive>false</transitive>
                                     <source>true</source>
                                 </artifact>
                                 <artifact>
-                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.markdown:3.0.0-SNAPSHOT</id>
+                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.markdown:3.0.1-SNAPSHOT</id>
                                     <transitive>false</transitive>
                                     <source>true</source>
                                 </artifact>
                                 <artifact>
-                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.mediawiki:3.0.0-SNAPSHOT</id>
+                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.mediawiki:3.0.1-SNAPSHOT</id>
                                     <transitive>false</transitive>
                                     <source>true</source>
                                 </artifact>
                                 <artifact>
-                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.tracwiki:3.0.0-SNAPSHOT</id>
+                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.tracwiki:3.0.1-SNAPSHOT</id>
                                     <transitive>false</transitive>
                                     <source>true</source>
                                 </artifact>
                                 <artifact>
-                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.twiki:3.0.0-SNAPSHOT</id>
+                                    <id>org.eclipse.mylyn.docs:org.eclipse.mylyn.wikitext.twiki:3.0.1-SNAPSHOT</id>
                                     <transitive>false</transitive>
                                     <source>true</source>
                                 </artifact>
