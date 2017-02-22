@@ -106,4 +106,56 @@ public class AsciiDocLanguageImageTest extends AsciiDocLanguageTestBase {
 
 		assertEquals(expected, html);
 	}
+
+	@Test
+	public void urlImageWithImageDir() {
+		String markup = "" + //
+				":imagesdir: imgs/\n" + //
+				"\n" + //
+				"image::../cover.png[alt]\n" + //
+				"\n" + //
+				"image::https://example.com/cover.png[alt]\n" + //
+				"\n" + //
+				"image::http://www.example.com/cover.png[alt]\n" + //
+				"\n" + //
+				"image::ftp://me@example.com:20/cover.png[alt]\n" + //
+				"\n" + //
+				"image::file:///C:/absolute/cover.png[alt]\n" + //
+				"\n" + //
+				"image::file:///absolute/cover.png[alt]\n";
+		String html = parseToHtml(markup);
+
+		String expected = "" //
+				+ "<p><div class=\"imageblock\"><div class=\"content\"><img alt=\"alt\" border=\"0\" src=\"imgs/../cover.png\"/></div></div></p>\n"
+				+ "<p><div class=\"imageblock\"><div class=\"content\"><img alt=\"alt\" border=\"0\" src=\"https://example.com/cover.png\"/></div></div></p>\n"
+				+ "<p><div class=\"imageblock\"><div class=\"content\"><img alt=\"alt\" border=\"0\" src=\"http://www.example.com/cover.png\"/></div></div></p>\n"
+				+ "<p><div class=\"imageblock\"><div class=\"content\"><img alt=\"alt\" border=\"0\" src=\"ftp://me@example.com:20/cover.png\"/></div></div></p>\n"
+				+ "<p><div class=\"imageblock\"><div class=\"content\"><img alt=\"alt\" border=\"0\" src=\"file:///C:/absolute/cover.png\"/></div></div></p>\n"
+				+ "<p><div class=\"imageblock\"><div class=\"content\"><img alt=\"alt\" border=\"0\" src=\"file:///absolute/cover.png\"/></div></div></p>\n";
+
+		assertEquals(expected, html);
+	}
+
+	@Test
+	public void absolutePathImageWithImageDir() {
+		String markup = "" + //
+				":imagesdir: imgs/\n" + //
+				"\n" + //
+				"image::cover.png[alt]\n" + //
+				"\n" + //
+				"image::/absolute/cover.png[alt]\n" + //
+				"\n" + //
+				"image::C:/absolute/cover.png[alt]\n" + //
+				"\n" + //
+				"image::D:\\absolute\\cover.png[alt]\n";
+		String html = parseToHtml(markup);
+
+		String expected = "" //
+				+ "<p><div class=\"imageblock\"><div class=\"content\"><img alt=\"alt\" border=\"0\" src=\"imgs/cover.png\"/></div></div></p>\n"
+				+ "<p><div class=\"imageblock\"><div class=\"content\"><img alt=\"alt\" border=\"0\" src=\"/absolute/cover.png\"/></div></div></p>\n"
+				+ "<p><div class=\"imageblock\"><div class=\"content\"><img alt=\"alt\" border=\"0\" src=\"C:/absolute/cover.png\"/></div></div></p>\n"
+				+ "<p><div class=\"imageblock\"><div class=\"content\"><img alt=\"alt\" border=\"0\" src=\"D:\\absolute\\cover.png\"/></div></div></p>\n";
+
+		assertEquals(expected, html);
+	}
 }

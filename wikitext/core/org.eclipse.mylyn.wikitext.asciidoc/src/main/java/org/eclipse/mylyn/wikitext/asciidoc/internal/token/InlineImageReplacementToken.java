@@ -15,6 +15,7 @@ package org.eclipse.mylyn.wikitext.asciidoc.internal.token;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.asciidoc.internal.AsciiDocContentState;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.util.LanguageSupport;
@@ -39,6 +40,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
  * @author Max Rydahl Andersen
  */
 public class InlineImageReplacementToken extends PatternBasedElement {
+	public static final String ABSOLUTE_PATH_OR_URL_REGEX = "(?:\\/|[a-zA-Z]\\:[\\\\\\/]|(?:https?|ftp|file)\\:\\/\\/)[^\\s]+"; //$NON-NLS-1$
 
 	@Override
 	protected String getPattern(int groupOffset) {
@@ -98,12 +100,14 @@ public class InlineImageReplacementToken extends PatternBasedElement {
 
 			}
 
-			String imagesDir = getAsciiDocState().getAttribute(AsciiDocContentState.ATTRIBUTE_IMAGESDIR);
-			if (imagesDir != null && !imagesDir.isEmpty()) {
-				if (imagesDir.endsWith("/")) { //$NON-NLS-1$
-					src = imagesDir + src;
-				} else {
-					src = imagesDir + "/" + src; //$NON-NLS-1$
+			if (!Pattern.matches(ABSOLUTE_PATH_OR_URL_REGEX, src)) {
+				String imagesDir = getAsciiDocState().getAttribute(AsciiDocContentState.ATTRIBUTE_IMAGESDIR);
+				if (imagesDir != null && !imagesDir.isEmpty()) {
+					if (imagesDir.endsWith("/")) { //$NON-NLS-1$
+						src = imagesDir + src;
+					} else {
+						src = imagesDir + "/" + src; //$NON-NLS-1$
+					}
 				}
 			}
 
