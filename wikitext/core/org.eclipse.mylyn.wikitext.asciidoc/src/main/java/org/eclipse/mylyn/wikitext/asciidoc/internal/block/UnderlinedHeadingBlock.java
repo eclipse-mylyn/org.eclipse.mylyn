@@ -15,6 +15,8 @@ package org.eclipse.mylyn.wikitext.asciidoc.internal.block;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.mylyn.wikitext.asciidoc.internal.AsciiDocContentState;
+import org.eclipse.mylyn.wikitext.asciidoc.internal.util.LanguageSupport;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.util.LookAheadReader;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.util.ReadAheadBlock;
 import org.eclipse.mylyn.wikitext.parser.HeadingAttributes;
@@ -40,11 +42,11 @@ public class UnderlinedHeadingBlock extends Block implements ReadAheadBlock {
 
 	private int blockLineCount;
 
-	private int level;
+	private int lineLevel;
 
 	public boolean canStart(String line, int lineOffset, LookAheadReader lookAheadReader) {
 		blockLineCount = 0;
-		level = 0;
+		lineLevel = 0;
 		String nextLine = lookAheadReader.lookAhead();
 		if (nextLine == null) {
 			return false;
@@ -75,16 +77,16 @@ public class UnderlinedHeadingBlock extends Block implements ReadAheadBlock {
 	 *            next line in the document
 	 * @param pattern
 	 *            regular expression in a Pattern to match a line of chars in the next line
-	 * @param l
+	 * @param level
 	 *            level that is set if the next line matches
 	 * @return
 	 */
-	private boolean checkNextLine(int length, String nextLine, Pattern pattern, int l) {
+	private boolean checkNextLine(int length, String nextLine, Pattern pattern, int level) {
 		Matcher matcher = pattern.matcher(nextLine);
 		if (matcher.matches()) {
 			int lineLength = matcher.group(1).length();
 			if ((lineLength > length - 2) && (lineLength < length + 2)) {
-				level = l;
+				lineLevel = level;
 				return true;
 			}
 		}
@@ -103,6 +105,7 @@ public class UnderlinedHeadingBlock extends Block implements ReadAheadBlock {
 			HeadingAttributes attributes = new HeadingAttributes();
 			attributes.setId(state.getIdGenerator().newId(null, line));
 
+			int level = LanguageSupport.computeHeadingLevel(lineLevel, getAsciiDocState());
 			builder.beginHeading(level, attributes);
 			builder.characters(line.trim());
 		} else {
@@ -112,5 +115,9 @@ public class UnderlinedHeadingBlock extends Block implements ReadAheadBlock {
 
 		blockLineCount++;
 		return -1;
+	}
+
+	protected AsciiDocContentState getAsciiDocState() {
+		return (AsciiDocContentState) state;
 	}
 }

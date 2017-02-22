@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.mylyn.wikitext.asciidoc.internal.AsciiDocContentState;
 import org.eclipse.mylyn.wikitext.parser.TableCellAttributes;
 
 import com.google.common.base.Splitter;
@@ -140,6 +141,17 @@ public class LanguageSupport {
 			result.add(new TableCellAttributes());
 		}
 		return result;
+	}
+
+	public static int computeHeadingLevel(int initialLevel, AsciiDocContentState state) {
+		String attributeValue = state.getAttributeOrValue(AsciiDocContentState.ATTRIBUTE_LEVELOFFSET, "0");
+		int levelOffset;
+		try {
+			levelOffset = Integer.parseInt(attributeValue);
+		} catch (NumberFormatException e) {
+			return initialLevel;
+		}
+		return Math.max(1, Math.min(initialLevel + levelOffset, 6));
 	}
 
 }

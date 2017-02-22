@@ -39,6 +39,8 @@ public class AsciiDocContentState extends ContentState {
 
 	public static final String ATTRIBUTE_IMAGESDIR = "imagesdir"; //$NON-NLS-1$
 
+	public static final String ATTRIBUTE_LEVELOFFSET = "leveloffset"; //$NON-NLS-1$
+
 	// latest title provided via .<optional title> syntax
 	private String lastTitle;
 

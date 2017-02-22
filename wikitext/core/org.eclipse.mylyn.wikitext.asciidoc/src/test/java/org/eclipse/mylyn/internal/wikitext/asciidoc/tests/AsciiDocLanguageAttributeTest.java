@@ -26,6 +26,7 @@ public class AsciiDocLanguageAttributeTest extends AsciiDocLanguageTestBase {
 			" - idprefix: {idprefix}\n" + //
 			" - idseparator: {idseparator}\n" + //
 			" - imagesdir: {imagesdir}\n" + //
+			" - leveloffset: {leveloffset}\n" + //
 			"";
 
 	@Test
@@ -40,6 +41,7 @@ public class AsciiDocLanguageAttributeTest extends AsciiDocLanguageTestBase {
 				"<li>idprefix: _</li>" + //
 				"<li>idseparator: _</li>" + //
 				"<li>imagesdir: </li>" + //
+				"<li>leveloffset: {leveloffset}</li>" + //
 				"</ul>";
 		assertEquals(expected, html);
 	}

@@ -14,6 +14,8 @@ package org.eclipse.mylyn.wikitext.asciidoc.internal.block;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.mylyn.wikitext.asciidoc.internal.AsciiDocContentState;
+import org.eclipse.mylyn.wikitext.asciidoc.internal.util.LanguageSupport;
 import org.eclipse.mylyn.wikitext.parser.HeadingAttributes;
 import org.eclipse.mylyn.wikitext.parser.markup.Block;
 
@@ -45,7 +47,7 @@ public class HeadingBlock extends Block {
 
 	@Override
 	public int processLineContent(String line, int offset) {
-		int level = matcher.group(1).length();
+		int level = LanguageSupport.computeHeadingLevel(matcher.group(1).length(), getAsciiDocState());
 		String text = matcher.group(2);
 		String closingGroup = matcher.group(4);
 
@@ -62,5 +64,9 @@ public class HeadingBlock extends Block {
 
 		setClosed(true);
 		return -1;
+	}
+
+	protected AsciiDocContentState getAsciiDocState() {
+		return (AsciiDocContentState) state;
 	}
 }

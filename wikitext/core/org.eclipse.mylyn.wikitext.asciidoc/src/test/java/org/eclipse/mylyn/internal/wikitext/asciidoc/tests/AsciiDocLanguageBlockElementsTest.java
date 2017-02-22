@@ -133,6 +133,41 @@ public class AsciiDocLanguageBlockElementsTest extends AsciiDocLanguageTestBase 
 	}
 
 	@Test
+	public void headerLevel1WithLeveloffset2() {
+		String html = parseToHtml(":leveloffset: 2\n\n== This is Level 1");
+
+		assertEquals("<h4 id=\"_this_is_level_1\">This is Level 1</h4>", html);
+	}
+
+	@Test
+	public void headerLevel1WithLeveloffset3() {
+		String html = parseToHtml(":leveloffset: 3\n\n== This is Level 1");
+
+		assertEquals("<h5 id=\"_this_is_level_1\">This is Level 1</h5>", html);
+	}
+
+	@Test
+	public void headerLevel1WithLeveloffset6() {
+		String html = parseToHtml(":leveloffset: 6\n\n== This is Level 1");
+
+		assertEquals("<h6 id=\"_this_is_level_1\">This is Level 1</h6>", html);
+	}
+
+	@Test
+	public void headerLevel4WithLeveloffsetMinus2() {
+		String html = parseToHtml(":leveloffset: -2\n\n==== This is Level 3");
+
+		assertEquals("<h2 id=\"_this_is_level_3\">This is Level 3</h2>", html);
+	}
+
+	@Test
+	public void headerLevel4WithLeveloffsetMinus6() {
+		String html = parseToHtml(":leveloffset: -6\n\n==== This is Level 3");
+
+		assertEquals("<h1 id=\"_this_is_level_3\">This is Level 3</h1>", html);
+	}
+
+	@Test
 	public void testHeadingContainingEmphasisStyle() {
 		//Bug 492301
 		String text = "=== This _is_ true!";
@@ -457,6 +492,27 @@ public class AsciiDocLanguageBlockElementsTest extends AsciiDocLanguageTestBase 
 		String html = parseToHtml("Title test underlined H5\n++++++++++++++++++++++++\t  ");
 
 		assertEquals("<h5 id=\"_title_test_underlined_h5\">Title test underlined H5</h5>", html);
+	}
+
+	@Test
+	public void underlinedLevel3WithLeveloffset1() {
+		String html = parseToHtml(":leveloffset:1\n\nThis is Level 3\n^^^^^^^^^^^^^^^");
+
+		assertEquals("<h5 id=\"_this_is_level_3\">This is Level 3</h5>", html);
+	}
+
+	@Test
+	public void underlinedLevel3WithLeveloffset4() {
+		String html = parseToHtml(":leveloffset:4\n\nThis is Level 3\n^^^^^^^^^^^^^^^");
+
+		assertEquals("<h6 id=\"_this_is_level_3\">This is Level 3</h6>", html);
+	}
+
+	@Test
+	public void underlinedLevel3WithLeveloffsetMinus4() {
+		String html = parseToHtml(":leveloffset:-4\n\nThis is Level 3\n^^^^^^^^^^^^^^^");
+
+		assertEquals("<h1 id=\"_this_is_level_3\">This is Level 3</h1>", html);
 	}
 
 	@Test
