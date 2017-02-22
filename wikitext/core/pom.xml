@@ -72,6 +72,8 @@
         <module>org.eclipse.mylyn.wikitext.mediawiki.ant</module>
         <module>org.eclipse.mylyn.wikitext.tracwiki</module>
         <module>org.eclipse.mylyn.wikitext.twiki</module>
+        
+        <module>repository</module>
     </modules>
 
     <build>

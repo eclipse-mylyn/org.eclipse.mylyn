@@ -13,7 +13,6 @@
 
     <modules>
         <module>core</module>
-        <module>repository</module>
         <module>ui-pom.xml</module>
     </modules>
 
