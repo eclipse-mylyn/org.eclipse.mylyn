@@ -24,12 +24,12 @@ import org.eclipse.ui.texteditor.ResourceMarkerAnnotationModel;
 /**
  * An abstract document provider for the {@link WikiTextSourceEditor}. Subclasses must implement
  * {@link #doSaveDocument(IProgressMonitor, Object, IDocument, boolean) mutable document storage}.
- * 
+ *
  * @author David Green
  * @since 1.3
  */
-public abstract class AbstractWikiTextDocumentProvider extends StorageDocumentProvider implements
-		WikiTextDocumentProvider {
+public abstract class AbstractWikiTextDocumentProvider extends StorageDocumentProvider
+		implements WikiTextDocumentProvider {
 
 	private MarkupLanguage markupLanguage;
 
@@ -39,10 +39,16 @@ public abstract class AbstractWikiTextDocumentProvider extends StorageDocumentPr
 		WikiTextSourcePartitioning.configurePartitioning(document, markupLanguage);
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public MarkupLanguage getMarkupLanguage() {
 		return markupLanguage;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public void setMarkupLanguage(MarkupLanguage markupLanguage) {
 		this.markupLanguage = markupLanguage;
 	}
@@ -50,7 +56,7 @@ public abstract class AbstractWikiTextDocumentProvider extends StorageDocumentPr
 	@Override
 	protected IAnnotationModel createAnnotationModel(Object element) throws CoreException {
 		if (element instanceof IAdaptable) {
-			IFile file = (IFile) ((IAdaptable) element).getAdapter(IFile.class);
+			IFile file = ((IAdaptable) element).getAdapter(IFile.class);
 			if (file != null) {
 				return new ResourceMarkerAnnotationModel(file);
 			}

@@ -15,11 +15,13 @@ import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 /**
  * Document providers used with {@link WikiTextSourceEditor} <em>should</em> implement this interface. Implementors
  * should prefer to subclass {@link AbstractWikiTextDocumentProvider} instead of directly implementing this interface.
- * 
+ *
  * @author David Green
  * @since 1.3
  */
 public interface WikiTextDocumentProvider {
-
+	/**
+	 * @since 3.0
+	 */
 	public void setMarkupLanguage(MarkupLanguage markupLanguage);
 }
