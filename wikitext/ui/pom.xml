@@ -24,8 +24,6 @@
         <test.uservmargs></test.uservmargs>
         <test.osvmargs></test.osvmargs>
 
-        <dist.qualifier>'N'yyyyMMdd-HHmm</dist.qualifier>
-
         <tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/mylyn/org.eclipse.mylyn.docs.git</tycho.scmUrl>
         <tycho.testArgLine></tycho.testArgLine>
     </properties>
@@ -145,17 +143,11 @@
                     <dependencies>
                         <dependency>
                             <groupId>org.eclipse.tycho.extras</groupId>
-                            <artifactId>tycho-buildtimestamp-jgit</artifactId>
-                            <version>${tycho-extras-version}</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.eclipse.tycho.extras</groupId>
                             <artifactId>tycho-sourceref-jgit</artifactId>
                             <version>${tycho-extras-version}</version>
                         </dependency>
                     </dependencies>
                     <configuration>
-                        <format>${dist.qualifier}</format>
                         <archiveSite>false</archiveSite>
                         <archive>
                             <addMavenDescriptor>false</addMavenDescriptor>
@@ -163,8 +155,6 @@
                         <sourceReferences>
                             <generate>true</generate>
                         </sourceReferences>
-                        <timestampProvider>jgit</timestampProvider>
-                        <jgit.dirtyWorkingTree>warning</jgit.dirtyWorkingTree>
                     </configuration>
                 </plugin>
                 <plugin>
