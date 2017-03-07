@@ -29,6 +29,7 @@ update() {
   echo "Updating $OLD_QUALIFIED to $NEW_QUALIFIED..."
 
   find . -name pom.xml | xargs sed -i~ -e "s/<version>$OLD<\/version>/<version>$NEW<\/version>/"
+  find . -name ui-pom.xml | xargs sed -i~ -e "s/<version>$OLD<\/version>/<version>$NEW<\/version>/"
 
   find . -name MANIFEST.MF | xargs sed -i~ -e "s/Bundle-Version: $OLD_QUALIFIED/Bundle-Version: $NEW_QUALIFIED/"
   find . -name MANIFEST.MF | xargs sed -i~ -e "s/\(org\.eclipse\.mylyn\.wikitext.*;bundle-version=\"\)$OLD_BARE\(\"\)/\1$NEW_BARE\2/"
