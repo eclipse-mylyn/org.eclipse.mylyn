@@ -24,6 +24,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.mylyn.internal.wikitext.ui.ScreenshotOnTimeoutRule;
 import org.eclipse.mylyn.wikitext.toolkit.StackDumpOnTimeoutRule;
 import org.junit.After;
 import org.junit.Rule;
@@ -34,6 +35,9 @@ public abstract class AbstractTestInWorkspace {
 
 	@Rule
 	public final StackDumpOnTimeoutRule stackDumpOnTimeoutRule = new StackDumpOnTimeoutRule();
+
+	@Rule
+	public final ScreenshotOnTimeoutRule screenshotRule = new ScreenshotOnTimeoutRule();
 
 	@Rule
 	public final TemporaryFolder temporaryFolder = new TemporaryFolder();

@@ -16,6 +16,15 @@
         <module>ui-pom.xml</module>
     </modules>
 
+    <profiles>
+        <profile>
+            <id>sign</id>
+            <properties>
+                <artifacts.sign>true</artifacts.sign>
+            </properties>
+        </profile>
+    </profiles>
+    
     <licenses>
         <license>
             <name>Eclipse Public License Version 1.0</name>

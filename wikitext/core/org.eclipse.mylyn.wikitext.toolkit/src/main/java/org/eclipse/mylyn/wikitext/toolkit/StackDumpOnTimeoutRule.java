@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.toolkit;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 import static java.text.MessageFormat.format;
 
 import java.io.PrintStream;
@@ -19,21 +17,17 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 import java.time.Duration;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import org.junit.rules.TestRule;
-import org.junit.runner.Description;
-import org.junit.runners.model.Statement;
 
 /**
  * A {@link TestRule} that dumps a stack trace to {@code System.out}.
+ * 
  * @since 3.0
  */
-public class StackDumpOnTimeoutRule implements TestRule {
+public class StackDumpOnTimeoutRule extends TimeoutActionRule {
 
 	private static final Duration DEFAULT_TIMEOUT = Duration.ofMinutes(1L);
-	private Duration timeoutDuration;
 
 	/**
 	 * Creates the rule with the default timeout of 1 minute.
@@ -46,42 +40,20 @@ public class StackDumpOnTimeoutRule implements TestRule {
 	 * Creates the rule with the specified timeout.
 	 */
 	public StackDumpOnTimeoutRule(Duration timeoutDuration) {
-		this.timeoutDuration = checkNotNull(timeoutDuration,"Must specify a timeout duration");
-		checkArgument(timeoutDuration.toMillis() > 100L,"Timeout must be > 100ms");
+		super(timeoutDuration);
 	}
-	
+
 	@Override
-	public Statement apply(Statement base, Description description) {
-		return new Statement() {
-			@Override
-			public void evaluate() throws Throwable {
-				Timer timer = new Timer(true);
-				try {
-					timer.schedule(createDumpStackTraceTask(), timeoutDuration.toMillis(), timeoutDuration.toMillis());
-					base.evaluate();
-				} finally {
-					timer.cancel();
-				}
-			}
-
-		};
+	protected void performAction() {
+		dumpStackTrace(System.out);
 	}
 
-	private TimerTask createDumpStackTraceTask() {
-		return new TimerTask() {
-			
-			@Override
-			public void run() {
-				dumpStackTrace(System.out);
-			}
-		};
-	}
-	
 	private void dumpStackTrace(PrintStream writer) {
 		ThreadMXBean bean = ManagementFactory.getThreadMXBean();
 		ThreadInfo[] infos = bean.dumpAllThreads(true, true);
 		writer.println();
-		// ThreadInfo doesn't give a complete stack trace, so we do it again here
+		// ThreadInfo doesn't give a complete stack trace, so we do it again
+		// here
 		writer.println("***********");
 		writer.println("All threads complete stack trace:");
 		writer.println();

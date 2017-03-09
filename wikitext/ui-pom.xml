@@ -63,13 +63,13 @@
                                 </replaceregexp>
                                 <delete includeemptydirs="true">
                                     <fileset dir="${p2.repo.local}" defaultexcludes="false">
-                                       <include name="org/eclipse/mylyn/docs/**" />
+                                        <include name="org/eclipse/mylyn/docs/**"/>
                                     </fileset>
                                     <fileset dir="${p2.repo.local}" defaultexcludes="false">
-                                       <include name="p2/org/eclipse/update/feature/org.eclipse.mylyn.wikitext*/**" />
+                                        <include name="p2/org/eclipse/update/feature/org.eclipse.mylyn.wikitext*/**"/>
                                     </fileset>
                                     <fileset dir="${p2.repo.local}" defaultexcludes="false">
-                                       <include name="p2/osgi/bundle/org.eclipse.mylyn.wikitext*/**" />
+                                        <include name="p2/osgi/bundle/org.eclipse.mylyn.wikitext*/**"/>
                                     </fileset>
                                 </delete>
                             </target>
@@ -92,6 +92,9 @@
                     <pom>ui/pom.xml</pom>
                     <streamLogs>true</streamLogs>
                     <localRepositoryPath>.local-repo</localRepositoryPath>
+                    <properties>
+                        <artifacts.sign>${artifacts.sign}</artifacts.sign>
+                    </properties>
                     <goals>
                         <goal>clean</goal>
                         <goal>${wikitext.goal}</goal>
@@ -101,7 +104,8 @@
                     <execution>
                         <id>two-part-build</id>
                         <goals>
-                            <goal>install</goal><!-- install to avoid stale p2 cache with locally built artifacts -->
+                            <goal>install</goal>
+                            <!-- install to avoid stale p2 cache with locally built artifacts -->
                             <goal>run</goal>
                             <goal>verify</goal>
                         </goals>

@@ -41,6 +41,40 @@
                 <test.osvmargs>-Dosgi.ws=cocoa -XstartOnFirstThread</test.osvmargs>
             </properties>
         </profile>
+        <profile>
+            <id>sign</id>
+            <activation>
+                <property>
+                    <name>artifacts.sign</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.eclipse.cbi.maven.plugins</groupId>
+                        <artifactId>eclipse-jarsigner-plugin</artifactId>
+                        <version>1.1.3</version>
+                        <executions>
+                            <execution>
+                                <id>sign</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>eclipse-cbi</id>
+                    <name>Eclipse CBI</name>
+                    <url>https://repo.eclipse.org/content/repositories/cbi-releases/</url>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
     </profiles>
 
     <modules>
@@ -79,21 +113,21 @@
                 <version>${tycho-version}</version>
                 <extensions>true</extensions>
             </plugin>
-              <plugin>
-                  <groupId>org.eclipse.tycho</groupId>
-                  <artifactId>target-platform-configuration</artifactId>
-                  <version>${tycho-version}</version>
-                  <configuration>
-                      <target>
-                          <artifact>
-                              <groupId>org.eclipse.mylyn.docs</groupId>
-                              <artifactId>wikitext.ui.target</artifactId>
-                              <classifier>wikitext</classifier>
-                              <version>3.0.3-SNAPSHOT</version>
-                          </artifact>
-                      </target>
-                  </configuration>
-              </plugin>
+            <plugin>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>target-platform-configuration</artifactId>
+                <version>${tycho-version}</version>
+                <configuration>
+                    <target>
+                        <artifact>
+                            <groupId>org.eclipse.mylyn.docs</groupId>
+                            <artifactId>wikitext.ui.target</artifactId>
+                            <classifier>wikitext</classifier>
+                            <version>3.0.3-SNAPSHOT</version>
+                        </artifact>
+                    </target>
+                </configuration>
+            </plugin>
         </plugins>
         <pluginManagement>
             <plugins>
