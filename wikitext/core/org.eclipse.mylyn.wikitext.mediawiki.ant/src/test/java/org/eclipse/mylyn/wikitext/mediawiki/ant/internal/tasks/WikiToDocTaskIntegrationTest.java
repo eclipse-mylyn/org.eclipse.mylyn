@@ -18,13 +18,14 @@ import java.io.IOException;
 import java.util.Collections;
 
 import org.apache.tools.ant.Project;
-import org.eclipse.mylyn.wikitext.mediawiki.ant.internal.tasks.WikiToDocTask;
 import org.eclipse.mylyn.wikitext.mediawiki.ant.internal.tasks.WikiToDocTask.Path;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+@Ignore // bug 513425
 public class WikiToDocTaskIntegrationTest {
 
 	@Rule
