@@ -15,6 +15,7 @@ import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -27,6 +28,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.mylyn.internal.wikitext.ui.ScreenshotOnTimeoutRule;
 import org.eclipse.mylyn.wikitext.toolkit.StackDumpOnTimeoutRule;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 
@@ -42,20 +44,11 @@ public abstract class AbstractTestInWorkspace {
 	@Rule
 	public final TemporaryFolder temporaryFolder = new TemporaryFolder();
 
-	private static boolean init = false;
-
 	private final List<IProject> temporaryProjects = new ArrayList<IProject>();
 
-	public AbstractTestInWorkspace() {
-		if (!init) {
-			try {
-				ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE,
-						new NullProgressMonitor());
-			} catch (CoreException e) {
-				throw new IllegalStateException(e);
-			}
-			init = true;
-		}
+	@Before
+	public void before() {
+		refreshWorkspace();
 	}
 
 	/**
@@ -78,10 +71,10 @@ public abstract class AbstractTestInWorkspace {
 		}
 	}
 
-	public IProject createSimpleProject() throws CoreException {
+	public IProject createSimpleProject() {
 		long seed = System.currentTimeMillis();
 
-		String projectName = "test" + seed;
+		String projectName = "test" + Long.toHexString(seed) + Long.toHexString(new Random().nextLong());
 
 		File folderParent = temporaryFolder.getRoot();
 
@@ -92,9 +85,13 @@ public abstract class AbstractTestInWorkspace {
 
 		IProject project = workspace.getRoot().getProject(projectName);
 
-		project.create(description, new NullProgressMonitor());
-		if (!project.isOpen()) {
-			project.open(new NullProgressMonitor());
+		try {
+			project.create(description, new NullProgressMonitor());
+			if (!project.isOpen()) {
+				project.open(new NullProgressMonitor());
+			}
+		} catch (CoreException e) {
+			throw new RuntimeException(e);
 		}
 
 		temporaryProjects.add(project);
@@ -102,4 +99,11 @@ public abstract class AbstractTestInWorkspace {
 		return project;
 	}
 
+	private void refreshWorkspace() {
+		try {
+			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+		} catch (CoreException e) {
+			throw new IllegalStateException(e);
+		}
+	}
 }

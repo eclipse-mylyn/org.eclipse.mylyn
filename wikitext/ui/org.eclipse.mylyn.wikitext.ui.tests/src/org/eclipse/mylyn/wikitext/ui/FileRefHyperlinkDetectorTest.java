@@ -45,8 +45,10 @@ public class FileRefHyperlinkDetectorTest extends AbstractTestInWorkspace {
 
 	private IProject project;
 
+	@Override
 	@Before
-	public void before() throws Exception {
+	public void before() {
+		super.before();
 		project = createSimpleProject();
 	}
 
