@@ -26,7 +26,7 @@ public class TestResources {
 	public static String load(Class<?> relativeToClass,String path) {
 		try {
 			URL url = relativeToClass.getResource(path);
-			checkNotNull(url,"Resource %s not found relative to %s",path,relativeToClass.getClass().getName());
+			checkNotNull(url,"Resource %s not found relative to %s",path,relativeToClass.getName());
 			return Resources.toString(url, StandardCharsets.UTF_8);
 		} catch (IOException e) {
 			throw Throwables.propagate(e);

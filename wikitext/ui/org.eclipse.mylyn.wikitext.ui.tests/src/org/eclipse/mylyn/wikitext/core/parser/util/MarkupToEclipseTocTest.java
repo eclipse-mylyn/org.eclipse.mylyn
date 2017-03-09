@@ -10,16 +10,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.parser.util;
 
-import java.io.IOException;
-import java.net.URL;
-
 import org.eclipse.mylyn.wikitext.parser.util.MarkupToEclipseToc;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
-
-import com.google.common.base.Charsets;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Throwables;
-import com.google.common.io.Resources;
+import org.eclipse.mylyn.wikitext.toolkit.TestResources;
 
 import junit.framework.TestCase;
 
@@ -39,9 +32,8 @@ public class MarkupToEclipseTocTest extends TestCase {
 	public void basic() throws Exception {
 		markupToEclipseToc.setBookTitle("Test");
 		markupToEclipseToc.setHtmlFile("Test.html");
-		String toc = markupToEclipseToc.parse("h1. title1\n\nContent para 1\n\nh1. title2\n\nMore content\n\nh2. Nested title\n\nnested content");
-
-		
+		String toc = markupToEclipseToc.parse(
+				"h1. title1\n\nContent para 1\n\nh1. title2\n\nMore content\n\nh2. Nested title\n\nnested content");
 
 		assertEqualsResource("basic.xml", toc);
 	}
@@ -49,8 +41,6 @@ public class MarkupToEclipseTocTest extends TestCase {
 	public void testCopyrightNotice() {
 		markupToEclipseToc.setCopyrightNotice("Copyright (c) 2012 David Green");
 		String toc = markupToEclipseToc.parse("h1. title");
-
-		
 
 		assertTrue("content: " + toc, toc.contains("<!-- Copyright (c) 2012 David Green -->"));
 	}
@@ -65,8 +55,6 @@ public class MarkupToEclipseTocTest extends TestCase {
 		markupToEclipseToc.setAnchorLevel(0);
 		String toc = markupToEclipseToc.parse("h1. Top");
 
-		
-
 		assertEqualsResource("testEmitAnchorsLevel0.xml", toc);
 	}
 
@@ -76,24 +64,12 @@ public class MarkupToEclipseTocTest extends TestCase {
 		markupToEclipseToc.setAnchorLevel(1);
 		String toc = markupToEclipseToc.parse("h1. First\n\nh2. Second\n\nh1. Third");
 
-		
-
 		assertEqualsResource("testEmitAnchorsLevel1.xml", toc);
 	}
 
 	private void assertEqualsResource(String resourceName, String actualValue) {
-		String expectedValue = loadResource(resourceName);
+		String expectedValue = TestResources.load(MarkupToEclipseTocTest.class,
+				MarkupToEclipseTocTest.class.getSimpleName() + "." + resourceName);
 		assertEquals(expectedValue, actualValue);
-	}
-
-	private String loadResource(String resourceName) {
-		String name = MarkupToEclipseTocTest.class.getSimpleName() + "." + resourceName;
-		URL resource = MarkupToEclipseTocTest.class.getResource(name);
-		Preconditions.checkState(resource != null, "Cannot load resource %s", name);
-		try {
-			return Resources.toString(resource, Charsets.UTF_8);
-		} catch (IOException e) {
-			throw Throwables.propagate(e);
-		}
 	}
 }

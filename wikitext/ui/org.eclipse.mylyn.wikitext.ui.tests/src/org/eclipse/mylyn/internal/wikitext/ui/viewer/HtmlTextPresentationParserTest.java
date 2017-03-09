@@ -35,7 +35,6 @@ import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Throwables;
 
 /**
  * @author David Green
@@ -55,7 +54,7 @@ public class HtmlTextPresentationParserTest {
 	public void testAdjacentElementsSeparatedByWhitespace() throws Exception {
 		parser.parse("<html><body><p><strong>one</strong> <em>two</em></p></body></html>");
 		String text = parser.getText();
-		
+
 		assertTrue(text.contains("one two"));
 	}
 
@@ -65,10 +64,10 @@ public class HtmlTextPresentationParserTest {
 	@Test
 	public void testSignificantWhitespaceLossBug236367() throws SAXException, IOException {
 		String html = new MarkupParser(new TextileLanguage()).parseToHtml("one *two* three *four* five *six* seven");
-		
+
 		parser.parse(html);
 		String text = parser.getText();
-		
+
 		assertTrue(text.contains("one two three four five six seven"));
 	}
 
@@ -76,7 +75,7 @@ public class HtmlTextPresentationParserTest {
 	public void testOrderedListBlockHandling() throws Exception {
 		parser.parse("<html><body><ol><li> one </li><li>    two </li></ol></body></html>");
 		String text = parser.getText();
-		
+
 		assertTrue(text.contains("\t1. one\n\t2. two"));
 	}
 
@@ -84,7 +83,7 @@ public class HtmlTextPresentationParserTest {
 	public void testOrderedListBlockHandling2() throws Exception {
 		parser.parse("<html><body><ol><li> <b>one</b> </li><li>    two </li></ol></body></html>");
 		String text = parser.getText();
-		
+
 		assertTrue(text.contains("\t1. one\n\t2. two"));
 	}
 
@@ -94,7 +93,7 @@ public class HtmlTextPresentationParserTest {
 		parser.parse("<html><body><ul><li> one</li><li>    two<ul><li>two.one</li></ul></li></ul></body></html>");
 
 		String text = parser.getText();
-		
+
 		assertTrue(text.contains("\tA  one\n\tA  two\n\t\tB  two.one"));
 	}
 
@@ -102,7 +101,7 @@ public class HtmlTextPresentationParserTest {
 	public void testParagraphBlockHandling() throws Exception {
 		parser.parse("<html><body><p>first para\n\nwith some newlines</p>\n\n<p>second para</p></body></html>");
 		String text = parser.getText();
-		
+
 		assertTrue(text.contains("first para with some newlines\n\nsecond para"));
 	}
 
@@ -111,7 +110,7 @@ public class HtmlTextPresentationParserTest {
 		parser.parse(
 				"<html><body><p>first para<br/>\nwith one newline plus br</p>\n\n<p>second para</p></body></html>");
 		String text = parser.getText();
-		
+
 		assertTrue(text.contains("first para\nwith one newline plus br\n\nsecond para"));
 	}
 
@@ -119,7 +118,7 @@ public class HtmlTextPresentationParserTest {
 	public void testParagraphBlockHandlingWithBR2() throws Exception {
 		parser.parse("<html><body><p>first para<br/>with one newline plus br</p>\n\n<p>second para</p></body></html>");
 		String text = parser.getText();
-		
+
 		assertTrue(text.contains("first para\nwith one newline plus br\n\nsecond para"));
 	}
 
@@ -127,7 +126,7 @@ public class HtmlTextPresentationParserTest {
 	public void testDefinitionList() throws Exception {
 		parser.parse("<html><body><dl><dt>foo</dt><dd>bar baz</dd></dl></body></html>");
 		String text = parser.getText();
-		
+
 		assertTrue(text.contains("foo\n\tbar baz"));
 	}
 
@@ -135,7 +134,7 @@ public class HtmlTextPresentationParserTest {
 	public void testNonParaText() throws Exception {
 		parser.parse("<html><body><p>one</p>two<p>three</p></body></html>");
 		String text = parser.getText();
-		
+
 		assertTrue(text.contains("one\n\ntwo\n\nthree"));
 	}
 
@@ -143,7 +142,7 @@ public class HtmlTextPresentationParserTest {
 	public void testBlockQuoteParaWhitespace() throws Exception {
 		parser.parse("<html><body><p>one</p><blockquote><p>two</p></blockquote><p>three</p></body></html>");
 		String text = parser.getText();
-		
+
 		assertTrue(text.contains("one\n\n\ttwo\n\nthree"));
 	}
 
@@ -151,7 +150,7 @@ public class HtmlTextPresentationParserTest {
 	public void testBR() throws Exception {
 		parser.parse("<html><head></head><body><p>One<br/>Two</p></body></html>");
 		String text = parser.getText();
-		
+
 		assertTrue(text.contains("One\nTwo"));
 	}
 
@@ -160,7 +159,7 @@ public class HtmlTextPresentationParserTest {
 		parser.parse(
 				"<html><head></head><body>before<table><tr><td>in1</td></tr><tr><td>in2</td></tr></table>after</body></html>");
 		String text = parser.getText();
-		
+
 		assertTrue(text.contains("in1 \t\nin2 \t\n\nafter"));
 	}
 
@@ -169,7 +168,7 @@ public class HtmlTextPresentationParserTest {
 		String html = "<html><body><p>Foo<br/>Bar &#8212; baz</p></body></html>";
 		parser.parse(html);
 		String text = parser.getText();
-		
+
 		assertTrue(Pattern.compile("Bar\\s\\S\\sbaz", Pattern.MULTILINE).matcher(text).find());
 	}
 
@@ -190,7 +189,7 @@ public class HtmlTextPresentationParserTest {
 				return new CssParser().parse(reader);
 			}
 		} catch (IOException e) {
-			throw Throwables.propagate(e);
+			throw new RuntimeException(e);
 		}
 	}
 

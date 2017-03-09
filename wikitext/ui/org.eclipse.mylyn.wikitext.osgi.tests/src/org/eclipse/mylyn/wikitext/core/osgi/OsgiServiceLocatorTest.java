@@ -46,7 +46,8 @@ public class OsgiServiceLocatorTest {
 
 	@Test
 	public void getAllMarkupLanguages() {
-		OsgiServiceLocator serviceLocator = createOsgiServiceLocator(createBundleWithLanguage(MockMarkupLanguage.class));
+		OsgiServiceLocator serviceLocator = createOsgiServiceLocator(
+				createBundleWithLanguage(MockMarkupLanguage.class));
 		Set<MarkupLanguage> languages = serviceLocator.getAllMarkupLanguages();
 		assertNotNull(languages);
 		assertTrue(!languages.isEmpty());
@@ -90,8 +91,8 @@ public class OsgiServiceLocatorTest {
 	}
 
 	void assertLoadsMarkupLanguageFromServicesPath(String servicesFolder) {
-		OsgiServiceLocator serviceLocator = createOsgiServiceLocator(createBundleWithLanguage(servicesFolder,
-				MockMarkupLanguage.class));
+		OsgiServiceLocator serviceLocator = createOsgiServiceLocator(
+				createBundleWithLanguage(servicesFolder, MockMarkupLanguage.class));
 		MarkupLanguage markupLanguage = serviceLocator.getMarkupLanguage(MockMarkupLanguage.class.getSimpleName());
 		assertNotNull(markupLanguage);
 	}
@@ -110,7 +111,8 @@ public class OsgiServiceLocatorTest {
 			doReturn(1234L).when(bundle).getBundleId();
 			doReturn(markupLanguage).when(bundle).loadClass(eq(markupLanguage.getName()));
 		} catch (Exception e) {
-			throw Throwables.propagate(e);
+			Throwables.throwIfUnchecked(e);
+			throw new RuntimeException(e);
 		}
 		return bundle;
 	}

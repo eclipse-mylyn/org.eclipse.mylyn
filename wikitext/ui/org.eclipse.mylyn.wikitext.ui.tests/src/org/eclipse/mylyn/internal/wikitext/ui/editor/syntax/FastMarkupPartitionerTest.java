@@ -28,19 +28,8 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 		FastMarkupPartitioner partitioner = new FastMarkupPartitioner();
 		partitioner.setMarkupLanguage(new TextileLanguage());
 
-		long millis = System.currentTimeMillis();
-		long nanos = System.nanoTime();
-
 		partitioner.connect(document);
 		document.setDocumentPartitioner(partitioner);
-
-		long nanosEnd = System.nanoTime();
-		long millisEnd = System.currentTimeMillis();
-
-		
-		
-
-//		assertTrue((nanosEnd - nanos) < 800000000L); removed assert due to bug 261236
 	}
 
 	public void testTextileCausesExceptionIssue36() {
@@ -100,8 +89,8 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 //		MarkupPartition(type=PARAGRAPH,offset=32,length=6,end=38)
 
 		int[][] expected = new int[][] { //
-		{ 0, 12 }, //
-				{ 12, 7 },//
+				{ 0, 12 }, //
+				{ 12, 7 }, //
 				{ 19, 13 }, //
 				{ 32, 6 }, //
 		};
@@ -119,7 +108,7 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 		// ...........0123456789012.345678.9012.345678.90123.4567890.12345.6789012.
 		// .....................10..........20..........30.........40..........50..
 		//
-		// MarkupPartition(type=PARAGRAPH,offset=19,length=10,end=29) cannot start before partition 
+		// MarkupPartition(type=PARAGRAPH,offset=19,length=10,end=29) cannot start before partition
 		// MarkupPartition(type=PARAGRAPH,offset=29,length=5,end=34).
 
 		partitioner.connect(document);
@@ -135,8 +124,8 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 //			MarkupPartition(type=PARAGRAPH,offset=41,length=12,end=53)
 
 		int[][] expected = new int[][] { //
-		{ 0, 13 }, //
-				{ 13, 6 },//
+				{ 0, 13 }, //
+				{ 13, 6 }, //
 				{ 19, 10 }, //
 				{ 29, 5 }, //
 				{ 34, 7 }, //
@@ -152,15 +141,13 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 		FastMarkupPartitioner partitioner = new FastMarkupPartitioner();
 		partitioner.setMarkupLanguage(new ConfluenceLanguage());
 
-		document.set("views to help SOA  development. These includes [SOA Services Explorer](in green) for the list of all available SOA services,\n[Types Explorer](in {color:#0000ff}blue{color}) for searching and browsing all available ");
+		document.set(
+				"views to help SOA  development. These includes [SOA Services Explorer](in green) for the list of all available SOA services,\n[Types Explorer](in {color:#0000ff}blue{color}) for searching and browsing all available ");
 
 		partitioner.connect(document);
 		document.setDocumentPartitioner(partitioner);
 
-		ITypedRegion[] partitioning = partitioner.computePartitioning(0, document.getLength(), false);
-		for (ITypedRegion region : partitioning) {
-			
-		}
+		partitioner.computePartitioning(0, document.getLength(), false);
 	}
 
 	/**
@@ -179,7 +166,7 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 		document.setDocumentPartitioner(partitioner);
 
 		int[][] expected = new int[][] { //
-		{ 0, 12 }, //
+				{ 0, 12 }, //
 		};
 
 		ITypedRegion[] partitioning = partitioner.computePartitioning(0, document.getLength(), false);
@@ -211,7 +198,7 @@ public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 		document.setDocumentPartitioner(partitioner);
 
 		int[][] expected = new int[][] { //
-		{ 0, markup.length() }, //
+				{ 0, markup.length() }, //
 		};
 
 		ITypedRegion[] partitioning = partitioner.computePartitioning(0, document.getLength(), false);

@@ -218,6 +218,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		return createEditor(taskRepository, parent, style, null);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public SourceViewer createEditor(TaskRepository taskRepository, Composite parent, int style, IAdaptable context) {
 		final MarkupLanguageType markupLanguageCopy = createRepositoryMarkupLanguage(taskRepository);
@@ -355,6 +356,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 			};
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		protected Map<String, IAdaptable> getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
 			Map<String, IAdaptable> hyperlinkDetectorTargets = super.getHyperlinkDetectorTargets(sourceViewer);
@@ -406,6 +408,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 			markupHyperlinksFirst = false;
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		protected Map<String, IAdaptable> getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
 			Map<String, IAdaptable> hyperlinkDetectorTargets = super.getHyperlinkDetectorTargets(sourceViewer);
