@@ -19,15 +19,28 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.MessageFormat;
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.List;
 
 import org.eclipse.mylyn.wikitext.toolkit.TimeoutActionRule;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
+
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 
 public class ScreenshotOnTimeoutRule extends TimeoutActionRule {
 
@@ -84,13 +97,42 @@ public class ScreenshotOnTimeoutRule extends TimeoutActionRule {
 			++index;
 
 			GC gc = new GC(shell);
-			final Image image = new Image(display, shell.getBounds());
-			gc.copyArea(image, 0, 0);
+			final Image image = new Image(display, display.getBounds());
+			shell.print(gc);
 
 			writeScreenshot(image, format("shell-{0}", index));
 
 			image.dispose();
 			gc.dispose();
+
+			dumpControlHierarchy(0, ImmutableList.of(shell));
 		}
+	}
+
+	private void dumpControlHierarchy(int level, List<Control> controls) {
+		for (Control control : controls) {
+			String indent = Strings.repeat("  ", level);
+			System.out.println(indent + description(control));
+			if (control instanceof Composite) {
+				dumpControlHierarchy(level + 1, Arrays.asList(((Composite) control).getChildren()));
+			}
+		}
+	}
+
+	private String description(Control control) {
+		ToStringHelper builder = MoreObjects.toStringHelper(control.getClass());
+		if (control instanceof StyledText) {
+			builder.add("text", ((StyledText) control).getText());
+		}
+		if (control instanceof Text) {
+			builder.add("text", ((Text) control).getText());
+		}
+		if (control instanceof Button) {
+			builder.add("text", ((Button) control).getText());
+		}
+		if (control instanceof Label) {
+			builder.add("text", ((Label) control).getText());
+		}
+		return builder.add("tooltip", control.getToolTipText()).toString();
 	}
 }
