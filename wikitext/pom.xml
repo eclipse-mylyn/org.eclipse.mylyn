@@ -13,6 +13,7 @@
 
     <modules>
         <module>core</module>
+        <module>repository</module>
         <module>ui-pom.xml</module>
     </modules>
 
@@ -24,7 +25,7 @@
             </properties>
         </profile>
     </profiles>
-    
+
     <licenses>
         <license>
             <name>Eclipse Public License Version 1.0</name>

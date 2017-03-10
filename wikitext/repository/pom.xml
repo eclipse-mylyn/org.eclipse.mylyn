@@ -4,10 +4,9 @@
 
     <parent>
         <groupId>org.eclipse.mylyn.docs</groupId>
-        <artifactId>wikitext.core</artifactId>
+        <artifactId>wikitext</artifactId>
         <version>3.0.3-SNAPSHOT</version>
         <relativePath>..</relativePath>
-
     </parent>
 
     <artifactId>wikitext.core.repository</artifactId>
@@ -17,6 +16,85 @@
     <properties>
         <!-- artifacts.sign>true</artifacts.sign -->
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.eclipse.mylyn.docs</groupId>
+            <artifactId>wikitext.core</artifactId>
+            <version>3.0.3-SNAPSHOT</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.mylyn.docs</groupId>
+            <artifactId>org.eclipse.mylyn.wikitext</artifactId>
+            <version>3.0.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.mylyn.docs</groupId>
+            <artifactId>org.eclipse.mylyn.wikitext.ant</artifactId>
+            <version>3.0.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.mylyn.docs</groupId>
+            <artifactId>org.eclipse.mylyn.wikitext.asciidoc</artifactId>
+            <version>3.0.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.mylyn.docs</groupId>
+            <artifactId>org.eclipse.mylyn.wikitext.commonmark</artifactId>
+            <version>3.0.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.mylyn.docs</groupId>
+            <artifactId>org.eclipse.mylyn.wikitext.confluence</artifactId>
+            <version>3.0.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.mylyn.docs</groupId>
+            <artifactId>org.eclipse.mylyn.wikitext.creole</artifactId>
+            <version>3.0.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.mylyn.docs</groupId>
+            <artifactId>org.eclipse.mylyn.wikitext.html</artifactId>
+            <version>3.0.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.mylyn.docs</groupId>
+            <artifactId>org.eclipse.mylyn.wikitext.markdown</artifactId>
+            <version>3.0.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.mylyn.docs</groupId>
+            <artifactId>org.eclipse.mylyn.wikitext.mediawiki</artifactId>
+            <version>3.0.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.mylyn.docs</groupId>
+            <artifactId>org.eclipse.mylyn.wikitext.mediawiki.ant</artifactId>
+            <version>3.0.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.mylyn.docs</groupId>
+            <artifactId>org.eclipse.mylyn.wikitext.textile</artifactId>
+            <version>3.0.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.mylyn.docs</groupId>
+            <artifactId>org.eclipse.mylyn.wikitext.toolkit</artifactId>
+            <version>3.0.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.mylyn.docs</groupId>
+            <artifactId>org.eclipse.mylyn.wikitext.tracwiki</artifactId>
+            <version>3.0.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.mylyn.docs</groupId>
+            <artifactId>org.eclipse.mylyn.wikitext.twiki</artifactId>
+            <version>3.0.3-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
@@ -65,9 +143,7 @@
                         <configuration>
                             <target if="artifacts.sign">
                                 <echo level="info">Signing p2 artifacts:</echo>
-                                <apply executable="curl" parallel="false"
-                                    dir="${project.build.directory}/repository/plugins"
-                                    relative="true">
+                                <apply executable="curl" parallel="false" dir="${project.build.directory}/repository/plugins" relative="true">
                                     <arg value="--output"/>
                                     <targetfile/>
                                     <arg value="--form"/>
