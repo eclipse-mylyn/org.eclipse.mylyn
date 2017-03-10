@@ -9,7 +9,7 @@
  *     Simon Scholz - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.wikitext.ui;
+package org.eclipse.mylyn.internal.wikitext.ui;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;

@@ -2,12 +2,12 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.ui.tests;singleton:=true
+Fragment-Host: org.eclipse.mylyn.wikitext.ui;bundle-version="3.0.3"
 Bundle-Version: 3.0.3.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy
-Bundle-Activator: org.eclipse.mylyn.internal.wikitext.tests.WikiTextTestsPlugin
 Require-Bundle: org.junit;bundle-version="4.8",
  org.eclipse.mylyn.wikitext;bundle-version="3.0.3",
  org.eclipse.mylyn.wikitext.toolkit;bundle-version="3.0.3",
@@ -24,7 +24,6 @@ Require-Bundle: org.junit;bundle-version="4.8",
  org.eclipse.mylyn.wikitext.tracwiki.ui;bundle-version="3.0.3",
  org.eclipse.mylyn.wikitext.twiki;bundle-version="3.0.3",
  org.eclipse.mylyn.wikitext.twiki.ui;bundle-version="3.0.3",
- org.eclipse.mylyn.wikitext.ui;bundle-version="3.0.3",
  org.eclipse.mylyn.wikitext.tasks.ui;bundle-version="3.0.3",
  org.eclipse.ui,
  org.eclipse.ui.editors,
@@ -44,8 +43,7 @@ Require-Bundle: org.junit;bundle-version="4.8",
 Import-Package: com.google.common.base;version="[15.0.0,22.0.0)",
  com.google.common.collect;version="[15.0.0,22.0.0)",
  com.google.common.io;version="[15.0.0,22.0.0)"
-Export-Package: org.eclipse.mylyn.internal.wikitext.tests;x-internal:=true,
- org.eclipse.mylyn.internal.wikitext.ui;x-internal:=true,
+Export-Package: org.eclipse.mylyn.internal.wikitext.ui;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.ui.editor.syntax;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.resources;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.ui.registry;x-internal:=true,
@@ -59,5 +57,4 @@ Export-Package: org.eclipse.mylyn.internal.wikitext.tests;x-internal:=true,
  org.eclipse.mylyn.wikitext.tests;x-internal:=true,
  org.eclipse.mylyn.wikitext.textile;x-internal:=true,
  org.eclipse.mylyn.wikitext.textile.resources;x-internal:=true,
- org.eclipse.mylyn.wikitext.ui;x-internal:=true,
  org.eclipse.mylyn.wikitext.ui.annotation;x-internal:=true

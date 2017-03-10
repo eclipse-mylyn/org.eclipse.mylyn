@@ -9,7 +9,7 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.wikitext.ui;
+package org.eclipse.mylyn.internal.wikitext.ui;
 
 import static java.text.MessageFormat.format;
 import static org.junit.Assert.assertTrue;
