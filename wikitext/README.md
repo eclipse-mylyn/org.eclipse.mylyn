@@ -27,8 +27,11 @@ Mechanics of performing a release:
 5. Verify the Maven artifacts in the staging repository if necessary
 7. From the [Nexus Repository Manager](https://oss.sonatype.org/#stagingRepositories) release the Maven artifacts to Maven central
 8. Update the [project metadata (PMI)](https://www.eclipse.org/projects/handbook/#pmi) to indicate that the release has been performed
+   - https://projects.eclipse.org/projects/mylyn.docs/governance
 9. Run `./update-ui-version.sh` locally, commit and push the changes to Gerrit, +2/merge once successful
 10. Email mylyn-docs-dev@eclipse.org to indicate that the release is complete
+11. Add target milestone to bugzilla for the next release
+    - https://dev.eclipse.org/committers/bugs/bugz_manager.php
 
 Build Notes
 -----------
