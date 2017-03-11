@@ -6,7 +6,7 @@
   <groupId>org.eclipse.mylyn.docs</groupId>
   <artifactId>docs.main</artifactId>
   <name>Mylyn Docs</name>
-  <version>3.0.6-SNAPSHOT</version>
+  <version>3.0.7-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <modules>
