@@ -1,0 +1,2 @@
+DIRS=$(find ../../drops/3.[5678].*/v*/ -maxdepth 0 | sort -r | head -n 1)
+NAME="Mylyn for Eclipse Indigo"

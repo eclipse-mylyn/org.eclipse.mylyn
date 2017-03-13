@@ -1,0 +1,2 @@
+DIRS=$(find ../../drops/3.22.*/ -mindepth 1 -maxdepth 1 -type d | sort -r | head -n 10)
+NAME="Mylyn Snapshots for Eclipse Oxygen"

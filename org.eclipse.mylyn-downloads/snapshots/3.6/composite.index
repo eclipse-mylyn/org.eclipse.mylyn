@@ -1,0 +1,2 @@
+DIRS=$(find ../../drops/3.6.*/*/ -maxdepth 0 | sort -r | head -n 10)
+NAME="Mylyn 3.6 Snapshots for Eclipse 3.5, 3.6 and 3.7"

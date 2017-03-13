@@ -1,0 +1,2 @@
+DIRS=$(find ../../drops/3.11.*/v*/ -maxdepth 0 | sort -r)
+NAME="Mylyn 3.11 for Eclipse 3.8, 4.3 and 4.4"

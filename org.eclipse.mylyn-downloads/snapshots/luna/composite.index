@@ -1,0 +1,2 @@
+DIRS=$(find ../../drops/3.14.*/*/ -maxdepth 0 | sort -r | head -n 3)
+NAME="Mylyn Snapshots for Eclipse Luna"

@@ -1,0 +1,2 @@
+DIRS=$(find ../../drops/3.2*/*/ -maxdepth 0 | sort -r | head -n 1)
+NAME="Mylyn Weekly for Eclipse 4.5 and later"
