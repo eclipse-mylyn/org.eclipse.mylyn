@@ -20,12 +20,6 @@
    <feature url="features/org.eclipse.mylyn.context_feature_0.0.0.jar" id="org.eclipse.mylyn.context_feature" version="0.0.0">
       <category name="Features"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.wikitext_feature_0.0.0.jar" id="org.eclipse.mylyn.wikitext_feature" version="0.0.0">
-      <category name="Features"/>
-   </feature>
-   <feature url="features/org.eclipse.mylyn.docs.epub_0.0.0.jar" id="org.eclipse.mylyn.docs.epub" version="0.0.0">
-      <category name="Features"/>
-   </feature>
    
    <feature url="features/org.eclipse.cdt.mylyn_0.0.0.jar" id="org.eclipse.cdt.mylyn" version="0.0.0">
       <category name="Integration"/>
@@ -97,15 +91,6 @@
    <feature url="features/org.eclipse.mylyn.context.sdk_0.0.0.jar" id="org.eclipse.mylyn.context.sdk" version="0.0.0">
       <category name="SDK"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.docs.epub.sdk_0.0.0.jar" id="org.eclipse.mylyn.docs.epub.sdk" version="0.0.0">
-      <category name="SDK"/>
-   </feature>
-   <feature url="features/org.eclipse.mylyn.docs.sdk_0.0.0.jar" id="org.eclipse.mylyn.docs.sdk" version="0.0.0">
-      <category name="SDK"/>
-   </feature>
-   <feature url="features/org.eclipse.mylyn.htmltext_0.0.0.jar" id="org.eclipse.mylyn.htmltext" version="0.0.0">
-      <category name="SDK"/>
-   </feature>
    <feature url="features/org.eclipse.mylyn.reviews.feature_0.0.0.jar" id="org.eclipse.mylyn.reviews.feature" version="0.0.0">
       <category name="SDK"/>
    </feature>
@@ -125,9 +110,6 @@
       <category name="SDK"/>
    </feature>
    <feature url="features/org.eclipse.mylyn.versions.sdk_0.0.0.jar" id="org.eclipse.mylyn.versions.sdk" version="0.0.0">
-      <category name="SDK"/>
-   </feature>
-   <feature url="features/org.eclipse.mylyn.wikitext.sdk_0.0.0.jar" id="org.eclipse.mylyn.wikitext.sdk" version="0.0.0">
       <category name="SDK"/>
    </feature>
    
