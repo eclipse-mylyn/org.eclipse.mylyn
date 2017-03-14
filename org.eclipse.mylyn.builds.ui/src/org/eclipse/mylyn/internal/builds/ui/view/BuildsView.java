@@ -749,10 +749,16 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 			if (viewSite != null) {
 				final IStatusLineManager statusLine = viewSite.getActionBars().getStatusLineManager();
 				if (statusLine != null) {
-					statusLine.setMessage(statusMessage);
+					updateStatusLine(statusMessage, statusLine);
 				}
 			}
 		}
+	}
+
+	private void updateStatusLine(String statusMessage, final IStatusLineManager statusLine) {
+		Display.getDefault().asyncExec(() -> {
+			statusLine.setMessage(statusMessage);
+		});
 	}
 
 	public void updateToolbarActions() {
