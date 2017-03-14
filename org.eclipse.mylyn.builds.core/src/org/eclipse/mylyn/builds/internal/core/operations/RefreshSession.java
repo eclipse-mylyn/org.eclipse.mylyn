@@ -37,7 +37,7 @@ import org.eclipse.mylyn.commons.core.operations.IOperationMonitor.OperationFlag
 /**
  * Manages refreshes for plans and builds. Each server has one associated session that may process several requests
  * concurrently.
- * 
+ *
  * @author Steffen Pingel
  */
 public class RefreshSession {
@@ -172,14 +172,16 @@ public class RefreshSession {
 			@Override
 			public List<IBuildPlan> run() throws CoreException {
 				BuildPlanRequest planRequest = new BuildPlanRequest(input.get());
-				return server.getBehaviour().getPlans(planRequest, monitor);
+				List<IBuildPlan> result = server.getBehaviour().getPlans(planRequest, monitor);
+				result.stream().forEach(p -> p.setServer(server.getOriginal()));
+				return result;
 			}
 		});
 
 		// handle result
 		if (result == null) {
-			throw new CoreException(new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN,
-					"Server did not provide any plans."));
+			throw new CoreException(
+					new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, "Server did not provide any plans."));
 		}
 		original.getLoader().getRealm().syncExec(new Runnable() {
 			public void run() {
@@ -192,8 +194,8 @@ public class RefreshSession {
 							newPlan.setRefreshDate(refreshDate);
 							update(request, oldPlan, newPlan, monitor);
 						} else {
-							((BuildPlan) oldPlan).setOperationStatus(new Status(IStatus.ERROR,
-									BuildsCorePlugin.ID_PLUGIN, "The plan does not exist."));
+							((BuildPlan) oldPlan).setOperationStatus(
+									new Status(IStatus.ERROR, BuildsCorePlugin.ID_PLUGIN, "The plan does not exist."));
 						}
 					}
 				}
