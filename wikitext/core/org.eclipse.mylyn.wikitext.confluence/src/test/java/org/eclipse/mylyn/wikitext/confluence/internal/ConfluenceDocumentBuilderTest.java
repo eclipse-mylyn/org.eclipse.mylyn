@@ -13,7 +13,6 @@ package org.eclipse.mylyn.wikitext.confluence.internal;
 
 import java.io.StringWriter;
 
-import org.eclipse.mylyn.wikitext.confluence.internal.ConfluenceDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
@@ -515,6 +514,36 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 		assertTableRow("|| ||content|| |\n\n", BlockType.TABLE_CELL_HEADER);
 	}
 
+	public void testTableWithCellsContainingBulletedList() {
+		assertTableRow("|| ||* first\n* second|| |\n\n", BlockType.TABLE_CELL_HEADER, this::emitMultiItemBulletedList);
+	}
+
+	public void testTableWithCellsContainingNumericList() {
+		assertTableRow("| |# first\n# second| |\n\n", BlockType.TABLE_CELL_NORMAL, this::emitMultiItemNumericList);
+	}
+
+	public void testTableWithLineBreaks() {
+		assertTableRow("| |abc\\\\ \\\\def| |\n\n", BlockType.TABLE_CELL_NORMAL, () -> {
+			builder.characters("abc");
+			builder.lineBreak();
+			builder.lineBreak();
+			builder.characters("def");
+		});
+	}
+
+	public void testTableWithParagraphs() {
+		assertTableRow("| |abc\ndef| |\n\n", BlockType.TABLE_CELL_NORMAL, () -> {
+			builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+			builder.characters("abc");
+			builder.endBlock();
+			builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+			builder.endBlock();
+			builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+			builder.characters("def");
+			builder.endBlock();
+		});
+	}
+
 	public void testDivAfterImplicitParagraph() {
 		builder.beginDocument();
 
@@ -692,19 +721,30 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 
 	public void testListWithMultipleItems() {
 		builder.beginDocument();
-
-		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
-
-		emitListItem("first");
-		emitListItem("second");
-
-		builder.endBlock(); // list
-
+		emitMultiItemBulletedList();
 		builder.endDocument();
 
 		String markup = out.toString();
 
 		assertEquals("* first\n* second\n", markup);
+	}
+
+	private void emitMultiItemBulletedList() {
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+
+		emitListItem("first");
+		emitListItem("second");
+
+		builder.endBlock();
+	}
+
+	private void emitMultiItemNumericList() {
+		builder.beginBlock(BlockType.NUMERIC_LIST, new Attributes());
+
+		emitListItem("first");
+		emitListItem("second");
+
+		builder.endBlock();
 	}
 
 	private void emitListItem(String text) {
@@ -1105,6 +1145,10 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 	}
 
 	private void assertTableRow(String expectedMarkup, BlockType cellType) {
+		assertTableRow(expectedMarkup, cellType, () -> builder.characters("content"));
+	}
+
+	private void assertTableRow(String expectedMarkup, BlockType cellType, Runnable cellContentProvider) {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.TABLE, new Attributes());
 
@@ -1114,7 +1158,7 @@ public class ConfluenceDocumentBuilderTest extends TestCase {
 		builder.endBlock();
 
 		builder.beginBlock(cellType, new Attributes());
-		builder.characters("content");
+		cellContentProvider.run();
 		builder.endBlock();
 
 		builder.beginBlock(cellType, new Attributes());

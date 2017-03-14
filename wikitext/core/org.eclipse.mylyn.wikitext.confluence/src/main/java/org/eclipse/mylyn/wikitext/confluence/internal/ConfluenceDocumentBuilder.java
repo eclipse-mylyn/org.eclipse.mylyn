@@ -36,7 +36,6 @@ import com.google.common.base.Strings;
  *
  * @see HtmlParser
  * @author David Green
- * 
  * @see ConfluenceLanguage
  * @see ConfluenceLanguage#createDocumentBuilder(Writer)
  */
@@ -247,10 +246,11 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 		@Override
 		protected void emitContent(String content) throws IOException {
-			if (Strings.isNullOrEmpty(content)) {
+			if (Strings.isNullOrEmpty(content) || content.trim().isEmpty()) {
 				content = " "; //$NON-NLS-1$
+			} else {
+				content = PATTERN_MULTIPLE_NEWLINES.matcher(content.trim()).replaceAll("\n");
 			}
-			content = content.replaceAll("(\\r|\\n)+", " "); //$NON-NLS-1$ //$NON-NLS-2$
 			super.emitContent(content);
 		}
 	}
