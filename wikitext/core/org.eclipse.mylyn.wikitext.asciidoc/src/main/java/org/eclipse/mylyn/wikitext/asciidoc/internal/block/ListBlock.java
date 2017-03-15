@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.wikitext.asciidoc.internal.block;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -32,6 +32,10 @@ import com.google.common.collect.ImmutableList;
  * @author Patrik Suzzi
  */
 public class ListBlock extends Block {
+
+	private static final String PARAM_NAME_START = "start";
+
+	private static final String PARAM_NAME_STYLE = "style";
 
 	private static final String ANY_CHAR = "\\s+(.*+)"; //$NON-NLS-1$
 
@@ -89,14 +93,17 @@ public class ListBlock extends Block {
 			BlockType type = calculateType(listSpec);
 
 			if (type == BlockType.NUMERIC_LIST) {
-				Map<String, String> lastProperties = getAsciiDocState().getLastProperties(Collections.emptyList());
+
+				List<String> positionalParameters = new ArrayList<>();
+				positionalParameters.add(PARAM_NAME_STYLE);
+				Map<String, String> lastProperties = getAsciiDocState().getLastProperties(positionalParameters);
 				getAsciiDocState().setLastPropertiesText("");
 
-				String startProperty = lastProperties.get("start"); //$NON-NLS-1$
+				String startProperty = lastProperties.get(PARAM_NAME_START);
 				if (startProperty != null) {
 					attributes.setStart(startProperty);
 				}
-				String styleProperty = lastProperties.get("style"); //$NON-NLS-1$
+				String styleProperty = lastProperties.get(PARAM_NAME_STYLE);
 				updateStyleAttribute(attributes, listSpec, styleProperty);
 			}
 			// first line of the block could be "** " or more

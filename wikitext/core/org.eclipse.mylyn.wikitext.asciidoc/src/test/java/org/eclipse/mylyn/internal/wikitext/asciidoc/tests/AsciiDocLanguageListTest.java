@@ -439,6 +439,91 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 	}
 
 	@Test
+	public void testListWithStyleArabicAsPositionalParam() {
+		String html = parseToHtml("[arabic]\n" //
+				+ ". item\n" //
+				+ ".. item\n" //
+				+ "\n" //
+				+ "another\n" //
+				+ ". item");
+		assertEquals("<ol style=\"list-style-type:decimal;\">" //
+				+ "<li>item<ol style=\"list-style-type:lower-alpha;\">" //
+				+ "<li>item</li>" //
+				+ "</ol></li></ol><p>another</p>\n" //
+				+ "<ol style=\"list-style-type:decimal;\">" //
+				+ "<li>item</li></ol>", //
+				html);
+	}
+
+	@Test
+	public void testListWithStyleLoweralphaAsPositionalParam() {
+		String html = parseToHtml("[loweralpha]\n" //
+				+ ". item\n" //
+				+ ".. item\n" //
+				+ "\n" //
+				+ "another\n" //
+				+ ". item");
+		assertEquals("<ol style=\"list-style-type:lower-alpha;\">" //
+				+ "<li>item<ol style=\"list-style-type:lower-alpha;\">" //
+				+ "<li>item</li>" //
+				+ "</ol></li></ol><p>another</p>\n" //
+				+ "<ol style=\"list-style-type:decimal;\">" //
+				+ "<li>item</li></ol>", //
+				html);
+	}
+
+	@Test
+	public void testListWithStyleUpperalphaAsPositionalParam() {
+		String html = parseToHtml("[upperalpha]\n" //
+				+ ". item\n" //
+				+ ".. item\n" //
+				+ "\n" //
+				+ "another\n" //
+				+ ". item");
+		assertEquals("<ol style=\"list-style-type:upper-alpha;\">" //
+				+ "<li>item<ol style=\"list-style-type:lower-alpha;\">" //
+				+ "<li>item</li>" //
+				+ "</ol></li></ol><p>another</p>\n" //
+				+ "<ol style=\"list-style-type:decimal;\">" //
+				+ "<li>item</li></ol>", //
+				html);
+	}
+
+	@Test
+	public void testListWithStyleLowerromanAsPositionalParam() {
+		String html = parseToHtml("[lowerroman]\n" //
+				+ ". item\n" //
+				+ ".. item\n" //
+				+ "\n" //
+				+ "another\n" //
+				+ ". item");
+		assertEquals("<ol style=\"list-style-type:lower-roman;\">" //
+				+ "<li>item<ol style=\"list-style-type:lower-alpha;\">" //
+				+ "<li>item</li>" //
+				+ "</ol></li></ol><p>another</p>\n" //
+				+ "<ol style=\"list-style-type:decimal;\">" //
+				+ "<li>item</li></ol>", //
+				html);
+	}
+
+	@Test
+	public void testListWithStyleUpperromanAsPositionalParam() {
+		String html = parseToHtml("[upperroman]\n" //
+				+ ". item\n" //
+				+ ".. item\n" //
+				+ "\n" //
+				+ "another\n" //
+				+ ". item");
+		assertEquals("<ol style=\"list-style-type:upper-roman;\">" //
+				+ "<li>item<ol style=\"list-style-type:lower-alpha;\">" //
+				+ "<li>item</li>" //
+				+ "</ol></li></ol><p>another</p>\n" //
+				+ "<ol style=\"list-style-type:decimal;\">" //
+				+ "<li>item</li></ol>", //
+				html);
+	}
+
+	@Test
 	public void testListWithExplicitNumbering() {
 		String html = parseToHtml("\n" //
 				+ "MDCLXIV) level 1\n" //
