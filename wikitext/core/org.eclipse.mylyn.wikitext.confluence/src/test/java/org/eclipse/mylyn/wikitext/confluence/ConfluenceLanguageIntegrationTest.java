@@ -32,10 +32,15 @@ public class ConfluenceLanguageIntegrationTest {
 	}
 
 	@Test
-	// test for bug# 513661
 	public void listsInTables() {
-		String textile = "|* item 1\n* item 2|# item 3\n# item 4|";
-		assertRoundTrip(textile, textile);
+		assertRoundTripExact("|* item 1\n* item 2|# item 3\n# item 4|\n\n");
+	}
+
+	@Test
+	public void tableWithMultiLineCellContent() {
+		String table = "|line one\\\\line two\\\\line three|\n\n";
+		assertRoundTripExact(table);
+		assertRoundTrip("|line one\nline two\nline three|", table);
 	}
 
 	private void assertHtmlToConfluence(boolean parseAsDocument) {
@@ -53,6 +58,10 @@ public class ConfluenceLanguageIntegrationTest {
 		assertEquals("some text *bold here* more text\n\n", confluenceOut.toString());
 	}
 
+	private void assertRoundTripExact(String textile) {
+		assertRoundTrip(textile, textile);
+	}
+
 	private void assertRoundTrip(String textileIn, String textileOut) {
 		Writer confluenceOut = new StringWriter();
 		ConfluenceLanguage confluenceLanguage = new ConfluenceLanguage();
@@ -61,6 +70,6 @@ public class ConfluenceLanguageIntegrationTest {
 		parser.setBuilder(confluenceLanguage.createDocumentBuilder(confluenceOut));
 		parser.parse(textileIn, false);
 
-		assertEquals(textileOut, confluenceOut.toString().trim());
+		assertEquals(textileOut, confluenceOut.toString());
 	}
 }

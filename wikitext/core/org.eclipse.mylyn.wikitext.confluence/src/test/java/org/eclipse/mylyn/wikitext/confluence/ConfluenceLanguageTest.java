@@ -656,6 +656,25 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	}
 
 	@Test
+	public void testTableWithMultilineText() {
+		assertMarkup("<table><tr><td>label</td><td>line1<br/>line2<br/>line3</td><td>text</td></tr></table>",
+				"|label|line1\nline2\nline3|text |");
+	}
+
+	@Test
+	public void testTableWithMultilineTextImplicitEnd() {
+		assertMarkup("<table><tr><td>label</td><td>line1<br/>line2<br/>line3</td></tr></table><p>text</p>",
+				"|label|line1\nline2\nline3\n\ntext");
+	}
+
+	@Test
+	public void testTableWithMultilineTextAndNestedBlock() {
+		assertMarkup(
+				"<table><tr><td><ul><li>listitem</li></ul></td><td>line1<br/>line2<br/>line3</td><td><ul><li>listitem2</li></ul></td></tr></table>",
+				"|* listitem|line1\nline2\nline3|* listitem2|");
+	}
+
+	@Test
 	public void testTableWithHeader() {
 		assertMarkup(
 				"<table><tr><th>a</th><th>header</th><th>row</th></tr><tr><td>a</td><td>row</td><td>not header</td></tr></table>",

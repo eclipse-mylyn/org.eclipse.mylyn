@@ -29,6 +29,8 @@ import com.google.common.collect.ImmutableList;
  */
 public class TableBlock extends Block {
 
+	private static final int LINE_PROCESSED_INDICATOR = -1;
+
 	private static final List<Class<?>> NESTABLE_CELL_BLOCKS = ImmutableList.of(ListBlock.class);
 
 	private static final Pattern START_PATTERN = Pattern.compile("\\s*(\\|\\|?.*$)"); //$NON-NLS-1$
@@ -52,29 +54,63 @@ public class TableBlock extends Block {
 
 	private boolean rowStarted = false;
 
+	private boolean multiLineCell = false;
+
 	public TableBlock() {
 	}
 
 	@Override
 	public int processLineContent(String line, int offset) {
 		nesting = false;
+		int finalOffset = processLineStart(line, offset);
+
+		if (isClosed() || finalOffset == LINE_PROCESSED_INDICATOR) {
+			return isClosed() ? 0 : LINE_PROCESSED_INDICATOR;
+		}
+
+		++blockLineCount;
+
+		if (atEndOfRow(line, finalOffset)) {
+			ensureRowClosed();
+			finalOffset = LINE_PROCESSED_INDICATOR;
+		} else {
+			finalOffset = processCellContent(line, finalOffset);
+		}
+
+		return isClosed() ? 0 : processEndOfLine(line, finalOffset);
+	}
+
+	private int processLineStart(String line, int offset) {
 		if (blockLineCount == 0) {
 			Attributes attributes = new Attributes();
 			builder.beginBlock(BlockType.TABLE, attributes);
 		} else if (markupLanguage.isEmptyLine(line)) {
 			setClosed(true);
-			return 0;
+		} else if (offset == 0 && multiLineCell) {
+			offset = continueMultiLineCell(line, offset);
+		} else if (!TABLE_ROW_PATTERN.matcher(line).find()) {
+			setClosed(true);
 		}
+		return offset;
+	}
 
-		++blockLineCount;
-
-		if (atEndOfRow(line, offset)) {
-			ensureRowClosed();
-			return -1;
+	private int continueMultiLineCell(String line, int offset) {
+		String cellContent = line;
+		Matcher rowMatcher = TABLE_ROW_PATTERN.matcher(line);
+		if (rowMatcher.find()) {
+			offset = rowMatcher.start();
+			if (offset > 0) {
+				cellContent = line.substring(0, offset);
+				builder.lineBreak();
+				emitMarkup(cellContent, 0);
+			}
+			ensureCellClosed();
+		} else {
+			builder.lineBreak();
+			emitMarkup(cellContent, 0);
+			return LINE_PROCESSED_INDICATOR;
 		}
-
-		int postCellOffset = processCellContent(line, offset);
-		return isClosed() ? 0 : processEndOfLine(line, postCellOffset);
+		return offset;
 	}
 
 	private boolean atEndOfRow(String line, int lineOffset) {
@@ -127,11 +163,15 @@ public class TableBlock extends Block {
 	}
 
 	private int processEndOfLine(String line, int offset) {
-		if (!nesting) {
-			ensureRowClosed();
-			return -1;
+		if (offset != LINE_PROCESSED_INDICATOR && !nesting) {
+			if (atEndOfRow(line, offset)) {
+				ensureRowClosed();
+				return LINE_PROCESSED_INDICATOR;
+			} else {
+				multiLineCell = true;
+			}
 		}
-		return offset >= line.length() ? -1 : offset;
+		return offset >= line.length() ? LINE_PROCESSED_INDICATOR : offset;
 	}
 
 	@Override
@@ -191,6 +231,7 @@ public class TableBlock extends Block {
 		if (currentCell != null) {
 			builder.endBlock();
 			currentCell = null;
+			multiLineCell = false;
 		}
 	}
 }
