@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2012 David Green and others.
+ * Copyright (c) 2007, 2017 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,14 +20,14 @@ import org.eclipse.mylyn.wikitext.parser.markup.Block;
 
 /**
  * List block, matches blocks that start with <code>*</code>, <code>#</code> or <code>-</code>
- * 
+ *
  * @author David Green
  */
 public class ListBlock extends Block {
 
 	private static final int LINE_REMAINDER_GROUP_OFFSET = 2;
 
-	static final Pattern startPattern = Pattern.compile("((?:(?:\\*)|(?:#)|(?:-))+)\\s(.*+)"); //$NON-NLS-1$
+	private static final Pattern LIST_PATTERN = Pattern.compile("\\s*((?:(?:\\*)|(?:#)|(?:-))+)\\s(.*+)"); //$NON-NLS-1$
 
 	private int blockLineCount = 0;
 
@@ -60,7 +60,7 @@ public class ListBlock extends Block {
 
 			adjustLevel(listSpec, level, type);
 		} else {
-			Matcher matcher = startPattern.matcher(line);
+			Matcher matcher = LIST_PATTERN.matcher(line);
 			if (!matcher.matches()) {
 				boolean empty = offset == 0 && markupLanguage.isEmptyLine(line);
 				boolean breaking = ParagraphBlock.paragraphBreakingBlockMatches(getMarkupLanguage(), line, offset);
@@ -102,7 +102,8 @@ public class ListBlock extends Block {
 	}
 
 	private void adjustLevel(String listSpec, int level, BlockType type) {
-		for (ListState previousState = listState.peek(); level != previousState.level || previousState.type != type; previousState = listState.peek()) {
+		for (ListState previousState = listState.peek(); level != previousState.level
+				|| previousState.type != type; previousState = listState.peek()) {
 
 			if (level > previousState.level) {
 				if (!previousState.openItem) {
@@ -143,25 +144,21 @@ public class ListBlock extends Block {
 	public boolean canStart(String line, int lineOffset) {
 		blockLineCount = 0;
 		listState = null;
-		if (lineOffset == 0) {
-			matcher = startPattern.matcher(line);
-			final boolean matches = matcher.matches();
-			if (matches) {
-				String listSpec = matcher.group(1);
-				if (listSpec.charAt(0) == '-') {
-					int level = calculateLevel(listSpec);
-					if (level > 1) {
-						// don't match hr, emdash, endash etc.
-						// list block must start at level 1s
-						return false;
-					}
+		matcher = LIST_PATTERN.matcher(line);
+		matcher.region(lineOffset, line.length());
+		boolean matches = matcher.matches();
+		if (matches) {
+			String listSpec = matcher.group(1);
+			if (listSpec.charAt(0) == '-') {
+				int level = calculateLevel(listSpec);
+				if (level > 1) {
+					// don't match hr, emdash, endash etc.
+					// list block must start at level 1s
+					return false;
 				}
 			}
-			return matches;
-		} else {
-			matcher = null;
-			return false;
 		}
+		return matches;
 	}
 
 	@Override

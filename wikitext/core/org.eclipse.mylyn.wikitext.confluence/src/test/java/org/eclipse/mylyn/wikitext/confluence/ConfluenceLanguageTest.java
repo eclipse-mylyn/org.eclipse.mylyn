@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2015 David Green and others.
+ * Copyright (c) 2007, 2017 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -652,25 +652,21 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 
 	@Test
 	public void testTable() {
-		String html = parser.parseToHtml("|a|row|not header|");
-
-		assertTrue(html.contains("<body><table><tr><td>a</td><td>row</td><td>not header</td></tr></table></body>"));
+		assertMarkup("<table><tr><td>a</td><td>row</td><td>not header</td></tr></table>", "|a|row|not header|");
 	}
 
 	@Test
 	public void testTableWithHeader() {
-		String html = parser.parseToHtml("||a||header||row||\n|a|row|not header|");
-
-		assertTrue(html.contains(
-				"<body><table><tr><th>a</th><th>header</th><th>row</th></tr><tr><td>a</td><td>row</td><td>not header</td></tr></table></body>"));
+		assertMarkup(
+				"<table><tr><th>a</th><th>header</th><th>row</th></tr><tr><td>a</td><td>row</td><td>not header</td></tr></table>",
+				"||a||header||row||\n|a|row|not header|");
 	}
 
 	@Test
 	public void testTableNestedWithHeader() {
-		String html = parser.parseToHtml("a para\n||a||header||row||\n|a|row|not header|\ntail");
-
-		assertTrue(html.contains(
-				"<body><p>a para</p><table><tr><th>a</th><th>header</th><th>row</th></tr><tr><td>a</td><td>row</td><td>not header</td></tr></table><p>tail</p></body>"));
+		assertMarkup(
+				"<p>a para</p><table><tr><th>a</th><th>header</th><th>row</th></tr><tr><td>a</td><td>row</td><td>not header</td></tr></table><p>tail</p>",
+				"a para\n||a||header||row||\n|a|row|not header|\ntail");
 	}
 
 	@Test
@@ -686,6 +682,57 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 		assertMarkup(
 				"<table><tr><td><a href=\"https://textile-j.dev.java.net/\">Website</a></td><td>another cell</td><td><a href=\"http://www.eclipse.org\">Eclipse</a></td></tr></table>",
 				"| [Website|https://textile-j.dev.java.net/] | another cell | [Eclipse|http://www.eclipse.org] |");
+	}
+
+	@Test
+	public void testTableWithSingletonList() {
+		// test for bug# 513661
+		assertMarkup("<table><tr><td><ul><li>one thing</li></ul></td><td>another cell</td></tr></table>",
+				"|* one thing| another cell |");
+	}
+
+	@Test
+	public void testTableWithSingletonListAndWhitespacePrefix() {
+		// test for bug# 513661
+		assertMarkup("<table><tr><td><ul><li>one thing</li></ul></td><td>another cell</td></tr></table>",
+				"|    * one thing| another cell |");
+	}
+
+	@Test
+	public void testTableWithBulletedLists() {
+		// test for bug# 513661
+		assertMarkup(
+				"<table><tr><td><ul><li>one thing</li><li>two things</li></ul></td><td>another cell</td></tr></table>",
+				"|* one thing\n* two things| another cell |");
+	}
+
+	@Test
+	public void testTableWithNumberedLists() {
+		// test for bug# 513661
+		assertMarkup(
+				"<table><tr><td>other cell</td><td><ol><li>one thing</li><li>two things</li><li>three things </li></ol></td></tr></table>",
+				"|other cell| # one thing\n# two things\n# three things |");
+	}
+
+	@Test
+	public void testTableWithLinksAndLists() {
+		// test for bug# 513661
+		assertMarkup(
+				"<table><tr><td><a href=\"https://textile-j.dev.java.net/\">Website</a></td><td><ol><li>one thing</li><li>two things</li><li>three things </li></ol></td><td><a href=\"http://www.eclipse.org\">Eclipse</a></td></tr></table>",
+				"| [Website|https://textile-j.dev.java.net/]| # one thing\n# two things\n# three things | [Eclipse|http://www.eclipse.org] |");
+	}
+
+	@Test
+	public void testTableWithMultipleLists() {
+		// test for bug# 513661
+		assertMarkup("<table>" + //
+				"<tr><th>Bulleted list</th><th><ul><li>one thing</li><li>two things </li></ul></th></tr>" + //
+				"<tr><td>Numbered list</td><td><ol><li>one thing</li><li>two things </li></ol></td></tr>" + //
+				"<tr><td>Bulleted list</td><td><ul style=\"list-style: square\"><li>one thing<ul><li>two things </li></ul></li></ul></td></tr>"
+				+ //
+				"</table>", "||Bulleted list||* one thing\n* two things |\n" + //
+						"|Numbered list|# one thing\n# two things |\n" + //
+						"|Bulleted list|- one thing\n-- two things |");
 	}
 
 	@Test
@@ -1063,6 +1110,11 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 		String html = parser.parseToHtml("* one\ntwo\n* three");
 
 		assertTrue(html.contains("<body><ul><li>one<br/>two</li><li>three</li></ul></body>"));
+	}
+
+	@Test
+	public void testListItemWithIndent() {
+		assertMarkup("<ul><li>one<br/>two</li><li>three</li></ul>", " \t* one\ntwo\n* three");
 	}
 
 	@Test

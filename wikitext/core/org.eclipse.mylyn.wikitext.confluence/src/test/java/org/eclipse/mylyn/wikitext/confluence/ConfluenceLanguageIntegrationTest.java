@@ -31,6 +31,13 @@ public class ConfluenceLanguageIntegrationTest {
 		assertHtmlToConfluence(false);
 	}
 
+	@Test
+	// test for bug# 513661
+	public void listsInTables() {
+		String textile = "|* item 1\n* item 2|# item 3\n# item 4|";
+		assertRoundTrip(textile, textile);
+	}
+
 	private void assertHtmlToConfluence(boolean parseAsDocument) {
 		HtmlLanguage htmlLanguage = HtmlLanguage.builder()
 				.add(BlockType.PARAGRAPH)
@@ -44,5 +51,16 @@ public class ConfluenceLanguageIntegrationTest {
 		parser.parse("<html><body>some text <b>bold here</b> more text</body></html>", parseAsDocument);
 
 		assertEquals("some text *bold here* more text\n\n", confluenceOut.toString());
+	}
+
+	private void assertRoundTrip(String textileIn, String textileOut) {
+		Writer confluenceOut = new StringWriter();
+		ConfluenceLanguage confluenceLanguage = new ConfluenceLanguage();
+
+		MarkupParser parser = new MarkupParser(confluenceLanguage);
+		parser.setBuilder(confluenceLanguage.createDocumentBuilder(confluenceOut));
+		parser.parse(textileIn, false);
+
+		assertEquals(textileOut, confluenceOut.toString().trim());
 	}
 }
