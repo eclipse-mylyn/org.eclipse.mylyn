@@ -4,9 +4,9 @@ define hudson::site(
 	$data,
 	$port,
 	$version,
-  $allbasicauth = false,
-  $certauth = false,
-  $digestauth = false,
+	$allbasicauth = false,
+	$certauth = false,
+	$digestauth = false,
 	$base = $hudson::base,
 	$envinfo = "",
 	$envdefault = false,
@@ -93,6 +93,16 @@ define hudson::site(
   }
   
   if $matrixPlugin {
+	exec { "install JUnit plugin for $envbase":
+	  command => "wget -P $envbase/plugins http://updates.jenkins-ci.org/download/plugins/junit/1.20/junit.hpi",
+ 	  cwd => "$envbase",
+	  user => "$userOwner",
+	}
+	exec { "install script security plugin for $envbase":
+	  command => "wget -P $envbase/plugins http://updates.jenkins-ci.org/download/plugins/script-security/1.13/script-security.hpi",
+ 	  cwd => "$envbase",
+	  user => "$userOwner",
+	}
   	exec { "install matrix plugin for $envbase":
 	  command => "wget -P $envbase/plugins http://updates.jenkins-ci.org/download/plugins/matrix-project/1.7.1/matrix-project.hpi",
  	  cwd => "$envbase",
