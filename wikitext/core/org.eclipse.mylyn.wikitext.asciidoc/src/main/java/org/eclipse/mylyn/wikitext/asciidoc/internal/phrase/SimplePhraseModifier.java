@@ -28,37 +28,40 @@ public class SimplePhraseModifier extends PatternBasedElement {
 
 	private final SpanType spanType;
 
-	private final boolean wordBoundary;
+	private final Mode mode;
 
-	public SimplePhraseModifier(String delimiter, SpanType spanType) {
-		this(delimiter, spanType, false);
+	public enum Mode {
+		/**
+		 * normal phrase content is processed
+		 */
+		NORMAL,
+		/**
+		 * special phrase content, ie: no token replacement
+		 */
+		SPECIAL,
+		/**
+		 * phrase may contain other nested phrases
+		 */
+		NESTING,
 	}
 
-	public SimplePhraseModifier(String delimiter, SpanType spanType, boolean wordBoundary) {
+	public SimplePhraseModifier(String delimiter, SpanType spanType, Mode mode) {
 		this.delimiter = delimiter;
 		this.spanType = spanType;
-		this.wordBoundary = wordBoundary;
+		this.mode = mode;
 	}
 
 	@Override
 	protected String getPattern(int groupOffset) {
 		final String quotedDelimiter = Pattern.quote(delimiter);
 		String pattern;
-		if (wordBoundary) {
-			// word boundary implicitly assumes single occurrence
-			// of the pattern (e.g. * and not **)
-			pattern = quotedDelimiter + "(?!" + quotedDelimiter + ")" + " *" + "(.+?)" + " *" + quotedDelimiter + "(?!" //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$ //$NON-NLS-6$
-					+ quotedDelimiter + ")"; //$NON-NLS-1$
-			pattern = "(^|\\W)" + pattern + "($|\\W)"; //$NON-NLS-1$ //$NON-NLS-2$
-		} else {
-			pattern = quotedDelimiter + " *" + "(.+?)" + " *" + quotedDelimiter; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		}
+		pattern = quotedDelimiter + " *" + "(.+?)" + " *" + quotedDelimiter; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return pattern;
 	}
 
 	@Override
 	protected int getPatternGroupCount() {
-		return wordBoundary ? 3 : 1;
+		return 1;
 	}
 
 	@Override
@@ -69,32 +72,21 @@ public class SimplePhraseModifier extends PatternBasedElement {
 	private class CodePhraseModifierProcessor extends PatternBasedElementProcessor {
 
 		@Override
-		public int getLineStartOffset() {
-			if (wordBoundary) {
-				final int value = end(1);
-				if (value >= 0) {
-					return value;
-				}
-			}
-			return super.getLineStartOffset();
-		}
-
-		@Override
-		public int getLineEndOffset() {
-			if (wordBoundary) {
-				final int value = start(3);
-				if (value >= 0) {
-					return value;
-				}
-			}
-			return super.getLineEndOffset();
-		}
-
-		@Override
 		public void emit() {
-			String content = group(wordBoundary ? 2 : 1);
+			String content = group(1);
 			getBuilder().beginSpan(spanType, new Attributes());
-			getMarkupLanguage().emitMarkupText(parser, state, content);
+			switch (mode) {
+			case NORMAL:
+				getMarkupLanguage().emitMarkupText(parser, state, content);
+				break;
+			case NESTING:
+				int contentStart = start(1);
+				getMarkupLanguage().emitMarkupLine(parser, state, contentStart, content, 0);
+				break;
+			case SPECIAL:
+				getBuilder().charactersUnescaped(content);
+				break;
+			}
 			getBuilder().endSpan();
 		}
 	}

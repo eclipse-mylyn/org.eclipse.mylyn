@@ -35,6 +35,7 @@ import org.eclipse.mylyn.wikitext.asciidoc.internal.block.TitleLineBlock;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.block.UnderlinedHeadingBlock;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.phrase.BackslashEscapePhraseModifier;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.phrase.SimplePhraseModifier;
+import org.eclipse.mylyn.wikitext.asciidoc.internal.phrase.SimplePhraseModifier.Mode;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.token.AnchorLinkMacroReplacementToken;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.token.AnchorLinkReplacementToken;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.token.EmailLinkReplacementToken;
@@ -134,17 +135,25 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 
 		phraseModifierSyntax.add(new InlineImageReplacementToken());
 
+		// pass-through
+		phraseModifierSyntax.add(new SimplePhraseModifier("+++", SpanType.SPAN, Mode.SPECIAL));
+
 		// emphasis span elements
-		phraseModifierSyntax.add(new SimplePhraseModifier("``", SpanType.CODE)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("++", SpanType.CODE)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("**", SpanType.STRONG)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("__", SpanType.EMPHASIS)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("``", SpanType.CODE, Mode.NESTING)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("++", SpanType.SPAN, Mode.NORMAL)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("**", SpanType.STRONG, Mode.NESTING)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("__", SpanType.EMPHASIS, Mode.NESTING)); //$NON-NLS-1$
 
 		// emphasis span elements on word boundaries
-		phraseModifierSyntax.add(new SimplePhraseModifier("`", SpanType.CODE, true)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("+", SpanType.CODE, true)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("*", SpanType.STRONG, true)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("_", SpanType.EMPHASIS, true)); //$NON-NLS-1$
+		phraseModifierSyntax.beginGroup("(?:(?<=\\W)|^)(?:", 0);
+		phraseModifierSyntax.add(new SimplePhraseModifier("*", SpanType.STRONG, Mode.NESTING)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("_", SpanType.EMPHASIS, Mode.NESTING)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("`", SpanType.CODE, Mode.NESTING)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("+", SpanType.SPAN, Mode.NORMAL)); //$NON-NLS-1$
+		phraseModifierSyntax.endGroup(")(?:(?=\\W)|$)", 0);
+
+		phraseModifierSyntax.add(new SimplePhraseModifier("^", SpanType.SUPERSCRIPT, Mode.NESTING));
+		phraseModifierSyntax.add(new SimplePhraseModifier("~", SpanType.SUBSCRIPT, Mode.NESTING));
 
 	}
 

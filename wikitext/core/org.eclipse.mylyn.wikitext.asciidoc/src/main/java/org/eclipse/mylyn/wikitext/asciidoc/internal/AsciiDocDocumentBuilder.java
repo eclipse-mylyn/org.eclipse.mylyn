@@ -276,6 +276,10 @@ public class AsciiDocDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			return new ContentBlock("*", "*", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
 		case CODE:
 			return new CodeSpan();
+		case SUPERSCRIPT:
+			return new ContentBlock("^", "^", 0, 0);
+		case SUBSCRIPT:
+			return new ContentBlock("~", "~", 0, 0);
 		default:
 			Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
 			return new ContentBlock("", "", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$

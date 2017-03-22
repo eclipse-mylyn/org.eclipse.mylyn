@@ -185,67 +185,67 @@ public class AsciiDocLanguageSpanElementsTest extends AsciiDocLanguageTestBase {
 	}
 
 	@Test
-	public void code() {
+	public void plusSpan() {
 		String html = parseToHtml("+foo bar+");
-		assertEquals("<p><code>foo bar</code></p>\n", html);
+		assertEquals("<p><span>foo bar</span></p>\n", html);
 	}
 
 	@Test
-	public void codeSurrounded() {
+	public void plusSpanSurrounded() {
 		String html = parseToHtml("before +foo bar+ after");
-		assertEquals("<p>before <code>foo bar</code> after</p>\n", html);
+		assertEquals("<p>before <span>foo bar</span> after</p>\n", html);
 	}
 
 	@Test
-	public void codeNoSpaceSurrounded() {
+	public void plusSpanNoSpaceSurrounded() {
 		String html = parseToHtml("before+foo bar+after");
 		assertEquals("<p>before+foo bar+after</p>\n", html);
 	}
 
 	@Test
-	public void codeTwiceInLine() {
+	public void plusSpanTwiceInLine() {
 		String html = parseToHtml("before +foo bar+ after a +second time+");
-		assertEquals("<p>before <code>foo bar</code> after a <code>second time</code></p>\n", html);
+		assertEquals("<p>before <span>foo bar</span> after a <span>second time</span></p>\n", html);
 	}
 
 	@Test
-	public void codeTwiceInLineNoSpaceSurrounded() {
+	public void plusSpanTwiceInLineNoSpaceSurrounded() {
 		String html = parseToHtml("before +foo bar+after a +second time+");
-		assertEquals("<p>before <code>foo bar+after a +second time</code></p>\n", html);
+		assertEquals("<p>before <span>foo bar+after a +second time</span></p>\n", html);
 	}
 
 	@Test
-	public void codeNoWordBoundarySpaceSurrounded() {
+	public void plusSpanNoWordBoundarySpaceSurrounded() {
 		String html = parseToHtml("before ++foo bar++ after");
-		assertEquals("<p>before <code>foo bar</code> after</p>\n", html);
+		assertEquals("<p>before <span>foo bar</span> after</p>\n", html);
 	}
 
 	@Test
-	public void codeNoWordBoundarySpaceSurroundedBegin() {
+	public void plusSpanNoWordBoundarySpaceSurroundedBegin() {
 		String html = parseToHtml("++foo bar++ after");
-		assertEquals("<p><code>foo bar</code> after</p>\n", html);
+		assertEquals("<p><span>foo bar</span> after</p>\n", html);
 	}
 
 	@Test
-	public void codeNoWordBoundarySpaceSurroundedEnd() {
+	public void plusSpanNoWordBoundarySpaceSurroundedEnd() {
 		String html = parseToHtml("before ++foo bar++");
-		assertEquals("<p>before <code>foo bar</code></p>\n", html);
+		assertEquals("<p>before <span>foo bar</span></p>\n", html);
 	}
 
 	@Test
-	public void codeNoWordBoundaryNoSpaceSurrounded() {
+	public void plusSpanNoWordBoundaryNoSpaceSurrounded() {
 		String html = parseToHtml("before++foo bar++after");
-		assertEquals("<p>before<code>foo bar</code>after</p>\n", html);
+		assertEquals("<p>before<span>foo bar</span>after</p>\n", html);
 	}
 
 	@Test
-	public void escapedCode() {
+	public void escapedPlusSpan() {
 		String html = parseToHtml("\\+foo bar+");
 		assertEquals("<p>+foo bar+</p>\n", html);
 	}
 
 	@Test
-	public void escapedCodeNoWordBoundary() {
+	public void escapedPlusSpanNoWordBoundary() {
 		String html = parseToHtml("before\\\\++foo bar++");
 		assertEquals("<p>before++foo bar++</p>\n", html);
 	}
@@ -314,6 +314,106 @@ public class AsciiDocLanguageSpanElementsTest extends AsciiDocLanguageTestBase {
 	public void mixed() {
 		String html = parseToHtml("Here *we* _go_ *again*");
 		assertEquals("<p>Here <strong>we</strong> <em>go</em> <strong>again</strong></p>\n", html);
+	}
+
+	@Test
+	public void boldAndItalicWordBoundary() {
+		String html = parseToHtml("This should be *_italic bold_*");
+		assertEquals("<p>This should be <strong><em>italic bold</em></strong></p>\n", html);
+	}
+
+	@Test
+	public void italicAndBoldWordBoundary() {
+		String html = parseToHtml("This should be _*italic bold*_");
+		assertEquals("<p>This should be <em><strong>italic bold</strong></em></p>\n", html);
+	}
+
+	@Test
+	public void codeAndBoldWordBoundary() {
+		String html = parseToHtml("This should be `*italic bold*`");
+		assertEquals("<p>This should be <code><strong>italic bold</strong></code></p>\n", html);
+	}
+
+	@Test
+	public void boldAndCodeWordBoundary() {
+		String html = parseToHtml("This should be *`italic bold`*");
+		assertEquals("<p>This should be <strong><code>italic bold</code></strong></p>\n", html);
+	}
+
+	@Test
+	public void italicAndCodeWordBoundary() {
+		String html = parseToHtml("This should be _`italic bold`_");
+		assertEquals("<p>This should be <em><code>italic bold</code></em></p>\n", html);
+	}
+
+	@Test
+	public void codeAndItalicWordBoundary() {
+		String html = parseToHtml("This should be `_italic bold_`");
+		assertEquals("<p>This should be <code><em>italic bold</em></code></p>\n", html);
+	}
+
+	@Test
+	public void passThroughWordBoundary() {
+		String html = parseToHtml("This should be +++<strong>bold</strong>+++");
+		assertEquals("<p>This should be <span><strong>bold</strong></span></p>\n", html);
+	}
+
+	@Test
+	public void boldAndItalicNoWordBoundary() {
+		String html = parseToHtml("This should be**_italic bold_**no space");
+		assertEquals("<p>This should be<strong><em>italic bold</em></strong>no space</p>\n", html);
+	}
+
+	@Test
+	public void italicAndBoldNoWordBoundary() {
+		String html = parseToHtml("This should be__*italic bold*__no space");
+		assertEquals("<p>This should be<em><strong>italic bold</strong></em>no space</p>\n", html);
+	}
+
+	@Test
+	public void codeAndBoldNoWordBoundary() {
+		String html = parseToHtml("This should be``*code bold*``no space");
+		assertEquals("<p>This should be<code><strong>code bold</strong></code>no space</p>\n", html);
+	}
+
+	@Test
+	public void boldAndCodeNoWordBoundary() {
+		String html = parseToHtml("This should be**`code bold`**no space");
+		assertEquals("<p>This should be<strong><code>code bold</code></strong>no space</p>\n", html);
+	}
+
+	@Test
+	public void italicAndCodeNoWordBoundary() {
+		String html = parseToHtml("This should be__`italic code`__no space");
+		assertEquals("<p>This should be<em><code>italic code</code></em>no space</p>\n", html);
+	}
+
+	@Test
+	public void codeAndItalicNoWordBoundary() {
+		String html = parseToHtml("This should be``_italic code_``no space");
+		assertEquals("<p>This should be<code><em>italic code</em></code>no space</p>\n", html);
+	}
+
+	@Test
+	public void passThroughNoWordBoundary() {
+		String html = parseToHtml("This should be+++<strong>bold</strong>+++no space");
+		assertEquals("<p>This should be<span><strong>bold</strong></span>no space</p>\n", html);
+	}
+
+	@Test
+	public void superscript() {
+		String html = parseToHtml("Superscript: x^2**a**^ = *y*^_t_^z^*s*^");
+		assertEquals(
+				"<p>Superscript: x<sup>2<strong>a</strong></sup> = <strong>y</strong><sup><em>t</em></sup>z<sup><strong>s</strong></sup></p>\n",
+				html);
+	}
+
+	@Test
+	public void subscript() {
+		String html = parseToHtml("Subscript: x~2**a**~ = *y*~_t_~z~*s*~");
+		assertEquals(
+				"<p>Subscript: x<sub>2<strong>a</strong></sub> = <strong>y</strong><sub><em>t</em></sub>z<sub><strong>s</strong></sub></p>\n",
+				html);
 	}
 
 }

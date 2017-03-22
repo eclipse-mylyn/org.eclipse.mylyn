@@ -55,6 +55,9 @@ public class ExplicitLinkReplacementToken extends PatternBasedElement {
 			LinkAttributes attributes = new LinkAttributes();
 			if (text == null) {
 				text = href;
+			} else if (text.endsWith("^")) {
+				text = text.substring(0, text.length() - 1);
+				attributes.setTarget("_blank");
 			}
 
 			builder.link(attributes, href, text);

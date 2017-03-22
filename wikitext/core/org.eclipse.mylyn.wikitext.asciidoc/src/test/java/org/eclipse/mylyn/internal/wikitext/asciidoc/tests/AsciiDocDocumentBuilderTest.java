@@ -695,6 +695,26 @@ public class AsciiDocDocumentBuilderTest {
 	}
 
 	@Test
+	public void testSuperscript() {
+		builder.beginDocument();
+		builder.beginSpan(SpanType.SUPERSCRIPT, new Attributes());
+		builder.characters("superscript");
+		builder.endSpan();
+		builder.endDocument();
+		assertMarkup("^superscript^\n\n");
+	}
+
+	@Test
+	public void testSubscript() {
+		builder.beginDocument();
+		builder.beginSpan(SpanType.SUBSCRIPT, new Attributes());
+		builder.characters("subscript");
+		builder.endSpan();
+		builder.endDocument();
+		assertMarkup("~subscript~\n\n");
+	}
+
+	@Test
 	public void testImage() {
 		builder.beginDocument();
 		builder.image(new ImageAttributes(), "/path/to/img.jpg");

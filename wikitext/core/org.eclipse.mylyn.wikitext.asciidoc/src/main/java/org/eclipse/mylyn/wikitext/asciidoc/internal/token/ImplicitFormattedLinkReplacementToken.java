@@ -45,7 +45,12 @@ public class ImplicitFormattedLinkReplacementToken extends PatternBasedElement {
 		public void emit() {
 			String href = group(2);
 			String text = group(3);
-			builder.link(new LinkAttributes(), href, text);
+			LinkAttributes attributes = new LinkAttributes();
+			if (text.endsWith("^")) {
+				text = text.substring(0, text.length() - 1);
+				attributes.setTarget("_blank");
+			}
+			builder.link(attributes, href, text);
 		}
 	}
 }

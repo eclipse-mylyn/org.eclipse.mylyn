@@ -53,6 +53,12 @@ public class AsciiDocLanguageLinksTest extends AsciiDocLanguageTestBase {
 	}
 
 	@Test
+	public void implicitLinkWithTextAndBlankShortcut() {
+		String html = parseToHtml("http://eclipse.org[Eclipse Rocks^]");
+		assertEquals("<p><a href=\"http://eclipse.org\" target=\"_blank\">Eclipse Rocks</a></p>\n", html);
+	}
+
+	@Test
 	public void implicitLinkWithMixedTextSymbolx() {
 		String html = parseToHtml(
 				"This is a link to http://eclipse.org#tag%20test[Eclipse Rocks] that could be nasty.");
