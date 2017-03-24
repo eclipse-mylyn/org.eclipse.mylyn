@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -127,14 +128,15 @@ public class SynchronizeRelevantTasksJob extends Job {
 	}
 
 	private void addTodaysTasks(HashSet<ITask> relevantTasks) {
-		Set<ITask> dueTasks = taskActivityManager.getScheduledTasks(TaskActivityUtil.getCurrentWeek().getToday());
-		for (ITask dueTask : dueTasks) {
-			if (dueTask.isCompleted()) {
-				dueTasks.remove(dueTask);
+		Set<ITask> scheduledTasks = taskActivityManager.getScheduledTasks(TaskActivityUtil.getCurrentWeek().getToday());
+		for (Iterator<ITask> iterator = scheduledTasks.iterator(); iterator.hasNext();) {
+			ITask scheduledTask = iterator.next();
+			if (scheduledTask.isCompleted()) {
+				iterator.remove();
 			}
 		}
-		if (dueTasks.size() < MAX_NUM_TASKS) {
-			relevantTasks.addAll(dueTasks);
+		if (scheduledTasks.size() < MAX_NUM_TASKS) {
+			relevantTasks.addAll(scheduledTasks);
 		}
 	}
 
