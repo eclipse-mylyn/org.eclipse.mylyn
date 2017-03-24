@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.tasks.tests.ui.editor;
 
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
 import org.eclipse.mylyn.internal.tasks.ui.editors.AttachmentTableLabelProvider;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
@@ -43,4 +44,15 @@ public class AttachmentTableLabelProviderTest extends TestCase {
 		assertEquals("myid", labelProvider.buildTextFromEventIndex(5, attachment).getString());
 	}
 
+	public void testGetAttachmentDescription() throws Exception {
+		TaskAttachment attachment = TaskTestUtil.createMockTaskAttachment("1");
+		attachment.setDescription(null);
+		AttachmentTableLabelProvider labelProvider = new AttachmentTableLabelProvider();
+		StyledString styledString = labelProvider.buildTextFromEventIndex(1, attachment);
+		assertEquals("", styledString.getString());
+
+		attachment.setDescription("test");
+		styledString = labelProvider.buildTextFromEventIndex(1, attachment);
+		assertEquals("test", styledString.getString());
+	}
 }

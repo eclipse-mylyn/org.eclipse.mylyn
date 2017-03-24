@@ -131,10 +131,12 @@ public class AttachmentTableLabelProvider extends StyledCellLabelProvider {
 			}
 			break;
 		case 1:
-			text.append(attachment.getDescription());
+			if (attachment.getDescription() != null) {
+				text.append(attachment.getDescription());
+			}
 			break;
 		case 2:
-			Long length = attachment.getLength();
+			long length = attachment.getLength();
 			if (length < 0) {
 				text.append("-"); //$NON-NLS-1$
 			}
