@@ -710,7 +710,6 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 			setTopControl(messageComposite);
 		}
 		updateDecoration(status);
-		updateToolbarActions();
 	}
 
 	public void updateDecoration(IStatus status) {
@@ -759,11 +758,6 @@ public class BuildsView extends ViewPart implements IShowInTarget {
 		Display.getDefault().asyncExec(() -> {
 			statusLine.setMessage(statusMessage);
 		});
-	}
-
-	public void updateToolbarActions() {
-		// updates each action (SelectionChangedListeners) by setting selection to current selection
-		viewer.setSelection(viewer.getSelection());
 	}
 
 	@Override
