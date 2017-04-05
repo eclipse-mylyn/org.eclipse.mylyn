@@ -413,6 +413,10 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 			}
 		}
 			break;
+		case MARK:
+			writer.writeStartElement("emphasis");
+			writer.writeAttribute("role", "marked");
+			break;
 		default:
 			Logger.getLogger(DocBookDocumentBuilder.class.getName()).warning("No docbook mapping for " + type); //$NON-NLS-1$
 			writer.writeStartElement("phrase"); //$NON-NLS-1$

@@ -33,40 +33,53 @@ import com.google.common.base.Throwables;
  * The {@link HtmlLanguage} maps block types as follows:
  * </p>
  * <ul>
- * <li>{@link BlockType#BULLETED_LIST} maps to HTML tag {@code 
- * <ul>
+ * <li>{@link BlockType#BULLETED_LIST} maps to HTML tag {@code
+ * 
+<ul>
  * }</li>
  * <li>{@link BlockType#CODE} maps to HTML tags <code>&lt;pre>&lt;code></code></li>
- * <li>{@link BlockType#DEFINITION_LIST} maps to HTML tag {@code 
- * <dl>
- * }</li>
- * <li>{@link BlockType#DEFINITION_ITEM} maps to HTML tag {@code 
- * <dd>}</li>
- * <li>{@link BlockType#DEFINITION_TERM} maps to HTML tag {@code 
- * <dt>}</li>
- * <li>{@link BlockType#DIV} maps to HTML tag {@code <div>}</li>
- * <li>{@link BlockType#LIST_ITEM} maps to HTML tag {@code 
- * <li>}</li>
- * <li>{@link BlockType#NUMERIC_LIST} maps to HTML tag {@code 
- * <ol>
- * }</li>
- * <li>{@link BlockType#PARAGRAPH} maps to HTML tag {@code 
- * <p>
- * }</li>
- * <li>{@link BlockType#PREFORMATTED} maps to HTML tag {@code 
+ * <li>{@link BlockType#DEFINITION_LIST} maps to HTML tag {@code
  * 
- * <pre>
+<dl>
+ * }</li>
+ * <li>{@link BlockType#DEFINITION_ITEM} maps to HTML tag {@code
+ * 
+<dd>}</li>
+ * <li>{@link BlockType#DEFINITION_TERM} maps to HTML tag {@code
+ * 
+<dt>}</li>
+ * <li>{@link BlockType#DIV} maps to HTML tag {@code <div>}</li>
+ * <li>{@link BlockType#LIST_ITEM} maps to HTML tag {@code
+ * 
+<li>}</li>
+ * <li>{@link BlockType#NUMERIC_LIST} maps to HTML tag {@code
+ * 
+<ol>
+ * }</li>
+ * <li>{@link BlockType#PARAGRAPH} maps to HTML tag {@code
+ * 
+<p>
+ * }</li>
+ * <li>{@link BlockType#PREFORMATTED} maps to HTML tag {@code
+ *
+ * 
+
+<pre>
  * }</li>
  * <li>{@link BlockType#QUOTE} maps to HTML tag {@code <blockquote>}</li>
- * <li>{@link BlockType#TABLE} maps to HTML tag {@code 
- * <table>
+ * <li>{@link BlockType#TABLE} maps to HTML tag {@code
+ * 
+<table>
  * }</li>
- * <li>{@link BlockType#TABLE_CELL_HEADER} maps to HTML tag {@code 
- * <th>}</li>
- * <li>{@link BlockType#TABLE_CELL_NORMAL} maps to HTML tag {@code 
- * <td>}</li>
- * <li>{@link BlockType#TABLE_ROW} maps to HTML tag {@code 
- * <tr>
+ * <li>{@link BlockType#TABLE_CELL_HEADER} maps to HTML tag {@code
+ * 
+<th>}</li>
+ * <li>{@link BlockType#TABLE_CELL_NORMAL} maps to HTML tag {@code
+ * 
+<td>}</li>
+ * <li>{@link BlockType#TABLE_ROW} maps to HTML tag {@code
+ * 
+<tr>
  * }</li>
  * </ul>
  * <p>
@@ -82,13 +95,15 @@ import com.google.common.base.Throwables;
  * <li>{@link SpanType#ITALIC} maps to HTML tag {@code <i>}</li>
  * <li>{@link SpanType#LINK} maps to HTML tag {@code <a>}</li>
  * <li>{@link SpanType#MONOSPACE} maps to HTML tag {@code <tt>}</li>
- * <li>{@link SpanType#QUOTE} maps to HTML tag {@code 
- * <q>}</li>
+ * <li>{@link SpanType#QUOTE} maps to HTML tag {@code
+ * 
+<q>}</li>
  * <li>{@link SpanType#SPAN} maps to HTML tag {@code <span>}</li>
  * <li>{@link SpanType#STRONG} maps to HTML tag {@code <strong>}</li>
  * <li>{@link SpanType#SUBSCRIPT} maps to HTML tag {@code <sub>}</li>
  * <li>{@link SpanType#SUPERSCRIPT} maps to HTML tag {@code <sup>}</li>
  * <li>{@link SpanType#UNDERLINED} maps to HTML tag {@code <u>}</li>
+ * <li>{@link SpanType#MARK} maps to HTML tag {@mark <u>}</li>
  * </ul>
  * <p>
  * {@link HtmlLanguage} variants created using {@link HtmlLanguageBuilder} may map {@link SpanType} and

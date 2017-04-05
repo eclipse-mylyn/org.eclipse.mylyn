@@ -77,6 +77,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		spanTypeToElementNameBuilder.put(SpanType.SPAN, "span"); //$NON-NLS-1$
 		spanTypeToElementNameBuilder.put(SpanType.CODE, "code"); //$NON-NLS-1$
 		spanTypeToElementNameBuilder.put(SpanType.MONOSPACE, "tt"); //$NON-NLS-1$
+		spanTypeToElementNameBuilder.put(SpanType.MARK, "mark"); //$NON-NLS-1$
 		defaultSpanTypeToElementName = spanTypeToElementNameBuilder.build();
 	}
 

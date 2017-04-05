@@ -116,6 +116,7 @@ public abstract class AbstractSaxHtmlParser {
 		elementNameToSpanType.put("font", SpanType.SPAN); //$NON-NLS-1$
 		elementNameToSpanType.put("code", SpanType.CODE); //$NON-NLS-1$
 		elementNameToSpanType.put("tt", SpanType.MONOSPACE); //$NON-NLS-1$
+		elementNameToSpanType.put("mark", SpanType.MARK); //$NON-NLS-1$
 	}
 
 	private static final Map<String, BlockType> elementNameToBlockType = new HashMap<String, DocumentBuilder.BlockType>();

@@ -30,7 +30,6 @@ import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
  *
  * @see HtmlParser
  * @author David Green
- * 
  * @see TextileLanguage
  * @see TextileLanguage#createDocumentBuilder(Writer)
  */
@@ -396,6 +395,7 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		case DELETED:
 			block = new ContentBlock("-" + spanAttributes, "-", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			break;
+		case MARK:
 		case EMPHASIS:
 			block = new ContentBlock("_" + spanAttributes, "_", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			break;

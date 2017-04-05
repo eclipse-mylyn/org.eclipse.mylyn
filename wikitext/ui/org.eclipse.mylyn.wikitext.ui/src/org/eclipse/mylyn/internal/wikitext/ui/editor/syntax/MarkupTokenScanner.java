@@ -342,6 +342,9 @@ public class MarkupTokenScanner implements ITokenScanner {
 		case UNDERLINED:
 			key = Preferences.PHRASE_UNDERLINED;
 			break;
+		case MARK:
+			key = Preferences.PHRASE_MARK;
+			break;
 		}
 		cssStyles = preferences.getCssByPhraseModifierType().get(key);
 		if (cssStyles == null && span.getAttributes().getCssStyle() == null && span.getChildren().isEmpty()) {

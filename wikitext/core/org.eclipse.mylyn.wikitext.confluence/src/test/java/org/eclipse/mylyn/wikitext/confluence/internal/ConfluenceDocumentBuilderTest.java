@@ -752,6 +752,26 @@ public class ConfluenceDocumentBuilderTest {
 	}
 
 	@Test
+	public void mark() {
+		builder.beginDocument();
+
+		builder.characters("prefix ");
+
+		builder.beginSpan(SpanType.MARK, new Attributes());
+		builder.characters("italic phrase");
+		builder.endBlock();
+
+		builder.characters(" suffix");
+
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		assertEquals("prefix _italic phrase_ suffix\n\n", markup);
+	}
+
+	@Test
 	public void emptyBoldSpan() {
 		builder.beginDocument();
 

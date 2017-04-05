@@ -34,6 +34,7 @@ import org.eclipse.mylyn.wikitext.asciidoc.internal.block.TableBlock;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.block.TitleLineBlock;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.block.UnderlinedHeadingBlock;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.phrase.BackslashEscapePhraseModifier;
+import org.eclipse.mylyn.wikitext.asciidoc.internal.phrase.CssClassPhraseModifier;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.phrase.SimplePhraseModifier;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.phrase.SimplePhraseModifier.Mode;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.token.AnchorLinkMacroReplacementToken;
@@ -150,11 +151,11 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 		phraseModifierSyntax.add(new SimplePhraseModifier("_", SpanType.EMPHASIS, Mode.NESTING)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new SimplePhraseModifier("`", SpanType.CODE, Mode.NESTING)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new SimplePhraseModifier("+", SpanType.SPAN, Mode.NORMAL)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new CssClassPhraseModifier());
 		phraseModifierSyntax.endGroup(")(?:(?=\\W)|$)", 0);
 
 		phraseModifierSyntax.add(new SimplePhraseModifier("^", SpanType.SUPERSCRIPT, Mode.NESTING));
 		phraseModifierSyntax.add(new SimplePhraseModifier("~", SpanType.SUBSCRIPT, Mode.NESTING));
-
 	}
 
 	@Override

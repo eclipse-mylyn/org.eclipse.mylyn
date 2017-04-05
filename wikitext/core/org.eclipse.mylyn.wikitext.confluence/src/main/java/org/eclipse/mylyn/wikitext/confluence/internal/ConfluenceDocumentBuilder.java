@@ -383,6 +383,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		case DELETED:
 			block = new ContentBlock("-" + spanAttributes, "-", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			break;
+		case MARK:
 		case EMPHASIS:
 		case ITALIC:
 			block = new ContentBlock("_" + spanAttributes, "_", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
@@ -416,7 +417,6 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			block = new ContentBlock("+", "+", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 //			case QUOTE: not supported
-
 		case SPAN:
 		default:
 			block = null;

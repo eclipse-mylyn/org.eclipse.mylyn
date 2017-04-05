@@ -65,6 +65,8 @@ public class Preferences implements Cloneable {
 
 	public static final String PHRASE_QUOTE = "quote"; //$NON-NLS-1$
 
+	public static final String PHRASE_MARK = "mark"; //$NON-NLS-1$
+
 	public static final String BLOCK_QUOTE = "bq."; //$NON-NLS-1$
 
 	public static final String BLOCK_PRE = "pre."; //$NON-NLS-1$
@@ -124,6 +126,7 @@ public class Preferences implements Cloneable {
 		cssByPhraseModifierType.put(PHRASE_MONOSPACE, "font-family: monospace;"); //$NON-NLS-1$
 		cssByPhraseModifierType.put(PHRASE_UNDERLINED, "text-decoration: underline;"); //$NON-NLS-1$
 		cssByPhraseModifierType.put(PHRASE_QUOTE, "color: rgb(38,86,145);"); //$NON-NLS-1$
+		cssByPhraseModifierType.put(PHRASE_MARK, "background-color: yellow;"); //$NON-NLS-1$
 	}
 
 	private boolean editorFolding = true;

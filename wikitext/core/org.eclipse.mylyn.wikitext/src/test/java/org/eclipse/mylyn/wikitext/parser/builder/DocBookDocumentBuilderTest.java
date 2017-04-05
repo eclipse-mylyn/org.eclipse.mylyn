@@ -349,4 +349,18 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		assertEquals(DOCBOOK_BEGIN_CHAPTER + expectedContent + DOCBOOK_END_CHAPTER, docbook);
 	}
 
+	public void testMarked() {
+		builder.beginDocument();
+		builder.characters("normal text ");
+		builder.beginSpan(SpanType.MARK, new Attributes());
+		builder.characters("marked text");
+		builder.endSpan();
+		builder.endDocument();
+
+		String docbook = out.toString();
+
+		String expectedContent = "normal text <emphasis role=\"marked\">marked text</emphasis>";
+		assertEquals(DOCBOOK_BEGIN + expectedContent + DOCBOOK_END, docbook);
+	}
+
 }

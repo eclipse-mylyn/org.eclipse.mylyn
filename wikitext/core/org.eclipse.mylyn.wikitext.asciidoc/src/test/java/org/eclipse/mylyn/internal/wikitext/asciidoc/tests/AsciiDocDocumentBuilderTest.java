@@ -666,6 +666,16 @@ public class AsciiDocDocumentBuilderTest {
 	}
 
 	@Test
+	public void testHighlight() {
+		builder.beginDocument();
+		builder.beginSpan(SpanType.MARK, new Attributes());
+		builder.characters("highlight");
+		builder.endSpan();
+		builder.endDocument();
+		assertMarkup("#highlight#\n\n");
+	}
+
+	@Test
 	public void testCodeSpan() {
 		builder.beginDocument();
 		builder.characters("Here's a ");
@@ -692,6 +702,30 @@ public class AsciiDocDocumentBuilderTest {
 		builder.endDocument();
 		assertMarkup(
 				"A single backtick in a code span: `` ` ``\nA backtick-delimited string in a code span: `` `foo` ``\n\n");
+	}
+
+	@Test
+	public void testSpanSimple() {
+		builder.beginDocument();
+		builder.characters("Here's a ");
+		builder.beginSpan(SpanType.SPAN, new Attributes());
+		builder.characters("plain");
+		builder.endSpan();
+		builder.characters(" span.");
+		builder.endBlock();
+		assertMarkup("Here's a plain span.\n\n");
+	}
+
+	@Test
+	public void testSpanWithCssClass() {
+		builder.beginDocument();
+		builder.characters("Here's a ");
+		builder.beginSpan(SpanType.SPAN, new Attributes(null, "css-class", null, null));
+		builder.characters("css styled");
+		builder.endSpan();
+		builder.characters(" span.");
+		builder.endBlock();
+		assertMarkup("Here's a [css-class]#css styled# span.\n\n");
 	}
 
 	@Test

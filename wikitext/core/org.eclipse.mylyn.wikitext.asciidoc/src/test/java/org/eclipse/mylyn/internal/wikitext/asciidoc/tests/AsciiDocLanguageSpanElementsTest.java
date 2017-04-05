@@ -416,4 +416,39 @@ public class AsciiDocLanguageSpanElementsTest extends AsciiDocLanguageTestBase {
 				html);
 	}
 
+	@Test
+	public void highlightWordBoundary() {
+		String html = parseToHtml("#text#");
+		assertEquals("<p><mark>text</mark></p>\n", html);
+	}
+
+	@Test
+	public void highlightNoWordBoundary() {
+		String html = parseToHtml("nospace#text#nospace");
+		assertEquals("<p>nospace#text#nospace</p>\n", html);
+	}
+
+	@Test
+	public void customClassWordBoundary() {
+		String html = parseToHtml("[css-class]#text#");
+		assertEquals("<p><span class=\"css-class\">text</span></p>\n", html);
+	}
+
+	@Test
+	public void customClassLeadingDots() {
+		String html = parseToHtml("[..css-class]#text#");
+		assertEquals("<p><span class=\"css-class\">text</span></p>\n", html);
+	}
+
+	@Test
+	public void customClassNoWordBoundary() {
+		String html = parseToHtml("nospace[css-class]#text#nospace");
+		assertEquals("<p>nospace[css-class]#text#nospace</p>\n", html);
+	}
+
+	@Test
+	public void customClassNoWordBoundaryBefore() {
+		String html = parseToHtml("nospace[css-class]#text#");
+		assertEquals("<p>nospace[css-class]<mark>text</mark></p>\n", html);
+	}
 }

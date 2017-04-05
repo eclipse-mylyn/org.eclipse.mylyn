@@ -16,7 +16,6 @@ import java.io.StringWriter;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
-import org.eclipse.mylyn.wikitext.textile.internal.TextileDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
 
@@ -56,8 +55,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 			String markup = out.toString();
 
-			
-
 			assertEquals("text more text\n\n", markup);
 		}
 	}
@@ -70,8 +67,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 			builder.endDocument();
 
 			String markup = out.toString();
-
-			
 
 			assertEquals("a b\n\n", markup);
 		}
@@ -89,8 +84,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		String markup = out.toString();
 
-		
-
 		assertEquals("text\nmore text\n\n", markup);
 	}
 
@@ -103,8 +96,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-
-		
 
 		assertEquals("text\nmore text\n\n", markup);
 	}
@@ -122,8 +113,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		String markup = out.toString();
 
-		
-
 		assertEquals("text\n more\n\tmore2 text\n\n", markup);
 	}
 
@@ -140,8 +129,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-
-		
 
 		assertEquals("first paragraph\n\nsecond paragraph\n\n", markup);
 	}
@@ -162,8 +149,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		String markup = out.toString();
 
-		
-
 		assertEquals("some **bold** and _emphasis_\n\n", markup);
 	}
 
@@ -175,8 +160,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-
-		
 
 		assertEquals("p(test). text more text\n\n", markup);
 	}
@@ -190,8 +173,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		String markup = out.toString();
 
-		
-
 		assertEquals("p{x-test: foo;}. text more text\n\n", markup);
 	}
 
@@ -204,8 +185,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		String markup = out.toString();
 
-		
-
 		assertEquals("p(#123). text more text\n\n", markup);
 	}
 
@@ -217,8 +196,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-
-		
 
 		assertEquals("p(test#123). text more text\n\n", markup);
 	}
@@ -238,8 +215,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		String markup = out.toString();
 
-		
-
 		assertEquals("text more text \"baz\":http://example.com/foo+bar/baz.gif test\n\n", markup);
 	}
 
@@ -251,8 +226,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-
-		
 
 		assertEquals("bc.. text\n\nmore text\n\n", markup);
 	}
@@ -272,8 +245,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		String markup = out.toString();
 
-		
-
 		assertEquals("bc.. text\n\nmore text\n\np. text\n\ntext2\n\n", markup);
 	}
 
@@ -288,8 +259,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-
-		
 
 		assertEquals("h1. text more text\n\ntext\n\n", markup);
 	}
@@ -308,8 +277,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-
-		
 
 		assertEquals("h1. text _emphasized_\n\ntext\n\n", markup);
 	}
@@ -340,7 +307,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		String markup = out.toString();
 
-		
 		return markup;
 	}
 
@@ -354,8 +320,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-
-		
 
 		assertEquals("text1\n\ntext2\n\ntext3\n\n", markup);
 	}
@@ -371,8 +335,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-
-		
 
 		assertEquals("*text1*\n\ntext2\n\n", markup);
 	}
@@ -391,8 +353,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		String markup = out.toString();
 
-		
-
 		assertEquals("*text2* text3\n\n", markup);
 	}
 
@@ -409,8 +369,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-
-		
 
 		assertEquals("text3 **text2**\n\n", markup);
 	}
@@ -429,8 +387,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-
-		
 
 		assertEquals("text3 **text2** text4\n\n", markup);
 	}
@@ -451,8 +407,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		String markup = out.toString();
 
-		
-
 		assertEquals("**text2** __text3__\n\n", markup);
 	}
 
@@ -469,8 +423,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-
-		
 
 		assertEquals("**text2**!\n\n", markup);
 	}
@@ -492,8 +444,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-
-		
 
 		assertEquals("* text2 **text3**\n* text4\n", markup);
 	}
@@ -519,8 +469,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-
-		
 
 		assertEquals("* first\n** first.1\n** first.2\n* second\n", markup);
 	}
@@ -557,8 +505,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		String markup = out.toString();
 
-		
-
 		assertEquals("* first\n* second\n** second.1\n\n# third\n# fourth\n## fourth.1\n", markup);
 	}
 
@@ -574,8 +520,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-
-		
 
 		assertEquals("para 1\n\n* list item 1\n* list item 2\n\npara 2\n\n", markup);
 	}
@@ -608,8 +552,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		String markup = out.toString();
 
-		
-
 		assertEquals("prefix **bolded** suffix\n\n", markup);
 	}
 
@@ -628,8 +570,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		String markup = out.toString();
 
-		
-
 		assertEquals("prefix suffix\n\n", markup);
 	}
 
@@ -647,8 +587,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-
-		
 
 		assertEquals("prefix %{font-family:monospace;}text% suffix\n\n", markup);
 	}
@@ -671,8 +609,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-
-		
 
 		assertEquals("|content| |\n\n", markup);
 	}
@@ -700,8 +636,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-
-		
 
 		assertEquals("test\n\nmore **text**\n\n# text2\n", markup);
 	}
@@ -737,8 +671,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		String markup = out.toString();
 
-		
-
 		assertEquals("|first| content content2|\n\n", markup);
 	}
 
@@ -755,8 +687,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-
-		
 
 		assertEquals("first second\n\n", markup);
 	}
@@ -777,8 +707,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		String markup = out.toString();
 
-		
-
 		assertEquals("%{color:blue;}first second%\n\n", markup);
 	}
 
@@ -790,8 +718,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-
-		
 
 		assertEquals("line\nbreak\n\n", markup);
 	}
@@ -813,8 +739,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		String markup = out.toString();
 
-		
-
 		assertEquals("bc.. one\n\n\ntwo\n\np. line\nbreak\n\n", markup);
 	}
 
@@ -828,8 +752,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-
-		
 
 		assertEquals("fn1. line\nbreak\n\n", markup);
 	}
@@ -846,8 +768,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		String markup = out.toString();
 
-		
-
 		assertEquals("pre.. line\n\nbreak\n\n", markup);
 	}
 
@@ -861,8 +781,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-
-		
 
 		assertEquals("pre. line\nbreak\n\n", markup);
 	}
@@ -878,8 +796,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		String markup = out.toString();
 
-		
-
 		assertEquals("a \"link to foo\":#foo test\n\n", markup);
 	}
 
@@ -894,8 +810,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		String markup = out.toString();
 
-		
-
 		assertEquals("an \"external link\":http://example.com/ test\n\n", markup);
 	}
 
@@ -909,8 +823,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-
-		
 
 		assertEquals("a \"link text\": test\n\n", markup);
 	}
@@ -928,8 +840,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		String markup = out.toString();
 
-		
-
 		assertEquals("a \"link text\": test\n\n", markup);
 	}
 
@@ -943,8 +853,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-
-		
 
 		assertEquals("a !fooImage.png!:#foo test\n\n", markup);
 	}
@@ -960,8 +868,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		String markup = out.toString();
 
-		
-
 		assertEquals("a !fooImage.png! test\n\n", markup);
 	}
 
@@ -973,7 +879,7 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-		
+
 		assertEquals("a test\n\n", markup);
 	}
 
@@ -988,8 +894,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		String markup = out.toString();
 
-		
-
 		assertEquals("a (c) test\n\n", markup);
 	}
 
@@ -1001,8 +905,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-
-		
 
 		assertEquals("a (c) test\n\n", markup);
 	}
@@ -1016,8 +918,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 		String markup = out.toString();
 
-		
-
 		assertEquals("a (r) test\n\n", markup);
 	}
 
@@ -1029,8 +929,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-
-		
 
 		assertEquals("a test\n\n", markup);
 	}
@@ -1047,7 +945,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-		
 
 		assertEquals("bc. // some code\n\n-redacted- text\n\n", markup);
 	}
@@ -1078,6 +975,10 @@ public class TextileDocumentBuilderTest extends TestCase {
 
 	public void testSpanEmphasis() {
 		assertSpan("begin _span text_ end\n\n", SpanType.EMPHASIS);
+	}
+
+	public void testSpanMark() {
+		assertSpan("begin _span text_ end\n\n", SpanType.MARK);
 	}
 
 	public void testSpanInserted() {
@@ -1118,7 +1019,6 @@ public class TextileDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String markup = out.toString();
-		
 
 		assertEquals(expected, markup);
 	}

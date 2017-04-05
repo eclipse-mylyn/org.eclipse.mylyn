@@ -327,6 +327,7 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			return new ContentBlock("<", ">", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
 		case ITALIC:
 		case EMPHASIS:
+		case MARK:
 			return new ContentBlock("*", "*", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
 		case BOLD:
 		case STRONG:
@@ -356,7 +357,7 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	}
 
 	private String escapeAmpersand(String text) {
-		return text.replace("&","&amp;"); //$NON-NLS-1$ //$NON-NLS-2$
+		return text.replace("&", "&amp;"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override

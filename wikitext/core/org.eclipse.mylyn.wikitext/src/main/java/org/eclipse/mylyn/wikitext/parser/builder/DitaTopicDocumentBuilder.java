@@ -395,13 +395,15 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 		case INSERTED:
 			// no equivalent?
 			writer.writeStartElement("ph"); //$NON-NLS-1$
-			attributes.setCssClass(attributes.getCssClass() == null ? "inserted" : attributes.getCssClass() //$NON-NLS-1$
-					+ " inserted"); //$NON-NLS-1$
+			attributes.setCssClass(attributes.getCssClass() == null
+					? "inserted" //$NON-NLS-1$
+					: attributes.getCssClass() + " inserted"); //$NON-NLS-1$
 			break;
 		case UNDERLINED:
 			writer.writeStartElement("u"); //$NON-NLS-1$
 			break;
 		case ITALIC:
+		case MARK:
 			writer.writeStartElement("i"); //$NON-NLS-1$
 			break;
 		case SPAN:

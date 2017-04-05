@@ -57,6 +57,10 @@ em {
 	font-style: italic;
 }
 
+mark {
+	background-color:yellow;
+}
+
 var {
 	font-style: italic;
 }

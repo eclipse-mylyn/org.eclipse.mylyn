@@ -20,12 +20,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.StringWriter;
 import java.util.Collections;
 
-import org.eclipse.mylyn.wikitext.html.internal.FontElementStrategy;
-import org.eclipse.mylyn.wikitext.html.internal.HtmlSubsetDocumentBuilder;
-import org.eclipse.mylyn.wikitext.html.internal.SpanHtmlElementStrategy;
-import org.eclipse.mylyn.wikitext.html.internal.SupportedBlockStrategy;
-import org.eclipse.mylyn.wikitext.html.internal.SupportedSpanStrategy;
-import org.eclipse.mylyn.wikitext.html.internal.UnsupportedBlockStrategy;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
@@ -530,6 +524,11 @@ public class HtmlSubsetDocumentBuilderTest {
 	@Test
 	public void spanUnderlinedSupported() {
 		assertSupportedSpan("<u>test</u>", SpanType.UNDERLINED);
+	}
+
+	@Test
+	public void spanMarkSupported() {
+		assertSupportedSpan("<mark>test</mark>", SpanType.MARK);
 	}
 
 	@Test

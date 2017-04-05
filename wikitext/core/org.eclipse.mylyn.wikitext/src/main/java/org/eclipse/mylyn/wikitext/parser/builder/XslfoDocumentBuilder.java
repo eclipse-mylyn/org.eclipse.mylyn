@@ -84,6 +84,7 @@ public class XslfoDocumentBuilder extends AbstractXmlDocumentBuilder {
 	static {
 		spanTypeToCssStyles.put(SpanType.STRONG, "font-weight: bold;"); //$NON-NLS-1$
 		spanTypeToCssStyles.put(SpanType.BOLD, "font-weight: bold;"); //$NON-NLS-1$
+		spanTypeToCssStyles.put(SpanType.MARK, "font-style: italic;"); //$NON-NLS-1$
 		spanTypeToCssStyles.put(SpanType.MONOSPACE, "font-family: monospace;"); //$NON-NLS-1$
 		spanTypeToCssStyles.put(SpanType.CODE, "font-family: monospace;"); //$NON-NLS-1$
 		spanTypeToCssStyles.put(SpanType.CITATION, "font-style: italic;"); //$NON-NLS-1$

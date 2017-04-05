@@ -244,7 +244,8 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.endBlock();
 		builder.endBlock();
 		builder.endDocument();
-		assertMarkup("> ## Header.\n\n> * First item.\n> * Second item.\n\n> Some code:\n\n>     return shell_exec(\"echo $input | $markdown_script\");\n\n");
+		assertMarkup(
+				"> ## Header.\n\n> * First item.\n> * Second item.\n\n> Some code:\n\n>     return shell_exec(\"echo $input | $markdown_script\");\n\n");
 	}
 
 	public void testBlockQuoteTripleNested() {
@@ -438,7 +439,8 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.endBlock();
 		builder.endBlock();
 		builder.endDocument();
-		assertMarkup("* A list item with a code block:\n\n        code goes here  \n        code second line\n\n  another para\n\n");
+		assertMarkup(
+				"* A list item with a code block:\n\n        code goes here  \n        code second line\n\n  another para\n\n");
 	}
 
 	public void testCodeBlock() {
@@ -645,7 +647,17 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.characters("`foo`");
 		builder.endSpan();
 		builder.endDocument();
-		assertMarkup("A single backtick in a code span: `` ` ``  \nA backtick-delimited string in a code span: `` `foo` ``\n\n");
+		assertMarkup(
+				"A single backtick in a code span: `` ` ``  \nA backtick-delimited string in a code span: `` `foo` ``\n\n");
+	}
+
+	public void testMark() {
+		builder.beginDocument();
+		builder.beginSpan(SpanType.MARK, new Attributes());
+		builder.characters("emphasis");
+		builder.endSpan();
+		builder.endDocument();
+		assertMarkup("*emphasis*\n\n");
 	}
 
 	public void testImage() {
@@ -732,7 +744,8 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		imageAttr.setTitle("Optional image title");
 		builder.imageLink(linkAttr, imageAttr, "http://example.net/", "/path/to/img.jpg");
 		builder.endDocument();
-		assertMarkup("[![Alt text](/path/to/img.jpg \"Optional image title\")](http://example.net/ \"Optional link title\")\n\n");
+		assertMarkup(
+				"[![Alt text](/path/to/img.jpg \"Optional image title\")](http://example.net/ \"Optional link title\")\n\n");
 	}
 
 	public void testImplicitParagrahWithSpan() {
@@ -829,8 +842,6 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 
 		String markup = out.toString();
 
-		
-
 		assertEquals(
 				"* first\n* second\n  * second.1\n\n1. third\n2. fourth\n   1. fourth.1\n   2. fourth.2  \n      fourth.2 line 2\n",
 				markup);
@@ -844,7 +855,7 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 
 	private void assertMarkup(String expected) {
 		String markup = out.toString();
-		
+
 		assertEquals(expected, markup);
 	}
 

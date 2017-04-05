@@ -139,6 +139,11 @@ public class HtmlParserTest {
 	}
 
 	@Test
+	public void spanMark() {
+		assertParse("<mark>marked text</mark>", "<body><mark>marked text</mark></body>");
+	}
+
+	@Test
 	public void blockCodeEventOrder() {
 		assertParseEventOrder("<body><pre><code>some\ncode</code></pre></body>", BlockType.CODE, "some\ncode",
 				END_BLOCK);
@@ -197,6 +202,11 @@ public class HtmlParserTest {
 	@Test
 	public void horizontalRule() {
 		assertParse("<p>first</p><hr/><p>second</p>", "<body><p>first</p>\n<hr/><p>second</p></body>");
+	}
+
+	@Test
+	public void blockMark() {
+		assertParseEventOrder("<body><mark>lorem</mark></body>", SpanType.MARK, "lorem", END_SPAN);
 	}
 
 	private void assertParseEventOrder(String content, Object... expectedEventTypes) {

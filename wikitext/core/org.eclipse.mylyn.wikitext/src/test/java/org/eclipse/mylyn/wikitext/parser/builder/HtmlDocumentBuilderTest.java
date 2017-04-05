@@ -203,6 +203,18 @@ public class HtmlDocumentBuilderTest {
 	}
 
 	@Test
+	public void spanMark() {
+		builder.setEmitAsDocument(false);
+		builder.beginDocument();
+		builder.characters("normal text ");
+		builder.beginSpan(SpanType.MARK, new Attributes());
+		builder.characters("marked text");
+		builder.endSpan();
+		builder.endDocument();
+		assertEquals("normal text <mark>marked text</mark>", out.toString());
+	}
+
+	@Test
 	public void filterEntityReferences() {
 		assertEntityReferenceToNumericValue("&#160;", "nbsp");
 		assertEntityReferenceToNumericValue("&#8817;", "nge");
