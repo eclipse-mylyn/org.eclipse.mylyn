@@ -494,6 +494,171 @@ public class AsciiDocLanguageTableTest extends AsciiDocLanguageTestBase {
 	}
 
 	@Test
+	public void testTableCSVWithQuotes() {
+		String html = parseToHtml("" //
+				+ "[format=\"csv\"]\n" //
+				+ "|===\n" //
+				+ "\"first\",second,third\n" //
+				+ "first,\"second\",third\n" //
+				+ "first,second,\"third\"\n" //
+				+ "\"foo,bar\",second,third\n" //
+				+ "first,\"foo,bar\",third\n" //
+				+ "first,second,\"foo,bar\"\n" //
+				+ "|===\n" //
+				+ "Some Text");
+		assertEquals("<table>" //
+				+ "<tr>" //
+				+ "<td>first</td>" //
+				+ "<td>second</td>" //
+				+ "<td>third</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>first</td>" //
+				+ "<td>second</td>" //
+				+ "<td>third</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>first</td>" //
+				+ "<td>second</td>" //
+				+ "<td>third</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>foo,bar</td>" //
+				+ "<td>second</td>" //
+				+ "<td>third</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>first</td>" //
+				+ "<td>foo,bar</td>" //
+				+ "<td>third</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>first</td>" //
+				+ "<td>second</td>" //
+				+ "<td>foo,bar</td>" //
+				+ "</tr>" //
+				+ "</table>" //
+				+ "<p>Some Text</p>\n", html);
+	}
+
+	@Test
+	public void testTableCSVWithWrongQuotes() {
+		String html = parseToHtml("" //
+				+ "[format=\"csv\"]\n" //
+				+ "|===\n" //
+				+ "xxx\"first\"xxx,second,third\n" //
+				+ "first,xxx\"second\"xxx,third\n" //
+				+ "first,second,xxx\"third\"xxx\n" //
+				+ "\n" //
+				+ "xxx \" fi rst \" xxx,second,third\n" //
+				+ "first,xxx \"sec ond\" xxx,third\n" //
+				+ "first,second,xxx \" third \" xxx\n" //
+				+ "|===\n" //
+				+ "Some Text");
+		assertEquals("<table>" //
+				+ "<tr>" //
+				+ "<td>xxx\"first\"xxx</td>" //
+				+ "<td>second</td>" //
+				+ "<td>third</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>first</td>" //
+				+ "<td>xxx\"second\"xxx</td>" //
+				+ "<td>third</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>first</td>" //
+				+ "<td>second</td>" //
+				+ "<td>xxx\"third\"xxx</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>xxx \" fi rst \" xxx</td>" //
+				+ "<td>second</td>" //
+				+ "<td>third</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>first</td>" //
+				+ "<td>xxx \"sec ond\" xxx</td>" //
+				+ "<td>third</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>first</td>" //
+				+ "<td>second</td>" //
+				+ "<td>xxx \" third \" xxx</td>" //
+				+ "</tr>" //
+				+ "</table>" //
+				+ "<p>Some Text</p>\n", html);
+	}
+
+	@Test
+	public void testTableCSVWithQuotesAndEscaped() {
+		String html = parseToHtml("" //
+				+ "[format=\"csv\"]\n" //
+				+ "|===\n" //
+				+ "\"lorem \"\"a\"\" ipsum\",second,third\n" //
+				+ "first,\"lorem \"\"a\"\" ipsum\",third\n" //
+				+ "first,second,\"lorem \"\"a\"\" ipsum\"\n" //
+				+ "\n" //
+				+ "\"\"\"a\"\" ipsum\",second,third\n" //
+				+ "first,\"\"\"a\"\" ipsum\",third\n" //
+				+ "first,second,\"\"\"a\"\" ipsum\"\n" //
+				+ "\n" //
+				+ "\"lorem \"\"a\"\"\",second,third\n" //
+				+ "first,\"lorem \"\"a\"\"\",third\n" //
+				+ "first,second,\"lorem \"\"a\"\"\"\n" //
+				+ "|===\n" //
+				+ "Some Text");
+		assertEquals("<table>" //
+				+ "<tr>" //
+				+ "<td>lorem \"a\" ipsum</td>" //
+				+ "<td>second</td>" //
+				+ "<td>third</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>first</td>" //
+				+ "<td>lorem \"a\" ipsum</td>" //
+				+ "<td>third</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>first</td>" //
+				+ "<td>second</td>" //
+				+ "<td>lorem \"a\" ipsum</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>\"a\" ipsum</td>" //
+				+ "<td>second</td>" //
+				+ "<td>third</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>first</td>" //
+				+ "<td>\"a\" ipsum</td>" //
+				+ "<td>third</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>first</td>" //
+				+ "<td>second</td>" //
+				+ "<td>\"a\" ipsum</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>lorem \"a\"</td>" //
+				+ "<td>second</td>" //
+				+ "<td>third</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>first</td>" //
+				+ "<td>lorem \"a\"</td>" //
+				+ "<td>third</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>first</td>" //
+				+ "<td>second</td>" //
+				+ "<td>lorem \"a\"</td>" //
+				+ "</tr>" //
+				+ "</table>" //
+				+ "<p>Some Text</p>\n", html);
+	}
+
+	@Test
 	public void testTableDSV() {
 		String html = parseToHtml("" //
 				+ "[format=\"dsv\", options=\"header\"]\n" //

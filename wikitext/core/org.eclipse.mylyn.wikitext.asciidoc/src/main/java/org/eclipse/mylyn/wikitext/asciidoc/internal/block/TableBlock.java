@@ -130,7 +130,7 @@ public class TableBlock extends AsciiDocBlock {
 
 	private Iterable<String> createRowCellSplitter(String line) {
 		if (format == TableFormat.COMMA_SEPARATED_VALUES) {
-			return Splitter.on(",").split(line); //$NON-NLS-1$
+			return Splitter.on(Pattern.compile(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)")).split(line); //$NON-NLS-1$
 		}
 		String delimiter = getCellSeparator();
 		return Splitter.on(Pattern.compile("(?<!\\\\)" + Pattern.quote(delimiter))).split(line); //$NON-NLS-1$
@@ -152,11 +152,15 @@ public class TableBlock extends AsciiDocBlock {
 		closeCellBlockIfNeeded();
 
 		String blockContent;
-		if (format != TableFormat.COMMA_SEPARATED_VALUES) {
+		if (format == TableFormat.COMMA_SEPARATED_VALUES) {
+			if (cellContent.startsWith("\"") && cellContent.endsWith("\"")) {
+				blockContent = cellContent.substring(1, cellContent.length() - 1).replaceAll("\"\"", "\"");
+			} else {
+				blockContent = cellContent;
+			}
+		} else {
 			String delimiter = getCellSeparator();
 			blockContent = cellContent.replaceAll("\\\\" + Pattern.quote(delimiter), delimiter);//$NON-NLS-1$
-		} else {
-			blockContent = cellContent;
 		}
 
 		if (!colsAttribute.isEmpty() && cellsCount % colsAttribute.size() == 0) {
