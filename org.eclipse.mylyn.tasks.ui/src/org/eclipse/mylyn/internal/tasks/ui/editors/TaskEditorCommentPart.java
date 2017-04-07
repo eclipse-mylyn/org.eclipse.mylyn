@@ -524,14 +524,26 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			String replyText = taskComment.getText();
 			if (hasTextControl()) {
 				Control textControl = commentTextEditor.getControl();
-				if (textControl instanceof StyledText) {
-					String selectedText = ((StyledText) textControl).getSelectionText();
-					if (!Strings.isNullOrEmpty(selectedText)) {
-						replyText = selectedText;
-					}
+				String selectedText = getSelectedText(textControl);
+				if (!Strings.isNullOrEmpty(selectedText)) {
+					replyText = selectedText;
 				}
 			}
 			return replyText;
+		}
+
+		private String getSelectedText(Control control) {
+			if (control instanceof StyledText) {
+				return ((StyledText) control).getSelectionText();
+			} else if (control instanceof Composite) {
+				for (Control child : ((Composite) control).getChildren()) {
+					String selectedText = getSelectedText(child);
+					if (!Strings.isNullOrEmpty(selectedText)) {
+						return selectedText;
+					}
+				}
+			}
+			return null;
 		}
 
 		private boolean hasTextControl() {
