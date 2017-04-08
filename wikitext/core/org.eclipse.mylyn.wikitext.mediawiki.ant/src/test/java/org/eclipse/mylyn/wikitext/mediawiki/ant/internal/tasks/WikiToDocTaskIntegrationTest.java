@@ -15,11 +15,12 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Collections;
 
 import org.apache.tools.ant.Project;
-import org.eclipse.mylyn.wikitext.mediawiki.ant.internal.tasks.WikiToDocTask;
 import org.eclipse.mylyn.wikitext.mediawiki.ant.internal.tasks.WikiToDocTask.Path;
+import org.eclipse.mylyn.wikitext.toolkit.TestResources;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -30,25 +31,39 @@ public class WikiToDocTaskIntegrationTest {
 	@Rule
 	public final TemporaryFolder temporaryFolder = new TemporaryFolder();
 
-	private WikiToDocTask task;
+	@Rule
+	public final TemporaryFolder serverTemporaryFolder = new TemporaryFolder();
+
+	private TestWikiToDocTask task;
 
 	@Before
 	public void before() throws IOException {
-		task = new WikiToDocTask();
+		task = new TestWikiToDocTask();
 		task.setDest(temporaryFolder.getRoot());
 		task.setProject(new Project());
 	}
 
 	@Test
-	public void processPageWithManyImages() {
+	public void processPageWithManyImages() throws Exception {
+		MediaWikiMockFixture mediaWikiMockFixture = new MediaWikiMockFixture(serverTemporaryFolder.getRoot());
+		Files.createTempFile("image", "");
+
+		task.setServerContent(
+				Collections.singletonMap("https://wiki.eclipse.org/index.php?title=Some%2FMy_Page&action=raw",
+						TestResources.load(this.getClass(), "WikiToDocTaskIntegrationTest.mediawiki")));
+
+		mediaWikiMockFixture.createImageFiles();
+
+		task.setImageServerContent(mediaWikiMockFixture.createImageServerContent("https"));
+
 		task.setWikiBaseUrl("https://wiki.eclipse.org");
 		task.setPrependImagePrefix("images");
 		task.setFormatOutput(true);
 		task.setGenerateUnifiedToc(false);
 
 		Path path = new Path();
-		path.setTitle("Linux Tools Project - User Guide");
-		String wikiPageName = "Linux_Tools_Project/Vagrant_Tooling/User_Guide";
+		path.setTitle("Some - My Page!");
+		String wikiPageName = "Some/My_Page";
 		path.setName(wikiPageName);
 		path.setGenerateToc(true);
 
@@ -56,13 +71,8 @@ public class WikiToDocTaskIntegrationTest {
 		task.execute();
 
 		File wikiPageFolder = new File(temporaryFolder.getRoot(), wikiPageName);
-		assertManyImages(wikiPageFolder);
-	}
 
-	private void assertManyImages(File wikiPageFolder) {
 		assertTrue(wikiPageFolder.exists());
-
-		File imagesFolder = new File(wikiPageFolder, "images");
-		WikiPageAssertions.assertManyImages(imagesFolder);
+		mediaWikiMockFixture.assertImageFiles(new File(wikiPageFolder, "images"));
 	}
 }

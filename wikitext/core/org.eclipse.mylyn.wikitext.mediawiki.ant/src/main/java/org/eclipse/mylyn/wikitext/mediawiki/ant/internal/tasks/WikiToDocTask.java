@@ -466,7 +466,7 @@ public class WikiToDocTask extends MarkupTask {
 		}
 		getProject().log(MessageFormat.format(Messages.getString("WikiToDocTask_fetching_images_for_page"), path.name), //$NON-NLS-1$
 				Project.MSG_VERBOSE);
-		MediaWikiApiImageFetchingStrategy imageFetchingStrategy = new MediaWikiApiImageFetchingStrategy();
+		MediaWikiApiImageFetchingStrategy imageFetchingStrategy = createImageFetchingStrategy();
 		imageFetchingStrategy.setTask(this);
 		imageFetchingStrategy.setDest(dest);
 		imageFetchingStrategy.setPageName(path.name);
@@ -476,6 +476,10 @@ public class WikiToDocTask extends MarkupTask {
 			throw new BuildException(e);
 		}
 		return imageFetchingStrategy.fetchImages();
+	}
+
+	protected MediaWikiApiImageFetchingStrategy createImageFetchingStrategy() {
+		return new MediaWikiApiImageFetchingStrategy();
 	}
 
 	private String preprocessMarkup(Path path, String content) {

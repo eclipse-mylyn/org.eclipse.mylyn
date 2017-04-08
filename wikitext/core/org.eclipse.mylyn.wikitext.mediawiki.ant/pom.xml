@@ -49,5 +49,11 @@
         <version>1.8.4</version>
         <scope>test</scope>
     </dependency>
+    <dependency>
+        <groupId>org.eclipse.mylyn.docs</groupId>
+        <artifactId>org.eclipse.mylyn.wikitext.toolkit</artifactId>
+        <version>3.0.8-SNAPSHOT</version>
+        <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>

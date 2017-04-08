@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -94,7 +95,7 @@ class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 
 				log("Fetching " + apiUrl, Project.MSG_VERBOSE); //$NON-NLS-1$
 
-				input = new InputStreamReader(new BufferedInputStream(apiUrl.openStream()), "UTF-8"); //$NON-NLS-1$
+				input = createInputReader(apiUrl);
 			} catch (IOException e) {
 				throw new BuildException(String.format("Cannot contact %s: %s", apiUrl, e.getMessage()), e); //$NON-NLS-1$
 			}
@@ -134,7 +135,7 @@ class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 				String name = titleMatcher.group(1);
 				name = name.replace(' ', '_');
 				String qualifiedUrl = base;
-				if (imageUrl.matches("https?://.*")) { //$NON-NLS-1$
+				if (imageUrl.matches("(file|https?)://.*")) { //$NON-NLS-1$
 					qualifiedUrl = imageUrl;
 				} else {
 					if (imageUrl.startsWith("/")) { //$NON-NLS-1$
@@ -166,6 +167,10 @@ class MediaWikiApiImageFetchingStrategy extends ImageFetchingStrategy {
 		log("Fetched " + fileCount + " image files for " + pageName, Project.MSG_INFO); //$NON-NLS-1$ //$NON-NLS-2$
 
 		return filenames;
+	}
+
+	protected Reader createInputReader(URL apiUrl) throws UnsupportedEncodingException, IOException {
+		return new InputStreamReader(new BufferedInputStream(apiUrl.openStream()), "UTF-8");
 	}
 
 	public URL getUrl() {

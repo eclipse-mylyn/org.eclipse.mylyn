@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.mylyn.wikitext.mediawiki.ant.internal.tasks.WikiToDocTask.Path;
@@ -39,6 +40,14 @@ public class WikiToDocTaskTest {
 	@Before
 	public void before() throws IOException {
 		task = new TestWikiToDocTask();
+		HashMap<String, String> serverContent = new HashMap<String, String>();
+		serverContent.put(
+				"http://wiki.eclipse.org/api.php?action=query&titles=GEF%2FGEF4%2FCommon&generator=images&prop=imageinfo&iiprop=url&format=xml",
+				"<api batchcomplete=\"\"><query><pages></pages></query></api>");
+		serverContent.put(
+				"http://wiki.eclipse.org/api.php?action=query&titles=Mylyn%2FFAQ&generator=images&prop=imageinfo&iiprop=url&format=xml",
+				"<api batchcomplete=\"\"><query><pages></pages></query></api>");
+		task.setImageServerContent(serverContent);
 		task.setDest(temporaryFolder.getRoot());
 	}
 

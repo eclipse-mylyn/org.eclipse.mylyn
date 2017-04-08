@@ -63,7 +63,7 @@ public class MediaWikiImageFetcher extends Task {
 			if (base != null) {
 				throw new BuildException("When @url is specified @base cannot be specified"); //$NON-NLS-1$
 			}
-			MediaWikiApiImageFetchingStrategy apiStrategy = new MediaWikiApiImageFetchingStrategy();
+			MediaWikiApiImageFetchingStrategy apiStrategy = createImageFetchingStrategy();
 			apiStrategy.setUrl(url);
 			apiStrategy.setPageName(pageName);
 			strategy = apiStrategy;
@@ -71,6 +71,10 @@ public class MediaWikiImageFetcher extends Task {
 		strategy.setDest(dest);
 		strategy.setTask(this);
 		strategy.fetchImages();
+	}
+
+	protected MediaWikiApiImageFetchingStrategy createImageFetchingStrategy() {
+		return new MediaWikiApiImageFetchingStrategy();
 	}
 
 	/**

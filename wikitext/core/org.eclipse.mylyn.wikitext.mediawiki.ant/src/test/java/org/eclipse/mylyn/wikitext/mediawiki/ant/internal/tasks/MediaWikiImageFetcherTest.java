@@ -12,11 +12,9 @@
 package org.eclipse.mylyn.wikitext.mediawiki.ant.internal.tasks;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.tools.ant.Project;
-import org.eclipse.mylyn.wikitext.mediawiki.ant.internal.tasks.MediaWikiImageFetcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,7 +24,10 @@ public class MediaWikiImageFetcherTest {
 	@Rule
 	public final TemporaryFolder temporaryFolder = new TemporaryFolder();
 
-	private final MediaWikiImageFetcher task = new MediaWikiImageFetcher();
+	@Rule
+	public final TemporaryFolder serverTemporaryFolder = new TemporaryFolder();
+
+	private final TestMediaWikiImageFetcher task = new TestMediaWikiImageFetcher();
 
 	@Before
 	public void before() throws IOException {
@@ -35,14 +36,18 @@ public class MediaWikiImageFetcherTest {
 	}
 
 	@Test
-	public void processPageWithManyImages() throws MalformedURLException {
+	public void processPageWithManyImages() throws IOException {
+		MediaWikiMockFixture mediaWikiMockFixture = new MediaWikiMockFixture(serverTemporaryFolder.getRoot());
+		mediaWikiMockFixture.createImageFiles();
+		task.setImageServerContent(mediaWikiMockFixture.createImageServerContent("http"));
+
 		task.setUrl(new URL("http://wiki.eclipse.org/"));
-		String wikiPageName = "Linux_Tools_Project/Vagrant_Tooling/User_Guide";
+		String wikiPageName = "Some/My_Page";
 		task.setPageName(wikiPageName);
 
 		task.execute();
 
-		WikiPageAssertions.assertManyImages(temporaryFolder.getRoot());
+		mediaWikiMockFixture.assertImageFiles(temporaryFolder.getRoot());
 	}
 
 }

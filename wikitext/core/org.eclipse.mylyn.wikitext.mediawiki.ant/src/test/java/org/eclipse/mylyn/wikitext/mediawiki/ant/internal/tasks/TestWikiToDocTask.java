@@ -15,13 +15,11 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.URL;
-import java.util.Collections;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.tools.ant.Project;
-import org.eclipse.mylyn.wikitext.mediawiki.ant.internal.tasks.WikiToDocTask;
-import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
+
+import com.google.common.collect.ImmutableMap;
 
 /**
  * Extension of the {@link WikiToDocTask} for test purposes.
@@ -29,6 +27,8 @@ import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 class TestWikiToDocTask extends WikiToDocTask {
 
 	private Map<String, String> serverContent;
+
+	private Map<String, String> imageServerContent;
 
 	public TestWikiToDocTask() {
 		setProject(new Project());
@@ -42,6 +42,10 @@ class TestWikiToDocTask extends WikiToDocTask {
 	 */
 	public void setServerContent(Map<String, String> serverContent) {
 		this.serverContent = serverContent;
+	}
+
+	public void setImageServerContent(Map<String, String> imageServerContent) {
+		this.imageServerContent = ImmutableMap.copyOf(imageServerContent);
 	}
 
 	@Override
@@ -59,7 +63,7 @@ class TestWikiToDocTask extends WikiToDocTask {
 	}
 
 	@Override
-	protected Set<String> fetchImages(MarkupLanguage markupLanguage, Path path) {
-		return Collections.emptySet();
+	protected MediaWikiApiImageFetchingStrategy createImageFetchingStrategy() {
+		return new TestMediaWikiApiImageFetchingStrategy(imageServerContent);
 	}
 }
