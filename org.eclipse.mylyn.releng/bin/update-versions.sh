@@ -21,14 +21,24 @@ org.eclipse.mylyn/org.eclipse.mylyn-parent/pom.xml
 
 #mvn -Dtycho.mode=maven org.sonatype.tycho:tycho-versions-plugin:set-version -DnewVersion=1.4.1-SNAPSHOT
 
-update 1.13.0  1.14.0 # builds, versions, org.eclipse.mylyn.commons.identiy/notifications/repositories
-update 2.10.0  2.11.0 # docs
-update 2.12.0  2.13.0 # reviews
-update 3.21.0  3.22.0
-update 5.17.0  5.18.0 # CDT
+update 1.14.0 1.15.0 # builds, versions, org.eclipse.mylyn.commons.identiy/notifications/repositories
+update 2.13.0 2.14.0 # reviews
+update 3.22.0 3.23.0
+update 5.18.0 5.19.0 # CDT
+bug=505126
+version=3.23
 
 # Must do this for first SR on a branch
 #updateSnapshotSitesForSR 3.14
 
-
 #grep Bundle-Version */META-INF/MANIFEST.MF | grep -v 0.9.0 | grep -v 3.7.0 | grep -v 1.5.0
+
+git submodule foreach eval "git commit -a -m \"$bug: update \$(basename \$(pwd)) versions to $version
+
+Change-Id: I0000000000000000000000000000000000000000
+Task-Url: https://bugs.eclipse.org/bugs/show_bug.cgi?id=$bug\""
+
+git commit -a -m "$bug: update `basename $(pwd)` versions to $version
+
+Change-Id: I0000000000000000000000000000000000000000
+Task-Url: https://bugs.eclipse.org/bugs/show_bug.cgi?id=$bug"
