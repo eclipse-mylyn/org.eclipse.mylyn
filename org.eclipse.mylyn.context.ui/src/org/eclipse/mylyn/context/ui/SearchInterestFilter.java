@@ -18,7 +18,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.search.internal.ui.text.LineElement;
 
 /**
- * @since 3.22
+ * @since 3.23
  */
 public class SearchInterestFilter extends InterestFilter {
 
