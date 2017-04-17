@@ -51,9 +51,8 @@ public class BugzillaRestGetTaskAttachments extends BugzillaRestGetRequest<Array
 	protected ArrayList<TaskAttribute> parseFromJson(InputStreamReader in) {
 		TypeToken<ArrayList<TaskAttribute>> type = new TypeToken<ArrayList<TaskAttribute>>() {
 		};
-		return new GsonBuilder().registerTypeAdapter(type.getType(), new JSonTaskDataDeserializer())
-				.create()
-				.fromJson(in, type.getType());
+		return new GsonBuilder().registerTypeAdapter(type.getType(), new JSonTaskDataDeserializer()).create().fromJson(
+				in, type.getType());
 	}
 
 	BugzillaRestTaskSchema taskSchema = BugzillaRestTaskSchema.getDefault();
@@ -95,12 +94,10 @@ public class BugzillaRestGetTaskAttachments extends BugzillaRestGetRequest<Array
 					}
 					attachmentMapper.setContentType(attachmentObject.get("content_type").getAsString()); //$NON-NLS-1$
 					attachmentMapper.setDeprecated(attachmentObject.get("is_obsolete") //$NON-NLS-1$
-							.getAsString()
-							.equals(Integer.valueOf(1)));
+							.getAsBoolean());
 					attachmentMapper.setDescription(attachmentObject.get("summary").getAsString()); //$NON-NLS-1$
 					attachmentMapper.setFileName(attachmentObject.get("file_name").getAsString()); //$NON-NLS-1$
-					attachmentMapper
-							.setPatch(attachmentObject.get("is_patch").getAsString().equals(Integer.valueOf(1))); //$NON-NLS-1$
+					attachmentMapper.setPatch(attachmentObject.get("is_patch").getAsBoolean()); //$NON-NLS-1$
 					attachmentMapper.applyTo(attachmentAttribute);
 					JsonArray flags = attachmentObject.get("flags").getAsJsonArray(); //$NON-NLS-1$
 					if (flags.size() > 0) {
