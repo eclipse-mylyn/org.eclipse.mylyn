@@ -38,7 +38,6 @@ import org.eclipse.mylyn.commons.repositories.http.core.CommonHttpResponse;
 import org.eclipse.mylyn.commons.repositories.http.core.HttpUtil;
 import org.eclipse.mylyn.internal.bugzilla.rest.core.response.data.BugzillaRestIdsResult;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
-import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.osgi.util.NLS;
 
@@ -74,9 +73,10 @@ public class BugzillaRestPostNewAttachment extends BugzillaRestPostRequest<Bugzi
 		String contentType = source.getContentType();
 		String filename = source.getName();
 		boolean isPatch = false;
+		boolean isPrivate = false;
 
 		if (attachmentAttribute != null) {
-			TaskAttachmentMapper mapper = TaskAttachmentMapper.createFrom(attachmentAttribute);
+			BugzillaRestAttachmentMapper mapper = BugzillaRestAttachmentMapper.createFrom(attachmentAttribute);
 
 			if (mapper.getDescription() != null) {
 				description = mapper.getDescription();
@@ -92,6 +92,9 @@ public class BugzillaRestPostNewAttachment extends BugzillaRestPostRequest<Bugzi
 
 			if (mapper.isPatch() != null) {
 				isPatch = mapper.isPatch();
+			}
+			if (mapper.getAttachmentIsPrivate() != null) {
+				isPrivate = mapper.getAttachmentIsPrivate();
 			}
 		}
 		Assert.isNotNull(bugReportID);
@@ -136,7 +139,7 @@ public class BugzillaRestPostNewAttachment extends BugzillaRestPostRequest<Bugzi
 			out.name("content_type").value(contentType); //$NON-NLS-1$
 			out.name("data").value(dataBase64); //$NON-NLS-1$
 			out.name("file_name").value(filename); //$NON-NLS-1$
-			out.name("is_private").value(false); //$NON-NLS-1$
+			out.name("is_private").value(isPrivate); //$NON-NLS-1$
 			if (attachmentAttribute != null) {
 				attachmentAttribute.getAttributes().values();
 				Set<TaskAttribute> changed = new HashSet<TaskAttribute>();

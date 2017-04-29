@@ -23,6 +23,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 public class BugzillaRestAttachmentMapper extends TaskAttachmentMapper {
 	private Date deltaDate;
 
+	private Boolean attachmentIsPrivate;
+
 	@Override
 	public void applyTo(TaskAttribute taskAttribute) {
 		Assert.isNotNull(taskAttribute);
@@ -102,6 +104,13 @@ public class BugzillaRestAttachmentMapper extends TaskAttachmentMapper {
 			defaults.setLabel("Modification Date");
 			mapper.setDateValue(child, getDeltaDate());
 		}
+		if (getAttachmentIsPrivate() != null) {
+			TaskAttribute child = taskAttribute.createMappedAttribute("is_private"); //$NON-NLS-1$
+			TaskAttributeMetaData defaults = child.getMetaData().defaults();
+			defaults.setType(TaskAttribute.TYPE_BOOLEAN);
+			defaults.setLabel("private");
+			mapper.setBooleanValue(child, getAttachmentIsPrivate());
+		}
 	}
 
 	public static BugzillaRestAttachmentMapper createFrom(TaskAttribute taskAttribute) {
@@ -152,6 +161,10 @@ public class BugzillaRestAttachmentMapper extends TaskAttachmentMapper {
 		if (child != null) {
 			attachment.setDeltaDate(mapper.getDateValue(child));
 		}
+		child = taskAttribute.getMappedAttribute("is_private"); //$NON-NLS-1$
+		if (child != null) {
+			attachment.setAttachmentIsPrivate(mapper.getBooleanValue(child));
+		}
 
 		return attachment;
 	}
@@ -162,6 +175,14 @@ public class BugzillaRestAttachmentMapper extends TaskAttachmentMapper {
 
 	public void setDeltaDate(Date deltaDate) {
 		this.deltaDate = deltaDate;
+	}
+
+	public Boolean getAttachmentIsPrivate() {
+		return attachmentIsPrivate;
+	}
+
+	public void setAttachmentIsPrivate(Boolean attachmentIsPrivate) {
+		this.attachmentIsPrivate = attachmentIsPrivate;
 	}
 
 	public void addMissingFlags(TaskAttribute taskAttribute) {
