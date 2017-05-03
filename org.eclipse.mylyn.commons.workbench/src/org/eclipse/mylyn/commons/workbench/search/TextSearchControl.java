@@ -94,6 +94,10 @@ public class TextSearchControl extends Composite {
 	static {
 		ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(PlatformUI.PLUGIN_ID,
 				"$nl$/icons/full/etool16/clear_co.gif"); //$NON-NLS-1$
+		if (descriptor == null) {
+			descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(PlatformUI.PLUGIN_ID,
+					"$nl$/icons/full/etool16/clear_co.png"); //$NON-NLS-1$
+		}
 		if (descriptor != null) {
 			JFaceResources.getImageRegistry().put(CLEAR_ICON, descriptor);
 		}
@@ -160,7 +164,7 @@ public class TextSearchControl extends Composite {
 					Messages.TextControl_AccessibleListenerFindButton, Messages.TextControl_FindToolTip, ICON_SEARCH);
 			clearControl = createLabelButtonControl(this, textControl,
 					JFaceResources.getImageRegistry().getDescriptor(CLEAR_ICON),
-					WorkbenchMessages.FilteredTree_ClearToolTip,//FilteredTree_AccessibleListenerClearButton,
+					WorkbenchMessages.FilteredTree_ClearToolTip, //FilteredTree_AccessibleListenerClearButton,
 					WorkbenchMessages.FilteredTree_ClearToolTip, ICON_CANCEL);
 			addModifyListener(new ModifyListener() {
 
@@ -240,7 +244,8 @@ public class TextSearchControl extends Composite {
 	}
 
 	private Control createLabelButtonControl(Composite parent, final Text textControl,
-			ImageDescriptor activeImageDescriptor, final String accessibilityText, String toolTipText, final int detail) {
+			ImageDescriptor activeImageDescriptor, final String accessibilityText, String toolTipText,
+			final int detail) {
 
 		final Image nativeImage = parent.getDisplay().getSystemImage(detail);
 
