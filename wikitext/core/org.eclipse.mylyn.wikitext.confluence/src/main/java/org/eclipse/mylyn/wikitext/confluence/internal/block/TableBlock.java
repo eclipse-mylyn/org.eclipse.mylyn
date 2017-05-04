@@ -150,7 +150,8 @@ public class TableBlock extends Block {
 	}
 
 	private boolean isNestableCellContent(String cellContent) {
-		return NESTABLE_CELL_BLOCKS.contains(getConfluenceLanguage().startBlock(cellContent, 0).getClass());
+		Block startBlock = getConfluenceLanguage().startBlock(cellContent, 0);
+		return startBlock != null && NESTABLE_CELL_BLOCKS.contains(startBlock.getClass());
 	}
 
 	private void emitMarkup(String text, int lineOffset) {

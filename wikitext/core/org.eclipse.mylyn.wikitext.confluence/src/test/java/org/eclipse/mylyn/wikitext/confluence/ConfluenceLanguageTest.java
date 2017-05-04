@@ -711,6 +711,13 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	}
 
 	@Test
+	public void testTableWithEmptyCells() {
+		assertMarkup("<table><tr><td></td></tr></table>", "|   |");
+		assertMarkup("<table><tr><td></td><td></td></tr></table>", "|   |   |");
+		assertMarkup("<table><tr><td></td><td>text</td></tr></table>", "|   | text |");
+	}
+
+	@Test
 	public void testTableWithSingletonListAndWhitespacePrefix() {
 		// test for bug# 513661
 		assertMarkup("<table><tr><td><ul><li>one thing</li></ul></td><td>another cell</td></tr></table>",
