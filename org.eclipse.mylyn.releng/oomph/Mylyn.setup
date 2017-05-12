@@ -161,7 +161,7 @@
         <repository
             url="http://download.eclipse.org/eclipse/updates/3.8"/>
         <repository
-            url="http://download.eclipse.org/tools/orbit/downloads/drops/I20170209194730/repository"/>
+            url="http://download.eclipse.org/tools/orbit/downloads/drops/R20170516192513/repository/"/>
       </repositoryList>
       <repositoryList
           name="Neon">
@@ -174,7 +174,7 @@
         <repository
             url="http://download.eclipse.org/eclipse/updates/3.8"/>
         <repository
-            url="http://download.eclipse.org/tools/orbit/downloads/drops/I20170209194730/repository"/>
+            url="http://download.eclipse.org/tools/orbit/downloads/drops/R20170516192513/repository/"/>
       </repositoryList>
       <repositoryList
           name="Mars">
@@ -187,7 +187,7 @@
         <repository
             url="http://download.eclipse.org/eclipse/updates/3.8"/>
         <repository
-            url="http://download.eclipse.org/tools/orbit/downloads/drops/I20170209194730/repository"/>
+            url="http://download.eclipse.org/tools/orbit/downloads/drops/R20170516192513/repository/"/>
       </repositoryList>
     </targlet>
   </setupTask>
