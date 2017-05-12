@@ -370,6 +370,16 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	}
 
 	@Test
+	public void testHyperlinkWithUrlTitle() {
+		assertMarkup("<p>a <a href=\"http://example.com\">http://example.com</a> hyperlink</p>",
+				"a [http://example.com| http://example.com] hyperlink");
+		assertMarkup("<p>a <a href=\"http://example.com\">http://example.com with more text</a> hyperlink</p>",
+				"a [http://example.com with more text| http://example.com] hyperlink");
+		assertMarkup("<p>a <a href=\"http://example.com\">http://example.com <strong>bolded</strong></a> hyperlink</p>",
+				"a [http://example.com *bolded*| http://example.com] hyperlink");
+	}
+
+	@Test
 	public void testHyperlinkHash() {
 		String html = parser.parseToHtml("a [Example|#example] hyperlink");
 

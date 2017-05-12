@@ -15,6 +15,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.mylyn.wikitext.confluence.internal.ConfluenceContentState;
 import org.eclipse.mylyn.wikitext.confluence.internal.ConfluenceDocumentBuilder;
 import org.eclipse.mylyn.wikitext.confluence.internal.block.CodeBlock;
 import org.eclipse.mylyn.wikitext.confluence.internal.block.ColorBlock;
@@ -37,13 +38,14 @@ import org.eclipse.mylyn.wikitext.confluence.internal.phrase.SimpleWrappedPhrase
 import org.eclipse.mylyn.wikitext.confluence.internal.token.AnchorReplacementToken;
 import org.eclipse.mylyn.wikitext.confluence.internal.token.EscapedCharacterReplacementToken;
 import org.eclipse.mylyn.wikitext.confluence.internal.token.HorizontalRuleToken;
+import org.eclipse.mylyn.wikitext.confluence.internal.token.ImpliedHyperlinkReplacementToken;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.parser.markup.ContentState;
 import org.eclipse.mylyn.wikitext.parser.markup.token.EntityReferenceReplacementToken;
-import org.eclipse.mylyn.wikitext.parser.markup.token.ImpliedHyperlinkReplacementToken;
 import org.eclipse.mylyn.wikitext.parser.markup.token.PatternEntityReferenceReplacementToken;
 import org.eclipse.mylyn.wikitext.parser.markup.token.PatternLineBreakReplacementToken;
 
@@ -192,5 +194,10 @@ public class ConfluenceLanguage extends AbstractMarkupLanguage {
 		ConfluenceLanguage copy = (ConfluenceLanguage) super.clone();
 		copy.parseRelativeLinks = parseRelativeLinks;
 		return copy;
+	}
+
+	@Override
+	protected ContentState createState() {
+		return new ConfluenceContentState();
 	}
 }

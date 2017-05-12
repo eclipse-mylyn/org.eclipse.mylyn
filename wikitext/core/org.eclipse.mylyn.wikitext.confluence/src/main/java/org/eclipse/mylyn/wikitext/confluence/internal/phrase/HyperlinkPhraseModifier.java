@@ -13,6 +13,7 @@ package org.eclipse.mylyn.wikitext.confluence.internal.phrase;
 import java.text.MessageFormat;
 import java.util.regex.Pattern;
 
+import org.eclipse.mylyn.wikitext.confluence.internal.ConfluenceContentState;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
@@ -24,8 +25,8 @@ import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
  */
 public class HyperlinkPhraseModifier extends PatternBasedElement {
 
-	private static final Pattern QUALIFIED_HREF_PATTERN = Pattern.compile(
-			"(#|([a-z]{2,6}:)).*", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
+	private static final Pattern QUALIFIED_HREF_PATTERN = Pattern.compile("(#|([a-z]{2,6}:)).*", //$NON-NLS-1$
+			Pattern.CASE_INSENSITIVE);
 
 	private final boolean parseRelativeLinks;
 
@@ -91,13 +92,23 @@ public class HyperlinkPhraseModifier extends PatternBasedElement {
 					LinkAttributes attributes = new LinkAttributes();
 					attributes.setTitle(tip);
 					attributes.setHref(toInternalHref(href));
+
 					getBuilder().beginSpan(SpanType.LINK, attributes);
-
-					getMarkupLanguage().emitMarkupLine(parser, state, start(1), text, 0);
-
+					emitLinkText(text);
 					getBuilder().endSpan();
 				}
 			}
+		}
+
+		private void emitLinkText(String text) {
+			getState().setWithinLink(true);
+			getMarkupLanguage().emitMarkupLine(parser, state, start(1), text, 0);
+			getState().setWithinLink(false);
+		}
+
+		@Override
+		public ConfluenceContentState getState() {
+			return (ConfluenceContentState) super.getState();
 		}
 
 		private boolean shouldEmitAsLink(String text, String href) {
