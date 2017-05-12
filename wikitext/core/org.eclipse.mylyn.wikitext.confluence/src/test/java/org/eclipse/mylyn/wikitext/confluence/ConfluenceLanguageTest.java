@@ -1001,76 +1001,60 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 
 	@Test
 	public void testBoldItalics() {
-		String html = parser.parseToHtml("*_bold and italic_ not just bold*");
-
-		assertTrue(html.contains("<strong><em>bold and italic</em> not just bold</strong>"));
+		assertMarkup("<p><strong><em>bold and italic</em> not just bold</strong></p>",
+				"*_bold and italic_ not just bold*");
 	}
 
 	@Test
 	public void testInlineQuote() {
-		String html = parser.parseToHtml("a paragraph {quote}with inline{quote} quote");
-
-		assertTrue(html.contains("<body><p>a paragraph <q>with inline</q> quote</p></body>"));
+		assertMarkup("<p>a paragraph <q>with inline</q> quote</p>", "a paragraph {quote}with inline{quote} quote");
 	}
 
 	@Test
 	public void testInlineQuoteWithBullets() {
-		String html = parser.parseToHtml("* a bullet {quote}with inline{quote} quote");
-
-		assertTrue(html.contains("<body><ul><li>a bullet <q>with inline</q> quote</li></ul></body>"));
+		assertMarkup("<ul><li>a bullet <q>with inline</q> quote</li></ul>",
+				"* a bullet {quote}with inline{quote} quote");
 	}
 
 	@Test
 	public void testInlineQuoteWithBullets2() {
-		String html = parser.parseToHtml("* {quote}a bullet with inline{quote} quote");
-
-		assertTrue(html.contains("<body><ul><li><q>a bullet with inline</q> quote</li></ul></body>"));
+		assertMarkup("<ul><li><q>a bullet with inline</q> quote</li></ul>",
+				"* {quote}a bullet with inline{quote} quote");
 	}
 
 	@Test
 	public void testInlineQuoteNegativeMatch() {
-		String html = parser.parseToHtml("a paragraph {quote}with inline quote");
-
-		assertTrue(html.contains("<body><p>a paragraph {quote}with inline quote</p></body>"));
+		assertMarkup("<p>a paragraph {quote}with inline quote</p>", "a paragraph {quote}with inline quote");
 	}
 
 	@Test
 	public void testInlineQuoteNegativeMatch2() {
-		String html = parser.parseToHtml("{quote}a paragraph with {quote}inline quote{quote}");
-
-		assertTrue(html
-				.contains("<body><blockquote><p>a paragraph with </p></blockquote><p>inline quote{quote}</p></body>"));
+		assertMarkup("<blockquote><p>a paragraph with </p></blockquote><p>inline quote{quote}</p>",
+				"{quote}a paragraph with {quote}inline quote{quote}");
 	}
 
 	@Test
 	public void testColor() {
-		String html = parser.parseToHtml("{color:red}\na paragraph\n\nanother paragraph\n{color}\ntext");
-
-		assertTrue(html.contains(
-				"<body><div style=\"color: red;\"><p>a paragraph</p><p>another paragraph</p></div><p>text</p></body>"));
+		assertMarkup("<div style=\"color: red;\"><p>a paragraph</p><p>another paragraph</p></div><p>text</p>",
+				"{color:red}\na paragraph\n\nanother paragraph\n{color}\ntext");
 	}
 
 	@Test
 	public void testColor2() {
-		String html = parser.parseToHtml("{color:red}a paragraph\n\nanother paragraph{color}text");
-
-		assertTrue(html.contains(
-				"<body><div style=\"color: red;\"><p>a paragraph</p><p>another paragraph</p></div><p>text</p></body>"));
+		assertMarkup("<div style=\"color: red;\"><p>a paragraph</p><p>another paragraph</p></div><p>text</p>",
+				"{color:red}a paragraph\n\nanother paragraph{color}text");
 	}
 
 	@Test
 	public void testColor3() {
-		String html = parser.parseToHtml("text {color:red}more text{color} text");
-
-		assertTrue(html.contains("<body><p>text <span style=\"color: red;\">more text</span> text</p></body>"));
+		assertMarkup("<p>text <span style=\"color: red;\">more text</span> text</p>",
+				"text {color:red}more text{color} text");
 	}
 
 	@Test
 	public void testColor4() {
-		String html = parser.parseToHtml("text\n{color:red}more text{color}\ntext");
-
-		assertTrue(
-				html.contains("<body><p>text</p><div style=\"color: red;\"><p>more text</p></div><p>text</p></body>"));
+		assertMarkup("<p>text</p><div style=\"color: red;\"><p>more text</p></div><p>text</p>",
+				"text\n{color:red}more text{color}\ntext");
 	}
 
 	@Test
@@ -1122,30 +1106,22 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 
 	@Test
 	public void testParagraphWithSingleNewline() {
-		String html = parser.parseToHtml("one\ntwo\n\nthree");
-
-		assertTrue(html.contains("<body><p>one<br/>two</p><p>three</p></body>"));
+		assertMarkup("<p>one<br/>two</p><p>three</p>", "one\ntwo\n\nthree");
 	}
 
 	@Test
 	public void testParagraphWithMultipleNewlines() {
-		String html = parser.parseToHtml("one\n\\\\\\\\two\n\nthree");
-
-		assertTrue(html.contains("<body><p>one<br/><br/><br/>two</p><p>three</p></body>"));
+		assertMarkup("<p>one<br/><br/><br/>two</p><p>three</p>", "one\n\\\\\\\\two\n\nthree");
 	}
 
 	@Test
 	public void testParagraphWithMultipleNewlines2() {
-		String html = parser.parseToHtml("one\\\\\\\\\\\\two\n\nthree");
-
-		assertTrue(html.contains("<body><p>one<br/><br/><br/>two</p><p>three</p></body>"));
+		assertMarkup("<p>one<br/><br/><br/>two</p><p>three</p>", "one\\\\\\\\\\\\two\n\nthree");
 	}
 
 	@Test
 	public void testListItemWithNewline() {
-		String html = parser.parseToHtml("* one\ntwo\n* three");
-
-		assertTrue(html.contains("<body><ul><li>one<br/>two</li><li>three</li></ul></body>"));
+		assertMarkup("<ul><li>one<br/>two</li><li>three</li></ul>", "* one\ntwo\n* three");
 	}
 
 	@Test
@@ -1155,9 +1131,7 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 
 	@Test
 	public void testListItemWithTwoNewlines() {
-		String html = parser.parseToHtml("* one\n\ntwo\n* three");
-
-		assertTrue(html.contains("<body><ul><li>one</li></ul><p>two</p><ul><li>three</li></ul></body>"));
+		assertMarkup("<ul><li>one</li></ul><p>two</p><ul><li>three</li></ul>", "* one\n\ntwo\n* three");
 	}
 
 	@Test
