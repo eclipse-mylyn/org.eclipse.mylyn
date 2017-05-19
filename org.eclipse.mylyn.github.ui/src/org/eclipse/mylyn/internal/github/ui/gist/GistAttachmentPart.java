@@ -198,7 +198,7 @@ public class GistAttachmentPart extends AbstractTaskEditorPart {
 			attachmentList.add(taskAttachment);
 		}
 		attachmentsViewer.setContentProvider(new ArrayContentProvider());
-		attachmentsViewer.setLabelProvider(new AttachmentTableLabelProvider(
+		attachmentsViewer.setLabelProvider(new GistAttachmentTableLabelProvider(
 				getModel(), getTaskEditorPage().getAttributeEditorToolkit()) {
 
 			public String getColumnText(Object element, int columnIndex) {
