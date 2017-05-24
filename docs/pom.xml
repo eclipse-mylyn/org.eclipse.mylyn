@@ -42,6 +42,14 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
+            <id>epub-local-p2</id>
+            <url>${project.baseUri}../../epub/ui/org.eclipse.mylyn.docs.epub-site/target/site/</url>
+            <layout>p2</layout>
+        </repository>
+        <repository>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
             <id>mylyn-snapshots</id>
             <url>https://repo.eclipse.org/content/repositories/mylyn-snapshots/</url>
             <layout>default</layout>
@@ -67,6 +75,14 @@
                     </snapshots>
                     <id>wikitext-local-p2</id>
                     <url>${project.baseUri}../../wikitext/ui/org.eclipse.mylyn.wikitext-site/target/site/</url>
+                    <layout>p2</layout>
+                </repository>
+                <repository>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                    <id>epub-local-p2</id>
+                    <url>${project.baseUri}../../epub/ui/org.eclipse.mylyn.docs.epub-site/target/site/</url>
                     <layout>p2</layout>
                 </repository>
                 <repository>
@@ -134,14 +150,6 @@
 
         <module>org.eclipse.mylyn.htmltext-feature</module>
         <module>org.eclipse.mylyn.htmltext.ui</module>
-
-        <module>org.eclipse.mylyn.docs.epub.core</module>
-        <module>org.eclipse.mylyn.docs.epub.ant.core</module>
-        <module>org.eclipse.mylyn.docs.epub.ui</module>
-        <module>org.eclipse.mylyn.docs.epub.help</module>
-        <module>org.eclipse.mylyn.docs.epub.sdk-feature</module>
-        <module>org.eclipse.mylyn.docs.epub.tests</module>
-        <module>org.eclipse.mylyn.docs.epub-feature</module>
 
         <module>org.eclipse.mylyn.docs-site</module>
     </modules>

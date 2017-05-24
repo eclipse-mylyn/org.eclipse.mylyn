@@ -11,6 +11,7 @@
 
   <modules>
     <module>wikitext</module>
+    <module>epub</module>
     <module>docs-pom.xml</module>
   </modules>
 </project>

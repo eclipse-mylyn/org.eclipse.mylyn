@@ -70,7 +70,7 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>remove-wikitext-from-p2-index</id>
+                        <id>remove-from-p2-index</id>
                         <phase>generate-sources</phase>
                         <configuration>
                             <target>
@@ -78,6 +78,10 @@
                                 <touch file="${p2-index-file}" mkdirs="true"/>
                                 <replaceregexp file="${p2-index-file}" flags="gm">
                                     <regexp pattern="^p2\.osgi\.bundle\:org\.eclipse\.mylyn\.wikitext\..*$"/>
+                                    <substitution expression=""/>
+                                </replaceregexp>
+                                <replaceregexp file="${p2-index-file}" flags="gm">
+                                    <regexp pattern="^p2\.osgi\.bundle\:org\.eclipse\.mylyn\.docs\.epub\..*$"/>
                                     <substitution expression=""/>
                                 </replaceregexp>
                                 <delete includeemptydirs="true">
@@ -89,6 +93,12 @@
                                     </fileset>
                                     <fileset dir="${p2.repo.local}" defaultexcludes="false">
                                         <include name="p2/osgi/bundle/org.eclipse.mylyn.wikitext*/**"/>
+                                    </fileset>
+                                    <fileset dir="${p2.repo.local}" defaultexcludes="false">
+                                        <include name="p2/org/eclipse/update/feature/org.eclipse.mylyn.docs.epub*/**"/>
+                                    </fileset>
+                                    <fileset dir="${p2.repo.local}" defaultexcludes="false">
+                                        <include name="p2/osgi/bundle/org.eclipse.mylyn.docs.epub*/**"/>
                                     </fileset>
                                 </delete>
                             </target>
