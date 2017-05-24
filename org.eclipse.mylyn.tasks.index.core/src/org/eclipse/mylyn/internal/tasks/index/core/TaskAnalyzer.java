@@ -11,23 +11,27 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.index.core;
 
-import org.apache.lucene.analysis.KeywordAnalyzer;
-import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.core.KeywordAnalyzer;
+import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.util.Version;
 
 /**
  * An analyzer that is aware of task fields
- * 
+ *
  * @author David Green
  */
 class TaskAnalyzer {
 
 	public static PerFieldAnalyzerWrapper instance() {
-		PerFieldAnalyzerWrapper wrapper = new PerFieldAnalyzerWrapper(new StandardAnalyzer(Version.LUCENE_CURRENT));
-		wrapper.addAnalyzer(TaskListIndex.FIELD_IDENTIFIER.getIndexKey(), new KeywordAnalyzer());
-		wrapper.addAnalyzer(TaskListIndex.FIELD_TASK_KEY.getIndexKey(), new KeywordAnalyzer());
-		wrapper.addAnalyzer(TaskListIndex.FIELD_REPOSITORY_URL.getIndexKey(), new KeywordAnalyzer());
+		Map<String, Analyzer> analyzerPerField = new HashMap<String, Analyzer>();
+		analyzerPerField.put(TaskListIndex.FIELD_IDENTIFIER.getIndexKey(), new KeywordAnalyzer());
+		analyzerPerField.put(TaskListIndex.FIELD_TASK_KEY.getIndexKey(), new KeywordAnalyzer());
+		analyzerPerField.put(TaskListIndex.FIELD_REPOSITORY_URL.getIndexKey(), new KeywordAnalyzer());
+		PerFieldAnalyzerWrapper wrapper = new PerFieldAnalyzerWrapper(new StandardAnalyzer(), analyzerPerField);
 		return wrapper;
 	}
 }

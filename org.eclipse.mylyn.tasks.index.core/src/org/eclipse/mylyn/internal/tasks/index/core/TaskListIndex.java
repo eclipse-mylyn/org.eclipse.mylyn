@@ -36,14 +36,20 @@ import java.util.logging.Logger;
 import org.apache.lucene.document.DateTools;
 import org.apache.lucene.document.DateTools.Resolution;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.document.StringField;
+import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexFormatTooOldException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.IndexWriterConfig.OpenMode;
+import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
@@ -57,7 +63,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.store.NIOFSDirectory;
-import org.apache.lucene.util.Version;
+import org.apache.lucene.util.InfoStream;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -447,7 +453,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 						}
 					}
 					try {
-						directory = new NIOFSDirectory(indexLocation);
+						directory = new NIOFSDirectory(indexLocation.toPath());
 					} catch (IOException e) {
 						StatusHandler.log(new Status(IStatus.ERROR, TasksIndexCore.ID_PLUGIN,
 								"Cannot create task list index", e)); //$NON-NLS-1$
@@ -601,12 +607,6 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 					} catch (IOException e) {
 						StatusHandler.log(new Status(IStatus.ERROR, TasksIndexCore.ID_PLUGIN,
 								"Unexpected failure within task list index", e)); //$NON-NLS-1$
-					} finally {
-						try {
-							indexSearcher.close();
-						} catch (IOException e) {
-							// ignore
-						}
 					}
 
 				} else {
@@ -684,12 +684,6 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 				} catch (IOException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, TasksIndexCore.ID_PLUGIN,
 							"Unexpected failure within task list index", e)); //$NON-NLS-1$
-				} finally {
-					try {
-						indexSearcher.close();
-					} catch (IOException e) {
-						// ignore
-					}
 				}
 			}
 		} finally {
@@ -706,7 +700,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		if (!hasBooleanSpecifiers && defaultField.equals(FIELD_SUMMARY) && !containsSpecialCharacters(patternString)) {
 			return new PrefixQuery(new Term(defaultField.getIndexKey(), patternString));
 		}
-		QueryParser qp = new QueryParser(Version.LUCENE_CURRENT, defaultField.getIndexKey(), TaskAnalyzer.instance());
+		QueryParser qp = new QueryParser(defaultField.getIndexKey(), TaskAnalyzer.instance());
 		Query q;
 		try {
 			q = qp.parse(patternString);
@@ -718,16 +712,22 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		// to what we're expecting
 		// from previous task list search
 		if (q instanceof BooleanQuery) {
+			//Since queries and clauses are now immutable we need to rewrite q
+			BooleanQuery.Builder qb = new BooleanQuery.Builder();
+
 			BooleanQuery query = (BooleanQuery) q;
-			for (BooleanClause clause : query.getClauses()) {
+			for (BooleanClause clause : query.clauses()) {
 				if (clause.getQuery() instanceof TermQuery) {
 					TermQuery termQuery = (TermQuery) clause.getQuery();
-					clause.setQuery(new PrefixQuery(termQuery.getTerm()));
+					clause = new BooleanClause(new PrefixQuery(termQuery.getTerm()), clause.getOccur());
+					qb.add(clause);
 				}
 				if (!hasBooleanSpecifiers) {
-					clause.setOccur(Occur.MUST);
+					clause = new BooleanClause(clause.getQuery(), Occur.MUST);
+					qb.add(clause);
 				}
 			}
+			q = qb.build();
 		} else if (q instanceof TermQuery) {
 			return new PrefixQuery(((TermQuery) q).getTerm());
 		}
@@ -781,7 +781,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		try {
 			synchronized (this) {
 				if (indexReader == null) {
-					indexReader = IndexReader.open(directory, true);
+					indexReader = DirectoryReader.open(directory);
 					lastResults = null;
 				}
 				return indexReader;
@@ -966,9 +966,8 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		}
 
 		if (isPersonField(indexField)) {
-			IRepositoryPerson repositoryPerson = attribute.getTaskData()
-					.getAttributeMapper()
-					.getRepositoryPerson(attribute);
+			IRepositoryPerson repositoryPerson = attribute.getTaskData().getAttributeMapper().getRepositoryPerson(
+					attribute);
 			addIndexedAttribute(document, indexField, repositoryPerson);
 
 			if (values.size() <= 1) {
@@ -998,15 +997,14 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		if (value == null) {
 			return;
 		}
-		Field field = document.getField(indexField.getIndexKey());
+		IndexableField field = document.getField(indexField.getIndexKey());
 		if (field == null) {
-			field = new Field(indexField.getIndexKey(), value, Store.YES,
-					org.apache.lucene.document.Field.Index.ANALYZED);
+			field = new TextField(indexField.getIndexKey(), value, Store.YES);
 			document.add(field);
 		} else {
 			String existingValue = field.stringValue();
 			if (!indexField.equals(FIELD_PERSON) || !existingValue.contains(value)) {
-				field.setValue(existingValue + " " + value); //$NON-NLS-1$
+				document.add(new TextField(field.name(), existingValue + " " + value, Store.YES)); //$NON-NLS-1$
 			}
 		}
 	}
@@ -1019,13 +1017,12 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		// move the date by the GMT offset if there is any
 
 		String value = DateTools.dateToString(date, Resolution.HOUR);
-		Field field = document.getField(indexField.getIndexKey());
+		IndexableField field = document.getField(indexField.getIndexKey());
 		if (field == null) {
-			field = new Field(indexField.getIndexKey(), value, Store.YES,
-					org.apache.lucene.document.Field.Index.ANALYZED);
+			field = new StringField(indexField.getIndexKey(), value, Store.YES);
 			document.add(field);
 		} else {
-			field.setValue(value);
+			document.add(new StringField(field.name(), value, Store.YES));
 		}
 	}
 
@@ -1072,8 +1069,8 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 	 * @return a representation of the value with characters escaped
 	 */
 	public String escapeFieldValue(String value) {
-		// see http://lucene.apache.org/java/2_9_1/queryparsersyntax.html#Escaping%20Special%20Characters
-		String escaped = value.replaceAll("([\\+\\-\\!\\(\\)\\{\\}\\[\\]^\"~\\*\\?:\\\\]|&&|\\|\\|)", "\\\\$1"); //$NON-NLS-1$ //$NON-NLS-2$
+		// see https://lucene.apache.org/core/6_1_0/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#Escaping_Special_Characters
+		String escaped = value.replaceAll("([\\/\\+\\-\\!\\(\\)\\{\\}\\[\\]^\"~\\*\\?:\\\\]|&&|\\|\\|)", "\\\\$1"); //$NON-NLS-1$ //$NON-NLS-2$
 		return escaped;
 	}
 
@@ -1084,7 +1081,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 			try {
 				if (!rebuildIndex) {
 					try {
-						IndexReader reader = IndexReader.open(directory, false);
+						IndexReader reader = DirectoryReader.open(directory);
 						reader.close();
 					} catch (CorruptIndexException e) {
 						rebuildIndex = true;
@@ -1229,9 +1226,9 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 			IndexWriter writer;
 			try {
 				writer = createIndexWriter(true);
-			} catch (CorruptIndexException e) {
+			} catch (CorruptIndexException | IndexFormatTooOldException e) {
 				if (directory instanceof FSDirectory) {
-					cleanDirectory(((FSDirectory) directory).getFile());
+					cleanDirectory(((FSDirectory) directory).getDirectory().toFile());
 					writer = createIndexWriter(true);
 				} else {
 					throw e;
@@ -1279,7 +1276,10 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 
 	protected IndexWriter createIndexWriter(boolean create)
 			throws CorruptIndexException, LockObtainFailedException, IOException {
-		return new IndexWriter(directory, TaskAnalyzer.instance(), create, IndexWriter.MaxFieldLength.UNLIMITED);
+		IndexWriterConfig writerConfig = new IndexWriterConfig(TaskAnalyzer.instance());
+		writerConfig.setInfoStream(InfoStream.NO_OUTPUT);
+		writerConfig.setOpenMode(create ? OpenMode.CREATE : OpenMode.APPEND);
+		return new IndexWriter(directory, writerConfig);
 	}
 
 	/**
@@ -1298,8 +1298,7 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 
 		Document document = new Document();
 
-		document.add(new Field(FIELD_IDENTIFIER.getIndexKey(), task.getHandleIdentifier(), Store.YES,
-				org.apache.lucene.document.Field.Index.ANALYZED));
+		document.add(new TextField(FIELD_IDENTIFIER.getIndexKey(), task.getHandleIdentifier(), Store.YES));
 		if (taskData == null) {
 			if ("local".equals(((AbstractTask) task).getConnectorKind())) { //$NON-NLS-1$
 				addIndexedAttributes(document, task);
