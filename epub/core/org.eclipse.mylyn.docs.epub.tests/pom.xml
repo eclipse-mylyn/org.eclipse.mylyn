@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>epub.core</artifactId>
+		<groupId>org.eclipse.mylyn.docs</groupId>
+		<version>4.0.0-SNAPSHOT</version>
+		<relativePath>..</relativePath>
+	</parent>
+	<artifactId>org.eclipse.mylyn.docs.epub.tests</artifactId>
+	<groupId>org.eclipse.mylyn.docs</groupId>
+	<version>4.0.0-SNAPSHOT</version>
+	<packaging>bundle</packaging>
+	
+	<properties>
+		<test.suite>${project.artifactId}.AllTests</test.suite>
+	</properties>
+	
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<id>epubcheck</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<tasks>
+								<!-- Bug 454932 - fix or remove failing EPUB test <ant antfile="epubcheck.xml" 
+									inheritAll="true"/> -->
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.ant</groupId>
+			<artifactId>ant</artifactId>
+			<version>1.9.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.mylyn.docs</groupId>
+			<artifactId>org.eclipse.mylyn.docs.epub.core</artifactId>
+			<version>4.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.mylyn.docs</groupId>
+			<artifactId>org.eclipse.mylyn.docs.epub.ant</artifactId>
+			<version>4.0.0-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+</project>

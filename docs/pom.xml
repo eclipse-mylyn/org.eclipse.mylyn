@@ -135,13 +135,7 @@
         <module>org.eclipse.mylyn.htmltext-feature</module>
         <module>org.eclipse.mylyn.htmltext.ui</module>
 
-        <module>org.eclipse.mylyn.docs.epub.core</module>
-        <module>org.eclipse.mylyn.docs.epub.ant.core</module>
-        <module>org.eclipse.mylyn.docs.epub.ui</module>
-        <module>org.eclipse.mylyn.docs.epub.help</module>
         <module>org.eclipse.mylyn.docs.epub.sdk-feature</module>
-        <module>org.eclipse.mylyn.docs.epub.tests</module>
-        <module>org.eclipse.mylyn.docs.epub-feature</module>
 
         <module>org.eclipse.mylyn.docs-site</module>
     </modules>
