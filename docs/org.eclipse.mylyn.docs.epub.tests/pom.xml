@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>org.eclipse.mylyn.docs-parent</artifactId>
+		<groupId>org.eclipse.mylyn.docs</groupId>
+		<version>2.11.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>org.eclipse.mylyn.docs.epub.tests</artifactId>
+	<version>3.2.0-SNAPSHOT</version>
+	<packaging>eclipse-test-plugin</packaging>
+  <properties>
+    <test.suite>${project.artifactId}.AllTests</test.suite>
+  </properties>
+	<build>
+		<plugins>		
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+					  <id>epubcheck</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<tasks>
+							<!-- Bug 454932 - fix or remove failing EPUB test
+                				<ant antfile="epubcheck.xml" inheritAll="true"/>
+                			-->
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-surefire-plugin</artifactId>
+				<version>${tycho-version}</version>
+		        <configuration>
+		          <skip>${test.component.skip}</skip> 
+		          <testSuite>${project.artifactId}</testSuite>
+		          <testClass>${test.suite}</testClass>
+		          <useUIHarness>false</useUIHarness>
+		        </configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-source-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+	<groupId>org.eclipse.mylyn.docs.epub</groupId>
+</project>
