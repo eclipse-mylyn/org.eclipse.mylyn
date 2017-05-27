@@ -33,6 +33,13 @@ class mylyn {
     ensure  => running,
     require => Package["apache2"],
   }
+ 
+  exec { "Enable cgi module":
+    command => "a2enmod cgi",
+    require => Package["apache2"],
+    notify  => Service["apache2"],
+    creates => "/etc/apache2/mods-enabled/cgi.load",
+  }
 
   file { "/usr/lib/cgi-bin/services":
     source  => "puppet:///modules/mylyn/services.cgi",
@@ -44,7 +51,7 @@ class mylyn {
     content => template('mylyn/index.html.erb'),
     mode => 644,
     require => Package[$requirements],
-  }
+  }  
 
 #  for local testing of the mylyn website (see http://wiki.eclipse.org/Mylyn/Website)
 #  file { "/var/www/html/mylyn":
