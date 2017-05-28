@@ -86,15 +86,15 @@ class bugzilla {
     require => Exec["apt-get update"],
   }
 
+  service { "apache2":
+    ensure  => running,
+    require => Package["apache2"],
+  }
+ 
   exec { "Enable php5 module":
     command => "a2enmod php5",
     require => Package["libapache2-mod-php5"],
     creates => "/etc/apache2/mods-enabled/php5.load",
-  }
-
-  service { "apache2":
-    ensure  => running,
-    require => Package["apache2"],
   }
 
   exec { "Enable auth_digest module":

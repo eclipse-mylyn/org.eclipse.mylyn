@@ -121,7 +121,7 @@ define bugzilla::site (
         onlyif    => "/usr/bin/test -d $base/$bugzillaDir",
         cwd     => "$base/$bugzillaDir",
         user => "$userOwner",
-        timeout => 300,
+        timeout => 360,
         logoutput => true,
         require   => Exec["prepare bugzilla"],
       }
@@ -129,7 +129,7 @@ define bugzilla::site (
         command => "git clone https://github.com/bugzilla/bugzilla $base/$bugzillaDir",
         cwd     => "$base",
         user => "$userOwner",
-        timeout => 300,
+        timeout => 360,
         creates => "$base/$bugzillaDir",
         require   => Exec["prepare bugzilla"],
         notify => Exec["end extract bugzilla $bugzillaDir"],
@@ -139,7 +139,7 @@ define bugzilla::site (
         command => "git clone -b $branch https://github.com/bugzilla/bugzilla $base/$bugzillaDir",
         cwd     => "$base",
         user => "$userOwner",
-        timeout => 300,
+        timeout => 360,
         creates => "$base/$bugzillaDir",
         require   => Exec["prepare bugzilla"],
       }
@@ -148,7 +148,7 @@ define bugzilla::site (
         cwd     => "$base/$bugzillaDir",
         user => "$userOwner",
         logoutput => true,
-        timeout => 300,
+        timeout => 360,
         require   => Exec["master $branchTagInternal git clone $bugzillaDir"],
         notify => Exec["end extract bugzilla $bugzillaDir"],
       }
@@ -159,7 +159,7 @@ define bugzilla::site (
       onlyif    => "/usr/bin/test -d $base/$bugzillaDir",
       cwd     => "$base/$bugzillaDir",
       user => "$userOwner",
-      timeout => 300,
+      timeout => 360,
       logoutput => true,
       require   => Exec["prepare bugzilla"],
       notify => Exec["end extract bugzilla $bugzillaDir"],
@@ -169,7 +169,7 @@ define bugzilla::site (
       command => "git clone -b $branch https://github.com/bugzilla/bugzilla $base/$bugzillaDir",
       cwd     => "$base",
       user => "$userOwner",
-      timeout => 300,
+      timeout => 360,
       creates => "$base/$bugzillaDir",
       require   => Exec["$branch $branchTagInternal git fetch $bugzillaDir"],
     }
@@ -185,7 +185,7 @@ define bugzilla::site (
         command => "git checkout $branchTagInternal",
         cwd     => "$base/$bugzillaDir",
         user => "$userOwner",
-        timeout => 300,
+        timeout => 360,
         require   => Exec["$branch $branchTagInternal git clone $bugzillaDir"],
         notify => Exec["end extract bugzilla $bugzillaDir"],
       }
@@ -210,7 +210,7 @@ define bugzilla::site (
     cwd     => "$base/$bugzillaDir",
     creates => "$base/$bugzillaDir/CGI.out",
     user => "$userOwner",
-    timeout => 300,
+    timeout => 360,
     require   => File["$base/$bugzillaDir/installPerlModules.sh"]
   }
 
