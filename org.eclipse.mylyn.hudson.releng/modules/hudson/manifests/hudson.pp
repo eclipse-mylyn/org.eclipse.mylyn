@@ -40,6 +40,7 @@ define hudson::hudson(
       creates => "$base/archive/${type}-$version.war",
       user => "$userOwner",
       require => Exec["prepare $version"],
+      timeout => 360,
 	}
 
 }

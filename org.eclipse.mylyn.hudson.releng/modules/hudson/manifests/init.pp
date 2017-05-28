@@ -9,7 +9,7 @@ class hudson {
     onlyif  => "find /var/lib/apt/lists/ -mtime -7 | (grep -q Package; [ $? != 0 ])",
   }
 
-  $requirements = [ "apache2", "openjdk-7-jre-headless:i386", "git-core", ]
+  $requirements = [ "apache2", "git-core", ]
 
   package { $requirements:
     ensure  => "installed",
@@ -25,24 +25,28 @@ class hudson {
     command => "a2enmod auth_digest",
     require => Package["apache2"],
     creates => "/etc/apache2/mods-enabled/auth_digest.load",
+    notify  => Service["apache2"],
   }
 
   exec { "Enable proxy mod":
     command => "a2enmod proxy",
     require => Package["apache2"],
     creates => "/etc/apache2/mods-enabled/proxy.load",
+    notify  => Service["apache2"],
   }
 
   exec { "Enable proxy_http mod":
     command => "a2enmod proxy_http",
     require => Package["apache2"],
     creates => "/etc/apache2/mods-enabled/proxy_http.load",
+    notify  => Service["apache2"],
   }
 
   exec { "Enable ssl module":
     command => "a2enmod ssl",
     require => Package["apache2"],
     creates => "/etc/apache2/mods-enabled/ssl.load",
+    notify  => Service["apache2"],
   }
 
   file { "/etc/apache2/sites-enabled/001-default-ssl":
