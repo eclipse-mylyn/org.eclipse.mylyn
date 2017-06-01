@@ -17,6 +17,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -40,11 +42,17 @@ public class TaskDataStore {
 
 	private final TaskDataExternalizer externalizer;
 
+	private final ReadWriteLock lock = new ReentrantReadWriteLock();
+
 	public TaskDataStore(IRepositoryManager taskRepositoryManager) {
-		this.externalizer = new TaskDataExternalizer(taskRepositoryManager);
+		this(new TaskDataExternalizer(taskRepositoryManager));
 	}
 
-	public synchronized TaskDataState discardEdits(File file) throws CoreException {
+	TaskDataStore(TaskDataExternalizer externalizer) {
+		this.externalizer = externalizer;
+	}
+
+	public TaskDataState discardEdits(File file) throws CoreException {
 		TaskDataState state = readState(file);
 		if (state != null) {
 			state.setEditsData(null);
@@ -53,11 +61,11 @@ public class TaskDataStore {
 		return state;
 	}
 
-	public synchronized TaskDataState getTaskDataState(File file) throws CoreException {
+	public TaskDataState getTaskDataState(File file) throws CoreException {
 		return readState(file);
 	}
 
-	public synchronized void putEdits(File file, TaskData data) throws CoreException {
+	public void putEdits(File file, TaskData data) throws CoreException {
 		Assert.isNotNull(file);
 		Assert.isNotNull(data);
 		TaskDataState state = readState(file);
@@ -68,8 +76,7 @@ public class TaskDataStore {
 		writeState(file, state);
 	}
 
-	public synchronized TaskDataState putTaskData(File file, TaskData data, boolean setLastRead, boolean user)
-			throws CoreException {
+	public TaskDataState putTaskData(File file, TaskData data, boolean setLastRead, boolean user) throws CoreException {
 		Assert.isNotNull(file);
 		Assert.isNotNull(data);
 		TaskDataState state = null;
@@ -93,7 +100,7 @@ public class TaskDataStore {
 		return state;
 	}
 
-	public synchronized TaskDataState setTaskData(File file, TaskData data) throws CoreException {
+	public TaskDataState setTaskData(File file, TaskData data) throws CoreException {
 		Assert.isNotNull(file);
 		Assert.isNotNull(data);
 
@@ -123,6 +130,7 @@ public class TaskDataStore {
 	}
 
 	private TaskDataState readState(File file) throws CoreException {
+		lock.readLock().lock();
 		try {
 			if (file.exists()) {
 				try {
@@ -146,10 +154,13 @@ public class TaskDataStore {
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error reading task data", //$NON-NLS-1$
 					e));
+		} finally {
+			lock.readLock().unlock();
 		}
 	}
 
 	private void writeState(File file, TaskDataState state) throws CoreException {
+		lock.writeLock().lock();
 		try {
 			try (ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
 				out.setMethod(ZipOutputStream.DEFLATED);
@@ -162,15 +173,22 @@ public class TaskDataStore {
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error writing task data", //$NON-NLS-1$
 					e));
+		} finally {
+			lock.writeLock().unlock();
 		}
 	}
 
-	public synchronized void putTaskData(File file, TaskDataState state) throws CoreException {
+	public void putTaskData(File file, TaskDataState state) throws CoreException {
 		writeState(file, state);
 	}
 
-	public synchronized boolean deleteTaskData(File file) {
-		return file.delete();
+	public boolean deleteTaskData(File file) {
+		lock.writeLock().lock();
+		try {
+			return file.delete();
+		} finally {
+			lock.writeLock().unlock();
+		}
 	}
 
 }
