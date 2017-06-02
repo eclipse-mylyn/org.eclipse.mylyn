@@ -111,20 +111,17 @@ public class TaskDataStore {
 	}
 
 	private TaskDataState readStateInternal(File file, boolean xml11) throws IOException, SAXException {
-		ZipInputStream in = new ZipInputStream(new BufferedInputStream(new FileInputStream(file)));
-		try {
+		try (ZipInputStream in = new ZipInputStream(new BufferedInputStream(new FileInputStream(file)))) {
 			in.getNextEntry();
-			// bug 268456: When TaskData that contains C0 control characters is written to disk using XML 1.0 reading it back 
-			// in fails with a SAXException. The XML 1.1 standard allows C0 entities but fails if C1 entities. If C0 control 
-			// characters are detected while parsing file as XML 1.0 a second attempt is made using XML 1.1. If the file contains 
+			// bug 268456: When TaskData that contains C0 control characters is written to disk using XML 1.0 reading it back
+			// in fails with a SAXException. The XML 1.1 standard allows C0 entities but fails if C1 entities. If C0 control
+			// characters are detected while parsing file as XML 1.0 a second attempt is made using XML 1.1. If the file contains
 			// C0 and C1 control characters reading will fail regardless.
 			if (xml11) {
 				return externalizer.readState(new Xml11InputStream(in));
 			} else {
 				return externalizer.readState(in);
 			}
-		} finally {
-			in.close();
 		}
 	}
 
@@ -157,16 +154,13 @@ public class TaskDataStore {
 
 	private void writeState(File file, TaskDataState state) throws CoreException {
 		try {
-			ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
-			try {
+			try (ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
 				out.setMethod(ZipOutputStream.DEFLATED);
 
 				ZipEntry entry = new ZipEntry(FILE_NAME_INTERNAL);
 				out.putNextEntry(entry);
 
 				externalizer.writeState(out, state);
-			} finally {
-				out.close();
 			}
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error writing task data", //$NON-NLS-1$
