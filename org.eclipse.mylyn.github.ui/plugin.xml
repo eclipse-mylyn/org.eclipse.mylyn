@@ -276,23 +276,23 @@
          point="org.eclipse.ui.commandImages">
       <image
             commandId="org.eclipse.mylyn.github.ui.command.cloneGist"
-            icon="platform:/plugin/org.eclipse.egit.ui/icons/obj16/cloneGit.gif">
+            icon="icons/obj16/cloneGit.png">
       </image>
       <image
             commandId="org.eclipse.mylyn.github.ui.command.checkoutPullRequest"
-            icon="platform:/plugin/org.eclipse.egit.ui/icons/obj16/checkout.gif">
+            icon="icons/obj16/checkout.png">
       </image>
       <image
             commandId="org.eclipse.mylyn.github.ui.command.fetchPullRequest"
-            icon="platform:/plugin/org.eclipse.egit.ui/icons/obj16/fetch.gif">
+            icon="icons/obj16/fetch.png">
       </image>
       <image
             commandId="org.eclipse.mylyn.github.ui.command.mergePullRequest"
-            icon="platform:/plugin/org.eclipse.egit.ui/icons/obj16/merge.gif">
+            icon="icons/obj16/merge.png">
       </image>
       <image
             commandId="org.eclipse.mylyn.github.ui.command.rebasePullRequest"
-            icon="platform:/plugin/org.eclipse.egit.ui/icons/obj16/rebase.gif">
+            icon="icons/obj16/rebase.png">
       </image>
    </extension>
    <extension
