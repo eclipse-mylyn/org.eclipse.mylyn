@@ -159,9 +159,6 @@ public class AttachmentTableLabelProvider extends StyledCellLabelProvider {
 			// FIXME add id to ITaskAttachment
 			text.append(getAttachmentId(attachment));
 			break;
-		default:
-			text.append("unrecognized column");
-			break;
 		}
 		return text;
 	}
