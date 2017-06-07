@@ -40,7 +40,7 @@ import org.eclipse.swt.graphics.RGB;
 
 /**
  * A hyperlink presenter that displays a tooltip when hovering over a {@link TaskHyperlink}.
- * 
+ *
  * @author Steffen Pingel
  * @author Frank Becker
  * @since 3.1
@@ -97,7 +97,6 @@ public final class TaskHyperlinkPresenter extends MultipleHyperlinkPresenter {
 		delegate.uninstall();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void applyTextPresentation(TextPresentation textPresentation) {
 		delegate.applyTextPresentation(textPresentation);
@@ -121,9 +120,10 @@ public final class TaskHyperlinkPresenter extends MultipleHyperlinkPresenter {
 	}
 
 	// TODO e3.7 add @Override annotation
+	@Override
 	public void showHyperlinks(IHyperlink[] hyperlinks, boolean takesFocusWhenVisible) {
 		activeRegion = null;
-		// show task name in tooltip 
+		// show task name in tooltip
 		if (hyperlinks.length == 1 && hyperlinks[0] instanceof TaskHyperlink) {
 			TaskHyperlink hyperlink = (TaskHyperlink) hyperlinks[0];
 

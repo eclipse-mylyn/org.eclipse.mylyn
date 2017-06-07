@@ -48,7 +48,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 @SuppressWarnings("nls")
 public class RepositoryQuerySchemaPage extends AbstractRepositoryQueryPage2 {
-	private static final String QUERYPAGE_FILTER_ID = "org.eclipse.mylyn.tasks.ui.wizards.QueryPageFilter";
 
 	private static final int LABEL_WIDTH = 110;
 
