@@ -29,7 +29,7 @@ import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 /**
  * Reads properties from the deprecated Eclipse keyring and writes them to the {@link ICredentialsStore} provided by the
  * {@link ILocationService}.
- * 
+ *
  * @author Sam Davis
  */
 public abstract class KeyringMigrator<T> {
@@ -67,7 +67,7 @@ public abstract class KeyringMigrator<T> {
 		return getAuthorizationInfo(new URL(url), authRealm, authScheme);
 	}
 
-	@SuppressWarnings({ "deprecation", "unchecked" })
+	@SuppressWarnings("deprecation")
 	protected Map<String, String> getAuthorizationInfo(URL url, String realm, String scheme)
 			throws MalformedURLException {
 		return Platform.getAuthorizationInfo(url, realm, scheme);

@@ -64,8 +64,6 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 
 		private final RepositoryQuery repositoryQuery;
 
-		private int resultCount;
-
 		private final SynchronizationSession session;
 
 		public TaskCollector(RepositoryQuery repositoryQuery, SynchronizationSession session) {
@@ -92,15 +90,10 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 			} catch (CoreException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Failed to save task", e)); //$NON-NLS-1$
 			}
-			resultCount++;
 		}
 
 		public Set<ITask> getRemovedChildren() {
 			return removedQueryResults;
-		}
-
-		public int getResultCount() {
-			return resultCount;
 		}
 
 		@Override
