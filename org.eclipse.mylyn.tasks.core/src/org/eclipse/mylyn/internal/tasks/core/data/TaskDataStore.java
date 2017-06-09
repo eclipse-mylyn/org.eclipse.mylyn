@@ -139,7 +139,7 @@ public class TaskDataStore {
 					}
 
 				} catch (SAXException e) {
-					throw new IOException("Error parsing task data: " + e.getMessage()); //$NON-NLS-1$
+					throw new IOException("Error parsing task data: " + e.getMessage(), e); //$NON-NLS-1$
 				}
 			}
 			return null;
