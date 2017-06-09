@@ -77,12 +77,9 @@ public class TaskDataStore {
 			state = readState(file);
 		} catch (CoreException e) {
 			if (!user) {
-				throw new CoreException(
-						new Status(
-								IStatus.ERROR,
-								ITasksCoreConstants.ID_PLUGIN,
-								"Reading of existing task data failed. Forcing synchronization will override outgoing changes.", //$NON-NLS-1$
-								e));
+				throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+						"Reading of existing task data failed. Forcing synchronization will override outgoing changes.", //$NON-NLS-1$
+						e));
 			}
 		}
 		if (state == null) {
@@ -133,8 +130,8 @@ public class TaskDataStore {
 						return readStateInternal(file, false);
 					} catch (SAXException e) {
 						// bug 268456: if reading fails, try again using a different XML version
-						if (e.getMessage() != null
-								&& (e.getMessage().contains("invalid XML character") || e.getMessage().contains(" \"&#"))) { //$NON-NLS-1$ //$NON-NLS-2$
+						if (e.getMessage() != null && (e.getMessage().contains("invalid XML character") //$NON-NLS-1$
+								|| e.getMessage().contains(" \"&#"))) { //$NON-NLS-1$
 							return readStateInternal(file, true);
 						} else {
 							throw e;
@@ -167,18 +164,6 @@ public class TaskDataStore {
 					e));
 		}
 	}
-
-//	public synchronized void putLastRead(File file, TaskData data) throws CoreException {
-//		Assert.isNotNull(file);
-//		Assert.isNotNull(data);
-//
-//		TaskDataState state = readState(file);
-//		if (state == null) {
-//			state = new TaskDataState(data.getConnectorKind(), data.getRepositoryUrl(), data.getTaskId());
-//		}
-//		state.setLastReadData(data);
-//		writeState(file, state);
-//	}
 
 	public synchronized void putTaskData(File file, TaskDataState state) throws CoreException {
 		writeState(file, state);
