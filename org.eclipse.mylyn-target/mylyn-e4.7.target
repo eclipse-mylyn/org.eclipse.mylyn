@@ -4,9 +4,12 @@
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="com.google.gwt.servlet" version="2.0.4.v20100709-0658"/>
 <unit id="org.antlr.runtime" version="3.0.0.v200803061811"/>
-<unit id="org.apache.lucene.core" version="2.9.1.v201101211721"/>
 <unit id="javax.servlet" version="3.0.0.v201112011016"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20160221192158/repository/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.apache.lucene.core" version="6.1.0.v20161115-1612"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20170516192513/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="com.google.gerrit.prettify" version="2.1.5.v201112241444"/>
