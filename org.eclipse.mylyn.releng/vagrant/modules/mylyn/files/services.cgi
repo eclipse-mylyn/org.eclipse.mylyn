@@ -8,7 +8,7 @@ my $cgi = new CGI;
 my $buffer = $cgi->query_string();
 my $callback = $cgi -> param('callback');
 my $muster = 'service*.json';
-my @verzeichnisse = (
+my @tools_dir = (
     '/home/tools',
 );
 
@@ -16,7 +16,7 @@ my @files = File::Find::Rule->file()
     ->mindepth(2)
     ->maxdepth(4)
     ->name( $muster )
-    ->in( @verzeichnisse );
+    ->in( @tools_dir );
 
 print "Content-type:application/json\r\n\r\n";
 if ($callback) {
