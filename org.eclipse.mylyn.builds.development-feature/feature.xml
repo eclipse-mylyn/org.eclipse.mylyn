@@ -40,7 +40,6 @@
       <import plugin="org.eclipse.jdt.junit"/>
       <import plugin="org.eclipse.jdt.ui"/>
       <import plugin="org.eclipse.ecf.discovery"/>
-      <import plugin="org.eclipse.ecf.provider.discovery"/>
       <import plugin="org.eclipse.ecf.provider.jmdns"/>
    </requires>
 
