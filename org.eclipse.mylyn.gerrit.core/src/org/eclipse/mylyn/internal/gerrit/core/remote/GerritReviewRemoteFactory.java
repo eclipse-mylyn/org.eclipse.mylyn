@@ -67,7 +67,7 @@ import com.google.gerrit.reviewdb.UserIdentity;
 /**
  * Manages retrieval of Review information from Gerrit API. Also creates, adds, and updates contents of review sets for
  * each patch set, but does not retrieve the patch set details or contents.
- * 
+ *
  * @author Miles Parker
  * @author Steffen Pingel
  */
@@ -137,9 +137,8 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 			pull(parent, detail, detail.getNeededBy(), monitor);
 			return gerritChange;
 		} catch (GerritException e) {
-			throw GerritCorePlugin.getDefault()
-					.getConnector()
-					.toCoreException(parent.getTaskRepository(), "Problem while retrieving Gerrit review.", e); //$NON-NLS-1$
+			throw GerritCorePlugin.getDefault().getConnector().toCoreException(parent.getTaskRepository(),
+					"Problem while retrieving Gerrit review.", e); //$NON-NLS-1$
 		}
 	}
 
@@ -194,7 +193,7 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 		for (ChangeInfo depend : remoteDependencies) {
 			remoteIds.add(depend.getId().toString());
 		}
-		return !localIds.equals(remoteDependencies);
+		return !localIds.equals(remoteIds);
 	}
 
 	@Override
@@ -289,8 +288,8 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 		int patchIndex = 0;
 		PatchSetDetailRemoteFactory itemSetFactory = getGerritProvider().getReviewItemSetFactory();
 		for (PatchSetDetail patchSetDetail : gerritChange.getPatchSetDetails()) {
-			RemoteEmfConsumer<IReview, IReviewItemSet, String, PatchSetDetail, PatchSetDetail, String> consumer = itemSetFactory.getConsumerForRemoteObject(
-					review, patchSetDetail);
+			RemoteEmfConsumer<IReview, IReviewItemSet, String, PatchSetDetail, PatchSetDetail, String> consumer = itemSetFactory
+					.getConsumerForRemoteObject(review, patchSetDetail);
 			try {
 				//We force a pull here, which is safe because there isn't any actual client API invocation
 				consumer.pull(true, new NullProgressMonitor());
@@ -388,8 +387,8 @@ public class GerritReviewRemoteFactory extends ReviewRemoteFactory<GerritChange,
 					reviewerEntry = IReviewsFactory.INSTANCE.createReviewerEntry();
 					review.getReviewerApprovals().put(reviewer, reviewerEntry);
 				}
-				for (Entry<com.google.gerrit.reviewdb.ApprovalCategory.Id, PatchSetApproval> remoteMap : remoteApproval.getApprovalMap()
-						.entrySet()) {
+				for (Entry<com.google.gerrit.reviewdb.ApprovalCategory.Id, PatchSetApproval> remoteMap : remoteApproval
+						.getApprovalMap().entrySet()) {
 					String remoteType = remoteMap.getValue().getCategoryId().get();
 					IApprovalType approvalType = typeForKey.get(remoteType);
 					if (approvalType == null) {
