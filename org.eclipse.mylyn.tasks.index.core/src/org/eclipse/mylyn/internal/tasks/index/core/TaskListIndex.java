@@ -719,19 +719,25 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 			for (BooleanClause clause : query.clauses()) {
 				if (clause.getQuery() instanceof TermQuery) {
 					TermQuery termQuery = (TermQuery) clause.getQuery();
-					clause = new BooleanClause(new PrefixQuery(termQuery.getTerm()), clause.getOccur());
-					qb.add(clause);
-				}
-				if (!hasBooleanSpecifiers) {
+					clause = new BooleanClause(new PrefixQuery(termQuery.getTerm()),
+							computeOccur(clause, hasBooleanSpecifiers));
+				} else if (!hasBooleanSpecifiers) {
 					clause = new BooleanClause(clause.getQuery(), Occur.MUST);
-					qb.add(clause);
 				}
+				qb.add(clause);
 			}
 			q = qb.build();
 		} else if (q instanceof TermQuery) {
 			return new PrefixQuery(((TermQuery) q).getTerm());
 		}
 		return q;
+	}
+
+	private Occur computeOccur(BooleanClause clause, boolean hasBooleanSpecifiers) {
+		if (!hasBooleanSpecifiers) {
+			return Occur.MUST;
+		}
+		return clause.getOccur();
 	}
 
 	private boolean containsSpecialCharacters(String patternString) {
@@ -966,8 +972,9 @@ public class TaskListIndex implements ITaskDataManagerListener, ITaskListChangeL
 		}
 
 		if (isPersonField(indexField)) {
-			IRepositoryPerson repositoryPerson = attribute.getTaskData().getAttributeMapper().getRepositoryPerson(
-					attribute);
+			IRepositoryPerson repositoryPerson = attribute.getTaskData()
+					.getAttributeMapper()
+					.getRepositoryPerson(attribute);
 			addIndexedAttribute(document, indexField, repositoryPerson);
 
 			if (values.size() <= 1) {

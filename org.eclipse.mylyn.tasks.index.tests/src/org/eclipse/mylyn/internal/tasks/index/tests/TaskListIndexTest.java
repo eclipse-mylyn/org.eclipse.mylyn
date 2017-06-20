@@ -120,12 +120,15 @@ public class TaskListIndexTest extends AbstractTaskListIndexTest {
 
 		index.setDefaultField(TaskListIndex.FIELD_CONTENT);
 
-		assertTrue(index.matches(task, task.getSummary()));
+		String summary = task.getSummary();
+		assertTrue(index.matches(task, summary));
+		assertTrue(index.matches(task, summary.substring(0, summary.length() - 3) + "*"));
 		assertFalse(index.matches(task, "" + System.currentTimeMillis()));
 
 		index.setDefaultField(FIELD_SUMMARY);
 
-		assertTrue(index.matches(task, task.getSummary()));
+		assertTrue(index.matches(task, summary));
+		assertTrue(index.matches(task, summary.substring(0, summary.length() - 3) + "*"));
 		assertFalse(index.matches(task, "" + System.currentTimeMillis()));
 	}
 
@@ -624,6 +627,51 @@ public class TaskListIndexTest extends AbstractTaskListIndexTest {
 				TaskListIndex.FIELD_CONTENT.getIndexKey() + ":\"" + attachmentMapper.getFileName() + "\""));
 		assertFalse(index.matches(repositoryTask,
 				TaskListIndex.FIELD_ATTACHMENT_NAME.getIndexKey() + ":\"" + attachmentMapper.getDescription() + "\""));
+	}
+
+	@Test
+	public void testFindWithComplexQuery() throws Exception {
+		setupIndex();
+
+		ITask task1 = context.createRepositoryTask();
+		setSummary(task1, "one two three");
+		ITask task2 = context.createRepositoryTask();
+		setSummary(task2, "two three four");
+		ITask task3 = context.createRepositoryTask();
+		setSummary(task3, "three four five");
+
+		String repositoryUrl = task1.getRepositoryUrl();
+		assertEquals(repositoryUrl, task2.getRepositoryUrl());
+		assertEquals(repositoryUrl, task3.getRepositoryUrl());
+		repositoryUrl = index.escapeFieldValue(repositoryUrl);
+
+		index.reindex();
+		index.waitUntilIdle();
+		index.setDefaultField(TaskListIndex.FIELD_CONTENT);
+
+		String pattern = "repository_url:%s AND (summary:%s* OR task_key:%s)";
+		String query = String.format(pattern, repositoryUrl, "five", task1.getTaskKey());
+		assertTrue(index.matches(task1, query));
+		assertFalse(index.matches(task2, query));
+		assertTrue(index.matches(task3, query));
+
+		query = String.format(pattern, repositoryUrl, task2.getTaskKey(), task2.getTaskKey());
+		assertFalse(index.matches(task1, query));
+		assertTrue(index.matches(task2, query));
+		assertFalse(index.matches(task3, query));
+
+		query = String.format(pattern, repositoryUrl, "two", "something.irrelevant");
+		assertTrue(index.matches(task1, query));
+		assertTrue(index.matches(task2, query));
+		assertFalse(index.matches(task3, query));
+	}
+
+	private void setSummary(ITask task, String summary) throws CoreException {
+		task.setSummary(summary);
+		TaskData taskData = context.getDataManager().getTaskData(task);
+		taskData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY).setValue(summary);
+		context.getDataManager().putSubmittedTaskData(task, taskData, new DelegatingProgressMonitor());
+		context.getTaskList().notifyElementsChanged(Collections.singleton(task));
 	}
 
 	private void assertCanFindTask(ITask task) {
