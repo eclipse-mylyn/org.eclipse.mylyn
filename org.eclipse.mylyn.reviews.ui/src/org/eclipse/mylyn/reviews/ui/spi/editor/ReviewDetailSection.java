@@ -249,7 +249,7 @@ public abstract class ReviewDetailSection extends AbstractReviewSection {
 					: " "; //$NON-NLS-1$
 			String ownerName = change.getOwner().getDisplayName();
 			link.setText(NLS.bind(Messages.ReviewDetailSection_Link_W_X_Y_by_Z, new String[] {
-					StringUtils.left(change.getKey(), 9), change.getSubject(), ownerName, changeStatus }));
+					StringUtils.left(change.getKey(), 9), change.getSubject(), changeStatus, ownerName }));
 			link.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
