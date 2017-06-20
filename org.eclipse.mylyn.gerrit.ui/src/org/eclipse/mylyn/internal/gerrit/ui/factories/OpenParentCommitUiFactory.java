@@ -94,10 +94,9 @@ public class OpenParentCommitUiFactory extends OpenCommitUiFactory {
 
 		private RevCommit getRevCommit() throws AmbiguousObjectException, IOException {
 			ObjectId ref = repository.resolve(commitId);
-			RevWalk walker = new RevWalk(repository);
-			RevCommit targetCommit = walker.parseCommit(ref);
-			return targetCommit;
-
+			try (RevWalk walker = new RevWalk(repository)) {
+				return walker.parseCommit(ref);
+			}
 		}
 
 	}

@@ -19,6 +19,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 import java.io.File;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.net.Proxy;
 import java.security.NoSuchAlgorithmException;
@@ -216,8 +217,7 @@ class ReviewHarness {
 	void checkoutPatchSet(int number) throws Exception {
 		IReviewItemSet patchSet = getReview().getSets().get(0);
 		ObjectId ref = git.getRepository().resolve(patchSet.getRevision());
-		RevWalk walker = new RevWalk(git.getRepository());
-		RevCommit targetCommit = walker.parseCommit(ref);
+		RevCommit targetCommit = parseCommit(ref);
 
 		//make sure to checkout the correct commit
 		assertThat(targetCommit.toString(), is(commitId));
@@ -227,6 +227,12 @@ class ReviewHarness {
 				.setName("change" + "/" + getReview().getId() + "/" + number)
 				.setStartPoint(targetCommit)
 				.call();
+	}
+
+	private RevCommit parseCommit(ObjectId ref) throws IOException {
+		try (RevWalk walker = new RevWalk(git.getRepository())) {
+			return walker.parseCommit(ref);
+		}
 	}
 
 	GerritClient getClient() {

@@ -50,18 +50,18 @@ import com.google.gerrit.reviewdb.Project;
 
 /**
  * Provides common UI utilities.
- * 
+ *
  * @author Steffen Pingel
  * @author Sascha Scholz
  */
 public class EGitUiUtil {
 
-	public static RevCommit getRevCommit(Repository repository, PatchSet target) throws AmbiguousObjectException,
-			IOException, MissingObjectException, IncorrectObjectTypeException {
+	public static RevCommit getRevCommit(Repository repository, PatchSet target)
+			throws AmbiguousObjectException, IOException, MissingObjectException, IncorrectObjectTypeException {
 		ObjectId ref = repository.resolve(target.getRevision().get());
-		RevWalk walker = new RevWalk(repository);
-		RevCommit targetCommit = walker.parseCommit(ref);
-		return targetCommit;
+		try (RevWalk walker = new RevWalk(repository)) {
+			return walker.parseCommit(ref);
+		}
 	}
 
 	private static RevCommit fetchRefSpec(IProgressMonitor monitor, Repository repository, RemoteConfig remote,
@@ -73,7 +73,9 @@ public class EGitUiUtil {
 		op.setCredentialsProvider(new EGitCredentialsProvider());
 		FetchResult result = op.execute(monitor);
 		ObjectId resultRef = result.getAdvertisedRef(refSpec.getSource()).getObjectId();
-		return new RevWalk(repository).parseCommit(resultRef);
+		try (RevWalk walker = new RevWalk(repository)) {
+			return walker.parseCommit(resultRef);
+		}
 	}
 
 	public static RevCommit fetchPatchSet(IProgressMonitor monitor, Repository repository, RemoteConfig remote,
