@@ -29,5 +29,6 @@ Require-Bundle: org.hamcrest;bundle-version="1.1.0",
  org.mockito;bundle-version="1.8.4"
 Export-Package: org.eclipse.mylyn.reviews.spi.edit.remote;x-internal:=true,
  org.eclipse.mylyn.reviews.tests;x-internal:=true,
- org.eclipse.mylyn.reviews.tests.ui;x-internal:=true
+ org.eclipse.mylyn.reviews.tests.ui;x-internal:=true,
+ org.eclipse.mylyn.reviews.tests.util;x-internal:=true
 Import-Package: org.eclipse.compare.internal
