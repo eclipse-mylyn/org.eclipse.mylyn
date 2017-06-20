@@ -81,8 +81,9 @@ public class GerritClient29 extends GerritClient {
 			throw new GerritException(NOT_SIGNED_IN, -32603);
 		}
 		String query = "/accounts/self"; //$NON-NLS-1$/
-		org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo accountInfo = getRestClient().executeGetRestRequest(
-				query, org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo.class, monitor);
+		org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo accountInfo = getRestClient()
+				.executeGetRestRequest(query, org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo.class,
+						monitor);
 
 		Account account = new Account(new Account.Id(accountInfo.getId()));
 		account.setFullName(accountInfo.getName());
@@ -120,7 +121,8 @@ public class GerritClient29 extends GerritClient {
 		return getChangeDetail(id.getParentKey().get(), monitor);
 	}
 
-	private ChangeMessage convertChangeMessage(int reviewId, ChangeInfo changeInfo, ChangeMessageInfo changeMessageInfo) {
+	private ChangeMessage convertChangeMessage(int reviewId, ChangeInfo changeInfo,
+			ChangeMessageInfo changeMessageInfo) {
 		Change.Id changeId = new Change.Id(reviewId);
 		ChangeMessage.Key changeMessageKey = new ChangeMessage.Key(changeId, changeInfo.getId());
 		org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo author = changeMessageInfo.getAuthor();
@@ -140,7 +142,8 @@ public class GerritClient29 extends GerritClient {
 		return branchKey;
 	}
 
-	private Change createChange(String keyString, int changeIdValue, AccountInfo accountInfo, Branch.NameKey branchKey) {
+	private Change createChange(String keyString, int changeIdValue, AccountInfo accountInfo,
+			Branch.NameKey branchKey) {
 		Change.Key key = new Change.Key(keyString);
 		Change.Id changeId = new Change.Id(changeIdValue);
 		Change change = new Change(key, changeId, accountInfo.getId(), branchKey);
@@ -157,11 +160,12 @@ public class GerritClient29 extends GerritClient {
 			AccountInfo accountInfo, Branch.NameKey branchKey) {
 
 		Change change = createChange(info.getChangeId(), info.getChangeNumber(), accountInfo, branchKey);
-		PatchSet.Id patchsetId = new PatchSet.Id(change.getId(), info.getCurrentRevisionNumbe());
+		PatchSet.Id patchsetId = new PatchSet.Id(change.getId(), info.getCurrentRevisionNumber());
 
 		PatchSetInfo patchSetInfo = getPatchSetInfo(patchsetId, info.getCommitInfo().getSubject());
 		change.setCurrentPatchSet(patchSetInfo);
-		com.google.gerrit.common.data.ChangeInfo googleChangeInfo = new com.google.gerrit.common.data.ChangeInfo(change);
+		com.google.gerrit.common.data.ChangeInfo googleChangeInfo = new com.google.gerrit.common.data.ChangeInfo(
+				change);
 
 		return googleChangeInfo;
 	}
@@ -313,7 +317,8 @@ public class GerritClient29 extends GerritClient {
 
 		if (containsMessageFromGerritSystem) {
 			//add Gerrit system if there was a ChangeMessageInfo that was created by the Gerrit system
-			listAccountInfo.add(org.eclipse.mylyn.internal.gerrit.core.client.compat.GerritSystemAccount.GERRIT_SYSTEM.getGerritSystemAccountInfo());
+			listAccountInfo.add(org.eclipse.mylyn.internal.gerrit.core.client.compat.GerritSystemAccount.GERRIT_SYSTEM
+					.getGerritSystemAccountInfo());
 		}
 
 		AccountInfoCache accountInfoCache = new AccountInfoCache(listAccountInfo);
@@ -334,7 +339,8 @@ public class GerritClient29 extends GerritClient {
 		changeDetail.setApprovalTypes(changeInfo.convertToApprovalTypes());
 
 		//Fill the submit records
-		String querysubmit = "/changes/" + Integer.toString(reviewId) + "/revisions/current/test.submit_rule?filters=SKIP"; //$NON-NLS-1$//$NON-NLS-2$
+		String querysubmit = "/changes/" + Integer.toString(reviewId) //$NON-NLS-1$
+				+ "/revisions/current/test.submit_rule?filters=SKIP"; //$NON-NLS-1$
 		List<SubmitRecord> submitRecord = currentSubmitRecord(querysubmit, monitor);
 		changeDetail.setSubmitRecords(submitRecord);
 		if (changeDetail.getApprovalTypes() == null && getGerritConfig() != null) {
@@ -476,8 +482,8 @@ public class GerritClient29 extends GerritClient {
 
 	private PatchSetInfo setAccountPatchSetInfo(PatchSetInfo patchSetInfo, IProgressMonitor monitor) {
 		if (patchSetInfo.getAuthor().getAccount() == null) {
-			patchSetInfo.setAuthor(setUserIdentity(patchSetInfo.getAuthor().getName(), patchSetInfo.getAuthor(),
-					"Author", monitor)); //$NON-NLS-1$
+			patchSetInfo.setAuthor(
+					setUserIdentity(patchSetInfo.getAuthor().getName(), patchSetInfo.getAuthor(), "Author", monitor)); //$NON-NLS-1$
 		}
 		if (patchSetInfo.getCommitter().getAccount() == null) {
 			patchSetInfo.setCommitter(setUserIdentity(patchSetInfo.getCommitter().getName(),
@@ -493,12 +499,14 @@ public class GerritClient29 extends GerritClient {
 		}
 		String st = URIUtil.encodeQuery(account);
 		final String uri = "/accounts/" + st; //$NON-NLS-1$
-		org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo accountInfo = getRestClient().executeGetRestRequest(
-				uri, org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo.class, monitor);
+		org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo accountInfo = getRestClient()
+				.executeGetRestRequest(uri, org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo.class,
+						monitor);
 		return accountInfo;
 	}
 
-	private UserIdentity setUserIdentity(String name, UserIdentity userIdentity, String user, IProgressMonitor monitor) {
+	private UserIdentity setUserIdentity(String name, UserIdentity userIdentity, String user,
+			IProgressMonitor monitor) {
 		org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo accountInfo = null;
 		try {
 			accountInfo = getAccountInfo(name, monitor);
@@ -506,8 +514,8 @@ public class GerritClient29 extends GerritClient {
 			userIdentity.setAccount(accountId);
 		} catch (GerritException gerritException) {
 			if (gerritException.getMessage().indexOf(HttpStatus.SC_NOT_FOUND) != 0) {
-				StatusHandler.log(new Status(IStatus.WARNING, GerritCorePlugin.PLUGIN_ID, NLS.bind(
-						"GerritException {0} not found", user), gerritException)); //$NON-NLS-1$
+				StatusHandler.log(new Status(IStatus.WARNING, GerritCorePlugin.PLUGIN_ID,
+						NLS.bind("GerritException {0} not found", user), gerritException)); //$NON-NLS-1$
 			}
 		} catch (URIException uriException) {
 			StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID,

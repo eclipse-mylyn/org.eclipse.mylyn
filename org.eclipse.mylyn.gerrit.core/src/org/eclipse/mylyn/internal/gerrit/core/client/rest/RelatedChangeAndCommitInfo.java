@@ -12,8 +12,8 @@
 package org.eclipse.mylyn.internal.gerrit.core.client.rest;
 
 /**
- * Data model object for <a
- * href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#related-change-and-commit-info"
+ * Data model object for
+ * <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#related-change-and-commit-info"
  * >RelatedChangeAndCommitInfo</a>.
  */
 public class RelatedChangeAndCommitInfo {
@@ -44,7 +44,7 @@ public class RelatedChangeAndCommitInfo {
 		return _revision_number;
 	}
 
-	public int getCurrentRevisionNumbe() {
+	public int getCurrentRevisionNumber() {
 		return _current_revision_number;
 	}
 
