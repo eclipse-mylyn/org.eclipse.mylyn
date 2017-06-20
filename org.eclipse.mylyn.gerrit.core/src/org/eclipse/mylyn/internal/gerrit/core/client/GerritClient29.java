@@ -71,6 +71,10 @@ public class GerritClient29 extends GerritClient {
 
 	final String MAY = "MAY"; //$NON-NLS-1$
 
+	private static enum UserType {
+		Author, Committer
+	}
+
 	protected GerritClient29(TaskRepository repository, Version version) {
 		super(repository, version);
 	}
@@ -482,12 +486,12 @@ public class GerritClient29 extends GerritClient {
 
 	private PatchSetInfo setAccountPatchSetInfo(PatchSetInfo patchSetInfo, IProgressMonitor monitor) {
 		if (patchSetInfo.getAuthor().getAccount() == null) {
-			patchSetInfo.setAuthor(
-					setUserIdentity(patchSetInfo.getAuthor().getName(), patchSetInfo.getAuthor(), "Author", monitor)); //$NON-NLS-1$
+			patchSetInfo.setAuthor(setUserIdentity(patchSetInfo.getAuthor().getName(), patchSetInfo.getAuthor(),
+					UserType.Author, monitor));
 		}
 		if (patchSetInfo.getCommitter().getAccount() == null) {
 			patchSetInfo.setCommitter(setUserIdentity(patchSetInfo.getCommitter().getName(),
-					patchSetInfo.getCommitter(), "Committer", monitor)); //$NON-NLS-1$
+					patchSetInfo.getCommitter(), UserType.Committer, monitor));
 		}
 		return patchSetInfo;
 	}
@@ -505,7 +509,7 @@ public class GerritClient29 extends GerritClient {
 		return accountInfo;
 	}
 
-	private UserIdentity setUserIdentity(String name, UserIdentity userIdentity, String user,
+	private UserIdentity setUserIdentity(String name, UserIdentity userIdentity, UserType user,
 			IProgressMonitor monitor) {
 		org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo accountInfo = null;
 		try {
