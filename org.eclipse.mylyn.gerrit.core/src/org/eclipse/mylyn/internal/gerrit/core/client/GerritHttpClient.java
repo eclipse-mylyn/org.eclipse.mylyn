@@ -55,7 +55,7 @@ import com.google.gson.reflect.TypeToken;
 
 /**
  * Abstract class that handles the http communications with the Gerrit server.
- * 
+ *
  * @author Daniel Olsson, ST Ericsson
  * @author Thomas Westling
  * @author Steffen Pingel
@@ -136,7 +136,6 @@ public class GerritHttpClient {
 			this.errorHandler = handler;
 		}
 
-		@SuppressWarnings("null")
 		@Override
 		public HttpMethodBase createMethod() throws IOException {
 			HttpMethodBase method = null;
@@ -257,7 +256,7 @@ public class GerritHttpClient {
 
 	/**
 	 * Send a JSON request to the Gerrit server.
-	 * 
+	 *
 	 * @return The JSON response
 	 * @throws GerritException
 	 */
@@ -276,8 +275,8 @@ public class GerritHttpClient {
 		return restRequest(HttpMethod.POST, serviceUri, input, resultType, handler, monitor);
 	}
 
-	public <T> T getRestRequest(final String serviceUri, Type resultType, IProgressMonitor monitor) throws IOException,
-			GerritException {
+	public <T> T getRestRequest(final String serviceUri, Type resultType, IProgressMonitor monitor)
+			throws IOException, GerritException {
 		return restRequest(HttpMethod.GET, serviceUri, null, resultType, null, monitor);
 	}
 
@@ -295,8 +294,8 @@ public class GerritHttpClient {
 		return restRequest(HttpMethod.DELETE, serviceUri, input, resultType, handler, monitor);
 	}
 
-	private <T> T restRequest(final HttpMethod httpMethod, final String serviceUri, final Object input,
-			Type resultType, ErrorHandler handler, IProgressMonitor monitor) throws IOException, GerritException {
+	private <T> T restRequest(final HttpMethod httpMethod, final String serviceUri, final Object input, Type resultType,
+			ErrorHandler handler, IProgressMonitor monitor) throws IOException, GerritException {
 		Assert.isNotNull(httpMethod, "HTTP Method must be not null."); //$NON-NLS-1$
 		Assert.isNotNull(serviceUri, "REST Service URI must be not null."); //$NON-NLS-1$
 		Assert.isNotNull(resultType, "Output type must be not null."); //$NON-NLS-1$
@@ -476,8 +475,8 @@ public class GerritHttpClient {
 		return null;
 	}
 
-	private int authenticateOpenIdService(String openIdProvider, IProgressMonitor monitor) throws IOException,
-			GerritException {
+	private int authenticateOpenIdService(String openIdProvider, IProgressMonitor monitor)
+			throws IOException, GerritException {
 		JSonSupport json = new JSonSupport();
 
 		List<Object> args = new ArrayList<Object>(2);
@@ -641,8 +640,8 @@ public class GerritHttpClient {
 		return HttpStatus.SC_NOT_FOUND;
 	}
 
-	int authenticateForm(AuthenticationCredentials credentials, IProgressMonitor monitor) throws IOException,
-			GerritException {
+	int authenticateForm(AuthenticationCredentials credentials, IProgressMonitor monitor)
+			throws IOException, GerritException {
 		// try standard basic/digest/ntlm authentication first
 		String repositoryUrl = getUrl();
 		AuthScope authScope = new AuthScope(WebUtil.getHost(repositoryUrl), WebUtil.getPort(repositoryUrl), null,

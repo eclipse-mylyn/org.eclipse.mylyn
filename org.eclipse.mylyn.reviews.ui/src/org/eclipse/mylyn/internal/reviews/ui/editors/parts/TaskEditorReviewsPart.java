@@ -59,7 +59,6 @@ public class TaskEditorReviewsPart extends AbstractTaskEditorPart {
 			this.labelProvider = labelProvider;
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public int compare(TableViewer viewer, Object e1, Object e2, int columnIndex) {
 			int cat1 = category(e1);

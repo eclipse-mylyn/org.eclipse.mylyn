@@ -312,7 +312,6 @@ public class GerritConnector extends ReviewsConnector {
 		}
 	}
 
-	@SuppressWarnings("restriction")
 	@Override
 	public void updateTaskFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData) {
 		Date oldModificationDate = task.getModificationDate();

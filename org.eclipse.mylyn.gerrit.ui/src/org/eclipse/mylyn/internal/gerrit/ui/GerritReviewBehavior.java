@@ -97,17 +97,14 @@ public class GerritReviewBehavior extends ReviewBehavior {
 
 	@Override
 	public IStatus discardComment(IReviewItem item, IComment comment, IProgressMonitor monitor) {
-		short side = RIGHT_SIDE;
 		String id = item.getId();
 		if (id.startsWith(BASE)) {
 			// base revision
 			id = id.substring(BASE.length());
-			side = LEFT_SIDE;
 		}
 		Patch.Key key = Patch.Key.parse(id);
 		for (ILocation location : comment.getLocations()) {
 			if (location instanceof ILineLocation) {
-				ILineLocation lineLocation = (ILineLocation) location;
 				DiscardDraftRequest request = new DiscardDraftRequest(key, comment.getId());
 				request.setMessage(comment.getDescription());
 

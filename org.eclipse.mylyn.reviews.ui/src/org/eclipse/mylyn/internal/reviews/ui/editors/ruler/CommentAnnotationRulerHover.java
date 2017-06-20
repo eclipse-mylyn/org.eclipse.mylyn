@@ -201,7 +201,6 @@ public class CommentAnnotationRulerHover
 		return (annotation != null && !annotations.contains(annotation));
 	}
 
-	@SuppressWarnings("unchecked")
 	private List<CommentAnnotation> getCommentAnnotationsForLine(ISourceViewer viewer, int line) {
 		IAnnotationModel model = getAnnotationModel(viewer);
 		if (model == null) {

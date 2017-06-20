@@ -611,8 +611,7 @@ public abstract class GerritClient extends ReviewsClient {
 		//Try to remove the reviewer from the change
 		try {
 			//Currently using a string to return as the only response from the gerrit api will be an http status
-			String result = restClient.executeDeleteRestRequest(uri, new ReviewerInput(reviewerId), String.class, null,
-					monitor);
+			restClient.executeDeleteRestRequest(uri, new ReviewerInput(reviewerId), String.class, null, monitor);
 		} catch (GerritHttpException e) {
 			if (e.getResponseCode() == HttpStatus.SC_NOT_FOUND) {
 				reviewerResult.addError(new ReviewerResult.Error(null, reviewerId));

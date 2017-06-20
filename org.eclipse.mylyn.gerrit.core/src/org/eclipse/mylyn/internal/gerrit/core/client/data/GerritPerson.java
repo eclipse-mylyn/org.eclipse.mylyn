@@ -18,8 +18,6 @@ public class GerritPerson {
 
 	private String name;
 
-	private String _account_id;
-
 	public String getName() {
 		return name;
 	}

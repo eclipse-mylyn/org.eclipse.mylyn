@@ -54,11 +54,6 @@ public class ImportAsContextAction extends Action implements
 				|| c.getChangeType() == ChangeType.REPLACED;
 	}
 
-	private String formatSourceHandleString(Change c) {
-		return c.getTarget().getProjectName()
-				+ c.getTarget().getProjectRelativePath();
-	}
-
 	public void runWithEvent(Event event) {
 		run();
 	}

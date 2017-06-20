@@ -26,8 +26,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
@@ -66,9 +64,9 @@ import org.mockito.ArgumentMatcher;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
-public class CommentPopupDialogTest extends TestCase {
+import junit.framework.TestCase;
 
-	private static final int MAX_WIDTH = 500;
+public class CommentPopupDialogTest extends TestCase {
 
 	private final static String USER_ID = "1";
 
@@ -265,7 +263,7 @@ public class CommentPopupDialogTest extends TestCase {
 
 	/**
 	 * Tests that the comment popup displays comments with accurate information
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -281,7 +279,7 @@ public class CommentPopupDialogTest extends TestCase {
 
 	/**
 	 * Tests that the comment editor UI displays accurate information for comment threads with drafts
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -296,7 +294,7 @@ public class CommentPopupDialogTest extends TestCase {
 
 	/**
 	 * Tests that the comment editor UI displays accurate information for comment threads with no drafts
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -308,7 +306,7 @@ public class CommentPopupDialogTest extends TestCase {
 
 	/**
 	 * Tests submitting a new draft using the save button
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -321,7 +319,7 @@ public class CommentPopupDialogTest extends TestCase {
 
 	/**
 	 * Tests submitting a draft edit using the save button
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -334,7 +332,7 @@ public class CommentPopupDialogTest extends TestCase {
 
 	/**
 	 * Tests submitting a new draft with the discard/done button
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -347,7 +345,7 @@ public class CommentPopupDialogTest extends TestCase {
 
 	/**
 	 * Tests discarding a draft with the discard/done button
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -359,7 +357,7 @@ public class CommentPopupDialogTest extends TestCase {
 
 	/**
 	 * Tests cancel the comment editor with the cancel button
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -476,7 +474,7 @@ public class CommentPopupDialogTest extends TestCase {
 
 	/**
 	 * Returns a comment from the dialog depending on the ordering from the top of the comment list
-	 * 
+	 *
 	 * @param commentNumber
 	 *            the number of comments from the top of the comment list (counting starts at 1)
 	 * @return a comment from the UI
@@ -490,7 +488,7 @@ public class CommentPopupDialogTest extends TestCase {
 
 	/**
 	 * Creates a comment dialog with one comment (a submitted comment)
-	 * 
+	 *
 	 * @return the text of that submitted comment
 	 */
 	private Text editOneComment() {
@@ -516,7 +514,7 @@ public class CommentPopupDialogTest extends TestCase {
 
 	/**
 	 * Adds a {@link CommentPopupDialog}
-	 * 
+	 *
 	 * @param x
 	 *            the number of comments that will be added to the dialog
 	 * @param isCommentNavigator
@@ -539,7 +537,7 @@ public class CommentPopupDialogTest extends TestCase {
 
 	/**
 	 * Adds comments to a comment dialog (note that every even numbered comment is a draft)
-	 * 
+	 *
 	 * @param x
 	 *            the number of comments that will be created
 	 * @return the created list of {@link CommentAnnotation}
@@ -548,15 +546,15 @@ public class CommentPopupDialogTest extends TestCase {
 		List<CommentAnnotation> annotations = new ArrayList<CommentAnnotation>();
 		for (int i = 1; i <= x; i++) {
 			boolean isDraft = i % 2 == 0;
-			annotations.add(createAnnotation(createComment("Test Comment " + i, new Date(i), Integer.toString(i),
-					isDraft)));
+			annotations.add(
+					createAnnotation(createComment("Test Comment " + i, new Date(i), Integer.toString(i), isDraft)));
 		}
 		return annotations;
 	}
 
 	/**
 	 * Creates a {@link CommentAnnotation} for a provided comment
-	 * 
+	 *
 	 * @param comment
 	 *            the provided comment
 	 * @return the created {@link CommentAnnotation}
@@ -567,7 +565,7 @@ public class CommentPopupDialogTest extends TestCase {
 
 	/**
 	 * Creates a {@link IComment} with the provided parameters
-	 * 
+	 *
 	 * @param text
 	 *            the text content of the comment
 	 * @param date
@@ -592,7 +590,7 @@ public class CommentPopupDialogTest extends TestCase {
 
 	/**
 	 * Creates a {@link ILocation} for the comment dialog
-	 * 
+	 *
 	 * @return the created {@link ILocation}
 	 */
 	private ILocation createLocation() {
@@ -603,7 +601,7 @@ public class CommentPopupDialogTest extends TestCase {
 
 	/**
 	 * Creates a {@link IUser} for the comment dialog
-	 * 
+	 *
 	 * @return the created {@link IUser}
 	 */
 	private IUser createUser() {
@@ -616,7 +614,7 @@ public class CommentPopupDialogTest extends TestCase {
 
 	/**
 	 * Ensures that the {@link Control} has only 1 {@link Listener}
-	 * 
+	 *
 	 * @param c
 	 *            the {@link Control} that is checked
 	 */
@@ -638,7 +636,7 @@ public class CommentPopupDialogTest extends TestCase {
 
 	/**
 	 * Asserts the UI for the provided {@link Section}
-	 * 
+	 *
 	 * @param s
 	 *            the {@link Section} that will be checked
 	 * @param commentContent
@@ -692,7 +690,7 @@ public class CommentPopupDialogTest extends TestCase {
 
 	/**
 	 * Traverses the {@link Control} to find mouse listeners
-	 * 
+	 *
 	 * @param c
 	 *            the {@link Control} that will be traversed
 	 * @return the number of listeners for the provided {@link Control} and its children
@@ -713,7 +711,7 @@ public class CommentPopupDialogTest extends TestCase {
 
 	/**
 	 * Asserts that the UI elements are properly created
-	 * 
+	 *
 	 * @param isDraft
 	 *            true if the comment is a draft edit, false if the comment is a new draft
 	 */
@@ -741,7 +739,7 @@ public class CommentPopupDialogTest extends TestCase {
 
 	/**
 	 * Asserts a save/discard action and determines if comments are correctly formated to be sent
-	 * 
+	 *
 	 * @param button
 	 *            the button that will be pressed to invoke the action
 	 * @param description
@@ -779,7 +777,7 @@ public class CommentPopupDialogTest extends TestCase {
 
 	/**
 	 * Simulates a button press
-	 * 
+	 *
 	 * @param b
 	 *            the button that is being pressed
 	 */
@@ -790,7 +788,7 @@ public class CommentPopupDialogTest extends TestCase {
 
 	/**
 	 * Ensures that only one comment editor will be editable for the same item and line
-	 * 
+	 *
 	 * @param isCommentNavigator
 	 *            true if the tested comment is from the next/previous comment button, false if it is from a hover input
 	 */
@@ -811,7 +809,7 @@ public class CommentPopupDialogTest extends TestCase {
 	/**
 	 * Adds a comment editor to the popup (note that if the comment provided is not a draft, you will be editing the
 	 * last draft in that comment thread)
-	 * 
+	 *
 	 * @param popup
 	 *            the comment dialog popup that will be edited
 	 * @param comment

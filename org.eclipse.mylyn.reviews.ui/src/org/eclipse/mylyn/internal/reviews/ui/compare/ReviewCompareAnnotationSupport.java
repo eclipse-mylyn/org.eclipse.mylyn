@@ -382,7 +382,6 @@ public class ReviewCompareAnnotationSupport {
 		widget.setRedraw(true);
 	}
 
-	@SuppressWarnings("unchecked")
 	private List<CommentAnnotation> getAnnotationsForLine(SourceViewer viewer, int offset) {
 		IAnnotationModel model = viewer.getAnnotationModel();
 		if (model == null) {

@@ -227,7 +227,6 @@ public class CommentAnnotationHover implements IAnnotationHover, IAnnotationHove
 		return (annotation != null && !annotations.contains(annotation));
 	}
 
-	@SuppressWarnings("unchecked")
 	private List<CommentAnnotation> getAnnotationsForLine(ISourceViewer viewer, int line) {
 		IAnnotationModel model = getAnnotationModel(viewer);
 		if (model == null) {
