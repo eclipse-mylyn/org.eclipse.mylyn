@@ -1130,6 +1130,11 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	}
 
 	@Test
+	public void testListItemWithIndentUsingSpaces() {
+		assertMarkup("<ul><li>one</li><li>two</li><li>three</li></ul>", " * one\n * two\n * three");
+	}
+
+	@Test
 	public void testListItemWithTwoNewlines() {
 		assertMarkup("<ul><li>one</li></ul><p>two</p><ul><li>three</li></ul>", "* one\n\ntwo\n* three");
 	}
