@@ -1,4 +1,4 @@
-INSERT INTO accounts 
+INSERT INTO accounts
   (account_id,preferred_email,registered_on)
 VALUES
   (<%= @userid %>,'<%= @useremail %>',now());
@@ -9,18 +9,27 @@ VALUES (
   (SELECT group_id FROM account_groups WHERE name='<%= @usergroup %>')
 );
 INSERT INTO account_external_ids
+  (account_id, external_id, email_address, password)
+VALUES (
+  (SELECT account_id FROM accounts WHERE preferred_email='<%= @useremail %>'),
+  'mailto:<%= @useremail %>',
+  '<%= @useremail %>',
+  'mylyntest'
+);
+
+INSERT INTO account_external_ids
   (account_id, external_id)
 VALUES (
   (SELECT account_id FROM accounts WHERE preferred_email='<%= @useremail %>'),
   'gerrit:<%= @useremail %>'
 );
+
 INSERT INTO account_external_ids
-  (account_id, external_id, email_address, password)
+  (account_id, external_id, password)
 VALUES (
   (SELECT account_id FROM accounts WHERE preferred_email='<%= @useremail %>'),
   'username:<%= @username %>',
-  '<%= @useremail %>',
-  'mylyntest'
+  '<%= @gerritUserPassword %>'
 );
 INSERT INTO account_ssh_keys
   (ssh_public_key,valid,account_id)

@@ -1,6 +1,6 @@
 [gerrit]
         basePath = <%= @envbase %>/git
-<% if @envhost == "precise32" %>
+<% if @envhost == "localhost" %>
         canonicalWebUrl = http://localhost:2080/<%= @envid %>
 <% else %>
         canonicalWebUrl = http://<%= @envhost %>/<%= @envid %>
