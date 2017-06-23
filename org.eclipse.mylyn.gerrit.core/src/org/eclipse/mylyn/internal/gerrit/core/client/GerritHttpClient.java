@@ -20,7 +20,10 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.Credentials;
@@ -46,6 +49,7 @@ import org.eclipse.mylyn.commons.net.UnsupportedRequestException;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.internal.gerrit.core.GerritConnector;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient.Request.HttpMethod;
+import org.osgi.framework.Version;
 
 import com.google.gerrit.common.auth.SignInMode;
 import com.google.gerrit.common.auth.openid.DiscoveryResult;
@@ -228,10 +232,15 @@ public class GerritHttpClient {
 
 	private volatile boolean obtainedXsrfKey;
 
-	public GerritHttpClient(AbstractWebLocation location) {
+	private static final String XSRF_TOKEN_COOKIE_NAME = "XSRF_TOKEN"; //$NON-NLS-1$
+
+	private final Version version;
+
+	public GerritHttpClient(AbstractWebLocation location, Version version) {
 		Assert.isNotNull(location, "Location must be not null."); //$NON-NLS-1$
 		this.location = location;
 		this.httpClient = new HttpClient(WebUtil.getConnectionManager());
+		this.version = version;
 	}
 
 	public synchronized int getId() {
@@ -331,7 +340,11 @@ public class GerritHttpClient {
 			if (obtainedXsrfKey) {
 				// required to authenticate against Gerrit 2.6+ REST endpoints
 				// harmless in previous versions
-				method.setRequestHeader(X_GERRIT_AUTHORITY, xsrfKey);
+				if (GerritVersion.isVersion2120OrLater(version)) {
+					method.setRequestHeader(X_GERRIT_AUTHORITY, getXsrfKey());
+				} else {
+					method.setRequestHeader(X_GERRIT_AUTHORITY, xsrfKey);
+				}
 			}
 			try {
 				// Execute the method.
@@ -387,6 +400,14 @@ public class GerritHttpClient {
 		try {
 			code = execute(method, monitor);
 			if (code == HttpStatus.SC_OK) {
+				if (GerritVersion.isVersion2120OrLater(version)) {
+					try {
+						setXsrfCookie(XSRF_TOKEN_COOKIE_NAME);
+					} catch (Exception e) {
+						setXsrfKey(null);
+					}
+				}
+
 				InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
 				try {
 					GerritHtmlProcessor processor = new GerritHtmlProcessor();
@@ -460,8 +481,12 @@ public class GerritHttpClient {
 				throw new GerritLoginException();
 			}
 
-			// Location: http://egit.eclipse.org/r/#SignInFailure,SIGN_IN,Session cookie not available
-			validateAuthenticationState(httpClient);
+			if (GerritVersion.isVersion2120OrLater(version)) {
+				setXsrfCookie(LOGIN_COOKIE_NAME);
+			} else {
+				// Location: http://egit.eclipse.org/r/#SignInFailure,SIGN_IN,Session cookie not available
+				validateAuthenticationState(httpClient);
+			}
 
 			// success since no exception was thrown
 			break;
@@ -726,14 +751,11 @@ public class GerritHttpClient {
 	}
 
 	protected void validateAuthenticationState(HttpClient httpClient) throws GerritLoginException {
-		Cookie[] cookies = httpClient.getState().getCookies();
-		for (Cookie cookie : cookies) {
-			if (LOGIN_COOKIE_NAME.equals(cookie.getName())) {
-				setXsrfCookie(cookie);
-				return;
-			}
+		Optional<Cookie> cookie = findCookieWithName(LOGIN_COOKIE_NAME, httpClient);
+		if (cookie.isPresent()) {
+			setXsrfCookie(cookie.get());
+			return;
 		}
-
 		if (CoreUtil.TEST_MODE) {
 			System.err.println(" Authentication failed: " + httpClient.getState()); //$NON-NLS-1$
 		}
@@ -769,6 +791,30 @@ public class GerritHttpClient {
 			httpClient.getState().clear();
 		}
 		sessionChanged(xsrfCookie);
+	}
+
+	private void setXsrfCookie(String cookieName) throws GerritLoginException {
+		Optional<Cookie> cookie = findCookieWithName(cookieName, httpClient);
+		cookie.ifPresent(this::setXsrfCookie);
+		cookie.orElseThrow(() -> new GerritLoginException());
+	}
+
+	private Optional<Cookie> findCookieWithName(String cookieName, HttpClient httpClient) {
+		return Arrays.stream(httpClient.getState().getCookies())
+				.filter(c -> cookieName.equals(c.getName()))
+				.findFirst();
+	}
+
+	static <T extends Optional, X extends Throwable> T nonNullOrThrow(T val, Supplier<? extends X> exSupplier,
+			HttpClient httpClient) throws X {
+		if (val.isPresent()) {
+			return val;
+		} else {
+			if (CoreUtil.TEST_MODE) {
+				System.err.println(" Authentication failed: " + httpClient.getState()); //$NON-NLS-1$
+			}
+			throw exSupplier.get();
+		}
 	}
 
 }

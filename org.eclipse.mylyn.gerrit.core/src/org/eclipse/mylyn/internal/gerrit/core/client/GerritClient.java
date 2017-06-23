@@ -208,7 +208,7 @@ public abstract class GerritClient extends ReviewsClient {
 	protected void initialize(AbstractWebLocation location, GerritConfiguration config,
 			GerritAuthenticationState authState, String xsrfKey, final GerritClientStateListener stateListener) {
 		this.stateListener = stateListener;
-		this.client = new GerritHttpClient(location) {
+		this.client = new GerritHttpClient(location, version) {
 			@Override
 			protected void sessionChanged(Cookie cookie) {
 				GerritAuthenticationState authState = new GerritAuthenticationState();
@@ -297,7 +297,11 @@ public abstract class GerritClient extends ReviewsClient {
 			}, monitor);
 
 			if (gerritConfig == null) {
-				throw new GerritException("Failed to obtain Gerrit configuration"); //$NON-NLS-1$
+				if (GerritVersion.isVersion2120OrLater(version)) {
+					gerritConfig = new GerritConfigX();
+				} else {
+					throw new GerritException("Failed to obtain Gerrit configuration"); //$NON-NLS-1$
+				}
 			}
 			return gerritConfig;
 		} catch (UnknownHostException cause) {

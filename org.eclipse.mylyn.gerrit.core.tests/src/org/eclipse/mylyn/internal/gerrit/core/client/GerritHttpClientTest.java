@@ -48,7 +48,7 @@ import com.google.gson.reflect.TypeToken;
 
 /**
  * Unit tests for {@link GerritHttpClient}.
- * 
+ *
  * @author Christian Trutz
  */
 @RunWith(MockitoJUnitRunner.class)
@@ -57,7 +57,7 @@ public class GerritHttpClientTest {
 		private final int code;
 
 		private TestGerritHttpClient(AbstractWebLocation location, int code) {
-			super(location);
+			super(location, GerritCapabilities.MAXIMUM_SUPPORTED_VERSION);
 			this.code = code;
 		}
 
@@ -89,7 +89,7 @@ public class GerritHttpClientTest {
 	 */
 	@Test(expected = AssertionFailedException.class)
 	public void constructorNull() {
-		new GerritHttpClient((AbstractWebLocation) null);
+		new GerritHttpClient((AbstractWebLocation) null, GerritCapabilities.MAXIMUM_SUPPORTED_VERSION);
 	}
 
 	/**
@@ -98,7 +98,8 @@ public class GerritHttpClientTest {
 	 */
 	@Test(expected = AssertionFailedException.class)
 	public void postJsonRequestNullServiceUri() throws IOException, GerritException {
-		GerritHttpClient gerritHttpClient = new GerritHttpClient(abstractWebLocation);
+		GerritHttpClient gerritHttpClient = new GerritHttpClient(abstractWebLocation,
+				GerritCapabilities.MAXIMUM_SUPPORTED_VERSION);
 		gerritHttpClient.postJsonRequest(null, new JsonEntity() {
 			@Override
 			public String getContent() {
@@ -113,7 +114,8 @@ public class GerritHttpClientTest {
 	 */
 	@Test(expected = AssertionFailedException.class)
 	public void postJsonRequestNullJsonEntity() throws IOException, GerritException {
-		GerritHttpClient gerritHttpClient = new GerritHttpClient(abstractWebLocation);
+		GerritHttpClient gerritHttpClient = new GerritHttpClient(abstractWebLocation,
+				GerritCapabilities.MAXIMUM_SUPPORTED_VERSION);
 		gerritHttpClient.postJsonRequest("not null", null, progressMonitor); //$NON-NLS-1$
 	}
 
@@ -122,8 +124,9 @@ public class GerritHttpClientTest {
 		// given
 		final TypeToken<Byte[]> byteArrayType = new TypeToken<Byte[]>() {
 		};
-		Request<byte[]> request = new GerritHttpClient(abstractWebLocation).new RestRequest<byte[]>(HttpMethod.GET,
-				"serviceUri", null /*input*/, byteArrayType.getType(), null /*error handler*/); //$NON-NLS-1$
+		Request<byte[]> request = new GerritHttpClient(abstractWebLocation,
+				GerritCapabilities.MAXIMUM_SUPPORTED_VERSION).new RestRequest<byte[]>(HttpMethod.GET, "serviceUri", //$NON-NLS-1$
+						null /*input*/, byteArrayType.getType(), null /*error handler*/);
 		HttpMethodBase httpMethodBase = mock(HttpMethodBase.class);
 		byte[] binary = "binary".getBytes(); //$NON-NLS-1$
 		when(httpMethodBase.getResponseBody()).thenReturn(binary);

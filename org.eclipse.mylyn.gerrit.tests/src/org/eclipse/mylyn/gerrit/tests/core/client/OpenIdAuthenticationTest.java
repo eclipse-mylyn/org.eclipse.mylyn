@@ -13,20 +13,21 @@ package org.eclipse.mylyn.gerrit.tests.core.client;
 
 import java.io.IOException;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.commons.net.UnsupportedRequestException;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritCapabilities;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient.Request;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritLoginException;
 import org.eclipse.mylyn.internal.gerrit.core.client.IOpenIdLocation;
 import org.eclipse.mylyn.internal.gerrit.core.client.OpenIdAuthenticationRequest;
 import org.eclipse.mylyn.internal.gerrit.core.client.OpenIdAuthenticationResponse;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -56,11 +57,10 @@ public class OpenIdAuthenticationTest extends TestCase {
 
 	private static String PROVIDER_URL = "https://www.google.com/accounts/o8/id"; //$NON-NLS-1$
 
-	StubRepositoryLocation location = new StubRepositoryLocation(GerritFixture.current()
-			.repository()
-			.getRepositoryUrl());
+	StubRepositoryLocation location = new StubRepositoryLocation(
+			GerritFixture.current().repository().getRepositoryUrl());
 
-	GerritHttpClient client = new GerritHttpClient(location);
+	GerritHttpClient client = new GerritHttpClient(location, GerritCapabilities.MAXIMUM_SUPPORTED_VERSION);
 
 	public void testExecuteNullOpenIdProviderNullCredentials() throws Exception {
 		client.execute(createRequest(), null);

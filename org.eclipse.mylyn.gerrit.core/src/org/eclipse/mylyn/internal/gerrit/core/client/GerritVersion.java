@@ -23,6 +23,8 @@ public class GerritVersion {
 
 	public static final Version VERSION_2_11_2 = new Version(2, 11, 2);
 
+	public static final Version VERSION_2_12_0 = new Version(2, 12, 0);
+
 	// e.g. 2.6 or 2.6.0
 	private static final Pattern MAJOR_MINOR_MICRO_VERSION_PATTERN = Pattern.compile("V?\\d+\\.\\d+(\\.\\d+)?"); //$NON-NLS-1$
 
@@ -57,6 +59,10 @@ public class GerritVersion {
 
 	public static boolean isVersion2112OrLater(Version version) {
 		return version.compareTo(VERSION_2_11_2) >= 0;
+	}
+
+	public static boolean isVersion2120OrLater(Version version) {
+		return version.compareTo(VERSION_2_12_0) >= 0;
 	}
 
 }
