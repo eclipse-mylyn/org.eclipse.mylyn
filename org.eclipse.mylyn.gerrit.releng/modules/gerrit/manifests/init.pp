@@ -3,6 +3,17 @@ class gerrit {
   $userOwner = "tools"
   $userGroup = "tools"
 
+  $_exists =inline_template("<%= File.exists?('/etc/gerrit_clear_mode') %>")
+  if $_exists == "true"  {
+    $clearMode            = regsubst(file("/etc/gerrit_clear_mode"), '\n', '')
+  } else {
+    $clearMode            = "noclear"
+    exec { "create clearMode":
+      command => "echo \"noclear\" >/etc/gerrit_clear_mode",
+      creates => '/etc/gerrit_clear_mode',
+    }
+  }
+
   exec { "apt-get update":
     command => "apt-get update",
     onlyif  => "find /var/lib/apt/lists/ -mtime -7 | (grep -q Package; [ $? != 0 ])",
