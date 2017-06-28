@@ -1,2 +1,2 @@
-DIRS=$(find ../../drops/3.21.*/v*/ -maxdepth 0 | sort -r)
+DIRS=$(find ../../drops/3.23.*/v*/ -maxdepth 0 | sort -r)
 NAME="Mylyn for Eclipse Oxygen"
