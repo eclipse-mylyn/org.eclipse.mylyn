@@ -52,7 +52,7 @@ COUNT=0
 for i in $DIRS; do
   echo "    <child location='$i'/>" >> $FILE
   COUNT=$((COUNT+1))
- 
+
   echo " added $i"
 done
 sed -i -e "s/CHILD_COUNT/$COUNT/" $FILE
@@ -78,3 +78,4 @@ else
  exit 1
 fi
 
+$(dirname $0)/generate-snapshot-index.sh
