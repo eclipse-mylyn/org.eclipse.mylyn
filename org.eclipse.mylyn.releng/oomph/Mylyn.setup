@@ -2063,6 +2063,8 @@
         <buildPlan
             name="mylyn-3.23.x-release"/>
         <buildPlan
+            name="mylyn-3.24.x-release"/>
+        <buildPlan
             name="mylyn-integration"/>
         <buildPlan
             name="mylyn-integration-connectors"/>
@@ -2082,6 +2084,8 @@
             name="mylyn-3.22.x"/>
         <buildPlan
             name="mylyn-3.23.x"/>
+        <buildPlan
+            name="mylyn-3.24.x"/>
         <buildPlan
             name="mylyn-all-snapshot"/>
         <buildPlan
