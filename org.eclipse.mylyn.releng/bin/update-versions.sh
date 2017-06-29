@@ -33,7 +33,10 @@ version=3.24
 
 #grep Bundle-Version */META-INF/MANIFEST.MF | grep -v 0.9.0 | grep -v 3.7.0 | grep -v 1.5.0
 
-git submodule foreach eval "git commit -a -m \"$bug: update \$(basename \$(pwd)) versions to $version
+for f in `find . -maxdepth 1 -name "org.eclipse.mylyn*" -not -name "*docs"`
+do
+cd $f
+eval "git commit -a -m \"$bug: update \$(basename \$(pwd)) versions to $version
 
 Change-Id: I0000000000000000000000000000000000000000
 Task-Url: https://bugs.eclipse.org/bugs/show_bug.cgi?id=$bug\""
@@ -42,3 +45,5 @@ git commit -a -m "$bug: update `basename $(pwd)` versions to $version
 
 Change-Id: I0000000000000000000000000000000000000000
 Task-Url: https://bugs.eclipse.org/bugs/show_bug.cgi?id=$bug"
+cd ..
+done
