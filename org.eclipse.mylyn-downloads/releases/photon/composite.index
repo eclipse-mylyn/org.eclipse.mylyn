@@ -1,0 +1,3 @@
+DIRS=$(find ../../drops/3.24.*/v*/ -maxdepth 0 | sort -r)
+DIRS+=" ../../docs/releases/3.0"
+NAME="Mylyn for Eclipse Photon"
