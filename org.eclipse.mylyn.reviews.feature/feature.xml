@@ -12,7 +12,7 @@
 <feature
       id="org.eclipse.mylyn.reviews.feature"
       label="%featureName"
-      version="2.14.0.qualifier"
+      version="2.15.0.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.mylyn.reviews.core"
       license-feature="org.eclipse.license"
@@ -31,7 +31,7 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.mylyn_feature" version="3.23.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn_feature" version="3.24.0" match="compatible"/>
    </requires>
 
    <plugin

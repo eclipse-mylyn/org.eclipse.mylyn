@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Reviews
 Bundle-SymbolicName: org.eclipse.mylyn.reviews.core;singleton:=true
-Bundle-Version: 2.14.0.qualifier
+Bundle-Version: 2.15.0.qualifier
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.team.core,
  org.eclipse.mylyn.commons.core;bundle-version="3.9.0",
