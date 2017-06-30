@@ -81,7 +81,7 @@
   <setupTask
       xsi:type="setup:VariableTask"
       name="eclipse.target.platform"
-      defaultValue="Neon"
+      defaultValue="Oxygen"
       storageURI="scope://Workspace"/>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -153,7 +153,7 @@
       <repositoryList
           name="Oxygen">
         <repository
-            url="http://download.eclipse.org/staging/oxygen"/>
+            url="http://download.eclipse.org/releases/oxygen"/>
         <repository
             url="http://download.eclipse.org/cbi/updates/license"/>
         <repository
@@ -647,7 +647,7 @@
             name="Mylyn Docs">
           <predicate
               xsi:type="predicates:RepositoryPredicate"
-              project="org.eclipse.mylyn.wikitext.core"/>
+              project="org.eclipse.mylyn.wikitext"/>
         </workingSet>
       </setupTask>
       <setupTask
@@ -1621,7 +1621,7 @@
             name="Mylyn Docs">
           <predicate
               xsi:type="predicates:RepositoryPredicate"
-              project="org.eclipse.mylyn.wikitext.core"/>
+              project="org.eclipse.mylyn.wikitext"/>
         </workingSet>
       </setupTask>
       <setupTask
