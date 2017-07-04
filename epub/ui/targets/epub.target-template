@@ -27,6 +27,8 @@
 <unit id="org.apache.commons.lang" version="0.0.0"/>
 <unit id="org.apache.commons.httpclient" version="0.0.0"/>
 <unit id="org.apache.lucene.core" version="0.0.0"/>
+<unit id="org.apache.lucene.queryparser" version="0.0.0"/>
+<unit id="org.apache.lucene.analyzers-common" version="0.0.0"/>
 <unit id="org.apache.xerces" version="0.0.0"/>
 <unit id="org.apache.xml.resolver" version="0.0.0"/>
 <unit id="org.apache.xml.serializer" version="0.0.0"/>
