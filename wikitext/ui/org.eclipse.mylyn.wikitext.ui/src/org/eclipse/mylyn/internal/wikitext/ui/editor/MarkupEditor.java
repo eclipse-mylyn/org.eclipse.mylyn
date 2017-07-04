@@ -91,6 +91,7 @@ import org.eclipse.mylyn.wikitext.ui.editor.MarkupSourceViewerConfiguration;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.browser.LocationListener;
@@ -376,6 +377,12 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		return viewer;
 	}
 
+	private void logPreviewScrollingFailure(SWTException e) {
+		WikiTextUiPlugin.getDefault().getLog().log(WikiTextUiPlugin.getDefault().createStatus(
+				format(Messages.MarkupEditor_previewScrollingFailed, e.getMessage()), IStatus.WARNING, e));
+
+	}
+
 	private void logPreviewTabUnavailable(SWTError e) {
 		WikiTextUiPlugin.getDefault().getLog().log(WikiTextUiPlugin.getDefault()
 				.createStatus(format(Messages.MarkupEditor_previewUnavailable, e.getMessage()), IStatus.ERROR, e));
@@ -574,7 +581,13 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	 */
 	private void updatePreview(final OutlineItem outlineItem) {
 		if (previewDirty && browser != null) {
-			Object result = browser.evaluate(JAVASCRIPT_GETSCROLLTOP);
+			Object result = null;
+			try {
+				result = browser.evaluate(JAVASCRIPT_GETSCROLLTOP);
+			} catch (SWTException e) {
+				// bug 517281 javascript fails for some Linux configurations
+				logPreviewScrollingFailure(e);
+			}
 			final int verticalScrollbarPos = result != null ? ((Number) result).intValue() : 0;
 			String xhtml = null;
 			if (document == null) {

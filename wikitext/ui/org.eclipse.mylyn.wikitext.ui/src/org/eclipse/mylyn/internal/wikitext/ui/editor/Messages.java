@@ -48,6 +48,8 @@ class Messages extends NLS {
 
 	public static String MarkupEditor_collapseAllAction_description;
 
+	public static String MarkupEditor_previewScrollingFailed;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
