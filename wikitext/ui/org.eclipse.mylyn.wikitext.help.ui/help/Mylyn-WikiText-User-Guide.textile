@@ -672,8 +672,7 @@ h2. Textile Reference
 Textile syntax and references can be found here:
 
 * "Textile (markup language)":http://en.wikipedia.org/wiki/Textile_%28markup_language%29 (wikipedia.org)
-* "The Textile Reference Manual":http://thresholdstate.com/articles/4312/the-textile-reference-manual (thresholdstate.com)
-* "Textile":http://textile.thresholdstate.com/ an online form for trying out Textile syntax (thresholdstate.com)
+* "TxStyle · Textile Documentation":https://txstyle.org/ an online form for trying out Textile syntax (txstyle.org)
 * "Textile Reference":http://redcloth.org/hobix.com/textile/ an example-based Textile reference (hobix.com)
 
 h1. Tips and Tricks
