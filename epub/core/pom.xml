@@ -49,7 +49,6 @@
     <modules>
         <module>org.eclipse.mylyn.docs.epub.core</module>
         <module>org.eclipse.mylyn.docs.epub.ant</module>
-        <module>org.eclipse.mylyn.docs.epub.tests</module>
         <module>repository</module>
     </modules>
 
@@ -69,22 +68,6 @@
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.0.1</version>
             </plugin>
-            <!-- 
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <version>3.2.0</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <manifestLocation>META-INF</manifestLocation>
-                    <instructions>
-                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                        <Bundle-RequiredExecutionEnvironment>JavaSE-1.8</Bundle-RequiredExecutionEnvironment>
-                        <Export-Package>${project.artifactId}*</Export-Package>
-                    </instructions>
-                </configuration>
-            </plugin>
-             -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -128,11 +111,8 @@
             <resource>
                 <directory>.</directory>
                 <includes>
-                    <include>about_files/*</include>
-                    <include>icons/*.gif</include>
                     <include>model/*</include>
                     <include>about.*</include>
-                    <include>feature.gif</include>
                     <include>plugin.*</include>
                 </includes>
             </resource>

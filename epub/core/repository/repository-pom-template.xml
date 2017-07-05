@@ -34,27 +34,9 @@
 									<id>org.eclipse.mylyn.docs:org.eclipse.mylyn.docs.epub.core:@EPUB_VERSION@</id>
 									<transitive>false</transitive>
 									<source>true</source>
-									<singleton>true</singleton>
-									<override>true</override>
-									<instructions>
-				                        <Bundle-RequiredExecutionEnvironment>JavaSE-1.8</Bundle-RequiredExecutionEnvironment>
-				                        <Export-Package>org.eclipse.mylyn.docs.epub.internal*;x-internal:=true,org.eclipse.mylyn.docs.epub.core.*, org.eclipse.mylyn.docs.epub.*</Export-Package>
-				                        <Import-Package>org.apache.tika.*;version="0", org.eclipse.emf.*, org.eclipse.mylyn.wikitext.*</Import-Package>
-									</instructions>
 								</artifact>
 								<artifact>
 									<id>org.eclipse.mylyn.docs:org.eclipse.mylyn.docs.epub.ant:@EPUB_VERSION@</id>
-									<transitive>false</transitive>
-									<source>true</source>
-									<override>true</override>
-									<instructions>
-				                        <Bundle-RequiredExecutionEnvironment>JavaSE-1.8</Bundle-RequiredExecutionEnvironment>
-				                        <Export-Package>*</Export-Package>
-				                        <Import-Package>*;resolution:=optional</Import-Package>
-									</instructions>
-								</artifact>
-								<artifact>
-									<id>org.eclipse.mylyn.docs:org.eclipse.mylyn.docs.epub.tests:@EPUB_VERSION@</id>
 									<transitive>false</transitive>
 									<source>true</source>
 								</artifact>

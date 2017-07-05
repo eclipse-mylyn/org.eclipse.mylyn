@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: %Bundle-Name
+Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.mylyn.docs.epub.help;singleton:=true
 Bundle-Version: 4.0.0.qualifier
-Bundle-Vendor: %Bundle-Vendor
+Bundle-Vendor: %Bundle-Vendor.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Bundle-Localization: OSGI-INF/l10n/bundle
+Bundle-Localization: plugin
 Require-Bundle: org.eclipse.help
