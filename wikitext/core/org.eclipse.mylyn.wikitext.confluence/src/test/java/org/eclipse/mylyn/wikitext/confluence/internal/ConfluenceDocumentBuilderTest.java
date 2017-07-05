@@ -149,6 +149,19 @@ public class ConfluenceDocumentBuilderTest {
 	}
 
 	@Test
+	public void codeBlockCurlyBraceContent() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.CODE, new Attributes());
+		builder.characters("{something}");
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		assertEquals("{code}{something}{code}\n\n", markup);
+	}
+
+	@Test
 	public void preformattedBlockWithLineBreaks() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PREFORMATTED, new Attributes());
@@ -386,7 +399,7 @@ public class ConfluenceDocumentBuilderTest {
 	}
 
 	@Test
-	public void MonospaceSpan() {
+	public void monospaceSpan() {
 		builder.beginDocument();
 
 		builder.characters("prefix ");
@@ -402,6 +415,25 @@ public class ConfluenceDocumentBuilderTest {
 		String markup = out.toString();
 
 		assertEquals("prefix {{test}} suffix\n\n", markup);
+	}
+
+	@Test
+	public void monospaceSpanWithCurlyBraceContent() {
+		builder.beginDocument();
+
+		builder.characters("prefix ");
+
+		builder.beginSpan(SpanType.MONOSPACE, new Attributes());
+		builder.characters("{test}");
+		builder.endSpan();
+
+		builder.characters(" suffix");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		assertEquals("prefix {{\\{test}}} suffix\n\n", markup);
 	}
 
 	@Test
@@ -702,6 +734,16 @@ public class ConfluenceDocumentBuilderTest {
 		String markup = out.toString();
 
 		assertEquals("first\n\\\\ \\\\second\n\n", markup);
+	}
+
+	@Test
+	public void paragraphWithCurlyBraceContent() {
+		assertParagraphWithContent("\\{something}\n\n", "{something}");
+	}
+
+	@Test
+	public void paragraphWithSlashContent() {
+		assertParagraphWithContent("here is \\\\ a slash\n\n", "here is \\ a slash");
 	}
 
 	@Test
@@ -1254,5 +1296,17 @@ public class ConfluenceDocumentBuilderTest {
 		String markup = out.toString();
 
 		assertEquals(expectedMarkup, markup);
+	}
+
+	private void assertParagraphWithContent(String expected, String characters) {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters(characters);
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		assertEquals(expected, markup);
 	}
 }

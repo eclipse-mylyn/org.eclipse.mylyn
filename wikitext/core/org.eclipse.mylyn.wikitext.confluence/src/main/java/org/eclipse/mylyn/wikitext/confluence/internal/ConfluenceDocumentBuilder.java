@@ -80,18 +80,28 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 		private int consecutiveLineBreakCount = 0;
 
+		private final boolean escaping;
+
 		ContentBlock(BlockType blockType, String prefix, String suffix, boolean requireAdjacentSeparator,
 				boolean emitWhenEmpty, int leadingNewlines, int trailingNewlines) {
+			this(blockType, prefix, suffix, requireAdjacentSeparator, emitWhenEmpty, leadingNewlines, trailingNewlines,
+					true);
+		}
+
+		ContentBlock(BlockType blockType, String prefix, String suffix, boolean requireAdjacentSeparator,
+				boolean emitWhenEmpty, int leadingNewlines, int trailingNewlines, boolean escaping) {
 			super(blockType, leadingNewlines, trailingNewlines);
 			this.prefix = prefix;
 			this.suffix = suffix;
 			this.requireAdjacentSeparator = requireAdjacentSeparator;
 			this.emitWhenEmpty = emitWhenEmpty;
+			this.escaping = escaping;
 		}
 
 		ContentBlock(String prefix, String suffix, boolean requireAdjacentWhitespace, boolean emitWhenEmpty,
 				int leadingNewlines, int trailingNewlines) {
-			this(null, prefix, suffix, requireAdjacentWhitespace, emitWhenEmpty, leadingNewlines, trailingNewlines);
+			this(null, prefix, suffix, requireAdjacentWhitespace, emitWhenEmpty, leadingNewlines, trailingNewlines,
+					true);
 		}
 
 		@Override
@@ -100,7 +110,11 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			if (!isBlockTypePreservingWhitespace()) {
 				c = normalizeWhitespace(c);
 			}
-			ConfluenceDocumentBuilder.this.emitContent(c);
+			if (escaping) {
+				ConfluenceDocumentBuilder.this.emitEscapedContent(c);
+			} else {
+				ConfluenceDocumentBuilder.this.emitContent(c);
+			}
 		}
 
 		@Override
@@ -109,7 +123,11 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			if (!isBlockTypePreservingWhitespace()) {
 				s = normalizeWhitespace(s);
 			}
-			ConfluenceDocumentBuilder.this.emitContent(s);
+			if (escaping) {
+				ConfluenceDocumentBuilder.this.emitEscapedContent(s);
+			} else {
+				ConfluenceDocumentBuilder.this.emitContent(s);
+			}
 		}
 
 		public void writeLineBreak() throws IOException {
@@ -287,7 +305,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			}
 			return new NewlineDelimitedBlock(type, 2, 1);
 		case CODE:
-			return new ContentBlock(type, "{code}", "{code}\n\n", false, false, 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock(type, "{code}", "{code}\n\n", false, false, 2, 2, false); //$NON-NLS-1$ //$NON-NLS-2$
 		case DEFINITION_ITEM:
 		case DEFINITION_TERM:
 		case LIST_ITEM:
@@ -524,6 +542,19 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	void emitEscapedContent(String s) throws IOException {
+		for (int x = 0; x < s.length(); ++x) {
+			emitEscapedContent(s.charAt(x));
+		}
+	}
+
+	void emitEscapedContent(int c) throws IOException {
+		if (c == '{' || c == '\\') {
+			super.emitContent('\\');
+		}
+		super.emitContent(c);
 	}
 
 	private void writeAttributes(Attributes attributes) {
