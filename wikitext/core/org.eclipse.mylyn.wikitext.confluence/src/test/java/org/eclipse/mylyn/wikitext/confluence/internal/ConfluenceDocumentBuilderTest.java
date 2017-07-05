@@ -150,15 +150,13 @@ public class ConfluenceDocumentBuilderTest {
 
 	@Test
 	public void codeBlockCurlyBraceContent() {
-		builder.beginDocument();
-		builder.beginBlock(BlockType.CODE, new Attributes());
-		builder.characters("{something}");
-		builder.endBlock();
-		builder.endDocument();
+		assertCodeBlock("{code}{something}{code}\n\n", "{something}");
+	}
 
-		String markup = out.toString();
+	@Test
+	public void codeBlockSquareBraceContent() {
+		assertCodeBlock("{code}[something]{code}\n\n", "[something]");
 
-		assertEquals("{code}{something}{code}\n\n", markup);
 	}
 
 	@Test
@@ -751,6 +749,11 @@ public class ConfluenceDocumentBuilderTest {
 	@Test
 	public void paragraphWithCurlyBraceContent() {
 		assertParagraphWithContent("\\{something}\n\n", "{something}");
+	}
+
+	@Test
+	public void paragraphWithSquareBraceContent() {
+		assertParagraphWithContent("\\[something]\n\n", "[something]");
 	}
 
 	@Test
@@ -1409,5 +1412,17 @@ public class ConfluenceDocumentBuilderTest {
 		builder.characters(content);
 		builder.endBlock(); // paragraph
 		builder.endBlock(); // list item
+	}
+
+	private void assertCodeBlock(String expected, String content) {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.CODE, new Attributes());
+		builder.characters(content);
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		assertEquals(expected, markup);
 	}
 }

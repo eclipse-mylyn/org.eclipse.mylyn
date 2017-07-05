@@ -573,7 +573,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	}
 
 	void emitEscapedContent(int c) throws IOException {
-		if (c == '{' || c == '\\') {
+		if (c == '{' || c == '\\' || c == '[') {
 			super.emitContent('\\');
 		}
 		super.emitContent(c);
