@@ -16,11 +16,10 @@
 	</description>
 
 	<path id="wikitext.tasks.classpath">
-		<pathelement path="${compile_classpath}"/>
+		<pathelement path="${plugin_classpath}"/>
 	</path>
-        <echo message="compile classpath: ${compile_classpath}"/>
-	<taskdef classpathref="wikitext.tasks.classpath" resource="org/eclipse/mylyn/internal/wikitext/mediawiki/core/tasks/tasks.properties"/>
-	<taskdef classpathref="wikitext.tasks.classpath" resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties"/>
+	<echo message="wikitext classpath: ${plugin_classpath}"/>
+	<taskdef classpathref="wikitext.tasks.classpath" resource="org/eclipse/mylyn/wikitext/mediawiki/ant/tasks.properties"/>
 
 	<property name="help.doc.url.base" value="http://wiki.eclipse.org" />
 

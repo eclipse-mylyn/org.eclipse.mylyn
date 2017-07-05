@@ -30,19 +30,29 @@ http://www.eclipse.org/legal/epl-v10.html
     <plugins>
       <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
-          <dependencies>
-            <dependency>
-              <groupId>ant</groupId>
-              <artifactId>optional</artifactId>
-              <version>1.5.4</version>
-            </dependency>
+        <dependencies>
+          <dependency>
+            <groupId>ant</groupId>
+            <artifactId>optional</artifactId>
+            <version>1.5.4</version>
+          </dependency>
+          <dependency>
+            <groupId>org.eclipse.mylyn.docs</groupId>
+            <artifactId>org.eclipse.mylyn.wikitext.ant</artifactId>
+            <version>3.0.9</version>
+          </dependency>
+          <dependency>
+            <groupId>org.eclipse.mylyn.docs</groupId>
+            <artifactId>org.eclipse.mylyn.wikitext.mediawiki.ant</artifactId>
+            <version>3.0.9</version>
+          </dependency>
         </dependencies>
         <executions>
           <execution>
             <phase>generate-sources</phase>
             <configuration>
                 <tasks if="update.doc">
-                <property name="compile_classpath" refid="maven.compile.classpath"/>
+                <property name="plugin_classpath" refid="maven.plugin.classpath"/>
                 <ant target="all" inheritRefs="true" antfile="build-help.xml"/>
               </tasks>
             </configuration>
