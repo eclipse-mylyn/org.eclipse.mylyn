@@ -15,11 +15,7 @@
 		Generate Eclipse help content
 	</description>
 
-	<path id="wikitext.tasks.classpath">
-		<pathelement path="${plugin_classpath}"/>
-	</path>
-	<echo message="wikitext classpath: ${plugin_classpath}"/>
-	<taskdef classpathref="wikitext.tasks.classpath" resource="org/eclipse/mylyn/wikitext/mediawiki/ant/tasks.properties"/>
+	<taskdef resource="org/eclipse/mylyn/wikitext/mediawiki/ant/tasks.properties"/>
 
 	<property name="help.doc.url.base" value="http://wiki.eclipse.org" />
 

@@ -51,8 +51,7 @@ http://www.eclipse.org/legal/epl-v10.html
           <execution>
             <phase>generate-sources</phase>
             <configuration>
-                <tasks if="update.doc">
-                <property name="plugin_classpath" refid="maven.plugin.classpath"/>
+              <tasks if="update.doc">
                 <ant target="all" inheritRefs="true" antfile="build-help.xml"/>
               </tasks>
             </configuration>
