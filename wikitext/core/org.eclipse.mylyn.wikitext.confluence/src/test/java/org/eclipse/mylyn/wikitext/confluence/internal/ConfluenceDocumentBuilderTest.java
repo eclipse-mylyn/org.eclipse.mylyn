@@ -808,6 +808,21 @@ public class ConfluenceDocumentBuilderTest {
 		assertEquals("* first\n* second\n", markup);
 	}
 
+	@Test
+	public void listItemWithSingleParagraph() {
+		builder.beginDocument();
+
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+
+		emitListItemHavingParagraphAndContent("first");
+
+		builder.endBlock(); // list
+
+		builder.endDocument();
+
+		assertEquals("* first\n", out.toString());
+	}
+
 	private void emitMultiItemBulletedList() {
 		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
 
@@ -892,6 +907,27 @@ public class ConfluenceDocumentBuilderTest {
 		String markup = out.toString();
 
 		assertEquals("* first\n* second\n** second.1\n\n# third\n# fourth\n## fourth.1\n", markup);
+	}
+
+	@Test
+	public void listWithNestedListsWihoutListItem() {
+		builder.beginDocument();
+
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+
+		emitListItemHavingParagraphAndContent("content 1");
+
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+		emitListItemHavingParagraphAndContent("content 2");
+		builder.endBlock(); // list
+		builder.endBlock(); // list
+
+		builder.endBlock(); // list
+
+		builder.endDocument();
+		assertEquals("* content 1\n" + //
+				"*** content 2\n", out.toString());
 	}
 
 	@Test
@@ -1308,5 +1344,13 @@ public class ConfluenceDocumentBuilderTest {
 		String markup = out.toString();
 
 		assertEquals(expected, markup);
+	}
+
+	private void emitListItemHavingParagraphAndContent(String content) {
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters(content);
+		builder.endBlock(); // paragraph
+		builder.endBlock(); // list item
 	}
 }

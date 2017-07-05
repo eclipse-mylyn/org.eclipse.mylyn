@@ -82,26 +82,30 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 		private final boolean escaping;
 
+		private final boolean trimmingNewlines;
+
 		ContentBlock(BlockType blockType, String prefix, String suffix, boolean requireAdjacentSeparator,
 				boolean emitWhenEmpty, int leadingNewlines, int trailingNewlines) {
 			this(blockType, prefix, suffix, requireAdjacentSeparator, emitWhenEmpty, leadingNewlines, trailingNewlines,
-					true);
+					true, false);
 		}
 
 		ContentBlock(BlockType blockType, String prefix, String suffix, boolean requireAdjacentSeparator,
-				boolean emitWhenEmpty, int leadingNewlines, int trailingNewlines, boolean escaping) {
+				boolean emitWhenEmpty, int leadingNewlines, int trailingNewlines, boolean escaping,
+				boolean trimmingNewlines) {
 			super(blockType, leadingNewlines, trailingNewlines);
 			this.prefix = prefix;
 			this.suffix = suffix;
 			this.requireAdjacentSeparator = requireAdjacentSeparator;
 			this.emitWhenEmpty = emitWhenEmpty;
 			this.escaping = escaping;
+			this.trimmingNewlines = trimmingNewlines;
 		}
 
 		ContentBlock(String prefix, String suffix, boolean requireAdjacentWhitespace, boolean emitWhenEmpty,
 				int leadingNewlines, int trailingNewlines) {
 			this(null, prefix, suffix, requireAdjacentWhitespace, emitWhenEmpty, leadingNewlines, trailingNewlines,
-					true);
+					true, false);
 		}
 
 		@Override
@@ -175,6 +179,9 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 				}
 
 				emitPrefix();
+				if (trimmingNewlines) {
+					content = CharMatcher.anyOf("\n\r").trimFrom(content);
+				}
 				emitContent(content);
 				emitSuffix(content);
 
@@ -259,7 +266,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	private class TableCellBlock extends ContentBlock {
 		public TableCellBlock(BlockType blockType) {
-			super(blockType, blockType == BlockType.TABLE_CELL_NORMAL ? "|" : "||", "", false, true, 0, 0); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			super(blockType, blockType == BlockType.TABLE_CELL_NORMAL ? "|" : "||", "", false, true, 0, 0, true, true); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 
 		@Override
@@ -271,6 +278,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			}
 			super.emitContent(content);
 		}
+
 	}
 
 	private class ImplicitParagraphBlock extends ContentBlock {
@@ -299,18 +307,21 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			if (currentBlock != null) {
 				BlockType currentBlockType = currentBlock.getBlockType();
 				if (currentBlockType == BlockType.LIST_ITEM || currentBlockType == BlockType.DEFINITION_ITEM
-						|| currentBlockType == BlockType.DEFINITION_TERM) {
+						|| currentBlockType == BlockType.DEFINITION_TERM || currentBlockType == BlockType.BULLETED_LIST
+						|| currentBlockType == BlockType.NUMERIC_LIST
+						|| currentBlockType == BlockType.DEFINITION_LIST) {
 					return new NewlineDelimitedBlock(type, 1, 1);
 				}
 			}
 			return new NewlineDelimitedBlock(type, 2, 1);
 		case CODE:
-			return new ContentBlock(type, "{code}", "{code}\n\n", false, false, 2, 2, false); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock(type, "{code}", "{code}\n\n", false, false, 2, 2, false, false); //$NON-NLS-1$ //$NON-NLS-2$
 		case DEFINITION_ITEM:
 		case DEFINITION_TERM:
 		case LIST_ITEM:
 			char prefixChar = computeCurrentListType() == BlockType.NUMERIC_LIST ? '#' : '*';
-			return new ContentBlock(type, computePrefix(prefixChar, computeListLevel()) + " ", "", false, true, 1, 1); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock(type, computePrefix(prefixChar, computeListLevel()) + " ", "", false, true, 1, 1, //$NON-NLS-1$//$NON-NLS-2$
+					true, true);
 		case DIV:
 			if (currentBlock == null) {
 				return new ContentBlock(type, "", "", false, false, 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
