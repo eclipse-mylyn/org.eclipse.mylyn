@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="mylyn-e4.7" sequenceNumber="14">
+<?pde version="3.8"?><target name="mylyn-e4.7" sequenceNumber="15">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="com.google.gwt.servlet" version="2.0.4.v20100709-0658"/>
@@ -92,6 +92,10 @@
 <unit id="org.eclipse.ecf.discovery.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.ecf.discovery.jmdns.feature.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/releases/oxygen"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.ecf.provider.discovery" version="0.0.0"/>
+<repository location="http://download.eclipse.org/releases/neon"/>
 </location>
 </locations>
 </target>
