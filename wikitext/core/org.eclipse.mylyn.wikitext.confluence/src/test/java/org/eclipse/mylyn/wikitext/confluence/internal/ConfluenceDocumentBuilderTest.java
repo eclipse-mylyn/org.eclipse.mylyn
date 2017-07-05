@@ -605,6 +605,18 @@ public class ConfluenceDocumentBuilderTest {
 	}
 
 	@Test
+	public void tableWithNestedList() {
+		assertTableRow("| |* first\n" + //
+				"* second| |\n\n", //
+				BlockType.TABLE_CELL_NORMAL, () -> {
+					builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+					emitListItemHavingParagraphAndContent("first");
+					emitListItemHavingParagraphAndContent("second");
+					builder.endBlock();
+				});
+	}
+
+	@Test
 	public void divAfterImplicitParagraph() {
 		builder.beginDocument();
 
@@ -821,6 +833,51 @@ public class ConfluenceDocumentBuilderTest {
 		builder.endDocument();
 
 		assertEquals("* first\n", out.toString());
+	}
+
+	@Test
+	public void listItemWithMultipleParagraphs() {
+		builder.beginDocument();
+
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("first");
+		builder.endBlock(); // paragraph
+
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("second");
+		builder.endBlock(); // paragraph
+
+		builder.endBlock(); // list item
+		builder.endBlock(); // list
+
+		builder.endDocument();
+
+		assertEquals("* first\nsecond\n", out.toString());
+	}
+
+	@Test
+	public void listItemWithMultipleMixedParagraphs() {
+		builder.beginDocument();
+
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("first");
+
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("second");
+		builder.endBlock(); // paragraph
+
+		builder.characters("third");
+
+		builder.endBlock(); // list item
+		builder.endBlock(); // list
+
+		builder.endDocument();
+
+		assertEquals("* first\nsecond\nthird\n", out.toString());
 	}
 
 	private void emitMultiItemBulletedList() {

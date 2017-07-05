@@ -84,15 +84,17 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 		private final boolean trimmingNewlines;
 
+		private final boolean collapsingConsecutiveNewlines;
+
 		ContentBlock(BlockType blockType, String prefix, String suffix, boolean requireAdjacentSeparator,
 				boolean emitWhenEmpty, int leadingNewlines, int trailingNewlines) {
 			this(blockType, prefix, suffix, requireAdjacentSeparator, emitWhenEmpty, leadingNewlines, trailingNewlines,
-					true, false);
+					true, false, false);
 		}
 
 		ContentBlock(BlockType blockType, String prefix, String suffix, boolean requireAdjacentSeparator,
 				boolean emitWhenEmpty, int leadingNewlines, int trailingNewlines, boolean escaping,
-				boolean trimmingNewlines) {
+				boolean trimmingNewlines, boolean collapsingConsecutiveNewlines) {
 			super(blockType, leadingNewlines, trailingNewlines);
 			this.prefix = prefix;
 			this.suffix = suffix;
@@ -100,12 +102,13 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			this.emitWhenEmpty = emitWhenEmpty;
 			this.escaping = escaping;
 			this.trimmingNewlines = trimmingNewlines;
+			this.collapsingConsecutiveNewlines = collapsingConsecutiveNewlines;
 		}
 
 		ContentBlock(String prefix, String suffix, boolean requireAdjacentWhitespace, boolean emitWhenEmpty,
 				int leadingNewlines, int trailingNewlines) {
 			this(null, prefix, suffix, requireAdjacentWhitespace, emitWhenEmpty, leadingNewlines, trailingNewlines,
-					true, false);
+					true, false, false);
 		}
 
 		@Override
@@ -181,6 +184,9 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 				emitPrefix();
 				if (trimmingNewlines) {
 					content = CharMatcher.anyOf("\n\r").trimFrom(content);
+				}
+				if (collapsingConsecutiveNewlines) {
+					content = PATTERN_MULTIPLE_NEWLINES.matcher(content).replaceAll("\n");
 				}
 				emitContent(content);
 				emitSuffix(content);
@@ -266,15 +272,14 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	private class TableCellBlock extends ContentBlock {
 		public TableCellBlock(BlockType blockType) {
-			super(blockType, blockType == BlockType.TABLE_CELL_NORMAL ? "|" : "||", "", false, true, 0, 0, true, true); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			super(blockType, blockType == BlockType.TABLE_CELL_NORMAL ? "|" : "||", "", false, true, 0, 0, true, true, //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+					true);
 		}
 
 		@Override
 		protected void emitContent(String content) throws IOException {
 			if (Strings.isNullOrEmpty(content) || content.trim().isEmpty()) {
 				content = " "; //$NON-NLS-1$
-			} else {
-				content = PATTERN_MULTIPLE_NEWLINES.matcher(content.trim()).replaceAll("\n");
 			}
 			super.emitContent(content);
 		}
@@ -304,24 +309,15 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		case BULLETED_LIST:
 		case DEFINITION_LIST:
 		case NUMERIC_LIST:
-			if (currentBlock != null) {
-				BlockType currentBlockType = currentBlock.getBlockType();
-				if (currentBlockType == BlockType.LIST_ITEM || currentBlockType == BlockType.DEFINITION_ITEM
-						|| currentBlockType == BlockType.DEFINITION_TERM || currentBlockType == BlockType.BULLETED_LIST
-						|| currentBlockType == BlockType.NUMERIC_LIST
-						|| currentBlockType == BlockType.DEFINITION_LIST) {
-					return new NewlineDelimitedBlock(type, 1, 1);
-				}
-			}
-			return new NewlineDelimitedBlock(type, 2, 1);
+			return new NewlineDelimitedBlock(type, doubleNewlineDelimiterCount(), 1);
 		case CODE:
-			return new ContentBlock(type, "{code}", "{code}\n\n", false, false, 2, 2, false, false); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock(type, "{code}", "{code}\n\n", false, false, 2, 2, false, false, false); //$NON-NLS-1$ //$NON-NLS-2$
 		case DEFINITION_ITEM:
 		case DEFINITION_TERM:
 		case LIST_ITEM:
 			char prefixChar = computeCurrentListType() == BlockType.NUMERIC_LIST ? '#' : '*';
 			return new ContentBlock(type, computePrefix(prefixChar, computeListLevel()) + " ", "", false, true, 1, 1, //$NON-NLS-1$//$NON-NLS-2$
-					true, true);
+					true, true, true);
 		case DIV:
 			if (currentBlock == null) {
 				return new ContentBlock(type, "", "", false, false, 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
@@ -339,11 +335,14 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		case PARAGRAPH:
 			String attributesMarkup = computeAttributes(attributes);
 
-			return new ContentBlock(type, attributesMarkup, "", false, false, 2, 2); //$NON-NLS-1$
+			return new ContentBlock(type, attributesMarkup, "", false, false, doubleNewlineDelimiterCount(), //$NON-NLS-1$
+					doubleNewlineDelimiterCount());
 		case PREFORMATTED:
-			return new ContentBlock(type, "{noformat}", "{noformat}", false, false, 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock(type, "{noformat}", "{noformat}", false, false, doubleNewlineDelimiterCount(), //$NON-NLS-1$//$NON-NLS-2$
+					doubleNewlineDelimiterCount());
 		case QUOTE:
-			return new ContentBlock(type, "{quote}", "{quote}", false, false, 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock(type, "{quote}", "{quote}", false, false, doubleNewlineDelimiterCount(), //$NON-NLS-1$//$NON-NLS-2$
+					doubleNewlineDelimiterCount());
 		case TABLE:
 			return new SuffixBlock(type, "\n"); //$NON-NLS-1$
 		case TABLE_CELL_HEADER:
@@ -355,6 +354,18 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
 			return new ContentBlock(type, "", "", false, false, 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
 		}
+	}
+
+	private int doubleNewlineDelimiterCount() {
+		if (currentBlock != null) {
+			BlockType currentBlockType = currentBlock.getBlockType();
+			if (currentBlockType == BlockType.LIST_ITEM || currentBlockType == BlockType.DEFINITION_ITEM
+					|| currentBlockType == BlockType.DEFINITION_TERM || currentBlockType == BlockType.BULLETED_LIST
+					|| currentBlockType == BlockType.NUMERIC_LIST || currentBlockType == BlockType.DEFINITION_LIST) {
+				return 1;
+			}
+		}
+		return 2;
 	}
 
 	@Override
