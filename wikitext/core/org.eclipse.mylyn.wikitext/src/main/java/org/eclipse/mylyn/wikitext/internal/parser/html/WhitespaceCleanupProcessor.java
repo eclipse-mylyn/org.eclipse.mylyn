@@ -22,6 +22,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -185,7 +186,7 @@ class WhitespaceCleanupProcessor extends DocumentProcessor {
 	private static int lastIndexOfNonWhitespace(String text) {
 		int i = text.length() - 1;
 		while (i > -1) {
-			if (!Character.isWhitespace(text.charAt(i))) {
+			if (!CharMatcher.WHITESPACE.matches(text.charAt(i))) {
 				return i;
 			}
 			--i;
@@ -196,7 +197,7 @@ class WhitespaceCleanupProcessor extends DocumentProcessor {
 	private static int firstIndexOfNonWhitespace(String text) {
 		int i = 0;
 		while (i < text.length()) {
-			if (!Character.isWhitespace(text.charAt(i))) {
+			if (!CharMatcher.WHITESPACE.matches(text.charAt(i))) {
 				return i;
 			}
 			++i;

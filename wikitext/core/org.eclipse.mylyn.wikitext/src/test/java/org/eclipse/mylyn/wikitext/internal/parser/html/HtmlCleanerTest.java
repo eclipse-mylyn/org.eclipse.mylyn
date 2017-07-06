@@ -15,7 +15,6 @@ package org.eclipse.mylyn.wikitext.internal.parser.html;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import org.eclipse.mylyn.wikitext.internal.parser.html.HtmlCleaner;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.TextNode;
@@ -49,6 +48,13 @@ public class HtmlCleanerTest {
 	@Test
 	public void testLastNode_MoveWhitespaceOutside2() {
 		String result = clean("<p>foo <span style=\"color:blue;\"><br/>bar<br/>ab </span></p>");
+
+		assertTrue(result.contains("<p>foo <br /><span style=\"color: blue;\">bar<br />ab</span></p>"));
+	}
+
+	@Test
+	public void testLastNode_MoveWhitespaceOutside3() {
+		String result = clean("<p>foo <span style=\"color:blue;\"><br/>bar<br/>ab&nbsp;</span></p>");
 
 		assertTrue(result.contains("<p>foo <br /><span style=\"color: blue;\">bar<br />ab</span></p>"));
 	}
