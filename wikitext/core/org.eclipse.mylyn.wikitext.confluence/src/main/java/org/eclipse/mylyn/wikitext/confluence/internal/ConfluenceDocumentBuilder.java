@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2016 Tasktop Technologies.
+ * Copyright (c) 2011, 2017 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,7 +41,10 @@ import com.google.common.base.Strings;
  */
 public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
-	private static final Pattern PATTERN_MULTIPLE_NEWLINES = Pattern.compile("(\r\n|\r|\n){2,}"); //$NON-NLS-1$
+	private static final String NEWLINE_REGEX = "(?:\r\n|\r|\n)";
+
+	private static final Pattern PATTERN_MULTIPLE_NEWLINES = Pattern
+			.compile("(" + NEWLINE_REGEX + "(?:\\s+" + NEWLINE_REGEX + "|" + NEWLINE_REGEX + ")+)"); //$NON-NLS-1$
 
 	private static final CharMatcher SPAN_MARKUP_CHARACTERS = CharMatcher.anyOf("*_+-^~{}[]?%@"); //$NON-NLS-1$
 
@@ -82,7 +85,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 		private final boolean escaping;
 
-		private final boolean trimmingNewlines;
+		private final boolean trimmingNewlinesAndWhitespace;
 
 		private final boolean collapsingConsecutiveNewlines;
 
@@ -94,14 +97,14 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 		ContentBlock(BlockType blockType, String prefix, String suffix, boolean requireAdjacentSeparator,
 				boolean emitWhenEmpty, int leadingNewlines, int trailingNewlines, boolean escaping,
-				boolean trimmingNewlines, boolean collapsingConsecutiveNewlines) {
+				boolean trimmingNewlinesAndWhitespace, boolean collapsingConsecutiveNewlines) {
 			super(blockType, leadingNewlines, trailingNewlines);
 			this.prefix = prefix;
 			this.suffix = suffix;
 			this.requireAdjacentSeparator = requireAdjacentSeparator;
 			this.emitWhenEmpty = emitWhenEmpty;
 			this.escaping = escaping;
-			this.trimmingNewlines = trimmingNewlines;
+			this.trimmingNewlinesAndWhitespace = trimmingNewlinesAndWhitespace;
 			this.collapsingConsecutiveNewlines = collapsingConsecutiveNewlines;
 		}
 
@@ -182,8 +185,8 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 				}
 
 				emitPrefix();
-				if (trimmingNewlines) {
-					content = CharMatcher.anyOf("\n\r").trimFrom(content);
+				if (trimmingNewlinesAndWhitespace) {
+					content = CharMatcher.WHITESPACE.trimFrom(content);
 				}
 				if (collapsingConsecutiveNewlines) {
 					content = PATTERN_MULTIPLE_NEWLINES.matcher(content).replaceAll("\n");
@@ -254,19 +257,17 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		protected void emitContent(String content) throws IOException {
 			//[Example|http://example.com|title]
 			// [Example|http://example.com]
-			String linkContent = content;
 			if (!Strings.isNullOrEmpty(content)) {
-				linkContent += " | "; //$NON-NLS-1$
+				super.emitContent(content);
+				super.emitContent(" | ");//$NON-NLS-1$
 			}
 			if (attributes.getHref() != null) {
-				linkContent += attributes.getHref();
+				super.emitContent(attributes.getHref());
 			}
 			if (!Strings.isNullOrEmpty(attributes.getTitle())) {
-				linkContent += " | "; //$NON-NLS-1$
-				linkContent += attributes.getTitle();
+				super.emitContent(" | ");//$NON-NLS-1$
+				super.emitContent(attributes.getTitle());
 			}
-
-			super.emitContent(linkContent);
 		}
 	}
 
@@ -573,7 +574,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	}
 
 	void emitEscapedContent(int c) throws IOException {
-		if (c == '{' || c == '\\' || c == '[') {
+		if (c == '{' || c == '\\' || c == '[' || c == ']') {
 			super.emitContent('\\');
 		}
 		super.emitContent(c);

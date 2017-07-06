@@ -156,7 +156,6 @@ public class ConfluenceDocumentBuilderTest {
 	@Test
 	public void codeBlockSquareBraceContent() {
 		assertCodeBlock("{code}[something]{code}\n\n", "[something]");
-
 	}
 
 	@Test
@@ -523,6 +522,22 @@ public class ConfluenceDocumentBuilderTest {
 	}
 
 	@Test
+	public void linkSpanWithSpecialCharacters() {
+		builder.beginDocument();
+
+		LinkAttributes attributes = new LinkAttributes();
+		attributes.setHref("http://example.com/target");
+		attributes.setTitle("Title Words");
+		builder.beginSpan(SpanType.LINK, attributes);
+		builder.characters("[This][Is] a test");
+		builder.endSpan();
+
+		builder.endDocument();
+
+		assertEquals("[\\[This\\]\\[Is\\] a test | http://example.com/target | Title Words]\n\n", out.toString());
+	}
+
+	@Test
 	public void linkAlternate() {
 		builder.beginDocument();
 
@@ -559,6 +574,26 @@ public class ConfluenceDocumentBuilderTest {
 	}
 
 	@Test
+	public void linkSpanWithSurroundingItalics() {
+		builder.beginDocument();
+
+		builder.beginSpan(SpanType.ITALIC, new Attributes());
+		builder.characters("prefix ");
+
+		LinkAttributes attributes = new LinkAttributes();
+		attributes.setHref("http://example.com/target");
+		builder.beginSpan(SpanType.LINK, attributes);
+		builder.characters("text");
+		builder.endSpan();
+
+		builder.endSpan();
+
+		builder.endDocument();
+
+		assertEquals("_prefix [text | http://example.com/target]_\n\n", out.toString());
+	}
+
+	@Test
 	public void tableWithEmptyCells() {
 		assertTableRow("| |content| |\n\n", BlockType.TABLE_CELL_NORMAL);
 	}
@@ -585,6 +620,13 @@ public class ConfluenceDocumentBuilderTest {
 			builder.lineBreak();
 			builder.lineBreak();
 			builder.characters("def");
+		});
+	}
+
+	@Test
+	public void tableWithWhitespaceAndNewlinesInContent() {
+		assertTableRow("| |abc  def| |\n\n", BlockType.TABLE_CELL_NORMAL, () -> {
+			builder.characters(" \n\nabc\n\ndef");
 		});
 	}
 
@@ -753,7 +795,7 @@ public class ConfluenceDocumentBuilderTest {
 
 	@Test
 	public void paragraphWithSquareBraceContent() {
-		assertParagraphWithContent("\\[something]\n\n", "[something]");
+		assertParagraphWithContent("\\[something\\]\n\n", "[something]");
 	}
 
 	@Test
