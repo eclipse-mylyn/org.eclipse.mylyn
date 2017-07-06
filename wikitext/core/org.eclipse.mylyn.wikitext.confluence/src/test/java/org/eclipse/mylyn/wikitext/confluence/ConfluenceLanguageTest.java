@@ -472,7 +472,6 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	public void testItalicsWithHyperlink() {
 		// bug 298626: [Confluence] italic formatting with embedded links is not handled correctly
 		String html = parser.parseToHtml("_This [This is a test|http://my_url.jpg] is a test_");
-		System.out.println(html);
 		assertTrue(html.contains(
 				"<body><p><em>This <a href=\"http://my_url.jpg\">This is a test</a> is a test</em></p></body>"));
 	}
@@ -481,7 +480,6 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	public void testItalicsWithHyperlink2() {
 		// bug 298626: [Confluence] italic formatting with embedded links is not handled correctly
 		String html = parser.parseToHtml("_This [This is a test|http://myurl.jpg] is a test_");
-		System.out.println(html);
 		assertTrue(html.contains(
 				"<body><p><em>This <a href=\"http://myurl.jpg\">This is a test</a> is a test</em></p></body>"));
 	}
@@ -490,7 +488,6 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	public void testItalicsWithHyperlink3() {
 		// bug 298626: [Confluence] italic formatting with embedded links is not handled correctly
 		String html = parser.parseToHtml("_This [This is a test|http://my%5Furl.jpg] is a test_");
-		System.out.println(html);
 		assertTrue(html.contains(
 				"<body><p><em>This <a href=\"http://my%5Furl.jpg\">This is a test</a> is a test</em></p></body>"));
 	}
@@ -756,6 +753,22 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 		assertMarkup(
 				"<table><tr><td><a href=\"https://textile-j.dev.java.net/\">Website</a></td><td><ol><li>one thing</li><li>two things</li><li>three things </li></ol></td><td><a href=\"http://www.eclipse.org\">Eclipse</a></td></tr></table>",
 				"| [Website|https://textile-j.dev.java.net/]| # one thing\n# two things\n# three things | [Eclipse|http://www.eclipse.org] |");
+	}
+
+	@Test
+	public void parseTableWithSquareBrace() {
+		String content = "|[B\n"//
+				+ "C]|\n";
+		assertMarkup("<table><tr><td>[B<br/>C]</td></tr></table>", content);
+	}
+
+	@Test
+	public void parseTableWithLinkAndSquareBrace() {
+		assertMarkup("<table><tr><td>a <a href=\"http://example.com\">link</a> to [B<br/>C]</td></tr></table>",
+				"|a [link|http://example.com] to [B\n"//
+						+ "C]|\n");
+		assertMarkup("<table><tr><td>[a <a href=\"http://example.com\">link</a> to B</td></tr></table>",
+				"|[a [link|http://example.com] to B|");
 	}
 
 	@Test

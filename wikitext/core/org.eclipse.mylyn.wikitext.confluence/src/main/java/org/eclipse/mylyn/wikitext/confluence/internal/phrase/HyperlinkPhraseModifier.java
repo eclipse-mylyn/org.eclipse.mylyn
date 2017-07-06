@@ -36,7 +36,7 @@ public class HyperlinkPhraseModifier extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "\\[(?:\\s*([^\\]\\|]+)\\|)?([^\\]]+)\\]"; //$NON-NLS-1$
+		return "\\[(?:\\s*([^\\[\\]\\|]+)\\|)?([^\\[\\]]+)\\]"; //$NON-NLS-1$
 	}
 
 	@Override

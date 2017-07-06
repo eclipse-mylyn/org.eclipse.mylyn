@@ -35,14 +35,17 @@ public class TableBlock extends Block {
 
 	private static final Pattern START_PATTERN = Pattern.compile("\\s*(\\|\\|?.*$)"); //$NON-NLS-1$
 
-	private static final Pattern END_OF_CELL_CONTENT_PATTERN = Pattern.compile("((?:(?:[^\\|\\[]*)(?:\\[[^\\]]*\\])?)*)" //$NON-NLS-1$
+	private static final String LINK_REGEX = "(?:\\[[^\\[]*?\\])";
+
+	private static final String CELL_CONTENT_REGEX = "(?:(?:[^|\\[]|\\\\\\||\\\\\\[|" + LINK_REGEX + "|\\\\\\||\\[)*)";
+
+	private static final Pattern END_OF_CELL_CONTENT_PATTERN = Pattern.compile("(" + CELL_CONTENT_REGEX + ")" //$NON-NLS-1$
 			+ "(\\|\\|?\\s*)+?"); //$NON-NLS-1$
 
 	private static final Pattern END_OF_ROW_PATTERN = Pattern.compile("^\\|\\|?\\s*$"); //$NON-NLS-1$
 
-	private static final Pattern TABLE_ROW_PATTERN = Pattern
-			.compile("\\|(\\|)?\\s*" + "((?:(?:[^\\|\\[]*)(?:\\[[^\\]]*\\])?)*)" //$NON-NLS-1$ //$NON-NLS-2$
-					+ "(\\|\\|?\\s*$)?"); //$NON-NLS-1$
+	private static final Pattern TABLE_ROW_PATTERN = Pattern.compile("\\|(\\|)?\\s*" + "(" + CELL_CONTENT_REGEX + ")" //$NON-NLS-1$ //$NON-NLS-2$
+			+ "(\\|\\|?\\s*$)?"); //$NON-NLS-1$
 
 	private int blockLineCount = 0;
 
