@@ -321,6 +321,11 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	}
 
 	@Test
+	public void testHuyperlinkUnclosed() {
+		assertMarkup("<p>[1. first <br/>2. second]</p>", "[1. first \n2. second]");
+	}
+
+	@Test
 	public void testDisabledRelativeParsingHyperlinkExternal() {
 		setupLanguageWithRelativeLinksDisabled();
 		assertMarkup("<p><a href=\"http://abc\">http://abc</a></p>", "[http://abc]");
@@ -708,6 +713,17 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 		assertMarkup(
 				"<table><tr><td><a href=\"https://textile-j.dev.java.net/\">Website</a></td><td>another cell</td><td><a href=\"http://www.eclipse.org\">Eclipse</a></td></tr></table>",
 				"| [Website|https://textile-j.dev.java.net/] | another cell | [Eclipse|http://www.eclipse.org] |");
+	}
+
+	@Test
+	public void testTableWithUnclosedHyperlinks() {
+		assertMarkup("<table><tr><td>one</td><td>[two<br/> three</td></tr></table>", "| one | [two\n three |");
+	}
+
+	@Test
+	public void testTableWithUnclosedHyperlinks2() {
+		assertMarkup("<table><tr><td>one</td><td>[two</td></tr></table><p>more content</p>",
+				"| one | [two\n\nmore content");
 	}
 
 	@Test
