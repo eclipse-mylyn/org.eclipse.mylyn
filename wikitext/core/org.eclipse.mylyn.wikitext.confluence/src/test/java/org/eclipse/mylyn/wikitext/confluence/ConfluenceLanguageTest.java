@@ -182,9 +182,13 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 
 	@Test
 	public void testCharacterEscapeSequence() {
-		String html = parser.parseToHtml("a \\{ b");
+		assertMarkup("<p>a {[] &amp;#160;\u00A0 b</p>", "a \\{\\[\\] &\\#160;&#160; b");
+	}
 
-		assertTrue(html.contains("<p>a { b</p>"));
+	@Test
+	public void testCharacterEntityReference() {
+		String html = parser.parseToHtml("a &#92;&#122; b");
+		assertTrue(html.contains("<p>a \\z b</p>"));
 	}
 
 	@Test

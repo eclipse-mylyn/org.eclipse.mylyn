@@ -21,6 +21,10 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.parser.builder.EventDocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.builder.event.CharactersEvent;
+import org.eclipse.mylyn.wikitext.parser.builder.event.DocumentBuilderEvent;
+import org.eclipse.mylyn.wikitext.parser.builder.event.DocumentBuilderEvents;
 import org.junit.Test;
 
 public class ConfluenceLanguageIntegrationTest {
@@ -41,6 +45,43 @@ public class ConfluenceLanguageIntegrationTest {
 		String table = "|line one\\\\line two\\\\line three|\n\n";
 		assertRoundTripExact(table);
 		assertRoundTrip("|line one\nline two\nline three|", table);
+	}
+
+	@Test
+	public void builderParserSymmetricalWithProblemCharacters() {
+		String characterContent = "\"`&amp;{}!@$%^&*()_-+=[]\\|;:',.<>/?~/+&#160;ˇ";
+
+		String markup = toMarkup(characterContent);
+		String text = toText(parseToEvents(markup));
+
+		assertEquals(characterContent, text);
+	}
+
+	private String toText(DocumentBuilderEvents events) {
+		String text = "";
+		for (DocumentBuilderEvent event : events.getEvents()) {
+			if (event instanceof CharactersEvent) {
+				text += ((CharactersEvent) event).getText();
+			}
+		}
+		return text;
+	}
+
+	private DocumentBuilderEvents parseToEvents(String markup) {
+		EventDocumentBuilder eventBuilder = new EventDocumentBuilder();
+		MarkupParser parser = new MarkupParser(new ConfluenceLanguage(), eventBuilder);
+		parser.parse(markup);
+		DocumentBuilderEvents events = eventBuilder.getDocumentBuilderEvents();
+		return events;
+	}
+
+	private String toMarkup(String characterContent) {
+		StringWriter writer = new StringWriter();
+		DocumentBuilder builder = new ConfluenceLanguage().createDocumentBuilder(writer);
+		builder.beginDocument();
+		builder.characters(characterContent);
+		builder.endDocument();
+		return writer.toString().trim();
 	}
 
 	private void assertHtmlToConfluence(boolean parseAsDocument) {

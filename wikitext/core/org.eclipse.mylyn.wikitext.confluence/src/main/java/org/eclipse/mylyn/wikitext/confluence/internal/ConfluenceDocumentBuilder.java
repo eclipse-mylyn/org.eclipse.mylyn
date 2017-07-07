@@ -574,10 +574,14 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	}
 
 	void emitEscapedContent(int c) throws IOException {
-		if (c == '{' || c == '\\' || c == '[' || c == ']') {
-			super.emitContent('\\');
+		if (c == '\\') {
+			super.emitContent("&#92;");
+		} else {
+			if ((c == '#' && getLastChar() == '&') || (c == '{' || c == '\\' || c == '[' || c == ']')) {
+				super.emitContent('\\');
+			}
+			super.emitContent(c);
 		}
-		super.emitContent(c);
 	}
 
 	private void writeAttributes(Attributes attributes) {

@@ -39,6 +39,7 @@ import org.eclipse.mylyn.wikitext.confluence.internal.token.AnchorReplacementTok
 import org.eclipse.mylyn.wikitext.confluence.internal.token.EscapedCharacterReplacementToken;
 import org.eclipse.mylyn.wikitext.confluence.internal.token.HorizontalRuleToken;
 import org.eclipse.mylyn.wikitext.confluence.internal.token.ImpliedHyperlinkReplacementToken;
+import org.eclipse.mylyn.wikitext.confluence.internal.token.NumericEntityReferenceReplacementToken;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
@@ -152,6 +153,7 @@ public class ConfluenceLanguage extends AbstractMarkupLanguage {
 		tokenSyntax.add(new HorizontalRuleToken());
 		tokenSyntax.add(new ImpliedHyperlinkReplacementToken());
 		tokenSyntax.add(new AnchorReplacementToken());
+		tokenSyntax.add(new NumericEntityReferenceReplacementToken());
 	}
 
 	@Override

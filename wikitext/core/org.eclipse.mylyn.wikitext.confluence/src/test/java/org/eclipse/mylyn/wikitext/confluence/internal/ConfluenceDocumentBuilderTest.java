@@ -800,7 +800,7 @@ public class ConfluenceDocumentBuilderTest {
 
 	@Test
 	public void paragraphWithSlashContent() {
-		assertParagraphWithContent("here is \\\\ a slash\n\n", "here is \\ a slash");
+		assertParagraphWithContent("here is &#92; a slash\n\n", "here is \\ a slash");
 	}
 
 	@Test
