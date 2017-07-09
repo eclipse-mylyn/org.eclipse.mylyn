@@ -57,6 +57,7 @@ public class RepositoryImportWizard extends Wizard implements IImportWizard {
 		setNeedsProgressMonitor(true);
 		setDefaultPageImageDescriptor(WorkbenchImages
 				.getImageDescriptor(IWorkbenchGraphicConstants.IMG_WIZBAN_IMPORT_WIZ));
+		setWindowTitle(Messages.RepositorySearchWizardPage_Title);
 	}
 
 	/**
