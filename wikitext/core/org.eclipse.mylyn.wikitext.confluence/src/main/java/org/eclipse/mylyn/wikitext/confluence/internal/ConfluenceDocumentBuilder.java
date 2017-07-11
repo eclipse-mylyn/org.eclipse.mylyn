@@ -340,7 +340,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 					doubleNewlineDelimiterCount());
 		case PREFORMATTED:
 			return new ContentBlock(type, "{noformat}", "{noformat}", false, false, doubleNewlineDelimiterCount(), //$NON-NLS-1$//$NON-NLS-2$
-					doubleNewlineDelimiterCount());
+					doubleNewlineDelimiterCount(), false, false, false);
 		case QUOTE:
 			return new ContentBlock(type, "{quote}", "{quote}", false, false, doubleNewlineDelimiterCount(), //$NON-NLS-1$//$NON-NLS-2$
 					doubleNewlineDelimiterCount());

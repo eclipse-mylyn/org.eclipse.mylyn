@@ -177,6 +177,19 @@ public class ConfluenceDocumentBuilderTest {
 	}
 
 	@Test
+	public void preformattedBlockWithCurlyBraceContent() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PREFORMATTED, new Attributes());
+		builder.characters("{somecontent}");
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		assertEquals("{noformat}{somecontent}{noformat}\n\n", markup);
+	}
+
+	@Test
 	public void paragraphFollowingExtendedBlockCode() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.CODE, new Attributes());

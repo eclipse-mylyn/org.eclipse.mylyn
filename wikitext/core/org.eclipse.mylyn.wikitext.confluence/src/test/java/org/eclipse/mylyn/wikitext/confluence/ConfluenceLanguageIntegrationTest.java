@@ -48,6 +48,16 @@ public class ConfluenceLanguageIntegrationTest {
 	}
 
 	@Test
+	public void preformattedWithCurlyBraces() {
+		assertRoundTrip("{noformat}{something}{noformat}\n\n", "{noformat}{something}\n{noformat}\n\n");
+	}
+
+	@Test
+	public void codeBlockWithCurlyBraces() {
+		assertRoundTrip("{code}{something}{code}\n\n", "{code}{something}\n{code}\n\n");
+	}
+
+	@Test
 	public void builderParserSymmetricalWithProblemCharacters() {
 		String characterContent = "\"`&amp;{}!@$%^&*()_-+=[]\\|;:',.<>/?~/+&#160;ˇ";
 
