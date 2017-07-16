@@ -85,7 +85,7 @@ import com.google.gerrit.reviewdb.Project.NameKey;
 /**
  * @author Miles Parker
  */
-public class GerritReviewRemoteFactoryTest extends GerritRemoteTest {
+public class GerritReviewRemoteFactoryJUnit3Test extends GerritRemoteTest {
 
 	public void testGlobalComments() throws Exception {
 		String message1 = "new comment, time: " + System.currentTimeMillis(); //$NON-NLS-1$

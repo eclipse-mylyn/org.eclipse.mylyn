@@ -40,7 +40,7 @@ import org.eclipse.mylyn.gerrit.tests.core.client.rest.SubmitInputTest;
 import org.eclipse.mylyn.gerrit.tests.support.GerritFixture;
 import org.eclipse.mylyn.gerrit.tests.ui.GerritUrlHandlerTest;
 import org.eclipse.mylyn.internal.gerrit.core.remote.GerritDataLocatorTest;
-import org.eclipse.mylyn.internal.gerrit.core.remote.GerritReviewRemoteFactoryTest;
+import org.eclipse.mylyn.internal.gerrit.core.remote.GerritReviewRemoteFactoryJUnit3Test;
 import org.eclipse.mylyn.internal.gerrit.core.remote.PatchSetDetailRemoteFactoryTest;
 import org.eclipse.mylyn.internal.gerrit.core.remote.PatchSetRemoteFactoryTest;
 import org.eclipse.mylyn.internal.gerrit.core.remote.ReviewHarnessTest;
@@ -104,7 +104,7 @@ public class AllGerritTests {
 		fixture.add(GerritConnectorTest.class);
 		fixture.add(GerritSynchronizationTest.class);
 		fixture.add(GerritDataLocatorTest.class);
-		fixture.add(GerritReviewRemoteFactoryTest.class);
+		fixture.add(GerritReviewRemoteFactoryJUnit3Test.class);
 		fixture.add(PatchSetRemoteFactoryTest.class);
 		fixture.add(PatchSetDetailRemoteFactoryTest.class);
 		fixture.add(GerritUrlHandlerTest.class);
