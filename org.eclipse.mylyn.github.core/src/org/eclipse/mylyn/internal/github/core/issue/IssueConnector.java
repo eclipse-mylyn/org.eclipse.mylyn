@@ -67,7 +67,7 @@ public class IssueConnector extends RepositoryConnector {
 
 	/**
 	 * Get repository label for id provider
-	 * 
+	 *
 	 * @param repo
 	 * @return label
 	 */
@@ -77,7 +77,7 @@ public class IssueConnector extends RepositoryConnector {
 
 	/**
 	 * Create issue task repository
-	 * 
+	 *
 	 * @param repo
 	 * @param username
 	 * @param password
@@ -94,13 +94,13 @@ public class IssueConnector extends RepositoryConnector {
 			repository.setCredentials(AuthenticationType.REPOSITORY,
 					new AuthenticationCredentials(username, password), true);
 		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY,
-				IRepositoryConstants.CATEGORY_BUGS);
+				TaskRepository.CATEGORY_BUGS);
 		return repository;
 	}
 
 	/**
 	 * Create client for repository
-	 * 
+	 *
 	 * @param repository
 	 * @return client
 	 */
@@ -131,7 +131,7 @@ public class IssueConnector extends RepositoryConnector {
 
 	/**
 	 * Refresh labels for repository
-	 * 
+	 *
 	 * @param repository
 	 * @return labels
 	 * @throws CoreException
@@ -155,7 +155,7 @@ public class IssueConnector extends RepositoryConnector {
 
 	/**
 	 * Get labels for task repository.
-	 * 
+	 *
 	 * @param repository
 	 * @return non-null but possibly empty list of labels
 	 */
@@ -170,7 +170,7 @@ public class IssueConnector extends RepositoryConnector {
 
 	/**
 	 * Are there cached labels for the specified task repository?
-	 * 
+	 *
 	 * @param repository
 	 * @return true if contains labels, false otherwise
 	 */
@@ -180,7 +180,7 @@ public class IssueConnector extends RepositoryConnector {
 
 	/**
 	 * Refresh milestones for repository
-	 * 
+	 *
 	 * @param repository
 	 * @return milestones
 	 * @throws CoreException
@@ -207,7 +207,7 @@ public class IssueConnector extends RepositoryConnector {
 
 	/**
 	 * Get milestones for task repository.
-	 * 
+	 *
 	 * @param repository
 	 * @return non-null but possibly empty list of milestones
 	 */
@@ -222,7 +222,7 @@ public class IssueConnector extends RepositoryConnector {
 
 	/**
 	 * Are there cached milestones for the specified task repository?
-	 * 
+	 *
 	 * @param repository
 	 * @return true if contains milestones, false otherwise
 	 */
@@ -232,7 +232,7 @@ public class IssueConnector extends RepositoryConnector {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @return always {@code true}
 	 */
 	@Override
@@ -242,7 +242,7 @@ public class IssueConnector extends RepositoryConnector {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @return always {@code true}
 	 */
 	@Override
@@ -252,7 +252,7 @@ public class IssueConnector extends RepositoryConnector {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see #KIND
 	 */
 	@Override

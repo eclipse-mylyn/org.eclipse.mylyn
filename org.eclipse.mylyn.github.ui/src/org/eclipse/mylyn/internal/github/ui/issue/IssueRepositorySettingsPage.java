@@ -47,7 +47,7 @@ public class IssueRepositorySettingsPage extends AbstractRepositorySettingsPage 
 
 	/**
 	 * Populate taskRepository with repository settings.
-	 * 
+	 *
 	 * @param taskRepository
 	 *            - Object to populate
 	 */
@@ -179,7 +179,7 @@ public class IssueRepositorySettingsPage extends AbstractRepositorySettingsPage 
 	 */
 	public void applyTo(TaskRepository repository) {
 		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY,
-				IRepositoryConstants.CATEGORY_BUGS);
+				TaskRepository.CATEGORY_BUGS);
 		super.applyTo(repository);
 	}
 

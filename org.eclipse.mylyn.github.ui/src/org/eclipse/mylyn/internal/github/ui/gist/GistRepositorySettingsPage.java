@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * Gist repository settings page class.
- * 
+ *
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class GistRepositorySettingsPage extends AbstractRepositorySettingsPage {
@@ -127,7 +127,7 @@ public class GistRepositorySettingsPage extends AbstractRepositorySettingsPage {
 	 */
 	public void applyTo(TaskRepository repository) {
 		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY,
-				IRepositoryConstants.CATEGORY_REVIEW);
+				TaskRepository.CATEGORY_REVIEW);
 		super.applyTo(repository);
 	}
 

@@ -45,7 +45,7 @@ public class PullRequestRepositorySettingsPage extends
 
 	/**
 	 * Create pull request repository settings page
-	 * 
+	 *
 	 * @param taskRepository
 	 */
 	public PullRequestRepositorySettingsPage(final TaskRepository taskRepository) {
@@ -159,7 +159,7 @@ public class PullRequestRepositorySettingsPage extends
 	 */
 	public void applyTo(TaskRepository repository) {
 		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY,
-				IRepositoryConstants.CATEGORY_REVIEW);
+				TaskRepository.CATEGORY_REVIEW);
 		super.applyTo(repository);
 	}
 

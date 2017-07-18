@@ -44,6 +44,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.progress.IProgressConstants2;
 
 /**
  * GitHub issue task editor attribute part that display labels and milestone
@@ -172,7 +173,7 @@ public class IssueAttributePart extends AbstractTaskEditorSection {
 					}
 				});
 				job.setUser(true);
-				job.setProperty(WorkbenchUtil.SHOW_IN_TASKBAR_ICON_PROPERTY,
+				job.setProperty(IProgressConstants2.SHOW_IN_TASKBAR_ICON_PROPERTY,
 						Boolean.TRUE);
 				job.setPriority(Job.INTERACTIVE);
 				job.schedule();

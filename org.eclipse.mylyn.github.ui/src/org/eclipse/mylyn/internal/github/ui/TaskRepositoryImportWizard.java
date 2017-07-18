@@ -104,7 +104,7 @@ public class TaskRepositoryImportWizard extends Wizard implements IImportWizard 
 			repository.setCredentials(AuthenticationType.REPOSITORY,
 					credentials, true);
 			repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY,
-					IRepositoryConstants.CATEGORY_REVIEW);
+					TaskRepository.CATEGORY_REVIEW);
 			manager.addRepository(repository);
 		}
 		return true;
