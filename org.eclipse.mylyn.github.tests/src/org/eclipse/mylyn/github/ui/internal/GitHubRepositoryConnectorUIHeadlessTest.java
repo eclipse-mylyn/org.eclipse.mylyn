@@ -11,8 +11,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.github.ui.internal;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
@@ -24,7 +24,7 @@ import org.junit.Test;
 
 /**
  * Headless test for {@link IssueConnectorUi}
- * 
+ *
  * @author Christian Trutz <christian.trutz@gmail.com>
  */
 @SuppressWarnings("restriction")
