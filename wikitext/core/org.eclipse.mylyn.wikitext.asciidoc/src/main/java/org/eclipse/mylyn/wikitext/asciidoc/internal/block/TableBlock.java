@@ -188,7 +188,8 @@ public class TableBlock extends AsciiDocBlock {
 	@Override
 	protected void processBlockEnd() {
 		closeCellBlockIfNeeded();
-		if (colsAttribute.isEmpty() || (!colsAttribute.isEmpty() && cellsCount % colsAttribute.size() != 0)) {
+		if ((colsAttribute.isEmpty() && cellsCount > 0)
+				|| (!colsAttribute.isEmpty() && cellsCount % colsAttribute.size() != 0)) {
 			builder.endBlock(); // close table row
 		}
 		builder.endBlock(); // close table

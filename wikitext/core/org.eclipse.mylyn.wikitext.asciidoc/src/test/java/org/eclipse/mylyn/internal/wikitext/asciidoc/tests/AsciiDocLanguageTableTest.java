@@ -47,6 +47,14 @@ public class AsciiDocLanguageTableTest extends AsciiDocLanguageTestBase {
 	}
 
 	@Test
+	public void testJustOpenedTable() {
+		String html = parseToHtml("" //
+				+ "|===\n");
+		assertEquals("<table>" //
+				+ "</table>", html);
+	}
+
+	@Test
 	public void testTableWithContentAdjacentToThePipe() {
 		String html = parseToHtml("" //
 				+ "|===   \n" //
