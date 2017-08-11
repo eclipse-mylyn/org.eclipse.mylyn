@@ -104,7 +104,7 @@ public class BugzillaSeeAlsoAttributeEditor extends AbstractAttributeEditor {
 		seeAlsoViewer.setColumnProperties(seeAlsoColumns);
 		ColumnViewerToolTipSupport.enableFor(seeAlsoViewer, ToolTip.NO_RECREATE);
 
-		seeAlsoViewer.setContentProvider(new ArrayContentProvider());
+		seeAlsoViewer.setContentProvider(ArrayContentProvider.getInstance());
 		seeAlsoViewer.addOpenListener(new IOpenListener() {
 			public void open(OpenEvent event) {
 				openseeAlso(event);

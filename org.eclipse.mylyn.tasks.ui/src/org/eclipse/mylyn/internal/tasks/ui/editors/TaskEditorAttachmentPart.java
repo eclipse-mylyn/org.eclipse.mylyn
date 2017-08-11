@@ -237,7 +237,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		comparator = createComparator();
 		attachmentsViewer.setComparator(comparator);
 
-		attachmentsViewer.setContentProvider(new ArrayContentProvider());
+		attachmentsViewer.setContentProvider(ArrayContentProvider.getInstance());
 		attachmentsViewer.setLabelProvider(createTableProvider());
 		attachmentsViewer.addOpenListener(new IOpenListener() {
 			public void open(OpenEvent event) {

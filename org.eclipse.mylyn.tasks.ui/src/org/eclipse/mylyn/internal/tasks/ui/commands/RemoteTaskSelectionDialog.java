@@ -124,7 +124,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		tasksViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, 400).create());
 		tasksViewer.setLabelProvider(new DecoratingLabelProvider(new TaskElementLabelProvider(true),
 				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
-		tasksViewer.setContentProvider(new ArrayContentProvider());
+		tasksViewer.setContentProvider(ArrayContentProvider.getInstance());
 		tasksViewer.addFilter(new ViewerFilter() {
 
 			@Override
@@ -186,7 +186,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 
 		repositoriesViewer = new ComboViewer(repositoriesComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		repositoriesViewer.setLabelProvider(new TaskRepositoryLabelProvider());
-		repositoriesViewer.setContentProvider(new ArrayContentProvider());
+		repositoriesViewer.setContentProvider(ArrayContentProvider.getInstance());
 		List<TaskRepository> taskRepositories = getTaskRepositories();
 		repositoriesViewer.setInput(taskRepositories);
 		if (taskRepositories.size() == 1) {
@@ -229,7 +229,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		addToTaskListCheck.setText(Messages.RemoteTaskSelectionDialog_Add_to_Task_List_category);
 
 		categoryViewer = new ComboViewer(addToTaskListComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
-		categoryViewer.setContentProvider(new ArrayContentProvider());
+		categoryViewer.setContentProvider(ArrayContentProvider.getInstance());
 		TaskList taskList = TasksUiPlugin.getTaskList();
 		LinkedList<AbstractTaskContainer> categories = new LinkedList<AbstractTaskContainer>(taskList.getCategories());
 		categories.addFirst(taskList.getDefaultCategory());

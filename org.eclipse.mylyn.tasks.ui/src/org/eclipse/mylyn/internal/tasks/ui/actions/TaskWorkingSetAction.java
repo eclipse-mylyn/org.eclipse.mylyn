@@ -268,7 +268,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 			viewer = CheckboxTableViewer.newCheckList(viewerComposite, SWT.BORDER);
 			viewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 			viewer.setLabelProvider(new WorkingSetLabelProvider());
-			viewer.setContentProvider(new ArrayContentProvider());
+			viewer.setContentProvider(ArrayContentProvider.getInstance());
 			viewer.addFilter(new WorkingSetFilter(taskWorkingSetIds));
 			viewer.setInput(window.getWorkbench().getWorkingSetManager().getWorkingSets());
 
