@@ -161,10 +161,17 @@ public class AsciiDocLanguageBlockElementsTest extends AsciiDocLanguageTestBase 
 	}
 
 	@Test
+	public void headerLevel4WithLeveloffsetMinus3() {
+		String html = parseToHtml(":leveloffset: -3\n\n==== This is Level 3");
+
+		assertEquals("==== This is Level 3", html);
+	}
+
+	@Test
 	public void headerLevel4WithLeveloffsetMinus6() {
 		String html = parseToHtml(":leveloffset: -6\n\n==== This is Level 3");
 
-		assertEquals("<h1 id=\"_this_is_level_3\">This is Level 3</h1>", html);
+		assertEquals("==== This is Level 3", html);
 	}
 
 	@Test
@@ -591,6 +598,29 @@ public class AsciiDocLanguageBlockElementsTest extends AsciiDocLanguageTestBase 
 		String html = parseToHtml("    === Header 3\n    Lorem *ipsum*");
 
 		String expectedHtml = "<pre>=== Header 3\nLorem *ipsum*</pre>";
+		assertEquals(expectedHtml, html);
+	}
+
+	@Test
+	public void testOnlyOneTitle() {
+		String html = parseToHtml("= Title =\n\nsome text\n= Not a title=\n content");
+
+		String expectedHtml = "<h1 id=\"header\">Title</h1><p>some text\n= Not a title=\n content</p>\n";
+		assertEquals(expectedHtml, html);
+	}
+
+	@Test
+	public void testHeaderAuthors() {
+		String html = parseToHtml(
+				"= Title =\nSam One <sam.one@example.com>; Sam Two <https://example.com/samtwo[@samtwo]>\n");
+		String expectedHtml = //
+				"<h1 id=\"header\">Title</h1>" //
+						+ "<div class=\"details\">" //
+						+ "<span id=\"author\" class=\"author\">Sam One</span>" //
+						+ "<span id=\"email\" class=\"email\"><a href=\"mailto:sam.one@example.com\">sam.one@example.com</a></span>" //
+						+ "<span id=\"author2\" class=\"author\">Sam Two</span>" //
+						+ "<span id=\"email2\" class=\"email\"><a href=\"https://example.com/samtwo\">@samtwo</a></span>" //
+						+ "</div>";
 		assertEquals(expectedHtml, html);
 	}
 }

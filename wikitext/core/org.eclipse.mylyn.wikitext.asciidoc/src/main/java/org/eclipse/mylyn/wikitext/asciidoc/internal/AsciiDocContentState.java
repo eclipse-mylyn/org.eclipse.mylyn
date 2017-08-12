@@ -46,6 +46,8 @@ public class AsciiDocContentState extends ContentState {
 
 	private String lastPropertiesText;
 
+	private boolean heading1Present;
+
 	private final Map<String, String> attributes = new HashMap<>();
 
 	public void setLastTitle(String text) {
@@ -107,5 +109,13 @@ public class AsciiDocContentState extends ContentState {
 						.setIdSeparator(AsciiDocContentState.IDSEPARATOR_DEFAULT_VALUE);
 			}
 		}
+	}
+
+	public boolean isHeading1Present() {
+		return heading1Present;
+	}
+
+	public void setHeading1Present(boolean heading1Present) {
+		this.heading1Present = heading1Present;
 	}
 }
