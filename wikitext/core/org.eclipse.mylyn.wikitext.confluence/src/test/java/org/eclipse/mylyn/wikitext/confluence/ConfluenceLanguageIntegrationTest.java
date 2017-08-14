@@ -36,6 +36,15 @@ public class ConfluenceLanguageIntegrationTest {
 	}
 
 	@Test
+	public void htmlColorToConfluence() {
+		assertHtmlToConfluenceColor("rgb(255, 0, 0);", "#ff0000");
+		assertHtmlToConfluenceColor("rgb(255, 0, 0)", "#ff0000");
+		assertHtmlToConfluenceColor("rgb(255,    0,    0);", "#ff0000");
+		assertHtmlToConfluenceColor("rgb(255,0,0)", "#ff0000");
+		assertHtmlToConfluenceColor("#ff0000", "#ff0000");
+	}
+
+	@Test
 	public void listsInTables() {
 		assertRoundTripExact("|* item 1\n* item 2|# item 3\n# item 4|\n\n");
 	}
@@ -107,6 +116,22 @@ public class ConfluenceLanguageIntegrationTest {
 		parser.parse("<html><body>some text <b>bold here</b> more text</body></html>", parseAsDocument);
 
 		assertEquals("some text *bold here* more text\n\n", confluenceOut.toString());
+	}
+
+	private void assertHtmlToConfluenceColor(String color, String hex) {
+		HtmlLanguage htmlLanguage = HtmlLanguage.builder()
+				.add(BlockType.PARAGRAPH)
+				.add(SpanType.SPAN)
+				.name("Test")
+				.create();
+		MarkupParser parser = new MarkupParser(htmlLanguage);
+		Writer confluenceOut = new StringWriter();
+		DocumentBuilder confuenceBuilder = new ConfluenceLanguage().createDocumentBuilder(confluenceOut);
+		parser.setBuilder(confuenceBuilder);
+		parser.parse("<html><body><span style=\"color: " + color + "\"><del>this text here</del></span></body></html>",
+				true);
+
+		assertEquals("{color:" + hex + "}-this text here-{color}\n\n", confluenceOut.toString());
 	}
 
 	private void assertRoundTripExact(String textile) {

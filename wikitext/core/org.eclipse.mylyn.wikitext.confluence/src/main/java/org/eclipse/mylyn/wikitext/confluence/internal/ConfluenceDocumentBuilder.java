@@ -23,6 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.confluence.ConfluenceLanguage;
+import org.eclipse.mylyn.wikitext.confluence.internal.util.Colors;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.HtmlParser;
 import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
@@ -421,9 +422,9 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		default:
 			block = null;
 			if (attributes.getCssStyle() != null) {
-				Matcher colorMatcher = Pattern.compile("color:\\s*([^; \t]+)").matcher(attributes.getCssStyle()); //$NON-NLS-1$
+				Matcher colorMatcher = Pattern.compile("color:\\s*([^;\\t]+)").matcher(attributes.getCssStyle()); //$NON-NLS-1$
 				if (colorMatcher.find()) {
-					String color = colorMatcher.group(1);
+					String color = Colors.asHex(colorMatcher.group(1));
 					if (color.equalsIgnoreCase("black") || color.equals("#010101")) { //$NON-NLS-1$ //$NON-NLS-2$
 						color = null;
 					}
