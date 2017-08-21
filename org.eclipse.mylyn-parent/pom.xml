@@ -72,7 +72,7 @@
     <alt-target-version>4.6</alt-target-version>
     <alt-platform-repository-url>http://download.eclipse.org/releases/neon/</alt-platform-repository-url>
 
-    <orbit-repository-url>http://download.eclipse.org/tools/orbit/downloads/drops/S20170306214312/repository/</orbit-repository-url>
+    <orbit-repository-url>http://download.eclipse.org/tools/orbit/downloads/drops/R20170516192513/repository/</orbit-repository-url>
     <jdt-annotation-repository-url>http://download.eclipse.org/mylyn/snapshots/jdt-annotation/</jdt-annotation-repository-url>
     <mylyn-repository-url>http://download.eclipse.org/mylyn/snapshots/3.23/</mylyn-repository-url>
     <mylyn-builds-repository-url>http://download.eclipse.org/mylyn/snapshots/3.23/</mylyn-builds-repository-url>
