@@ -14,6 +14,7 @@ package org.eclipse.mylyn.wikitext.asciidoc.internal.block;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.asciidoc.internal.util.LanguageSupport;
@@ -21,8 +22,6 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.TableAttributes;
 import org.eclipse.mylyn.wikitext.parser.TableCellAttributes;
 import org.eclipse.mylyn.wikitext.parser.TableRowAttributes;
-
-import com.google.common.base.Splitter;
 
 /**
  * Text block containing a table
@@ -98,42 +97,64 @@ public class TableBlock extends AsciiDocBlock {
 		builder.beginBlock(BlockType.TABLE, tableAttributes);
 	}
 
+	private final boolean isColFormatKnown() {
+		return !colsAttribute.isEmpty();
+	}
+
+	private final boolean isFirstRow() {
+		return colsAttribute.isEmpty() || cellsCount < colsAttribute.size();
+	}
+
+	private final boolean isFirsCellOfTable() {
+		return !cellBlockIsOpen;
+	}
+
 	@Override
 	protected void processBlockContent(String line) {
 		if (!line.trim().isEmpty()) {
-			if (colsAttribute.isEmpty() && !cellBlockIsOpen) {
+			if (!isColFormatKnown() && !cellBlockIsOpen) {
 				TableRowAttributes tableRowAttributes = new TableRowAttributes();
 				builder.beginBlock(BlockType.TABLE_ROW, tableRowAttributes);
 			}
 
+			int offset = 0;
 			boolean firstCellInLine = true;
-			for (String cell : createRowCellSplitter(line)) {
-				String cellContent = cell.trim();
-				if (format == TableFormat.PREFIX_SEPARATED_VALUES && cellBlockIsOpen && !cellContent.isEmpty()
-						&& firstCellInLine) {
-					markupLanguage.emitMarkupLine(parser, state, " " + cellContent, 0); //$NON-NLS-1$
-				} else {
-					if (colsAttribute.isEmpty() && cellBlockIsOpen && firstCellInLine) {
-						closeCellBlockIfNeeded();
-						builder.endBlock(); // close table row
-						colsAttribute = LanguageSupport.createDefaultColumnsAttributeList(cellsCount);
-					}
+			Matcher rowCellMatcher = createRowCellMatcher(line);
 
-					if (!cellContent.isEmpty() || !firstCellInLine) {
-						handleCellContent(cellContent);
+			while (offset <= line.length()) {
+				boolean found = rowCellMatcher.find();
+				int endOffset = found ? rowCellMatcher.start() : line.length();
+				String cellContent = line.substring(offset, endOffset);
+				if (offset == 0 && format == TableFormat.PREFIX_SEPARATED_VALUES) {
+					if (!cellContent.isEmpty()) {
+						if (isFirsCellOfTable()) {
+							handleCellContent(cellContent, offset);
+							firstCellInLine = false;
+						} else {
+							appendCellContent(cellContent, endOffset);
+							firstCellInLine = false;
+						}
 					}
+				} else {
+					if (!isColFormatKnown() && firstCellInLine && !isFirsCellOfTable()) {
+						colsAttribute = LanguageSupport.createDefaultColumnsAttributeList(cellsCount + 1);
+					}
+					// start of new cell
+					handleCellContent(cellContent, offset);
+					firstCellInLine = false;
 				}
-				firstCellInLine = false;
+				offset = found ? rowCellMatcher.end() : line.length() + 1;
 			}
 		}
 	}
 
-	private Iterable<String> createRowCellSplitter(String line) {
+	private Matcher createRowCellMatcher(String line) {
 		if (format == TableFormat.COMMA_SEPARATED_VALUES) {
-			return Splitter.on(Pattern.compile(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)")).split(line); //$NON-NLS-1$
+			String regex = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"; //$NON-NLS-1$
+			return Pattern.compile(regex).matcher(line);
 		}
 		String delimiter = getCellSeparator();
-		return Splitter.on(Pattern.compile("(?<!\\\\)" + Pattern.quote(delimiter))).split(line); //$NON-NLS-1$
+		return Pattern.compile("(?<!\\\\)" + Pattern.quote(delimiter)).matcher(line); //$NON-NLS-1$
 	}
 
 	private String getCellSeparator() {
@@ -148,9 +169,10 @@ public class TableBlock extends AsciiDocBlock {
 		}
 	}
 
-	private void handleCellContent(String cellContent) {
+	private void handleCellContent(String fullCellContent, int positionInLine) {
 		closeCellBlockIfNeeded();
 
+		String cellContent = fullCellContent.trim();
 		String blockContent;
 		if (format == TableFormat.COMMA_SEPARATED_VALUES) {
 			if (cellContent.startsWith("\"") && cellContent.endsWith("\"")) {
@@ -163,7 +185,7 @@ public class TableBlock extends AsciiDocBlock {
 			blockContent = cellContent.replaceAll("\\\\" + Pattern.quote(delimiter), delimiter);//$NON-NLS-1$
 		}
 
-		if (!colsAttribute.isEmpty() && cellsCount % colsAttribute.size() == 0) {
+		if (isColFormatKnown() && cellsCount % colsAttribute.size() == 0) {
 			TableRowAttributes tableRowAttributes = new TableRowAttributes();
 			builder.beginBlock(BlockType.TABLE_ROW, tableRowAttributes);
 		}
@@ -175,21 +197,25 @@ public class TableBlock extends AsciiDocBlock {
 			attributes = colsAttribute.get(cellsCount % colsAttribute.size());
 		}
 
-		if (hasHeader && (colsAttribute.isEmpty() || cellsCount < colsAttribute.size())) {
+		if (hasHeader && isFirstRow()) {
 			builder.beginBlock(BlockType.TABLE_CELL_HEADER, attributes);
 		} else {
 			builder.beginBlock(BlockType.TABLE_CELL_NORMAL, attributes);
 		}
 		cellBlockIsOpen = true;
 
-		markupLanguage.emitMarkupLine(parser, state, blockContent, 0);
+		int offset = fullCellContent.indexOf(cellContent);
+		markupLanguage.emitMarkupLine(parser, state, offset + positionInLine, blockContent, 0);
+	}
+
+	private void appendCellContent(String cellContent, int positionInLine) {
+		markupLanguage.emitMarkupLine(parser, state, positionInLine, " " + cellContent.trim(), 0);
 	}
 
 	@Override
 	protected void processBlockEnd() {
 		closeCellBlockIfNeeded();
-		if ((colsAttribute.isEmpty() && cellsCount > 0)
-				|| (!colsAttribute.isEmpty() && cellsCount % colsAttribute.size() != 0)) {
+		if ((!isColFormatKnown() && cellsCount > 0) || (isColFormatKnown() && cellsCount % colsAttribute.size() != 0)) {
 			builder.endBlock(); // close table row
 		}
 		builder.endBlock(); // close table

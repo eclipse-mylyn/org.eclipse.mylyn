@@ -12,7 +12,12 @@
 package org.eclipse.mylyn.internal.wikitext.asciidoc.tests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
+import org.eclipse.mylyn.wikitext.toolkit.RecordingDocumentBuilder.Event;
 import org.junit.Test;
 
 /**
@@ -732,5 +737,66 @@ public class AsciiDocLanguageTableTest extends AsciiDocLanguageTestBase {
 				+ "<td>second</td>" //
 				+ "</tr>" //
 				+ "</table>", html);
+	}
+
+	@Test
+	public void testTableFormattedText() {
+		String html = parseToHtml("" //
+				+ "|===\n" //
+				+ "| first | second\n" //
+				+ "| *bold* _italic_ | plain\n" //
+				+ "| a^super^ | a~sub~\n" //
+				+ "|===\n");
+		assertEquals("<table>" //
+				+ "<tr>" //
+				+ "<td>first</td><td>second</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td><strong>bold</strong> <em>italic</em></td>" //
+				+ "<td>plain</td>" //
+				+ "</tr>" //
+				+ "<tr>" //
+				+ "<td>a<sup>super</sup></td>" //
+				+ "<td>a<sub>sub</sub></td>" //
+				+ "</tr>" //
+				+ "</table>", html);
+	}
+
+	@Test
+	public void testTableFormattedTextRanges() {
+		List<Event> events = parseToEvents("" //
+				+ "|===\n" //
+				+ "| first | second\n" //
+				+ "| *bold* _italic_ | plain\n" //
+				+ "| a^super^ | a~sub~\n" //
+				+ "|===\n");
+
+		boolean emphasisFound = false;
+		boolean boldFound = false;
+		boolean superFound = false;
+		boolean subFound = false;
+		for (Event event : events) {
+			if (event.spanType == SpanType.EMPHASIS) {
+				assertEquals(9, event.locator.getLineCharacterOffset());
+				assertEquals(17, event.locator.getLineSegmentEndOffset());
+				emphasisFound = true;
+			} else if (event.spanType == SpanType.STRONG) {
+				assertEquals(2, event.locator.getLineCharacterOffset());
+				assertEquals(8, event.locator.getLineSegmentEndOffset());
+				boldFound = true;
+			} else if (event.spanType == SpanType.SUPERSCRIPT) {
+				assertEquals(3, event.locator.getLineCharacterOffset());
+				assertEquals(10, event.locator.getLineSegmentEndOffset());
+				superFound = true;
+			} else if (event.spanType == SpanType.SUBSCRIPT) {
+				assertEquals(14, event.locator.getLineCharacterOffset());
+				assertEquals(19, event.locator.getLineSegmentEndOffset());
+				subFound = true;
+			}
+		}
+		assertTrue("expected to find emphasis span", emphasisFound);
+		assertTrue("expected to find strong span", boldFound);
+		assertTrue("expected to find superscript span", superFound);
+		assertTrue("expected to find subscript span", subFound);
 	}
 }

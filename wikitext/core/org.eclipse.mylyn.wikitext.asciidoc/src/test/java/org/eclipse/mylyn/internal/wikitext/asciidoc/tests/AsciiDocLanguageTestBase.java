@@ -12,12 +12,15 @@
 package org.eclipse.mylyn.internal.wikitext.asciidoc.tests;
 
 import java.io.StringWriter;
+import java.util.List;
 
 import org.eclipse.mylyn.wikitext.asciidoc.AsciiDocLanguage;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageConfiguration;
+import org.eclipse.mylyn.wikitext.toolkit.RecordingDocumentBuilder;
+import org.eclipse.mylyn.wikitext.toolkit.RecordingDocumentBuilder.Event;
 import org.junit.Before;
 
 /**
@@ -36,6 +39,13 @@ public abstract class AsciiDocLanguageTestBase {
 
 	public String parseToHtml(String markup) {
 		return parseAsciiDocToHtml(markup, parser);
+	}
+
+	public List<Event> parseToEvents(String markup) {
+		RecordingDocumentBuilder builder = new RecordingDocumentBuilder();
+		parser.setBuilder(builder);
+		parser.parse(markup);
+		return builder.getEvents();
 	}
 
 	protected static MarkupParser createParserWithConfiguration(MarkupLanguageConfiguration configuration) {
