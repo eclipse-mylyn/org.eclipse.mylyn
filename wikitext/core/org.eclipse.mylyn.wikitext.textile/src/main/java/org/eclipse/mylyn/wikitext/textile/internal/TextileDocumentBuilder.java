@@ -23,6 +23,7 @@ import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.HtmlParser;
 import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.parser.builder.AbstractMarkupDocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.builder.EntityReferences;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
 
 /**
@@ -498,7 +499,10 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		assertOpenBlock();
 		String literal = entityToLiteral.get(entity);
 		if (literal == null) {
-			literal = "&" + entity + ";"; //$NON-NLS-1$//$NON-NLS-2$
+			literal = EntityReferences.instance().equivalentString(entity);
+			if (literal == null) {
+				literal = "&" + entity + ";"; //$NON-NLS-1$//$NON-NLS-2$
+			}
 		}
 		try {
 			currentBlock.write(literal);

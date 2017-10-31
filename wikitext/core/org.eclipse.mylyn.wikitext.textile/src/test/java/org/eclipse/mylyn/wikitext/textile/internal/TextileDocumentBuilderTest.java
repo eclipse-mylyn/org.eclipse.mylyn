@@ -883,6 +883,48 @@ public class TextileDocumentBuilderTest extends TestCase {
 		assertEquals("a test\n\n", markup);
 	}
 
+	public void testEntityReferenceApostropheSurroundedBySpaces() {
+		builder.beginDocument();
+
+		builder.characters("a ");
+		builder.entityReference("#8217");
+		builder.characters(" test");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		assertEquals("a ’ test\n\n", markup);
+	}
+
+	public void testEntityReferenceApostropheSurroundedByCharacters() {
+		builder.beginDocument();
+
+		builder.characters("a");
+		builder.entityReference("#8217");
+		builder.characters("test");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		assertEquals("a’test\n\n", markup);
+	}
+
+	public void testEntityReferenceInvalidEnitity() {
+		builder.beginDocument();
+
+		builder.characters("a ");
+		builder.entityReference("not_an_entity");
+		builder.characters(" test");
+
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		assertEquals("a &not_an_entity; test\n\n", markup);
+	}
+
 	public void testEntityReference() {
 		builder.beginDocument();
 
