@@ -43,16 +43,9 @@ public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	{
 		entityToLiteral.put("nbsp", " "); //$NON-NLS-1$//$NON-NLS-2$
 		entityToLiteral.put("#160", " "); //$NON-NLS-1$//$NON-NLS-2$
-		entityToLiteral.put("quot", "\""); //$NON-NLS-1$//$NON-NLS-2$
-		entityToLiteral.put("amp", "&"); //$NON-NLS-1$//$NON-NLS-2$
-		entityToLiteral.put("lt", "<"); //$NON-NLS-1$//$NON-NLS-2$
-		entityToLiteral.put("gt", ">"); //$NON-NLS-1$//$NON-NLS-2$
 		entityToLiteral.put("copy", "(c)"); //$NON-NLS-1$//$NON-NLS-2$
 		entityToLiteral.put("reg", "(r)"); //$NON-NLS-1$//$NON-NLS-2$
 		entityToLiteral.put("#8482", "(t)"); //$NON-NLS-1$//$NON-NLS-2$
-		entityToLiteral.put("euro", "\u20ac"); //$NON-NLS-1$//$NON-NLS-2$
-		entityToLiteral.put("#36", "$"); //$NON-NLS-1$//$NON-NLS-2$
-		entityToLiteral.put("#37", "%"); //$NON-NLS-1$//$NON-NLS-2$
 	}
 
 	private boolean previousWasExtended;
