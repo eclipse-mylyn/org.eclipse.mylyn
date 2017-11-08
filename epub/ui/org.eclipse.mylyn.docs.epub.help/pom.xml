@@ -6,13 +6,13 @@
 	<parent>
 		<artifactId>epub.ui</artifactId>
 		<groupId>org.eclipse.mylyn.docs</groupId>
-		<version>4.0.0-SNAPSHOT</version>
+		<version>4.0.3-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 	
 	<artifactId>org.eclipse.mylyn.docs.epub.help</artifactId>
 	<groupId>org.eclipse.mylyn.docs.epub</groupId>
-	<version>4.0.0-SNAPSHOT</version>
+	<version>4.0.3-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
 
 	<properties>
