@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.eclipse.mylyn.docs</groupId>
 		<artifactId>epub</artifactId>
-		<version>4.0.3-SNAPSHOT</version>
+		<version>4.0.6-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 
@@ -100,7 +100,7 @@
 							<groupId>org.eclipse.mylyn.docs</groupId>
 							<artifactId>epub.ui.target</artifactId>
 							<classifier>epub</classifier>
-							<version>4.0.3-SNAPSHOT</version>
+							<version>4.0.6-SNAPSHOT</version>
 						</artifact>
 					</target>
 					<resolver>p2</resolver>
