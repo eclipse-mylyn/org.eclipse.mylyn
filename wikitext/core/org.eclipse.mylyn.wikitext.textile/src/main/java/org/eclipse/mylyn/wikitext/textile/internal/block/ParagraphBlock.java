@@ -21,7 +21,7 @@ import org.eclipse.mylyn.wikitext.textile.internal.Textile;
 
 /**
  * Matches any textile text, including lines starting with <code>p. </code>.
- * 
+ *
  * @author David Green
  */
 public class ParagraphBlock extends Block {
@@ -76,7 +76,7 @@ public class ParagraphBlock extends Block {
 		for (Block block : textileLanguage.getParagraphBreakingBlocks()) {
 			if (block.canStart(line, offset)) {
 				setClosed(true);
-				return 0;
+				return offset;
 			}
 		}
 

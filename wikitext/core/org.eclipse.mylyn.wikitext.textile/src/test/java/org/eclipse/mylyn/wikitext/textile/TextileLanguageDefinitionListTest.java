@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.wikitext.textile;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ import java.util.List;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.textile.internal.TextileDocumentBuilder;
 import org.eclipse.mylyn.wikitext.toolkit.RecordingDocumentBuilder;
 import org.eclipse.mylyn.wikitext.toolkit.RecordingDocumentBuilder.Event;
 import org.junit.Before;
@@ -45,6 +47,14 @@ public class TextileLanguageDefinitionListTest {
 		builder.setEmitAsDocument(false);
 		parser.setBuilder(builder);
 		parser.parse(markup);
+		return out.toString();
+	}
+
+	private String textileToTextileRoundTrip(String testContent) {
+		StringWriter out = new StringWriter();
+		TextileDocumentBuilder builder = new TextileDocumentBuilder(out);
+		parser.setBuilder(builder);
+		parser.parse(testContent);
 		return out.toString();
 	}
 
@@ -150,6 +160,41 @@ public class TextileLanguageDefinitionListTest {
 	public void definitionListInterruptsParagraph() {
 		String html = parseToHtml("one\n- two := three four");
 		assertEquals("<p>one</p><dl><dt>two</dt><dd>three four</dd></dl>", html);
+	}
+
+	@Test
+	public void definitionListToTextile() {
+		String testContent = "; a";
+		String result = textileToTextileRoundTrip(testContent);
+		assertEquals("- a\n", result);
+	}
+
+	@Test
+	public void definitionListToHtml() {
+		String testContent = "; a";
+		String html = parser.parseToHtml(testContent);
+		assertTrue(html.contains("<body><dl><dt>a</dt></dl></body>"));
+	}
+
+	@Test
+	public void paragraphContainingOnlyDefinitionListSyntaxToTextile() {
+		String testContent = "p. ; a";
+		String result = textileToTextileRoundTrip(testContent);
+		assertEquals("- a\n", result);
+	}
+
+	@Test
+	public void paragraphContainingOnlyDefinitionListSyntaxToHtml() {
+		String testContent = "p. ; a";
+		String html = parser.parseToHtml(testContent);
+		assertTrue(html.contains("<body><p></p><dl><dt>a</dt></dl></body>"));
+	}
+
+	@Test
+	public void paragraphContainingDefinitionListSyntaxToTextile() {
+		String testContent = "p. abc ; a";
+		String result = textileToTextileRoundTrip(testContent);
+		assertEquals("abc ; a\n\n", result);
 	}
 
 	@Test
