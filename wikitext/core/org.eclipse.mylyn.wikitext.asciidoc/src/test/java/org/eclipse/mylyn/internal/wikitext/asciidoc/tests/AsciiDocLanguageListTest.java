@@ -14,6 +14,10 @@ package org.eclipse.mylyn.internal.wikitext.asciidoc.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+import java.util.List;
+
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.toolkit.RecordingDocumentBuilder.Event;
 import org.junit.Test;
 
 /**
@@ -548,4 +552,154 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "</ol>", html);
 	}
 
+	@Test
+	public void testDefinitionListSimple() {
+		String html = parseToHtml("" //
+				+ "First Item:: first description\n" //
+				+ "Second Item:: second description\n");
+		assertEquals("<dl>" //
+				+ "<dt class=\"hdlist1\">First Item</dt>" //
+				+ "<dd>first description</dd>" //
+				+ "<dt class=\"hdlist1\">Second Item</dt>" //
+				+ "<dd>second description</dd>" //
+				+ "</dl>" //
+				, html);
+	}
+
+	@Test
+	public void testDefinitionListFormattedText() {
+		String html = parseToHtml("" //
+				+ "First Item:: *first* _description_\n" //
+				+ "Second Item:: `second` description\n");
+		assertEquals("<dl>" //
+				+ "<dt class=\"hdlist1\">First Item</dt>" //
+				+ "<dd><strong>first</strong> <em>description</em></dd>" //
+				+ "<dt class=\"hdlist1\">Second Item</dt>" //
+				+ "<dd><code>second</code> description</dd>" //
+				+ "</dl>" //
+				, html);
+	}
+
+	@Test
+	public void testDefinitionListSplitLines() {
+		String html = parseToHtml("" //
+				+ "First Item::\n" //
+				+ "first description\n" //
+				+ "Second Item::\n" //
+				+ "second description\n");
+		assertEquals("<dl>" //
+				+ "<dt class=\"hdlist1\">First Item</dt>" //
+				+ "<dd>first description</dd>" //
+				+ "<dt class=\"hdlist1\">Second Item</dt>" //
+				+ "<dd>second description</dd>" //
+				+ "</dl>" //
+				, html);
+	}
+
+	@Test
+	public void testDefinitionListWithBlankLines() {
+		String html = parseToHtml("" //
+				+ "First Item:: first description\n\n" //
+				+ "Second Item::\n\n" //
+				+ "second description\n");
+		assertEquals("<dl>" //
+				+ "<dt class=\"hdlist1\">First Item</dt>" //
+				+ "<dd>first description</dd>" //
+				+ "<dt class=\"hdlist1\">Second Item</dt>" //
+				+ "<dd>second description</dd>" //
+				+ "</dl>" //
+				, html);
+	}
+
+	@Test
+	public void testDefinitionListNested() {
+		String html = parseToHtml("" //
+				+ "First:: description\n\n" //
+				+ "Sub First 1::: description\n" //
+				+ "Sub First 2::: description\n" //
+				+ "Second:: description\n");
+		assertEquals("<dl>" //
+				+ "<dt class=\"hdlist1\">First</dt>" //
+				+ "<dd>description" //
+				+ "<dl>" //
+				+ "<dt class=\"hdlist1\">Sub First 1</dt>" //
+				+ "<dd>description</dd>" //
+				+ "<dt class=\"hdlist1\">Sub First 2</dt>" //
+				+ "<dd>description</dd>" //
+				+ "</dl></dd>" //
+				+ "<dt class=\"hdlist1\">Second</dt>" //
+				+ "<dd>description</dd>" //
+				+ "</dl>" //
+				, html);
+	}
+
+	@Test
+	public void testDefinitionListNestedStopped() {
+		String html = parseToHtml("" //
+				+ "First:: description\n\n" //
+				+ "Sub First 1::: description\n" //
+		);
+		assertEquals("<dl>" //
+				+ "<dt class=\"hdlist1\">First</dt>" //
+				+ "<dd>description" //
+				+ "<dl>" //
+				+ "<dt class=\"hdlist1\">Sub First 1</dt>" //
+				+ "<dd>description</dd>" //
+				+ "</dl></dd>" //
+				+ "</dl>" //
+				, html);
+	}
+
+	@Test
+	public void testDefinitionListNestedIncomplete() {
+		String html = parseToHtml("" //
+				+ "First:: description\n\n" //
+				+ "Sub First 1::: description\n" //
+				+ "Second::");
+		assertEquals("<dl>" //
+				+ "<dt class=\"hdlist1\">First</dt>" //
+				+ "<dd>description" //
+				+ "<dl>" //
+				+ "<dt class=\"hdlist1\">Sub First 1</dt>" //
+				+ "<dd>description</dd>" //
+				+ "</dl></dd>" //
+				+ "<dt class=\"hdlist1\">Second</dt>" //
+				+ "</dl>" //
+				, html);
+	}
+
+	@Test
+	public void testDefinitionListTextRanges() {
+		List<Event> events = parseToEvents("" //
+				+ "First:: description\n\n" //
+				+ "Sub First 1::: description\n" //
+				+ "Sub First 2::: description\n" //
+				+ "Second:: description\n");
+
+		assertEquals(18, events.size());
+		assertBlockRange(events.get(0), BlockType.DEFINITION_LIST, 0, 0);
+
+		assertBlockRange(events.get(1), BlockType.DEFINITION_TERM, 0, 5);
+		assertBlockRange(events.get(2), "First", 0, 5);
+		assertBlockRange(events.get(3), BlockType.DEFINITION_ITEM, 8, 19);
+		assertBlockRange(events.get(4), "description", 8, 19);
+
+		assertBlockRange(events.get(5), BlockType.DEFINITION_LIST, 0, 0);
+
+		assertBlockRange(events.get(6), BlockType.DEFINITION_TERM, 0, 11);
+		assertBlockRange(events.get(7), "Sub First 1", 0, 11);
+		assertBlockRange(events.get(8), BlockType.DEFINITION_ITEM, 15, 26);
+		assertBlockRange(events.get(9), "description", 15, 26);
+
+		assertBlockRange(events.get(10), BlockType.DEFINITION_TERM, 0, 11);
+		assertBlockRange(events.get(11), "Sub First 2", 0, 11);
+		assertBlockRange(events.get(12), BlockType.DEFINITION_ITEM, 15, 26);
+		assertBlockRange(events.get(13), "description", 15, 26);
+
+		assertBlockRange(events.get(14), BlockType.DEFINITION_TERM, 0, 6);
+		assertBlockRange(events.get(15), "Second", 0, 6);
+		assertBlockRange(events.get(16), BlockType.DEFINITION_ITEM, 9, 20);
+		assertBlockRange(events.get(17), "description", 9, 20);
+
+	}
 }

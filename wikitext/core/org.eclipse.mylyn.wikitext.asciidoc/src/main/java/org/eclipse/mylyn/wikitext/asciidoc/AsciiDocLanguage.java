@@ -24,6 +24,7 @@ import org.eclipse.mylyn.wikitext.asciidoc.internal.AsciiDocIdGenerationStrategy
 import org.eclipse.mylyn.wikitext.asciidoc.internal.block.AttributeDefinitionBlock;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.block.CodeBlock;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.block.CommentBlock;
+import org.eclipse.mylyn.wikitext.asciidoc.internal.block.DefinitionListBlock;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.block.HeadingBlock;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.block.HorizontalRuleBlock;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.block.ListBlock;
@@ -194,6 +195,9 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 		paragraphBreakingBlocks.add(commentBlock);
 		paragraphBreakingBlocks.add(preformattedBlock);
 
+		DefinitionListBlock definitionListBlock = new DefinitionListBlock();
+		blocks.add(definitionListBlock);
+		paragraphBreakingBlocks.add(definitionListBlock);
 	}
 
 	@Override

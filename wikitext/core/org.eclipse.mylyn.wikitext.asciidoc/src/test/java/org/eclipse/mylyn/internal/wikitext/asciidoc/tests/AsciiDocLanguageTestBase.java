@@ -11,10 +11,13 @@
 
 package org.eclipse.mylyn.internal.wikitext.asciidoc.tests;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.StringWriter;
 import java.util.List;
 
 import org.eclipse.mylyn.wikitext.asciidoc.AsciiDocLanguage;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
@@ -63,6 +66,18 @@ public abstract class AsciiDocLanguageTestBase {
 		parser.setBuilder(builder);
 		parser.parse(markup);
 		return out.toString();
+	}
+
+	protected static void assertBlockRange(Event event, BlockType type, int start, int end) {
+		assertEquals(type, event.blockType);
+		assertEquals(start, event.locator.getLineCharacterOffset());
+		assertEquals(end, event.locator.getLineSegmentEndOffset());
+	}
+
+	protected static void assertBlockRange(Event event, String text, int start, int end) {
+		assertEquals(text, event.text);
+		assertEquals(start, event.locator.getLineCharacterOffset());
+		assertEquals(end, event.locator.getLineSegmentEndOffset());
 	}
 
 }

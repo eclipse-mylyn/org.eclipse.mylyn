@@ -228,6 +228,7 @@ public class AsciiDocDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		case QUOTE:
 			return new ContentBlock(type, "[quote]\n----\n", "\n----\n", 1, 1); //$NON-NLS-1$ //$NON-NLS-2$
 		case BULLETED_LIST:
+		case DEFINITION_LIST:
 		case NUMERIC_LIST:
 			if (currentBlock != null) {
 				BlockType currentBlockType = currentBlock.getBlockType();
@@ -254,6 +255,10 @@ public class AsciiDocDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			return new ContentBlock(type, "|", " ", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
 		case DIV:
 			return new ContentBlock(type, "", "", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
+		case DEFINITION_ITEM:
+			return new ContentBlock(type, ":: ", "", 0, 1); //$NON-NLS-1$//$NON-NLS-2$
+		case DEFINITION_TERM:
+			return new ContentBlock(type, "", "", 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 		default:
 			Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
 			return new ContentBlock(type, "", "", 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
