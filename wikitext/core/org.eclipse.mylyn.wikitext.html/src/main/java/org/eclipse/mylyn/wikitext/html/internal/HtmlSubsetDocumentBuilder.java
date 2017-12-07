@@ -44,6 +44,8 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 
 	private BlockSeparator blockSeparator;
 
+	private boolean supportsImages = true;
+
 	public HtmlSubsetDocumentBuilder(Writer out, boolean formatting) {
 		this(new HtmlDocumentBuilder(checkNotNull(out, "Must provide a writer"), formatting)); //$NON-NLS-1$
 	}
@@ -72,6 +74,14 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 
 	void setDocumentHandler(HtmlDocumentHandler documentHandler) {
 		delegate.setDocumentHandler(documentHandler);
+	}
+
+	void setSupportsImages(boolean supportsImagesFlag) {
+		this.supportsImages = supportsImagesFlag;
+	}
+
+	boolean getSupportsImages() {
+		return this.supportsImages;
 	}
 
 	@Override
@@ -178,8 +188,10 @@ public class HtmlSubsetDocumentBuilder extends DocumentBuilder {
 
 	@Override
 	public void image(Attributes attributes, String url) {
-		assertOpenBlock();
-		delegate.image(attributes, url);
+		if (supportsImages) {
+			assertOpenBlock();
+			delegate.image(attributes, url);
+		}
 	}
 
 	@Override

@@ -46,16 +46,11 @@ public class HtmlSubsetLanguage extends HtmlLanguage {
 
 	private final boolean xhtmlStrict;
 
-	public HtmlSubsetLanguage(String name, HtmlDocumentHandler documentHandler, int headingLevel,
-			Set<BlockType> blockTypes, Set<SpanType> spanTypes, Map<SpanType, String> tagNameSubstitutions,
-			List<SpanHtmlElementStrategy> spanElementStrategies) {
-		this(name, documentHandler, headingLevel, blockTypes, spanTypes, tagNameSubstitutions, spanElementStrategies,
-				false);
-	}
+	private final boolean supportsImages;
 
 	public HtmlSubsetLanguage(String name, HtmlDocumentHandler documentHandler, int headingLevel,
 			Set<BlockType> blockTypes, Set<SpanType> spanTypes, Map<SpanType, String> tagNameSubstitutions,
-			List<SpanHtmlElementStrategy> spanElementStrategies, boolean xhtmlStrict) {
+			List<SpanHtmlElementStrategy> spanElementStrategies, boolean xhtmlStrict, boolean supportsImages) {
 		setName(checkNotNull(name));
 		this.documentHandler = documentHandler;
 		checkArgument(headingLevel >= 0 && headingLevel <= 6, "headingLevel must be between 0 and 6"); //$NON-NLS-1$
@@ -65,6 +60,7 @@ public class HtmlSubsetLanguage extends HtmlLanguage {
 		this.tagNameSubstitutions = ImmutableMap.copyOf(checkNotNull(tagNameSubstitutions));
 		this.spanElementStrategies = ImmutableList.copyOf(checkNotNull(spanElementStrategies));
 		this.xhtmlStrict = xhtmlStrict;
+		this.supportsImages = supportsImages;
 
 		assertSubstitutedAreSupported();
 	}
@@ -92,6 +88,7 @@ public class HtmlSubsetLanguage extends HtmlLanguage {
 		builder.setSupportedSpanTypes(supportedSpanTypes, spanElementStrategies);
 		builder.setSupportedBlockTypes(supportedBlockTypes);
 		builder.setXhtmlStrict(xhtmlStrict);
+		builder.setSupportsImages(supportsImages);
 		addSpanTagNameSubstitutions(builder);
 		if (documentHandler != null) {
 			builder.setDocumentHandler(documentHandler);
@@ -108,7 +105,7 @@ public class HtmlSubsetLanguage extends HtmlLanguage {
 	@Override
 	public HtmlSubsetLanguage clone() {
 		HtmlSubsetLanguage copy = new HtmlSubsetLanguage(getName(), documentHandler, headingLevel, supportedBlockTypes,
-				supportedSpanTypes, tagNameSubstitutions, spanElementStrategies, xhtmlStrict);
+				supportedSpanTypes, tagNameSubstitutions, spanElementStrategies, xhtmlStrict, supportsImages);
 		copy.setFileExtensions(getFileExtensions());
 		copy.setExtendsLanguage(getExtendsLanguage());
 		copy.setParseCleansHtml(isParseCleansHtml());
@@ -124,5 +121,9 @@ public class HtmlSubsetLanguage extends HtmlLanguage {
 
 	public boolean isXhtmlStrict() {
 		return xhtmlStrict;
+	}
+
+	public boolean getSupportsImages() {
+		return supportsImages;
 	}
 }

@@ -126,10 +126,15 @@ public class HtmlSubsetDocumentBuilderTest {
 
 	@Test
 	public void image() {
-		builder.beginDocument();
 		builder.image(new Attributes(), "image.png");
-		builder.endDocument();
 		assertContent("<img border=\"0\" src=\"image.png\"/>");
+	}
+
+	@Test
+	public void setDoesntSupportImages() {
+		builder.setSupportsImages(false);
+		builder.image(new Attributes(), "image.png");
+		assertContent("");
 	}
 
 	@Test

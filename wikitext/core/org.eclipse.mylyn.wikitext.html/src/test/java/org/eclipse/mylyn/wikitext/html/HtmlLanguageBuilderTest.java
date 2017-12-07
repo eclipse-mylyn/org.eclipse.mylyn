@@ -19,8 +19,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.StringWriter;
 
-import org.eclipse.mylyn.wikitext.html.HtmlLanguage;
-import org.eclipse.mylyn.wikitext.html.HtmlLanguageBuilder;
 import org.eclipse.mylyn.wikitext.html.internal.HtmlSubsetLanguage;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
@@ -360,6 +358,12 @@ public class HtmlLanguageBuilderTest {
 		assertEmittedCharsEqual(true, "<p>foobar</p>", "foo", "bar");
 	}
 
+	@Test
+	public void setSupportsImages() {
+		assertSupportsImages(true);
+		assertSupportsImages(false);
+	}
+
 	private void addSpanWithCssFontWeightBold(DocumentBuilder builder) {
 		builder.beginSpan(SpanType.SPAN, new Attributes(null, null, "font-weight:bold", null));
 		builder.characters("test");
@@ -372,6 +376,14 @@ public class HtmlLanguageBuilderTest {
 
 		HtmlSubsetLanguage language = (HtmlSubsetLanguage) builder.create();
 		assertEquals(xhtmlStrict, language.isXhtmlStrict());
+	}
+
+	private void assertSupportsImages(boolean supportsImages) {
+		builder.name("Test").add(BlockType.PARAGRAPH);
+		assertSame(builder, builder.setSupportsImages(supportsImages));
+
+		HtmlSubsetLanguage language = (HtmlSubsetLanguage) builder.create();
+		assertEquals(supportsImages, language.getSupportsImages());
 	}
 
 	private void addSpanWithCssColor(DocumentBuilder builder) {

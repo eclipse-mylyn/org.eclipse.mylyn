@@ -15,8 +15,6 @@ import static org.junit.Assert.assertEquals;
 import java.io.StringWriter;
 import java.util.Collections;
 
-import org.eclipse.mylyn.wikitext.html.internal.HtmlSubsetDocumentBuilder;
-import org.eclipse.mylyn.wikitext.html.internal.SpanHtmlElementStrategy;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
@@ -42,7 +40,8 @@ public class HtmlSubsetDocumentBuilderXhtmlStrictTest {
 		builder = new HtmlSubsetDocumentBuilder(delegate);
 		builder.setSupportedBlockTypes(Sets.newHashSet(BlockType.PARAGRAPH, BlockType.DIV, BlockType.BULLETED_LIST,
 				BlockType.LIST_ITEM, BlockType.QUOTE, BlockType.PREFORMATTED));
-		builder.setSupportedSpanTypes(Sets.newHashSet(SpanType.BOLD), Collections.<SpanHtmlElementStrategy> emptyList());
+		builder.setSupportedSpanTypes(Sets.newHashSet(SpanType.BOLD),
+				Collections.<SpanHtmlElementStrategy> emptyList());
 		builder.setSupportedHeadingLevel(3);
 		builder.setXhtmlStrict(true);
 		builder.beginDocument();
@@ -198,6 +197,14 @@ public class HtmlSubsetDocumentBuilderXhtmlStrictTest {
 		builder.image(new Attributes(), "foo.png");
 		builder.characters("bar");
 		assertContent("<p><img style=\"border-width: 0px;\" alt=\"\" src=\"foo.png\"/>bar</p>");
+	}
+
+	@Test
+	public void emitImageWithoutImageSupport() {
+		builder.setSupportsImages(false);
+		builder.image(new Attributes(), "foo.png");
+		builder.characters("bar");
+		assertContent("<p>bar</p>");
 	}
 
 	@Test

@@ -60,6 +60,8 @@ public class HtmlLanguageBuilder {
 
 	private boolean xhtmlStrict;
 
+	private boolean supportsImages = true;
+
 	HtmlLanguageBuilder() {
 		// prevent direct instantiation
 	}
@@ -185,10 +187,22 @@ public class HtmlLanguageBuilder {
 		return this;
 	}
 
+	/**
+	 * Indicate if the resulting document builder should support HTML img tags or strip them out. The default is true.
+	 *
+	 * @param supportsImages
+	 *            true if the language should support HTML image tags, false if they are to be stripped out
+	 * @return this builder
+	 */
+	public HtmlLanguageBuilder setSupportsImages(boolean supportsImages) {
+		this.supportsImages = supportsImages;
+		return this;
+	}
+
 	public HtmlLanguage create() {
 		checkState(name != null, "Name must be provided to create an HtmlLanguage"); //$NON-NLS-1$
 
 		return new HtmlSubsetLanguage(name, documentHandler, headingLevel, blockTypes, spanTypes,
-				spanTypeToElementNameSubstitution, spanElementStrategies, xhtmlStrict);
+				spanTypeToElementNameSubstitution, spanElementStrategies, xhtmlStrict, supportsImages);
 	}
 }
