@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011-2014 Torkild U. Resheim.
+ * Copyright (c) 2011-2017 Torkild U. Resheim.
  *
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
 /**
  * This type is a SAX parser that will read a XHTML file, locate header text (<b>H1</b> trough <b>H6</b>) and create NCX
  * items for the EPUB table of contents.
- * 
+ *
  * @author Torkild U. Resheim
  */
 public class TOCGenerator extends AbstractXHTMLScanner {
@@ -59,27 +59,31 @@ public class TOCGenerator extends AbstractXHTMLScanner {
 
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
-		int level = isHeader(qName);
-		if (level > 0) {
+		int currentLevel = isHeader(qName);
+		int parentLevel = currentLevel - 1;
+		// only handle header level specifications H1 through H6
+		if (currentLevel > 0 && currentLevel < 7) {
 			recording = false;
-			NavPoint np = createNavPoint(buffer.toString());
-			// Determine the parent header
-			NavPoint h = headers[level - 1];
-			while (level > 1 && h == null) {
-				level--;
-				if (level == 1) {
-					h = headers[0];
-					break;
+			NavPoint navPoint = createNavPoint(buffer.toString());
+			// determine the actual parent element as it may not exist at the
+			// level immediately above, as one would expect.
+			if (currentLevel > 1) {
+				NavPoint parent = headers[parentLevel - 1];
+				while (parent == null && parentLevel > 1) {
+					parentLevel = parentLevel - 1;
+					parent = headers[parentLevel - 1];
 				}
-				h = headers[level - 1];
-			}
-			// Add to the parent header or to the root
-			if (level > 1) {
-				h.getNavPoints().add(np);
+				if (parent == null) {
+					ncx.getNavMap().getNavPoints().add(navPoint);
+					headers[0] = navPoint;
+				} else {
+					parent.getNavPoints().add(navPoint);
+					headers[parentLevel] = navPoint;
+				}
 			} else {
-				ncx.getNavMap().getNavPoints().add(np);
+				ncx.getNavMap().getNavPoints().add(navPoint);
+				headers[0] = navPoint;
 			}
-			headers[level] = np;
 			buffer.setLength(0);
 		}
 	}
@@ -113,7 +117,7 @@ public class TOCGenerator extends AbstractXHTMLScanner {
 
 	/**
 	 * Parses an XHTML file, representing a publication chapter, and generates a table of contents for this chapter.
-	 * 
+	 *
 	 * @param file
 	 *            the XHTML file to parse
 	 * @param href
@@ -122,13 +126,13 @@ public class TOCGenerator extends AbstractXHTMLScanner {
 	 *            the NCX to add headers to
 	 * @param playOrder
 	 *            initial play order
-	 * @return
+	 * @return the current play order
 	 * @throws ParserConfigurationException
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-	public static int parse(InputSource file, String href, Ncx ncx, int playOrder) throws ParserConfigurationException,
-			SAXException, IOException {
+	public static int parse(InputSource file, String href, Ncx ncx, int playOrder)
+			throws ParserConfigurationException, SAXException, IOException {
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		factory.setFeature("http://xml.org/sax/features/validation", false); //$NON-NLS-1$
 		factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false); //$NON-NLS-1$
