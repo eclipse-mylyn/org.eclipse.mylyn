@@ -695,7 +695,12 @@ public class GitHubClient {
 	 */
 	public InputStream getStream(final GitHubRequest request)
 			throws IOException {
-		return getResponseStream(createGet(request.generateUri()));
+		HttpURLConnection httpRequest = createGet(request.generateUri());
+		String accept = request.getResponseContentType();
+		if (accept != null) {
+			httpRequest.setRequestProperty(HEADER_ACCEPT, accept);
+		}
+		return getResponseStream(httpRequest);
 	}
 
 	/**
