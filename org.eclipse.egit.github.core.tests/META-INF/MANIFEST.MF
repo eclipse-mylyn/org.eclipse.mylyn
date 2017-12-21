@@ -1,6 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
+Automatic-Module-Name: org.eclipse.egit.github.core.tests
 Bundle-SymbolicName: org.eclipse.egit.github.core.tests
 Bundle-Version: 4.10.0.qualifier
 Bundle-Localization: plugin
