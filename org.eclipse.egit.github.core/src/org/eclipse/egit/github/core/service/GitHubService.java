@@ -52,6 +52,16 @@ public abstract class GitHubService {
 	public static final String ACCEPT_FULL = "application/vnd.github.v3.full+json"; //$NON-NLS-1$
 
 	/**
+	 * Accept header for diff response
+	 */
+	public static final String ACCEPT_DIFF = "application/vnd.github.v3.diff"; //$NON-NLS-1$
+
+	/**
+	 * Accept header for patch response
+	 */
+	public static final String ACCEPT_PATCH = "application/vnd.github.v3.patch"; //$NON-NLS-1$
+
+	/**
 	 * Accept header to use preview features of the 'ironman' release.
 	 * @see <a href="https://developer.github.com/changes">https://developer.github.com/changes</a>
 	 * @since 4.2

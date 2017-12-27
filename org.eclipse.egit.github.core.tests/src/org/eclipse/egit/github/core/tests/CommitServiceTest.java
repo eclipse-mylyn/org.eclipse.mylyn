@@ -133,6 +133,80 @@ public class CommitServiceTest {
 	}
 
 	/**
+	 * Get commit diff with null sha
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getCommitDiffNullSha() throws IOException {
+		RepositoryId repo = new RepositoryId("o", "n");
+		service.getCommitDiff(repo, null);
+	}
+
+	/**
+	 * Get commit diff with empty sha
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getCommitDiffEmptySha() throws IOException {
+		RepositoryId repo = new RepositoryId("o", "n");
+		service.getCommitDiff(repo, "");
+	}
+
+	/**
+	 * Get commit diff
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getCommitDiff() throws IOException {
+		RepositoryId repo = new RepositoryId("o", "n");
+		service.getCommitDiff(repo, "abc");
+		GitHubRequest request = new GitHubRequest();
+		request.setUri("/repos/o/n/commits/abc");
+		request.setResponseContentType("application/vnd.github.v3.diff");
+		verify(client).getStream(request);
+	}
+
+	/**
+	 * Get commit patch with null sha
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getCommitPatchNullSha() throws IOException {
+		RepositoryId repo = new RepositoryId("o", "n");
+		service.getCommitPatch(repo, null);
+	}
+
+	/**
+	 * Get commit patch with empty sha
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getCommitPatchEmptySha() throws IOException {
+		RepositoryId repo = new RepositoryId("o", "n");
+		service.getCommitPatch(repo, "");
+	}
+
+	/**
+	 * Get commit patch
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void getCommitPatch() throws IOException {
+		RepositoryId repo = new RepositoryId("o", "n");
+		service.getCommitPatch(repo, "abc");
+		GitHubRequest request = new GitHubRequest();
+		request.setUri("/repos/o/n/commits/abc");
+		request.setResponseContentType("application/vnd.github.v3.patch");
+		verify(client).getStream(request);
+	}
+
+	/**
 	 * Get comments with null sha
 	 *
 	 * @throws IOException
@@ -328,6 +402,124 @@ public class CommitServiceTest {
 		GitHubRequest request = new GitHubRequest();
 		request.setUri("/repos/o/n/compare/v1...HEAD");
 		verify(client).get(request);
+	}
+
+	/**
+	 * Generate diff for commit comparison with null base
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void compareDiffNullBase() throws IOException {
+		RepositoryId repo = new RepositoryId("o", "n");
+		service.compareDiff(repo, null, "HEAD");
+	}
+
+	/**
+	 * Generate diff for commit comparison with empty base
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void compareDiffEmptyBase() throws IOException {
+		RepositoryId repo = new RepositoryId("o", "n");
+		service.compareDiff(repo, "", "HEAD");
+	}
+
+	/**
+	 * Generate diff for commit comparison with null head
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void compareDiffNullHead() throws IOException {
+		RepositoryId repo = new RepositoryId("o", "n");
+		service.compareDiff(repo, "HEAD~1", null);
+	}
+
+	/**
+	 * Generate diff for commit comparison with empty head
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void compareDiffEmptyHead() throws IOException {
+		RepositoryId repo = new RepositoryId("o", "n");
+		service.compareDiff(repo, "HEAD~1", "");
+	}
+
+	/**
+	 * Generate diff for commit comparison
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void compareDiff() throws IOException {
+		RepositoryId repo = new RepositoryId("o", "n");
+		service.compareDiff(repo, "v1", "HEAD");
+		GitHubRequest request = new GitHubRequest();
+		request.setResponseContentType("application/vnd.github.v3.diff");
+		request.setUri("/repos/o/n/compare/v1...HEAD");
+		verify(client).getStream(request);
+	}
+
+	/**
+	 * Generate patch for commit comparison with null base
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void comparePatchNullBase() throws IOException {
+		RepositoryId repo = new RepositoryId("o", "n");
+		service.comparePatch(repo, null, "HEAD");
+	}
+
+	/**
+	 * Generate patch for commit comparison with empty base
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void comparePatchEmptyBase() throws IOException {
+		RepositoryId repo = new RepositoryId("o", "n");
+		service.comparePatch(repo, "", "HEAD");
+	}
+
+	/**
+	 * Generate patch for commit comparison with null head
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void comparePatchNullHead() throws IOException {
+		RepositoryId repo = new RepositoryId("o", "n");
+		service.comparePatch(repo, "HEAD~1", null);
+	}
+
+	/**
+	 * Generate patch for commit comparison with empty head
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void comparePatchEmptyHead() throws IOException {
+		RepositoryId repo = new RepositoryId("o", "n");
+		service.comparePatch(repo, "HEAD~1", "");
+	}
+
+	/**
+	 * Generate patch for commit comparison
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void comparePatch() throws IOException {
+		RepositoryId repo = new RepositoryId("o", "n");
+		service.comparePatch(repo, "v1", "HEAD");
+		GitHubRequest request = new GitHubRequest();
+		request.setResponseContentType("application/vnd.github.v3.patch");
+		request.setUri("/repos/o/n/compare/v1...HEAD");
+		verify(client).getStream(request);
 	}
 
 	/**

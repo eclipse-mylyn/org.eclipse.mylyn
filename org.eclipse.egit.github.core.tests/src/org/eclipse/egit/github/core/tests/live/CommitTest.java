@@ -13,10 +13,14 @@ package org.eclipse.egit.github.core.tests.live;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 
 import org.eclipse.egit.github.core.CommitComment;
@@ -106,5 +110,73 @@ public class CommitTest extends LiveTest {
 		assertNotNull(commit.getUrl());
 		assertNotNull(commit.getParents());
 		assertFalse(commit.getParents().isEmpty());
+	}
+
+	/**
+	 * Test generating single-commit diff
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void singleCommitDiff() throws IOException {
+		CommitService service = new CommitService(client);
+		RepositoryId repo = RepositoryId.create("defunkt", "mustache");
+		String sha = "d8214ac6aef0759e112ff9ce8d2ef851b36969eb";
+		String firstLine = readLine(service.getCommitDiff(repo, sha), 0);
+		assertTrue("response is a diff", firstLine.startsWith("diff --git"));
+	}
+
+	/**
+	 * Test generating single-commit patch
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void singleCommitPatch() throws IOException {
+		CommitService service = new CommitService(client);
+		RepositoryId repo = RepositoryId.create("defunkt", "mustache");
+		String sha = "d8214ac6aef0759e112ff9ce8d2ef851b36969eb";
+		String fourthLine = readLine(service.getCommitPatch(repo, sha), 3);
+		assertTrue("response is a patch", fourthLine.contains("[PATCH "));
+	}
+
+	/**
+	 * Test generating multi-commit diff
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void multiCommitDiff() throws IOException {
+		CommitService service = new CommitService(client);
+		RepositoryId repo = RepositoryId.create("defunkt", "mustache");
+		String base = "d8214ac6aef0759e112ff9ce8d2ef851b36969eb";
+		String head = "7dd0a3773e7c65351cf3d75f17e9e91919bafa33";
+		String firstLine = readLine(service.compareDiff(repo, base, head), 0);
+		assertTrue("response is a diff", firstLine.startsWith("diff --git"));
+	}
+
+	/**
+	 * Test generating multi-commit patch
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void multiCommitPatch() throws IOException {
+		CommitService service = new CommitService(client);
+		RepositoryId repo = RepositoryId.create("defunkt", "mustache");
+		String base = "d8214ac6aef0759e112ff9ce8d2ef851b36969eb";
+		String head = "7dd0a3773e7c65351cf3d75f17e9e91919bafa33";
+		String fourthLine = readLine(service.comparePatch(repo, base, head), 3);
+		assertTrue("response is a patch", fourthLine.contains("[PATCH "));
+	}
+
+	private String readLine(InputStream inStream, int i) throws IOException {
+		try (final Scanner sc = new Scanner(inStream)) {
+			sc.useDelimiter("\\n");
+			for (; i > 0; i--) {
+			    sc.next();
+			}
+			return sc.next();
+		}
 	}
 }
