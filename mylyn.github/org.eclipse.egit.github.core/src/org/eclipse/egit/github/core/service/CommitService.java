@@ -21,6 +21,7 @@ import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_SIZE;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -165,20 +166,57 @@ public class CommitService extends GitHubService {
 	 */
 	public RepositoryCommit getCommit(IRepositoryIdProvider repository,
 			String sha) throws IOException {
+		GitHubRequest request = getCommitRequest(repository, sha);
+		request.setType(RepositoryCommit.class);
+		return (RepositoryCommit) client.get(request).getBody();
+	}
+
+	/**
+	 * Get diff for commit with given SHA-1 from given repository. It is the
+	 * responsibility of the calling method to close the returned stream.
+	 *
+	 * @param repository
+	 * @param sha
+	 * @return diff stream
+	 * @throws IOException
+	 */
+	public InputStream getCommitDiff(IRepositoryIdProvider repository,
+			String sha) throws IOException {
+		GitHubRequest request = getCommitRequest(repository, sha);
+		request.setResponseContentType(ACCEPT_DIFF);
+		return client.getStream(request);
+	}
+
+	/**
+	 * Get patch for commit with given SHA-1 from given repository. It is the
+	 * responsibility of the calling method to close the returned stream.
+	 *
+	 * @param repository
+	 * @param sha
+	 * @return patch stream
+	 * @throws IOException
+	 */
+	public InputStream getCommitPatch(IRepositoryIdProvider repository,
+			String sha) throws IOException {
+		GitHubRequest request = getCommitRequest(repository, sha);
+		request.setResponseContentType(ACCEPT_PATCH);
+		return client.getStream(request);
+	}
+
+	private GitHubRequest getCommitRequest(IRepositoryIdProvider repository,
+			String sha) {
 		String id = getId(repository);
-		if (sha == null)
+		if (sha == null) {
 			throw new IllegalArgumentException("Sha cannot be null"); //$NON-NLS-1$
-		if (sha.length() == 0)
+		} else if (sha.length() == 0) {
 			throw new IllegalArgumentException("Sha cannot be empty"); //$NON-NLS-1$
+		}
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
 		uri.append(SEGMENT_COMMITS);
 		uri.append('/').append(sha);
-		GitHubRequest request = createRequest();
-		request.setUri(uri);
-		request.setType(RepositoryCommit.class);
-		return (RepositoryCommit) client.get(request).getBody();
+		return createRequest().setUri(uri);
 	}
 
 	/**
@@ -343,25 +381,64 @@ public class CommitService extends GitHubService {
 	 */
 	public RepositoryCommitCompare compare(IRepositoryIdProvider repository,
 			String base, String head) throws IOException {
-		String id = getId(repository);
-		if (base == null)
-			throw new IllegalArgumentException("Base cannot be null"); //$NON-NLS-1$
-		if (base.length() == 0)
-			throw new IllegalArgumentException("Base cannot be empty"); //$NON-NLS-1$
+		GitHubRequest request = getCompareRequest(repository, base, head);
+		request.setType(RepositoryCommitCompare.class);
+		return (RepositoryCommitCompare) client.get(request).getBody();
+	}
 
-		if (head == null)
+	/**
+	 * Get diff between base and head commits. It is the responsibility of the
+	 * calling method to close the returned stream.
+	 *
+	 * @param repository
+	 * @param base
+	 * @param head
+	 * @return diff stream
+	 * @throws IOException
+	 */
+	public InputStream compareDiff(IRepositoryIdProvider repository,
+			String base, String head) throws IOException {
+		GitHubRequest request = getCompareRequest(repository, base, head);
+		request.setResponseContentType(ACCEPT_DIFF);
+		return client.getStream(request);
+	}
+
+	/**
+	 * Get patch between base and head commits. It is the responsibility of the
+	 * calling method to close the returned stream.
+	 *
+	 * @param repository
+	 * @param base
+	 * @param head
+	 * @return patch stream
+	 * @throws IOException
+	 */
+	public InputStream comparePatch(IRepositoryIdProvider repository,
+			String base, String head) throws IOException {
+		GitHubRequest request = getCompareRequest(repository, base, head);
+		request.setResponseContentType(ACCEPT_PATCH);
+		return client.getStream(request);
+	}
+
+	private GitHubRequest getCompareRequest(IRepositoryIdProvider repository,
+			String base, String head) {
+		String id = getId(repository);
+		if (base == null) {
+			throw new IllegalArgumentException("Base cannot be null"); //$NON-NLS-1$
+		} else if (base.length() == 0) {
+			throw new IllegalArgumentException("Base cannot be empty"); //$NON-NLS-1$
+		}
+		if (head == null) {
 			throw new IllegalArgumentException("Head cannot be null"); //$NON-NLS-1$
-		if (head.length() == 0)
+		} else if (head.length() == 0) {
 			throw new IllegalArgumentException("Head cannot be empty"); //$NON-NLS-1$
+		}
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
 		uri.append(SEGMENT_COMPARE);
 		uri.append('/').append(base).append("...").append(head); //$NON-NLS-1$
-		GitHubRequest request = createRequest();
-		request.setType(RepositoryCommitCompare.class);
-		request.setUri(uri);
-		return (RepositoryCommitCompare) client.get(request).getBody();
+		return createRequest().setUri(uri);
 	}
 
 	/**
