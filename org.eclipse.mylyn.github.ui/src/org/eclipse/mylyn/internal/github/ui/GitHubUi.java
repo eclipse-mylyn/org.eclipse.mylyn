@@ -13,11 +13,10 @@
 package org.eclipse.mylyn.internal.github.ui;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.file.Files;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -48,7 +47,7 @@ public class GitHubUi extends AbstractUIPlugin {
 
 	/**
 	 * Create status
-	 * 
+	 *
 	 * @param severity
 	 * @param message
 	 * @return status
@@ -59,7 +58,7 @@ public class GitHubUi extends AbstractUIPlugin {
 
 	/**
 	 * Create status
-	 * 
+	 *
 	 * @param severity
 	 * @param message
 	 * @param e
@@ -71,7 +70,7 @@ public class GitHubUi extends AbstractUIPlugin {
 
 	/**
 	 * Create error status from message
-	 * 
+	 *
 	 * @param message
 	 * @return status
 	 */
@@ -81,7 +80,7 @@ public class GitHubUi extends AbstractUIPlugin {
 
 	/**
 	 * Create error status from message and throwable
-	 * 
+	 *
 	 * @param message
 	 * @param t
 	 * @return status
@@ -92,7 +91,7 @@ public class GitHubUi extends AbstractUIPlugin {
 
 	/**
 	 * Create error status from throwable
-	 * 
+	 *
 	 * @param e
 	 * @return status
 	 */
@@ -103,7 +102,7 @@ public class GitHubUi extends AbstractUIPlugin {
 
 	/**
 	 * Log message and throwable as error
-	 * 
+	 *
 	 * @param message
 	 * @param t
 	 */
@@ -113,7 +112,7 @@ public class GitHubUi extends AbstractUIPlugin {
 
 	/**
 	 * Log throwable as error
-	 * 
+	 *
 	 * @param t
 	 */
 	public static void logError(Throwable t) {
@@ -124,7 +123,7 @@ public class GitHubUi extends AbstractUIPlugin {
 
 	/**
 	 * Get default activator
-	 * 
+	 *
 	 * @return plug-in
 	 */
 	public static GitHubUi getDefault() {
@@ -142,7 +141,7 @@ public class GitHubUi extends AbstractUIPlugin {
 
 	/**
 	 * Get avatar store
-	 * 
+	 *
 	 * @return avatar store
 	 */
 	public AvatarStore getStore() {
@@ -163,7 +162,7 @@ public class GitHubUi extends AbstractUIPlugin {
 
 	/**
 	 * Load avatars
-	 * 
+	 *
 	 * @param context
 	 */
 	protected void loadAvatars(BundleContext context) {
@@ -172,7 +171,7 @@ public class GitHubUi extends AbstractUIPlugin {
 		if (file.exists()) {
 			ObjectInputStream stream = null;
 			try {
-				stream = new ObjectInputStream(new FileInputStream(file));
+				stream = new ObjectInputStream(Files.newInputStream(file.toPath()));
 				store = (AvatarStore) stream.readObject();
 			} catch (IOException e) {
 				logError("Error reading avatar store", e); //$NON-NLS-1$
@@ -193,7 +192,7 @@ public class GitHubUi extends AbstractUIPlugin {
 
 	/**
 	 * Save avatars
-	 * 
+	 *
 	 * @param context
 	 */
 	protected void saveAvatars(BundleContext context) {
@@ -201,19 +200,10 @@ public class GitHubUi extends AbstractUIPlugin {
 		IPath location = Platform.getStateLocation(context.getBundle());
 		File file = location.append(STORE_NAME).toFile();
 
-		ObjectOutputStream stream = null;
-		try {
-			stream = new ObjectOutputStream(new FileOutputStream(file));
+		try (ObjectOutputStream stream = new ObjectOutputStream(Files.newOutputStream(file.toPath()))) {
 			stream.writeObject(this.store);
 		} catch (IOException e) {
 			logError("Error writing avatar store", e); //$NON-NLS-1$
-		} finally {
-			if (stream != null)
-				try {
-					stream.close();
-				} catch (IOException ignore) {
-					// Ignored
-				}
 		}
 	}
 
