@@ -16,13 +16,11 @@ import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS
 import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_FIRST;
 import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_SIZE;
 
-import com.google.gson.reflect.TypeToken;
-
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.nio.file.Files;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +33,8 @@ import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.client.PagedRequest;
 import org.eclipse.egit.github.core.util.MultiPartUtils;
+
+import com.google.gson.reflect.TypeToken;
 
 /**
  * Service for accessing, creating, and deleting repositories downloads.
@@ -309,7 +309,7 @@ public class DownloadService extends GitHubService {
 		if (file == null)
 			throw new IllegalArgumentException("File cannot be null"); //$NON-NLS-1$
 
-		return createDownload(repository, download, new FileInputStream(file),
+		return createDownload(repository, download, Files.newInputStream(file.toPath()),
 				file.length());
 	}
 }
