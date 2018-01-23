@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>epub.core</artifactId>
 		<groupId>org.eclipse.mylyn.docs</groupId>
-		<version>4.0.6</version>
+		<version>4.0.7-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 	
