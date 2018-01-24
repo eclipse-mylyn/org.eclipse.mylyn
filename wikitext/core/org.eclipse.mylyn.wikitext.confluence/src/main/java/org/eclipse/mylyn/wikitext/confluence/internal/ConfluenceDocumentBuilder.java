@@ -26,6 +26,7 @@ import org.eclipse.mylyn.wikitext.confluence.ConfluenceLanguage;
 import org.eclipse.mylyn.wikitext.confluence.internal.util.Colors;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.HtmlParser;
+import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.parser.builder.AbstractMarkupDocumentBuilder;
 
@@ -335,9 +336,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		case WARNING:
 			attributes.appendCssClass(type.name().toLowerCase());
 		case PARAGRAPH:
-			String attributesMarkup = computeAttributes(attributes);
-
-			return new ContentBlock(type, attributesMarkup, "", false, false, doubleNewlineDelimiterCount(), //$NON-NLS-1$
+			return new ContentBlock(type, "", "", false, false, doubleNewlineDelimiterCount(), //$NON-NLS-1$
 					doubleNewlineDelimiterCount());
 		case PREFORMATTED:
 			return new ContentBlock(type, "{noformat}", "{noformat}", false, false, doubleNewlineDelimiterCount(), //$NON-NLS-1$//$NON-NLS-2$
@@ -373,46 +372,45 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	@Override
 	protected Block computeSpan(SpanType type, Attributes attributes) {
 		Block block;
-		String spanAttributes = computeAttributes(attributes);
 		switch (type) {
 		case BOLD:
-			block = new ContentBlock("*" + spanAttributes, "*", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("*", "*", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case CITATION:
-			block = new ContentBlock("??" + spanAttributes, "??", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("??", "??", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case DELETED:
-			block = new ContentBlock("-" + spanAttributes, "-", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("-", "-", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case MARK:
 		case EMPHASIS:
 		case ITALIC:
-			block = new ContentBlock("_" + spanAttributes, "_", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("_", "_", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case INSERTED:
-			block = new ContentBlock("+" + spanAttributes, "+", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("+", "+", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case CODE:
-			block = new ContentBlock("@" + spanAttributes, "@", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("@", "@", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case LINK:
 			if (attributes instanceof LinkAttributes) {
 				block = new LinkBlock((LinkAttributes) attributes);
 			} else {
-				block = new ContentBlock("%" + spanAttributes, "%", true, true, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
+				block = new ContentBlock("%", "%", true, true, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			}
 			break;
 		case MONOSPACE:
 			block = new ContentBlock("{{", "}}", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case STRONG:
-			block = new ContentBlock("*" + spanAttributes, "*", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("*", "*", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case SUPERSCRIPT:
-			block = new ContentBlock("^" + spanAttributes, "^", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("^", "^", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case SUBSCRIPT:
-			block = new ContentBlock("~" + spanAttributes, "~", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("~", "~", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case UNDERLINED:
 			block = new ContentBlock("+", "+", true, false, 0, 0); //$NON-NLS-1$//$NON-NLS-2$
@@ -438,12 +436,6 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			}
 		}
 		return block;
-	}
-
-	private String computeAttributes(Attributes attributes) {
-		String attributeMarkup = ""; //$NON-NLS-1$
-
-		return attributeMarkup;
 	}
 
 	@Override
@@ -506,8 +498,8 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			assertOpenBlock();
 			try {
 				currentBlock.write('!');
-				writeAttributes(attributes);
 				currentBlock.write(url);
+				writeImageAttributes(attributes);
 				currentBlock.write('!');
 			} catch (IOException e) {
 				throw new RuntimeException(e);
@@ -531,8 +523,8 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		assertOpenBlock();
 		try {
 			currentBlock.write('!');
-			writeAttributes(imageAttributes);
 			currentBlock.write(imageUrl);
+			writeImageAttributes(imageAttributes);
 			currentBlock.write('!');
 			currentBlock.write(':');
 			currentBlock.write(href);
@@ -585,18 +577,28 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		}
 	}
 
-	private void writeAttributes(Attributes attributes) {
-
-		try {
-			currentBlock.write(computeAttributes(attributes));
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
 	@Override
 	protected Block createImplicitParagraphBlock() {
 		return new ImplicitParagraphBlock();
 	}
 
+	private void writeImageAttributes(Attributes attributes) throws IOException {
+		if (attributes instanceof ImageAttributes) {
+			ImageAttributes imageAttributes = (ImageAttributes) attributes;
+			String attributeMarkup = "";
+			if (!Strings.isNullOrEmpty(imageAttributes.getAlt())) {
+				attributeMarkup = "alt=\"" + imageAttributes.getAlt() + "\"";
+			}
+			if (!Strings.isNullOrEmpty(imageAttributes.getTitle())) {
+				if (!attributeMarkup.isEmpty()) {
+					attributeMarkup += ",";
+				}
+				attributeMarkup += "title=\"" + imageAttributes.getTitle() + "\"";
+			}
+			if (!attributeMarkup.isEmpty()) {
+				currentBlock.write('|');
+				currentBlock.write(attributeMarkup);
+			}
+		}
+	}
 }

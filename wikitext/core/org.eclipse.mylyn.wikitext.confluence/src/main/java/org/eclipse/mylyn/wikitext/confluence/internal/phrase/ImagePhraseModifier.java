@@ -57,6 +57,8 @@ public class ImagePhraseModifier extends PatternBasedElement {
 					public void setOption(String key, String value) {
 						if ("alt".equalsIgnoreCase(key)) { //$NON-NLS-1$
 							attributes.setAlt(value);
+						} else if ("title".equalsIgnoreCase(key)) { //$NON-NLS-1$
+							attributes.setTitle(value);
 						} else if ("align".equalsIgnoreCase(key)) { //$NON-NLS-1$
 							if ("middle".equalsIgnoreCase(value)) { //$NON-NLS-1$
 								attributes.setAlign(Align.Middle);

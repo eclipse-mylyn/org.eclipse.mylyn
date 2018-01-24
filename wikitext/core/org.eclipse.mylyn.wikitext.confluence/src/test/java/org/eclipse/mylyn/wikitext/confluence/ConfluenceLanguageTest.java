@@ -631,6 +631,20 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	}
 
 	@Test
+	public void testImageWithAttributesTitle() {
+		assertMarkup(
+				"<p>an <img title=\"some title text\" alt=\"some title text\" border=\"0\" src=\"image.png\"/> image</p>",
+				"an !image.png|title= some title text! image");
+	}
+
+	@Test
+	public void testImageWithAttributesAltAndTitle() {
+		assertMarkup(
+				"<p>an <img alt=\"alt text here\" title=\"some title text\" border=\"0\" src=\"image.png\"/> image</p>",
+				"an !image.png|alt=\"alt text here\",title= some title text! image");
+	}
+
+	@Test
 	public void testImageWithAttributesBorder() {
 		String html = parser.parseToHtml("an !image.png|border=5! image");
 

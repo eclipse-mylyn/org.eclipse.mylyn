@@ -1193,6 +1193,52 @@ public class ConfluenceDocumentBuilderTest {
 	}
 
 	@Test
+	public void imageWithAlt() {
+		builder.beginDocument();
+		builder.characters("a ");
+		ImageAttributes attributes = new ImageAttributes();
+		attributes.setAlt("a value");
+		builder.image(attributes, "fooImage.png");
+		builder.characters(" test");
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		assertEquals("a !fooImage.png|alt=\"a value\"! test\n\n", markup);
+	}
+
+	@Test
+	public void imageWithTitle() {
+		builder.beginDocument();
+		builder.characters("a ");
+		ImageAttributes attributes = new ImageAttributes();
+		attributes.setTitle("a value");
+		builder.image(attributes, "fooImage.png");
+		builder.characters(" test");
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		assertEquals("a !fooImage.png|title=\"a value\"! test\n\n", markup);
+	}
+
+	@Test
+	public void imageWithAltAndTitle() {
+		builder.beginDocument();
+		builder.characters("a ");
+		ImageAttributes attributes = new ImageAttributes();
+		attributes.setAlt("first value");
+		attributes.setTitle("second value");
+		builder.image(attributes, "fooImage.png");
+		builder.characters(" test");
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		assertEquals("a !fooImage.png|alt=\"first value\",title=\"second value\"! test\n\n", markup);
+	}
+
+	@Test
 	public void imageNoUrl() {
 		builder.beginDocument();
 		builder.characters("a ");
