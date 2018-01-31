@@ -100,6 +100,11 @@ public abstract class AsciiDocBlock extends Block {
 			processBlockEnd();
 		}
 		super.setClosed(closed);
+		resetLastTitle();
+	}
+
+	protected void resetLastTitle() {
+		getAsciiDocState().setLastTitle(null);
 	}
 
 	protected abstract void processBlockContent(String line);

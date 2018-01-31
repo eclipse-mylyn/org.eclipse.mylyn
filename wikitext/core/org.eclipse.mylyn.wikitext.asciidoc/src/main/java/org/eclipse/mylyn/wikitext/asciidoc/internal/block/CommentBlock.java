@@ -39,4 +39,8 @@ public class CommentBlock extends AsciiDocBlock {
 		// do nothing for comments
 	}
 
+	@Override
+	protected void resetLastTitle() {
+		// do nothing for comments
+	}
 }

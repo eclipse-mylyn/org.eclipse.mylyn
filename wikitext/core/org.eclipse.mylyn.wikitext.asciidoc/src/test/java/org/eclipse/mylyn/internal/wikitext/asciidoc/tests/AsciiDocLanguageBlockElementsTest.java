@@ -623,4 +623,53 @@ public class AsciiDocLanguageBlockElementsTest extends AsciiDocLanguageTestBase 
 						+ "</div>";
 		assertEquals(expectedHtml, html);
 	}
+
+	@Test
+	public void testLastTileReset() {
+		String html = parseToHtml("" //
+				+ ".Title line\n" //
+				+ "----\n" //
+				+ "This block has a title\n" //
+				+ "----\n" //
+				+ "" //
+				+ "----\n" //
+				+ "A block without title\n" //
+				+ "----\n");
+		assertEquals("<div class=\"listingblock\">" //
+				+ "<div class=\"title\">Title line</div>" //
+				+ "<div class=\"content\"><pre class=\"nowrap\">" //
+				+ "<code class=\"nowrap\">This block has a title<br/></code>" //
+				+ "</pre></div>" //
+				+ "</div>" //
+				+ "<div class=\"listingblock\">" //
+				+ "<div class=\"content\">" //
+				+ "<pre class=\"nowrap\">" //
+				+ "<code class=\"nowrap\">A block without title<br/></code></pre></div></div>", html);
+	}
+
+	@Test
+	public void testLastTileResetWithCommentBlock() {
+		String html = parseToHtml("" //
+				+ ".Title line\n" //
+				+ "////\n" //
+				+ "comment blocks do not reset the title\n" //
+				+ "////\n" //
+				+ "----\n" //
+				+ "This block has a title\n" //
+				+ "----\n" //
+				+ "" //
+				+ "----\n" //
+				+ "A block without title\n" //
+				+ "----\n");
+		assertEquals("<div class=\"listingblock\">" //
+				+ "<div class=\"title\">Title line</div>" //
+				+ "<div class=\"content\"><pre class=\"nowrap\">" //
+				+ "<code class=\"nowrap\">This block has a title<br/></code>" //
+				+ "</pre></div>" //
+				+ "</div>" //
+				+ "<div class=\"listingblock\">" //
+				+ "<div class=\"content\">" //
+				+ "<pre class=\"nowrap\">" //
+				+ "<code class=\"nowrap\">A block without title<br/></code></pre></div></div>", html);
+	}
 }
