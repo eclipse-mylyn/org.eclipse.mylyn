@@ -1422,6 +1422,26 @@ public class ConfluenceDocumentBuilderTest {
 	}
 
 	@Test
+	public void paragraphWithKnownEntityReference() {
+		assertParagraphWithEntityReference("–\n\n", "#8211");
+	}
+
+	@Test
+	public void paragraphWithUnknownEntityReference() {
+		assertParagraphWithEntityReference("&unknown;\n\n", "unknown");
+	}
+
+	@Test
+	public void parapgraphWithUnknownEntityReferenceHavingEscapableChars() {
+		assertParagraphWithEntityReference("&#unknown;\n\n", "#unknown");
+	}
+
+	@Test
+	public void parapgraphWithEscapableChars() {
+		assertParagraphWithContent("&\\#unknown\n\n", "&#unknown");
+	}
+
+	@Test
 	public void italicBoldItalic() {
 		builder.beginDocument();
 		builder.beginSpan(SpanType.ITALIC, new Attributes());
@@ -1519,6 +1539,18 @@ public class ConfluenceDocumentBuilderTest {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
 		builder.characters(characters);
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		assertEquals(expected, markup);
+	}
+
+	private void assertParagraphWithEntityReference(String expected, String characters) {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.entityReference(characters);
 		builder.endBlock();
 		builder.endDocument();
 

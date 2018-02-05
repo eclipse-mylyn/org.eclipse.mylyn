@@ -29,6 +29,7 @@ import org.eclipse.mylyn.wikitext.parser.HtmlParser;
 import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.parser.builder.AbstractMarkupDocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.builder.EntityReferences;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Strings;
@@ -483,10 +484,14 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		assertOpenBlock();
 		String literal = entityToLiteral.get(entity);
 		if (literal == null) {
-			literal = "&" + entity + ";"; //$NON-NLS-1$//$NON-NLS-2$
+			literal = EntityReferences.instance().equivalentString(entity);
+			if (literal == null) {
+				literal = "&" + entity + ";"; //$NON-NLS-1$//$NON-NLS-2$
+			}
+
 		}
 		try {
-			currentBlock.write(literal);
+			super.emitContent(literal);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
