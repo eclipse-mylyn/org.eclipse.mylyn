@@ -284,7 +284,7 @@ public abstract class AbstractMarkupLanguage extends MarkupLanguage {
 							if (nestedBlocks != null && !nestedBlocks.isEmpty()) {
 								Block nestedParent = nestedBlocks.peek();
 								if (nestedParent.canResume(line, lineOffset)) {
-									currentBlock = nestedParent;
+									currentBlock = nestedBlocks.pop();
 								}
 							}
 							if (currentBlock == null) {

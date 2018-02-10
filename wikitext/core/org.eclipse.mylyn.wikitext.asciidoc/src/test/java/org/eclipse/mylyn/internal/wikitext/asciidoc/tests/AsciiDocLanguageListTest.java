@@ -346,7 +346,11 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "----" + BR //
 				+ "some code" + BR //
 				+ "----" + BR //
-				+ "* other" + BR); //
+				+ "* other" + BR + "+" + BR //
+				+ "----" + BR //
+				+ "other code" + BR //
+				+ "----" + BR //
+		); //
 		assertEquals("testListBreak", "" //
 				+ "<ul>" //
 				+ "<li>lorem"
@@ -354,7 +358,49 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "some code<br/>" //
 				+ "</code></pre></div></div>" //
 				+ "</li>" //
-				+ "<li>other</li>" //
+				+ "<li>other" //
+				+ "<div class=\"listingblock\"><div class=\"content\"><pre class=\"nowrap\"><code class=\"nowrap\">" //
+				+ "other code<br/>" //
+				+ "</code></pre></div></div>" //
+				+ "</li>" //
+				+ "</ul>" //
+				, html);
+	}
+
+	@Test
+	public void testListWithContinuationAndNestedBlocks() {
+		String html = parseToHtml("* item 1" + BR //
+				+ "+" + BR //
+				+ "----" + BR //
+				+ "code block 1" + BR //
+				+ "----" + BR //
+				+ "+" + BR //
+				+ "|===" + BR //
+				+ "|cell 1|cell 2" + BR //
+				+ "|cell 3|cell 4" + BR //
+				+ "|===" + BR //
+				+ "* item 2" + BR + "+" + BR //
+				+ "----" + BR //
+				+ "code block 2" + BR //
+				+ "----" + BR //
+		); //
+		assertEquals("testListBreak", "" //
+				+ "<ul>" //
+				+ "<li>item 1"
+				+ "<div class=\"listingblock\"><div class=\"content\"><pre class=\"nowrap\"><code class=\"nowrap\">" //
+				+ "code block 1<br/>" //
+				+ "</code></pre></div></div>" //
+				+ "<table><tr>" //
+				+ "<td>cell 1</td><td>cell 2</td>" //
+				+ "</tr><tr>" //
+				+ "<td>cell 3</td><td>cell 4</td>" //
+				+ "</tr></table>" //
+				+ "</li>" //
+				+ "<li>item 2" //
+				+ "<div class=\"listingblock\"><div class=\"content\"><pre class=\"nowrap\"><code class=\"nowrap\">" //
+				+ "code block 2<br/>" //
+				+ "</code></pre></div></div>" //
+				+ "</li>" //
 				+ "</ul>" //
 				, html);
 	}

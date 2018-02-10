@@ -282,6 +282,7 @@ public class ListBlock extends Block {
 	@Override
 	public int findCloseOffset(String line, int lineOffset) {
 		if (line.isEmpty() || isListContinuation(line)) {
+			listContinuation = isListContinuation(line);
 			return 0;
 		}
 		return -1;
@@ -289,7 +290,11 @@ public class ListBlock extends Block {
 
 	@Override
 	public boolean canResume(String line, int lineOffset) {
-		return listContinuation && correspondsToListLine(line, lineOffset);
+		boolean resume = listContinuation && (correspondsToListLine(line, lineOffset) || line.isEmpty());
+		if (resume) {
+			listContinuation = false;
+		}
+		return resume;
 	}
 
 	private static class ListState {
