@@ -19,9 +19,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.asciidoc.internal.AsciiDocContentState;
+import org.eclipse.mylyn.wikitext.asciidoc.internal.util.ReadAheadDispatcher;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.ListAttributes;
+import org.eclipse.mylyn.wikitext.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.parser.markup.Block;
 
 import com.google.common.collect.ImmutableList;
@@ -62,6 +64,10 @@ public class ListBlock extends Block {
 	private boolean blankSeparator;
 
 	private boolean listContinuation;
+
+	private boolean nestingBegin;
+
+	private boolean nestedBlockInterruptible;
 
 	@Override
 	public boolean canStart(String line, int lineOffset) {
@@ -276,23 +282,38 @@ public class ListBlock extends Block {
 
 	@Override
 	public boolean beginNesting() {
-		return listContinuation;
+		nestingBegin = listContinuation;
+		return nestingBegin; // will start nesting after this
 	}
 
 	@Override
 	public int findCloseOffset(String line, int lineOffset) {
-		if (line.isEmpty() || isListContinuation(line)) {
-			listContinuation = isListContinuation(line);
-			return 0;
+		if (listContinuation) {
+			if (nestingBegin) {
+				AbstractMarkupLanguage language = (AbstractMarkupLanguage) getParser().getMarkupLanguage();
+				Block block = language.startBlock(line, lineOffset);
+				nestedBlockInterruptible = isInterruptibleNestedBlock(block);
+				nestingBegin = false;
+			}
+			if (nestedBlockInterruptible && (line.isEmpty() || isListContinuation(line))) {
+				listContinuation = isListContinuation(line);
+				return 0;
+			}
 		}
 		return -1;
 	}
 
+	private boolean isInterruptibleNestedBlock(Block block) {
+		return block == null || (block instanceof ReadAheadDispatcher);
+	}
+
 	@Override
 	public boolean canResume(String line, int lineOffset) {
-		boolean resume = listContinuation && (correspondsToListLine(line, lineOffset) || line.isEmpty());
+		boolean resume = listContinuation
+				&& (correspondsToListLine(line, lineOffset) || line.isEmpty() || isListContinuation(line));
 		if (resume) {
 			listContinuation = false;
+			nestingBegin = false;
 		}
 		return resume;
 	}

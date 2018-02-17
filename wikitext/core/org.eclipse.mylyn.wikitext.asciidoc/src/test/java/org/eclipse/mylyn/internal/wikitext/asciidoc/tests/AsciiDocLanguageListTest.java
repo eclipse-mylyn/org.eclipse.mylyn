@@ -369,20 +369,21 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 
 	@Test
 	public void testListWithContinuationAndNestedBlocks() {
-		String html = parseToHtml("* item 1" + BR //
-				+ "+" + BR //
-				+ "----" + BR //
-				+ "code block 1" + BR //
-				+ "----" + BR //
-				+ "+" + BR //
-				+ "|===" + BR //
-				+ "|cell 1|cell 2" + BR //
-				+ "|cell 3|cell 4" + BR //
-				+ "|===" + BR //
-				+ "* item 2" + BR + "+" + BR //
-				+ "----" + BR //
-				+ "code block 2" + BR //
-				+ "----" + BR //
+		String html = parseToHtml("* item 1\n" //
+				+ "+\n" //
+				+ "----\n" //
+				+ "code block 1\n" //
+				+ "----\n" //
+				+ "+\n" //
+				+ "|===\n" //
+				+ "|cell 1|cell 2\n" //
+				+ "|cell 3|cell 4\n" //
+				+ "|===\n" //
+				+ "* item 2\n" //
+				+ "+\n" //
+				+ "----\n" //
+				+ "code block 2\n" //
+				+ "----\n" //
 		); //
 		assertEquals("testListBreak", "" //
 				+ "<ul>" //
@@ -402,6 +403,74 @@ public class AsciiDocLanguageListTest extends AsciiDocLanguageTestBase {
 				+ "</code></pre></div></div>" //
 				+ "</li>" //
 				+ "</ul>" //
+				, html);
+	}
+
+	@Test
+	public void testListWithNestedCodeBlockContainingEmptyLine() {
+		String html = parseToHtml("* item 1\n" //
+				+ "+\n" //
+				+ "----\n" //
+				+ "code block with empty line\n" //
+				+ "\n" //
+				+ "----\n" //
+				+ "\n" //
+				+ "end of list" //
+		); //
+		assertEquals("testListBreak", "" //
+				+ "<ul>" //
+				+ "<li>item 1"
+				+ "<div class=\"listingblock\"><div class=\"content\"><pre class=\"nowrap\"><code class=\"nowrap\">" //
+				+ "code block with empty line<br/><br/>" //
+				+ "</code></pre></div></div>" //
+				+ "</li>" //
+				+ "</ul>" //
+				+ "<p>end of list</p>\n" //
+				, html);
+	}
+
+	@Test
+	public void testListWithNestedCodeBlockContainingContinuation() {
+		String html = parseToHtml("* item 1\n" //
+				+ "+\n" //
+				+ "----\n" //
+				+ "code block with continuation\n" //
+				+ "+\n" //
+				+ "----\n" //
+				+ "\n" //
+				+ "end of list" //
+		); //
+		assertEquals("testListBreak", "" //
+				+ "<ul>" //
+				+ "<li>item 1"
+				+ "<div class=\"listingblock\"><div class=\"content\"><pre class=\"nowrap\"><code class=\"nowrap\">" //
+				+ "code block with continuation<br/>" //
+				+ "+<br/>" //
+				+ "</code></pre></div></div>" //
+				+ "</li>" //
+				+ "</ul>" //
+				+ "<p>end of list</p>\n" //
+				, html);
+	}
+
+	@Test
+	public void testListWithNestedTableContainingEmptyLine() {
+		String html = parseToHtml("* item 1\n" //
+				+ "+\n" //
+				+ "|===\n" //
+				+ "|one | two\n" //
+				+ "\n" //
+				+ "|===\n" //
+				+ "\n" //
+				+ "end of list" //
+		); //
+		assertEquals("testListBreak", "" //
+				+ "<ul>" //
+				+ "<li>item 1" //
+				+ "<table><tr><td>one</td><td>two</td></tr></table>" //
+				+ "</li>" //
+				+ "</ul>" //
+				+ "<p>end of list</p>\n" //
 				, html);
 	}
 
