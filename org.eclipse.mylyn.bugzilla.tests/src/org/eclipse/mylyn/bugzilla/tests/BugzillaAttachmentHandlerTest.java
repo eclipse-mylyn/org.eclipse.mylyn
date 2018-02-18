@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.bugzilla.tests;
 
+import static org.junit.Assume.assumeTrue;
+
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -305,6 +307,9 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 	}
 
 	public void testAttachmentWithUnicode() throws Exception {
+		String osName = System.getProperty("os.name").toLowerCase();
+		assumeTrue(!osName.startsWith("mac os x"));
+		// macos X with APFS can not handle this
 		testAttachmentWithSpecialCharacters(
 				"\u00E7\u00F1\u00A5\u20AC\u00A3\u00BD\u00BC\u03B2\u03B8\u53F0\u5317\u3096\u3097\uFF73");
 	}

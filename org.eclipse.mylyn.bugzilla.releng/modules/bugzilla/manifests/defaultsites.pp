@@ -23,59 +23,47 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
   
   /* Sites */
 
-  bugzilla::site { "bugzilla-4.0.18":
-    major   => "4",
-    minor   => "0",
-    micro   => "18",
-  }
-
-  bugzilla::site { "bugzilla-4.2.16":
-    major   => "4",
-    minor   => "2",
-    micro   => "16",
-  }
-
-  bugzilla::site { "bugzilla-4.4.12-bugaliases":
+  bugzilla::site { "bugzilla-4.4.13-bugaliases":
     major         => "4",
     minor         => "4",
-    micro         => "12",
+    micro         => "13",
     usebugaliases => true,
   }
 
-  bugzilla::site { "bugzilla-4.4.12":
+  bugzilla::site { "bugzilla-4.4.13":
     major      => "4",
     minor      => "4",
-    micro      => "12",
+    micro      => "13",
     envdefault => true,
   }
 
-  bugzilla::site { "bugzilla-4.4.12-custom-wf":
+  bugzilla::site { "bugzilla-4.4.13-custom-wf":
     major       => "4",
     minor       => "4",
-    micro       => "12",
+    micro       => "13",
     custom_wf   => true,
   }
 
-  bugzilla::site { "bugzilla-4.4.12-custom-wf-and-status":
+  bugzilla::site { "bugzilla-4.4.13-custom-wf-and-status":
     major                => "4",
     minor                => "4",
-    micro                => "12",
+    micro                => "13",
     custom_wf_and_status => true,
   }
 
-  bugzilla::site { "bugzilla-5.0.3":
+  bugzilla::site { "bugzilla-5.0.4":
     major       => "5",
     minor       => "0",
-    micro       => "3",
+    micro       => "4",
   }
 
   bugzilla::site { "bugzilla-master":
     major       => "5",
     minor       => "1",
-    micro       => "1",
+    micro       => "2",
     branch      => "master",
     branchTag   => "HEAD",
-    envversion  => "5.1.1+",
+    envversion  => "5.1.2+",
     envinfo     => "Master",
   }
 
@@ -83,10 +71,10 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
  * REST sites
  *******************************************************************************/
 
-  bugzilla::site { "bugzilla-rest-5.0.3":
+  bugzilla::site { "bugzilla-rest-5.0.4":
     major           => "5",
     minor           => "0",
-    micro           => "3",
+    micro           => "4",
     envtype         => "bugzillaREST",
     rest_enabled    => true,
     envdefault_rest => true,
@@ -96,20 +84,20 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
   bugzilla::site { "bugzilla-rest-master":
     major           => "5",
     minor           => "1",
-    micro           => "1",
+    micro           => "2",
     branch          => "master",
     branchTag       => "HEAD",
-    envversion      => "5.1.1+",
+    envversion      => "5.1.2+",
     envinfo         => "Master",
     envtype         => "bugzillaREST",
     rest_enabled    => true,
     testdataVersion => "Version2",
   }
 
-  bugzilla::site { "bugzilla-rest-apikey-5.0.3":
+  bugzilla::site { "bugzilla-rest-apikey-5.0.4":
     major           => "5",
     minor           => "0",
-    micro           => "3",
+    micro           => "4",
     envtype         => "bugzillaREST",
     rest_enabled    => true,
     testdataVersion => "Version1",
@@ -119,10 +107,10 @@ define bugzilla::defaultsites($base = $bugzilla::bugzillaBase, $userOwner = $bug
   bugzilla::site { "bugzilla-rest-apikey-master":
     major           => "5",
     minor           => "1",
-    micro           => "1",
+    micro           => "2",
     branch          => "master",
     branchTag       => "HEAD",
-    envversion      => "5.1.1+",
+    envversion      => "5.1.2+",
     envinfo         => "Master, APIKEY enabled",
     envtype         => "bugzillaREST",
     rest_enabled    => true,

@@ -116,19 +116,18 @@ define bugzilla::site (
 
   if $branch == "master" {
     if $branchTagInternal == "HEAD" {
-      exec { "master master git fetch $bugzillaDir":
-        command => "git fetch",
+      exec { "master master git pull $bugzillaDir":
+        command => "git pull",
         onlyif    => "/usr/bin/test -d $base/$bugzillaDir",
         cwd     => "$base/$bugzillaDir",
-        user => "$userOwner",
         timeout => 360,
         logoutput => true,
         require   => Exec["prepare bugzilla"],
+        notify => Exec["end extract bugzilla $bugzillaDir"],
       }
       exec { "master master git clone $bugzillaDir":
         command => "git clone https://github.com/bugzilla/bugzilla $base/$bugzillaDir",
         cwd     => "$base",
-        user => "$userOwner",
         timeout => 360,
         creates => "$base/$bugzillaDir",
         require   => Exec["prepare bugzilla"],
@@ -138,7 +137,6 @@ define bugzilla::site (
       exec { "master $branchTagInternal git clone $bugzillaDir":
         command => "git clone -b $branch https://github.com/bugzilla/bugzilla $base/$bugzillaDir",
         cwd     => "$base",
-        user => "$userOwner",
         timeout => 360,
         creates => "$base/$bugzillaDir",
         require   => Exec["prepare bugzilla"],
@@ -146,7 +144,6 @@ define bugzilla::site (
       exec { "master $branchTagInternal git checkout $bugzillaDir":
         command => "git checkout $branchTagInternal",
         cwd     => "$base/$bugzillaDir",
-        user => "$userOwner",
         logoutput => true,
         timeout => 360,
         require   => Exec["master $branchTagInternal git clone $bugzillaDir"],
@@ -154,11 +151,10 @@ define bugzilla::site (
       }
     }
   } else {
-    exec { "$branch $branchTagInternal git fetch $bugzillaDir":
-      command => "git fetch",
+    exec { "$branch $branchTagInternal git pull $bugzillaDir":
+      command => "git reset --hard $branchTagInternal;git pull origin $branchTagInternal",
       onlyif    => "/usr/bin/test -d $base/$bugzillaDir",
       cwd     => "$base/$bugzillaDir",
-      user => "$userOwner",
       timeout => 360,
       logoutput => true,
       require   => Exec["prepare bugzilla"],
@@ -168,27 +164,10 @@ define bugzilla::site (
     exec { "$branch $branchTagInternal git clone $bugzillaDir":
       command => "git clone -b $branch https://github.com/bugzilla/bugzilla $base/$bugzillaDir",
       cwd     => "$base",
-      user => "$userOwner",
       timeout => 360,
       creates => "$base/$bugzillaDir",
-      require   => Exec["$branch $branchTagInternal git fetch $bugzillaDir"],
-    }
-    if $branchTagInternal == "HEAD" {
-      exec { "$branch $branchTagInternal dummy git checkout $bugzillaDir":
-        command => "echo '$branch $branchTagInternal dummy git checkout $bugzillaDir'",
-        logoutput => true,
-        require   => Exec["$branch $branchTagInternal git clone $bugzillaDir"],
-        notify => Exec["end extract bugzilla $bugzillaDir"],
-      }
-    } else {
-      exec { "$branch $branchTagInternal git checkout $bugzillaDir":
-        command => "git checkout $branchTagInternal",
-        cwd     => "$base/$bugzillaDir",
-        user => "$userOwner",
-        timeout => 360,
-        require   => Exec["$branch $branchTagInternal git clone $bugzillaDir"],
-        notify => Exec["end extract bugzilla $bugzillaDir"],
-      }
+      require   => Exec["$branch $branchTagInternal git pull $bugzillaDir"],
+      notify => Exec["end extract bugzilla $bugzillaDir"],
     }
   }
 
@@ -209,7 +188,6 @@ define bugzilla::site (
     command => "$base/$bugzillaDir/installPerlModules.sh  >$base/$bugzillaDir/CGI.out",
     cwd     => "$base/$bugzillaDir",
     creates => "$base/$bugzillaDir/CGI.out",
-    user => "$userOwner",
     timeout => 360,
     require   => File["$base/$bugzillaDir/installPerlModules.sh"]
   }
@@ -280,7 +258,6 @@ define bugzilla::site (
     command => "$base/$bugzillaDir/checksetup.pl $base/$bugzillaDir/answers || exit 0",
     cwd     => "$base/$bugzillaDir",
     creates => "$base/$bugzillaDir/localconfig",
-    user => "$userOwner",
     logoutput => true,
     require => [
       Exec["mysql-createdb-$bugzillaDir"],
