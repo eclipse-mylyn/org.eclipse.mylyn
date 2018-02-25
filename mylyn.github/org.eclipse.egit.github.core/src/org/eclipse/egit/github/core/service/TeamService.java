@@ -1,5 +1,5 @@
 /******************************************************************************
- *  Copyright (c) 2011, 2014 GitHub Inc. and others
+ *  Copyright (c) 2011, 2018 GitHub Inc. and others
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
@@ -11,6 +11,8 @@
  *    Kevin Sawicki (GitHub Inc.) - initial API and implementation
  *    Michael Mathews (Arizona Board of Regents) - (Bug: 447419)
  *    			 Team Membership API implementation
+ *    Singaram Subramanian (Capital One) - (Bug: 529850)
+ *    			 User teams across GitHub organizations implementation
  *****************************************************************************/
 package org.eclipse.egit.github.core.service;
 
@@ -19,8 +21,7 @@ import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_MEMBE
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_ORGS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_TEAMS;
-
-import com.google.gson.reflect.TypeToken;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_USER;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -35,6 +36,8 @@ import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.PagedRequest;
+
+import com.google.gson.reflect.TypeToken;
 
 /**
  * Service class for working with organization teams
@@ -380,4 +383,19 @@ public class TeamService extends GitHubService {
 		}.getType());
 		return getAll(request);
 	}
+
+	/**
+	 * Get teams of the current user across all of the GitHub organizations
+	 *
+	 * @return list of teams
+	 * @throws IOException
+	 */
+	public List<Team> getTeams() throws IOException {
+		StringBuilder uri = new StringBuilder(SEGMENT_USER).append(SEGMENT_TEAMS);
+		PagedRequest<Team> request = createPagedRequest();
+		request.setUri(uri);
+		request.setType(new TypeToken<List<Team>>(){}.getType());
+		return getAll(request);
+	}
+
 }
