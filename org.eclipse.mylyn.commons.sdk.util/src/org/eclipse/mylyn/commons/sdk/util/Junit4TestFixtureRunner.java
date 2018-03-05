@@ -18,6 +18,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -188,9 +189,17 @@ public class Junit4TestFixtureRunner extends Suite {
 			TestConfiguration defFixture = TestConfiguration.getDefault();
 			List<AbstractTestFixture> parametersList = (List<AbstractTestFixture>) defFixture.discover(fixtureClass,
 					fixtureType);
+			ArrayList<AbstractTestFixture> sortedParametersList = new ArrayList<AbstractTestFixture>(parametersList);
+			sortedParametersList.sort(new Comparator<AbstractTestFixture>() {
+
+				@Override
+				public int compare(AbstractTestFixture o1, AbstractTestFixture o2) {
+					return o1.getInfo().compareTo(o2.getInfo());
+				}
+			});
 			List<AbstractTestFixture> fixturesToExecute = new ArrayList<AbstractTestFixture>();
 			if (restrictProperty != null) {
-				for (AbstractTestFixture abstractFixture : parametersList) {
+				for (AbstractTestFixture abstractFixture : sortedParametersList) {
 					String tempProperty = abstractFixture.getProperty(restrictProperty);
 					if (tempProperty != null && tempProperty.equals(restrictValue)) {
 						fixturesToExecute.add(abstractFixture);
@@ -201,9 +210,9 @@ public class Junit4TestFixtureRunner extends Suite {
 						runners.add(new TestClassRunnerForFixture(getTestClass().getJavaClass(), fixturesToExecute, i));
 					}
 				}
-			} else if (parametersList.size() > 0) {
-				for (int i = 0; i < parametersList.size(); i++) {
-					runners.add(new TestClassRunnerForFixture(getTestClass().getJavaClass(), parametersList, i));
+			} else if (sortedParametersList.size() > 0) {
+				for (int i = 0; i < sortedParametersList.size(); i++) {
+					runners.add(new TestClassRunnerForFixture(getTestClass().getJavaClass(), sortedParametersList, i));
 				}
 			}
 		} else {
