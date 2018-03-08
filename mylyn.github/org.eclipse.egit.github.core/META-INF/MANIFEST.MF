@@ -4,7 +4,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Automatic-Module-Name: org.eclipse.egit.github.cores
 Bundle-SymbolicName: org.eclipse.egit.github.core
-Bundle-Version: 4.11.0.qualifier
+Bundle-Version: 4.11.0.201803080745-r
 Bundle-Vendor: %providerName
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: com.google.gson;version="[1.6.0,3.0.0)",
