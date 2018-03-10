@@ -40,7 +40,6 @@ public class UserTest extends LiveTest {
 		User user = service.getUser();
 		assertNotNull(user);
 		assertEquals(client.getUser(), user.getLogin());
-		assertNotNull(user.getGravatarId());
 		assertNotNull(user.getAvatarUrl());
 		assertNotNull(user.getCreatedAt());
 		assertNotNull(user.getPlan());
@@ -59,7 +58,6 @@ public class UserTest extends LiveTest {
 		User user = service.getUser(client.getUser());
 		assertNotNull(user);
 		assertEquals(client.getUser(), user.getLogin());
-		assertNotNull(user.getGravatarId());
 		assertNotNull(user.getAvatarUrl());
 		assertNotNull(user.getCreatedAt());
 	}

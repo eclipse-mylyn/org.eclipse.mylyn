@@ -356,26 +356,6 @@ public class User implements Serializable {
 	}
 
 	/**
-	 * @return gravatarId
-	 * @deprecated
-	 */
-	@Deprecated
-	public String getGravatarId() {
-		return gravatarId;
-	}
-
-	/**
-	 * @param gravatarId
-	 * @return this user
-	 * @deprecated
-	 */
-	@Deprecated
-	public User setGravatarId(String gravatarId) {
-		this.gravatarId = gravatarId;
-		return this;
-	}
-
-	/**
 	 * @return htmlUrl
 	 */
 	public String getHtmlUrl() {
