@@ -62,7 +62,7 @@ public class MergePullRequestHandler extends TaskDataHandler {
 				String target = request.getBase().getRef();
 				String branchName = PullRequestUtils.getBranchName(request);
 				try {
-					Ref sourceRef = repo.getRef(branchName);
+					Ref sourceRef = repo.findRef(branchName);
 					if (sourceRef != null) {
 						if (!PullRequestUtils.isCurrentBranch(target, repo)) {
 							monitor.setTaskName(MessageFormat

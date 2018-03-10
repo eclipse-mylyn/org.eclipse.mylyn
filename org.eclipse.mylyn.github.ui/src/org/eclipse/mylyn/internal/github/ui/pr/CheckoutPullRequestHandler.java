@@ -87,7 +87,7 @@ public class CheckoutPullRequestHandler extends TaskDataHandler {
 						return Status.CANCEL_STATUS;
 
 					String branchName = PullRequestUtils.getBranchName(request);
-					Ref branchRef = repo.getRef(branchName);
+					Ref branchRef = repo.findRef(branchName);
 					RemoteConfig remote = null;
 					String headBranch = null;
 

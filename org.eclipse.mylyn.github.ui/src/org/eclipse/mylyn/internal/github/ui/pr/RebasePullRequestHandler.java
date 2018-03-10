@@ -62,7 +62,7 @@ public class RebasePullRequestHandler extends TaskDataHandler {
 				String branchName = PullRequestUtils.getBranchName(request);
 				try {
 					String target = request.getBase().getRef();
-					Ref targetRef = repo.getRef(request.getBase().getRef());
+					Ref targetRef = repo.findRef(request.getBase().getRef());
 					if (targetRef != null) {
 						if (!PullRequestUtils.isCurrentBranch(branchName, repo)) {
 							monitor.setTaskName(MessageFormat
