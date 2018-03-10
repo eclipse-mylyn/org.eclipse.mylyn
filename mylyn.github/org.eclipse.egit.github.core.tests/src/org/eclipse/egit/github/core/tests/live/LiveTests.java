@@ -32,8 +32,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	PullRequestTest.class,
 	RepositoryTest.class,
 	TeamTest.class,
-	UserTest.class,
-	WatcherTest.class })
+	UserTest.class})
 public class LiveTests {
 
 }

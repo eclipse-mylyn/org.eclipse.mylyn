@@ -121,7 +121,6 @@ import org.junit.runners.Suite.SuiteClasses;
 		UserServiceTest.class, //
 		UserTest.class, //
 		WatchPayloadTest.class, //
-		WatcherServiceTest.class //
 })
 public class AllHeadlessTests {
 
