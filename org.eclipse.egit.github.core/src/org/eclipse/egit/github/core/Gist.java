@@ -10,14 +10,14 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.egit.github.core.util.DateUtils;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  * GitHub gist model class.
@@ -259,24 +259,6 @@ public class Gist implements Serializable {
 	 */
 	public Gist setOwner(User owner) {
 		this.owner = owner;
-		return this;
-	}
-
-	/**
-	 * @return user
-	 */
-	@Deprecated
-	public User getUser() {
-		return owner;
-	}
-
-	/**
-	 * @param user
-	 * @return this gist
-	 */
-	@Deprecated
-	public Gist setUser(User user) {
-		this.owner = user;
 		return this;
 	}
 }

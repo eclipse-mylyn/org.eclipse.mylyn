@@ -46,7 +46,7 @@ public class GistTest {
 		assertNull(gist.getId());
 		assertNull(gist.getUpdatedAt());
 		assertNull(gist.getUrl());
-		assertNull(gist.getUser());
+		assertNull(gist.getOwner());
 		assertNull(gist.getOwner());
 		assertFalse(gist.isPublic());
 	}
@@ -75,7 +75,7 @@ public class GistTest {
 				.getUpdatedAt());
 		assertEquals("url", gist.setUrl("url").getUrl());
 		User user = new User().setLogin("use");
-		assertEquals(user, gist.setUser(user).getUser());
+		assertEquals(user, gist.setOwner(user).getOwner());
 		assertTrue(gist.setPublic(true).isPublic());
 	}
 

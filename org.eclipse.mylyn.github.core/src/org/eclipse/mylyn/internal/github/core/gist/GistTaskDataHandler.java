@@ -232,7 +232,7 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 		if (credentials != null) {
 			client.setCredentials(credentials.getUserName(),
 					credentials.getPassword());
-			gist.setUser(new User().setLogin(credentials.getUserName()));
+			gist.setOwner(new User().setLogin(credentials.getUserName()));
 		}
 
 		GistService service = new GistService(client);
