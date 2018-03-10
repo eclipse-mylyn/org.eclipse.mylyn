@@ -67,4 +67,6 @@ public interface IRepositoryConstants {
 
 	public static final String CATEGORY_OTHER = "org.eclipse.mylyn.category.other"; //$NON-NLS-1$
 
+	public static final String TEMPLATE_VALUE_PREFIX = "template.value.prefix."; //$NON-NLS-1$
+
 }

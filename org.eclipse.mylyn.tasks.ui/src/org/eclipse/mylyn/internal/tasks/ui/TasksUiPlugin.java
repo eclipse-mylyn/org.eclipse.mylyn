@@ -66,6 +66,7 @@ import org.eclipse.mylyn.internal.discovery.ui.DiscoveryUi;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractSearchHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryModelListener;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
@@ -740,6 +741,11 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 							repositoryManager.addRepository(taskRepository);
 							repositoryManager.applyMigrators(taskRepository);
 						}
+						Map<String, String> templateAttributes = template.getAttributes();
+						for (Map.Entry<String, String> entry : templateAttributes.entrySet()) {
+							taskRepository.setProperty(IRepositoryConstants.TEMPLATE_VALUE_PREFIX + entry.getKey(),
+									entry.getValue());
+						}
 					} catch (Throwable t) {
 						StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, NLS.bind(
 								"Could not load repository template for repository {0}", template.repositoryUrl), t)); //$NON-NLS-1$
@@ -923,17 +929,15 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			}
 		}
 
-		if (!MonitorUiPlugin.getDefault()
-				.getPreferenceStore()
-				.getBoolean(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED + ".checked")) { //$NON-NLS-1$
+		if (!MonitorUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED + ".checked")) { //$NON-NLS-1$
 			if (!taskActivityMonitor.getActivationHistory().isEmpty()) {
 				// tasks have been active before so fore preference enabled
 				MonitorUiPlugin.getDefault().getPreferenceStore().setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED,
 						true);
 			}
-			MonitorUiPlugin.getDefault()
-					.getPreferenceStore()
-					.setValue(MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED + ".checked", true); //$NON-NLS-1$
+			MonitorUiPlugin.getDefault().getPreferenceStore().setValue(
+					MonitorUiPlugin.ACTIVITY_TRACKING_ENABLED + ".checked", true); //$NON-NLS-1$
 			MonitorUiPlugin.getDefault().savePluginPreferences();
 		}
 
@@ -1008,9 +1012,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	}
 
 	public boolean groupSubtasks(ITaskContainer element) {
-		boolean groupSubtasks = TasksUiPlugin.getDefault()
-				.getPreferenceStore()
-				.getBoolean(ITasksUiPreferenceConstants.GROUP_SUBTASKS);
+		boolean groupSubtasks = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				ITasksUiPreferenceConstants.GROUP_SUBTASKS);
 
 		if (element instanceof ITask) {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin
