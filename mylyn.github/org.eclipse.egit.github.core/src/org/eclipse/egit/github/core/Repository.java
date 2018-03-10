@@ -10,12 +10,12 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 import java.util.Date;
 
 import org.eclipse.egit.github.core.util.DateUtils;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Repository model class
@@ -399,24 +399,6 @@ public class Repository implements IRepositoryIdProvider, Serializable {
 	 */
 	public Repository setDefaultBranch(String defaultBranch) {
 		this.defaultBranch = defaultBranch;
-		return this;
-	}
-
-	/**
-	 * @return masterBranch
-	*/
-	@Deprecated
-	public String getMasterBranch() {
-		return defaultBranch;
-	}
-
-	/**
-	 * @param masterBranch
-	 * @return this repository
-	 */
-	@Deprecated
-	public Repository setMasterBranch(String masterBranch) {
-		this.defaultBranch = masterBranch;
 		return this;
 	}
 
