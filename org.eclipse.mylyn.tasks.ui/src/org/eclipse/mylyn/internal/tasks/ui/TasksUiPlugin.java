@@ -650,11 +650,11 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			return;
 		}
 		// Use a UI job to ensure the UI has loaded
-		new UIJob("Credential Migration UI Job") { //$NON-NLS-1$
+		new UIJob("Credentials Migration") { //$NON-NLS-1$
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				// use a Job to ensure we do not access the secure store on the UI thread
-				new Job("Credential Migration") { //$NON-NLS-1$
+				new Job("Credentials Migration") { //$NON-NLS-1$
 					@Override
 					protected IStatus run(IProgressMonitor monitor) {
 						if (force) {

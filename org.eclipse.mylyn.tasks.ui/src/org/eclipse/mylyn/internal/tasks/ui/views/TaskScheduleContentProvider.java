@@ -376,7 +376,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 	private class RolloverCheck extends Job {
 
 		public RolloverCheck() {
-			super("Calendar Rollover Job"); //$NON-NLS-1$
+			super("Calendar Rollover"); //$NON-NLS-1$
 		}
 
 		@Override
