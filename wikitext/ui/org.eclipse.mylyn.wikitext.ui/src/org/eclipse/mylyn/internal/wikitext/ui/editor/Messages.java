@@ -42,6 +42,8 @@ class Messages extends NLS {
 
 	public static String MarkupEditor_previewUnavailable;
 
+	public static String MarkupEditor_openWorkspaceFileFailed;
+
 	public static String MarkupEditor_updateOutline;
 
 	public static String MarkupEditor_collapseAllAction_label;

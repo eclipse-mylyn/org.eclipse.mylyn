@@ -89,6 +89,8 @@ public class Preferences implements Cloneable {
 
 	public static final String BLOCK_DT = "dt"; //$NON-NLS-1$
 
+	public static final String KEY_OPEN_AS_PREVIEW_NAME_PATTERN = "openAsPreviewNamePattern"; //$NON-NLS-1$
+
 	/**
 	 * heading preferences key indexed by level (0 is null, 1 is {@link #BLOCK_H1}, etc.)
 	 */
@@ -132,6 +134,8 @@ public class Preferences implements Cloneable {
 	}
 
 	private boolean editorFolding = true;
+
+	private String openAsPreviewFileNamePattern = "(?i)readme\\.\\w+"; //$NON-NLS-1$
 
 	private String markupViewerCss;
 
@@ -240,9 +244,11 @@ public class Preferences implements Cloneable {
 		if (asDefault) {
 			store.setDefault(KEY_EDITOR_FOLDING, editorFolding);
 			store.setDefault(KEY_MARKUP_VIEWER_CSS, getDefaultMarkupViewerCss());
+			store.setDefault(KEY_OPEN_AS_PREVIEW_NAME_PATTERN, openAsPreviewFileNamePattern);
 		} else {
 			store.setValue(KEY_EDITOR_FOLDING, editorFolding);
 			store.setValue(KEY_MARKUP_VIEWER_CSS, markupViewerCss);
+			store.setValue(KEY_OPEN_AS_PREVIEW_NAME_PATTERN, openAsPreviewFileNamePattern);
 		}
 	}
 
@@ -272,6 +278,7 @@ public class Preferences implements Cloneable {
 		}
 		editorFolding = store.getBoolean(KEY_EDITOR_FOLDING);
 		markupViewerCss = store.getString(KEY_MARKUP_VIEWER_CSS);
+		openAsPreviewFileNamePattern = store.getString(KEY_OPEN_AS_PREVIEW_NAME_PATTERN);
 		if (isEmpty(markupViewerCss)) {
 			markupViewerCss = getDefaultMarkupViewerCss();
 		}
@@ -299,6 +306,14 @@ public class Preferences implements Cloneable {
 			}
 		}
 		return true;
+	}
+
+	public String getPreviewFileNamePattern() {
+		return openAsPreviewFileNamePattern;
+	}
+
+	public void setPreviewFileNamePattern(String previewFileNamePattern) {
+		this.openAsPreviewFileNamePattern = previewFileNamePattern;
 	}
 
 	/**

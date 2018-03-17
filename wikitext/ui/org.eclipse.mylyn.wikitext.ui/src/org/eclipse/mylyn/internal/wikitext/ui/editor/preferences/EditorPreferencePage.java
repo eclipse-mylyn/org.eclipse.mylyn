@@ -38,7 +38,7 @@ import org.eclipse.ui.PlatformUI;
  * <p>
  * This page is used to modify preferences only. They are stored in the preference store that belongs to the main
  * plug-in class. That way, preferences can be accessed directly via the preference store.
- * 
+ *
  * @author David Green
  * @author Hiroyuki Inaba fix for bug 265079: Dialog font not apply WikiText preference pages
  */
@@ -86,6 +86,13 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 			layout.marginRight = 5;
 		}
 
+		Group openModeGroup = new Group(getFieldEditorParent(), SWT.NULL);
+		openModeGroup.setText(Messages.EditorPreferencePage_openMode);
+		openModeGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
+
+		addField(new RegExStringFieldEditor(Preferences.KEY_OPEN_AS_PREVIEW_NAME_PATTERN,
+				Messages.EditorPreferencePage_openInPreview, openModeGroup));
+
 		Group blockGroup = new Group(getFieldEditorParent(), SWT.NULL);
 		blockGroup.setText(Messages.EditorPreferencePage_blockModifiers);
 		blockGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
@@ -121,21 +128,20 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 		}
 
 		applyDialogFont(getFieldEditorParent());
+		openModeGroup.setFont(getFieldEditorParent().getFont());
 		blockGroup.setFont(getFieldEditorParent().getFont());
 		phraseModifierGroup.setFont(getFieldEditorParent().getFont());
 
-		PlatformUI.getWorkbench()
-				.getHelpSystem()
-				.setHelp(getControl(), "org.eclipse.mylyn.wikitext.help.ui.preferences"); //$NON-NLS-1$
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
+				"org.eclipse.mylyn.wikitext.help.ui.preferences"); //$NON-NLS-1$
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
 	public void init(IWorkbench workbench) {
 	}
-
 }

@@ -14,9 +14,11 @@ package org.eclipse.mylyn.internal.wikitext.ui.editor;
 
 import static java.text.MessageFormat.format;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +31,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -111,15 +114,18 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPathEditorInput;
+import org.eclipse.ui.IURIEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.IShowInSource;
 import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.part.IShowInTargetList;
@@ -244,7 +250,6 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 					styles | SWT.WRAP);
 
 			sourceTab.setControl(((Viewer) viewer).getControl());
-			tabFolder.setSelection(sourceTab);
 		}
 
 		try {
@@ -259,10 +264,34 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 					event.doit = false;
 				}
 
+				private boolean tryToOpenAsWorkspaceFile(String location) {
+					if (getEditorInput() instanceof IURIEditorInput) {
+						try {
+							IURIEditorInput uriInput = (IURIEditorInput) getEditorInput();
+							URI locationURI = uriInput.getURI().resolve(location);
+							if (locationURI != null) {
+								IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(
+										locationURI);
+								if (files.length > 0) {
+									// it is a workspace resource -> open using an editor
+									IEditorPart editor = IDE.openEditor(getEditorSite().getPage(), files[0]);
+									if (editor instanceof MarkupEditor) {
+										MarkupEditor markupEditor = (MarkupEditor) editor;
+										markupEditor.showPreview(null);
+									}
+									return true;
+								}
+							}
+						} catch (Exception e) {
+							logErrorOpeningAsWorkspaceFile(e);
+						}
+					}
+					return false;
+				}
+
 				public void changing(LocationEvent event) {
 					// if it looks like an absolute URL
 					if (event.location.matches("([a-zA-Z]{3,8})://?.*")) { //$NON-NLS-1$
-
 						// workaround for browser problem (bug 262043)
 						int idxOfSlashHash = event.location.indexOf("/#"); //$NON-NLS-1$
 						if (idxOfSlashHash != -1) {
@@ -275,6 +304,9 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 						// workaround end
 
 						event.doit = false;
+						if (tryToOpenAsWorkspaceFile(event.location)) {
+							return;
+						}
 						try {
 							PlatformUI.getWorkbench()
 									.getBrowserSupport()
@@ -283,6 +315,8 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 						} catch (Exception e) {
 							new URLHyperlink(new Region(0, 1), event.location).open();
 						}
+					} else {
+						tryToOpenAsWorkspaceFile(event.location);
 					}
 				}
 			});
@@ -294,6 +328,21 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 				previewTab = null;
 			}
 			logPreviewTabUnavailable(e);
+		}
+
+		// start special files in "read mode", i.e. preview tab
+		IEditorInput ei = getEditorInput();
+		if (previewTab != null && ei instanceof IURIEditorInput) {
+			String previewFileNamePattern = WikiTextUiPlugin.getDefault().getPreferences().getPreviewFileNamePattern();
+			IURIEditorInput editorInput = (IURIEditorInput) ei;
+			File file = new File(editorInput.getURI());
+			if (previewFileNamePattern != null && file.getName().matches(previewFileNamePattern)) {
+				tabFolder.setSelection(previewTab);
+			} else {
+				tabFolder.setSelection(sourceTab);
+			}
+		} else {
+			tabFolder.setSelection(sourceTab);
 		}
 
 		tabFolder.addSelectionListener(new SelectionListener() {
@@ -376,6 +425,10 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 			WikiTextUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(preferencesListener);
 		}
 
+		if (isShowingPreview()) {
+			updatePreview();
+		}
+
 		return viewer;
 	}
 
@@ -388,6 +441,11 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	private void logPreviewTabUnavailable(SWTError e) {
 		WikiTextUiPlugin.getDefault().getLog().log(WikiTextUiPlugin.getDefault()
 				.createStatus(format(Messages.MarkupEditor_previewUnavailable, e.getMessage()), IStatus.ERROR, e));
+	}
+
+	private void logErrorOpeningAsWorkspaceFile(Exception e) {
+		WikiTextUiPlugin.getDefault().getLog().log(WikiTextUiPlugin.getDefault()
+				.createStatus(format(Messages.MarkupEditor_openWorkspaceFileFailed, e.getMessage()), IStatus.ERROR, e));
 	}
 
 	@Override
@@ -554,6 +612,9 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 			previewDirty = true;
 			outlineDirty = true;
 			updateOutline();
+			if (isShowingPreview()) {
+				updatePreview();
+			}
 		}
 	}
 

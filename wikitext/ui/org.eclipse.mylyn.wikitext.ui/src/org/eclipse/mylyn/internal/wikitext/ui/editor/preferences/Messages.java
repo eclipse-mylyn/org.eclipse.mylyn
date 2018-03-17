@@ -34,6 +34,13 @@ class Messages extends NLS {
 	public static String EditorPreferencePage_introInfo;
 
 	public static String EditorPreferencePage_phraseModifiers;
+
+	public static String EditorPreferencePage_openInPreview;
+
+	public static String EditorPreferencePage_openInPreviewInvalidRegEx;
+
+	public static String EditorPreferencePage_openMode;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
