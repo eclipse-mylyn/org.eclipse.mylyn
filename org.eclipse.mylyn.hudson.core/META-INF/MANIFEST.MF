@@ -18,7 +18,7 @@ Export-Package: org.eclipse.mylyn.hudson.core;x-friends:="org.eclipse.mylyn.huds
  org.eclipse.mylyn.internal.hudson.core.client;x-friends:="org.eclipse.mylyn.hudson.ui",
  org.eclipse.mylyn.internal.hudson.model;x-friends:="org.eclipse.mylyn.hudson.ui"
 Bundle-Activator: org.eclipse.mylyn.internal.hudson.core.HudsonCorePlugin
-Import-Package: com.google.gson;version="[2.7.0,2.8.0)",
+Import-Package: com.google.gson;version="[2.7.0,2.9.0)",
  org.apache.http;version="[4.4.4,4.5.0)",
  org.apache.http.client;version="[4.5.2,4.6.0)",
  org.apache.http.client.entity;version="[4.5.2,4.6.0)",
