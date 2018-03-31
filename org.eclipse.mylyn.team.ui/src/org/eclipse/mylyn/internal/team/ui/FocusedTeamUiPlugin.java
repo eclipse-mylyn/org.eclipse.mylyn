@@ -50,7 +50,7 @@ public class FocusedTeamUiPlugin extends AbstractUIPlugin {
 
 	public static final String COMMIT_TEMPLATE = "org.eclipse.mylyn.team.commit.template"; //$NON-NLS-1$
 
-	public static final String DEFAULT_COMMIT_TEMPLATE = "${task.key}: ${task.description} \n\nTask-Url: ${task.url}"; //$NON-NLS-1$
+	public static final String DEFAULT_COMMIT_TEMPLATE = "${task.key}: ${task.description}\n\nTask-Url: ${task.url}"; //$NON-NLS-1$
 
 	public static class FocusedTeamUiStartup implements IStartup {
 

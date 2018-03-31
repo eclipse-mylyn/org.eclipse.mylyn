@@ -65,7 +65,7 @@ public class CopyCommitMessageHandlerTest extends TestCase {
 
 		addAndSelectTask();
 		executeCommand();
-		assertEquals("1: My Task \n\nTask-Url: http://url", getClipboardContents());
+		assertEquals("1: My Task\n\nTask-Url: http://url", getClipboardContents());
 	}
 
 	private void addAndSelectTask() throws Exception {

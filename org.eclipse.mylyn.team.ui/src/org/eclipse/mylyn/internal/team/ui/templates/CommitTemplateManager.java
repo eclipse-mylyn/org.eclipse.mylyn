@@ -62,7 +62,7 @@ public class CommitTemplateManager {
 			int templateNewline = template.indexOf('\n');
 			String templateFirstLineIndex = template;
 			if (templateNewline != -1) {
-				templateFirstLineIndex = template.substring(0, templateNewline - 1);
+				templateFirstLineIndex = template.substring(0, templateNewline);
 			}
 
 			String regex = getTaskIdRegEx(templateFirstLineIndex);
