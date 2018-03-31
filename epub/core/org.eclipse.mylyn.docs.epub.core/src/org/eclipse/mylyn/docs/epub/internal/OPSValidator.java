@@ -1,9 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012-2014 Torkild U. Resheim
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Torkild U. Resheim - initial API and implementation
@@ -43,8 +45,8 @@ public class OPSValidator extends DefaultHandler {
 		WARN
 	}
 
-	public static String clean(InputSource file, String href) throws ParserConfigurationException, SAXException,
-			IOException {
+	public static String clean(InputSource file, String href)
+			throws ParserConfigurationException, SAXException, IOException {
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		factory.setFeature("http://xml.org/sax/features/validation", false); //$NON-NLS-1$
 		factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false); //$NON-NLS-1$
@@ -60,8 +62,8 @@ public class OPSValidator extends DefaultHandler {
 		return null;
 	}
 
-	public static List<ValidationMessage> validate(InputSource file, String href) throws ParserConfigurationException,
-			SAXException, IOException {
+	public static List<ValidationMessage> validate(InputSource file, String href)
+			throws ParserConfigurationException, SAXException, IOException {
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		factory.setFeature("http://xml.org/sax/features/validation", false); //$NON-NLS-1$
 		factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false); //$NON-NLS-1$
@@ -96,12 +98,11 @@ public class OPSValidator extends DefaultHandler {
 	 * @see http://idpf.org/epub/20/spec/OPS_2.0.1_draft.htm#Section2.2
 	 */
 	@SuppressWarnings("nls")
-	private final String[] legalElements = new String[] { "body", "head", "html", "title", "abbr", "acronym",
-			"address", "blockquote", "br", "cite", "code", "dfn", "div", "em", "h1", "h2", "h3", "h4", "h5", "h6",
-			"kbd", "p", "pre", "q", "samp", "span", "strong", "var", "a", "dl", "dt", "dd", "ol", "ul", "li", "object",
-			"param", "b", "big", "hr", "i", "small", "sub", "sup", "tt", "del", "ins", "bdo", "caption", "col",
-			"colgroup", "table", "tbody", "td", "tfoot", "th", "thead", "tr", "img", "area", "map", "style", "link",
-			"base" };
+	private final String[] legalElements = new String[] { "body", "head", "html", "title", "abbr", "acronym", "address",
+			"blockquote", "br", "cite", "code", "dfn", "div", "em", "h1", "h2", "h3", "h4", "h5", "h6", "kbd", "p",
+			"pre", "q", "samp", "span", "strong", "var", "a", "dl", "dt", "dd", "ol", "ul", "li", "object", "param",
+			"b", "big", "hr", "i", "small", "sub", "sup", "tt", "del", "ins", "bdo", "caption", "col", "colgroup",
+			"table", "tbody", "td", "tfoot", "th", "thead", "tr", "img", "area", "map", "style", "link", "base" };
 
 	private final ArrayList<ValidationMessage> messages;
 
@@ -229,8 +230,8 @@ public class OPSValidator extends DefaultHandler {
 			contents.append('>');
 			recording = true;
 			if (!isLegalElement(qName)) {
-				messages.add(new ValidationMessage(Severity.WARNING, MessageFormat.format(
-						"Element \"{0}\" in file \"{1}\" is not in OPS Preferred Vocabularies", qName, href))); //$NON-NLS-1$
+				messages.add(new ValidationMessage(Severity.WARNING, MessageFormat
+						.format("Element \"{0}\" in file \"{1}\" is not in OPS Preferred Vocabularies", qName, href))); //$NON-NLS-1$
 
 			}
 		}

@@ -2,12 +2,14 @@
  * Copyright (c) 2011-2014 Torkild U. Resheim.
  *
  * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0 which
+ * available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Torkild U. Resheim - initial API and implementation
+ *     Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.internal;
 
@@ -29,7 +31,7 @@ import org.xml.sax.SAXException;
 /**
  * This type is a SAX parser that will read a XHTML file and create a list of all images, content and CSS-files that are
  * referenced either through an <i>img<i/> tag or a link.
- * 
+ *
  * @author Torkild U. Resheim
  */
 public class ReferenceScanner extends AbstractXHTMLScanner {
@@ -65,7 +67,7 @@ public class ReferenceScanner extends AbstractXHTMLScanner {
 
 	/**
 	 * Case-insensitive method for obtaining an attribute.
-	 * 
+	 *
 	 * @param attributes
 	 *            SAX attributes
 	 * @param name

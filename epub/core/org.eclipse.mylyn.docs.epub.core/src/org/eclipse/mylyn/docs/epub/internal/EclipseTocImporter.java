@@ -1,9 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2014 Torkild U. Resheim
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Torkild U. Resheim - initial API and implementation
@@ -36,8 +38,8 @@ import org.xml.sax.SAXException;
  */
 public class EclipseTocImporter {
 
-	private static void importTocs(Publication oebps, File rootFile, Node root) throws ParserConfigurationException,
-	SAXException, IOException, DOMException, URISyntaxException {
+	private static void importTocs(Publication oebps, File rootFile, Node root)
+			throws ParserConfigurationException, SAXException, IOException, DOMException, URISyntaxException {
 		NodeList childNodes = root.getChildNodes();
 		for (int i = 0; i < childNodes.getLength(); i++) {
 			Node node = childNodes.item(i);
@@ -82,8 +84,8 @@ public class EclipseTocImporter {
 		}
 	}
 
-	private static void importFile(Publication oebps, File rootFile, File file) throws ParserConfigurationException,
-	SAXException, IOException, DOMException, URISyntaxException {
+	private static void importFile(Publication oebps, File rootFile, File file)
+			throws ParserConfigurationException, SAXException, IOException, DOMException, URISyntaxException {
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		Document doc = dBuilder.parse(file);
@@ -104,8 +106,8 @@ public class EclipseTocImporter {
 	 * @throws DOMException
 	 * @throws URISyntaxException
 	 */
-	public static void importFile(Publication oebps, File file) throws ParserConfigurationException, SAXException,
-	IOException, DOMException, URISyntaxException {
+	public static void importFile(Publication oebps, File file)
+			throws ParserConfigurationException, SAXException, IOException, DOMException, URISyntaxException {
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		Document doc = dBuilder.parse(file);

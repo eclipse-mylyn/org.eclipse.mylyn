@@ -1,13 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2011,2012 Torkild U. Resheim.
- * 
+ *
  * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0 which
+ * available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors: 
- *   Torkild U. Resheim - initial API and implementation
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *     Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.internal;
 
@@ -17,7 +19,7 @@ import org.xml.sax.ext.DefaultHandler2;
 
 /**
  * This abstract type should be used to form the basis for all types that are used to scan EPUB XHTML content files.
- * 
+ *
  * @author Torkild U. Resheim
  */
 public abstract class AbstractXHTMLScanner extends DefaultHandler2 {
@@ -42,7 +44,7 @@ public abstract class AbstractXHTMLScanner extends DefaultHandler2 {
 
 	/**
 	 * Determines whether or not the given element name represents a HTML header.
-	 * 
+	 *
 	 * @param qName
 	 *            the element name
 	 * @return <code>true</code> if the element is a header

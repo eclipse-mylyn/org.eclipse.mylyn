@@ -1,9 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2007, 2013 David Green and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     David Green - initial API and implementation
@@ -44,9 +46,8 @@ import org.eclipse.mylyn.wikitext.tracwiki.internal.token.WikiWordReplacementTok
 
 /**
  * An implementation of the <a href="http://trac.edgewall.org/wiki/TracWiki">TracWiki</a> markup language.
- * 
+ *
  * @author David Green
- * 
  */
 public class TracWikiLanguage extends AbstractMarkupLanguage {
 
@@ -60,7 +61,7 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 
 	/**
 	 * Convert a page name to an href to the page.
-	 * 
+	 *
 	 * @param pageName
 	 *            the name of the page to target
 	 * @return the href to access the page
@@ -77,7 +78,7 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 
 	/**
 	 * convert a ticket id to a hyperlink based on the {@link #getServerUrl() server url}
-	 * 
+	 *
 	 * @param ticketId
 	 *            the id of the ticket
 	 * @param commentNumber
@@ -93,7 +94,7 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 
 	/**
 	 * convert a changeset id to a hyperlink based on the {@link #getServerUrl() server url}
-	 * 
+	 *
 	 * @param changesetId
 	 *            the changeset id
 	 * @param restriction
@@ -109,7 +110,7 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 
 	/**
 	 * convert a revisions to a revision log hyperlink based on the {@link #getServerUrl() server url}
-	 * 
+	 *
 	 * @param revision1
 	 *            the first revision
 	 * @param revision2
@@ -128,7 +129,7 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 
 	/**
 	 * convert a report id to a hyperlink based on the {@link #getServerUrl() server url}
-	 * 
+	 *
 	 * @param reportId
 	 *            the id of the report
 	 */
@@ -139,7 +140,7 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 
 	/**
 	 * convert a milestone id to a hyperlink based on the {@link #getServerUrl() server url}
-	 * 
+	 *
 	 * @param milestoneId
 	 *            the id of the milesonte
 	 */
@@ -150,7 +151,7 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 
 	/**
 	 * create an URL to an attachment ticket based on the {@link #getServerUrl() server url}
-	 * 
+	 *
 	 * @param ticketId
 	 *            the id of the ticket
 	 * @param attachment
@@ -163,7 +164,7 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 
 	/**
 	 * create an URL to the source browser
-	 * 
+	 *
 	 * @param source
 	 *            the source to be viewed
 	 * @param revision
@@ -188,7 +189,7 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 
 	/**
 	 * for the purpose of converting wiki words into links, determine if the wiki word exists.
-	 * 
+	 *
 	 * @see WikiWordReplacementToken
 	 */
 	public boolean computeInternalLinkExists(String link) {
@@ -212,7 +213,7 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 	/**
 	 * set the server URL, for example <code>http://trac.edgewall.org/</code> from which links may be derrived, such as
 	 * <code>http://trac.edgewall.org/wiki/WikiPage</code> or <code>http://trac.edgewall.org/tickets/1</code>
-	 * 
+	 *
 	 * @param url
 	 *            the url, or null if it is unknown.
 	 */
@@ -226,7 +227,7 @@ public class TracWikiLanguage extends AbstractMarkupLanguage {
 	/**
 	 * the server URL, for example <code>http://trac.edgewall.org/</code> from which links may be derrived, such as
 	 * <code>http://trac.edgewall.org/wiki/WikiPage</code> or <code>http://trac.edgewall.org/tickets/1</code>
-	 * 
+	 *
 	 * @see #setServerUrl(String)
 	 */
 	public String getServerUrl() {

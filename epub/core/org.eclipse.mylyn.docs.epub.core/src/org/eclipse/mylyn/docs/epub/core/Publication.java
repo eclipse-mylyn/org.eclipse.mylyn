@@ -2,12 +2,14 @@
  * Copyright (c) 2011-2015 Torkild U. Resheim.
  *
  * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0 which
+ * available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Torkild U. Resheim - initial API and implementation
+ *     Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.core;
 
@@ -342,8 +344,8 @@ public abstract class Publication {
 	}
 
 	/**
-	 * Adds a new date to the publication. The given instance will be represented in a format defined by
-	 * "Date and Time Formats" at http://www.w3.org/TR/NOTE-datetime and by ISO 8601 on which it is based.
+	 * Adds a new date to the publication. The given instance will be represented in a format defined by "Date and Time
+	 * Formats" at http://www.w3.org/TR/NOTE-datetime and by ISO 8601 on which it is based.
 	 *
 	 * @param date
 	 *            the date
@@ -355,10 +357,10 @@ public abstract class Publication {
 	}
 
 	/**
-	 * Date of publication, in the format defined by the W3C specification "<a href="http://www.w3.org/TR/NOTE-datetime
-	 * ">Date and Time Formats</a>" and by ISO 8601. In particular, dates without times must be represented in the form
-	 * YYYY[-MM[-DD]]: a required 4-digit year, an optional 2-digit month, and if the month is given, an optional
-	 * 2-digit day of month.
+	 * Date of publication, in the format defined by the W3C specification
+	 * "<a href="http://www.w3.org/TR/NOTE-datetime ">Date and Time Formats</a>" and by ISO 8601. In particular, dates
+	 * without times must be represented in the form YYYY[-MM[-DD]]: a required 4-digit year, an optional 2-digit month,
+	 * and if the month is given, an optional 2-digit day of month.
 	 *
 	 * @param value
 	 *            the date string
@@ -369,8 +371,8 @@ public abstract class Publication {
 	}
 
 	/**
-	 * Adds a new date to the publication. The given instance will be represented in a format defined by
-	 * "Date and Time Formats" at http://www.w3.org/TR/NOTE-datetime and by ISO 8601 on which it is based.
+	 * Adds a new date to the publication. The given instance will be represented in a format defined by "Date and Time
+	 * Formats" at http://www.w3.org/TR/NOTE-datetime and by ISO 8601 on which it is based.
 	 *
 	 * @param id
 	 *            optional identifier
@@ -395,11 +397,11 @@ public abstract class Publication {
 	}
 
 	/**
-	 * Date of publication, in the format defined by the W3C specification "<a href="http://www.w3.org/TR/NOTE-datetime
-	 * ">Date and Time Formats</a>" and by ISO 8601. In particular, dates without times must be represented in the form
-	 * YYYY[-MM[-DD]]: a required 4-digit year, an optional 2-digit month, and if the month is given, an optional
-	 * 2-digit day of month. The event attribute is optional, possible values may include: "creation", "publication",
-	 * and "modification".
+	 * Date of publication, in the format defined by the W3C specification
+	 * "<a href="http://www.w3.org/TR/NOTE-datetime ">Date and Time Formats</a>" and by ISO 8601. In particular, dates
+	 * without times must be represented in the form YYYY[-MM[-DD]]: a required 4-digit year, an optional 2-digit month,
+	 * and if the month is given, an optional 2-digit day of month. The event attribute is optional, possible values may
+	 * include: "creation", "publication", and "modification".
 	 *
 	 * @param id
 	 *            optional identifier

@@ -2,9 +2,11 @@
  * Copyright (c) 2011-2014 Torkild U. Resheim.
  *
  * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0 which
+ * available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Torkild U. Resheim - initial API and implementation
@@ -82,7 +84,8 @@ public class MainPage extends WizardPage {
 	public MainPage() {
 		super("wizardPage"); //$NON-NLS-1$
 		setMessage(Messages.MainPage_0);
-		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(EPUBUIPlugin.PLUGIN_ID, "icons/wizard-banner.png")); //$NON-NLS-1$
+		setImageDescriptor(
+				AbstractUIPlugin.imageDescriptorFromPlugin(EPUBUIPlugin.PLUGIN_ID, "icons/wizard-banner.png")); //$NON-NLS-1$
 		setTitle(Messages.MainPage_1);
 	}
 
@@ -224,8 +227,8 @@ public class MainPage extends WizardPage {
 		public StringValidator(String errorText, Control control) {
 			this.errorText = errorText;
 			controlDecoration = new ControlDecoration(control, SWT.LEFT | SWT.TOP);
-			FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault().getFieldDecoration(
-					FieldDecorationRegistry.DEC_REQUIRED);
+			FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault()
+					.getFieldDecoration(FieldDecorationRegistry.DEC_REQUIRED);
 			controlDecoration.setImage(fieldDecoration.getImage());
 		}
 
@@ -254,8 +257,8 @@ public class MainPage extends WizardPage {
 			this.errorText = errorText;
 			this.fileSuffixes = fileSuffixes;
 			controlDecoration = new ControlDecoration(control, SWT.LEFT | SWT.TOP);
-			FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault().getFieldDecoration(
-					FieldDecorationRegistry.DEC_ERROR);
+			FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault()
+					.getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
 			controlDecoration.setImage(fieldDecoration.getImage());
 			controlDecoration.hide();
 		}
@@ -307,7 +310,8 @@ public class MainPage extends WizardPage {
 		IObservableValue text_4ObserveTextObserveWidget = SWTObservables.observeText(identifierText, SWT.Modify);
 		final IObservableValue beanIdentifierObserveValue = PojoObservables.observeValue(bean, "identifier"); //$NON-NLS-1$
 		UpdateValueStrategy identifierStrategy = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
-		identifierStrategy.setBeforeSetValidator(new StringValidator("An identifier must be specified", identifierText)); //$NON-NLS-1$
+		identifierStrategy
+				.setBeforeSetValidator(new StringValidator("An identifier must be specified", identifierText)); //$NON-NLS-1$
 		bindingContext.bindValue(text_4ObserveTextObserveWidget, beanIdentifierObserveValue, identifierStrategy, null);
 		//
 		IObservableValue schemeTextObserveTextObserveWidget = SWTObservables.observeText(schemeText);
@@ -339,16 +343,17 @@ public class MainPage extends WizardPage {
 		UpdateValueStrategy coverStrategy = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
 		coverStrategy.setBeforeSetValidator(new FileValidator(
 				"The cover image must be a valid image file of type PNG, SVG or JPEG.", coverText, new String[] { //$NON-NLS-1$
-				".png", ".svg", ".jpeg", ".jpg" })); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+						".png", ".svg", ".jpeg", ".jpg" })); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		bindingContext.bindValue(coverObserveTextObserveWidget, beanCoverObserveValue, coverStrategy, null);
 		//
-		IObservableValue styleSheetTextObserveTextObserveWidget = SWTObservables.observeText(styleSheetText, SWT.Modify);
+		IObservableValue styleSheetTextObserveTextObserveWidget = SWTObservables.observeText(styleSheetText,
+				SWT.Modify);
 		IObservableValue beanStyleSheetObserveValue = PojoObservables.observeValue(bean, "styleSheet"); //$NON-NLS-1$
 		UpdateValueStrategy styleSheetStrategy = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
 		styleSheetStrategy.setBeforeSetValidator(new FileValidator("The style sheet must be a valid CSS file.", //$NON-NLS-1$
 				styleSheetText, new String[] { ".css" })); //$NON-NLS-1$
-		bindingContext.bindValue(styleSheetTextObserveTextObserveWidget, beanStyleSheetObserveValue,
-				styleSheetStrategy, null);
+		bindingContext.bindValue(styleSheetTextObserveTextObserveWidget, beanStyleSheetObserveValue, styleSheetStrategy,
+				null);
 		//
 		return bindingContext;
 	}
