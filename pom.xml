@@ -74,6 +74,11 @@
 		  <layout>p2</layout>
 		  <url>${mylyn-context-repository-url}</url>
 		</repository>
+		<repository>
+		  <id>ecf-provider-discovery</id>
+		  <layout>p2</layout>
+		  <url>http://download.eclipse.org/rt/ecf/3.13.3/site.p2</url>
+		</repository>
         <repository>
           <id>cbi-license</id>
           <layout>p2</layout>
