@@ -65,7 +65,8 @@ public class SearchRepositoryTest {
 		SearchRepository repo2 = new SearchRepository("a", "c");
 		SearchRepository repo3 = new SearchRepository("a", "b");
 		assertTrue(repo1.equals(repo1));
-		assertFalse(repo1.equals("repo1"));
+		Object string = "repo1";
+		assertFalse(repo1.equals(string));
 		assertFalse(repo1.equals(repo2));
 		assertTrue(repo1.equals(repo3));
 		assertEquals(repo1.hashCode(), repo3.hashCode());
