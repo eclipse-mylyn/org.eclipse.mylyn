@@ -59,7 +59,8 @@ public class LabelTest {
 		l1.setName("a");
 		Label l3 = new Label().setName("a");
 		assertTrue(l1.equals(l1));
-		assertFalse(l1.equals("a"));
+		Object string = "a";
+		assertFalse(l1.equals(string));
 		assertFalse(l1.equals(l2));
 		assertTrue(l1.equals(l3));
 		assertEquals(l1.hashCode(), l3.hashCode());

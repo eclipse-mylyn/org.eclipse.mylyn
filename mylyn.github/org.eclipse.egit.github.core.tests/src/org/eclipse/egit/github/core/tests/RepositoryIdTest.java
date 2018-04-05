@@ -201,7 +201,8 @@ public class RepositoryIdTest {
 		assertTrue(id1.equals(id1));
 		assertTrue(id1.equals(id2));
 		assertFalse(id1.equals(id3));
-		assertFalse(id1.equals("content"));
+		Object string = "content";
+		assertFalse(id1.equals(string));
 		assertEquals(id1.hashCode(), id2.hashCode());
 		assertEquals(id1.toString(), id2.toString());
 	}
