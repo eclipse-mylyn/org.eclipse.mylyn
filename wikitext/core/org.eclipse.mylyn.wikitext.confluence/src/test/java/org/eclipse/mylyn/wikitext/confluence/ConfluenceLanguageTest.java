@@ -819,6 +819,18 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	}
 
 	@Test
+	public void testTableWithEscapedPipe() {
+		assertMarkup("<table><tr><td>some cell | content with pipe escaped</td></tr></table>",
+				"| some cell \\| content with pipe escaped |");
+	}
+
+	@Test
+	public void testTableWithEscapedSquareBrackets() {
+		assertMarkup("<table><tr><td>some cell [ content with pipe escaped</td></tr></table>",
+				"| some cell \\[ content with pipe escaped |");
+	}
+
+	@Test
 	public void testPreformattedExtended() {
 		String html = parser
 				.parseToHtml("{noformat}\na multiline\n\tpreformatted\n\nwith two paras\n{noformat}\nanother para");
@@ -1145,6 +1157,18 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	@Test
 	public void stackOverflowWithLargeContentOnBug424387() throws IOException {
 		String content = Resources.toString(ConfluenceLanguageTest.class.getResource("resources/bug424387.confluence"),
+				Charsets.UTF_8);
+		parser.setBuilder(new HtmlDocumentBuilder(new StringWriter()));
+		parser.parse(new StringReader(content));
+		// if we reach here we didn't hang.
+	}
+
+	/**
+	 * bug 533397
+	 */
+	@Test
+	public void stackOverflowWithLargeContentInTable() throws IOException {
+		String content = Resources.toString(ConfluenceLanguageTest.class.getResource("resources/bug533397.confluence"),
 				Charsets.UTF_8);
 		parser.setBuilder(new HtmlDocumentBuilder(new StringWriter()));
 		parser.parse(new StringReader(content));

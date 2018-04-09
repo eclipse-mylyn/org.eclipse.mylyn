@@ -37,7 +37,7 @@ public class TableBlock extends Block {
 
 	private static final String LINK_REGEX = "(?:\\[[^\\[]*?\\])";
 
-	private static final String CELL_CONTENT_REGEX = "(?:(?:[^|\\[]|\\\\\\||\\\\\\[|" + LINK_REGEX + "|\\\\\\||\\[)*)";
+	static final String CELL_CONTENT_REGEX = "(?:\\\\\\||[^|\\[]|" + LINK_REGEX + "|\\[)*+";
 
 	private static final Pattern END_OF_CELL_CONTENT_PATTERN = Pattern.compile("(" + CELL_CONTENT_REGEX + ")" //$NON-NLS-1$
 			+ "(\\|\\|?\\s*)+?"); //$NON-NLS-1$
