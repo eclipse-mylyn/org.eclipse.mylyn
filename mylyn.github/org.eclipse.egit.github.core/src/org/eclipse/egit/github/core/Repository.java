@@ -50,7 +50,13 @@ public class Repository implements IRepositoryIdProvider, Serializable {
 
 	private int size;
 
+	/** Legacy field, kept for backwards compatibility. It's actually the stargazersCount. */
 	private int watchers;
+
+	private int stargazersCount;
+
+	/** This is what Github shows as "watchers". */
+	private int subscribersCount = -1;
 
 	private Repository parent;
 
@@ -243,10 +249,29 @@ public class Repository implements IRepositoryIdProvider, Serializable {
 	}
 
 	/**
+	 * @return stars
+	 * @since 5.0
+	 */
+	public int getStars() {
+		return stargazersCount;
+	}
+
+	/**
+	 * @param stars
+	 * @return this repository
+	 * @since 5.0
+	 */
+	public Repository setStars(int stars) {
+		this.stargazersCount = stars;
+		return this;
+	}
+
+	/**
 	 * @return watchers
 	 */
 	public int getWatchers() {
-		return watchers;
+		// Account for legacy serializations that had only the watchers field
+		return subscribersCount < 0 ? watchers : subscribersCount;
 	}
 
 	/**
@@ -254,7 +279,7 @@ public class Repository implements IRepositoryIdProvider, Serializable {
 	 * @return this repository
 	 */
 	public Repository setWatchers(int watchers) {
-		this.watchers = watchers;
+		this.subscribersCount = watchers;
 		return this;
 	}
 

@@ -15,10 +15,16 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.User;
+import org.eclipse.egit.github.core.client.GsonUtils;
 import org.junit.Test;
 
 /**
@@ -53,6 +59,7 @@ public class RepositoryTest {
 		assertNull(repo.getSvnUrl());
 		assertNull(repo.getUrl());
 		assertEquals(0, repo.getWatchers());
+		assertEquals(0, repo.getStars());
 		assertFalse(repo.isFork());
 		assertFalse(repo.isHasDownloads());
 		assertFalse(repo.isHasIssues());
@@ -93,6 +100,7 @@ public class RepositoryTest {
 		assertEquals("svn://", repo.setSvnUrl("svn://").getSvnUrl());
 		assertEquals("url://", repo.setUrl("url://").getUrl());
 		assertEquals(200, repo.setWatchers(200).getWatchers());
+		assertEquals(42, repo.setStars(42).getStars());
 		assertTrue(repo.setFork(true).isFork());
 		assertTrue(repo.setHasDownloads(true).isHasDownloads());
 		assertTrue(repo.setHasIssues(true).isHasIssues());
@@ -167,5 +175,16 @@ public class RepositoryTest {
 		repo.setName("myproject");
 		repo.setOwner(new User().setLogin("tuser"));
 		assertEquals("tuser/myproject", repo.generateId());
+	}
+
+	@Test
+	public void fromJson() throws IOException {
+		try (Reader r = new BufferedReader(new InputStreamReader (
+				this.getClass().getResourceAsStream("test_repo.json"),
+				StandardCharsets.UTF_8))) {
+			Repository repo = GsonUtils.fromJson(r, Repository.class);
+			assertEquals(9,repo.getWatchers());
+			assertEquals(21, repo.getStars());
+		}
 	}
 }
