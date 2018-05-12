@@ -107,9 +107,6 @@ public class BugzillaRestPutUpdateTask extends BugzillaRestPutRequest<PutUpdateR
 		if ((legalUpdateAttributes.contains(id) || id.startsWith("cf_")) && value != null) { //$NON-NLS-1$
 			id = BugzillaRestTaskSchema.getFieldNameFromAttributeName(id);
 			if (id.equals("status")) { //$NON-NLS-1$
-				if (value != null && value.equals(TaskAttribute.PREFIX_OPERATION + "default")) { //$NON-NLS-1$
-					return;
-				}
 				if (value.equals("duplicate")) { //$NON-NLS-1$
 					TaskAttribute res = element.getParentAttribute()
 							.getAttribute(BugzillaRestTaskSchema.getDefault().RESOLUTION.getKey());

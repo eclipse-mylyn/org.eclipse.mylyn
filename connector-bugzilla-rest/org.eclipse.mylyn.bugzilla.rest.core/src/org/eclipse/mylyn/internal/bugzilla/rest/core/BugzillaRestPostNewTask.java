@@ -62,19 +62,16 @@ public class BugzillaRestPostNewTask extends BugzillaRestPostRequest<BugzillaRes
 		}
 
 		@Override
-		public void write(JsonWriter out, TaskData value) throws IOException {
+		public void write(JsonWriter out, TaskData taskData) throws IOException {
 			out.beginObject();
 			addAuthenticationToGson(out, location);
 			for (Object element : taskData.getRoot().getAttributes().values()) {
 				TaskAttribute taskAttribute = (TaskAttribute) element;
 				String id = taskAttribute.getId();
-				String value1 = BugzillaRestGsonUtil.convertString2GSonString(taskAttribute.getValue());
+				String attributValue = BugzillaRestGsonUtil.convertString2GSonString(taskAttribute.getValue());
 				if (legalCreateAttributes.contains(id) || id.startsWith("cf_")) { //$NON-NLS-1$
 					id = BugzillaRestCreateTaskSchema.getFieldNameFromAttributeName(id);
-					if (id.equals("status") //$NON-NLS-1$
-							&& (value != null && value.equals(TaskAttribute.PREFIX_OPERATION + "default"))) { //$NON-NLS-1$
-						continue;
-					} else if (id.equals("cc")) { //$NON-NLS-1$
+					if (id.equals("cc")) { //$NON-NLS-1$
 						HashSet<String> setNew = new HashSet<String>(
 								Arrays.asList(taskAttribute.getValue().split("\\s*,\\s*"))); //$NON-NLS-1$
 						BugzillaRestGsonUtil.buildArrayFromHash(out, id, setNew, false);
@@ -91,21 +88,21 @@ public class BugzillaRestPostNewTask extends BugzillaRestPostRequest<BugzillaRes
 					} else {
 
 						if (id.equals(BugzillaRestCreateTaskSchema.getDefault().KEYWORDS.getKey())) {
-							value1 = taskAttribute.getValues().toString();
-							value1 = value1.substring(1, value1.length() - 1);
+							attributValue = taskAttribute.getValues().toString();
+							attributValue = attributValue.substring(1, attributValue.length() - 1);
 						}
 
 						if (taskAttribute.getMetaData().getType() != null
 								&& taskAttribute.getMetaData().getType().equals(TaskAttribute.TYPE_MULTI_SELECT)) {
 							List<String> values = taskAttribute.getValues();
 							int ii = 0;
-							value1 = ""; //$NON-NLS-1$
+							attributValue = ""; //$NON-NLS-1$
 							for (String string : values) {
 								string = BugzillaRestGsonUtil.convertString2GSonString(string);
-								value1 += ((ii++ == 0 ? "" : ",") + string); //$NON-NLS-1$ //$NON-NLS-2$
+								attributValue += ((ii++ == 0 ? "" : ",") + string); //$NON-NLS-1$ //$NON-NLS-2$
 							}
 						}
-						out.name(id).value(value1);
+						out.name(id).value(attributValue);
 						if (id.equals("description")) { //$NON-NLS-1$
 							TaskAttribute descriptionpri = taskAttribute.getAttribute(
 									BugzillaRestCreateTaskSchema.getDefault().DESCRIPTION_IS_PRIVATE.getKey());
