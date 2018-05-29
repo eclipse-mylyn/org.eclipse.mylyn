@@ -4,9 +4,11 @@
    Copyright (C) 2011, Matthias Sohn <matthias.sohn@sap.com>
 
    All rights reserved. This program and the accompanying materials
-   are made available under the terms of the Eclipse Public License v1.0
+   are made available under the terms of the Eclipse Public License 2.0
    which accompanies this distribution, and is available at
-   http://www.eclipse.org/legal/epl-v10.html
+   https://www.eclipse.org/legal/epl-2.0/
+
+   SPDX-License-Identifier: EPL-2.0
 -->
 <project
     xmlns="http://maven.apache.org/POM/4.0.0"
@@ -27,14 +29,16 @@
 
   <licenses>
     <license>
-      <name>Eclipse Public License v1.0</name>
+      <name>Eclipse Public License 2.0</name>
       <comments>
        All rights reserved.
 
        This program and the accompanying materials are made
-       available under the terms of the Eclipse Public License v1.0
+       available under the terms of the Eclipse Public License 2.0
        which accompanies this distribution, and is available at
-       http://www.eclipse.org/legal/epl-v10.htm
+       https://www.eclipse.org/legal/epl-2.0/
+
+       SPDX-License-Identifier: EPL-2.0
       </comments>
     </license>
   </licenses>
@@ -48,6 +52,7 @@
     <eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
     <orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/R20150519210750/repository/</orbit-site>
     <download-publish-path>/home/data/httpd/download.eclipse.org/egit/github/updates-nightly</download-publish-path>
+    <license-site>http://download.eclipse.org/cbi/updates/license</license-site>
   </properties>
 
     <modules>
@@ -81,6 +86,11 @@
       <id>mylyn</id>
       <layout>p2</layout>
       <url>${mylyn-site}</url>
+    </repository>
+    <repository>
+      <id>eclipse.license</id>
+      <layout>p2</layout>
+      <url>${license-site}</url>
     </repository>
   </repositories>
 
