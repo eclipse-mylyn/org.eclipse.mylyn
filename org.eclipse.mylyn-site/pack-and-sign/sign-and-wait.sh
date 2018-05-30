@@ -20,53 +20,14 @@ fi
 set -x
 
 SRC=$1
-DST=/home/data/httpd/download-staging.priv/$2
-OUT=$DST/output
-LOG=/home/data/httpd/download-staging.priv/arch/signer.log
-
-# prepare
-
-rm -rf $DST
-mkdir -p $DST
-mkdir -p $OUT
-
-# create zip
-
-echo Creating archive for signing
 
 cd $SRC
-/usr/bin/find -name "*$3*" | zip $DST/site.zip -@
 
-# sign
+echo Begin Signing
 
-/usr/bin/sign $DST/site.zip nomail $OUT
-
-# wait up to 30 minutes for signing to complete
-
-tail -f $LOG | grep -E \(Extracting\|Finished\) &
-
-I=0
-while [ $I -lt 120 ] && [ ! -e $OUT/site.zip ]; do
-  echo Waiting for $OUT/site.zip... $I / 120
-  sleep 30
-  let I=I+1
+for file in `/usr/bin/find -name "*$3*.jar"`; do
+	echo Signing $file
+	curl -o $file -F file=@$file http://build.eclipse.org:31338/sign
 done
 
-PID=`jobs -l -p`
-kill $PID
-
-if [ ! -e $OUT/site.zip ]
-then
-  echo
-  echo Signing Failed: Timeout waiting for $OUT/site.zip
-  exit 1
-fi
-
-# unzip
-
-echo Unzipping signed files
-/usr/bin/unzip -o -d $SRC $OUT/site.zip
-
-# cleanup
-
-rm $DST/site.zip
+echo Completed Signing
