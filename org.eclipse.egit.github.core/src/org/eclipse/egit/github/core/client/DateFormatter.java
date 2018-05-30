@@ -52,11 +52,12 @@ public class DateFormatter implements JsonDeserializer<Date>,
 			format.setTimeZone(timeZone);
 	}
 
+	@Override
 	public Date deserialize(JsonElement json, Type typeOfT,
 			JsonDeserializationContext context) throws JsonParseException {
 		JsonParseException exception = null;
 		final String value = json.getAsString();
-		for (DateFormat format : formats)
+		for (DateFormat format : formats) {
 			try {
 				synchronized (format) {
 					return format.parse(value);
@@ -64,9 +65,15 @@ public class DateFormatter implements JsonDeserializer<Date>,
 			} catch (ParseException e) {
 				exception = new JsonParseException(e);
 			}
-		throw exception;
+		}
+		if (exception != null) { // Always true here.
+			throw exception;
+		}
+		// We'll never get here, but JDT's null analysis get's confused.
+		return null;
 	}
 
+	@Override
 	public JsonElement serialize(Date date, Type type,
 			JsonSerializationContext context) {
 		final DateFormat primary = formats[0];

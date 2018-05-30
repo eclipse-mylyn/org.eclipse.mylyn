@@ -23,7 +23,6 @@ import org.eclipse.egit.github.core.Language;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.SearchRepository;
 import org.eclipse.egit.github.core.service.RepositoryService;
-import org.eclipse.egit.github.core.util.UrlUtils;
 import org.eclipse.egit.ui.internal.UIIcons;
 import org.eclipse.egit.ui.internal.provisional.wizards.GitRepositoryInfo;
 import org.eclipse.egit.ui.internal.provisional.wizards.IRepositorySearchResult;
@@ -95,6 +94,7 @@ public class RepositorySearchWizardPage extends WizardPage implements
 	/**
 	 *
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		final Composite root = new Composite(parent, SWT.NONE);
 		GridLayoutFactory.swtDefaults().numColumns(1).applyTo(root);
@@ -137,21 +137,26 @@ public class RepositorySearchWizardPage extends WizardPage implements
 
 					private Image repoImage = UIIcons.REPOSITORY.createImage();
 
+					@Override
 					public void removeListener(ILabelProviderListener listener) {
 					}
 
+					@Override
 					public boolean isLabelProperty(Object element,
 							String property) {
 						return false;
 					}
 
+					@Override
 					public void dispose() {
 						repoImage.dispose();
 					}
 
+					@Override
 					public void addListener(ILabelProviderListener listener) {
 					}
 
+					@Override
 					public StyledString getStyledText(Object element) {
 						StyledString styled = new StyledString();
 						SearchRepository repo = (SearchRepository) element;
@@ -186,6 +191,7 @@ public class RepositorySearchWizardPage extends WizardPage implements
 						return styled;
 					}
 
+					@Override
 					public Image getImage(Object element) {
 						return repoImage;
 					}
@@ -194,6 +200,7 @@ public class RepositorySearchWizardPage extends WizardPage implements
 		repoListViewer
 				.addSelectionChangedListener(new ISelectionChangedListener() {
 
+					@Override
 					public void selectionChanged(SelectionChangedEvent event) {
 						validate(repoListViewer);
 					}
@@ -201,6 +208,7 @@ public class RepositorySearchWizardPage extends WizardPage implements
 
 		searchText.addModifyListener(new ModifyListener() {
 
+			@Override
 			public void modifyText(ModifyEvent e) {
 				searchButton
 						.setEnabled(searchText.getText().trim().length() != 0);
@@ -209,6 +217,7 @@ public class RepositorySearchWizardPage extends WizardPage implements
 
 		searchButton.addSelectionListener(new SelectionAdapter() {
 
+			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				String language = null;
 				if (languageCombo.getSelectionIndex() > 0)
@@ -230,6 +239,7 @@ public class RepositorySearchWizardPage extends WizardPage implements
 		setPageComplete(!selection.isEmpty());
 	}
 
+	@Override
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		if (visible)
@@ -242,6 +252,7 @@ public class RepositorySearchWizardPage extends WizardPage implements
 		try {
 			getContainer().run(true, true, new IRunnableWithProgress() {
 
+				@Override
 				public void run(IProgressMonitor monitor)
 						throws InvocationTargetException, InterruptedException {
 					monitor.beginTask(
@@ -251,22 +262,18 @@ public class RepositorySearchWizardPage extends WizardPage implements
 					try {
 						final List<SearchRepository> repositories = repositoryService
 								.searchRepositories(text.trim(), language);
-						PlatformUI.getWorkbench().getDisplay()
-								.syncExec(new Runnable() {
-
-									public void run() {
-										if (viewer.getControl().isDisposed())
-											return;
-										setMessage(
-												MessageFormat
-														.format(Messages.RepositorySearchWizardPage_Found,
-																repositories
-																		.size()),
-												INFORMATION);
-										viewer.setInput(repositories);
-										validate(viewer);
-									}
-								});
+						PlatformUI.getWorkbench().getDisplay().syncExec(() -> {
+							if (viewer.getControl().isDisposed())
+								return;
+							setMessage(
+									MessageFormat.format(
+											Messages.RepositorySearchWizardPage_Found,
+											Integer.valueOf(
+													repositories.size())),
+									INFORMATION);
+							viewer.setInput(repositories);
+							validate(viewer);
+						});
 					} catch (IOException e) {
 						throw new InvocationTargetException(GitHubException
 								.wrap(e));
@@ -287,6 +294,7 @@ public class RepositorySearchWizardPage extends WizardPage implements
 		}
 	}
 
+	@Override
 	public GitRepositoryInfo getGitRepositoryInfo()
 			throws NoRepositoryInfoException {
 		String cloneUrl = null;

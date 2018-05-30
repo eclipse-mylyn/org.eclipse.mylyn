@@ -49,7 +49,7 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 
 		/**
 		 * Avatar loaded
-		 * 
+		 *
 		 * @param data
 		 * @param store
 		 */
@@ -72,11 +72,11 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 	 */
 	public static final int BUFFER_SIZE = 8192;
 
-	private Map<String, byte[]> avatars = new HashMap<String, byte[]>();
+	private Map<String, byte[]> avatars = new HashMap<>();
 
 	/**
 	 * Get cached avatar image data
-	 * 
+	 *
 	 * @param url
 	 * @return image data or null if not present in store
 	 */
@@ -93,7 +93,7 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 
 	/**
 	 * Normalize url removing query parameters
-	 * 
+	 *
 	 * @param url
 	 * @return normalized
 	 */
@@ -110,13 +110,14 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 
 	/**
 	 * Load avatar
-	 * 
+	 *
 	 * @param url
 	 * @param callback
 	 */
 	public void loadAvatar(final String url, final IAvatarCallback callback) {
-		Job job = new Job(MessageFormat.format("Loading avatar for {0}", url)) {
+		Job job = new Job(MessageFormat.format("Loading avatar for {0}", url)) { //$NON-NLS-1$
 
+			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
 					ImageData data = loadAvatar(url);
@@ -133,7 +134,7 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 
 	/**
 	 * Load avatar image data from url
-	 * 
+	 *
 	 * @param url
 	 * @return avatar image data
 	 * @throws IOException
@@ -177,7 +178,7 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 
 	/**
 	 * Get scaled image
-	 * 
+	 *
 	 * @param size
 	 * @param data
 	 * @return image data scaled to specified size
@@ -208,7 +209,7 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 
 	/**
 	 * Get avatar image data
-	 * 
+	 *
 	 * @param bytes
 	 * @return image data
 	 */
@@ -231,6 +232,7 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 	/**
 	 * @see org.eclipse.core.runtime.jobs.ISchedulingRule#contains(org.eclipse.core.runtime.jobs.ISchedulingRule)
 	 */
+	@Override
 	public boolean contains(ISchedulingRule rule) {
 		return this == rule;
 	}
@@ -238,6 +240,7 @@ public class AvatarStore implements Serializable, ISchedulingRule {
 	/**
 	 * @see org.eclipse.core.runtime.jobs.ISchedulingRule#isConflicting(org.eclipse.core.runtime.jobs.ISchedulingRule)
 	 */
+	@Override
 	public boolean isConflicting(ISchedulingRule rule) {
 		return this == rule;
 	}

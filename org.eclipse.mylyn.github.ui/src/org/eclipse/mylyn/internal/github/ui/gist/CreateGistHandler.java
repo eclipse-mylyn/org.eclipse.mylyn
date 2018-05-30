@@ -64,6 +64,7 @@ public class CreateGistHandler extends AbstractHandler {
 	/**
 	 * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
 	 */
+	@Override
 	public boolean isEnabled() {
 		return !GistConnectorUi.getRepositories().isEmpty();
 	}
@@ -97,6 +98,7 @@ public class CreateGistHandler extends AbstractHandler {
 
 	}
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		// TODO replace this with
 		// HandlerUtil.getActiveEditorInput(ExecutionEvent) as soon
@@ -137,9 +139,9 @@ public class CreateGistHandler extends AbstractHandler {
 					}
 				}
 			} else if (part instanceof IWorkbenchPart2)
-				name = ((IWorkbenchPart2) part).getPartName().replace(" ", "")
+				name = ((IWorkbenchPart2) part).getPartName().replace(" ", "") //$NON-NLS-1$ //$NON-NLS-2$
 						.toLowerCase(Locale.US)
-						+ ".txt";
+						+ ".txt"; //$NON-NLS-1$
 			if (name == null)
 				name = DEFAULT_FILENAME;
 			createGistJob(event, name, text.getText(), isPublic);
@@ -153,7 +155,7 @@ public class CreateGistHandler extends AbstractHandler {
 				file = (IResource) ((IAdaptable) obj)
 						.getAdapter(IResource.class);
 				if (file == null)
-					file = (IFile) ((IAdaptable) obj).getAdapter(IFile.class);
+					file = (IResource) ((IAdaptable) obj).getAdapter(IFile.class);
 			}
 			if (file instanceof IFile)
 				createGistJob(event, (IFile) file, isPublic);

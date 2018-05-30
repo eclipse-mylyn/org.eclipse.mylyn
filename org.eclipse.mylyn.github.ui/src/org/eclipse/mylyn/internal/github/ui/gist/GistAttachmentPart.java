@@ -38,7 +38,6 @@ import org.eclipse.mylyn.commons.workbench.forms.CommonFormUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.commands.OpenTaskAttachmentHandler;
-import org.eclipse.mylyn.internal.tasks.ui.editors.AttachmentTableLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorAttachmentPart;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiMenus;
@@ -104,6 +103,7 @@ public class GistAttachmentPart extends AbstractTaskEditorPart {
 	 * @see org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart#createControl(org.eclipse.swt.widgets.Composite,
 	 *      org.eclipse.ui.forms.widgets.FormToolkit)
 	 */
+	@Override
 	public void createControl(Composite parent, final FormToolkit toolkit) {
 		initialize();
 
@@ -150,6 +150,7 @@ public class GistAttachmentPart extends AbstractTaskEditorPart {
 	/**
 	 * @see org.eclipse.ui.forms.AbstractFormPart#dispose()
 	 */
+	@Override
 	public void dispose() {
 		if (menuManager != null)
 			menuManager.dispose();
@@ -190,7 +191,7 @@ public class GistAttachmentPart extends AbstractTaskEditorPart {
 
 		attachmentsViewer.setSorter(new GistAttachmentSorter());
 
-		List<ITaskAttachment> attachmentList = new ArrayList<ITaskAttachment>(
+		List<ITaskAttachment> attachmentList = new ArrayList<>(
 				attachments.size());
 		for (TaskAttribute attribute : attachments) {
 			ITaskAttachment taskAttachment = new TaskAttachment(getModel()
@@ -203,12 +204,14 @@ public class GistAttachmentPart extends AbstractTaskEditorPart {
 		attachmentsViewer.setLabelProvider(new GistAttachmentTableLabelProvider(
 				getModel(), getTaskEditorPage().getAttributeEditorToolkit()) {
 
+			@Override
 			public String getColumnText(Object element, int columnIndex) {
 				if (columnIndex > 0)
 					columnIndex++;
 				return super.getColumnText(element, columnIndex);
 			}
 
+			@Override
 			public Image getColumnImage(Object element, int columnIndex) {
 				if (columnIndex > 0)
 					columnIndex++;
@@ -217,6 +220,7 @@ public class GistAttachmentPart extends AbstractTaskEditorPart {
 
 		});
 		attachmentsViewer.addOpenListener(new IOpenListener() {
+			@Override
 			public void open(OpenEvent event) {
 				openAttachments(event);
 			}
@@ -227,6 +231,7 @@ public class GistAttachmentPart extends AbstractTaskEditorPart {
 		menuManager = new MenuManager();
 		menuManager.setRemoveAllWhenShown(true);
 		menuManager.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				TasksUiMenus.fillTaskAttachmentMenu(manager);
 			}
@@ -283,6 +288,7 @@ public class GistAttachmentPart extends AbstractTaskEditorPart {
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart#fillToolBar(org.eclipse.jface.action.ToolBarManager)
 	 */
+	@Override
 	protected void fillToolBar(ToolBarManager toolBarManager) {
 		Action attachFileAction = new Action() {
 			@Override
@@ -297,8 +303,13 @@ public class GistAttachmentPart extends AbstractTaskEditorPart {
 		toolBarManager.add(attachFileAction);
 	}
 
+	/**
+	 * Open attachments from a task.
+	 *
+	 * @param event
+	 */
 	protected void openAttachments(OpenEvent event) {
-		List<ITaskAttachment> attachments = new ArrayList<ITaskAttachment>();
+		List<ITaskAttachment> attachments = new ArrayList<>();
 
 		StructuredSelection selection = (StructuredSelection) event
 				.getSelection();
@@ -335,6 +346,14 @@ public class GistAttachmentPart extends AbstractTaskEditorPart {
 		return super.setFormInput(input);
 	}
 
+	/**
+	 * Selects and shows in the table of attachments an attachment matching the
+	 * given {@link TaskAttribute}.
+	 * 
+	 * @param attachmentAttribute
+	 *            to select
+	 * @return whether an element was found and selected
+	 */
 	public boolean selectReveal(TaskAttribute attachmentAttribute) {
 		if (attachmentAttribute == null || attachmentsTable == null)
 			return false;

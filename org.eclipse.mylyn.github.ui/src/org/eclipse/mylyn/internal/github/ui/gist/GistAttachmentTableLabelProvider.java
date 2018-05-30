@@ -61,12 +61,30 @@ public class GistAttachmentTableLabelProvider extends ColumnLabelProvider {
 
 	private final ResourceManager imageManager;
 
+	/**
+	 * Creates a new {@link GistAttachmentTableLabelProvider}.
+	 *
+	 * @param model
+	 *            to use
+	 * @param attributeEditorToolkit
+	 *            to use
+	 */
 	public GistAttachmentTableLabelProvider(TaskDataModel model, AttributeEditorToolkit attributeEditorToolkit) {
 		this.model = model;
 		this.attributeEditorToolkit = attributeEditorToolkit;
 		this.imageManager = new LocalResourceManager(JFaceResources.getResources());
 	}
 
+	/**
+	 * Determines an appropriate image for the element shown in a particular
+	 * column.
+	 *
+	 * @param element
+	 *            being shown
+	 * @param columnIndex
+	 *            of the column the element is being shown in
+	 * @return an {@link Image}, or {@code null} if none
+	 */
 	public Image getColumnImage(Object element, int columnIndex) {
 		ITaskAttachment attachment = (ITaskAttachment) element;
 		if (columnIndex == 0) {
@@ -84,11 +102,14 @@ public class GistAttachmentTableLabelProvider extends ColumnLabelProvider {
 	}
 
 	/**
-	 * Simplified implementation of {@link org.eclipse.mylyn.commons.workbench.CommonImageManager#getFileName(String)}.
-	 * The CommonImageManagerPackage was relocated from package org.eclipse.mylyn.internal.provisional.commons.ui
-	 * some time after Mylyn 3.7.
+	 * Simplified implementation of
+	 * org.eclipse.mylyn.commons.workbench.CommonImageManager#getFileName(String).
+	 * The CommonImageManagerPackage was relocated from package
+	 * org.eclipse.mylyn.internal.provisional.commons.ui some time after Mylyn
+	 * 3.7.
 	 *
-	 * @param filename to get an image for
+	 * @param filename
+	 *            to get an image for
 	 * @return the image
 	 */
 	private Image getFileImage(String filename) {
@@ -111,6 +132,16 @@ public class GistAttachmentTableLabelProvider extends ColumnLabelProvider {
 		}
 	}
 
+	/**
+	 * Determines the text to shown in a particular column for a particular
+	 * element. column.
+	 *
+	 * @param element
+	 *            being shown
+	 * @param columnIndex
+	 *            of the column the element is being shown in
+	 * @return the text to show.
+	 */
 	public String getColumnText(Object element, int columnIndex) {
 		ITaskAttachment attachment = (ITaskAttachment) element;
 		switch (columnIndex) {

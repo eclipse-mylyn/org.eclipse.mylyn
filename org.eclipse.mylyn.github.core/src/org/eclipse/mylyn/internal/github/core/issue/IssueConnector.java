@@ -48,7 +48,6 @@ import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.github.core.GitHub;
 import org.eclipse.mylyn.internal.github.core.QueryUtils;
 import org.eclipse.mylyn.internal.github.core.RepositoryConnector;
-import org.eclipse.mylyn.internal.github.core.pr.PullRequestConnector;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -163,7 +162,7 @@ public class IssueConnector extends RepositoryConnector {
 	 */
 	public List<Label> getLabels(TaskRepository repository) {
 		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
-		List<Label> labels = new LinkedList<Label>();
+		List<Label> labels = new LinkedList<>();
 		List<Label> cached = this.repositoryLabels.get(repository);
 		if (cached != null)
 			labels.addAll(cached);
@@ -194,7 +193,7 @@ public class IssueConnector extends RepositoryConnector {
 		GitHubClient client = createClient(repository);
 		MilestoneService service = new MilestoneService(client);
 		try {
-			List<Milestone> milestones = new LinkedList<Milestone>();
+			List<Milestone> milestones = new LinkedList<>();
 			milestones.addAll(service.getMilestones(repo.getOwner(),
 					repo.getName(), IssueService.STATE_OPEN));
 			milestones.addAll(service.getMilestones(repo.getOwner(),
@@ -215,7 +214,7 @@ public class IssueConnector extends RepositoryConnector {
 	 */
 	public List<Milestone> getMilestones(TaskRepository repository) {
 		Assert.isNotNull(repository, "Repository cannot be null"); //$NON-NLS-1$
-		List<Milestone> milestones = new LinkedList<Milestone>();
+		List<Milestone> milestones = new LinkedList<>();
 		List<Milestone> cached = this.repositoryMilestones.get(repository);
 		if (cached != null)
 			milestones.addAll(cached);
@@ -294,7 +293,7 @@ public class IssueConnector extends RepositoryConnector {
 			GitHubClient client = createClient(repository);
 			IssueService service = new IssueService(client);
 
-			Map<String, String> filterData = new HashMap<String, String>();
+			Map<String, String> filterData = new HashMap<>();
 			String mentions = query.getAttribute(IssueService.FILTER_MENTIONED);
 			if (mentions != null)
 				filterData.put(IssueService.FILTER_MENTIONED, mentions);

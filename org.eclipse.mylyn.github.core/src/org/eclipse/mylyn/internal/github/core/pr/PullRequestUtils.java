@@ -230,7 +230,7 @@ public abstract class PullRequestUtils {
 	 */
 	public static String getHeadBranch(PullRequest request) {
 		PullRequestMarker head = request.getHead();
-		return Constants.R_REMOTES + head.getRepo().getOwner().getLogin() + "/"
+		return Constants.R_REMOTES + head.getRepo().getOwner().getLogin() + '/'
 				+ head.getRef();
 	}
 }

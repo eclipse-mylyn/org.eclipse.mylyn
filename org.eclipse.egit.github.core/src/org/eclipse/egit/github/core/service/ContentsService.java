@@ -81,7 +81,7 @@ public class ContentsService extends GitHubService {
 		GitHubRequest request = createRequest();
 		request.setUri(uri);
 		if (ref != null && ref.length() > 0)
-			request.setParams(Collections.singletonMap("ref", ref));
+			request.setParams(Collections.singletonMap("ref", ref)); //$NON-NLS-1$
 		request.setType(RepositoryContents.class);
 		return (RepositoryContents) client.get(request).getBody();
 	}
@@ -143,7 +143,7 @@ public class ContentsService extends GitHubService {
 		request.setArrayType(new TypeToken<List<RepositoryContents>>() {
 		}.getType());
 		if (ref != null && ref.length() > 0)
-			request.setParams(Collections.singletonMap("ref", ref));
+			request.setParams(Collections.singletonMap("ref", ref)); //$NON-NLS-1$
 
 		Object body = client.get(request).getBody();
 		if (body instanceof RepositoryContents)

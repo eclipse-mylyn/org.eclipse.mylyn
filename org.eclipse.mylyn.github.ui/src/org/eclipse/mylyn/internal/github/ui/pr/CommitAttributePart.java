@@ -68,11 +68,11 @@ public class CommitAttributePart extends AbstractTaskEditorSection {
 
 	private CommandContributionItem fetchCommits;
 
-	private CommandContributionItem checkoutPr;
+	// private CommandContributionItem checkoutPr;
 
-	private CommandContributionItem mergePr;
+	// private CommandContributionItem mergePr;
 
-	private CommandContributionItem rebasePr;
+	// private CommandContributionItem rebasePr;
 
 	private PullRequestComposite request;
 
@@ -86,6 +86,7 @@ public class CommitAttributePart extends AbstractTaskEditorSection {
 		this.request = request;
 	}
 
+	@Override
 	protected Control createContent(FormToolkit toolkit, Composite parent) {
 		Composite displayArea = toolkit.createComposite(parent);
 		GridLayoutFactory.fillDefaults().spacing(0, 0).applyTo(displayArea);
@@ -134,6 +135,7 @@ public class CommitAttributePart extends AbstractTaskEditorSection {
 				FormToolkit.TREE_BORDER);
 		commitViewer.addOpenListener(new IOpenListener() {
 
+			@Override
 			public void open(final OpenEvent event) {
 				PullRequest pr = request.getRequest();
 				Repository repo = PullRequestUtils.getRepository(pr);
@@ -180,18 +182,9 @@ public class CommitAttributePart extends AbstractTaskEditorSection {
 							Messages.CommitAttributePart_TitleFetch,
 							Messages.CommitAttributePart_MessageFetch);
 					if (fetch) {
-						fetchCommits(new Runnable() {
-
-							public void run() {
-								PlatformUI.getWorkbench().getDisplay()
-										.asyncExec(new Runnable() {
-
-											public void run() {
-												openCommits(repository,
-														elements);
-											}
-										});
-							}
+						fetchCommits(() -> {
+							PlatformUI.getWorkbench().getDisplay().asyncExec(
+									() -> openCommits(repository, elements));
 						});
 					}
 
@@ -210,6 +203,7 @@ public class CommitAttributePart extends AbstractTaskEditorSection {
 		return new CommandContributionItem(parameter);
 	}
 
+	@Override
 	protected void fillToolBar(ToolBarManager toolBarManager) {
 		if (TasksUiUtil.isOutgoingNewTask(getTaskEditorPage().getTask(),
 				IssueConnector.KIND))
@@ -217,10 +211,12 @@ public class CommitAttributePart extends AbstractTaskEditorSection {
 		if (request == null)
 			return;
 
-		checkoutPr = createCommandContributionItem(CheckoutPullRequestHandler.ID);
+		// checkoutPr =
+		// createCommandContributionItem(CheckoutPullRequestHandler.ID);
 		fetchCommits = createCommandContributionItem(FetchPullRequestHandler.ID);
-		mergePr = createCommandContributionItem(MergePullRequestHandler.ID);
-		rebasePr = createCommandContributionItem(RebasePullRequestHandler.ID);
+		// mergePr = createCommandContributionItem(MergePullRequestHandler.ID);
+		// rebasePr =
+		// createCommandContributionItem(RebasePullRequestHandler.ID);
 
 		// Disable actions for now
 		// toolBarManager.add(checkoutPr);
@@ -235,6 +231,7 @@ public class CommitAttributePart extends AbstractTaskEditorSection {
 				: null;
 	}
 
+	@Override
 	protected boolean shouldExpandOnCreate() {
 		return true;
 	}

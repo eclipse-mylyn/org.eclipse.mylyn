@@ -40,11 +40,11 @@ public abstract class TaskDataHandler extends AbstractHandler {
 	 * POST_HANDLER_CALLBACK - variable for post handler callback that is a
 	 * {@link Runnable}
 	 */
-	public static final String POST_HANDLER_CALLBACK = "postHandlerCallback";
+	public static final String POST_HANDLER_CALLBACK = "postHandlerCallback"; //$NON-NLS-1$
 
 	/**
 	 * Create context with given selection
-	 * 
+	 *
 	 * @param selection
 	 * @param handlerService
 	 * @return context
@@ -60,7 +60,7 @@ public abstract class TaskDataHandler extends AbstractHandler {
 
 	/**
 	 * Get task data from event
-	 * 
+	 *
 	 * @param event
 	 * @return task data
 	 */
@@ -86,9 +86,9 @@ public abstract class TaskDataHandler extends AbstractHandler {
 
 	/**
 	 * Should this handler be enabled for the given task data?
-	 * 
+	 *
 	 * Always returns true by default, sub-classes should override
-	 * 
+	 *
 	 * @param data
 	 * @return true is enabled, false otherwise
 	 */
@@ -98,7 +98,7 @@ public abstract class TaskDataHandler extends AbstractHandler {
 
 	/**
 	 * Schedule job
-	 * 
+	 *
 	 * @param job
 	 * @param event
 	 */
@@ -120,7 +120,7 @@ public abstract class TaskDataHandler extends AbstractHandler {
 
 	/**
 	 * Execute callback on trigger if configured
-	 * 
+	 *
 	 * @param event
 	 */
 	protected void executeCallback(ExecutionEvent event) {

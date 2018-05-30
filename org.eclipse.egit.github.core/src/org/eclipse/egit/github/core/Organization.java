@@ -44,7 +44,9 @@ public class Organization implements Serializable {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
+	 * @return this
 	 */
 	public Organization setId(int id) {
 		this.id = id;
@@ -59,7 +61,9 @@ public class Organization implements Serializable {
 	}
 
 	/**
-	 * @param login the login to set
+	 * @param login
+	 *            the login to set
+	 * @return this
 	 */
 	public Organization setLogin(String login) {
 		this.login = login;
@@ -74,7 +78,9 @@ public class Organization implements Serializable {
 	}
 
 	/**
-	 * @param description the description to set
+	 * @param description
+	 *            the description to set
+	 * @return this
 	 */
 	public Organization setDescription(String description) {
 		this.description = description;
@@ -89,7 +95,9 @@ public class Organization implements Serializable {
 	}
 
 	/**
-	 * @param url the url to set
+	 * @param url
+	 *            the url to set
+	 * @return this
 	 */
 	public Organization setUrl(String url) {
 		this.url = url;

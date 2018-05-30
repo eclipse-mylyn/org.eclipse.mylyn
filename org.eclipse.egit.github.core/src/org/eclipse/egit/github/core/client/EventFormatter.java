@@ -75,12 +75,13 @@ public class EventFormatter implements JsonDeserializer<Event> {
 			.registerTypeAdapter(Date.class, new DateFormatter())
 			.setFieldNamingPolicy(LOWER_CASE_WITH_UNDERSCORES).create();
 
+	@Override
 	public Event deserialize(JsonElement json, Type typeOfT,
 			JsonDeserializationContext context) throws JsonParseException {
 		final Event event = gson.fromJson(json, Event.class);
 		if (event == null || !json.isJsonObject())
 			return event;
-		final JsonElement rawPayload = json.getAsJsonObject().get("payload");
+		final JsonElement rawPayload = json.getAsJsonObject().get("payload"); //$NON-NLS-1$
 		if (rawPayload == null || !rawPayload.isJsonObject())
 			return event;
 		final String type = event.getType();

@@ -23,9 +23,11 @@ import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 public class GistAttachmentSorter extends TableSorter {
 
 	/**
-	 * @see org.eclipse.mylyn.internal.provisional.commons.ui.AbstractColumnViewerSorter#compare(org.eclipse.jface.viewers.ColumnViewer,
-	 *      java.lang.Object, java.lang.Object, int)
+	 * Compare
+	 * org.eclipse.mylyn.internal.provisional.commons.ui.AbstractColumnViewerSorter#compare(org.eclipse.jface.viewers.ColumnViewer,
+	 * java.lang.Object, java.lang.Object, int)
 	 */
+	@Override
 	public int compare(TableViewer viewer, Object e1, Object e2, int columnIndex) {
 		ITaskAttachment attachment1 = (ITaskAttachment) e1;
 		ITaskAttachment attachment2 = (ITaskAttachment) e2;

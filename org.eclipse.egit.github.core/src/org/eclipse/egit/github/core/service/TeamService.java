@@ -136,7 +136,7 @@ public class TeamService extends GitHubService {
 		uri.append('/').append(organization);
 		uri.append(SEGMENT_TEAMS);
 
-		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> params = new HashMap<>();
 		params.put("name", team.getName()); //$NON-NLS-1$
 		params.put("permission", team.getPermission()); //$NON-NLS-1$
 		if (repoNames != null)
@@ -251,6 +251,17 @@ public class TeamService extends GitHubService {
 		client.delete(uri.toString());
 	}
 
+	/**
+	 * Determines a user's membership status in a team.
+	 *
+	 * @param id
+	 *            of the team
+	 * @param user
+	 *            to query
+	 * @return the team membership of the user
+	 * @throws IOException
+	 *             if the user is not a member of the team
+	 */
 	public TeamMembership getMembership(int id, String user) throws IOException {
 		if (user == null)
 			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
@@ -265,9 +276,24 @@ public class TeamService extends GitHubService {
 		GitHubRequest request = createRequest();
 		request.setUri(uri);
 		request.setType(TeamMembership.class);
+		// According to
+		// https://developer.github.com/v3/teams/members/#get-team-membership
+		// Github returns a 404 if the user is not a member of the team, which
+		// the GitHubClient translates into an IOException. Is that correct?
 		return (TeamMembership) client.get(request).getBody();
 	}
 
+	/**
+	 * Add a user to a team.
+	 *
+	 * @param id
+	 *            of the team
+	 * @param user
+	 *            to query
+	 * @return the resulting {@link TeamMembership}
+	 * @throws IOException
+	 *             if the user cannot be added
+	 */
 	public TeamMembership addMembership(int id, String user) throws IOException {
 		if (user == null)
 			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
@@ -281,6 +307,16 @@ public class TeamService extends GitHubService {
 		return client.put(uri.toString(), null, TeamMembership.class);
 	}
 
+	/**
+	 * Remove a user from a team.
+	 *
+	 * @param id
+	 *            of the team
+	 * @param user
+	 *            to remove
+	 * @throws IOException
+	 *             on communication errors
+	 */
 	public void removeMembership(int id, String user) throws IOException {
 		if (user == null)
 			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$

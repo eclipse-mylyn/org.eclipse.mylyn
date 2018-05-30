@@ -38,7 +38,7 @@ public class GitHubUi extends AbstractUIPlugin {
 	/**
 	 * BUNDLE_ID
 	 */
-	public static final String BUNDLE_ID = "org.eclipse.mylyn.github.ui";
+	public static final String BUNDLE_ID = "org.eclipse.mylyn.github.ui"; //$NON-NLS-1$
 
 	/**
 	 * STORE_NAME
@@ -99,7 +99,7 @@ public class GitHubUi extends AbstractUIPlugin {
 	 */
 	public static IStatus createErrorStatus(Throwable e) {
 		return createStatus(IStatus.ERROR,
-				"Unexpected error: " + e.getMessage(), e);
+				"Unexpected error: " + e.getMessage(), e); //$NON-NLS-1$
 	}
 
 	/**
@@ -153,6 +153,7 @@ public class GitHubUi extends AbstractUIPlugin {
 	/**
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		INSTANCE = this;
@@ -212,6 +213,7 @@ public class GitHubUi extends AbstractUIPlugin {
 	/**
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		INSTANCE = null;
