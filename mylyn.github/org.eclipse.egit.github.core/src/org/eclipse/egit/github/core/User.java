@@ -69,6 +69,7 @@ public class User implements Serializable {
 
 	private String email;
 
+	// Github legacy field; needs to be kept for proper deserialization.
 	private String gravatarId;
 
 	private String htmlUrl;

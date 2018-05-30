@@ -168,6 +168,7 @@ public class IssueService extends GitHubService {
 		/**
 		 * @see org.eclipse.egit.github.core.IResourceProvider#getResources()
 		 */
+		@Override
 		public List<SearchIssue> getResources() {
 			return issues;
 		}
@@ -397,7 +398,7 @@ public class IssueService extends GitHubService {
 	/**
 	 * Get an issue's comments
 	 *
-	 * @param repository
+	 * @param repoId
 	 * @param issueNumber
 	 * @return list of comments
 	 * @throws IOException
@@ -590,7 +591,7 @@ public class IssueService extends GitHubService {
 	 * @return map
 	 */
 	protected Map<Object, Object> createIssueMap(Issue issue, boolean newIssue) {
-		Map<Object, Object> params = new HashMap<Object, Object>();
+		Map<Object, Object> params = new HashMap<>();
 		if (issue != null) {
 			params.put(FIELD_BODY, issue.getBody());
 			params.put(FIELD_TITLE, issue.getTitle());
@@ -610,7 +611,7 @@ public class IssueService extends GitHubService {
 			}
 			List<Label> labels = issue.getLabels();
 			if (labels != null) {
-				List<String> labelNames = new ArrayList<String>(labels.size());
+				List<String> labelNames = new ArrayList<>(labels.size());
 				for (Label label : labels)
 					labelNames.add(label.getName());
 				params.put(FILTER_LABELS, labelNames);
@@ -703,7 +704,6 @@ public class IssueService extends GitHubService {
 	 * Edit issue
 	 *
 	 * @param repoId
-	 * @param repository
 	 * @param issue
 	 * @return created issue
 	 * @throws IOException
@@ -809,7 +809,7 @@ public class IssueService extends GitHubService {
 		uri.append('/').append(issueNumber);
 		uri.append(SEGMENT_COMMENTS);
 
-		Map<String, String> params = new HashMap<String, String>(1, 1);
+		Map<String, String> params = new HashMap<>(1, 1);
 		params.put(FIELD_BODY, comment);
 
 		return client.post(uri.toString(), params, Comment.class);
@@ -872,8 +872,7 @@ public class IssueService extends GitHubService {
 	/**
 	 * Edit issue comment
 	 *
-	 * @param user
-	 * @param repository
+	 * @param repoId
 	 * @param comment
 	 * @return edited comment
 	 * @throws IOException
@@ -947,8 +946,7 @@ public class IssueService extends GitHubService {
 	/**
 	 * Delete the issue comment with the given id
 	 *
-	 * @param user
-	 * @param repository
+	 * @param repoId
 	 * @param commentId
 	 * @throws IOException
 	 */

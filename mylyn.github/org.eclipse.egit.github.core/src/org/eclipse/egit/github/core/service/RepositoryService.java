@@ -119,6 +119,7 @@ public class RepositoryService extends GitHubService {
 		/**
 		 * @see org.eclipse.egit.github.core.IResourceProvider#getResources()
 		 */
+		@Override
 		public List<SearchRepository> getResources() {
 			return repositories;
 		}
@@ -253,7 +254,7 @@ public class RepositoryService extends GitHubService {
 		PagedRequest<Repository> request = createPagedRequest();
 		request.setUri(SEGMENT_REPOSITORIES);
 		if (since > 0)
-			request.setParams(Collections.singletonMap("since",
+			request.setParams(Collections.singletonMap("since", //$NON-NLS-1$
 					Long.toString(since)));
 		request.setType(new TypeToken<List<Repository>>() {
 		}.getType());
@@ -492,7 +493,7 @@ public class RepositoryService extends GitHubService {
 
 		PagedRequest<SearchRepository> request = createPagedRequest();
 
-		Map<String, String> params = new HashMap<String, String>(2, 1);
+		Map<String, String> params = new HashMap<>(2, 1);
 		if (language != null && language.length() > 0)
 			params.put(PARAM_LANGUAGE, language);
 		if (startPage > 0)
@@ -769,7 +770,7 @@ public class RepositoryService extends GitHubService {
 		uri.append('/').append(id);
 		uri.append(SEGMENT_FORKS);
 		if (organization != null)
-			uri.append("?org=").append(organization);
+			uri.append("?org=").append(organization); //$NON-NLS-1$
 		return client.post(uri.toString(), null, Repository.class);
 	}
 

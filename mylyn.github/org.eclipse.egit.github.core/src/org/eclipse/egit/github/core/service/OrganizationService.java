@@ -46,7 +46,12 @@ public class OrganizationService extends GitHubService {
 	 * @since 4.2
 	 */
 	public static enum RoleFilter {
-		all, admin, member
+		/** Everybody. */
+		all,
+		/** "Admin" members of the organization. */
+		admin,
+		/** Ordinary non-admin members of the organization. */
+		member
 	}
 
 	/**
@@ -75,7 +80,7 @@ public class OrganizationService extends GitHubService {
 	 */
 	protected PagedRequest<User> createOrgRequest(String user, int start,
 			int size) {
-		PagedRequest<User> request = new PagedRequest<User>(start, size);
+		PagedRequest<User> request = new PagedRequest<>(start, size);
 		if (user == null)
 			request.setUri(SEGMENT_USER + SEGMENT_ORGS);
 		else {
@@ -197,8 +202,9 @@ public class OrganizationService extends GitHubService {
 		if (organization.length() == 0)
 			throw new IllegalArgumentException("Organization cannot be empty"); //$NON-NLS-1$
 
-		HashMap<String, String> params = new HashMap<String, String>();
-		if(roleFilter != null) params.put("role", roleFilter.toString());
+		HashMap<String, String> params = new HashMap<>();
+		if (roleFilter != null)
+			params.put("role", roleFilter.toString()); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_ORGS);
 		uri.append('/').append(organization);

@@ -36,12 +36,12 @@ public class MarkdownService extends GitHubService {
 	/**
 	 * GitHub-flavored Markdown mode
 	 */
-	public static final String MODE_GFM = "gfm";
+	public static final String MODE_GFM = "gfm"; //$NON-NLS-1$
 
 	/**
 	 * Default Markdown mode
 	 */
-	public static final String MODE_MARKDOWN = "markdown";
+	public static final String MODE_MARKDOWN = "markdown"; //$NON-NLS-1$
 
 	/**
 	 * Create Markdown service
@@ -91,10 +91,10 @@ public class MarkdownService extends GitHubService {
 			final String text) throws IOException {
 		String context = getId(repo);
 
-		Map<String, String> params = new HashMap<String, String>(3, 1);
-		params.put("context", context);
-		params.put("text", text);
-		params.put("mode", MODE_GFM);
+		Map<String, String> params = new HashMap<>(3, 1);
+		params.put("context", context); //$NON-NLS-1$
+		params.put("text", text); //$NON-NLS-1$
+		params.put("mode", MODE_GFM); //$NON-NLS-1$
 
 		return client.postStream(SEGMENT_MARKDOWN, params);
 	}
@@ -125,9 +125,9 @@ public class MarkdownService extends GitHubService {
 	 */
 	public InputStream getStream(final String text, final String mode)
 			throws IOException {
-		Map<String, String> params = new HashMap<String, String>(2, 1);
-		params.put("text", text);
-		params.put("mode", mode);
+		Map<String, String> params = new HashMap<>(2, 1);
+		params.put("text", text); //$NON-NLS-1$
+		params.put("mode", mode); //$NON-NLS-1$
 
 		return client.postStream(SEGMENT_MARKDOWN, params);
 	}

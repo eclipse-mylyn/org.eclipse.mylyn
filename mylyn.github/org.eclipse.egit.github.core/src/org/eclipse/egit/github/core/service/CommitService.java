@@ -147,7 +147,7 @@ public class CommitService extends GitHubService {
 		}.getType());
 
 		if (sha != null || path != null) {
-			Map<String, String> params = new HashMap<String, String>();
+			Map<String, String> params = new HashMap<>();
 			if (sha != null)
 				params.put("sha", sha); //$NON-NLS-1$
 			if (path != null)
@@ -489,15 +489,15 @@ public class CommitService extends GitHubService {
 		if (status == null)
 			throw new IllegalArgumentException("Status cannot be null"); //$NON-NLS-1$
 
-		Map<String, String> params = new HashMap<String, String>(3, 1);
+		Map<String, String> params = new HashMap<>(3, 1);
 		if (status.getState() != null)
-			params.put("state", status.getState());
+			params.put("state", status.getState()); //$NON-NLS-1$
 		if (status.getTargetUrl() != null)
-			params.put("target_url", status.getTargetUrl());
+			params.put("target_url", status.getTargetUrl()); //$NON-NLS-1$
 		if (status.getDescription() != null)
-			params.put("description", status.getDescription());
+			params.put("description", status.getDescription()); //$NON-NLS-1$
 		if (status.getContext() != null)
-			params.put("context", status.getContext());
+			params.put("context", status.getContext()); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);

@@ -657,7 +657,7 @@ public class GitHubClient {
 			}
 		} else {
 			request.setFixedLengthStreamingMode(0);
-			request.setRequestProperty("Content-Length", "0");
+			request.setRequestProperty("Content-Length", "0"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -837,7 +837,7 @@ public class GitHubClient {
 	 * @return this client
 	 */
 	protected GitHubClient updateRateLimits(HttpURLConnection request) {
-		String limit = request.getHeaderField("X-RateLimit-Limit");
+		String limit = request.getHeaderField("X-RateLimit-Limit"); //$NON-NLS-1$
 		if (limit != null && limit.length() > 0)
 			try {
 				requestLimit = Integer.parseInt(limit);
@@ -847,7 +847,7 @@ public class GitHubClient {
 		else
 			requestLimit = -1;
 
-		String remaining = request.getHeaderField("X-RateLimit-Remaining");
+		String remaining = request.getHeaderField("X-RateLimit-Remaining"); //$NON-NLS-1$
 		if (remaining != null && remaining.length() > 0)
 			try {
 				remainingRequests = Integer.parseInt(remaining);

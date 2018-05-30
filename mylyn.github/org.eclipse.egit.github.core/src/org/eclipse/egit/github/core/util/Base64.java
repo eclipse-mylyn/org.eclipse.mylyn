@@ -51,10 +51,10 @@ class Base64 {
 
 	static {
 		try {
-			ENC = ("ABCDEFGHIJKLMNOPQRSTUVWXYZ" //
-					+ "abcdefghijklmnopqrstuvwxyz" //
-					+ "0123456789" //
-					+ "+/" //
+			ENC = ("ABCDEFGHIJKLMNOPQRSTUVWXYZ" // //$NON-NLS-1$
+					+ "abcdefghijklmnopqrstuvwxyz" // //$NON-NLS-1$
+					+ "0123456789" // //$NON-NLS-1$
+					+ "+/" // //$NON-NLS-1$
 			).getBytes(CHARSET_UTF8);
 		} catch (UnsupportedEncodingException uee) {
 			throw new RuntimeException(uee.getMessage(), uee);
@@ -281,8 +281,8 @@ class Base64 {
 
 			} else if (sbiDecode != WHITE_SPACE_DEC)
 				throw new IllegalArgumentException(MessageFormat.format(
-						"Bad Base64 input character at {0} : {1} (decimal)", i,
-						source[i] & 0xff));
+						"Bad Base64 input character at {0} : {1} (decimal)", //$NON-NLS-1$
+						Integer.valueOf(i), Integer.valueOf(source[i] & 0xff)));
 		}
 
 		if (outBuff.length == outBuffPosn)

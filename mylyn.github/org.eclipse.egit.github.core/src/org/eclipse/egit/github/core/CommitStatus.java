@@ -161,7 +161,8 @@ public class CommitStatus implements Serializable {
 			this.state = state;
 			return this;
 		}
-		throw new IllegalArgumentException(MessageFormat.format("Invalid state {0}", state));
+		throw new IllegalArgumentException(
+				MessageFormat.format("Invalid state {0}", state)); //$NON-NLS-1$
 	}
 
 	/**

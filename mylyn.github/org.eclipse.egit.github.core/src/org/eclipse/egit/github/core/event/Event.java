@@ -28,97 +28,97 @@ public class Event implements Serializable {
 	/**
 	 * Event type denoting a {@link CommitCommentPayload}
 	 */
-	public static final String TYPE_COMMIT_COMMENT = "CommitCommentEvent";
+	public static final String TYPE_COMMIT_COMMENT = "CommitCommentEvent"; //$NON-NLS-1$
 
 	/**
 	 * Event type denoting a {@link CreatePayload}
 	 */
-	public static final String TYPE_CREATE = "CreateEvent";
+	public static final String TYPE_CREATE = "CreateEvent"; //$NON-NLS-1$
 
 	/**
 	 * Event type denoting a {@link DeletePayload}
 	 */
-	public static final String TYPE_DELETE = "DeleteEvent";
+	public static final String TYPE_DELETE = "DeleteEvent"; //$NON-NLS-1$
 
 	/**
 	 * Event type denoting a {@link DownloadPayload}
 	 */
-	public static final String TYPE_DOWNLOAD = "DownloadEvent";
+	public static final String TYPE_DOWNLOAD = "DownloadEvent"; //$NON-NLS-1$
 
 	/**
 	 * Event type dneoting a {@link FollowPayload}
 	 */
-	public static final String TYPE_FOLLOW = "FollowEvent";
+	public static final String TYPE_FOLLOW = "FollowEvent"; //$NON-NLS-1$
 
 	/**
 	 * Event type denoting a {@link ForkPayload}
 	 */
-	public static final String TYPE_FORK = "ForkEvent";
+	public static final String TYPE_FORK = "ForkEvent"; //$NON-NLS-1$
 
 	/**
 	 * Event type denoting a {@link ForkApplyPayload}
 	 */
-	public static final String TYPE_FORK_APPLY = "ForkApplyEvent";
+	public static final String TYPE_FORK_APPLY = "ForkApplyEvent"; //$NON-NLS-1$
 
 	/**
 	 * Event type denoting a {@link GistPayload}
 	 */
-	public static final String TYPE_GIST = "GistEvent";
+	public static final String TYPE_GIST = "GistEvent"; //$NON-NLS-1$
 
 	/**
 	 * Event type denoting a {@link GollumPayload}
 	 */
-	public static final String TYPE_GOLLUM = "GollumEvent";
+	public static final String TYPE_GOLLUM = "GollumEvent"; //$NON-NLS-1$
 
 	/**
 	 * Event type denoting a {@link IssueCommentPayload}
 	 */
-	public static final String TYPE_ISSUE_COMMENT = "IssueCommentEvent";
+	public static final String TYPE_ISSUE_COMMENT = "IssueCommentEvent"; //$NON-NLS-1$
 
 	/**
 	 * Event type denoting a {@link IssuesPayload}
 	 */
-	public static final String TYPE_ISSUES = "IssuesEvent";
+	public static final String TYPE_ISSUES = "IssuesEvent"; //$NON-NLS-1$
 
 	/**
 	 * Event type denoting a {@link MemberPayload}
 	 */
-	public static final String TYPE_MEMBER = "MemberEvent";
+	public static final String TYPE_MEMBER = "MemberEvent"; //$NON-NLS-1$
 
 	/**
 	 * Event type denoting a {@link PublicPayload}
 	 */
-	public static final String TYPE_PUBLIC = "PublicEvent";
+	public static final String TYPE_PUBLIC = "PublicEvent"; //$NON-NLS-1$
 
 	/**
 	 * Event type denoting a {@link PullRequestPayload}
 	 */
-	public static final String TYPE_PULL_REQUEST = "PullRequestEvent";
+	public static final String TYPE_PULL_REQUEST = "PullRequestEvent"; //$NON-NLS-1$
 
 	/**
 	 * Event type denoting a {@link PullRequestReviewCommentPayload}
 	 */
-	public static final String TYPE_PULL_REQUEST_REVIEW_COMMENT = "PullRequestReviewCommentEvent";
+	public static final String TYPE_PULL_REQUEST_REVIEW_COMMENT = "PullRequestReviewCommentEvent"; //$NON-NLS-1$
 
 	/**
 	 * Event type denoting a {@link PushPayload}
 	 */
-	public static final String TYPE_PUSH = "PushEvent";
+	public static final String TYPE_PUSH = "PushEvent"; //$NON-NLS-1$
 
 	/**
 	 * Event type denoting a {@link ReleasePayload}
 	 */
-	public static final String TYPE_RELEASE = "ReleaseEvent";
+	public static final String TYPE_RELEASE = "ReleaseEvent"; //$NON-NLS-1$
 
 	/**
 	 * Event type denoting a {@link TeamAddPayload}
 	 */
-	public static final String TYPE_TEAM_ADD = "TeamAddEvent";
+	public static final String TYPE_TEAM_ADD = "TeamAddEvent"; //$NON-NLS-1$
 
 	/**
 	 * Event type denoting a {@link WatchPayload}
 	 */
-	public static final String TYPE_WATCH = "WatchEvent";
+	public static final String TYPE_WATCH = "WatchEvent"; //$NON-NLS-1$
 
 	private static final long serialVersionUID = 3633702964380402233L;
 
