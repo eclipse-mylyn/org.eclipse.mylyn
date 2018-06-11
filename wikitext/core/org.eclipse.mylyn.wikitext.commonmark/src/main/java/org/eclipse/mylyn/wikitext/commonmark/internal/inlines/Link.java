@@ -13,6 +13,7 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
@@ -72,8 +73,7 @@ public class Link extends InlineWithNestedContents {
 
 	@Override
 	public String toString() {
-		return com.google.common.base.Objects.toStringHelper(Link.class)
-				.add("offset", getOffset())
+		return toStringHelper(Link.class).add("offset", getOffset())
 				.add("length", getLength())
 				.add("href", ToStringHelper.toStringValue(href))
 				.add("title", title)

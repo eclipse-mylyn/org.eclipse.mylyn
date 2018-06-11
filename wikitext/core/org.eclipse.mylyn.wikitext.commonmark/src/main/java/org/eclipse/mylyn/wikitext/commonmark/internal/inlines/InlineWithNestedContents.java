@@ -13,6 +13,8 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -52,8 +54,7 @@ public abstract class InlineWithNestedContents extends Inline {
 
 	@Override
 	public String toString() {
-		return com.google.common.base.Objects.toStringHelper(getClass())
-				.add("offset", getOffset())
+		return toStringHelper(getClass()).add("offset", getOffset())
 				.add("length", getLength())
 				.add("contents", getContents())
 				.toString();

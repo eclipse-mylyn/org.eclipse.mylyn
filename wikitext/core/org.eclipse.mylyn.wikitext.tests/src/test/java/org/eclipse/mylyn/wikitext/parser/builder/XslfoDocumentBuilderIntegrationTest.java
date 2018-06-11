@@ -22,13 +22,11 @@ import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.mediawiki.MediaWikiLanguage;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.parser.builder.XslfoDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.parser.outline.OutlineParser;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;
 import org.eclipse.mylyn.wikitext.util.DefaultXmlStreamWriter;
 
-import com.google.common.base.Throwables;
 import com.google.common.io.Resources;
 
 import junit.framework.TestCase;
@@ -78,8 +76,7 @@ public class XslfoDocumentBuilderIntegrationTest extends TestCase {
 
 		assertTrue(Pattern.compile(
 				"<bookmark-tree>\\s*<bookmark internal-destination=\"Bookmark_H1\">\\s*<bookmark-title>Bookmark H1</bookmark-title>\\s*<bookmark internal-destination=\"Bookmark_H2\">\\s*<bookmark-title>Bookmark H2</bookmark-title>\\s*</bookmark>\\s*</bookmark>\\s*</bookmark-tree>")
-				.matcher(xslfo)
-				.find());
+				.matcher(xslfo).find());
 	}
 
 	public void testforTableCSSAttributes_bug336813() {
@@ -100,17 +97,14 @@ public class XslfoDocumentBuilderIntegrationTest extends TestCase {
 
 		// Test for border attributes in table
 		assertTrue(Pattern.compile("<table-body border-color=\"#000\" border-style=\"solid\" border-width=\"1px\">")
-				.matcher(xslfo)
-				.find());
+				.matcher(xslfo).find());
 		// Test for border attributes in row
 		assertTrue(Pattern.compile("<table-row border-color=\"#000\" border-style=\"solid\" border-width=\"1px\">")
-				.matcher(xslfo)
-				.find());
+				.matcher(xslfo).find());
 		// Test for border attributes in cell
 		assertTrue(Pattern.compile(
 				"<block font-size=\"10.0pt\" border-color=\"#000\" border-style=\"solid\" border-width=\"1px\">")
-				.matcher(xslfo)
-				.find());
+				.matcher(xslfo).find());
 	}
 
 	public void testforTableSpan_bug336813() {
@@ -131,14 +125,12 @@ public class XslfoDocumentBuilderIntegrationTest extends TestCase {
 		// Test for rowspan
 		assertTrue(Pattern.compile(
 				"<table-cell number-rows-spanned=\"2\" padding-left=\"2pt\" padding-right=\"2pt\" padding-top=\"2pt\" padding-bottom=\"2pt\">")
-				.matcher(xslfo)
-				.find());
+				.matcher(xslfo).find());
 
 		// Test for colspan
 		assertTrue(Pattern.compile(
 				"<table-cell number-columns-spanned=\"2\" padding-left=\"2pt\" padding-right=\"2pt\" padding-top=\"2pt\" padding-bottom=\"2pt\">")
-				.matcher(xslfo)
-				.find());
+				.matcher(xslfo).find());
 
 	}
 
@@ -165,8 +157,7 @@ public class XslfoDocumentBuilderIntegrationTest extends TestCase {
 	}
 
 	public void testforTableCellAlign_bug336813() {
-		final String markup = "{|\n"
-				+ "|- \n |'''Row heading'''\n"
+		final String markup = "{|\n" + "|- \n |'''Row heading'''\n"
 				+ "| valign=\"top\" | A longer piece of text. Lorem ipsum...\n |A shorter piece of text.\n"
 				+ "|- \n |'''Row heading'''\n"
 				+ "| style=\"vertical-align: bottom;\" | A longer piece of text. Lorem ipsum... \n |A shorter piece of text.\n"
@@ -189,8 +180,7 @@ public class XslfoDocumentBuilderIntegrationTest extends TestCase {
 	}
 
 	public void testforTableCellTextAlign_bug336813() {
-		final String markup = "{|\n"
-				+ "|- \n |'''Row heading'''\n"
+		final String markup = "{|\n" + "|- \n |'''Row heading'''\n"
 				+ "| align=\"left\" | A longer piece of text. Lorem ipsum...\n |A shorter piece of text.\n"
 				+ "|- \n |'''Row heading'''\n"
 				+ "| style=\"text-align: right;\" | A longer piece of text. Lorem ipsum... \n |A shorter piece of text.\n"
@@ -225,8 +215,10 @@ public class XslfoDocumentBuilderIntegrationTest extends TestCase {
 		final String xslfo = out.toString();
 
 		assertTrue(xslfo.contains("<basic-link internal-destination=\"intern_label\">INTERN-LABEL</basic-link>"));
-		assertTrue(xslfo.contains("<basic-link internal-destination=\"intern_bold_label\"><inline font-weight=\"bold\">INTERN-BOLD-LABEL</inline></basic-link>"));
-		assertTrue(xslfo.contains("<basic-link external-destination=\"url(http://extern-label.com/)\">EXTERN-LABEL</basic-link>"));
+		assertTrue(xslfo.contains(
+				"<basic-link internal-destination=\"intern_bold_label\"><inline font-weight=\"bold\">INTERN-BOLD-LABEL</inline></basic-link>"));
+		assertTrue(xslfo.contains(
+				"<basic-link external-destination=\"url(http://extern-label.com/)\">EXTERN-LABEL</basic-link>"));
 	}
 
 	public void testCopyrightExtent() {
@@ -239,12 +231,12 @@ public class XslfoDocumentBuilderIntegrationTest extends TestCase {
 	}
 
 	private String resource(String resourceName) {
-		URL resource = XslfoDocumentBuilderIntegrationTest.class.getResource("resources/"
-				+ XslfoDocumentBuilderIntegrationTest.class.getSimpleName() + "_" + resourceName);
+		URL resource = XslfoDocumentBuilderIntegrationTest.class.getResource(
+				"resources/" + XslfoDocumentBuilderIntegrationTest.class.getSimpleName() + "_" + resourceName);
 		try {
 			return Resources.toString(resource, StandardCharsets.UTF_8);
 		} catch (IOException e) {
-			throw Throwables.propagate(e);
+			throw new RuntimeException(e);
 		}
 	}
 }

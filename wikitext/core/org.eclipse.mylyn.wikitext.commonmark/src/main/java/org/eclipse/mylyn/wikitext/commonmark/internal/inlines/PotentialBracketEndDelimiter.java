@@ -13,6 +13,7 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
+import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.net.URLDecoder;
@@ -28,7 +29,6 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.EntityReferences;
 
 import com.google.common.base.CharMatcher;
-import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.escape.Escaper;
@@ -224,7 +224,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 			if (last instanceof Characters) {
 				Characters characters = (Characters) last;
 				if (characters.getText().length() <= length
-						&& CharMatcher.WHITESPACE.matchesAllOf(characters.getText())) {
+						&& CharMatcher.whitespace().matchesAllOf(characters.getText())) {
 					inlines.remove(inlines.size() - 1);
 				}
 			}
@@ -312,7 +312,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 		if (uriWithEscapes == null) {
 			uriWithEscapes = matcher.group(2);
 		}
-		uriWithEscapes = Objects.firstNonNull(uriWithEscapes, "");
+		uriWithEscapes = firstNonNull(uriWithEscapes, "");
 		return normalizeUri(uriWithEscapes);
 	}
 
@@ -360,7 +360,7 @@ public class PotentialBracketEndDelimiter extends InlineWithText {
 
 	String toReferenceName(String stringWithBackslashEscapes) {
 		String referenceName = stringWithBackslashEscapes.replaceAll("(?s)\\\\(\\[|\\])", "$1").replaceAll("\\s+", " ");
-		if (CharMatcher.WHITESPACE.matchesAllOf(referenceName)) {
+		if (CharMatcher.whitespace().matchesAllOf(referenceName)) {
 			return null;
 		}
 		return referenceName;

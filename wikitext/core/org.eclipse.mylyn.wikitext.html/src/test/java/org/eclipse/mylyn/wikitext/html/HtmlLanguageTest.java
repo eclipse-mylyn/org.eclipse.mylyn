@@ -23,7 +23,6 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URL;
 
-import org.eclipse.mylyn.wikitext.html.HtmlLanguage;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
@@ -37,7 +36,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import com.google.common.base.Charsets;
-import com.google.common.base.Throwables;
 import com.google.common.io.Resources;
 
 public class HtmlLanguageTest {
@@ -168,7 +166,7 @@ public class HtmlLanguageTest {
 			URL resource = HtmlLanguageTest.class.getResource(fileName);
 			return Resources.toString(resource, Charsets.UTF_8);
 		} catch (IOException e) {
-			throw Throwables.propagate(e);
+			throw new RuntimeException(e);
 		}
 	}
 

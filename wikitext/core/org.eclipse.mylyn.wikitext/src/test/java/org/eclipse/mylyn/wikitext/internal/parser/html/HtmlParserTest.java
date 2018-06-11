@@ -32,7 +32,6 @@ import org.junit.Test;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 
 public class HtmlParserTest {
@@ -259,9 +258,9 @@ public class HtmlParserTest {
 		try {
 			parser.parse(new InputSource(new StringReader(content)), builder, false);
 		} catch (IOException e) {
-			throw Throwables.propagate(e);
+			throw new RuntimeException(e);
 		} catch (SAXException e) {
-			throw Throwables.propagate(e);
+			throw new RuntimeException(e);
 		}
 	}
 

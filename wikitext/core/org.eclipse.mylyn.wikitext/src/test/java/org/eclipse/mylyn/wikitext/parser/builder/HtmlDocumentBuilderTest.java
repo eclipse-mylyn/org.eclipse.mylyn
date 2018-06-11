@@ -33,7 +33,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import com.google.common.base.Charsets;
-import com.google.common.base.Throwables;
 import com.google.common.io.Resources;
 
 public class HtmlDocumentBuilderTest {
@@ -338,7 +337,7 @@ public class HtmlDocumentBuilderTest {
 			URL resource = HtmlDocumentBuilderTest.class.getResource(fileName);
 			return Resources.toString(resource, Charsets.UTF_8);
 		} catch (IOException e) {
-			throw Throwables.propagate(e);
+			throw new RuntimeException(e);
 		}
 	}
 }

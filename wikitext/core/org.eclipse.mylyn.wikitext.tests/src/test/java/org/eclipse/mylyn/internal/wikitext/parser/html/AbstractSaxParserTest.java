@@ -25,8 +25,6 @@ import org.eclipse.mylyn.wikitext.textile.internal.TextileDocumentBuilder;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.google.common.base.Throwables;
-
 import junit.framework.TestCase;
 
 /**
@@ -209,7 +207,7 @@ public abstract class AbstractSaxParserTest extends TestCase {
 		try {
 			parser.parse(sourceForHtml(html), htmlBuilder, true);
 		} catch (Exception e) {
-			throw Throwables.propagate(e);
+			throw new RuntimeException(e);
 		}
 		assertEquals(expectedResult, out.toString());
 	}

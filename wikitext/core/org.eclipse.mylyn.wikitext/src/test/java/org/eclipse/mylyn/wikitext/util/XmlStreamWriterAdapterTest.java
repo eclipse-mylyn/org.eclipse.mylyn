@@ -24,12 +24,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stax.StAXResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.eclipse.mylyn.wikitext.util.DefaultXmlStreamWriter;
-import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
-import org.eclipse.mylyn.wikitext.util.XmlStreamWriterAdapter;
 import org.junit.Test;
-
-import com.google.common.base.Throwables;
 
 public class XmlStreamWriterAdapterTest {
 
@@ -62,7 +57,8 @@ public class XmlStreamWriterAdapterTest {
 		adapter.writeEndElement();
 		adapter.writeEndDocument();
 		adapter.close();
-		assertXml("<?xml version='1.1' encoding='utf-8' ?><test xmlns:pf=\"uri:urn:test\" pf:a=\"testv\" b=\"test\"></test>");
+		assertXml(
+				"<?xml version='1.1' encoding='utf-8' ?><test xmlns:pf=\"uri:urn:test\" pf:a=\"testv\" b=\"test\"></test>");
 	}
 
 	@Test
@@ -202,7 +198,7 @@ public class XmlStreamWriterAdapterTest {
 			Transformer transformer = TransformerFactory.newInstance().newTransformer();
 			transformer.transform(new StreamSource(new StringReader(input)), new StAXResult(adapter));
 		} catch (Exception e) {
-			throw Throwables.propagate(e);
+			throw new RuntimeException(e);
 		}
 		assertXml(expectedResult);
 	}

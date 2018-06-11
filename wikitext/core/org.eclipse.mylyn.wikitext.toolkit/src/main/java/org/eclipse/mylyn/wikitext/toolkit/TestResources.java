@@ -18,20 +18,20 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-import com.google.common.base.Throwables;
 import com.google.common.io.Resources;
+
 /**
  * @since 3.0
  */
 public class TestResources {
 
-	public static String load(Class<?> relativeToClass,String path) {
+	public static String load(Class<?> relativeToClass, String path) {
 		try {
 			URL url = relativeToClass.getResource(path);
-			checkNotNull(url,"Resource %s not found relative to %s",path,relativeToClass.getName());
+			checkNotNull(url, "Resource %s not found relative to %s", path, relativeToClass.getName());
 			return Resources.toString(url, StandardCharsets.UTF_8);
 		} catch (IOException e) {
-			throw Throwables.propagate(e);
+			throw new RuntimeException(e);
 		}
 	}
 }

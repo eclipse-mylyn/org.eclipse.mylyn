@@ -13,12 +13,12 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 
 public class TextSegment {
@@ -81,7 +81,7 @@ public class TextSegment {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(TextSegment.class).add("text", ToStringHelper.toStringValue(text)).toString();
+		return toStringHelper(TextSegment.class).add("text", ToStringHelper.toStringValue(text)).toString();
 	}
 
 	public Line getLineAtOffset(int textOffset) {

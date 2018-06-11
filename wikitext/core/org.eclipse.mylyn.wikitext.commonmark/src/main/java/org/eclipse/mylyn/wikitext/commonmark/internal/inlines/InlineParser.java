@@ -13,6 +13,8 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
+import static com.google.common.base.MoreObjects.firstNonNull;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,7 +26,6 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.EntityReferences;
 import org.eclipse.mylyn.wikitext.parser.builder.NoOpDocumentBuilder;
 
-import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 
@@ -100,7 +101,7 @@ public class InlineParser {
 
 			@Override
 			public void entityReference(String entity) {
-				stringBuilder.append(Objects.firstNonNull(EntityReferences.instance().equivalentString(entity), ""));
+				stringBuilder.append(firstNonNull(EntityReferences.instance().equivalentString(entity), ""));
 			}
 		};
 		for (Inline inline : contents) {

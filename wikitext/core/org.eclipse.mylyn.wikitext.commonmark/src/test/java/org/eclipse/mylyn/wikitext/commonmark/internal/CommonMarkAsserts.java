@@ -31,8 +31,6 @@ import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.google.common.base.Throwables;
-
 public class CommonMarkAsserts {
 
 	public static void assertContent(String expectedHtml, String input) {
@@ -73,7 +71,7 @@ public class CommonMarkAsserts {
 		try {
 			parser.parse(new StringReader(input));
 		} catch (IOException e) {
-			throw Throwables.propagate(e);
+			throw new RuntimeException(e);
 		}
 		return out.toString();
 	}

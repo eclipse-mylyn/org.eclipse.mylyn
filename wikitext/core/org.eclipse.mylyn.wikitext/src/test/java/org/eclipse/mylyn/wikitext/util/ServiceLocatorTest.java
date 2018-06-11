@@ -36,14 +36,12 @@ import org.eclipse.mylyn.internal.wikitext.MockMarkupLanguageProvider;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguageProvider;
-import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import com.google.common.base.Charsets;
-import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -158,7 +156,7 @@ public class ServiceLocatorTest {
 				}
 			};
 		} catch (Exception e) {
-			throw Throwables.propagate(e);
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -184,7 +182,7 @@ public class ServiceLocatorTest {
 				}
 			};
 		} catch (Exception e) {
-			throw Throwables.propagate(e);
+			throw new RuntimeException(e);
 		}
 	}
 

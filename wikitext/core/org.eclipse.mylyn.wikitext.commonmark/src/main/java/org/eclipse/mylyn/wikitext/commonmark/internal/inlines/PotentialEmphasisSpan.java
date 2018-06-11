@@ -63,7 +63,7 @@ public class PotentialEmphasisSpan extends SourceSpan {
 	}
 
 	private boolean isWhitespace(char c) {
-		return CharMatcher.WHITESPACE.matches(c);
+		return CharMatcher.whitespace().matches(c);
 	}
 
 	private boolean isPunctuation(char c) {

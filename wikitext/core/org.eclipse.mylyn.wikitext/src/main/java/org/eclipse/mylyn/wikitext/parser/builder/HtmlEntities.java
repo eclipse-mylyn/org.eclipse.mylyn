@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Charsets;
 import com.google.common.base.Splitter;
-import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ListMultimap;
@@ -42,7 +41,7 @@ class HtmlEntities {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					HtmlDocumentBuilder.class.getResourceAsStream("html-entity-references.txt"), Charsets.UTF_8)); //$NON-NLS-1$
 			try {
-				Splitter splitter = Splitter.on(CharMatcher.WHITESPACE).trimResults().omitEmptyStrings();
+				Splitter splitter = Splitter.on(CharMatcher.whitespace()).trimResults().omitEmptyStrings();
 
 				String line;
 				while ((line = reader.readLine()) != null) {
@@ -56,7 +55,7 @@ class HtmlEntities {
 				reader.close();
 			}
 		} catch (IOException e) {
-			throw Throwables.propagate(e);
+			throw new RuntimeException(e);
 		}
 		return builder.build();
 	}

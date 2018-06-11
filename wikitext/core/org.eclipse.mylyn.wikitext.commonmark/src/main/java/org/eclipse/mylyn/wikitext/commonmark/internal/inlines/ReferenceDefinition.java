@@ -13,6 +13,7 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Objects;
@@ -70,8 +71,7 @@ public class ReferenceDefinition extends Inline {
 
 	@Override
 	public String toString() {
-		return com.google.common.base.Objects.toStringHelper(ReferenceDefinition.class)
-				.add("offset", getOffset())
+		return toStringHelper(ReferenceDefinition.class).add("offset", getOffset())
 				.add("length", getLength())
 				.add("name", name)
 				.add("href", ToStringHelper.toStringValue(href))

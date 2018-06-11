@@ -24,8 +24,6 @@ import java.util.List;
 import org.eclipse.mylyn.wikitext.commonmark.internal.LineSequence.ForwardLineSequence;
 import org.eclipse.mylyn.wikitext.util.LocationTrackingReader;
 
-import com.google.common.base.Throwables;
-
 class ContentLineSequence extends ForwardLineSequence {
 
 	private final LocationTrackingReader reader;
@@ -44,7 +42,7 @@ class ContentLineSequence extends ForwardLineSequence {
 		try {
 			text = reader.readLine();
 		} catch (IOException e) {
-			throw Throwables.propagate(e);
+			throw new RuntimeException(e);
 		}
 		if (text == null) {
 			return null;

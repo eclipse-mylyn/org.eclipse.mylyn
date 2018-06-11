@@ -20,8 +20,6 @@ import java.util.Stack;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 
-import com.google.common.base.Throwables;
-
 /**
  * Provides default functionality for document builders that emit lightweight wiki markup.
  *
@@ -531,7 +529,7 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 			try {
 				block.open();
 			} catch (IOException e) {
-				throw Throwables.propagate(e);
+				throw new RuntimeException(e);
 			}
 		}
 	}

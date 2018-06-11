@@ -125,7 +125,7 @@ public class TableBlock extends Block {
 			builder.beginBlock(header ? BlockType.TABLE_CELL_HEADER : BlockType.TABLE_CELL_NORMAL, attributes);
 
 			markupLanguage.emitMarkupLine(getParser(), state, textLineOffset,
-					CharMatcher.WHITESPACE.trimTrailingFrom(text), 0);
+					CharMatcher.whitespace().trimTrailingFrom(text), 0);
 
 			builder.endBlock(); // table cell
 		} while (rowMatcher.find());

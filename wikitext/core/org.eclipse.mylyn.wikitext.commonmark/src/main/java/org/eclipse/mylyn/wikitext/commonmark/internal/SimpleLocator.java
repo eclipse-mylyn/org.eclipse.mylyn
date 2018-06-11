@@ -13,11 +13,10 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.eclipse.mylyn.wikitext.parser.Locator;
-
-import com.google.common.base.Objects;
 
 public class SimpleLocator implements Locator {
 
@@ -76,8 +75,7 @@ public class SimpleLocator implements Locator {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(Locator.class)
-				.add("lineNumber", lineNumber)
+		return toStringHelper(Locator.class).add("lineNumber", lineNumber)
 				.add("lineDocumentOffset", lineDocumentOffset)
 				.add("lineLength", lineLength)
 				.add("lineCharacterOffset", lineCharacterOffset)

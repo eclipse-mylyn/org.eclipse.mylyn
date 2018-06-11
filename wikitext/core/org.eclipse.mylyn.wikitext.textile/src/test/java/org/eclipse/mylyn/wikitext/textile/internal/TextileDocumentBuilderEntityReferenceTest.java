@@ -77,7 +77,7 @@ public class TextileDocumentBuilderEntityReferenceTest {
 		builder.endDocument();
 
 		String markup = out.toString();
-		String expectedSequence = CharMatcher.WHITESPACE.trimAndCollapseFrom("a " + expected + " test", ' ');
+		String expectedSequence = CharMatcher.whitespace().trimAndCollapseFrom("a " + expected + " test", ' ');
 		assertEquals(expectedSequence + "\n\n", markup);
 	}
 

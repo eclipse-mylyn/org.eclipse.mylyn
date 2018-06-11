@@ -13,8 +13,6 @@
 
 package org.eclipse.mylyn.wikitext.parser;
 
-import com.google.common.base.Throwables;
-
 /**
  * Attributes for a markup element. Note that though there are many specialized subclasses of this class, they are
  * optional.
@@ -121,7 +119,7 @@ public class Attributes implements Cloneable {
 		try {
 			return (Attributes) super.clone();
 		} catch (CloneNotSupportedException e) {
-			throw Throwables.propagate(e);
+			throw new RuntimeException(e);
 		}
 	}
 }

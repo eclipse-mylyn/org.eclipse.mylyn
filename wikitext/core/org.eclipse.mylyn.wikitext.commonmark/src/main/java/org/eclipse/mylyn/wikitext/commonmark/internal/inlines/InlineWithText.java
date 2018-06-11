@@ -13,6 +13,7 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Objects;
@@ -51,8 +52,7 @@ abstract class InlineWithText extends Inline {
 
 	@Override
 	public String toString() {
-		return com.google.common.base.Objects.toStringHelper(getClass())
-				.add("offset", getOffset())
+		return toStringHelper(getClass()).add("offset", getOffset())
 				.add("length", getLength())
 				.add("text", getText())
 				.toString();

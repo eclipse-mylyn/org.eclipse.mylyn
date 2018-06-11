@@ -13,6 +13,7 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.spec;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static org.eclipse.mylyn.wikitext.commonmark.internal.CommonMarkAsserts.assertContent;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
@@ -41,8 +42,6 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Objects;
-import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.CharStreams;
@@ -87,7 +86,7 @@ public class CommonMarkSpecTest {
 
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(Expectation.class).add("input", input).add("expected", expected).toString();
+			return toStringHelper(Expectation.class).add("input", input).add("expected", expected).toString();
 		}
 	}
 
@@ -157,7 +156,7 @@ public class CommonMarkSpecTest {
 				}
 			}
 		} catch (IOException e) {
-			throw Throwables.propagate(e);
+			throw new RuntimeException(e);
 		}
 	}
 

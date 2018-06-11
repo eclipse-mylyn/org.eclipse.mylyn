@@ -13,13 +13,13 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.spec;
 
+import static com.google.common.base.MoreObjects.firstNonNull;
+
 import java.io.Writer;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
-
-import com.google.common.base.Objects;
 
 public class SimplifiedHtmlDocumentBuilder extends HtmlDocumentBuilder {
 
@@ -34,7 +34,7 @@ public class SimplifiedHtmlDocumentBuilder extends HtmlDocumentBuilder {
 		writer.writeAttribute("src", makeUrlAbsolute(url)); //$NON-NLS-1$
 		if (attributes instanceof ImageAttributes) {
 			ImageAttributes imageAttributes = (ImageAttributes) attributes;
-			writer.writeAttribute(getHtmlNsUri(), "alt", Objects.firstNonNull(imageAttributes.getAlt(), ""));
+			writer.writeAttribute(getHtmlNsUri(), "alt", firstNonNull(imageAttributes.getAlt(), ""));
 			if (imageAttributes.getTitle() != null) {
 				writer.writeAttribute(getHtmlNsUri(), "title", imageAttributes.getTitle());
 			}

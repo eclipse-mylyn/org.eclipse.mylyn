@@ -68,15 +68,14 @@ public class ListBlock extends BlockWithNestedBlocks {
 
 	@Override
 	public void createContext(final ProcessingContextBuilder contextBuilder, LineSequence lineSequence) {
-		process(ProcessingContext.builder().build(), new NoOpDocumentBuilder(), lineSequence,
-				new ListItemHandler() {
+		process(ProcessingContext.builder().build(), new NoOpDocumentBuilder(), lineSequence, new ListItemHandler() {
 
-					@Override
-					public void emitListItem(ProcessingContext dummyContext, DocumentBuilder builder, ListMode listMode,
-							LineSequence lineSequence) {
-						CommonMark.sourceBlocks().createContext(contextBuilder, listItemLineSequence(lineSequence));
-					}
-				});
+			@Override
+			public void emitListItem(ProcessingContext dummyContext, DocumentBuilder builder, ListMode listMode,
+					LineSequence lineSequence) {
+				CommonMark.sourceBlocks().createContext(contextBuilder, listItemLineSequence(lineSequence));
+			}
+		});
 	}
 
 	private void process(ProcessingContext context, DocumentBuilder builder, LineSequence lineSequence,
@@ -246,7 +245,7 @@ public class ListBlock extends BlockWithNestedBlocks {
 	}
 
 	private boolean isIndented(Line line, int indentSize) {
-		int firstNonWhitespace = CharMatcher.WHITESPACE.negate().indexIn(line.getText());
+		int firstNonWhitespace = CharMatcher.whitespace().negate().indexIn(line.getText());
 		return firstNonWhitespace >= indentSize;
 	}
 

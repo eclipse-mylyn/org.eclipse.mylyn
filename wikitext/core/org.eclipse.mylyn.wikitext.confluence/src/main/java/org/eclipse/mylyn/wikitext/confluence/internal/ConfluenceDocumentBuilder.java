@@ -191,7 +191,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 				emitPrefix();
 				if (trimmingNewlinesAndWhitespace) {
-					content = CharMatcher.WHITESPACE.trimFrom(content);
+					content = CharMatcher.whitespace().trimFrom(content);
 				}
 				if (collapsingConsecutiveNewlines) {
 					content = PATTERN_MULTIPLE_NEWLINES.matcher(content).replaceAll("\n");

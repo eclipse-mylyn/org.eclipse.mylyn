@@ -135,7 +135,7 @@ public class SpanStrategies extends ElementStrategies<SpanType, SpanStrategy, Sp
 	}
 
 	private boolean isFontFamilyMonospace(CssRule rule) {
-		for (String value : Splitter.on(',').trimResults(CharMatcher.WHITESPACE).split(rule.value)) {
+		for (String value : Splitter.on(',').trimResults(CharMatcher.whitespace()).split(rule.value)) {
 			if ("monospace".equalsIgnoreCase(value)) { //$NON-NLS-1$
 				return true;
 			}

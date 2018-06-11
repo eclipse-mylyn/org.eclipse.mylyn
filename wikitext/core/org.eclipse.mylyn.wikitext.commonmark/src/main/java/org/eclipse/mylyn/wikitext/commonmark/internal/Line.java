@@ -13,13 +13,13 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.eclipse.mylyn.wikitext.parser.Locator;
 
 import com.google.common.base.CharMatcher;
-import com.google.common.base.Objects;
 
 public class Line {
 
@@ -38,7 +38,7 @@ public class Line {
 	}
 
 	public boolean isEmpty() {
-		return !CharMatcher.WHITESPACE.negate().matchesAnyOf(text);
+		return !CharMatcher.whitespace().negate().matchesAnyOf(text);
 	}
 
 	public String getText() {
@@ -82,8 +82,7 @@ public class Line {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(Line.class)
-				.add("lineNumber", lineNumber)
+		return toStringHelper(Line.class).add("lineNumber", lineNumber)
 				.add("offset", offset)
 				.add("text", ToStringHelper.toStringValue(text))
 				.toString();

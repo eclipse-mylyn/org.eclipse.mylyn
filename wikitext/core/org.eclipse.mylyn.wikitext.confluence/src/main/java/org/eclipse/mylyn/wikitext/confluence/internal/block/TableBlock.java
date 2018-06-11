@@ -161,7 +161,7 @@ public class TableBlock extends Block {
 
 	private void emitMarkup(String text, int lineOffset) {
 		getConfluenceLanguage().emitMarkupLine(getParser(), state, lineOffset,
-				CharMatcher.WHITESPACE.trimTrailingFrom(text), 0);
+				CharMatcher.whitespace().trimTrailingFrom(text), 0);
 	}
 
 	private ConfluenceLanguage getConfluenceLanguage() {

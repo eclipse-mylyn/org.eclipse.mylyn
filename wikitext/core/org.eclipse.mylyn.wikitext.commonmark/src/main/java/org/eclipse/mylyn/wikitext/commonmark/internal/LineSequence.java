@@ -13,12 +13,12 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.Iterator;
 
 import com.google.common.base.Function;
-import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
@@ -68,8 +68,7 @@ public abstract class LineSequence implements Iterable<Line> {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(LineSequence.class)
-				.add("currentLine", getCurrentLine())
+		return toStringHelper(LineSequence.class).add("currentLine", getCurrentLine())
 				.add("nextLine", getNextLine())
 				.toString();
 	}
