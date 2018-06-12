@@ -20,6 +20,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 
+import com.google.common.base.Strings;
+
 /**
  * @author David Green
  */
@@ -37,9 +39,9 @@ class RemoveEmptySpansProcessor extends DocumentProcessor {
 			// remove empty spans, and eliminate tags that only contain whitespace
 			for (Element element : body.getAllElements()) {
 				if (Html.isSpanElement(element)) {
-					// remove span with no children
+					// remove span with no children, but preserve hyperlinks
 					List<Node> childNodes = element.childNodes();
-					if (childNodes.isEmpty()) {
+					if (childNodes.isEmpty() && !isHyperlinkWithTarget(element)) {
 						element.remove();
 						modifiedOne = true;
 					} else {
@@ -77,6 +79,11 @@ class RemoveEmptySpansProcessor extends DocumentProcessor {
 				}
 			}
 		} while (modifiedOne);
+
+	}
+
+	private boolean isHyperlinkWithTarget(Element element) {
+		return element.tagName().equalsIgnoreCase("a") && !Strings.isNullOrEmpty(element.attr("href"));
 	}
 
 }

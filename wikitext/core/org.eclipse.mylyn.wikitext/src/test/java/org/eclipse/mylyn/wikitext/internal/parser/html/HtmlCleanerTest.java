@@ -127,6 +127,26 @@ public class HtmlCleanerTest {
 	}
 
 	@Test
+	public void preserveSpanWithHyperlink() {
+		String result = cleanToBody(
+				"<p><span> </span><span class=\"foobar\"><a class=\"embedded\" href=\"https://foobar.com:9443/rm/resources/12345\" id=\"_1528753187524\">a link to somewhere  </a></span> <span>  </span></p>");
+
+		assertEquals(
+				"<body><p>&nbsp;<span class=\"foobar\"><a class=\"embedded\" href=\"https://foobar.com:9443/rm/resources/12345\" id=\"_1528753187524\">a link to somewhere</a></span> &nbsp; </p></body>",
+				result);
+	}
+
+	@Test
+	public void preserveSpanWithHyperlinkWithNoText() {
+		String result = cleanToBody(
+				"<p><span> </span><span class=\"foobar\"><a class=\"embedded\" href=\"https://foobar.com:9443/rm/resources/12345\" id=\"_1528753187524\">  </a></span> <span>  </span></p>");
+
+		assertEquals(
+				"<body><p>&nbsp;<span class=\"foobar\"><a class=\"embedded\" href=\"https://foobar.com:9443/rm/resources/12345\" id=\"_1528753187524\"></a></span> &nbsp; </p></body>",
+				result);
+	}
+
+	@Test
 	public void testRemoveExcessiveStyles_lots_of_styles() {
 		String result = clean(
 				"<p>foo <span style=\"font-style: italic;font-weight: bold; color: blue; bogus: bad; ignoreThis: too\"> bar</span></p>");
