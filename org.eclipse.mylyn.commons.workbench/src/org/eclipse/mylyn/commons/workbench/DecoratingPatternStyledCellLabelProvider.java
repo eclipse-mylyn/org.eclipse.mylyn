@@ -26,6 +26,8 @@ import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.jface.viewers.ViewerColumn;
+import org.eclipse.mylyn.internal.commons.workbench.StringMatcher;
+import org.eclipse.mylyn.internal.commons.workbench.StringMatcher.Position;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
@@ -33,19 +35,17 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.misc.StringMatcher;
-import org.eclipse.ui.internal.misc.StringMatcher.Position;
 
 /**
  * A decorating styled label provider that supports highlighting of substrings that match a pattern. Based on
  * {@link DecoratingFileSearchLabelProvider}.
- * 
+ *
  * @author Kevin Sawicki
  * @see DecoratingFileSearchLabelProvider
  * @since 3.7
  */
-public class DecoratingPatternStyledCellLabelProvider extends DecoratingStyledCellLabelProvider implements
-		IPropertyChangeListener, ILabelProvider {
+public class DecoratingPatternStyledCellLabelProvider extends DecoratingStyledCellLabelProvider
+		implements IPropertyChangeListener, ILabelProvider {
 
 	/**
 	 * Color to use to decorate matches.
@@ -54,8 +54,8 @@ public class DecoratingPatternStyledCellLabelProvider extends DecoratingStyledCe
 
 	static final Styler HIGHLIGHT_STYLE = StyledString.createColorRegistryStyler(null, HIGHLIGHT_BG_COLOR_NAME);
 
-	private static class PatternStyledLabelProvider extends StyledCellLabelProvider implements IStyledLabelProvider,
-			IColorProvider, IFontProvider {
+	private static class PatternStyledLabelProvider extends StyledCellLabelProvider
+			implements IStyledLabelProvider, IColorProvider, IFontProvider {
 
 		private final ILabelProvider labelProvider;
 
@@ -67,7 +67,7 @@ public class DecoratingPatternStyledCellLabelProvider extends DecoratingStyledCe
 
 		/**
 		 * Set the pattern to highlight
-		 * 
+		 *
 		 * @param pattern
 		 */
 		public void setPattern(String pattern) {
@@ -134,7 +134,7 @@ public class DecoratingPatternStyledCellLabelProvider extends DecoratingStyledCe
 
 	/**
 	 * Create a new repository search styled label provider that wraps an {@link ILabelProvider}
-	 * 
+	 *
 	 * @param labelProvider
 	 * @param decorator
 	 * @param decorationContext
@@ -154,15 +154,15 @@ public class DecoratingPatternStyledCellLabelProvider extends DecoratingStyledCe
 		PlatformUI.getPreferenceStore().addPropertyChangeListener(this);
 		JFaceResources.getColorRegistry().addListener(this);
 
-		setOwnerDrawEnabled(PlatformUI.getPreferenceStore()
-				.getBoolean(IWorkbenchPreferenceConstants.USE_COLORED_LABELS));
+		setOwnerDrawEnabled(
+				PlatformUI.getPreferenceStore().getBoolean(IWorkbenchPreferenceConstants.USE_COLORED_LABELS));
 
 		super.initialize(viewer, column);
 	}
 
 	/**
 	 * Get underyling label provider
-	 * 
+	 *
 	 * @return label provider
 	 */
 	public ILabelProvider getLabelProvider() {
@@ -182,7 +182,7 @@ public class DecoratingPatternStyledCellLabelProvider extends DecoratingStyledCe
 
 	/**
 	 * Set the pattern to highlight
-	 * 
+	 *
 	 * @param pattern
 	 */
 	public void setPattern(String pattern) {
@@ -195,8 +195,8 @@ public class DecoratingPatternStyledCellLabelProvider extends DecoratingStyledCe
 	protected void refresh() {
 		ColumnViewer viewer = getViewer();
 		if (viewer != null) {
-			boolean coloredLabels = PlatformUI.getPreferenceStore().getBoolean(
-					IWorkbenchPreferenceConstants.USE_COLORED_LABELS);
+			boolean coloredLabels = PlatformUI.getPreferenceStore()
+					.getBoolean(IWorkbenchPreferenceConstants.USE_COLORED_LABELS);
 			if (coloredLabels || coloredLabels != isOwnerDrawEnabled()) {
 				setOwnerDrawEnabled(coloredLabels);
 				viewer.refresh();
@@ -228,7 +228,7 @@ public class DecoratingPatternStyledCellLabelProvider extends DecoratingStyledCe
 
 	/**
 	 * Get text of element from underyling label provider
-	 * 
+	 *
 	 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
 	 */
 	public String getText(Object element) {
@@ -237,7 +237,7 @@ public class DecoratingPatternStyledCellLabelProvider extends DecoratingStyledCe
 
 	/**
 	 * Override preparation of style range to add border dot about highlight regions that don't have colors applied
-	 * 
+	 *
 	 * @see org.eclipse.jface.viewers.StyledCellLabelProvider#prepareStyleRange(org.eclipse.swt.custom.StyleRange,
 	 *      boolean)
 	 */
