@@ -34,7 +34,7 @@ import com.google.common.collect.Multimap;
 
 public class SaxTaskListHandler extends DefaultHandler {
 
-	private final ITransferList taskList;
+	private final LazyTransferList taskList;
 
 	private final RepositoryModel repositoryModel;
 
@@ -52,7 +52,7 @@ public class SaxTaskListHandler extends DefaultHandler {
 
 	public SaxTaskListHandler(ITransferList taskList, RepositoryModel repositoryModel,
 			IRepositoryManager repositoryManager) throws CoreException {
-		this.taskList = taskList;
+		this.taskList = new LazyTransferList(taskList);
 		this.repositoryModel = repositoryModel;
 		this.repositoryManager = repositoryManager;
 
@@ -151,7 +151,7 @@ public class SaxTaskListHandler extends DefaultHandler {
 			applyContainmentToTaskList(subTasks);
 			applyContainmentToTaskList(queryResults);
 			applyContainmentToTaskList(categorizedTasks);
-
+			commitUntransferedTasksToTaskList();
 			break;
 		default:
 			break;
@@ -159,6 +159,10 @@ public class SaxTaskListHandler extends DefaultHandler {
 
 		orphanBuilder.endElement();
 
+	}
+
+	private void commitUntransferedTasksToTaskList() {
+		taskList.commit();
 	}
 
 	private <T extends IRepositoryElement> void recordHit(Attributes attributes, Multimap<T, String> hitMap,
