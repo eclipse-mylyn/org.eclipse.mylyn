@@ -163,6 +163,10 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 
 	private void initialize() {
 		project = (IProject) getElement().getAdapter(IResource.class);
+		if (project == null) {
+			throw new RuntimeException(
+					TasksUiPlugin.ID_PLUGIN + ": Can not get the project of " + getElement()); //$NON-NLS-1$
+		}
 		noDefaultAndApplyButton();
 		setDescription(Messages.ProjectTaskRepositoryPage_Select_a_task_repository_to_associate_with_this_project_below);
 	}
