@@ -15,15 +15,13 @@ package org.eclipse.mylyn.wikitext.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -136,18 +134,26 @@ public class ServiceLocatorTest {
 
 	protected void setupServiceLocatorWithMockMarkupLanguage(boolean metaInf) {
 		try {
-			ClassLoader classLoader = mock(ClassLoader.class);
-			Collection<URL> resources = Collections
-					.singletonList(new URL("file:" + MockMarkupLanguage.class.getName()));
+			ClassLoader classLoader = new URLClassLoader(new URL[0]) {
+				@Override
+				public Enumeration<URL> getResources(String name) throws IOException {
+					if ((metaInf && name.equals("META-INF/services/" + MarkupLanguage.class.getName()))
+							|| (!metaInf && name.equals("services/" + MarkupLanguage.class.getName()))) {
+						Collection<URL> resources = Collections
+								.singletonList(new URL("file:" + MockMarkupLanguage.class.getName()));
+						return Collections.enumeration(resources);
+					}
+					return Collections.enumeration(Collections.emptyList());
+				}
 
-			Enumeration<Object> empty = Collections.enumeration(Collections.emptyList());
-			doReturn(empty).when(classLoader).getResources(any(String.class));
-			doReturn(metaInf ? Collections.enumeration(resources) : empty).when(classLoader)
-					.getResources(eq("META-INF/services/" + MarkupLanguage.class.getName()));
-			doReturn(!metaInf ? Collections.enumeration(resources) : empty).when(classLoader)
-					.getResources(eq("services/" + MarkupLanguage.class.getName()));
-			doReturn(MockMarkupLanguage.class).when(classLoader).loadClass(MockMarkupLanguage.class.getName());
-
+				@Override
+				public Class<?> loadClass(String name) throws ClassNotFoundException {
+					if (name.equals(MockMarkupLanguage.class.getName())) {
+						return MockMarkupLanguage.class;
+					}
+					return super.loadClass(name);
+				}
+			};
 			locator = new ServiceLocator(classLoader) {
 				@Override
 				protected List<String> readServiceClassNames(URL url) {
@@ -162,18 +168,27 @@ public class ServiceLocatorTest {
 
 	protected void setupServiceLocatorWithMockMarkupLanguageProvider(boolean metaInf) {
 		try {
-			ClassLoader classLoader = mock(ClassLoader.class);
-			Collection<URL> resources = Collections
-					.singletonList(new URL("file:" + MockMarkupLanguageProvider.class.getName()));
+			ClassLoader classLoader = new URLClassLoader(new URL[0]) {
+				@Override
+				public Enumeration<URL> getResources(String name) throws IOException {
+					if ((metaInf && name.equals("META-INF/services/" + MarkupLanguageProvider.class.getName()))
+							|| (!metaInf && name.equals("services/" + MarkupLanguageProvider.class.getName()))) {
+						Collection<URL> resources = Collections
+								.singletonList(new URL("file:" + MockMarkupLanguageProvider.class.getName()));
+						return Collections.enumeration(resources);
+					}
+					return Collections.enumeration(Collections.emptyList());
+				}
 
-			Enumeration<Object> empty = Collections.enumeration(Collections.emptyList());
-			doReturn(empty).when(classLoader).getResources(any(String.class));
-			doReturn(metaInf ? Collections.enumeration(resources) : empty).when(classLoader)
-					.getResources(eq("META-INF/services/" + MarkupLanguageProvider.class.getName()));
-			doReturn(!metaInf ? Collections.enumeration(resources) : empty).when(classLoader)
-					.getResources(eq("services/" + MarkupLanguageProvider.class.getName()));
-			doReturn(MockMarkupLanguageProvider.class).when(classLoader)
-					.loadClass(MockMarkupLanguageProvider.class.getName());
+				@Override
+				public Class<?> loadClass(String name) throws ClassNotFoundException {
+					if (name.equals(MockMarkupLanguageProvider.class.getName())) {
+						return MockMarkupLanguageProvider.class;
+					}
+					return super.loadClass(name);
+				}
+			};
+
 			locator = new ServiceLocator(classLoader) {
 				@Override
 				protected List<String> readServiceClassNames(URL url) {
