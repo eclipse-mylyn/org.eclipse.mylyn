@@ -35,8 +35,6 @@ import java.util.UUID;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.eclipse.mylyn.wikitext.maven.internal.BuildFailureException;
-import org.eclipse.mylyn.wikitext.maven.internal.MarkupToEclipseHelpMojo;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder.Stylesheet;
 import org.eclipse.mylyn.wikitext.parser.util.MarkupToEclipseToc;
@@ -72,11 +70,11 @@ public class MarkupToEclipseHelpMojoTest {
 	private File calculateSourceFolder() {
 		URL resource = MarkupToEclipseHelpMojoTest.class.getResource("/test.textile");
 		checkNotNull(resource);
-		checkState(resource.getProtocol().equals("file"));
+		checkState(resource.getProtocol().equals("file"), "Expecting resource to have the file protocol: %s", resource);
 		String path = resource.getPath();
 		File file = new File(path);
-		checkState(file.exists());
-		checkState(file.isFile());
+		checkState(file.exists(), "Expecting file to exist: %s", file);
+		checkState(file.isFile(), "Expecting file to be a file: %s", file);
 		return file.getParentFile();
 	}
 
