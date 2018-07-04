@@ -122,20 +122,7 @@ public abstract class AbstractInPlaceDialog extends PopupDialog {
 
 		parent.pack();
 
-		setBackgroundColor(parent);
-
 		return parent;
-	}
-
-	private void setBackgroundColor(Composite parent) {
-		parent.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WHITE));
-		for (Control control : parent.getChildren()) {
-			if (control instanceof Composite) {
-				setBackgroundColor((Composite) control);
-			} else {
-				control.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WHITE));
-			}
-		}
 	}
 
 	protected abstract Control createControl(Composite composite);
