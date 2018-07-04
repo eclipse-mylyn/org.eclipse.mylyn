@@ -46,6 +46,8 @@ import org.eclipse.mylyn.wikitext.util.DefaultXmlStreamWriter;
 import org.eclipse.mylyn.wikitext.util.FormattingXMLStreamWriter;
 import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 
 /**
@@ -154,6 +156,8 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private final Stack<ElementInfo> blockState = new Stack<ElementInfo>();
 
+	private List<UriProcessor> linkUriProcessors = defaultLinkUriProcessors();
+
 	/**
 	 * construct the HtmlDocumentBuilder.
 	 *
@@ -211,10 +215,26 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		other.setCopyrightNotice(getCopyrightNotice());
 		other.setHtmlFilenameFormat(htmlFilenameFormat);
 		other.spanTypeToElementName = spanTypeToElementName;
+		copyLinkProcessors(other);
 		if (stylesheets != null) {
 			other.stylesheets = new ArrayList<Stylesheet>();
 			other.stylesheets.addAll(stylesheets);
 		}
+	}
+
+	/**
+	 * Adds a {@link UriProcessor} to the processors applied to {@link #link(Attributes, String, String) links}.
+	 *
+	 * @param processor
+	 *            the processor
+	 * @since 3.1
+	 */
+	public void addLinkUriProcessor(UriProcessor processor) {
+		checkNotNull(processor, "Must provide processor");
+		this.linkUriProcessors = ImmutableList.<UriProcessor> builder()
+				.addAll(linkUriProcessors)
+				.add(processor)
+				.build();
 	}
 
 	protected static XmlStreamWriter createFormattingXmlStreamWriter(Writer out) {
@@ -1131,7 +1151,11 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 */
 	protected void emitAnchorHref(String href) {
 		if (href != null) {
-			writer.writeAttribute("href", makeUrlAbsolute(applyHtmlFilenameFormat(href))); //$NON-NLS-1$
+			String newHref = href;
+			for (UriProcessor processor : linkUriProcessors) {
+				newHref = processor.process(newHref);
+			}
+			writer.writeAttribute("href", newHref); //$NON-NLS-1$
 		}
 	}
 
@@ -1458,5 +1482,18 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 */
 	public void setCopyrightNotice(String copyrightNotice) {
 		this.copyrightNotice = copyrightNotice;
+	}
+
+	private void copyLinkProcessors(HtmlDocumentBuilder other) {
+		List<UriProcessor> defaultProcessors = other.defaultLinkUriProcessors();
+		Builder<UriProcessor> newProcessors = ImmutableList.<UriProcessor> builder().addAll(defaultProcessors);
+		if (defaultProcessors.size() < linkUriProcessors.size()) {
+			newProcessors.addAll(linkUriProcessors.subList(defaultProcessors.size(), linkUriProcessors.size()));
+		}
+		other.linkUriProcessors = newProcessors.build();
+	}
+
+	private List<UriProcessor> defaultLinkUriProcessors() {
+		return ImmutableList.of(this::applyHtmlFilenameFormat, this::makeUrlAbsolute);
 	}
 }

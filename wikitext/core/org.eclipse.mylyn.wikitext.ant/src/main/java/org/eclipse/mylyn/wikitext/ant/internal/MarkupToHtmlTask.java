@@ -9,7 +9,7 @@
  *
  * Contributors:
  *     David Green - initial API and implementation
- *     Peter Stibrany - bug 294383 
+ *     Peter Stibrany - bug 294383
  *     Torkild U. Resheim - Handle links when transforming file based wiki
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.ant.internal;
@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +35,7 @@ import org.apache.tools.ant.types.FileSet;
 import org.eclipse.mylyn.wikitext.ant.MarkupTask;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.parser.builder.JavadocShortcutUriProcessor;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.splitter.DefaultSplittingStrategy;
 import org.eclipse.mylyn.wikitext.splitter.NoSplittingStrategy;
@@ -44,10 +46,9 @@ import org.eclipse.mylyn.wikitext.splitter.SplittingStrategy;
 
 /**
  * An Ant task for converting lightweight markup to HTML format.
- * 
+ *
  * @author David Green
  * @author Torkild U. Resheim
- * 
  */
 public class MarkupToHtmlTask extends MarkupTask {
 	private final List<FileSet> filesets = new ArrayList<FileSet>();
@@ -85,6 +86,10 @@ public class MarkupToHtmlTask extends MarkupTask {
 	private String htmlDoctype = null;
 
 	private String copyrightNotice = null;
+
+	private String javadocRelativePath = null;
+
+	private String javadocBasePackageName = null;
 
 	@Override
 	public void execute() throws BuildException {
@@ -144,9 +149,10 @@ public class MarkupToHtmlTask extends MarkupTask {
 					} catch (BuildException e) {
 						throw e;
 					} catch (Exception e) {
-						throw new BuildException(MessageFormat.format(
-								Messages.getString("MarkupToHtmlTask.11"), inputFile, //$NON-NLS-1$
-								e.getMessage()), e);
+						throw new BuildException(
+								MessageFormat.format(Messages.getString("MarkupToHtmlTask.11"), inputFile, //$NON-NLS-1$
+										e.getMessage()),
+								e);
 					}
 				}
 			}
@@ -158,8 +164,8 @@ public class MarkupToHtmlTask extends MarkupTask {
 			} catch (BuildException e) {
 				throw e;
 			} catch (Exception e) {
-				throw new BuildException(MessageFormat.format(
-						Messages.getString("MarkupToHtmlTask.12"), file, e.getMessage()), e); //$NON-NLS-1$
+				throw new BuildException(
+						MessageFormat.format(Messages.getString("MarkupToHtmlTask.12"), file, e.getMessage()), e); //$NON-NLS-1$
 			}
 		}
 	}
@@ -175,7 +181,7 @@ public class MarkupToHtmlTask extends MarkupTask {
 
 	/**
 	 * process the file
-	 * 
+	 *
 	 * @param baseDir
 	 * @param source
 	 * @return the lightweight markup, or null if the file was not written
@@ -204,10 +210,12 @@ public class MarkupToHtmlTask extends MarkupTask {
 
 			Writer writer;
 			try {
-				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(htmlOutputFile)), "utf-8"); //$NON-NLS-1$
+				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(htmlOutputFile)),
+						StandardCharsets.UTF_8);
 			} catch (Exception e) {
-				throw new BuildException(MessageFormat.format(
-						Messages.getString("MarkupToHtmlTask.16"), htmlOutputFile, e.getMessage()), e); //$NON-NLS-1$
+				throw new BuildException(
+						MessageFormat.format(Messages.getString("MarkupToHtmlTask.16"), htmlOutputFile, e.getMessage()), //$NON-NLS-1$
+						e);
 			}
 			try {
 				HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer, formatOutput);
@@ -241,6 +249,10 @@ public class MarkupToHtmlTask extends MarkupTask {
 				builder.setXhtmlStrict(xhtmlStrict);
 				builder.setCopyrightNotice(copyrightNotice);
 				builder.setHtmlFilenameFormat(htmlFilenameFormat);
+				if (javadocRelativePath != null || javadocBasePackageName != null) {
+					builder.addLinkUriProcessor(
+							new JavadocShortcutUriProcessor(javadocRelativePath, javadocBasePackageName));
+				}
 
 				SplittingStrategy splittingStrategy = multipleOutputFiles
 						? new DefaultSplittingStrategy()
@@ -268,9 +280,10 @@ public class MarkupToHtmlTask extends MarkupTask {
 				try {
 					writer.close();
 				} catch (Exception e) {
-					throw new BuildException(MessageFormat.format(
-							Messages.getString("MarkupToHtmlTask.17"), htmlOutputFile, //$NON-NLS-1$
-							e.getMessage()), e);
+					throw new BuildException(
+							MessageFormat.format(Messages.getString("MarkupToHtmlTask.17"), htmlOutputFile, //$NON-NLS-1$
+									e.getMessage()),
+							e);
 				}
 			}
 		}
@@ -294,7 +307,7 @@ public class MarkupToHtmlTask extends MarkupTask {
 	/**
 	 * The format of the HTML output file. Consists of a pattern where the '$1' is replaced with the filename of the
 	 * input file. Default value is <code>$1.html</code>
-	 * 
+	 *
 	 * @param htmlFilenameFormat
 	 */
 	public void setHtmlFilenameFormat(String htmlFilenameFormat) {
@@ -466,8 +479,8 @@ public class MarkupToHtmlTask extends MarkupTask {
 	/**
 	 * The 'rel' value for HTML links. If specified the value is applied to all links generated by the builder. The
 	 * default value is null. Setting this value to "nofollow" is recommended for rendering HTML in areas where users
-	 * may add links, for example in a blog comment. See <a
-	 * href="http://en.wikipedia.org/wiki/Nofollow">http://en.wikipedia.org/wiki/Nofollow</a> for more information.
+	 * may add links, for example in a blog comment. See
+	 * <a href="http://en.wikipedia.org/wiki/Nofollow">http://en.wikipedia.org/wiki/Nofollow</a> for more information.
 	 */
 	public String getLinkRel() {
 		return linkRel;
@@ -476,8 +489,8 @@ public class MarkupToHtmlTask extends MarkupTask {
 	/**
 	 * The 'rel' value for HTML links. If specified the value is applied to all links generated by the builder. The
 	 * default value is null. Setting this value to "nofollow" is recommended for rendering HTML in areas where users
-	 * may add links, for example in a blog comment. See <a
-	 * href="http://en.wikipedia.org/wiki/Nofollow">http://en.wikipedia.org/wiki/Nofollow</a> for more information.
+	 * may add links, for example in a blog comment. See
+	 * <a href="http://en.wikipedia.org/wiki/Nofollow">http://en.wikipedia.org/wiki/Nofollow</a> for more information.
 	 */
 	public void setLinkRel(String linkRel) {
 		this.linkRel = linkRel;
@@ -509,8 +522,6 @@ public class MarkupToHtmlTask extends MarkupTask {
 	 * A default target attribute for links that have absolute (not relative) urls. By default this value is null.
 	 * Setting this value will cause all HTML anchors to have their target attribute set if it's not explicitly
 	 * specified.
-	 * 
-	 * 
 	 */
 	public String getDefaultAbsoluteLinkTarget() {
 		return defaultAbsoluteLinkTarget;
@@ -520,8 +531,6 @@ public class MarkupToHtmlTask extends MarkupTask {
 	 * A default target attribute for links that have absolute (not relative) urls. By default this value is null.
 	 * Setting this value will cause all HTML anchors to have their target attribute set if it's not explicitly
 	 * specified.
-	 * 
-	 * 
 	 */
 	public void setDefaultAbsoluteLinkTarget(String defaultAbsoluteLinkTarget) {
 		this.defaultAbsoluteLinkTarget = defaultAbsoluteLinkTarget;
@@ -529,9 +538,8 @@ public class MarkupToHtmlTask extends MarkupTask {
 
 	/**
 	 * Indicate if the builder should attempt to conform to strict XHTML rules. The default is false.
-	 * 
+	 *
 	 * @see HtmlDocumentBuilder#isXhtmlStrict()
-	 * 
 	 */
 	public boolean isXhtmlStrict() {
 		return xhtmlStrict;
@@ -539,9 +547,8 @@ public class MarkupToHtmlTask extends MarkupTask {
 
 	/**
 	 * Indicate if the builder should attempt to conform to strict XHTML rules. The default is false.
-	 * 
+	 *
 	 * @see HtmlDocumentBuilder#isXhtmlStrict()
-	 * 
 	 */
 	public void setXhtmlStrict(boolean xhtmlStrict) {
 		this.xhtmlStrict = xhtmlStrict;
@@ -549,9 +556,8 @@ public class MarkupToHtmlTask extends MarkupTask {
 
 	/**
 	 * Indicate if the builder should emit DOCTYPE declaration. Default is true.
-	 * 
+	 *
 	 * @see HtmlDocumentBuilder#isEmitDtd()
-	 * 
 	 */
 	public boolean getEmitDoctype() {
 		return emitDoctype;
@@ -559,9 +565,8 @@ public class MarkupToHtmlTask extends MarkupTask {
 
 	/**
 	 * Indicate if the builder should emit DOCTYPE declaration. Default is true.
-	 * 
+	 *
 	 * @see HtmlDocumentBuilder#isEmitDtd()
-	 * 
 	 */
 	public void setEmitDoctype(boolean emitDtd) {
 		this.emitDoctype = emitDtd;
@@ -569,10 +574,9 @@ public class MarkupToHtmlTask extends MarkupTask {
 
 	/**
 	 * The DTD to use in the output document. Ignored if {@link #getEmitDoctype() emitDoctype} is false.
-	 * 
+	 *
 	 * @see HtmlDocumentBuilder#isEmitDtd()
 	 * @return the DTD to use, or null if the default DTD should be used
-	 * 
 	 */
 	public String getHtmlDoctype() {
 		return htmlDoctype;
@@ -581,10 +585,9 @@ public class MarkupToHtmlTask extends MarkupTask {
 	/**
 	 * The DTD to use in the output document. Ignored if {@link #getEmitDoctype() emitDoctype} is false. The doctype
 	 * should take the form: <code>&lt;!DOCTYPE html ...&gt;</code>
-	 * 
+	 *
 	 * @param htmlDoctype
 	 *            the DTD to use, or null if the default DTD should be used
-	 * 
 	 */
 	public void setHtmlDoctype(String htmlDoctype) {
 		this.htmlDoctype = htmlDoctype;
@@ -592,8 +595,6 @@ public class MarkupToHtmlTask extends MarkupTask {
 
 	/**
 	 * the copyright notice that should appear in the generated output
-	 * 
-	 * 
 	 */
 	public String getCopyrightNotice() {
 		return copyrightNotice;
@@ -601,13 +602,58 @@ public class MarkupToHtmlTask extends MarkupTask {
 
 	/**
 	 * the copyright notice that should appear in the generated output
-	 * 
+	 *
 	 * @param copyrightNotice
 	 *            the notice, or null if there should be none
-	 * 
 	 */
 	public void setCopyrightNotice(String copyrightNotice) {
 		this.copyrightNotice = copyrightNotice;
+	}
+
+	/**
+	 * Provides the relative path to related javadoc documentation.
+	 *
+	 * @return the relative path, or null
+	 * @see JavadocShortcutUriProcessor
+	 * @since 3.0.26
+	 */
+	public String getJavadocRelativePath() {
+		return javadocRelativePath;
+	}
+
+	/**
+	 * Sets the relative path to related javadoc documentation.
+	 *
+	 * @param javadocRelativePath
+	 *            the relative path, or null
+	 * @see JavadocShortcutUriProcessor
+	 * @since 3.0.26
+	 */
+	public void setJavadocRelativePath(String javadocRelativePath) {
+		this.javadocRelativePath = javadocRelativePath;
+	}
+
+	/**
+	 * Provides the base Java package name of the related javadoc documentation.
+	 *
+	 * @return the package name, or null
+	 * @see JavadocShortcutUriProcessor
+	 * @since 3.0.26
+	 */
+	public String getJavadocBasePackageName() {
+		return javadocBasePackageName;
+	}
+
+	/**
+	 * Sets the base Java package name of the related javadoc documentation.
+	 *
+	 * @param javadocBasePackageName
+	 *            the package name, or null
+	 * @see JavadocShortcutUriProcessor
+	 * @since 3.0.26
+	 */
+	public void setJavadocBasePackageName(String javadocBasePackageName) {
+		this.javadocBasePackageName = javadocBasePackageName;
 	}
 
 }

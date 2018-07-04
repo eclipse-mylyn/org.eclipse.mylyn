@@ -22,8 +22,6 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.ant.internal.MarkupToHtmlTask;
-
 /**
  * @author David Green
  * @author Torkild U. Resheim
@@ -210,6 +208,20 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 
 		assertTrue(content.contains("<a href=\"markup.html\" title=\"Heading One\">Previous</a>"));
 		assertTrue(content.contains("<a href=\"markup.html#HeadingOne\">link</a>"));
+	}
+
+	public void testWithJavadocLink() throws IOException {
+		File markup = createTextileMarkupFile("\"Test\":@.Test");
+		task.setFile(markup);
+		task.setJavadocBasePackageName("org.eclipse.mylyn.wikitext");
+		task.execute();
+
+		File htmlFile = new File(markup.getParentFile(), "markup.html");
+		assertTrue(htmlFile.exists() && htmlFile.isFile());
+
+		String content = getContent(htmlFile);
+
+		assertTrue(content, content.contains("<a href=\"index.html?org/eclipse/mylyn/wikitext/Test.html\">Test</a>"));
 	}
 
 	protected File createSimpleTextileMarkup() throws IOException {

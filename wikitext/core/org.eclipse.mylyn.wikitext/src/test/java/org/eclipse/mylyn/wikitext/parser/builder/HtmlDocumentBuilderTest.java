@@ -252,6 +252,29 @@ public class HtmlDocumentBuilderTest {
 		builder.setElementNameOfSpanType(SpanType.BOLD, null);
 	}
 
+	@Test
+	public void addLinkUriProcessor() {
+		builder.setEmitAsDocument(false);
+		builder.addLinkUriProcessor(h -> "a-target");
+		builder.beginDocument();
+		builder.link("something", "text");
+		builder.endDocument();
+		assertEquals("<a href=\"a-target\">text</a>", out.toString());
+	}
+
+	@Test
+	public void addLinkUriProcessorCopyConfiguration() {
+		builder.setEmitAsDocument(false);
+		builder.addLinkUriProcessor(h -> "a-target");
+		StringWriter otherWriter = new StringWriter();
+		HtmlDocumentBuilder other = new HtmlDocumentBuilder(otherWriter);
+		builder.copyConfiguration(other);
+		other.beginDocument();
+		other.link("something", "text");
+		other.endDocument();
+		assertEquals("<a href=\"a-target\">text</a>", otherWriter.toString());
+	}
+
 	private void assertListStyle(String listStyleType) {
 		setup();
 		ListAttributes attributes = new ListAttributes();

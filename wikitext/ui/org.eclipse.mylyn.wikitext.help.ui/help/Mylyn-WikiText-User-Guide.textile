@@ -322,12 +322,28 @@ The @markupLanguage@ attribute accepts any of the following values (depending on
 | @emitDoctype@ | Indicate if the builder should emit a DTD doctype declaration.  The default is true. |
 | @htmlDoctype@ | The doctype to use.  Defaults to @<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">@. |
 | @copyrightNotice@ | The copyright notice to include in generated output files. |
+| @javadocBasePackageName@ | Specifies the javadoc base package name to use with "javadoc links":#JavadocLinks.  Defaults to unspecified. |
+| @javadocRelativePath@ | Specifies the relative path to related javadoc to use with "javadoc links":#JavadocLinks.  Defaults to unspecified. |
 
 *stylesheet*
 
 Nested @<stylesheet>@ elements cause HTML to contain links to CSS stylesheets or CSS stylesheet content.  When used with the @url@ attribute the stylesheet element is linked.  When used with the @file@ attribute the stylesheet content is copied into the HTML document.
 
 Stylesheets may have nested @<attribute>@ elements with @name@ and @value@.  These attributes are copied verbatim to the HTML @<link>@ element.  Attributes named @type@, @rel@ and @href@ are ignored.
+
+h4. Javadoc Links
+
+WikiText provides extensions to supported markup languages for abbreviated links to javadoc.  This feature simplifies linking to javadoc from wiki markup by providing support for abbreviated syntax in link URIs.
+
+The following link URI syntax is supported:
+
+* "@foo.bar"      -> "index.html?foo/bar/package-summary.html"
+* "@foo.Bar"      -> "index.html?foo/Bar.html"
+* "javadoc://Foo" -> "index.html?Foo.html"
+
+If a base package name is provided, it can be referenced by preceding a package name with a dot, for example with a base package name of "com.example":
+
+* "@.foo.Bar"      -> "index.html?com/example/foo/Bar.html"
 
 h3. PDF and XSLFO
 
