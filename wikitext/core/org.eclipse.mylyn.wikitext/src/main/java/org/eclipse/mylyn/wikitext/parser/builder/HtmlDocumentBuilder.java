@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Stack;
 import java.util.regex.Pattern;
 
@@ -1102,7 +1103,15 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		if (!hasTarget && defaultAbsoluteLinkTarget != null && href != null) {
 			if (isExternalLink(href)) {
 				writer.writeAttribute("target", defaultAbsoluteLinkTarget); //$NON-NLS-1$
+				hasTarget = true;
 			}
+		}
+		if (!hasTarget) {
+			linkUriProcessors.stream()
+					.map(s -> s.target(href))
+					.filter(Objects::nonNull)
+					.findFirst()
+					.ifPresent(target -> writer.writeAttribute("target", target));
 		}
 
 		if (rel != null) {

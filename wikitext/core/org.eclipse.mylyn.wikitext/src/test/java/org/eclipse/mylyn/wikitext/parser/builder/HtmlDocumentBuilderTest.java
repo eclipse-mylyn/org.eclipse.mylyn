@@ -255,11 +255,22 @@ public class HtmlDocumentBuilderTest {
 	@Test
 	public void addLinkUriProcessor() {
 		builder.setEmitAsDocument(false);
-		builder.addLinkUriProcessor(h -> "a-target");
+		builder.addLinkUriProcessor(new UriProcessor() {
+
+			@Override
+			public String process(String uri) {
+				return "a-uri";
+			}
+
+			@Override
+			public String target(String uri) {
+				return "a-target";
+			}
+		});
 		builder.beginDocument();
 		builder.link("something", "text");
 		builder.endDocument();
-		assertEquals("<a href=\"a-target\">text</a>", out.toString());
+		assertEquals("<a href=\"a-uri\" target=\"a-target\">text</a>", out.toString());
 	}
 
 	@Test

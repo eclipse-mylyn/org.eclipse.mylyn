@@ -221,7 +221,8 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 
 		String content = getContent(htmlFile);
 
-		assertTrue(content, content.contains("<a href=\"index.html?org/eclipse/mylyn/wikitext/Test.html\">Test</a>"));
+		assertTrue(content, content
+				.contains("<a href=\"index.html?org/eclipse/mylyn/wikitext/Test.html\" target=\"_javadoc\">Test</a>"));
 	}
 
 	protected File createSimpleTextileMarkup() throws IOException {

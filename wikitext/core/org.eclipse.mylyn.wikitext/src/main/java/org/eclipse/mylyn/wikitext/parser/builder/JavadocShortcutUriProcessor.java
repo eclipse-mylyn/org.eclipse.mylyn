@@ -34,6 +34,8 @@ import javax.lang.model.SourceVersion;
  */
 public class JavadocShortcutUriProcessor implements UriProcessor {
 
+	private static final String TARGET = "_javadoc";
+
 	private static final String JAVADOC_URI_MARKER = "@";
 
 	private static final String JAVADOC_ABSOLUTE_URI_MARKER = "javadoc://";
@@ -57,13 +59,7 @@ public class JavadocShortcutUriProcessor implements UriProcessor {
 
 	@Override
 	public String process(String uri) {
-		String newUri = uri;
-		if (newUri.startsWith(JAVADOC_ABSOLUTE_URI_MARKER) && newUri.length() > JAVADOC_ABSOLUTE_URI_MARKER.length()) {
-			newUri = newUri.substring(JAVADOC_ABSOLUTE_URI_MARKER.length());
-		}
-		if (newUri.startsWith(JAVADOC_URI_MARKER) && newUri.length() > JAVADOC_URI_MARKER.length()) {
-			newUri = uri.substring(JAVADOC_URI_MARKER.length());
-		}
+		String newUri = preprocessUri(uri);
 		if (!newUri.equals(uri)) {
 			newUri = prependWithBasePackage(newUri);
 			if (SourceVersion.isName(newUri)) {
@@ -74,6 +70,25 @@ public class JavadocShortcutUriProcessor implements UriProcessor {
 			}
 		}
 		return uri;
+	}
+
+	@Override
+	public String target(String uri) {
+		if (!preprocessUri(uri).equals(uri)) {
+			return TARGET;
+		}
+		return null;
+	}
+
+	private String preprocessUri(String uri) {
+		String newUri = uri;
+		if (newUri.startsWith(JAVADOC_ABSOLUTE_URI_MARKER) && newUri.length() > JAVADOC_ABSOLUTE_URI_MARKER.length()) {
+			newUri = newUri.substring(JAVADOC_ABSOLUTE_URI_MARKER.length());
+		}
+		if (newUri.startsWith(JAVADOC_URI_MARKER) && newUri.length() > JAVADOC_URI_MARKER.length()) {
+			newUri = uri.substring(JAVADOC_URI_MARKER.length());
+		}
+		return newUri;
 	}
 
 	private String toTypePage(String newUri) {

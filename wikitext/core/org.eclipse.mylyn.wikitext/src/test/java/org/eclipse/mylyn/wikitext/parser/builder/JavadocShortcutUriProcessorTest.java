@@ -66,4 +66,11 @@ public class JavadocShortcutUriProcessorTest {
 	public void processMalformedName() {
 		assertEquals("@foo-bar", processor.process("@foo-bar"));
 	}
+
+	@Test
+	public void target() {
+		assertEquals("_javadoc", processor.target("@.Foo"));
+		assertEquals(null, processor.target("Foo"));
+
+	}
 }

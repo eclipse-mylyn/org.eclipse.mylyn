@@ -25,4 +25,15 @@ public interface UriProcessor {
 	 * @return the new URI, or the original if there were no changes to apply
 	 */
 	String process(String uri);
+
+	/**
+	 * Provides a target for the given URI.
+	 * 
+	 * @param uri
+	 *            the URI
+	 * @return the target, or null
+	 */
+	default String target(String uri) {
+		return null;
+	}
 }
