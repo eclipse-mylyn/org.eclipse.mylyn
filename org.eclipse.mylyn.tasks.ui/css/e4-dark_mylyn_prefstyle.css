@@ -8,3 +8,10 @@ IEclipsePreferences#org-eclipse-ui-workbench:org-eclipse-mylyn-tasks-ui {
 		'org.eclipse.mylyn.tasks.ui.colors.category.gradient.start=85,87,83'
 		'org.eclipse.mylyn.tasks.ui.colors.category.gradient.end=136,137,133'
 }
+
+/* See org.eclipse.ui.themes/css/dark/e4-dark_globalstyle.css for additional
+ * Mylyn Theme settings */
+DatePickerPanel {
+    background-color: #41464A;
+    color: #dddddd;
+}
