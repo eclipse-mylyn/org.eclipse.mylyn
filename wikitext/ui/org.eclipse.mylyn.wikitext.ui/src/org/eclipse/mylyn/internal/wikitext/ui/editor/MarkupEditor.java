@@ -269,9 +269,10 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 						try {
 							IURIEditorInput uriInput = (IURIEditorInput) getEditorInput();
 							URI locationURI = uriInput.getURI().resolve(location);
-							if (locationURI != null) {
-								IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(
-										locationURI);
+							if (locationURI != null && "file".equals(locationURI.getScheme())) { //$NON-NLS-1$
+								IFile[] files = ResourcesPlugin.getWorkspace()
+										.getRoot()
+										.findFilesForLocationURI(locationURI);
 								if (files.length > 0) {
 									// it is a workspace resource -> open using an editor
 									IEditorPart editor = IDE.openEditor(getEditorSite().getPage(), files[0]);
