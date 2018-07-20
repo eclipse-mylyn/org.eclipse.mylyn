@@ -12,8 +12,6 @@
 package org.eclipse.mylyn.internal.tasks.core.data;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -27,7 +25,6 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.DelegatingProgressMonitor;
 import org.eclipse.mylyn.commons.core.IDelegatingProgressMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -56,18 +53,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
  */
 public class TaskDataManager implements ITaskDataManager {
 
-	private static final String ENCODING_UTF_8 = "UTF-8"; //$NON-NLS-1$
-
-	private static final String EXTENSION = ".zip"; //$NON-NLS-1$
-
-	private static final String FOLDER_TASKS = "tasks"; //$NON-NLS-1$
-
-	private static final String FOLDER_DATA = "offline"; //$NON-NLS-1$
-
-	private static final String FOLDER_TASKS_1_0 = "offline"; //$NON-NLS-1$
-
-	private String dataPath;
-
 	private final IRepositoryManager repositoryManager;
 
 	private final TaskDataStore taskDataStore;
@@ -78,15 +63,17 @@ public class TaskDataManager implements ITaskDataManager {
 
 	private final List<ITaskDataManagerListener> listeners = new CopyOnWriteArrayList<ITaskDataManagerListener>();
 
-	private final SynchronizationManger synchronizationManger;
+	private final SynchronizationManger synchronizationManager;
+
+	private final TaskDataFileManager fileManager = new TaskDataFileManager();
 
 	public TaskDataManager(TaskDataStore taskDataStore, IRepositoryManager repositoryManager, TaskList taskList,
-			TaskActivityManager taskActivityManager, SynchronizationManger synchronizationManger) {
+			TaskActivityManager taskActivityManager, SynchronizationManger synchronizationManager) {
 		this.taskDataStore = taskDataStore;
 		this.repositoryManager = repositoryManager;
 		this.taskList = taskList;
 		this.taskActivityManager = taskActivityManager;
-		this.synchronizationManger = synchronizationManger;
+		this.synchronizationManager = synchronizationManager;
 	}
 
 	public void addListener(ITaskDataManagerListener listener) {
@@ -162,7 +149,7 @@ public class TaskDataManager implements ITaskDataManager {
 		final boolean[] changed = new boolean[1];
 		taskList.run(new ITaskListRunnable() {
 			public void execute(IProgressMonitor monitor) throws CoreException {
-				final File file = getFile(task, kind);
+				final File file = fileManager.getFile(task, kind);
 				taskDataStore.putTaskData(ensurePathExists(file), state);
 				switch (task.getSynchronizationState()) {
 				case SYNCHRONIZED:
@@ -227,7 +214,7 @@ public class TaskDataManager implements ITaskDataManager {
 							state = taskDataStore.getTaskDataState(ensurePathExists(file));
 						}
 						TaskData lastReadData = (state != null) ? state.getLastReadData() : null;
-						TaskDataDiff diff = synchronizationManger.createDiff(taskData, lastReadData, monitor);
+						TaskDataDiff diff = synchronizationManager.createDiff(taskData, lastReadData, monitor);
 						suppressIncoming = Boolean.toString(!diff.hasChanged());
 
 						switch (task.getSynchronizationState()) {
@@ -295,9 +282,9 @@ public class TaskDataManager implements ITaskDataManager {
 	private File getMigratedFile(ITask task, String kind) throws CoreException {
 		Assert.isNotNull(task);
 		Assert.isNotNull(kind);
-		File file = getFile(task, kind);
+		File file = fileManager.getFile(task, kind);
 		if (!file.exists()) {
-			File oldFile = getFile10(task, kind);
+			File oldFile = fileManager.getFile10(task, kind);
 			if (oldFile.exists()) {
 				TaskDataState state = taskDataStore.getTaskDataState(oldFile);
 				// save migrated task data right away
@@ -314,7 +301,7 @@ public class TaskDataManager implements ITaskDataManager {
 		final TaskDataManagerEvent event = new TaskDataManagerEvent(this, itask);
 		taskList.run(new ITaskListRunnable() {
 			public void execute(IProgressMonitor monitor) throws CoreException {
-				File dataFile = getFile(task, kind);
+				File dataFile = fileManager.getFile(task, kind);
 				if (dataFile.exists()) {
 					taskDataStore.discardEdits(dataFile);
 				}
@@ -337,42 +324,15 @@ public class TaskDataManager implements ITaskDataManager {
 	}
 
 	private File findFile(ITask task, String kind) {
-		File file = getFile(task, kind);
+		File file = fileManager.getFile(task, kind);
 		if (file.exists()) {
 			return file;
 		}
-		return getFile10(task, kind);
+		return fileManager.getFile10(task, kind);
 	}
 
 	public String getDataPath() {
-		return dataPath;
-	}
-
-	private File getFile(ITask task, String kind) {
-		return getFile(task.getRepositoryUrl(), task, kind);
-	}
-
-	private File getFile(String repositoryUrl, ITask task, String kind) {
-//			String pathName = task.getConnectorKind() + "-"
-//					+ URLEncoder.encode(task.getRepositoryUrl(), ENCODING_UTF_8);
-//			String fileName = kind + "-" + URLEncoder.encode(task.getTaskId(), ENCODING_UTF_8) + EXTENSION;
-		String repositoryPath = task.getConnectorKind() + "-" + CoreUtil.asFileName(repositoryUrl); //$NON-NLS-1$
-		String fileName = CoreUtil.asFileName(task.getTaskId()) + EXTENSION;
-		File path = new File(dataPath + File.separator + FOLDER_TASKS + File.separator + repositoryPath + File.separator
-				+ FOLDER_DATA);
-		return new File(path, fileName);
-	}
-
-	private File getFile10(ITask task, String kind) {
-		try {
-			String pathName = URLEncoder.encode(task.getRepositoryUrl(), ENCODING_UTF_8);
-			String fileName = task.getTaskId() + EXTENSION;
-			File path = new File(dataPath + File.separator + FOLDER_TASKS_1_0, pathName);
-			return new File(path, fileName);
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
-		}
-
+		return fileManager.getDataPath();
 	}
 
 	public TaskData getTaskData(ITask task) throws CoreException {
@@ -446,7 +406,7 @@ public class TaskDataManager implements ITaskDataManager {
 		final AbstractTask task = (AbstractTask) itask;
 		taskList.run(new ITaskListRunnable() {
 			public void execute(IProgressMonitor monitor) throws CoreException {
-				File file = getFile(task, task.getConnectorKind());
+				File file = fileManager.getFile(task, task.getConnectorKind());
 				if (file.exists()) {
 					taskDataStore.deleteTaskData(file);
 					task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
@@ -457,7 +417,7 @@ public class TaskDataManager implements ITaskDataManager {
 	}
 
 	public void setDataPath(String dataPath) {
-		this.dataPath = dataPath;
+		fileManager.setDataPath(dataPath);
 	}
 
 	/**
@@ -520,7 +480,7 @@ public class TaskDataManager implements ITaskDataManager {
 		final boolean[] changed = new boolean[1];
 		taskList.run(new ITaskListRunnable() {
 			public void execute(IProgressMonitor monitor) throws CoreException {
-				taskDataStore.putEdits(getFile(task, kind), editsData);
+				taskDataStore.putEdits(fileManager.getFile(task, kind), editsData);
 				switch (task.getSynchronizationState()) {
 				case INCOMING:
 				case INCOMING_NEW:
@@ -589,7 +549,7 @@ public class TaskDataManager implements ITaskDataManager {
 				if (file.exists()) {
 					TaskDataState oldState = taskDataStore.getTaskDataState(file);
 					if (oldState != null) {
-						File newFile = getFile(newStorageRepositoryUrl, task, kind);
+						File newFile = fileManager.getFile(newStorageRepositoryUrl, task, kind);
 						TaskDataState newState = new TaskDataState(oldState.getConnectorKind(), newRepositoryUrl,
 								oldState.getTaskId());
 						newState.merge(oldState);
@@ -627,7 +587,7 @@ public class TaskDataManager implements ITaskDataManager {
 				if (file.exists()) {
 					TaskDataState oldState = taskDataStore.getTaskDataState(file);
 					if (oldState != null) {
-						File newFile = getFile(task.getRepositoryUrl(), newTask, kind);
+						File newFile = fileManager.getFile(task.getRepositoryUrl(), newTask, kind);
 						TaskDataState newState = new TaskDataState(oldState.getConnectorKind(), task.getRepositoryUrl(),
 								newTask.getTaskId());
 						newState.merge(oldState);
