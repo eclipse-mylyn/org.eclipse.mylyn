@@ -1,11 +1,12 @@
 /*******************************************************************************
  * Copyright (c) 2011 Research Group for Industrial Software (INSO), Vienna University of Technology
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0
+ * 
+ * SPDX-License-Identifier: EPL-2.0
  *
- * Contributors:
  *     Kilian Matt (Research Group for Industrial Software (INSO), Vienna University of Technology) - initial API and implementation
  *     Alvaro Sanchez-Leon - Resolve IResource information in generated artifacts
  *     Tasktop Technologies - Improvements
