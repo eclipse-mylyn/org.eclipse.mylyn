@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse @Test
 	public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v20.html
  *
  * Contributors:
  *     Frank Becker - initial API and implementation
