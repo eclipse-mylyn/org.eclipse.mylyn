@@ -166,28 +166,11 @@ public class RepositorySearchWizardPage extends WizardPage implements
 							styled.append(" (" + language + ")", //$NON-NLS-1$ //$NON-NLS-2$
 									StyledString.QUALIFIER_STYLER);
 
-						int forks = repo.getForks();
-						if (forks != 1)
-							styled.append(MessageFormat.format(
-									Messages.RepositorySearchWizardPage_Forks,
-									forks), StyledString.COUNTER_STYLER);
-						else
-							styled.append(
-									Messages.RepositorySearchWizardPage_Fork,
-									StyledString.COUNTER_STYLER);
-
-						int watchers = repo.getWatchers();
-						if (watchers != 1)
-							styled.append(
-									MessageFormat
-											.format(Messages.RepositorySearchWizardPage_Watchers,
-													watchers),
-									StyledString.COUNTER_STYLER);
-						else
-							styled.append(
-									Messages.RepositorySearchWizardPage_Watcher,
-									StyledString.COUNTER_STYLER);
-
+						String counters = " " + MessageFormat.format( //$NON-NLS-1$
+								Messages.RepositorySearchWizardPage_counters,
+								Integer.valueOf(repo.getForks()),
+								Integer.valueOf(repo.getWatchers()));
+						styled.append(counters, StyledString.COUNTER_STYLER);
 						return styled;
 					}
 

@@ -67,12 +67,6 @@ public class Messages extends NLS {
 	public static String RepositorySearchWizardPage_Description;
 
 	/** */
-	public static String RepositorySearchWizardPage_Fork;
-
-	/** */
-	public static String RepositorySearchWizardPage_Forks;
-
-	/** */
 	public static String RepositorySearchWizardPage_SearchButton;
 
 	/** */
@@ -85,10 +79,7 @@ public class Messages extends NLS {
 	public static String RepositorySearchWizardPage_Title;
 
 	/** */
-	public static String RepositorySearchWizardPage_Watcher;
-
-	/** */
-	public static String RepositorySearchWizardPage_Watchers;
+	public static String RepositorySearchWizardPage_counters;
 
 	/** */
 	public static String RepositorySelectionWizardPage_Description;
