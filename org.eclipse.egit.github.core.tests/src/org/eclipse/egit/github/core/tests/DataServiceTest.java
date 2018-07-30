@@ -431,4 +431,42 @@ public class DataServiceTest {
 		service.createTag(repo, tag);
 		verify(client).post(eq("/repos/o/n/git/tags"), any(), eq(Tag.class));
 	}
+
+	/**
+	 * Delete reference
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void deleteReference() throws IOException {
+		Reference ref = new Reference();
+		ref.setRef("refs/heads/master");
+		service.deleteReference(repo, ref);
+		verify(client).delete(eq("/repos/o/n/git/refs/heads/master"));
+	}
+
+	/**
+	 * Delete branch
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void deleteBranch() throws IOException {
+		String branch = "branch";
+		service.deleteBranch(repo, branch);
+		verify(client).delete(eq("/repos/o/n/git/refs/heads/branch"));
+	}
+
+	/**
+	 * Delete tag
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void deleteTag() throws IOException {
+		Tag tag = new Tag();
+		tag.setTag("tag");
+		service.deleteTag(repo, tag);
+		verify(client).delete(eq("/repos/o/n/git/refs/tags/tag"));
+	}
 }

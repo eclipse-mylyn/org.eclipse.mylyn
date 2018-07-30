@@ -115,6 +115,8 @@ public interface IGitHubConstants {
 	/** */
 	String SEGMENT_GIT = "/git"; //$NON-NLS-1$
 	/** */
+	String SEGMENT_HEADS = "/heads"; //$NON-NLS-1$
+	/** */
 	String SEGMENT_HOOKS = "/hooks"; //$NON-NLS-1$
 	/** */
 	String SEGMENT_ISSUES = "/issues"; //$NON-NLS-1$
