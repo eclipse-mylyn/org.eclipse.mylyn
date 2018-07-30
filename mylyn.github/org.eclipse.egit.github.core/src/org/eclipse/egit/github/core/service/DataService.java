@@ -15,6 +15,7 @@ package org.eclipse.egit.github.core.service;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_BLOBS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_COMMITS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_GIT;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_HEADS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REFS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_TAGS;
@@ -457,5 +458,83 @@ public class DataService extends GitHubService {
 		}
 		params.put("tagger", tag.getTagger()); //$NON-NLS-1$
 		return client.post(uri.toString(), params, Tag.class);
+	}
+
+	/**
+	 * Delete reference
+	 *
+	 * @param repository
+	 * @param reference
+	 * @throws IOException
+	 */
+	public void deleteReference(IRepositoryIdProvider repository,
+			Reference reference) throws IOException {
+		final String id = getId(repository);
+		if (reference == null) {
+			throw new IllegalArgumentException("Reference cannot be null"); //$NON-NLS-1$
+		}
+		String ref = reference.getRef();
+		if (ref == null) {
+			throw new IllegalArgumentException("Ref cannot be null"); //$NON-NLS-1$
+		}
+		if (ref.length() == 0) {
+			throw new IllegalArgumentException("Ref cannot be empty"); //$NON-NLS-1$
+		}
+		StringBuilder uri = new StringBuilder();
+		uri.append(SEGMENT_REPOS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_GIT);
+		if (!ref.startsWith("refs/")) { //$NON-NLS-1$
+			uri.append(SEGMENT_REFS);
+		}
+		uri.append('/').append(ref);
+		client.delete(uri.toString());
+	}
+
+	/**
+	 * Delete branch
+	 *
+	 * @param repository
+	 * @param branchName
+	 * @throws IOException
+	 */
+	public void deleteBranch(IRepositoryIdProvider repository,
+			String branchName) throws IOException {
+		final String id = getId(repository);
+		if (branchName == null || branchName.isEmpty()) {
+			throw new IllegalArgumentException("BranchName cannot be null"); //$NON-NLS-1$
+		}
+		StringBuilder uri = new StringBuilder();
+		uri.append(SEGMENT_REPOS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_GIT);
+		uri.append(SEGMENT_REFS);
+		uri.append(SEGMENT_HEADS).append('/').append(branchName);
+		client.delete(uri.toString());
+	}
+
+	/**
+	 * Delete tag
+	 *
+	 * @param repository
+	 * @param tag
+	 * @throws IOException
+	 */
+	public void deleteTag(IRepositoryIdProvider repository, Tag tag)
+			throws IOException {
+		final String id = getId(repository);
+		if (tag == null) {
+			throw new IllegalArgumentException("Tag cannot be null"); //$NON-NLS-1$
+		}
+		if (tag.getTag() == null || tag.getTag().isEmpty()) {
+			throw new IllegalArgumentException("Tag Name cannot be empty"); //$NON-NLS-1$
+		}
+		StringBuilder uri = new StringBuilder();
+		uri.append(SEGMENT_REPOS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_GIT);
+		uri.append(SEGMENT_REFS);
+		uri.append(SEGMENT_TAGS).append('/').append(tag.getTag());
+		client.delete(uri.toString());
 	}
 }
