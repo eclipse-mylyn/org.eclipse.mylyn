@@ -410,6 +410,19 @@ public class DataServiceTest {
 	}
 
 	/**
+	 * List tags
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void listTags() throws IOException {
+		service.listTags(repo);
+		GitHubRequest request = new GitHubRequest();
+		request.setUri(Utils.page("/repos/o/n/git/refs/tags"));
+		verify(client).get(request);
+	}
+
+	/**
 	 * Create tag with null tag
 	 *
 	 * @throws IOException
