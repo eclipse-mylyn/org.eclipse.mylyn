@@ -430,6 +430,31 @@ public class DataService extends GitHubService {
 	}
 
 	/**
+	 * List tags for given repository. You can access to more information by
+	 * using URL in Reference Object returned.
+	 *
+	 * @param repository
+	 * @return non-null but possibly empty list of references
+	 * @throws IOException
+	 */
+	public List<Reference> listTags(IRepositoryIdProvider repository)
+			throws IOException {
+		final String id = getId(repository);
+		StringBuilder uri = new StringBuilder();
+		uri.append(SEGMENT_REPOS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_GIT);
+		uri.append(SEGMENT_REFS);
+		uri.append(SEGMENT_TAGS);
+		PagedRequest<Reference> request = createPagedRequest();
+		request.setType(new TypeToken<List<Reference>>() {
+			// make protected type visible
+		}.getType());
+		request.setUri(uri);
+		return getAll(request);
+	}
+
+	/**
 	 * Create tag object in given repository
 	 *
 	 * @param repository
