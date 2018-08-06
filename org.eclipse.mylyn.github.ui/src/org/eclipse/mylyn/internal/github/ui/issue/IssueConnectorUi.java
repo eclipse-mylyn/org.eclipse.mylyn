@@ -168,7 +168,7 @@ public class IssueConnectorUi extends AbstractRepositoryConnectorUi {
 				}
 			}
 		}
-		return hyperlinks.toArray(new IHyperlink[hyperlinks.size()]);
+		return hyperlinks.toArray(new IHyperlink[0]);
 	}
 
 	private Region createRegion(int textOffset, Matcher matcher) {
