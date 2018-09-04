@@ -21,12 +21,12 @@ org.eclipse.mylyn/org.eclipse.mylyn-parent/pom.xml
 
 #mvn -Dtycho.mode=maven org.sonatype.tycho:tycho-versions-plugin:set-version -DnewVersion=1.4.1-SNAPSHOT
 
-update 1.16.0 1.16.0 # builds, versions, org.eclipse.mylyn.commons.identiy/notifications/repositories
-update 2.15.0 2.15.0 # reviews
-update 3.24.0 3.24.1
-update 5.20.0 5.20.0 # CDT
-bug=536060
-version=3.24.1
+#update 1.16.0 1.16.0 # builds, versions, org.eclipse.mylyn.commons.identiy/notifications/repositories
+#update 2.15.0 2.15.0 # reviews
+update 3.24.1 3.24.2
+#update 5.20.0 5.20.0 # CDT
+bug=538100
+version=3.24.2
 
 # Must do this for first SR on a branch
 #updateSnapshotSitesForSR 3.14
