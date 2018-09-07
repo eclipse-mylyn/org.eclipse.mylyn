@@ -24,6 +24,8 @@ public class TableAttributes extends Attributes {
 
 	private String border;
 
+	private String align;
+
 	private String summary;
 
 	private String width;
@@ -102,4 +104,17 @@ public class TableAttributes extends Attributes {
 		this.bgcolor = bgcolor;
 	}
 
+	/**
+	 * @since 3.0.26
+	 */
+	public String getAlign() {
+		return align;
+	}
+
+	/**
+	 * @since 3.0.26
+	 */
+	public void setAlign(String align) {
+		this.align = align;
+	}
 }

@@ -26,6 +26,8 @@ import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.ListAttributes;
+import org.eclipse.mylyn.wikitext.parser.TableAttributes;
+import org.eclipse.mylyn.wikitext.parser.TableCellAttributes;
 import org.eclipse.mylyn.wikitext.util.XmlStreamWriter;
 import org.junit.Before;
 import org.junit.Rule;
@@ -284,6 +286,45 @@ public class HtmlDocumentBuilderTest {
 		other.link("something", "text");
 		other.endDocument();
 		assertEquals("<a href=\"a-target\">text</a>", otherWriter.toString());
+	}
+
+	@Test
+	public void tableWithAttributes() {
+		builder.setEmitAsDocument(false);
+		builder.beginBlock(BlockType.TABLE, tableAttributesWithBorderAndAlign());
+		builder.beginBlock(BlockType.TABLE_ROW, new Attributes());
+		builder.beginBlock(BlockType.TABLE_CELL_NORMAL, tableCellAttributesWithScope());
+		builder.characters("cell content");
+		builder.endBlock();
+		builder.endBlock();
+		builder.endBlock();
+		assertExpected("tableWithAttributes");
+	}
+
+	@Test
+	public void tableWithoutAttributes() {
+		builder.setEmitAsDocument(false);
+		builder.beginBlock(BlockType.TABLE, new TableAttributes());
+		builder.beginBlock(BlockType.TABLE_ROW, new Attributes());
+		builder.beginBlock(BlockType.TABLE_CELL_NORMAL, new Attributes());
+		builder.characters("cell content");
+		builder.endBlock();
+		builder.endBlock();
+		builder.endBlock();
+		assertExpected("tableWithoutAttributes");
+	}
+
+	private TableAttributes tableAttributesWithBorderAndAlign() {
+		TableAttributes attributes = new TableAttributes();
+		attributes.setAlign("left");
+		attributes.setBorder("1");
+		return attributes;
+	}
+
+	private TableCellAttributes tableCellAttributesWithScope() {
+		TableCellAttributes attributes = new TableCellAttributes();
+		attributes.setScope("col");
+		return attributes;
 	}
 
 	private void assertListStyle(String listStyleType) {

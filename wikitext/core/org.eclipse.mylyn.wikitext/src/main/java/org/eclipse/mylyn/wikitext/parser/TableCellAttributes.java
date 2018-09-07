@@ -32,6 +32,8 @@ public class TableCellAttributes extends Attributes {
 
 	private String colspan;
 
+	private String scope;
+
 	public String getBgcolor() {
 		return bgcolor;
 	}
@@ -96,4 +98,24 @@ public class TableCellAttributes extends Attributes {
 		this.colspan = colspan;
 	}
 
+	/**
+	 * Scope attribute.
+	 *
+	 * @return the scope value
+	 * @since 3.0.26
+	 */
+	public String getScope() {
+		return scope;
+	}
+
+	/**
+	 * Scope attribute.
+	 *
+	 * @param scope
+	 *            typical value is "col", "row", "rowgroup" or "colgroup"
+	 * @since 3.0.26
+	 */
+	public void setScope(String scope) {
+		this.scope = scope;
+	}
 }

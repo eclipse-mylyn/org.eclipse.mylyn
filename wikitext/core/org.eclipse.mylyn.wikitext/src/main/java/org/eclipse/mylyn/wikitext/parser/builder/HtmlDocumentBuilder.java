@@ -926,6 +926,9 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 			if (tableAttributes.getBorder() != null) {
 				writer.writeAttribute("border", tableAttributes.getBorder()); //$NON-NLS-1$
 			}
+			if (tableAttributes.getAlign() != null) {
+				writer.writeAttribute("align", tableAttributes.getAlign()); //$NON-NLS-1$
+			}
 			if (tableAttributes.getCellpadding() != null) {
 				writer.writeAttribute("cellpadding", tableAttributes.getCellpadding()); //$NON-NLS-1$
 			}
@@ -974,6 +977,9 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		if (attributes instanceof TableCellAttributes) {
 			TableCellAttributes tableCellAttributes = (TableCellAttributes) attributes;
+			if (tableCellAttributes.getScope() != null) {
+				writer.writeAttribute("scope", tableCellAttributes.getScope()); //$NON-NLS-1$
+			}
 			if (tableCellAttributes.getBgcolor() != null) {
 				writer.writeAttribute("bgcolor", tableCellAttributes.getBgcolor()); //$NON-NLS-1$
 			}
