@@ -38,6 +38,8 @@ public class TaskDataFileManagerTest extends TestCase {
 		assertEquals("11111%2520", fileManager.getFileName(TaskTestUtil.createMockTask("11111%20"), true));
 		// <max, does not exist, not requires encoding == not encoded
 		assertEquals("11111%20", fileManager.getFileName(TaskTestUtil.createMockTask("11111%20"), false));
+		// <max, does not exist, not requires encoding == not encoded
+		assertEquals("11111%20_", fileManager.getFileName(TaskTestUtil.createMockTask("11111%20_"), false));
 		// <max, does not exist, requires encoding == encoded
 		assertEquals("11111%2520%2B", fileManager.getFileName(TaskTestUtil.createMockTask("11111%20+"), false));
 		// <max, exists, requires encoding == encoded
