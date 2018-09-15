@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.event;
 
-import java.io.Serializable;
-
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.Team;
 import org.eclipse.egit.github.core.User;
@@ -21,7 +19,7 @@ import org.eclipse.egit.github.core.User;
 /**
  * TeamAddEvent payload model class
  */
-public class TeamAddPayload extends EventPayload implements Serializable {
+public class TeamAddPayload extends EventPayload {
 
 	private static final long serialVersionUID = 7660176723347977144L;
 

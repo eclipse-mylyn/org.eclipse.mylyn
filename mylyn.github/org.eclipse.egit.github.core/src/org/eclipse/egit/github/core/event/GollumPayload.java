@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.event;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.eclipse.egit.github.core.GollumPage;
@@ -20,7 +19,7 @@ import org.eclipse.egit.github.core.GollumPage;
 /**
  * GollumEvent payload model class.
  */
-public class GollumPayload extends EventPayload implements Serializable {
+public class GollumPayload extends EventPayload {
 
 	private static final long serialVersionUID = 7111499446827257290L;
 

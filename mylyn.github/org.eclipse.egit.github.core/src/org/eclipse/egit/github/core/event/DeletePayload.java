@@ -12,12 +12,10 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.event;
 
-import java.io.Serializable;
-
 /**
  * DeleteEvent payload model class.
  */
-public class DeletePayload extends EventPayload implements Serializable {
+public class DeletePayload extends EventPayload {
 
 	private static final long serialVersionUID = -7571623946339106873L;
 

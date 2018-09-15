@@ -12,14 +12,12 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.event;
 
-import java.io.Serializable;
-
 import org.eclipse.egit.github.core.User;
 
 /**
  * FollowEvent payload model class.
  */
-public class FollowPayload extends EventPayload implements Serializable {
+public class FollowPayload extends EventPayload {
 
 	private static final long serialVersionUID = -4345668254608800406L;
 

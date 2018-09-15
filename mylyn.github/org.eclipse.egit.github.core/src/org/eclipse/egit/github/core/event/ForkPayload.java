@@ -12,14 +12,12 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.event;
 
-import java.io.Serializable;
-
 import org.eclipse.egit.github.core.Repository;
 
 /**
  * ForkEvent payload model class.
  */
-public class ForkPayload extends EventPayload implements Serializable {
+public class ForkPayload extends EventPayload {
 
 	private static final long serialVersionUID = 2110456722558520113L;
 

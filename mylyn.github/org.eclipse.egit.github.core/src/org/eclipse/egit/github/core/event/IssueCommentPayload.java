@@ -12,15 +12,13 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.event;
 
-import java.io.Serializable;
-
 import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.Issue;
 
 /**
  * IssueCommentEvent payload model class.
  */
-public class IssueCommentPayload extends EventPayload implements Serializable {
+public class IssueCommentPayload extends EventPayload {
 
 	private static final long serialVersionUID = 2661548417314120170L;
 
