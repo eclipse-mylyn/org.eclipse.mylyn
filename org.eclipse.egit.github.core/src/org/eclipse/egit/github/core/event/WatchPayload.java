@@ -12,12 +12,10 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.event;
 
-import java.io.Serializable;
-
 /**
  * WatchEvent payload model class.
  */
-public class WatchPayload extends EventPayload implements Serializable {
+public class WatchPayload extends EventPayload {
 
 	private static final long serialVersionUID = -1600566006173513492L;
 

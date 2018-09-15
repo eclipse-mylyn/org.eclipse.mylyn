@@ -13,14 +13,12 @@
 
 package org.eclipse.egit.github.core.event;
 
-import java.io.Serializable;
-
 import org.eclipse.egit.github.core.PullRequest;
 
 /**
  * PullRequestEvent payload model class.
  */
-public class PullRequestPayload extends EventPayload implements Serializable {
+public class PullRequestPayload extends EventPayload {
 
 	private static final long serialVersionUID = -8234504270587265625L;
 

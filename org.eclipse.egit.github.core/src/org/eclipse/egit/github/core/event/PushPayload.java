@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.event;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.eclipse.egit.github.core.Commit;
@@ -20,7 +19,7 @@ import org.eclipse.egit.github.core.Commit;
 /**
  * PushEvent payload model class.
  */
-public class PushPayload extends EventPayload implements Serializable {
+public class PushPayload extends EventPayload {
 
 	private static final long serialVersionUID = -1542484898531583478L;
 
