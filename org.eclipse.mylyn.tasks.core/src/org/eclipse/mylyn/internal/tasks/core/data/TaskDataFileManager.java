@@ -97,7 +97,7 @@ public class TaskDataFileManager {
 	 * @return true or false
 	 */
 	private boolean requiresEncoding(String fileName) {
-		return !fileName.matches("^[_a-zA-Z0-9%\\.]+$"); //$NON-NLS-1$
+		return !fileName.matches("^[a-zA-Z0-9%\\.]+$"); //$NON-NLS-1$
 	}
 
 	private String trimFilenameIfRequired(String filename) {
