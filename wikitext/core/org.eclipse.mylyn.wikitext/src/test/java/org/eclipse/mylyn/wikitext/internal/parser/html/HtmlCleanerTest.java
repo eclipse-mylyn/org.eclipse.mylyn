@@ -28,37 +28,32 @@ import org.junit.Test;
 public class HtmlCleanerTest {
 	@Test
 	public void testFirstNode_MoveWhitespaceOutside() {
-		String result = clean("<p>foo <span style=\"color:blue;\"> bar</span></p>");
-
-		assertTrue(result, result.contains("<p>foo <span style=\"color: blue;\">bar</span></p>"));
+		assertClean("<p>foo <span style=\"color: blue;\">bar</span></p>",
+				"<p>foo <span style=\"color:blue;\"> bar</span></p>");
 	}
 
 	@Test
 	public void testFirstNode_MoveWhitespaceOutside2() {
-		String result = clean("<p>foo <span style=\"color:blue;\"> <br/>bar</span></p>");
-
-		assertTrue(result.contains("<p>foo <br /><span style=\"color: blue;\">bar</span></p>"));
+		assertClean("<p>foo <br><span style=\"color: blue;\">bar</span></p>",
+				"<p>foo <span style=\"color:blue;\"> <br/>bar</span></p>");
 	}
 
 	@Test
 	public void testLastNode_MoveWhitespaceOutside() {
-		String result = clean("<p>foo <span style=\"color:blue;\"><br/>bar<br/> </span></p>");
-
-		assertTrue(result.contains("<p>foo <br /><span style=\"color: blue;\">bar</span><br /></p>"));
+		assertClean("<p>foo <br><span style=\"color: blue;\">bar</span><br></p>",
+				"<p>foo <span style=\"color:blue;\"><br/>bar<br/> </span></p>");
 	}
 
 	@Test
 	public void testLastNode_MoveWhitespaceOutside2() {
-		String result = clean("<p>foo <span style=\"color:blue;\"><br/>bar<br/>ab </span></p>");
-
-		assertTrue(result.contains("<p>foo <br /><span style=\"color: blue;\">bar<br />ab</span></p>"));
+		assertClean("<p>foo <br><span style=\"color: blue;\">bar<br>ab</span></p>",
+				"<p>foo <span style=\"color:blue;\"><br/>bar<br/>ab </span></p>");
 	}
 
 	@Test
 	public void testLastNode_MoveWhitespaceOutside3() {
-		String result = clean("<p>foo <span style=\"color:blue;\"><br/>bar<br/>ab&nbsp;</span></p>");
-
-		assertTrue(result.contains("<p>foo <br /><span style=\"color: blue;\">bar<br />ab</span></p>"));
+		assertClean("<p>foo <br><span style=\"color: blue;\">bar<br>ab</span></p>",
+				"<p>foo <span style=\"color:blue;\"><br/>bar<br/>ab&nbsp;</span></p>");
 	}
 
 	@Test
@@ -266,48 +261,36 @@ public class HtmlCleanerTest {
 	@Test
 	public void testWhitespacesBeforeBrTag() {
 		// bug 433872
-		String result = cleanToBody("<body>\n	<br/> foo</body>");
-
-		assertEquals("<body><br /> foo</body>", result);
+		assertClean("<br> foo", "<body>\n	<br/> foo</body>");
 	}
 
 	@Test
 	public void testWhitespacesBeforeBrTag2() {
 		// bug 433872
-		String result = cleanToBody("<body><hr>\n	<br/> foo</body>");
-
-		assertEquals("<body><hr /><br /> foo</body>", result);
+		assertClean("<hr><br> foo", "<body><hr>\n	<br/> foo</body>");
 	}
 
 	@Test
 	public void testTextAndWhitespacesBeforeBrTag() {
 		// bug 433872
-		String result = cleanToBody("<body>foo \n	<br/> bar</body>");
-
-		assertEquals("<body>foo<br /> bar</body>", result);
+		assertClean("foo<br> bar", "<body>foo \n	<br/> bar</body>");
 	}
 
 	@Test
 	public void testTextBeforeBrTag() {
 		// bug 433872
-		String result = cleanToBody("<body>foo<br/> bar</body>");
-
-		assertEquals("<body>foo<br /> bar</body>", result);
+		assertClean("foo<br> bar", "<body>foo<br/> bar</body>");
 	}
 
 	@Test
 	public void testTagBeforeBrTag() {
 		// bug 433872
-		String result = cleanToBody("<body><hr/><br/> bar</body>");
-
-		assertEquals("<body><hr /><br /> bar</body>", result);
+		assertClean("<hr><br> bar", "<body><hr/><br/> bar</body>");
 	}
 
 	@Test
 	public void testWhitespacesPreservedAroundHrTag() {
-		String result = cleanToBody("<body>foo\n <hr/> foo</body>");
-
-		assertEquals("<body>foo <hr /> foo</body>", result);
+		assertClean("foo <hr> foo", "<body>foo\n <hr/> foo</body>");
 	}
 
 	@Test
@@ -365,6 +348,11 @@ public class HtmlCleanerTest {
 				cleanToBody("<pre><code> \none\r\ntwo\n</code></pre>"));
 	}
 
+	private void assertClean(String expected, String input) {
+		String result = cleanToBody(input);
+		assertEquals("<body>" + expected + "</body>", result);
+	}
+
 	private String cleanToBody(String originalHtml) {
 		Document document = Jsoup.parse(originalHtml);
 		return cleanToBody(document);
@@ -373,15 +361,13 @@ public class HtmlCleanerTest {
 	private String cleanToBody(Document document) {
 		new HtmlCleaner().apply(document);
 		document.outputSettings().prettyPrint(false);
-		String result = document.body().outerHtml();
-		return result;
+		return document.body().outerHtml();
 	}
 
 	private String clean(String originalHtml) {
 		Document document = Jsoup.parse(originalHtml);
 		new HtmlCleaner().apply(document);
 		document.outputSettings().prettyPrint(false);
-		String result = document.outerHtml();
-		return result;
+		return document.outerHtml();
 	}
 }
