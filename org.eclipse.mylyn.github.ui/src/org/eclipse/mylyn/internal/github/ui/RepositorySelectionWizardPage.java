@@ -79,6 +79,7 @@ public class RepositorySelectionWizardPage extends WizardPage {
 
 		@Override
 		public void addListener(ILabelProviderListener listener) {
+			// empty
 		}
 
 		@Override
@@ -93,6 +94,7 @@ public class RepositorySelectionWizardPage extends WizardPage {
 
 		@Override
 		public void removeListener(ILabelProviderListener listener) {
+			// empty
 		}
 
 		@Override

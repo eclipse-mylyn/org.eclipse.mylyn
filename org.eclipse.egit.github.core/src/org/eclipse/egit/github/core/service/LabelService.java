@@ -88,6 +88,7 @@ public class LabelService extends GitHubService {
 		PagedRequest<Label> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<Label>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}
@@ -139,6 +140,7 @@ public class LabelService extends GitHubService {
 		uri.append(SEGMENT_LABELS);
 
 		return client.put(uri.toString(), labels, new TypeToken<List<Label>>() {
+			// make protected type visible
 		}.getType());
 	}
 

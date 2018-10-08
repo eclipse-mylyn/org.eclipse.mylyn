@@ -65,6 +65,7 @@ public class CollaboratorService extends GitHubService {
 		PagedRequest<User> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<User>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}

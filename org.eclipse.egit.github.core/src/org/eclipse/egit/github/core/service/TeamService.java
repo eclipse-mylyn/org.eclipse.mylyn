@@ -23,6 +23,8 @@ import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_TEAMS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_USER;
 
+import com.google.gson.reflect.TypeToken;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -36,8 +38,6 @@ import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.PagedRequest;
-
-import com.google.gson.reflect.TypeToken;
 
 /**
  * Service class for working with organization teams
@@ -98,6 +98,7 @@ public class TeamService extends GitHubService {
 		PagedRequest<Team> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<Team>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}
@@ -186,6 +187,7 @@ public class TeamService extends GitHubService {
 		PagedRequest<User> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<User>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}
@@ -344,6 +346,7 @@ public class TeamService extends GitHubService {
 		PagedRequest<Repository> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<Repository>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}
@@ -416,6 +419,7 @@ public class TeamService extends GitHubService {
 		PagedRequest<Team> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<Team>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}
@@ -430,7 +434,9 @@ public class TeamService extends GitHubService {
 		StringBuilder uri = new StringBuilder(SEGMENT_USER).append(SEGMENT_TEAMS);
 		PagedRequest<Team> request = createPagedRequest();
 		request.setUri(uri);
-		request.setType(new TypeToken<List<Team>>(){}.getType());
+		request.setType(new TypeToken<List<Team>>() {
+			// make protected type visible
+		}.getType());
 		return getAll(request);
 	}
 

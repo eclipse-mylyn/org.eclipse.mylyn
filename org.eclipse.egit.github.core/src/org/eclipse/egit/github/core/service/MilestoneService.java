@@ -95,6 +95,7 @@ public class MilestoneService extends GitHubService {
 			request.setParams(Collections.singletonMap(
 					IssueService.FILTER_STATE, state));
 		request.setUri(uri).setType(new TypeToken<List<Milestone>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}

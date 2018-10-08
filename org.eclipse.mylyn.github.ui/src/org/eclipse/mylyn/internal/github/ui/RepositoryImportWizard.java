@@ -65,7 +65,9 @@ public class RepositoryImportWizard extends Wizard implements IImportWizard {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
+		// empty
 	}
 
 	/**
@@ -106,6 +108,7 @@ public class RepositoryImportWizard extends Wizard implements IImportWizard {
 				repositories.length)
 				: Messages.RepositoryImportWizard_CloningRepository;
 		Job job = new Job(name) {
+			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				monitor.beginTask(
 						Messages.RepositoryImportWizard_CloningRepository,
@@ -150,7 +153,7 @@ public class RepositoryImportWizard extends Wizard implements IImportWizard {
 				return Status.OK_STATUS;
 			}
 		};
-		IWorkbenchSiteProgressService progress = (IWorkbenchSiteProgressService) PlatformUI
+		IWorkbenchSiteProgressService progress = PlatformUI
 				.getWorkbench().getService(IWorkbenchSiteProgressService.class);
 		if (progress != null)
 			progress.schedule(job);

@@ -139,6 +139,7 @@ public class RepositorySearchWizardPage extends WizardPage implements
 
 					@Override
 					public void removeListener(ILabelProviderListener listener) {
+						// empty
 					}
 
 					@Override
@@ -154,6 +155,7 @@ public class RepositorySearchWizardPage extends WizardPage implements
 
 					@Override
 					public void addListener(ILabelProviderListener listener) {
+						// empty
 					}
 
 					@Override

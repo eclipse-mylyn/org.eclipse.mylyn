@@ -91,6 +91,7 @@ public class EventService extends GitHubService {
 		PagedRequest<Event> request = createPagedRequest(start, size);
 		request.setUri(SEGMENT_EVENTS);
 		request.setType(new TypeToken<List<Event>>() {
+			// make protected type visible
 		}.getType());
 		return createPageIterator(request);
 	}
@@ -390,6 +391,7 @@ public class EventService extends GitHubService {
 		uri.append(SEGMENT_EVENTS);
 		PagedRequest<Event> request = createPagedRequest(start, size);
 		request.setUri(uri).setType(new TypeToken<List<Event>>() {
+			// make protected type visible
 		}.getType());
 		return request;
 	}
@@ -412,6 +414,7 @@ public class EventService extends GitHubService {
 		uri.append(SEGMENT_EVENTS);
 		PagedRequest<Event> request = createPagedRequest(start, size);
 		request.setUri(uri).setType(new TypeToken<List<Event>>() {
+			// make protected type visible
 		}.getType());
 		return request;
 	}
@@ -433,6 +436,7 @@ public class EventService extends GitHubService {
 		uri.append(SEGMENT_EVENTS);
 		PagedRequest<Event> request = createPagedRequest(start, size);
 		request.setUri(uri).setType(new TypeToken<List<Event>>() {
+			// make protected type visible
 		}.getType());
 		return request;
 	}
@@ -458,6 +462,7 @@ public class EventService extends GitHubService {
 			uri.append(SEGMENT_PUBLIC);
 		PagedRequest<Event> request = createPagedRequest(start, size);
 		request.setUri(uri).setType(new TypeToken<List<Event>>() {
+			// make protected type visible
 		}.getType());
 		return request;
 	}
@@ -483,6 +488,7 @@ public class EventService extends GitHubService {
 			uri.append(SEGMENT_PUBLIC);
 		PagedRequest<Event> request = createPagedRequest(start, size);
 		request.setUri(uri).setType(new TypeToken<List<Event>>() {
+			// make protected type visible
 		}.getType());
 		return request;
 	}
@@ -506,6 +512,7 @@ public class EventService extends GitHubService {
 		uri.append('/').append(org);
 		PagedRequest<Event> request = createPagedRequest(start, size);
 		request.setUri(uri).setType(new TypeToken<List<Event>>() {
+			// make protected type visible
 		}.getType());
 		return request;
 	}

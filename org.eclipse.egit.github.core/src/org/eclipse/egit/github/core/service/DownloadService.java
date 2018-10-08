@@ -18,6 +18,8 @@ import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS
 import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_FIRST;
 import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_SIZE;
 
+import com.google.gson.reflect.TypeToken;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,8 +37,6 @@ import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.client.PagedRequest;
 import org.eclipse.egit.github.core.util.MultiPartUtils;
-
-import com.google.gson.reflect.TypeToken;
 
 /**
  * Service for accessing, creating, and deleting repositories downloads.
@@ -144,6 +144,7 @@ public class DownloadService extends GitHubService {
 		uri.append(SEGMENT_DOWNLOADS);
 		PagedRequest<Download> request = createPagedRequest(start, size);
 		request.setType(new TypeToken<List<Download>>() {
+			// make protected type visible
 		}.getType());
 		request.setUri(uri);
 		return request;
@@ -251,7 +252,7 @@ public class DownloadService extends GitHubService {
 			throw new IllegalArgumentException(
 					"Content input stream cannot be null"); //$NON-NLS-1$
 
-		Map<String, Object> parts = new LinkedHashMap<String, Object>();
+		Map<String, Object> parts = new LinkedHashMap<>();
 		parts.put(UPLOAD_KEY, resource.getPath());
 		parts.put(UPLOAD_ACL, resource.getAcl());
 		parts.put(UPLOAD_SUCCESS_ACTION_STATUS, Integer.toString(HTTP_CREATED));

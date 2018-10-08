@@ -50,6 +50,7 @@ public class PullRequestTaskDataHandler extends GitHubTaskDataHandler {
 	 * @param connector
 	 */
 	public PullRequestTaskDataHandler(PullRequestConnector connector) {
+		// empty
 	}
 
 	/**

@@ -231,6 +231,7 @@ public class RepositoryService extends GitHubService {
 		request.setUri(SEGMENT_USER + SEGMENT_REPOS);
 		request.setParams(filterData);
 		request.setType(new TypeToken<List<Repository>>() {
+			// make protected type visible
 		}.getType());
 		return createPageIterator(request);
 	}
@@ -257,6 +258,7 @@ public class RepositoryService extends GitHubService {
 			request.setParams(Collections.singletonMap("since", //$NON-NLS-1$
 					Long.toString(since)));
 		request.setType(new TypeToken<List<Repository>>() {
+			// make protected type visible
 		}.getType());
 		return createPageIterator(request);
 	}
@@ -314,6 +316,7 @@ public class RepositoryService extends GitHubService {
 		PagedRequest<Repository> request = createPagedRequest(start, size);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<Repository>>() {
+			// make protected type visible
 		}.getType());
 		return createPageIterator(request);
 	}
@@ -426,6 +429,7 @@ public class RepositoryService extends GitHubService {
 		request.setParams(filterData);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<Repository>>() {
+			// make protected type visible
 		}.getType());
 		return createPageIterator(request);
 	}
@@ -626,6 +630,7 @@ public class RepositoryService extends GitHubService {
 		PagedRequest<Repository> request = createPagedRequest(start, size);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<Repository>>() {
+			// make protected type visible
 		}.getType());
 		return request;
 	}
@@ -791,6 +796,7 @@ public class RepositoryService extends GitHubService {
 		GitHubRequest request = createRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<Map<String, Long>>() {
+			// make protected type visible
 		}.getType());
 		return (Map<String, Long>) client.get(request).getBody();
 	}
@@ -811,6 +817,7 @@ public class RepositoryService extends GitHubService {
 		PagedRequest<RepositoryBranch> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<RepositoryBranch>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}
@@ -831,6 +838,7 @@ public class RepositoryService extends GitHubService {
 		PagedRequest<RepositoryTag> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<RepositoryTag>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}
@@ -854,6 +862,7 @@ public class RepositoryService extends GitHubService {
 		if (includeAnonymous)
 			request.setParams(Collections.singletonMap("anon", "1")); //$NON-NLS-1$ //$NON-NLS-2$
 		request.setType(new TypeToken<List<Contributor>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}
@@ -874,6 +883,7 @@ public class RepositoryService extends GitHubService {
 		PagedRequest<RepositoryHook> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<RepositoryHook>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}

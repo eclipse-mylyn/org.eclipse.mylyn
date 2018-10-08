@@ -56,6 +56,7 @@ public class TaskRepositoryImportWizard extends Wizard implements IImportWizard 
 	/**
 	 * @see org.eclipse.jface.wizard.Wizard#addPages()
 	 */
+	@Override
 	public void addPages() {
 		credentialsPage = new CredentialsWizardPage();
 		addPage(credentialsPage);
@@ -66,6 +67,7 @@ public class TaskRepositoryImportWizard extends Wizard implements IImportWizard 
 	/**
 	 * @see org.eclipse.jface.wizard.Wizard#getNextPage(org.eclipse.jface.wizard.IWizardPage)
 	 */
+	@Override
 	public IWizardPage getNextPage(IWizardPage page) {
 		IWizardPage next = super.getNextPage(page);
 		if (next == reposPage) {
@@ -79,13 +81,15 @@ public class TaskRepositoryImportWizard extends Wizard implements IImportWizard 
 	 * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
 	 *      org.eclipse.jface.viewers.IStructuredSelection)
 	 */
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
-
+		// empty
 	}
 
 	/**
 	 * @see org.eclipse.jface.wizard.Wizard#performFinish()
 	 */
+	@Override
 	public boolean performFinish() {
 		String user = credentialsPage.getUserName();
 		String password = credentialsPage.getPassword();

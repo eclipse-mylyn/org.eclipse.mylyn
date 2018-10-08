@@ -27,14 +27,17 @@ import org.eclipse.mylyn.tasks.core.data.TaskMapper;
  */
 public abstract class RepositoryConnector extends AbstractRepositoryConnector {
 
+	@Override
 	public boolean canCreateNewTask(TaskRepository repository) {
 		return true;
 	}
 
+	@Override
 	public boolean canCreateTaskFromKey(TaskRepository repository) {
 		return true;
 	}
 
+	@Override
 	public boolean hasTaskChanged(TaskRepository taskRepository, ITask task,
 			TaskData taskData) {
 		Date dataDate = getTaskMapping(taskData).getModificationDate();
@@ -42,8 +45,10 @@ public abstract class RepositoryConnector extends AbstractRepositoryConnector {
 		return dataDate == null || !dataDate.equals(taskDate);
 	}
 
+	@Override
 	public void updateRepositoryConfiguration(TaskRepository taskRepository,
 			IProgressMonitor monitor) throws CoreException {
+		// empty
 	}
 
 	@Override

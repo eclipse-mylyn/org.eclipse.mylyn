@@ -137,6 +137,7 @@ public class PullRequestService extends GitHubService {
 			request.setParams(Collections.singletonMap(
 					IssueService.FILTER_STATE, state));
 		request.setType(new TypeToken<List<PullRequest>>() {
+			// make protected type visible
 		}.getType());
 		return request;
 	}
@@ -196,7 +197,7 @@ public class PullRequestService extends GitHubService {
 	}
 
 	private Map<String, String> createPrMap(PullRequest request) {
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, String> params = new HashMap<>();
 		if (request != null) {
 			String title = request.getTitle();
 			if (title != null)
@@ -221,7 +222,7 @@ public class PullRequestService extends GitHubService {
 	}
 
 	private Map<String, String> editPrMap(PullRequest request) {
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, String> params = new HashMap<>();
 		String title = request.getTitle();
 		if (title != null)
 			params.put(PR_TITLE, title);
@@ -269,7 +270,7 @@ public class PullRequestService extends GitHubService {
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
 		uri.append(SEGMENT_PULLS);
-		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> params = new HashMap<>();
 		params.put("issue", issueId); //$NON-NLS-1$
 		params.put("head", head); //$NON-NLS-1$
 		params.put("base", base); //$NON-NLS-1$
@@ -317,6 +318,7 @@ public class PullRequestService extends GitHubService {
 		PagedRequest<RepositoryCommit> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<RepositoryCommit>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}
@@ -340,6 +342,7 @@ public class PullRequestService extends GitHubService {
 		PagedRequest<CommitFile> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<CommitFile>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}
@@ -443,6 +446,7 @@ public class PullRequestService extends GitHubService {
 		PagedRequest<CommitComment> request = createPagedRequest(start, size);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<CommitComment>>() {
+			// make protected type visible
 		}.getType());
 		return createPageIterator(request);
 	}
@@ -508,7 +512,7 @@ public class PullRequestService extends GitHubService {
 		uri.append(SEGMENT_PULLS);
 		uri.append('/').append(pullRequestId);
 		uri.append(SEGMENT_COMMENTS);
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, String> params = new HashMap<>();
 		params.put("in_reply_to", Integer.toString(commentId)); //$NON-NLS-1$
 		params.put("body", body); //$NON-NLS-1$
 		return client.post(uri.toString(), params, CommitComment.class);

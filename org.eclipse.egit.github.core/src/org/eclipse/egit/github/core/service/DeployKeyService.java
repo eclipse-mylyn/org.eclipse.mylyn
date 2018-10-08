@@ -66,6 +66,7 @@ public class DeployKeyService extends GitHubService {
 		PagedRequest<Key> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<Key>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}

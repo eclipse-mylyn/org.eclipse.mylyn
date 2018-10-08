@@ -61,6 +61,7 @@ public class OAuthService extends GitHubService {
 		PagedRequest<Authorization> request = createPagedRequest();
 		request.setUri(SEGMENT_AUTHORIZATIONS);
 		request.setType(new TypeToken<List<Authorization>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}
