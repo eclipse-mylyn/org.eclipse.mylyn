@@ -43,7 +43,7 @@ public class EncodingUtilsTest {
 		assertNotNull(encoded);
 		assertFalse(encoded.length() == 0);
 		assertFalse(test.equals(encoded));
-		byte[] decoded = EncodingUtils.fromBase64(new String(encoded));
+		byte[] decoded = EncodingUtils.fromBase64(encoded);
 		assertNotNull(decoded);
 		assertFalse(decoded.length == 0);
 		assertEquals(test, new String(decoded));
