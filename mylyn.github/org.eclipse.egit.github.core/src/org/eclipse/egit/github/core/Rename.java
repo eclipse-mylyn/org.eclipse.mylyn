@@ -19,7 +19,7 @@ import java.io.Serializable;
  */
 public class Rename implements Serializable {
 
-	/** serialVersionUID */;
+	/** serialVersionUID */
 	private final static long serialVersionUID = -4700399891066053425L;
 
 	private String from;
