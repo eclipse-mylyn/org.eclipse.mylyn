@@ -197,7 +197,7 @@ public class DataService extends GitHubService {
 		GitHubRequest request = createRequest();
 		request.setType(Tree.class);
 		request.setUri(uri);
-		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> params = new HashMap<>();
 		if (entries != null)
 			params.put("tree", entries.toArray()); //$NON-NLS-1$
 		if (baseTree != null)
@@ -251,6 +251,7 @@ public class DataService extends GitHubService {
 		uri.append(SEGMENT_REFS);
 		PagedRequest<Reference> request = createPagedRequest();
 		request.setType(new TypeToken<List<Reference>>() {
+			// make protected type visible
 		}.getType());
 		request.setUri(uri);
 		return getAll(request);
@@ -279,7 +280,7 @@ public class DataService extends GitHubService {
 		uri.append('/').append(id);
 		uri.append(SEGMENT_GIT);
 		uri.append(SEGMENT_REFS);
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, String> params = new HashMap<>();
 		params.put("sha", object.getSha()); //$NON-NLS-1$
 		params.put("ref", reference.getRef()); //$NON-NLS-1$
 		return client.post(uri.toString(), params, Reference.class);
@@ -328,7 +329,7 @@ public class DataService extends GitHubService {
 		if (!ref.startsWith("refs/")) //$NON-NLS-1$
 			uri.append(SEGMENT_REFS);
 		uri.append('/').append(ref);
-		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> params = new HashMap<>();
 		params.put("sha", object.getSha()); //$NON-NLS-1$
 		if (force)
 			params.put("force", true); //$NON-NLS-1$
@@ -382,13 +383,13 @@ public class DataService extends GitHubService {
 		uri.append('/').append(id);
 		uri.append(SEGMENT_GIT);
 		uri.append(SEGMENT_COMMITS);
-		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> params = new HashMap<>();
 		params.put("author", commit.getAuthor()); //$NON-NLS-1$
 		params.put("committer", commit.getCommitter()); //$NON-NLS-1$
 		params.put("message", commit.getMessage()); //$NON-NLS-1$
 		List<Commit> parents = commit.getParents();
 		if (parents != null && parents.size() > 0) {
-			List<String> parentIds = new ArrayList<String>();
+			List<String> parentIds = new ArrayList<>();
 			for (Commit parent : parents)
 				parentIds.add(parent.getSha());
 			params.put("parents", parentIds); //$NON-NLS-1$
@@ -446,7 +447,7 @@ public class DataService extends GitHubService {
 		uri.append('/').append(id);
 		uri.append(SEGMENT_GIT);
 		uri.append(SEGMENT_TAGS);
-		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> params = new HashMap<>();
 		params.put("tag", tag.getTag()); //$NON-NLS-1$
 		params.put("message", tag.getMessage()); //$NON-NLS-1$
 		TypedResource object = tag.getObject();

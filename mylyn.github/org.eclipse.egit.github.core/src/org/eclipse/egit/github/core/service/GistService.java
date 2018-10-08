@@ -126,6 +126,7 @@ public class GistService extends GitHubService {
 		PagedRequest<Gist> request = createPagedRequest(start, size);
 		request.setUri(SEGMENT_GISTS + SEGMENT_STARRED);
 		request.setType(new TypeToken<List<Gist>>() {
+			// make protected type visible
 		}.getType());
 		return createPageIterator(request);
 	}
@@ -160,6 +161,7 @@ public class GistService extends GitHubService {
 		uri.append(SEGMENT_GISTS);
 		PagedRequest<Gist> request = createPagedRequest(start, size);
 		request.setUri(uri).setType(new TypeToken<List<Gist>>() {
+			// make protected type visible
 		}.getType());
 		return request;
 	}
@@ -246,6 +248,7 @@ public class GistService extends GitHubService {
 		PagedRequest<Gist> request = createPagedRequest(start, size);
 		request.setUri(SEGMENT_GISTS + SEGMENT_PUBLIC);
 		request.setType(new TypeToken<List<Gist>>() {
+			// make protected type visible
 		}.getType());
 		return createPageIterator(request);
 	}
@@ -320,6 +323,7 @@ public class GistService extends GitHubService {
 		uri.append(SEGMENT_COMMENTS);
 		PagedRequest<Comment> request = createPagedRequest();
 		request.setUri(uri).setType(new TypeToken<List<Comment>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}

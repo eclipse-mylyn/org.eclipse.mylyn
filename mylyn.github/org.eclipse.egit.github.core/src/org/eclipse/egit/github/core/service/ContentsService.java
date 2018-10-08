@@ -141,6 +141,7 @@ public class ContentsService extends GitHubService {
 		request.setUri(uri);
 		request.setType(RepositoryContents.class);
 		request.setArrayType(new TypeToken<List<RepositoryContents>>() {
+			// make protected type visible
 		}.getType());
 		if (ref != null && ref.length() > 0)
 			request.setParams(Collections.singletonMap("ref", ref)); //$NON-NLS-1$

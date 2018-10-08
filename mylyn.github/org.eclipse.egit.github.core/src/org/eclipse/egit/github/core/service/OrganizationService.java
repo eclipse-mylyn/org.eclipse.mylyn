@@ -90,6 +90,7 @@ public class OrganizationService extends GitHubService {
 			request.setUri(uri);
 		}
 		request.setType(new TypeToken<List<User>>() {
+			// make protected type visible
 		}.getType());
 		return request;
 	}
@@ -213,6 +214,7 @@ public class OrganizationService extends GitHubService {
 		request.setParams(params);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<User>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}
@@ -236,6 +238,7 @@ public class OrganizationService extends GitHubService {
 		PagedRequest<User> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<User>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}

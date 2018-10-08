@@ -144,6 +144,7 @@ public class CommitService extends GitHubService {
 				size);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<RepositoryCommit>>() {
+			// make protected type visible
 		}.getType());
 
 		if (sha != null || path != null) {
@@ -284,6 +285,7 @@ public class CommitService extends GitHubService {
 		PagedRequest<CommitComment> request = createPagedRequest(start, size);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<CommitComment>>() {
+			// make protected type visible
 		}.getType());
 		return createPageIterator(request);
 	}
@@ -465,6 +467,7 @@ public class CommitService extends GitHubService {
 		uri.append('/').append(sha);
 		PagedRequest<CommitStatus> request = createPagedRequest();
 		request.setType(new TypeToken<List<CommitStatus>>() {
+			// make protected type visible
 		}.getType());
 		request.setUri(uri);
 		return getAll(request);
@@ -560,6 +563,7 @@ public class CommitService extends GitHubService {
 		PagedRequest<CommitComment> request = createPagedRequest(start, size);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<CommitComment>>() {
+			// make protected type visible
 		}.getType());
 		return createPageIterator(request);
 	}

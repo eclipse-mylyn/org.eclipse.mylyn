@@ -131,6 +131,7 @@ public class UserService extends GitHubService {
 			request.setUri(uri);
 		}
 		request.setType(new TypeToken<List<User>>() {
+			// make protected type visible
 		}.getType());
 		return request;
 	}
@@ -155,6 +156,7 @@ public class UserService extends GitHubService {
 			request.setUri(uri);
 		}
 		request.setType(new TypeToken<List<User>>() {
+			// make protected type visible
 		}.getType());
 		return request;
 	}
@@ -405,6 +407,7 @@ public class UserService extends GitHubService {
 		PagedRequest<String> request = createPagedRequest();
 		request.setUri(SEGMENT_USER + SEGMENT_EMAILS);
 		request.setType(new TypeToken<List<String>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}
@@ -451,6 +454,7 @@ public class UserService extends GitHubService {
 		PagedRequest<Key> request = createPagedRequest();
 		request.setUri(SEGMENT_USER + SEGMENT_KEYS);
 		request.setType(new TypeToken<List<Key>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}

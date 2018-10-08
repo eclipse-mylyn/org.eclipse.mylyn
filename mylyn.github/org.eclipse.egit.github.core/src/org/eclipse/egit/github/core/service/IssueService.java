@@ -259,6 +259,7 @@ public class IssueService extends GitHubService {
 		request.setParams(filterData);
 		request.setUri(SEGMENT_ISSUES);
 		request.setType(new TypeToken<List<RepositoryIssue>>() {
+			// make protected type visible
 		}.getType());
 		return createPageIterator(request);
 	}
@@ -418,6 +419,7 @@ public class IssueService extends GitHubService {
 		PagedRequest<Comment> request = createPagedRequest();
 		request.setUri(uri);
 		request.setType(new TypeToken<List<Comment>>() {
+			// make protected type visible
 		}.getType());
 		return getAll(request);
 	}
@@ -439,6 +441,7 @@ public class IssueService extends GitHubService {
 		PagedRequest<Issue> request = createPagedRequest(start, size);
 		request.setParams(filterData).setUri(uri);
 		request.setType(new TypeToken<List<Issue>>() {
+			// make protected type visible
 		}.getType());
 		return request;
 	}
@@ -1008,6 +1011,7 @@ public class IssueService extends GitHubService {
 		uri.append(SEGMENT_EVENTS);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<IssueEvent>>() {
+			// make protected type visible
 		}.getType());
 		return createPageIterator(request);
 	}
@@ -1061,6 +1065,7 @@ public class IssueService extends GitHubService {
 		uri.append(SEGMENT_EVENTS);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<IssueEvent>>() {
+			// make protected type visible
 		}.getType());
 		return createPageIterator(request);
 	}
