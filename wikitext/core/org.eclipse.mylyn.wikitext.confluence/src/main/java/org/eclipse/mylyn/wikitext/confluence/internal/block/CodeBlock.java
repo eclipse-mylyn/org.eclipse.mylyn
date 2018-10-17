@@ -44,15 +44,16 @@ public class CodeBlock extends AbstractConfluenceDelimitedBlock {
 	}
 
 	@Override
-	protected void handleBlockContent(String content) {
+	protected int handleBlockContent(String content) {
 		builder.characters(content);
 		builder.characters("\n"); //$NON-NLS-1$
+		return -1;
 	}
 
 	@Override
 	protected void endBlock() {
 		if (title != null) {
-			builder.endBlock(); // panel	
+			builder.endBlock(); // panel
 		}
 		builder.endBlock(); // code
 	}

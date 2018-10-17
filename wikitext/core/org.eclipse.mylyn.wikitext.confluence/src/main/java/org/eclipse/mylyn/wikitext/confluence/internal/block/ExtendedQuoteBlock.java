@@ -20,7 +20,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.Block;
 /**
  * quoted text block, matches blocks that start with <code>{quote}</code>. Creates an extended block type of
  * {@link ParagraphBlock paragraph}.
- * 
+ *
  * @author David Green
  */
 public class ExtendedQuoteBlock extends AbstractConfluenceDelimitedBlock {
@@ -64,7 +64,7 @@ public class ExtendedQuoteBlock extends AbstractConfluenceDelimitedBlock {
 	}
 
 	@Override
-	protected void handleBlockContent(String content) {
+	protected int handleBlockContent(String content) {
 		if (nestedBlock == null) {
 			ConfluenceLanguage markupLanguage = (ConfluenceLanguage) getMarkupLanguage();
 			for (Block block : markupLanguage.getNestedBlocks()) {
@@ -87,22 +87,19 @@ public class ExtendedQuoteBlock extends AbstractConfluenceDelimitedBlock {
 				nestedBlock = null;
 			}
 			if (lineOffset < content.length() && lineOffset >= 0) {
-				if (nestedBlock != null) {
-					throw new IllegalStateException("if a block does not fully process a line then it must be closed"); //$NON-NLS-1$
-				}
-				content = content.substring(lineOffset);
+				return lineOffset;
 			} else {
-				return;
+				return -1;
 			}
 		}
 		if (blockLineCount == 1 && content.length() == 0) {
-			return;
+			return -1;
 		}
 		if (blockLineCount > 1 && paraOpen && getMarkupLanguage().isEmptyLine(content)) {
 			builder.endBlock(); // para
 			paraOpen = false;
 			paraLine = 0;
-			return;
+			return -1;
 		}
 		if (!paraOpen) {
 			builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
@@ -113,7 +110,31 @@ public class ExtendedQuoteBlock extends AbstractConfluenceDelimitedBlock {
 		}
 		++paraLine;
 		getMarkupLanguage().emitMarkupLine(getParser(), state, content, 0);
+		return -1;
+	}
 
+	@Override
+	public int findCloseOffset(String line, int lineOffset) {
+		if (nestedBlock == null) {
+			return super.findCloseOffset(line, lineOffset);
+		}
+		return nestedBlock.findCloseOffset(line, lineOffset);
+	}
+
+	@Override
+	public boolean beginNesting() {
+		if (nestedBlock == null) {
+			return super.beginNesting();
+		}
+		return nestedBlock.beginNesting();
+	}
+
+	@Override
+	public boolean canResume(String line, int lineOffset) {
+		if (nestedBlock == null) {
+			return super.canResume(line, lineOffset);
+		}
+		return nestedBlock.canResume(line, lineOffset);
 	}
 
 	@Override

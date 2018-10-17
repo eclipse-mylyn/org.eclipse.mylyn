@@ -40,38 +40,57 @@ public abstract class AbstractConfluenceDelimitedBlock extends ParameterizedBloc
 			beginBlock();
 		}
 
-		int end = line.length();
-		int segmentEnd = end;
+		int endOfContent = line.length();
+		int segmentEnd = endOfContent;
 		boolean terminating = false;
 
-		if (offset < end) {
+		if (offset < endOfContent) {
 			Matcher endMatcher = endPattern.matcher(line);
 			if (blockLineCount == 0) {
-				endMatcher.region(offset, end);
+				endMatcher.region(offset, endOfContent);
 			}
 			if (endMatcher.find()) {
 				terminating = true;
-				end = endMatcher.start(2);
+				endOfContent = endMatcher.start(2);
 				segmentEnd = endMatcher.start(1);
 			}
 		}
 
-		if (end < line.length()) {
-			state.setLineSegmentEndOffset(end);
+		if (endOfContent < line.length()) {
+			state.setLineSegmentEndOffset(endOfContent);
 		}
 
 		++blockLineCount;
 
 		final String content = line.substring(offset, segmentEnd);
-		handleBlockContent(content);
+		int contentOffset = handleBlockContent(content);
 
 		if (terminating) {
 			setClosed(true);
 		}
-		return end == line.length() ? -1 : end;
+
+		return finalOffset(line.length(), endOfContent, contentOffset);
 	}
 
-	protected abstract void handleBlockContent(String content);
+	private int finalOffset(int lineLength, int endOfContent, int contentOffset) {
+		int finalOffset = contentOffset;
+		if (contentOffset == lineLength) {
+			finalOffset = -1;
+		} else if (endOfContent != lineLength) {
+			finalOffset = endOfContent;
+		}
+		return finalOffset;
+	}
+
+	/**
+	 * Process the given line of markup starting at the provided offset.
+	 *
+	 * @param line
+	 *            the markup line to process
+	 * @return a non-negative integer to indicate that processing of the block completed before the end of the line, or
+	 *         -1 if the entire line was processed.
+	 */
+	protected abstract int handleBlockContent(String content);
 
 	protected abstract void beginBlock();
 

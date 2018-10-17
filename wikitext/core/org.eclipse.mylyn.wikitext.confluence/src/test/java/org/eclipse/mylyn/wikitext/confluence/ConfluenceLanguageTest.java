@@ -150,6 +150,20 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	}
 
 	@Test
+	public void testBlockQuoteExtendedWithNestedTable() {
+		assertMarkup(
+				"<blockquote><table><tr><td>Names</td><td>Occupation</td></tr><tr><td><ul><li>John</li><li>Jane</li></ul></td><td>Programmer</td></tr></table></blockquote>",
+				"{quote}|Names|Occupation|\n|* John\n* Jane|Programmer|{quote}\n");
+	}
+
+	@Test
+	public void testBlockQuoteExtendedWithMultipleNestedBlocks() {
+		assertMarkup(
+				"<blockquote><table><tr><td>Names</td><td>Occupation</td></tr><tr><td><ul><li>John</li><li>Jane</li></ul></td><td>Programmer</td></tr></table><ul><li>another</li><li>list</li></ul><p>and a para</p></blockquote>",
+				"{quote}\n|Names|Occupation|\n|* John\n* Jane|Programmer|\n\n* another\n* list\n\nand a para{quote}\n");
+	}
+
+	@Test
 	public void testSimplePhraseModifiers() throws IOException {
 		Object[][] pairs = new Object[][] { { "*", "strong" }, { "_", "em" }, { "??", "cite" }, { "-", "del" },
 				{ "+", "u" }, { "^", "sup" }, { "~", "sub" }, };

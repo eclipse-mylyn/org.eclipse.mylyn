@@ -660,6 +660,28 @@ public class ConfluenceDocumentBuilderTest {
 	}
 
 	@Test
+	public void nestTablesAfterBlockQuote() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.QUOTE, new Attributes());
+		builder.beginBlock(BlockType.TABLE, new Attributes());
+		builder.beginBlock(BlockType.TABLE_ROW, new Attributes());
+		builder.beginBlock(BlockType.TABLE_CELL_NORMAL, new Attributes());
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+		emitListItemHavingParagraphAndContent("first");
+		emitListItemHavingParagraphAndContent("second");
+		builder.endBlock();
+		builder.endBlock();
+		builder.endBlock();
+		builder.endBlock();
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		assertEquals("{quote}|* first\n* second|\n\n{quote}\n\n", markup);
+	}
+
+	@Test
 	public void tableWithNestedList() {
 		assertTableRow("| |* first\n" + //
 				"* second| |\n\n", //

@@ -18,7 +18,7 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
 /**
  * quoted text block, matches blocks that start with <code>{noformat}</code>. Creates an extended block type of
  * {@link ParagraphBlock paragraph}.
- * 
+ *
  * @author David Green
  */
 public class ExtendedPreformattedBlock extends AbstractConfluenceDelimitedBlock {
@@ -39,13 +39,14 @@ public class ExtendedPreformattedBlock extends AbstractConfluenceDelimitedBlock 
 	}
 
 	@Override
-	protected void handleBlockContent(String content) {
+	protected int handleBlockContent(String content) {
 		if (content.length() > 0) {
 			builder.characters(content);
 		} else if (blockLineCount == 1) {
-			return;
+			return -1;
 		}
 		builder.characters("\n"); //$NON-NLS-1$
+		return -1;
 	}
 
 	@Override
