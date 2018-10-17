@@ -79,7 +79,7 @@ public class IssueAttributePart extends AbstractTaskEditorSection {
 	}
 
 	private void createAttributeControls(Composite attributesComposite,
-			FormToolkit toolkit, int columnCount) {
+			FormToolkit toolkit) {
 		for (AbstractAttributeEditor attributeEditor : attributeEditors) {
 			if (attributeEditor.hasLabel())
 				attributeEditor
@@ -137,8 +137,7 @@ public class IssueAttributePart extends AbstractTaskEditorSection {
 		attributesData.grabExcessVerticalSpace = false;
 		attributesComposite.setLayoutData(attributesData);
 
-		createAttributeControls(attributesComposite, toolkit,
-				attributesLayout.numColumns);
+		createAttributeControls(attributesComposite, toolkit);
 		toolkit.paintBordersFor(attributesComposite);
 
 		return attributesComposite;
