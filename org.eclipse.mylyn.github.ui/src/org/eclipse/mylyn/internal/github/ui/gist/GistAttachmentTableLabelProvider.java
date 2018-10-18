@@ -156,7 +156,7 @@ public class GistAttachmentTableLabelProvider extends ColumnLabelProvider {
 		case 1:
 			return attachment.getDescription();
 		case 2:
-			Long length = attachment.getLength();
+			long length = attachment.getLength();
 			if (length < 0) {
 				return "-"; //$NON-NLS-1$
 			}

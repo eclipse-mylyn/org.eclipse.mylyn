@@ -107,7 +107,7 @@ public abstract class GitHubTaskDataHandler extends AbstractTaskDataHandler {
 			commentMapper.setCreationDate(comment.getCreatedAt());
 			commentMapper.setText(comment.getBody());
 			commentMapper.setCommentId(comment.getUrl());
-			commentMapper.setNumber(count);
+			commentMapper.setNumber(Integer.valueOf(count));
 
 			TaskAttribute attribute = parent
 					.createAttribute(TaskAttribute.PREFIX_COMMENT + count);

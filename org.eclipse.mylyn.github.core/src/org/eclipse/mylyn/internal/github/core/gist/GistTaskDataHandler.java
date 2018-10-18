@@ -140,9 +140,9 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 				sizeCount += file.getSize();
 				TaskAttachmentMapper attachmentMapper = new TaskAttachmentMapper();
 				attachmentMapper.setFileName(file.getFilename());
-				attachmentMapper.setReplaceExisting(true);
-				attachmentMapper.setLength((long) file.getSize());
-				attachmentMapper.setPatch(false);
+				attachmentMapper.setReplaceExisting(Boolean.TRUE);
+				attachmentMapper.setLength(Long.valueOf(file.getSize()));
+				attachmentMapper.setPatch(Boolean.FALSE);
 				attachmentMapper.setAuthor(reporterPerson);
 				attachmentMapper.setAttachmentId(file.getFilename());
 				TaskAttribute attribute = data.getRoot().createAttribute(
@@ -193,7 +193,8 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 		}
 		if (files != 1)
 			summaryText.append(MessageFormat.format(
-					Messages.GistTaskDataHandler_FilesMultiple, files));
+					Messages.GistTaskDataHandler_FilesMultiple,
+					Integer.valueOf(files)));
 		else
 			summaryText.append(Messages.GistTaskDataHandler_FilesSingle);
 		summaryText.append(',').append(' ').append(formatSize(size));
@@ -222,6 +223,7 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 	 *      org.eclipse.mylyn.tasks.core.data.TaskData, java.util.Set,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public RepositoryResponse postTaskData(TaskRepository repository,
 			TaskData taskData, Set<TaskAttribute> oldAttributes,
 			IProgressMonitor monitor) throws CoreException {
@@ -277,6 +279,7 @@ public class GistTaskDataHandler extends GitHubTaskDataHandler {
 	 *      org.eclipse.mylyn.tasks.core.ITaskMapping,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public boolean initializeTaskData(TaskRepository repository, TaskData data,
 			ITaskMapping initializationData, IProgressMonitor monitor)
 			throws CoreException {

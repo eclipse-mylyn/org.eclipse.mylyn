@@ -346,7 +346,9 @@ public class RepositorySelectionWizardPage extends WizardPage {
 	private void updateSelectionLabel() {
 		selectedLabel.setText(MessageFormat.format(
 				Messages.RepositorySelectionWizardPage_LabelSelectionCount,
-				tree.getCheckboxTreeViewer().getCheckedLeafCount(), repoCount));
+				Integer.valueOf(
+						tree.getCheckboxTreeViewer().getCheckedLeafCount()),
+				Integer.valueOf(repoCount)));
 		selectedLabel.getParent().layout(true, true);
 		validatePage();
 	}

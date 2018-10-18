@@ -105,7 +105,7 @@ public class RepositoryImportWizard extends Wizard implements IImportWizard {
 				.getRepositories();
 		String name = repositories.length != 1 ? MessageFormat.format(
 				Messages.RepositoryImportWizard_CloningRepositories,
-				repositories.length)
+				Integer.valueOf(repositories.length))
 				: Messages.RepositoryImportWizard_CloningRepository;
 		Job job = new Job(name) {
 			@Override

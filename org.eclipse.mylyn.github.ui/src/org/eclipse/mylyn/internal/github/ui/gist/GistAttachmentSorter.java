@@ -35,7 +35,8 @@ public class GistAttachmentSorter extends TableSorter {
 		case 0:
 			return CoreUtil.compare(attachment1.getFileName(), attachment2.getFileName());
 		case 1:
-			return CoreUtil.compare(attachment1.getLength(), attachment2.getLength());
+			return CoreUtil.compare(Long.valueOf(attachment1.getLength()),
+					Long.valueOf(attachment2.getLength()));
 		case 2:
 			return CoreUtil.compare(attachment1.getAuthor().toString(), attachment2
 					.getAuthor().toString());

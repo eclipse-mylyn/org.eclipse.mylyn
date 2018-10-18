@@ -159,7 +159,8 @@ public class CommitAttributePart extends AbstractTaskEditorSection {
 		}
 		getSection().setText(
 				MessageFormat.format(
-						Messages.CommitAttributePart_SectionCommits, size));
+						Messages.CommitAttributePart_SectionCommits,
+						Integer.valueOf(size)));
 		return displayArea;
 	}
 
@@ -237,7 +238,7 @@ public class CommitAttributePart extends AbstractTaskEditorSection {
 	}
 
 	private void fetchCommits(final Runnable postHandler) {
-		IHandlerService handlerService = (IHandlerService) getTaskEditorPage()
+		IHandlerService handlerService = getTaskEditorPage()
 				.getEditorSite().getService(IHandlerService.class);
 		try {
 			IEvaluationContext context = TaskDataHandler.createContext(
