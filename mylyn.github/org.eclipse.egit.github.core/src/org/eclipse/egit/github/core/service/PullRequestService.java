@@ -271,7 +271,7 @@ public class PullRequestService extends GitHubService {
 		uri.append('/').append(id);
 		uri.append(SEGMENT_PULLS);
 		Map<String, Object> params = new HashMap<>();
-		params.put("issue", issueId); //$NON-NLS-1$
+		params.put("issue", Integer.valueOf(issueId)); //$NON-NLS-1$
 		params.put("head", head); //$NON-NLS-1$
 		params.put("base", base); //$NON-NLS-1$
 		return client.post(uri.toString(), params, PullRequest.class);

@@ -332,7 +332,7 @@ public class DataService extends GitHubService {
 		Map<String, Object> params = new HashMap<>();
 		params.put("sha", object.getSha()); //$NON-NLS-1$
 		if (force)
-			params.put("force", true); //$NON-NLS-1$
+			params.put("force", Boolean.TRUE); //$NON-NLS-1$
 		return client.post(uri.toString(), params, Reference.class);
 	}
 
