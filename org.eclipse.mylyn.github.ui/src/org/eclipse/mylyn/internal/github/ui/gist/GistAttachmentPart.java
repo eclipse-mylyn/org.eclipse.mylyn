@@ -189,7 +189,7 @@ public class GistAttachmentPart extends AbstractTaskEditorPart {
 		ColumnViewerToolTipSupport.enableFor(attachmentsViewer,
 				ToolTip.NO_RECREATE);
 
-		attachmentsViewer.setSorter(new GistAttachmentSorter());
+		attachmentsViewer.setComparator(new GistAttachmentSorter());
 
 		List<ITaskAttachment> attachmentList = new ArrayList<>(
 				attachments.size());
@@ -349,7 +349,7 @@ public class GistAttachmentPart extends AbstractTaskEditorPart {
 	/**
 	 * Selects and shows in the table of attachments an attachment matching the
 	 * given {@link TaskAttribute}.
-	 * 
+	 *
 	 * @param attachmentAttribute
 	 *            to select
 	 * @return whether an element was found and selected
