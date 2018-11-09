@@ -605,11 +605,10 @@ public class IssueService extends GitHubService {
 			Milestone milestone = issue.getMilestone();
 			if (milestone != null) {
 				int number = milestone.getNumber();
-				if (number > 0)
-					params.put(FILTER_MILESTONE, Integer.toString(number));
-				else {
-					if (!newIssue)
-						params.put(FILTER_MILESTONE, ""); //$NON-NLS-1$
+				if (number > 0) {
+					params.put(FILTER_MILESTONE, Integer.valueOf(number));
+				} else if (!newIssue) {
+					params.put(FILTER_MILESTONE, null);
 				}
 			}
 			List<Label> labels = issue.getLabels();
