@@ -59,21 +59,19 @@
     <tycho-extras-version>${tycho-version}</tycho-extras-version>
     <spotbugs-maven-plugin-version>3.1.6</spotbugs-maven-plugin-version>
     <egit-site>file:/${basedir}/../../egit/org.eclipse.egit.repository/target/repository</egit-site>
-    <platform-version-name>mars</platform-version-name>
-    <mylyn-site>http://download.eclipse.org/mylyn/releases/3.7</mylyn-site>
-    <eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
-    <orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/R20150519210750/repository/</orbit-site>
+    <platform-version-name>oxygen</platform-version-name>
     <download-publish-path>/home/data/httpd/download.eclipse.org/egit/github/updates-nightly</download-publish-path>
     <license-site>http://download.eclipse.org/cbi/updates/license</license-site>
   </properties>
 
   <modules>
+    <module>org.eclipse.mylyn.github.target</module>
     <module>org.eclipse.egit.github.core</module>
     <module>org.eclipse.mylyn.github.core</module>
     <module>org.eclipse.mylyn.github.ui</module>
     <module>org.eclipse.mylyn.github-feature</module>
     <module>org.eclipse.egit.github.core.tests</module>
-    <!--module>org.eclipse.mylyn.github.tests</module -->
+    <module>org.eclipse.mylyn.github.tests</module>
     <module>org.eclipse.mylyn.github-site</module>
     <module>org.eclipse.mylyn.github.doc</module>
   </modules>
@@ -83,21 +81,6 @@
       <id>egit</id>
       <layout>p2</layout>
       <url>${egit-site}</url>
-    </repository>
-    <repository>
-      <id>eclipse</id>
-      <layout>p2</layout>
-      <url>${eclipse-site}</url>
-    </repository>
-    <repository>
-      <id>orbit</id>
-      <layout>p2</layout>
-      <url>${orbit-site}</url>
-    </repository>
-    <repository>
-      <id>mylyn</id>
-      <layout>p2</layout>
-      <url>${mylyn-site}</url>
     </repository>
     <repository>
       <id>eclipse.license</id>
@@ -145,7 +128,14 @@
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>target-platform-configuration</artifactId>
         <configuration>
-          <resolver>p2</resolver>
+          <target>
+            <artifact>
+              <groupId>org.eclipse.mylyn.github</groupId>
+              <artifactId>org.eclipse.mylyn.github.target</artifactId>
+              <version>5.2.0-SNAPSHOT</version>
+              <classifier>github</classifier>
+            </artifact>
+          </target>
         </configuration>
       </plugin>
     </plugins>
@@ -292,51 +282,51 @@
 
   <profiles>
     <profile>
-      <id>platform-juno</id>
+      <id>platform-oxygen</id>
       <activation>
         <property>
           <name>platform-version-name</name>
-          <value>juno</value>
+          <value>oxygen</value>
         </property>
       </activation>
       <properties>
-        <eclipse-site>http://download.eclipse.org/releases/juno</eclipse-site>
+        <eclipse-site>http://download.eclipse.org/releases/oxygen</eclipse-site>
       </properties>
     </profile>
     <profile>
-      <id>platform-kepler</id>
+      <id>platform-photon</id>
       <activation>
         <property>
           <name>platform-version-name</name>
-          <value>kepler</value>
+          <value>photon</value>
         </property>
       </activation>
       <properties>
-        <eclipse-site>http://download.eclipse.org/releases/kepler</eclipse-site>
+        <eclipse-site>http://download.eclipse.org/releases/photon</eclipse-site>
       </properties>
     </profile>
     <profile>
-      <id>platform-luna</id>
+      <id>platform-2018-09</id>
       <activation>
         <property>
           <name>platform-version-name</name>
-          <value>luna</value>
+          <value>2018-09</value>
         </property>
       </activation>
       <properties>
-        <eclipse-site>http://download.eclipse.org/releases/luna</eclipse-site>
+        <eclipse-site>http://download.eclipse.org/releases/2018-09</eclipse-site>
       </properties>
     </profile>
     <profile>
-      <id>platform-mars</id>
+      <id>platform-2018-12</id>
       <activation>
         <property>
           <name>platform-version-name</name>
-          <value>mars</value>
+          <value>2018-12</value>
         </property>
       </activation>
       <properties>
-        <eclipse-site>http://download.eclipse.org/releases/mars</eclipse-site>
+        <eclipse-site>http://download.eclipse.org/releases/2018-12</eclipse-site>
       </properties>
     </profile>
     <profile>
@@ -476,6 +466,30 @@
           </plugin>
         </plugins>
       </build>
+    </profile>
+    <profile>
+      <id>macosx</id>
+      <activation>
+        <os>
+          <name>mac os x</name>
+          <family>mac</family>
+        </os>
+      </activation>
+      <properties>
+        <ui.test.vmargs>${test.vmparams} ${uitest.vmparams} -XstartOnFirstThread</ui.test.vmargs>
+      </properties>
+    </profile>
+    <profile>
+      <id>other-os</id>
+      <activation>
+        <os>
+          <name>not-mac</name>
+          <family>!mac</family>
+        </os>
+      </activation>
+      <properties>
+        <ui.test.vmargs>${test.vmparams} ${uitest.vmparams}</ui.test.vmargs>
+      </properties>
     </profile>
   </profiles>
 
