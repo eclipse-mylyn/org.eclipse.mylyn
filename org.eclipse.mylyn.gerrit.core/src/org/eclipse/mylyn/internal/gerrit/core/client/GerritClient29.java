@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient.ErrorHandler;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
@@ -246,6 +247,9 @@ public class GerritClient29 extends GerritClient {
 
 	private List<SubmitRecord> currentSubmitRecord(String uri, IProgressMonitor monitor) throws GerritException {
 		List<SubmitRecord> submitRecordList = new ArrayList<SubmitRecord>();
+		if (getRepository().getCredentials(AuthenticationType.REPOSITORY) == null) {
+			return submitRecordList;
+		}
 		SubmitRecord[] submitRecordArray = getRestClient().executePostRestRequest(uri, new SubmitRecord(),
 				SubmitRecord[].class, new ErrorHandler() {
 					@Override
@@ -388,9 +392,8 @@ public class GerritClient29 extends GerritClient {
 		List<RelatedChangeAndCommitInfo> listCommitInfo = relatedChangesInfo.getCommitInfo();
 		boolean needed = true;
 		for (RelatedChangeAndCommitInfo relatedChangeAndCommitInfo : listCommitInfo) {
-			if (relatedChangeAndCommitInfo.getCommitInfo()
-					.getCommit()
-					.equalsIgnoreCase(changeInfo28.getCurrentRevision())) {
+			if (relatedChangeAndCommitInfo.getCommitInfo().getCommit().equalsIgnoreCase(
+					changeInfo28.getCurrentRevision())) {
 				needed = false;
 			} else {
 				if (relatedChangeAndCommitInfo.getChangeNumber() > 0) {
