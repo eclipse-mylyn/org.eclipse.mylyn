@@ -54,6 +54,8 @@ public abstract class ToolBarButtonContribution extends ControlContribution {
 			heigtHint = 22;
 		} else if (Platform.WS_CARBON.equals(SWT.getPlatform())) {
 			heigtHint = 32;
+		} else if (Platform.WS_GTK.equals(SWT.getPlatform())) {
+			heigtHint = 26;
 		}
 		GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).hint(SWT.DEFAULT, heigtHint).applyTo(button);
 		return composite;
