@@ -270,18 +270,21 @@ public abstract class ReviewsLabelProvider extends TableStyledLabelProvider {
 				IFileItem fileItem = (IFileItem) element;
 				IFileVersion base = fileItem.getBase();
 				IFileVersion target = fileItem.getTarget();
-				if (target.getPath() != null && base.getPath() == null) {
-					return NLS.bind(Messages.ReviewsLabelProvider_X_Revision_Y, target.getPath(),
-							target.getDescription());
-				} else if (target.getPath() == null && base.getPath() != null) {
-					return NLS.bind(Messages.ReviewsLabelProvider_X_Revision_Y, base.getPath(),
-							target.getDescription());
-				} else if (!target.getPath().equals(base.getPath())) {
-					return NLS.bind(Messages.ReviewsLabelProvider_X_renamed_from_Y_Z,
-							new Object[] { target.getPath(), base.getPath(), target.getDescription() });
-				} else {
-					return NLS.bind(Messages.ReviewsLabelProvider_X_Revision_Y, target.getPath(),
-							target.getDescription());
+				if (target != null) {
+					if (target.getPath() != null && base.getPath() == null) {
+						return NLS.bind(Messages.ReviewsLabelProvider_X_Revision_Y, target.getPath(),
+								target.getDescription());
+					} else if (target.getPath() == null && base.getPath() != null) {
+						return NLS.bind(Messages.ReviewsLabelProvider_X_Revision_Y, base.getPath(),
+								target.getDescription());
+					} else if (target.getPath() != null && !target.getPath().equals(base.getPath())) {
+						return NLS.bind(Messages.ReviewsLabelProvider_X_renamed_from_Y_Z,
+								new Object[] { target.getPath(), base.getPath(), target.getDescription() });
+					} else {
+						return NLS.bind(Messages.ReviewsLabelProvider_X_Revision_Y,
+								target.getPath() == null ? target.getName() : target.getPath(),
+								target.getDescription());
+					}
 				}
 			}
 			if (element instanceof IUser) {

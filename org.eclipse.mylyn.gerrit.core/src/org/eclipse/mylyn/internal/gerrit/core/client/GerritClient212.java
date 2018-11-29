@@ -11,19 +11,67 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.client;
 
+import java.lang.reflect.Type;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jgit.diff.Edit;
+import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.DownloadSchemeX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.GerritConfigX;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.PatchScriptX;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectDetailX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.SchemeInfo;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.AccountInfo;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.ChangeInfo;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.CommentInfo;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.CommitInfo;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.ConfigInfo;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.DiffContent;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.DiffInfo;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.DiffPreferencesInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.DownloadSchemeInfo;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.FileInfo;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.GitPersonalInfo;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.GroupInfo;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.ProjectAccessInfo;
+import org.eclipse.mylyn.internal.gerrit.core.client.rest.ProjectInfo;
 import org.eclipse.mylyn.internal.gerrit.core.client.rest.ServerInfo;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.osgi.framework.Version;
 
+import com.google.gerrit.common.data.AccountInfoCache;
+import com.google.gerrit.common.data.CommentDetail;
+import com.google.gerrit.common.data.GerritConfig;
+import com.google.gerrit.common.data.PatchScript.DisplayMethod;
+import com.google.gerrit.common.data.PatchSetDetail;
+import com.google.gerrit.prettify.common.SparseFileContent;
+import com.google.gerrit.reviewdb.Account;
+import com.google.gerrit.reviewdb.AccountDiffPreference;
+import com.google.gerrit.reviewdb.AccountGroup;
+import com.google.gerrit.reviewdb.Change;
+import com.google.gerrit.reviewdb.Patch;
+import com.google.gerrit.reviewdb.Patch.ChangeType;
+import com.google.gerrit.reviewdb.Patch.Key;
+import com.google.gerrit.reviewdb.PatchLineComment;
+import com.google.gerrit.reviewdb.PatchSet;
+import com.google.gerrit.reviewdb.PatchSet.Id;
+import com.google.gerrit.reviewdb.PatchSetInfo;
+import com.google.gerrit.reviewdb.Project;
 import com.google.gerrit.reviewdb.Project.NameKey;
+import com.google.gerrit.reviewdb.RevId;
+import com.google.gerrit.reviewdb.UserIdentity;
 
 public class GerritClient212 extends GerritClient29 {
 
@@ -62,7 +110,435 @@ public class GerritClient212 extends GerritClient29 {
 		});
 
 		config.setSchemes(schemes);
+		config.setDownloadSchemes(
+				schemes.keySet().stream().map(scheme -> scheme.toDownloadScheme()).collect(Collectors.toSet()));
 
 		return config;
+	}
+
+	@Override
+	protected PatchSetDetail getPatchSetDetail(PatchSet.Id idBase, PatchSet.Id idTarget, IProgressMonitor monitor)
+			throws GerritException {
+		if (!GerritVersion.isVersion2120OrLater(getVersion())) {
+			return super.getPatchSetDetail(idBase, idTarget, monitor);
+		}
+		// Use REST API, RCP was removed in 2.13
+		PatchSetDetail patchSetDetail = new PatchSetDetail();
+		CommitInfo commitInfo = retrieveCommitInfo(idTarget, monitor);
+		AccountInfo accInfo = retrieveAccountInfo(commitInfo.getAuthor().getEmail(), monitor);
+		patchSetDetail.setInfo(adaptRestPatchSetInfo(commitInfo, accInfo, idTarget, monitor));
+		patchSetDetail.setPatchSet(adaptRestPatchSet(commitInfo, accInfo, idTarget, monitor));
+		patchSetDetail.setPatches(adaptRestPatches(idTarget, monitor));
+		return patchSetDetail;
+	}
+
+	@Override
+	protected PatchScriptX getPatchScript(final Patch.Key key, final PatchSet.Id leftId, final PatchSet.Id rightId,
+			final IProgressMonitor monitor) throws GerritException {
+		if (!GerritVersion.isVersion2120OrLater(getVersion())) {
+			return super.getPatchScript(key, leftId, rightId, monitor);
+		}
+
+		String fileName = key.getFileName();
+		AccountDiffPreference diffPrefs = adaptAccountDiffPref(
+				retrieveAccountInfo(retrieveCommitInfo(rightId, monitor).getAuthor().getEmail(), monitor),
+				retrieveDiffPrefInfo(retrieveCommitInfo(rightId, monitor).getAuthor().getEmail(), monitor));
+
+		DiffInfo diffInfo;
+		if (leftId == null) {
+			diffInfo = retrieveDiffInfoAgainstBase(rightId, fileName, monitor);
+		} else {
+			diffInfo = retrieveDiffInfoNotBase(rightId, leftId, fileName, monitor);
+		}
+
+		CommentDetail commentDetail;
+		if (diffInfo.getContent().get(0).getA() != null || diffInfo.getContent().get(0).getAb() != null
+				|| diffInfo.getContent().get(0).getB() != null) {
+			commentDetail = setCommentDetails(leftId, rightId, fileName, monitor);
+		} else {
+			commentDetail = new CommentDetail(leftId, rightId);
+		}
+
+		PatchScriptX patchScriptX = new PatchScriptX();
+		patchScriptX.setChangeId(new Change.Key(rightId.getParentKey().toString()));
+		patchScriptX.setDiffPrefs(diffPrefs);
+		patchScriptX.setComments(commentDetail);
+		patchScriptX.setHeader(diffInfo.getDiff_header());
+		patchScriptX.setChangeType(diffInfo.getChange_type());
+		patchScriptX.setHistory(adaptRestPatches(rightId, monitor));
+		patchScriptX.setDisplayMethodA(DisplayMethod.DIFF); // hardcoded to diff.
+		patchScriptX.setDisplayMethodB(DisplayMethod.DIFF);
+
+		if (diffInfo.getContent() != null) {
+			patchScriptX.setEdits(adaptDiffContent(diffInfo, patchScriptX, monitor));
+		}
+
+		if (diffInfo.getMeta_a() != null) {
+			patchScriptX.setA(adaptSparseFileContent_A(diffInfo, monitor));
+		} else {
+			patchScriptX.setA(new SparseFileContent());
+		}
+		if (diffInfo.getMeta_b() != null) {
+			patchScriptX.setB(adaptSparseFileContent_B(diffInfo, monitor));
+		} else {
+			patchScriptX.setB(new SparseFileContent());
+		}
+
+		if (diffInfo.getDiff_header() != null) {
+			if (patchScriptX.isBinary()) {
+				fetchLeftBinaryContent(patchScriptX, key, leftId, monitor);
+				fetchRightBinaryContent(patchScriptX, key, rightId, monitor);
+			}
+		}
+		return patchScriptX;
+	}
+
+	private List<Patch> adaptRestPatches(Id id, IProgressMonitor monitor) throws GerritException {
+		List<Patch> patches = new ArrayList<>();
+		Map<String, FileInfo> infos = retrieveFileInfos(id, monitor);
+		for (String fileName : infos.keySet()) {
+			FileInfo fileInfo = infos.get(fileName);
+			Patch patch = new Patch(new Key(id, fileName));
+			patch.setChangeType(ChangeType.forCode(fileInfo.getStatus()));
+			patch.setDeletions(fileInfo.getLinesDeleted());
+			patch.setInsertions(fileInfo.getLinesInserted());
+			patches.add(patch);
+		}
+		return patches;
+	}
+
+	private PatchSet adaptRestPatchSet(CommitInfo commitInfo, AccountInfo accInfo, PatchSet.Id id,
+			IProgressMonitor monitor) throws GerritException {
+		PatchSet patchSet = new PatchSet(id);
+		patchSet.setRevision(new RevId(commitInfo.getCommit()));
+		patchSet.setUploader(new Account.Id(accInfo.getId()));
+		patchSet.setCreatedOn(parseTimeStamp(commitInfo.getAuthor().getDate()));
+		return patchSet;
+	}
+
+	private PatchSetInfo adaptRestPatchSetInfo(CommitInfo commitInfo, AccountInfo accInfo, PatchSet.Id id,
+			IProgressMonitor monitor) throws GerritException {
+		PatchSetInfo info = new PatchSetInfo(id);
+		info.setMessage(commitInfo.getMessage());
+		info.setSubject(commitInfo.getSubject());
+		info.setAuthor(toUserIdentity(commitInfo.getAuthor(), accInfo, monitor));
+		info.setCommitter(toUserIdentity(commitInfo.getCommitter(), accInfo, monitor));
+		return info;
+	}
+
+	private List<Edit> adaptDiffContent(DiffInfo diffInfo, PatchScriptX patchScriptX, IProgressMonitor monitor)
+			throws GerritException {
+		List<DiffContent> diffContent = diffInfo.getContent(); // content differences in file
+		List<Edit> editsInFile = new ArrayList<>();
+		int contentSize = 0;
+		for (DiffContent diff : diffContent) {
+			if (diff.getAb() != null) { // if ab, do nothing; this is not an Edit.
+				contentSize += diff.getAb().size();
+			} else if (diff.getA() != null && diff.getB() != null) {
+				Edit edit = new Edit(contentSize, contentSize + diff.getA().size() - 1, contentSize,
+						contentSize + diff.getB().size() - 1);
+				editsInFile.add(edit);
+				contentSize += diff.getA().size();
+				patchScriptX.setIntralineDifference(true); // this behavior might not be correct
+			} else if (diff.getA() != null) { // content only on side a (deleted in b)
+				Edit edit = new Edit(contentSize, contentSize + diff.getA().size() - 1, contentSize, contentSize);
+				editsInFile.add(edit);
+				contentSize += diff.getA().size();
+			} else if (diff.getB() != null) { // content only on side b (added in b)
+				Edit edit = new Edit(contentSize, contentSize, contentSize, contentSize + diff.getB().size() - 1);
+				editsInFile.add(edit);
+				contentSize += diff.getB().size();
+			}
+		}
+		return editsInFile;
+	}
+
+	private AccountDiffPreference adaptAccountDiffPref(AccountInfo accInfo, DiffPreferencesInfo diffPrefInfo) {
+		AccountDiffPreference accDiffPref = new AccountDiffPreference(new Account.Id(accInfo.getId()));
+		accDiffPref.setContext(diffPrefInfo.getContext());
+		accDiffPref.setIgnoreWhitespace(diffPrefInfo.getIgnoreWhitespace());
+		accDiffPref.setIntralineDifference(diffPrefInfo.isIntralineDifference());
+		accDiffPref.setLineLength(diffPrefInfo.getLineLength());
+		accDiffPref.setShowTabs(diffPrefInfo.isShowTabs());
+		accDiffPref.setShowWhitespaceErrors(diffPrefInfo.isShowWhitespaceErrors());
+		accDiffPref.setSyntaxHighlighting(diffPrefInfo.isSyntaxHighlighting());
+		accDiffPref.setTabSize(diffPrefInfo.getTabSize());
+		return accDiffPref;
+	}
+
+	private CommentDetail setCommentDetails(PatchSet.Id leftId, PatchSet.Id rightId, String fileName,
+			IProgressMonitor monitor) throws GerritException {
+		CommentDetail commentDetail = new CommentDetail(leftId, rightId);
+		if (leftId != null) {
+			Map<String, List<CommentInfo>> commentInfo_A = retrieveRevisionComments(leftId, monitor);
+			adaptCommentDetails(commentInfo_A, leftId, commentDetail.getCommentsA(), fileName, commentDetail);
+		}
+		Map<String, List<CommentInfo>> commentInfo_B = retrieveRevisionComments(rightId, monitor);
+		adaptCommentDetails(commentInfo_B, rightId, commentDetail.getCommentsB(), fileName, commentDetail);
+
+		ChangeInfo changeInfo = getChangeInfo(rightId.getParentKey().get(), monitor);
+		List<com.google.gerrit.common.data.AccountInfo> listAccountInfo = new ArrayList<com.google.gerrit.common.data.AccountInfo>();
+
+		com.google.gerrit.common.data.AccountInfo accountInfo = setAccountFromChangeInfo(changeInfo);
+		listAccountInfo.add(accountInfo);
+		AccountInfoCache accCache = new AccountInfoCache(listAccountInfo);
+		commentDetail.setAccountInfoCache(accCache);
+
+		return commentDetail;
+	}
+
+	private com.google.gerrit.common.data.AccountInfo setAccountFromChangeInfo(ChangeInfo changeInfo) {
+		com.google.gerrit.common.data.AccountInfo accountInfo;
+		Account account = new Account(new Account.Id(changeInfo.getOwner().getId()));
+		account.setFullName(changeInfo.getOwner().getName());
+		account.setUserName(changeInfo.getOwner().getUsername());
+		account.setPreferredEmail(changeInfo.getOwner().getEmail());
+		return new com.google.gerrit.common.data.AccountInfo(account);
+	}
+
+	private void adaptCommentDetails(Map<String, List<CommentInfo>> commentInfo, PatchSet.Id id,
+			List<PatchLineComment> side, String file, CommentDetail commentDetail) {
+		for (String filePath : commentInfo.keySet()) {
+			if (!filePath.equals(file)) {
+				continue;
+			}
+			List<CommentInfo> comments = commentInfo.get(filePath);
+			for (CommentInfo comment : comments) {
+				Patch.Key patchKey = new Patch.Key(id, filePath);
+				PatchLineComment.Key patchLineCommentKey = new PatchLineComment.Key(patchKey, comment.getId());
+				PatchLineComment lineComment = new PatchLineComment(patchLineCommentKey, comment.getLine(),
+						new Account.Id(comment.getAuthor().getId()), null);
+				populateLineComment(lineComment, comment);
+				side.add(lineComment);
+			}
+		}
+	}
+
+	private void populateLineComment(PatchLineComment lineComment, CommentInfo commentInfo) {
+		lineComment.setMessage(commentInfo.getMessage());
+	}
+
+	@Override
+	protected List<ProjectDetailX> getProjectDetails(IProgressMonitor monitor, GerritConfig gerritConfig,
+			List<Project> result) throws GerritException {
+		if (!GerritVersion.isVersion2120OrLater(getVersion())) {
+			return super.getProjectDetails(monitor, gerritConfig, result);
+		}
+
+		List<ProjectDetailX> projectDetails = adaptProjectDetails(gerritConfig, monitor);
+		return projectDetails;
+	}
+
+	private List<ProjectDetailX> adaptProjectDetails(GerritConfig gerritConfig, IProgressMonitor monitor)
+			throws GerritException {
+		ConfigInfo configInfo = retrieveProjectConfigs(gerritConfig.getWildProject().get(), monitor);
+		List<ProjectDetailX> projectDetails = new ArrayList<>();
+		Map<String, ProjectInfo> listedProjects = listProjects(monitor);
+		for (String projectName : listedProjects.keySet()) {
+			ProjectDetailX projectDetail = new ProjectDetailX();
+			projectDetail.setProject(adaptProject(configInfo, projectName, monitor));
+			projectDetail.setGroups(adaptGroups(projectName, monitor));
+			projectDetails.add(projectDetail);
+		}
+		return projectDetails;
+	}
+
+	private Project adaptProject(ConfigInfo configInfo, String projectName, IProgressMonitor monitor)
+			throws GerritException {
+		Project project = new Project(new Project.NameKey(projectName));
+		project.setDescription(configInfo.getDescription());
+		project.setUseContributorAgreements(configInfo.getUse_contributor_agreements().isValue());
+		project.setUseSignedOffBy(configInfo.getUse_signed_off_by().isValue());
+		project.setParent(new Project.NameKey(retrieveParentProject(projectName, monitor)));
+		return project;
+
+	}
+
+	private Map<AccountGroup.Id, AccountGroup> adaptGroups(String projectName, IProgressMonitor monitor)
+			throws GerritException {
+		Map<AccountGroup.Id, AccountGroup> groups = new HashMap<>();
+		ProjectAccessInfo accessRights = listAccessRights(projectName, monitor);
+		Map<String, GroupInfo> groupInfos = accessRights.getGroups();
+		if (groupInfos != null) {
+			for (String groupUuid : groupInfos.keySet()) {
+				GroupInfo groupInfo = groupInfos.get(groupUuid);
+				AccountGroup.Id groupId = AccountGroup.Id.parse(groupUuid);
+				String groupName = groupInfo.getName();
+				if (groupInfo.getName() == null) {
+					groupName = groupUuid;
+				}
+				groups.put(groupId, setAccountGroup(groupInfo, groupName, groupId));
+			}
+		}
+		return groups;
+	}
+
+	private AccountGroup setAccountGroup(GroupInfo groupInfo, String groupName, AccountGroup.Id groupId) {
+		AccountGroup.NameKey nameKey = new AccountGroup.NameKey(groupName);
+		AccountGroup accGroup = new AccountGroup(nameKey, groupId);
+		accGroup.setDescription(groupInfo.getDescription());
+		accGroup.setExternalNameKey(new AccountGroup.ExternalNameKey(groupName));
+		accGroup.setNameKey(nameKey);
+		accGroup.setOwnerGroupId(groupId);
+		accGroup.setType(getGroupType(groupInfo.getId()));
+		return accGroup;
+	}
+
+	private AccountGroup.Type getGroupType(String groupUuid) {
+		if (groupUuid.matches("^[0-9a-f]{40}$")) { //$NON-NLS-1$
+			return AccountGroup.Type.INTERNAL;
+		} else if (groupUuid.startsWith("global:")) { //$NON-NLS-1$
+			return AccountGroup.Type.SYSTEM;
+		} else if (groupUuid.startsWith("ldap:")) { //$NON-NLS-1$
+			return AccountGroup.Type.LDAP;
+		} else {
+			return null;
+		}
+	}
+
+	private SparseFileContent adaptSparseFileContent_A(DiffInfo diffInfo, IProgressMonitor monitor) {
+		SparseFileContent sparseFileContent = new SparseFileContent();
+		sparseFileContent.setSize(diffInfo.getMeta_a().getLines());
+		sparseFileContent.setPath(diffInfo.getMeta_a().getName());
+		sparseFileContent.setMissingNewlineAtEnd(false); // hardcoded, don't know how to get this from api
+		adaptLineContent_A(sparseFileContent, diffInfo);
+		return sparseFileContent;
+	}
+
+	private SparseFileContent adaptSparseFileContent_B(DiffInfo diffInfo, IProgressMonitor monitor) {
+		SparseFileContent sparseFileContent = new SparseFileContent();
+		sparseFileContent.setSize(diffInfo.getMeta_b().getLines());
+		sparseFileContent.setPath(diffInfo.getMeta_b().getName());
+		sparseFileContent.setMissingNewlineAtEnd(false); // hardcoded, don't know how to get this from api
+		adaptLineContent_B(sparseFileContent, diffInfo);
+		return sparseFileContent;
+	}
+
+	private void adaptLineContent_A(SparseFileContent sparseFileContent, DiffInfo diffInfo) {
+		List<DiffContent> diffContent = diffInfo.getContent();
+		int contentIdx = 0;
+		for (int i = 0; i < diffContent.size(); i++) {
+			if (diffContent.get(i).getAb() != null) { // add common content if this is the case
+				addLinesAndConvertToStrings(sparseFileContent, diffContent.get(i).getAb(), contentIdx);
+				contentIdx += diffContent.get(i).getAb().size();
+			} else if (diffContent.get(i).getA() != null) { // content only on side a (deleted in b)
+				addLinesAndConvertToStrings(sparseFileContent, diffContent.get(i).getA(), contentIdx);
+				contentIdx += diffContent.get(i).getA().size();
+			}
+		}
+	}
+
+	private void adaptLineContent_B(SparseFileContent sparseFileContent, DiffInfo diffInfo) {
+		List<DiffContent> diffContent = diffInfo.getContent();
+		int contentIdx = 0;
+		for (int i = 0; i < diffContent.size(); i++) {
+			if (diffContent.get(i).getAb() != null) { // add common content if this is the case
+				addLinesAndConvertToStrings(sparseFileContent, diffContent.get(i).getAb(), contentIdx);
+				contentIdx += diffContent.get(i).getAb().size();
+			} else if (diffContent.get(i).getB() != null) { // content only on side b (added in b)
+				addLinesAndConvertToStrings(sparseFileContent, diffContent.get(i).getB(), contentIdx);
+				contentIdx += diffContent.get(i).getB().size();
+			}
+		}
+	}
+
+	private void addLinesAndConvertToStrings(SparseFileContent sparseFileContent, ArrayList<String> ab, int idx) {
+		for (String string : ab) {
+			sparseFileContent.addLine(idx, string);
+			idx++;
+		}
+	}
+
+	private CommitInfo retrieveCommitInfo(PatchSet.Id id, IProgressMonitor monitor) throws GerritException {
+		String commitQuery = String.format("/changes/%s/revisions/%s/commit", id.getParentKey().get(), id.get()); //$NON-NLS-1$
+		return getRestClient().executeGetRestRequest(commitQuery, CommitInfo.class, monitor);
+	}
+
+	private Map<String, FileInfo> retrieveFileInfos(PatchSet.Id id, IProgressMonitor monitor) throws GerritException {
+		String commitQuery = String.format("/changes/%s/revisions/%s/files", id.getParentKey().get(), id.get()); //$NON-NLS-1$
+		@SuppressWarnings("serial")
+		Type mapTypeToken = new com.google.common.reflect.TypeToken<Map<String, FileInfo>>() {
+		}.getType();
+		return getRestClient().executeGetRestRequest(commitQuery, mapTypeToken, monitor);
+	}
+
+	private AccountInfo retrieveAccountInfo(String emailAsId, IProgressMonitor monitor) throws GerritException {
+		String accQuery = String.format("/accounts/%s", encode(emailAsId)); //$NON-NLS-1$
+		return getRestClient().executeGetRestRequest(accQuery, AccountInfo.class, monitor);
+	}
+
+	private DiffInfo retrieveDiffInfoNotBase(PatchSet.Id targetId, PatchSet.Id baseId, String fileName,
+			IProgressMonitor monitor) throws GerritException {
+		String query = String.format("/changes/%s/revisions/%s/files/%s/diff?base=%s", targetId.getParentKey().get(), //$NON-NLS-1$
+				targetId.get(), encode(fileName), baseId.get());
+		return getRestClient().executeGetRestRequest(query, DiffInfo.class, monitor);
+	}
+
+	private DiffInfo retrieveDiffInfoAgainstBase(PatchSet.Id targetId, String fileName, IProgressMonitor monitor)
+			throws GerritException {
+		String query = String.format("/changes/%s/revisions/%s/files/%s/diff", targetId.getParentKey().get(), //$NON-NLS-1$
+				targetId.get(), encode(fileName));
+		return getRestClient().executeGetRestRequest(query, DiffInfo.class, monitor);
+	}
+
+	private Map<String, List<CommentInfo>> retrieveRevisionComments(PatchSet.Id id, IProgressMonitor monitor)
+			throws GerritException {
+		String query = String.format("/changes/%s/revisions/%s/comments/", id.getParentKey().get(), id.get()); //$NON-NLS-1$
+		@SuppressWarnings("serial")
+		Type mapTypeToken = new com.google.common.reflect.TypeToken<Map<String, List<CommentInfo>>>() {
+		}.getType();
+		return getRestClient().executeGetRestRequest(query, mapTypeToken, monitor);
+	}
+
+	private ConfigInfo retrieveProjectConfigs(String projectName, IProgressMonitor monitor) throws GerritException {
+		String query = String.format("/projects/%s/config", encode(projectName)); //$NON-NLS-1$
+		return getRestClient().executeGetRestRequest(query, ConfigInfo.class, monitor);
+	}
+
+	private Map<String, ProjectInfo> listProjects(IProgressMonitor monitor) throws GerritException {
+		String query = String.format("/projects/?n=25"); //$NON-NLS-1$
+		@SuppressWarnings("serial")
+		Type mapTypeToken = new com.google.common.reflect.TypeToken<Map<String, ProjectInfo>>() {
+		}.getType();
+		return getRestClient().executeGetRestRequest(query, mapTypeToken, monitor);
+	}
+
+	private String retrieveParentProject(String projectName, IProgressMonitor monitor) throws GerritException {
+		String query = String.format("/projects/%s/parent", encode(projectName)); //$NON-NLS-1$
+		return getRestClient().executeGetRestRequest(query, String.class, monitor);
+	}
+
+	private ProjectAccessInfo listAccessRights(String projectName, IProgressMonitor monitor) throws GerritException {
+		String query = String.format("/projects/%s/access", encode(projectName)); //$NON-NLS-1$
+		return getRestClient().executeGetRestRequest(query, ProjectAccessInfo.class, monitor);
+	}
+
+	private DiffPreferencesInfo retrieveDiffPrefInfo(String emailAsId, IProgressMonitor monitor)
+			throws GerritException {
+		String query = String.format("/accounts/self/preferences.diff", encode(emailAsId)); //$NON-NLS-1$
+		return getRestClient().executeGetRestRequest(query, DiffPreferencesInfo.class, monitor);
+	}
+
+	private UserIdentity toUserIdentity(GitPersonalInfo info, AccountInfo accInfo, IProgressMonitor monitor)
+			throws GerritException {
+		UserIdentity userIdentity = new UserIdentity();
+		userIdentity.setAccount(new Account.Id(accInfo.getId()));
+		userIdentity.setEmail(info.getEmail());
+		userIdentity.setName(info.getName());
+		userIdentity.setTimeZone(info.getTimeZoneOffset());
+		userIdentity.setDate(parseTimeStamp(info.getDate()));
+
+		return userIdentity;
+	}
+
+	private Timestamp parseTimeStamp(String date) {
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS"); //$NON-NLS-1$
+			Date parsedDate = dateFormat.parse(date);
+			return new java.sql.Timestamp(parsedDate.getTime());
+		} catch (ParseException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, GerritCorePlugin.PLUGIN_ID, e.getMessage(), e));
+			return null;
+		}
 	}
 }

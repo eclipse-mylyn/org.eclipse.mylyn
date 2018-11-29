@@ -12,8 +12,8 @@
 package org.eclipse.mylyn.internal.gerrit.core.client.rest;
 
 /**
- * Data model object for <a
- * href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#git-personal-info"
+ * Data model object for
+ * <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#git-personal-info"
  * >GitPersonalInfo</a>.
  */
 public class GitPersonalInfo {
@@ -22,12 +22,24 @@ public class GitPersonalInfo {
 
 	private String email;
 
+	private int tz;
+
+	private String date;
+
 	public String getName() {
 		return name;
 	}
 
 	public String getEmail() {
 		return email;
+	}
+
+	public int getTimeZoneOffset() {
+		return tz;
+	}
+
+	public String getDate() {
+		return date;
 	}
 
 }

@@ -12,8 +12,8 @@
 package org.eclipse.mylyn.internal.gerrit.core.client.rest;
 
 /**
- * Data model object for <a
- * href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#commit-info">CommitInfo</a>.
+ * Data model object for
+ * <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#commit-info">CommitInfo</a>.
  */
 public class CommitInfo {
 
@@ -22,6 +22,8 @@ public class CommitInfo {
 	private CommitInfo[] parents;
 
 	private GitPersonalInfo author;
+
+	private GitPersonalInfo committer;
 
 	private String subject;
 
@@ -33,6 +35,10 @@ public class CommitInfo {
 
 	public GitPersonalInfo getAuthor() {
 		return author;
+	}
+
+	public GitPersonalInfo getCommitter() {
+		return committer;
 	}
 
 	public String getSubject() {

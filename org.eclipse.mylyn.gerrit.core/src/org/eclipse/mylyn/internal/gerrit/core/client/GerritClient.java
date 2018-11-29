@@ -351,14 +351,7 @@ public abstract class GerritClient extends ReviewsClient {
 			throws GerritException {
 		List<Project> result = new ArrayList<Project>();
 		try {
-			List<ProjectDetailX> projectDetails = restClient.execute(monitor,
-					new Operation<List<ProjectDetailX>>(client) {
-						@Override
-						public void execute(IProgressMonitor monitor) throws GerritException {
-							getProjectAdminService(monitor).visibleProjectDetails(this);
-						}
-					});
-			for (ProjectDetailX projectDetail : projectDetails) {
+			for (ProjectDetailX projectDetail : getProjectDetails(monitor, gerritConfig, result)) {
 				if (!GerritUtil.isPermissionOnlyProject(projectDetail, gerritConfig)) {
 					result.add(projectDetail.project);
 				}
@@ -372,6 +365,17 @@ public abstract class GerritClient extends ReviewsClient {
 		}
 		Collections.sort(result, new ProjectByNameComparator());
 		return result;
+	}
+
+	protected List<ProjectDetailX> getProjectDetails(IProgressMonitor monitor, GerritConfig gerritConfig,
+			List<Project> result) throws GerritException {
+		List<ProjectDetailX> projectDetails = restClient.execute(monitor, new Operation<List<ProjectDetailX>>(client) {
+			@Override
+			public void execute(IProgressMonitor monitor) throws GerritException {
+				getProjectAdminService(monitor).visibleProjectDetails(this);
+			}
+		});
+		return projectDetails;
 	}
 
 	private boolean isNoSuchServiceError(GerritException e) {
@@ -433,20 +437,18 @@ public abstract class GerritClient extends ReviewsClient {
 		}
 	}
 
-	private PatchSetDetail getPatchSetDetail(final PatchSet.Id idBase, final PatchSet.Id idTarget,
-			IProgressMonitor monitor) throws GerritException {
-		PatchSetDetail patchSetDetail = null;
-		patchSetDetail = restClient.execute(monitor, new Operation<PatchSetDetail>(client) {
+	protected PatchSetDetail getPatchSetDetail(PatchSet.Id idBase, PatchSet.Id idTarget, IProgressMonitor monitor)
+			throws GerritException {
+		PatchSetDetail patchSetDetail = restClient.execute(monitor, new Operation<PatchSetDetail>(client) {
 			@Override
 			public void execute(IProgressMonitor monitor) throws GerritException {
 				getChangeDetailService(monitor).patchSetDetail2(idBase, idTarget, createAccountDiffPreference(), this);
 			}
 		});
-
 		return patchSetDetail;
 	}
 
-	private PatchScriptX getPatchScript(final Patch.Key key, final PatchSet.Id leftId, final PatchSet.Id rightId,
+	protected PatchScriptX getPatchScript(final Patch.Key key, final PatchSet.Id leftId, final PatchSet.Id rightId,
 			final IProgressMonitor monitor) throws GerritException {
 		final AccountDiffPreference diffPrefs = createAccountDiffPreference();
 		final PatchScriptX patchScript = restClient.execute(monitor, new Operation<PatchScriptX>(client) {
@@ -529,7 +531,7 @@ public abstract class GerritClient extends ReviewsClient {
 		}
 	}
 
-	private AccountDiffPreference createAccountDiffPreference() {
+	protected AccountDiffPreference createAccountDiffPreference() {
 		AccountDiffPreference diffPrefs = new AccountDiffPreference((Account.Id) null);
 		diffPrefs.setLineLength(Integer.MAX_VALUE);
 		diffPrefs.setTabSize(4);

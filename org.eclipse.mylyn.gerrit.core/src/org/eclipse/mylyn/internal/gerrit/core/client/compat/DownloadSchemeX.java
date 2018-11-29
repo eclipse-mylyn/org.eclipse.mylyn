@@ -11,22 +11,24 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.client.compat;
 
-public enum DownloadSchemeX {
-	ANON_HTTP("anonymous http"), HTTP("http"), GIT("git"), SSH("ssh"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-	private String scheme;
+import com.google.gerrit.reviewdb.AccountGeneralPreferences.DownloadScheme;
 
-	private DownloadSchemeX(String scheme) {
-		this.scheme = scheme;
+public enum DownloadSchemeX {
+	ANON_HTTP(DownloadScheme.ANON_HTTP), HTTP(DownloadScheme.HTTP), GIT(DownloadScheme.ANON_GIT), SSH(
+			DownloadScheme.SSH);
+	private final DownloadScheme downloadScheme;
+
+	private DownloadSchemeX(DownloadScheme scheme) {
+		this.downloadScheme = scheme;
 	}
 
-	@Override
-	public String toString() {
-		return scheme;
+	public DownloadScheme toDownloadScheme() {
+		return downloadScheme;
 	}
 
 	public static DownloadSchemeX fromString(String scheme) {
 		for (DownloadSchemeX value : values()) {
-			if (value.toString().equals(scheme)) {
+			if (value.toString().equalsIgnoreCase(scheme)) {
 				return value;
 			}
 		}

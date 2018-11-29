@@ -60,11 +60,13 @@ public class ReviewItemSetCompareEditorInput extends ReviewItemCompareEditorInpu
 			if (!(item instanceof IFileItem)) {
 				continue;
 			}
+			IFileItem fileItem = (IFileItem) item;
+			if (fileItem.getBase().getContent() != null) {
+				FileItemNode node = new FileItemNode(behavior, fileItem, monitor);
 
-			FileItemNode node = new FileItemNode(behavior, (IFileItem) item, monitor);
-
-			DiffNode parent = findNode(root, node.getPath());
-			parent.add(node);
+				DiffNode parent = findNode(root, node.getPath());
+				parent.add(node);
+			}
 		}
 
 		for (IDiffElement child : root.getChildren()) {

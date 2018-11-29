@@ -14,8 +14,8 @@ package org.eclipse.mylyn.internal.gerrit.core.client.rest;
 import java.util.Map;
 
 /**
- * Data model object for <a
- * href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#revision-info">RevisionInfo</a>.
+ * Data model object for
+ * <a href="https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#revision-info">RevisionInfo</a>.
  */
 public class RevisionInfo {
 
@@ -26,6 +26,8 @@ public class RevisionInfo {
 	public Map<String, ActionInfo> actions;
 
 	private CommitInfo commit;
+
+	private AccountInfo uploader;
 
 	public boolean isDraft() {
 		return draft;
@@ -41,5 +43,9 @@ public class RevisionInfo {
 
 	public CommitInfo getCommit() {
 		return commit;
+	}
+
+	public AccountInfo getUploader() {
+		return uploader;
 	}
 }

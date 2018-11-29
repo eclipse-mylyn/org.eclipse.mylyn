@@ -94,8 +94,9 @@ public class GerritUtil {
 
 		if (supportsDownloadScheme(config, DownloadSchemeX.SSH)) {
 			return getSchemeUri(config, DownloadSchemeX.SSH, project);
+		} else if (config.getGerritConfig().getSchemes() != null) {
+			return null;
 		}
-
 		Set<DownloadScheme> supportedDownloadSchemes = config.getGerritConfig().getDownloadSchemes();
 		if (supportedDownloadSchemes.contains(DownloadScheme.SSH)
 				|| supportedDownloadSchemes.contains(DownloadScheme.DEFAULT_DOWNLOADS)) {
@@ -129,8 +130,9 @@ public class GerritUtil {
 	public static String getHttpCloneUri(TaskRepository repository, GerritConfiguration config, Project project) {
 		if (supportsDownloadScheme(config, DownloadSchemeX.HTTP)) {
 			return getSchemeUri(config, DownloadSchemeX.HTTP, project);
+		} else if (config.getGerritConfig().getSchemes() != null) {
+			return null;
 		}
-
 		Set<DownloadScheme> supportedDownloadSchemes = config.getGerritConfig().getDownloadSchemes();
 		if (supportedDownloadSchemes.contains(DownloadScheme.HTTP)
 				|| supportedDownloadSchemes.contains(DownloadScheme.DEFAULT_DOWNLOADS)) {
@@ -166,8 +168,9 @@ public class GerritUtil {
 	public static String getAnonHttpCloneUri(TaskRepository repository, GerritConfiguration config, Project project) {
 		if (supportsDownloadScheme(config, DownloadSchemeX.ANON_HTTP)) {
 			return getSchemeUri(config, DownloadSchemeX.ANON_HTTP, project);
+		} else if (config.getGerritConfig().getSchemes() != null) {
+			return null;
 		}
-
 		Set<DownloadScheme> supportedDownloadSchemes = config.getGerritConfig().getDownloadSchemes();
 		if (supportedDownloadSchemes.contains(DownloadScheme.ANON_HTTP)
 				|| supportedDownloadSchemes.contains(DownloadScheme.DEFAULT_DOWNLOADS)) {
@@ -193,8 +196,9 @@ public class GerritUtil {
 	public static String getAnonGitCloneUri(TaskRepository repository, GerritConfiguration config, Project project) {
 		if (supportsDownloadScheme(config, DownloadSchemeX.GIT)) {
 			return getSchemeUri(config, DownloadSchemeX.GIT, project);
+		} else if (config.getGerritConfig().getSchemes() != null) {
+			return null;
 		}
-
 		Set<DownloadScheme> supportedDownloadSchemes = config.getGerritConfig().getDownloadSchemes();
 		String gitAddress = config.getGerritConfig().getGitDaemonUrl();
 		if (gitAddress != null && (supportedDownloadSchemes.contains(DownloadScheme.ANON_GIT)

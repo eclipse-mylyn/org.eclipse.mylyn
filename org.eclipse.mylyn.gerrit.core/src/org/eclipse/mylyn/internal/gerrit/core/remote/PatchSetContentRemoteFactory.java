@@ -45,12 +45,12 @@ import com.google.gerrit.reviewdb.PatchLineComment;
 
 /**
  * Manages retrieval of patch set contents, including file versions and associated comments, from Gerrit API.
- * 
+ *
  * @author Miles Parker
  * @author Steffen Pingel
  */
-public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
-		ReviewItemSetContentRemoteFactory<PatchSetContent, RemoteKeyType> {
+public abstract class PatchSetContentRemoteFactory<RemoteKeyType>
+		extends ReviewItemSetContentRemoteFactory<PatchSetContent, RemoteKeyType> {
 
 	private final ReviewItemCache cache;
 
@@ -82,8 +82,8 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
 			comments.addAll(commentDetail.getCommentsA());
 			comments.addAll(commentDetail.getCommentsB());
 			for (PatchLineComment comment : comments) {
-				gerritFactoryProvider.pullUser(gerritFactoryProvider.getRoot(), patchScript.getCommentDetail()
-						.getAccounts(), comment.getAuthor(), monitor);
+				gerritFactoryProvider.pullUser(gerritFactoryProvider.getRoot(),
+						patchScript.getCommentDetail().getAccounts(), comment.getAuthor(), monitor);
 			}
 		}
 		return content;
@@ -166,18 +166,21 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
 				if (baseVersion == null) {
 					baseVersion = IReviewsFactory.INSTANCE.createFileVersion();
 					baseVersion.setId(baseId);
-					if (patchScript.isBinary()) {
-						baseVersion.setBinaryContent(patchScript.getBinaryA());
-					} else {
-						baseVersion.setContent(patchScript.getA().asString());
+					if (patchScript.getPatchHeader() != null) {
+						if (patchScript.isBinary()) {
+							baseVersion.setBinaryContent(patchScript.getBinaryA());
+						} else {
+							baseVersion.setContent(patchScript.getA().asString());
+						}
+						baseVersion.setPath(patchScript.getA().getPath());
+						baseVersion.setDescription((content.getBase() != null)
+								? NLS.bind(Messages.PatchSetContentRemoteFactory_Patch_Set,
+										content.getBase().getPatchSetId())
+								: Messages.PatchSetContentRemoteFactory_Base);
+						baseVersion.setFile(item);
+						baseVersion.setName(item.getName());
+						getCache().put(baseVersion);
 					}
-					baseVersion.setPath(patchScript.getA().getPath());
-					baseVersion.setDescription((content.getBase() != null)
-							? NLS.bind(Messages.PatchSetContentRemoteFactory_Patch_Set, content.getBase()
-									.getPatchSetId()) : Messages.PatchSetContentRemoteFactory_Base);
-					baseVersion.setFile(item);
-					baseVersion.setName(item.getName());
-					getCache().put(baseVersion);
 				}
 				item.setBase(baseVersion);
 
@@ -186,10 +189,12 @@ public abstract class PatchSetContentRemoteFactory<RemoteKeyType> extends
 					targetVersion = IReviewsFactory.INSTANCE.createFileVersion();
 					targetVersion.setId(targetId);
 					SparseFileContent target = patchScript.getB().apply(patchScript.getA(), patchScript.getEdits());
-					if (patchScript.isBinary()) {
-						targetVersion.setBinaryContent(patchScript.getBinaryB());
-					} else {
-						targetVersion.setContent(target.asString());
+					if (patchScript.getPatchHeader() != null) {
+						if (patchScript.isBinary()) {
+							targetVersion.setBinaryContent(patchScript.getBinaryB());
+						} else {
+							targetVersion.setContent(target.asString());
+						}
 					}
 					targetVersion.setPath(patchScript.getB().getPath());
 					targetVersion.setDescription(NLS.bind(Messages.PatchSetContentRemoteFactory_Patch_Set,

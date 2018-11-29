@@ -24,7 +24,7 @@ import com.google.gerrit.reviewdb.PatchSet;
  * Defines a single patch set, that is a state comparison between an (optional) base and target. The content can then be
  * populated by calling
  * {@link GerritClient#loadPatchSetContent(GerritPatchSetContent, org.eclipse.core.runtime.IProgressMonitor)}.
- * 
+ *
  * @author Steffen Pingel
  * @author Miles Parker
  */
@@ -40,7 +40,7 @@ public class PatchSetContent {
 
 	/**
 	 * Creates empty patch set content using detailed target.
-	 * 
+	 *
 	 * @param base
 	 *            may be null, in which case the target will be compared to an empty baseline
 	 * @param targetDetail
@@ -53,7 +53,7 @@ public class PatchSetContent {
 
 	/**
 	 * Creates empty patch set content using basic patch set.
-	 * 
+	 *
 	 * @param base
 	 *            may be null, in which case the target will be compared to an empty baseline
 	 * @param target
@@ -70,7 +70,7 @@ public class PatchSetContent {
 
 	public PatchSet getTarget() {
 		if (targetDetail != null) {
-			return targetDetail.getPatchSet();
+			target = targetDetail.getPatchSet();
 		}
 		return target;
 	}
@@ -78,7 +78,7 @@ public class PatchSetContent {
 	/**
 	 * Returns null if not supplied by constructor, unless initialized by
 	 * {@link GerritClient#loadPatchSetContent(GerritPatchSetContent, org.eclipse.core.runtime.IProgressMonitor)}
-	 * 
+	 *
 	 * @return
 	 */
 	public PatchSetDetail getTargetDetail() {

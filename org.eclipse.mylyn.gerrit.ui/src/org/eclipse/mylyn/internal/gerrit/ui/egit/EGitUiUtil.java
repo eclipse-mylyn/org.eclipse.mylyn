@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -42,9 +43,11 @@ import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.widgets.Shell;
 
+import com.google.gerrit.reviewdb.AccountGeneralPreferences.DownloadScheme;
 import com.google.gerrit.reviewdb.PatchSet;
 import com.google.gerrit.reviewdb.Project;
 
@@ -97,17 +100,40 @@ public class EGitUiUtil {
 			public GitRepositoryInfo getGitRepositoryInfo() throws NoRepositoryInfoException {
 				GitRepositoryInfo gitRepositoryInfo;
 				try {
-					GerritConfiguration config = GerritCorePlugin.getGerritClient(repository).getConfiguration();
-					gitRepositoryInfo = new GitRepositoryInfo(GerritUtil.getSshCloneUri(repository, config, project));
-				} catch (URISyntaxException e) {
-					throw new NoRepositoryInfoException(e.getMessage(), e);
+					GerritConfiguration config = GerritCorePlugin.getGerritClient(repository).refreshConfig(null);
+					gitRepositoryInfo = new GitRepositoryInfo(getCloneUriForRepo(repository, config, project));
+					return gitRepositoryInfo;
+				} catch (GerritException e) {
+
 				}
-				return gitRepositoryInfo;
+				return null;
 			}
 		});
 		WizardDialog dlg = new WizardDialog(shell, cloneWizard);
 		dlg.setHelpAvailable(true);
 		return dlg.open();
+	}
+
+	private static String getCloneUriForRepo(TaskRepository repository, GerritConfiguration config, Project project)
+			throws NoRepositoryInfoException {
+		try {
+			Map<DownloadScheme, String> cloneUris = GerritUtil.getCloneUris(config, repository, project);
+			if (cloneUris.keySet().contains(DownloadScheme.SSH)) {
+				return cloneUris.get(DownloadScheme.SSH);
+			}
+			if (cloneUris.keySet().contains(DownloadScheme.HTTP)) {
+				return cloneUris.get(DownloadScheme.HTTP);
+			}
+			for (DownloadScheme scheme : cloneUris.keySet()) {
+				if (cloneUris.get(scheme) != null) {
+					return cloneUris.get(scheme);
+				}
+			}
+			return null;
+		} catch (URISyntaxException e) {
+			throw new NoRepositoryInfoException(e.getMessage(), e);
+		}
+
 	}
 
 }
