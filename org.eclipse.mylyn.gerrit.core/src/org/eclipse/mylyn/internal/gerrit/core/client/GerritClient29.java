@@ -27,7 +27,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.gerrit.core.GerritCorePlugin;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritHttpClient.ErrorHandler;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ChangeDetailX;
@@ -247,7 +246,7 @@ public class GerritClient29 extends GerritClient {
 
 	private List<SubmitRecord> currentSubmitRecord(String uri, IProgressMonitor monitor) throws GerritException {
 		List<SubmitRecord> submitRecordList = new ArrayList<SubmitRecord>();
-		if (getRepository().getCredentials(AuthenticationType.REPOSITORY) == null) {
+		if (isAnonymous()) {
 			return submitRecordList;
 		}
 		SubmitRecord[] submitRecordArray = getRestClient().executePostRestRequest(uri, new SubmitRecord(),
