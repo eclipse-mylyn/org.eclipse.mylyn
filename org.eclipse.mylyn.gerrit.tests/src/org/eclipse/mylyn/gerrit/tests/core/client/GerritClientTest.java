@@ -30,8 +30,6 @@ import java.net.URLEncoder;
 import java.util.EnumSet;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.httpclient.Cookie;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -44,7 +42,7 @@ import org.eclipse.mylyn.gerrit.tests.support.GerritHarness;
 import org.eclipse.mylyn.internal.gerrit.core.GerritUtil;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritAuthenticationState;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient;
-import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient29;
+import org.eclipse.mylyn.internal.gerrit.core.client.GerritClient212;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritException;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritSystemInfo;
@@ -62,6 +60,8 @@ import com.google.gerrit.reviewdb.Patch.ChangeType;
 import com.google.gerrit.reviewdb.Patch.Key;
 import com.google.gerrit.reviewdb.PatchSet.Id;
 
+import junit.framework.TestCase;
+
 /**
  * @author Steffen Pingel
  * @author Sascha Scholz
@@ -69,7 +69,7 @@ import com.google.gerrit.reviewdb.PatchSet.Id;
  * @author Jacques Bouthillier
  */
 public class GerritClientTest extends TestCase {
-	public class TestGerritClient extends GerritClient29 {
+	public class TestGerritClient extends GerritClient212 {
 
 		public TestGerritClient(TaskRepository repository, AbstractWebLocation location) {
 			super(repository, GerritFixture.current().getGerritVersion());
@@ -131,6 +131,11 @@ public class GerritClientTest extends TestCase {
 		assertNotNull(config);
 		assertNotNull(config.getGerritConfig());
 		assertNotNull(config.getProjects());
+		assertNotNull(config.getGerritConfig().getWildProject());
+		assertEquals("All-Projects", config.getGerritConfig().getWildProject().toString());
+		if (client.getVersion().getMinor() >= 12) {
+			assertNotNull(config.getGerritConfig().getSchemes());
+		}
 	}
 
 	@Test

@@ -47,7 +47,8 @@ public class GerritFixture extends TestFixture {
 
 	public GerritFixture(FixtureConfiguration configuration) {
 		this(configuration.getUrl(), configuration.getVersion(), configuration.getInfo());
-		supportsAnonymousAccess = "DEVELOPMENT_BECOME_ANY_ACCOUNT".equals(configuration.getProperties().get("authtype"));
+		supportsAnonymousAccess = "DEVELOPMENT_BECOME_ANY_ACCOUNT"
+				.equals(configuration.getProperties().get("authtype"));
 	}
 
 	public static GerritFixture current() {
@@ -55,6 +56,20 @@ public class GerritFixture extends TestFixture {
 			DEFAULT.activate();
 		}
 		return current;
+	}
+
+	public static GerritFixture forVersion(int major, int minor) {
+
+		GerritFixture fixture = TestConfiguration.getDefault()
+				.discover(GerritFixture.class, "gerrit", false)
+				.stream()
+				.filter(f -> f.getGerritVersion().getMinor() >= minor && f.getGerritVersion().getMajor() >= major)
+				.findFirst()
+				.get();
+
+		fixture.activate();
+
+		return fixture;
 	}
 
 	@Override

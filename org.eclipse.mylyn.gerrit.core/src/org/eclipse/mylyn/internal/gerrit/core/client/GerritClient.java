@@ -187,14 +187,14 @@ public abstract class GerritClient extends ReviewsClient {
 			GerritConfiguration config, GerritAuthenticationState authState, String xsrfKey,
 			GerritClientStateListener stateListener) {
 		Version version = Version.emptyVersion;
-		GerritClient versionDiscoveryClient = new GerritClient29(repository, version);
+		GerritClient versionDiscoveryClient = new GerritClient212(repository, version);
 		versionDiscoveryClient.initialize(location, config, authState, xsrfKey, stateListener);
 		try {
 			version = versionDiscoveryClient.getVersion(new NullProgressMonitor());
 		} catch (GerritException e) {
 			//Ignore, we'll just use the base client.
 		}
-		GerritClient client = new GerritClient29(repository, version);
+		GerritClient client = new GerritClient212(repository, version);
 		client.initialize(location, config, authState, xsrfKey, stateListener);
 		return client;
 	}
@@ -226,7 +226,7 @@ public abstract class GerritClient extends ReviewsClient {
 		}
 		this.serviceByClass = new HashMap<Class<? extends RemoteJsonService>, RemoteJsonService>();
 		this.config = config;
-		this.restClient = new GerritRestClient(this.client);
+		this.restClient = new GerritRestClient(client);
 	}
 
 	public GerritSystemInfo getInfo(IProgressMonitor monitor) throws GerritException {
@@ -298,7 +298,7 @@ public abstract class GerritClient extends ReviewsClient {
 
 			if (gerritConfig == null) {
 				if (GerritVersion.isVersion2120OrLater(version)) {
-					gerritConfig = new GerritConfigX();
+					gerritConfig = getGerritConfigFromServerInfo(monitor);
 				} else {
 					throw new GerritException("Failed to obtain Gerrit configuration"); //$NON-NLS-1$
 				}
@@ -313,6 +313,10 @@ public abstract class GerritClient extends ReviewsClient {
 			e.initCause(cause);
 			throw e;
 		}
+	}
+
+	protected GerritConfigX getGerritConfigFromServerInfo(IProgressMonitor monitor) throws GerritException {
+		return new GerritConfigX();
 	}
 
 	public GerritConfiguration refreshConfig(IProgressMonitor monitor) throws GerritException {

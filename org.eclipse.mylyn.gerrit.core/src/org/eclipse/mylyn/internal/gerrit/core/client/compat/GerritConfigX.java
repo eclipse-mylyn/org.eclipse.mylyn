@@ -12,7 +12,9 @@
 
 package org.eclipse.mylyn.internal.gerrit.core.client.compat;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gerrit.common.data.GerritConfig;
 
@@ -25,6 +27,16 @@ public class GerritConfigX extends GerritConfig {
 	private List<CommentLink> commentLinks;
 
 	private String gitHttpUrl;
+
+	private Map<DownloadSchemeX, SchemeInfo> schemes;
+
+	public Map<DownloadSchemeX, SchemeInfo> getSchemes() {
+		return schemes;
+	}
+
+	public void setSchemes(Map<DownloadSchemeX, SchemeInfo> schemes) {
+		this.schemes = Collections.unmodifiableMap(schemes);
+	}
 
 	public List<CommentLink> getCommentLinks2() {
 		return commentLinks;

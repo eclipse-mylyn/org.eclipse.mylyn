@@ -20,7 +20,9 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.internal.gerrit.core.client.GerritConfiguration;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.DownloadSchemeX;
 import org.eclipse.mylyn.internal.gerrit.core.client.compat.ProjectDetailX;
+import org.eclipse.mylyn.internal.gerrit.core.client.compat.SchemeInfo;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.osgi.util.NLS;
 
@@ -89,6 +91,11 @@ public class GerritUtil {
 
 	public static String getSshCloneUri(TaskRepository repository, GerritConfiguration config, Project project)
 			throws URISyntaxException {
+
+		if (supportsDownloadScheme(config, DownloadSchemeX.SSH)) {
+			return getSchemeUri(config, DownloadSchemeX.SSH, project);
+		}
+
 		Set<DownloadScheme> supportedDownloadSchemes = config.getGerritConfig().getDownloadSchemes();
 		if (supportedDownloadSchemes.contains(DownloadScheme.SSH)
 				|| supportedDownloadSchemes.contains(DownloadScheme.DEFAULT_DOWNLOADS)) {
@@ -120,6 +127,10 @@ public class GerritUtil {
 	}
 
 	public static String getHttpCloneUri(TaskRepository repository, GerritConfiguration config, Project project) {
+		if (supportsDownloadScheme(config, DownloadSchemeX.HTTP)) {
+			return getSchemeUri(config, DownloadSchemeX.HTTP, project);
+		}
+
 		Set<DownloadScheme> supportedDownloadSchemes = config.getGerritConfig().getDownloadSchemes();
 		if (supportedDownloadSchemes.contains(DownloadScheme.HTTP)
 				|| supportedDownloadSchemes.contains(DownloadScheme.DEFAULT_DOWNLOADS)) {
@@ -153,6 +164,10 @@ public class GerritUtil {
 	}
 
 	public static String getAnonHttpCloneUri(TaskRepository repository, GerritConfiguration config, Project project) {
+		if (supportsDownloadScheme(config, DownloadSchemeX.ANON_HTTP)) {
+			return getSchemeUri(config, DownloadSchemeX.ANON_HTTP, project);
+		}
+
 		Set<DownloadScheme> supportedDownloadSchemes = config.getGerritConfig().getDownloadSchemes();
 		if (supportedDownloadSchemes.contains(DownloadScheme.ANON_HTTP)
 				|| supportedDownloadSchemes.contains(DownloadScheme.DEFAULT_DOWNLOADS)) {
@@ -176,10 +191,14 @@ public class GerritUtil {
 	}
 
 	public static String getAnonGitCloneUri(TaskRepository repository, GerritConfiguration config, Project project) {
+		if (supportsDownloadScheme(config, DownloadSchemeX.GIT)) {
+			return getSchemeUri(config, DownloadSchemeX.GIT, project);
+		}
+
 		Set<DownloadScheme> supportedDownloadSchemes = config.getGerritConfig().getDownloadSchemes();
 		String gitAddress = config.getGerritConfig().getGitDaemonUrl();
-		if (gitAddress != null
-				&& (supportedDownloadSchemes.contains(DownloadScheme.ANON_GIT) || supportedDownloadSchemes.contains(DownloadScheme.DEFAULT_DOWNLOADS))) {
+		if (gitAddress != null && (supportedDownloadSchemes.contains(DownloadScheme.ANON_GIT)
+				|| supportedDownloadSchemes.contains(DownloadScheme.DEFAULT_DOWNLOADS))) {
 			final StringBuilder sb = new StringBuilder();
 			sb.append(gitAddress);
 			if (!gitAddress.endsWith("/")) { //$NON-NLS-1$
@@ -213,4 +232,17 @@ public class GerritUtil {
 		return id;
 	}
 
+	private static boolean supportsDownloadScheme(GerritConfiguration config, DownloadSchemeX scheme) {
+		return config.getGerritConfig().getSchemes() != null
+				&& config.getGerritConfig().getSchemes().containsKey(scheme);
+	}
+
+	private static String getSchemeUri(GerritConfiguration config, DownloadSchemeX scheme, Project project) {
+		SchemeInfo info = config.getGerritConfig().getSchemes().get(scheme);
+		return info != null ? forProject(info.getUrl(), project) : null;
+	}
+
+	public static String forProject(String url, Project project) {
+		return url.replaceAll("\\$\\{project\\}", project.getName()); //$NON-NLS-1$
+	}
 }

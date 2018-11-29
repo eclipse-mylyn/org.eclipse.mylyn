@@ -15,6 +15,9 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.google.gerrit.reviewdb.Project;
+import com.google.gerrit.reviewdb.Project.NameKey;
+
 public class GerritUtilTest {
 
 	@Test
@@ -28,4 +31,10 @@ public class GerritUtilTest {
 				GerritUtil.toChangeId("abc~I95aa5d1d28009ecc6a59b1bf33a2866d186e5c62"));
 	}
 
+	@Test
+	public void forProject() {
+		Project project = new Project(new NameKey("some_name"));
+		assertEquals("http://jdoe@gerrithost:8080/" + project.getName(),
+				GerritUtil.forProject("http://jdoe@gerrithost:8080/${project}", project));
+	}
 }
