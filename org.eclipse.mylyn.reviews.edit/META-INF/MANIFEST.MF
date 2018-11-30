@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylyn Reviews Edit Support
+Bundle-Name: Mylyn Reviews Edit
 Bundle-SymbolicName: org.eclipse.mylyn.reviews.edit;singleton:=true
 Bundle-Version: 2.16.0.qualifier
 Require-Bundle: org.eclipse.core.runtime,
