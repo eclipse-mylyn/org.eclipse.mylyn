@@ -20,8 +20,12 @@ import java.util.logging.Logger;
 
 import org.eclipse.mylyn.wikitext.creole.CreoleLanguage;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
+import org.eclipse.mylyn.wikitext.parser.ImageAttributes;
+import org.eclipse.mylyn.wikitext.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.parser.builder.AbstractMarkupDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.EntityReferences;
+
+import com.google.common.base.Strings;
 
 /**
  * a document builder that emits Creole markup
@@ -119,6 +123,34 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	}
 
+	private class LinkBlock extends ContentBlock {
+
+		private final LinkAttributes attributes;
+
+		LinkBlock(LinkAttributes attributes) {
+			super(null, "", "", 0, 0, true);
+			this.attributes = attributes;
+		}
+
+		@Override
+		protected void emitContent(String content) throws IOException {
+			// [[http://url.com|label]]
+			CreoleDocumentBuilder.this.emitContent("[[");
+			if (!Strings.isNullOrEmpty(attributes.getHref())) {
+				CreoleDocumentBuilder.this.emitContent(attributes.getHref());
+
+			}
+			if (!Strings.isNullOrEmpty(attributes.getHref()) && !Strings.isNullOrEmpty(content)) {
+				CreoleDocumentBuilder.this.emitContent('|');
+			}
+			if (!Strings.isNullOrEmpty(content)) {
+				CreoleDocumentBuilder.this.emitContent(content);
+			}
+			CreoleDocumentBuilder.this.emitContent("]]");
+		}
+
+	}
+
 	public CreoleDocumentBuilder(Writer out) {
 		super(out);
 	}
@@ -137,6 +169,11 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	@Override
 	protected Block computeSpan(SpanType type, Attributes attributes) {
 		switch (type) {
+		case LINK:
+			if (attributes instanceof LinkAttributes) {
+				return new LinkBlock((LinkAttributes) attributes);
+			}
+			return new ContentBlock("[[", "]]", 0, 0);
 		case ITALIC:
 		case EMPHASIS:
 		case MARK:
@@ -172,7 +209,7 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	}
 
 	private String escapeTilde(String text) {
-		return text.replace("~", "&tilde;");
+		return text != null ? text.replace("~", "&tilde;") : null;
 	}
 
 	@Override
@@ -191,17 +228,49 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	@Override
 	public void image(Attributes attributes, String url) {
-		throw new UnsupportedOperationException();
+		if (url != null) {
+			assertOpenBlock();
+			try {
+				currentBlock.write("{{");
+				currentBlock.write(url);
+				writeImageAttributes(attributes);
+				currentBlock.write("}}");
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
+
+	private void writeImageAttributes(Attributes attributes) throws IOException {
+		if (attributes instanceof ImageAttributes) {
+			if (!Strings.isNullOrEmpty(((ImageAttributes) attributes).getAlt())) {
+				currentBlock.write('|');
+				currentBlock.write(((ImageAttributes) attributes).getAlt());
+			} else if (!Strings.isNullOrEmpty(((ImageAttributes) attributes).getTitle())) {
+				currentBlock.write('|');
+				currentBlock.write(((ImageAttributes) attributes).getTitle());
+			}
+		}
 	}
 
 	@Override
 	public void link(Attributes attributes, String hrefOrHashName, String text) {
-		throw new UnsupportedOperationException();
+		assertOpenBlock();
+		LinkAttributes linkAttributes = new LinkAttributes();
+		linkAttributes.setHref(hrefOrHashName);
+		beginSpan(SpanType.LINK, linkAttributes);
+		characters(text);
+		endSpan();
 	}
 
 	@Override
 	public void imageLink(Attributes linkAttributes, Attributes imageAttributes, String href, String imageUrl) {
-		throw new UnsupportedOperationException();
+		String altText = "";
+		if (imageAttributes instanceof ImageAttributes
+				&& !Strings.isNullOrEmpty(((ImageAttributes) imageAttributes).getAlt())) {
+			altText = ((ImageAttributes) imageAttributes).getAlt();
+		}
+		link(linkAttributes, href, "{{" + Strings.nullToEmpty(imageUrl) + "}}" + altText);
 	}
 
 	@Override
