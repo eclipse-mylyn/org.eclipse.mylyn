@@ -18,7 +18,7 @@
 
   <groupId>org.eclipse.mylyn.github</groupId>
   <artifactId>github-parent</artifactId>
-  <version>5.2.0-SNAPSHOT</version>
+  <version>5.2.0.201812061821-r</version>
   <packaging>pom</packaging>
 
   <name>Eclipse EGit Mylyn GitHub Connector Parent</name>
@@ -132,7 +132,7 @@
             <artifact>
               <groupId>org.eclipse.mylyn.github</groupId>
               <artifactId>org.eclipse.mylyn.github.target</artifactId>
-              <version>5.2.0-SNAPSHOT</version>
+              <version>5.2.0.201812061821-r</version>
               <classifier>github</classifier>
             </artifact>
           </target>
