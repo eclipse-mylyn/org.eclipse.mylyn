@@ -158,12 +158,29 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	@Override
 	protected Block computeBlock(BlockType type, Attributes attributes) {
 		switch (type) {
+		case BULLETED_LIST:
+		case NUMERIC_LIST:
+			return new NewlineDelimitedBlock(type, doubleNewlineDelimiterCount(), 1);
+		case LIST_ITEM:
+			char prefixChar = computeCurrentListType() == BlockType.NUMERIC_LIST ? '#' : '*';
+			return new ContentBlock(type, computePrefix(prefixChar, computeListLevel()) + " ", "", 1, 1);
 		case PARAGRAPH:
 			return new ContentBlock(type, "", "", 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
 		default:
 			Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
 			return new ContentBlock(type, "", "", 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
 		}
+	}
+
+	private int doubleNewlineDelimiterCount() {
+		if (currentBlock != null) {
+			BlockType currentBlockType = currentBlock.getBlockType();
+			if (currentBlockType == BlockType.LIST_ITEM || currentBlockType == BlockType.BULLETED_LIST
+					|| currentBlockType == BlockType.NUMERIC_LIST) {
+				return 1;
+			}
+		}
+		return 2;
 	}
 
 	@Override
