@@ -151,6 +151,21 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	}
 
+	private class TableCellBlock extends ContentBlock {
+
+		public TableCellBlock(BlockType blockType) {
+			super(blockType, blockType == BlockType.TABLE_CELL_NORMAL ? "|" : "|=", "", 0, 0, true);
+		}
+
+		@Override
+		protected void emitContent(String content) throws IOException {
+			if (Strings.isNullOrEmpty(content) || content.trim().isEmpty()) {
+				content = " "; //$NON-NLS-1$
+			}
+			super.emitContent(content);
+		}
+	}
+
 	public CreoleDocumentBuilder(Writer out) {
 		super(out);
 	}
@@ -166,6 +181,13 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			return new ContentBlock(type, computePrefix(prefixChar, computeListLevel()) + " ", "", 1, 1);
 		case PARAGRAPH:
 			return new ContentBlock(type, "", "", 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
+		case TABLE:
+			return new SuffixBlock(type, "\n"); //$NON-NLS-1$
+		case TABLE_CELL_HEADER:
+		case TABLE_CELL_NORMAL:
+			return new TableCellBlock(type);
+		case TABLE_ROW:
+			return new SuffixBlock(type, "|\n"); //$NON-NLS-1$
 		default:
 			Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
 			return new ContentBlock(type, "", "", 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
