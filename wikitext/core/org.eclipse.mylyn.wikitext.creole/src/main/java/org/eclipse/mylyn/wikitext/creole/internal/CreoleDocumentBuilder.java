@@ -181,6 +181,9 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			return new ContentBlock(type, computePrefix(prefixChar, computeListLevel()) + " ", "", 1, 1);
 		case PARAGRAPH:
 			return new ContentBlock(type, "", "", 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
+		case PREFORMATTED:
+		case CODE:
+			return new ContentBlock(type, "{{{\n", "\n}}}", 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
 		case TABLE:
 			return new SuffixBlock(type, "\n"); //$NON-NLS-1$
 		case TABLE_CELL_HEADER:
@@ -222,6 +225,8 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			return new ContentBlock("**", "**"); //$NON-NLS-1$ //$NON-NLS-2$
 		case DELETED:
 			return new ContentBlock("--", "--"); //$NON-NLS-1$ //$NON-NLS-2$
+		case CODE:
+			return new ContentBlock("{{{", "}}}"); //$NON-NLS-1$ //$NON-NLS-2$
 		case UNDERLINED:
 			return new ContentBlock("__", "__"); //$NON-NLS-1$ //$NON-NLS-2$
 		default:

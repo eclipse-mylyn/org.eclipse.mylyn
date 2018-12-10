@@ -15,6 +15,7 @@ package org.eclipse.mylyn.internal.wikitext.creole.tests.documentbuilder;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 
 /**
  * @see http://www.wikicreole.org/wiki/Elements
@@ -93,6 +94,30 @@ public class CreoleDocumentBuilderListTest extends AbstractCreoleDocumentBuilder
 		builder.endBlock();
 		builder.endDocument();
 		assertMarkup("* X\n\n* Y\n\n* Z\n\n");
+	}
+
+	public void testListWithCodeSpan() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("No code");
+		builder.endBlock();
+
+		builder.beginBlock(BlockType.BULLETED_LIST, new Attributes());
+
+		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
+		builder.characters("With ");
+		builder.beginSpan(SpanType.CODE, new Attributes());
+		builder.characters("* /code\\ *");
+		builder.endSpan();
+		builder.endBlock();
+
+		builder.endBlock();
+
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("* No code\n** With {{{* /code\\ *}}}\n");
 	}
 
 	public void testBulletedListWithNestedSublist() {

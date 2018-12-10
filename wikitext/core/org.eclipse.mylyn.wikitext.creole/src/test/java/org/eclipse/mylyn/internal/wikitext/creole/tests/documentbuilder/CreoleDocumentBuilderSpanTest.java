@@ -85,6 +85,15 @@ public class CreoleDocumentBuilderSpanTest extends AbstractCreoleDocumentBuilder
 		assertMarkup("__underlined__\n\n");
 	}
 
+	public void testCode() {
+		builder.beginDocument();
+		builder.beginSpan(SpanType.CODE, new Attributes());
+		builder.characters("code");
+		builder.endSpan();
+		builder.endDocument();
+		assertMarkup("{{{code}}}\n\n");
+	}
+
 	public void testEmptySpan() {
 		builder.beginDocument();
 		builder.characters("prefix");

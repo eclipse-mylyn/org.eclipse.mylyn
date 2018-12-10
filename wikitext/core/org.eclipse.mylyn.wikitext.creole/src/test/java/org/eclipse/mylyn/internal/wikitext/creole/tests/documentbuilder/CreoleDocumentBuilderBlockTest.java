@@ -109,6 +109,90 @@ public class CreoleDocumentBuilderBlockTest extends AbstractCreoleDocumentBuilde
 		assertMarkup("text\n\n**bold** text\n\n");
 	}
 
+	public void testBlockCode() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.CODE, new Attributes());
+		builder.characters("text\n\nmore text");
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		assertEquals("{{{\ntext\n\nmore text\n}}}\n\n", markup);
+	}
+
+	public void testCodeBlockWithLineBreaks() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.CODE, new Attributes());
+		builder.characters("line 1");
+		builder.lineBreak();
+		builder.characters("line 2");
+		builder.lineBreak();
+		builder.lineBreak();
+		builder.characters("line 3");
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		assertEquals("{{{\nline 1\\\\line 2\\\\\\\\line 3\n}}}\n\n", markup);
+	}
+
+	public void testCodeBlockCurlyBraceContent() {
+		assertCodeBlock("{{{\n{something}\n}}}\n\n", "{something}");
+	}
+
+	public void testCodeBlockSquareBraceContent() {
+		assertCodeBlock("{{{\n[something]\n}}}\n\n", "[something]");
+	}
+
+	public void testPreformattedBlockWithLineBreaks() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PREFORMATTED, new Attributes());
+		builder.characters("line 1");
+		builder.lineBreak();
+		builder.characters("line 2");
+		builder.lineBreak();
+		builder.lineBreak();
+		builder.characters("line 3");
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		assertEquals("{{{\nline 1\\\\line 2\\\\\\\\line 3\n}}}\n\n", markup);
+	}
+
+	public void testPreformattedBlockWithCurlyBraceContent() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PREFORMATTED, new Attributes());
+		builder.characters("{somecontent}");
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		assertEquals("{{{\n{somecontent}\n}}}\n\n", markup);
+	}
+
+	public void testParagraphFollowingExtendedBlockCode() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.CODE, new Attributes());
+		builder.characters("text\n\nmore text");
+		builder.endBlock();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("text");
+		builder.endBlock();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("text2");
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		assertEquals("{{{\ntext\n\nmore text\n}}}\n\ntext\n\ntext2\n\n", markup);
+	}
+
 	public void testEmptyBlock() {
 		builder.beginDocument();
 		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
@@ -124,6 +208,18 @@ public class CreoleDocumentBuilderBlockTest extends AbstractCreoleDocumentBuilde
 		builder.endBlock();
 		builder.endDocument();
 		assertMarkup("unsupported\n\n");
+	}
+
+	private void assertCodeBlock(String expected, String content) {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.CODE, new Attributes());
+		builder.characters(content);
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		assertEquals(expected, markup);
 	}
 
 }

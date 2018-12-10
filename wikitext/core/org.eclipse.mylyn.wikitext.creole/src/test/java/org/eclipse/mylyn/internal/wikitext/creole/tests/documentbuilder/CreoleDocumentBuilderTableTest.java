@@ -80,7 +80,6 @@ public class CreoleDocumentBuilderTableTest extends AbstractCreoleDocumentBuilde
 		ImageAttributes attr = new ImageAttributes();
 		attr.setAlt("Alt text");
 		builder.image(attr, "/path/to/img.jpg");
-		builder.endDocument();
 		builder.endBlock();
 
 		builder.endBlock();
@@ -90,6 +89,32 @@ public class CreoleDocumentBuilderTableTest extends AbstractCreoleDocumentBuilde
 		String markup = out.toString();
 
 		assertEquals("|{{/path/to/img.jpg}}|{{/path/to/img.jpg|Alt text}}|\n\n", markup);
+	}
+
+	public void testTableWithCodeSpan() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.TABLE, new Attributes());
+
+		builder.beginBlock(BlockType.TABLE_ROW, new Attributes());
+
+		builder.beginBlock(BlockType.TABLE_CELL_NORMAL, new Attributes());
+		builder.characters("No code");
+		builder.endBlock();
+
+		builder.beginBlock(BlockType.TABLE_CELL_NORMAL, new Attributes());
+		builder.characters("With ");
+		builder.beginSpan(SpanType.CODE, new Attributes());
+		builder.characters("* | /code\\ | *");
+		builder.endSpan();
+		builder.endBlock();
+
+		builder.endBlock();
+		builder.endBlock();
+		builder.endDocument();
+
+		String markup = out.toString();
+
+		assertEquals("|No code|With {{{* | /code\\ | *}}}|\n\n", markup);
 	}
 
 	private void assertTableRow(String expectedMarkup, BlockType cellType) {
