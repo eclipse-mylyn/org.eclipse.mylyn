@@ -42,8 +42,10 @@ public class NowikiBlock extends Block {
 				setClosed(true);
 				return -1;
 			}
+			if (blockLineCount > 2) {
+				builder.characters("\n");
+			}
 			builder.characters(line);
-			builder.characters("\n"); //$NON-NLS-1$
 		}
 		return -1;
 	}

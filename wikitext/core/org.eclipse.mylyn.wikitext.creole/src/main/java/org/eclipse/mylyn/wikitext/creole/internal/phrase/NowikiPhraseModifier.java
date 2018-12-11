@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.creole.internal.phrase;
 
+import org.eclipse.mylyn.wikitext.parser.Attributes;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.parser.markup.PatternBasedElementProcessor;
 import org.eclipse.mylyn.wikitext.parser.markup.phrase.LiteralPhraseModifierProcessor;
@@ -20,6 +22,20 @@ import org.eclipse.mylyn.wikitext.parser.markup.phrase.LiteralPhraseModifierProc
  * @author Igor Malinin
  */
 public class NowikiPhraseModifier extends PatternBasedElement {
+
+	private static class NowikiPhraseModifierProcessor extends LiteralPhraseModifierProcessor {
+
+		public NowikiPhraseModifierProcessor() {
+			super(true);
+		}
+
+		@Override
+		public void emit() {
+			getBuilder().beginSpan(SpanType.CODE, new Attributes());
+			super.emit();
+			getBuilder().endSpan();
+		}
+	}
 
 	@Override
 	public String getPattern(int groupOffset) {
@@ -33,7 +49,7 @@ public class NowikiPhraseModifier extends PatternBasedElement {
 
 	@Override
 	protected PatternBasedElementProcessor newProcessor() {
-		return new LiteralPhraseModifierProcessor(true);
+		return new NowikiPhraseModifierProcessor();
 	}
 
 }

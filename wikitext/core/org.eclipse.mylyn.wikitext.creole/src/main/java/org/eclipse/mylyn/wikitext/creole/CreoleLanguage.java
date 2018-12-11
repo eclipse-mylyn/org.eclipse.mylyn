@@ -12,9 +12,11 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.creole;
 
+import java.io.Writer;
 import java.text.MessageFormat;
 import java.util.List;
 
+import org.eclipse.mylyn.wikitext.creole.internal.CreoleDocumentBuilder;
 import org.eclipse.mylyn.wikitext.creole.internal.block.HeadingBlock;
 import org.eclipse.mylyn.wikitext.creole.internal.block.HorizontalRuleBlock;
 import org.eclipse.mylyn.wikitext.creole.internal.block.ListBlock;
@@ -25,6 +27,7 @@ import org.eclipse.mylyn.wikitext.creole.internal.phrase.EscapePhraseModifier;
 import org.eclipse.mylyn.wikitext.creole.internal.phrase.NowikiPhraseModifier;
 import org.eclipse.mylyn.wikitext.creole.internal.phrase.SimplePhraseModifier;
 import org.eclipse.mylyn.wikitext.creole.internal.token.LinkReplacementToken;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.parser.markup.AbstractMarkupLanguage;
 import org.eclipse.mylyn.wikitext.parser.markup.Block;
@@ -110,6 +113,11 @@ public class CreoleLanguage extends AbstractMarkupLanguage {
 	@Override
 	protected Block createParagraphBlock() {
 		return new ParagraphBlock();
+	}
+
+	@Override
+	public DocumentBuilder createDocumentBuilder(Writer out, boolean formatting) {
+		return new CreoleDocumentBuilder(out);
 	}
 
 }

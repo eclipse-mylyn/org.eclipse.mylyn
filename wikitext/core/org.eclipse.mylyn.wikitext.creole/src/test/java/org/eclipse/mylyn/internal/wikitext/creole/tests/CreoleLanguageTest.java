@@ -198,7 +198,7 @@ public class CreoleLanguageTest extends TestCase {
 	public void testNowiki() {
 		String html = parser.parseToHtml("{{{\nnowiki\ntext\n}}}");
 
-		assertEquals("<pre>nowiki\ntext\n</pre>", content(html));
+		assertEquals("<pre>nowiki\ntext</pre>", content(html));
 	}
 
 	public void testTable() {
