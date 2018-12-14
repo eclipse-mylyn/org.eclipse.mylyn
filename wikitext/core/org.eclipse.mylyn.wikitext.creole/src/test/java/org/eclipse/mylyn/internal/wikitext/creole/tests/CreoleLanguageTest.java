@@ -208,6 +208,12 @@ public class CreoleLanguageTest extends TestCase {
 				content(html));
 	}
 
+	public void testTildeEscape() {
+		String html = parser.parseToHtml("~~ escape ~* escape ~= escape ~| escape ~# escape");
+
+		assertEquals("<p>~ escape * escape = escape | escape # escape</p>", content(html));
+	}
+
 	private String repeat(int i, String string) {
 		StringBuilder buf = new StringBuilder(string.length() * i);
 		for (int x = 0; x < i; ++x) {

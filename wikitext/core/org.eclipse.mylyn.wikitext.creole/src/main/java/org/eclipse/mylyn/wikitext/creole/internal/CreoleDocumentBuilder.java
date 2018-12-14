@@ -50,17 +50,20 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 		private final boolean emitWhenEmpty;
 
+		private final boolean escaping;
+
 		public ContentBlock(BlockType blockType, String prefix, String suffix, int precedingNewlineCount,
-				int trailingNewlineCount, boolean emitWhenEmpty) {
+				int trailingNewlineCount, boolean emitWhenEmpty, boolean escaping) {
 			super(blockType, precedingNewlineCount, trailingNewlineCount);
 			this.prefix = prefix;
 			this.suffix = suffix;
 			this.emitWhenEmpty = emitWhenEmpty;
+			this.escaping = escaping;
 		}
 
 		public ContentBlock(BlockType blockType, String prefix, String suffix, int precedingNewlineCount,
 				int trailingNewlineCount) {
-			this(blockType, prefix, suffix, precedingNewlineCount, trailingNewlineCount, false);
+			this(blockType, prefix, suffix, precedingNewlineCount, trailingNewlineCount, false, true);
 		}
 
 		public ContentBlock(String prefix, String suffix, int precedingNewlineCount, int trailingNewlineCount) {
@@ -73,12 +76,20 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 		@Override
 		public void write(int c) throws IOException {
-			CreoleDocumentBuilder.this.emitContent(c);
+			if (escaping) {
+				CreoleDocumentBuilder.this.emitEscapedContent(c);
+			} else {
+				CreoleDocumentBuilder.this.emitContent(c);
+			}
 		}
 
 		@Override
 		public void write(String s) throws IOException {
-			CreoleDocumentBuilder.this.emitContent(s);
+			if (escaping) {
+				CreoleDocumentBuilder.this.emitEscapedContent(s);
+			} else {
+				CreoleDocumentBuilder.this.emitContent(s);
+			}
 		}
 
 		@Override
@@ -128,7 +139,7 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		private final LinkAttributes attributes;
 
 		LinkBlock(LinkAttributes attributes) {
-			super(null, "", "", 0, 0, true);
+			super(null, "", "", 0, 0, true, true);
 			this.attributes = attributes;
 		}
 
@@ -154,7 +165,7 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	private class TableCellBlock extends ContentBlock {
 
 		public TableCellBlock(BlockType blockType) {
-			super(blockType, blockType == BlockType.TABLE_CELL_NORMAL ? "|" : "|=", "", 0, 0, true);
+			super(blockType, blockType == BlockType.TABLE_CELL_NORMAL ? "|" : "|=", "", 0, 0, true, true);
 		}
 
 		@Override
@@ -183,7 +194,7 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			return new ContentBlock(type, "", "", 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
 		case PREFORMATTED:
 		case CODE:
-			return new ContentBlock(type, "{{{\n", "\n}}}", 2, 2); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock(type, "{{{\n", "\n}}}", 2, 2, false, false); //$NON-NLS-1$ //$NON-NLS-2$
 		case TABLE:
 			return new SuffixBlock(type, "\n"); //$NON-NLS-1$
 		case TABLE_CELL_HEADER:
@@ -226,7 +237,7 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		case DELETED:
 			return new ContentBlock("--", "--"); //$NON-NLS-1$ //$NON-NLS-2$
 		case CODE:
-			return new ContentBlock("{{{", "}}}"); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock(null, "{{{", "}}}", 0, 0, false, false); //$NON-NLS-1$ //$NON-NLS-2$
 		case UNDERLINED:
 			return new ContentBlock("__", "__"); //$NON-NLS-1$ //$NON-NLS-2$
 		default:
@@ -243,17 +254,12 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	@Override
 	public void characters(String text) {
-		String escapedText = escapeTilde(text);
 		assertOpenBlock();
 		try {
-			currentBlock.write(escapedText);
+			currentBlock.write(text);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	private String escapeTilde(String text) {
-		return text != null ? text.replace("~", "&tilde;") : null;
 	}
 
 	@Override
@@ -275,24 +281,25 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		if (url != null) {
 			assertOpenBlock();
 			try {
-				currentBlock.write("{{");
-				currentBlock.write(url);
-				writeImageAttributes(attributes);
-				currentBlock.write("}}");
+				Block imageBlock = new ContentBlock(null, "{{", "}}", 0, 0, false, false);
+				imageBlock.open();
+				imageBlock.write(url);
+				writeImageAttributes(imageBlock, attributes);
+				imageBlock.close();
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
 		}
 	}
 
-	private void writeImageAttributes(Attributes attributes) throws IOException {
+	private void writeImageAttributes(Block imageBlock, Attributes attributes) throws IOException {
 		if (attributes instanceof ImageAttributes) {
 			if (!Strings.isNullOrEmpty(((ImageAttributes) attributes).getAlt())) {
-				currentBlock.write('|');
-				currentBlock.write(((ImageAttributes) attributes).getAlt());
+				imageBlock.write('|');
+				imageBlock.write(((ImageAttributes) attributes).getAlt());
 			} else if (!Strings.isNullOrEmpty(((ImageAttributes) attributes).getTitle())) {
-				currentBlock.write('|');
-				currentBlock.write(((ImageAttributes) attributes).getTitle());
+				imageBlock.write('|');
+				imageBlock.write(((ImageAttributes) attributes).getTitle());
 			}
 		}
 	}
@@ -343,6 +350,21 @@ public class CreoleDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	void emitEscapedContent(String s) throws IOException {
+		if (s != null) {
+			for (int x = 0; x < s.length(); ++x) {
+				emitEscapedContent(s.charAt(x));
+			}
+		}
+	}
+
+	void emitEscapedContent(int c) throws IOException {
+		if (c == '~' || c == '*' || c == '#' || c == '|' || c == '=') {
+			super.emitContent('~');
+		}
+		super.emitContent(c);
 	}
 
 	@Override

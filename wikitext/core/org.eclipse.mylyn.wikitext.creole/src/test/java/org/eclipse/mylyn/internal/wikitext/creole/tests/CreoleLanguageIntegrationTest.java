@@ -55,11 +55,6 @@ public class CreoleLanguageIntegrationTest extends TestCase {
 		assertRoundTripExact("# item 1\n## item 1.A.\n# item 2\n## item 2.A.\n### item 2.A.i.\n### item 2.A.ii.\n");
 	}
 
-	public void testImageLink() {
-		assertRoundTripExact(
-				"This is an image: {{/path/to/img.jpg|An image}}\nThis is an image link: [[http://example.net/|{{/path/to/img.jpg}}]]\nThis is a link: [[http://example.com/|inline link]]\n\n");
-	}
-
 	public void testTable() {
 		assertRoundTripExact("|=H Col 1|=H Col 2|\n|Cell 1 line 1\\\\Cell 1 line 2|Cell 2|\n\n");
 	}
@@ -234,6 +229,27 @@ public class CreoleLanguageIntegrationTest extends TestCase {
 		builder.endDocument();
 		assertParsedHtmlMatchesRoundTrip(
 				"<p>This class is called <code>** /nCreoleLanguageIntegrationTest/n **</code> and it tests Creole markup.</p>",
+				out.toString());
+	}
+
+	public void testEscapedCharacters() {
+		StringWriter out = new StringWriter();
+		DocumentBuilder builder = new CreoleDocumentBuilder(out);
+		builder.beginDocument();
+		builder.characters("~ Tilde ~ * Asterix * # Number # | Pipe |");
+		builder.endDocument();
+		assertParsedHtmlMatchesRoundTrip("<p>~ Tilde ~ * Asterix * # Number # | Pipe |</p>", out.toString());
+	}
+
+	public void testEscapedCharactersInCodeSpan() {
+		StringWriter out = new StringWriter();
+		DocumentBuilder builder = new CreoleDocumentBuilder(out);
+		builder.beginDocument();
+		builder.beginSpan(SpanType.CODE, new Attributes());
+		builder.characters("~ Tilde ~ * Asterix * # Number # | Pipe |");
+		builder.endSpan();
+		builder.endDocument();
+		assertParsedHtmlMatchesRoundTrip("<p><code>~ Tilde ~ * Asterix * # Number # | Pipe |</code></p>",
 				out.toString());
 	}
 

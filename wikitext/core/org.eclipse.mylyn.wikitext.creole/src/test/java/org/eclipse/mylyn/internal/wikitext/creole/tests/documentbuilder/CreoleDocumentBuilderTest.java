@@ -74,7 +74,7 @@ public class CreoleDocumentBuilderTest extends AbstractCreoleDocumentBuilderTest
 		builder.characters("this ~ is interpreted as an escape");
 		builder.endBlock();
 		builder.endDocument();
-		assertMarkup("this &tilde; is interpreted as an escape\n\n");
+		assertMarkup("this ~~ is interpreted as an escape\n\n");
 	}
 
 	public void testEntityReference() {
