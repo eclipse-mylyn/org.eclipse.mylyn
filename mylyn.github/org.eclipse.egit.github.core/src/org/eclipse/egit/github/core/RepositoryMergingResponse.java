@@ -17,6 +17,8 @@ import java.util.List;
 
 /**
  * Repository merging response model class
+ *
+ * @since 5.3
  */
 public class RepositoryMergingResponse implements Serializable {
 

@@ -436,6 +436,7 @@ public class DataService extends GitHubService {
 	 * @param repository
 	 * @return non-null but possibly empty list of references
 	 * @throws IOException
+	 * @since 5.3
 	 */
 	public List<Reference> listTags(IRepositoryIdProvider repository)
 			throws IOException {
@@ -491,6 +492,7 @@ public class DataService extends GitHubService {
 	 * @param repository
 	 * @param reference
 	 * @throws IOException
+	 * @since 5.3
 	 */
 	public void deleteReference(IRepositoryIdProvider repository,
 			Reference reference) throws IOException {
@@ -522,6 +524,7 @@ public class DataService extends GitHubService {
 	 * @param repository
 	 * @param branchName
 	 * @throws IOException
+	 * @since 5.3
 	 */
 	public void deleteBranch(IRepositoryIdProvider repository,
 			String branchName) throws IOException {
@@ -544,6 +547,7 @@ public class DataService extends GitHubService {
 	 * @param repository
 	 * @param tag
 	 * @throws IOException
+	 * @since 5.3
 	 */
 	public void deleteTag(IRepositoryIdProvider repository, Tag tag)
 			throws IOException {
