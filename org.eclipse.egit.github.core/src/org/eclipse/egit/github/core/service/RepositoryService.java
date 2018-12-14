@@ -995,6 +995,7 @@ public class RepositoryService extends GitHubService {
 	 * @param merging
 	 * @return merging result or null if there is nothing to merge
 	 * @throws IOException
+	 * @since 5.3
 	 */
 	public RepositoryMergingResponse mergingBranches(
 			IRepositoryIdProvider repository, RepositoryMerging merging)

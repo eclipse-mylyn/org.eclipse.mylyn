@@ -16,6 +16,8 @@ import java.io.Serializable;
 
 /**
  * Repository merging model class
+ *
+ * @since 5.3
  */
 public class RepositoryMerging implements Serializable {
 
