@@ -5,6 +5,7 @@
 <unit id="com.google.gwt.servlet" version="2.0.4.v20100709-0658"/>
 <unit id="org.antlr.runtime" version="3.0.0.v200803061811"/>
 <unit id="javax.servlet" version="3.0.0.v201112011016"/>
+<unit id="javax.xml.bind" version="2.2.0.v201105210648"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20160221192158/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
