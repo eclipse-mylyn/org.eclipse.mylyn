@@ -12,8 +12,6 @@ Export-Package: org.eclipse.mylyn.commons.core,
  org.eclipse.mylyn.commons.core.storage;x-internal:=true,
  org.eclipse.mylyn.internal.commons.core;x-internal:=true,
  org.eclipse.mylyn.internal.commons.core.operations;x-internal:=true
-Import-package: javax.xml.bind, 
- javax.annotation
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.net
 Bundle-ClassPath: .
