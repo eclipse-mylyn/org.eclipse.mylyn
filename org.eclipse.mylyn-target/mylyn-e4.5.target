@@ -39,6 +39,7 @@
 <unit id="org.apache.xml.serializer" version="2.7.1.v201005080400"/>
 <unit id="org.apache.xerces" version="2.9.0.v201101211617"/>
 <unit id="javax.servlet" version="3.0.0.v201112011016"/>
+<unit id="javax.activation" version="1.1.0.v201211130549"/>
 <unit id="javax.xml.bind" version="2.2.0.v201105210648"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20170516192513/repository"/>
 </location>
