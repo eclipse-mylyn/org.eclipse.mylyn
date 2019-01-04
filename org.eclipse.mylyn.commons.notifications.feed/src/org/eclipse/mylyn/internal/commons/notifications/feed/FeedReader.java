@@ -49,7 +49,7 @@ public class FeedReader {
 	public IStatus parse(InputStream in, IProgressMonitor monitor) {
 
 		try {
-			JAXBContext jc = JAXBContext.newInstance(RSS.class);
+			JAXBContext jc = com.sun.xml.bind.v2.ContextFactory.createContext(new Class[] { RSS.class }, null);
 			Unmarshaller unmarshaller = jc.createUnmarshaller();
 			JAXBElement<RSS> rss = unmarshaller.unmarshal(new StreamSource(in), RSS.class);
 
