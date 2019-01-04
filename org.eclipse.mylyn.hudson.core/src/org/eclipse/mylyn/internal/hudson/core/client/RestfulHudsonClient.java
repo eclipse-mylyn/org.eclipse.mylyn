@@ -451,7 +451,7 @@ public class RestfulHudsonClient {
 	}
 
 	public static <T> T unmarshal(Node node, Class<T> clazz) throws JAXBException {
-		JAXBContext ctx = JAXBContext.newInstance(clazz);
+		JAXBContext ctx = com.sun.xml.bind.v2.ContextFactory.createContext(new Class[] { clazz }, null);
 
 		Unmarshaller unmarshaller = ctx.createUnmarshaller();
 

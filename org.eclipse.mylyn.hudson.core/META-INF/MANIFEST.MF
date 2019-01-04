@@ -9,7 +9,9 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.5.0",
  org.eclipse.mylyn.builds.core,
  org.eclipse.mylyn.commons.core;bundle-version="3.8.0",
  org.eclipse.mylyn.commons.repositories.core;bundle-version="1.0.0",
- org.eclipse.mylyn.commons.repositories.http.core;bundle-version="1.0.0"
+ org.eclipse.mylyn.commons.repositories.http.core;bundle-version="1.0.0",
+ javax.xml.bind;bundle-version="2.2.0",
+ com.sun.xml.bind;bundle-version="2.2.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Localization: plugin
@@ -19,8 +21,6 @@ Export-Package: org.eclipse.mylyn.hudson.core;x-friends:="org.eclipse.mylyn.huds
  org.eclipse.mylyn.internal.hudson.model;x-friends:="org.eclipse.mylyn.hudson.ui"
 Bundle-Activator: org.eclipse.mylyn.internal.hudson.core.HudsonCorePlugin
 Import-Package: com.google.gson;version="[2.7.0,2.9.0)",
- javax.xml.bind;version="[0.0.0,2.3.0)",
- com.sun.xml.bind;version="[0.0.0,2.3.0)",
  org.apache.http;version="[4.4.4,4.5.0)",
  org.apache.http.client;version="[4.5.2,4.6.0)",
  org.apache.http.client.entity;version="[4.5.2,4.6.0)",
