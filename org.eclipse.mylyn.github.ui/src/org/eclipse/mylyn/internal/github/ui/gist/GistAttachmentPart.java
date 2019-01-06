@@ -71,6 +71,7 @@ import org.eclipse.ui.forms.widgets.Section;
  * Gist editor attachment part. Modeled after {@link TaskEditorAttachmentPart}
  * but with less columns.
  */
+@SuppressWarnings("restriction")
 public class GistAttachmentPart extends AbstractTaskEditorPart {
 
 	private static final String ID_POPUP_MENU = "org.eclipse.mylyn.tasks.ui.editor.menu.attachments"; //$NON-NLS-1$

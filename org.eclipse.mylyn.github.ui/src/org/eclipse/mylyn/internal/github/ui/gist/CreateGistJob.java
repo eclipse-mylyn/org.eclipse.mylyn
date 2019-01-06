@@ -32,6 +32,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * Create Gist job class
  */
+@SuppressWarnings("restriction")
 public class CreateGistJob extends Job {
 
 	private String title;
@@ -61,7 +62,6 @@ public class CreateGistJob extends Job {
 	}
 
 	@Override
-	@SuppressWarnings("restriction")
 	protected IStatus run(IProgressMonitor monitor) {
 		try {
 			Gist gist = new Gist().setPublic(isPublic);
@@ -72,6 +72,7 @@ public class CreateGistJob extends Job {
 			final Display display = PlatformUI.getWorkbench().getDisplay();
 			display.asyncExec(new Runnable() {
 
+				@Override
 				public void run() {
 					GistNotificationPopup popup = new GistNotificationPopup(
 							display, created, title, repository);

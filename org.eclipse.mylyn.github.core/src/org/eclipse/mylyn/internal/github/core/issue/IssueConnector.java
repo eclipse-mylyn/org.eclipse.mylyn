@@ -59,6 +59,7 @@ import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 /**
  * GitHub issue repository connector.
  */
+@SuppressWarnings("restriction")
 public class IssueConnector extends RepositoryConnector {
 
 	/**

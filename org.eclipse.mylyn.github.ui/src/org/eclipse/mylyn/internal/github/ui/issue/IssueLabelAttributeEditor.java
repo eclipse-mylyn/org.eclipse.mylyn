@@ -52,6 +52,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 /**
  * Editor part for viewing an issue's labels.
  */
+@SuppressWarnings("restriction")
 public class IssueLabelAttributeEditor extends AbstractAttributeEditor {
 
 	/**
@@ -71,12 +72,14 @@ public class IssueLabelAttributeEditor extends AbstractAttributeEditor {
 					IAction.AS_PUSH_BUTTON);
 		}
 
+		@Override
 		public void run() {
 			InputDialog dialog = new InputDialog(getControl().getShell(),
 					Messages.IssueLabelAttributeEditor_TitleNewLabel,
 					Messages.IssueLabelAttributeEditor_DescriptionNewLabel,
 					"", new IInputValidator() { //$NON-NLS-1$
 
+						@Override
 						public String isValid(String newText) {
 							if (newText == null || newText.trim().length() == 0)
 								return Messages.IssueLabelAttributeEditor_MessageEnterName;
@@ -104,6 +107,7 @@ public class IssueLabelAttributeEditor extends AbstractAttributeEditor {
 			this.label = label;
 		}
 
+		@Override
 		public void run() {
 			if (getTaskAttribute().getValues().contains(label)) {
 				getTaskAttribute().removeValue(label);
@@ -121,6 +125,7 @@ public class IssueLabelAttributeEditor extends AbstractAttributeEditor {
 			setImageDescriptor(GitHubImages.DESC_GITHUB_ISSUE_LABEL);
 		}
 
+		@Override
 		public void run() {
 			if (!getTaskAttribute().getValues().contains(getText())) {
 				getTaskAttribute().addValue(getText());
@@ -133,10 +138,11 @@ public class IssueLabelAttributeEditor extends AbstractAttributeEditor {
 	private Composite displayArea;
 	private boolean layout = false;
 	private Composite labelsArea;
-	private List<CLabel> labelControls = new LinkedList<CLabel>();
+	private List<CLabel> labelControls = new LinkedList<>();
 	private FormToolkit toolkit;
 	private Comparator<String> labelComparator = new Comparator<String>() {
 
+		@Override
 		public int compare(String o1, String o2) {
 			return o1.compareToIgnoreCase(o2);
 		}
@@ -159,7 +165,7 @@ public class IssueLabelAttributeEditor extends AbstractAttributeEditor {
 
 		Image labelImage = GitHubImages
 				.get(GitHubImages.GITHUB_ISSUE_LABEL_OBJ);
-		List<String> labels = new LinkedList<String>(getTaskAttribute()
+		List<String> labels = new LinkedList<>(getTaskAttribute()
 				.getValues());
 		Collections.sort(labels, this.labelComparator);
 		if (!labels.isEmpty())
@@ -169,6 +175,7 @@ public class IssueLabelAttributeEditor extends AbstractAttributeEditor {
 				manager.setRemoveAllWhenShown(true);
 				manager.addMenuListener(new IMenuListener() {
 
+					@Override
 					public void menuAboutToShow(IMenuManager manager) {
 						manager.add(new RemoveLabelAction(label));
 					}
@@ -199,6 +206,7 @@ public class IssueLabelAttributeEditor extends AbstractAttributeEditor {
 	 * @see org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor#createControl(org.eclipse.swt.widgets.Composite,
 	 *      org.eclipse.ui.forms.widgets.FormToolkit)
 	 */
+	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		this.toolkit = toolkit;
 		displayArea = toolkit.createComposite(parent);
@@ -216,10 +224,11 @@ public class IssueLabelAttributeEditor extends AbstractAttributeEditor {
 		manager.setRemoveAllWhenShown(true);
 		manager.addMenuListener(new IMenuListener() {
 
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				manager.add(new NewLabelAction());
 				manager.add(new Separator());
-				List<String> labels = new LinkedList<String>(getTaskAttribute()
+				List<String> labels = new LinkedList<>(getTaskAttribute()
 						.getOptions().values());
 				labels.removeAll(getTaskAttribute().getValues());
 				for (String label : labels)
@@ -230,6 +239,7 @@ public class IssueLabelAttributeEditor extends AbstractAttributeEditor {
 		final Menu menu = manager.createContextMenu(displayArea);
 		addItem.addSelectionListener(new SelectionAdapter() {
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Rectangle toolItemBounds = addItem.getBounds();
 				Point location = toolbar.toDisplay(toolItemBounds.x,

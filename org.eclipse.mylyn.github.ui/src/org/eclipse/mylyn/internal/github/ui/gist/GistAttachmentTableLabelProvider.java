@@ -51,6 +51,7 @@ import org.eclipse.ui.PlatformUI;
  * AttachmentTableLabelProvider directly. Unfortunately, that class changed
  * in non-compatible ways with Mylyn Tasks 3.23.0.
  */
+@SuppressWarnings("restriction")
 public class GistAttachmentTableLabelProvider extends ColumnLabelProvider {
 
 	private final AttachmentSizeFormatter sizeFormatter = AttachmentSizeFormatter.getInstance();

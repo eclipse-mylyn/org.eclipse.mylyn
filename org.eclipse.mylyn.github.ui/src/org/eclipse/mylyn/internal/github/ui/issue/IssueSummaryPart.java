@@ -34,6 +34,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  * Issue summary task editor part modeled after {@link TaskEditorSummaryPart}
  * but displaying reporter and assignee avatar images.
  */
+@SuppressWarnings("restriction")
 public class IssueSummaryPart extends AbstractTaskEditorPart {
 
 	/**
@@ -49,7 +50,7 @@ public class IssueSummaryPart extends AbstractTaskEditorPart {
 
 	/**
 	 * Create issue summary part
-	 * 
+	 *
 	 * @param reporterAvatarId
 	 * @param assigneeAvatarId
 	 */
@@ -150,10 +151,11 @@ public class IssueSummaryPart extends AbstractTaskEditorPart {
 
 	/**
 	 * Create control
-	 * 
+	 *
 	 * @param parent
 	 * @param toolkit
 	 */
+	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		Composite composite = toolkit.createComposite(parent);
 		GridLayout layout = EditorUtil.createSectionClientLayout();
@@ -232,6 +234,7 @@ public class IssueSummaryPart extends AbstractTaskEditorPart {
 	/**
 	 * @see org.eclipse.ui.forms.AbstractFormPart#setFocus()
 	 */
+	@Override
 	public void setFocus() {
 		if (summaryEditor != null)
 			summaryEditor.getControl().setFocus();
