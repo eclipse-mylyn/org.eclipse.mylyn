@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -71,6 +72,26 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
  */
 public class BuildServerPart extends RepositoryLocationPart {
 
+	private boolean urlValid = false;
+
+	private Button refreshButton = null;
+
+	public class BuildServerPartUrlValidator extends UrlValidator {
+		public IStatus validate(Object value) {
+			IStatus validationStatus = super.validate(value);
+			urlValid = validationStatus == Status.OK_STATUS;
+			if (refreshButton != null) {
+				refreshButton.setEnabled(urlValid);
+			}
+			return validationStatus;
+		}
+	}
+
+	@Override
+	protected UpdateValueStrategy getUrlUpdateValueStrategy() {
+		return new UpdateValueStrategy().setAfterConvertValidator(new BuildServerPartUrlValidator());
+	}
+
 	private class CheckboxFilteredTree extends FilteredTree {
 
 		public CheckboxFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
@@ -121,8 +142,8 @@ public class BuildServerPart extends RepositoryLocationPart {
 				}
 				return result;
 			} catch (CoreException e) {
-				return new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN, NLS.bind("Server validation failed: {0}",
-						e.getMessage()), e);
+				return new Status(IStatus.ERROR, BuildsUiPlugin.ID_PLUGIN,
+						NLS.bind("Server validation failed: {0}", e.getMessage()), e);
 			}
 		}
 
@@ -167,11 +188,11 @@ public class BuildServerPart extends RepositoryLocationPart {
 
 	@Override
 	public boolean canValidate() {
-		return true;
+		return super.canValidate() && urlValid;
 	}
 
 	private void createButtons(Composite section) {
-		Button refreshButton = new Button(section, SWT.PUSH);
+		refreshButton = new Button(section, SWT.PUSH);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(refreshButton);
 		refreshButton.setText("&Refresh");
 		refreshButton.addSelectionListener(new SelectionAdapter() {
@@ -180,6 +201,7 @@ public class BuildServerPart extends RepositoryLocationPart {
 				validate();
 			}
 		});
+		refreshButton.setEnabled(urlValid);
 
 		Button selectAllButton = new Button(section, SWT.PUSH);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(selectAllButton);
