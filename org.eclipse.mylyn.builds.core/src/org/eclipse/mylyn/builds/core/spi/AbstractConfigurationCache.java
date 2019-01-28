@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.builds.core.spi;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -116,10 +117,8 @@ public abstract class AbstractConfigurationCache<C extends Serializable> {
 		if (cacheFile == null) {
 			return;
 		}
-
-		ObjectOutputStream out = null;
-		try {
-			out = new ObjectOutputStream(new FileOutputStream(cacheFile));
+		try (ObjectOutputStream out = new ObjectOutputStream(
+				new BufferedOutputStream(new FileOutputStream(cacheFile)))) {
 			out.writeInt(configurationByUrl.size());
 			for (String url : configurationByUrl.keySet()) {
 				out.writeObject(url);
@@ -128,14 +127,6 @@ public abstract class AbstractConfigurationCache<C extends Serializable> {
 		} catch (IOException e) {
 			StatusHandler.log(new Status(IStatus.WARNING, BuildsCorePlugin.ID_PLUGIN,
 					"The respository configuration cache could not be written", e)); //$NON-NLS-1$
-		} finally {
-			if (out != null) {
-				try {
-					out.close();
-				} catch (IOException e) {
-					// ignore
-				}
-			}
 		}
 	}
 
