@@ -13,6 +13,7 @@ package org.eclipse.mylyn.commons.sdk.util;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -38,8 +39,6 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import junit.framework.AssertionFailedError;
-
 import org.apache.commons.lang.reflect.MethodUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
@@ -54,6 +53,8 @@ import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
 import org.eclipse.osgi.service.resolver.VersionRange;
 import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Bundle;
+
+import junit.framework.AssertionFailedError;
 
 /**
  * @author Steffen Pingel
@@ -92,16 +93,9 @@ public class CommonTestUtil {
 	 * Copies the given source file to the given destination file.
 	 */
 	public static void copy(File source, File dest) throws IOException {
-		InputStream in = new FileInputStream(source);
-		try {
-			OutputStream out = new FileOutputStream(dest);
-			try {
-				transferData(in, out);
-			} finally {
-				out.close();
-			}
-		} finally {
-			in.close();
+		try (InputStream in = new FileInputStream(source);
+				OutputStream out = new BufferedOutputStream(new FileOutputStream(dest))) {
+			transferData(in, out);
 		}
 	}
 
@@ -274,8 +268,8 @@ public class CommonTestUtil {
 					return checkNotNull(getFileFromClassLoaderBeforeLuna(filename, classLoader));
 				}
 			} catch (Exception e) {
-				AssertionFailedError exception = new AssertionFailedError(NLS.bind(
-						"Could not locate {0} using classloader for {1}", filename, clazz));
+				AssertionFailedError exception = new AssertionFailedError(
+						NLS.bind("Could not locate {0} using classloader for {1}", filename, clazz));
 				exception.initCause(e);
 				throw exception;
 			}
@@ -457,27 +451,9 @@ public class CommonTestUtil {
 				String entryName = entry.getName();
 				File file = new File(dstDir, changeSeparator(entryName, '/', File.separatorChar));
 				file.getParentFile().mkdirs();
-				InputStream src = null;
-				OutputStream dst = null;
-				try {
-					src = zipFile.getInputStream(entry);
-					dst = new FileOutputStream(file);
+				try (InputStream src = zipFile.getInputStream(entry);
+						OutputStream dst = new BufferedOutputStream(new FileOutputStream(file))) {
 					transferData(src, dst);
-				} finally {
-					if (dst != null) {
-						try {
-							dst.close();
-						} catch (IOException e) {
-							// don't need to catch this
-						}
-					}
-					if (src != null) {
-						try {
-							src.close();
-						} catch (IOException e) {
-							// don't need to catch this
-						}
-					}
 				}
 			}
 		} finally {

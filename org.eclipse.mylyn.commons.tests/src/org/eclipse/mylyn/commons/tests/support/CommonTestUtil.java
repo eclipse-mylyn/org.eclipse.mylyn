@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.commons.tests.support;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -38,7 +39,7 @@ public class CommonTestUtil {
 	/**
 	 * Returns the given file path with its separator character changed from the given old separator to the given new
 	 * separator.
-	 * 
+	 *
 	 * @param path
 	 *            a file path
 	 * @param oldSeparator
@@ -56,16 +57,8 @@ public class CommonTestUtil {
 	 * Copies the given source file to the given destination file.
 	 */
 	public static void copy(File source, File dest) throws IOException {
-		InputStream in = new FileInputStream(source);
-		try {
-			OutputStream out = new FileOutputStream(dest);
-			try {
+		try (InputStream in = new FileInputStream(source); OutputStream out = new BufferedOutputStream(new FileOutputStream(dest))) {
 				transferData(in, out);
-			} finally {
-				out.close();
-			}
-		} finally {
-			in.close();
 		}
 	}
 
@@ -81,8 +74,8 @@ public class CommonTestUtil {
 				File destDir = new File(targetFolder, currFile.getName());
 				if (!destDir.exists()) {
 					if (!destDir.mkdir()) {
-						throw new IOException("Unable to create destination context folder: "
-								+ destDir.getAbsolutePath());
+						throw new IOException(
+								"Unable to create destination context folder: " + destDir.getAbsolutePath());
 					}
 				}
 				for (File file : currFile.listFiles()) {
@@ -178,7 +171,7 @@ public class CommonTestUtil {
 
 	/**
 	 * Copies all bytes in the given source stream to the given destination stream. Neither streams are closed.
-	 * 
+	 *
 	 * @param source
 	 *            the given source stream
 	 * @param destination
@@ -197,7 +190,7 @@ public class CommonTestUtil {
 	/**
 	 * Unzips the given zip file to the given destination directory extracting only those entries the pass through the
 	 * given filter.
-	 * 
+	 *
 	 * @param zipFile
 	 *            the zip file to unzip
 	 * @param dstDir
@@ -222,27 +215,9 @@ public class CommonTestUtil {
 				String entryName = entry.getName();
 				File file = new File(dstDir, changeSeparator(entryName, '/', File.separatorChar));
 				file.getParentFile().mkdirs();
-				InputStream src = null;
-				OutputStream dst = null;
-				try {
-					src = zipFile.getInputStream(entry);
-					dst = new FileOutputStream(file);
+				try (InputStream src = zipFile.getInputStream(entry);
+						OutputStream dst = new BufferedOutputStream(new FileOutputStream(file))) {
 					transferData(src, dst);
-				} finally {
-					if (dst != null) {
-						try {
-							dst.close();
-						} catch (IOException e) {
-							// don't need to catch this
-						}
-					}
-					if (src != null) {
-						try {
-							src.close();
-						} catch (IOException e) {
-							// don't need to catch this
-						}
-					}
 				}
 			}
 		} finally {

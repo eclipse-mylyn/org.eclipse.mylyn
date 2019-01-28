@@ -64,11 +64,8 @@ public class WebUtil {
 	 */
 	public static IStatus download(URI uri, File target, IProgressMonitor monitor) throws IOException {
 		IStatus result;
-		OutputStream out = new BufferedOutputStream(new FileOutputStream(target));
-		try {
+		try (OutputStream out = new BufferedOutputStream(new FileOutputStream(target))) {
 			result = download(uri, out, monitor);
-		} finally {
-			out.close();
 		}
 		if (!result.isOK()) {
 			target.delete();

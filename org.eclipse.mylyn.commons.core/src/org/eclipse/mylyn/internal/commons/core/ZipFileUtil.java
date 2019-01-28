@@ -35,7 +35,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 
 /**
  * Contains utility methods for working with zip files
- * 
+ *
  * @author Wesley Coelho
  * @author Shawn Minto (Wrote methods that were moved here)
  */
@@ -43,7 +43,7 @@ public class ZipFileUtil {
 
 	/**
 	 * Only unzips files in zip file not directories
-	 * 
+	 *
 	 * @param zipped
 	 *            file
 	 * @param destPath
@@ -52,8 +52,7 @@ public class ZipFileUtil {
 	 */
 	public static List<File> unzipFiles(File zippedfile, String destPath, IProgressMonitor monitor)
 			throws FileNotFoundException, IOException {
-		ZipFile zipFile = new ZipFile(zippedfile);
-		try {
+		try (ZipFile zipFile = new ZipFile(zippedfile)) {
 			Enumeration<? extends ZipEntry> entries = zipFile.entries();
 			List<File> outputFiles = new ArrayList<File>();
 			File destinationFile = new File(destPath);
@@ -72,16 +71,9 @@ public class ZipFileUtil {
 					outputFile.getParentFile().mkdirs();
 				}
 
-				InputStream inputStream = new BufferedInputStream(zipFile.getInputStream(entry));
-				try {
-					OutputStream outStream = new BufferedOutputStream(new FileOutputStream(outputFile));
-					try {
-						copyStream(inputStream, outStream);
-					} finally {
-						outStream.close();
-					}
-				} finally {
-					inputStream.close();
+				try (InputStream inputStream = new BufferedInputStream(zipFile.getInputStream(entry));
+						OutputStream outStream = new BufferedOutputStream(new FileOutputStream(outputFile))) {
+					copyStream(inputStream, outStream);
 				}
 
 				outputFiles.add(outputFile);
@@ -90,8 +82,6 @@ public class ZipFileUtil {
 				}
 			}
 			return outputFiles;
-		} finally {
-			zipFile.close();
 		}
 	}
 
@@ -140,8 +130,7 @@ public class ZipFileUtil {
 			rootPath += "/"; //$NON-NLS-1$
 		}
 
-		ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
-		try {
+		try (ZipOutputStream zipOut = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(zipFile)))) {
 			for (File file : files) {
 				try {
 					addZipEntry(zipOut, rootPath, file);
@@ -153,16 +142,14 @@ public class ZipFileUtil {
 							+ file.getName() + " to zip", e)); //$NON-NLS-1$
 				}
 			}
-		} finally {
-			zipOut.close();
 		}
 	}
 
 	/**
 	 * @author Shawn Minto
 	 */
-	private static void addZipEntry(ZipOutputStream zipOut, String rootPath, File file) throws FileNotFoundException,
-			IOException {
+	private static void addZipEntry(ZipOutputStream zipOut, String rootPath, File file)
+			throws FileNotFoundException, IOException {
 		if (file.exists()) {
 			if (file.isDirectory()) {
 				for (File child : file.listFiles()) {
