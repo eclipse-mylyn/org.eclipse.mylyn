@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.bugzilla.core;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -206,15 +207,16 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			if (isComplete) {
 				Date completionDate = null;
 
-				List<TaskAttribute> taskComments = taskData.getAttributeMapper().getAttributesByType(taskData,
-						TaskAttribute.TYPE_COMMENT);
+				List<TaskAttribute> taskComments = taskData.getAttributeMapper()
+						.getAttributesByType(taskData, TaskAttribute.TYPE_COMMENT);
 				if (taskComments != null && taskComments.size() > 0) {
 					TaskAttribute lastComment = taskComments.get(taskComments.size() - 1);
 					if (lastComment != null) {
 						TaskAttribute attributeCommentDate = lastComment.getMappedAttribute(TaskAttribute.COMMENT_DATE);
 						if (attributeCommentDate != null) {
 							try {
-								completionDate = new SimpleDateFormat(COMMENT_FORMAT).parse(attributeCommentDate.getValue());
+								completionDate = new SimpleDateFormat(COMMENT_FORMAT)
+										.parse(attributeCommentDate.getValue());
 							} catch (ParseException e) {
 								// ignore
 							}
@@ -224,8 +226,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 				if (completionDate == null) {
 					// Use last modified date
-					TaskAttribute attributeLastModified = taskData.getRoot().getMappedAttribute(
-							TaskAttribute.DATE_MODIFICATION);
+					TaskAttribute attributeLastModified = taskData.getRoot()
+							.getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
 					if (attributeLastModified != null && attributeLastModified.getValue().length() > 0) {
 						completionDate = taskData.getAttributeMapper().getDateValue(attributeLastModified);
 					}
@@ -277,8 +279,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 		monitor = Policy.monitorFor(monitor);
 		try {
-			monitor.beginTask(Messages.BugzillaRepositoryConnector_checking_for_changed_tasks, session.getTasks()
-					.size());
+			monitor.beginTask(Messages.BugzillaRepositoryConnector_checking_for_changed_tasks,
+					session.getTasks().size());
 
 			if (repository.getSynchronizationTimeStamp() == null) {
 				for (ITask task : session.getTasks()) {
@@ -331,15 +333,16 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		} catch (UnsupportedEncodingException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 					"Repository configured with unsupported encoding: " + repository.getCharacterEncoding() //$NON-NLS-1$
-					+ "\n\n Unable to determine changed tasks.", e)); //$NON-NLS-1$
+							+ "\n\n Unable to determine changed tasks.", //$NON-NLS-1$
+					e));
 		} finally {
 			monitor.done();
 		}
 	}
 
 	private void queryForChanged(final TaskRepository repository, Set<ITask> changedTasks, String urlQueryString,
-			ISynchronizationSession syncSession, IProgressMonitor monitor) throws UnsupportedEncodingException,
-			CoreException {
+			ISynchronizationSession syncSession, IProgressMonitor monitor)
+			throws UnsupportedEncodingException, CoreException {
 
 		HashMap<String, ITask> taskById = new HashMap<String, ITask>();
 		for (ITask task : syncSession.getTasks()) {
@@ -403,8 +406,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			return new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, IStatus.INFO,
 					Messages.BugzillaRepositoryConnector_Unrecognized_response_from_server, e);
 		} catch (IOException e) {
-			return new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, IStatus.ERROR, MessageFormat.format(
-					Messages.BugzillaRepositoryConnector_Check_repository_configuration, e.getMessage()), e);
+			return new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, IStatus.ERROR, MessageFormat
+					.format(Messages.BugzillaRepositoryConnector_Check_repository_configuration, e.getMessage()), e);
 		} catch (CoreException e) {
 			return e.getStatus();
 		} finally {
@@ -460,7 +463,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateRepositoryConfiguration(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
+	public void updateRepositoryConfiguration(TaskRepository repository, IProgressMonitor monitor)
+			throws CoreException {
 		if (repository != null) {
 			getRepositoryConfiguration(repository, true, monitor);
 		}
@@ -663,7 +667,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 			@Override
 			public PriorityLevel getPriorityLevel() {
-				RepositoryConfiguration repositoryConfiguration = BugzillaRepositoryConnector.this.getRepositoryConfiguration(taskData.getRepositoryUrl());
+				RepositoryConfiguration repositoryConfiguration = BugzillaRepositoryConnector.this
+						.getRepositoryConfiguration(taskData.getRepositoryUrl());
 				String priority = getPriority();
 				if (repositoryConfiguration == null) {
 					// When we did not have the configuration we only can use the standard Priorities
@@ -694,8 +699,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 					}
 				}
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN,
-						ERROR_INCOMPATIBLE_CONFIGURATION));
+				StatusHandler
+						.log(new Status(IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN, ERROR_INCOMPATIBLE_CONFIGURATION));
 				try {
 					if (in != null) {
 						in.close();
@@ -779,7 +784,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				if (configuration == null) {
 					throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 							RepositoryStatus.ERROR_INTERNAL, "Failed to retrieve repository configuration for " //$NON-NLS-1$
-							+ repository.getRepositoryUrl().toString()));
+									+ repository.getRepositoryUrl().toString()));
 
 				}
 				return configuration;
@@ -818,32 +823,26 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	/** public for testing */
 	public void writeRepositoryConfigFile() {
 		if (repositoryConfigurationFile != null) {
-			ObjectOutputStream out = null;
 			try {
 				Set<RepositoryConfiguration> tempConfigs;
 				synchronized (repositoryConfigurations) {
 					tempConfigs = new HashSet<RepositoryConfiguration>(repositoryConfigurations.values());
 				}
+
 				if (tempConfigs.size() > 0) {
-					out = new ObjectOutputStream(new FileOutputStream(repositoryConfigurationFile));
-					out.writeInt(tempConfigs.size());
-					for (RepositoryConfiguration repositoryConfiguration : tempConfigs) {
-						if (repositoryConfiguration != null) {
-							out.writeObject(repositoryConfiguration);
+					try (ObjectOutputStream out = new ObjectOutputStream(
+							new BufferedOutputStream(new FileOutputStream(repositoryConfigurationFile)))) {
+						out.writeInt(tempConfigs.size());
+						for (RepositoryConfiguration repositoryConfiguration : tempConfigs) {
+							if (repositoryConfiguration != null) {
+								out.writeObject(repositoryConfiguration);
+							}
 						}
 					}
 				}
 			} catch (IOException e) {
 				StatusHandler.log(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN, 0,
 						"Failed to write repository configuration cache", e)); //$NON-NLS-1$
-			} finally {
-				if (out != null) {
-					try {
-						out.close();
-					} catch (IOException e) {
-						// ignore
-					}
-				}
 			}
 		}
 	}
@@ -860,8 +859,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		// set both or none
 		if (null != os && null != platform) {
 			TaskAttribute opSysAttribute = newBugModel.getRoot().getAttribute(BugzillaAttribute.OP_SYS.getKey());
-			TaskAttribute platformAttribute = newBugModel.getRoot().getAttribute(
-					BugzillaAttribute.REP_PLATFORM.getKey());
+			TaskAttribute platformAttribute = newBugModel.getRoot()
+					.getAttribute(BugzillaAttribute.REP_PLATFORM.getKey());
 
 			// TODO something can still go wrong when the allowed values on the repository change...
 			opSysAttribute.setValue(os);
@@ -879,8 +878,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			// Check that the result is in Values, if it is not, set it to other
 			// Defaults to the first of each (sorted) list All, All
 			TaskAttribute opSysAttribute = newBugModel.getRoot().getAttribute(BugzillaAttribute.OP_SYS.getKey());
-			TaskAttribute platformAttribute = newBugModel.getRoot().getAttribute(
-					BugzillaAttribute.REP_PLATFORM.getKey());
+			TaskAttribute platformAttribute = newBugModel.getRoot()
+					.getAttribute(BugzillaAttribute.REP_PLATFORM.getKey());
 
 			String OS = Platform.getOS();
 			String platform = Platform.getOSArch();

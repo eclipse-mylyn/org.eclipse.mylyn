@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.tasks.index.tests;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -50,15 +51,12 @@ public class TaskListIndexCorruptTest extends AbstractTaskListIndexTest {
 	private void corruptFile(File file) throws IOException {
 		Random random = new Random(123);
 		long length = file.length();
-		OutputStream stream = new FileOutputStream(file);
-		try {
+		try (OutputStream stream = new BufferedOutputStream(new FileOutputStream(file))) {
 			byte[] bytes = new byte[1];
 			for (long i = 0; i < length; ++i) {
 				random.nextBytes(bytes);
 				stream.write(bytes[0]);
 			}
-		} finally {
-			stream.close();
 		}
 	}
 

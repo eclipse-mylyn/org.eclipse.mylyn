@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -67,7 +68,7 @@ import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
  * A wizard to add a new attachment to a task report.
- * 
+ *
  * @since 3.0
  * @author Steffen Pingel
  */
@@ -216,11 +217,8 @@ public class TaskAttachmentWizard extends Wizard {
 						ImageLoader loader = new ImageLoader();
 						loader.data = new ImageData[] { image.getImageData() };
 						// TODO create image in memory?
-						FileOutputStream out = new FileOutputStream(file);
-						try {
+						try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(file))) {
 							loader.save(out, SWT.IMAGE_PNG);
-						} finally {
-							out.close();
 						}
 					} finally {
 						image.dispose();
@@ -314,8 +312,8 @@ public class TaskAttachmentWizard extends Wizard {
 		previewPage = new AttachmentPreviewPage(model);
 		addPage(previewPage);
 
-		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(model.getTaskRepository()
-				.getConnectorKind());
+		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin
+				.getConnectorUi(model.getTaskRepository().getConnectorKind());
 		editPage = connectorUi.getTaskAttachmentPage(model);
 		addPage(editPage);
 
@@ -352,8 +350,8 @@ public class TaskAttachmentWizard extends Wizard {
 	@Override
 	public boolean performFinish() {
 		SubmitJob job = TasksUiInternal.getJobFactory()
-				.createSubmitTaskAttachmentJob(connector, model.getTaskRepository(), model.getTask(),
-						model.getSource(), model.getComment(), model.getAttribute());
+				.createSubmitTaskAttachmentJob(connector, model.getTaskRepository(), model.getTask(), model.getSource(),
+						model.getComment(), model.getAttribute());
 		final boolean attachContext = model.getAttachContext();
 		job.addSubmitJobListener(new SubmitJobListener() {
 			@Override
@@ -420,7 +418,8 @@ public class TaskAttachmentWizard extends Wizard {
 			return job.getStatus() == null;
 		} catch (InvocationTargetException e) {
 			StatusManager.getManager()
-					.handle(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unexpected error", e), StatusManager.SHOW | StatusManager.LOG); //$NON-NLS-1$
+					.handle(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unexpected error", e), //$NON-NLS-1$
+							StatusManager.SHOW | StatusManager.LOG);
 			return false;
 		} catch (InterruptedException e) {
 			// canceled

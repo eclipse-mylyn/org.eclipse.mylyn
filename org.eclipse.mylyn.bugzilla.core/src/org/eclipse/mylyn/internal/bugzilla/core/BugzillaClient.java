@@ -13,6 +13,7 @@
 
 package org.eclipse.mylyn.internal.bugzilla.core;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -1654,9 +1655,8 @@ public class BugzillaClient {
 							value = a.getValue();
 							if (value.equals("?") && requestee != null) { //$NON-NLS-1$
 								fields.put("requestee_type-" + flagTypeNumber, //$NON-NLS-1$
-										new NameValuePair(
-												"requestee_type-" //$NON-NLS-1$
-														+ flagTypeNumber,
+										new NameValuePair("requestee_type-" //$NON-NLS-1$
+												+ flagTypeNumber,
 												requestee.getValue() != null ? requestee.getValue() : "")); //$NON-NLS-1$
 							}
 						}
@@ -1671,9 +1671,8 @@ public class BugzillaClient {
 						}
 						if (value.equals("?") && requestee != null) { //$NON-NLS-1$
 							fields.put("requestee-" + flagnumber.getValue(), //$NON-NLS-1$
-									new NameValuePair(
-											"requestee-" //$NON-NLS-1$
-													+ flagnumber.getValue(),
+									new NameValuePair("requestee-" //$NON-NLS-1$
+											+ flagnumber.getValue(),
 											requestee.getValue() != null ? requestee.getValue() : "")); //$NON-NLS-1$
 						}
 					} else if (id.startsWith(TaskAttribute.PREFIX_COMMENT)) {
@@ -2687,14 +2686,14 @@ public class BugzillaClient {
 		GzipGetMethod method = null;
 		try {
 			method = getConnect(loginUrl, monitor);
-			InputStream input = null;
 
 			File file = new File(changeSeparator(transFile, '/', File.separatorChar));
 			file.getParentFile().mkdirs();
 
-			FileOutputStream output = new FileOutputStream(transFile);
-			input = getResponseStream(method, monitor);
-			transferData(input, output);
+			try (InputStream input = getResponseStream(method, monitor);
+					BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(transFile))) {
+				transferData(input, output);
+			}
 		} finally {
 			if (method != null) {
 				WebUtil.releaseConnection(method, monitor);
@@ -2706,6 +2705,7 @@ public class BugzillaClient {
 		return connector;
 	}
 
+	@SuppressWarnings("restriction")
 	public TaskRepository getTaskRepository() {
 		if (location instanceof TaskRepositoryLocation) {
 			return ((TaskRepositoryLocation) location).getTaskRepository();

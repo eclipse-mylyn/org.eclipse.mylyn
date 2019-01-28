@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.trac.core;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -33,7 +34,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 
 /**
  * Caches {@link ITracClient} objects.
- * 
+ *
  * @author Steffen Pingel
  */
 public class TracClientManager implements IRepositoryListener {
@@ -134,10 +135,8 @@ public class TracClientManager implements IRepositoryListener {
 		if (cacheFile == null) {
 			return;
 		}
-
-		ObjectOutputStream out = null;
-		try {
-			out = new ObjectOutputStream(new FileOutputStream(cacheFile));
+		try (ObjectOutputStream out = new ObjectOutputStream(
+				new BufferedOutputStream(new FileOutputStream(cacheFile)))) {
 			out.writeInt(clientDataByUrl.size());
 			for (String url : clientDataByUrl.keySet()) {
 				out.writeObject(url);
@@ -146,14 +145,6 @@ public class TracClientManager implements IRepositoryListener {
 		} catch (IOException e) {
 			StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.ID_PLUGIN,
 					"The Trac respository configuration cache could not be written", e)); //$NON-NLS-1$
-		} finally {
-			if (out != null) {
-				try {
-					out.close();
-				} catch (IOException e) {
-					// ignore
-				}
-			}
 		}
 	}
 

@@ -412,8 +412,8 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		taskData.getRoot()
 				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())
 				.setValue("M2");
-		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskData, null,
-				null);
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository())
+				.postTaskData(taskData, null, null);
 		assertEquals(ResponseKind.TASK_CREATED, reposonse.getReposonseKind());
 	}
 
@@ -461,8 +461,8 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		TaskMapper mapper1 = new TaskMapper(taskData);
 		connector.getTaskMapping(taskDataSubmit).merge(mapper1);
 
-		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskDataSubmit,
-				null, null);
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository())
+				.postTaskData(taskDataSubmit, null, null);
 		assertEquals(ResponseKind.TASK_CREATED, reposonse.getReposonseKind());
 	}
 
@@ -563,7 +563,8 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		assertEquals(
 				IOUtils.toString(
 						CommonTestUtil.getResource(this, actualFixture.getTestDataFolder() + "/taskDataFlags.txt")),
-				flags.toString());	}
+				flags.toString());
+	}
 
 	@Test
 	public void testUpdateTaskData() throws Exception {
@@ -597,8 +598,8 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		changed.add(attribute);
 
 		//Act
-		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskDataGet,
-				changed, null);
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository())
+				.postTaskData(taskDataGet, changed, null);
 		assertNotNull(reposonse);
 		assertNotNull(reposonse.getReposonseKind());
 		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_UPDATED));
@@ -636,8 +637,8 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		changed.add(attribute);
 
 		//Act
-		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskDataGet,
-				changed, null);
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository())
+				.postTaskData(taskDataGet, changed, null);
 		assertNotNull(reposonse);
 		assertNotNull(reposonse.getReposonseKind());
 		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_UPDATED));
@@ -700,18 +701,13 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		BugzillaRestTaskAttachmentHandler attachmentHandler = new BugzillaRestTaskAttachmentHandler(connector);
 		ITask task = new TaskTask(actualFixture.repository().getConnectorKind(),
 				actualFixture.repository().getRepositoryUrl(), taskId);
-
-		InputStream in = CommonTestUtil.getResource(this, "testdata/icons/bugzilla-logo.gif");
 		File file = File.createTempFile("attachment", null);
 		file.deleteOnExit();
-		OutputStream out = new FileOutputStream(file);
-		try {
-			IOUtils.copy(in, out);
-		} finally {
-			in.close();
-			out.close();
-		}
 
+		try (OutputStream out = new FileOutputStream(file);
+				InputStream in = CommonTestUtil.getResource(this, "testdata/icons/bugzilla-logo.gif")) {
+			IOUtils.copy(in, out);
+		}
 		FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(file);
 		attachment.setContentType("image/gif");
 		attachment.setDescription("My Attachment 2");
@@ -774,16 +770,11 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		BugzillaRestTaskAttachmentHandler attachmentHandler = new BugzillaRestTaskAttachmentHandler(connector);
 		ITask task = new TaskTask(actualFixture.repository().getConnectorKind(),
 				actualFixture.repository().getRepositoryUrl(), taskId);
-
-		InputStream in = CommonTestUtil.getResource(this, "testdata/AttachmentTest.txt");
 		File file = File.createTempFile("attachment", null);
 		file.deleteOnExit();
-		OutputStream out = new FileOutputStream(file);
-		try {
+		try (OutputStream out = new FileOutputStream(file);
+				InputStream in = CommonTestUtil.getResource(this, "testdata/AttachmentTest.txt")) {
 			IOUtils.copy(in, out);
-		} finally {
-			in.close();
-			out.close();
 		}
 
 		FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(file);
@@ -861,10 +852,11 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		taskData.getRoot()
 				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())
 				.setValue("M2");
-		taskData.getRoot().getAttribute(BugzillaRestCreateTaskSchema.getDefault().CC.getKey()).setValue(
-				"admin@mylyn.eclipse.org, tests@mylyn.eclipse.org");
-		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskData, null,
-				null);
+		taskData.getRoot()
+				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().CC.getKey())
+				.setValue("admin@mylyn.eclipse.org, tests@mylyn.eclipse.org");
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository())
+				.postTaskData(taskData, null, null);
 		assertNotNull(reposonse);
 		assertNotNull(reposonse.getReposonseKind());
 		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_CREATED));
@@ -914,10 +906,11 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		taskData.getRoot()
 				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())
 				.setValue("M2");
-		taskData.getRoot().getAttribute(BugzillaRestCreateTaskSchema.getDefault().BLOCKS.getKey()).setValue(
-				taskIdRel[0] + ", " + taskIdRel[1]);
-		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskData, null,
-				null);
+		taskData.getRoot()
+				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().BLOCKS.getKey())
+				.setValue(taskIdRel[0] + ", " + taskIdRel[1]);
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository())
+				.postTaskData(taskData, null, null);
 		assertNotNull(reposonse);
 		assertNotNull(reposonse.getReposonseKind());
 		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_CREATED));
@@ -967,10 +960,11 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		taskData.getRoot()
 				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().TARGET_MILESTONE.getKey())
 				.setValue("M2");
-		taskData.getRoot().getAttribute(BugzillaRestCreateTaskSchema.getDefault().DEPENDS_ON.getKey()).setValue(
-				taskIdRel[0] + ", " + taskIdRel[1]);
-		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskData, null,
-				null);
+		taskData.getRoot()
+				.getAttribute(BugzillaRestCreateTaskSchema.getDefault().DEPENDS_ON.getKey())
+				.setValue(taskIdRel[0] + ", " + taskIdRel[1]);
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository())
+				.postTaskData(taskData, null, null);
 		assertNotNull(reposonse);
 		assertNotNull(reposonse.getReposonseKind());
 		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_CREATED));
@@ -995,8 +989,8 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		changed.add(attribute);
 
 		//Act
-		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskDataGet,
-				changed, null);
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository())
+				.postTaskData(taskDataGet, changed, null);
 		assertNotNull(reposonse);
 		assertNotNull(reposonse.getReposonseKind());
 		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_UPDATED));
@@ -1045,8 +1039,8 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		changed.add(taskDataOld.getRoot().getAttribute(BugzillaRestTaskSchema.getDefault().BLOCKS.getKey()));
 
 		//Act
-		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskDataGet,
-				changed, null);
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository())
+				.postTaskData(taskDataGet, changed, null);
 		assertNotNull(reposonse);
 		assertNotNull(reposonse.getReposonseKind());
 		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_UPDATED));
@@ -1093,8 +1087,8 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		changed.add(taskDataOld.getRoot().getAttribute(BugzillaRestTaskSchema.getDefault().BLOCKS.getKey()));
 
 		//Act
-		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskDataGet,
-				changed, null);
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository())
+				.postTaskData(taskDataGet, changed, null);
 		assertNotNull(reposonse);
 		assertNotNull(reposonse.getReposonseKind());
 		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_UPDATED));
@@ -1142,8 +1136,8 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		changed.add(taskDataOld.getRoot().getAttribute(BugzillaRestTaskSchema.getDefault().DEPENDS_ON.getKey()));
 
 		//Act
-		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskDataGet,
-				changed, null);
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository())
+				.postTaskData(taskDataGet, changed, null);
 		assertNotNull(reposonse);
 		assertNotNull(reposonse.getReposonseKind());
 		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_UPDATED));
@@ -1191,8 +1185,8 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		changed.add(taskDataOld.getRoot().getAttribute(BugzillaRestTaskSchema.getDefault().DEPENDS_ON.getKey()));
 
 		//Act
-		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskDataGet,
-				changed, null);
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository())
+				.postTaskData(taskDataGet, changed, null);
 		assertNotNull(reposonse);
 		assertNotNull(reposonse.getReposonseKind());
 		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_UPDATED));
@@ -1268,8 +1262,8 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		}
 
 		//Act
-		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskDataGet,
-				changed, null);
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository())
+				.postTaskData(taskDataGet, changed, null);
 		assertNotNull(reposonse);
 		assertNotNull(reposonse.getReposonseKind());
 		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_UPDATED));
@@ -1385,8 +1379,8 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 			}
 		}
 
-		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskDataGet,
-				changed, null);
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository())
+				.postTaskData(taskDataGet, changed, null);
 		assertNotNull(reposonse);
 		assertNotNull(reposonse.getReposonseKind());
 		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_UPDATED));
@@ -1575,8 +1569,8 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 			}
 		}
 
-		RepositoryResponse reposonse = connector.getClient(actualFixture.repository()).postTaskData(taskDataGet,
-				changed, null);
+		RepositoryResponse reposonse = connector.getClient(actualFixture.repository())
+				.postTaskData(taskDataGet, changed, null);
 		assertNotNull(reposonse);
 		assertNotNull(reposonse.getReposonseKind());
 		assertThat(reposonse.getReposonseKind(), is(ResponseKind.TASK_UPDATED));
@@ -1781,15 +1775,11 @@ public class BugzillaRestClientTest implements IFixtureJUnitClass {
 		ITask task = new TaskTask(actualFixture.repository().getConnectorKind(),
 				actualFixture.repository().getRepositoryUrl(), taskId);
 
-		InputStream in = CommonTestUtil.getResource(this, "testdata/AttachmentTest.txt");
 		File file = File.createTempFile("attachment", null);
 		file.deleteOnExit();
-		OutputStream out = new FileOutputStream(file);
-		try {
+		try (OutputStream out = new FileOutputStream(file);
+				InputStream in = CommonTestUtil.getResource(this, "testdata/AttachmentTest.txt")) {
 			IOUtils.copy(in, out);
-		} finally {
-			in.close();
-			out.close();
 		}
 
 		FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(file);

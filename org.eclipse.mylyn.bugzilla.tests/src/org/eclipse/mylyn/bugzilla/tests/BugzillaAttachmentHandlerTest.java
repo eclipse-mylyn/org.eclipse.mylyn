@@ -58,8 +58,9 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 
 	@SuppressWarnings("null")
 	public void testUpdateAttachmentFlags() throws Exception {
-		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, "update of Attachment Flags",
-				"description for testUpdateAttachmentFlags");
+		TaskData taskData = BugzillaFixture.current()
+				.createTask(PrivilegeLevel.USER, "update of Attachment Flags",
+						"description for testUpdateAttachmentFlags");
 		assertNotNull(taskData);
 		int numAttached = taskData.getAttributeMapper()
 				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT)
@@ -349,8 +350,8 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 
 		taskData = BugzillaFixture.current().getTask(taskData.getTaskId(), client);
 		assertNotNull(taskData);
-		List<TaskAttribute> attachmentAttrs = taskData.getAttributeMapper().getAttributesByType(taskData,
-				TaskAttribute.TYPE_ATTACHMENT);
+		List<TaskAttribute> attachmentAttrs = taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT);
 		assertEquals(1, attachmentAttrs.size());
 
 		attachmentMapper = TaskAttachmentMapper.createFrom(attachmentAttrs.get(0));
@@ -506,8 +507,8 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		boolean isObsolete[] = { false, true, false, true };
 
 		int index = 0;
-		for (TaskAttribute attribute : taskData.getAttributeMapper().getAttributesByType(taskData,
-				TaskAttribute.TYPE_ATTACHMENT)) {
+		for (TaskAttribute attribute : taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT)) {
 			assertTrue(validateAttachmentAttributes(taskData, attribute, isPatch[index], isObsolete[index], task));
 			index++;
 		}
@@ -551,8 +552,9 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 			attachmentMapper.setComment("Context attachment failure Test");
 			attachmentMapper.applyTo(attrAttachment);
 
-			connector.getTaskAttachmentHandler().postContent(repository, task, attachment,
-					attachmentMapper.getComment(), attrAttachment, new NullProgressMonitor());
+			connector.getTaskAttachmentHandler()
+					.postContent(repository, task, attachment, attachmentMapper.getComment(), attrAttachment,
+							new NullProgressMonitor());
 		} catch (CoreException e) {
 			assertTrue(BugzillaTestSupportUtil.isInvalidLogon(e));
 			assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
@@ -562,8 +564,9 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 	}
 
 	public void testDownloadAttachmentFile() throws Exception {
-		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, "update of Attachment Flags",
-				"description for testUpdateAttachmentFlags");
+		TaskData taskData = BugzillaFixture.current()
+				.createTask(PrivilegeLevel.USER, "update of Attachment Flags",
+						"description for testUpdateAttachmentFlags");
 		assertNotNull(taskData);
 		int numAttached = taskData.getAttributeMapper()
 				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT)
@@ -609,11 +612,8 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		ITaskAttachment taskAttachment;
 		taskAttachment = new TaskAttachment(repository, iTask, attachmentAttribute);
 
-		OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
-		try {
+		try (OutputStream out = new BufferedOutputStream(new FileOutputStream(file))) {
 			AttachmentUtil.downloadAttachment(taskAttachment, out, new NullProgressMonitor());
-		} finally {
-			out.close();
 		}
 		FileInputStream raf = new FileInputStream(file);
 
@@ -630,8 +630,9 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 	}
 
 	public void testDownloadNonExsistingAttachmentFile() throws Exception {
-		TaskData taskData = BugzillaFixture.current().createTask(PrivilegeLevel.USER, "update of Attachment Flags",
-				"description for testUpdateAttachmentFlags");
+		TaskData taskData = BugzillaFixture.current()
+				.createTask(PrivilegeLevel.USER, "update of Attachment Flags",
+						"description for testUpdateAttachmentFlags");
 		assertNotNull(taskData);
 		int numAttached = taskData.getAttributeMapper()
 				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT)
@@ -678,14 +679,11 @@ public class BugzillaAttachmentHandlerTest extends AbstractBugzillaTest {
 		ITaskAttachment taskAttachment;
 		taskAttachment = new TaskAttachment(repository, iTask, attachmentAttribute);
 
-		OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
-		try {
+		try (OutputStream out = new BufferedOutputStream(new FileOutputStream(file))) {
 			AttachmentUtil.downloadAttachment(taskAttachment, out, new NullProgressMonitor());
 		} catch (CoreException e) {
 			String message = e.getMessage();
 			assertTrue(message.startsWith("invalid attachment id: "));
-		} finally {
-			out.close();
 		}
 	}
 }

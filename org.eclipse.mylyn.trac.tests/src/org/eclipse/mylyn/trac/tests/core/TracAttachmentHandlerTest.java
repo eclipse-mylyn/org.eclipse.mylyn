@@ -17,8 +17,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
@@ -30,6 +28,8 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.trac.tests.support.TracFixture;
 import org.eclipse.mylyn.trac.tests.support.TracHarness;
 import org.eclipse.mylyn.trac.tests.support.TracTestUtil;
+
+import junit.framework.TestCase;
 
 /**
  * @author Steffen Pingel
@@ -79,22 +79,16 @@ public class TracAttachmentHandlerTest extends TestCase {
 		ITask task = harness.createTask("GetContent");
 		File file = File.createTempFile("attachment", null);
 		file.deleteOnExit();
-		OutputStream out = new FileOutputStream(file);
-		try {
+		try (OutputStream out = new FileOutputStream(file)) {
 			out.write("Mylar".getBytes());
-		} finally {
-			out.close();
 		}
 		attachmentHandler.postContent(repository, task, new FileTaskAttachmentSource(file), "comment", null, null);
 
 		ITracClient client = connector.getClientManager().getTracClient(repository);
-		InputStream in = client.getAttachmentData(Integer.parseInt(task.getTaskId()), file.getName(), null);
-		try {
+		try (InputStream in = client.getAttachmentData(Integer.parseInt(task.getTaskId()), file.getName(), null)) {
 			byte[] result = new byte[5];
 			in.read(result);
 			assertEquals("Mylar", new String(result));
-		} finally {
-			in.close();
 		}
 	}
 

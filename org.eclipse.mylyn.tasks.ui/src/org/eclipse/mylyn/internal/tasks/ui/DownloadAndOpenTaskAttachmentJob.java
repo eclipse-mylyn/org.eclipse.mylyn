@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -82,9 +83,9 @@ class DownloadAndOpenTaskAttachmentJob implements ICoreRunnable {
 		file.deleteOnExit();
 
 		boolean ok = false;
-		FileOutputStream fos = null;
+		BufferedOutputStream fos = null;
 		try {
-			fos = new FileOutputStream(file);
+			fos = new BufferedOutputStream(new FileOutputStream(file));
 			AttachmentUtil.downloadAttachment(attachment, fos, monitor);
 			ok = true;
 

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.tasks.core;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -160,9 +161,8 @@ public abstract class RepositoryClientManager<T, C extends Serializable> impleme
 			return;
 		}
 
-		ObjectOutputStream out = null;
-		try {
-			out = new ObjectOutputStream(new FileOutputStream(cacheFile));
+		try (ObjectOutputStream out = new ObjectOutputStream(
+				new BufferedOutputStream(new FileOutputStream(cacheFile)))) {
 			out.writeInt(respoitoryConfigurationByUrl.size());
 			for (String url : respoitoryConfigurationByUrl.keySet()) {
 				out.writeObject(url);
@@ -170,14 +170,6 @@ public abstract class RepositoryClientManager<T, C extends Serializable> impleme
 			}
 		} catch (IOException e) {
 			handleError("The respository configuration cache could not be written", e); //$NON-NLS-1$
-		} finally {
-			if (out != null) {
-				try {
-					out.close();
-				} catch (IOException e) {
-					// ignore
-				}
-			}
 		}
 	}
 
