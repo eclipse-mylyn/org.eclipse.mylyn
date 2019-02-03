@@ -280,7 +280,7 @@ public class TeamService extends GitHubService {
 		request.setType(TeamMembership.class);
 		// According to
 		// https://developer.github.com/v3/teams/members/#get-team-membership
-		// Github returns a 404 if the user is not a member of the team, which
+		// GitHub returns a 404 if the user is not a member of the team, which
 		// the GitHubClient translates into an IOException. Is that correct?
 		return (TeamMembership) client.get(request).getBody();
 	}
