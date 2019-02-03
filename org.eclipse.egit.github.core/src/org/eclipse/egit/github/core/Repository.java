@@ -12,12 +12,12 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.Date;
 
 import org.eclipse.egit.github.core.util.DateUtils;
-
-import com.google.gson.annotations.SerializedName;
 
 /**
  * Repository model class
@@ -57,7 +57,7 @@ public class Repository implements IRepositoryIdProvider, Serializable {
 
 	private int stargazersCount;
 
-	/** This is what Github shows as "watchers". */
+	/** This is what GitHub shows as "watchers". */
 	private int subscribersCount = -1;
 
 	private Repository parent;
@@ -562,6 +562,7 @@ public class Repository implements IRepositoryIdProvider, Serializable {
 	 *
 	 * @see IRepositoryIdProvider#generateId()
 	 */
+	@Override
 	public String generateId() {
 		final User owner = this.owner;
 		final String name = this.name;
