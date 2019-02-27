@@ -62,7 +62,7 @@ public class ProjectAccessInfo {
 		this.local = local;
 	}
 
-	public boolean isIs_owner() {
+	public boolean is_owner() {
 		return is_owner;
 	}
 
