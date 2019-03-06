@@ -69,7 +69,7 @@ public class User implements Serializable {
 
 	private String email;
 
-	// Github legacy field; needs to be kept for proper deserialization.
+	// GitHub legacy field; needs to be kept for proper deserialization.
 	@SuppressWarnings("unused")
 	private String gravatarId;
 
