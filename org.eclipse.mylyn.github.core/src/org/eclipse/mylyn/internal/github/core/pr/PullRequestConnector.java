@@ -46,6 +46,7 @@ import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 /**
  * GitHub pull request connector.
  */
+@SuppressWarnings("restriction")
 public class PullRequestConnector extends RepositoryConnector {
 
 	/**

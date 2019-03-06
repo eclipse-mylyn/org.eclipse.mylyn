@@ -37,6 +37,7 @@ import org.eclipse.ui.dialogs.SelectionDialog;
 /**
  * Dialog to select a Gist task repository
  */
+@SuppressWarnings("restriction")
 public class GistConnectorSelectionDialog extends SelectionDialog {
 
 	private final Collection<TaskRepository> repos;

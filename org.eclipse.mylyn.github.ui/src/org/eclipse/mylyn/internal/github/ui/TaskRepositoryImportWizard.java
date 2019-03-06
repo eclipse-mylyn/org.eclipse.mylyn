@@ -37,6 +37,7 @@ import org.eclipse.ui.internal.WorkbenchImages;
  *
  * @author Kevin Sawicki (kevin@github.com)
  */
+@SuppressWarnings("restriction")
 public class TaskRepositoryImportWizard extends Wizard implements IImportWizard {
 
 	private CredentialsWizardPage credentialsPage;

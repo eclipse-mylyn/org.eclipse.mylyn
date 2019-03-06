@@ -39,6 +39,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * Pull request task repository settings page.
  */
+@SuppressWarnings("restriction")
 public class PullRequestRepositorySettingsPage extends
 		HttpRepositorySettingsPage {
 
@@ -92,6 +93,7 @@ public class PullRequestRepositorySettingsPage extends
 
 			serverUrlCombo.addModifyListener(new ModifyListener() {
 
+				@Override
 				public void modifyText(ModifyEvent e) {
 					editingUrl = true;
 					try {
@@ -105,6 +107,7 @@ public class PullRequestRepositorySettingsPage extends
 			repositoryLabelEditor.getTextControl(compositeContainer)
 					.addModifyListener(new ModifyListener() {
 
+						@Override
 						public void modifyText(ModifyEvent e) {
 							if (!editingUrl)
 								syncLabel = false;
@@ -159,12 +162,14 @@ public class PullRequestRepositorySettingsPage extends
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#applyTo(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
+	@Override
 	public void applyTo(TaskRepository repository) {
 		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY,
 				TaskRepository.CATEGORY_REVIEW);
 		super.applyTo(repository);
 	}
 
+	@Override
 	public String getRepositoryUrl() {
 		return PullRequestConnector.appendPulls(super.getRepositoryUrl());
 	}

@@ -260,6 +260,9 @@
             icon="icons/obj16/github.png"
             id="org.eclipse.mylyn.github.ui.importRepositoriesWizard"
             name="%importRepositoriesWizardName">
+         <description>
+            %importRepositoriesWizardDescription
+         </description>
       </wizard>
    </extension>
    <extension
@@ -270,6 +273,9 @@
             icon="icons/obj16/github.png"
             id="org.eclipse.mylyn.github.ui.cloneRepositoriesWizard"
             name="%cloneRepositoriesWizardName">
+         <description>
+            %cloneRepositoriesWizardDescription
+         </description>
       </wizard>
    </extension>
    <extension

@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * GitHub connector specific extensions.
  */
+@SuppressWarnings("restriction")
 public class IssueRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 	private boolean syncLabel = true;
@@ -100,6 +101,7 @@ public class IssueRepositorySettingsPage extends AbstractRepositorySettingsPage 
 
 			serverUrlCombo.addModifyListener(new ModifyListener() {
 
+				@Override
 				public void modifyText(ModifyEvent e) {
 					editingUrl = true;
 					try {
@@ -113,6 +115,7 @@ public class IssueRepositorySettingsPage extends AbstractRepositorySettingsPage 
 			repositoryLabelEditor.getTextControl(compositeContainer)
 					.addModifyListener(new ModifyListener() {
 
+						@Override
 						public void modifyText(ModifyEvent e) {
 							if (!editingUrl)
 								syncLabel = false;
@@ -179,6 +182,7 @@ public class IssueRepositorySettingsPage extends AbstractRepositorySettingsPage 
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#applyTo(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
+	@Override
 	public void applyTo(TaskRepository repository) {
 		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY,
 				TaskRepository.CATEGORY_BUGS);
@@ -188,6 +192,7 @@ public class IssueRepositorySettingsPage extends AbstractRepositorySettingsPage 
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#canValidate()
 	 */
+	@Override
 	public boolean canValidate() {
 		return isPageComplete()
 				&& (getMessage() == null || getMessageType() != IMessageProvider.ERROR);

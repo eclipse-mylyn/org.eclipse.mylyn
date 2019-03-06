@@ -64,6 +64,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 /**
  * Task editor section to view commits attached to a pull request
  */
+@SuppressWarnings("restriction")
 public class CommitAttributePart extends AbstractTaskEditorSection {
 
 	private CommandContributionItem fetchCommits;

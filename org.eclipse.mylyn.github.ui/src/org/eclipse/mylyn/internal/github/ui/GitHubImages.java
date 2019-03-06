@@ -35,10 +35,10 @@ public class GitHubImages {
 
 	private static ImageRegistry manager;
 
-	/** Key for the Github logo icon. */
+	/** Key for the GitHub logo icon. */
 	public static final String GITHUB_LOGO_OBJ = NAME_PREFIX + "OBJ_GITHUB_LOGO"; //$NON-NLS-1$
 
-	/** Key for a Github issue label icon. */
+	/** Key for a GitHub issue label icon. */
 	public static final String GITHUB_ISSUE_LABEL_OBJ = NAME_PREFIX + "OBJ_GITHUB_ISSUE_LABEL"; //$NON-NLS-1$
 
 	/** Key for an "add" icon. */
@@ -53,10 +53,10 @@ public class GitHubImages {
 	/** Key for an organization icon. */
 	public static final String GITHUB_ORG = NAME_PREFIX + "GITHUB_ORG"; //$NON-NLS-1$
 
-	/** {@link ImageDescriptor} for the Github logo icon. */
+	/** {@link ImageDescriptor} for the GitHub logo icon. */
 	public static final ImageDescriptor DESC_GITHUB_LOGO = create(PATH_OBJ, "github.png"); //$NON-NLS-1$
 
-	/** {@link ImageDescriptor} for the Github issue label icon. */
+	/** {@link ImageDescriptor} for the GitHub issue label icon. */
 	public static final ImageDescriptor DESC_GITHUB_ISSUE_LABEL = create(PATH_OBJ, "issue_label.png"); //$NON-NLS-1$
 
 	/** {@link ImageDescriptor} for the "add" icon. */

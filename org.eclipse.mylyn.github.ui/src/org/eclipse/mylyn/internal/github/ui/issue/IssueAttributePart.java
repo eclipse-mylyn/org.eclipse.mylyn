@@ -51,6 +51,7 @@ import org.eclipse.ui.progress.IProgressConstants2;
  * GitHub issue task editor attribute part that display labels and milestone
  * attribute editors.
  */
+@SuppressWarnings("restriction")
 public class IssueAttributePart extends AbstractTaskEditorSection {
 
 	private List<AbstractAttributeEditor> attributeEditors;

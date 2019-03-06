@@ -15,7 +15,7 @@
 
   <artifactId>org.eclipse.mylyn.github.target</artifactId>
   <packaging>pom</packaging>
-  <name>EGit Github Target Platform Definition</name>
+  <name>EGit GitHub Target Platform Definition</name>
 
   <parent>
     <artifactId>github-parent</artifactId>

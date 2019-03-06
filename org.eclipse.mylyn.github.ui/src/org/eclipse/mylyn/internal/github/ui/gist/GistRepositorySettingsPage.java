@@ -37,6 +37,7 @@ import org.eclipse.swt.widgets.Composite;
  *
  * @author Kevin Sawicki (kevin@github.com)
  */
+@SuppressWarnings("restriction")
 public class GistRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 	/**
@@ -56,6 +57,7 @@ public class GistRepositorySettingsPage extends AbstractRepositorySettingsPage {
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#getConnectorKind()
 	 */
+	@Override
 	public String getConnectorKind() {
 		return GistConnector.KIND;
 	}
@@ -63,6 +65,7 @@ public class GistRepositorySettingsPage extends AbstractRepositorySettingsPage {
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#createAdditionalControls(org.eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	protected void createAdditionalControls(Composite parent) {
 		if (repository == null) {
 			setUrl(URL);
@@ -74,6 +77,7 @@ public class GistRepositorySettingsPage extends AbstractRepositorySettingsPage {
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#isValidUrl(java.lang.String)
 	 */
+	@Override
 	protected boolean isValidUrl(String url) {
 		if (url.startsWith("http://") || url.startsWith("https://")) //$NON-NLS-1$ //$NON-NLS-2$
 			try {
@@ -89,9 +93,11 @@ public class GistRepositorySettingsPage extends AbstractRepositorySettingsPage {
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#getValidator(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
+	@Override
 	protected Validator getValidator(final TaskRepository repository) {
 		return new Validator() {
 
+			@Override
 			public void run(IProgressMonitor monitor) throws CoreException {
 				monitor.beginTask(
 						Messages.GistRepositorySettingsPage_TaskValidating, 100);
@@ -127,6 +133,7 @@ public class GistRepositorySettingsPage extends AbstractRepositorySettingsPage {
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#applyTo(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
+	@Override
 	public void applyTo(TaskRepository repository) {
 		repository.setProperty(IRepositoryConstants.PROPERTY_CATEGORY,
 				TaskRepository.CATEGORY_REVIEW);
@@ -136,6 +143,7 @@ public class GistRepositorySettingsPage extends AbstractRepositorySettingsPage {
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#canValidate()
 	 */
+	@Override
 	public boolean canValidate() {
 		return isPageComplete()
 				&& (getMessage() == null || getMessageType() != IMessageProvider.ERROR);

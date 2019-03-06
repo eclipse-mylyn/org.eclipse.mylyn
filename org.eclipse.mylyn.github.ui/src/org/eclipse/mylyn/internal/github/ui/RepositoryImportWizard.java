@@ -48,6 +48,7 @@ import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 /**
  * {@link IImportWizard} for cloning GitHub repositories.
  */
+@SuppressWarnings("restriction")
 public class RepositoryImportWizard extends Wizard implements IImportWizard {
 
 	private final RepositorySearchWizardPage repositorySearchWizardPage = new RepositorySearchWizardPage();

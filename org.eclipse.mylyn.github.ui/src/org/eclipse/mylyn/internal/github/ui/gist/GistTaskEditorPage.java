@@ -33,6 +33,7 @@ import org.eclipse.ui.menus.CommandContributionItemParameter;
 /**
  * Gist task editor page class
  */
+@SuppressWarnings("restriction")
 public class GistTaskEditorPage extends AbstractTaskEditorPage {
 
 	/**
@@ -63,6 +64,7 @@ public class GistTaskEditorPage extends AbstractTaskEditorPage {
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage#fillToolBar(org.eclipse.jface.action.IToolBarManager)
 	 */
+	@Override
 	public void fillToolBar(IToolBarManager toolBarManager) {
 		super.fillToolBar(toolBarManager);
 		addCloneAction(toolBarManager);
@@ -71,6 +73,7 @@ public class GistTaskEditorPage extends AbstractTaskEditorPage {
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage#createPartDescriptors()
 	 */
+	@Override
 	protected Set<TaskEditorPartDescriptor> createPartDescriptors() {
 		Set<TaskEditorPartDescriptor> partDescriptors = super
 				.createPartDescriptors();
@@ -87,6 +90,7 @@ public class GistTaskEditorPage extends AbstractTaskEditorPage {
 		if (!getModel().getTaskData().isNew()) {
 			partDescriptors.add(new TaskEditorPartDescriptor(ID_PART_SUMMARY) {
 
+				@Override
 				public AbstractTaskEditorPart createPart() {
 					return new IssueSummaryPart(GistAttribute.AUTHOR_GRAVATAR
 							.getMetadata().getId(), null);
@@ -95,6 +99,7 @@ public class GistTaskEditorPage extends AbstractTaskEditorPage {
 			partDescriptors.add(new TaskEditorPartDescriptor(
 					ID_PART_ATTACHMENTS) {
 
+				@Override
 				public AbstractTaskEditorPart createPart() {
 					return new GistAttachmentPart();
 				}
@@ -102,9 +107,11 @@ public class GistTaskEditorPage extends AbstractTaskEditorPage {
 		}
 		partDescriptors.add(new TaskEditorPartDescriptor(ID_PART_ACTIONS) {
 
+			@Override
 			public AbstractTaskEditorPart createPart() {
 				return new TaskEditorActionPart() {
 
+					@Override
 					protected void addAttachContextButton(
 							Composite buttonComposite, FormToolkit toolkit) {
 						// Prohibit context button since Gists don't support
