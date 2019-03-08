@@ -626,7 +626,8 @@ public abstract class GerritClient extends ReviewsClient {
 			if (e.getResponseCode() == HttpStatus.SC_NOT_FOUND) {
 				reviewerResult.addError(new ReviewerResult.Error(null, reviewerId));
 			}
-
+		} catch (GerritLoginException e) {
+			reviewerResult.addError(new ReviewerResult.Error(null, reviewerId));
 		}
 
 		//Now that the reviewer has been removed, remove that reviewers approvals on the change

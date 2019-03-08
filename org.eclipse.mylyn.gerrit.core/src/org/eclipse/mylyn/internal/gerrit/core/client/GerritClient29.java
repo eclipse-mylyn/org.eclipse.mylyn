@@ -296,7 +296,6 @@ public class GerritClient29 extends GerritClient {
 
 	@Override
 	public ChangeDetailX getChangeDetail(int reviewId, IProgressMonitor monitor) throws GerritException {
-		ChangeDetailX changeDetail = null;
 		String query = "/changes/" + Integer.toString(reviewId) + "/detail/?o=ALL_REVISIONS&o=MESSAGES"; //$NON-NLS-1$//$NON-NLS-2$
 		ChangeInfo28 changeInfo = (ChangeInfo28) getRestClient().executeGetRestRequest(query, ChangeInfo28.class,
 				monitor);
@@ -330,7 +329,7 @@ public class GerritClient29 extends GerritClient {
 
 		AccountInfoCache accountInfoCache = new AccountInfoCache(listAccountInfo);
 
-		changeDetail = new ChangeDetailX();
+		ChangeDetailX changeDetail = new ChangeDetailX();
 		changeDetail.setDateCreated(changeInfo.getCreated());
 		changeDetail.setLastModified(changeInfo.getUpdated());
 		changeDetail.setStarred(changeInfo.getStarred() != null ? true : false);
@@ -391,8 +390,9 @@ public class GerritClient29 extends GerritClient {
 		List<RelatedChangeAndCommitInfo> listCommitInfo = relatedChangesInfo.getCommitInfo();
 		boolean needed = true;
 		for (RelatedChangeAndCommitInfo relatedChangeAndCommitInfo : listCommitInfo) {
-			if (relatedChangeAndCommitInfo.getCommitInfo().getCommit().equalsIgnoreCase(
-					changeInfo28.getCurrentRevision())) {
+			if (relatedChangeAndCommitInfo.getCommitInfo()
+					.getCommit()
+					.equalsIgnoreCase(changeInfo28.getCurrentRevision())) {
 				needed = false;
 			} else {
 				if (relatedChangeAndCommitInfo.getChangeNumber() > 0) {

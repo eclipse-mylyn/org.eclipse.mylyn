@@ -313,7 +313,7 @@ public class GerritHttpClient {
 	}
 
 	public <T> T execute(Request<T> request, IProgressMonitor monitor) throws IOException, GerritException {
-		return execute(request, true, monitor);
+		return execute(request, !isAnonymous(), monitor);
 	}
 
 	public <T> T execute(Request<T> request, boolean authenticateIfNeeded, IProgressMonitor monitor)
@@ -378,8 +378,9 @@ public class GerritHttpClient {
 				} finally {
 					WebUtil.releaseConnection(method, monitor);
 				}
-				if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
-					// login or re-authenticate due to an expired session
+				if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN
+						|| code == HttpURLConnection.HTTP_NOT_FOUND) {
+					// login or re-authenticate due to an expired session, or resource that is specified by the URL is not found or is not visible to the calling user
 					authenticate(openIdProvider, monitor);
 
 					this.obtainedXsrfKey = false;

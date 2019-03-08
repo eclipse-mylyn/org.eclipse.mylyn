@@ -63,6 +63,7 @@ import com.google.gerrit.common.data.PatchSetDetail;
 import com.google.gerrit.prettify.common.SparseFileContent;
 import com.google.gerrit.reviewdb.Account;
 import com.google.gerrit.reviewdb.AccountDiffPreference;
+import com.google.gerrit.reviewdb.AccountDiffPreference.Whitespace;
 import com.google.gerrit.reviewdb.AccountGroup;
 import com.google.gerrit.reviewdb.ApprovalCategory;
 import com.google.gerrit.reviewdb.Change;
@@ -81,6 +82,8 @@ import com.google.gerrit.reviewdb.RevId;
 import com.google.gerrit.reviewdb.UserIdentity;
 
 public class GerritClient212 extends GerritClient29 {
+
+	private final String SELF_ACCOUNT_ID = "self"; //$NON-NLS-1$
 
 	protected GerritClient212(TaskRepository repository, Version version) {
 		super(repository, version);
@@ -132,11 +135,28 @@ public class GerritClient212 extends GerritClient29 {
 		// Use REST API, RCP was removed in 2.13
 		PatchSetDetail patchSetDetail = new PatchSetDetail();
 		CommitInfo commitInfo = retrieveCommitInfo(idTarget, monitor);
-		AccountInfo accInfo = retrieveAccountInfo(commitInfo.getAuthor().getEmail(), monitor);
+
+		AccountInfo accInfo = adaptAccountInfo(commitInfo, monitor);
 		patchSetDetail.setInfo(adaptRestPatchSetInfo(commitInfo, accInfo, idTarget, monitor));
 		patchSetDetail.setPatchSet(adaptRestPatchSet(commitInfo, accInfo, idTarget, monitor));
 		patchSetDetail.setPatches(adaptRestPatches(idTarget, monitor));
 		return patchSetDetail;
+	}
+
+	private AccountInfo adaptAccountInfo(CommitInfo commitInfo, IProgressMonitor monitor) throws GerritException {
+		String accountId = commitInfo.getAuthor().getEmail();
+		for (int retries = 0;; retries++) {
+			try {
+				return retrieveAccountInfo(accountId, monitor);
+			} catch (GerritException e) {
+				if (retries < 3) {
+					accountId = commitInfo.getAuthor().getName();
+					continue;
+				} else {
+					throw e;
+				}
+			}
+		}
 	}
 
 	@Override
@@ -147,10 +167,14 @@ public class GerritClient212 extends GerritClient29 {
 		}
 
 		String fileName = key.getFileName();
-		AccountDiffPreference diffPrefs = adaptAccountDiffPref(
-				retrieveAccountInfo(retrieveCommitInfo(rightId, monitor).getAuthor().getEmail(), monitor),
-				retrieveDiffPrefInfo(retrieveCommitInfo(rightId, monitor).getAuthor().getEmail(), monitor));
-
+		CommitInfo commitInfo = retrieveCommitInfo(rightId, monitor);
+		AccountInfo accInfo = adaptAccountInfo(commitInfo, monitor);
+		AccountDiffPreference diffPrefs;
+		try {
+			diffPrefs = adaptAccountDiffPref(accInfo, retrieveDiffPrefInfo(monitor));
+		} catch (GerritException e) {
+			diffPrefs = null;
+		}
 		DiffInfo diffInfo;
 		if (leftId == null) {
 			diffInfo = retrieveDiffInfoAgainstBase(rightId, fileName, monitor);
@@ -240,24 +264,29 @@ public class GerritClient212 extends GerritClient29 {
 			throws GerritException {
 		List<DiffContent> diffContent = diffInfo.getContent(); // content differences in file
 		List<Edit> editsInFile = new ArrayList<>();
-		int contentSize = 0;
+		int contentSize_A = 0;
+		int contentSize_B = 0;
 		for (DiffContent diff : diffContent) {
 			if (diff.getAb() != null) { // if ab, do nothing; this is not an Edit.
-				contentSize += diff.getAb().size();
+				contentSize_A += diff.getAb().size();
+				contentSize_B += diff.getAb().size();
 			} else if (diff.getA() != null && diff.getB() != null) {
-				Edit edit = new Edit(contentSize, contentSize + diff.getA().size() - 1, contentSize,
-						contentSize + diff.getB().size() - 1);
+				Edit edit = new Edit(contentSize_A, contentSize_A + diff.getA().size() - 1, contentSize_B,
+						contentSize_B + diff.getB().size() - 1);
 				editsInFile.add(edit);
-				contentSize += diff.getA().size();
+				contentSize_A += diff.getA().size();
+				contentSize_B += diff.getB().size();
 				patchScriptX.setIntralineDifference(true); // this behavior might not be correct
 			} else if (diff.getA() != null) { // content only on side a (deleted in b)
-				Edit edit = new Edit(contentSize, contentSize + diff.getA().size() - 1, contentSize, contentSize);
+				Edit edit = new Edit(contentSize_A, contentSize_A + diff.getA().size() - 1, contentSize_B,
+						contentSize_B);
 				editsInFile.add(edit);
-				contentSize += diff.getA().size();
+				contentSize_A += diff.getA().size();
 			} else if (diff.getB() != null) { // content only on side b (added in b)
-				Edit edit = new Edit(contentSize, contentSize, contentSize, contentSize + diff.getB().size() - 1);
+				Edit edit = new Edit(contentSize_A, contentSize_A, contentSize_B,
+						contentSize_B + diff.getB().size() - 1);
 				editsInFile.add(edit);
-				contentSize += diff.getB().size();
+				contentSize_B += diff.getB().size();
 			}
 		}
 		return editsInFile;
@@ -266,7 +295,9 @@ public class GerritClient212 extends GerritClient29 {
 	private AccountDiffPreference adaptAccountDiffPref(AccountInfo accInfo, DiffPreferencesInfo diffPrefInfo) {
 		AccountDiffPreference accDiffPref = new AccountDiffPreference(new Account.Id(accInfo.getId()));
 		accDiffPref.setContext(diffPrefInfo.getContext());
-		accDiffPref.setIgnoreWhitespace(diffPrefInfo.getIgnoreWhitespace());
+		accDiffPref.setIgnoreWhitespace(diffPrefInfo.getIgnoreWhitespace() != null
+				? diffPrefInfo.getIgnoreWhitespace()
+				: Whitespace.IGNORE_NONE);
 		accDiffPref.setIntralineDifference(diffPrefInfo.isIntralineDifference());
 		accDiffPref.setLineLength(diffPrefInfo.getLineLength());
 		accDiffPref.setShowTabs(diffPrefInfo.isShowTabs());
@@ -514,8 +545,8 @@ public class GerritClient212 extends GerritClient29 {
 		return getRestClient().executeGetRestRequest(commitQuery, mapTypeToken, monitor);
 	}
 
-	private AccountInfo retrieveAccountInfo(String emailAsId, IProgressMonitor monitor) throws GerritException {
-		String accQuery = String.format("/accounts/%s", encode(emailAsId)); //$NON-NLS-1$
+	private AccountInfo retrieveAccountInfo(String accountId, IProgressMonitor monitor) throws GerritException {
+		String accQuery = String.format("/accounts/%s", encode(accountId)); //$NON-NLS-1$
 		return getRestClient().executeGetRestRequest(accQuery, AccountInfo.class, monitor);
 	}
 
@@ -565,9 +596,8 @@ public class GerritClient212 extends GerritClient29 {
 		return getRestClient().executeGetRestRequest(query, ProjectAccessInfo.class, monitor);
 	}
 
-	private DiffPreferencesInfo retrieveDiffPrefInfo(String emailAsId, IProgressMonitor monitor)
-			throws GerritException {
-		String query = String.format("/accounts/self/preferences.diff", encode(emailAsId)); //$NON-NLS-1$
+	private DiffPreferencesInfo retrieveDiffPrefInfo(IProgressMonitor monitor) throws GerritException {
+		String query = String.format("/accounts/self/preferences.diff"); //$NON-NLS-1$
 		return getRestClient().executeGetRestRequest(query, DiffPreferencesInfo.class, monitor);
 	}
 
