@@ -22,7 +22,7 @@
 
    <requires>
       <import feature="org.eclipse.egit" version="5.4.0" match="equivalent"/>
-      <import feature="org.eclipse.mylyn_feature" version="3.9.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.mylyn_feature" version="3.21.0" match="greaterOrEqual"/>
       <import plugin="com.google.gson" version="1.6" match="greaterOrEqual"/>
    </requires>
 
