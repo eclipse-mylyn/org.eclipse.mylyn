@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * Credentials wizard page class.
- * 
+ *
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class CredentialsWizardPage extends WizardPage {
@@ -44,6 +44,7 @@ public class CredentialsWizardPage extends WizardPage {
 	/**
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		Composite displayArea = new Composite(parent, SWT.NONE);
 		GridLayoutFactory.swtDefaults().numColumns(2).equalWidth(false)
@@ -54,6 +55,7 @@ public class CredentialsWizardPage extends WizardPage {
 		userText = new Text(displayArea, SWT.BORDER | SWT.SINGLE);
 		userText.addModifyListener(new ModifyListener() {
 
+			@Override
 			public void modifyText(ModifyEvent e) {
 				validatePage();
 			}
@@ -65,6 +67,7 @@ public class CredentialsWizardPage extends WizardPage {
 				| SWT.PASSWORD);
 		passwordText.addModifyListener(new ModifyListener() {
 
+			@Override
 			public void modifyText(ModifyEvent e) {
 				validatePage();
 			}
@@ -77,11 +80,11 @@ public class CredentialsWizardPage extends WizardPage {
 
 	private void validatePage() {
 		String message = null;
-		if (message == null && userText.getText().trim().length() == 0)
+		if (userText.getText().trim().isEmpty()) {
 			message = Messages.CredentialsWizardPage_ErrorUser;
-
-		if (message == null && passwordText.getText().trim().length() == 0)
+		} else if (passwordText.getText().trim().isEmpty()) {
 			message = Messages.CredentialsWizardPage_ErrorPassword;
+		}
 
 		setErrorMessage(message);
 		setPageComplete(message == null);
@@ -90,7 +93,7 @@ public class CredentialsWizardPage extends WizardPage {
 
 	/**
 	 * Get user name
-	 * 
+	 *
 	 * @return user name
 	 */
 	public String getUserName() {
@@ -99,7 +102,7 @@ public class CredentialsWizardPage extends WizardPage {
 
 	/**
 	 * Get password
-	 * 
+	 *
 	 * @return password
 	 */
 	public String getPassword() {
