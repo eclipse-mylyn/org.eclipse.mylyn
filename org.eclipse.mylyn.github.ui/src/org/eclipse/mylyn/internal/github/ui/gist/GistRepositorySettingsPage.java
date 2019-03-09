@@ -77,6 +77,7 @@ public class GistRepositorySettingsPage extends AbstractRepositorySettingsPage {
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#isValidUrl(java.lang.String)
 	 */
+	@SuppressWarnings("unused")
 	@Override
 	protected boolean isValidUrl(String url) {
 		if (url.startsWith("http://") || url.startsWith("https://")) //$NON-NLS-1$ //$NON-NLS-2$

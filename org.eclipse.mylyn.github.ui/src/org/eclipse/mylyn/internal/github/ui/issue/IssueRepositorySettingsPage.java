@@ -167,6 +167,7 @@ public class IssueRepositorySettingsPage extends AbstractRepositorySettingsPage 
 		return validator;
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	protected boolean isValidUrl(final String url) {
 		if (url.startsWith("http://") || url.startsWith("https://")) //$NON-NLS-1$ //$NON-NLS-2$

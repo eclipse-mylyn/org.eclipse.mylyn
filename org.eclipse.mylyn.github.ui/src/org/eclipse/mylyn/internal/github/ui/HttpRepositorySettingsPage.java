@@ -28,7 +28,7 @@ public abstract class HttpRepositorySettingsPage extends
 
 	/**
 	 * Create repository settings page
-	 * 
+	 *
 	 * @param title
 	 * @param description
 	 * @param taskRepository
@@ -44,6 +44,7 @@ public abstract class HttpRepositorySettingsPage extends
 		setNeedsHttpAuth(false);
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	protected boolean isValidUrl(final String url) {
 		if (url.startsWith("http://") || url.startsWith("https://")) //$NON-NLS-1$ //$NON-NLS-2$
@@ -59,6 +60,7 @@ public abstract class HttpRepositorySettingsPage extends
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage#canValidate()
 	 */
+	@Override
 	public boolean canValidate() {
 		return isPageComplete()
 				&& (getMessage() == null || getMessageType() != IMessageProvider.ERROR);
