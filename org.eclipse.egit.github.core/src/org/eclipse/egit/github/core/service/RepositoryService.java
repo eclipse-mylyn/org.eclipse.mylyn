@@ -784,6 +784,20 @@ public class RepositoryService extends GitHubService {
 	}
 
 	/**
+	 * Delete repository
+	 *
+	 * @param repository
+	 * @throws IOException
+	 */
+	public void deleteRepository(IRepositoryIdProvider repository)
+			throws IOException {
+		String id = getId(repository);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(id);
+		client.delete(uri.toString());
+	}
+
+	/**
 	 * Get languages used in given repository
 	 *
 	 * @param repository
