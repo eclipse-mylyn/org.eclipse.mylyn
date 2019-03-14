@@ -101,6 +101,9 @@ perl -pi~ -e '
 	s/(org.eclipse.egit.github.*;version="\[)[^"]*(\)")/${1}'"$GITHUB_V,$GITHUB_N"'${2}/;
 	s/(org.eclipse.mylyn.internal.github.*;version=")[^"[(]*(")/${1}'"$GITHUB_V"'${2}/;
 	s/(org.eclipse.mylyn.internal.github.*;version="\[)[^"]*(\)")/${1}'"$GITHUB_V,$GITHUB_N"'${2}/;
+	s/(org.eclipse.jgit.*;version="\[)[^"]*(\)")/${1}'"$GITHUB_V,$GITHUB_N"'${2}/;
+	s/(org.eclipse.egit.core.*;version="\[)[^"]*(\)")/${1}'"$GITHUB_V,$GITHUB_N"'${2}/;
+	s/(org.eclipse.egit.ui.*;version="\[)[^"]*(\)")/${1}'"$GITHUB_V,$GITHUB_N"'${2}/;
 	' $(git ls-files | egrep "META-INF/MANIFEST.MF|META-INF/SOURCE-MANIFEST.MF")
 
 perl -pi~ -e '
