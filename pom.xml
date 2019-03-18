@@ -344,7 +344,7 @@
             <artifact>
               <groupId>org.eclipse.mylyn.github</groupId>
               <artifactId>org.eclipse.mylyn.github.target</artifactId>
-              <version>5.3.0-SNAPSHOT</version>
+              <version>5.4.0-SNAPSHOT</version>
               <classifier>github</classifier>
             </artifact>
           </target>
