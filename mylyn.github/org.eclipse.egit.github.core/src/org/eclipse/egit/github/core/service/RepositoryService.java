@@ -900,7 +900,7 @@ public class RepositoryService extends GitHubService {
 	 * @return repository hook
 	 * @throws IOException
 	 */
-	public RepositoryHook getHook(IRepositoryIdProvider repository, int hookId)
+	public RepositoryHook getHook(IRepositoryIdProvider repository, long hookId)
 			throws IOException {
 		String id = getId(repository);
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
@@ -958,7 +958,7 @@ public class RepositoryService extends GitHubService {
 	 * @param hookId
 	 * @throws IOException
 	 */
-	public void deleteHook(IRepositoryIdProvider repository, int hookId)
+	public void deleteHook(IRepositoryIdProvider repository, long hookId)
 			throws IOException {
 		String id = getId(repository);
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
@@ -976,7 +976,7 @@ public class RepositoryService extends GitHubService {
 	 * @param hookId
 	 * @throws IOException
 	 */
-	public void testHook(IRepositoryIdProvider repository, int hookId)
+	public void testHook(IRepositoryIdProvider repository, long hookId)
 			throws IOException {
 		String id = getId(repository);
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
