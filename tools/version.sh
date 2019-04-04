@@ -133,7 +133,7 @@ perl -pi~ -e '
 		$seen_version = 1 if
 		s{<(version)>[^<\$]*</\1>}{<${1}>'"$POM_V"'</${1}>};
 	}
-	s{<(egit-version)>[^<\$]*</\1>}{<${1}>'"$POM_V"'</${1}>};
+	s{<(egit-github-version)>[^<\$]*</\1>}{<${1}>'"$POM_V"'</${1}>};
 	' pom.xml
 
 perl -pi~ -e '
