@@ -55,6 +55,7 @@
   </licenses>
 
   <properties>
+    <egit-github-version>5.3.1-SNAPSHOT</egit-github-version>
     <tycho-version>1.3.0</tycho-version>
     <tycho-extras-version>${tycho-version}</tycho-extras-version>
     <spotbugs-maven-plugin-version>3.1.9</spotbugs-maven-plugin-version>
@@ -344,7 +345,7 @@
             <artifact>
               <groupId>org.eclipse.mylyn.github</groupId>
               <artifactId>org.eclipse.mylyn.github.target</artifactId>
-              <version>5.3.0-SNAPSHOT</version>
+              <version>${egit-github-version}</version>
               <classifier>github</classifier>
             </artifact>
           </target>
