@@ -2,9 +2,9 @@
 <!--
     Copyright (c) 2012, 2015 Tasktop Technologies and others.
     All rights reserved. This program and the accompanying materials
-    are made available under the terms of the Eclipse Public License v1.0
+    are made available under the terms of the Eclipse Public License v2.0
     which accompanies this distribution, and is available at
-    http://www.eclipse.org/legal/epl-v10.html
+    http://www.eclipse.org/legal/epl-v20.html
 
     Contributors:
          Tasktop Technologies - initial API and implementation
@@ -24,7 +24,7 @@
   </prerequisites>
 
   <properties>
-    <tycho-version>1.0.0</tycho-version>
+    <tycho-version>1.5.0</tycho-version>
     <tycho-extras-version>${tycho-version}</tycho-extras-version>
 
     <mylyn-test-append></mylyn-test-append>
@@ -72,7 +72,7 @@
     <alt-target-version>4.7</alt-target-version>
     <alt-platform-repository-url>http://download.eclipse.org/releases/oxygen/</alt-platform-repository-url>
 
-    <orbit-repository-url>http://download.eclipse.org/tools/orbit/downloads/drops/R20170516192513/repository/</orbit-repository-url>
+    <orbit-repository-url>http://download.eclipse.org/tools/orbit/downloads/drops/R20180905201904/repository/</orbit-repository-url>
     <jdt-annotation-repository-url>http://download.eclipse.org/mylyn/snapshots/jdt-annotation/</jdt-annotation-repository-url>
     <mylyn-repository-url>http://download.eclipse.org/mylyn/snapshots/3.25/</mylyn-repository-url>
     <mylyn-builds-repository-url>http://download.eclipse.org/mylyn/snapshots/3.25/</mylyn-builds-repository-url>
@@ -130,14 +130,14 @@
 
   <licenses>
     <license>
-      <name>Eclipse Public License v1.0</name>
-      <url>http://www.eclipse.org/legal/epl-v10.html</url>
+      <name>Eclipse Public License v2.0</name>
+      <url>http://www.eclipse.org/legal/epl-v20.html</url>
       <distribution>repo</distribution>
       <comments>
         All rights reserved.
 
         This program and the accompanying materials are made
-        available under the terms of the Eclipse Public License v1.0
+        available under the terms of the Eclipse Public License v2.0
         which accompanies this distribution, and is available at
         http://www.eclipse.org/legal/epl-v10.htm
       </comments>
@@ -306,8 +306,8 @@
       </activation>
       <!-- Properties get overridden if a specific target profile is activated. -->
       <properties>
-        <target-version>4.7</target-version>
-        <platform-repository-url>http://download.eclipse.org/releases/oxygen/</platform-repository-url>
+        <target-version>4.8</target-version>
+        <platform-repository-url>http://download.eclipse.org/releases/photon/</platform-repository-url>
       </properties>
     </profile>
     <profile>
