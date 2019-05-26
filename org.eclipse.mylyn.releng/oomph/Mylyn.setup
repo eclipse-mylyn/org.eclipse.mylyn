@@ -621,7 +621,8 @@
       <setupTask
           xsi:type="setup:EclipseIniTask"
           option="-Doomph.redirection.mylyn"
-          value="=http://git.eclipse.org/c/mylyn/org.eclipse.mylyn.git/plain/org.eclipse.mylyn.releng/oomph/Mylyn.setup->${git.clone.mylyn.releng.location|uri}/org.eclipse.mylyn.releng/oomph/Mylyn.setup"/>
+          value="=http://git.eclipse.org/c/mylyn/org.eclipse.mylyn.git/plain/org.eclipse.mylyn.releng/oomph/Mylyn.setup->${git.clone.mylyn.releng.location|uri}/org.eclipse.mylyn.releng/oomph/Mylyn.setup"
+          vm="true"/>
       <stream
           name="master"
           label="Master"/>
@@ -996,10 +997,10 @@
       <setupTask
           xsi:type="setup:StringSubstitutionTask"
           name="git.clone.mylyn.builds"
-          value="${git.clone.mylyn.builds.location}"/>
+          value="${git.clone.mylyn.builds.simple.location}"/>
       <setupTask
           xsi:type="git:GitCloneTask"
-          id="git.clone.mylyn.builds"
+          id="git.clone.mylyn.builds.simple"
           remoteURI="mylyn/org.eclipse.mylyn.builds">
         <annotation
             source="http://www.eclipse.org/oomph/setup/InducedChoices">
@@ -1027,7 +1028,7 @@
       <setupTask
           xsi:type="projects:ProjectsImportTask">
         <sourceLocator
-            rootFolder="${git.clone.mylyn.builds.location}/org.eclipse.mylyn.hudson.releng/"/>
+            rootFolder="${git.clone.mylyn.builds.simple.location}/org.eclipse.mylyn.hudson.releng/"/>
         <description>Import Releng Project</description>
       </setupTask>
       <setupTask
@@ -1038,7 +1039,7 @@
           <requirement
               name="org.eclipse.mylyn.builds.development.feature.group"/>
           <sourceLocator
-              rootFolder="${git.clone.mylyn.builds.location}"/>
+              rootFolder="${git.clone.mylyn.builds.simple.location}"/>
         </targlet>
       </setupTask>
       <setupTask
@@ -1060,11 +1061,11 @@
       <setupTask
           xsi:type="setup:StringSubstitutionTask"
           name="git.clone.mylyn.commons"
-          value="${git.clone.mylyn.commons.location}"
+          value="${git.clone.mylyn.commons.simple.location}"
           documentation="The location of the Mylyn Commons Git clone."/>
       <setupTask
           xsi:type="git:GitCloneTask"
-          id="git.clone.mylyn.commons"
+          id="git.clone.mylyn.commons.simple"
           remoteURI="mylyn/org.eclipse.mylyn.commons"
           userID="">
         <annotation
@@ -1098,7 +1099,7 @@
           <requirement
               name="org.eclipse.mylyn.commons.development.feature.group"/>
           <sourceLocator
-              rootFolder="${git.clone.mylyn.commons.location}"/>
+              rootFolder="${git.clone.mylyn.commons.simple.location}"/>
         </targlet>
       </setupTask>
       <setupTask
@@ -1119,7 +1120,7 @@
         label="Context">
       <setupTask
           xsi:type="git:GitCloneTask"
-          id="git.clone.jdt.core"
+          id="git.clone.jdt.core.simple"
           remoteURI="jdt/eclipse.jdt.core"
           pushURI=""
           checkoutBranch="master">
@@ -1149,7 +1150,7 @@
       <setupTask
           xsi:type="projects:ProjectsImportTask">
         <sourceLocator
-            rootFolder="${git.clone.jdt.core.location}/org.eclipse.jdt.annotation_v1/"/>
+            rootFolder="${git.clone.jdt.core.simple.location}/org.eclipse.jdt.annotation_v1/"/>
         <description>Import JDT Annotations v1.1</description>
       </setupTask>
       <setupTask
@@ -1163,10 +1164,10 @@
       <setupTask
           xsi:type="setup:StringSubstitutionTask"
           name="git.clone.mylyn.context"
-          value="${git.clone.mylyn.context.location}"/>
+          value="${git.clone.mylyn.context.simple.location}"/>
       <setupTask
           xsi:type="git:GitCloneTask"
-          id="git.clone.mylyn.context"
+          id="git.clone.mylyn.context.simple"
           remoteURI="mylyn/org.eclipse.mylyn.context"
           checkoutBranch="master">
         <annotation
@@ -1200,7 +1201,7 @@
           <requirement
               name="org.eclipse.mylyn.context.development.feature.group"/>
           <sourceLocator
-              rootFolder="${git.clone.mylyn.context.location}"/>
+              rootFolder="${git.clone.mylyn.context.simple.location}"/>
         </targlet>
       </setupTask>
       <setupTask
@@ -1222,10 +1223,10 @@
       <setupTask
           xsi:type="setup:StringSubstitutionTask"
           name="git.clone.mylyn.releng"
-          value="${git.clone.mylyn.releng.location}"/>
+          value="${git.clone.mylyn.releng.simple.location}"/>
       <setupTask
           xsi:type="git:GitCloneTask"
-          id="git.clone.mylyn.releng"
+          id="git.clone.mylyn.releng.simple"
           remoteURI="mylyn/org.eclipse.mylyn">
         <annotation
             source="http://www.eclipse.org/oomph/setup/InducedChoices">
@@ -1253,13 +1254,13 @@
       <setupTask
           xsi:type="projects:ProjectsImportTask">
         <sourceLocator
-            rootFolder="${git.clone.mylyn.releng.location}/org.eclipse.mylyn.releng/"/>
+            rootFolder="${git.clone.mylyn.releng.simple.location}/org.eclipse.mylyn.releng/"/>
         <sourceLocator
-            rootFolder="${git.clone.mylyn.releng.location}/org.eclipse.mylyn-parent/"/>
+            rootFolder="${git.clone.mylyn.releng.simple.location}/org.eclipse.mylyn-parent/"/>
         <sourceLocator
-            rootFolder="${git.clone.mylyn.releng.location}/org.eclipse.mylyn.maven-parent/"/>
+            rootFolder="${git.clone.mylyn.releng.simple.location}/org.eclipse.mylyn.maven-parent/"/>
         <sourceLocator
-            rootFolder="${git.clone.mylyn.releng.location}/org.eclipse.mylyn.tests/"/>
+            rootFolder="${git.clone.mylyn.releng.simple.location}/org.eclipse.mylyn.tests/"/>
       </setupTask>
       <setupTask
           xsi:type="setup.workingsets:WorkingSetTask">
@@ -1276,13 +1277,14 @@
             name="Mylyn Releng"
             activeRepositoryList="${eclipse.target.platform}">
           <sourceLocator
-              rootFolder="${git.clone.mylyn.releng.location}"/>
+              rootFolder="${git.clone.mylyn.releng.simple.location}"/>
         </targlet>
       </setupTask>
       <setupTask
           xsi:type="setup:EclipseIniTask"
           option="-Doomph.redirection.mylyn"
-          value="=http://git.eclipse.org/c/mylyn/org.eclipse.mylyn.git/plain/org.eclipse.mylyn.releng/oomph/Mylyn.setup->${git.clone.mylyn.releng.location|uri}/org.eclipse.mylyn.releng/oomph/Mylyn.setup"/>
+          value="=http://git.eclipse.org/c/mylyn/org.eclipse.mylyn.git/plain/org.eclipse.mylyn.releng/oomph/Mylyn.setup->${git.clone.mylyn.releng.simple.location|uri}/org.eclipse.mylyn.releng/oomph/Mylyn.setup"
+          vm="true"/>
       <stream
           name="master"
           label="Master"/>
@@ -1293,10 +1295,10 @@
       <setupTask
           xsi:type="setup:StringSubstitutionTask"
           name="git.clone.mylyn.reviews"
-          value="${git.clone.mylyn.reviews.location}"/>
+          value="${git.clone.mylyn.reviews.simple.location}"/>
       <setupTask
           xsi:type="git:GitCloneTask"
-          id="git.clone.mylyn.reviews"
+          id="git.clone.mylyn.reviews.simple"
           remoteURI="mylyn/org.eclipse.mylyn.reviews">
         <annotation
             source="http://www.eclipse.org/oomph/setup/InducedChoices">
@@ -1324,7 +1326,7 @@
       <setupTask
           xsi:type="projects:ProjectsImportTask">
         <sourceLocator
-            rootFolder="${git.clone.mylyn.reviews.location}/org.eclipse.mylyn.gerrit.releng/"/>
+            rootFolder="${git.clone.mylyn.reviews.simple.location}/org.eclipse.mylyn.gerrit.releng/"/>
         <description>Import Releng Project</description>
       </setupTask>
       <setupTask
@@ -1335,7 +1337,7 @@
           <requirement
               name="org.eclipse.mylyn.reviews.development.feature.feature.group"/>
           <sourceLocator
-              rootFolder="${git.clone.mylyn.reviews.location}"/>
+              rootFolder="${git.clone.mylyn.reviews.simple.location}"/>
         </targlet>
       </setupTask>
       <setupTask
@@ -1357,10 +1359,10 @@
       <setupTask
           xsi:type="setup:StringSubstitutionTask"
           name="git.clone.mylyn.tasks"
-          value="${git.clone.mylyn.tasks.location}"/>
+          value="${git.clone.mylyn.tasks.simple.location}"/>
       <setupTask
           xsi:type="git:GitCloneTask"
-          id="git.clone.mylyn.tasks"
+          id="git.clone.mylyn.tasks.simple"
           remoteURI="mylyn/org.eclipse.mylyn.tasks"
           checkoutBranch="master">
         <annotation
@@ -1389,7 +1391,7 @@
       <setupTask
           xsi:type="projects:ProjectsImportTask">
         <sourceLocator
-            rootFolder="${git.clone.mylyn.tasks.location}/org.eclipse.mylyn.bugzilla.releng/"/>
+            rootFolder="${git.clone.mylyn.tasks.simple.location}/org.eclipse.mylyn.bugzilla.releng/"/>
         <description>Import Releng Project</description>
       </setupTask>
       <setupTask
@@ -1402,7 +1404,7 @@
           <requirement
               name="org.eclipse.mylyn.test_feature.feature.group"/>
           <sourceLocator
-              rootFolder="${git.clone.mylyn.tasks.location}"/>
+              rootFolder="${git.clone.mylyn.tasks.simple.location}"/>
         </targlet>
       </setupTask>
       <setupTask
@@ -1436,7 +1438,7 @@
             <requirement
                 name="org.eclipse.mylyn.bugzilla.rest.development.feature.feature.group"/>
             <sourceLocator
-                rootFolder="${git.clone.mylyn.tasks.location}"/>
+                rootFolder="${git.clone.mylyn.tasks.simple.location}"/>
           </targlet>
         </setupTask>
         <setupTask
@@ -1468,10 +1470,10 @@
       <setupTask
           xsi:type="setup:StringSubstitutionTask"
           name="git.clone.mylyn.versions"
-          value="${git.clone.mylyn.versions.location}"/>
+          value="${git.clone.mylyn.versions.simple.location}"/>
       <setupTask
           xsi:type="git:GitCloneTask"
-          id="git.clone.mylyn.versions"
+          id="git.clone.mylyn.versions.simple"
           remoteURI="mylyn/org.eclipse.mylyn.versions">
         <annotation
             source="http://www.eclipse.org/oomph/setup/InducedChoices">
@@ -1504,7 +1506,7 @@
           <requirement
               name="org.eclipse.mylyn.versions.development.feature.group"/>
           <sourceLocator
-              rootFolder="${git.clone.mylyn.versions.location}"/>
+              rootFolder="${git.clone.mylyn.versions.simple.location}"/>
           <repositoryList
               name="2018-12">
             <repository
