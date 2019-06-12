@@ -164,6 +164,13 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	}
 
 	@Test
+	public void testBlockQuoteExtendedWithNestedBlockEndingAtStartOfLine() {
+		assertMarkup(
+				"<blockquote><h1 id=\"Headline1\">Headline 1</h1><h2 id=\"Headline2\">Headline 2</h2></blockquote>",
+				"{quote}\nh1. Headline 1\nh2. Headline 2\n{quote}");
+	}
+
+	@Test
 	public void testSimplePhraseModifiers() throws IOException {
 		Object[][] pairs = new Object[][] { { "*", "strong" }, { "_", "em" }, { "??", "cite" }, { "-", "del" },
 				{ "+", "u" }, { "^", "sup" }, { "~", "sub" }, };

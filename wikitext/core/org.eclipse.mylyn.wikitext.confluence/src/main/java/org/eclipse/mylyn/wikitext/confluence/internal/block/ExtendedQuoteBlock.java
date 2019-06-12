@@ -56,49 +56,30 @@ public class ExtendedQuoteBlock extends AbstractConfluenceDelimitedBlock {
 			nestedBlock = null;
 		}
 		if (paraOpen) {
-			builder.endBlock(); // para
-			paraLine = 0;
-			paraOpen = false;
+			closeParagraph();
 		}
 		builder.endBlock(); // quote
+	}
+
+	private void closeParagraph() {
+		builder.endBlock();
+		paraOpen = false;
+		paraLine = 0;
 	}
 
 	@Override
 	protected int handleBlockContent(String content) {
 		if (nestedBlock == null) {
-			ConfluenceLanguage markupLanguage = (ConfluenceLanguage) getMarkupLanguage();
-			for (Block block : markupLanguage.getNestedBlocks()) {
-				if (block.canStart(content, 0)) {
-					nestedBlock = block.clone();
-					nestedBlock.setParser(getParser());
-					nestedBlock.setState(getState());
-					if (paraOpen) {
-						builder.endBlock(); // para
-						paraOpen = false;
-						paraLine = 0;
-					}
-					break;
-				}
-			}
+			checkForStartOfNestedBlock(content);
 		}
 		if (nestedBlock != null) {
-			int lineOffset = nestedBlock.processLine(content, 0);
-			if (nestedBlock.isClosed()) {
-				nestedBlock = null;
-			}
-			if (lineOffset < content.length() && lineOffset >= 0) {
-				return lineOffset;
-			} else {
-				return -1;
-			}
+			return delegateProcessingToNestedBlock(content);
 		}
 		if (blockLineCount == 1 && content.length() == 0) {
 			return -1;
 		}
 		if (blockLineCount > 1 && paraOpen && getMarkupLanguage().isEmptyLine(content)) {
-			builder.endBlock(); // para
-			paraOpen = false;
-			paraLine = 0;
+			closeParagraph();
 			return -1;
 		}
 		if (!paraOpen) {
@@ -110,6 +91,37 @@ public class ExtendedQuoteBlock extends AbstractConfluenceDelimitedBlock {
 		}
 		++paraLine;
 		getMarkupLanguage().emitMarkupLine(getParser(), state, content, 0);
+		return -1;
+	}
+
+	private void checkForStartOfNestedBlock(String content) {
+		ConfluenceLanguage markupLanguage = (ConfluenceLanguage) getMarkupLanguage();
+		for (Block block : markupLanguage.getNestedBlocks()) {
+			if (block.canStart(content, 0)) {
+				nestedBlock = block.clone();
+				nestedBlock.setParser(getParser());
+				nestedBlock.setState(getState());
+				if (paraOpen) {
+					closeParagraph();
+				}
+			}
+		}
+	}
+
+	private int delegateProcessingToNestedBlock(String content) {
+		int lineOffset = nestedBlock.processLine(content, 0);
+		if (nestedBlock.isClosed()) {
+			nestedBlock = null;
+		}
+
+		if (lineOffset < content.length() && lineOffset >= 0) {
+			if (nestedBlock == null) {
+				//Return handling of the rest of the line to the main quote block
+				return handleBlockContent(content.substring(lineOffset));
+			}
+			return lineOffset;
+		}
+
 		return -1;
 	}
 
