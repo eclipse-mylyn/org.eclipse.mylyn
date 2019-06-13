@@ -1,6 +1,7 @@
 #!/bin/sh
 # Copyright (C) 2009, Google Inc.
 # Copyright (C) 2011, Matthias Sohn <matthias.sohn@sap.com>
+# Copyright (C) 2019, Thomas Wolf <thomas.wolf@paranor.ch>
 #
 # All rights reserved. This program and the accompanying materials
 # are made available under the terms of the Eclipse Public License 2.0
@@ -115,9 +116,7 @@ perl -pi~ -e '
 		$seen_version = 1 if (!/<\?xml/ &&
 		s/(version=")[^"]*(")/${1}'"$OSGI_V"'${2}/);
 	}
-	s/(feature="org.eclipse.egit.github.core" version=")[^"]*(")/${1}'"$GITHUB_V"'${2}/;
-	s/(feature="org.eclipse.mylyn.github.core" version=")[^"]*(")/${1}'"$GITHUB_V"'${2}/;
-	s/(feature="org.eclipse.mylyn.github.ui" version=")[^"]*(")/${1}'"$GITHUB_V"'${2}/;
+	s/(feature="org.eclipse.egit" version=")[^"]*(")/${1}'"$GITHUB_V"'${2}/;
 	' org.eclipse.mylyn.github-feature/feature.xml
 
 perl -pi~ -e '
