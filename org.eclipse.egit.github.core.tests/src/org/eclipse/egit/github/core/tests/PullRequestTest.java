@@ -39,7 +39,7 @@ public class PullRequestTest {
 	@Test
 	public void defaultState() {
 		PullRequest request = new PullRequest();
-		assertFalse(request.isMergeable());
+		assertNull(request.isMergeable());
 		assertFalse(request.isMerged());
 		assertEquals(0, request.getAdditions());
 		assertNull(request.getBase());
