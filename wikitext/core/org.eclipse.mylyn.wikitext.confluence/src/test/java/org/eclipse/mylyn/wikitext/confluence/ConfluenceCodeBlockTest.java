@@ -48,6 +48,12 @@ public class ConfluenceCodeBlockTest extends AbstractMarkupGenerationTest<Conflu
 	}
 
 	@Test
+	public void blockWithEmailText() {
+		assertMarkup("<pre><code>snippet by another@another.com and another@another.com\n</code></pre><p>more text</p>",
+				"{code}snippet by another@another.com and another@another.com{code}more text");
+	}
+
+	@Test
 	public void blockLanguageJava() {
 		assertMarkup(
 				"<pre class=\"java code-java\"><code class=\"java code-java\">some code\n</code></pre><p>more text</p>",

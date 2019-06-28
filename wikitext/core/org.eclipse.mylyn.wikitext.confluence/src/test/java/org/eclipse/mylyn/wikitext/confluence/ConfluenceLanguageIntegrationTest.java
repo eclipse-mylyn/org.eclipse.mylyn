@@ -69,6 +69,26 @@ public class ConfluenceLanguageIntegrationTest {
 	}
 
 	@Test
+	public void simpleCodeSpan() {
+		assertRoundTripExact("text on left @someFunctionHere@ text on right\n\n");
+	}
+
+	@Test
+	public void codeSpanWithEmailAddressInside() {
+		assertRoundTripExact("text on left @email at sample@sample.com@ text on right\n\n");
+	}
+
+	@Test
+	public void codeSpanWithNestedElement() {
+		assertRoundTripExact("text on left @email at _sample@sample.com_@ text on right\n\n");
+	}
+
+	@Test
+	public void codeSpanWithEmailAddressOutside() {
+		assertRoundTripExact("sample@sample.com @codeHere@ another@another.com\n\n");
+	}
+
+	@Test
 	public void builderParserSymmetricalWithProblemCharacters() {
 		String characterContent = "\"`&amp;{}!@$%^&*()_-+=[]\\|;:',.<>/?~/+&#160;ˇ";
 

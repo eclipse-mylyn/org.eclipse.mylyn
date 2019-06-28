@@ -1234,6 +1234,45 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	}
 
 	@Test
+	public void testInlineCode() {
+		assertMarkup("<p><code>someCamelCaseCodeHere()</code> and some text</p>",
+				"@someCamelCaseCodeHere()@ and some text");
+	}
+
+	@Test
+	public void testEmailInInlineCode() {
+		assertMarkup("<p><code>sampleEmail@sample.com</code></p>", "@sampleEmail@sample.com@");
+	}
+
+	@Test
+	public void testNestedEmailsInInlineCode() {
+		assertMarkup("<p><code>snippet by sampleEmail@sample.com and another@another.com</code></p>",
+				"@snippet by sampleEmail@sample.com and another@another.com@");
+	}
+
+	@Test
+	public void testNoNestingInCode() {
+		assertMarkup("<p><code>_underline_</code></p>", "@_underline_@");
+	}
+
+	@Test
+	public void testEmailAddressOutsideOfCode() {
+		assertMarkup("<p>sampleEmail@sample.com followed by <code>this</code></p>",
+				"sampleEmail@sample.com followed by @this@");
+	}
+
+	@Test
+	public void testEmailRightBeforeCode() {
+		assertMarkup("<p>sampleEmail@sample.com <code>this</code></p>", "sampleEmail@sample.com @this@");
+	}
+
+	@Test
+	public void testEmailBeforeAndAfterCode() {
+		assertMarkup("<p>sampleEmail@sample.com <code>this</code> another@another.com</p>",
+				"sampleEmail@sample.com @this@ another@another.com");
+	}
+
+	@Test
 	public void testClone() {
 		ConfluenceLanguage language = (ConfluenceLanguage) parser.getMarkupLanguage();
 		ConfluenceLanguage newLanguage = language.clone();
