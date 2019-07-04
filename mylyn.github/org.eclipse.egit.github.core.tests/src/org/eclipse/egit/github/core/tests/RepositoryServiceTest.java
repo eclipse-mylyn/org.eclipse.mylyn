@@ -625,7 +625,7 @@ public class RepositoryServiceTest {
 	@Test
 	public void runHook() throws IOException {
 		service.testHook(repo, 5609);
-		verify(client).post("/repos/o/n/hooks/5609/test");
+		verify(client).post("/repos/o/n/hooks/5609/tests");
 	}
 
 	/**

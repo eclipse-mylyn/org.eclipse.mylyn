@@ -178,8 +178,9 @@ public interface IGitHubConstants {
 	String SEGMENT_TAGS = "/tags"; //$NON-NLS-1$
 	/** */
 	String SEGMENT_TEAMS = "/teams"; //$NON-NLS-1$
-	/** */
-	String SEGMENT_TEST = "/test"; //$NON-NLS-1$
+
+	/** previously singular, now plural */
+	String SEGMENT_TEST = "/tests"; //$NON-NLS-1$
 	/** */
 	String SEGMENT_TREES = "/trees"; //$NON-NLS-1$
 	/** */
