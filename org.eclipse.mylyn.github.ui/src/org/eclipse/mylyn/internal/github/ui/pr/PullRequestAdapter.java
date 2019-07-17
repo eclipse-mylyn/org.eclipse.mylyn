@@ -28,17 +28,16 @@ public class PullRequestAdapter extends WorkbenchAdapter {
 
 	/**
 	 * Create pull request adapter
-	 * 
+	 *
 	 * @param request
 	 */
 	public PullRequestAdapter(PullRequestComposite request) {
-		List<PullRequestCommitAdapter> prCommits = new ArrayList<PullRequestCommitAdapter>();
+		List<PullRequestCommitAdapter> prCommits = new ArrayList<>();
 		List<RepositoryCommit> requestCommits = request.getCommits();
 		if (requestCommits != null)
 			for (RepositoryCommit commit : requestCommits)
 				prCommits.add(new PullRequestCommitAdapter(commit));
-		commits = prCommits.toArray(new PullRequestCommitAdapter[prCommits
-				.size()]);
+		commits = prCommits.toArray(new PullRequestCommitAdapter[0]);
 	}
 
 	@Override
