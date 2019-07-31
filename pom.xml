@@ -5,13 +5,13 @@
   <parent>
     <groupId>org.eclipse.mylyn</groupId>
     <artifactId>org.eclipse.mylyn-parent</artifactId>
-    <version>3.25.0-SNAPSHOT</version>
+    <version>3.26.0-SNAPSHOT</version>
     <relativePath>../org.eclipse.mylyn/org.eclipse.mylyn-parent</relativePath>
   </parent>
   <groupId>org.eclipse.mylyn.commons</groupId>
   <artifactId>org.eclipse.mylyn.commons-parent</artifactId>
   <name>Mylyn Commons</name>
-  <version>3.25.0-SNAPSHOT</version>
+  <version>3.26.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <properties>
     <tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/mylyn/org.eclipse.mylyn.commons.git</tycho.scmUrl>
@@ -65,7 +65,7 @@
                 <artifact>
                   <groupId>org.eclipse.mylyn.commons</groupId>
                   <artifactId>org.eclipse.mylyn.commons-target</artifactId>
-                  <version>3.25.0-SNAPSHOT</version>
+                  <version>3.26.0-SNAPSHOT</version>
                   <classifier>mylyn-commons-e4.5</classifier>
                 </artifact>
               </target>
