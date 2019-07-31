@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Tasks SDK Utilities
 Bundle-SymbolicName: org.eclipse.mylyn.tests.util
-Bundle-Version: 3.25.0.qualifier
+Bundle-Version: 3.26.0.qualifier
 Bundle-Vendor: Eclipse Mylyn
 Require-Bundle: org.junit;bundle-version="4.8.2",
  org.eclipse.core.resources,

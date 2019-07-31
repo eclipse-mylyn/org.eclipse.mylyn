@@ -14,7 +14,7 @@
 <feature
       id="org.eclipse.mylyn.test_feature"
       label="%featureName"
-      version="3.25.0.qualifier"
+      version="3.26.0.qualifier"
       plugin="org.eclipse.mylyn.tasks.core"
       license-feature="org.eclipse.license"
       license-feature-version="2.0.0">

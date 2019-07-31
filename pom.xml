@@ -5,12 +5,12 @@
   <parent>
     <groupId>org.eclipse.mylyn</groupId>
     <artifactId>org.eclipse.mylyn-parent</artifactId>
-    <version>3.25.0-SNAPSHOT</version>
+    <version>3.26.0-SNAPSHOT</version>
     <relativePath>../org.eclipse.mylyn/org.eclipse.mylyn-parent</relativePath>
   </parent>
   <groupId>org.eclipse.mylyn.tasks</groupId>
   <artifactId>org.eclipse.mylyn.tasks-parent</artifactId>
-  <version>3.25.0-SNAPSHOT</version>
+  <version>3.26.0-SNAPSHOT</version>
   <name>Mylyn Tasks</name>
   <packaging>pom</packaging>
   <properties>
@@ -79,7 +79,7 @@
                 <artifact>
                   <groupId>org.eclipse.mylyn.tasks</groupId>
                   <artifactId>org.eclipse.mylyn.tasks-target</artifactId>
-                  <version>3.25.0-SNAPSHOT</version>
+                  <version>3.26.0-SNAPSHOT</version>
                   <classifier>mylyn-tasks-e3.6</classifier>
                 </artifact>
               </target>

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tasks Index Tests
 Bundle-SymbolicName: org.eclipse.mylyn.tasks.index.tests
-Bundle-Version: 3.25.0.qualifier
+Bundle-Version: 3.26.0.qualifier
 Bundle-Vendor: Eclipse.org
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.junit;bundle-version="4.8.2",

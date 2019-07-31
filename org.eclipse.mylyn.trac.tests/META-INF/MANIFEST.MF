@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn Trac Connector Tests
 Bundle-SymbolicName: org.eclipse.mylyn.trac.tests;singleton:=true
-Bundle-Version: 3.25.0.qualifier
+Bundle-Version: 3.26.0.qualifier
 Require-Bundle: org.junit;bundle-version="4.8.2",
  org.eclipse.core.runtime,
  org.eclipse.jface.text,
