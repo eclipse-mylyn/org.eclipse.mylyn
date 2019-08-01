@@ -5,7 +5,7 @@
   <parent>
     <artifactId>org.eclipse.mylyn.reviews.parent</artifactId>
     <groupId>org.eclipse.mylyn.reviews</groupId>
-    <version>2.16.0-SNAPSHOT</version>
+    <version>2.17.0-SNAPSHOT</version>
   </parent>
   <artifactId>org.eclipse.mylyn.gerrit.target</artifactId>
   <packaging>pom</packaging>
