@@ -14,7 +14,7 @@
 <feature
       id="org.eclipse.mylyn.hudson"
       label="%featureName"
-      version="1.17.0.qualifier"
+      version="1.18.0.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.mylyn.builds.core"
       license-feature="org.eclipse.license"
@@ -40,8 +40,8 @@
       <import plugin="com.sun.xml.bind" version="2.2.0" match="compatible"/>
       <import plugin="javax.xml.stream" version="1.0.1" match="compatible"/>
       
-      <import feature="org.eclipse.mylyn.builds" version="1.17.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn.commons.repositories.http" version="1.17.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.builds" version="1.18.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn.commons.repositories.http" version="1.18.0" match="compatible"/>
    </requires>
 
    <plugin
