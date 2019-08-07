@@ -24,6 +24,7 @@ import org.eclipse.mylyn.wikitext.confluence.internal.block.ColorBlock;
 import org.eclipse.mylyn.wikitext.confluence.internal.block.ExtendedPreformattedBlock;
 import org.eclipse.mylyn.wikitext.confluence.internal.block.ExtendedQuoteBlock;
 import org.eclipse.mylyn.wikitext.confluence.internal.block.HeadingBlock;
+import org.eclipse.mylyn.wikitext.confluence.internal.block.HorizontalRuleBlock;
 import org.eclipse.mylyn.wikitext.confluence.internal.block.ListBlock;
 import org.eclipse.mylyn.wikitext.confluence.internal.block.ParagraphBlock;
 import org.eclipse.mylyn.wikitext.confluence.internal.block.QuoteBlock;
@@ -39,7 +40,6 @@ import org.eclipse.mylyn.wikitext.confluence.internal.phrase.SimplePhraseModifie
 import org.eclipse.mylyn.wikitext.confluence.internal.phrase.SimpleWrappedPhraseModifier;
 import org.eclipse.mylyn.wikitext.confluence.internal.token.AnchorReplacementToken;
 import org.eclipse.mylyn.wikitext.confluence.internal.token.EscapedCharacterReplacementToken;
-import org.eclipse.mylyn.wikitext.confluence.internal.token.HorizontalRuleToken;
 import org.eclipse.mylyn.wikitext.confluence.internal.token.ImpliedHyperlinkReplacementToken;
 import org.eclipse.mylyn.wikitext.confluence.internal.token.NumericEntityReferenceReplacementToken;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
@@ -107,6 +107,9 @@ public class ConfluenceLanguage extends AbstractMarkupLanguage {
 		ExtendedPreformattedBlock noformatBlock = new ExtendedPreformattedBlock();
 		blocks.add(noformatBlock);
 		paragraphBreakingBlocks.add(noformatBlock);
+		HorizontalRuleBlock horizontalRuleBlock = new HorizontalRuleBlock();
+		blocks.add(horizontalRuleBlock);
+		paragraphBreakingBlocks.add(horizontalRuleBlock);
 
 		blocks.add(new TextBoxBlock(BlockType.PANEL, "panel")); //$NON-NLS-1$
 		blocks.add(new TextBoxBlock(BlockType.NOTE, "note")); //$NON-NLS-1$
@@ -153,7 +156,6 @@ public class ConfluenceLanguage extends AbstractMarkupLanguage {
 		tokenSyntax.add(new EntityReferenceReplacementToken("(R)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
 		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=(?:\\w\\s)|^)(---)(?=\\s\\w))", "#8212")); // emdash //$NON-NLS-1$ //$NON-NLS-2$
 		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=(?:\\w\\s)|^)(--)(?=\\s\\w))", "#8211")); // endash //$NON-NLS-1$ //$NON-NLS-2$
-		tokenSyntax.add(new HorizontalRuleToken());
 		tokenSyntax.add(new ImpliedHyperlinkReplacementToken());
 		tokenSyntax.add(new AnchorReplacementToken());
 		tokenSyntax.add(new NumericEntityReferenceReplacementToken());

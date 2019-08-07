@@ -260,9 +260,9 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 
 	@Test
 	public void testHorizontalRule() {
-		String html = parser.parseToHtml("an hr ---- foo");
+		String html = parser.parseToHtml("an hr \n----\n foo");
 
-		assertTrue(html.contains("hr <hr/> foo"));
+		assertTrue(html.contains("hr </p><hr/><p> foo"));
 	}
 
 	/**
@@ -270,16 +270,16 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	 */
 	@Test
 	public void testHorizontalRule2() {
-		String html = parser.parseToHtml("---- an hr foo");
+		String html = parser.parseToHtml("----\n an hr foo");
 
-		assertTrue(html.contains("<hr/> an hr foo"));
+		assertTrue(html.contains("<hr/><p> an hr foo</p>"));
 	}
 
 	@Test
 	public void testHorizontalRule3() {
-		String html = parser.parseToHtml("an hr foo ----");
+		String html = parser.parseToHtml("an hr foo \n ---- ");
 
-		assertTrue(html.contains("an hr foo <hr/>"));
+		assertTrue(html.contains("<p>an hr foo </p><hr/>"));
 	}
 
 	@Test
@@ -287,6 +287,90 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 		String html = parser.parseToHtml("text\n----\nmore text");
 
 		assertTrue(html.contains("<hr/>"));
+	}
+
+	@Test
+	public void testFourDashesIsNotHorizontalRule() {
+		String html = parser.parseToHtml("text----more text");
+
+		assertTrue(html.contains("text----more text"));
+	}
+
+	@Test
+	public void testFourSpacedDashesIsNotHorizontalRule() {
+		String html = parser.parseToHtml("text  -  -  -  -more text");
+
+		assertTrue(html.contains("text  -  -  -  -more text"));
+	}
+
+	@Test
+	public void testFiveDashesIsNotHorizontalRule() {
+		String html = parser.parseToHtml("text\n-----\nmore text");
+
+		assertTrue(html.contains("text<br/>-----<br/>more text"));
+	}
+
+	@Test
+	public void testSixDashesIsNotHorizontalRule() {
+		String html = parser.parseToHtml("text\n------\nmore text");
+
+		assertTrue(html.contains("text<br/>------<br/>more text"));
+	}
+
+	@Test
+	public void testEightDashesIsNotHorizontalRule() {
+		String html = parser.parseToHtml("text\n--------\nmore text");
+
+		assertTrue(html.contains("text<br/>--------<br/>more text"));
+	}
+
+	@Test
+	public void testEightDashesWithSpaceInBetweenIsNotHorizontalRule() {
+		String html = parser.parseToHtml("text\n---- ----\nmore text");
+
+		assertTrue(html.contains("text<br/>---- ----<br/>more text"));
+	}
+
+	@Test
+	public void testTabBeforeFourDashesIsHorizontalRule() {
+		String html = parser.parseToHtml("text\n	----\nmore text");
+
+		assertTrue(html.contains("text</p><hr/><p>more text"));
+	}
+
+	@Test
+	public void testTabAfterFourDashesIsHorizontalRule() {
+		String html = parser.parseToHtml("text\n----	\nmore text");
+
+		assertTrue(html.contains("text</p><hr/><p>more text"));
+	}
+
+	@Test
+	public void testMultipleTabsBeforeAndAfterFourDashesIsHorizontalRule() {
+		String html = parser.parseToHtml("text\n			----		\nmore text");
+
+		assertTrue(html.contains("text</p><hr/><p>more text"));
+	}
+
+	@Test
+	public void testTabBetweenFourDashesIsNotHorizontalRule() {
+		String html = parser.parseToHtml("text\n--	--\nmore text");
+
+		assertTrue(html.contains("text<br/>--	--<br/>more text"));
+	}
+
+	@Test
+	public void testFourDashesWithoutASpaceAtFourthLevelIsHorizontalRule() {
+		String html = parser.parseToHtml("- text\n-- second line\n--- third line\n----");
+
+		assertTrue(html.contains("<li>text<ul><li>second line<ul><li>third line</li></ul></li></ul></li></ul><hr/>"));
+	}
+
+	@Test
+	public void testFourDashesWithASpaceAtFourthLevelIsNotHorizontalRule() {
+		String html = parser.parseToHtml("- text\n-- second line\n--- third line\n---- ");
+
+		assertFalse(html.contains("<hr/>"));
 	}
 
 	@Test
