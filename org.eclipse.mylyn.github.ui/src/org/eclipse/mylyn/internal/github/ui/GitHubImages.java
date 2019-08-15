@@ -72,10 +72,10 @@ public class GitHubImages {
 	public static final ImageDescriptor DESC_GITHUB_ORG = create(PATH_OBJ, "org.png"); //$NON-NLS-1$
 
 	/** {@link ImageDescriptor} for a person icon. */
-	public static final ImageDescriptor DESC_PERSON = create(PATH_TOOL, "person.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_PERSON = create(PATH_TOOL, "person.png"); //$NON-NLS-1$
 
 	/** {@link ImageDescriptor} for a person icon denoting the current user. */
-	public static final ImageDescriptor DESC_PERSON_ME = create(PATH_TOOL, "person-me.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_PERSON_ME = create(PATH_TOOL, "person-me.png"); //$NON-NLS-1$
 
 	private static ImageDescriptor create(String prefix, String name) {
 		return ImageDescriptor.createFromURL(makeImageURL(prefix, name));
