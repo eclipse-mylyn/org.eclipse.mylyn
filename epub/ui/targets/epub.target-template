@@ -67,7 +67,7 @@
 <repository location="https://ci.eclipse.org/orbit/job/orbit-recipes/lastStableBuild/artifact/releng/repository/target/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.license.feature.group" version="2.0.0.v20180130-0820"/>
+<unit id="org.eclipse.license.feature.group" version="2.0.2.v20181016-2210"/>
 <repository location="http://download.eclipse.org/cbi/updates/license"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
