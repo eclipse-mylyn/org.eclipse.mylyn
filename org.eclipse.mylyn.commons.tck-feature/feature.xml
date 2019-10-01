@@ -16,7 +16,7 @@
       provider-name="%providerName"
       plugin="org.eclipse.mylyn.commons.core"
       license-feature="org.eclipse.license"
-      license-feature-version="2.0.0">
+      license-feature-version="2.0.2">
 
    <description url="http://eclipse.org/mylyn/commons/">
       %description
