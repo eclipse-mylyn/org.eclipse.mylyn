@@ -19,7 +19,11 @@ import java.io.UnsupportedEncodingException;
 /**
  * Encoding utilities
  */
-public abstract class EncodingUtils {
+public final class EncodingUtils {
+
+	private EncodingUtils() {
+		// utility class
+	}
 
 	/**
 	 * Decode base64 encoded string

@@ -25,15 +25,6 @@ import org.junit.Test;
 public class EncodingUtilsTest {
 
 	/**
-	 * Test default constructor through anonymous sub-class
-	 */
-	@Test
-	public void constructor() {
-		assertNotNull(new EncodingUtils() {
-		});
-	}
-
-	/**
 	 * Encode and decode content
 	 */
 	@Test

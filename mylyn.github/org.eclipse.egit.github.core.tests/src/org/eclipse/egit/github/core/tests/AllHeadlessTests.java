@@ -40,7 +40,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		CreatePayloadTest.class, //
 		DataServiceTest.class, //
 		DateFormatterTest.class, //
-		DateUtilTest.class, //
+		DateUtilsTest.class, //
 		DeletePayloadTest.class, //
 		DeployKeyServiceTest.class, //
 		DownloadPayloadTest.class, //

@@ -25,15 +25,6 @@ import org.junit.Test;
 public class UrlUtilsTest {
 
 	/**
-	 * Test default constructor through anonymous sub-class
-	 */
-	@Test
-	public void constructor() {
-		assertNotNull(new UrlUtils() {
-		});
-	}
-
-	/**
 	 * Encode url
 	 */
 	@Test
@@ -48,7 +39,7 @@ public class UrlUtilsTest {
 	 * Verify generation of HTTPS URL
 	 */
 	@Test
-	public void gererateHttpsUrl() {
+	public void generateHttpsUrl() {
 		RepositoryId repo = new RepositoryId("person", "project");
 		assertEquals("https://me@github.com/person/project.git",
 				UrlUtils.createRemoteHttpsUrl(repo, "me"));
@@ -58,7 +49,7 @@ public class UrlUtilsTest {
 	 * Verify generation of SSH URL
 	 */
 	@Test
-	public void gererateSshUrl() {
+	public void generateSshUrl() {
 		RepositoryId repo = new RepositoryId("person", "project");
 		assertEquals("git@github.com:person/project.git",
 				UrlUtils.createRemoteSshUrl(repo));
@@ -68,7 +59,7 @@ public class UrlUtilsTest {
 	 * Verify generation of read only URL
 	 */
 	@Test
-	public void gererateReadOnlyUrl() {
+	public void generateReadOnlyUrl() {
 		RepositoryId repo = new RepositoryId("person", "project");
 		assertEquals("git://github.com/person/project.git",
 				UrlUtils.createRemoteReadOnlyUrl(repo));
