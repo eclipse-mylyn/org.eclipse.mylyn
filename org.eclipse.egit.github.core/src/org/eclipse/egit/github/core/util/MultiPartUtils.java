@@ -25,7 +25,11 @@ import java.util.Map.Entry;
 /**
  * Utilities for writing multiple HTTP requests
  */
-public class MultiPartUtils {
+public final class MultiPartUtils {
+
+	private MultiPartUtils() {
+		// utility class
+	}
 
 	/**
 	 * Post parts to URL

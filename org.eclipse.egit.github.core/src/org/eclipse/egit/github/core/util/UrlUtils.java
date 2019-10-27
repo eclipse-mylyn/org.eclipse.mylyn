@@ -28,7 +28,11 @@ import org.eclipse.egit.github.core.IRepositoryIdProvider;
 /**
  * URL utilities
  */
-public abstract class UrlUtils {
+public final class UrlUtils {
+
+	private UrlUtils() {
+		// utility class
+	}
 
 	/**
 	 * Create SSH URL used for repository remote configs

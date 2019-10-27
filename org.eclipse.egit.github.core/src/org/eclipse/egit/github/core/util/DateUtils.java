@@ -17,7 +17,11 @@ import java.util.Date;
 /**
  * Date utilities
  */
-public abstract class DateUtils {
+public final class DateUtils {
+
+	private DateUtils() {
+		// utility class
+	}
 
 	/**
 	 * Clone date if non-null

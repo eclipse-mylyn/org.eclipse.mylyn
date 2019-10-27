@@ -13,7 +13,6 @@
 package org.eclipse.egit.github.core.tests;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 
@@ -25,16 +24,7 @@ import org.junit.Test;
 /**
  * Unit tests of {@link DateUtils}
  */
-public class DateUtilTest {
-
-	/**
-	 * Test default constructor through anonymous sub-class
-	 */
-	@Test
-	public void constructor() {
-		assertNotNull(new DateUtils() {
-		});
-	}
+public class DateUtilsTest {
 
 	/**
 	 * Test cloning date
