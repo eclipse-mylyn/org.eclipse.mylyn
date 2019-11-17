@@ -13,7 +13,6 @@
 package org.eclipse.mylyn.internal.github.ui.issue;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -140,13 +139,6 @@ public class IssueLabelAttributeEditor extends AbstractAttributeEditor {
 	private Composite labelsArea;
 	private List<CLabel> labelControls = new LinkedList<>();
 	private FormToolkit toolkit;
-	private Comparator<String> labelComparator = new Comparator<String>() {
-
-		@Override
-		public int compare(String o1, String o2) {
-			return o1.compareToIgnoreCase(o2);
-		}
-	};
 
 	/**
 	 * @param manager
@@ -167,7 +159,7 @@ public class IssueLabelAttributeEditor extends AbstractAttributeEditor {
 				.get(GitHubImages.GITHUB_ISSUE_LABEL_OBJ);
 		List<String> labels = new LinkedList<>(getTaskAttribute()
 				.getValues());
-		Collections.sort(labels, this.labelComparator);
+		Collections.sort(labels, String.CASE_INSENSITIVE_ORDER);
 		if (!labels.isEmpty())
 			for (final String label : labels) {
 				CLabel cLabel = new CLabel(labelsArea, SWT.NONE);

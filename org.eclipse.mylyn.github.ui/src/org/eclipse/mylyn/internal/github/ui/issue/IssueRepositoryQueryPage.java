@@ -80,6 +80,7 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 
 	private SelectionListener completeListener = new SelectionAdapter() {
 
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			setPageComplete(isPageComplete());
 		}
@@ -120,6 +121,7 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 		labelsViewer.setContentProvider(ArrayContentProvider.getInstance());
 		labelsViewer.setLabelProvider(new LabelProvider() {
 
+			@Override
 			public Image getImage(Object element) {
 				return GitHubImages.get(GitHubImages.GITHUB_ISSUE_LABEL_OBJ);
 			}
@@ -128,6 +130,7 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 		labelsViewer
 				.addSelectionChangedListener(new ISelectionChangedListener() {
 
+					@Override
 					public void selectionChanged(SelectionChangedEvent event) {
 						setPageComplete(isPageComplete());
 					}
@@ -164,6 +167,7 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 				.createImage();
 		toolbar.addDisposeListener(new DisposeListener() {
 
+			@Override
 			public void widgetDisposed(DisposeEvent e) {
 				updateImage.dispose();
 			}
@@ -175,6 +179,7 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 				.grab(true, false).applyTo(toolbar);
 		updateItem.addSelectionListener(new SelectionAdapter() {
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				refreshRepository();
 			}
@@ -206,6 +211,7 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 	/**
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		Composite displayArea = new Composite(parent, SWT.NONE);
 		GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(true)
@@ -224,6 +230,7 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 			GridDataFactory.fillDefaults().grab(true, false).applyTo(titleText);
 			titleText.addModifyListener(new ModifyListener() {
 
+				@Override
 				public void modifyText(ModifyEvent e) {
 					setPageComplete(isPageComplete());
 				}
@@ -287,7 +294,7 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 			List<org.eclipse.egit.github.core.Label> labels = connector
 					.getLabels(repository);
 			Collections.sort(labels, new LabelComparator());
-			List<String> labelNames = new ArrayList<String>(labels.size());
+			List<String> labelNames = new ArrayList<>(labels.size());
 			for (org.eclipse.egit.github.core.Label label : labels)
 				labelNames.add(label.getName());
 			labelsViewer.setInput(labelNames);
@@ -306,12 +313,8 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 			milestones = connector.getMilestones(repository);
 			milestoneCombo.removeAll();
 			milestoneCombo.add(Messages.IssueRepositoryQueryPage_MilestoneNone);
-			Collections.sort(milestones, new Comparator<Milestone>() {
-
-				public int compare(Milestone m1, Milestone m2) {
-					return m1.getTitle().compareToIgnoreCase(m2.getTitle());
-				}
-			});
+			Collections.sort(milestones, Comparator.comparing(
+					Milestone::getTitle, String.CASE_INSENSITIVE_ORDER));
 			for (Milestone milestone : milestones)
 				milestoneCombo.add(milestone.getTitle());
 
@@ -324,6 +327,7 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 		try {
 			ICoreRunnable runnable = new ICoreRunnable() {
 
+				@Override
 				public void run(IProgressMonitor monitor) throws CoreException {
 					Policy.monitorFor(monitor);
 					monitor.beginTask("", 2); //$NON-NLS-1$
@@ -342,6 +346,7 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 					PlatformUI.getWorkbench().getDisplay()
 							.asyncExec(new Runnable() {
 
+								@Override
 								public void run() {
 									updateLabels();
 									updateMilestones();
@@ -375,6 +380,7 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage#isPageComplete()
 	 */
+	@Override
 	public boolean isPageComplete() {
 		boolean complete = inSearchContainer() ? true : super.isPageComplete();
 		if (complete) {
@@ -391,6 +397,7 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage#getQueryTitle()
 	 */
+	@Override
 	public String getQueryTitle() {
 		return titleText != null ? titleText.getText() : null;
 	}
@@ -398,10 +405,11 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage#applyTo(org.eclipse.mylyn.tasks.core.IRepositoryQuery)
 	 */
+	@Override
 	public void applyTo(IRepositoryQuery query) {
 		query.setSummary(getQueryTitle());
 
-		List<String> statuses = new LinkedList<String>();
+		List<String> statuses = new LinkedList<>();
 		if (openButton.getSelection())
 			statuses.add(IssueService.STATE_OPEN);
 		if (closedButton.getSelection())
@@ -427,7 +435,7 @@ public class IssueRepositoryQueryPage extends GitHubRepositoryQueryPage {
 		else
 			query.setAttribute(IssueService.FILTER_MILESTONE, null);
 
-		List<String> labels = new LinkedList<String>();
+		List<String> labels = new LinkedList<>();
 		for (Object label : labelsViewer.getCheckedElements())
 			labels.add(label.toString());
 		QueryUtils.setAttribute(IssueService.FILTER_LABELS, labels, query);
