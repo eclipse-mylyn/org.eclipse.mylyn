@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2015 Tasktop Technologies.
+ * Copyright (c) 2014, 2019 Tasktop Technologies.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Leo Dos Santos - initial API and implementation
+ *     Pierre-Yves B. <pyvesdev@gmail.com> - Bug 509033 - markdown misses support for ~~strike~~
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.markdown.internal;
@@ -336,6 +337,8 @@ public class MarkdownDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			return new ContentBlock("**", "**", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
 		case CODE:
 			return new CodeSpan();
+		case DELETED:
+			return new ContentBlock("~", "~", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$
 		default:
 			Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
 			return new ContentBlock("", "", 0, 0); //$NON-NLS-1$ //$NON-NLS-2$

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Tasktop Technologies
+ * Copyright (c) 2014, 2019 Tasktop Technologies
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Leo Dos Santos - initial API and implementation
+ *     Pierre-Yves B. <pyvesdev@gmail.com> - Bug 509033 - markdown misses support for ~~strike~~
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.markdown.tests;
@@ -120,6 +121,19 @@ public class MarkdownDocumentBuilderTest extends TestCase {
 		builder.endSpan();
 		builder.endDocument();
 		assertMarkup("some **strong** and *emphasis*\n\n");
+	}
+
+	public void testParagraphWithDeleted() {
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		builder.characters("some ");
+		builder.beginSpan(SpanType.DELETED, new Attributes());
+		builder.characters("deleted");
+		builder.endSpan();
+		builder.characters(" text");
+		builder.endBlock();
+		builder.endDocument();
+		assertMarkup("some ~deleted~ text\n\n");
 	}
 
 	public void testLineBreak() {

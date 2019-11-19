@@ -10,6 +10,7 @@
  * Contributors:
  *     Stefan Seelmann - initial API and implementation
  *     Pierre-Yves B. <pyvesdev@gmail.com> - Bug 552231 - Styling should not apply inside words
+ *     Pierre-Yves B. <pyvesdev@gmail.com> - Bug 509033 - markdown misses support for ~~strike~~
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.markdown.tests;
@@ -254,6 +255,17 @@ public class MarkdownLanguageSpanElementsTest extends MarkdownLanguageTestBase {
 	}
 
 	/*
+	 * Deleted. Markdown treats both single and double tilde as "deleted".
+	 */
+	public void testDeletedWithDoubleTilde() {
+		parseAndAssert("~~foo bar~~", "<p><del>foo bar</del></p>");
+	}
+
+	public void testDeletedWithTilde() {
+		parseAndAssert("~foo bar~", "<p><del>foo bar</del></p>");
+	}
+
+	/*
 	 * Emphasis with asterisks can be used in the middle of a word.
 	 */
 	public void testEmphasisWithinWord() {
@@ -261,10 +273,10 @@ public class MarkdownLanguageSpanElementsTest extends MarkdownLanguageTestBase {
 	}
 
 	/*
-	 * But if you surround an * or _ with spaces, it'll be treated as a literal asterisk or underscore.
+	 * But if you surround an *, _ or ~ with spaces, it'll be treated as a literal asterisk, underscore or tilde.
 	 */
 	public void testLiteralAsteriskAndUnderscore() {
-		parseAndAssert("asterisk * underscore _", "<p>asterisk * underscore _</p>");
+		parseAndAssert("asterisk * underscore _ tilde ~", "<p>asterisk * underscore _ tilde ~</p>");
 	}
 
 	/*
@@ -279,8 +291,8 @@ public class MarkdownLanguageSpanElementsTest extends MarkdownLanguageTestBase {
 	}
 
 	/*
-	 * To produce a literal asterisk or underscore at a position where it would otherwise be used as an emphasis
-	 * delimiter, you can backslash escape it.
+	 * To produce a literal asterisk, underscore or tilde at a position where it would otherwise be used as an
+	 * emphasis delimiter, you can backslash escape it.
 	 */
 	public void testEscapesAsterisk() {
 		parseAndAssert("\\*foo bar\\*", "<p>*foo bar*</p>");
@@ -290,12 +302,20 @@ public class MarkdownLanguageSpanElementsTest extends MarkdownLanguageTestBase {
 		parseAndAssert("\\_foo bar\\_", "<p>_foo bar_</p>");
 	}
 
+	public void testEscapesTilde() {
+		parseAndAssert("\\~foo bar\\~", "<p>~foo bar~</p>");
+	}
+
 	public void testEscapesDoubleAsterisk() {
 		parseAndAssert("\\**foo bar\\**", "<p>**foo bar**</p>");
 	}
 
 	public void testEscapesDoubleUnderscore() {
 		parseAndAssert("\\__foo bar\\__", "<p>__foo bar__</p>");
+	}
+
+	public void testEscapesDoubleTilde() {
+		parseAndAssert("\\~~foo bar\\~~", "<p>~~foo bar~~</p>");
 	}
 
 	/*

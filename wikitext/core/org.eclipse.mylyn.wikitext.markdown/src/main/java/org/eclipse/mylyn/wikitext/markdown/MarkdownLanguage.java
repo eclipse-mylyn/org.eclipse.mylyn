@@ -11,6 +11,7 @@
  *     Stefan Seelmann - initial API and implementation
  *     Alexander Nyßen - support for inline links in phrases
  *     Pierre-Yves B. <pyvesdev@gmail.com> - Bug 552231 - Styling should not apply inside words
+ *     Pierre-Yves B. <pyvesdev@gmail.com> - Bug 509033 - markdown misses
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.markdown;
@@ -89,8 +90,10 @@ public class MarkdownLanguage extends AbstractMarkupLanguage {
 		// backslash escaped span elements
 		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("**")); //$NON-NLS-1$
 		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("__")); //$NON-NLS-1$
+		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("~~")); //$NON-NLS-1$
 		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("*")); //$NON-NLS-1$
 		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("_")); //$NON-NLS-1$
+		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("~")); //$NON-NLS-1$
 		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("\\")); //$NON-NLS-1$
 		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("`")); //$NON-NLS-1$
 		phraseModifierSyntax.add(new BackslashEscapePhraseModifier("{")); //$NON-NLS-1$
@@ -111,6 +114,8 @@ public class MarkdownLanguage extends AbstractMarkupLanguage {
 		phraseModifierSyntax.add(new SimpleWordModifier("__", SpanType.STRONG)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new SimplePhraseModifier("*", SpanType.EMPHASIS)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new SimpleWordModifier("_", SpanType.EMPHASIS)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("~~", SpanType.DELETED)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("~", SpanType.DELETED)); //$NON-NLS-1$
 	}
 
 	@Override
