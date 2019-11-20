@@ -58,6 +58,7 @@ public class RequestException extends IOException {
 		this.status = status;
 	}
 
+	@Override
 	public String getMessage() {
 		return error != null ? formatErrors() : super.getMessage();
 	}

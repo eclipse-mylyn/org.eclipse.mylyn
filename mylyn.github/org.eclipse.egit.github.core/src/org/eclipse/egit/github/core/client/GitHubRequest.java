@@ -163,11 +163,13 @@ public class GitHubRequest {
 		return this;
 	}
 
+	@Override
 	public int hashCode() {
 		final String fullUri = generateUri();
 		return fullUri != null ? fullUri.hashCode() : super.hashCode();
 	}
 
+	@Override
 	public boolean equals(final Object obj) {
 		if (obj == this)
 			return true;
@@ -178,6 +180,7 @@ public class GitHubRequest {
 		return fullUri != null && objUri != null && fullUri.equals(objUri);
 	}
 
+	@Override
 	public String toString() {
 		final String fullUri = generateUri();
 		return fullUri != null ? fullUri : super.toString();

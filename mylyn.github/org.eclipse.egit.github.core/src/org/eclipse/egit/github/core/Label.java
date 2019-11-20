@@ -31,6 +31,7 @@ public class Label implements Serializable {
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == this)
 			return true;
@@ -44,6 +45,7 @@ public class Label implements Serializable {
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode() {
 		final String name = this.name;
 		return name != null ? name.hashCode() : super.hashCode();
@@ -52,6 +54,7 @@ public class Label implements Serializable {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString() {
 		final String name = this.name;
 		return name != null ? name : super.toString();

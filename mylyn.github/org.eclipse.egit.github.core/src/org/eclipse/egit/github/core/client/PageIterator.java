@@ -148,14 +148,17 @@ public class PageIterator<V> implements Iterator<Collection<V>>,
 		return last;
 	}
 
+	@Override
 	public boolean hasNext() {
 		return nextPage == 0 || next != null;
 	}
 
+	@Override
 	public void remove() {
 		throw new UnsupportedOperationException("Remove not supported"); //$NON-NLS-1$
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public Collection<V> next() {
 		if (!hasNext())
@@ -207,6 +210,7 @@ public class PageIterator<V> implements Iterator<Collection<V>>,
 	/**
 	 * @return this page iterator
 	 */
+	@Override
 	public Iterator<Collection<V>> iterator() {
 		return this;
 	}

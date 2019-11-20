@@ -131,6 +131,7 @@ public class RepositoryId implements IRepositoryIdProvider, Serializable {
 		return name;
 	}
 
+	@Override
 	public String generateId() {
 		return owner + "/" + name; //$NON-NLS-1$
 	}

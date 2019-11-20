@@ -123,6 +123,7 @@ public class PullRequestServiceTest {
 	public void getPullRequestsNullRepositoryId() throws IOException {
 		pullRequestService.getPullRequests(new IRepositoryIdProvider() {
 
+			@Override
 			public String generateId() {
 				return null;
 			}

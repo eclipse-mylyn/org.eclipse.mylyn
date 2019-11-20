@@ -27,6 +27,7 @@ public class MilestoneComparator implements Comparator<Milestone>, Serializable 
 	 */
 	private static final long serialVersionUID = 7166479273639101758L;
 
+	@Override
 	public int compare(Milestone m1, Milestone m2) {
 		return m1.getTitle().compareToIgnoreCase(m2.getTitle());
 	}
