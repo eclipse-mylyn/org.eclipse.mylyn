@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Stefan Seelmann and others.
+ * Copyright (c) 2012, 2019 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     Stefan Seelmann - initial API and implementation
+ *     Pierre-Yves B. <pyvesdev@gmail.com> - Bug 552231 - Styling should not apply inside words
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.wikitext.markdown.tests;
@@ -253,7 +254,7 @@ public class MarkdownLanguageSpanElementsTest extends MarkdownLanguageTestBase {
 	}
 
 	/*
-	 * Emphasis can be used in the middle of a word.
+	 * Emphasis with asterisks can be used in the middle of a word.
 	 */
 	public void testEmphasisWithinWord() {
 		parseAndAssert("un*frigging*believable", "<p>un<em>frigging</em>believable</p>");
@@ -264,6 +265,17 @@ public class MarkdownLanguageSpanElementsTest extends MarkdownLanguageTestBase {
 	 */
 	public void testLiteralAsteriskAndUnderscore() {
 		parseAndAssert("asterisk * underscore _", "<p>asterisk * underscore _</p>");
+	}
+
+	/*
+	 * And _ in the middle of a word will be treated as a literal underscore.
+	 */
+	public void testLiteralUnderscoreInsideWord() {
+		parseAndAssert("un_frigging_believable", "<p>un_frigging_believable</p>");
+	}
+
+	public void testLiteralDoubleUnderscoreInsideWord() {
+		parseAndAssert("un__frigging__believable", "<p>un__frigging__believable</p>");
 	}
 
 	/*

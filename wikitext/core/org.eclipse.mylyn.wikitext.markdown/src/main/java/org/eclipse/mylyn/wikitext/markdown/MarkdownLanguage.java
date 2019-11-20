@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2015 Stefan Seelmann and others.
+ * Copyright (c) 2012, 2019 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  * Contributors:
  *     Stefan Seelmann - initial API and implementation
  *     Alexander Nyßen - support for inline links in phrases
+ *     Pierre-Yves B. <pyvesdev@gmail.com> - Bug 552231 - Styling should not apply inside words
  *******************************************************************************/
 
 package org.eclipse.mylyn.wikitext.markdown;
@@ -31,6 +32,7 @@ import org.eclipse.mylyn.wikitext.markdown.internal.block.QuoteBlock;
 import org.eclipse.mylyn.wikitext.markdown.internal.block.UnderlinedHeadingBlock;
 import org.eclipse.mylyn.wikitext.markdown.internal.phrase.BackslashEscapePhraseModifier;
 import org.eclipse.mylyn.wikitext.markdown.internal.phrase.SimplePhraseModifier;
+import org.eclipse.mylyn.wikitext.markdown.internal.phrase.SimpleWordModifier;
 import org.eclipse.mylyn.wikitext.markdown.internal.token.AutomaticLinkReplacementToken;
 import org.eclipse.mylyn.wikitext.markdown.internal.token.InlineImageReplacementToken;
 import org.eclipse.mylyn.wikitext.markdown.internal.token.InlineLinkReplacementToken;
@@ -106,9 +108,9 @@ public class MarkdownLanguage extends AbstractMarkupLanguage {
 		phraseModifierSyntax.add(new SimplePhraseModifier("``", SpanType.CODE)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new SimplePhraseModifier("`", SpanType.CODE)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new SimplePhraseModifier("**", SpanType.STRONG)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("__", SpanType.STRONG)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimpleWordModifier("__", SpanType.STRONG)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new SimplePhraseModifier("*", SpanType.EMPHASIS)); //$NON-NLS-1$
-		phraseModifierSyntax.add(new SimplePhraseModifier("_", SpanType.EMPHASIS)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimpleWordModifier("_", SpanType.EMPHASIS)); //$NON-NLS-1$
 	}
 
 	@Override
