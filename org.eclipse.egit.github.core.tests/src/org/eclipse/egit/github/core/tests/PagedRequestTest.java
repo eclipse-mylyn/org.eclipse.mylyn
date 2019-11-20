@@ -27,7 +27,7 @@ public class PagedRequestTest {
 	 */
 	@Test
 	public void defaultState() {
-		PagedRequest<String> request = new PagedRequest<String>();
+		PagedRequest<String> request = new PagedRequest<>();
 		assertTrue(request.getPage() > 0);
 		assertTrue(request.getPageSize() > 0);
 	}

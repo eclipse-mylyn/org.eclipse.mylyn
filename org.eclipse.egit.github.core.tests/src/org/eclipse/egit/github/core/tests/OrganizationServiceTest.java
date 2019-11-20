@@ -251,7 +251,7 @@ public class OrganizationServiceTest {
 
 	private void testMembersByRole(RoleFilter roleFilter) throws IOException {
 		service.getMembers("group", roleFilter);
-		HashMap<String, String> params = new HashMap<String, String>();
+		HashMap<String, String> params = new HashMap<>();
 		params.put("role", roleFilter.toString());
 		GitHubRequest request = new GitHubRequest();
 		request.setParams(params);

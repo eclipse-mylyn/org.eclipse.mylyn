@@ -242,7 +242,7 @@ public class IssueTaskDataHandler extends GitHubTaskDataHandler {
 			IssueAttribute attribute, List<Label> values) {
 		TaskAttribute attr = createAttribute(data, attribute.getMetadata());
 		if (values != null) {
-			List<String> labels = new ArrayList<String>(values.size());
+			List<String> labels = new ArrayList<>(values.size());
 			for (Label label : values)
 				labels.add(label.getName());
 			data.getAttributeMapper().setValues(attr, labels);
@@ -291,8 +291,8 @@ public class IssueTaskDataHandler extends GitHubTaskDataHandler {
 					// Ignore
 				}
 			List<Label> currentLabels = connector.getLabels(repository);
-			List<Label> newLabels = new LinkedList<Label>();
-			List<Label> labels = new LinkedList<Label>();
+			List<Label> newLabels = new LinkedList<>();
+			List<Label> labels = new LinkedList<>();
 			for (String value : labelsAttribute.getValues()) {
 				Label label = new Label().setName(value);
 				if (!currentLabels.contains(label))

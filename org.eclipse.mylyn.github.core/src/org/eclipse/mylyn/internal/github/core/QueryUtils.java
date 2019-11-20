@@ -68,7 +68,7 @@ public abstract class QueryUtils {
 		if (attribute == null || attribute.length() == 0)
 			return Collections.emptyList();
 
-		List<String> attrs = new LinkedList<String>();
+		List<String> attrs = new LinkedList<>();
 		String[] values = attribute.split(DELIMITER);
 		for (String value : values)
 			if (value.length() > 0)

@@ -177,7 +177,7 @@ public class PullRequestRepositoryQueryPage extends GitHubRepositoryQueryPage {
 	public void applyTo(IRepositoryQuery query) {
 		query.setSummary(getQueryTitle());
 
-		List<String> statuses = new LinkedList<String>();
+		List<String> statuses = new LinkedList<>();
 		if (openButton.getSelection())
 			statuses.add(IssueService.STATE_OPEN);
 		if (closedButton.getSelection())

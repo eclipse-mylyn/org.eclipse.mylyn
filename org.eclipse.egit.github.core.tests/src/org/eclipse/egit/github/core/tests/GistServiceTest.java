@@ -462,7 +462,7 @@ public class GistServiceTest {
 	public void createCommentOK() throws IOException {
 		gistService.createComment("1", "test_comment");
 
-		Map<String, String> params = new HashMap<String, String>(1, 1);
+		Map<String, String> params = new HashMap<>(1, 1);
 		params.put(IssueService.FIELD_BODY, "test_comment");
 		verify(gitHubClient).post("/gists/1/comments", params, Comment.class);
 	}

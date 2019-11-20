@@ -173,7 +173,7 @@ public class DataServiceTest {
 	public void createTree() throws IOException {
 		service.createTree(repo, null);
 		verify(client).post("/repos/o/n/git/trees",
-				new HashMap<Object, Object>(), Tree.class);
+				new HashMap<>(), Tree.class);
 	}
 
 	/**

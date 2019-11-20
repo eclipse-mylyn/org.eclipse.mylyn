@@ -47,7 +47,7 @@ public class CommitTest extends LiveTest {
 		CommitService service = new CommitService(client);
 		RepositoryId repo = RepositoryId.create("defunkt", "mustache");
 		PageIterator<RepositoryCommit> commits = service.pageCommits(repo, 2);
-		Set<String> shas = new HashSet<String>();
+		Set<String> shas = new HashSet<>();
 		int pages = 0;
 		for (Collection<RepositoryCommit> page : commits) {
 			assertNotNull(page);

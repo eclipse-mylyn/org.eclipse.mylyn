@@ -145,7 +145,7 @@ public class IssueTest extends LiveTest {
 	@Test
 	public void testPaging() throws Exception {
 		IssueService service = new IssueService(client);
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, String> params = new HashMap<>();
 		params.put(IssueService.FILTER_STATE, IssueService.STATE_CLOSED);
 		PageIterator<Issue> iterator = service.pageIssues("schacon", "showoff",
 				params, 1);
