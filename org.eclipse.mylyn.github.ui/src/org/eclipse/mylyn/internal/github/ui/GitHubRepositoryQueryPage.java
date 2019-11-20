@@ -41,6 +41,7 @@ public abstract class GitHubRepositoryQueryPage extends
 		super(pageName, taskRepository, query);
 	}
 
+	@Override
 	public void setPageComplete(boolean complete) {
 		super.setPageComplete(complete);
 		// Forward completeness to search container if applicable

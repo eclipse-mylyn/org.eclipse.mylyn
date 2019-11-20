@@ -57,6 +57,7 @@ public class PullRequestCommitAdapter extends WorkbenchAdapter {
 		return commit.getSha().substring(0, 8);
 	}
 
+	@Override
 	public StyledString getStyledText(Object object) {
 		StyledString styled = new StyledString(getLabel(object));
 		String desc = commit.getCommit().getMessage();

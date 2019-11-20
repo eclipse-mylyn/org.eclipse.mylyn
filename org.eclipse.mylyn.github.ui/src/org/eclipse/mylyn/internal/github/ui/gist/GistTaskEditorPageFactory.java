@@ -31,6 +31,7 @@ public class GistTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory#canCreatePageFor(org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput)
 	 */
+	@Override
 	public boolean canCreatePageFor(TaskEditorInput input) {
 		ITask task = input.getTask();
 		return GistConnector.KIND.equals(task.getConnectorKind())
@@ -40,6 +41,7 @@ public class GistTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory#createPage(org.eclipse.mylyn.tasks.ui.editors.TaskEditor)
 	 */
+	@Override
 	public IFormPage createPage(TaskEditor parentEditor) {
 		return new GistTaskEditorPage(parentEditor, GistConnector.KIND);
 	}
@@ -47,6 +49,7 @@ public class GistTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory#getPageImage()
 	 */
+	@Override
 	public Image getPageImage() {
 		return GitHubImages.get(GitHubImages.GITHUB_LOGO_OBJ);
 	}
@@ -54,6 +57,7 @@ public class GistTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory#getPageText()
 	 */
+	@Override
 	public String getPageText() {
 		return Messages.GistTaskEditorPageFactory_PageText;
 	}
@@ -61,6 +65,7 @@ public class GistTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory#getPriority()
 	 */
+	@Override
 	public int getPriority() {
 		return PRIORITY_TASK;
 	}
@@ -68,6 +73,7 @@ public class GistTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory#getConflictingIds(org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput)
 	 */
+	@Override
 	public String[] getConflictingIds(TaskEditorInput input) {
 		return new String[] { ITasksUiConstants.ID_PAGE_PLANNING };
 	}

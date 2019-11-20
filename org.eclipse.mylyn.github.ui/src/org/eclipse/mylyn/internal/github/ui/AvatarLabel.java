@@ -134,6 +134,7 @@ public class AvatarLabel implements IAvatarCallback {
 			avatarImage.setBackgroundImage(image);
 			avatarImage.addDisposeListener(new DisposeListener() {
 
+				@Override
 				public void widgetDisposed(DisposeEvent e) {
 					image.dispose();
 				}
@@ -146,9 +147,11 @@ public class AvatarLabel implements IAvatarCallback {
 	 * @see org.eclipse.mylyn.internal.github.ui.AvatarStore.IAvatarCallback#loaded(org.eclipse.swt.graphics.ImageData,
 	 *      org.eclipse.mylyn.internal.github.ui.AvatarStore)
 	 */
+	@Override
 	public void loaded(final ImageData data, final AvatarStore store) {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
+			@Override
 			public void run() {
 				Image image = store.getScaledImage(AVATAR_SIZE, data);
 				setImage(image).setVisible(true).layout();

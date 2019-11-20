@@ -39,6 +39,7 @@ public class GitHubTaskAttributeMapper extends TaskAttributeMapper {
 	/**
 	 * @see org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper#getValueLabels(org.eclipse.mylyn.tasks.core.data.TaskAttribute)
 	 */
+	@Override
 	public List<String> getValueLabels(final TaskAttribute taskAttribute) {
 		final String type = taskAttribute.getMetaData().getType();
 		if (TaskAttribute.TYPE_DATE.equals(type)

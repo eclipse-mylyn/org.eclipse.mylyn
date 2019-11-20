@@ -64,6 +64,7 @@ public class IssueTaskEditorPage extends AbstractTaskEditorPage {
 		}
 		partDescriptors.add(new TaskEditorPartDescriptor(ID_PART_SUMMARY) {
 
+			@Override
 			public AbstractTaskEditorPart createPart() {
 				return new IssueSummaryPart(IssueAttribute.REPORTER_GRAVATAR
 						.getMetadata().getId(),
@@ -72,6 +73,7 @@ public class IssueTaskEditorPage extends AbstractTaskEditorPage {
 		}.setPath(PATH_HEADER));
 		partDescriptors.add(new TaskEditorPartDescriptor(ID_PART_ATTRIBUTES) {
 
+			@Override
 			public AbstractTaskEditorPart createPart() {
 				return new IssueAttributePart();
 			}
@@ -103,6 +105,7 @@ public class IssueTaskEditorPage extends AbstractTaskEditorPage {
 		AuthenticationCredentials cred = taskRepository.getCredentials(AuthenticationType.REPOSITORY);
 		if (cred == null || cred.getUserName() == null || cred.getUserName().equals("")) { //$NON-NLS-1$
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				@Override
 				public void run() {
 					getTaskEditor().setMessage(Messages.IssueTaskEditorPage_MessageAnonymousCannotSubmit, type,
 							new HyperlinkAdapter() {

@@ -45,6 +45,7 @@ public class RebasePullRequestHandler extends TaskDataHandler {
 	 */
 	public static final String ID = "org.eclipse.mylyn.github.ui.command.rebasePullRequest"; //$NON-NLS-1$
 
+	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		final TaskData data = getTaskData(event);
 		if (data == null)
@@ -52,6 +53,7 @@ public class RebasePullRequestHandler extends TaskDataHandler {
 		Job job = new Job(MessageFormat.format(
 				Messages.RebasePullRequestHandler_RebaseJob, data.getTaskId())) {
 
+			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				PullRequestComposite prComp = PullRequestConnector
 						.getPullRequest(data);

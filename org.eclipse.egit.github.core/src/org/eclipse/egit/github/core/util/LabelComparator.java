@@ -30,6 +30,7 @@ public class LabelComparator implements Comparator<Label>, Serializable {
 	/**
 	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 	 */
+	@Override
 	public int compare(Label label1, Label label2) {
 		return label1.getName().compareToIgnoreCase(label2.getName());
 	}

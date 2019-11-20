@@ -53,6 +53,7 @@ public class FetchPullRequestHandler extends TaskDataHandler {
 
 	}
 
+	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		final TaskData data = getTaskData(event);
 		if (data == null)
@@ -61,6 +62,7 @@ public class FetchPullRequestHandler extends TaskDataHandler {
 		Job job = new Job(MessageFormat.format(
 				Messages.FetchPullRequestHandler_JobName, data.getTaskId())) {
 
+			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
 					PullRequestComposite prComp = PullRequestConnector

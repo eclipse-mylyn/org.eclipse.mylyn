@@ -58,6 +58,7 @@ public class GistConnectorUi extends AbstractRepositoryConnectorUi {
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#getTaskKindLabel(org.eclipse.mylyn.tasks.core.ITask)
 	 */
+	@Override
 	public String getTaskKindLabel(ITask task) {
 		return Messages.GistConnectorUi_LabelTaskKind;
 	}
@@ -65,6 +66,7 @@ public class GistConnectorUi extends AbstractRepositoryConnectorUi {
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#getConnectorKind()
 	 */
+	@Override
 	public String getConnectorKind() {
 		return GistConnector.KIND;
 	}
@@ -72,6 +74,7 @@ public class GistConnectorUi extends AbstractRepositoryConnectorUi {
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#getSettingsPage(org.eclipse.mylyn.tasks.core.TaskRepository)
 	 */
+	@Override
 	public ITaskRepositoryPage getSettingsPage(TaskRepository taskRepository) {
 		return new GistRepositorySettingsPage(taskRepository);
 	}
@@ -80,6 +83,7 @@ public class GistConnectorUi extends AbstractRepositoryConnectorUi {
 	 * @see org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#getQueryWizard(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      org.eclipse.mylyn.tasks.core.IRepositoryQuery)
 	 */
+	@Override
 	public IWizard getQueryWizard(TaskRepository taskRepository,
 			IRepositoryQuery queryToEdit) {
 		RepositoryQueryWizard wizard = new RepositoryQueryWizard(taskRepository);
@@ -91,6 +95,7 @@ public class GistConnectorUi extends AbstractRepositoryConnectorUi {
 	 * @see org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#getNewTaskWizard(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      org.eclipse.mylyn.tasks.core.ITaskMapping)
 	 */
+	@Override
 	public IWizard getNewTaskWizard(TaskRepository taskRepository,
 			ITaskMapping selection) {
 		return new NewTaskWizard(taskRepository, selection);
@@ -99,6 +104,7 @@ public class GistConnectorUi extends AbstractRepositoryConnectorUi {
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#hasSearchPage()
 	 */
+	@Override
 	public boolean hasSearchPage() {
 		return true;
 	}
@@ -107,6 +113,7 @@ public class GistConnectorUi extends AbstractRepositoryConnectorUi {
 	 * @see org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#getSearchPage(org.eclipse.mylyn.tasks.core.TaskRepository,
 	 *      org.eclipse.jface.viewers.IStructuredSelection)
 	 */
+	@Override
 	public ITaskSearchPage getSearchPage(TaskRepository repository,
 			IStructuredSelection selection) {
 		return new GistRepositoryQueryPage(repository, null);
@@ -115,6 +122,7 @@ public class GistConnectorUi extends AbstractRepositoryConnectorUi {
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi#getTaskAttachmentPage(org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel)
 	 */
+	@Override
 	public IWizardPage getTaskAttachmentPage(TaskAttachmentModel model) {
 		return new GistAttachmentPage(model);
 	}

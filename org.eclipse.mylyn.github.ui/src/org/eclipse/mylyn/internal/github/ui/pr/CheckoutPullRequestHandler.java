@@ -68,6 +68,7 @@ public class CheckoutPullRequestHandler extends TaskDataHandler {
 		}
 	}
 
+	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		final TaskData data = getTaskData(event);
 		if (data == null)
@@ -76,6 +77,7 @@ public class CheckoutPullRequestHandler extends TaskDataHandler {
 		Job job = new Job(MessageFormat.format(
 				Messages.CheckoutPullRequestHandler_JobName, data.getTaskId())) {
 
+			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				SubProgressMonitor sub;
 				try {

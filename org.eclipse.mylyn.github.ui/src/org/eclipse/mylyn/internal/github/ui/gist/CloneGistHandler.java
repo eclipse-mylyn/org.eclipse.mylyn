@@ -144,6 +144,7 @@ public class CloneGistHandler extends TaskDataHandler {
 	private Job createCloneJob(final ExecutionEvent event, final TaskData data) {
 		Job job = new Job(Messages.CloneGistHandler_TaskCloning) {
 
+			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
 					final String name = getGistName(data);
@@ -152,6 +153,7 @@ public class CloneGistHandler extends TaskDataHandler {
 
 					operation.addPostCloneTask(new PostCloneTask() {
 
+						@Override
 						public void execute(Repository repository,
 								IProgressMonitor monitor) throws CoreException {
 							if (monitor.isCanceled())
@@ -164,10 +166,12 @@ public class CloneGistHandler extends TaskDataHandler {
 
 					operation.addPostCloneTask(new PostCloneTask() {
 
+						@Override
 						public void execute(final Repository repository,
 								IProgressMonitor monitor) throws CoreException {
 							IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
 
+								@Override
 								public void run(IProgressMonitor monitor)
 										throws CoreException {
 									if (monitor.isCanceled())
@@ -201,6 +205,7 @@ public class CloneGistHandler extends TaskDataHandler {
 				.getCause() : exception;
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 
+			@Override
 			public void run() {
 				ErrorDialog.openError(HandlerUtil.getActiveShell(event),
 						Messages.CloneGistHandler_ErrorTitle,
@@ -214,6 +219,7 @@ public class CloneGistHandler extends TaskDataHandler {
 	/**
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
 	 */
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		TaskData data = getTaskData(event);
 		if (data != null)

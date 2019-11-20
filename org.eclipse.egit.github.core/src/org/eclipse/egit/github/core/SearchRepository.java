@@ -79,6 +79,7 @@ public class SearchRepository implements IRepositoryIdProvider, Serializable {
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode() {
 		return getId().hashCode();
 	}
@@ -86,6 +87,7 @@ public class SearchRepository implements IRepositoryIdProvider, Serializable {
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == this)
 			return true;
@@ -98,6 +100,7 @@ public class SearchRepository implements IRepositoryIdProvider, Serializable {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString() {
 		return getId();
 	}
@@ -230,6 +233,7 @@ public class SearchRepository implements IRepositoryIdProvider, Serializable {
 		return watchers;
 	}
 
+	@Override
 	public String generateId() {
 		final String owner = this.owner;
 		if (owner == null || owner.length() == 0)

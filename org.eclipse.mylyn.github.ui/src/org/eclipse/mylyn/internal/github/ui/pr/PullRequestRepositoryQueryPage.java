@@ -44,6 +44,7 @@ public class PullRequestRepositoryQueryPage extends GitHubRepositoryQueryPage {
 
 	private SelectionListener completeListener = new SelectionAdapter() {
 
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			setPageComplete(isPageComplete());
 		}
@@ -100,6 +101,7 @@ public class PullRequestRepositoryQueryPage extends GitHubRepositoryQueryPage {
 	/**
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		Composite displayArea = new Composite(parent, SWT.NONE);
 		GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(true)
@@ -118,6 +120,7 @@ public class PullRequestRepositoryQueryPage extends GitHubRepositoryQueryPage {
 			GridDataFactory.fillDefaults().grab(true, false).applyTo(titleText);
 			titleText.addModifyListener(new ModifyListener() {
 
+				@Override
 				public void modifyText(ModifyEvent e) {
 					setPageComplete(isPageComplete());
 				}
@@ -145,6 +148,7 @@ public class PullRequestRepositoryQueryPage extends GitHubRepositoryQueryPage {
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage#isPageComplete()
 	 */
+	@Override
 	public boolean isPageComplete() {
 		boolean complete = super.isPageComplete();
 		if (complete) {
@@ -161,6 +165,7 @@ public class PullRequestRepositoryQueryPage extends GitHubRepositoryQueryPage {
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage#getQueryTitle()
 	 */
+	@Override
 	public String getQueryTitle() {
 		return this.titleText != null ? this.titleText.getText() : null;
 	}
@@ -168,6 +173,7 @@ public class PullRequestRepositoryQueryPage extends GitHubRepositoryQueryPage {
 	/**
 	 * @see org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage#applyTo(org.eclipse.mylyn.tasks.core.IRepositoryQuery)
 	 */
+	@Override
 	public void applyTo(IRepositoryQuery query) {
 		query.setSummary(getQueryTitle());
 

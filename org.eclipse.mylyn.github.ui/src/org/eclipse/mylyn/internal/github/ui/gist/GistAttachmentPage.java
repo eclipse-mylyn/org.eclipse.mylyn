@@ -54,6 +54,7 @@ public class GistAttachmentPage extends WizardPage {
 	/**
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		Composite displayArea = new Composite(parent, SWT.NONE);
 		GridLayoutFactory.swtDefaults().numColumns(2).applyTo(displayArea);
@@ -65,6 +66,7 @@ public class GistAttachmentPage extends WizardPage {
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(nameText);
 		nameText.addModifyListener(new ModifyListener() {
 
+			@Override
 			public void modifyText(ModifyEvent e) {
 				updateFilename();
 			}
@@ -88,6 +90,7 @@ public class GistAttachmentPage extends WizardPage {
 	/**
 	 * @see org.eclipse.jface.dialogs.DialogPage#setVisible(boolean)
 	 */
+	@Override
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		if (visible) {

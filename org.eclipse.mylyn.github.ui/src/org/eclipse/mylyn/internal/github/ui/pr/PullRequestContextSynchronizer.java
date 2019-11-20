@@ -48,6 +48,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  */
 public class PullRequestContextSynchronizer extends TaskActivationAdapter {
 
+	@Override
 	public void taskActivated(ITask task) {
 		if (task == null)
 			return;

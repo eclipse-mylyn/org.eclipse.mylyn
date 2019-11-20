@@ -58,6 +58,7 @@ public class PullRequestTaskEditorPage extends AbstractTaskEditorPage {
 		}
 		partDescriptors.add(new TaskEditorPartDescriptor(ID_PART_SUMMARY) {
 
+			@Override
 			public AbstractTaskEditorPart createPart() {
 				return new IssueSummaryPart(
 						PullRequestAttribute.REPORTER_GRAVATAR.getMetadata()
@@ -66,6 +67,7 @@ public class PullRequestTaskEditorPage extends AbstractTaskEditorPage {
 		}.setPath(PATH_HEADER));
 		partDescriptors.add(new TaskEditorPartDescriptor(ID_PART_ATTRIBUTES) {
 
+			@Override
 			public AbstractTaskEditorPart createPart() {
 				return new CommitAttributePart(prComp);
 			}

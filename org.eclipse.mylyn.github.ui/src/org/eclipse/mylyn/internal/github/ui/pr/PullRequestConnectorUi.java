@@ -49,6 +49,7 @@ public class PullRequestConnectorUi extends AbstractRepositoryConnectorUi {
 				Messages.PullRequestConnectorUi_MessageRepositoryNotFound, id);
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 
+			@Override
 			public void run() {
 				MessageDialog
 						.openInformation(
@@ -60,14 +61,17 @@ public class PullRequestConnectorUi extends AbstractRepositoryConnectorUi {
 		});
 	}
 
+	@Override
 	public String getConnectorKind() {
 		return PullRequestConnector.KIND;
 	}
 
+	@Override
 	public ITaskRepositoryPage getSettingsPage(TaskRepository taskRepository) {
 		return new PullRequestRepositorySettingsPage(taskRepository);
 	}
 
+	@Override
 	public IWizard getQueryWizard(TaskRepository taskRepository,
 			IRepositoryQuery queryToEdit) {
 		RepositoryQueryWizard wizard = new RepositoryQueryWizard(taskRepository);
@@ -77,11 +81,13 @@ public class PullRequestConnectorUi extends AbstractRepositoryConnectorUi {
 		return wizard;
 	}
 
+	@Override
 	public IWizard getNewTaskWizard(TaskRepository taskRepository,
 			ITaskMapping selection) {
 		return new NewTaskWizard(taskRepository, selection);
 	}
 
+	@Override
 	public boolean hasSearchPage() {
 		return true;
 	}

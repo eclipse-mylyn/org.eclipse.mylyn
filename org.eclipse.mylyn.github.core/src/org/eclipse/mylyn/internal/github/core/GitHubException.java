@@ -50,6 +50,7 @@ public class GitHubException extends IOException {
 		initCause(cause);
 	}
 
+	@Override
 	public String getMessage() {
 		RequestError error = ((RequestException) getCause()).getError();
 		String errorMessage = error.getMessage();
