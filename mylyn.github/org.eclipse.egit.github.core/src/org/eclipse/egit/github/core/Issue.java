@@ -157,7 +157,7 @@ public class Issue implements Serializable {
 	 * @return this issue
 	 */
 	public Issue setLabels(List<Label> labels) {
-		this.labels = labels != null ? new ArrayList<Label>(labels) : null;
+		this.labels = labels != null ? new ArrayList<>(labels) : null;
 		return this;
 	}
 

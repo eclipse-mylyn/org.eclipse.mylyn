@@ -189,7 +189,7 @@ public class LabelServiceTest {
 	 */
 	@Test
 	public void setLabels() throws IOException {
-		List<Label> labels = new LinkedList<Label>();
+		List<Label> labels = new LinkedList<>();
 		labelService.setLabels("test_user", "test_repository", "1", labels);
 		TypeToken<List<Label>> labelsToken = new TypeToken<List<Label>>() {
 		};
@@ -206,7 +206,7 @@ public class LabelServiceTest {
 	@Test
 	public void setLabelsWithRepositoryId() throws IOException {
 		RepositoryId repo = new RepositoryId("test_user", "test_repository");
-		List<Label> labels = new LinkedList<Label>();
+		List<Label> labels = new LinkedList<>();
 		labelService.setLabels(repo, "1", labels);
 		TypeToken<List<Label>> labelsToken = new TypeToken<List<Label>>() {
 		};

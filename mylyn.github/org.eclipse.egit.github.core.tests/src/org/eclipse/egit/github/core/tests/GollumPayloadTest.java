@@ -42,7 +42,7 @@ public class GollumPayloadTest {
 	@Test
 	public void updateFields() {
 		GollumPayload payload = new GollumPayload();
-		List<GollumPage> pages = new ArrayList<GollumPage>();
+		List<GollumPage> pages = new ArrayList<>();
 		pages.add(new GollumPage().setPageName("page"));
 		assertEquals(pages, payload.setPages(pages).getPages());
 	}

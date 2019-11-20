@@ -146,7 +146,7 @@ public abstract class GitHubService {
 	 * @return request
 	 */
 	protected <V> PagedRequest<V> createPagedRequest(int start, int size) {
-		return new PagedRequest<V>(start, size);
+		return new PagedRequest<>(start, size);
 	}
 
 	/**
@@ -157,7 +157,7 @@ public abstract class GitHubService {
 	 * @return iterator
 	 */
 	protected <V> PageIterator<V> createPageIterator(PagedRequest<V> request) {
-		return new PageIterator<V>(request, client);
+		return new PageIterator<>(request, client);
 	}
 
 	/**
@@ -183,7 +183,7 @@ public abstract class GitHubService {
 	 * @throws IOException
 	 */
 	protected <V> List<V> getAll(PageIterator<V> iterator) throws IOException {
-		List<V> elements = new ArrayList<V>();
+		List<V> elements = new ArrayList<>();
 		try {
 			while (iterator.hasNext())
 				elements.addAll(iterator.next());

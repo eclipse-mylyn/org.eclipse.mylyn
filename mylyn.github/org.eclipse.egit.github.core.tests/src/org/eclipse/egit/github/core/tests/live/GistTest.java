@@ -171,7 +171,7 @@ public class GistTest extends LiveTest {
 		Collection<Gist> gists = pages.next();
 		assertNotNull(gists);
 		assertTrue(gists.size() > 0);
-		Set<String> ids = new HashSet<String>();
+		Set<String> ids = new HashSet<>();
 		for (Gist gist : gists) {
 			assertNotNull(gist);
 			assertNotNull(gist.getId());

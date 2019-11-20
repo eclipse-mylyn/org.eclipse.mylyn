@@ -481,7 +481,7 @@ public class IssueServiceTest {
 		issue.setState("test_state");
 		issueService.editIssue("test_user", "test_repository", issue);
 
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, String> params = new HashMap<>();
 		params.put(IssueService.FIELD_TITLE, "test_title");
 		params.put(IssueService.FIELD_BODY, "test_body");
 		params.put(IssueService.FILTER_STATE, "test_state");
@@ -504,7 +504,7 @@ public class IssueServiceTest {
 		RepositoryId id = new RepositoryId("tu", "tr");
 		issueService.editIssue(id, issue);
 
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, String> params = new HashMap<>();
 		params.put(IssueService.FIELD_TITLE, "test_title");
 		params.put(IssueService.FIELD_BODY, "test_body");
 		params.put(IssueService.FILTER_STATE, "test_state");
@@ -581,7 +581,7 @@ public class IssueServiceTest {
 		issueService.createComment("test_user", "test_repository", 1,
 				"test_comment");
 
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, String> params = new HashMap<>();
 		params.put(IssueService.FIELD_BODY, "test_comment");
 		verify(gitHubClient).post(
 				"/repos/test_user/test_repository/issues/1/comments", params,
@@ -598,7 +598,7 @@ public class IssueServiceTest {
 		RepositoryId id = new RepositoryId("tu", "tr");
 		issueService.createComment(id, 1, "test_comment");
 
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, String> params = new HashMap<>();
 		params.put(IssueService.FIELD_BODY, "test_comment");
 		verify(gitHubClient).post("/repos/tu/tr/issues/1/comments", params,
 				Comment.class);

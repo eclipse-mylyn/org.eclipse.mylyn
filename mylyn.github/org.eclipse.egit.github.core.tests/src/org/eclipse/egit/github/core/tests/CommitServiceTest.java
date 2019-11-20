@@ -582,7 +582,7 @@ public class CommitServiceTest {
 		status.setState(CommitStatus.STATE_SUCCESS);
 		status.setContext("context");
 		service.createStatus(repo, "123", status);
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, String> params = new HashMap<>();
 		params.put("description", status.getDescription());
 		params.put("target_url", status.getTargetUrl());
 		params.put("state", status.getState());

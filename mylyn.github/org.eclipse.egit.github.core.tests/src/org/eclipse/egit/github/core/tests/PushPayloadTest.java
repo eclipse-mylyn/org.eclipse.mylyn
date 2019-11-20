@@ -60,7 +60,7 @@ public class PushPayloadTest {
 	@Test
 	public void updateFields() {
 		PushPayload payload = new PushPayload();
-		List<Commit> commits = new ArrayList<Commit>();
+		List<Commit> commits = new ArrayList<>();
 		commits.add(new Commit().setSha("000"));
 		assertEquals("head", payload.setHead("head").getHead());
 		assertEquals("ref", payload.setRef("ref").getRef());

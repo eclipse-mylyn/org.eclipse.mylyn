@@ -139,7 +139,7 @@ public class RepositoryServiceTest {
 	 */
 	@Test
 	public void editRepositoryWithFields() throws IOException {
-		Map<String, Object> fields = new HashMap<String, Object>();
+		Map<String, Object> fields = new HashMap<>();
 		fields.put("has_issues", true);
 		fields.put("homepage", "test://address");
 		service.editRepository("o", "n", fields);
@@ -163,7 +163,7 @@ public class RepositoryServiceTest {
 	 */
 	@Test
 	public void editRepositoryProviderWithFields() throws IOException {
-		Map<String, Object> fields = new HashMap<String, Object>();
+		Map<String, Object> fields = new HashMap<>();
 		fields.put("has_issues", true);
 		fields.put("homepage", "test://address");
 		service.editRepository(repo, fields);
