@@ -152,10 +152,10 @@ public class CreateGistHandler extends AbstractHandler {
 			if (obj instanceof IResource)
 				file = (IResource) obj;
 			else if (obj instanceof IAdaptable) {
-				file = (IResource) ((IAdaptable) obj)
+				file = ((IAdaptable) obj)
 						.getAdapter(IResource.class);
 				if (file == null)
-					file = (IResource) ((IAdaptable) obj).getAdapter(IFile.class);
+					file = ((IAdaptable) obj).getAdapter(IFile.class);
 			}
 			if (file instanceof IFile)
 				createGistJob(event, (IFile) file, isPublic);
