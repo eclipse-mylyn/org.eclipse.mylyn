@@ -34,6 +34,7 @@ import org.eclipse.mylyn.wikitext.asciidoc.internal.block.ParagraphBlock;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.block.PreformattedBlock;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.block.PropertiesLineBlock;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.block.TableBlock;
+import org.eclipse.mylyn.wikitext.asciidoc.internal.block.TableOfContentsBlock;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.block.TitleLineBlock;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.block.UnderlinedHeadingBlock;
 import org.eclipse.mylyn.wikitext.asciidoc.internal.phrase.BackslashEscapePhraseModifier;
@@ -200,6 +201,9 @@ public class AsciiDocLanguage extends AbstractMarkupLanguage {
 		DefinitionListBlock definitionListBlock = new DefinitionListBlock();
 		blocks.add(definitionListBlock);
 		paragraphBreakingBlocks.add(definitionListBlock);
+
+		TableOfContentsBlock tocBlock = new TableOfContentsBlock();
+		blocks.add(tocBlock);
 	}
 
 	@Override

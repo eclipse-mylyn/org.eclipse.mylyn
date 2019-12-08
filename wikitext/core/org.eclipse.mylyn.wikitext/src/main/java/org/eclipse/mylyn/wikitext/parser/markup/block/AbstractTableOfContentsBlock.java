@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 David Green and others.
+ * Copyright (c) 2007, 2019 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,7 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.wikitext.textile.internal.block;
+package org.eclipse.mylyn.wikitext.parser.markup.block;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
@@ -22,8 +22,6 @@ import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
  * @author David Green
  */
 public abstract class AbstractTableOfContentsBlock extends Block {
-
-	// TODO: move to core and make API in 1.4
 
 	private String style = "none"; //$NON-NLS-1$
 
@@ -50,8 +48,8 @@ public abstract class AbstractTableOfContentsBlock extends Block {
 			return;
 		}
 
-		Attributes listAttributes = new Attributes(null, level == 0 ? cssClass : null,
-				"list-style: " + style + ";", null);//$NON-NLS-1$ //$NON-NLS-2$ 
+		Attributes listAttributes = new Attributes(null, level == 0 ? cssClass : null, "list-style: " + style + ";", //$NON-NLS-1$//$NON-NLS-2$
+				null);
 		builder.beginBlock(BlockType.NUMERIC_LIST, listAttributes);
 		for (OutlineItem child : item.getChildren()) {
 			builder.beginBlock(BlockType.LIST_ITEM, nullAttributes);

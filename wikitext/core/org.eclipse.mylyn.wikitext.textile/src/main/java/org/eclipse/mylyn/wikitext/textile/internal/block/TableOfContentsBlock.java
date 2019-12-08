@@ -15,6 +15,7 @@ package org.eclipse.mylyn.wikitext.textile.internal.block;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.mylyn.wikitext.parser.markup.block.AbstractTableOfContentsBlock;
 import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.parser.outline.OutlineParser;
 import org.eclipse.mylyn.wikitext.textile.TextileLanguage;

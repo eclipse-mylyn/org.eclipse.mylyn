@@ -13,6 +13,7 @@
 
 package org.eclipse.mylyn.wikitext.asciidoc.internal.block;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,7 +34,7 @@ import org.eclipse.mylyn.wikitext.parser.markup.Block;
  */
 public class HeadingBlock extends Block {
 
-	private static final Pattern pattern = Pattern.compile("(={1,})\\s+(.+?)(\\s*)((?:=*\\s*))?"); //$NON-NLS-1$
+	private static final Pattern pattern = Pattern.compile("(={1,6})\\s+(.+?)(\\s*)((?:=*\\s*))?"); //$NON-NLS-1$
 
 	private Matcher matcher;
 
@@ -43,7 +44,7 @@ public class HeadingBlock extends Block {
 	public boolean canStart(String line, int lineOffset) {
 		if (lineOffset == 0) {
 			Matcher m = pattern.matcher(line);
-			if (m.matches() && m.group(1).length() < 6) {
+			if (m.matches()) {
 				matcher = m;
 				return true;
 			}
@@ -73,6 +74,10 @@ public class HeadingBlock extends Block {
 				setClosed(true);
 			} else {
 				lineCount++;
+				String tocAttribute = getAsciiDocState().getAttribute("toc");
+				if (tocAttribute != null && !"macro".equals(tocAttribute)) {
+					emitTableOfContent();
+				}
 			}
 		} else {
 			if (line.trim().isEmpty()) {
@@ -84,6 +89,17 @@ public class HeadingBlock extends Block {
 		}
 
 		return -1;
+	}
+
+	private void emitTableOfContent() {
+		List<Block> blocks = getMarkupLanguage().getBlocks();
+		for (Block block : blocks) {
+			if (block instanceof TableOfContentsBlock) {
+				TableOfContentsBlock tocBlock = ((TableOfContentsBlock) block).cloneAndStart(getMarkupLanguage(),
+						getParser(), getState());
+				tocBlock.emitFullToc();
+			}
+		}
 	}
 
 	private void processHeaderLine(String line) {

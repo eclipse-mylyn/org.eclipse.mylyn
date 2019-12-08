@@ -114,10 +114,10 @@ public class AsciiDocLanguageBlockElementsTest extends AsciiDocLanguageTestBase 
 	}
 
 	@Test
-	public void testEqStyleHeaderNotH6() {
-		String html = parseToHtml("====== This is not h6");
+	public void testEqStyleHeaderLevel5() {
+		String html = parseToHtml("====== This is an H6");
 
-		assertEquals("<p>====== This is not h6</p>\n", html);
+		assertEquals("<h6 id=\"_this_is_an_h6\">This is an H6</h6>", html);
 	}
 
 	@Test
@@ -284,10 +284,17 @@ public class AsciiDocLanguageBlockElementsTest extends AsciiDocLanguageTestBase 
 	}
 
 	@Test
-	public void testClosedEqStyleHeaderNotH6() {
-		String html = parseToHtml("====== This is also not h6 ======");
+	public void testClosedEqStyleHeaderLevel5() {
+		String html = parseToHtml("====== This is also H6 ======");
 
-		assertEquals("<p>====== This is also not h6 ======</p>\n", html);
+		assertEquals("<h6 id=\"_this_is_also_h6\">This is also H6</h6>", html);
+	}
+
+	@Test
+	public void testClosedEqStyleHeaderLevel5WithSpaces() {
+		String html = parseToHtml("====== This is H6 with spaces    ======");
+
+		assertEquals("<h6 id=\"_this_is_h6_with_spaces\">This is H6 with spaces</h6>", html);
 	}
 
 	@Test
