@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 Stefan Seelmann and others.
+ * Copyright (c) 2012, 2019 Stefan Seelmann and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -92,7 +92,8 @@ public class MarkdownLanguageTest extends MarkdownLanguageTestBase {
 		assertTrue(html.contains("<pre><code>Code block"));
 		assertTrue(html.contains("<pre><code>  Fenced Code block (Tildes)"));
 		assertTrue(html.contains("<pre><code>  Fenced Code block (Backticks)"));
-		assertTrue(html.contains("<strong>Some formatted text with an embedded anchor to <a href=\"#Header-2\" title=\"Header2 Title\">Header2</a></strong>"));
+		assertTrue(html.contains(
+				"<strong>Some formatted text with an embedded anchor to <a href=\"#Header-2\" title=\"Header2 Title\">Header2</a></strong>"));
 		assertTrue(html.contains("<ul>"));
 		assertTrue(html.contains("<li>List item 1</li>"));
 		assertTrue(html.contains("<li>List item 2</li>"));
@@ -114,6 +115,17 @@ public class MarkdownLanguageTest extends MarkdownLanguageTestBase {
 
 		assertTrue(html.contains("<p>AT&amp;T and</p>"));
 		assertTrue(html.contains("<p>AT&amp;T again</p>"));
+	}
+
+	public void testBacktickWithLang() {
+		StringBuilder text = new StringBuilder();
+		text.append("```java\n");
+		text.append("new String();\n");
+		text.append("```");
+
+		String html = parseToHtml(text.toString());
+
+		assertEquals("<pre class=\"language-java\"><code class=\"language-java\">new String();</code></pre>", html);
 	}
 
 	public void testCreateDocumentBuilder() {

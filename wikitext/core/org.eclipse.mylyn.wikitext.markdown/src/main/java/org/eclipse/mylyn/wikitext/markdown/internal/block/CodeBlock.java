@@ -57,14 +57,20 @@ public class CodeBlock extends NestableBlock {
 	protected int processLineContent(String line, int offset) {
 		// start of block
 		if (blockLineCount == 0) {
-			builder.beginBlock(BlockType.CODE, new Attributes());
+			Attributes attributes = new Attributes();
 			// if we have a fenced block, the first line will not contain contents
 			if (fencedBlock) {
+				String lang = line.substring(3).trim();
+				if (!lang.isEmpty()) {
+					attributes.setCssClass("language-" + lang);
+				}
+				builder.beginBlock(BlockType.CODE, attributes);
 				blockLineCount++;
 				return -1;
+			} else {
+				builder.beginBlock(BlockType.CODE, attributes);
 			}
 		}
-
 		Matcher matcher = fencedBlock
 				? FENCED_BLOCK.matcher(line.substring(offset))
 				: INDENTED_BLOCK.matcher(line.substring(offset));
