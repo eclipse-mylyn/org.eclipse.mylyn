@@ -36,7 +36,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
@@ -1184,22 +1183,15 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 
 	private void updateSourceTabLabel() {
 		if (sourceTab != null) {
-			// bug 270215 carbon shows tooltip in source editing area.
-			boolean isCarbon = Platform.WS_CARBON.equals(Platform.getWS());
-
 			MarkupLanguage markupLanguage = getMarkupLanguage();
 			if (markupLanguage == null) {
 				sourceTab.setText(Messages.MarkupEditor_markupSource);
-				if (!isCarbon) {
-					sourceTab.setToolTipText(Messages.MarkupEditor_markupSource_tooltip);
-				}
+				sourceTab.setToolTipText(Messages.MarkupEditor_markupSource_tooltip);
 			} else {
 				sourceTab.setText(
 						NLS.bind(Messages.MarkupEditor_markupSource_named, new Object[] { markupLanguage.getName() }));
-				if (!isCarbon) {
-					sourceTab.setToolTipText(NLS.bind(Messages.MarkupEditor_markupSource_tooltip_named,
-							new Object[] { markupLanguage.getName() }));
-				}
+				sourceTab.setToolTipText(NLS.bind(Messages.MarkupEditor_markupSource_tooltip_named,
+						new Object[] { markupLanguage.getName() }));
 			}
 		}
 	}
