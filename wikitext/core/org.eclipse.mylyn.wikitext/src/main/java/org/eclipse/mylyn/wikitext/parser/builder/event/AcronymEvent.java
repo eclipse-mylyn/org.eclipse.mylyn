@@ -15,9 +15,9 @@ package org.eclipse.mylyn.wikitext.parser.builder.event;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
+import java.util.Objects;
 
-import com.google.common.base.Objects;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 
 /**
  * An {@link DocumentBuilderEvent} corresponding to {@link DocumentBuilder#acronym(String, String)}.
@@ -48,7 +48,7 @@ public class AcronymEvent extends DocumentBuilderEvent {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(text, definition);
+		return Objects.hash(text, definition);
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class AcronymEvent extends DocumentBuilderEvent {
 			return false;
 		}
 		AcronymEvent other = (AcronymEvent) obj;
-		return Objects.equal(text, other.text) && Objects.equal(definition, other.definition);
+		return Objects.equals(text, other.text) && Objects.equals(definition, other.definition);
 	}
 
 }

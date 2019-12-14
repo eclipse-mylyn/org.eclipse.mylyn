@@ -15,10 +15,10 @@ package org.eclipse.mylyn.wikitext.parser.builder.event;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Objects;
+
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
-
-import com.google.common.base.Objects;
 
 /**
  * An {@link DocumentBuilderEvent} corresponding to {@link DocumentBuilder#beginHeading(int, Attributes)}.
@@ -44,7 +44,7 @@ public class BeginHeadingEvent extends DocumentBuilderEvent {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(level);
+		return Objects.hash(level);
 	}
 
 	@Override

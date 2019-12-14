@@ -21,6 +21,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
@@ -34,7 +35,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 
 public class HtmlDocumentBuilderTest {
@@ -410,7 +410,7 @@ public class HtmlDocumentBuilderTest {
 		try {
 			String fileName = HtmlDocumentBuilderTest.class.getSimpleName() + '_' + resourceName + ".xml";
 			URL resource = HtmlDocumentBuilderTest.class.getResource(fileName);
-			return Resources.toString(resource, Charsets.UTF_8);
+			return Resources.toString(resource, StandardCharsets.UTF_8);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

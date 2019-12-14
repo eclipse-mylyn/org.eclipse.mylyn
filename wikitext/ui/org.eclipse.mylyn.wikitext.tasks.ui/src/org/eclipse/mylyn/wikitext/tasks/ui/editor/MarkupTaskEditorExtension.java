@@ -149,8 +149,9 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 		markupViewer.getTextWidget().setCaret(null);
 
 		if (JFaceResources.getFontRegistry().hasValueFor(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_DEFAULT_FONT)) {
-			markupViewer.getTextWidget().setFont(
-					JFaceResources.getFontRegistry().get(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_DEFAULT_FONT));
+			markupViewer.getTextWidget()
+					.setFont(
+							JFaceResources.getFontRegistry().get(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_DEFAULT_FONT));
 		}
 		if (JFaceResources.getFontRegistry().hasValueFor(WikiTextTasksUiPlugin.FONT_REGISTRY_KEY_MONOSPACE_FONT)) {
 			markupViewer.setDefaultMonospaceFont(

@@ -465,8 +465,9 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 								}
 							} catch (Exception e) {
 								if (WikiTextUiPlugin.getDefault() != null) {
-									WikiTextUiPlugin.getDefault().log(IStatus.ERROR,
-											NLS.bind(Messages.ImageManager_accessFailed, new Object[] { location }), e);
+									WikiTextUiPlugin.getDefault()
+											.log(IStatus.ERROR, NLS.bind(Messages.ImageManager_accessFailed,
+													new Object[] { location }), e);
 								}
 								urlToImageData.put(imgSrc, null);
 							}

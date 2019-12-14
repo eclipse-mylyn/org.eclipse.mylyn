@@ -18,6 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
@@ -36,7 +37,7 @@ public class FileToMarkupLanguage {
 	}
 
 	public MarkupLanguage get(File file) {
-		checkNotNull(file);
+		Objects.requireNonNull(file);
 		String extension = computeFileExtension(file);
 		return extensionToMarkupLanguage.get(extension.toLowerCase());
 	}

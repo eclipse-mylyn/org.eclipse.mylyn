@@ -15,11 +15,11 @@ package org.eclipse.mylyn.wikitext.parser.builder.event;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Objects;
+
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
-
-import com.google.common.base.Objects;
 
 /**
  * An {@link DocumentBuilderEvent} corresponding to {@link DocumentBuilder#beginBlock(BlockType, Attributes)}.
@@ -45,7 +45,7 @@ public class BeginBlockEvent extends DocumentBuilderEvent {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(type);
+		return Objects.hash(type);
 	}
 
 	@Override

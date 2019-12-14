@@ -433,19 +433,28 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 	}
 
 	private void logPreviewScrollingFailure(SWTException e) {
-		WikiTextUiPlugin.getDefault().getLog().log(WikiTextUiPlugin.getDefault().createStatus(
-				format(Messages.MarkupEditor_previewScrollingFailed, e.getMessage()), IStatus.WARNING, e));
+		WikiTextUiPlugin.getDefault()
+				.getLog()
+				.log(WikiTextUiPlugin.getDefault()
+						.createStatus(format(Messages.MarkupEditor_previewScrollingFailed, e.getMessage()),
+								IStatus.WARNING, e));
 
 	}
 
 	private void logPreviewTabUnavailable(SWTError e) {
-		WikiTextUiPlugin.getDefault().getLog().log(WikiTextUiPlugin.getDefault()
-				.createStatus(format(Messages.MarkupEditor_previewUnavailable, e.getMessage()), IStatus.ERROR, e));
+		WikiTextUiPlugin.getDefault()
+				.getLog()
+				.log(WikiTextUiPlugin.getDefault()
+						.createStatus(format(Messages.MarkupEditor_previewUnavailable, e.getMessage()), IStatus.ERROR,
+								e));
 	}
 
 	private void logErrorOpeningAsWorkspaceFile(Exception e) {
-		WikiTextUiPlugin.getDefault().getLog().log(WikiTextUiPlugin.getDefault()
-				.createStatus(format(Messages.MarkupEditor_openWorkspaceFileFailed, e.getMessage()), IStatus.ERROR, e));
+		WikiTextUiPlugin.getDefault()
+				.getLog()
+				.log(WikiTextUiPlugin.getDefault()
+						.createStatus(format(Messages.MarkupEditor_openWorkspaceFileFailed, e.getMessage()),
+								IStatus.ERROR, e));
 	}
 
 	@Override
@@ -1253,8 +1262,9 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 				file.setPersistentProperty(
 						new QualifiedName(WikiTextUiPlugin.getDefault().getPluginId(), MARKUP_LANGUAGE), preference);
 			} catch (CoreException e) {
-				WikiTextUiPlugin.getDefault().log(IStatus.ERROR,
-						NLS.bind(Messages.MarkupEditor_markupPreferenceError2, new Object[] { preference }), e);
+				WikiTextUiPlugin.getDefault()
+						.log(IStatus.ERROR,
+								NLS.bind(Messages.MarkupEditor_markupPreferenceError2, new Object[] { preference }), e);
 			}
 		}
 	}
