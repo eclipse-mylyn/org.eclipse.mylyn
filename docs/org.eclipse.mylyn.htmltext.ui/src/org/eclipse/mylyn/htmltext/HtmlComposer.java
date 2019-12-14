@@ -726,6 +726,7 @@ public class HtmlComposer {
 	 * @return
 	 * @see org.eclipse.swt.browser.Browser#getWebBrowser()
 	 */
+	@Deprecated
 	public Object getWebBrowser() {
 		return browser.getWebBrowser();
 	}
