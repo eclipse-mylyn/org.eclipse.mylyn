@@ -59,7 +59,7 @@ public abstract class MarkupLanguage implements Cloneable {
 	public MarkupLanguage clone() {
 		MarkupLanguage markupLanguage;
 		try {
-			markupLanguage = getClass().newInstance();
+			markupLanguage = getClass().getConstructor().newInstance();
 		} catch (Exception e) {
 			throw new IllegalStateException(e);
 		}

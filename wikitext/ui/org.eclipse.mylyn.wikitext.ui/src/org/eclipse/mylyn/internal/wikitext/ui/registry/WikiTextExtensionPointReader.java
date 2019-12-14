@@ -104,7 +104,7 @@ public class WikiTextExtensionPointReader {
 
 	private MarkupLanguage instantiateMarkupLanguage(String name, Class<? extends MarkupLanguage> languageClass) {
 		try {
-			MarkupLanguage language = languageClass.newInstance();
+			MarkupLanguage language = languageClass.getConstructor().newInstance();
 			language.setName(name);
 			language.setExtendsLanguage(languageExtensionByLanguage.get(name));
 			configureFileExtensions(language);

@@ -157,8 +157,8 @@ public class StandaloneMarkupValidator {
 				computeRules(markupLanguage, pluginXml);
 			} catch (SecurityException e) {
 				// ignore, we can get this during unit testing.  It can happen due to a digest mismatch for resources in a jar file.
-				Logger.getLogger(StandaloneMarkupValidator.class.getName()).log(Level.WARNING,
-						String.format("Ignoring plugin.xml due to security exception: %s", url), e); //$NON-NLS-1$
+				Logger.getLogger(StandaloneMarkupValidator.class.getName())
+						.log(Level.WARNING, String.format("Ignoring plugin.xml due to security exception: %s", url), e); //$NON-NLS-1$
 			} catch (SAXException e) {
 				throw new IllegalStateException(String.format("Cannot parse file %s", url), e); //$NON-NLS-1$
 			} catch (ParserConfigurationException e) {
@@ -185,7 +185,7 @@ public class StandaloneMarkupValidator {
 								String className = rule.getAttribute("class"); //$NON-NLS-1$
 								try {
 									Class<?> validationRuleClass = Class.forName(className, true, getClassLoader());
-									rules.add((ValidationRule) validationRuleClass.newInstance());
+									rules.add((ValidationRule) validationRuleClass.getConstructor().newInstance());
 								} catch (Exception e) {
 									// ignore
 								}

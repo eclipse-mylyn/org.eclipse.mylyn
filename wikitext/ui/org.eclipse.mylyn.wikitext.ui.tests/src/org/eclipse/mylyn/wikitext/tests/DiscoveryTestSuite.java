@@ -13,6 +13,7 @@
 
 package org.eclipse.mylyn.wikitext.tests;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
@@ -25,7 +26,7 @@ import junit.framework.TestSuite;
 
 /**
  * a test suite that discovers tests by traversing the classpath looking for test classes that match specific criteria.
- * 
+ *
  * @author David Green
  */
 @NoDiscovery
@@ -51,10 +52,18 @@ public class DiscoveryTestSuite extends TestSuite implements ClassFilter {
 							}
 						} catch (NoSuchMethodException e) {
 							try {
-								addTest((Test) clazz.newInstance());
+								addTest((Test) clazz.getConstructor().newInstance());
 							} catch (InstantiationException e1) {
 								throw new IllegalStateException(clazz.getName(), e1);
 							} catch (IllegalAccessException e1) {
+								throw new IllegalStateException(clazz.getName(), e1);
+							} catch (IllegalArgumentException e1) {
+								throw new IllegalStateException(clazz.getName(), e1);
+							} catch (InvocationTargetException e1) {
+								throw new IllegalStateException(clazz.getName(), e1);
+							} catch (NoSuchMethodException e1) {
+								throw new IllegalStateException(clazz.getName(), e1);
+							} catch (SecurityException e1) {
 								throw new IllegalStateException(clazz.getName(), e1);
 							}
 						} catch (Throwable e) {

@@ -158,7 +158,7 @@ public class ServiceLocator {
 				try {
 					Class<?> clazz = Class.forName(className, true, classLoader);
 					if (MarkupLanguage.class.isAssignableFrom(clazz)) {
-						MarkupLanguage instance = (MarkupLanguage) clazz.newInstance();
+						MarkupLanguage instance = (MarkupLanguage) clazz.getConstructor().newInstance();
 						return instance;
 					}
 				} catch (Exception e) {
@@ -229,12 +229,12 @@ public class ServiceLocator {
 				try {
 					Class<?> clazz = loadClass(descriptor, className);
 					if (MarkupLanguage.class.isAssignableFrom(clazz)) {
-						MarkupLanguage instance = (MarkupLanguage) clazz.newInstance();
+						MarkupLanguage instance = (MarkupLanguage) clazz.getConstructor().newInstance();
 						if (!visitor.accept(instance)) {
 							return;
 						}
 					} else if (MarkupLanguageProvider.class.isAssignableFrom(clazz)) {
-						MarkupLanguageProvider provider = (MarkupLanguageProvider) clazz.newInstance();
+						MarkupLanguageProvider provider = (MarkupLanguageProvider) clazz.getConstructor().newInstance();
 						for (MarkupLanguage language : provider.getMarkupLanguages()) {
 							if (!visitor.accept(language)) {
 								return;
@@ -250,8 +250,8 @@ public class ServiceLocator {
 
 	void logFailure(String className, Exception e) {
 		// very unusual, but inform the user in a stand-alone way
-		Logger.getLogger(ServiceLocator.class.getName()).log(Level.WARNING,
-				MessageFormat.format(Messages.getString("ServiceLocator.0"), className), e); //$NON-NLS-1$
+		Logger.getLogger(ServiceLocator.class.getName())
+				.log(Level.WARNING, MessageFormat.format(Messages.getString("ServiceLocator.0"), className), e); //$NON-NLS-1$
 	}
 
 	/**
