@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2004, 2016 Tasktop Technologies and others.
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * https://www.eclipse.org/legal/epl-2.0
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -56,6 +56,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.notifications.feed.ServiceMessageManager;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.commons.ui.PlatformUiUtil;
 import org.eclipse.mylyn.commons.ui.compatibility.CommonThemes;
@@ -134,6 +135,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
@@ -778,11 +780,30 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 			message.setTitle(Messages.TaskListView_Welcome_Message_Title);
 			message.setImage(Dialog.DLG_IMG_MESSAGE_INFO);
 			serviceMessageControl.setMessage(message);
-			TasksUiPlugin.getDefault().getPreferenceStore().setValue(ITasksUiPreferenceConstants.WELCOME_MESSAGE,
-					Boolean.toString(true));
+			TasksUiPlugin.getDefault()
+					.getPreferenceStore()
+					.setValue(ITasksUiPreferenceConstants.WELCOME_MESSAGE, Boolean.toString(true));
 		}
 
-		TasksUiPlugin.getDefault().getServiceMessageManager().addServiceMessageListener(serviceMessageControl);
+		ServiceMessageManager serviceMessageManager = TasksUiPlugin.getDefault().getServiceMessageManager();
+		if (serviceMessageManager == null) {
+			Display.getDefault().asyncExec(new Runnable() {
+
+				@Override
+				public void run() {
+					ServiceMessageManager serviceMessageManager = TasksUiPlugin.getDefault().getServiceMessageManager();
+					if (serviceMessageManager != null) {
+						serviceMessageManager.addServiceMessageListener(serviceMessageControl);
+					} else {
+						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								"Could not add Listener for serviceMessageControl")); //$NON-NLS-1$
+
+					}
+				}
+			});
+		} else {
+			serviceMessageManager.addServiceMessageListener(serviceMessageControl);
+		}
 
 		// Need to do this because the page, which holds the active working set is not around on creation, see bug 203179
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().addPageListener(PAGE_LISTENER);
@@ -1530,7 +1551,8 @@ public class TaskListView extends AbstractTaskListView implements IPropertyChang
 					if (width) {
 						if (getViewSite().getActionBars().getToolBarManager() instanceof ToolBarManager) {
 							Point size = ((ToolBarManager) getViewSite().getActionBars().getToolBarManager())
-									.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT);
+									.getControl()
+									.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 							// leave some room for the view menu drop-down
 							return size.x + PlatformUiUtil.getViewMenuWidth();
 						}
