@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
@@ -35,7 +36,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 
 public class HtmlLanguageTest {
@@ -164,7 +164,7 @@ public class HtmlLanguageTest {
 		try {
 			String fileName = HtmlLanguageTest.class.getSimpleName() + '_' + resourceName;
 			URL resource = HtmlLanguageTest.class.getResource(fileName);
-			return Resources.toString(resource, Charsets.UTF_8);
+			return Resources.toString(resource, StandardCharsets.UTF_8);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

@@ -18,6 +18,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +30,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 
 public class WikiToDocTaskTest {
@@ -95,7 +95,7 @@ public class WikiToDocTaskTest {
 		task.execute();
 
 		File result = task.computeHtmlOutputFile(path);
-		String content = Files.toString(result, Charsets.UTF_8);
+		String content = Files.toString(result, StandardCharsets.UTF_8);
 		assertTrue(content.contains(
 				"<p>Link to <a href=\"#IActivatable\" title=\"GEF/GEF4/Common#IActivatable\">IActivatable</a> is here</p>"));
 	}
@@ -138,7 +138,7 @@ public class WikiToDocTaskTest {
 		assertEquals("'Installation.html' page exists", true, installationPage.exists());
 		File taskListPage = new File(mainPage.getParentFile(), "Task-List.html");
 		assertEquals("'Task-List.html' page exists", true, taskListPage.exists());
-		String content = Files.toString(taskListPage, Charsets.UTF_8);
+		String content = Files.toString(taskListPage, StandardCharsets.UTF_8);
 		assertTrue(content.contains(
 				"<a href=\"Installation.html#Recommended_GTK_Setup_for_KDE\" title=\"Mylyn/FAQ#Recommended_GTK_Setup_for_KDE\">Recommended GTK Setup for KDE</a> section."));
 	}

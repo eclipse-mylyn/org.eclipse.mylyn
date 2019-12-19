@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -39,7 +40,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -157,8 +157,8 @@ public class ServiceLocatorTest {
 			locator = new ServiceLocator(classLoader) {
 				@Override
 				protected List<String> readServiceClassNames(URL url) {
-					return super.readServiceClassNames(
-							new ByteArrayInputStream(MockMarkupLanguage.class.getName().getBytes(Charsets.UTF_8)));
+					return super.readServiceClassNames(new ByteArrayInputStream(
+							MockMarkupLanguage.class.getName().getBytes(StandardCharsets.UTF_8)));
 				}
 			};
 		} catch (Exception e) {
@@ -193,7 +193,7 @@ public class ServiceLocatorTest {
 				@Override
 				protected List<String> readServiceClassNames(URL url) {
 					return super.readServiceClassNames(new ByteArrayInputStream(
-							MockMarkupLanguageProvider.class.getName().getBytes(Charsets.UTF_8)));
+							MockMarkupLanguageProvider.class.getName().getBytes(StandardCharsets.UTF_8)));
 				}
 			};
 		} catch (Exception e) {
@@ -295,6 +295,6 @@ public class ServiceLocatorTest {
 	}
 
 	private InputStream createInput(String content) {
-		return new ByteArrayInputStream(content.getBytes(Charsets.UTF_8));
+		return new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
 	}
 }

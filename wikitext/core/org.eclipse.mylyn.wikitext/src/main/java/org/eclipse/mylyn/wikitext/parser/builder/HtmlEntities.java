@@ -19,13 +19,13 @@ import static com.google.common.base.Preconditions.checkState;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.google.common.base.CharMatcher;
-import com.google.common.base.Charsets;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
@@ -38,8 +38,9 @@ class HtmlEntities {
 	private static ListMultimap<String, String> readHtmlEntities() {
 		ImmutableListMultimap.Builder<String, String> builder = ImmutableListMultimap.builder();
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					HtmlDocumentBuilder.class.getResourceAsStream("html-entity-references.txt"), Charsets.UTF_8)); //$NON-NLS-1$
+			BufferedReader reader = new BufferedReader(
+					new InputStreamReader(HtmlDocumentBuilder.class.getResourceAsStream("html-entity-references.txt"), //$NON-NLS-1$
+							StandardCharsets.UTF_8));
 			try {
 				Splitter splitter = Splitter.on(CharMatcher.whitespace()).trimResults().omitEmptyStrings();
 

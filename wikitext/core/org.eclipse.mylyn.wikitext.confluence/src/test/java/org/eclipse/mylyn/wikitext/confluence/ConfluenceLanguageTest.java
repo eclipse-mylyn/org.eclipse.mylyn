@@ -23,6 +23,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.parser.builder.DocBookDocumentBuilder;
@@ -33,7 +34,6 @@ import org.eclipse.mylyn.wikitext.toolkit.RecordingDocumentBuilder;
 import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 import org.junit.Test;
 
-import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 
 /**
@@ -1252,7 +1252,7 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	@Test
 	public void testHangOnBug318695() throws IOException {
 		String content = Resources.toString(ConfluenceLanguageTest.class.getResource("resources/bug318695.confluence"),
-				Charsets.UTF_8);
+				StandardCharsets.UTF_8);
 		parser.setBuilder(new HtmlDocumentBuilder(new StringWriter()));
 		parser.parse(new StringReader(content));
 		// if we reach here we didn't hang.
@@ -1264,7 +1264,7 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	@Test
 	public void stackOverflowWithLargeContentOnBug424387() throws IOException {
 		String content = Resources.toString(ConfluenceLanguageTest.class.getResource("resources/bug424387.confluence"),
-				Charsets.UTF_8);
+				StandardCharsets.UTF_8);
 		parser.setBuilder(new HtmlDocumentBuilder(new StringWriter()));
 		parser.parse(new StringReader(content));
 		// if we reach here we didn't hang.
@@ -1276,7 +1276,7 @@ public class ConfluenceLanguageTest extends AbstractMarkupGenerationTest<Conflue
 	@Test
 	public void stackOverflowWithLargeContentInTable() throws IOException {
 		String content = Resources.toString(ConfluenceLanguageTest.class.getResource("resources/bug533397.confluence"),
-				Charsets.UTF_8);
+				StandardCharsets.UTF_8);
 		parser.setBuilder(new HtmlDocumentBuilder(new StringWriter()));
 		parser.parse(new StringReader(content));
 		// if we reach here we didn't hang.
