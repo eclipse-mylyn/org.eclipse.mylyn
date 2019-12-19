@@ -13,11 +13,11 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.net.UrlEscapers;
@@ -67,7 +67,7 @@ public class AutoLinkSpan extends SourceSpan {
 								linkLength - 2, href))));
 			}
 		}
-		return Optional.absent();
+		return Optional.empty();
 	}
 
 	private String escapeUri(String link) {

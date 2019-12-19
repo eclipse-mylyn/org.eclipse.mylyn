@@ -18,6 +18,7 @@ import static com.google.common.base.MoreObjects.firstNonNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContext;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContextBuilder;
@@ -26,7 +27,6 @@ import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.EntityReferences;
 import org.eclipse.mylyn.wikitext.parser.builder.NoOpDocumentBuilder;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 
 public class InlineParser {
@@ -77,7 +77,7 @@ public class InlineParser {
 
 	static List<Inline> secondPass(List<Inline> inlines) {
 		List<Inline> processedInlines = ImmutableList.copyOf(inlines);
-		Optional<InlinesSubstitution> substitution = Optional.absent();
+		Optional<InlinesSubstitution> substitution = Optional.empty();
 		do {
 			for (Inline inline : processedInlines) {
 				substitution = inline.secondPass(processedInlines);

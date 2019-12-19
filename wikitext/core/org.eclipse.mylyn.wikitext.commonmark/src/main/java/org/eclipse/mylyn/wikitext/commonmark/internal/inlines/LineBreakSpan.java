@@ -13,10 +13,9 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.google.common.base.Optional;
 
 public class LineBreakSpan extends SourceSpan {
 
@@ -35,7 +34,7 @@ public class LineBreakSpan extends SourceSpan {
 				return Optional.of(new SoftLineBreak(cursor.getLineAtOffset(), cursor.getOffset(), length));
 			}
 		}
-		return Optional.absent();
+		return Optional.empty();
 	}
 
 }

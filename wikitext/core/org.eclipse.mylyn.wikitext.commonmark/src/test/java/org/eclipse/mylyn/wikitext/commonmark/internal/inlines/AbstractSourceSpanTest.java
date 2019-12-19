@@ -20,6 +20,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.StringWriter;
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContext;
@@ -27,7 +28,6 @@ import org.eclipse.mylyn.wikitext.commonmark.internal.TextSegment;
 import org.eclipse.mylyn.wikitext.commonmark.internal.spec.SimplifiedHtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 
 abstract class AbstractSourceSpanTest {

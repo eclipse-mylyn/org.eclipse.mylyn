@@ -14,11 +14,11 @@
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 
 class PotentialEmphasisDelimiter extends InlineWithText {
@@ -27,7 +27,8 @@ class PotentialEmphasisDelimiter extends InlineWithText {
 
 	private final boolean canClose;
 
-	public PotentialEmphasisDelimiter(Line line, int offset, int length, String text, boolean canOpen, boolean canClose) {
+	public PotentialEmphasisDelimiter(Line line, int offset, int length, String text, boolean canOpen,
+			boolean canClose) {
 		super(line, offset, length, text);
 		this.canOpen = canOpen;
 		this.canClose = canClose;
@@ -41,7 +42,7 @@ class PotentialEmphasisDelimiter extends InlineWithText {
 	@Override
 	Optional<InlinesSubstitution> secondPass(List<Inline> inlines) {
 		if (!canClose) {
-			return Optional.absent();
+			return Optional.empty();
 		}
 		int indexOfThis = inlines.indexOf(this);
 		Optional<PotentialEmphasisDelimiter> opener = previousOpener(inlines, indexOfThis);
@@ -68,7 +69,7 @@ class PotentialEmphasisDelimiter extends InlineWithText {
 
 			return Optional.of(new InlinesSubstitution(openingDelimiter, this, substitutionInlines.build()));
 		}
-		return Optional.absent();
+		return Optional.empty();
 	}
 
 	private Inline createPotentialClosingDelimiter(int delimiterSize) {
@@ -86,9 +87,9 @@ class PotentialEmphasisDelimiter extends InlineWithText {
 	private PotentialEmphasisDelimiter createPotentialOpeningDelimiter(PotentialEmphasisDelimiter openingDelimiter,
 			int consumedSize) {
 		return new PotentialEmphasisDelimiter(openingDelimiter.getLine(), openingDelimiter.getOffset(),
-				openingDelimiter.getLength() - consumedSize, openingDelimiter.getText().substring(0,
-						openingDelimiter.getText().length() - consumedSize), openingDelimiter.canOpen,
-				openingDelimiter.canClose);
+				openingDelimiter.getLength() - consumedSize,
+				openingDelimiter.getText().substring(0, openingDelimiter.getText().length() - consumedSize),
+				openingDelimiter.canOpen, openingDelimiter.canClose);
 	}
 
 	private int delimiterSize(PotentialEmphasisDelimiter openingDelimiter) {
@@ -110,6 +111,6 @@ class PotentialEmphasisDelimiter extends InlineWithText {
 				}
 			}
 		}
-		return Optional.absent();
+		return Optional.empty();
 	}
 }

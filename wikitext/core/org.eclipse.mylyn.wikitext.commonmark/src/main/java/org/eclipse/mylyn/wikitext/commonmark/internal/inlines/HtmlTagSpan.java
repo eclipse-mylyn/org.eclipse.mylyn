@@ -13,10 +13,9 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.google.common.base.Optional;
 
 public class HtmlTagSpan extends SourceSpan {
 
@@ -59,7 +58,7 @@ public class HtmlTagSpan extends SourceSpan {
 				return Optional.of(new HtmlTag(cursor.getLineAtOffset(), cursor.getOffset(), matcher.group(1)));
 			}
 		}
-		return Optional.absent();
+		return Optional.empty();
 	}
 
 }

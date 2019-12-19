@@ -13,7 +13,7 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
-import com.google.common.base.Optional;
+import java.util.Optional;
 
 public class PotentialBracketSpan extends SourceSpan {
 
@@ -31,7 +31,7 @@ public class PotentialBracketSpan extends SourceSpan {
 		if (c == ']') {
 			return Optional.of(new PotentialBracketEndDelimiter(cursor.getLineAtOffset(), cursor.getOffset()));
 		}
-		return Optional.absent();
+		return Optional.empty();
 	}
 
 }

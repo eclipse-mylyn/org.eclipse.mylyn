@@ -19,6 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContext;
@@ -26,8 +27,6 @@ import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContextBuilder;
 import org.eclipse.mylyn.wikitext.commonmark.internal.SimpleLocator;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.Locator;
-
-import com.google.common.base.Optional;
 
 public abstract class Inline {
 
@@ -70,7 +69,7 @@ public abstract class Inline {
 	}
 
 	Optional<InlinesSubstitution> secondPass(List<Inline> inlines) {
-		return Optional.absent();
+		return Optional.empty();
 	}
 
 	public void createContext(ProcessingContextBuilder contextBuilder) {

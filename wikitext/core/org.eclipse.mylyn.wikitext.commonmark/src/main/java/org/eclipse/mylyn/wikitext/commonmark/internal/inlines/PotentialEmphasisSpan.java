@@ -13,8 +13,9 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
+import java.util.Optional;
+
 import com.google.common.base.CharMatcher;
-import com.google.common.base.Optional;
 
 public class PotentialEmphasisSpan extends SourceSpan {
 
@@ -36,7 +37,7 @@ public class PotentialEmphasisSpan extends SourceSpan {
 			return Optional.of(new PotentialEmphasisDelimiter(cursor.getLineAtOffset(), cursor.getOffset(), length,
 					cursor.getTextAtOffset(length), canOpen, canClose));
 		}
-		return Optional.absent();
+		return Optional.empty();
 	}
 
 	boolean isLeftFlanking(Cursor cursor, int length) {

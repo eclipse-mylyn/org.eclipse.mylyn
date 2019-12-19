@@ -13,12 +13,11 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.commonmark.internal.Line;
-
-import com.google.common.base.Optional;
 
 public class HtmlEntitySpan extends SourceSpan {
 
@@ -43,7 +42,7 @@ public class HtmlEntitySpan extends SourceSpan {
 				return Optional.of(new HtmlEntity(lineAtOffset, offset, length, ent));
 			}
 		}
-		return Optional.absent();
+		return Optional.empty();
 	}
 
 	protected boolean isInvalidUnicodeCodepoint(String ent) {

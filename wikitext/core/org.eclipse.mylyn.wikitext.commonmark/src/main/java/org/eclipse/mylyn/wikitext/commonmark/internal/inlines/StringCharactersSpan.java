@@ -13,10 +13,9 @@
 
 package org.eclipse.mylyn.wikitext.commonmark.internal.inlines;
 
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.google.common.base.Optional;
 
 public class StringCharactersSpan extends SourceSpan {
 
@@ -30,7 +29,7 @@ public class StringCharactersSpan extends SourceSpan {
 			int length = cursor.getOffset(matcher.end(1)) - cursor.getOffset();
 			return Optional.of(new Characters(cursor.getLineAtOffset(), cursor.getOffset(), length, group));
 		}
-		return Optional.absent();
+		return Optional.empty();
 	}
 
 }
