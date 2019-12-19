@@ -18,7 +18,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylyn.wikitext.tests.ClassTraversal.Visitor;
 
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
@@ -38,43 +37,40 @@ public class DiscoveryTestSuite extends TestSuite implements ClassFilter {
 
 	protected void discoverTests(final ClassFilter filter) {
 		// find all tests that meet the right criteria for running in a headless environment
-		new ClassTraversal().visitClasses(new Visitor() {
-			public void visit(Class<?> clazz) {
-				if (!filter(clazz) && !filter.filter(clazz)) {
-					if (TestSuite.class.isAssignableFrom(clazz)) {
-						try {
-							Method suiteMethod = clazz.getMethod("suite");
-							if (Modifier.isStatic(suiteMethod.getModifiers())
-									&& Modifier.isPublic(suiteMethod.getModifiers())) {
-								addTest((Test) suiteMethod.invoke(null));
-							} else {
-								throw new IllegalStateException(clazz.getName() + "#" + suiteMethod.getName());
-							}
-						} catch (NoSuchMethodException e) {
-							try {
-								addTest((Test) clazz.getConstructor().newInstance());
-							} catch (InstantiationException e1) {
-								throw new IllegalStateException(clazz.getName(), e1);
-							} catch (IllegalAccessException e1) {
-								throw new IllegalStateException(clazz.getName(), e1);
-							} catch (IllegalArgumentException e1) {
-								throw new IllegalStateException(clazz.getName(), e1);
-							} catch (InvocationTargetException e1) {
-								throw new IllegalStateException(clazz.getName(), e1);
-							} catch (NoSuchMethodException e1) {
-								throw new IllegalStateException(clazz.getName(), e1);
-							} catch (SecurityException e1) {
-								throw new IllegalStateException(clazz.getName(), e1);
-							}
-						} catch (Throwable e) {
-							throw new IllegalStateException(clazz.getName(), e);
+		new ClassTraversal().visitClasses(clazz -> {
+			if (!filter(clazz) && !filter.filter(clazz)) {
+				if (TestSuite.class.isAssignableFrom(clazz)) {
+					try {
+						Method suiteMethod = clazz.getMethod("suite");
+						if (Modifier.isStatic(suiteMethod.getModifiers())
+								&& Modifier.isPublic(suiteMethod.getModifiers())) {
+							addTest((Test) suiteMethod.invoke(null));
+						} else {
+							throw new IllegalStateException(clazz.getName() + "#" + suiteMethod.getName());
 						}
-					} else {
-						addTest(new JUnit4TestAdapter(clazz));
+					} catch (NoSuchMethodException e2) {
+						try {
+							addTest((Test) clazz.getConstructor().newInstance());
+						} catch (InstantiationException e11) {
+							throw new IllegalStateException(clazz.getName(), e11);
+						} catch (IllegalAccessException e12) {
+							throw new IllegalStateException(clazz.getName(), e12);
+						} catch (IllegalArgumentException e13) {
+							throw new IllegalStateException(clazz.getName(), e13);
+						} catch (InvocationTargetException e14) {
+							throw new IllegalStateException(clazz.getName(), e14);
+						} catch (NoSuchMethodException e15) {
+							throw new IllegalStateException(clazz.getName(), e15);
+						} catch (SecurityException e16) {
+							throw new IllegalStateException(clazz.getName(), e16);
+						}
+					} catch (Throwable e3) {
+						throw new IllegalStateException(clazz.getName(), e3);
 					}
+				} else {
+					addTest(new JUnit4TestAdapter(clazz));
 				}
 			}
-
 		});
 	}
 

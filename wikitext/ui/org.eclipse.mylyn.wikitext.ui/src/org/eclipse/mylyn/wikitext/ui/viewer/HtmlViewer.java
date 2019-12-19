@@ -40,8 +40,6 @@ import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.HorizontalRuleDr
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.ImageAnnotation;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.ImageDrawingStrategy;
 import org.eclipse.mylyn.wikitext.parser.css.Stylesheet;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Composite;
@@ -127,11 +125,7 @@ public class HtmlViewer extends SourceViewer {
 		addTextPresentationListener(painter);
 		addPainter(painter);
 
-		getTextWidget().addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent e) {
-				imageCache.dispose();
-			}
-		});
+		getTextWidget().addDisposeListener(e -> imageCache.dispose());
 
 		if (displayImages) {
 			new ImageManager(this, imageCache, painter);

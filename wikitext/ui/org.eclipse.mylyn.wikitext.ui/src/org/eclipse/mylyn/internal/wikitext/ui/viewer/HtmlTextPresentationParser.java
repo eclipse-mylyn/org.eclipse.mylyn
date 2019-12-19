@@ -762,11 +762,7 @@ public class HtmlTextPresentationParser {
 				++elementState.indentLevel;
 			}
 			// process stylesheet
-			stylesheet.applyTo(elementState, new Stylesheet.Receiver() {
-				public void apply(CssRule rule) {
-					cssStyleManager.processCssStyles(elementState.fontState, parentElementState.fontState, rule);
-				}
-			});
+			stylesheet.applyTo(elementState, rule -> cssStyleManager.processCssStyles(elementState.fontState, parentElementState.fontState, rule));
 
 			int numAtts = atts.getLength();
 			for (int x = 0; x < numAtts; ++x) {

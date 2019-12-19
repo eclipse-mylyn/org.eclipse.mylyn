@@ -27,8 +27,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 
@@ -45,12 +43,8 @@ public class LineSequenceTest {
 
 	@Test
 	public void transform() {
-		LineSequence lineSequence = LineSequence.create("one").transform(new Function<Line, Line>() {
-
-			@Override
-			public Line apply(Line input) {
-				throw new UnsupportedOperationException();
-			}
+		LineSequence lineSequence = LineSequence.create("one").transform(input -> {
+			throw new UnsupportedOperationException();
 		});
 		assertNotNull(lineSequence);
 		assertEquals(TransformLineSequence.class, lineSequence.getClass());
@@ -86,13 +80,7 @@ public class LineSequenceTest {
 		assertFalse(LineSequence.create("a").with(Predicates.<Line> alwaysFalse()).iterator().hasNext());
 
 		List<String> strings = new ArrayList<>();
-		for (Line line : LineSequence.create("a\nb\nc\na").with(new Predicate<Line>() {
-
-			@Override
-			public boolean apply(Line input) {
-				return !input.getText().equals("c");
-			}
-		})) {
+		for (Line line : LineSequence.create("a\nb\nc\na").with(input -> !input.getText().equals("c"))) {
 			strings.add(line.getText());
 		}
 		assertEquals(ImmutableList.of("a", "b"), strings);
@@ -101,13 +89,7 @@ public class LineSequenceTest {
 	@Test
 	public void withPredicate() {
 		LineSequence originalLineSequence = LineSequence.create("one\ntwo\nthree\nfour");
-		LineSequence lineSequence = originalLineSequence.with(Predicates.not(new Predicate<Line>() {
-
-			@Override
-			public boolean apply(Line input) {
-				return input.getText().equals("three");
-			}
-		}));
+		LineSequence lineSequence = originalLineSequence.with(Predicates.not(input -> input.getText().equals("three")));
 		assertEquals("one", lineSequence.getCurrentLine().getText());
 		lineSequence.advance();
 		assertEquals("two", lineSequence.getCurrentLine().getText());

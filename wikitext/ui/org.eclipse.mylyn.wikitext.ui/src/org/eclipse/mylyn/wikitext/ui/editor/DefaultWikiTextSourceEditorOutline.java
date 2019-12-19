@@ -13,17 +13,12 @@
 package org.eclipse.mylyn.wikitext.ui.editor;
 
 import org.eclipse.jface.action.GroupMarker;
-import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
-import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.OpenEvent;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.ToolTip;
@@ -67,16 +62,8 @@ public class DefaultWikiTextSourceEditorOutline extends AbstractWikiTextSourceEd
 		viewer.setLabelProvider(WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider());
 		viewer.setInput(getEditor().getAdapter(OutlineItem.class));
 
-		viewer.addOpenListener(new IOpenListener() {
-			public void open(OpenEvent event) {
-				revealInEditor(event.getSelection());
-			}
-		});
-		viewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				revealInEditor(event.getSelection());
-			}
-		});
+		viewer.addOpenListener(event -> revealInEditor(event.getSelection()));
+		viewer.addPostSelectionChangedListener(event -> revealInEditor(event.getSelection()));
 		viewer.expandAll();
 
 		updateSelectionToMatchEditor();
@@ -131,11 +118,7 @@ public class DefaultWikiTextSourceEditorOutline extends AbstractWikiTextSourceEd
 
 		MenuManager manager = new MenuManager("#PopUp"); //$NON-NLS-1$
 		manager.setRemoveAllWhenShown(true);
-		manager.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager menuManager) {
-				contextMenuAboutToShow(menuManager);
-			}
-		});
+		manager.addMenuListener(menuManager -> contextMenuAboutToShow(menuManager));
 		viewer.getTree().setMenu(manager.createContextMenu(viewer.getTree()));
 
 	}
@@ -211,11 +194,9 @@ public class DefaultWikiTextSourceEditorOutline extends AbstractWikiTextSourceEd
 				refresh();
 
 				// update the outline selection from the editor
-				getControl().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if (getControl() != null && !getControl().isDisposed() && getEditor() != null) {
-							updateSelectionToMatchEditor();
-						}
+				getControl().getDisplay().asyncExec(() -> {
+					if (getControl() != null && !getControl().isDisposed() && getEditor() != null) {
+						updateSelectionToMatchEditor();
 					}
 				});
 			} else if (propId == WikiTextSourceEditor.PROP_OUTLINE_LOCATION) {

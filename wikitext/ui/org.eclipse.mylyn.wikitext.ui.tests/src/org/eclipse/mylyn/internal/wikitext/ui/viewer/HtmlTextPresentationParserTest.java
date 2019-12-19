@@ -24,7 +24,6 @@ import java.util.regex.Pattern;
 import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.css.CssParser;
-import org.eclipse.mylyn.wikitext.parser.css.CssRule;
 import org.eclipse.mylyn.wikitext.parser.css.ElementInfo;
 import org.eclipse.mylyn.wikitext.parser.css.Stylesheet;
 import org.eclipse.mylyn.wikitext.parser.css.Stylesheet.Receiver;
@@ -199,13 +198,7 @@ public class HtmlTextPresentationParserTest {
 		Stylesheet stylesheet = defaultStylesheet();
 		final List<String> styles = new ArrayList<>();
 
-		Receiver receiver = new Receiver() {
-
-			@Override
-			public void apply(CssRule rule) {
-				styles.add(rule.name + ": " + rule.value);
-			}
-		};
+		Receiver receiver = rule -> styles.add(rule.name + ": " + rule.value);
 		stylesheet.applyTo(new ElementInfo() {
 
 			@Override

@@ -26,11 +26,7 @@ public abstract class AbstractWikiTextSourceEditorOutline extends ContentOutline
 
 	private IEditorPart editor;
 
-	private final IPropertyListener editorPropertyListener = new IPropertyListener() {
-		public void propertyChanged(Object source, int propId) {
-			editorPropertyChanged(source, propId);
-		}
-	};
+	private final IPropertyListener editorPropertyListener = (source, propId) -> editorPropertyChanged(source, propId);
 
 	public void setEditor(IEditorPart editor) {
 		if (this.editor != null) {

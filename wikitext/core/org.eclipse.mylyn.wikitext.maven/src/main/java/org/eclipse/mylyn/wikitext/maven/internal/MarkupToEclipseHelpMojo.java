@@ -31,7 +31,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.eclipse.mylyn.wikitext.maven.internal.SourceFileTraversal.Visitor;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.markup.MarkupLanguage;
@@ -239,13 +238,10 @@ public class MarkupToEclipseHelpMojo extends AbstractMojo {
 			SourceFileTraversal fileTraversal = new SourceFileTraversal(sourceFolder);
 
 			final AtomicInteger fileCount = new AtomicInteger();
-			fileTraversal.traverse(new Visitor() {
-				@Override
-				public void accept(String relativePath, File sourceFile) {
-					fileCount.incrementAndGet();
+			fileTraversal.traverse((relativePath, sourceFile) -> {
+				fileCount.incrementAndGet();
 
-					process(sourceFile, relativePath, fileToMarkupLanguage.get(sourceFile));
-				}
+				process(sourceFile, relativePath, fileToMarkupLanguage.get(sourceFile));
 			});
 			getLog().info(format("Processed {0} files", fileCount.get()));
 		} catch (BuildFailureException e) {

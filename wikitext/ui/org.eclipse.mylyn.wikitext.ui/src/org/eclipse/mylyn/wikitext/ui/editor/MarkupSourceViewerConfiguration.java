@@ -24,7 +24,6 @@ import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.DefaultTextHover;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextHover;
@@ -65,7 +64,6 @@ import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.parser.outline.OutlineParser;
 import org.eclipse.mylyn.wikitext.ui.viewer.AbstractTextSourceViewerConfiguration;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.IShowInTarget;
@@ -439,11 +437,9 @@ public class MarkupSourceViewerConfiguration extends AbstractTextSourceViewerCon
 	}
 
 	protected IInformationControlCreator getOutlineInformationControlCreator() {
-		return new IInformationControlCreator() {
-			public IInformationControl createInformationControl(Shell parent) {
-				QuickOutlinePopupDialog dialog = new QuickOutlinePopupDialog(parent, showInTarget);
-				return dialog;
-			}
+		return parent -> {
+			QuickOutlinePopupDialog dialog = new QuickOutlinePopupDialog(parent, showInTarget);
+			return dialog;
 		};
 	}
 

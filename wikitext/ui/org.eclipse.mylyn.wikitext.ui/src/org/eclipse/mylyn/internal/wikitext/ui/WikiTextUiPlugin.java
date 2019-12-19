@@ -29,7 +29,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.assist.MarkupTemplateCompletionProcessor;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.assist.Templates;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.help.CheatSheetContent;
@@ -86,11 +85,7 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		preferencesListener = new IPropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent event) {
-				preferences = null;
-			}
-		};
+		preferencesListener = event -> preferences = null;
 		getPreferenceStore().addPropertyChangeListener(preferencesListener);
 	}
 

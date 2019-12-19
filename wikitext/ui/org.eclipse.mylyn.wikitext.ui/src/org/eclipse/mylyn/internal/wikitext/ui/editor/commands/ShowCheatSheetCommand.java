@@ -68,11 +68,7 @@ public class ShowCheatSheetCommand extends AbstractHandler {
 						computeCheatSheet(markupLanguage));
 
 				// show information asynchronously since on Eclipse 3.4 it will disappear otherwise
-				Display.getCurrent().asyncExec(new Runnable() {
-					public void run() {
-						informationPresenter.showInformation();
-					}
-				});
+				Display.getCurrent().asyncExec(() -> informationPresenter.showInformation());
 			}
 		}
 

@@ -120,11 +120,7 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	@Override
 	public void link(Attributes attributes, String href, final String text) {
-		link(attributes, href, new ContentEmitter() {
-			public void emit() {
-				writer.writeCharacters(text);
-			}
-		});
+		link(attributes, href, () -> writer.writeCharacters(text));
 	}
 
 	private void link(Attributes attributes, String href, ContentEmitter emitter) {
@@ -616,11 +612,7 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 	@Override
 	public void imageLink(Attributes linkAttributes, final Attributes imageAttributes, String href,
 			final String imageUrl) {
-		link(linkAttributes, href, new ContentEmitter() {
-			public void emit() {
-				emitImage(imageAttributes, imageUrl, true);
-			}
-		});
+		link(linkAttributes, href, () -> emitImage(imageAttributes, imageUrl, true));
 	}
 
 	@Override

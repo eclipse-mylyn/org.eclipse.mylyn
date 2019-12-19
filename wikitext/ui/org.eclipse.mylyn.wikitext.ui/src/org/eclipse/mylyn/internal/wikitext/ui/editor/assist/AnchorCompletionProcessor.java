@@ -27,7 +27,6 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
-import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem.Visitor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 
@@ -132,17 +131,14 @@ public class AnchorCompletionProcessor implements IContentAssistProcessor {
 		}
 		final List<CompletionProposal> suggestions = new ArrayList<>(20);
 		final int prefixOffset = offset - prefix.length();
-		outline.accept(new Visitor() {
-			public boolean visit(OutlineItem item) {
-				if (item != outline) {
-					String id = item.getId();
-					if (id != null && id.length() > 0) {
-						suggestions.add(createProposal(prefix, prefixOffset, id));
-					}
+		outline.accept(item -> {
+			if (item != outline) {
+				String id = item.getId();
+				if (id != null && id.length() > 0) {
+					suggestions.add(createProposal(prefix, prefixOffset, id));
 				}
-				return true;
 			}
-
+			return true;
 		});
 		if (suggestions.isEmpty()) {
 			return null;

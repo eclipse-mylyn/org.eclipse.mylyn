@@ -474,11 +474,7 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 						} catch (MalformedURLException e) {
 							urlToImageData.put(imgSrc, null);
 						}
-						display.asyncExec(new Runnable() {
-							public void run() {
-								updateImage(imgSrc, urlToImageData.get(imgSrc));
-							}
-						});
+						display.asyncExec(() -> updateImage(imgSrc, urlToImageData.get(imgSrc)));
 					}
 					if (Thread.currentThread().isInterrupted()) {
 						break;

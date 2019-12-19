@@ -17,8 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextChangeEvent;
@@ -26,7 +24,6 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.IFoldingStructure;
 import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem;
-import org.eclipse.mylyn.wikitext.parser.outline.OutlineItem.Visitor;
 import org.eclipse.ui.IEditorPart;
 
 /**
@@ -41,13 +38,11 @@ class ActiveFoldingListener extends AbstractContextListener {
 
 	private final IFoldingStructure foldingStructure;
 
-	private org.eclipse.jface.util.IPropertyChangeListener preferenceListener = new IPropertyChangeListener() {
-		public void propertyChange(PropertyChangeEvent event) {
-			if (WikiTextContextUiPlugin.PREF_ACTIVE_FOLDING_ENABLED.equals(event.getProperty())) {
-				Object newValue = event.getNewValue();
-				foldingEnabled = Boolean.TRUE.toString().equals(newValue.toString());
-				updateFolding(false);
-			}
+	private org.eclipse.jface.util.IPropertyChangeListener preferenceListener = event -> {
+		if (WikiTextContextUiPlugin.PREF_ACTIVE_FOLDING_ENABLED.equals(event.getProperty())) {
+			Object newValue = event.getNewValue();
+			foldingEnabled = Boolean.TRUE.toString().equals(newValue.toString());
+			updateFolding(false);
 		}
 	};
 
@@ -78,15 +73,13 @@ class ActiveFoldingListener extends AbstractContextListener {
 			OutlineItem outline = (OutlineItem) part.getAdapter(OutlineItem.class);
 			if (outline != null) {
 				final List<OutlineItem> toExpand = new ArrayList<OutlineItem>();
-				outline.accept(new Visitor() {
-					public boolean visit(OutlineItem item) {
-						String identifier = bridge.getHandleIdentifier(item);
-						IInteractionElement element = ContextCore.getContextManager().getElement(identifier);
-						if (element != null && element.getInterest().isInteresting()) {
-							toExpand.add(item);
-						}
-						return true;
+				outline.accept(item -> {
+					String identifier = bridge.getHandleIdentifier(item);
+					IInteractionElement element = ContextCore.getContextManager().getElement(identifier);
+					if (element != null && element.getInterest().isInteresting()) {
+						toExpand.add(item);
 					}
+					return true;
 				});
 				if (toExpand.isEmpty()) {
 					foldingStructure.collapseAll(elementsDeleted);

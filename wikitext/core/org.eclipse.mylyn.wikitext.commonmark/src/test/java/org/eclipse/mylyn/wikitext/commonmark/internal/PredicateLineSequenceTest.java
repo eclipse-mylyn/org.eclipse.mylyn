@@ -68,12 +68,6 @@ public class PredicateLineSequenceTest {
 	}
 
 	private Predicate<Line> notTwoPredicate() {
-		return new Predicate<Line>() {
-
-			@Override
-			public boolean apply(Line input) {
-				return !input.getText().equals("two");
-			}
-		};
+		return input -> !input.getText().equals("two");
 	}
 }

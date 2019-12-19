@@ -39,11 +39,7 @@ public abstract class PreferenceStoreFacade implements IPreferenceStore {
 	public void addPropertyChangeListener(IPropertyChangeListener listener) {
 		listeners.add(listener);
 		if (forwardingListener == null) {
-			forwardingListener = new IPropertyChangeListener() {
-				public void propertyChange(PropertyChangeEvent event) {
-					firePropertyChangeEvent(event.getProperty(), event.getOldValue(), event.getNewValue());
-				}
-			};
+			forwardingListener = event -> firePropertyChangeEvent(event.getProperty(), event.getOldValue(), event.getNewValue());
 			delegate.addPropertyChangeListener(forwardingListener);
 		}
 	}

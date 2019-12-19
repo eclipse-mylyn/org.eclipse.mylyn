@@ -28,8 +28,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.IResourceDeltaVisitor;
-import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -125,55 +123,47 @@ public class ValidationProjectBuilder extends IncrementalProjectBuilder {
 			throws CoreException {
 		final List<ValidationInfo> files = new ArrayList<>();
 
-		resourceDelta.accept(new IResourceDeltaVisitor() {
-
-			public boolean visit(IResourceDelta delta) throws CoreException {
-				if (monitor.isCanceled()) {
-					throw new OperationCanceledException();
+		resourceDelta.accept(delta -> {
+			if (monitor.isCanceled()) {
+				throw new OperationCanceledException();
+			}
+			if (isInterrupted()) {
+				return false;
+			}
+			IResource resource = delta.getResource();
+			if (resource instanceof IFile) {
+				if ((delta.getKind() & (IResourceDelta.ADDED | IResourceDelta.CHANGED)) != 0) {
+					IFile file = (IFile) resource;
+					ValidationProjectBuilder.this.visit(files, file);
 				}
-				if (isInterrupted()) {
+			} else if (resource instanceof IContainer) {
+				if (filtered((IContainer) resource)) {
 					return false;
 				}
-				IResource resource = delta.getResource();
-				if (resource instanceof IFile) {
-					if ((delta.getKind() & (IResourceDelta.ADDED | IResourceDelta.CHANGED)) != 0) {
-						IFile file = (IFile) resource;
-						ValidationProjectBuilder.this.visit(files, file);
-					}
-				} else if (resource instanceof IContainer) {
-					if (filtered((IContainer) resource)) {
-						return false;
-					}
-				}
-				return true;
 			}
-
+			return true;
 		});
 		return files;
 	}
 
 	private List<ValidationInfo> collect(IProject project, final IProgressMonitor monitor) throws CoreException {
 		final List<ValidationInfo> files = new ArrayList<>();
-		project.accept(new IResourceVisitor() {
-
-			public boolean visit(IResource resource) throws CoreException {
-				if (monitor.isCanceled()) {
-					throw new OperationCanceledException();
-				}
-				if (isInterrupted()) {
+		project.accept(resource -> {
+			if (monitor.isCanceled()) {
+				throw new OperationCanceledException();
+			}
+			if (isInterrupted()) {
+				return false;
+			}
+			if (resource instanceof IFile) {
+				IFile file = (IFile) resource;
+				ValidationProjectBuilder.this.visit(files, file);
+			} else if (resource instanceof IContainer) {
+				if (filtered((IContainer) resource)) {
 					return false;
 				}
-				if (resource instanceof IFile) {
-					IFile file = (IFile) resource;
-					ValidationProjectBuilder.this.visit(files, file);
-				} else if (resource instanceof IContainer) {
-					if (filtered((IContainer) resource)) {
-						return false;
-					}
-				}
-				return true;
 			}
-
+			return true;
 		});
 		return files;
 	}

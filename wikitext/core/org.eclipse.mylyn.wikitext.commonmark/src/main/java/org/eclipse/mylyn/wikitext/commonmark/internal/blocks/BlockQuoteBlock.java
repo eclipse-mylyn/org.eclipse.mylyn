@@ -27,7 +27,6 @@ import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContext;
 import org.eclipse.mylyn.wikitext.commonmark.internal.ProcessingContextBuilder;
 import org.eclipse.mylyn.wikitext.commonmark.internal.SourceBlock;
 import org.eclipse.mylyn.wikitext.commonmark.internal.SourceBlocks;
-import org.eclipse.mylyn.wikitext.commonmark.internal.SourceBlocks.BlockContext;
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder.BlockType;
@@ -65,13 +64,9 @@ public class BlockQuoteBlock extends BlockWithNestedBlocks {
 		private SourceBlock currentBlock;
 
 		Predicate<SourceBlocks.BlockContext> contextPredicate() {
-			return new Predicate<SourceBlocks.BlockContext>() {
-
-				@Override
-				public boolean apply(BlockContext context) {
-					currentBlock = context.getCurrentBlock();
-					return true;
-				}
+			return context -> {
+				currentBlock = context.getCurrentBlock();
+				return true;
 			};
 		}
 
@@ -80,17 +75,13 @@ public class BlockQuoteBlock extends BlockWithNestedBlocks {
 		}
 
 		private Function<Line, Line> blockQuoteLineTransform() {
-			return new Function<Line, Line>() {
-
-				@Override
-				public Line apply(Line line) {
-					Matcher matcher = START_PATTERN.matcher(line.getText());
-					if (matcher.matches()) {
-						int start = matcher.start(1);
-						return line.segment(start, matcher.end(1) - start);
-					}
-					return line;
+			return line -> {
+				Matcher matcher = START_PATTERN.matcher(line.getText());
+				if (matcher.matches()) {
+					int start = matcher.start(1);
+					return line.segment(start, matcher.end(1) - start);
 				}
+				return line;
 			};
 		}
 

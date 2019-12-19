@@ -171,11 +171,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 			"org.eclipse.ui.navigator.ProjectExplorer", // 3.5 //$NON-NLS-1$
 			IPageLayout.ID_OUTLINE };
 
-	private static IShowInTargetList SHOW_IN_TARGET_LIST = new IShowInTargetList() {
-		public String[] getShowInTargetIds() {
-			return SHOW_IN_TARGETS;
-		}
-	};
+	private static IShowInTargetList SHOW_IN_TARGET_LIST = () -> SHOW_IN_TARGETS;
 
 	private IDocument document;
 
@@ -408,18 +404,12 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		updateDocument();
 
 		if (preferencesListener == null) {
-			preferencesListener = new IPropertyChangeListener() {
-				public void propertyChange(PropertyChangeEvent event) {
-					if (viewer.getTextWidget() == null || viewer.getTextWidget().isDisposed()) {
-						return;
-					}
-					if (isFontPreferenceChange(event)) {
-						viewer.getTextWidget().getDisplay().asyncExec(new Runnable() {
-							public void run() {
-								reloadPreferences();
-							}
-						});
-					}
+			preferencesListener = event -> {
+				if (viewer.getTextWidget() == null || viewer.getTextWidget().isDisposed()) {
+					return;
+				}
+				if (isFontPreferenceChange(event)) {
+					viewer.getTextWidget().getDisplay().asyncExec(() -> reloadPreferences());
 				}
 			};
 			WikiTextUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(preferencesListener);
@@ -607,13 +597,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 				}
 				document.addDocumentListener(documentListener);
 				if (documentPartitioningListener == null) {
-					documentPartitioningListener = new IDocumentPartitioningListener() {
-
-						public void documentPartitioningChanged(IDocument document) {
-							// async update
-							scheduleOutlineUpdate();
-						}
-					};
+					documentPartitioningListener = document -> scheduleOutlineUpdate();
 				}
 				document.addDocumentPartitioningListener(documentPartitioningListener);
 			}
@@ -922,11 +906,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 					return Status.CANCEL_STATUS;
 				}
 
-				display.asyncExec(new Runnable() {
-					public void run() {
-						updateOutline(contentGeneration, rootItem);
-					}
-				});
+				display.asyncExec(() -> updateOutline(contentGeneration, rootItem));
 				return Status.OK_STATUS;
 			}
 
@@ -964,11 +944,9 @@ public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSo
 		if (isOutlinePageValid()) {
 			outlinePage.refresh();
 
-			outlinePage.getControl().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					if (isOutlinePageValid()) {
-						updateOutlineSelection();
-					}
+			outlinePage.getControl().getDisplay().asyncExec(() -> {
+				if (isOutlinePageValid()) {
+					updateOutlineSelection();
 				}
 			});
 		}

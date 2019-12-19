@@ -19,7 +19,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -55,23 +54,21 @@ public class ConvertMarkupToHtml extends AbstractMarkupResourceHandler {
 
 		try {
 
-			IRunnableWithProgress runnable = new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					try {
-						String inputContent = IOUtil.readFully(file);
-						parser.parse(inputContent);
-						String xhtmlContent = writer.toString();
+			IRunnableWithProgress runnable = monitor -> {
+				try {
+					String inputContent = IOUtil.readFully(file);
+					parser.parse(inputContent);
+					String xhtmlContent = writer.toString();
 
-						if (newFile.exists()) {
-							newFile.setContents(new ByteArrayInputStream(xhtmlContent.getBytes("utf-8")), false, true, //$NON-NLS-1$
-									monitor);
-						} else {
-							newFile.create(new ByteArrayInputStream(xhtmlContent.getBytes("utf-8")), false, monitor); //$NON-NLS-1$
-						}
-						newFile.setCharset(StandardCharsets.UTF_8.name(), monitor);
-					} catch (Exception e) {
-						throw new InvocationTargetException(e);
+					if (newFile.exists()) {
+						newFile.setContents(new ByteArrayInputStream(xhtmlContent.getBytes("utf-8")), false, true, //$NON-NLS-1$
+								monitor);
+					} else {
+						newFile.create(new ByteArrayInputStream(xhtmlContent.getBytes("utf-8")), false, monitor); //$NON-NLS-1$
 					}
+					newFile.setCharset(StandardCharsets.UTF_8.name(), monitor);
+				} catch (Exception e) {
+					throw new InvocationTargetException(e);
 				}
 			};
 			try {

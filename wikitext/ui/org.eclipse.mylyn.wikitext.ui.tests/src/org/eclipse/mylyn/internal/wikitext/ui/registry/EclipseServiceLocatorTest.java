@@ -28,7 +28,6 @@ import org.eclipse.mylyn.wikitext.util.ServiceLocator;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 
@@ -51,12 +50,8 @@ public class EclipseServiceLocatorTest {
 	@Test
 	public void getAllMarkupLanguages() {
 		Set<MarkupLanguage> allMarkupLanguages = ServiceLocator.getInstance().getAllMarkupLanguages();
-		Set<String> names = ImmutableSet.copyOf(FluentIterable.from(allMarkupLanguages).transform(
-				new Function<MarkupLanguage, String>() {
-					public String apply(MarkupLanguage language) {
-						return language.getName();
-					}
-				}));
+		Set<String> names = ImmutableSet
+				.copyOf(FluentIterable.from(allMarkupLanguages).transform(language -> language.getName()));
 		assertEquals(WikiText.getMarkupLanguageNames(), names);
 	}
 }

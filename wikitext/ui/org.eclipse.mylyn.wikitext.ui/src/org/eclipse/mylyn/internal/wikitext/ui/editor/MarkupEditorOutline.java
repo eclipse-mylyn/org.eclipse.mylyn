@@ -16,19 +16,14 @@ package org.eclipse.mylyn.internal.wikitext.ui.editor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
-import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.OpenEvent;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
@@ -83,16 +78,8 @@ public class MarkupEditorOutline extends ContentOutlinePage implements IShowInSo
 		viewer.setLabelProvider(WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider());
 		viewer.setInput(editor.getOutlineModel());
 
-		viewer.addOpenListener(new IOpenListener() {
-			public void open(OpenEvent event) {
-				revealInEditor(event.getSelection(), true);
-			}
-		});
-		viewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				revealInEditor(event.getSelection(), false);
-			}
-		});
+		viewer.addOpenListener(event -> revealInEditor(event.getSelection(), true));
+		viewer.addPostSelectionChangedListener(event -> revealInEditor(event.getSelection(), false));
 		viewer.expandAll();
 
 		new ToolTip(viewer.getControl(), ToolTip.RECREATE, false) {
@@ -149,11 +136,7 @@ public class MarkupEditorOutline extends ContentOutlinePage implements IShowInSo
 
 		MenuManager manager = new MenuManager("#PopUp"); //$NON-NLS-1$
 		manager.setRemoveAllWhenShown(true);
-		manager.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager menuManager) {
-				contextMenuAboutToShow(menuManager);
-			}
-		});
+		manager.addMenuListener(menuManager -> contextMenuAboutToShow(menuManager));
 		viewer.getTree().setMenu(manager.createContextMenu(viewer.getTree()));
 
 		site.registerContextMenu(MarkupEditor.ID + ".outlineContextMenu", manager, viewer); //$NON-NLS-1$

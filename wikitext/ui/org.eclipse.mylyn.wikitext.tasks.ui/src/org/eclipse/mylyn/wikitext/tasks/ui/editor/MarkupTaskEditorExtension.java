@@ -53,8 +53,6 @@ import org.eclipse.mylyn.wikitext.ui.viewer.DefaultHyperlinkDetectorDescriptorFi
 import org.eclipse.mylyn.wikitext.ui.viewer.MarkupViewer;
 import org.eclipse.mylyn.wikitext.ui.viewer.MarkupViewerConfiguration;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.graphics.RGB;
@@ -261,11 +259,7 @@ public class MarkupTaskEditorExtension<MarkupLanguageType extends MarkupLanguage
 				AbstractDecoratedTextEditorPreferenceConstants.EDITOR_PRINT_MARGIN_COLUMN);
 
 		support.install(new EditorExtensionPreferenceStore(EditorsUI.getPreferenceStore(), viewer.getControl()));
-		viewer.getControl().addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent e) {
-				support.dispose();
-			}
-		});
+		viewer.getControl().addDisposeListener(e1 -> support.dispose());
 
 		IFocusService focusService = PlatformUI.getWorkbench().getService(IFocusService.class);
 		if (focusService != null) {

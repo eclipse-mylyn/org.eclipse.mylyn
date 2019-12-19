@@ -55,14 +55,12 @@ public class SplitOutlineItem extends OutlineItem {
 		if (pages == null) {
 			final Set<String> pageTargets = new HashSet<String>();
 			pages = new ArrayList<SplitOutlineItem>();
-			accept(new Visitor() {
-				public boolean visit(OutlineItem item) {
-					SplitOutlineItem split = (SplitOutlineItem) item;
-					if (pageTargets.add(split.getSplitTarget())) {
-						pages.add(split);
-					}
-					return true;
+			accept(item -> {
+				SplitOutlineItem split = (SplitOutlineItem) item;
+				if (pageTargets.add(split.getSplitTarget())) {
+					pages.add(split);
 				}
+				return true;
 			});
 		}
 		return pages;
@@ -86,16 +84,14 @@ public class SplitOutlineItem extends OutlineItem {
 		}
 		if (outlineItemById == null) {
 			final Map<String, SplitOutlineItem> splitTargetById = new HashMap<String, SplitOutlineItem>();
-			this.accept(new Visitor() {
-				public boolean visit(OutlineItem item) {
-					if (item.getId() != null) {
-						if (splitTargetById.containsKey(item.getId())) {
-							throw new IllegalStateException(String.format("Duplicate id '%s'", item.getId())); //$NON-NLS-1$
-						}
-						splitTargetById.put(item.getId(), (SplitOutlineItem) item);
+			this.accept(item -> {
+				if (item.getId() != null) {
+					if (splitTargetById.containsKey(item.getId())) {
+						throw new IllegalStateException(String.format("Duplicate id '%s'", item.getId())); //$NON-NLS-1$
 					}
-					return true;
+					splitTargetById.put(item.getId(), (SplitOutlineItem) item);
 				}
+				return true;
 			});
 			this.outlineItemById = splitTargetById;
 		}

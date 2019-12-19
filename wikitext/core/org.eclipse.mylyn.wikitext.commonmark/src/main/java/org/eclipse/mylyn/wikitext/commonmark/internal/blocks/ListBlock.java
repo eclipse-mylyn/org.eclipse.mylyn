@@ -34,7 +34,6 @@ import org.eclipse.mylyn.wikitext.parser.ListAttributes;
 import org.eclipse.mylyn.wikitext.parser.builder.NoOpDocumentBuilder;
 
 import com.google.common.base.CharMatcher;
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
 public class ListBlock extends BlockWithNestedBlocks {
@@ -56,26 +55,15 @@ public class ListBlock extends BlockWithNestedBlocks {
 
 	@Override
 	public void process(ProcessingContext context, DocumentBuilder builder, LineSequence lineSequence) {
-		process(context, builder, lineSequence, new ListItemHandler() {
-
-			@Override
-			public void emitListItem(ProcessingContext context, DocumentBuilder builder, ListMode listMode,
-					LineSequence lineSequence) {
-				emitListItem(context, builder, listMode, lineSequence);
-			}
-		});
+		process(context, builder, lineSequence, (context1, builder1, listMode, lineSequence1) -> emitListItem(context1,
+				builder1, listMode, lineSequence1));
 	}
 
 	@Override
 	public void createContext(final ProcessingContextBuilder contextBuilder, LineSequence lineSequence) {
-		process(ProcessingContext.builder().build(), new NoOpDocumentBuilder(), lineSequence, new ListItemHandler() {
-
-			@Override
-			public void emitListItem(ProcessingContext dummyContext, DocumentBuilder builder, ListMode listMode,
-					LineSequence lineSequence) {
-				CommonMark.sourceBlocks().createContext(contextBuilder, listItemLineSequence(lineSequence));
-			}
-		});
+		process(ProcessingContext.builder().build(), new NoOpDocumentBuilder(), lineSequence,
+				(dummyContext, builder, listMode, lineSequence1) -> CommonMark.sourceBlocks()
+						.createContext(contextBuilder, listItemLineSequence(lineSequence1)));
 	}
 
 	private void process(ProcessingContext context, DocumentBuilder builder, LineSequence lineSequence,
@@ -230,17 +218,13 @@ public class ListBlock extends BlockWithNestedBlocks {
 				return firstLineNumber == line.getLineNumber() || line.isEmpty() || isIndented(line, indentOffset);
 			}
 		});
-		return itemLinesSequence.transform(new Function<Line, Line>() {
-
-			@Override
-			public Line apply(Line line) {
-				if (line.isEmpty()) {
-					return line;
-				}
-				int length = Math.max(line.getText().length() - indentOffset, 0);
-				int offset = Math.min(indentOffset, line.getText().length());
-				return line.segment(offset, length);
+		return itemLinesSequence.transform(line -> {
+			if (line.isEmpty()) {
+				return line;
 			}
+			int length = Math.max(line.getText().length() - indentOffset, 0);
+			int offset = Math.min(indentOffset, line.getText().length());
+			return line.segment(offset, length);
 		});
 	}
 

@@ -72,13 +72,8 @@ public class SourceBlocks extends SourceBlock {
 
 	public void createContext(final ProcessingContextBuilder contextBuilder, LineSequence lineSequence,
 			Predicate<BlockContext> contextPredicate) {
-		process(lineSequence, new SourceBlockRunnable() {
-
-			@Override
-			public void run(LineSequence lineSequence, SourceBlock sourceBlock) {
-				sourceBlock.createContext(contextBuilder, lineSequence);
-			}
-		}, contextPredicate);
+		process(lineSequence, (lineSequence1, sourceBlock) -> sourceBlock.createContext(contextBuilder, lineSequence1),
+				contextPredicate);
 	}
 
 	@Override
@@ -93,26 +88,17 @@ public class SourceBlocks extends SourceBlock {
 
 	public void process(final ProcessingContext context, final DocumentBuilder builder, LineSequence lineSequence,
 			Predicate<BlockContext> predicate) {
-		process(lineSequence, new SourceBlockRunnable() {
-
-			@Override
-			public void run(LineSequence lineSequence, SourceBlock sourceBlock) {
-				sourceBlock.process(context, builder, lineSequence);
-			}
-		}, predicate);
+		process(lineSequence, (lineSequence1, sourceBlock) -> sourceBlock.process(context, builder, lineSequence1),
+				predicate);
 	}
 
 	public List<SourceBlock> calculateSourceBlocks(final ProcessingContext context, LineSequence lineSequence,
 			Predicate<BlockContext> predicate) {
 		final List<SourceBlock> sourceBlocks = new ArrayList<>();
 		final NoOpDocumentBuilder builder = new NoOpDocumentBuilder();
-		process(lineSequence, new SourceBlockRunnable() {
-
-			@Override
-			public void run(LineSequence lineSequence, SourceBlock sourceBlock) {
-				sourceBlocks.add(sourceBlock);
-				sourceBlock.process(context, builder, lineSequence);
-			}
+		process(lineSequence, (lineSequence1, sourceBlock) -> {
+			sourceBlocks.add(sourceBlock);
+			sourceBlock.process(context, builder, lineSequence1);
 		}, predicate);
 		return sourceBlocks;
 	}

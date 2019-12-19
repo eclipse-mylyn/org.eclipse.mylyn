@@ -21,7 +21,6 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -70,19 +69,17 @@ public class ConvertMarkupToMarkup extends AbstractMarkupResourceHandler {
 			parser.parse(inputContent);
 			final String targetConent = writer.toString();
 
-			IRunnableWithProgress runnable = new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					try {
-						if (newFile.exists()) {
-							newFile.setContents(new ByteArrayInputStream(targetConent.getBytes("utf-8")), false, true, //$NON-NLS-1$
-									monitor);
-						} else {
-							newFile.create(new ByteArrayInputStream(targetConent.getBytes("utf-8")), false, monitor); //$NON-NLS-1$
-						}
-						newFile.setCharset("utf-8", monitor); //$NON-NLS-1$
-					} catch (Exception e) {
-						throw new InvocationTargetException(e);
+			IRunnableWithProgress runnable = monitor -> {
+				try {
+					if (newFile.exists()) {
+						newFile.setContents(new ByteArrayInputStream(targetConent.getBytes("utf-8")), false, true, //$NON-NLS-1$
+								monitor);
+					} else {
+						newFile.create(new ByteArrayInputStream(targetConent.getBytes("utf-8")), false, monitor); //$NON-NLS-1$
 					}
+					newFile.setCharset("utf-8", monitor); //$NON-NLS-1$
+				} catch (Exception e) {
+					throw new InvocationTargetException(e);
 				}
 			};
 			try {

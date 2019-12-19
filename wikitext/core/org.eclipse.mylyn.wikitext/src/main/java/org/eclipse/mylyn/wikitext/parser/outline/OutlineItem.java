@@ -255,13 +255,11 @@ public class OutlineItem {
 	public OutlineItem findItemById(String id) {
 		if (itemsById == null) {
 			itemsById = new HashMap<String, OutlineItem>();
-			accept(new Visitor() {
-				public boolean visit(OutlineItem item) {
-					if (item.getId() != null) {
-						itemsById.put(item.getId(), item);
-					}
-					return true;
+			accept(item -> {
+				if (item.getId() != null) {
+					itemsById.put(item.getId(), item);
 				}
+				return true;
 			});
 		}
 		return itemsById.get(id);
@@ -378,12 +376,10 @@ public class OutlineItem {
 				}
 				otherParent.children.clear();
 			}
-			Visitor visitor = new Visitor() {
-				public boolean visit(OutlineItem item) {
-					item.hash = -1;
-					item.positionKey = null;
-					return true;
-				}
+			Visitor visitor = item -> {
+				item.hash = -1;
+				item.positionKey = null;
+				return true;
 			};
 			for (OutlineItem child : children) {
 				child.accept(visitor);

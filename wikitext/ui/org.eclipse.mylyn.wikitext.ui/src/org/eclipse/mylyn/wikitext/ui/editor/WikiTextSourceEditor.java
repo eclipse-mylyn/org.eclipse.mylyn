@@ -341,12 +341,7 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 				}
 				document.addDocumentListener(documentListener);
 				if (documentPartitioningListener == null) {
-					documentPartitioningListener = new IDocumentPartitioningListener() {
-						public void documentPartitioningChanged(IDocument document) {
-							// async update
-							scheduleOutlineUpdate();
-						}
-					};
+					documentPartitioningListener = document -> scheduleOutlineUpdate();
 				}
 				document.addDocumentPartitioningListener(documentPartitioningListener);
 			}
@@ -452,11 +447,7 @@ public class WikiTextSourceEditor extends TextEditor implements IShowInSource, I
 					return Status.CANCEL_STATUS;
 				}
 
-				display.asyncExec(new Runnable() {
-					public void run() {
-						updateOutline(contentGeneration, rootItem);
-					}
-				});
+				display.asyncExec(() -> updateOutline(contentGeneration, rootItem));
 				return Status.OK_STATUS;
 			}
 

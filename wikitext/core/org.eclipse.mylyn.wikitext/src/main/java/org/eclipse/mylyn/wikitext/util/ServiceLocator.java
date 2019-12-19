@@ -127,17 +127,14 @@ public class ServiceLocator {
 
 		final MarkupLanguage[] result = new MarkupLanguage[1];
 
-		loadMarkupLanguages(new MarkupLanguageVisitor() {
-
-			public boolean accept(MarkupLanguage language) {
-				if (languageName.equals(language.getName())) {
-					result[0] = language;
-					return false;
-				}
-				languages.add(language);
-				names.add(language.getName());
-				return true;
+		loadMarkupLanguages(language -> {
+			if (languageName.equals(language.getName())) {
+				result[0] = language;
+				return false;
 			}
+			languages.add(language);
+			names.add(language.getName());
+			return true;
 		});
 		if (result[0] != null) {
 			return result[0];
@@ -191,12 +188,9 @@ public class ServiceLocator {
 	 */
 	public Set<MarkupLanguage> getAllMarkupLanguages() {
 		final Set<MarkupLanguage> markupLanguages = new HashSet<MarkupLanguage>();
-		loadMarkupLanguages(new MarkupLanguageVisitor() {
-
-			public boolean accept(MarkupLanguage language) {
-				markupLanguages.add(language);
-				return true;
-			}
+		loadMarkupLanguages(language -> {
+			markupLanguages.add(language);
+			return true;
 		});
 		return filterDuplicates(markupLanguages);
 	}

@@ -29,8 +29,6 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitioner;
 import org.eclipse.mylyn.wikitext.ui.viewer.HtmlTextPresenter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
@@ -165,14 +163,12 @@ public class InformationPresenterUtil {
 
 			presenter.install(viewer);
 			final InformationPresenter informationPresenter = presenter;
-			viewer.getTextWidget().addDisposeListener(new DisposeListener() {
-				public void widgetDisposed(DisposeEvent e) {
-					try {
-						informationPresenter.uninstall();
-					} catch (Exception e2) {
-					}
-					informationPresenter.dispose();
+			viewer.getTextWidget().addDisposeListener(e -> {
+				try {
+					informationPresenter.uninstall();
+				} catch (Exception e2) {
 				}
+				informationPresenter.dispose();
 			});
 			control.setData(DATA_INFORMATION_PRESENTER, presenter);
 			control.setData(DATA_INFORMATION_CONTROL_CREATOR, informationControlCreator);
