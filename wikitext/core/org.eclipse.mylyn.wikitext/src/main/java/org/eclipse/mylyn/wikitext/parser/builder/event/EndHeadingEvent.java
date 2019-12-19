@@ -13,9 +13,9 @@
 
 package org.eclipse.mylyn.wikitext.parser.builder.event;
 
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
+import java.util.Objects;
 
-import com.google.common.base.Objects;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 
 /**
  * An {@link DocumentBuilderEvent} corresponding to {@link DocumentBuilder#endHeading()}.
@@ -32,7 +32,7 @@ public class EndHeadingEvent extends DocumentBuilderEvent {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(EndHeadingEvent.class);
+		return Objects.hash(EndHeadingEvent.class);
 	}
 
 	@Override

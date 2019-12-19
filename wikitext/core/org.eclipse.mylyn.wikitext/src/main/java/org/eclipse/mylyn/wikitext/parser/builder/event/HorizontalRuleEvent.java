@@ -13,9 +13,9 @@
 
 package org.eclipse.mylyn.wikitext.parser.builder.event;
 
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
+import java.util.Objects;
 
-import com.google.common.base.Objects;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 
 /**
  * @since 3.0
@@ -29,7 +29,7 @@ public class HorizontalRuleEvent extends DocumentBuilderEvent {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(HorizontalRuleEvent.class);
+		return Objects.hash(HorizontalRuleEvent.class);
 	}
 
 	@Override

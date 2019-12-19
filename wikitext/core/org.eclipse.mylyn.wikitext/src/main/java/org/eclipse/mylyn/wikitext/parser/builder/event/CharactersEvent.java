@@ -15,9 +15,9 @@ package org.eclipse.mylyn.wikitext.parser.builder.event;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
+import java.util.Objects;
 
-import com.google.common.base.Objects;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 
 /**
  * An {@link DocumentBuilderEvent} corresponding to {@link DocumentBuilder#characters(String)}.
@@ -49,7 +49,7 @@ public class CharactersEvent extends DocumentBuilderEvent {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(text);
+		return Objects.hash(text);
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class CharactersEvent extends DocumentBuilderEvent {
 			return false;
 		}
 		CharactersEvent other = (CharactersEvent) obj;
-		return Objects.equal(other.text, text);
+		return Objects.equals(other.text, text);
 	}
 
 	@Override

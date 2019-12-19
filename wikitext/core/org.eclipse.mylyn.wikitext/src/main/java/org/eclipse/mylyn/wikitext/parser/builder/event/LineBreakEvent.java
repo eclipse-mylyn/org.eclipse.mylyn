@@ -13,9 +13,9 @@
 
 package org.eclipse.mylyn.wikitext.parser.builder.event;
 
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
+import java.util.Objects;
 
-import com.google.common.base.Objects;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 
 /**
  * An {@link DocumentBuilderEvent} corresponding to {@link DocumentBuilder#lineBreak()}.
@@ -32,7 +32,7 @@ public class LineBreakEvent extends DocumentBuilderEvent {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(LineBreakEvent.class);
+		return Objects.hash(LineBreakEvent.class);
 	}
 
 	@Override

@@ -15,9 +15,9 @@ package org.eclipse.mylyn.wikitext.parser.builder.event;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
+import java.util.Objects;
 
-import com.google.common.base.Objects;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 
 /**
  * An {@link DocumentBuilderEvent} corresponding to {@link DocumentBuilder#charactersUnescaped(String)}.
@@ -40,7 +40,7 @@ public class CharactersUnescapedEvent extends DocumentBuilderEvent {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(literal);
+		return Objects.hash(literal);
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class CharactersUnescapedEvent extends DocumentBuilderEvent {
 			return false;
 		}
 		CharactersUnescapedEvent other = (CharactersUnescapedEvent) obj;
-		return Objects.equal(other.literal, literal);
+		return Objects.equals(other.literal, literal);
 	}
 
 	@Override

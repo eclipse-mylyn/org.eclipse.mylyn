@@ -15,10 +15,10 @@ package org.eclipse.mylyn.wikitext.parser.builder.event;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Objects;
+
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
-
-import com.google.common.base.Objects;
 
 /**
  * An {@link DocumentBuilderEvent} corresponding to {@link DocumentBuilder#link(Attributes, String, String)}.
@@ -47,7 +47,7 @@ public class LinkEvent extends DocumentBuilderEvent {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(hrefOrHashName, text);
+		return Objects.hash(hrefOrHashName, text);
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class LinkEvent extends DocumentBuilderEvent {
 			return false;
 		}
 		LinkEvent other = (LinkEvent) obj;
-		return Objects.equal(hrefOrHashName, other.hrefOrHashName) && Objects.equal(text, other.text);
+		return Objects.equals(hrefOrHashName, other.hrefOrHashName) && Objects.equals(text, other.text);
 	}
 
 	@Override

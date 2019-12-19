@@ -13,9 +13,9 @@
 
 package org.eclipse.mylyn.wikitext.parser.builder.event;
 
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
+import java.util.Objects;
 
-import com.google.common.base.Objects;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 
 /**
  * An {@link DocumentBuilderEvent} corresponding to {@link DocumentBuilder#endSpan()}.
@@ -32,7 +32,7 @@ public class EndSpanEvent extends DocumentBuilderEvent {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(EndSpanEvent.class);
+		return Objects.hash(EndSpanEvent.class);
 	}
 
 	@Override

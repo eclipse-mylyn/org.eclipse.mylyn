@@ -15,9 +15,9 @@ package org.eclipse.mylyn.wikitext.parser.builder.event;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
+import java.util.Objects;
 
-import com.google.common.base.Objects;
+import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
 
 /**
  * An {@link DocumentBuilderEvent} corresponding to {@link DocumentBuilder#entityReference(String)}.
@@ -54,7 +54,7 @@ public class EntityReferenceEvent extends DocumentBuilderEvent {
 		if (!(obj instanceof EntityReferenceEvent)) {
 			return false;
 		}
-		return Objects.equal(entity, ((EntityReferenceEvent) obj).entity);
+		return Objects.equals(entity, ((EntityReferenceEvent) obj).entity);
 	}
 
 	@Override

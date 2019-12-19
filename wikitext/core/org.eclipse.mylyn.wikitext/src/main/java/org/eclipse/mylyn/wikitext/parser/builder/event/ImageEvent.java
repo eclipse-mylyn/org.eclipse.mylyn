@@ -15,10 +15,10 @@ package org.eclipse.mylyn.wikitext.parser.builder.event;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Objects;
+
 import org.eclipse.mylyn.wikitext.parser.Attributes;
 import org.eclipse.mylyn.wikitext.parser.DocumentBuilder;
-
-import com.google.common.base.Objects;
 
 /**
  * An {@link DocumentBuilderEvent} corresponding to {@link DocumentBuilder#image(Attributes, String)}.
@@ -44,7 +44,7 @@ public class ImageEvent extends DocumentBuilderEvent {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(url);
+		return Objects.hash(url);
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class ImageEvent extends DocumentBuilderEvent {
 		if (!(obj instanceof ImageEvent)) {
 			return false;
 		}
-		return Objects.equal(url, ((ImageEvent) obj).url);
+		return Objects.equals(url, ((ImageEvent) obj).url);
 	}
 
 	@Override
